@@ -1,4 +1,5 @@
 import React from 'react';
+import { openableUrls } from '@/lib/safeOpen';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import {
   DropdownMenu,
@@ -241,7 +242,7 @@ export function GroupContextMenu({
                 <div><div>Merge with current</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
               </DropdownMenuItem>
               {(() => {
-                const urls = group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http')));
+                const urls = openableUrls(group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http'))));
                 return (
                   <DropdownMenuItem
                     disabled={urls.length === 0}

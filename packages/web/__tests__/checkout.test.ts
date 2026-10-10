@@ -82,6 +82,29 @@ describe('POST /api/checkout', () => {
     expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
   })
 
+  it('returns 400 for a body that is not JSON', async () => {
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(
+      new NextRequest('http://localhost/api/checkout', { method: 'POST', body: '{"tier": "pro"' })
+    )
+    expect(res.status).toBe(400)
+    expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['null', null],
+    ['a string', 'pro'],
+    ['a number', 1],
+    ['an array', ['pro', 'monthly']],
+  ])('returns 400 for a JSON body that is %s', async (_label, body) => {
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest(body))
+    expect(res.status).toBe(400)
+    expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+  })
+
   it('returns 400 for an invalid interval', async () => {
     const { POST } = await import('@/app/api/checkout/route')
 

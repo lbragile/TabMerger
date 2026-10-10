@@ -1,6 +1,8 @@
 import type { Tab } from '@tabmerger/shared'
 
 function normalizeUrl(url: string): string {
+  // a tab whose url is not a string (malformed stored data) compares as an empty address instead of throwing
+  if (typeof url !== 'string') return ''
   try {
     return new URL(url).href.toLowerCase()
   } catch {

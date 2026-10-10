@@ -96,3 +96,5 @@
 - [Saved copies + positional matching](learnings_saved_copies_and_positional_matching.md) — copyLiveTab/copyLiveWindow for every live-to-saved writer, closableTabIds for deletes, findDuplicateTabs positions with a URL check
 - [Selection click-away press rule](learnings_selection_click_away_press_rule.md) — background click = press began on background + no overlay open; a menu trigger's click targets the document root
 - [Keyboard move re-anchor](learnings_keyboard_move_reanchor.md) — picked-up item re-anchored by identity on each cache update; cache listener is pre-render; real-commit test pattern
+- [E2E CodeQL sanitizers](learnings_e2e_codeql_sanitizers.md) — escapeHtml / jsLiteral / startTitleServer in e2e/helpers.ts; unicode-escape authoring gotcha; how to type-check e2e/
+- [Import validation + stored-URL open guard](learnings_import_validation_and_open_guard.md) — parsers return { groups, skipped }; lib/safeOpen.ts before every stored-URL open; CRLF and NUL-byte editing gotchas

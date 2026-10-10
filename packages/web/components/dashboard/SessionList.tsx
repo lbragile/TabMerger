@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { isEncryptedBlob, decryptBlob, type EncryptedBlob, FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { isEncryptedBlob, decryptBlob, toHttpUrl, type EncryptedBlob, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { useEncryptionKey, unreadableRowKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
 import { SessionCard } from './SessionCard'
@@ -101,9 +101,10 @@ export function SessionList({ sessions: rawSessions, isPro }: SessionListProps) 
       toast.error("This session can't be read, so it can't be restored.")
       return
     }
-    const urls = session.groups.flatMap((g) =>
-      (g.windows ?? []).flatMap((w) => (w.tabs ?? []).map((t) => t.url))
-    )
+    // Only http(s) addresses are opened; a tab with any other kind of URL is skipped.
+    const urls = session.groups
+      .flatMap((g) => (g.windows ?? []).flatMap((w) => (w.tabs ?? []).map((t) => toHttpUrl(t.url))))
+      .filter((url): url is string => url !== undefined)
     urls.forEach((url) => window.open(url, '_blank', 'noopener'))
     toast.success(`Restored ${urls.length} tab${urls.length === 1 ? '' : 's'} from "${session.name}"`)
   }

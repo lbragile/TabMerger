@@ -6,6 +6,10 @@ import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
 vi.mock('workflow', () => ({
   createHook: vi.fn(),
   getWritable: vi.fn(),
+  // Stand-in for the SDK's non-retryable step error.
+  FatalError: class FatalError extends Error {
+    fatal = true
+  },
 }))
 
 vi.mock('@workflow/ai/agent', () => ({
@@ -17,8 +21,16 @@ vi.mock('@/lib/supabase/server', () => ({
 }))
 
 // Import after mocks
-import { applyChanges, fetchUserData, type ClientGroup } from '@/lib/workflows/tabOrganizer'
+import {
+  applyChanges,
+  fetchUserData,
+  tabOrganizerWorkflow,
+  ORGANIZE_NEEDS_CLIENT_DATA_ERROR,
+  type ClientGroup,
+} from '@/lib/workflows/tabOrganizer'
 import { createServiceRoleClient } from '@/lib/supabase/server'
+import { createHook, getWritable } from 'workflow'
+import { DurableAgent } from '@workflow/ai/agent'
 
 // ─── Supabase mock builder ────────────────────────────────────────────────────
 //
@@ -201,6 +213,69 @@ describe('fetchUserData', () => {
 
     const result = await fetchUserData('user-123', null)
     expect(result[0].windows).toEqual([])
+  })
+
+  // ── Encrypted stored rows ──────────────────────────────────────────────────
+
+  it.each([
+    ['an encrypted windows blob', [G1, ENCRYPTED]],
+    ['only encrypted rows', [ENCRYPTED]],
+    // Not recognized by `isEncryptedBlob` (which needs `v === 1`), still not readable.
+    ['a blob of a later version', [G1, { ...ENCRYPTED, windows: { v: 2, iv: 'aXY=', ct: 'Y3Q=' } }]],
+    ['an object that is not a blob', [{ ...G1, windows: { tabs: [] } }]],
+    ['a string', [{ ...G1, windows: 'eyJ2IjoxfQ==' }]],
+    ['a number', [{ ...G1, windows: 7 }]],
+  ])('ends the run with a user-presentable, non-retryable error for %s', async (_label, rows) => {
+    const { client } = makeSupabaseMock(rows)
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const failure = await fetchUserData('user-123', null).catch((e: unknown) => e)
+
+    expect(failure).toBeInstanceOf(Error)
+    expect((failure as Error).message).toBe(ORGANIZE_NEEDS_CLIENT_DATA_ERROR)
+    expect((failure as { fatal?: boolean }).fatal).toBe(true)
+    expect(ORGANIZE_NEEDS_CLIENT_DATA_ERROR).toMatch(/extension/i)
+  })
+
+  it('passes plaintext rows, whose windows are arrays, and an account with no rows', async () => {
+    const withRows = makeSupabaseMock([LEGACY, G1, G2])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(withRows.client as any)
+    const result = await fetchUserData('user-123', null)
+    expect(result.map((g) => g.id)).toEqual(['legacy', 'g1', 'g2'])
+    expect(result[2].windows).toEqual(G2.windows)
+
+    const noRows = makeSupabaseMock([])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(noRows.client as any)
+    expect(await fetchUserData('user-123', null)).toEqual([])
+  })
+
+  it('does not read stored rows at all when the client supplied its groups', async () => {
+    const { client } = makeSupabaseMock([ENCRYPTED])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await fetchUserData('user-123', [{ id: 'c0', name: 'Now Open', tabs: [] }])
+
+    expect(result).toHaveLength(1)
+    expect(createServiceRoleClient).not.toHaveBeenCalled()
+  })
+})
+
+describe('tabOrganizerWorkflow with encrypted stored rows and no client payload', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('fails before the model is called, so nothing is proposed or applied', async () => {
+    const { client, builder } = makeSupabaseMock([G1, ENCRYPTED])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    await expect(tabOrganizerWorkflow('user-123', 'org-user-123-abc', null)).rejects.toThrow(
+      ORGANIZE_NEEDS_CLIENT_DATA_ERROR
+    )
+
+    expect(DurableAgent).not.toHaveBeenCalled()
+    expect(getWritable).not.toHaveBeenCalled()
+    expect(createHook).not.toHaveBeenCalled()
+    expect(builder.update).not.toHaveBeenCalled()
+    expect(builder.delete).not.toHaveBeenCalled()
   })
 })
 

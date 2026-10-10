@@ -37,6 +37,42 @@ describe('POST /api/contact', () => {
     expect(sendMock).not.toHaveBeenCalled()
   })
 
+  // Each case below uses its own IP: the route's per-IP rate limiter counts
+  // every request, and the default IP is already at its limit in this file.
+  it.each(['a@b.c', 'first.last@sub.example.co.uk', 'a+tag@b.io'])('accepts the address %s', async (email) => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req({ ...validBody, email }, '10.0.0.1'))
+    expect(res.status).toBe(200)
+    expect(sendMock).toHaveBeenCalledWith(expect.objectContaining({ replyTo: email }))
+  })
+
+  it.each(['a@b', 'a@.b', 'a@b.', 'a b@c.d', 'a@b..c'])('rejects the malformed address %s', async (email) => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req({ ...validBody, email }, '10.0.0.2'))
+    expect(res.status).toBe(400)
+    expect(sendMock).not.toHaveBeenCalled()
+  })
+
+  it('rejects an address over 254 characters', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const email = `${'a'.repeat(250)}@b.io`
+    expect(email.length).toBeGreaterThan(254)
+    const res = await POST(req({ ...validBody, email }, '10.0.0.3'))
+    expect(res.status).toBe(400)
+    expect(sendMock).not.toHaveBeenCalled()
+  })
+
+  it('rejects a long backtracking-prone address quickly', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const request = req({ ...validBody, email: '!@' + '!.'.repeat(50000) }, '10.0.0.4')
+    const start = performance.now()
+    const res = await POST(request)
+    const elapsed = performance.now() - start
+    expect(res.status).toBe(400)
+    // The old pattern needed seconds for this input; a linear check needs about a millisecond.
+    expect(elapsed).toBeLessThan(500)
+  })
+
   it('rejects an empty subject', async () => {
     const { POST } = await import('@/app/api/contact/route')
     const res = await POST(req({ ...validBody, subject: '  ' }))

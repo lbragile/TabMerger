@@ -25,7 +25,9 @@ const DEFAULT_TO = 'tabmerger.support@gmail.com'
 
 const SUBJECT_MAX = 200
 const MESSAGE_MAX = 5000
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Domain labels exclude "." so each character can match in only one place:
+// with "." allowed inside a label the pattern backtracks quadratically.
+const EMAIL_RE = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/
 
 const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1h
@@ -133,8 +135,8 @@ export async function POST(req: NextRequest) {
 
   if (
     typeof email !== 'string' ||
-    !EMAIL_RE.test(email) ||
     email.length > 254 ||
+    !EMAIL_RE.test(email) ||
     typeof subject !== 'string' ||
     subject.trim().length === 0 ||
     subject.length > SUBJECT_MAX ||

@@ -60,6 +60,11 @@ the screen can show the change before it is stored, so neither the UI nor a fixe
 ## settings.spec.ts — Import / Export
 - export produces a JSON file containing all group names
 
+## settings.spec.ts — Import validation
+- JSON backup: script URLs and malformed entries are left out, the rest is saved, the toast counts them
+- bookmarks file: bookmarklets are left out and counted, ordinary bookmarks are saved
+- a file with nothing importable shows the error toast and saves nothing
+
 ## misc.spec.ts — Notes
 - group note text persists after popup reload
 

@@ -295,6 +295,58 @@ export async function startFixtureServer(title: string): Promise<{ url: string; 
   });
 }
 
+/** Escapes text for an HTML response body, so a request-derived value can never be read as markup. */
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+const JS_LITERAL_ESCAPES: Record<string, string> = {
+  '<': '\\u003C',
+  '>': '\\u003E',
+  '/': '\\u002F',
+  '\u2028': '\\u2028',
+  '\u2029': '\\u2029',
+};
+
+/** Serialises a value for embedding in JS source that is evaluated in the page (JSON plus the characters JSON leaves unsafe there). */
+export function jsLiteral(value: unknown): string {
+  return JSON.stringify(value).replace(/[<>/\u2028\u2029]/g, (char) => JS_LITERAL_ESCAPES[char]);
+}
+
+/**
+ * Spins up a loopback HTTP server whose page title (and body) is the last URL path segment, so
+ * every real browser tab a test opens on it gets a stable, distinct row name without the
+ * internet. Unlike {@link startFixtureServer}, the title comes from the request, one per path.
+ * Sockets are tracked and destroyed on `close()` so teardown never waits on a keep-alive.
+ */
+export async function startTitleServer(): Promise<{ base: string; close: () => Promise<void> }> {
+  const server = http.createServer((req, res) => {
+    const title = decodeURIComponent((req.url ?? '/').split('/').pop() ?? '');
+    res.writeHead(200, { 'Content-Type': 'text/html', Connection: 'close' });
+    res.end(`<!doctype html><html><head><title>${escapeHtml(title)}</title></head><body>${escapeHtml(title)}</body></html>`);
+  });
+  const sockets = new Set<import('node:net').Socket>();
+  server.on('connection', (s) => {
+    sockets.add(s);
+    s.on('close', () => sockets.delete(s));
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const { port } = server.address() as AddressInfo;
+  return {
+    base: `http://127.0.0.1:${port}`,
+    close: () =>
+      new Promise<void>((resolve) => {
+        server.close(() => resolve());
+        sockets.forEach((s) => s.destroy());
+      }),
+  };
+}
+
 export const E2E_USER_ID = 'e2e-user';
 const E2E_USER_EMAIL = 'e2e@example.com';
 

@@ -8,6 +8,7 @@ import { TabPreview } from './TabPreview';
 import { CreateGroupMenuItem } from './CreateGroupMenuItem';
 import type { Tab as TabType } from '@/lib/types';
 import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminder, useClearTabReminder, GROUPS_QUERY_KEY } from '@/hooks/useGroups';
+import { isOpenableUrl } from '@/lib/safeOpen';
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
@@ -257,7 +258,7 @@ const { mutate: deleteTab } = useDeleteTab();
     if (isLocked) return;
     // Skip opening the tab when Ctrl/Cmd/Shift is held — those gestures are for selection
     if (e && (e.ctrlKey || e.metaKey || e.shiftKey)) return;
-    if (!tab.url) return;
+    if (!isOpenableUrl(tab.url)) return;
     if (tab.chromeGroup && chrome.tabGroups) {
       await openTabInChromeGroup(tab, undefined, true);
       return;
@@ -269,7 +270,7 @@ const { mutate: deleteTab } = useDeleteTab();
   const handleReopenGroup = async () => {
     if (!tab.chromeGroup || !chrome.tabGroups) return;
     const siblings = groupsState?.available[groupIndex]?.windows[windowIndex]?.tabs ?? [];
-    const groupTabs = siblings.filter((t) => t.chromeGroup?.id === tab.chromeGroup!.id && t.url);
+    const groupTabs = siblings.filter((t) => t.chromeGroup?.id === tab.chromeGroup!.id && isOpenableUrl(t.url));
     if (groupTabs.length === 0) return;
     const newTabs = await Promise.all(groupTabs.map((t) => chrome.tabs.create({ url: t.url!, active: false })));
     const tabIds = newTabs.map((t) => t.id).filter((id): id is number => id !== undefined);

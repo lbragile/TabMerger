@@ -186,3 +186,28 @@ describe('move window to Now Open — incognito', () => {
     })
   })
 })
+
+describe('useOpenWindow — stored URLs', () => {
+  it('opens only the openable tabs of a saved window in the new window', async () => {
+    const { result } = renderHook(() => useOpenWindow())
+    await act(async () => { await result.current(win(false, ['javascript:alert(1)', 'https://a.com', 'data:text/html,x', 'chrome://extensions/'])) })
+    expect(chromeMock.windows.create).toHaveBeenCalledTimes(1)
+    expect(chromeMock.tabs.create.mock.calls.map(([arg]) => (arg as { url: string }).url)).toEqual(['https://a.com', 'chrome://extensions/'])
+  })
+
+  it('opens no window when the saved window has nothing openable', async () => {
+    const { result } = renderHook(() => useOpenWindow())
+    await act(async () => { await result.current(win(false, ['javascript:alert(1)', 'JaVaScRiPt:void(0)', ''])) })
+    expect(chromeMock.tabs.query).not.toHaveBeenCalled()
+    expect(chromeMock.windows.create).not.toHaveBeenCalled()
+    expect(chromeMock.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('adds only the openable missing tabs to a window that already has one of them open', async () => {
+    chromeMock.tabs.query.mockResolvedValue([{ url: 'https://a.com', windowId: 42 }])
+    const { result } = renderHook(() => useOpenWindow())
+    await act(async () => { await result.current(win(false, ['https://a.com', 'javascript:alert(1)', 'https://b.com'])) })
+    expect(chromeMock.tabs.create).toHaveBeenCalledTimes(1)
+    expect(chromeMock.tabs.create).toHaveBeenCalledWith({ windowId: 42, url: 'https://b.com' })
+  })
+})

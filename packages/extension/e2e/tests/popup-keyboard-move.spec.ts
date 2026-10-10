@@ -3,6 +3,7 @@ import {
   STANDARD_GROUPS, NOW_OPEN, grp, win, starredWin, openRealPopup, openGroup, ctrlSelect, walkUntil, rowLabel, groupRow, sleep, ghostOutside,
   type PopupSession, type SeedGroup, type Within,
 } from '../kbdPopup';
+import { jsLiteral } from '../helpers';
 
 // Cells are independent (each opens its own browser + popup), so let CI shards (--shard=i/N) split them.
 test.describe.configure({ mode: 'parallel' });
@@ -304,7 +305,7 @@ cell('W6 window Escape', STANDARD_GROUPS(), {}, async (s, log) => {
 const workRow = async (s: PopupSession) => { await s.tabTo(groupRow('Work')); };
 async function ctrlSelectGroups(s: PopupSession, names: string[]) {
   for (const n of names) {
-    await s.eval(`(() => { const el = [...document.querySelectorAll('[data-sidebar-group-index]')].find(e => e.getAttribute('aria-label') === ${JSON.stringify(n)}); el.dispatchEvent(new MouseEvent('click', { ctrlKey: true, bubbles: true, cancelable: true })); })()`);
+    await s.eval(`(() => { const el = [...document.querySelectorAll('[data-sidebar-group-index]')].find(e => e.getAttribute('aria-label') === ${jsLiteral(n)}); el.dispatchEvent(new MouseEvent('click', { ctrlKey: true, bubbles: true, cancelable: true })); })()`);
     await sleep(150);
   }
 }

@@ -26,7 +26,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { tier, interval } = await request.json()
+  // A body that is not JSON, or not a JSON object, is read as empty and gets the 400 below.
+  const body = await request.json().catch(() => null)
+  const { tier, interval } = body && typeof body === 'object' ? body : {}
 
   if (!['pro', 'proAi'].includes(tier)) {
     return NextResponse.json({ error: 'Invalid tier' }, { status: 400 })

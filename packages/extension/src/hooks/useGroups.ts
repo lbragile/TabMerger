@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { isOpenableUrl, openableUrls } from '@/lib/safeOpen';
 import { nanoid } from 'nanoid';
 import type { Group, GroupsState, Tab } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
@@ -525,9 +526,14 @@ export function useToggleWindowIncognito() {
       // Now Open group: manipulate the real browser window; useCurrentTabs will sync state
       if (group?.permanent) {
         const win = group.windows[windowIndex];
-        const tabUrls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
+        const tabUrls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
         const oldWindowId = win.id;
-        await chrome.windows.create({ incognito: !win.incognito, url: tabUrls, focused: true });
+        // no `url: []`: with nothing to reopen the window is created without a url list
+        await chrome.windows.create(
+          tabUrls.length > 0
+            ? { incognito: !win.incognito, url: tabUrls, focused: true }
+            : { incognito: !win.incognito, focused: true }
+        );
         await chrome.windows.remove(oldWindowId);
         return;
       }
@@ -826,7 +832,7 @@ export function useMoveTab() {
 
       // Moving to Now Open → open in browser; useCurrentTabs sync will pick it up automatically
       if (state?.available[toGroupIndex]?.permanent) {
-        if (sourceTab?.url && !RESTRICTED_URL_RE.test(sourceTab.url)) {
+        if (sourceTab && isOpenableUrl(sourceTab.url) && !RESTRICTED_URL_RE.test(sourceTab.url)) {
           chrome.tabs.create({ url: sourceTab.url, active: false }).catch(() => {});
         }
         // If source is also Now Open (copy=true), the browser tab already exists — nothing to remove
@@ -914,7 +920,7 @@ export function useMoveWindow() {
       if (state?.available[toGroupIndex]?.permanent) {
         const win = state.available[fromGroupIndex]?.windows[windowIndex];
         if (win) {
-          const urls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
+          const urls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
           if (urls.length > 0) {
             void resolveIncognito(win.incognito).then((incognito) =>
               chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })

@@ -47,3 +47,23 @@ describe('openTabInChromeGroup', () => {
     expect(chrome.tabGroups.update).toHaveBeenCalledWith(99, { title: 'Work', color: 'blue' })
   })
 })
+
+describe('openTabInChromeGroup — stored URLs', () => {
+  beforeEach(() => {
+    vi.stubGlobal('chrome', {
+      tabs: { create: vi.fn().mockResolvedValue({ id: 5, windowId: 10 }), group: vi.fn().mockResolvedValue(99) },
+      tabGroups: { query: vi.fn().mockResolvedValue([]), update: vi.fn().mockResolvedValue(undefined) },
+    })
+  })
+
+  it.each(['javascript:alert(1)', 'JaVaScRiPt:alert(1)', 'data:text/html,x', 'vbscript:x', ''])('opens nothing and makes no tab group for the URL %j', async (url) => {
+    await openTabInChromeGroup({ id: 0, title: 'T', url, chromeGroup: { id: 1, name: 'Work', color: 'blue' } }, 10, true)
+    expect(chrome.tabs.create).not.toHaveBeenCalled()
+    expect(chrome.tabs.group).not.toHaveBeenCalled()
+  })
+
+  it('still opens a browser page such as chrome://extensions/', async () => {
+    await openTabInChromeGroup({ id: 0, title: 'T', url: 'chrome://extensions/' })
+    expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'chrome://extensions/', windowId: undefined, active: false })
+  })
+})

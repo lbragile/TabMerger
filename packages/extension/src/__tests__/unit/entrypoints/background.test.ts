@@ -324,6 +324,22 @@ describe('background — externally_connectable SYNC_AUTH (web app auth bridge)'
     expect(supabase.auth.setSession).toHaveBeenCalledWith({ access_token: 'a', refresh_token: 'b' })
   })
 
+  it.each([
+    ['null', null],
+    ['a string', 'SYNC_AUTH'],
+    ['an array', [{ type: 'SYNC_AUTH', accessToken: 'a', refreshToken: 'b' }]],
+    ['a non-string type', { type: 7, accessToken: 'a', refreshToken: 'b' }],
+    ['non-string tokens', { type: 'SYNC_AUTH', accessToken: { a: 1 }, refreshToken: ['b'] }],
+    ['an oversized token', { type: 'SYNC_AUTH', accessToken: 'a'.repeat(20_000), refreshToken: 'b' }]
+  ])('ignores a message that is %s without throwing', async (_what, msg) => {
+    const { supabase } = await import('@/lib/supabase')
+    ;(supabase.auth.setSession as ReturnType<typeof vi.fn>).mockClear()
+    const sendResponse = vi.fn()
+    expect(() => stub.listeners.onMessageExternal[0](msg, {}, sendResponse)).not.toThrow()
+    expect(supabase.auth.setSession).not.toHaveBeenCalled()
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
   it('ignores SYNC_AUTH messages missing a token', async () => {
     const { supabase } = await import('@/lib/supabase')
     ;(supabase.auth.setSession as ReturnType<typeof vi.fn>).mockClear()
@@ -798,6 +814,22 @@ describe('background — reminder notifications', () => {
   it('ignores alarms not prefixed with "reminder-"', async () => {
     await stub.listeners.onAlarm[0]({ name: 'other-alarm' })
     expect(stub.chrome.notifications.create).not.toHaveBeenCalled()
+  })
+
+  it.each(['javascript:alert(1)', 'JAVASCRIPT:alert(1)', 'data:text/html,x', '', 42])('clears a clicked reminder without opening the stored URL %j', async (url) => {
+    stub.chrome.tabs.create.mockClear()
+    stub.chrome.storage.local.get.mockResolvedValue({ 'reminder-1': { url, title: 'Tab', note: '' } })
+    await stub.listeners.notifOnClicked[0]('reminder-1')
+    expect(stub.chrome.tabs.create).not.toHaveBeenCalled()
+    expect(stub.chrome.notifications.clear).toHaveBeenCalledWith('reminder-1')
+    expect(stub.chrome.storage.local.remove).toHaveBeenCalledWith('reminder-1')
+  })
+
+  it('opens a clicked reminder whose stored URL is a browser page', async () => {
+    stub.chrome.tabs.create.mockClear()
+    stub.chrome.storage.local.get.mockResolvedValue({ 'reminder-1': { url: 'chrome://extensions/', title: 'Tab', note: '' } })
+    await stub.listeners.notifOnClicked[0]('reminder-1')
+    expect(stub.chrome.tabs.create).toHaveBeenCalledWith({ url: 'chrome://extensions/', active: true })
   })
 
   it('opens the reminder URL and clears the notification on click', async () => {

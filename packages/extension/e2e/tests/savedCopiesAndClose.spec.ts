@@ -1,8 +1,6 @@
-import http from 'node:http';
-import type { AddressInfo } from 'node:net';
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload, readStoredGroups, waitForStoredGroups } from '../helpers';
+import { openPopup, seedAndReload, readStoredGroups, startTitleServer, waitForStoredGroups } from '../helpers';
 
 /**
  * Three rules, driven end to end with REAL browser windows (Now Open is rebuilt from the live
@@ -38,29 +36,6 @@ const SAVED = {
   color: 'rgba(16,185,129,1)',
   windows: [{ id: 0, incognito: false, focused: false, tabs: [{ id: 0, title: 'Old One', url: 'https://old.example.com' }] }],
 };
-
-async function startTitleServer() {
-  const server = http.createServer((req, res) => {
-    const title = decodeURIComponent((req.url ?? '/').split('/').pop() ?? '');
-    res.writeHead(200, { 'Content-Type': 'text/html', Connection: 'close' });
-    res.end(`<!doctype html><html><head><title>${title}</title></head><body>${title}</body></html>`);
-  });
-  const sockets = new Set<import('node:net').Socket>();
-  server.on('connection', (s) => {
-    sockets.add(s);
-    s.on('close', () => sockets.delete(s));
-  });
-  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const { port } = server.address() as AddressInfo;
-  return {
-    base: `http://127.0.0.1:${port}`,
-    close: () =>
-      new Promise<void>((resolve) => {
-        server.close(() => resolve());
-        sockets.forEach((s) => s.destroy());
-      }),
-  };
-}
 
 type Server = Awaited<ReturnType<typeof startTitleServer>>;
 

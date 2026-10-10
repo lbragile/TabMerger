@@ -18,7 +18,7 @@ import { test, expect, chromium, type BrowserContext } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { seedIdb } from '../helpers';
+import { jsLiteral, seedIdb } from '../helpers';
 import { RawCdp } from '../rawCdp';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -3724,13 +3724,13 @@ const FOUR_GROUPS = [
 ];
 
 const SIDEBAR_ROW = (name: string) =>
-  `[...document.querySelectorAll('[data-sidebar-group-index]')].find((r) => r.getAttribute('aria-label') === ${JSON.stringify(name)})`;
+  `[...document.querySelectorAll('[data-sidebar-group-index]')].find((r) => r.getAttribute('aria-label') === ${jsLiteral(name)})`;
 
 /** A neutral click point on a sidebar group row: its name span (the click bubbles to the row). */
 async function groupRowPoint(cdp: RawCdp, name: string) {
   return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
     const row = ${SIDEBAR_ROW(name)};
-    const span = row && [...row.querySelectorAll('span')].find((s) => s.textContent === ${JSON.stringify(name)});
+    const span = row && [...row.querySelectorAll('span')].find((s) => s.textContent === ${jsLiteral(name)});
     if (!span) return null;
     const r = span.getBoundingClientRect();
     return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };

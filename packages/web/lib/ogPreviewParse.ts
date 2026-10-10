@@ -310,7 +310,7 @@ export type ImageKind = 'preview' | 'icon'
 export function resolveCandidate(raw: string | null, finalUrl: string): string | null {
   if (!raw) return null
   const decoded = decodeHtmlEntities(raw).trim()
-  if (!decoded || decoded.startsWith('data:') || decoded.startsWith('javascript:')) return null
+  if (!decoded) return null
   try {
     const imgUrl = new URL(decoded, finalUrl)
     return imgUrl.protocol === 'http:' || imgUrl.protocol === 'https:' ? imgUrl.toString() : null

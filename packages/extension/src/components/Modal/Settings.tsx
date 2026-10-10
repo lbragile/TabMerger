@@ -17,7 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useGroups, useImportGroups } from '@/hooks/useGroups';
 import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
 import { useAiUsage } from '@/hooks/useAiUsage';
-import { importGroups, parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
+import { importGroups, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@/lib/importExport';
 import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
@@ -29,7 +29,7 @@ import { getEncryptionKeyState, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
-import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, formatUsd } from '@tabmerger/shared';
+import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, formatUsd, toHttpUrl } from '@tabmerger/shared';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -177,14 +177,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     try {
       const text = await file.text();
       const ext = file.name.split('.').pop()?.toLowerCase();
-      let groups: import('@/lib/types').Group[];
-      if (ext === 'html') {
-        groups = parseBookmarksHtml(text);
-      } else if (ext === 'txt') {
-        groups = parseOneTabs(text);
-      } else {
-        groups = importGroups(text);
-      }
+      // Every parser validates what it reads and reports how many entries it left out
+      const parse = ext === 'html' ? parseBookmarksHtml : ext === 'txt' ? parseOneTabs : importGroups;
+      const { groups, skipped } = parse(text);
       if (groups.length === 0) throw new Error('No groups found');
 
       // Free-tier backstop: this import path is additive (appends to existing groups),
@@ -194,7 +189,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       if (!confirm(`Import ${groups.length} group${groups.length === 1 ? '' : 's'}?`)) return;
       importGroupsMutation(groups, {
         onSuccess: () => {
-          toast.success('Groups imported successfully');
+          toast.success(`Groups imported successfully${skippedSuffix(skipped)}`);
           onClose();
         }
       });
@@ -212,8 +207,10 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         headers: { Authorization: `Bearer ${session.access_token}` }
       });
       const { url, error } = await res.json();
-      if (error || !url) throw new Error(error ?? 'No portal URL');
-      chrome.tabs.create({ url, active: true });
+      // The billing portal is always an http(s) page; anything else in the response is not opened
+      const portalUrl = toHttpUrl(url);
+      if (error || !portalUrl) throw new Error(error ?? 'No portal URL');
+      chrome.tabs.create({ url: portalUrl, active: true });
     } catch {
       toast.error('Could not open billing portal');
     } finally {

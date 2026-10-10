@@ -244,3 +244,39 @@ describe('closeTabsWhenPopupCloses', () => {
     expect(ports).toHaveLength(2)
   })
 })
+
+describe('runSideEffects — opening stored URLs', () => {
+  it('opens a saved tab in the target window', async () => {
+    const { chromeStub } = stubChrome()
+    await runSideEffects([{ type: 'tabs.create', windowId: 4, url: 'https://a.com', index: 2, active: false }])
+    expect(chromeStub.tabs.create).toHaveBeenCalledWith({ windowId: 4, url: 'https://a.com', index: 2, active: false })
+  })
+
+  it.each(['javascript:alert(1)', 'JaVaScRiPt:alert(1)', 'data:text/html,x', ''])('does not open a tab for the URL %j', async (url) => {
+    const { chromeStub } = stubChrome()
+    await runSideEffects([{ type: 'tabs.create', windowId: 4, url, active: false }])
+    expect(chromeStub.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('opens a window with the openable URLs of a list, in order', async () => {
+    const { chromeStub } = stubChrome()
+    await runSideEffects([{ type: 'windows.create', url: ['https://a.com', 'javascript:alert(1)', 'chrome://extensions/', 'https://b.com'], focused: false }])
+    expect(chromeStub.windows.create).toHaveBeenCalledWith({ url: ['https://a.com', 'chrome://extensions/', 'https://b.com'], focused: false })
+  })
+
+  it('opens a window for a single URL given as a string', async () => {
+    const { chromeStub } = stubChrome()
+    await runSideEffects([{ type: 'windows.create', url: 'https://a.com', focused: false }])
+    expect(chromeStub.windows.create).toHaveBeenCalledWith({ url: 'https://a.com', focused: false })
+  })
+
+  it.each([
+    ['a list with nothing openable', ['javascript:alert(1)', 'data:text/html,x']],
+    ['an empty list', []],
+    ['a single script URL', 'vbscript:msgbox(1)']
+  ])('opens no window at all for %s (never a blank one)', async (_what, url) => {
+    const { chromeStub } = stubChrome()
+    await runSideEffects([{ type: 'windows.create', url, focused: false }])
+    expect(chromeStub.windows.create).not.toHaveBeenCalled()
+  })
+})

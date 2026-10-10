@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { isOpenableUrl, openableUrls } from '@/lib/safeOpen';
 import type { Collision, DragStartEvent, DragOverEvent, DragMoveEvent, DragEndEvent } from '@dnd-kit/core';
 import { useQueryClient, notifyManager, defaultScheduler, type QueryClient } from '@tanstack/react-query';
 import { containerKeyOf, makeGap, type DndGap, type DndInsertion } from '@/lib/dndInsertion';
@@ -595,10 +596,12 @@ export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
       } else if (fx.type === 'tabs.create') {
         // `active: false` always: activating a tab in the popup's anchor window dismisses the popup.
          
-        await chrome.tabs.create({ windowId: fx.windowId, url: fx.url, index: fx.index, active: false });
+        if (isOpenableUrl(fx.url)) await chrome.tabs.create({ windowId: fx.windowId, url: fx.url, index: fx.index, active: false });
       } else if (fx.type === 'windows.create') {
          
-        await chrome.windows.create({ url: fx.url, focused: false });
+        const urls = openableUrls(Array.isArray(fx.url) ? fx.url : [fx.url]);
+        // nothing openable: no window at all (an empty url list would open a blank one)
+        if (urls.length > 0) await chrome.windows.create({ url: Array.isArray(fx.url) ? urls : urls[0], focused: false });
       } else if (fx.type === 'tabs.remove') {
 
         const { now, deferred } = await partitionClosableTabs(fx.tabIds);

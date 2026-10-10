@@ -88,9 +88,10 @@ vi.mock('@/hooks/useGroups', () => ({
   GROUPS_QUERY_KEY: ['groups'],
 }))
 vi.mock('@/lib/importExport', () => ({
-  importGroups: vi.fn().mockReturnValue([{ name: 'g' }]),
-  parseBookmarksHtml: vi.fn().mockReturnValue([]),
-  parseOneTabs: vi.fn().mockReturnValue([]),
+  importGroups: vi.fn().mockReturnValue({ groups: [{ name: 'g' }], skipped: 0 }),
+  parseBookmarksHtml: vi.fn().mockReturnValue({ groups: [], skipped: 0 }),
+  parseOneTabs: vi.fn().mockReturnValue({ groups: [], skipped: 0 }),
+  skippedSuffix: (n: number) => (n > 0 ? `, ${n} skipped` : ''),
   exportGroups: mockExportGroups,
 }))
 vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: mockToastError } }))
@@ -527,7 +528,7 @@ describe('SettingsModal — Data tab', () => {
 
   it('shows an error toast and skips the mutation when the parsed file has zero groups', async () => {
     const { importGroups } = await import('@/lib/importExport')
-    ;(importGroups as ReturnType<typeof vi.fn>).mockReturnValueOnce([])
+    ;(importGroups as ReturnType<typeof vi.fn>).mockReturnValueOnce({ groups: [], skipped: 4 })
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^data$/i)
@@ -666,7 +667,7 @@ describe('SettingsModal — billing portal', () => {
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
     fireEvent.click(screen.getByRole('button', { name: /manage billing/i }))
-    await waitFor(() => expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://billing.example.com', active: true }))
+    await waitFor(() => expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://billing.example.com/', active: true }))
   })
 
   it('shows an error toast when the portal request fails', async () => {

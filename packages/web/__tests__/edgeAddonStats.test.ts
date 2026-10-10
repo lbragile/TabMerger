@@ -97,7 +97,7 @@ describe('getEdgeAddonStats', () => {
     expect(stats?.ratingCount).toBe(4)
     expect(stats?.reviews).toHaveLength(1)
     expect(fetchMock.mock.calls[0][0]).toBe(EDGE_PRODUCT_DETAILS_URL)
-    expect(fetchMock.mock.calls[1][0]).toMatch(new RegExp(`^${EDGE_REVIEWS_API_URL}/${PRODUCT_ID}\\?`))
+    expect(String(fetchMock.mock.calls[1][0]).startsWith(`${EDGE_REVIEWS_API_URL}/${PRODUCT_ID}?`)).toBe(true)
   })
 
   it('keeps the rating when the reviews call fails, throws or is unreadable', async () => {

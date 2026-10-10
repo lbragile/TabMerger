@@ -242,6 +242,19 @@ describe('resolveCandidate', () => {
     expect(resolveCandidate('javascript:alert(1)', finalUrl)).toBeNull()
   })
 
+  it('rejects every non-http(s) scheme, whatever its case or leading whitespace', () => {
+    expect(resolveCandidate('data:image/png;base64,AAAA', finalUrl)).toBeNull()
+    expect(resolveCandidate('JAVASCRIPT:alert(1)', finalUrl)).toBeNull()
+    expect(resolveCandidate('vbscript:msgbox(1)', finalUrl)).toBeNull()
+    expect(resolveCandidate(' javascript:alert(1)', finalUrl)).toBeNull()
+  })
+
+  it('keeps relative, protocol-relative and absolute https candidates', () => {
+    expect(resolveCandidate('img/a.png', finalUrl)).toBe('https://final.test/img/a.png')
+    expect(resolveCandidate('//cdn.example.com/a.png', finalUrl)).toBe('https://cdn.example.com/a.png')
+    expect(resolveCandidate('https://cdn.example.com/a.png', finalUrl)).toBe('https://cdn.example.com/a.png')
+  })
+
   it('rejects empty/null candidates', () => {
     expect(resolveCandidate('', finalUrl)).toBeNull()
     expect(resolveCandidate(null, finalUrl)).toBeNull()

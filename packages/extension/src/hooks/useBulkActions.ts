@@ -5,6 +5,7 @@
  * queue + cross-context lock, so keep it synchronous), then the cache is set from its result.
  */
 import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { isOpenableUrl, openableUrls } from '@/lib/safeOpen';
 import { updateGroupsState } from '@/lib/localDb';
 import { useUIStore } from '@/stores/uiStore';
 import type { SelectedItem } from '@/stores/uiStore';
@@ -275,7 +276,7 @@ export function useBulkMoveToGroup() {
           if (available[targetGroupIndex]?.permanent) {
             // Moving to Now Open → open each tab in the browser; useCurrentTabs will sync them in
             for (const tab of tabsToMove) {
-              if (tab.url && !RESTRICTED_URL_RE.test(tab.url)) {
+              if (isOpenableUrl(tab.url) && !RESTRICTED_URL_RE.test(tab.url)) {
                 chrome.tabs.create({ url: tab.url, active: false }).catch(() => {});
               }
             }
@@ -347,7 +348,7 @@ export function useBulkMoveToGroup() {
           if (available[targetGroupIndex]?.permanent) {
             // Moving to Now Open → open each window in the browser; useCurrentTabs will sync them in
             for (const win of windowsToMove) {
-              const urls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
+              const urls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
               if (urls.length > 0) {
                 void resolveIncognito(win.incognito).then((incognito) =>
                   chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })

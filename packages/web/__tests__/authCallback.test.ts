@@ -56,6 +56,48 @@ describe('GET /api/auth/callback', () => {
     expect(res.headers.get('location')).toBe('http://localhost/account')
   })
 
+  it.each([
+    '@evil.example',
+    '.evil.example',
+    '//evil.example',
+    '/\\evil.example',
+    'https://evil.example',
+    'javascript:alert(1)',
+    '/a\nb',
+    '',
+  ])('redirects to /dashboard on this site when next is %j', async (next) => {
+    mockExchangeCodeForSession.mockResolvedValue({ error: null })
+    const { GET } = await import('@/app/api/auth/callback/route')
+
+    const res = await GET(
+      makeRequest(`http://localhost/api/auth/callback?code=good&next=${encodeURIComponent(next)}`)
+    )
+    expect(res.headers.get('location')).toBe('http://localhost/dashboard')
+  })
+
+  it('keeps the forwarded host as the redirect host when next is not a same-site path', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    mockExchangeCodeForSession.mockResolvedValue({ error: null })
+    const { GET } = await import('@/app/api/auth/callback/route')
+
+    const res = await GET(
+      makeRequest(`http://localhost/api/auth/callback?code=good&next=${encodeURIComponent('@evil.example')}`, {
+        'x-forwarded-host': 'tabmerger.app',
+      })
+    )
+    expect(res.headers.get('location')).toBe('https://tabmerger.app/dashboard')
+  })
+
+  it('keeps the query string and fragment of a same-site next path', async () => {
+    mockExchangeCodeForSession.mockResolvedValue({ error: null })
+    const { GET } = await import('@/app/api/auth/callback/route')
+
+    const res = await GET(
+      makeRequest(`http://localhost/api/auth/callback?code=good&next=${encodeURIComponent('/dashboard?x=1#y')}`)
+    )
+    expect(res.headers.get('location')).toBe('http://localhost/dashboard?x=1#y')
+  })
+
   it('uses x-forwarded-host in production', async () => {
     vi.stubEnv('NODE_ENV', 'production')
     mockExchangeCodeForSession.mockResolvedValue({ error: null })

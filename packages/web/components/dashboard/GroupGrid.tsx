@@ -5,7 +5,7 @@ import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, External
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
-import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/shared'
+import { isEncryptedBlob, decryptBlob, toHttpUrl, type EncryptedBlob } from '@tabmerger/shared'
 import { useEncryptionKey, unreadableRowKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
 import { LockedItemNote } from '@/components/dashboard/LockedItemNote'
@@ -157,7 +157,9 @@ function ShareButton({ group, lockedNoteId }: { group: DashboardGroup; lockedNot
 
 function openAllTabs(group: DashboardGroup) {
   group.windows.flatMap((w) => w.tabs).forEach((tab) => {
-    if (tab.url) window.open(tab.url, '_blank', 'noopener')
+    // Only http(s) addresses are opened; a tab with any other kind of URL is skipped.
+    const url = toHttpUrl(tab.url)
+    if (url) window.open(url, '_blank', 'noopener')
   })
 }
 

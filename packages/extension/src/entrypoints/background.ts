@@ -1,4 +1,6 @@
 import * as Sentry from '@sentry/browser';
+import { isOpenableUrl } from '@/lib/safeOpen';
+import { parseBridgeMessage, type BridgeMessage } from '@/lib/bridgeMessage';
 import { getGroupsState, updateGroupsState, registerGroupsChangeListener } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
@@ -12,10 +14,8 @@ import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
 import {
   EXTENSION_MESSAGE,
-  WEBSITE_TO_EXTENSION_TYPES,
   SIGN_IN_DATA_CONSENT_CATEGORIES,
   SYNC_AUTH_CONSENT_REQUIRED_REASON,
-  type ExtensionMessageType,
 } from '@tabmerger/shared';
 import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 
@@ -291,7 +291,6 @@ export default defineBackground(() => {
   // Shared by externally_connectable (Chrome/Edge) and the Firefox web-bridge content script
   // (see web-bridge.content.ts) below — same three message types, same handling, so neither
   // path can drift from the other.
-  type BridgeMessage = { type?: ExtensionMessageType; accessToken?: string; refreshToken?: string };
   function handleBridgeMessage(
     m: BridgeMessage,
     sendResponse: (response?: unknown) => void
@@ -340,7 +339,10 @@ export default defineBackground(() => {
   // (unlike the content script this used to be routed through). Chrome/Edge only — Firefox
   // doesn't support externally_connectable for web pages, see the onMessage listener below.
   chrome.runtime.onMessageExternal.addListener((msg: unknown, _sender, sendResponse) => {
-    return handleBridgeMessage(msg as BridgeMessage, sendResponse);
+    // Runtime check first: the sender is a web page, so the shape is not trusted (see parseBridgeMessage)
+    const m = parseBridgeMessage(msg);
+    if (!m) return;
+    return handleBridgeMessage(m, sendResponse);
   });
 
   // Firefox-only counterpart of the listener above (relayed by web-bridge.content.ts, which
@@ -358,8 +360,8 @@ export default defineBackground(() => {
     }
   })();
   chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
-    const m = msg as BridgeMessage;
-    if (!m?.type || !(WEBSITE_TO_EXTENSION_TYPES as readonly string[]).includes(m.type)) return;
+    const m = parseBridgeMessage(msg);
+    if (!m) return;
     if (sender.id !== chrome.runtime.id) return;
     if (!WEB_APP_ORIGIN || !sender.url) return;
     let senderOrigin: string;
@@ -536,7 +538,8 @@ export default defineBackground(() => {
       const data = (await chrome.storage.local.get(notifId))[notifId] as
         | { url: string; title: string; note: string }
         | undefined;
-      if (data?.url) chrome.tabs.create({ url: data.url, active: true });
+      const url: unknown = data?.url;
+      if (isOpenableUrl(url)) chrome.tabs.create({ url, active: true });
       chrome.notifications.clear(notifId);
       chrome.storage.local.remove(notifId);
       // The tab's reminder field will be stale in IDB but harmless — it won't re-alarm

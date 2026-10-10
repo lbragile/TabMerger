@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { isOpenableUrl } from '@/lib/safeOpen';
 import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
 import { encryptBlob, FREE_TIER_LIMITS } from '@tabmerger/shared';
@@ -142,8 +143,9 @@ export function useRestoreSession() {
       await Promise.all(windows.map((w) => chrome.windows.remove(w.id!)));
       for (const group of session.groups) {
         for (const win of group.windows) {
-          if (win.tabs.length === 0) continue;
-          const [first, ...rest] = win.tabs;
+          const tabs = win.tabs.filter((t) => isOpenableUrl(t.url));
+          if (tabs.length === 0) continue;
+          const [first, ...rest] = tabs;
           const incognito = await resolveIncognito(win.incognito);
           const newWin = await chrome.windows.create(incognito ? { url: first.url, incognito: true } : { url: first.url });
           if (newWin && rest.length > 0 && newWin.id) {

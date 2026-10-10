@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { useUrlRules, useSaveUrlRules, matchUrlToRule } from '@/hooks/useUrlRules'
+import { useUrlRules, useSaveUrlRules, matchUrlToRule, globMatch } from '@/hooks/useUrlRules'
 import type { UrlRule } from '@/lib/types'
 
 const { mockGetSetting, mockSetSetting } = vi.hoisted(() => ({
@@ -140,5 +140,63 @@ describe('matchUrlToRule', () => {
     const rules: UrlRule[] = [{ id: 'r1', pattern: '[unclosed', groupId: 'g1', createdAt: 1 }]
     expect(() => matchUrlToRule('https://a.com', rules)).not.toThrow()
     expect(matchUrlToRule('https://a.com', rules)).toBeNull()
+  })
+})
+
+describe('globMatch', () => {
+  it.each([
+    ['github.com/*', 'github.com/lbragile/TabMerger', true],
+    ['github.com/*', 'github.com/', true],
+    ['github.com/*', 'gitlab.com/x', false],
+    ['*.example.com/*', 'docs.example.com/a/b', true],
+    ['*.example.com/*', 'example.com/a', false],
+    ['example.com', 'example.com', true],
+    ['example.com', 'example.com/', false],
+    ['*', '', true],
+    ['*', 'anything at all', true],
+    ['**', 'x', true],
+    ['a*b*c', 'a-b-c', true],
+    ['a*b*c', 'abc', true],
+    ['a*b*c', 'acb', false],
+    ['a*a', 'a', false],
+    ['a*a', 'aa', true],
+    ['*foo', 'barfoo', true],
+    ['*foo', 'foobar', false],
+    ['a*bc*bc', 'a-bc', false],
+    ['', '', true],
+    ['', 'x', false]
+  ])('pattern %j against %j is %s', (pattern, text, expected) => {
+    expect(globMatch(pattern, text)).toBe(expected)
+  })
+
+  it('treats every character except * literally', () => {
+    expect(globMatch('a.c', 'abc')).toBe(false)
+    expect(globMatch('a.c', 'a.c')).toBe(true)
+    expect(globMatch('(a|b)+?[c]$^\\', '(a|b)+?[c]$^\\')).toBe(true)
+    expect(globMatch('a+', 'aaa')).toBe(false)
+  })
+
+  it('answers quickly for a pattern of many wildcards against a long address', () => {
+    const pattern = Array.from({ length: 40 }, () => 'a').join('*') + '*b'
+    const text = 'a'.repeat(5000)
+    const started = performance.now()
+    expect(globMatch(pattern, text)).toBe(false)
+    expect(performance.now() - started).toBeLessThan(250)
+  })
+})
+
+describe('matchUrlToRule — stored rules of the wrong shape', () => {
+  it('skips a rule whose pattern is not a string and still matches the next one', () => {
+    const rules = [
+      { id: 'r0', pattern: 5, groupId: 'g0', createdAt: 1 },
+      null,
+      { id: 'r1', pattern: 'example.com/*', groupId: 'g1', createdAt: 1 }
+    ] as unknown as UrlRule[]
+    expect(matchUrlToRule('https://example.com/a', rules)).toBe('g1')
+  })
+
+  it('returns null for an address or a rule list of the wrong type', () => {
+    expect(matchUrlToRule(undefined as unknown as string, [{ id: 'r', pattern: '*', groupId: 'g', createdAt: 1 }])).toBeNull()
+    expect(matchUrlToRule('https://a.com', 'rules' as unknown as UrlRule[])).toBeNull()
   })
 })

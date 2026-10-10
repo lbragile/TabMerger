@@ -65,19 +65,37 @@ export async function deleteRulesForGroupIds(groupIds: string[]): Promise<void> 
   if (filtered.length !== rules.length) await persistRules(filtered);
 }
 
+/**
+ * Whole-string glob match where `*` is the only wildcard (any run of characters, including none).
+ * The pattern is never compiled into a regular expression: its literal pieces are found left to
+ * right with `indexOf`, so the time is bounded by pattern length × text length whatever the user
+ * typed (many `*` in a row cost nothing extra).
+ */
+export function globMatch(pattern: string, text: string): boolean {
+  const parts = pattern.split('*');
+  if (parts.length === 1) return pattern === text;
+  const first = parts[0];
+  const last = parts[parts.length - 1];
+  if (text.length < first.length + last.length || !text.startsWith(first) || !text.endsWith(last)) return false;
+  let pos = first.length;
+  const end = text.length - last.length;
+  for (let i = 1; i < parts.length - 1; i++) {
+    const found = text.indexOf(parts[i], pos);
+    if (found === -1 || found + parts[i].length > end) return false;
+    pos = found + parts[i].length;
+  }
+  return true;
+}
+
 /** Returns the groupId for the first matching rule, or null if none match. */
 export function matchUrlToRule(url: string, rules: UrlRule[]): string | null {
+  if (typeof url !== 'string' || !Array.isArray(rules)) return null;
+  /** strip scheme so patterns like "github.com/*" work without requiring "https://" */
+  const target = url.replace(/^https?:\/\//, '');
   for (const rule of rules) {
     // ponytail: simple glob — only * wildcard, no ** or ? needed for domain patterns
-    const escaped = rule.pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
-    try {
-      /** strip scheme so patterns like "github.com/*" work without requiring "https://" */
-      if (new RegExp(`^${escaped}$`).test(url.replace(/^https?:\/\//, ''))) {
-        return rule.groupId;
-      }
-    } catch {
-      // malformed pattern — skip
-    }
+    // a stored rule with a non-string pattern never matches
+    if (typeof rule?.pattern === 'string' && globMatch(rule.pattern, target)) return rule.groupId;
   }
   return null;
 }

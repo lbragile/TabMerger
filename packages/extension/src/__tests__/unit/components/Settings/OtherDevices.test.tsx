@@ -195,6 +195,27 @@ describe('OtherDevices settings panel', () => {
     expect(mockRenameDevice).not.toHaveBeenCalled()
   })
 
+  it('Restore opens the openable tabs of the snapshot and leaves script URLs closed', async () => {
+    const user = userEvent.setup()
+    mockUseEntitlements.mockReturnValue(entitlements({ tier: 'pro' }))
+    mockFetchDeviceSessions.mockResolvedValue([
+      makeDeviceRow({
+        now_open_snapshot: {
+          windows: [
+            { id: 1, tabs: [{ id: 0, title: 'A', url: 'https://a.com' }, { id: 0, title: 'S', url: 'javascript:alert(1)' }] },
+            { id: 2, tabs: [{ id: 0, title: 'D', url: 'data:text/html,x' }, { id: 0, title: 'E', url: 'chrome://extensions/' }] },
+          ],
+        },
+      }),
+    ])
+    await renderPanel()
+
+    await user.click(await screen.findByText('Chrome on Mac'))
+    await user.click(await screen.findByRole('button', { name: /restore 4 tabs/i }))
+
+    expect(mockTabsCreate.mock.calls.map(([arg]) => (arg as { url: string }).url)).toEqual(['https://a.com', 'chrome://extensions/'])
+  })
+
   it('clicking Restore opens every tab in the snapshot locally via chrome.tabs.create', async () => {
     const user = userEvent.setup()
     mockUseEntitlements.mockReturnValue(entitlements({ tier: 'pro' }))

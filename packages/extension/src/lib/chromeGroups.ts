@@ -1,4 +1,5 @@
 import type { Tab as TabType } from '@/lib/types';
+import { isOpenableUrl } from '@/lib/safeOpen';
 
 /**
  * Opens a tab and places it into the appropriate Chrome tab group.
@@ -14,6 +15,7 @@ export async function openTabInChromeGroup(
   windowId?: number,
   active = false
 ): Promise<void> {
+  if (!isOpenableUrl(tab.url)) return;
   const newTab = await chrome.tabs.create({ url: tab.url, windowId, active });
 
   if (!tab.chromeGroup || !chrome.tabGroups) return;

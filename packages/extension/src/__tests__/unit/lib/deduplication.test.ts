@@ -72,3 +72,11 @@ describe('findDuplicateTabs', () => {
     expect(findDuplicateTabs(windows([], []))).toEqual([])
   })
 })
+
+describe('findDuplicateTabs — tabs without a string url', () => {
+  it('does not throw and compares such tabs as an empty address', () => {
+    const odd = (url: unknown) => ({ id: 0, title: 'T', url }) as unknown as Tab
+    const result = findDuplicateTabs(windows([odd(undefined), makeTab(0, 'https://a.com'), odd(42), odd(null)]))
+    expect(result.map(({ tabIndex }) => tabIndex)).toEqual([2, 3])
+  })
+})

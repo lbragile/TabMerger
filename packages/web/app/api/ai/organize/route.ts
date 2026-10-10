@@ -5,46 +5,7 @@ import { aiDisabledResponse } from '@/lib/ai-guard'
 import { start, getRun } from 'workflow/api'
 import { tabOrganizerWorkflow, type ClientGroup } from '@/lib/workflows/tabOrganizer'
 import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
-
-/**
- * Reads an optional client-supplied `groups` payload from the POST body.
- *
- * E2E-encrypted users must send their locally-decrypted groups here, because
- * `groups.windows` in Supabase is ciphertext the server can never read. Callers
- * that send nothing (unencrypted users, older extension builds) get the original
- * server-side DB read — this is additive, not a breaking change.
- *
- * Returns `null` for an absent/empty/malformed payload rather than erroring, so
- * a bad body degrades to the DB path instead of failing the request.
- */
-async function readClientGroups(request: NextRequest): Promise<ClientGroup[] | null> {
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return null // empty body — the historical `{}`-or-nothing case
-  }
-
-  const groups = (body as { groups?: unknown })?.groups
-  if (!Array.isArray(groups) || groups.length === 0) return null
-
-  const valid = groups.every(
-    (g): g is ClientGroup =>
-      !!g &&
-      typeof g === 'object' &&
-      typeof (g as ClientGroup).id === 'string' &&
-      typeof (g as ClientGroup).name === 'string' &&
-      Array.isArray((g as ClientGroup).tabs)
-  )
-  if (!valid) return null
-
-  return (groups as ClientGroup[]).map((g) => ({
-    id: g.id,
-    name: g.name,
-    tabs: g.tabs,
-    ...(typeof g.permanent === 'boolean' ? { permanent: g.permanent } : {}),
-  }))
-}
+import { parseOrganizeBody, readJsonBody } from '@/lib/ai-validation'
 
 /**
  * Extracts and validates the caller's identity from the Authorization header.
@@ -87,8 +48,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // Read before the usage check so a malformed body never burns a quota unit.
-  const clientGroups = await readClientGroups(request)
+  // Optional client-supplied `groups` payload. E2E-encrypted users must send their
+  // locally-decrypted groups here, because `groups.windows` in Supabase is ciphertext
+  // the server can never read. Only a request that sends no groups (no JSON object,
+  // or `groups` missing, null or empty) is `null`, which sends the workflow down the
+  // server-side DB read (unencrypted users, older extension builds). Groups that are
+  // sent are used or rejected with a 400, never replaced by the DB read; the workflow
+  // itself ends the run if the rows it would read turn out to be encrypted.
+  // Read before the usage check so a rejected body never burns a quota unit.
+  const input = parseOrganizeBody(await readJsonBody(request))
+  if (!input.ok) {
+    return NextResponse.json({ error: input.error }, { status: 400 })
+  }
+  const clientGroups: ClientGroup[] | null = input.data
 
   const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.groupTabs)
   if (!allowed) {

@@ -41,4 +41,14 @@ describe('ContactPage — ?topic= preselection', () => {
     render(<ContactPage />)
     expect(await screen.findByText('Select a reason…')).toBeInTheDocument()
   })
+
+  it.each(['unknown', 'toString', 'constructor', '__proto__', 'hasOwnProperty'])(
+    'leaves the subject unselected for the topic %j',
+    async (topic) => {
+      mockSearch.value = `topic=${topic}`
+      render(<ContactPage />)
+      const combobox = await screen.findByRole('combobox', { name: /subject/i })
+      expect(combobox).toHaveTextContent('Select a reason…')
+    }
+  )
 })
