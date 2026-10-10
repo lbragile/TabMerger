@@ -1,0 +1,32 @@
+{
+    "frames": {
+        "dark": 272,
+        "light": 271
+    },
+    "events": {
+        "dark": {
+            "renameDblclick": 24,
+            "renameTypeStart": 37,
+            "renameCommit": 62,
+            "renamed": 64,
+            "noteMenuOpen": 99,
+            "noteItemClick": 128,
+            "noteTypeStart": 142,
+            "noteTyped": 205,
+            "noteSave": 227,
+            "noteSaved": 233
+        },
+        "light": {
+            "renameDblclick": 24,
+            "renameTypeStart": 38,
+            "renameCommit": 63,
+            "renamed": 65,
+            "noteMenuOpen": 99,
+            "noteItemClick": 129,
+            "noteTypeStart": 143,
+            "noteTyped": 205,
+            "noteSave": 227,
+            "noteSaved": 231
+        }
+    }
+}

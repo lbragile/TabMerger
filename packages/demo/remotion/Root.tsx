@@ -1,10 +1,11 @@
 import React from "react";
-import { Composition, registerRoot } from "remotion";
+import { Composition, Still, registerRoot } from "remotion";
 import { WalkthroughDemo, MobileWalkthroughDemo, getTotalDurationInFrames } from "./Composition";
 import { demoScript, promoScript } from "../demo-script";
 import { ScreenshotFrame } from "./stills/ScreenshotFrame";
 import { PromoTile } from "./stills/PromoTile";
 import { TourSceneView, TourVideo } from "./tour/TourVideo";
+import { TourThumbnail } from "./tour/TourThumbnail";
 import { TOUR_FPS, TOUR_HEIGHT, TOUR_WIDTH } from "./tour/common";
 import { TOUR_SCENES, getTourDurationInFrames, tourSceneCompositionId } from "./tour/registry";
 
@@ -127,6 +128,17 @@ export function RemotionRoot() {
                     />
                 )),
             )}
+            {/* Poster image for the tour (a still, rendered by render-tour-thumbnail.ts) */}
+            {TOUR_THEMES.map((theme) => (
+                <Still
+                    key={`tour-thumbnail-${theme}`}
+                    id={`TourThumbnail-${theme}`}
+                    component={TourThumbnail}
+                    width={TOUR_WIDTH}
+                    height={TOUR_HEIGHT}
+                    defaultProps={{ theme }}
+                />
+            ))}
             {/* Chrome Web Store listing assets — rendered via render-store-assets.ts */}
             <Composition
                 id="ScreenshotFrame"

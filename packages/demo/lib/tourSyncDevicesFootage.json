@@ -1,0 +1,22 @@
+{
+    "frames": {
+        "dark": 44,
+        "light": 43
+    },
+    "framesB": {
+        "dark": 43,
+        "light": 43
+    },
+    "bOffset": {
+        "dark": 0,
+        "light": 1
+    },
+    "events": {
+        "dark": {
+            "end": 44
+        },
+        "light": {
+            "end": 43
+        }
+    }
+}

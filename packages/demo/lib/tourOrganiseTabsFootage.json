@@ -1,0 +1,40 @@
+{
+    "frames": {
+        "dark": 376,
+        "light": 380
+    },
+    "events": {
+        "dark": {
+            "aGrip": 28,
+            "aPickup": 32,
+            "aOver": 72,
+            "aDrop": 86,
+            "aTwoWindows": 87,
+            "selectCalendar": 137,
+            "selectSlack": 161,
+            "bGrip": 227,
+            "bPickup": 231,
+            "bOver": 267,
+            "bDrop": 271,
+            "bWorkCounts": 272,
+            "cancelSelection": 335,
+            "selectionCleared": 341
+        },
+        "light": {
+            "aGrip": 29,
+            "aPickup": 33,
+            "aOver": 70,
+            "aDrop": 84,
+            "aTwoWindows": 85,
+            "selectCalendar": 135,
+            "selectSlack": 158,
+            "bGrip": 228,
+            "bPickup": 231,
+            "bOver": 269,
+            "bDrop": 273,
+            "bWorkCounts": 274,
+            "cancelSelection": 338,
+            "selectionCleared": 344
+        }
+    }
+}

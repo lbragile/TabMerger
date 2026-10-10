@@ -374,6 +374,9 @@
   synchronously-before-paint via the fixed provider, that whole `mounted` workaround became dead
   weight and was deleted outright — worth re-checking other consumers of a value you just moved to
   `useSyncExternalStore` for their own now-redundant "wait for mount" gates.
+  Correction (2026-10-10): this holds for what is *rendered*, not for *effects*. While hydrating,
+  effects still run once on the commit that carries the server snapshot (`'light'`), so an effect
+  that acts on `theme` needs a hydration guard. See `learnings/theme-dependent-media-hydration.md`.
 - `@next/next/no-img-element` on `ShareBundleContent.tsx` (public share page rendering arbitrary
   shared tabs' favicons/OG images): correctly a permanent disable, not a `next/image` migration —
   the source hostnames are unbounded (any URL a user ever had open), so `next.config.ts`'s

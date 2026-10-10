@@ -32,3 +32,6 @@
 - [Feature tour scene 2 (2026-10-08)](learnings_feature_tour_scene2_2026_10_08.md) — own popup clip + popup-as-truth titles, bot-wall title, stale card, integer z-index
 - [Feature tour popup capture (2026-10-09)](learnings_feature_tour_scene3_2026_10_09.md) — sharp CDP frame-grab capture, setPace/pointer hook reuse, tooltip/cursor/title-flap gotchas
 - [Feature tour drag scene (2026-10-09)](learnings_feature_tour_scene4_2026_10_09.md) — drag to a new group in headless footage, click-marker sync of drawn windows, timed captions, open-windows record
+- [Feature tour organise scene (2026-10-09)](learnings_feature_tour_organise_tabs_2026_10_09.md) — replay prior scene unrecorded for a seamless cut, Ctrl-click = selection mode, 600ms spring-open limit, clip-path windows fade
+- [Tour final composition and audio](learnings_tour_final_composition_and_audio.md) — frozen-first-frame dissolves, poster intro, synthesised bed pipeline, ffmpeg/loudness and synthesis pitfalls
+- [Tour sound design only (2026-10-10)](learnings_tour_sound_design_only_2026_10_10.md) — SFX only, fixed gain not LUFS normalisation, md5 refactor proof, limiter finding, WAV/ffmpeg gotchas

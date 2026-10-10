@@ -19,7 +19,7 @@ export function Desktop({ theme = "dark", children }: TourSceneProps & { childre
 
 // Same look as the caption bar in Composition.tsx (sharp corners, translucent
 // black, white semibold sans), sized up for the 1920x1080 canvas.
-export function CaptionBar({ text }: { text: string }) {
+export function CaptionBar({ text, opacity }: { text: string; opacity?: number }) {
     return (
         <div
             style={{
@@ -36,6 +36,7 @@ export function CaptionBar({ text }: { text: string }) {
                 fontSize: 32,
                 fontWeight: 600,
                 textAlign: "center",
+                ...(opacity === undefined ? {} : { opacity }),
             }}
         >
             {/* nbsp keeps the bar its full height while the text is blank between scenes */}
@@ -62,3 +63,9 @@ export function captionTextAt(caption: string | CaptionCue[], local: number): st
     for (const cue of caption) if (local >= cue.from) text = cue.text;
     return text;
 }
+
+/** True when a scene's registry caption is empty, i.e. the scene wants no caption bar at all. */
+export const hasNoCaption = (caption: string | CaptionCue[]) => (typeof caption === "string" ? caption === "" : caption.length === 0);
+
+/** Frames over which the caption bar fades out at the start of a scene that opts out of it (full tour only). */
+export const CAPTION_BAR_FADE_FRAMES = 10;

@@ -25,7 +25,7 @@ import { CHAOS_WINDOW_URLS } from "./chaosWindows";
 // call, unlike `page.mouse` which remembers them) so `naturalMouseMove` and
 // every drag action only needed their `page.mouse.*` calls swapped for
 // `mouse.*` ones, not rewritten.
-class CdpMouse {
+export class CdpMouse {
     private x = 0;
     private y = 0;
     private pressed = false;
@@ -69,7 +69,7 @@ class CdpMouse {
 // drag calls rather than opening a fresh session every time — `newCDPSession`
 // is not free, and every drag action operates on the same `page` throughout.
 const cdpMiceByPage = new WeakMap<Page, CdpMouse>();
-async function getCdpMouse(page: Page): Promise<CdpMouse> {
+export async function getCdpMouse(page: Page): Promise<CdpMouse> {
     const existing = cdpMiceByPage.get(page);
     if (existing) return existing;
     const session = await page.context().newCDPSession(page);
@@ -201,7 +201,7 @@ function easeInOutCubic(t: number) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
-async function naturalMouseMove(
+export async function naturalMouseMove(
     page: Page,
     mouse: CdpMouse,
     from: { x: number; y: number },

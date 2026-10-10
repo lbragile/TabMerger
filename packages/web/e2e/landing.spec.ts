@@ -14,6 +14,80 @@ test.describe('Landing page', () => {
   // `demo search filters tabs`) are deleted rather than retargeted since the feature
   // itself no longer exists.
 
+  test.describe('hero feature-tour video', () => {
+    const TOUR_SRC = { light: /\/videos\/tabmerger-tour-light\.mp4/, dark: /\/videos\/tabmerger-tour-dark\.mp4/ }
+
+    async function openHero(page: import('@playwright/test').Page, theme: 'light' | 'dark') {
+      // Seed the visitor's theme before the first load, as a returning visitor would have it.
+      await page.addInitScript((t) => localStorage.setItem('theme', t), theme)
+      await page.goto('/')
+      const video = page.getByLabel('TabMerger feature tour video')
+      await expect(video).toBeVisible()
+      return video
+    }
+
+    for (const theme of ['light', 'dark'] as const) {
+      test(`${theme} visitor: plays the ${theme} tour, autoplaying and muted`, async ({ page }) => {
+        const video = await openHero(page, theme)
+        await expect(video).toHaveAttribute('src', TOUR_SRC[theme])
+        await expect(video).toHaveJSProperty('muted', true)
+        await expect(video).toHaveJSProperty('loop', true)
+        // Autoplay actually started (not just the attribute): time moves on and it is not paused.
+        await expect
+          .poll(() => video.evaluate((el: HTMLVideoElement) => !el.paused && el.currentTime > 0.5), { timeout: 15_000 })
+          .toBe(true)
+        // The poster shown before playback is the visitor's own theme's.
+        await expect(video).toHaveAttribute('poster', new RegExp(`tour-poster-${theme}\\.jpg`))
+      })
+    }
+
+    for (const [from, to] of [
+      ['light', 'dark'],
+      ['dark', 'light'],
+    ] as const) {
+      test(`switching ${from} to ${to}: swaps the source and continues from the same position while playing`, async ({
+        page,
+      }) => {
+        const video = await openHero(page, from)
+        await expect(video).toHaveAttribute('src', TOUR_SRC[from])
+        await expect
+          .poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime), { timeout: 15_000 })
+          .toBeGreaterThan(1)
+        const before = await video.evaluate((el: HTMLVideoElement) => el.currentTime)
+
+        await page.getByRole('button', { name: 'Toggle theme' }).click()
+
+        await expect(video).toHaveAttribute('src', TOUR_SRC[to])
+        // Back to playing on the new source, from where it was (never restarted at 0).
+        await expect
+          .poll(() => video.evaluate((el: HTMLVideoElement) => !el.paused && el.readyState >= 3), { timeout: 15_000 })
+          .toBe(true)
+        const after = await video.evaluate((el: HTMLVideoElement) => el.currentTime)
+        expect(after).toBeGreaterThanOrEqual(before - 0.5)
+        expect(after).toBeLessThan(before + 8)
+        await expect(video).toHaveJSProperty('muted', true)
+      })
+    }
+
+    test('switching theme while paused keeps it paused at the same position', async ({ page }) => {
+      const video = await openHero(page, 'light')
+      await expect
+        .poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime), { timeout: 15_000 })
+        .toBeGreaterThan(1)
+      const paused = await video.evaluate((el: HTMLVideoElement) => {
+        el.pause()
+        return el.currentTime
+      })
+
+      await page.getByRole('button', { name: 'Toggle theme' }).click()
+
+      await expect(video).toHaveAttribute('src', TOUR_SRC.dark)
+      await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.readyState), { timeout: 15_000 }).toBeGreaterThanOrEqual(2)
+      await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeCloseTo(paused, 1)
+      expect(await video.evaluate((el: HTMLVideoElement) => el.paused)).toBe(true)
+    })
+  })
+
   test('shows all three browser install links in the hero', async ({ page }) => {
     await page.goto('/')
     // components/marketing/InstallButtons.tsx (the old equal three-button "Add to X"

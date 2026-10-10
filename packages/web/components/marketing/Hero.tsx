@@ -12,10 +12,12 @@ export function Hero() {
   return (
     <section className="py-14 px-8 bg-background">
       <div className="container">
-        <div className="grid gap-10 items-center grid-cols-1 md:grid-cols-[1fr_1fr]">
+        {/* Two columns from `lg` only: at tablet widths half the row is too narrow for a
+            16:9 video, so it stacks under the copy at full width instead. */}
+        <div className="grid gap-10 items-center grid-cols-1 lg:grid-cols-[1fr_1fr]">
           {/* Left col — capped width + ml-auto pulls the text block toward the
               center gutter instead of hugging the far-left edge of the section. */}
-          <div className="flex flex-col md:max-w-[34rem] md:ml-auto">
+          <div className="flex flex-col lg:max-w-[34rem] lg:ml-auto">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
               Tab manager for people with too many tabs
             </p>

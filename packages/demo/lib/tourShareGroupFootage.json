@@ -1,0 +1,32 @@
+{
+    "frames": {
+        "dark": 303,
+        "light": 304
+    },
+    "events": {
+        "dark": {
+            "selectClick": 35,
+            "groupTick": 79,
+            "shareClick": 129,
+            "toastShown": 131,
+            "cancelClick": 199,
+            "toastGone": 276
+        },
+        "light": {
+            "selectClick": 34,
+            "groupTick": 79,
+            "shareClick": 128,
+            "toastShown": 131,
+            "cancelClick": 200,
+            "toastGone": 278
+        }
+    },
+    "nowOpenTexts": {
+        "dark": [
+            "Now Open4◆13"
+        ],
+        "light": [
+            "Now Open4◆13"
+        ]
+    }
+}

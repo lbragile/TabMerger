@@ -532,12 +532,16 @@ A separate roughly 60-90s, 1920x1080 tour that also shows browser windows, drawn
 |---|---|---|
 | 1 | The mess: three browser windows crammed with tabs | Built (4.5s), accepted |
 | 2 | Open TabMerger: the same windows and tabs appear in "Now Open", next to the browser windows | Built (6.5s), accepted |
-| 3 | Drag a window into a new group, name it, colour it | Built (10.7s), awaiting review |
-| 4 | Organise by dragging (a tab into its own window, then several tabs at once into another group) | Not started |
-| 5 | Rename and annotate | Not started |
-| 6 | Find a tab | Not started |
-| 7 | Restore: open a saved group and the browser windows come back | Not started |
-| 8 | Share a group (Pro) | Not started |
-| 9 | Sync across devices (Pro) | Not started |
-| 10 | Settings | Not started |
-| 11 | Closing card | Not started |
+| 3 | Drag a window into a new group, name it, colour it | Built (10.7s), accepted |
+| 4 | Organise by dragging (a tab into its own window, then several tabs at once into another group) | Built (8.5s), accepted |
+| 5 | Rename and annotate | Built (7.5s), accepted |
+| 6 | Find a tab | Built (6.1s), accepted |
+| 7 | Restore: open a saved group and the browser windows come back | Built (6.8s), accepted |
+| 8 | Share a group (Pro) | Built (6.8s), accepted |
+| 9 | Sync across devices (Pro) | Built (4.0s), accepted |
+| 10 | Settings | Skipped. Decision: left out; in the recording build Settings is only reachable through the account menu, which shows account details, and the build's settings view includes a development-only tab |
+| 11 | Closing card (the 10th scene in the registry, id `closing-card`, since Settings is skipped) | Built (4.0s), accepted |
+
+Tour thumbnail (a still, also the first frame of the tour video): built in dark and light. See README "Feature tour" (`render:tour-thumbnail`).
+
+Final tour (both themes): the thumbnail intro (30 frames fully opaque, then an 8-frame dissolve), the nine feature scenes and the closing card (scene 8 of the original plan, Settings, was skipped), 2072 frames = 69.07 s at 1920x1080, 30 fps, with optional synthesised sound effects only (no music, no transition sounds, no third-party audio so no credits needed; about -19.7 LUFS integrated, -1.9 dBTP true peak; nothing is tied to a scene cut; `audio:tour`, `audio:chart`) and silent variants (`render:tour-dark-silent`, `render:tour-light-silent`). Per-scene mp4s exist for both themes (`render:tour-scene <id> [dark|light]`). See README "Feature tour".

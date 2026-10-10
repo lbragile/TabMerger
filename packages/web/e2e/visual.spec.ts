@@ -52,6 +52,9 @@ async function pauseVideo(page: Page) {
         }
       })
   )
+  // The player's buffering spinner (components/marketing/DemoVideo.tsx) hides on the `seeked`
+  // event awaited above; assert it is gone so a frame with the spinner never becomes a baseline.
+  await expect(page.getByTestId('tour-video-spinner')).toHaveCount(0)
 }
 
 for (const theme of ['light', 'dark'] as const) {

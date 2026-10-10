@@ -41,14 +41,24 @@ function getServerSnapshot(): Theme {
   return 'light'
 }
 
+const subscribeNever = () => () => {}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
+  // False only on the hydration commit, where `theme` is still the server snapshot.
+  const hydrated = useSyncExternalStore(subscribeNever, () => true, () => false)
+
   // Updating an external system (the DOM class) from the latest React state — the
   // sanctioned use of useEffect, not the setState-in-effect pattern the rule flags.
+  // Skipped on the hydration commit: the inline script in app/layout.tsx has already set the
+  // class from the visitor's real theme, and applying the server snapshot ('light') there
+  // would strip `dark` for an instant — long enough for the browser to fetch light-only
+  // assets (e.g. the hero's light poster) for a dark-theme visitor.
   useEffect(() => {
+    if (!hydrated) return
     document.documentElement.classList.toggle('dark', theme === 'dark')
-  }, [theme])
+  }, [hydrated, theme])
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark'
