@@ -1,3 +1,15 @@
+## [3.1.2](https://github.com/lbragile/TabMerger/compare/v3.1.1...v3.1.2) (2026-10-10)
+
+
+### Bug Fixes
+
+* validate and sanitize user input across the extension and web app ([1833397](https://github.com/lbragile/TabMerger/commit/183339757804e30d4960ba87121dd7e783c053d5))
+
+
+### Features
+
+* **web:** play the feature tour video in the landing page hero ([3da0a60](https://github.com/lbragile/TabMerger/commit/3da0a60e80cab3750123381c1206106ba6a9d5f2))
+
 ## [3.1.1](https://github.com/lbragile/TabMerger/compare/v3.1.0...v3.1.1) (2026-10-09)
 
 
