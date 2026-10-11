@@ -96,11 +96,19 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # `pull-requests: write` is only for the failure comment below, and only this job gets it.
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: high
+          # Names the offending package, license or advisory on the PR. Fork and Dependabot
+          # PRs get a read-only token and cannot comment, so they rely on the failed check
+          # and its job summary instead.
+          comment-summary-in-pr: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' && 'on-failure' || 'never' }}
           allow-licenses: >-
             MIT, MIT-0, Apache-2.0, ISC, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0,
             0BSD, Unlicense, CC0-1.0, CC-BY-4.0, MPL-2.0, AFL-2.1, FSL-1.1-MIT
