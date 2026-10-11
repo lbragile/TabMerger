@@ -119,7 +119,7 @@ export function MobileNavToggle({ email, initials, starsPromise }: MobileNavTogg
                                 <button
                                     type="submit"
                                     onClick={() => setOpen(false)}
-                                    className="flex h-10 w-full items-center rounded-lg px-3 text-left text-[14px] text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                                    className="flex h-10 w-full items-center rounded-lg px-3 text-left text-[14px] text-text2 transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive"
                                 >
                                     Sign out
                                 </button>
