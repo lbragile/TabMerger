@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Navbar is an async server component — mock its data dependency so we can
 // `await` and render the markup under test.
@@ -12,9 +12,53 @@ vi.mock('@/lib/supabase/server', () => ({
   }),
 }))
 
+// The navbar's GitHub badge reads the star count on the server; no network in unit tests.
+const { getGithubStarCount } = vi.hoisted(() => ({ getGithubStarCount: vi.fn() }))
+vi.mock('@/lib/githubStats', () => ({ getGithubStarCount }))
+
 import { Navbar } from '@/components/layout/Navbar'
 
 describe('Navbar', () => {
+  beforeEach(() => {
+    getGithubStarCount.mockReset()
+    getGithubStarCount.mockResolvedValue(null)
+  })
+
+  it('renders the GitHub badge with the star count when the count resolves a number', async () => {
+    getGithubStarCount.mockResolvedValue(1234)
+    await act(async () => {
+      render(await Navbar())
+    })
+    const badge = screen.getByRole('link', { name: 'TabMerger on GitHub, 1,234 stars' })
+    expect(badge).toHaveAttribute('href', 'https://github.com/lbragile/TabMerger')
+    expect(badge).toHaveAttribute('target', '_blank')
+    expect(badge).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(badge).toHaveTextContent('1.2K')
+  })
+
+  it('renders the plain GitHub link, with no number, when the count resolves null', async () => {
+    await act(async () => {
+      render(await Navbar())
+    })
+    const badge = screen.getByRole('link', { name: 'TabMerger on GitHub' })
+    expect(badge).toHaveAttribute('href', 'https://github.com/lbragile/TabMerger')
+    expect(badge.textContent).toBe('')
+  })
+
+  it('starts the star lookup once and shares it with the mobile panel', async () => {
+    getGithubStarCount.mockResolvedValue(9)
+    const user = userEvent.setup()
+    await act(async () => {
+      render(await Navbar())
+    })
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: 'Open menu' }))
+    })
+    // Desktop badge and the mobile row both show the count from the single lookup.
+    expect(screen.getAllByRole('link', { name: 'TabMerger on GitHub, 9 stars' })).toHaveLength(2)
+    expect(getGithubStarCount).toHaveBeenCalledTimes(1)
+  })
+
   it('renders nav links including Changelog', async () => {
     render(await Navbar())
     expect(screen.getByRole('link', { name: 'Features' })).toBeInTheDocument()

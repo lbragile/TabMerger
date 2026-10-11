@@ -35,6 +35,78 @@ describe('ChangelogPage', () => {
     expect(screen.getByRole('link', { name: 'v3.0.0' })).toHaveAttribute('href', '#v3-0-0')
   })
 
+  describe('GitHub release links', () => {
+    const releaseLink = (version: string) =>
+      screen.queryByRole('link', { name: `${version} release on GitHub` })
+
+    it('renders the link for a generated entry with a releaseUrl', () => {
+      getGeneratedChangelog.mockReturnValue([
+        {
+          version: 'v3.1.2',
+          date: 'October 1, 2026',
+          changes: [{ type: 'Fixed', text: 'popup: a fix' }],
+          releaseUrl: 'https://github.com/lbragile/TabMerger/releases/tag/v3.1.2',
+        },
+      ])
+      render(<ChangelogPage />)
+      const link = releaseLink('v3.1.2')
+      expect(link).toBeInTheDocument()
+      expect(link).toHaveAttribute('href', 'https://github.com/lbragile/TabMerger/releases/tag/v3.1.2')
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+      expect(link).toHaveTextContent('GitHub release')
+    })
+
+    it('renders no link for a generated entry without a releaseUrl', () => {
+      getGeneratedChangelog.mockReturnValue([
+        { version: 'v3.1.2', date: 'October 1, 2026', changes: [{ type: 'Fixed', text: 'popup: a fix' }] },
+      ])
+      render(<ChangelogPage />)
+      expect(releaseLink('v3.1.2')).not.toBeInTheDocument()
+    })
+
+    it('links exactly the six hand-written versions that have a GitHub release', () => {
+      render(<ChangelogPage />)
+      const linked = ['v2.0.0', 'v1.6.2', 'v1.5.0', 'v1.4.3', 'v1.3.0', 'v1.2.1']
+      for (const v of linked) {
+        expect(releaseLink(v)).toHaveAttribute(
+          'href',
+          `https://github.com/lbragile/TabMerger/releases/tag/${v}`,
+        )
+      }
+      const unlinked = [
+        'v3.0.0', 'v1.6.1', 'v1.6.0', 'v1.4.2', 'v1.4.1', 'v1.4.0', 'v1.3.1', 'v1.2.0',
+        'v1.1.3', 'v1.1.2', 'v1.1.1', 'v1.1.0', 'v1.0.1', 'v1.0.0',
+      ]
+      for (const v of unlinked) expect(releaseLink(v)).not.toBeInTheDocument()
+      expect(screen.getAllByRole('link', { name: /release on GitHub$/ })).toHaveLength(linked.length)
+    })
+
+    it('keeps the version anchor link unique and resolving to its section', () => {
+      render(<ChangelogPage />)
+      const anchors = screen.getAllByRole('link', { name: 'v3.0.0' })
+      expect(anchors).toHaveLength(1)
+      expect(anchors[0]).toHaveAttribute('href', '#v3-0-0')
+    })
+
+    it('links every stable entry parsed from a real CHANGELOG.md section', async () => {
+      const actual = await vi.importActual<typeof import('@/lib/changelog')>('@/lib/changelog')
+      getGeneratedChangelog.mockReturnValue(
+        actual.parseChangelog(`# [2.2.0](https://github.com/o/r/compare/v2.1.0...v2.2.0) (2026-10-01)
+
+### Features
+
+* add stable thing ([abc1234](https://github.com/o/r/commit/abc1234))
+`),
+      )
+      render(<ChangelogPage />)
+      expect(releaseLink('v2.2.0')).toHaveAttribute(
+        'href',
+        'https://github.com/lbragile/TabMerger/releases/tag/v2.2.0',
+      )
+    })
+  })
+
   it('shows the "Major release" badge only for vX.0.0 entries', () => {
     getGeneratedChangelog.mockReturnValue([
       { version: 'v3.1.0', date: 'October 1, 2026', changes: [{ type: 'Fixed', text: 'extension: a fix' }] },

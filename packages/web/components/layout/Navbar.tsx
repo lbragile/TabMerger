@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
@@ -13,8 +14,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
 import { SignOutForm } from "@/components/auth/SignOutForm";
+import { GithubStars, GithubStarsFallback } from "@/components/layout/GithubStars";
+import { getGithubStarCount } from "@/lib/githubStats";
 
 export async function Navbar() {
+    // Started, not awaited: the header renders straight away and the star count streams in
+    // behind a Suspense boundary. The one promise feeds both the badge and the mobile panel.
+    const starsPromise = getGithubStarCount();
+
     const supabase = await createClient();
     const {
         data: { user },
@@ -27,8 +34,13 @@ export async function Navbar() {
     return (
         <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
             <div className="container relative flex items-center">
-                <div className="mr-8 flex items-center">
-                    <Link href="/" className="mr-8 flex shrink-0 items-center gap-[9px]">
+                {/* Width budget from md to lg: the container is capped at 768px there and, logged out,
+                    holds the logo, four links, the GitHub mark, the theme toggle and two buttons. The
+                    tighter spacing below lg (mr-4 here and on the logo, px-2 on the links) is what
+                    makes them fit: this block shrinks instead of overflowing, so when it is too wide
+                    the right-hand cluster slides over the last link rather than causing a scrollbar. */}
+                <div className="mr-4 flex items-center">
+                    <Link href="/" className="mr-4 flex shrink-0 items-center gap-[9px] lg:mr-8">
                         <Image
                             src="/logo.png"
                             alt="TabMerger"
@@ -41,25 +53,25 @@ export async function Navbar() {
                     <nav className="hidden items-center gap-1 text-[13.5px] md:flex">
                         <Link
                             href="/features"
-                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
                             Features
                         </Link>
                         <Link
                             href="/pricing"
-                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
                             Pricing
                         </Link>
                         <Link
                             href="/changelog"
-                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
                             Changelog
                         </Link>
                         <Link
                             href="/faq"
-                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
                             FAQ
                         </Link>
@@ -67,6 +79,9 @@ export async function Navbar() {
                 </div>
                 <div className="flex flex-1 items-center justify-end space-x-2">
                     <div className="flex items-center gap-2.5">
+                        <Suspense fallback={<GithubStarsFallback />}>
+                            <GithubStars starsPromise={starsPromise} />
+                        </Suspense>
                         <ThemeToggle />
                         {/* Sign-in/account controls move into the mobile hamburger panel below md */}
                         <div className="hidden items-center gap-2.5 md:flex">
@@ -128,7 +143,7 @@ export async function Navbar() {
                                 </>
                             )}
                         </div>
-                        <MobileNavToggle email={user?.email} initials={initials} />
+                        <MobileNavToggle email={user?.email} initials={initials} starsPromise={starsPromise} />
                     </div>
                 </div>
             </div>

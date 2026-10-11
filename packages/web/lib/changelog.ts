@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { githubReleaseUrl } from '@/lib/github'
 
 export type ChangeType = 'New' | 'Improved' | 'Fixed'
 
@@ -7,6 +8,8 @@ export interface ChangeEntry {
   version: string
   date: string
   changes: { type: ChangeType; text: string }[]
+  /** The version's GitHub release page. Set only when that release really exists. */
+  releaseUrl?: string
 }
 
 /**
@@ -117,10 +120,14 @@ export function parseChangelog(raw: string): ChangeEntry[] {
       if (versionMatch) {
         if (current) entries.push(current)
         const dateMatch = text.match(dateRe)
+        const version = `v${versionMatch[1]}`
         current = {
-          version: `v${versionMatch[1]}`,
+          version,
           date: dateMatch ? formatDate(dateMatch[1]) : '',
           changes: [],
+          // Every version semantic-release writes here also gets a GitHub release
+          // (`@semantic-release/github` in `.releaserc.json`), tagged `v` + the version.
+          releaseUrl: githubReleaseUrl(version),
         }
         currentType = null
         continue
