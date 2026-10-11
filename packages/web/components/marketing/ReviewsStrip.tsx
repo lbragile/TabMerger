@@ -73,10 +73,18 @@ export const MIN_UNIQUE_REVIEWS = 6
  */
 const MIN_HALF_PX = 2560 // covers a 2560px-wide viewport
 
-export function buildMarqueeTrack<T>(items: T[]): T[] {
+export function buildMarqueeHalf<T>(items: T[]): T[] {
   if (items.length === 0) return []
   const repeats = Math.max(1, Math.ceil(MIN_HALF_PX / (items.length * MIN_CARD_STRIDE_PX)))
-  const half = Array.from({ length: repeats }, () => items).flat()
+  return Array.from({ length: repeats }, () => items).flat()
+}
+
+/**
+ * Both halves. The page itself sends only the first (see `ReviewsCarousel`, which adds the
+ * second in the browser); this is the whole loop, as it ends up on screen.
+ */
+export function buildMarqueeTrack<T>(items: T[]): T[] {
+  const half = buildMarqueeHalf(items)
   return [...half, ...half]
 }
 
@@ -184,7 +192,7 @@ export async function ReviewsStrip() {
   if (!ratings) return null
 
   const { stores, reviews } = ratings
-  const track = buildMarqueeTrack(reviews)
+  const track = buildMarqueeHalf(reviews)
   // One store's breakdown would only repeat the headline, which already names it.
   const showBreakdown = stores.length > 1
 

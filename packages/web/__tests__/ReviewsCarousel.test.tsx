@@ -117,6 +117,18 @@ describe('ReviewsCarousel', () => {
       </>,
     )
 
+  it('adds the second half itself, hidden from assistive tech and out of the tab order', () => {
+    renderCarousel()
+    const track = screen.getByTestId('reviews-track')
+    const copy = track.querySelector('[data-loop-copy]') as HTMLElement
+    expect(copy).not.toBeNull()
+    expect(copy).toHaveAttribute('aria-hidden', 'true')
+    expect(copy).toHaveAttribute('inert')
+    expect(copy.querySelectorAll('[data-testid="card"]')).toHaveLength(1)
+    // The original half stays outside the wrapper and reachable.
+    expect(Array.from(track.children).filter((el) => el !== copy)).toHaveLength(1)
+  })
+
   const nextFrame = () => act(() => new Promise<void>((r) => requestAnimationFrame(() => r())))
   /** px scrolled, read back from the transform the loop writes. */
   const offset = () => {
@@ -378,7 +390,7 @@ describe('ReviewsCarousel', () => {
 
     it('runs again a few seconds after a swipe ends', () => {
       renderCarousel()
-      const card = screen.getByTestId('card')
+      const card = screen.getAllByTestId('card')[0]
       fireEvent.pointerDown(card, { pointerId: 1, clientX: 200, pointerType: 'touch' })
       fireEvent.pointerMove(card, { pointerId: 1, clientX: 80, pointerType: 'touch' })
       fireEvent.pointerUp(card, { pointerId: 1, clientX: 80, pointerType: 'touch' })
@@ -392,7 +404,7 @@ describe('ReviewsCarousel', () => {
 
     it('stays stopped after a tap pauses it, until a second tap', () => {
       renderCarousel()
-      const text = screen.getByText('Review text')
+      const text = screen.getAllByText('Review text')[0]
       const tap = () => {
         fireEvent.pointerDown(text, { pointerId: 1, clientX: 200, pointerType: 'touch' })
         fireEvent.pointerUp(text, { pointerId: 1, clientX: 201, pointerType: 'touch' })
@@ -422,7 +434,7 @@ describe('ReviewsCarousel', () => {
 
     it('a swipe does not', () => {
       renderCarousel()
-      const card = screen.getByTestId('card')
+      const card = screen.getAllByTestId('card')[0]
       fireEvent.pointerDown(card, { pointerId: 1, clientX: 200, pointerType: 'touch' })
       fireEvent.pointerMove(card, { pointerId: 1, clientX: 80, pointerType: 'touch' })
       fireEvent.pointerUp(card, { pointerId: 1, clientX: 80, pointerType: 'touch' })
@@ -438,7 +450,7 @@ describe('ReviewsCarousel', () => {
 
     it('a tap on the strip pauses it on a touch screen, and a second tap starts it again', () => {
       renderCarousel()
-      const text = screen.getByText('Review text')
+      const text = screen.getAllByText('Review text')[0]
       const tap = () => {
         fireEvent.pointerDown(text, { pointerId: 1, clientX: 200, pointerType: 'touch' })
         fireEvent.pointerUp(text, { pointerId: 1, clientX: 201, pointerType: 'touch' })
@@ -459,7 +471,7 @@ describe('ReviewsCarousel', () => {
 
     it('a cancelled touch (the page was scrolled instead) does not pause', () => {
       renderCarousel()
-      const text = screen.getByText('Review text')
+      const text = screen.getAllByText('Review text')[0]
       fireEvent.pointerDown(text, { pointerId: 1, clientX: 200, pointerType: 'touch' })
       fireEvent.pointerCancel(text, { pointerId: 1, clientX: 200, pointerType: 'touch' })
       expect(pauseButton()).toHaveAttribute('aria-pressed', 'false')
@@ -467,7 +479,7 @@ describe('ReviewsCarousel', () => {
 
     it('a mouse click on the strip does not pause: hovering already holds it still', () => {
       renderCarousel()
-      const text = screen.getByText('Review text')
+      const text = screen.getAllByText('Review text')[0]
       fireEvent.pointerDown(text, { pointerId: 1, clientX: 200, pointerType: 'mouse', button: 0 })
       fireEvent.pointerUp(text, { pointerId: 1, clientX: 200, pointerType: 'mouse', button: 0 })
       expect(pauseButton()).toHaveAttribute('aria-pressed', 'false')
@@ -592,8 +604,9 @@ describe('ReviewsCarousel', () => {
       renderCards()
       fireEvent.click(screen.getByRole('button', { name: 'Previous review' }))
       await nextFrame()
-      // Three cards per half: one back from the start is the third card.
-      expect(offset()).toBe(3 * STRIDE - STRIDE)
+      // The six cards are the first half (the second is added by the carousel itself): one
+      // back from the start is the sixth card.
+      expect(offset()).toBe(6 * STRIDE - STRIDE)
     })
 
     it('moves the strip so a focused card outside the viewport is fully in view', async () => {

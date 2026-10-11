@@ -3,17 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { AccountMenuLoader } from "@/components/layout/AccountMenuLoader";
 import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
-import { SignOutForm } from "@/components/auth/SignOutForm";
 import { GithubStars, GithubStarsFallback } from "@/components/layout/GithubStars";
 import { getGithubStarCount } from "@/lib/githubStats";
 
@@ -86,50 +78,7 @@ export async function Navbar() {
                         {/* Sign-in/account controls move into the mobile hamburger panel below md */}
                         <div className="hidden items-center gap-2.5 md:flex">
                             {user ? (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            className="relative h-8 w-8 rounded-md"
-                                            aria-label="Account menu"
-                                        >
-                                            <Avatar className="h-8 w-8 rounded-md">
-                                                <AvatarFallback className="text-xs rounded-md">
-                                                    {initials}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        className="w-56"
-                                        align="end"
-                                        forceMount
-                                    >
-                                        <div className="flex flex-col space-y-1 p-2">
-                                            <p className="text-sm font-medium leading-none">
-                                                {user.email}
-                                            </p>
-                                        </div>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/dashboard">Dashboard</Link>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/account">Account</Link>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem asChild>
-                                            <SignOutForm>
-                                                <button
-                                                    className="w-full text-left"
-                                                    type="submit"
-                                                >
-                                                    Sign out
-                                                </button>
-                                            </SignOutForm>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <AccountMenuLoader email={user.email ?? ""} initials={initials} />
                             ) : (
                                 <>
                                     <Button variant="ghost" size="sm" asChild>

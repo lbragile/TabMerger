@@ -37,7 +37,7 @@ test.describe('Landing page', () => {
           .poll(() => video.evaluate((el: HTMLVideoElement) => !el.paused && el.currentTime > 0.5), { timeout: 15_000 })
           .toBe(true)
         // The poster shown before playback is the visitor's own theme's.
-        await expect(video).toHaveAttribute('poster', new RegExp(`tour-poster-${theme}\\.jpg`))
+        await expect(video).toHaveAttribute('poster', new RegExp(`tour-poster-${theme}\\.webp`))
       })
     }
 

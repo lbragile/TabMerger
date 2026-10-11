@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AppToaster } from '@/components/AppToaster'
 import { PostHogProvider } from '@/components/posthog-provider'
+import { DeferredOnLoad } from '@/components/DeferredOnLoad'
 import { getMetadataBase } from '@/lib/utils'
 import './globals.css'
 
@@ -43,10 +44,6 @@ export const metadata: Metadata = {
     'chrome extension',
     'tab organizer',
   ],
-  icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
-  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -82,10 +79,14 @@ export default function RootLayout({
           {children}
           <AppToaster />
         </ThemeProvider>
-        <PostHogProvider />
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-        )}
+        {/* Measurement loads after the page has, never during it: it needs none of the first
+            paint's bandwidth or main-thread time. */}
+        <DeferredOnLoad>
+          <PostHogProvider />
+          {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+          )}
+        </DeferredOnLoad>
         {/* Vercel Web Analytics + Speed Insights. The `/next` entry points hook
             into the App Router, so client-side navigations are counted as page
             views — the plain `/react` entry would only see the first load.
@@ -93,8 +94,10 @@ export default function RootLayout({
             They only report once enabled in the Vercel dashboard (Analytics and
             Speed Insights tabs); in local dev they run in debug mode and send
             nothing. */}
-        <Analytics />
-        <SpeedInsights />
+        <DeferredOnLoad>
+          <Analytics />
+          <SpeedInsights />
+        </DeferredOnLoad>
       </body>
     </html>
   )

@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ReviewsStrip, buildMarqueeTrack, listNames } from '@/components/marketing/ReviewsStrip'
+import { ReviewsStrip, buildMarqueeHalf, buildMarqueeTrack, listNames } from '@/components/marketing/ReviewsStrip'
 import { getChromeStoreStats } from '@/lib/chromeStoreStats'
 import { getEdgeAddonStats } from '@/lib/edgeAddonStats'
 import { getFirefoxAddonStats } from '@/lib/firefoxAddonStats'
@@ -308,10 +308,15 @@ describe('ReviewsStrip', () => {
       const track = screen.getByTestId('reviews-track')
       expect(track).toHaveAttribute('role', 'list')
       expect(within(track).getAllByRole('listitem')).toHaveLength(5)
-      // Every repeat is hidden and out of the tab order.
+      // Every repeat is hidden and out of the tab order: the repeats within the first half by
+      // tabindex, the second half (added in the browser) as one inert wrapper.
       const repeats = Array.from(track.children).filter((card) => card.getAttribute('aria-hidden') === 'true')
-      expect(repeats.length).toBe(track.children.length - 5)
-      for (const repeat of repeats) {
+      const copy = repeats.filter((el) => el.hasAttribute('data-loop-copy'))
+      expect(copy).toHaveLength(1)
+      expect(copy[0]).toHaveAttribute('inert')
+      const cards = repeats.filter((el) => !el.hasAttribute('data-loop-copy'))
+      expect(cards.length).toBe(track.children.length - 1 - 5)
+      for (const repeat of cards) {
         expect(repeat).not.toHaveAttribute('role')
         expect(repeat.querySelector('a')).toHaveAttribute('tabindex', '-1')
       }
@@ -354,6 +359,15 @@ describe('listNames', () => {
     [['Chrome', 'Firefox', 'Edge'], 'Chrome, Firefox and Edge'],
   ])('joins %j as %j', (names, expected) => {
     expect(listNames(names)).toBe(expected)
+  })
+})
+
+describe('buildMarqueeHalf', () => {
+  it('is the first half of the track: what the page sends, the browser repeating it', () => {
+    const items = ['a', 'b', 'c']
+    const track = buildMarqueeTrack(items)
+    expect(buildMarqueeHalf(items)).toEqual(track.slice(0, track.length / 2))
+    expect(buildMarqueeHalf([])).toEqual([])
   })
 })
 

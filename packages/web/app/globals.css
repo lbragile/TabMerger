@@ -167,7 +167,7 @@ button:disabled,
     --popover: 0 0% 100%;
     --popover-foreground: 213 27% 8%;
     /* Brand cyan */
-    --primary: 189 100% 40%;
+    --primary: 189 100% 26%;
     --primary-foreground: 0 0% 100%;
     /* Brand orange */
     --secondary: 33 90% 55%;
@@ -182,7 +182,7 @@ button:disabled,
     --destructive-foreground: 0 0% 100%;
     --border: 60 9% 89%;
     --input: 60 9% 89%;
-    --ring: 189 100% 40%;
+    --ring: 189 100% 26%;
     --radius: 0rem;
 
     /* Extra surface/elevation tokens from the design spec — not covered by
