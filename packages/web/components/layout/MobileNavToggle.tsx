@@ -68,7 +68,7 @@ export function MobileNavToggle({ email, initials, starsPromise }: MobileNavTogg
                 aria-expanded={open}
                 aria-controls="mobile-nav-panel"
                 onClick={() => setOpen((v) => !v)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-text2 hover:bg-surface2 hover:text-foreground"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-text2 hover:bg-surface2 hover:text-foreground"
             >
                 <span aria-hidden="true" className="text-lg leading-none">
                     {open ? '✕' : '☰'}

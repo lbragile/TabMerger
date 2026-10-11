@@ -18,3 +18,12 @@ describe('AccountAvatar', () => {
     expect(ACCOUNT_AVATAR_BUTTON_CLASS).not.toContain('rounded-full')
   })
 })
+
+describe('AccountAvatar size', () => {
+  it('is 36px (h-9) like the other controls in the header, not 32px', () => {
+    expect(ACCOUNT_AVATAR_BUTTON_CLASS).toContain('h-9')
+    expect(ACCOUNT_AVATAR_BUTTON_CLASS).toContain('w-9')
+    const { container } = render(<AccountAvatar initials="LB" />)
+    expect((container.firstElementChild as HTMLElement).className).toContain('h-9')
+  })
+})
