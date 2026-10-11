@@ -10,6 +10,9 @@ import {
   type EncryptedBlob,
 } from '@tabmerger/shared'
 import { createClient } from '@/lib/supabase/client'
+import { SESSION_KEY_PREFIX, clearAllCachedDataKeys } from '@/lib/encryption/cachedKeys'
+
+export { clearAllCachedDataKeys }
 
 function base64ToBuf(b64: string): Uint8Array<ArrayBuffer> {
   const binary = atob(b64)
@@ -52,7 +55,6 @@ const defaultValue: EncryptionKeyContextValue = {
 
 const EncryptionKeyContext = createContext<EncryptionKeyContextValue>(defaultValue)
 
-const SESSION_KEY_PREFIX = 'tabmerger:dataKey:'
 
 /** Columns that identify one `encryption_keys` row (see {@link keyRowFingerprint}). */
 const KEY_ROW_COLUMNS = 'user_id, salt, wrap_iv'
@@ -148,17 +150,6 @@ async function readCachedDataKey(userId: string): Promise<{ key: CryptoKey; fing
 
 export function clearCachedDataKey(userId: string): void {
   sessionStorage.removeItem(sessionKeyFor(userId))
-}
-
-/**
- * Clears every cached data key in this tab, regardless of account. Used on
- * sign-out, where the signing-out user's id isn't worth threading through
- * just to look up one key — only one account is ever signed in per tab.
- */
-export function clearAllCachedDataKeys(): void {
-  for (const key of Object.keys(sessionStorage)) {
-    if (key.startsWith(SESSION_KEY_PREFIX)) sessionStorage.removeItem(key)
-  }
 }
 
 /** The server's answer about the account's key row. `answered: false` means the lookup itself failed. */

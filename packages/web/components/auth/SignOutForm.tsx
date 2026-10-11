@@ -1,10 +1,10 @@
 'use client'
 
-import { clearAllCachedDataKeys } from '@/lib/encryption/context'
+import { clearAllCachedDataKeys } from '@/lib/encryption/cachedKeys'
 
 /**
  * Wraps the plain `/api/auth/sign-out` POST form so the cached encryption
- * data key (sessionStorage, see `lib/encryption/context.tsx`) is wiped before
+ * data key (sessionStorage, see `lib/encryption/cachedKeys.ts`) is wiped before
  * the browser navigates away — otherwise it would linger in the tab and could
  * be picked up if another account signs in in the same tab.
  */

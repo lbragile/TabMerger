@@ -1,6 +1,6 @@
 # TabMerger
 
-[![CI](https://img.shields.io/github/actions/workflow/status/lbragile/TabMerger/ci.yml?branch=main&label=CI&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/lbragile/TabMerger/ci.yml?branch=main&label=CI&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/actions) [![Coverage](https://img.shields.io/codecov/c/github/lbragile/TabMerger/main?label=coverage&style=flat-square&logo=codecov)](https://app.codecov.io/gh/lbragile/TabMerger/tree/main)
 
 |  | <img src="docs/assets/browsers/chrome.svg" width="28" height="28" alt="Chrome Web Store" title="Chrome Web Store"><br><sub>Chrome</sub> | <img src="docs/assets/browsers/firefox.svg" width="28" height="28" alt="Firefox Add-ons" title="Firefox Add-ons"><br><sub>Firefox</sub> | <img src="docs/assets/browsers/edge.svg" width="28" height="28" alt="Microsoft Edge Add-ons" title="Microsoft Edge Add-ons"><br><sub>Edge</sub> |
 | :-- | :-: | :-: | :-: |

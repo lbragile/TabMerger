@@ -16,7 +16,7 @@ const leadFeatures = [
         </div>
         <div className="flex gap-1.5 flex-wrap">
           <span className="h-[22px] px-2 rounded-md bg-violet-soft text-violet text-[11px] font-medium grid place-items-center">LLM evals · 9</span>
-          <span className="h-[22px] px-2 rounded-md bg-secondary/20 text-secondary text-[11px] font-medium grid place-items-center">Hiring · 7</span>
+          <span className="h-[22px] px-2 rounded-md bg-secondary/20 text-[hsl(33_90%_28%)] dark:text-secondary text-[11px] font-medium grid place-items-center">Hiring · 7</span>
           <span className="h-[22px] px-2 rounded-md bg-ok-soft text-ok text-[11px] font-medium grid place-items-center">Docs · 8</span>
         </div>
       </div>

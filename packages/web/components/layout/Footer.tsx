@@ -13,7 +13,7 @@ export function Footer() {
                     <Link href="/" className="flex items-center space-x-2">
                         <Image
                             src="/logo.png"
-                            alt="TabMerger"
+                            alt=""
                             width={24}
                             height={24}
                             className="rounded-sm"

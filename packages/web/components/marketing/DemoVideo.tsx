@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
-  type CSSProperties,
   type SyntheticEvent,
 } from 'react'
 import { useTheme } from '@/components/theme-provider'
@@ -22,14 +21,9 @@ const HAVE_FUTURE_DATA = 3
 // The box is sized by `aspect-video` (16:9, the tour's own ratio) on a full-width block, so
 // its height is known before the poster or any video byte arrives: no layout shift.
 //
-// The poster is this box's CSS background, chosen by the `.dark` class that the inline script
-// in app/layout.tsx sets before first paint. The server can't know the visitor's theme (it
-// lives in localStorage), so a `poster` attribute in the server HTML would always be the light
-// one: a dark-theme visitor would download it and see it flash. A background picked by the
-// class is right on the first paint, and the browser only fetches the one that applies.
-const BOX_CLASS_NAME =
-  'relative mx-auto w-full max-w-[45rem] aspect-video overflow-hidden rounded-xl shadow-2xl ' +
-  'bg-muted bg-cover bg-center bg-(image:--tour-poster-light) dark:bg-(image:--tour-poster-dark)'
+// The poster is two <img>s (see PosterImages), one per theme, shown by the `.dark` class that
+// the inline script in app/layout.tsx sets before first paint, so the first paint is right.
+const BOX_CLASS_NAME = 'relative mx-auto w-full max-w-[45rem] aspect-video overflow-hidden rounded-xl shadow-2xl bg-muted'
 
 // What is behind the overlay is a video frame, not the page, so theme tokens say nothing
 // about its contrast. The spinner therefore brings its own backdrop: a near-black disc with a
@@ -49,8 +43,55 @@ interface DemoVideoProps {
 
 const subscribeNever = () => () => {}
 
-function cssUrl(url: string | null): string {
-  return url ? `url("${url}")` : 'none'
+/**
+ * The poster files for one theme. The tour's first frame is kept as a JPEG (what ffmpeg writes,
+ * and what older browsers get) next to two WebP renditions made from it: 1280px wide, and 640px
+ * for a phone, where the box is under 400px wide. The cache-busting query string of the JPEG
+ * carries over to all of them.
+ */
+export function posterFiles(jpg: string): { jpg: string; webp: string; smallWebp: string } {
+  const [file, query] = jpg.split('?')
+  const suffix = query ? `?${query}` : ''
+  const base = file.replace(/.jpg$/, '')
+  return { jpg, webp: `${base}.webp${suffix}`, smallWebp: `${base}-640.webp${suffix}` }
+}
+
+/**
+ * The poster as real images, one per theme, so the browser finds the LCP image in the HTML
+ * itself (a CSS background is only found once the stylesheet has loaded, a script-added preload
+ * only once the script has run). The `.dark` class on <html> shows one of them and hides the
+ * other. The hidden one is still fetched, because the server can't know the theme; at 10 KB on a
+ * phone that is nothing against the multi-MB video.
+ */
+function PosterImages({ darkPoster, lightPoster }: { darkPoster: string | null; lightPoster: string | null }) {
+  // Plain <picture>: next/image rejects the cache-busting query string these local files carry.
+  const poster = (jpg: string, className: string) => {
+    const files = posterFiles(jpg)
+    return (
+      <picture className={className}>
+        <source
+          type="image/webp"
+          srcSet={`${files.smallWebp} 640w, ${files.webp} 1280w`}
+          sizes="(min-width: 768px) 720px, 100vw"
+        />
+        <img
+          src={files.jpg}
+          alt=""
+          width={1280}
+          height={720}
+          decoding="async"
+          fetchPriority="high"
+          className="block h-full w-full object-cover"
+        />
+      </picture>
+    )
+  }
+  return (
+    <>
+      {lightPoster && poster(lightPoster, 'absolute inset-0 dark:hidden')}
+      {darkPoster && poster(darkPoster, 'absolute inset-0 hidden dark:block')}
+    </>
+  )
 }
 
 export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVideoProps) {
@@ -85,7 +126,7 @@ export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVi
     const videoEl = videoRef.current
     if (!hydrated || !videoEl || !src || lastSrcRef.current === src) return
 
-    if (poster) videoEl.poster = poster
+    if (poster) videoEl.poster = posterFiles(poster).webp
 
     if (lastSrcRef.current === null) {
       // Browsers only autoplay a muted video. React does not reliably carry `muted` through
@@ -93,9 +134,18 @@ export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVi
       // falls back to) here, before the source that triggers autoplay is assigned.
       videoEl.defaultMuted = true
       videoEl.muted = true
-      videoEl.src = src
-      lastSrcRef.current = src
-      return
+      const start = () => {
+        videoEl.src = src
+        lastSrcRef.current = src
+      }
+      // The video is several MB: starting it before the page has loaded would share the
+      // connection with the poster (the LCP element) and the scripts. Wait for `load`.
+      if (document.readyState === 'complete') {
+        start()
+        return
+      }
+      globalThis.addEventListener('load', start, { once: true })
+      return () => globalThis.removeEventListener('load', start)
     }
 
     const pending = pendingRef.current ?? { time: videoEl.currentTime, paused: videoEl.paused }
@@ -118,13 +168,12 @@ export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVi
 
   if (!src && !poster) return null
 
-  const posterVars = {
-    '--tour-poster-light': cssUrl(lightPoster),
-    '--tour-poster-dark': cssUrl(darkPoster),
-  } as CSSProperties
-
   if (!src) {
-    return <div role="img" aria-label={TOUR_POSTER_LABEL} className={BOX_CLASS_NAME} style={posterVars} />
+    return (
+      <div role="img" aria-label={TOUR_POSTER_LABEL} className={BOX_CLASS_NAME}>
+        <PosterImages darkPoster={darkPoster} lightPoster={lightPoster} />
+      </div>
+    )
   }
 
   const showLoading = () => setLoadState('loading')
@@ -142,7 +191,8 @@ export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVi
   }
 
   return (
-    <div className={BOX_CLASS_NAME} style={posterVars}>
+    <div className={BOX_CLASS_NAME}>
+      <PosterImages darkPoster={darkPoster} lightPoster={lightPoster} />
       <video
         ref={videoRef}
         aria-label={TOUR_VIDEO_LABEL}

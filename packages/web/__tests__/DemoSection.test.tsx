@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, cleanup, fireEvent } from '@testing-library/react'
-import { DemoVideo } from '@/components/marketing/DemoVideo'
+import { DemoVideo, posterFiles } from '@/components/marketing/DemoVideo'
 
 // ponytail: DemoSection itself is a server component that only stats files on
 // disk (fs.existsSync/statSync) and hands plain string props to DemoVideo —
@@ -121,20 +121,22 @@ describe('DemoVideo', () => {
     expect(playSpy).toHaveBeenCalled()
   })
 
-  it("uses the theme's own poster, and offers both to CSS so the first paint can pick by class", () => {
+  it("uses the theme's own poster for the video, and renders both as images so the first paint can pick by class", () => {
     mockUseTheme.mockReturnValue({ theme: 'dark', toggleTheme: vi.fn() })
     const { container, rerender } = render(<DemoVideo {...SOURCES} />)
 
     const video = container.querySelector('video') as HTMLVideoElement
-    expect(video.getAttribute('poster')).toBe(SOURCES.darkPoster)
+    expect(video.getAttribute('poster')).toBe(posterFiles(SOURCES.darkPoster).webp)
 
     const box = video.parentElement as HTMLElement
-    expect(box.style.getPropertyValue('--tour-poster-dark')).toBe(`url("${SOURCES.darkPoster}")`)
-    expect(box.style.getPropertyValue('--tour-poster-light')).toBe(`url("${SOURCES.lightPoster}")`)
+    const posters = Array.from(box.querySelectorAll('img'))
+    expect(posters.map((img) => img.getAttribute('src'))).toEqual([SOURCES.lightPoster, SOURCES.darkPoster])
+    // Real images in the HTML are what lets the browser fetch the LCP image at high priority at once.
+    expect(posters.every((img) => img.getAttribute('fetchpriority') === 'high' && img.getAttribute('alt') === '')).toBe(true)
 
     mockUseTheme.mockReturnValue({ theme: 'light', toggleTheme: vi.fn() })
     rerender(<DemoVideo {...SOURCES} />)
-    expect(video.getAttribute('poster')).toBe(SOURCES.lightPoster)
+    expect(video.getAttribute('poster')).toBe(posterFiles(SOURCES.lightPoster).webp)
   })
 
   it('sizes the player as a 16:9 box and gives the video an accessible name', () => {
@@ -411,7 +413,7 @@ describe('DemoVideo', () => {
 
     expect(container.querySelector('video')).toBeNull()
     const img = getByRole('img', { name: 'TabMerger feature tour preview' })
-    expect(img.style.getPropertyValue('--tour-poster-dark')).toContain('tour-poster-dark.jpg')
+    expect(img.querySelector('img')?.getAttribute('src')).toContain('tour-poster-dark.jpg')
   })
 
   it('renders nothing when neither the themed video nor its poster exists', async () => {
@@ -422,5 +424,19 @@ describe('DemoVideo', () => {
     await Promise.resolve()
 
     expect(container.firstChild).toBeNull()
+  })
+})
+
+describe('posterFiles', () => {
+  it('names the WebP renditions next to the JPEG and carries the cache-buster to each', () => {
+    expect(posterFiles('/videos/tour-poster-dark.jpg?v=123.4')).toEqual({
+      jpg: '/videos/tour-poster-dark.jpg?v=123.4',
+      webp: '/videos/tour-poster-dark.webp?v=123.4',
+      smallWebp: '/videos/tour-poster-dark-640.webp?v=123.4',
+    })
+  })
+
+  it('works without a query string', () => {
+    expect(posterFiles('/videos/tour-poster-light.jpg').webp).toBe('/videos/tour-poster-light.webp')
   })
 })

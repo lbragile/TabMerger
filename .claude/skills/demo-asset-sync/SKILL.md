@@ -21,6 +21,11 @@ disable-model-invocation: true
    done
    ```
 
+   Then make the WebP renditions the hero's `<picture>` serves (1280px, and 640px for phones: about 10 to 22 KB against the JPEG's 55 KB). They must exist for both themes, or the landing page shows a broken poster (`__tests__/tour-poster-files.test.ts` checks this). Run from `packages/web`:
+   ```bash
+   node -e 'const s=require("sharp");(async()=>{for(const t of ["light","dark"]){const j="public/videos/tour-poster-"+t+".jpg";await s(j).webp({quality:72,effort:6}).toFile("public/videos/tour-poster-"+t+".webp");await s(j).resize(640).webp({quality:72,effort:6}).toFile("public/videos/tour-poster-"+t+"-640.webp")}})()'
+   ```
+
 3. **Screenshots/promo tiles stay local-only by design** (an explicit decision — see `.claude/agent-memory/demo/`) unless you're deliberately changing that: they live in `packages/demo/screenshots/store/*.jpg` and `packages/demo/promo/*.jpg`, git-ignored. `.github/workflows/publish.yml`'s release-asset step already globs these paths and will silently pick them up the moment they're committed — no workflow change needed if you later decide to ship them.
 
 4. **Verify before committing**: `git status` for `packages/web/public/videos/` — confirm file sizes/timestamps actually changed, since a failed render can leave stale output in `packages/demo/out/` that looks present but isn't current.

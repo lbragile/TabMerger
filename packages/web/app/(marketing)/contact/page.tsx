@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { GITHUB_ISSUES_URL } from '@/lib/github'
 
 // Note: metadata must be in a separate server component when using 'use client'.
 // SEO is handled via the layout's default metadata.
@@ -104,7 +105,7 @@ function ContactForm() {
         <p className="text-muted-foreground text-sm mt-2">
           Reporting a bug?{' '}
           <a
-            href="https://github.com/lbragile/TabMerger/issues"
+            href={GITHUB_ISSUES_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="underline underline-offset-4 hover:text-foreground transition-colors"
