@@ -1,0 +1,87 @@
+name: Workflow Lint
+
+# Static checks for the CI itself: workflow syntax and expressions (actionlint), workflow
+# security (zizmor) and the repo's shell scripts (ShellCheck). CodeQL can't scan shell and
+# only partly covers workflows, and these files hold the store-publish and deploy secrets.
+# Runs only when one of the files it checks changes.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - beta
+    paths:
+      - ".github/workflows/**"
+      - ".github/dependabot.yml"
+      - "scripts/**/*.sh"
+  pull_request:
+    branches:
+      - main
+      - beta
+    paths:
+      - ".github/workflows/**"
+      - ".github/dependabot.yml"
+      - "scripts/**/*.sh"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workflow-lint-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/beta' && github.ref != 'refs/heads/main' }}
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # rhysd/actionlint 1.7.12, pinned by digest. `-shellcheck=` turns off its ShellCheck
+      # pass over inline `run:` blocks: the existing ones carry a handful of style-level
+      # notes (unquoted globs, an unused loop variable) that would fail this on day one.
+      # Scripts under scripts/ are covered by the shellcheck job below.
+      - uses: docker://rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
+        with:
+          args: -shellcheck= -color
+
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # Gated at high severity and medium confidence, so it reports real problems and not
+      # every hardening suggestion. Lower findings (credential persistence on checkout,
+      # unpinned container images, ...) are deliberately not enforced; tighten
+      # `min-severity` once they are worked through. `advanced-security: false` prints to
+      # the job log instead of uploading SARIF, so no security-events write is needed
+      # (and it keeps working on fork PRs).
+      - uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        with:
+          version: 1.30.1
+          advanced-security: false
+          min-severity: high
+          min-confidence: medium
+
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # ShellCheck ships on the ubuntu runner image. Warning level and up: the scripts are
+      # clean at that level today; style notes would only add noise.
+      - name: ShellCheck scripts
+        run: |
+          shopt -s globstar nullglob
+          shellcheck --severity=warning scripts/**/*.sh

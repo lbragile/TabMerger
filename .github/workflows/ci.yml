@@ -86,6 +86,25 @@ env:
   PREVIEW_SUPABASE_PUBLISHABLE_KEY: sb_publishable_jLK5NyMIvyHkBjilsKo44w_hbTpX9TX
 
 jobs:
+  # ── Dependency review (PRs only): fails a PR that ADDS or CHANGES a dependency with a
+  # known high-severity vulnerability, or whose license is outside the allow-list below.
+  # The list mirrors the licenses already in the production tree (TabMerger 3.x is
+  # all-rights-reserved, so no GPL/AGPL/LGPL/SSPL). Needs no secrets, so it runs on fork PRs.
+  # Only judges what a PR changes — the existing tree is pnpm audit's job in static-checks.
+  dependency-review:
+    name: Dependency Review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          allow-licenses: >-
+            MIT, MIT-0, Apache-2.0, ISC, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0,
+            0BSD, Unlicense, CC0-1.0, CC-BY-4.0, MPL-2.0, AFL-2.1, FSL-1.1-MIT
+
   # ── Static checks: secret scan, dependency audit (non-blocking step),
   # type-check, lint. Merged into one job so they share a single checkout +
   # install instead of four. dep-audit's continue-on-error moved from the job
@@ -95,7 +114,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
@@ -110,8 +129,8 @@ jobs:
 
           echo "No secrets found."
 
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
@@ -153,9 +172,9 @@ jobs:
       contents: read
       actions: read
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
@@ -183,7 +202,7 @@ jobs:
       # unnoticed at promotion time.
       - name: Publish coverage baseline (default branch only)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: coverage-baseline
           path: |
@@ -200,7 +219,7 @@ jobs:
       # rather than failing, per scripts/ci/coverage-delta.mjs's own
       # no-op-if-missing behavior.
       - name: Download baseline coverage from the default branch
-        uses: dawidd6/action-download-artifact@v25
+        uses: dawidd6/action-download-artifact@634d83b91986fcec9be314054943fa5c976aeb0e # v25
         continue-on-error: true # no baseline yet (e.g. very first run) → coverage-delta.mjs no-ops on missing file
         with:
           workflow: ci.yml
@@ -233,7 +252,7 @@ jobs:
       - name: Keep reports for Codecov
         if: ${{ !cancelled() }}
         continue-on-error: true
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: codecov-unit
           path: |
@@ -250,9 +269,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
@@ -262,7 +281,7 @@ jobs:
       - name: Keep test results for Codecov
         if: ${{ !cancelled() }}
         continue-on-error: true
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: codecov-integration
           path: packages/extension/junit-integration.xml
@@ -298,7 +317,7 @@ jobs:
       matrix:
         shard: [1, 2, 3]
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0 # the gate step diffs the push/PR range
 
@@ -349,9 +368,9 @@ jobs:
           fi
           decide false "Only web/demo/supabase/docs/agent/markdown files changed; skipping extension e2e."
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
         if: steps.gate.outputs.run == 'true'
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         if: steps.gate.outputs.run == 'true'
         with:
           node-version: 24
@@ -369,7 +388,7 @@ jobs:
           # Makes e2e/playwright.config.ts add the junit reporter (test results for the
           # `codecov` job). Written next to the config, one file per shard.
           PLAYWRIGHT_JUNIT_OUTPUT_NAME: junit-e2e-extension-${{ matrix.shard }}.xml
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure() && steps.gate.outputs.run == 'true'
         with:
           name: extension-e2e-report-${{ matrix.shard }}
@@ -378,7 +397,7 @@ jobs:
       - name: Keep test results for Codecov
         if: ${{ !cancelled() && steps.gate.outputs.run == 'true' }}
         continue-on-error: true
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: codecov-e2e-extension-${{ matrix.shard }}
           path: packages/extension/e2e/junit-e2e-extension-${{ matrix.shard }}.xml
@@ -410,7 +429,7 @@ jobs:
       options: --ipc=host
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       # Fails fast when the lockfile's Playwright and the image tag drift apart (the
       # browsers baked into the image only match one Playwright version).
@@ -425,8 +444,8 @@ jobs:
             echo "::error::Playwright in pnpm-lock.yaml ($locked / core $core) does not match the container image tag ($image). Bump the image in ci.yml (e2e-extension AND e2e-web) together with @playwright/test."
             exit 1
           fi
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
@@ -449,7 +468,7 @@ jobs:
             exit 1
           fi
           pnpm --filter @tabmerger/web test:e2e
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure()
         with:
           name: web-e2e-report
@@ -458,7 +477,7 @@ jobs:
       - name: Keep test results for Codecov
         if: ${{ !cancelled() }}
         continue-on-error: true
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: codecov-e2e-web
           path: packages/web/junit-e2e-web.xml
@@ -495,12 +514,12 @@ jobs:
       USE_OIDC: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && github.actor != 'dependabot[bot]' }}
     steps:
       # Codecov maps the report's file paths onto the repository, so it needs the tree.
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
       - name: Collect the reports saved by the test jobs
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         continue-on-error: true
         with:
           pattern: codecov-*
@@ -512,7 +531,7 @@ jobs:
       - name: Coverage — extension
         if: ${{ hashFiles('codecov-reports/codecov-unit/extension/coverage/coverage-final.json') != '' }}
         continue-on-error: true
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
@@ -523,7 +542,7 @@ jobs:
       - name: Coverage — web
         if: ${{ hashFiles('codecov-reports/codecov-unit/web/coverage/coverage-final.json') != '' }}
         continue-on-error: true
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
@@ -534,7 +553,7 @@ jobs:
       - name: Test results — unit (extension)
         if: ${{ hashFiles('codecov-reports/codecov-unit/extension/coverage/junit.xml') != '' }}
         continue-on-error: true
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
@@ -546,7 +565,7 @@ jobs:
       - name: Test results — unit (web)
         if: ${{ hashFiles('codecov-reports/codecov-unit/web/coverage/junit.xml') != '' }}
         continue-on-error: true
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
@@ -558,7 +577,7 @@ jobs:
       - name: Test results — integration
         if: ${{ hashFiles('codecov-reports/codecov-integration/junit-integration.xml') != '' }}
         continue-on-error: true
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
@@ -570,7 +589,7 @@ jobs:
       - name: Test results — e2e (extension, all shards)
         if: ${{ hashFiles('codecov-reports/codecov-e2e-extension-*/junit-e2e-extension-*.xml') != '' }}
         continue-on-error: true
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
@@ -582,7 +601,7 @@ jobs:
       - name: Test results — e2e (web)
         if: ${{ hashFiles('codecov-reports/codecov-e2e-web/junit-e2e-web.xml') != '' }}
         continue-on-error: true
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
@@ -637,7 +656,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0 # the gate step diffs the push/PR range
           persist-credentials: false
@@ -704,9 +723,9 @@ jobs:
           fi
           decide false "Only web/demo/supabase/docs/agent/markdown files changed; skipping visual regression."
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
         if: steps.gate.outputs.run == 'true'
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         if: steps.gate.outputs.run == 'true'
         with:
           node-version: 24
@@ -730,7 +749,7 @@ jobs:
         run: pnpm --filter @tabmerger/extension test:visual --reporter=list,html,json
 
       # Before the Report step, so the summary can link straight to the download.
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         id: report_artifact
         if: always() && steps.visual.outcome == 'failure'
         with:
@@ -833,22 +852,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       # Next.js's recommended CI cache (nextjs.org/docs/app/guides/ci-build-caching).
       # Next validates entries by content itself, so a restore-key partial hit can only
       # skip work, never serve stale output. Placed BEFORE install so the source hash
       # never walks node_modules/.next.
       - name: Cache Next.js build cache
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: packages/web/.next/cache
           key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/web/**/*.ts', 'packages/web/**/*.tsx', 'packages/web/**/*.js', 'packages/web/**/*.mjs', 'packages/web/**/*.css', 'packages/web/**/*.json', 'packages/shared/src/**', '!**/node_modules/**', '!packages/web/.next/**') }}
           restore-keys: |
             nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
 
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
@@ -868,7 +887,13 @@ jobs:
           fi
           echo "Bundle OK"
 
-      - uses: actions/upload-artifact@v7
+      # A new permission, host permission or content-script match changes the install
+      # warning and can slow store review. Fails unless the baseline is updated on purpose
+      # (see the script header).
+      - name: Check manifest permissions
+        run: node scripts/ci/check-manifest-permissions.mjs
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: extension-bundle
           path: packages/extension/.output/chrome-mv3/
@@ -919,11 +944,11 @@ jobs:
     steps:
       # fetch-depth: 0 — semantic-release reads the full tag history to work out the
       # last release. A shallow clone makes it think every release is the first one.
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
@@ -993,7 +1018,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           # Hand the PAT to checkout so every git command in this job authenticates
@@ -1014,8 +1039,8 @@ jobs:
           # from a `git ls-remote` whose logged URL has no credentials in it at all, and
           # no trace anywhere of why the token was rejected.
           token: ${{ secrets.RELEASE_TOKEN }}
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
@@ -1093,7 +1118,7 @@ jobs:
     outputs:
       web: ${{ steps.diff.outputs.web }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - id: diff
