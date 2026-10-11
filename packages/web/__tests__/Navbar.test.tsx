@@ -90,3 +90,15 @@ describe('Navbar', () => {
     expect(screen.getByRole('button', { name: 'Open menu' })).toBeInTheDocument()
   })
 })
+
+describe('Navbar: header controls', () => {
+  it('gives Sign in and Get started the same 1px border as the toggle and the GitHub badge', async () => {
+    getGithubStarCount.mockResolvedValue(10)
+    await act(async () => {
+      render(await Navbar())
+    })
+    // Same 36px box and same border, so the browser snaps all four to the same device pixels.
+    expect(screen.getByRole('link', { name: 'Sign in' }).className).toContain('border-transparent')
+    expect(screen.getByRole('link', { name: 'Get started' }).className).toContain('border-primary')
+  })
+})
