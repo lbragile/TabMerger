@@ -213,8 +213,44 @@ describe('GroupGrid "Open all" button', () => {
     fireEvent.click(screen.getByRole('button', { name: /Open all/i }))
 
     expect(openSpy).toHaveBeenCalledTimes(2)
-    expect(openSpy).toHaveBeenCalledWith('https://a.example.com', '_blank', 'noopener')
-    expect(openSpy).toHaveBeenCalledWith('https://b.example.com', '_blank', 'noopener')
+    expect(openSpy).toHaveBeenCalledWith('https://a.example.com/', '_blank', 'noopener')
+    expect(openSpy).toHaveBeenCalledWith('https://b.example.com/', '_blank', 'noopener')
+
+    openSpy.mockRestore()
+  })
+
+  it('opens only the http(s) tabs of a group and skips the rest', () => {
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
+    const mixedGroups = [
+      {
+        id: 'g3',
+        name: 'Mixed',
+        color: 'rgba(0,180,204,1)',
+        windows: [
+          {
+            tabs: [
+              { title: 'Site', url: 'https://a.example.com/page' },
+              { title: 'Script', url: 'javascript:alert(1)' },
+              { title: 'Script, mixed case', url: ' JavaScript:alert(1)' },
+              { title: 'Data', url: 'data:text/html,<p>x</p>' },
+              { title: 'File', url: 'file:///etc/hosts' },
+              { title: 'Relative', url: '/relative' },
+              { title: 'No URL' },
+              { title: 'Plain http', url: 'http://b.example.com/' },
+            ],
+          },
+        ],
+        updated_at: new Date().toISOString(),
+      },
+    ]
+
+    render(<GroupGrid groups={mixedGroups} isPro={false} />)
+    fireEvent.click(screen.getByRole('button', { name: /Open all/i }))
+
+    expect(openSpy.mock.calls).toEqual([
+      ['https://a.example.com/page', '_blank', 'noopener'],
+      ['http://b.example.com/', '_blank', 'noopener'],
+    ])
 
     openSpy.mockRestore()
   })

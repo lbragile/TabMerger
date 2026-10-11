@@ -1,4 +1,4 @@
-import { createHook, getWritable } from "workflow";
+import { createHook, FatalError, getWritable } from "workflow";
 import { DurableAgent } from "@workflow/ai/agent";
 import { z } from "zod";
 import { isEncryptedBlob } from "@tabmerger/shared";
@@ -79,6 +79,15 @@ export interface ClientGroup {
   permanent?: boolean;
 }
 
+/**
+ * Message of the error that ends a run when the stored rows are end-to-end
+ * encrypted and the request carried no tab data. Written to be shown to the user.
+ */
+export const ORGANIZE_NEEDS_CLIENT_DATA_ERROR =
+  "Your groups are end-to-end encrypted, so they can only be organized from the " +
+  "TabMerger extension, which sends the tab data with the request. Start Organize " +
+  "from the extension.";
+
 // --- Steps ------------------------------------------------------------------
 
 export async function fetchUserData(
@@ -116,6 +125,19 @@ export async function fetchUserData(
     .order("id", { ascending: true });
 
   if (error) throw new Error(`fetchUserData: ${error.message}`);
+
+  // The server holds no decryption key, so an encrypted row is unreadable here and
+  // must never reach the prompt: a plan built from ciphertext would be meaningless,
+  // and approving it could act on real rows. End the run before the model is
+  // called. FatalError, because retrying the step cannot change the outcome.
+  //
+  // The check is on the readable shape, not on the blob format: plaintext `windows`
+  // is always an array, so anything else (an encrypted blob of any version, or any
+  // other object) stops the run. `null` is the one exception and is read as no
+  // windows below; the column is `not null`, so a stored row never holds it.
+  if ((data ?? []).some((g) => g.windows != null && !Array.isArray(g.windows))) {
+    throw new FatalError(ORGANIZE_NEEDS_CLIENT_DATA_ERROR);
+  }
 
   return (data ?? []).map((g) => ({
     id: g.id,

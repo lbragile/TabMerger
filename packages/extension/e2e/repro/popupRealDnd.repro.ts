@@ -18,7 +18,7 @@ import { test, expect, chromium, type BrowserContext } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { seedIdb } from '../helpers';
+import { jsLiteral, seedIdb } from '../helpers';
 import { RawCdp } from '../rawCdp';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -67,7 +67,7 @@ async function launch(
   opts: {
     hostUrl?: string;
     extraTabUrls?: string[];
-    extraWindowUrls?: string[];
+    extraWindowUrls?: (string | string[])[];
     /** seed groups (default: Now Open, Work, Play) */
     groups?: Parameters<typeof seedIdb>[1];
     /**
@@ -2026,6 +2026,126 @@ test('real popup — NOW OPEN WINDOW (the window the popup hangs off) dropped on
   await nowOpenMoveOutDrag('window');
 });
 
+// The popup only closes when the ACTIVE tab of the window it hangs off closes, so a window it
+// is NOT attached to must close completely at the drop (spec C7), tabs and all.
+
+/** Centre of the header of the window card that holds the tab row titled `title`. */
+async function windowHeaderPoint(cdp: RawCdp, title: string) {
+  return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
+    const rows = [...document.querySelectorAll('[role="listitem"]')];
+    const row = rows.find(e => e.getAttribute('aria-label') === ${JSON.stringify(title)})
+      || rows.find(e => (e.getAttribute('aria-label') || '').includes('<title>' + ${JSON.stringify(title)} + '</title>'));
+    let scope = row && row.parentElement;
+    while (scope && !(scope.hasAttribute('data-window-index') && scope.querySelector('[data-window-header]'))) scope = scope.parentElement;
+    const header = scope && scope.querySelector('[data-window-header]');
+    if (!header) return null;
+    const r = header.getBoundingClientRect();
+    return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+  })()`);
+}
+
+test('real popup — NOW OPEN WINDOW the popup is NOT attached to closes whole at the drop, and the popup stays alive', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({
+    hostUrl: liveUrl('LiveHost'),
+    extraTabUrls: [liveUrl('LiveOther')],
+    extraWindowUrls: [[liveUrl('SecondA'), liveUrl('SecondB'), liveUrl('SecondC')]]
+  });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Now Open');
+    await expect.poll(() => liveGripByTitle(cdp, 'SecondA', 'window'), { timeout: 10_000 }).not.toBeNull();
+    const from = (await liveGripByTitle(cdp, 'SecondA', 'window'))!;
+    const workRow = await rowBoxByText(cdp, 'Work');
+    expect(workRow).not.toBeNull();
+    const tabsBefore = await browserTabs(context);
+    const secondWindowId = tabsBefore.find((t) => t.title === 'SecondA')!.windowId;
+    expect(tabsBefore.filter((t) => t.windowId === secondWindowId).map((t) => t.title).sort()).toEqual(['SecondA', 'SecondB', 'SecondC']);
+
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, center(workRow!));
+
+    // The whole window is gone while the popup is still open.
+    await expect
+      .poll(async () => (await browserTabs(context)).filter((t) => t.windowId === secondWindowId).length, { timeout: 5_000 })
+      .toBe(0);
+    const alive = await probeAlive(cdp, 'not-attached-window');
+    expect(alive).not.toBeNull();
+    expect(alive).toBeGreaterThan(0);
+    expect(stageNames(await readLog(cdp))).toEqual(expect.arrayContaining(['onDragEnd', 'committed']));
+    const { consoleErrors, pageErrors } = await readErrors(cdp);
+    expect(pageErrors).toEqual([]);
+    expect(consoleErrors).toEqual([]);
+
+    // The anchor window was not touched, and the saved group holds the whole copy.
+    const titlesAfter = (await browserTabs(context)).map((t) => t.title);
+    expect(titlesAfter).toEqual(expect.arrayContaining(['LiveHost', 'LiveOther']));
+    const work = await idbTabs(cdp, 'work');
+    expect(work.some((w) => w.map((t) => t.title).join() === 'SecondA,SecondB,SecondC')).toBe(true);
+    for (const t of work.flat()) expect(t.id).toBe(0);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — NOW OPEN mixed WINDOW selection (the anchor window plus another): the other closes whole, the anchor tab waits for the popup to close', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({
+    hostUrl: liveUrl('LiveHost'),
+    extraTabUrls: [liveUrl('LiveOther')],
+    extraWindowUrls: [[liveUrl('SecondA'), liveUrl('SecondB')]]
+  });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Now Open');
+    await expect
+      .poll(async () => !!(await windowHeaderPoint(cdp, 'LiveHost')) && !!(await windowHeaderPoint(cdp, 'SecondA')), { timeout: 10_000 })
+      .toBe(true);
+    // Ctrl-click a window header: enters selection mode and selects that window.
+    await modClick(cdp, (await windowHeaderPoint(cdp, 'LiveHost'))!, MOD_CTRL);
+    await modClick(cdp, (await windowHeaderPoint(cdp, 'SecondA'))!, MOD_CTRL);
+    await expect
+      .poll(() => cdp.evaluate<number>(`document.querySelectorAll('[role="checkbox"][aria-checked="true"]').length`), { timeout: 4_000 })
+      .toBe(2);
+
+    const from = (await liveGripByTitle(cdp, 'SecondA', 'window'))!;
+    const workRow = await rowBoxByText(cdp, 'Work');
+    expect(workRow).not.toBeNull();
+    const tabsBefore = await browserTabs(context);
+    const secondWindowId = tabsBefore.find((t) => t.title === 'SecondA')!.windowId;
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, center(workRow!));
+
+    await expect
+      .poll(async () => (await browserTabs(context)).filter((t) => t.windowId === secondWindowId).length, { timeout: 5_000 })
+      .toBe(0);
+    const alive = await probeAlive(cdp, 'mixed-window-selection');
+    expect(alive).not.toBeNull();
+    expect(alive).toBeGreaterThan(0);
+    expect(stageNames(await readLog(cdp))).toEqual(expect.arrayContaining(['onDragEnd', 'committed']));
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+
+    // Anchor window: its non-active tabs closed at the drop; the active (anchor) tab is still open.
+    const titlesAfter = (await browserTabs(context)).map((t) => t.title);
+    expect(titlesAfter).not.toContain('LiveOther');
+    expect(titlesAfter).toContain('LiveHost');
+
+    const work = await idbTabs(cdp, 'work');
+    const copies = work.slice(-2).map((w) => w.map((t) => t.title));
+    expect(copies.some((w) => w.join() === 'SecondA,SecondB')).toBe(true);
+    expect(copies.some((w) => w.includes('LiveHost') && w.includes('LiveOther'))).toBe(true);
+
+    // The deferred close lands when the popup goes away.
+    await cdp.evaluate(`window.close()`).catch(() => {});
+    await sleep(1_500);
+    expect((await browserTabs(context)).map((t) => t.title)).not.toContain('LiveHost');
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // PHASE 1 (spec §6 deltas)
 //  A. A picked-up GROUP becomes the active group mid-drag; the selection follows the
@@ -2273,7 +2393,7 @@ test('real popup — BUG REPRO: TAB dwelled on sidebar row (spring-open swaps pa
 
     const log = await readLog(cdp);
     printLog('BUG REPRO — spring-open then drop on window row', log);
-    const endEntry = logEntry(log, 'onDragEnd');
+    const endEntry = logEntry(log, 'onDragEnd') as { insertion?: { container: string; index: number } } | undefined;
     console.log('[bug-repro] onDragEnd entry:', JSON.stringify(endEntry));
     console.log('[bug-repro] committed entry:', JSON.stringify(logEntry(log, 'committed')));
 
@@ -2282,7 +2402,9 @@ test('real popup — BUG REPRO: TAB dwelled on sidebar row (spring-open swaps pa
     expect((await readErrors(cdp)).pageErrors).toEqual([]);
 
     expect(stageNames(log)).toEqual(expect.arrayContaining(['html5:drop', 'onDragEnd', 'committed']));
-    expect((await idbGroup(cdp, 'play')).windows.map((w) => w.tabs)).toEqual([['Foxtrot', 'Alpha']]);
+    // gap == commit: the tab lands at the index of the gap shown at the release (before Foxtrot), the one logged at the drop
+    expect(endEntry?.insertion).toMatchObject({ container: 'play::w0', index: 0, commitOverId: 'play::w0::t0' });
+    expect((await idbGroup(cdp, 'play')).windows.map((w) => w.tabs)).toEqual([['Alpha', 'Foxtrot']]);
     expect((await idbGroup(cdp, 'work')).windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie'], ['Delta', 'Echo']]);
   } finally {
     cdp.close();
@@ -3021,7 +3143,7 @@ async function pressKey(cdp: RawCdp, code: 'Space' | 'ArrowDown' | 'ArrowUp' | '
   await sleep(ms);
 }
 
-test('real popup — KEYBOARD DnD: focus a tab grip, Space, ArrowDown ×2, Space → commits; popup alive; no tab opened; group never switched; focus + announcement follow the moved tab', async () => {
+test('real popup — KEYBOARD move: focus a tab grip, Space, ArrowDown ×2, Space → commits; popup alive; no tab opened; group never switched; focus + announcement follow the moved tab', async () => {
   test.setTimeout(120_000);
   const { context, cdp } = await launch();
   try {
@@ -3042,16 +3164,15 @@ test('real popup — KEYBOARD DnD: focus a tab grip, Space, ArrowDown ×2, Space
 
     await pressKey(cdp, 'Space'); // pick up
     const liveRegion = `(document.querySelector('[id^="DndLiveRegion"]')?.textContent ?? '')`;
-    const pickup = await cdp.evaluate<string>(liveRegion);
+    const pickup = await cdp.evaluate<string>(APP_REGION);
     await pressKey(cdp, 'ArrowDown');
-    await pressKey(cdp, 'ArrowDown');
-    const mid = await cdp.evaluate<{ panel: string[]; alphaTransform: string; lifted: boolean }>(`(() => {
-      const r = ${ROW_BY_TITLE('Alpha')};
+    await pressKey(cdp, 'ArrowDown', 500);
+    const mid = await cdp.evaluate<{ panel: string[]; sourceHeight: number | null; hostFocused: boolean }>(`(() => {
+      const src = document.querySelector('[data-tm-dnd-id][data-tm-move-source]');
       return {
         panel: [...document.querySelectorAll('main [role="listitem"]')].map((e) => e.getAttribute('aria-label')),
-        alphaTransform: r.style.transform,
-        // ring-ring (≥3:1 in both themes), not ring-primary (2.73:1 on a selected light row)
-        lifted: r.className.split(' ').includes('ring-ring')
+        sourceHeight: src ? src.getBoundingClientRect().height : null,
+        hostFocused: document.activeElement?.getAttribute('data-testid') === 'keyboard-move-host'
       };
     })()`);
     const midShot = await saveShot(cdp, 'keyboard-dnd-mid.png');
@@ -3069,11 +3190,11 @@ test('real popup — KEYBOARD DnD: focus a tab grip, Space, ArrowDown ×2, Space
     console.log('[keyboard-dnd] after:', JSON.stringify(after), ' IDB work:', JSON.stringify(work.windows.map((w) => w.tabs)));
 
     // committed, and IndexedDB actually reordered
-    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragStart', 'onDragEnd', 'committed']));
+    expect(stageNames(log)).toContain('committed');
     expect(work.windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie', 'Alpha'], ['Delta', 'Echo']]);
-    // S1: a sighted keyboard user SEES the row move (live transform + lifted style) mid-drag
-    expect(mid.alphaTransform).toMatch(/translate/);
-    expect(mid.lifted).toBe(true);
+    // S1: a sighted keyboard user SEES the move: the source row is collapsed and focus sits on the move host
+    expect(mid.sourceHeight).toBe(0);
+    expect(mid.hostFocused).toBe(true);
     // C2: arrows moved the item, not the active group
     expect(mid.panel).toEqual(WORK_TABS);
     expect(await idbSetting(cdp, 'activeGroupIndex')).toBe(activeBefore);
@@ -3085,8 +3206,8 @@ test('real popup — KEYBOARD DnD: focus a tab grip, Space, ArrowDown ×2, Space
     // S2/S3: real names in the announcements, focus on the moved tab's grip
     expect(pickup).toContain('Picked up tab Alpha');
     expect(after.region).toContain('Moved tab Alpha');
-    expect(after.focus).toBe('Drag to reorder tab: Alpha');
-    expect(after.dndKitRegion).toBe('Dropped.');
+    expect(after.focus).toBe('Alpha'); // focus lands on the moved tab's row
+    expect(after.dndKitRegion).not.toContain('Dropped');
   } finally {
     cdp.close();
     await context.close().catch(() => {});
@@ -3109,126 +3230,33 @@ async function focusGrip(cdp: RawCdp, rowExpr: string, gripSel: string): Promise
   })()`);
 }
 
-test('real popup — KEYBOARD drag, ArrowLeft onto a SIDEBAR group row and dwell: the panel never switches, focus stays on the dragged grip (A2)', async () => {
-  test.setTimeout(120_000);
-  const { context, cdp } = await launch();
-  try {
-    await installErrorCapture(cdp);
-    await selectGroup(cdp, 'Work');
-    await expect.poll(() => panelTabs(cdp), { timeout: 5_000 }).toEqual(WORK_TABS);
-    const activeBefore = await idbSetting(cdp, 'activeGroupIndex');
-    expect(await focusGrip(cdp, ROW_BY_TITLE('Alpha'), TAB_GRIP)).toBe('Drag to reorder tab: Alpha');
+const STALE_TEXT = 'The groups changed, so the movement was cancelled.';
+const WINDOW_NAMES = (g: { windows: { tabs: string[] }[] }) => g.windows.map((w) => w.tabs);
 
-    await pressKey(cdp, 'Space');
-    // Must rest on a NON-active, non-permanent group row (Play) — spring-open never arms for
-    // Work (already shown) or Now Open, so anything else would prove nothing about A2.
-    const overText = await walkKeyboardToSidebarRow(cdp, 'Play');
-    // dwell well past the 600ms spring-open delay
-    await sleep(1_500);
-    const during = await cdp.evaluate<{ panel: string[]; focus: string | null }>(
-      `({ panel: [...document.querySelectorAll('main [role="listitem"]')].map((e) => e.getAttribute('aria-label')), focus: ${FOCUS_LABEL} })`
-    );
-    await pressKey(cdp, 'Escape', 600);
-    const afterCancel = await cdp.evaluate<{ focus: string | null }>(`({ focus: ${FOCUS_LABEL} })`);
-    const work = await idbGroup(cdp, 'work');
-    console.log('[kbd-left] over:', JSON.stringify(overText), ' during:', JSON.stringify(during), ' afterCancel:', JSON.stringify(afterCancel));
-
-    expect(overText).toMatch(/^Over group Play, as a new window\./); // the arrows DID reach the non-active sidebar row
-    expect(during.panel).toEqual(WORK_TABS); // …but the panel never switched
-    expect(during.focus).toBe('Drag to reorder tab: Alpha');
-    expect(await idbSetting(cdp, 'activeGroupIndex')).toBe(activeBefore);
-    expect(afterCancel.focus).toBe('Drag to reorder tab: Alpha');
-    expect(work.windows.map((w) => w.tabs)).toEqual([['Alpha', 'Bravo', 'Charlie'], ['Delta', 'Echo']]);
-    expect(await probeAlive(cdp, 'kbd-left')).toBeGreaterThan(0);
-    expect((await readErrors(cdp)).pageErrors).toEqual([]);
-  } finally {
-    cdp.close();
-    await context.close().catch(() => {});
-  }
-});
-
-/**
- * During a keyboard drag, walk dnd-kit's arrow targeting onto the sidebar row of group
- * `name`. Measured in the real popup: ArrowLeft from a tab grip lands on its WINDOW
- * container first ("Over position 1 of 2 in group Work."), so keep pressing Left until a
- * sidebar-row phrase is announced, then step Down/Up to the wanted row. Returns the last
- * dnd-kit announcement (callers assert on it).
- */
-async function walkKeyboardToSidebarRow(cdp: RawCdp, name: string): Promise<string> {
-  const want = new RegExp(`^Over group ${name}, as a new window\\.`);
-  const sidebarPhrase = /^Over (group .+, as a new window|Now Open, which opens)/;
-  let over = await cdp.evaluate<string>(DNDKIT_REGION);
-  for (let i = 0; i < 4 && !sidebarPhrase.test(over); i++) {
-    await pressKey(cdp, 'ArrowLeft', 350);
-    over = await cdp.evaluate<string>(DNDKIT_REGION);
-  }
-  for (let i = 0; i < 4 && sidebarPhrase.test(over) && !want.test(over); i++) {
-    await pressKey(cdp, 'ArrowDown', 350);
-    over = await cdp.evaluate<string>(DNDKIT_REGION);
-  }
-  for (let i = 0; i < 4 && sidebarPhrase.test(over) && !want.test(over); i++) {
-    await pressKey(cdp, 'ArrowUp', 350);
-    over = await cdp.evaluate<string>(DNDKIT_REGION);
-  }
-  console.log(`[walkKeyboardToSidebarRow ${name}] last announcement:`, JSON.stringify(over));
-  return over;
+/** Another writer replaces the group `id`'s windows with the current ones in `order` (indexes into the current list). */
+async function reorderWindows(cdp: RawCdp, id: string, order: number[]): Promise<boolean> {
+  return cdp.evaluate<boolean>(`(() => {
+    const qc = globalThis.__tmQueryClient;
+    if (!qc) return false;
+    qc.setQueryData(['groups'], (s) => ({
+      ...s,
+      available: s.available.map((g) => g.id === ${JSON.stringify(id)} ? { ...g, updatedAt: Date.now(), windows: ${JSON.stringify(order)}.map((i) => g.windows[i]) } : g)
+    }));
+    return true;
+  })()`);
 }
 
-test('real popup — KEYBOARD drop onto ANOTHER group\'s sidebar row: moved, panel stays, focus lands on the nearest remaining tab BY IDENTITY, outcome announced after focus (A1/A5)', async () => {
+const winOf = (...titles: string[]) => ({ id: 0, incognito: false, focused: false, tabs: titles.map(tab) });
+
+test('real popup — #15: two IDENTICAL saved windows reordered while one is picked up (vs a stable neighbour) → the move is cancelled at once; nothing written', async () => {
   test.setTimeout(120_000);
-  const { context, cdp } = await launch();
-  try {
-    await installErrorCapture(cdp);
-    await selectGroup(cdp, 'Work');
-    await expect.poll(() => panelTabs(cdp), { timeout: 5_000 }).toEqual(WORK_TABS);
-    expect(await focusGrip(cdp, ROW_BY_TITLE('Alpha'), TAB_GRIP)).toBe('Drag to reorder tab: Alpha');
-    await cdp.evaluate(`globalThis.__tmDndLog = []`);
-
-    await pressKey(cdp, 'Space');
-    const over = await walkKeyboardToSidebarRow(cdp, 'Play');
-    console.log('[kbd-cross] over before drop:', JSON.stringify(over));
-    expect(over).toMatch(/^Over group Play, as a new window\./);
-    await pressKey(cdp, 'Space', 1_000);
-
-    const after = await cdp.evaluate<{ focus: string | null; region: string; panel: string[] }>(
-      `({ focus: ${FOCUS_LABEL}, region: ${APP_REGION}, panel: [...document.querySelectorAll('main [role="listitem"]')].map((e) => e.getAttribute('aria-label')) })`
-    );
-    const work = await idbGroup(cdp, 'work');
-    const play = await idbGroup(cdp, 'play');
-    printLog('KEYBOARD cross-group', await readLog(cdp));
-    console.log('[kbd-cross] after:', JSON.stringify(after), ' IDB work:', JSON.stringify(work), ' play:', JSON.stringify(play));
-
-    expect(work.windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie'], ['Delta', 'Echo']]);
-    expect(play.windows.map((w) => w.tabs)).toEqual([['Foxtrot'], ['Alpha']]);
-    expect(after.panel).toEqual(['Bravo', 'Charlie', 'Delta', 'Echo']); // Work still shown
-    // A5: Alpha's next sibling in its own list — never "whatever slid into slot t0" by accident of position
-    expect(after.focus).toBe('Drag to reorder tab: Bravo');
-    expect(after.region).toContain('Moved tab Alpha to Window 2 of group Play');
-    expect(after.region).toContain('Group Play is not shown.');
-    expect(await probeAlive(cdp, 'kbd-cross')).toBeGreaterThan(0);
-    expect((await readErrors(cdp)).pageErrors).toEqual([]);
-  } finally {
-    cdp.close();
-    await context.close().catch(() => {});
-  }
-});
-
-test('real popup — #15: two IDENTICAL saved windows reordered mid-drag (vs a stable neighbour) → the drop CANCELS cleanly; nothing written', async () => {
-  test.setTimeout(120_000);
-  const same = () => ({ id: 0, incognito: false, focused: false, tabs: [tab('Same')] });
-  const DUP = {
-    id: 'dup',
-    name: 'Dup',
-    windows: [same(), { id: 0, incognito: false, focused: false, tabs: [tab('Other')] }, same()]
-  };
+  const DUP = { id: 'dup', name: 'Dup', windows: [winOf('Same'), winOf('Other'), winOf('Same')] };
   const { context, cdp } = await launch({ groups: [NOW_OPEN, DUP, PLAY] });
   try {
     await installErrorCapture(cdp);
     await selectGroup(cdp, 'Dup');
-    const WIN_GRIP = '[aria-label^="Drag to reorder window"]';
     await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${WIN_GRIP}').length`), { timeout: 5_000 }).toBe(3);
-    const before = await idbGroup(cdp, 'dup');
-    expect(before.windows.map((w) => w.tabs)).toEqual([['Same'], ['Other'], ['Same']]);
+    expect(WINDOW_NAMES(await idbGroup(cdp, 'dup'))).toEqual([['Same'], ['Other'], ['Same']]);
     await cdp.evaluate(`globalThis.__tmDndLog = []`);
 
     const focused = await cdp.evaluate<string | null>(`(() => {
@@ -3238,32 +3266,99 @@ test('real popup — #15: two IDENTICAL saved windows reordered mid-drag (vs a s
     expect(focused).toBe('Drag to reorder window: Window 1');
 
     await pressKey(cdp, 'Space'); // pick up the FIRST "Same" window (before "Other")
-    // a remote reorder lands mid-drag: [Other, Same, Same] — the rank-0 "Same" is now AFTER "Other"
-    const injected = await cdp.evaluate<boolean>(`(() => {
-      const qc = globalThis.__tmQueryClient;
-      if (!qc) return false;
-      qc.setQueryData(['groups'], (s) => ({
-        ...s,
-        available: s.available.map((g) => g.id === 'dup' ? { ...g, updatedAt: Date.now(), windows: [g.windows[1], g.windows[0], g.windows[2]] } : g)
-      }));
-      return true;
+    // a remote reorder lands mid-move: [Other, Same, Same] — the rank-0 "Same" is now AFTER "Other"
+    expect(await reorderWindows(cdp, 'dup', [1, 0, 2])).toBe(true);
+    await sleep(400);
+
+    // cancelled AT THE INJECTION (no further keys needed)
+    const region = await cdp.evaluate<string>(APP_REGION);
+    const log = await readLog(cdp);
+    printLog('#15 duplicate-window permutation (keyboard)', log);
+    const after = await idbGroup(cdp, 'dup');
+    console.log('[#15] IDB after:', JSON.stringify(after), ' region:', JSON.stringify(region));
+    expect(region).toBe(STALE_TEXT);
+    expect(stageNames(log)).toContain('keyboard:cancelled-stale');
+    expect(stageNames(log)).not.toContain('keyboard:reanchored');
+    expect(stageNames(log)).not.toContain('committed');
+    expect(WINDOW_NAMES(after)).toEqual([['Same'], ['Other'], ['Same']]); // IDB untouched
+    expect(await probeAlive(cdp, '#15')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — #15b: UNIQUE saved windows reordered while one is picked up → the picked-up window is re-anchored and is the one the drop moves', async () => {
+  test.setTimeout(120_000);
+  const UNIQ = { id: 'uniq', name: 'Uniq', windows: [winOf('Alpha'), winOf('Bravo'), winOf('Charlie')] };
+  const { context, cdp } = await launch({ groups: [NOW_OPEN, UNIQ, PLAY] });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Uniq');
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${WIN_GRIP}').length`), { timeout: 5_000 }).toBe(3);
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+
+    const focused = await cdp.evaluate<string | null>(`(() => {
+      document.querySelector('[data-tm-dnd-id="uniq::w0"] ${WIN_GRIP}')?.focus();
+      return ${FOCUS_LABEL};
     })()`);
-    expect(injected).toBe(true);
-    await pressKey(cdp, 'ArrowDown', 400);
-    await pressKey(cdp, 'ArrowDown', 400);
+    expect(focused).toBe('Drag to reorder window: Window 1');
+
+    await pressKey(cdp, 'Space'); // pick up Alpha's window
+    expect(await reorderWindows(cdp, 'uniq', [1, 2, 0])).toBe(true); // Alpha's window is now last
+    await sleep(600);
+    const mid = await readLog(cdp);
+    expect(stageNames(mid)).toContain('keyboard:reanchored');
+    expect(logEntry(mid, 'keyboard:reanchored')).toMatchObject({ from: 'uniq::w0', to: 'uniq::w2', count: 1 });
+    expect(stageNames(mid)).not.toContain('keyboard:cancelled-stale');
+
+    await pressKey(cdp, 'ArrowUp', 450); // the slot between Bravo and Charlie
     await pressKey(cdp, 'Space', 1_000);
+    const log = await readLog(cdp);
+    printLog('#15b unique-window reorder (keyboard)', log);
+    const after = await idbGroup(cdp, 'uniq');
+    console.log('[#15b] IDB after:', JSON.stringify(after));
+    expect(stageNames(log)).toContain('committed');
+    expect(WINDOW_NAMES(after)).toEqual([['Bravo'], ['Alpha'], ['Charlie']]);
+    expect(await probeAlive(cdp, '#15b')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — #15c: two IDENTICAL saved windows reordered mid POINTER drag → the drop CANCELS cleanly; nothing written', async () => {
+  test.setTimeout(120_000);
+  const DUP = { id: 'dup', name: 'Dup', windows: [winOf('Same'), winOf('Other'), winOf('Same')] };
+  const { context, cdp } = await launch({ groups: [NOW_OPEN, DUP, PLAY], forcePath: 'pointer' });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Dup');
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${WIN_GRIP}').length`), { timeout: 5_000 }).toBe(3);
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    const from = center(await box(cdp, WIN_GRIP, 0));
+    const to = center(await box(cdp, WIN_GRIP, 2));
+
+    // the sensor is pinned to the pointer path
+    await drivePath(cdp, from, to, 1, async () => {
+      expect(await reorderWindows(cdp, 'dup', [1, 0, 2])).toBe(true);
+    });
+    await sleep(700);
 
     const log = await readLog(cdp);
-    printLog('#15 duplicate-window permutation', log);
+    printLog('#15c duplicate-window permutation (pointer)', log);
     const after = await idbGroup(cdp, 'dup');
-    const region = await cdp.evaluate<string>(APP_REGION);
-    console.log('[#15] IDB after:', JSON.stringify(after), ' region:', JSON.stringify(region));
-
+    // a pointer drop's outcome is spoken through dnd-kit's own live region
+    const region = await cdp.evaluate<string>(DNDKIT_REGION);
+    console.log('[#15c] IDB after:', JSON.stringify(after), ' region:', JSON.stringify(region));
+    expect(stageNames(log)).toContain('path:pointer');
     expect(stageNames(log)).toContain('commit-cancelled-stale');
     expect(stageNames(log)).not.toContain('committed');
-    expect(after.windows.map((w) => w.tabs)).toEqual([['Same'], ['Other'], ['Same']]); // IDB untouched
+    expect(WINDOW_NAMES(after)).toEqual([['Same'], ['Other'], ['Same']]); // IDB untouched
     expect(region).toMatch(/groups changed during the drag, so nothing was moved/);
-    expect(await probeAlive(cdp, '#15')).toBeGreaterThan(0);
+    expect(await probeAlive(cdp, '#15c')).toBeGreaterThan(0);
     expect((await readErrors(cdp)).pageErrors).toEqual([]);
   } finally {
     cdp.close();
@@ -3629,13 +3724,13 @@ const FOUR_GROUPS = [
 ];
 
 const SIDEBAR_ROW = (name: string) =>
-  `[...document.querySelectorAll('[data-sidebar-group-index]')].find((r) => r.getAttribute('aria-label') === ${JSON.stringify(name)})`;
+  `[...document.querySelectorAll('[data-sidebar-group-index]')].find((r) => r.getAttribute('aria-label') === ${jsLiteral(name)})`;
 
 /** A neutral click point on a sidebar group row: its name span (the click bubbles to the row). */
 async function groupRowPoint(cdp: RawCdp, name: string) {
   return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
     const row = ${SIDEBAR_ROW(name)};
-    const span = row && [...row.querySelectorAll('span')].find((s) => s.textContent === ${JSON.stringify(name)});
+    const span = row && [...row.querySelectorAll('span')].find((s) => s.textContent === ${jsLiteral(name)});
     if (!span) return null;
     const r = span.getBoundingClientRect();
     return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
@@ -4076,7 +4171,7 @@ test('real popup — 4c: roving tabindex — ONE Tab stop per tab row and per si
     await sleep(700);
     const log = await readLog(cdp);
     printLog('4c keyboard DnD after roving', log);
-    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragStart', 'onDragEnd', 'committed']));
+    expect(stageNames(log)).toContain('committed');
     const after = await idbGroup(cdp, 'work');
     console.log('[4c] work w0:', JSON.stringify(before.windows[0].tabs), '→', JSON.stringify(after.windows[0].tabs));
     expect(after.windows[0].tabs).toEqual(['Bravo', 'Charlie', 'Alpha']);
@@ -4178,7 +4273,7 @@ test('real popup — 4d: roving tabindex reaches the WINDOW HEADER — one Tab s
     await sleep(900);
     const log = await readLog(cdp);
     printLog('4d keyboard window DnD after header roving', log);
-    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragStart', 'onDragEnd', 'committed']));
+    expect(stageNames(log)).toContain('committed');
     const after = await idbGroup(cdp, 'work');
     console.log(
       '[4d] work windows:',
@@ -4186,15 +4281,14 @@ test('real popup — 4d: roving tabindex reaches the WINDOW HEADER — one Tab s
       '→',
       JSON.stringify(after.windows.map((w: { tabs: string[] }) => w.tabs))
     );
-    expect(after.windows[0].tabs).toEqual(['Delta', 'Echo']);
-    expect(after.windows[1].tabs).toEqual(['Alpha', 'Bravo', 'Charlie']);
-    // Focus landed back on something real (the moved window's grip), never <body>.
+    expect(after.windows.map((w: { tabs: string[] }) => w.tabs)).toEqual([['Delta', 'Echo'], ['Golf', 'Hotel'], ['Alpha', 'Bravo', 'Charlie']]);
+    // Focus landed back on something real (the moved window's header), never <body>.
     const landed = await cdp.evaluate<{ label: string | null; onBody: boolean }>(
       `({ label: ${FOCUS_LABEL}, onBody: document.activeElement === document.body })`
     );
     console.log('[4d] focus after keyboard window drop:', JSON.stringify(landed));
     expect(landed.onBody).toBe(false);
-    expect(landed.label).toMatch(/^Drag to reorder window/);
+    expect(landed.label).toMatch(/^Window \d+ controls$/);
 
     expect(await probeAlive(cdp, '4d')).toBeGreaterThan(0);
     expect((await readErrors(cdp)).pageErrors).toEqual([]);

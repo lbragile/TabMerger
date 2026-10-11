@@ -348,6 +348,10 @@ describe('GroupContextMenu — item actions', () => {
     renderGroup(withDupes)
     await user.click(screen.getByText('Deduplicate tabs'))
     expect(mockOpenModal).toHaveBeenCalledWith('deduplicateGroup', expect.objectContaining({ groupIndex: 1 }))
+    // The duplicate is passed with its position in the group (first window, second tab).
+    const { duplicates } = mockOpenModal.mock.calls[0][1] as { duplicates: { windowIndex: number; tabIndex: number; tab: { title: string } }[] }
+    expect(duplicates).toHaveLength(1)
+    expect(duplicates[0]).toMatchObject({ windowIndex: 0, tabIndex: 1, tab: { title: 'A dup' } })
   })
 
   it('shows an info toast instead of opening a modal when there are no duplicates', async () => {

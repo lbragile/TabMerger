@@ -42,6 +42,24 @@ describe('createMoveGhost', () => {
     expect(document.querySelectorAll('[data-testid="drag-ghost-stack"]').length).toBeGreaterThan(0)
   })
 
+  it('setCount(): the badge shows the number of items being moved, and goes away for a single item', () => {
+    const ghost = createMoveGhost(tabRow(), 4)!
+    const badge = () => document.querySelector('[data-testid="drag-ghost-count"]')
+    const stack = () => document.querySelectorAll('[data-testid="drag-ghost-stack"]').length
+    expect(badge()?.textContent).toBe('+3')
+    expect(stack()).toBe(2)
+    ghost.setCount(3)
+    expect(badge()?.textContent).toBe('+2')
+    expect(stack()).toBe(2)
+    ghost.setCount(2)
+    expect(badge()?.textContent).toBe('+1')
+    expect(stack()).toBe(1)
+    ghost.setCount(1)
+    expect(badge()).toBeNull()
+    expect(stack()).toBe(0)
+    expect(document.querySelector('[data-testid="drag-ghost"]')?.textContent).toContain('Bravo')
+  })
+
   it('place() docks the copy at the rect (rounded) and sizes it; place(null) parks it off screen', () => {
     const ghost = createMoveGhost(tabRow(), 1)!
     const el = document.querySelector<HTMLElement>('[data-testid="drag-ghost"]')!

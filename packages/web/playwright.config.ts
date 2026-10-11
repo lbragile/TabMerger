@@ -6,7 +6,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? 'github' : 'html',
+  // CI also sets PLAYWRIGHT_JUNIT_OUTPUT_NAME to write test results for Codecov's Tests tab.
+  reporter: process.env.CI
+    ? [['github'], ...(process.env.PLAYWRIGHT_JUNIT_OUTPUT_NAME ? [['junit'] as ['junit']] : [])]
+    : 'html',
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',

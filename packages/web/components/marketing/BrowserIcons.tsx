@@ -1,3 +1,6 @@
+import type { ReactElement } from 'react'
+import type { StoreId } from '@/lib/stores'
+
 export function ChromeIcon({ size = 20 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" role="img" aria-label="Chrome">
@@ -45,4 +48,15 @@ export function EdgeIcon({ size = 20 }: { size?: number }) {
       />
     </svg>
   )
+}
+
+/**
+ * The icon of the browser each store belongs to. Every icon carries its own accessible
+ * name ("Chrome"); where the store is already written out as text next to it, wrap it in
+ * an `aria-hidden` element so it isn't announced twice.
+ */
+export const STORE_ICON: Record<StoreId, (props: { size?: number }) => ReactElement> = {
+  chrome: ChromeIcon,
+  firefox: FirefoxIcon,
+  edge: EdgeIcon,
 }

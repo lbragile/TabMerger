@@ -2,6 +2,18 @@
 
 [![CI](https://img.shields.io/github/actions/workflow/status/lbragile/TabMerger/ci.yml?branch=main&label=CI&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/actions)
 
+|  | <img src="docs/assets/browsers/chrome.svg" width="28" height="28" alt="Chrome Web Store" title="Chrome Web Store"><br><sub>Chrome</sub> | <img src="docs/assets/browsers/firefox.svg" width="28" height="28" alt="Firefox Add-ons" title="Firefox Add-ons"><br><sub>Firefox</sub> | <img src="docs/assets/browsers/edge.svg" width="28" height="28" alt="Microsoft Edge Add-ons" title="Microsoft Edge Add-ons"><br><sub>Edge</sub> |
+| :-- | :-: | :-: | :-: |
+| **Stable** | [![Stable version on the Chrome Web Store](https://img.shields.io/chrome-web-store/v/inmiajapbpafmhjleiebcamfhkfnlgoc?label=&style=flat-square&color=2ea44f)](https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc) | [![Stable version on Firefox Add-ons](https://img.shields.io/amo/v/tabmerger?label=&style=flat-square&color=2ea44f)](https://addons.mozilla.org/firefox/addon/tabmerger/) | [![Stable version on Microsoft Edge Add-ons](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Feogjdfjemlgmbblgkjlcgdehbeoodbfn&query=%24.version&prefix=v&label=&style=flat-square&color=2ea44f)](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn) |
+| **Beta** | [![Beta version on the Chrome Web Store](https://img.shields.io/github/v/release/lbragile/TabMerger?include_prereleases&filter=*-beta.*&sort=semver&label=&style=flat-square&color=orange)](https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd) | [![Beta version for Firefox](https://img.shields.io/github/v/release/lbragile/TabMerger?include_prereleases&filter=*-beta.*&sort=semver&label=&style=flat-square&color=orange)](https://tabmerger-preview.vercel.app/beta#firefox) | [![Beta version for Edge (the Chrome Web Store beta)](https://img.shields.io/github/v/release/lbragile/TabMerger?include_prereleases&filter=*-beta.*&sort=semver&label=&style=flat-square&color=orange)](https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd) |
+
+Each badge links to its listing. The stable badges show the version that is live on that store
+right now; a newer release can still be in the store's review and appears once the store
+publishes it. The beta badges show the latest beta release on GitHub, which the Chrome Web
+Store may still be reviewing. The beta is invite-only: its Chrome listing opens only for
+members of the tester group, Edge installs that same Chrome beta, and the Firefox beta is
+installed from the beta guide.
+
 A cross-browser tab manager for Chrome, Firefox, and Edge. Save, organize, and restore your tab
 sessions, with optional cloud sync (end-to-end encrypted) and AI-powered grouping (coming soon).
 

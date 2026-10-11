@@ -13,7 +13,7 @@ This is the practical guide: stack, local development, migrations, sync and comm
 
 | Table | Written by | Notes |
 |---|---|---|
-| `profiles` | `handle_new_user()` trigger | Never insert from app code |
+| `profiles` | `handle_new_user()` trigger (creates the row) and Stripe webhook (service role, sets `stripe_customer_id`) | Read-only for its owner. Never insert from app code |
 | `subscriptions` | trigger (free row) and Stripe webhook (service role) | One row per user (`UNIQUE(user_id)`) |
 | `groups` | extension `syncEngine.ts` | Content is E2E-encrypted |
 | `sessions` | extension `useSessions.ts` | Content is E2E-encrypted |
@@ -45,19 +45,21 @@ Details are in [database-schema.md § E2E-encrypted columns](database-schema.md#
 
 RLS is enabled on every table.
 
-- Owner-only (`auth.uid() = user_id`, or `= id` for `profiles`): `profiles` (select/update), `groups`, `sessions`, `device_sessions` and `encryption_keys` (full CRUD), and `organize_runs` (`for all`).
-- Read-only for the owner, with writes through the service role: `subscriptions`, `ai_usage`, `ai_credit_purchases`.
+- Owner-only (`auth.uid() = user_id`): `groups`, `sessions`, `device_sessions` and `encryption_keys` (full CRUD), and `organize_runs` (`for all`).
+- Read-only for the owner, with writes through the service role: `profiles` (`auth.uid() = id`), `subscriptions`, `ai_usage`, `ai_credit_purchases`. On `profiles` the API roles (`anon`, `authenticated`) also hold `SELECT` only at the privilege level (migration 021); the signup trigger and the service role are its only writers.
 - `shared_bundles`: **public select** (`using (true)`), insert for `authenticated` users where `user_id = auth.uid()`, owner delete, and no update.
 
 The **service role key** bypasses RLS. Use it only on the server: in the Stripe webhook and for AI usage metering. Never use it on the client.
 
 ## Migrations
 
-Always add a new file and never edit an applied one; a hook (`.claude/hooks/protect-migrations.py`) blocks such edits. Name files `NNN_description.sql` with the next number (currently `019`). Before applying, run the `migration-reviewer` agent, and consider the `/new-migration` skill.
+Always add a new file and never edit an applied one; a hook (`.claude/hooks/protect-migrations.py`) blocks such edits. Name files `NNN_description.sql` with the next number (currently `022`). Before applying, run the `migration-reviewer` agent, and consider the `/new-migration` skill.
 
 ```bash
 supabase migration new <description>   # then rename to NNN_<description>.sql
-supabase db reset                      # rebuild local DB from all migrations + seed.sql
+supabase db reset                      # rebuild local DB from all migrations + seed.sql (wipes local data)
+supabase migration up --local          # apply only the pending migrations to the local DB, keeping its data
+supabase test db                       # run the pgTAP tests in supabase/tests/ against the local DB
 supabase db diff                       # local DB vs migrations
 supabase migration list --linked       # what the linked hosted project has applied
 supabase db push                       # apply pending migrations to the linked project

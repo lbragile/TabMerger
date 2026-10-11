@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { cn, formatDate, formatCurrency, absoluteUrl, getMetadataBase } from '@/lib/utils'
+import { cn, formatDate, formatCurrency, absoluteUrl, getMetadataBase, safeRedirectPath } from '@/lib/utils'
 
 describe('cn', () => {
   it('merges class names', () => {
@@ -160,5 +160,56 @@ describe('getMetadataBase', () => {
     vi.stubEnv('VERCEL_URL', '')
     vi.stubEnv('VERCEL_PROJECT_PRODUCTION_URL', '')
     expect(getMetadataBase().origin).toBe('http://localhost:3000')
+  })
+})
+
+describe('safeRedirectPath', () => {
+  it.each([
+    '/pricing',
+    '/dashboard?x=1#y',
+    '/',
+    '/account/billing',
+    '/a?next=https://other.example',
+    '/a/./b?x=1#y',
+    '/a/../b?x=1#y',
+    '/a//b?x=1#y',
+    '/a?x=//b#//c',
+  ])(
+    'returns the same-site path %j unchanged',
+    (path) => {
+      expect(safeRedirectPath(path)).toBe(path)
+    }
+  )
+
+  it.each([
+    '@evil.example',
+    '.evil.example',
+    '//evil.example',
+    '/.//evil.example',
+    '/..//evil.example',
+    '/./..//evil.example',
+    '/a/..//evil.example',
+    '/\\evil.example',
+    '/a\\b',
+    'https://evil.example',
+    'javascript:alert(1)',
+    'pricing',
+    '',
+    '/a\nb',
+    '/a\tb',
+    '/\t/evil.example',
+    '/a\u0000b',
+    '/a\u007fb',
+  ])('returns the default for %j', (value) => {
+    expect(safeRedirectPath(value)).toBe('/dashboard')
+  })
+
+  it.each([null, undefined, 42, {}, ['/pricing']])('returns the default for the non-string %j', (value) => {
+    expect(safeRedirectPath(value)).toBe('/dashboard')
+  })
+
+  it('returns the given fallback instead of the default', () => {
+    expect(safeRedirectPath('//evil.example', '/account')).toBe('/account')
+    expect(safeRedirectPath('/pricing', '/account')).toBe('/pricing')
   })
 })

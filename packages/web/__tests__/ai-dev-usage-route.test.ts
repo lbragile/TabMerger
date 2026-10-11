@@ -17,6 +17,7 @@ vi.mock('@/lib/supabase/server', () => ({
 }))
 
 import { POST } from '@/app/api/ai/dev-usage/route'
+import { AI_MAX_DEV_USAGE_COUNT } from '@/lib/ai-validation'
 
 const USER_ID = 'user-uuid-1'
 const URL = 'http://localhost/api/ai/dev-usage'
@@ -134,6 +135,22 @@ describe('POST /api/ai/dev-usage', () => {
       expect(res.status).toBe(400)
     }
     expect(mockUpsert).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['malformed JSON', '{"count": '],
+    ['an empty body', ''],
+    ['a null body', 'null'],
+    ['an array body', '[5]'],
+    ['a count above the ceiling', JSON.stringify({ count: AI_MAX_DEV_USAGE_COUNT + 1 })],
+  ])('returns 400 for %s without writing usage', async (_label, raw) => {
+    const res = await POST(
+      new NextRequest(URL, { method: 'POST', headers: { authorization: 'Bearer jwt-token' }, body: raw })
+    )
+    expect(res.status).toBe(400)
+    expect(await res.json()).toEqual({ error: 'count must be a non-negative integer' })
+    expect(mockUpsert).not.toHaveBeenCalled()
+    expect(mockDelete).not.toHaveBeenCalled()
   })
 
   it('returns 500 when the upsert fails', async () => {

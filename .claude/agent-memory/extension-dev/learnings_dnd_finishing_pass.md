@@ -55,9 +55,10 @@ a tab drag needs two to move two. Read `[id^="DndLiveRegion"]` to see what dnd-k
 C7 stands: closing the active tab of the popup's anchor window dismisses the popup. The
 split that works:
 - `applyMove` stays pure and emits `{ type: 'tabs.remove', tabIds }`;
-- `runSideEffects` partitions with `chrome.tabs.query({ active: true })` — **every** active
-  tab (not just the anchor: the popup has no reliable handle on its own anchor) is deferred,
-  the rest close immediately;
+- `runSideEffects` partitions with `chrome.tabs.query({ active: true })` — originally
+  **every** active tab was deferred and the rest closed immediately. Superseded 2026-10-09:
+  only the active tab of the popup's own window is deferred, see
+  `learnings_now_open_close_own_window_rule.md`;
 - deferred ids go to the background over a long-lived port (`chrome.runtime.connect`), and
   the worker closes them on `onDisconnect`. That fires for EVERY way a popup can vanish,
   and an open port keeps the MV3 worker alive so the close can't be lost to eviction.

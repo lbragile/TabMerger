@@ -1,4 +1,6 @@
 import * as Sentry from '@sentry/browser';
+import { isOpenableUrl } from '@/lib/safeOpen';
+import { parseBridgeMessage, type BridgeMessage } from '@/lib/bridgeMessage';
 import { getGroupsState, updateGroupsState, registerGroupsChangeListener } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
@@ -7,14 +9,13 @@ import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
 import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
+import { copyLiveTab } from '@/lib/dndMove';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
 import {
   EXTENSION_MESSAGE,
-  WEBSITE_TO_EXTENSION_TYPES,
   SIGN_IN_DATA_CONSENT_CATEGORIES,
   SYNC_AUTH_CONSENT_REQUIRED_REASON,
-  type ExtensionMessageType,
 } from '@tabmerger/shared';
 import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 
@@ -90,7 +91,8 @@ const SCOPE_LABELS: Record<Scope, string> = {
 };
 
 // Shared by the context-menu handler and the global keyboard shortcuts: picks the
-// subset of tabs in a window for a given scope, filtering out chrome:// urls.
+// subset of tabs in a window for a given scope, filtering out chrome:// urls. The result
+// is what gets saved, so each tab is a detached saved copy (id 0, savedAt — see copyLiveTab).
 export function tabsForScope(
   scope: Scope,
   contextTab: chrome.tabs.Tab,
@@ -107,13 +109,14 @@ export function tabsForScope(
 
   return selected
     .filter((t) => t.url && !t.url.startsWith('chrome://'))
-    .map((t, i) => ({
-      id: t.id ?? Date.now() + i,
-      title: t.title ?? t.url ?? '',
-      url: t.url ?? '',
-      favIconUrl: t.favIconUrl,
-      pinned: t.pinned,
-    }));
+    .map((t) =>
+      copyLiveTab({
+        id: t.id ?? 0,
+        title: t.title ?? t.url ?? '',
+        url: t.url ?? '',
+        favIconUrl: t.favIconUrl,
+      })
+    );
 }
 
 let _building = false;
@@ -232,10 +235,11 @@ export default defineBackground(() => {
 
   // Tabs the popup dragged OUT of "Now Open" that it must not close itself: closing the
   // ACTIVE tab of the popup's anchor window dismisses the popup instantly (spec C7), which
-  // used to kill the drop commit. The popup posts the ids down a long-lived port and we
-  // close them when that port disconnects — i.e. the moment the popup goes away, whatever
-  // made it go away. The open port also keeps this worker alive until then, so the close
-  // can't be lost to worker eviction.
+  // used to kill the drop commit. That is the only tab it holds back; every other dragged
+  // tab the popup closes itself at the drop. The popup posts the ids down a long-lived
+  // port and we close them when that port disconnects — i.e. the moment the popup goes
+  // away, whatever made it go away. The open port also keeps this worker alive until then,
+  // so the close can't be lost to worker eviction.
   chrome.runtime.onConnect.addListener((port) => {
     if (port.name !== DEFERRED_CLOSE_PORT) return;
     const pending = new Set<number>();
@@ -287,7 +291,6 @@ export default defineBackground(() => {
   // Shared by externally_connectable (Chrome/Edge) and the Firefox web-bridge content script
   // (see web-bridge.content.ts) below — same three message types, same handling, so neither
   // path can drift from the other.
-  type BridgeMessage = { type?: ExtensionMessageType; accessToken?: string; refreshToken?: string };
   function handleBridgeMessage(
     m: BridgeMessage,
     sendResponse: (response?: unknown) => void
@@ -336,7 +339,10 @@ export default defineBackground(() => {
   // (unlike the content script this used to be routed through). Chrome/Edge only — Firefox
   // doesn't support externally_connectable for web pages, see the onMessage listener below.
   chrome.runtime.onMessageExternal.addListener((msg: unknown, _sender, sendResponse) => {
-    return handleBridgeMessage(msg as BridgeMessage, sendResponse);
+    // Runtime check first: the sender is a web page, so the shape is not trusted (see parseBridgeMessage)
+    const m = parseBridgeMessage(msg);
+    if (!m) return;
+    return handleBridgeMessage(m, sendResponse);
   });
 
   // Firefox-only counterpart of the listener above (relayed by web-bridge.content.ts, which
@@ -354,8 +360,8 @@ export default defineBackground(() => {
     }
   })();
   chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
-    const m = msg as BridgeMessage;
-    if (!m?.type || !(WEBSITE_TO_EXTENSION_TYPES as readonly string[]).includes(m.type)) return;
+    const m = parseBridgeMessage(msg);
+    if (!m) return;
     if (sender.id !== chrome.runtime.id) return;
     if (!WEB_APP_ORIGIN || !sender.url) return;
     let senderOrigin: string;
@@ -532,7 +538,8 @@ export default defineBackground(() => {
       const data = (await chrome.storage.local.get(notifId))[notifId] as
         | { url: string; title: string; note: string }
         | undefined;
-      if (data?.url) chrome.tabs.create({ url: data.url, active: true });
+      const url: unknown = data?.url;
+      if (isOpenableUrl(url)) chrome.tabs.create({ url, active: true });
       chrome.notifications.clear(notifId);
       chrome.storage.local.remove(notifId);
       // The tab's reminder field will be stale in IDB but harmless — it won't re-alarm

@@ -52,7 +52,9 @@
 - [seed:dev manual tool](learnings_seed_dev_manual_tool.md) — `pnpm seed:dev` headed-Chrome seeded-popup click-around tool; THREE dev builds
 - [setDragImage canvas-vs-img grey box](learnings_dragimage_canvas_vs_img.md) — detached canvas silently falls back to Chrome's native drag image
 - [DnD ghost clone fidelity](learnings_dnd_ghost_clone_fidelity.md) — replaced synthesized ghost card with `cloneNode(true)` of the real row
-- [Now Open DnD = copy, never close](learnings_now_open_dnd_copy_semantics.md) — tabs.remove on drag-out closed the popup's anchor tab → Chrome dismissed popup
+- [Now Open DnD copy semantics (SUPERSEDED: drag-out is a MOVE again, see DnD finishing pass)](learnings_now_open_dnd_copy_semantics.md) — why a synchronous tabs.remove dismissed the popup; harness gotchas still valid
+- [Window "Copy to group" from Now Open](learnings_now_open_window_copy_to_group.md) — useMoveWindow copies when the source is permanent (no caller flag); copyLiveWindow exported from dndMove
+- [Now Open drag-out: own-window rule](learnings_now_open_close_own_window_rule.md) — only the active tab of the page's own window (windows.getCurrent) is deferred; fallback defers all actives; tsx probe recipe
 - [Collapse, instant drop, pointer probe](learnings_dnd_collapse_instant_drop_probe.md) — MEASURED: native-drag abort = mutation inside dragstart dispatch/microtask only
 - [DnD ghost prominence + cursor dead end](learnings_dnd_ghost_prominence_and_cursor.md) — switched source-hide from opacity dim to `visibility:hidden`
 - [Phase-1 cross-group + active group](learnings_phase1_cross_group_active_group.md) — useGroups staleTime:0 refetch-on-mount clobbered the optimistic DnD commit
@@ -91,3 +93,8 @@
 - [Group colour tints](learnings_group_colour_tints.md) — withAlpha lives in lib/color.ts; inline style over static primary fallback classes; flush band via -mx-1 -mt-1
 - [Write commit + e2e persistence](learnings_popup_write_commit_and_e2e_persistence.md) — explicit tx.commit(), where click-to-commit time goes, waitForStoredGroup
 - [Visual regression determinism](learnings_visual_regression_determinism.md) — frozen clock on extension pages, blocked network, theme seeding, seed under the groups write lock, production-build fixture option
+- [Saved copies + positional matching](learnings_saved_copies_and_positional_matching.md) — copyLiveTab/copyLiveWindow for every live-to-saved writer, closableTabIds for deletes, findDuplicateTabs positions with a URL check
+- [Selection click-away press rule](learnings_selection_click_away_press_rule.md) — background click = press began on background + no overlay open; a menu trigger's click targets the document root
+- [Keyboard move re-anchor](learnings_keyboard_move_reanchor.md) — picked-up item re-anchored by identity on each cache update; cache listener is pre-render; real-commit test pattern
+- [E2E CodeQL sanitizers](learnings_e2e_codeql_sanitizers.md) — escapeHtml / jsLiteral / startTitleServer in e2e/helpers.ts; unicode-escape authoring gotcha; how to type-check e2e/
+- [Import validation + stored-URL open guard](learnings_import_validation_and_open_guard.md) — parsers return { groups, skipped }; lib/safeOpen.ts before every stored-URL open; CRLF and NUL-byte editing gotchas

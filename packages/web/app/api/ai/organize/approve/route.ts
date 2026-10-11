@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { aiDisabledResponse } from '@/lib/ai-guard'
 import { resumeHook } from 'workflow/api'
-import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
+import { parseApproveBody, readJsonBody } from '@/lib/ai-validation'
 
 /**
  * Resumes a paused tab-organizer workflow after the user approves or rejects the proposal.
@@ -45,8 +45,11 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const body: { token: string; approved: boolean; actions?: ReorganizeAction[] } =
-    await request.json()
+  const input = parseApproveBody(await readJsonBody(request))
+  if (!input.ok) {
+    return NextResponse.json({ error: input.error }, { status: 400 })
+  }
+  const body = input.data
 
   // Verify token belongs to the authenticated user — token format is `org-${userId}-${random}` (Issue 2 — IDOR fix)
   if (!body.token.startsWith(`org-${user.id}-`)) {

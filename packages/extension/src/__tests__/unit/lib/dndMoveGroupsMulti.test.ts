@@ -198,7 +198,8 @@ describe('moveToNewGroup — the sidebar "new group" drop zone', () => {
     expect(fresh.windows[0].tabs[0].id).toBe(0)
     expect(fresh.windows[0].tabs[0].savedAt).toBeGreaterThan(0)
     // Now Open in the MODEL is untouched (it re-syncs from the browser); the real tab is
-    // closed through a `tabs.remove`, deferred by the executor if it is active (spec C7).
+    // closed through a `tabs.remove`, deferred by the executor only if it is the active
+    // tab of the popup's own window (spec C7).
     expect(res.next.available[0].windows[0].tabs.map((t) => t.id)).toEqual([11])
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [11] }])
     expect(res.undoable).toBe(false)

@@ -37,7 +37,7 @@ import { parseSearchQuery, formatGroupCounts, cn, fuzzyMatch } from '@/lib/utils
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
-import { deduplicateTabs } from '@/lib/deduplication';
+import { findDuplicateTabs } from '@/lib/deduplication';
 import { toast } from '@/lib/toast';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
@@ -195,8 +195,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
   };
 
   const handleDeduplicate = () => {
-    const allTabs = group.windows.flatMap((w) => w.tabs);
-    const { duplicates } = deduplicateTabs(allTabs);
+    const duplicates = findDuplicateTabs(group.windows);
     if (duplicates.length === 0) {
       toast.info('No duplicates found');
       return;

@@ -1,4 +1,4 @@
-import type { PricingTier } from '../types/index.ts';
+import type { PricingTier, SubscriptionStatus } from '../types/index.ts';
 
 export const DEFAULT_GROUP_COLOR = 'rgba(128, 128, 128, 1)';
 export const FIRST_GROUP_TITLE = 'Now Open';
@@ -30,6 +30,21 @@ export type EntitledSubscriptionStatus = (typeof ENTITLED_SUBSCRIPTION_STATUSES)
 export function isEntitledSubscriptionStatus(status: string | null | undefined): boolean {
   return !!status && (ENTITLED_SUBSCRIPTION_STATUSES as readonly string[]).includes(status);
 }
+
+/**
+ * Every value `subscriptions.status` can hold: the CHECK list on that column and the members of
+ * the `SubscriptionStatus` type. Stripe has statuses outside this list (`unpaid`, `paused`,
+ * `incomplete_expired`, and any it adds later), so whatever writes a row stores one of these: a
+ * status that is not listed is written as `canceled`, which is stored and never entitled.
+ * Every entry of `ENTITLED_SUBSCRIPTION_STATUSES` is also in this list.
+ */
+export const STORED_SUBSCRIPTION_STATUSES = [
+  'active',
+  'canceled',
+  'past_due',
+  'trialing',
+  'incomplete',
+] as const satisfies readonly SubscriptionStatus[];
 
 export const PRESET_COLORS = [
   'rgba(239, 68, 68, 1)',   // red

@@ -31,7 +31,9 @@ vi.mock('@/hooks/useGroups', () => ({
 
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 
-vi.mock('@/lib/importExport', () => ({
+// The two file parsers are mocked; the state-file reader and the toast suffix are the real ones.
+vi.mock('@/lib/importExport', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/importExport')>()),
   parseBookmarksHtml: mockParseBookmarksHtml,
   parseOneTabs: mockParseOneTabs,
 }))
@@ -72,7 +74,7 @@ describe('ImportExportModal — import JSON', () => {
 
   it('imports a valid JSON export and replaces groups', async () => {
     const { onClose } = renderModal('import')
-    const file = makeFile(JSON.stringify({ available: [{ name: 'x' }] }), 'export.json')
+    const file = makeFile(JSON.stringify({ available: [{ name: 'x', windows: [] }] }), 'export.json')
     const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [file] } })
     await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalled())
@@ -83,6 +85,40 @@ describe('ImportExportModal — import JSON', () => {
     expect(typeof stored.available[0].id).toBe('string')
     expect(mockToastSuccess).toHaveBeenCalledWith('Groups imported successfully')
     expect(onClose).toHaveBeenCalled()
+  })
+
+  it('leaves out script URLs and malformed entries, stores the rest and says how many were skipped', async () => {
+    renderModal('import')
+    const available = [
+      { name: 'Mixed', windows: [{ tabs: [{ title: 'Ok', url: 'https://ok.example.com' }, { title: 'Bad', url: 'JaVaScRiPt:alert(1)' }, 'not a tab'] }] },
+      { name: 'No windows' },
+    ]
+    const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [makeFile(JSON.stringify({ available }), 'mixed.json')] } })
+    await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalled())
+    const stored = mockSetGroupsState.mock.calls[0][0] as { available: Array<{ name: string; windows: Array<{ tabs: Array<{ url: string }> }> }> }
+    expect(stored.available.map((g) => g.name)).toEqual(['Mixed'])
+    expect(stored.available[0].windows[0].tabs.map((t) => t.url)).toEqual(['https://ok.example.com'])
+    expect(mockToastSuccess).toHaveBeenCalledWith('Groups imported successfully, 3 skipped')
+  })
+
+  it('takes the error path when every entry of the file is left out', async () => {
+    renderModal('import')
+    const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [makeFile(JSON.stringify({ available: [{ name: 'x' }, 7] }), 'none.json')] } })
+    await waitFor(() => expect(mockToastError).toHaveBeenCalledWith('Invalid JSON file'))
+    expect(mockSetGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('applies the free-plan check to the validated groups, not to the raw file', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', maxGroups: 1, maxTabs: 50 })
+    renderModal('import')
+    // two entries in the file, only one is a group: within the one-group limit
+    const available = [{ name: 'Kept', windows: [] }, { name: 'Not a group' }]
+    const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [makeFile(JSON.stringify({ available }), 'two.json')] } })
+    await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalled())
+    expect(mockToastSuccess).toHaveBeenCalledWith('Groups imported successfully, 1 skipped')
   })
 
   it('shows an error toast for invalid JSON and does not close', async () => {
@@ -106,7 +142,7 @@ describe('ImportExportModal — import JSON', () => {
 
 describe('ImportExportModal — import bookmarks HTML', () => {
   it('imports parsed bookmark groups and reports tab count', async () => {
-    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: [{}, {}] }] }])
+    mockParseBookmarksHtml.mockReturnValue({ groups: [{ windows: [{ tabs: [{}, {}] }] }], skipped: 0 })
     const { onClose } = renderModal('import')
     const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
     const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
@@ -116,8 +152,16 @@ describe('ImportExportModal — import bookmarks HTML', () => {
     expect(onClose).toHaveBeenCalled()
   })
 
+  it('adds the skipped count to the success toast when links were left out', async () => {
+    mockParseBookmarksHtml.mockReturnValue({ groups: [{ windows: [{ tabs: [{}] }] }], skipped: 3 })
+    renderModal('import')
+    const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [makeFile('<html></html>', 'bookmarks.html', 'text/html')] } })
+    await waitFor(() => expect(mockToastSuccess).toHaveBeenCalledWith('Imported 1 group, 1 tab, 3 skipped'))
+  })
+
   it('shows "No bookmarks found" when parsing yields no groups', async () => {
-    mockParseBookmarksHtml.mockReturnValue([])
+    mockParseBookmarksHtml.mockReturnValue({ groups: [], skipped: 2 })
     renderModal('import')
     const file = makeFile('<html></html>', 'empty.html', 'text/html')
     const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
@@ -129,7 +173,7 @@ describe('ImportExportModal — import bookmarks HTML', () => {
 
 describe('ImportExportModal — import OneTab', () => {
   it('imports parsed OneTab groups', async () => {
-    mockParseOneTabs.mockReturnValue([{ windows: [{ tabs: [{}] }] }])
+    mockParseOneTabs.mockReturnValue({ groups: [{ windows: [{ tabs: [{}] }] }], skipped: 0 })
     renderModal('import')
     const file = makeFile('https://a.com | A', 'onetab.txt', 'text/plain')
     const input = document.querySelector('input[type="file"][accept=".txt"]') as HTMLInputElement
@@ -138,8 +182,16 @@ describe('ImportExportModal — import OneTab', () => {
     expect(mockToastSuccess).toHaveBeenCalledWith('Imported 1 group, 1 tab')
   })
 
+  it('adds the skipped count to the success toast when lines were left out', async () => {
+    mockParseOneTabs.mockReturnValue({ groups: [{ windows: [{ tabs: [{}, {}] }] }], skipped: 1 })
+    renderModal('import')
+    const input = document.querySelector('input[type="file"][accept=".txt"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [makeFile('x', 'onetab.txt', 'text/plain')] } })
+    await waitFor(() => expect(mockToastSuccess).toHaveBeenCalledWith('Imported 1 group, 2 tabs, 1 skipped'))
+  })
+
   it('shows "No tabs found" when parsing yields no groups', async () => {
-    mockParseOneTabs.mockReturnValue([])
+    mockParseOneTabs.mockReturnValue({ groups: [], skipped: 0 })
     renderModal('import')
     const file = makeFile('', 'empty.txt', 'text/plain')
     const input = document.querySelector('input[type="file"][accept=".txt"]') as HTMLInputElement
@@ -154,7 +206,7 @@ describe('ImportExportModal — Free-tier limit gating', () => {
     mockUseGroups.mockReturnValue({
       data: { available: [{ name: 'Now Open', permanent: true }, ...Array.from({ length: 5 }, (_, i) => ({ name: `g${i}`, windows: [] }))] }
     })
-    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: [{}] }] }])
+    mockParseBookmarksHtml.mockReturnValue({ groups: [{ windows: [{ tabs: [{}] }] }], skipped: 0 })
     renderModal('import')
     const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
     const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
@@ -170,7 +222,7 @@ describe('ImportExportModal — Free-tier limit gating', () => {
   it('blocks an import that would exceed maxTabs even when under maxGroups', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'free', maxGroups: 5, maxTabs: 50 })
     mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true }] } })
-    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: Array.from({ length: 51 }, () => ({})) }] }])
+    mockParseBookmarksHtml.mockReturnValue({ groups: [{ windows: [{ tabs: Array.from({ length: 51 }, () => ({})) }] }], skipped: 0 })
     renderModal('import')
     const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
     const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
@@ -183,7 +235,7 @@ describe('ImportExportModal — Free-tier limit gating', () => {
   it('allows a bookmarks import under the free limit', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'free', maxGroups: 5, maxTabs: 50 })
     mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true }] } })
-    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: [{}, {}] }] }])
+    mockParseBookmarksHtml.mockReturnValue({ groups: [{ windows: [{ tabs: [{}, {}] }] }], skipped: 0 })
     renderModal('import')
     const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
     const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
@@ -195,7 +247,7 @@ describe('ImportExportModal — Free-tier limit gating', () => {
   it('is unaffected for Pro even far past what would be the free limit', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro', maxGroups: Infinity, maxTabs: Infinity })
     mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true }] } })
-    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: Array.from({ length: 200 }, () => ({})) }] }])
+    mockParseBookmarksHtml.mockReturnValue({ groups: [{ windows: [{ tabs: Array.from({ length: 200 }, () => ({})) }] }], skipped: 0 })
     renderModal('import')
     const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
     const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement

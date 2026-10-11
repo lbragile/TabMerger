@@ -75,7 +75,12 @@ describe("manifest build output", () => {
     // overrides it for local dev builds. Read whichever value actually won instead.
     const manifest = build(["-b", "firefox", "--mode", "beta"], "firefox-mv3-beta");
     const updateUrl = manifest.browser_specific_settings?.gecko?.update_url;
-    expect(updateUrl).toMatch(new RegExp(`^https?://.+${FIREFOX_BETA.PATH}/${FIREFOX_BETA.UPDATES_FILE}$`));
+    // Literal checks (no pattern built from the constants): an http(s) origin, then exactly the shared path and file.
+    const suffix = `${FIREFOX_BETA.PATH}/${FIREFOX_BETA.UPDATES_FILE}`;
+    expect(typeof updateUrl).toBe("string");
+    const url = String(updateUrl);
+    expect(url.endsWith(suffix)).toBe(true);
+    expect(url.slice(0, -suffix.length)).toMatch(/^https?:[/]{2}.+/);
   });
 
   it("Firefox stable has no update_url (AMO-listed add-ons update from AMO itself)", () => {

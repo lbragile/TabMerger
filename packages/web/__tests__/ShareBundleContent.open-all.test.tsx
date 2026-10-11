@@ -68,8 +68,8 @@ describe('ShareBundleContent — open all tabs / favicon contrast', () => {
     await user.click(openAllButtons[0])
 
     expect(openSpy).toHaveBeenCalledTimes(2)
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/a1', '_blank')
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/a2', '_blank')
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/a1', '_blank', 'noopener,noreferrer')
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/a2', '_blank', 'noopener,noreferrer')
   })
 
   it('opens all valid tab URLs across every window in a group when "Open all windows" is clicked', async () => {
@@ -81,9 +81,9 @@ describe('ShareBundleContent — open all tabs / favicon contrast', () => {
     await user.click(openAllWindowsButtons[0])
 
     expect(openSpy).toHaveBeenCalledTimes(3)
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/a1', '_blank')
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/a2', '_blank')
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/a3', '_blank')
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/a1', '_blank', 'noopener,noreferrer')
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/a2', '_blank', 'noopener,noreferrer')
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/a3', '_blank', 'noopener,noreferrer')
   })
 
   it('does not throw and makes no window.open calls for a window/group with zero valid tab URLs', async () => {
@@ -130,7 +130,7 @@ describe('ShareBundleContent — open all tabs / favicon contrast', () => {
     // Single tab in this window → singular "Open tab" label
     await user.click(screen.getByRole('button', { name: /^open tab$/i }))
     expect(openSpy).toHaveBeenCalledTimes(1)
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/private', '_blank')
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/private', '_blank', 'noopener,noreferrer')
   })
 
   it('disables "Open all windows" for a single-window group whose only window has no valid URLs', () => {

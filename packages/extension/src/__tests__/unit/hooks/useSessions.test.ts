@@ -366,3 +366,59 @@ describe('useRestoreSession', () => {
     expect(chrome.windows.create).not.toHaveBeenCalled()
   })
 })
+
+describe('useRestoreSession — stored URLs', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.stubGlobal('chrome', {
+      windows: {
+        getAll: vi.fn().mockResolvedValue([]),
+        remove: vi.fn().mockResolvedValue(undefined),
+        create: vi.fn().mockResolvedValue({ id: 100 }),
+      },
+      tabs: { create: vi.fn().mockResolvedValue({}) },
+    })
+  })
+
+  const sessionOf = (...windowUrls: string[][]): Session => ({
+    id: 's1',
+    name: 'Session',
+    createdAt: 1,
+    groups: [
+      {
+        id: 'g1',
+        name: 'G',
+        color: 'rgba(0,0,0,1)',
+        updatedAt: 1,
+        permanent: false,
+        windows: windowUrls.map((urls, i) => ({
+          id: i,
+          incognito: false,
+          focused: false,
+          tabs: urls.map((url) => ({ id: 0, title: url, url })),
+        })),
+      },
+    ],
+  })
+
+  it('reopens only the openable tabs of a window, starting with the first openable one', async () => {
+    const { result } = renderHook(() => useRestoreSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync(sessionOf(['javascript:alert(1)', 'https://a.com', 'data:text/html,x', 'chrome://extensions/']))
+    })
+    expect(chrome.windows.create).toHaveBeenCalledTimes(1)
+    expect(chrome.windows.create).toHaveBeenCalledWith({ url: 'https://a.com' })
+    expect(chrome.tabs.create).toHaveBeenCalledTimes(1)
+    expect(chrome.tabs.create).toHaveBeenCalledWith({ windowId: 100, url: 'chrome://extensions/' })
+  })
+
+  it('opens no window for a saved window with nothing openable, and still restores the others', async () => {
+    const { result } = renderHook(() => useRestoreSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync(sessionOf(['javascript:alert(1)', ''], ['https://b.com']))
+    })
+    expect(chrome.windows.create).toHaveBeenCalledTimes(1)
+    expect(chrome.windows.create).toHaveBeenCalledWith({ url: 'https://b.com' })
+    expect(mockTrackEvent).toHaveBeenCalledWith('session_restored')
+  })
+})

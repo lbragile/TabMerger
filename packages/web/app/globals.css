@@ -203,6 +203,10 @@ button:disabled,
     --feat-bg: 213 27% 8%;
     --feat-foreground: 220 16% 95%;
     --feat-foreground2: 220 12% 68%;
+    /* Review stars. The brand cyan above is about 2.6:1 on a white card, under the 3:1 a
+       graphic needs, so the light theme uses a darker cyan of the same hue (about 5:1).
+       Used as text-[hsl(var(--star))]. */
+    --star: 189 100% 28%;
     --sh1: 0 1px 2px rgba(16, 20, 24, 0.06);
     --sh2: 0 4px 12px -4px rgba(16, 20, 24, 0.12);
     --sh3: 0 24px 48px -24px rgba(16, 20, 24, 0.35);
@@ -249,6 +253,8 @@ button:disabled,
     --feat-bg: 220 22% 14%;
     --feat-foreground: 220 16% 95%;
     --feat-foreground2: 216 12% 65%;
+    /* The dark theme's brand cyan is already about 9:1 on a card: stars keep it. */
+    --star: var(--primary);
     --sh1: 0 1px 2px rgba(0, 0, 0, 0.4);
     --sh2: 0 8px 20px -8px rgba(0, 0, 0, 0.6);
     --sh3: 0 30px 60px -28px rgba(0, 0, 0, 0.85);

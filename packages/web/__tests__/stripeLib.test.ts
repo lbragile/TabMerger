@@ -130,6 +130,45 @@ describe('lib/stripe', () => {
     )
   })
 
+  // Both hosted Checkout pages show the "Add promotion code" field. The codes and their limits
+  // live in the Stripe Dashboard; nothing here applies a discount on the customer's behalf.
+  it.each([
+    [
+      'createCheckoutSession',
+      'subscription',
+      async (m: typeof import('@/lib/stripe')) =>
+        m.createCheckoutSession({ userId: 'u', priceId: 'price_123', successUrl: 'https://app/s', cancelUrl: 'https://app/c' }),
+    ],
+    [
+      'createCreditPackCheckoutSession',
+      'payment',
+      async (m: typeof import('@/lib/stripe')) =>
+        m.createCreditPackCheckoutSession({ userId: 'u', successUrl: 'https://app/s', cancelUrl: 'https://app/c' }),
+    ],
+  ])('%s lets the customer enter a promotion code on the %s checkout', async (_name, mode, create) => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/x' })
+    vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')
+    await create(await import('@/lib/stripe'))
+
+    const params = mockCheckoutCreate.mock.lastCall![0]
+    expect(params).toEqual(expect.objectContaining({ mode, allow_promotion_codes: true }))
+    // The customer types the code on Stripe's page; the server never pre-applies one.
+    expect(params).not.toHaveProperty('discounts')
+  })
+
+  // Fulfilment (webhook payment_status handling) assumes card-only checkouts.
+  it.each([
+    ['createCheckoutSession', async (m: typeof import('@/lib/stripe')) =>
+      m.createCheckoutSession({ userId: 'u', priceId: 'price_123', successUrl: 'https://app/s', cancelUrl: 'https://app/c' })],
+    ['createCreditPackCheckoutSession', async (m: typeof import('@/lib/stripe')) =>
+      m.createCreditPackCheckoutSession({ userId: 'u', successUrl: 'https://app/s', cancelUrl: 'https://app/c' })],
+  ])('%s accepts cards only', async (_name, create) => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/x' })
+    vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')
+    await create(await import('@/lib/stripe'))
+    expect(mockCheckoutCreate.mock.lastCall![0].payment_method_types).toEqual(['card'])
+  })
+
   it('createBillingPortalSession returns the portal URL', async () => {
     mockPortalCreate.mockResolvedValue({ url: 'https://billing.stripe.com/p1' })
     const { createBillingPortalSession } = await import('@/lib/stripe')

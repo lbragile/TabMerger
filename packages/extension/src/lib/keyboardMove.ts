@@ -438,10 +438,13 @@ export function enterGroup(ms: MoveState): MoveState | null {
 }
 
 /**
- * Recompute the list after the groups state changed under a live move. Keeps the cursor on
- * the same target key when it still exists (the end of the group in `list` mode), else
- * returns to the origin (or the first target). `null` when the moving items are gone (the
- * move must be cancelled).
+ * Recompute the list after the groups state changed under a live move. `ms.source` must
+ * already name the moving items IN `state`: model ids are positional, so the caller
+ * re-anchors them by identity first (`rebaseMove` in `@/lib/dndRebase`, see
+ * `useKeyboardMove`). The cursor stays on the item's own slot when it was there (wherever
+ * that slot now is), else on the same target key when it still exists (the end of the group
+ * in `list` mode), else it returns to the origin (or the first target). `null` when a
+ * moving id does not exist in `state` (the move must be cancelled).
  */
 export function rebuildMove(ms: MoveState, state: GroupsState, opts: MoveOptions): MoveState | null {
   const model = buildDndModel(state);
@@ -452,8 +455,10 @@ export function rebuildMove(ms: MoveState, state: GroupsState, opts: MoveOptions
     ms.scope === 'new-group'
       ? { targets: buildNewGroupTargets(state, ms.source, opts), originIndex: -1 }
       : buildTargets(state, ms.source, { ...opts, activeGroupIndex: typeof ms.scope === 'number' ? ms.scope : opts.activeGroupIndex });
+  const home = Math.max(built.originIndex, 0);
   const at = current ? built.targets.findIndex((t) => t.key === current.key) : -1;
-  const index = ms.mode === 'list' ? Math.max(endIndex(built.targets), 0) : at >= 0 ? at : Math.max(built.originIndex, 0);
+  const kept = current?.origin && built.originIndex >= 0 ? home : at >= 0 ? at : home;
+  const index = ms.mode === 'list' ? Math.max(endIndex(built.targets), 0) : kept;
   return { ...ms, targets: built.targets, index, originGroup: originGroupOf(model, ms.source) };
 }
 

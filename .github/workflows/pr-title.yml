@@ -1,0 +1,44 @@
+name: PR Title
+
+# The squash-merge commit message is the PR title, and semantic-release reads it to decide
+# whether (and how) to cut a release. A husky/commitlint hook only checks local commits, so
+# a PR opened from the GitHub UI skips it entirely. This checks the title instead.
+#
+# `pull_request`, never `pull_request_target` (see ci.yml): the action only needs the PR
+# title from the event payload, so a read-only token is enough, including on fork PRs.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - main
+      - beta
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  semantic-title:
+    name: Conventional PR title
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # The full conventional-commit set, matching @commitlint/config-conventional
+          # (see .github/CONTRIBUTING.md). Scopes stay free-form: .releaserc.json suppresses
+          # releases for some of them (ci, e2e, demo, dev, web, ...), and that is by scope.
+          types: |
+            feat
+            fix
+            perf
+            refactor
+            docs
+            style
+            test
+            build
+            ci
+            chore
+            revert

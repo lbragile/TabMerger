@@ -5,13 +5,15 @@
  * queue + cross-context lock, so keep it synchronous), then the cache is set from its result.
  */
 import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { isOpenableUrl, openableUrls } from '@/lib/safeOpen';
 import { updateGroupsState } from '@/lib/localDb';
 import { useUIStore } from '@/stores/uiStore';
 import type { SelectedItem } from '@/stores/uiStore';
-import { GROUPS_QUERY_KEY, RESTRICTED_URL_RE } from '@/hooks/useGroups';
+import { GROUPS_QUERY_KEY, RESTRICTED_URL_RE, closableTabIds } from '@/hooks/useGroups';
 import { createWindow, getGroupInfo, sortWindowsByStarred } from '@/lib/utils';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { resolveIncognito } from '@/lib/incognito';
+import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import type { GroupsState, Tab, Window as WindowType } from '@/lib/types';
 import { alignToBase } from '@/lib/groupsAlign';
@@ -40,8 +42,8 @@ export function parseGroupId(id: string): ParsedGroup | null {
 // ─── Bulk Delete ──────────────────────────────────────────────────────────────
 
 /**
- * Delete all selected items of the same type.
- * Handles cascade: closes live browser tabs, removes from IndexedDB.
+ * Delete all selected items of the same type and remove them from IndexedDB.
+ * Items selected in Now Open are also closed in the browser; saved items close nothing.
  */
 export function useBulkDelete() {
   const qc = useQueryClient();
@@ -72,10 +74,11 @@ export function useBulkDelete() {
                 : b.tabIndex - a.tabIndex
             );
 
-          // Fire-and-forget close browser tabs
+          // Fire-and-forget close of the selected Now Open tabs (saved tabs close nothing)
           const tabIds = parsed.flatMap((p) => {
-            const t = state.available[p.groupIndex]?.windows[p.windowIndex]?.tabs[p.tabIndex];
-            return t?.id ? [t.id] : [];
+            const grp = state.available[p.groupIndex];
+            const t = grp?.windows[p.windowIndex]?.tabs[p.tabIndex];
+            return closableTabIds(grp, t ? [t] : []);
           });
           if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
 
@@ -120,9 +123,10 @@ export function useBulkDelete() {
               b.groupIndex !== a.groupIndex ? b.groupIndex - a.groupIndex : b.windowIndex - a.windowIndex
             );
 
+          // Only the tabs of selected Now Open windows are closed (saved windows close nothing)
           const tabIds = parsed.flatMap((p) => {
-            const win = state.available[p.groupIndex]?.windows[p.windowIndex];
-            return win?.tabs.map((t) => t.id) ?? [];
+            const grp = state.available[p.groupIndex];
+            return closableTabIds(grp, grp?.windows[p.windowIndex]?.tabs ?? []);
           });
           if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
 
@@ -153,13 +157,8 @@ export function useBulkDelete() {
           let available = [...state.available];
           const deletedGroupIds: string[] = [];
 
-          for (const p of parsed) {
-            const group = available[p.groupIndex];
-            if (!group || group.permanent) continue;
-            const tabIds = group.windows.flatMap((w) => w.tabs.map((t) => t.id));
-            if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
-          }
-
+          // Only saved groups can be deleted, and a saved group holds detached copies:
+          // no browser tab is closed here.
           for (const p of parsed) {
             const group = available[p.groupIndex];
             if (!group || group.permanent) continue;
@@ -243,11 +242,16 @@ export function useBulkMoveToGroup() {
 
           // Collect tabs in ASC order (natural reading order) before mutating
           const parsedAsc = [...parsedDesc].reverse();
+          // A tab taken from Now Open is stored as a detached saved copy (id 0, savedAt)
           const tabsToMoveWithSource = parsedAsc
-            .map((p) => ({
-              tab: state.available[p.groupIndex]?.windows[p.windowIndex]?.tabs[p.tabIndex],
-              sourceKey: `${p.groupIndex}:${p.windowIndex}`
-            }))
+            .map((p) => {
+              const grp = state.available[p.groupIndex];
+              const tab = grp?.windows[p.windowIndex]?.tabs[p.tabIndex];
+              return {
+                tab: tab && grp?.permanent ? copyLiveTab(tab) : tab,
+                sourceKey: `${p.groupIndex}:${p.windowIndex}`
+              };
+            })
             .filter((t): t is { tab: Tab; sourceKey: string } => t.tab !== undefined);
           const tabsToMove: Tab[] = tabsToMoveWithSource.map((t) => t.tab);
 
@@ -272,7 +276,7 @@ export function useBulkMoveToGroup() {
           if (available[targetGroupIndex]?.permanent) {
             // Moving to Now Open → open each tab in the browser; useCurrentTabs will sync them in
             for (const tab of tabsToMove) {
-              if (tab.url && !RESTRICTED_URL_RE.test(tab.url)) {
+              if (isOpenableUrl(tab.url) && !RESTRICTED_URL_RE.test(tab.url)) {
                 chrome.tabs.create({ url: tab.url, active: false }).catch(() => {});
               }
             }
@@ -318,8 +322,14 @@ export function useBulkMoveToGroup() {
 
           // Collect windows in ASC order before mutating
           const parsedAsc = [...parsedDesc].reverse();
+          // A window taken from Now Open is stored as a detached saved copy that keeps its star
+          // (see copyLiveWindowKeepingStar)
           const windowsToMove: WindowType[] = parsedAsc
-            .map((p) => state.available[p.groupIndex]?.windows[p.windowIndex])
+            .map((p) => {
+              const grp = state.available[p.groupIndex];
+              const w = grp?.windows[p.windowIndex];
+              return w && grp?.permanent ? copyLiveWindowKeepingStar(w) : w;
+            })
             .filter((w): w is WindowType => w !== undefined);
 
           // Remove from source positions in DESC order
@@ -338,7 +348,7 @@ export function useBulkMoveToGroup() {
           if (available[targetGroupIndex]?.permanent) {
             // Moving to Now Open → open each window in the browser; useCurrentTabs will sync them in
             for (const win of windowsToMove) {
-              const urls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
+              const urls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
               if (urls.length > 0) {
                 void resolveIncognito(win.incognito).then((incognito) =>
                   chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })

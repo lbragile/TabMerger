@@ -312,6 +312,10 @@ describe('WindowsPanel — toolbar dropdown mutations', () => {
     const user = await openMenu()
     await user.click(screen.getByText('Deduplicate tabs'))
     expect(mockOpenModal).toHaveBeenCalledWith('deduplicateGroup', expect.objectContaining({ groupIndex: 0 }))
+    // The duplicate is passed with its position in the group (second window, first tab).
+    const { duplicates } = mockOpenModal.mock.calls[0][1] as { duplicates: { windowIndex: number; tabIndex: number; tab: { url: string } }[] }
+    expect(duplicates).toHaveLength(1)
+    expect(duplicates[0]).toMatchObject({ windowIndex: 1, tabIndex: 0, tab: { url: 'https://dup.com' } })
   })
 
   it('dispatches deleteAllWindows and shows "Close all windows" label for a permanent group', async () => {

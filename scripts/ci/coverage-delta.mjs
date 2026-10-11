@@ -22,7 +22,9 @@ if (!baselinePath || !currentPath) {
 }
 
 if (!existsSync(baselinePath)) {
-  console.log(`No baseline coverage found at ${baselinePath} — skipping delta check (nothing to compare).`)
+  // A notice (shown on the run's summary page), not a plain log line: a skip that
+  // happens on every run means the baseline path is wrong, and that must be visible.
+  console.log(`::notice::No baseline coverage found at ${baselinePath} — skipping delta check (nothing to compare).`)
   process.exit(0)
 }
 

@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`020`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`021`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -28,6 +28,7 @@ The migrations in `supabase/migrations/` (`001`–`020`) are the source of truth
 | 018 | `018_encryption_keys_delete_policy.sql` | Adds the missing `encryption_keys` delete policy. Without it, `resetEncryption()` silently deleted 0 rows. |
 | 019 | `019_gate_cloud_sync_rls.sql` | Adds `public.has_cloud_sync(uid)` — tier in `pro`/`pro_ai` and status in `active`/`trialing`/`past_due` (kept in sync with the shared `ENTITLED_SUBSCRIPTION_STATUSES` constant used by `useEntitlements.ts`'s `resolveTier()`). Replaces the insert/update policies on `groups`, `sessions`, `device_sessions`, `shared_bundles` (insert only) and `encryption_keys` to also require it, closing a gap where any signed-in free user could write sync rows directly (RLS previously only checked `auth.uid() = user_id`). `sessions` is gated too (owner decision: free users sync 0 sessions, keeping up to 3 locally only — the extension's free-tier upload path was removed in the same change). select/delete are untouched everywhere so downgraded users keep read/export/delete access. |
 | 020 | `020_groups_position_keeps_updated_at.sql` | `groups_set_updated_at()` replaces `update_updated_at()` on `groups` only: a position-only or view_count-only update keeps `updated_at`, any other change stamps `now()`. |
+| 021 | `021_profiles_server_managed.sql` | `profiles` is written only by the server (signup trigger and billing webhook): select is its only policy, and `anon`/`authenticated` hold `SELECT` only on the table. No schema change. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -60,7 +61,7 @@ This table extends `auth.users` with one row per user, created by `handle_new_us
 | `stripe_customer_id` | `text` | unique, nullable |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
-**RLS:** `profiles_select_own` and `profiles_update_own` (`auth.uid() = id`). There is no insert or delete policy. Rows come only from the trigger (`security definer`) or the service role.
+**RLS:** `profiles_select_own` (`auth.uid() = id`) is the only policy: a user reads their own row. There is no insert, update or delete policy, and `anon` and `authenticated` hold only `SELECT` on the table (migration 021) (plus the non-data `REFERENCES`/`TRIGGER` defaults). Rows are created by the trigger (`security definer`) and updated by the service role (the Stripe webhook sets `stripe_customer_id`). No column is edited by its owner.
 
 ### `subscriptions`
 
@@ -221,7 +222,7 @@ One-time AI credit packs. They are month-scoped and don't roll over. There is on
 
 ## Grants (migration 010)
 
-Local CLI stacks don't get the schema-level grants to `anon`/`authenticated` that Supabase Cloud provisions implicitly. Without them, Postgres rejects a query before RLS is even evaluated. Migration 010 grants `select, insert, update, delete` on all public tables, and on future ones via `alter default privileges`. RLS remains the access control.
+Local CLI stacks don't get the schema-level grants to `anon`/`authenticated` that Supabase Cloud provisions implicitly. Without them, Postgres rejects a query before RLS is even evaluated. Migration 010 grants `select, insert, update, delete` on all public tables, and on future ones via `alter default privileges`. RLS remains the access control. One table is narrower: migration 021 leaves the API roles with `select` only on `profiles`.
 
 ## How tables relate
 

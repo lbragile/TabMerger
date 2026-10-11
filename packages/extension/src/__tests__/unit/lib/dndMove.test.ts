@@ -31,7 +31,7 @@
  * NOT a setup error. They go green once the rework lands.
  */
 import { describe, it, expect } from 'vitest'
-import { canDrop, applyMove } from '@/lib/dndMove'
+import { canDrop, applyMove, copyLiveWindow, copyLiveWindowKeepingStar } from '@/lib/dndMove'
 import { buildDndModel } from '@/hooks/useDndModel'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
@@ -350,8 +350,9 @@ describe('applyMove — Now Open delegation', () => {
     expect(copy!.savedAt).toEqual(expect.any(Number))
     // Now Open group in `next` is NOT directly mutated (it re-syncs from the browser)
     expect(res.next.available[0]).toEqual(s.available[0])
-    // MOVE semantics: the real tab is closed. `runSideEffects` defers an ACTIVE tab to
-    // popup teardown so the popup's anchor tab can't dismiss it mid-drop (spec C7).
+    // MOVE semantics: the real tab is closed. `runSideEffects` defers it to popup teardown
+    // only if it is the active tab of the popup's own window, so closing the popup's
+    // anchor tab can't dismiss it mid-drop (spec C7).
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9] }])
     // Undo can't faithfully reopen a closed tab, so the move stays out of the stack.
     expect(res.undoable).toBe(false)
@@ -434,8 +435,8 @@ describe('applyMove — Now Open delegation', () => {
 // The hazard this replaced a copy with is spec C7: closing the ACTIVE tab of the
 // window the toolbar popup is anchored to makes Chrome dismiss the popup instantly,
 // which used to kill the commit mid-flight. `applyMove` stays pure and just names the
-// ids; `runSideEffects` closes only NON-active tabs itself and defers every active one
-// to the background worker, which closes it when the popup goes away (see
+// ids; `runSideEffects` closes them itself, except the active tab of the popup's own
+// window, which it defers to the background worker to close when the popup goes away (see
 // `dndNowOpenMoveOut.test.ts`). The guard that survives here: a `tabs.remove` may only
 // ever appear for a Now Open → saved drop, and may only ever name REAL (non-zero) ids.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -967,5 +968,73 @@ describe('applyMove — the Now Open ROW as a drop target', () => {
       }
     }
     expect(creates).toBeGreaterThan(1)
+  })
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// copyLiveWindow — the detached saved copy of a live Now Open window
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('copyLiveWindow', () => {
+  const live = (): ExtWindow => ({
+    id: 77,
+    focused: true,
+    starred: true,
+    incognito: true,
+    name: 'Research',
+    note: 'keep',
+    tabs: [
+      { id: 101, title: 'A', url: 'https://a.com', pinned: true, favIconUrl: 'https://a.com/f.ico' },
+      { id: 102, title: 'B', url: 'https://b.com' },
+    ],
+  })
+
+  it('detaches the window: id 0, unfocused, unstarred; keeps name, note and incognito', () => {
+    const copy = copyLiveWindow(live())
+    expect(copy).toMatchObject({ id: 0, focused: false, starred: false, incognito: true, name: 'Research', note: 'keep' })
+  })
+
+  it('detaches every tab: id 0, a fresh savedAt, no pinned flag; url/title/favicon kept in order', () => {
+    const before = Date.now()
+    const copy = copyLiveWindow(live())
+    expect(copy.tabs.map((t) => [t.title, t.url])).toEqual([['A', 'https://a.com'], ['B', 'https://b.com']])
+    expect(copy.tabs[0].favIconUrl).toBe('https://a.com/f.ico')
+    for (const t of copy.tabs) {
+      expect(t.id).toBe(0)
+      expect(t.savedAt).toBeGreaterThanOrEqual(before)
+      expect('pinned' in t).toBe(false)
+    }
+  })
+
+  it('does not mutate or alias the live window', () => {
+    const w = live()
+    const snapshot = structuredClone(w)
+    const copy = copyLiveWindow(w)
+    expect(w).toEqual(snapshot)
+    expect(copy).not.toBe(w)
+    expect(copy.tabs).not.toBe(w.tabs)
+    expect(copy.tabs[0]).not.toBe(w.tabs[0])
+  })
+
+  it('defaults a missing incognito flag to false and handles a window with no tabs', () => {
+    const w = { id: 5, tabs: [], focused: true } as unknown as ExtWindow
+    expect(copyLiveWindow(w)).toMatchObject({ id: 0, incognito: false, focused: false, tabs: [] })
+  })
+
+  it('keepStar carries the live window\'s star onto the copy; everything else is detached the same way', () => {
+    const copy = copyLiveWindow(live(), { keepStar: true })
+    expect(copy).toMatchObject({ id: 0, focused: false, starred: true, incognito: true, name: 'Research', note: 'keep' })
+    expect(copy.tabs.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+  })
+
+  it('keepStar on an unstarred window (flag false or missing) stores starred: false', () => {
+    expect(copyLiveWindow({ ...live(), starred: false }, { keepStar: true }).starred).toBe(false)
+    const noFlag: ExtWindow = { id: 78, tabs: [], incognito: false, focused: true }
+    expect(copyLiveWindow(noFlag, { keepStar: true }).starred).toBe(false)
+  })
+
+  it('copyLiveWindowKeepingStar is the keepStar copy, usable directly as a map callback', () => {
+    const copies = [live(), { ...live(), starred: false }].map(copyLiveWindowKeepingStar)
+    expect(copies.map((w) => [w.id, w.focused, w.starred])).toEqual([[0, false, true], [0, false, false]])
   })
 })

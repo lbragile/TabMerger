@@ -2,21 +2,29 @@ import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/di
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useDeduplicateGroup } from '@/hooks/useGroups'
-import type { Tab } from '@/lib/types'
+import type { DuplicateTab } from '@/lib/deduplication'
 
 interface DeduplicateConfirmModalProps {
   data: Record<string, unknown>
   onClose: () => void
 }
 
+/**
+ * Confirms removing a group's duplicate tabs. `data.duplicates` comes from
+ * `findDuplicateTabs`: each entry carries the tab's position in the group, which is what
+ * the mutation matches on.
+ */
 export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmModalProps) {
   const groupIndex = data.groupIndex as number
-  const duplicates = data.duplicates as Tab[]
+  const duplicates = data.duplicates as DuplicateTab[]
   const { mutate: deduplicate, isPending } = useDeduplicateGroup()
 
   const handleConfirm = () => {
     deduplicate(
-      { groupIndex, duplicateIds: duplicates.map((t) => t.id) },
+      {
+        groupIndex,
+        duplicates: duplicates.map(({ windowIndex, tabIndex, tab }) => ({ windowIndex, tabIndex, url: tab.url }))
+      },
       { onSuccess: onClose }
     )
   }
@@ -32,8 +40,8 @@ export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmMod
 
       <ScrollArea className="max-h-48 mt-3 border border-border">
         <ul className="p-2 space-y-1">
-          {duplicates.map((tab) => (
-            <li key={`${tab.id}-${tab.url}`} className="text-xs text-muted-foreground truncate px-1">
+          {duplicates.map(({ windowIndex, tabIndex, tab }) => (
+            <li key={`${windowIndex}-${tabIndex}`} className="text-xs text-muted-foreground truncate px-1">
               {tab.title || tab.url}
             </li>
           ))}

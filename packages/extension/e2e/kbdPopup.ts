@@ -1,6 +1,6 @@
 import { chromium, type BrowserContext, type Worker } from '@playwright/test';
 import http from 'http';
-import { seedIdb } from './helpers';
+import { escapeHtml, jsLiteral, seedIdb } from './helpers';
 import { EXTENSION_PATH } from './extensionPath';
 import { CDP_TARGET_CLOSED, RawCdp } from './rawCdp';
 
@@ -68,14 +68,14 @@ let portCounter = 9460 + Number(process.env.TEST_PARALLEL_INDEX ?? 0) * 100;
 /** Open the real popup on `groups` with `liveTabs` open as real browser tabs (Now Open). */
 export async function openRealPopup(
   groups: SeedGroup[],
-  opts: { liveWindows?: string[][] } = {}
+  opts: { liveWindows?: string[][]; dndDebug?: boolean } = {}
 ): Promise<PopupSession> {
   const port = portCounter++;
   const server = http.createServer((req, res) => {
     const seg = (req.url ?? '/x').split('/').pop() || 'x';
     res.setHeader('Connection', 'close');
     res.setHeader('Content-Type', 'text/html');
-    res.end(`<title>${seg.charAt(0).toUpperCase() + seg.slice(1)}</title><body>${seg}</body>`);
+    res.end(`<title>${escapeHtml(seg.charAt(0).toUpperCase() + seg.slice(1))}</title><body>${escapeHtml(seg)}</body>`);
   });
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   const liveBase = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
@@ -98,6 +98,8 @@ export async function openRealPopup(
   const seedPage = await context.newPage();
   await seedPage.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
   await seedIdb(seedPage, groups);
+  // The move/drag stage log (`__tmDndLog`) and the groups query client (`__tmQueryClient`) are exposed to the page only when this flag is set.
+  if (opts.dndDebug) await seedPage.evaluate(() => localStorage.setItem('tm_dnd_debug', '1'));
   await seedPage.close();
 
   // Real browser tabs (Now Open). First list goes in the existing window, others in new windows.
@@ -209,8 +211,8 @@ export async function openRealPopup(
 }
 
 /** Row matcher (over `el`) for a tab/window/group by aria-label. */
-export const rowLabel = (label: string) => `el.getAttribute('aria-label') === ${JSON.stringify(label)}`;
-export const groupRow = (name: string) => `el.hasAttribute('data-sidebar-group-index') && el.getAttribute('aria-label') === ${JSON.stringify(name)}`;
+export const rowLabel = (label: string) => `el.getAttribute('aria-label') === ${jsLiteral(label)}`;
+export const groupRow = (name: string) => `el.hasAttribute('data-sidebar-group-index') && el.getAttribute('aria-label') === ${jsLiteral(name)}`;
 
 /** Keyboard-open a saved group: Tab to its sidebar row and press Enter. */
 export async function openGroup(s: PopupSession, name: string) {
@@ -223,7 +225,7 @@ export async function openGroup(s: PopupSession, name: string) {
 export async function ctrlSelect(s: PopupSession, labels: string[], attr = 'role="listitem"') {
   for (const l of labels) {
     await s.eval(
-      `(() => { const el = [...document.querySelectorAll('[${attr}]')].find(e => e.getAttribute('aria-label') === ${JSON.stringify(l)}); el.dispatchEvent(new MouseEvent('click', { ctrlKey: true, bubbles: true, cancelable: true })); })()`
+      `(() => { const el = [...document.querySelectorAll('[${attr}]')].find(e => e.getAttribute('aria-label') === ${jsLiteral(l)}); el.dispatchEvent(new MouseEvent('click', { ctrlKey: true, bubbles: true, cancelable: true })); })()`
     );
     await sleep(120);
   }

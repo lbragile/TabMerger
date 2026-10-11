@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { importKeyFromBase64, decryptBlob } from '@tabmerger/shared'
+import { importKeyFromBase64, decryptBlob, toHttpUrl } from '@tabmerger/shared'
 import { useLocationHash } from '@/lib/hooks/useLocationHash'
 
 interface Tab { id: number; title?: string; url?: string; favIconUrl?: string; ogImage?: string }
@@ -73,20 +73,13 @@ function truncateUrl(url: string, max = 20): string {
   return url.length > max ? `${url.slice(0, max)}…` : url
 }
 
-function safeUrl(u?: string): string | undefined {
-  if (!u) return undefined
-  try {
-    const p = new URL(u)
-    return p.protocol === 'http:' || p.protocol === 'https:' ? p.toString() : undefined
-  } catch { return undefined }
-}
 interface ExtWindow { id: number; tabs: Tab[]; incognito: boolean; focused: boolean }
 interface Group { id: string; name: string; color: string; windows: ExtWindow[] }
 
 // ponytail: sequential window.open() calls inside a click handler are fine — most browsers
 // allow several tabs per user gesture; no queue/throttle infra needed for a share page.
 function windowUrls(win: ExtWindow): string[] {
-  return win.tabs.map((t) => safeUrl(t.url)).filter((u): u is string => !!u)
+  return win.tabs.map((t) => toHttpUrl(t.url)).filter((u): u is string => !!u)
 }
 function groupUrls(group: Group): string[] {
   return group.windows.flatMap(windowUrls)
@@ -388,7 +381,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
               aria-label={group.windows.length === 1 ? 'Open window' : 'Open all windows'}
               className="ml-auto text-xs text-primary hover:underline disabled:opacity-50 disabled:no-underline"
               disabled={groupUrls(group).length === 0}
-              onClick={() => groupUrls(group).forEach((url) => window.open(url, '_blank'))}
+              onClick={() => groupUrls(group).forEach((url) => window.open(url, '_blank', 'noopener,noreferrer'))}
             >
               {group.windows.length === 1 ? 'Open window' : 'Open all windows'}
             </button>
@@ -406,14 +399,14 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
                   aria-label={windowUrls(win).length === 1 ? 'Open tab' : 'Open all tabs'}
                   className="ml-auto text-primary hover:underline disabled:opacity-50 disabled:no-underline"
                   disabled={windowUrls(win).length === 0}
-                  onClick={() => windowUrls(win).forEach((url) => window.open(url, '_blank'))}
+                  onClick={() => windowUrls(win).forEach((url) => window.open(url, '_blank', 'noopener,noreferrer'))}
                 >
                   {windowUrls(win).length === 1 ? 'Open tab' : 'Open all tabs'}
                 </button>
               </div>
               {win.tabs.map((tab, tabIndex) => {
-                const href = safeUrl(tab.url)
-                const favicon = safeUrl(tab.favIconUrl)
+                const href = toHttpUrl(tab.url)
+                const favicon = toHttpUrl(tab.favIconUrl)
                 const key = `${group.id}-win-${winIndex}-tab-${tabIndex}`
                 const shortUrl = href ? truncateUrl(href) : ''
                 const inner = (

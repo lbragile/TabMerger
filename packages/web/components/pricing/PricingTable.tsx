@@ -2,7 +2,14 @@
 
 import { useState } from 'react'
 import { PricingCard } from './PricingCard'
-import { TIERS, PRICES_IN_USD_NOTE, formatListPrice, yearlySavings } from '@/lib/tiers'
+import {
+  TIERS,
+  PRICES_IN_USD_NOTE,
+  YEARLY_DISCOUNT_PERCENT,
+  YEARLY_SAVINGS,
+  formatListPrice,
+  yearlySubtext,
+} from '@/lib/tiers'
 import { cn } from '@/lib/utils'
 
 interface PricingTableProps {
@@ -11,16 +18,6 @@ interface PricingTableProps {
   currentInterval?: 'monthly' | 'yearly'
   /** The Free card's install link, resolved on the server (`getStoreLinks()`) by the page. */
   installHref: string
-}
-
-const PRO_SAVINGS = yearlySavings(TIERS.pro.monthlyPrice, TIERS.pro.yearlyPrice)
-const PRO_AI_SAVINGS = yearlySavings(TIERS.proAi.monthlyPrice, TIERS.proAi.yearlyPrice)
-// The toggle badge claims the smaller of the two discounts, so it's true for every plan.
-const YEARLY_DISCOUNT_PERCENT = Math.min(PRO_SAVINGS.percent, PRO_AI_SAVINGS.percent)
-
-/** "$3.58/mo billed yearly · save 10%": the yearly plan's monthly equivalent, under its price. */
-function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>): string {
-  return `${formatListPrice(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
 }
 
 export function PricingTable({ currentTier, currentInterval, installHref }: PricingTableProps) {
@@ -83,7 +80,7 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
             installHref={installHref}
             displayMonthly={formatListPrice(TIERS.pro.monthlyPrice)}
             displayYearly={formatListPrice(TIERS.pro.yearlyPrice)}
-            yearlySubtext={yearlySubtext(PRO_SAVINGS)}
+            yearlySubtext={yearlySubtext(YEARLY_SAVINGS.pro)}
           />
         </div>
 
@@ -99,7 +96,7 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
           installHref={installHref}
           displayMonthly={formatListPrice(TIERS.proAi.monthlyPrice)}
           displayYearly={formatListPrice(TIERS.proAi.yearlyPrice)}
-          yearlySubtext={yearlySubtext(PRO_AI_SAVINGS)}
+          yearlySubtext={yearlySubtext(YEARLY_SAVINGS.proAi)}
         />
       </div>
 

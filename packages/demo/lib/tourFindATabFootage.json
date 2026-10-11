@@ -1,0 +1,22 @@
+{
+    "frames": {
+        "dark": 167,
+        "light": 161
+    },
+    "events": {
+        "dark": {
+            "searchClick": 39,
+            "typeStart": 50,
+            "resultsShown": 67,
+            "resultClick": 127,
+            "overlayClosed": 132
+        },
+        "light": {
+            "searchClick": 34,
+            "typeStart": 45,
+            "resultsShown": 63,
+            "resultClick": 125,
+            "overlayClosed": 127
+        }
+    }
+}

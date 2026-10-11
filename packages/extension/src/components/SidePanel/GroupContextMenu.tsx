@@ -1,4 +1,5 @@
 import React from 'react';
+import { openableUrls } from '@/lib/safeOpen';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import {
   DropdownMenu,
@@ -41,7 +42,7 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
 import { getSetting } from '@/lib/localDb';
-import { deduplicateTabs } from '@/lib/deduplication';
+import { findDuplicateTabs } from '@/lib/deduplication';
 import { toast } from '@/lib/toast';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -118,8 +119,7 @@ export function GroupContextMenu({
   // Same handler the windows-toolbar ⋯ uses (Windows/index.tsx `handleDeduplicate`) —
   // kept in sync per the P1 subset rule.
   const handleDeduplicate = () => {
-    const allTabs = group.windows.flatMap((w) => w.tabs);
-    const { duplicates } = deduplicateTabs(allTabs);
+    const duplicates = findDuplicateTabs(group.windows);
     if (duplicates.length === 0) {
       toast.info('No duplicates found');
       return;
@@ -242,7 +242,7 @@ export function GroupContextMenu({
                 <div><div>Merge with current</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
               </DropdownMenuItem>
               {(() => {
-                const urls = group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http')));
+                const urls = openableUrls(group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http'))));
                 return (
                   <DropdownMenuItem
                     disabled={urls.length === 0}

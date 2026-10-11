@@ -1,10 +1,11 @@
 /**
- * useSelectionClickAway.test.tsx — 2d: selection mode exits on ANY plain click that isn't
- * a selection control (previously only an empty-space click inside the windows panel did).
+ * useSelectionClickAway.test.tsx — selection mode exits on a background click: a plain left
+ * click whose whole gesture stays off the selection controls.
  *
  * The negative cases are the point: a click that MODIFIES the selection, the action bar,
  * the checkboxes, a live drag, an open menu's dismiss click, the click that ENTERED
- * selection mode, and anything inside a menu/dialog/toast must all leave it alone.
+ * selection mode, anything inside a menu/dialog/toast, a click whose press began on a
+ * selection control, and a click that arrives while a menu is open must all leave it alone.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, fireEvent, cleanup, act } from '@testing-library/react'
@@ -66,6 +67,17 @@ async function setup(props: { active: boolean; exit: () => void; overlay?: boole
 function click(el: Element, init: Partial<MouseEventInit> = {}) {
   fireEvent.pointerDown(el, { ...init, bubbles: true })
   fireEvent.click(el, init)
+}
+
+/**
+ * A mouse gesture whose `click` is delivered somewhere other than where the press began.
+ * That is what a browser does when the page under the pointer stops taking pointer events
+ * between press and release (a menu that opens on `pointerdown`): the click goes to the
+ * document root.
+ */
+function pressThenClick(pressOn: Element, clickOn: Element) {
+  fireEvent.pointerDown(pressOn, { bubbles: true })
+  fireEvent.click(clickOn)
 }
 
 let exit: (() => void) & ReturnType<typeof vi.fn>
@@ -173,6 +185,89 @@ describe('useSelectionClickAway — does NOT exit', () => {
     // Menu gone → the next background click is a real cancel.
     getByTestId('menu').remove()
     getByTestId('toast').remove()
+    click(getByTestId('background'))
+    expect(exit).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('useSelectionClickAway — a click belongs to the press that started it', () => {
+  const controls: Array<[string, string]> = [
+    ['a selection-bar button', 'bar-button'],
+    ['the selection bar itself', 'bar'],
+    ['a menu trigger', 'menu-trigger'],
+    ['a selection checkbox', 'checkbox']
+  ]
+  for (const [label, testid] of controls) {
+    it(`a press that starts on ${label} keeps the selection when its click lands on the document root`, async () => {
+      const { getByTestId } = await setup({ active: true, exit })
+      pressThenClick(getByTestId(testid), document.documentElement)
+      expect(exit).not.toHaveBeenCalled()
+    })
+  }
+
+  it('a press on the background whose click lands on the document root exits', async () => {
+    const { getByTestId } = await setup({ active: true, exit })
+    pressThenClick(getByTestId('background'), document.documentElement)
+    expect(exit).toHaveBeenCalledTimes(1)
+  })
+
+  it('a press vouches for one click only: the next background click exits', async () => {
+    const { getByTestId } = await setup({ active: true, exit })
+    pressThenClick(getByTestId('bar-button'), document.documentElement)
+    expect(exit).not.toHaveBeenCalled()
+    click(getByTestId('background'))
+    expect(exit).toHaveBeenCalledTimes(1)
+  })
+
+  it('a keyboard-activated click on the background exits, whatever an earlier press began on', async () => {
+    const { getByTestId } = await setup({ active: true, exit })
+    // A press on a control that produced no click (a drag, a secondary button).
+    fireEvent.pointerDown(getByTestId('bar-button'), { bubbles: true })
+    // Enter on a focused background control: a key press, then a click with no press.
+    fireEvent.keyDown(getByTestId('row'), { key: 'Enter' })
+    fireEvent.click(getByTestId('row'))
+    expect(exit).toHaveBeenCalledTimes(1)
+  })
+
+  it('a keyboard-activated click on a selection control keeps the selection', async () => {
+    const { getByTestId } = await setup({ active: true, exit })
+    fireEvent.keyDown(getByTestId('bar-button'), { key: 'Enter' })
+    fireEvent.click(getByTestId('bar-button'))
+    expect(exit).not.toHaveBeenCalled()
+  })
+
+  it('stops tracking presses once selection mode ends', async () => {
+    const { getByTestId, rerender } = await setup({ active: true, exit })
+    rerender(React.createElement(Harness, { active: false, exit }))
+    await arm()
+    pressThenClick(getByTestId('background'), document.documentElement)
+    expect(exit).not.toHaveBeenCalled()
+  })
+})
+
+describe('useSelectionClickAway — a click while a menu is open keeps the selection', () => {
+  it('when the menu opened between the press and the click', async () => {
+    const { getByTestId, rerender } = await setup({ active: true, exit })
+    // The press begins on the background with nothing open, and a menu is open by the time
+    // the click arrives.
+    fireEvent.pointerDown(getByTestId('background'), { bubbles: true })
+    rerender(React.createElement(Harness, { active: true, exit, overlay: true }))
+    fireEvent.click(document.documentElement)
+    expect(exit).not.toHaveBeenCalled()
+  })
+
+  it('when the click is keyboard-activated (no press) and lands on the background', async () => {
+    const { getByTestId } = await setup({ active: true, exit, overlay: true })
+    fireEvent.keyDown(getByTestId('row'), { key: 'Enter' })
+    fireEvent.click(getByTestId('row'))
+    expect(exit).not.toHaveBeenCalled()
+  })
+
+  it('and the first background click after the menu is gone exits', async () => {
+    const { getByTestId, rerender } = await setup({ active: true, exit, overlay: true })
+    click(document.documentElement)
+    expect(exit).not.toHaveBeenCalled()
+    rerender(React.createElement(Harness, { active: true, exit }))
     click(getByTestId('background'))
     expect(exit).toHaveBeenCalledTimes(1)
   })

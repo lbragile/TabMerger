@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useGroups, useSetGroupsState, useImportGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
-import type { GroupsState } from '@/lib/types';
-import { parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
+import { importGroupsState, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@/lib/importExport';
 import { toast } from '@/lib/toast';
 import { prepareImportedState } from '@/lib/syncDirty';
 import { blockImportOverFreeLimit, countSavedGroupsAndTabs } from '@/lib/tierLimits';
@@ -43,13 +42,11 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
   const handleImport = async (file: File) => {
     try {
       const text = await file.text();
-      const parsed = JSON.parse(text) as GroupsState;
-      if (!parsed.available || !Array.isArray(parsed.available)) {
-        throw new Error('Invalid format');
-      }
+      // Validates and rebuilds every group, window and tab; throws when the file is not a state export
+      const { state: parsed, skipped } = importGroupsState(text);
       if (blockImportOverFreeLimit({ maxGroups, maxTabs }, [], parsed.available, 'replace')) return;
       await setGroupsState(prepareImportedState(parsed, groupsState));
-      toast.success('Groups imported successfully');
+      toast.success(`Groups imported successfully${skippedSuffix(skipped)}`);
       onClose();
     } catch {
       toast.error('Invalid JSON file');
@@ -58,23 +55,23 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
 
   const handleBookmarksImport = async (file: File) => {
     const html = await file.text();
-    const groups = parseBookmarksHtml(html);
+    const { groups, skipped } = parseBookmarksHtml(html);
     if (groups.length === 0) { toast.error('No bookmarks found'); return; }
     if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
     const imported = countSavedGroupsAndTabs(groups);
     await importGroups.mutateAsync(groups);
-    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}`);
+    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}${skippedSuffix(skipped)}`);
     onClose();
   };
 
   const handleOneTabImport = async (file: File) => {
     const text = await file.text();
-    const groups = parseOneTabs(text);
+    const { groups, skipped } = parseOneTabs(text);
     if (groups.length === 0) { toast.error('No tabs found'); return; }
     if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
     const imported = countSavedGroupsAndTabs(groups);
     await importGroups.mutateAsync(groups);
-    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}`);
+    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}${skippedSuffix(skipped)}`);
     onClose();
   };
 

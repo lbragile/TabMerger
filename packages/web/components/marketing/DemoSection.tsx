@@ -3,26 +3,24 @@ import path from 'node:path'
 import { DemoVideo } from './DemoVideo'
 
 // ponytail: cache-bust via the file's own mtime instead of a bundler asset
-// pipeline (Turbopack has no built-in loader for .mp4) — a re-rendered demo
+// pipeline (Turbopack has no built-in loader for .mp4) — a re-rendered tour
 // video on release changes mtime, which busts the cache with zero config.
+// The posters are plain CSS backgrounds / `poster` values (not next/image, which
+// rejects query strings on local images), so they take the same cache-buster.
 function assetUrl(relPath: string): string | null {
   const full = path.join(process.cwd(), 'public', relPath)
   if (!fs.existsSync(full)) return null
   return `/${relPath}?v=${fs.statSync(full).mtimeMs}`
 }
 
+/** The hero's feature-tour video: one render and one first-frame poster per site theme. */
 export function DemoSection() {
-  const previewPath = path.join(process.cwd(), 'public/videos/demo-preview.jpg')
-
   return (
     <DemoVideo
-      darkSrc={assetUrl('videos/tabmerger-demo-dark.mp4')}
-      lightSrc={assetUrl('videos/tabmerger-demo-light.mp4')}
-      // ponytail: no `?v=` cache-buster here — next/image rejects query strings
-      // on local images (images.localPatterns) and static poster art changes
-      // far less often than the video, so content-hash caching from next/image
-      // is enough.
-      previewSrc={fs.existsSync(previewPath) ? '/videos/demo-preview.jpg' : null}
+      darkSrc={assetUrl('videos/tabmerger-tour-dark.mp4')}
+      lightSrc={assetUrl('videos/tabmerger-tour-light.mp4')}
+      darkPoster={assetUrl('videos/tour-poster-dark.jpg')}
+      lightPoster={assetUrl('videos/tour-poster-light.jpg')}
     />
   )
 }

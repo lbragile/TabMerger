@@ -63,6 +63,22 @@ describe('POST /api/checkout/credits', () => {
     }
   })
 
+  // Credit packs are one-time purchases on top of a plan, so the one-subscription-per-account
+  // rule of /api/checkout does not apply here: a subscriber buys credits like anyone else.
+  it('starts a credit-pack checkout without consulting the subscriptions table', async () => {
+    const { createClient } = await import('@/lib/supabase/server')
+    const client = await createClient()
+    const { POST } = await import('@/app/api/checkout/credits/route')
+
+    const res = await POST(makeRequest({ quantity: 100 }))
+
+    expect(res.status).toBe(200)
+    expect((await res.json()).url).toBe('https://checkout.stripe.com/s1')
+    expect(mockCreateCreditPackCheckoutSession).toHaveBeenCalledTimes(1)
+    expect(client.from).toHaveBeenCalledWith('profiles')
+    expect(client.from).not.toHaveBeenCalledWith('subscriptions')
+  })
+
   it('returns 503 ai_disabled when the AI flag is off, before any Stripe call', async () => {
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
     const { POST } = await import('@/app/api/checkout/credits/route')

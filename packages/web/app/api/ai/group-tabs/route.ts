@@ -1,8 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { aiDisabledResponse } from '@/lib/ai-guard'
-import { groupTabs, type Tab } from '@/lib/ai'
+import { groupTabs } from '@/lib/ai'
 import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
+import { parseGroupTabsBody, readJsonBody } from '@/lib/ai-validation'
 
 /**
  * Groups an array of tabs into labelled clusters using the AI model.
@@ -34,6 +35,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Validated before the usage check, so a rejected body never spends a credit.
+  const input = parseGroupTabsBody(await readJsonBody(request))
+  if (!input.ok) {
+    return NextResponse.json({ error: input.error }, { status: 400 })
+  }
+
   const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.groupTabs)
   if (!allowed) {
     return NextResponse.json(
@@ -42,15 +49,8 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const body = await request.json()
-  const tabs: Tab[] = body.tabs
-
-  if (!Array.isArray(tabs) || tabs.length === 0) {
-    return NextResponse.json({ error: 'tabs array required' }, { status: 400 })
-  }
-
   try {
-    const groups = await groupTabs(tabs)
+    const groups = await groupTabs(input.data)
     return NextResponse.json({ groups }, {
       headers: { 'X-AI-Requests-Remaining': String(remaining) },
     })

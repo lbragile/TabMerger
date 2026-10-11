@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { isOpenableUrl } from '@/lib/safeOpen';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { DeviceSession } from '@tabmerger/shared';
 import { useEntitlements } from '@/hooks/useEntitlements';
@@ -112,7 +113,7 @@ export function OtherDevices() {
   };
 
   const openTab = (tab: SnapshotTab) => {
-    if (!tab.url) return;
+    if (!isOpenableUrl(tab.url)) return;
     chrome.tabs.create({ url: tab.url });
   };
 
@@ -122,7 +123,7 @@ export function OtherDevices() {
   // group/window metadata worth preserving).
   const restoreDevice = (tabs: SnapshotTab[]) => {
     tabs.forEach((tab) => {
-      if (tab.url) chrome.tabs.create({ url: tab.url });
+      if (isOpenableUrl(tab.url)) chrome.tabs.create({ url: tab.url });
     });
   };
 

@@ -8,6 +8,15 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push }),
 }))
 
+const toastInfo = vi.fn()
+const toastError = vi.fn()
+vi.mock('sonner', () => ({
+  toast: {
+    info: (...args: unknown[]) => toastInfo(...args),
+    error: (...args: unknown[]) => toastError(...args),
+  },
+}))
+
 const baseProps = {
   name: 'Pro',
   monthlyPrice: 4,
@@ -35,6 +44,8 @@ async function loadPricingCard(aiEnabled: boolean): Promise<typeof PricingCardTy
 describe('PricingCard', () => {
   beforeEach(() => {
     push.mockClear()
+    toastInfo.mockClear()
+    toastError.mockClear()
     global.fetch = vi.fn()
   })
 
@@ -232,6 +243,113 @@ describe('PricingCard', () => {
     const PricingCard = await loadPricingCard(true)
     render(<PricingCard {...baseProps} highlighted />)
     expect(screen.getByText('Recommended')).toBeInTheDocument()
+  })
+
+  // An account holds one subscription: checkout starts the first one, and every later plan
+  // change happens in the billing portal.
+  describe('plan changes for an existing subscriber go to the billing portal', () => {
+    /** Answers each endpoint from a map and records where the browser was sent. */
+    function mockEndpoints(responses: Record<string, { status: number; body: unknown }>) {
+      vi.mocked(global.fetch).mockImplementation(async (input) => {
+        const response = responses[String(input)]
+        if (!response) throw new Error(`unexpected request to ${String(input)}`)
+        return { status: response.status, json: async () => response.body } as Response
+      })
+      delete (window as any).location
+      ;(window as any).location = { href: '' }
+    }
+
+    function requestedPaths() {
+      return vi.mocked(global.fetch).mock.calls.map(([input]) => String(input))
+    }
+
+    it('a Pro subscriber choosing Pro AI opens the billing portal and never calls checkout', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/billing-portal': { status: 200, body: { url: 'https://billing.example.com/portal' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro" currentInterval="monthly" />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro AI' }))
+
+      expect(requestedPaths()).toEqual(['/api/billing-portal'])
+      expect(window.location.href).toBe('https://billing.example.com/portal')
+    })
+
+    it('a signed-in free user still starts checkout', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 200, body: { url: 'https://checkout.example.com' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      expect(window.location.href).toBe('https://checkout.example.com')
+      expect(toastInfo).not.toHaveBeenCalled()
+      expect(toastError).not.toHaveBeenCalled()
+    })
+
+    it('sends the user to the billing portal, with a short message, when checkout answers 409 already_subscribed', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({
+        '/api/checkout': { status: 409, body: { error: 'already_subscribed' } },
+        '/api/billing-portal': { status: 200, body: { url: 'https://billing.example.com/portal' } },
+      })
+
+      const user = userEvent.setup()
+      // The page still shows the user as free (e.g. it was loaded before the purchase).
+      render(<PricingCard {...baseProps} currentTier="free" />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(requestedPaths()).toEqual(['/api/checkout', '/api/billing-portal'])
+      expect(window.location.href).toBe('https://billing.example.com/portal')
+      expect(toastInfo).toHaveBeenCalledTimes(1)
+      expect(toastInfo).toHaveBeenCalledWith(expect.stringMatching(/already have a plan/i))
+      // Not a failure: no error is shown.
+      expect(toastError).not.toHaveBeenCalled()
+    })
+
+    it('says where to change the plan when the portal cannot be opened after a 409', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({
+        '/api/checkout': { status: 409, body: { error: 'already_subscribed' } },
+        '/api/billing-portal': { status: 400, body: { error: 'No billing account found' } },
+      })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(window.location.href).toBe('')
+      expect(toastError).toHaveBeenCalledWith(expect.stringMatching(/Manage billing on your account page/))
+      // The button is usable again.
+      expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).not.toBeDisabled()
+    })
+
+    it('does not open the portal for a 409 with any other error code', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'something_else' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      expect(window.location.href).toBe('')
+      expect(toastInfo).not.toHaveBeenCalled()
+    })
+
+    it('sends a signed-out session to sign-in when the portal answers 401', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/billing-portal': { status: 401, body: {} } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} tier="pro" name="Pro" currentTier="pro_ai" />)
+      await user.click(screen.getByRole('button', { name: 'Downgrade to Pro' }))
+
+      expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/pricing')
+      expect(toastError).not.toHaveBeenCalled()
+    })
   })
 
   describe('AI coming-soon flag (AI_ENABLED off)', () => {

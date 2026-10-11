@@ -1,10 +1,11 @@
 import type { Window as ExtWindow } from '@/lib/types';
+import { isOpenableUrl } from '@/lib/safeOpen';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { resolveIncognito } from '@/lib/incognito';
 
 export function useOpenWindow() {
   const openWindow = async (window: ExtWindow) => {
-    const urlTabs = window.tabs.filter((t) => !!t.url);
+    const urlTabs = window.tabs.filter((t) => isOpenableUrl(t.url));
     if (urlTabs.length === 0) return;
 
     const openTabs = await chrome.tabs.query({});

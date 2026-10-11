@@ -188,7 +188,47 @@ describe('SessionList restore/delete (previously uncovered branches)', () => {
       />
     )
     fireEvent.click(screen.getByRole('button', { name: 'Restore session' }))
-    expect(openSpy).toHaveBeenCalledWith('https://a.com', '_blank', 'noopener')
+    expect(openSpy).toHaveBeenCalledWith('https://a.com/', '_blank', 'noopener')
+    openSpy.mockRestore()
+  })
+
+  it('restores only the http(s) tabs of a session and skips the rest', () => {
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
+    render(
+      <SessionList
+        sessions={[
+          {
+            id: 's1',
+            name: 'Session 1',
+            groups: [
+              {
+                name: 'G',
+                windows: [
+                  {
+                    tabs: [
+                      { url: 'https://a.com/page' },
+                      { url: 'javascript:alert(1)' },
+                      { url: ' JavaScript:alert(1)' },
+                      { url: 'data:text/html,<p>x</p>' },
+                      { url: 'file:///etc/hosts' },
+                      { url: '' },
+                    ],
+                  },
+                  { tabs: [{ url: 'http://b.com/' }] },
+                ],
+              },
+            ],
+            created_at: new Date().toISOString(),
+          },
+        ]}
+        isPro={true}
+      />
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Restore session' }))
+    expect(openSpy.mock.calls).toEqual([
+      ['https://a.com/page', '_blank', 'noopener'],
+      ['http://b.com/', '_blank', 'noopener'],
+    ])
     openSpy.mockRestore()
   })
 

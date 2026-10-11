@@ -13,12 +13,13 @@ disable-model-invocation: true
    ls -la packages/demo/out/ packages/demo/screenshots/store/ packages/demo/promo/
    ```
 
-2. **Copy the demo videos + preview image** (these are the only demo assets currently committed to git — see `packages/demo/.gitignore`, which excludes `screenshots/` and `promo/` as local-only working-tree output):
+2. **Compress the tour videos + posters into the web app** (these are the only demo assets currently committed to git — see `packages/demo/.gitignore`, which excludes `screenshots/` and `promo/` as local-only working-tree output). The landing-page hero (`DemoSection.tsx`) plays `tabmerger-tour-{dark,light}.mp4` by site theme and shows `tour-poster-{dark,light}.jpg` (the video's first frame) until it loads. The renders are 1920x1080 at about 20 MB, so re-encode to 1280x720 (about 3.4 MB) rather than copying; this needs a full `ffmpeg` (`$TM_FFMPEG`, the same one `audio:tour` uses):
    ```bash
-   cp packages/demo/out/tabmerger-demo-dark.mp4 packages/web/public/videos/tabmerger-demo-dark.mp4
-   cp packages/demo/out/tabmerger-demo-light.mp4 packages/web/public/videos/tabmerger-demo-light.mp4
+   for t in dark light; do
+     "$TM_FFMPEG" -y -i packages/demo/out/tour/tabmerger-tour-$t.mp4 -vf scale=1280:-2 -c:v libx264 -preset slow -crf 26 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart packages/web/public/videos/tabmerger-tour-$t.mp4
+     "$TM_FFMPEG" -y -i packages/demo/out/tour/tabmerger-tour-$t.mp4 -frames:v 1 -vf scale=1280:-2 -q:v 4 packages/web/public/videos/tour-poster-$t.jpg
+   done
    ```
-   Update `packages/web/public/videos/demo-preview.jpg` too if a better static fallback was generated (`packages/demo/screenshots.ts` output) — only used when a themed video file is missing.
 
 3. **Screenshots/promo tiles stay local-only by design** (an explicit decision — see `.claude/agent-memory/demo/`) unless you're deliberately changing that: they live in `packages/demo/screenshots/store/*.jpg` and `packages/demo/promo/*.jpg`, git-ignored. `.github/workflows/publish.yml`'s release-asset step already globs these paths and will silently pick them up the moment they're committed — no workflow change needed if you later decide to ship them.
 

@@ -161,6 +161,12 @@ These are the barriers we know about, with workarounds where there is one.
 - **Motion on the website.** Only the reviews carousel on the website stops moving when your
   system asks for reduced motion. Other website animations have not been checked. The extension
   does respect that setting.
+- **Store reviews in other languages.** The reviews on the landing page are quoted from the
+  store listings in the language they were written in, without language markup. A screen reader
+  may read a review that is not in English with the page's English voice.
+- **Reviews strip on small screens.** On a narrow screen the reviews strip on the landing page
+  has no previous and next buttons, so it can only be moved by swiping. Tapping the strip pauses
+  it, and every review can still be reached with the keyboard or a screen reader.
 - **No skip link on the website.** Keyboard users must tab through the navigation on every page.
 - **Contrast of the default accent color.** In the extension's light theme, the main teal
   accent is about 3:1 against white. That is enough for large text and icons but short of the

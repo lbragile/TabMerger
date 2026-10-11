@@ -1,0 +1,16 @@
+{
+    "permissions": [
+        "alarms",
+        "contextMenus",
+        "identity",
+        "notifications",
+        "storage",
+        "tabGroups",
+        "tabs"
+    ],
+    "optional_permissions": [],
+    "host_permissions": [],
+    "optional_host_permissions": [],
+    "content_script_matches": [],
+    "web_accessible_matches": []
+}

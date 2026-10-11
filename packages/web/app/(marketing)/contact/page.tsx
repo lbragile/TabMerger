@@ -49,7 +49,9 @@ export default function ContactPage() {
 function ContactForm() {
   const searchParams = useSearchParams()
   const topic = searchParams.get('topic')
-  const preselectedSubject = topic ? TOPIC_TO_SUBJECT[topic] : undefined
+  // Own keys only, so a topic named after a built-in object property selects nothing.
+  const preselectedSubject =
+    topic && Object.prototype.hasOwnProperty.call(TOPIC_TO_SUBJECT, topic) ? TOPIC_TO_SUBJECT[topic] : undefined
 
   const [status, setStatus] = useState<Status>('idle')
   const [subjectOption, setSubjectOption] = useState<string>(preselectedSubject ?? '')

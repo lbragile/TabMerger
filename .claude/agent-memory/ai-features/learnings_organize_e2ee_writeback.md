@@ -7,7 +7,7 @@ metadata:
 
 `/api/ai/organize` handles E2E encryption by **splitting reads from writes**, not by round-tripping ciphertext:
 
-- **Read:** the extension POSTs `{ groups: [{id, name, permanent, tabs}] }` (only when `hasEncryptionKey()`), mirroring `/api/ai/suggest-sessions`. `fetchUserData` uses it verbatim and skips the DB entirely. Absent/malformed payload silently falls back to the service-role DB read — no 400.
+- **Read:** the extension POSTs `{ groups: [{id, name, permanent, tabs}] }` (only when `hasEncryptionKey()`), mirroring `/api/ai/suggest-sessions`. `fetchUserData` uses it verbatim and skips the DB entirely. Only a request with no groups (missing, null or empty `groups`) falls back to the service-role DB read; groups that are present but structurally invalid get a 400, and the DB read itself ends the run if a row is an encrypted blob. See [[ai-request-validation]].
 - **Write:** `applyChanges` never re-encrypts. It calls `isEncryptedBlob(group.windows)` and pushes any *content-bearing* action (`rename`, `merge`) onto `skipped` for the client to re-apply locally through the sync engine. Only `delete` and `reorder` (row-level / position-only) run server-side.
 - The web dashboard is **not** an E2EE client — `OrganizeProposal` takes an `encrypted` prop and renders a refusal card instead of streaming.
 

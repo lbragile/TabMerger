@@ -1,0 +1,38 @@
+{
+    "frames": {
+        "dark": 387,
+        "light": 383
+    },
+    "events": {
+        "dark": {
+            "grip": 37,
+            "pickup": 38,
+            "overZone": 80,
+            "drop": 90,
+            "windowClosed": 99,
+            "nowOpenTwo": 100,
+            "renameText": 177,
+            "renameInput": 199,
+            "colorDot": 273,
+            "swatch": 300,
+            "apply": 322
+        },
+        "light": {
+            "grip": 40,
+            "pickup": 40,
+            "overZone": 79,
+            "drop": 89,
+            "windowClosed": 97,
+            "nowOpenTwo": 102,
+            "renameText": 171,
+            "renameInput": 193,
+            "colorDot": 264,
+            "swatch": 293,
+            "apply": 316
+        }
+    },
+    "closeAfterReleaseMs": {
+        "dark": 296,
+        "light": 265
+    }
+}

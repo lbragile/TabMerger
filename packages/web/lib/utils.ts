@@ -20,6 +20,41 @@ export function formatCurrency(amount: number, currency = 'USD'): string {
   }).format(amount)
 }
 
+/** Where a sign-in or auth callback lands when no usable destination was given. */
+export const DEFAULT_REDIRECT_PATH = '/dashboard'
+
+/** Any origin works here: it only has to be one no input can name. */
+const PLACEHOLDER_ORIGIN = 'http://placeholder.invalid'
+
+/**
+ * Returns `candidate` when it is a path on this site, otherwise `fallback`.
+ *
+ * For redirect destinations read from a query string (`next`, `redirectTo`). A value is
+ * accepted only when it starts with a single `/`, has no backslash (browsers read `\` as `/`)
+ * and no ASCII control character, and still resolves to the same origin it was resolved
+ * against, with a parsed path that does not start with `//`. So `/pricing` and
+ * `/dashboard?x=1#y` pass, while `//host`, `/.//host`, `/\host`, `@host`, absolute URLs and
+ * non-strings give the fallback. The accepted value is returned unchanged.
+ */
+export function safeRedirectPath(candidate: unknown, fallback: string = DEFAULT_REDIRECT_PATH): string {
+  if (typeof candidate !== 'string') return fallback
+  if (!candidate.startsWith('/') || candidate.startsWith('//')) return fallback
+  if (candidate.includes('\\')) return fallback
+  for (let i = 0; i < candidate.length; i++) {
+    const code = candidate.charCodeAt(i)
+    if (code < 0x20 || code === 0x7f) return fallback
+  }
+  try {
+    const resolved = new URL(candidate, PLACEHOLDER_ORIGIN)
+    if (resolved.origin !== PLACEHOLDER_ORIGIN) return fallback
+    // Dot segments are removed when a URL is parsed, so `/.//host` has the path `//host`.
+    if (resolved.pathname.startsWith('//')) return fallback
+  } catch {
+    return fallback
+  }
+  return candidate
+}
+
 /**
  * Validates a candidate base URL string: must parse as an absolute http(s) URL with no
  * embedded whitespace or stray quote characters (both symptoms of a misconfigured env var —

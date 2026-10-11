@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-06
+> Last Updated: 2026-10-10
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -88,6 +88,8 @@ WHAT YOU CAN DO
 - Take saved sessions (snapshots of your groups) and restore them later.
 - Undo and redo changes, and switch between light and dark themes.
 - Import from a JSON file, a bookmarks HTML export or OneTab, and export your data as JSON.
+  Imported files are checked entry by entry: links that run script instead of opening a page
+  (bookmarklets, for example) are left out, and the import tells you how many were skipped.
 
 FREE AND PRO
 TabMerger works fully without an account. The free plan keeps everything in your browser and
@@ -358,6 +360,12 @@ All three certifications can be ticked, because they are true as built:
 - AI features (Pro AI tier) are currently **disabled/coming soon** in both the extension and the
   web app (`VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` feature flags) — no tab content is sent to
   Anthropic's Claude API while this flag is off. Update this note when AI ships.
+- Imported files (JSON, bookmarks HTML, OneTab) are read and validated on the device, in the
+  popup: each group, window and tab is rebuilt from known fields only, and addresses using a
+  script-running scheme (`javascript:`, `data:`, `vbscript:`, `blob:`) are not saved. The same
+  check sits in front of every action that opens a saved address (`src/lib/safeOpen.ts`), so
+  such an address is never opened; browser pages (`chrome://`, `file://` and the like) open as
+  before. No permission, data collection or network destination changed with this.
 - Direct network destinations from the extension: the TabMerger website (`/api/track`,
   `/api/og-preview` when enabled, `/api/portal` for the billing link), Supabase, Google's favicon
   service, and the Google sign-in window. PostHog's capture endpoint and Sentry are in the code

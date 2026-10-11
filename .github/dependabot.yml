@@ -1,0 +1,21 @@
+# Keeps the SHA-pinned GitHub Actions in .github/workflows current. Security updates
+# for npm dependencies are handled by the repo's Dependabot security updates setting,
+# so only the actions ecosystem is configured here (version updates).
+#
+# `chore(ci)` is a scope .releaserc.json suppresses, so an action bump never cuts a release.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait a week after a release before proposing it, so a hijacked or yanked release
+    # has time to be caught before it reaches the pinned SHAs.
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

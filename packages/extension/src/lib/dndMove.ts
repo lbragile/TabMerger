@@ -19,14 +19,17 @@ import { createGroup } from '@/lib/utils';
  * undo cannot faithfully reopen a closed tab (history, scroll position, form state).
  *
  * `tabs.remove` is the ONE destructive side effect, and it is deliberately not executed
- * verbatim: `runSideEffects` closes only tabs that are NOT active in their window, and
- * hands every ACTIVE tab to the background worker to close once the popup goes away.
- * Closing the active tab of the window the toolbar popup is anchored to dismisses the
- * popup instantly (spec C7), which used to kill the commit mid-flight. Persistence runs
- * before side effects, so the move survives even if the popup does die.
+ * verbatim: `runSideEffects` closes every tab at the drop EXCEPT the active tab of the
+ * window the popup itself is in, which it hands to the background worker to close once
+ * the popup goes away. Closing the active tab of the window the toolbar popup is anchored
+ * to dismisses the popup instantly (spec C7), which used to kill the commit mid-flight.
+ * So a dragged window the popup is NOT attached to closes completely at the drop; the
+ * popup's own window keeps its active tab until the popup closes. Which window that is
+ * is the executor's business, not this module's. Persistence runs before side effects,
+ * so the move survives even if the popup does die.
  *
  * `available[permIndex]` is NOT edited here: Now Open mirrors the real browser, and
- * `useCurrentTabs` re-syncs it as the closes land. A deferred (active) tab therefore
+ * `useCurrentTabs` re-syncs it as the closes land. The one deferred tab therefore
  * legitimately stays visible until the popup closes.
  *
  * The other Now Open side effects are non-destructive: `tabs.move` (reorder within Now
@@ -110,9 +113,10 @@ export type DndSideEffect =
   | { type: 'tabs.create'; windowId: number; url: string; index?: number; active: false }
   /**
    * Real Now Open tabs the user dragged OUT into a saved group: the move closes them.
-   * `runSideEffects` splits these — non-active tabs close immediately, an ACTIVE tab is
-   * deferred to popup teardown so closing the popup's anchor tab can't dismiss it
-   * mid-commit (spec C7). Always accompanied by detached copies in the destination.
+   * `runSideEffects` splits these — the active tab of the popup's OWN window is deferred
+   * to popup teardown so closing the popup's anchor tab can't dismiss it mid-commit (spec
+   * C7); every other tab closes immediately. Always accompanied by detached copies in the
+   * destination.
    */
   | { type: 'tabs.remove'; tabIds: number[] }
   /**
@@ -425,8 +429,11 @@ function detachTab(tab: Tab): Tab {
   return { ...rest, id: 0 };
 }
 
-/** A saved, detached copy of a LIVE Now Open tab. */
-function copyLiveTab(tab: Tab): Tab {
+/**
+ * A saved, detached copy of a LIVE Now Open tab: `id: 0`, no `pinned`, stamped `savedAt`.
+ * Every writer that stores a live tab in a saved group goes through this (or `copyLiveWindow`).
+ */
+export function copyLiveTab(tab: Tab): Tab {
   return { ...detachTab(tab), savedAt: Date.now() };
 }
 
@@ -438,16 +445,31 @@ function liveTabIds(tabs: Tab[]): number[] {
   return tabs.map((t) => t.id).filter((id): id is number => typeof id === 'number' && id > 0);
 }
 
-/** A saved, detached copy of a LIVE Now Open window (the real window's tabs are closed). */
-function copyLiveWindow(w: ExtWindow): ExtWindow {
+/**
+ * A saved, detached copy of a LIVE Now Open window. Closing the real window is the caller's
+ * call: a drag does (via `tabs.remove`), the "Copy to group" menu (`useMoveWindow`) does not.
+ *
+ * The star: a dragged window lands unstarred (the default); a menu or button copy passes
+ * `keepStar` so the copy carries the live window's star. A caller that keeps the star runs the
+ * target's windows through `sortWindowsByStarred`.
+ */
+export function copyLiveWindow(w: ExtWindow, { keepStar = false }: { keepStar?: boolean } = {}): ExtWindow {
   return {
     ...w,
     id: 0,
     incognito: w.incognito ?? false,
     focused: false,
-    starred: false,
+    starred: keepStar && w.starred === true,
     tabs: w.tabs.map(copyLiveTab)
   };
+}
+
+/**
+ * The copy a menu or button action stores (Copy to group, Duplicate, Replace / Merge with
+ * current): detached like any `copyLiveWindow` result, with the live window's star kept.
+ */
+export function copyLiveWindowKeepingStar(w: ExtWindow): ExtWindow {
+  return copyLiveWindow(w, { keepStar: true });
 }
 
 /** Positions of `objs` (by identity) inside group `gi` of `available`; missing ones are skipped. */
@@ -613,7 +635,8 @@ function moveGroupsMulti(
  *  - a tab (or a multi-tab selection) → ONE new window inside the new group,
  *  - a window (or a multi-window selection) → the window(s) as the new group's contents,
  *  - Now Open sources are MOVED: a detached copy lands here and the real tabs are closed
- *    through `tabs.remove` (actives deferred to popup teardown, C7); not undoable.
+ *    through `tabs.remove` (the popup window's active tab deferred to popup teardown,
+ *    C7); not undoable.
  *
  * The new group is left ACTIVE so the user can see where the drop landed — otherwise the
  * items would vanish into a group that isn't on screen. If the underlying move turns out
@@ -694,9 +717,10 @@ function moveWindow(s: GroupsState, a: HydratedRef, o: HydratedRef, permIndex: n
     // A LIVE "Now Open" window dragged onto a saved group MOVES it: the saved group gains
     // a detached copy (tabs `id:0`, not focused/starred) and every real tab of that window
     // is closed via `tabs.remove` — which closes the real window once its last tab goes.
-    // The executor defers the window's ACTIVE tab to popup teardown, so the popup is never
-    // dismissed mid-commit (spec C7). `available[permIndex]` is left untouched — Now Open
-    // re-syncs from the browser.
+    // That happens at the drop unless this is the window the popup is in: the executor
+    // defers THAT window's active tab to popup teardown, so the popup is never dismissed
+    // mid-commit (spec C7). `available[permIndex]` is left untouched — Now Open re-syncs
+    // from the browser.
     const liveW = s.available[permIndex].windows[a.windowIndex];
     if (!liveW) return NOOP(s);
 
@@ -861,8 +885,8 @@ function moveTab(
   if (srcIsPerm && !destIsPerm) {
     // Drag a live tab OUT of Now Open into a saved group MOVES it: the saved group gets a
     // detached copy and the real tab is closed via `tabs.remove` (deferred by the executor
-    // if it is the active/anchor tab — spec C7). `available[permIndex]` is untouched;
-    // `useCurrentTabs` re-syncs Now Open once the close lands.
+    // if it is the active tab of the popup's own window — spec C7). `available[permIndex]`
+    // is untouched; `useCurrentTabs` re-syncs Now Open once the close lands.
     const realTab = s.available[permIndex].windows[srcWi]?.tabs[srcTi];
     if (!realTab) return NOOP(s);
 
@@ -1100,8 +1124,8 @@ function moveTabsMulti(
     if (!isPerm(gi)) available[gi] = bump(available[gi]);
   });
 
-  // Live members are MOVED, not copied: close their real tabs (the executor defers any
-  // active one to popup teardown). Saved members need no side effect.
+  // Live members are MOVED, not copied: close their real tabs (the executor defers the
+  // popup window's active one to popup teardown). Saved members need no side effect.
   const closingTabs = liveTabIds(liveSel.map((t) => orig(t)!));
 
   return {
@@ -1200,7 +1224,8 @@ function moveWindowsMulti(
     if (!isPerm(gi)) available[gi] = bump(available[gi]);
   });
 
-  // Live windows are MOVED: close every real tab they hold (the executor defers actives).
+  // Live windows are MOVED: close every real tab they hold, so each window closes at the
+  // drop (the executor defers only the active tab of the popup's own window).
   const closingWindowTabs = liveTabIds(liveSel.flatMap((w) => orig(w)!.tabs));
 
   return {

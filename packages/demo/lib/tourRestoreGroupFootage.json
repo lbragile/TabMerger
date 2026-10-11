@@ -1,0 +1,56 @@
+{
+    "frames": {
+        "dark": 286,
+        "light": 296
+    },
+    "events": {
+        "dark": {
+            "groupClick": 38,
+            "menu0": 87,
+            "open0": 115,
+            "menu1": 153,
+            "open1": 180,
+            "windowCreated0": 120,
+            "windowCreated1": 183,
+            "nowOpen0": 121,
+            "nowOpen1": 127,
+            "nowOpen2": 129,
+            "nowOpen3": 131,
+            "nowOpen4": 187,
+            "nowOpen5": 189,
+            "nowOpen6": 191
+        },
+        "light": {
+            "groupClick": 37,
+            "menu0": 89,
+            "open0": 116,
+            "menu1": 158,
+            "open1": 186,
+            "windowCreated0": 122,
+            "windowCreated1": 191,
+            "nowOpen0": 126,
+            "nowOpen1": 132,
+            "nowOpen2": 136,
+            "nowOpen3": 194
+        }
+    },
+    "nowOpenTexts": {
+        "dark": [
+            "Now Open2◆10",
+            "Now Open3◆11",
+            "Now Open3◆12",
+            "Now Open3◆13",
+            "Now Open3◆12",
+            "Now Open4◆13",
+            "Now Open4◆14",
+            "Now Open4◆13"
+        ],
+        "light": [
+            "Now Open2◆10",
+            "Now Open3◆11",
+            "Now Open3◆13",
+            "Now Open3◆12",
+            "Now Open4◆13"
+        ]
+    }
+}

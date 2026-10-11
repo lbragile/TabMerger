@@ -1,8 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { aiDisabledResponse } from '@/lib/ai-guard'
-import { summarizeTab, type Tab } from '@/lib/ai'
+import { summarizeTab } from '@/lib/ai'
 import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
+import { parseTabSummaryBody, readJsonBody } from '@/lib/ai-validation'
 
 /**
  * Generates a one-sentence summary of a single tab for the hover preview tooltip.
@@ -32,6 +33,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Validated before the usage check, so a rejected body never spends a credit.
+  // Accepts `{ url, title }` (what the extension sends) or `{ tab: { id, title, url } }`.
+  const input = parseTabSummaryBody(await readJsonBody(request))
+  if (!input.ok) {
+    return NextResponse.json({ error: input.error }, { status: 400 })
+  }
+
   const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.tabSummary)
   if (!allowed) {
     return NextResponse.json(
@@ -40,15 +48,8 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const body = await request.json()
-  const tab: Tab = body.tab
-
-  if (!tab || typeof tab.id !== 'number') {
-    return NextResponse.json({ error: 'tab object required' }, { status: 400 })
-  }
-
   try {
-    const summary = await summarizeTab(tab)
+    const summary = await summarizeTab(input.data)
     return NextResponse.json({ summary }, {
       headers: { 'X-AI-Requests-Remaining': String(remaining) },
     })

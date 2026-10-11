@@ -4,7 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Check, Plus } from 'lucide-react'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
@@ -65,6 +67,8 @@ export function PricingCard({
   // A signed-out visitor has no currentTier — treat as free/below every paid card.
   const isBelowCurrentTier =
     !!currentTier && TIER_RANK[normalizeTier(tier)] < TIER_RANK[normalizeTier(currentTier)]
+  // The pricing page passes a paid currentTier only while that subscription is entitled.
+  const hasPaidPlan = !!currentTier && normalizeTier(currentTier) !== 'free'
   // Never recommend a tier the user already has or has surpassed.
   const showRecommended = highlighted && !isCurrentPlan && !isBelowCurrentTier
   // A paid current plan can move to the other billing interval (same plan, new price).
@@ -119,13 +123,17 @@ export function PricingCard({
 
     setLoading(true)
     try {
-      // Downgrading to an already-active Stripe subscription must go through the billing
-      // portal (which changes the existing subscription's price) — a fresh /api/checkout
-      // call would create a second, separate subscription instead of switching plans.
-      const res = await fetch(isBelowCurrentTier ? '/api/billing-portal' : '/api/checkout', {
+      // An account holds one subscription, so a subscriber moving to another paid plan (up or
+      // down) changes that subscription in the billing portal. Checkout only starts a first one.
+      if (hasPaidPlan) {
+        await openBillingPortal()
+        return
+      }
+
+      const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: isBelowCurrentTier ? undefined : JSON.stringify({ tier, interval }),
+        body: JSON.stringify({ tier, interval }),
       })
 
       if (res.status === 401) {
@@ -133,13 +141,46 @@ export function PricingCard({
         return
       }
 
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
+
+      // The server found a paid plan this page didn't know about (e.g. the page was loaded
+      // before subscribing in another tab). Same destination as above: the billing portal.
+      if (res.status === 409 && data.error === ALREADY_SUBSCRIBED_ERROR) {
+        toast.info('You already have a plan. Opening billing so you can change it.')
+        await openBillingPortal()
+        return
+      }
+
       if (data.url) {
         window.location.href = data.url
       }
     } finally {
       setLoading(false)
     }
+  }
+
+  /**
+   * Sends the user to the Stripe billing portal, where an existing subscription is changed.
+   * Says where to go instead when the portal can't be opened.
+   */
+  async function openBillingPortal() {
+    const res = await fetch('/api/billing-portal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    if (res.status === 401) {
+      router.push('/auth/sign-in?redirectTo=/pricing')
+      return
+    }
+
+    const data = await res.json().catch(() => ({}))
+    if (data.url) {
+      window.location.href = data.url
+      return
+    }
+
+    toast.error("Couldn't open billing. Use Manage billing on your account page to change your plan.")
   }
 
   return (
@@ -250,9 +291,8 @@ export function PricingCard({
             )}
           </>
         ) : isCurrentPlan ? null : isBelowCurrentTier ? (
-          // Downgrading an active Stripe subscription is a price change on the *existing*
-          // subscription, not a new one — route through the billing portal (handleClick
-          // hits /api/billing-portal here), never /api/checkout.
+          // A plan change is a price change on the *existing* subscription, not a new one:
+          // handleClick sends every subscriber to /api/billing-portal, never /api/checkout.
           <Button
             variant="secondary"
             className="w-full rounded-lg"

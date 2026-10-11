@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { aiDisabledResponse } from '@/lib/ai-guard'
+import { parseDevUsageBody, readJsonBody } from '@/lib/ai-validation'
 
 /**
  * Dev-only: sets the authenticated user's `ai_usage.credits_used` for the
@@ -35,10 +36,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { count } = await request.json().catch(() => ({ count: undefined }))
-  if (typeof count !== 'number' || !Number.isInteger(count) || count < 0) {
-    return NextResponse.json({ error: 'count must be a non-negative integer' }, { status: 400 })
+  const input = parseDevUsageBody(await readJsonBody(request))
+  if (!input.ok) {
+    return NextResponse.json({ error: input.error }, { status: 400 })
   }
+  const count = input.data
 
   // user_id comes only from the verified token — never from the request body.
   const month = new Date().toISOString().slice(0, 7)
