@@ -88,9 +88,11 @@ function FAQItem({
   )
 }
 
+// No bottom border on the section: the FAQ is the whole /faq page and the footer draws its own
+// top border, so a second line above it left two lines with an empty band between them.
 export function FAQ() {
   return (
-    <section className="py-16 sm:py-[72px] px-6 sm:px-11 border-b border-border">
+    <section className="py-16 sm:py-[72px] px-6 sm:px-11">
       <div className="container max-w-[960px] grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
         <div className="sm:col-span-1">
           <h1 className="font-semibold tracking-tight mb-2 text-[28px] sm:text-[34px] leading-tight">
