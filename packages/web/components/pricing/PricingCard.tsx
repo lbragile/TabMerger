@@ -193,7 +193,7 @@ export function PricingCard({
     >
       {/* Title row */}
       <div className="flex items-center justify-between gap-2 mb-2.5">
-        <h6 className="text-sm font-semibold">{name}</h6>
+        <h2 className="text-sm font-semibold">{name}</h2>
         {isCurrentPlan && (
           <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary text-primary-foreground self-center">
             Current
