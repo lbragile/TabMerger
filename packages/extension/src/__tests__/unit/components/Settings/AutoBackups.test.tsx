@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AUTO_BACKUP_COPY, AUTO_BACKUP_MESSAGE } from '@tabmerger/shared'
 import type { Group, Session } from '@/lib/types'
@@ -15,6 +15,7 @@ const h = vi.hoisted(() => ({
   groups: { available: [] as unknown[] },
   importMutate: vi.fn(),
   replaceMutate: vi.fn(),
+  replacing: false,
   download: vi.fn(),
   deleteAutoBackup: vi.fn(),
   blockOverLimit: vi.fn(),
@@ -34,7 +35,7 @@ vi.mock('@/hooks/useSessions', () => ({ useSessions: () => ({ data: h.sessions }
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => ({ data: h.groups }),
   useImportGroups: () => ({ mutate: h.importMutate }),
-  useReplaceSavedGroups: () => ({ mutate: h.replaceMutate }),
+  useReplaceSavedGroups: () => ({ mutate: h.replaceMutate, isPending: h.replacing }),
 }))
 vi.mock('@/lib/autoBackup', async () => {
   const actual = await vi.importActual<typeof import('@/lib/autoBackup')>('@/lib/autoBackup')
@@ -91,6 +92,7 @@ beforeEach(() => {
   h.saveSettings.mockResolvedValue(undefined)
   h.user = { id: 'user-1' }
   h.sessions = []
+  h.replacing = false
   h.groups = { available: [] }
   h.download.mockResolvedValue({ status: 'done', added: 0, inAccount: 0, unreadable: 0 })
   h.deleteAutoBackup.mockResolvedValue(undefined)
@@ -108,7 +110,7 @@ beforeEach(() => {
     },
     tabs: { create: tabsCreate },
   }
-  vi.stubGlobal('confirm', vi.fn(() => true))
+  vi.stubGlobal('confirm', vi.fn(() => true)) // the native box is gone: tests assert it is never used
   // Radix Select needs these in jsdom
   Element.prototype.scrollIntoView = vi.fn()
   Element.prototype.hasPointerCapture = vi.fn(() => false)
@@ -314,25 +316,52 @@ describe('AutoBackups — restore and delete', () => {
     expect(onRestored).toHaveBeenCalled()
   })
 
-  it('"Replace my groups" asks first (naming how many current groups go), then replaces and does not import', () => {
+  const dialog = () => screen.findByRole('alertdialog')
+  const answer = async (name: string) => {
+    fireEvent.click(within(await dialog()).getByRole('button', { name }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+  }
+
+  it('"Replace my groups" asks in-app first (naming how many current groups go), then replaces and does not import', async () => {
     h.replaceMutate.mockImplementation((_g: unknown, o: { onSuccess: () => void }) => o.onSuccess())
     const { onRestored } = renderIt()
     open()
     fireEvent.click(screen.getByRole('button', { name: 'Replace my groups' }))
-    expect(confirm).toHaveBeenCalledWith(expect.stringMatching(/Replace your groups with the 2 groups from this backup\? Your 1 current group will be removed/))
-    expect(h.replaceMutate).toHaveBeenCalledTimes(1)
+    const box = await screen.findByRole('alertdialog', { name: 'Replace your groups?' })
+    expect(box).toHaveTextContent('Your groups will be replaced with the 2 groups from this backup. Your 1 current group will be removed. You can undo this.')
+    expect(h.replaceMutate).not.toHaveBeenCalled()
+    // destructive: focus starts on Cancel, the action names what it does
+    expect(within(box).getByRole('button', { name: 'Cancel' })).toHaveFocus()
+    fireEvent.click(within(box).getByRole('button', { name: 'Replace groups' }))
+    await waitFor(() => expect(h.replaceMutate).toHaveBeenCalledTimes(1))
     expect(h.importMutate).not.toHaveBeenCalled()
     expect(h.track).toHaveBeenCalledWith('auto_backup_restored', { mode: 'replace' })
     expect(onRestored).toHaveBeenCalled()
+    expect(confirm).not.toHaveBeenCalled()
   })
 
-  it('"Replace" declined in the confirm changes nothing', () => {
-    vi.stubGlobal('confirm', vi.fn(() => false))
+  it('"Replace" cancelled, or dismissed with Escape, changes nothing and keeps the choice open', async () => {
     renderIt()
     open()
     fireEvent.click(screen.getByRole('button', { name: 'Replace my groups' }))
+    await answer('Cancel')
+    fireEvent.click(screen.getByRole('button', { name: 'Replace my groups' }))
+    await dialog()
+    fireEvent.keyDown(document.activeElement as Element, { key: 'Escape' })
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
     expect(h.replaceMutate).not.toHaveBeenCalled()
     expect(h.importMutate).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Add to my groups' })).toBeInTheDocument()
+  })
+
+  it('a replace that is still being written cannot be started again (no second question)', async () => {
+    h.replacing = true
+    renderIt()
+    open()
+    fireEvent.click(screen.getByRole('button', { name: 'Replace my groups' }))
+    await new Promise((r) => setTimeout(r, 30))
+    expect(screen.queryByRole('alertdialog')).toBeNull()
+    expect(h.replaceMutate).not.toHaveBeenCalled()
   })
 
   it('checks the Free limits against the current groups: append for Add, replace for Replace; blocked means nothing happens', () => {
@@ -365,30 +394,37 @@ describe('AutoBackups — restore and delete', () => {
     expect(h.importMutate).not.toHaveBeenCalled()
   })
 
-  it('a failed import or replace shows an error', () => {
+  it('a failed import or replace shows an error', async () => {
     h.importMutate.mockImplementation((_g: unknown, o: { onError: () => void }) => o.onError())
     h.replaceMutate.mockImplementation((_g: unknown, o: { onError: () => void }) => o.onError())
     renderIt()
     open()
     fireEvent.click(screen.getByRole('button', { name: 'Add to my groups' }))
     fireEvent.click(screen.getByRole('button', { name: 'Replace my groups' }))
+    await answer('Replace groups')
     expect(h.toast.error).toHaveBeenCalledTimes(2)
     expect(h.toast.error).toHaveBeenCalledWith('Could not restore this backup')
   })
 
-  it('delete asks first with the shared scope sentence (removed from this browser and the account), then deletes by id', async () => {
+  it('delete asks in-app first with the shared scope sentence (removed from this browser and the account), then deletes by id', async () => {
     renderIt()
     fireEvent.click(deleteBtn())
-    expect(confirm).toHaveBeenCalledWith(expect.stringContaining(AUTO_BACKUP_COPY.deleteScope))
-    expect(confirm).toHaveBeenCalledWith(expect.stringMatching(/cannot be undone/))
+    const box = await screen.findByRole('alertdialog', { name: 'Delete this backup?' })
+    expect(box).toHaveTextContent(AUTO_BACKUP_COPY.deleteScope)
+    expect(box).toHaveTextContent(/This cannot be undone\./)
+    expect(within(box).getByRole('button', { name: 'Cancel' })).toHaveFocus()
+    expect(h.deleteAutoBackup).not.toHaveBeenCalled()
+    fireEvent.click(within(box).getByRole('button', { name: 'Delete backup' }))
     await waitFor(() => expect(h.deleteAutoBackup).toHaveBeenCalled())
     expect(h.deleteAutoBackup.mock.calls[0][0]).toBe('b1')
+    expect(confirm).not.toHaveBeenCalled()
   })
 
-  it('delete does nothing when declined', () => {
-    vi.stubGlobal('confirm', vi.fn(() => false))
+  it('delete does nothing when cancelled', async () => {
     renderIt()
     fireEvent.click(deleteBtn())
+    await answer('Cancel')
+    await new Promise((r) => setTimeout(r, 30))
     expect(h.deleteAutoBackup).not.toHaveBeenCalled()
   })
 

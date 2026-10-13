@@ -83,7 +83,7 @@ describe('saveBackupFile', () => {
 
   it('renders the name from the pattern: group and tab counts (Now Open not counted), inside the folder', async () => {
     const out = await saveBackupFile(session, 'My Backups', 'bk {groups}g {tabs}t')
-    expect(out).toEqual({ result: 'saved', path: 'My Backups/bk 2g 3t.json' })
+    expect(out).toEqual({ result: 'saved', path: 'My Backups/bk 2g 3t.json', downloadId: 7 })
     expect(download).toHaveBeenCalledWith(expect.objectContaining({ filename: 'My Backups/bk 2g 3t.json', saveAs: false, conflictAction: 'uniquify' }))
   })
 

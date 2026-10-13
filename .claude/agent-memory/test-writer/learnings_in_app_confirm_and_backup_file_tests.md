@@ -1,0 +1,16 @@
+---
+name: in-app-confirm-and-backup-file-tests
+description: How the in-app confirm box and the "Last file" backup block are tested per layer, with the jsdom, react-query and Playwright gotchas hit
+metadata:
+  type: reference
+---
+
+- **Layout.** `unit/hooks/useConfirm.test.tsx` covers hook + `ConfirmDialog` together through a harness (true only for the action; false for Cancel, Escape, X, unmount, a second question; one answer on a double click; focus by `destructive`; focus return incl. `returnFocusTo`). Call sites answer by `findByRole('alertdialog')` and a button name; `unit/lib/autoBackupFileLocate.test.ts` (parse/locate/show), `unit/components/Settings/AutoBackupFileSettingsLast.test.tsx` (every "Last file" state), `unit/lib/autoBackupFileLastLocalOnly.test.ts` (key is account-scoped and never mentioned in `syncEngine.ts` / `autoBackupDownload.ts`, read with `readFileSync`: `?raw` imports do not type-check), shared `autoBackupFileDisplayPath.test.ts`.
+- **Radix alertdialog in jsdom.** An open dialog sets `pointer-events: none` on the body, so `userEvent.click(document.body)` throws: dispatch `fireEvent.pointerDown/pointerUp/click` for the "outside click is ignored" case. A second question while one is open must be asked from code (`element.click()`), for the same reason. Escape through `userEvent.keyboard('{Escape}')` is reliable; `fireEvent.keyDown(document.activeElement)` was flaky when asked right after the dialog appeared.
+- **react-query v5 "refetch on window focus" in tests**: it only fires on a focus-state change and listens to `visibilitychange`, not `focus`. Call `focusManager.setFocused(false); focusManager.setFocused(true)`.
+- **`relativeTimeStr`** prints `5 mins ago` / `1 min ago`, not `5m`.
+- **Mocking `chrome.downloads`**: give the fake `runtime.id`, `permissions.contains`, `downloads.search`, `show`, `showDefaultFolder` and `onChanged.{addListener,removeListener}`; `locateBackupFile` compares `byExtensionId` with `chrome.runtime.id`.
+- **E2E.** The in-app box needs no `page.once('dialog')`; record native dialogs with `page.on('dialog', ...)` and assert the list stays empty. `getByRole('dialog')` selectors do not match an `alertdialog`. The restore-session action closes every window, so e2e only runs its declining paths.
+- **File-copy e2e** (`autoBackupFile.spec.ts`): launches its own persistent context (needs `acceptDownloads` + `downloadsPath`), loads the `TM_E2E_GRANT_DOWNLOADS=1` build named by `TM_E2E_DOWNLOADS_EXT_DIR`, and an init script replaces `chrome.downloads.show` / `showDefaultFolder` with recorders that do not forward (a headless run must not open a file manager) and can rewrite `search` filenames from `sessionStorage`. Playwright reports the real absolute path under `downloadsPath`.
+- **Temp builds without touching `.output`**: a config in the scratchpad that imports the real `wxt.config` and overrides `outDir`; run Playwright from the package root (`pnpm exec playwright test -c e2e/playwright.config.ts e2e/tests/...`) with `TM_E2E_EXT_DIR=<abs>/chrome-mv3-dev`.
+- **Bash heredocs with many quotes** can break the tool ("unexpected EOF"): write the script or text with the Write tool into the scratchpad and run it.

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -143,7 +143,7 @@ beforeEach(() => {
   mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
   mockUseGroups.mockReturnValue({ data: { available: [] } })
   globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
-  globalThis.confirm = vi.fn().mockReturnValue(true) // still used by the Import flow's confirm()
+  globalThis.confirm = vi.fn().mockReturnValue(true) // the native box must never be used: tests assert it
   globalThis.URL.createObjectURL = vi.fn().mockReturnValue('blob:x')
   globalThis.URL.revokeObjectURL = vi.fn()
   mockGetEncryptionKeyState.mockResolvedValue('absent')
@@ -524,13 +524,87 @@ describe('SettingsModal — Data tab', () => {
     return document.querySelector('input[type="file"]') as HTMLInputElement
   }
 
-  it('imports a .json file via importGroups and closes the modal on success', async () => {
-    renderModal()
+  const chooseFile = (name = 'backup.json') =>
+    fireEvent.change(fileInput(), { target: { files: [new File(['{}'], name, { type: 'application/json' })] } })
+  const openDataTab = async () => {
+    const onClose = vi.fn()
+    renderModal(onClose)
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^data$/i)
-    const file = new File(['{}'], 'backup.json', { type: 'application/json' })
-    fireEvent.change(fileInput(), { target: { files: [file] } })
-    await waitFor(() => expect(mockImportGroupsMutate).toHaveBeenCalled())
+    return onClose
+  }
+
+  it('importing a .json file asks in-app first (default focus on the action), imports on confirm and closes Settings', async () => {
+    mockImportGroupsMutate.mockImplementation((_g: unknown, o: { onSuccess: () => void }) => o.onSuccess())
+    const onClose = await openDataTab()
+    chooseFile()
+    const box = await screen.findByRole('alertdialog', { name: 'Import 1 group?' })
+    expect(box).toHaveTextContent('The 1 group in "backup.json" will be added next to the groups you already have.')
+    expect(mockImportGroupsMutate).not.toHaveBeenCalled()
+    const action = within(box).getByRole('button', { name: 'Import 1 group' })
+    expect(action).toHaveFocus() // not destructive: the action is the default
+    fireEvent.click(action)
+    await waitFor(() => expect(mockImportGroupsMutate).toHaveBeenCalledTimes(1))
+    expect(onClose).toHaveBeenCalled()
+    expect(globalThis.confirm).not.toHaveBeenCalled()
+  })
+
+  it('the question names the plural count for several groups', async () => {
+    const { importGroups } = await import('@/lib/importExport')
+    ;(importGroups as ReturnType<typeof vi.fn>).mockReturnValueOnce({ groups: [{ name: 'a' }, { name: 'b' }], skipped: 0 })
+    await openDataTab()
+    chooseFile()
+    const box = await screen.findByRole('alertdialog', { name: 'Import 2 groups?' })
+    expect(within(box).getByRole('button', { name: 'Import 2 groups' })).toBeInTheDocument()
+  })
+
+  it('a file name longer than 60 characters is cut in the question', async () => {
+    await openDataTab()
+    chooseFile(`${'f'.repeat(70)}.json`)
+    const box = await screen.findByRole('alertdialog')
+    expect(box).toHaveTextContent(`"${'f'.repeat(60)}…"`)
+    expect(box).not.toHaveTextContent('f'.repeat(61))
+  })
+
+  it('a file name with markup is shown as text', async () => {
+    await openDataTab()
+    chooseFile('<img src=x onerror=alert(1)>.json')
+    const box = await screen.findByRole('alertdialog')
+    expect(box.querySelector('img')).toBeNull()
+    expect(box).toHaveTextContent('<img src=x onerror=alert(1)>.json')
+  })
+
+  it('Cancel imports nothing, keeps Settings open and returns focus to the Import button', async () => {
+    const onClose = await openDataTab()
+    chooseFile()
+    const box = await screen.findByRole('alertdialog')
+    fireEvent.click(within(box).getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(mockImportGroupsMutate).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Import' })).toHaveFocus()
+  })
+
+  it('Escape cancels the import question without closing Settings', async () => {
+    const onClose = await openDataTab()
+    chooseFile()
+    await screen.findByRole('alertdialog')
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(mockImportGroupsMutate).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Import' })).toBeInTheDocument()
+  })
+
+  it('choosing the same file again after Cancel asks again (the input is cleared)', async () => {
+    await openDataTab()
+    chooseFile()
+    fireEvent.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(fileInput().value).toBe('')
+    chooseFile()
+    fireEvent.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Import 1 group' }))
+    await waitFor(() => expect(mockImportGroupsMutate).toHaveBeenCalledTimes(1))
   })
 
   it('shows an error toast and skips the mutation when the parsed file has zero groups', async () => {
@@ -544,19 +618,7 @@ describe('SettingsModal — Data tab', () => {
     await waitFor(() => expect(mockImportGroupsMutate).not.toHaveBeenCalled())
   })
 
-  it('does not import when the user cancels the import confirm dialog', async () => {
-    globalThis.confirm = vi.fn().mockReturnValue(false)
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/^data$/i)
-    const file = new File(['{}'], 'backup.json', { type: 'application/json' })
-    fireEvent.change(fileInput(), { target: { files: [file] } })
-    await waitFor(() => expect(globalThis.confirm).toHaveBeenCalled())
-    expect(mockImportGroupsMutate).not.toHaveBeenCalled()
-  })
-
   it('blocks the import (before the confirm dialog) when it would exceed the free group limit', async () => {
-    globalThis.confirm = vi.fn().mockReturnValue(true)
     mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, maxGroups: 1, maxTabs: 50 })
     mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true, windows: [] }, { name: 'existing', windows: [] }] } })
     renderModal()
@@ -567,7 +629,7 @@ describe('SettingsModal — Data tab', () => {
     const file = new File(['{}'], 'backup.json', { type: 'application/json' })
     fireEvent.change(fileInput(), { target: { files: [file] } })
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Free plan allows up to 1 groups.', expect.anything()))
-    expect(globalThis.confirm).not.toHaveBeenCalled()
+    expect(screen.queryByRole('alertdialog')).toBeNull()
     expect(mockImportGroupsMutate).not.toHaveBeenCalled()
   })
 })

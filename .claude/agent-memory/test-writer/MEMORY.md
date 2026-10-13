@@ -15,3 +15,4 @@
 - [Keyboard move re-anchor tests](learnings_keyboard_move_reanchor_tests.md) — inject cache changes mid-move in CI e2e (tm_dnd_debug flag) and the repro harness; which live region per path
 - [Tour v2 tests](learnings_tour_v2_tests.md) — test layout, jsdom rect stubbing, Playwright inert gotcha, isolating the e2e build with TM_E2E_EXT_DIR
 - [Auto-backup test patterns](learnings_auto_backup_tests.md) — localDb commit mocks, abortSignal chain links, flag sentinels (true/false/0/""), in-request interleaving hooks
+- [In-app confirm + backup file tests](learnings_in_app_confirm_and_backup_file_tests.md) — alertdialog/jsdom pointer-events, focusManager, downloads mock, file-copy e2e recorder

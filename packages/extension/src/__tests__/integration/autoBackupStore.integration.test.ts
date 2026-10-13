@@ -26,6 +26,8 @@ import {
 } from '@/lib/localDb'
 import {
   APP_SETTINGS_KEY,
+  AUTO_BACKUP_FILE_LAST_KEY,
+  AUTO_BACKUP_FILE_STATUS_KEY,
   AUTO_BACKUP_PENDING_DELETES_KEY,
   AUTO_BACKUP_STORE_GUARD_KEY,
   CLOUD_SYNC_ACTIVE_KEY,
@@ -257,6 +259,29 @@ describe('account and "Clear all data" wipes', () => {
     await expect(clearLocalAccountData()).resolves.toBeUndefined()
     await setSetting(APP_SETTINGS_KEY, ['x'])
     await expect(clearLocalAccountData()).resolves.toBeUndefined()
+  })
+
+  it('clearLocalAccountData removes the last backup file record and its status (a download id belongs to one account on one profile)', async () => {
+    await setSetting(AUTO_BACKUP_FILE_LAST_KEY, { id: 12, at: 1000 })
+    await setSetting(AUTO_BACKUP_FILE_STATUS_KEY, { at: 1000, result: 'saved', path: 'TabMerger/b.json' })
+    await clearLocalAccountData()
+    expect(await getSetting(AUTO_BACKUP_FILE_LAST_KEY, null)).toBeNull()
+    expect(await getSetting(AUTO_BACKUP_FILE_STATUS_KEY, null)).toBeNull()
+  })
+
+  it('clearAllLocalData removes the last backup file record too', async () => {
+    await setSetting(AUTO_BACKUP_FILE_LAST_KEY, { id: 12, at: 1000 })
+    await clearAllLocalData()
+    expect(await getSetting(AUTO_BACKUP_FILE_LAST_KEY, null)).toBeNull()
+  })
+
+  it('the last backup file record survives a commit that does not touch it, and a failed guard commit does not write it', async () => {
+    await setSetting(AUTO_BACKUP_FILE_LAST_KEY, { id: 12, at: 1000 })
+    await setSetting(AUTO_BACKUP_STORE_GUARD_KEY, 'user-1')
+    await commitSessionsIfGuardHolds({ key: AUTO_BACKUP_STORE_GUARD_KEY, value: 'user-2' }, { settings: { [AUTO_BACKUP_FILE_LAST_KEY]: { id: 99, at: 2000 } } })
+    expect(await getSetting(AUTO_BACKUP_FILE_LAST_KEY, null)).toEqual({ id: 12, at: 1000 })
+    await commitSessionsIfGuardHolds({ key: AUTO_BACKUP_STORE_GUARD_KEY, value: 'user-1' }, { settings: { [AUTO_BACKUP_FILE_LAST_KEY]: { id: 99, at: 2000 } } })
+    expect(await getSetting(AUTO_BACKUP_FILE_LAST_KEY, null)).toEqual({ id: 99, at: 2000 })
   })
 
   it('the wipe also removes backups, so the next account starts without the previous one', async () => {

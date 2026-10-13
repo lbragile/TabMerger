@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { AUTO_BACKUP_COPY } from '@tabmerger/shared';
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload, seedSettings, signInAsPro } from '../helpers';
+import { openPopup, readStoredGroups, seedAndReload, seedSettings, signInAsPro } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
 
 /**
@@ -172,18 +172,34 @@ test.describe('Automatic backups - Pro', () => {
     await expect(page.getByText(AUTO_BACKUP_COPY.namePrefix)).toHaveCount(0);
   });
 
-  test('restore adds the backup groups next to the current ones, and Undo removes them again', async ({ context, extensionId }) => {
+  /** Records the browser's own confirm()/alert() if it ever opens: the questions are in-app now. */
+  function watchNativeDialogs(page: Page): string[] {
+    const seen: string[] = [];
+    page.on('dialog', (d) => {
+      seen.push(`${d.type()}: ${d.message()}`);
+      void d.dismiss();
+    });
+    return seen;
+  }
+
+  async function openChoice(page: Page) {
+    await section(page).getByRole('button', { name: /^Restore backup from/ }).first().click();
+  }
+
+  test('"Add to my groups" puts the backup groups next to the current ones, and Undo removes them again', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
     await seedSessions(page, [{ id: 'bk1', name: 'Automatic backup', createdAt: Date.now() - 60_000, auto: true, groups: [backupGroup('bg1', 'Restored one', 2), backupGroup('bg2', 'Restored two', 1)] }]);
     await signInAsPro(page);
     await page.reload({ waitUntil: 'networkidle' });
     await openDataTab(page);
+    const native = watchNativeDialogs(page);
 
-    page.once('dialog', (d) => void d.accept());
-    await section(page).getByRole('button', { name: /^Restore backup from/ }).click();
+    await openChoice(page);
+    await section(page).getByRole('button', { name: 'Add to my groups' }).click();
 
-    // Settings closes; the restored groups sit beside the existing one
+    // no question for "add"; Settings closes; the restored groups sit beside the existing one
+    await expect(page.getByRole('alertdialog')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Restored one', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Restored two', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Work', exact: true })).toBeVisible();
@@ -192,9 +208,34 @@ test.describe('Automatic backups - Pro', () => {
     await expect(page.getByRole('button', { name: 'Restored one', exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Restored two', exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Work', exact: true })).toBeVisible();
+    expect(native).toEqual([]);
   });
 
-  test('declining the restore confirmation changes nothing; delete removes only that backup', async ({ context, extensionId }) => {
+  test('"Replace my groups" asks in the app (keyboard only): Cancel is focused first, Tab then Enter replaces; no native dialog', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
+    await seedSessions(page, [{ id: 'bk1', name: 'Automatic backup', createdAt: Date.now() - 60_000, auto: true, groups: [backupGroup('bg1', 'Replacement', 2)] }]);
+    await signInAsPro(page);
+    await page.reload({ waitUntil: 'networkidle' });
+    await openDataTab(page);
+    const native = watchNativeDialogs(page);
+
+    await openChoice(page);
+    await section(page).getByRole('button', { name: 'Replace my groups' }).click();
+    const box = page.getByRole('alertdialog', { name: 'Replace your groups?' });
+    await expect(box).toBeVisible();
+    await expect(box).toContainText('Your 1 current group will be removed');
+    await expect(box.getByRole('button', { name: 'Cancel' })).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(box.getByRole('button', { name: 'Replace groups' })).toBeFocused();
+    await page.keyboard.press('Enter');
+
+    await expect(page.getByRole('button', { name: 'Replacement', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Work', exact: true })).toHaveCount(0);
+    expect(native).toEqual([]);
+  });
+
+  test('declining "Replace" (Cancel, Escape, the close button) changes nothing and Settings stays open; delete asks too and removes only that backup', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
     await seedSessions(page, [
@@ -204,15 +245,72 @@ test.describe('Automatic backups - Pro', () => {
     await signInAsPro(page);
     await page.reload({ waitUntil: 'networkidle' });
     await openDataTab(page);
+    const native = watchNativeDialogs(page);
 
-    page.once('dialog', (d) => void d.dismiss());
-    await section(page).getByRole('button', { name: /^Restore backup from/ }).first().click();
-    await expect(page.getByRole('button', { name: 'Declined group', exact: true })).toHaveCount(0);
+    await openChoice(page);
+    const replace = section(page).getByRole('button', { name: 'Replace my groups' });
+    const box = page.getByRole('alertdialog', { name: 'Replace your groups?' });
+    await replace.click();
+    await box.getByRole('button', { name: 'Cancel' }).click();
+    await expect(box).toHaveCount(0);
+    await replace.click();
+    await page.keyboard.press('Escape');
+    await expect(box).toHaveCount(0);
+    await replace.click();
+    await box.getByRole('button', { name: /close/i }).click();
+    await expect(box).toHaveCount(0);
+    // Settings is still open, nothing changed
+    await expect(section(page)).toBeVisible();
+    expect((await readStoredGroups(page)).map((g) => g.name)).toEqual(['Now Open', 'Work']);
 
+    // delete: the question says where the backup goes, Cancel keeps it, the action removes only it
     const items = section(page).getByRole('list', { name: 'Automatic backups list' }).getByRole('listitem');
     await expect(items).toHaveCount(2);
-    page.once('dialog', (d) => void d.accept());
-    await items.first().getByRole('button', { name: /^Delete backup from/ }).click();
+    const del = items.first().getByRole('button', { name: /^Delete backup from/ });
+    await del.click();
+    const deleteBox = page.getByRole('alertdialog', { name: 'Delete this backup?' });
+    await expect(deleteBox).toContainText(AUTO_BACKUP_COPY.deleteScope);
+    await expect(deleteBox).toContainText('This cannot be undone');
+    await expect(deleteBox.getByRole('button', { name: 'Cancel' })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(deleteBox).toHaveCount(0);
+    await expect(items).toHaveCount(2);
+    await expect(del).toBeFocused();
+
+    await del.click();
+    await page.keyboard.press('Tab');
+    await expect(deleteBox.getByRole('button', { name: 'Delete backup' })).toBeFocused();
+    await page.keyboard.press('Enter');
     await expect(items).toHaveCount(1);
+    expect(native).toEqual([]);
+  });
+
+  test('a backup missing from the account is never deleted from this browser (empty answer, error answer), and no "Removed" line shows', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
+    await seedSessions(page, [{ id: 'bk-up', name: 'Automatic backup', createdAt: Date.now() - 60_000, auto: true, uploadedAt: Date.now() - 30_000, groups: [backupGroup('g1', 'Uploaded earlier', 2)] }]);
+    await signInAsPro(page);
+    // the account answers a complete, EMPTY list: the backup was deleted in the web dashboard
+    await page.route('**/rest/v1/sessions*', (route) => route.fulfill({ json: [] }));
+    await page.reload({ waitUntil: 'networkidle' });
+    await openDataTab(page);
+
+    const items = () => section(page).getByRole('list', { name: 'Automatic backups list' }).getByRole('listitem');
+    await expect(items()).toHaveCount(1);
+    await page.waitForTimeout(800); // let the download finish
+    await expect(page.getByText(/^Removed \d/)).toHaveCount(0);
+    await expect(items()).toHaveCount(1);
+
+    // after a popup reopen it is still there
+    await page.reload({ waitUntil: 'networkidle' });
+    await openDataTab(page);
+    await expect(items()).toHaveCount(1);
+
+    // and an error from the account changes nothing either
+    await page.route('**/rest/v1/sessions*', (route) => route.fulfill({ status: 500, json: { message: 'e2e: down' } }));
+    await page.reload({ waitUntil: 'networkidle' });
+    await openDataTab(page);
+    await expect(items()).toHaveCount(1);
+    await expect(page.getByText(/^Removed \d/)).toHaveCount(0);
   });
 });

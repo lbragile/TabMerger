@@ -28,6 +28,7 @@ import {
 import {
   REARMED_BY_BACKUP,
   SESSIONS_HEAL_IN_PROGRESS,
+  AUTO_BACKUP_FILE_LAST_KEY,
   AUTO_BACKUP_FILE_STATUS_KEY,
   AUTO_BACKUP_FREE_SEEN_KEY,
   AUTO_BACKUP_PENDING_DELETES_KEY,
@@ -989,6 +990,65 @@ describe('runAutoBackup: file copy', () => {
     enableFile()
     h.uploadResult = false
     expect(await runAutoBackup({ now: NOW })).toMatchObject({ status: 'created', uploaded: false, file: 'saved' })
+  })
+
+  describe('the last file (autoBackupFileLast)', () => {
+    const withId = (result: string, downloadId?: number) =>
+      (h.fileResult = { result, path: 'p.json', ...(downloadId === undefined ? {} : { downloadId }) } as typeof h.fileResult)
+
+    it('a saved file stores { id, at } next to the status', async () => {
+      enableFile()
+      withId('saved', 42)
+      await runAutoBackup({ now: NOW })
+      expect(h.settings.get(AUTO_BACKUP_FILE_LAST_KEY)).toEqual({ id: 42, at: NOW })
+      expect(h.settings.get(AUTO_BACKUP_FILE_STATUS_KEY)).toMatchObject({ at: NOW, result: 'saved' })
+    })
+
+    it('download id 0 is stored (it is a real id)', async () => {
+      enableFile()
+      withId('saved', 0)
+      await runAutoBackup({ now: NOW })
+      expect(h.settings.get(AUTO_BACKUP_FILE_LAST_KEY)).toEqual({ id: 0, at: NOW })
+    })
+
+    it('is not written when the file option is off', async () => {
+      withId('saved', 42)
+      await runAutoBackup({ now: NOW })
+      expect(h.settings.has(AUTO_BACKUP_FILE_LAST_KEY)).toBe(false)
+    })
+
+    it('is not written when no id came back, even if the result says saved', async () => {
+      enableFile()
+      withId('saved')
+      await runAutoBackup({ now: NOW })
+      expect(h.settings.has(AUTO_BACKUP_FILE_LAST_KEY)).toBe(false)
+    })
+
+    it.each(['failed', 'no-permission'])('a %s write keeps the previous value and still records the status', async (result) => {
+      enableFile()
+      h.settings.set(AUTO_BACKUP_FILE_LAST_KEY, { id: 5, at: NOW - 1000 })
+      withId(result, 99)
+      await runAutoBackup({ now: NOW })
+      expect(h.settings.get(AUTO_BACKUP_FILE_LAST_KEY)).toEqual({ id: 5, at: NOW - 1000 })
+      expect(h.settings.get(AUTO_BACKUP_FILE_STATUS_KEY)).toMatchObject({ result })
+    })
+
+    it('a later saved file replaces the previous value', async () => {
+      enableFile()
+      h.settings.set(AUTO_BACKUP_FILE_LAST_KEY, { id: 5, at: NOW - 1000 })
+      withId('saved', 6)
+      await runAutoBackup({ now: NOW })
+      expect(h.settings.get(AUTO_BACKUP_FILE_LAST_KEY)).toEqual({ id: 6, at: NOW })
+    })
+
+    it('a wipe during the file write stores neither the status nor the id', async () => {
+      enableFile()
+      withId('saved', 42)
+      h.duringFile = () => void h.settings.delete(AUTO_BACKUP_STORE_GUARD_KEY)
+      await runAutoBackup({ now: NOW })
+      expect(h.settings.has(AUTO_BACKUP_FILE_LAST_KEY)).toBe(false)
+      expect(h.settings.has(AUTO_BACKUP_FILE_STATUS_KEY)).toBe(false)
+    })
   })
 
   it('an unchanged run makes no file (nothing new to save)', async () => {
