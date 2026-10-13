@@ -1,4 +1,6 @@
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { DEFAULT_GROUP_TITLE, type Group } from './types';
+import { TOUR_DEMO_MAIN_ID, TOUR_DEMO_TARGET_ID } from './tourDemo';
 import { tourAnchorSelector, type TourStep, type TourTaskId } from './tour';
 import { TOUR_ANCHORS, TOUR_READY_ATTR } from './tourSteps';
 
@@ -17,6 +19,11 @@ import { TOUR_ANCHORS, TOUR_READY_ATTR } from './tourSteps';
  *    each task names single controls, and everything else stays locked.
  *  - At the Free plan's group limit "make a group" is not offered at all, so the tour never
  *    runs into the upgrade prompt.
+ *  - The DRAG tasks only ever involve the tour's own practice groups ("Tour demo", see
+ *    `tourDemo.ts`). Only their drag handles are unlocked (`dragOnly`: a press, a drag and the
+ *    Space key, nothing else), a drag can therefore never start from "Now Open" or from a group
+ *    of the user's, and the drag engine refuses every target that is not practice data
+ *    (`canDrop` in `dndMove.ts`), so a drop anywhere else changes nothing.
  */
 
 export interface TourTaskContext {
@@ -56,6 +63,27 @@ export interface TourTargets {
    * Empty for a read-only step. Not drawn once the task is done.
    */
   action: string[][];
+  /**
+   * For a task with several controls in a row: which sub-step (1-based) each list in `action`
+   * stands for, in the same order. The card shows "2 of 3" from the list that won.
+   */
+  actionSteps?: number[];
+  /**
+   * A drag step's destination, for the dashed "Drop here" marker: lists of CSS selectors, read
+   * exactly like `action`. Stays up while the item is being dragged.
+   */
+  drop?: string[][];
+  /**
+   * True for a drag step. The unlocked controls are drag handles, and only what a drag needs
+   * reaches them: a press, the drag itself and the Space key (which picks the item up for a
+   * keyboard move). No click, no right-click menu, no other key.
+   */
+  dragOnly?: boolean;
+  /**
+   * More that the card must not cover, besides the action ring's control: lists of CSS
+   * selectors read like `action` (the label of the setting the user is changing).
+   */
+  keepClear?: string[][];
   /** Selectors of the only controls the user may operate. Everything else in a locked root is inert. */
   allow: string[];
   /**
@@ -79,6 +107,8 @@ export interface TourTask {
    * result can be taken back while the step is still up (a new group that is cancelled).
    */
   remember?: boolean;
+  /** How many controls the task visits in a row (its sub-steps). Omit for a single control. */
+  subSteps?: number;
 }
 
 const anchor = tourAnchorSelector;
@@ -120,7 +150,12 @@ const practiceRow = (ctx: TourTaskContext): string | null => {
 const isRenaming = (ctx: TourTaskContext, group: Group): boolean =>
   ctx.renamingGroupIndex !== null && ctx.groups[ctx.renamingGroupIndex]?.id === group.id;
 
-export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
+/** The task with this id. */
+export function tourTask(id: TourTaskId): TourTask {
+  return (TOUR_DRAG_TASKS as Partial<Record<TourTaskId, TourTask>>)[id] ?? TOUR_TASKS[id as keyof typeof TOUR_TASKS];
+}
+
+export const TOUR_TASKS: Record<Exclude<TourTaskId, keyof typeof TOUR_DRAG_TASKS>, TourTask> = {
   /**
    * "Add Group", then type a name. Done once the practice group exists, has a name of its own
    * (not the placeholder a new group starts with) and that name is no longer being edited.
@@ -129,6 +164,7 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
    */
   'make-group': {
     remember: false,
+    subSteps: 3,
     available: (ctx) => findPracticeGroup(ctx) !== null || savedGroupIds(ctx.groups).length < ctx.maxGroups,
     baseline: (ctx) => savedGroupIds(ctx.groups),
     isDone: (ctx) => {
@@ -138,7 +174,7 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
     targets: (ctx) => {
       const row = practiceRow(ctx);
       const addGroup = anchor(TOUR_ANCHORS.addGroup);
-      if (!row) return { highlight: [[addGroup]], action: [[addGroup]], allow: [addGroup], lockRoots: [] };
+      if (!row) return { highlight: [[addGroup]], action: [[addGroup]], actionSteps: [1], allow: [addGroup], lockRoots: [] };
       return {
         highlight: [[row]],
         // "Save" once a name of the user's own is in the field (GroupItem marks it), the field until then
@@ -146,6 +182,7 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
           [`${row} ${anchor(TOUR_ANCHORS.groupNameSave)}[${TOUR_READY_ATTR}]`],
           [`${row} ${anchor(TOUR_ANCHORS.groupNameInput)}`]
         ],
+        actionSteps: [3, 2],
         allow: [`${row} ${anchor(TOUR_ANCHORS.groupName)}`],
         lockRoots: []
       };
@@ -154,6 +191,7 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
 
   /** The practice group's colour dot, then Apply. Done when the stored colour differs. */
   'group-colour': {
+    subSteps: 3,
     available: (ctx) => findPracticeGroup(ctx) !== null,
     baseline: (ctx) => findPracticeGroup(ctx)?.color ?? null,
     isDone: (ctx, baseline) => {
@@ -173,6 +211,7 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
           [`${picker} ${anchor(TOUR_ANCHORS.colorSwatches)}`],
           [`${row} ${anchor(TOUR_ANCHORS.groupColor)}`]
         ],
+        actionSteps: picked ? [3, 2, 1] : [2, 1],
         allow: [`${row} ${anchor(TOUR_ANCHORS.groupColor)}`, picker],
         lockRoots: []
       };
@@ -199,6 +238,7 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
 
   /** Open the search box and type. Done when there is a search query. */
   search: {
+    subSteps: 2,
     available: () => true,
     baseline: () => true,
     isDone: (ctx) => ctx.searchFilter.trim().length > 0,
@@ -206,6 +246,7 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
       highlight: [[anchor(TOUR_ANCHORS.searchOverlay)], [anchor(TOUR_ANCHORS.search)]],
       // The field inside the search box once it is open, the "Open search" box until then
       action: [[`${anchor(TOUR_ANCHORS.searchOverlay)} input`], [anchor(TOUR_ANCHORS.search)]],
+      actionSteps: [2, 1],
       allow: [anchor(TOUR_ANCHORS.search), anchor(TOUR_ANCHORS.searchOverlay)],
       lockRoots: []
     })
@@ -220,6 +261,8 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
    */
   theme: {
     modal: 'settings',
+    // The menu, "Settings", the Theme control, the list of themes, "Save changes"
+    subSteps: 5,
     available: () => true,
     baseline: (ctx) => ctx.theme,
     isDone: (ctx, baseline) => ctx.theme !== null && baseline !== null && ctx.theme !== baseline,
@@ -240,6 +283,9 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
               [anchor(TOUR_ANCHORS.settingsThemeTrigger)]
             ]
           : [[anchor(TOUR_ANCHORS.menuSettings)], [anchor(TOUR_ANCHORS.accountMenu)]],
+      actionSteps: ctx.modalType === 'settings' ? [4, 5, 3] : [2, 1],
+      // The whole Theme row, so its label stays readable next to the card
+      keepClear: [[anchor(TOUR_ANCHORS.settingsTheme)]],
       allow: [
         // Not while Settings is open: the menu button is behind the dialog then
         ...(ctx.modalType === 'settings' ? [] : [anchor(TOUR_ANCHORS.accountMenu)]),
@@ -253,10 +299,158 @@ export const TOUR_TASKS: Record<TourTaskId, TourTask> = {
   }
 };
 
+// ── Drag steps: the practice groups ──────────────────────────────────────────────────────
+
+/** The element that holds focus during a keyboard move (`KeyboardMoveHost`): it must stay usable. */
+export const TOUR_MOVE_HOST = '[data-testid="keyboard-move-host"]';
+const TAB_GRIP = '[aria-label^="Drag to reorder tab"]';
+const GROUP_GRIP = '[aria-label^="Drag to reorder group"]';
+/** Any menu a press could still open is locked as a whole. */
+const ANY_MENU = '[role="menu"]';
+
+const demoGroup = (ctx: TourTaskContext, id: string): Group | null =>
+  ctx.groups.find((g) => g.id === id && isTourDemoGroup(g) && !g.permanent && !g.archived) ?? null;
+const demoMain = (ctx: TourTaskContext) => demoGroup(ctx, TOUR_DEMO_MAIN_ID);
+const demoTarget = (ctx: TourTaskContext) => demoGroup(ctx, TOUR_DEMO_TARGET_ID);
+
+/** The tab row at this position of a practice group, in the main panel (only there while that group is shown). */
+export function tourDemoTabRowSelector(groupId: string, windowIndex: number, tabIndex: number): string {
+  return `[data-tab-index][data-tm-dnd-id="${quoted(groupId)}::w${windowIndex}::t${tabIndex}"]`;
+}
+/** The window card at this position of a practice group, in the main panel. */
+export function tourDemoWindowSelector(groupId: string, windowIndex: number): string {
+  return `[data-tm-dnd-id="${quoted(groupId)}::w${windowIndex}"]`;
+}
+/** Every tab drag handle of a practice group. */
+const demoTabGrips = (groupId: string) => `[data-tab-index][data-tm-dnd-id^="${quoted(groupId)}::w"] ${TAB_GRIP}`;
+
+/** Addresses of a group's tabs, window by window. The sample tabs all have different addresses. */
+const tabUrls = (group: Group): string[][] => group.windows.map((w) => w.tabs.map((t) => t.url));
+const sameMembers = (a: readonly string[], b: readonly string[]) => a.length === b.length && [...a].sort().join('\n') === [...b].sort().join('\n');
+
+/** What the three "drag a tab" steps share: the panel, the handles, the lock. */
+function tabDragTargets(source: string | null, drop: string | null, highlight: string[]): TourTargets {
+  return {
+    highlight: [highlight],
+    // The ring goes on the exact handle to press, not on the whole row
+    action: source ? [[`${source} ${TAB_GRIP}`]] : [],
+    drop: drop ? [[drop]] : [],
+    dragOnly: true,
+    allow: [demoTabGrips(TOUR_DEMO_MAIN_ID), TOUR_MOVE_HOST],
+    lockRoots: [ANY_MENU]
+  };
+}
+
+export const TOUR_DRAG_TASKS: Pick<Record<TourTaskId, TourTask>, 'drag-tab-reorder' | 'drag-tab-window' | 'drag-tab-group' | 'drag-group-order'> = {
+  /**
+   * Move a tab to another place in ITS OWN window. Done when a window of "Tour demo" holds the
+   * same tabs as when the step was entered, in a different order.
+   */
+  'drag-tab-reorder': {
+    subSteps: 3,
+    available: (ctx) => !!demoMain(ctx)?.windows.some((w) => w.tabs.length >= 2),
+    baseline: (ctx) => {
+      const main = demoMain(ctx);
+      return main ? tabUrls(main) : null;
+    },
+    isDone: (ctx, baseline) => {
+      const main = demoMain(ctx);
+      if (!main || !Array.isArray(baseline)) return false;
+      const before = baseline as string[][];
+      return tabUrls(main).some((now, i) => !!before[i] && now.length >= 2 && sameMembers(now, before[i]) && now.join('\n') !== before[i].join('\n'));
+    },
+    targets: (ctx) => {
+      const main = demoMain(ctx);
+      const wi = main ? main.windows.findIndex((w) => w.tabs.length >= 2) : -1;
+      if (!main || wi === -1) return tabDragTargets(null, null, [anchor(TOUR_ANCHORS.tabsPanel)]);
+      const last = main.windows[wi].tabs.length - 1;
+      return tabDragTargets(tourDemoTabRowSelector(main.id, wi, 0), tourDemoTabRowSelector(main.id, wi, last), [anchor(TOUR_ANCHORS.tabsPanel)]);
+    }
+  },
+
+  /** Move a tab into the OTHER window of "Tour demo". Done when a tab is in a different window than before. */
+  'drag-tab-window': {
+    subSteps: 3,
+    available: (ctx) => {
+      const main = demoMain(ctx);
+      return !!main && main.windows.length >= 2 && main.windows.some((w) => w.tabs.length >= 1);
+    },
+    baseline: (ctx) => {
+      const main = demoMain(ctx);
+      return main ? tabUrls(main) : null;
+    },
+    isDone: (ctx, baseline) => {
+      const main = demoMain(ctx);
+      if (!main || !Array.isArray(baseline)) return false;
+      const before = baseline as string[][];
+      return tabUrls(main).some((now, i) => now.some((url) => before.some((urls, j) => j !== i && urls.includes(url))));
+    },
+    targets: (ctx) => {
+      const main = demoMain(ctx);
+      const from = main ? main.windows.findIndex((w) => w.tabs.length >= 1) : -1;
+      if (!main || from === -1 || main.windows.length < 2) return tabDragTargets(null, null, [anchor(TOUR_ANCHORS.tabsPanel)]);
+      const to = from === 0 ? 1 : 0;
+      return tabDragTargets(tourDemoTabRowSelector(main.id, from, 0), tourDemoWindowSelector(main.id, to), [anchor(TOUR_ANCHORS.tabsPanel)]);
+    }
+  },
+
+  /** Drag a tab onto "Tour demo 2" in the list on the left. Done when that group holds a tab it did not have. */
+  'drag-tab-group': {
+    subSteps: 3,
+    available: (ctx) => !!demoTarget(ctx) && !!demoMain(ctx)?.windows.some((w) => w.tabs.length >= 1),
+    baseline: (ctx) => {
+      const target = demoTarget(ctx);
+      return target ? tabUrls(target).flat() : null;
+    },
+    isDone: (ctx, baseline) => {
+      const target = demoTarget(ctx);
+      if (!target || !Array.isArray(baseline)) return false;
+      return tabUrls(target).flat().some((url) => !(baseline as string[]).includes(url));
+    },
+    targets: (ctx) => {
+      const main = demoMain(ctx);
+      const target = demoTarget(ctx);
+      const highlight = [anchor(TOUR_ANCHORS.tabsPanel), anchor(TOUR_ANCHORS.groups)];
+      const from = main ? main.windows.findIndex((w) => w.tabs.length >= 1) : -1;
+      if (!main || !target || from === -1) return tabDragTargets(null, null, highlight);
+      return tabDragTargets(tourDemoTabRowSelector(main.id, from, 0), tourGroupRowSelector(target.id), highlight);
+    }
+  },
+
+  /** Drag one practice group past the other in the list on the left. Done when their order is the other way round. */
+  'drag-group-order': {
+    subSteps: 3,
+    available: (ctx) => {
+      const main = demoMain(ctx);
+      const target = demoTarget(ctx);
+      return !!main && !!target && !!main.starred === !!target.starred;
+    },
+    baseline: (ctx) => {
+      const ids = ctx.groups.filter((g) => g.id === TOUR_DEMO_MAIN_ID || g.id === TOUR_DEMO_TARGET_ID).map((g) => g.id);
+      return ids.length === 2 ? ids : null;
+    },
+    isDone: (ctx, baseline) => {
+      const ids = ctx.groups.filter((g) => g.id === TOUR_DEMO_MAIN_ID || g.id === TOUR_DEMO_TARGET_ID).map((g) => g.id);
+      return Array.isArray(baseline) && ids.length === 2 && ids[0] !== (baseline as string[])[0];
+    },
+    targets: (ctx) => {
+      const rows = ctx.groups.filter((g) => (g.id === TOUR_DEMO_MAIN_ID || g.id === TOUR_DEMO_TARGET_ID) && isTourDemoGroup(g)).map((g) => tourGroupRowSelector(g.id));
+      return {
+        highlight: [[anchor(TOUR_ANCHORS.groups)]],
+        action: rows[0] ? [[`${rows[0]} ${GROUP_GRIP}`]] : [],
+        drop: rows[1] ? [[rows[1]]] : [],
+        dragOnly: true,
+        allow: [...rows.map((row) => `${row} ${GROUP_GRIP}`), TOUR_MOVE_HOST],
+        lockRoots: [ANY_MENU]
+      };
+    }
+  }
+};
+
 /** The step's task when it can be offered to this user right now, else `null` (read-only step). */
 export function activeTourTask(step: TourStep | null, ctx: TourTaskContext): TourTask | null {
   if (!step?.task) return null;
-  const task = TOUR_TASKS[step.task];
+  const task = tourTask(step.task);
   return task.available(ctx) ? task : null;
 }
 

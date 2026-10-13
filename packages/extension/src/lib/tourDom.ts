@@ -76,6 +76,8 @@ export interface TourHighlight {
   rect: TourRect;
   /** Corner radius of the highlighted element in pixels (0 for a square one, or for several). */
   radius: number;
+  /** Position, in the lists given, of the list that won (0 = the first, most specific one). */
+  index: number;
 }
 
 /**
@@ -84,13 +86,13 @@ export interface TourHighlight {
  * element of that list. `null` when nothing is visible (the step is then drawn centered).
  */
 export function measureTourHighlight(groups: readonly (readonly string[])[]): TourHighlight | null {
-  for (const selectors of groups) {
+  for (const [index, selectors] of groups.entries()) {
     const elements = selectors.flatMap(queryAll);
     const rects = elements.map(visibleRect).filter((r): r is TourRect => r !== null);
     const rect = unionRects(rects);
     if (!rect) continue;
     const radius = elements.length === 1 ? parseFloat(getComputedStyle(elements[0]).borderTopLeftRadius) || 0 : 0;
-    return { rect, radius: Math.min(radius, rect.width / 2, rect.height / 2) };
+    return { rect, radius: Math.min(radius, rect.width / 2, rect.height / 2), index };
   }
   return null;
 }
@@ -130,6 +132,9 @@ const OPERABLE = 'button:not([disabled]), [href], input:not([disabled]), select:
 /** Selector of a toast on screen (sonner). Toasts stay usable while the tour is open. */
 export const TOUR_TOAST_SELECTOR = '[data-sonner-toast]';
 
+/** Marks an unlocked element that Tab must never land on (the keyboard move's hidden focus holder). */
+export const TOUR_NO_TAB_ATTR = 'data-tour-no-tab';
+
 /** The controls inside the elements a step unlocks, in document order, skipping anything inert. */
 export function allowedFocusables(allowed: readonly Element[]): HTMLElement[] {
   const found = new Set<HTMLElement>();
@@ -138,7 +143,7 @@ export function allowedFocusables(allowed: readonly Element[]): HTMLElement[] {
     el.querySelectorAll<HTMLElement>(OPERABLE).forEach((child) => found.add(child));
   }
   return Array.from(found)
-    .filter((el) => el.isConnected && !el.closest('[inert]'))
+    .filter((el) => el.isConnected && !el.closest('[inert]') && !el.hasAttribute(TOUR_NO_TAB_ATTR))
     .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
 }
 

@@ -3,6 +3,7 @@ import { Search, Folder, AppWindow } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { parseSearchQuery } from '@/lib/utils';
 import type { GroupsState } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
 
 const EXAMPLES = [
@@ -44,6 +45,8 @@ function getResults(query: string, groupsState: GroupsState | undefined): Result
     const results: Result[] = [];
 
     groupsState.available.forEach((group, groupIndex) => {
+        // The guided tour's practice groups are not the user's: never a search result
+        if (isTourDemoGroup(group)) return;
         if (groupFilter && !group.name.toLowerCase().includes(groupFilter.toLowerCase())) return;
         const tabCount = group.windows.reduce((a, w) => a + w.tabs.length, 0);
 
@@ -82,7 +85,7 @@ function getResults(query: string, groupsState: GroupsState | undefined): Result
 function getGroupPicks(typed: string, groupsState: GroupsState | undefined) {
     if (!groupsState) return [];
     return groupsState.available
-        .filter((g) => !g.permanent && g.name.toLowerCase().includes(typed.toLowerCase()))
+        .filter((g) => !g.permanent && !isTourDemoGroup(g) && g.name.toLowerCase().includes(typed.toLowerCase()))
         .map((g) => ({ name: g.name, color: g.color, index: groupsState.available.indexOf(g) }))
         .slice(0, 8);
 }
@@ -95,6 +98,7 @@ function getWindowPicks(typed: string, groupsState: GroupsState | undefined, gro
     if (!groupsState) return [];
     const picks: Array<{ name: string; color: string; index?: number; windowIndex: number; groupIndex: number }> = [];
     groupsState.available.forEach((g, groupIndex) => {
+        if (isTourDemoGroup(g)) return;
         if (groupFilter && !g.name.toLowerCase().includes(groupFilter.toLowerCase())) return;
         g.windows.forEach((w, windowIndex) => {
             if (!w.name || !w.name.toLowerCase().includes(typed.toLowerCase())) return;
@@ -114,6 +118,7 @@ function getTagPicks(typed: string, groupsState: GroupsState | undefined) {
     const seen = new Set<string>();
     const picks: { name: string; color: string }[] = [];
     groupsState.available.forEach((g) => {
+        if (isTourDemoGroup(g)) return;
         g.windows.forEach((w) => {
             w.tabs.forEach((t) => {
                 if (t.chromeGroup && !seen.has(t.chromeGroup.name) && t.chromeGroup.name.toLowerCase().includes(typed.toLowerCase())) {

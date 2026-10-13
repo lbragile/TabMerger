@@ -9,6 +9,7 @@ import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
 import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { copyLiveTab } from '@/lib/dndMove';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
@@ -159,7 +160,8 @@ async function _buildMenus() {
   let groups: Awaited<ReturnType<typeof getGroupsState>>['available'] = [];
   try {
     const state = await getGroupsState();
-    groups = state.available.filter((g) => !g.permanent && !g.archived);
+    // Never the guided tour's practice groups: the menu only offers the user's own groups
+    groups = state.available.filter((g) => !g.permanent && !g.archived && !isTourDemoGroup(g));
   } catch {
     // IDB not ready — leave empty
   }
@@ -393,8 +395,8 @@ export default defineBackground(() => {
     await updateGroupsState((state) => {
       const available = [...state.available];
       let targetIndex = groupId
-        ? available.findIndex((g) => g.id === groupId && !g.permanent)
-        : available.findIndex((g) => !g.permanent);
+        ? available.findIndex((g) => g.id === groupId && !g.permanent && !isTourDemoGroup(g))
+        : available.findIndex((g) => !g.permanent && !isTourDemoGroup(g));
 
       if (targetIndex < 0 && !groupId) {
         available.push(createGroup(undefined, 'Quick Save'));

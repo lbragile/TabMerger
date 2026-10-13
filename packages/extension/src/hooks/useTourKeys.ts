@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type React from 'react';
 import { nextTrapIndex } from '@/lib/tour';
+import { isDndDragLive } from '@/lib/dndMultiDrag';
 import {
   TOUR_APP_ROOT_ID,
   TOUR_TOAST_SELECTOR,
@@ -27,6 +28,12 @@ export interface TourKeyHandlers {
    * card's buttons, so one Tab from the card reaches the control the step asks for.
    */
   allowedFirst?: () => boolean;
+  /**
+   * True on a drag step: the unlocked controls are drag handles. Only what a drag needs then
+   * reaches them (a press, the drag, plain Space to pick up for a keyboard move); a click, a
+   * double click, a right-click menu and every other key are kept away.
+   */
+  dragOnly?: () => boolean;
 }
 
 /** Marks the part of the card that scrolls when the text is taller than the popup. */
@@ -34,6 +41,9 @@ export const TOUR_BODY_ATTR = 'data-tour-body';
 
 /** Fraction of the visible text height each key scrolls by. */
 const SCROLL_KEYS: Record<string, number> = { ArrowDown: 0.25, ArrowUp: -0.25, PageDown: 0.9, PageUp: -0.9 };
+
+/** On a drag step, the events an unlocked drag handle does NOT get (see `dragOnly`). */
+const NOT_FOR_DRAG_HANDLES: ReadonlySet<string> = new Set(['click', 'dblclick', 'auxclick', 'contextmenu']);
 
 /** Pointer and mouse events kept away from everything the step does not unlock. */
 const GUARDED_EVENTS = ['pointerdown', 'mousedown', 'mouseup', 'click', 'dblclick', 'auxclick', 'contextmenu', 'dragstart'] as const;
@@ -71,6 +81,11 @@ const GUARDED_EVENTS = ['pointerdown', 'mousedown', 'mouseup', 'click', 'dblclic
  *   global shortcuts: a second listener on the app root, which runs after React's, stops the
  *   event there. Only Tab is still handled here, so focus can leave the control for the card.
  *
+ * Drag steps add a third. While an item is being moved (`isDndDragLive`: a pointer drag, or the
+ * keyboard move mode that Space on a drag handle starts) EVERY key belongs to that move: the
+ * arrow keys walk the drop targets, Space drops, Escape cancels the move and not the tour. The
+ * tour's listeners do nothing until the move ends.
+ *
  * Pointer events are guarded the same way: inside the app root, anything outside the unlocked
  * controls is swallowed. `inert` already covers most of it; this covers the ANCESTORS of an
  * unlocked control, which cannot be inert (a group row around its colour dot).
@@ -87,6 +102,8 @@ export function useTourKeys(cardRef: React.RefObject<HTMLElement | null>, handle
     const onKeyDown = (e: KeyboardEvent) => {
       const card = cardRef.current;
       if (!card) return;
+      // An item is being moved: the move owns the keyboard (see above)
+      if (isDndDragLive()) return;
       const target = e.target instanceof Element ? e.target : null;
 
       // A menu, popover, select list or dialog the app opened owns its keys
@@ -94,8 +111,11 @@ export function useTourKeys(cardRef: React.RefObject<HTMLElement | null>, handle
       if (e.key === 'Escape' && isForeignLayerOpen()) return;
 
       const inAllowed = !!target && !card.contains(target) && isInAllowed(target, allowed());
-      // On an unlocked control everything but Tab belongs to that control (see the root listener)
-      if (inAllowed && e.key !== 'Tab') return;
+      // On an unlocked control everything but Tab belongs to that control (see the root listener).
+      // A drag handle only gets plain Space, which picks the item up.
+      const plainSpace = (e.key === ' ' || e.code === 'Space') && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey;
+      const forControl = latest.current.dragOnly?.() ? plainSpace : e.key !== 'Tab';
+      if (inAllowed && forControl) return;
 
       e.stopImmediatePropagation();
 
@@ -144,7 +164,7 @@ export function useTourKeys(cardRef: React.RefObject<HTMLElement | null>, handle
     // key by now, and the popup's document / window shortcuts must not see it
     const root = document.getElementById(TOUR_APP_ROOT_ID);
     const quarantine = (e: Event) => {
-      if (cardRef.current) e.stopPropagation();
+      if (cardRef.current && !isDndDragLive()) e.stopPropagation();
     };
 
     const guardPointer = (e: Event) => {
@@ -152,7 +172,7 @@ export function useTourKeys(cardRef: React.RefObject<HTMLElement | null>, handle
       const target = e.target instanceof Node ? e.target : null;
       if (!target || !root.contains(target)) return;
       if (target instanceof Element && isInToastRegion(target)) return;
-      if (isInAllowed(target, allowed())) return;
+      if (isInAllowed(target, allowed()) && !(latest.current.dragOnly?.() && NOT_FOR_DRAG_HANDLES.has(e.type))) return;
       e.preventDefault();
       e.stopImmediatePropagation();
     };

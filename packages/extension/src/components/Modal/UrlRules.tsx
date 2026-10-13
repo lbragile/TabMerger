@@ -9,6 +9,7 @@ import { useGroups } from '@/hooks/useGroups';
 import { useUrlRules, useSaveUrlRules } from '@/hooks/useUrlRules';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import type { UrlRule } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { toast } from '@/lib/toast';
 
 
@@ -38,7 +39,7 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
   const atLimit = draft.length >= maxUrlRules;
 
   // Saved groups only (exclude Now Open at index 0)
-  const savedGroups = groupsState?.available.slice(1).filter((g) => !g.archived) ?? [];
+  const savedGroups = groupsState?.available.slice(1).filter((g) => !g.archived && !isTourDemoGroup(g)) ?? [];
 
   // One-time sweep of rules orphaned before deleteRulesForGroupIds existed (or from any other
   // gap) — self-heals on open rather than requiring a manual per-rule delete. Runs exactly once

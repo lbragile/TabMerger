@@ -1,4 +1,4 @@
-import { GROUP_COLOR_RE, isScriptUrl } from '@tabmerger/shared'
+import { GROUP_COLOR_RE, isScriptUrl, withoutTourDemoGroups } from '@tabmerger/shared'
 import { nanoid } from 'nanoid'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 import { DEFAULT_GROUP_COLOR } from '@/lib/types'
@@ -154,8 +154,14 @@ function sanitizeGroups(items: unknown[]): { groups: Group[]; nowOpen: Group | u
   return { groups, nowOpen, skipped: counter.skipped }
 }
 
+/** The export file's text. The guided tour's practice groups are never written to a file. */
 export function exportGroups(groups: Group[]): string {
-  return JSON.stringify(groups)
+  return JSON.stringify(withoutTourDemoGroups(groups))
+}
+
+/** The full-state export (`{ active, available }`) of the Import / Export dialog, same rule. */
+export function exportGroupsState(state: GroupsState): string {
+  return JSON.stringify({ ...state, available: withoutTourDemoGroups(state.available) }, null, 2)
 }
 
 /**

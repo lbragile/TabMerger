@@ -15,7 +15,8 @@ import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
-import { FreeLimitExceededError } from '@/lib/tierLimits';
+import { FreeLimitExceededError, countedGroups } from '@/lib/tierLimits';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession, useSaveSession } from '@/hooks/useSessions';
 import { pluralize } from '@/lib/utils';
@@ -209,8 +210,10 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   let savedDisplayIdx = 0;
   const available = getSidebarDisplayOrder(raw).map(({ group: g, realIndex }) => {
     // ponytail: all non-permanent groups count toward free-tier limit (archived included)
-    const isLocked = !g.permanent && isFinite(maxGroups) && isOverFreeLimit(savedDisplayIdx, maxGroups);
-    if (!g.permanent) savedDisplayIdx++;
+    // The guided tour's practice groups are not the user's: never counted, never locked
+    const counts = !g.permanent && !isTourDemoGroup(g);
+    const isLocked = counts && isFinite(maxGroups) && isOverFreeLimit(savedDisplayIdx, maxGroups);
+    if (counts) savedDisplayIdx++;
     return { group: g, realIndex, isLocked };
   });
   // MODEL ids — each visible group's real `group.id` (not positional "group-N").
@@ -219,7 +222,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
 
   // All non-permanent groups count toward the limit (archived included — archiving
   // doesn't free up slots).
-  const atGroupLimit = raw.filter((g) => !g.permanent).length >= maxGroups;
+  const atGroupLimit = countedGroups(raw).length >= maxGroups;
   const warnGroupLimit = useCallback(() => {
     trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
     toast.error(`Free plan allows up to ${maxGroups} groups.`, {

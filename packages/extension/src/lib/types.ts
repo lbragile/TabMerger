@@ -47,6 +47,11 @@ export interface Group {
    */
   remoteUpdatedAt?: string;
   archived?: boolean; // hidden from main sidebar; excluded from free-tier group count
+  /**
+   * Practice data made by the guided tour (`lib/tourDemo.ts`). Local-only and short-lived: never
+   * synced, backed up, exported, shared or counted. Test it with `isTourDemoGroup`, never directly.
+   */
+  tourDemo?: boolean;
 }
 
 export interface UrlRule {

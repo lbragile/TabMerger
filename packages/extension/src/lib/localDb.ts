@@ -1,4 +1,5 @@
 import { openDB, type IDBPDatabase, type IDBPTransaction } from 'idb';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import type { Group, GroupsState, Session } from './types';
 import { createNowOpenGroup } from './utils';
 import { GROUPS_CHANGED_MESSAGE } from './groupsChangedMessage';
@@ -414,18 +415,27 @@ async function writeGroupsState(state: GroupsState, expectedRev?: number, preser
   const keepIds = new Set(state.available.map((g) => g.id));
   const orphanIds = storedGroups.map((g) => g.id).filter((id) => !keepIds.has(id));
   const storedById = new Map(storedGroups.map((g) => [g.id, g]));
-  const prevIndex = new Map<string, number>((stateRecord?.order ?? []).map((id: string, i: number): [string, number] => [id, i]));
+  // The guided tour's practice groups are device-local and never synced. They must not shift the
+  // SYNCED position of a real group either: a group's position is its index among the groups
+  // that are not practice data, so making or removing the practice groups marks nothing dirty.
+  const demoIds = new Set([...storedGroups, ...state.available].filter(isTourDemoGroup).map((g) => g.id));
+  const syncedOrder = (ids: string[]) => new Map<string, number>(ids.filter((id) => !demoIds.has(id)).map((id, i): [string, number] => [id, i]));
+  const prevIndex = syncedOrder(stateRecord?.order ?? []);
+  const nextIndex = syncedOrder(state.available.map((g) => g.id));
   const rev = storedRev + 1;
 
-  const groups = state.available.map((g, i) => {
+  const groups = state.available.map((g) => {
     const { positionDirty: claimed, remoteUpdatedAt: incomingBase, ...rest0 } = g;
+    // Practice data: stored without any sync mark, whatever the caller set (a drag marks the
+    // groups it touched as changed)
+    if (isTourDemoGroup(g)) return { ...rest0, pendingSync: false };
     // A blind cache-derived write carries whatever base the cache held; the stored one is newer
     // (pushes update it), so it wins there. Read-modify-write callers hand over a fresh base.
     const base = preserveBases ? storedById.get(g.id)?.remoteUpdatedAt ?? incomingBase : incomingBase;
     const rest = base ? { ...rest0, remoteUpdatedAt: base } : rest0;
     if (g.permanent) return rest; // Now Open is never synced
     const dirty =
-      claimed !== false && (claimed === true || storedById.get(g.id)?.positionDirty === true || prevIndex.get(g.id) !== i);
+      claimed !== false && (claimed === true || storedById.get(g.id)?.positionDirty === true || prevIndex.get(g.id) !== nextIndex.get(g.id));
     return dirty ? { ...rest, positionDirty: true } : rest;
   });
 
@@ -434,7 +444,8 @@ async function writeGroupsState(state: GroupsState, expectedRev?: number, preser
   // a signed-out / free user's deletes never pile up), and a group it (re)creates, e.g. an
   // undone delete, stops being one. A crash cannot leave a local delete without its marker.
   const pending = new Set(pendingRecord?.value ?? []);
-  if (syncRecord?.value === true) orphanIds.forEach((id) => pending.add(id));
+  // (never a practice group of the guided tour: it was never on the server)
+  if (syncRecord?.value === true) orphanIds.filter((id) => !demoIds.has(id)).forEach((id) => pending.add(id));
   keepIds.forEach((id) => pending.delete(id));
   capPendingDeletes(pending);
 
@@ -613,7 +624,7 @@ export async function compareAndSetSetting(key: string, expected: unknown, next:
 export async function getPendingSyncGroups(): Promise<Group[]> {
   const db = await getDb();
   const all = await db.getAll('groups');
-  return all.filter((g) => g.pendingSync);
+  return all.filter((g) => g.pendingSync && !isTourDemoGroup(g));
 }
 
 /**
@@ -730,7 +741,7 @@ export function markAllGroupsPendingSync(): Promise<void> {
     // push (an unconditional upsert); a device that was offline can therefore overwrite a newer
     // remote edit. Restricting this to rows that are still plaintext/absent remotely needs a pull
     // first and is not done here.
-    const all = (await tx.store.getAll()).filter((g) => !g.permanent);
+    const all = (await tx.store.getAll()).filter((g) => !g.permanent && !isTourDemoGroup(g));
     await Promise.all([
       ...all.map((g) => tx.store.put({ ...g, pendingSync: true })),
       tx.done

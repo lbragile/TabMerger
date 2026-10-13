@@ -15,7 +15,12 @@ import type { TourChapter, TourStep } from './tour';
  * "press Enter" to save a typed group name (GroupItem.tsx, the rename input's `onKeyDown`) and
  * the keyboard way to move a row, which every "drag" step must give: Space on a focused row
  * picks it up (`startMoveOnSpace` in lib/keyboardMoveEntry.ts), the arrow keys move it and
- * Space drops it (`useKeyboardMove.ts`). Browser-level shortcuts (the manifest's suggested keys,
+ * Space drops it (`useKeyboardMove.ts`). A drag step gives it per sub-step in `subStepKeys`,
+ * shown as its own line.
+ *
+ * A read-only step is a look, not something to try: the app underneath is locked while it is
+ * up. Its text therefore DESCRIBES ("the menu has…") and never instructs ("right-click…"), and
+ * says the user can try it after the tour where that helps. Browser-level shortcuts (the manifest's suggested keys,
  * Ctrl+K) are left out: a browser may not assign them, and they differ per platform.
  *
  * Only describe controls every user can see. A read-only step whose `anchor` is not on the
@@ -85,6 +90,11 @@ export const TOUR_CHAPTERS: readonly TourChapter[] = [
     description: 'Groups are where saved tabs live. You will make one, name it, give it a colour and pin it to the top.'
   },
   {
+    id: 'drag',
+    title: 'Move things by dragging',
+    description: 'You will move tabs and groups around. For this chapter the tour adds two practice groups, "Tour demo" and "Tour demo 2". They hold sample tabs, not yours, and are removed when you leave this chapter and when the tour ends.'
+  },
+  {
     id: 'tabs',
     title: 'Save and reopen tabs',
     description: 'How to move open tabs into a group, bring them back later and tidy what you saved. This chapter only explains: nothing is saved or closed.'
@@ -114,7 +124,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     anchor: null,
     placement: 'center',
     title: 'Welcome to TabMerger',
-    body: 'TabMerger tidies up your browser. Save the tabs you have open into named groups, close them, and bring them back whenever you need them. This tour has six short chapters, each named at the top of this card. A few steps ask you to try something yourself: a ring then marks the control to use next, and the text names it. You can skip a step, a chapter or the whole tour at any time.'
+    body: 'TabMerger tidies up your browser. Save the tabs you have open into named groups, close them, and bring them back whenever you need them. This tour has seven short chapters, each named at the top of this card. Some steps ask you to try something yourself: an orange ring then marks the control to use next, and the text names it. To practise dragging, the tour adds two sample groups named "Tour demo" and removes them again by itself. You can skip a step, a chapter or the whole tour at any time.'
   },
   {
     id: 'now-open',
@@ -175,15 +185,96 @@ export const TOUR_STEPS: readonly TourStep[] = [
     anchor: TOUR_ANCHORS.groups,
     placement: 'right',
     title: 'More for each group',
-    body: 'Double-click a group\'s name to rename it. Right-click a group for the rest: "Add note", "Duplicate", "Merge with current" to add your open windows to it, "Archive group" to hide it, and "Delete group".'
+    body: 'Every saved group has a right-click menu. It holds "Rename", "Add note", "Duplicate", "Merge with current" to add your open windows to the group, "Archive group" to hide it, and "Delete group". This step is just a look: the list is locked while the tour is open, so try the menu after the tour.'
+  },
+
+  // ── Dragging (on the tour's own practice groups) ──────────────────────────────────────
+  {
+    id: 'drag-tab-reorder',
+    chapter: 'drag',
+    anchor: TOUR_ANCHORS.tabsPanel,
+    activate: 'tour-demo',
+    placement: 'left',
+    task: 'drag-tab-reorder',
+    title: 'Reorder tabs',
+    body: 'The main panel shows the practice group "Tour demo". Every tab has a dotted handle in front of it, named "Drag to reorder tab". Move the first tab of the window "Reading" to the end of that window.',
+    subStepText: [
+      'Press and hold the handle of the first tab.',
+      'Move it down to the last tab, marked "Drop here".',
+      'Let go to drop it.'
+    ],
+    subStepKeys: [
+      'press Tab to reach the handle, then Space to pick the tab up.',
+      'press the Down arrow key until the tab is last in "Reading".',
+      'press Space to drop it.'
+    ],
+    doneText: 'Nice, the tab moved.',
+    fallbackBody: 'Every saved tab has a dotted handle in front of it, named "Drag to reorder tab". Dragging it moves the tab up or down in its window. This step is just a look.'
   },
   {
-    id: 'group-order',
-    chapter: 'groups',
+    id: 'drag-tab-window',
+    chapter: 'drag',
+    anchor: TOUR_ANCHORS.tabsPanel,
+    activate: 'tour-demo',
+    placement: 'left',
+    task: 'drag-tab-window',
+    title: 'Move a tab to another window',
+    body: 'A tab can also go into another window of the same group. Move the first tab into the other window of "Tour demo".',
+    subStepText: [
+      'Press and hold the handle of the first tab.',
+      'Move it onto the other window, marked "Drop here".',
+      'Let go to drop it.'
+    ],
+    subStepKeys: [
+      'press Tab to reach the handle, then Space to pick the tab up.',
+      'press the Down arrow key until the tab is in the other window.',
+      'press Space to drop it.'
+    ],
+    doneText: 'Nice, the tab is in the other window.',
+    fallbackBody: 'Dragging a tab by its handle onto another window of the same group moves it there. This step is just a look.'
+  },
+  {
+    id: 'drag-tab-group',
+    chapter: 'drag',
+    anchor: TOUR_ANCHORS.tabsPanel,
+    activate: 'tour-demo',
+    placement: 'left',
+    task: 'drag-tab-group',
+    title: 'Move a tab to another group',
+    body: 'Dropping a tab on a group in the list on the left moves it into that group. Move the first tab into the practice group "Tour demo 2".',
+    subStepText: [
+      'Press and hold the handle of the first tab.',
+      'Move it onto "Tour demo 2" in the list on the left, marked "Drop here".',
+      'Let go to drop it.'
+    ],
+    subStepKeys: [
+      'press Tab to reach the handle, then Space to pick the tab up.',
+      'press the Left arrow key to go to the list of groups, then the Down arrow key to reach "Tour demo 2".',
+      'press Space to drop it.'
+    ],
+    doneText: 'Nice, the tab is in "Tour demo 2" now.',
+    fallbackBody: 'Dragging a tab by its handle onto a group in the list on the left moves it into that group. This step is just a look.'
+  },
+  {
+    id: 'drag-group-order',
+    chapter: 'drag',
     anchor: TOUR_ANCHORS.groups,
     placement: 'right',
+    task: 'drag-group-order',
     title: 'Put groups in order',
-    body: 'Once you have two or more groups, drag one by the dotted handle at the start of its row to move it up or down. With the keyboard: focus the group, press Space, move it with the arrow keys and press Space again.'
+    body: 'Groups have a dotted handle too, at the start of their row, named "Drag to reorder group". Swap the two practice groups. Your own groups move the same way.',
+    subStepText: [
+      'Press and hold the handle of the upper practice group.',
+      'Move it onto the other practice group, marked "Drop here".',
+      'Let go to drop it.'
+    ],
+    subStepKeys: [
+      'press Tab to reach the handle, then Space to pick the group up.',
+      'press the Down arrow key to move it below the other practice group.',
+      'press Space to drop it.'
+    ],
+    doneText: 'Nice, the groups changed places.',
+    fallbackBody: 'Every saved group has a dotted handle at the start of its row, named "Drag to reorder group". Dragging it moves the group up or down the list. This step is just a look.'
   },
 
   // ── Tabs and windows ──────────────────────────────────────────────────────────────────
@@ -194,7 +285,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     activate: 'now-open',
     placement: 'left',
     title: 'Save tabs into a group',
-    body: 'Drag a tab, or a whole window, from Now Open onto a group on the left: it is saved there and closed in your browser. With the keyboard: focus the tab, press Space, pick the group with the arrow keys and press Space again. To save a tab and keep it open, right-click it and choose "Copy to group".'
+    body: 'Saving uses the drag you just practised: a tab, or a whole window, dragged from Now Open onto a group on the left is saved in that group and closed in your browser. The right-click menu of an open tab has "Copy to group", which saves it and keeps it open. This step is just a look, so none of your tabs is closed: try it after the tour.'
   },
   {
     id: 'open-tabs',
@@ -202,7 +293,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     anchor: TOUR_ANCHORS.tabsPanel,
     placement: 'left',
     title: 'Open your tabs again',
-    body: 'Select a saved group on the left, then click the name of a tab to open it again. For a whole window, use "More window options" on that window and choose "Open in browser". For a whole group, right-click the group and choose "Open all in new window".'
+    body: 'In a saved group, the name of a tab opens that tab again. "More window options" on a window has "Open in browser" for the whole window, and the right-click menu of a group has "Open all in new window". This step is just a look: nothing is opened during the tour.'
   },
   {
     id: 'tab-extras',
@@ -210,7 +301,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     anchor: TOUR_ANCHORS.tabsPanel,
     placement: 'left',
     title: 'Notes, reminders and names',
-    body: 'Right-click a saved tab for more: "Add note" to write something down, "Remind me…" to be reminded about it later, "Rename tab" to give it your own title, and "Move to group".'
+    body: 'A saved tab has a right-click menu with more: "Add note" to write something down, "Remind me…" to be reminded about it later, "Rename tab" to give it your own title, and "Move to group". This step is just a look: try the menu after the tour.'
   },
   {
     id: 'tidy-up',
@@ -218,7 +309,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     anchor: TOUR_ANCHORS.groupOptions,
     placement: 'left',
     title: 'Tidy a group',
-    body: '"More group options", at the top right of the main panel, can sort the tabs by title or address, remove repeats with "Deduplicate tabs", and "Unite windows" into one or "Split windows" apart.'
+    body: '"More group options", at the top right of the main panel, can sort the tabs by title or address, remove repeats with "Deduplicate tabs", and "Unite windows" into one or "Split windows" apart. This step is just a look.'
   },
   {
     id: 'select-items',
@@ -226,7 +317,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     anchor: TOUR_ANCHORS.selectItems,
     placement: 'bottom',
     title: 'Work on several at once',
-    body: '"Select items", in the header, shows a tick box on every tab, window and group. Tick the ones you want, then use the bar that appears at the bottom to act on all of them together, for example to delete them. Sharing selected groups as a link needs a Pro plan.'
+    body: '"Select items", in the header, shows a tick box on every tab, window and group. With some ticked, a bar appears at the bottom that acts on all of them together, for example to delete them. Sharing selected groups as a link needs a Pro plan. This step is just a look.'
   },
 
   // ── Find and undo ─────────────────────────────────────────────────────────────────────
@@ -237,7 +328,8 @@ export const TOUR_STEPS: readonly TourStep[] = [
     placement: 'bottom',
     task: 'search',
     title: 'Find anything',
-    body: 'Try it: select the search box at the top, named "Open search". A search field opens: type a word from the name of a tab or a group. Matches appear as you type.',
+    body: 'The search box at the top, which reads "Search tabs and groups…", looks through every tab and group at once. Matches appear as you type.',
+    subStepText: ['Select the search box at the top.', 'Type a word from the name of a tab or a group.'],
     doneText: 'Nice. Selecting a result takes you straight to it.'
   },
   {
@@ -293,6 +385,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     task: 'theme',
     title: 'Light or dark',
     body: 'Try it: open the menu in the top right corner, named "Settings menu" (or "Account menu" once you are signed in), and choose "Settings". Open the "Theme" list, pick a different theme, then select "Save changes".',
+    modalBody: 'In Settings: open the "Theme" list, pick a different theme, then select "Save changes".',
     doneText: 'Nice, theme changed. Close Settings, or select Next, to carry on.'
   },
   {

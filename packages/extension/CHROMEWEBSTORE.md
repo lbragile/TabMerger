@@ -87,11 +87,12 @@ WHAT YOU CAN DO
 - Set URL rules that send matching tabs to a group automatically, and clean up duplicate tabs.
 - Take saved sessions (snapshots of your groups) and restore them later.
 - Undo and redo changes, and switch between light and dark themes.
-- Get a guided tour the first time you open TabMerger: six short chapters in plain language,
-  each with a header saying what it covers. A few steps let you try things yourself (make a
-  group, colour it, pin it, search, switch the theme), with a ring on the exact control to use
-  next. Skip a step, a chapter or the whole tour, and replay it any time from the "?" button or
-  from Settings.
+- Get a guided tour the first time you open TabMerger: seven short chapters in plain language,
+  each with a header saying what it covers. Many steps let you try things yourself (make a
+  group, colour it, pin it, drag tabs and groups around, search, switch the theme), with a
+  ring on the exact control to use next. Dragging is practised on two sample groups that the
+  tour adds and removes by itself, so your own tabs are never touched. Skip a step, a chapter
+  or the whole tour, and replay it any time from the "?" button or from Settings.
 - Import from a JSON file, a bookmarks HTML export or OneTab, and export your data as JSON.
   Imported files are checked entry by entry: links that run script instead of opening a page
   (bookmarklets, for example) are left out, and the import tells you how many were skipped.
@@ -545,7 +546,7 @@ with the real semver string carried in `version_name`.
 | BETA | `4.1.0.11` | `3.1.0-beta.11` | `v3.1.0-beta.11` | 2026-10-07 | Submitted by the publish workflow; owner to update when the review completes |
 | Both | set at release | set at release | next release (unreleased) | — | Draft: adds automatic backups (Pro) and the `alarms` wording above, plus the OPTIONAL `downloads` permission for "Also save a file to this computer". No required permission changes, so no re-approval prompt for existing users; `downloads` is asked for only when a user turns that option on. Update the dashboard's privacy tab: the permission justification above, and "Web history" stays ticked (the file holds saved tab addresses but stays on the user's disk). Screenshots: none of the current ones shows Settings, so none needs refreshing; a new Settings → Data screenshot showing the backups list would be worth adding |
 
-| Both | set at release | set at release | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest change and no new permission: the tour's progress is one record in `chrome.storage.local`, already covered by `storage`, so there is no re-approval prompt. The tour has six chapters with a header each, five "try it" steps and a ring on the control to use next; the group made while trying is offered for removal at the end. No new data leaves the device apart from six anonymous usage events (`tour_started`, `tour_completed`, `tour_skipped`, `tour_task_done`, `tour_step_skipped`, `tour_chapter_skipped`, carrying step or chapter ids only) through the existing analytics path. Screenshots: the ones showing the popup header need refreshing, see Screenshot Notes |
+| Both | set at release | set at release | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest change and no new permission: the tour's progress is one record in `chrome.storage.local`, already covered by `storage`, so there is no re-approval prompt. The tour has seven chapters with a header each, nine "try it" steps and a thin pulsing orange ring on the control to use next; four of them practise drag and drop on two sample groups ("Tour demo", "Tour demo 2") that the tour adds for that chapter and removes again by itself, and which never leave the device (not synced, backed up, exported, shared or counted towards a plan); the group made while trying is offered for removal at the end. No new data leaves the device apart from six anonymous usage events (`tour_started`, `tour_completed`, `tour_skipped`, `tour_task_done`, `tour_step_skipped`, `tour_chapter_skipped`, carrying step or chapter ids only) through the existing analytics path. Screenshots: the ones showing the popup header need refreshing, see Screenshot Notes |
 
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 

@@ -24,11 +24,21 @@ interface TourCardProps {
   position: { left: number; top: number } | null;
   taskStatus: TourTaskStatus;
   /**
+   * For a task that visits several controls in a row: which one the action ring is on now.
+   * Shown next to the title as dots and "2 of 3". `null` when there is nothing to count.
+   */
+  subStep?: { current: number; total: number } | null;
+  /**
    * True on the step that introduces its chapter to this user in this run: the chapter's
    * description is then part of the announcement. It is SHOWN on that step and on the
    * chapter's first step, but announced only here, so it is heard once per chapter.
    */
   introducesChapter?: boolean;
+  /**
+   * True while the card has to stay small (a dialog the task opened is on screen): the
+   * chapter's description is left out.
+   */
+  compact?: boolean;
   /** Last step only: the practice group, while there is one to offer. */
   practice?: TourPracticeOffer | null;
   onNext: () => void;
@@ -85,7 +95,7 @@ const plural = (count: number, word: string) => `${count} ${word}${count === 1 ?
  * `<body>`, which this card (a child of the body) would otherwise inherit.
  */
 export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourCard(
-  { step, body, progress, position, taskStatus, introducesChapter = false, practice, onNext, onBack, onSkip, onSkipStep, onSkipChapter, onRemovePractice },
+  { step, body, progress, position, taskStatus, subStep = null, introducesChapter = false, compact = false, practice, onNext, onBack, onSkip, onSkipStep, onSkipChapter, onRemovePractice },
   ref
 ) {
   const titleId = useId();
@@ -95,9 +105,15 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
   const stepLine = `Step ${progress.step} of ${progress.total}`;
   const doneText = step.doneText ?? 'Done.';
 
-  const showChapterIntro = !!progress.chapterDescription && (introducesChapter || progress.stepInChapter === 1);
+  const showChapterIntro = !compact && !!progress.chapterDescription && (introducesChapter || progress.stepInChapter === 1);
   const chapterIntro = introducesChapter && progress.chapterDescription ? ` ${progress.chapterDescription}` : '';
-  const stepAnnouncement = `${chapterLine}, ${progress.chapterTitle}.${chapterIntro} ${stepLine}: ${step.title}. ${body}${
+  // A step with its own text per sub-step is announced whole, once: every sub-step in order,
+  // then the keyboard way. The line shown changes as the user goes; the announcement does not.
+  const subStepText = step.subStepText ?? [];
+  const subStepKeys = step.subStepKeys ?? [];
+  const showSubStepText = taskStatus === 'todo' && !!subStep && subStepText.length > 0;
+  const allSubSteps = taskStatus === 'todo' && subStepText.length > 0 ? ` ${subStepText.join(' ')}${subStepKeys.length ? ` With the keyboard: ${subStepKeys.join(' ')}` : ''}` : '';
+  const stepAnnouncement = `${chapterLine}, ${progress.chapterTitle}.${chapterIntro} ${stepLine}: ${step.title}. ${body}${allSubSteps}${
     taskStatus === 'todo' ? ' Your turn. To move on without trying it, select "Skip this step".' : ''
   }`;
   const announcement = taskStatus === 'done' ? `${doneText} Select Next to continue.` : stepAnnouncement;
@@ -150,10 +166,40 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
           })}
         </div>
 
-        <h2 id={titleId} className="mt-3 text-[0.8125rem] font-semibold">
-          {step.title}
-        </h2>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <h2 id={titleId} className="min-w-0 text-[0.8125rem] font-semibold">
+            {step.title}
+          </h2>
+          {/* Not a live region: the ring moving on is announced by the control taking focus.
+              The words "2 of 3" are the text equivalent of the dots. */}
+          {subStep && (
+            <p data-tour-substep={subStep.current} className="flex shrink-0 items-center gap-1.5 text-[0.6875rem] font-medium text-muted-foreground">
+              <span aria-hidden="true" className="flex items-center gap-0.5">
+                {Array.from({ length: subStep.total }, (_, i) => (
+                  <span key={i} data-tour-substep-dot={i + 1 < subStep.current ? 'done' : i + 1 === subStep.current ? 'current' : 'todo'} />
+                ))}
+              </span>
+              <span>
+                <span className="sr-only">Part </span>
+                {subStep.current} of {subStep.total}
+              </span>
+            </p>
+          )}
+        </div>
         <p className="mt-1.5 text-[0.8125rem] leading-relaxed">{body}</p>
+        {showSubStepText && subStep && (
+          <>
+            <p data-tour-substep-text="" className="mt-2 border-l-2 border-secondary pl-2 text-[0.8125rem] font-medium leading-snug">
+              {subStepText[subStep.current - 1] ?? subStepText[subStepText.length - 1]}
+            </p>
+            {subStepKeys[subStep.current - 1] && (
+              <p data-tour-substep-keys="" className="mt-1 pl-2.5 text-xs leading-snug text-muted-foreground">
+                <span className="font-medium text-foreground">Keyboard: </span>
+                {subStepKeys[subStep.current - 1]}
+              </p>
+            )}
+          </>
+        )}
 
         {taskStatus === 'todo' && (
           <p data-tour-task-line="todo" className="mt-2.5 flex items-start gap-1.5 border border-foreground/30 px-2 py-1.5 text-xs font-medium">

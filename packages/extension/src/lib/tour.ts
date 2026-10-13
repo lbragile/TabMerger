@@ -28,18 +28,36 @@ export interface TourRecord {
    * and the tour can offer to remove it when it ends.
    */
   practiceGroupId?: string;
+  /**
+   * Ids of the tour's practice ("Tour demo") groups while they exist: written while a step of
+   * the drag chapter is up, gone once they were removed. A trace only. Clean-up never trusts
+   * it: it finds practice groups by their flag and fixed ids (`lib/tourDemo.ts`).
+   */
+  demoGroupIds?: string[];
 }
 
+/** Most ids kept in `demoGroupIds` (there are two practice groups). */
+const MAX_DEMO_IDS = 4;
+
 const isStoredId = (value: unknown): value is string => typeof value === 'string' && value.length > 0 && value.length <= 64;
+
+const validDemoIds = (value: unknown): string[] => (Array.isArray(value) ? value.filter(isStoredId).slice(0, MAX_DEMO_IDS) : []);
 
 /** Validates what came out of storage; anything unexpected reads as "no record". */
 export function parseTourRecord(raw: unknown): TourRecord | null {
   if (typeof raw !== 'object' || raw === null) return null;
-  const { status, stepId, practiceGroupId } = raw as { status?: unknown; stepId?: unknown; practiceGroupId?: unknown };
+  const { status, stepId, practiceGroupId, demoGroupIds } = raw as {
+    status?: unknown;
+    stepId?: unknown;
+    practiceGroupId?: unknown;
+    demoGroupIds?: unknown;
+  };
   if (status !== 'done' && status !== 'pending') return null;
   const record: TourRecord = { status };
   if (status === 'pending' && isStoredId(stepId)) record.stepId = stepId;
   if (isStoredId(practiceGroupId)) record.practiceGroupId = practiceGroupId;
+  const demoIds = validDemoIds(demoGroupIds);
+  if (status === 'pending' && demoIds.length > 0) record.demoGroupIds = demoIds;
   return record;
 }
 
@@ -99,9 +117,14 @@ export function shouldAutoStartTour(record: TourRecord | null): boolean {
 const withPractice = (record: TourRecord, practiceGroupId?: string | null): TourRecord =>
   isStoredId(practiceGroupId) ? { ...record, practiceGroupId } : record;
 
-/** Remembers the step being shown, so the tour resumes there after the popup closes. */
-export function saveTourProgress(stepId: string, practiceGroupId?: string | null): Promise<void> {
-  return writeTourRecord(withPractice({ status: 'pending', stepId }, practiceGroupId));
+/**
+ * Remembers the step being shown, so the tour resumes there after the popup closes.
+ * `demoGroupIds`: the practice groups on the list right now (the drag chapter), if any.
+ */
+export function saveTourProgress(stepId: string, practiceGroupId?: string | null, demoGroupIds: readonly string[] = []): Promise<void> {
+  const demoIds = validDemoIds(demoGroupIds);
+  const record: TourRecord = demoIds.length > 0 ? { status: 'pending', stepId, demoGroupIds: demoIds } : { status: 'pending', stepId };
+  return writeTourRecord(withPractice(record, practiceGroupId));
 }
 
 /**
@@ -118,7 +141,19 @@ export function markTourDone(practiceGroupId?: string | null): Promise<void> {
 export type TourPlacement = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
 /** A "do it yourself" step. What each one watches and unlocks is in `tourTasks.ts`. */
-export type TourTaskId = 'make-group' | 'group-colour' | 'group-pin' | 'search' | 'theme';
+export type TourTaskId =
+  | 'make-group'
+  | 'group-colour'
+  | 'group-pin'
+  | 'drag-tab-reorder'
+  | 'drag-tab-window'
+  | 'drag-tab-group'
+  | 'drag-group-order'
+  | 'search'
+  | 'theme';
+
+/** Id of the chapter whose steps use the practice ("Tour demo") groups. They exist only while it is up. */
+export const TOUR_DRAG_CHAPTER = 'drag';
 
 export interface TourStep {
   /** Stable id: stored as progress and sent with analytics, so do not rename casually. */
@@ -138,8 +173,20 @@ export interface TourStep {
   doneText?: string;
   /** Text used instead of `body` when the task cannot be offered (the step is then read-only). */
   fallbackBody?: string;
-  /** Group to show in the main panel while the step is up. */
-  activate?: 'now-open';
+  /**
+   * Shorter text shown instead of `body` while the dialog the task opened is on screen (the
+   * card then has to fit beside what the user is doing in that dialog).
+   */
+  modalBody?: string;
+  /**
+   * A task with sub-steps that have their own instruction: one short sentence per sub-step, in
+   * order, saying only what to do now. Shown under `body`, the current one only.
+   */
+  subStepText?: readonly string[];
+  /** The keyboard way to do each sub-step, shown as its own short line. Same order as `subStepText`. */
+  subStepKeys?: readonly string[];
+  /** Group to show in the main panel while the step is up (`tour-demo` = the first practice group). */
+  activate?: 'now-open' | 'tour-demo';
   /** Only shown when this feature is switched on in the build. */
   when?: 'ai';
 }
@@ -434,9 +481,11 @@ export function cardPositionAvoiding(
   card: TourSize,
   frame: TourSize,
   margin: number,
-  avoid: TourRect | null
+  avoid: TourRect | readonly TourRect[] | null
 ): { left: number; top: number } {
-  const covers = (p: { left: number; top: number }) => !!avoid && rectsOverlap({ ...p, ...card }, avoid);
+  // Several rectangles (a drag step's source and its destination) are each kept clear
+  const rects: readonly TourRect[] = !avoid ? [] : Array.isArray(avoid) ? avoid : [avoid as TourRect];
+  const covers = (p: { left: number; top: number }) => rects.some((rect) => rectsOverlap({ ...p, ...card }, rect));
   if (!covers(position)) return position;
   const maxLeft = Math.max(margin, frame.width - card.width - margin);
   const maxTop = Math.max(margin, frame.height - card.height - margin);

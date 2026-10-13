@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { GroupsState } from '@/lib/types';
+import { withoutTourDemoGroups } from '@tabmerger/shared';
 import { setSetting } from '@/lib/localDb';
 
 export type ModalType =
@@ -183,6 +184,18 @@ function withOverlayDismiss(
 }
 
 /**
+ * A snapshot as the undo history keeps it: without the guided tour's practice groups. They are
+ * not the user's, and a snapshot holding them would bring them back when it is restored after
+ * the tour removed them. (Restoring keeps whatever practice groups are current: see
+ * `restoreSnapshotAsLocalChange`.)
+ */
+function historySnapshot(state: GroupsState): GroupsState {
+  if (!Array.isArray(state?.available)) return state;
+  const available = withoutTourDemoGroups(state.available);
+  return available === state.available ? state : { ...state, available };
+}
+
+/**
  * Central ephemeral UI store. Manages: active modal, active group index, search filter,
  * rename target, undo/redo stack (capped at 10 GroupsState snapshots), and selection mode.
  * None of this state is persisted — it resets when the popup closes. Use TanStack Query
@@ -239,7 +252,7 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   pushUndo: (state) =>
     set((prev) => {
-      const stack = [state, ...prev.undoStack].slice(0, 10);
+      const stack = [historySnapshot(state), ...prev.undoStack].slice(0, 10);
       return { undoStack: stack, redoStack: [] };
     }),
 
@@ -251,7 +264,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     const { undoStack, redoStack } = get();
     if (undoStack.length === 0) return undefined;
     const [top, ...rest] = undoStack;
-    set({ undoStack: rest, redoStack: [currentState, ...redoStack].slice(0, 10) });
+    set({ undoStack: rest, redoStack: [historySnapshot(currentState), ...redoStack].slice(0, 10) });
     return top;
   },
 
@@ -263,7 +276,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     const { undoStack, redoStack } = get();
     if (redoStack.length === 0) return undefined;
     const [top, ...rest] = redoStack;
-    set({ undoStack: [currentState, ...undoStack].slice(0, 10), redoStack: rest });
+    set({ undoStack: [historySnapshot(currentState), ...undoStack].slice(0, 10), redoStack: rest });
     return top;
   },
 

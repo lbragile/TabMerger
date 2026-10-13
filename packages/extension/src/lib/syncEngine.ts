@@ -1,5 +1,5 @@
 import type { Session } from '@supabase/supabase-js';
-import { encryptBlob, decryptBlob, isEncryptedBlob, SYNC_DATA_CONSENT_CATEGORIES, type EncryptedBlob } from '@tabmerger/shared';
+import { encryptBlob, decryptBlob, isEncryptedBlob, isTourDemoGroup, SYNC_DATA_CONSENT_CATEGORIES, type EncryptedBlob } from '@tabmerger/shared';
 import type { Group } from './types';
 import { emitForeignGroupsChange, emitSyncConflict } from './foreignChange';
 import { groupContentEqual, makeConflictCopy } from './syncConflict';
@@ -90,6 +90,9 @@ async function checkCycleIdentity(session: Session): Promise<CycleIdentity> {
 async function pushGroup(session: Session, group: Group, position: number, legacy: boolean, dataKey: CryptoKey): Promise<void> {
   // NOTE: a full-row push (re-encrypted with a fresh IV) always counts as a CONTENT change on the
   // server. Reorders must never come through here; they use pushPosition.
+  // Last line of defence: the guided tour's practice groups never leave the device, however one
+  // got this far.
+  if (isTourDemoGroup(group)) return;
   // ponytail: whole body wrapped — a throw here (e.g. encryptBlob choking on a malformed/
   // oversized field for one specific group) must not propagate out to the caller's for-loop,
   // which would silently abort every group after it in the same push batch.
@@ -235,7 +238,8 @@ export async function pushPendingChanges(session: Session, deadline = cycleDeadl
 async function pushPending(session: Session, deadline: number): Promise<void> {
   if (!(await canUploadOnFirefox())) return; // consent not granted — see canUploadOnFirefox's doc comment
   // ponytail: explicit permanent guard — Now Open should already have pendingSync:false, but belt-and-suspenders
-  const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent);
+  // ...and never the guided tour's practice groups (see `isTourDemoGroup`)
+  const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent && !isTourDemoGroup(g));
 
   // One gate per cycle for every content push: without an unlocked key NOTHING is sent (there is no
   // plaintext fallback, see getContentUploadKey) and the groups keep `pendingSync` until setup /
@@ -246,7 +250,8 @@ async function pushPending(session: Session, deadline: number): Promise<void> {
   }
 
   const legacy = !(await getSetting(REMOTE_BASE_SEEDED_KEY, false));
-  const { available } = await getGroupsState();
+  // Positions are counted without the tour's practice groups, so the server's order has no gaps
+  const available = (await getGroupsState()).available.filter((g) => !isTourDemoGroup(g));
   const positions = new Map(available.map((g, i) => [g.id, i]));
   const contentKey = gate?.key;
   // Past the cycle deadline nothing more is started: the rest stays pending for the next cycle.
@@ -278,6 +283,7 @@ async function pushPending(session: Session, deadline: number): Promise<void> {
  * has adopted that change) instead of hiding the change behind a fresh stamp.
  */
 async function pushPosition(session: Session, group: Group, position: number): Promise<void> {
+  if (isTourDemoGroup(group)) return;
   const id = group.id;
   try {
     let query = supabase.from('groups').update({ position }).eq('id', id).eq('user_id', session.user.id);
@@ -483,7 +489,7 @@ function mergeRemoteGroups(
 
     if (remote && local) {
       const stamp = remote.remoteUpdatedAt;
-      if (local.permanent) {
+      if (local.permanent || isTourDemoGroup(local)) {
         merged.push(local);
       } else if (local.pendingSync) {
         if (local.remoteUpdatedAt ? compareStamps(stamp!, local.remoteUpdatedAt) <= 0 : legacy) {
@@ -521,7 +527,8 @@ function mergeRemoteGroups(
       // above) can only mean it was deleted remotely — drop it locally instead of resurrecting it.
       // An encrypted-but-locked remote row is in `remoteIds` but not in `remoteMap`: the group still
       // exists remotely, it just cannot be read yet, so it must not be mistaken for a remote delete.
-      if (local.permanent || remoteIds.has(local.id)) {
+      // The guided tour's practice groups are never on the server: that is not a remote delete.
+      if (local.permanent || isTourDemoGroup(local) || remoteIds.has(local.id)) {
         merged.push(local);
       } else if (local.pendingSync) {
         if (local.remoteUpdatedAt) {

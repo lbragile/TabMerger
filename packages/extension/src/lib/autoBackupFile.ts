@@ -1,4 +1,4 @@
-import { BACKUP_FILE_PERMISSION, buildBackupFilePath, withoutLocalOnlySyncKeys } from '@tabmerger/shared';
+import { BACKUP_FILE_PERMISSION, buildBackupFilePath, isTourDemoGroup, withoutLocalOnlySyncKeys } from '@tabmerger/shared';
 import type { Group, Session } from '@/lib/types';
 import { exportGroups } from '@/lib/importExport';
 import { getGroupTabCount } from '@/lib/utils';
@@ -43,7 +43,7 @@ export function parseBackupFileStatus(raw: unknown): BackupFileStatus | null {
  * both writers produce the same file for the same backup whatever the stored content holds.
  */
 export function backupFileContent(groups: Group[]): string {
-  const saved = withoutLocalOnlySyncKeys(groups.filter((g) => !g.permanent)) as Group[];
+  const saved = withoutLocalOnlySyncKeys(groups.filter((g) => !g.permanent && !isTourDemoGroup(g))) as Group[];
   return exportGroups(saved);
 }
 

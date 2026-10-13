@@ -3,3 +3,4 @@ export * from './constants/index';
 export * from './crypto/index';
 export * from './utils/flags';
 export * from './utils/url';
+export * from './utils/tourDemo';

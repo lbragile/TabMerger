@@ -99,4 +99,5 @@
 - [E2E CodeQL sanitizers](learnings_e2e_codeql_sanitizers.md) — escapeHtml / jsLiteral / startTitleServer in e2e/helpers.ts; unicode-escape authoring gotcha; how to type-check e2e/
 - [Import validation + stored-URL open guard](learnings_import_validation_and_open_guard.md) — parsers return { groups, skipped }; lib/safeOpen.ts before every stored-URL open; CRLF and NUL-byte editing gotchas
 - [Automatic backups](learnings_auto_backups.md) — sessions marked auto, worker alarm; never re-create a periodic alarm, due tolerance, listener order asserted by tests; server absence never deletes a local backup, in-transaction list updates, sender URL check
+- [Tour demo groups + drag steps](learnings_tour_demo_groups_and_drag_steps.md) — one flag/predicate, write-path and merge choke points, sealed canDrop sandbox, drags under the tour lock, Radix aria-hidden marker gotcha
 - [Guided tour](learnings_guided_tour.md) — tm_tour record lifecycle, inert root + window-capture key lock, hidden-card focus trap, every e2e launcher must dismissTour; interactive tasks, action ring, measured focus rules

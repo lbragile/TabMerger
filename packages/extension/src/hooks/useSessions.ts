@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
-import { FREE_TIER_LIMITS } from '@tabmerger/shared';
+import { FREE_TIER_LIMITS, isTourDemoGroup } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
 import { getSessions, saveSession, deleteSession, getSetting, setSetting } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
@@ -46,7 +46,8 @@ export function useSaveSession() {
         throw new Error('SESSION_LIMIT');
       }
       if (!groupsState) throw new Error('No groups state');
-      const groups = groupsState.available.filter((g) => !g.permanent);
+      // Saved groups only: never "Now Open", never the guided tour's practice groups
+      const groups = groupsState.available.filter((g) => !g.permanent && !isTourDemoGroup(g));
       const session: Session = {
         id: nanoid(10),
         name,

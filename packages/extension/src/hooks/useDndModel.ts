@@ -1,6 +1,7 @@
 import { useMemo, useSyncExternalStore } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
 /**
@@ -28,6 +29,11 @@ export interface DndModelGroup {
    * its own zone (`@/lib/dndMove`'s `canDrop` rejects a selection that spans both).
    */
   starred: boolean;
+  /**
+   * Practice data of the guided tour (`isTourDemoGroup`). A sealed sandbox for drag and drop:
+   * its items only move between practice groups, and nothing else moves in (`canDrop`).
+   */
+  tourDemo: boolean;
 }
 
 export interface DndModelWindow {
@@ -87,7 +93,7 @@ export function buildDndModel(groupsState: GroupsState): DndModel {
       windows[wid] = { id: wid, groupId: gid, tabIds, groupIndex, windowIndex, starred: !!w.starred };
     });
 
-    groups[gid] = { id: gid, windowIds, index: groupIndex, starred: !!group.starred };
+    groups[gid] = { id: gid, windowIds, index: groupIndex, starred: !!group.starred, tourDemo: isTourDemoGroup(group) };
   });
 
   const permanent = available.find((g) => g.permanent);

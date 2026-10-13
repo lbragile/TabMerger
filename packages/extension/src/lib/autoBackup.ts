@@ -12,6 +12,7 @@ import {
   type AutoBackupIntervalMinutes
 } from '@tabmerger/shared';
 import type { Group, Session } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { TIER_LIMITS } from '@/lib/types';
 import { getGroupsState, getSessions, deleteSession, getSetting, setSetting, commitSessions, commitSessionsIfGuardHolds, compareAndSetSetting } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
@@ -211,9 +212,12 @@ export function parseAutoBackupState(raw: unknown): AutoBackupState | null {
   return { lastBackupAt: r.lastBackupAt, fingerprint: r.fingerprint, lastBackupId: r.lastBackupId };
 }
 
-/** The groups a backup holds: every saved group, never "Now Open". Same selection as `useSaveSession`. */
+/**
+ * The groups a backup holds: every saved group, never "Now Open" and never the guided tour's
+ * practice groups. Same selection as `useSaveSession`.
+ */
 export function backupGroups(available: Group[]): Group[] {
-  return available.filter((g) => !g.permanent);
+  return available.filter((g) => !g.permanent && !isTourDemoGroup(g));
 }
 
 /** Per-group fields that change without the user's content changing (sync bookkeeping, stamps, derived text). */

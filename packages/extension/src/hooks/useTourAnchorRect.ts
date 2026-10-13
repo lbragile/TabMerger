@@ -6,6 +6,7 @@ const sameHighlight = (a: TourHighlight | null, b: TourHighlight | null) =>
   (!!a &&
     !!b &&
     a.radius === b.radius &&
+    a.index === b.index &&
     a.rect.left === b.rect.left &&
     a.rect.top === b.rect.top &&
     a.rect.width === b.rect.width &&

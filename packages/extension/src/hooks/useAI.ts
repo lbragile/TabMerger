@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { trackEvent } from '@/lib/analytics';
 import type { Tab, Group } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 import { useAppSettings } from './useAppSettings';
@@ -176,7 +177,7 @@ export function useOrganizeTabs() {
       // Only a confirmed "no key" lets the server read the rows itself: when the check failed the
       // account may be encrypted, and the server would then be reading ciphertext.
       const groups = (await getEncryptionKeyState()) !== 'absent'
-        ? groupsState?.available.map((g) => ({
+        ? groupsState?.available.filter((g) => !isTourDemoGroup(g)).map((g) => ({
             id: g.id,
             name: g.name,
             permanent: g.permanent ?? false,

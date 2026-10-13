@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import type { Group, GroupsState } from './types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 
 /** The server base and the unpushed-position flag belong to ONE row; a copy under another identity must not inherit them. */
 function withoutSyncIdentity(g: Group): Group {
@@ -23,12 +24,16 @@ function contentKey(g: Group): string {
  *
  * Now Open (permanent) is never taken from the snapshot: its tabs are the LIVE browser
  * tabs, and a snapshot's copy is stale (and it is never synced). The current one is kept.
+ *
+ * The guided tour's practice groups are not history either: a snapshot's copies are dropped and
+ * the ones that exist NOW are kept, at the end of the list, so an undo neither removes practice
+ * data mid-tour nor brings it back after the tour removed it.
  */
 export function restoreSnapshotAsLocalChange(current: GroupsState, snapshot: GroupsState): GroupsState {
   const currentById = new Map(current.available.map((g) => [g.id, g]));
   const currentNowOpen = current.available.find((g) => g.permanent);
   const now = Date.now();
-  const available = snapshot.available.map((g) => {
+  const restored = snapshot.available.filter((g) => !isTourDemoGroup(g)).map((g) => {
     if (g.permanent) return currentNowOpen ?? g;
     const cur = currentById.get(g.id);
     // A group the current state lacks (an undone delete) keeps its OLD id, but its server row may be
@@ -39,6 +44,7 @@ export function restoreSnapshotAsLocalChange(current: GroupsState, snapshot: Gro
     if (contentKey(cur) !== contentKey(g)) return { ...g, updatedAt: now, pendingSync: true };
     return { ...g, updatedAt: cur.updatedAt, pendingSync: cur.pendingSync }; // same content: keep its sync state
   });
+  const available = [...restored, ...current.available.filter(isTourDemoGroup)];
   return { ...snapshot, available };
 }
 

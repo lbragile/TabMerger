@@ -36,7 +36,7 @@ import { AI_ENABLED } from "@/lib/aiFlag";
 import { useAppSettings } from "@/hooks/useAppSettings";
 import { useGroups, useSetGroupsState, useApplyAIGroups } from "@/hooks/useGroups";
 import { toast } from "@/lib/toast";
-import { FreeLimitExceededError } from "@/lib/tierLimits";
+import { FreeLimitExceededError, countedGroups } from "@/lib/tierLimits";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
@@ -132,7 +132,7 @@ export function Header() {
             }
 
             // Cap to remaining free-tier group slots, same limit manual "New group" enforces
-            const activeCount = groupsState.available.filter((g) => !g.permanent).length;
+            const activeCount = countedGroups(groupsState.available).length;
             const remaining = isFinite(maxGroups) ? Math.max(0, maxGroups - activeCount) : result.groups.length;
             const suggestions = result.groups.slice(0, remaining);
             if (suggestions.length === 0) {

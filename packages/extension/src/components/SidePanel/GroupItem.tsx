@@ -23,6 +23,7 @@ import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { TOUR_ANCHORS, TOUR_READY_ATTR } from '@/lib/tourSteps';
+import { isTourDemoGroup } from '@tabmerger/shared';
 
 interface GroupItemProps {
   group: Group;
@@ -40,7 +41,9 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   // `starred` rides along because it is the row's ZONE, not decoration: starred groups are
   // pinned above unstarred ones, and the DnD collision layer clamps the insertion gap into
   // the dragged block's own zone (`@/lib/dndInsertion`, spec §6.1).
-  const dndData = { type: 'group', groupId: group.id, index: groupIndex, starred: !!group.starred };
+  // `tourDemo`: a practice group of the guided tour only reorders against another one, and the
+  // collision layer needs to know which rows those are to draw the gap in the right place.
+  const dndData = { type: 'group', groupId: group.id, index: groupIndex, starred: !!group.starred, tourDemo: isTourDemoGroup(group) };
   // `transition` is intentionally discarded — this codebase renders an insertion gap
   // instead of applying dnd-kit's live transform/transition during a drag (drag-and-drop
   // spec §8: "no live dnd-kit `transform` on a pointer-dragged row").
