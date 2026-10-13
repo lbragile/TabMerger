@@ -13,6 +13,7 @@ import { chromium, type BrowserContext, type Page } from "@playwright/test";
 process.env.TM_DEMO_EXT_DIR ??= path.resolve(__dirname, ".pw-ext-dev");
 process.env.TM_DEMO_USER_DATA_DIR ??= path.resolve(__dirname, ".pw-user-sync-a");
 import { launchDemoContext } from "./lib/launchDemoContext";
+import { markTourDone } from "./lib/tourDone";
 import { saveWebp, settle } from "./lib/betaShot";
 
 const ROOT = path.resolve(__dirname, "../..");
@@ -80,6 +81,7 @@ async function launchDeviceB(extensionId: string): Promise<{ context: BrowserCon
             origins: [{ origin: `chrome-extension://${extensionId}`, localStorage: [{ name: "tabmerger-theme", value: "light" }] }],
         },
     });
+    await markTourDone(context); // before the popup opens, so the tour never shows
     for (const url of ["https://github.com", "https://developer.mozilla.org", "https://news.ycombinator.com"]) {
         const t = await context.newPage();
         await t.goto(url, { waitUntil: "domcontentloaded" }).catch(() => null);
