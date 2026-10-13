@@ -36,6 +36,9 @@ const {
 }))
 
 vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuthFlow }))
+// Automatic backups have their own suite (autoBackupAlarm.test.ts): here the worker only has to call it once.
+const { mockRegisterAutoBackup } = vi.hoisted(() => ({ mockRegisterAutoBackup: vi.fn() }))
+vi.mock('@/lib/autoBackupAlarm', () => ({ registerAutoBackup: mockRegisterAutoBackup }))
 
 vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   getGroupsState: mockGetGroupsState,
@@ -67,6 +70,8 @@ vi.mock('@/lib/urlRuleEngine', () => ({
   applyUrlRule: mockApplyUrlRule,
 }))
 
+const OWN_PAGE = { id: 'this-extension-id', url: 'chrome-extension://this-extension-id/popup.html' }
+
 function makeChromeStub() {
   const listeners: Record<string, ((...args: unknown[]) => unknown)[]> = {}
   const on = (name: string) => ({
@@ -86,7 +91,8 @@ function makeChromeStub() {
         // Popup → worker port used to close Now Open tabs the popup must not close itself
         // (an ACTIVE tab; closing the popup's anchor dismisses it — spec C7).
         onConnect: on('onConnect'),
-        getURL: vi.fn().mockReturnValue('icon.png'),
+        // getURL('') is the extension's own origin (what isOwnExtensionPage compares sender.url with)
+        getURL: vi.fn((path?: string) => (path ? 'icon.png' : 'chrome-extension://this-extension-id/')),
         getManifest: vi.fn().mockReturnValue({ version: '2.9.0' }),
         id: 'this-extension-id',
       },
@@ -99,7 +105,7 @@ function makeChromeStub() {
         onCommand: on('onCommand'),
       },
       storage: {
-        local: { get: vi.fn().mockResolvedValue({}), remove: vi.fn() },
+        local: { get: vi.fn().mockResolvedValue({}), set: vi.fn().mockResolvedValue(undefined), remove: vi.fn() },
         session: { set: vi.fn().mockResolvedValue(undefined), get: vi.fn().mockResolvedValue({}), remove: vi.fn() },
       },
       alarms: {
@@ -352,7 +358,7 @@ describe('background — externally_connectable SYNC_AUTH (web app auth bridge)'
 describe('background — SIGN_IN_WITH_GOOGLE message', () => {
   it('runs the OAuth flow and responds ok on success, keeping the channel open', () => {
     const sendResponse = vi.fn()
-    const keepOpen = stub.listeners.onMessage[1]({ type: 'SIGN_IN_WITH_GOOGLE' }, {}, sendResponse)
+    const keepOpen = stub.listeners.onMessage[1]({ type: 'SIGN_IN_WITH_GOOGLE' }, OWN_PAGE, sendResponse)
     expect(keepOpen).toBe(true)
     expect(mockRunGoogleOAuthFlow).toHaveBeenCalled()
     return new Promise((resolve) => setTimeout(() => {
@@ -364,7 +370,7 @@ describe('background — SIGN_IN_WITH_GOOGLE message', () => {
   it('responds with ok: false and the error message on failure', () => {
     mockRunGoogleOAuthFlow.mockRejectedValue(new Error('Google sign-in was cancelled'))
     const sendResponse = vi.fn()
-    stub.listeners.onMessage[1]({ type: 'SIGN_IN_WITH_GOOGLE' }, {}, sendResponse)
+    stub.listeners.onMessage[1]({ type: 'SIGN_IN_WITH_GOOGLE' }, OWN_PAGE, sendResponse)
     return new Promise((resolve) => setTimeout(() => {
       expect(sendResponse).toHaveBeenCalledWith({ ok: false, error: 'Google sign-in was cancelled' })
       resolve(undefined)
@@ -472,15 +478,48 @@ describe('background — externally_connectable SYNC_NOW (web dashboard trigger)
   })
 })
 
+describe('background — automatic backups wiring', () => {
+  it('registers the automatic-backup worker exactly once per worker start', () => {
+    mockRegisterAutoBackup.mockClear()
+    capturedMain!()
+    expect(mockRegisterAutoBackup).toHaveBeenCalledTimes(1)
+  })
+})
+
 describe('background — alarm helper messages', () => {
   it('creates an alarm for CREATE_ALARM', () => {
-    stub.listeners.onMessage[0]({ type: 'CREATE_ALARM', name: 'reminder-1', delayInMinutes: 5 })
+    stub.listeners.onMessage[0]({ type: 'CREATE_ALARM', name: 'reminder-1', delayInMinutes: 5 }, OWN_PAGE)
     expect(stub.chrome.alarms.create).toHaveBeenCalledWith('reminder-1', { delayInMinutes: 5 })
   })
 
   it('clears an alarm for CLEAR_ALARM', () => {
-    stub.listeners.onMessage[0]({ type: 'CLEAR_ALARM', name: 'reminder-1' })
+    stub.listeners.onMessage[0]({ type: 'CLEAR_ALARM', name: 'reminder-1' }, OWN_PAGE)
     expect(stub.chrome.alarms.clear).toHaveBeenCalledWith('reminder-1')
+  })
+})
+
+describe('background — internal messages from a content script are refused', () => {
+  const CONTENT_SCRIPT = { id: 'this-extension-id', tab: { id: 4 }, url: 'https://evil.example/' }
+  it.each([
+    ['content script (web page url)', CONTENT_SCRIPT],
+    ['no url, no tab', { id: 'this-extension-id' }],
+    ['no url, with a tab', { id: 'this-extension-id', tab: { id: 4 } }],
+    ['another extension', { id: 'other', url: 'chrome-extension://other/x.html' }],
+  ])('CREATE_ALARM, CLEAR_ALARM and SIGN_IN_WITH_GOOGLE from a %s do nothing', (_n, sender) => {
+    stub.listeners.onMessage[0]({ type: 'CREATE_ALARM', name: 'reminder-1', delayInMinutes: 5 }, sender)
+    stub.listeners.onMessage[0]({ type: 'CLEAR_ALARM', name: 'reminder-1' }, sender)
+    expect(stub.chrome.alarms.create).not.toHaveBeenCalled()
+    expect(stub.chrome.alarms.clear).not.toHaveBeenCalled()
+    const sendResponse = vi.fn()
+    expect(stub.listeners.onMessage[1]({ type: 'SIGN_IN_WITH_GOOGLE' }, sender, sendResponse)).toBeUndefined()
+    expect(mockRunGoogleOAuthFlow).not.toHaveBeenCalled()
+  })
+
+  it('the automatic backup alarm name cannot be created or cleared through the popup helper', () => {
+    stub.listeners.onMessage[0]({ type: 'CREATE_ALARM', name: 'tm-auto-backup', delayInMinutes: 1 }, OWN_PAGE)
+    stub.listeners.onMessage[0]({ type: 'CLEAR_ALARM', name: 'tm-auto-backup' }, OWN_PAGE)
+    expect(stub.chrome.alarms.create).not.toHaveBeenCalled()
+    expect(stub.chrome.alarms.clear).not.toHaveBeenCalled()
   })
 })
 
@@ -949,7 +988,7 @@ describe('background — Firefox web-bridge internal onMessage listener', () => 
 
   it('rejects a sender with a missing url', () => {
     const sendResponse = vi.fn()
-    stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, { id: 'this-extension-id' }, sendResponse)
+    stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, OWN_PAGE, sendResponse)
     expect(sendResponse).not.toHaveBeenCalled()
   })
 
@@ -970,5 +1009,28 @@ describe('background — Firefox web-bridge internal onMessage listener', () => 
       sendResponse
     )
     expect(sendResponse).not.toHaveBeenCalled()
+  })
+})
+
+describe('background — guided tour flag on install', () => {
+  const flush = () => new Promise((r) => setTimeout(r, 0))
+
+  it('marks the tour pending on a first install', async () => {
+    stub.listeners.onInstalled[0]({ reason: 'install' })
+    await flush()
+    expect(stub.chrome.storage.local.set).toHaveBeenCalledWith({ tm_tour: { status: 'pending' } })
+  })
+
+  it.each(['update', 'chrome_update', 'shared_module_update'])('does not touch the tour flag on %s', async (reason) => {
+    stub.listeners.onInstalled[0]({ reason })
+    await flush()
+    expect(stub.chrome.storage.local.set).not.toHaveBeenCalledWith({ tm_tour: expect.anything() })
+  })
+
+  it('does not overwrite an existing tour record on a reinstall', async () => {
+    stub.chrome.storage.local.get.mockResolvedValue({ tm_tour: { status: 'done' } })
+    stub.listeners.onInstalled[0]({ reason: 'install' })
+    await flush()
+    expect(stub.chrome.storage.local.set).not.toHaveBeenCalledWith({ tm_tour: expect.anything() })
   })
 })

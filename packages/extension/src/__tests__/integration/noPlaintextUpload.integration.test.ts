@@ -98,7 +98,7 @@ const savedSession = (): Session => ({
 /** One sync cycle + an explicit session upload + the debounced Now Open snapshot upload. */
 async function runEveryUploadPath(): Promise<void> {
   await performSync(auth)
-  await pushSessionToSupabase(savedSession())
+  await pushSessionToSupabase(savedSession(), auth.user.id)
   pushDeviceSession(await getGroupsState(), 'pro')
   await new Promise((r) => setTimeout(r, DEVICE_SESSION_DEBOUNCE_MS + 300))
 }

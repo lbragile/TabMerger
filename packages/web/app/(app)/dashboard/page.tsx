@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 import { SessionList } from '@/components/dashboard/SessionList'
+import { BackupsSection } from '@/components/dashboard/BackupsSection'
+import { SavedSessionsProvider } from '@/components/dashboard/SavedSessionsProvider'
+import { SessionsStatDescription, SessionsStatValue } from '@/components/dashboard/SessionsStat'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -53,7 +56,7 @@ export default async function DashboardPage({
   const isPro = currentTier === 'pro' || currentTier === 'pro_ai'
   const syncEnabled = hasCloudSync(subscription)
 
-  const [{ data: profile }, { data: groups }, { data: sessions }] = await Promise.all([
+  const [{ data: profile }, { data: groups }, { data: sessions, error: sessionsError }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     // Free (and non-entitled paid-tier) accounts never sync — RLS rejects their writes
     // (supabase/migrations/019_gate_cloud_sync_rls.sql), so there's nothing of theirs to read.
@@ -71,7 +74,7 @@ export default async function DashboardPage({
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
-      : Promise.resolve({ data: null }),
+      : Promise.resolve({ data: null, error: null }),
   ])
 
   // ponytail: uses the denormalized tab_count column (maintained client-side on every push),
@@ -108,6 +111,9 @@ export default async function DashboardPage({
   }
 
   return (
+    // One decrypt pass for everything below that lists or counts `sessions` rows: saved sessions
+    // and automatic backups are the same table and can only be told apart after decrypting.
+    <SavedSessionsProvider sessions={(sessions ?? []) as never} loadError={!!sessionsError}>
     <div className="flex flex-col gap-8">
       {params.upgraded === '1' && (
         <UpgradedBanner planName={subscription?.tier === 'pro_ai' ? 'Pro AI' : 'Pro'} />
@@ -161,6 +167,7 @@ export default async function DashboardPage({
         tabCount={tabCount}
         groupCount={activeGroups.length}
         sessionCount={sessions?.length ?? 0}
+        sessionStat={{ value: <SessionsStatValue />, description: <SessionsStatDescription /> }}
         memberSince={profile?.created_at ?? user.created_at}
         aiUsage={aiUsage}
         showSyncStats={syncEnabled}
@@ -192,11 +199,15 @@ export default async function DashboardPage({
 
           <div>
             <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>
-            {/* ponytail: cast because Supabase infers groups as Json, not SessionGroup[] */}
-            <SessionList sessions={(sessions ?? []) as never} isPro={isPro} />
+            {/* The rows come from SavedSessionsProvider above. */}
+            <SessionList isPro={isPro} />
           </div>
         </>
       )}
+
+      {/* Shown to every account: a free one gets the explanation and the upgrade link, no rows. */}
+      <BackupsSection syncEnabled={syncEnabled} />
     </div>
+    </SavedSessionsProvider>
   )
 }

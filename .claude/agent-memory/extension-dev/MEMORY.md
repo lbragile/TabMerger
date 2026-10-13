@@ -98,3 +98,5 @@
 - [Keyboard move re-anchor](learnings_keyboard_move_reanchor.md) — picked-up item re-anchored by identity on each cache update; cache listener is pre-render; real-commit test pattern
 - [E2E CodeQL sanitizers](learnings_e2e_codeql_sanitizers.md) — escapeHtml / jsLiteral / startTitleServer in e2e/helpers.ts; unicode-escape authoring gotcha; how to type-check e2e/
 - [Import validation + stored-URL open guard](learnings_import_validation_and_open_guard.md) — parsers return { groups, skipped }; lib/safeOpen.ts before every stored-URL open; CRLF and NUL-byte editing gotchas
+- [Automatic backups](learnings_auto_backups.md) — sessions marked auto, worker alarm; never re-create a periodic alarm, due tolerance, listener order asserted by tests; server absence never deletes a local backup, in-transaction list updates, sender URL check
+- [Guided tour](learnings_guided_tour.md) — tm_tour record lifecycle, inert root + window-capture key lock, hidden-card focus trap, every e2e launcher must dismissTour; interactive tasks, action ring, measured focus rules

@@ -3,6 +3,7 @@ import { Search, Folder, AppWindow } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { parseSearchQuery } from '@/lib/utils';
 import type { GroupsState } from '@/lib/types';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 
 const EXAMPLES = [
     { query: 'react',     desc: 'Find any tab or group containing "react"' },
@@ -229,6 +230,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
             <div className="fixed inset-0 z-40" onClick={onClose} />
             <div
                 className="fixed left-1/2 -translate-x-1/2 z-50 w-[440px] rounded-none border border-border bg-popover shadow-2xl overflow-hidden"
+                data-tour={TOUR_ANCHORS.searchOverlay}
                 style={{ top: '8px' }}
             >
                 {/* Input row */}

@@ -1,4 +1,5 @@
 import type { PricingTier, SubscriptionStatus } from '../types/index.ts';
+import { AUTO_BACKUP_COPY } from './autoBackup';
 
 export const DEFAULT_GROUP_COLOR = 'rgba(128, 128, 128, 1)';
 export const FIRST_GROUP_TITLE = 'Now Open';
@@ -18,7 +19,7 @@ export const AI_COMING_SOON_LABEL = 'Coming soon';
  * Deliberately narrower than "anything but canceled": `incomplete` (first payment
  * failed), `incomplete_expired`, `unpaid`, and `paused` do NOT entitle. `past_due` is
  * included as Stripe's dunning/retry grace period. Single source of truth shared by
- * the extension's useEntitlements resolveTier() and supabase/migrations/019_gate_cloud_sync_rls.sql's
+ * the extension's resolveTier() (packages/extension/src/lib/entitlementTier.ts) and supabase/migrations/019_gate_cloud_sync_rls.sql's
  * has_cloud_sync() — keep both in sync with this list (see the drift test in
  * packages/extension for the SQL side).
  */
@@ -45,6 +46,13 @@ export const STORED_SUBSCRIPTION_STATUSES = [
   'trialing',
   'incomplete',
 ] as const satisfies readonly SubscriptionStatus[];
+
+/**
+ * A group colour as the app writes or has written it: `rgb()/rgba()` or hex. Anything else read
+ * from a file, a backup or the server is replaced by the default colour. One definition for the
+ * extension's import and the web dashboard.
+ */
+export const GROUP_COLOR_RE = /^(?:rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(?:,\s*(?:\d(?:\.\d+)?|\.\d+)\s*)?\)|#[0-9a-f]{3,8})$/i;
 
 export const PRESET_COLORS = [
   'rgba(239, 68, 68, 1)',   // red
@@ -89,6 +97,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Unlimited groups, tabs, URL rules & sessions',
       'Cloud sync across devices',
       'Sessions synced across devices',
+      AUTO_BACKUP_COPY.pricingFeature,
       'Priority support',
     ],
     limits: UNLIMITED_TIER_LIMITS,
@@ -122,6 +131,9 @@ export * from './priceFormat';
 export * from './firefoxBeta';
 export * from './firefoxDataConsent';
 export * from './storeListings';
+export * from './autoBackup';
+export * from './autoBackupFile';
+export * from './localOnlySyncKeys';
 
 /** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
 export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

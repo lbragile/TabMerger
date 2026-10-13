@@ -1,4 +1,4 @@
-import { isScriptUrl } from '@tabmerger/shared'
+import { GROUP_COLOR_RE, isScriptUrl } from '@tabmerger/shared'
 import { nanoid } from 'nanoid'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 import { DEFAULT_GROUP_COLOR } from '@/lib/types'
@@ -24,9 +24,6 @@ export const IMPORTED_GROUP_FALLBACK_NAME = 'Imported group'
 
 /** The colours `chrome.tabGroups` accepts; any other value makes `tabGroups.update` reject. */
 const CHROME_GROUP_COLORS: readonly string[] = ['grey', 'blue', 'red', 'yellow', 'green', 'pink', 'purple', 'cyan', 'orange']
-
-/** The two colour notations the app writes or has written: `rgb()/rgba()` and hex. */
-const GROUP_COLOR_RE = /^(?:rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(?:,\s*(?:\d(?:\.\d+)?|\.\d+)\s*)?\)|#[0-9a-f]{3,8})$/i
 
 type Counter = { skipped: number }
 

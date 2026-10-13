@@ -65,7 +65,13 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
     },
     clearAllData: {
       title: 'Clear All Data',
-      description: 'This will permanently delete all groups, saved sessions, and settings. This cannot be undone.',
+      // The second sentence is only added when the caller has seen automatic backups in the
+      // signed-in account (Settings passes `cloudBackupsKept: true`): the wipe is local.
+      description:
+        'This will permanently delete all groups, saved sessions, and settings. This cannot be undone.' +
+        (data.cloudBackupsKept === true
+          ? ' Automatic backups stored in your account are kept, and you can bring them back from Settings → Data.'
+          : ''),
       confirm: 'Clear All Data',
     },
     resetEncryption: {

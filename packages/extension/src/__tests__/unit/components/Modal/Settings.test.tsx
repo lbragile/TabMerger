@@ -97,6 +97,8 @@ vi.mock('@/lib/importExport', () => ({
 vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: mockToastError } }))
 vi.mock('@/lib/dataConsent', () => ({ requestDataConsent: mockRequestDataConsent }))
 vi.mock('@/components/Settings/OtherDevices', () => ({ OtherDevices: () => <div>Other devices panel</div> }))
+// The Data tab's backups section has its own data hooks (sessions, entitlements), so it is stubbed here like OtherDevices.
+vi.mock('@/components/Settings/AutoBackups', () => ({ AutoBackups: () => <div>Automatic backups panel</div> }))
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: Object.assign((sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }), {
     getState: () => ({ clearHistory: mockClearHistory })
@@ -117,6 +119,11 @@ const DEFAULT_SETTINGS = {
   aiOrganizeEnabled: true,
   aiTabSummaryEnabled: true,
   showPreviewImages: false,
+  autoBackupEnabled: true,
+  autoBackupIntervalMinutes: 1440,
+  autoBackupFileEnabled: false,
+  autoBackupFileFolder: 'TabMerger',
+  autoBackupFilePattern: 'TabMerger backup {date} {time}',
 }
 
 function renderModal(onClose = vi.fn()) {

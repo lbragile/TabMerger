@@ -468,3 +468,41 @@ describe('getDataKey / getEncryptionKeyState', () => {
     expect(await getEncryptionKeyState()).toBe('absent')
   })
 })
+
+describe('expectedUserId: acting for one account', () => {
+  it('getEncryptionKeyState: another account signed in is "unknown" and NO request is made', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder({ user_id: 'u1' }))
+    const { getEncryptionKeyState } = await import('@/lib/encryptionKey')
+    expect(await getEncryptionKeyState('someone-else')).toBe('unknown')
+    expect(mockFrom).not.toHaveBeenCalled()
+  })
+
+  it('getEncryptionKeyState: nobody signed in while a user was expected is "unknown", not "absent"', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+    const { getEncryptionKeyState } = await import('@/lib/encryptionKey')
+    expect(await getEncryptionKeyState('u1')).toBe('unknown')
+    expect(mockFrom).not.toHaveBeenCalled()
+  })
+
+  it('getEncryptionKeyState: the expected account answers as usual', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder({ user_id: 'u1' }))
+    const { getEncryptionKeyState } = await import('@/lib/encryptionKey')
+    expect(await getEncryptionKeyState('u1')).toBe('present')
+  })
+
+  it('getDataKey: an unlocked key is never handed to a caller expecting another account', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder({ salt: btoa('salt'), wrapped_key: 'wrapped', wrap_iv: 'iv1', kdf_iterations: 600000 }))
+    mockDeriveWrappingKey.mockResolvedValue(fakeWrappingKey)
+    mockUnwrapDataKey.mockResolvedValue(fakeDataKey)
+    const { unlockEncryption, getDataKey } = await import('@/lib/encryptionKey')
+    expect(await unlockEncryption('correct passphrase')).toBe('unlocked')
+    expect(await getDataKey('u1')).toBe(fakeDataKey)
+    expect(await getDataKey('someone-else')).toBeNull()
+  })
+
+  it('getDataKey: nobody signed in is null', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+    const { getDataKey } = await import('@/lib/encryptionKey')
+    expect(await getDataKey('u1')).toBeNull()
+  })
+})

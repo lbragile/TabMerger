@@ -148,7 +148,8 @@ export default async function AccountPage() {
               ? [
                   { label: 'Groups synced', value: String(groupCount) },
                   { label: 'Tabs saved', value: String(tabCount) },
-                  { label: 'Sessions', value: String(sessionCount) },
+                  // One row count for both: which rows are automatic backups is only known after decrypting them in the browser.
+                  { label: 'Sessions and backups', value: String(sessionCount) },
                 ]
               : []),
             ...(AI_ENABLED

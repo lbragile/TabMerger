@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-10-08. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-10-12. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.0.0`, but it hasn't been published to the stores: v3
   goes to stable after the 3.1 beta. The beta channel is at `v3.1.0-beta.11`
@@ -13,7 +13,7 @@ _Last updated 2026-10-08. Keep this current in the same change as the work (a CL
 - **Stores:** the Chrome Web Store stable listing and the Firefox AMO listing are both still on v2
   (`2.0.0`); v3 is only on the beta channels. The
   Edge Add-ons listing isn't published from CI yet (its secrets aren't set).
-- **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption, enforced server-side (RLS requires an active paid plan). Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Stripe subscriptions and AI credit packs. Monthly ↔ yearly plan switching. Local-currency checkout (Stripe Adaptive Pricing). Web dashboard and account pages, usable on phones. Public `/changelog`. Beta tester guide at `/beta` with a known-issues list (`packages/web/lib/knownIssues.ts`).
+- **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption, enforced server-side (RLS requires an active paid plan). Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Guided tour of the popup for new installs, replayable from the header and Settings (in the code, unreleased). Stripe subscriptions and AI credit packs. Monthly ↔ yearly plan switching. Local-currency checkout (Stripe Adaptive Pricing). Web dashboard and account pages, usable on phones. Public `/changelog`. Beta tester guide at `/beta` with a known-issues list (`packages/web/lib/knownIssues.ts`).
 - **Built but off:** AI features (auto-group, name group, tab summary, session suggestions, organize) are behind the "coming soon" flag (`NEXT_PUBLIC_AI_ENABLED` / `VITE_AI_ENABLED`, off unless `"true"`).
 
 ---
@@ -25,7 +25,7 @@ _Last updated 2026-10-08. Keep this current in the same change as the work (a CL
 - [x] Non-blocking upgrade prompt at the free limit (`UpgradePrompt`, `UpgradeCTA`, locked items past `FREE_TIER_LIMITS`)
 - [x] Search shortcuts: Ctrl/Cmd+F focuses search, Ctrl/Cmd+K opens the search overlay. Ctrl/Cmd+G adds a group.
 - [ ] Undo/redo keyboard shortcuts (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z). Undo and redo exist only as header buttons today.
-- [ ] Onboarding tooltip flow for new installs. The web dashboard has an onboarding checklist; the extension has nothing.
+- [x] Guided tour of the popup for new installs: 23 steps in six chapters, in plain language. Every chapter has a header on the card (title plus one sentence on what it covers and what the user will try). Five steps are "try it" steps (make and name a group, change its colour, pin it, search, change the theme): completion is read from real state, only the controls the step needs are unlocked, and a tight pulsing ring marks the exact control to use next and moves on as the user progresses. Read-only steps spotlight the area they describe. At the Free group limit the group steps are shown read-only. Starts once after a first install (never after an update), resumes if the popup closes, and can be replayed from the header "?" button or Settings. Unreleased: ships with the next release.
 - [ ] Group collapse/expand in the sidebar, persisted to IndexedDB
 - [ ] Letter-avatar favicon fallback. Today a generic fallback icon is shown.
 
@@ -62,6 +62,7 @@ _Last updated 2026-10-08. Keep this current in the same change as the work (a CL
 
 - [x] Tab notes, and reminders with notifications
 - [x] Bulk tab actions (selection mode → move, star, share, delete)
+- [x] Automatic backups (Pro): an encrypted snapshot of the saved groups on a schedule (hourly to weekly, daily by default), newest 10 kept, restored from Settings → Data (add to the current groups, or replace them; both undoable). Backups stored in the account are brought back onto a device that lost its local data (reinstall, new browser profile) when that screen is opened. They also appear in a Backups section on the web dashboard, where they can be viewed, downloaded and deleted (restoring is done in the extension). Deleting one there removes the cloud copy only: a browser that already has that backup keeps its own copy, and a backup missing from the account is never deleted from a browser because of that. Optionally each backup is also saved as a JSON file inside the browser's Downloads folder (optional `downloads` permission, folder and file name chosen by the user). In the code, not released yet.
 - [ ] Session scheduler ("restore this session every Monday at 9am")
 - [ ] Group templates (group structure without URLs)
 - [ ] Global quick-open hotkey outside the popup. Search inside the popup exists (Ctrl/Cmd+K).

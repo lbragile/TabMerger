@@ -42,6 +42,7 @@ import { toast } from '@/lib/toast';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
 import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 
 interface WindowsPanelProps {
   group: Group;
@@ -284,7 +285,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
   const windowIds = group.windows.map((_, i) => `${group.id}::w${i}`);
 
   return (
-    <div className="flex flex-col h-full min-w-0 overflow-hidden">
+    <div className="flex flex-col h-full min-w-0 overflow-hidden" data-tour={TOUR_ANCHORS.tabsPanel}>
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 py-2.5 border-b border-border shrink-0">
         <span className="text-xs text-muted-foreground flex items-center gap-1.5">
@@ -327,7 +328,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
           {/* Controlled so `useCloseOnOverlayDismiss` can shut it when a multi-select starts. */}
           <DropdownMenu open={groupMenuOpen} onOpenChange={setGroupMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="More group options">
+              <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="More group options" data-tour={TOUR_ANCHORS.groupOptions}>
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>

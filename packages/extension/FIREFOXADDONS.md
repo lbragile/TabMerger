@@ -1,6 +1,6 @@
 # Firefox Add-ons Listings — TabMerger
 
-> Last Updated: 2026-10-06
+> Last Updated: 2026-10-12
 >
 > **State of the stable add-on:** the public AMO listing is still the v2 build (`2.0.0`). The
 > first v3 stable release is planned as `v3.1.0` and is not yet released. The listing copy,
@@ -59,8 +59,12 @@ unrelated add-on. This was restored to the live listing's real GUID in `wxt.conf
 Firefox ships the exact same `manifest.permissions` array as Chrome/Edge — see
 `CHROMEWEBSTORE.md`'s [Permissions Justification](CHROMEWEBSTORE.md#permissions-justification)
 table for the per-permission rationale (`tabs`, `tabGroups`, `storage`, `contextMenus`, `alarms`,
-`notifications`, `identity`; re-verified 2026-10-06: `alarms` and `notifications` are used only
-for user-set reminders). No `host_permissions` on Firefox either, with one addition:
+`notifications`, `identity`; re-verified 2026-10-11: `notifications` is used only for user-set
+reminders, `alarms` for those reminders and for the automatic-backup schedule), plus the same
+single OPTIONAL permission, `downloads` (re-verified 2026-10-12: asked for only when the user
+turns on "Also save a file to this computer", used only to write backup files into the
+Downloads folder; on Firefox the file is handed over as a blob URL because Firefox does not
+accept `data:` URLs for downloads). No `host_permissions` on Firefox either, with one addition:
 
 ### The Firefox-only web-bridge content script
 
@@ -126,12 +130,22 @@ transmits and where consent is requested:
     `src/components/Windows/TabPreview.tsx` — requested when Settings → "Show page images in
     previews" is turned on, and re-checked on every hover so a mid-session revocation in
     about:addons is respected) and tab URLs/titles included in cloud sync uploads
-    (`src/lib/syncEngine.ts`'s `pushPendingChanges`, `src/hooks/useSessions.ts`'s
-    `pushSessionToSupabase`, `src/lib/deviceSessions.ts`'s device-session push — all gated on
+    (`src/lib/syncEngine.ts`'s `pushPendingChanges`, `src/lib/sessionUpload.ts`'s
+    `pushSessionToSupabase` (saved sessions and automatic backups, which are sessions the
+    background script saves on a schedule), `src/lib/deviceSessions.ts`'s device-session push — all gated on
     `canUploadOnFirefox()`; a denied/revoked permission pauses uploads, surfaced in Settings'
     Cloud sync row as "Sync paused: allow in Firefox", not a silent failure). End-to-end encrypted
     client-side before upload, but the ciphertext still leaves the browser, and Firefox's consent
-    model is about what leaves the device, not whether the destination can read it.
+    model is about what leaves the device, not whether the destination can read it. Reading the
+    user's own automatic backups back from the account (`src/lib/autoBackupDownload.ts`, when
+    Settings → Data is opened) is a download, not collection, so like every other pull it is
+    not gated on this permission. That step also retries deletes of backups the user already
+    made on this device. It never removes a local backup: one that is missing from the account
+    (deleting in the web dashboard removes the cloud copy only) stays in the browser that has
+    it and is not uploaded again. The optional
+    backup FILE ("Also save a file to this computer") is written to the user's own Downloads
+    folder and sent nowhere, so it is not a data-collection category; it is plaintext, and the
+    setting says so.
   - `authenticationInfo` / `personallyIdentifyingInfo` — email + Supabase session on sign-in.
     Requested in `src/components/Modal/Auth.tsx`, synchronously in the click/submit handler,
     before every sign-in entry point proceeds (email/password sign-in, sign-up, magic link,
@@ -252,6 +266,7 @@ TabMerger's Settings (the true semver).
 | Stable (listed) | `3.1.0` | (ignored by Firefox) | `v3.1.0` (planned) | not yet released | **Planned: first v3 stable release.** Not yet submitted. Stable keeps the same plain semver as Chrome (no beta offset) |
 | BETA (unlisted) | `4.1.0.7` | (ignored by Firefox) | `v3.1.0-beta.7` | 2026-09-29 | Signed; published to `/firefox-beta/`. Validator warnings above (min version 109 at the time) |
 | BETA (unlisted) | `4.1.0.11` | (ignored by Firefox) | `v3.1.0-beta.11` | 2026-10-07 | Signed and published to the self-hosted beta channel by the publish workflow |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest, permission or `data_collection_permissions` change: progress is one `storage.local` record, and the six tour usage events (started, completed, skipped, task done, step skipped, chapter skipped; step or chapter ids only) go through the existing `technicalAndInteraction`-gated analytics. The tour has six chapters with a header each, five "try it" steps and a ring on the control to use next. Listing copy: the new Chrome description bullet applies unchanged |
 
 ## Notes for a future review / support request
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalToc } from '@/components/legal-toc'
+import { BACKUP_FILE_COPY } from '@tabmerger/shared'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy — TabMerger',
@@ -95,8 +96,12 @@ export default function PrivacyPage() {
               <span className="text-muted-foreground">Tab and group data in browser IndexedDB, under your control. Not transmitted anywhere unless you enable sync, or send a specific tab's address to the preview service by turning on page previews (see "Page previews" above). One exception: showing a tab's icon can send that site's domain to Google's favicon service (see "Site icons" above).</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
+              <span className="font-medium w-40 shrink-0">Backup files (optional)</span>
+              <span className="text-muted-foreground">If you turn on &quot;{BACKUP_FILE_COPY.toggle}&quot;, each automatic backup is also written as a JSON file inside your browser&apos;s Downloads folder. That file is not encrypted and stays on your computer: TabMerger does not upload it, read other files, or delete it. It contains your saved groups (tab addresses and titles, group and window names, notes) and nothing about your account.</span>
+            </div>
+            <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Supabase (Pro)</span>
-              <span className="text-muted-foreground">Account profile in a PostgreSQL database, encrypted at rest and in transit by our infrastructure. Groups and sessions are additionally end-to-end encrypted client-side before upload — we store only ciphertext and never hold the key, so this content is unreadable to us.</span>
+              <span className="text-muted-foreground">Account profile in a PostgreSQL database, encrypted at rest and in transit by our infrastructure. Groups and sessions (including automatic backups, which Pro accounts get by default and can turn off: they are saved as sessions, and the extension downloads them again to restore them on a new or reinstalled browser) are additionally end-to-end encrypted client-side before upload — we store only ciphertext and never hold the key, so this content is unreadable to us.</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Stripe</span>

@@ -857,3 +857,39 @@ describe('Header — search overlay + selection mode + sign out', () => {
     expect(mockTrackEvent).toHaveBeenCalledTimes(1)
   })
 })
+
+// ─── Header — guided tour button ─────────────────────────────────────────────
+
+describe('Header — "Take the tour" button', () => {
+  const startTour = vi.fn()
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
+    mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5 })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState & { startTour: typeof startTour }) => unknown) =>
+      selector({ ...baseUIState, startTour })
+    )
+  })
+
+  it('renders a "Take the tour" button that is also the help tour anchor', () => {
+    wrap(React.createElement(Header))
+    const button = screen.getByRole('button', { name: 'Take the tour' })
+    expect(button).toHaveAttribute('data-tour', 'help')
+  })
+
+  it('starts the tour from the first step and reports the source', async () => {
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: 'Take the tour' }))
+    expect(startTour).toHaveBeenCalledTimes(1)
+    expect(startTour).toHaveBeenCalledWith()
+    expect(mockTrackEvent).toHaveBeenCalledWith('tour_started', { source: 'header' })
+  })
+
+  it('marks the search trigger and the account menu as tour anchors', () => {
+    wrap(React.createElement(Header))
+    expect(screen.getByRole('button', { name: /open search/i })).toHaveAttribute('data-tour', 'search')
+    expect(screen.getByRole('button', { name: /settings menu/i })).toHaveAttribute('data-tour', 'account-menu')
+  })
+})

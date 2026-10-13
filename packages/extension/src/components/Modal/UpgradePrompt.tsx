@@ -50,7 +50,7 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
   const { title, description } =
     REASON_MESSAGES[reason ?? ''] ?? {
       title: 'Upgrade TabMerger',
-      description: 'Unlock unlimited groups, cloud sync, and AI features with TabMerger Pro.'
+      description: 'Unlock unlimited groups, cloud sync, automatic backups, and AI features with TabMerger Pro.'
     };
 
   // AI features: coming soon — this modal is the one place the Pro AI tier row is

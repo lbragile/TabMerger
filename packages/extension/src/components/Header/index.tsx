@@ -8,6 +8,7 @@ import {
     CheckSquare,
     Square,
     Zap,
+    CircleQuestionMark,
 } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,8 @@ import { FreeLimitExceededError } from "@/lib/tierLimits";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
+import { TOUR_ANCHORS } from "@/lib/tourSteps";
+import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
 
 /** Map an internal tier key to a human-readable label. */
 function tierLabel(tier: string): string {
@@ -74,6 +77,11 @@ export function Header() {
 
     const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
     const setScrollToWindowIndex = useUIStore((s) => s.setScrollToWindowIndex);
+    const startTour = useUIStore((s) => s.startTour);
+    const handleStartTour = () => {
+        trackEvent('tour_started', { source: 'header' });
+        startTour();
+    };
     // ponytail: fire once per non-empty search "session" — reset when the field clears
     const searchTrackedRef = useRef(false);
     const handleSearchQueryChange = (q: string) => {
@@ -178,6 +186,8 @@ export function Header() {
 
     const searchRef = useRef<HTMLInputElement>(null);
     const [searchOpen, setSearchOpen] = useState(false);
+    // The guided tour closes whatever a step opened when it moves on (same signal as a multi-select)
+    useCloseOnOverlayDismiss(() => setSearchOpen(false));
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
@@ -223,6 +233,7 @@ export function Header() {
                     className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full border border-border bg-muted/40 text-xs text-foreground/70 hover:bg-muted transition-colors"
                     onClick={() => setSearchOpen(true)}
                     aria-label="Open search"
+                    data-tour={TOUR_ANCHORS.search}
                 >
                     <span className="flex-1 text-left truncate">
                         {searchFilter || 'Search tabs and groups…'}
@@ -253,6 +264,7 @@ export function Header() {
                             onClick={handleUndo}
                             disabled={undoStack.length === 0}
                             aria-label="Undo"
+                            data-tour={TOUR_ANCHORS.undo}
                         >
                             <Undo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
@@ -269,6 +281,7 @@ export function Header() {
                             onClick={handleRedo}
                             disabled={redoStack.length === 0}
                             aria-label="Redo"
+                            data-tour={TOUR_ANCHORS.redo}
                         >
                             <Redo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
@@ -289,6 +302,7 @@ export function Header() {
                             )}
                             onClick={toggleSelectionMode}
                             aria-pressed={selectionMode}
+                            data-tour={TOUR_ANCHORS.selectItems}
                             aria-label={
                                 selectionMode
                                     ? "Exit selection mode"
@@ -326,6 +340,7 @@ export function Header() {
                                     disabled={aiLoading || organizeLoading}
                                     aria-disabled={!aiFeatures}
                                     aria-label="AI actions"
+                                    data-tour={TOUR_ANCHORS.aiActions}
                                 >
                                     <Sparkles className={cn(
                                         "h-3.5 w-3.5",
@@ -362,6 +377,23 @@ export function Header() {
                 </DropdownMenu>
                 )}
 
+                {/* Replays the guided tour (components/Tour). The tour's last step points here. */}
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={handleStartTour}
+                            aria-label="Take the tour"
+                            data-tour={TOUR_ANCHORS.help}
+                        >
+                            <CircleQuestionMark className="h-3.5 w-3.5 text-muted-foreground" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">Take the tour</TooltipContent>
+                </Tooltip>
+
                 {/* Profile dropdown — consolidated sign-in / account widget */}
                 <Tooltip>
                     <DropdownMenu>
@@ -370,6 +402,7 @@ export function Header() {
                                 <button
                                     className="ml-0.5 flex items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     aria-label={user ? 'Account menu' : 'Settings menu'}
+                                    data-tour={TOUR_ANCHORS.accountMenu}
                                 >
                                     {user ? (
                                         <Avatar className="h-6 w-6 ring-1 ring-border hover:ring-primary/60 transition-all">
@@ -393,6 +426,7 @@ export function Header() {
                         <DropdownMenuContent
                             align="end"
                             className="w-44 text-xs"
+                            data-tour={TOUR_ANCHORS.accountMenuContent}
                         >
                             {user ? (
                                 <>
@@ -436,6 +470,7 @@ export function Header() {
                                     <DropdownMenuItem
                                         className="text-xs cursor-pointer"
                                         onClick={() => openModal("settings")}
+                                        data-tour={TOUR_ANCHORS.menuSettings}
                                     >
                                         <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
                                         Settings
@@ -457,6 +492,7 @@ export function Header() {
                                     <DropdownMenuItem
                                         className="text-xs cursor-pointer"
                                         onClick={() => openModal("settings")}
+                                        data-tour={TOUR_ANCHORS.menuSettings}
                                     >
                                         <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
                                         Settings

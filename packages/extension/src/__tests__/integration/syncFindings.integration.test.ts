@@ -246,13 +246,20 @@ describe('N8 pending remote deletes are bounded, chunked and backed off', () => 
     expect(await getPendingGroupDeletes()).toEqual([])
   })
 
-  it('caps the pending set, dropping the oldest ids', async () => {
-    const { addPendingGroupDeletes, getPendingGroupDeletes } = await import('@/lib/localDb')
-    await addPendingGroupDeletes(Array.from({ length: 520 }, (_, i) => `old${i}`))
+  it('caps the pending set at 5000 (above what "Replace my groups" can remove at once), dropping the oldest ids', async () => {
+    const { addPendingGroupDeletes, getPendingGroupDeletes, MAX_PENDING_DELETES } = await import('@/lib/localDb')
+    expect(MAX_PENDING_DELETES).toBe(5000)
+    await addPendingGroupDeletes(Array.from({ length: 5020 }, (_, i) => `old${i}`))
     const ids = await getPendingGroupDeletes()
-    expect(ids).toHaveLength(500)
+    expect(ids).toHaveLength(5000)
     expect(ids[0]).toBe('old20')
-    expect(ids.at(-1)).toBe('old519')
+    expect(ids.at(-1)).toBe('old5019')
+  })
+
+  it('520 pending ids are all kept (the old cap of 500 no longer drops any)', async () => {
+    const { addPendingGroupDeletes, getPendingGroupDeletes } = await import('@/lib/localDb')
+    await addPendingGroupDeletes(Array.from({ length: 520 }, (_, i) => `keep${i}`))
+    expect(await getPendingGroupDeletes()).toHaveLength(520)
   })
 })
 

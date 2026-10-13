@@ -96,6 +96,22 @@ describe('DeleteConfirmModal — clearAllData', () => {
     expect(onClose).toHaveBeenCalled()
   })
 
+  it('does not mention account backups unless the caller saw some', () => {
+    renderModal(<DeleteConfirmModal type="clearAllData" data={{ onConfirm: vi.fn() }} onClose={vi.fn()} />)
+    expect(screen.queryByText(/automatic backups/i)).toBeNull()
+  })
+
+  it('adds the "backups are kept" sentence only for cloudBackupsKept === true', () => {
+    renderModal(<DeleteConfirmModal type="clearAllData" data={{ onConfirm: vi.fn(), cloudBackupsKept: true }} onClose={vi.fn()} />)
+    expect(screen.getByText(/Automatic backups stored in your account are kept/)).toBeTruthy()
+    expect(screen.getByText(/cannot be undone/i)).toBeTruthy()
+  })
+
+  it.each([[false], ['true'], [1], [undefined]])('ignores a non-true cloudBackupsKept (%j)', (v) => {
+    renderModal(<DeleteConfirmModal type="clearAllData" data={{ onConfirm: vi.fn(), cloudBackupsKept: v }} onClose={vi.fn()} />)
+    expect(screen.queryByText(/automatic backups/i)).toBeNull()
+  })
+
   it('does not call onConfirm when Cancel is clicked', () => {
     const onConfirm = vi.fn()
     renderModal(<DeleteConfirmModal type="clearAllData" data={{ onConfirm }} onClose={vi.fn()} />)

@@ -24,6 +24,7 @@ import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { FREE_TIER_LIMITS } from '@tabmerger/shared';
 import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 
 /**
  * Shared shell for the Archived / Sessions sidebar sections: a disclosure header row
@@ -41,6 +42,7 @@ function SidebarSection({
   emptyLabel,
   action,
   className,
+  tourAnchor,
   children,
 }: {
   label: string;
@@ -51,10 +53,12 @@ function SidebarSection({
   emptyLabel: string;
   action?: React.ReactNode;
   className?: string;
+  /** Guided-tour anchor name (`data-tour`), see lib/tourSteps.ts. */
+  tourAnchor?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={className}>
+    <div className={className} data-tour={tourAnchor}>
       <div className="flex items-center gap-1 pr-1">
         <button
           type="button"
@@ -153,7 +157,11 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const { mutate: deleteGroup } = useDeleteGroup();
   const [archivedOpen, setArchivedOpen] = useState(false);
   const [sessionsOpen, setSessionsOpen] = useState(false);
-  const { data: sessions = [] } = useSessions();
+  const { data: storedSessions = [] } = useSessions();
+  // Automatic backups share the sessions store but are NOT listed here: this list's Restore closes
+  // every browser window and reopens the tabs, which is not what restoring a backup means. They
+  // are managed in Settings → Data only, and never count toward the Free session limit.
+  const sessions = storedSessions.filter((s) => s.auto !== true);
   const { mutate: deleteSession } = useDeleteSession();
   const { mutate: restoreSession, isPending: restoring } = useRestoreSession();
   const { mutateAsync: saveSession } = useSaveSession();
@@ -258,7 +266,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       <ScrollArea className="flex-1">
         <div className="py-1.5">
           {/* List wrapper: grows by the gap height while a group drag's gap is here. */}
-          <div data-tm-dnd-list="groups" style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
+          <div data-tm-dnd-list="groups" data-tour={TOUR_ANCHORS.groups} style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
           <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>
             {available.map(({ group, realIndex, isLocked }) => (
               <GroupItem
@@ -281,7 +289,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
               Both children stay MOUNTED for the same reason; only visibility flips. */}
           <div className={cn('relative px-1.5 mt-2', atNewGroupStop && KEYBOARD_ZONE_MIN_HEIGHT)}>
             <NewGroupDropZone active={dropZoneActive} />
-            <div className={(isDragging || moveKind !== null) ? 'invisible' : undefined}>
+            <div data-tour={TOUR_ANCHORS.addGroup} className={(isDragging || moveKind !== null) ? 'invisible' : undefined}>
               <Button
                 variant="outline"
                 className="h-8 rounded-none px-3 text-xs w-full"
@@ -311,6 +319,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           isEmpty={archivedGroups.length === 0}
           emptyLabel="No archived groups"
           className="mt-1.5"
+          tourAnchor={TOUR_ANCHORS.archived}
         >
           {archivedGroups.map(({ group, realIndex }) => (
             <div
@@ -370,6 +379,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           isEmpty={sessions.length === 0}
           emptyLabel="No saved sessions"
           className="mt-1.5 mb-1.5"
+          tourAnchor={TOUR_ANCHORS.sessions}
           action={
             <Tooltip>
               <TooltipTrigger asChild>

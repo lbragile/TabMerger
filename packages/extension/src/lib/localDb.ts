@@ -1,9 +1,9 @@
-import { openDB, type IDBPDatabase } from 'idb';
+import { openDB, type IDBPDatabase, type IDBPTransaction } from 'idb';
 import type { Group, GroupsState, Session } from './types';
 import { createNowOpenGroup } from './utils';
 import { GROUPS_CHANGED_MESSAGE } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
-import { LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
+import { APP_SETTINGS_KEY, LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
 
 const DB_NAME = 'tabmerger';
 const DB_VERSION = 1;
@@ -332,8 +332,14 @@ export interface UpdateAux {
   /** Persisted id of the account whose data this store holds (only filled with `readSignedInUser`). */
   signedInUserId: string | null;
 }
-/** Oldest pending-delete ids are dropped past this many (a stuck backlog must not grow forever). */
-const MAX_PENDING_DELETES = 500;
+/**
+ * Oldest pending-delete ids are dropped past this many (a stuck backlog must not grow forever).
+ * A dropped id is a group that comes back on the next pull if its remote DELETE had not gone
+ * through, so the cap has to be above what ONE user action can remove: "Replace my groups"
+ * (restoring a backup) and a bulk delete remove every saved group at once. 5000 ids are about
+ * 60 KB in the settings store and 50 chunked DELETE requests per retry cycle.
+ */
+export const MAX_PENDING_DELETES = 5000;
 
 /** Thrown by an `expectedRev` write whose base state is out of date. */
 export class StaleGroupsError extends Error {
@@ -485,6 +491,89 @@ export async function deleteSession(id: string): Promise<void> {
   await db.delete('sessions', id);
 }
 
+/**
+ * Stamps `uploadedAt` on a session IF it is still stored, reading and writing it in ONE
+ * transaction. A caller that uploaded a copy it read earlier must not `saveSession` that copy
+ * back: a session deleted while the upload ran would be re-created, and one changed meanwhile
+ * would be overwritten with the old content.
+ */
+export async function markSessionUploaded(id: string, at: number): Promise<void> {
+  const db = await getDb();
+  const tx = db.transaction('sessions', 'readwrite');
+  const stored = await tx.store.get(id);
+  await Promise.all([stored ? tx.store.put({ ...stored, uploadedAt: at }) : undefined, tx.done]);
+}
+
+/**
+ * Writes sessions and settings in ONE transaction, but only if the setting `guard.key` still
+ * holds `guard.value` when the transaction runs; otherwise nothing is written and it resolves
+ * `false`. For writers that decided what to write some awaits ago (automatic backups) and must
+ * not land in a store that was wiped in between: the account wipe and "Clear all data" are each
+ * one transaction over these same stores and remove account-scoped settings, so a guard on such
+ * a setting is gone after a wipe. IndexedDB runs overlapping readwrite transactions one after
+ * the other, so the check and the writes cannot be interleaved with a wipe. Takes no lock and is
+ * not part of the groups write queue (it never touches groups).
+ */
+export async function commitSessionsIfGuardHolds(guard: { key: string; value: unknown }, changes: SessionChanges): Promise<boolean> {
+  const db = await getDb();
+  const tx = db.transaction(['sessions', 'settings'], 'readwrite');
+  const record = (await tx.objectStore('settings').get(guard.key)) as { id: string; value: unknown } | undefined;
+  if (record === undefined || record.value !== guard.value) {
+    await tx.done; // nothing queued: commits empty
+    return false;
+  }
+  await applySessionChanges(tx, changes);
+  return true;
+}
+
+/**
+ * {@link commitSessionsIfGuardHolds} without the guard: the same changes in ONE transaction, for a
+ * writer that acts on what the user just asked for on this device (deleting a backup) and has no
+ * account to act for.
+ */
+export async function commitSessions(changes: SessionChanges): Promise<void> {
+  const db = await getDb();
+  await applySessionChanges(db.transaction(['sessions', 'settings'], 'readwrite'), changes);
+}
+
+/** What one sessions + settings transaction may change. */
+export interface SessionChanges {
+  putSessions?: Session[];
+  deleteSessionIds?: string[];
+  settings?: Record<string, unknown>;
+  /**
+   * Settings computed from the value stored WHEN THE TRANSACTION RUNS (`undefined` when there is
+   * none): the read and the write cannot be separated by another writer, which a `getSetting`
+   * followed by a `settings` entry can. Each function must be synchronous.
+   */
+  updateSettings?: Record<string, (stored: unknown) => unknown>;
+  /** Stamps `uploadedAt` on these sessions IF they are still stored (a session deleted meanwhile is not re-created). */
+  markUploaded?: { ids: string[]; at: number };
+}
+
+/** A readwrite transaction over the `sessions` and `settings` stores. */
+type SessionsSettingsTx = IDBPTransaction<TabMergerDB, string[], 'readwrite'>;
+
+async function applySessionChanges(tx: SessionsSettingsTx, changes: SessionChanges): Promise<void> {
+  const sessions = tx.objectStore('sessions');
+  const settings = tx.objectStore('settings');
+  const updates = Object.entries(changes.updateSettings ?? {});
+  // every read first, in one go: an `await` on anything that is not a request of this
+  // transaction would let it auto-commit before the writes
+  const [stillStored, storedSettings] = await Promise.all([
+    Promise.all((changes.markUploaded?.ids ?? []).map((id) => sessions.get(id))),
+    Promise.all(updates.map(([id]) => settings.get(id) as Promise<{ id: string; value: unknown } | undefined>))
+  ]);
+  await Promise.all([
+    ...stillStored.filter((s): s is Session => s !== undefined).map((s) => sessions.put({ ...s, uploadedAt: changes.markUploaded!.at })),
+    ...(changes.putSessions ?? []).map((s) => sessions.put(s)),
+    ...(changes.deleteSessionIds ?? []).map((id) => sessions.delete(id)),
+    ...Object.entries(changes.settings ?? {}).map(([id, value]) => settings.put({ id, value })),
+    ...updates.map(([id, update], i) => settings.put({ id, value: update(storedSettings[i]?.value) })),
+    tx.done
+  ]);
+}
+
 export async function getSetting<T>(key: string, defaultValue: T): Promise<T> {
   const db = await getDb();
   const record = await db.get('settings', key);
@@ -505,6 +594,20 @@ export async function getSetting<T>(key: string, defaultValue: T): Promise<T> {
 export async function setSetting<T>(key: string, value: T): Promise<void> {
   const db = await getDb();
   await db.put('settings', { id: key, value });
+}
+
+/**
+ * Writes `next` under `key` only if the stored value is exactly `expected` (strict equality, so
+ * for primitives), in ONE transaction. Resolves whether it wrote. For a flag several contexts
+ * re-arm: a writer finishing its work must not overwrite a re-arm made while it was working.
+ */
+export async function compareAndSetSetting(key: string, expected: unknown, next: unknown): Promise<boolean> {
+  const db = await getDb();
+  const tx = db.transaction('settings', 'readwrite');
+  const record = (await tx.store.get(key)) as { id: string; value: unknown } | undefined;
+  const matches = record !== undefined && record.value === expected;
+  await Promise.all([matches ? tx.store.put({ id: key, value: next }) : undefined, tx.done]);
+  return matches;
 }
 
 export async function getPendingSyncGroups(): Promise<Group[]> {
@@ -552,7 +655,8 @@ export const markPositionSynced = (id: string, pushedPosition: number, base?: st
  * (see useSync's last-signed-in-user check) so a different account never inherits the
  * previous account's locally-cached data (which would get pushed as "mine" and collide
  * with that account's own rows under RLS). Settings are intentionally left alone — they're
- * device-level prefs, not per-account data.
+ * device-level prefs, not per-account data. One exception: the automatic backups' file copy is
+ * switched off (see below).
  *
  * Runs as a step of the groups write queue (bumping the write generation): a groups write
  * issued BEFORE the wipe lands first and is wiped with the rest, instead of racing the wipe
@@ -561,7 +665,18 @@ export function clearLocalAccountData(): Promise<void> {
   return enqueueGroupsWrite(async () => {
     const db = await getDb();
     const tx = db.transaction(['groups', 'groupsState', 'sessions', 'settings'], 'readwrite');
+    const settings = tx.objectStore('settings');
+    // "Also save a file to this computer" was the PREVIOUS account's choice, and it writes
+    // unencrypted files: the next account must turn it on itself. The folder and file name stay
+    // (they are not a decision to write anything). Read inside the wipe's own transaction.
+    const appSettings = (await settings.get(APP_SETTINGS_KEY)) as { id: string; value: unknown } | undefined;
+    const prefs = appSettings?.value;
+    const fileCopyOff =
+      typeof prefs === 'object' && prefs !== null && !Array.isArray(prefs) && (prefs as Record<string, unknown>).autoBackupFileEnabled === true
+        ? [settings.put({ id: APP_SETTINGS_KEY, value: { ...prefs, autoBackupFileEnabled: false } })]
+        : [];
     await Promise.all([
+      ...fileCopyOff,
       tx.objectStore('groups').clear(),
       tx.objectStore('groupsState').clear(),
       tx.objectStore('sessions').clear(),
@@ -588,8 +703,10 @@ export function clearAllLocalData(): Promise<void> {
   return enqueueGroupsWrite(async () => {
     const db = await getDb();
     const keep = new Set<string>([CLOUD_SYNC_ACTIVE_KEY, LAST_USER_ID_KEY]);
-    const settingKeys = ((await db.getAllKeys('settings')) as string[]).filter((k) => !keep.has(k));
     const tx = db.transaction(['groups', 'groupsState', 'sessions', 'settings'], 'readwrite');
+    // Listed INSIDE the transaction: a setting written between a separate listing and the wipe
+    // (the backup store guard, a pending delete) would survive "Clear all data".
+    const settingKeys = ((await tx.objectStore('settings').getAllKeys()) as string[]).filter((k) => !keep.has(k));
     await Promise.all([
       tx.objectStore('groups').clear(),
       tx.objectStore('groupsState').clear(),

@@ -24,6 +24,29 @@ test.describe('Dashboard auth guard', () => {
   })
 })
 
+// Runs only under the `authenticated` project, whose ephemeral user is a new free account
+// (auth.setup.ts). The paid states need encrypted rows and a data key, so they are covered by
+// the component tests (__tests__/dashboard-backups.test.tsx), not here.
+test.describe('Dashboard Backups section (signed in, free account)', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'authenticated', 'requires the authenticated project')
+  })
+
+  test('explains the Pro feature with an upgrade link and lists nothing', async ({ page }) => {
+    await page.goto('/dashboard')
+    await expect(page).not.toHaveURL(/\/(login|auth|sign-in)/)
+
+    const backups = page.getByRole('region', { name: 'Backups' })
+    await expect(backups.getByRole('heading', { level: 2, name: 'Backups' })).toBeVisible()
+    await expect(backups.getByText(/Automatic backups are part of Pro/)).toBeVisible()
+    await expect(backups.getByRole('listitem')).toHaveCount(0)
+    await expect(backups.getByText('No backups yet.')).toHaveCount(0)
+
+    await backups.getByRole('link', { name: 'Upgrade' }).click()
+    await expect(page).toHaveURL(/\/pricing/)
+  })
+})
+
 test.describe('Public share page', () => {
   test('unknown slug returns 404', async ({ page }) => {
     const res = await page.goto('/share/doesnotexist00')

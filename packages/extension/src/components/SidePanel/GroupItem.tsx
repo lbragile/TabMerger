@@ -22,6 +22,7 @@ import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMove
 import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
+import { TOUR_ANCHORS, TOUR_READY_ATTR } from '@/lib/tourSteps';
 
 interface GroupItemProps {
   group: Group;
@@ -338,6 +339,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     style={{ backgroundColor: displayColor }}
                     onClick={(e) => e.stopPropagation()}
                     aria-label="Change group color"
+                    data-tour={TOUR_ANCHORS.groupColor}
                   />
                 </PopoverTrigger>
               </TooltipTrigger>
@@ -347,6 +349,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 align="start"
                 sideOffset={4}
                 onClick={(e) => e.stopPropagation()}
+                data-tour={TOUR_ANCHORS.colorPicker}
               >
                 <ColorPicker
                   value={group.color}
@@ -367,7 +370,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         )}
 
         {/* Name slot */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0" data-tour={TOUR_ANCHORS.groupName}>
           {isRenaming ? (
             <div className="flex items-center gap-1 w-full" onClick={(e) => e.stopPropagation()}>
               <input
@@ -377,10 +380,12 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); if (e.key === 'Escape') handleCancelRename(); }}
                 onBlur={handleRename}
+                aria-label="Group name"
+                data-tour={TOUR_ANCHORS.groupNameInput}
                 className="min-w-0 flex-1 bg-transparent outline-none text-xs"
                 style={{ borderBottom: '1px solid rgba(0,180,204,0.6)', color: 'var(--sidebar-text-active)' }}
               />
-              <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleRename(); }}><Check className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label="Save" data-tour={TOUR_ANCHORS.groupNameSave} {...{ [TOUR_READY_ATTR]: editValue.trim() && editValue.trim() !== DEFAULT_GROUP_TITLE ? '' : undefined }} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleRename(); }}><Check className="h-2.5 w-2.5" /></button>
               <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleCancelRename(); }}><X className="h-2.5 w-2.5" /></button>
             </div>
           ) : (
@@ -439,6 +444,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                   group.starred ? 'opacity-100' : 'opacity-30 group-hover:opacity-100'
                 )}
                 aria-label={group.starred ? 'Unpin group' : 'Pin group'}
+                data-tour={TOUR_ANCHORS.groupPin}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleGroupStar(groupIndex);

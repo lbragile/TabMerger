@@ -6,14 +6,18 @@ import {
   getSetting,
   setSetting,
   markAllGroupsPendingSync,
-  getSessions
+  getSessions,
+  markSessionUploaded,
+  compareAndSetSetting
 } from '@/lib/localDb';
+import { refreshUploadedSession, deleteRemoteSessions } from '@/lib/sessionUpload';
+import { cycleDeadline } from '@/lib/syncRequest';
 import { getEncryptionKeyState, getDataKey, ENCRYPTION_MIGRATION_DONE_KEY } from '@/lib/encryptionKey';
 import { useUIStore } from '@/stores/uiStore';
 import { ensureAccountScope } from '@/lib/accountScope';
 import { onForeignGroupsChange, onSyncConflict } from '@/lib/foreignChange';
 import { toast } from '@/lib/toast';
-import { CLOUD_SYNC_ACTIVE_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
+import { CLOUD_SYNC_ACTIVE_KEY, SESSIONS_HEAL_IN_PROGRESS, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 import { GROUPS_QUERY_KEY } from './useGroups';
@@ -38,6 +42,7 @@ export function useSync() {
   const closeModal = useUIStore((s) => s.closeModal);
   const setSyncPausedReason = useUIStore((s) => s.setSyncPausedReason);
   const sessionsRetryAt = useRef(0);
+  const sessionsHealRunning = useRef(false);
 
   const doSync = useCallback(async () => {
     if (!session || !cloudSync) return;
@@ -89,6 +94,15 @@ export function useSync() {
       await setSetting(ENCRYPTION_MIGRATION_DONE_KEY, true);
     }
 
+    // The groups come FIRST: the sessions pass below can be many requests, and the user's groups
+    // must not wait behind it.
+    try {
+      await performSync(session);
+      qc.setQueryData(GROUPS_QUERY_KEY, await getGroupsState());
+    } catch (err) {
+      console.error('[useSync] sync error', err);
+    }
+
     // Same self-heal as above, but for sessions — those have no pendingSync flag or push
     // loop (useSaveSession only uploads on explicit save), so a session that is not on the
     // server encrypted (saved before setup / while locked / while offline, or still plaintext
@@ -96,26 +110,79 @@ export function useSync() {
     // ONLY when every push succeeded; otherwise it stays unset and a later sync retries (not
     // before SESSIONS_RETRY_MS, so one permanently rejected session cannot make every 30 s poll
     // re-upload them all). Skipped entirely while uploads are not allowed (Firefox consent).
-    if (canUpload && Date.now() >= sessionsRetryAt.current && !(await getSetting(SESSIONS_MIGRATION_DONE_KEY, false))) {
-      const sessions = await getSessions();
-      let allUploaded = true;
-      for (const s of sessions) {
-        try {
-          if (!(await pushSessionToSupabase(s))) allUploaded = false;
-        } catch (e) {
-          allUploaded = false;
-          console.warn('[useSync] session self-heal push failed', s.id, e);
+    // One pass at a time: doSync runs on a 30 s poll and a pass can outlast it.
+    if (canUpload && !sessionsHealRunning.current && Date.now() >= sessionsRetryAt.current && !(await getSetting(SESSIONS_MIGRATION_DONE_KEY, false))) {
+      sessionsHealRunning.current = true;
+      try {
+        // Every request below has its own timeout (see sessionUpload.ts); the pass as a whole
+        // stops starting new ones after one cycle budget, and what is left waits for the retry.
+        const deadline = cycleDeadline();
+        // Re-armed BEFORE the sessions are read: a session saved while this pass runs re-arms the
+        // flag itself, and must not have that undone when the pass finishes.
+        await setSetting(SESSIONS_MIGRATION_DONE_KEY, SESSIONS_HEAL_IN_PROGRESS);
+        // Never-uploaded sessions FIRST: a pass that runs out of time must have spent it on what
+        // the server does not have yet, not on refreshing backups it already holds (stable sort).
+        const isUploadedBackup = (s: { auto?: boolean; uploadedAt?: number }) => s.auto === true && typeof s.uploadedAt === 'number';
+        const sessions = [...(await getSessions())].sort((a, b) => Number(isUploadedBackup(a)) - Number(isUploadedBackup(b)));
+        let allUploaded = true;
+        /** ids this pass upserted: each was a copy read above, see the check after the loop */
+        const pushedIds: string[] = [];
+        for (const s of sessions) {
+          if (Date.now() > deadline) {
+            allUploaded = false;
+            break;
+          }
+          try {
+            // An automatic backup the server already confirmed is never INSERTED again. If the
+            // server no longer has it (`gone`), it was deleted in the web dashboard: that removes
+            // the cloud copy only, so there is nothing to do and the local backup STAYS. One never
+            // uploaded (taken offline) uploads below.
+            if (isUploadedBackup(s)) {
+              if ((await refreshUploadedSession(s, session.user.id)) === 'failed') allUploaded = false;
+              continue;
+            }
+            // for THIS cycle's account only: refused if the client's session changed meanwhile
+            if (!(await pushSessionToSupabase(s, session.user.id))) {
+              allUploaded = false;
+              continue;
+            }
+            pushedIds.push(s.id);
+            // stamped on the session as stored NOW (if it still is), never by saving back the
+            // copy read above: that would re-create a backup deleted while the upload ran
+            if (s.auto === true) await markSessionUploaded(s.id, Date.now());
+          } catch (e) {
+            allUploaded = false;
+            console.warn('[useSync] session self-heal push failed', s.id, e);
+          }
         }
+        // What was upserted was a copy read before the requests. A session deleted on this device
+        // meanwhile had its server row deleted too, possibly BEFORE the upsert above landed, which
+        // then re-created a row nothing here tracks. So: whatever was pushed and is no longer
+        // stored has its row deleted again. (A delete made after this read sends its own request
+        // after every upsert of this pass, so it needs nothing.) Best-effort, never throws.
+        // NOT after a wipe: "Clear all data" and an account switch empty the local store too, and
+        // must never delete anything in the account. They remove this flag with the sessions (one
+        // transaction), so the cleanup only runs while the pass's own marker is still stored,
+        // read AFTER the sessions. A re-arm made meanwhile skips it as well: the safe side.
+        if (pushedIds.length > 0) {
+          try {
+            const stored = new Set((await getSessions()).map((s) => s.id));
+            const orphaned = pushedIds.filter((id) => !stored.has(id));
+            if (orphaned.length > 0 && (await getSetting<unknown>(SESSIONS_MIGRATION_DONE_KEY, false)) === SESSIONS_HEAL_IN_PROGRESS) {
+              await deleteRemoteSessions(orphaned, session.user.id);
+            }
+          } catch (e) {
+            console.warn('[useSync] session self-heal cleanup failed', e);
+          }
+        }
+        if (!allUploaded) sessionsRetryAt.current = Date.now() + SESSIONS_RETRY_MS;
+        // Done only if nothing re-armed the flag since this pass started (`false` written by a
+        // save, a backup run, an encryption reset): those sessions were not in the list above.
+        // (A backup run's own marker, REARMED_BY_BACKUP, is falsy too: it starts a pass like `false`.)
+        else await compareAndSetSetting(SESSIONS_MIGRATION_DONE_KEY, SESSIONS_HEAL_IN_PROGRESS, true);
+      } finally {
+        sessionsHealRunning.current = false;
       }
-      if (allUploaded) await setSetting(SESSIONS_MIGRATION_DONE_KEY, true);
-      else sessionsRetryAt.current = Date.now() + SESSIONS_RETRY_MS;
-    }
-
-    try {
-      await performSync(session);
-      qc.setQueryData(GROUPS_QUERY_KEY, await getGroupsState());
-    } catch (err) {
-      console.error('[useSync] sync error', err);
     }
   }, [session, cloudSync, qc, modal.type, openModal, closeModal, setSyncPausedReason]);
 
@@ -158,6 +225,8 @@ export function useSync() {
         useUIStore.getState().clearHistory(); // the wiped account's snapshots are gone with it
         qc.setQueryData(GROUPS_QUERY_KEY, await getGroupsState());
         qc.setQueryData(SESSIONS_QUERY_KEY, []);
+        // the wipe switched the backup file copy off (see clearLocalAccountData): show that
+        void qc.invalidateQueries({ queryKey: APP_SETTINGS_QUERY_KEY });
       }
     })();
   }, [userId, qc]);

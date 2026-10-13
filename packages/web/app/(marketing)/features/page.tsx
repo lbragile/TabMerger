@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { AI_COMING_SOON_LABEL, AUTO_BACKUP_COPY, AUTO_BACKUP_RETENTION_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 import {
   Layers,
@@ -18,6 +18,7 @@ import {
   Shield,
   Globe,
   ArrowRight,
+  History,
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -96,6 +97,12 @@ const featureSections = [
         title: 'Session save & restore',
         description:
           `Snapshot your current groups as a named session and restore them instantly. Free plans save up to ${FREE_TIER_LIMITS.sessions} sessions in this browser; Pro syncs unlimited sessions across every device.`,
+      },
+      {
+        icon: History,
+        title: AUTO_BACKUP_COPY.title,
+        description:
+          `TabMerger saves an encrypted snapshot of your groups on a schedule you choose, from every hour to once a week. The newest ${AUTO_BACKUP_RETENTION_COUNT} are kept, and you can bring any of them back from Settings. Your dashboard lists them too, where you can look inside one or download it. You can also have each one saved as a file on your computer; that copy is not encrypted.`,
       },
       {
         icon: Shield,

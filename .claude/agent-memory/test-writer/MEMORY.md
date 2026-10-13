@@ -13,3 +13,5 @@
 - [Now Open close rule tests](learnings_now_open_close_rule_tests.md) — where the "defer only the own window's active tab" rule is tested per layer; stubs need windows.getCurrent or the fallback runs
 - [Saved copies and close e2e](learnings_saved_copies_and_close_e2e.md) — savedCopiesAndClose.spec.ts patterns: real windows, raw stored shape, bulk copy prepends, rebuild dev build first
 - [Keyboard move re-anchor tests](learnings_keyboard_move_reanchor_tests.md) — inject cache changes mid-move in CI e2e (tm_dnd_debug flag) and the repro harness; which live region per path
+- [Tour v2 tests](learnings_tour_v2_tests.md) — test layout, jsdom rect stubbing, Playwright inert gotcha, isolating the e2e build with TM_E2E_EXT_DIR
+- [Auto-backup test patterns](learnings_auto_backup_tests.md) — localDb commit mocks, abortSignal chain links, flag sentinels (true/false/0/""), in-request interleaving hooks

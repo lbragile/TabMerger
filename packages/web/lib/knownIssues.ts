@@ -66,6 +66,14 @@ export const KNOWN_ISSUES: KnownIssue[] = [
       'Press the refresh button on the label. The extension in that browser syncs and the time updates.',
   },
   {
+    id: 'session-deleted-on-dashboard-comes-back',
+    area: 'Sync',
+    title: 'A saved session deleted on the dashboard can come back',
+    details:
+      'If you delete a session you saved yourself on the web dashboard while a browser with the extension still has that session, the extension can upload it again later, and it reappears on the dashboard. This happens when that browser has to send its sessions again: after a session or an automatic backup could not be uploaded (for example while offline), or after you reset your encryption passphrase. Automatic backups are not affected: one deleted on the dashboard stays deleted there, and the browser that has it keeps its own copy.',
+    workaround: 'Delete the session in the extension (the Sessions list in the sidebar). That removes it from that browser and from your account.',
+  },
+  {
     id: 'dashboard-locked-after-passphrase-reset',
     area: 'Web app',
     title: 'Some groups or sessions show as “(locked)” after a passphrase reset',

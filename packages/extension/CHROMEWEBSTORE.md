@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-10
+> Last Updated: 2026-10-12
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -87,6 +87,11 @@ WHAT YOU CAN DO
 - Set URL rules that send matching tabs to a group automatically, and clean up duplicate tabs.
 - Take saved sessions (snapshots of your groups) and restore them later.
 - Undo and redo changes, and switch between light and dark themes.
+- Get a guided tour the first time you open TabMerger: six short chapters in plain language,
+  each with a header saying what it covers. A few steps let you try things yourself (make a
+  group, colour it, pin it, search, switch the theme), with a ring on the exact control to use
+  next. Skip a step, a chapter or the whole tour, and replay it any time from the "?" button or
+  from Settings.
 - Import from a JSON file, a bookmarks HTML export or OneTab, and export your data as JSON.
   Imported files are checked entry by entry: links that run script instead of opening a page
   (bookmarklets, for example) are left out, and the import tells you how many were skipped.
@@ -96,8 +101,12 @@ TabMerger works fully without an account. The free plan keeps everything in your
 allows up to 5 groups, 50 saved tabs, 3 URL rules and 3 saved sessions.
 
 Pro is a paid subscription bought on the TabMerger website (not inside the extension). It removes
-those limits and adds optional cloud sync of your groups and sessions between devices, a
-"Continue on other device" view, and encrypted share links for groups. Pro features need a
+those limits and adds optional cloud sync of your groups and sessions between devices, automatic
+backups (an encrypted snapshot of your saved groups, taken on a schedule you choose, that you can
+restore from Settings, including on a new or reinstalled browser once you sign in and unlock
+encryption; you can also have each backup saved as a file in your Downloads folder), a
+"Continue on other device" view, and encrypted share links for groups.
+Pro features need a
 signed-in account; prices and plans are on the website.
 
 PRIVACY
@@ -212,6 +221,16 @@ The description must be between 250 and 10,000 characters (the stable descriptio
 
 ### Screenshot Notes
 
+**Needs refreshing (guided tour, next release):** the popup header gained a "?" (Take the tour)
+button between the selection toggle and the account icon, so every store screenshot that shows
+the popup header is one icon out of date: `open-popup-light/dark.jpg`,
+`view-new-group-dark/light.jpg`, `cross-window-tab-drag-light/dark.jpg` and
+`add-window-note-dark/light.jpg`. Regenerate them with the usual demo pipeline before the next
+store upload. Demo builds never start the tour by themselves, so the captures stay clean. A
+screenshot of the tour itself is optional and not made yet. If one is made, use a "try it" step
+(for example "Make a group"): it shows the chapter header at the top of the card and the action
+ring on the control to use next, which the welcome card does not.
+
 What each existing store screenshot shows (all use demo data; none shows personal data, AI
 features or paid-only screens):
 
@@ -241,8 +260,8 @@ features or paid-only screens):
 
 ## Permissions Justification
 
-Checked against the manifest `wxt.config.ts` produces on 2026-10-06. Seven API permissions, no
-optional permissions, **no `host_permissions`** of any kind (required or optional) — deliberately,
+Checked against the manifest `wxt.config.ts` produces on 2026-10-12. Seven API permissions, one
+optional permission (`downloads`, see the row below), **no `host_permissions`** of any kind (required or optional) — deliberately,
 to keep the extension out of the store's elevated review tier for reading page content. The
 extension also declares `incognito: "spanning"`, four keyboard `commands`, and an
 `externally_connectable` block (all explained below). No content script ships in the Chrome or
@@ -253,11 +272,16 @@ Edge build. Tab previews' page-image fetch is done server-side by the web app
 |------------|------------------------------------------|
 | `tabs` | Reads the title, address and icon of the browser's open tabs so the user can save them into named groups, and creates, moves and closes tabs to restore or save them. The "Now Open" view uses it to mirror the tabs currently open. Tab data is only read to show it to the user and to save what they choose. |
 | `tabGroups` | Reads the browser's native tab groups (name and color) so a saved tab remembers its group, and recreates that group when the tab is restored. |
-| `storage` | Stores settings, the sync encryption key (on this device only) and pending reminders in `chrome.storage.local`, so they survive a browser restart. Saved groups are kept in the extension's own database. |
+| `storage` | Stores settings, the sync encryption key (on this device only), pending reminders and whether the guided tour was finished in `chrome.storage.local`, so they survive a browser restart. Saved groups are kept in the extension's own database. |
 | `contextMenus` | Adds the right-click entry "Save to TabMerger" (save this tab, tabs to the left, tabs to the right, all other tabs) as a faster alternative to opening the popup. |
-| `alarms` | Schedules the one-time reminders a user sets on a saved tab, so the reminder fires at the chosen time even when the popup is closed. |
+| `alarms` | Schedules the one-time reminders a user sets on a saved tab, so the reminder fires at the chosen time even when the popup is closed. Also runs the automatic backup of saved groups on the interval the user picked in Settings (paid accounts; can be turned off). |
 | `notifications` | Shows the reminder notification when a reminder the user set comes due; clicking it opens the saved tab. |
 | `identity` | Runs the "Continue with Google" sign-in window (`chrome.identity.launchWebAuthFlow`, `src/lib/googleOAuthFlow.ts`). Used only if the user chooses to sign in; the extension works without it. |
+| `downloads` (**optional**, `optional_permissions`) | Not granted at install. Requested only when the user turns on "Also save a file to this computer" in Settings (automatic backups), from that click. It is used for one thing: writing each backup as a JSON file into a folder the user names inside the browser's Downloads folder (`chrome.downloads.download` with `saveAs: false` and `conflictAction: "uniquify"`). The extension never reads, opens, lists or deletes downloads, and does not touch downloads it did not start. If the user declines or later removes the permission, backups keep working without the file copy. |
+
+**`downloads` must stay optional.** As a required permission Chrome would disable the extension
+for every existing user until they accepted the new warning. The CI baseline
+(`packages/extension/manifest-permissions.json`) lists it under `optional_permissions`.
 
 Not permissions, but reviewers ask:
 
@@ -357,6 +381,46 @@ All three certifications can be ticked, because they are true as built:
   and `device_sessions.now_open_snapshot` are stored in Supabase as `{v:1,iv,ct}` ciphertext —
   the unwrapped data key lives only in `chrome.storage.local` on the user's device and is never
   transmitted. See `src/lib/encryptionKey.ts`.
+- Automatic backups (Pro, on by default, Settings → Data): on a schedule (hourly to weekly,
+  daily by default) the background worker saves a snapshot of the user's saved groups (the same
+  content as a saved session: group and window names, notes, tab URLs and titles; never the
+  "Now Open" tabs) as a session marked automatic. It is stored in the extension's own database
+  and uploaded to the same place as synced sessions (`sessions`), encrypted on the device first
+  like every other session; the "automatic" marker is inside the ciphertext, so the server
+  cannot tell a backup from a session the user saved. Nothing is written to disk as a file, no
+  new data category, no new network destination and **no new permission** (`alarms` and
+  `storage` were already granted). The newest 10 are kept; older automatic ones are deleted on
+  the device and on the server. Restoring one adds its groups back into TabMerger; it does not
+  open or close browser windows. The server rejects the upload for an account without an active
+  paid plan (`has_cloud_sync()` on `sessions`). See `src/lib/autoBackup.ts`.
+- Getting backups back onto a device (`src/lib/autoBackupDownload.ts`): when the user opens
+  Settings → Data (and after "Back up now"), the extension reads the signed-in user's own
+  `sessions` rows from Supabase, decrypts them on the device, keeps only the ones marked as
+  automatic backups, validates them like an imported file and stores the missing ones locally.
+  This is a download of the user's own encrypted data: no new kind of data is collected. It
+  never overwrites or removes a backup on the device and does not run on a timer. The one thing
+  it does besides adding: it first retries deletes the user (or the keep-newest-10 rule) already
+  made on this device but that had not reached the server yet. **A backup that is missing from
+  the account is never deleted from the device because of that.** Deleting a backup in the web
+  dashboard removes the cloud copy only: a browser that already has that backup keeps its own
+  copy, and does not upload it again. Deleting a backup in the extension removes it from that
+  browser and from the account; another browser that already has it keeps its copy. An account
+  that is no longer paid can still read its own backups. Backups are listed only in Settings →
+  Data, not in the sidebar's Sessions list.
+  Restoring offers two choices, both undoable: add the backup's groups next to the current
+  ones, or replace the current groups with them (after a confirmation).
+- "Also save a file to this computer" (off by default, optional `downloads` permission, see
+  Permissions): when on, each backup is also written as a JSON file inside the browser's
+  Downloads folder, in a subfolder (default `TabMerger`) and with a file name pattern (default
+  `TabMerger backup {date} {time}`) the user can change; both are validated so the path can
+  never leave Downloads (no absolute paths, no `..`, no names Windows reserves, no control,
+  invisible or text-direction characters). The option is switched off again when a different
+  account signs in on the same browser profile, so one account's choice never writes another
+  account's groups to disk. **The file is not encrypted**: it is plaintext on the user's own
+  disk, in the same format as Settings → Export, and holds saved groups only (tab addresses and
+  titles, group and window names, notes), never the "Now Open" tabs, keys, tokens or the account
+  id. It never leaves the device through TabMerger. TabMerger does not delete these files.
+  The setting says so in plain words. See `src/lib/autoBackupFile.ts`.
 - AI features (Pro AI tier) are currently **disabled/coming soon** in both the extension and the
   web app (`VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` feature flags) — no tab content is sent to
   Anthropic's Claude API while this flag is off. Update this note when AI ships.
@@ -479,6 +543,9 @@ with the real semver string carried in `version_name`.
 | BETA | `4.1.0.9` | `3.1.0-beta.9` | `v3.1.0-beta.9` | 2026-10-01 | Superseded |
 | BETA | `4.1.0.10` | `3.1.0-beta.10` | `v3.1.0-beta.10` | 2026-10-02 | Superseded by beta.11 (withdrawn from review if still pending) |
 | BETA | `4.1.0.11` | `3.1.0-beta.11` | `v3.1.0-beta.11` | 2026-10-07 | Submitted by the publish workflow; owner to update when the review completes |
+| Both | set at release | set at release | next release (unreleased) | — | Draft: adds automatic backups (Pro) and the `alarms` wording above, plus the OPTIONAL `downloads` permission for "Also save a file to this computer". No required permission changes, so no re-approval prompt for existing users; `downloads` is asked for only when a user turns that option on. Update the dashboard's privacy tab: the permission justification above, and "Web history" stays ticked (the file holds saved tab addresses but stays on the user's disk). Screenshots: none of the current ones shows Settings, so none needs refreshing; a new Settings → Data screenshot showing the backups list would be worth adding |
+
+| Both | set at release | set at release | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest change and no new permission: the tour's progress is one record in `chrome.storage.local`, already covered by `storage`, so there is no re-approval prompt. The tour has six chapters with a header each, five "try it" steps and a ring on the control to use next; the group made while trying is offered for removal at the end. No new data leaves the device apart from six anonymous usage events (`tour_started`, `tour_completed`, `tour_skipped`, `tour_task_done`, `tour_step_skipped`, `tour_chapter_skipped`, carrying step or chapter ids only) through the existing analytics path. Screenshots: the ones showing the popup header need refreshing, see Screenshot Notes |
 
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 

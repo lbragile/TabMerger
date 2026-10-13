@@ -40,6 +40,7 @@ import {
   useDeleteTab,
   useToggleWindowIncognito,
   useDeleteGroup,
+  useReplaceSavedGroups,
   useToggleGroupStar,
   useMoveTab,
   useGroups,
@@ -2132,5 +2133,87 @@ describe('useApplyAIGroups — Free-tier caps backstop', () => {
       outcome = await result.current.mutateAsync([{ name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] }])
     })
     expect(outcome).toEqual({ appliedGroups: 1, appliedTabs: 1 })
+  })
+})
+
+
+describe('useReplaceSavedGroups', () => {
+  const setup = () => {
+    const nowOpen = createNowOpenGroup()
+    const a = createGroup('a', 'A')
+    const b = createGroup('b', 'B')
+    const state = makeState([nowOpen, a, b], 1)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    return { nowOpen, wrapper }
+  }
+
+  it('replaces every saved group with fresh copies, keeps Now Open first and untouched, active index 0', async () => {
+    const { nowOpen, wrapper } = setup()
+    const incoming = [createGroup('n1', 'New 1'), createGroup('n2', 'New 2')]
+    const { result } = renderHook(() => useReplaceSavedGroups(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(incoming) })
+
+    const saved = lastSaved()
+    expect(saved.available[0]).toEqual(nowOpen)
+    const rest = saved.available.slice(1)
+    expect(rest.map((g) => g.name)).toEqual(['New 1', 'New 2'])
+    expect(rest.map((g) => g.id)).not.toContain('n1') // fresh ids
+    expect(saved.active).toEqual({ id: nowOpen.id, index: 0 }) // index 0 is Now Open (the panel then shows its first group)
+  })
+
+  it('asks for the remote delete of EVERY non-permanent id, never Now Open', async () => {
+    const { nowOpen, wrapper } = setup()
+    const { result } = renderHook(() => useReplaceSavedGroups(), { wrapper })
+    await act(async () => { await result.current.mutateAsync([createGroup('n1', 'New 1')]) })
+    expect(deleteRemoteGroups).toHaveBeenCalledTimes(1)
+    expect(deleteRemoteGroups).toHaveBeenCalledWith(['a', 'b'])
+    expect((deleteRemoteGroups as ReturnType<typeof vi.fn>).mock.calls[0][0]).not.toContain(nowOpen.id)
+  })
+
+  it('calls deleteRemoteGroups only AFTER the local write has resolved', async () => {
+    setup()
+    const order: string[] = []
+    let finishWrite!: () => void
+    ;(saveGroupsState as ReturnType<typeof vi.fn>).mockImplementationOnce(
+      () => new Promise<void>((resolve) => (finishWrite = () => (order.push('write'), resolve())))
+    )
+    ;(deleteRemoteGroups as ReturnType<typeof vi.fn>).mockImplementationOnce(async () => void order.push('remote'))
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useReplaceSavedGroups(), { wrapper })
+    let done!: Promise<unknown>
+    act(() => { done = result.current.mutateAsync([createGroup('n1', 'New 1')]) })
+    await waitFor(() => expect(saveGroupsState).toHaveBeenCalled())
+    expect(deleteRemoteGroups).not.toHaveBeenCalled() // the write is still pending
+    await act(async () => { finishWrite(); await done })
+    expect(order).toEqual(['write', 'remote'])
+  })
+
+  it('a rejected local write never calls deleteRemoteGroups, and the error reaches the caller', async () => {
+    const { wrapper } = setup()
+    ;(saveGroupsState as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('QuotaExceededError'))
+    const { result } = renderHook(() => useReplaceSavedGroups(), { wrapper })
+    await act(async () => {
+      await expect(result.current.mutateAsync([createGroup('n1', 'New 1')])).rejects.toThrow('QuotaExceededError')
+    })
+    expect(deleteRemoteGroups).not.toHaveBeenCalled()
+  })
+
+  it('a failing remote delete is swallowed (fire and forget): the replace still succeeds', async () => {
+    const { wrapper } = setup()
+    ;(deleteRemoteGroups as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('offline'))
+    const { result } = renderHook(() => useReplaceSavedGroups(), { wrapper })
+    await act(async () => { await expect(result.current.mutateAsync([createGroup('n1', 'New 1')])).resolves.toBeDefined() })
+  })
+
+  it('records one undo snapshot of the state the user had', async () => {
+    const { wrapper } = setup()
+    useUIStore.setState({ undoStack: [], redoStack: [] })
+    const { result } = renderHook(() => useReplaceSavedGroups(), { wrapper })
+    await act(async () => { await result.current.mutateAsync([createGroup('n1', 'New 1')]) })
+    const stack = useUIStore.getState().undoStack
+    expect(stack).toHaveLength(1)
+    expect(stack[0].available.filter((g) => !g.permanent).map((g) => g.id)).toEqual(['a', 'b'])
   })
 })

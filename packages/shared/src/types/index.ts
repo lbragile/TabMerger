@@ -61,6 +61,8 @@ export interface Session {
   description?: string;
   groups: Group[];
   createdAt: number;
+  /** True for a snapshot the extension took by itself (automatic backup). Travels inside the encrypted blob only. */
+  auto?: boolean;
 }
 
 // Subscription tiers

@@ -1,6 +1,6 @@
 import { chromium, type BrowserContext, type Worker } from '@playwright/test';
 import http from 'http';
-import { escapeHtml, jsLiteral, seedIdb } from './helpers';
+import { dismissTour, escapeHtml, jsLiteral, seedIdb } from './helpers';
 import { EXTENSION_PATH } from './extensionPath';
 import { CDP_TARGET_CLOSED, RawCdp } from './rawCdp';
 
@@ -94,6 +94,7 @@ export async function openRealPopup(
   let [sw] = context.serviceWorkers();
   if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
   const extensionId = new URL(sw.url()).hostname;
+  await dismissTour(context);
 
   const seedPage = await context.newPage();
   await seedPage.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });

@@ -1,0 +1,199 @@
+import { useEffect, useId, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import {
+  BACKUP_FILE_COPY,
+  BACKUP_FILE_EXTENSION,
+  BACKUP_FILE_PERMISSION,
+  BACKUP_FILE_TOKENS,
+  DEFAULT_BACKUP_FILE_FOLDER,
+  DEFAULT_BACKUP_FILE_PATTERN,
+  buildBackupFilePath,
+  validateBackupFilePattern,
+  validateBackupFolder
+} from '@tabmerger/shared';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import type { AppSettings } from '@/hooks/useAppSettings';
+import { describeBackupFile, type AutoBackupSettings } from '@/lib/autoBackup';
+import { hasBackupFilePermission, parseBackupFileStatus } from '@/lib/autoBackupFile';
+import { backupFilePermissionQueryKey, backupFileStatusQueryKey } from '@/lib/autoBackupQueryKeys';
+import { getSetting } from '@/lib/localDb';
+import { AUTO_BACKUP_FILE_STATUS_KEY } from '@/lib/syncSettingKeys';
+import { relativeTimeStr } from '@/lib/utils';
+import { toast } from '@/lib/toast';
+
+export type BackupFilePatch = Partial<Pick<AppSettings, 'autoBackupFileEnabled' | 'autoBackupFileFolder' | 'autoBackupFilePattern'>>;
+
+interface AutoBackupFileSettingsProps {
+  /** The saved, already validated values (see readAutoBackupSettings). */
+  file: AutoBackupSettings['file'];
+  /** Automatic backups are off or settings are still loading: nothing here can be changed. */
+  disabled: boolean;
+  onSave: (patch: BackupFilePatch) => Promise<void> | void;
+}
+
+/** What the preview is built from: a fixed example, so it does not jump around while typing. */
+const PREVIEW = { groups: 4, tabs: 37 };
+
+/**
+ * "Also save a file to this computer" inside Settings → Data → Automatic backups.
+ *
+ * The folder and file name the user types become a path on their disk. They are checked on every
+ * keystroke with the shared validators, saved only when valid, and the background worker checks
+ * the stored values again before it writes (it never trusts what this component saved).
+ */
+export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFileSettingsProps) {
+  const folderId = useId();
+  const patternId = useId();
+  const [folder, setFolder] = useState(file.folder);
+  const [pattern, setPattern] = useState(file.pattern);
+  const [previewAt] = useState(() => Date.now());
+
+  // The saved value changed elsewhere (reset, another popup): show it.
+  useEffect(() => setFolder(file.folder), [file.folder]);
+  useEffect(() => setPattern(file.pattern), [file.pattern]);
+
+  // The permission can be taken away in the browser's extension settings at any time, so the
+  // switch shows what is actually possible, not only what was saved.
+  const { data: permitted, refetch: recheckPermission } = useQuery({
+    queryKey: backupFilePermissionQueryKey,
+    queryFn: hasBackupFilePermission,
+    staleTime: 0,
+    refetchOnWindowFocus: true
+  });
+  const { data: status } = useQuery({
+    queryKey: backupFileStatusQueryKey,
+    queryFn: async () => parseBackupFileStatus(await getSetting<unknown>(AUTO_BACKUP_FILE_STATUS_KEY, null)),
+    staleTime: 0
+  });
+
+  const on = file.enabled && permitted === true;
+  const revoked = file.enabled && permitted === false;
+  const folderCheck = validateBackupFolder(folder);
+  const patternCheck = validateBackupFilePattern(pattern);
+  const fieldsDisabled = disabled || !on;
+
+  // Turning it ON asks the browser for the permission FIRST, as the very first call in the click
+  // (no await before it): browsers only show the prompt from a user action. Off needs nothing.
+  const handleToggle = (checked: boolean) => {
+    if (!checked) {
+      void onSave({ autoBackupFileEnabled: false });
+      return;
+    }
+    chrome.permissions
+      .request({ permissions: [BACKUP_FILE_PERMISSION] })
+      .then(async (granted) => {
+        await recheckPermission();
+        if (!granted) {
+          toast.error(BACKUP_FILE_COPY.permissionDenied);
+          return;
+        }
+        await onSave({ autoBackupFileEnabled: true });
+      })
+      .catch(() => toast.error(BACKUP_FILE_COPY.permissionDenied));
+  };
+
+  const commitFolder = () => {
+    if (folderCheck.ok && folderCheck.value !== file.folder) void onSave({ autoBackupFileFolder: folderCheck.value });
+  };
+  const commitPattern = () => {
+    if (patternCheck.ok && patternCheck.value !== file.pattern) void onSave({ autoBackupFilePattern: patternCheck.value });
+  };
+  const handleReset = () => {
+    setFolder(DEFAULT_BACKUP_FILE_FOLDER);
+    setPattern(DEFAULT_BACKUP_FILE_PATTERN);
+    void onSave({ autoBackupFileFolder: DEFAULT_BACKUP_FILE_FOLDER, autoBackupFilePattern: DEFAULT_BACKUP_FILE_PATTERN });
+  };
+
+  const isDefault = file.folder === DEFAULT_BACKUP_FILE_FOLDER && file.pattern === DEFAULT_BACKUP_FILE_PATTERN && folder === file.folder && pattern === file.pattern;
+  const preview =
+    folderCheck.ok && patternCheck.ok
+      ? `Downloads/${buildBackupFilePath(folderCheck.value, patternCheck.value, { createdAt: previewAt, ...PREVIEW })}`
+      : null;
+
+  return (
+    <div className="min-w-0 space-y-3">
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <Label className="text-sm">{BACKUP_FILE_COPY.toggle}</Label>
+          <p className="text-xs text-muted-foreground">{BACKUP_FILE_COPY.description}</p>
+          {revoked && <p className="text-xs text-amber-500 mt-0.5">{BACKUP_FILE_COPY.permissionRevoked}</p>}
+        </div>
+        <Switch className="shrink-0" aria-label={BACKUP_FILE_COPY.toggle} checked={on} disabled={disabled} onCheckedChange={handleToggle} />
+      </div>
+
+      {on && (
+        <div className="min-w-0 space-y-2 border border-border p-2">
+          <p className="text-xs text-muted-foreground">{BACKUP_FILE_COPY.location}</p>
+
+          <div className="min-w-0 space-y-1">
+            <Label htmlFor={folderId} className="text-xs">
+              {BACKUP_FILE_COPY.folderLabel}
+            </Label>
+            <Input
+              id={folderId}
+              className="h-7 w-full min-w-0 text-xs rounded-none"
+              value={folder}
+              disabled={fieldsDisabled}
+              spellCheck={false}
+              autoComplete="off"
+              aria-invalid={!folderCheck.ok}
+              aria-describedby={!folderCheck.ok ? `${folderId}-error` : undefined}
+              onChange={(e) => setFolder(e.target.value)}
+              onBlur={commitFolder}
+            />
+            {!folderCheck.ok && (
+              <p id={`${folderId}-error`} className="text-xs text-destructive">
+                {folderCheck.error}
+              </p>
+            )}
+          </div>
+
+          <div className="min-w-0 space-y-1">
+            <Label htmlFor={patternId} className="text-xs">
+              {BACKUP_FILE_COPY.patternLabel}
+            </Label>
+            <Input
+              id={patternId}
+              className="h-7 w-full min-w-0 text-xs rounded-none"
+              value={pattern}
+              disabled={fieldsDisabled}
+              spellCheck={false}
+              autoComplete="off"
+              aria-invalid={!patternCheck.ok}
+              aria-describedby={`${patternId}-help${!patternCheck.ok ? ` ${patternId}-error` : ''}`}
+              onChange={(e) => setPattern(e.target.value)}
+              onBlur={commitPattern}
+            />
+            {!patternCheck.ok && (
+              <p id={`${patternId}-error`} className="text-xs text-destructive">
+                {patternCheck.error}
+              </p>
+            )}
+            <p id={`${patternId}-help`} className="text-[11px] text-muted-foreground break-words">
+              You can use {BACKUP_FILE_TOKENS.map((t) => `${t.token} (${t.meaning})`).join(', ')}. {BACKUP_FILE_EXTENSION} is added for you.
+            </p>
+          </div>
+
+          <div className="flex items-start justify-between gap-2 min-w-0">
+            <p className="min-w-0 flex-1 text-[11px] text-muted-foreground break-all" aria-live="polite">
+              {preview ? `Example: ${preview}` : 'Fix the highlighted field to see where files will go.'}
+            </p>
+            <Button variant="ghost" size="sm" className="h-6 px-2 text-xs shrink-0 rounded-none" disabled={fieldsDisabled || isDefault} onClick={handleReset}>
+              Reset
+            </Button>
+          </div>
+
+          <p className="text-[11px] text-muted-foreground">{BACKUP_FILE_COPY.retention}</p>
+          {status && (
+            <p className="text-[11px] text-muted-foreground break-all">
+              Last file, {relativeTimeStr(status.at)} ago: {describeBackupFile(status.result, status.path)}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

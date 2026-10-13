@@ -297,3 +297,101 @@ html[data-tm-dnd-grabbing] * {
   outline: 0.125rem solid hsl(var(--primary));
   outline-offset: -0.125rem;
 }
+
+/* Guided tour (components/Tour): the ring around the highlighted control.
+   Three lines and the dim, all box-shadows so they follow the element's border radius:
+   an inner line in the theme's text colour (3:1 or better against the control it touches,
+   whatever the theme or the group colour), the brand cyan ring, a thin white edge (so the ring
+   reads against the dim), then the dim itself. Under forced colours shadows are dropped, so a
+   transparent outline, which that mode paints, stands in for the ring. */
+[data-tour-spotlight] {
+  box-shadow:
+    0 0 0 0.125rem hsl(var(--foreground)),
+    0 0 0 0.3125rem #00b4cc,
+    0 0 0 0.375rem rgb(255 255 255 / 0.9),
+    0 0 0 100rem rgb(0 0 0 / 0.72);
+  outline: 0.1875rem solid transparent;
+  outline-offset: 0.125rem;
+}
+
+/* The pulse: a second ring that starts on the first one and grows 0.25rem outwards while it
+   fades. Transform and opacity only, so it is composited and never causes layout. The two
+   scale factors are set per highlight (pulseScale in lib/tour.ts), so the ring moves the same distance on
+   every side whatever the shape. */
+[data-tour-pulse] {
+  position: absolute;
+  inset: -0.375rem;
+  border: 0.125rem solid #00b4cc;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: tour-pulse 1.8s ease-out infinite;
+}
+
+@keyframes tour-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  75%,
+  100% {
+    transform: scale(var(--tour-pulse-x, 1.1), var(--tour-pulse-y, 1.1));
+    opacity: 0;
+  }
+}
+
+/* An interactive step also has an ACTION RING (below) on the one control to use next. The
+   region then stays calm, so the ring is what draws the eye: a thin neutral line instead of the
+   cyan ring, and no pulse (Tour.tsx does not render one). */
+[data-tour-spotlight='calm'] {
+  box-shadow:
+    0 0 0 0.0625rem hsl(var(--foreground)),
+    0 0 0 0.125rem rgb(255 255 255 / 0.55),
+    0 0 0 100rem rgb(0 0 0 / 0.72);
+  outline: 0.0625rem solid transparent;
+  outline-offset: 0.0625rem;
+}
+
+/* The region and the action ring are on the same control: the region is only the dim. */
+[data-tour-spotlight='merged'] {
+  box-shadow: 0 0 0 100rem rgb(0 0 0 / 0.72);
+  outline: none;
+}
+
+/* The action ring: tight around the one control to act on next. The same three lines as the
+   region ring, thinner and closer to the control (inner text-colour line for 3:1 against the
+   control, the brand cyan, a white edge against the dim), with the pulse on it. Drawn above
+   menus and dialogs; never catches the pointer (pointer-events-none in Tour.tsx). */
+[data-tour-action] {
+  box-shadow:
+    0 0 0 0.0625rem hsl(var(--foreground)),
+    0 0 0 0.1875rem #00b4cc,
+    0 0 0 0.25rem rgb(255 255 255 / 0.9);
+  outline: 0.1875rem solid transparent;
+  outline-offset: 0.0625rem;
+}
+
+[data-tour-action] > [data-tour-pulse] {
+  inset: -0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tour-pulse] {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-tour-spotlight] {
+    outline-color: Highlight;
+  }
+  [data-tour-spotlight='calm'] {
+    outline-color: CanvasText;
+  }
+  [data-tour-action] {
+    outline-color: Highlight;
+  }
+  [data-tour-pulse] {
+    display: none;
+  }
+}

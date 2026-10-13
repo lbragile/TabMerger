@@ -12,6 +12,7 @@ import { aiPost } from '@/hooks/useAI';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { applyTheme } from '@/lib/theme';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
 import { useGroups, useImportGroups } from '@/hooks/useGroups';
@@ -21,6 +22,9 @@ import { importGroups, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@
 import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
+import { AutoBackups } from '@/components/Settings/AutoBackups';
+import { autoBackupDownloadQueryKey } from '@/lib/autoBackupQueryKeys';
+import type { BackupDownloadResult } from '@/lib/autoBackupDownload';
 import { toast } from '@/lib/toast';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
@@ -57,6 +61,13 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const openModal = useUIStore((s) => s.openModal);
   const syncPausedReason = useUIStore((s) => s.syncPausedReason);
+  const startTour = useUIStore((s) => s.startTour);
+  // The tour is only drawn while no modal is open, so Settings closes first
+  const handleStartTour = () => {
+    trackEvent('tour_started', { source: 'settings' });
+    onClose();
+    startTour();
+  };
   const [canResetEncryption, setCanResetEncryption] = useState(false);
 
   useEffect(() => {
@@ -157,7 +168,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   };
 
   const handleClearAll = () => {
-    openModal('clearAllData', { onConfirm: () => void performClearAll() });
+    // Only when this panel has just SEEN automatic backups in the signed-in account (the Data tab's
+    // backups section downloaded them) does the confirmation say they are kept: clearing wipes this
+    // device only, and they can be brought back from here afterwards. No cloud copy, no sentence.
+    const download = queryClient.getQueryData<BackupDownloadResult>(autoBackupDownloadQueryKey(user?.id));
+    const cloudBackupsKept = !!user && download?.status === 'done' && download.inAccount > 0;
+    openModal('clearAllData', { onConfirm: () => void performClearAll(), ...(cloudBackupsKept ? { cloudBackupsKept: true } : {}) });
   };
 
   const handleExport = () => {
@@ -279,6 +295,16 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
+              <Label className="text-sm">Take the tour</Label>
+              <p className="text-xs text-muted-foreground">A quick walkthrough of TabMerger</p>
+            </div>
+            <Button variant="outline" size="sm" className="h-7 shrink-0 text-xs" onClick={handleStartTour} aria-label="Start the tour">
+              Start
+            </Button>
+          </div>
+
+          <div className="flex items-center justify-between gap-4" data-tour={TOUR_ANCHORS.settingsTheme}>
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Theme</Label>
               <p className="text-xs text-muted-foreground">Choose your preferred theme</p>
             </div>
@@ -286,7 +312,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               value={draft.theme}
               onValueChange={(v) => patch('theme', v as AppSettings['theme'])}
             >
-              <SelectTrigger className="w-28 h-7 text-xs shrink-0">
+              <SelectTrigger className="w-28 h-7 text-xs shrink-0" aria-label="Theme" data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -556,6 +582,15 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <Separator />
 
+          {/* Saves its two settings immediately (this tab has no Save footer) and mirrors them
+              into the draft, so a later "Save changes" on General cannot write old values back. */}
+          <AutoBackups
+            onSettingsSaved={(saved) => setDraft((prev) => ({ ...prev, ...saved }))}
+            onRestored={onClose}
+          />
+
+          <Separator />
+
           <Button variant="destructive" size="sm" className="w-full text-xs rounded-none" onClick={handleClearAll}>
             Clear all data
           </Button>
@@ -754,6 +789,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               className="text-xs shrink-0"
               disabled={!isDirty}
               onClick={() => void handleSave()}
+              data-tour={TOUR_ANCHORS.settingsSaveButton}
             >
               Save changes
             </Button>

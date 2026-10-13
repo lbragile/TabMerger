@@ -1,6 +1,7 @@
 import React from 'react';
 import { openableUrls } from '@/lib/safeOpen';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -163,6 +164,7 @@ export function GroupContextMenu({
       role="button"
       aria-label={group.name}
       data-sidebar-group-index={groupIndex}
+      data-tour={group.permanent ? TOUR_ANCHORS.nowOpen : undefined}
       data-tm-dnd-id={wrapperDndId}
       onClick={onWrapperClick}
       onKeyDown={(e) => {

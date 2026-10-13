@@ -6,6 +6,11 @@ interface StatsOverviewProps {
   tabCount: number
   groupCount: number
   sessionCount: number
+  /**
+   * Replaces the sessions card's number and description with client-rendered content, for a
+   * count that is only known in the browser (see `SessionsStat`). `sessionCount` is then unused.
+   */
+  sessionStat?: { value: React.ReactNode; description: React.ReactNode }
   memberSince: string
   aiUsage?: { used: number; limit: number }
   /**
@@ -32,6 +37,7 @@ export function StatsOverview({
   tabCount,
   groupCount,
   sessionCount,
+  sessionStat,
   memberSince,
   aiUsage,
   showSyncStats = true,
@@ -53,9 +59,9 @@ export function StatsOverview({
           },
           {
             label: 'Sessions stored',
-            value: sessionCount,
+            value: sessionStat?.value ?? sessionCount,
             icon: Clock,
-            description: 'Browsing sessions stored',
+            description: sessionStat?.description ?? 'Browsing sessions stored',
           },
           {
             label: 'Memory reclaimed',

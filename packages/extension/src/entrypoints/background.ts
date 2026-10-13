@@ -18,6 +18,9 @@ import {
   SYNC_AUTH_CONSENT_REQUIRED_REASON,
 } from '@tabmerger/shared';
 import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
+import { markTourPendingOnInstall } from '@/lib/tour';
+import { registerAutoBackup } from '@/lib/autoBackupAlarm';
+import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
 
 /**
  * `skipped: true` = another sync cycle (the popup's, or an earlier request) held the sync lock, so
@@ -225,6 +228,8 @@ export default defineBackground(() => {
 
   chrome.runtime.onInstalled.addListener((details) => {
     void buildMenus();
+    // Guided tour: pending on a first install only, never on an update (see lib/tour.ts)
+    void markTourPendingOnInstall(details.reason);
     trackEvent(details.reason === 'install' ? 'extension_installed' : 'extension_updated', {
       reason: details.reason,
     });
@@ -257,13 +262,15 @@ export default defineBackground(() => {
     });
   });
 
-  chrome.runtime.onMessage.addListener((msg: unknown) => {
-    const m = msg as { type?: string; name?: string; delayInMinutes?: number };
-    // Alarm helpers — chrome.alarms only available in background, not popup
-    if (m?.type === 'CREATE_ALARM' && m.name && m.delayInMinutes) {
+  chrome.runtime.onMessage.addListener((msg: unknown, sender) => {
+    const m = msg as { type?: unknown; name?: unknown; delayInMinutes?: unknown } | null | undefined;
+    // Alarm helpers — chrome.alarms only available in background, not popup. Accepted only from
+    // this extension's own pages (never a content script, see isOwnExtensionPage) and only for
+    // reminder alarms with a real delay: no other alarm can be created or cleared this way.
+    if (m?.type === 'CREATE_ALARM' && isOwnExtensionPage(sender) && isReminderAlarmName(m.name) && isAlarmDelayMinutes(m.delayInMinutes)) {
       chrome.alarms.create(m.name, { delayInMinutes: m.delayInMinutes });
     }
-    if (m?.type === 'CLEAR_ALARM' && m.name) {
+    if (m?.type === 'CLEAR_ALARM' && isOwnExtensionPage(sender) && isReminderAlarmName(m.name)) {
       void chrome.alarms.clear(m.name);
     }
     // Popup-side (and other extension-page) half of the mechanism described in
@@ -279,8 +286,9 @@ export default defineBackground(() => {
   // runGoogleOAuthFlow's doc comment. The popup awaits this response but doesn't
   // need it to succeed (if the popup already closed, sendResponse just no-ops) —
   // the session lands via chrome.storage.onChanged the next time it opens either way.
-  chrome.runtime.onMessage.addListener((msg: unknown, _sender, sendResponse) => {
-    if ((msg as { type?: string })?.type === 'SIGN_IN_WITH_GOOGLE') {
+  chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
+    // Only the popup may start a sign-in window (never a content script, see isOwnExtensionPage).
+    if ((msg as { type?: string } | null | undefined)?.type === 'SIGN_IN_WITH_GOOGLE' && isOwnExtensionPage(sender)) {
       runGoogleOAuthFlow()
         .then(() => sendResponse({ ok: true }))
         .catch((err) => sendResponse({ ok: false, error: err instanceof Error ? err.message : String(err) }));
@@ -545,4 +553,9 @@ export default defineBackground(() => {
       // The tab's reminder field will be stale in IDB but harmless — it won't re-alarm
     });
   }
+
+  // Automatic backups (Pro): own alarm, own listeners (registered after the reminder ones, which
+  // they never touch), see lib/autoBackupAlarm.ts. Only creates and uploads a backup session; it
+  // never runs a groups sync cycle.
+  registerAutoBackup();
 });

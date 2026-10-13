@@ -111,7 +111,28 @@ interface UIState {
    */
   syncPausedReason: string | null;
 
+  /**
+   * Guided tour (`components/Tour`). `tourActive` = a tour is under way; it is only DRAWN
+   * while no modal is open. `tourStepId` is the step being shown, or the step to resume at
+   * (null = the first step). Progress that must outlive the popup is stored by `lib/tour.ts`.
+   */
+  tourActive: boolean;
+  tourStepId: string | null;
+  /**
+   * Id of the group the user made in the tour's "make a group" step (the practice group), or
+   * null. Deliberately survives `endTour`: a replay in the same popup reuses the group.
+   */
+  tourPracticeGroupId: string | null;
+
   // Actions
+  /**
+   * Starts (or restarts) the tour, at `stepId` when given and still present, else at step 1.
+   * `practiceGroupId` (from the stored record) is only applied when given.
+   */
+  startTour: (stepId?: string | null, practiceGroupId?: string | null) => void;
+  setTourStepId: (stepId: string) => void;
+  setTourPracticeGroupId: (groupId: string | null) => void;
+  endTour: () => void;
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
   closeModal: () => void;
   setActiveGroupIndex: (index: number) => void;
@@ -184,6 +205,18 @@ export const useUIStore = create<UIState>((set, get) => ({
   overlayDismissNonce: 0,
   syncPausedReason: null,
   setSyncPausedReason: (reason) => set({ syncPausedReason: reason }),
+  tourActive: false,
+  tourStepId: null,
+  tourPracticeGroupId: null,
+  startTour: (stepId, practiceGroupId) =>
+    set((prev) => ({
+      tourActive: true,
+      tourStepId: stepId ?? null,
+      tourPracticeGroupId: practiceGroupId ?? prev.tourPracticeGroupId
+    })),
+  setTourStepId: (stepId) => set({ tourStepId: stepId }),
+  setTourPracticeGroupId: (groupId) => set({ tourPracticeGroupId: groupId }),
+  endTour: () => set({ tourActive: false, tourStepId: null }),
 
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),

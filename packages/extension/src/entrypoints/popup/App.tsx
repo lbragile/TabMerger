@@ -27,6 +27,7 @@ import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
 import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker';
 // Exiting selection mode unmounts every checkbox and the action bar; keep focus off <body>.
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
+import { Tour } from '@/components/Tour/Tour';
 
 function AppContent() {
   const { data: groupsState, isLoading } = useGroups();
@@ -151,6 +152,8 @@ function AppContent() {
       </DndProvider>
       {/* Floating action bar — visible when ≥1 item is selected */}
       {selectedItems.length > 0 && <SelectionActionBar />}
+      {/* Guided tour: mounted after the app because its steps point at the controls above */}
+      <Tour />
     </div>
   );
 }

@@ -83,6 +83,7 @@ export default defineConfig({
         const env = loadEnv(mode, process.cwd(), "");
         const isBeta = mode === "beta";
         const isFirefox = browser === "firefox";
+        const e2eGrantDownloads = mode === "development" && process.env.TM_E2E_GRANT_DOWNLOADS === "1";
         // ponytail: manifest.version can't just be package.json's version — semantic-release
         // never bumps it (no @semantic-release/npm plugin; per release-and-beta-channel-spec.md
         // §8, git tags are the sole source of truth for the released version), and a beta
@@ -107,7 +108,17 @@ export default defineConfig({
                 "alarms",
                 "notifications",
                 "identity",
+                // Test seam, development builds only: a headless browser cannot answer the
+                // permission prompt, so the end-to-end check of "Also save a file to this
+                // computer" builds with the permission already granted. Never set for a
+                // store build (the mode check makes that impossible).
+                ...(e2eGrantDownloads ? ["downloads"] : []),
             ],
+            // OPTIONAL on purpose: `downloads` is only used by automatic backups' "Also save a
+            // file to this computer", and is requested from the user's click when they turn
+            // that on. As a required permission it would disable the extension for every
+            // existing user until they re-approved. Keep it here, never in `permissions`.
+            optional_permissions: e2eGrantDownloads ? [] : ["downloads"],
             // No host_permissions of any kind (required or optional) — Tab Preview's
             // OG-image read goes through the web app's server-side scraper
             // (packages/web/app/api/og-preview) instead of in-page script injection,

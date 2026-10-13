@@ -148,7 +148,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
     expect(screen.queryByText('Devices')).not.toBeInTheDocument()
     expect(screen.queryByText('Groups synced')).not.toBeInTheDocument()
     expect(screen.queryByText('Tabs saved')).not.toBeInTheDocument()
-    expect(screen.queryByText('Sessions')).not.toBeInTheDocument()
+    expect(screen.queryByText('Sessions and backups')).not.toBeInTheDocument()
     // No hard-coded placeholder numbers anywhere on the page.
     expect(screen.queryByText('24')).not.toBeInTheDocument()
     expect(screen.queryByText('847')).not.toBeInTheDocument()
@@ -175,7 +175,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
     expect(screen.getByText('Devices')).toBeInTheDocument()
     expect(screen.getByText('Groups synced')).toBeInTheDocument()
     expect(screen.getByText('Tabs saved')).toBeInTheDocument()
-    expect(screen.getByText('Sessions')).toBeInTheDocument()
+    expect(screen.getByText('Sessions and backups')).toBeInTheDocument()
     expect(screen.queryByText('24')).not.toBeInTheDocument()
     expect(screen.queryByText('847')).not.toBeInTheDocument()
     expect(screen.queryByText('12')).not.toBeInTheDocument()
