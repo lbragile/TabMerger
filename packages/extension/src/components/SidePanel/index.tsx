@@ -19,6 +19,7 @@ import { FreeLimitExceededError, countedGroups } from '@/lib/tierLimits';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession, useSaveSession } from '@/hooks/useSessions';
+import { useConfirm } from '@/hooks/useConfirm';
 import { pluralize } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
@@ -165,6 +166,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const sessions = storedSessions.filter((s) => s.auto !== true);
   const { mutate: deleteSession } = useDeleteSession();
   const { mutate: restoreSession, isPending: restoring } = useRestoreSession();
+  const { confirm, confirmDialog } = useConfirm();
   const { mutateAsync: saveSession } = useSaveSession();
 
   // Moved from Header (P4, popup-ui-consolidation-spec.md): "Save session" now lives in
@@ -437,9 +439,15 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                       disabled={restoring}
                       aria-label={`Restore session: ${session.name}`}
                       onClick={() => {
-                        if (window.confirm('This will close all open windows. Continue?')) {
-                          restoreSession(session);
-                        }
+                        const name = session.name.length > 60 ? `${session.name.slice(0, 60)}…` : session.name;
+                        void confirm({
+                          title: 'Restore this session?',
+                          description: `This will close all open windows and open the tabs saved in "${name}" instead.`,
+                          confirmLabel: 'Close all windows',
+                          destructive: true
+                        }).then((confirmed) => {
+                          if (confirmed) restoreSession(session);
+                        });
                       }}
                     >
                       <RotateCcw className="h-3 w-3" />
@@ -486,6 +494,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           );
         })()}
         </div>
+      {confirmDialog}
     </div>
   );
 }

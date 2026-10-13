@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { FolderOpen } from 'lucide-react';
 import {
   BACKUP_FILE_COPY,
   BACKUP_FILE_EXTENSION,
@@ -17,10 +18,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { AppSettings } from '@/hooks/useAppSettings';
 import { describeBackupFile, type AutoBackupSettings } from '@/lib/autoBackup';
-import { hasBackupFilePermission, parseBackupFileStatus } from '@/lib/autoBackupFile';
-import { backupFilePermissionQueryKey, backupFileStatusQueryKey } from '@/lib/autoBackupQueryKeys';
+import {
+  canShowBackupFolder,
+  hasBackupFilePermission,
+  locateBackupFile,
+  parseBackupFileLast,
+  parseBackupFileStatus,
+  showBackupFile
+} from '@/lib/autoBackupFile';
+import { backupFileLastQueryKey, backupFilePermissionQueryKey, backupFileStatusQueryKey } from '@/lib/autoBackupQueryKeys';
 import { getSetting } from '@/lib/localDb';
-import { AUTO_BACKUP_FILE_STATUS_KEY } from '@/lib/syncSettingKeys';
+import { AUTO_BACKUP_FILE_LAST_KEY, AUTO_BACKUP_FILE_STATUS_KEY } from '@/lib/syncSettingKeys';
 import { relativeTimeStr } from '@/lib/utils';
 import { toast } from '@/lib/toast';
 
@@ -33,6 +41,9 @@ interface AutoBackupFileSettingsProps {
   disabled: boolean;
   onSave: (patch: BackupFilePatch) => Promise<void> | void;
 }
+
+const formatFileTime = (ms: number) =>
+  new Date(ms).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 /** What the preview is built from: a fixed example, so it does not jump around while typing. */
 const PREVIEW = { groups: 4, tabs: 37 };
@@ -47,6 +58,7 @@ const PREVIEW = { groups: 4, tabs: 37 };
 export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFileSettingsProps) {
   const folderId = useId();
   const patternId = useId();
+  const lastFileId = useId();
   const [folder, setFolder] = useState(file.folder);
   const [pattern, setPattern] = useState(file.pattern);
   const [previewAt] = useState(() => Date.now());
@@ -71,6 +83,37 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
 
   const on = file.enabled && permitted === true;
   const revoked = file.enabled && permitted === false;
+
+  // Where the last file is NOW: the browser is asked each time this is shown, after every backup
+  // (the status above changes), and when the popup gets focus back (the user may have moved the
+  // file in the file manager that "Show in folder" opened).
+  const { data: location, refetch: recheckLocation } = useQuery({
+    queryKey: [...backupFileLastQueryKey, status?.at ?? 0],
+    queryFn: async () => locateBackupFile(parseBackupFileLast(await getSetting<unknown>(AUTO_BACKUP_FILE_LAST_KEY, null))),
+    enabled: on,
+    staleTime: 0,
+    refetchOnWindowFocus: true
+  });
+  // The browser checks whether a file still exists in the background and reports it as a change.
+  const lastId = location && 'id' in location ? location.id : null;
+  useEffect(() => {
+    if (lastId === null || typeof chrome === 'undefined' || !chrome.downloads?.onChanged) return;
+    const onChanged = (delta: { id?: unknown }) => {
+      if (delta?.id === lastId) void recheckLocation();
+    };
+    chrome.downloads.onChanged.addListener(onChanged);
+    return () => chrome.downloads.onChanged.removeListener(onChanged);
+  }, [lastId, recheckLocation]);
+
+  const canShow = canShowBackupFolder();
+  const handleShow = async () => {
+    if (!canShow) return;
+    // Ask again first: a file deleted a moment ago must open the Downloads folder, not nothing.
+    const current = (await recheckLocation()).data;
+    const result = await showBackupFile(current?.kind === 'found' ? current.id : null);
+    if (result === 'unavailable') toast.error(BACKUP_FILE_COPY.showUnavailable);
+    else if (result === 'failed') toast.error(BACKUP_FILE_COPY.showFailed);
+  };
   const folderCheck = validateBackupFolder(folder);
   const patternCheck = validateBackupFilePattern(pattern);
   const fieldsDisabled = disabled || !on;
@@ -186,12 +229,69 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
             </Button>
           </div>
 
+          <p className="text-[11px] text-muted-foreground">{BACKUP_FILE_COPY.whereToFind}</p>
           <p className="text-[11px] text-muted-foreground">{BACKUP_FILE_COPY.retention}</p>
-          {status && (
-            <p className="text-[11px] text-muted-foreground break-all">
-              Last file, {relativeTimeStr(status.at)} ago: {describeBackupFile(status.result, status.path)}
-            </p>
-          )}
+
+          {/* Where the last file really is. The path comes from the browser, so it is shown as
+              text only (never a link, never markup) and wraps inside the popup's width. */}
+          <div className="min-w-0 space-y-1 border-t border-border pt-2" role="group" aria-labelledby={lastFileId}>
+            <div className="flex items-start justify-between gap-2 min-w-0">
+              <div className="min-w-0 flex-1 space-y-0.5">
+                <p id={lastFileId} className="text-xs font-medium">
+                  {BACKUP_FILE_COPY.lastFileLabel}
+                </p>
+                {location?.kind === 'found' && (
+                  <>
+                    <p className="text-[11px] break-all select-text" data-testid="backup-file-path">
+                      {location.path}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      Saved {relativeTimeStr(location.at)} ago ({formatFileTime(location.at)})
+                    </p>
+                  </>
+                )}
+                {location?.kind === 'pending' && <p className="text-[11px] text-muted-foreground">{BACKUP_FILE_COPY.lastFilePending}</p>}
+                {location?.kind === 'gone' && (
+                  <p className="text-[11px] text-muted-foreground">
+                    {BACKUP_FILE_COPY.lastFileGone} It was saved {relativeTimeStr(location.at)} ago ({formatFileTime(location.at)}).
+                  </p>
+                )}
+                {/* The browser was not asked, or has nothing recorded: say what the last write did
+                    (its path is the one inside Downloads that TabMerger asked for). */}
+                {(location?.kind === 'none' || location?.kind === 'unavailable') &&
+                  (status ? (
+                    <p className="text-[11px] text-muted-foreground break-all">
+                      Last file, {relativeTimeStr(status.at)} ago: {describeBackupFile(status.result, status.path)}
+                    </p>
+                  ) : (
+                    <p className="text-[11px] text-muted-foreground">No file has been saved yet.</p>
+                  ))}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                // `aria-disabled`, not `disabled`: the reason below stays reachable from the button
+                className="h-7 px-2 text-xs shrink-0 rounded-none aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+                aria-disabled={!canShow}
+                aria-describedby={!canShow ? `${lastFileId}-unavailable` : undefined}
+                onClick={() => void handleShow()}
+              >
+                <FolderOpen className="h-3 w-3" />
+                {location?.kind === 'found' ? BACKUP_FILE_COPY.showInFolder : BACKUP_FILE_COPY.showDownloadsFolder}
+              </Button>
+            </div>
+            {!canShow && (
+              <p id={`${lastFileId}-unavailable`} className="text-[11px] text-muted-foreground">
+                {BACKUP_FILE_COPY.showUnavailable}
+              </p>
+            )}
+            {/* A newer write that did not produce a file: the last file above is the one before it. */}
+            {status && status.result !== 'saved' && location && location.kind !== 'none' && location.kind !== 'unavailable' && (
+              <p className="text-[11px] text-amber-500">
+                Last attempt, {relativeTimeStr(status.at)} ago: {describeBackupFile(status.result, status.path)}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>

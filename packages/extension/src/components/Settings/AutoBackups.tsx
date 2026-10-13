@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useGroups, useImportGroups, useReplaceSavedGroups } from '@/hooks/useGroups';
 import { AutoBackupFileSettings, type BackupFilePatch } from '@/components/Settings/AutoBackupFileSettings';
 import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
@@ -107,7 +108,8 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
   });
   const { data: groupsState } = useGroups();
   const { mutate: importGroupsMutation } = useImportGroups();
-  const { mutate: replaceGroupsMutation } = useReplaceSavedGroups();
+  const { mutate: replaceGroupsMutation, isPending: replacing } = useReplaceSavedGroups();
+  const { confirm, confirmDialog } = useConfirm();
   const [running, setRunning] = useState(false);
   /** The backup whose "how do you want it back" choice is open, if any. */
   const [restoreId, setRestoreId] = useState<string | null>(null);
@@ -169,7 +171,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
   //    after a confirmation. "Now Open" is never touched.
   // Both go through the import path: the stored snapshot is validated and rebuilt like a file
   // would be, every group gets a new id and is marked for sync, and both can be undone.
-  const handleRestore = (backup: Session, mode: 'add' | 'replace') => {
+  const handleRestore = async (backup: Session, mode: 'add' | 'replace') => {
     let parsed: ReturnType<typeof importGroups>;
     try {
       parsed = importGroups(JSON.stringify(backup.groups));
@@ -199,7 +201,15 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
     }
     const current = countSavedGroupsAndTabs(groupsState?.available ?? []).groups;
     const losing = current === 0 ? '' : ` Your ${current} current ${pluralize(current, 'group')} will be removed.`;
-    if (!confirm(`Replace your groups with the ${count} from this backup?${losing} You can undo this.`)) return;
+    // a replace that is still being written must not be started a second time
+    if (replacing) return;
+    const confirmed = await confirm({
+      title: 'Replace your groups?',
+      description: `Your groups will be replaced with the ${count} from this backup.${losing} You can undo this.`,
+      confirmLabel: 'Replace groups',
+      destructive: true
+    });
+    if (!confirmed) return;
     replaceGroupsMutation(groups, {
       ...done,
       onSuccess: () => {
@@ -210,8 +220,14 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
     });
   };
 
-  const handleDelete = (backup: Session) => {
-    if (!confirm(`Delete the backup from ${formatBackupDate(backup.createdAt)}? ${AUTO_BACKUP_COPY.deleteScope} This cannot be undone.`)) return;
+  const handleDelete = async (backup: Session) => {
+    const confirmed = await confirm({
+      title: 'Delete this backup?',
+      description: `The backup from ${formatBackupDate(backup.createdAt)} will be deleted. ${AUTO_BACKUP_COPY.deleteScope} This cannot be undone.`,
+      confirmLabel: 'Delete backup',
+      destructive: true
+    });
+    if (!confirmed) return;
     deleteBackup(backup.id);
   };
 
@@ -353,7 +369,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
                   size="sm"
                   className="h-7 px-2 shrink-0 rounded-none text-muted-foreground hover:text-destructive"
                   aria-label={`Delete backup from ${when}`}
-                  onClick={() => handleDelete(backup)}
+                  onClick={() => void handleDelete(backup)}
                 >
                   <Trash2 className="h-3 w-3" />
                 </Button>
@@ -365,10 +381,10 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
                       this backup holds. Either way you can undo it.
                     </p>
                     <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                      <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => handleRestore(backup, 'add')}>
+                      <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => void handleRestore(backup, 'add')}>
                         Add to my groups
                       </Button>
-                      <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => handleRestore(backup, 'replace')}>
+                      <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => void handleRestore(backup, 'replace')}>
                         Replace my groups
                       </Button>
                       <Button variant="ghost" size="sm" className="h-7 text-xs rounded-none" onClick={() => setRestoreId(null)}>
@@ -382,6 +398,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
           })}
         </ul>
       )}
+      {confirmDialog}
     </section>
   );
 }

@@ -9,5 +9,8 @@ export const autoBackupDownloadQueryKey = (userId: string | undefined) => ['auto
 /** Whether the browser currently lets the extension save files (the optional `downloads` permission). */
 export const backupFilePermissionQueryKey = ['backupFilePermission'] as const;
 
+/** Where the last backup file is on disk, as the browser reports it (see lib/autoBackupFile.ts). */
+export const backupFileLastQueryKey = ['autoBackupFileLast'] as const;
+
 /** What the last backup file write did (see lib/autoBackupFile.ts). */
 export const backupFileStatusQueryKey = ['backupFileStatus'] as const;

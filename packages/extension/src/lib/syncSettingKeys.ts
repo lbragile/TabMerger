@@ -79,6 +79,13 @@ export const AUTO_BACKUP_FREE_SEEN_KEY = 'autoBackupFreeSeen';
 export const AUTO_BACKUP_FILE_STATUS_KEY = 'autoBackupFileStatus';
 
 /**
+ * Setting: `{ id, at }`, the browser's download id of the last backup file that was written and
+ * when (see lib/autoBackupFile.ts). Only this device's browser knows that id, so it is never
+ * uploaded: like every key here it lives in the local settings store only. Account-scoped.
+ */
+export const AUTO_BACKUP_FILE_LAST_KEY = 'autoBackupFileLast';
+
+/**
  * Settings that describe ONE account's sync progress. They live in the device-wide settings store,
  * so the account wipe removes them: the next account must not inherit "already migrated" /
  * "already seeded" from the previous one.
@@ -92,5 +99,6 @@ export const ACCOUNT_SCOPED_SETTING_KEYS = [
   AUTO_BACKUP_PENDING_DELETES_KEY,
   AUTO_BACKUP_STORE_GUARD_KEY,
   AUTO_BACKUP_FREE_SEEN_KEY,
-  AUTO_BACKUP_FILE_STATUS_KEY
+  AUTO_BACKUP_FILE_STATUS_KEY,
+  AUTO_BACKUP_FILE_LAST_KEY
 ] as const;

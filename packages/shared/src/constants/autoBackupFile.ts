@@ -43,7 +43,33 @@ export const BACKUP_FILE_COPY = {
   patternLabel: 'File name',
   permissionDenied: 'TabMerger needs permission to save files. Allow it in the browser prompt to turn this on.',
   permissionRevoked: 'Turned off: TabMerger no longer has permission to save files. Turn it on to allow it again.',
+  whereToFind:
+    "To find the files, open your browser's Downloads folder and look in the folder named above (with no folder name, they are directly in Downloads).",
+  lastFileLabel: 'Last file',
+  lastFilePending: 'The file is still being written.',
+  lastFileGone:
+    "The last file was moved or deleted, or is no longer in the browser's list of downloads, so TabMerger cannot point to it.",
+  showInFolder: 'Show in folder',
+  showDownloadsFolder: 'Open Downloads folder',
+  showUnavailable: 'This browser does not let TabMerger open the folder for you. Open your Downloads folder yourself.',
+  showFailed: 'The folder could not be opened. Open your Downloads folder yourself.',
 } as const;
+
+/** The longest path read back from the browser that is shown (Linux allows 4096; Windows and macOS far less). */
+export const BACKUP_FILE_DISPLAY_PATH_LENGTH = 1024;
+
+/**
+ * Text that is safe to SHOW for a path the browser reported (the absolute path of a downloaded
+ * file). It is someone else's text: control characters and the invisible / text-direction
+ * characters are dropped (they make one path look like another), and it is cut at
+ * {@link BACKUP_FILE_DISPLAY_PATH_LENGTH}. Anything that is not a string becomes `''`. Display
+ * only: never use the result as a path, a URL or markup.
+ */
+export function toDisplayPath(input: unknown): string {
+  if (typeof input !== 'string') return '';
+  const clean = input.replace(CONTROL_CHARS_ALL, '').replace(INVISIBLE_CHARS_ALL, '');
+  return clean.length > BACKUP_FILE_DISPLAY_PATH_LENGTH ? `${clean.slice(0, BACKUP_FILE_DISPLAY_PATH_LENGTH)}…` : clean;
+}
 
 export type BackupPathResult = { ok: true; value: string } | { ok: false; error: string };
 
@@ -62,6 +88,10 @@ const CONTROL_CHARS = /[\u0000-\u001f\u007f-\u009f]/;
  * another (`backup\u202enosj.exe` is displayed as `backupexe.json`).
  */
 const INVISIBLE_CHARS = /[\u00ad\u061c\u180e\u200b-\u200f\u2028-\u202e\u2060-\u206f\ufeff]/;
+// The same two sets as global patterns, for removing every occurrence (see toDisplayPath).
+// eslint-disable-next-line no-control-regex
+const CONTROL_CHARS_ALL = new RegExp(CONTROL_CHARS.source, 'g');
+const INVISIBLE_CHARS_ALL = new RegExp(INVISIBLE_CHARS.source, 'g');
 const INVISIBLE_CHARS_MESSAGE = 'Names cannot contain invisible or text-direction characters.';
 /**
  * Windows device names: `CON`, `PRN`, `AUX`, `NUL`, `CONIN$`, `CONOUT$`, and `COM` / `LPT`

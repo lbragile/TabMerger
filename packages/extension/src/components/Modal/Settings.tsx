@@ -15,6 +15,7 @@ import { applyTheme } from '@/lib/theme';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useGroups, useImportGroups } from '@/hooks/useGroups';
 import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
 import { useAiUsage } from '@/hooks/useAiUsage';
@@ -59,6 +60,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { data: groupsState } = useGroups();
   const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const importButtonRef = useRef<HTMLButtonElement>(null);
+  const { confirm, confirmDialog } = useConfirm();
   const openModal = useUIStore((s) => s.openModal);
   const syncPausedReason = useUIStore((s) => s.syncPausedReason);
   const startTour = useUIStore((s) => s.startTour);
@@ -202,7 +205,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       // so gate on current + imported, same as ImportExport.tsx's Bookmarks/OneTab paths.
       if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
 
-      if (!confirm(`Import ${groups.length} group${groups.length === 1 ? '' : 's'}?`)) return;
+      const count = `${groups.length} group${groups.length === 1 ? '' : 's'}`;
+      // The file name is the user's own, shown as text and cut short so it cannot fill the dialog.
+      const from = file.name.length > 60 ? `${file.name.slice(0, 60)}…` : file.name;
+      const confirmed = await confirm({
+        title: `Import ${count}?`,
+        description: `The ${count} in "${from}" will be added next to the groups you already have.`,
+        confirmLabel: `Import ${count}`,
+        // the file picker took focus away: give it back to the Import button
+        returnFocusTo: importButtonRef.current
+      });
+      if (!confirmed) return;
       importGroupsMutation(groups, {
         onSuccess: () => {
           toast.success(`Groups imported successfully${skippedSuffix(skipped)}`);
@@ -560,6 +573,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <p className="text-xs text-muted-foreground">Restore groups from a JSON export</p>
             </div>
             <Button
+              ref={importButtonRef}
               variant="outline"
               size="sm"
               className="text-xs gap-1.5 shrink-0 rounded-none"
@@ -576,6 +590,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
+              // cleared so that choosing the same file again (after Cancel) asks again
+              e.target.value = '';
               if (file) void handleImport(file);
             }}
           />
@@ -796,6 +812,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           </div>
         </div>
       )}
+      {confirmDialog}
     </>
   );
 }

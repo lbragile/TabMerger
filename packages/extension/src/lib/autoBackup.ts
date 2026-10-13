@@ -18,9 +18,10 @@ import { getGroupsState, getSessions, deleteSession, getSetting, setSetting, com
 import { supabase } from '@/lib/supabase';
 import { fetchTier } from '@/lib/entitlementTier';
 import { pushSessionToSupabase, deleteRemoteSessions, isSignedInAs } from '@/lib/sessionUpload';
-import { saveBackupFile, isBackupFileResult, type BackupFileResult, type BackupFileStatus } from '@/lib/autoBackupFile';
+import { saveBackupFile, isBackupFileResult, type BackupFileLast, type BackupFileResult, type BackupFileStatus } from '@/lib/autoBackupFile';
 import {
   APP_SETTINGS_KEY,
+  AUTO_BACKUP_FILE_LAST_KEY,
   AUTO_BACKUP_FILE_STATUS_KEY,
   AUTO_BACKUP_FREE_SEEN_KEY,
   AUTO_BACKUP_PENDING_DELETES_KEY,
@@ -446,11 +447,17 @@ async function runLocked({ manual = false, recheckTier = false, now = Date.now()
   // The copy on this computer, if the user asked for one. It follows the local snapshot and does
   // not depend on the upload; a failed write is reported but never fails the backup. Nothing is
   // ever deleted from disk, whatever the rotation above removed.
-  let file: { result: BackupFileResult; path: string } | undefined;
+  let file: { result: BackupFileResult; path: string; downloadId?: number } | undefined;
   if (settings.file.enabled) {
     file = await saveBackupFile(session, settings.file.folder, settings.file.pattern);
     const status: BackupFileStatus = { at: now, result: file.result, path: file.path };
-    await commitSessionsIfGuardHolds(guard, { settings: { [AUTO_BACKUP_FILE_STATUS_KEY]: status } });
+    // The browser's id of the download is what "Show in folder" and the real path are looked up
+    // by. Only a file that was written replaces it: after a failed write the last file is still
+    // the one before.
+    const last: BackupFileLast | null = file.result === 'saved' && file.downloadId !== undefined ? { id: file.downloadId, at: now } : null;
+    await commitSessionsIfGuardHolds(guard, {
+      settings: { [AUTO_BACKUP_FILE_STATUS_KEY]: status, ...(last ? { [AUTO_BACKUP_FILE_LAST_KEY]: last } : {}) }
+    });
   }
 
   // The backup is on this device, in its owner's store. From here on only requests remain, and
