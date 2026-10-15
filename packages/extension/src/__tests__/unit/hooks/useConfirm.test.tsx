@@ -253,4 +253,42 @@ describe('useConfirm / ConfirmDialog', () => {
     await gone()
     expect(answers).toEqual([false, true])
   })
+  it('Escape is answered before any document listener, so a dialog underneath that still listens does not close too', async () => {
+    // The dialog underneath (Settings) drops its own Escape listener only a few renders after this
+    // box opens; until then it would close on an Escape nobody had used.
+    const underneath: boolean[] = []
+    const stale = (e: KeyboardEvent) => { if (e.key === 'Escape') underneath.push(e.defaultPrevented) }
+    document.addEventListener('keydown', stale, true)
+    try {
+      const answers: boolean[] = []
+      const user = userEvent.setup()
+      render(<Harness answers={answers} />)
+      await user.click(screen.getByText('Ask'))
+      await box()
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' })
+      await gone()
+      expect(answers).toEqual([false])
+      expect(underneath).toEqual([true])
+    } finally {
+      document.removeEventListener('keydown', stale, true)
+    }
+  })
+
+  it('an Escape another handler already used is left alone', async () => {
+    // registered first, so it runs before the box's own listener (as the search overlay's would)
+    const used = (e: KeyboardEvent) => e.preventDefault()
+    window.addEventListener('keydown', used, true)
+    try {
+      const answers: boolean[] = []
+      const user = userEvent.setup()
+      render(<Harness answers={answers} />)
+      await user.click(screen.getByText('Ask'))
+      await box()
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' })
+      expect(screen.getByRole('alertdialog')).toBeInTheDocument()
+      expect(answers).toEqual([])
+    } finally {
+      window.removeEventListener('keydown', used, true)
+    }
+  })
 })

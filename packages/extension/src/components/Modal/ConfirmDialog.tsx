@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -41,6 +41,26 @@ export function ConfirmDialog({ options, onResult, onClosed }: ConfirmDialogProp
   const shownRef = useRef<ConfirmOptions | null>(null);
   if (options) shownRef.current = options;
   const shown = options ?? shownRef.current;
+
+  // Escape answers this box first, before Radix's own Escape handling. Radix listens on the
+  // document and only the top dialog's listener should act, but the dialog underneath (Settings)
+  // drops its listener a few renders after this box opens. An Escape inside that window reached
+  // the dialog underneath first and closed it too, taking this box with it. A window capture
+  // listener runs before any document listener, and preventDefault makes every Radix layer skip
+  // that Escape. Layout effect: listening from the same commit that puts the box on screen.
+  const open = options !== null;
+  const onResultRef = useRef(onResult);
+  onResultRef.current = onResult;
+  useLayoutEffect(() => {
+    if (!open) return;
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      e.preventDefault();
+      onResultRef.current(false);
+    };
+    window.addEventListener('keydown', onEscape, true);
+    return () => window.removeEventListener('keydown', onEscape, true);
+  }, [open]);
 
   return (
     <Dialog open={options !== null} onOpenChange={(open) => !open && onResult(false)}>

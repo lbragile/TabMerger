@@ -254,8 +254,11 @@ test.describe('Automatic backups - Pro', () => {
     await box.getByRole('button', { name: 'Cancel' }).click();
     await expect(box).toHaveCount(0);
     await replace.click();
+    // Escape is for the box: press it once the box is up (before that it would close Settings)
+    await expect(box).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(box).toHaveCount(0);
+    await expect(section(page)).toBeVisible();
     await replace.click();
     await box.getByRole('button', { name: /close/i }).click();
     await expect(box).toHaveCount(0);
@@ -278,6 +281,7 @@ test.describe('Automatic backups - Pro', () => {
     await expect(del).toBeFocused();
 
     await del.click();
+    await expect(deleteBox.getByRole('button', { name: 'Cancel' })).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(deleteBox.getByRole('button', { name: 'Delete backup' })).toBeFocused();
     await page.keyboard.press('Enter');
