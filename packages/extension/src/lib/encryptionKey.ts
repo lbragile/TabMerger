@@ -251,11 +251,16 @@ export async function unlockEncryption(passphrase: string): Promise<UnlockResult
  * cache only saves re-importing a value that is still the persisted one. A key another context
  * dropped is therefore null here too, and one it replaced is re-imported.
  * Async because the storage.local read and the session-user lookup are both async.
+ *
+ * `expectedUserId`: when given, the key is returned only if THAT account is the one signed in;
+ * anyone else's session answers `null` (the caller is acting for an account that is no longer
+ * the signed-in one, and must not be handed the other account's key).
  */
-export async function getDataKey(): Promise<CryptoKey | null> {
+export async function getDataKey(expectedUserId?: string): Promise<CryptoKey | null> {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return null;
   const userId = session.user.id;
+  if (expectedUserId !== undefined && userId !== expectedUserId) return null;
 
   const b64 = await readStored<string>(localKeyFor(userId));
   if (cachedDataKey?.userId === userId) {
@@ -318,10 +323,15 @@ export type EncryptionKeyState = 'present' | 'absent' | 'unknown';
  * account signed into the same browser profile (it kept reading the FIRST account's "true"),
  * which made every subsequent account's sync look "locked" instead of "needs setup" forever.
  * See docs: extension-dev learnings on unscoped local flags in multi-account contexts.
+ *
+ * `expectedUserId`: when given and the signed-in account is not that one (or nobody is signed
+ * in), the answer is `unknown`: nothing is known about the EXPECTED account's key, and no
+ * request is made (nor is anything reconciled) for whoever is signed in instead.
  */
-export async function getEncryptionKeyState(): Promise<EncryptionKeyState> {
+export async function getEncryptionKeyState(expectedUserId?: string): Promise<EncryptionKeyState> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
+    if (expectedUserId !== undefined && session?.user.id !== expectedUserId) return 'unknown';
     if (!session) return 'absent';
 
     const { data, error } = await supabase

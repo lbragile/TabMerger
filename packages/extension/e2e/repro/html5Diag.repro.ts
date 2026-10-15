@@ -17,7 +17,7 @@
  * Run: pnpm --filter @tabmerger/extension exec playwright test --config e2e/repro/playwright.repro.config.ts html5Diag
  */
 import { test, chromium, type BrowserContext, type Page } from '@playwright/test';
-import { seedIdb } from '../helpers';
+import { dismissTour, seedIdb } from '../helpers';
 import { NOW_OPEN, SAVED_GROUP } from '../seed';
 import { EXTENSION_PATH } from './settings';
 
@@ -123,6 +123,7 @@ test.describe('Html5DragSensor — tab context, real paced DragEvents', () => {
       ]
     });
     try {
+      await dismissTour(context);
       const { page, log } = await bootPopupTab(context);
       const g = await primeGrips(page);
       const before = await page.evaluate(readWork);
@@ -159,6 +160,7 @@ test.describe('Html5DragSensor — tab context, real paced DragEvents', () => {
       ]
     });
     try {
+      await dismissTour(context);
       const { page, log } = await bootPopupTab(context);
       const g = await primeGrips(page);
       const before = await page.evaluate(readWork);

@@ -4,7 +4,7 @@
  * selectionMode guards on add-group and item click.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -188,23 +188,45 @@ describe('SidePanel — sessions section', () => {
   it('toggles sessions open, restores on confirm accept, skips on confirm reject, and deletes', async () => {
     const session = makeSession({ name: 'Morning setup' })
     mockUseSessionsData.mockReturnValue({ data: [session] })
-    const confirmSpy = vi.spyOn(window, 'confirm')
+    const nativeConfirm = vi.spyOn(window, 'confirm')
     const user = userEvent.setup()
     wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ permanent: true })]) }))
 
     await user.click(screen.getByText(/SESSIONS \(1\)/))
     expect(screen.getByText('Morning setup')).toBeTruthy()
 
-    confirmSpy.mockReturnValueOnce(false)
+    // Cancel: the in-app question closes and nothing is restored
     await user.click(screen.getByRole('button', { name: /restore session: morning setup/i }))
+    const dialog = await screen.findByRole('alertdialog', { name: 'Restore this session?' })
+    expect(dialog).toHaveTextContent('This will close all open windows and open the tabs saved in "Morning setup" instead.')
+    await user.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
     expect(mockRestoreSession).not.toHaveBeenCalled()
 
-    confirmSpy.mockReturnValueOnce(true)
+    // Confirm: only the action button restores
     await user.click(screen.getByRole('button', { name: /restore session: morning setup/i }))
+    await user.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Close all windows' }))
     expect(mockRestoreSession).toHaveBeenCalledWith(session)
+    expect(mockRestoreSession).toHaveBeenCalledTimes(1)
+    expect(nativeConfirm).not.toHaveBeenCalled()
 
     await user.click(screen.getByRole('button', { name: /delete session morning setup/i }))
     expect(mockDeleteSession).toHaveBeenCalledWith(session.id)
+  })
+
+  it('cuts a long session name at 60 characters in the restore question and Escape cancels it', async () => {
+    const longName = 'S'.repeat(80)
+    mockUseSessionsData.mockReturnValue({ data: [makeSession({ name: longName })] })
+    const user = userEvent.setup()
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ permanent: true })]) }))
+    await user.click(screen.getByText(/SESSIONS \(1\)/))
+    await user.click(screen.getByRole('button', { name: /restore session:/i }))
+    const dialog = await screen.findByRole('alertdialog')
+    expect(dialog).toHaveTextContent(`"${'S'.repeat(60)}…"`)
+    expect(dialog).not.toHaveTextContent('S'.repeat(61))
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(mockRestoreSession).not.toHaveBeenCalled()
   })
 
   it('disables the restore button while a restore is pending', async () => {

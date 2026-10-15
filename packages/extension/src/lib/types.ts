@@ -47,6 +47,11 @@ export interface Group {
    */
   remoteUpdatedAt?: string;
   archived?: boolean; // hidden from main sidebar; excluded from free-tier group count
+  /**
+   * Practice data made by the guided tour (`lib/tourDemo.ts`). Local-only and short-lived: never
+   * synced, backed up, exported, shared or counted. Test it with `isTourDemoGroup`, never directly.
+   */
+  tourDemo?: boolean;
 }
 
 export interface UrlRule {
@@ -74,6 +79,20 @@ export interface Session {
   description?: string;
   groups: Group[];
   createdAt: number;
+  /**
+   * True for a snapshot the extension took by itself (automatic backup). Stored locally and
+   * inside the encrypted blob on the server; never as a plaintext column.
+   */
+  auto?: boolean;
+  /**
+   * Local-only (never uploaded, never in a file): epoch ms this session was confirmed stored on
+   * the server. Set for automatic backups only, and it means ONE thing: never INSERT this row
+   * again. A backup carrying it that the server no longer has was deleted in the web dashboard,
+   * which removes the cloud copy only: it is not uploaded again, and it STAYS on this device
+   * (absence on the server never deletes a local backup). A backup without it (taken offline,
+   * never uploaded) still uploads once.
+   */
+  uploadedAt?: number;
 }
 
 export type Tier = 'free' | 'pro' | 'pro_ai';

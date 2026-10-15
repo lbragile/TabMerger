@@ -22,6 +22,9 @@ export function KeyboardMoveHost() {
       role="group"
       aria-label="Moving items"
       data-testid="keyboard-move-host"
+      // The guided tour keeps this element usable during its drag steps (a keyboard move needs
+      // it for focus) but never offers it as a Tab stop
+      data-tour-no-tab=""
       className="sr-only focus:outline-none"
     />
   );

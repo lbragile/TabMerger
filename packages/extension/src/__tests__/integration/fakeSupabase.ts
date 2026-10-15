@@ -190,14 +190,17 @@ export const fakeSupabase = {
   },
   from(table: string) {
     return {
-      async upsert(row: RemoteRow, _opts?: unknown) {
-        state().writes.push({ table, op: 'upsert', body: row })
-        // only `groups` is modelled as a table; other tables (sessions, device_sessions) are just logged
-        if (table !== 'groups') return { error: null }
-        state().upserts.push(row)
-        await maybeGate('upsert')
-        state().rows.set(row.id, row)
-        return { error: null }
+      upsert(row: RemoteRow, _opts?: unknown) {
+        // thenable that also accepts .abortSignal(): every upsert in the product carries one
+        return request(async () => {
+          state().writes.push({ table, op: 'upsert', body: row })
+          // only `groups` is modelled as a table; other tables (sessions, device_sessions) are just logged
+          if (table !== 'groups') return { error: null }
+          state().upserts.push(row)
+          await maybeGate('upsert')
+          state().rows.set(row.id, row)
+          return { error: null }
+        })
       },
       /** INSERT: unique violation (23505) when the id exists. Returns the stored updated_at. */
       insert(row: RemoteRow) {

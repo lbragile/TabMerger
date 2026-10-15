@@ -1,4 +1,4 @@
-import { isScriptUrl } from '@tabmerger/shared'
+import { GROUP_COLOR_RE, isReservedTourDemoId, isScriptUrl, withoutTourDemoGroups } from '@tabmerger/shared'
 import { nanoid } from 'nanoid'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 import { DEFAULT_GROUP_COLOR } from '@/lib/types'
@@ -24,9 +24,6 @@ export const IMPORTED_GROUP_FALLBACK_NAME = 'Imported group'
 
 /** The colours `chrome.tabGroups` accepts; any other value makes `tabGroups.update` reject. */
 const CHROME_GROUP_COLORS: readonly string[] = ['grey', 'blue', 'red', 'yellow', 'green', 'pink', 'purple', 'cyan', 'orange']
-
-/** The two colour notations the app writes or has written: `rgb()/rgba()` and hex. */
-const GROUP_COLOR_RE = /^(?:rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(?:,\s*(?:\d(?:\.\d+)?|\.\d+)\s*)?\)|#[0-9a-f]{3,8})$/i
 
 type Counter = { skipped: number }
 
@@ -123,7 +120,8 @@ function sanitizeGroup(raw: unknown, counter: Counter): Group | null {
     else counter.skipped++
   }
   const group: Group = {
-    id: typeof raw.id === 'string' && raw.id ? raw.id : nanoid(10),
+    // (an id the tour's practice groups use gets a fresh one: the tour removes groups by that id)
+    id: typeof raw.id === 'string' && raw.id && !isReservedTourDemoId(raw.id) ? raw.id : nanoid(10),
     name: typeof raw.name === 'string' && raw.name ? raw.name : IMPORTED_GROUP_FALLBACK_NAME,
     color: typeof raw.color === 'string' && GROUP_COLOR_RE.test(raw.color) ? raw.color : DEFAULT_GROUP_COLOR,
     updatedAt: isFiniteNumber(raw.updatedAt) ? raw.updatedAt : Date.now(),
@@ -157,8 +155,14 @@ function sanitizeGroups(items: unknown[]): { groups: Group[]; nowOpen: Group | u
   return { groups, nowOpen, skipped: counter.skipped }
 }
 
+/** The export file's text. The guided tour's practice groups are never written to a file. */
 export function exportGroups(groups: Group[]): string {
-  return JSON.stringify(groups)
+  return JSON.stringify(withoutTourDemoGroups(groups))
+}
+
+/** The full-state export (`{ active, available }`) of the Import / Export dialog, same rule. */
+export function exportGroupsState(state: GroupsState): string {
+  return JSON.stringify({ ...state, available: withoutTourDemoGroups(state.available) }, null, 2)
 }
 
 /**

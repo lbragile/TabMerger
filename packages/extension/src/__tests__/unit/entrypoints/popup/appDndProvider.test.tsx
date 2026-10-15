@@ -54,6 +54,8 @@ vi.mock('@/components/SelectionActionBar', () => ({ SelectionActionBar: () => nu
 vi.mock('@/components/SubscriptionStatusBanner', () => ({ SubscriptionStatusBanner: () => null }))
 vi.mock('@/components/UpgradeCTA', () => ({ UpgradeCTA: () => null }))
 vi.mock('@/components/CleanupSuggestionBanner', () => ({ CleanupSuggestionBanner: () => null }))
+// The guided tour has its own tests; here it would read uiStore state this file's mock does not carry
+vi.mock('@/components/Tour/Tour', () => ({ Tour: () => null }))
 
 const baseUIState = {
   activeGroupIndex: 0,

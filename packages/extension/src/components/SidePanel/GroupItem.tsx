@@ -22,6 +22,9 @@ import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMove
 import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
+import { TOUR_ANCHORS, TOUR_READY_ATTR } from '@/lib/tourSteps';
+import { isTourDemoGroup, SEARCH_COPY } from '@tabmerger/shared';
+import { Highlighted } from '@/components/Highlighted';
 
 interface GroupItemProps {
   group: Group;
@@ -29,9 +32,17 @@ interface GroupItemProps {
   isActive: boolean;
   isLocked?: boolean;
   onClick: () => void;
+  /** While a search is active: how many of this group's tabs match (shown instead of the windows/tabs badge). */
+  searchMatchCount?: number;
+  /** The part of the search to mark in the group's name ('' = none). Plain text, never a pattern. */
+  searchNameQuery?: string;
+  /** "Dim" search mode: this group has no match. */
+  searchDimmed?: boolean;
+  /** Groups are hidden by the search: no drag grip and no keyboard move (the order among hidden rows would be a guess). */
+  reorderLocked?: boolean;
 }
 
-export function GroupItem({ group, groupIndex, isActive, isLocked = false, onClick }: GroupItemProps) {
+export function GroupItem({ group, groupIndex, isActive, isLocked = false, onClick, searchMatchCount, searchNameQuery = '', searchDimmed = false, reorderLocked = false }: GroupItemProps) {
   const { data: groupsState } = useGroups();
   const savedGroupCount = (groupsState?.available ?? []).filter((g) => !g.permanent).length;
   // MODEL id — the group's real `group.id` (not positional "group-N"). Same id for
@@ -39,7 +50,9 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   // `starred` rides along because it is the row's ZONE, not decoration: starred groups are
   // pinned above unstarred ones, and the DnD collision layer clamps the insertion gap into
   // the dragged block's own zone (`@/lib/dndInsertion`, spec §6.1).
-  const dndData = { type: 'group', groupId: group.id, index: groupIndex, starred: !!group.starred };
+  // `tourDemo`: a practice group of the guided tour only reorders against another one, and the
+  // collision layer needs to know which rows those are to draw the gap in the right place.
+  const dndData = { type: 'group', groupId: group.id, index: groupIndex, starred: !!group.starred, tourDemo: isTourDemoGroup(group) };
   // `transition` is intentionally discarded — this codebase renders an insertion gap
   // instead of applying dnd-kit's live transform/transition during a drag (drag-and-drop
   // spec §8: "no live dnd-kit `transform` on a pointer-dragged row").
@@ -232,14 +245,16 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       wrapperRef={setNodeRef}
       // Static row id for the multi-drag registry (collapse + `+N`) and focus-by-identity.
       wrapperDndId={group.id}
+      wrapperLabel={searchDimmed ? `${group.name}${SEARCH_COPY.noMatchSuffix}` : undefined}
       // Space on the focused row starts keyboard move mode — only for a row that has a grip.
-      moveGroupId={group.permanent || savedGroupCount <= 1 ? undefined : group.id}
+      moveGroupId={group.permanent || savedGroupCount <= 1 || reorderLocked ? undefined : group.id}
       // Ctrl+Space on the focused row toggles it in the selection (never Now Open).
       selectGroupItem={group.permanent ? undefined : { type: 'group', id: selectionId }}
       onWrapperKeyDown={roving.onKeyDown}
       wrapperStyle={{
         ...style,
-        opacity: isDimmedBySelection ? 0.4 : undefined,
+        // 0.6 keeps a faded row's text readable (it is still a row the user can open)
+        opacity: isDimmedBySelection ? 0.4 : searchDimmed ? 0.6 : undefined,
         background:
           isSelected
             ? 'rgba(0, 180, 204, 0.15)'
@@ -284,7 +299,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             be reordered). In selection mode the checkbox sits right after it, exactly as
             in Tab.tsx / Window.tsx: replacing the grip with the checkbox used to make a
             multi-group selection impossible to drag at all. */}
-        {group.permanent || savedGroupCount <= 1 ? (
+        {group.permanent || savedGroupCount <= 1 || reorderLocked ? (
           <span className="h-3 w-3 shrink-0" aria-hidden="true" />
         ) : (
           <span
@@ -338,6 +353,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     style={{ backgroundColor: displayColor }}
                     onClick={(e) => e.stopPropagation()}
                     aria-label="Change group color"
+                    data-tour={TOUR_ANCHORS.groupColor}
                   />
                 </PopoverTrigger>
               </TooltipTrigger>
@@ -347,6 +363,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 align="start"
                 sideOffset={4}
                 onClick={(e) => e.stopPropagation()}
+                data-tour={TOUR_ANCHORS.colorPicker}
               >
                 <ColorPicker
                   value={group.color}
@@ -367,7 +384,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         )}
 
         {/* Name slot */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0" data-tour={TOUR_ANCHORS.groupName}>
           {isRenaming ? (
             <div className="flex items-center gap-1 w-full" onClick={(e) => e.stopPropagation()}>
               <input
@@ -377,10 +394,12 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); if (e.key === 'Escape') handleCancelRename(); }}
                 onBlur={handleRename}
+                aria-label="Group name"
+                data-tour={TOUR_ANCHORS.groupNameInput}
                 className="min-w-0 flex-1 bg-transparent outline-none text-xs"
                 style={{ borderBottom: '1px solid rgba(0,180,204,0.6)', color: 'var(--sidebar-text-active)' }}
               />
-              <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleRename(); }}><Check className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label="Save" data-tour={TOUR_ANCHORS.groupNameSave} {...{ [TOUR_READY_ATTR]: editValue.trim() && editValue.trim() !== DEFAULT_GROUP_TITLE ? '' : undefined }} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleRename(); }}><Check className="h-2.5 w-2.5" /></button>
               <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleCancelRename(); }}><X className="h-2.5 w-2.5" /></button>
             </div>
           ) : (
@@ -396,7 +415,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     setRenameTarget({ kind: 'group', groupIndex });
                   }}
                 >
-                  {group.name}
+                  <Highlighted text={group.name} query={searchNameQuery} />
                 </span>
               </TooltipTrigger>
               <TooltipContent side="top">{group.name}</TooltipContent>
@@ -405,7 +424,18 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         </div>
 
         {/* Windows ◆ tabs badge — hidden while renaming */}
-        {!isRenaming && <span
+        {!isRenaming && searchMatchCount !== undefined && (
+          // While searching the badge says how many of the group's tabs match.
+          <span
+            className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
+            style={{ background: 'var(--sidebar-badge-bg)', color: 'var(--sidebar-text-muted)' }}
+            data-testid="group-search-count"
+            title={`${searchMatchCount} of ${tabCount} tabs match the search`}
+          >
+            {searchMatchCount} found
+          </span>
+        )}
+        {!isRenaming && searchMatchCount === undefined && <span
           className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
           style={{
             background: 'var(--sidebar-badge-bg)',
@@ -439,6 +469,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                   group.starred ? 'opacity-100' : 'opacity-30 group-hover:opacity-100'
                 )}
                 aria-label={group.starred ? 'Unpin group' : 'Pin group'}
+                data-tour={TOUR_ANCHORS.groupPin}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleGroupStar(groupIndex);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2, BookmarkPlus } from 'lucide-react';
@@ -15,15 +15,23 @@ import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
-import { FreeLimitExceededError } from '@/lib/tierLimits';
+import { FreeLimitExceededError, countedGroups } from '@/lib/tierLimits';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession, useSaveSession } from '@/hooks/useSessions';
+import { useConfirm } from '@/hooks/useConfirm';
 import { pluralize } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { FREE_TIER_LIMITS } from '@tabmerger/shared';
 import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
+import { SEARCH_NON_MATCHING } from '@tabmerger/shared';
+import { useSearchFilters, useSearchMode } from '@/hooks/useSearchView';
+import { useKeepFocusInList } from '@/hooks/useKeepFocusInList';
+import { useTourSearchShowsDemo } from '@/hooks/useTourSearchShowsDemo';
+import { isSearchActive, summarizeSearch } from '@/lib/searchMatch';
 
 /**
  * Shared shell for the Archived / Sessions sidebar sections: a disclosure header row
@@ -41,6 +49,7 @@ function SidebarSection({
   emptyLabel,
   action,
   className,
+  tourAnchor,
   children,
 }: {
   label: string;
@@ -51,10 +60,12 @@ function SidebarSection({
   emptyLabel: string;
   action?: React.ReactNode;
   className?: string;
+  /** Guided-tour anchor name (`data-tour`), see lib/tourSteps.ts. */
+  tourAnchor?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={className}>
+    <div className={className} data-tour={tourAnchor}>
       <div className="flex items-center gap-1 pr-1">
         <button
           type="button"
@@ -153,9 +164,14 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const { mutate: deleteGroup } = useDeleteGroup();
   const [archivedOpen, setArchivedOpen] = useState(false);
   const [sessionsOpen, setSessionsOpen] = useState(false);
-  const { data: sessions = [] } = useSessions();
+  const { data: storedSessions = [] } = useSessions();
+  // Automatic backups share the sessions store but are NOT listed here: this list's Restore closes
+  // every browser window and reopens the tabs, which is not what restoring a backup means. They
+  // are managed in Settings → Data only, and never count toward the Free session limit.
+  const sessions = storedSessions.filter((s) => s.auto !== true);
   const { mutate: deleteSession } = useDeleteSession();
   const { mutate: restoreSession, isPending: restoring } = useRestoreSession();
+  const { confirm, confirmDialog } = useConfirm();
   const { mutateAsync: saveSession } = useSaveSession();
 
   // Moved from Header (P4, popup-ui-consolidation-spec.md): "Save session" now lives in
@@ -191,6 +207,23 @@ export function SidePanel({ groupsState }: SidePanelProps) {
 
   const raw = groupsState.available;
 
+  // Search: which groups have a match, and how many. In "hide" mode a group with none is not
+  // rendered (render only: `realIndex` below is always the group's index in the saved data, and
+  // "Now Open" stays at index 0 there). Groups search leaves out have no entry and always show.
+  const filters = useSearchFilters();
+  const searchMode = useSearchMode();
+  const searchShowsDemo = useTourSearchShowsDemo();
+  const searchSummary = useMemo(
+    () => (isSearchActive(filters) ? summarizeSearch(raw, filters) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [raw, filters, searchShowsDemo]
+  );
+  const hideNonMatching = !!searchSummary && searchMode === SEARCH_NON_MATCHING.HIDE;
+  // A focused group row that search hides hands focus to its nearest listed neighbor
+  const groupListRef = useRef<HTMLDivElement>(null);
+  const keepFocus = useKeepFocusInList(groupListRef, hideNonMatching);
+  const plainOnly = !!filters.tabQuery && !filters.groupFilter && !filters.windowFilter && !filters.tagFilter;
+
   // Split archived vs active (permanent is always active)
   const archivedGroups = raw
     .map((g, i) => ({ group: g, realIndex: i }))
@@ -201,8 +234,10 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   let savedDisplayIdx = 0;
   const available = getSidebarDisplayOrder(raw).map(({ group: g, realIndex }) => {
     // ponytail: all non-permanent groups count toward free-tier limit (archived included)
-    const isLocked = !g.permanent && isFinite(maxGroups) && isOverFreeLimit(savedDisplayIdx, maxGroups);
-    if (!g.permanent) savedDisplayIdx++;
+    // The guided tour's practice groups are not the user's: never counted, never locked
+    const counts = !g.permanent && !isTourDemoGroup(g);
+    const isLocked = counts && isFinite(maxGroups) && isOverFreeLimit(savedDisplayIdx, maxGroups);
+    if (counts) savedDisplayIdx++;
     return { group: g, realIndex, isLocked };
   });
   // MODEL ids — each visible group's real `group.id` (not positional "group-N").
@@ -211,7 +246,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
 
   // All non-permanent groups count toward the limit (archived included — archiving
   // doesn't free up slots).
-  const atGroupLimit = raw.filter((g) => !g.permanent).length >= maxGroups;
+  const atGroupLimit = countedGroups(raw).length >= maxGroups;
   const warnGroupLimit = useCallback(() => {
     trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
     toast.error(`Free plan allows up to ${maxGroups} groups.`, {
@@ -258,18 +293,30 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       <ScrollArea className="flex-1">
         <div className="py-1.5">
           {/* List wrapper: grows by the gap height while a group drag's gap is here. */}
-          <div data-tm-dnd-list="groups" style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
+          <div ref={groupListRef} onFocusCapture={keepFocus.onFocusCapture} onBlurCapture={keepFocus.onBlurCapture} data-tm-dnd-list="groups" data-tour={TOUR_ANCHORS.groups} style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
           <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>
-            {available.map(({ group, realIndex, isLocked }) => (
-              <GroupItem
-                key={group.id}
-                group={group}
-                groupIndex={realIndex}
-                isActive={realIndex === activeGroupIndex}
-                isLocked={isLocked}
-                onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
-              />
-            ))}
+            {available.map(({ group, realIndex, isLocked }) => {
+              const found = searchSummary?.perGroup[realIndex];
+              const isActive = realIndex === activeGroupIndex;
+              const noMatch = !!found && !found.visible;
+              // The group on screen stays listed even with no match: it is what the panel shows.
+              // So does "Now Open" (with a "0 found" badge): it is the way back to the live tabs.
+              if (hideNonMatching && noMatch && !isActive && !group.permanent) return null;
+              return (
+                <GroupItem
+                  key={group.id}
+                  group={group}
+                  groupIndex={realIndex}
+                  isActive={isActive}
+                  isLocked={isLocked}
+                  onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
+                  searchMatchCount={found?.matchCount}
+                  searchNameQuery={found ? filters.groupFilter || (plainOnly && found.nameMatch ? filters.tabQuery : '') : ''}
+                  searchDimmed={noMatch && !isActive}
+                  reorderLocked={hideNonMatching}
+                />
+              );
+            })}
           </SortableContext>
           </div>
 
@@ -281,7 +328,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
               Both children stay MOUNTED for the same reason; only visibility flips. */}
           <div className={cn('relative px-1.5 mt-2', atNewGroupStop && KEYBOARD_ZONE_MIN_HEIGHT)}>
             <NewGroupDropZone active={dropZoneActive} />
-            <div className={(isDragging || moveKind !== null) ? 'invisible' : undefined}>
+            <div data-tour={TOUR_ANCHORS.addGroup} className={(isDragging || moveKind !== null) ? 'invisible' : undefined}>
               <Button
                 variant="outline"
                 className="h-8 rounded-none px-3 text-xs w-full"
@@ -311,6 +358,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           isEmpty={archivedGroups.length === 0}
           emptyLabel="No archived groups"
           className="mt-1.5"
+          tourAnchor={TOUR_ANCHORS.archived}
         >
           {archivedGroups.map(({ group, realIndex }) => (
             <div
@@ -370,6 +418,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           isEmpty={sessions.length === 0}
           emptyLabel="No saved sessions"
           className="mt-1.5 mb-1.5"
+          tourAnchor={TOUR_ANCHORS.sessions}
           action={
             <Tooltip>
               <TooltipTrigger asChild>
@@ -424,9 +473,15 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                       disabled={restoring}
                       aria-label={`Restore session: ${session.name}`}
                       onClick={() => {
-                        if (window.confirm('This will close all open windows. Continue?')) {
-                          restoreSession(session);
-                        }
+                        const name = session.name.length > 60 ? `${session.name.slice(0, 60)}…` : session.name;
+                        void confirm({
+                          title: 'Restore this session?',
+                          description: `This will close all open windows and open the tabs saved in "${name}" instead.`,
+                          confirmLabel: 'Close all windows',
+                          destructive: true
+                        }).then((confirmed) => {
+                          if (confirmed) restoreSession(session);
+                        });
                       }}
                     >
                       <RotateCcw className="h-3 w-3" />
@@ -473,6 +528,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           );
         })()}
         </div>
+      {confirmDialog}
     </div>
   );
 }

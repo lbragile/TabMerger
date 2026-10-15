@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import type { Entitlements, Tier } from '@/lib/types';
 import { TIER_LIMITS } from '@/lib/types';
 import { AI_ENABLED } from '@/lib/aiFlag';
-import { isEntitledSubscriptionStatus } from '@tabmerger/shared';
+import { resolveTier } from '@/lib/entitlementTier';
 import { useAuth } from './useAuth';
 
 type SubRow = {
@@ -13,20 +13,6 @@ type SubRow = {
   current_period_end: string | null;
   stripe_price_id: string | null;
 };
-
-/**
- * Maps a raw subscription row to a `Tier` enum value.
- * Only `ENTITLED_SUBSCRIPTION_STATUSES` (active, trialing, past_due) grant paid
- * entitlements — every other status (canceled, incomplete, incomplete_expired,
- * unpaid, paused) is treated as `free` regardless of the tier field. Mirrors
- * `has_cloud_sync()` in supabase/migrations/019_gate_cloud_sync_rls.sql.
- */
-function resolveTier(data: SubRow | null): Tier {
-  if (!data || !isEntitledSubscriptionStatus(data.status)) return 'free';
-  if (data.tier === 'pro_ai') return 'pro_ai';
-  if (data.tier === 'pro') return 'pro';
-  return 'free';
-}
 
 async function fetchSubscription(userId: string): Promise<SubRow | null> {
   const { data, error } = await supabase

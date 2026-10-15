@@ -14,7 +14,7 @@ import {
   type Locator,
   type Worker
 } from '@playwright/test';
-import { seedIdb } from '../helpers';
+import { dismissTour, seedIdb } from '../helpers';
 import { EXTENSION_PATH, settings, type SeedGroup } from './settings';
 
 export interface ReproSession {
@@ -53,6 +53,7 @@ export async function startPopupSession(groups: SeedGroup[]): Promise<ReproSessi
 
   const sw = await getServiceWorker(context);
   const extensionId = new URL(sw.url()).hostname;
+  await dismissTour(context);
 
   // 1. Seed IDB through popup.html-as-a-tab (Playwright can drive that fine).
   const seedTab = await context.newPage();

@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { test as base, chromium, type BrowserContext, type Page } from '@playwright/test';
 import { EXTENSION_PATH, CPU_THROTTLE_RATE, EXTRA_CHROMIUM_ARGS, OFFLINE_CHROMIUM_ARG } from './extensionPath';
+import { dismissTour } from './helpers';
 
 /** Per-file switches (`test.use({ ... })`) for the browser the fixture launches. */
 interface ExtensionOptions {
@@ -12,6 +13,12 @@ interface ExtensionOptions {
    * real host. Requests a test stubs with `page.route` are answered before DNS, so they still work.
    */
   blockNetwork: boolean;
+  /**
+   * The guided tour. `'dismissed'` (default): the profile starts with the tour already finished,
+   * so it never covers the popup. `'pending'`: leave the profile as a first install made it, so
+   * the tour opens with the first popup (for specs about the tour itself).
+   */
+  tour: 'dismissed' | 'pending';
 }
 
 /**
@@ -25,9 +32,10 @@ interface ExtensionOptions {
 export const test = base.extend<{ context: BrowserContext; extensionId: string } & ExtensionOptions>({
   extensionPath: [EXTENSION_PATH, { option: true }],
   blockNetwork: [false, { option: true }],
+  tour: ['dismissed', { option: true }],
 
   // Override the built-in context fixture
-  context: async ({ extensionPath, blockNetwork }, use) => {
+  context: async ({ extensionPath, blockNetwork, tour }, use) => {
     if (!fs.existsSync(path.join(extensionPath, 'manifest.json'))) {
       throw new Error(`No built extension (manifest.json) in ${extensionPath}. Build it first, see e2e/TEST_CASES.md.`);
     }
@@ -57,6 +65,12 @@ export const test = base.extend<{ context: BrowserContext; extensionId: string }
       };
       context.on('page', (page) => void throttle(page));
       await Promise.all(context.pages().map(throttle));
+    }
+    if (tour === 'dismissed') {
+      await dismissTour(context).catch(async (error: unknown) => {
+        await context.close();
+        throw error;
+      });
     }
     await use(context);
     await context.close();

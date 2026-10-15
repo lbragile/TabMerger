@@ -4,6 +4,7 @@ import type { GroupsState, Window, Tab } from '@/lib/types';
 import { updateGroupsState } from '@/lib/localDb';
 import { getFaviconUrl, formatGroupCounts, sortWindowsByStarred } from '@/lib/utils';
 import { pushDeviceSession } from '@/lib/deviceSessions';
+import { isTourPracticeUrl } from '@/lib/tourPracticeTab';
 import { GROUPS_QUERY_KEY } from './useGroups';
 import { useEntitlements } from './useEntitlements';
 
@@ -84,7 +85,9 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
     // in useGroups.ts, but scoped to this extension only rather than all extensions.
     const ownExtensionPrefix = `chrome-extension://${chrome.runtime.id}/`;
     for (const [windowId, tabs] of tabsByWindow) {
-      tabsByWindow.set(windowId, tabs.filter((t) => !t.url?.startsWith(ownExtensionPrefix)));
+      // One exception: the guided tour's spare tab (`lib/tourPracticeTab.ts`), which the tour's
+      // "save a tab" step needs on the list. It is only open while that step is up.
+      tabsByWindow.set(windowId, tabs.filter((t) => !t.url?.startsWith(ownExtensionPrefix) || isTourPracticeUrl(t.url)));
     }
 
     let wrote = false;

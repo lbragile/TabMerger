@@ -8,6 +8,8 @@ import {
     CheckSquare,
     Square,
     Zap,
+    CircleQuestionMark,
+    X,
 } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
@@ -33,12 +35,17 @@ import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAutoGroup, useOrganizeTabs, QuotaExceededError } from "@/hooks/useAI";
 import { AI_ENABLED } from "@/lib/aiFlag";
 import { useAppSettings } from "@/hooks/useAppSettings";
-import { useGroups, useSetGroupsState, useApplyAIGroups } from "@/hooks/useGroups";
+import { useUndoRedo } from "@/hooks/useUndoRedo";
+import { useGroups, useApplyAIGroups } from "@/hooks/useGroups";
 import { toast } from "@/lib/toast";
-import { FreeLimitExceededError } from "@/lib/tierLimits";
+import { FreeLimitExceededError, countedGroups } from "@/lib/tierLimits";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
+import { TOUR_ANCHORS } from "@/lib/tourSteps";
+import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
+import { motionScrollBehavior } from "@/lib/reducedMotion";
+import { SEARCH_COPY } from "@tabmerger/shared";
 
 /** Map an internal tier key to a human-readable label. */
 function tierLabel(tier: string): string {
@@ -52,10 +59,6 @@ export function Header() {
         searchFilter,
         setSearchFilter,
         openModal,
-        undoStack,
-        redoStack,
-        undo,
-        redo,
         selectionMode,
         toggleSelectionMode,
     } = useUIStore(
@@ -63,10 +66,6 @@ export function Header() {
             searchFilter: s.searchFilter,
             setSearchFilter: s.setSearchFilter,
             openModal: s.openModal,
-            undoStack: s.undoStack,
-            redoStack: s.redoStack,
-            undo: s.undo,
-            redo: s.redo,
             selectionMode: s.selectionMode,
             toggleSelectionMode: s.toggleSelectionMode,
         })),
@@ -74,6 +73,11 @@ export function Header() {
 
     const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
     const setScrollToWindowIndex = useUIStore((s) => s.setScrollToWindowIndex);
+    const startTour = useUIStore((s) => s.startTour);
+    const handleStartTour = () => {
+        trackEvent('tour_started', { source: 'header' });
+        startTour();
+    };
     // ponytail: fire once per non-empty search "session" — reset when the field clears
     const searchTrackedRef = useRef(false);
     const handleSearchQueryChange = (q: string) => {
@@ -88,24 +92,15 @@ export function Header() {
     const { user, signOut } = useAuth();
     const { aiFeatures, tier, maxGroups, maxTabs } = useEntitlements();
     const { data: groupsState } = useGroups();
-    const setGroupsState = useSetGroupsState();
     const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
     const { mutateAsync: applyAIGroups } = useApplyAIGroups({ maxGroups, maxTabs });
     const { mutateAsync: organizeTabs, isPending: organizeLoading } = useOrganizeTabs();
     const { data: appSettings } = useAppSettings();
     const [aiQuotaExceeded, setAiQuotaExceeded] = useState(false);
 
-    const handleUndo = async () => {
-        if (!groupsState) return;
-        const prev = undo(groupsState);
-        if (prev) await setGroupsState(prev);
-    };
-
-    const handleRedo = async () => {
-        if (!groupsState) return;
-        const next = redo(groupsState);
-        if (next) await setGroupsState(next);
-    };
+    // Restores a snapshot as a NEW local change (see `useUndoRedo`), never the raw snapshot:
+    // that one carries stale sync stamps, a stale copy of Now Open and no tour practice groups.
+    const { canUndo, canRedo, undo: handleUndo, redo: handleRedo } = useUndoRedo();
 
     const handleAIGroup = async () => {
         if (!groupsState) return;
@@ -124,7 +119,7 @@ export function Header() {
             }
 
             // Cap to remaining free-tier group slots, same limit manual "New group" enforces
-            const activeCount = groupsState.available.filter((g) => !g.permanent).length;
+            const activeCount = countedGroups(groupsState.available).length;
             const remaining = isFinite(maxGroups) ? Math.max(0, maxGroups - activeCount) : result.groups.length;
             const suggestions = result.groups.slice(0, remaining);
             if (suggestions.length === 0) {
@@ -178,6 +173,8 @@ export function Header() {
 
     const searchRef = useRef<HTMLInputElement>(null);
     const [searchOpen, setSearchOpen] = useState(false);
+    // The guided tour closes whatever a step opened when it moves on (same signal as a multi-select)
+    useCloseOnOverlayDismiss(() => setSearchOpen(false));
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
@@ -190,9 +187,48 @@ export function Header() {
         return () => window.removeEventListener('keydown', handler);
     }, []);
 
+    const openSearchRef = useRef<HTMLButtonElement>(null);
+    const wasSearchOpen = useRef(false);
     useEffect(() => {
-        if (searchOpen) setTimeout(() => searchRef.current?.focus(), 0);
+        // Focus the box in this effect, not in a later timer: the overlay's input is already
+        // mounted here, and the effect of a click or Ctrl K runs before the next key is handled.
+        // A timer lets keys typed straight after opening (busy main thread: the browser handles
+        // queued input before timers) land on the opener instead of the box, and get lost.
+        if (searchOpen) searchRef.current?.focus();
+        // Closed (Escape, a click outside, Ctrl K, a picked result): the focused search box is
+        // gone, so focus goes back to the opener. Not when something else already took it (a
+        // picked tab focuses its row a moment later, which then moves it on).
+        else if (wasSearchOpen.current) {
+            const active = document.activeElement;
+            if (!active || active === document.body) openSearchRef.current?.focus();
+        }
+        wasSearchOpen.current = searchOpen;
     }, [searchOpen]);
+
+    // The query is only ever cleared by the user. This is the header's own clear (x) button:
+    // it is about to unmount, so focus moves to the search box's opener first.
+    const handleClearSearch = () => {
+        openSearchRef.current?.focus();
+        handleSearchQueryChange('');
+    };
+
+    // Picking a tab in the results goes to its group and KEEPS the query: the picked tab matches
+    // it, so it is on screen and marked. Once the panel has drawn that group, the row is
+    // scrolled into view and focused (the overlay that had focus is gone).
+    const revealTab = (groupIndex: number, windowIndex: number, tabIndex: number) => {
+        const selector = `[data-group-index="${groupIndex}"][data-window-index="${windowIndex}"][data-tab-index="${tabIndex}"]`;
+        let tries = 0;
+        const attempt = () => {
+            const row = document.querySelector<HTMLElement>(selector);
+            if (row) {
+                row.scrollIntoView({ behavior: motionScrollBehavior(), block: 'nearest' });
+                row.focus({ preventScroll: true });
+            } else if (tries++ < 10) {
+                setTimeout(attempt, 30);
+            }
+        };
+        setTimeout(attempt, 0);
+    };
 
     const userInitials = user?.email?.slice(0, 2).toUpperCase() ?? "TM";
     const currentTierLabel = tierLabel(tier);
@@ -219,16 +255,38 @@ export function Header() {
             {/* Search trigger — px-3 matches WindowsPanel toolbar's inset below it */}
             <div className="flex justify-start items-center flex-1 min-w-0 px-3 py-2">
                 <button
+                    ref={openSearchRef}
                     type="button"
-                    className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full border border-border bg-muted/40 text-xs text-foreground/70 hover:bg-muted transition-colors"
+                    className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full min-w-0 border border-border bg-muted/40 text-xs text-foreground/70 hover:bg-muted transition-colors"
                     onClick={() => setSearchOpen(true)}
-                    aria-label="Open search"
+                    // The visible query is part of the name (WCAG 2.5.3, label in name)
+                    aria-label={searchFilter ? `${SEARCH_COPY.openSearch}, ${SEARCH_COPY.currentSearch}: ${searchFilter}` : SEARCH_COPY.openSearch}
+                    data-tour={TOUR_ANCHORS.search}
                 >
                     <span className="flex-1 text-left truncate">
                         {searchFilter || 'Search tabs and groups…'}
                     </span>
                     <kbd className="text-[10px] border border-border px-1 py-px font-mono shrink-0">Ctrl K</kbd>
                 </button>
+                {/* A sibling of the opener (a button inside a button is invalid). Only while a
+                    query is active: the query stays until the user clears it. */}
+                {searchFilter && (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 shrink-0 rounded-none border border-l-0 border-border"
+                                onClick={handleClearSearch}
+                                aria-label={SEARCH_COPY.clearSearch}
+                                data-testid="header-clear-search"
+                            >
+                                <X className="h-3.5 w-3.5 text-muted-foreground" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">{SEARCH_COPY.clearSearch}</TooltipContent>
+                    </Tooltip>
+                )}
             </div>
 
             {/* Search overlay */}
@@ -236,8 +294,10 @@ export function Header() {
                 query={searchFilter}
                 onQueryChange={handleSearchQueryChange}
                 groupsState={groupsState}
-                onSelectGroup={(idx) => { setActiveGroupIndex(idx); setSearchFilter(''); setSearchOpen(false); }}
-                onSelectWindow={(groupIdx, winIdx) => { setActiveGroupIndex(groupIdx); setScrollToWindowIndex(winIdx); setSearchFilter(''); setSearchOpen(false); }}
+                // Picking a result never clears the query: it stays until the user clears it.
+                onSelectGroup={(idx) => { setActiveGroupIndex(idx); setSearchOpen(false); }}
+                onSelectWindow={(groupIdx, winIdx) => { setActiveGroupIndex(groupIdx); setScrollToWindowIndex(winIdx); setSearchOpen(false); }}
+                onSelectTab={(groupIdx, winIdx, tabIdx) => { setActiveGroupIndex(groupIdx); setSearchOpen(false); revealTab(groupIdx, winIdx, tabIdx); }}
                 onClose={() => setSearchOpen(false)}
                 inputRef={searchRef}
             />}
@@ -250,9 +310,10 @@ export function Header() {
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={handleUndo}
-                            disabled={undoStack.length === 0}
+                            onClick={() => void handleUndo()}
+                            disabled={!canUndo}
                             aria-label="Undo"
+                            data-tour={TOUR_ANCHORS.undo}
                         >
                             <Undo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
@@ -266,9 +327,10 @@ export function Header() {
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={handleRedo}
-                            disabled={redoStack.length === 0}
+                            onClick={() => void handleRedo()}
+                            disabled={!canRedo}
                             aria-label="Redo"
+                            data-tour={TOUR_ANCHORS.redo}
                         >
                             <Redo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
@@ -289,6 +351,7 @@ export function Header() {
                             )}
                             onClick={toggleSelectionMode}
                             aria-pressed={selectionMode}
+                            data-tour={TOUR_ANCHORS.selectItems}
                             aria-label={
                                 selectionMode
                                     ? "Exit selection mode"
@@ -326,6 +389,7 @@ export function Header() {
                                     disabled={aiLoading || organizeLoading}
                                     aria-disabled={!aiFeatures}
                                     aria-label="AI actions"
+                                    data-tour={TOUR_ANCHORS.aiActions}
                                 >
                                     <Sparkles className={cn(
                                         "h-3.5 w-3.5",
@@ -362,6 +426,23 @@ export function Header() {
                 </DropdownMenu>
                 )}
 
+                {/* Replays the guided tour (components/Tour). The tour's last step points here. */}
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={handleStartTour}
+                            aria-label="Take the tour"
+                            data-tour={TOUR_ANCHORS.help}
+                        >
+                            <CircleQuestionMark className="h-3.5 w-3.5 text-muted-foreground" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">Take the tour</TooltipContent>
+                </Tooltip>
+
                 {/* Profile dropdown — consolidated sign-in / account widget */}
                 <Tooltip>
                     <DropdownMenu>
@@ -370,6 +451,7 @@ export function Header() {
                                 <button
                                     className="ml-0.5 flex items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     aria-label={user ? 'Account menu' : 'Settings menu'}
+                                    data-tour={TOUR_ANCHORS.accountMenu}
                                 >
                                     {user ? (
                                         <Avatar className="h-6 w-6 ring-1 ring-border hover:ring-primary/60 transition-all">
@@ -393,6 +475,7 @@ export function Header() {
                         <DropdownMenuContent
                             align="end"
                             className="w-44 text-xs"
+                            data-tour={TOUR_ANCHORS.accountMenuContent}
                         >
                             {user ? (
                                 <>
@@ -436,6 +519,7 @@ export function Header() {
                                     <DropdownMenuItem
                                         className="text-xs cursor-pointer"
                                         onClick={() => openModal("settings")}
+                                        data-tour={TOUR_ANCHORS.menuSettings}
                                     >
                                         <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
                                         Settings
@@ -457,6 +541,7 @@ export function Header() {
                                     <DropdownMenuItem
                                         className="text-xs cursor-pointer"
                                         onClick={() => openModal("settings")}
+                                        data-tour={TOUR_ANCHORS.menuSettings}
                                     >
                                         <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
                                         Settings

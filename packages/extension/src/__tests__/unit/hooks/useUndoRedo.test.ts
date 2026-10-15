@@ -10,7 +10,12 @@ const { mockUseUIStore, mockUseGroups, mockSetGroupsState, mockToastInfo } = vi.
 }))
 
 vi.mock('@/lib/toast', () => ({ toast: { info: mockToastInfo } }))
-vi.mock('@/stores/uiStore', () => ({ useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector) }))
+const { mockSignalTour, mockTourHistory } = vi.hoisted(() => ({ mockSignalTour: vi.fn(), mockTourHistory: { value: null as unknown } }))
+vi.mock('@/stores/uiStore', () => ({
+  useUIStore: Object.assign((selector: (s: object) => unknown) => mockUseUIStore(selector), {
+    getState: () => ({ ...(mockUseUIStore((st: object) => st) as object), tourHistory: mockTourHistory.value, signalTour: mockSignalTour }),
+  }),
+}))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
   useSetGroupsState: () => mockSetGroupsState,
@@ -92,11 +97,45 @@ describe('useUndoRedo — lost rev race (M4)', () => {
     const restoreHistory = vi.fn()
     const undoStack = [snapshot]
     mockSetGroupsState.mockResolvedValueOnce(false)
-    mockUseUIStore.mockImplementation((sel) => sel(makeState({ undo: undoFn, restoreHistory, undoStack, redoStack: [] })))
+    const state = makeState({ undo: undoFn, restoreHistory, undoStack, redoStack: [] })
+    mockUseUIStore.mockImplementation((sel) => sel(state))
     const { result } = renderHook(() => useUndoRedo())
     await act(async () => { await result.current.undo() })
     expect(restoreHistory).toHaveBeenCalledWith(undoStack, [])
     expect(mockToastInfo).toHaveBeenCalledWith(expect.stringMatching(/changed/i), expect.objectContaining({ id: 'undo-conflict' }))
+  })
+
+  it('does not put the entry back when the history changed in the meantime (cleared, new change, tour start/end)', async () => {
+    const snapshot = { available: [], active: { id: '', index: 0 } }
+    const restoreHistory = vi.fn()
+    const undoFn = vi.fn().mockReturnValue(snapshot)
+    const state = makeState({ undo: undoFn, restoreHistory, undoStack: [snapshot], redoStack: [] })
+    mockUseUIStore.mockImplementation((sel) => sel(state))
+    mockSetGroupsState.mockImplementationOnce(async () => {
+      // while the write was in flight the history was replaced by a different one
+      mockUseUIStore.mockImplementation((sel) => sel(makeState({ undo: undoFn, restoreHistory, undoStack: [], redoStack: [] })))
+      return false
+    })
+    const { result } = renderHook(() => useUndoRedo())
+    await act(async () => { await result.current.undo() })
+    expect(restoreHistory).not.toHaveBeenCalled()
+    expect(mockToastInfo).toHaveBeenCalledWith(expect.stringMatching(/changed/i), expect.objectContaining({ id: 'undo-conflict' }))
+  })
+
+  it('does not put the entry back when the tour history began or ended during the write', async () => {
+    const snapshot = { available: [], active: { id: '', index: 0 } }
+    const restoreHistory = vi.fn()
+    const state = makeState({ undo: vi.fn().mockReturnValue(snapshot), restoreHistory, undoStack: [snapshot], redoStack: [] })
+    mockUseUIStore.mockImplementation((sel) => sel(state))
+    mockSetGroupsState.mockImplementationOnce(async () => {
+      mockTourHistory.value = { undoStack: [], redoStack: [] }
+      return false
+    })
+    const { result } = renderHook(() => useUndoRedo())
+    await act(async () => { await result.current.undo() })
+    mockTourHistory.value = null
+    expect(restoreHistory).not.toHaveBeenCalled()
+    expect(mockToastInfo).toHaveBeenCalled()
   })
 
   it('redo: same recovery', async () => {
@@ -104,11 +143,35 @@ describe('useUndoRedo — lost rev race (M4)', () => {
     const redoFn = vi.fn().mockReturnValue(snapshot)
     const restoreHistory = vi.fn()
     mockSetGroupsState.mockResolvedValueOnce(false)
-    mockUseUIStore.mockImplementation((sel) => sel(makeState({ redo: redoFn, restoreHistory, undoStack: [], redoStack: [snapshot] })))
+    const state = makeState({ redo: redoFn, restoreHistory, undoStack: [], redoStack: [snapshot] })
+    mockUseUIStore.mockImplementation((sel) => sel(state))
     const { result } = renderHook(() => useUndoRedo())
     await act(async () => { await result.current.redo() })
     expect(restoreHistory).toHaveBeenCalledWith([], [snapshot])
     expect(mockToastInfo).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ id: 'undo-conflict' }))
+  })
+
+  it('tells the tour about a successful undo/redo (signalTour) and not about a refused one', async () => {
+    const snapshot = { available: [], active: { id: '', index: 0 } }
+    mockSetGroupsState.mockResolvedValueOnce(true)
+    mockUseUIStore.mockImplementation((sel) => sel(makeState({ undo: vi.fn().mockReturnValue(snapshot) })))
+    const { result } = renderHook(() => useUndoRedo())
+    await act(async () => { await result.current.undo() })
+    expect(mockSignalTour).toHaveBeenCalledWith('undo')
+    mockSignalTour.mockClear()
+    mockSetGroupsState.mockResolvedValueOnce(false)
+    await act(async () => { await result.current.undo() })
+    expect(mockSignalTour).not.toHaveBeenCalled()
+  })
+
+  it('during the tour practice history the snapshot is applied as a practice-only change', async () => {
+    const snapshot = { available: [], active: { id: '', index: 0 } }
+    mockTourHistory.value = { undoStack: [], redoStack: [] }
+    mockUseUIStore.mockImplementation((sel) => sel(makeState({ undo: vi.fn().mockReturnValue(snapshot) })))
+    const { result } = renderHook(() => useUndoRedo())
+    await act(async () => { await result.current.undo() })
+    expect(mockSetGroupsState).toHaveBeenCalledTimes(1)
+    mockTourHistory.value = null
   })
 
   it('no recovery when the write went through', async () => {

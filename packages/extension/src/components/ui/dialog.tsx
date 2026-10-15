@@ -29,9 +29,11 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 // an in-progress Auth sign-in draft) the moment the toast became clickable via the
 // `pointer-events: auto` fix in globals.css. `closest()` (not a direct-parent check) because
 // the actual event target is often a toast's inner button/icon, several levels below
-// `[data-sonner-toaster]` itself.
+// `[data-sonner-toaster]` itself. The guided tour's overlay (`[data-tour-overlay]`, components/Tour) is
+// exempt for the same reason: its card sits beside the Settings dialog during the theme step, and
+// pressing one of its buttons must not throw the dialog (and an unsaved change) away.
 function isSonnerToasterTarget(target: EventTarget | null): boolean {
-  return target instanceof Element && target.closest('[data-sonner-toaster]') !== null;
+  return target instanceof Element && target.closest('[data-sonner-toaster], [data-tour-overlay]') !== null;
 }
 
 const DialogContent = React.forwardRef<

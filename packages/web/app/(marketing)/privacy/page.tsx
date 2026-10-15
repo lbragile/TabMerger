@@ -1,6 +1,7 @@
 import { pageMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { LegalToc } from '@/components/legal-toc'
+import { BACKUP_FILE_COPY } from '@tabmerger/shared'
 
 export const metadata = pageMetadata({
   path: '/privacy',
@@ -33,7 +34,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: October 6, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 14, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -68,6 +69,10 @@ export default function PrivacyPage() {
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">AI features <span className="normal-case font-normal">(Pro AI tier only)</span></h3>
               <p>When you use AI features, the titles and URLs of your open tabs are sent to the Anthropic Claude API to generate a response over an encrypted connection. Anthropic does not use API request content to train its models and does not retain it beyond their standard API data handling terms. Tab content is not stored by us beyond what you have already saved in your groups.</p>
             </div>
+            <div id="uninstall-survey" className="scroll-mt-24">
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">If you remove the extension</h3>
+              <p>When you remove TabMerger, your browser opens a short page on our site asking why. The page address tells us only the extension&apos;s version, which browser it was for, and whether it was the regular or the beta release; nothing about you, your account or your tabs is in it. (Like every page on this site, it is also counted by the web analytics described below.) Answering is optional. Only if you press send does the form send the reasons you ticked, anything you wrote, and an email address if you chose to give one so we can reply. That answer is emailed to our support inbox through Resend, along with the same basic details as the contact form (which site version and page it came from, your browser name and language), but never your IP address. We use it only to understand why people leave and, if you asked, to reply.</p>
+            </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Analytics</h3>
               <p>We use Google Analytics 4 on the web app to collect aggregate usage patterns (page views, feature usage). GA4 assigns an anonymous client identifier and we do not link this data to your account identity. No personally identifiable information is sent to Google. We also use PostHog for product analytics and session replay on the web app, with all form inputs masked by default; this data is likewise not linked to your account beyond what's needed to improve the product. On the web app we also use Vercel Web Analytics, which counts page views without cookies, and Vercel Speed Insights, which measures how fast pages load; neither is linked to your account.</p>
@@ -97,8 +102,12 @@ export default function PrivacyPage() {
               <span className="text-muted-foreground">Tab and group data in browser IndexedDB, under your control. Not transmitted anywhere unless you enable sync, or send a specific tab's address to the preview service by turning on page previews (see "Page previews" above). One exception: showing a tab's icon can send that site's domain to Google's favicon service (see "Site icons" above).</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
+              <span className="font-medium w-40 shrink-0">Backup files (optional)</span>
+              <span className="text-muted-foreground">If you turn on &quot;{BACKUP_FILE_COPY.toggle}&quot;, each automatic backup is also written as a JSON file inside your browser&apos;s Downloads folder. That file is not encrypted and stays on your computer: TabMerger does not upload it, read other files, or delete it. It contains your saved groups (tab addresses and titles, group and window names, notes) and nothing about your account.</span>
+            </div>
+            <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Supabase (Pro)</span>
-              <span className="text-muted-foreground">Account profile in a PostgreSQL database, encrypted at rest and in transit by our infrastructure. Groups and sessions are additionally end-to-end encrypted client-side before upload — we store only ciphertext and never hold the key, so this content is unreadable to us.</span>
+              <span className="text-muted-foreground">Account profile in a PostgreSQL database, encrypted at rest and in transit by our infrastructure. Groups and sessions (including automatic backups, which Pro accounts get by default and can turn off: they are saved as sessions, and the extension downloads them again to restore them on a new or reinstalled browser) are additionally end-to-end encrypted client-side before upload — we store only ciphertext and never hold the key, so this content is unreadable to us.</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Stripe</span>
@@ -119,6 +128,7 @@ export default function PrivacyPage() {
               { name: 'Google Analytics', purpose: 'Anonymous aggregate analytics', url: 'https://policies.google.com/privacy' },
               { name: 'Google favicon service', purpose: "Site icons for tabs whose icon your browser doesn't supply. Receives the site's domain only, directly from your browser.", url: 'https://policies.google.com/privacy' },
               { name: 'PostHog', purpose: 'Product analytics and session replay, with form inputs masked by default', url: 'https://posthog.com/privacy' },
+              { name: 'Resend', purpose: 'Delivers messages you send us from the contact form or the page shown after removing the extension to our support inbox', url: 'https://resend.com/legal/privacy-policy' },
               { name: 'Vercel', purpose: 'Hosting for the web app, plus Web Analytics (cookieless, aggregate page views) and Speed Insights (page performance metrics such as load time)', url: 'https://vercel.com/legal/privacy-policy' },
             ].map(({ name, purpose, url }) => (
               <div key={name} className="flex gap-4 px-4 py-3">

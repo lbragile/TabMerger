@@ -189,7 +189,12 @@ for (const theme of THEMES) {
     });
 
     test('search overlay with matching tabs', async ({ context, extensionId }) => {
-      const page = await openSeededPopup(context, extensionId, theme, { groups: POPULATED, activeGroupIndex: WORK_INDEX });
+      // The default ("Hide") removes non-matching rows; this shot keeps showing the faded ones.
+      const page = await openSeededPopup(context, extensionId, theme, {
+        groups: POPULATED,
+        activeGroupIndex: WORK_INDEX,
+        settings: { appSettings: { theme, searchNonMatching: 'dim' } }
+      });
 
       await page.getByRole('button', { name: 'Open search' }).click();
       const input = page.getByPlaceholder('Search tabs, groups…');
@@ -197,8 +202,8 @@ for (const theme of THEMES) {
       await input.fill('docs');
       await expect(page.getByText('Tabs', { exact: true })).toBeVisible();
       // The panel behind the overlay dims the tabs that do not match.
-      await expect(page.getByRole('listitem', { name: 'Sprint board' })).toHaveClass(/opacity-30/);
-      await expect(page.getByRole('listitem', { name: 'API docs: payments' })).not.toHaveClass(/opacity-30/);
+      await expect(page.getByRole('listitem', { name: 'Sprint board' })).toHaveClass(/opacity-60/);
+      await expect(page.getByRole('listitem', { name: 'API docs: payments' })).not.toHaveClass(/opacity-60/);
       await shoot(page, 'search', theme);
     });
 

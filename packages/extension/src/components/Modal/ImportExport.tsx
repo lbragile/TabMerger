@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useGroups, useSetGroupsState, useImportGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
-import { importGroupsState, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@/lib/importExport';
+import { exportGroupsState, importGroupsState, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@/lib/importExport';
 import { toast } from '@/lib/toast';
 import { prepareImportedState } from '@/lib/syncDirty';
 import { blockImportOverFreeLimit, countSavedGroupsAndTabs } from '@/lib/tierLimits';
@@ -27,7 +27,7 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
 
   const handleExport = () => {
     if (!groupsState) return;
-    const json = JSON.stringify(groupsState, null, 2);
+    const json = exportGroupsState(groupsState);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

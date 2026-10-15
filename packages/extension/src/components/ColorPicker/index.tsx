@@ -4,6 +4,7 @@ import { PRESET_COLORS } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { rgbaToHex, hexToRgba } from '@/lib/color';
 import { Button } from '@/components/ui/button';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 
 interface ColorPickerProps {
   value: string;
@@ -203,7 +204,7 @@ export function ColorPicker({ value, onChange, onCancel, onPreview }: ColorPicke
         style={{ width: '100%', height: 140 }}
       />
 
-      <div className="grid grid-cols-6 justify-items-center gap-y-1.5">
+      <div className="grid grid-cols-6 justify-items-center gap-y-1.5" data-tour={TOUR_ANCHORS.colorSwatches}>
         {PRESET_COLORS.map((color) => (
           <SwatchButton
             key={color}
@@ -243,7 +244,7 @@ export function ColorPicker({ value, onChange, onCancel, onPreview }: ColorPicke
         <Button type="button" size="sm" variant="outline" onClick={handleCancel}>
           Cancel
         </Button>
-        <Button type="button" size="sm" onClick={handleApply}>
+        <Button type="button" size="sm" onClick={handleApply} data-tour={TOUR_ANCHORS.colorApply}>
           Apply
         </Button>
       </div>

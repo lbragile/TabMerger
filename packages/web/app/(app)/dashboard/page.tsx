@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 import { SessionList } from '@/components/dashboard/SessionList'
+import { BackupsSection } from '@/components/dashboard/BackupsSection'
+import { SavedSessionsProvider } from '@/components/dashboard/SavedSessionsProvider'
+import { SessionsStatDescription, SessionsStatValue } from '@/components/dashboard/SessionsStat'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -12,7 +15,7 @@ import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
 import { Sparkles } from 'lucide-react'
 import { getEffectiveCap } from '@/lib/ai-usage'
-import { isEncryptedBlob } from '@tabmerger/shared'
+import { AUTO_BACKUP_DOWNLOAD_LIMITS, isEncryptedBlob } from '@tabmerger/shared'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getStoreLinks } from '@/lib/storeLinks'
@@ -53,7 +56,11 @@ export default async function DashboardPage({
   const isPro = currentTier === 'pro' || currentTier === 'pro_ai'
   const syncEnabled = hasCloudSync(subscription)
 
-  const [{ data: profile }, { data: groups }, { data: sessions }] = await Promise.all([
+  const [
+    { data: profile },
+    { data: groups },
+    { data: sessions, error: sessionsError, count: sessionsTotal },
+  ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     // Free (and non-entitled paid-tier) accounts never sync — RLS rejects their writes
     // (supabase/migrations/019_gate_cloud_sync_rls.sql), so there's nothing of theirs to read.
@@ -65,13 +72,17 @@ export default async function DashboardPage({
           .order('position')
           .limit(isPro ? 1000 : 5)
       : Promise.resolve({ data: null }),
-    syncEnabled
-      ? supabase
-          .from('sessions')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-      : Promise.resolve({ data: null }),
+    // Read for every account: RLS lets the owner read and delete their rows at any plan, so an
+    // account that lost cloud sync still sees (read-only) the sessions and backups it saved before.
+    // Only INSERT/UPDATE need has_cloud_sync(), and the dashboard never writes these rows.
+    // `count: 'exact'` returns the full row total in the same request, so the "Sessions stored"
+    // stat isn't capped at the row limit below.
+    supabase
+      .from('sessions')
+      .select('*', { count: 'exact' })
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(AUTO_BACKUP_DOWNLOAD_LIMITS.rows),
   ])
 
   // ponytail: uses the denormalized tab_count column (maintained client-side on every push),
@@ -108,6 +119,9 @@ export default async function DashboardPage({
   }
 
   return (
+    // One decrypt pass for everything below that lists or counts `sessions` rows: saved sessions
+    // and automatic backups are the same table and can only be told apart after decrypting.
+    <SavedSessionsProvider sessions={(sessions ?? []) as never} loadError={!!sessionsError}>
     <div className="flex flex-col gap-8">
       {params.upgraded === '1' && (
         <UpgradedBanner planName={subscription?.tier === 'pro_ai' ? 'Pro AI' : 'Pro'} />
@@ -160,7 +174,8 @@ export default async function DashboardPage({
       <StatsOverview
         tabCount={tabCount}
         groupCount={activeGroups.length}
-        sessionCount={sessions?.length ?? 0}
+        sessionCount={sessionsTotal ?? sessions?.length ?? 0}
+        sessionStat={{ value: <SessionsStatValue />, description: <SessionsStatDescription /> }}
         memberSince={profile?.created_at ?? user.created_at}
         aiUsage={aiUsage}
         showSyncStats={syncEnabled}
@@ -183,20 +198,26 @@ export default async function DashboardPage({
       )}
 
       {syncEnabled && (
-        <>
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Tab Groups</h2>
-            {/* ponytail: cast because Supabase infers windows as Json, not ExtWindow[] */}
-            <GroupGrid groups={(groups ?? []) as never} isPro={isPro} />
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>
-            {/* ponytail: cast because Supabase infers groups as Json, not SessionGroup[] */}
-            <SessionList sessions={(sessions ?? []) as never} isPro={isPro} />
-          </div>
-        </>
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Tab Groups</h2>
+          {/* ponytail: cast because Supabase infers windows as Json, not ExtWindow[] */}
+          <GroupGrid groups={(groups ?? []) as never} isPro={isPro} />
+        </div>
       )}
+
+      {/* An account without cloud sync sees this only when it still has rows saved from before, read-only. */}
+      {(syncEnabled || (sessions?.length ?? 0) > 0) && (
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>
+          {/* The rows come from SavedSessionsProvider above. */}
+          <SessionList isPro={isPro} readOnly={!syncEnabled} />
+        </div>
+      )}
+
+      {/* Shown to every account: one without cloud sync gets the upgrade link, plus any backups it
+          still has, read-only (download and delete). */}
+      <BackupsSection syncEnabled={syncEnabled} />
     </div>
+    </SavedSessionsProvider>
   )
 }

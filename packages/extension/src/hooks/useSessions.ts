@@ -2,14 +2,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
-import { encryptBlob, FREE_TIER_LIMITS } from '@tabmerger/shared';
+import { FREE_TIER_LIMITS, isTourDemoGroup } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
-import { getSessions, saveSession, deleteSession, setSetting } from '@/lib/localDb';
+import { getSessions, saveSession, deleteSession, getSetting, setSetting } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { resolveIncognito } from '@/lib/incognito';
-import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from '@/lib/contentUploadKey';
-import { SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
-import { canUploadOnFirefox } from '@/lib/syncEngine';
+import { LAST_USER_ID_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
+import { pushSessionToSupabase, deleteRemoteSessions } from '@/lib/sessionUpload';
 import { useGroups } from './useGroups';
 
 export const SESSIONS_QUERY_KEY = ['sessions'] as const;
@@ -23,41 +22,9 @@ export function useSessions() {
   });
 }
 
-/**
- * Upserts a single local session to Supabase with `{name, groups, description}` ENCRYPTED into
- * the `groups` column (the plaintext `name`/`description` columns are sent blank). There is no
- * plaintext branch: without an unlocked key (setup not finished, status unknown, locked) nothing
- * is sent. Resolves `true` only when the server accepted the row; `false` when the upload was
- * skipped or rejected, so callers can retry later. Shared by `useSaveSession`'s explicit save
- * action and `useSync`'s session self-heal, since sessions have no `pendingSync` flag or push
- * loop of their own.
- */
-export async function pushSessionToSupabase(session: Session): Promise<boolean> {
-  const { data: { session: authSession } } = await supabase.auth.getSession();
-  if (!authSession) return false;
-  if (!(await canUploadOnFirefox())) return false; // see syncEngine.ts's canUploadOnFirefox doc comment
-
-  const gate = await getContentUploadKey();
-  if (!gate.key) {
-    console.warn(`[TabMerger] Session ${session.id} not uploaded: ${UPLOAD_BLOCKED_MESSAGE[gate.reason]}`);
-    return false;
-  }
-  const { iv, ct } = await encryptBlob(gate.key, { name: session.name, groups: session.groups, description: session.description });
-
-  const { error } = await supabase.from('sessions').upsert({
-    id: session.id,
-    user_id: authSession.user.id,
-    name: '',
-    description: null,
-    groups: { v: 1, iv, ct },
-    created_at: new Date(session.createdAt).toISOString(),
-  });
-  if (error) {
-    console.warn('[TabMerger] Session sync to Supabase failed', session.id, error.message);
-    return false;
-  }
-  return true;
-}
+// The upload itself has no React in it and is also used by the background worker (automatic
+// backups), so it lives in lib/. Re-exported: existing importers keep working.
+export { pushSessionToSupabase };
 
 /**
  * Saves the current non-permanent groups as a named session snapshot.
@@ -79,7 +46,8 @@ export function useSaveSession() {
         throw new Error('SESSION_LIMIT');
       }
       if (!groupsState) throw new Error('No groups state');
-      const groups = groupsState.available.filter((g) => !g.permanent);
+      // Saved groups only: never "Now Open", never the guided tour's practice groups
+      const groups = groupsState.available.filter((g) => !g.permanent && !isTourDemoGroup(g));
       const session: Session = {
         id: nanoid(10),
         name,
@@ -87,13 +55,29 @@ export function useSaveSession() {
         groups,
         createdAt: Date.now(),
       };
+      // Whose session this is, captured BEFORE anything is written: the upload below is refused
+      // if the signed-in account is no longer this one (see pushSessionToSupabase). Free users
+      // never upload, so the session is not even read for them.
+      // The groups being saved are the STORE's, so its recorded owner decides, not only who is
+      // signed in right now: if the store still holds another account's data (the account wipe
+      // has not run yet), nothing is uploaded under the signed-in account.
+      let ownerId: string | undefined;
+      if (cloudSync) {
+        try {
+          const signedInId = (await supabase.auth.getSession()).data.session?.user.id;
+          const storeOwner = await getSetting<string | null>(LAST_USER_ID_KEY, null);
+          if (signedInId && (!storeOwner || storeOwner === signedInId)) ownerId = signedInId;
+        } catch (e) {
+          console.warn('[TabMerger] Session sync to Supabase failed', e);
+        }
+      }
       await saveSession(session);
       // ponytail: best-effort Supabase sync — local save already succeeded. Only for
       // users with the cloud-sync entitlement; free users stay local-only.
       if (cloudSync) {
         let uploaded = false;
         try {
-          uploaded = await pushSessionToSupabase(session);
+          if (ownerId) uploaded = await pushSessionToSupabase(session, ownerId);
         } catch (e) {
           console.warn('[TabMerger] Session sync to Supabase failed', e);
         }
@@ -115,16 +99,18 @@ export function useDeleteSession() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      await deleteSession(id);
-      // ponytail: best-effort Supabase sync
+      // Whose session it is, read BEFORE the local delete: the store's recorded owner, or (a store
+      // nobody owns yet) whoever is signed in. The request is only sent while the client is still
+      // signed in as that account, and is scoped to its user id (see deleteRemoteSessions).
+      let ownerId: string | undefined;
       try {
-        const { data: { session: authSession } } = await supabase.auth.getSession();
-        if (authSession) {
-          await supabase.from('sessions').delete().eq('id', id).eq('user_id', authSession.user.id);
-        }
+        ownerId = (await getSetting<string | null>(LAST_USER_ID_KEY, null)) ?? (await supabase.auth.getSession()).data.session?.user.id;
       } catch (e) {
         console.warn('[TabMerger] Session delete sync to Supabase failed', e);
       }
+      await deleteSession(id);
+      // ponytail: best-effort Supabase sync (never throws)
+      if (ownerId) await deleteRemoteSessions([id], ownerId);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
   });

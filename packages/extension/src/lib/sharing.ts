@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { generateDataKey, encryptBlob, exportKeyToBase64 } from '@tabmerger/shared'
+import { generateDataKey, encryptBlob, exportKeyToBase64, isTourDemoGroup } from '@tabmerger/shared'
 import type { Group } from './types'
 
 export interface Entitlement {
@@ -31,7 +31,9 @@ export async function createSharedBundle(
     throw new Error('Sharing requires a Pro upgrade — entitlement not met')
   }
 
-  const selected = groups.filter((g) => groupIds.includes(g.id))
+  // The guided tour's practice groups are never shared, whatever was selected
+  const selected = groups.filter((g) => groupIds.includes(g.id) && !isTourDemoGroup(g))
+  if (selected.length === 0) throw new Error('No groups selected')
 
   const dataKey = await generateDataKey()
   const encrypted = await encryptBlob(dataKey, selected)

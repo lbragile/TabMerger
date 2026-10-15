@@ -18,6 +18,7 @@
 // own .env file) — this is a real vite build of this file (wxt.builder.importEntrypoints), not
 // a naive static parse, so the env substitution applies here too.
 import { WEB_BRIDGE, WEBSITE_TO_EXTENSION_TYPES, type ExtensionMessageType } from '@tabmerger/shared';
+import { parseBridgeMessage } from '@/lib/bridgeMessage';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL;
 
@@ -45,8 +46,15 @@ export default defineContentScript({
 
       const { requestId, type, payload } = data;
 
+      // Forward ONLY what the bridge protocol defines: the allow-listed type and the two token
+      // fields, rebuilt by parseBridgeMessage. The page's payload is never spread into the
+      // message (a `type` inside it used to replace the allow-listed one, letting a script on this
+      // origin send the extension's internal messages), and no other field is passed along.
+      const message = parseBridgeMessage({ ...(payload && typeof payload === 'object' && !Array.isArray(payload) ? payload : {}), type });
+      if (!message) return;
+
       chrome.runtime
-        .sendMessage({ type, ...(payload && typeof payload === 'object' ? payload : {}) })
+        .sendMessage(message)
         .then((response) => {
           // Never post back to '*' — only this exact origin, and never log/forward the
           // SYNC_AUTH payload itself (only the ack the background handler returns).

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { useGroups, useSaveShortcutTabs } from '@/hooks/useGroups';
 import type { Tab } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 
 export const PENDING_SHORTCUT_SAVE_KEY = 'pendingShortcutSave';
 const NEW_GROUP_VALUE = '__new__';
@@ -19,7 +20,7 @@ export function ShortcutSavePickerModal({ data, onClose }: ShortcutSavePickerMod
   const { data: groupsState } = useGroups();
   const { mutate: saveTabs, isPending } = useSaveShortcutTabs();
 
-  const groups = (groupsState?.available ?? []).filter((g) => !g.permanent && !g.archived);
+  const groups = (groupsState?.available ?? []).filter((g) => !g.permanent && !g.archived && !isTourDemoGroup(g));
   const [selected, setSelected] = useState<string>(groups[0]?.id ?? NEW_GROUP_VALUE);
 
   const clearPending = () => void chrome.storage.session.remove(PENDING_SHORTCUT_SAVE_KEY);

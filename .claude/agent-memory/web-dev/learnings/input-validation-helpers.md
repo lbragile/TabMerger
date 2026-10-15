@@ -20,6 +20,12 @@ One helper per kind of value; reuse them instead of writing a local check.
 - **Lookup in an object literal keyed by a query value**: test with `hasOwnProperty` first.
   `MAP['toString']` is a function, and `useState(fn)` calls it as a lazy initialiser.
 
+- **Dynamic route segment used as a row id** (`[id]`): test it against an anchored id pattern
+  right after `await params` and return 400 before `createClient()`, so a bad value reaches
+  neither auth nor the database. Keep the pattern a non-exported const: a `route.ts` may only
+  export handlers and route config. In the test, assert `createClient` was not called, and
+  pass non-string values too (`params` is typed, not checked).
+
 Test notes:
 - Avoid control characters inside regex literals (ESLint `no-control-regex`); loop over
   `charCodeAt` instead. `\t`, `\n`, `\r` escapes are allowed.

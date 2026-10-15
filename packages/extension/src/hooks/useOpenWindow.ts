@@ -2,9 +2,17 @@ import type { Window as ExtWindow } from '@/lib/types';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { resolveIncognito } from '@/lib/incognito';
+import { TOUR_SIGNALS, isTourOpenBlocked } from '@/lib/tourSandbox';
+import { useUIStore } from '@/stores/uiStore';
 
 export function useOpenWindow() {
   const openWindow = async (window: ExtWindow) => {
+    // The guided tour's "open your tabs again" step: its sample tabs are not real pages, so
+    // nothing is opened. The request is counted for the step instead.
+    if (isTourOpenBlocked()) {
+      useUIStore.getState().signalTour(TOUR_SIGNALS.openWindow);
+      return;
+    }
     const urlTabs = window.tabs.filter((t) => isOpenableUrl(t.url));
     if (urlTabs.length === 0) return;
 

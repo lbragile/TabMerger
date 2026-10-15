@@ -98,3 +98,14 @@
 - [Keyboard move re-anchor](learnings_keyboard_move_reanchor.md) — picked-up item re-anchored by identity on each cache update; cache listener is pre-render; real-commit test pattern
 - [E2E CodeQL sanitizers](learnings_e2e_codeql_sanitizers.md) — escapeHtml / jsLiteral / startTitleServer in e2e/helpers.ts; unicode-escape authoring gotcha; how to type-check e2e/
 - [Import validation + stored-URL open guard](learnings_import_validation_and_open_guard.md) — parsers return { groups, skipped }; lib/safeOpen.ts before every stored-URL open; CRLF and NUL-byte editing gotchas
+- [Automatic backups](learnings_auto_backups.md) — sessions marked auto, worker alarm; never re-create a periodic alarm, due tolerance, listener order asserted by tests; server absence never deletes a local backup, in-transaction list updates, sender URL check
+- [Tour demo groups + drag steps](learnings_tour_demo_groups_and_drag_steps.md) — one flag/predicate, write-path and merge choke points, sealed canDrop sandbox, drags under the tour lock, Radix aria-hidden marker gotcha
+- [In-app confirm + backup file location](learnings_in_app_confirm_and_backup_file_location.md) — useConfirm alertdialog nested over Settings, focus return; downloads search/show facts, Firefox support; probe build via outDir override
+- [Guided tour](learnings_guided_tour.md) — tm_tour record lifecycle, inert root + window-capture key lock, hidden-card focus trap, every e2e launcher must dismissTour; interactive tasks, action ring, measured focus rules
+- [Tour tasks on practice data](learnings_tour_tasks_on_practice_data.md) — practice-only undo history, open guard, needsFresh vs available, menu items by visible text, search put aside
+- [Search highlight + hide/dim](learnings_search_highlight_hide_dim.md) — one contiguous matcher (textMatches + matchRanges + matchRank), render-only hiding keeps indices, grip-less reorder lock, sticky query fallout, marks split getByText
+- [Search a11y + sync numbering](learnings_search_a11y_and_sync_numbering.md) — useKeepFocusInList, overlay combobox, announcer outside inert root, reserved tour ids, practice-free positions
+- [Uninstall survey URL](learnings_uninstall_survey_url.md) — setUninstallURL on every worker start; channel = MODE beta; no e2e build flag (dev mode + empty CI URL); no getter
+- [Sonner owns toast ::after/::before](learnings_sonner_pseudo_elements.md) — countdown bar must out-specify sonner's hover gap filler on ::after; filler re-created on ::before
+- [Deferred focus drops keys](learnings_deferred_focus_drops_keys.md) — setTimeout(0) focus loses keys typed right after opening on busy CI; focus in the effect; timer-delay repro
+- [Radix nested dialog Escape race](learnings_radix_nested_dialog_escape_race.md) — lower dialog keeps its Escape listener for a few renders; ConfirmDialog answers Escape from a window-capture listener

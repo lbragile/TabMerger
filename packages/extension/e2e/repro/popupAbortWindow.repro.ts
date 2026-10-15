@@ -19,7 +19,7 @@ import { test, expect, chromium, type BrowserContext } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { seedIdb } from '../helpers';
+import { dismissTour, seedIdb } from '../helpers';
 import { RawCdp } from '../rawCdp';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -57,6 +57,7 @@ async function launch(): Promise<{ context: BrowserContext; cdp: RawCdp }> {
   let [sw] = context.serviceWorkers();
   if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
   const extensionId = new URL(sw.url()).hostname;
+  await dismissTour(context);
   const seedPage = await context.newPage();
   await seedPage.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
   await seedPage.waitForTimeout(1500);

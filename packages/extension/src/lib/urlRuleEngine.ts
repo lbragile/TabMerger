@@ -2,6 +2,7 @@ import { updateGroupsState, getSetting } from '@/lib/localDb';
 import { matchUrlToRule } from '@/hooks/useUrlRules';
 import { copyLiveTab } from '@/lib/dndMove';
 import type { UrlRule } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import type { Tab } from '@/lib/types';
 
 /**
@@ -34,7 +35,8 @@ export async function applyUrlRule(
   // context from the popup, so the read-modify-write must be one `updateGroupsState`.
   await updateGroupsState((state) => {
     const group = state.available.find((g) => g.id === matchedGroupId);
-    if (!group) return null;
+    // (a rule can never fill one of the guided tour's practice groups)
+    if (!group || isTourDemoGroup(group)) return null;
 
     // Add to the first window, or create one if none exist
     const windows = group.windows.length

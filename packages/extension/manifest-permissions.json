@@ -8,7 +8,9 @@
         "tabGroups",
         "tabs"
     ],
-    "optional_permissions": [],
+    "optional_permissions": [
+        "downloads"
+    ],
     "host_permissions": [],
     "optional_host_permissions": [],
     "content_script_matches": [],

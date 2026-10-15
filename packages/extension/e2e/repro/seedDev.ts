@@ -50,6 +50,7 @@ import {
   type Worker,
 } from '@playwright/test';
 import { buildSeedGroups, countSeedTabs, resolveSeedConfig, type SeedSavedGroup } from './seedData';
+import { dismissTour } from '../helpers';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_DIR = path.resolve(here, '../../.output');
@@ -316,6 +317,9 @@ test('seed dev extension for manual DnD click-around', async () => {
 
   const sw = await getServiceWorker(context);
   const extensionId = new URL(sw.url()).hostname;
+  // A fresh profile counts as a first install, which would open the guided tour over the
+  // seeded popup. Set TM_SEED_TOUR=1 to keep it (to click through the tour by hand).
+  if (process.env.TM_SEED_TOUR !== '1') await dismissTour(context);
 
   // 1. Seed IDB via a throwaway popup.html tab (Playwright can drive that fine).
   const seedTab = await context.newPage();

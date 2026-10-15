@@ -238,6 +238,23 @@ describe('WindowsPanel — Ctrl/Cmd+A only selects what the user can act on', ()
     expect(mockSetSelection).toHaveBeenCalledWith([{ type: 'tab', id: 'tab-2-0-0' }])
   })
 
+  it('selects only CONTIGUOUS matches: letters in order but spread out ("jra" in Jira) select nothing', () => {
+    const group = makeGroup({
+      windows: [
+        makeWindow({ tabs: [makeTab({ title: 'Jira Board', url: 'https://jira.example.com' }), makeTab({ title: 'Mail', url: 'https://mail.example.com' })] }),
+      ],
+    })
+    searchFilterState = 'jra'
+    const a = wrap(<WindowsPanel group={group} groupIndex={2} />)
+    fireEvent.keyDown(screen.getByTestId('windows-panel-scroll'), { key: 'a', ctrlKey: true })
+    expect(mockSetSelection).not.toHaveBeenCalled()
+    a.unmount()
+    searchFilterState = 'jir'
+    wrap(<WindowsPanel group={group} groupIndex={2} />)
+    fireEvent.keyDown(screen.getByTestId('windows-panel-scroll'), { key: 'a', ctrlKey: true })
+    expect(mockSetSelection).toHaveBeenCalledWith([{ type: 'tab', id: 'tab-2-0-0' }])
+  })
+
   it('skips tabs locked by the free-tier limit (counted across windows)', () => {
     entitledMaxTabs = 2
     const group = makeGroup({ windows: [makeWindow({ tabs: [makeTab(), makeTab()] }), makeWindow({ tabs: [makeTab()] })] })

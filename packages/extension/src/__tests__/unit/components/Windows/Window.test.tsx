@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
 import { WindowItem } from '@/components/Windows/Window'
+import { PanelSearchContext, buildPanelSearchView } from '@/hooks/useSearchView'
 import type { Window as WindowType, GroupsState } from '@/lib/types'
 
 const {
@@ -534,5 +535,44 @@ describe('WindowItem', () => {
       expect(baseUIState.openModal).toHaveBeenCalledWith('deleteWindow', expect.objectContaining({ groupIndex: 1, windowIndex: 0 }))
     )
     expect(mockDeleteWindow).not.toHaveBeenCalled()
+  })
+})
+
+
+describe('WindowItem — search hides rows (reorder locked)', () => {
+  const hideView = buildPanelSearchView(
+    { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'tab' },
+    'hide',
+    { windows: [{ tabMatches: [true], matchCount: 1, selfMatch: false, visible: true }], matchCount: 1, tabCount: 1, nameMatch: false, visible: true }
+  )
+  const renderLocked = () =>
+    wrap(
+      React.createElement(
+        PanelSearchContext.Provider,
+        { value: hideView },
+        React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] })
+      )
+    )
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetSetting.mockResolvedValue({ confirmOnDelete: false })
+    mockUseGroups.mockReturnValue({ data: { available: [], active: { id: 'g1', index: 1 } } })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+  })
+
+  it('has no window drag grip in hide mode', () => {
+    renderLocked()
+    expect(document.querySelector('[aria-label^="Drag to reorder window"]')).toBeNull()
+  })
+
+  it('plain Space on the header does not start a keyboard move and announces why', () => {
+    useKeyboardMoveStore.setState({ request: null })
+    renderLocked()
+    const header = document.querySelector('[data-window-header]') as HTMLElement
+    const ev = fireEvent.keyDown(header, { key: ' ', code: 'Space' })
+    expect(ev).toBe(false)
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+    expect(document.getElementById('tm-dnd-live-region')?.textContent).toBe('Clear the search to move items')
   })
 })
