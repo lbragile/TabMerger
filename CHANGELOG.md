@@ -1,3 +1,21 @@
+## [3.1.3](https://github.com/lbragile/TabMerger/compare/v3.1.2...v3.1.3) (2026-10-15)
+
+
+### Bug Fixes
+
+* **extension:** keep the toast countdown bar on the toast while hovered ([#65](https://github.com/lbragile/TabMerger/issues/65)) ([7591d44](https://github.com/lbragile/TabMerger/commit/7591d44d809be94c955538e97de2c7a5a6b39571)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+* **web:** red Sign out highlight, one account avatar and header accessibility fixes ([#66](https://github.com/lbragile/TabMerger/issues/66)) ([7a4f1a9](https://github.com/lbragile/TabMerger/commit/7a4f1a927c99229dded7022b314a05b4ea715ffa)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+
+
+### Features
+
+* **web:** custom 404 and 500 pages ([#64](https://github.com/lbragile/TabMerger/issues/64)) ([6f3488c](https://github.com/lbragile/TabMerger/commit/6f3488cde7ce971ceb6bb13666948094e69f01d9)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+
+
+### Performance Improvements
+
+* **web:** faster landing page, accessibility fixes and a GitHub star badge ([#63](https://github.com/lbragile/TabMerger/issues/63)) ([fb7e52a](https://github.com/lbragile/TabMerger/commit/fb7e52ae9e878d6b27c6d12689506753a9227ccb))
+
 ## [3.1.2](https://github.com/lbragile/TabMerger/compare/v3.1.1...v3.1.2) (2026-10-10)
 
 
