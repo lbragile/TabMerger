@@ -130,3 +130,70 @@ test.describe('Toast dismissal', () => {
     await expect(toast).toHaveCount(0);
   });
 });
+
+/**
+ * Regression coverage for the countdown bar jumping ABOVE a hovered toast.
+ *
+ * Root cause: globals.css draws the countdown bar on `[data-sonner-toast]::after`, and sonner's
+ * own stylesheet uses the same pseudo-element as its hover gap filler
+ * (`[data-expanded='true']::after { bottom: 100%; height: var(--gap) }`). Sonner's sheet loads
+ * later at equal specificity, so on hover the paused bar moved into the gap above the toast.
+ * Fixed by scoping the bar rules under `[data-sonner-toaster]` and moving the gap filler to
+ * ::before.
+ */
+test.describe('Toast countdown bar', () => {
+  test('stays on the bottom edge while hovered, and stacked toasts stay expanded across the gap', async ({
+    context,
+    extensionId,
+  }) => {
+    const page = await openPopup(context, extensionId);
+    const groups = Array.from({ length: 5 }, (_, i) => ({ id: `g${i}`, name: `Group ${i}` }));
+    await seedAndReload(page, [NOW_OPEN, ...groups]);
+
+    // Two stacked toasts (the free-tier group cap toast, fired twice).
+    const addGroup = page.getByRole('button', { name: 'Add Group' });
+    await addGroup.click();
+    await addGroup.click();
+    const toasts = page.locator('[data-sonner-toast]');
+    await expect(toasts).toHaveCount(2);
+
+    const front = page.locator('[data-sonner-toast][data-front="true"]');
+    await front.hover();
+    await expect(front).toHaveAttribute('data-expanded', 'true');
+
+    const after = await front.evaluate((el) => {
+      const cs = getComputedStyle(el, '::after');
+      return { bottom: cs.bottom, top: cs.top, height: cs.height, playState: cs.animationPlayState };
+    });
+    expect(after.bottom).toBe('0px');
+    expect(after.height).toBe('3px');
+    expect(after.top).not.toMatch(/^-/);
+    expect(after.playState).toBe('paused');
+
+    // The gap filler now lives on ::before and spans the gap above the toast.
+    const before = await front.evaluate((el) => {
+      const cs = getComputedStyle(el, '::before');
+      return { content: cs.content, bottom: cs.bottom };
+    });
+    expect(before.content).toBe('""');
+    expect(before.bottom).not.toBe('0px');
+
+    // Move the pointer into the gap between the two expanded toasts: the stack must not collapse.
+    const back = page.locator('[data-sonner-toast][data-front="false"]');
+    // Sonner animates the stack open (~400ms), so wait for a real gap before measuring.
+    const gapBetween = async () => {
+      const f = (await front.boundingBox())!;
+      const b = (await back.boundingBox())!;
+      return f.y - (b.y + b.height);
+    };
+    await expect.poll(gapBetween).toBeGreaterThan(2);
+    await page.waitForTimeout(500);
+    const frontBox = (await front.boundingBox())!;
+    const backBox = (await back.boundingBox())!;
+    const gapY = (backBox.y + backBox.height + frontBox.y) / 2;
+    await page.mouse.move(frontBox.x + frontBox.width / 2, gapY, { steps: 4 });
+    await page.waitForTimeout(150);
+    await expect(front).toHaveAttribute('data-expanded', 'true');
+    await expect(back).toHaveAttribute('data-expanded', 'true');
+  });
+});
