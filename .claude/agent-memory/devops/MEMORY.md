@@ -6,3 +6,4 @@
 - [Release notes scope filter](learnings_release_notes_scope_filter.md) — hide internal scopes via parserOpts.headerPattern; conventionalcommits preset breaks with the plugin's writer
 - [Codecov reporting](learnings_codecov_reporting.md) — reporting-only Codecov via artifact hand-off to one OIDC job; upload-artifact multi-path layout, pnpm `--`, junit reporter gotchas
 - [History rewrite drops semantic-release notes](learnings_history_rewrite_semantic_release_notes.md) — recreate refs/notes/semantic-release-<tag> on rewritten tag commits, or the next beta recomputes an existing version and leaves a stray release commit
+- [Junk "closes" link in release notes](learnings_changelog_junk_closes_link.md) — PR-body anchors parsed as issue refs; issuePrefixes workaround, template URLs
