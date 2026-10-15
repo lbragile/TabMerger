@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -904,6 +904,22 @@ describe('Header — search overlay + selection mode + sign out', () => {
     await user.type(input, 'abc')
     expect(mockTrackEvent).toHaveBeenCalledWith('search_used')
     expect(mockTrackEvent).toHaveBeenCalledTimes(1)
+  })
+
+  describe('the search box has the focus as soon as it opens (no timer: keys typed straight away reach it)', () => {
+    beforeEach(() => mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() }))
+
+    it('opened by a click', () => {
+      wrap(React.createElement(Header))
+      act(() => { fireEvent.click(screen.getByRole('button', { name: /open search/i })) })
+      expect(screen.getByRole('combobox')).toHaveFocus()
+    })
+
+    it('opened by Ctrl+K', () => {
+      wrap(React.createElement(Header))
+      act(() => { fireEvent.keyDown(window, { key: 'k', ctrlKey: true }) })
+      expect(screen.getByRole('combobox')).toHaveFocus()
+    })
   })
 
   describe('focus returns to the opener when the search closes', () => {

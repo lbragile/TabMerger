@@ -190,7 +190,11 @@ export function Header() {
     const openSearchRef = useRef<HTMLButtonElement>(null);
     const wasSearchOpen = useRef(false);
     useEffect(() => {
-        if (searchOpen) setTimeout(() => searchRef.current?.focus(), 0);
+        // Focus the box in this effect, not in a later timer: the overlay's input is already
+        // mounted here, and the effect of a click or Ctrl K runs before the next key is handled.
+        // A timer lets keys typed straight after opening (busy main thread: the browser handles
+        // queued input before timers) land on the opener instead of the box, and get lost.
+        if (searchOpen) searchRef.current?.focus();
         // Closed (Escape, a click outside, Ctrl K, a picked result): the focused search box is
         // gone, so focus goes back to the opener. Not when something else already took it (a
         // picked tab focuses its row a moment later, which then moves it on).

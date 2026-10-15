@@ -107,3 +107,4 @@
 - [Search a11y + sync numbering](learnings_search_a11y_and_sync_numbering.md) — useKeepFocusInList, overlay combobox, announcer outside inert root, reserved tour ids, practice-free positions
 - [Uninstall survey URL](learnings_uninstall_survey_url.md) — setUninstallURL on every worker start; channel = MODE beta; no e2e build flag (dev mode + empty CI URL); no getter
 - [Sonner owns toast ::after/::before](learnings_sonner_pseudo_elements.md) — countdown bar must out-specify sonner's hover gap filler on ::after; filler re-created on ::before
+- [Deferred focus drops keys](learnings_deferred_focus_drops_keys.md) — setTimeout(0) focus loses keys typed right after opening on busy CI; focus in the effect; timer-delay repro

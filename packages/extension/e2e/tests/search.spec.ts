@@ -11,6 +11,12 @@ async function seedWithMode(page: Page, mode: 'hide' | 'dim') {
   await page.reload({ waitUntil: 'networkidle' });
 }
 
+/** Opens the search overlay and waits until its box has the focus, so typed keys reach it. */
+async function openSearch(page: Page) {
+  await page.getByRole('button', { name: 'Open search' }).click();
+  await expect(page.getByRole('combobox', { name: SEARCH_COPY.searchInput })).toBeFocused();
+}
+
 test.describe('Search (dim mode)', () => {
   test('search with space character dims non-matching rows', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
@@ -19,8 +25,7 @@ test.describe('Search (dim mode)', () => {
     await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     // Search is a button that opens an overlay with a focused input — not a persistent textbox
-    await page.getByRole('button', { name: 'Open search' }).click();
-    await page.waitForTimeout(50);
+    await openSearch(page);
     // keyboard.type fires real keydown events — catches space-swallowing regression
     await page.keyboard.type('Jira Board');
     await page.waitForTimeout(100);
@@ -37,8 +42,7 @@ test.describe('Search (dim mode)', () => {
 
     await page.getByRole('button', { name: 'Work', exact: true }).click();
 
-    await page.getByRole('button', { name: 'Open search' }).click();
-    await page.waitForTimeout(50);
+    await openSearch(page);
     await page.keyboard.type('Jira');
     await page.waitForTimeout(100);
 
@@ -56,8 +60,7 @@ test.describe('Search (dim mode)', () => {
 
 test.describe('Search (hide mode, the default)', () => {
   async function search(page: Page, query: string) {
-    await page.getByRole('button', { name: 'Open search' }).click();
-    await page.waitForTimeout(50);
+    await openSearch(page);
     await page.keyboard.type(query);
     await page.waitForTimeout(150);
   }
@@ -134,8 +137,7 @@ test.describe('Search (hide mode, the default)', () => {
 
 test.describe('Search is contiguous-only', () => {
   async function typeQuery(page: Page, query: string) {
-    await page.getByRole('button', { name: 'Open search' }).click();
-    await page.waitForTimeout(50);
+    await openSearch(page);
     await page.keyboard.type(query);
     await page.waitForTimeout(150);
   }
@@ -177,10 +179,10 @@ test.describe('Search is contiguous-only', () => {
     await expect(page.getByRole('listitem', { name: /^Jira Board/ })).toHaveClass(/opacity-60/);
     await expect(page.getByRole('listitem', { name: /^Confluence/ })).toHaveClass(/opacity-60/);
 
-    await page.getByRole('button', { name: 'Open search' }).click();
+    await openSearch(page);
     await page.keyboard.press('Control+A');
     await page.keyboard.type('jir');
-    await page.waitForTimeout(150);
+    await expect(page.getByRole('combobox', { name: SEARCH_COPY.searchInput })).toHaveValue('jir');
     await page.keyboard.press('Escape');
     await expect(page.getByRole('listitem', { name: 'Jira Board' })).not.toHaveClass(/opacity-60/);
     await expect(page.getByRole('listitem', { name: /^Confluence/ })).toHaveClass(/opacity-60/);
