@@ -5,4 +5,5 @@
 - [Visual regression CI](learnings_visual_regression_ci.md) — informational extension visual job, manual Linux-baseline workflow, artifact/annotation gotchas
 - [Release notes scope filter](learnings_release_notes_scope_filter.md) — hide internal scopes via parserOpts.headerPattern; conventionalcommits preset breaks with the plugin's writer
 - [Codecov reporting](learnings_codecov_reporting.md) — reporting-only Codecov via artifact hand-off to one OIDC job; upload-artifact multi-path layout, pnpm `--`, junit reporter gotchas
+- [CI matrix gates](learnings_ci_matrix_gates.md) — aggregator jobs keep required check names stable, `strategy.job-total` shard count, fullyParallel sharding, artifact layout after per-package split, actionlint via docker
 - [History rewrite drops semantic-release notes](learnings_history_rewrite_semantic_release_notes.md) — recreate refs/notes/semantic-release-<tag> on rewritten tag commits, or the next beta recomputes an existing version and leaves a stray release commit
