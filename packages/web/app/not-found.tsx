@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button'
 import { ErrorPageShell } from '@/components/errors/ErrorPageShell'
 import { NOT_FOUND_COPY, SITE_LINKS } from '@/components/errors/copy'
 
+// No `robots` here: Next already adds `<meta name="robots" content="noindex">` to every 404, and
+// a page-level one would be a second copy of the same tag.
 export const metadata: Metadata = {
   title: NOT_FOUND_COPY.documentTitle,
-  robots: { index: false },
 }
 
 /**

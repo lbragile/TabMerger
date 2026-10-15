@@ -1,11 +1,13 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { LegalToc } from '@/components/legal-toc'
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy — TabMerger',
-  description: 'How TabMerger collects, uses, and protects your data.',
-}
+export const metadata = pageMetadata({
+  path: '/privacy',
+  title: 'Privacy Policy',
+  description:
+    'How TabMerger collects, uses, and protects your data.',
+})
 
 const TOC = [
   { id: 'what-we-collect', label: 'What we collect' },

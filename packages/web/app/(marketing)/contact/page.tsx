@@ -1,6 +1,5 @@
 'use client'
 
-import type { Metadata } from 'next'
 import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -16,8 +15,7 @@ import {
 } from '@/components/ui/select'
 import { GITHUB_ISSUES_URL } from '@/lib/github'
 
-// Note: metadata must be in a separate server component when using 'use client'.
-// SEO is handled via the layout's default metadata.
+// A client component can't export metadata; the page's own lives in ./layout.tsx.
 
 type Status = 'idle' | 'sending' | 'sent' | 'error'
 

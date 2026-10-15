@@ -24,9 +24,9 @@ describe('social preview image', () => {
     expect(existsSync(join(appDir, `${name}.alt.txt`))).toBe(true)
   })
 
-  it('beta page does not override openGraph/twitter, so it inherits the image', async () => {
+  it('beta page names the social image itself, since its own openGraph/twitter replace the root ones', async () => {
     const mod = await import('@/app/(marketing)/beta/page')
-    expect(mod.metadata.openGraph).toBeUndefined()
-    expect(mod.metadata.twitter).toBeUndefined()
+    expect(mod.metadata.openGraph).toMatchObject({ url: '/beta', images: [expect.objectContaining({ url: '/opengraph-image.png' })] })
+    expect(mod.metadata.twitter).toMatchObject({ images: [expect.objectContaining({ url: '/twitter-image.png' })] })
   })
 })

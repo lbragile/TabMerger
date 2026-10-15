@@ -1,14 +1,19 @@
 import type { MetadataRoute } from 'next'
+import { getMetadataBase } from '@/lib/utils'
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://tabmerger.vercel.app'
-
+/**
+ * `/auth/` and `/share/` are not disallowed: those pages carry a `noindex` meta tag, which a
+ * crawler can only read if it may fetch the page. A Disallow alone can leave a linked URL listed
+ * in results without its content. The signed-in app and the API stay disallowed: there is nothing
+ * there for a crawler (signed-out requests redirect to sign-in).
+ */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/dashboard', '/account', '/auth/', '/api/', '/share/'],
+      disallow: ['/dashboard', '/account', '/api/'],
     },
-    sitemap: `${BASE_URL}/sitemap.xml`,
+    sitemap: new URL('/sitemap.xml', getMetadataBase()).href,
   }
 }
