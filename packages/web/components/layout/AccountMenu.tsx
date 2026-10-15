@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AccountAvatar, ACCOUNT_AVATAR_BUTTON_CLASS } from "@/components/layout/AccountAvatar";
 import { SignOutForm } from "@/components/auth/SignOutForm";
 
 /**
@@ -23,14 +23,10 @@ export function AccountMenu({ email, initials }: { email: string; initials?: str
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="relative h-8 w-8 rounded-md"
+                    className={ACCOUNT_AVATAR_BUTTON_CLASS}
                     aria-label="Account menu"
                 >
-                    <Avatar className="h-8 w-8 rounded-md">
-                        <AvatarFallback className="text-xs rounded-md">
-                            {initials}
-                        </AvatarFallback>
-                    </Avatar>
+                    <AccountAvatar initials={initials} />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -51,7 +47,8 @@ export function AccountMenu({ email, initials }: { email: string; initials?: str
                     <Link href="/account">Account</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                {/* Red on hover and focus, like the same item in the dashboard's menu. */}
+                <DropdownMenuItem asChild className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                     <SignOutForm>
                         <button
                             className="w-full text-left"

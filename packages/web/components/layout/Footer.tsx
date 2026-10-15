@@ -26,7 +26,7 @@ export function Footer() {
                 </div>
                 <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-sm font-semibold">Product</h3>
+                        <h2 className="text-sm font-semibold">Product</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
                                 <Link
@@ -63,7 +63,7 @@ export function Footer() {
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-sm font-semibold">Account</h3>
+                        <h2 className="text-sm font-semibold">Account</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
                                 <Link
@@ -84,7 +84,7 @@ export function Footer() {
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-sm font-semibold">Legal</h3>
+                        <h2 className="text-sm font-semibold">Legal</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
                                 <Link
@@ -113,7 +113,7 @@ export function Footer() {
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-sm font-semibold">Public</h3>
+                        <h2 className="text-sm font-semibold">Public</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
                                 <Link
