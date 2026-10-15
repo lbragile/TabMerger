@@ -32,7 +32,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: October 6, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 14, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -66,6 +66,10 @@ export default function PrivacyPage() {
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">AI features <span className="normal-case font-normal">(Pro AI tier only)</span></h3>
               <p>When you use AI features, the titles and URLs of your open tabs are sent to the Anthropic Claude API to generate a response over an encrypted connection. Anthropic does not use API request content to train its models and does not retain it beyond their standard API data handling terms. Tab content is not stored by us beyond what you have already saved in your groups.</p>
+            </div>
+            <div id="uninstall-survey" className="scroll-mt-24">
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">If you remove the extension</h3>
+              <p>When you remove TabMerger, your browser opens a short page on our site asking why. The page address tells us only the extension&apos;s version, which browser it was for, and whether it was the regular or the beta release; nothing about you, your account or your tabs is in it. (Like every page on this site, it is also counted by the web analytics described below.) Answering is optional. Only if you press send does the form send the reasons you ticked, anything you wrote, and an email address if you chose to give one so we can reply. That answer is emailed to our support inbox through Resend, along with the same basic details as the contact form (which site version and page it came from, your browser name and language), but never your IP address. We use it only to understand why people leave and, if you asked, to reply.</p>
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Analytics</h3>
@@ -122,6 +126,7 @@ export default function PrivacyPage() {
               { name: 'Google Analytics', purpose: 'Anonymous aggregate analytics', url: 'https://policies.google.com/privacy' },
               { name: 'Google favicon service', purpose: "Site icons for tabs whose icon your browser doesn't supply. Receives the site's domain only, directly from your browser.", url: 'https://policies.google.com/privacy' },
               { name: 'PostHog', purpose: 'Product analytics and session replay, with form inputs masked by default', url: 'https://posthog.com/privacy' },
+              { name: 'Resend', purpose: 'Delivers messages you send us from the contact form or the page shown after removing the extension to our support inbox', url: 'https://resend.com/legal/privacy-policy' },
               { name: 'Vercel', purpose: 'Hosting for the web app, plus Web Analytics (cookieless, aggregate page views) and Speed Insights (page performance metrics such as load time)', url: 'https://vercel.com/legal/privacy-policy' },
             ].map(({ name, purpose, url }) => (
               <div key={name} className="flex gap-4 px-4 py-3">

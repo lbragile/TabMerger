@@ -134,6 +134,7 @@ export * from './storeListings';
 export * from './autoBackup';
 export * from './autoBackupFile';
 export * from './localOnlySyncKeys';
+export * from './uninstallSurvey';
 export * from './search';
 
 /** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */

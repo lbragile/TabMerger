@@ -21,6 +21,7 @@ import {
 import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 import { markTourPendingOnInstall } from '@/lib/tour';
 import { registerAutoBackup } from '@/lib/autoBackupAlarm';
+import { registerUninstallSurvey } from '@/lib/uninstallSurvey';
 import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
 
 /**
@@ -239,6 +240,8 @@ export default defineBackground(() => {
   chrome.runtime.onStartup.addListener(() => { void buildMenus(); void reRegisterReminders(); });
   void buildMenus();
   void reRegisterReminders();
+  // On every worker start, not only onInstalled: an update changes the version in the URL
+  registerUninstallSurvey();
 
   // Tabs the popup dragged OUT of "Now Open" that it must not close itself: closing the
   // ACTIVE tab of the popup's anchor window dismisses the popup instantly (spec C7), which

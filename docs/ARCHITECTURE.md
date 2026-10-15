@@ -86,7 +86,7 @@ In CI there are no env files. `.github/workflows/publish.yml` sets each build's 
 
 **Routes:**
 
-- `app/(marketing)/` — landing, features, pricing, faq, changelog, contact, privacy, terms, and the public share page `share/[slug]`.
+- `app/(marketing)/` — landing, features, pricing, faq, changelog, contact, privacy, terms, the public share page `share/[slug]`, and `uninstalled` (the not-indexed survey the browser opens after the extension is removed).
 - `app/(app)/` — `dashboard`, `account`. `proxy.ts` redirects signed-out users to `/auth/sign-in`.
 - `app/auth/` — sign-in/sign-up pages. `app/api/auth/{callback,sign-out}`.
 - `app/api/`:
@@ -102,6 +102,7 @@ In CI there are no env files. `.github/workflows/publish.yml` sets each build's 
 | `og-preview` | Server-side OG metadata fetch for tab previews and share pages. |
 | `track` | GA4 Measurement Protocol proxy for extension events. |
 | `contact` | Contact form via Resend. |
+| `uninstall-feedback` | Uninstall survey answers from the public `/uninstalled` page (opened by `runtime.setUninstallURL`) via Resend to `UNINSTALL_FEEDBACK_TO_EMAIL` (falls back to `CONTACT_TO_EMAIL`). Shares the rate limiter, diagnostics and send helper with `contact` (`lib/supportEmail.ts`). |
 
 - **CORS:** `proxy.ts` answers preflights and adds CORS headers on `/api/*` for `chrome-extension://` and `moz-extension://` origins only. It never sends `Allow-Credentials`, so authenticated routes rely on the Bearer token.
 - **Encrypted data:** the dashboard decrypts on the client after a passphrase prompt (`lib/encryption/context.tsx`, which caches the key in `sessionStorage`). Server code never decrypts. A route that needs plaintext content accepts it from the client in the request body, as `organize` does. Sharing goes further and never touches an API route at all — `lib/sharing.ts` encrypts and inserts into `shared_bundles` directly from the browser (see `docs/DATABASE.md`).

@@ -39,6 +39,9 @@ vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuth
 // Automatic backups have their own suite (autoBackupAlarm.test.ts): here the worker only has to call it once.
 const { mockRegisterAutoBackup } = vi.hoisted(() => ({ mockRegisterAutoBackup: vi.fn() }))
 vi.mock('@/lib/autoBackupAlarm', () => ({ registerAutoBackup: mockRegisterAutoBackup }))
+// The uninstall survey has its own suite (uninstallSurvey.test.ts): here the worker only has to call it once.
+const { mockRegisterUninstallSurvey } = vi.hoisted(() => ({ mockRegisterUninstallSurvey: vi.fn() }))
+vi.mock('@/lib/uninstallSurvey', () => ({ registerUninstallSurvey: mockRegisterUninstallSurvey }))
 
 vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   getGroupsState: mockGetGroupsState,
@@ -483,6 +486,14 @@ describe('background — automatic backups wiring', () => {
     mockRegisterAutoBackup.mockClear()
     capturedMain!()
     expect(mockRegisterAutoBackup).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('background — uninstall survey wiring', () => {
+  it('registers the uninstall survey URL on every worker start, not only on install', () => {
+    mockRegisterUninstallSurvey.mockClear()
+    capturedMain!()
+    expect(mockRegisterUninstallSurvey).toHaveBeenCalledTimes(1)
   })
 })
 
