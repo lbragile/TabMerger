@@ -12,8 +12,10 @@ import { aiPost } from '@/hooks/useAI';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { applyTheme } from '@/lib/theme';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useGroups, useImportGroups } from '@/hooks/useGroups';
 import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
 import { useAiUsage } from '@/hooks/useAiUsage';
@@ -21,6 +23,9 @@ import { importGroups, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@
 import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
+import { AutoBackups } from '@/components/Settings/AutoBackups';
+import { autoBackupDownloadQueryKey } from '@/lib/autoBackupQueryKeys';
+import type { BackupDownloadResult } from '@/lib/autoBackupDownload';
 import { toast } from '@/lib/toast';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
@@ -29,10 +34,12 @@ import { getEncryptionKeyState, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
-import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, formatUsd, toHttpUrl } from '@tabmerger/shared';
+import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, SEARCH_COPY, SEARCH_NON_MATCHING_OPTIONS, formatUsd, normalizeSearchNonMatching, toHttpUrl } from '@tabmerger/shared';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
-  return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
+  // A key that settings saved by an older version lack counts as its default, so a newer
+  // setting does not make an untouched form look edited.
+  return (Object.keys(a) as (keyof AppSettings)[]).every((k) => (a[k] ?? DEFAULT_APP_SETTINGS[k]) === (b[k] ?? DEFAULT_APP_SETTINGS[k]));
 }
 
 interface SettingsModalProps {
@@ -55,8 +62,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { data: groupsState } = useGroups();
   const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const importButtonRef = useRef<HTMLButtonElement>(null);
+  const { confirm, confirmDialog } = useConfirm();
   const openModal = useUIStore((s) => s.openModal);
   const syncPausedReason = useUIStore((s) => s.syncPausedReason);
+  const startTour = useUIStore((s) => s.startTour);
+  // The tour is only drawn while no modal is open, so Settings closes first
+  const handleStartTour = () => {
+    trackEvent('tour_started', { source: 'settings' });
+    onClose();
+    startTour();
+  };
   const [canResetEncryption, setCanResetEncryption] = useState(false);
 
   useEffect(() => {
@@ -157,7 +173,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   };
 
   const handleClearAll = () => {
-    openModal('clearAllData', { onConfirm: () => void performClearAll() });
+    // Only when this panel has just SEEN automatic backups in the signed-in account (the Data tab's
+    // backups section downloaded them) does the confirmation say they are kept: clearing wipes this
+    // device only, and they can be brought back from here afterwards. No cloud copy, no sentence.
+    const download = queryClient.getQueryData<BackupDownloadResult>(autoBackupDownloadQueryKey(user?.id));
+    const cloudBackupsKept = !!user && download?.status === 'done' && download.inAccount > 0;
+    openModal('clearAllData', { onConfirm: () => void performClearAll(), ...(cloudBackupsKept ? { cloudBackupsKept: true } : {}) });
   };
 
   const handleExport = () => {
@@ -186,7 +207,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       // so gate on current + imported, same as ImportExport.tsx's Bookmarks/OneTab paths.
       if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
 
-      if (!confirm(`Import ${groups.length} group${groups.length === 1 ? '' : 's'}?`)) return;
+      const count = `${groups.length} group${groups.length === 1 ? '' : 's'}`;
+      // The file name is the user's own, shown as text and cut short so it cannot fill the dialog.
+      const from = file.name.length > 60 ? `${file.name.slice(0, 60)}…` : file.name;
+      const confirmed = await confirm({
+        title: `Import ${count}?`,
+        description: `The ${count} in "${from}" will be added next to the groups you already have.`,
+        confirmLabel: `Import ${count}`,
+        // the file picker took focus away: give it back to the Import button
+        returnFocusTo: importButtonRef.current
+      });
+      if (!confirmed) return;
       importGroupsMutation(groups, {
         onSuccess: () => {
           toast.success(`Groups imported successfully${skippedSuffix(skipped)}`);
@@ -279,6 +310,16 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
+              <Label className="text-sm">Take the tour</Label>
+              <p className="text-xs text-muted-foreground">A quick walkthrough of TabMerger</p>
+            </div>
+            <Button variant="outline" size="sm" className="h-7 shrink-0 text-xs" onClick={handleStartTour} aria-label="Start the tour">
+              Start
+            </Button>
+          </div>
+
+          <div className="flex items-center justify-between gap-4" data-tour={TOUR_ANCHORS.settingsTheme}>
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Theme</Label>
               <p className="text-xs text-muted-foreground">Choose your preferred theme</p>
             </div>
@@ -286,7 +327,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               value={draft.theme}
               onValueChange={(v) => patch('theme', v as AppSettings['theme'])}
             >
-              <SelectTrigger className="w-28 h-7 text-xs shrink-0">
+              <SelectTrigger className="w-28 h-7 text-xs shrink-0" aria-label="Theme" data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -304,6 +345,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </div>
             <Switch
               className="shrink-0"
+              aria-label="Confirm before deleting"
               checked={draft.confirmOnDelete}
               onCheckedChange={(v) => patch('confirmOnDelete', v)}
             />
@@ -316,9 +358,31 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </div>
             <Switch
               className="shrink-0"
+              aria-label="Open tab on click"
               checked={draft.openTabOnClick}
               onCheckedChange={(v) => patch('openTabOnClick', v)}
             />
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <Label className="text-sm">{SEARCH_COPY.settingLabel}</Label>
+              <p className="text-xs text-muted-foreground">{SEARCH_COPY.settingDescription}</p>
+            </div>
+            <Select
+              // A stored value is only trusted when it is one of the options (older saves have none).
+              value={normalizeSearchNonMatching(draft.searchNonMatching)}
+              onValueChange={(v) => patch('searchNonMatching', normalizeSearchNonMatching(v))}
+            >
+              <SelectTrigger className="w-24 h-7 text-xs shrink-0" aria-label={SEARCH_COPY.settingLabel}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SEARCH_NON_MATCHING_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex items-center justify-between gap-4">
@@ -328,6 +392,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </div>
             <Switch
               className="shrink-0"
+              aria-label="Auto-deduplicate on merge"
               checked={draft.autoDedupOnMerge}
               onCheckedChange={(v) => patch('autoDedupOnMerge', v)}
             />
@@ -372,6 +437,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Cloud sync"
                 checked={draft.syncEnabled}
                 onCheckedChange={(v) => patch('syncEnabled', v)}
               />
@@ -534,6 +600,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <p className="text-xs text-muted-foreground">Restore groups from a JSON export</p>
             </div>
             <Button
+              ref={importButtonRef}
               variant="outline"
               size="sm"
               className="text-xs gap-1.5 shrink-0 rounded-none"
@@ -550,8 +617,19 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
+              // cleared so that choosing the same file again (after Cancel) asks again
+              e.target.value = '';
               if (file) void handleImport(file);
             }}
+          />
+
+          <Separator />
+
+          {/* Saves its two settings immediately (this tab has no Save footer) and mirrors them
+              into the draft, so a later "Save changes" on General cannot write old values back. */}
+          <AutoBackups
+            onSettingsSaved={(saved) => setDraft((prev) => ({ ...prev, ...saved }))}
+            onRestored={onClose}
           />
 
           <Separator />
@@ -581,6 +659,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Auto-group"
                 checked={draft.aiAutoGroupEnabled}
                 onCheckedChange={(v) => patch('aiAutoGroupEnabled', v)}
               />
@@ -593,6 +672,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Name group"
                 checked={draft.aiNameGroupEnabled}
                 onCheckedChange={(v) => patch('aiNameGroupEnabled', v)}
               />
@@ -605,6 +685,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Suggest sessions"
                 checked={draft.aiSuggestSessionsEnabled}
                 onCheckedChange={(v) => patch('aiSuggestSessionsEnabled', v)}
               />
@@ -617,6 +698,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Organize"
                 checked={draft.aiOrganizeEnabled}
                 onCheckedChange={(v) => patch('aiOrganizeEnabled', v)}
               />
@@ -629,6 +711,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Tab preview summaries"
                 checked={draft.aiTabSummaryEnabled}
                 onCheckedChange={(v) => patch('aiTabSummaryEnabled', v)}
               />
@@ -647,6 +730,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Limit automatic AI suggestions to once a day"
                 checked={draft.aiDailyThrottle}
                 onCheckedChange={(v) => patch('aiDailyThrottle', v)}
               />
@@ -754,12 +838,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               className="text-xs shrink-0"
               disabled={!isDirty}
               onClick={() => void handleSave()}
+              data-tour={TOUR_ANCHORS.settingsSaveButton}
             >
               Save changes
             </Button>
           </div>
         </div>
       )}
+      {confirmDialog}
     </>
   );
 }

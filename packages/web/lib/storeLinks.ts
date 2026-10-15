@@ -57,6 +57,32 @@ export function getStoreLinks(): StoreLinks {
   return isProductionDeployment() ? STABLE_STORE_LINKS : BETA_STORE_LINKS
 }
 
+/**
+ * The "install it again" links on the uninstall survey page.
+ *
+ * - Browser known: just that browser's link. Unknown: all three.
+ * - Channel `stable`: the public listings. Channel `beta`: the beta builds, except on the
+ *   production deployment, where the beta guide (the Firefox beta target) is not served, so the
+ *   public listings are used there. Unknown: whatever this deployment links to (`getStoreLinks`).
+ *
+ * Server only, for the same reason as `getStoreLinks`.
+ */
+export function getReinstallLinks(
+  browser: keyof StoreLinks | undefined,
+  channel: 'stable' | 'beta' | undefined
+): { browser: keyof StoreLinks; href: string }[] {
+  const links =
+    channel === 'stable'
+      ? STABLE_STORE_LINKS
+      : channel === 'beta'
+        ? isProductionDeployment()
+          ? STABLE_STORE_LINKS
+          : BETA_STORE_LINKS
+        : getStoreLinks()
+  const browsers: (keyof StoreLinks)[] = browser ? [browser] : ['chrome', 'firefox', 'edge']
+  return browsers.map((b) => ({ browser: b, href: links[b] }))
+}
+
 /** True for a link that leaves this site (a store listing). */
 export function isExternalStoreLink(href: string): boolean {
   return /^https?:\/\//.test(href)

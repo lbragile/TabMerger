@@ -3,6 +3,36 @@ import http from 'node:http';
 import { webcrypto } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
 
+/** `chrome.storage.local` key of the guided tour's record. Mirrors `TOUR_STORAGE_KEY` in `src/lib/tour.ts`. */
+export const TOUR_STORAGE_KEY = 'tm_tour';
+
+/**
+ * Marks the guided tour as already finished for this browser profile.
+ *
+ * Every test profile is brand new, so the extension's `onInstalled` listener sees a first
+ * install and marks the tour pending: the popup would then open with the tour's overlay on
+ * top of everything, in every spec. Call this once, right after the context is created and
+ * BEFORE the first popup page is opened. The `context` fixture does it unless a spec opts
+ * in with `test.use({ tour: 'pending' })`; code that launches its own context calls it itself.
+ *
+ * It first waits for the install handler's own write: that handler reads the record and then
+ * writes it, so writing first could be overwritten. With a build that predates the tour the
+ * write never comes, the wait times out and nothing is lost (such a build has no tour).
+ */
+export async function dismissTour(context: BrowserContext): Promise<void> {
+  let [sw] = context.serviceWorkers();
+  if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
+  await sw.evaluate(async (key) => {
+    const deadline = Date.now() + 3_000;
+    while (Date.now() < deadline) {
+      const stored = await chrome.storage.local.get(key);
+      if (stored[key]) break;
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    }
+    await chrome.storage.local.set({ [key]: { status: 'done' } });
+  }, TOUR_STORAGE_KEY);
+}
+
 /** Open the extension popup as a regular page (bypasses the 800×600 popup constraint). */
 export async function openPopup(context: BrowserContext, extensionId: string): Promise<Page> {
   const page = await context.newPage();

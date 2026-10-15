@@ -27,6 +27,7 @@ import path from "node:path";
 import { chromium, type BrowserContext, type Locator, type Page } from "@playwright/test";
 import { getCdpMouse, naturalMouseMove, runStepAction, setPace } from "./lib/actions";
 import { frameAt, installCursor, makeGlide, openCleanChaosPopup, startGrabber, writeFrames } from "./lib/tourCapture";
+import { markTourDone } from "./lib/tourDone";
 
 const theme = (process.argv[2] as "light" | "dark" | undefined) ?? "dark";
 if (theme !== "light" && theme !== "dark") {
@@ -323,6 +324,7 @@ async function main() {
                 args: ["--headless=new", `--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`, "--window-size=800,600"],
                 ...{ storageState: { cookies: [], origins: [{ origin: `chrome-extension://${extensionId}`, localStorage: [{ name: "tabmerger-theme", value: theme }] }] } },
             });
+            await markTourDone(ctxB); // before the popup opens, so the tour never shows
             for (const u of ["https://github.com", "https://developer.mozilla.org", "https://news.ycombinator.com"]) {
                 const t = await ctxB.newPage();
                 await t.goto(u, { waitUntil: "domcontentloaded" }).catch(() => null);

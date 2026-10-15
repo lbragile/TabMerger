@@ -4,6 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { chromium, type BrowserContext, type Page } from "@playwright/test";
+import { markTourDone } from "./tourDone";
 
 // ponytail: MUST be the "-demo" output dir — `pnpm build:extension:demo`
 // (wxt build -m demo) is what actually keeps the Settings > Dev tab's Demo
@@ -89,6 +90,9 @@ export async function launchDemoContext(
     let [sw] = probeContext.serviceWorkers();
     if (!sw) sw = await probeContext.waitForEvent("serviceworker");
     const extensionId = sw.url().split("/")[2];
+    // The first launch is the install: mark the tour done in this profile before the real
+    // (popup-opening) launch below, so the tour never shows on screen.
+    await markTourDone(probeContext, sw);
     await probeContext.close();
 
     // ponytail: --app=chrome-extension://... makes Chrome start navigating to

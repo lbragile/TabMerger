@@ -1,13 +1,15 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getGeneratedChangelog, type ChangeEntry, type ChangeType } from '@/lib/changelog'
 import { githubReleaseUrl } from '@/lib/github'
 
-export const metadata: Metadata = {
-  title: 'Changelog — TabMerger',
-  description: 'New features, improvements, and fixes in TabMerger.',
-}
+export const metadata = pageMetadata({
+  path: '/changelog',
+  title: 'Changelog',
+  description:
+    'New features, improvements, and fixes in TabMerger.',
+})
 
 // v3.0.0 is the version live on the Chrome Web Store, but its `v3.0.0` git tag is only
 // an ANCHOR for semantic-release (created 2026-09-19 on the 2026-08-14 commit fcd85f9),

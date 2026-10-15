@@ -320,3 +320,256 @@ html[data-tm-dnd-grabbing] * {
   outline: 0.125rem solid hsl(var(--primary));
   outline-offset: -0.125rem;
 }
+
+/* Guided tour (components/Tour): the rings. Colors come from the theme tokens only.
+
+   REGION ring (`[data-tour-spotlight]`), in the PRIMARY brand color: the area a step is about.
+   ACTION ring (`[data-tour-action]`), in the SECONDARY brand color (orange): the one control to
+   use right now, so the two can never be mistaken for each other.
+   DROP marker (`[data-tour-drop]`): where a dragged item goes. Dashed and labelled, so it
+   does not rely on color to differ from the action ring.
+
+   Every ring is box-shadows on an element that is slightly larger than its target (Tour.tsx
+   pads it), so the lines follow the target's own corner radius and sit a little away from it.
+   The lines are thin on purpose (a 0.125rem colored line). Brand colors alone do not reach
+   3:1 on every surface (orange on white is about 2.3:1, cyan on white about 3:1), so each
+   colored line has ONE hairline in the theme's text color on its inner side: together they
+   always have 3:1 or better against the control inside and against whatever is outside (the
+   page, or the dim). The faint glow is decoration only.
+
+   Only one thing moves at a time: the action ring pulses while there is one, else the region
+   ring does; the drop marker pulses only while an item is being dragged.
+
+   Under forced colors shadows are dropped, so a transparent outline, which that mode paints
+   in a system color, stands in for each ring. */
+[data-tour-spotlight] {
+  box-shadow:
+    0 0 0 0.0625rem hsl(var(--foreground)),
+    0 0 0 0.1875rem hsl(var(--primary)),
+    0 0 0.625rem 0.125rem hsl(var(--primary) / 0.3),
+    0 0 0 100rem rgb(0 0 0 / 0.72);
+  outline: 0.125rem solid transparent;
+  outline-offset: 0.0625rem;
+}
+
+/* The pulse: a second ring that starts on the first one and grows 0.25rem outwards while it
+   fades. Transform and opacity only, so it is composited and never causes layout. The two
+   scale factors are set per highlight (pulseScale in lib/tour.ts), so the ring moves the same
+   distance on every side whatever the shape. Noticeable but not jumpy: one soft wave every
+   1.8 seconds. */
+[data-tour-pulse] {
+  position: absolute;
+  inset: -0.1875rem;
+  border: 0.125rem solid hsl(var(--primary));
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: tour-pulse 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+@keyframes tour-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  75%,
+  100% {
+    transform: scale(var(--tour-pulse-x, 1.1), var(--tour-pulse-y, 1.1));
+    opacity: 0;
+  }
+}
+
+/* The ACTION ring only (the region's dim is too large a shadow to animate): a ring that has
+   just been given a different target glides to it (Tour.tsx sets the attribute
+   for a moment). Not on all the time: while it FOLLOWS its target (a menu growing in, a list
+   being scrolled) it is positioned frame by frame, and easing would make it trail behind. */
+[data-tour-glide] {
+  transition:
+    left 0.2s ease-out,
+    top 0.2s ease-out,
+    width 0.2s ease-out,
+    height 0.2s ease-out,
+    border-radius 0.2s ease-out;
+}
+
+/* An interactive step also has an ACTION RING (below) on the one control to use next. The
+   region then stays calm, so the ring is what draws the eye: a hairline in the primary color
+   on a text-color hairline, no glow and no pulse (Tour.tsx does not render one). */
+[data-tour-spotlight='calm'] {
+  box-shadow:
+    0 0 0 0.0625rem hsl(var(--foreground)),
+    0 0 0 0.125rem hsl(var(--primary)),
+    0 0 0 100rem rgb(0 0 0 / 0.72);
+  outline: 0.0625rem solid transparent;
+  outline-offset: 0.0625rem;
+}
+
+/* The region and the action ring are on the same control: the region is only the dim. */
+[data-tour-spotlight='merged'] {
+  box-shadow: 0 0 0 100rem rgb(0 0 0 / 0.72);
+  outline: none;
+}
+
+/* The action ring: tight around the one control to act on next, in the secondary color.
+   A text-color hairline, the thin orange line, a faint orange glow, and the pulse: it is the
+   one thing on screen that moves. Drawn above menus and dialogs; never catches the pointer
+   (pointer-events-none in Tour.tsx). */
+[data-tour-action] {
+  box-shadow:
+    0 0 0 0.0625rem hsl(var(--foreground)),
+    0 0 0 0.1875rem hsl(var(--secondary)),
+    0 0 0.5rem 0.125rem hsl(var(--secondary) / 0.35);
+  outline: 0.125rem solid transparent;
+  outline-offset: 0.0625rem;
+}
+
+[data-tour-action] > [data-tour-pulse],
+[data-tour-drop] > [data-tour-pulse] {
+  border-color: hsl(var(--secondary));
+}
+
+/* The drop marker of a drag step: where the picked-up item goes. A thin dashed line in the
+   secondary color with one solid text-color hairline outside it (the hairline carries the
+   contrast, the dashes and the label carry the meaning). Steady until an item is being
+   dragged; then it takes over the pulse from the source (Tour.tsx renders the pulse). */
+[data-tour-drop] {
+  border: 0.125rem dashed hsl(var(--secondary));
+  box-shadow: 0 0 0 0.0625rem hsl(var(--foreground));
+  background: hsl(var(--secondary) / 0.1);
+}
+
+[data-tour-drop] > [data-tour-pulse] {
+  inset: -0.25rem;
+}
+
+/* The drop marker when the item goes into the GAP under a row (the end of a list, the place
+   after a group), not onto the row: a solid bar along that edge instead of a box, so it never
+   reads as "drop on this row". Text-color hairlines above and below carry the contrast; the
+   little wedge at its left end and the label's arrow carry the meaning without color. */
+[data-tour-drop^='line'] {
+  border: 0;
+  background: hsl(var(--secondary));
+  box-shadow: 0 0 0 0.0625rem hsl(var(--foreground));
+}
+
+[data-tour-drop^='line']::before {
+  content: '';
+  position: absolute;
+  left: -0.0625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0.3125rem solid transparent;
+  border-left-color: hsl(var(--foreground));
+}
+
+/* Its label. Theme text colors for the words (white on the orange would be too faint), with
+   the orange as a bar in front. */
+[data-tour-drop-label] {
+  position: absolute;
+  right: -0.125rem;
+  bottom: calc(100% + 0.125rem);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-right: 0.25rem solid hsl(var(--secondary));
+  /* A background-color edge, so the label stands out on any surface (the list of groups is
+     dark in both themes) */
+  outline: 0.0625rem solid hsl(var(--background));
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+  padding: 0.0625rem 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* The arrow in the label points at the marker: down while the label sits above it. */
+[data-tour-drop-arrow] {
+  width: 0;
+  height: 0;
+  border-left: 0.25rem solid transparent;
+  border-right: 0.25rem solid transparent;
+  border-top: 0.3125rem solid currentColor;
+}
+
+/* No room above the destination (it touches the top of the popup): the label goes inside a
+   box, and under a line (its arrow then points up). */
+[data-tour-drop-label='inside'] {
+  bottom: auto;
+  top: 0;
+  right: 0;
+}
+[data-tour-drop-label='under'] {
+  bottom: auto;
+  top: calc(100% + 0.125rem);
+}
+[data-tour-drop-label='under'] > [data-tour-drop-arrow] {
+  border-top: 0;
+  border-bottom: 0.3125rem solid currentColor;
+}
+
+/* The card's sub-step marker (one dot per control of a "try it" step). */
+[data-tour-substep-dot] {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  border: 0.0625rem solid hsl(var(--foreground));
+  background: transparent;
+}
+[data-tour-substep-dot='done'] {
+  background: hsl(var(--foreground));
+}
+[data-tour-substep-dot='current'] {
+  width: 1rem;
+  background: hsl(var(--secondary));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tour-pulse] {
+    animation: none;
+  }
+  [data-tour-glide] {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-tour-spotlight] {
+    outline-color: CanvasText;
+  }
+  [data-tour-spotlight='calm'] {
+    outline-color: CanvasText;
+  }
+  [data-tour-action] {
+    outline-color: Highlight;
+  }
+  [data-tour-drop] {
+    border-color: Highlight;
+    background: none;
+  }
+  [data-tour-drop^='line'] {
+    background: Highlight;
+    outline: 0.0625rem solid CanvasText;
+  }
+  [data-tour-drop^='line']::before {
+    border-left-color: CanvasText;
+  }
+  [data-tour-drop-label] {
+    border: 0.0625rem solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+  [data-tour-substep-dot] {
+    border-color: CanvasText;
+  }
+  [data-tour-substep-dot='done'] {
+    background: CanvasText;
+  }
+  [data-tour-substep-dot='current'] {
+    background: Highlight;
+  }
+  [data-tour-pulse] {
+    display: none;
+  }
+}

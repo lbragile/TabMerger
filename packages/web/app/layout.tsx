@@ -8,6 +8,7 @@ import { AppToaster } from '@/components/AppToaster'
 import { PostHogProvider } from '@/components/posthog-provider'
 import { DeferredOnLoad } from '@/components/DeferredOnLoad'
 import { getMetadataBase } from '@/lib/utils'
+import { HOME_TITLE, SITE_DESCRIPTION, SITE_NAME, TITLE_TEMPLATE } from '@/lib/seo'
 import { noFlashThemeScript } from '@/lib/themeScript'
 import './globals.css'
 
@@ -23,11 +24,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
   title: {
-    default: 'TabMerger — Organize your tabs. Reclaim your focus.',
-    template: '%s | TabMerger',
+    default: HOME_TITLE,
+    template: TITLE_TEMPLATE,
   },
-  description:
-    'TabMerger groups your open tabs into a clean, searchable panel — saving memory and mental bandwidth.',
+  description: SITE_DESCRIPTION,
   keywords: [
     'tab manager',
     'browser extension',
@@ -35,20 +35,21 @@ export const metadata: Metadata = {
     'chrome extension',
     'tab organizer',
   ],
+  // Fallback cards for pages that set none (the signed-in app, auth, 404). Indexable pages set
+  // their own through `pageMetadata()` (lib/seo.ts): Next replaces these objects whole, it does
+  // not merge them. No `url` here: one URL for every page is what made all pages share as the
+  // homepage.
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_APP_URL,
-    siteName: 'TabMerger',
-    title: 'TabMerger — Organize your tabs. Reclaim your focus.',
-    description:
-      'TabMerger groups your open tabs into a clean, searchable panel — saving memory and mental bandwidth.',
+    siteName: SITE_NAME,
+    title: HOME_TITLE,
+    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TabMerger — Organize your tabs. Reclaim your focus.',
-    description:
-      'TabMerger groups your open tabs into a clean, searchable panel — saving memory and mental bandwidth.',
+    title: HOME_TITLE,
+    description: SITE_DESCRIPTION,
   },
   verification: {
     google: 'OW3tfEcFL_xiCb5p0XfnF7B1BILkp-gkxDuNg4XZFK8',

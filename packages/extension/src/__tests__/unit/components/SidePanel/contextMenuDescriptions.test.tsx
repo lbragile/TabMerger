@@ -232,9 +232,9 @@ describe('GroupContextMenu — duplicate free-tier guard', () => {
   })
 
   it('allows duplicate with 5 total groups (4 saved + Now Open), limit 5', () => {
-    // 5-1=4 < 5 → allowed
+    // 4 counted groups (Now Open is permanent and not counted) < 5 → allowed
     mockUseGroups.mockReturnValue({
-      data: { available: new Array(5).fill({}), active: { id: '', index: 0 } },
+      data: { available: [{ permanent: true }, {}, {}, {}, {}], active: { id: '', index: 0 } },
     })
     mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
 

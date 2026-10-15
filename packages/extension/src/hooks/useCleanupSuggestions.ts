@@ -1,6 +1,7 @@
 import { useGroups } from '@/hooks/useGroups';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import type { Tab } from '@/lib/types';
+import { isTourDemoGroup } from '@tabmerger/shared';
 
 const MIN_STALE = 5;
 
@@ -23,7 +24,7 @@ export function useCleanupSuggestions() {
 
   if (groupsState) {
     groupsState.available.forEach((g, gi) => {
-      if (g.permanent) return; // skip Now Open
+      if (g.permanent || isTourDemoGroup(g)) return; // skip Now Open and the tour's practice groups
       for (const w of g.windows) {
         for (const t of w.tabs) {
           if (t.savedAt && now - t.savedAt > thresholdMs) {

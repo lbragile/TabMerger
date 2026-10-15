@@ -56,6 +56,15 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
+/**
+ * Finds a row by its full text even when a search match splits it into <mark> pieces
+ * (getByText only looks at one text node per element). Returns the innermost element.
+ */
+const textOf = (text: string) =>
+  screen.getByText((_content, el) => !!el && el.textContent === text && !Array.from(el.children).some((c) => c.textContent === text))
+const queryTextOf = (text: string) =>
+  screen.queryByText((_content, el) => !!el && el.textContent === text && !Array.from(el.children).some((c) => c.textContent === text))
+
 describe('SearchOverlay — empty state', () => {
   it('shows example searches when query is empty', () => {
     setup('')
@@ -74,8 +83,8 @@ describe('SearchOverlay — empty state', () => {
 describe('SearchOverlay — results mode', () => {
   it('shows matching tabs for a plain text query', () => {
     setup('react')
-    expect(screen.getByText('React docs')).toBeTruthy()
-    expect(screen.queryByText('Vue docs')).toBeNull()
+    expect(textOf('React docs')).toBeTruthy()
+    expect(queryTextOf('Vue docs')).toBeNull()
   })
 
   it('shows "No matches" when query matches nothing', () => {
@@ -90,7 +99,7 @@ describe('SearchOverlay — results mode', () => {
 
   it('clicking a tab result calls onSelectGroup with its group index', () => {
     const { onSelectGroup } = setup('react')
-    fireEvent.click(screen.getByText('React docs'))
+    fireEvent.click(textOf('React docs'))
     expect(onSelectGroup).toHaveBeenCalledWith(0)
   })
 
@@ -98,20 +107,58 @@ describe('SearchOverlay — results mode', () => {
     setup('react', { groupsState: undefined })
     expect(screen.getByText(/No matches for/)).toBeTruthy()
   })
+
+  it('matches only the text as typed: letters out of sequence find nothing', () => {
+    setup('rct')
+    expect(screen.getByText(/No matches for/)).toBeTruthy()
+    expect(queryTextOf('React docs')).toBeNull()
+  })
+
+  it('orders results exact, then prefix, then word start, then anywhere, stable within a rank', () => {
+    const tab = (id: number, title: string) => ({ id, title, url: `https://example.com/${id}` })
+    const groupsState: GroupsState = {
+      active: { id: '', index: 0 },
+      available: [{
+        id: 'g1', name: 'Work', color: 'rgba(1,1,1,1)', updatedAt: 0, permanent: false, starred: false,
+        windows: [{
+          id: 1, name: 'Main', starred: false, incognito: false, focused: false,
+          tabs: [tab(1, 'Ninjira notes'), tab(2, 'Open Jira'), tab(3, 'Jira board'), tab(4, 'jira'), tab(5, 'Jira sprint'), tab(6, 'Jra only')],
+        }],
+      }],
+    }
+    setup('jira', { groupsState })
+    const rows = screen.getAllByRole('option').map((o) => o.textContent ?? '')
+    const order = ['jira', 'Jira board', 'Jira sprint', 'Open Jira', 'Ninjira notes'].map((t) => rows.findIndex((r) => r.startsWith(`Work${t}`) || r.startsWith(t)))
+    expect(order.every((i) => i >= 0)).toBe(true)
+    expect([...order].sort((a, b) => a - b)).toEqual(order)
+    expect(rows.some((r) => r.includes('Jra only'))).toBe(false)
+  })
 })
 
 describe('SearchOverlay — group: picker', () => {
   it('shows group picks when query ends with bare "group:"', () => {
     setup('group:')
     expect(screen.getByText('Pick a group')).toBeTruthy()
-    expect(screen.getByText('Work')).toBeTruthy()
-    expect(screen.getByText('Personal')).toBeTruthy()
+    expect(textOf('Work')).toBeTruthy()
+    expect(textOf('Personal')).toBeTruthy()
   })
 
   it('filters group picks by typed text', () => {
     setup('group:pers')
-    expect(screen.getByText('Personal')).toBeTruthy()
-    expect(screen.queryByText('Work')).toBeNull()
+    expect(textOf('Personal')).toBeTruthy()
+    expect(queryTextOf('Work')).toBeNull()
+  })
+
+  it('does not pick a group by letters out of sequence', () => {
+    setup('group:wrk')
+    expect(queryTextOf('Work')).toBeNull()
+  })
+
+  it('lists picks best match first', () => {
+    const g = (id: string, name: string) => ({ id, name, color: 'rgba(1,1,1,1)', updatedAt: 0, permanent: false, starred: false, windows: [] })
+    setup('group:ops', { groupsState: { active: { id: '', index: 0 }, available: [g('a', 'DevOps'), g('b', 'Ops'), g('c', 'Ops team'), g('d', 'Big Ops')] } })
+    const rows = screen.getAllByRole('option').map((o) => o.textContent)
+    expect(rows).toEqual(['Ops', 'Ops team', 'Big Ops', 'DevOps'])
   })
 
   it('shows "No matches" in picker when nothing matches', () => {
@@ -122,7 +169,7 @@ describe('SearchOverlay — group: picker', () => {
   it('clicking a group pick schedules a quoted query update', async () => {
     vi.useFakeTimers()
     const { onQueryChange } = setup('group:wor')
-    fireEvent.click(screen.getByText('Work'))
+    fireEvent.click(textOf('Work'))
     vi.runAllTimers()
     expect(onQueryChange).toHaveBeenCalledWith('group:"Work" ')
     vi.useRealTimers()

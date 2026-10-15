@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from 'sonner';
 import { Header } from '@/components/Header';
@@ -17,7 +17,8 @@ import { getSetting } from '@/lib/localDb';
 import { useSync } from '@/hooks/useSync';
 import { useExternalGroupsChanges } from '@/hooks/useExternalGroupsChanges';
 import { useUIStore } from '@/stores/uiStore';
-import { parseSearchQuery, fuzzyMatch } from '@/lib/utils';
+import { parseSearchQuery } from '@/lib/utils';
+import { textMatches } from '@/lib/searchMatch';
 import { trackEvent } from '@/lib/analytics';
 import { useTheme } from '@/hooks/useTheme';
 import { useKeyboardNav } from '@/hooks/useKeyboardNav';
@@ -27,6 +28,8 @@ import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
 import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker';
 // Exiting selection mode unmounts every checkbox and the action bar; keep focus off <body>.
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
+import { Tour } from '@/components/Tour/Tour';
+import { SearchAnnouncer } from '@/components/SearchAnnouncer';
 
 function AppContent() {
   const { data: groupsState, isLoading } = useGroups();
@@ -87,14 +90,23 @@ function AppContent() {
   useExternalGroupsChanges();
 
   // Auto-select group when "in:group_name" qualifier is typed
+  // Once per filter text, not on every groups update: the query now stays until the user clears
+  // it, and "Now Open" updates all the time, so re-jumping would pin the user to that group.
+  const jumpedForGroupFilter = useRef('');
   useEffect(() => {
-    if (!groupsState || !searchFilter) return;
-    const { groupFilter } = parseSearchQuery(searchFilter);
-    if (!groupFilter) return;
+    const groupFilter = searchFilter ? parseSearchQuery(searchFilter).groupFilter : '';
+    if (!groupFilter) {
+      jumpedForGroupFilter.current = '';
+      return;
+    }
+    if (!groupsState || jumpedForGroupFilter.current === groupFilter) return;
     const idx = groupsState.available.findIndex((g) =>
-      fuzzyMatch(g.name, groupFilter)
+      textMatches(g.name, groupFilter)
     );
-    if (idx !== -1) setActiveGroupIndex(idx);
+    if (idx !== -1) {
+      jumpedForGroupFilter.current = groupFilter;
+      setActiveGroupIndex(idx);
+    }
   }, [searchFilter, groupsState, setActiveGroupIndex]);
 
   // Escape key exits selection mode
@@ -140,7 +152,7 @@ function AppContent() {
           <SidePanel groupsState={groupsState} />
           <main className="flex-1 min-w-0 overflow-hidden">
             {activeGroup ? (
-              <WindowsPanel group={activeGroup} groupIndex={safeActiveIndex} />
+              <WindowsPanel group={activeGroup} groupIndex={safeActiveIndex} allGroups={groupsState.available} />
             ) : (
               <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                 No group selected
@@ -151,6 +163,10 @@ function AppContent() {
       </DndProvider>
       {/* Floating action bar — visible when ≥1 item is selected */}
       {selectedItems.length > 0 && <SelectionActionBar />}
+      {/* Polite live region: how many tabs a search found, and in how many groups */}
+      <SearchAnnouncer groups={groupsState.available} />
+      {/* Guided tour: mounted after the app because its steps point at the controls above */}
+      <Tour />
     </div>
   );
 }

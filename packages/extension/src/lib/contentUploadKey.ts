@@ -26,12 +26,18 @@ export type ContentUploadGate = { key: CryptoKey } | { key: null; reason: Upload
  * re-arm their self-heal) until setup / unlock completes, which then uploads everything
  * encrypted. Plaintext metadata (`position`, counts, colour, device name) is not content and
  * does not go through here.
+ *
+ * `expectedUserId`: the account the caller is acting for. Both lookups below resolve the user
+ * from the client's CURRENT session, which can change while a caller runs (the web app hands the
+ * worker another session, the popup signs out). With it, a key is only ever returned for that
+ * account: if someone else (or nobody) is signed in when either lookup runs, the answer is
+ * `unknown` or `locked` and nothing is uploaded, never another account's key.
  */
-export async function getContentUploadKey(): Promise<ContentUploadGate> {
-  const state = await getEncryptionKeyState();
+export async function getContentUploadKey(expectedUserId?: string): Promise<ContentUploadGate> {
+  const state = await getEncryptionKeyState(expectedUserId);
   if (state !== 'present') return { key: null, reason: state === 'absent' ? 'no-key' : 'unknown' };
   try {
-    const key = await getDataKey();
+    const key = await getDataKey(expectedUserId);
     return key ? { key } : { key: null, reason: 'locked' };
   } catch {
     // unreadable / corrupt stored key: same as never unlocked

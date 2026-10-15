@@ -5,15 +5,16 @@ import { ReviewsStripSkeleton } from '@/components/marketing/ReviewsStripSkeleto
 import { Features } from '@/components/marketing/Features'
 import { PricingTeaser } from '@/components/marketing/PricingTeaser'
 import { FinalCta } from '@/components/marketing/FinalCta'
-import type { Metadata } from 'next'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { HOME_TITLE, SITE_DESCRIPTION, homeJsonLd, pageMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'TabMerger — Organize your tabs. Reclaim your focus.',
-}
+// Absolute: the root layout's title template would otherwise append the brand a second time.
+export const metadata = pageMetadata({ path: '/', title: HOME_TITLE, description: SITE_DESCRIPTION, absoluteTitle: true })
 
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={homeJsonLd()} />
       <Hero />
       {/* The reviews wait on three stores. Without this boundary the whole page waits with
           them; with it the page is sent at once and the section follows in the same

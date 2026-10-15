@@ -2,6 +2,7 @@ import type { NextConfig } from 'next'
 import path from 'path'
 import { withSentryConfig } from '@sentry/nextjs'
 import { FIREFOX_BETA } from '@tabmerger/shared'
+import { isPreviewDeployment } from './lib/deployment'
 
 /**
  * Public base of the Vercel Blob store CI uploads the self-distributed Firefox beta build to
@@ -10,6 +11,22 @@ import { FIREFOX_BETA } from '@tabmerger/shared'
  * docs/PUBLISHING.md). Resolved once at build/boot time, same lifecycle as the rest of this file.
  */
 const FIREFOX_BETA_BLOB_BASE_URL = process.env.FIREFOX_BETA_BLOB_BASE_URL
+
+/**
+ * `X-Robots-Tag: noindex` on every response of a Vercel preview deployment (the beta testers'
+ * site), so it never competes with production in search results. Vercel doesn't add one there:
+ * the preview is served on a `*.vercel.app` alias, which is indexable by default.
+ *
+ * Only `VERCEL_ENV === 'preview'` (`isPreviewDeployment()`), not "anything but production": local
+ * development and CI's `next start` (Lighthouse scores the SEO category, including is-crawlable)
+ * have no `VERCEL_ENV` and must stay indexable. Evaluated when the site is built; the preview and
+ * production sites are separate builds (`vercel build` vs `vercel build --prod`), each with its own
+ * `VERCEL_ENV`. A header rather than a robots meta tag, so a 404 still carries exactly one meta.
+ */
+export function previewNoindexHeaders(): { source: string; headers: { key: string; value: string }[] }[] {
+  if (!isPreviewDeployment()) return []
+  return [{ source: '/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex' }] }]
+}
 
 /**
  * Builds the `/firefox-beta/*` → Blob store rewrite, or `null` when unconfigured so the app runs
@@ -95,18 +112,19 @@ const nextConfig: NextConfig = {
     return rewrite ? [rewrite] : []
   },
   async headers() {
+    const rules = previewNoindexHeaders()
     // updates.json is what Firefox polls to learn a new beta build exists — if a CDN/browser
     // caches a stale copy, testers silently stop getting updates. Force revalidation regardless
     // of whatever Cache-Control the Blob object itself was uploaded with. The .xpi's own
     // Content-Type (application/x-xpinstall, set by CI on upload per FIREFOX_BETA.XPI_CONTENT_TYPE)
     // passes through the rewrite unmodified, so it's left alone here.
-    if (!FIREFOX_BETA_BLOB_BASE_URL) return []
-    return [
-      {
+    if (FIREFOX_BETA_BLOB_BASE_URL) {
+      rules.push({
         source: `${FIREFOX_BETA.PATH}/${FIREFOX_BETA.UPDATES_FILE}`,
         headers: [{ key: 'Cache-Control', value: 'no-store' }],
-      },
-    ]
+      })
+    }
+    return rules
   },
 }
 

@@ -19,3 +19,12 @@
 export function isProductionDeployment(): boolean {
   return process.env.VERCEL_ENV === 'production' || process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
 }
+
+/**
+ * True only on a Vercel preview deployment (the beta testers' site). Not simply
+ * `!isProductionDeployment()`: local development and CI's `next start` (Lighthouse) have no
+ * `VERCEL_ENV` at all and must behave like the public site for crawl checks.
+ */
+export function isPreviewDeployment(): boolean {
+  return process.env.VERCEL_ENV === 'preview'
+}

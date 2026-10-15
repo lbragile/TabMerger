@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { X, Zap } from 'lucide-react';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { useGroups } from '@/hooks/useGroups';
 import { useEntitlements, isApproachingLimit } from '@/hooks/useEntitlements';
 import { trackEvent } from '@/lib/analytics';
@@ -19,7 +20,8 @@ export function UpgradeCTA() {
 
   const eligible = !loading && !dismissed && tier === 'free' && subscriptionStatus === null && !!groupsState;
   // exclude Now Open (index 0) only — archived groups still count toward the limit
-  const saved = eligible ? groupsState!.available.slice(1) : [];
+  // (nor the guided tour's practice groups, which are not the user's)
+  const saved = eligible ? groupsState!.available.slice(1).filter((g) => !isTourDemoGroup(g)) : [];
   const groupCount = saved.length;
   const totalTabs = saved.reduce((sum, g) => sum + g.windows.reduce((ws, w) => ws + w.tabs.length, 0), 0);
   const shown = eligible && isApproachingLimit(groupCount, totalTabs, maxGroups, maxTabs);

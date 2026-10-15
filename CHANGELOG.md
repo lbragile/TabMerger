@@ -1,4 +1,16 @@
-## [3.1.3-beta.1](https://github.com/lbragile/TabMerger/compare/v3.1.2...v3.1.3-beta.1) (2026-10-15)
+# [3.2.0](https://github.com/lbragile/TabMerger/compare/v3.1.3...v3.2.0) (2026-10-15)
+
+
+### Bug Fixes
+
+* **web:** page-specific social previews, canonical URLs and structured data ([#68](https://github.com/lbragile/TabMerger/issues/68)) ([e34ee81](https://github.com/lbragile/TabMerger/commit/e34ee8102da4497510d27cf1c7762f0c31ee8deb)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+
+
+### Features
+
+* **extension:** guided tour, automatic backups, exact search and an uninstall survey ([#67](https://github.com/lbragile/TabMerger/issues/67)) ([4cc2903](https://github.com/lbragile/TabMerger/commit/4cc2903c5a283bb4dcac52517d5dc21005b7103a)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+
+## [3.1.3](https://github.com/lbragile/TabMerger/compare/v3.1.2...v3.1.3) (2026-10-15)
 
 
 ### Bug Fixes

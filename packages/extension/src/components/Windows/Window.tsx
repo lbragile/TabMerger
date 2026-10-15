@@ -57,6 +57,10 @@ import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { selectionRange } from '@/lib/selectionRange';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
+import { usePanelSearch, withoutFilteredOut } from '@/hooks/useSearchView';
+import { Highlighted } from '@/components/Highlighted';
+import { announceDnd } from '@/lib/dndLiveRegion';
+import { SEARCH_COPY } from '@tabmerger/shared';
 
 interface WindowProps {
   /** parent group's model id — window sortable id is `${groupId}::w${windowIndex}` */
@@ -88,6 +92,11 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
   });
   const { gap, active: dndActive } = useDndContext();
   const keyboardDrag = dndActive?.keyboard === true;
+  // The panel's search: which of this window's tabs match (by real index), whether the rest
+  // are hidden or faded, and whether reordering is off because rows are hidden.
+  const search = usePanelSearch();
+  const windowSearch = search.state?.windows[windowIndex];
+  const reorderLocked = search.reorderLocked;
   const windowTitle = window.name ?? `Window ${windowIndex + 1}`;
   // The header row is ONE Tab stop (a11y M3): `role="toolbar"` + `tabIndex=0` on the
   // container, `useRovingRow` pinning every control to -1 and walking them with
@@ -190,7 +199,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
     // Shift on the checkbox (click, or Shift+Space with it focused) extends a range.
     if (e.shiftKey) {
       const item = { type: 'window' as const, id: selectionId };
-      selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+      selectRange(item, withoutFilteredOut(search, selectionRange(groupsState, selectionAnchor, item)));
       return;
     }
     toggleSelection({ type: 'window', id: selectionId });
@@ -201,7 +210,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
     if (e.shiftKey) {
       e.stopPropagation();
       const item = { type: 'window' as const, id: selectionId };
-      selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+      selectRange(item, withoutFilteredOut(search, selectionRange(groupsState, selectionAnchor, item)));
       return;
     }
     if (e.ctrlKey || e.metaKey) {
@@ -279,6 +288,12 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           if (e.defaultPrevented || e.target !== e.currentTarget) return;
           // Ctrl+Space toggles the window in the selection; Space starts keyboard move mode.
           if (toggleSelectionOnCtrlSpace(e, { type: 'window', id: selectionId })) return;
+          // Rows hidden by the search: no keyboard move either. Space is consumed and says why.
+          if (reorderLocked && e.key === ' ' && !e.shiftKey && !e.altKey) {
+            e.preventDefault();
+            if (!e.repeat) announceDnd(SEARCH_COPY.reorderLocked);
+            return;
+          }
           startMoveOnSpace(e, 'window', sortableId);
         }}
         onClick={handleHeaderClick}
@@ -366,7 +381,13 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             Rendered even when this is the group's ONLY window: moving that window to
             another group is a legitimate move (the source group is simply left empty —
             it is never auto-deleted), and gating this on `siblingCount > 1` made that
-            window undraggable and unreachable by keyboard drag. */}
+            window undraggable and unreachable by keyboard drag.
+
+            NOT rendered while the search hides rows: a drop "between" two visible windows
+            would not say where it lands among the hidden ones. */}
+        {reorderLocked ? (
+          <span className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        ) : (
         <span
           className="opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
           // Native onDragStart activator (see useDnd.ts + dndHtml5Sensor) needs
@@ -385,7 +406,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
               e.preventDefault();
               e.stopPropagation();
               const item = { type: 'window' as const, id: selectionId };
-              selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+              selectRange(item, withoutFilteredOut(search, selectionRange(groupsState, selectionAnchor, item)));
               return;
             }
             if (toggleSelectionOnCtrlSpace(e, { type: 'window', id: selectionId })) return;
@@ -398,6 +419,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         >
           <GripVertical className="h-3.5 w-3.5" />
         </span>
+        )}
         {showCheckbox && (
           <button
             type="button"
@@ -437,7 +459,10 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                   className="block truncate text-xs font-medium cursor-default"
                   onDoubleClick={() => setIsEditing(true)}
                 >
-                  {(window.name ?? 'Window').length > 20
+                  {search.filters.windowFilter && windowSearch?.visible !== false ? (
+                    // A `window:` search marks the name where it matched; CSS truncates it.
+                    <Highlighted text={window.name ?? 'Window'} query={search.filters.windowFilter} />
+                  ) : (window.name ?? 'Window').length > 20
                     ? `${(window.name ?? 'Window').slice(0, 20)}…`
                     : (window.name ?? 'Window')}
                 </span>
@@ -449,8 +474,10 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           )}
         </div>
 
-        <span className="text-[10px] text-muted-foreground">
-          {window.tabs.length} {pluralize(window.tabs.length, 'tab')}
+        <span className="text-[10px] text-muted-foreground shrink-0 whitespace-nowrap">
+          {windowSearch && windowSearch.matchCount < window.tabs.length
+            ? `${windowSearch.matchCount} of ${window.tabs.length} ${pluralize(window.tabs.length, 'tab')}`
+            : `${window.tabs.length} ${pluralize(window.tabs.length, 'tab')}`}
         </span>
 
         {window.note && !selectionMode && (
@@ -590,6 +617,9 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
       >
         <SortableContext items={tabIds} strategy={verticalListSortingStrategy}>
           {window.tabs.filter(Boolean).map((tab, tabIndex) => (
+            // "Hide" mode: a non-matching tab is not rendered. `tabIndex` is still the tab's
+            // real position, so every action on the rows that are shown goes to the right tab.
+            search.hide && windowSearch?.tabMatches[tabIndex] === false ? null :
             <TabItem
               key={`${groupId}::w${windowIndex}::t${tabIndex}`}
               groupId={groupId}

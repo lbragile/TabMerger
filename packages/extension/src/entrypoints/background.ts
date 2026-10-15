@@ -9,7 +9,9 @@ import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
 import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { copyLiveTab } from '@/lib/dndMove';
+import { isTourPracticeUrl } from '@/lib/tourPracticeTab';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
 import {
@@ -18,6 +20,10 @@ import {
   SYNC_AUTH_CONSENT_REQUIRED_REASON,
 } from '@tabmerger/shared';
 import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
+import { markTourPendingOnInstall } from '@/lib/tour';
+import { registerAutoBackup } from '@/lib/autoBackupAlarm';
+import { registerUninstallSurvey } from '@/lib/uninstallSurvey';
+import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
 
 /**
  * `skipped: true` = another sync cycle (the popup's, or an earlier request) held the sync lock, so
@@ -108,7 +114,8 @@ export function tabsForScope(
   }
 
   return selected
-    .filter((t) => t.url && !t.url.startsWith('chrome://'))
+    // (never the guided tour's spare practice tab: it is not one of the user's tabs)
+    .filter((t) => t.url && !t.url.startsWith('chrome://') && !isTourPracticeUrl(t.url))
     .map((t) =>
       copyLiveTab({
         id: t.id ?? 0,
@@ -156,7 +163,8 @@ async function _buildMenus() {
   let groups: Awaited<ReturnType<typeof getGroupsState>>['available'] = [];
   try {
     const state = await getGroupsState();
-    groups = state.available.filter((g) => !g.permanent && !g.archived);
+    // Never the guided tour's practice groups: the menu only offers the user's own groups
+    groups = state.available.filter((g) => !g.permanent && !g.archived && !isTourDemoGroup(g));
   } catch {
     // IDB not ready — leave empty
   }
@@ -225,6 +233,8 @@ export default defineBackground(() => {
 
   chrome.runtime.onInstalled.addListener((details) => {
     void buildMenus();
+    // Guided tour: pending on a first install only, never on an update (see lib/tour.ts)
+    void markTourPendingOnInstall(details.reason);
     trackEvent(details.reason === 'install' ? 'extension_installed' : 'extension_updated', {
       reason: details.reason,
     });
@@ -232,6 +242,8 @@ export default defineBackground(() => {
   chrome.runtime.onStartup.addListener(() => { void buildMenus(); void reRegisterReminders(); });
   void buildMenus();
   void reRegisterReminders();
+  // On every worker start, not only onInstalled: an update changes the version in the URL
+  registerUninstallSurvey();
 
   // Tabs the popup dragged OUT of "Now Open" that it must not close itself: closing the
   // ACTIVE tab of the popup's anchor window dismisses the popup instantly (spec C7), which
@@ -257,13 +269,15 @@ export default defineBackground(() => {
     });
   });
 
-  chrome.runtime.onMessage.addListener((msg: unknown) => {
-    const m = msg as { type?: string; name?: string; delayInMinutes?: number };
-    // Alarm helpers — chrome.alarms only available in background, not popup
-    if (m?.type === 'CREATE_ALARM' && m.name && m.delayInMinutes) {
+  chrome.runtime.onMessage.addListener((msg: unknown, sender) => {
+    const m = msg as { type?: unknown; name?: unknown; delayInMinutes?: unknown } | null | undefined;
+    // Alarm helpers — chrome.alarms only available in background, not popup. Accepted only from
+    // this extension's own pages (never a content script, see isOwnExtensionPage) and only for
+    // reminder alarms with a real delay: no other alarm can be created or cleared this way.
+    if (m?.type === 'CREATE_ALARM' && isOwnExtensionPage(sender) && isReminderAlarmName(m.name) && isAlarmDelayMinutes(m.delayInMinutes)) {
       chrome.alarms.create(m.name, { delayInMinutes: m.delayInMinutes });
     }
-    if (m?.type === 'CLEAR_ALARM' && m.name) {
+    if (m?.type === 'CLEAR_ALARM' && isOwnExtensionPage(sender) && isReminderAlarmName(m.name)) {
       void chrome.alarms.clear(m.name);
     }
     // Popup-side (and other extension-page) half of the mechanism described in
@@ -279,8 +293,9 @@ export default defineBackground(() => {
   // runGoogleOAuthFlow's doc comment. The popup awaits this response but doesn't
   // need it to succeed (if the popup already closed, sendResponse just no-ops) —
   // the session lands via chrome.storage.onChanged the next time it opens either way.
-  chrome.runtime.onMessage.addListener((msg: unknown, _sender, sendResponse) => {
-    if ((msg as { type?: string })?.type === 'SIGN_IN_WITH_GOOGLE') {
+  chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
+    // Only the popup may start a sign-in window (never a content script, see isOwnExtensionPage).
+    if ((msg as { type?: string } | null | undefined)?.type === 'SIGN_IN_WITH_GOOGLE' && isOwnExtensionPage(sender)) {
       runGoogleOAuthFlow()
         .then(() => sendResponse({ ok: true }))
         .catch((err) => sendResponse({ ok: false, error: err instanceof Error ? err.message : String(err) }));
@@ -385,8 +400,8 @@ export default defineBackground(() => {
     await updateGroupsState((state) => {
       const available = [...state.available];
       let targetIndex = groupId
-        ? available.findIndex((g) => g.id === groupId && !g.permanent)
-        : available.findIndex((g) => !g.permanent);
+        ? available.findIndex((g) => g.id === groupId && !g.permanent && !isTourDemoGroup(g))
+        : available.findIndex((g) => !g.permanent && !isTourDemoGroup(g));
 
       if (targetIndex < 0 && !groupId) {
         available.push(createGroup(undefined, 'Quick Save'));
@@ -545,4 +560,9 @@ export default defineBackground(() => {
       // The tab's reminder field will be stale in IDB but harmless — it won't re-alarm
     });
   }
+
+  // Automatic backups (Pro): own alarm, own listeners (registered after the reminder ones, which
+  // they never touch), see lib/autoBackupAlarm.ts. Only creates and uploads a backup session; it
+  // never runs a groups sync cycle.
+  registerAutoBackup();
 });

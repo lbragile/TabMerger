@@ -64,12 +64,23 @@ export function createTab(title = 'New Tab', url = 'https://www.google.com'): Ta
   };
 }
 
+const FALLBACK_FAVICON_URL = 'https://www.google.com/favicon.ico';
+
+/**
+ * Google's favicon service URL for an http(s) page, or a generic fallback icon.
+ * URLs with an opaque origin (about:blank, data:, blob:, file:, extension pages)
+ * have `origin === 'null'`; sending that to the service redirects to a 404, so
+ * they get the fallback instead.
+ */
 export function getFaviconUrl(url: string): string {
   try {
     const u = new URL(url);
+    if (u.origin === 'null' || (u.protocol !== 'http:' && u.protocol !== 'https:')) {
+      return FALLBACK_FAVICON_URL;
+    }
     return `https://s2.googleusercontent.com/s2/favicons?domain_url=${u.origin}`;
   } catch {
-    return 'https://www.google.com/favicon.ico';
+    return FALLBACK_FAVICON_URL;
   }
 }
 
@@ -93,17 +104,6 @@ export function getGroupInfo(group: Group): string {
 
 export function sortWindowsByStarred(windows: Window[]): Window[] {
   return [...windows.filter((w) => w.starred), ...windows.filter((w) => !w.starred)];
-}
-
-/** Returns true if all characters of query appear in text in order (case-insensitive). */
-export function fuzzyMatch(text: string, query: string): boolean {
-  if (!query) return true;
-  const t = text.toLowerCase(), q = query.toLowerCase();
-  let qi = 0;
-  for (let i = 0; i < t.length && qi < q.length; i++) {
-    if (t[i] === q[qi]) qi++;
-  }
-  return qi === q.length;
 }
 
 /**

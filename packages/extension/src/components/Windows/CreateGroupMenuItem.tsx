@@ -3,6 +3,7 @@ import { toast } from '@/lib/toast';
 import { DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { useGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
+import { countedGroups } from '@/lib/tierLimits';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 
@@ -19,7 +20,7 @@ export function CreateGroupMenuItem({ onCreated }: { onCreated: (groupIndex: num
   const openModal = useUIStore((s) => s.openModal);
 
   const handleClick = () => {
-    const activeCount = groupsState?.available.filter((g) => !g.permanent).length ?? 0;
+    const activeCount = countedGroups(groupsState?.available ?? []).length;
     if (activeCount >= maxGroups) {
       trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
       toast.error(`Free plan allows up to ${maxGroups} groups.`, {

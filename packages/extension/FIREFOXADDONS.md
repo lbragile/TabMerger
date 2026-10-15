@@ -1,6 +1,6 @@
 # Firefox Add-ons Listings — TabMerger
 
-> Last Updated: 2026-10-06
+> Last Updated: 2026-10-13
 >
 > **State of the stable add-on:** the public AMO listing is still the v2 build (`2.0.0`). The
 > first v3 stable release is planned as `v3.1.0` and is not yet released. The listing copy,
@@ -59,8 +59,17 @@ unrelated add-on. This was restored to the live listing's real GUID in `wxt.conf
 Firefox ships the exact same `manifest.permissions` array as Chrome/Edge — see
 `CHROMEWEBSTORE.md`'s [Permissions Justification](CHROMEWEBSTORE.md#permissions-justification)
 table for the per-permission rationale (`tabs`, `tabGroups`, `storage`, `contextMenus`, `alarms`,
-`notifications`, `identity`; re-verified 2026-10-06: `alarms` and `notifications` are used only
-for user-set reminders). No `host_permissions` on Firefox either, with one addition:
+`notifications`, `identity`; re-verified 2026-10-11: `notifications` is used only for user-set
+reminders, `alarms` for those reminders and for the automatic-backup schedule), plus the same
+single OPTIONAL permission, `downloads` (re-verified 2026-10-12: asked for only when the user
+turns on "Also save a file to this computer", used only to write backup files into the
+Downloads folder and to show the user where the last one is: `downloads.search({ id })` for the
+one file the extension wrote, `downloads.show(id)` and `downloads.showDefaultFolder()` behind a
+"Show in folder" button. Desktop Firefox has all three (`search` since 47, the other two since
+48); Firefox for Android removed the whole downloads API in 79, so there the button is disabled
+with an explanation. Firefox's `show` answers `false` when it cannot show the file, and the
+Downloads folder is opened instead. On Firefox the file is handed over as a blob URL because
+Firefox does not accept `data:` URLs for downloads). No `host_permissions` on Firefox either, with one addition:
 
 ### The Firefox-only web-bridge content script
 
@@ -126,12 +135,22 @@ transmits and where consent is requested:
     `src/components/Windows/TabPreview.tsx` — requested when Settings → "Show page images in
     previews" is turned on, and re-checked on every hover so a mid-session revocation in
     about:addons is respected) and tab URLs/titles included in cloud sync uploads
-    (`src/lib/syncEngine.ts`'s `pushPendingChanges`, `src/hooks/useSessions.ts`'s
-    `pushSessionToSupabase`, `src/lib/deviceSessions.ts`'s device-session push — all gated on
+    (`src/lib/syncEngine.ts`'s `pushPendingChanges`, `src/lib/sessionUpload.ts`'s
+    `pushSessionToSupabase` (saved sessions and automatic backups, which are sessions the
+    background script saves on a schedule), `src/lib/deviceSessions.ts`'s device-session push — all gated on
     `canUploadOnFirefox()`; a denied/revoked permission pauses uploads, surfaced in Settings'
     Cloud sync row as "Sync paused: allow in Firefox", not a silent failure). End-to-end encrypted
     client-side before upload, but the ciphertext still leaves the browser, and Firefox's consent
-    model is about what leaves the device, not whether the destination can read it.
+    model is about what leaves the device, not whether the destination can read it. Reading the
+    user's own automatic backups back from the account (`src/lib/autoBackupDownload.ts`, when
+    Settings → Data is opened) is a download, not collection, so like every other pull it is
+    not gated on this permission. That step also retries deletes of backups the user already
+    made on this device. It never removes a local backup: one that is missing from the account
+    (deleting in the web dashboard removes the cloud copy only) stays in the browser that has
+    it and is not uploaded again. The optional
+    backup FILE ("Also save a file to this computer") is written to the user's own Downloads
+    folder and sent nowhere, so it is not a data-collection category; it is plaintext, and the
+    setting says so.
   - `authenticationInfo` / `personallyIdentifyingInfo` — email + Supabase session on sign-in.
     Requested in `src/components/Modal/Auth.tsx`, synchronously in the click/submit handler,
     before every sign-in entry point proceeds (email/password sign-in, sign-up, magic link,
@@ -252,6 +271,9 @@ TabMerger's Settings (the true semver).
 | Stable (listed) | `3.1.0` | (ignored by Firefox) | `v3.1.0` (planned) | not yet released | **Planned: first v3 stable release.** Not yet submitted. Stable keeps the same plain semver as Chrome (no beta offset) |
 | BETA (unlisted) | `4.1.0.7` | (ignored by Firefox) | `v3.1.0-beta.7` | 2026-09-29 | Signed; published to `/firefox-beta/`. Validator warnings above (min version 109 at the time) |
 | BETA (unlisted) | `4.1.0.11` | (ignored by Firefox) | `v3.1.0-beta.11` | 2026-10-07 | Signed and published to the self-hosted beta channel by the publish workflow |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest, permission or `data_collection_permissions` change: progress is one `storage.local` record, and the six tour usage events (started, completed, skipped, task done, step skipped, chapter skipped; step or chapter ids only) go through the existing `technicalAndInteraction`-gated analytics. The "try it" steps run on two sample groups the tour adds and removes itself, and on one spare tab of the extension's own (the packaged page `tour-practice.html`) that the "save a tab" step opens in the background and closes again; all of it is local-only (never synced, backed up, exported or shared, and the spare tab is left out of the other-devices snapshot), so no data-collection answer changes. The tour has seven chapters with a header each and fifteen "try it" steps (drag and drop, saving a tab, "Open in browser", "Deduplicate tabs", selecting items, search, undo and redo among them); during them nothing of the user's is opened, closed or changed. A thin pulsing ring marks the control to use next. Listing copy: the new Chrome description bullet applies unchanged |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: search matches only the text as typed (in sequence, any case; letters out of order no longer match, best matches first in the search list), highlights the matched text, hides or fades what does not match (new local setting, Hide by default), keeps the query until the user clears it, and covers "Now Open". No manifest, permission or `data_collection_permissions` change: the query stays in the popup's memory and the setting is local. Listing copy: the reworded Chrome search bullet applies unchanged. Screenshots: see the Chrome file's Screenshot Notes |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: after the add-on is removed, Firefox opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL` (no permission). No manifest, permission or `data_collection_permissions` change: the address holds only the build's own version, browser and channel (constants of the build, nothing read from the user or device), and anything typed in the survey is sent by the web page, not the add-on |
 
 ## Notes for a future review / support request
 
@@ -261,6 +283,9 @@ TabMerger's Settings (the true semver).
   see `CHROMEWEBSTORE.md`'s "Notes for the review team" and `src/lib/encryptionKey.ts`.
 - AI features are currently disabled/"coming soon" behind `VITE_AI_ENABLED` in every build,
   Firefox included.
+- Uninstall survey: on removal Firefox opens `<web app>/uninstalled?v=<version>&b=firefox&c=<stable|beta>`
+  (`src/lib/uninstallSurvey.ts`). No identifier of any kind is in that address and the add-on sends
+  nothing itself, so no data-collection category is declared for it.
 - If AMO support asks about the web-bridge content script's site-access permission, point them at
   the "Firefox-only web-bridge content script" section above and the exact three message types it
   relays.

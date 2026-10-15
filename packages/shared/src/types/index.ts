@@ -40,6 +40,11 @@ export interface Group {
   note?: string;
   pendingSync?: boolean; // local-only, not persisted to Supabase
   archived?: boolean; // hidden from main sidebar; excluded from free-tier group count
+  /**
+   * Practice data made by the extension's guided tour. Local-only and short-lived: never synced,
+   * backed up, exported, shared or counted. Test it with `isTourDemoGroup`, never directly.
+   */
+  tourDemo?: boolean;
 }
 
 export interface UrlRule {
@@ -61,6 +66,8 @@ export interface Session {
   description?: string;
   groups: Group[];
   createdAt: number;
+  /** True for a snapshot the extension took by itself (automatic backup). Travels inside the encrypted blob only. */
+  auto?: boolean;
 }
 
 // Subscription tiers

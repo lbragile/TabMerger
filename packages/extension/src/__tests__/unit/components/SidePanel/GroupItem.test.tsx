@@ -50,6 +50,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
     wrapperClassName,
     wrapperStyle,
     wrapperDndId,
+    wrapperLabel,
     onWrapperClick,
     onWrapperContextMenu,
     onWrapperMouseEnter,
@@ -62,6 +63,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
     wrapperClassName?: string
     wrapperStyle?: React.CSSProperties
     wrapperDndId?: string
+    wrapperLabel?: string
     moveGroupId?: string
     selectGroupItem?: unknown
     onWrapperClick?: React.MouseEventHandler<HTMLDivElement>
@@ -74,6 +76,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
       {
         'data-testid': 'group-wrapper',
         'data-tm-dnd-id': wrapperDndId,
+        'aria-label': wrapperLabel,
         'data-move-group-id': moveGroupId,
         'data-select-item': selectGroupItem ? JSON.stringify(selectGroupItem) : undefined,
         ref: wrapperRef,
@@ -165,6 +168,20 @@ describe('GroupItem', () => {
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
     expect(screen.getByText('Work')).toBeTruthy()
     expect(screen.getAllByText('1').length).toBeGreaterThan(0)
+  })
+
+  it('a group that does not match the search is faded to 0.6 and says so in its accessible name', () => {
+    const group = makeGroup({ name: 'Work' })
+    wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn(), searchDimmed: true }))
+    const row = screen.getByLabelText('Work, no match')
+    expect((row as HTMLElement).style.opacity).toBe('0.6')
+  })
+
+  it('a matching (not dimmed) group keeps its plain name and full opacity', () => {
+    const group = makeGroup({ name: 'Work' })
+    wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn(), searchDimmed: false }))
+    expect(screen.queryByLabelText('Work, no match')).toBeNull()
+    expect((screen.getByTestId('group-wrapper') as HTMLElement).style.opacity).toBe('')
   })
 
   it('renders long names in full with CSS truncation (no manual character slicing)', () => {

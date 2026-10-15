@@ -6,7 +6,6 @@ import {
   createTab,
   createWindow,
   formatGroupCounts,
-  fuzzyMatch,
   getFaviconUrl,
   getGroupInfo,
   getGroupTabCount,
@@ -87,6 +86,25 @@ describe('getFaviconUrl', () => {
 
   it('returns fallback for invalid URLs', () => {
     expect(getFaviconUrl('not-a-url')).toBe('https://www.google.com/favicon.ico')
+  })
+
+  it('builds the service URL from the origin of an https URL', () => {
+    expect(getFaviconUrl('https://example.com/a/b?c=1')).toBe(
+      'https://s2.googleusercontent.com/s2/favicons?domain_url=https://example.com'
+    )
+  })
+
+  it.each([
+    'about:blank',
+    'data:text/html,<p>hi</p>',
+    'file:///tmp/page.html',
+    'blob:null/1234',
+    'chrome-extension://abcdefghijklmnop/popup.html',
+    'chrome://settings',
+  ])('returns fallback (never domain_url=null) for non-http(s) URL %s', (input) => {
+    const result = getFaviconUrl(input)
+    expect(result).toBe('https://www.google.com/favicon.ico')
+    expect(result).not.toContain('domain_url=null')
   })
 })
 
@@ -187,28 +205,6 @@ describe('parseSearchQuery', () => {
 
   it('does not treat embedded group: as a prefix', () => {
     expect(parseSearchQuery('xyzgroup:work')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'xyzgroup:work' })
-  })
-})
-
-describe('fuzzyMatch', () => {
-  it('matches when all query chars appear in order', () => {
-    expect(fuzzyMatch('Linear — Project Board', 'lnear')).toBe(true)
-  })
-
-  it('rejects out-of-order characters', () => {
-    expect(fuzzyMatch('Work', 'Wrok')).toBe(false)
-  })
-
-  it('matches subsequence across gaps', () => {
-    expect(fuzzyMatch('GitHub', 'ghb')).toBe(true)
-  })
-
-  it('returns true for empty query', () => {
-    expect(fuzzyMatch('anything', '')).toBe(true)
-  })
-
-  it('returns false when query is longer than text', () => {
-    expect(fuzzyMatch('hi', 'hello')).toBe(false)
   })
 })
 

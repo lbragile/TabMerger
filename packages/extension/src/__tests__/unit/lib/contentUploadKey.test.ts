@@ -46,3 +46,24 @@ describe('getContentUploadKey', () => {
     expect(await getContentUploadKey()).toEqual({ key: null, reason: 'locked' })
   })
 })
+
+describe('getContentUploadKey with an expected user', () => {
+  it('passes the expected user id to both lookups', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    expect(await getContentUploadKey('u1')).toEqual({ key })
+    expect(mockGetEncryptionKeyState).toHaveBeenCalledWith('u1')
+    expect(mockGetDataKey).toHaveBeenCalledWith('u1')
+  })
+
+  it('a mismatch (state "unknown") makes no key lookup and returns no key', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
+    expect(await getContentUploadKey('u1')).toEqual({ key: null, reason: 'unknown' })
+    expect(mockGetDataKey).not.toHaveBeenCalled()
+  })
+
+  it('the key lookup answering null for another account is "locked", never that account\'s key', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockGetDataKey.mockResolvedValue(null)
+    expect(await getContentUploadKey('u1')).toEqual({ key: null, reason: 'locked' })
+  })
+})

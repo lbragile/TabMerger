@@ -1,5 +1,5 @@
 import { test, expect, chromium, type Page } from '@playwright/test';
-import { seedIdb } from '../helpers';
+import { dismissTour, seedIdb } from '../helpers';
 import { EXTENSION_PATH } from '../extensionPath';
 import { RawCdp } from '../rawCdp';
 
@@ -45,6 +45,7 @@ async function openPopup(port: number, groups: unknown[]) {
   let [sw] = context.serviceWorkers();
   if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
   const extensionId = new URL(sw.url()).hostname;
+  await dismissTour(context);
   const seedPage: Page = await context.newPage();
   await seedPage.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
   await seedIdb(seedPage, groups);

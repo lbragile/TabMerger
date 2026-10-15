@@ -329,6 +329,47 @@ function spansZones(model: DndModel, ref: DndRef): boolean {
   return ranks.size > 1;
 }
 
+/** Id of the group an item belongs to (a group is its own), or `undefined` when it has none. */
+function owningGroupId(model: DndModel, id: string): string | undefined {
+  if (model.groups[id]) return id;
+  const windowId = model.tabs[id]?.windowId ?? (model.windows[id] ? id : undefined);
+  return windowId ? model.windows[windowId]?.groupId : undefined;
+}
+
+/** True when the item (a tab, window or group model id) is inside one of the guided tour's practice groups. */
+export function isTourDemoItem(model: DndModel, id: string): boolean {
+  const groupId = owningGroupId(model, id);
+  return !!groupId && model.groups[groupId]?.tourDemo === true;
+}
+
+/**
+ * The guided tour's practice groups are a sealed sandbox. A move that touches one, as the
+ * source or as the target, is allowed only when EVERY dragged item and the target are inside
+ * practice groups: practice tabs never land in a real group, in Now Open or in a new group, a
+ * practice group is only reordered against another practice group, and nothing of the user's
+ * can be dropped into practice data (which is deleted when the tour ends).
+ *
+ * One exception, and one extra lock, while the tour's "save a tab" step is up
+ * (`model.tourPractice`): the tour's own practice tab in "Now Open", dragged by itself, may be
+ * dropped on practice data (that is the step), and every other move that involves anything of
+ * the user's is refused, so nothing but that one tab can be saved, moved or closed from there.
+ * Returns `true` when the move is refused for that reason.
+ */
+function breaksTourSandbox(model: DndModel, active: DndRef, over: DndRef, oKind: DndRefType): boolean {
+  const isDemo = (groupId: string | undefined) => !!groupId && model.groups[groupId]?.tourDemo === true;
+  const sources = active.selectionIds && active.selectionIds.length > 1 ? active.selectionIds : [active.id];
+  const sourceDemo = sources.map((id) => isDemo(owningGroupId(model, id)));
+  const targetGroupId =
+    oKind === 'new-group' ? undefined : oKind === 'new-window' ? model.groupIds[over.groupIndex ?? -1] : owningGroupId(model, over.id);
+  const targetDemo = isDemo(targetGroupId);
+  if (model.tourPractice) {
+    if (sources.length === 1 && sources[0] === model.tourPractice.tabId) return !targetDemo;
+    return !(targetDemo && sourceDemo.every(Boolean));
+  }
+  if (!targetDemo && !sourceDemo.some(Boolean)) return false; // nothing of the tour's is involved
+  return !(targetDemo && sourceDemo.every(Boolean));
+}
+
 // ─── canDrop ────────────────────────────────────────────────────────────────
 
 export function canDrop(model: DndModel, active: DndRef, over: DndRef): boolean {
@@ -338,6 +379,7 @@ export function canDrop(model: DndModel, active: DndRef, over: DndRef): boolean 
   const aKind = active.type ?? refKind(model, active.id);
   const oKind = over.type ?? refKind(model, over.id);
   if (!aKind || !oKind) return false;
+  if (breaksTourSandbox(model, active, over, oKind)) return false;
 
   if (isMixedSelection(model, active)) return false;
   // Starred groups/windows are pinned above unstarred ones — a block straddling that

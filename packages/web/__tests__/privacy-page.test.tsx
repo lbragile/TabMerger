@@ -79,4 +79,13 @@ describe('PrivacyPage', () => {
     const link = screen.getByRole('link', { name: 'Vercel' })
     expect(link).toHaveAttribute('href', 'https://vercel.com/legal/privacy-policy')
   })
+  it('discloses the uninstall survey: what opening it sends, what the form sends, and where it goes', () => {
+    render(<PrivacyPage />)
+    const block = document.getElementById('uninstall-survey')
+    expect(block?.textContent).toMatch(/version, which browser it was for, and whether it was the regular or the beta release/)
+    expect(block?.textContent).toMatch(/Only if you press send/)
+    expect(block?.textContent).toMatch(/emailed to our support inbox through Resend/)
+    expect(block?.textContent).toMatch(/never your IP address/)
+    expect(screen.getByRole('link', { name: 'Resend' })).toHaveAttribute('href', 'https://resend.com/legal/privacy-policy')
+  })
 })

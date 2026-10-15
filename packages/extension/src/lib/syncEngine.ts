@@ -1,5 +1,5 @@
 import type { Session } from '@supabase/supabase-js';
-import { encryptBlob, decryptBlob, isEncryptedBlob, SYNC_DATA_CONSENT_CATEGORIES, type EncryptedBlob } from '@tabmerger/shared';
+import { encryptBlob, decryptBlob, isEncryptedBlob, isTourDemoGroup, SYNC_DATA_CONSENT_CATEGORIES, type EncryptedBlob } from '@tabmerger/shared';
 import type { Group } from './types';
 import { emitForeignGroupsChange, emitSyncConflict } from './foreignChange';
 import { groupContentEqual, makeConflictCopy } from './syncConflict';
@@ -90,6 +90,9 @@ async function checkCycleIdentity(session: Session): Promise<CycleIdentity> {
 async function pushGroup(session: Session, group: Group, position: number, legacy: boolean, dataKey: CryptoKey): Promise<void> {
   // NOTE: a full-row push (re-encrypted with a fresh IV) always counts as a CONTENT change on the
   // server. Reorders must never come through here; they use pushPosition.
+  // Last line of defence: the guided tour's practice groups never leave the device, however one
+  // got this far.
+  if (isTourDemoGroup(group)) return;
   // ponytail: whole body wrapped — a throw here (e.g. encryptBlob choking on a malformed/
   // oversized field for one specific group) must not propagate out to the caller's for-loop,
   // which would silently abort every group after it in the same push batch.
@@ -235,7 +238,8 @@ export async function pushPendingChanges(session: Session, deadline = cycleDeadl
 async function pushPending(session: Session, deadline: number): Promise<void> {
   if (!(await canUploadOnFirefox())) return; // consent not granted — see canUploadOnFirefox's doc comment
   // ponytail: explicit permanent guard — Now Open should already have pendingSync:false, but belt-and-suspenders
-  const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent);
+  // ...and never the guided tour's practice groups (see `isTourDemoGroup`)
+  const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent && !isTourDemoGroup(g));
 
   // One gate per cycle for every content push: without an unlocked key NOTHING is sent (there is no
   // plaintext fallback, see getContentUploadKey) and the groups keep `pendingSync` until setup /
@@ -246,7 +250,8 @@ async function pushPending(session: Session, deadline: number): Promise<void> {
   }
 
   const legacy = !(await getSetting(REMOTE_BASE_SEEDED_KEY, false));
-  const { available } = await getGroupsState();
+  // Positions are counted without the tour's practice groups, so the server's order has no gaps
+  const available = (await getGroupsState()).available.filter((g) => !isTourDemoGroup(g));
   const positions = new Map(available.map((g, i) => [g.id, i]));
   const contentKey = gate?.key;
   // Past the cycle deadline nothing more is started: the rest stays pending for the next cycle.
@@ -278,6 +283,7 @@ async function pushPending(session: Session, deadline: number): Promise<void> {
  * has adopted that change) instead of hiding the change behind a fresh stamp.
  */
 async function pushPosition(session: Session, group: Group, position: number): Promise<void> {
+  if (isTourDemoGroup(group)) return;
   const id = group.id;
   try {
     let query = supabase.from('groups').update({ position }).eq('id', id).eq('user_id', session.user.id);
@@ -483,7 +489,7 @@ function mergeRemoteGroups(
 
     if (remote && local) {
       const stamp = remote.remoteUpdatedAt;
-      if (local.permanent) {
+      if (local.permanent || isTourDemoGroup(local)) {
         merged.push(local);
       } else if (local.pendingSync) {
         if (local.remoteUpdatedAt ? compareStamps(stamp!, local.remoteUpdatedAt) <= 0 : legacy) {
@@ -521,7 +527,8 @@ function mergeRemoteGroups(
       // above) can only mean it was deleted remotely — drop it locally instead of resurrecting it.
       // An encrypted-but-locked remote row is in `remoteIds` but not in `remoteMap`: the group still
       // exists remotely, it just cannot be read yet, so it must not be mistaken for a remote delete.
-      if (local.permanent || remoteIds.has(local.id)) {
+      // The guided tour's practice groups are never on the server: that is not a remote delete.
+      if (local.permanent || isTourDemoGroup(local) || remoteIds.has(local.id)) {
         merged.push(local);
       } else if (local.pendingSync) {
         if (local.remoteUpdatedAt) {
@@ -555,6 +562,11 @@ function permanentFirst(groups: Group[], compare: (a: Group, b: Group) => number
   return [...groups.filter((g) => g.permanent), ...groups.filter((g) => !g.permanent).sort(compare)];
 }
 
+/** Each group's index among the groups that are not tour practice data (practice groups get none). */
+function syncedIndexMap(groups: Group[]): Map<string, number> {
+  return new Map(groups.filter((g) => !isTourDemoGroup(g)).map((g, i): [string, number] => [g.id, i]));
+}
+
 /**
  * Sidebar order after a pull, so two devices converge on one order.
  *
@@ -567,15 +579,20 @@ function permanentFirst(groups: Group[], compare: (a: Group, b: Group) => number
  * Ties break by `updatedAt` desc, then id, so the result never depends on arrival order.
  */
 function orderByPosition(merged: Group[], localGroups: Group[], snapshot: RemoteSnapshot): Group[] {
-  const localIndex = new Map(localGroups.map((g, i) => [g.id, i]));
+  // Indices count the groups without the tour's practice groups, the same numbering the pushed
+  // `position` uses; the practice groups themselves always sort after every real group
+  const localIndex = syncedIndexMap(localGroups);
+  const practiceIndex = new Map(localGroups.map((g, i) => [g.id, i]));
   const localById = new Map(localGroups.map((g) => [g.id, g]));
   const key = (g: Group): number => {
+    if (isTourDemoGroup(g)) return practiceIndex.get(g.id) ?? 0;
     const remotePos = snapshot.positions.get(g.id);
     const local = localById.get(g.id);
     if (remotePos !== undefined && !local?.pendingSync && !local?.positionDirty) return remotePos;
     return localIndex.get(g.id) ?? remotePos ?? Infinity;
   };
-  return permanentFirst(merged, (a, b) => key(a) - key(b) || b.updatedAt - a.updatedAt || (a.id < b.id ? -1 : 1));
+  const practiceLast = (g: Group) => (isTourDemoGroup(g) ? 1 : 0);
+  return permanentFirst(merged, (a, b) => practiceLast(a) - practiceLast(b) || key(a) - key(b) || b.updatedAt - a.updatedAt || (a.id < b.id ? -1 : 1));
 }
 
 /**
@@ -686,13 +703,17 @@ async function runSyncCycle(session: Session): Promise<{ groups: Group[]; status
     droppedRemotely = result.toDelete;
     conflicts = result.conflicts;
     foreign = result.toSave.length > 0 || result.toDelete.length > 0 || result.copies.length > 0;
-    const localIndex = new Map(fresh.available.map((g, i) => [g.id, i]));
+    const localIndex = syncedIndexMap(fresh.available);
     const localById = new Map(fresh.available.map((g) => [g.id, g]));
     // A group that moved to exactly its remote position is already in sync there: claim it so
     // adopting another device's order does not make this device push the same positions back.
-    const ordered = orderByPosition(result.merged, fresh.available, snapshot).map((g, i) => {
+    // (Indices without the practice groups, matching the pushed `position`.)
+    const sorted = orderByPosition(result.merged, fresh.available, snapshot);
+    const sortedIndex = syncedIndexMap(sorted);
+    const ordered = sorted.map((g) => {
       const local = localById.get(g.id);
-      const claimsSynced = localIndex.get(g.id) !== i && snapshot.positions.get(g.id) === i && !local?.pendingSync && !local?.positionDirty;
+      const i = sortedIndex.get(g.id);
+      const claimsSynced = i !== undefined && localIndex.get(g.id) !== i && snapshot.positions.get(g.id) === i && !local?.pendingSync && !local?.positionDirty;
       if (claimsSynced) return { ...g, positionDirty: false };
       // A remote row with no valid position (written before position sync existed) must receive
       // this device's order: flag it so the next push sends 1..n instead of leaving the server at 0.

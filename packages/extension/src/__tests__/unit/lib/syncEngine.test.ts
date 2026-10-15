@@ -66,6 +66,7 @@ vi.mock('@tabmerger/shared', () => ({
   encryptBlob: mockEncryptBlob,
   decryptBlob: mockDecryptBlob,
   CONFLICT_COPY_SUFFIX: ' (conflict copy)',
+  isTourDemoGroup: (g: { tourDemo?: unknown } | null | undefined) => g?.tourDemo === true,
   isEncryptedBlob: (v: unknown) =>
     !!v && typeof v === 'object' && 'v' in v && 'iv' in v && 'ct' in v,
   SYNC_DATA_CONSENT_CATEGORIES: ['browsingActivity'],
@@ -182,6 +183,16 @@ describe('pushPendingChanges', () => {
     currentBuilder = makeBuilder([{ data: [{ updated_at: 'S1' }], error: null }])
     await pushPendingChanges(makeSession())
     expect(currentBuilder.insert).not.toHaveBeenCalled()
+  })
+
+  it('never pushes a guided-tour practice group (tourDemo), even when it is marked pending, and never marks it synced', async () => {
+    pending([makeGroup({ id: 'tour-demo-1', tourDemo: true }), makeGroup({ id: 'real' })])
+    localState.available = [makeGroup({ id: 'now', permanent: true }), makeGroup({ id: 'tour-demo-1', tourDemo: true }), makeGroup({ id: 'real' })]
+    currentBuilder = makeBuilder([{ data: [{ updated_at: 'S1' }], error: null }, { data: [{ updated_at: 'S1' }], error: null }])
+    await pushPendingChanges(makeSession('u1'))
+    expect(currentBuilder.insert).toHaveBeenCalledTimes(1)
+    expect(currentBuilder.insert).toHaveBeenCalledWith(expect.objectContaining({ id: 'real' }))
+    expect(mockMarkGroupSynced).not.toHaveBeenCalledWith('tour-demo-1', expect.anything())
   })
 
   it('upserts each pending group and marks it synced on success', async () => {
@@ -510,6 +521,15 @@ describe('pullRemoteChanges', () => {
     expect(result.find((g) => g.id === 'g1')).toBeUndefined()
     expect(mockDeleteGroup).toHaveBeenCalledWith('g1')
     // must not be re-pushed — deleteGroup, not saveGroup/upsert
+    expect(mockSaveGroup).not.toHaveBeenCalled()
+  })
+
+  it('keeps a guided-tour practice group that the server does not have: it is neither deleted by the pull nor pushed', async () => {
+    currentBuilder = makeBuilder([{ data: [], error: null }])
+    const local = [makeGroup({ id: 'tour-demo-1', tourDemo: true, pendingSync: false })]
+    const result = await pullRemoteChanges(makeSession(), local)
+    expect(result.find((g) => g.id === 'tour-demo-1')).toBeDefined()
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
     expect(mockSaveGroup).not.toHaveBeenCalled()
   })
 

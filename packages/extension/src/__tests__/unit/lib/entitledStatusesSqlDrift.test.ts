@@ -31,7 +31,7 @@ describe('has_cloud_sync() SQL vs ENTITLED_SUBSCRIPTION_STATUSES drift', () => {
   it("has_cloud_sync()'s status allowlist matches ENTITLED_SUBSCRIPTION_STATUSES exactly", () => {
     // Expect an explicit `s.status in ('active', 'trialing', 'past_due')` style check,
     // not the old `s.status <> 'canceled'` — that broader form is what this migration
-    // is meant to tighten per the owner decision (see useEntitlements.ts resolveTier()).
+    // is meant to tighten per the owner decision (see resolveTier() in src/lib/entitlementTier.ts).
     const statusListMatch = sql.match(/s\.status\s+in\s*\(([^)]+)\)/i);
     expect(statusListMatch, 'expected has_cloud_sync() to use an explicit status allowlist (s.status in (...)), not s.status <> \'canceled\'').not.toBeNull();
 

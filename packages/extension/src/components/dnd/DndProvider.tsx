@@ -98,14 +98,17 @@ const asCollisions = (v: unknown): Collision[] => (Array.isArray(v) ? (v as Coll
  */
 export const unifiedCollision: CollisionDetection = (args) => {
   const activeType = (args.active?.data?.current as { type?: string } | undefined)?.type;
+  const activeTourDemo = (args.active?.data?.current as { tourDemo?: boolean } | undefined)?.tourDemo === true;
 
   const sameTypeOnly = (hits: Collision[]): Collision[] => {
     if (activeType !== 'window' && activeType !== 'group') return hits;
     const filtered = hits.filter((hit) => {
       const container = args.droppableContainers.find((c) => c.id === hit.id);
-      const d = container?.data?.current as { type?: string; index?: number } | undefined;
+      const d = container?.data?.current as { type?: string; index?: number; tourDemo?: boolean } | undefined;
       const t = d?.type;
       if (activeType === 'group') {
+        // A practice group of the guided tour only reorders against another practice group
+        if (activeTourDemo && !d?.tourDemo) return false;
         // A group may only reorder among OTHER non-permanent group rows. Never let
         // the permanent "Now Open" row (index 0) be a target, so no drop
         // indicator shows above/on it and a group can't land at index 0.
@@ -161,7 +164,7 @@ export const unifiedCollision: CollisionDetection = (args) => {
   return sameTypeOnly(asCollisions(closestCenter(args)));
 };
 
-type SortableData = { type?: string; windowId?: string; groupId?: string; index?: number; starred?: boolean };
+type SortableData = { type?: string; windowId?: string; groupId?: string; index?: number; starred?: boolean; tourDemo?: boolean };
 
 /**
  * Zone of a group/window row — starred rows are pinned above unstarred ones, so this is
@@ -212,6 +215,8 @@ export function attachInsertion(args: Parameters<CollisionDetection>[0], hits: C
       if (d?.type !== activeType) continue;
       if (selectionIds?.has(String(c.id)) && zoneOf(activeType, d) !== activeZone) spansZones = true;
       if (activeType === 'group' && d.index === 0) continue; // "Now Open" never moves
+      // A practice group of the guided tour is only reordered among the practice groups
+      if (activeType === 'group' && activeData?.tourDemo && !d.tourDemo) continue;
       const rect = args.droppableRects.get(c.id);
       const key = containerKeyOf(activeType, String(c.id), d);
       if (!rect || !key) continue;

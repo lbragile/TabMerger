@@ -14,6 +14,7 @@ import {
 } from '@/hooks/useDndModel';
 import {
   canDrop,
+  isTourDemoItem,
   applyMove,
   NEW_GROUP_ID,
   type DndLanded,
@@ -22,6 +23,7 @@ import {
   type DndSideEffect
 } from '@/lib/dndMove';
 import { rebaseMove } from '@/lib/dndRebase';
+import { isTourSpringOpenBlocked } from '@/lib/tourSandbox';
 import { closeTabsWhenPopupCloses } from '@/lib/deferredTabClose';
 import {
   clearDndDragLive,
@@ -954,7 +956,12 @@ export function useDndHandlers() {
         (a?.type === 'window' || a?.type === 'tab') &&
         !!overGroup &&
         overId !== model.permanentGroupId &&
-        overGroup.index !== activeGroupIndex;
+        overGroup.index !== activeGroupIndex &&
+        // A practice item of the guided tour can only land in a practice group (`canDrop`):
+        // hovering one of the user's own groups must not switch the panel to it
+        (!isTourDemoItem(model, a.id) || overGroup.tourDemo) &&
+        // ...and a tour step whose destination is in the panel being shown keeps that panel
+        !isTourSpringOpenBlocked();
       if (armSpring) {
         if (springOverIdRef.current !== overId) {
           clearSpring();
@@ -1244,7 +1251,9 @@ export function useDndHandlers() {
       undoable,
       newWindow: co.type === 'new-window'
     });
-    if (undoable) {
+    // A move inside the guided tour's practice groups is not history: they are not the user's
+    // data and are removed when the tour ends, so Undo must not offer to "restore" it.
+    if (undoable && !isTourDemoItem(commitModel, ca.id)) {
       p.redoBefore = uiState()?.redoStack ?? null;
       pushUndo(commitBase);
       p.pushedBase = commitBase;

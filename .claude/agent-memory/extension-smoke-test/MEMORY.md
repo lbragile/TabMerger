@@ -5,3 +5,4 @@
 - [Stale `vi.mock` factory keys survive a deleted hook export](stale_vimock_factory_keys.md) — type-check + build both miss them; grep (check 3) is the only gate
 - [DnD onDragOver preview can self-feed into a popup-killing render loop](dnd_ondragover_self_feed_loop.md) — four guards (measuring=BeforeDragging, anchor-under-pointer, idInModel, applyPreview dedupe) must survive any DnD change
 - [Popup DnD sensor history + drag-handle onMouseDown rule](mousesensor_onmousedown_clobber.md) — MouseSensor was reverted to a pointer-capture PointerSensor subclass (Mv3PointerSensor); activator is `onPointerDown` again; still compose handle `onMouseDown` with the spread handler
+- [Tour step ids / chapter counts are hardcoded in tour e2e specs](tour_step_ids_in_e2e.md) — only the e2e run catches a rename; "page closed"/"not finish" = stale id

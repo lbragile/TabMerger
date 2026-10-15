@@ -6,7 +6,8 @@ import { useSessions, useSaveSession, useDeleteSession, useRestoreSession } from
 import { createGroup, createWindow, createTab } from '@/lib/utils'
 import type { GroupsState, Session } from '@/lib/types'
 
-const { mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting, mockSetSetting, mockCanUploadOnFirefox } = vi.hoisted(() => ({
+const { mockStoreOwner, mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting, mockSetSetting, mockCanUploadOnFirefox } = vi.hoisted(() => ({
+  mockStoreOwner: vi.fn().mockResolvedValue(null),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
   mockGetSessions: vi.fn().mockResolvedValue([]),
   mockSaveSession: vi.fn().mockResolvedValue(undefined),
@@ -22,7 +23,8 @@ vi.mock('@/lib/localDb', () => ({
   getSessions: mockGetSessions,
   saveSession: mockSaveSession,
   deleteSession: mockDeleteSession,
-  getSetting: mockGetSetting,
+  // the store's recorded owner is its own setting; everything else is the encryption stand-in below
+  getSetting: (key: string, d: unknown) => (key === 'lastSignedInUserId' ? mockStoreOwner() : mockGetSetting(key, d)),
   setSetting: mockSetSetting,
 }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -48,6 +50,8 @@ const builder: Record<string, unknown> = {}
 builder.upsert = vi.fn().mockReturnValue(builder)
 builder.delete = vi.fn().mockReturnValue(builder)
 builder.eq = vi.fn().mockReturnValue(builder)
+builder.in = vi.fn().mockReturnValue(builder)
+builder.abortSignal = vi.fn().mockReturnValue(builder)
 let responses: { data: unknown; error: unknown }[] = []
 let idx = 0
 Object.defineProperty(builder, 'then', {
@@ -90,6 +94,7 @@ describe('useSaveSession', () => {
     mockGetSetting.mockResolvedValue(false)
     mockGetDataKey.mockReturnValue(null)
     mockCanUploadOnFirefox.mockResolvedValue(true)
+    mockStoreOwner.mockResolvedValue(null)
     const g = createGroup(undefined, 'Saved')
     g.windows = [createWindow([createTab('T1', 'https://a.com')])]
     const nowOpen = createGroup(undefined, 'Now Open')
@@ -137,6 +142,32 @@ describe('useSaveSession', () => {
     })
     expect(mockFrom).toHaveBeenCalledWith('sessions')
     expect((builder.upsert as ReturnType<typeof vi.fn>)).toHaveBeenCalled()
+  })
+
+  it("owner mismatch: the store still holds another account's data, so the session is saved locally and NOT uploaded", async () => {
+    mockStoreOwner.mockResolvedValue('owner-1')
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
+    })
+    expect(mockSaveSession).toHaveBeenCalled()
+    expect((builder.upsert as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
+    expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', false)
+  })
+
+  it('owner matches the signed-in user: the upload happens', async () => {
+    mockStoreOwner.mockResolvedValue('u1')
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
+    })
+    expect((builder.upsert as ReturnType<typeof vi.fn>)).toHaveBeenCalledWith(expect.objectContaining({ user_id: 'u1' }))
   })
 
   it('free users (cloudSync entitlement false) save locally only — no Supabase call at all', async () => {
@@ -260,6 +291,7 @@ describe('useDeleteSession', () => {
     idx = 0
     responses = []
     mockGetSession.mockResolvedValue({ data: { session: null } })
+    mockStoreOwner.mockResolvedValue(null)
   })
 
   it('deletes locally', async () => {
@@ -279,7 +311,30 @@ describe('useDeleteSession', () => {
     })
     expect(mockFrom).toHaveBeenCalledWith('sessions')
     expect((builder.delete as ReturnType<typeof vi.fn>)).toHaveBeenCalled()
-    expect((builder.eq as ReturnType<typeof vi.fn>)).toHaveBeenCalledWith('id', 'sess-1')
+    expect((builder.in as ReturnType<typeof vi.fn>)).toHaveBeenCalledWith('id', ['sess-1'])
+    expect((builder.eq as ReturnType<typeof vi.fn>)).toHaveBeenCalledWith('user_id', 'u1')
+    expect((builder.abortSignal as ReturnType<typeof vi.fn>)).toHaveBeenCalledWith(expect.any(AbortSignal))
+  })
+
+  it("goes through deleteRemoteSessions for the store's owner, even when someone else is signed in now: nothing is sent", async () => {
+    mockStoreOwner.mockResolvedValue('owner-1')
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'someone-else' } } } })
+    const { result } = renderHook(() => useDeleteSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync('sess-1')
+    })
+    expect(mockDeleteSession).toHaveBeenCalledWith('sess-1') // local delete still happens
+    expect((builder.delete as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
+  })
+
+  it('the request is scoped to the store owner when that owner is signed in', async () => {
+    mockStoreOwner.mockResolvedValue('u1')
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    const { result } = renderHook(() => useDeleteSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync('sess-1')
+    })
+    expect((builder.eq as ReturnType<typeof vi.fn>)).toHaveBeenCalledWith('user_id', 'u1')
   })
 
   it('does not error when remote delete sync fails', async () => {

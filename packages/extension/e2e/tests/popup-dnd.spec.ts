@@ -1,5 +1,5 @@
 import { test, expect, chromium, type BrowserContext, type Page } from '@playwright/test';
-import { seedIdb } from '../helpers';
+import { dismissTour, seedIdb } from '../helpers';
 import { EXTENSION_PATH } from '../extensionPath';
 import { RawCdp } from '../rawCdp';
 
@@ -64,6 +64,7 @@ test.describe('DnD inside the real MV3 action popup', () => {
     let [sw] = context.serviceWorkers();
     if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
     extensionId = new URL(sw.url()).hostname;
+    await dismissTour(context);
   });
 
   test.afterAll(async () => {
@@ -199,6 +200,7 @@ test('spring-open: a WINDOW dropped onto another group\'s window row (after dwel
     let [sw] = context.serviceWorkers();
     if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
     const extensionId = new URL(sw.url()).hostname;
+    await dismissTour(context);
 
     const PLAY = {
       id: 'play',

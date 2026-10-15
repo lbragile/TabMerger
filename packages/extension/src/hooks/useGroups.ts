@@ -1366,3 +1366,39 @@ export function useImportGroups() {
       }), false, { align: false })
   });
 }
+
+/**
+ * Replaces every saved group with `newGroups` (restoring a backup "the way it was"). "Now Open"
+ * is kept: its tabs are the live browser tabs. Each restored group is a new group (fresh id, no
+ * server base, pending), exactly like an import, so it can never collide with a row that still
+ * exists or be hidden by a pending delete; the replaced groups are pruned by the write and
+ * deleted remotely. Undoable like any other change: the previous state goes on the undo stack.
+ *
+ * The remote delete is asked for HERE, the way `useDeleteGroup` does it, and not left to the
+ * write: the write only remembers a pruned group for remote deletion while the `cloudSyncActive`
+ * setting is true, and that is false until entitlements have loaded. Without this call a replace
+ * made in that window left the old rows on the server, and the next pull brought them back.
+ * `deleteRemoteGroups` records the ids itself (and does nothing when nobody is signed in).
+ */
+export function useReplaceSavedGroups() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (newGroups: import('@/lib/types').Group[]) => {
+      let removedIds: string[] = [];
+      return mutate((prev) => {
+        removedIds = prev.available.filter((g) => !g.permanent).map((g) => g.id);
+        const available = [...prev.available.filter((g) => g.permanent), ...newGroups.map((g) => asNewGroup(g))];
+        return { ...prev, available, active: { id: available[0]?.id ?? '', index: 0 } };
+      }, false, { align: false }).then((next) => {
+        // Only AFTER the local write is stored (a rejected write never gets here). Asked for
+        // earlier, a write that then failed (storage full on a large backup) left the old groups
+        // on this device with their server rows deleted and their ids pending, and the next pull
+        // removed them: neither the old groups nor the new ones were left.
+        // Fire-and-forget: hard-delete from Supabase so sync doesn't resurrect them
+        deleteRemoteGroups(removedIds).catch(() => {});
+        return next;
+      });
+    }
+  });
+}

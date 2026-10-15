@@ -27,6 +27,11 @@ const {
   mockPushSessionToSupabase,
   mockClearLocalAccountData,
   mockCanUploadOnFirefox,
+  mockMarkSessionUploaded,
+  mockCompareAndSetSetting,
+  mockRefreshUploadedSession,
+  mockCycleDeadline,
+  mockDeleteRemoteSessions,
 } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
@@ -49,6 +54,11 @@ const {
   mockPushSessionToSupabase: vi.fn().mockResolvedValue(true),
   mockClearLocalAccountData: vi.fn().mockResolvedValue(undefined),
   mockCanUploadOnFirefox: vi.fn().mockResolvedValue(true),
+  mockMarkSessionUploaded: vi.fn().mockResolvedValue(undefined),
+  mockCompareAndSetSetting: vi.fn().mockResolvedValue(true),
+  mockRefreshUploadedSession: vi.fn().mockResolvedValue('updated'),
+  mockCycleDeadline: vi.fn(() => Date.now() + 60_000),
+  mockDeleteRemoteSessions: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
@@ -86,7 +96,11 @@ vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/up
   markAllGroupsPendingSync: mockMarkAllGroupsPendingSync,
   getSessions: mockGetSessions,
   clearLocalAccountData: mockClearLocalAccountData,
+  markSessionUploaded: mockMarkSessionUploaded,
+  compareAndSetSetting: mockCompareAndSetSetting,
 }))
+vi.mock('@/lib/sessionUpload', () => ({ refreshUploadedSession: mockRefreshUploadedSession, deleteRemoteSessions: mockDeleteRemoteSessions }))
+vi.mock('@/lib/syncRequest', async (orig) => ({ ...(await orig<typeof import('@/lib/syncRequest')>()), cycleDeadline: mockCycleDeadline }))
 vi.mock('@/lib/encryptionKey', () => ({
   getEncryptionKeyState: mockGetEncryptionKeyState,
   getDataKey: mockGetDataKey,
@@ -272,11 +286,11 @@ describe('useSync — sessions encryption migration self-heal', () => {
     renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
 
     await waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(2))
-    expect(mockPushSessionToSupabase).toHaveBeenCalledWith(sessionA)
-    expect(mockPushSessionToSupabase).toHaveBeenCalledWith(sessionB)
-    await waitFor(() =>
-      expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', true)
-    )
+    expect(mockPushSessionToSupabase).toHaveBeenCalledWith(sessionA, 'u1')
+    expect(mockPushSessionToSupabase).toHaveBeenCalledWith(sessionB, 'u1')
+    // done = compare-and-set from the in-progress marker (0), so a re-arm made meanwhile survives
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', 0, true))
+    expect(mockSetSetting).not.toHaveBeenCalledWith('sessionsEncryptionMigrationDone', true)
   })
 
   it.each([
@@ -299,7 +313,7 @@ describe('useSync — sessions encryption migration self-heal', () => {
     await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
     expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(2)
     // ...but the flag stays unset: one session is still not on the server
-    expect(mockSetSetting).not.toHaveBeenCalledWith('sessionsEncryptionMigrationDone', true)
+    expect(mockCompareAndSetSetting).not.toHaveBeenCalled()
   })
 
   it('after a failed self-heal the same popup waits before retrying, then retries and sets the flag once every push succeeds', async () => {
@@ -315,6 +329,11 @@ describe('useSync — sessions encryption migration self-heal', () => {
       mockSetSetting.mockImplementation(async (key: string, value: unknown) => {
         if (key === 'sessionsEncryptionMigrationDone') sessionsDone = value as boolean
       })
+      mockCompareAndSetSetting.mockImplementation(async (key: string, expected: unknown, next: unknown) => {
+        if (key !== 'sessionsEncryptionMigrationDone' || sessionsDone !== expected) return false
+        sessionsDone = next as boolean
+        return true
+      })
       mockGetSessions.mockResolvedValue([{ id: 's1', name: 'A', groups: [], createdAt: 1 }])
       mockPushSessionToSupabase.mockResolvedValueOnce(false) // first attempt: not uploaded
 
@@ -326,7 +345,7 @@ describe('useSync — sessions encryption migration self-heal', () => {
       await vi.advanceTimersByTimeAsync(60_000)
       expect(mockPushPendingChanges).toHaveBeenCalledTimes(3)
       expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(1)
-      expect(sessionsDone).toBe(false)
+      expect(sessionsDone).toBeFalsy() // the in-progress marker (0) stays after a failed pass: still "not done"
 
       // ...until the retry window (5 min) has passed; then one retry, and the flag is set for good
       await vi.advanceTimersByTimeAsync(5 * 60_000)
@@ -352,7 +371,7 @@ describe('useSync — sessions encryption migration self-heal', () => {
 
     await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
     expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
-    expect(mockSetSetting).not.toHaveBeenCalledWith('sessionsEncryptionMigrationDone', true)
+    expect(mockCompareAndSetSetting).not.toHaveBeenCalled()
   })
 
   it('does not re-run the sessions self-heal once its flag is already set', async () => {
@@ -367,6 +386,248 @@ describe('useSync — sessions encryption migration self-heal', () => {
     await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
     expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
     expect(mockGetSessions).not.toHaveBeenCalled()
+  })
+})
+
+describe('useSync — sessions pass: automatic backups, ordering, deadline, one pass at a time', () => {
+  const FLAG = 'sessionsEncryptionMigrationDone'
+  const armed = () =>
+    mockGetSetting.mockImplementation((key: string, d: unknown) => Promise.resolve(key === FLAG ? false : key === 'lastSignedInUserId' ? d : true))
+  const backup = (id: string, extra: Record<string, unknown> = {}) => ({ id, name: id, groups: [], createdAt: 1, auto: true, ...extra })
+  const run = () => renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+  beforeEach(() => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetSessions.mockReset().mockResolvedValue([])
+    mockPushSessionToSupabase.mockReset().mockResolvedValue(true)
+    mockRefreshUploadedSession.mockReset().mockResolvedValue('updated')
+    mockCompareAndSetSetting.mockReset().mockResolvedValue(true)
+    mockMarkSessionUploaded.mockReset().mockResolvedValue(undefined)
+    mockDeleteRemoteSessions.mockReset().mockResolvedValue(true)
+    mockCycleDeadline.mockReset().mockImplementation(() => Date.now() + 60_000)
+    armed()
+  })
+
+  it('an uploaded backup the server no longer has (gone) is kept, counts as done, and is not uploaded again', async () => {
+    mockGetSessions.mockResolvedValue([backup('b1', { uploadedAt: 5 })])
+    mockRefreshUploadedSession.mockResolvedValue('gone')
+    run()
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalledWith(FLAG, 0, true))
+    expect(mockRefreshUploadedSession).toHaveBeenCalledWith(expect.objectContaining({ id: 'b1' }), 'u1')
+    expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
+    expect(mockMarkSessionUploaded).not.toHaveBeenCalled()
+  })
+
+  it('a refresh that failed keeps the flag unset', async () => {
+    mockGetSessions.mockResolvedValue([backup('b1', { uploadedAt: 5 })])
+    mockRefreshUploadedSession.mockResolvedValue('failed')
+    run()
+    await waitFor(() => expect(mockRefreshUploadedSession).toHaveBeenCalled())
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockCompareAndSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('a backup never uploaded is pushed, then stamped through markSessionUploaded (not by saving a copy back)', async () => {
+    mockGetSessions.mockResolvedValue([backup('b1')])
+    run()
+    await waitFor(() => expect(mockMarkSessionUploaded).toHaveBeenCalledWith('b1', expect.any(Number)))
+    expect(mockPushSessionToSupabase).toHaveBeenCalledWith(expect.objectContaining({ id: 'b1' }), 'u1')
+  })
+
+  it('a manual session is never stamped; a push that did not happen is not stamped', async () => {
+    mockGetSessions.mockResolvedValue([{ id: 'm1', name: 'M', groups: [], createdAt: 1 }, backup('b2')])
+    mockPushSessionToSupabase.mockResolvedValueOnce(true).mockResolvedValueOnce(false)
+    run()
+    await waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockMarkSessionUploaded).not.toHaveBeenCalled()
+    expect(mockCompareAndSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('the pass runs after performSync (the groups are not made to wait behind it)', async () => {
+    const order: string[] = []
+    mockPushPendingChanges.mockImplementationOnce(async () => void order.push('groups'))
+    mockGetSessions.mockImplementation(async () => (order.push('sessions-read'), [backup('b1')]))
+    mockPushSessionToSupabase.mockImplementation(async () => (order.push('session-push'), true))
+    run()
+    await waitFor(() => expect(order).toContain('session-push'))
+    expect(order.indexOf('groups')).toBeLessThan(order.indexOf('sessions-read'))
+  })
+
+  it('the in-progress marker (0) is stored before the sessions are read', async () => {
+    const order: string[] = []
+    mockSetSetting.mockImplementation(async (k: string, v: unknown) => void (k === FLAG && order.push(`set:${String(v)}`)))
+    mockGetSessions.mockImplementation(async () => (order.push('read'), []))
+    run()
+    await waitFor(() => expect(order).toContain('read'))
+    expect(order).toEqual(['set:0', 'read'])
+    mockSetSetting.mockReset().mockResolvedValue(undefined)
+  })
+
+  it('the flag becomes true only while the in-progress marker is still stored: a lost compare-and-set leaves it armed', async () => {
+    mockGetSessions.mockResolvedValue([backup('b1')])
+    mockCompareAndSetSetting.mockResolvedValue(false) // a save re-armed the flag during the pass
+    run()
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalledWith(FLAG, 0, true))
+    expect(mockSetSetting).not.toHaveBeenCalledWith(FLAG, true)
+  })
+
+  it('stops starting requests once the cycle deadline has passed, and does not mark the pass done', async () => {
+    mockCycleDeadline.mockReturnValue(Date.now() - 1) // already over
+    mockGetSessions.mockResolvedValue([backup('b1'), backup('b2')])
+    run()
+    await waitFor(() => expect(mockGetSessions).toHaveBeenCalled())
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
+    expect(mockRefreshUploadedSession).not.toHaveBeenCalled()
+    expect(mockCompareAndSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('a second doSync during a pass (the 30 s poll) does not start another pass', async () => {
+    vi.useFakeTimers()
+    try {
+      let release!: () => void
+      mockGetSessions.mockResolvedValue([backup('b1')])
+      mockPushSessionToSupabase.mockImplementation(() => new Promise<boolean>((r) => (release = () => r(true))))
+      renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+      await vi.waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(1))
+      await vi.advanceTimersByTimeAsync(31_000) // a poll fires while the first pass is still waiting
+      expect(mockGetSessions).toHaveBeenCalledTimes(1)
+      expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(1)
+      release()
+      await vi.advanceTimersByTimeAsync(0)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+})
+
+describe('useSync — sessions pass: order and cleanup of sessions deleted mid-pass', () => {
+  const FLAG = 'sessionsEncryptionMigrationDone'
+  const backup = (id: string, extra: Record<string, unknown> = {}) => ({ id, name: id, groups: [], createdAt: 1, auto: true, ...extra })
+  const manual = (id: string) => ({ id, name: id, groups: [], createdAt: 1 })
+  const run = () => renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+  /** The first read of the flag (the start check) answers `start`; later reads answer `later`. */
+  const flag = (start: unknown, later: unknown) => {
+    let reads = 0
+    mockGetSetting.mockImplementation((key: string, d: unknown) =>
+      Promise.resolve(key === FLAG ? (reads++ === 0 ? start : later) : key === 'lastSignedInUserId' ? d : true)
+    )
+  }
+
+  beforeEach(() => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetSessions.mockReset().mockResolvedValue([])
+    mockPushSessionToSupabase.mockReset().mockResolvedValue(true)
+    mockRefreshUploadedSession.mockReset().mockResolvedValue('updated')
+    mockCompareAndSetSetting.mockReset().mockResolvedValue(true)
+    mockMarkSessionUploaded.mockReset().mockResolvedValue(undefined)
+    mockDeleteRemoteSessions.mockReset().mockResolvedValue(true)
+    mockCycleDeadline.mockReset().mockImplementation(() => Date.now() + 60_000)
+    flag(false, 0)
+  })
+
+  it('processes never-uploaded sessions first and already-uploaded backups last, stable within each class', async () => {
+    const order: string[] = []
+    mockPushSessionToSupabase.mockImplementation(async (s: { id: string }) => (order.push(`push:${s.id}`), true))
+    mockRefreshUploadedSession.mockImplementation(async (s: { id: string }) => (order.push(`refresh:${s.id}`), 'updated'))
+    mockGetSessions.mockResolvedValue([backup('u1', { uploadedAt: 1 }), manual('m1'), backup('n1'), backup('u2', { uploadedAt: 2 }), manual('m2'), backup('n2')])
+    run()
+    await waitFor(() => expect(order).toHaveLength(6))
+    expect(order).toEqual(['push:m1', 'push:n1', 'push:m2', 'push:n2', 'refresh:u1', 'refresh:u2'])
+  })
+
+  it('a deadline hit part-way has spent the time on the never-uploaded sessions', async () => {
+    // one request fits, then the clock jumps past the cycle budget
+    const realNow = Date.now.bind(Date)
+    let late = false
+    const now = vi.spyOn(Date, 'now').mockImplementation(() => (late ? realNow() + 10 * 60_000 : realNow()))
+    mockPushSessionToSupabase.mockImplementation(async () => ((late = true), true))
+    mockGetSessions.mockResolvedValue([backup('u1', { uploadedAt: 1 }), manual('m1'), manual('m2')])
+    run()
+    await waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalled())
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    await new Promise((r) => setTimeout(r, 30))
+    now.mockRestore()
+    // the never-uploaded went first; the second one and the refresh of the uploaded backup waited
+    expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(1)
+    expect(mockPushSessionToSupabase.mock.calls[0][0]).toMatchObject({ id: 'm1' })
+    expect(mockRefreshUploadedSession).not.toHaveBeenCalled()
+    expect(mockCompareAndSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('a pushed session that is gone at the re-read while the pass marker (0) is still stored: its server row is deleted again', async () => {
+    flag(false, 0)
+    mockGetSessions.mockResolvedValueOnce([manual('s1'), manual('s2')]).mockResolvedValueOnce([manual('s2')])
+    run()
+    await waitFor(() => expect(mockDeleteRemoteSessions).toHaveBeenCalledWith(['s1'], 'u1'))
+    expect(mockDeleteRemoteSessions).toHaveBeenCalledTimes(1)
+  })
+
+  it('a pushed session still stored: no delete', async () => {
+    mockGetSessions.mockResolvedValue([manual('s1')])
+    run()
+    await waitFor(() => expect(mockGetSessions).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalled())
+    expect(mockDeleteRemoteSessions).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['absent', undefined],
+    ['false (a re-arm)', false],
+    ['the backup marker ""', ''],
+    ['true', true],
+  ])('gone, but the flag now reads %s (a wipe removed it, or a re-arm): NO delete', async (_n, later) => {
+    flag(false, later)
+    mockGetSessions.mockResolvedValueOnce([manual('s1')]).mockResolvedValueOnce([])
+    run()
+    await waitFor(() => expect(mockGetSessions).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockDeleteRemoteSessions).not.toHaveBeenCalled()
+  })
+
+  it('no successful push: no second getSessions() and no delete', async () => {
+    mockGetSessions.mockResolvedValue([manual('s1')])
+    mockPushSessionToSupabase.mockResolvedValue(false)
+    run()
+    await waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalled())
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockGetSessions).toHaveBeenCalledTimes(1)
+    expect(mockDeleteRemoteSessions).not.toHaveBeenCalled()
+  })
+
+  it('only uploaded-backup refreshes (no push): no second getSessions()', async () => {
+    mockGetSessions.mockResolvedValue([backup('u1', { uploadedAt: 1 })])
+    run()
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalled())
+    expect(mockGetSessions).toHaveBeenCalledTimes(1)
+  })
+
+  it('deleteRemoteSessions throwing does not fail the pass or change the flag outcome', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockGetSessions.mockResolvedValueOnce([manual('s1')]).mockResolvedValueOnce([])
+    mockDeleteRemoteSessions.mockRejectedValue(new Error('offline'))
+    run()
+    await waitFor(() => expect(mockDeleteRemoteSessions).toHaveBeenCalled())
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalledWith(FLAG, 0, true))
+  })
+
+  it('the re-read throwing does not fail the pass or change the flag outcome', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockGetSessions.mockResolvedValueOnce([manual('s1')]).mockRejectedValueOnce(new Error('idb'))
+    run()
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalledWith(FLAG, 0, true))
+    expect(mockDeleteRemoteSessions).not.toHaveBeenCalled()
+  })
+
+  it('a stored flag "" (left by a backup run) starts a pass like false', async () => {
+    flag('', 0)
+    mockGetSessions.mockResolvedValue([manual('s1')])
+    run()
+    await waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(1))
   })
 })
 
