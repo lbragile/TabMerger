@@ -91,9 +91,10 @@ WHAT YOU CAN DO
 - Take saved sessions (snapshots of your groups) and restore them later.
 - Undo and redo changes, and switch between light and dark themes.
 - Get a guided tour the first time you open TabMerger: seven short chapters in plain language,
-  each with a header saying what it covers. Many steps let you try things yourself (make a
-  group, colour it, pin it, drag tabs and groups around, search, switch the theme), with a
-  ring on the exact control to use next. Dragging is practised on two sample groups that the
+  each with a header saying what it covers. Most steps let you try things yourself (make a
+  group, color it, pin it, drag tabs and groups around, save a tab, reopen a window, remove a
+  repeated tab, select items, search, undo and redo, switch the theme), with a ring on the
+  exact control to use next. You practice on two sample groups and one spare tab that the
   tour adds and removes by itself, so your own tabs are never touched. Skip a step, a chapter
   or the whole tour, and replay it any time from the "?" button or from Settings.
 - Import from a JSON file, a bookmarks HTML export or OneTab, and export your data as JSON.
@@ -286,7 +287,7 @@ Edge build. Tab previews' page-image fetch is done server-side by the web app
 | `alarms` | Schedules the one-time reminders a user sets on a saved tab, so the reminder fires at the chosen time even when the popup is closed. Also runs the automatic backup of saved groups on the interval the user picked in Settings (paid accounts; can be turned off). |
 | `notifications` | Shows the reminder notification when a reminder the user set comes due; clicking it opens the saved tab. |
 | `identity` | Runs the "Continue with Google" sign-in window (`chrome.identity.launchWebAuthFlow`, `src/lib/googleOAuthFlow.ts`). Used only if the user chooses to sign in; the extension works without it. |
-| `downloads` (**optional**, `optional_permissions`) | Not granted at install. Requested only when the user turns on "Also save a file to this computer" in Settings (automatic backups), from that click. It is used for one thing: writing each backup as a JSON file into a folder the user names inside the browser's Downloads folder (`chrome.downloads.download` with `saveAs: false` and `conflictAction: "uniquify"`). The extension never reads, opens, lists or deletes downloads, and does not touch downloads it did not start. If the user declines or later removes the permission, backups keep working without the file copy. |
+| `downloads` (**optional**, `optional_permissions`) | Not granted at install. Requested only when the user turns on "Also save a file to this computer" in Settings (automatic backups), from that click. It is used for the backup file only: writing each backup as a JSON file into a folder the user names inside the browser's Downloads folder (`chrome.downloads.download` with `saveAs: false` and `conflictAction: "uniquify"`), and helping the user find that file afterwards. For the second part the extension remembers the download id of the last backup file it wrote (on this device only) and, while Settings → Data is open, looks up that one id (`chrome.downloads.search({ id })`) to show the file's full path and whether it still exists; a "Show in folder" button opens the system file manager on that file (`chrome.downloads.show`) or, when the file is gone, on the Downloads folder (`chrome.downloads.showDefaultFolder`). The path is shown as text in the popup and is not stored or sent anywhere. The extension never lists or searches the user's other downloads, never opens a downloaded file's contents, never deletes or cancels a download, and ignores any entry it did not start itself. If the user declines or later removes the permission, backups keep working without the file copy. |
 
 **`downloads` must stay optional.** As a required permission Chrome would disable the extension
 for every existing user until they accepted the new warning. The CI baseline
@@ -396,9 +397,10 @@ All three certifications can be ticked, because they are true as built:
   "Now Open" tabs) as a session marked automatic. It is stored in the extension's own database
   and uploaded to the same place as synced sessions (`sessions`), encrypted on the device first
   like every other session; the "automatic" marker is inside the ciphertext, so the server
-  cannot tell a backup from a session the user saved. Nothing is written to disk as a file, no
-  new data category, no new network destination and **no new permission** (`alarms` and
-  `storage` were already granted). The newest 10 are kept; older automatic ones are deleted on
+  cannot tell a backup from a session the user saved. By default nothing is written to disk as
+  a file; no new data category, no new network destination and **no new required permission**
+  (`alarms` and `storage` were already granted). The only addition is the optional `downloads`
+  permission, asked for only if the user turns on the file copy described below. The newest 10 are kept; older automatic ones are deleted on
   the device and on the server. Restoring one adds its groups back into TabMerger; it does not
   open or close browser windows. The server rejects the upload for an account without an active
   paid plan (`has_cloud_sync()` on `sessions`). See `src/lib/autoBackup.ts`.
@@ -430,6 +432,11 @@ All three certifications can be ticked, because they are true as built:
   titles, group and window names, notes), never the "Now Open" tabs, keys, tokens or the account
   id. It never leaves the device through TabMerger. TabMerger does not delete these files.
   The setting says so in plain words. See `src/lib/autoBackupFile.ts`.
+  To help the user find the file, the setting says where the folder is, shows "Last file" with
+  the full path the browser reports for the last file written (or that it was moved or
+  deleted), and has a "Show in folder" button that opens the system file manager there. Only the
+  download id and time of that last file are kept, on the device (never synced, removed with the
+  account's local data); the path is read from the browser each time and shown as text.
 - AI features (Pro AI tier) are currently **disabled/coming soon** in both the extension and the
   web app (`VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` feature flags) — no tab content is sent to
   Anthropic's Claude API while this flag is off. Update this note when AI ships.
@@ -439,6 +446,13 @@ All three certifications can be ticked, because they are true as built:
   check sits in front of every action that opens a saved address (`src/lib/safeOpen.ts`), so
   such an address is never opened; browser pages (`chrome://`, `file://` and the like) open as
   before. No permission, data collection or network destination changed with this.
+- Uninstall survey (`src/lib/uninstallSurvey.ts`): on every start the background worker calls
+  `chrome.runtime.setUninstallURL` (no permission needed), so after the extension is removed the
+  browser opens `<web app>/uninstalled` (`https://tabmerger.vercel.app/uninstalled` for the stable
+  item). The address carries only the extension version, the browser (`chrome`, `firefox`,
+  `edge`) and the channel (`stable`, `beta`), e.g. `?v=3.1.2&b=chrome&c=stable`: no user id,
+  email, install id, group or tab data, or settings. The survey on that page is optional; anything
+  typed there is sent by the web page, not by the extension. Not set in the demo-video build.
 - Direct network destinations from the extension: the TabMerger website (`/api/track`,
   `/api/og-preview` when enabled, `/api/portal` for the billing link), Supabase, Google's favicon
   service, and the Google sign-in window. PostHog's capture endpoint and Sentry are in the code
@@ -552,11 +566,12 @@ with the real semver string carried in `version_name`.
 | BETA | `4.1.0.9` | `3.1.0-beta.9` | `v3.1.0-beta.9` | 2026-10-01 | Superseded |
 | BETA | `4.1.0.10` | `3.1.0-beta.10` | `v3.1.0-beta.10` | 2026-10-02 | Superseded by beta.11 (withdrawn from review if still pending) |
 | BETA | `4.1.0.11` | `3.1.0-beta.11` | `v3.1.0-beta.11` | 2026-10-07 | Submitted by the publish workflow; owner to update when the review completes |
-| Both | set at release | set at release | next release (unreleased) | — | Draft: adds automatic backups (Pro) and the `alarms` wording above, plus the OPTIONAL `downloads` permission for "Also save a file to this computer". No required permission changes, so no re-approval prompt for existing users; `downloads` is asked for only when a user turns that option on. Update the dashboard's privacy tab: the permission justification above, and "Web history" stays ticked (the file holds saved tab addresses but stays on the user's disk). Screenshots: none of the current ones shows Settings, so none needs refreshing; a new Settings → Data screenshot showing the backups list would be worth adding |
+| Both | set at release | set at release | next release (unreleased) | — | Draft: adds automatic backups (Pro) and the `alarms` wording above, plus the OPTIONAL `downloads` permission for "Also save a file to this computer". No required permission changes, so no re-approval prompt for existing users; `downloads` is asked for only when a user turns that option on. Update the dashboard's privacy tab: the permission justification above, and "Web history" stays ticked (the file holds saved tab addresses but stays on the user's disk). Screenshots: none of the current ones shows Settings, so none needs refreshing; a new Settings → Data screenshot showing the backups list would be worth adding. Same draft: the `downloads` justification now also covers showing where the last backup file is ("Last file" path and "Show in folder"), so paste the updated justification into the dashboard; and the browser's native confirm boxes (import, restore a backup by replacing, delete a backup, restore a session) became dialogs inside the popup, which no current screenshot shows |
 
-| Both | set at release | set at release | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest change and no new permission: the tour's progress is one record in `chrome.storage.local`, already covered by `storage`, so there is no re-approval prompt. The tour has seven chapters with a header each, nine "try it" steps and a thin pulsing orange ring on the control to use next; four of them practise drag and drop on two sample groups ("Tour demo", "Tour demo 2") that the tour adds for that chapter and removes again by itself, and which never leave the device (not synced, backed up, exported, shared or counted towards a plan); the group made while trying is offered for removal at the end. No new data leaves the device apart from six anonymous usage events (`tour_started`, `tour_completed`, `tour_skipped`, `tour_task_done`, `tour_step_skipped`, `tour_chapter_skipped`, carrying step or chapter ids only) through the existing analytics path. Screenshots: the ones showing the popup header need refreshing, see Screenshot Notes |
+| Both | set at release | set at release | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest change and no new permission: the tour's progress is one record in `chrome.storage.local`, already covered by `storage`, so there is no re-approval prompt. The tour has seven chapters with a header each, fifteen "try it" steps and a thin pulsing orange ring on the control to use next. Eleven of them (four drag-and-drop steps, saving a tab, "Open in browser", "Deduplicate tabs", selecting items, two search steps, undo and redo) work on two sample groups ("Tour demo", "Tour demo 2") that the tour adds for those chapters and removes again by itself, and which never leave the device (not synced, backed up, exported, shared or counted toward a plan). The "save a tab" step opens one spare tab of the extension's own (`tour-practice.html`, a packaged page, opened in the background with `chrome.tabs.create`, which needs no extra permission) and closes it again; it is the only tab that step can move, and it is left out of the "continue on another device" snapshot. During those chapters "Open in browser" opens nothing, and "Undo" and "Redo" run on a history of the sample data alone, so the user's own tabs, groups and undo history are untouched. The group made while trying is offered for removal at the end. No new data leaves the device apart from six anonymous usage events (`tour_started`, `tour_completed`, `tour_skipped`, `tour_task_done`, `tour_step_skipped`, `tour_chapter_skipped`, carrying step or chapter ids only) through the existing analytics path. Screenshots: the ones showing the popup header need refreshing, see Screenshot Notes |
 | Both | set at release | set at release | next release (unreleased) | — | Draft: search shows what matched, and matches only the text as typed (in sequence, any case; letters out of order no longer match), best matches first in the search list. Matched text is highlighted (title, address, window, group and Chrome tab-group names, and the rows of the search list); tabs, windows and groups that do not match are hidden, or faded, by a new local setting "Tabs that do not match a search" (Hide by default, Dim) in Settings, General; the query stays until the user clears it (a clear button in the search field, next to the header box and on the "hidden by search" line); "Now Open" is searched like any group. No manifest change, no new permission, no new data: the query never leaves the popup's memory and the setting is one more field of the existing local preferences record. Dragging and keyboard moving are switched off while a search hides rows. Screenshots: see Screenshot Notes |
 
+| Both | set at release | set at release | next release (unreleased) | — | Draft: after the extension is removed, the browser opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL`. No manifest change and no new permission. The address carries only the extension version, browser and release channel; see Technical privacy notes. The dashboard's privacy tab needs no new tick (the extension sends nothing; the page itself is the website's) |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
 Betas 1–3 predate the store-version offset, so their manifest version is the plain
@@ -591,6 +606,10 @@ Paste into the dashboard's test-instructions field for the v2 to v3 update:
 > background script only handles reminder alarms the user set, the right-click menu, the toolbar
 > badge, keyboard shortcuts and the URL rules the user created. AI features
 > are not enabled in this release. Data saved by version 2 is not imported.
+
+Uninstall survey: when the extension is removed, the browser opens the TabMerger website's
+`/uninstalled` page (set with `runtime.setUninstallURL`, no permission). Its address holds only the
+extension version, browser and channel. Answering the survey there is optional.
 
 ### Known Issues / Limitations
 
