@@ -2,7 +2,7 @@
 
 Codecov shows coverage trends and test results (Test Analytics) for `lbragile/TabMerger`. It is
 **informational**: it never gates a merge, a release or a deploy. The real gates stay as they are:
-the 80% Vitest thresholds and `scripts/ci/coverage-delta.mjs` (both in the `unit-tests` job of
+the 80% Vitest thresholds and `scripts/ci/coverage-delta.mjs` (both in the `unit-tests` matrix legs of
 `.github/workflows/ci.yml`).
 
 ## How it is wired
@@ -13,10 +13,10 @@ and uploads them with `codecov/codecov-action`.
 
 | Test job | Artifact | Files | Codecov flag |
 |---|---|---|---|
-| `unit-tests` | `codecov-unit` | extension and web `coverage-final.json` | `extension`, `web` |
-| `unit-tests` | `codecov-unit` | extension and web Vitest JUnit (`coverage/junit.xml`) | `unit-extension`, `unit-web` |
+| `unit-tests` (each package leg) | `codecov-unit-extension`, `codecov-unit-web` | `coverage-final.json` | `extension`, `web` |
+| `unit-tests` (each package leg) | `codecov-unit-extension`, `codecov-unit-web` | Vitest JUnit (`junit.xml`) | `unit-extension`, `unit-web` |
 | `integration-tests` | `codecov-integration` | Vitest JUnit | `integration` |
-| `e2e-extension` (each shard) | `codecov-e2e-extension-N` | Playwright JUnit | `e2e-extension` |
+| `e2e-extension` (each shard) | `codecov-e2e-extension-N` | Playwright JUnit (the `codecov` job builds the file list, so the shard count can change) | `e2e-extension` |
 | `e2e-web` | `codecov-e2e-web` | Playwright JUnit | `e2e-web` |
 
 Why a separate job: `release` and the deploys wait on the test jobs. An upload step inside them

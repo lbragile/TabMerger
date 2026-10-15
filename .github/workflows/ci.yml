@@ -5,11 +5,16 @@ name: CI
 # Branches → master → Branch protection rules → "Require status checks":
 #   • Static Checks        (static-checks — secret scan + type-check + lint;
 #                            dep-audit runs inside it as a non-blocking step)
-#   • Unit Tests           (unit-tests — also runs the coverage-delta compare
-#                            as its last steps, same job)
+#   • Unit Tests           (unit-tests-gate — an aggregator over the unit-tests
+#                            matrix, legs "Unit Tests (extension)" / "Unit Tests (web)",
+#                            which are NOT required themselves; each leg also runs its
+#                            package's coverage-delta compare as its last steps)
 #   • Integration Tests    (integration-tests)
-#   • E2E Tests            (e2e-extension — 3 shards, "E2E Tests (Extension) 1/3".."3/3";
-#                            e2e-web)
+#   • E2E Tests (Extension) (e2e-extension-gate — an aggregator over the e2e-extension
+#                            shards "E2E Tests (Extension) shard N", which are NOT
+#                            required themselves, so the shard count can change without
+#                            touching the rulesets)
+#   • E2E Tests (Web)      (e2e-web)
 #   • Build                (build — extension + web, was build-extension/build-web)
 #   • Visual Regression    NOT required, on purpose — the visual-regression job
 #                          below is informational (continue-on-error, in no
@@ -162,16 +167,20 @@ jobs:
 
   # ── Gate 1: unit tests + coverage floor (each package's `test` script runs
   # `vitest run`; the ≥80% floor is enforced by vitest.config.ts `thresholds`,
-  # which fails the job itself if any metric drops below 80%). The coverage
-  # delta comparison against the default-branch baseline now runs as the last
-  # steps of THIS job (folded in from the former separate `coverage-delta`
-  # job) — same checkout, same install, and it can read the just-produced
-  # coverage-summary.json files straight off disk instead of a same-run
-  # artifact upload/download round trip.
+  # which fails the job itself if any metric drops below 80%). One matrix leg per
+  # package so the two suites run in parallel instead of back to back. The
+  # coverage delta comparison against the default-branch baseline runs as the last
+  # steps of EACH leg (same checkout, same install; it reads the just-produced
+  # coverage-summary.json straight off disk). The required check "Unit Tests" is the
+  # `unit-tests-gate` aggregator below, not these legs.
   unit-tests:
-    name: Unit Tests
+    name: Unit Tests (${{ matrix.pkg }})
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        pkg: [extension, web]
     # actions: read lets dawidd6/action-download-artifact list this repo's runs and
     # artifacts for the coverage baseline. Without it the default (contents: read only)
     # makes that step fail, and since it is continue-on-error the coverage-delta
@@ -191,31 +200,33 @@ jobs:
       # `--reporter=junit` also writes the test results that the `codecov` job sends to
       # Codecov's Tests tab; `--reporter=default` keeps the normal console output.
       - name: Test extension (with coverage)
+        if: matrix.pkg == 'extension'
         run: pnpm --filter @tabmerger/extension test:coverage --reporter=default --reporter=junit --outputFile.junit=coverage/junit.xml
 
       # No `--` before the flags: pnpm passes a literal `--` through, and Vitest then reads
       # `--coverage` as a file filter. That ran the web tests WITHOUT coverage, so the web
       # thresholds and the web delta check below were silently not applied.
       - name: Test web (with coverage)
+        if: matrix.pkg == 'web'
         run: pnpm --filter @tabmerger/web test --coverage --reporter=default --reporter=junit --outputFile.junit=coverage/junit.xml
 
       # Repo-level release tooling (scripts/set-release-version.mjs, run by semantic-release)
       - name: Test release scripts
+        if: matrix.pkg == 'extension'
         run: pnpm test:scripts
 
       # Baseline for future PRs to diff against — only refreshed on the default
       # branch, so a bad PR can never poison the baseline other PRs compare to.
       # Deliberately NOT refreshed from `beta`: beta carries unreleased work, and
       # letting it move the baseline would let a coverage drop ride into stable
-      # unnoticed at promotion time.
+      # unnoticed at promotion time. One artifact per package, so each leg downloads
+      # only its own.
       - name: Publish coverage baseline (default branch only)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: coverage-baseline
-          path: |
-            packages/extension/coverage/coverage-summary.json
-            packages/web/coverage/coverage-summary.json
+          name: coverage-baseline-${{ matrix.pkg }}
+          path: packages/${{ matrix.pkg }}/coverage/coverage-summary.json
           retention-days: 90
           overwrite: true
 
@@ -233,43 +244,59 @@ jobs:
           workflow: ci.yml
           # Must match the branch that PUBLISHES the baseline above.
           branch: main
-          name: coverage-baseline
+          name: coverage-baseline-${{ matrix.pkg }}
           path: baseline
 
-      # The baseline paths have NO `packages/` level: upload-artifact roots an artifact
-      # with several paths at their least common ancestor (`packages/`), so the files
-      # unpack as `baseline/<package>/coverage/...`. With the wrong path the script
-      # finds no baseline and skips, which is how this check once compared nothing.
-      - name: Compare extension coverage
+      # The baseline path is just `baseline/coverage-summary.json`: the artifact holds ONE
+      # literal file path, and upload-artifact roots an artifact at the least common
+      # ancestor of its paths, which for a single file is the file's own folder, so it
+      # unpacks as the bare file name (no `<package>/coverage/` levels, unlike the old
+      # two-package artifact). With the wrong path the script finds no baseline and
+      # skips, which is how this check once compared nothing. The very first run after
+      # this split has no per-package baseline yet and soft-skips once.
+      - name: Compare coverage against the baseline
         run: |
           node scripts/ci/coverage-delta.mjs \
-            baseline/extension/coverage/coverage-summary.json \
-            packages/extension/coverage/coverage-summary.json \
-            2
-
-      - name: Compare web coverage
-        run: |
-          node scripts/ci/coverage-delta.mjs \
-            baseline/web/coverage/coverage-summary.json \
-            packages/web/coverage/coverage-summary.json \
+            baseline/coverage-summary.json \
+            packages/${{ matrix.pkg }}/coverage/coverage-summary.json \
             2
 
       # Hand the reports to the `codecov` job. Sending them to Codecov from here would put
       # a third-party service on the release path; saving an artifact does not. Never fails
-      # the job.
+      # the job. Both files share a folder, so the artifact unpacks as the bare file names:
+      # `codecov-unit-<pkg>/coverage-final.json` and `codecov-unit-<pkg>/junit.xml`.
       - name: Keep reports for Codecov
         if: ${{ !cancelled() }}
         continue-on-error: true
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: codecov-unit
+          name: codecov-unit-${{ matrix.pkg }}
           path: |
-            packages/extension/coverage/coverage-final.json
-            packages/extension/coverage/junit.xml
-            packages/web/coverage/coverage-final.json
-            packages/web/coverage/junit.xml
+            packages/${{ matrix.pkg }}/coverage/coverage-final.json
+            packages/${{ matrix.pkg }}/coverage/junit.xml
           if-no-files-found: ignore
           retention-days: 1
+
+  # Aggregator that keeps the required check name "Unit Tests" stable while the real work
+  # is split across matrix legs. `always()` so it reports (red) when a leg fails or is
+  # cancelled instead of being skipped (a skipped required check counts as passing).
+  # Nothing `needs` it: `release` and `deploy-web-preview` wait on the matrix directly.
+  unit-tests-gate:
+    name: Unit Tests
+    needs: unit-tests
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every unit-test leg to pass
+        env:
+          RESULT: ${{ needs.unit-tests.result }}
+        run: |
+          echo "unit-tests matrix result: $RESULT"
+          if [ "$RESULT" != "success" ]; then
+            echo "::error::Unit tests did not pass (result: $RESULT)."
+            exit 1
+          fi
 
   # ── Gate 2: integration tests (real IndexedDB round trips) ──
   integration-tests:
@@ -298,17 +325,21 @@ jobs:
 
   # ── Gate 3: E2E — both fixture sets, non-visual specs only (visual specs
   # are handled by the informational visual-regression job below) ──
-  # Sharded 3 ways (the suite runs one worker per runner, so shards are the only
-  # parallelism). The job id stays `e2e-extension` so `release.needs` and
-  # `deploy-web-preview.needs` wait on every shard. Check names are now
-  # "E2E Tests (Extension) 1/3".."3/3" — update any branch-protection rule that
-  # required the old "E2E Tests (Extension)" name.
+  # Sharded 5 ways, per TEST (e2e/playwright.config.ts has `fullyParallel: true`, so
+  # Playwright splits individual tests across shards instead of whole spec files, which
+  # is what keeps the shards even). The suite still runs one worker per runner, so shards
+  # are the only parallelism. The shard count lives in ONE place: the `shard` list in the
+  # matrix below (`strategy.job-total` feeds `--shard=N/TOTAL`). The job id stays
+  # `e2e-extension` so `release.needs` and `deploy-web-preview.needs` wait on every
+  # shard. Shard checks are named "E2E Tests (Extension) shard N" and are NOT required:
+  # the required check "E2E Tests (Extension)" is the `e2e-extension-gate` aggregator
+  # after this job, so changing the shard count never touches the rulesets.
   #
   # Skipping uses a gate step, NOT a job-level `if:`: a skipped `needs` dependency
   # would silently skip `release` and `deploy-web-preview`. A gated job still
   # finishes green within seconds.
   e2e-extension:
-    name: E2E Tests (Extension) ${{ matrix.shard }}/3
+    name: E2E Tests (Extension) shard ${{ matrix.shard }}
     runs-on: ubuntu-latest
     # The official image already contains the browsers and their system libraries, so
     # there is no browser cache or `playwright install --with-deps` (apt took 479s).
@@ -323,7 +354,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        # The only place the shard count is set; add or drop a number to resize.
+        shard: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -390,7 +422,7 @@ jobs:
         if: steps.gate.outputs.run == 'true'
       # No `--` before --shard: pnpm appends args after the script name as-is, and a
       # literal `--` would make Playwright read --shard as a file filter.
-      - run: pnpm --filter @tabmerger/extension test:e2e --shard=${{ matrix.shard }}/3
+      - run: pnpm --filter @tabmerger/extension test:e2e --shard=${{ matrix.shard }}/${{ strategy.job-total }}
         if: steps.gate.outputs.run == 'true'
         env:
           # Makes e2e/playwright.config.ts add the junit reporter (test results for the
@@ -411,6 +443,27 @@ jobs:
           path: packages/extension/e2e/junit-e2e-extension-${{ matrix.shard }}.xml
           if-no-files-found: ignore
           retention-days: 1
+
+  # Aggregator that keeps the required check name "E2E Tests (Extension)" stable across
+  # shard-count changes. The shards always run (they skip via a gate STEP, never a
+  # job-level `if`), so anything but `success` means a shard failed or was cancelled.
+  # `always()` so a failed shard turns this red rather than skipping it.
+  e2e-extension-gate:
+    name: E2E Tests (Extension)
+    needs: e2e-extension
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every extension e2e shard to pass
+        env:
+          RESULT: ${{ needs.e2e-extension.result }}
+        run: |
+          echo "e2e-extension matrix result: $RESULT"
+          if [ "$RESULT" != "success" ]; then
+            echo "::error::Extension e2e did not pass (result: $RESULT)."
+            exit 1
+          fi
 
   e2e-web:
     name: E2E Tests (Web)
@@ -537,29 +590,29 @@ jobs:
         run: find codecov-reports -type f 2>/dev/null | sort || true
 
       - name: Coverage — extension
-        if: ${{ hashFiles('codecov-reports/codecov-unit/extension/coverage/coverage-final.json') != '' }}
+        if: ${{ hashFiles('codecov-reports/codecov-unit-extension/coverage-final.json') != '' }}
         continue-on-error: true
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
           disable_search: true
-          files: codecov-reports/codecov-unit/extension/coverage/coverage-final.json
+          files: codecov-reports/codecov-unit-extension/coverage-final.json
           flags: extension
 
       - name: Coverage — web
-        if: ${{ hashFiles('codecov-reports/codecov-unit/web/coverage/coverage-final.json') != '' }}
+        if: ${{ hashFiles('codecov-reports/codecov-unit-web/coverage-final.json') != '' }}
         continue-on-error: true
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
           use_oidc: ${{ env.USE_OIDC }}
           fail_ci_if_error: false
           disable_search: true
-          files: codecov-reports/codecov-unit/web/coverage/coverage-final.json
+          files: codecov-reports/codecov-unit-web/coverage-final.json
           flags: web
 
       - name: Test results — unit (extension)
-        if: ${{ hashFiles('codecov-reports/codecov-unit/extension/coverage/junit.xml') != '' }}
+        if: ${{ hashFiles('codecov-reports/codecov-unit-extension/junit.xml') != '' }}
         continue-on-error: true
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
@@ -567,11 +620,11 @@ jobs:
           fail_ci_if_error: false
           disable_search: true
           report_type: test_results
-          files: codecov-reports/codecov-unit/extension/coverage/junit.xml
+          files: codecov-reports/codecov-unit-extension/junit.xml
           flags: unit-extension
 
       - name: Test results — unit (web)
-        if: ${{ hashFiles('codecov-reports/codecov-unit/web/coverage/junit.xml') != '' }}
+        if: ${{ hashFiles('codecov-reports/codecov-unit-web/junit.xml') != '' }}
         continue-on-error: true
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
@@ -579,7 +632,7 @@ jobs:
           fail_ci_if_error: false
           disable_search: true
           report_type: test_results
-          files: codecov-reports/codecov-unit/web/coverage/junit.xml
+          files: codecov-reports/codecov-unit-web/junit.xml
           flags: unit-web
 
       - name: Test results — integration
@@ -594,8 +647,17 @@ jobs:
           files: codecov-reports/codecov-integration/junit-integration.xml
           flags: integration
 
+      # One comma-separated list of every shard's JUnit file, built here so the shard
+      # count can change without editing this job.
+      - name: List e2e (extension) shard reports
+        id: e2e_ext
+        run: |
+          files=$(find codecov-reports -path 'codecov-reports/codecov-e2e-extension-*/junit-e2e-extension-*.xml' -type f 2>/dev/null | sort | paste -sd, -)
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+          echo "e2e (extension) reports: ${files:-none}"
+
       - name: Test results — e2e (extension, all shards)
-        if: ${{ hashFiles('codecov-reports/codecov-e2e-extension-*/junit-e2e-extension-*.xml') != '' }}
+        if: ${{ steps.e2e_ext.outputs.files != '' }}
         continue-on-error: true
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
@@ -603,7 +665,7 @@ jobs:
           fail_ci_if_error: false
           disable_search: true
           report_type: test_results
-          files: codecov-reports/codecov-e2e-extension-1/junit-e2e-extension-1.xml,codecov-reports/codecov-e2e-extension-2/junit-e2e-extension-2.xml,codecov-reports/codecov-e2e-extension-3/junit-e2e-extension-3.xml
+          files: ${{ steps.e2e_ext.outputs.files }}
           flags: e2e-extension
 
       - name: Test results — e2e (web)
@@ -1012,6 +1074,11 @@ jobs:
     # visual-regression is deliberately NOT listed — it is informational
     # (continue-on-error, see that job's comment) and must never delay or block a
     # release. Do not add it here.
+    #
+    # `unit-tests` and `e2e-extension` are matrices: `needs` waits for every leg/shard and
+    # the job is skipped unless all succeeded, which is exactly what the gate wants. The
+    # `*-gate` aggregators exist only to give the rulesets stable check names; they are
+    # deliberately not listed (they would add a runner hop and prove nothing extra).
     needs:
       [
         static-checks,
