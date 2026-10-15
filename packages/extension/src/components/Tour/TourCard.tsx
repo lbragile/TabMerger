@@ -39,6 +39,12 @@ interface TourCardProps {
    * chapter's description is left out.
    */
   compact?: boolean;
+  /**
+   * True on a drag step: the card is wide and low (docked along the bottom of the main panel by
+   * `Tour.tsx`), so the rows being dragged and the drop marker above it stay in view. The
+   * chapter header becomes one line and the "Skip" links share the row of the buttons.
+   */
+  wide?: boolean;
   /** Last step only: the practice group, while there is one to offer. */
   practice?: TourPracticeOffer | null;
   onNext: () => void;
@@ -56,7 +62,7 @@ interface TourCardProps {
 export const TOUR_DIALOG_LABEL = 'TabMerger tour';
 
 // Solid, high-contrast buttons from the theme's own foreground/background pair: AA in both
-// themes without depending on the brand colour (white on the light theme's cyan is too faint).
+// themes without depending on the brand color (white on the light theme's cyan is too faint).
 const BUTTON =
   'inline-flex h-7 items-center justify-center px-3 text-xs font-medium cursor-pointer transition-colors motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 const LINK =
@@ -74,7 +80,7 @@ const plural = (count: number, word: string) => `${count} ${word}${count === 1 ?
  * description so the step's own text keeps the room: the card must fit the 800x600 popup.
  *
  * How a step is announced: ONCE, by the polite status line at the bottom, which carries the
- * whole step ("Chapter 2 of 6, Organise with groups. Step 5 of 23: title. text"), with the
+ * whole step ("Chapter 2 of 6, Organize with groups. Step 5 of 23: title. text"), with the
  * chapter's description after the chapter title on the step that introduces the chapter and
  * on no other step. It is the only thing that
  * changes for a screen reader when the step changes, whether the user pressed a button or an
@@ -95,7 +101,7 @@ const plural = (count: number, word: string) => `${count} ${word}${count === 1 ?
  * `<body>`, which this card (a child of the body) would otherwise inherit.
  */
 export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourCard(
-  { step, body, progress, position, taskStatus, subStep = null, introducesChapter = false, compact = false, practice, onNext, onBack, onSkip, onSkipStep, onSkipChapter, onRemovePractice },
+  { step, body, progress, position, taskStatus, subStep = null, introducesChapter = false, compact = false, wide = false, practice, onNext, onBack, onSkip, onSkipStep, onSkipChapter, onRemovePractice },
   ref
 ) {
   const titleId = useId();
@@ -105,7 +111,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
   const stepLine = `Step ${progress.step} of ${progress.total}`;
   const doneText = step.doneText ?? 'Done.';
 
-  const showChapterIntro = !compact && !!progress.chapterDescription && (introducesChapter || progress.stepInChapter === 1);
+  const showChapterIntro = !compact && !wide && !!progress.chapterDescription && (introducesChapter || progress.stepInChapter === 1);
   const chapterIntro = introducesChapter && progress.chapterDescription ? ` ${progress.chapterDescription}` : '';
   // A step with its own text per sub-step is announced whole, once: every sub-step in order,
   // then the keyboard way. The line shown changes as the user goes; the announcement does not.
@@ -132,7 +138,8 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
       data-tour-card={step.id}
       data-tour-task={taskStatus}
       className={cn(
-        'pointer-events-auto fixed z-[61] flex max-h-[calc(100vh-1rem)] w-80 max-w-[calc(100vw-1rem)] flex-col border border-foreground/30 bg-popover p-4 text-popover-foreground shadow-lg',
+        'pointer-events-auto fixed z-[61] flex max-h-[calc(100vh-1rem)] max-w-[calc(100vw-1rem)] flex-col border border-foreground/30 bg-popover text-popover-foreground shadow-lg',
+        wide ? 'w-[34rem] px-4 py-3' : 'w-80 p-4',
         'focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
         // Measured before it is shown, so it never flashes in the wrong place
         !position && 'invisible'
@@ -142,12 +149,22 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
       <div {...{ [TOUR_BODY_ATTR]: '' }} className="min-h-0 flex-1 overflow-y-auto">
         <div data-tour-chapter="" className="border-l-2 border-foreground pl-2">
           <div className="flex items-baseline justify-between gap-2 text-[0.6875rem] font-medium uppercase tracking-wide text-muted-foreground">
-            <p className="min-w-0 truncate">{chapterLine}</p>
+            <p className="min-w-0 truncate">
+              {chapterLine}
+              {wide && (
+                <span data-tour-chapter-title="" className="font-semibold text-foreground">
+                  {' · '}
+                  {progress.chapterTitle}
+                </span>
+              )}
+            </p>
             <p className="shrink-0">{stepLine}</p>
           </div>
-          <p data-tour-chapter-title="" className="mt-0.5 text-sm font-semibold leading-snug">
-            {progress.chapterTitle}
-          </p>
+          {!wide && (
+            <p data-tour-chapter-title="" className="mt-0.5 text-sm font-semibold leading-snug">
+              {progress.chapterTitle}
+            </p>
+          )}
           {showChapterIntro && (
             <p data-tour-chapter-description="" className="mt-1 text-xs leading-snug text-muted-foreground">
               {progress.chapterDescription}
@@ -166,7 +183,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
           })}
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className={cn('flex items-center justify-between gap-2', wide ? 'mt-2' : 'mt-3')}>
           <h2 id={titleId} className="min-w-0 text-[0.8125rem] font-semibold">
             {step.title}
           </h2>
@@ -186,7 +203,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
             </p>
           )}
         </div>
-        <p className="mt-1.5 text-[0.8125rem] leading-relaxed">{body}</p>
+        <p className={cn('text-[0.8125rem]', wide ? 'mt-1 leading-snug' : 'mt-1.5 leading-relaxed')}>{body}</p>
         {showSubStepText && subStep && (
           <>
             <p data-tour-substep-text="" className="mt-2 border-l-2 border-secondary pl-2 text-[0.8125rem] font-medium leading-snug">
@@ -201,7 +218,9 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
           </>
         )}
 
-        {taskStatus === 'todo' && (
+        {/* Left out while a sub-step's own instruction is up: that line and the "2 of 3" marker
+            already say it is the user's turn, and the card has to stay small next to a drag */}
+        {taskStatus === 'todo' && !showSubStepText && (
           <p data-tour-task-line="todo" className="mt-2.5 flex items-start gap-1.5 border border-foreground/30 px-2 py-1.5 text-xs font-medium">
             <Hand aria-hidden="true" className="mt-px h-3.5 w-3.5 shrink-0" />
             <span>Your turn. This step waits until you have tried it.</span>
@@ -233,7 +252,10 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
         )}
       </div>
 
-      <div className="mt-4 flex shrink-0 items-center justify-end gap-2">
+      {/* Wide: one row, the "Skip" links on the left of the buttons. They stay AFTER the buttons
+          in the document (and so in the Tab order) and are only drawn first (`order-first`). */}
+      <div className={cn(wide ? 'mt-2.5 flex shrink-0 items-center justify-between gap-3' : 'contents')}>
+      <div className={cn('flex shrink-0 items-center justify-end gap-2', !wide && 'mt-4')}>
         {!isFirst && (
           <button type="button" className={cn(BUTTON, 'border border-border hover:bg-muted')} onClick={onBack}>
             Back
@@ -251,7 +273,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
       </div>
 
       {!isLast && (
-        <div className="mt-2.5 flex shrink-0 items-center justify-between gap-3 border-t border-foreground/15 pt-2">
+        <div className={cn('flex shrink-0 items-center', wide ? 'order-first gap-4' : 'mt-2.5 justify-between gap-3 border-t border-foreground/15 pt-2')}>
           <button type="button" className={LINK} onClick={onSkip}>
             Skip tour
           </button>
@@ -262,6 +284,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
           )}
         </div>
       )}
+      </div>
 
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {announced}

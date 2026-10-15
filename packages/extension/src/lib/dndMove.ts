@@ -348,6 +348,11 @@ export function isTourDemoItem(model: DndModel, id: string): boolean {
  * practice groups: practice tabs never land in a real group, in Now Open or in a new group, a
  * practice group is only reordered against another practice group, and nothing of the user's
  * can be dropped into practice data (which is deleted when the tour ends).
+ *
+ * One exception, and one extra lock, while the tour's "save a tab" step is up
+ * (`model.tourPractice`): the tour's own practice tab in "Now Open", dragged by itself, may be
+ * dropped on practice data (that is the step), and every other move that involves anything of
+ * the user's is refused, so nothing but that one tab can be saved, moved or closed from there.
  * Returns `true` when the move is refused for that reason.
  */
 function breaksTourSandbox(model: DndModel, active: DndRef, over: DndRef, oKind: DndRefType): boolean {
@@ -357,6 +362,10 @@ function breaksTourSandbox(model: DndModel, active: DndRef, over: DndRef, oKind:
   const targetGroupId =
     oKind === 'new-group' ? undefined : oKind === 'new-window' ? model.groupIds[over.groupIndex ?? -1] : owningGroupId(model, over.id);
   const targetDemo = isDemo(targetGroupId);
+  if (model.tourPractice) {
+    if (sources.length === 1 && sources[0] === model.tourPractice.tabId) return !targetDemo;
+    return !(targetDemo && sourceDemo.every(Boolean));
+  }
   if (!targetDemo && !sourceDemo.some(Boolean)) return false; // nothing of the tour's is involved
   return !(targetDemo && sourceDemo.every(Boolean));
 }

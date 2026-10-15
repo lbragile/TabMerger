@@ -3,6 +3,7 @@ import type { BrowserContext, Page } from '@playwright/test';
 import { test, expect } from '../fixtures';
 import { TOUR_STORAGE_KEY, openPopup, seedAndReload, waitForRenameInputReady, waitForStoredGroup } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
+import { FRAME_EDGE_PX, stepId } from '../tourIds';
 
 /** Reads the tour record from `chrome.storage.local` through the service worker. */
 async function readTour(context: BrowserContext): Promise<unknown> {
@@ -193,7 +194,7 @@ test.describe('Guided tour — replay and lock (tour already finished)', () => {
     await waitForTour(context, (r) => r?.status === 'pending' && typeof r.practiceGroupId === 'string', 'practice group remembered');
 
     // Colour: only the practice group's dot works, and the step completes on the stored colour
-    await goTo('group-colour');
+    await goTo(stepId('group-color'));
     await expect(card).toHaveAttribute('data-tour-task', 'todo');
     const workBox = (await page.getByRole('button', { name: 'Work', exact: true }).boundingBox())!;
     await page.mouse.click(workBox.x + workBox.width / 2, workBox.y + workBox.height / 2);
@@ -203,8 +204,8 @@ test.describe('Guided tour — replay and lock (tour already finished)', () => {
     await expect(picker).toBeVisible();
     // the ring goes around the row and the picker, fully inside the popup
     const ring = await page.locator('[data-tour-spotlight]').boundingBox();
-    expect(ring!.x).toBeGreaterThanOrEqual(10);
-    expect(ring!.y + ring!.height).toBeLessThanOrEqual(590);
+    expect(ring!.x).toBeGreaterThanOrEqual(FRAME_EDGE_PX - 0.5);
+    expect(ring!.y + ring!.height).toBeLessThanOrEqual(600 - FRAME_EDGE_PX + 0.5);
     await picker.locator('button[title^="rgba"]').nth(4).click();
     await picker.getByRole('button', { name: 'Apply' }).click();
     await expect(card).toHaveAttribute('data-tour-task', 'done');
@@ -218,7 +219,7 @@ test.describe('Guided tour — replay and lock (tour already finished)', () => {
     // Search: typing completes it, leaving the step clears the search again
     await goTo('search');
     await page.locator('[data-tour="search"]').click();
-    await page.keyboard.type('jira');
+    await page.keyboard.type('sam');
     await expect(card).toHaveAttribute('data-tour-task', 'done');
     await card.locator('button', { hasText: /^Next$/ }).click();
     await expect(page.locator('[data-tour="search-overlay"]')).toHaveCount(0);
@@ -278,13 +279,13 @@ test.describe('Guided tour — replay and lock (tour already finished)', () => {
     await page.keyboard.press('Enter');
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
     await cardOf(page).locator('button', { hasText: /^Next$/ }).click();
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
-    await waitForTour(context, (r) => r?.stepId === 'group-colour' && typeof r.practiceGroupId === 'string', 'progress stored');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
+    await waitForTour(context, (r) => r?.stepId === stepId('group-color') && typeof r.practiceGroupId === 'string', 'progress stored');
     await waitForStoredGroup(page, (g) => g.name === 'Practice', 'practice group written');
     await page.close();
 
     page = await openPopup(context, extensionId);
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'todo');
 
     await cardOf(page).getByRole('button', { name: 'Skip tour' }).click();
@@ -300,7 +301,7 @@ test.describe('Guided tour — replay and lock (tour already finished)', () => {
     await seedAndReload(page, [NOW_OPEN, ...five]);
     await page.getByRole('button', { name: 'Take the tour' }).click();
     const card = page.locator('[data-tour-card]');
-    for (const id of ['make-group', 'group-colour', 'group-pin']) {
+    for (const id of ['make-group', stepId('group-color'), 'group-pin']) {
       for (let i = 0; i < 10 && (await card.getAttribute('data-tour-card')) !== id; i++) {
         await card.locator('button', { hasText: /^Next$/ }).click();
       }
@@ -309,7 +310,7 @@ test.describe('Guided tour — replay and lock (tour already finished)', () => {
     }
     await expect(page.locator('[data-sidebar-group-index]')).toHaveCount(6);
     await card.getByRole('button', { name: 'Skip chapter' }).click();
-    await expect(card).toHaveAttribute('data-tour-card', 'save-tabs');
+    await expect(card).toHaveAttribute('data-tour-card', stepId('drag-tab-reorder'));
   });
 
   test('a tour step has no serious or critical accessibility violations', async ({ context, extensionId }) => {

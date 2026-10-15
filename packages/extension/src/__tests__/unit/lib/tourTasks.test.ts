@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   TOUR_TASKS,
+  TOUR_FOREIGN_DIALOG,
   activeTourTask,
   findNewGroup,
   findPracticeGroup,
@@ -37,6 +38,10 @@ const ctx = (over: Partial<TourTaskContext> = {}): TourTaskContext => ({
   searchFilter: '',
   theme: 'system',
   modalType: null,
+  practiceTab: { id: null, url: '', state: 'off' },
+  signals: {},
+  selectionMode: false,
+  selectedIds: [],
   ...over
 })
 const step = (id: string) => TOUR_STEPS.find((s) => s.id === id) as TourStep
@@ -97,19 +102,19 @@ describe('make-group', () => {
   })
 })
 
-describe('group-colour and group-pin', () => {
+describe('group-color and group-pin', () => {
   const withPractice = (extra: Partial<Group> = {}) => ctx({ groups: [NOW_OPEN, group('other'), group('p', extra)], practiceGroupId: 'p' })
 
   it('are not offered without a practice group, so the tour never asks for a change to an existing group', () => {
     const existing = ctx({ groups: [NOW_OPEN, group('other')] })
-    expect(TOUR_TASKS['group-colour'].available(existing)).toBe(false)
+    expect(TOUR_TASKS['group-color'].available(existing)).toBe(false)
     expect(TOUR_TASKS['group-pin'].available(existing)).toBe(false)
-    expect(step('group-colour').fallbackBody).toBeTruthy()
+    expect(step('group-color').fallbackBody).toBeTruthy()
     expect(step('group-pin').fallbackBody).toBeTruthy()
   })
 
-  it('colour is done when the stored colour differs from the one the step started with', () => {
-    const task = TOUR_TASKS['group-colour']
+  it('color is done when the stored color differs from the one the step started with', () => {
+    const task = TOUR_TASKS['group-color']
     const baseline = task.baseline(withPractice())
     expect(task.isDone(withPractice(), baseline)).toBe(false)
     expect(task.isDone(withPractice({ color: 'rgba(2,2,2,1)' }), baseline)).toBe(true)
@@ -117,8 +122,8 @@ describe('group-colour and group-pin', () => {
     expect(task.isDone(ctx({ groups: [NOW_OPEN, group('other', { color: 'rgba(2,2,2,1)' }), group('p')], practiceGroupId: 'p' }), baseline)).toBe(false)
   })
 
-  it('colour unlocks the dot and its picker, nothing else in the row', () => {
-    const { allow, lockRoots } = TOUR_TASKS['group-colour'].targets(withPractice())
+  it('color unlocks the dot and its picker, nothing else in the row', () => {
+    const { allow, lockRoots } = TOUR_TASKS['group-color'].targets(withPractice())
     expect(allow).toEqual(['[data-sidebar-group-index][data-tm-dnd-id="p"] [data-tour="group-color"]', '[data-tour="color-picker"]'])
     expect(lockRoots).toEqual([])
   })
@@ -135,7 +140,8 @@ describe('search and theme', () => {
   it('search is done once there is a query', () => {
     expect(TOUR_TASKS.search.isDone(ctx(), true)).toBe(false)
     expect(TOUR_TASKS.search.isDone(ctx({ searchFilter: '   ' }), true)).toBe(false)
-    expect(TOUR_TASKS.search.isDone(ctx({ searchFilter: 'work' }), true)).toBe(true)
+    // a query that matches no sample tab is not done
+    expect(TOUR_TASKS.search.isDone(ctx({ searchFilter: 'work' }), true)).toBe(false)
   })
 
   it('theme waits for settings to load, then is done when the SAVED theme differs', () => {
@@ -151,7 +157,7 @@ describe('search and theme', () => {
     const closed = TOUR_TASKS.theme.targets(ctx())
     expect(closed.allow).toContain('[data-tour="account-menu"]')
     expect(closed.allow).toContain('[data-tour="menu-settings"]')
-    expect(closed.lockRoots).toEqual(['[data-tour="account-menu-content"]', '[role="dialog"]:not([data-tour-card])'])
+    expect(closed.lockRoots).toEqual(['[data-tour="account-menu-content"]', TOUR_FOREIGN_DIALOG])
     const open = TOUR_TASKS.theme.targets(ctx({ modalType: 'settings' }))
     expect(open.allow).not.toContain('[data-tour="account-menu"]')
     expect(open.allow).toEqual(expect.arrayContaining(['[data-tour="settings-theme"]', '[data-tour="settings-save-button"]']))
@@ -181,13 +187,13 @@ describe('action ring lists, furthest point first', () => {
     ])
   })
 
-  it('group-colour lists only the dot and the swatches until a different colour is being tried', () => {
+  it('group-color lists only the dot and the swatches until a different color is being tried', () => {
     const dot = `${ROW} [data-tour="group-color"]`
     const swatches = `${PICKER} [data-tour="color-swatches"]`
     const apply = `${PICKER} [data-tour="color-apply"]`
-    const t = TOUR_TASKS['group-colour']
+    const t = TOUR_TASKS['group-color']
     expect(t.targets(withPractice({ previewColor: null })).action).toEqual([[swatches], [dot]])
-    // the preview equals the stored colour: nothing to apply yet
+    // the preview equals the stored color: nothing to apply yet
     expect(t.targets(withPractice({ previewColor: 'rgba(1,1,1,1)' })).action).toEqual([[swatches], [dot]])
     expect(t.targets(withPractice({ previewColor: 'rgba(9,9,9,1)' })).action).toEqual([[apply], [swatches], [dot]])
     // no practice group: a preview cannot make Apply the target
@@ -230,13 +236,13 @@ describe('action ring lists, furthest point first', () => {
 describe('availability at the Free group limit', () => {
   const full = [NOW_OPEN, ...['a', 'b', 'c', 'd', 'e'].map((id) => group(id))]
 
-  it('make-group, colour and pin all fall back to read-only text', () => {
+  it('make-group, color and pin all fall back to read-only text', () => {
     const c = ctx({ groups: full })
     expect(activeTourTask(step('make-group'), c)).toBeNull()
-    expect(activeTourTask(step('group-colour'), c)).toBeNull()
+    expect(activeTourTask(step('group-color'), c)).toBeNull()
     expect(activeTourTask(step('group-pin'), c)).toBeNull()
-    // search and theme do not depend on the group count
-    expect(activeTourTask(step('search'), c)).not.toBeNull()
+    // theme does not depend on the group count (search needs the practice groups)
+    expect(activeTourTask(step('search'), c)).toBeNull()
     expect(activeTourTask(step('theme'), c)).not.toBeNull()
   })
 

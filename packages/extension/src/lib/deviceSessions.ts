@@ -6,6 +6,7 @@ import { supabase } from './supabase';
 import { getDataKey } from './encryptionKey';
 import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from './contentUploadKey';
 import { canUploadOnFirefox } from './syncEngine';
+import { withoutTourPracticeTabs } from './tourPracticeTab';
 
 /** Rapid Now Open changes (tab open/close bursts) coalesce into a single push after this window. */
 export const DEVICE_SESSION_DEBOUNCE_MS = 2000;
@@ -94,7 +95,8 @@ async function doPush(): Promise<void> {
     console.warn(`[deviceSessions] Device session not uploaded: ${UPLOAD_BLOCKED_MESSAGE[gate.reason]}`);
     return;
   }
-  const { iv, ct } = await encryptBlob(gate.key, { windows: nowOpen?.windows ?? [] });
+  // (never the guided tour's own spare tab: it is not the user's)
+  const { iv, ct } = await encryptBlob(gate.key, { windows: withoutTourPracticeTabs(nowOpen?.windows ?? []) });
   const snapshotField: EncryptedBlob = { v: 1, iv, ct };
 
   const { error } = await supabase.from('device_sessions').upsert({

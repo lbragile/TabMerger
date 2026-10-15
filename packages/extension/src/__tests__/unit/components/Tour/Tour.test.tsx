@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const { mockTrackEvent, mockDeleteGroup, mockToast, app } = vi.hoisted(() => ({
   mockTrackEvent: vi.fn(),
@@ -15,6 +16,14 @@ vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => ({ data: { available: app.groups } }),
   useDeleteGroup: () => ({ mutate: mockDeleteGroup }),
+  GROUPS_QUERY_KEY: ['groups'],
+}))
+// The practice groups live in IndexedDB: not under test here (see tourDemo.test.ts)
+vi.mock('@/lib/tourDemo', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/tourDemo')>()),
+  ensureTourDemoGroups: vi.fn().mockResolvedValue({ state: { available: [] }, changed: false }),
+  resetTourDemoGroups: vi.fn().mockResolvedValue({ state: { available: [] }, changed: false }),
+  removeTourDemoGroups: vi.fn().mockResolvedValue({ state: { available: [] }, changed: false }),
 }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => ({ data: { theme: app.theme } }) }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ maxGroups: app.maxGroups }) }))
@@ -27,6 +36,18 @@ import { Tour } from '@/components/Tour/Tour'
 import { useUIStore } from '@/stores/uiStore'
 import { TOUR_STORAGE_KEY } from '@/lib/tour'
 import { TOUR_ANCHORS, TOUR_STEPS } from '@/lib/tourSteps'
+
+/** The tour reads and writes the groups query cache (the practice groups), so it needs a client. */
+const renderTour = () => {
+  const client = new QueryClient()
+  const tree = () => (
+    <QueryClientProvider client={client}>
+      <Tour />
+    </QueryClientProvider>
+  )
+  const view = render(tree())
+  return { ...view, rerenderTour: () => view.rerender(tree()) }
+}
 
 const ANCHORS = Object.values(TOUR_ANCHORS)
 /** The steps a build without the AI features shows. */
@@ -70,24 +91,24 @@ beforeEach(() => {
 describe('Tour', () => {
   it('draws nothing while no tour is running', async () => {
     mountApp()
-    render(<Tour />)
+    renderTour()
     await act(async () => {})
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('opens at the first step with the app locked underneath', async () => {
     const root = mountApp()
-    render(<Tour />)
+    renderTour()
     start()
     await expectStep('Welcome to TabMerger')
     expect(screen.getByText(`Step 1 of ${STEPS.length}`)).toBeInTheDocument()
-    expect(screen.getByText('Chapter 1 of 6')).toBeInTheDocument()
+    expect(screen.getByText('Chapter 1 of 7')).toBeInTheDocument()
     expect(lockedCount(root)).toBe(root.children.length)
   })
 
   it('moves focus into the card', async () => {
     mountApp()
-    render(<Tour />)
+    renderTour()
     start()
     const dialog = await screen.findByRole('dialog')
     await waitFor(() => expect(dialog).toHaveFocus())
@@ -96,14 +117,14 @@ describe('Tour', () => {
   it('starts by itself from a pending stored record and resumes at the stored step', async () => {
     mountApp()
     await chrome.storage.local.set({ [TOUR_STORAGE_KEY]: { status: 'pending', stepId: 'group-menu' } })
-    render(<Tour />)
+    renderTour()
     await expectStep('More for each group')
     expect(mockTrackEvent).not.toHaveBeenCalledWith('tour_started', expect.anything())
   })
 
   it('falls back to the first step when the stored step no longer exists', async () => {
     mountApp()
-    render(<Tour />)
+    renderTour()
     start('removed-step')
     await expectStep('Welcome to TabMerger')
   })
@@ -111,7 +132,7 @@ describe('Tour', () => {
   it('drops steps whose anchor is missing and recounts "Step X of N"', async () => {
     mountApp([TOUR_ANCHORS.sessions])
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     const total = STEPS.length - 1
@@ -119,18 +140,19 @@ describe('Tour', () => {
     // walk every step: the sessions step never appears
     const titles: string[] = []
     for (let i = 0; i < total; i++) {
+      // wait for the real condition (this step is up), not a fixed delay: the walk is long and a loaded machine is slow
+      await waitFor(() => expect(screen.getByText(`Step ${i + 1} of ${total}`)).toBeInTheDocument())
       titles.push(screen.getByRole('heading').textContent ?? '')
-      expect(screen.getByText(`Step ${i + 1} of ${total}`)).toBeInTheDocument()
       if (i < total - 1) await next(user)
     }
     expect(titles).not.toContain('Save everything at once')
     expect(titles).toHaveLength(total)
-  })
+  }, 6000)
 
   it('Next and Back move between steps, Back is absent on step 1', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument()
@@ -143,7 +165,7 @@ describe('Tour', () => {
   it('keeps focus inside the card after each step change, also when the focused button goes away', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('now-open')
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Back' }))
@@ -157,7 +179,7 @@ describe('Tour', () => {
   it('saves the current step on every step', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await waitFor(async () => expect(await stored()).toEqual({ status: 'pending', stepId: 'welcome' }))
@@ -168,7 +190,7 @@ describe('Tour', () => {
   it('Left/Right arrows move and stop at the first step; Right never finishes on the last', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await user.keyboard('{ArrowLeft}')
@@ -187,7 +209,7 @@ describe('Tour', () => {
   it('Done on the last step completes the tour, records it and reports the count', async () => {
     const root = mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start(TOUR_STEPS[TOUR_STEPS.length - 1].id)
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Done' }))
@@ -202,7 +224,7 @@ describe('Tour', () => {
   it('Enter on the card walks forward and completes on the last step', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start(STEPS[STEPS.length - 2].id)
     const dialog = await screen.findByRole('dialog')
     await waitFor(() => expect(dialog).toHaveFocus())
@@ -216,7 +238,7 @@ describe('Tour', () => {
   it('Escape on the last step counts as finishing, not skipping', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start(TOUR_STEPS[TOUR_STEPS.length - 1].id)
     await screen.findByRole('dialog')
     await user.keyboard('{Escape}')
@@ -231,7 +253,7 @@ describe('Tour', () => {
     const toasts = document.createElement('section')
     toasts.setAttribute('aria-live', 'polite')
     root.appendChild(toasts)
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     expect(toasts).not.toHaveAttribute('inert')
@@ -241,7 +263,7 @@ describe('Tour', () => {
   it('Skip tour ends it, records done and reports which step', async () => {
     const root = mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await next(user)
@@ -256,7 +278,7 @@ describe('Tour', () => {
   it('Escape skips', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await user.keyboard('{Escape}')
@@ -269,7 +291,7 @@ describe('Tour', () => {
     const launcher = document.getElementById('launcher') as HTMLButtonElement
     launcher.focus()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await user.keyboard('{Escape}')
@@ -280,7 +302,7 @@ describe('Tour', () => {
     mountApp()
     ;(document.activeElement as HTMLElement | null)?.blur()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await user.keyboard('{Escape}')
@@ -290,7 +312,7 @@ describe('Tour', () => {
   it('steps aside while a modal is open and comes back when it closes, on the same step', async () => {
     const root = mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await next(user)
@@ -306,7 +328,7 @@ describe('Tour', () => {
   it('does not appear when a modal is already open at start', async () => {
     mountApp()
     useUIStore.setState({ modal: { type: 'settings' } })
-    render(<Tour />)
+    renderTour()
     start()
     await act(async () => {})
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -314,7 +336,7 @@ describe('Tour', () => {
 
   it('removes the lock when it unmounts mid-tour', async () => {
     const root = mountApp()
-    const { unmount } = render(<Tour />)
+    const { unmount } = renderTour()
     start()
     await screen.findByRole('dialog')
     expect(lockedCount(root)).toBe(root.children.length)
@@ -324,7 +346,7 @@ describe('Tour', () => {
 
   it('does not count a tour_started event itself (the launcher does)', async () => {
     mountApp()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     expect(mockTrackEvent).not.toHaveBeenCalled()
@@ -339,7 +361,7 @@ describe('Tour', () => {
       .spyOn(Element.prototype, 'getBoundingClientRect')
       .mockReturnValue({ left: 100, top: 100, right: 200, bottom: 130, width: 100, height: 30, x: 100, y: 100, toJSON: () => ({}) })
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     expect(document.querySelector('[data-tour-spotlight]')).toBeNull()
@@ -354,7 +376,7 @@ describe('Tour', () => {
   it('an interactive step waits: no Next, and neither Right nor Enter moves on', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('make-group')
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveAttribute('data-tour-task', 'todo')
@@ -367,7 +389,7 @@ describe('Tour', () => {
 
   it('unlocks only the control the step asks for', async () => {
     const root = mountApp()
-    render(<Tour />)
+    renderTour()
     start('make-group')
     await screen.findByRole('dialog')
     const allowed = root.querySelector(`[data-tour="${TOUR_ANCHORS.addGroup}"]`)
@@ -378,70 +400,70 @@ describe('Tour', () => {
   it('"Skip this step" moves on and reports the step', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('make-group')
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Skip this step' }))
-    await expectStep('Give it a colour')
+    await expectStep('Give it a color')
     expect(mockTrackEvent).toHaveBeenCalledWith('tour_step_skipped', { step_id: 'make-group' })
   })
 
   it('completes "make a group" from real state: a new group with a name of its own', async () => {
     mountApp()
     const user = userEvent.setup()
-    const view = render(<Tour />)
+    const view = renderTour()
     start('make-group')
     const dialog = await screen.findByRole('dialog')
     // the group appears, still carrying its placeholder name and being renamed: not done yet
     app.groups = [NOW_OPEN, savedGroup('g1', { name: 'temp group' })]
     act(() => useUIStore.setState({ renameTarget: { kind: 'group', groupIndex: 1 } }))
-    view.rerender(<Tour />)
+    view.rerenderTour()
     await waitFor(() => expect(useUIStore.getState().tourPracticeGroupId).toBe('g1'))
     expect(dialog).toHaveAttribute('data-tour-task', 'todo')
     // named and saved
     app.groups = [NOW_OPEN, savedGroup('g1', { name: 'Practice' })]
     act(() => useUIStore.setState({ renameTarget: null }))
-    view.rerender(<Tour />)
+    view.rerenderTour()
     await waitFor(() => expect(dialog).toHaveAttribute('data-tour-task', 'done'))
     expect(mockTrackEvent).toHaveBeenCalledWith('tour_task_done', { step_id: 'make-group' })
     await waitFor(async () => expect(await stored()).toEqual({ status: 'pending', stepId: 'make-group', practiceGroupId: 'g1' }))
     await user.click(screen.getByRole('button', { name: 'Next' }))
-    await expectStep('Give it a colour')
+    await expectStep('Give it a color')
     expect(screen.getByRole('dialog')).toHaveAttribute('data-tour-task', 'todo')
   })
 
   it('a new group that is cancelled puts "make a group" back to waiting', async () => {
     mountApp()
-    const view = render(<Tour />)
+    const view = renderTour()
     start('make-group')
     const dialog = await screen.findByRole('dialog')
     app.groups = [NOW_OPEN, savedGroup('g1', { name: 'temp group' })]
-    view.rerender(<Tour />)
+    view.rerenderTour()
     await waitFor(() => expect(useUIStore.getState().tourPracticeGroupId).toBe('g1'))
     // Escape in the name field: the app deletes the never-named group again
     app.groups = [NOW_OPEN]
-    view.rerender(<Tour />)
+    view.rerenderTour()
     expect(dialog).toHaveAttribute('data-tour-task', 'todo')
     expect(mockTrackEvent).not.toHaveBeenCalledWith('tour_task_done', expect.anything())
   })
 
-  it('completes the colour step when the practice group colour changes, and stays done after Back', async () => {
+  it('completes the color step when the practice group color changes, and stays done after Back', async () => {
     app.groups = [NOW_OPEN, savedGroup('g1', { name: 'Practice' })]
     useUIStore.setState({ tourPracticeGroupId: 'g1' })
     mountApp()
     const user = userEvent.setup()
-    const view = render(<Tour />)
-    start('group-colour')
+    const view = renderTour()
+    start('group-color')
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveAttribute('data-tour-task', 'todo')
     app.groups = [NOW_OPEN, savedGroup('g1', { name: 'Practice', color: 'rgba(9,9,9,1)' })]
-    view.rerender(<Tour />)
+    view.rerenderTour()
     await waitFor(() => expect(dialog).toHaveAttribute('data-tour-task', 'done'))
-    expect(dialog).toHaveTextContent('Nice, colour changed.')
+    expect(dialog).toHaveTextContent('Nice, color changed.')
     await user.click(screen.getByRole('button', { name: 'Next' }))
     await expectStep('Pin a group to the top')
     await user.click(screen.getByRole('button', { name: 'Back' }))
-    await expectStep('Give it a colour')
+    await expectStep('Give it a color')
     expect(screen.getByRole('dialog')).toHaveAttribute('data-tour-task', 'done')
   })
 
@@ -449,44 +471,44 @@ describe('Tour', () => {
     app.groups = [NOW_OPEN, ...['a', 'b', 'c', 'd', 'e'].map((id) => savedGroup(id))]
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('make-group')
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveAttribute('data-tour-task', 'none')
     expect(dialog).toHaveTextContent('as many groups as your plan allows')
     await user.click(screen.getByRole('button', { name: 'Next' }))
-    await expectStep('Give it a colour')
+    await expectStep('Give it a color')
     expect(screen.getByRole('dialog')).toHaveAttribute('data-tour-task', 'none')
   })
 
   it('"Skip chapter" jumps to the first step of the next chapter', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('make-group')
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Skip chapter' }))
-    await expectStep('Save tabs into a group')
+    await expectStep('Reorder tabs')
     expect(mockTrackEvent).toHaveBeenCalledWith('tour_chapter_skipped', { chapter: 'groups' })
   })
 
   it('stays on screen for the modal its own step opens, and completes on the saved theme', async () => {
     mountApp()
-    const view = render(<Tour />)
+    const view = renderTour()
     start('theme')
     await screen.findByRole('dialog')
     act(() => useUIStore.getState().openModal('settings'))
     expect(screen.getByRole('dialog')).toHaveAttribute('data-tour-card', 'theme')
     expect(screen.getByRole('dialog')).toHaveAttribute('data-tour-task', 'todo')
     app.theme = 'dark'
-    view.rerender(<Tour />)
+    view.rerenderTour()
     await waitFor(() => expect(screen.getByRole('dialog')).toHaveAttribute('data-tour-task', 'done'))
   })
 
   it('closes the modal its step opened when the step is left', async () => {
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('theme')
     await screen.findByRole('dialog')
     act(() => useUIStore.getState().openModal('settings'))
@@ -500,7 +522,7 @@ describe('Tour', () => {
     useUIStore.setState({ tourPracticeGroupId: 'g1' })
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('finish')
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Remove the practice group' }))
@@ -514,7 +536,7 @@ describe('Tour', () => {
     useUIStore.setState({ tourPracticeGroupId: 'g1' })
     mountApp()
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start()
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Skip tour' }))

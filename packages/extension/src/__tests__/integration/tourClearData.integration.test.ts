@@ -69,23 +69,27 @@ describe('guided tour resume with a practice group (real IndexedDB + storage)', 
     searchFilter: '',
     theme: 'system',
     modalType: null,
-    previewColor: null
+    previewColor: null,
+    practiceTab: { id: null, url: 'chrome-extension://x/practice.html', state: 'off' as const },
+    signals: {},
+    selectionMode: false,
+    selectedIds: []
   })
 
   it('restores the step and the practice group after the popup closes and opens again', async () => {
     const practice = await seedPractice()
-    await saveTourProgress('group-colour', practice.id)
+    await saveTourProgress('group-color', practice.id)
 
     // a fresh start: nothing in memory, only what the stores hold
     const record = await readTourRecord()
-    expect(record).toEqual({ status: 'pending', stepId: 'group-colour', practiceGroupId: practice.id })
+    expect(record).toEqual({ status: 'pending', stepId: 'group-color', practiceGroupId: practice.id })
     const steps = TOUR_STEPS.filter((x) => x.when !== 'ai')
-    expect(steps[resolveTourStartIndex(steps, record?.stepId)].id).toBe('group-colour')
+    expect(steps[resolveTourStartIndex(steps, record?.stepId)].id).toBe('group-color')
 
     const groups = await getGroupsState()
     expect(findPracticeGroup(ctxFor(groups, record?.practiceGroupId ?? null))?.name).toBe('Practice')
     // the colour step can be offered because the practice group really is in the database
-    const step = TOUR_STEPS.find((x) => x.id === 'group-colour')!
+    const step = TOUR_STEPS.find((x) => x.id === 'group-color')!
     expect(activeTourTask(step, ctxFor(groups, record?.practiceGroupId ?? null))).not.toBeNull()
   })
 

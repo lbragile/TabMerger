@@ -88,7 +88,7 @@ const GUARDED_EVENTS = ['pointerdown', 'mousedown', 'mouseup', 'click', 'dblclic
  *
  * Pointer events are guarded the same way: inside the app root, anything outside the unlocked
  * controls is swallowed. `inert` already covers most of it; this covers the ANCESTORS of an
- * unlocked control, which cannot be inert (a group row around its colour dot).
+ * unlocked control, which cannot be inert (a group row around its color dot).
  */
 export function useTourKeys(cardRef: React.RefObject<HTMLElement | null>, handlers: TourKeyHandlers): void {
   const latest = useRef(handlers);

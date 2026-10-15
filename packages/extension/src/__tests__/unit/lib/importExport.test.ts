@@ -58,6 +58,25 @@ describe('skippedSuffix', () => {
   })
 })
 
+describe('importGroups — reserved tour practice ids', () => {
+  const file = (ids: string[]) => JSON.stringify(ids.map((id) => ({ ...makeGroup(`G ${id}`, ['https://x.com']), id })))
+
+  it('gives a group that carries a practice id a fresh id (the tour removes groups by that id)', () => {
+    const { groups } = importGroups(file(['tour-demo-1', 'tour-demo-2']))
+    expect(groups).toHaveLength(2)
+    for (const g of groups) {
+      expect(['tour-demo-1', 'tour-demo-2']).not.toContain(g.id)
+      expect(g.id.length).toBeGreaterThan(0)
+    }
+    expect(groups[0].id).not.toBe(groups[1].id)
+  })
+
+  it('keeps any other id', () => {
+    const { groups } = importGroups(file(['mine-1', 'tour-demo-3']))
+    expect(groups.map((g) => g.id)).toEqual(['mine-1', 'tour-demo-3'])
+  })
+})
+
 describe('importGroups', () => {
   it('round-trips: export then import returns equivalent groups with nothing skipped', () => {
     const groups = [makeGroup('Research', ['https://x.com', 'https://y.com'])]

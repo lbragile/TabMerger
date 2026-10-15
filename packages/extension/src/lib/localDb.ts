@@ -647,7 +647,14 @@ function markPushed(id: string, pushed: { updatedAt?: number; position: number; 
     if (next && pushed.updatedAt !== undefined && next.updatedAt === pushed.updatedAt && next.pendingSync && (!pushed.group || groupContentEqual(next, pushed.group))) {
       next = { ...next, pendingSync: false };
     }
-    if (next && next.positionDirty && stateRecord?.order?.indexOf(id) === pushed.position) {
+    // The pushed position counts the groups without the tour's practice groups (see
+    // `updateGroupsState`), so it is compared against the index in that same filtered order
+    const syncedIndex = async (): Promise<number> => {
+      const stored = await tx.objectStore('groups').getAll();
+      const demoIds = new Set(stored.filter(isTourDemoGroup).map((g) => g.id));
+      return (stateRecord?.order ?? []).filter((orderId: string) => !demoIds.has(orderId)).indexOf(id);
+    };
+    if (next && next.positionDirty && (await syncedIndex()) === pushed.position) {
       const { positionDirty: _cleared, ...rest } = next;
       next = rest;
     }

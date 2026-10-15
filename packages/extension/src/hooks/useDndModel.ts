@@ -2,6 +2,7 @@ import { useMemo, useSyncExternalStore } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
 import { isTourDemoGroup } from '@tabmerger/shared';
+import { getTourTabSandbox, subscribeTourTabSandbox, type TourTabSandbox } from '@/lib/tourSandbox';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
 /**
@@ -61,12 +62,23 @@ export interface DndModel {
   /** render order; `groupIds[0]` === `permanentGroupId` whenever a permanent group exists */
   groupIds: string[];
   permanentGroupId: string;
+  /**
+   * Present only while the guided tour's "save a tab" step is up (`lib/tourSandbox.ts`).
+   * `tabId` is the model id of the tour's own practice tab in "Now Open", or `null` while that
+   * tab is not on the list. `canDrop` then allows one move out of Now Open: that tab, onto the
+   * tour's practice groups.
+   */
+  tourPractice?: { tabId: string | null };
 }
 
 const EMPTY_STATE: GroupsState = { active: { id: '', index: 0 }, available: [] };
 
-/** Pure: build the normalised DnD model from a groups state snapshot. */
-export function buildDndModel(groupsState: GroupsState): DndModel {
+/**
+ * Build the normalised DnD model from a groups state snapshot. `sandbox` is the guided tour's
+ * "save a tab" step (read from its own small store unless given): see {@link DndModel.tourPractice}.
+ */
+export function buildDndModel(groupsState: GroupsState, sandbox: TourTabSandbox | null = getTourTabSandbox()): DndModel {
+  let practiceTabModelId: string | null = null;
   const groups: Record<string, DndModelGroup> = {};
   const windows: Record<string, DndModelWindow> = {};
   const tabs: Record<string, DndModelTab> = {};
@@ -84,9 +96,11 @@ export function buildDndModel(groupsState: GroupsState): DndModel {
       windowIds.push(wid);
       const tabIds: string[] = [];
 
-      (w.tabs ?? []).filter(Boolean).forEach((_tab, tabIndex) => {
+      (w.tabs ?? []).filter(Boolean).forEach((tab, tabIndex) => {
         const tid = `${wid}::t${tabIndex}`;
         tabIds.push(tid);
+        // Only a LIVE tab (Now Open) has a real id; saved tabs all carry 0
+        if (sandbox && group.permanent && sandbox.tabId !== null && tab.id === sandbox.tabId) practiceTabModelId = tid;
         tabs[tid] = { id: tid, windowId: wid, groupIndex, windowIndex, tabIndex };
       });
 
@@ -99,7 +113,9 @@ export function buildDndModel(groupsState: GroupsState): DndModel {
   const permanent = available.find((g) => g.permanent);
   const permanentGroupId = permanent ? permanent.id : '';
 
-  return { groups, windows, tabs, groupIds, permanentGroupId };
+  const model: DndModel = { groups, windows, tabs, groupIds, permanentGroupId };
+  if (sandbox) model.tourPractice = { tabId: practiceTabModelId };
+  return model;
 }
 
 // ─── legacy ⇄ model selection-id mapping ─────────────────────────────────────
@@ -149,5 +165,6 @@ export function useDndModel(): DndModel {
     () => qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY),
     () => undefined
   );
-  return useMemo(() => buildDndModel(state ?? EMPTY_STATE), [state]);
+  const sandbox = useSyncExternalStore(subscribeTourTabSandbox, getTourTabSandbox, () => null);
+  return useMemo(() => buildDndModel(state ?? EMPTY_STATE, sandbox), [state, sandbox]);
 }

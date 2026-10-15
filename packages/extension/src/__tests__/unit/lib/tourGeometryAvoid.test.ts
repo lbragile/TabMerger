@@ -48,9 +48,9 @@ describe('cardPositionAvoiding', () => {
   })
 
   it('moves to the corner nearest to where it was when it would cover the control', () => {
-    // card at the bottom-left would cover a control there; the nearest clear corner is the top-left
+    // card at the bottom-left would cover a control there; the nearest clear spot is the middle of the left side
     const avoid = r(20, 420, 100, 40)
-    expect(cardPositionAvoiding({ left: 8, top: 392 }, card, frame, margin, avoid)).toEqual({ left: 8, top: 8 })
+    expect(cardPositionAvoiding({ left: 8, top: 392 }, card, frame, margin, avoid)).toEqual({ left: 8, top: 200 })
   })
 
   it('goes to the next nearest clear corner when the nearest one is covered too', () => {

@@ -1,4 +1,4 @@
-import { GROUP_COLOR_RE, isScriptUrl, withoutTourDemoGroups } from '@tabmerger/shared'
+import { GROUP_COLOR_RE, isReservedTourDemoId, isScriptUrl, withoutTourDemoGroups } from '@tabmerger/shared'
 import { nanoid } from 'nanoid'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 import { DEFAULT_GROUP_COLOR } from '@/lib/types'
@@ -120,7 +120,8 @@ function sanitizeGroup(raw: unknown, counter: Counter): Group | null {
     else counter.skipped++
   }
   const group: Group = {
-    id: typeof raw.id === 'string' && raw.id ? raw.id : nanoid(10),
+    // (an id the tour's practice groups use gets a fresh one: the tour removes groups by that id)
+    id: typeof raw.id === 'string' && raw.id && !isReservedTourDemoId(raw.id) ? raw.id : nanoid(10),
     name: typeof raw.name === 'string' && raw.name ? raw.name : IMPORTED_GROUP_FALLBACK_NAME,
     color: typeof raw.color === 'string' && GROUP_COLOR_RE.test(raw.color) ? raw.color : DEFAULT_GROUP_COLOR,
     updatedAt: isFiniteNumber(raw.updatedAt) ? raw.updatedAt : Date.now(),

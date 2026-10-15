@@ -30,10 +30,16 @@ export interface TourRecord {
   practiceGroupId?: string;
   /**
    * Ids of the tour's practice ("Tour demo") groups while they exist: written while a step of
-   * the drag chapter is up, gone once they were removed. A trace only. Clean-up never trusts
-   * it: it finds practice groups by their flag and fixed ids (`lib/tourDemo.ts`).
+   * a chapter that uses them is up, gone once they were removed. A trace only. Clean-up never
+   * trusts it: it finds practice groups by their flag and fixed ids (`lib/tourDemo.ts`).
    */
   demoGroupIds?: string[];
+  /**
+   * Browser tab id of the spare tab the "save a tab" step opened, while that step is up. A
+   * trace only: before the tab is closed its address is checked (`lib/tourPracticeTab.ts`), so
+   * a stale or forged id can never close a tab of the user's.
+   */
+  practiceTabId?: number;
 }
 
 /** Most ids kept in `demoGroupIds` (there are two practice groups). */
@@ -43,14 +49,18 @@ const isStoredId = (value: unknown): value is string => typeof value === 'string
 
 const validDemoIds = (value: unknown): string[] => (Array.isArray(value) ? value.filter(isStoredId).slice(0, MAX_DEMO_IDS) : []);
 
+/** A browser tab id: a positive whole number. */
+const isTabId = (value: unknown): value is number => typeof value === 'number' && Number.isInteger(value) && value > 0;
+
 /** Validates what came out of storage; anything unexpected reads as "no record". */
 export function parseTourRecord(raw: unknown): TourRecord | null {
   if (typeof raw !== 'object' || raw === null) return null;
-  const { status, stepId, practiceGroupId, demoGroupIds } = raw as {
+  const { status, stepId, practiceGroupId, demoGroupIds, practiceTabId } = raw as {
     status?: unknown;
     stepId?: unknown;
     practiceGroupId?: unknown;
     demoGroupIds?: unknown;
+    practiceTabId?: unknown;
   };
   if (status !== 'done' && status !== 'pending') return null;
   const record: TourRecord = { status };
@@ -58,6 +68,7 @@ export function parseTourRecord(raw: unknown): TourRecord | null {
   if (isStoredId(practiceGroupId)) record.practiceGroupId = practiceGroupId;
   const demoIds = validDemoIds(demoGroupIds);
   if (status === 'pending' && demoIds.length > 0) record.demoGroupIds = demoIds;
+  if (status === 'pending' && isTabId(practiceTabId)) record.practiceTabId = practiceTabId;
   return record;
 }
 
@@ -119,11 +130,18 @@ const withPractice = (record: TourRecord, practiceGroupId?: string | null): Tour
 
 /**
  * Remembers the step being shown, so the tour resumes there after the popup closes.
- * `demoGroupIds`: the practice groups on the list right now (the drag chapter), if any.
+ * `demoGroupIds`: the practice groups on the list right now, if any. `practiceTabId`: the
+ * spare browser tab the "save a tab" step has open, if any.
  */
-export function saveTourProgress(stepId: string, practiceGroupId?: string | null, demoGroupIds: readonly string[] = []): Promise<void> {
+export function saveTourProgress(
+  stepId: string,
+  practiceGroupId?: string | null,
+  demoGroupIds: readonly string[] = [],
+  practiceTabId?: number | null
+): Promise<void> {
   const demoIds = validDemoIds(demoGroupIds);
   const record: TourRecord = demoIds.length > 0 ? { status: 'pending', stepId, demoGroupIds: demoIds } : { status: 'pending', stepId };
+  if (isTabId(practiceTabId)) record.practiceTabId = practiceTabId;
   return writeTourRecord(withPractice(record, practiceGroupId));
 }
 
@@ -143,17 +161,35 @@ export type TourPlacement = 'top' | 'bottom' | 'left' | 'right' | 'center';
 /** A "do it yourself" step. What each one watches and unlocks is in `tourTasks.ts`. */
 export type TourTaskId =
   | 'make-group'
-  | 'group-colour'
+  | 'group-color'
   | 'group-pin'
   | 'drag-tab-reorder'
   | 'drag-tab-window'
   | 'drag-tab-group'
   | 'drag-group-order'
+  | 'save-tabs'
+  | 'open-tabs'
+  | 'tidy-up'
+  | 'select-items'
   | 'search'
+  | 'search-filters'
+  | 'undo'
   | 'theme';
 
-/** Id of the chapter whose steps use the practice ("Tour demo") groups. They exist only while it is up. */
+/** Id of the drag chapter. */
 export const TOUR_DRAG_CHAPTER = 'drag';
+
+/**
+ * Ids of the chapters whose steps use the practice ("Tour demo") groups: dragging, saving and
+ * reopening tabs, and finding and undoing. The groups exist only while a step of one of them is
+ * up. The chapters are next to each other, so going from one to the next keeps the same set.
+ */
+export const TOUR_DEMO_CHAPTERS: readonly string[] = [TOUR_DRAG_CHAPTER, 'tabs', 'find'];
+
+/** True for a chapter whose steps need the practice groups on the list. */
+export function usesTourDemoData(chapterId: string | null | undefined): boolean {
+  return !!chapterId && TOUR_DEMO_CHAPTERS.includes(chapterId);
+}
 
 export interface TourStep {
   /** Stable id: stored as progress and sent with analytics, so do not rename casually. */
@@ -169,7 +205,7 @@ export interface TourStep {
   placement: TourPlacement;
   /** Makes the step interactive: the user does the thing, and only then is Next offered. */
   task?: TourTaskId;
-  /** Shown once the task is done ("Nice, colour changed."). */
+  /** Shown once the task is done ("Nice, color changed."). */
   doneText?: string;
   /** Text used instead of `body` when the task cannot be offered (the step is then read-only). */
   fallbackBody?: string;
@@ -489,14 +525,43 @@ export function cardPositionAvoiding(
   if (!covers(position)) return position;
   const maxLeft = Math.max(margin, frame.width - card.width - margin);
   const maxTop = Math.max(margin, frame.height - card.height - margin);
+  const midLeft = Math.max(margin, (frame.width - card.width) / 2);
+  const midTop = Math.max(margin, (frame.height - card.height) / 2);
   const corners = [
     { left: margin, top: margin },
     { left: maxLeft, top: margin },
     { left: margin, top: maxTop },
-    { left: maxLeft, top: maxTop }
+    { left: maxLeft, top: maxTop },
+    // ...then the middle of each side
+    { left: midLeft, top: margin },
+    { left: midLeft, top: maxTop },
+    { left: margin, top: midTop },
+    { left: maxLeft, top: midTop }
   ];
   const distance = (p: { left: number; top: number }) => Math.abs(p.left - position.left) + Math.abs(p.top - position.top);
   return corners.sort((a, b) => distance(a) - distance(b)).find((corner) => !covers(corner)) ?? position;
+}
+
+/**
+ * {@link cardPositionAvoiding} with priorities: `groups` are lists of rectangles, the most
+ * important first. Every list is kept clear when a place for the card exists that does so;
+ * otherwise the least important list is given up, and so on. Returns `position` when even the
+ * first list alone cannot be kept clear.
+ */
+export function cardPositionAvoidingByPriority(
+  position: { left: number; top: number },
+  card: TourSize,
+  frame: TourSize,
+  margin: number,
+  groups: readonly (readonly TourRect[])[]
+): { left: number; top: number } {
+  for (let keep = groups.length; keep > 0; keep--) {
+    const rects = groups.slice(0, keep).flat();
+    if (rects.length === 0) continue;
+    const placed = cardPositionAvoiding(position, card, frame, margin, rects);
+    if (!rects.some((rect) => rectsOverlap({ ...placed, ...card }, rect))) return placed;
+  }
+  return position;
 }
 
 /**

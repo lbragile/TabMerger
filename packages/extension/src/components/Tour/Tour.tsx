@@ -8,10 +8,11 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useTourAutoStart } from '@/hooks/useTourAutoStart';
 import { useTourFrame, useTourHighlight } from '@/hooks/useTourAnchorRect';
 import { useTourKeys } from '@/hooks/useTourKeys';
+import { useTourPracticeTab } from '@/hooks/useTourPracticeTab';
 import {
   availableTourSteps,
   backdropPanels,
-  cardPositionAvoiding,
+  cardPositionAvoidingByPriority,
   computeCardPosition,
   markTourDone,
   nextChapterIndex,
@@ -23,10 +24,12 @@ import {
   shouldAutoStartTour,
   spotlightRect,
   tourProgress,
-  TOUR_DRAG_CHAPTER,
+  usesTourDemoData,
   type TourRect,
   type TourStep
 } from '@/lib/tour';
+import { closeTourPracticeTab, tourPracticeTabUrl } from '@/lib/tourPracticeTab';
+import { setTourOpenBlocked, setTourSearchShowsDemo, setTourSpringOpenBlocked } from '@/lib/tourSandbox';
 import {
   TOUR_DEMO_GROUP_IDS,
   TOUR_DEMO_MAIN_ID,
@@ -41,10 +44,13 @@ import {
   allowedFocusables,
   findTourElements,
   isForeignLayerOpen,
+  isFullyVisible,
   isInAllowed,
   isInForeignLayer,
   isTextEntry,
   lockTourApp,
+  markTourLabels,
+  revealTourTarget,
   tourFocusReturnTarget,
   tourFrame,
   tourRemToPx
@@ -73,7 +79,7 @@ const MIN_RADIUS_REM = 0.125;
 // The action ring: the tight ring on the ONE control to act on next (see globals.css,
 // `[data-tour-action]`). Closer to its control and thinner than the region ring.
 const ACTION_PADDING_REM = 0.1875;
-/** Text-colour hairline + the thin secondary-colour line. */
+/** Text-color hairline + the thin secondary-color line. */
 const ACTION_RING_EXTENT_REM = 0.1875;
 /** How long a ring glides for after it is given a different target (the CSS transition, plus a little). */
 const GLIDE_MS = 240;
@@ -89,8 +95,20 @@ const PRACTICE_TOAST_ID = 'tour-practice-group';
 /** The drop marker sits this far outside its destination, and keeps this far from the popup frame. */
 const DROP_PADDING_REM = 0.125;
 const DROP_FRAME_EDGE_REM = 0.375;
+/** Thickness of the drop marker when it is a line under a row (`dropKind: 'below'`). */
+const DROP_LINE_REM = 0.25;
+/** Room the marker's label takes above (or under) it: the card keeps clear of that too. */
+const DROP_LABEL_REM = 1.5;
+/** The gap a "below" marker points into, for the card to keep clear of: about one row. */
+const DROP_SLOT_REM = 2;
+/** Above the copy of the item that follows the pointer (`lib/dndDragVisuals.ts` draws it one below the maximum). */
+const DROP_MARKER_Z = 2147483647;
+/** How often a source or destination that is scrolled out of view is brought back, at most. */
+const REVEAL_EVERY_MS = 250;
+/** Id of the step that opens the tour's spare browser tab. */
+const SAVE_TABS_STEP = 'save-tabs';
 /** How far around the destination a dragged item counts as "over it" (the third sub-step of a drag). */
-const DROP_NEAR_REM = 0.25;
+const DROP_NEAR_REM = 0.5;
 /** The copy of the item that follows the pointer, or sits in the gap during a keyboard move. */
 const DRAG_GHOST = '[data-testid="drag-ghost"]';
 /** The row the keyboard move's group-list cursor is on (`useKeyboardMove`). */
@@ -134,16 +152,21 @@ export function Tour() {
   const { mutate: deleteGroup } = useDeleteGroup();
   useTourAutoStart();
 
-  // A popup that was closed in the middle of the drag chapter could not remove the practice
-  // groups. Once per popup open: unless the tour is about to resume in that chapter (or is
-  // already showing it), they go, so nobody is left with a stray "Tour demo" group.
+  // A popup that was closed in the middle of a chapter that uses the practice groups could not
+  // remove them. Once per popup open: unless the tour is about to resume in such a chapter (or
+  // is already showing one), they go, so nobody is left with a stray "Tour demo" group. The
+  // same for the spare browser tab of the "save a tab" step (closed only while it still shows
+  // the tour's own practice page).
   const removeTourDemo = useRemoveTourDemo();
   useEffect(() => {
     void readTourRecord().then((record) => {
-      const resumesThere = shouldAutoStartTour(record) && chapterOfStep(record?.stepId) === TOUR_DRAG_CHAPTER;
+      const resumes = shouldAutoStartTour(record);
       const ui = useUIStore.getState();
-      const showingIt = ui.tourActive && chapterOfStep(ui.tourStepId) === TOUR_DRAG_CHAPTER;
+      const resumesThere = resumes && usesTourDemoData(chapterOfStep(record?.stepId));
+      const showingIt = ui.tourActive && usesTourDemoData(chapterOfStep(ui.tourStepId));
       if (!resumesThere && !showingIt) removeTourDemo();
+      const tabStillWanted = (resumes && record?.stepId === SAVE_TABS_STEP) || (ui.tourActive && ui.tourStepId === SAVE_TABS_STEP);
+      if (record?.practiceTabId && !tabStillWanted) void closeTourPracticeTab(record.practiceTabId);
     });
     // Once per popup open
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,6 +210,9 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   const searchFilter = useUIStore((s) => s.searchFilter);
   const renameTarget = useUIStore((s) => s.renameTarget);
   const previewGroupColor = useUIStore((s) => s.previewGroupColor);
+  const signals = useUIStore((s) => s.tourSignals);
+  const selectionMode = useUIStore((s) => s.selectionMode);
+  const selectedItems = useUIStore((s) => s.selectedItems);
   const { data: settings } = useAppSettings();
   const { maxGroups } = useEntitlements();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -206,6 +232,12 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   const isLast = index === total - 1;
 
   // ── Interactive steps: real state in, "done" out ────────────────────────────────────────
+  // Done stays done for this run, so Back onto a finished step does not ask for it again
+  const [completed, setCompleted] = useState<ReadonlySet<string>>(() => new Set());
+  // The "save a tab" step works on a spare browser tab of the tour's own: open while that step
+  // is waiting to be tried, closed again as soon as it is not (see the hook)
+  const practiceTab = useTourPracticeTab(currentId === SAVE_TABS_STEP && !completed.has(SAVE_TABS_STEP));
+  const practiceTabUrl = useMemo(() => tourPracticeTabUrl(), []);
   const ctx: TourTaskContext = useMemo(
     () => ({
       groups,
@@ -215,9 +247,13 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
       searchFilter,
       theme: settings?.theme ?? null,
       modalType,
-      previewColor: previewGroupColor && previewGroupColor.groupId === practiceGroupId ? previewGroupColor.color : null
+      previewColor: previewGroupColor && previewGroupColor.groupId === practiceGroupId ? previewGroupColor.color : null,
+      practiceTab: { ...practiceTab, url: practiceTabUrl },
+      signals,
+      selectionMode,
+      selectedIds: selectedItems.map((item) => item.id)
     }),
-    [groups, practiceGroupId, maxGroups, renameTarget, searchFilter, settings?.theme, modalType, previewGroupColor]
+    [groups, practiceGroupId, maxGroups, renameTarget, searchFilter, settings?.theme, modalType, previewGroupColor, practiceTab, practiceTabUrl, signals, selectionMode, selectedItems]
   );
   const task = activeTourTask(step, ctx);
   const practice = findPracticeGroup(ctx);
@@ -230,14 +266,17 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
     if (baseline !== null) setEntry({ id: step.id, baseline });
   }
   const liveDone = !!step && !!task && entry?.id === step.id && task.isDone(ctx, entry.baseline);
-  // Done stays done for this run, so Back onto a finished step does not ask for it again
-  const [completed, setCompleted] = useState<ReadonlySet<string>>(() => new Set());
   useEffect(() => {
     if (!liveDone || !currentId || completed.has(currentId)) return;
     // (also the guard that sends the event once per step, whether or not the result is remembered)
     setCompleted((prev) => new Set(prev).add(currentId));
     trackEvent('tour_task_done', { step_id: currentId });
   }, [liveDone, currentId, completed]);
+  // A task with a halfway point (see `TourTask.milestone`): counted each time it is reached
+  const milestone = (step && task && entry?.id === step.id ? task.milestone?.(ctx) : null) ?? null;
+  useEffect(() => {
+    if (milestone) useUIStore.getState().signalTour(milestone);
+  }, [milestone, currentId]);
   const done = !!currentId && (liveDone || (task?.remember !== false && completed.has(currentId)));
   const taskStatus: TourTaskStatus = !task ? 'none' : done ? 'done' : 'todo';
 
@@ -260,14 +299,14 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   // Declared before the effect that writes progress, so this read is issued first.
   useEffect(() => {
     if (useUIStore.getState().tourPracticeGroupId) return;
-    let cancelled = false;
+    let canceled = false;
     void readTourRecord().then((record) => {
-      if (!cancelled && record?.practiceGroupId && !useUIStore.getState().tourPracticeGroupId) {
+      if (!canceled && record?.practiceGroupId && !useUIStore.getState().tourPracticeGroupId) {
         setTourPracticeGroupId(record.practiceGroupId);
       }
     });
     return () => {
-      cancelled = true;
+      canceled = true;
     };
   }, [setTourPracticeGroupId]);
 
@@ -279,22 +318,24 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
     if (fresh) setTourPracticeGroupId(fresh.id);
   }, [makeGroupBaseline, practice, groups, setTourPracticeGroupId]);
 
-  // ── The practice ("Tour demo") groups of the drag chapter ───────────────────────────────
-  // They exist exactly while a step of that chapter is up. Every step of the chapter makes sure
-  // both are there when it opens, and puts a fresh set in place when what is left of them
-  // cannot serve the step (the user moved every sample tab away, say): the user is never asked
-  // to make anything first. Leaving the chapter, in any direction and by any button, or ending
-  // the tour (this component unmounts) removes them.
+  // ── The practice ("Tour demo") groups ───────────────────────────────────────────────────
+  // They exist exactly while a step of a chapter that uses them is up (`TOUR_DEMO_CHAPTERS`:
+  // the drag chapter and the two after it, so going from one to the next keeps the same
+  // set). Every such step makes sure both are there when it opens, and puts a fresh set in
+  // place when what is left of them cannot serve the step (the user moved every sample tab
+  // away, say): the user is never asked to make anything first. Leaving those chapters, in any
+  // direction and by any button, or ending the tour (this component unmounts) removes them.
   const qc = useQueryClient();
   const removeTourDemo = useRemoveTourDemo();
-  const inDragChapter = step?.chapter === TOUR_DRAG_CHAPTER;
+  const inDragChapter = usesTourDemoData(step?.chapter);
   const stepTaskId = step?.task;
   useEffect(() => {
     if (!inDragChapter || !currentId) return;
     void ensureTourDemoGroups().then(async (made) => {
       let result = made;
       const wanted = stepTaskId ? tourTask(stepTaskId) : null;
-      if (wanted && !wanted.available({ ...ctx, groups: made.state.available })) result = await resetTourDemoGroups();
+      const fresh = { ...ctx, groups: made.state.available };
+      if (wanted && (!wanted.available(fresh) || wanted.needsFresh?.(fresh))) result = await resetTourDemoGroups();
       if (result.changed) qc.setQueryData(GROUPS_QUERY_KEY, result.state);
     });
     // On entering each step of the chapter (`ctx` is only read for the plan and practice ids)
@@ -304,30 +345,71 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
     if (!inDragChapter) return;
     return removeTourDemo;
   }, [inDragChapter, removeTourDemo]);
+  // While those chapters are up, two things keep the user's own data out of it. "Open in
+  // browser" opens nothing (the sample tabs are not real pages; the request is only counted for
+  // the step that asks for it). And "Undo" / "Redo" run on a history of the practice data alone:
+  // the user's own history is put aside on the way in and put back, untouched, on the way out.
+  useEffect(() => {
+    if (!inDragChapter) return;
+    setTourOpenBlocked(true);
+    useUIStore.getState().beginTourHistory();
+    return () => {
+      setTourOpenBlocked(false);
+      useUIStore.getState().endTourHistory();
+    };
+  }, [inDragChapter]);
+  // The practice groups can be found by search only while a search step is up
+  const searchesDemo = (stepTaskId === 'search' || stepTaskId === 'search-filters') && !!task;
+  useEffect(() => {
+    if (!searchesDemo) return;
+    setTourSearchShowsDemo(true);
+    return () => setTourSearchShowsDemo(false);
+  }, [searchesDemo]);
 
   // Remember the step (and the practice groups) so the tour resumes here after the popup closes
   const practiceId = practice?.id ?? null;
+  const practiceTabId = practiceTab.id;
   useEffect(() => {
-    if (currentId) void saveTourProgress(currentId, practiceId, inDragChapter ? TOUR_DEMO_GROUP_IDS : []);
-  }, [currentId, practiceId, inDragChapter]);
+    if (currentId) void saveTourProgress(currentId, practiceId, inDragChapter ? TOUR_DEMO_GROUP_IDS : [], practiceTabId);
+  }, [currentId, practiceId, inDragChapter, practiceTabId]);
 
   // Entering a step may pick the group shown; leaving one closes whatever it opened
   const leaveModal = task?.modal ?? null;
   const activate = step?.activate ?? null;
-  const isSearchStep = step?.task === 'search';
+  const isSearchStep = step?.task === 'search' || step?.task === 'search-filters';
+  const isSelectStep = step?.task === 'select-items';
+  const isUndoStep = step?.task === 'undo';
   useEffect(() => {
     if (!currentId) return;
     if (activate === 'now-open') useUIStore.getState().setActiveGroupIndex(0);
+    // The undo step starts from "nothing to undo", so each button lights up when it is its turn
+    if (isUndoStep) useUIStore.getState().clearTourHistory();
     return () => {
       const ui = useUIStore.getState();
-      // Menus, popovers, the colour picker and the search box (see `useCloseOnOverlayDismiss`)
+      // Menus, popovers, the color picker and the search box (see `useCloseOnOverlayDismiss`)
       ui.dismissOverlays();
       if (leaveModal && ui.modal.type === leaveModal) ui.closeModal();
+      // A search stays until it is cleared: what a search step had the user type must not go on
+      // filtering the next step, or the user's own groups after the tour
       if (isSearchStep) ui.setSearchFilter('');
+      // (only when the step turned it on: a selection of the user's own is never open under the tour)
+      if (isSelectStep && ui.selectionMode) ui.exitSelectionMode();
     };
     // Per step, not per render: the values above are fixed for a given step
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentId]);
+
+  // A search of the user's own is put aside for the whole tour and put back when it ends. A
+  // search stays until it is cleared, and in "hide" mode it would hide the very groups the
+  // steps point at. (Declared after the effect above on purpose: when the tour ends, that one
+  // clears what a search step typed first, and this one then restores the user's own text.)
+  useEffect(() => {
+    const own = useUIStore.getState().searchFilter;
+    if (own) useUIStore.getState().setSearchFilter('');
+    return () => {
+      if (own) useUIStore.getState().setSearchFilter(own);
+    };
+  }, []);
 
   // Another modal (sign-in, encryption setup, an upgrade prompt…) takes over: step aside
   const suspended = modalType !== null && modalType !== (task?.modal ?? null);
@@ -447,7 +529,7 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   );
   // A drag step has three sub-steps, read from the live drag: 1 = nothing picked up yet, 2 = an
   // item is being moved (pointer drag or keyboard move), 3 = it is over the marked destination.
-  // A cancelled drag is simply "nothing picked up" again.
+  // A canceled drag is simply "nothing picked up" again.
   const isDragStep = taskStatus === 'todo' && !!targets?.dragOnly;
   const [dragPhaseRaw, setDragPhase] = useState<1 | 2 | 3>(1);
   const dragPhase = isDragStep ? dragPhaseRaw : 1;
@@ -456,10 +538,35 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   const actionLists = taskStatus === 'todo' && dragPhase === 1 ? (targets?.action ?? NO_ACTION) : NO_ACTION;
   const dropLists = taskStatus === 'todo' ? (targets?.drop ?? NO_ACTION) : NO_ACTION;
   const dropTarget = useTourHighlight(dropLists, `${currentId ?? ''}:drop`, drawn && dropLists.length > 0);
-  const drop = useMemo(
-    () => (dropTarget ? spotlightRect(dropTarget.rect, tourRemToPx(DROP_PADDING_REM), tourFrame(), tourRemToPx(DROP_FRAME_EDGE_REM)) : null),
-    [dropTarget]
-  );
+  // The drop marker: a dashed box around a destination the item goes INTO, or a line along the
+  // bottom edge of the row the item goes UNDER (see `TourTargets.dropKind`)
+  const dropBelow = targets?.dropKind === 'below';
+  const drop = useMemo(() => {
+    if (!dropTarget) return null;
+    if (!dropBelow) return spotlightRect(dropTarget.rect, tourRemToPx(DROP_PADDING_REM), tourFrame(), tourRemToPx(DROP_FRAME_EDGE_REM));
+    const frame = tourFrame();
+    const edge = tourRemToPx(DROP_FRAME_EDGE_REM);
+    const thickness = tourRemToPx(DROP_LINE_REM);
+    const left = Math.max(edge, dropTarget.rect.left);
+    const right = Math.min(frame.width - edge, dropTarget.rect.left + dropTarget.rect.width);
+    const top = Math.min(Math.max(edge, dropTarget.rect.top + dropTarget.rect.height - thickness / 2), frame.height - edge - thickness);
+    return { left, top, width: Math.max(0, right - left), height: thickness };
+  }, [dropTarget, dropBelow]);
+  // What the card must keep clear of around the marker: its label, and for a line the gap
+  // under it, where the item lands
+  const dropAvoid = useMemo((): TourRect | null => {
+    if (!drop) return null;
+    const label = tourRemToPx(DROP_LABEL_REM);
+    const slot = dropBelow ? tourRemToPx(DROP_SLOT_REM) : 0;
+    // (the label may sit above or under the marker: room for it on both sides)
+    return { left: drop.left, top: drop.top - label, width: drop.width, height: drop.height + label * 2 + slot };
+  }, [drop, dropBelow]);
+  // A destination inside the panel being shown: hovering another group must not switch the panel
+  const keepPanel = taskStatus === 'todo' && !!targets?.keepPanel;
+  useEffect(() => {
+    setTourSpringOpenBlocked(keepPanel);
+    return () => setTourSpringOpenBlocked(false);
+  }, [keepPanel]);
   const keepClearLists = taskStatus === 'todo' ? (targets?.keepClear ?? NO_ACTION) : NO_ACTION;
   const keepClear = useTourHighlight(keepClearLists, `${currentId ?? ''}:clear`, drawn && keepClearLists.length > 0);
   const actionTarget = useTourHighlight(actionLists, `${currentId ?? ''}:action`, drawn && actionLists.length > 0);
@@ -497,10 +604,15 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   // Place the card once it has a size, and again whenever the spotlight or the frame moves
   const [position, setPosition] = useState<{ left: number; top: number } | null>(null);
   const taskModalOpen = !!task?.modal && modalType === task.modal;
+  // A drag step docks a wide, low card along the bottom of the main panel: the rows being
+  // dragged and the drop marker are above it, and the list of groups is left of it
+  // (a search step does the same: the search box and its matches fill the middle of the popup)
+  const wideCard = !!task && (!!targets?.dragOnly || !!targets?.lowCard);
   const place = useCallback(() => {
     const card = cardRef.current;
     if (!card || !step) return;
-    const beside = computeCardPosition({
+    const docked = { left: tourFrame().width - card.offsetWidth - tourRemToPx(FRAME_MARGIN_REM), top: tourFrame().height - card.offsetHeight - tourRemToPx(FRAME_MARGIN_REM) };
+    const beside = wideCard ? docked : computeCardPosition({
       anchor: spotlight,
       card: { width: card.offsetWidth, height: card.offsetHeight },
       frame: tourFrame(),
@@ -515,16 +627,27 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
     const extent = tourRemToPx(ACTION_FRAME_EDGE_REM);
     const size = { width: card.offsetWidth, height: card.offsetHeight };
     const grown = (rect: TourRect): TourRect => ({ left: rect.left - extent, top: rect.top - extent, width: rect.width + extent * 2, height: rect.height + extent * 2 });
-    // ...nor on a drag's destination, nor on what the task asks to keep readable (a setting's label)
-    const avoid = [action, drop, keepClear?.rect ?? null].filter((rect): rect is TourRect => rect !== null).map(grown);
-    const { left, top } = cardPositionAvoiding(beside, size, tourFrame(), tourRemToPx(FRAME_MARGIN_REM), avoid);
+    // ...nor on a drag's destination and its label. Those two come first; what the task asks to
+    // keep readable besides (a setting's label, the row being picked up) is given up before them
+    // when the popup has no room for everything.
+    const present = (rects: (TourRect | null)[]) => rects.filter((rect): rect is TourRect => rect !== null).map(grown);
+    const avoid = [present([dropAvoid, action]), present([keepClear?.rect ?? null])];
+    const { left, top } = cardPositionAvoidingByPriority(beside, size, tourFrame(), tourRemToPx(FRAME_MARGIN_REM), avoid);
     setPosition((prev) => (prev && prev.left === left && prev.top === top ? prev : { left, top }));
     // `taskStatus`, the chapter header and the practice offer change the card's height
-  }, [spotlight, action, drop, keepClear, step, taskModalOpen]);
+  }, [spotlight, action, dropAvoid, keepClear, step, taskModalOpen, wideCard]);
   useLayoutEffect(() => {
     place();
     window.addEventListener('resize', place);
-    return () => window.removeEventListener('resize', place);
+    // Whatever makes the card taller or shorter (a sub-step's line, the keyboard line, the
+    // chapter's description) may put it over the marker: place it again
+    const card = cardRef.current;
+    const observer = card && typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => place()) : null;
+    if (card) observer?.observe(card);
+    return () => {
+      window.removeEventListener('resize', place);
+      observer?.disconnect();
+    };
     // (the sub-step's own line of text changes the card's height too)
   }, [place, taskStatus, practiceRemoved, introducesChapter, drawn, subStepShown]);
 
@@ -564,7 +687,7 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   }, []);
   useEffect(() => {
     if (taskStatus !== 'done') return;
-    // A popover that closes as the task completes (the colour picker on "Apply") returns focus
+    // A popover that closes as the task completes (the color picker on "Apply") returns focus
     // to its trigger a moment AFTER this runs: keep handing back for a short while (see the
     // frame loop below). Not for longer, so the user can still Tab back to the control.
     handBackUntil.current = { until: performance.now() + HAND_BACK_MS, step: currentId ?? '' };
@@ -586,6 +709,9 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   // Once per frame: keep the lock in step with the page, and never leave focus on <body>
   // (a control that became inert, a menu that closed)
   const pinDemoGroup = step?.activate === 'tour-demo';
+  const pinNowOpen = step?.activate === 'now-open' && isDragStep;
+  const revealAfter = useRef(0);
+  const revealClash = useRef('');
   useTourFrame(() => {
     const dragging = isDndDragLive();
     if (isDragStep) {
@@ -596,24 +722,56 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
         const box = destination?.getBoundingClientRect();
         const near = tourRemToPx(DROP_NEAR_REM);
         // The MIDDLE of the carried copy is inside the destination (grown a little): rows next to
-        // each other would otherwise count as "over" the moment the item is picked up
-        const x = ghost ? ghost.left + ghost.width / 2 : 0;
+        // each other would otherwise count as "over" the moment the item is picked up. For a
+        // "below" marker the middle is in the gap under the row instead (or on its lower half,
+        // from where the item also lands under it).
+        // Across, the copy's LEFT end is what counts: it hangs to the right of the pointer and is
+        // as wide as the row it was taken from, so its middle can be far from where the pointer is.
+        const x = ghost ? ghost.left + Math.min(ghost.width / 2, tourRemToPx(1)) : 0;
         const y = ghost ? ghost.top + ghost.height / 2 : 0;
-        const over = !!box && !!ghost && ghost.width > 0 && x > box.left - near && x < box.right + near && y > box.top - near && y < box.bottom + near;
-        if (destination && (over || destination.hasAttribute(MOVE_CURSOR_ATTR))) phase = 3;
+        let over = false;
+        if (box && ghost && ghost.width > 0) {
+          const across = x > box.left - near && x < box.right + near;
+          over = dropBelow
+            ? across && y > box.bottom - box.height / 2 && y < box.bottom + ghost.height * 3
+            : across && y > box.top - near && y < box.bottom + near;
+        }
+        if (destination && (over || (!dropBelow && destination.hasAttribute(MOVE_CURSOR_ATTR)))) phase = 3;
       }
       setDragPhase((prev) => (prev === phase ? prev : phase));
     }
-    // A drag step keeps its practice group in the main panel (a hover may have switched it)
+    // A step on the practice group keeps it in the main panel (a hover may have switched it)
     if (pinDemoGroup && !dragging) {
       const at = groups.findIndex((g) => g.id === TOUR_DEMO_MAIN_ID);
       if (at > 0 && useUIStore.getState().activeGroupIndex !== at) useUIStore.getState().setActiveGroupIndex(at);
+    }
+    // ...and the step that drags out of Now Open keeps Now Open there until the tab is picked up
+    if (pinNowOpen && !dragging && useUIStore.getState().activeGroupIndex !== 0) useUIStore.getState().setActiveGroupIndex(0);
+    // The control to use and the destination stay in view: whichever is scrolled out of its list
+    // (a long list of groups, a window with many tabs) is brought back. Never while an item is
+    // being moved (the lists scroll by themselves then), and the control wins when one list
+    // cannot show both.
+    if (taskStatus === 'todo' && !dragging && performance.now() >= revealAfter.current) {
+      revealAfter.current = performance.now() + REVEAL_EVERY_MS;
+      const first = (lists: readonly (readonly string[])[]) => lists.map((list) => findTourElements(list)[0]).find(Boolean);
+      const source = first(actionLists);
+      const destination = first(dropLists);
+      if (source && !isFullyVisible(source)) revealTourTarget(source);
+      if (destination && !isFullyVisible(destination) && revealClash.current !== (currentId ?? '')) {
+        revealTourTarget(destination, tourRemToPx(DROP_LABEL_REM + DROP_SLOT_REM));
+        if (source && !isFullyVisible(source)) {
+          revealTourTarget(source);
+          revealClash.current = currentId ?? '';
+        }
+      }
     }
     // While an open dialog of the app hides everything else from assistive technology, the
     // card's own controls stay reachable (they are the way out of the step). Such a dialog hides
     // the card's DIRECT children (the card itself is spared, as the parent of a live region), and
     // none of them is ever hidden on purpose. Not found by the library's marker attribute: when
     // a menu and then a dialog open back to back, the second one hides without marking.
+    // Menu items and dialog buttons carry their visible text, for the steps that name one
+    markTourLabels();
     Array.from(cardRef.current?.children ?? []).forEach((el) => {
       if (el.hasAttribute('aria-hidden')) el.removeAttribute('aria-hidden');
     });
@@ -651,6 +809,26 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   // The drop marker: steady until an item is being dragged, then it is what pulses
   const dropRadius = drop && dropTarget ? Math.max(dropTarget.radius + tourRemToPx(DROP_PADDING_REM), tourRemToPx(MIN_RADIUS_REM)) : 0;
   const dropPulse = drop && dragPhase > 1 ? pulseScale({ width: drop.width + tourRemToPx(0.5), height: drop.height + tourRemToPx(0.5) }, tourRemToPx(PULSE_TRAVEL_REM)) : null;
+  // Where the marker's label goes. A line: under it, in the gap the item lands in (above it when
+  // the popup ends there). A tall box (a window): above it, or inside its top right corner when
+  // the popup starts there. A box one row high (a group in the list): under it, so the label
+  // covers neither the group's own name nor the name of the row before it (inside its corner
+  // when the popup ends there).
+  const labelRoom = tourRemToPx(1.75);
+  const roomUnder = !!drop && drop.top + drop.height + labelRoom <= frame.height;
+  const dropLabelPlace = !drop
+    ? ''
+    : dropBelow
+      ? roomUnder
+        ? 'under'
+        : ''
+      : drop.height < tourRemToPx(3.5)
+        ? roomUnder
+          ? 'under'
+          : 'inside'
+        : drop.top < labelRoom
+          ? 'inside'
+          : '';
   const pulse = spotlight && !action && !drop
     ? pulseScale({ width: spotlight.width + ringExtent * 2, height: spotlight.height + ringExtent * 2 }, tourRemToPx(PULSE_TRAVEL_REM))
     : null;
@@ -730,14 +908,19 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
         </div>
       )}
       {drop && (
-        // Where a dragged item goes. Decorative like the rings: the text names the destination.
+        // Where a dragged item goes. Decorative like the rings: the card's sub-step line says the
+        // same in words (it quotes the label). Drawn above everything, the copy of the item that
+        // follows the pointer included, so neither that copy nor a hover highlight can hide it.
         <div
           aria-hidden="true"
-          data-tour-drop={dragPhase > 1 ? 'live' : ''}
-          className="pointer-events-none fixed z-[60]"
-          style={{ left: drop.left, top: drop.top, width: drop.width, height: drop.height, borderRadius: dropRadius }}
+          data-tour-drop={`${dropBelow ? 'line' : ''}${dragPhase > 1 ? (dropBelow ? '-live' : 'live') : ''}`}
+          className="pointer-events-none fixed"
+          style={{ left: drop.left, top: drop.top, width: drop.width, height: drop.height, borderRadius: dropBelow ? 0 : dropRadius, zIndex: DROP_MARKER_Z }}
         >
-          <span data-tour-drop-label={drop.top < tourRemToPx(1.75) ? 'inside' : ''}>Drop here</span>
+          <span data-tour-drop-label={dropLabelPlace}>
+            <span data-tour-drop-arrow="" />
+            {targets?.dropLabel ?? 'Drop here'}
+          </span>
           {dropPulse && (
             <span
               data-tour-pulse=""
@@ -758,6 +941,7 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
         body={body}
         introducesChapter={introducesChapter}
         compact={taskModalOpen}
+        wide={wideCard}
         progress={tourProgress(steps ?? [], index, TOUR_CHAPTERS)}
         position={position}
         taskStatus={taskStatus}

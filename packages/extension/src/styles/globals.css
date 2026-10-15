@@ -321,27 +321,27 @@ html[data-tm-dnd-grabbing] * {
   outline-offset: -0.125rem;
 }
 
-/* Guided tour (components/Tour): the rings. Colours come from the theme tokens only.
+/* Guided tour (components/Tour): the rings. Colors come from the theme tokens only.
 
-   REGION ring (`[data-tour-spotlight]`), in the PRIMARY brand colour: the area a step is about.
-   ACTION ring (`[data-tour-action]`), in the SECONDARY brand colour (orange): the one control to
+   REGION ring (`[data-tour-spotlight]`), in the PRIMARY brand color: the area a step is about.
+   ACTION ring (`[data-tour-action]`), in the SECONDARY brand color (orange): the one control to
    use right now, so the two can never be mistaken for each other.
    DROP marker (`[data-tour-drop]`): where a dragged item goes. Dashed and labelled, so it
-   does not rely on colour to differ from the action ring.
+   does not rely on color to differ from the action ring.
 
    Every ring is box-shadows on an element that is slightly larger than its target (Tour.tsx
    pads it), so the lines follow the target's own corner radius and sit a little away from it.
-   The lines are thin on purpose (a 0.125rem coloured line). Brand colours alone do not reach
+   The lines are thin on purpose (a 0.125rem colored line). Brand colors alone do not reach
    3:1 on every surface (orange on white is about 2.3:1, cyan on white about 3:1), so each
-   coloured line has ONE hairline in the theme's text colour on its inner side: together they
+   colored line has ONE hairline in the theme's text color on its inner side: together they
    always have 3:1 or better against the control inside and against whatever is outside (the
    page, or the dim). The faint glow is decoration only.
 
    Only one thing moves at a time: the action ring pulses while there is one, else the region
    ring does; the drop marker pulses only while an item is being dragged.
 
-   Under forced colours shadows are dropped, so a transparent outline, which that mode paints
-   in a system colour, stands in for each ring. */
+   Under forced colors shadows are dropped, so a transparent outline, which that mode paints
+   in a system color, stands in for each ring. */
 [data-tour-spotlight] {
   box-shadow:
     0 0 0 0.0625rem hsl(var(--foreground)),
@@ -393,8 +393,8 @@ html[data-tm-dnd-grabbing] * {
 }
 
 /* An interactive step also has an ACTION RING (below) on the one control to use next. The
-   region then stays calm, so the ring is what draws the eye: a hairline in the primary colour
-   on a text-colour hairline, no glow and no pulse (Tour.tsx does not render one). */
+   region then stays calm, so the ring is what draws the eye: a hairline in the primary color
+   on a text-color hairline, no glow and no pulse (Tour.tsx does not render one). */
 [data-tour-spotlight='calm'] {
   box-shadow:
     0 0 0 0.0625rem hsl(var(--foreground)),
@@ -410,8 +410,8 @@ html[data-tm-dnd-grabbing] * {
   outline: none;
 }
 
-/* The action ring: tight around the one control to act on next, in the secondary colour.
-   A text-colour hairline, the thin orange line, a faint orange glow, and the pulse: it is the
+/* The action ring: tight around the one control to act on next, in the secondary color.
+   A text-color hairline, the thin orange line, a faint orange glow, and the pulse: it is the
    one thing on screen that moves. Drawn above menus and dialogs; never catches the pointer
    (pointer-events-none in Tour.tsx). */
 [data-tour-action] {
@@ -429,7 +429,7 @@ html[data-tm-dnd-grabbing] * {
 }
 
 /* The drop marker of a drag step: where the picked-up item goes. A thin dashed line in the
-   secondary colour with one solid text-colour hairline outside it (the hairline carries the
+   secondary color with one solid text-color hairline outside it (the hairline carries the
    contrast, the dashes and the label carry the meaning). Steady until an item is being
    dragged; then it takes over the pulse from the source (Tour.tsx renders the pulse). */
 [data-tour-drop] {
@@ -442,13 +442,39 @@ html[data-tm-dnd-grabbing] * {
   inset: -0.25rem;
 }
 
-/* Its label. Theme text colours for the words (white on the orange would be too faint), with
+/* The drop marker when the item goes into the GAP under a row (the end of a list, the place
+   after a group), not onto the row: a solid bar along that edge instead of a box, so it never
+   reads as "drop on this row". Text-color hairlines above and below carry the contrast; the
+   little wedge at its left end and the label's arrow carry the meaning without color. */
+[data-tour-drop^='line'] {
+  border: 0;
+  background: hsl(var(--secondary));
+  box-shadow: 0 0 0 0.0625rem hsl(var(--foreground));
+}
+
+[data-tour-drop^='line']::before {
+  content: '';
+  position: absolute;
+  left: -0.0625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0.3125rem solid transparent;
+  border-left-color: hsl(var(--foreground));
+}
+
+/* Its label. Theme text colors for the words (white on the orange would be too faint), with
    the orange as a bar in front. */
 [data-tour-drop-label] {
   position: absolute;
   right: -0.125rem;
   bottom: calc(100% + 0.125rem);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   border-right: 0.25rem solid hsl(var(--secondary));
+  /* A background-color edge, so the label stands out on any surface (the list of groups is
+     dark in both themes) */
+  outline: 0.0625rem solid hsl(var(--background));
   background: hsl(var(--foreground));
   color: hsl(var(--background));
   padding: 0.0625rem 0.375rem;
@@ -458,11 +484,29 @@ html[data-tm-dnd-grabbing] * {
   white-space: nowrap;
 }
 
-/* No room above the destination (it touches the top of the popup): the label goes inside it. */
+/* The arrow in the label points at the marker: down while the label sits above it. */
+[data-tour-drop-arrow] {
+  width: 0;
+  height: 0;
+  border-left: 0.25rem solid transparent;
+  border-right: 0.25rem solid transparent;
+  border-top: 0.3125rem solid currentColor;
+}
+
+/* No room above the destination (it touches the top of the popup): the label goes inside a
+   box, and under a line (its arrow then points up). */
 [data-tour-drop-label='inside'] {
   bottom: auto;
   top: 0;
   right: 0;
+}
+[data-tour-drop-label='under'] {
+  bottom: auto;
+  top: calc(100% + 0.125rem);
+}
+[data-tour-drop-label='under'] > [data-tour-drop-arrow] {
+  border-top: 0;
+  border-bottom: 0.3125rem solid currentColor;
 }
 
 /* The card's sub-step marker (one dot per control of a "try it" step). */
@@ -503,6 +547,13 @@ html[data-tm-dnd-grabbing] * {
   [data-tour-drop] {
     border-color: Highlight;
     background: none;
+  }
+  [data-tour-drop^='line'] {
+    background: Highlight;
+    outline: 0.0625rem solid CanvasText;
+  }
+  [data-tour-drop^='line']::before {
+    border-left-color: CanvasText;
   }
   [data-tour-drop-label] {
     border: 0.0625rem solid CanvasText;

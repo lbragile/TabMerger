@@ -48,6 +48,7 @@ import { toast } from '@/lib/toast';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
+import { countedGroups } from '@/lib/tierLimits';
 
 interface GroupContextMenuProps {
   group: Group;
@@ -218,7 +219,7 @@ export function GroupContextMenu({
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => {
-            if ((groupsState?.available.length ?? 1) - 1 >= maxGroups) {
+            if (countedGroups(groupsState?.available ?? []).length >= maxGroups) {
               trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
               toast.error(`Free plan allows up to ${maxGroups} groups.`, {
                 action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }

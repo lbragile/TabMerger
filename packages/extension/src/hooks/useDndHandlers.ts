@@ -23,6 +23,7 @@ import {
   type DndSideEffect
 } from '@/lib/dndMove';
 import { rebaseMove } from '@/lib/dndRebase';
+import { isTourSpringOpenBlocked } from '@/lib/tourSandbox';
 import { closeTabsWhenPopupCloses } from '@/lib/deferredTabClose';
 import {
   clearDndDragLive,
@@ -958,7 +959,9 @@ export function useDndHandlers() {
         overGroup.index !== activeGroupIndex &&
         // A practice item of the guided tour can only land in a practice group (`canDrop`):
         // hovering one of the user's own groups must not switch the panel to it
-        (!isTourDemoItem(model, a.id) || overGroup.tourDemo);
+        (!isTourDemoItem(model, a.id) || overGroup.tourDemo) &&
+        // ...and a tour step whose destination is in the panel being shown keeps that panel
+        !isTourSpringOpenBlocked();
       if (armSpring) {
         if (springOverIdRef.current !== overId) {
           clearSpring();

@@ -51,3 +51,46 @@ describe('uiStore — guided tour', () => {
     expect(useUIStore.getState().modal.type).toBe('settings')
   })
 })
+
+describe('uiStore — tour practice history', () => {
+  const snap = (id: string) => ({ available: [], active: { id, index: 0 } }) as never
+
+  beforeEach(() => {
+    useUIStore.setState({ undoStack: [], redoStack: [], tourHistory: null })
+  })
+
+  it('begin sets the user history aside and starts empty; end puts it back untouched', () => {
+    useUIStore.setState({ undoStack: [snap('u')], redoStack: [snap('r')] })
+    useUIStore.getState().beginTourHistory()
+    expect(useUIStore.getState()).toMatchObject({ undoStack: [], redoStack: [] })
+    expect(useUIStore.getState().tourHistory).toEqual({ undoStack: [snap('u')], redoStack: [snap('r')] })
+    useUIStore.setState({ undoStack: [snap('practice')] })
+    useUIStore.getState().endTourHistory()
+    const s = useUIStore.getState()
+    expect(s.tourHistory).toBeNull()
+    expect(s.undoStack).toEqual([snap('u')])
+    expect(s.redoStack).toEqual([snap('r')])
+  })
+
+  it('clearHistory during a tour empties the live stacks AND the set-aside ones', () => {
+    useUIStore.setState({ undoStack: [snap('u')], redoStack: [snap('r')] })
+    useUIStore.getState().beginTourHistory()
+    useUIStore.setState({ undoStack: [snap('practice')] })
+    useUIStore.getState().clearHistory()
+    expect(useUIStore.getState().undoStack).toEqual([])
+    expect(useUIStore.getState().tourHistory).toEqual({ undoStack: [], redoStack: [] })
+  })
+
+  it('endTourHistory after a clear restores EMPTY stacks, not snapshots of wiped data', () => {
+    useUIStore.setState({ undoStack: [snap('u')], redoStack: [snap('r')] })
+    useUIStore.getState().beginTourHistory()
+    useUIStore.getState().clearHistory()
+    useUIStore.getState().endTourHistory()
+    expect(useUIStore.getState()).toMatchObject({ undoStack: [], redoStack: [], tourHistory: null })
+  })
+
+  it('clearHistory outside a tour leaves tourHistory null', () => {
+    useUIStore.getState().clearHistory()
+    expect(useUIStore.getState().tourHistory).toBeNull()
+  })
+})

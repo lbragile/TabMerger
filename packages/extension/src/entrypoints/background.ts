@@ -11,6 +11,7 @@ import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { copyLiveTab } from '@/lib/dndMove';
+import { isTourPracticeUrl } from '@/lib/tourPracticeTab';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
 import {
@@ -113,7 +114,8 @@ export function tabsForScope(
   }
 
   return selected
-    .filter((t) => t.url && !t.url.startsWith('chrome://'))
+    // (never the guided tour's spare practice tab: it is not one of the user's tabs)
+    .filter((t) => t.url && !t.url.startsWith('chrome://') && !isTourPracticeUrl(t.url))
     .map((t) =>
       copyLiveTab({
         id: t.id ?? 0,

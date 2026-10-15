@@ -1045,3 +1045,28 @@ describe('background — guided tour flag on install', () => {
     expect(stub.chrome.storage.local.set).not.toHaveBeenCalledWith({ tm_tour: expect.anything() })
   })
 })
+
+describe('background — tabsForScope', () => {
+  const PRACTICE = 'chrome-extension://abc/tour-practice.html'
+  const t = (id: number, index: number, url: string) => ({ id, index, url, title: `T${id}` }) as chrome.tabs.Tab
+
+  async function scoped(scope: 'current' | 'left' | 'right' | 'excluding', contextId: number, tabs: chrome.tabs.Tab[]) {
+    ;(globalThis.chrome.runtime.getURL as unknown) = vi.fn((path: string) => `chrome-extension://abc/${path}`)
+    const { tabsForScope } = await import('@/entrypoints/background')
+    return tabsForScope(scope, tabs.find((x) => x.id === contextId)!, tabs).map((x) => x.url)
+  }
+
+  const tabs = [t(1, 0, 'https://a.com'), t(2, 1, PRACTICE), t(3, 2, 'https://b.com'), t(4, 3, 'chrome://settings')]
+
+  it('never includes the tour practice tab, whatever the scope', async () => {
+    expect(await scoped('excluding', 1, tabs)).toEqual(['https://b.com'])
+    expect(await scoped('right', 1, tabs)).toEqual(['https://b.com'])
+    expect(await scoped('left', 3, tabs)).toEqual(['https://a.com'])
+    expect(await scoped('current', 2, tabs)).toEqual([])
+  })
+
+  it('still skips chrome:// pages and keeps ordinary tabs', async () => {
+    expect(await scoped('excluding', 3, tabs)).toEqual(['https://a.com'])
+    expect(await scoped('current', 1, tabs)).toEqual(['https://a.com'])
+  })
+})

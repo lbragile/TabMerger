@@ -1,32 +1,35 @@
-import { TOUR_DEMO_GROUP_NAME, TOUR_DEMO_TARGET_GROUP_NAME, isTourDemoGroup } from '@tabmerger/shared';
+import { TOUR_DEMO_GROUP_IDS, TOUR_DEMO_GROUP_NAME, TOUR_DEMO_MAIN_ID, TOUR_DEMO_TARGET_GROUP_NAME, TOUR_DEMO_TARGET_ID, isTourDemoGroup } from '@tabmerger/shared';
 import { updateGroupsState } from './localDb';
 import type { Group, GroupsState, Tab, Window } from './types';
 import { getGroupInfo } from './utils';
 
 /**
- * The guided tour's practice data: two groups the drag-and-drop chapter lets the user move
- * things around in, so nothing of theirs is touched.
+ * The guided tour's practice data: two groups the tour's "try it" steps work on (dragging,
+ * saving and reopening tabs, tidying, selecting, searching, undoing), so nothing of the user's
+ * is touched.
  *
  * They are ordinary groups in the local list, marked `tourDemo: true`. Everything that reads
  * saved groups asks `isTourDemoGroup` (from `@tabmerger/shared`) and leaves them out: cloud sync
  * (push, positions, pending remote deletes, the merge), backups, sessions, export, sharing, plan
- * limits, the right-click menu, URL rules, the undo history and search. Drag and drop treats
+ * limits, the right-click menu, URL rules, the user's undo history and search (except during the
+ * tour's own search steps: `isHiddenFromSearch` in `tourSandbox.ts`). Drag and drop treats
  * them as a sealed sandbox (`canDrop` in `dndMove.ts`): practice items only move between
  * practice groups, and nothing else can be dropped into one.
  *
- * Lifetime: they exist only while a step of the tour's drag chapter is on screen. `Tour.tsx`
- * makes them on entering the chapter and removes them on leaving it, however the tour is left
- * (Next, Back, a skipped chapter, a finished or skipped tour). A popup closed in the middle of
- * the chapter cannot clean up, so the next popup open does: unless the tour is about to resume
- * in that chapter, they are removed before anything else (`Tour.tsx`).
+ * Lifetime: they exist only while a step of one of the chapters that use them is on screen
+ * (`TOUR_DEMO_CHAPTERS` in `tour.ts`). `Tour.tsx` makes them on entering those chapters and
+ * removes them on leaving, however the tour is left (Next, Back, a skipped chapter, a finished
+ * or skipped tour). A popup closed in the middle of such a chapter cannot clean up, so the next
+ * popup open does: unless the tour is about to resume there, they are removed before anything
+ * else (`Tour.tsx`).
  *
  * The ids are fixed, so a practice group can always be found again (and is also recorded in the
  * tour's stored record). The sample addresses are reserved example domains; the tour never
  * opens them.
  */
-export const TOUR_DEMO_MAIN_ID = 'tour-demo-1';
-export const TOUR_DEMO_TARGET_ID = 'tour-demo-2';
-export const TOUR_DEMO_GROUP_IDS: readonly string[] = [TOUR_DEMO_MAIN_ID, TOUR_DEMO_TARGET_ID];
+export { TOUR_DEMO_MAIN_ID, TOUR_DEMO_TARGET_ID, TOUR_DEMO_GROUP_IDS };
+/** Name of the first window of "Tour demo". The step text names it, so a step that does checks it is still there. */
+export const TOUR_DEMO_FIRST_WINDOW_NAME = 'Reading';
 
 const sampleTab = (title: string, url: string, savedAt: number): Tab => ({ id: 0, title, url, savedAt });
 const sampleWindow = (name: string, tabs: Tab[]): Window => ({ id: 0, name, tabs, incognito: false, focused: false });
@@ -39,7 +42,7 @@ export function buildTourDemoGroups(now: number = Date.now()): Group[] {
   };
   return [
     group(TOUR_DEMO_MAIN_ID, TOUR_DEMO_GROUP_NAME, 'rgba(245,146,30,1)', [
-      sampleWindow('Reading', [
+      sampleWindow(TOUR_DEMO_FIRST_WINDOW_NAME, [
         sampleTab('Sample: news article', 'https://example.com/news', now),
         sampleTab('Sample: recipe', 'https://example.com/recipe', now),
         sampleTab('Sample: travel guide', 'https://example.com/travel', now)

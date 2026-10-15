@@ -28,8 +28,18 @@ function contentKey(g: Group): string {
  * The guided tour's practice groups are not history either: a snapshot's copies are dropped and
  * the ones that exist NOW are kept, at the end of the list, so an undo neither removes practice
  * data mid-tour nor brings it back after the tour removed it.
+ *
+ * `tourPractice` turns that around, for the tour's own practice history (`uiStore.tourHistory`):
+ * ONLY the practice groups are taken from the snapshot, and everything of the user's (their
+ * groups, the order, the active group) stays exactly as it is now. A practice undo can
+ * therefore never change, re-stamp or re-upload a real group, whatever happened to the real
+ * groups since the snapshot was taken (a sync pull, a write from the service worker).
  */
-export function restoreSnapshotAsLocalChange(current: GroupsState, snapshot: GroupsState): GroupsState {
+export function restoreSnapshotAsLocalChange(current: GroupsState, snapshot: GroupsState, opts: { tourPractice?: boolean } = {}): GroupsState {
+  if (opts.tourPractice) {
+    const practice = snapshot.available.filter((g) => isTourDemoGroup(g) && !g.permanent);
+    return { ...current, available: [...current.available.filter((g) => !isTourDemoGroup(g)), ...practice] };
+  }
   const currentById = new Map(current.available.map((g) => [g.id, g]));
   const currentNowOpen = current.available.find((g) => g.permanent);
   const now = Date.now();

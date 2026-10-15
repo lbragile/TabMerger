@@ -562,6 +562,11 @@ function permanentFirst(groups: Group[], compare: (a: Group, b: Group) => number
   return [...groups.filter((g) => g.permanent), ...groups.filter((g) => !g.permanent).sort(compare)];
 }
 
+/** Each group's index among the groups that are not tour practice data (practice groups get none). */
+function syncedIndexMap(groups: Group[]): Map<string, number> {
+  return new Map(groups.filter((g) => !isTourDemoGroup(g)).map((g, i): [string, number] => [g.id, i]));
+}
+
 /**
  * Sidebar order after a pull, so two devices converge on one order.
  *
@@ -574,15 +579,20 @@ function permanentFirst(groups: Group[], compare: (a: Group, b: Group) => number
  * Ties break by `updatedAt` desc, then id, so the result never depends on arrival order.
  */
 function orderByPosition(merged: Group[], localGroups: Group[], snapshot: RemoteSnapshot): Group[] {
-  const localIndex = new Map(localGroups.map((g, i) => [g.id, i]));
+  // Indices count the groups without the tour's practice groups, the same numbering the pushed
+  // `position` uses; the practice groups themselves always sort after every real group
+  const localIndex = syncedIndexMap(localGroups);
+  const practiceIndex = new Map(localGroups.map((g, i) => [g.id, i]));
   const localById = new Map(localGroups.map((g) => [g.id, g]));
   const key = (g: Group): number => {
+    if (isTourDemoGroup(g)) return practiceIndex.get(g.id) ?? 0;
     const remotePos = snapshot.positions.get(g.id);
     const local = localById.get(g.id);
     if (remotePos !== undefined && !local?.pendingSync && !local?.positionDirty) return remotePos;
     return localIndex.get(g.id) ?? remotePos ?? Infinity;
   };
-  return permanentFirst(merged, (a, b) => key(a) - key(b) || b.updatedAt - a.updatedAt || (a.id < b.id ? -1 : 1));
+  const practiceLast = (g: Group) => (isTourDemoGroup(g) ? 1 : 0);
+  return permanentFirst(merged, (a, b) => practiceLast(a) - practiceLast(b) || key(a) - key(b) || b.updatedAt - a.updatedAt || (a.id < b.id ? -1 : 1));
 }
 
 /**
@@ -693,13 +703,17 @@ async function runSyncCycle(session: Session): Promise<{ groups: Group[]; status
     droppedRemotely = result.toDelete;
     conflicts = result.conflicts;
     foreign = result.toSave.length > 0 || result.toDelete.length > 0 || result.copies.length > 0;
-    const localIndex = new Map(fresh.available.map((g, i) => [g.id, i]));
+    const localIndex = syncedIndexMap(fresh.available);
     const localById = new Map(fresh.available.map((g) => [g.id, g]));
     // A group that moved to exactly its remote position is already in sync there: claim it so
     // adopting another device's order does not make this device push the same positions back.
-    const ordered = orderByPosition(result.merged, fresh.available, snapshot).map((g, i) => {
+    // (Indices without the practice groups, matching the pushed `position`.)
+    const sorted = orderByPosition(result.merged, fresh.available, snapshot);
+    const sortedIndex = syncedIndexMap(sorted);
+    const ordered = sorted.map((g) => {
       const local = localById.get(g.id);
-      const claimsSynced = localIndex.get(g.id) !== i && snapshot.positions.get(g.id) === i && !local?.pendingSync && !local?.positionDirty;
+      const i = sortedIndex.get(g.id);
+      const claimsSynced = i !== undefined && localIndex.get(g.id) !== i && snapshot.positions.get(g.id) === i && !local?.pendingSync && !local?.positionDirty;
       if (claimsSynced) return { ...g, positionDirty: false };
       // A remote row with no valid position (written before position sync existed) must receive
       // this device's order: flag it so the next push sends 1..n instead of leaving the server at 0.

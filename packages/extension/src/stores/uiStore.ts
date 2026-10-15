@@ -27,6 +27,9 @@ export type ModalType =
   | 'resetEncryption'
   | null;
 
+/** How many snapshots Undo and Redo each keep. */
+export const UNDO_HISTORY_LIMIT = 10;
+
 interface ModalState {
   type: ModalType;
   data?: Record<string, unknown>;
@@ -124,8 +127,32 @@ interface UIState {
    * null. Deliberately survives `endTour`: a replay in the same popup reuses the group.
    */
   tourPracticeGroupId: string | null;
+  /**
+   * Things the tour's "try it" steps wait for that leave no trace in the saved data: how often
+   * each named thing happened since the popup opened (`undo`, `redo`, `open-window`, …). A
+   * step compares against the counts it started from. See `lib/tourTasks.ts`.
+   */
+  tourSignals: Readonly<Record<string, number>>;
+  /**
+   * Non-null while the tour is on a chapter that works on its practice ("Tour demo") groups:
+   * the user's own undo and redo history, put aside for the duration. Meanwhile `undoStack` and
+   * `redoStack` are a history of the PRACTICE data only (snapshots keep the practice groups, and
+   * restoring one changes nothing else: `restoreSnapshotAsLocalChange`), so "Undo" really undoes
+   * a practice change in the tour's undo step. `endTourHistory` puts the user's history back
+   * exactly as it was: nothing done on practice data ever adds to it, removes from it or clears
+   * its redo side.
+   */
+  tourHistory: { undoStack: GroupsState[]; redoStack: GroupsState[] } | null;
 
   // Actions
+  /** Puts the user's undo/redo history aside and starts an empty one for practice data. No-op when already begun. */
+  beginTourHistory: () => void;
+  /** Empties the practice history (the tour's undo step starts from "nothing to undo"). No-op outside it. */
+  clearTourHistory: () => void;
+  /** Drops the practice history and puts the user's own back. No-op when not begun. */
+  endTourHistory: () => void;
+  /** Counts one more of `name` in {@link UIState.tourSignals}. Does nothing while no tour is under way. */
+  signalTour: (name: string) => void;
   /**
    * Starts (or restarts) the tour, at `stepId` when given and still present, else at step 1.
    * `practiceGroupId` (from the stored record) is only applied when given.
@@ -189,8 +216,9 @@ function withOverlayDismiss(
  * the tour removed them. (Restoring keeps whatever practice groups are current: see
  * `restoreSnapshotAsLocalChange`.)
  */
-function historySnapshot(state: GroupsState): GroupsState {
-  if (!Array.isArray(state?.available)) return state;
+function historySnapshot(state: GroupsState, keepTourDemo = false): GroupsState {
+  // (kept only in the tour's own practice history: see `UIState.tourHistory`)
+  if (keepTourDemo || !Array.isArray(state?.available)) return state;
   const available = withoutTourDemoGroups(state.available);
   return available === state.available ? state : { ...state, available };
 }
@@ -221,6 +249,15 @@ export const useUIStore = create<UIState>((set, get) => ({
   tourActive: false,
   tourStepId: null,
   tourPracticeGroupId: null,
+  tourSignals: {},
+  tourHistory: null,
+  beginTourHistory: () =>
+    set((prev) => (prev.tourHistory ? prev : { tourHistory: { undoStack: prev.undoStack, redoStack: prev.redoStack }, undoStack: [], redoStack: [] })),
+  clearTourHistory: () => set((prev) => (prev.tourHistory ? { undoStack: [], redoStack: [] } : prev)),
+  endTourHistory: () =>
+    set((prev) => (prev.tourHistory ? { tourHistory: null, undoStack: prev.tourHistory.undoStack, redoStack: prev.tourHistory.redoStack } : prev)),
+  signalTour: (name) =>
+    set((prev) => (prev.tourActive ? { tourSignals: { ...prev.tourSignals, [name]: (prev.tourSignals[name] ?? 0) + 1 } } : prev)),
   startTour: (stepId, practiceGroupId) =>
     set((prev) => ({
       tourActive: true,
@@ -252,7 +289,7 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   pushUndo: (state) =>
     set((prev) => {
-      const stack = [historySnapshot(state), ...prev.undoStack].slice(0, 10);
+      const stack = [historySnapshot(state, prev.tourHistory !== null), ...prev.undoStack].slice(0, UNDO_HISTORY_LIMIT);
       return { undoStack: stack, redoStack: [] };
     }),
 
@@ -261,10 +298,10 @@ export const useUIStore = create<UIState>((set, get) => ({
    * cache value at the moment of the gesture) onto the redo stack so redo can reverse the undo.
    */
   undo: (currentState: import('@/lib/types').GroupsState) => {
-    const { undoStack, redoStack } = get();
+    const { undoStack, redoStack, tourHistory } = get();
     if (undoStack.length === 0) return undefined;
     const [top, ...rest] = undoStack;
-    set({ undoStack: rest, redoStack: [historySnapshot(currentState), ...redoStack].slice(0, 10) });
+    set({ undoStack: rest, redoStack: [historySnapshot(currentState, tourHistory !== null), ...redoStack].slice(0, UNDO_HISTORY_LIMIT) });
     return top;
   },
 
@@ -273,14 +310,17 @@ export const useUIStore = create<UIState>((set, get) => ({
    * so the user can undo again after a redo.
    */
   redo: (currentState: import('@/lib/types').GroupsState) => {
-    const { undoStack, redoStack } = get();
+    const { undoStack, redoStack, tourHistory } = get();
     if (redoStack.length === 0) return undefined;
     const [top, ...rest] = redoStack;
-    set({ undoStack: [historySnapshot(currentState), ...undoStack].slice(0, 10), redoStack: rest });
+    set({ undoStack: [historySnapshot(currentState, tourHistory !== null), ...undoStack].slice(0, UNDO_HISTORY_LIMIT), redoStack: rest });
     return top;
   },
 
-  clearHistory: () => set({ undoStack: [], redoStack: [] }),
+  // The user's history set aside for the tour is emptied too: `endTourHistory` would otherwise put
+  // back snapshots of data that was just wiped, pulled over or belongs to another account
+  clearHistory: () =>
+    set((prev) => ({ undoStack: [], redoStack: [], tourHistory: prev.tourHistory ? { undoStack: [], redoStack: [] } : null })),
   restoreHistory: (undoStack, redoStack) => set({ undoStack, redoStack }),
 
   enterSelectionMode: () =>

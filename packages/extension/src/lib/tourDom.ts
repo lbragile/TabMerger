@@ -10,11 +10,18 @@ export const TOUR_APP_ROOT_ID = 'root';
 export const TOUR_CARD_SELECTOR = '[data-tour-card]';
 
 /**
+ * Any dialog of the app, never the tour's own card. The in-app confirmation is an
+ * `alertdialog` (`components/Modal/ConfirmDialog.tsx`) and counts exactly like a `dialog`. One
+ * compound selector (no comma), so it can be extended: `${TOUR_APP_DIALOG} > button`.
+ */
+export const TOUR_APP_DIALOG = ':is([role="dialog"], [role="alertdialog"]):not([data-tour-card])';
+
+/**
  * Surfaces the APP renders outside its root while a control is open: Radix menus, popovers and
  * select lists (all inside a popper wrapper) and dialogs. While one is open and has the
  * keyboard, its own key handling and focus trap are in charge, not the tour's.
  */
-export const TOUR_FOREIGN_LAYER = '[data-radix-popper-content-wrapper], [role="dialog"]:not([data-tour-card])';
+export const TOUR_FOREIGN_LAYER = `[data-radix-popper-content-wrapper], ${TOUR_APP_DIALOG}`;
 
 export function findTourAnchor(name: string | null): HTMLElement | null {
   if (!name || typeof document === 'undefined') return null;
@@ -78,6 +85,8 @@ export interface TourHighlight {
   radius: number;
   /** Position, in the lists given, of the list that won (0 = the first, most specific one). */
   index: number;
+  /** True when the bottom edge of what was measured is cut off (scrolled out of its list). */
+  bottomCut: boolean;
 }
 
 /**
@@ -92,9 +101,51 @@ export function measureTourHighlight(groups: readonly (readonly string[])[]): To
     const rect = unionRects(rects);
     if (!rect) continue;
     const radius = elements.length === 1 ? parseFloat(getComputedStyle(elements[0]).borderTopLeftRadius) || 0 : 0;
-    return { rect, radius: Math.min(radius, rect.width / 2, rect.height / 2), index };
+    const fullBottom = Math.max(...elements.map((el) => el.getBoundingClientRect().bottom));
+    return { rect, radius: Math.min(radius, rect.width / 2, rect.height / 2), index, bottomCut: fullBottom > rect.top + rect.height + 1 };
   }
   return null;
+}
+
+/**
+ * Attribute the tour writes on menu items and dialog buttons while a step is up: the control's
+ * visible text ({@link markTourLabels}). It lets a step name a control exactly the way its text
+ * does (`[data-tour-label="Open in browser"]`), for controls that carry no `data-tour` anchor.
+ */
+export const TOUR_LABEL_ATTR = 'data-tour-label';
+
+const LABELED = `[role="menuitem"], ${TOUR_APP_DIALOG} button`;
+
+/**
+ * The first line of visible text inside an element: a menu item's title without the hint under
+ * it, a button's whole text. It is the text of the element that holds the first words, pieces
+ * joined (React renders "Remove {count} duplicates" as several text nodes).
+ */
+function firstText(el: Element): string {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (!(node.textContent ?? '').trim()) continue;
+    const pieces = Array.from(node.parentNode?.childNodes ?? [node]).filter((child) => child.nodeType === Node.TEXT_NODE);
+    return pieces
+      .map((piece) => piece.textContent ?? '')
+      .join('')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 80);
+  }
+  return '';
+}
+
+/**
+ * Writes {@link TOUR_LABEL_ATTR} on every menu item and dialog button on the page. Cheap (a
+ * handful of elements, and only while a menu or dialog is open), and an attribute is only
+ * written when its value changes, so calling it every frame causes no mutations when idle.
+ */
+export function markTourLabels(): void {
+  document.querySelectorAll(LABELED).forEach((el) => {
+    const text = firstText(el);
+    if (el.getAttribute(TOUR_LABEL_ATTR) !== text) el.setAttribute(TOUR_LABEL_ATTR, text);
+  });
 }
 
 /** Every element on the page matching any of the selectors. */
@@ -123,6 +174,29 @@ export function revealTourAnchor(el: Element): void {
   if (top === null) return;
   if (typeof container.scrollTo === 'function') container.scrollTo({ top, behavior: motionScrollBehavior() });
   else container.scrollTop = top;
+}
+
+/** True when nothing of the element is cut off by a scrolling ancestor or the popup frame. */
+export function isFullyVisible(el: Element): boolean {
+  const full = elementRect(el);
+  const seen = visibleRect(el);
+  return !!seen && seen.height >= full.height - 1 && seen.width >= full.width - 1;
+}
+
+/**
+ * Brings an element fully into view through EVERY scrolling ancestor (a tab inside a window's
+ * own list inside the windows panel), with `padding` pixels of room above and below it. Instant,
+ * not smooth: the rings are measured every frame and must not chase a moving target.
+ */
+export function revealTourTarget(el: Element, padding = tourRemToPx(0.5)): void {
+  let node: Element = el;
+  for (let depth = 0; depth < 6; depth++) {
+    const container = findScrollContainer(node);
+    if (!container) return;
+    const top = scrollTopToReveal(elementRect(el), elementRect(container), container.scrollTop, padding);
+    if (top !== null) container.scrollTop = top;
+    node = container;
+  }
 }
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -164,7 +238,7 @@ export function tourFocusables(card: HTMLElement, allowed: readonly Element[] = 
   return allowedFirst ? [...inApp, ...inCard, ...inToasts] : [...inCard, ...inApp, ...inToasts];
 }
 
-/** True for the toast container sonner renders inside the app root (a labelled live region). */
+/** True for the toast container sonner renders inside the app root (a labeled live region). */
 function isToastRegion(el: Element): boolean {
   return el.matches('section[aria-live]') || el.querySelector('[data-sonner-toaster]') !== null;
 }
@@ -212,7 +286,7 @@ export function lockTourApp(allow: readonly Element[] = [], extraRoots: readonly
  * True while a menu, popover, select list or dialog of the app is open (not the tour's card).
  * A tooltip does not count, although it is drawn in the same kind of wrapper: it takes no
  * focus and owns no keys, and one opens by itself whenever the keyboard lands on a control
- * that has one (the colour dot, the star), which would otherwise read as "a menu is open" for
+ * that has one (the color dot, the star), which would otherwise read as "a menu is open" for
  * as long as focus stays there.
  */
 export function isForeignLayerOpen(): boolean {

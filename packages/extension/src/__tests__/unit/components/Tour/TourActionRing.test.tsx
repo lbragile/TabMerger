@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const { mockTrackEvent, mockDeleteGroup, mockToast, app } = vi.hoisted(() => ({
   mockTrackEvent: vi.fn(),
@@ -14,6 +15,13 @@ vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => ({ data: { available: app.groups } }),
   useDeleteGroup: () => ({ mutate: mockDeleteGroup }),
+  GROUPS_QUERY_KEY: ['groups'],
+}))
+vi.mock('@/lib/tourDemo', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/tourDemo')>()),
+  ensureTourDemoGroups: vi.fn().mockResolvedValue({ state: { available: [] }, changed: false }),
+  resetTourDemoGroups: vi.fn().mockResolvedValue({ state: { available: [] }, changed: false }),
+  removeTourDemoGroups: vi.fn().mockResolvedValue({ state: { available: [] }, changed: false }),
 }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => ({ data: { theme: app.theme } }) }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ maxGroups: app.maxGroups }) }))
@@ -39,8 +47,23 @@ function mountApp(html: string) {
   document.body.appendChild(root)
   return root
 }
+/** A practice group as `buildTourDemoGroups` makes it, enough for the search tasks to be available. */
+const DEMO = {
+  ...saved('tour-demo-1', { name: 'Tour demo', tourDemo: true }),
+  windows: [{ id: 0, name: 'Reading', incognito: false, focused: false, tabs: [{ id: 0, title: 'Sample: news article', url: 'https://example.com/news', savedAt: 0 }] }]
+}
 const ROW = (id: string, inner: string, rect = '0,100,240,36') => `<div data-sidebar-group-index="1" data-tm-dnd-id="${id}" data-rect="${rect}">${inner}</div>`
 
+const renderTour = () => {
+  const client = new QueryClient()
+  const tree = () => (
+    <QueryClientProvider client={client}>
+      <Tour />
+    </QueryClientProvider>
+  )
+  const view = render(tree())
+  return { ...view, rerenderTour: () => view.rerender(tree()) }
+}
 const start = (stepId?: string) => act(() => useUIStore.getState().startTour(stepId))
 const dialog = () => screen.getByRole('dialog')
 const action = () => document.querySelector<HTMLElement>('[data-tour-action]')
@@ -75,12 +98,12 @@ afterEach(() => rectSpy.mockRestore())
 describe('Tour action ring', () => {
   it('is drawn on the Add Group control while the task is to do, and the region merges with it', async () => {
     mountApp('<button data-tour="add-group" data-rect="0,500,240,36">Add Group</button>')
-    render(<Tour />)
+    renderTour()
     start('make-group')
     await waitFor(() => expect(action()).not.toBeNull())
     expect(region()).toHaveAttribute('data-tour-spotlight', 'merged')
-    // cut-out = control grown by 3px, kept 8px from the frame edge
-    expect(action()).toHaveStyle({ left: '8px', top: '497px' })
+    // cut-out = control grown by 3px, kept 7px (ring 3px + pulse 4px) from the frame edge
+    expect(action()).toHaveStyle({ left: '7px', top: '497px' })
   })
 
   it('moves from the name field to Save once the typed name is marked ready, and the region goes calm', async () => {
@@ -93,7 +116,7 @@ describe('Tour action ring', () => {
           '<button data-tour="group-name-save" id="save" data-rect="170,106,50,24">Save</button>'
       )
     )
-    render(<Tour />)
+    renderTour()
     start('make-group')
     await waitFor(() => expect(action()).not.toBeNull())
     expect(action()).toHaveStyle({ left: '37px', top: '103px' }) // the input, 40,106
@@ -104,7 +127,7 @@ describe('Tour action ring', () => {
 
   it('is not drawn on a read-only step, which keeps its pulse and an empty region attribute', async () => {
     mountApp('<button data-tour="undo" data-rect="300,10,30,30">u</button><button data-tour="redo" data-rect="340,10,30,30">r</button>')
-    render(<Tour />)
+    renderTour()
     start('undo')
     await waitFor(() => expect(region()).not.toBeNull())
     expect(action()).toBeNull()
@@ -116,7 +139,7 @@ describe('Tour action ring', () => {
     app.groups = [NOW_OPEN, saved('g1')]
     useUIStore.setState({ tourPracticeGroupId: 'g1' })
     mountApp(ROW('g1', '<button data-tour="group-pin" data-rect="200,106,24,24">star</button>'))
-    render(<Tour />)
+    renderTour()
     start('group-pin')
     await waitFor(() => expect(action()).not.toBeNull())
     expect(action()!.querySelector('[data-tour-pulse]')).not.toBeNull()
@@ -129,11 +152,11 @@ describe('Tour action ring', () => {
     app.groups = [NOW_OPEN, saved('g1')]
     useUIStore.setState({ tourPracticeGroupId: 'g1' })
     mountApp(ROW('g1', '<button data-tour="group-pin" data-rect="200,106,24,24">star</button>'))
-    const view = render(<Tour />)
+    const view = renderTour()
     start('group-pin')
     await waitFor(() => expect(action()).not.toBeNull())
     app.groups = [NOW_OPEN, saved('g1', { starred: true })]
-    view.rerender(<Tour />)
+    view.rerenderTour()
     await waitFor(() => expect(dialog()).toHaveAttribute('data-tour-task', 'done'))
     await waitFor(() => expect(action()).toBeNull())
     expect(region()).toHaveAttribute('data-tour-spotlight', '')
@@ -142,7 +165,7 @@ describe('Tour action ring', () => {
   it('is absent when the step falls back to read-only (group limit)', async () => {
     app.groups = [NOW_OPEN, ...['a', 'b', 'c', 'd', 'e'].map((id) => saved(id))]
     mountApp('<button data-tour="add-group" data-rect="0,500,240,36">Add Group</button>')
-    render(<Tour />)
+    renderTour()
     start('make-group')
     await waitFor(() => expect(region()).not.toBeNull())
     expect(dialog()).toHaveAttribute('data-tour-task', 'none')
@@ -164,8 +187,8 @@ describe('Tour colour step: previewColor is fed only for the practice group', ()
 
   it('walks dot, swatches, Apply as the practice group colour is previewed', async () => {
     mountApp(dot + picker)
-    render(<Tour />)
-    start('group-colour')
+    renderTour()
+    start('group-color')
     // picker is on the page: swatches (270,70), not the dot
     await waitFor(() => expect(action()).toHaveStyle({ left: '267px', top: '67px' }))
     act(() => useUIStore.setState({ previewGroupColor: { groupId: 'g1', color: 'rgba(9,9,9,1)' } }))
@@ -174,8 +197,8 @@ describe('Tour colour step: previewColor is fed only for the practice group', ()
 
   it('stays on the swatches when the preview belongs to another group or equals the stored colour', async () => {
     mountApp(dot + picker)
-    render(<Tour />)
-    start('group-colour')
+    renderTour()
+    start('group-color')
     await waitFor(() => expect(action()).toHaveStyle({ top: '67px' }))
     act(() => useUIStore.setState({ previewGroupColor: { groupId: 'g2', color: 'rgba(9,9,9,1)' } }))
     await new Promise((r) => setTimeout(r, 50))
@@ -187,35 +210,39 @@ describe('Tour colour step: previewColor is fed only for the practice group', ()
 
   it('points at the colour dot while no picker is open', async () => {
     mountApp(dot)
-    render(<Tour />)
-    start('group-colour')
-    await waitFor(() => expect(action()).toHaveStyle({ left: '8px', top: '103px' })) // 10,106 grown by 3, kept 8 from the edge
+    renderTour()
+    start('group-color')
+    await waitFor(() => expect(action()).toHaveStyle({ left: '7px', top: '103px' })) // 10,106 grown by 3, kept 7 from the edge
   })
 })
 
 describe('Tour focus rules', () => {
+  beforeEach(() => {
+    app.groups = [NOW_OPEN, DEMO]
+  })
+
   it('entering a waiting task moves focus to the card, not onto the Skip-this-step button that replaces Next', async () => {
     mountApp('<button data-tour="select-items" data-rect="500,10,30,30">s</button><button data-tour="search" data-rect="300,10,200,30">search</button>')
     const user = userEvent.setup()
-    render(<Tour />)
+    renderTour()
     start('select-items')
     await screen.findByRole('dialog')
-    await user.click(screen.getByRole('button', { name: 'Next' }))
+    await user.click(screen.getByRole('button', { name: /^(Next|Skip this step)$/ }))
     await expectStep('Find anything')
     await waitFor(() => expect(dialog()).toHaveFocus())
     expect(screen.getByRole('button', { name: 'Skip this step' })).not.toHaveFocus()
   })
 
-  it('does not take focus from a text field when the task completes (search is done at the first letter)', async () => {
+  it('does not take focus from a text field when the task completes (search is done at the third letter)', async () => {
     mountApp(
       '<button data-tour="search" data-rect="300,10,200,30">search</button><div data-tour="search-overlay" data-rect="100,10,500,200"><input id="q" /></div>'
     )
-    render(<Tour />)
+    renderTour()
     start('search')
     await screen.findByRole('dialog')
     const input = document.getElementById('q') as HTMLInputElement
     input.focus()
-    act(() => useUIStore.getState().setSearchFilter('w'))
+    act(() => useUIStore.getState().setSearchFilter('sam'))
     await waitFor(() => expect(dialog()).toHaveAttribute('data-tour-task', 'done'))
     await new Promise((r) => setTimeout(r, 100))
     expect(input).toHaveFocus()
@@ -223,11 +250,11 @@ describe('Tour focus rules', () => {
 
   it('hands focus to the card when a non-text control had it at completion', async () => {
     mountApp('<button data-tour="search" id="open" data-rect="300,10,200,30">search</button><div data-tour="search-overlay"></div>')
-    render(<Tour />)
+    renderTour()
     start('search')
     await screen.findByRole('dialog')
     document.getElementById('open')!.focus()
-    act(() => useUIStore.getState().setSearchFilter('w'))
+    act(() => useUIStore.getState().setSearchFilter('sam'))
     await waitFor(() => expect(dialog()).toHaveAttribute('data-tour-task', 'done'))
     await waitFor(() => expect(dialog()).toHaveFocus())
   })
@@ -239,33 +266,33 @@ describe('Tour chapter description', () => {
   it('is announced once per chapter and run, not again after Back', async () => {
     mountApp('<button data-tour="groups" data-rect="0,40,240,300">g</button>')
     const user = userEvent.setup()
-    render(<Tour />)
-    start('group-menu')
+    renderTour()
+    start('group-pin')
     await screen.findByRole('dialog')
     const DESC = 'Groups are where saved tabs live.'
     // the first step shown in the chapter introduces it, whichever step that is
     await waitFor(() => expect(status()).toHaveTextContent(DESC))
     expect(document.querySelector('[data-tour-chapter-description]')).toHaveTextContent(DESC)
 
-    await user.click(screen.getByRole('button', { name: 'Next' }))
-    await expectStep('Put groups in order')
-    await waitFor(() => expect(status()).toHaveTextContent('Put groups in order'))
+    await user.click(screen.getByRole('button', { name: /^(Next|Skip this step)$/ }))
+    await expectStep('More for each group')
+    await waitFor(() => expect(status()).toHaveTextContent('More for each group'))
     expect(status()).not.toHaveTextContent(DESC)
 
     await user.click(screen.getByRole('button', { name: 'Back' }))
-    await expectStep('More for each group')
-    await waitFor(() => expect(status()).toHaveTextContent('More for each group'))
+    await expectStep('Pin a group to the top')
+    await waitFor(() => expect(status()).toHaveTextContent('Pin a group to the top'))
     expect(status()).not.toHaveTextContent(DESC)
   })
 
   it('shows the chapter title on every step of the run', async () => {
     mountApp('<button data-tour="groups" data-rect="0,40,240,300">g</button>')
     const user = userEvent.setup()
-    render(<Tour />)
-    start('group-menu')
+    renderTour()
+    start('group-pin')
     await screen.findByRole('dialog')
-    expect(document.querySelector('[data-tour-chapter-title]')).toHaveTextContent('Organise with groups')
-    await user.click(screen.getByRole('button', { name: 'Next' }))
-    expect(document.querySelector('[data-tour-chapter-title]')).toHaveTextContent('Organise with groups')
+    expect(document.querySelector('[data-tour-chapter-title]')).toHaveTextContent('Organize with groups')
+    await user.click(screen.getByRole('button', { name: /^(Next|Skip this step)$/ }))
+    expect(document.querySelector('[data-tour-chapter-title]')).toHaveTextContent('Organize with groups')
   })
 })

@@ -250,13 +250,32 @@ describe('GroupContextMenu — item actions', () => {
   })
 
   it('duplicates the group when under the free-tier group limit', async () => {
-    mockUseGroupsData.mockReturnValue({ available: [{}, {}] }) // 2 groups - 1 = 1 < maxGroups(2)
+    mockUseGroupsData.mockReturnValue({ available: [{ permanent: true }, {}] }) // 1 counted group (Now Open is not) < maxGroups(2)
     const user = userEvent.setup()
     renderGroup(makeGroup())
     await user.click(screen.getByText('Duplicate'))
     expect(mockDuplicateGroup).toHaveBeenCalledWith(1)
     expect(mockToastError).not.toHaveBeenCalled()
     expect(mockTrackEvent).not.toHaveBeenCalledWith('entitlement_limit_hit', expect.anything())
+  })
+
+  it('practice (tour demo) groups do not count: duplicate is allowed with them present while the counted groups are under the limit', async () => {
+    // Now Open + 1 real + 2 practice = 4 entries, but only 1 counts (< maxGroups 2)
+    mockUseGroupsData.mockReturnValue({ available: [{ permanent: true }, {}, { tourDemo: true }, { tourDemo: true }] })
+    const user = userEvent.setup()
+    renderGroup(makeGroup())
+    await user.click(screen.getByText('Duplicate'))
+    expect(mockDuplicateGroup).toHaveBeenCalledWith(1)
+    expect(mockToastError).not.toHaveBeenCalled()
+  })
+
+  it('still blocks duplicate at the limit when practice groups are present (real groups are what count)', async () => {
+    mockUseGroupsData.mockReturnValue({ available: [{ permanent: true }, {}, {}, { tourDemo: true }] })
+    const user = userEvent.setup()
+    renderGroup(makeGroup())
+    await user.click(screen.getByText('Duplicate'))
+    expect(mockDuplicateGroup).not.toHaveBeenCalled()
+    expect(mockToastError).toHaveBeenCalled()
   })
 
   it('shows an upgrade toast instead of duplicating when at the free-tier group limit', async () => {

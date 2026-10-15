@@ -2,6 +2,7 @@ import type { BrowserContext, Page } from '@playwright/test';
 import { test, expect } from '../fixtures';
 import { TOUR_STORAGE_KEY, openPopup, seedAndReload, waitForRenameInputReady, waitForStoredGroup } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
+import { ACTION_FRAME_EDGE_PX, CHAPTER_COUNT, stepId } from '../tourIds';
 
 // Tour v2: the action ring, chapter headers and keyboard-only use.
 // The ring is `[data-tour-action]`, the region `[data-tour-spotlight]` (value "calm" or "merged" while a
@@ -10,8 +11,8 @@ import { NOW_OPEN, WORK_GROUP } from '../seed';
 // (Basic start, resume, skip and the end-to-end happy path live in tour.spec.ts.)
 
 const FRAME = { width: 800, height: 600 };
-/** Ring (4px) + pulse (4px): how far from the frame edge the ring's cut-out stays. */
-const RING_EXTENT = 8;
+/** Ring + pulse: how far from the frame edge the ring's cut-out stays (derived from Tour.tsx). */
+const RING_EXTENT = ACTION_FRAME_EDGE_PX;
 /** Tour.tsx keeps handing focus back to the card for 500 ms after a task completes. */
 const HAND_BACK_SETTLE_MS = 700;
 
@@ -47,7 +48,7 @@ async function practiceRow(context: BrowserContext): Promise<string> {
 
 /**
  * Asserts the action ring sits on `target` (or that there is none when `target` is null): it
- * contains the visible part of the control, is tight to it, stays 8px inside the 800x600 frame,
+ * contains the visible part of the control, is tight to it, stays inside the 800x600 frame,
  * is the only thing that pulses, the card does not cover it and the document does not overflow.
  */
 async function expectRingOn(page: Page, target: string | null, label: string) {
@@ -115,10 +116,10 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     const header = cardOf(page).locator('[data-tour-chapter]');
     const description = cardOf(page).locator('[data-tour-chapter-description]');
 
-    await expect(header).toContainText('Chapter 1 of 6');
+    await expect(header).toContainText(`Chapter 1 of ${CHAPTER_COUNT}`);
     await expect(header).toContainText('Getting to know TabMerger');
     await expect(description).toHaveCount(1);
-    await expect(statusOf(page)).toContainText('Chapter 1 of 6, Getting to know TabMerger.');
+    await expect(statusOf(page)).toContainText(`Chapter 1 of ${CHAPTER_COUNT}, Getting to know TabMerger.`);
     const intro = (await description.textContent()) ?? '';
     expect(intro.length).toBeGreaterThan(10);
     await expect(statusOf(page)).toContainText(intro);
@@ -140,24 +141,43 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
 
     // the next chapter introduces itself on its first step
     await goToStep(page, 'make-group');
-    await expect(header).toContainText('Chapter 2 of 6');
+    await expect(header).toContainText(`Chapter 2 of ${CHAPTER_COUNT}`);
     await expect(description).toHaveCount(1);
     await expect(statusOf(page)).toContainText((await description.textContent()) ?? '');
   });
 
   test('a read-only step has a region ring and no action ring, and the region pulses', async ({ context, extensionId }) => {
     const page = await startTour(context, extensionId);
-    await goToStep(page, 'undo');
+    await goToStep(page, 'main-panel');
     await expect(page.locator('[data-tour-spotlight]')).toHaveCount(1);
     await expect(page.locator('[data-tour-action]')).toHaveCount(0);
     await expect(page.locator('[data-tour-spotlight]')).toHaveAttribute('data-tour-spotlight', '');
     await expect(page.locator('[data-tour-spotlight] > [data-tour-pulse]')).toHaveCount(1);
   });
 
+  test('undo task: star the sample window, Undo, Redo; the action ring follows each control', async ({ context, extensionId }) => {
+    const page = await startTour(context, extensionId);
+    await goToStep(page, stepId('undo'));
+    await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'todo');
+    const star = page.getByRole('button', { name: 'Star window' }).first();
+    await expect(star).toBeVisible();
+    await expect(page.locator('[data-tour-action]')).toHaveCount(1);
+
+    await star.click();
+    // after the star the ring moves on to Undo
+    await expect(page.locator('[data-tour-action]')).toHaveCount(1);
+    await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'todo');
+    await page.getByRole('button', { name: 'Undo', exact: true }).click();
+    await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'todo');
+    await page.getByRole('button', { name: 'Redo', exact: true }).click();
+    await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
+    await expect(page.locator('[data-tour-action]')).toHaveCount(0);
+  });
+
   test('with reduced motion nothing pulses', async ({ context, extensionId }) => {
     const page = await startTour(context, extensionId);
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await goToStep(page, 'undo');
+    await goToStep(page, 'main-panel');
     const animation = await page.locator('[data-tour-spotlight] > [data-tour-pulse]').evaluate((el) => getComputedStyle(el).animationName);
     expect(animation).toBe('none');
   });
@@ -184,7 +204,7 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await nextOrSkip(page).click();
 
     // Colour: the dot, the swatches, Apply once a different colour is picked
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
     await expectRingOn(page, `${row} [data-tour="group-color"]`, 'colour 1');
     await page.locator(`${row} [data-tour="group-color"]`).click();
     await page.locator('[data-tour="color-picker"]').waitFor();
@@ -210,9 +230,9 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await page.locator('[data-tour="search"]').click();
     await page.locator('[data-tour="search-overlay"] input').waitFor();
     await expectRingOn(page, '[data-tour="search-overlay"] input', 'search 2');
-    await page.locator('[data-tour="search-overlay"] input').pressSequentially('goo', { delay: 60 });
+    await page.locator('[data-tour="search-overlay"] input').pressSequentially('sam', { delay: 60 });
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
-    await expect(page.locator('[data-tour="search-overlay"] input')).toHaveValue('goo');
+    await expect(page.locator('[data-tour="search-overlay"] input')).toHaveValue('sam');
     await expectRingOn(page, null, 'search done');
     await nextOrSkip(page).click();
 
@@ -248,6 +268,10 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     const enterTo = async (id: string) => {
       for (let i = 0; i < 40 && (await stepOf(page)) !== id; i++) {
         await expectFocus(/^(card|button\|\|\|(Next|Back))/, `card focus on ${await stepOf(page)}`);
+        // A "try it" step does not move on with Enter from the card: Tab to its "Skip this step" first
+        if ((await cardOf(page).getAttribute('data-tour-task')) === 'todo') {
+          for (let t = 0; t < 12 && !/Skip this step/.test(await focusOf(page)); t++) await kb.press('Tab');
+        }
         await kb.press('Enter');
         await page.waitForTimeout(150);
       }
@@ -274,7 +298,7 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await kb.press('Enter');
 
     // colour: Tab, open the picker, pick a swatch, Apply; focus returns to the card after the picker closes
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
     await expectFocus(/^card/, 'colour arrival');
     await kb.press('Tab');
     await expectFocus(/Change group color/, 'colour: one Tab from the card');
@@ -319,9 +343,9 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await expectFocus(/Open search/, 'search: one Tab from the card');
     await kb.press('Enter');
     await page.locator('[data-tour="search-overlay"] input').waitFor();
-    await kb.type('goo', { delay: 80 });
+    await kb.type('sam', { delay: 80 });
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
-    await expect(page.locator('[data-tour="search-overlay"] input')).toHaveValue('goo');
+    await expect(page.locator('[data-tour="search-overlay"] input')).toHaveValue('sam');
     await neverBody('search typed');
     for (let i = 0; i < 12 && !/^card|Next/.test(await focusOf(page)); i++) await kb.press('Tab');
     await kb.press('Enter');
@@ -376,7 +400,7 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
     await expect.poll(() => focusOf(page)).toMatch(/^card/);
     await page.keyboard.press('Enter');
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
     await page.keyboard.press('Tab');
     await expect.poll(() => focusOf(page), { timeout: 3_000 }).toMatch(/Change group color/);
   });
@@ -390,16 +414,16 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await page.locator('[data-tour="group-name-save"]').click();
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
     await nextOrSkip(page).click();
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
     const row = await practiceRow(context);
-    await waitForTour(context, (r) => r?.stepId === 'group-colour' && typeof r.practiceGroupId === 'string', 'progress stored');
+    await waitForTour(context, (r) => r?.stepId === stepId('group-color') && typeof r.practiceGroupId === 'string', 'progress stored');
     await waitForStoredGroup(page, (g) => g.name === 'Practice', 'practice group written');
     const before = await readTour(context);
     await page.close();
 
     page = await openPopup(context, extensionId);
     await page.setViewportSize({ width: FRAME.width, height: FRAME.height });
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'todo');
     expect((await readTour(context)).practiceGroupId).toBe(before.practiceGroupId);
     await expectRingOn(page, `${row} [data-tour="group-color"]`, 'resumed colour step');
@@ -413,13 +437,13 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await expect(cardOf(page).locator('button', { hasText: /^Next$/ })).toHaveCount(0);
     await cardOf(page).locator('button', { hasText: /^Skip this step$/ }).click();
     // nothing was made, so the colour step cannot be tried: it is read-only
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'group-colour');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('group-color'));
     await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'none');
     await expect(page.locator('[data-tour-action]')).toHaveCount(0);
 
     await cardOf(page).locator('button', { hasText: /^Skip chapter$/ }).click();
-    await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'save-tabs');
-    await expect(cardOf(page).locator('[data-tour-chapter]')).toContainText('Chapter 3 of 6');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', stepId('drag-tab-reorder'));
+    await expect(cardOf(page).locator('[data-tour-chapter]')).toContainText(`Chapter 3 of ${CHAPTER_COUNT}`);
 
     await goToStep(page, 'search');
     await cardOf(page).locator('button', { hasText: /^Skip tour$/ }).click();
@@ -431,7 +455,7 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
   test('the last chapter has no "Skip chapter"', async ({ context, extensionId }) => {
     const page = await startTour(context, extensionId);
     await goToStep(page, 'settings-more');
-    await expect(cardOf(page).locator('[data-tour-chapter]')).toContainText('Chapter 6 of 6');
+    await expect(cardOf(page).locator('[data-tour-chapter]')).toContainText(`Chapter ${CHAPTER_COUNT} of ${CHAPTER_COUNT}`);
     await expect(cardOf(page).locator('button', { hasText: /^Skip chapter$/ })).toHaveCount(0);
     await expect(cardOf(page).locator('button', { hasText: /^Skip tour$/ })).toHaveCount(1);
   });
@@ -440,7 +464,7 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     const page = await openPopup(context, extensionId);
     await page.getByRole('button', { name: 'Take the tour' }).click();
     await expect(cardOf(page)).toHaveAttribute('data-tour-card', 'welcome');
-    await expect(cardOf(page).locator('[data-tour-chapter]')).toContainText('Chapter 1 of 6');
+    await expect(cardOf(page).locator('[data-tour-chapter]')).toContainText(`Chapter 1 of ${CHAPTER_COUNT}`);
   });
 
   test('at the Free group limit the three group steps show their fallback text: no ring, Next, Add Group does nothing, no upgrade prompt', async ({ context, extensionId }) => {
@@ -457,7 +481,7 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await expect(page.locator('[role="dialog"]:not([data-tour-card])')).toHaveCount(0);
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(0);
 
-    for (const id of ['make-group', 'group-colour', 'group-pin']) {
+    for (const id of ['make-group', stepId('group-color'), 'group-pin']) {
       await goToStep(page, id);
       await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'none');
       await expect(page.locator('[data-tour-action]')).toHaveCount(0);
