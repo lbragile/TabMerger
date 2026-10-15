@@ -59,6 +59,8 @@ interface GroupContextMenuProps {
   wrapperRef?: (node: HTMLElement | null) => void;
   wrapperStyle?: React.CSSProperties;
   wrapperClassName?: string;
+  /** Accessible name of the row; the group's name when omitted. */
+  wrapperLabel?: string;
   /**
    * The row's positional DnD model id, rendered as `data-tm-dnd-id`. `dndMultiDrag` /
    * `dndDragVisuals` / `dndFocus` find rows through this STATIC attribute — without it a
@@ -87,6 +89,7 @@ export function GroupContextMenu({
   wrapperRef,
   wrapperStyle,
   wrapperClassName,
+  wrapperLabel,
   wrapperDndId,
   moveGroupId,
   selectGroupItem,
@@ -162,7 +165,7 @@ export function GroupContextMenu({
       className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-ring', wrapperClassName)}
       tabIndex={0}
       role="button"
-      aria-label={group.name}
+      aria-label={wrapperLabel ?? group.name}
       data-sidebar-group-index={groupIndex}
       data-tour={group.permanent ? TOUR_ANCHORS.nowOpen : undefined}
       data-tm-dnd-id={wrapperDndId}

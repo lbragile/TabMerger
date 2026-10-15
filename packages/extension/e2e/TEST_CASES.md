@@ -50,8 +50,25 @@ the screen can show the change before it is stored, so neither the UI nor a fixe
 - undo after tab delete restores it, redo removes it again
 
 ## search.spec.ts
-- search with space character filters correctly
-- clearing search restores all tabs to full opacity
+- Dim mode (seeded `appSettings.searchNonMatching: 'dim'`): typing a query with a space dims the non-matching row (`opacity-60`) and leaves the matching one full
+- Dim mode: clearing the search restores every row to full opacity
+- TO WRITE, highlighting: a substring query wraps exactly the matched run of the title in one `<mark>`; letters typed out of sequence ("ghpr" on "GitHub Pull Requests", "jra" on "Jira") match nothing (only the contiguous text typed counts, case-insensitive, surrounding spaces ignored); a tab found only by its address shows the matched part of the address, marked, in the address column; a match at the end of a long title is brought into the visible part ("…" then the match) and the row still truncates; `window:` marks the window name, `group:` the group name in the sidebar, `tag:` the Chrome tab-group badge; the rows of the search list mark the same text; a query with `<b>`, `(`, `[`, `*`, `\` is shown and matched as plain text; light and dark
+- Contiguous-only search, done in search.spec.ts: "jra" (letters in order, not adjacent) lists nothing in the overlay ("No matches for ...") and hides every row in the panel; "JIR" lists "Jira Board" in the overlay and marks "Jir" there and in the panel row; Dim mode: "jra" fades every row, "jir" leaves only the Jira row at full opacity; the overlay orders a prefix match ("Jira Board") above a word-start match ("Project Jira") above a mid-word match ("Fajira Notes") whatever the saved order
+- Hide mode (the default), done in search.spec.ts: non-matching rows are absent; the matched text sits in a `<mark>`; "Now Open" stays in the sidebar with a "0 found" badge
+- TO WRITE, "Hide" (default): non-matching tabs are absent; a window with no matching tab is absent unless it is what `window:` matched; sidebar groups with no match are absent, except the group on screen and "Now Open" (both show "0 found"); "N tabs hidden by search" plus "Clear search"; nothing matching in the open group shows `No tabs match "…" in this group`, the count in other groups and "Clear search"; no outer scrollbar at 800x600
+- TO WRITE, "Dim": every row stays, non-matching tabs and groups are faded, the line reads "N of M tabs match"; drag grips are present
+- TO WRITE, positions while rows are hidden: remove, rename, note, "Move to group" and open on a visible tab act on that tab (stored data checked), with hidden tabs before it in the same window and a hidden window before its window
+- no reordering while rows are hidden, done in search.spec.ts: no "Drag to reorder tab" grip in Hide mode with a query, and Space on a focused row announces "Clear the search to move items" in `#tm-dnd-live-region`
+- the query persists after Escape closes the search box and is gone only after "Clear search", done in search.spec.ts; a focused row hidden by a changed query hands focus to a neighbouring row instead of the body (`useKeepFocusInList`), done in search.spec.ts
+- TO WRITE, no reordering while rows are hidden: in "Hide" mode with a query there is no "Drag to reorder" grip on tabs, windows or groups, Space on a focused row does not start move mode and announces "Clear the search to move items"; both come back when the search is cleared; in "Dim" mode they are never removed
+- TO WRITE, selection: Ctrl+A selects only matching tabs in both modes (and only visible windows in "Hide" when windows are selected); Shift+click across a hidden tab does not select it
+- TO WRITE, setting: Settings, General, "Tabs that do not match a search" (Hide / Dim) saves, applies without reopening the popup, survives a reload, "Restore defaults" gives Hide; an unknown stored value reads as Hide; settings saved before the field existed do not show "Unsaved changes"
+- TO WRITE, live region: `search-announcer` says "5 tabs match in 2 groups" / "1 tab matches in 1 group" / "No tabs match" after typing stops, and is empty with no query
+- TO WRITE, the query stays: after Escape, after clicking outside the search box, after picking a tab result, after switching groups and after opening and closing Settings, the header box still shows the query and the filter is still applied; Escape closes the search box without clearing and does not leave selection mode in the same press
+- TO WRITE, clearing: the "Clear search" button in the search field empties it and keeps focus in the field; the one next to the header box (only shown with a query) clears and moves focus to "Open search"; the ones on the hidden-count line and the empty state do the same; focus is never on `<body>`
+- TO WRITE, picking a result in another group: the panel switches to that group, the picked tab is rendered, marked, scrolled into view and focused, and the query is unchanged; going to a group found by its name only (no tab of its own matches) shows its tabs, not an empty panel
+- TO WRITE, `group:` with a sticky query: after `group:"Work"` jumped to Work, the user can switch to another group and is not pulled back when "Now Open" updates
+- TO WRITE, "Now Open": a query matching an open tab lists it in the search list under "Now Open", counts it in the sidebar badge and the live region, and picking it switches to "Now Open" with the tab marked and focused; `group:now` offers "Now Open" in the picker; `tag:` matches the browser's own tab groups there; closing the matching browser tab while the query is active updates the counts and shows the empty state; "Now Open" stays the first group in stored data throughout
 
 ## selection.spec.ts
 - entering selection mode shows tab checkboxes
@@ -148,7 +165,7 @@ Each state is shot in the light and the dark theme, as `popup-<state>-<theme>.pn
 - `color-picker` — the group colour picker open on a sidebar row
 - `settings-modal` — Settings, General tab (the version badge text is pinned to `v0.0.0`)
 - `url-rules-modal` — URL rules at the free limit (3/3, "Add rule" disabled) with a very long pattern
-- `search` — search overlay with a query matching three tabs, non-matching tabs dimmed behind it
+- `search` — search overlay with a query matching three tabs, non-matching tabs dimmed behind it (NEEDS UPDATING: baseline and the spec's `opacity-30` assertions predate highlighting and the default "Hide" mode)
 - `encryption-setup` — "Set up encryption" for a signed-in Pro account with no key
 - `encryption-unlock` — "Unlock encryption" (one field) on a device that does not hold the key
 - `free-limit` — free account with seven groups: the upgrade banner and two locked sidebar rows

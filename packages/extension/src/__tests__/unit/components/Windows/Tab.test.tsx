@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { TabItem } from '@/components/Windows/Tab'
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
+import { PanelSearchContext, buildPanelSearchView } from '@/hooks/useSearchView'
+import { SEARCH_COPY } from '@tabmerger/shared'
 import type { Tab, Group, GroupsState, UrlRule } from '@/lib/types'
 
 const {
@@ -843,5 +845,102 @@ describe('TabItem — stale badge', () => {
       { wrapper }
     )
     expect(screen.queryByLabelText('Stale tab')).not.toBeInTheDocument()
+  })
+})
+
+
+describe('TabItem — search hides rows (reorder locked)', () => {
+  const lockedView = buildPanelSearchView(
+    { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'my' },
+    'hide',
+    { windows: [{ tabMatches: [true], matchCount: 1, selfMatch: false, visible: true }], matchCount: 1, tabCount: 1, nameMatch: false, visible: true }
+  )
+  const renderLocked = (view = lockedView) =>
+    render(
+      <PanelSearchContext.Provider value={view}>
+        <TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />
+      </PanelSearchContext.Provider>,
+      { wrapper }
+    )
+
+  it('has no drag grip in hide mode, but keeps one in dim mode', () => {
+    const { unmount } = renderLocked()
+    expect(document.querySelector('[aria-label^="Drag to reorder"]')).toBeNull()
+    unmount()
+    renderLocked(buildPanelSearchView(lockedView.filters, 'dim', lockedView.state))
+    expect(document.querySelector('[aria-label^="Drag to reorder"]')).not.toBeNull()
+  })
+
+  it('dim mode: a non-matching tab is faded to opacity-60 and its name ends with ", no match"; a match is neither', () => {
+    const dimState = (match: boolean) =>
+      buildPanelSearchView(lockedView.filters, 'dim', { windows: [{ tabMatches: [match], matchCount: match ? 1 : 0, selfMatch: false, visible: match }], matchCount: match ? 1 : 0, tabCount: 1, nameMatch: false, visible: match })
+    const a = renderLocked(dimState(false))
+    const row = screen.getByRole('listitem', { name: `My Tab${SEARCH_COPY.noMatchSuffix}` })
+    expect(row).toHaveClass('opacity-60')
+    a.unmount()
+    renderLocked(dimState(true))
+    const ok = screen.getByRole('listitem', { name: 'My Tab' })
+    expect(ok).not.toHaveClass('opacity-60')
+  })
+
+  it('plain Space does not start a keyboard move and announces "Clear the search to move items"', () => {
+    useKeyboardMoveStore.setState({ request: null })
+    renderLocked()
+    const ev = fireEvent.keyDown(screen.getByRole('listitem'), { key: ' ', code: 'Space' })
+    expect(ev).toBe(false) // consumed: the tab is not opened either
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+    expect(document.getElementById('tm-dnd-live-region')?.textContent).toBe(SEARCH_COPY.reorderLocked)
+    expect(SEARCH_COPY.reorderLocked).toBe('Clear the search to move items')
+  })
+
+  it('Enter still opens the tab on its real address while rows are hidden', () => {
+    renderLocked()
+    fireEvent.keyDown(screen.getByRole('listitem'), { key: 'Enter', code: 'Enter' })
+    expect(globalThis.chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://example.com', active: true })
+  })
+
+  it('Ctrl+Space still toggles the selection', () => {
+    renderLocked()
+    fireEvent.keyDown(screen.getByRole('listitem'), { key: ' ', code: 'Space', ctrlKey: true })
+    expect(mockToggleSelection).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' })
+  })
+})
+
+describe('TabItem — contiguous search dim parity (custom display title)', () => {
+  const renderWith = (filter: string) =>
+    render(
+      <TabItem
+        tab={makeTab({ title: 'Jira Board', customTitle: 'Reading list', url: 'https://example.org/x' })}
+        groupIndex={0}
+        windowIndex={0}
+        tabIndex={0}
+        siblingCount={1}
+        searchFilter={filter}
+      />,
+      { wrapper }
+    )
+  const row = () => screen.getByRole('listitem')
+
+  it('a contiguous run in the shown (custom) title is not dimmed and is marked', () => {
+    renderWith('read')
+    expect(row()).not.toHaveClass('opacity-60')
+    expect(row().querySelector('mark')).not.toBeNull()
+  })
+
+  it('the original page title still counts as a match (not dimmed)', () => {
+    renderWith('jira')
+    expect(row()).not.toHaveClass('opacity-60')
+  })
+
+  it('letters in order but not adjacent dim the row and mark nothing', () => {
+    renderWith('rdg')
+    expect(row()).toHaveClass('opacity-60')
+    expect(row().querySelector('mark')).toBeNull()
+  })
+
+  it('"jra" (spread across "Jira Board") dims the row', () => {
+    renderWith('jra')
+    expect(row()).toHaveClass('opacity-60')
   })
 })

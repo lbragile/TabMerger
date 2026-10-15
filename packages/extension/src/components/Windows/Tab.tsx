@@ -11,7 +11,7 @@ import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminde
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
-import { cn, fuzzyMatch } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { withAlpha } from '@/lib/color';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
@@ -26,6 +26,11 @@ import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { selectionRange } from '@/lib/selectionRange';
 import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
+import { usePanelSearch, withoutFilteredOut } from '@/hooks/useSearchView';
+import { Highlighted } from '@/components/Highlighted';
+import { matchRanges, snippetAroundMatch, tabMatchesFilters, urlPrefixLength } from '@/lib/searchMatch';
+import { announceDnd } from '@/lib/dndLiveRegion';
+import { SEARCH_COPY } from '@tabmerger/shared';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
@@ -95,7 +100,11 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
   });
   const { gap, active: dndActive } = useDndContext();
   const keyboardDrag = dndActive?.keyboard === true;
-const { mutate: deleteTab } = useDeleteTab();
+  // The panel's search (inactive when the row is rendered on its own): which rows match, and
+  // whether reordering is off because non-matching rows are hidden.
+  const search = usePanelSearch();
+  const reorderLocked = search.reorderLocked;
+  const { mutate: deleteTab } = useDeleteTab();
   const { mutate: moveTab } = useMoveTab();
   const { data: urlRules = [] } = useUrlRules();
   const { mutate: updateTabNote } = useUpdateTabNote();
@@ -282,11 +291,33 @@ const { mutate: deleteTab } = useDeleteTab();
     });
   };
 
-  const isHighlighted =
-    searchFilter &&
-    (fuzzyMatch(tab.title, searchFilter) || fuzzyMatch(tab.url, searchFilter));
+  // The same matcher as the panel's search state (shown title, page title, address), so a row
+  // that is not dimmed always has a highlight
+  const isHighlighted = !!searchFilter && tabMatchesFilters(tab, { tabQuery: searchFilter, tagFilter: '' });
   // 6c: tag filter — tab must match chromeGroup name if tagFilter is set
-  const tagMatch = !tagFilter || (tab.chromeGroup != null && fuzzyMatch(tab.chromeGroup.name, tagFilter));
+  const tagMatch = !tagFilter || tabMatchesFilters(tab, { tabQuery: '', tagFilter });
+  // Faded when this row's own filters miss, or when the panel says so (a `window:` / `group:`
+  // filter that leaves this tab out). In "hide" mode the window does not render such a row at all.
+  const panelMatch = search.state?.windows[windowIndex]?.tabMatches[tabIndex];
+  const dimmedBySearch = (!!searchFilter && !isHighlighted) || (!!tagFilter && !tagMatch) || panelMatch === false;
+
+  // Where the plain words matched, for the <mark>s. Only a row that is a result is marked.
+  const markQuery = dimmedBySearch ? '' : (searchFilter || search.filters.tabQuery);
+  const markTag = dimmedBySearch ? '' : (tagFilter || search.filters.tagFilter);
+  const shownTitle = getDisplayTitle(tab) || tab.url || '';
+  // A match far into a long title would sit behind the ellipsis: start the text just before it.
+  const titleMark = snippetAroundMatch(shownTitle, markQuery ? matchRanges(shownTitle, markQuery) : [], { maxLead: 22, keep: 8 });
+  // The address column normally shows a shortened host + path. While searching, a match in the
+  // address is shown where it is, so a tab found by its URL says why it was found. A tab found
+  // only by its original page title (hidden behind a custom one) shows that title there instead.
+  const urlRanges = markQuery ? matchRanges(tab.url, markQuery) : [];
+  const urlMark = urlRanges.length > 0
+    ? snippetAroundMatch(tab.url, urlRanges, { skip: urlPrefixLength(tab.url), maxLead: 14, keep: 8 })
+    : null;
+  const pageTitleMark =
+    markQuery && !urlMark && titleMark.ranges.length === 0 && tab.title && tab.title !== shownTitle
+      ? snippetAroundMatch(tab.title, matchRanges(tab.title, markQuery), { maxLead: 14, keep: 8 })
+      : null;
 
   // Build list of groups this tab can be moved to (all except the current group and archived groups)
   const targetGroups =
@@ -313,7 +344,7 @@ const { mutate: deleteTab } = useDeleteTab();
 
   const extendRange = () => {
     const item = { type: 'tab' as const, id: selectionId };
-    selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+    selectRange(item, withoutFilteredOut(search, selectionRange(groupsState, selectionAnchor, item)));
   };
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
@@ -333,8 +364,7 @@ const { mutate: deleteTab } = useDeleteTab();
     if (e.shiftKey) {
       e.stopPropagation();
       e.preventDefault();
-      const item = { type: 'tab' as const, id: selectionId };
-      selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+      extendRange();
       return;
     }
     // Ctrl/Cmd+click anywhere on the row enters selection and toggles this tab
@@ -357,8 +387,8 @@ const { mutate: deleteTab } = useDeleteTab();
         // NOTE: no `isDragging` class here on purpose — mutating the dragged row's
         // className mid-drag aborts the native HTML5 drag in the MV3 popup. The
         // ghost card is the drag affordance.
-        searchFilter && !isHighlighted && 'opacity-30',
-        tagFilter && !tagMatch && 'opacity-30',
+        // 60%: faded, but the title stays readable
+        dimmedBySearch && 'opacity-60',
         // Selected: tint + a 3px inset bar in --foreground (the old 50% primary ring was ~1.7:1).
         // `isSelected` never flips synchronously inside `dragstart` (clearing is rAF-deferred).
         isSelected && 'bg-primary/10 shadow-[inset_3px_0_0_0_var(--color-foreground)]',
@@ -372,7 +402,7 @@ const { mutate: deleteTab } = useDeleteTab();
       )}
       tabIndex={0}
       role="listitem"
-      aria-label={getDisplayTitle(tab) || tab.url}
+      aria-label={dimmedBySearch ? `${getDisplayTitle(tab) || tab.url}${SEARCH_COPY.noMatchSuffix}` : getDisplayTitle(tab) || tab.url}
       data-group-index={groupIndex}
       data-window-index={windowIndex}
       data-tab-index={tabIndex}
@@ -401,6 +431,12 @@ const { mutate: deleteTab } = useDeleteTab();
         // Ctrl+Space toggles the selection without opening or moving; plain Space picks the
         // tab up (keyboard move); Enter stays "open".
         if (!editingTitle && toggleSelectionOnCtrlSpace(e, { type: 'tab', id: selectionId })) return;
+        // Rows hidden by the search: no keyboard move either. Space is consumed and says why.
+        if (!editingTitle && reorderLocked && e.key === ' ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          if (!e.repeat) announceDnd(SEARCH_COPY.reorderLocked);
+          return;
+        }
         if (!editingTitle && startMoveOnSpace(e, 'tab', sortableId)) return;
         if ((e.key === 'Enter' || e.key === ' ') && !isLocked && !editingTitle) {
           e.preventDefault();
@@ -544,7 +580,9 @@ const { mutate: deleteTab } = useDeleteTab();
 
       {/* Drag grip — ALWAYS present: a selection is dragged from any selected row's grip.
           In selection mode the checkbox sits right after it. */}
-      {editingTitle ? (
+      {/* No grip while the search hides rows: a drop "between" two visible rows would not say
+          where the tab lands among the hidden ones. */}
+      {editingTitle || reorderLocked ? (
         <span className="h-3 w-3 shrink-0" />
       ) : (
         <span
@@ -629,12 +667,16 @@ const { mutate: deleteTab } = useDeleteTab();
                 onClick={(e) => handleOpen(e)}
                 onMouseDown={(e) => e.stopPropagation()}
               >
-                {getDisplayTitle(tab) || tab.url}
+                <Highlighted text={titleMark.text} ranges={titleMark.ranges} />
               </span>
             </TabPreview>
 
-            {getUrlDisplay(tab.url) ? (
-              <span className="truncate shrink min-w-0 text-[10px] text-muted-foreground justify-self-start">
+            {urlMark || pageTitleMark ? (
+              <span className="truncate shrink min-w-0 max-w-full text-[10px] text-muted-foreground justify-self-start" data-search-fragment="">
+                <Highlighted text={(urlMark ?? pageTitleMark)!.text} ranges={(urlMark ?? pageTitleMark)!.ranges} />
+              </span>
+            ) : getUrlDisplay(tab.url) ? (
+              <span className="truncate shrink min-w-0 max-w-full text-[10px] text-muted-foreground justify-self-start">
                 {getUrlDisplay(tab.url)}
               </span>
             ) : (
@@ -659,7 +701,7 @@ const { mutate: deleteTab } = useDeleteTab();
                 onMouseDown={(e) => e.stopPropagation()}
                 aria-label={`Reopen Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
               >
-                {tab.chromeGroup.name || ' '}
+                <Highlighted text={tab.chromeGroup.name || ' '} query={markTag} />
               </button>
             ) : (
               <span
@@ -668,7 +710,7 @@ const { mutate: deleteTab } = useDeleteTab();
                 onMouseDown={(e) => e.stopPropagation()}
                 aria-label={`Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
               >
-                {tab.chromeGroup.name || ' '}
+                <Highlighted text={tab.chromeGroup.name || ' '} query={markTag} />
               </span>
             )
           )}

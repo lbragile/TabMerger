@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -51,7 +51,7 @@ const {
   },
   mockOrganizeTabsMutateAsync: vi.fn(),
   mockUseOrganizeState: vi.fn(() => ({ isPending: false })),
-  mockUseAppSettings: vi.fn(() => ({ data: { aiAutoGroupEnabled: true, aiOrganizeEnabled: true } })),
+  mockUseAppSettings: vi.fn((): { data: Record<string, unknown> } => ({ data: { aiAutoGroupEnabled: true, aiOrganizeEnabled: true } })),
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -96,8 +96,12 @@ vi.mock('@/hooks/useDnd', () => ({
 // ─── Stub heavy child components ─────────────────────────────────────────────
 
 vi.mock('@/components/SidePanel/GroupItem', () => ({
-  GroupItem: ({ group }: { group: { name: string } }) =>
-    React.createElement('div', { 'data-testid': 'group-item' }, group.name),
+  GroupItem: ({ group, searchMatchCount, searchDimmed, reorderLocked }: { group: { name: string }; searchMatchCount?: number; searchDimmed?: boolean; reorderLocked?: boolean }) =>
+    React.createElement(
+      'div',
+      { 'data-testid': 'group-item', 'data-found': searchMatchCount, 'data-dimmed': String(!!searchDimmed), 'data-locked': String(!!reorderLocked) },
+      group.name
+    ),
 }))
 
 vi.mock('@/components/Windows/Window', () => ({
@@ -141,7 +145,9 @@ vi.mock('@/hooks/useEntitlements', () => ({
 }))
 
 vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector),
+  useUIStore: Object.assign((selector: (s: object) => unknown) => mockUseUIStore(selector), {
+    getState: () => ({ tourHistory: null, signalTour: vi.fn() }),
+  }),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({
@@ -266,6 +272,60 @@ describe('SidePanel — Add Group limit excludes Now Open', () => {
     expect(mockToastError).not.toHaveBeenCalled()
     expect(mockAddGroupMutateAsync).toHaveBeenCalled()
     expect(mockTrackEvent).not.toHaveBeenCalledWith('entitlement_limit_hit', expect.anything())
+  })
+})
+
+// ─── SidePanel — search hide / dim ───────────────────────────────────────────
+
+describe('SidePanel — search hides or dims non-matching groups', () => {
+  const tabsIn = (...titles: string[]) => [
+    { id: 1, tabs: titles.map((title) => ({ id: 0, title, url: `https://example.com/${title}` })), incognito: false, focused: false },
+  ]
+  const nowOpen = () => makeGroup({ id: 'now', permanent: true, name: 'Now Open', windows: tabsIn('zzz only') })
+  const work = () => makeGroup({ id: 'work', name: 'Work', windows: tabsIn('alpha doc') })
+  const play = () => makeGroup({ id: 'play', name: 'Play', windows: tabsIn('beta game') })
+  const names = () => screen.queryAllByTestId('group-item').map((el) => el.textContent)
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free', aiFeatures: false })
+    mockUseAppSettings.mockReturnValue({ data: {} })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector({ ...baseUIState, searchFilter: 'alpha', activeGroupIndex: 1 }))
+  })
+
+  afterEach(() => {
+    mockUseAppSettings.mockReturnValue({ data: { aiAutoGroupEnabled: true, aiOrganizeEnabled: true } })
+  })
+
+  it('hide (the default): Now Open stays listed with "0 found", the active group stays, other non-matching groups go; reordering is locked', () => {
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([nowOpen(), work(), play()]) }))
+    expect(names()).toEqual(['Now Open', 'Work'])
+    const items = screen.getAllByTestId('group-item')
+    expect(items[0]).toHaveAttribute('data-found', '0')
+    expect(items[1]).toHaveAttribute('data-found', '1')
+    expect(items.every((el) => el.getAttribute('data-locked') === 'true')).toBe(true)
+  })
+
+  it('dim: every group stays in place, non-matching ones are flagged dimmed, and reordering stays on', () => {
+    mockUseAppSettings.mockReturnValue({ data: { searchNonMatching: 'dim' } })
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([nowOpen(), work(), play()]) }))
+    expect(names()).toEqual(['Now Open', 'Work', 'Play'])
+    const items = screen.getAllByTestId('group-item')
+    expect(items.map((el) => el.getAttribute('data-dimmed'))).toEqual(['true', 'false', 'true'])
+    expect(items.every((el) => el.getAttribute('data-locked') === 'false')).toBe(true)
+  })
+
+  it('an unknown stored mode falls back to hide', () => {
+    mockUseAppSettings.mockReturnValue({ data: { searchNonMatching: 'bogus' } })
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([nowOpen(), work(), play()]) }))
+    expect(names()).toEqual(['Now Open', 'Work'])
+  })
+
+  it('no search: nothing is flagged, hidden or locked', () => {
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([nowOpen(), work(), play()]) }))
+    expect(names()).toEqual(['Now Open', 'Work', 'Play'])
+    expect(screen.getAllByTestId('group-item').every((el) => el.getAttribute('data-locked') === 'false' && el.getAttribute('data-dimmed') === 'false')).toBe(true)
   })
 })
 
@@ -490,7 +550,7 @@ describe('Header — undo/redo', () => {
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /undo/i }))
     expect(undoFn).toHaveBeenCalledWith(groupsState)
-    expect(mockSetGroupsState).toHaveBeenCalledWith(groupsState)
+    expect(mockSetGroupsState).toHaveBeenCalledWith(expect.objectContaining({ active: groupsState.active }), expect.objectContaining({ expectedRev: undefined }))
   })
 
   it('applies the popped redo snapshot via setGroupsState when Redo is clicked', async () => {
@@ -498,7 +558,7 @@ describe('Header — undo/redo', () => {
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /redo/i }))
     expect(redoFn).toHaveBeenCalledWith(groupsState)
-    expect(mockSetGroupsState).toHaveBeenCalledWith(groupsState)
+    expect(mockSetGroupsState).toHaveBeenCalledWith(expect.objectContaining({ active: groupsState.active }), expect.objectContaining({ expectedRev: undefined }))
   })
 
   it('is a no-op when undo() returns nothing (empty stack)', async () => {
@@ -803,7 +863,7 @@ describe('Header — search overlay + selection mode + sign out', () => {
     const user = userEvent.setup()
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /open search/i }))
-    expect(screen.getByRole('textbox')).toBeTruthy()
+    expect(screen.getByRole('combobox')).toBeTruthy()
   })
 
   it('toggles selection mode on click', async () => {
@@ -840,10 +900,53 @@ describe('Header — search overlay + selection mode + sign out', () => {
     const user = userEvent.setup()
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /open search/i }))
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     await user.type(input, 'abc')
     expect(mockTrackEvent).toHaveBeenCalledWith('search_used')
     expect(mockTrackEvent).toHaveBeenCalledTimes(1)
+  })
+
+  describe('focus returns to the opener when the search closes', () => {
+    beforeEach(() => mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() }))
+    const opener = () => screen.getByRole('button', { name: /open search/i })
+
+    it('Escape in the search box', async () => {
+      const user = userEvent.setup()
+      wrap(React.createElement(Header))
+      await user.click(opener())
+      await waitFor(() => expect(screen.getByRole('combobox')).toHaveFocus())
+      await user.keyboard('{Escape}')
+      await waitFor(() => expect(screen.queryByRole('combobox')).toBeNull())
+      expect(opener()).toHaveFocus()
+    })
+
+    it('Ctrl+K toggles it closed and refocuses the opener', async () => {
+      const user = userEvent.setup()
+      wrap(React.createElement(Header))
+      await user.click(opener())
+      await waitFor(() => expect(screen.getByRole('combobox')).toHaveFocus())
+      await user.keyboard('{Control>}k{/Control}')
+      await waitFor(() => expect(screen.queryByRole('combobox')).toBeNull())
+      expect(opener()).toHaveFocus()
+    })
+
+    it('a click outside the search', async () => {
+      const user = userEvent.setup()
+      wrap(React.createElement(Header))
+      await user.click(opener())
+      await waitFor(() => expect(screen.getByRole('combobox')).toHaveFocus())
+      // the full-popup backdrop behind the search box
+      fireEvent.click(document.querySelector('.fixed.inset-0.z-40') as HTMLElement)
+      await waitFor(() => expect(screen.queryByRole('combobox')).toBeNull())
+      expect(opener()).toHaveFocus()
+    })
+  })
+
+  it('the opener name includes the current query, so the search state is announced', () => {
+    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector({ ...baseUIState, searchFilter: 'my query' }))
+    wrap(React.createElement(Header))
+    expect(screen.getByRole('button', { name: 'Open search, current search: my query' })).toBeInTheDocument()
   })
 
   it('does not track search_used when the query is cleared back to empty', async () => {
@@ -851,7 +954,7 @@ describe('Header — search overlay + selection mode + sign out', () => {
     const user = userEvent.setup()
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /open search/i }))
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     await user.type(input, 'a')
     await user.clear(input)
     expect(mockTrackEvent).toHaveBeenCalledTimes(1)

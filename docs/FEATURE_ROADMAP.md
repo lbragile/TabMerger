@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-10-12. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-10-13. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.0.0`, but it hasn't been published to the stores: v3
   goes to stable after the 3.1 beta. The beta channel is at `v3.1.0-beta.11`
@@ -24,6 +24,7 @@ _Last updated 2026-10-12. Keep this current in the same change as the work (a CL
 
 - [x] Non-blocking upgrade prompt at the free limit (`UpgradePrompt`, `UpgradeCTA`, locked items past `FREE_TIER_LIMITS`)
 - [x] Search shortcuts: Ctrl/Cmd+F focuses search, Ctrl/Cmd+K opens the search overlay. Ctrl/Cmd+G adds a group.
+- [x] Search shows what matched: the matched text is highlighted in tab titles and addresses, window names (`window:`), group names (`group:`), Chrome tab-group names (`tag:`) and the rows of the search list; a tab found only by its address shows that part of the address. Tabs, windows and groups that do not match are hidden or faded (Settings, General: "Tabs that do not match a search", Hide by default; a local, per-device preference). While searching, the sidebar shows a per-group match count and the panel a "N tabs hidden by search" line with "Clear search". The query stays until the user clears it (also after picking a result, which goes to the tab and scrolls it into view), "Now Open" is searched like any group, and a screen reader hears the result count. Drag and drop and keyboard move are off while rows are hidden.
 - [ ] Undo/redo keyboard shortcuts (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z). Undo and redo exist only as header buttons today.
 - [x] Guided tour of the popup for new installs: 26 steps in seven chapters, in plain language. Every chapter has a header on the card (title plus one sentence on what it covers and what the user will try). Nine steps are "try it" steps (make and name a group, change its colour, pin it, four drag-and-drop steps, search, change the theme): completion is read from real state, only the controls the step needs are unlocked, and a thin pulsing ring in the secondary colour marks the exact control to use next, with a "2 of 3" marker on the card. The drag chapter runs on two sample groups ("Tour demo") that the tour adds on entering the chapter and removes on leaving it; they are local-only and excluded from sync, backups, sessions, export, sharing, plan limits, the right-click menu, URL rules, undo and search, and drag and drop treats them as a sealed sandbox. Each drag step has three sub-steps (pick up, move to the dashed "Drop here" marker, drop) and works with the mouse and with the keyboard move mode.
   - [ ] Tour follow-ups, still read-only today: saving a tab from Now Open, opening saved tabs, tab extras, tidying a group, selecting several, search filters and undo are explained but not yet practised as checked tasks. Read-only steps spotlight the area they describe. At the Free group limit the group steps are shown read-only. Starts once after a first install (never after an update), resumes if the popup closes, and can be replayed from the header "?" button or Settings. Unreleased: ships with the next release.

@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-12
+> Last Updated: 2026-10-13
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -81,7 +81,10 @@ WHAT YOU CAN DO
   private windows reopen as private windows when you have allowed TabMerger in Incognito.
 - Reorder by drag and drop, or with a keyboard-only move mode, across tabs, windows and groups.
 - See a "Now Open" view that always mirrors the tabs open in your browser right now.
-- Search every saved tab and group (Ctrl/Cmd+K).
+- Search every tab and group, saved or open right now (Ctrl/Cmd+K), for the text as you type it
+  (any case), best matches first. The text that matched is
+  highlighted in titles, addresses, window, group and tab-group names, and tabs that do not match
+  are hidden or faded, whichever you choose in Settings. The search stays until you clear it.
 - Add notes to tabs, windows and groups, give tabs a custom title, and set reminders that show a
   notification at the time you choose.
 - Set URL rules that send matching tabs to a group automatically, and clean up duplicate tabs.
@@ -221,6 +224,11 @@ The listing text and images cannot be changed through the publish API; they are 
 The description must be between 250 and 10,000 characters (the stable description above fits).
 
 ### Screenshot Notes
+
+**Search highlighting (next release):** no current store screenshot shows a search, so none is
+wrong because of it. A new screenshot of a search (matched text highlighted, the "N tabs hidden
+by search" line, per-group counts in the sidebar) is optional and not made yet. The visual
+regression baseline `search` (extension e2e) does change and needs regenerating.
 
 **Needs refreshing (guided tour, next release):** the popup header gained a "?" (Take the tour)
 button between the selection toggle and the account icon, so every store screenshot that shows
@@ -547,6 +555,7 @@ with the real semver string carried in `version_name`.
 | Both | set at release | set at release | next release (unreleased) | — | Draft: adds automatic backups (Pro) and the `alarms` wording above, plus the OPTIONAL `downloads` permission for "Also save a file to this computer". No required permission changes, so no re-approval prompt for existing users; `downloads` is asked for only when a user turns that option on. Update the dashboard's privacy tab: the permission justification above, and "Web history" stays ticked (the file holds saved tab addresses but stays on the user's disk). Screenshots: none of the current ones shows Settings, so none needs refreshing; a new Settings → Data screenshot showing the backups list would be worth adding |
 
 | Both | set at release | set at release | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest change and no new permission: the tour's progress is one record in `chrome.storage.local`, already covered by `storage`, so there is no re-approval prompt. The tour has seven chapters with a header each, nine "try it" steps and a thin pulsing orange ring on the control to use next; four of them practise drag and drop on two sample groups ("Tour demo", "Tour demo 2") that the tour adds for that chapter and removes again by itself, and which never leave the device (not synced, backed up, exported, shared or counted towards a plan); the group made while trying is offered for removal at the end. No new data leaves the device apart from six anonymous usage events (`tour_started`, `tour_completed`, `tour_skipped`, `tour_task_done`, `tour_step_skipped`, `tour_chapter_skipped`, carrying step or chapter ids only) through the existing analytics path. Screenshots: the ones showing the popup header need refreshing, see Screenshot Notes |
+| Both | set at release | set at release | next release (unreleased) | — | Draft: search shows what matched, and matches only the text as typed (in sequence, any case; letters out of order no longer match), best matches first in the search list. Matched text is highlighted (title, address, window, group and Chrome tab-group names, and the rows of the search list); tabs, windows and groups that do not match are hidden, or faded, by a new local setting "Tabs that do not match a search" (Hide by default, Dim) in Settings, General; the query stays until the user clears it (a clear button in the search field, next to the header box and on the "hidden by search" line); "Now Open" is searched like any group. No manifest change, no new permission, no new data: the query never leaves the popup's memory and the setting is one more field of the existing local preferences record. Dragging and keyboard moving are switched off while a search hides rows. Screenshots: see Screenshot Notes |
 
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 

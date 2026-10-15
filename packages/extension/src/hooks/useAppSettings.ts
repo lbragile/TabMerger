@@ -6,7 +6,9 @@ import {
   DEFAULT_BACKUP_FILE_ENABLED,
   DEFAULT_BACKUP_FILE_FOLDER,
   DEFAULT_BACKUP_FILE_PATTERN,
-  type AutoBackupIntervalMinutes
+  DEFAULT_SEARCH_NON_MATCHING,
+  type AutoBackupIntervalMinutes,
+  type SearchNonMatching
 } from '@tabmerger/shared';
 import { getSetting, setSetting } from '@/lib/localDb';
 
@@ -18,6 +20,8 @@ export interface AppSettings {
   autoDedupOnMerge: boolean;
   staleThresholdDays: 7 | 14 | 30 | 60;
   showPreviewImages: boolean;
+  /** Search: hide or dim what does not match. Objects saved before this existed lack it: read through `normalizeSearchNonMatching` (see `useSearchMode`). */
+  searchNonMatching: SearchNonMatching;
   aiDailyThrottle: boolean;
   aiAutoGroupEnabled: boolean;
   aiNameGroupEnabled: boolean;
@@ -41,6 +45,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   autoDedupOnMerge: false,
   staleThresholdDays: 30,
   showPreviewImages: false,
+  searchNonMatching: DEFAULT_SEARCH_NON_MATCHING,
   aiDailyThrottle: true,
   aiAutoGroupEnabled: true,
   aiNameGroupEnabled: true,

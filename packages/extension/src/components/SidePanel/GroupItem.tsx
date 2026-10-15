@@ -23,7 +23,8 @@ import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { TOUR_ANCHORS, TOUR_READY_ATTR } from '@/lib/tourSteps';
-import { isTourDemoGroup } from '@tabmerger/shared';
+import { isTourDemoGroup, SEARCH_COPY } from '@tabmerger/shared';
+import { Highlighted } from '@/components/Highlighted';
 
 interface GroupItemProps {
   group: Group;
@@ -31,9 +32,17 @@ interface GroupItemProps {
   isActive: boolean;
   isLocked?: boolean;
   onClick: () => void;
+  /** While a search is active: how many of this group's tabs match (shown instead of the windows/tabs badge). */
+  searchMatchCount?: number;
+  /** The part of the search to mark in the group's name ('' = none). Plain text, never a pattern. */
+  searchNameQuery?: string;
+  /** "Dim" search mode: this group has no match. */
+  searchDimmed?: boolean;
+  /** Groups are hidden by the search: no drag grip and no keyboard move (the order among hidden rows would be a guess). */
+  reorderLocked?: boolean;
 }
 
-export function GroupItem({ group, groupIndex, isActive, isLocked = false, onClick }: GroupItemProps) {
+export function GroupItem({ group, groupIndex, isActive, isLocked = false, onClick, searchMatchCount, searchNameQuery = '', searchDimmed = false, reorderLocked = false }: GroupItemProps) {
   const { data: groupsState } = useGroups();
   const savedGroupCount = (groupsState?.available ?? []).filter((g) => !g.permanent).length;
   // MODEL id — the group's real `group.id` (not positional "group-N"). Same id for
@@ -236,14 +245,16 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       wrapperRef={setNodeRef}
       // Static row id for the multi-drag registry (collapse + `+N`) and focus-by-identity.
       wrapperDndId={group.id}
+      wrapperLabel={searchDimmed ? `${group.name}${SEARCH_COPY.noMatchSuffix}` : undefined}
       // Space on the focused row starts keyboard move mode — only for a row that has a grip.
-      moveGroupId={group.permanent || savedGroupCount <= 1 ? undefined : group.id}
+      moveGroupId={group.permanent || savedGroupCount <= 1 || reorderLocked ? undefined : group.id}
       // Ctrl+Space on the focused row toggles it in the selection (never Now Open).
       selectGroupItem={group.permanent ? undefined : { type: 'group', id: selectionId }}
       onWrapperKeyDown={roving.onKeyDown}
       wrapperStyle={{
         ...style,
-        opacity: isDimmedBySelection ? 0.4 : undefined,
+        // 0.6 keeps a faded row's text readable (it is still a row the user can open)
+        opacity: isDimmedBySelection ? 0.4 : searchDimmed ? 0.6 : undefined,
         background:
           isSelected
             ? 'rgba(0, 180, 204, 0.15)'
@@ -288,7 +299,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             be reordered). In selection mode the checkbox sits right after it, exactly as
             in Tab.tsx / Window.tsx: replacing the grip with the checkbox used to make a
             multi-group selection impossible to drag at all. */}
-        {group.permanent || savedGroupCount <= 1 ? (
+        {group.permanent || savedGroupCount <= 1 || reorderLocked ? (
           <span className="h-3 w-3 shrink-0" aria-hidden="true" />
         ) : (
           <span
@@ -404,7 +415,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     setRenameTarget({ kind: 'group', groupIndex });
                   }}
                 >
-                  {group.name}
+                  <Highlighted text={group.name} query={searchNameQuery} />
                 </span>
               </TooltipTrigger>
               <TooltipContent side="top">{group.name}</TooltipContent>
@@ -413,7 +424,18 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         </div>
 
         {/* Windows ◆ tabs badge — hidden while renaming */}
-        {!isRenaming && <span
+        {!isRenaming && searchMatchCount !== undefined && (
+          // While searching the badge says how many of the group's tabs match.
+          <span
+            className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
+            style={{ background: 'var(--sidebar-badge-bg)', color: 'var(--sidebar-text-muted)' }}
+            data-testid="group-search-count"
+            title={`${searchMatchCount} of ${tabCount} tabs match the search`}
+          >
+            {searchMatchCount} found
+          </span>
+        )}
+        {!isRenaming && searchMatchCount === undefined && <span
           className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
           style={{
             background: 'var(--sidebar-badge-bg)',

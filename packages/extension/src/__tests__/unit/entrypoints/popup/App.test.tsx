@@ -153,3 +153,29 @@ describe('App — loaded state', () => {
     expect(screen.getByText('No group selected')).toBeTruthy()
   })
 })
+
+describe('App — group: search jumps to the group by contiguous name', () => {
+  const withFilter = (searchFilter: string) =>
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector({ ...baseUIState, searchFilter }))
+  const groups = [
+    { id: 'now', name: 'Now Open', windows: [] },
+    { id: 'w', name: 'Work stuff', windows: [] },
+    { id: 'r', name: 'Reading', windows: [] },
+  ] as unknown as Array<{ id: string; name: string }>
+
+  it('jumps to the first group whose name contains the typed text as one run', async () => {
+    mockGroupsState(groups)
+    withFilter('group:read')
+    render(<App />)
+    await waitFor(() => expect(baseUIState.setActiveGroupIndex).toHaveBeenCalledWith(2))
+  })
+
+  it('does not jump when the letters are only spread across a name ("wrk" vs "Work stuff")', async () => {
+    mockGroupsState(groups)
+    withFilter('group:wrk')
+    render(<App />)
+    await new Promise((r) => setTimeout(r, 20))
+    expect(baseUIState.setActiveGroupIndex).not.toHaveBeenCalledWith(1)
+    expect(baseUIState.setActiveGroupIndex).not.toHaveBeenCalledWith(2)
+  })
+})

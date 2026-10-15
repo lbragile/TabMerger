@@ -879,3 +879,31 @@ describe('SettingsModal — Reset encryption passphrase', () => {
   })
 })
 
+
+
+describe('SettingsModal — switches are findable by role and name', () => {
+  it.each(['Confirm before deleting', 'Open tab on click', 'Auto-deduplicate on merge', 'Show page images in previews'])(
+    'the "%s" switch has that accessible name and reflects its stored state',
+    async (name) => {
+      renderModal()
+      await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+      const sw = await screen.findByRole('switch', { name })
+      expect(sw).toHaveAttribute('aria-checked', expect.stringMatching(/true|false/))
+    }
+  )
+
+  it('toggling a switch by its name flips it', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const sw = await screen.findByRole('switch', { name: 'Confirm before deleting' })
+    const before = sw.getAttribute('aria-checked')
+    fireEvent.click(sw)
+    expect(screen.getByRole('switch', { name: 'Confirm before deleting' }).getAttribute('aria-checked')).not.toBe(before)
+  })
+
+  it('the hide/dim select for non-matching search results has a name too', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(await screen.findByRole('combobox', { name: 'Tabs that do not match a search' })).toBeInTheDocument()
+  })
+})

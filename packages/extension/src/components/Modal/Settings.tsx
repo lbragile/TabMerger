@@ -34,10 +34,12 @@ import { getEncryptionKeyState, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
-import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, formatUsd, toHttpUrl } from '@tabmerger/shared';
+import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, SEARCH_COPY, SEARCH_NON_MATCHING_OPTIONS, formatUsd, normalizeSearchNonMatching, toHttpUrl } from '@tabmerger/shared';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
-  return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
+  // A key that settings saved by an older version lack counts as its default, so a newer
+  // setting does not make an untouched form look edited.
+  return (Object.keys(a) as (keyof AppSettings)[]).every((k) => (a[k] ?? DEFAULT_APP_SETTINGS[k]) === (b[k] ?? DEFAULT_APP_SETTINGS[k]));
 }
 
 interface SettingsModalProps {
@@ -343,6 +345,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </div>
             <Switch
               className="shrink-0"
+              aria-label="Confirm before deleting"
               checked={draft.confirmOnDelete}
               onCheckedChange={(v) => patch('confirmOnDelete', v)}
             />
@@ -355,9 +358,31 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </div>
             <Switch
               className="shrink-0"
+              aria-label="Open tab on click"
               checked={draft.openTabOnClick}
               onCheckedChange={(v) => patch('openTabOnClick', v)}
             />
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <Label className="text-sm">{SEARCH_COPY.settingLabel}</Label>
+              <p className="text-xs text-muted-foreground">{SEARCH_COPY.settingDescription}</p>
+            </div>
+            <Select
+              // A stored value is only trusted when it is one of the options (older saves have none).
+              value={normalizeSearchNonMatching(draft.searchNonMatching)}
+              onValueChange={(v) => patch('searchNonMatching', normalizeSearchNonMatching(v))}
+            >
+              <SelectTrigger className="w-24 h-7 text-xs shrink-0" aria-label={SEARCH_COPY.settingLabel}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SEARCH_NON_MATCHING_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex items-center justify-between gap-4">
@@ -367,6 +392,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </div>
             <Switch
               className="shrink-0"
+              aria-label="Auto-deduplicate on merge"
               checked={draft.autoDedupOnMerge}
               onCheckedChange={(v) => patch('autoDedupOnMerge', v)}
             />
@@ -411,6 +437,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Cloud sync"
                 checked={draft.syncEnabled}
                 onCheckedChange={(v) => patch('syncEnabled', v)}
               />
@@ -632,6 +659,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Auto-group"
                 checked={draft.aiAutoGroupEnabled}
                 onCheckedChange={(v) => patch('aiAutoGroupEnabled', v)}
               />
@@ -644,6 +672,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Name group"
                 checked={draft.aiNameGroupEnabled}
                 onCheckedChange={(v) => patch('aiNameGroupEnabled', v)}
               />
@@ -656,6 +685,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Suggest sessions"
                 checked={draft.aiSuggestSessionsEnabled}
                 onCheckedChange={(v) => patch('aiSuggestSessionsEnabled', v)}
               />
@@ -668,6 +698,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Organize"
                 checked={draft.aiOrganizeEnabled}
                 onCheckedChange={(v) => patch('aiOrganizeEnabled', v)}
               />
@@ -680,6 +711,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Tab preview summaries"
                 checked={draft.aiTabSummaryEnabled}
                 onCheckedChange={(v) => patch('aiTabSummaryEnabled', v)}
               />
@@ -698,6 +730,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
               <Switch
                 className="shrink-0"
+                aria-label="Limit automatic AI suggestions to once a day"
                 checked={draft.aiDailyThrottle}
                 onCheckedChange={(v) => patch('aiDailyThrottle', v)}
               />

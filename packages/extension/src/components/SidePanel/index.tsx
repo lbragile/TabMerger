@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2, BookmarkPlus } from 'lucide-react';
@@ -27,6 +27,11 @@ import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { FREE_TIER_LIMITS } from '@tabmerger/shared';
 import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
+import { SEARCH_NON_MATCHING } from '@tabmerger/shared';
+import { useSearchFilters, useSearchMode } from '@/hooks/useSearchView';
+import { useKeepFocusInList } from '@/hooks/useKeepFocusInList';
+import { useTourSearchShowsDemo } from '@/hooks/useTourSearchShowsDemo';
+import { isSearchActive, summarizeSearch } from '@/lib/searchMatch';
 
 /**
  * Shared shell for the Archived / Sessions sidebar sections: a disclosure header row
@@ -202,6 +207,23 @@ export function SidePanel({ groupsState }: SidePanelProps) {
 
   const raw = groupsState.available;
 
+  // Search: which groups have a match, and how many. In "hide" mode a group with none is not
+  // rendered (render only: `realIndex` below is always the group's index in the saved data, and
+  // "Now Open" stays at index 0 there). Groups search leaves out have no entry and always show.
+  const filters = useSearchFilters();
+  const searchMode = useSearchMode();
+  const searchShowsDemo = useTourSearchShowsDemo();
+  const searchSummary = useMemo(
+    () => (isSearchActive(filters) ? summarizeSearch(raw, filters) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [raw, filters, searchShowsDemo]
+  );
+  const hideNonMatching = !!searchSummary && searchMode === SEARCH_NON_MATCHING.HIDE;
+  // A focused group row that search hides hands focus to its nearest listed neighbor
+  const groupListRef = useRef<HTMLDivElement>(null);
+  const keepFocus = useKeepFocusInList(groupListRef, hideNonMatching);
+  const plainOnly = !!filters.tabQuery && !filters.groupFilter && !filters.windowFilter && !filters.tagFilter;
+
   // Split archived vs active (permanent is always active)
   const archivedGroups = raw
     .map((g, i) => ({ group: g, realIndex: i }))
@@ -271,18 +293,30 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       <ScrollArea className="flex-1">
         <div className="py-1.5">
           {/* List wrapper: grows by the gap height while a group drag's gap is here. */}
-          <div data-tm-dnd-list="groups" data-tour={TOUR_ANCHORS.groups} style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
+          <div ref={groupListRef} onFocusCapture={keepFocus.onFocusCapture} onBlurCapture={keepFocus.onBlurCapture} data-tm-dnd-list="groups" data-tour={TOUR_ANCHORS.groups} style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
           <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>
-            {available.map(({ group, realIndex, isLocked }) => (
-              <GroupItem
-                key={group.id}
-                group={group}
-                groupIndex={realIndex}
-                isActive={realIndex === activeGroupIndex}
-                isLocked={isLocked}
-                onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
-              />
-            ))}
+            {available.map(({ group, realIndex, isLocked }) => {
+              const found = searchSummary?.perGroup[realIndex];
+              const isActive = realIndex === activeGroupIndex;
+              const noMatch = !!found && !found.visible;
+              // The group on screen stays listed even with no match: it is what the panel shows.
+              // So does "Now Open" (with a "0 found" badge): it is the way back to the live tabs.
+              if (hideNonMatching && noMatch && !isActive && !group.permanent) return null;
+              return (
+                <GroupItem
+                  key={group.id}
+                  group={group}
+                  groupIndex={realIndex}
+                  isActive={isActive}
+                  isLocked={isLocked}
+                  onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
+                  searchMatchCount={found?.matchCount}
+                  searchNameQuery={found ? filters.groupFilter || (plainOnly && found.nameMatch ? filters.tabQuery : '') : ''}
+                  searchDimmed={noMatch && !isActive}
+                  reorderLocked={hideNonMatching}
+                />
+              );
+            })}
           </SortableContext>
           </div>
 

@@ -52,7 +52,7 @@ const featureSections = [
         icon: Search,
         title: 'Full-text search',
         description:
-          'Search across all your tab titles and URLs instantly. Fuzzy matching means you find what you need even with typos.',
+          'Search across all your tab titles and URLs instantly. Results match the text exactly as you type it (any case), best matches first.',
       },
       {
         icon: GripVertical,

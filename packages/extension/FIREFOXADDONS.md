@@ -1,6 +1,6 @@
 # Firefox Add-ons Listings — TabMerger
 
-> Last Updated: 2026-10-12
+> Last Updated: 2026-10-13
 >
 > **State of the stable add-on:** the public AMO listing is still the v2 build (`2.0.0`). The
 > first v3 stable release is planned as `v3.1.0` and is not yet released. The listing copy,
@@ -267,6 +267,7 @@ TabMerger's Settings (the true semver).
 | BETA (unlisted) | `4.1.0.7` | (ignored by Firefox) | `v3.1.0-beta.7` | 2026-09-29 | Signed; published to `/firefox-beta/`. Validator warnings above (min version 109 at the time) |
 | BETA (unlisted) | `4.1.0.11` | (ignored by Firefox) | `v3.1.0-beta.11` | 2026-10-07 | Signed and published to the self-hosted beta channel by the publish workflow |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest, permission or `data_collection_permissions` change: progress is one `storage.local` record, and the six tour usage events (started, completed, skipped, task done, step skipped, chapter skipped; step or chapter ids only) go through the existing `technicalAndInteraction`-gated analytics. Dragging is practised on two sample groups the tour adds and removes itself; they are local-only (never synced, backed up, exported or shared), so no data-collection answer changes. The tour has seven chapters with a header each, nine "try it" steps (four of them drag and drop). A thin pulsing ring marks the control to use next. Listing copy: the new Chrome description bullet applies unchanged |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: search matches only the text as typed (in sequence, any case; letters out of order no longer match, best matches first in the search list), highlights the matched text, hides or fades what does not match (new local setting, Hide by default), keeps the query until the user clears it, and covers "Now Open". No manifest, permission or `data_collection_permissions` change: the query stays in the popup's memory and the setting is local. Listing copy: the reworded Chrome search bullet applies unchanged. Screenshots: see the Chrome file's Screenshot Notes |
 
 ## Notes for a future review / support request
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import { NEW_WINDOW_SUFFIX } from '@/hooks/useDndHandlers';
@@ -33,7 +33,7 @@ import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { getSetting } from '@/lib/localDb';
 import { useAppSettings } from '@/hooks/useAppSettings';
-import { parseSearchQuery, formatGroupCounts, cn, fuzzyMatch } from '@/lib/utils';
+import { parseSearchQuery, formatGroupCounts, cn } from '@/lib/utils';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
@@ -43,11 +43,23 @@ import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
 import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
+import { isHiddenFromSearch } from '@/lib/tourSandbox';
+import { useTourSearchShowsDemo } from '@/hooks/useTourSearchShowsDemo';
+import { SEARCH_COPY, SEARCH_NON_MATCHING } from '@tabmerger/shared';
+import { PanelSearchContext, buildPanelSearchView, useSearchFilters, useSearchMode } from '@/hooks/useSearchView';
+import { useKeepFocusInList, SEARCH_STATUS_CLEAR_ATTR } from '@/hooks/useKeepFocusInList';
+import { groupSearchState, isSearchActive, summarizeSearch, tabMatchesFilters } from '@/lib/searchMatch';
 
 interface WindowsPanelProps {
   group: Group;
   groupIndex: number;
+  /** Every group, for the "matches in other groups" count of a search. Optional: the panel also renders on its own. */
+  allGroups?: Group[];
 }
+
+const count = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+/** The typed query as shown back to the user: plain text, cut short so it cannot fill the panel. */
+const shortQuery = (q: string) => (q.length > 60 ? `${q.slice(0, 60)}…` : q);
 
 /**
  * "Drop here for a new window" zone — ALWAYS mounted (unmounting it mid-drag
@@ -110,15 +122,15 @@ function NewWindowDropZone({
  * All drag logic lives in the unified layer (`useDndHandlers` + pure `applyMove`) —
  * this component only renders the (possibly reflow-overridden) window/tab tree.
  */
-export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
+export function WindowsPanel({ group, groupIndex, allGroups }: WindowsPanelProps) {
   return (
     <DndProvider>
-      <WindowsPanelInner group={group} groupIndex={groupIndex} />
+      <WindowsPanelInner group={group} groupIndex={groupIndex} allGroups={allGroups} />
     </DndProvider>
   );
 }
 
-function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) {
+function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsPanelProps) {
   const dnd = useDndContext();
   const moveKind = useKeyboardMoveStore((s) => s.kind);
   // Keyboard move on the "new group" stop: the shown group is NOT where the item will land, so dim it.
@@ -129,10 +141,43 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
 
   const { mutate: addWindow } = useAddWindow();
   const rawSearchFilter = useUIStore((s) => s.searchFilter);
+  const setSearchFilter = useUIStore((s) => s.setSearchFilter);
+  // Search as it applies to THIS group: what matches (by real index), and whether the rest is
+  // hidden or faded. A group search must leave out (the tour's practice groups, outside the
+  // tour's own search steps) gets no search state: its rows only fade, as they always have.
+  const filters = useSearchFilters();
+  const searchMode = useSearchMode();
+  // `isHiddenFromSearch` reads a flag the tour flips with its steps: re-evaluate on a step change.
+  const searchShowsDemo = useTourSearchShowsDemo();
+  const searchState = useMemo(
+    () => (isSearchActive(filters) && !isHiddenFromSearch(group) ? groupSearchState(group, filters) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [group, filters, searchShowsDemo]
+  );
+  const searchView = useMemo(() => buildPanelSearchView(filters, searchMode, searchState), [filters, searchMode, searchState]);
+  const otherGroups = useMemo(() => {
+    if (!searchState || !allGroups) return null;
+    const all = summarizeSearch(allGroups, filters);
+    return {
+      tabs: Math.max(0, all.matchingTabs - searchState.matchCount),
+      groups: Math.max(0, all.groupsWithMatches - (searchState.matchCount > 0 ? 1 : 0))
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allGroups, filters, searchState, searchShowsDemo]);
+
+  const clearSearch = () => {
+    // The button that was clicked is about to go away: put focus on the search box's opener
+    // before it does, so it never falls back to <body>.
+    document.querySelector<HTMLElement>('button[aria-label="Open search"]')?.focus();
+    setSearchFilter?.('');
+  };
   const scrollToWindowIndex = useUIStore((s) => s.scrollToWindowIndex);
   const setScrollToWindowIndex = useUIStore((s) => s.setScrollToWindowIndex);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // A focused row that search hides, or a "Now Open" row whose browser tab closed, hands focus
+  // to its nearest neighbor instead of dropping it on the page
+  const keepFocus = useKeepFocusInList(scrollContainerRef, searchView.hide || !!group.permanent);
 
   useEffect(() => {
     if (scrollToWindowIndex === null || activeGroupIndex !== groupIndex) return;
@@ -167,15 +212,20 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
       offset += w.tabs.length;
       return w.tabs.flatMap((t, ti) => {
         if (!t) return [];
-        const hiddenBySearch = !!searchFilter && !(fuzzyMatch(t.title, searchFilter) || fuzzyMatch(t.url, searchFilter));
-        const hiddenByTag = !!tagFilter && !(t.chromeGroup != null && fuzzyMatch(t.chromeGroup.name, tagFilter));
+        const hiddenBySearch = !!searchFilter && !tabMatchesFilters(t, { tabQuery: searchFilter, tagFilter: '' });
+        const hiddenByTag = !!tagFilter && !tabMatchesFilters(t, { tabQuery: '', tagFilter });
+        // The panel's own search state (also knows `window:` / `group:` filters) wins when there is one.
+        const filteredOut = searchState ? searchState.windows[wi]?.tabMatches[ti] === false : hiddenBySearch || hiddenByTag;
         const locked = isFinite(maxTabs) && base + ti >= maxTabs;
-        return hiddenBySearch || hiddenByTag || locked ? [] : [{ type: 'tab' as const, id: `tab-${groupIndex}-${wi}-${ti}` }];
+        return filteredOut || locked ? [] : [{ type: 'tab' as const, id: `tab-${groupIndex}-${wi}-${ti}` }];
       });
     });
     const items =
       selectedType === 'window'
-        ? group.windows.map((_w, wi) => ({ type: 'window' as const, id: `window-${groupIndex}-${wi}` }))
+        ? group.windows.flatMap((_w, wi) =>
+            // A window the search has taken off the screen is never selected.
+            searchView.hide && searchState?.windows[wi]?.visible === false ? [] : [{ type: 'window' as const, id: `window-${groupIndex}-${wi}` }]
+          )
         : tabItems;
     if (items.length === 0) return;
     enterSelectionMode?.();
@@ -283,6 +333,23 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
   const { tabQuery: searchFilter, tagFilter } = parseSearchQuery(rawSearchFilter);
 
   const windowIds = group.windows.map((_, i) => `${group.id}::w${i}`);
+
+  // The quiet line under the toolbar while a search is active.
+  const hiddenTabs = searchState ? searchState.tabCount - searchState.matchCount : 0;
+  const nothingToShow = !!searchState && !searchState.windows.some((w) => w.visible);
+  const elsewhere =
+    otherGroups && otherGroups.tabs > 0
+      ? `${count(otherGroups.tabs, 'matching tab')} in ${count(otherGroups.groups, 'other group')}`
+      : null;
+  const searchStatus = !searchState
+    ? ''
+    : nothingToShow
+      ? 'No tabs match in this group'
+      : searchMode === SEARCH_NON_MATCHING.HIDE
+        ? hiddenTabs > 0
+          ? `${count(hiddenTabs, 'tab')} hidden by search`
+          : `All ${count(searchState.tabCount, 'tab')} match`
+        : `${searchState.matchCount} of ${count(searchState.tabCount, 'tab')} match`;
 
   return (
     <div className="flex flex-col h-full min-w-0 overflow-hidden" data-tour={TOUR_ANCHORS.tabsPanel}>
@@ -420,10 +487,27 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
         </div>
       )}
 
+      {searchView.active && (
+        <div
+          className="flex items-center justify-between gap-2 min-w-0 px-3 py-1 border-b border-border shrink-0 text-[11px] text-muted-foreground"
+          data-testid="search-status"
+        >
+          <span className="truncate min-w-0">
+            {searchStatus}
+            {nothingToShow && elsewhere ? ` · ${elsewhere}` : ''}
+          </span>
+          <Button variant="link" size="sm" className="h-5 px-0 text-[11px] shrink-0" onClick={clearSearch} {...{ [SEARCH_STATUS_CLEAR_ATTR]: '' }}>
+            {SEARCH_COPY.clearSearch}
+          </Button>
+        </div>
+      )}
+
       <div
         ref={scrollContainerRef}
         className={cn('flex-1 min-w-0 overflow-y-auto overflow-x-hidden transition-opacity', atNewGroupStop && 'opacity-40')}
         data-testid="windows-panel-scroll"
+        onFocusCapture={keepFocus.onFocusCapture}
+        onBlurCapture={keepFocus.onBlurCapture}
         onClick={handlePanelClick}
         onKeyDown={handlePanelKeyDown}
       >
@@ -431,11 +515,15 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
           {/* List wrapper: grows by the gap height while a window drag's gap is here
               (see `gapGrowthFor`). Always mounted — never toggled mid-drag. */}
           <div data-tm-dnd-list={group.id} style={dndListStyle(gapGrowthFor(dnd.gap, group.id), '0px')}>
+          <PanelSearchContext.Provider value={searchView}>
           <SortableContext items={windowIds} strategy={verticalListSortingStrategy}>
             {group.windows.reduce<{ els: React.ReactNode[]; offset: number }>(
               ({ els, offset }, window, windowIndex) => ({
                 els: [
                   ...els,
+                  // "Hide" mode: a window with nothing to show is not rendered. `windowIndex`
+                  // and the tab offset still count it, so the rows that are shown keep their real positions.
+                  searchView.hide && searchState?.windows[windowIndex]?.visible === false ? null :
                   <WindowItem
                     key={windowIds[windowIndex]}
                     groupId={group.id}
@@ -462,7 +550,20 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
               { els: [], offset: 0 }
             ).els}
           </SortableContext>
+          </PanelSearchContext.Provider>
           </div>
+
+          {searchView.hide && nothingToShow && group.windows.length > 0 && (
+            <div className="py-6 px-3 text-center min-w-0" data-testid="search-empty">
+              <p className="text-sm text-muted-foreground break-words">
+                No tabs match &ldquo;{shortQuery(rawSearchFilter.trim())}&rdquo; in this group
+              </p>
+              {elsewhere && <p className="mt-1 text-xs text-muted-foreground">{elsewhere}</p>}
+              <Button variant="outline" size="sm" className="mt-3 h-7 rounded-none px-3 text-xs" onClick={clearSearch}>
+                {SEARCH_COPY.clearSearch}
+              </Button>
+            </div>
+          )}
 
           {group.windows.length === 0 && (
             <p className="py-6 text-center text-sm text-muted-foreground">No windows in this group</p>
