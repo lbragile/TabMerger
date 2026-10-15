@@ -81,10 +81,13 @@ export async function Navbar() {
                                 <AccountMenuLoader email={user.email ?? ""} initials={initials} />
                             ) : (
                                 <>
-                                    <Button variant="ghost" size="sm" asChild>
+                                    {/* The theme toggle and the GitHub badge have a 1px border; these two get one too (transparent
+                                        or the fill colour), so all four are the same 36px box and the browser snaps
+                                        them to the same device pixels at any zoom. */}
+                                    <Button variant="ghost" size="sm" className="border border-transparent" asChild>
                                         <Link href="/auth/sign-in">Sign in</Link>
                                     </Button>
-                                    <Button size="sm" asChild>
+                                    <Button size="sm" className="border border-primary" asChild>
                                         <Link href="/auth/sign-up">
                                             Get started
                                         </Link>
