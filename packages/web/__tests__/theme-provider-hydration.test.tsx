@@ -3,7 +3,7 @@ import { act } from 'react'
 import { renderToString } from 'react-dom/server'
 import { hydrateRoot, type Root } from 'react-dom/client'
 import { ThemeProvider, useTheme } from '@/components/theme-provider'
-import { DemoVideo } from '@/components/marketing/DemoVideo'
+import { DemoVideo, posterFiles } from '@/components/marketing/DemoVideo'
 
 // The hydration commit carries the SERVER theme ('light'). The inline script in
 // app/layout.tsx has already put the visitor's real theme on <html> before React runs, so
@@ -108,7 +108,7 @@ describe('ThemeProvider hydration', () => {
     expect(classLog).not.toContain(false)
     expect(document.documentElement.classList.contains('dark')).toBe(true)
     expect(srcWrites).toEqual([SOURCES.darkSrc])
-    expect(container.querySelector('video')?.getAttribute('poster')).toBe(SOURCES.darkPoster)
+    expect(container.querySelector('video')?.getAttribute('poster')).toBe(posterFiles(SOURCES.darkPoster).webp)
   })
 
   it('loads only the light video for a light visitor and leaves the class off', async () => {

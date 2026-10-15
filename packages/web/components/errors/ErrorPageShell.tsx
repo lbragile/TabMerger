@@ -1,0 +1,205 @@
+import type { CSSProperties, ReactNode } from 'react'
+import Link from 'next/link'
+import { TriangleAlert } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import type { ErrorPageCopy, ErrorPageLink } from './copy'
+
+/**
+ * The look shared by every error page: a browser-window illustration with the status code, the
+ * heading and copy, the caller's actions, and a row of helpful links, over a faint grid and glow.
+ *
+ * Presentational only (no hooks, no context), so the server-rendered 404, the client `error.tsx`
+ * boundaries and the provider-less `global-error.tsx` can all render it.
+ */
+export interface ErrorPageShellProps {
+  copy: ErrorPageCopy
+  /** `lost` (404): a tab has drifted out of the strip. `crashed` (500): the drifting tab shows a warning. */
+  variant: 'lost' | 'crashed'
+  /** Buttons under the copy (Back to home, Try again). */
+  actions: ReactNode
+  links: ErrorPageLink[]
+  /** Extra content under the actions, e.g. the copyable reference ID. */
+  children?: ReactNode
+  /** `main` where no layout above already provides the page's `<main>` landmark. */
+  as?: 'main' | 'div'
+  /**
+   * `global-error.tsx` renders after the root layout itself failed, so it uses plain anchors:
+   * a full page load is the safest way out of that state.
+   */
+  plainLinks?: boolean
+  className?: string
+}
+
+// Faint grid that fades out towards the edges. Uses the theme's `--line` hairline colour so it
+// reads the same in both themes.
+const GRID_STYLE: CSSProperties = {
+  backgroundImage:
+    'linear-gradient(hsl(var(--line)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--line)) 1px, transparent 1px)',
+  backgroundSize: '2.5rem 2.5rem',
+  maskImage: 'radial-gradient(ellipse at center, black 15%, transparent 70%)',
+  WebkitMaskImage: 'radial-gradient(ellipse at center, black 15%, transparent 70%)',
+}
+
+/** The faint grid and two soft glows behind the page. The parent must be `relative isolate`. */
+export function ShellBackdrop() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+      <div className="absolute inset-0" style={GRID_STYLE} />
+      <div className="absolute left-1/2 top-[10%] h-[18rem] w-[18rem] -translate-x-1/2 rounded-full bg-primary/15 blur-3xl sm:h-[26rem] sm:w-[26rem]" />
+      <div className="absolute left-[55%] top-[22%] h-[10rem] w-[10rem] rounded-full bg-secondary/10 blur-3xl sm:h-[14rem] sm:w-[14rem]" />
+    </div>
+  )
+}
+
+export function ErrorPageShell({
+  copy,
+  variant,
+  actions,
+  links,
+  children,
+  as: Component = 'div',
+  plainLinks = false,
+  className,
+}: ErrorPageShellProps) {
+  return (
+    <Component
+      className={cn(
+        'relative isolate flex flex-1 items-center justify-center overflow-hidden px-4 py-16 sm:px-6 sm:py-24',
+        className
+      )}
+    >
+      <ShellBackdrop />
+
+      <div className="relative mx-auto flex w-full min-w-0 max-w-[36rem] flex-col items-center text-center">
+        <BrowserIllustration code={copy.code} variant={variant} />
+
+        <p className="mt-10 text-xs font-semibold uppercase tracking-widest text-primary">{copy.eyebrow}</p>
+        <h1
+          className="mt-3 text-[2rem] font-bold leading-tight tracking-tight text-foreground sm:text-[2.75rem]"
+          style={{ letterSpacing: '-0.02em' }}
+        >
+          {copy.title}
+        </h1>
+        <p className="mt-4 max-w-[40ch] text-base text-text2">{copy.description}</p>
+
+        <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
+          {actions}
+        </div>
+
+        {children}
+
+        <nav aria-label="Helpful links" className="mt-10 w-full border-t border-border pt-6">
+          <p className="mb-3 text-xs text-text3">Or try one of these</p>
+          <ul className="flex flex-wrap justify-center gap-x-1 gap-y-2">
+            {links.map((link) => (
+              <li key={link.href}>
+                <ShellLink
+                  href={link.href}
+                  plain={plainLinks}
+                  className="inline-flex h-8 items-center px-3 text-sm text-text2 transition-colors hover:bg-surface2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {link.label}
+                </ShellLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </Component>
+  )
+}
+
+/** A Next.js `<Link>`, or a plain `<a>` when `plain` is set (see `plainLinks`). */
+export function ShellLink({
+  href,
+  plain,
+  className,
+  children,
+}: {
+  href: string
+  plain?: boolean
+  className?: string
+  children: ReactNode
+}) {
+  return plain ? (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  )
+}
+
+/**
+ * A small browser window: a tab strip with an empty slot where one tab used to be, and that tab
+ * floating away above it. Purely decorative (the eyebrow states the status in words).
+ */
+function BrowserIllustration({ code, variant }: { code: string; variant: 'lost' | 'crashed' }) {
+  return (
+    <div aria-hidden="true" className="relative w-full max-w-[22rem] select-none" data-testid="error-illustration">
+      {/* The tab that left the strip. `rotate-*` is the CSS `rotate` property in Tailwind v4, so
+          it composes with the float animation's `transform` instead of being overwritten. */}
+      <div className="absolute -top-6 right-1 z-10 rotate-[7deg] motion-safe:animate-tab-float sm:-right-8">
+        <div
+          className={cn(
+            'flex h-8 items-center gap-1.5 border border-dashed bg-card px-2.5 text-[0.75rem] font-medium text-text2 shadow-sh2',
+            variant === 'lost' ? 'border-primary/70' : 'border-destructive/70'
+          )}
+        >
+          {variant === 'lost' ? (
+            <span className="grid h-4 w-4 place-items-center bg-primary/15 text-[0.625rem] font-bold text-primary">
+              ?
+            </span>
+          ) : (
+            <TriangleAlert className="h-3.5 w-3.5 text-destructive" />
+          )}
+          <span>{variant === 'lost' ? 'Missing page' : 'Not responding'}</span>
+        </div>
+      </div>
+
+      <div className="overflow-hidden border border-border bg-card text-left shadow-sh3">
+        <div className="flex items-end gap-1 border-b border-border bg-surface2 px-2 pt-2">
+          <span className="mb-2.5 mr-1.5 flex gap-1">
+            <span className="h-2 w-2 rounded-full bg-border2" />
+            <span className="h-2 w-2 rounded-full bg-border2" />
+            <span className="h-2 w-2 rounded-full bg-border2" />
+          </span>
+          <MiniTab label="Research" dotClassName="bg-primary" active />
+          <MiniTab label="Docs" dotClassName="bg-ok" />
+          {/* Where the drifting tab used to sit. */}
+          <span className="h-7 w-14 shrink-0 border border-b-0 border-dashed border-border2 sm:w-16" />
+        </div>
+        <div className="px-3 pt-3">
+          <div className="flex h-7 items-center gap-2 bg-surface2 px-2.5 font-mono text-[0.6875rem] text-text3">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-text3/60" />
+            <span className="truncate">tabmerger.app/…</span>
+          </div>
+        </div>
+        <div className="grid place-items-center px-4 pb-8 pt-6">
+          <span
+            className="bg-clip-text text-[5rem] font-bold leading-none tracking-tighter text-transparent sm:text-[6.5rem]"
+            style={{ backgroundImage: 'var(--gradient-brand)' }}
+          >
+            {code}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MiniTab({ label, dotClassName, active }: { label: string; dotClassName: string; active?: boolean }) {
+  return (
+    <span
+      className={cn(
+        'flex h-7 min-w-0 items-center gap-1.5 border border-b-0 px-2.5 text-[0.6875rem] font-medium',
+        active ? 'border-border bg-card text-foreground' : 'border-transparent text-text3'
+      )}
+    >
+      <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', dotClassName)} />
+      <span className="truncate">{label}</span>
+    </span>
+  )
+}

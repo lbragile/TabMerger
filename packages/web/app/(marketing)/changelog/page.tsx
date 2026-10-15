@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getGeneratedChangelog, type ChangeEntry, type ChangeType } from '@/lib/changelog'
+import { githubReleaseUrl } from '@/lib/github'
 
 export const metadata: Metadata = {
   title: 'Changelog — TabMerger',
@@ -27,11 +29,17 @@ export const metadata: Metadata = {
 // months later, so their publish dates aren't used. v1.4.1–v1.4.3 and v1.6.0–v1.6.2
 // come from the combined notes on the v1.4.3 and v1.6.2 releases. Versions before
 // v1.2.0 were never tagged. A "v3.0 refactor" started in 2021 was never released —
-// v3.0.0 above is the 2026 rebuild. Historical record: don't edit.
+// v3.0.0 above is the 2026 rebuild. Historical record: don't edit the wording or dates.
+//
+// `releaseUrl` is set only on the versions published as a GitHub release: v2.0.0, v1.6.2,
+// v1.5.0, v1.4.3, v1.3.0 and v1.2.1. The rest (and v3.0.0, whose tag is only an anchor) have
+// at most a tag, and a link to a tag without a release lands on a bare tag page with no
+// notes, so they get no link. Generated entries get theirs from parseChangelog().
 const ORIGINAL_EXTENSION: ChangeEntry[] = [
   {
     version: 'v2.0.0',
     date: 'March 6, 2021',
+    releaseUrl: githubReleaseUrl('v2.0.0'),
     changes: [
       { type: 'New', text: 'Subscriptions' },
       { type: 'New', text: 'Automatic backups to a JSON file and to sync' },
@@ -47,6 +55,7 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
   {
     version: 'v1.6.2',
     date: 'February 16, 2021',
+    releaseUrl: githubReleaseUrl('v1.6.2'),
     changes: [
       { type: 'New', text: 'Adjustable tab title weight and font' },
       { type: 'New', text: 'Hover a tab title to see its URL' },
@@ -81,6 +90,7 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
   {
     version: 'v1.5.0',
     date: 'January 8, 2021',
+    releaseUrl: githubReleaseUrl('v1.5.0'),
     changes: [
       { type: 'New', text: 'Printable PDF via a print button' },
       { type: 'New', text: 'A faster new homepage' },
@@ -93,6 +103,7 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
     // of v1.4.3"; split per version from the commit at each tag.
     version: 'v1.4.3',
     date: 'December 22, 2020',
+    releaseUrl: githubReleaseUrl('v1.4.3'),
     changes: [
       { type: 'New', text: 'Sync buttons' },
       { type: 'Fixed', text: 'Sync and incognito now work reliably' },
@@ -128,6 +139,7 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
   {
     version: 'v1.3.0',
     date: 'December 15, 2020',
+    releaseUrl: githubReleaseUrl('v1.3.0'),
     changes: [
       { type: 'New', text: 'Sync your TabMerger configuration across devices' },
       { type: 'New', text: 'Works in incognito (private) windows' },
@@ -140,6 +152,7 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
   {
     version: 'v1.2.1',
     date: 'December 7, 2020',
+    releaseUrl: githubReleaseUrl('v1.2.1'),
     changes: [
       { type: 'New', text: 'Import and export JSON, and export a PDF of your TabMerger page' },
       { type: 'New', text: 'Keyboard shortcuts' },
@@ -286,6 +299,21 @@ export default function ChangelogPage() {
                   {entry.version}
                 </a>
                 <div className="text-xs text-text3 mt-1">{entry.date}</div>
+                {entry.releaseUrl && (
+                  <div className="mt-1.5">
+                    <a
+                      href={entry.releaseUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      // The visible text is the same on every entry, so the name carries the version.
+                      aria-label={`${entry.version} release on GitHub`}
+                      className="inline-flex items-center gap-1 text-xs text-text3 hover:text-primary transition-colors"
+                    >
+                      GitHub release
+                      <ExternalLink aria-hidden="true" className="size-3 shrink-0" />
+                    </a>
+                  </div>
+                )}
                 {major && (
                   <span className="inline-block mt-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-primary/15 text-primary">
                     Major release

@@ -38,6 +38,9 @@ export function firefoxBetaRewrite(baseUrl: string | undefined) {
 }
 
 const nextConfig: NextConfig = {
+  // The source is public (LICENSE.md), so serving source maps exposes nothing and lets browsers
+  // and Lighthouse map the large first-party bundles back to it.
+  productionBrowserSourceMaps: true,
   turbopack: {
     // pnpm monorepo fix: Turbopack looks for next/package.json from the workspace root
     // (where pnpm-workspace.yaml lives), not from packages/web. Point to the repo root

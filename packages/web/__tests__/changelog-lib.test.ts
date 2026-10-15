@@ -34,6 +34,26 @@ describe('parseChangelog', () => {
     ])
   })
 
+  it('sets releaseUrl to the GitHub release page of each stable entry', () => {
+    const raw = `${PATCH_HEADER}
+
+### Bug Fixes
+
+* patch a bug ([abc1234](https://github.com/o/r/commit/abc1234))
+
+${STABLE_HEADER}
+
+### Features
+
+* a feature ([def5678](https://github.com/o/r/commit/def5678))
+`
+    const entries = parseChangelog(raw)
+    expect(entries.map((e) => e.releaseUrl)).toEqual([
+      'https://github.com/lbragile/TabMerger/releases/tag/v2.2.1',
+      'https://github.com/lbragile/TabMerger/releases/tag/v2.2.0',
+    ])
+  })
+
   it('accepts a level-2 (patch) release heading the same as a level-1 heading', () => {
     const raw = `${PATCH_HEADER}
 

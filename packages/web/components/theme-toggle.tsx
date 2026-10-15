@@ -13,7 +13,9 @@ export function ThemeToggle() {
       size="icon"
       onClick={toggleTheme}
       aria-label="Toggle theme"
-      className="h-[34px] w-[34px] rounded-sm border-border2 text-text2 hover:bg-surface2 hover:text-foreground"
+      // h-9 and the Button's own rounded-md: the same box as the size="sm" buttons and the
+      // GitHub badge it sits beside in the marketing navbar.
+      className="h-9 w-9 border-border2 text-text2 hover:bg-surface2 hover:text-foreground"
     >
       {theme === 'dark' ? (
         <Sun className="h-4 w-4" />

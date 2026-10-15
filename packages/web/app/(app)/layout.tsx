@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { AccountAvatar, ACCOUNT_AVATAR_BUTTON_CLASS } from '@/components/layout/AccountAvatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,11 +79,9 @@ export default async function AppLayout({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-8 w-8 rounded-full"
+                className={ACCOUNT_AVATAR_BUTTON_CLASS}
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="text-xs font-medium bg-primary/20 text-primary">{initials}</AvatarFallback>
-                </Avatar>
+                <AccountAvatar initials={initials} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>

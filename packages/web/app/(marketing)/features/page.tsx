@@ -31,7 +31,7 @@ type BadgeTier = 'Core' | 'Pro' | 'Pro AI'
 const badgeStyle: Record<BadgeTier, string> = {
   'Core':   'bg-muted text-muted-foreground',
   'Pro':    'bg-primary/10 text-primary',
-  'Pro AI': 'bg-secondary/10 text-secondary',
+  'Pro AI': 'bg-secondary/10 text-[hsl(33_90%_28%)] dark:text-secondary',
 }
 
 const featureSections = [

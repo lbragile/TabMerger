@@ -55,7 +55,7 @@ export default async function PricingPage() {
         />
       </div>
       <p className="text-center text-sm text-text2 mt-14">
-        Have more questions? See the <Link href="/faq" className="text-primary hover:underline">FAQ</Link>.
+        Have more questions? See the <Link href="/faq" className="text-primary underline underline-offset-2">FAQ</Link>.
       </p>
     </div>
   )

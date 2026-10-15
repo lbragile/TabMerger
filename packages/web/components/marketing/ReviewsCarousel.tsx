@@ -12,7 +12,10 @@ import { CARD_STRIDE_PX, CAROUSEL_TRACK_CLASS, CAROUSEL_VIEWPORT_CLASS } from '.
  *
  * Motion is one number, `offset` (px scrolled), applied as a transform every frame.
  * The track is two identical halves (see buildMarqueeTrack), so rendering
- * `offset mod halfWidth` loops seamlessly in both directions.
+ * `offset mod halfWidth` loops seamlessly in both directions. The server sends only the
+ * first half, which already spans the widest screen: the second is the same cards again,
+ * added here once the page is interactive (hidden from assistive tech and out of the tab
+ * order), so the repeat is neither sent nor hydrated. Nothing moves until it is there.
  *
  * Auto-scroll stops for good (until it is started again, or the page is reloaded) only
  * when the visitor says so:
@@ -49,6 +52,9 @@ const DRAG_THRESHOLD_PX = 6
 const SWIPE_COMMIT_FRACTION = 0.15
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
+
+/** Marks the wrapper of the second half, which is not itself a card. */
+const LOOP_COPY_ATTR = 'data-loop-copy'
 
 /** `offset` wrapped into [0, half). */
 export function wrapOffset(offset: number, half: number): number {
@@ -106,6 +112,8 @@ export function nearestOnLoop(from: number, to: number, half: number): number {
   return from + delta
 }
 
+const subscribeNever = () => () => {}
+
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3
 
 function subscribeReducedMotion(onChange: () => void): () => void {
@@ -151,11 +159,14 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
   })
   // The same two facts the loop reads from the ref, as state, for what is rendered.
   const [paused, setPaused] = useState(false)
+  // False for the server render and the hydrating render, which hold the first half only; true
+  // from the render right after, once the page is interactive.
+  const looped = useSyncExternalStore(subscribeNever, () => true, () => false)
   const reducedMotion = useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false)
 
   useEffect(() => {
     const track = trackRef.current
-    if (!track) return
+    if (!track || !looped) return
     const s = m.current
 
     // The card narrows on a small screen, so the stride is read from the cards themselves.
@@ -163,13 +174,14 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
     // a gap short of that, a visible jump once per lap. Without layout (or with fewer than
     // two cards) there is nothing to read, and the nominal figures stand in.
     const measure = () => {
-      const cards = track.children
+      // The cards of the first half: everything in the track but the wrapper of the second.
+      const cards = Array.from(track.children).filter((el) => !el.hasAttribute(LOOP_COPY_ATTR))
       const first = cards[0] as HTMLElement | undefined
       const second = cards[1] as HTMLElement | undefined
       const stride = first && second ? second.offsetLeft - first.offsetLeft : 0
       if (stride > 0) {
         s.stride = stride
-        s.half = (cards.length / 2) * stride
+        s.half = cards.length * stride
       } else {
         s.stride = CARD_STRIDE_PX
         s.half = track.scrollWidth / 2
@@ -217,7 +229,7 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
       ro?.disconnect()
       mq?.removeEventListener?.('change', onMotion)
     }
-  }, [])
+  }, [looped])
 
   const goTo = (to: number) => {
     const s = m.current
@@ -394,6 +406,13 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
           }}
         >
           {children}
+          {looped && (
+            // `contents`: the cards stay flex items of the track. `inert` keeps the repeat out of
+            // the tab order and the accessibility tree, as the first half's own repeats are.
+            <div className="contents" aria-hidden="true" inert {...{ [LOOP_COPY_ATTR]: '' }}>
+              {children}
+            </div>
+          )}
         </div>
       </div>
     </div>
