@@ -23,6 +23,12 @@ Automatic backups are rows of `sessions`. The only marker is `auto === true` ins
 - `DELETE /api/sessions/[id]` accepts only ids matching `[A-Za-z0-9_-]{1,64}` (the extension's short ids and UUIDs both fit; `sessions.id` is a `text` column). Client code that builds the URL still wraps the id in `encodeURIComponent`.
 - Time and locale formatting with `undefined` locale is safe here only because backups exist solely after the client-side decrypt, so nothing is server-rendered.
 
+## Accounts without cloud sync (read-only)
+- `sessions` RLS lets the owner SELECT and DELETE at any plan; only INSERT/UPDATE need `has_cloud_sync()`. So the page reads `sessions` for every account (`.order('created_at', desc).limit(AUTO_BACKUP_DOWNLOAD_LIMITS.rows)`), unlike `groups`, which stays gated.
+- Decision: a downgraded account keeps its old rows read-only. `BackupsSection` shows the upgrade box plus `AUTO_BACKUP_COPY.readOnlyNote` and the rows (download/delete only); `SessionList readOnly` swaps the free-plan footer for `SAVED_SESSIONS_READ_ONLY_NOTE`. The page renders Saved Sessions for such an account only when raw rows exist.
+- Whether backups exist is unknown until decrypt, so "show the rows part" is: synced, or error, or (ready ? backups/unknownKind > 0 : `totalRows` > 0). The "No backups yet" text describes the extension making them, so it is paid-only.
+- Page tests: `__tests__/dashboard-sessions-query.test.tsx` records every builder call per table, which also proves nothing calls insert/update/upsert.
+
 ## Radix Dialog opened without a `DialogTrigger`
 Radix returns focus only to its trigger. A dialog opened from state (one dialog for many rows) leaves focus on `<body>` when it closes. Remember the opener in a ref and focus it in `onCloseAutoFocus` (after `event.preventDefault()`); point the ref at a heading instead when the opener's row is about to be removed.
 

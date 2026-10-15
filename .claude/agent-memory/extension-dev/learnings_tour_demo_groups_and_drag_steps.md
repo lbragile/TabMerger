@@ -6,8 +6,8 @@ metadata:
 ---
 
 **Practice data.** `lib/tourDemo.ts` makes two groups with FIXED ids (`tour-demo-1`, `tour-demo-2`) and `tourDemo: true`.
-`isTourDemoGroup` (in `@tabmerger/shared`) is the only test. They exist exactly while a step of the chapter
-`TOUR_DRAG_CHAPTER` is on screen: an effect keyed on "in the drag chapter" adds them and its clean-up removes them,
+`isTourDemoGroup` (in `@tabmerger/shared`) is the only test. They exist exactly while a step of one of the chapters
+in `TOUR_DEMO_CHAPTERS` is on screen: an effect keyed on "in a practice chapter" adds them and its clean-up removes them,
 which also covers a finished or skipped tour (the overlay unmounts). A popup closed mid-chapter cannot clean up, so
 `Tour` removes them once per popup open unless the stored record resumes in that chapter. Clean-up finds them by flag
 or fixed id, never by an id read from storage (a stored value must not be able to name a real group).

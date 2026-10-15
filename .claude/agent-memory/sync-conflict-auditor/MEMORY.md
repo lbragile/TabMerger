@@ -5,4 +5,5 @@
 - [Server-stamped updated_at + merge shape](learnings_sync_server_stamp_and_merge_shape.md) — server stamp vs client clock, compare-and-swap pushes, cycle shape, keyset paging on a global text id, per-request timeouts, request identity
 - [IDB explicit commit + un-awaited reads](learnings_idb_explicit_commit.md) — commit() stays atomic, sync put throws never abort, creation-order guarantees, fake-indexeddb models call order only
 - [Sessions store audit rules](learnings_sessions_store_audit_rules.md) — sessions RLS per verb, silent zero-row writes, anon answers, what a settings-key guard proves, writers outside the backup lock
+- [Filtered index + set-aside history](learnings_filtered_index_and_set_aside_state.md) — local-only rows need one index space for every position check; stashed undo history must obey clearHistory
 - [DnD rebase identity pitfalls](learnings_dnd_rebase_identity.md) — rank + duplicate-only context check; structurally blind to a pure transposition of identity-equal items
