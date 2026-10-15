@@ -477,3 +477,47 @@ describe('AutoBackups — free or downgraded account', () => {
     expect(screen.queryByText(/no longer includes automatic backups/)).toBeNull()
   })
 })
+
+
+describe('AutoBackups — focus after deleting a backup', () => {
+  const T = Date.now()
+  beforeEach(() => {
+    h.sessions = [backup('b1', T - 1000), backup('b2', T - 2000), backup('b3', T - 3000)]
+    h.deleteAutoBackup.mockImplementation(async (id: string) => {
+      h.sessions = (h.sessions as Session[]).filter((s) => s.id !== id)
+    })
+  })
+
+  async function deleteRow(view: ReturnType<typeof renderIt>, id: string) {
+    const btn = document.querySelector<HTMLElement>(`[data-backup-delete="${id}"]`)!
+    btn.focus()
+    fireEvent.click(btn)
+    const box = await screen.findByRole('alertdialog', { name: 'Delete this backup?' })
+    fireEvent.click(within(box).getByRole('button', { name: 'Delete backup' }))
+    await waitFor(() => expect(h.deleteAutoBackup).toHaveBeenCalledWith(id, expect.anything()))
+    view.rerender(
+      <QueryClientProvider client={qc}>
+        <AutoBackups onSettingsSaved={view.onSettingsSaved} onRestored={view.onRestored} />
+      </QueryClientProvider>
+    )
+  }
+
+  it('moves to the NEXT row Delete button', async () => {
+    const view = renderIt()
+    await deleteRow(view, 'b1')
+    await waitFor(() => expect(document.querySelector('[data-backup-delete="b2"]')).toHaveFocus())
+  })
+
+  it('moves to the PREVIOUS row Delete button when the last one was deleted', async () => {
+    const view = renderIt()
+    await deleteRow(view, 'b3')
+    await waitFor(() => expect(document.querySelector('[data-backup-delete="b2"]')).toHaveFocus())
+  })
+
+  it('moves to the section itself when it was the only backup', async () => {
+    h.sessions = [backup('only', T - 1000)]
+    const view = renderIt()
+    await deleteRow(view, 'only')
+    await waitFor(() => expect(screen.getByRole('region', { name: AUTO_BACKUP_COPY.title })).toHaveFocus())
+  })
+})

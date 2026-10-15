@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { RotateCcw, Trash2 } from 'lucide-react';
 import { AUTO_BACKUP_COPY, AUTO_BACKUP_INTERVALS, AUTO_BACKUP_MESSAGE, AUTO_BACKUP_RETENTION_COUNT, normalizeAutoBackupInterval } from '@tabmerger/shared';
@@ -116,6 +116,19 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
 
   const { enabled, intervalMinutes, file } = readAutoBackupSettings(saved);
   const backups = sessions.filter(isAutoBackup); // newest first (getSessions sorts)
+
+  // After a delete the removed row's button is gone: focus moves to the next row's Delete button,
+  // else the previous one's, else the section. `null` = nothing pending.
+  const sectionRef = useRef<HTMLElement>(null);
+  const [focusAfterDelete, setFocusAfterDelete] = useState<{ deletedId: string; nextId: string | null } | null>(null);
+  useEffect(() => {
+    if (!focusAfterDelete || backups.some((b) => b.id === focusAfterDelete.deletedId)) return;
+    const { nextId } = focusAfterDelete;
+    setFocusAfterDelete(null);
+    const buttons = Array.from(sectionRef.current?.querySelectorAll<HTMLElement>('[data-backup-delete]') ?? []);
+    const target = nextId ? buttons.find((el) => el.dataset.backupDelete === nextId) : undefined;
+    (target ?? sectionRef.current)?.focus();
+  }, [backups, focusAfterDelete]);
   const latest = backups[0];
   const downloadNote = describeBackupDownload(download, downloading && download?.status !== 'busy', cloudSync);
 
@@ -228,11 +241,14 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
       destructive: true
     });
     if (!confirmed) return;
+    const at = backups.findIndex((b) => b.id === backup.id);
+    const neighbor = backups[at + 1] ?? backups[at - 1];
+    setFocusAfterDelete({ deletedId: backup.id, nextId: neighbor?.id ?? null });
     deleteBackup(backup.id);
   };
 
   return (
-    <section aria-label={AUTO_BACKUP_COPY.title} className="min-w-0 space-y-3">
+    <section ref={sectionRef} tabIndex={-1} aria-label={AUTO_BACKUP_COPY.title} className="min-w-0 space-y-3 focus:outline-none">
       {planLoading ? (
         // The plan is not known yet: neither the controls nor the upgrade offer (a paid user must
         // not see "Upgrade to Pro" flash by while their subscription loads).
@@ -369,6 +385,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
                   size="sm"
                   className="h-7 px-2 shrink-0 rounded-none text-muted-foreground hover:text-destructive"
                   aria-label={`Delete backup from ${when}`}
+                  data-backup-delete={backup.id}
                   onClick={() => void handleDelete(backup)}
                 >
                   <Trash2 className="h-3 w-3" />
