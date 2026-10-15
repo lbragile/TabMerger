@@ -32,7 +32,11 @@ export async function DELETE(
     .eq('id', id)
     .eq('user_id', user.id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    // The Postgres wording can name tables, columns and policies, so it stays in the server log.
+    console.error('Session delete error:', error)
+    return NextResponse.json({ error: 'Delete failed' }, { status: 500 })
+  }
 
   return new NextResponse(null, { status: 204 })
 }

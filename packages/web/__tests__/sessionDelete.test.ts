@@ -54,11 +54,19 @@ describe('DELETE /api/sessions/[id]', () => {
     expect(mockDeleteEq2).toHaveBeenCalledWith('user_id', 'user-1')
   })
 
-  it('returns 500 when the delete fails', async () => {
-    mockDeleteEq2.mockResolvedValue({ error: new Error('db down') })
+  it('returns a generic 500 when the delete fails, keeping the database wording out of the body', async () => {
+    const raw = 'new row violates row-level security policy for table "sessions"'
+    mockDeleteEq2.mockResolvedValue({ error: { message: raw, code: '42501' } })
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
     const { DELETE } = await import('@/app/api/sessions/[id]/route')
     const res = await DELETE(req(), params)
     expect(res.status).toBe(500)
+    const text = await res.text()
+    expect(JSON.parse(text)).toEqual({ error: 'Delete failed' })
+    expect(text).not.toContain(raw)
+    expect(text).not.toContain('sessions')
+    expect(consoleError).toHaveBeenCalledWith('Session delete error:', expect.objectContaining({ message: raw }))
+    consoleError.mockRestore()
   })
 
   describe('id shape', () => {
