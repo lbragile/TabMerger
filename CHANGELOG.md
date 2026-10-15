@@ -3,25 +3,25 @@
 
 ### Bug Fixes
 
-* **web:** page-specific social previews, canonical URLs and structured data ([#68](https://github.com/lbragile/TabMerger/issues/68)) ([e34ee81](https://github.com/lbragile/TabMerger/commit/e34ee8102da4497510d27cf1c7762f0c31ee8deb)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+* **web:** page-specific social previews, canonical URLs and structured data ([#68](https://github.com/lbragile/TabMerger/issues/68)) ([e34ee81](https://github.com/lbragile/TabMerger/commit/e34ee8102da4497510d27cf1c7762f0c31ee8deb))
 
 
 ### Features
 
-* **extension:** guided tour, automatic backups, exact search and an uninstall survey ([#67](https://github.com/lbragile/TabMerger/issues/67)) ([4cc2903](https://github.com/lbragile/TabMerger/commit/4cc2903c5a283bb4dcac52517d5dc21005b7103a)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+* **extension:** guided tour, automatic backups, exact search and an uninstall survey ([#67](https://github.com/lbragile/TabMerger/issues/67)) ([4cc2903](https://github.com/lbragile/TabMerger/commit/4cc2903c5a283bb4dcac52517d5dc21005b7103a))
 
 ## [3.1.3](https://github.com/lbragile/TabMerger/compare/v3.1.2...v3.1.3) (2026-10-15)
 
 
 ### Bug Fixes
 
-* **extension:** keep the toast countdown bar on the toast while hovered ([#65](https://github.com/lbragile/TabMerger/issues/65)) ([7591d44](https://github.com/lbragile/TabMerger/commit/7591d44d809be94c955538e97de2c7a5a6b39571)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
-* **web:** red Sign out highlight, one account avatar and header accessibility fixes ([#66](https://github.com/lbragile/TabMerger/issues/66)) ([7a4f1a9](https://github.com/lbragile/TabMerger/commit/7a4f1a927c99229dded7022b314a05b4ea715ffa)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+* **extension:** keep the toast countdown bar on the toast while hovered ([#65](https://github.com/lbragile/TabMerger/issues/65)) ([7591d44](https://github.com/lbragile/TabMerger/commit/7591d44d809be94c955538e97de2c7a5a6b39571))
+* **web:** red Sign out highlight, one account avatar and header accessibility fixes ([#66](https://github.com/lbragile/TabMerger/issues/66)) ([7a4f1a9](https://github.com/lbragile/TabMerger/commit/7a4f1a927c99229dded7022b314a05b4ea715ffa))
 
 
 ### Features
 
-* **web:** custom 404 and 500 pages ([#64](https://github.com/lbragile/TabMerger/issues/64)) ([6f3488c](https://github.com/lbragile/TabMerger/commit/6f3488cde7ce971ceb6bb13666948094e69f01d9)), closes [../ACCESSIBILITY.md#contributor-expectations](https://github.com/../ACCESSIBILITY.md/issues/contributor-expectations)
+* **web:** custom 404 and 500 pages ([#64](https://github.com/lbragile/TabMerger/issues/64)) ([6f3488c](https://github.com/lbragile/TabMerger/commit/6f3488cde7ce971ceb6bb13666948094e69f01d9))
 
 
 ### Performance Improvements
@@ -155,7 +155,7 @@
 * **web:** draw toasts with the app's theme and tokens ([4d13125](https://github.com/lbragile/TabMerger/commit/4d131252cd8d71b1d2cdbeaf44ee26c1dc4edb56))
 * **web:** drive the changelog page from generated CHANGELOG.md ([1f36cd3](https://github.com/lbragile/TabMerger/commit/1f36cd3a21d925c9cb9044f5c38891233fe29fd6))
 * **web:** drop the dashboard's New group button and let the upgrade banner be dismissed ([65143db](https://github.com/lbragile/TabMerger/commit/65143dbd5efbe3db16982f4c825800bbf0c2eb24))
-* **web:** full beta test plan with sharp screenshots of every step ([b727be3](https://github.com/lbragile/TabMerger/commit/b727be33fc0360422a3c96e646b21a50765f8c68)), closes [hi#density](https://github.com/hi/issues/density)
+* **web:** full beta test plan with sharp screenshots of every step ([b727be3](https://github.com/lbragile/TabMerger/commit/b727be33fc0360422a3c96e646b21a50765f8c68))
 * **web:** give each beta test steps and an example, and take reports on GitHub ([9585d1f](https://github.com/lbragile/TabMerger/commit/9585d1fe2603aee4e5b7a3393297228794d54731))
 * **web:** hide sync-only parts of the dashboard and account page for free accounts ([99d69e9](https://github.com/lbragile/TabMerger/commit/99d69e9e5bc712d3d883d25631b54877218dd2f4))
 * **web:** let customers pay in their local currency at checkout ([a7c723f](https://github.com/lbragile/TabMerger/commit/a7c723f30e70b3ac7e07d03e395a6b5508dcb425))

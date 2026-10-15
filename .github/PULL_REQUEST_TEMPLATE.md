@@ -22,7 +22,7 @@
 - [ ] `pnpm lint` and `pnpm type-check` pass
 - [ ] `pnpm test` passes (unit tests updated/added for the change)
 - [ ] Integration/E2E tests updated if this touches cross-boundary or user-visible flow
-- [ ] UI changes: keyboard-only pass, names on icon-only controls, and contrast checked in both themes (see [`ACCESSIBILITY.md`](../ACCESSIBILITY.md#contributor-expectations))
+- [ ] UI changes: keyboard-only pass, names on icon-only controls, and contrast checked in both themes (see [`ACCESSIBILITY.md`](https://github.com/lbragile/TabMerger/blob/main/ACCESSIBILITY.md#contributor-expectations))
 - [ ] `pnpm scan-secrets` is clean
 
 ## Contribution terms
