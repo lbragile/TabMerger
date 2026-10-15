@@ -8,6 +8,7 @@ import { AppToaster } from '@/components/AppToaster'
 import { PostHogProvider } from '@/components/posthog-provider'
 import { DeferredOnLoad } from '@/components/DeferredOnLoad'
 import { getMetadataBase } from '@/lib/utils'
+import { noFlashThemeScript } from '@/lib/themeScript'
 import './globals.css'
 
 const geistSans = Geist({
@@ -18,16 +19,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
   variable: '--font-geist-mono',
 })
-
-// ponytail: inline script (not a hook) so the class lands before first paint —
-// a React effect would run after hydration and flash the wrong theme.
-const noFlashThemeScript = `
-try {
-  var t = localStorage.getItem('theme');
-  if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  if (t === 'dark') document.documentElement.classList.add('dark');
-} catch (e) {}
-`
 
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
