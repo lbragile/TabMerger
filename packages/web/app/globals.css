@@ -55,6 +55,13 @@
   --radius-full: 9999px;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  /* The drifting tab on the 404/500 pages (components/errors). Used only via motion-safe:. */
+  --animate-tab-float: tab-float 4s ease-in-out infinite;
+}
+
+@keyframes tab-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.5rem); }
 }
 
 @keyframes accordion-down {
