@@ -287,7 +287,7 @@ Edge build. Tab previews' page-image fetch is done server-side by the web app
 | `alarms` | Schedules the one-time reminders a user sets on a saved tab, so the reminder fires at the chosen time even when the popup is closed. Also runs the automatic backup of saved groups on the interval the user picked in Settings (paid accounts; can be turned off). |
 | `notifications` | Shows the reminder notification when a reminder the user set comes due; clicking it opens the saved tab. |
 | `identity` | Runs the "Continue with Google" sign-in window (`chrome.identity.launchWebAuthFlow`, `src/lib/googleOAuthFlow.ts`). Used only if the user chooses to sign in; the extension works without it. |
-| `downloads` (**optional**, `optional_permissions`) | Not granted at install. Requested only when the user turns on "Also save a file to this computer" in Settings (automatic backups), from that click. It is used for the backup file only: writing each backup as a JSON file into a folder the user names inside the browser's Downloads folder (`chrome.downloads.download` with `saveAs: false` and `conflictAction: "uniquify"`), and helping the user find that file afterwards. For the second part the extension remembers the download id of the last backup file it wrote (on this device only) and, while Settings → Data is open, looks up that one id (`chrome.downloads.search({ id })`) to show the file's full path and whether it still exists; a "Show in folder" button opens the system file manager on that file (`chrome.downloads.show`) or, when the file is gone, on the Downloads folder (`chrome.downloads.showDefaultFolder`). The path is shown as text in the popup and is not stored or sent anywhere. The extension never lists or searches the user's other downloads, never opens a downloaded file's contents, never deletes or cancels a download, and ignores any entry it did not start itself. If the user declines or later removes the permission, backups keep working without the file copy. |
+| `downloads` (**optional**, `optional_permissions`) | Optional (not granted at install); requested only from the click that turns on "Also save a file to this computer" (automatic backups) in Settings. Used only for backup files: each backup is saved as a JSON file in a folder the user names inside Downloads (downloads.download, saveAs false, conflictAction "uniquify"). The extension keeps the id of the last backup file, on this device only. With Settings → Data open, it looks up that one id (downloads.search({ id })) to show the file's full path and whether it still exists. "Show in folder" opens that file (downloads.show), or the Downloads folder if it is gone (downloads.showDefaultFolder). The path is shown, never stored or sent. It never lists other downloads, opens file contents, deletes or cancels downloads, or touches entries it did not start. Without the permission, backups still work, minus the file. |
 
 **`downloads` must stay optional.** As a required permission Chrome would disable the extension
 for every existing user until they accepted the new warning. The CI baseline
@@ -594,22 +594,15 @@ Never remove that offset.
 
 Paste into the dashboard's test-instructions field for the v2 to v3 update:
 
-> TabMerger 3 is a rewrite of the version 2 extension (same item, same single purpose: saving,
-> organizing and restoring browser tabs in named groups). New in this version is an optional
-> account with paid end-to-end encrypted sync. No account, login or test credentials are needed
-> to review the core features: install, open the popup, and use "Save to TabMerger" from the
-> right-click menu or the popup to save tabs into a group, then restore them. Sign-in and sync
-> are only reachable from the account icon in the popup header and are not required for anything
-> else. The extension requests no host permissions and has no content script on Chrome. Saved
-> tabs are stored locally; if a user signs in and subscribes, group content is encrypted on the
-> device with the user's passphrase before upload, so the server holds only ciphertext. The
-> background script only handles reminder alarms the user set, the right-click menu, the toolbar
-> badge, keyboard shortcuts and the URL rules the user created. AI features
-> are not enabled in this release. Data saved by version 2 is not imported.
-
-Uninstall survey: when the extension is removed, the browser opens the TabMerger website's
-`/uninstalled` page (set with `runtime.setUninstallURL`, no permission). Its address holds only the
-extension version, browser and channel. Answering the survey there is optional.
+> TabMerger 3 rewrites version 2: same item, same purpose (saving, organizing and restoring tabs
+> in named groups). No account or test credentials needed: open the popup, save tabs with "Save
+> to TabMerger" (popup or right-click menu), then restore them. Tabs are stored locally. New:
+> optional paid sync, only via the popup's account icon. Sync is end-to-end encrypted on the
+> device with the user's passphrase; the server holds only ciphertext. No host permissions; no
+> content script on Chrome. The background script only runs user-set reminders, the right-click
+> menu, the badge, shortcuts and the user's URL rules. AI is off. Version 2 data is not imported.
+> Uninstalling opens an optional survey on the TabMerger website (runtime.setUninstallURL, no
+> permission); its URL holds only version, browser and channel.
 
 ### Known Issues / Limitations
 

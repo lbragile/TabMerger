@@ -52,7 +52,9 @@ unrelated add-on. This was restored to the live listing's real GUID in `wxt.conf
   asset table and the outdated-screenshot warning in `CHROMEWEBSTORE.md`.
 - **Notes to reviewer:** reuse "Notes for the review team" from `CHROMEWEBSTORE.md`, and add that
   the Firefox build includes one content script on the TabMerger website origin (below). No test
-  account is needed for core features.
+  account is needed for core features. Sentence to append: "Firefox only: a content script on the
+  TabMerger site relays three messages (install check, sign-in handoff, sync) and reads nothing
+  else."
 
 ## Permissions
 
