@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -20,11 +20,12 @@ import {
   ArrowRight,
 } from 'lucide-react'
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
+  path: '/features',
   title: 'Features',
   description:
     'Explore everything TabMerger can do — from smart tab grouping to AI-powered organization.',
-}
+})
 
 type BadgeTier = 'Core' | 'Pro' | 'Pro AI'
 

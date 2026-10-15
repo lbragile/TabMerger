@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PricingTable } from '@/components/pricing/PricingTable'
@@ -6,11 +6,12 @@ import { getPriceInfo, type BillingInterval } from '@/lib/tiers'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getStoreLinks } from '@/lib/storeLinks'
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
+  path: '/pricing',
   title: 'Pricing',
   description:
     'Simple, transparent pricing. Start free, upgrade when you need more.',
-}
+})
 
 export default async function PricingPage() {
   const supabase = await createClient()

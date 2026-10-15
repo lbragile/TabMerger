@@ -11,10 +11,10 @@ test.describe('404 page', () => {
     await expect(page).toHaveTitle(/Page not found/)
     await expect(page.getByRole('heading', { level: 1, name: 'This tab wandered off' })).toBeVisible()
     await expect(page.getByText('Error 404 · Page not found')).toBeVisible()
-    // Next.js adds its own noindex to 404 responses as well, so there can be two of these tags.
-    const robots = await page.locator('meta[name="robots"]').evaluateAll((tags) => tags.map((t) => t.getAttribute('content')))
-    expect(robots.length).toBeGreaterThan(0)
-    for (const content of robots) expect(content).toMatch(/noindex/)
+    // Next adds noindex to every 404 itself; the page sets none of its own, so there is exactly one.
+    const robots = page.locator('meta[name="robots"]')
+    await expect(robots).toHaveCount(1)
+    await expect(robots).toHaveAttribute('content', /noindex/)
 
     const helpful = page.getByRole('navigation', { name: 'Helpful links' })
     await expect(helpful.getByRole('link', { name: 'Pricing' })).toHaveAttribute('href', '/pricing')

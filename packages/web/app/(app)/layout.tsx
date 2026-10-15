@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
@@ -16,6 +17,11 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
 import { EncryptionKeyProvider } from '@/lib/encryption/context'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { NOINDEX } from '@/lib/seo'
+
+// Signed-in pages: robots.txt keeps crawlers out and signed-out visitors are redirected, so this
+// only matters if a crawler ever reaches one anyway.
+export const metadata: Metadata = { robots: NOINDEX }
 
 export default async function AppLayout({
   children,

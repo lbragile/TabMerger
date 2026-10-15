@@ -1,6 +1,7 @@
 # web-dev Memory Index
 
 - [Flex img collapse on mobile](learnings/navbar-flex-collapse.md) — next/image in nested flex rows can collapse to 0x0 at narrow viewports without shrink-0; verify logo/icons at 375px with actual boundingBox checks, not just screenshots.
+- [SEO metadata](learnings/seo-metadata.md) — `pageMetadata()` per page (openGraph replace drops the file image), relative canonical + preview-only X-Robots-Tag, noindex vs Disallow, 404 duplicate noindex, JSON-LD `<` escaping
 - [CHANGELOG.md parsing](learnings/changelog-md-parsing.md) — build-time parser for semantic-release's generated changelog: path resolution from packages/web, angular-preset heading/section format, the `**scope:**` double-colon trap, ENOENT-as-empty-not-error.
 - [Module-scope SDK construction crash](learnings/module-scope-sdk-construction-crash.md) — Stripe/Supabase clients constructed with `!`-asserted env vars kill `next build` or every request; server.ts's client is reached from Navbar on every request too (not just build-safe), auth-js degrades getUser() to null rather than throwing, fail-loud-vs-degrade line, repro steps.
 - [Playwright authenticated-project leak](learnings/playwright-authenticated-project-leak.md) — unrestricted specs run under every project; unauthenticated-redirect tests need `test.use({storageState:{cookies:[],origins:[]}})` per-describe or they flip meaning under `authenticated`; also `.env.local` isn't auto-loaded for the Playwright process locally.

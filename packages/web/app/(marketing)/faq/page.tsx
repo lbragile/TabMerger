@@ -1,10 +1,12 @@
-import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { FAQ } from '@/components/marketing/FAQ'
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
+  path: '/faq',
   title: 'FAQ',
-  description: 'Frequently asked questions about TabMerger.',
-}
+  description:
+    'Frequently asked questions about TabMerger.',
+})
 
 export default function FaqPage() {
   return <FAQ />

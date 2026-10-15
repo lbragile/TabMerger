@@ -9,6 +9,7 @@ import { FREE_TIER_LIMITS, FIREFOX_BETA, CONFLICT_COPY_SUFFIX, STORE_LISTING_URL
 import { KNOWN_ISSUES } from '@/lib/knownIssues'
 import { cn } from '@/lib/utils'
 import { isProductionDeployment } from '@/lib/deployment'
+import { pageMetadata } from '@/lib/seo'
 import { BETA_GUIDE_FIREFOX_ID } from '@/lib/storeLinks'
 import { GITHUB_DISCUSSIONS_URL, GITHUB_REPO } from '@/lib/github'
 import { GitHubMark } from '@/components/GitHubMark'
@@ -29,11 +30,12 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = isProductionDeployment()
   ? { robots: { index: false, follow: false } }
-  : {
+  : pageMetadata({
+      path: '/beta',
       title: 'Beta Program',
       description:
         'Join the TabMerger beta — install the private beta build, know what to test, and report bugs directly to the team.',
-    }
+    })
 
 // The Google Group is also the Chrome Web Store trusted-tester list for the private
 // BETA item. Joining it is what makes the private listing visible to that Google

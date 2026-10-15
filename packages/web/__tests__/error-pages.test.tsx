@@ -60,9 +60,10 @@ describe('not-found page', () => {
     expect(screen.getByTestId('error-illustration')).toHaveTextContent('404')
   })
 
-  it('is titled "Page not found" and kept out of search indexes', () => {
+  it('is titled "Page not found" and leaves noindex to Next, which adds it to every 404', () => {
     expect(notFoundMetadata.title).toBe('Page not found')
-    expect(notFoundMetadata.robots).toEqual({ index: false })
+    // A page-level robots would be a second <meta name="robots"> next to Next's own.
+    expect(notFoundMetadata.robots).toBeUndefined()
   })
 })
 
