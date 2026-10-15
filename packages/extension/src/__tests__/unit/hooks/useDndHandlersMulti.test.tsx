@@ -138,7 +138,8 @@ describe('multi-drag: the selection moves as one block and stays selected at its
     expect(chromeStub.windows.create).toHaveBeenCalledWith({ url: ['https://e.x/a1', 'https://e.x/a2'], focused: false })
     expect(chromeStub.tabs.remove).not.toHaveBeenCalled()
     expect(useUIStore.getState().selectedItems).toEqual([])
-    expect(useUIStore.getState().undoStack).toHaveLength(0)
+    // the sources lost saved tabs: ONE undo step (it also closes the tabs this drop opened)
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
   })
 
   it('dragging an UNSELECTED tab while a selection exists: selection untouched during dragstart, cleared in the NEXT frame; a single-item move commits', async () => {
@@ -402,6 +403,6 @@ describe('runSideEffects', () => {
 
   it('a failing chrome call never throws out of the drop (best effort)', async () => {
     vi.stubGlobal('chrome', { tabs: { create: vi.fn().mockRejectedValue(new Error('gone')) } })
-    await expect(runSideEffects([{ type: 'tabs.create', windowId: 1, url: 'u', active: false }])).resolves.toBeUndefined()
+    await expect(runSideEffects([{ type: 'tabs.create', windowId: 1, url: 'u', active: false }])).resolves.toEqual([])
   })
 })

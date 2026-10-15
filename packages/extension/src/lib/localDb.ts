@@ -2,7 +2,7 @@ import { openDB, type IDBPDatabase, type IDBPTransaction } from 'idb';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import type { Group, GroupsState, Session } from './types';
 import { createNowOpenGroup } from './utils';
-import { GROUPS_CHANGED_MESSAGE } from './groupsChangedMessage';
+import { GROUPS_CHANGED_MESSAGE, type GroupsChangeCause, type GroupsChangedMessage } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
 import { APP_SETTINGS_KEY, LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
 
@@ -54,7 +54,7 @@ export function registerGroupsChangeListener(listener: GroupsChangeListener): vo
   backgroundGroupsChangeListener = listener;
 }
 
-function notifyGroupsChanged(): void {
+function notifyGroupsChanged(cause?: GroupsChangeCause): void {
   // In-SW half first (sendMessage never reaches the sender's own listeners), then ALWAYS
   // fall through to `sendMessage` too: it is also how the OTHER contexts learn the groups
   // changed — the popup's `useExternalGroupsChanges` refetches on it, so a write issued by
@@ -62,7 +62,8 @@ function notifyGroupsChanged(): void {
   backgroundGroupsChangeListener?.();
   if (typeof chrome === 'undefined' || !chrome.runtime?.sendMessage) return;
   try {
-    chrome.runtime.sendMessage({ type: GROUPS_CHANGED_MESSAGE }, () => {
+    const message: GroupsChangedMessage = cause ? { type: GROUPS_CHANGED_MESSAGE, cause } : { type: GROUPS_CHANGED_MESSAGE };
+    chrome.runtime.sendMessage(message, () => {
       // Swallow "Receiving end does not exist" — e.g. no background listener registered
       // yet, or the extension context is mid-reload. Reading lastError marks it "handled"
       // so it doesn't surface as an unhandled error.
@@ -313,7 +314,7 @@ export function saveGroupsState(state: GroupsState, opts: { expectedRev?: number
  */
 export function updateGroupsState(
   fn: (current: GroupsState, aux: UpdateAux) => GroupsState | null,
-  opts: { readPendingDeletes?: boolean; readSignedInUser?: boolean } = {}
+  opts: { readPendingDeletes?: boolean; readSignedInUser?: boolean; cause?: GroupsChangeCause } = {}
 ): Promise<GroupsState> {
   return enqueueGroupsWrite(async () => {
     const current = (await readStoredGroupsState()) ?? createInitialGroupsState();
@@ -322,7 +323,7 @@ export function updateGroupsState(
     const signedInUserId = opts.readSignedInUser ? await getSetting<string | null>(LAST_USER_ID_KEY, null) : null;
     const next = fn(current, { pendingDeletes, signedInUserId });
     if (!next) return current;
-    return writeGroupsState(next);
+    return writeGroupsState(next, undefined, false, opts.cause);
   });
 }
 
@@ -376,6 +377,39 @@ async function editPendingGroupDeletes(edit: (ids: Set<string>) => void): Promis
 export const addPendingGroupDeletes = (ids: string[]) => editPendingGroupDeletes((set) => ids.forEach((id) => set.add(id)));
 export const removePendingGroupDeletes = (ids: string[]) => editPendingGroupDeletes((set) => ids.forEach((id) => set.delete(id)));
 
+/**
+ * Records `ids` for remote deletion, but only those STILL absent from the groups store, as one
+ * queued step of the groups write queue (one transaction over groups + settings). Resolves with
+ * the ids it recorded: the only ones a caller may then DELETE on the server.
+ *
+ * `deleteRemoteGroups` gets here after an `auth.getSession()` (possibly a network refresh), so an
+ * Undo that restored the groups can have landed first. A plain add would then re-mark the restored
+ * groups pending: their server rows deleted, and the next merge pruning them locally, leaving
+ * neither the old nor the new groups. Inside the queue, this step sees every write issued before
+ * it, the Undo included.
+ */
+export function addPendingGroupDeletesIfAbsent(ids: string[]): Promise<string[]> {
+  if (ids.length === 0) return Promise.resolve([]);
+  return enqueueGroupsWrite(async () => {
+    const db = await getDb();
+    const tx = db.transaction(['groups', 'settings'], 'readwrite');
+    const [keys, record] = await Promise.all([
+      Promise.all(ids.map((id) => tx.objectStore('groups').getKey(id))),
+      tx.objectStore('settings').get(PENDING_DELETE_KEY) as Promise<{ id: string; value: string[] } | undefined>
+    ]);
+    const absent = [...new Set(ids.filter((_, i) => keys[i] === undefined))];
+    if (absent.length > 0) {
+      const pending = new Set(record?.value ?? []);
+      absent.forEach((id) => pending.add(id));
+      capPendingDeletes(pending);
+      await Promise.all([tx.objectStore('settings').put({ id: PENDING_DELETE_KEY, value: [...pending] }), tx.done]);
+    } else {
+      await tx.done;
+    }
+    return absent;
+  });
+}
+
 /** Drops the oldest ids once the pending-delete set exceeds its cap (Set keeps insertion order). */
 function capPendingDeletes(ids: Set<string>): void {
   for (const id of ids) {
@@ -396,7 +430,7 @@ function capPendingDeletes(ids: Set<string>): void {
  * OR-ed in. An incoming `positionDirty === false` is a caller's claim "already at this index on
  * the server" (a pull that adopted the remote order) and wins for that write only.
  */
-async function writeGroupsState(state: GroupsState, expectedRev?: number, preserveBases = false): Promise<GroupsState> {
+async function writeGroupsState(state: GroupsState, expectedRev?: number, preserveBases = false, cause?: GroupsChangeCause): Promise<GroupsState> {
   const db = await getDb();
   const tx = db.transaction(['groups', 'groupsState', 'settings'], 'readwrite');
   const [stateRecord, storedGroups, pendingRecord, syncRecord] = await Promise.all([
@@ -464,7 +498,7 @@ async function writeGroupsState(state: GroupsState, expectedRev?: number, preser
   // rejects), exactly as before.
   tx.commit();
   await Promise.all([...requests, tx.done]);
-  notifyGroupsChanged();
+  notifyGroupsChanged(cause);
   return { ...state, available: groups, rev };
 }
 

@@ -124,6 +124,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useAddGroup: () => ({ mutateAsync: mockAddGroupMutateAsync }),
   useGroups: () => mockUseGroupsData(),
   useSetGroupsState: () => mockSetGroupsState,
+  useGroupsSnapshot: () => () => mockUseGroupsData()?.data,
   useApplyAIGroups: () => ({ mutateAsync: mockApplyAIGroupsMutateAsync }),
   useAddWindow: () => ({ mutate: vi.fn() }),
   useReplaceWithCurrent: () => ({ mutate: vi.fn() }),

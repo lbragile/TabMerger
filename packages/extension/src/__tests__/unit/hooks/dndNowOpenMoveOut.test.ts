@@ -14,6 +14,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { partitionClosableTabs, runSideEffects } from '@/hooks/useDndHandlers'
 import {
   closeTabsWhenPopupCloses,
+  keepTabsOpen,
   resetDeferredClosePort,
   DEFERRED_CLOSE_PORT
 } from '@/lib/deferredTabClose'
@@ -202,7 +203,7 @@ describe('runSideEffects — tabs.detachToNewWindow (Now Open → Now Open\'s ow
   it('a failed windows.create is best-effort and does not throw, and skips the follow-up move', async () => {
     const { chromeStub } = stubChrome()
     chromeStub.windows.create.mockRejectedValueOnce(new Error('nope'))
-    await expect(runSideEffects([{ type: 'tabs.detachToNewWindow', tabIds: [9, 10] }])).resolves.toBeUndefined()
+    await expect(runSideEffects([{ type: 'tabs.detachToNewWindow', tabIds: [9, 10] }])).resolves.toEqual([])
     expect(chromeStub.tabs.move).not.toHaveBeenCalled()
   })
 
@@ -232,6 +233,30 @@ describe('closeTabsWhenPopupCloses', () => {
       throw new Error('worker gone')
     })
     expect(() => closeTabsWhenPopupCloses([9])).not.toThrow()
+  })
+
+  it('keepTabsOpen posts the ids to take back down the SAME port; without a port it does nothing', () => {
+    const { chromeStub, ports } = stubChrome()
+    keepTabsOpen([1])
+    expect(chromeStub.runtime.connect).not.toHaveBeenCalled() // nothing was queued by this popup
+    closeTabsWhenPopupCloses([1, 2])
+    keepTabsOpen([2])
+    keepTabsOpen([])
+    expect(ports).toHaveLength(1)
+    expect(ports[0].postMessage).toHaveBeenNthCalledWith(2, { keepTabIds: [2] })
+    expect(ports[0].postMessage).toHaveBeenCalledTimes(2)
+  })
+
+  it('keepTabsOpen never throws when the port is dead, and forgets it', () => {
+    const { ports } = stubChrome()
+    closeTabsWhenPopupCloses([1])
+    ports[0].postMessage.mockImplementation(() => {
+      throw new Error('disconnected')
+    })
+    expect(() => keepTabsOpen([1])).not.toThrow()
+    ports[0].postMessage.mockReset()
+    closeTabsWhenPopupCloses([3])
+    expect(ports).toHaveLength(2)
   })
 
   it('drops a dead port so the NEXT call reconnects instead of posting into the void', () => {

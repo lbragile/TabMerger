@@ -23,8 +23,11 @@ import {
   type DndSideEffect
 } from '@/lib/dndMove';
 import { rebaseMove } from '@/lib/dndRebase';
+import { liveTabRecords, tagHistoryEntry, type LiveTabRecord } from '@/lib/undoLiveTabs';
+import { savedDataChanged } from '@/lib/undoHistory';
+import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
 import { isTourSpringOpenBlocked } from '@/lib/tourSandbox';
-import { closeTabsWhenPopupCloses } from '@/lib/deferredTabClose';
+import { closeLiveTabsSafely, partitionClosableTabs } from '@/lib/closeLiveTabs';
 import {
   clearDndDragLive,
   clearDndDragSelection,
@@ -53,6 +56,9 @@ import {
 import { useUIStore, type SelectedItem } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
+// Re-exported: tests (and older callers) import it from here
+export { partitionClosableTabs };
+
 /** Announced when a drop's write fails (or the commit throws) and the UI is rolled back. */
 export const DND_SAVE_FAILED_TEXT = "Couldn't save the move; restored.";
 
@@ -63,6 +69,8 @@ interface CommitProgress {
   movedGroup?: { from: number; to: number };
   pushedBase?: GroupsState;
   redoBefore?: GroupsState[] | null;
+  /** the undo entry this drop pushed (the tabs it opens are attached to it once they exist) */
+  historyEntry?: GroupsState;
   cacheWritten?: boolean;
   /**
    * The in-flight `saveGroupsState` promise, recorded the moment it is issued so a
@@ -518,62 +526,6 @@ function resolveActive(base: GroupsState, id: string, dataCurrent?: unknown): Dn
 }
 
 /**
- * Id of the browser window this TabMerger page lives in, or `null` when it can't be told.
- *
- * `chrome.windows.getCurrent()` resolves to the window containing the calling page, not
- * the focused one: for the toolbar popup that is the window it is anchored to, and for
- * `popup.html` opened as an ordinary tab it is the window holding that tab. (It must be
- * asked from the page — in a service worker "current" falls back to the last active
- * window. `chrome.tabs.getCurrent()` is no use either: it is `undefined` in a popup.)
- */
-async function ownWindowId(): Promise<number | null> {
-  try {
-    const win = await chrome.windows.getCurrent();
-    return typeof win?.id === 'number' && win.id >= 0 ? win.id : null;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Split the tabs a Now Open drag-out wants closed into "safe to close right now" and
- * "must wait until the popup is gone".
- *
- * Closing the ACTIVE tab of the window the toolbar popup is anchored to dismisses the
- * popup instantly (spec C7), so that ONE tab is deferred. Every other tab closes now,
- * active or not: the popup only watches its own window's tab strip, and a dragged window
- * the popup is not attached to is expected to close completely at the drop.
- *
- * If the popup's own window can't be identified — the lookup fails, or it names a window
- * that owns none of the active tabs — every tab that is active in ANY window is deferred
- * instead. Over-deferring costs nothing (the close still happens, just on popup close);
- * under-deferring costs the user their popup mid-drop.
- *
- * Exported for tests; `chrome.tabs.query` failing degrades to "defer everything", which
- * is the safe direction.
- */
-export async function partitionClosableTabs(
-  tabIds: number[]
-): Promise<{ now: number[]; deferred: number[] }> {
-  const unique = [...new Set(tabIds)].filter((id) => typeof id === 'number' && id > 0);
-  if (unique.length === 0) return { now: [], deferred: [] };
-  let held = new Set<number>();
-  try {
-    const [active, ownId] = await Promise.all([chrome.tabs.query({ active: true }), ownWindowId()]);
-    const mine = ownId === null ? [] : active.filter((t) => t.windowId === ownId);
-    held = new Set(
-      (mine.length > 0 ? mine : active).map((t) => t.id).filter((id): id is number => typeof id === 'number')
-    );
-  } catch {
-    return { now: [], deferred: unique };
-  }
-  return {
-    now: unique.filter((id) => !held.has(id)),
-    deferred: unique.filter((id) => held.has(id))
-  };
-}
-
-/**
  * Execute the chrome side effects `applyMove` described — the ONLY place popup DnD
  * touches chrome APIs. `windows.create` is always `focused: false` (hardcoded here as
  * well as carried on the effect): a new focused window steals focus from the window
@@ -585,8 +537,10 @@ export async function partitionClosableTabs(
  * closes here at the drop. Side effects run AFTER `saveGroupsState` has been issued, so
  * even a dismissed popup leaves the destination group persisted.
  */
-export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
-  if (typeof chrome === 'undefined') return;
+export async function runSideEffects(effects: DndSideEffect[]): Promise<LiveTabRecord[]> {
+  /** the real tabs this run OPENED (a saved item dropped into Now Open): what an Undo closes */
+  const opened: LiveTabRecord[] = [];
+  if (typeof chrome === 'undefined') return opened;
   for (const fx of effects) {
     try {
       if (fx.type === 'tabs.move') {
@@ -598,20 +552,25 @@ export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
       } else if (fx.type === 'tabs.create') {
         // `active: false` always: activating a tab in the popup's anchor window dismisses the popup.
          
-        if (isOpenableUrl(fx.url)) await chrome.tabs.create({ windowId: fx.windowId, url: fx.url, index: fx.index, active: false });
+        if (isOpenableUrl(fx.url)) {
+          const created = await chrome.tabs.create({ windowId: fx.windowId, url: fx.url, index: fx.index, active: false });
+          noteTabsOpenedByPopup([{ id: created?.id, url: fx.url }]);
+          if (typeof created?.id === 'number') opened.push({ tabId: created.id, url: fx.url, windowId: fx.windowId, index: fx.index });
+        }
       } else if (fx.type === 'windows.create') {
          
         const urls = openableUrls(Array.isArray(fx.url) ? fx.url : [fx.url]);
         // nothing openable: no window at all (an empty url list would open a blank one)
-        if (urls.length > 0) await chrome.windows.create({ url: Array.isArray(fx.url) ? urls : urls[0], focused: false });
+        if (urls.length > 0) {
+          const win = await chrome.windows.create({ url: Array.isArray(fx.url) ? urls : urls[0], focused: false });
+          noteTabsOpenedByPopup((win?.tabs ?? []).map((t, i) => ({ id: t.id, url: urls[i] })));
+          (win?.tabs ?? []).forEach((t, i) => {
+            if (typeof t.id === 'number' && urls[i] !== undefined) opened.push({ tabId: t.id, url: urls[i] });
+          });
+        }
       } else if (fx.type === 'tabs.remove') {
 
-        const { now, deferred } = await partitionClosableTabs(fx.tabIds);
-        // The deferred ids go first: if removing the others somehow dismisses the popup,
-        // the background worker already holds the rest.
-        if (deferred.length > 0) closeTabsWhenPopupCloses(deferred);
-
-        if (now.length > 0) await chrome.tabs.remove(now);
+        await closeLiveTabsSafely(fx.tabIds);
       } else if (fx.type === 'tabs.detachToNewWindow') {
         // A real MOVE, not open+close: `windows.create({tabId})` detaches the existing
         // tab (with its history, form state, pinned flag…) into a brand-new window
@@ -631,6 +590,7 @@ export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
       /* best effort — Now Open re-syncs from the browser regardless */
     }
   }
+  return opened;
 }
 
 /** ~600ms pointer dwell over a non-active, non-permanent group row springs it open. */
@@ -1251,12 +1211,18 @@ export function useDndHandlers() {
       undoable,
       newWindow: co.type === 'new-window'
     });
-    // A move inside the guided tour's practice groups is not history: they are not the user's
-    // data and are removed when the tour ends, so Undo must not offer to "restore" it.
-    if (undoable && !isTourDemoItem(commitModel, ca.id)) {
+    // ONE undo step for every drop that changed saved data, Now Open sources and destinations
+    // included (`savedDataChanged` is the same rule every other mutation uses). A move inside the
+    // guided tour's practice groups is not history: they are not the user's data and are removed
+    // when the tour ends, so Undo must not offer to "restore" it.
+    if (undoable && savedDataChanged(commitBase, next) && !isTourDemoItem(commitModel, ca.id)) {
       p.redoBefore = uiState()?.redoStack ?? null;
       pushUndo(commitBase);
       p.pushedBase = commitBase;
+      p.historyEntry = uiState()?.undoStack?.[0];
+      // A drag OUT of Now Open closes real tabs: Undo reopens them (lib/undoLiveTabs.ts)
+      const closing = sideEffects.flatMap((fx) => (fx.type === 'tabs.remove' ? fx.tabIds : []));
+      if (closing.length > 0) tagHistoryEntry(p.historyEntry, { kind: 'reopen', tabs: liveTabRecords(commitBase, closing) });
     }
     // The IDB write is ISSUED first, synchronously: `saveGroupsState` bumps the write
     // generation and queue tail before returning, so any groups read in flight re-reads
@@ -1348,7 +1314,11 @@ export function useDndHandlers() {
         announceDnd(DND_SAVE_FAILED_TEXT);
         return;
       }
-      if (sideEffects.length) await runSideEffects(sideEffects);
+      if (sideEffects.length) {
+        // A saved item dropped INTO Now Open opened real tabs: Undo closes exactly those (by id)
+        const opened = await runSideEffects(sideEffects);
+        if (opened.length > 0) tagHistoryEntry(p.historyEntry, { kind: 'close', tabs: opened });
+      }
       try {
         trackEvent('dnd_move', { type: ca.type });
       } catch {

@@ -212,6 +212,22 @@ describe('background — deferred tab close (drag out of Now Open)', () => {
     expect(stub.chrome.tabs.remove).not.toHaveBeenCalled()
   })
 
+  it('keepTabIds (an Undo of the drop) takes queued tabs back out: they stay open', () => {
+    const port = connect()
+    port.post({ tabIds: [7, 8] })
+    port.post({ keepTabIds: [8, 99] })
+    port.disconnect()
+    expect(stub.chrome.tabs.remove).toHaveBeenCalledWith([7])
+  })
+
+  it('nothing is closed when every queued tab was kept', () => {
+    const port = connect()
+    port.post({ tabIds: [7] })
+    port.post({ keepTabIds: [7] })
+    port.disconnect()
+    expect(stub.chrome.tabs.remove).not.toHaveBeenCalled()
+  })
+
   it('ignores ports with a different name (other features may open their own)', () => {
     const port = connect('something-else')
     expect(port.connected).toBe(false)

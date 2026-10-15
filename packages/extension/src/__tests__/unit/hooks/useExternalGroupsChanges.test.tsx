@@ -5,6 +5,7 @@ import React from 'react'
 import { useExternalGroupsChanges } from '@/hooks/useExternalGroupsChanges'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { useUIStore } from '@/stores/uiStore'
+import { consumeOwnOpenedTab, noteTabsOpenedByPopup, OWN_TAB_WINDOW_MS, resetOwnOpenedTabs } from '@/lib/ownOpenedTabs'
 
 type Listener = (msg: unknown) => void
 
@@ -48,6 +49,85 @@ describe('useExternalGroupsChanges', () => {
     mount()
     listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED' }))
     expect(useUIStore.getState().undoStack).toEqual([])
+  })
+
+  describe('a URL rule saving a tab', () => {
+    const entry = { available: [], active: { id: '', index: 0 } }
+    beforeEach(() => {
+      resetOwnOpenedTabs()
+      useUIStore.setState({ undoStack: [entry], redoStack: [entry] })
+    })
+
+    it('THIS popup opened (part of its own action): the history stays, the groups are still refetched', () => {
+      noteTabsOpenedByPopup([{ id: 501, url: 'https://example.com/a' }])
+      mount()
+      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 501, url: 'https://example.com/a' } }))
+      expect(useUIStore.getState().undoStack).toHaveLength(1)
+      expect(useUIStore.getState().redoStack).toHaveLength(1)
+      expect(invalidate).toHaveBeenCalledWith({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false })
+    })
+
+    it('the popup did NOT open (a change made elsewhere): the history is cleared', () => {
+      noteTabsOpenedByPopup([{ id: 501, url: 'https://example.com/a' }])
+      mount()
+      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 777, url: 'https://example.com/a' } }))
+      expect(useUIStore.getState().undoStack).toEqual([])
+    })
+
+    it('a malformed cause counts as a change made elsewhere', () => {
+      noteTabsOpenedByPopup([{ id: 501, url: 'https://example.com/a' }])
+      mount()
+      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: '501', url: 'https://example.com/a' } }))
+      expect(useUIStore.getState().undoStack).toEqual([])
+    })
+
+    it('only ONCE: a second rule save of the same tab (its reload) clears the history', () => {
+      noteTabsOpenedByPopup([{ id: 501, url: 'https://example.com/a' }])
+      mount()
+      const msg = { type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 501, url: 'https://example.com/a' } }
+      listeners.forEach((l) => l(msg))
+      expect(useUIStore.getState().undoStack).toHaveLength(1)
+      listeners.forEach((l) => l(msg))
+      expect(useUIStore.getState().undoStack).toEqual([])
+    })
+
+    it('after the tab was navigated (the saved URL is another one), the history is cleared', () => {
+      noteTabsOpenedByPopup([{ id: 501, url: 'https://example.com/a' }])
+      mount()
+      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 501, url: 'https://example.com/somewhere-else' } }))
+      expect(useUIStore.getState().undoStack).toEqual([])
+    })
+
+    it('long after the action (a capture minutes later), the history is cleared', () => {
+      vi.useFakeTimers()
+      try {
+        noteTabsOpenedByPopup([{ id: 501, url: 'https://example.com/a' }])
+        mount()
+        vi.advanceTimersByTime(OWN_TAB_WINDOW_MS + 1)
+        listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 501, url: 'https://example.com/a' } }))
+        expect(useUIStore.getState().undoStack).toEqual([])
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+  })
+
+  describe('the own-opened-tabs registry', () => {
+    beforeEach(() => resetOwnOpenedTabs())
+
+    it('only keeps real tab ids with a URL, and compares URLs in their normal form', () => {
+      noteTabsOpenedByPopup([{ id: undefined, url: 'https://a.com' }, { id: 0, url: 'https://a.com' }, { id: -3, url: 'https://a.com' }, { id: 13 }, { id: 12, url: 'https://a.com' }], 1000)
+      expect(consumeOwnOpenedTab(0, 'https://a.com', 1000)).toBe(false)
+      expect(consumeOwnOpenedTab(13, '', 1000)).toBe(false)
+      expect(consumeOwnOpenedTab(12, 'https://a.com/', 1000 + OWN_TAB_WINDOW_MS)).toBe(true)
+      expect(consumeOwnOpenedTab(12, 'https://a.com/', 1000)).toBe(false) // consumed
+    })
+
+    it('an unparsable URL compares as written; a non-string cause URL never matches', () => {
+      noteTabsOpenedByPopup([{ id: 5, url: 'not a url' }, { id: 6, url: 'https://a.com' }], 0)
+      expect(consumeOwnOpenedTab(5, 'not a url', 0)).toBe(true)
+      expect(consumeOwnOpenedTab(6, undefined, 0)).toBe(false)
+    })
   })
 
   it('ignores unrelated messages', () => {

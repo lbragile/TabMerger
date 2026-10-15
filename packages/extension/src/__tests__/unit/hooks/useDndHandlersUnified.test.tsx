@@ -755,7 +755,7 @@ describe('DnD side effects: new real windows are always opened unfocused', () =>
     expect(c.windows.create).toHaveBeenCalledTimes(1)
     expect(c.windows.create).toHaveBeenCalledWith({ url: 'https://example.com/a1', focused: false })
     expect(c.tabs.create).not.toHaveBeenCalled()
-    expect(useUIStore.getState().undoStack).toHaveLength(0) // touches Now Open → not undoable
+    expect(useUIStore.getState().undoStack).toHaveLength(1) // the saved group lost a tab: one undo step
   })
 })
 

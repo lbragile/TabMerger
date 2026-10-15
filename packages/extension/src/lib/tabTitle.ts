@@ -19,18 +19,27 @@ function applyCustomTitle(tab: Tab, title: string): void {
  * Resolves with the stored state (unchanged when the group/tab no longer exists).
  */
 export function setTabCustomTitle(groupId: string, windowIndex: number, tabIndex: number, title: string): Promise<GroupsState> {
-  return updateGroupsState((state) => {
-    const gi = state.available.findIndex((g) => g.id === groupId)
-    const tab = state.available[gi]?.windows[windowIndex]?.tabs[tabIndex]
-    if (!tab) return null
-    const group = state.available[gi]
-    const windows = group.windows.map((w, wi) =>
-      wi !== windowIndex ? w : { ...w, tabs: w.tabs.map((t, ti) => (ti === tabIndex ? { ...t } : t)) }
-    )
-    applyCustomTitle(windows[windowIndex].tabs[tabIndex], title.trim())
-    const edited = group.permanent ? { ...group, windows } : { ...group, windows, updatedAt: Date.now(), pendingSync: true }
-    return { ...state, available: state.available.map((g, i) => (i === gi ? edited : g)) }
-  })
+  return updateGroupsState((state) => withTabCustomTitle(state, groupId, windowIndex, tabIndex, title))
+}
+
+/**
+ * The pure edit behind {@link setTabCustomTitle} (and the undoable `useRenameTab`): `state` with the
+ * tab's custom title set, or `null` when the group/tab no longer exists. Only the edited group and
+ * window are copied, so nothing else changes identity.
+ */
+export function withTabCustomTitle(state: GroupsState, groupId: string, windowIndex: number, tabIndex: number, title: string): GroupsState | null {
+  const gi = state.available.findIndex((g) => g.id === groupId)
+  const tab = state.available[gi]?.windows[windowIndex]?.tabs[tabIndex]
+  if (!tab) return null
+  const group = state.available[gi]
+  const windows = group.windows.map((w, wi) =>
+    wi !== windowIndex ? w : { ...w, tabs: w.tabs.map((t, ti) => (ti === tabIndex ? { ...t } : t)) }
+  )
+  applyCustomTitle(windows[windowIndex].tabs[tabIndex], title.trim())
+  // the same title as before: nothing to write (no re-stamp, no sync push, no undo step)
+  if (windows[windowIndex].tabs[tabIndex].customTitle === tab.customTitle) return null
+  const edited = group.permanent ? { ...group, windows } : { ...group, windows, updatedAt: Date.now(), pendingSync: true }
+  return { ...state, available: state.available.map((g, i) => (i === gi ? edited : g)) }
 }
 
 /** Same edit, for a tab found by its (live) tab id: the first group holding it. */

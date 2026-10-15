@@ -19,6 +19,7 @@ vi.mock('@/stores/uiStore', () => ({
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
   useSetGroupsState: () => mockSetGroupsState,
+  useGroupsSnapshot: () => () => mockUseGroups().data,
 }))
 
 const groupsState = { available: [{ id: 'now' }], active: { id: 'now', index: 0 } }

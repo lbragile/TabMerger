@@ -52,6 +52,13 @@ vi.mock('@/lib/localDb', () => ({
   addPendingGroupDeletes: async (ids: string[]) => {
     settingsStore['pendingDeleteGroupIds'] = Array.from(new Set([...((settingsStore['pendingDeleteGroupIds'] as string[] | undefined) ?? []), ...ids]))
   },
+  // the groups store's ids are `settingsStore.__presentGroupIds` (none unless a test sets them)
+  addPendingGroupDeletesIfAbsent: async (ids: string[]) => {
+    const present = new Set((settingsStore['__presentGroupIds'] as string[] | undefined) ?? [])
+    const absent = ids.filter((id) => !present.has(id))
+    settingsStore['pendingDeleteGroupIds'] = Array.from(new Set([...((settingsStore['pendingDeleteGroupIds'] as string[] | undefined) ?? []), ...absent]))
+    return absent
+  },
   removePendingGroupDeletes: async (ids: string[]) => {
     settingsStore['pendingDeleteGroupIds'] = ((settingsStore['pendingDeleteGroupIds'] as string[] | undefined) ?? []).filter((id) => !ids.includes(id))
   },
@@ -415,6 +422,25 @@ describe('deleteRemoteGroups', () => {
     currentBuilder = makeBuilder([{ data: null, error: { message: 'offline' } }])
     await deleteRemoteGroups(['g1'])
     expect(settingsStore['pendingDeleteGroupIds']).toEqual(['g1']) // kept although the DELETE failed
+  })
+
+  it('an id that is back in the groups store by now (an Undo landed first) is neither recorded nor deleted remotely', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: makeSession('u1') } })
+    settingsStore['__presentGroupIds'] = ['restored']
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+    await deleteRemoteGroups(['restored', 'gone'])
+    expect(settingsStore['pendingDeleteGroupIds']).toEqual(['gone'])
+    expect((currentBuilder.in as ReturnType<typeof vi.fn>).mock.calls.map((c) => c[1])).toEqual([['gone']])
+    delete settingsStore['__presentGroupIds']
+  })
+
+  it('sends nothing when every id is back', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: makeSession('u1') } })
+    settingsStore['__presentGroupIds'] = ['restored']
+    currentBuilder = makeBuilder([])
+    await deleteRemoteGroups(['restored'])
+    expect(currentBuilder.in as ReturnType<typeof vi.fn>).not.toHaveBeenCalled()
+    delete settingsStore['__presentGroupIds']
   })
 
   it('sends the DELETE in chunks of 100 ids', async () => {

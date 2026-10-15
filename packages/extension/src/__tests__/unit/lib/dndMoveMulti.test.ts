@@ -124,14 +124,14 @@ describe('applyMove — multi-WINDOW move (item 8: moveWindowsMulti)', () => {
     expect(res.next.available[2].windows).toHaveLength(3)
   })
 
-  it('a multi-window drop INTO Now Open opens a real window per selected window (undoable:false)', () => {
+  it('a multi-window drop INTO Now Open opens a real window per selected window (one undo step)', () => {
     const s = twoGroupsThreeWindows()
     const { m, winRef, groupRef, wid } = refs(s)
     const active = { ...winRef(1, 1), selectionIds: [wid(1, 1), wid(1, 2)] }
 
     const res = applyMove(m, s, active, groupRef(0))
 
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
     const creates = res.sideEffects.filter((e) => e.type === 'windows.create')
     expect(creates).toHaveLength(2)
     // every new real window is unfocused — a focused one dismisses the toolbar popup
@@ -257,14 +257,14 @@ describe('applyMove — LIVE window dragged out of Now Open (item 9)', () => {
     expect(merged).toEqual(expect.arrayContaining(['live-9', 'live-10']))
   })
 
-  it('is not undoable and bumps the receiving saved group', () => {
+  it('is one undo step and bumps the receiving saved group', () => {
     const s = nowOpenWithLiveWindow()
     const beforeA = s.available[1].updatedAt
     const { m, winRef, groupRef } = refs(s)
 
     const res = applyMove(m, s, winRef(0, 0), groupRef(1))
 
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
     expect(res.next.available[1].updatedAt).toBeGreaterThan(beforeA)
     expect(res.next.available[1].pendingSync).toBe(true)
   })
@@ -298,7 +298,7 @@ describe('applyMove — LIVE window dragged out of Now Open (item 9)', () => {
     expect(copy.tabs.every((t) => t.id === 0)).toBe(true)
   })
 
-  it('closes exactly the live tabs it moved (ids 9 + 10, never a saved id 0) and is not undoable', () => {
+  it('closes exactly the live tabs it moved (ids 9 + 10, never a saved id 0) and is one undo step', () => {
     const s = nowOpenWithLiveWindow() // live window 500 with tabs id 9 + id 10
     const { m, winRef, groupRef } = refs(s)
 
@@ -308,7 +308,7 @@ describe('applyMove — LIVE window dragged out of Now Open (item 9)', () => {
     expect(removals).toHaveLength(1)
     expect((removals[0] as { tabIds: number[] }).tabIds).toEqual([9, 10])
     // Undo cannot faithfully reopen a closed tab.
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 })
 

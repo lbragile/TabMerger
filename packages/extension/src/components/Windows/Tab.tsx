@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { TabPreview } from './TabPreview';
 import { CreateGroupMenuItem } from './CreateGroupMenuItem';
 import type { Tab as TabType } from '@/lib/types';
-import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminder, useClearTabReminder, GROUPS_QUERY_KEY } from '@/hooks/useGroups';
+import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminder, useClearTabReminder, useRenameTab, GROUPS_QUERY_KEY } from '@/hooks/useGroups';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
@@ -16,7 +16,7 @@ import { withAlpha } from '@/lib/color';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
-import { getDisplayTitle, setTabCustomTitle } from '@/lib/tabTitle';
+import { getDisplayTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
@@ -110,6 +110,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
   const { mutate: updateTabNote } = useUpdateTabNote();
   const { mutate: setTabReminder } = useSetTabReminder();
   const { mutate: clearTabReminder } = useClearTabReminder();
+  const { mutateAsync: renameTab } = useRenameTab();
   const { data: groupsState } = useGroups();
   const queryClient = useQueryClient();
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
@@ -163,8 +164,8 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
     // Address the group by ID: the positional index came from the render this click belongs to.
     const groupId = queryClient.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available[groupIndex]?.id;
     if (!groupId) return;
-    // Atomic read-modify-write that also marks the group for sync (see setTabCustomTitle).
-    queryClient.setQueryData(GROUPS_QUERY_KEY, await setTabCustomTitle(groupId, windowIndex, tabIndex, trimmed));
+    // Atomic read-modify-write that marks the group for sync and is one undo step (see useRenameTab).
+    await renameTab({ groupId, windowIndex, tabIndex, title: trimmed }).catch(() => {});
   };
 
   const handleNoteBlur = (e: React.FocusEvent) => {

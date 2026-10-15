@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
+import { GROUPS_CHANGED_MESSAGE, type GroupsChangedMessage } from '@/lib/groupsChangedMessage';
+import { consumeOwnOpenedTab } from '@/lib/ownOpenedTabs';
 import { useUIStore } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
@@ -17,10 +18,15 @@ export function useExternalGroupsChanges() {
 
   useEffect(() => {
     const onMessage = (msg: unknown) => {
-      if ((msg as { type?: string } | undefined)?.type !== GROUPS_CHANGED_MESSAGE) return;
+      const m = msg as Partial<GroupsChangedMessage> | undefined;
+      if (m?.type !== GROUPS_CHANGED_MESSAGE) return;
       // Another context changed the groups: an undo snapshot taken before that would prune or
       // revert the change when restored, so the history is dropped (simplest deterministic rule).
-      useUIStore.getState().clearHistory();
+      // Except a URL rule saving a tab THIS popup just opened: that save is part of the popup's
+      // own action (lib/ownOpenedTabs.ts), and undoing the action rightly takes it back too.
+      // (once, shortly after opening it, at the URL it was opened with: see consumeOwnOpenedTab)
+      const ownTabRule = m.cause?.kind === 'url-rule' && typeof m.cause.tabId === 'number' && consumeOwnOpenedTab(m.cause.tabId, m.cause.url);
+      if (!ownTabRule) useUIStore.getState().clearHistory();
       // cancelRefetch:false is mandatory on the groups key (spec C11): the default cancels an
       // in-flight fetch and rejects any mutation that joined it.
       void qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false });

@@ -11,6 +11,11 @@ import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@
 import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { asNewGroup } from '@/lib/syncDirty';
+import { savedDataChanged } from '@/lib/undoHistory';
+import { isTourDemoGroup } from '@tabmerger/shared';
+import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
+import { withTabCustomTitle } from '@/lib/tabTitle';
+import { tagHistoryEntry, type LiveTabsEffect } from '@/lib/undoLiveTabs';
 import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
 import { toast } from '@/lib/toast';
 import { useUIStore } from '@/stores/uiStore';
@@ -80,21 +85,44 @@ export function useGroups() {
 }
 
 /**
+ * A reader of the groups cache AT CALL TIME. A click handler that needs the current state (undo,
+ * redo) must not use the value of the render it was created in: a write that landed since (Now
+ * Open's re-sync, the previous undo) has already replaced the cache but maybe not re-rendered yet,
+ * and the stale value's `rev` makes an expected-rev write refuse.
+ */
+export function useGroupsSnapshot(): () => GroupsState | undefined {
+  const qc = useQueryClient();
+  return () => qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+}
+
+/**
  * Returns a typed mutation helper used by every group/window/tab mutation hook.
- * Pattern: atomic IDB read-modify-write (`updateGroupsState`: fresh read → optionally push undo
- * snapshot → apply transform → persist, all inside the write queue + cross-context lock) → update cache.
- * Pass `skipUndo=true` for operations that are too granular to undo (notes, info fields, Now Open sync).
+ * Pattern: atomic IDB read-modify-write (`updateGroupsState`: fresh read → apply transform →
+ * persist, all inside the write queue + cross-context lock) → push the undo snapshot → update cache.
+ *
+ * Undo is decided HERE for every hook below: the state the transform started from goes on the undo
+ * stack exactly when the transform changed the SAVED data (`savedDataChanged`), and only once the
+ * write is stored. So each user action is one step, a no-op or Now Open-only write is none, and a
+ * failed write leaves no step behind. `skipUndo=true` is only for writes that are not user changes
+ * (info recounts) or that an undo could not take back (reminders: their alarms stay scheduled).
+ * `opts.liveTabs`: the real tabs the action opened (see lib/undoLiveTabs.ts), attached to the step
+ * so Undo closes exactly those tabs and Redo reopens them.
  * `mutFn` runs inside the lock: keep it synchronous and cheap (fire-and-forget side effects only).
  */
 function useGroupsMutation() {
   const qc = useQueryClient();
   const pushUndo = useUIStore((s) => s.pushUndo);
 
-  return (mutFn: (prev: GroupsState) => GroupsState, skipUndo = false, opts: { align?: boolean } = {}) => {
+  return (
+    mutFn: (prev: GroupsState) => GroupsState | null,
+    skipUndo = false,
+    opts: { align?: boolean; liveTabs?: Promise<LiveTabsEffect | null> } = {}
+  ) => {
     // The list the user is looking at. `mutFn` closes over positional indexes from that render.
     const base = opts.align === false ? undefined : qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
     /** a fresh read inside the lock (not the cache) guarantees we mutate the latest IDB state, even one the service worker just wrote */
     let gone = false;
+    let undoBase: GroupsState | null = null;
     return updateGroupsState((fresh) => {
       // Resolve the target by group id: re-address the fresh state to `base`'s order so index N
       // is still the group the user clicked; refuse (no write) if that group is gone.
@@ -103,14 +131,22 @@ function useGroupsMutation() {
         gone = true;
         return null;
       }
-      if (!skipUndo) pushUndo(prev);
       const result = mutFn(prev);
+      if (!result) return null; // nothing to change: no write, no rev bump, no broadcast
+      if (!skipUndo && savedDataChanged(prev, result)) undoBase = prev;
       // The view was in the user's order: put the result back into the FRESH order (see restoreFreshOrder).
       return prev === fresh ? result : restoreFreshOrder(fresh, prev, result);
     }).then((next) => {
       if (gone) {
         toast.info('A group you were working on changed or was removed elsewhere, so nothing was changed.', { id: 'groups-changed-elsewhere' });
         markAborted(next); // onSuccess analytics must not count a mutation that did nothing
+      }
+      if (undoBase) {
+        pushUndo(undoBase);
+        if (opts.liveTabs) {
+          const entry = useUIStore.getState().undoStack?.[0];
+          void opts.liveTabs.then((effect) => tagHistoryEntry(entry, effect));
+        }
       }
       qc.setQueryData(GROUPS_QUERY_KEY, next);
       return next;
@@ -293,8 +329,8 @@ export function useUpdateGroupNote() {
           const available = [...prev.available];
           available[groupIndex] = { ...available[groupIndex], note, updatedAt: Date.now(), pendingSync: true };
           return { ...prev, available };
-        },
-        true
+        }
+        // undoable: a note is saved once (blur / Enter), and one with the same text is no step
       )
   });
 }
@@ -442,7 +478,7 @@ export function useUpdateWindowNote() {
           pendingSync: true
         };
         return { ...prev, available };
-      }, true)
+      })
   });
 }
 
@@ -639,7 +675,21 @@ export function useUpdateTabNote() {
           pendingSync: true
         };
         return { ...prev, available };
-      }, true) // ponytail: skip undo — note edits are too granular to undo per-keystroke
+      }) // undoable: saved once per edit (blur / Enter), not per keystroke
+  });
+}
+
+/**
+ * Renames a tab (its `customTitle`; an empty or unchanged title clears it) as one undoable step.
+ * The group is addressed by ID, the tab by its position inside it (saved tabs are all `id: 0`).
+ */
+export function useRenameTab() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({ groupId, windowIndex, tabIndex, title }: { groupId: string; windowIndex: number; tabIndex: number; title: string }) =>
+      // null (the tab is gone, or the title is unchanged) writes nothing
+      mutate((prev) => withTabCustomTitle(prev, groupId, windowIndex, tabIndex, title), false, { align: false })
   });
 }
 
@@ -832,8 +882,16 @@ export function useMoveTab() {
 
       // Moving to Now Open → open in browser; useCurrentTabs sync will pick it up automatically
       if (state?.available[toGroupIndex]?.permanent) {
+        let opened: Promise<LiveTabsEffect | null> | undefined;
         if (sourceTab && isOpenableUrl(sourceTab.url) && !RESTRICTED_URL_RE.test(sourceTab.url)) {
-          chrome.tabs.create({ url: sourceTab.url, active: false }).catch(() => {});
+          const url = sourceTab.url;
+          // The opened tab's id: an Undo of this move closes exactly that tab (lib/undoLiveTabs.ts)
+          opened = Promise.resolve(chrome.tabs.create({ url, active: false }))
+            .then((t): LiveTabsEffect | null => {
+              noteTabsOpenedByPopup([{ id: t?.id, url }]);
+              return typeof t?.id === 'number' ? { kind: 'close', tabs: [{ tabId: t.id, url }] } : null;
+            })
+            .catch(() => null);
         }
         // If source is also Now Open (copy=true), the browser tab already exists — nothing to remove
         if (copy) return;
@@ -849,7 +907,7 @@ export function useMoveTab() {
           fromGroup.info = getGroupInfo(fromGroup);
           available[fromGroupIndex] = fromGroup;
           return { ...prev, available };
-        });
+        }, false, { liveTabs: opened });
       }
 
       return mutate((prev) => {
@@ -918,13 +976,24 @@ export function useMoveWindow() {
 
       // Moving to Now Open → open in browser; useCurrentTabs sync will pick it up automatically
       if (state?.available[toGroupIndex]?.permanent) {
+        let opened: Promise<LiveTabsEffect | null> | undefined;
         const win = state.available[fromGroupIndex]?.windows[windowIndex];
         if (win) {
           const urls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
           if (urls.length > 0) {
-            void resolveIncognito(win.incognito).then((incognito) =>
-              chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })
-            ).catch(() => {});
+            // The opened tabs' ids: an Undo of this move closes exactly those tabs (lib/undoLiveTabs.ts)
+            opened = resolveIncognito(win.incognito)
+              .then((incognito) =>
+                chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })
+              )
+              .then((created): LiveTabsEffect | null => {
+                noteTabsOpenedByPopup((created?.tabs ?? []).map((t, i) => ({ id: t.id, url: urls[i] })));
+                const tabs = (created?.tabs ?? []).flatMap((t, i) =>
+                  typeof t.id === 'number' && urls[i] !== undefined ? [{ tabId: t.id, url: urls[i] }] : []
+                );
+                return tabs.length > 0 ? { kind: 'close', tabs } : null;
+              })
+              .catch(() => null);
           }
         }
         // If source is also Now Open, browser window already exists — nothing to remove
@@ -938,7 +1007,7 @@ export function useMoveWindow() {
           fromGroup.info = getGroupInfo(fromGroup);
           available[fromGroupIndex] = fromGroup;
           return { ...prev, available };
-        });
+        }, false, { liveTabs: opened });
       }
 
       return mutate((prev) => {
@@ -1387,7 +1456,8 @@ export function useReplaceSavedGroups() {
     mutationFn: (newGroups: import('@/lib/types').Group[]) => {
       let removedIds: string[] = [];
       return mutate((prev) => {
-        removedIds = prev.available.filter((g) => !g.permanent).map((g) => g.id);
+        // (never the tour's practice groups: they were never on the server)
+        removedIds = prev.available.filter((g) => !g.permanent && !isTourDemoGroup(g)).map((g) => g.id);
         const available = [...prev.available.filter((g) => g.permanent), ...newGroups.map((g) => asNewGroup(g))];
         return { ...prev, available, active: { id: available[0]?.id ?? '', index: 0 } };
       }, false, { align: false }).then((next) => {

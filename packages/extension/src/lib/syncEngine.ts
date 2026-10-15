@@ -10,7 +10,7 @@ import { LAST_USER_ID_KEY, REMOTE_BASE_SEEDED_KEY, DELETE_BACKOFF_KEY } from './
 import { supabase } from './supabase';
 import {
   getGroupsState, updateGroupsState, getPendingSyncGroups, markGroupSynced, markPositionSynced, saveGroup, deleteGroup,
-  getPendingGroupDeletes, addPendingGroupDeletes, removePendingGroupDeletes, getSetting, setSetting
+  getPendingGroupDeletes, addPendingGroupDeletesIfAbsent, removePendingGroupDeletes, getSetting, setSetting
 } from './localDb';
 import { getDataKey, reportUndecryptableRows } from './encryptionKey';
 import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from './contentUploadKey';
@@ -349,8 +349,10 @@ export async function deleteRemoteGroups(ids: string[]): Promise<void> {
   if (ids.length === 0) return;
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
-  await addPendingGroupDeletes(ids);
-  await sendRemoteDeletes(session.user.id, ids);
+  // Only the ids still gone locally: an Undo that landed while getSession() was in flight has
+  // restored some of them, and those must keep their server rows (see addPendingGroupDeletesIfAbsent)
+  const absent = await addPendingGroupDeletesIfAbsent(ids);
+  if (absent.length > 0) await sendRemoteDeletes(session.user.id, absent);
 }
 
 /**
