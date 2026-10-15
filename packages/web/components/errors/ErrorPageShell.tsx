@@ -1,12 +1,14 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { TriangleAlert } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ErrorPageCopy, ErrorPageLink } from './copy'
+import { ShellGlows } from './ShellGlows'
 
 /**
  * The look shared by every error page: a browser-window illustration with the status code, the
- * heading and copy, the caller's actions, and a row of helpful links, over a faint grid and glow.
+ * heading and copy, the caller's actions, and a row of helpful links, over soft glows that follow
+ * the pointer.
  *
  * Presentational only (no hooks, no context), so the server-rendered 404, the client `error.tsx`
  * boundaries and the provider-less `global-error.tsx` can all render it.
@@ -30,23 +32,16 @@ export interface ErrorPageShellProps {
   className?: string
 }
 
-// Faint grid that fades out towards the edges. Uses the theme's `--line` hairline colour so it
-// reads the same in both themes.
-const GRID_STYLE: CSSProperties = {
-  backgroundImage:
-    'linear-gradient(hsl(var(--line)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--line)) 1px, transparent 1px)',
-  backgroundSize: '2.5rem 2.5rem',
-  maskImage: 'radial-gradient(ellipse at center, black 15%, transparent 70%)',
-  WebkitMaskImage: 'radial-gradient(ellipse at center, black 15%, transparent 70%)',
-}
-
-/** The faint grid and two soft glows behind the page. The parent must be `relative isolate`. */
+/**
+ * Two soft glows behind the page, the main one under the pointer, and a grid that shows only in
+ * a circle around the pointer (`ShellGlows`). The parent must be `relative isolate` (and
+ * `overflow-hidden`): the layer sits at `-z-10` in the parent's stacking context, so only the
+ * parent's own background paints below it.
+ */
 export function ShellBackdrop() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-      <div className="absolute inset-0" style={GRID_STYLE} />
-      <div className="absolute left-1/2 top-[10%] h-[18rem] w-[18rem] -translate-x-1/2 rounded-full bg-primary/15 blur-3xl sm:h-[26rem] sm:w-[26rem]" />
-      <div className="absolute left-[55%] top-[22%] h-[10rem] w-[10rem] rounded-full bg-secondary/10 blur-3xl sm:h-[14rem] sm:w-[14rem]" />
+      <ShellGlows />
     </div>
   )
 }

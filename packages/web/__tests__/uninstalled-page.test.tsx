@@ -182,6 +182,20 @@ describe('/uninstalled page', () => {
     )
   })
 
+  it("shows each browser's own icon on its reinstall button, hidden from the accessible name", async () => {
+    vi.stubEnv('VERCEL_ENV', 'production')
+    await renderPage({})
+    for (const name of ['Chrome', 'Firefox', 'Edge']) {
+      // Exact name: the icon's own label ("Chrome") is not announced a second time.
+      const link = screen.getByRole('link', { name: `Add TabMerger to ${name}` })
+      const icon = link.querySelector(`svg[aria-label="${name}"]`)
+      expect(icon).not.toBeNull()
+      expect(icon!.closest('[aria-hidden="true"]')).not.toBeNull()
+      expect(link.querySelectorAll('svg')).toHaveLength(1)
+      expect(link.querySelector('.lucide-download')).toBeNull()
+    }
+  })
+
   it('says a subscription is not cancelled and points to the account page', async () => {
     await renderPage()
     expect(screen.getByText(/does not cancel a Pro subscription/)).toBeInTheDocument()
