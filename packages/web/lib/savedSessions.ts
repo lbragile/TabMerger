@@ -135,6 +135,10 @@ export function lockedSavedItem(row: SavedRowBase): SavedItem {
   return { ...row, name: '(locked)', groups: [], exportable: [], locked: true }
 }
 
+/** Under the Saved Sessions of an account without cloud sync. Pairs with `AUTO_BACKUP_COPY.readOnlyNote`. */
+export const SAVED_SESSIONS_READ_ONLY_NOTE =
+  'Saving new sessions to your account needs Pro. Your existing sessions can still be opened or deleted.'
+
 export function countWindows(groups: SavedGroup[]): number {
   return groups.reduce((sum, g) => sum + g.windows.length, 0)
 }

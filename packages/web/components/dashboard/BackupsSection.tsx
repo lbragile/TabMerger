@@ -72,14 +72,25 @@ function downloadBackup(item: SavedItem) {
  * Restoring is not offered here: it is done in the extension.
  *
  * `syncEnabled` false (free, or a paid plan that is not active) shows what the feature is and the
- * upgrade link, with no rows: the server returns none for such an account.
+ * upgrade link. Backups the account saved while it had Pro are still listed, read-only: download
+ * and delete only, with a note that new backups need Pro.
  */
 export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
   const headingId = useId()
   const headingRef = useRef<HTMLHeadingElement>(null)
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
-  const { status, backups, unknownKind } = useSavedSessions()
+  const { status, backups, unknownKind, totalRows } = useSavedSessions()
+  /**
+   * Whether the rows part of the section is shown. Always with cloud sync. Without it (free, or a
+   * paid plan that is not active) only while the account may still hold backups saved before:
+   * those stay readable, downloadable and deletable (RLS allows SELECT and DELETE at any plan),
+   * and nothing in this section creates or changes a row.
+   */
+  const showRows =
+    syncEnabled ||
+    status === 'error' ||
+    (status === 'ready' ? backups.length > 0 || unknownKind > 0 : totalRows > 0)
   const [deleteTarget, setDeleteTarget] = useState<SavedItem | null>(null)
   const [deleting, setDeleting] = useState(false)
   /** Said by screen readers when something happens that is otherwise only seen (a toast, a row leaving). */
@@ -133,20 +144,25 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
         {announcement}
       </p>
 
-      {!syncEnabled ? (
-        <div className="mt-3 rounded-lg border border-dashed p-6 flex flex-col items-start gap-3">
+      {!syncEnabled && (
+        <div className="mt-3 mb-4 rounded-lg border border-dashed p-6 flex flex-col items-start gap-3">
           <p className="text-sm text-muted-foreground max-w-prose">{AUTO_BACKUP_COPY.upgradeDescription}</p>
+          {showRows && <p className="text-sm text-muted-foreground max-w-prose">{AUTO_BACKUP_COPY.readOnlyNote}</p>}
           <Button size="sm" asChild>
             <Link href="/pricing">Upgrade</Link>
           </Button>
         </div>
-      ) : (
+      )}
+
+      {showRows && (
         <>
-          <p className="text-sm text-muted-foreground mb-4 max-w-prose">
-            Snapshots of your groups that the TabMerger extension saved to your account by itself, newest first. The
-            newest {AUTO_BACKUP_RETENTION_COUNT} are kept. To restore one, open the extension and go to{' '}
-            {BACKUPS_EXTENSION_PLACE}; restoring is not done from this page. A file you download here is not encrypted.
-          </p>
+          {syncEnabled && (
+            <p className="text-sm text-muted-foreground mb-4 max-w-prose">
+              Snapshots of your groups that the TabMerger extension saved to your account by itself, newest first. The
+              newest {AUTO_BACKUP_RETENTION_COUNT} are kept. To restore one, open the extension and go to{' '}
+              {BACKUPS_EXTENSION_PLACE}; restoring is not done from this page. A file you download here is not encrypted.
+            </p>
+          )}
 
           {status === 'error' && (
             <div role="alert" className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -178,14 +194,17 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
                 </p>
               )}
               {backups.length === 0 ? (
-                <div className="text-sm text-muted-foreground max-w-prose">
-                  <p className="font-medium text-foreground">No backups yet.</p>
-                  <p className="mt-1">
-                    The extension saves one by itself while your browser is open, when your groups have changed since
-                    the last one. The schedule is &quot;{DEFAULT_INTERVAL_LABEL}&quot; unless you change it: pick the
-                    interval, or back up right away, in the extension under {BACKUPS_EXTENSION_PLACE}.
-                  </p>
-                </div>
+                // Without cloud sync the extension saves no new backups, so the "how they are made" text does not apply.
+                syncEnabled && (
+                  <div className="text-sm text-muted-foreground max-w-prose">
+                    <p className="font-medium text-foreground">No backups yet.</p>
+                    <p className="mt-1">
+                      The extension saves one by itself while your browser is open, when your groups have changed since
+                      the last one. The schedule is &quot;{DEFAULT_INTERVAL_LABEL}&quot; unless you change it: pick the
+                      interval, or back up right away, in the extension under {BACKUPS_EXTENSION_PLACE}.
+                    </p>
+                  </div>
+                )
               ) : (
                 <ul className={`flex flex-col gap-3 min-w-0 ${isPending ? 'opacity-70 pointer-events-none' : ''}`}>
                   {backups.map((backup) => (

@@ -11,7 +11,7 @@ import {
   useSavedSessionsOptional,
   type RawSessionRow,
 } from '@/components/dashboard/SavedSessionsProvider'
-import { countTabs, countWindows, type SavedItem } from '@/lib/savedSessions'
+import { SAVED_SESSIONS_READ_ONLY_NOTE, countTabs, countWindows, type SavedItem } from '@/lib/savedSessions'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { SessionCard } from './SessionCard'
@@ -24,6 +24,12 @@ interface SessionListProps {
    */
   sessions?: RawSessionRow[]
   isPro: boolean
+  /**
+   * The account has no cloud sync (free, or a paid plan that is not active): its existing rows are
+   * listed so they can still be opened or deleted, with a note that saving new ones needs Pro.
+   * Nothing here writes rows, so read-only only changes the note.
+   */
+  readOnly?: boolean
 }
 
 /**
@@ -31,17 +37,17 @@ interface SessionListProps {
  * they have their own section (`BackupList`). A row that cannot be read stays in this list, as a
  * locked item, because its kind is unknown.
  */
-export function SessionList({ sessions, isPro }: SessionListProps) {
+export function SessionList({ sessions, isPro, readOnly = false }: SessionListProps) {
   const shared = useSavedSessionsOptional()
-  if (shared) return <SessionListView isPro={isPro} />
+  if (shared) return <SessionListView isPro={isPro} readOnly={readOnly} />
   return (
     <SavedSessionsProvider sessions={sessions}>
-      <SessionListView isPro={isPro} />
+      <SessionListView isPro={isPro} readOnly={readOnly} />
     </SavedSessionsProvider>
   )
 }
 
-function SessionListView({ isPro }: { isPro: boolean }) {
+function SessionListView({ isPro, readOnly }: { isPro: boolean; readOnly: boolean }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const { status, sessions } = useSavedSessions()
@@ -120,7 +126,14 @@ function SessionListView({ isPro }: { isPro: boolean }) {
           />
         ))}
       </div>
-      {!isPro && (
+      {readOnly ? (
+        <p className="mt-3 text-xs text-muted-foreground">
+          {SAVED_SESSIONS_READ_ONLY_NOTE}{' '}
+          <Link href="/pricing" className="underline underline-offset-2 hover:no-underline">
+            Upgrade to Pro
+          </Link>
+        </p>
+      ) : !isPro && (
         <p className="mt-3 text-xs text-muted-foreground">
           Free plan: up to {FREE_TIER_LIMITS.sessions} sessions.{' '}
           <Link href="/pricing" className="underline underline-offset-2 hover:no-underline">

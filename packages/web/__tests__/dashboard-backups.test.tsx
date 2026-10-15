@@ -16,7 +16,7 @@ import { DAMAGED_ITEM_NOTE } from '@/components/dashboard/SessionCard'
 import { SessionList } from '@/components/dashboard/SessionList'
 import { SessionsStatDescription, SessionsStatValue } from '@/components/dashboard/SessionsStat'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
-import { formatAbsoluteTime, formatRelativeTime } from '@/lib/savedSessions'
+import { SAVED_SESSIONS_READ_ONLY_NOTE, formatAbsoluteTime, formatRelativeTime } from '@/lib/savedSessions'
 
 /**
  * The dashboard's split between "Saved Sessions" and "Backups". Rows are really encrypted and
@@ -82,10 +82,11 @@ function Dashboard({ rows, syncEnabled = true, loadError = false }: { rows: Row[
         sessionStat={{ value: <span data-testid="sessions-stat"><SessionsStatValue /></span>, description: <SessionsStatDescription /> }}
         memberSince="2024-01-01"
       />
-      {syncEnabled && (
+      {/* As on the dashboard page: without cloud sync, shown only while rows saved before remain. */}
+      {(syncEnabled || rows.length > 0) && (
         <div data-testid="sessions-section">
           <h2>Saved Sessions</h2>
-          <SessionList isPro />
+          <SessionList isPro={syncEnabled} readOnly={!syncEnabled} />
         </div>
       )}
       <BackupsSection syncEnabled={syncEnabled} />
@@ -499,5 +500,84 @@ describe('Pro pricing', () => {
   it('lists the automatic backups line in Pro only', () => {
     const ids = PRICING_TIERS.filter((t) => t.features.includes(AUTO_BACKUP_COPY.pricingFeature)).map((t) => t.id)
     expect(ids).toEqual(['pro'])
+  })
+})
+
+describe('an account without cloud sync that still has rows (read-only)', () => {
+  async function renderReadOnly() {
+    const rows = [
+      await row('b1', 3, { name: 'b', groups: [WORK, PLAY], auto: true }),
+      await row('b2', 30, { name: 'b', groups: [PLAY], auto: true }),
+      await row('s1', 4, { name: 'Mine', groups: [WORK] }),
+    ]
+    render(<Dashboard rows={rows} syncEnabled={false} />)
+    await waitFor(() => expect(backupItems()).toHaveLength(2))
+    return rows
+  }
+
+  it('lists the backups with Download and Delete, the read-only note and the upgrade link', async () => {
+    await renderReadOnly()
+    const region = within(backupsRegion())
+    expect(region.getByText(AUTO_BACKUP_COPY.readOnlyNote)).toBeInTheDocument()
+    expect(region.getByText(AUTO_BACKUP_COPY.upgradeDescription)).toBeInTheDocument()
+    expect(region.getByRole('link', { name: 'Upgrade' })).toHaveAttribute('href', '/pricing')
+    for (const item of backupItems()) {
+      expect(within(item).getByRole('button', { name: /^Download backup from / })).toBeEnabled()
+      expect(within(item).getByRole('button', { name: /^Delete backup from / })).toBeEnabled()
+    }
+    // Only reading and removing: every button in the section is one of these.
+    const names = region.getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? b.textContent)
+    for (const name of names) expect(name).toMatch(/^(Download backup from |Delete backup from |Show contents)/)
+    // The paid text about how backups are made and restored does not apply.
+    expect(region.queryByText(/To restore one/)).toBeNull()
+    expect(region.queryByText('No backups yet.')).toBeNull()
+  })
+
+  it('downloads a backup', async () => {
+    vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:test'), revokeObjectURL: vi.fn() }))
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+    await renderReadOnly()
+    fireEvent.click(within(backupItems()[0]).getByRole('button', { name: /^Download backup from / }))
+    expect(click).toHaveBeenCalledTimes(1)
+  })
+
+  it('deletes a backup, and the only request it makes is the DELETE', async () => {
+    const fetchMock = vi.fn(async () => ({ ok: true }))
+    vi.stubGlobal('fetch', fetchMock)
+    await renderReadOnly()
+    fireEvent.click(within(backupItems()[0]).getByRole('button', { name: /^Delete backup from / }))
+    const dialog = await screen.findByRole('dialog', { name: 'Delete this backup?' })
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete' }))
+    await waitFor(() => expect(h.refresh).toHaveBeenCalledTimes(1))
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(fetchMock).toHaveBeenCalledWith('/api/sessions/b1', { method: 'DELETE' })
+  })
+
+  it('keeps the saved sessions listed with Restore and Delete, and the read-only note instead of the free-plan limit', async () => {
+    await renderReadOnly()
+    const section = within(sessionsSection())
+    expect(await section.findByText('Mine')).toBeInTheDocument()
+    expect(section.getByText(SAVED_SESSIONS_READ_ONLY_NOTE, { exact: false })).toBeInTheDocument()
+    expect(section.getByRole('link', { name: 'Upgrade to Pro' })).toHaveAttribute('href', '/pricing')
+    expect(section.queryByText(/Free plan: up to/)).toBeNull()
+  })
+
+  it('shows only the upgrade box, without the read-only note, when every row is a saved session', async () => {
+    render(<Dashboard rows={[await row('s1', 4, { name: 'Mine', groups: [WORK] })]} syncEnabled={false} />)
+    await within(sessionsSection()).findByText('Mine')
+    const region = within(backupsRegion())
+    expect(region.getByText(AUTO_BACKUP_COPY.upgradeDescription)).toBeInTheDocument()
+    expect(region.queryByText(AUTO_BACKUP_COPY.readOnlyNote)).toBeNull()
+    expect(region.queryByText('No backups yet.')).toBeNull()
+    expect(backupItems()).toHaveLength(0)
+  })
+
+  it('an account with cloud sync gets no read-only notes', async () => {
+    render(<Dashboard rows={[await row('b1', 3, { name: 'b', groups: [WORK], auto: true }), await row('s1', 4, { name: 'Mine', groups: [WORK] })]} />)
+    await waitFor(() => expect(backupItems()).toHaveLength(1))
+    expect(screen.queryByText(AUTO_BACKUP_COPY.readOnlyNote)).toBeNull()
+    expect(screen.queryByText(SAVED_SESSIONS_READ_ONLY_NOTE, { exact: false })).toBeNull()
+    expect(within(backupsRegion()).queryByRole('link', { name: 'Upgrade' })).toBeNull()
+    expect(within(backupsRegion()).getByText(/To restore one/)).toBeInTheDocument()
   })
 })

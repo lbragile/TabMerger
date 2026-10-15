@@ -139,3 +139,10 @@ describe('Pro pricing feature line', () => {
     expect(AUTO_BACKUP_COPY.pricingFeature).toBe('Automatic encrypted backups of your groups, with an optional file copy on your computer')
   })
 })
+
+describe('AUTO_BACKUP_COPY read-only note', () => {
+  it('tells a plan without cloud sync that new backups need Pro but existing ones stay available', () => {
+    expect(AUTO_BACKUP_COPY.readOnlyNote).toBe('New backups need Pro. Your existing backups can still be downloaded or deleted.')
+    expect(AUTO_BACKUP_COPY.readOnlyNote).not.toBe(AUTO_BACKUP_COPY.upgradeDescription)
+  })
+})
