@@ -33,3 +33,4 @@
 - [Navbar streamed data + width budget](learnings/navbar-streamed-data-and-width-budget.md) — un-awaited promise + `use()` shared with a client component, fetch `signal` vs data cache, and the 768–1023px header overflow trap
 - [Dashboard Backups section](learnings/dashboard-backups-section.md) — `SavedSessionsProvider` split, unknown-kind rows, decrypted-content validation, read-only rows without cloud sync, Radix focus, local recipe
 - [Error pages in Next 16](learnings/error-pages-next16.md) — retry vs reset, which layout each boundary keeps, duplicate 404 noindex meta, global-error theming, previewing 500s, Playwright on another port
+- [Backdrop pointer glow](learnings/backdrop-pointer-glow.md) — error-page/uninstalled glow: client-module helper export 500s server pages, -z-10 parent rules, fixed-layer trade-offs, jsdom gaps, light-mode AA maths
