@@ -358,7 +358,16 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     await expectFocus(/(Settings|Account) menu/, 'theme: one Tab from the card');
     await kb.press('Enter');
     await page.locator('[data-tour="menu-settings"]').waitFor();
-    for (let i = 0; i < 4 && !/menu-settings/.test(await focusOf(page)); i++) await kb.press('ArrowDown');
+    // Radix menus and selects move focus for an arrow key in a timer, so a key pressed right
+    // after it can still reach the item the arrow left (a busy CI runs input before timers).
+    // Wait until focus is inside the open menu, and after each arrow until it has moved.
+    await expectFocus(/^div\|/, 'theme: focus inside the open menu');
+    for (let i = 0; i < 4 && !/menu-settings/.test(await focusOf(page)); i++) {
+      const before = await focusOf(page);
+      await kb.press('ArrowDown');
+      await expect.poll(() => focusOf(page), { message: 'theme: ArrowDown moved focus in the menu' }).not.toBe(before);
+    }
+    await expectFocus(/menu-settings/, 'theme: on "Settings"');
     await kb.press('Enter');
     await page.locator('[data-tour="settings-theme-trigger"]').waitFor();
     for (let i = 0; i < 12 && !/settings-theme-trigger/.test(await focusOf(page)); i++) {
@@ -367,9 +376,17 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     }
     await kb.press('Enter');
     await page.locator('[role="listbox"]').waitFor();
-    const startValue = await page.evaluate(() => document.activeElement?.textContent ?? '');
+    // Same timer as the menu: the list focuses the selected option once it is placed, and an
+    // arrow moves focus in a timer. Enter before the move re-selects the old theme and closes
+    // the list, so wait for each focus change before the next key.
+    const focusedOption = page.locator('[role="listbox"] [role="option"]:focus');
+    await expect(focusedOption, 'theme: the open list focuses the current theme').toHaveCount(1);
+    const startValue = ((await focusedOption.textContent()) ?? '').trim();
     await kb.press(/System/.test(startValue) ? 'ArrowUp' : 'ArrowDown');
+    await expect(focusedOption, 'theme: the arrow moved to another theme').not.toHaveText(startValue);
+    const picked = ((await focusedOption.textContent()) ?? '').trim();
     await kb.press('Enter');
+    await expect(page.locator('[data-tour="settings-theme-trigger"]')).toHaveText(picked);
     for (let i = 0; i < 12 && !/settings-save-button/.test(await focusOf(page)); i++) {
       await kb.press('Tab');
       await page.waitForTimeout(60);

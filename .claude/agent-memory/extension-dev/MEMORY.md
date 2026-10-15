@@ -109,3 +109,4 @@
 - [Sonner owns toast ::after/::before](learnings_sonner_pseudo_elements.md) — countdown bar must out-specify sonner's hover gap filler on ::after; filler re-created on ::before
 - [Deferred focus drops keys](learnings_deferred_focus_drops_keys.md) — setTimeout(0) focus loses keys typed right after opening on busy CI; focus in the effect; timer-delay repro
 - [Radix nested dialog Escape race](learnings_radix_nested_dialog_escape_race.md) — lower dialog keeps its Escape listener for a few renders; ConfirmDialog answers Escape from a window-capture listener
+- [Radix arrow-key focus timer](learnings_radix_arrow_focus_timer.md) — Select + menus move arrow focus in setTimeout; e2e must wait for focus to move before Enter
