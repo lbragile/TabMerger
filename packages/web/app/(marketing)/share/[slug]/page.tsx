@@ -60,7 +60,7 @@ export default async function SharePage({ params }: Props) {
   // ponytail: derive origin from the incoming request instead of adding a new env var —
   // works in dev, preview, and prod without another value to keep in sync.
   const h = await headers()
-  const host = h.get('x-forwarded-host') ?? h.get('host') ?? 'tabmerger.vercel.app'
+  const host = h.get('x-forwarded-host') ?? h.get('host') ?? 'tabmerger.com'
   const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https')
   const shareUrl = `${proto}://${host}/share/${slug}`
   const storeLinks = getStoreLinks()

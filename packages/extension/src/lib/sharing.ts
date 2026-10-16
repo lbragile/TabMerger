@@ -59,6 +59,6 @@ export async function createSharedBundle(
 
   if (error) throw new Error(error.message)
 
-  const base = import.meta.env.VITE_WEB_APP_URL ?? 'https://tabmerger.vercel.app'
+  const base = import.meta.env.VITE_WEB_APP_URL ?? 'https://tabmerger.com'
   return `${base}/share/${data.slug}#key=${key}`
 }
