@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isEmailAddress } from '@/lib/emailAddress'
-import { DEFAULT_TO, buildDiagnostics, createRateLimiter, getClientIp, sendSupportEmail } from '@/lib/supportEmail'
+import { buildDiagnostics, createRateLimiter, getClientIp, sendSupportEmail, supportToAddress } from '@/lib/supportEmail'
 
 /**
  * POST /api/contact
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
 
   const diagnostics = buildDiagnostics(req)
   const sent = await sendSupportEmail('contact', {
-    to: process.env.CONTACT_TO_EMAIL || DEFAULT_TO,
+    to: supportToAddress('CONTACT_TO_EMAIL'),
     replyTo: email,
     subject: `[Contact]${diagnostics.envTag} ${subject}`,
     text: `From: ${email}\n\n${message}\n\n---\n${diagnostics.text}`,

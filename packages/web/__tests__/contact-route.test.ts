@@ -104,7 +104,7 @@ describe('POST /api/contact', () => {
     expect(await res.json()).toEqual({ ok: true })
     expect(sendMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        to: 'tabmerger.support@gmail.com',
+        to: 'support@tabmerger.com',
         replyTo: 'user@example.com',
         subject: expect.stringContaining('Hello'),
       })

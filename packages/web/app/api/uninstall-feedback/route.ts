@@ -8,7 +8,7 @@ import {
 } from '@tabmerger/shared'
 import { isEmailAddress } from '@/lib/emailAddress'
 import { stripControlChars } from '@/lib/plainText'
-import { DEFAULT_TO, buildDiagnostics, createRateLimiter, getClientIp, sendSupportEmail } from '@/lib/supportEmail'
+import { buildDiagnostics, createRateLimiter, getClientIp, sendSupportEmail, supportToAddress } from '@/lib/supportEmail'
 
 /**
  * POST /api/uninstall-feedback
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
   ].join('\n')
 
   const sent = await sendSupportEmail('uninstall-feedback', {
-    to: process.env.UNINSTALL_FEEDBACK_TO_EMAIL || process.env.CONTACT_TO_EMAIL || DEFAULT_TO,
+    to: supportToAddress('UNINSTALL_FEEDBACK_TO_EMAIL', 'CONTACT_TO_EMAIL'),
     replyTo: email,
     subject: `[Uninstall]${diagnostics.envTag} ${reasons.length ? reasons.join(', ') : 'comment only'}`,
     text: textBody,

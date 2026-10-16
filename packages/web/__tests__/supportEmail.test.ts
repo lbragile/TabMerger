@@ -10,12 +10,17 @@ import { EMAIL_MAX, isEmailAddress } from '@/lib/emailAddress'
 import { stripControlChars } from '@/lib/plainText'
 import {
   DEFAULT_FROM,
+  DEFAULT_TO,
   buildDiagnostics,
   createRateLimiter,
   describeBrowser,
   getClientIp,
+  isSenderAddress,
   sendSupportEmail,
+  supportFromAddress,
+  supportToAddress,
 } from '@/lib/supportEmail'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 import { BETA_STORE_LINKS, STABLE_STORE_LINKS, getReinstallLinks } from '@/lib/storeLinks'
 
 const sendMock = vi.fn()
@@ -110,6 +115,61 @@ describe('buildDiagnostics', () => {
   it('reports an unknown page for a malformed Referer', () => {
     const req = new NextRequest('http://localhost/api/x', { headers: { referer: 'not a url' } })
     expect(buildDiagnostics(req).text).toContain('Sent from page: unknown')
+  })
+})
+
+describe('support addresses from env', () => {
+  it('defaults to the public support inbox on tabmerger.com', () => {
+    vi.stubEnv('CONTACT_TO_EMAIL', '')
+    vi.stubEnv('CONTACT_FROM_EMAIL', '')
+    expect(SUPPORT_EMAIL).toBe('support@tabmerger.com')
+    expect(DEFAULT_TO).toBe(SUPPORT_EMAIL)
+    expect(DEFAULT_FROM).toBe(`TabMerger Support <${SUPPORT_EMAIL}>`)
+    expect(supportToAddress('CONTACT_TO_EMAIL')).toBe(DEFAULT_TO)
+    expect(supportFromAddress()).toBe(DEFAULT_FROM)
+  })
+
+  it.each(['a@b.io', 'TabMerger Support <a@b.io>', 'O’Brien Help <a@b.io>'])('accepts the sender %s', (value) => {
+    expect(isSenderAddress(value)).toBe(true)
+  })
+
+  it.each([
+    'not an address',
+    'Name <not an address>',
+    ' <a@b.io>',
+    'Name a@b.io',
+    'Na"me <a@b.io>',
+    'Name <a@b.io> <c@d.io>',
+    'Name\r\nBcc: x@evil.io <a@b.io>',
+    `${'n'.repeat(65)} <a@b.io>`,
+  ])('rejects the sender %j', (value) => {
+    expect(isSenderAddress(value)).toBe(false)
+  })
+
+  it('uses a valid, trimmed CONTACT_FROM_EMAIL', () => {
+    vi.stubEnv('CONTACT_FROM_EMAIL', '  Help <help@example.com>  ')
+    expect(supportFromAddress()).toBe('Help <help@example.com>')
+  })
+
+  it('falls back from an invalid CONTACT_FROM_EMAIL and warns without the value', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.stubEnv('CONTACT_FROM_EMAIL', 'Help\n<private@example.com>')
+    expect(supportFromAddress()).toBe(DEFAULT_FROM)
+    expect(warn).toHaveBeenCalledWith('[supportEmail] ignoring invalid CONTACT_FROM_EMAIL')
+    expect(JSON.stringify(warn.mock.calls)).not.toContain('private@example.com')
+    warn.mockRestore()
+  })
+
+  it('takes the first valid inbox in order, skipping empty and invalid ones', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.stubEnv('FIRST', '')
+    vi.stubEnv('SECOND', 'Name <a@b.io>')
+    vi.stubEnv('THIRD', 'inbox@example.com')
+    expect(supportToAddress('FIRST', 'SECOND', 'THIRD')).toBe('inbox@example.com')
+    expect(warn).toHaveBeenCalledTimes(1)
+    vi.stubEnv('THIRD', 'a@b.io,c@d.io')
+    expect(supportToAddress('FIRST', 'SECOND', 'THIRD')).toBe(DEFAULT_TO)
+    warn.mockRestore()
   })
 })
 

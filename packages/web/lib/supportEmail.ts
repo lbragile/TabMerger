@@ -1,5 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { Resend } from 'resend'
+import { isEmailAddress } from '@/lib/emailAddress'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
 /**
  * Server-only pieces shared by the public routes that email the support inbox
@@ -7,17 +9,50 @@ import { Resend } from 'resend'
  * non-personal diagnostics block, and the Resend send with PII-free logging.
  */
 
-// Resend's shared test sender (onboarding@resend.dev) only delivers to the
-// Resend account owner's own address; anything else is refused with a
-// "testing domain restriction" error. To reach a real support inbox, verify a
-// domain in Resend and set CONTACT_FROM_EMAIL to an address on it (e.g.
-// "TabMerger Support <support@your-domain>"). CONTACT_TO_EMAIL picks the inbox.
-export const DEFAULT_FROM = 'TabMerger Support <onboarding@resend.dev>'
-export const DEFAULT_TO = 'tabmerger.support@gmail.com'
+// Defaults when CONTACT_FROM_EMAIL / CONTACT_TO_EMAIL are unset or invalid.
+// tabmerger.com is a verified sending domain in Resend, so the sender must stay
+// on that domain (Resend refuses an unverified one). SUPPORT_EMAIL is also the
+// public support inbox: mail sent to it is forwarded to the maintainer.
+export const DEFAULT_FROM = `TabMerger Support <${SUPPORT_EMAIL}>`
+export const DEFAULT_TO = SUPPORT_EMAIL
 
-/** Sender address for every support email. */
+// "Display Name <address>": a name of printable characters other than the ones
+// that would end or restructure the header (`"`, `<`, `>`), then a bracketed address.
+const NAMED_ADDRESS_RE = /^([^"<>\p{Cc}]{1,64}) <([^<>]+)>$/u
+
+/** True for `address` or `Display Name <address>`, with a valid address and no control characters. */
+export function isSenderAddress(value: string): boolean {
+  const named = NAMED_ADDRESS_RE.exec(value)
+  return named ? named[1].trim().length > 0 && isEmailAddress(named[2]) : isEmailAddress(value)
+}
+
+/**
+ * The first set and valid value among the named env vars, else `fallback`. A set
+ * but invalid value is skipped with a warning that names the variable only (the
+ * value may be a personal address), so a typo in Vercel can't put arbitrary text
+ * into an email header and still delivers to the public support inbox.
+ */
+function addressFromEnv(names: string[], isValid: (value: string) => boolean, fallback: string): string {
+  for (const name of names) {
+    const value = process.env[name]?.trim()
+    if (!value) continue
+    if (isValid(value)) return value
+    console.warn(`[supportEmail] ignoring invalid ${name}`)
+  }
+  return fallback
+}
+
+/** Sender address for every support email: `CONTACT_FROM_EMAIL` when valid, else {@link DEFAULT_FROM}. */
 export function supportFromAddress(): string {
-  return process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM
+  return addressFromEnv(['CONTACT_FROM_EMAIL'], isSenderAddress, DEFAULT_FROM)
+}
+
+/**
+ * Inbox for a support email: the first valid address among `envNames` (in order),
+ * else {@link DEFAULT_TO}. Each value must be one plain address, not a list.
+ */
+export function supportToAddress(...envNames: string[]): string {
+  return addressFromEnv(envNames, isEmailAddress, DEFAULT_TO)
 }
 
 /**
