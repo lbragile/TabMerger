@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/lbragile/TabMerger/compare/v3.3.0...v3.3.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* move the website address to tabmerger.com ([#78](https://github.com/lbragile/TabMerger/issues/78)) ([b99b5d0](https://github.com/lbragile/TabMerger/commit/b99b5d00581d423da85724bd6d01b49b52489909))
+
 # [3.3.0](https://github.com/lbragile/TabMerger/compare/v3.2.1...v3.3.0) (2026-10-16)
 
 
