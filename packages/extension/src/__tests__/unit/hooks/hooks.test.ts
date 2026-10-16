@@ -918,8 +918,9 @@ describe('useBulkStar', () => {
       await result.current.mutateAsync({ items: [{ type: 'group' as const, id: 'group-0' }], starred: true })
     })
 
-    const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
-    expect(saved.available[0].starred).toBeFalsy()
+    // Now Open is skipped, so nothing changed and nothing is written
+    expect(saveGroupsState).not.toHaveBeenCalled()
+    expect(state.available[0].starred).toBeFalsy()
     void qc
   })
 

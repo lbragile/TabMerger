@@ -122,11 +122,13 @@ export function useBulkDelete() {
           });
           if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
 
-          // Deep-clone the mutable part: each group's windows + tabs arrays
-          const available = state.available.map((g) => ({
-            ...g,
-            windows: g.windows.map((w) => ({ ...w, tabs: [...w.tabs] }))
-          }));
+          // Deep-clone the mutable part (windows + tabs arrays) of the affected groups only.
+          // Untouched groups keep their objects, which keeps them out of the sync stamp and lets
+          // the undo comparison skip them by reference (the write itself still stores every group).
+          const touched = new Set(parsed.map((p) => p.groupIndex));
+          const available = state.available.map((g, i) =>
+            touched.has(i) ? { ...g, windows: g.windows.map((w) => ({ ...w, tabs: [...w.tabs] })) } : g
+          );
 
           for (const p of parsed) {
             const grp = available[p.groupIndex];
@@ -262,11 +264,14 @@ export function useBulkMoveToGroup() {
       const opened: Promise<LiveTabRecord[]>[] = [];
       const next = await updateWithUndo(base, pushUndo, (state) => {
 
-        // Deep-clone so we can mutate in-place
-        const available = state.available.map((g) => ({
-          ...g,
-          windows: g.windows.map((w) => ({ ...w, tabs: [...w.tabs] }))
-        }));
+        // Deep-clone the sources and the target so they can be mutated in place; every other
+        // group keeps its object, which keeps it out of the sync stamp and lets the undo comparison
+        // skip it by reference (the write itself still stores every group)
+        const parseIndex = type === 'tab' ? parseTabId : parseWindowId;
+        const touched = new Set([targetGroupIndex, ...items.map((i) => parseIndex(i.id)?.groupIndex)]);
+        const available = state.available.map((g, i) =>
+          touched.has(i) ? { ...g, windows: g.windows.map((w) => ({ ...w, tabs: [...w.tabs] })) } : g
+        );
 
         if (type === 'tab') {
           const parsedDesc = items
@@ -449,7 +454,12 @@ export function useBulkStar() {
       const base = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const next = await updateWithUndo(base, pushUndo, (state) => {
 
-        const available = state.available.map((g) => ({ ...g, windows: [...g.windows] }));
+        // Only the groups whose star flags actually change are copied, re-sorted and marked for
+        // sync. Every other group keeps its object (same reference, no updatedAt/pendingSync
+        // bump): stamping an untouched group would push this device's possibly stale copy of it
+        // over another device's newer edit.
+        const available = [...state.available];
+        const changed = new Set<number>();
         const type = items[0].type;
 
         if (type === 'window') {
@@ -457,27 +467,29 @@ export function useBulkStar() {
             const p = parseWindowId(item.id);
             if (!p) continue;
             const grp = available[p.groupIndex];
-            if (!grp) continue;
-            const win = grp.windows[p.windowIndex];
-            if (!win) continue;
-            grp.windows[p.windowIndex] = { ...win, starred };
+            const win = grp?.windows[p.windowIndex];
+            if (!win || (win.starred ?? false) === starred) continue;
+            const windows = changed.has(p.groupIndex) ? grp.windows : [...grp.windows];
+            windows[p.windowIndex] = { ...win, starred };
+            available[p.groupIndex] = { ...grp, windows };
+            changed.add(p.groupIndex);
           }
-          for (const grp of available) {
-            if (!grp) continue;
-            const idx = available.indexOf(grp);
-            available[idx] = { ...grp, windows: sortWindowsByStarred(grp.windows), updatedAt: Date.now(), pendingSync: true };
+          for (const gi of changed) {
+            const grp = available[gi];
+            available[gi] = { ...grp, windows: sortWindowsByStarred(grp.windows), updatedAt: Date.now(), pendingSync: true };
           }
         } else if (type === 'group') {
           for (const item of items) {
             const p = parseGroupId(item.id);
             if (!p) continue;
             const grp = available[p.groupIndex];
-            if (!grp || grp.permanent) continue;
+            if (!grp || grp.permanent || (grp.starred ?? false) === starred) continue;
             available[p.groupIndex] = { ...grp, starred, updatedAt: Date.now(), pendingSync: true };
+            changed.add(p.groupIndex);
           }
         }
 
-        return { ...state, available };
+        return changed.size > 0 ? { ...state, available } : null; // nothing changed: no write
       });
       qc.setQueryData(GROUPS_QUERY_KEY, next);
     },

@@ -614,7 +614,8 @@ describe('useBulkStar — malformed ids, missing group/window guards, permanent 
       })
     })
 
-    expect(lastSaved().available[0].windows[0].starred).toBeFalsy()
+    // Nothing to star: no write at all (and so no group stamped for sync)
+    expect(saveGroupsState).not.toHaveBeenCalled()
   })
 
   it('ignores group items with malformed ids and a permanent target', async () => {
@@ -634,6 +635,222 @@ describe('useBulkStar — malformed ids, missing group/window guards, permanent 
       })
     })
 
-    expect(lastSaved().available[0].starred).toBeFalsy()
+    // Nothing to star: no write at all (and so no group stamped for sync)
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+})
+
+describe('useBulkStar — only the groups that change are stamped for sync', () => {
+  async function runStar(state: GroupsState, items: { type: 'window' | 'group'; id: string }[], starred: boolean) {
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useBulkStar(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ items, starred }) })
+  }
+
+  it('starring a window marks only its group; the other groups keep their objects and stamps', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(5, 'https://live.com')])]
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://a1.com')]), win([tab(0, 'https://a2.com')])]
+    const b = { ...createGroup('b', 'B'), updatedAt: 111, pendingSync: false }
+    b.windows = [win([tab(0, 'https://b.com')])]
+    const state = makeState([nowOpen, a, b])
+
+    await runStar(state, [{ type: 'window', id: 'window-1-1' }], true)
+
+    const saved = lastSaved()
+    expect(saved.available[1].pendingSync).toBe(true)
+    expect(saved.available[1].windows[0].tabs[0].url).toBe('https://a2.com') // starred window floated up
+    expect(saved.available[1].windows[0].starred).toBe(true)
+    // Untouched groups: same reference, no updatedAt / pendingSync bump
+    expect(saved.available[2]).toBe(b)
+    expect(saved.available[2].updatedAt).toBe(111)
+    expect(saved.available[2].pendingSync).toBe(false)
+    expect(saved.available[0]).toBe(nowOpen)
+  })
+
+  it('two windows of one group are starred in one copy of that group', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://1.com')]), win([tab(0, 'https://2.com')]), win([tab(0, 'https://3.com')])]
+    const b = createGroup('b', 'B')
+    const state = makeState([createNowOpenGroup(), a, b])
+
+    await runStar(state, [{ type: 'window', id: 'window-1-2' }, { type: 'window', id: 'window-1-1' }], true)
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows.map((w) => [w.tabs[0].url, w.starred ?? false])).toEqual([
+      ['https://2.com', true],
+      ['https://3.com', true],
+      ['https://1.com', false],
+    ])
+    expect(saved.available[2]).toBe(b)
+  })
+
+  it('starring windows that are already starred writes nothing', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [{ ...win([tab(0, 'https://a.com')]), starred: true }]
+    await runStar(makeState([createNowOpenGroup(), a]), [{ type: 'window', id: 'window-1-0' }], true)
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('unstarring a window without a star flag writes nothing', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://a.com')])]
+    await runStar(makeState([createNowOpenGroup(), a]), [{ type: 'window', id: 'window-1-0' }], false)
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('starring groups stamps only the groups whose flag changes', async () => {
+    const a = createGroup('a', 'A')
+    const b = { ...createGroup('b', 'B'), starred: true, updatedAt: 222, pendingSync: false }
+    const c = createGroup('c', 'C')
+    await runStar(makeState([createNowOpenGroup(), a, b, c]), [
+      { type: 'group', id: 'group-1' },
+      { type: 'group', id: 'group-2' },
+    ], true)
+
+    const saved = lastSaved()
+    const byId = new Map(saved.available.map((g) => [g.id, g]))
+    expect(byId.get('a')?.starred).toBe(true)
+    expect(byId.get('a')?.pendingSync).toBe(true)
+    expect(byId.get('b')).toBe(b) // already starred: untouched
+    expect(byId.get('c')).toBe(c)
+  })
+})
+
+describe('useBulkDelete / useBulkMoveToGroup — untouched groups keep their objects', () => {
+  it('deleting a tab leaves the other groups as they were', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://a1.com'), tab(0, 'https://a2.com')])]
+    const b = createGroup('b', 'B')
+    b.windows = [win([tab(0, 'https://b.com')])]
+    const state = makeState([createNowOpenGroup(), a, b])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkDelete(), { wrapper })
+
+    await act(async () => { await result.current.mutateAsync([{ type: 'tab' as const, id: 'tab-1-0-0' }]) })
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows[0].tabs.map((t) => t.url)).toEqual(['https://a2.com'])
+    expect(saved.available[2]).toBe(b)
+    expect(b.windows[0].tabs).toHaveLength(1)
+  })
+
+  it('moving a tab touches only its source and the target', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://a1.com'), tab(0, 'https://a2.com')])]
+    const b = createGroup('b', 'B')
+    b.windows = [win([tab(0, 'https://b.com')])]
+    const c = createGroup('c', 'C')
+    c.windows = [win([tab(0, 'https://c.com')])]
+    const state = makeState([createNowOpenGroup(), a, b, c])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ items: [{ type: 'tab' as const, id: 'tab-1-0-0' }], targetGroupIndex: 2 })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows[0].tabs.map((t) => t.url)).toEqual(['https://a2.com'])
+    expect(saved.available[2].windows.flatMap((w) => w.tabs.map((t) => t.url))).toContain('https://a1.com')
+    expect(saved.available[3]).toBe(c)
+    expect(a.windows[0].tabs).toHaveLength(2) // the input state was not mutated
+  })
+
+  it('moving a window touches only its source and the target', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://a1.com')]), win([tab(0, 'https://a2.com')])]
+    const b = createGroup('b', 'B')
+    b.windows = [win([tab(0, 'https://b.com')])]
+    const c = createGroup('c', 'C')
+    c.windows = [win([tab(0, 'https://c.com')])]
+    const nowOpen = createNowOpenGroup()
+    const state = makeState([nowOpen, a, b, c])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ items: [{ type: 'window' as const, id: 'window-1-0' }], targetGroupIndex: 2 })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows.map((w) => w.tabs[0].url)).toEqual(['https://a2.com'])
+    expect(saved.available[1].pendingSync).toBe(true)
+    expect(saved.available[2].windows.map((w) => w.tabs[0].url)).toEqual(['https://a1.com', 'https://b.com'])
+    expect(saved.available[2].pendingSync).toBe(true)
+    expect(saved.available[0]).toBe(nowOpen)
+    expect(saved.available[3]).toBe(c)
+  })
+
+  it('moving tabs into Now Open opens them and leaves Now Open unstamped and unchanged', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://a1.com'), tab(0, 'https://a2.com')])]
+    const b = createGroup('b', 'B')
+    const nowOpen = { ...createNowOpenGroup(), updatedAt: 333, pendingSync: false }
+    nowOpen.windows = [win([tab(7, 'https://live.com')])]
+    const state = makeState([nowOpen, a, b])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ items: [{ type: 'tab' as const, id: 'tab-1-0-0' }], targetGroupIndex: 0 })
+    })
+
+    expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://a1.com', active: false })
+    const saved = lastSaved()
+    expect(saved.available[0].windows.flatMap((w) => w.tabs.map((t) => t.url))).toEqual(['https://live.com'])
+    expect(saved.available[0].updatedAt).toBe(333)
+    expect(saved.available[0].pendingSync).toBe(false)
+    expect(saved.available[1].pendingSync).toBe(true) // the source lost its tab
+    expect(saved.available[2]).toBe(b)
+  })
+})
+
+describe('useBulkStar — selections that are partly already starred', () => {
+  async function runStar(state: GroupsState, ids: string[]) {
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkStar(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ items: ids.map((id) => ({ type: 'window' as const, id })), starred: true })
+    })
+  }
+
+  it('in one group: the group is stamped once and the starred windows come first in order', async () => {
+    const a = { ...createGroup('a', 'A'), updatedAt: 1, pendingSync: false }
+    a.windows = [{ ...win([tab(0, 'https://1.com')]), starred: true }, win([tab(0, 'https://2.com')]), win([tab(0, 'https://3.com')])]
+    await runStar(makeState([createNowOpenGroup(), a]), ['window-1-0', 'window-1-2'])
+
+    expect(saveGroupsState).toHaveBeenCalledTimes(1)
+    const g = lastSaved().available[1]
+    expect(g.pendingSync).toBe(true)
+    expect(g.updatedAt).toBeGreaterThan(1)
+    expect(g.windows.map((w) => [w.tabs[0].url, w.starred ?? false])).toEqual([
+      ['https://1.com', true],
+      ['https://3.com', true],
+      ['https://2.com', false],
+    ])
+  })
+
+  it('across groups: a group whose only selected window is already starred keeps its object', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [win([tab(0, 'https://a.com')])]
+    const b = { ...createGroup('b', 'B'), updatedAt: 5, pendingSync: false }
+    b.windows = [{ ...win([tab(0, 'https://b.com')]), starred: true }]
+    await runStar(makeState([createNowOpenGroup(), a, b]), ['window-1-0', 'window-2-0'])
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows[0].starred).toBe(true)
+    expect(saved.available[1].pendingSync).toBe(true)
+    expect(saved.available[2]).toBe(b)
+    expect(saved.available[2].updatedAt).toBe(5)
+    expect(saved.available[2].pendingSync).toBe(false)
   })
 })

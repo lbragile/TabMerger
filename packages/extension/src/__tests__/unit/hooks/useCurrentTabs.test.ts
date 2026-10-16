@@ -5,11 +5,11 @@
  * filtering, ogImage/note carryover. There is no content script, so ogImage is only ever
  * carried forward from a prior value — never backfilled via chrome.tabs.sendMessage.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { useCurrentTabs } from '@/hooks/useCurrentTabs'
+import { useCurrentTabs, NOW_OPEN_SYNC_DELAY_MS } from '@/hooks/useCurrentTabs'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { createGroup, createNowOpenGroup } from '@/lib/utils'
 import type { GroupsState, Tab } from '@/lib/types'
@@ -50,7 +50,7 @@ const chromeMock = {
 }
 globalThis.chrome = chromeMock as unknown as typeof chrome
 
-import { saveGroupsState, getGroupsState } from '@/lib/localDb'
+import { saveGroupsState, getGroupsState, updateGroupsState } from '@/lib/localDb'
 import { pushDeviceSession } from '@/lib/deviceSessions'
 
 function makeWrapper() {
@@ -106,7 +106,7 @@ describe('useCurrentTabs — tier closure regression', () => {
     rerender()
 
     const handleChange = chromeMock.tabs.onUpdated.addListener.mock.calls[0][0]
-    await act(async () => { await handleChange() })
+    await act(async () => { handleChange(); await new Promise((r) => setTimeout(r, NOW_OPEN_SYNC_DELAY_MS + 50)) })
 
     expect(pushDeviceSession).toHaveBeenLastCalledWith(expect.anything(), 'pro')
     // Listeners were registered exactly once — the tab-event effect must not have re-run.
@@ -316,7 +316,7 @@ describe('syncNowOpen — starred flag and order carryover (regression)', () => 
     // Initial mount sync, then simulate a chrome.tabs.onUpdated event re-sync (e.g. favicon load)
     await act(async () => {})
     const handleChange = chromeMock.tabs.onUpdated.addListener.mock.calls[0][0]
-    await act(async () => { await handleChange() })
+    await act(async () => { handleChange(); await new Promise((r) => setTimeout(r, NOW_OPEN_SYNC_DELAY_MS + 50)) })
 
     const cached = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)
     const windowById = new Map(cached?.available[0].windows.map((w) => [w.id, w]))
@@ -324,5 +324,198 @@ describe('syncNowOpen — starred flag and order carryover (regression)', () => 
     // Starred window zone-clamped to the front, same as sortWindowsByStarred elsewhere
     expect(cached?.available[0].windows[0].id).toBe(2)
     unmount()
+  })
+})
+
+describe('useCurrentTabs — tab event bursts are coalesced into one Now Open write', () => {
+  /** A stored state the mocked write path reads and replaces, like IndexedDB would. */
+  let stored: GroupsState
+  let liveTitle: string
+
+  beforeEach(() => {
+    vi.useFakeTimers()
+    const saved = createGroup('saved', 'Saved')
+    saved.windows = [{ id: 0, incognito: false, focused: false, tabs: [{ id: 0, url: 'https://saved.com', title: 'Saved', favIconUrl: '', pinned: false }] }]
+    stored = makeState([createNowOpenGroup(), saved])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockImplementation(async () => stored)
+    ;(saveGroupsState as ReturnType<typeof vi.fn>).mockImplementation(async (s: GroupsState) => { stored = s })
+    liveTitle = 'title 0'
+    chromeMock.windows.getAll.mockResolvedValue([chromeWindow(1)])
+    chromeMock.tabs.query.mockImplementation(async () => [chromeTab({ id: 10, windowId: 1, title: liveTitle })])
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  /** Mounts the hook, lets the immediate mount pass finish, and returns the onUpdated listener. */
+  async function mount() {
+    const { qc, wrapper } = makeWrapper()
+    const view = renderHook(() => useCurrentTabs(), { wrapper })
+    await act(async () => { await vi.advanceTimersByTimeAsync(0) })
+    expect(saveGroupsState).toHaveBeenCalledTimes(1) // the mount pass is not delayed
+    ;(saveGroupsState as ReturnType<typeof vi.fn>).mockClear()
+    const onUpdated = chromeMock.tabs.onUpdated.addListener.mock.calls[0][0] as () => void
+    return { qc, onUpdated, ...view }
+  }
+  const nowOpenTitle = (s: GroupsState | undefined) => s?.available[0].windows[0]?.tabs[0]?.title
+
+  it('a burst of events gives one write holding the latest browser state', async () => {
+    const { qc, onUpdated, unmount } = await mount()
+
+    for (let i = 1; i <= 10; i++) {
+      liveTitle = `title ${i}`
+      onUpdated()
+      await act(async () => { await vi.advanceTimersByTimeAsync(10) })
+    }
+    expect(saveGroupsState).not.toHaveBeenCalled() // still collecting the burst
+    await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS) })
+
+    expect(saveGroupsState).toHaveBeenCalledTimes(1)
+    expect(nowOpenTitle(stored)).toBe('title 10')
+    expect(nowOpenTitle(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY))).toBe('title 10')
+    unmount()
+  })
+
+  it('a title changing every 40 ms is not starved: writes keep landing, about one per delay, and end on the latest', async () => {
+    const { onUpdated, unmount } = await mount()
+
+    const duration = 2000
+    for (let t = 40; t <= duration; t += 40) {
+      liveTitle = `title ${t}`
+      onUpdated()
+      await act(async () => { await vi.advanceTimersByTimeAsync(40) })
+    }
+    await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS) })
+
+    const writes = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls.length
+    expect(writes).toBeGreaterThan(1) // a reset-on-every-event debounce would write once, at the very end
+    expect(writes).toBeLessThanOrEqual(Math.ceil(duration / NOW_OPEN_SYNC_DELAY_MS) + 1) // vs 50 events
+    expect(nowOpenTitle(stored)).toBe(`title ${duration}`)
+    unmount()
+  })
+
+  it('events during a pass in flight queue exactly one more pass, which reads the latest state', async () => {
+    const { onUpdated, unmount } = await mount()
+
+    // Hold the next browser query open, so the pass started by the first event stays in flight
+    let release!: () => void
+    chromeMock.tabs.query.mockImplementationOnce(() => new Promise((resolve) => {
+      const seen = liveTitle
+      release = () => resolve([chromeTab({ id: 10, windowId: 1, title: seen })])
+    }))
+    liveTitle = 'stale'
+    onUpdated()
+    await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS) })
+
+    // Three more bursts while that pass waits: each fires its timer, all fold into one re-run
+    for (const title of ['b', 'c', 'latest']) {
+      liveTitle = title
+      onUpdated()
+      await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS) })
+    }
+    expect(saveGroupsState).not.toHaveBeenCalled()
+    expect(chromeMock.tabs.query).toHaveBeenCalledTimes(2) // mount + the held pass, no parallel pass
+
+    await act(async () => { release(); await vi.advanceTimersByTimeAsync(0) })
+
+    const titles = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls.map(([s]) => nowOpenTitle(s as GroupsState))
+    expect(titles).toEqual(['stale', 'latest'])
+    unmount()
+  })
+
+  it('a user mutation is stored right away while a burst is pending, and the mirror write keeps it', async () => {
+    const { onUpdated, unmount } = await mount()
+
+    liveTitle = 'after burst'
+    onUpdated()
+    onUpdated()
+
+    // The drop: a write to a saved group, made while the burst's pass is still waiting
+    let done = false
+    await act(async () => {
+      await updateGroupsState((s) => ({
+        ...s,
+        available: s.available.map((g) => (g.id === 'saved' ? { ...g, name: 'Dropped', pendingSync: true } : g))
+      }))
+      done = true
+    })
+    expect(done).toBe(true)
+    expect(saveGroupsState).toHaveBeenCalledTimes(1) // only the user's write: no mirror write queued ahead of it
+    expect(stored.available[1].name).toBe('Dropped')
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS) })
+    expect(saveGroupsState).toHaveBeenCalledTimes(2)
+    expect(stored.available[1].name).toBe('Dropped') // the mirror pass re-read the store and kept it
+    expect(nowOpenTitle(stored)).toBe('after burst')
+    unmount()
+  })
+
+  it('unmount flushes a pending pass to IndexedDB without touching the cache', async () => {
+    const { qc, onUpdated, unmount } = await mount()
+    const cachedBefore = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)
+
+    liveTitle = 'closing'
+    onUpdated()
+    unmount()
+    await act(async () => { await vi.advanceTimersByTimeAsync(0) })
+
+    expect(saveGroupsState).toHaveBeenCalledTimes(1)
+    expect(nowOpenTitle(stored)).toBe('closing')
+    expect(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)).toBe(cachedBefore)
+    // No timer left behind to fire a second write later
+    await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS * 2) })
+    expect(saveGroupsState).toHaveBeenCalledTimes(1)
+  })
+
+  it('unmount with nothing pending writes nothing', async () => {
+    const { unmount } = await mount()
+    unmount()
+    await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS * 2) })
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  /** Starts a pass whose browser query is held open, so it is in flight until `release()`. */
+  async function holdAPass(onUpdated: () => void) {
+    let release!: () => void
+    chromeMock.tabs.query.mockImplementationOnce(() => new Promise((resolve) => {
+      const seen = liveTitle
+      release = () => resolve([chromeTab({ id: 10, windowId: 1, title: seen })])
+    }))
+    liveTitle = 'in flight'
+    onUpdated()
+    await act(async () => { await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS) })
+    return () => release()
+  }
+
+  it('unmount during a pass with a timer armed: one more IndexedDB write, no cache update, no device push', async () => {
+    const { qc, onUpdated, unmount } = await mount()
+    ;(pushDeviceSession as ReturnType<typeof vi.fn>).mockClear()
+    const setQueryData = vi.spyOn(qc, 'setQueryData')
+    const release = await holdAPass(onUpdated)
+
+    liveTitle = 'latest'
+    onUpdated() // arms the timer while the pass is in flight
+    unmount() // flush: the pass is running, so this becomes its one re-run
+    await act(async () => { release(); await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS * 2) })
+
+    const titles = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls.map(([s]) => nowOpenTitle(s as GroupsState))
+    expect(titles).toEqual(['in flight', 'latest'])
+    expect(setQueryData).not.toHaveBeenCalled()
+    expect(pushDeviceSession).not.toHaveBeenCalled()
+  })
+
+  it('unmount during a pass with no timer armed: the pass stores to IndexedDB but leaves the cache alone', async () => {
+    const { qc, onUpdated, unmount } = await mount()
+    ;(pushDeviceSession as ReturnType<typeof vi.fn>).mockClear()
+    const cachedBefore = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)
+    const release = await holdAPass(onUpdated)
+
+    unmount()
+    await act(async () => { release(); await vi.advanceTimersByTimeAsync(NOW_OPEN_SYNC_DELAY_MS * 2) })
+
+    expect(saveGroupsState).toHaveBeenCalledTimes(1)
+    expect(nowOpenTitle(stored)).toBe('in flight')
+    expect(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)).toBe(cachedBefore)
+    expect(pushDeviceSession).not.toHaveBeenCalled()
   })
 })
