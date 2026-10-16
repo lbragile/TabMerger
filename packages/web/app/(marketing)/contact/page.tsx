@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { GITHUB_ISSUES_URL } from '@/lib/github'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
 // A client component can't export metadata; the page's own lives in ./layout.tsx.
 
@@ -112,6 +113,16 @@ function ContactForm() {
           </a>
           {' '}for faster tracking and visibility.
         </p>
+        <p className="text-muted-foreground text-sm mt-2">
+          Prefer email? Write to{' '}
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className="underline underline-offset-4 hover:text-foreground transition-colors"
+          >
+            {SUPPORT_EMAIL}
+          </a>
+          .
+        </p>
       </div>
 
       {status === 'sent' ? (
@@ -177,7 +188,15 @@ function ContactForm() {
 
           {status === 'error' && (
             <p className="text-sm text-destructive">
-              {errorMessage ?? 'Something went wrong. Please try again or email us directly.'}
+              {errorMessage ?? (
+                <>
+                  Something went wrong. Please try again or email us at{' '}
+                  <a href={`mailto:${SUPPORT_EMAIL}`} className="underline underline-offset-4">
+                    {SUPPORT_EMAIL}
+                  </a>
+                  .
+                </>
+              )}
             </p>
           )}
 
