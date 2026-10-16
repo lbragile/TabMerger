@@ -1,3 +1,10 @@
+## [3.3.2-beta.1](https://github.com/lbragile/TabMerger/compare/v3.3.1...v3.3.2-beta.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* **extension:** ask for Firefox site access from a tab, not the popup ([0b86c55](https://github.com/lbragile/TabMerger/commit/0b86c5595411600c085bf194182ce2712aae4b0b))
+
 ## [3.3.1](https://github.com/lbragile/TabMerger/compare/v3.3.0...v3.3.1) (2026-10-16)
 
 
