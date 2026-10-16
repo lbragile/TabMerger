@@ -212,6 +212,22 @@ describe('background — deferred tab close (drag out of Now Open)', () => {
     expect(stub.chrome.tabs.remove).not.toHaveBeenCalled()
   })
 
+  it('keepTabIds (an Undo of the drop) takes queued tabs back out: they stay open', () => {
+    const port = connect()
+    port.post({ tabIds: [7, 8] })
+    port.post({ keepTabIds: [8, 99] })
+    port.disconnect()
+    expect(stub.chrome.tabs.remove).toHaveBeenCalledWith([7])
+  })
+
+  it('nothing is closed when every queued tab was kept', () => {
+    const port = connect()
+    port.post({ tabIds: [7] })
+    port.post({ keepTabIds: [7] })
+    port.disconnect()
+    expect(stub.chrome.tabs.remove).not.toHaveBeenCalled()
+  })
+
   it('ignores ports with a different name (other features may open their own)', () => {
     const port = connect('something-else')
     expect(port.connected).toBe(false)
@@ -1020,6 +1036,55 @@ describe('background — Firefox web-bridge internal onMessage listener', () => 
       sendResponse
     )
     expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  // VITE_EXTRA_WEB_APP_URLS: a second site (during a host move) the bridge also runs on. The
+  // origin list is read when main() runs, so each case stubs the env and re-runs main() on a
+  // fresh chrome stub.
+  describe('extra trusted web origins (VITE_EXTRA_WEB_APP_URLS)', () => {
+    function restartWith(extras: string) {
+      vi.stubEnv('VITE_EXTRA_WEB_APP_URLS', extras)
+      stub = makeChromeStub()
+      globalThis.chrome = stub.chrome as unknown as typeof chrome
+      capturedMain!()
+    }
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
+    it('accepts a relayed PING from an extra origin', () => {
+      restartWith('https://new.example.com')
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2](
+        { type: EXTENSION_MESSAGE.PING },
+        { id: 'this-extension-id', url: 'https://new.example.com/dashboard' },
+        sendResponse
+      )
+      expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+    })
+
+    it('still accepts the primary origin alongside the extras', () => {
+      restartWith('https://new.example.com')
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+      expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+    })
+
+    it('rejects a lookalike of an extra origin (subdomain or other scheme)', () => {
+      restartWith('https://new.example.com')
+      for (const url of ['https://evil.new.example.com/', 'http://new.example.com/', 'https://new.example.com.evil.com/']) {
+        const sendResponse = vi.fn()
+        stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, { id: 'this-extension-id', url }, sendResponse)
+        expect(sendResponse).not.toHaveBeenCalled()
+      }
+    })
+
+    it('fails closed (trusts no origin, not even the primary) when the extras are invalid', () => {
+      restartWith('https://*.example.com')
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+      expect(sendResponse).not.toHaveBeenCalled()
+    })
   })
 })
 

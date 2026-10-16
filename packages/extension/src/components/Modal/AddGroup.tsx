@@ -9,6 +9,7 @@ import { rgbaToHex } from '@/lib/color';
 import { useAddGroup, useGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
+import { asOneHistoryStep } from '@/lib/undoHistory';
 
 interface AddGroupModalProps {
   onClose: () => void;
@@ -25,27 +26,24 @@ export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
   const displayColor = previewColor ?? color;
   const [pickerOpen, setPickerOpen] = useState(false);
   const { maxGroups, maxTabs } = useEntitlements();
-  const { mutate: addGroup, isPending } = useAddGroup({ maxGroups, maxTabs });
+  const { mutateAsync: addGroup, isPending } = useAddGroup({ maxGroups, maxTabs });
   const { data: groupsState } = useGroups();
-  const onCreated = data?.onCreated as ((groupIndex: number) => void) | undefined;
+  const onCreated = data?.onCreated as ((groupIndex: number) => void | Promise<unknown>) | undefined;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // New group is always appended, so its index is the current length — capture before the mutation lands.
     const newIndex = groupsState?.available.length ?? 0;
-    // Close only after the mutation settles — closing synchronously unmounts this component
-    // (and its useAddGroup() observer) before the async mutationFn resolves, so the mutate-level
-    // onSuccess below (tied to that observer, not the mutation cache) would silently never fire,
-    // meaning onCreated (which does the actual move/copy) never runs even though the group is created.
-    addGroup(
-      { name: name.trim() || DEFAULT_GROUP_TITLE, color },
-      {
-        onSuccess: () => {
-          onCreated?.(newIndex);
-          onClose();
-        },
-      }
-    );
+    // Close once the group exists (a refused add, whose free-plan toast the backstop already
+    // showed, keeps the dialog open). Opened from a "Create new group…" menu item, the add and the
+    // caller's move/copy into the new group are ONE user action, so they are one undo step
+    // (asOneHistoryStep): a single Undo removes the group and puts the item back. `mutateAsync`
+    // settles even after this dialog unmounts, so the move still runs.
+    void asOneHistoryStep(async () => {
+      await addGroup({ name: name.trim() || DEFAULT_GROUP_TITLE, color });
+      onClose();
+      await onCreated?.(newIndex);
+    }).catch(() => {});
   };
 
   return (

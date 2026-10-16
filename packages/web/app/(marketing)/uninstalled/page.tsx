@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { UNINSTALL_SURVEY_PARAMS, parseUninstallSurveyParams } from '@tabmerger/shared'
-import { Download, Info, Layers } from 'lucide-react'
+import { Info, Layers } from 'lucide-react'
 import { ShellBackdrop } from '@/components/errors/ErrorPageShell'
+import { STORE_ICON } from '@/components/marketing/BrowserIcons'
 import { StoreLink } from '@/components/StoreLink'
 import { Button } from '@/components/ui/button'
 import { UninstallSurveyForm } from '@/components/uninstall/UninstallSurveyForm'
@@ -76,16 +77,22 @@ export default async function UninstalledPage({ searchParams }: { searchParams: 
             </h2>
             <p className="mb-4 mt-1 text-text2">You can add TabMerger back at any time.</p>
             <ul className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              {reinstall.map(({ browser, href }) => (
-                <li key={browser} className="flex flex-col">
-                  <Button variant="outline" asChild>
-                    <StoreLink href={href}>
-                      <Download className="h-4 w-4" aria-hidden="true" />
-                      Add TabMerger to {BROWSER_NAMES[browser]}
-                    </StoreLink>
-                  </Button>
-                </li>
-              ))}
+              {reinstall.map(({ browser, href }) => {
+                const BrowserIcon = STORE_ICON[browser]
+                return (
+                  <li key={browser} className="flex flex-col">
+                    <Button variant="outline" asChild>
+                      <StoreLink href={href}>
+                        {/* The icon names the browser itself; the text already does. */}
+                        <span aria-hidden="true" className="flex shrink-0">
+                          <BrowserIcon size={16} />
+                        </span>
+                        Add TabMerger to {BROWSER_NAMES[browser]}
+                      </StoreLink>
+                    </Button>
+                  </li>
+                )
+              })}
             </ul>
           </section>
 

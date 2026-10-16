@@ -27,7 +27,8 @@ import { useUIStore } from '@/stores/uiStore'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
 vi.mock('@/lib/localDb', () => ({
-  saveGroupsState: vi.fn().mockResolvedValue(undefined),
+  // (records the drop's undo step the way the real write does: inside the write, once stored)
+  saveGroupsState: vi.fn(async (s: unknown, o?: { afterWrite?: (stored: unknown) => void }) => { o?.afterWrite?.(s) }),
   setSetting: vi.fn().mockResolvedValue(undefined),
   getSetting: vi.fn().mockResolvedValue({})
 }))
@@ -755,7 +756,7 @@ describe('DnD side effects: new real windows are always opened unfocused', () =>
     expect(c.windows.create).toHaveBeenCalledTimes(1)
     expect(c.windows.create).toHaveBeenCalledWith({ url: 'https://example.com/a1', focused: false })
     expect(c.tabs.create).not.toHaveBeenCalled()
-    expect(useUIStore.getState().undoStack).toHaveLength(0) // touches Now Open → not undoable
+    expect(useUIStore.getState().undoStack).toHaveLength(1) // the saved group lost a tab: one undo step
   })
 })
 

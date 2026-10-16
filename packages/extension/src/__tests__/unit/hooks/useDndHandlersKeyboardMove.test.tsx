@@ -18,7 +18,8 @@ import { saveGroupsState } from '@/lib/localDb'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
 vi.mock('@/lib/localDb', () => ({
-  saveGroupsState: vi.fn().mockResolvedValue(undefined),
+  // (records the drop's undo step the way the real write does: inside the write, once stored)
+  saveGroupsState: vi.fn(async (s: unknown, o?: { afterWrite?: (stored: unknown) => void }) => { o?.afterWrite?.(s) }),
   setSetting: vi.fn().mockResolvedValue(undefined),
   getSetting: vi.fn().mockResolvedValue({})
 }))

@@ -1,6 +1,6 @@
 # Firefox Add-ons Listings — TabMerger
 
-> Last Updated: 2026-10-13
+> Last Updated: 2026-10-15
 >
 > **State of the stable add-on:** the public AMO listing is still the v2 build (`2.0.0`). The
 > first v3 stable release is planned as `v3.1.0` and is not yet released. The listing copy,
@@ -85,7 +85,37 @@ the same three message types between `window.postMessage` (page side) and
 users). Full permission-request wording and scope: see
 `CHROMEWEBSTORE.md`'s ["Firefox permission note"](CHROMEWEBSTORE.md#firefox-permission-note-web-bridgecontentts)
 section (the fact pattern is identical for both the stable and beta Firefox add-ons — only the
-content script's `matches` origin differs, since it reads `VITE_WEB_APP_URL` per build mode).
+content script's `matches` origins differ, since they come from `VITE_WEB_APP_URL` plus
+`VITE_EXTRA_WEB_APP_URLS` per build mode).
+
+**Sites it runs on:** the TabMerger website only, two sites each while it moves to its own
+domain. Stable: `https://tabmerger.vercel.app/*` and `https://tabmerger.com/*`. BETA:
+`https://tabmerger-preview.vercel.app/*` and `https://preview.tabmerger.com/*`. Justification
+to paste where AMO asks about site access: "Runs only on the TabMerger website (tabmerger.com,
+and tabmerger.vercel.app while the site moves there) to relay three messages: install check,
+sign-in handoff and sync request. Reads nothing else on the page."
+
+**Granting (checked against Firefox 158's own add-on code):** in MV3 these sites are optional
+host access, not required permissions. A new install grants all of them and lists them in the
+install prompt (`extensions.originControls.grantByDefault`, on by default). An update shows no
+prompt for a newly added site and does not grant it, so an existing install keeps working on the
+sites it already had and the new site stays off until the user allows it: the extensions button
+on that site, or about:addons, TabMerger, Permissions.
+
+**The in-popup prompt (Firefox only):** so users don't have to find that setting, the popup shows
+a one-line banner under the header, "Allow TabMerger on <site> so the website can find it and pass
+your sign-in.", whenever one of the build's trusted sites is not granted
+(`permissions.contains`, re-checked on every popup open and on `permissions.onAdded`/`onRemoved`).
+Its **Allow** button calls `permissions.request({ origins })` for just the missing sites, from the
+click itself (Firefox needs the user action); Firefox then shows its own permission dialog, and a
+refusal leaves the banner in place. The **dismiss** button hides it and remembers that in
+`storage.local` (`webAppAccessDismissed`, the list of dismissed site patterns, on this device
+only); it comes back only if a site that wasn't dismissed goes missing. No manifest change: in MV3
+the content-script sites are requestable optional origins as they are. Chrome and Edge never show
+it (`externally_connectable` needs no grant). Code: `src/components/WebAppConnectBanner.tsx`,
+`src/lib/webAppHostAccess.ts`. For reviewers: "Firefox only: if an update added a TabMerger website
+address that Firefox did not grant, the popup offers a button that asks Firefox for access to that
+one TabMerger site. Nothing is requested without the user's click."
 
 ## Data collection declaration (`data_collection_permissions`)
 
@@ -199,7 +229,8 @@ the manifest — see the build test above).
    the single source of truth for these path/file-name strings across the extension, web app, and
    CI). The web app forwards that path on its own domain, giving the beta a stable URL:
    `<beta web app>/firefox-beta/updates.json` (e.g.
-   `https://tabmerger-preview.vercel.app/firefox-beta/updates.json`).
+   `https://preview.tabmerger.com/firefox-beta/updates.json`). Older betas carry the
+   `tabmerger-preview.vercel.app` address, which serves the same file, so it must stay up.
 3. The beta build's `gecko.update_url` (set in `wxt.config.ts`, only for `browser === "firefox"`
    and `mode === "beta"`) points at that exact URL. **If the beta build has no `VITE_WEB_APP_URL`
    set, the build fails loudly** (`scripts/firefoxBetaUpdateUrl.ts`) rather than shipping a beta
@@ -275,6 +306,8 @@ TabMerger's Settings (the true semver).
 | BETA (unlisted) | `4.1.0.11` | (ignored by Firefox) | `v3.1.0-beta.11` | 2026-10-07 | Signed and published to the self-hosted beta channel by the publish workflow |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest, permission or `data_collection_permissions` change: progress is one `storage.local` record, and the six tour usage events (started, completed, skipped, task done, step skipped, chapter skipped; step or chapter ids only) go through the existing `technicalAndInteraction`-gated analytics. The "try it" steps run on two sample groups the tour adds and removes itself, and on one spare tab of the extension's own (the packaged page `tour-practice.html`) that the "save a tab" step opens in the background and closes again; all of it is local-only (never synced, backed up, exported or shared, and the spare tab is left out of the other-devices snapshot), so no data-collection answer changes. The tour has seven chapters with a header each and fifteen "try it" steps (drag and drop, saving a tab, "Open in browser", "Deduplicate tabs", selecting items, search, undo and redo among them); during them nothing of the user's is opened, closed or changed. A thin pulsing ring marks the control to use next. Listing copy: the new Chrome description bullet applies unchanged |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: search matches only the text as typed (in sequence, any case; letters out of order no longer match, best matches first in the search list), highlights the matched text, hides or fades what does not match (new local setting, Hide by default), keeps the query until the user clears it, and covers "Now Open". No manifest, permission or `data_collection_permissions` change: the query stays in the popup's memory and the setting is local. Listing copy: the reworded Chrome search bullet applies unchanged. Screenshots: see the Chrome file's Screenshot Notes |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: the web-bridge content script also runs on the website's new domain (`tabmerger.com` next to `tabmerger.vercel.app`, `preview.tabmerger.com` next to `tabmerger-preview.vercel.app` for BETA). Manifest change: one more `content_scripts` match, no `host_permissions`, no `data_collection_permissions` change. Updating installs get no Firefox prompt and the new site is not granted, so the popup shows a banner with an "Allow" button that asks Firefox for that site from the click (dismissible, remembered on the device; see "The in-popup prompt" above); new installs get both sites and never see it. Screenshots: the banner is Firefox-only and shows only on updated installs, so no store screenshot changes |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: the add-on now talks to the website on its new domain: sign-in, sync, AI and checkout requests, links and the uninstall page go to `tabmerger.com` (stable) / `preview.tabmerger.com` (BETA), and the BETA `update_url` moves to `preview.tabmerger.com/firefox-beta/updates.json`. The old `vercel.app` hosts stay trusted. Manifest: the same two web-bridge `content_scripts` matches as the previous release, so no new site access and no prompt; installs that never clicked "Allow" for the new site still see the banner. No `data_collection_permissions` change |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: after the add-on is removed, Firefox opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL` (no permission). No manifest, permission or `data_collection_permissions` change: the address holds only the build's own version, browser and channel (constants of the build, nothing read from the user or device), and anything typed in the survey is sent by the web page, not the add-on |
 
 ## Notes for a future review / support request

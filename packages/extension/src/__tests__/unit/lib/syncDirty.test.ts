@@ -78,3 +78,34 @@ describe('new identities carry no sync bookkeeping (F1)', () => {
     expect(out.rev).toBe(7) // the cache rev, not the file's
   })
 })
+
+describe('restoreSnapshotAsLocalChange keeps the CURRENT sync identity of a group that still exists (M1)', () => {
+  const now = g('now', { permanent: true })
+
+  it('a changed group takes its server base from the current state, never the older one of the snapshot', () => {
+    const current = state(now, g('a', { name: 'B', remoteUpdatedAt: 'S2' }))
+    const snapshot = state(now, g('a', { name: 'A', remoteUpdatedAt: 'S1', positionDirty: false }))
+    const out = restoreSnapshotAsLocalChange(current, snapshot).available[1]
+    expect(out.name).toBe('A')
+    expect(out.remoteUpdatedAt).toBe('S2')
+    expect(out.pendingSync).toBe(true)
+    expect('positionDirty' in out).toBe(false) // derived by the write
+  })
+
+  it('a changed group with no base now gets none from the snapshot', () => {
+    const out = restoreSnapshotAsLocalChange(state(now, g('a', { name: 'B' })), state(now, g('a', { name: 'A', remoteUpdatedAt: 'S1' }))).available[1]
+    expect(out.remoteUpdatedAt).toBeUndefined()
+  })
+
+  it('a group whose content is unchanged is kept exactly as it is now (base, flags and stamps)', () => {
+    const cur = g('a', { remoteUpdatedAt: 'S2', updatedAt: 3000, pendingSync: true, positionDirty: true })
+    const out = restoreSnapshotAsLocalChange(state(now, cur), state(now, g('a', { remoteUpdatedAt: 'S1', updatedAt: 1000 }))).available[1]
+    expect(out).toBe(cur)
+  })
+
+  it('a group the current state lacks is re-inserted without any base (unchanged rule)', () => {
+    const out = restoreSnapshotAsLocalChange(state(now), state(now, g('gone', { remoteUpdatedAt: 'S1', positionDirty: false }))).available[1]
+    expect(out.remoteUpdatedAt).toBeUndefined()
+    expect('positionDirty' in out).toBe(false)
+  })
+})

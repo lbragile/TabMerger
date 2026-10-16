@@ -202,3 +202,34 @@ describe('uiStore — setPreviewGroupColor', () => {
     unsubscribe()
   })
 })
+
+describe('history moves by identity (stepHistory, dropUndoEntry, pushUndo)', () => {
+  const s = (name: string) => ({ active: { id: 'now', index: 0 }, available: [{ id: 'a', name, color: 'rgba(0,0,0,1)', updatedAt: 1, windows: [] }] })
+  beforeEach(() => useUIStore.setState({ undoStack: [], redoStack: [], tourHistory: null }))
+
+  it('pushUndo returns the entry it pushed', () => {
+    const entry = useUIStore.getState().pushUndo(s('x'))
+    expect(useUIStore.getState().undoStack[0]).toBe(entry)
+  })
+
+  it('stepHistory moves only the entry that is on top, and returns the counterpart it pushed', () => {
+    const top = s('top')
+    useUIStore.setState({ undoStack: [top, s('older')] })
+    expect(useUIStore.getState().stepHistory('undo', s('not on top'), s('now'))).toBeUndefined()
+    expect(useUIStore.getState().undoStack).toHaveLength(2)
+    const counterpart = useUIStore.getState().stepHistory('undo', top, s('now'))
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
+    expect(useUIStore.getState().redoStack[0]).toBe(counterpart)
+    expect(useUIStore.getState().stepHistory('redo', counterpart!, s('back'))).toBeDefined()
+    expect(useUIStore.getState().undoStack).toHaveLength(2)
+    expect(useUIStore.getState().redoStack).toHaveLength(0)
+  })
+
+  it('dropUndoEntry removes the top entry only when it is the given one', () => {
+    const top = s('top')
+    useUIStore.setState({ undoStack: [top] })
+    expect(useUIStore.getState().dropUndoEntry(s('other'))).toBe(false)
+    expect(useUIStore.getState().dropUndoEntry(top)).toBe(true)
+    expect(useUIStore.getState().undoStack).toHaveLength(0)
+  })
+})

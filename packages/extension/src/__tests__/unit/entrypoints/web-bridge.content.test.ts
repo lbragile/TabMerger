@@ -50,6 +50,31 @@ describe('web-bridge content script — manifest scoping', () => {
   it('matches only the configured web app origin', () => {
     expect(captured!.matches).toEqual(['http://localhost:3000/*'])
   })
+
+  it('also matches each extra origin from VITE_EXTRA_WEB_APP_URLS, primary first', async () => {
+    vi.resetModules()
+    vi.stubEnv('VITE_EXTRA_WEB_APP_URLS', ' https://new.example.com/ , https://other.example.com')
+    try {
+      await import('@/entrypoints/web-bridge.content')
+      expect(captured!.matches).toEqual([
+        'http://localhost:3000/*',
+        'https://new.example.com/*',
+        'https://other.example.com/*',
+      ])
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('refuses to load with an invalid extra origin instead of dropping it', async () => {
+    vi.resetModules()
+    vi.stubEnv('VITE_EXTRA_WEB_APP_URLS', 'http://new.example.com')
+    try {
+      await expect(import('@/entrypoints/web-bridge.content')).rejects.toThrow(/VITE_EXTRA_WEB_APP_URLS/)
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
 })
 
 describe('web-bridge content script — READY announcement', () => {

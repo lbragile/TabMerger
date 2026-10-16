@@ -124,6 +124,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useAddGroup: () => ({ mutateAsync: mockAddGroupMutateAsync }),
   useGroups: () => mockUseGroupsData(),
   useSetGroupsState: () => mockSetGroupsState,
+  useGroupsSnapshot: () => () => mockUseGroupsData()?.data,
   useApplyAIGroups: () => ({ mutateAsync: mockApplyAIGroupsMutateAsync }),
   useAddWindow: () => ({ mutate: vi.fn() }),
   useReplaceWithCurrent: () => ({ mutate: vi.fn() }),
@@ -142,6 +143,13 @@ vi.mock('@/hooks/useGroups', () => ({
 vi.mock('@/hooks/useEntitlements', () => ({
   useEntitlements: () => mockUseEntitlements(),
   isOverFreeLimit: (itemIndex: number, freeLimit: number) => itemIndex >= freeLimit,
+}))
+
+// The Header only wires the buttons to useUndoRedo; the cursor move itself is tested in
+// hooks/useUndoRedo.test.ts and hooks/useGroupsUndo.test.tsx
+const undoRedo = vi.hoisted(() => ({ canUndo: false, canRedo: false, undo: vi.fn(), redo: vi.fn() }))
+vi.mock('@/hooks/useUndoRedo', () => ({
+  useUndoRedo: () => ({ ...undoRedo, undoStack: [], redoStack: [] }),
 }))
 
 vi.mock('@/stores/uiStore', () => ({
@@ -532,41 +540,34 @@ describe('Styling — "Add Window" button (WindowsPanel)', () => {
 
 describe('Header — undo/redo', () => {
   const groupsState = makeGroupsState([makeGroup({ permanent: true })])
-  const undoFn = vi.fn().mockReturnValue(groupsState)
-  const redoFn = vi.fn().mockReturnValue(groupsState)
 
   beforeEach(() => {
     vi.clearAllMocks()
     mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
     mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5 })
     mockUseGroupsData.mockReturnValue({ data: groupsState })
-    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
-      selector({ ...baseUIState, undoStack: [groupsState], redoStack: [groupsState], undo: undoFn, redo: redoFn })
-    )
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+    Object.assign(undoRedo, { canUndo: true, canRedo: true })
   })
 
-  it('applies the popped undo snapshot via setGroupsState when Undo is clicked', async () => {
+  afterEach(() => {
+    Object.assign(undoRedo, { canUndo: false, canRedo: false })
+  })
+
+  it('Undo and Redo call useUndoRedo().undo / .redo', async () => {
     const user = userEvent.setup()
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /undo/i }))
-    expect(undoFn).toHaveBeenCalledWith(groupsState)
-    expect(mockSetGroupsState).toHaveBeenCalledWith(expect.objectContaining({ active: groupsState.active }), expect.objectContaining({ expectedRev: undefined }))
-  })
-
-  it('applies the popped redo snapshot via setGroupsState when Redo is clicked', async () => {
-    const user = userEvent.setup()
-    wrap(React.createElement(Header))
+    expect(undoRedo.undo).toHaveBeenCalledTimes(1)
     await user.click(screen.getByRole('button', { name: /redo/i }))
-    expect(redoFn).toHaveBeenCalledWith(groupsState)
-    expect(mockSetGroupsState).toHaveBeenCalledWith(expect.objectContaining({ active: groupsState.active }), expect.objectContaining({ expectedRev: undefined }))
+    expect(undoRedo.redo).toHaveBeenCalledTimes(1)
   })
 
-  it('is a no-op when undo() returns nothing (empty stack)', async () => {
-    undoFn.mockReturnValueOnce(undefined)
-    const user = userEvent.setup()
+  it('the buttons are disabled while their stack is empty', () => {
+    Object.assign(undoRedo, { canUndo: false, canRedo: false })
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /undo/i }))
-    expect(mockSetGroupsState).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: /undo/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /redo/i })).toBeDisabled()
   })
 })
 

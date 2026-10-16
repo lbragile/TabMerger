@@ -16,6 +16,7 @@ const {
   mockUpdateTabNote,
   mockSetTabReminder,
   mockClearTabReminder,
+  mockRenameTab,
   mockUseGroupsData,
   mockToggleSelection,
   mockEnterSelectionMode,
@@ -30,6 +31,7 @@ const {
   mockUpdateTabNote: vi.fn(),
   mockSetTabReminder: vi.fn(),
   mockClearTabReminder: vi.fn(),
+  mockRenameTab: vi.fn().mockResolvedValue(undefined),
   mockUseGroupsData: vi.fn(),
   mockToggleSelection: vi.fn(),
   mockEnterSelectionMode: vi.fn(),
@@ -82,11 +84,12 @@ vi.mock('@/components/Windows/TabPreview', () => ({
 
 vi.mock('@/hooks/useGroups', () => ({
   useDeleteTab: () => ({ mutate: mockDeleteTab }),
-  useMoveTab: () => ({ mutate: mockMoveTab }),
+  useMoveTab: () => ({ mutate: mockMoveTab, mutateAsync: mockMoveTab }),
   useGroups: () => mockUseGroupsData(),
   useUpdateTabNote: () => ({ mutate: mockUpdateTabNote }),
   useSetTabReminder: () => ({ mutate: mockSetTabReminder }),
   useClearTabReminder: () => ({ mutate: mockClearTabReminder }),
+  useRenameTab: () => ({ mutateAsync: mockRenameTab }),
   GROUPS_QUERY_KEY: ['groups'],
 }))
 
@@ -586,7 +589,6 @@ describe('TabItem — custom title / rename flow', () => {
   })
 
   it('renames the tab title via context menu and commits on Enter', async () => {
-    const startedAt = Date.now()
     const t = makeTab({ title: 'Example Tab' })
     mockUseGroupsData.mockReturnValue({
       data: {
@@ -601,12 +603,10 @@ describe('TabItem — custom title / rename flow', () => {
     const input = await screen.findByDisplayValue('Example Tab')
     fireEvent.change(input, { target: { value: 'New Title' } })
     fireEvent.keyDown(input, { key: 'Enter' })
-    await waitFor(() => expect(mockSaveGroupsState).toHaveBeenCalled())
-    // the edit is a sync-visible change to the saved group (it used to be neither pushed nor kept)
-    const saved = mockSaveGroupsState.mock.calls.at(-1)?.[0] as GroupsState
-    expect(saved.available[0].windows[0].tabs[0].customTitle).toBe('New Title')
-    expect(saved.available[0].pendingSync).toBe(true)
-    expect(saved.available[0].updatedAt).toBeGreaterThanOrEqual(startedAt)
+    // through the undoable rename mutation (the sync mark and the undo step are tested on useRenameTab)
+    await waitFor(() =>
+      expect(mockRenameTab).toHaveBeenCalledWith({ groupId: makeGroup().id, windowIndex: 0, tabIndex: 0, title: 'New Title' })
+    )
   })
 })
 
@@ -626,7 +626,7 @@ describe('TabItem — reset to original title', () => {
     fireEvent.contextMenu(screen.getByRole('listitem'))
     const resetItem = await screen.findByText(/reset to original title/i)
     await user.click(resetItem)
-    await waitFor(() => expect(mockSaveGroupsState).toHaveBeenCalled())
+    await waitFor(() => expect(mockRenameTab).toHaveBeenCalled())
   })
 })
 

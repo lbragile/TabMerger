@@ -2,6 +2,7 @@ import { pageMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { LegalToc } from '@/components/legal-toc'
 import { BACKUP_FILE_COPY } from '@tabmerger/shared'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
 export const metadata = pageMetadata({
   path: '/privacy',
@@ -34,7 +35,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: October 14, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 15, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -186,7 +187,7 @@ export default function PrivacyPage() {
 
         <section id="contact" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">10. Contact</h2>
-          <p className="text-muted-foreground text-sm">For privacy-related questions or requests, use our <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">contact page</Link>.</p>
+          <p className="text-muted-foreground text-sm">For privacy-related questions or requests, use our <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">contact page</Link> or email <a href={`mailto:${SUPPORT_EMAIL}`} className="underline underline-offset-4 hover:text-foreground transition-colors">{SUPPORT_EMAIL}</a>.</p>
         </section>
 
         <div className="pt-6 border-t flex gap-4 text-sm text-muted-foreground">

@@ -51,7 +51,10 @@ export async function applyUrlRule(
         g.id === matchedGroupId ? { ...g, windows, updatedAt: Date.now(), pendingSync: true } : g
       ),
     };
-  });
+    // The cause tells an open popup which tab this save was for: if the popup opened that tab
+    // itself, the save is part of its own action and its undo history stays (see
+    // useExternalGroupsChanges)
+  }, typeof tab.id === 'number' && tab.id > 0 ? { cause: { kind: 'url-rule', tabId: tab.id, url: tab.url ?? '' } } : {});
 }
 
 /** Convenience for background.ts — reads rules from settings store */

@@ -7,8 +7,8 @@
  *
  *   2b — `moveToNewGroup`: the sidebar "drop here for a new group" zone. A tab lands in a
  *        new group holding one window; a window lands as the new group's window; a whole
- *        multi-selection lands in ONE new group; a Now Open source is COPIED (detached,
- *        `id: 0`, not undoable) and never closed.
+ *        multi-selection lands in ONE new group; a Now Open source is MOVED (a detached
+ *        `id: 0` copy lands, the real tab closes) as one undo step.
  */
 import { describe, it, expect } from 'vitest'
 import { applyMove, canDrop, NEW_GROUP_ID } from '@/lib/dndMove'
@@ -188,7 +188,7 @@ describe('moveToNewGroup — the sidebar "new group" drop zone', () => {
     expect(res.next.available[5].windows.map((x) => x.tabs.map((t) => t.title))).toEqual([['a1'], ['b1']])
   })
 
-  it('a NOW OPEN tab is MOVED into the new group — detached (id 0), the real tab closed, not undoable', () => {
+  it('a NOW OPEN tab is MOVED into the new group — detached (id 0), the real tab closed, one undo step', () => {
     const s = seed()
     const m = buildDndModel(s)
     const liveId = m.windows[m.groups.now.windowIds[0]].tabIds[0]
@@ -202,7 +202,7 @@ describe('moveToNewGroup — the sidebar "new group" drop zone', () => {
     // tab of the popup's own window (spec C7).
     expect(res.next.available[0].windows[0].tabs.map((t) => t.id)).toEqual([11])
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [11] }])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
   it('never strands an empty group when the underlying move is a no-op', () => {

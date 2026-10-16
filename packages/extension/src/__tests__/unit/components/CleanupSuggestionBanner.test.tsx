@@ -60,15 +60,15 @@ describe('CleanupSuggestionBanner', () => {
     expect(localStorage.getItem('cleanup_banner_dismissed_until')).toBeTruthy()
   })
 
-  it('remove stale calls removeStaleTabs for each stale group index and shows success toast', async () => {
+  it('remove stale calls removeStaleTabs ONCE for every stale group (one undo step) and shows success toast', async () => {
     mockUseCleanupSuggestions.mockReturnValue({ staleTabs: makeTabs(6), staleGroupIndexes: [1, 4], staleThresholdDays: 30, thresholdMs: 12345 })
     render(React.createElement(CleanupSuggestionBanner))
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /remove stale/i }))
     })
     await waitFor(() => expect(mockToastSuccess).toHaveBeenCalled())
-    expect(mockRemoveStaleTabs).toHaveBeenCalledWith({ groupIndex: 1, staleThresholdMs: 12345 })
-    expect(mockRemoveStaleTabs).toHaveBeenCalledWith({ groupIndex: 4, staleThresholdMs: 12345 })
+    expect(mockRemoveStaleTabs).toHaveBeenCalledTimes(1)
+    expect(mockRemoveStaleTabs).toHaveBeenCalledWith({ groupIndexes: [1, 4], staleThresholdMs: 12345 })
     expect(mockToastSuccess).toHaveBeenCalledWith('Removed 6 stale tabs')
   })
 

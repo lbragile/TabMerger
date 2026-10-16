@@ -25,7 +25,8 @@ import type { DndInsertion } from '@/lib/dndInsertion'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
 vi.mock('@/lib/localDb', () => ({
-  saveGroupsState: vi.fn().mockResolvedValue(undefined),
+  // (records the drop's undo step the way the real write does: inside the write, once stored)
+  saveGroupsState: vi.fn(async (s: unknown, o?: { afterWrite?: (stored: unknown) => void }) => { o?.afterWrite?.(s) }),
   setSetting: vi.fn().mockResolvedValue(undefined),
   getSetting: vi.fn().mockResolvedValue({})
 }))
@@ -109,7 +110,13 @@ describe('multi-drag: the selection moves as one block and stays selected at its
     expect(result.current.active?.selectionIds).toEqual(['work::w0::t0', 'work::w1::t0', 'work::w1::t1'])
 
     let release!: () => void
-    save.mockImplementationOnce(() => new Promise<void>((r) => (release = r)))
+    save.mockImplementationOnce(
+      (s: unknown, o?: { afterWrite?: (stored: unknown) => void }) =>
+        new Promise<void>((r) => (release = () => {
+          o?.afterWrite?.(s) // (the step is recorded inside the write, once it is stored)
+          r()
+        }))
+    )
     let pending!: Promise<void>
     act(() => {
       pending = result.current.onDragEnd(endEvt('work::w1::t0', 'play::w0::t1', { type: 'tab' })) as Promise<void>
@@ -138,7 +145,8 @@ describe('multi-drag: the selection moves as one block and stays selected at its
     expect(chromeStub.windows.create).toHaveBeenCalledWith({ url: ['https://e.x/a1', 'https://e.x/a2'], focused: false })
     expect(chromeStub.tabs.remove).not.toHaveBeenCalled()
     expect(useUIStore.getState().selectedItems).toEqual([])
-    expect(useUIStore.getState().undoStack).toHaveLength(0)
+    // the sources lost saved tabs: ONE undo step (it also closes the tabs this drop opened)
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
   })
 
   it('dragging an UNSELECTED tab while a selection exists: selection untouched during dragstart, cleared in the NEXT frame; a single-item move commits', async () => {
@@ -402,6 +410,6 @@ describe('runSideEffects', () => {
 
   it('a failing chrome call never throws out of the drop (best effort)', async () => {
     vi.stubGlobal('chrome', { tabs: { create: vi.fn().mockRejectedValue(new Error('gone')) } })
-    await expect(runSideEffects([{ type: 'tabs.create', windowId: 1, url: 'u', active: false }])).resolves.toBeUndefined()
+    await expect(runSideEffects([{ type: 'tabs.create', windowId: 1, url: 'u', active: false }])).resolves.toEqual([])
   })
 })

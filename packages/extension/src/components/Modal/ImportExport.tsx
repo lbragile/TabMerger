@@ -2,11 +2,10 @@ import { useState, useRef } from 'react';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { useGroups, useSetGroupsState, useImportGroups } from '@/hooks/useGroups';
+import { useGroups, useImportGroups, useReplaceSavedGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { exportGroupsState, importGroupsState, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@/lib/importExport';
 import { toast } from '@/lib/toast';
-import { prepareImportedState } from '@/lib/syncDirty';
 import { blockImportOverFreeLimit, countSavedGroupsAndTabs } from '@/lib/tierLimits';
 
 interface ImportExportModalProps {
@@ -18,7 +17,7 @@ interface ImportExportModalProps {
 export function ImportExportModal({ mode: initialMode, data: _data, onClose }: ImportExportModalProps) {
   const [activeTab, setActiveTab] = useState<string>(initialMode === 'import' ? 'import' : 'export');
   const { data: groupsState } = useGroups();
-  const setGroupsState = useSetGroupsState();
+  const replaceSavedGroups = useReplaceSavedGroups();
   const importGroups = useImportGroups();
   const { maxGroups, maxTabs } = useEntitlements();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +44,9 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
       // Validates and rebuilds every group, window and tab; throws when the file is not a state export
       const { state: parsed, skipped } = importGroupsState(text);
       if (blockImportOverFreeLimit({ maxGroups, maxTabs }, [], parsed.available, 'replace')) return;
-      await setGroupsState(prepareImportedState(parsed, groupsState));
+      // Replaces every saved group (Now Open is kept), as ONE undoable step, and asks for the
+      // replaced groups' remote delete: the same path as restoring an automatic backup
+      await replaceSavedGroups.mutateAsync(parsed.available.filter((g) => !g.permanent));
       toast.success(`Groups imported successfully${skippedSuffix(skipped)}`);
       onClose();
     } catch {

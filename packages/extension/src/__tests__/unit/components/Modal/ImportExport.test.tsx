@@ -5,7 +5,7 @@ import { ImportExportModal } from '@/components/Modal/ImportExport'
 
 const {
   mockUseGroups,
-  mockSetGroupsState,
+  mockReplaceSavedGroups,
   mockImportGroupsMutateAsync,
   mockParseBookmarksHtml,
   mockParseOneTabs,
@@ -14,7 +14,7 @@ const {
   mockUseEntitlements,
 } = vi.hoisted(() => ({
   mockUseGroups: vi.fn(),
-  mockSetGroupsState: vi.fn().mockResolvedValue(undefined),
+  mockReplaceSavedGroups: vi.fn().mockResolvedValue(undefined),
   mockImportGroupsMutateAsync: vi.fn().mockResolvedValue(undefined),
   mockParseBookmarksHtml: vi.fn(),
   mockParseOneTabs: vi.fn(),
@@ -25,7 +25,7 @@ const {
 
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
-  useSetGroupsState: () => mockSetGroupsState,
+  useReplaceSavedGroups: () => ({ mutateAsync: mockReplaceSavedGroups }),
   useImportGroups: () => ({ mutateAsync: mockImportGroupsMutateAsync }),
 }))
 
@@ -77,12 +77,12 @@ describe('ImportExportModal — import JSON', () => {
     const file = makeFile(JSON.stringify({ available: [{ name: 'x', windows: [] }] }), 'export.json')
     const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [file] } })
-    await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalled())
-    // saved groups are re-created as NEW groups (fresh id, pending, no server bookkeeping)
-    const stored = mockSetGroupsState.mock.calls[0][0] as { available: Array<{ id: string; name: string; pendingSync: boolean }> }
-    expect(stored.available).toHaveLength(1)
-    expect(stored.available[0]).toMatchObject({ name: 'x', pendingSync: true })
-    expect(typeof stored.available[0].id).toBe('string')
+    await waitFor(() => expect(mockReplaceSavedGroups).toHaveBeenCalled())
+    // the saved groups replace every saved group through the undoable replace mutation (which
+    // re-creates them as NEW groups: tested on useReplaceSavedGroups)
+    const stored = mockReplaceSavedGroups.mock.calls[0][0] as Array<{ name: string; permanent?: boolean }>
+    expect(stored).toHaveLength(1)
+    expect(stored[0]).toMatchObject({ name: 'x' })
     expect(mockToastSuccess).toHaveBeenCalledWith('Groups imported successfully')
     expect(onClose).toHaveBeenCalled()
   })
@@ -95,10 +95,10 @@ describe('ImportExportModal — import JSON', () => {
     ]
     const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [makeFile(JSON.stringify({ available }), 'mixed.json')] } })
-    await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalled())
-    const stored = mockSetGroupsState.mock.calls[0][0] as { available: Array<{ name: string; windows: Array<{ tabs: Array<{ url: string }> }> }> }
-    expect(stored.available.map((g) => g.name)).toEqual(['Mixed'])
-    expect(stored.available[0].windows[0].tabs.map((t) => t.url)).toEqual(['https://ok.example.com'])
+    await waitFor(() => expect(mockReplaceSavedGroups).toHaveBeenCalled())
+    const stored = mockReplaceSavedGroups.mock.calls[0][0] as Array<{ name: string; windows: Array<{ tabs: Array<{ url: string }> }> }>
+    expect(stored.map((g) => g.name)).toEqual(['Mixed'])
+    expect(stored[0].windows[0].tabs.map((t) => t.url)).toEqual(['https://ok.example.com'])
     expect(mockToastSuccess).toHaveBeenCalledWith('Groups imported successfully, 3 skipped')
   })
 
@@ -107,7 +107,7 @@ describe('ImportExportModal — import JSON', () => {
     const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [makeFile(JSON.stringify({ available: [{ name: 'x' }, 7] }), 'none.json')] } })
     await waitFor(() => expect(mockToastError).toHaveBeenCalledWith('Invalid JSON file'))
-    expect(mockSetGroupsState).not.toHaveBeenCalled()
+    expect(mockReplaceSavedGroups).not.toHaveBeenCalled()
   })
 
   it('applies the free-plan check to the validated groups, not to the raw file', async () => {
@@ -117,7 +117,7 @@ describe('ImportExportModal — import JSON', () => {
     const available = [{ name: 'Kept', windows: [] }, { name: 'Not a group' }]
     const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [makeFile(JSON.stringify({ available }), 'two.json')] } })
-    await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalled())
+    await waitFor(() => expect(mockReplaceSavedGroups).toHaveBeenCalled())
     expect(mockToastSuccess).toHaveBeenCalledWith('Groups imported successfully, 1 skipped')
   })
 
@@ -136,7 +136,7 @@ describe('ImportExportModal — import JSON', () => {
     const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [file] } })
     await waitFor(() => expect(mockToastError).toHaveBeenCalledWith('Invalid JSON file'))
-    expect(mockSetGroupsState).not.toHaveBeenCalled()
+    expect(mockReplaceSavedGroups).not.toHaveBeenCalled()
   })
 })
 
@@ -272,6 +272,6 @@ describe('ImportExportModal — Free-tier limit gating', () => {
     fireEvent.change(input, { target: { files: [file] } })
     await waitFor(() => expect(mockToastError).toHaveBeenCalled())
     expect(mockToastError).toHaveBeenCalledWith('Free plan allows up to 2 groups.', expect.anything())
-    expect(mockSetGroupsState).not.toHaveBeenCalled()
+    expect(mockReplaceSavedGroups).not.toHaveBeenCalled()
   })
 })

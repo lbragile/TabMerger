@@ -34,3 +34,17 @@ test.describe('Notes', () => {
     await expect(page.locator('textarea')).toHaveValue('Remember to update docs');
   });
 });
+
+// The "Allow TabMerger on <site>" prompt (WebAppConnectBanner) is Firefox-only: Firefox MV3 doesn't
+// grant a content-script site added by an update. Playwright can't load a Firefox extension, so the
+// Firefox side is covered by unit tests; this guards the Chromium side, where the website reaches the
+// extension through externally_connectable and there is no site access to ask for.
+test.describe('Firefox site-access prompt', () => {
+  test('never shows in the Chromium popup', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
+    await expect(page.getByRole('button', { name: 'Work', exact: true })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Website access' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Allow TabMerger on/ })).toHaveCount(0);
+  });
+});

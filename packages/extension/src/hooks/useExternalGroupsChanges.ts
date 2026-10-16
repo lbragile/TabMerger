@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
+import { GROUPS_CHANGED_MESSAGE, type GroupsChangedMessage } from '@/lib/groupsChangedMessage';
+import { consumeOwnOpenedTab } from '@/lib/ownOpenedTabs';
+import { reanchorHistoryCursor } from '@/lib/undoHistory';
 import { useUIStore } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
@@ -17,10 +19,22 @@ export function useExternalGroupsChanges() {
 
   useEffect(() => {
     const onMessage = (msg: unknown) => {
-      if ((msg as { type?: string } | undefined)?.type !== GROUPS_CHANGED_MESSAGE) return;
+      const m = msg as Partial<GroupsChangedMessage> | undefined;
+      if (m?.type !== GROUPS_CHANGED_MESSAGE) return;
       // Another context changed the groups: an undo snapshot taken before that would prune or
       // revert the change when restored, so the history is dropped (simplest deterministic rule).
-      useUIStore.getState().clearHistory();
+      // Except a URL rule saving a tab THIS popup just opened: that save is part of the popup's
+      // own action (lib/ownOpenedTabs.ts), and undoing the action rightly takes it back too.
+      // (once, shortly after opening it, at the URL it was opened with: see consumeOwnOpenedTab)
+      const ownTabRule = m.cause?.kind === 'url-rule' && typeof m.cause.tabId === 'number' && consumeOwnOpenedTab(m.cause.tabId, m.cause.url);
+      // The kept history must not then refuse its next Undo for that save (a change that did not go
+      // through the history, see `changedOutsideHistory`): the cursor is re-anchored on it instead.
+      if (ownTabRule) void reanchorHistoryCursor(m.saved);
+      // A write that left the saved data as it found it (another TabMerger page mirroring its live
+      // tabs into Now Open, on every tab event) cannot be reverted by any entry: Now Open is never
+      // restored, so the history stays. The writer declares it (`savedUnchanged`), so a late or
+      // reordered message does not matter. Only exactly `true` keeps it; anything else clears.
+      else if (m.savedUnchanged !== true) useUIStore.getState().clearHistory();
       // cancelRefetch:false is mandatory on the groups key (spec C11): the default cancels an
       // in-flight fetch and rejects any mutation that joined it.
       void qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false });

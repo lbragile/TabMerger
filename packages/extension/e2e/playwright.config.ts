@@ -23,4 +23,8 @@ export default defineConfig({
   },
   // Single worker: each test gets its own persistent context via the fixture
   workers: 1,
+  // Shard by test, not by spec file. Without this `--shard=N/M` hands out whole files, and
+  // the uneven file sizes made the slowest CI shard ~1.5x the fastest. A file that must run
+  // in order opts back in with `test.describe.configure({ mode: 'serial' })` (autoBackupFile).
+  fullyParallel: true,
 });

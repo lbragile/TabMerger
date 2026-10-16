@@ -48,7 +48,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useUpdateWindowNote: () => ({ mutate: mockUpdateWindowNote }),
   useToggleWindowStarred: () => ({ mutate: mockToggleStarred }),
   useToggleWindowIncognito: () => ({ mutate: mockToggleIncognito }),
-  useMoveWindow: () => ({ mutate: mockMoveWindow }),
+  useMoveWindow: () => ({ mutate: mockMoveWindow, mutateAsync: mockMoveWindow }),
   useSortTabs: () => ({ mutate: mockSortTabs }),
   useGroups: () => mockUseGroups(),
 }))

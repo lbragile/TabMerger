@@ -60,8 +60,8 @@ describe('POST /api/uninstall-feedback', () => {
     expect(await res.json()).toEqual({ ok: true })
     expect(sendMock).toHaveBeenCalledTimes(1)
     const mail = sent()
-    expect(mail.to).toBe('tabmerger.support@gmail.com')
-    expect(mail.from).toBe('TabMerger Support <onboarding@resend.dev>')
+    expect(mail.to).toBe('support@tabmerger.com')
+    expect(mail.from).toBe('TabMerger Support <support@tabmerger.com>')
     expect(mail.replyTo).toBe('user@example.com')
     expect(mail.text).toContain('- Something did not work (bug)')
     expect(mail.text).toContain('- It slowed my browser down (slow)')
@@ -151,7 +151,7 @@ describe('POST /api/uninstall-feedback', () => {
     })
     expect(res.status).toBe(200)
     const mail = sent()
-    expect(mail.to).toBe('tabmerger.support@gmail.com')
+    expect(mail.to).toBe('support@tabmerger.com')
     expect(JSON.stringify(mail)).not.toContain('<script>')
     expect(JSON.stringify(mail)).not.toContain('safari')
     expect(JSON.stringify(mail)).not.toContain('nightly')
@@ -230,7 +230,17 @@ describe('POST /api/uninstall-feedback', () => {
       vi.stubEnv('UNINSTALL_FEEDBACK_TO_EMAIL', '')
       vi.stubEnv('CONTACT_TO_EMAIL', '')
       await post(validBody)
-      expect(sent().to).toBe('tabmerger.support@gmail.com')
+      expect(sent().to).toBe('support@tabmerger.com')
+    })
+
+    it('skips an invalid UNINSTALL_FEEDBACK_TO_EMAIL for the next valid one', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      vi.stubEnv('UNINSTALL_FEEDBACK_TO_EMAIL', 'a@example.com, b@example.com')
+      vi.stubEnv('CONTACT_TO_EMAIL', 'contact@example.com')
+      await post(validBody)
+      expect(sent().to).toBe('contact@example.com')
+      expect(warn).toHaveBeenCalledWith('[supportEmail] ignoring invalid UNINSTALL_FEEDBACK_TO_EMAIL')
+      warn.mockRestore()
     })
 
     it('sends from CONTACT_FROM_EMAIL when set', async () => {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Sparkles, X } from 'lucide-react';
 import { useSuggestSessions, QuotaExceededError } from '@/hooks/useAI';
-import { useGroups, useArchiveGroup } from '@/hooks/useGroups';
+import { useGroups, useArchiveGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
 import { useUIStore } from '@/stores/uiStore';
@@ -21,7 +21,7 @@ export function AIGroupSuggestion() {
   const { aiFeatures, loading } = useEntitlements();
   const { data: groupsState } = useGroups();
   const { mutateAsync: suggest } = useSuggestSessions();
-  const { mutateAsync: archiveGroup } = useArchiveGroup();
+  const { mutateAsync: archiveGroups } = useArchiveGroups();
   const openModal = useUIStore((s) => s.openModal);
 
   // Read persisted state once on mount
@@ -69,11 +69,9 @@ export function AIGroupSuggestion() {
    * "Archive all" button passes every listed stale group id at once) and updates the
    * persisted suggestion to drop whichever ids got archived. */
   const handleArchive = async (groupIds: string[]) => {
-    for (const groupId of groupIds) {
-      const groupIndex = groupsState?.available.findIndex((g) => g.id === groupId) ?? -1;
-      if (groupIndex === -1) continue;
-      await archiveGroup(groupIndex);
-    }
+    // ONE write and one undo step for all of them (an Undo brings every one of them back)
+    const present = groupIds.filter((id) => groupsState?.available.some((g) => g.id === id));
+    if (present.length > 0) await archiveGroups(present);
     const remainingIds = (stored?.staleGroupIds ?? []).filter((id) => !groupIds.includes(id));
     if (remainingIds.length === 0) {
       dismiss();

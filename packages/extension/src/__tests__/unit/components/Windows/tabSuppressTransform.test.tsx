@@ -64,6 +64,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useUpdateTabNote: () => ({ mutate: vi.fn() }),
   useSetTabReminder: () => ({ mutate: vi.fn() }),
   useClearTabReminder: () => ({ mutate: vi.fn() }),
+  useRenameTab: () => ({ mutateAsync: vi.fn().mockResolvedValue(undefined) }),
   GROUPS_QUERY_KEY: ['groups'],
 }))
 vi.mock('@/stores/uiStore', () => ({

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import PrivacyPage from '@/app/(marketing)/privacy/page'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
 const SECTION_IDS = [
   'what-we-collect',
@@ -23,6 +24,12 @@ describe('PrivacyPage', () => {
       expect(el).toBeInTheDocument()
       expect(el?.tagName.toLowerCase()).toBe('section')
     })
+  })
+
+  it('names the support address in the Contact section', () => {
+    render(<PrivacyPage />)
+    const contact = document.getElementById('contact') as HTMLElement
+    expect(within(contact).getByRole('link', { name: SUPPORT_EMAIL })).toHaveAttribute('href', `mailto:${SUPPORT_EMAIL}`)
   })
 
   it('renders a sticky, lg-only TOC nav with links matching every section id', () => {

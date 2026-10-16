@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import ContactPage from '@/app/(marketing)/contact/page'
@@ -48,7 +49,15 @@ describe('ContactPage', () => {
     render(<ContactPage />)
     await fillAndSubmit(user)
 
-    expect(await screen.findByText(/something went wrong/i)).toBeInTheDocument()
+    const error = await screen.findByText(/something went wrong/i)
+    expect(within(error).getByRole('link', { name: SUPPORT_EMAIL })).toHaveAttribute('href', `mailto:${SUPPORT_EMAIL}`)
+  })
+
+  it('offers the support address as a mailto link', () => {
+    render(<ContactPage />)
+    const links = screen.getAllByRole('link', { name: SUPPORT_EMAIL })
+    expect(links).toHaveLength(1)
+    expect(links[0]).toHaveAttribute('href', `mailto:${SUPPORT_EMAIL}`)
   })
 
   it('shows a generic error message on network failure', async () => {

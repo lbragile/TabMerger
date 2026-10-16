@@ -26,7 +26,8 @@ import { applyMove } from '@/lib/dndMove'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
 vi.mock('@/lib/localDb', () => ({
-  saveGroupsState: vi.fn().mockResolvedValue(undefined),
+  // (records the drop's undo step the way the real write does: inside the write, once stored)
+  saveGroupsState: vi.fn(async (s: unknown, o?: { afterWrite?: (stored: unknown) => void }) => { o?.afterWrite?.(s) }),
   getGroupsState: vi.fn(),
   setSetting: vi.fn().mockResolvedValue(undefined),
   getSetting: vi.fn().mockResolvedValue({})
@@ -302,28 +303,31 @@ describe('#18 a failed write only rolls back what is still ours', () => {
     }
   })
 
-  it('the undo entry is removed and the redo stack the push wiped comes back', async () => {
+  it('the step is recorded only once the write is stored: while it is pending and after it failed there is none, and Redo is untouched', async () => {
     const redoSnap = seed()
     useUIStore.setState({ redoStack: [redoSnap] })
     const { result } = setup()
     start(result, 'work::w0::t0')
     const drop = heldDrop(result, 'work::w0::t0', 'play', 'group')
-    expect(useUIStore.getState().undoStack).toHaveLength(1)
-    expect(useUIStore.getState().redoStack).toHaveLength(0)
+    expect(useUIStore.getState().undoStack).toHaveLength(0)
+    expect(useUIStore.getState().redoStack).toEqual([redoSnap])
     await drop.fail()
     expect(useUIStore.getState().undoStack).toHaveLength(0)
     expect(useUIStore.getState().redoStack).toEqual([redoSnap])
   })
 
-  it('a NEWER undo entry on top is never popped', async () => {
+  it('G6: an entry another action recorded while the drop was saving is never removed by its failure', async () => {
     const { result } = setup()
     start(result, 'work::w0::t0')
     const drop = heldDrop(result, 'work::w0::t0', 'play', 'group')
     const newer = seed()
-    act(() => useUIStore.getState().pushUndo(newer))
+    act(() => {
+      useUIStore.getState().pushUndo(newer)
+    })
+    const entry = useUIStore.getState().undoStack[0]
     await drop.fail()
-    expect(useUIStore.getState().undoStack[0]).toBe(newer)
-    expect(useUIStore.getState().undoStack).toHaveLength(2)
+    expect(useUIStore.getState().undoStack).toEqual([entry])
+    expect(useUIStore.getState().undoStack[0]).toBe(entry)
   })
 })
 
@@ -381,7 +385,8 @@ describe('a throw AFTER the write was issued is handled as a probable SUCCESS', 
 
   /** Drag a selected tab so `setSelection` (post-cache-write) is on the commit path. */
   function throwAfterWrite(persist: Promise<void>) {
-    save.mockReturnValueOnce(persist)
+    // (the step is recorded inside the write, once it is stored)
+    save.mockImplementationOnce((s: unknown, o?: { afterWrite?: (stored: unknown) => void }) => persist.then(() => o?.afterWrite?.(s)))
     useUIStore.setState({
       selectionMode: true,
       selectedItems: [

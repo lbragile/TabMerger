@@ -78,7 +78,7 @@ describe('drop commit with a stale base rev', () => {
     save.mockResolvedValue(6)
     const { qc, run } = drop()
     await run()
-    expect(save).toHaveBeenCalledWith(expect.anything(), { expectedRev: 5 })
+    expect(save).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ expectedRev: 5 }))
     expect(qc.getQueryData<GroupsState>(['groups'])?.rev).toBe(6)
   })
 

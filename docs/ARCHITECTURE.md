@@ -55,7 +55,7 @@ There is no content script. Tab-preview metadata (OG image/description) comes fr
 
 ### Web ↔ extension bridge
 
-`externally_connectable.matches` is `${VITE_WEB_APP_URL}/*` for the build mode. `ids` holds the published store ID (`CHROME_EXTENSION_ID`, or `CHROME_EXTENSION_ID_BETA` in beta mode) plus the fixed dev ID. The web app calls `sendToExtension(message)` / `sendToKnownExtension(message)` from `packages/web/lib/extensionMessaging.ts`, which try each ID in `EXTENSION_IDS` (`packages/web/lib/extensionId.ts` — built from `NEXT_PUBLIC_CHROME_EXTENSION_ID`, `NEXT_PUBLIC_EDGE_EXTENSION_ID`, and the dev ID in development) in order until one answers, since an Edge Add-ons store install has a different extension ID from the Chrome Web Store build of the same code. The responding ID is cached for the session so later calls (e.g. `SYNC_NOW` after `PING` already succeeded) skip straight to it. `SYNC_AUTH` carries live session tokens, so it is only ever sent via `sendToKnownExtension` (the cached, already-confirmed ID) — never sprayed across every candidate ID. The extension handles these messages in `onMessageExternal`:
+`externally_connectable.matches` is `${VITE_WEB_APP_URL}/*` for the build mode, plus `${origin}/*` for each extra site in the comma-separated `VITE_EXTRA_WEB_APP_URLS` (used while the site moves between hosts; parsed strictly by `packages/extension/src/lib/webAppOrigins.ts`, which fails the build on anything but a bare https origin). The Firefox web bridge matches the same list, and the background accepts relayed bridge messages only from it. Outgoing URLs always use `VITE_WEB_APP_URL`. `ids` holds the published store ID (`CHROME_EXTENSION_ID`, or `CHROME_EXTENSION_ID_BETA` in beta mode) plus the fixed dev ID. The web app calls `sendToExtension(message)` / `sendToKnownExtension(message)` from `packages/web/lib/extensionMessaging.ts`, which try each ID in `EXTENSION_IDS` (`packages/web/lib/extensionId.ts` — built from `NEXT_PUBLIC_CHROME_EXTENSION_ID`, `NEXT_PUBLIC_EDGE_EXTENSION_ID`, and the dev ID in development) in order until one answers, since an Edge Add-ons store install has a different extension ID from the Chrome Web Store build of the same code. The responding ID is cached for the session so later calls (e.g. `SYNC_NOW` after `PING` already succeeded) skip straight to it. `SYNC_AUTH` carries live session tokens, so it is only ever sent via `sendToKnownExtension` (the cached, already-confirmed ID) — never sprayed across every candidate ID. The extension handles these messages in `onMessageExternal`:
 
 | Message | Effect |
 |---|---|
@@ -76,7 +76,7 @@ These failures are currently silent. A diagnostics screen is planned but has not
 | `demo` | `pnpm build:extension:demo` | TabMerger | `.env.demo` (committed; only `VITE_DEMO_BUILD=true`) | — (demo data, no backend) |
 | `production` | `pnpm build`, `pnpm zip` | TabMerger | `.env.production` (gitignored) | `https://tabmerger.vercel.app` / project `jzgz…` |
 
-In CI there are no env files. `.github/workflows/publish.yml` sets each build's `VITE_WEB_APP_URL`, `VITE_SUPABASE_*` and extension IDs from its top-level `env:` (public values, not secrets): store BETA builds use the preview site and preview Supabase project (`BETA_*`), stable builds use production (`PROD_*`). See `docs/PUBLISHING.md` Step 5.
+In CI there are no env files. `.github/workflows/publish.yml` sets each build's `VITE_WEB_APP_URL`, `VITE_EXTRA_WEB_APP_URLS`, `VITE_SUPABASE_*` and extension IDs from its top-level `env:` (public values, not secrets): store BETA builds use the preview site and preview Supabase project (`BETA_*`), stable builds use production (`PROD_*`). See `docs/PUBLISHING.md` Step 5.
 
 ---
 
@@ -101,8 +101,8 @@ In CI there are no env files. `.github/workflows/publish.yml` sets each build's 
 | `sessions/[id]` | Deletes a saved session. |
 | `og-preview` | Server-side OG metadata fetch for tab previews and share pages. |
 | `track` | GA4 Measurement Protocol proxy for extension events. |
-| `contact` | Contact form via Resend. |
-| `uninstall-feedback` | Uninstall survey answers from the public `/uninstalled` page (opened by `runtime.setUninstallURL`) via Resend to `UNINSTALL_FEEDBACK_TO_EMAIL` (falls back to `CONTACT_TO_EMAIL`). Shares the rate limiter, diagnostics and send helper with `contact` (`lib/supportEmail.ts`). |
+| `contact` | Contact form via Resend, from `CONTACT_FROM_EMAIL` to `CONTACT_TO_EMAIL` (defaults to the `tabmerger.com` support address, `DEFAULT_FROM`/`DEFAULT_TO` in `lib/supportEmail.ts`; `tabmerger.com` is the verified Resend sending domain; an invalid env value is ignored with a warning). |
+| `uninstall-feedback` | Uninstall survey answers from the public `/uninstalled` page (opened by `runtime.setUninstallURL`) via Resend to `UNINSTALL_FEEDBACK_TO_EMAIL` (falls back to `CONTACT_TO_EMAIL`, then `DEFAULT_TO`). Shares the rate limiter, diagnostics and send helper with `contact` (`lib/supportEmail.ts`). |
 
 - **CORS:** `proxy.ts` answers preflights and adds CORS headers on `/api/*` for `chrome-extension://` and `moz-extension://` origins only. It never sends `Allow-Credentials`, so authenticated routes rely on the Bearer token.
 - **Encrypted data:** the dashboard decrypts on the client after a passphrase prompt (`lib/encryption/context.tsx`, which caches the key in `sessionStorage`). Server code never decrypts. A route that needs plaintext content accepts it from the client in the request body, as `organize` does. Sharing goes further and never touches an API route at all — `lib/sharing.ts` encrypts and inserts into `shared_bundles` directly from the browser (see `docs/DATABASE.md`).

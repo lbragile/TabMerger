@@ -15,7 +15,8 @@
 // give the new permission a plain-English justification in packages/extension/CHROMEWEBSTORE.md.
 //
 // `externally_connectable` is intentionally not compared: it is derived from build-time env
-// (VITE_WEB_APP_URL, extension IDs) and differs per environment.
+// (VITE_WEB_APP_URL, VITE_EXTRA_WEB_APP_URLS, extension IDs) and differs per environment. Those
+// origins are validated when the extension builds (packages/extension/src/lib/webAppOrigins.ts).
 import { readFileSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 

@@ -26,7 +26,8 @@ vi.mock('@/hooks/useAI', () => ({
 }))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
-  useArchiveGroup: () => ({ mutateAsync: mockArchiveGroup }),
+  // one write (and one undo step) for every group archived at once
+  useArchiveGroups: () => ({ mutateAsync: mockArchiveGroup }),
 }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/components/AIQuotaExceededPrompt', () => ({
@@ -108,7 +109,7 @@ describe('AIGroupSuggestion', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Review' }))
     const { onArchive } = mockOpenModal.mock.calls[0][1] as { onArchive: (groupId: string) => Promise<void> }
     await onArchive('g1')
-    expect(mockArchiveGroup).toHaveBeenCalledWith(0)
+    expect(mockArchiveGroup).toHaveBeenCalledWith(['g1'])
     await waitFor(() => expect(globalThis.chrome.storage.local.set).toHaveBeenCalledWith({
       tm_ai_suggestion: { message: 'You have 2 groups untouched for 2 weeks.', staleGroupIds: ['g2'], dismissed: false },
     }))
@@ -149,8 +150,8 @@ describe('AIGroupSuggestion', () => {
     render(React.createElement(AIGroupSuggestion))
     await screen.findByText('You have 2 groups untouched for 2 weeks.')
     fireEvent.click(screen.getByRole('button', { name: 'Archive' }))
-    await waitFor(() => expect(mockArchiveGroup).toHaveBeenCalledWith(0))
-    expect(mockArchiveGroup).toHaveBeenCalledWith(1)
+    await waitFor(() => expect(mockArchiveGroup).toHaveBeenCalledWith(['g1', 'g2']))
+    expect(mockArchiveGroup).toHaveBeenCalledTimes(1)
     expect(mockOpenModal).not.toHaveBeenCalledWith('archiveStaleGroups', expect.anything())
     await waitFor(() => expect(screen.queryByText('You have 2 groups untouched for 2 weeks.')).toBeNull())
     expect(globalThis.chrome.storage.local.set).toHaveBeenLastCalledWith({
@@ -171,8 +172,8 @@ describe('AIGroupSuggestion', () => {
     expect(mockArchiveGroup).not.toHaveBeenCalled()
     const { onConfirm } = mockOpenModal.mock.calls[0][1] as { onConfirm: () => Promise<void> }
     await onConfirm()
-    expect(mockArchiveGroup).toHaveBeenCalledWith(0)
-    expect(mockArchiveGroup).toHaveBeenCalledWith(1)
+    expect(mockArchiveGroup).toHaveBeenCalledWith(['g1', 'g2'])
+    expect(mockArchiveGroup).toHaveBeenCalledTimes(1)
   })
 
   it('shows both Review and Archive banner CTAs even when only one stale group is listed', async () => {

@@ -42,7 +42,7 @@ interface UpdatesManifest {
 }
 
 /**
- * @param webAppUrl e.g. "https://tabmerger.vercel.app" — no trailing slash expected,
+ * @param webAppUrl e.g. "https://preview.tabmerger.com" — no trailing slash expected,
  *   but one is tolerated (stripped) so a copy-pasted secret with a trailing `/`
  *   doesn't produce a double slash in `update_link`.
  */

@@ -333,7 +333,7 @@ describe('applyMove — cross-group', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('applyMove — Now Open delegation', () => {
-  it('23. dragging a live tab OUT of Now Open into a saved group MOVES it: saved group gets a detached copy, available[0] not mutated, a tabs.remove closes the real tab, not undoable', () => {
+  it('23. dragging a live tab OUT of Now Open into a saved group MOVES it: saved group gets a detached copy, available[0] not mutated, a tabs.remove closes the real tab, one undo step', () => {
     const s = state([
       group('now-open', [liveWin(500, [liveTab(9, 'live-9'), liveTab(10, 'live-10')])], { permanent: true }),
       group('saved-a', [win([tab('a1')])]),
@@ -355,7 +355,7 @@ describe('applyMove — Now Open delegation', () => {
     // anchor tab can't dismiss it mid-drop (spec C7).
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9] }])
     // Undo can't faithfully reopen a closed tab, so the move stays out of the stack.
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
   it('24. reordering a tab WITHIN Now Open: emits a chrome.tabs.move side-effect with the right windowId + index, no direct mutation of available[0]', () => {
@@ -386,10 +386,10 @@ describe('applyMove — Now Open delegation', () => {
     // onto the Now Open ROW → a NEW real window (not a tab in an existing live window),
     // never focused (a focused new window dismisses the toolbar popup)
     expect(res.sideEffects).toEqual([{ type: 'windows.create', url: 'https://go.example', focused: false }])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
-  it('25b. dragging a SAVED whole window INTO Now Open: one windows.create side-effect, source group loses the window + is bumped, not undoable', () => {
+  it('25b. dragging a SAVED whole window INTO Now Open: one windows.create side-effect, source group loses the window + is bumped, one undo step', () => {
     const s = state([
       group('now-open', [liveWin(810, [liveTab(1, 'n1')])], { permanent: true }),
       group('saved-a', [
@@ -407,10 +407,10 @@ describe('applyMove — Now Open delegation', () => {
     const creates = res.sideEffects.filter((e) => e.type === 'windows.create')
     expect(creates).toHaveLength(1)
     expect((creates[0] as { url: string[] }).url).toEqual(['https://go1.example', 'https://go2.example'])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
-  it('26. no applyMove that touches Now Open is undoable (source OR target)', () => {
+  it('26. a move out of or into Now Open is undoable; one inside Now Open is not', () => {
     const s = state([
       group('now-open', [liveWin(900, [liveTab(41, 'n1'), liveTab(42, 'n2')])], { permanent: true }),
       group('saved-a', [win([tab('a1')])]),
@@ -419,9 +419,10 @@ describe('applyMove — Now Open delegation', () => {
     const outOfNowOpen = applyMove(m, s, tabRef(0, 0, 0), groupRef(1))
     const intoNowOpen = applyMove(m, s, tabRef(1, 0, 0), groupRef(0))
     const withinNowOpen = applyMove(m, s, tabRef(0, 0, 0), { ...tabRef(0, 0, 1), index: 1 })
-    expect(outOfNowOpen.undoable).toBe(false)
-    expect(intoNowOpen.undoable).toBe(false)
+    expect(outOfNowOpen.undoable).toBe(true)
+    expect(intoNowOpen.undoable).toBe(true)
     expect(withinNowOpen.undoable).toBe(false)
+    // a move that stays inside Now Open changes no saved data: no undo step
     // sanity: a purely-saved move IS undoable
     const savedOnly = applyMove(m, s, winRef(1, 0), groupRef(1))
     expect(savedOnly.undoable).toBe(true)
@@ -490,7 +491,7 @@ describe('applyMove — a drag out of Now Open closes exactly the real tabs it m
           const ids = (removals[0] as { tabIds: number[] }).tabIds
           expect(ids.length).toBeGreaterThan(0)
           expect(ids.every((id) => Number.isInteger(id) && id > 0)).toBe(true)
-          expect(res.undoable).toBe(false)
+          expect(res.undoable).toBe(true)
           // Now Open is never mutated by an out-drag — it re-syncs from the browser.
           expect(res.next.available[0]).toEqual(s.available[0])
         } else {
@@ -533,7 +534,7 @@ describe('applyMove — a drag out of Now Open closes exactly the real tabs it m
     expect(copy.tabs.map((t) => t.title)).toEqual(['live-9', 'live-10'])
     expect(copy.tabs.every((t) => t.id === 0)).toBe(true)
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10] }])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
   it('multi-TAB and multi-WINDOW selections out of Now Open close every live member exactly once', () => {
@@ -547,7 +548,7 @@ describe('applyMove — a drag out of Now Open closes exactly the real tabs it m
       groupRef(1),
     )
     expect(multiTab.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10] }])
-    expect(multiTab.undoable).toBe(false)
+    expect(multiTab.undoable).toBe(true)
 
     const multiWin = applyMove(
       m,
@@ -557,7 +558,7 @@ describe('applyMove — a drag out of Now Open closes exactly the real tabs it m
     )
     // both live windows → all three of their real tabs
     expect(multiWin.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10, 11] }])
-    expect(multiWin.undoable).toBe(false)
+    expect(multiWin.undoable).toBe(true)
   })
 
   it('the non-destructive Now Open side effects still fire: tabs.move (within), tabs.create / windows.create (into)', () => {
@@ -625,7 +626,7 @@ describe('applyMove — a drag out of Now Open closes exactly the real tabs it m
       expect(res.sideEffects).toEqual([
         { type: 'windows.create', url: 'https://example.com/a1', focused: false },
       ])
-      expect(res.undoable).toBe(false)
+      expect(res.undoable).toBe(true)
     })
 
     it('multiple saved tabs dropped on Now Open\'s new-window zone open ONE new window with every url', () => {
@@ -920,7 +921,7 @@ describe('applyMove — the Now Open ROW as a drop target', () => {
     expect(res.sideEffects).toEqual([{ type: 'windows.create', url: 'https://a1.example', focused: false }])
     expect(titles(res.next.available[1])).toEqual([['a2']])
     expect(res.next.available[0]).toEqual(s.available[0])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
   it('a saved WINDOW on the Now Open row opens one unfocused real window with all its urls; the source loses it', () => {
@@ -931,7 +932,7 @@ describe('applyMove — the Now Open ROW as a drop target', () => {
       { type: 'windows.create', url: ['https://a1.example', 'https://a2.example'], focused: false },
     ])
     expect(res.next.available[1].windows).toEqual([])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
   it('a LIVE Now Open tab or window dropped on the Now Open row is not a target (canDrop false; applyMove is a no-op)', () => {

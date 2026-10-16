@@ -88,7 +88,7 @@ function validateBaseUrl(candidate: string | undefined): string | null {
 /**
  * Resolves the base URL for Stripe redirect targets (checkout success/cancel, billing portal
  * return): NEXT_PUBLIC_APP_URL, validated, set per Vercel environment — the real domain in
- * Production, the fixed alias https://tabmerger-preview.vercel.app in Preview (CI points it at
+ * Production, the fixed alias https://preview.tabmerger.com in Preview (CI points it at
  * each new preview deploy, see .github/workflows/deploy-web.yml), localhost in local dev.
  *
  * Deliberately does NOT read VERCEL_URL. It used to, back when previews had only a hashed
@@ -108,7 +108,7 @@ function resolveBaseUrl(): string {
 
   throw new Error(
     'absoluteUrl: could not resolve a base URL. Set NEXT_PUBLIC_APP_URL to a valid absolute ' +
-      'http(s) URL (e.g. https://tabmerger.app, https://tabmerger-preview.vercel.app for ' +
+      'http(s) URL (e.g. https://tabmerger.com, https://preview.tabmerger.com for ' +
       'previews, or http://localhost:3000 for local dev).'
   )
 }

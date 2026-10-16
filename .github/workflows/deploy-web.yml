@@ -163,21 +163,26 @@ jobs:
       # stayed on an older deployment, those redirects would silently return people to
       # older code.
       #
-      # A *.vercel.app name needs no DNS or domain setup; the first alias claims it for
-      # this account. It must be ONE label under vercel.app — a nested name like
-      # preview.tabmerger.vercel.app isn't allowed (and isn't covered by the certificate).
-      # The name also appears in the Supabase redirect allow-list and in the Preview
-      # environment's NEXT_PUBLIC_APP_URL, so change all three together.
-      - name: Point tabmerger-preview.vercel.app at this deployment
+      # preview.tabmerger.com is the canonical preview host: a Cloudflare CNAME (DNS-only)
+      # to Vercel. It is deliberately NOT a project domain, since those follow --prod
+      # deploys, so it has to be aliased here on every preview deploy.
+      # tabmerger-preview.vercel.app stays aliased too: beta builds already installed
+      # call it, so it must keep serving the current code.
+      # Both names are in the Supabase redirect allow-list, and the Preview environment's
+      # NEXT_PUBLIC_APP_URL is ALIAS, so change those together with this step.
+      - name: Point the preview hosts at this deployment
         id: alias
         env:
           URL: ${{ steps.deploy.outputs.url }}
-          ALIAS: tabmerger-preview.vercel.app
+          ALIAS: preview.tabmerger.com
+          ALIASES: preview.tabmerger.com tabmerger-preview.vercel.app
         run: |
-          vercel alias set "$URL" "$ALIAS" --non-interactive || {
-            echo "::error::Deployed to $URL, but couldn't point $ALIAS at it. The name may already belong to another Vercel account, or the token's scope may not own this project (see the pull step's hints)."
-            exit 1
-          }
+          for a in $ALIASES; do
+            vercel alias set "$URL" "$a" --non-interactive || {
+              echo "::error::Deployed to $URL, but couldn't point $a at it. The name may already belong to another Vercel account, or the token's scope may not own this project (see the pull step's hints)."
+              exit 1
+            }
+          done
           echo "url=https://$ALIAS" >> "$GITHUB_OUTPUT"
           {
             echo "### Web preview deployed"

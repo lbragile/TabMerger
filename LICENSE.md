@@ -16,7 +16,7 @@ as expressly permitted in this license.
 1. **Use TabMerger.** You can install TabMerger from its designated extension stores, such as the
    Chrome Web Store, Microsoft Edge Add-ons, and Firefox Add-ons, and use it for any purpose,
    personal or business. That use is covered by the
-   [Terms of Service](https://tabmerger.vercel.app/terms), not by this license.
+   [Terms of Service](https://tabmerger.com/terms), not by this license.
 2. **Read and review the source.** Anyone, including a company or its security team, may view the
    source code in this repository to evaluate, review, or audit TabMerger (for example, its
    end-to-end encryption). This includes the copies a browser or GitHub makes to display it.
@@ -51,7 +51,7 @@ this license grants no other right to change, build, distribute, or use one.
 **Third-party components** included in this project remain under their own licenses.
 
 **Permission requests**, including commercial licensing, go through
-<https://tabmerger.vercel.app/contact>.
+<https://tabmerger.com/contact>.
 
 Required Notice: Copyright (c) 2020-2026 Lior Bragilevsky (https://github.com/lbragile/TabMerger)
 

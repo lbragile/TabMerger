@@ -7,16 +7,19 @@ import { createGroup } from '@/lib/utils';
  *
  * `canDrop` / `applyMove` hold EVERY structural constraint for tab / window / group
  * drags. Neither calls a chrome API: moves that touch the permanent "Now Open" group
- * are described as `DndSideEffect`s for the handler layer to execute, and such moves
- * are always `undoable: false` (Now Open re-syncs from the browser and must never
- * enter the undo stack). `applyMove` only rearranges already-decrypted in-memory
+ * are described as `DndSideEffect`s for the handler layer to execute. `undoable` is
+ * true exactly when the move changed SAVED data (a group gained or lost something): only
+ * a move that stays inside Now Open (a real-browser reorder or detach) is `false`. Now Open
+ * itself never enters the undo history: a restore keeps the live one. `applyMove` only rearranges already-decrypted in-memory
  * state — the commit still goes through the normal `saveGroupsState` path.
  *
  * Dragging anything OUT of Now Open into a saved group MOVES it: the destination gains a
  * DETACHED copy (`id: 0` plus `savedAt` — a saved tab carrying a real browser id would
  * let a later "remove tab" in `useGroups` close the real tab) and the real browser tabs
- * are closed through a `tabs.remove` side effect. It stays `undoable: false`, because
- * undo cannot faithfully reopen a closed tab (history, scroll position, form state).
+ * are closed through a `tabs.remove` side effect. It is undoable as ONE step: Undo removes
+ * the copy and reopens the closed tabs, Redo closes those again (`lib/undoLiveTabs.ts`). A
+ * reopened tab is a new tab at the same URL (its history, scroll position and form state are
+ * gone).
  *
  * `tabs.remove` is the ONE destructive side effect, and it is deliberately not executed
  * verbatim: `runSideEffects` closes every tab at the drop EXCEPT the active tab of the
@@ -678,7 +681,7 @@ function moveGroupsMulti(
  *  - a window (or a multi-window selection) → the window(s) as the new group's contents,
  *  - Now Open sources are MOVED: a detached copy lands here and the real tabs are closed
  *    through `tabs.remove` (the popup window's active tab deferred to popup teardown,
- *    C7); not undoable.
+ *    C7); undoable like every drag-out (see the module doc).
  *
  * The new group is left ACTIVE so the user can see where the drop landed — otherwise the
  * items would vanish into a group that isn't on screen. If the underlying move turns out
@@ -777,7 +780,7 @@ function moveWindow(s: GroupsState, a: HydratedRef, o: HydratedRef, permIndex: n
     return {
       next: { ...s, available },
       sideEffects: closing.length > 0 ? [{ type: 'tabs.remove', tabIds: closing }] : [],
-      undoable: false,
+      undoable: true,
       landed: { type: 'window', positions: locateWindows(available, o.groupIndex, [copy]) }
     };
   }
@@ -796,7 +799,7 @@ function moveWindow(s: GroupsState, a: HydratedRef, o: HydratedRef, permIndex: n
     return {
       next: { ...s, available },
       sideEffects: [{ type: 'windows.create', url: urls, focused: false }],
-      undoable: false
+      undoable: true
     };
   }
 
@@ -946,7 +949,7 @@ function moveTab(
     return {
       next: { ...s, available },
       sideEffects: closing.length > 0 ? [{ type: 'tabs.remove', tabIds: closing }] : [],
-      undoable: false,
+      undoable: true,
       landed: { type: 'tab', positions: locateTabs(available, dest.groupIndex, [copy]) }
     };
   }
@@ -971,7 +974,7 @@ function moveTab(
       ? [{ type: 'tabs.create', windowId: targetWin.id, url, index: dest.index, active: false }]
       : [{ type: 'windows.create', url, focused: false }];
 
-    return { next: { ...s, available }, sideEffects, undoable: false };
+    return { next: { ...s, available }, sideEffects, undoable: true };
   }
 
   // ── purely-saved tab move ────────────────────────────────────────────────
@@ -1131,7 +1134,7 @@ function moveTabsMulti(
         })
       );
     }
-    return { next: savedSel.length > 0 ? { ...s, available } : s, sideEffects, undoable: false };
+    return { next: savedSel.length > 0 ? { ...s, available } : s, sideEffects, undoable: savedSel.length > 0 };
   }
 
   // ── INTO a saved group ────────────────────────────────────────────────────
@@ -1173,7 +1176,7 @@ function moveTabsMulti(
   return {
     next: { ...s, available },
     sideEffects: closingTabs.length > 0 ? [{ type: 'tabs.remove', tabIds: closingTabs }] : [],
-    undoable: liveSel.length === 0,
+    undoable: true,
     landed: { type: 'tab', positions: locateTabs(available, dest.groupIndex, inserted) }
   };
 }
@@ -1184,9 +1187,9 @@ function moveTabsMulti(
  * Analogue of {@link moveTabsMulti} for a multi-window selection. Moves the WHOLE
  * ordered run (sorted by source groupIndex then windowIndex) as ONE undoable op, landing
  * it inside its own starred/unstarred zone in the target (spec §6.1; a selection spanning
- * both zones is refused by `canDrop`). Live Now Open windows are COPIED (detached). A drop
- * INTO Now Open opens one real unfocused window per selected SAVED window
- * (`undoable:false`).
+ * both zones is refused by `canDrop`). Live Now Open windows are MOVED (a detached copy
+ * lands, the real tabs close). A drop INTO Now Open opens one real unfocused window per
+ * selected SAVED window. Either way it is one undoable step.
  */
 function moveWindowsMulti(
   model: DndModel,
@@ -1235,7 +1238,7 @@ function moveWindowsMulti(
       url: orig(w)!.tabs.map((t) => t.url).filter(Boolean) as string[],
       focused: false
     }));
-    return { next: { ...s, available }, sideEffects, undoable: false };
+    return { next: { ...s, available }, sideEffects, undoable: true };
   }
 
   // ── drop onto a saved group row / window ───────────────────────────────────
@@ -1273,7 +1276,7 @@ function moveWindowsMulti(
   return {
     next: { ...s, available },
     sideEffects: closingWindowTabs.length > 0 ? [{ type: 'tabs.remove', tabIds: closingWindowTabs }] : [],
-    undoable: liveSel.length === 0,
+    undoable: true,
     landed: { type: 'window', positions: locateWindows(available, dstGi, movedWindows) }
   };
 }

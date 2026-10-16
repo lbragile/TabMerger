@@ -1,3 +1,34 @@
+## [3.3.1](https://github.com/lbragile/TabMerger/compare/v3.3.0...v3.3.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* move the website address to tabmerger.com ([#78](https://github.com/lbragile/TabMerger/issues/78)) ([b99b5d0](https://github.com/lbragile/TabMerger/commit/b99b5d00581d423da85724bd6d01b49b52489909))
+
+# [3.3.0](https://github.com/lbragile/TabMerger/compare/v3.2.1...v3.3.0) (2026-10-16)
+
+
+### Bug Fixes
+
+* **web:** send support email from support@tabmerger.com ([#77](https://github.com/lbragile/TabMerger/issues/77)) ([eb50c15](https://github.com/lbragile/TabMerger/commit/eb50c15b3c8591b163df3e77c9db11df4152a19f))
+
+
+### Features
+
+* **extension:** trust the tabmerger.com site alongside the vercel.app one ([#76](https://github.com/lbragile/TabMerger/issues/76)) ([3527ab8](https://github.com/lbragile/TabMerger/commit/3527ab8e1834782290be366a1b068f4f55cb01d0))
+
+## [3.2.1](https://github.com/lbragile/TabMerger/compare/v3.2.0...v3.2.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* **extension:** one undo step per action, applied in order ([#73](https://github.com/lbragile/TabMerger/issues/73)) ([a6ea081](https://github.com/lbragile/TabMerger/commit/a6ea081166cb387929948045e9bf03e0a70f8cdb))
+
+
+### Features
+
+* **web:** pointer-following glow backdrop on error pages and /uninstalled ([#74](https://github.com/lbragile/TabMerger/issues/74)) ([75a1791](https://github.com/lbragile/TabMerger/commit/75a1791f146556659ecf60dc6e93929d01871ab3))
+
 # [3.2.0](https://github.com/lbragile/TabMerger/compare/v3.1.3...v3.2.0) (2026-10-15)
 
 

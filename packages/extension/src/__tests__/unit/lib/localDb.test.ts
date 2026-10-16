@@ -366,6 +366,53 @@ describe('localDb — groups-change notification (context menu rebuild trigger)'
     expect(sendMessage).toHaveBeenCalledWith({ type: 'TM_GROUPS_CHANGED' }, expect.any(Function))
   })
 
+  describe('savedUnchanged and saved on the broadcast', () => {
+    const lastMessage = (send: ReturnType<typeof vi.fn>) => send.mock.calls.at(-1)?.[0] as Record<string, unknown>
+    afterEach(() => vi.doUnmock('@/lib/savedData'))
+
+    it('a read-modify-write that changed only Now Open declares savedUnchanged: true; one that changed saved data does not', async () => {
+      const sendMessage = stubChromeRuntime()
+      const { getGroupsState, saveGroupsState, updateGroupsState } = await freshLocalDb()
+      const initial = await getGroupsState()
+      await saveGroupsState({ active: initial.active, available: [initial.available[0], grpForNotifyTests('a')] })
+      sendMessage.mockClear()
+      // the Now Open mirror: a new Now Open object, the saved groups untouched (same objects)
+      await updateGroupsState((s) => ({ ...s, available: s.available.map((g) => (g.permanent ? { ...g, windows: [] } : g)) }))
+      expect(lastMessage(sendMessage)).toEqual({ type: 'TM_GROUPS_CHANGED', savedUnchanged: true })
+      // a saved-data change
+      await updateGroupsState((s) => ({ ...s, available: s.available.map((g) => (g.permanent ? g : { ...g, name: 'renamed' })) }))
+      expect(lastMessage(sendMessage)).toEqual({ type: 'TM_GROUPS_CHANGED' })
+      // an in-place edit returning the state it was given: "don't know", so no flag
+      await updateGroupsState((s) => s)
+      expect(lastMessage(sendMessage)).toEqual({ type: 'TM_GROUPS_CHANGED' })
+    })
+
+    it('a URL-rule write carries the fingerprint of the saved data it stored', async () => {
+      const sendMessage = stubChromeRuntime()
+      const { getGroupsState, updateGroupsState } = await freshLocalDb()
+      await getGroupsState()
+      const { savedDataFingerprint } = await import('@/lib/savedData')
+      const stored = await updateGroupsState((s) => ({ ...s, available: [...s.available, grpForNotifyTests('r')] }), { cause: { kind: 'url-rule', tabId: 5, url: 'https://x.test/' } })
+      expect(lastMessage(sendMessage)).toEqual({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 5, url: 'https://x.test/' }, saved: savedDataFingerprint(stored) })
+    })
+
+    it('a fingerprint or flag that throws never drops the broadcast: it is sent without the field (the receiver clears)', async () => {
+      vi.doMock('@/lib/savedData', async (importOriginal) => ({
+        ...(await importOriginal<typeof import('@/lib/savedData')>()),
+        savedDataFingerprint: () => { throw new Error('boom') },
+        savedDataChanged: () => { throw new Error('boom') }
+      }))
+      const sendMessage = stubChromeRuntime()
+      const { getGroupsState, updateGroupsState } = await freshLocalDb()
+      await getGroupsState()
+      sendMessage.mockClear()
+      await updateGroupsState((s) => ({ ...s, available: s.available.map((g) => (g.permanent ? { ...g, windows: [] } : g)) }))
+      expect(lastMessage(sendMessage)).toEqual({ type: 'TM_GROUPS_CHANGED' })
+      await updateGroupsState((s) => ({ ...s, available: [...s.available, grpForNotifyTests('t')] }), { cause: { kind: 'url-rule', tabId: 6, url: 'https://y.test/' } })
+      expect(lastMessage(sendMessage)).toEqual({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 6, url: 'https://y.test/' } })
+    })
+  })
+
   it('saveGroup and deleteGroup also notify', async () => {
     const sendMessage = stubChromeRuntime()
     const { saveGroup, deleteGroup } = await freshLocalDb()
