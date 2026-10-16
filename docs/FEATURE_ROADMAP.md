@@ -4,12 +4,13 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-10-13. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-10-16. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
-- **Releases:** the latest stable tag is `v3.0.0`, but it hasn't been published to the stores: v3
-  goes to stable after the 3.1 beta. The beta channel is at `v3.1.0-beta.11`
+- **Releases:** the latest stable tag is `v3.3.1` and the beta channel is at `v3.3.2-beta.1`
   (Chrome BETA listing, and the self-hosted Firefox beta). Releases come from semantic-release:
   prereleases on the `beta` branch, stable versions on `main` ([PUBLISHING.md](PUBLISHING.md)).
+- **Website address:** the site lives at `tabmerger.com` (beta: `preview.tabmerger.com`) since
+  v3.3.1. The old `*.vercel.app` hosts stay up and trusted, so installed builds keep working.
 - **Stores:** the Chrome Web Store stable listing and the Firefox AMO listing are both still on v2
   (`2.0.0`); v3 is only on the beta channels. The
   Edge Add-ons listing isn't published from CI yet (its secrets aren't set).

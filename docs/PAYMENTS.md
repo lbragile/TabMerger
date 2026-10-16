@@ -157,7 +157,7 @@ All success/cancel/portal-return URLs come from `absoluteUrl()` in `packages/web
 - Validated: absolute `http(s)` origin only — no whitespace/quotes, userinfo, path, query or hash.
 - Fails closed: missing or invalid → throws, so the route returns 500 rather than handing Stripe a
   bad URL.
-- Values: production `https://tabmerger.vercel.app`; preview `https://tabmerger-preview.vercel.app`
+- Values: production `https://tabmerger.com`; preview `https://preview.tabmerger.com`
   (fixed alias that `.github/workflows/deploy-web.yml` re-points at each preview deploy); local
   `http://localhost:3000`.
 
@@ -316,7 +316,8 @@ Each environment (production, preview, local) needs its **own** Stripe webhook d
 
 1. Stripe Dashboard (live mode for production, **test mode** for preview) → Webhooks → add endpoint
    `<NEXT_PUBLIC_APP_URL>/api/webhooks/stripe`, e.g.
-   `https://tabmerger-preview.vercel.app/api/webhooks/stripe`.
+   `https://preview.tabmerger.com/api/webhooks/stripe`. Endpoints already on the old
+   `*.vercel.app` hosts can stay: those hosts serve the same deployment and keep `/api/*`.
 2. Subscribe it to `checkout.session.completed`, `customer.subscription.updated`,
    `customer.subscription.deleted`, `invoice.payment_failed`.
 3. Put that endpoint's signing secret in the environment's `STRIPE_WEBHOOK_SECRET` (Vercel env var
