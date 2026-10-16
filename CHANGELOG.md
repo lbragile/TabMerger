@@ -1,3 +1,15 @@
+## [3.2.1](https://github.com/lbragile/TabMerger/compare/v3.2.0...v3.2.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* **extension:** one undo step per action, applied in order ([#73](https://github.com/lbragile/TabMerger/issues/73)) ([a6ea081](https://github.com/lbragile/TabMerger/commit/a6ea081166cb387929948045e9bf03e0a70f8cdb))
+
+
+### Features
+
+* **web:** pointer-following glow backdrop on error pages and /uninstalled ([#74](https://github.com/lbragile/TabMerger/issues/74)) ([75a1791](https://github.com/lbragile/TabMerger/commit/75a1791f146556659ecf60dc6e93929d01871ab3))
+
 # [3.2.0](https://github.com/lbragile/TabMerger/compare/v3.1.3...v3.2.0) (2026-10-15)
 
 
