@@ -39,10 +39,12 @@
   `BETA_STORE_MAJOR_OFFSET` (see that file for why — an accidental early release permanently
   raised the floor on the BETA item's accepted version numbers).
 - `.github/workflows/deploy-web.yml` deploys a Vercel **preview** (not production) of
-  `packages/web`, called from `ci.yml` after CI passes on `main`, aliased to a fixed
-  `tabmerger-preview.vercel.app` URL.
+  `packages/web`, called from `ci.yml` after CI passes on `main`, aliased to the fixed
+  `preview.tabmerger.com` host and to the old `tabmerger-preview.vercel.app` one, which stays up
+  for builds already installed.
 - `.github/workflows/deploy-web-production.yml` deploys `packages/web` to Vercel
-  **production** (`tabmerger.vercel.app`). It runs automatically when a **stable** (non-prerelease)
+  **production** (`tabmerger.com`; the old `tabmerger.vercel.app` alias keeps serving the same
+  deployment). It runs automatically when a **stable** (non-prerelease)
   GitHub release is published, and manually from the Actions tab. Every run waits for approval in
   the `vercel-production` environment. See "Step 4 — Vercel" below.
 
@@ -130,7 +132,7 @@ or `*.chromiumapp.org`: any other extension could then receive TabMerger sign-in
 | Edge Add-ons stable | `https://eogjdfjemlgmbblgkjlcgdehbeoodbfn.chromiumapp.org/` |
 | Firefox stable | `https://541d995cc738c669c050dc1dcfbb4b46a2dcbff1.extensions.allizom.org/` |
 | Firefox BETA | `https://b00b8167da1d804b7108f9915bfd2eb660504ff8.extensions.allizom.org/` (confirmed working 2026-09-29) |
-| Websites | `https://tabmerger.vercel.app/**`, `https://tabmerger-preview.vercel.app/**` |
+| Websites | `https://tabmerger.com/**`, `https://preview.tabmerger.com/**`, plus the old `https://tabmerger.vercel.app/**` and `https://tabmerger-preview.vercel.app/**` (keep them: older builds still sign in there) |
 
 Chromium's host is the extension ID. Firefox's is the SHA-1 (hex) of the add-on ID, e.g.
 `node -e "console.log(require('crypto').createHash('sha1').update('tabmerger-beta@lbragile.com').digest('hex'))"`;
@@ -215,20 +217,22 @@ How production is deployed:
 - Production is built fresh with production env vars; a preview deployment is never promoted
   (`NEXT_PUBLIC_*` values are baked in at build time, so a preview carries the preview Supabase
   project).
-- `tabmerger.vercel.app` is an **alias**, not a domain registered on the Vercel project, so
-  `vercel deploy --prod` alone does not move it. The workflow points it at the new deployment
+- `tabmerger.com` (and `www`, which redirects to it) are domains on the Vercel project, so
+  `vercel deploy --prod` moves them. `tabmerger.vercel.app` is an **alias**, not a project domain,
+  so `vercel deploy --prod` alone does not move it. The workflow points it at the new deployment
   with `vercel alias set` (as the preview workflow does for `tabmerger-preview.vercel.app`). To
   move it by hand: `vercel alias set <deployment-url> tabmerger.vercel.app`.
 
 Confirm a deploy: the job's **Verify the live site** step must be green (it checks `/`, `/privacy`
 and that `/api/track` answers an extension preflight with a matching `Access-Control-Allow-Origin`),
 and the job summary shows the deployed commit and deployment URL. Then open
-`https://tabmerger.vercel.app/privacy` and check its "Last updated" date.
+`https://tabmerger.com/privacy` and check its "Last updated" date.
 
 ### Step 4b — Firefox beta hosting (Vercel Blob)
 
 The self-distributed (unlisted) Firefox beta build is served from the BETA web app's own domain
-(`tabmerger-preview.vercel.app/firefox-beta/...`), not a separate host — `next.config.ts` rewrites
+(`preview.tabmerger.com/firefox-beta/...`; the old `tabmerger-preview.vercel.app/firefox-beta/...`
+serves the same files for beta builds that still check there), not a separate host — `next.config.ts` rewrites
 `/firefox-beta/*` to a public Vercel Blob store. Path/file names come from the single shared
 source of truth, `packages/shared/src/constants/firefoxBeta.ts` (`FIREFOX_BETA`), used by both the
 web app's rewrite and CI's publish step.

@@ -72,9 +72,9 @@ These failures are currently silent. A diagnostics screen is planned but has not
 | Mode | Command (in `packages/extension`) | Manifest name | Env file | Web app / Supabase |
 |---|---|---|---|---|
 | `development` | `pnpm dev`, `pnpm build:dev` | TabMerger DEV | `.env.local` (gitignored) | `http://localhost:3000` / local stack `127.0.0.1:54321` |
-| `beta` | `pnpm zip:beta` | TabMerger BETA | `.env.beta` (gitignored) | preview `https://tabmerger-preview.vercel.app` / project `xmofzeq…` |
+| `beta` | `pnpm zip:beta` | TabMerger BETA | `.env.beta` (gitignored) | preview `https://preview.tabmerger.com` (also trusts the old `https://tabmerger-preview.vercel.app`) / project `xmofzeq…` |
 | `demo` | `pnpm build:extension:demo` | TabMerger | `.env.demo` (committed; only `VITE_DEMO_BUILD=true`) | — (demo data, no backend) |
-| `production` | `pnpm build`, `pnpm zip` | TabMerger | `.env.production` (gitignored) | `https://tabmerger.vercel.app` / project `jzgz…` |
+| `production` | `pnpm build`, `pnpm zip` | TabMerger | `.env.production` (gitignored) | `https://tabmerger.com` (also trusts the old `https://tabmerger.vercel.app`) / project `jzgz…` |
 
 In CI there are no env files. `.github/workflows/publish.yml` sets each build's `VITE_WEB_APP_URL`, `VITE_EXTRA_WEB_APP_URLS`, `VITE_SUPABASE_*` and extension IDs from its top-level `env:` (public values, not secrets): store BETA builds use the preview site and preview Supabase project (`BETA_*`), stable builds use production (`PROD_*`). See `docs/PUBLISHING.md` Step 5.
 
@@ -145,10 +145,10 @@ When the flag is on, the extension POSTs to `${VITE_WEB_APP_URL}/api/ai/*` with 
 | | Web | Extension | Supabase project |
 |---|---|---|---|
 | Local | `pnpm dev:web` → `localhost:3000` | `development` mode | local CLI stack (`supabase start`) |
-| Preview | `https://tabmerger-preview.vercel.app`. CI deploys it: `ci.yml` → `deploy-web.yml`, after CI passes on `main`, only when web-relevant paths changed. | Locally built `beta` (`.env.beta`) | `xmofzeq…` |
-| Production | `https://tabmerger.vercel.app` | Stable store listing (`production` mode); the CI-built store BETA also points here | `jzgz…` |
+| Preview | `https://preview.tabmerger.com` (the old `https://tabmerger-preview.vercel.app` serves the same deployment). CI deploys it: `ci.yml` → `deploy-web.yml`, after CI passes on `main`, only when web-relevant paths changed. | Locally built `beta` (`.env.beta`) | `xmofzeq…` |
+| Production | `https://tabmerger.com` (the old `https://tabmerger.vercel.app` serves the same deployment). `deploy-web-production.yml` deploys it on a stable release, after approval. | Stable store listing (`production` mode); the CI-built store BETA also points here | `jzgz…` |
 
-TODO (owner): no workflow in `.github/workflows/` deploys web to production (`deploy-web.yml` is preview-only). Document how production web deploys happen, e.g. Vercel Git integration or a manual promote.
+The old `*.vercel.app` hosts stay up for good: extension builds already installed call their APIs and sign in there. Each build trusts both its own site and the old one (`VITE_EXTRA_WEB_APP_URLS`), so a release never adds a site and never prompts. Production web deploys are covered in `docs/PUBLISHING.md` Step 4.
 
 The web app and the extension talking to it must use the **same** Supabase project. If they don't, `SYNC_AUTH` tokens are rejected and the dashboard reads a different database.
 
