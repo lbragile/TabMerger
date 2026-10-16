@@ -203,7 +203,7 @@ Rules:
 
 | Event | Why |
 |---|---|
-| Another context wrote the groups (service worker context-menu save, URL rule, a second popup or page) | its change would be reverted by restoring an older snapshot (I1) |
+| Another context wrote the groups' SAVED data (service worker context-menu save, URL rule, a second popup or page) | its change would be reverted by restoring an older snapshot (I1) |
 | A sync pull or realtime event applied a **foreign** change (another device): new, changed or deleted rows, conflict copies, or any other change to the saved data (e.g. another device's reorder) | same. Announced from the merge write's own queue step, so no later queued write (an Undo) runs before the history is gone |
 | An action whose write starts from saved data the history has not seen (a foreign write whose clear message is still on its way) | its older entries predate that write; the action's step becomes the first of a history that matches the data |
 | A history hook throws (`recordStep`, Undo/Redo) | history out of step with the data is worse than none (the write stands) |
@@ -212,8 +212,17 @@ Rules:
 
 Clearing removes both stacks, and also the user's history set aside during the tour.
 
-**Not** a clear (these are the user's own action, so the step survives):
+**Not** a clear (these are the user's own action, or change nothing a snapshot could revert):
 
+- another context's write that changed **only Now Open** (a second TabMerger page, e.g. `popup.html`
+  open in a tab, mirrors its live tabs on every tab event). The writer declares it: a
+  read-modify-write whose result left the saved data as its fresh read had it sends
+  `savedUnchanged: true` (`leftSavedDataUnchanged` in `lib/localDb.ts`: a reference check per
+  untouched group, a content check only for the groups `fn` replaced; `fn` returning the state it
+  was given counts as "don't know"). The popup keeps its history only for exactly `true`, so a late
+  or reordered message does not matter. Everything else clears, as before: a write that changed
+  saved data, a blind `saveGroupsState` (drops, Undo/Redo of another page), a raw store edit, a
+  wipe, an older sender, or a flag that could not be worked out;
 - this device's own sync push, its realtime echo and later pulls that bring nothing foreign;
 - a URL rule saving a tab **this popup just opened** (a drop into Now Open, an Undo reopening tabs):
   one-shot, within 10 s, at the URL it was opened with (`lib/ownOpenedTabs.ts`). Undoing the action
@@ -265,6 +274,8 @@ tour empties both.
 | Redo after the user navigated a reopened tab | that tab stays open |
 | A tab opens or closes in the browser between actions, or between two quick Undos | Now Open updates; history unchanged; Undo still works and keeps the current Now Open |
 | Another device edits a group | history cleared; buttons disabled |
+| `popup.html` open in a tab (a second TabMerger page) while tabs change, then Undo in the popup | history kept (only Now Open changed elsewhere); Undo works |
+| That second page edits a saved group | history cleared |
 | An Undo queued behind a pull that applies another device's change | the history is cleared first; the Undo does nothing (no message) |
 | Popup closed and reopened | history empty |
 | Action refused (its group was deleted elsewhere) | no write, no entry |
@@ -283,6 +294,17 @@ tour empties both.
   action runs (milliseconds: the add, then the move) would fold into the same step.
 - **A copy from a live tab** (`useMoveTab` with a live source) asks the page for its preview image
   before its write is issued; an Undo clicked within those milliseconds undoes the step before it.
+- **The broadcast flag trusts `fn` not to edit the state it was given in place** (the
+  `updateGroupsState` contract). An edit that returns the same state object is caught and treated
+  as a change; an in-place edit of a nested group behind a new outer state is not.
+- **Very frequent Now Open writes from two TabMerger pages at once** (a page whose title changes every
+  few tens of milliseconds, with `popup.html` also open): each page rewrites Now Open on every tab
+  event with no debounce, so a drop's write can wait in the queue for seconds. The history stays
+  correct; only the latency shows.
+- **A lost clear message.** If another context commits a saved-data write and is torn down before
+  it sends its message, and a later Now Open-only write then arrives with `savedUnchanged: true`,
+  the popup keeps its history. The cursor check still catches it: the next Undo is refused
+  ("changed elsewhere"), and the next action clears the older history (§6). Nothing is reverted.
 - **Practice groups without the `tourDemo` flag** (data from before the flag) count as the user's
   saved data in the cursor check.
 - **A partial write** (a synchronous `put` throw inside `writeGroupsState` after earlier requests
@@ -300,15 +322,26 @@ Every row of §2.1, §6 and §9 has a test at the cheapest layer that can see it
   `dropUndoEntry` by identity, tour set-aside); pending effects (`lib/undoLiveTabs.test.ts`); the
   restore's sync identity (`lib/syncDirty.test.ts`); `useUndoRedo` (refusal, failure, mid-write
   clear, tour, effects); every hook is one entry or none and the ordering cases G1–G5
-  (`hooks/useGroupsUndo.test.tsx`); drops (`hooks/useDndHandlersUndo.test.tsx`).
+  (`hooks/useGroupsUndo.test.tsx`); drops (`hooks/useDndHandlersUndo.test.tsx`, which also holds
+  the **drop audit matrix**: every source (saved tab, saved window, multi-selection, live tab or
+  window, group) × target (sidebar group row, own or other group, Now Open row; a window or tab
+  position after spring-open; own / other / Now Open new-window zone; the new-group zone) through
+  the real `onDragEnd`, plus the keyboard-move equivalents through `commitKeyboardMove`); broadcasts
+  from another context (`hooks/useExternalGroupsChanges.test.tsx`, `lib/localDb.test.ts`: the
+  `savedUnchanged` / `saved` fields, and a throwing fingerprint still broadcasting); the cost of the
+  broadcast decision on a large store (`lib/savedData.test.ts`).
 - **Integration (real IndexedDB):** `undoOrdering.integration.test.tsx` (rapid Undo/Redo, Undo
   during an action, Now Open writes between Undos, outside-history refusal and S1, the restore's
-  base through two sync cycles, Undo behind a foreign pull, URL-rule re-anchor, `afterWrite`);
+  base through two sync cycles, Undo behind a foreign pull, URL-rule re-anchor, `afterWrite`, a
+  saved tab dropped on another group's sidebar row through the real handler, another page's Now
+  Open-only write (also a late one) keeping the history and its saved-data write clearing it);
   cross-group drop into a new window → Undo → Redo; own sync keeps the step, a foreign edit clears
   it; Undo racing a remote delete.
 - **E2E (real popup):** a drag out of Now Open → Undo reopens → Redo closes; saved items into Now
   Open → Undo closes the opened tabs; rapid Undo/Redo applies in order with no conflict
-  (`undo-rapid.spec.ts`).
+  (`undo-rapid.spec.ts`); a saved tab dropped on another group's sidebar row, with and without
+  spring-open and with Now Open changing during the drag, and on the Now Open row; the same drop
+  with `popup.html` open in a tab and live tabs changing (`undo-dnd.spec.ts`).
 
 ---
 

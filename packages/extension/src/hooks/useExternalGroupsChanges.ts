@@ -30,7 +30,11 @@ export function useExternalGroupsChanges() {
       // The kept history must not then refuse its next Undo for that save (a change that did not go
       // through the history, see `changedOutsideHistory`): the cursor is re-anchored on it instead.
       if (ownTabRule) void reanchorHistoryCursor(m.saved);
-      else useUIStore.getState().clearHistory();
+      // A write that left the saved data as it found it (another TabMerger page mirroring its live
+      // tabs into Now Open, on every tab event) cannot be reverted by any entry: Now Open is never
+      // restored, so the history stays. The writer declares it (`savedUnchanged`), so a late or
+      // reordered message does not matter. Only exactly `true` keeps it; anything else clears.
+      else if (m.savedUnchanged !== true) useUIStore.getState().clearHistory();
       // cancelRefetch:false is mandatory on the groups key (spec C11): the default cancels an
       // in-flight fetch and rejects any mutation that joined it.
       void qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false });

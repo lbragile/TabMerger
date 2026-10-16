@@ -10,7 +10,9 @@ import { createGroup, createNowOpenGroup, createWindow } from '@/lib/utils'
 import { forgetHistoryCursor, recordStep } from '@/lib/undoHistory'
 import { useUIStore } from '@/stores/uiStore'
 import { useUndoRedo } from '@/hooks/useUndoRedo'
-import { useUpdateGroupName } from '@/hooks/useGroups'
+import { useUpdateGroupName, GROUPS_QUERY_KEY } from '@/hooks/useGroups'
+import { useDndHandlers } from '@/hooks/useDndHandlers'
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 import type { Group, GroupsState } from '@/lib/types'
 import { clearDb } from './dbTestUtils'
 import { useExternalGroupsChanges } from '@/hooks/useExternalGroupsChanges'
@@ -429,5 +431,142 @@ describe('localDb afterWrite (real IndexedDB)', () => {
       microtask.mockRestore()
       errors.mockRestore()
     }
+  })
+})
+
+describe('a cross-group move made while a sync cycle is pulling', () => {
+  it('keeps its step (an own pending change is not foreign)', async () => {
+    mountHistory()
+    // a third group so the moved groups are not the first ones
+    const s0 = await getGroupsState()
+    const third = { ...createGroup('misc', 'Misc'), windows: [createWindow([tab('m1')])], updatedAt: 500, remoteUpdatedAt: BASE, pendingSync: false }
+    await saveGroupsState({ ...s0, available: [s0.available[0], third, ...s0.available.slice(1)] })
+    await markPositionSynced('misc', 1)
+    await markPositionSynced('work', 2)
+    await markPositionSynced('play', 3)
+    fakeRemote.rows.set('misc', rowOf(third, 1))
+    fakeRemote.rows.set('work', { ...fakeRemote.rows.get('work')!, position: 2 })
+    fakeRemote.rows.set('play', { ...fakeRemote.rows.get('play')!, position: 3 })
+    await performSync(session)
+    foreign.mockClear()
+
+    const gate = fakeRemote.hold('select')
+    const sync = performSync(session)
+    await gate.entered
+    // the drop: a tab leaves Work for a new window in Play (one recorded step)
+    await updateGroupsState(
+      (s) => ({
+        ...s,
+        available: s.available.map((g) =>
+          g.id === 'work' ? { ...g, windows: [{ ...g.windows[0], tabs: g.windows[0].tabs.slice(1) }], updatedAt: Date.now(), pendingSync: true }
+          : g.id === 'play' ? { ...g, windows: [...g.windows, createWindow([tab('a1')])], updatedAt: Date.now(), pendingSync: true }
+          : g)
+      }),
+      { afterWrite: recordStep({ push: (st) => useUIStore.getState().pushUndo(st) }) }
+    )
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
+    gate.release()
+    await sync
+    expect(foreign).not.toHaveBeenCalled()
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
+    expect((await getGroupsState()).available.map((g) => g.id).slice(1)).toEqual(['misc', 'work', 'play'])
+  })
+})
+
+describe('a saved tab dropped ON another group sidebar row (real handler, real IndexedDB)', () => {
+  it('is one step: Undo puts it back, Redo moves it into the new window again', async () => {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    qc.setQueryData(GROUPS_QUERY_KEY, await getGroupsState())
+    const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client: qc }, children)
+    const { result } = renderHook(() => ({ dnd: useDndHandlers(), history: useUndoRedo() }), { wrapper })
+    const tabsOf = async (id: string) => (await getGroupsState()).available.find((g) => g.id === id)!.windows.map((w) => w.tabs.map((t) => t.title))
+    const data = { current: undefined }
+    act(() => {
+      result.current.dnd.onDragStart({ active: { id: 'work::w0::t0', data }, activatorEvent: new MouseEvent('mousedown') } as unknown as DragStartEvent)
+    })
+    await act(async () => {
+      await result.current.dnd.onDragEnd({ active: { id: 'work::w0::t0', data }, over: { id: 'play', data: { current: { type: 'group' } } } } as unknown as DragEndEvent)
+    })
+    expect(await tabsOf('work')).toEqual([['a2']])
+    expect(await tabsOf('play')).toEqual([['p1'], ['a1']])
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
+
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(await tabsOf('work')).toEqual([['a1', 'a2']])
+    expect(await tabsOf('play')).toEqual([['p1']])
+    await act(async () => {
+      await result.current.history.redo()
+    })
+    expect(await tabsOf('play')).toEqual([['p1'], ['a1']])
+    expect(conflictToasts()).toHaveLength(0)
+  })
+})
+
+describe('another TabMerger page writing the groups (real IndexedDB)', () => {
+  /** The popup listening; `deliver()` hands it the broadcasts sent since `capture()` (another context's writes). */
+  function popupListeningFrom() {
+    const listeners: Array<(m: unknown) => void> = []
+    const runtime = chrome.runtime as unknown as Record<string, unknown>
+    runtime.onMessage = { addListener: (l: (m: unknown) => void) => listeners.push(l), removeListener: vi.fn() }
+    const qc = new QueryClient()
+    renderHook(() => useExternalGroupsChanges(), { wrapper: ({ children }) => React.createElement(QueryClientProvider, { client: qc }, children) })
+    const send = chrome.runtime.sendMessage as ReturnType<typeof vi.fn>
+    return {
+      capture: () => send.mockClear(),
+      deliver: () => {
+        for (const [m] of send.mock.calls) listeners.forEach((l) => l(m))
+      }
+    }
+  }
+
+  it('its Now Open-only write (a live tab event) keeps the popup history, and Undo still works', async () => {
+    const result = mountHistory()
+    const other = popupListeningFrom()
+    await rename('work', 'W1')
+    other.capture()
+    await mirrorLiveTabs(70) // the other page's useCurrentTabs reacting to a tab event
+    other.deliver()
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(conflictToasts()).toHaveLength(0)
+    expect(names(await getGroupsState())).toEqual(['Work', 'Play'])
+  })
+
+  it('its saved-data write clears the popup history (as before)', async () => {
+    mountHistory()
+    const other = popupListeningFrom()
+    await rename('work', 'W1')
+    other.capture()
+    const s = await getGroupsState()
+    await saveGroupsState({ ...s, available: s.available.map((g) => (g.id === 'play' ? { ...g, name: 'Elsewhere' } : g)) })
+    other.deliver()
+    // (decided on a fresh read queued behind every write so far)
+    await getGroupsState()
+    await updateGroupsState(() => null)
+    expect(useUIStore.getState().undoStack).toHaveLength(0)
+  })
+
+  it('a LATE message of its Now Open write (it landed before this popup\'s latest step) keeps the history too', async () => {
+    const result = mountHistory()
+    const other = popupListeningFrom()
+    await rename('work', 'W1')
+    other.capture()
+    await mirrorLiveTabs(71) // the other page writes first...
+    const late = (chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mock.calls.slice()
+    await rename('play', 'P1') // ...then this popup's next step lands before that message arrives
+    ;(chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mockReset().mockResolvedValue(undefined)
+    ;(chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mock.calls.push(...late)
+    other.deliver()
+    await updateGroupsState(() => null) // (the decision's queued read has run)
+    expect(useUIStore.getState().undoStack).toHaveLength(2)
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(conflictToasts()).toHaveLength(0)
+    expect(names(await getGroupsState())).toEqual(['W1', 'Play'])
   })
 })

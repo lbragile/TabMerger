@@ -4,7 +4,7 @@ import type { Group, GroupsState, Session } from './types';
 import { createNowOpenGroup } from './utils';
 import { GROUPS_CHANGED_MESSAGE, type GroupsChangeCause, type GroupsChangedMessage } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
-import { savedDataFingerprint } from './savedData';
+import { savedDataChanged, savedDataFingerprint } from './savedData';
 import { APP_SETTINGS_KEY, LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
 
 const DB_NAME = 'tabmerger';
@@ -55,19 +55,35 @@ export function registerGroupsChangeListener(listener: GroupsChangeListener): vo
   backgroundGroupsChangeListener = listener;
 }
 
-function notifyGroupsChanged(cause?: GroupsChangeCause, stored?: GroupsState): void {
+function notifyGroupsChanged(cause?: GroupsChangeCause, stored?: GroupsState, savedUnchanged = false): void {
   // In-SW half first (sendMessage never reaches the sender's own listeners), then ALWAYS
   // fall through to `sendMessage` too: it is also how the OTHER contexts learn the groups
   // changed — the popup's `useExternalGroupsChanges` refetches on it, so a write issued by
   // the service worker (context menu, URL rule, SYNC_NOW) shows up in an open popup.
   backgroundGroupsChangeListener?.();
   if (typeof chrome === 'undefined' || !chrome.runtime?.sendMessage) return;
+  // What the receivers need to know about this write, worked out BEFORE sending and never able
+  // to stop the broadcast: on a throw the field is left out, which a receiver takes as "the
+  // saved data may have changed" (the safe side).
+  //  - `savedUnchanged`: this write left the saved data as it found it (it changed only Now Open).
+  //  - `saved` (a URL-rule write only): the fingerprint of the saved data it stored, for the
+  //    popup's re-anchor (see reanchorHistoryCursor). Hashing every write would cost a full
+  //    serialisation of the saved groups on the hottest path (the Now Open mirror).
+  let saved: string | undefined;
+  if (cause && stored) {
+    try {
+      saved = savedDataFingerprint(stored);
+    } catch {
+      saved = undefined;
+    }
+  }
+  const message: GroupsChangedMessage = {
+    type: GROUPS_CHANGED_MESSAGE,
+    ...(cause ? { cause } : {}),
+    ...(saved ? { saved } : {}),
+    ...(savedUnchanged === true ? { savedUnchanged: true as const } : {})
+  };
   try {
-    // (with a cause: the saved data this write left, so an open popup that keeps its history for it
-    // re-anchors on exactly that)
-    const message: GroupsChangedMessage = cause && stored
-      ? { type: GROUPS_CHANGED_MESSAGE, cause, saved: savedDataFingerprint(stored) }
-      : { type: GROUPS_CHANGED_MESSAGE };
     chrome.runtime.sendMessage(message, () => {
       // Swallow "Receiving end does not exist" — e.g. no background listener registered
       // yet, or the extension context is mid-reload. Reading lastError marks it "handled"
@@ -381,10 +397,26 @@ export function updateGroupsState(
     const signedInUserId = opts.readSignedInUser ? await getSetting<string | null>(LAST_USER_ID_KEY, null) : null;
     const next = fn(current, { pendingDeletes, signedInUserId });
     if (!next) return current;
-    const stored = await writeGroupsState(next, undefined, false, opts.cause);
+    const stored = await writeGroupsState(next, undefined, false, opts.cause, undefined, leftSavedDataUnchanged(current, next));
     runAfterWrite(() => opts.afterWrite?.(stored, current));
     return stored;
   });
+}
+
+/**
+ * Whether a read-modify-write left the saved data as its fresh read had it (it changed only Now
+ * Open, or bookkeeping). Decided on the read handed to `fn` and `fn`'s result, never on the
+ * rebuilt stored objects: `fn` keeps the objects of the groups it does not touch, so this is a
+ * reference check per group and a content check only for the ones it replaced. `fn` returning the
+ * very state it was given (an in-place edit) is "don't know". Any doubt (a throw) is "changed".
+ */
+function leftSavedDataUnchanged(current: GroupsState, next: GroupsState): boolean {
+  if (next === current) return false;
+  try {
+    return !savedDataChanged(current, next);
+  } catch {
+    return false;
+  }
 }
 
 /** Extra context handed to an {@link updateGroupsState} callback. */
@@ -496,7 +528,9 @@ async function writeGroupsState(
   preserveBases = false,
   cause?: GroupsChangeCause,
   /** filled with the state this write replaces (as read in its own transaction) */
-  replaced?: { before?: GroupsState }
+  replaced?: { before?: GroupsState },
+  /** the caller knows the write leaves the saved data unchanged (see leftSavedDataUnchanged) */
+  savedUnchanged = false
 ): Promise<GroupsState> {
   const db = await getDb();
   const tx = db.transaction(['groups', 'groupsState', 'settings'], 'readwrite');
@@ -567,7 +601,7 @@ async function writeGroupsState(
   tx.commit();
   await Promise.all([...requests, tx.done]);
   const stored = { ...state, available: groups, rev };
-  notifyGroupsChanged(cause, cause ? stored : undefined);
+  notifyGroupsChanged(cause, stored, savedUnchanged);
   return stored;
 }
 

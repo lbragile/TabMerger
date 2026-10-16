@@ -9,14 +9,21 @@ export const GROUPS_CHANGED_MESSAGE = 'TM_GROUPS_CHANGED';
  */
 export type GroupsChangeCause = { kind: 'url-rule'; tabId: number; url: string };
 
-/** The message body: `{ type: GROUPS_CHANGED_MESSAGE, cause?, saved? }`. */
+/** The message body: `{ type: GROUPS_CHANGED_MESSAGE, cause?, saved?, savedUnchanged? }`. */
 export interface GroupsChangedMessage {
   type: typeof GROUPS_CHANGED_MESSAGE;
   cause?: GroupsChangeCause;
   /**
-   * With a `cause`: the fingerprint of the saved data that write left (`savedDataFingerprint`). The
-   * popup re-anchors its undo cursor only while the store still holds exactly that saved data (Now
-   * Open writes in between do not matter; any other saved-data change does).
+   * With a URL-rule `cause`: the fingerprint of the saved data that write left
+   * (`savedDataFingerprint`: Now Open, practice groups and sync bookkeeping not included). The popup
+   * re-anchors its undo cursor on it (only while the store still holds exactly that saved data).
    */
   saved?: string;
+  /**
+   * `true`: the write left the saved data exactly as it found it (it changed only Now Open, e.g.
+   * another TabMerger page mirroring its live tabs), so an open popup keeps its undo history.
+   * Anything else (absent: a write that changed saved data, a blind write, a wipe, an older
+   * sender) means "may have changed" and clears it.
+   */
+  savedUnchanged?: true;
 }

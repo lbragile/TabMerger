@@ -44,18 +44,18 @@ export function withTabCustomTitle(state: GroupsState, groupId: string, windowIn
 
 /** Same edit, for a tab found by its (live) tab id: the first group holding it. */
 export async function saveCustomTitle(tabId: number, title: string): Promise<void> {
+  // A copy, never an in-place edit of the state it is given (updateGroupsState decides from the
+  // objects it handed over whether the saved data changed)
   await updateGroupsState((state) => {
-    for (const group of state.available) {
-      for (const win of group.windows) {
-        const tab = win.tabs.find((t) => t.id === tabId)
-        if (tab) {
-          applyCustomTitle(tab, title)
-          if (!group.permanent) {
-            group.updatedAt = Date.now()
-            group.pendingSync = true
-          }
-          return state
-        }
+    for (const [gi, group] of state.available.entries()) {
+      for (const [wi, win] of group.windows.entries()) {
+        const ti = win.tabs.findIndex((t) => t.id === tabId)
+        if (ti === -1) continue
+        const tab = { ...win.tabs[ti] }
+        applyCustomTitle(tab, title)
+        const windows = group.windows.map((w, i) => (i === wi ? { ...w, tabs: w.tabs.map((t, j) => (j === ti ? tab : t)) } : w))
+        const edited = group.permanent ? { ...group, windows } : { ...group, windows, updatedAt: Date.now(), pendingSync: true }
+        return { ...state, available: state.available.map((g, i) => (i === gi ? edited : g)) }
       }
     }
     return null

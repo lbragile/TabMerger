@@ -51,6 +51,36 @@ describe('useExternalGroupsChanges', () => {
     expect(invalidate).toHaveBeenCalledWith({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false })
   })
 
+  describe('a write of another context that changed only Now Open (its live-tab mirror)', () => {
+    const entry = { available: [], active: { id: '', index: 0 } }
+    beforeEach(() => useUIStore.setState({ undoStack: [entry], redoStack: [entry] }))
+
+    it('keeps the history when the writer declares it left the saved data unchanged (savedUnchanged: true)', () => {
+      mount()
+      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', savedUnchanged: true }))
+      expect(useUIStore.getState().undoStack).toHaveLength(1)
+      expect(useUIStore.getState().redoStack).toHaveLength(1)
+      expect(invalidate).toHaveBeenCalled() // still refetched
+    })
+
+    it('clears it for anything but exactly true (absent: an older sender, a blind write, a wipe)', () => {
+      mount()
+      for (const savedUnchanged of [undefined, false, 'true', 1]) {
+        useUIStore.setState({ undoStack: [entry] })
+        listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', ...(savedUnchanged === undefined ? {} : { savedUnchanged }) }))
+        expect(useUIStore.getState().undoStack).toEqual([])
+      }
+    })
+
+    it('a URL rule saving a tab this popup opened (it changed saved data) re-anchors on its fingerprint and keeps the history', () => {
+      noteTabsOpenedByPopup([{ id: 801, url: 'https://example.com/r' }])
+      mount()
+      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 801, url: 'https://example.com/r' }, saved: 'fp-9' }))
+      expect(reanchorHistoryCursor).toHaveBeenCalledWith('fp-9')
+      expect(useUIStore.getState().undoStack).toHaveLength(1)
+    })
+  })
+
   it('clears the undo/redo history: a snapshot older than another context write must not be restored over it', () => {
     useUIStore.setState({ undoStack: [{ available: [], active: { id: '', index: 0 } }], redoStack: [] })
     mount()

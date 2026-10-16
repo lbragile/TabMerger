@@ -205,6 +205,21 @@ describe('saved-group drops: one step each, one Undo reverts the whole drop', ()
     await expectOneStepRoundTrip(h, () => h.drop('work::w0', 'play', { type: 'group' }))
   })
 
+  it('a saved tab dropped onto ANOTHER group sidebar row (lands in a new window there)', async () => {
+    const h = await setup()
+    const after = await expectOneStepRoundTrip(h, () => h.drop('work::w0::t0', 'play', { type: 'group' }))
+    expect(after).toEqual([['work', [['a2', 'a3']]], ['play', [['p1'], ['a1']]]])
+  })
+
+  it('the same drop when a Now Open write landed during the drag (the write is refused as stale and redone on a fresh read)', async () => {
+    const h = await setup()
+    // useCurrentTabs mirrored a tab event: the store moved on, the cache has not seen it
+    store.state = { ...store.state, rev: store.rev + 1, available: [{ ...store.state.available[0], windows: [win([tab('live1', 41)], { id: 7 })] }, ...store.state.available.slice(1)] }
+    store.rev += 1
+    const after = await expectOneStepRoundTrip(h, () => h.drop('work::w0::t0', 'play', { type: 'group' }))
+    expect(after).toEqual([['work', [['a2', 'a3']]], ['play', [['p1'], ['a1']]]])
+  })
+
   it('a group reorder', async () => {
     const h = await setup()
     await expectOneStepRoundTrip(h, () => h.drop('play', 'work'))
@@ -321,5 +336,123 @@ describe('the drop step is recorded inside its write (G6, G2, G3)', () => {
     const h = await setup()
     await h.drop('work::w0::t0', 'play::new-window', { type: 'new-window', groupId: 'play', groupIndex: 2 })
     expect(historyEntryEffect(useUIStore.getState().undoStack[0])).toBeUndefined()
+  })
+})
+
+/**
+ * The audit matrix (docs/undo-redo-spec.md §2.1, drops): every source × target through the real
+ * handler (`onDragEnd` → `commitDrop` → `commitResolved`), and the keyboard-move equivalents
+ * (`commitKeyboardMove`). A drop that changes saved data is exactly ONE step and one Undo gives
+ * back exactly the state before; Redo the state after. A drop that changes only Now Open is none.
+ */
+describe('audit matrix: every drop source x target', () => {
+  type Row = [name: string, active: string, over: string, overData?: Record<string, unknown>, selection?: string[]]
+  const playNewWindow = { type: 'new-window', groupId: 'play', groupIndex: 2 }
+  const workNewWindow = { type: 'new-window', groupId: 'work', groupIndex: 1 }
+  const nowNewWindow = { type: 'new-window', groupId: 'now', groupIndex: 0 }
+
+  /** work has a second window here, so window moves inside a group are possible */
+  const seedTwoWindows = () => {
+    store.state = {
+      ...seed(),
+      available: [seed().available[0], group('work', [win([tab('a1'), tab('a2'), tab('a3')]), win([tab('b1')])]), seed().available[2]]
+    }
+  }
+
+  const oneStep: Row[] = [
+    ['saved tab -> other group sidebar row', 'work::w0::t0', 'play', { type: 'group' }],
+    ['saved tab -> its own group sidebar row', 'work::w0::t0', 'work', { type: 'group' }],
+    ['saved tab -> other group window (spring-open)', 'work::w0::t0', 'play::w0', { type: 'window' }],
+    ['saved tab -> other group tab position (spring-open)', 'work::w0::t0', 'play::w0::t0'],
+    ['saved tab -> own new-window zone', 'work::w0::t1', 'work::new-window', workNewWindow],
+    ['saved tab -> other new-window zone', 'work::w0::t0', 'play::new-window', playNewWindow],
+    ['saved tab -> new-group zone', 'work::w0::t0', NEW_GROUP_ID],
+    ['saved tab -> Now Open sidebar row', 'work::w0::t0', 'now', { type: 'group' }],
+    ['saved tab -> Now Open window (panel)', 'work::w0::t0', 'now::w0', { type: 'window' }],
+    ['saved tab -> Now Open tab position (panel)', 'work::w0::t0', 'now::w0::t0'],
+    ['saved tab -> Now Open new-window zone', 'work::w0::t0', 'now::new-window', nowNewWindow],
+    ['saved tab -> other tab in its own window (reorder)', 'work::w0::t0', 'work::w0::t2'],
+    ['saved window -> other group sidebar row', 'work::w1', 'play', { type: 'group' }],
+    ['saved window -> other group window (spring-open)', 'work::w1', 'play::w0', { type: 'window' }],
+    ['saved window -> its own group window (reorder)', 'work::w1', 'work::w0', { type: 'window' }],
+    ['saved window -> new-group zone', 'work::w1', NEW_GROUP_ID],
+    ['saved window -> Now Open sidebar row', 'work::w1', 'now', { type: 'group' }],
+    ['saved window -> Now Open window (panel)', 'work::w1', 'now::w0', { type: 'window' }],
+    ['multi saved tabs -> other group sidebar row', 'work::w0::t0', 'play', { type: 'group' }, ['work::w0::t0', 'work::w0::t2']],
+    ['multi saved tabs -> new-group zone', 'work::w0::t0', NEW_GROUP_ID, undefined, ['work::w0::t0', 'work::w1::t0']],
+    ['multi saved tabs -> Now Open sidebar row', 'work::w0::t0', 'now', { type: 'group' }, ['work::w0::t0', 'work::w0::t2']],
+    ['multi saved windows -> other group sidebar row', 'work::w0', 'play', { type: 'group' }, ['work::w0', 'work::w1']],
+    ['live tab -> saved group sidebar row', 'now::w0::t1', 'play', { type: 'group' }],
+    ['live tab -> saved window (spring-open)', 'now::w0::t1', 'play::w0', { type: 'window' }],
+    ['live tab -> saved tab position (spring-open)', 'now::w0::t1', 'play::w0::t0'],
+    ['live tab -> saved group new-window zone', 'now::w0::t1', 'play::new-window', playNewWindow],
+    ['live tab -> new-group zone', 'now::w0::t1', NEW_GROUP_ID],
+    ['multi live tabs -> saved group sidebar row', 'now::w0::t0', 'play', { type: 'group' }, ['now::w0::t0', 'now::w0::t1']],
+    ['live window -> saved group sidebar row', 'now::w0', 'play', { type: 'group' }],
+    ['live window -> new-group zone', 'now::w0', NEW_GROUP_ID],
+    ['group -> group (reorder)', 'play', 'work', { type: 'group' }]
+  ]
+
+  it.each(oneStep)('%s: exactly one step, Undo and Redo round-trip it', async (_name, active, over, overData, selection) => {
+    seedTwoWindows()
+    const h = await setup()
+    await expectOneStepRoundTrip(h, () => h.drop(active, over, overData, selection))
+  })
+
+  const noStep: Row[] = [
+    ['live tab -> Now Open tab (reorder)', 'now::w0::t0', 'now::w0::t1'],
+    ['live tab -> Now Open new-window zone (detach)', 'now::w0::t0', 'now::new-window', nowNewWindow],
+    ['saved tab -> itself', 'work::w0::t0', 'work::w0::t0']
+  ]
+
+  it.each(noStep)('%s: no step (only Now Open, or nothing, changes)', async (_name, active, over, overData, selection) => {
+    seedTwoWindows()
+    const before = saved(store.state)
+    const h = await setup()
+    await h.drop(active, over, overData, selection)
+    expect(saved(store.state)).toEqual(before)
+    expect(steps()).toBe(0)
+  })
+
+  it('two drops in a row are two steps; two Undos take both back', async () => {
+    seedTwoWindows()
+    const before = saved(store.state)
+    const h = await setup()
+    await h.drop('work::w0::t0', 'play', { type: 'group' })
+    await h.drop('work::w1', 'play', { type: 'group' })
+    expect(steps()).toBe(2)
+    await h.undo()
+    await h.undo()
+    expect(saved(store.state)).toEqual(before)
+  })
+})
+
+describe('audit matrix: keyboard move equivalents (commitKeyboardMove)', () => {
+  type KRow = [name: string, active: Record<string, unknown>, over: Record<string, unknown>]
+  const rows: KRow[] = [
+    ['tab -> other group row', { type: 'tab', id: 'work::w0::t0' }, { type: 'group', id: 'play' }],
+    ['tab -> other group tab position', { type: 'tab', id: 'work::w0::t0' }, { type: 'tab', id: 'play::w0::t0', index: 0 }],
+    ['tab -> new-group zone', { type: 'tab', id: 'work::w0::t0' }, { type: 'new-group', id: NEW_GROUP_ID }],
+    ['window -> other group row', { type: 'window', id: 'work::w0' }, { type: 'group', id: 'play' }],
+    ['group -> group (reorder)', { type: 'group', id: 'play' }, { type: 'group', id: 'work' }]
+  ]
+
+  it.each(rows)('%s: exactly one step, Undo and Redo round-trip it', async (_name, active, over) => {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    qc.setQueryData(GROUPS_QUERY_KEY, structuredClone(store.state))
+    const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client: qc }, children)
+    const { result } = renderHook(() => ({ dnd: useDndHandlers(), history: useUndoRedo() }), { wrapper })
+    await waitFor(() => expect(qc.isFetching()).toBe(0))
+    const before = saved(store.state)
+    await act(async () => {
+      await result.current.dnd.commitKeyboardMove(active as never, over as never)
+    })
+    const after = saved(store.state)
+    expect(after).not.toEqual(before)
+    expect(steps()).toBe(1)
+    await act(async () => { await result.current.history.undo() })
+    expect(saved(store.state)).toEqual(before)
+    await act(async () => { await result.current.history.redo() })
+    expect(saved(store.state)).toEqual(after)
   })
 })

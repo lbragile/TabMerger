@@ -22,7 +22,7 @@ const PLAY = { id: 'play', name: 'Play', windows: [win(3, ['Foxtrot', 'Golf'])] 
 
 type Pt = { x: number; y: number };
 
-async function openPopup(port: number, groups: unknown[]) {
+async function openPopup(port: number, groups: Parameters<typeof seedIdb>[1], opts: { busyTab?: boolean; secondPage?: boolean } = {}) {
   const context = await chromium.launchPersistentContext('', {
     headless: false,
     args: [
@@ -42,6 +42,18 @@ async function openPopup(port: number, groups: unknown[]) {
   await seedPage.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
   await seedIdb(seedPage, groups);
   await seedPage.close();
+  if (opts.busyTab) {
+    // a live tab whose title keeps changing: chrome.tabs.onUpdated fires all through the drag, so
+    // Now Open is rewritten while it runs (what a real browser with loading pages does)
+    const busy = await context.newPage();
+    await busy.goto('data:text/html,<title>busy</title><script>let n=0;setInterval(()=>{document.title="busy "+(n++)},300)</script>');
+  }
+  if (opts.secondPage) {
+    // popup.html open in a tab too: a second TabMerger page, whose Now Open mirror writes (and
+    // broadcasts) on every tab event
+    const second = await context.newPage();
+    await second.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
+  }
   const host = await context.newPage();
   await host.goto('about:blank');
   await host.bringToFront();
@@ -157,6 +169,83 @@ test.describe('undo / redo of a drag and drop (real popup)', () => {
     await expect.poll(() => buttonEnabled(cdp, 'Undo'), { timeout: 3_000 }).toBe(true);
     await expect.poll(() => buttonEnabled(cdp, 'Redo'), { timeout: 3_000 }).toBe(false);
   }
+
+  /**
+   * Picks up the first tab of Work and releases it ON Play's sidebar row: right away (`dwell`
+   * false: no spring-open), or after dwelling until the panel sprang open to Play.
+   */
+  async function dragWorkTabOntoPlayRow(cdp: RawCdp, dwell: boolean, target = 'Play') {
+    await expect
+      .poll(() => cdp.evaluate<boolean>(`!![...document.querySelectorAll('span')].find(s => s.textContent === 'Work')`), { timeout: 5_000 })
+      .toBe(true);
+    await cdp.evaluate(`[...document.querySelectorAll('span')].find(s => s.textContent === 'Work').click()`);
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('[aria-label^="Drag to reorder tab"]').length`), { timeout: 5_000 }).toBe(3);
+    expect(await buttonEnabled(cdp, 'Undo')).toBe(false);
+    const from = await centerOf(cdp, '[aria-label^="Drag to reorder tab"]');
+    const row = await cdp.evaluate<Pt>(
+      `(() => {
+         const s = [...document.querySelectorAll('aside span, span')].find(n => n.textContent === '${target}');
+         const el = s.closest('[data-sidebar-group-index]') || s.closest('div');
+         const r = el.getBoundingClientRect();
+         return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+       })()`,
+    );
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: from.x, y: from.y, button: 'none', buttons: 0 });
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: from.x, y: from.y, button: 'left', buttons: 1, clickCount: 1 });
+    for (let i = 1; i <= 3; i++) await move(cdp, { x: from.x, y: from.y + i * 4 });
+    await glide(cdp, { x: from.x, y: from.y + 12 }, row, 8, 20);
+    const dwellMoves = dwell ? 15 : 3;
+    for (let i = 0; i < dwellMoves; i++) {
+      await move(cdp, { x: row.x + (i % 2 ? 1 : 0), y: row.y });
+      await new Promise((r) => setTimeout(r, dwell ? 80 : 30));
+    }
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: row.x, y: row.y, button: 'left', buttons: 0, clickCount: 1 });
+  }
+
+  for (const [dwell, busyTab, port] of [[false, false, 9453], [true, false, 9454], [false, true, 9455], [true, true, 9456]] as const) {
+    test(`a tab dropped ON another group's sidebar row (${dwell ? 'after spring-open' : 'no spring-open'}${busyTab ? ', Now Open changing during the drag' : ''}) is one undo step`, async () => {
+      const { context, cdp } = await openPopup(port, [NOW_OPEN, WORK, PLAY], { busyTab });
+      try {
+        await dragWorkTabOntoPlayRow(cdp, dwell);
+        await expectOneStepUndoRedo(cdp, { work: [['Bravo', 'Charlie']], play: [['Foxtrot', 'Golf'], ['Alpha']] });
+      } finally {
+        cdp.close();
+        await context.close();
+      }
+    });
+  }
+
+  test('with popup.html also open in a tab and live tabs changing, the drop keeps its undo step (a Now Open-only write elsewhere is no clear)', async () => {
+    const { context, cdp } = await openPopup(9458, [NOW_OPEN, WORK, PLAY], { busyTab: true, secondPage: true });
+    try {
+      await dragWorkTabOntoPlayRow(cdp, false);
+      // the other page keeps rewriting Now Open (the busy tab) and broadcasting it
+      await new Promise((r) => setTimeout(r, 1_000));
+      await expectOneStepUndoRedo(cdp, { work: [['Bravo', 'Charlie']], play: [['Foxtrot', 'Golf'], ['Alpha']] });
+    } finally {
+      cdp.close();
+      await context.close();
+    }
+  });
+
+  test('a saved tab dropped ON the Now Open sidebar row (a new real window opens) is one undo step; Undo closes that window again', async () => {
+    const { context, cdp } = await openPopup(9457, [NOW_OPEN, WORK, PLAY]);
+    try {
+      const pagesBefore = context.pages().length;
+      await dragWorkTabOntoPlayRow(cdp, false, 'Now Open');
+      await expect.poll(() => tabsOf(cdp, 'work'), { timeout: 5_000 }).toEqual([['Bravo', 'Charlie']]);
+      await expect.poll(() => context.pages().some((p) => p.url().includes('example.com/alpha')), { timeout: 5_000 }).toBe(true);
+      await expect.poll(() => buttonEnabled(cdp, 'Undo'), { timeout: 3_000 }).toBe(true);
+      await clickButton(cdp, 'Undo');
+      await expect.poll(() => tabsOf(cdp, 'work'), { timeout: 5_000 }).toEqual([['Alpha', 'Bravo', 'Charlie']]);
+      await expect.poll(() => context.pages().some((p) => p.url().includes('example.com/alpha')), { timeout: 5_000 }).toBe(false);
+      expect(context.pages().length).toBeGreaterThanOrEqual(pagesBefore - 1);
+      await expect.poll(() => buttonEnabled(cdp, 'Redo'), { timeout: 3_000 }).toBe(true);
+    } finally {
+      cdp.close();
+      await context.close();
+    }
+  });
 
   test("a tab dragged into another group's new-window zone is one undo step; Undo restores it, Redo re-applies it", async () => {
     const { context, cdp } = await openPopup(9451, [NOW_OPEN, WORK, PLAY]);

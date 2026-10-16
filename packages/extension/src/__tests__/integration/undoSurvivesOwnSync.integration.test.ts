@@ -6,6 +6,7 @@ import { onForeignGroupsChange } from '@/lib/foreignChange'
 import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage'
 import { createGroup, createNowOpenGroup, createWindow } from '@/lib/utils'
 import { restoreSnapshotAsLocalChange } from '@/lib/syncDirty'
+import { forgetHistoryCursor } from '@/lib/undoHistory'
 import { useUIStore } from '@/stores/uiStore'
 import type { Group, GroupsState } from '@/lib/types'
 import { clearDb } from './dbTestUtils'
@@ -85,6 +86,7 @@ beforeEach(async () => {
   fakeRemote.reset()
   await clearDb()
   useUIStore.setState({ undoStack: [], redoStack: [], tourHistory: null })
+  forgetHistoryCursor() // (module state: these cases build their history with pushUndo, not through writes)
   foreign = vi.fn<() => void>(() => useUIStore.getState().clearHistory()) // what useSync does
   offForeign = onForeignGroupsChange(foreign)
   await seed()
@@ -237,6 +239,7 @@ describe('path 1: the service worker saving a tab by URL rule (real IndexedDB)',
     // the second tab was navigated before the rule saw it
     await applyUrlRule({ id: 612, url: 'https://example.com/elsewhere', title: 'Elsewhere' } as chrome.tabs.Tab, 'work')
     deliver()
+    await getGroupsState() // (a broadcast whose saved data differs is decided on a queued fresh read)
     expect(useUIStore.getState().undoStack).toHaveLength(0)
 
     useUIStore.getState().pushUndo(await getGroupsState())
@@ -253,6 +256,7 @@ describe('path 1: the service worker saving a tab by URL rule (real IndexedDB)',
     } finally {
       late.mockRestore()
     }
+    await getGroupsState() // (a broadcast whose saved data differs is decided on a queued fresh read)
     expect(useUIStore.getState().undoStack).toHaveLength(0)
   })
 
@@ -262,6 +266,7 @@ describe('path 1: the service worker saving a tab by URL rule (real IndexedDB)',
     ;(chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mockClear()
     await applyUrlRule({ id: 999, url: 'https://example.com/other', title: 'Other' } as chrome.tabs.Tab, 'work')
     deliver()
+    await getGroupsState() // (a broadcast whose saved data differs is decided on a queued fresh read)
     expect(useUIStore.getState().undoStack).toHaveLength(0)
   })
 
@@ -273,6 +278,7 @@ describe('path 1: the service worker saving a tab by URL rule (real IndexedDB)',
     await saveGroupsState({ ...s, available: s.available.map((g) => (g.id === 'play' ? { ...g, name: 'P' } : g)) })
     expect((chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mock.calls[0][0]).toEqual({ type: GROUPS_CHANGED_MESSAGE })
     deliver()
+    await getGroupsState() // (a broadcast whose saved data differs is decided on a queued fresh read)
     expect(useUIStore.getState().undoStack).toHaveLength(0)
   })
 })

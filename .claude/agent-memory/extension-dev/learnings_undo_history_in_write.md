@@ -28,6 +28,24 @@ A `rev` gate was tried first and is wrong: useCurrentTabs writes Now Open (alway
 on the same tab events the rule reacts to, so the rev has moved on before the queued re-anchor runs,
 and `clearAll*` resets rev to 0.
 
+**Broadcasts from other contexts.** The WRITER declares its effect: `updateGroupsState` sends
+`savedUnchanged: true` when `fn`'s result left the saved data as the fresh read had it
+(`leftSavedDataUnchanged`, localDb.ts); the popup keeps its history only for exactly `true`, clears
+otherwise. A second TabMerger page (`popup.html` in a tab) used to wipe the popup's history on every
+tab event. A first design hashed the saved data on every write and compared fingerprints on the
+receiver: ~8.5 ms per write at 200 groups x 50 tabs inside the lock (vs 0.012 ms for the reference
+check), and late messages needed a queued fresh read. A WeakMap cache keyed by group object would
+not help: every RMW re-reads all groups from IDB (new objects) and writeGroupsState rebuilds every
+group object. Only URL-rule writes still carry the `saved` fingerprint (re-anchor). Fields are
+worked out before the send's try; a throw leaves the field out (receiver clears). `saveCustomTitle`
+edited the state in place and returned it: now copies (an in-place `return state` is "don't know").
+
+**Investigating "no undo step" reports.** First ask which checkout the build came from: a report
+against PR code was from the main checkout's build (pre-fix behaviour). The drop audit matrix in
+`useDndHandlersUndo.test.tsx` is the quick check that every source x target is one step. A
+40 ms-title-ticker page with two TabMerger pages open saturates the write queue (Now Open mirror has
+no debounce): drops land seconds late, which looks like a missing step in e2e.
+
 **Restore keeps the current sync identity (M1).** `restoreSnapshotAsLocalChange` used to keep the
 snapshot copy's `remoteUpdatedAt`; harmless while Undo used `saveGroupsState` (preserveBases), but via
 `updateGroupsState` the old base was stored → CAS against a stale stamp → "(conflict copy)", or a
