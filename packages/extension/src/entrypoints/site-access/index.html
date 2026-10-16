@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Firefox only: Chrome and Edge reach the website through externally_connectable and have no
+      site access to ask for, so this page is left out of their builds.
+    -->
+    <meta name="manifest.include" content="['firefox']" />
+    <title>TabMerger site access</title>
+    <!-- Same saved theme as the popup, applied before React mounts; see public/theme-init.js. -->
+    <script src="/theme-init.js"></script>
+    <style>
+      /* globals.css sizes body for the fixed popup; this is a normal, scrollable tab. */
+      html body {
+        width: auto;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

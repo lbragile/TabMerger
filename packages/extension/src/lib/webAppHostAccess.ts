@@ -10,7 +10,12 @@ import { resolveTrustedWebAppOrigins, toOriginMatchPatterns } from '@/lib/webApp
  * them are granted on a fresh install, but a site ADDED by an update is neither prompted for nor
  * granted, so an existing install can't run the bridge there until the user allows it. Those
  * matches are also requestable optional origins in MV3, so `permissions.request({ origins })`
- * can grant them from the popup with no manifest change.
+ * can grant them with no manifest change.
+ *
+ * The request is made from an extension tab (`entrypoints/site-access/`), never from the popup:
+ * Firefox shows no permission prompt over an open browser-action popup, only after it closes, and
+ * by then the popup that asked is gone, so its promise never settles anywhere and the UI never
+ * updates. The popup's banner opens that tab instead (`openWebAppHostAccessPage()`).
  *
  * Chrome and Edge reach the website through `externally_connectable`, which is not a permission,
  * so everything here is Firefox-only and reports "nothing to do" elsewhere.
@@ -18,6 +23,9 @@ import { resolveTrustedWebAppOrigins, toOriginMatchPatterns } from '@/lib/webApp
 
 /** chrome.storage.local key: the patterns the user dismissed the prompt for. */
 export const WEB_APP_ACCESS_DISMISSED_KEY = 'webAppAccessDismissed';
+
+/** Built path of the Firefox-only page that asks for site access (`entrypoints/site-access/`). */
+export const WEB_APP_ACCESS_PAGE_PATH = '/site-access.html';
 
 /**
  * The match patterns the bridge runs on, when the popup should look after them: Firefox builds
@@ -53,14 +61,31 @@ export async function getMissingWebAppHostPatterns(): Promise<string[]> {
 }
 
 /**
- * Asks Firefox for `patterns`. MUST be called synchronously from a click handler with nothing
- * awaited before it: Firefox only allows `permissions.request()` inside a user action. Resolves
- * to whether the user granted them; a refusal or an API error resolves to false.
+ * Asks Firefox for `patterns`. Call it only from the site-access tab, never from the popup (see
+ * the module comment), and synchronously from a click handler with nothing awaited before it:
+ * Firefox only allows `permissions.request()` inside a user action. Resolves to whether the user
+ * granted them; a refusal or an API error resolves to false.
  */
 export function requestWebAppHostAccess(patterns: readonly string[]): Promise<boolean> {
   if (patterns.length === 0) return Promise.resolve(true);
   try {
     return chrome.permissions.request({ origins: [...patterns] }).then(Boolean, () => false);
+  } catch {
+    return Promise.resolve(false);
+  }
+}
+
+/**
+ * Opens the site-access tab, which asks Firefox for the missing sites itself. Opening a tab
+ * closes the popup, which is expected. The tab works out what is missing on its own, so nothing
+ * is passed in the URL. Resolves to false when the tab could not be opened.
+ */
+export function openWebAppHostAccessPage(): Promise<boolean> {
+  try {
+    return chrome.tabs.create({ url: chrome.runtime.getURL(WEB_APP_ACCESS_PAGE_PATH) }).then(
+      () => true,
+      () => false
+    );
   } catch {
     return Promise.resolve(false);
   }
