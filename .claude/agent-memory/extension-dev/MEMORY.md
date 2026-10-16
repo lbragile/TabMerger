@@ -115,3 +115,4 @@
 - [Extra trusted web origins](learnings_extra_trusted_web_origins.md) — VITE_EXTRA_WEB_APP_URLS one parser for 3 consumers; Firefox MV3 never grants a content-script site added in an update
 - [Firefox popup permissions.request](learnings_firefox_popup_permission_request.md) — no doorhanger over a browser-action popup; ask from a Firefox-only tab (WXT manifest.include meta)
 - [Sync write scope + Now Open coalescing](learnings_sync_write_scope_and_now_open_coalescing.md) — stamp only changed groups (same ref otherwise); tab-event bursts throttled into one pass, flushed on in-app unmount
+- [Firefox popup same-size resize](learnings_firefox_popup_same_size_resize.md) — Radix Select closed on open in Firefox popups; capture guard in SelectContent; real-popup BiDi repro
