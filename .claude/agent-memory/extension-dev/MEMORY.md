@@ -112,3 +112,4 @@
 - [Radix arrow-key focus timer](learnings_radix_arrow_focus_timer.md) — Select + menus move arrow focus in setTimeout; e2e must wait for focus to move before Enter
 - [Undo: one step per mutation](learnings_undo_one_step_per_mutation.md) — savedDataChanged gate, push after write, live-tab reopen/close effects by id, stale-render rev trap
 - [Undo history in the write](learnings_undo_history_in_write.md) — afterWrite hook = history queue; cursor check not expectedRev; effect promises; restore keeps current base; mock gotchas
+- [Extra trusted web origins](learnings_extra_trusted_web_origins.md) — VITE_EXTRA_WEB_APP_URLS one parser for 3 consumers; Firefox MV3 never grants a content-script site added in an update

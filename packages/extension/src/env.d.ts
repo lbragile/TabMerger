@@ -12,6 +12,8 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string;
   readonly VITE_SUPABASE_PUBLISHABLE_KEY: string;
   readonly VITE_WEB_APP_URL: string;
+  /** Extra trusted web origins, comma-separated; see src/lib/webAppOrigins.ts. */
+  readonly VITE_EXTRA_WEB_APP_URLS?: string;
   readonly VITE_STRIPE_PUBLISHABLE_KEY: string;
   readonly VITE_DEMO_BUILD?: string;
   readonly VITE_AI_ENABLED?: string;

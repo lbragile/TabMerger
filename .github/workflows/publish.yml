@@ -34,9 +34,14 @@ permissions:
 # PROD: the production site and project, for stable builds only.
 env:
   BETA_WEB_APP_URL: https://tabmerger-preview.vercel.app
+  # Extra web origins each build also trusts (externally_connectable and the Firefox web bridge),
+  # comma-separated. Set while the site moves to tabmerger.com: builds trust the old and the new
+  # host, so installed builds keep working whichever one a page is served from.
+  BETA_EXTRA_WEB_APP_URLS: https://preview.tabmerger.com
   BETA_SUPABASE_URL: https://xmofzeqcuyenmxgxjtrv.supabase.co
   BETA_SUPABASE_PUBLISHABLE_KEY: sb_publishable_jLK5NyMIvyHkBjilsKo44w_hbTpX9TX
   PROD_WEB_APP_URL: https://tabmerger.vercel.app
+  PROD_EXTRA_WEB_APP_URLS: https://tabmerger.com
   PROD_SUPABASE_URL: https://jzgzdaileqxtsudbaouj.supabase.co
   PROD_SUPABASE_PUBLISHABLE_KEY: sb_publishable_KbrObk74eR4VDgYEqx0hcQ_HxuzkoTy
   # Chrome Web Store item IDs (public: they're in the listing URLs, see docs/PUBLISHING.md).
@@ -91,6 +96,7 @@ jobs:
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: ${{ env.BETA_WEB_APP_URL }}
+          VITE_EXTRA_WEB_APP_URLS: ${{ env.BETA_EXTRA_WEB_APP_URLS }}
           # NOTE the _BETA suffix: on the beta path wxt.config.ts reads
           # `env.CHROME_EXTENSION_ID_BETA`, not CHROME_EXTENSION_ID. Exporting the
           # wrong name fails SILENTLY — `filter(Boolean)` drops the undefined id and
@@ -141,6 +147,7 @@ jobs:
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: ${{ env.BETA_WEB_APP_URL }}
+          VITE_EXTRA_WEB_APP_URLS: ${{ env.BETA_EXTRA_WEB_APP_URLS }}
           VITE_SUPABASE_URL: ${{ env.BETA_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.BETA_SUPABASE_PUBLISHABLE_KEY }}
         run: pnpm wxt zip -b firefox --mode beta
@@ -162,6 +169,7 @@ jobs:
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: ${{ env.PROD_WEB_APP_URL }}
+          VITE_EXTRA_WEB_APP_URLS: ${{ env.PROD_EXTRA_WEB_APP_URLS }}
           CHROME_EXTENSION_ID: ${{ env.CHROME_EXTENSION_ID }}
           # See the beta step above — without these the shipped build cannot reach
           # Supabase and degrades silently to local-only. Stable uses the PROD_* project.
@@ -176,6 +184,7 @@ jobs:
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: ${{ env.PROD_WEB_APP_URL }}
+          VITE_EXTRA_WEB_APP_URLS: ${{ env.PROD_EXTRA_WEB_APP_URLS }}
           VITE_SUPABASE_URL: ${{ env.PROD_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.PROD_SUPABASE_PUBLISHABLE_KEY }}
         run: pnpm wxt zip -b firefox
@@ -185,6 +194,7 @@ jobs:
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: ${{ env.PROD_WEB_APP_URL }}
+          VITE_EXTRA_WEB_APP_URLS: ${{ env.PROD_EXTRA_WEB_APP_URLS }}
           CHROME_EXTENSION_ID: ${{ env.CHROME_EXTENSION_ID }}
           VITE_SUPABASE_URL: ${{ env.PROD_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.PROD_SUPABASE_PUBLISHABLE_KEY }}

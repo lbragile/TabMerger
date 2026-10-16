@@ -13,17 +13,24 @@
 // no install/update warning for existing Chromium users. Chrome and Edge keep using
 // `externally_connectable` in wxt.config.ts.
 //
-// `matches` reads `import.meta.env.VITE_WEB_APP_URL`, which WXT resolves per build mode the
-// same way it resolves the popup/background bundles (production/beta/local dev each get their
-// own .env file) — this is a real vite build of this file (wxt.builder.importEntrypoints), not
-// a naive static parse, so the env substitution applies here too.
+// `matches` reads `import.meta.env.VITE_WEB_APP_URL` plus the extra sites in
+// `VITE_EXTRA_WEB_APP_URLS`, which WXT resolves per build mode the same way it resolves the
+// popup/background bundles (production/beta/local dev each get their own .env file, and CI sets
+// them as env vars) — this is a real vite build of this file (wxt.builder.importEntrypoints),
+// not a naive static parse, so the env substitution applies here too. Same list, same parser as
+// `externally_connectable` in wxt.config.ts; an invalid extra throws and fails the build.
 import { WEB_BRIDGE, WEBSITE_TO_EXTENSION_TYPES, type ExtensionMessageType } from '@tabmerger/shared';
 import { parseBridgeMessage } from '@/lib/bridgeMessage';
+import { resolveTrustedWebAppOrigins, toOriginMatchPatterns } from '@/lib/webAppOrigins';
 
-const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL;
+const TRUSTED_ORIGINS = resolveTrustedWebAppOrigins(
+  import.meta.env.VITE_WEB_APP_URL,
+  import.meta.env.VITE_EXTRA_WEB_APP_URLS,
+  { allowLocalhostHttp: import.meta.env.MODE === 'development' }
+);
 
 export default defineContentScript({
-  matches: WEB_APP_URL ? [`${WEB_APP_URL}/*`] : [],
+  matches: toOriginMatchPatterns(TRUSTED_ORIGINS),
   include: ['firefox'],
   // Runs in the page's own JS context isolation (content script "isolated world"), not
   // MAIN world — window.postMessage still crosses that boundary fine, and this script never

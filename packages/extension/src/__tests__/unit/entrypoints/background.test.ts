@@ -1037,6 +1037,55 @@ describe('background — Firefox web-bridge internal onMessage listener', () => 
     )
     expect(sendResponse).not.toHaveBeenCalled()
   })
+
+  // VITE_EXTRA_WEB_APP_URLS: a second site (during a host move) the bridge also runs on. The
+  // origin list is read when main() runs, so each case stubs the env and re-runs main() on a
+  // fresh chrome stub.
+  describe('extra trusted web origins (VITE_EXTRA_WEB_APP_URLS)', () => {
+    function restartWith(extras: string) {
+      vi.stubEnv('VITE_EXTRA_WEB_APP_URLS', extras)
+      stub = makeChromeStub()
+      globalThis.chrome = stub.chrome as unknown as typeof chrome
+      capturedMain!()
+    }
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
+    it('accepts a relayed PING from an extra origin', () => {
+      restartWith('https://new.example.com')
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2](
+        { type: EXTENSION_MESSAGE.PING },
+        { id: 'this-extension-id', url: 'https://new.example.com/dashboard' },
+        sendResponse
+      )
+      expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+    })
+
+    it('still accepts the primary origin alongside the extras', () => {
+      restartWith('https://new.example.com')
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+      expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+    })
+
+    it('rejects a lookalike of an extra origin (subdomain or other scheme)', () => {
+      restartWith('https://new.example.com')
+      for (const url of ['https://evil.new.example.com/', 'http://new.example.com/', 'https://new.example.com.evil.com/']) {
+        const sendResponse = vi.fn()
+        stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, { id: 'this-extension-id', url }, sendResponse)
+        expect(sendResponse).not.toHaveBeenCalled()
+      }
+    })
+
+    it('fails closed (trusts no origin, not even the primary) when the extras are invalid', () => {
+      restartWith('https://*.example.com')
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+      expect(sendResponse).not.toHaveBeenCalled()
+    })
+  })
 })
 
 describe('background — guided tour flag on install', () => {
