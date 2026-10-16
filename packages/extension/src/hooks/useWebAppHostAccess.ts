@@ -13,6 +13,7 @@ interface WebAppHostAccess {
   /**
    * Opens the site-access tab, which asks Firefox for the missing sites. The popup never asks
    * itself: Firefox shows no permission prompt over an open popup (see `lib/webAppHostAccess.ts`).
+   * Resolves to whether the tab opened. Opening it leaves the popup open; the caller closes it.
    */
   connect: () => Promise<boolean>;
   /** Hides the prompt for the current `missing` sites, remembered across popup opens. */

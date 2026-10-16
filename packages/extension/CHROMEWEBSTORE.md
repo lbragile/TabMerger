@@ -540,7 +540,7 @@ on Firefox: a content script on the web app's origins (`VITE_WEB_APP_URL` plus
   about:addons, TabMerger, Permissions). Sites granted before stay granted. So an installed
   Firefox build that gains a second site keeps working on the first one only, until the user
   allows the second. The Firefox popup offers that with an "Allow" banner
-  (`permissions.request` from the click, dismissible); see `FIREFOXADDONS.md`, "The in-popup
+  (it opens a TabMerger tab that asks Firefox, then closes the popup; dismissible); see `FIREFOXADDONS.md`, "The in-popup
   prompt". Chrome and Edge never show it.
 - **What it can read/do:** relays exactly three message types between the page and the
   background script; reads nothing else from the page's DOM, network requests, or storage.
