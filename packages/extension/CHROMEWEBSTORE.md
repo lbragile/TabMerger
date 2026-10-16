@@ -464,7 +464,7 @@ All three certifications can be ticked, because they are true as built:
   before. No permission, data collection or network destination changed with this.
 - Uninstall survey (`src/lib/uninstallSurvey.ts`): on every start the background worker calls
   `chrome.runtime.setUninstallURL` (no permission needed), so after the extension is removed the
-  browser opens `<web app>/uninstalled` (`https://tabmerger.vercel.app/uninstalled` for the stable
+  browser opens `<web app>/uninstalled` (`https://tabmerger.com/uninstalled` for the stable
   item). The address carries only the extension version, the browser (`chrome`, `firefox`,
   `edge`) and the channel (`stable`, `beta`), e.g. `?v=3.1.2&b=chrome&c=stable`: no user id,
   email, install id, group or tab data, or settings. The survey on that page is optional; anything
@@ -483,9 +483,10 @@ All three certifications can be ticked, because they are true as built:
 https://tabmerger.vercel.app/privacy
 
 The route exists (`packages/web/app/(marketing)/privacy/page.tsx`, last updated September 26,
-2026) and the production domain matches `PROD_WEB_APP_URL` in `publish.yml`. Beta builds use
-the preview alias (`tabmerger-preview.vercel.app`) for the app, but the listing links the
-production domain. Terms of Service: https://tabmerger.vercel.app/terms
+2026). Builds now use `tabmerger.com` (`PROD_WEB_APP_URL` in `publish.yml`); the old
+`tabmerger.vercel.app` host keeps serving the same site, so this listing URL still works until it
+is switched to `https://tabmerger.com/privacy`. Beta builds use `preview.tabmerger.com` for the
+app, but the listing links the production domain. Terms of Service: https://tabmerger.vercel.app/terms
 (`app/(marketing)/terms/page.tsx`).
 
 ---
@@ -564,7 +565,8 @@ https://tabmerger.vercel.app/contact (route: `packages/web/app/(marketing)/conta
 Alternative for bug reports: https://github.com/lbragile/TabMerger/issues
 
 **Homepage URL** [RECOMMENDED]
-https://tabmerger.vercel.app (production site, same as `PROD_WEB_APP_URL` in `publish.yml`).
+https://tabmerger.vercel.app (production site; builds now use `https://tabmerger.com`,
+`PROD_WEB_APP_URL` in `publish.yml`, which serves the same site).
 Also live as routes: `/features`, `/pricing`, `/faq`, `/changelog`.
 
 ---
@@ -598,6 +600,8 @@ with the real semver string carried in `version_name`.
 | Both | set at release | set at release | next release (unreleased) | — | Draft: search shows what matched, and matches only the text as typed (in sequence, any case; letters out of order no longer match), best matches first in the search list. Matched text is highlighted (title, address, window, group and Chrome tab-group names, and the rows of the search list); tabs, windows and groups that do not match are hidden, or faded, by a new local setting "Tabs that do not match a search" (Hide by default, Dim) in Settings, General; the query stays until the user clears it (a clear button in the search field, next to the header box and on the "hidden by search" line); "Now Open" is searched like any group. No manifest change, no new permission, no new data: the query never leaves the popup's memory and the setting is one more field of the existing local preferences record. Dragging and keyboard moving are switched off while a search hides rows. Screenshots: see Screenshot Notes |
 
 | Both | set at release | set at release | next release (unreleased) | — | Draft: the extension also accepts its website messages (install check, sign-in handoff, sync request) from the site's new domain: `tabmerger.com` next to `tabmerger.vercel.app` (stable), `preview.tabmerger.com` next to `tabmerger-preview.vercel.app` (BETA). Only `externally_connectable.matches` changes in the Chrome and Edge manifest; it is not a permission, so no warning and no re-approval prompt. Paste the updated `externally_connectable` text above into the review notes if asked. The privacy tab needs no new tick: the extension sends nothing new and still sends everything to the current site. Screenshots: none affected |
+
+| Both | set at release | set at release | next release (unreleased) | — | Draft: the extension now talks to the website on its new domain: sign-in, sync, AI and checkout requests, links and the uninstall page go to `tabmerger.com` (stable) / `preview.tabmerger.com` (BETA). The old `vercel.app` hosts stay trusted. Manifest: the same two `externally_connectable.matches` per build as the previous release, so no permission change and no prompt. The privacy tab needs no new tick: the same data goes to the same operator's site under its own domain. Screenshots: none affected |
 
 | Both | set at release | set at release | next release (unreleased) | — | Draft: after the extension is removed, the browser opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL`. No manifest change and no new permission. The address carries only the extension version, browser and release channel; see Technical privacy notes. The dashboard's privacy tab needs no new tick (the extension sends nothing; the page itself is the website's) |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->

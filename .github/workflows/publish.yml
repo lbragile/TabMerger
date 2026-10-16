@@ -33,15 +33,15 @@ permissions:
 # to it for sign-in, sync, page previews, upgrade links and, on Firefox, updates.
 # PROD: the production site and project, for stable builds only.
 env:
-  BETA_WEB_APP_URL: https://tabmerger-preview.vercel.app
+  BETA_WEB_APP_URL: https://preview.tabmerger.com
   # Extra web origins each build also trusts (externally_connectable and the Firefox web bridge),
-  # comma-separated. Set while the site moves to tabmerger.com: builds trust the old and the new
-  # host, so installed builds keep working whichever one a page is served from.
-  BETA_EXTRA_WEB_APP_URLS: https://preview.tabmerger.com
+  # comma-separated. The old vercel.app hosts stay trusted after the move to tabmerger.com, so
+  # pages still served from them (and old links) keep reaching the extension.
+  BETA_EXTRA_WEB_APP_URLS: https://tabmerger-preview.vercel.app
   BETA_SUPABASE_URL: https://xmofzeqcuyenmxgxjtrv.supabase.co
   BETA_SUPABASE_PUBLISHABLE_KEY: sb_publishable_jLK5NyMIvyHkBjilsKo44w_hbTpX9TX
-  PROD_WEB_APP_URL: https://tabmerger.vercel.app
-  PROD_EXTRA_WEB_APP_URLS: https://tabmerger.com
+  PROD_WEB_APP_URL: https://tabmerger.com
+  PROD_EXTRA_WEB_APP_URLS: https://tabmerger.vercel.app
   PROD_SUPABASE_URL: https://jzgzdaileqxtsudbaouj.supabase.co
   PROD_SUPABASE_PUBLISHABLE_KEY: sb_publishable_KbrObk74eR4VDgYEqx0hcQ_HxuzkoTy
   # Chrome Web Store item IDs (public: they're in the listing URLs, see docs/PUBLISHING.md).
