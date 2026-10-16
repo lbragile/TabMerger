@@ -3,14 +3,17 @@ import {
   dismissWebAppHostPatterns,
   getDismissedWebAppHostPatterns,
   getMissingWebAppHostPatterns,
-  requestWebAppHostAccess,
+  openWebAppHostAccessPage,
   webAppHostPatterns,
 } from '@/lib/webAppHostAccess';
 
 interface WebAppHostAccess {
   /** Ungranted sites the prompt should offer; empty when there is nothing to show. */
   missing: string[];
-  /** Asks Firefox for `missing`. Call straight from the click: the request needs the user action. */
+  /**
+   * Opens the site-access tab, which asks Firefox for the missing sites. The popup never asks
+   * itself: Firefox shows no permission prompt over an open popup (see `lib/webAppHostAccess.ts`).
+   */
   connect: () => Promise<boolean>;
   /** Hides the prompt for the current `missing` sites, remembered across popup opens. */
   dismiss: () => Promise<void>;
@@ -20,7 +23,8 @@ interface WebAppHostAccess {
  * Which trusted web app sites the Firefox web bridge can't run on yet and the user hasn't
  * dismissed the prompt for. Checked when the popup opens and again on every permission change
  * (the user can grant or revoke site access in about:addons while the popup is open). Always
- * empty on Chrome and Edge; see `lib/webAppHostAccess.ts`.
+ * empty on Chrome and Edge; see `lib/webAppHostAccess.ts`. A grant made in the site-access tab
+ * arrives here through `permissions.onAdded` (or the next popup open) and hides the prompt.
  */
 export function useWebAppHostAccess(): WebAppHostAccess {
   const [missing, setMissing] = useState<string[]>([]);
@@ -50,13 +54,7 @@ export function useWebAppHostAccess(): WebAppHostAccess {
     };
   }, [load]);
 
-  const connect = useCallback(() => {
-    // No await before this call: Firefox only honours permissions.request() inside the click.
-    return requestWebAppHostAccess(missing).then(async (granted) => {
-      if (granted) setMissing(await load());
-      return granted;
-    });
-  }, [missing, load]);
+  const connect = useCallback(() => openWebAppHostAccessPage(), []);
 
   const dismiss = useCallback(async () => {
     const dismissed = missing;

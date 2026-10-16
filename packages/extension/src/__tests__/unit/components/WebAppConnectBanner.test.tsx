@@ -13,6 +13,7 @@ const NEW = 'https://tabmerger.com/*'
 let granted: Set<string>
 let contains: ReturnType<typeof vi.fn>
 let request: ReturnType<typeof vi.fn>
+let createTab: ReturnType<typeof vi.fn>
 let added: Listener[]
 let removed: Listener[]
 let store: Record<string, unknown>
@@ -38,8 +39,11 @@ beforeEach(() => {
     origins.forEach((o) => granted.add(o))
     return true
   })
+  createTab = vi.fn(async () => ({ id: 1 }))
   ;(globalThis as { chrome?: unknown }).chrome = {
     permissions: { contains, request, onAdded: event(() => added), onRemoved: event(() => removed) },
+    runtime: { getURL: (path: string) => `moz-extension://test-id${path}` },
+    tabs: { create: createTab },
     storage: {
       local: {
         get: vi.fn(async (key: string) => (key in store ? { [key]: store[key] } : {})),
@@ -103,25 +107,37 @@ describe('WebAppConnectBanner', () => {
     expect(added).toHaveLength(0)
   })
 
-  it('requests only the missing site inside the click, then hides once granted', async () => {
+  it('opens the site-access tab instead of asking Firefox from the popup', async () => {
     granted.add(OLD)
     render(<WebAppConnectBanner />)
     fireEvent.click(await allowButton())
-    // Synchronously, within the click: Firefox only allows permissions.request() in a user action.
-    expect(request).toHaveBeenCalledTimes(1)
-    expect(request).toHaveBeenCalledWith({ origins: [NEW] })
-    await waitFor(() => expect(screen.queryByRole('region', { name: 'Website access' })).not.toBeInTheDocument())
+    // Firefox shows no permission prompt over an open popup, so the tab asks instead.
+    expect(createTab).toHaveBeenCalledTimes(1)
+    expect(createTab).toHaveBeenCalledWith({ url: 'moz-extension://test-id/site-access.html' })
+    expect(request).not.toHaveBeenCalled()
   })
 
-  it('stays when the user refuses, with no other prompt', async () => {
-    request.mockResolvedValue(false)
+  it('stays until the grant is seen, then hides', async () => {
     granted.add(OLD)
     render(<WebAppConnectBanner />)
     fireEvent.click(await allowButton())
     await settle()
     expect(await allowButton()).toBeInTheDocument()
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(request).toHaveBeenCalledTimes(1)
+    granted.add(NEW)
+    await act(async () => {
+      added.forEach((cb) => cb())
+    })
+    await waitFor(() => expect(screen.queryByRole('region', { name: 'Website access' })).not.toBeInTheDocument())
+  })
+
+  it('stays when the tab cannot be opened', async () => {
+    createTab.mockRejectedValue(new Error('no tabs'))
+    granted.add(OLD)
+    render(<WebAppConnectBanner />)
+    fireEvent.click(await allowButton())
+    await settle()
+    expect(await allowButton()).toBeInTheDocument()
+    expect(request).not.toHaveBeenCalled()
   })
 
   it('dismisses, remembers the dismissal, and stays hidden on the next open', async () => {
@@ -170,6 +186,10 @@ describe('WebAppConnectBanner', () => {
     const allow = await allowButton()
     allow.focus()
     fireEvent.click(allow)
+    granted.add(NEW)
+    await act(async () => {
+      added.forEach((cb) => cb())
+    })
     await waitFor(() => expect(screen.getByRole('button', { name: 'Next control' })).toHaveFocus())
   })
 
@@ -185,6 +205,10 @@ describe('WebAppConnectBanner', () => {
     const allow = await allowButton()
     fireEvent.click(allow)
     screen.getByLabelText('Elsewhere').focus()
+    granted.add(NEW)
+    await act(async () => {
+      added.forEach((cb) => cb())
+    })
     await waitFor(() => expect(screen.queryByRole('region', { name: 'Website access' })).not.toBeInTheDocument())
     expect(screen.getByLabelText('Elsewhere')).toHaveFocus()
   })
