@@ -9,8 +9,14 @@ export const GROUPS_CHANGED_MESSAGE = 'TM_GROUPS_CHANGED';
  */
 export type GroupsChangeCause = { kind: 'url-rule'; tabId: number; url: string };
 
-/** The message body: `{ type: GROUPS_CHANGED_MESSAGE, cause? }`. */
+/** The message body: `{ type: GROUPS_CHANGED_MESSAGE, cause?, saved? }`. */
 export interface GroupsChangedMessage {
   type: typeof GROUPS_CHANGED_MESSAGE;
   cause?: GroupsChangeCause;
+  /**
+   * With a `cause`: the fingerprint of the saved data that write left (`savedDataFingerprint`). The
+   * popup re-anchors its undo cursor only while the store still holds exactly that saved data (Now
+   * Open writes in between do not matter; any other saved-data change does).
+   */
+  saved?: string;
 }

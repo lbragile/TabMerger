@@ -219,7 +219,7 @@ describe('path 1: the service worker saving a tab by URL rule (real IndexedDB)',
 
     await applyUrlRule({ id: 610, url: 'https://example.com/ruled', title: 'Ruled' } as chrome.tabs.Tab, 'work')
     expect((await getGroupsState()).available.find((g) => g.id === 'work')?.windows[0].tabs.map((t) => t.title)).toContain('Ruled')
-    expect((chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mock.calls[0][0]).toEqual({ type: GROUPS_CHANGED_MESSAGE, cause: { kind: 'url-rule', tabId: 610, url: 'https://example.com/ruled' } })
+    expect((chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mock.calls[0][0]).toEqual({ type: GROUPS_CHANGED_MESSAGE, cause: { kind: 'url-rule', tabId: 610, url: 'https://example.com/ruled' }, saved: expect.any(String) })
     deliver()
     expect(useUIStore.getState().undoStack).toHaveLength(1)
   })

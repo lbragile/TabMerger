@@ -6,5 +6,5 @@
 - [IDB explicit commit + un-awaited reads](learnings_idb_explicit_commit.md) — commit() stays atomic, sync put throws never abort, creation-order guarantees, fake-indexeddb models call order only
 - [Sessions store audit rules](learnings_sessions_store_audit_rules.md) — sessions RLS per verb, silent zero-row writes, anon answers, what a settings-key guard proves, writers outside the backup lock
 - [Filtered index + set-aside history](learnings_filtered_index_and_set_aside_state.md) — local-only rows need one index space for every position check; stashed undo history must obey clearHistory
-- [Undo-history exemptions + late markers](learnings_undo_history_exemptions_and_late_markers.md) — exemption key lifetime vs event frequency (onUpdated fires per navigation); markers written after an await vs a later undo
+- [Write path vs server base](learnings_write_path_server_base.md) — saveGroupsState keeps the stored remoteUpdatedAt, updateGroupsState trusts the incoming one
 - [DnD rebase identity pitfalls](learnings_dnd_rebase_identity.md) — rank + duplicate-only context check; structurally blind to a pure transposition of identity-equal items

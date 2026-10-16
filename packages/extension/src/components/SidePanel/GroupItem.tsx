@@ -102,7 +102,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   const { mutate: updateGroupName } = useUpdateGroupName();
   const { mutate: updateGroupColor } = useUpdateGroupColor();
   const { mutate: toggleGroupStar } = useToggleGroupStar();
-  const { mutate: deleteGroup } = useDeleteGroup();
+  // (only used to cancel a just-added group: that takes the add's undo step back with it)
+  const { mutate: deleteGroup } = useDeleteGroup({ cancelsAdd: true });
 
   const [editValue, setEditValue] = useState(group.name);
   const inputRef = useRef<HTMLInputElement>(null);

@@ -38,12 +38,11 @@ export function CleanupSuggestionBanner() {
     }
 
     async function doRemoveAll() {
-        for (const groupIndex of staleGroupIndexes) {
-            await removeStaleTabs({
-                groupIndex,
-                staleThresholdMs: thresholdMs,
-            });
-        }
+        // ONE write and one undo step for every group (an Undo brings all the removed tabs back)
+        await removeStaleTabs({
+            groupIndexes: staleGroupIndexes,
+            staleThresholdMs: thresholdMs,
+        });
         toast.success(`Removed ${count} stale ${count === 1 ? "tab" : "tabs"}`);
         dismiss();
     }

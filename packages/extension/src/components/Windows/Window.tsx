@@ -149,7 +149,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
   const { mutate: updateWindowNote } = useUpdateWindowNote();
   const { mutate: toggleStarred } = useToggleWindowStarred();
   const { mutate: toggleIncognito } = useToggleWindowIncognito();
-  const { mutate: moveWindow } = useMoveWindow();
+  const { mutate: moveWindow, mutateAsync: moveWindowAsync } = useMoveWindow();
   const { mutate: sortTabs } = useSortTabs();
   const { data: groupsState } = useGroups();
   const isNowOpen = groupsState?.available[groupIndex]?.permanent ?? false;
@@ -341,7 +341,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                   </DropdownMenuItem>
                 )}
                 <CreateGroupMenuItem
-                  onCreated={(index) => moveWindow({ fromGroupIndex: groupIndex, windowIndex, toGroupIndex: index })}
+                  onCreated={(index) => moveWindowAsync({ fromGroupIndex: groupIndex, windowIndex, toGroupIndex: index })}
                 />
               </DropdownMenuSubContent>
             </DropdownMenuSub>

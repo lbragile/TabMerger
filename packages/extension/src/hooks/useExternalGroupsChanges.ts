@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { GROUPS_CHANGED_MESSAGE, type GroupsChangedMessage } from '@/lib/groupsChangedMessage';
 import { consumeOwnOpenedTab } from '@/lib/ownOpenedTabs';
+import { reanchorHistoryCursor } from '@/lib/undoHistory';
 import { useUIStore } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
@@ -26,7 +27,10 @@ export function useExternalGroupsChanges() {
       // own action (lib/ownOpenedTabs.ts), and undoing the action rightly takes it back too.
       // (once, shortly after opening it, at the URL it was opened with: see consumeOwnOpenedTab)
       const ownTabRule = m.cause?.kind === 'url-rule' && typeof m.cause.tabId === 'number' && consumeOwnOpenedTab(m.cause.tabId, m.cause.url);
-      if (!ownTabRule) useUIStore.getState().clearHistory();
+      // The kept history must not then refuse its next Undo for that save (a change that did not go
+      // through the history, see `changedOutsideHistory`): the cursor is re-anchored on it instead.
+      if (ownTabRule) void reanchorHistoryCursor(m.saved);
+      else useUIStore.getState().clearHistory();
       // cancelRefetch:false is mandatory on the groups key (spec C11): the default cancels an
       // in-flight fetch and rejects any mutation that joined it.
       void qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false });

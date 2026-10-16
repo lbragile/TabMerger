@@ -84,7 +84,7 @@ vi.mock('@/components/Windows/TabPreview', () => ({
 
 vi.mock('@/hooks/useGroups', () => ({
   useDeleteTab: () => ({ mutate: mockDeleteTab }),
-  useMoveTab: () => ({ mutate: mockMoveTab }),
+  useMoveTab: () => ({ mutate: mockMoveTab, mutateAsync: mockMoveTab }),
   useGroups: () => mockUseGroupsData(),
   useUpdateTabNote: () => ({ mutate: mockUpdateTabNote }),
   useSetTabReminder: () => ({ mutate: mockSetTabReminder }),

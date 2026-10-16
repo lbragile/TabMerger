@@ -25,7 +25,8 @@ import type { DndInsertion } from '@/lib/dndInsertion'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
 vi.mock('@/lib/localDb', () => ({
-  saveGroupsState: vi.fn().mockResolvedValue(undefined),
+  // (records the drop's undo step the way the real write does: inside the write, once stored)
+  saveGroupsState: vi.fn(async (s: unknown, o?: { afterWrite?: (stored: unknown) => void }) => { o?.afterWrite?.(s) }),
   setSetting: vi.fn().mockResolvedValue(undefined),
   getSetting: vi.fn().mockResolvedValue({})
 }))
@@ -109,7 +110,13 @@ describe('multi-drag: the selection moves as one block and stays selected at its
     expect(result.current.active?.selectionIds).toEqual(['work::w0::t0', 'work::w1::t0', 'work::w1::t1'])
 
     let release!: () => void
-    save.mockImplementationOnce(() => new Promise<void>((r) => (release = r)))
+    save.mockImplementationOnce(
+      (s: unknown, o?: { afterWrite?: (stored: unknown) => void }) =>
+        new Promise<void>((r) => (release = () => {
+          o?.afterWrite?.(s) // (the step is recorded inside the write, once it is stored)
+          r()
+        }))
+    )
     let pending!: Promise<void>
     act(() => {
       pending = result.current.onDragEnd(endEvt('work::w1::t0', 'play::w0::t1', { type: 'tab' })) as Promise<void>

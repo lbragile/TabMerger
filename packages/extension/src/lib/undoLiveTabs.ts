@@ -15,7 +15,8 @@ import type { GroupsState } from './types';
  *    must also bring the tabs back, or they would be gone from everywhere;
  *  - a saved item dropped INTO Now Open is removed from its group and OPENED as real tabs. Undo
  *    puts the saved item back, so it also closes the tabs that drop opened.
- * Each such entry carries a {@link LiveTabsEffect}; running it returns the inverse effect, which is
+ * Each such entry carries a {@link LiveTabsEffect} (or the promise of it while Chrome is still
+ * returning the ids of the tabs the action opened); running it returns the inverse effect, which is
  * attached to the entry the undo/redo pushed onto the other stack. So Redo closes exactly the tabs
  * Undo reopened (by the ids Chrome returned when reopening them), and Undo again reopens them.
  *
@@ -44,17 +45,56 @@ export type LiveTabsEffect =
   /** tabs the change OPENED: undoing it closes exactly these ids */
   | { kind: 'close'; tabs: LiveTabRecord[] };
 
-const effects = new WeakMap<GroupsState, LiveTabsEffect>();
+/**
+ * An entry's effect, or the promise of it while it is still being collected: the ids of the tabs
+ * an action opened are only known once Chrome returns them, after the write that recorded the
+ * step. Tagging the entry with the PROMISE when the step is recorded is what makes the step
+ * complete: an Undo that pops it waits for the ids instead of finding no effect and leaving the
+ * opened tabs behind.
+ */
+export type PendingLiveTabsEffect = LiveTabsEffect | PromiseLike<LiveTabsEffect | null>;
 
-/** Attach `effect` to a history entry (nothing for a missing entry or an effect with no tabs). */
-export function tagHistoryEntry(entry: GroupsState | undefined, effect: LiveTabsEffect | null | undefined): void {
-  if (!entry || !effect || effect.tabs.length === 0) return;
+const effects = new WeakMap<GroupsState, PendingLiveTabsEffect>();
+
+/** Longest an Undo or Redo waits for an effect still being collected; past it the effect is skipped. */
+export const EFFECT_WAIT_MS = 10_000;
+
+const isPending = (effect: PendingLiveTabsEffect): effect is PromiseLike<LiveTabsEffect | null> =>
+  typeof (effect as PromiseLike<unknown>).then === 'function';
+
+/**
+ * Attach `effect` (or the promise of it) to a history entry. Nothing for a missing entry, a missing
+ * effect, or a known effect with no tabs.
+ */
+export function tagHistoryEntry(entry: GroupsState | undefined, effect: PendingLiveTabsEffect | null | undefined): void {
+  if (!entry || !effect) return;
+  if (!isPending(effect) && effect.tabs.length === 0) return;
   effects.set(entry, effect);
 }
 
-/** The effect attached to a history entry, if any. */
-export function historyEntryEffect(entry: GroupsState | undefined): LiveTabsEffect | undefined {
+/** The effect attached to a history entry (possibly still a promise), if any. */
+export function historyEntryEffect(entry: GroupsState | undefined): PendingLiveTabsEffect | undefined {
   return entry ? effects.get(entry) : undefined;
+}
+
+/**
+ * The entry's effect once it is known: waits for one still being collected, at most
+ * {@link EFFECT_WAIT_MS}. Null when there is none, it failed, it has no tabs or it timed out.
+ */
+export async function settledEntryEffect(entry: GroupsState | undefined): Promise<LiveTabsEffect | null> {
+  const effect = historyEntryEffect(entry);
+  if (!effect) return null;
+  if (!isPending(effect)) return effect;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), EFFECT_WAIT_MS);
+  });
+  try {
+    const settled = await Promise.race([Promise.resolve(effect).then((e) => e, () => null), timeout]);
+    return settled && settled.tabs.length > 0 ? settled : null;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /** Records of the live Now Open tabs with these ids in `state` (what a drag-out is about to close). */

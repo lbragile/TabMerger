@@ -23,8 +23,8 @@ import {
   type DndSideEffect
 } from '@/lib/dndMove';
 import { rebaseMove } from '@/lib/dndRebase';
-import { liveTabRecords, tagHistoryEntry, type LiveTabRecord } from '@/lib/undoLiveTabs';
-import { savedDataChanged } from '@/lib/undoHistory';
+import { liveTabRecords, type LiveTabRecord, type LiveTabsEffect } from '@/lib/undoLiveTabs';
+import { recordStep, type StepRecord } from '@/lib/undoHistory';
 import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
 import { isTourSpringOpenBlocked } from '@/lib/tourSandbox';
 import { closeLiveTabsSafely, partitionClosableTabs } from '@/lib/closeLiveTabs';
@@ -67,10 +67,12 @@ interface CommitProgress {
   selectionBefore: readonly SelectedItem[];
   remapped?: SelectedItem[];
   movedGroup?: { from: number; to: number };
-  pushedBase?: GroupsState;
-  redoBefore?: GroupsState[] | null;
-  /** the undo entry this drop pushed (the tabs it opens are attached to it once they exist) */
-  historyEntry?: GroupsState;
+  /**
+   * Hands the drop's undo step the real tabs its side effects opened (the step was recorded with
+   * the promise of them). EVERY exit after the write was issued must call it, with `[]` when
+   * nothing was opened, or an Undo of the drop would wait for the effect until it times out.
+   */
+  settleOpened?: (tabs: LiveTabRecord[]) => void;
   cacheWritten?: boolean;
   /**
    * The in-flight `saveGroupsState` promise, recorded the moment it is issued so a
@@ -83,8 +85,6 @@ interface CommitProgress {
 type UiSnapshot = {
   selectedItems?: SelectedItem[];
   activeGroupIndex?: number;
-  undoStack?: GroupsState[];
-  redoStack?: GroupsState[];
 };
 
 /** The store outside React; `undefined` for bare-selector test mocks that have no `getState`. */
@@ -356,16 +356,24 @@ async function redoDropOnFreshState(
   base: GroupsState,
   model: Model,
   a: DndRef,
-  o: DndRef
+  o: DndRef,
+  step: (skip: boolean) => StepRecord
 ): Promise<void> {
   let applied = false;
-  const stored = await updateGroupsState((fresh) => {
-    const freshModel = buildDndModel(fresh);
-    const rebased = rebaseMove(base, model, fresh, freshModel, a, o);
-    if (!rebased || !canDrop(freshModel, rebased.active, rebased.over)) return null;
-    applied = true;
-    return applyMove(freshModel, fresh, rebased.active, rebased.over).next;
-  });
+  // The drop's undo step is recorded here, on the state the move was really applied to
+  let skipHistory = true;
+  const stored = await updateGroupsState(
+    (fresh) => {
+      const freshModel = buildDndModel(fresh);
+      const rebased = rebaseMove(base, model, fresh, freshModel, a, o);
+      if (!rebased || !canDrop(freshModel, rebased.active, rebased.over)) return null;
+      applied = true;
+      const moved = applyMove(freshModel, fresh, rebased.active, rebased.over);
+      skipHistory = !moved.undoable || isTourDemoItem(freshModel, rebased.active.id);
+      return moved.next;
+    },
+    { afterWrite: (written, fresh) => recordStep(step(skipHistory))(written, fresh) }
+  );
   qc.setQueryData(GROUPS_QUERY_KEY, stored);
   if (!applied) throw new Error('the drop no longer applies to the latest groups');
 }
@@ -1026,10 +1034,9 @@ export function useDndHandlers() {
    * back. The rollback can run arbitrarily long after the drop (the write is queued), so:
    *  - the selection / active group are restored only if the store still holds the values
    *    this drop wrote AND no other drag is live (never clobber newer user state)
-   *  - the undo entry is removed only if it is still on top, and the redo stack the push
-   *    wiped comes back if nothing has written it since. `popUndo: false` suppresses that
-   *    entirely, for the one case where the write was already ISSUED and will probably
-   *    land: popping there would leave a real, persisted move with no way to undo it
+   *  - the undo history is never touched: the drop's step is recorded only once its write is
+   *    stored (inside that write), so a failed write has no step to take back, and no other
+   *    action's entry can be removed by mistake
    *  - the groups query re-reads IDB WITHOUT cancelling an in-flight fetch: `cancelRefetch`
    *    defaults to true and would reject every mutation that joined that fetch
    *
@@ -1037,7 +1044,7 @@ export function useDndHandlers() {
    * `isDndDragLive()`, which only `reset` clears — calling rollback first made them
    * permanently false on the synchronous-throw path, so nothing was ever restored.
    */
-  const rollback = (p: CommitProgress, opts: { popUndo?: boolean } = {}) => {
+  const rollback = (p: CommitProgress) => {
     const store = uiState();
     const live = isDndDragLive();
     if (p.remapped && store && !live && sameSelection(store.selectedItems ?? [], p.remapped)) {
@@ -1046,12 +1053,6 @@ export function useDndHandlers() {
     }
     if (p.movedGroup && store && !live && store.activeGroupIndex === p.movedGroup.to) {
       setActiveGroupIndex(p.movedGroup.from);
-    }
-    if (opts.popUndo !== false && p.pushedBase && store && store.undoStack?.[0] === p.pushedBase) {
-      (useUIStore as { setState?: (s: Record<string, unknown>) => void }).setState?.({
-        undoStack: store.undoStack.slice(1),
-        redoStack: store.redoStack && store.redoStack.length > 0 ? store.redoStack : (p.redoBefore ?? [])
-      });
     }
     if (p.cacheWritten) void qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false });
   };
@@ -1212,18 +1213,22 @@ export function useDndHandlers() {
       newWindow: co.type === 'new-window'
     });
     // ONE undo step for every drop that changed saved data, Now Open sources and destinations
-    // included (`savedDataChanged` is the same rule every other mutation uses). A move inside the
-    // guided tour's practice groups is not history: they are not the user's data and are removed
-    // when the tour ends, so Undo must not offer to "restore" it.
-    if (undoable && savedDataChanged(commitBase, next) && !isTourDemoItem(commitModel, ca.id)) {
-      p.redoBefore = uiState()?.redoStack ?? null;
-      pushUndo(commitBase);
-      p.pushedBase = commitBase;
-      p.historyEntry = uiState()?.undoStack?.[0];
-      // A drag OUT of Now Open closes real tabs: Undo reopens them (lib/undoLiveTabs.ts)
-      const closing = sideEffects.flatMap((fx) => (fx.type === 'tabs.remove' ? fx.tabIds : []));
-      if (closing.length > 0) tagHistoryEntry(p.historyEntry, { kind: 'reopen', tabs: liveTabRecords(commitBase, closing) });
-    }
+    // included: `recordStep` (the rule every other mutation uses), run INSIDE the write once it is
+    // stored. So a failed write leaves no step, and the step is ordered like the write (an Undo
+    // clicked right after the drop is queued behind it and undoes it). A move inside the guided
+    // tour's practice groups is not history: they are not the user's data and are removed when
+    // the tour ends, so Undo must not offer to "restore" it.
+    const skipHistory = !undoable || isTourDemoItem(commitModel, ca.id);
+    // A drag OUT of Now Open closes real tabs: Undo reopens them (lib/undoLiveTabs.ts)
+    const closing = sideEffects.flatMap((fx) => (fx.type === 'tabs.remove' ? fx.tabIds : []));
+    const reopen: LiveTabsEffect | null = closing.length > 0 ? { kind: 'reopen', tabs: liveTabRecords(commitBase, closing) } : null;
+    // A drop INTO Now Open opens real tabs, whose ids exist only once the side effects ran (after
+    // the write): the step carries the promise of them, so an Undo waits and closes exactly those
+    const opens = sideEffects.some((fx) => fx.type === 'tabs.create' || fx.type === 'windows.create');
+    const opened = new Promise<LiveTabsEffect | null>((resolve) => {
+      p.settleOpened = (tabs) => resolve(tabs.length > 0 ? { kind: 'close', tabs } : null);
+    });
+    const step = (skip: boolean): StepRecord => ({ push: pushUndo, skip, effect: () => reopen ?? (opens ? opened : null) });
     // The IDB write is ISSUED first, synchronously: `saveGroupsState` bumps the write
     // generation and queue tail before returning, so any groups read in flight re-reads
     // and any read that starts later waits for this write (`localDb` read-your-writes).
@@ -1232,13 +1237,17 @@ export function useDndHandlers() {
     // Optimistic concurrency: the write must be based on the rev this cache state came from. If
     // another write landed since (the worker, a sync, Now Open), it is refused instead of
     // clobbering it, and the move is re-derived from a FRESH read inside the lock.
+    // (the entry is the state stored right before this write, read inside its queue step)
+    const afterWrite = (stored: GroupsState, before?: GroupsState) => recordStep(step(skipHistory))(stored, before ?? commitBase);
     const persist: Promise<unknown> = Promise.resolve(
-      commitBase.rev === undefined ? saveGroupsState(next) : saveGroupsState(next, { expectedRev: commitBase.rev })
+      commitBase.rev === undefined
+        ? saveGroupsState(next, { afterWrite })
+        : saveGroupsState(next, { expectedRev: commitBase.rev, afterWrite })
     ).then(
       (rev) => noteCacheRev(qc, rev),
       (err: unknown) => {
         if ((err as { name?: string } | null)?.name !== 'StaleGroupsError') throw err;
-        return redoDropOnFreshState(qc, base, model, a, o);
+        return redoDropOnFreshState(qc, base, model, a, o, step);
       }
     );
     p.persist = persist;
@@ -1310,14 +1319,17 @@ export function useDndHandlers() {
         // effects (they would open real tabs/windows for a move that didn't happen).
         dndDebugLog('commit-persist-failed', { message: err instanceof Error ? err.message : String(err) });
         console.error('[tm-dnd] drop could not be saved; reloading groups from IndexedDB', err);
+        p.settleOpened?.([]);
         rollback(p);
         announceDnd(DND_SAVE_FAILED_TEXT);
         return;
       }
-      if (sideEffects.length) {
-        // A saved item dropped INTO Now Open opened real tabs: Undo closes exactly those (by id)
-        const opened = await runSideEffects(sideEffects);
-        if (opened.length > 0) tagHistoryEntry(p.historyEntry, { kind: 'close', tabs: opened });
+      // A saved item dropped INTO Now Open opened real tabs: Undo closes exactly those (by id)
+      let openedTabs: LiveTabRecord[] = [];
+      try {
+        if (sideEffects.length) openedTabs = await runSideEffects(sideEffects);
+      } finally {
+        p.settleOpened?.(openedTabs);
       }
       try {
         trackEvent('dnd_move', { type: ca.type });
@@ -1349,7 +1361,9 @@ export function useDndHandlers() {
         // failure for a write that will succeed — just re-read IDB so the cache matches
         // whatever actually landed, and keep awaiting the write so a REAL failure still
         // rolls back and announces (the old code dropped `persist` on the floor here).
-        rollback(p, { popUndo: false });
+        rollback(p);
+        // (no side effects run on this path: nothing was opened)
+        p.settleOpened?.([]);
         const persist = p.persist;
         if (persist) {
           tail = async () => {

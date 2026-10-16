@@ -6,6 +6,12 @@ import { useExternalGroupsChanges } from '@/hooks/useExternalGroupsChanges'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { useUIStore } from '@/stores/uiStore'
 import { consumeOwnOpenedTab, noteTabsOpenedByPopup, OWN_TAB_WINDOW_MS, resetOwnOpenedTabs } from '@/lib/ownOpenedTabs'
+import { reanchorHistoryCursor } from '@/lib/undoHistory'
+
+vi.mock('@/lib/undoHistory', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/undoHistory')>()),
+  reanchorHistoryCursor: vi.fn().mockResolvedValue(undefined),
+}))
 
 type Listener = (msg: unknown) => void
 
@@ -26,6 +32,7 @@ describe('useExternalGroupsChanges', () => {
     }
     qc = new QueryClient()
     invalidate = vi.spyOn(qc, 'invalidateQueries').mockResolvedValue(undefined)
+    vi.mocked(reanchorHistoryCursor).mockClear()
   })
 
   afterEach(() => {
@@ -61,10 +68,12 @@ describe('useExternalGroupsChanges', () => {
     it('THIS popup opened (part of its own action): the history stays, the groups are still refetched', () => {
       noteTabsOpenedByPopup([{ id: 501, url: 'https://example.com/a' }])
       mount()
-      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 501, url: 'https://example.com/a' } }))
+      listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 501, url: 'https://example.com/a' }, saved: 'fp-1' }))
       expect(useUIStore.getState().undoStack).toHaveLength(1)
       expect(useUIStore.getState().redoStack).toHaveLength(1)
       expect(invalidate).toHaveBeenCalledWith({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false })
+      // the kept history's next Undo must not be refused for that save: the cursor is re-anchored on it
+      expect(reanchorHistoryCursor).toHaveBeenCalledWith('fp-1')
     })
 
     it('the popup did NOT open (a change made elsewhere): the history is cleared', () => {
@@ -72,6 +81,7 @@ describe('useExternalGroupsChanges', () => {
       mount()
       listeners.forEach((l) => l({ type: 'TM_GROUPS_CHANGED', cause: { kind: 'url-rule', tabId: 777, url: 'https://example.com/a' } }))
       expect(useUIStore.getState().undoStack).toEqual([])
+      expect(reanchorHistoryCursor).not.toHaveBeenCalled()
     })
 
     it('a malformed cause counts as a change made elsewhere', () => {

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { pushPendingChanges, deleteRemoteGroups, pullRemoteChanges, subscribeToRemoteChanges, canUploadOnFirefox } from '@/lib/syncEngine'
 import type { Group } from '@/lib/types'
+import { onForeignGroupsChange } from '@/lib/foreignChange'
 import type { Session } from '@supabase/supabase-js'
 
 const {
@@ -598,6 +599,31 @@ describe('pullRemoteChanges', () => {
 })
 
 describe('subscribeToRemoteChanges', () => {
+  it('S3: a Realtime DELETE announces the foreign change INSIDE its write step, before the queue moves on to the next step (an Undo)', async () => {
+    let handler: (payload: unknown) => Promise<void> = async () => {}
+    mockChannelOn.mockImplementation((_event, _filter, cb) => {
+      handler = cb
+      return { subscribe: mockChannelSubscribe.mockReturnValue({}) }
+    })
+    await subscribeToRemoteChanges(makeSession('u1'), vi.fn())
+    const seen: string[] = []
+    const off = onForeignGroupsChange(() => seen.push('foreign'))
+    mockUpdateGroupsState.mockImplementationOnce(async (fn: (s: unknown, aux: unknown) => unknown, opts?: { afterWrite?: (stored: unknown, base: unknown) => void }) => {
+      const base = localState
+      const next = fn(localState, { pendingDeletes: new Set() })
+      if (next) {
+        localState = next as typeof localState
+        opts?.afterWrite?.(localState, base)
+      }
+      seen.push('step done')
+      return localState
+    })
+    localState.available.push(makeGroup({ id: 'g1', pendingSync: false }))
+    await handler({ eventType: 'DELETE', old: { id: 'g1' } })
+    off()
+    expect(seen).toEqual(['foreign', 'step done'])
+  })
+
   it('deletes the local group immediately on a live Realtime DELETE event', async () => {
     let handler: (payload: unknown) => Promise<void> = async () => {}
     mockChannelOn.mockImplementation((_event, _filter, cb) => {

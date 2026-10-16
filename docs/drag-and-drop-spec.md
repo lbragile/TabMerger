@@ -2,6 +2,7 @@
 
 Status: living document. Last updated 2026-10-15.
 Owner agent: `extension-dev`. Read this before touching any DnD code.
+The general undo/redo rules every drop follows are in [`undo-redo-spec.md`](undo-redo-spec.md).
 
 - **[BLOCKED]** — a requested behaviour a known constraint prevents.
 - **[UNVERIFIED]** — only a human in headed Chrome can confirm.
@@ -105,12 +106,12 @@ Out of scope: drags on the web dashboard.
    1. Resolve against the snapshot, then `canDrop`.
    2. `rebaseMove` onto the current cache; cancel if the item/target is gone, a duplicated identity was permuted, or a missing member may have been edited. Deleted members are excluded and reported via `removed`. Keyboard move mode applies the same rule to its picked-up item(s) on every cache update, so at the drop they already name the same item(s) in the current cache (§5.1).
    3. `applyMove`; skip `isStructuralNoop`.
-   4. `pushUndo(current)` when `undoable` **and** `savedDataChanged(current, next)` (`lib/undoHistory.ts`, the one rule every mutation uses): one step per drop, none for a move that changes no saved data. A drag OUT of Now Open tags that entry with a `reopen` effect for the tabs it closes; a drop that opens real tabs tags it with a `close` effect for the ids `runSideEffects` returns (`lib/undoLiveTabs.ts`).
-   5. `const persist = saveGroupsState(next)` **before** the cache write.
+   4. Prepare the drop's undo step: recorded by `recordStep` (`lib/undoHistory.ts`, the one rule every mutation uses) in the write's `afterWrite`, i.e. only once the write is stored, inside its step of the groups write queue, when `undoable` **and** the saved data changed: one step per drop, none for a move that changes no saved data, none for a failed write. A drag OUT of Now Open tags that entry with a `reopen` effect for the tabs it closes; a drop that opens real tabs tags it with the PROMISE of a `close` effect, settled with the ids `runSideEffects` returns (`lib/undoLiveTabs.ts`), so an Undo clicked before Chrome answered still closes them.
+   5. `const persist = saveGroupsState(next, { expectedRev, afterWrite })` **before** the cache write (a stale write re-derives the drop on a fresh read and records the step there).
    6. `setGroupsNow(next)`.
    7. Update the active index; remap the selection.
    8. `reset()` → `await persist` → `runSideEffects()`.
-   9. **On failure:** `reset()` before `rollback()`; conditional on `cacheWritten` (no undo-pop or failure announce for an already-issued write, but still awaited).
+   9. **On failure:** `reset()` before `rollback()`; conditional on `cacheWritten` (no failure announce for an already-issued write, but still awaited). The undo history is never touched by a rollback: a failed write recorded no step, so no entry (the drop's or another action's) can be removed by mistake.
    10. **Keyboard move drops** (§5.1) enter here through `commitKeyboardMove`, which runs this same tail (`commitResolved`): `dndFocus` focuses the landed item by identity, and the full outcome goes to the app live region `#tm-dnd-live-region` ~150ms later.
 9. **Release in place** restores exactly; a non-contiguous selection gathers into a block **[DECISION]**.
 
@@ -314,7 +315,7 @@ Native drag image and cursor (C9); **whether `grabbing` renders for a human and 
 ## 12. Known gaps, risks, decisions and doc debt
 
 ### Decisions
-- **2026-10-15 — one undo step per mutation, Now Open drops included (owner decision).** Every mutating action (DnD, menus, bulk actions, rename, notes, import/restore) pushes exactly one undo step, and only when it changed saved data (`savedDataChanged`), after the write is stored (a drop pushes at its commit and takes the step back if the write fails). A drag OUT of Now Open is undoable: Undo removes the saved copy and reopens the closed tabs, Redo closes exactly the tabs Undo reopened (tracked by the ids Chrome returned, never by URL). A saved item dropped INTO Now Open is undoable the same way in reverse. This reverses the earlier "anything touching Now Open is not undoable" rule.
+- **2026-10-15 — one undo step per mutation, Now Open drops included (owner decision).** Every mutating action (DnD, menus, bulk actions, rename, notes, import/restore) pushes exactly one undo step, and only when it changed saved data (`savedDataChanged`), after the write is stored (a drop now records its step inside its own write, so a failed write leaves none; see `undo-redo-spec.md`). A drag OUT of Now Open is undoable: Undo removes the saved copy and reopens the closed tabs, Redo closes exactly the tabs Undo reopened (tracked by the ids Chrome returned, never by URL). A saved item dropped INTO Now Open is undoable the same way in reverse. This reverses the earlier "anything touching Now Open is not undoable" rule.
 
 ### Decisions pending
 - **New-group naming:** groups are created as `"temp group"` with no rename prompt. Random/derived names were raised — a generator is easy, but `GroupItem.tsx:125` detects an unnamed group by comparing to the default literal, so it needs an explicit `autoNamed` flag or rename behaviour breaks quietly.

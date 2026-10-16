@@ -3,6 +3,7 @@ import { encryptBlob, decryptBlob, isEncryptedBlob, isTourDemoGroup, SYNC_DATA_C
 import type { Group } from './types';
 import { emitForeignGroupsChange, emitSyncConflict } from './foreignChange';
 import { groupContentEqual, makeConflictCopy } from './syncConflict';
+import { userDataChanged } from './savedData';
 import { compareStamps } from './stamp';
 import { withSyncLock } from './syncLock';
 import { syncRequestSignal, cycleDeadline } from './syncRequest';
@@ -692,6 +693,7 @@ async function runSyncCycle(session: Session): Promise<{ groups: Group[]; status
   let merged: Group[] = [];
   let droppedRemotely: string[] = [];
   let foreign = false;
+  let foreignEmitted = false;
   let conflicts: string[] = [];
   const legacy = !(await getSetting(REMOTE_BASE_SEEDED_KEY, false));
   await updateGroupsState((fresh, { pendingDeletes, signedInUserId }) => {
@@ -730,9 +732,23 @@ async function runSyncCycle(session: Session): Promise<{ groups: Group[]; status
     }
     const changed = withCopies.length !== fresh.available.length || withCopies.some((g, i) => g !== fresh.available[i]);
     merged = changed ? withCopies : fresh.available;
+    // Also foreign: anything else the merge changes in the saved data, e.g. another device's
+    // reorder (a position-only push leaves updated_at, so no group is in `toSave`). Bookkeeping
+    // (bases, flags) and practice data are not: see `userDataChanged`.
+    if (changed && !foreign) foreign = userDataChanged(fresh, { ...fresh, available: withCopies });
     // Nothing to apply (the usual 30 s poll): no write, no broadcast to the other contexts.
     return changed ? { ...fresh, available: withCopies } : null;
-  }, { readPendingDeletes: true, readSignedInUser: true });
+  }, {
+    readPendingDeletes: true,
+    readSignedInUser: true,
+    // Announced in the SAME step of the write queue as the merge, so the popup drops its undo
+    // history before any later queued write (an Undo, the next action) can run against it
+    afterWrite: () => {
+      if (!foreign) return;
+      emitForeignGroupsChange();
+      foreignEmitted = true; // (after: a throwing listener leaves the fallback emit below)
+    }
+  });
 
   // Confirmed gone on the server -> stop tracking. Groups dropped because the server deleted
   // them are gone remotely too; the write above recorded them as pending, so clear them.
@@ -742,7 +758,7 @@ async function runSyncCycle(session: Session): Promise<{ groups: Group[]; status
   // it was in the pull's ids but could not be adopted): those must keep probing.
   const unseeded = merged.some((g) => g.pendingSync && !g.permanent && !g.remoteUpdatedAt && snapshot.ids.has(g.id));
   if (legacy && !unseeded) await setSetting(REMOTE_BASE_SEEDED_KEY, true);
-  if (foreign) emitForeignGroupsChange();
+  if (foreign && !foreignEmitted) emitForeignGroupsChange();
   if (conflicts.length > 0) emitSyncConflict(conflicts);
   return { groups: merged, status: 'synced' };
 }
@@ -785,10 +801,9 @@ export async function subscribeToRemoteChanges(
             if (!local || local.permanent || local.pendingSync) return null;
             removed = local;
             return { ...fresh, available: fresh.available.filter((g) => g.id !== deletedId) };
-          }, { readPendingDeletes: true });
+          }, { readPendingDeletes: true, afterWrite: () => emitForeignGroupsChange() }); // (in the merge's own queue step)
           if (removed) {
             await removePendingGroupDeletes([deletedId]); // gone remotely: nothing to retry
-            emitForeignGroupsChange();
             onUpdate(removed); // let the popup refresh its cache
           }
           return;
@@ -817,11 +832,8 @@ export async function subscribeToRemoteChanges(
             available.push(authored ? { ...group, positionDirty: false } : group);
           } else available[idx] = group;
           return { ...fresh, available };
-        }, { readPendingDeletes: true });
-        if (applied) {
-          emitForeignGroupsChange();
-          onUpdate(group);
-        }
+        }, { readPendingDeletes: true, afterWrite: () => emitForeignGroupsChange() }); // (in the write's own queue step)
+        if (applied) onUpdate(group);
       }
     )
     .subscribe();

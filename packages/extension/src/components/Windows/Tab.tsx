@@ -105,7 +105,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
   const search = usePanelSearch();
   const reorderLocked = search.reorderLocked;
   const { mutate: deleteTab } = useDeleteTab();
-  const { mutate: moveTab } = useMoveTab();
+  const { mutate: moveTab, mutateAsync: moveTabAsync } = useMoveTab();
   const { data: urlRules = [] } = useUrlRules();
   const { mutate: updateTabNote } = useUpdateTabNote();
   const { mutate: setTabReminder } = useSetTabReminder();
@@ -492,7 +492,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               )}
               <CreateGroupMenuItem
                 onCreated={(index) =>
-                  moveTab({
+                  moveTabAsync({
                     fromGroupIndex: groupIndex,
                     fromWindowIndex: windowIndex,
                     fromTabIndex: tabIndex,

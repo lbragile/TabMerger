@@ -8,8 +8,8 @@ metadata:
 **One rule decides every undo step:** `savedDataChanged(before, after)` in `src/lib/undoHistory.ts`
 (saved groups only; ignores Now Open, `updatedAt`/`pendingSync`/`positionDirty`/`remoteUpdatedAt`/`info`).
 `useGroupsMutation` (useGroups.ts), `updateWithUndo` (useBulkActions.ts) and `commitResolved`
-(useDndHandlers.ts) all gate on it. useGroups/bulk push AFTER the write resolves (a failed write leaves
-no step); DnD still pushes at the commit and `rollback` pops it. `skipUndo` is only left on info recounts
+(useDndHandlers.ts) all gate on it. All of them now record the step inside the write (`recordStep` in `afterWrite`, see
+[[learnings-undo-history-in-write]]); DnD no longer pushes at the commit nor pops on rollback. `skipUndo` is only left on info recounts
 and reminders (their chrome alarms stay scheduled, an undo can't take them back).
 
 **Before this, two failure modes looked like "the drop made no undo step":**
@@ -30,7 +30,7 @@ Tab-closing helpers moved to `src/lib/closeLiveTabs.ts` (`partitionClosableTabs`
 
 **Stale-render trap:** useUndoRedo used the render's `useGroups().data` as the base and wrote with
 `expectedRev: base.rev`. Undo then Redo before the re-render (or right after any other write) was refused
-with "Your groups changed elsewhere". It now reads the cache at click time via `useGroupsSnapshot()`.
+with "Your groups changed elsewhere". (SUPERSEDED: the Undo now restores inside its own write step on a fresh read, with a cursor check instead of expectedRev; see [[learnings-undo-history-in-write]].)
 Test files that `vi.mock('@/hooks/useGroups')` and render the Header need `useGroupsSnapshot` in the mock.
 
 **What wipes history while the popup is open (checked against sync):**

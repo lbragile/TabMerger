@@ -16,6 +16,7 @@ Constraints of `groupsWriteTail` and `groupsWriteGen` in localDb.ts, as of 2026-
 - **Reentrancy.**
   - A queued step must use a raw reader. Calling `getGroupsState` from inside the chain deadlocks.
   - The empty-DB branch calls `saveGroupsState` from inside a read. That bumps the gen, so the creator always re-reads once (harmless). It would deadlock if reads were moved into the queue.
+- **`rev` doesn't mean "the saved data is unchanged".** The popup's Now Open mirror (`useCurrentTabs`) writes on every `chrome.tabs` event, with no debounce, and each write adds 1 to `rev`. Those are the same events that trigger the service worker's URL rules. A wipe also resets `rev` to 0. To tell whether the saved data changed, compare `savedDataFingerprint` / `userDataChanged` (lib/savedData.ts), never `rev`.
 - **Tests with fake-indexeddb don't reproduce real IDB transaction scheduling closely.** Reason about tx creation order, not test outcomes.
 
 **Why:** each of these is easy to break or misread while "improving" the queue.

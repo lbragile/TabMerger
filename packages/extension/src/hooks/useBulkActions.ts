@@ -16,41 +16,39 @@ import { resolveIncognito } from '@/lib/incognito';
 import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import type { GroupsState, Tab, Window as WindowType } from '@/lib/types';
-import { alignToBase } from '@/lib/groupsAlign';
-import { savedDataChanged } from '@/lib/undoHistory';
+import { alignToBase, restoreFreshOrder } from '@/lib/groupsAlign';
+import { recordStep } from '@/lib/undoHistory';
 import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
-import { tagHistoryEntry, type LiveTabRecord } from '@/lib/undoLiveTabs';
+import type { LiveTabRecord, LiveTabsEffect } from '@/lib/undoLiveTabs';
 
 /**
  * The bulk actions' read-modify-write: `edit` runs on the fresh state re-addressed to `base` (the
  * list the selection was made on; nothing is written when a group it pointed at is gone), and the
- * state it started from goes on the undo stack once the write is stored, only when the saved data
- * changed (`savedDataChanged`: a bulk action on Now Open items alone is no step). One bulk action
- * is one undo step. `opened` collects the real tabs the action opens (a move into Now Open): the
- * step closes exactly those on Undo (lib/undoLiveTabs.ts).
+ * state it started from goes on the undo stack once the write is stored, inside the same step of
+ * the write queue (`recordStep`), only when the saved data changed (a bulk action on Now Open items
+ * alone is no step). One bulk action is one undo step. `opened` collects the real tabs the action
+ * opens (a move into Now Open): the step carries the promise of their ids, so an Undo, even one
+ * clicked before Chrome returned them, closes exactly those (lib/undoLiveTabs.ts).
  */
 async function updateWithUndo(
   base: GroupsState | undefined,
-  pushUndo: (state: GroupsState) => void,
+  pushUndo: (state: GroupsState) => GroupsState | void,
   edit: (state: GroupsState) => GroupsState | null,
   opened: Promise<LiveTabRecord[]>[] = []
 ): Promise<GroupsState> {
-  let undoBase: GroupsState | null = null;
-  const next = await updateGroupsState((fresh) => {
-    const state = alignToBase(base, fresh);
-    if (!state) return null; // a group the selection pointed at is gone: nothing safe to change
-    const result = edit(state);
-    if (result && savedDataChanged(state, result)) undoBase = state;
-    return result;
-  });
-  if (undoBase) {
-    pushUndo(undoBase);
-    if (opened.length > 0) {
-      const entry = useUIStore.getState().undoStack?.[0];
-      void Promise.all(opened).then((tabs) => tagHistoryEntry(entry, { kind: 'close', tabs: tabs.flat() }));
-    }
-  }
-  return next;
+  const effect = (): Promise<LiveTabsEffect> | null =>
+    opened.length > 0 ? Promise.all(opened).then((tabs) => ({ kind: 'close', tabs: tabs.flat() })) : null;
+  return updateGroupsState(
+    (fresh) => {
+      const state = alignToBase(base, fresh);
+      if (!state) return null; // a group the selection pointed at is gone: nothing safe to change
+      const result = edit(state);
+      // The view was in the selection's order: put the result back into the FRESH order, like
+      // every other mutation (restoreFreshOrder), so only the edit itself is written and recorded.
+      return !result || state === fresh ? result : restoreFreshOrder(fresh, state, result);
+    },
+    { afterWrite: recordStep({ push: pushUndo, effect }) }
+  );
 }
 
 /** The tab Chrome opened, as a record an Undo can close by id (empty when it failed). */

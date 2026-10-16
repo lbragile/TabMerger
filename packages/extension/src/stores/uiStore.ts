@@ -170,12 +170,20 @@ interface UIState {
   setNoteTarget: (target: TabPositionTarget | null) => void;
   setPendingNoteGroupIndex: (index: number | null) => void;
   setPreviewGroupColor: (preview: { groupId: string; color: string } | null) => void;
-  pushUndo: (state: GroupsState) => void;
+  /** Records one step: `state` (the state before the change) goes on top of Undo, Redo empties. Returns the entry. */
+  pushUndo: (state: GroupsState) => GroupsState;
   undo: (currentState: GroupsState) => GroupsState | undefined;
   redo: (currentState: GroupsState) => GroupsState | undefined;
+  /**
+   * Moves the cursor one step, but only from `entry`: when it is still the top of the Undo
+   * (`'undo'`) or Redo (`'redo'`) stack it is popped and `currentState` is pushed onto the other
+   * stack. Returns that pushed counterpart, or undefined (and changes nothing) when `entry` is no
+   * longer on top (the history was cleared or swapped for the tour's meanwhile).
+   */
+  stepHistory: (direction: 'undo' | 'redo', entry: GroupsState, currentState: GroupsState) => GroupsState | undefined;
+  /** Removes `entry` from the top of the Undo stack (only if it is the top). Returns whether it did. */
+  dropUndoEntry: (entry: GroupsState) => boolean;
   clearHistory: () => void;
-  /** Puts a previously read history back (an undo/redo that lost the rev race consumed its entry). */
-  restoreHistory: (undoStack: GroupsState[], redoStack: GroupsState[]) => void;
 
   // Selection actions
   enterSelectionMode: () => void;
@@ -287,41 +295,53 @@ export const useUIStore = create<UIState>((set, get) => ({
     set({ previewGroupColor: preview });
   },
 
-  pushUndo: (state) =>
-    set((prev) => {
-      const stack = [historySnapshot(state, prev.tourHistory !== null), ...prev.undoStack].slice(0, UNDO_HISTORY_LIMIT);
-      return { undoStack: stack, redoStack: [] };
-    }),
+  pushUndo: (state) => {
+    const entry = historySnapshot(state, get().tourHistory !== null);
+    set((prev) => ({ undoStack: [entry, ...prev.undoStack].slice(0, UNDO_HISTORY_LIMIT), redoStack: [] }));
+    return entry;
+  },
 
   /**
-   * Pops the top undo snapshot and returns it. Pushes `currentState` (the live TanStack Query
-   * cache value at the moment of the gesture) onto the redo stack so redo can reverse the undo.
+   * Pops the top undo snapshot and returns it. Pushes `currentState` (the state being left) onto
+   * the redo stack so redo can reverse the undo.
    */
-  undo: (currentState: import('@/lib/types').GroupsState) => {
-    const { undoStack, redoStack, tourHistory } = get();
-    if (undoStack.length === 0) return undefined;
-    const [top, ...rest] = undoStack;
-    set({ undoStack: rest, redoStack: [historySnapshot(currentState, tourHistory !== null), ...redoStack].slice(0, UNDO_HISTORY_LIMIT) });
-    return top;
+  undo: (currentState) => {
+    const top = get().undoStack[0];
+    return top && get().stepHistory('undo', top, currentState) ? top : undefined;
   },
 
   /**
    * Pops the top redo snapshot and returns it. Pushes `currentState` back onto the undo stack
    * so the user can undo again after a redo.
    */
-  redo: (currentState: import('@/lib/types').GroupsState) => {
+  redo: (currentState) => {
+    const top = get().redoStack[0];
+    return top && get().stepHistory('redo', top, currentState) ? top : undefined;
+  },
+
+  stepHistory: (direction, entry, currentState) => {
     const { undoStack, redoStack, tourHistory } = get();
-    if (redoStack.length === 0) return undefined;
-    const [top, ...rest] = redoStack;
-    set({ undoStack: [historySnapshot(currentState, tourHistory !== null), ...undoStack].slice(0, UNDO_HISTORY_LIMIT), redoStack: rest });
-    return top;
+    const from = direction === 'undo' ? undoStack : redoStack;
+    const to = direction === 'undo' ? redoStack : undoStack;
+    if (from[0] !== entry) return undefined;
+    const counterpart = historySnapshot(currentState, tourHistory !== null);
+    const rest = from.slice(1);
+    const other = [counterpart, ...to].slice(0, UNDO_HISTORY_LIMIT);
+    set(direction === 'undo' ? { undoStack: rest, redoStack: other } : { undoStack: other, redoStack: rest });
+    return counterpart;
+  },
+
+  dropUndoEntry: (entry) => {
+    const { undoStack } = get();
+    if (undoStack[0] !== entry) return false;
+    set({ undoStack: undoStack.slice(1) });
+    return true;
   },
 
   // The user's history set aside for the tour is emptied too: `endTourHistory` would otherwise put
   // back snapshots of data that was just wiped, pulled over or belongs to another account
   clearHistory: () =>
     set((prev) => ({ undoStack: [], redoStack: [], tourHistory: prev.tourHistory ? { undoStack: [], redoStack: [] } : null })),
-  restoreHistory: (undoStack, redoStack) => set({ undoStack, redoStack }),
 
   enterSelectionMode: () =>
     set((prev) => ({ selectionMode: true, ...withOverlayDismiss(prev, { selectionMode: true }) })),

@@ -10,28 +10,52 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
-const store = vi.hoisted(() => ({ state: null as unknown as GroupsState, rev: 1, failNext: false }))
+// `hold`: while set, every queued write waits for it (an action "still saving")
+const store = vi.hoisted(() => ({ state: null as unknown as GroupsState, rev: 1, failNext: false, hold: null as Promise<void> | null }))
 
 vi.mock('@/lib/localDb', () => {
-  const save = async (next: GroupsState, opts: { expectedRev?: number } = {}) => {
+  // Like the real store: writes are applied one at a time in issue order, and `afterWrite` runs
+  // inside the write's step, once it is stored
+  let tail: Promise<unknown> = Promise.resolve()
+  const enqueue = <T,>(task: () => Promise<T>): Promise<T> => {
+    const run = tail.then(async () => {
+      if (store.hold) await store.hold
+      return task()
+    })
+    tail = run.catch(() => undefined)
+    return run
+  }
+  const write = (next: GroupsState, expectedRev?: number): GroupsState => {
     if (store.failNext) {
       store.failNext = false
       throw new Error('QuotaExceeded')
     }
-    if (opts.expectedRev !== undefined && opts.expectedRev !== store.rev) throw Object.assign(new Error('stale'), { name: 'StaleGroupsError' })
+    if (expectedRev !== undefined && expectedRev !== store.rev) throw Object.assign(new Error('stale'), { name: 'StaleGroupsError' })
     store.rev += 1
     store.state = structuredClone({ ...next, rev: store.rev })
-    return store.rev
+    return structuredClone(store.state)
   }
+  type SaveOpts = { expectedRev?: number; afterWrite?: (stored: GroupsState) => void }
+  type UpdateOpts = { afterWrite?: (stored: GroupsState, base: GroupsState) => void }
   return {
-    getGroupsState: vi.fn(async () => structuredClone(store.state)),
-    saveGroupsState: vi.fn(save),
-    updateGroupsState: vi.fn(async (fn: (s: GroupsState) => GroupsState | null) => {
-      const next = fn(structuredClone(store.state))
-      if (!next) return structuredClone(store.state)
-      await save(next)
-      return structuredClone(store.state)
-    }),
+    getGroupsState: vi.fn(async () => enqueue(async () => structuredClone(store.state))),
+    saveGroupsState: vi.fn((next: GroupsState, opts: SaveOpts = {}) =>
+      enqueue(async () => {
+        const stored = write(next, opts.expectedRev)
+        opts.afterWrite?.(stored)
+        return store.rev
+      })
+    ),
+    updateGroupsState: vi.fn((fn: (s: GroupsState) => GroupsState | null, opts: UpdateOpts = {}) =>
+      enqueue(async () => {
+        const base = structuredClone(store.state)
+        const next = fn(base)
+        if (!next) return base
+        const stored = write(next)
+        opts.afterWrite?.(stored, base)
+        return stored
+      })
+    ),
     setSetting: vi.fn().mockResolvedValue(undefined),
     getSetting: vi.fn().mockResolvedValue({})
   }
@@ -46,6 +70,9 @@ import { useBulkDelete, useBulkMoveToGroup, useBulkStar } from '@/hooks/useBulkA
 import { useUndoRedo } from '@/hooks/useUndoRedo'
 import { useUIStore } from '@/stores/uiStore'
 import { deleteRemoteGroups } from '@/lib/syncEngine'
+import { asOneHistoryStep, forgetHistoryCursor } from '@/lib/undoHistory'
+import { updateGroupsState } from '@/lib/localDb'
+import { toast } from '@/lib/toast'
 
 const tab = (title: string, id = 0): Tab => ({ id, title, url: `https://example.com/${title}`, savedAt: 1 })
 const win = (tabs: Tab[], over: Partial<ExtWindow> = {}): ExtWindow => ({ id: 0, tabs, incognito: false, focused: false, starred: false, ...over })
@@ -76,6 +103,8 @@ beforeEach(() => {
   store.state = seed()
   store.rev = 1
   store.failNext = false
+  store.hold = null
+  forgetHistoryCursor() // module state: a previous test's last write is not this test's cursor
   useUIStore.setState({ undoStack: [], redoStack: [], tourHistory: null, selectedItems: [], selectionMode: false, activeGroupIndex: 1 })
   chromeStub = {
     tabs: {
@@ -346,5 +375,334 @@ describe('auditor follow-ups', () => {
       await result.current.action.mutateAsync([group('imp', [win([tab('i1')])])])
     })
     expect(deleteRemoteGroups).toHaveBeenCalledWith(['work', 'play'])
+  })
+})
+
+/** A promise to hold the write queue with, and the function that lets it go. */
+function gate() {
+  let open!: () => void
+  const held = new Promise<void>((resolve) => {
+    open = resolve
+  })
+  return { held, open }
+}
+
+const conflictToasts = () => vi.mocked(toast.info).mock.calls.filter(([, o]) => (o as { id?: string } | undefined)?.id === 'undo-conflict')
+
+describe('ordering (spec §4): Undo, Redo and actions apply one at a time, in click order', () => {
+  it('G1: two quick Undo clicks undo two steps, with no "changed elsewhere" message', async () => {
+    const before = saved(store.state)
+    const { result } = setup(() => ({ rename: G.useUpdateGroupName(), color: G.useUpdateGroupColor() }))
+    await act(async () => {
+      await result.current.action.rename.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+      await result.current.action.color.mutateAsync({ groupIndex: 2, color: 'rgba(9,9,9,1)' })
+    })
+    expect(steps()).toBe(2)
+
+    // the second click comes before the first one's write has landed
+    await act(async () => {
+      await Promise.all([result.current.history.undo(), result.current.history.undo()])
+    })
+    expect(saved(store.state)).toEqual(before)
+    expect(steps()).toBe(0)
+    expect(useUIStore.getState().redoStack).toHaveLength(2)
+    expect(conflictToasts()).toHaveLength(0)
+  })
+
+  it('G1: Undo, Redo, Undo, Redo clicked quickly end where the last Redo puts it', async () => {
+    const { result } = setup(() => G.useUpdateGroupName())
+    await act(async () => {
+      await result.current.action.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+    })
+    const after = saved(store.state)
+    const { undo, redo } = result.current.history
+    await act(async () => {
+      await Promise.all([undo(), redo(), undo(), redo()])
+    })
+    expect(saved(store.state)).toEqual(after)
+    expect(steps()).toBe(1)
+    expect(useUIStore.getState().redoStack).toHaveLength(0)
+    expect(conflictToasts()).toHaveLength(0)
+  })
+
+  it('G1: an extra Undo click with nothing left to undo does nothing', async () => {
+    const { result } = setup(() => G.useUpdateGroupName())
+    await act(async () => {
+      await result.current.action.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+    })
+    const revBefore = store.rev
+    await act(async () => {
+      await Promise.all([result.current.history.undo(), result.current.history.undo()])
+    })
+    expect(store.rev).toBe(revBefore + 1) // only the first Undo wrote
+    expect(conflictToasts()).toHaveLength(0)
+  })
+
+  it('G2: an Undo clicked while an action is still saving waits, then undoes THAT action, and its Redo survives', async () => {
+    const { result } = setup(() => ({ rename: G.useUpdateGroupName(), color: G.useUpdateGroupColor() }))
+    await act(async () => {
+      await result.current.action.rename.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+    })
+    const afterFirst = saved(store.state)
+
+    const writes = gate()
+    store.hold = writes.held
+    let pending!: Promise<unknown>
+    await act(async () => {
+      pending = result.current.action.color.mutateAsync({ groupIndex: 2, color: 'rgba(9,9,9,1)' })
+      // the action's write is issued (and held) before the Undo click
+      await waitFor(() => expect(vi.mocked(updateGroupsState).mock.calls.length).toBe(2))
+    })
+    await act(async () => {
+      const undone = result.current.history.undo()
+      store.hold = null
+      writes.open()
+      await Promise.all([pending, undone])
+    })
+    // the colour change (the action in flight) is what was undone; the rename stays
+    expect(saved(store.state)).toEqual(afterFirst)
+    expect(steps()).toBe(1)
+    // its Redo survived the action landing: the action's step was recorded before the Undo ran
+    expect(useUIStore.getState().redoStack).toHaveLength(1)
+    await act(async () => {
+      await result.current.history.redo()
+    })
+    expect(saved(store.state).find((g) => g.id === 'play')?.color).toBe('rgba(9,9,9,1)')
+    expect(conflictToasts()).toHaveLength(0)
+  })
+
+  it('G3: an Undo clicked before Chrome returned the opened tab still closes it (it waits for the id)', async () => {
+    let giveId!: (tab: { id: number }) => void
+    chromeStub.tabs.create = vi.fn(() => new Promise((resolve) => { giveId = resolve }))
+    const { result } = setup(() => G.useMoveTab())
+    await act(async () => {
+      await result.current.action.mutateAsync({ fromGroupIndex: 1, fromWindowIndex: 0, fromTabIndex: 0, toGroupIndex: 0 })
+    })
+    expect(steps()).toBe(1)
+    let undone!: Promise<void>
+    await act(async () => {
+      undone = result.current.history.undo()
+      await new Promise((r) => setTimeout(r, 0))
+    })
+    // the saved data is already back; the tab waits for its id
+    expect(saved(store.state)[0].windows[0].tabs.map((t) => t[0])).toEqual(['a1', 'a2'])
+    expect(chromeStub.tabs.remove).not.toHaveBeenCalled()
+    await act(async () => {
+      giveId({ id: 900 })
+      await undone
+    })
+    expect(chromeStub.tabs.remove).toHaveBeenCalledWith([900])
+  })
+
+  it('G3: the same for a bulk move into Now Open, and a Redo right after waits for the inverse', async () => {
+    // Undo finds the opened tab still open; Redo finds it closed (by that Undo) and reopens it
+    chromeStub.tabs.get = vi.fn().mockResolvedValueOnce({ id: 900, url: 'https://example.com/p1', windowId: 7, index: 0 }).mockRejectedValue(new Error('closed'))
+    let giveId!: (tab: { id: number }) => void
+    chromeStub.tabs.create = vi.fn(() => new Promise((resolve) => { giveId = resolve })).mockImplementationOnce(() => new Promise((resolve) => { giveId = resolve }))
+    const { result } = setup(() => useBulkMoveToGroup())
+    await act(async () => {
+      await result.current.action.mutateAsync({ items: [{ type: 'tab', id: 'tab-2-0-0' }], targetGroupIndex: 0 })
+    })
+    await act(async () => {
+      const undone = result.current.history.undo()
+      const redone = result.current.history.redo()
+      await new Promise((r) => setTimeout(r, 0))
+      chromeStub.tabs.create.mockResolvedValue({ id: 950 }) // (the Redo's reopen)
+      giveId({ id: 900 })
+      await Promise.all([undone, redone])
+    })
+    // Undo closed the tab the move opened; the Redo clicked right after waited for that, then reopened it
+    expect(chromeStub.tabs.remove).toHaveBeenCalledWith([900])
+    expect(chromeStub.tabs.create).toHaveBeenCalledTimes(2)
+    expect(chromeStub.tabs.create).toHaveBeenLastCalledWith(expect.objectContaining({ windowId: 7, url: 'https://example.com/p1', active: false }))
+    expect(saved(store.state).find((g) => g.id === 'play')?.windows[0].tabs).toEqual([])
+  })
+})
+
+describe('only a SAVED-data change can refuse an Undo (spec §3, G5)', () => {
+  const nowOpenTabs = (s: GroupsState) => s.available[0].windows.flatMap((w) => w.tabs.map((t) => t.id))
+  /** What useCurrentTabs does as the user browses: rewrites Now Open only. */
+  const mirrorLiveTabs = (tabs: Tab[]) =>
+    updateGroupsState((s) => ({ ...s, available: [{ ...s.available[0], windows: [win(tabs, { id: 7 })] }, ...s.available.slice(1)] }))
+
+  it('a Now Open-only write between the action and the Undo does not refuse it, and the current Now Open is kept', async () => {
+    const before = saved(store.state)
+    const { result } = setup(() => G.useUpdateGroupName())
+    await act(async () => {
+      await result.current.action.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+    })
+    await act(async () => {
+      await mirrorLiveTabs([tab('live3', 43)])
+    })
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(conflictToasts()).toHaveLength(0)
+    expect(saved(store.state)).toEqual(before)
+    expect(nowOpenTabs(store.state)).toEqual([43])
+  })
+
+  it('a Now Open-only write queued between two quick Undos refuses neither', async () => {
+    const before = saved(store.state)
+    const { result } = setup(() => ({ rename: G.useUpdateGroupName(), note: G.useUpdateGroupNote() }))
+    await act(async () => {
+      await result.current.action.rename.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+      await result.current.action.note.mutateAsync({ groupIndex: 2, note: 'n' })
+    })
+    await act(async () => {
+      const first = result.current.history.undo()
+      const mirror = mirrorLiveTabs([tab('live9', 49)])
+      const second = result.current.history.undo()
+      await Promise.all([first, mirror, second])
+    })
+    expect(conflictToasts()).toHaveLength(0)
+    expect(saved(store.state)).toEqual(before)
+    expect(nowOpenTabs(store.state)).toEqual([49])
+  })
+
+  it('a saved-data change that did not go through the history refuses the Undo and keeps the step', async () => {
+    const { result } = setup(() => G.useUpdateGroupName())
+    await act(async () => {
+      await result.current.action.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+    })
+    // e.g. a sync pull applied another device's change, and its history clear has not arrived yet
+    await act(async () => {
+      await updateGroupsState((s) => ({ ...s, available: s.available.map((g) => (g.id === 'play' ? { ...g, name: 'Remote' } : g)) }))
+    })
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(conflictToasts()).toHaveLength(1)
+    expect(steps()).toBe(1)
+    expect(saved(store.state).map((g) => g.name)).toEqual(['Renamed', 'Remote'])
+  })
+
+  it('the savedAt migration (a maintenance write of this popup) does not refuse the next Undo', async () => {
+    const { result } = setup(() => ({ save: G.useSaveShortcutTabs(), groups: G.useGroups() }))
+    await act(async () => {
+      // tabs from a shortcut save carry no savedAt
+      await result.current.action.save.mutateAsync({ tabs: [{ id: 0, title: 'q', url: 'https://example.com/q' }], groupId: 'play' })
+    })
+    expect(steps()).toBe(1)
+    // the next read migrates them (a write of its own)
+    await act(async () => {
+      await result.current.action.groups.refetch()
+    })
+    expect(store.state.available.find((g) => g.id === 'play')?.windows.at(-1)?.tabs[0].savedAt).toBeTypeOf('number')
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(conflictToasts()).toHaveLength(0)
+    expect(steps()).toBe(0)
+  })
+})
+
+describe('multi-mutation actions are ONE step (G4)', () => {
+  it('"Archive all" stale groups is one step; one Undo brings every group back', async () => {
+    const { result } = setup(() => G.useArchiveGroups())
+    await act(async () => {
+      await result.current.action.mutateAsync(['work', 'play'])
+    })
+    expect(saved(store.state).map((g) => g.archived)).toEqual([true, true])
+    expect(steps()).toBe(1)
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(saved(store.state).map((g) => g.archived)).toEqual([false, false])
+  })
+
+  it('"Archive all": the view leaves an archived group for the nearest one above it that stays', async () => {
+    store.state = { ...store.state, available: [...store.state.available, group('keep', [win([tab('k')])])] }
+    useUIStore.setState({ activeGroupIndex: 2 })
+    const { result } = setup(() => G.useArchiveGroups())
+    await act(async () => {
+      await result.current.action.mutateAsync(['play'])
+    })
+    expect(useUIStore.getState().activeGroupIndex).toBe(1)
+    useUIStore.setState({ activeGroupIndex: 3 })
+    await act(async () => {
+      await result.current.action.mutateAsync(['work', 'keep'])
+    })
+    expect(useUIStore.getState().activeGroupIndex).toBe(0)
+  })
+
+  it('"Archive all" of groups that are gone or archived already writes nothing and is no step', async () => {
+    const { result } = setup(() => G.useArchiveGroups())
+    const rev = store.rev
+    await act(async () => {
+      await result.current.action.mutateAsync(['gone'])
+    })
+    expect(store.rev).toBe(rev)
+    expect(steps()).toBe(0)
+  })
+
+  it('"Remove all" stale tabs across several groups is one step', async () => {
+    const before = saved(store.state)
+    const { result } = setup(() => G.useRemoveStaleTabs())
+    await act(async () => {
+      await result.current.action.mutateAsync({ groupIndexes: [1, 2, 9], staleThresholdMs: 1 })
+    })
+    expect(saved(store.state).map((g) => g.windows.flatMap((w) => w.tabs))).toEqual([[], []])
+    expect(steps()).toBe(1)
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(saved(store.state)).toEqual(before)
+  })
+
+  it('"Create new group" + the move into it (asOneHistoryStep) is one step; one Undo removes the group and puts the tab back', async () => {
+    const before = saved(store.state)
+    const { result } = setup(() => ({ add: G.useAddGroup(), move: G.useMoveTab() }))
+    await act(async () => {
+      await asOneHistoryStep(async () => {
+        await result.current.action.add.mutateAsync({ name: 'Fresh' })
+        await result.current.action.move.mutateAsync({ fromGroupIndex: 1, fromWindowIndex: 0, fromTabIndex: 0, toGroupIndex: 3 })
+      })
+    })
+    expect(saved(store.state).find((g) => g.name === 'Fresh')?.windows[0].tabs.map((t) => t[0])).toEqual(['a1'])
+    expect(steps()).toBe(1)
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(saved(store.state)).toEqual(before)
+    await act(async () => {
+      await result.current.history.redo()
+    })
+    expect(saved(store.state).find((g) => g.name === 'Fresh')?.windows[0].tabs.map((t) => t[0])).toEqual(['a1'])
+  })
+
+  it('a step made after asOneHistoryStep ended is a new step; a nested call joins the outer one', async () => {
+    const { result } = setup(() => ({ add: G.useAddGroup(), rename: G.useUpdateGroupName() }))
+    await act(async () => {
+      await asOneHistoryStep(() => asOneHistoryStep(() => result.current.action.add.mutateAsync({ name: 'Fresh' })))
+      await result.current.action.rename.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+    })
+    expect(steps()).toBe(2)
+  })
+
+  it('cancelling the name of a group just added removes it AND its step: nothing is left to undo', async () => {
+    const { result } = setup(() => ({ add: G.useAddGroup(), cancel: G.useDeleteGroup({ cancelsAdd: true }) }))
+    await act(async () => {
+      await result.current.action.add.mutateAsync({})
+    })
+    expect(steps()).toBe(1)
+    await act(async () => {
+      await result.current.action.cancel.mutateAsync(3)
+    })
+    expect(saved(store.state).map((g) => g.id)).toEqual(['work', 'play'])
+    expect(steps()).toBe(0)
+  })
+
+  it('a cancelsAdd delete whose previous step is something else is an ordinary step', async () => {
+    const { result } = setup(() => ({ rename: G.useUpdateGroupName(), cancel: G.useDeleteGroup({ cancelsAdd: true }) }))
+    await act(async () => {
+      await result.current.action.rename.mutateAsync({ groupIndex: 1, name: 'Renamed' })
+      await result.current.action.cancel.mutateAsync(2)
+    })
+    expect(steps()).toBe(2)
+    await act(async () => {
+      await result.current.history.undo()
+    })
+    expect(saved(store.state).map((g) => g.id)).toEqual(['work', 'play'])
   })
 })

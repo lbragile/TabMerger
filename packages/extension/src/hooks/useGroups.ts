@@ -11,11 +11,11 @@ import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@
 import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { asNewGroup } from '@/lib/syncDirty';
-import { savedDataChanged } from '@/lib/undoHistory';
+import { carryHistoryCursor, recordStep } from '@/lib/undoHistory';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
 import { withTabCustomTitle } from '@/lib/tabTitle';
-import { tagHistoryEntry, type LiveTabsEffect } from '@/lib/undoLiveTabs';
+import type { LiveTabsEffect } from '@/lib/undoLiveTabs';
 import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
 import { toast } from '@/lib/toast';
 import { useUIStore } from '@/stores/uiStore';
@@ -64,13 +64,19 @@ async function getGroupsStateWithMigration() {
   if (tabsMissingSavedAt(state).length === 0) return state;
   // Redo the migration as an atomic update on a fresh read, so it can't overwrite a write
   // (this context's or the service worker's) that landed after the read above.
+  // A maintenance write, not a user change: it carries the undo cursor along (lib/undoHistory.ts)
+  // (a copy, not edited in place: the cursor is compared with the state the write started from)
   return updateGroupsState((fresh) => {
-    const missing = tabsMissingSavedAt(fresh);
-    if (missing.length === 0) return null;
+    if (tabsMissingSavedAt(fresh).length === 0) return null;
     const now = Date.now();
-    missing.forEach((t) => { t.savedAt = now; });
-    return fresh;
-  });
+    const stamp = (t: Tab): Tab => (t.savedAt ? t : { ...t, savedAt: now });
+    return {
+      ...fresh,
+      available: fresh.available.map((g) =>
+        g.permanent ? g : { ...g, windows: g.windows.map((w) => ({ ...w, tabs: w.tabs.map(stamp) })) }
+      )
+    };
+  }, { afterWrite: carryHistoryCursor });
 }
 
 /** Reads all groups from IndexedDB via TanStack Query. staleTime:0 so the popup always gets the latest on open. */
@@ -98,15 +104,18 @@ export function useGroupsSnapshot(): () => GroupsState | undefined {
 /**
  * Returns a typed mutation helper used by every group/window/tab mutation hook.
  * Pattern: atomic IDB read-modify-write (`updateGroupsState`: fresh read → apply transform →
- * persist, all inside the write queue + cross-context lock) → push the undo snapshot → update cache.
+ * persist → record the undo step, all inside the write queue + cross-context lock) → update cache.
  *
- * Undo is decided HERE for every hook below: the state the transform started from goes on the undo
- * stack exactly when the transform changed the SAVED data (`savedDataChanged`), and only once the
- * write is stored. So each user action is one step, a no-op or Now Open-only write is none, and a
- * failed write leaves no step behind. `skipUndo=true` is only for writes that are not user changes
- * (info recounts) or that an undo could not take back (reminders: their alarms stay scheduled).
+ * Undo is decided HERE for every hook below (`recordStep`, lib/undoHistory.ts): the state the write
+ * started from goes on the undo stack exactly when the write changed the SAVED data
+ * (`savedDataChanged`), and only once it is stored, inside the same step of the write queue. So each
+ * user action is one step, a no-op or Now Open-only write is none, a failed write leaves no step,
+ * and an Undo clicked while this write is in flight is queued behind it and undoes it.
+ * `skipUndo=true` is only for writes that are not user changes (info recounts) or that an undo could
+ * not take back (reminders: their alarms stay scheduled).
  * `opts.liveTabs`: the real tabs the action opened (see lib/undoLiveTabs.ts), attached to the step
- * so Undo closes exactly those tabs and Redo reopens them.
+ * as a promise when it is recorded, so an Undo waits for the ids and closes exactly those tabs.
+ * `opts.revertsLastStep`: see `StepRecord.revertsLastStep`.
  * `mutFn` runs inside the lock: keep it synchronous and cheap (fire-and-forget side effects only).
  */
 function useGroupsMutation() {
@@ -116,37 +125,33 @@ function useGroupsMutation() {
   return (
     mutFn: (prev: GroupsState) => GroupsState | null,
     skipUndo = false,
-    opts: { align?: boolean; liveTabs?: Promise<LiveTabsEffect | null> } = {}
+    opts: { align?: boolean; liveTabs?: Promise<LiveTabsEffect | null>; revertsLastStep?: boolean } = {}
   ) => {
     // The list the user is looking at. `mutFn` closes over positional indexes from that render.
     const base = opts.align === false ? undefined : qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
     /** a fresh read inside the lock (not the cache) guarantees we mutate the latest IDB state, even one the service worker just wrote */
     let gone = false;
-    let undoBase: GroupsState | null = null;
-    return updateGroupsState((fresh) => {
-      // Resolve the target by group id: re-address the fresh state to `base`'s order so index N
-      // is still the group the user clicked; refuse (no write) if that group is gone.
-      const prev = alignToBase(base, fresh);
-      if (!prev) {
-        gone = true;
-        return null;
+    return updateGroupsState(
+      (fresh) => {
+        // Resolve the target by group id: re-address the fresh state to `base`'s order so index N
+        // is still the group the user clicked; refuse (no write) if that group is gone.
+        const prev = alignToBase(base, fresh);
+        if (!prev) {
+          gone = true;
+          return null;
+        }
+        const result = mutFn(prev);
+        if (!result) return null; // nothing to change: no write, no rev bump, no broadcast
+        // The view was in the user's order: put the result back into the FRESH order (see restoreFreshOrder).
+        return prev === fresh ? result : restoreFreshOrder(fresh, prev, result);
+      },
+      {
+        afterWrite: recordStep({ push: pushUndo, skip: skipUndo, effect: () => opts.liveTabs, revertsLastStep: opts.revertsLastStep })
       }
-      const result = mutFn(prev);
-      if (!result) return null; // nothing to change: no write, no rev bump, no broadcast
-      if (!skipUndo && savedDataChanged(prev, result)) undoBase = prev;
-      // The view was in the user's order: put the result back into the FRESH order (see restoreFreshOrder).
-      return prev === fresh ? result : restoreFreshOrder(fresh, prev, result);
-    }).then((next) => {
+    ).then((next) => {
       if (gone) {
         toast.info('A group you were working on changed or was removed elsewhere, so nothing was changed.', { id: 'groups-changed-elsewhere' });
         markAborted(next); // onSuccess analytics must not count a mutation that did nothing
-      }
-      if (undoBase) {
-        pushUndo(undoBase);
-        if (opts.liveTabs) {
-          const entry = useUIStore.getState().undoStack?.[0];
-          void opts.liveTabs.then((effect) => tagHistoryEntry(entry, effect));
-        }
       }
       qc.setQueryData(GROUPS_QUERY_KEY, next);
       return next;
@@ -185,8 +190,12 @@ export function closableTabIds(group: Group | undefined, tabs: Tab[]): number[] 
  * Removes a saved group from IndexedDB. No browser tab is closed: a saved group holds
  * detached copies. Permanent groups (Now Open) are silently rejected.
  * Recalculates `active.index` so the sidebar never points to a stale slot.
+ *
+ * `cancelsAdd`: the delete cancels a group the user has just added (the X on its first rename).
+ * When the step before is that add, the delete takes the add's step back instead of adding its
+ * own, so nothing is left to undo (an Undo would otherwise bring the cancelled group back).
  */
-export function useDeleteGroup() {
+export function useDeleteGroup({ cancelsAdd = false }: { cancelsAdd?: boolean } = {}) {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
@@ -212,7 +221,7 @@ export function useDeleteGroup() {
         const newActiveId = newAvailable[newActiveIndex]?.id ?? newAvailable[0]?.id ?? '';
 
         return { active: { id: newActiveId, index: newActiveIndex }, available: newAvailable };
-      }).then((next) => {
+      }, false, { revertsLastStep: cancelsAdd }).then((next) => {
         if (target && !target.permanent) deleteRulesForGroupIds([target.id]).catch(() => {});
         return next;
       });
@@ -1132,24 +1141,30 @@ export function useDeduplicateGroup() {
   });
 }
 
-/** Removes all tabs older than staleThresholdMs from a saved group. */
+/**
+ * Removes all tabs older than staleThresholdMs from a saved group, or from several at once
+ * (`groupIndexes`: the cleanup banner's "Remove all", one write and one undo step for all of them).
+ */
 export function useRemoveStaleTabs() {
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({ groupIndex, staleThresholdMs }: { groupIndex: number; staleThresholdMs: number }) =>
+    mutationFn: ({ groupIndex, groupIndexes, staleThresholdMs }: { groupIndex?: number; groupIndexes?: number[]; staleThresholdMs: number }) =>
       mutate((prev) => {
         const available = [...prev.available];
-        const g = { ...available[groupIndex] };
         const now = Date.now();
-        g.windows = g.windows
-          .map((w) => ({ ...w, tabs: w.tabs.filter((t) => !t.savedAt || now - t.savedAt <= staleThresholdMs) }))
-          /** keep the last window even when empty — a group with zero windows is an invalid state */
-          .filter((w) => w.tabs.length > 0 || g.windows.length === 1);
-        g.updatedAt = now;
-        g.pendingSync = true;
-        g.info = getGroupInfo(g);
-        available[groupIndex] = g;
+        for (const index of groupIndexes ?? (groupIndex === undefined ? [] : [groupIndex])) {
+          const g = available[index] && { ...available[index] };
+          if (!g) continue;
+          g.windows = g.windows
+            .map((w) => ({ ...w, tabs: w.tabs.filter((t) => !t.savedAt || now - t.savedAt <= staleThresholdMs) }))
+            /** keep the last window even when empty — a group with zero windows is an invalid state */
+            .filter((w) => w.tabs.length > 0 || g.windows.length === 1);
+          g.updatedAt = now;
+          g.pendingSync = true;
+          g.info = getGroupInfo(g);
+          available[index] = g;
+        }
         return { ...prev, available };
       })
   });
@@ -1191,6 +1206,42 @@ export function useArchiveGroup() {
         if (didArchive && useUIStore.getState().activeGroupIndex === groupIndex) {
           useUIStore.getState().setActiveGroupIndex(aboveRealIndex);
         }
+        return next;
+      });
+    }
+  });
+}
+
+/**
+ * Archives several saved groups, addressed by id, as ONE write and one undo step (the AI
+ * suggestion's "Archive all"). When the group being viewed is one of them, the view moves to the
+ * nearest group above it in the sidebar that is not being archived (Now Open when there is none),
+ * the same rule as `useArchiveGroup`.
+ */
+export function useArchiveGroups() {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (groupIds: string[]) => {
+      const ids = new Set(groupIds);
+      const prevState = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const viewedId = prevState?.available[useUIStore.getState().activeGroupIndex]?.id;
+      return mutate((prev) => {
+        let changed = false;
+        const available = prev.available.map((g) => {
+          if (!ids.has(g.id) || g.permanent || g.archived) return g;
+          changed = true;
+          return { ...g, archived: true, updatedAt: Date.now(), pendingSync: true };
+        });
+        return changed ? { ...prev, available } : null;
+      }, false, { align: false }).then((next) => {
+        if (!viewedId || !ids.has(viewedId) || !next.available.find((g) => g.id === viewedId)?.archived) return next;
+        const order = getSidebarDisplayOrder(prevState?.available ?? []);
+        const pos = order.findIndex(({ group }) => group.id === viewedId);
+        const above = order.slice(0, Math.max(pos, 0)).reverse().find(({ group }) => !ids.has(group.id));
+        const aboveIndex = above ? next.available.findIndex((g) => g.id === above.group.id) : 0;
+        useUIStore.getState().setActiveGroupIndex(Math.max(aboveIndex, 0));
         return next;
       });
     }

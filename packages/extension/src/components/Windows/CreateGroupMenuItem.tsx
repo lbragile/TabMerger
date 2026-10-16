@@ -11,10 +11,11 @@ import { trackEvent } from '@/lib/analytics';
  * Shared "Create new group" item appended to every move/copy-to-group menu
  * (Tab.tsx, Window.tsx, SelectionActionBar.tsx). Opens the existing AddGroup
  * modal with an `onCreated` callback that the modal fires with the new group's
- * index once it's saved — the caller uses that index to run its own move/copy.
+ * index once it's saved — the caller uses that index to run its own move/copy, and returns its
+ * promise: the add and the move are then one undo step (see AddGroupModal).
  * Reuses the same free-tier gate as SidePanel's "+" button (handleNewGroup).
  */
-export function CreateGroupMenuItem({ onCreated }: { onCreated: (groupIndex: number) => void }) {
+export function CreateGroupMenuItem({ onCreated }: { onCreated: (groupIndex: number) => Promise<unknown> }) {
   const { data: groupsState } = useGroups();
   const { maxGroups } = useEntitlements();
   const openModal = useUIStore((s) => s.openModal);

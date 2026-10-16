@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 vi.mock('@/lib/deferredTabClose', () => ({ keepTabsOpen: vi.fn(), closeTabsWhenPopupCloses: vi.fn() }))
 vi.mock('@/lib/incognito', () => ({ resolveIncognito: vi.fn(async (was?: boolean) => !!was) }))
 
-import { historyEntryEffect, liveTabRecords, runLiveTabsEffect, tagHistoryEntry, type LiveTabRecord } from '@/lib/undoLiveTabs'
+import { EFFECT_WAIT_MS, historyEntryEffect, liveTabRecords, runLiveTabsEffect, settledEntryEffect, tagHistoryEntry, type LiveTabRecord } from '@/lib/undoLiveTabs'
 import { keepTabsOpen } from '@/lib/deferredTabClose'
 import type { GroupsState } from '@/lib/types'
 
@@ -165,5 +165,53 @@ describe('runLiveTabsEffect — close (Redo of a drag out, Undo of a drop into N
   it('does nothing without the chrome API', async () => {
     vi.stubGlobal('chrome', undefined)
     await expect(runLiveTabsEffect({ kind: 'close', tabs: [rec(1, 'https://a')] })).resolves.toBeNull()
+  })
+})
+
+describe('pending effects (the ids of opened tabs arrive after the step is recorded)', () => {
+  const entry = (): GroupsState => ({ active: { id: '', index: 0 }, available: [] })
+
+  it('an entry can be tagged with the promise of its effect; settledEntryEffect waits for it', async () => {
+    const e = entry()
+    let give!: (effect: { kind: 'close'; tabs: LiveTabRecord[] }) => void
+    tagHistoryEntry(e, new Promise((resolve) => { give = resolve }))
+    const settled = settledEntryEffect(e)
+    give({ kind: 'close', tabs: [rec(900, 'https://example.com/a')] })
+    await expect(settled).resolves.toMatchObject({ kind: 'close', tabs: [{ tabId: 900 }] })
+  })
+
+  it('a promise that settles with no tabs, null, or a rejection is no effect', async () => {
+    const a = entry()
+    const b = entry()
+    const c = entry()
+    tagHistoryEntry(a, Promise.resolve({ kind: 'close', tabs: [] }))
+    tagHistoryEntry(b, Promise.resolve(null))
+    const failing = Promise.reject(new Error('x'))
+    failing.catch(() => undefined)
+    tagHistoryEntry(c, failing)
+    await expect(settledEntryEffect(a)).resolves.toBeNull()
+    await expect(settledEntryEffect(b)).resolves.toBeNull()
+    await expect(settledEntryEffect(c)).resolves.toBeNull()
+    await expect(settledEntryEffect(entry())).resolves.toBeNull()
+  })
+
+  it('waits at most EFFECT_WAIT_MS for an effect that never arrives', async () => {
+    vi.useFakeTimers()
+    try {
+      const e = entry()
+      tagHistoryEntry(e, new Promise(() => {}))
+      const settled = settledEntryEffect(e)
+      await vi.advanceTimersByTimeAsync(EFFECT_WAIT_MS)
+      await expect(settled).resolves.toBeNull()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('a known effect is returned as it is', async () => {
+    const e = entry()
+    const effect = { kind: 'reopen' as const, tabs: [rec(5, 'https://example.com/b')] }
+    tagHistoryEntry(e, effect)
+    await expect(settledEntryEffect(e)).resolves.toBe(effect)
   })
 })

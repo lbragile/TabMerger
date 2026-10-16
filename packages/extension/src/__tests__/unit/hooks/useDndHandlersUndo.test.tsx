@@ -15,20 +15,41 @@ import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 const store = vi.hoisted(() => ({ state: null as unknown as GroupsState, rev: 1 }))
 
 vi.mock('@/lib/localDb', () => {
-  const save = async (next: GroupsState, opts: { expectedRev?: number } = {}) => {
-    if (opts.expectedRev !== undefined && opts.expectedRev !== store.rev) throw Object.assign(new Error('stale'), { name: 'StaleGroupsError' })
+  // Like the real store: writes apply one at a time in issue order, `afterWrite` runs inside the
+  // write's step once it is stored (with the state stored just before it)
+  let tail: Promise<unknown> = Promise.resolve()
+  const enqueue = <T,>(task: () => Promise<T>): Promise<T> => {
+    const run = tail.then(task)
+    tail = run.catch(() => undefined)
+    return run
+  }
+  const write = (next: GroupsState, expectedRev?: number): GroupsState => {
+    if (expectedRev !== undefined && expectedRev !== store.rev) throw Object.assign(new Error('stale'), { name: 'StaleGroupsError' })
     store.rev += 1
     store.state = structuredClone({ ...next, rev: store.rev })
-    return store.rev
+    return structuredClone(store.state)
   }
+  type AfterWrite = (stored: GroupsState, base: GroupsState) => void
   return {
-    getGroupsState: vi.fn(async () => structuredClone(store.state)),
-    saveGroupsState: vi.fn(save),
-    updateGroupsState: vi.fn(async (fn: (s: GroupsState) => GroupsState | null) => {
-      const next = fn(structuredClone(store.state))
-      if (next) await save(next)
-      return structuredClone(store.state)
-    }),
+    getGroupsState: vi.fn(async () => enqueue(async () => structuredClone(store.state))),
+    saveGroupsState: vi.fn((next: GroupsState, opts: { expectedRev?: number; afterWrite?: AfterWrite } = {}) =>
+      enqueue(async () => {
+        const base = structuredClone(store.state)
+        const stored = write(next, opts.expectedRev)
+        opts.afterWrite?.(stored, base)
+        return store.rev
+      })
+    ),
+    updateGroupsState: vi.fn((fn: (s: GroupsState) => GroupsState | null, opts: { afterWrite?: AfterWrite } = {}) =>
+      enqueue(async () => {
+        const base = structuredClone(store.state)
+        const next = fn(base)
+        if (!next) return base
+        const stored = write(next)
+        opts.afterWrite?.(stored, base)
+        return stored
+      })
+    ),
     setSetting: vi.fn().mockResolvedValue(undefined),
     getSetting: vi.fn().mockResolvedValue({})
   }
@@ -40,9 +61,11 @@ import { useDndHandlers } from '@/hooks/useDndHandlers'
 import { useUndoRedo } from '@/hooks/useUndoRedo'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { NEW_GROUP_ID } from '@/lib/dndMove'
-import { historyEntryEffect } from '@/lib/undoLiveTabs'
+import { historyEntryEffect, settledEntryEffect } from '@/lib/undoLiveTabs'
+import { saveGroupsState } from '@/lib/localDb'
 import { clearDndDragLive } from '@/lib/dndMultiDrag'
 import { useUIStore } from '@/stores/uiStore'
+import { forgetHistoryCursor } from '@/lib/undoHistory'
 
 const tab = (title: string, id = 0): Tab => ({ id, title, url: `https://example.com/${title}`, savedAt: 1 })
 const win = (tabs: Tab[], over: Partial<ExtWindow> = {}): ExtWindow => ({ id: 0, tabs, incognito: false, focused: false, starred: false, ...over })
@@ -68,6 +91,7 @@ let open: Map<number, string>
 beforeEach(() => {
   vi.clearAllMocks()
   clearDndDragLive()
+  forgetHistoryCursor()
   store.state = seed()
   store.rev = 1
   open = new Map([[41, 'https://example.com/live1'], [42, 'https://example.com/live2']])
@@ -122,9 +146,21 @@ async function setup() {
       await result.current.dnd.onDragEnd({ active: { id: activeId, data }, over: { id: overId, data: { current: overData } } } as unknown as DragEndEvent)
     })
   }
+  /** A drop whose commit is NOT awaited: returns the commit's promise (write, then side effects). */
+  const startDrop = (activeId: string, overId: string, overData?: Record<string, unknown>) => {
+    const data = { current: undefined }
+    act(() => {
+      result.current.dnd.onDragStart({ active: { id: activeId, data }, activatorEvent: new MouseEvent('mousedown') } as unknown as DragStartEvent)
+    })
+    let commit!: Promise<void>
+    act(() => {
+      commit = result.current.dnd.onDragEnd({ active: { id: activeId, data }, over: { id: overId, data: { current: overData } } } as unknown as DragEndEvent) as unknown as Promise<void>
+    })
+    return commit
+  }
   const undo = () => act(async () => { await result.current.history.undo() })
   const redo = () => act(async () => { await result.current.history.redo() })
-  return { drop, undo, redo }
+  return { drop, startDrop, undo, redo, history: () => result.current.history }
 }
 
 /** One step for the drop; Undo gives back exactly `before`; Redo gives back exactly the dropped state. */
@@ -188,7 +224,7 @@ describe('drops out of / into Now Open are one step too', () => {
     expect(saved(store.state)).toEqual([['work', [['a1', 'a2', 'a3']]], ['play', [['p1'], ['live2']]]])
     expect(open.has(42)).toBe(false) // the move closed the real tab
     expect(steps()).toBe(1)
-    expect(historyEntryEffect(useUIStore.getState().undoStack[0])?.kind).toBe('reopen')
+    expect((await settledEntryEffect(useUIStore.getState().undoStack[0]))?.kind).toBe('reopen')
 
     await h.undo()
     expect(saved(store.state)).toEqual([['work', [['a1', 'a2', 'a3']]], ['play', [['p1']]]])
@@ -232,5 +268,58 @@ describe('drops out of / into Now Open are one step too', () => {
     await h.drop('now::w0::t0', 'now::w0::t1')
     expect(c.tabs.move).toHaveBeenCalled()
     expect(steps()).toBe(0)
+  })
+})
+
+describe('the drop step is recorded inside its write (G6, G2, G3)', () => {
+  it('G6: a failed drop write leaves no step, and never removes an entry another action recorded', async () => {
+    const h = await setup()
+    const other = seed()
+    const redo = seed()
+    useUIStore.setState({ undoStack: [other], redoStack: [redo] })
+    vi.mocked(saveGroupsState).mockImplementationOnce(() => Promise.reject(new Error('QuotaExceeded')))
+    await h.drop('work::w0::t0', 'play::new-window', { type: 'new-window', groupId: 'play', groupIndex: 2 })
+    expect(useUIStore.getState().undoStack).toEqual([other])
+    expect(useUIStore.getState().undoStack[0]).toBe(other)
+    expect(useUIStore.getState().redoStack[0]).toBe(redo)
+  })
+
+  it("G2: an Undo clicked before the drop's write landed waits, then undoes the drop", async () => {
+    const h = await setup()
+    const before = saved(store.state)
+    await act(async () => {
+      const commit = h.startDrop('work::w0::t0', 'play::new-window', { type: 'new-window', groupId: 'play', groupIndex: 2 })
+      const undone = h.history().undo()
+      await Promise.all([commit, undone])
+    })
+    expect(saved(store.state)).toEqual(before)
+    expect(steps()).toBe(0)
+    expect(useUIStore.getState().redoStack).toHaveLength(1)
+  })
+
+  it('G3: an Undo clicked before Chrome returned the tab a drop into Now Open opened still closes it', async () => {
+    const h = await setup()
+    let giveTab!: () => void
+    const create = c.tabs.create.getMockImplementation() as (args: { url: string }) => Promise<unknown>
+    c.tabs.create.mockImplementationOnce((args: { url: string }) => new Promise((resolve) => { giveTab = () => resolve(create(args)) }))
+    await act(async () => {
+      const commit = h.startDrop('work::w0::t0', 'now::w0', { type: 'window' })
+      await waitFor(() => expect(c.tabs.create).toHaveBeenCalled())
+      const undone = h.history().undo()
+      await new Promise((r) => setTimeout(r, 0))
+      expect(c.tabs.remove).not.toHaveBeenCalled()
+      giveTab()
+      await Promise.all([commit, undone])
+    })
+    const opened = [...open].find(([, u]) => u === 'https://example.com/a1')
+    expect(opened).toBeUndefined() // closed again, by the id Chrome returned
+    expect(c.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(saved(store.state)).toEqual([['work', [['a1', 'a2', 'a3']]], ['play', [['p1']]]])
+  })
+
+  it('a drop with no tabs to open settles its effect at once (an Undo does not wait for it)', async () => {
+    const h = await setup()
+    await h.drop('work::w0::t0', 'play::new-window', { type: 'new-window', groupId: 'play', groupIndex: 2 })
+    expect(historyEntryEffect(useUIStore.getState().undoStack[0])).toBeUndefined()
   })
 })
