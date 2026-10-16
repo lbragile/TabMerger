@@ -1,3 +1,16 @@
+## [3.3.2](https://github.com/lbragile/TabMerger/compare/v3.3.1...v3.3.2) (2026-10-16)
+
+
+### Bug Fixes
+
+* **extension:** ask for Firefox site access from a tab, not the popup ([#79](https://github.com/lbragile/TabMerger/issues/79)) ([9f738c4](https://github.com/lbragile/TabMerger/commit/9f738c4cbe254057dc355c4311320846d6025c22))
+* **extension:** sync only the groups a bulk action changes, and batch Now Open writes ([#82](https://github.com/lbragile/TabMerger/issues/82)) ([24ca29d](https://github.com/lbragile/TabMerger/commit/24ca29da5667458f96fef4241243018938f2a4f8))
+
+
+### Features
+
+* **web:** redirect public pages on the old vercel.app hosts to tabmerger.com ([#80](https://github.com/lbragile/TabMerger/issues/80)) ([9fae1e9](https://github.com/lbragile/TabMerger/commit/9fae1e91611e91dd2beda5969529576644f0ce0d))
+
 ## [3.3.1](https://github.com/lbragile/TabMerger/compare/v3.3.0...v3.3.1) (2026-10-16)
 
 
