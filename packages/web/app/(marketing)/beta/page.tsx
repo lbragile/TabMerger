@@ -528,7 +528,7 @@ const TEST_AREAS: {
         checks: 'That upgrading from inside the extension works end to end, and the extension then shows Pro.',
         steps: [
           'Open the extension popup and use any "Upgrade to Pro" entry point — the header\'s upgrade button, the nag banner that appears as you approach the free limit, or an upgrade prompt shown when you hit a free-tier limit.',
-          'This opens the beta web app\'s pricing page (tabmerger-preview.vercel.app/pricing) in a new browser tab. Sign in there with the same account you use in the extension.',
+          'This opens the beta web app\'s pricing page (preview.tabmerger.com/pricing) in a new browser tab. Sign in there with the same account you use in the extension.',
           'Choose the Pro plan, monthly or yearly, and continue to Stripe Checkout.',
           'Complete checkout with the test card above (or a decline/3D-Secure card, if you\'re testing that path), then return to the app.',
         ],
@@ -542,7 +542,7 @@ const TEST_AREAS: {
         heading: 'Upgrading from the web account page',
         checks: 'That upgrading from the website\'s account page works, and the website and extension agree on your plan.',
         steps: [
-          'Instead of going through the extension, sign in directly at tabmerger-preview.vercel.app and open Account settings.',
+          'Instead of going through the extension, sign in directly at preview.tabmerger.com and open Account settings.',
           'Under "Subscription," click "Upgrade" and complete checkout with the test card.',
         ],
         example: {
@@ -954,13 +954,13 @@ const TEST_AREAS: {
     id: 'web-app-and-dashboard',
     title: 'Web app and dashboard (preview site)',
     intro:
-      'Everything here is at tabmerger-preview.vercel.app, not the main tabmerger.com — this beta build syncs with the preview site only.',
+      'Everything here is at preview.tabmerger.com, not the main tabmerger.com — this beta build syncs with the preview site only.',
     items: [
       {
         heading: 'Signing up and signing in',
         checks: 'That every way of signing in to the website works: Google, email and password, and a magic link.',
         steps: [
-          'From a signed-out state, open tabmerger-preview.vercel.app/auth/sign-in.',
+          'From a signed-out state, open preview.tabmerger.com/auth/sign-in.',
           'Try "Continue with Google".',
           'Try email + password instead: enter your email and password, then click "Continue".',
           'Try "Send magic link" instead, using just your email.',
@@ -1023,7 +1023,7 @@ const TEST_AREAS: {
         checks: 'That the website\'s dashboard shows the same groups as your extension once sync has caught up.',
         pro: true,
         steps: [
-          'With sync on and at least one group, open the dashboard at tabmerger-preview.vercel.app/dashboard.',
+          'With sync on and at least one group, open the dashboard at preview.tabmerger.com/dashboard.',
           'Compare the "Tab Groups" section there to the extension popup\'s sidebar: names, colors, window/tab counts and order.',
         ],
         example: {
@@ -1196,7 +1196,7 @@ const TEST_AREAS: {
           width: 1600,
           height: 1200,
           alt: 'The shared page opened signed out: "Shared collection · read-only", the share link, "9 tabs across 5 windows in 2 groups", a Show page previews switch, and the Work group\'s tabs with Open buttons',
-          caption: 'What someone opening your link sees, without signing in. (Here the link points at a local test server; yours will be on tabmerger-preview.vercel.app.)',
+          caption: 'What someone opening your link sees, without signing in. (Here the link points at a local test server; yours will be on preview.tabmerger.com.)',
         },
         good: [
           'The page loads with no sign-in required, labeled "Shared collection · read-only".',
@@ -1498,7 +1498,7 @@ const TEST_AREAS: {
     id: 'sign-in-and-sync',
     title: 'Sign-in and sync across devices',
     intro:
-      'Beta builds sync through the preview web app at tabmerger-preview.vercel.app, not the main site — sign in there to see your synced groups, dashboard, and sharing.',
+      'Beta builds sync through the preview web app at preview.tabmerger.com, not the main site — sign in there to see your synced groups, dashboard, and sharing.',
     items: [
       {
         heading: 'Setting up two devices',
@@ -1743,7 +1743,7 @@ const TEST_AREAS: {
         checks: 'That the website asks for your passphrase before it shows your synced groups.',
         pro: true,
         steps: [
-          'Sign in to the dashboard (tabmerger-preview.vercel.app) with an account that has encryption set up.',
+          'Sign in to the dashboard (preview.tabmerger.com) with an account that has encryption set up.',
           'If prompted, enter your passphrase in the inline unlock card before any group content appears.',
         ],
         example: {
@@ -1862,12 +1862,12 @@ export default function BetaPage() {
                 <span className="text-foreground font-medium">Sign in through the preview web app.</span>{' '}
                 Beta builds sync with{' '}
                 <a
-                  href="https://tabmerger-preview.vercel.app"
+                  href="https://preview.tabmerger.com"
                   target="_blank"
                   rel="noreferrer"
                   className="underline underline-offset-4 hover:text-foreground transition-colors"
                 >
-                  tabmerger-preview.vercel.app
+                  preview.tabmerger.com
                 </a>{' '}
                 — not the main tabmerger site. Sign in there (from the extension or the dashboard
                 directly) to see synced groups and sessions.
@@ -2233,7 +2233,7 @@ export default function BetaPage() {
               <div>
                 <h3 className="font-medium text-foreground mb-1">Where does my data sync?</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Beta builds sync with the preview web app at tabmerger-preview.vercel.app, not
+                  Beta builds sync with the preview web app at preview.tabmerger.com, not
                   the main tabmerger site. Sign in there to see your synced groups, sessions, and
                   sharing.
                 </p>

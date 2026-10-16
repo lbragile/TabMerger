@@ -169,7 +169,7 @@ function BrowserIllustration({ code, variant }: { code: string; variant: 'lost' 
         <div className="px-3 pt-3">
           <div className="flex h-7 items-center gap-2 bg-surface2 px-2.5 font-mono text-[0.6875rem] text-text3">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-text3/60" />
-            <span className="truncate">tabmerger.app/…</span>
+            <span className="truncate">tabmerger.com/…</span>
           </div>
         </div>
         <div className="grid place-items-center px-4 pb-8 pt-6">

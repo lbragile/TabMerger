@@ -3,7 +3,7 @@ import { FIREFOX_BETA } from "@tabmerger/shared";
 /**
  * Resolves the Firefox beta add-on's `browser_specific_settings.gecko.update_url` from the
  * beta build's own `VITE_WEB_APP_URL` (the preview web app, e.g.
- * `https://tabmerger-preview.vercel.app`) — extracted out of `wxt.config.ts`'s `manifest()`
+ * `https://preview.tabmerger.com`) — extracted out of `wxt.config.ts`'s `manifest()`
  * callback purely so this can be unit-tested without running a real `wxt build`.
  *
  * @param webAppUrl `env.VITE_WEB_APP_URL` as resolved by Vite's `loadEnv()` for the current mode.
@@ -16,7 +16,7 @@ export function resolveFirefoxBetaUpdateUrl(webAppUrl: string | undefined): stri
     throw new Error(
       "wxt.config.ts: Firefox beta build has no VITE_WEB_APP_URL set, so gecko.update_url " +
         "can't be resolved. Without it, the beta .xpi would ship with no way to auto-update. " +
-        "Set VITE_WEB_APP_URL (the beta web app, e.g. https://tabmerger-preview.vercel.app) " +
+        "Set VITE_WEB_APP_URL (the beta web app, e.g. https://preview.tabmerger.com) " +
         "before building.",
     );
   }

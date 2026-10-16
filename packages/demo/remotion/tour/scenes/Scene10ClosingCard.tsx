@@ -14,7 +14,7 @@ import { ease, ramp } from "./Scene02OpenTabMerger";
 //   name     "TabMerger"                       the extension name (CHROMEWEBSTORE.md, manifest)
 //   tagline  "Tab chaos, tamed."               the walkthrough outro in demo-script.ts ("TabMerger — tab chaos, tamed. Free to start.")
 //   CTA      "Free to start" + the site address  "Free to start" is from the same outro; the site address is the
-//                                                production site as spelled in CHROMEWEBSTORE.md (https://tabmerger.vercel.app)
+//                                                production site (https://tabmerger.com, PROD_WEB_APP_URL in publish.yml)
 
 export const SCENE_ID = "closing-card";
 export const SCENE_10_FRAMES = 120; // 4.0s
@@ -23,7 +23,7 @@ export const SCENE_10_CAPTION = ""; // empty: no caption bar for this scene
 const NAME = "TabMerger";
 const TAGLINE = "Tab chaos, tamed.";
 const CTA = "Free to start";
-const SITE = "tabmerger.vercel.app";
+const SITE = "tabmerger.com";
 
 const FADE_FRAMES = 15; // scene 9's last frame fades and eases away
 const IN_FRAMES = 18;

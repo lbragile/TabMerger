@@ -67,7 +67,7 @@ If something in TabMerger is hard or impossible to use, please tell us.
   [accessibility template](https://github.com/lbragile/TabMerger/issues/new?template=accessibility.md)
   on GitHub.
 - If you cannot or prefer not to use GitHub, use the website's
-  [contact page](https://tabmerger.vercel.app/contact).
+  [contact page](https://tabmerger.com/contact).
 
 Helpful details, none of them required: what you were trying to do, where (the extension popup,
 or the page address), what happened, the steps to reproduce it, your operating system, browser
@@ -157,7 +157,7 @@ These are the barriers we know about, with workarounds where there is one.
 - **Demo video has no captions or transcript.** The demo on the landing page has no captions,
   audio description or text transcript. It starts muted, plays automatically and loops, and does
   not check the reduce motion setting; it does have player controls to pause it. The
-  [Features page](https://tabmerger.vercel.app/features) describes the same features in text.
+  [Features page](https://tabmerger.com/features) describes the same features in text.
 - **Motion on the website.** Only the reviews carousel on the website stops moving when your
   system asks for reduced motion. Other website animations have not been checked. The extension
   does respect that setting.
@@ -178,5 +178,5 @@ These are the barriers we know about, with workarounds where there is one.
 
 If you have an idea for improving this statement or how we handle accessibility, open an issue on
 [GitHub](https://github.com/lbragile/TabMerger/issues) or use the website's
-[contact page](https://tabmerger.vercel.app/contact). If something here is wrong or out of date,
+[contact page](https://tabmerger.com/contact). If something here is wrong or out of date,
 please say so; we would rather correct it than leave it.
