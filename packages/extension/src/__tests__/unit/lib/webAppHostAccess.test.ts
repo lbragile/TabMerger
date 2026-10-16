@@ -4,7 +4,9 @@ import {
   dismissWebAppHostPatterns,
   getDismissedWebAppHostPatterns,
   getMissingWebAppHostPatterns,
+  WEB_APP_ACCESS_PAGE_PATH,
   hostOfPattern,
+  openWebAppHostAccessPage,
   requestWebAppHostAccess,
   webAppHostPatterns,
 } from '@/lib/webAppHostAccess'
@@ -125,6 +127,35 @@ describe('requestWebAppHostAccess', () => {
   it('does not call the API when there is nothing to ask for', async () => {
     await expect(requestWebAppHostAccess([])).resolves.toBe(true)
     expect(request).not.toHaveBeenCalled()
+  })
+})
+
+describe('openWebAppHostAccessPage', () => {
+  function withTabs(create: ReturnType<typeof vi.fn>) {
+    Object.assign((globalThis as { chrome: Record<string, unknown> }).chrome, {
+      runtime: { getURL: (path: string) => `moz-extension://test-id${path}` },
+      tabs: { create },
+    })
+  }
+
+  it('opens the built site-access page with nothing in the URL, and never requests from here', async () => {
+    const create = vi.fn().mockResolvedValue({ id: 1 })
+    withTabs(create)
+    await expect(openWebAppHostAccessPage()).resolves.toBe(true)
+    expect(WEB_APP_ACCESS_PAGE_PATH).toBe('/site-access.html')
+    expect(create).toHaveBeenCalledWith({ url: 'moz-extension://test-id/site-access.html' })
+    expect(request).not.toHaveBeenCalled()
+  })
+
+  it('resolves false when the tab cannot be opened', async () => {
+    withTabs(vi.fn().mockRejectedValue(new Error('no')))
+    await expect(openWebAppHostAccessPage()).resolves.toBe(false)
+    withTabs(
+      vi.fn(() => {
+        throw new Error('sync throw')
+      })
+    )
+    await expect(openWebAppHostAccessPage()).resolves.toBe(false)
   })
 })
 

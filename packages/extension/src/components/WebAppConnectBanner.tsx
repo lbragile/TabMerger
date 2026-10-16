@@ -22,7 +22,8 @@ function nextFocusableAfter(node: HTMLElement): HTMLElement | null {
  * granted (an update that adds a site doesn't grant it, see `lib/webAppHostAccess.ts`). Without
  * it the website can't detect the extension, hand over a sign-in or start a sync. Renders nothing
  * when every site is granted, on Chrome and Edge, and once dismissed for the missing sites.
- * A refusal in Firefox's dialog leaves the prompt in place.
+ * Allow opens the site-access tab, which asks Firefox (Firefox shows no permission prompt over an
+ * open popup); the banner hides once the grant is seen, and a refusal leaves it in place.
  */
 export function WebAppConnectBanner() {
   const { missing, connect, dismiss } = useWebAppHostAccess();
@@ -61,7 +62,7 @@ export function WebAppConnectBanner() {
         type="button"
         aria-label={`Allow TabMerger on ${hosts}`}
         className="shrink-0 border border-primary/40 text-primary px-2 py-0.5 text-xs hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        // connect() calls permissions.request() before any await: Firefox requires the user action.
+        // Opens the site-access tab, which closes the popup; the tab makes the request.
         onClick={() => {
           rememberFocusTarget();
           void connect();
