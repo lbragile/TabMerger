@@ -51,9 +51,9 @@ function withCors<T extends NextResponse>(response: T, cors: Record<string, stri
  * Old `*.vercel.app` hosts → their canonical custom-domain origin.
  *
  * The site moved to its own domain, but the old hosts stay up for good: extension
- * builds already in users' hands call their APIs. So HTML pages on an old host
- * 308 to the same path on the new one (keeps links, bookmarks and search results
- * converging on one host), while the API keeps answering where it was called.
+ * builds already in users' hands call their APIs. Public pages on an old host 308
+ * to the same path on the new one (keeps links, bookmarks and search results
+ * converging on one host).
  *
  * Fixed map, deliberately: no env var and nothing request-derived picks the
  * target, so a spoofed `Host` header can at most trigger a redirect to one of
@@ -66,21 +66,70 @@ export const LEGACY_HOST_REDIRECTS: Readonly<Record<string, string>> = {
   'tabmerger-preview.vercel.app': 'https://preview.tabmerger.com',
 }
 
+/**
+ * Public, signed-out pages that move to the new host — matched exactly.
+ *
+ * Every route here renders the same for everyone and needs no session, so serving
+ * it from the new host loses nothing. Image metadata routes (`/opengraph-image.png`,
+ * `/twitter-image.png`, icons) and `favicon.ico` aren't listed: the matcher below
+ * never runs the proxy for them.
+ */
+export const LEGACY_REDIRECT_EXACT_PATHS: ReadonlySet<string> = new Set([
+  '/',
+  '/pricing',
+  '/features',
+  '/faq',
+  '/beta',
+  '/changelog',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/uninstalled',
+  '/llms.txt',
+  '/robots.txt',
+  '/sitemap.xml',
+])
+
+/** Public sections that move with everything under them (`/share/<slug>`, `/share/demo`). */
+export const LEGACY_REDIRECT_PATH_PREFIXES: readonly string[] = ['/share']
+
 /** True for `prefix` itself and anything under `prefix/`, never `prefixfoo`. */
 function isUnderPath(pathname: string, prefix: string): boolean {
   return pathname === prefix || pathname.startsWith(`${prefix}/`)
 }
 
 /**
+ * The path to redirect to when `pathname` is a listed public page, else null.
+ *
+ * One trailing slash is dropped before matching (`/pricing/` → `/pricing`), and the
+ * target uses the dropped form: the site serves slash-less URLs (no `trailingSlash`
+ * in next.config.ts), so this saves the new host a second redirect. Matching is
+ * case-sensitive, like the routes themselves.
+ */
+function legacyRedirectPath(pathname: string): string | null {
+  const path = pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+  if (LEGACY_REDIRECT_EXACT_PATHS.has(path)) return path
+  return LEGACY_REDIRECT_PATH_PREFIXES.some((prefix) => isUnderPath(path, prefix)) ? path : null
+}
+
+/**
  * The canonical URL to 308 this request to, or null to serve it here.
  *
- * Never redirects:
- * - `/api/*` — a CORS preflight (OPTIONS) can't follow a redirect, so old
- *   extension builds' API calls would break; and `/api/auth/callback` must finish
- *   the PKCE exchange on the host it was called on (the verifier cookie lives
- *   there).
- * - `/firefox-beta/*` — Firefox's beta update check wants a direct response. The
- *   matcher already skips it; this guard keeps that true if the matcher changes.
+ * An allow-list, so it fails closed: only the public pages above move, and a new
+ * route stays on the old host until someone adds it. Everything signed-in stays
+ * where it is for now — `/dashboard`, `/account`, `/auth/*` and `/api/*`. Older
+ * extension builds start magic-link sign-in at `<old host>/api/auth/callback`, so
+ * the session cookie is set on the old host and the callback lands on that host's
+ * `/dashboard`. Moving those pages would show those users a signed-out page, and
+ * signing in again would end up on the old host the same way. A later change moves
+ * the rest once most users run builds that sign in on the new domain.
+ *
+ * Also never redirected, for their own reasons:
+ * - `/api/*` — a CORS preflight (OPTIONS) can't follow a redirect, and the PKCE
+ *   callback must finish on the host whose cookie holds the verifier.
+ * - `/firefox-beta/*` — Firefox's beta update check wants a direct response (the
+ *   matcher already skips it).
+ * - `/sentry-test` — a diagnostic page that belongs to the deployment it's on.
  *
  * Only the path and query are carried over, onto the fixed origin. They're set
  * via the `pathname`/`search` setters rather than `new URL(path, base)`: a path
@@ -89,22 +138,24 @@ function isUnderPath(pathname: string, prefix: string): boolean {
  */
 export function legacyHostRedirect(request: NextRequest): URL | null {
   const { pathname, search } = request.nextUrl
-  if (isUnderPath(pathname, '/api') || isUnderPath(pathname, '/firefox-beta')) return null
+  const path = legacyRedirectPath(pathname)
+  if (path === null) return null
 
   const rawHost = request.headers.get('host') ?? request.nextUrl.hostname
   // Strip the port (`host:443`); IPv6 literals never match the map anyway.
   const host = rawHost.trim().toLowerCase().replace(/:\d*$/, '')
   if (!Object.hasOwn(LEGACY_HOST_REDIRECTS, host)) return null
 
-  const target = new URL(LEGACY_HOST_REDIRECTS[host])
-  target.pathname = pathname
+  const origin = new URL(LEGACY_HOST_REDIRECTS[host]).origin
+  const target = new URL(origin)
+  target.pathname = path
   target.search = search
   // Belt and braces: the setters can't move the origin, but never redirect off it.
-  return target.origin === new URL(LEGACY_HOST_REDIRECTS[host]).origin ? target : null
+  return target.origin === origin ? target : null
 }
 
 export async function proxy(request: NextRequest) {
-  // First, before CORS and the Supabase client: an old host's page has nothing to do here.
+  // First, before CORS and the Supabase client: an old host's public page has nothing to do here.
   const legacyTarget = legacyHostRedirect(request)
   if (legacyTarget) return NextResponse.redirect(legacyTarget, 308)
 

@@ -1,8 +1,9 @@
 /**
  * The site moved off `*.vercel.app`. The old hosts stay up (old extension builds
- * call their APIs), but their HTML pages 308 to the canonical custom domain.
- * /api/* and /firefox-beta/* must never redirect: a CORS preflight can't follow
- * one, and Firefox's beta update check needs a direct response.
+ * call their APIs and sign in there), and only an allow-list of public pages 308s
+ * to the canonical custom domain. Everything else — the signed-in app, auth, the
+ * API, Firefox beta files and any route not on the list — is served where it was
+ * asked for, so the redirect fails closed.
  *
  * Runs with Supabase env unset, like proxyCors.test.ts: the redirect happens
  * before the Supabase client is built.
@@ -11,6 +12,30 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
 
 const CHROME_EXT = 'chrome-extension://ogfmehaahkdfdfggcaabepknidpdgnbb'
+
+const LEGACY_HOSTS: [string, string][] = [
+  ['tabmerger.vercel.app', 'https://tabmerger.com'],
+  ['tabmerger-preview.vercel.app', 'https://preview.tabmerger.com'],
+]
+
+/** Every public page that moves, including ones under `/share/`. */
+const ALLOWED_PATHS = [
+  '/',
+  '/pricing',
+  '/features',
+  '/faq',
+  '/beta',
+  '/changelog',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/uninstalled',
+  '/llms.txt',
+  '/robots.txt',
+  '/sitemap.xml',
+  '/share/abc123XYZ',
+  '/share/demo',
+]
 
 function req(
   url: string,
@@ -28,6 +53,14 @@ async function loadProxy() {
   return import('@/proxy')
 }
 
+async function expectNotRedirected(url: string, method = 'GET') {
+  const { proxy, legacyHostRedirect } = await loadProxy()
+  expect(legacyHostRedirect(req(url))).toBeNull()
+  const res = await proxy(req(url, { method }))
+  expect(res.status).not.toBe(308)
+  expect(res.headers.get('location')).toBeNull()
+}
+
 describe('proxy — legacy host redirect', () => {
   afterEach(() => {
     vi.unstubAllEnvs()
@@ -35,27 +68,103 @@ describe('proxy — legacy host redirect', () => {
     vi.resetModules()
   })
 
-  it.each([
-    ['https://tabmerger.vercel.app/pricing?x=1', 'https://tabmerger.com/pricing?x=1'],
-    ['https://tabmerger-preview.vercel.app/pricing?x=1', 'https://preview.tabmerger.com/pricing?x=1'],
-    ['https://tabmerger.vercel.app/', 'https://tabmerger.com/'],
-    ['https://tabmerger.vercel.app/share/abc123XYZ', 'https://tabmerger.com/share/abc123XYZ'],
-  ])('308s %s to %s', async (from, to) => {
-    const { proxy } = await loadProxy()
-    const res = await proxy(req(from))
-    expect(res.status).toBe(308)
-    expect(res.headers.get('location')).toBe(to)
+  describe.each(LEGACY_HOSTS)('on %s', (host, targetOrigin) => {
+    it.each(ALLOWED_PATHS)('308s %s with its query to the new host', async (path) => {
+      const { proxy } = await loadProxy()
+      const res = await proxy(req(`https://${host}${path}?utm_source=x&a=1`))
+      expect(res.status).toBe(308)
+      expect(res.headers.get('location')).toBe(`${targetOrigin}${path}?utm_source=x&a=1`)
+    })
+
+    it('308s an allowed path without a query', async () => {
+      const { proxy } = await loadProxy()
+      const res = await proxy(req(`https://${host}/pricing`))
+      expect(res.headers.get('location')).toBe(`${targetOrigin}/pricing`)
+    })
   })
 
-  it.each(['TabMerger.Vercel.APP', 'tabmerger.vercel.app:443'])(
-    'matches the host variant %s',
+  it.each([
+    ['/pricing/', 'https://tabmerger.com/pricing'],
+    ['/share/abc/', 'https://tabmerger.com/share/abc'],
+    ['/?q=1', 'https://tabmerger.com/?q=1'],
+    ['/pricing/?q=1', 'https://tabmerger.com/pricing?q=1'],
+  ])('drops one trailing slash: %s → %s', async (path, to) => {
+    const { legacyHostRedirect } = await loadProxy()
+    expect(legacyHostRedirect(req(`https://tabmerger.vercel.app${path}`))?.href).toBe(to)
+  })
+
+  it.each([
+    '/dashboard',
+    '/dashboard/',
+    '/dashboard/backups',
+    '/account',
+    '/account?tab=billing',
+    '/auth/sign-in',
+    '/auth/sign-in?redirectTo=%2Fdashboard',
+    '/auth/sign-up',
+    '/auth/callback',
+    '/api',
+    '/api/track',
+    '/api/auth/callback?code=abc',
+    '/firefox-beta',
+    '/firefox-beta/updates.json',
+    '/sentry-test',
+  ])('never redirects the signed-in or excluded path %s', async (path) => {
+    for (const [host] of LEGACY_HOSTS) await expectNotRedirected(`https://${host}${path}`, 'POST')
+  })
+
+  it.each([
+    '/pricingx',
+    '/pricing.html',
+    '/share-evil',
+    '/sharex/abc',
+    '/featuresfoo',
+    '/llms.txt.bak',
+    '/Pricing',
+    '/pricing//',
+    '/some-new-page',
+    '/blog/hello',
+    '/apix',
+  ])('does not redirect the lookalike or unknown path %s', async (path) => {
+    await expectNotRedirected(`https://tabmerger.vercel.app${path}`)
+  })
+
+  it.each([
+    ['//evil.com/x', null],
+    ['/%2F%2Fevil.com', null],
+    ['/share//evil.com/x', 'https://tabmerger.com/share//evil.com/x'],
+    ['/share/%2F%2Fevil.com', 'https://tabmerger.com/share/%2F%2Fevil.com'],
+    ['/share/%2f%2fevil.com%2Fx', 'https://tabmerger.com/share/%2f%2fevil.com%2Fx'],
+    ['/share/@evil.com', 'https://tabmerger.com/share/@evil.com'],
+  ])('keeps the fixed origin for %s', async (path, expected) => {
+    const { legacyHostRedirect } = await loadProxy()
+    const target = legacyHostRedirect(req(`https://tabmerger.vercel.app${path}`))
+    if (expected === null) {
+      expect(target).toBeNull()
+    } else {
+      expect(target?.href).toBe(expected)
+      expect(target?.origin).toBe('https://tabmerger.com')
+    }
+  })
+
+  it.each(['TabMerger.Vercel.APP', 'tabmerger.vercel.app:443', ' tabmerger.vercel.app '])(
+    'matches the host variant %j',
     async (host) => {
-      const { proxy } = await loadProxy()
-      const res = await proxy(req('https://tabmerger.vercel.app/features', { host }))
-      expect(res.status).toBe(308)
-      expect(res.headers.get('location')).toBe('https://tabmerger.com/features')
+      const { legacyHostRedirect } = await loadProxy()
+      expect(legacyHostRedirect(req('https://tabmerger.vercel.app/features', { host }))?.href).toBe(
+        'https://tabmerger.com/features',
+      )
     },
   )
+
+  it('handles the proxy end to end for a mixed-case host with a port', async () => {
+    const { proxy } = await loadProxy()
+    const res = await proxy(
+      req('https://tabmerger.vercel.app/features', { host: 'TabMerger-Preview.Vercel.App:8443' }),
+    )
+    expect(res.status).toBe(308)
+    expect(res.headers.get('location')).toBe('https://preview.tabmerger.com/features')
+  })
 
   it('falls back to the URL hostname when there is no host header', async () => {
     const { legacyHostRedirect } = await loadProxy()
@@ -69,37 +178,6 @@ describe('proxy — legacy host redirect', () => {
     const res = await proxy(req('https://tabmerger.vercel.app/contact', { method: 'POST' }))
     expect(res.status).toBe(308)
     expect(res.headers.get('location')).toBe('https://tabmerger.com/contact')
-  })
-
-  it('cannot be steered off the fixed origin by a protocol-relative path', async () => {
-    const { proxy } = await loadProxy()
-    const res = await proxy(req('https://tabmerger.vercel.app//evil.com/x'))
-    expect(res.status).toBe(308)
-    const location = res.headers.get('location')!
-    expect(location).toBe('https://tabmerger.com//evil.com/x')
-    expect(new URL(location).origin).toBe('https://tabmerger.com')
-  })
-
-  it.each([
-    'https://tabmerger.vercel.app/api/track',
-    'https://tabmerger.vercel.app/api',
-    'https://tabmerger.vercel.app/api/auth/callback?code=abc',
-    'https://tabmerger.vercel.app/firefox-beta/updates.json',
-    'https://tabmerger.vercel.app/firefox-beta',
-    'https://tabmerger-preview.vercel.app/api/track',
-  ])('never redirects %s', async (url) => {
-    const { proxy, legacyHostRedirect } = await loadProxy()
-    expect(legacyHostRedirect(req(url))).toBeNull()
-    const res = await proxy(req(url, { method: 'POST' }))
-    expect(res.status).not.toBe(308)
-    expect(res.headers.get('location')).toBeNull()
-  })
-
-  it('still redirects a path that only starts with "api"', async () => {
-    const { legacyHostRedirect } = await loadProxy()
-    expect(legacyHostRedirect(req('https://tabmerger.vercel.app/apix'))?.href).toBe(
-      'https://tabmerger.com/apix',
-    )
   })
 
   it('answers an extension preflight on the legacy host with 204 and CORS headers', async () => {
@@ -117,12 +195,20 @@ describe('proxy — legacy host redirect', () => {
     'https://tabmerger.com/pricing',
     'https://preview.tabmerger.com/pricing',
     'http://localhost:3000/pricing',
+    'http://localhost:3000/',
     'https://tabmerger-abc123-team.vercel.app/pricing',
     'https://tabmerger.vercel.app.evil.com/pricing',
-  ])('does not redirect %s', async (url) => {
-    const { proxy } = await loadProxy()
-    const res = await proxy(req(url))
-    expect(res.status).not.toBe(308)
-    expect(res.headers.get('location')).toBeNull()
+    'https://evil.tabmerger.vercel.app/pricing',
+    'https://vercel.app/pricing',
+  ])('does not redirect a non-legacy host: %s', async (url) => {
+    await expectNotRedirected(url)
+  })
+
+  it('ignores a spoofed non-legacy Host header on a legacy URL', async () => {
+    await loadProxy().then(({ legacyHostRedirect }) => {
+      expect(
+        legacyHostRedirect(req('https://tabmerger.vercel.app/pricing', { host: 'evil.com' })),
+      ).toBeNull()
+    })
   })
 })
