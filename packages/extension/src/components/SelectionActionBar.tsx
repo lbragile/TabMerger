@@ -41,7 +41,7 @@ export function SelectionActionBar() {
   const openModal = useUIStore((s) => s.openModal);
   const { data: groupsState } = useGroups();
   const { mutate: bulkDelete, isPending: isDeleting } = useBulkDelete();
-  const { mutate: bulkMove, isPending: isMoving } = useBulkMoveToGroup();
+  const { mutate: bulkMove, mutateAsync: bulkMoveAsync, isPending: isMoving } = useBulkMoveToGroup();
   const { mutate: bulkStar, isPending: isStarring } = useBulkStar();
   const entitlements = useEntitlements();
   const [isSharing, setIsSharing] = useState(false);
@@ -165,7 +165,7 @@ export function SelectionActionBar() {
               </DropdownMenuItem>
             ))}
             <CreateGroupMenuItem
-              onCreated={(index) => bulkMove({ items: selectedItems, targetGroupIndex: index })}
+              onCreated={(index) => bulkMoveAsync({ items: selectedItems, targetGroupIndex: index })}
             />
           </DropdownMenuContent>
         </DropdownMenu>

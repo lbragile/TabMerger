@@ -51,8 +51,16 @@ export function restoreSnapshotAsLocalChange(current: GroupsState, snapshot: Gro
     // compare-and-swap on a missing row and turning into a "(conflict copy)". If the row does still
     // exist, the insert hits a unique violation and the merge adopts it (equal content) or keeps both.
     if (!cur) return { ...withoutSyncIdentity(g), updatedAt: now, pendingSync: true };
-    if (contentKey(cur) !== contentKey(g)) return { ...g, updatedAt: now, pendingSync: true };
-    return { ...g, updatedAt: cur.updatedAt, pendingSync: cur.pendingSync }; // same content: keep its sync state
+    // A group that still exists keeps ITS sync identity: the server base (`remoteUpdatedAt`) is the
+    // stamp last seen for its row, which has moved on since the snapshot (pushes stamp it). The
+    // snapshot's older base would turn the next push into a compare-and-swap against a stamp the
+    // row no longer has: a "(conflict copy)" for an edit, or a "foreign" adoption that clears the
+    // history for a clean group. `positionDirty` is left to the write, which derives it.
+    if (contentKey(withoutSyncIdentity(cur)) !== contentKey(withoutSyncIdentity(g))) {
+      const base = cur.remoteUpdatedAt ? { remoteUpdatedAt: cur.remoteUpdatedAt } : {};
+      return { ...withoutSyncIdentity(g), ...base, updatedAt: now, pendingSync: true };
+    }
+    return cur; // same content: exactly as it is now (its sync state, base and flags)
   });
   const available = [...restored, ...current.available.filter(isTourDemoGroup)];
   return { ...snapshot, available };

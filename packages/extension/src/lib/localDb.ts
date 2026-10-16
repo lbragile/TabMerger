@@ -2,8 +2,9 @@ import { openDB, type IDBPDatabase, type IDBPTransaction } from 'idb';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import type { Group, GroupsState, Session } from './types';
 import { createNowOpenGroup } from './utils';
-import { GROUPS_CHANGED_MESSAGE } from './groupsChangedMessage';
+import { GROUPS_CHANGED_MESSAGE, type GroupsChangeCause, type GroupsChangedMessage } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
+import { savedDataChanged, savedDataFingerprint } from './savedData';
 import { APP_SETTINGS_KEY, LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
 
 const DB_NAME = 'tabmerger';
@@ -54,15 +55,36 @@ export function registerGroupsChangeListener(listener: GroupsChangeListener): vo
   backgroundGroupsChangeListener = listener;
 }
 
-function notifyGroupsChanged(): void {
+function notifyGroupsChanged(cause?: GroupsChangeCause, stored?: GroupsState, savedUnchanged = false): void {
   // In-SW half first (sendMessage never reaches the sender's own listeners), then ALWAYS
   // fall through to `sendMessage` too: it is also how the OTHER contexts learn the groups
   // changed — the popup's `useExternalGroupsChanges` refetches on it, so a write issued by
   // the service worker (context menu, URL rule, SYNC_NOW) shows up in an open popup.
   backgroundGroupsChangeListener?.();
   if (typeof chrome === 'undefined' || !chrome.runtime?.sendMessage) return;
+  // What the receivers need to know about this write, worked out BEFORE sending and never able
+  // to stop the broadcast: on a throw the field is left out, which a receiver takes as "the
+  // saved data may have changed" (the safe side).
+  //  - `savedUnchanged`: this write left the saved data as it found it (it changed only Now Open).
+  //  - `saved` (a URL-rule write only): the fingerprint of the saved data it stored, for the
+  //    popup's re-anchor (see reanchorHistoryCursor). Hashing every write would cost a full
+  //    serialisation of the saved groups on the hottest path (the Now Open mirror).
+  let saved: string | undefined;
+  if (cause && stored) {
+    try {
+      saved = savedDataFingerprint(stored);
+    } catch {
+      saved = undefined;
+    }
+  }
+  const message: GroupsChangedMessage = {
+    type: GROUPS_CHANGED_MESSAGE,
+    ...(cause ? { cause } : {}),
+    ...(saved ? { saved } : {}),
+    ...(savedUnchanged === true ? { savedUnchanged: true as const } : {})
+  };
   try {
-    chrome.runtime.sendMessage({ type: GROUPS_CHANGED_MESSAGE }, () => {
+    chrome.runtime.sendMessage(message, () => {
       // Swallow "Receiving end does not exist" — e.g. no background listener registered
       // yet, or the extension context is mid-reload. Reading lastError marks it "handled"
       // so it doesn't surface as an unhandled error.
@@ -202,14 +224,30 @@ async function readStoredGroupsState(): Promise<GroupsState | null> {
   tx.done.catch(() => undefined);
 
   // Deduplicate permanent groups: keep oldest (lowest updatedAt), delete the rest
-  let groups = allGroups;
-  const permanents = groups.filter((g) => g.permanent).sort((a, b) => a.updatedAt - b.updatedAt);
-  if (permanents.length > 1) {
-    const extraIds = new Set(permanents.slice(1).map((g) => g.id));
-    await Promise.all([...extraIds].map((id) => db.delete('groups', id)));
-    groups = groups.filter((g) => !extraIds.has(g.id));
-  }
+  const extraIds = extraPermanentIds(allGroups);
+  if (extraIds.size > 0) await Promise.all([...extraIds].map((id) => db.delete('groups', id)));
 
+  return orderedGroupsState(stateRecord, allGroups);
+}
+
+/** Ids of every permanent (Now Open) group but the oldest one: a legacy store can hold several. */
+function extraPermanentIds(groups: Group[]): Set<string> {
+  const permanents = groups.filter((g) => g.permanent).sort((a, b) => a.updatedAt - b.updatedAt);
+  return new Set(permanents.slice(1).map((g) => g.id));
+}
+
+/**
+ * The stored groups as a `GroupsState`, in their saved order (no reads, no writes). Shared by the
+ * read path and by `writeGroupsState`, which hands the state it replaces to an `afterWrite` hook.
+ */
+function orderedGroupsState(
+  stateRecord: { active: GroupsState['active']; order?: string[]; rev?: number } | undefined,
+  groups: Group[]
+): GroupsState | null {
+  // Only the oldest Now Open: the read path deletes the others, and a state handed to an
+  // `afterWrite` hook (a drop's undo entry) must not carry them either
+  const extra = extraPermanentIds(groups);
+  if (extra.size > 0) groups = groups.filter((g) => !extra.has(g.id));
   // Sort groups: use explicit saved order when available (preserves drag order across reloads).
   // Fall back to updatedAt desc for legacy data that pre-dates the order field.
   let sorted: Group[];
@@ -295,10 +333,36 @@ function enqueueGroupsWrite<T>(task: () => Promise<T>): Promise<T> {
  * `expectedRev` makes it an optimistic-concurrency write: inside the lock the stored `rev`
  * must still equal it, otherwise nothing is written and the promise rejects with
  * {@link StaleGroupsError} (the base the caller derived `state` from is out of date).
- * Resolves with the new `rev`.
+ * Resolves with the new `rev`. `afterWrite(stored, base)`: see {@link updateGroupsState}; `base` is
+ * the state stored just before this write (from the write's own transaction).
  */
-export function saveGroupsState(state: GroupsState, opts: { expectedRev?: number } = {}): Promise<number> {
-  return enqueueGroupsWrite(async () => (await writeGroupsState(state, opts.expectedRev, true)).rev ?? 0);
+export function saveGroupsState(
+  state: GroupsState,
+  opts: { expectedRev?: number; afterWrite?: (stored: GroupsState, base: GroupsState) => void } = {}
+): Promise<number> {
+  return enqueueGroupsWrite(async () => {
+    const replaced: { before?: GroupsState } = {};
+    const stored = await writeGroupsState(state, opts.expectedRev, true, undefined, replaced);
+    const base = replaced.before ?? createInitialGroupsState();
+    if (opts.afterWrite) runAfterWrite(() => opts.afterWrite?.(stored, base));
+    return stored.rev ?? 0;
+  });
+}
+
+/**
+ * Runs a write's `afterWrite` hook, still inside its step of the write queue. A throwing hook does
+ * not fail the write (it is stored, and the caller must not take it for failed): the error is
+ * re-thrown on its own, outside the queue, so the global error handler (Sentry) still reports it.
+ */
+function runAfterWrite(hook: () => void): void {
+  try {
+    hook();
+  } catch (err) {
+    console.error('[localDb] afterWrite hook failed', err);
+    queueMicrotask(() => {
+      throw err;
+    });
+  }
 }
 
 /**
@@ -310,10 +374,21 @@ export function saveGroupsState(state: GroupsState, opts: { expectedRev?: number
  * Resolves with the state after the step (`fn`'s result, or the unchanged fresh state).
  * An empty store is presented to `fn` as the initial Now Open state (and persisted with
  * `fn`'s result) instead of triggering the read path's lazy init write.
+ *
+ * `afterWrite(stored, base)` runs once the write is stored, STILL inside this step of the queue
+ * (`base` = the fresh state `fn` was given). It is how the undo history records a change: a step
+ * recorded there is ordered exactly like the writes themselves, so a later queued write (an Undo
+ * clicked meanwhile) always sees it. Keep it synchronous and cheap. Not called when nothing is
+ * written (`fn` returned `null`) or the write failed.
  */
 export function updateGroupsState(
   fn: (current: GroupsState, aux: UpdateAux) => GroupsState | null,
-  opts: { readPendingDeletes?: boolean; readSignedInUser?: boolean } = {}
+  opts: {
+    readPendingDeletes?: boolean;
+    readSignedInUser?: boolean;
+    cause?: GroupsChangeCause;
+    afterWrite?: (stored: GroupsState, base: GroupsState) => void;
+  } = {}
 ): Promise<GroupsState> {
   return enqueueGroupsWrite(async () => {
     const current = (await readStoredGroupsState()) ?? createInitialGroupsState();
@@ -322,8 +397,26 @@ export function updateGroupsState(
     const signedInUserId = opts.readSignedInUser ? await getSetting<string | null>(LAST_USER_ID_KEY, null) : null;
     const next = fn(current, { pendingDeletes, signedInUserId });
     if (!next) return current;
-    return writeGroupsState(next);
+    const stored = await writeGroupsState(next, undefined, false, opts.cause, undefined, leftSavedDataUnchanged(current, next));
+    runAfterWrite(() => opts.afterWrite?.(stored, current));
+    return stored;
   });
+}
+
+/**
+ * Whether a read-modify-write left the saved data as its fresh read had it (it changed only Now
+ * Open, or bookkeeping). Decided on the read handed to `fn` and `fn`'s result, never on the
+ * rebuilt stored objects: `fn` keeps the objects of the groups it does not touch, so this is a
+ * reference check per group and a content check only for the ones it replaced. `fn` returning the
+ * very state it was given (an in-place edit) is "don't know". Any doubt (a throw) is "changed".
+ */
+function leftSavedDataUnchanged(current: GroupsState, next: GroupsState): boolean {
+  if (next === current) return false;
+  try {
+    return !savedDataChanged(current, next);
+  } catch {
+    return false;
+  }
 }
 
 /** Extra context handed to an {@link updateGroupsState} callback. */
@@ -376,6 +469,39 @@ async function editPendingGroupDeletes(edit: (ids: Set<string>) => void): Promis
 export const addPendingGroupDeletes = (ids: string[]) => editPendingGroupDeletes((set) => ids.forEach((id) => set.add(id)));
 export const removePendingGroupDeletes = (ids: string[]) => editPendingGroupDeletes((set) => ids.forEach((id) => set.delete(id)));
 
+/**
+ * Records `ids` for remote deletion, but only those STILL absent from the groups store, as one
+ * queued step of the groups write queue (one transaction over groups + settings). Resolves with
+ * the ids it recorded: the only ones a caller may then DELETE on the server.
+ *
+ * `deleteRemoteGroups` gets here after an `auth.getSession()` (possibly a network refresh), so an
+ * Undo that restored the groups can have landed first. A plain add would then re-mark the restored
+ * groups pending: their server rows deleted, and the next merge pruning them locally, leaving
+ * neither the old nor the new groups. Inside the queue, this step sees every write issued before
+ * it, the Undo included.
+ */
+export function addPendingGroupDeletesIfAbsent(ids: string[]): Promise<string[]> {
+  if (ids.length === 0) return Promise.resolve([]);
+  return enqueueGroupsWrite(async () => {
+    const db = await getDb();
+    const tx = db.transaction(['groups', 'settings'], 'readwrite');
+    const [keys, record] = await Promise.all([
+      Promise.all(ids.map((id) => tx.objectStore('groups').getKey(id))),
+      tx.objectStore('settings').get(PENDING_DELETE_KEY) as Promise<{ id: string; value: string[] } | undefined>
+    ]);
+    const absent = [...new Set(ids.filter((_, i) => keys[i] === undefined))];
+    if (absent.length > 0) {
+      const pending = new Set(record?.value ?? []);
+      absent.forEach((id) => pending.add(id));
+      capPendingDeletes(pending);
+      await Promise.all([tx.objectStore('settings').put({ id: PENDING_DELETE_KEY, value: [...pending] }), tx.done]);
+    } else {
+      await tx.done;
+    }
+    return absent;
+  });
+}
+
 /** Drops the oldest ids once the pending-delete set exceeds its cap (Set keeps insertion order). */
 function capPendingDeletes(ids: Set<string>): void {
   for (const id of ids) {
@@ -396,7 +522,16 @@ function capPendingDeletes(ids: Set<string>): void {
  * OR-ed in. An incoming `positionDirty === false` is a caller's claim "already at this index on
  * the server" (a pull that adopted the remote order) and wins for that write only.
  */
-async function writeGroupsState(state: GroupsState, expectedRev?: number, preserveBases = false): Promise<GroupsState> {
+async function writeGroupsState(
+  state: GroupsState,
+  expectedRev?: number,
+  preserveBases = false,
+  cause?: GroupsChangeCause,
+  /** filled with the state this write replaces (as read in its own transaction) */
+  replaced?: { before?: GroupsState },
+  /** the caller knows the write leaves the saved data unchanged (see leftSavedDataUnchanged) */
+  savedUnchanged = false
+): Promise<GroupsState> {
   const db = await getDb();
   const tx = db.transaction(['groups', 'groupsState', 'settings'], 'readwrite');
   const [stateRecord, storedGroups, pendingRecord, syncRecord] = await Promise.all([
@@ -406,6 +541,7 @@ async function writeGroupsState(state: GroupsState, expectedRev?: number, preser
     tx.objectStore('settings').get(CLOUD_SYNC_ACTIVE_KEY) as Promise<{ id: string; value: boolean } | undefined>
   ]);
 
+  if (replaced) replaced.before = orderedGroupsState(stateRecord, storedGroups) ?? undefined;
   const storedRev = stateRecord?.rev ?? 0;
   if (expectedRev !== undefined && storedRev !== expectedRev) {
     await tx.done; // nothing queued: commits empty
@@ -464,8 +600,9 @@ async function writeGroupsState(state: GroupsState, expectedRev?: number, preser
   // rejects), exactly as before.
   tx.commit();
   await Promise.all([...requests, tx.done]);
-  notifyGroupsChanged();
-  return { ...state, available: groups, rev };
+  const stored = { ...state, available: groups, rev };
+  notifyGroupsChanged(cause, stored, savedUnchanged);
+  return stored;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { AddGroupModal } from '@/components/Modal/AddGroup'
 import { DEFAULT_GROUP_TITLE, DEFAULT_GROUP_COLOR } from '@/lib/types'
@@ -15,7 +15,7 @@ let groupsState = { available: [{ id: 'g0' }, { id: 'g1' }], active: { id: '', i
 vi.mock('@/hooks/useGroups', () => ({
   useAddGroup: (caps: unknown) => {
     mockUseAddGroup(caps)
-    return { mutate: mockAddGroup, isPending: false }
+    return { mutateAsync: mockAddGroup, isPending: false }
   },
   useGroups: () => ({ data: groupsState }),
 }))
@@ -32,20 +32,16 @@ describe('AddGroupModal', () => {
     expect(mockUseAddGroup).toHaveBeenCalledWith({ maxGroups: 5, maxTabs: 50 })
   })
 
-  it('submits with default name and color when unchanged', () => {
+  it('submits with default name and color when unchanged, and closes once the group exists', async () => {
+    let added!: () => void
+    mockAddGroup.mockImplementationOnce(() => new Promise<void>((resolve) => { added = resolve }))
     const onClose = vi.fn()
     renderModal(<AddGroupModal onClose={onClose} />)
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
-    expect(mockAddGroup).toHaveBeenCalledWith(
-      { name: DEFAULT_GROUP_TITLE, color: DEFAULT_GROUP_COLOR },
-      expect.objectContaining({ onSuccess: expect.any(Function) })
-    )
-    // onClose must wait for the mutation's onSuccess, not fire synchronously — closing
-    // (unmounting) before the async mutation settles would drop the mutate-level onSuccess
-    // that onCreated (the actual move/copy trigger) depends on.
+    expect(mockAddGroup).toHaveBeenCalledWith({ name: DEFAULT_GROUP_TITLE, color: DEFAULT_GROUP_COLOR })
+    // not before: a refused add (the free-plan backstop) keeps the dialog open
     expect(onClose).not.toHaveBeenCalled()
-    const [, options] = mockAddGroup.mock.calls[0] as [unknown, { onSuccess: () => void }]
-    options.onSuccess()
+    await act(async () => added())
     expect(onClose).toHaveBeenCalled()
   })
 
@@ -53,20 +49,14 @@ describe('AddGroupModal', () => {
     renderModal(<AddGroupModal onClose={vi.fn()} />)
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: '  My Group  ' } })
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
-    expect(mockAddGroup).toHaveBeenCalledWith(
-      { name: 'My Group', color: DEFAULT_GROUP_COLOR },
-      expect.objectContaining({ onSuccess: expect.any(Function) })
-    )
+    expect(mockAddGroup).toHaveBeenCalledWith({ name: 'My Group', color: DEFAULT_GROUP_COLOR })
   })
 
   it('falls back to default name when input is blank', () => {
     renderModal(<AddGroupModal onClose={vi.fn()} />)
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: '   ' } })
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
-    expect(mockAddGroup).toHaveBeenCalledWith(
-      { name: DEFAULT_GROUP_TITLE, color: DEFAULT_GROUP_COLOR },
-      expect.objectContaining({ onSuccess: expect.any(Function) })
-    )
+    expect(mockAddGroup).toHaveBeenCalledWith({ name: DEFAULT_GROUP_TITLE, color: DEFAULT_GROUP_COLOR })
   })
 
   it('cancel calls onClose without adding a group', () => {
@@ -77,22 +67,36 @@ describe('AddGroupModal', () => {
     expect(onClose).toHaveBeenCalled()
   })
 
-  it('calls data.onCreated with the current available.length (new group index) on successful add', () => {
-    const onCreated = vi.fn()
+  it('calls data.onCreated with the current available.length (new group index) once the add resolved', async () => {
+    let added!: () => void
+    mockAddGroup.mockImplementationOnce(() => new Promise<void>((resolve) => { added = resolve }))
+    const onCreated = vi.fn().mockResolvedValue(undefined)
     groupsState = { available: [{ id: 'g0' }, { id: 'g1' }, { id: 'g2' }], active: { id: '', index: 0 } }
     renderModal(<AddGroupModal onClose={vi.fn()} data={{ onCreated }} />)
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
-    const [, options] = mockAddGroup.mock.calls[0] as [unknown, { onSuccess: () => void }]
     expect(onCreated).not.toHaveBeenCalled()
-    options.onSuccess()
+    await act(async () => added())
     expect(onCreated).toHaveBeenCalledWith(3)
   })
 
-  it('does not throw and skips onCreated when no data prop is passed', () => {
-    renderModal(<AddGroupModal onClose={vi.fn()} />)
+  it('a refused add keeps the dialog open and never calls onCreated', async () => {
+    mockAddGroup.mockRejectedValueOnce(new Error('FreeLimitExceeded'))
+    const onCreated = vi.fn()
+    const onClose = vi.fn()
+    renderModal(<AddGroupModal onClose={onClose} data={{ onCreated }} />)
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /create/i }))
+    })
+    expect(onCreated).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('does not throw and closes when no data prop is passed', async () => {
+    mockAddGroup.mockResolvedValueOnce(undefined)
+    const onClose = vi.fn()
+    renderModal(<AddGroupModal onClose={onClose} />)
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
-    const [, options] = mockAddGroup.mock.calls[0] as [unknown, { onSuccess: () => void }]
-    expect(() => options.onSuccess()).not.toThrow()
+    await waitFor(() => expect(onClose).toHaveBeenCalled())
   })
 
   it('the draft preview swatch updates live while the colour picker is open, without persisting', () => {
@@ -124,10 +128,7 @@ describe('AddGroupModal', () => {
     fireEvent.click(cancelButtons[cancelButtons.length - 1])
     expect(screen.getByTestId('add-group-color-preview')).toHaveStyle({ backgroundColor: DEFAULT_GROUP_COLOR })
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
-    expect(mockAddGroup).toHaveBeenCalledWith(
-      { name: DEFAULT_GROUP_TITLE, color: DEFAULT_GROUP_COLOR },
-      expect.objectContaining({ onSuccess: expect.any(Function) })
-    )
+    expect(mockAddGroup).toHaveBeenCalledWith({ name: DEFAULT_GROUP_TITLE, color: DEFAULT_GROUP_COLOR })
   })
 
   it('Apply in the colour picker commits the draft color used on submit and closes the picker', () => {
@@ -139,9 +140,6 @@ describe('AddGroupModal', () => {
     expect(screen.getByTestId('add-group-color-preview')).toHaveStyle({ backgroundColor: '#123456' })
     expect(screen.getByRole('button', { name: 'Color' })).toHaveTextContent('#123456')
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
-    expect(mockAddGroup).toHaveBeenCalledWith(
-      { name: DEFAULT_GROUP_TITLE, color: 'rgba(18, 52, 86, 1)' },
-      expect.objectContaining({ onSuccess: expect.any(Function) })
-    )
+    expect(mockAddGroup).toHaveBeenCalledWith({ name: DEFAULT_GROUP_TITLE, color: 'rgba(18, 52, 86, 1)' })
   })
 })

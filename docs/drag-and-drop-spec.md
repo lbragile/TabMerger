@@ -1,7 +1,8 @@
 # Drag & Drop — Spec and Verification Guide (extension popup)
 
-Status: living document. Last updated 2026-10-09.
+Status: living document. Last updated 2026-10-15.
 Owner agent: `extension-dev`. Read this before touching any DnD code.
+The general undo/redo rules every drop follows are in [`undo-redo-spec.md`](undo-redo-spec.md).
 
 - **[BLOCKED]** — a requested behaviour a known constraint prevents.
 - **[UNVERIFIED]** — only a human in headed Chrome can confirm.
@@ -35,7 +36,7 @@ Out of scope: drags on the web dashboard.
 | C4 | **Native path only:** a layout mutation of the dragged row or its ancestors aborts the drag **only** inside the `dragstart` dispatch or a microtask queued from it. Attribute-only changes always survive. | `popupAbortWindow.repro.ts`, 82+ trials. | Defer visuals to the first rAF; never unmount a drop zone mid-drag, only hide it. |
 | C5 | **Native path only:** the OS owns the cursor. | Confirmed. | **`grabbing` works on the pointer path** (`html[data-tm-dnd-grabbing]` + `!important`). On the native path the OS glyph is unavoidable. |
 | C6 | `setDragImage(el)` silently ignores a **detached** non-`<img>`. | Log reads `{tagName:"IMG", complete:true, naturalWidth:1, isConnected:true}`. | Suppressed with a preloaded, decoded 1×1 transparent GIF `<img>` in `#tm-dnd-aux-host`. |
-| **C7** | **Closing the ACTIVE tab of the popup's own window dismisses the popup.** Dragging out of Now Open is a **MOVE** (the real tabs close), so that one tab must never be closed while the popup is open. Tabs of any other window are safe to close, active or not: the popup watches only its own window's tab strip. | A real-popup test failed within 5s of the drop when actives were closed inline. | `runSideEffects` partitions via `chrome.tabs.query({active:true})` and `chrome.windows.getCurrent()` (the window containing the calling page — the anchor window for the toolbar popup, the tab's window when `popup.html` is opened as a tab): **only the active tab of the popup's own window is deferred** to the background worker over a `chrome.runtime.connect` port that closes it on `onDisconnect` (popup teardown); **every other tab closes immediately**, so a dragged window the popup is not attached to closes completely at the drop. **Fallback:** if the own window can't be identified (the call is missing or rejects, or it names a window that owns no active tab), every active tab is deferred. |
+| **C7** | **Closing the ACTIVE tab of the popup's own window dismisses the popup.** Dragging out of Now Open is a **MOVE** (the real tabs close), so that one tab must never be closed while the popup is open. Tabs of any other window are safe to close, active or not: the popup watches only its own window's tab strip. | A real-popup test failed within 5s of the drop when actives were closed inline. | `runSideEffects` partitions via `chrome.tabs.query({active:true})` and `chrome.windows.getCurrent()` (the window containing the calling page — the anchor window for the toolbar popup, the tab's window when `popup.html` is opened as a tab): **only the active tab of the popup's own window is deferred** to the background worker over a `chrome.runtime.connect` port that closes it on `onDisconnect` (popup teardown); **every other tab closes immediately**, so a dragged window the popup is not attached to closes completely at the drop. **Fallback:** if the own window can't be identified (the call is missing or rejects, or it names a window that owns no active tab), every active tab is deferred. **Undo** of the drag-out reopens the tabs with `active:false` / `focused:false` (C7 again) and takes a still-deferred tab back out of the port's list (`keepTabIds`) instead of reopening it; **Redo** closes through the same partition. |
 | C8 | No error boundary: an uncaught render/effect error unmounts everything. | The `measuring: Always` loop took the popup down. | `measuring.droppable.strategy` stays `BeforeDragging (1)`; drag-end code is defensive. |
 | C9 | CDP screenshots can't see OS-composited things (native drag image, cursor); they **can** see in-page DOM. | Screenshots showed a correct ghost while a human tester saw the grey grip snapshot. | See §9 blind spots. |
 | C10 | CDP key events never reach the **native drag loop**; keyboard move mode (§5.1) has no native session, so CDP keys drive it fine. | Escape test: the drag continued and committed. | Native-drag Escape is human-only. |
@@ -105,12 +106,12 @@ Out of scope: drags on the web dashboard.
    1. Resolve against the snapshot, then `canDrop`.
    2. `rebaseMove` onto the current cache; cancel if the item/target is gone, a duplicated identity was permuted, or a missing member may have been edited. Deleted members are excluded and reported via `removed`. Keyboard move mode applies the same rule to its picked-up item(s) on every cache update, so at the drop they already name the same item(s) in the current cache (§5.1).
    3. `applyMove`; skip `isStructuralNoop`.
-   4. `pushUndo(current)` when undoable.
-   5. `const persist = saveGroupsState(next)` **before** the cache write.
+   4. Prepare the drop's undo step: recorded by `recordStep` (`lib/undoHistory.ts`, the one rule every mutation uses) in the write's `afterWrite`, i.e. only once the write is stored, inside its step of the groups write queue, when `undoable` **and** the saved data changed: one step per drop, none for a move that changes no saved data, none for a failed write. A drag OUT of Now Open tags that entry with a `reopen` effect for the tabs it closes; a drop that opens real tabs tags it with the PROMISE of a `close` effect, settled with the ids `runSideEffects` returns (`lib/undoLiveTabs.ts`), so an Undo clicked before Chrome answered still closes them.
+   5. `const persist = saveGroupsState(next, { expectedRev, afterWrite })` **before** the cache write (a stale write re-derives the drop on a fresh read and records the step there).
    6. `setGroupsNow(next)`.
    7. Update the active index; remap the selection.
    8. `reset()` → `await persist` → `runSideEffects()`.
-   9. **On failure:** `reset()` before `rollback()`; conditional on `cacheWritten` (no undo-pop or failure announce for an already-issued write, but still awaited).
+   9. **On failure:** `reset()` before `rollback()`; conditional on `cacheWritten` (no failure announce for an already-issued write, but still awaited). The undo history is never touched by a rollback: a failed write recorded no step, so no entry (the drop's or another action's) can be removed by mistake.
    10. **Keyboard move drops** (§5.1) enter here through `commitKeyboardMove`, which runs this same tail (`commitResolved`): `dndFocus` focuses the landed item by identity, and the full outcome goes to the app live region `#tm-dnd-live-region` ~150ms later.
 9. **Release in place** restores exactly; a non-contiguous selection gathers into a block **[DECISION]**.
 
@@ -176,12 +177,14 @@ Keyboard moves are a separate mode, not a dnd-kit drag. The pure model is `src/l
 | Saved window(s) → window position / group row | Inserted at the gap / new last window(s), starred-first kept | none | yes |
 | Saved window(s) → new-group zone | A new group holding them | none | yes |
 | Group reorder (single or multi) | Contiguous block at the gap; **never index 0**; anchor stays active | none | yes |
-| **Now Open tab(s)/window → saved group or new-group zone** | **MOVED.** Destination gains a detached copy (`id:0`, `savedAt`); the real tabs close | **`tabs.remove` — everything immediately, except the active tab of the popup's own window, which is deferred to popup teardown (C7)** | no |
-| Now Open tab reorder within Now Open | Real tab(s) moved | `chrome.tabs.move` | no |
-| Saved tab(s)/window(s) → Now Open row | Removed from sources; one new real window | `windows.create({focused:false})` | no |
-| Saved tab → live Now Open tab/window | Removed from source; real tab opened there | `tabs.create({active:false})` | no |
-| **Now Open tab(s) → Now Open's OWN new-window zone (2026-09-24, reverses the earlier "left out of scope")** | **REAL detach**, never a stored write (`next` is the same reference) | `tabs.detachToNewWindow` — `windows.create({tabId, focused:false})` then `tabs.move` for any further ids, order preserved | no |
-| Saved tab(s) → Now Open's new-window zone | Removed from sources; one new real window (unchanged — this already worked via `resolveTabDest`'s `new-window` handling, just unreachable through the UI until the zone was rendered for `group.permanent`) | `windows.create({focused:false})` | no |
+| **Now Open tab(s)/window → saved group or new-group zone** | **MOVED.** Destination gains a detached copy (`id:0`, `savedAt`); the real tabs close | **`tabs.remove` — everything immediately, except the active tab of the popup's own window, which is deferred to popup teardown (C7)** | **yes** — Undo removes the copy and reopens the closed tabs (same window and position when the window still exists, else a new unfocused window); Redo closes exactly the tabs Undo reopened, by id |
+| Now Open tab reorder within Now Open | Real tab(s) moved | `chrome.tabs.move` | no (no saved data changes) |
+| Saved tab(s)/window(s) → Now Open row | Removed from sources; one new real window | `windows.create({focused:false})` | **yes** — Undo puts the saved items back and closes exactly the tabs the drop opened, by id; Redo reopens them |
+| Saved tab → live Now Open tab/window | Removed from source; real tab opened there | `tabs.create({active:false})` | **yes** (as above) |
+| **Now Open tab(s) → Now Open's OWN new-window zone (2026-09-24, reverses the earlier "left out of scope")** | **REAL detach**, never a stored write (`next` is the same reference) | `tabs.detachToNewWindow` — `windows.create({tabId, focused:false})` then `tabs.move` for any further ids, order preserved | no (no saved data changes) |
+| Saved tab(s) → Now Open's new-window zone | Removed from sources; one new real window (unchanged — this already worked via `resolveTabDest`'s `new-window` handling, just unreachable through the UI until the zone was rendered for `group.permanent`) | `windows.create({focused:false})` | **yes** (as for the Now Open row) |
+
+- **Undo (2026-10-15):** every drop that changes saved data is exactly ONE undo step, and one Undo reverts the whole drop (every group it touched, any window it created); Redo re-applies it. A reopened tab is a new tab at the same URL: its history, scroll position and form contents are gone. Redo never closes a tab by URL: only the ids Undo got back, skipping one that has since closed or no longer shows the URL it was reopened with (the user navigated it). Cloud sync never clears this history for the device's own drop (its push, the realtime echo and the next pulls are not foreign changes). A URL rule that saves a tab the popup itself opened (a drop into Now Open, an Undo reopening tabs) is part of the same operation and keeps the history too; every other write from another context still clears it.
 
 - **Emptied windows are KEPT.** No move ever prunes a window left with no tabs; it renders as an empty card, keeps its badges, stays a drop target, and accepts tabs dragged back in. `useGroups` agrees (`useDeleteTab` and both `useMoveTab` branches). Explicit bulk cleanups (`useDeduplicateGroup`, `useRemoveStaleTabs`, AI-apply) still prune — they are cleanups, not moves.
 - **New-group zone at the free cap: HIDES.** `dropZoneActive = (tab‖window drag) && !atGroupLimit`; it renders exactly as when idle (`invisible`, `pointer-events-none`, `aria-hidden`, droppable disabled, still mounted per C4) and refuses silently. No toast. The Add Group button's own at-limit behaviour is unchanged.
@@ -204,7 +207,7 @@ Any move of more than one item — tabs, windows or groups — must follow these
 **How this is enforced:** a property test enumerates every subset selection against every valid anchor and compares the result to a reference `removeThenInsertBefore(anchor)` implementation, asserting the committed index equals the index the gap was drawn at. Example-based tests alone missed the zone-sort defect for months — the failing shapes were "selection mixes starred and unstarred" and "dropped into the other zone", while every same-zone case passed because `Array.prototype.filter` is stable.
 
 ### Invariants
-- Now Open is never reordered, deleted, drag-activated, or undoable; nothing lands above it.
+- Now Open is never reordered, deleted or drag-activated, and never restored from history (an undo keeps the live Now Open); nothing lands above it. A move that changes only Now Open is no undo step.
 - **No DnD move ever produces a saved tab with a nonzero id**, and no `tabs.remove` ever names a zero/negative id (sweep test).
 - Commits apply to the **current** cache, never the snapshot.
 - `applyMove` is pure; chrome calls only in `runSideEffects`.
@@ -252,7 +255,7 @@ Focus rings `ring-ring` **16.54 / 11.98**; tab row + grip on a selected row **15
 
 **Commit/persistence:** never tear down the ghost before the commit flushes; never `cancelQueries` on the groups query, and never `invalidateQueries` on the groups key without `cancelRefetch:false`; never commit from the snapshot alone; never `await` between issuing `saveGroupsState` and the cache write; never leave `onDragEnd` without `finally { reset() }`; never `rollback()` before `reset()`; never pop undo or announce failure for an already-issued write; never clear the live-drag flag late in `reset()`; never read/write groups outside `getGroupsState`/`saveGroupsState`.
 
-**Side effects:** **never close the ACTIVE tab of the popup's own window while the popup is open** — defer it to the background port, and defer every active tab when the own window is unknown (C7); never `windows.remove` from DnD (it would also close tabs the drop never saved); always `focused:false` / `active:false`; never persist a DnD-produced saved tab with a nonzero id; never activate Now Open from a drag; **never prune an emptied window in a move**.
+**Side effects:** **never close the ACTIVE tab of the popup's own window while the popup is open** — defer it to the background port, and defer every active tab when the own window is unknown (C7); never `windows.remove` from DnD (it would also close tabs the drop never saved); always `focused:false` / `active:false`; never persist a DnD-produced saved tab with a nonzero id; never activate Now Open from a drag; **never prune an emptied window in a move**; **never close a tab on Undo/Redo by URL** — only by the id recorded when it was opened, and skip one that is gone or was navigated.
 
 **Keyboard/a11y:** global key handlers check `isDndDragLive()` and `defaultPrevented`; never route a keyboard move through dnd-kit or spring-open (it is move mode, §5.1); never offer a keyboard target that fails `canDrop`; never carry a picked-up item across a cache update by its positional id, only by identity through `rebaseMove`, and cancel when identity is lost; never let Enter or Tab act during a move; never restore focus by positional slot; keep `restoreFocus:false`; grip selectors use `^=`; **arm global dismiss listeners on the next macrotask** (C14).
 
@@ -311,6 +314,9 @@ Native drag image and cursor (C9); **whether `grabbing` renders for a human and 
 
 ## 12. Known gaps, risks, decisions and doc debt
 
+### Decisions
+- **2026-10-15 — one undo step per mutation, Now Open drops included (owner decision).** Every mutating action (DnD, menus, bulk actions, rename, notes, import/restore) pushes exactly one undo step, and only when it changed saved data (`savedDataChanged`), after the write is stored (a drop now records its step inside its own write, so a failed write leaves none; see `undo-redo-spec.md`). A drag OUT of Now Open is undoable: Undo removes the saved copy and reopens the closed tabs, Redo closes exactly the tabs Undo reopened (tracked by the ids Chrome returned, never by URL). A saved item dropped INTO Now Open is undoable the same way in reverse. This reverses the earlier "anything touching Now Open is not undoable" rule.
+
 ### Decisions pending
 - **New-group naming:** groups are created as `"temp group"` with no rename prompt. Random/derived names were raised — a generator is easy, but `GroupItem.tsx:125` detects an unnamed group by comparing to the default literal, so it needs an explicit `autoNamed` flag or rename behaviour breaks quietly.
 - **Escape on the native path:** the intended behaviour is a cancel. It can only be checked by a human in headed Chrome (C10).
@@ -353,6 +359,7 @@ Native drag image and cursor (C9); **whether `grabbing` renders for a human and 
 | Rebase by URL + nearest position | Moved the wrong duplicate; now identity + occurrence rank + a context check. |
 | Checkbox replacing the grip | Selections couldn't be dragged — tabs, windows, then groups. Both are shown now. |
 | Pruning emptied windows | **Reversed** — emptied windows are kept, and `useGroups` was aligned to match. |
+| Drops touching Now Open marked `undoable:false` | Left no undo step for a drag out of (or into) Now Open, so Undo undid an older change. **Reversed** (2026-10-15): one step, with the real tabs reopened/closed by id on Undo/Redo (`lib/undoLiveTabs.ts`). |
 | New-group zone show-then-warn at the cap | **Reversed** — it hides. |
 | Click-away armed synchronously | React flushes passive effects inside its own root listener, so it exited on its own entering click (C14); now armed on the next macrotask. |
 | "E2E not runnable locally" | Wrong — it was the production build being loaded. The suite runs; 38 pass. |

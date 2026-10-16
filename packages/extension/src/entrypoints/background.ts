@@ -256,8 +256,10 @@ export default defineBackground(() => {
     if (port.name !== DEFERRED_CLOSE_PORT) return;
     const pending = new Set<number>();
     port.onMessage.addListener((msg: unknown) => {
-      const ids = (msg as DeferredCloseMessage | undefined)?.tabIds;
-      if (Array.isArray(ids)) ids.forEach((id) => { if (typeof id === 'number' && id > 0) pending.add(id); });
+      const m = msg as DeferredCloseMessage | undefined;
+      if (Array.isArray(m?.tabIds)) m.tabIds.forEach((id) => { if (typeof id === 'number' && id > 0) pending.add(id); });
+      // An Undo of the drop put the tab back: it must stay open after all
+      if (Array.isArray(m?.keepTabIds)) m.keepTabIds.forEach((id) => pending.delete(id));
     });
     port.onDisconnect.addListener(() => {
       if (pending.size === 0) return;

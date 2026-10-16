@@ -24,7 +24,7 @@ const { mockBulkMove, mockBulkStar, mockBulkDelete, mockExit, mockOpenModal, moc
 
 vi.mock('@/hooks/useBulkActions', () => ({
   useBulkDelete: () => ({ mutate: mockBulkDelete, isPending: false }),
-  useBulkMoveToGroup: () => ({ mutate: mockBulkMove, isPending: false }),
+  useBulkMoveToGroup: () => ({ mutate: mockBulkMove, mutateAsync: mockBulkMove, isPending: false }),
   useBulkStar: () => ({ mutate: mockBulkStar, isPending: false }),
   parseGroupId: (id: string) => {
     const m = id.match(/^group-(\d+)$/)

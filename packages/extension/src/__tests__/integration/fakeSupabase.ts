@@ -18,7 +18,7 @@ interface Gate {
   release: () => void
 }
 
-type GateName = 'upsert' | 'select'
+type GateName = 'upsert' | 'select' | 'getSession'
 
 /** One request body sent to the fake server, whatever the table. */
 export interface FakeWrite {
@@ -186,7 +186,10 @@ function writeResult(run: () => Promise<{ data: unknown; error: unknown }>) {
 
 export const fakeSupabase = {
   auth: {
-    getSession: async () => ({ data: { session: state().sessionUserId ? { user: { id: state().sessionUserId } } : null } }),
+    getSession: async () => {
+      await maybeGate('getSession') // a test can hold it (a token refresh still in flight)
+      return { data: { session: state().sessionUserId ? { user: { id: state().sessionUserId } } : null } }
+    },
   },
   from(table: string) {
     return {

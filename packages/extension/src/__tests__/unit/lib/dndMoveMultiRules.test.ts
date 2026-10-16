@@ -8,6 +8,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import { applyMove, canDrop, type DndRef } from '@/lib/dndMove'
+import { savedDataChanged } from '@/lib/undoHistory'
 import { buildDndModel } from '@/hooks/useDndModel'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
@@ -77,7 +78,7 @@ describe('multi-TAB commit rules', () => {
     expect(titles(res.next.available[1])).toEqual([['a2', 'a3'], [], ['a1', 'b1', 'b2']])
   })
 
-  it('OUT of Now Open onto a saved group is a MOVE: detached (id 0, savedAt), Now Open model untouched, the real tabs closed, not undoable', () => {
+  it('OUT of Now Open onto a saved group is a MOVE: detached (id 0, savedAt), Now Open model untouched, the real tabs closed, one undo step', () => {
     const sel = ['now::w0::t0', 'now::w1::t0']
     const { s, res } = move(tabRef(sel[0], sel), groupRef('work'))
     const copies = res.next.available[1].windows[2].tabs
@@ -89,16 +90,16 @@ describe('multi-TAB commit rules', () => {
     expect(res.next.available[0]).toBe(s.available[0])
     // live1 (id 11) + live3 (id 13) — the two dragged live tabs, in selection order.
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [11, 13] }])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
-  it('a SAVED selection onto the Now Open ROW opens ONE unfocused real window with every URL; sources leave their groups; not undoable; nothing landed', () => {
+  it('a SAVED selection onto the Now Open ROW opens ONE unfocused real window with every URL; sources leave their groups; one undo step; nothing landed', () => {
     const { res } = move(tabRef(SEL[0], SEL), groupRef('now'))
     expect(res.sideEffects).toEqual([
       { type: 'windows.create', url: ['https://e.x/a1', 'https://e.x/b1', 'https://e.x/b2'], focused: false }
     ])
     expect(titles(res.next.available[1])).toEqual([['a2', 'a3'], []]) // emptied w1 kept
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
     expect(res.landed).toBeUndefined()
   })
 
@@ -110,7 +111,7 @@ describe('multi-TAB commit rules', () => {
       { type: 'tabs.create', windowId: 700, url: 'https://e.x/a1', index: 2, active: false }
     ])
     expect(titles(res.next.available[1])).toEqual([['a2', 'a3'], ['b1', 'b2']])
-    expect(res.undoable).toBe(false)
+    expect(res.undoable).toBe(true)
   })
 
   it('a selection containing a LIVE tab cannot target the Now Open row', () => {
@@ -222,16 +223,15 @@ describe('REGRESSION sweeps over every single and multi move', () => {
     expect(removes).toBeGreaterThan(0)
   })
 
-  it('anything touching Now Open is not undoable; saved-only moves are', () => {
+  it('a move is undoable exactly when it changed saved data (Now Open sources and targets included)', () => {
     const s = seed()
-    const m = buildDndModel(s)
-    const perm = m.groups[m.permanentGroupId].index
-    const gi = (id: string) => m.tabs[id]?.groupIndex ?? m.windows[id]?.groupIndex ?? m.groups[id]?.index ?? (id.endsWith('::new-window') ? m.groups[id.slice(0, -12)].index : -1)
-    for (const { a, o, res } of allMoves(s)) {
+    for (const { res } of allMoves(s)) {
       if (res.next === s && res.sideEffects.length === 0) continue // NOOP
-      const touchesNow = [...(a.selectionIds ?? [a.id]), o.id].some((id) => gi(id) === perm)
-      if (touchesNow) expect(res.undoable).toBe(false)
-      else expect(res.undoable).toBe(true)
+      // every move that changed saved data is undoable (Now Open sources and targets included);
+      // one that changed none (a move inside Now Open, a release in place) is no step: the engine
+      // may still say `undoable` for a release in place, the handler's `savedDataChanged` gate drops it
+      if (savedDataChanged(s, res.next)) expect(res.undoable).toBe(true)
+      if (res.next === s) expect(res.undoable).toBe(false)
     }
   })
 })

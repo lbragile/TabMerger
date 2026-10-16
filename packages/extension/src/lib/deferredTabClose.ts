@@ -28,9 +28,13 @@
 /** Port name; the background worker matches on it. */
 export const DEFERRED_CLOSE_PORT = 'tm-close-tabs-on-popup-close';
 
-/** Message the popup posts down the port. */
+/**
+ * Message the popup posts down the port: `tabIds` to close when the popup goes away, or
+ * `keepTabIds` to take back out of that list (an Undo of the drop that queued them).
+ */
 export interface DeferredCloseMessage {
-  tabIds: number[];
+  tabIds?: number[];
+  keepTabIds?: number[];
 }
 
 let port: chrome.runtime.Port | null = null;
@@ -54,6 +58,20 @@ export function closeTabsWhenPopupCloses(tabIds: number[]): void {
     port.postMessage({ tabIds } satisfies DeferredCloseMessage);
   } catch {
     // Worker unreachable: the tab stays open. Never throw into the drop commit.
+    port = null;
+  }
+}
+
+/**
+ * Take `tabIds` back out of the close-on-popup-close list: an Undo of the drag-out that queued
+ * them puts the tab back, and the still-open tab IS that tab (nothing to reopen). Does nothing
+ * when this popup queued nothing (no port yet).
+ */
+export function keepTabsOpen(tabIds: number[]): void {
+  if (tabIds.length === 0 || !port) return;
+  try {
+    port.postMessage({ keepTabIds: tabIds } satisfies DeferredCloseMessage);
+  } catch {
     port = null;
   }
 }

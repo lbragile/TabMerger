@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { pushPendingChanges, deleteRemoteGroups, pullRemoteChanges, subscribeToRemoteChanges, canUploadOnFirefox } from '@/lib/syncEngine'
 import type { Group } from '@/lib/types'
+import { onForeignGroupsChange } from '@/lib/foreignChange'
 import type { Session } from '@supabase/supabase-js'
 
 const {
@@ -51,6 +52,13 @@ vi.mock('@/lib/localDb', () => ({
   getPendingGroupDeletes: async () => (settingsStore['pendingDeleteGroupIds'] as string[] | undefined) ?? [],
   addPendingGroupDeletes: async (ids: string[]) => {
     settingsStore['pendingDeleteGroupIds'] = Array.from(new Set([...((settingsStore['pendingDeleteGroupIds'] as string[] | undefined) ?? []), ...ids]))
+  },
+  // the groups store's ids are `settingsStore.__presentGroupIds` (none unless a test sets them)
+  addPendingGroupDeletesIfAbsent: async (ids: string[]) => {
+    const present = new Set((settingsStore['__presentGroupIds'] as string[] | undefined) ?? [])
+    const absent = ids.filter((id) => !present.has(id))
+    settingsStore['pendingDeleteGroupIds'] = Array.from(new Set([...((settingsStore['pendingDeleteGroupIds'] as string[] | undefined) ?? []), ...absent]))
+    return absent
   },
   removePendingGroupDeletes: async (ids: string[]) => {
     settingsStore['pendingDeleteGroupIds'] = ((settingsStore['pendingDeleteGroupIds'] as string[] | undefined) ?? []).filter((id) => !ids.includes(id))
@@ -417,6 +425,25 @@ describe('deleteRemoteGroups', () => {
     expect(settingsStore['pendingDeleteGroupIds']).toEqual(['g1']) // kept although the DELETE failed
   })
 
+  it('an id that is back in the groups store by now (an Undo landed first) is neither recorded nor deleted remotely', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: makeSession('u1') } })
+    settingsStore['__presentGroupIds'] = ['restored']
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+    await deleteRemoteGroups(['restored', 'gone'])
+    expect(settingsStore['pendingDeleteGroupIds']).toEqual(['gone'])
+    expect((currentBuilder.in as ReturnType<typeof vi.fn>).mock.calls.map((c) => c[1])).toEqual([['gone']])
+    delete settingsStore['__presentGroupIds']
+  })
+
+  it('sends nothing when every id is back', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: makeSession('u1') } })
+    settingsStore['__presentGroupIds'] = ['restored']
+    currentBuilder = makeBuilder([])
+    await deleteRemoteGroups(['restored'])
+    expect(currentBuilder.in as ReturnType<typeof vi.fn>).not.toHaveBeenCalled()
+    delete settingsStore['__presentGroupIds']
+  })
+
   it('sends the DELETE in chunks of 100 ids', async () => {
     mockGetSession.mockResolvedValue({ data: { session: makeSession('u1') } })
     currentBuilder = makeBuilder([{ data: null, error: null }, { data: null, error: null }, { data: null, error: null }])
@@ -572,6 +599,31 @@ describe('pullRemoteChanges', () => {
 })
 
 describe('subscribeToRemoteChanges', () => {
+  it('S3: a Realtime DELETE announces the foreign change INSIDE its write step, before the queue moves on to the next step (an Undo)', async () => {
+    let handler: (payload: unknown) => Promise<void> = async () => {}
+    mockChannelOn.mockImplementation((_event, _filter, cb) => {
+      handler = cb
+      return { subscribe: mockChannelSubscribe.mockReturnValue({}) }
+    })
+    await subscribeToRemoteChanges(makeSession('u1'), vi.fn())
+    const seen: string[] = []
+    const off = onForeignGroupsChange(() => seen.push('foreign'))
+    mockUpdateGroupsState.mockImplementationOnce(async (fn: (s: unknown, aux: unknown) => unknown, opts?: { afterWrite?: (stored: unknown, base: unknown) => void }) => {
+      const base = localState
+      const next = fn(localState, { pendingDeletes: new Set() })
+      if (next) {
+        localState = next as typeof localState
+        opts?.afterWrite?.(localState, base)
+      }
+      seen.push('step done')
+      return localState
+    })
+    localState.available.push(makeGroup({ id: 'g1', pendingSync: false }))
+    await handler({ eventType: 'DELETE', old: { id: 'g1' } })
+    off()
+    expect(seen).toEqual(['foreign', 'step done'])
+  })
+
   it('deletes the local group immediately on a live Realtime DELETE event', async () => {
     let handler: (payload: unknown) => Promise<void> = async () => {}
     mockChannelOn.mockImplementation((_event, _filter, cb) => {

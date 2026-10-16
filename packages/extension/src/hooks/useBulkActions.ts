@@ -16,7 +16,50 @@ import { resolveIncognito } from '@/lib/incognito';
 import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import type { GroupsState, Tab, Window as WindowType } from '@/lib/types';
-import { alignToBase } from '@/lib/groupsAlign';
+import { alignToBase, restoreFreshOrder } from '@/lib/groupsAlign';
+import { recordStep } from '@/lib/undoHistory';
+import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
+import type { LiveTabRecord, LiveTabsEffect } from '@/lib/undoLiveTabs';
+
+/**
+ * The bulk actions' read-modify-write: `edit` runs on the fresh state re-addressed to `base` (the
+ * list the selection was made on; nothing is written when a group it pointed at is gone), and the
+ * state it started from goes on the undo stack once the write is stored, inside the same step of
+ * the write queue (`recordStep`), only when the saved data changed (a bulk action on Now Open items
+ * alone is no step). One bulk action is one undo step. `opened` collects the real tabs the action
+ * opens (a move into Now Open): the step carries the promise of their ids, so an Undo, even one
+ * clicked before Chrome returned them, closes exactly those (lib/undoLiveTabs.ts).
+ */
+async function updateWithUndo(
+  base: GroupsState | undefined,
+  pushUndo: (state: GroupsState) => GroupsState | void,
+  edit: (state: GroupsState) => GroupsState | null,
+  opened: Promise<LiveTabRecord[]>[] = []
+): Promise<GroupsState> {
+  const effect = (): Promise<LiveTabsEffect> | null =>
+    opened.length > 0 ? Promise.all(opened).then((tabs) => ({ kind: 'close', tabs: tabs.flat() })) : null;
+  return updateGroupsState(
+    (fresh) => {
+      const state = alignToBase(base, fresh);
+      if (!state) return null; // a group the selection pointed at is gone: nothing safe to change
+      const result = edit(state);
+      // The view was in the selection's order: put the result back into the FRESH order, like
+      // every other mutation (restoreFreshOrder), so only the edit itself is written and recorded.
+      return !result || state === fresh ? result : restoreFreshOrder(fresh, state, result);
+    },
+    { afterWrite: recordStep({ push: pushUndo, effect }) }
+  );
+}
+
+/** The tab Chrome opened, as a record an Undo can close by id (empty when it failed). */
+function openedTab(created: Promise<chrome.tabs.Tab | undefined>, url: string): Promise<LiveTabRecord[]> {
+  return Promise.resolve(created)
+    .then((t) => {
+      noteTabsOpenedByPopup([{ id: t?.id, url }]);
+      return typeof t?.id === 'number' ? [{ tabId: t.id, url }] : [];
+    })
+    .catch(() => []);
+}
 
 // ─── ID Parsers ───────────────────────────────────────────────────────────────
 
@@ -58,10 +101,7 @@ export function useBulkDelete() {
 
       // The list the selection was made on: ids like "tab-2-0-1" are positions in THAT list.
       const base = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      const next = await updateGroupsState((fresh) => {
-        const state = alignToBase(base, fresh);
-        if (!state) return null; // a group the selection pointed at is gone: nothing safe to change
-        pushUndo(state);
+      const next = await updateWithUndo(base, pushUndo, (state) => {
 
         if (type === 'tab') {
           // Sort DESC so index removal doesn't shift lower indices
@@ -219,10 +259,8 @@ export function useBulkMoveToGroup() {
 
       // The list the selection was made on: ids like "tab-2-0-1" are positions in THAT list.
       const base = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      const next = await updateGroupsState((fresh) => {
-        const state = alignToBase(base, fresh);
-        if (!state) return null; // a group the selection pointed at is gone: nothing safe to change
-        pushUndo(state);
+      const opened: Promise<LiveTabRecord[]>[] = [];
+      const next = await updateWithUndo(base, pushUndo, (state) => {
 
         // Deep-clone so we can mutate in-place
         const available = state.available.map((g) => ({
@@ -277,7 +315,7 @@ export function useBulkMoveToGroup() {
             // Moving to Now Open → open each tab in the browser; useCurrentTabs will sync them in
             for (const tab of tabsToMove) {
               if (isOpenableUrl(tab.url) && !RESTRICTED_URL_RE.test(tab.url)) {
-                chrome.tabs.create({ url: tab.url, active: false }).catch(() => {});
+                opened.push(openedTab(chrome.tabs.create({ url: tab.url, active: false }), tab.url));
               }
             }
             // Don't insert into Now Open IndexedDB — the sync handles it
@@ -350,9 +388,17 @@ export function useBulkMoveToGroup() {
             for (const win of windowsToMove) {
               const urls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
               if (urls.length > 0) {
-                void resolveIncognito(win.incognito).then((incognito) =>
-                  chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })
-                ).catch(() => {});
+                opened.push(
+                  resolveIncognito(win.incognito)
+                    .then((incognito) =>
+                      chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })
+                    )
+                    .then((created) => {
+                      noteTabsOpenedByPopup((created?.tabs ?? []).map((t, i) => ({ id: t.id, url: urls[i] })));
+                      return (created?.tabs ?? []).flatMap((t, i) => (typeof t.id === 'number' && urls[i] !== undefined ? [{ tabId: t.id, url: urls[i] }] : []));
+                    })
+                    .catch(() => [])
+                );
               }
             }
             // Don't insert into Now Open IndexedDB — the sync handles it
@@ -381,7 +427,7 @@ export function useBulkMoveToGroup() {
         }
 
         return { ...state, available };
-      });
+      }, opened);
       qc.setQueryData(GROUPS_QUERY_KEY, next);
     },
 
@@ -401,10 +447,7 @@ export function useBulkStar() {
       if (items.length === 0) return;
       // The list the selection was made on: ids like "tab-2-0-1" are positions in THAT list.
       const base = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      const next = await updateGroupsState((fresh) => {
-        const state = alignToBase(base, fresh);
-        if (!state) return null; // a group the selection pointed at is gone: nothing safe to change
-        pushUndo(state);
+      const next = await updateWithUndo(base, pushUndo, (state) => {
 
         const available = state.available.map((g) => ({ ...g, windows: [...g.windows] }));
         const type = items[0].type;
