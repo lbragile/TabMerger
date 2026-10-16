@@ -7,6 +7,7 @@ import { resolveManifestVersion } from "./scripts/manifestVersion";
 import { resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
 import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "./scripts/firefoxAddonIds";
 import { resolveFirefoxBetaUpdateUrl } from "./scripts/firefoxBetaUpdateUrl";
+import { resolveTrustedWebAppOrigins, toOriginMatchPatterns } from "./src/lib/webAppOrigins";
 import { DEV_EXTENSION_ID } from "@tabmerger/shared";
 import { FIREFOX_DATA_CONSENT_CATEGORIES } from "@tabmerger/shared";
 import pkg from "./package.json";
@@ -94,6 +95,17 @@ export default defineConfig({
         // Falls back to package.json's version for local/dev builds and any CI step that never
         // zips for a store (nothing downstream reads manifest.version in that case).
         const { version, version_name } = resolveManifestVersion(rawVersionString);
+        // Every web origin this build accepts messages from: VITE_WEB_APP_URL first, then the
+        // comma-separated VITE_EXTRA_WEB_APP_URLS (a second site during a host move; read through
+        // loadEnv for the same reason as VITE_WEB_APP_URL above). Throws, failing the build, on
+        // any extra that isn't a bare https origin: a silently dropped entry would ship a build
+        // that site can't reach. The Firefox web bridge (web-bridge.content.ts) and the
+        // background's sender check resolve the same list from import.meta.env.
+        const trustedWebAppOrigins = resolveTrustedWebAppOrigins(
+            env.VITE_WEB_APP_URL,
+            env.VITE_EXTRA_WEB_APP_URLS,
+            { allowLocalhostHttp: mode === "development" },
+        );
         return {
             name: getExtensionName(mode),
             description: isBeta
@@ -183,10 +195,9 @@ export default defineConfig({
             // CHROME_EXTENSION_ID is the published Chrome Web Store ID (unset until first
             // publish — see docs/PUBLISHING.md); the dev ID is fixed for this repo's unpacked
             // build path. ponytail: filter(Boolean) so an unset published ID doesn't ship as "".
+            // `matches` covers the primary site and every extra (see trustedWebAppOrigins).
             externally_connectable: {
-                matches: env.VITE_WEB_APP_URL
-                    ? [`${env.VITE_WEB_APP_URL}/*`]
-                    : [],
+                matches: toOriginMatchPatterns(trustedWebAppOrigins),
                 ids: [
                     isBeta
                         ? env.CHROME_EXTENSION_ID_BETA

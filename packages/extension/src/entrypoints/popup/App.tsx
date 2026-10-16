@@ -23,6 +23,7 @@ import { trackEvent } from '@/lib/analytics';
 import { useTheme } from '@/hooks/useTheme';
 import { useKeyboardNav } from '@/hooks/useKeyboardNav';
 import { SubscriptionStatusBanner } from '@/components/SubscriptionStatusBanner';
+import { WebAppConnectBanner } from '@/components/WebAppConnectBanner';
 import { UpgradeCTA } from '@/components/UpgradeCTA';
 import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
 import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker';
@@ -141,6 +142,8 @@ function AppContent() {
     <div className="flex flex-col h-full overflow-hidden">
       <Header />
       <SubscriptionStatusBanner />
+      {/* Firefox only: asks to allow a trusted website an update added but Firefox did not grant */}
+      <WebAppConnectBanner />
       <UpgradeCTA />
       <CleanupSuggestionBanner />
       <AIGroupSuggestion />

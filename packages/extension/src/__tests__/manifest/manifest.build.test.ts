@@ -12,7 +12,8 @@ import { FIREFOX_BETA, FIREFOX_DATA_CONSENT_CATEGORIES } from "@tabmerger/shared
  *
  * - The Firefox-only web-bridge content script (web-bridge.content.ts, `include: ['firefox']`)
  *   must never reach the Chromium manifests (no content_scripts, no new host permission), while
- *   the Firefox manifest carries exactly this one script, scoped to the build's web app origin.
+ *   the Firefox manifest carries exactly this one script, scoped to the build's web app origins
+ *   (VITE_WEB_APP_URL plus any VITE_EXTRA_WEB_APP_URLS, the same list as externally_connectable).
  * - The Firefox add-on ID must be the live AMO listing's GUID for stable, and the separate beta
  *   ID for beta: any other stable ID is a different add-on, so existing users would stop updating.
  */
@@ -23,6 +24,7 @@ const extensionRoot = path.resolve(testDir, "../../../");
 
 type Manifest = {
   content_scripts?: { matches: string[]; js: string[] }[];
+  externally_connectable?: { matches?: string[]; ids?: string[] };
   host_permissions?: string[];
   browser_specific_settings?: {
     gecko?: {
@@ -33,10 +35,20 @@ type Manifest = {
   };
 };
 
-function build(args: string[], outDirName: string): Manifest {
+/**
+ * Runs `wxt build` and returns the emitted manifest. `env` overrides the inherited environment;
+ * Vite's loadEnv gives real env vars priority over .env files, so this pins a value no matter
+ * what a local .env.<mode> or .env.local holds.
+ */
+function build(args: string[], outDirName: string, env: Record<string, string> = {}): Manifest {
   // shell: true is required for npx.cmd to resolve on Windows; every arg here is a fixed
   // literal (never derived from external/user input), so shell-arg injection isn't a concern.
-  execFileSync("npx", ["wxt", "build", ...args], { cwd: extensionRoot, stdio: "pipe", shell: true });
+  execFileSync("npx", ["wxt", "build", ...args], {
+    cwd: extensionRoot,
+    stdio: "pipe",
+    shell: true,
+    env: { ...process.env, ...env },
+  });
   const manifestPath = path.join(extensionRoot, ".output", outDirName, "manifest.json");
   return JSON.parse(readFileSync(manifestPath, "utf8")) as Manifest;
 }
@@ -54,13 +66,51 @@ describe("manifest build output", () => {
   });
 
   it("Firefox stable: one web-bridge content script on the web app origin, and the live add-on ID", () => {
-    const manifest = build(["-b", "firefox"], "firefox-mv3");
+    // No extras pinned, so a local .env file that sets VITE_EXTRA_WEB_APP_URLS can't add matches.
+    const manifest = build(["-b", "firefox"], "firefox-mv3", { VITE_EXTRA_WEB_APP_URLS: "" });
     expect(manifest.content_scripts).toHaveLength(1);
     const entry = manifest.content_scripts![0];
     expect(entry.js).toEqual(["content-scripts/web-bridge.js"]);
     expect(entry.matches).toHaveLength(1);
     expect(entry.matches[0]).toMatch(/^https?:\/\/.+\/\*$/);
     expect(manifest.browser_specific_settings?.gecko?.id).toBe(FIREFOX_STABLE_ADDON_ID);
+  });
+
+  // VITE_EXTRA_WEB_APP_URLS: a second site (during a host move) every receiving surface trusts.
+  const TWO_SITES = {
+    VITE_WEB_APP_URL: "https://old.example.com",
+    VITE_EXTRA_WEB_APP_URLS: "https://new.example.com",
+  };
+
+  it("Chrome externally_connectable trusts the primary and the extra origin, primary first", () => {
+    const manifest = build([], "chrome-mv3", TWO_SITES);
+    expect(manifest.externally_connectable?.matches).toEqual([
+      "https://old.example.com/*",
+      "https://new.example.com/*",
+    ]);
+    expect(manifest.content_scripts).toBeUndefined();
+    expect(manifest.host_permissions).toBeUndefined();
+  });
+
+  it("Firefox web-bridge content script matches the primary and the extra origin", () => {
+    const manifest = build(["-b", "firefox"], "firefox-mv3", TWO_SITES);
+    expect(manifest.content_scripts).toHaveLength(1);
+    // WXT sorts content-script matches, so compare as a set.
+    expect([...manifest.content_scripts![0].matches].sort()).toEqual([
+      "https://new.example.com/*",
+      "https://old.example.com/*",
+    ]);
+    expect(manifest.externally_connectable?.matches).toEqual([
+      "https://old.example.com/*",
+      "https://new.example.com/*",
+    ]);
+    expect(manifest.host_permissions).toBeUndefined();
+  });
+
+  it("an invalid extra origin fails the build instead of being dropped", () => {
+    expect(() =>
+      build([], "chrome-mv3", { ...TWO_SITES, VITE_EXTRA_WEB_APP_URLS: "http://new.example.com" }),
+    ).toThrow();
   });
 
   it("Firefox beta uses its own add-on ID", () => {

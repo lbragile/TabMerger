@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-13
+> Last Updated: 2026-10-15
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -300,12 +300,19 @@ Not permissions, but reviewers ask:
 - **`incognito: "spanning"`:** one shared extension instance. Private windows are only visible
   to the extension if the user turns on "Allow in Incognito" in Chrome; it is used to reopen
   saved private windows as private windows.
-- **`externally_connectable`:** matches only the TabMerger website origin (the production site
-  in the stable build) and one extra extension ID (`DEV_EXTENSION_ID`, the maintainer's unpacked
-  development build). It lets the website detect that the extension is installed, pass a
-  sign-in session to it, and request a sync. It grants nothing to other sites or extensions.
+- **`externally_connectable`:** matches only the TabMerger website, which during the move to
+  its own domain is two sites: `https://tabmerger.vercel.app/*` and `https://tabmerger.com/*`
+  in the stable build, `https://tabmerger-preview.vercel.app/*` and
+  `https://preview.tabmerger.com/*` in the BETA build (`VITE_WEB_APP_URL` plus
+  `VITE_EXTRA_WEB_APP_URLS`). Plus one extra extension ID (`DEV_EXTENSION_ID`, the maintainer's
+  unpacked development build). It lets the website detect that the extension is installed, pass
+  a sign-in session to it, and request a sync. It grants nothing to other sites or extensions,
+  and it is not a permission: Chrome shows no warning for it, at install or on update.
+  Justification to paste: "Lets the TabMerger website (tabmerger.com, and tabmerger.vercel.app
+  while the site moves there) detect the extension, hand over the user's sign-in and ask for a
+  sync. No other site can message the extension."
 - **Content scripts:** none on Chrome and Edge. Firefox only: one script on the TabMerger
-  website origin (see "Firefox permission note" below).
+  website, the same two sites as `externally_connectable` (see "Firefox permission note" below).
 - **Remote code:** none. All code is bundled in the package; no script is loaded from a CDN.
 - **Host permissions:** none, so there is no host justification to paste.
 
@@ -343,13 +350,22 @@ usage events and the favicon lookups listed below.
 | Website content | No | The extension never reads page text, images, media or links from any page. (The opt-in preview image is fetched by TabMerger's server and returned; its input is the address, covered under Web history.) | `src/lib/tabAccess.ts` |
 
 **Not applicable on purpose:** no host permissions, no content script on Chrome or Edge, no
-remote code, no data sold. AI features are off (`VITE_AI_ENABLED` is not `"true"`), so no tab
+remote code, no data sold.
+
+**Which website the extension talks to.** The extension accepts messages (install check,
+sign-in handoff, sync request) only from the TabMerger website: `tabmerger.vercel.app` and
+`tabmerger.com` for the stable build, `tabmerger-preview.vercel.app` and
+`preview.tabmerger.com` for the BETA build, while the site moves to its own domain. Everything
+the extension itself sends (API calls, `/api/track`, links, the sign-in redirect) still goes to
+the first of each pair, `VITE_WEB_APP_URL`; the second site only adds where those messages may
+come from, so no data-use answer changes. AI features are off (`VITE_AI_ENABLED` is not `"true"`), so no tab
 titles or URLs are sent to Anthropic; the Pro AI row of the privacy policy only becomes true
 when AI ships, at which point re-check this table (AI would send open-tab titles and URLs, which
 is Web history).
 
 **Analytics and error reporting: which builds are active.** `.github/workflows/publish.yml`
-sets only `VITE_WEB_APP_URL`, `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for the
+sets only `VITE_WEB_APP_URL`, `VITE_EXTRA_WEB_APP_URLS` (a second trusted site, see "Which
+website the extension talks to" above), `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for the
 store builds (stable and beta, Chrome, Firefox and Edge). It does **not** set
 `VITE_POSTHOG_API_KEY` or `VITE_SENTRY_DSN`, and `.env*` files are not in the repository, so in
 every store build:
@@ -506,15 +522,25 @@ Firefox doesn't support `externally_connectable` for web pages (MDN;
 [bug 1319168](https://bugzil.la/1319168)), so the website→extension messages that Chrome/Edge
 get for free via `externally_connectable` (`PING`, `SYNC_AUTH`, `SYNC_NOW` — install detection,
 auth handoff after web sign-in, and the dashboard's "sync now" button) need a different transport
-on Firefox: a content script on the web app's origin (`VITE_WEB_APP_URL`, per build mode) that
-relays `window.postMessage` to `chrome.runtime.sendMessage` and back.
+on Firefox: a content script on the web app's origins (`VITE_WEB_APP_URL` plus
+`VITE_EXTRA_WEB_APP_URLS`, per build mode) that relays `window.postMessage` to
+`chrome.runtime.sendMessage` and back.
 
-- **Permission it adds, Firefox only:** a single content-script match on the web app's own
-  origin (e.g. `https://tabmerger.vercel.app/*` for production, the beta preview URL for the
-  beta build). No `host_permissions` entry — Firefox MV3 content scripts don't need one alongside
-  a `content_scripts` match. This is new site access Firefox users will be asked to approve on
-  install/update; Chrome and Edge users see no change (`include: ['firefox']` in
-  `wxt.config.ts`/the entrypoint excludes this content script from their manifests entirely).
+- **Permission it adds, Firefox only:** content-script matches on the TabMerger website only:
+  `https://tabmerger.vercel.app/*` and `https://tabmerger.com/*` for production,
+  `https://tabmerger-preview.vercel.app/*` and `https://preview.tabmerger.com/*` for the beta
+  build. No `host_permissions` entry — Firefox MV3 content scripts don't need one alongside a
+  `content_scripts` match. Chrome and Edge users see no change (`include: ['firefox']` in the
+  entrypoint excludes this content script from their manifests entirely).
+- **How Firefox grants it (MV3):** content-script sites count as host access, and in MV3 they
+  are optional, not required. A new install grants every listed site and names them in the
+  install prompt. An update never prompts for a site added in that update and does not grant
+  it: the new site stays off until the user allows it (the extensions button on that site, or
+  about:addons, TabMerger, Permissions). Sites granted before stay granted. So an installed
+  Firefox build that gains a second site keeps working on the first one only, until the user
+  allows the second. The Firefox popup offers that with an "Allow" banner
+  (`permissions.request` from the click, dismissible); see `FIREFOXADDONS.md`, "The in-popup
+  prompt". Chrome and Edge never show it.
 - **What it can read/do:** relays exactly three message types between the page and the
   background script; reads nothing else from the page's DOM, network requests, or storage.
   `SYNC_AUTH`'s token payload is forwarded to the background script but never logged, echoed
@@ -571,6 +597,8 @@ with the real semver string carried in `version_name`.
 | Both | set at release | set at release | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest change and no new permission: the tour's progress is one record in `chrome.storage.local`, already covered by `storage`, so there is no re-approval prompt. The tour has seven chapters with a header each, fifteen "try it" steps and a thin pulsing orange ring on the control to use next. Eleven of them (four drag-and-drop steps, saving a tab, "Open in browser", "Deduplicate tabs", selecting items, two search steps, undo and redo) work on two sample groups ("Tour demo", "Tour demo 2") that the tour adds for those chapters and removes again by itself, and which never leave the device (not synced, backed up, exported, shared or counted toward a plan). The "save a tab" step opens one spare tab of the extension's own (`tour-practice.html`, a packaged page, opened in the background with `chrome.tabs.create`, which needs no extra permission) and closes it again; it is the only tab that step can move, and it is left out of the "continue on another device" snapshot. During those chapters "Open in browser" opens nothing, and "Undo" and "Redo" run on a history of the sample data alone, so the user's own tabs, groups and undo history are untouched. The group made while trying is offered for removal at the end. No new data leaves the device apart from six anonymous usage events (`tour_started`, `tour_completed`, `tour_skipped`, `tour_task_done`, `tour_step_skipped`, `tour_chapter_skipped`, carrying step or chapter ids only) through the existing analytics path. Screenshots: the ones showing the popup header need refreshing, see Screenshot Notes |
 | Both | set at release | set at release | next release (unreleased) | — | Draft: search shows what matched, and matches only the text as typed (in sequence, any case; letters out of order no longer match), best matches first in the search list. Matched text is highlighted (title, address, window, group and Chrome tab-group names, and the rows of the search list); tabs, windows and groups that do not match are hidden, or faded, by a new local setting "Tabs that do not match a search" (Hide by default, Dim) in Settings, General; the query stays until the user clears it (a clear button in the search field, next to the header box and on the "hidden by search" line); "Now Open" is searched like any group. No manifest change, no new permission, no new data: the query never leaves the popup's memory and the setting is one more field of the existing local preferences record. Dragging and keyboard moving are switched off while a search hides rows. Screenshots: see Screenshot Notes |
 
+| Both | set at release | set at release | next release (unreleased) | — | Draft: the extension also accepts its website messages (install check, sign-in handoff, sync request) from the site's new domain: `tabmerger.com` next to `tabmerger.vercel.app` (stable), `preview.tabmerger.com` next to `tabmerger-preview.vercel.app` (BETA). Only `externally_connectable.matches` changes in the Chrome and Edge manifest; it is not a permission, so no warning and no re-approval prompt. Paste the updated `externally_connectable` text above into the review notes if asked. The privacy tab needs no new tick: the extension sends nothing new and still sends everything to the current site. Screenshots: none affected |
+
 | Both | set at release | set at release | next release (unreleased) | — | Draft: after the extension is removed, the browser opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL`. No manifest change and no new permission. The address carries only the extension version, browser and release channel; see Technical privacy notes. The dashboard's privacy tab needs no new tick (the extension sends nothing; the page itself is the website's) |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
@@ -609,7 +637,9 @@ Paste into the dashboard's test-instructions field for the v2 to v3 update:
 - Pro AI (AI grouping, smart naming, tab previews) is marked "coming soon" and disabled behind
   a feature flag as of this writing — do not describe it as available in store copy while that
   flag is off. See `CLAUDE.md`'s AI feature flag notes.
-- `externally_connectable` is scoped to the web app origin plus one extra ID,
+- `externally_connectable` is scoped to the web app's sites (`VITE_WEB_APP_URL` plus
+  `VITE_EXTRA_WEB_APP_URLS`, each checked to be a bare https origin when the extension builds)
+  plus one extra ID,
   `DEV_EXTENSION_ID` (`@tabmerger/shared`): the maintainer's unpacked development build, so the
   local web app can reach it. It grants nothing to other extensions or sites.
 

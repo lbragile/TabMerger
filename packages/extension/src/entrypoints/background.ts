@@ -24,6 +24,7 @@ import { markTourPendingOnInstall } from '@/lib/tour';
 import { registerAutoBackup } from '@/lib/autoBackupAlarm';
 import { registerUninstallSurvey } from '@/lib/uninstallSurvey';
 import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
+import { resolveTrustedWebAppOrigins } from '@/lib/webAppOrigins';
 
 /**
  * `skipped: true` = another sync cycle (the popup's, or an earlier request) held the sync lock, so
@@ -367,27 +368,31 @@ export default defineBackground(() => {
   // script's sendMessage always looks internal to onMessage, so this must independently prove
   // the message actually came from that content script and not some other extension code path:
   // `sender.id === runtime.id` (true for any of our own extension pages/scripts) AND
-  // `sender.url`'s origin equals this build's web app origin (only the bridge script runs
-  // there — nothing else in this extension has a content script on that page).
-  const WEB_APP_ORIGIN = (() => {
+  // `sender.url`'s origin is one of this build's trusted web app origins (only the bridge script
+  // runs there — nothing else in this extension has a content script on those pages). The list
+  // is the bridge's own `matches` list: VITE_WEB_APP_URL plus VITE_EXTRA_WEB_APP_URLS. A value
+  // the parser rejects already failed the build, so the catch only fails closed (trust nothing).
+  const WEB_APP_ORIGINS: readonly string[] = (() => {
     try {
-      return import.meta.env.VITE_WEB_APP_URL ? new URL(import.meta.env.VITE_WEB_APP_URL).origin : undefined;
+      return resolveTrustedWebAppOrigins(import.meta.env.VITE_WEB_APP_URL, import.meta.env.VITE_EXTRA_WEB_APP_URLS, {
+        allowLocalhostHttp: import.meta.env.MODE === 'development',
+      });
     } catch {
-      return undefined;
+      return [];
     }
   })();
   chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
     const m = parseBridgeMessage(msg);
     if (!m) return;
     if (sender.id !== chrome.runtime.id) return;
-    if (!WEB_APP_ORIGIN || !sender.url) return;
+    if (WEB_APP_ORIGINS.length === 0 || !sender.url) return;
     let senderOrigin: string;
     try {
       senderOrigin = new URL(sender.url).origin;
     } catch {
       return;
     }
-    if (senderOrigin !== WEB_APP_ORIGIN) return;
+    if (!WEB_APP_ORIGINS.includes(senderOrigin)) return;
     return handleBridgeMessage(m, sendResponse);
   });
 
