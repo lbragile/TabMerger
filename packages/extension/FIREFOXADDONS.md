@@ -46,8 +46,9 @@ unrelated add-on. This was restored to the live listing's real GUID in `wxt.conf
   tab-groups API, so drop that bullet if reviewers on Firefox see no effect; private windows
   reopen as private only when "Run in Private Windows" is allowed for the add-on. AI features
   stay out of the copy (off in every build).
-- **Privacy policy URL:** https://tabmerger.vercel.app/privacy. **Support site:**
-  https://tabmerger.vercel.app/contact. **Homepage:** https://tabmerger.vercel.app.
+- **Privacy policy URL:** https://tabmerger.com/privacy. **Support site:**
+  https://tabmerger.com/contact. **Homepage:** https://tabmerger.com (moved from the
+  `tabmerger.vercel.app` addresses on 2026-10-16).
 - **Screenshots:** the same store images as Chrome (`packages/demo/screenshots/store/`); see the
   asset table and the outdated-screenshot warning in `CHROMEWEBSTORE.md`.
 - **Notes to reviewer:** reuse "Notes for the review team" from `CHROMEWEBSTORE.md`, and add that
@@ -279,7 +280,7 @@ mistaken for real access control later.
 
 The code is licensed under `LICENSE.md` (PolyForm Strict 1.0.0 plus an all-rights-reserved
 preface); using the add-on is governed by the Terms of Service
-(<https://tabmerger.vercel.app/terms>).
+(<https://tabmerger.com/terms>).
 
 - **Stable (listed) — AMO asks for a license.** Choose **"All Rights Reserved"**; the old GPL-3.0
   choice no longer applies to TabMerger 3.x.
