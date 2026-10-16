@@ -7,4 +7,5 @@
 - [Sessions store audit rules](learnings_sessions_store_audit_rules.md) — sessions RLS per verb, silent zero-row writes, anon answers, what a settings-key guard proves, writers outside the backup lock
 - [Filtered index + set-aside history](learnings_filtered_index_and_set_aside_state.md) — local-only rows need one index space for every position check; stashed undo history must obey clearHistory
 - [Write path vs server base](learnings_write_path_server_base.md) — saveGroupsState keeps the stored remoteUpdatedAt, updateGroupsState trusts the incoming one
+- [Popup unmount + write scope](learnings_popup_unmount_and_write_scope.md) — popup close runs no effect cleanups; same-ref groups scope the sync stamp + undo check, not the IDB puts
 - [DnD rebase identity pitfalls](learnings_dnd_rebase_identity.md) — rank + duplicate-only context check; structurally blind to a pure transposition of identity-equal items

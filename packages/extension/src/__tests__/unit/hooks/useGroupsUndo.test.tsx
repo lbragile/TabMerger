@@ -208,6 +208,30 @@ describe('writes that change no saved data leave no undo step', () => {
     expect(useUIStore.getState().redoStack).toHaveLength(1)
   })
 
+  it('a bulk star that flips nothing (already starred) is no step, writes nothing, and keeps the redo history', async () => {
+    store.state.available[1].windows[0].starred = true
+    useUIStore.setState({ redoStack: [seed()] })
+    const revBefore = store.rev
+    const { result } = setup(() => useBulkStar())
+    await act(async () => {
+      await result.current.action.mutateAsync({ items: [{ type: 'window', id: 'window-1-0' }], starred: true })
+    })
+    expect(steps()).toBe(0)
+    expect(store.rev).toBe(revBefore)
+    expect(useUIStore.getState().redoStack).toHaveLength(1)
+  })
+
+  it('a bulk star of a Now Open window only is no step', async () => {
+    useUIStore.setState({ redoStack: [seed()] })
+    const { result } = setup(() => useBulkStar())
+    await act(async () => {
+      await result.current.action.mutateAsync({ items: [{ type: 'window', id: 'window-0-0' }], starred: true })
+    })
+    expect(store.state.available[0].windows[0].starred).toBe(true) // the write happened
+    expect(steps()).toBe(0)
+    expect(useUIStore.getState().redoStack).toHaveLength(1)
+  })
+
   it('deleting a Now Open tab (closes a live tab, saved data untouched) is no step', async () => {
     const { result } = setup(() => G.useDeleteTab())
     await act(async () => {

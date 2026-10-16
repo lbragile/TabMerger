@@ -157,9 +157,23 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
 }
 
 /**
+ * How long a burst of tab/window events is collected into one Now Open write. A single user
+ * action fires several events within ~100 ms (created, updated per load stage, attached, ...), so
+ * 150 ms folds one action into one write, stays below what reads as lag on the list, and caps a
+ * tab whose title changes every 40 ms at about one write per 150 ms per open page instead of 25 a
+ * second. Fewer mirror writes keep the shared write queue short, so a user mutation (a drop) is
+ * stored without waiting behind a backlog of Now Open rewrites.
+ */
+export const NOW_OPEN_SYNC_DELAY_MS = 150;
+
+/**
  * Keeps the Now Open group (index 0) in sync with live Chrome tabs.
- * Runs an initial sync on mount (with ogImage backfill), then re-syncs on every
- * tabs/windows Chrome event. Cleans up all listeners on unmount.
+ * Runs an initial sync on mount right away, then re-syncs after tabs/windows Chrome events,
+ * coalesced: one pass per `NOW_OPEN_SYNC_DELAY_MS` window and never two passes at once (an
+ * event during a pass queues exactly one more). Each pass re-reads the browser and the stored
+ * state, so the result after a burst is the latest browser state, and it never overwrites a user
+ * mutation stored meanwhile (only Now Open's windows are replaced). A pending pass is flushed on
+ * unmount. Cleans up all listeners on unmount.
  * Must be mounted exactly once — typically at the popup root.
  */
 export function useCurrentTabs() {
@@ -179,19 +193,46 @@ export function useCurrentTabs() {
 
   useEffect(() => {
     let mounted = true;
+    // Coalescing state (see NOW_OPEN_SYNC_DELAY_MS): at most one armed timer and one pass in
+    // flight per page; events during a pass ask for exactly one more pass after it.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let running = false;
+    let rerun = false;
 
     const doSync = async () => {
-      const next = await syncNowOpen();
-      if (!mounted || !next) return;
-      qc.setQueryData(GROUPS_QUERY_KEY, next);
-      // ponytail: pushDeviceSession no-ops for free tier internally (and debounce-schedules
-      // cheaply either way), so no extra guard needed here — see deviceSessions.ts doPush().
-      pushDeviceSession(next, tierRef.current);
+      if (running) {
+        rerun = true;
+        return;
+      }
+      running = true;
+      try {
+        do {
+          rerun = false;
+          const next = await syncNowOpen();
+          if (mounted && next) {
+            qc.setQueryData(GROUPS_QUERY_KEY, next);
+            // ponytail: pushDeviceSession no-ops for free tier internally (and debounce-schedules
+            // cheaply either way), so no extra guard needed here — see deviceSessions.ts doPush().
+            pushDeviceSession(next, tierRef.current);
+          }
+          // Every pass re-queries the browser, so the last one writes the latest state.
+        } while (rerun);
+      } finally {
+        running = false;
+      }
     };
 
     void doSync();
 
-    const handleChange = () => void doSync();
+    // Not a reset-on-every-event debounce: a title changing every 40 ms would starve that
+    // forever. The first event of a burst arms the timer; later ones ride along with it.
+    const handleChange = () => {
+      if (timer !== undefined) return;
+      timer = setTimeout(() => {
+        timer = undefined;
+        void doSync();
+      }, NOW_OPEN_SYNC_DELAY_MS);
+    };
 
     chrome.tabs.onCreated.addListener(handleChange);
     chrome.tabs.onRemoved.addListener(handleChange);
@@ -204,6 +245,15 @@ export function useCurrentTabs() {
 
     return () => {
       mounted = false;
+      // In-app unmounts only: flush an armed pass so the stored Now Open (read by other pages and
+      // the device session) isn't left a burst behind. It writes IndexedDB only, since the cache
+      // belongs to the gone tree. Closing the popup destroys the page without running effect
+      // cleanups, so no flush happens there; the next mount's immediate pass rebuilds Now Open.
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        timer = undefined;
+        void doSync();
+      }
       chrome.tabs.onCreated.removeListener(handleChange);
       chrome.tabs.onRemoved.removeListener(handleChange);
       chrome.tabs.onUpdated.removeListener(handleChange);
