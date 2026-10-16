@@ -47,7 +47,67 @@ function withCors<T extends NextResponse>(response: T, cors: Record<string, stri
   return response
 }
 
+/**
+ * Old `*.vercel.app` hosts → their canonical custom-domain origin.
+ *
+ * The site moved to its own domain, but the old hosts stay up for good: extension
+ * builds already in users' hands call their APIs. So HTML pages on an old host
+ * 308 to the same path on the new one (keeps links, bookmarks and search results
+ * converging on one host), while the API keeps answering where it was called.
+ *
+ * Fixed map, deliberately: no env var and nothing request-derived picks the
+ * target, so a spoofed `Host` header can at most trigger a redirect to one of
+ * these two origins. Only exact host names match — per-deployment
+ * `tabmerger-<hash>-….vercel.app` hosts, localhost and `*.tabmerger.com` never
+ * redirect.
+ */
+export const LEGACY_HOST_REDIRECTS: Readonly<Record<string, string>> = {
+  'tabmerger.vercel.app': 'https://tabmerger.com',
+  'tabmerger-preview.vercel.app': 'https://preview.tabmerger.com',
+}
+
+/** True for `prefix` itself and anything under `prefix/`, never `prefixfoo`. */
+function isUnderPath(pathname: string, prefix: string): boolean {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`)
+}
+
+/**
+ * The canonical URL to 308 this request to, or null to serve it here.
+ *
+ * Never redirects:
+ * - `/api/*` — a CORS preflight (OPTIONS) can't follow a redirect, so old
+ *   extension builds' API calls would break; and `/api/auth/callback` must finish
+ *   the PKCE exchange on the host it was called on (the verifier cookie lives
+ *   there).
+ * - `/firefox-beta/*` — Firefox's beta update check wants a direct response. The
+ *   matcher already skips it; this guard keeps that true if the matcher changes.
+ *
+ * Only the path and query are carried over, onto the fixed origin. They're set
+ * via the `pathname`/`search` setters rather than `new URL(path, base)`: a path
+ * like `//evil.com/x` parses as protocol-relative and would replace the origin.
+ * The browser re-applies the `#fragment` itself.
+ */
+export function legacyHostRedirect(request: NextRequest): URL | null {
+  const { pathname, search } = request.nextUrl
+  if (isUnderPath(pathname, '/api') || isUnderPath(pathname, '/firefox-beta')) return null
+
+  const rawHost = request.headers.get('host') ?? request.nextUrl.hostname
+  // Strip the port (`host:443`); IPv6 literals never match the map anyway.
+  const host = rawHost.trim().toLowerCase().replace(/:\d*$/, '')
+  if (!Object.hasOwn(LEGACY_HOST_REDIRECTS, host)) return null
+
+  const target = new URL(LEGACY_HOST_REDIRECTS[host])
+  target.pathname = pathname
+  target.search = search
+  // Belt and braces: the setters can't move the origin, but never redirect off it.
+  return target.origin === new URL(LEGACY_HOST_REDIRECTS[host]).origin ? target : null
+}
+
 export async function proxy(request: NextRequest) {
+  // First, before CORS and the Supabase client: an old host's page has nothing to do here.
+  const legacyTarget = legacyHostRedirect(request)
+  if (legacyTarget) return NextResponse.redirect(legacyTarget, 308)
+
   const cors = extensionCorsHeaders(request)
   // Answer the preflight directly: it carries no auth, and route handlers only
   // export POST/GET, so letting it through would 405.
