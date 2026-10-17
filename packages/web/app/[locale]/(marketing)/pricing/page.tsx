@@ -8,6 +8,7 @@ import { CheckoutCanceledTracker } from '@/components/pricing/CheckoutCanceledTr
 import { getPriceInfo, type BillingInterval } from '@/lib/tiers'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getStoreLinks } from '@/lib/storeLinks'
+import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
 export async function generateMetadata() {
   const t = await getTranslations('pricing.page')
@@ -58,7 +59,7 @@ export default async function PricingPage() {
         <PricingTable
           currentTier={currentTier}
           currentInterval={currentInterval}
-          installHref={getStoreLinks().chrome}
+          installHref={getStoreLinks()[await getVisitorBrowser()]}
         />
       </div>
       <p className="text-center text-sm text-text2 mt-14">

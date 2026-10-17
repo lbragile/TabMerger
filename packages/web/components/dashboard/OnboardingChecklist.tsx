@@ -5,7 +5,7 @@ import { CheckCircle2, Circle, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { useExtensionInstalled } from '@/lib/hooks/useExtensionInstalled'
-import { storeLinkProps } from '@/lib/storeLinks'
+import { StoreLink } from '@/components/StoreLink'
 
 const STORAGE_KEY = 'tm_onboarding_dismissed'
 
@@ -119,9 +119,9 @@ export function OnboardingChecklist({ isSignedIn, isPro, installHref }: Props) {
                 className={`h-3.5 w-3.5 shrink-0 ${step.done ? 'text-green-500 dark:text-green-400' : 'text-muted-foreground'}`}
               />
               {step.href && !step.done ? (
-                <a {...storeLinkProps(step.href)} className="text-xs text-blue-600 dark:text-blue-300 hover:underline">
+                <StoreLink href={step.href} className="text-xs text-blue-600 dark:text-blue-300 hover:underline">
                   {step.label}
-                </a>
+                </StoreLink>
               ) : content}
             </div>
           )

@@ -4,6 +4,9 @@
     "title": "Deja de ahogarte en pestañas.",
     "lead": "TabMerger convierte cada ventana abierta en grupos con nombre y color que puedes buscar, compartir y restaurar, en cualquier equipo y con un clic.",
     "installChrome": "Instalar en Chrome: gratis",
+    "installFirefox": "Instalar en Firefox: gratis",
+    "installEdge": "Instalar en Edge: gratis",
+    "chrome": "Chrome",
     "firefox": "Firefox",
     "edge": "Edge",
     "note": "Plan gratuito, sin cuenta."
@@ -22,6 +25,8 @@
     "leadAi": "Empieza gratis, sin cuenta. Mejora cuando quieras para tener sincronización en la nube e IA.",
     "leadNoAi": "Empieza gratis, sin cuenta. Mejora cuando quieras para tener sincronización en la nube; funciones de IA próximamente.",
     "installChrome": "Instalar en Chrome: gratis",
+    "installFirefox": "Instalar en Firefox: gratis",
+    "installEdge": "Instalar en Edge: gratis",
     "faq": "¿Tienes preguntas? Mira las preguntas frecuentes →"
   },
   "features": {

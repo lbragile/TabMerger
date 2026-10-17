@@ -13,6 +13,8 @@ function mockSupabase() {
   }))
 }
 
+vi.mock('next/headers', () => ({ headers: async () => new Headers() }))
+
 const SAMPLE_QUESTION = 'Is TabMerger really free?'
 
 describe('/faq page', () => {
@@ -32,7 +34,7 @@ describe('/faq page', () => {
 describe('Home page', () => {
   it('no longer renders FAQ content', async () => {
     const { default: HomePage } = await import('@/app/[locale]/(marketing)/page')
-    render(<HomePage />)
+    render(await HomePage())
     expect(screen.queryByText(SAMPLE_QUESTION)).not.toBeInTheDocument()
   })
 })

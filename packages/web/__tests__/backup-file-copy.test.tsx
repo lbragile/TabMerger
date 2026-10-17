@@ -29,8 +29,8 @@ describe('privacy page: backup files', () => {
 })
 
 describe('features page: automatic backups', () => {
-  it('mentions the optional, unencrypted file copy and the dashboard', () => {
-    render(<FeaturesPage />)
+  it('mentions the optional, unencrypted file copy and the dashboard', async () => {
+    render(await FeaturesPage())
     const entry = screen.getByRole('heading', { name: AUTO_BACKUP_COPY.title }).parentElement!.parentElement!
     expect(entry).toHaveTextContent('You can also have each one saved as a file on your computer; that copy is not encrypted.')
     expect(entry).toHaveTextContent('Your dashboard lists them too')

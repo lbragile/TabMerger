@@ -38,6 +38,14 @@ vi.mock('next/link', () => ({
   ),
 }))
 
+// Pages that pick the install button from the visitor's browser (`getVisitorBrowser()`) read
+// `headers()`, which throws outside a request. Default to a request with no User-Agent (Chrome).
+// A test file that cares about the headers mocks `next/headers` itself, which replaces this.
+vi.mock('next/headers', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('next/headers')>()),
+  headers: async () => new Headers(),
+}))
+
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn(), refresh: vi.fn() }),
   usePathname: () => '/',

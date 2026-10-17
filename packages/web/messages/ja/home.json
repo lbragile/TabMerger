@@ -4,6 +4,9 @@
     "title": "ブラウザのタブに溺れるのは、もう終わり。",
     "lead": "TabMergerは、開いているすべてのウィンドウを、検索・共有・復元できる色分けされた名前付きグループにまとめます。どのパソコンでも、ワンクリックで。",
     "installChrome": "Chromeにインストール — 無料",
+    "installFirefox": "Firefoxにインストール — 無料",
+    "installEdge": "Edgeにインストール — 無料",
+    "chrome": "Chrome",
     "firefox": "Firefox",
     "edge": "Edge",
     "note": "無料プラン、アカウント不要。"
@@ -22,6 +25,8 @@
     "leadAi": "無料で始められ、アカウントは不要です。クラウド同期とAIは、いつでもアップグレードして利用できます。",
     "leadNoAi": "無料で始められ、アカウントは不要です。クラウド同期はいつでもアップグレードして利用でき、AI機能は近日公開です。",
     "installChrome": "Chromeにインストール — 無料",
+    "installFirefox": "Firefoxにインストール — 無料",
+    "installEdge": "Edgeにインストール — 無料",
     "faq": "ご質問はありますか？よくある質問をご覧ください →"
   },
   "features": {

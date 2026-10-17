@@ -4,8 +4,24 @@ import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
 import { DemoSection } from './DemoSection'
 import { StoreLink } from '@/components/StoreLink'
 import { getStoreLinks } from '@/lib/storeLinks'
+import { orderInstallBrowsers, type InstallBrowser } from '@/lib/visitorBrowser'
 
-export function Hero() {
+/** Each browser's icon and its `home.hero` message keys: the large-button label and the short name. */
+const BROWSER_LABELS = {
+  chrome: { Icon: ChromeIcon, install: 'installChrome', name: 'chrome' },
+  firefox: { Icon: FirefoxIcon, install: 'installFirefox', name: 'firefox' },
+  edge: { Icon: EdgeIcon, install: 'installEdge', name: 'edge' },
+} as const
+
+interface HeroProps {
+  /**
+   * The visitor's browser (`getVisitorBrowser()` on the page): it gets the large primary
+   * button, the others the small outline ones. All three always show. Defaults to Chrome.
+   */
+  browser?: InstallBrowser
+}
+
+export function Hero({ browser = 'chrome' }: HeroProps = {}) {
   // Server component: the links follow the deployment answering this request.
   const storeLinks = getStoreLinks()
   const t = useTranslations('home.hero')
@@ -32,28 +48,28 @@ export function Hero() {
               {t('lead')}
             </p>
 
-            {/* CTA row */}
+            {/* CTA row: the visitor's browser first */}
             <div className="flex flex-wrap items-center gap-2 mb-2.5">
-              {/* Wraps instead of running off a phone screen when the label is long (another
-                  language); one line, at the usual 44px, whenever it fits. */}
-              <Button size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
-                <StoreLink href={storeLinks.chrome}>
-                  <ChromeIcon size={18} />
-                  {t('installChrome')}
-                </StoreLink>
-              </Button>
-              <Button size="sm" variant="outline" className="gap-1.5" asChild>
-                <StoreLink href={storeLinks.firefox}>
-                  <FirefoxIcon size={15} />
-                  {t('firefox')}
-                </StoreLink>
-              </Button>
-              <Button size="sm" variant="outline" className="gap-1.5" asChild>
-                <StoreLink href={storeLinks.edge}>
-                  <EdgeIcon size={15} />
-                  {t('edge')}
-                </StoreLink>
-              </Button>
+              {orderInstallBrowsers(browser).map((b, i) => {
+                const { Icon, install, name } = BROWSER_LABELS[b]
+                return i === 0 ? (
+                  // Wraps instead of running off a phone screen when the label is long (another
+                  // language); one line, at the usual 44px, whenever it fits.
+                  <Button key={b} size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
+                    <StoreLink href={storeLinks[b]}>
+                      <Icon size={18} />
+                      {t(install)}
+                    </StoreLink>
+                  </Button>
+                ) : (
+                  <Button key={b} size="sm" variant="outline" className="gap-1.5" asChild>
+                    <StoreLink href={storeLinks[b]}>
+                      <Icon size={15} />
+                      {t(name)}
+                    </StoreLink>
+                  </Button>
+                )
+              })}
             </div>
 
             <p className="text-xs text-muted-foreground">{t('note')}</p>
