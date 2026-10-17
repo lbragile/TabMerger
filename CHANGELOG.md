@@ -1,3 +1,10 @@
+## [3.3.3](https://github.com/lbragile/TabMerger/compare/v3.3.2...v3.3.3) (2026-10-17)
+
+
+### Bug Fixes
+
+* **extension:** Firefox Settings dropdowns and popup close on Allow ([#83](https://github.com/lbragile/TabMerger/issues/83)) ([faad459](https://github.com/lbragile/TabMerger/commit/faad4591cae64aaead616b70ba15fb2fca7f1732))
+
 ## [3.3.2](https://github.com/lbragile/TabMerger/compare/v3.3.1...v3.3.2) (2026-10-16)
 
 
