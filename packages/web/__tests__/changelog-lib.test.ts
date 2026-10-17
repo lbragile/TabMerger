@@ -128,6 +128,75 @@ ${STABLE_HEADER}
     expect(parseChangelog(raw)).toEqual([])
   })
 
+  describe('pull request links', () => {
+    const parseOne = (bullet: string) =>
+      parseChangelog(`${PATCH_HEADER}\n\n### Bug Fixes\n\n${bullet}\n`)[0].changes[0]
+
+    it('keeps the PR number of a squash-merged commit as a link to the pull request', () => {
+      // The exact shape CHANGELOG.md has for every PR-workflow commit.
+      const change = parseOne(
+        '* **extension:** Firefox Settings dropdowns and popup close on Allow ([#83](https://github.com/lbragile/TabMerger/issues/83)) ([faad459](https://github.com/lbragile/TabMerger/commit/faad4591cae64aaead616b70ba15fb2fca7f1732))',
+      )
+      expect(change).toEqual({
+        type: 'Fixed',
+        text: 'extension: Firefox Settings dropdowns and popup close on Allow',
+        prNumber: 83,
+        prUrl: 'https://github.com/lbragile/TabMerger/pull/83',
+      })
+    })
+
+    it('accepts a PR reference with no commit link after it', () => {
+      const change = parseOne('* a fix ([#84](https://github.com/lbragile/TabMerger/issues/84))')
+      expect(change).toEqual({
+        type: 'Fixed',
+        text: 'a fix',
+        prNumber: 84,
+        prUrl: 'https://github.com/lbragile/TabMerger/pull/84',
+      })
+    })
+
+    it('builds the link against this repo, not whatever URL the file has', () => {
+      const change = parseOne('* a fix ([#12](https://github.com/someone/else/issues/12)) ([abc1234](https://github.com/o/r/commit/abc1234))')
+      expect(change.prUrl).toBe('https://github.com/lbragile/TabMerger/pull/12')
+    })
+
+    it('leaves a commit made straight to main (commit link only) unlinked', () => {
+      const change = parseOne(
+        '* some fix description ([1833397](https://github.com/lbragile/TabMerger/commit/1833397abc1833397abc1833397abc1833397ab))',
+      )
+      expect(change).toEqual({ type: 'Fixed', text: 'some fix description' })
+      expect(change).not.toHaveProperty('prNumber')
+      expect(change).not.toHaveProperty('prUrl')
+    })
+
+    it('ignores a reference whose link text and URL disagree on the number', () => {
+      const change = parseOne('* a fix ([#5](https://github.com/lbragile/TabMerger/issues/6)) ([abc1234](https://github.com/o/r/commit/abc1234))')
+      expect(change).not.toHaveProperty('prUrl')
+      expect(change.text).toBe('a fix (#5)')
+    })
+
+    it('only ever links /pull/<digits> on this repo, whatever the reference says', () => {
+      // #0 isn't a PR, and a number past the safe-integer range would print as "1e+21".
+      for (const n of ['0', '1000000000000000000000']) {
+        const change = parseOne(`* a fix ([#${n}](https://github.com/lbragile/TabMerger/issues/${n}))`)
+        expect(change).not.toHaveProperty('prUrl')
+        expect(change.text).toBe(`a fix (#${n})`)
+      }
+      // Anything other than digits after "#" never matches the PR pattern at all.
+      const injected = parseOne('* a fix ([#1/../../evil](https://github.com/lbragile/TabMerger/issues/1/../../evil))')
+      expect(injected).not.toHaveProperty('prUrl')
+      const leadingZero = parseOne('* a fix ([#083](https://github.com/lbragile/TabMerger/issues/083))')
+      expect(leadingZero.prUrl).toBe('https://github.com/lbragile/TabMerger/pull/83')
+    })
+
+    it('does not treat an issue reference in the middle of the subject as the PR', () => {
+      const change = parseOne(
+        '* fix [#7](https://github.com/lbragile/TabMerger/issues/7) for real ([abc1234](https://github.com/o/r/commit/abc1234))',
+      )
+      expect(change).toEqual({ type: 'Fixed', text: 'fix #7 for real' })
+    })
+  })
+
   it('returns an empty array for an empty string', () => {
     expect(parseChangelog('')).toEqual([])
   })

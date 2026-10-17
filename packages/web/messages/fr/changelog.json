@@ -5,6 +5,7 @@
   "lead": "Tout ce que nous avons publié, du plus récent au plus ancien.",
   "githubRelease": "Version GitHub",
   "githubReleaseLabel": "Version {version} sur GitHub",
+  "prLinkLabel": "Pull request #{number} sur GitHub",
   "majorRelease": "Version majeure",
   "types": {
     "New": "Nouveau",

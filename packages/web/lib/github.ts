@@ -21,3 +21,12 @@ export function githubReleaseUrl(version: string): string {
   const tag = version.startsWith('v') ? version : `v${version}`
   return `${GITHUB_REPO_URL}/releases/tag/${encodeURIComponent(tag)}`
 }
+
+/**
+ * The pull request page for a PR number, e.g. `83` -> `https://github.com/lbragile/TabMerger/pull/83`.
+ * Only a positive safe integer gets a URL (`undefined` otherwise), so the path is always plain
+ * digits: never `1e+21`, `NaN` or `-1`, whatever text the number was parsed from.
+ */
+export function githubPullRequestUrl(prNumber: number): string | undefined {
+  return Number.isSafeInteger(prNumber) && prNumber > 0 ? `${GITHUB_REPO_URL}/pull/${prNumber}` : undefined
+}

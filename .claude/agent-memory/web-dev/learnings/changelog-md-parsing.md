@@ -32,6 +32,13 @@ preset — `.releaserc.json` doesn't override it):**
   after capturing the bold group double-colons the output ("popup:: text") — strip the trailing
   colon from the captured scope before re-adding one.
 
+**PR references:** squash-merged commits come out as `* subject ([#83](.../issues/83)) ([faad459](.../commit/...))`,
+with the PR ref BEFORE the commit link, so strip the commit link first and then match the PR ref at the
+end. Commits made straight to main have only the commit link. Each `ChangeItem` gets
+`prNumber`/`prUrl`, with the URL rebuilt as `GITHUB_REPO_URL/pull/N` (not copied from the file), and
+the regex requires the link text's number to match the URL's (`\1`). Direct commits stay unlinked by
+design. The generic link-stripping step used to leave a plain "(#83)" on every PR bullet.
+
 **Why the mapping table is small:** Features→New, Bug Fixes→Fixed, Performance/Reverts/Refactor→
 Improved is deliberately exhaustive (a design decision of the release-channel work) — docs/style/test/build/ci commit types are left
 unmapped on purpose because `@semantic-release/commit-analyzer`'s default (angular) rules never

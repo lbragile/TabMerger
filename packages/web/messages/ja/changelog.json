@@ -5,6 +5,7 @@
   "lead": "リリースしたすべての内容を新しい順に掲載しています。",
   "githubRelease": "GitHubのリリース",
   "githubReleaseLabel": "GitHubの{version}リリース",
+  "prLinkLabel": "GitHubのプルリクエスト #{number}",
   "majorRelease": "メジャーリリース",
   "types": {
     "New": "新機能",

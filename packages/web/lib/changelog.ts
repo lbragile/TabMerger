@@ -1,13 +1,25 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { githubReleaseUrl } from '@/lib/github'
+import { githubPullRequestUrl, githubReleaseUrl } from '@/lib/github'
 
 export type ChangeType = 'New' | 'Improved' | 'Fixed'
+
+export interface ChangeItem {
+  type: ChangeType
+  text: string
+  /**
+   * The pull request this change was merged in, when the changelog bullet names one.
+   * Commits made straight to `main` before the PR workflow have none, and stay unlinked.
+   */
+  prNumber?: number
+  /** That pull request's page on GitHub. Set together with `prNumber`. */
+  prUrl?: string
+}
 
 export interface ChangeEntry {
   version: string
   date: string
-  changes: { type: ChangeType; text: string }[]
+  changes: ChangeItem[]
   /** The version's GitHub release page. Set only when that release really exists. */
   releaseUrl?: string
 }
@@ -60,18 +72,45 @@ function formatDate(iso: string): string {
   })
 }
 
-function cleanCommitText(raw: string): string {
+/**
+ * The PR reference conventional-changelog appends after a squash-merged commit's subject,
+ * e.g. ` ([#84](https://github.com/owner/repo/issues/84))`. The writer links the number to
+ * `/issues/N` (GitHub redirects that to the PR); the number in the link text and the URL
+ * must agree, so a stray markdown link that merely ends a subject isn't mistaken for one.
+ */
+const TRAILING_PR_RE = /\s*\(\[#(\d+)\]\(https:\/\/github\.com\/[^\s)]+\/(?:issues|pull)\/\1\)\)\s*$/i
+
+/**
+ * Turns one changelog bullet into display text, plus its PR number when the bullet has one.
+ * The PR link is rebuilt from the number against this repo rather than copied from the file,
+ * and points at `/pull/N` directly instead of relying on GitHub's `/issues/N` redirect.
+ */
+function cleanCommitText(raw: string): Omit<ChangeItem, 'type'> {
   let text = raw.trim()
   // Drop the trailing commit-hash link semantic-release appends, e.g.
-  // " ([abc1234](https://github.com/owner/repo/commit/abc1234))"
+  // " ([abc1234](https://github.com/owner/repo/commit/abc1234))". Commits made straight to
+  // main (before the PR workflow) have only this link, and are deliberately left unlinked.
   text = text.replace(/\s*\(\[[0-9a-f]{7,40}\]\([^)]*\)\)\s*$/i, '')
+  // A squash-merged PR's number sits just before the commit link: keep it as its own field.
+  // Only the captured digits are used, and only when they make a valid PR number (not #0, not
+  // past the safe-integer range); otherwise the reference stays in the text, unlinked.
+  let prNumber: number | undefined
+  let prUrl: string | undefined
+  text = text.replace(TRAILING_PR_RE, (match: string, n: string) => {
+    const url = githubPullRequestUrl(Number(n))
+    if (!url) return match
+    prNumber = Number(n)
+    prUrl = url
+    return ''
+  })
   // A bold commit scope becomes a plain-text prefix, e.g. "**popup:** " -> "popup: "
   // (the bold markup already contains the colon per commitPartial's `bold(`${scope}:`)`,
   // so strip any trailing colon before re-adding one rather than doubling it up).
   text = text.replace(/^\*\*([^*]+)\*\*\s*/, (_, scope: string) => `${scope.replace(/:$/, '')}: `)
   // Any other markdown link (issue references) — keep the link text, drop the URL
   text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-  return text.trim()
+  text = text.trim()
+  return prNumber === undefined || prUrl === undefined ? { text } : { text, prNumber, prUrl }
 }
 
 /**
@@ -137,8 +176,8 @@ export function parseChangelog(raw: string): ChangeEntry[] {
     if (current && currentType) {
       const itemMatch = line.match(listItemRe)
       if (itemMatch) {
-        const text = cleanCommitText(itemMatch[1])
-        if (text) current.changes.push({ type: currentType, text })
+        const item = cleanCommitText(itemMatch[1])
+        if (item.text) current.changes.push({ type: currentType, ...item })
       }
     }
   }

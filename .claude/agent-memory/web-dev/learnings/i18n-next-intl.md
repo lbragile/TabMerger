@@ -41,7 +41,14 @@ route paths: after moving under `app/[locale]/` the changelog key is `/[locale]/
 **Lint guard gaps.** `react/jsx-no-literals` (noStrings) flags JSX text and bare `{'…'}` children
 but not strings inside ternaries (`{x ? 'Hide' : 'Show'}`) or attribute values; attributes are
 covered by a `no-restricted-syntax` selector on `aria-label|title|alt|placeholder`. Grep for
-`? '[A-Z]` in translated files when reviewing.
+`? '[A-Z]` in translated files when reviewing. The attribute selector matches `Literal` only, so a
+template literal (`` aria-label={`Pull request #${n} on GitHub`} ``) passes lint; grep for
+`` ={` `` too, especially in code cherry-picked from a pre-i18n branch. `allowedStrings` entries
+match whole text runs: `(` and `#` are allowed, `(#` is not; write `({'#'}` instead.
+
+**Numbers in messages.** A plain `{number}` argument is stringified, not locale-formatted, so a PR
+or issue number prints as `#1234` in every locale (checked with `createTranslator` for `de`). Only
+`{n, number}` (or plural) groups digits (`1.234`); use that for counts, never for identifiers.
 
 **Verifying "English unchanged".** Dump `document.documentElement` before and after with scripts,
 comments, `_R_…_` useId values and sentry metas normalised: useId values change when the tree

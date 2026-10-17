@@ -338,7 +338,28 @@ export default function ChangelogPage() {
                     >
                       {t(`types.${change.type}`)}
                     </span>
-                    <span className="text-text2 leading-relaxed">{change.text}</span>
+                    <span className="text-text2 leading-relaxed">
+                      {change.text}
+                      {change.prUrl && change.prNumber !== undefined && (
+                        <>
+                          {' '}
+                          <a
+                            href={change.prUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            // "#84" alone doesn't say where it goes; the name keeps the visible text.
+                            // `{number}` is a plain argument, so the digits print ungrouped
+                            // ("#1234"); `{number, number}` would make it "#1,234" / "#1.234".
+                            aria-label={t('prLinkLabel', { number: change.prNumber })}
+                            className="inline-flex items-center gap-0.5 whitespace-nowrap align-baseline font-mono text-xs text-primary hover:underline"
+                          >
+                            ({'#'}
+                            {change.prNumber}
+                            <ExternalLink aria-hidden="true" className="size-3 shrink-0" />)
+                          </a>
+                        </>
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>
