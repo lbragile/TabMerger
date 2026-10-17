@@ -46,8 +46,9 @@ unrelated add-on. This was restored to the live listing's real GUID in `wxt.conf
   tab-groups API, so drop that bullet if reviewers on Firefox see no effect; private windows
   reopen as private only when "Run in Private Windows" is allowed for the add-on. AI features
   stay out of the copy (off in every build).
-- **Privacy policy URL:** https://tabmerger.vercel.app/privacy. **Support site:**
-  https://tabmerger.vercel.app/contact. **Homepage:** https://tabmerger.vercel.app.
+- **Privacy policy URL:** https://tabmerger.com/privacy. **Support site:**
+  https://tabmerger.com/contact. **Homepage:** https://tabmerger.com (moved from the
+  `tabmerger.vercel.app` addresses on 2026-10-16).
 - **Screenshots:** the same store images as Chrome (`packages/demo/screenshots/store/`); see the
   asset table and the outdated-screenshot warning in `CHROMEWEBSTORE.md`.
 - **Notes to reviewer:** reuse "Notes for the review team" from `CHROMEWEBSTORE.md`, and add that
@@ -106,11 +107,15 @@ on that site, or about:addons, TabMerger, Permissions.
 a one-line banner under the header, "Allow TabMerger on <site> so the website can find it and pass
 your sign-in.", whenever one of the build's trusted sites is not granted
 (`permissions.contains`, re-checked on every popup open and on `permissions.onAdded`/`onRemoved`).
-Its **Allow** button opens a TabMerger tab (`site-access.html`, a Firefox-only extension page)
-and the popup closes. Firefox shows no permission prompt over an open browser-action popup: it
-appears only after the popup closes, by which time the popup that asked is gone, so the grant
+Its **Allow** button opens a TabMerger tab (`site-access.html`, a Firefox-only extension page,
+opened active) and then closes the popup itself (`window.close()`): opening a tab does not close
+a Firefox popup, so without that the click looked like it did nothing. If the tab can't be opened
+the popup stays open and the banner says so ("Couldn't open the site access tab. Try again, or
+allow it in about:addons."). Firefox shows no permission prompt over an open browser-action popup:
+it appears only after the popup closes, by which time the popup that asked is gone, so the grant
 never reached the UI. The tab works out the missing sites itself (only the build's own trusted
-sites, never anything from the URL) and shows one button, "Allow TabMerger on <site>", which
+sites, never anything from the URL) and shows one button, "Allow TabMerger on <site>" (the page tells the user to click it and confirm
+in Firefox's prompt), which
 calls `permissions.request({ origins })` from the click (Firefox needs the user action). Firefox
 shows its permission prompt over the tab. On a grant the tab says so and tries to close itself;
 a refusal says so and keeps the button. A grant from about:addons also updates it
@@ -275,7 +280,7 @@ mistaken for real access control later.
 
 The code is licensed under `LICENSE.md` (PolyForm Strict 1.0.0 plus an all-rights-reserved
 preface); using the add-on is governed by the Terms of Service
-(<https://tabmerger.vercel.app/terms>).
+(<https://tabmerger.com/terms>).
 
 - **Stable (listed) — AMO asks for a license.** Choose **"All Rights Reserved"**; the old GPL-3.0
   choice no longer applies to TabMerger 3.x.
@@ -314,7 +319,7 @@ TabMerger's Settings (the true semver).
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: adds the guided tour of the popup (starts once after a first install, never after an update; replay from the header "?" button or Settings, General). No manifest, permission or `data_collection_permissions` change: progress is one `storage.local` record, and the six tour usage events (started, completed, skipped, task done, step skipped, chapter skipped; step or chapter ids only) go through the existing `technicalAndInteraction`-gated analytics. The "try it" steps run on two sample groups the tour adds and removes itself, and on one spare tab of the extension's own (the packaged page `tour-practice.html`) that the "save a tab" step opens in the background and closes again; all of it is local-only (never synced, backed up, exported or shared, and the spare tab is left out of the other-devices snapshot), so no data-collection answer changes. The tour has seven chapters with a header each and fifteen "try it" steps (drag and drop, saving a tab, "Open in browser", "Deduplicate tabs", selecting items, search, undo and redo among them); during them nothing of the user's is opened, closed or changed. A thin pulsing ring marks the control to use next. Listing copy: the new Chrome description bullet applies unchanged |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: search matches only the text as typed (in sequence, any case; letters out of order no longer match, best matches first in the search list), highlights the matched text, hides or fades what does not match (new local setting, Hide by default), keeps the query until the user clears it, and covers "Now Open". No manifest, permission or `data_collection_permissions` change: the query stays in the popup's memory and the setting is local. Listing copy: the reworded Chrome search bullet applies unchanged. Screenshots: see the Chrome file's Screenshot Notes |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: the web-bridge content script also runs on the website's new domain (`tabmerger.com` next to `tabmerger.vercel.app`, `preview.tabmerger.com` next to `tabmerger-preview.vercel.app` for BETA). Manifest change: one more `content_scripts` match, no `host_permissions`, no `data_collection_permissions` change. Updating installs get no Firefox prompt and the new site is not granted, so the popup shows a banner with an "Allow" button that opens a TabMerger tab asking Firefox for that site (dismissible, remembered on the device; see "The in-popup prompt" above); new installs get both sites and never see it. Screenshots: the banner is Firefox-only and shows only on updated installs, so no store screenshot changes |
-| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: fix: the "Allow TabMerger on <site>" banner's Allow button now opens a TabMerger tab that asks Firefox for the site, because Firefox shows no permission prompt over the popup (in 3.3.0 the click seemed to do nothing and the banner stayed). The tab is a Firefox-only extension page (`site-access.html`). No manifest permission change. Screenshots: none |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: fix: the "Allow TabMerger on <site>" banner's Allow button now opens a TabMerger tab that asks Firefox for the site, because Firefox shows no permission prompt over the popup (in 3.3.0 the click seemed to do nothing and the banner stayed). After opening the tab the popup now closes itself, since opening a tab leaves a Firefox popup open; if the tab can't be opened the banner shows a short error instead. The tab is a Firefox-only extension page (`site-access.html`). No manifest permission change. Screenshots: none |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: the add-on now talks to the website on its new domain: sign-in, sync, AI and checkout requests, links and the uninstall page go to `tabmerger.com` (stable) / `preview.tabmerger.com` (BETA), and the BETA `update_url` moves to `preview.tabmerger.com/firefox-beta/updates.json`. The old `vercel.app` hosts stay trusted. Manifest: the same two web-bridge `content_scripts` matches as the previous release, so no new site access and no prompt; installs that never clicked "Allow" for the new site still see the banner. No `data_collection_permissions` change |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: after the add-on is removed, Firefox opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL` (no permission). No manifest, permission or `data_collection_permissions` change: the address holds only the build's own version, browser and channel (constants of the build, nothing read from the user or device), and anything typed in the survey is sent by the web page, not the add-on |
 

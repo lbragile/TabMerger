@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { WebAppConnectBanner } from '@/components/WebAppConnectBanner'
+import { OPEN_FAILED_MESSAGE } from '@/components/WebAppConnectBanner'
 import { WEB_APP_ACCESS_DISMISSED_KEY } from '@/lib/webAppHostAccess'
 
 // Firefox-only "Allow TabMerger on <site>" prompt (useWebAppHostAccess + lib/webAppHostAccess):
@@ -17,6 +18,7 @@ let createTab: ReturnType<typeof vi.fn>
 let added: Listener[]
 let removed: Listener[]
 let store: Record<string, unknown>
+let closeWindow: ReturnType<typeof vi.spyOn>
 
 function event(list: () => Listener[]) {
   return {
@@ -40,6 +42,8 @@ beforeEach(() => {
     return true
   })
   createTab = vi.fn(async () => ({ id: 1 }))
+  // The banner closes the popup once the tab is open; jsdom would otherwise tear down the window.
+  closeWindow = vi.spyOn(window, 'close').mockImplementation(() => {})
   ;(globalThis as { chrome?: unknown }).chrome = {
     permissions: { contains, request, onAdded: event(() => added), onRemoved: event(() => removed) },
     runtime: { getURL: (path: string) => `moz-extension://test-id${path}` },
@@ -59,6 +63,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  closeWindow.mockRestore()
   vi.unstubAllEnvs()
   ;(globalThis as { chrome?: unknown }).chrome = originalChrome
 })
@@ -113,7 +118,7 @@ describe('WebAppConnectBanner', () => {
     fireEvent.click(await allowButton())
     // Firefox shows no permission prompt over an open popup, so the tab asks instead.
     expect(createTab).toHaveBeenCalledTimes(1)
-    expect(createTab).toHaveBeenCalledWith({ url: 'moz-extension://test-id/site-access.html' })
+    expect(createTab).toHaveBeenCalledWith({ url: 'moz-extension://test-id/site-access.html', active: true })
     expect(request).not.toHaveBeenCalled()
   })
 
@@ -130,14 +135,45 @@ describe('WebAppConnectBanner', () => {
     await waitFor(() => expect(screen.queryByRole('region', { name: 'Website access' })).not.toBeInTheDocument())
   })
 
-  it('stays when the tab cannot be opened', async () => {
-    createTab.mockRejectedValue(new Error('no tabs'))
+  it('closes the popup once the site-access tab has opened', async () => {
+    // Opening a tab leaves a Firefox popup open, so the banner closes it itself.
+    let opened!: (tab: { id: number }) => void
+    createTab.mockImplementation(() => new Promise((r) => (opened = r)))
     granted.add(OLD)
     render(<WebAppConnectBanner />)
     fireEvent.click(await allowButton())
     await settle()
-    expect(await allowButton()).toBeInTheDocument()
+    expect(closeWindow).not.toHaveBeenCalled()
+    await act(async () => {
+      opened({ id: 1 })
+    })
+    await waitFor(() => expect(closeWindow).toHaveBeenCalledTimes(1))
+    expect(screen.getByRole('alert')).toBeEmptyDOMElement()
+  })
+
+  it('stays open and says so when the tab cannot be opened', async () => {
+    createTab.mockRejectedValue(new Error('no tabs'))
+    granted.add(OLD)
+    render(<WebAppConnectBanner />)
+    const allow = await allowButton()
+    expect(screen.getByRole('alert')).toBeEmptyDOMElement()
+    allow.focus()
+    fireEvent.click(allow)
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(OPEN_FAILED_MESSAGE))
+    expect(closeWindow).not.toHaveBeenCalled()
     expect(request).not.toHaveBeenCalled()
+    expect(await allowButton()).toHaveFocus()
+  })
+
+  it('clears the error when Allow is tried again and the tab opens', async () => {
+    createTab.mockRejectedValueOnce(new Error('no tabs'))
+    granted.add(OLD)
+    render(<WebAppConnectBanner />)
+    fireEvent.click(await allowButton())
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(OPEN_FAILED_MESSAGE))
+    fireEvent.click(await allowButton())
+    await waitFor(() => expect(closeWindow).toHaveBeenCalledTimes(1))
+    expect(screen.getByRole('alert')).toBeEmptyDOMElement()
   })
 
   it('dismisses, remembers the dismissal, and stays hidden on the next open', async () => {

@@ -92,7 +92,8 @@ export function SiteAccessPage() {
           <>
             <p className="text-sm text-muted-foreground">
               Firefox hasn&apos;t allowed TabMerger on {hosts} yet. Without it the website can&apos;t detect
-              TabMerger, pass your sign-in or start a sync. Firefox asks you to confirm.
+              TabMerger, pass your sign-in or start a sync. Click the button below, then confirm in
+              Firefox&apos;s prompt.
             </p>
             <Button
               type="button"

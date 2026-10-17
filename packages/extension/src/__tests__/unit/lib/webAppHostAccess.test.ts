@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   WEB_APP_ACCESS_DISMISSED_KEY,
+  closePopupView,
   dismissWebAppHostPatterns,
   getDismissedWebAppHostPatterns,
   getMissingWebAppHostPatterns,
@@ -138,12 +139,12 @@ describe('openWebAppHostAccessPage', () => {
     })
   }
 
-  it('opens the built site-access page with nothing in the URL, and never requests from here', async () => {
+  it('opens the built site-access page, active, with nothing in the URL, and never requests from here', async () => {
     const create = vi.fn().mockResolvedValue({ id: 1 })
     withTabs(create)
     await expect(openWebAppHostAccessPage()).resolves.toBe(true)
     expect(WEB_APP_ACCESS_PAGE_PATH).toBe('/site-access.html')
-    expect(create).toHaveBeenCalledWith({ url: 'moz-extension://test-id/site-access.html' })
+    expect(create).toHaveBeenCalledWith({ url: 'moz-extension://test-id/site-access.html', active: true })
     expect(request).not.toHaveBeenCalled()
   })
 
@@ -156,6 +157,48 @@ describe('openWebAppHostAccessPage', () => {
       })
     )
     await expect(openWebAppHostAccessPage()).resolves.toBe(false)
+  })
+})
+
+describe('closePopupView', () => {
+  // Opening a tab leaves a Firefox popup open, so the banner closes it after opening the tab.
+  let close: ReturnType<typeof vi.spyOn>
+  beforeEach(() => {
+    close = vi.spyOn(window, 'close').mockImplementation(() => {})
+  })
+  afterEach(() => {
+    close.mockRestore()
+  })
+  const withViews = (getViews: unknown) =>
+    Object.assign((globalThis as { chrome: Record<string, unknown> }).chrome, { extension: { getViews } })
+
+  it('closes the page when it is the popup', () => {
+    const getViews = vi.fn(() => [window])
+    withViews(getViews)
+    closePopupView()
+    expect(getViews).toHaveBeenCalledWith({ type: 'popup' })
+    expect(close).toHaveBeenCalledTimes(1)
+  })
+
+  it('leaves popup.html alone when it is open as an ordinary tab', () => {
+    withViews(vi.fn(() => []))
+    closePopupView()
+    expect(close).not.toHaveBeenCalled()
+  })
+
+  it('closes when the browser cannot list its views', () => {
+    closePopupView()
+    expect(close).toHaveBeenCalledTimes(1)
+  })
+
+  it('swallows an error from the browser', () => {
+    withViews(
+      vi.fn(() => {
+        throw new Error('no views')
+      })
+    )
+    expect(() => closePopupView()).not.toThrow()
+    expect(close).not.toHaveBeenCalled()
   })
 })
 

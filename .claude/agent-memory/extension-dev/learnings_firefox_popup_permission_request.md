@@ -1,6 +1,6 @@
 ---
 name: learnings-firefox-popup-permission-request
-description: Firefox shows no permissions.request() doorhanger over an open browser-action popup; request from a Firefox-only extension tab (WXT manifest.include meta) instead
+description: Firefox shows no permissions.request() doorhanger over an open browser-action popup, and tabs.create does not close the popup; open a Firefox-only extension tab, then window.close() the popup
 metadata:
   type: reference
 ---
@@ -12,8 +12,24 @@ the grant shown later never reaches the UI. Unit tests can't catch this because 
 `chrome.permissions.request` as resolving at once. Only a real Firefox install shows it.
 
 Fix pattern (the site-access banner, `components/WebAppConnectBanner.tsx`):
-- The popup button calls `chrome.tabs.create({ url: chrome.runtime.getURL('/site-access.html') })`,
-  which closes the popup. It never calls `permissions.request` itself.
+- The popup button calls `chrome.tabs.create({ url: chrome.runtime.getURL('/site-access.html'), active: true })`
+  and then `closePopupView()` (`window.close()`, skipped when `extension.getViews({type:'popup'})`
+  doesn't include this window, i.e. `popup.html` open as a plain tab). It never calls
+  `permissions.request` itself. On a failed open the popup stays and the banner shows a
+  `role="alert"` message (the `<p role="alert">` is always mounted so the text gets announced).
+- **Opening a tab does NOT close a Firefox popup.** Measured in headless Firefox 158: `tabs.create`
+  from the popup resolves with `active: true`, but `getViews({type:'popup'})` still lists the popup
+  seconds later. With an explicit `window.close()` it is gone within ~200 ms. Measure that from a
+  separate BiDi evaluate: while one long async evaluate keeps polling, the closing popup stays
+  listed until that evaluate returns.
+- A real BiDi `input.performActions` click on the tab's button opens the doorhanger
+  (`PopupNotifications._currentNotifications` has `addon-webext-permissions`, read from the
+  `{'moz:scope':'chrome'}` context). A `script.evaluate` with `userActivation: true` plus
+  `el.click()` does NOT count as user input there: `permissions.request` rejects at once.
+- Harness gotchas: install opens no extension tab, so navigate `about:home` to `popup.html`. Set
+  `tm_tour` to `{status:'done'}` first, or the tour's inert root swallows `el.click()` in the popup.
+  `ff.kill()` leaves headless children holding the profile, so kill with `taskkill /PID <pid> /T /F`
+  and use a fresh profile dir and port per run.
 - The tab (`entrypoints/site-access/`, component `components/SiteAccess/SiteAccessPage.tsx`) works
   out what is missing itself (`getMissingWebAppHostPatterns()`), with nothing taken from the URL.
   Its button calls `requestWebAppHostAccess(missing)` before any await. It listens to

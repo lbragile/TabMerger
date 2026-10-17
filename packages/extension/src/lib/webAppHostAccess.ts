@@ -15,7 +15,8 @@ import { resolveTrustedWebAppOrigins, toOriginMatchPatterns } from '@/lib/webApp
  * The request is made from an extension tab (`entrypoints/site-access/`), never from the popup:
  * Firefox shows no permission prompt over an open browser-action popup, only after it closes, and
  * by then the popup that asked is gone, so its promise never settles anywhere and the UI never
- * updates. The popup's banner opens that tab instead (`openWebAppHostAccessPage()`).
+ * updates. The popup's banner opens that tab instead (`openWebAppHostAccessPage()`) and then
+ * closes itself (`closePopupView()`), because opening a tab leaves a Firefox popup open.
  *
  * Chrome and Edge reach the website through `externally_connectable`, which is not a permission,
  * so everything here is Firefox-only and reports "nothing to do" elsewhere.
@@ -76,18 +77,37 @@ export function requestWebAppHostAccess(patterns: readonly string[]): Promise<bo
 }
 
 /**
- * Opens the site-access tab, which asks Firefox for the missing sites itself. Opening a tab
- * closes the popup, which is expected. The tab works out what is missing on its own, so nothing
- * is passed in the URL. Resolves to false when the tab could not be opened.
+ * Opens the site-access tab, active, which asks Firefox for the missing sites itself. The tab
+ * works out what is missing on its own, so nothing is passed in the URL. Resolves to false when
+ * the tab could not be opened.
+ *
+ * Opening a tab does NOT close a Firefox popup: the new tab opens behind it and the popup stays
+ * open until the user clicks away, so the caller closes it (`closePopupView()`).
  */
 export function openWebAppHostAccessPage(): Promise<boolean> {
   try {
-    return chrome.tabs.create({ url: chrome.runtime.getURL(WEB_APP_ACCESS_PAGE_PATH) }).then(
+    return chrome.tabs.create({ url: chrome.runtime.getURL(WEB_APP_ACCESS_PAGE_PATH), active: true }).then(
       () => true,
       () => false
     );
   } catch {
     return Promise.resolve(false);
+  }
+}
+
+/**
+ * Closes this page when it is the browser-action popup, so the user lands on a tab the popup
+ * just opened. Does nothing when `popup.html` is open as an ordinary tab (closing that would
+ * close the user's tab). When the browser can't list its views, the caller is assumed to be the
+ * popup, the only place that renders the banner calling this.
+ */
+export function closePopupView(): void {
+  try {
+    const views = chrome.extension?.getViews?.({ type: 'popup' });
+    if (views && !views.includes(window)) return;
+    window.close();
+  } catch {
+    // Not closable; the popup stays open and the new tab is still there behind it.
   }
 }
 

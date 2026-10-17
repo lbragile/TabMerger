@@ -324,7 +324,7 @@ Not permissions, but reviewers ask:
 ## Privacy & Data Use
 
 The authoritative, user-facing version of this section lives at the web app's
-[`/privacy`](https://tabmerger.vercel.app/privacy) page
+[`/privacy`](https://tabmerger.com/privacy) page
 (`packages/web/app/(marketing)/privacy/page.tsx`) — this table is the CWS data-use-disclosure-form
 mapping of the same facts, verified against that page and the extension's own code
 (`src/lib/analytics.ts`, `src/lib/syncEngine.ts`, `src/lib/encryptionKey.ts`).
@@ -393,7 +393,7 @@ All three certifications can be ticked, because they are true as built:
 
 **Other dashboard questions:** "Remote code": No. "Data encrypted in transit": yes (HTTPS only).
 "Users can request deletion": yes, by deleting the account on the website (see
-[`/privacy`](https://tabmerger.vercel.app/privacy), "Data Retention").
+[`/privacy`](https://tabmerger.com/privacy), "Data Retention").
 
 ### Technical privacy notes
 
@@ -480,13 +480,13 @@ All three certifications can be ticked, because they are true as built:
 ## Privacy Policy
 
 **Privacy Policy URL** [REQUIRED]
-https://tabmerger.vercel.app/privacy
+https://tabmerger.com/privacy
 
 The route exists (`packages/web/app/(marketing)/privacy/page.tsx`, last updated September 26,
-2026). Builds now use `tabmerger.com` (`PROD_WEB_APP_URL` in `publish.yml`); the old
-`tabmerger.vercel.app` host keeps serving the same site, so this listing URL still works until it
-is switched to `https://tabmerger.com/privacy`. Beta builds use `preview.tabmerger.com` for the
-app, but the listing links the production domain. Terms of Service: https://tabmerger.vercel.app/terms
+2026). The listing URLs moved to `tabmerger.com` on 2026-10-16, on both the stable and BETA
+listings; the old `tabmerger.vercel.app` host still serves the same pages (public pages redirect
+there to `tabmerger.com`). Beta builds use `preview.tabmerger.com` for the app, but the listing
+links the production domain. Terms of Service: https://tabmerger.com/terms
 (`app/(marketing)/terms/page.tsx`).
 
 ---
@@ -495,7 +495,7 @@ app, but the listing links the production domain. Terms of Service: https://tabm
 
 The Chrome Web Store has no license field. The code is licensed under `LICENSE.md`
 (PolyForm Strict 1.0.0 plus an all-rights-reserved preface), and using the extension is governed by
-the Terms of Service (<https://tabmerger.vercel.app/terms>), linked from the listing through the
+the Terms of Service (<https://tabmerger.com/terms>), linked from the listing through the
 website. Code must stay readable:
 minifying is allowed, but the store's code-readability policy forbids obfuscation, so a license
 (not obfuscation) is the protection.
@@ -540,7 +540,7 @@ on Firefox: a content script on the web app's origins (`VITE_WEB_APP_URL` plus
   about:addons, TabMerger, Permissions). Sites granted before stay granted. So an installed
   Firefox build that gains a second site keeps working on the first one only, until the user
   allows the second. The Firefox popup offers that with an "Allow" banner
-  (`permissions.request` from the click, dismissible); see `FIREFOXADDONS.md`, "The in-popup
+  (it opens a TabMerger tab that asks Firefox, then closes the popup; dismissible); see `FIREFOXADDONS.md`, "The in-popup
   prompt". Chrome and Edge never show it.
 - **What it can read/do:** relays exactly three message types between the page and the
   background script; reads nothing else from the page's DOM, network requests, or storage.
@@ -561,12 +561,12 @@ go through GitHub's private vulnerability reporting (see `.github/SECURITY.md`) 
 published email. Do not commit the address into this file.
 
 **Support URL** [RECOMMENDED]
-https://tabmerger.vercel.app/contact (route: `packages/web/app/(marketing)/contact/page.tsx`).
+https://tabmerger.com/contact (route: `packages/web/app/(marketing)/contact/page.tsx`).
 Alternative for bug reports: https://github.com/lbragile/TabMerger/issues
 
 **Homepage URL** [RECOMMENDED]
-https://tabmerger.vercel.app (production site; builds now use `https://tabmerger.com`,
-`PROD_WEB_APP_URL` in `publish.yml`, which serves the same site).
+https://tabmerger.com (production site, the same host builds use: `PROD_WEB_APP_URL` in
+`publish.yml`). The verified domain is linked under Account → Publisher.
 Also live as routes: `/features`, `/pricing`, `/faq`, `/changelog`.
 
 ---
