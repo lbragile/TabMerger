@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AI_COMING_SOON_LABEL, AUTO_BACKUP_COPY, AUTO_BACKUP_RETENTION_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
+import { ChromeIcon } from '@/components/marketing/BrowserIcons'
 import {
   Layers,
   Search,
@@ -16,7 +17,6 @@ import {
   Keyboard,
   RefreshCw,
   Shield,
-  Globe,
   ArrowRight,
   History,
 } from 'lucide-react'
@@ -166,7 +166,7 @@ export default function FeaturesPage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="gap-2" asChild>
               <a {...storeLinkProps(storeLinks.chrome)}>
-                <Globe className="h-5 w-5" />
+                <ChromeIcon size={18} />
                 Add to Chrome — It&apos;s Free
               </a>
             </Button>

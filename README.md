@@ -23,7 +23,20 @@ A cross-browser tab manager for Chrome, Firefox, and Edge. Save, organize, and r
 sessions, with optional cloud sync (end-to-end encrypted) and AI-powered grouping (coming soon).
 
 **Install:** [Chrome Web Store](https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc)
-(Edge, Brave, Vivaldi and Arc install it from there too).
+(Edge, Brave, Vivaldi and Arc install it from there too), [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/tabmerger/),
+[Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn).
+
+---
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=lbragile%2Ftabmerger&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=lbragile/tabmerger&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=lbragile/tabmerger&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=lbragile/tabmerger&type=date&legend=top-left" />
+ </picture>
+</a>
 
 ---
 
