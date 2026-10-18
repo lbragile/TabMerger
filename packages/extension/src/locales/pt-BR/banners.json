@@ -11,5 +11,12 @@
   "upgrade": "Upgrade",
   "paymentIssue": "Problema no pagamento — atualize seu cartão",
   "planEnds": "Seu plano Pro termina em {{date}}",
-  "approachingLimit": "Você está perto do limite gratuito — faça upgrade para o Pro e tenha grupos e abas ilimitados"
+  "approachingLimit": "Você está perto do limite gratuito — faça upgrade para o Pro e tenha grupos e abas ilimitados",
+  "update": {
+    "label": "Atualização disponível",
+    "text": "A versão {{version}} está pronta. Reiniciar fecha este popup.",
+    "restart": "Reiniciar para atualizar",
+    "restartLabel": "Reinicie o TabMerger para atualizar para a versão {{version}}. Isso fecha o popup.",
+    "dismissLabel": "Dispensar o aviso de atualização da versão {{version}}"
+  }
 }

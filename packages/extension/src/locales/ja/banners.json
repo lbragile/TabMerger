@@ -9,5 +9,12 @@
   "upgrade": "アップグレード",
   "paymentIssue": "お支払いの問題: カードを更新してください",
   "planEnds": "Proプランは{{date}}に終了します",
-  "approachingLimit": "無料プランの上限に近づいています。Proにアップグレードすると、グループとタブが無制限になります"
+  "approachingLimit": "無料プランの上限に近づいています。Proにアップグレードすると、グループとタブが無制限になります",
+  "update": {
+    "label": "アップデートがあります",
+    "text": "バージョン{{version}}の準備ができました。再起動するとこのポップアップが閉じます。",
+    "restart": "再起動してアップデート",
+    "restartLabel": "TabMergerを再起動してバージョン{{version}}にアップデートします。ポップアップは閉じます。",
+    "dismissLabel": "バージョン{{version}}のアップデート通知を閉じる"
+  }
 }

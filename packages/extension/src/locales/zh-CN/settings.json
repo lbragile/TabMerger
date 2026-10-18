@@ -109,5 +109,17 @@
     "noGroupsFound": "未找到分组",
     "invalidFile": "文件格式无效",
     "portalFailed": "无法打开账单页面"
+  },
+  "updates": {
+    "label": "更新",
+    "description": "让浏览器立即检查是否有新版本",
+    "button": "检查更新",
+    "checking": "正在检查…",
+    "available": "版本 {{version}} 已就绪。请使用弹出窗口顶部的“重启以更新”。",
+    "availableNoVersion": "更新已就绪。重启浏览器即可应用。",
+    "noUpdate": "已是最新版本",
+    "throttled": "检查过于频繁。请几分钟后再试。",
+    "unsupported": "这是开发版本，浏览器不会对其进行更新",
+    "error": "无法检查更新"
   }
 }

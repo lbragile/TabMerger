@@ -11,5 +11,12 @@
   "upgrade": "Passer à Pro",
   "paymentIssue": "Problème de paiement : mettez à jour votre carte",
   "planEnds": "Votre offre Pro se termine le {{date}}",
-  "approachingLimit": "Vous approchez de la limite gratuite : passez à Pro pour des groupes et onglets illimités"
+  "approachingLimit": "Vous approchez de la limite gratuite : passez à Pro pour des groupes et onglets illimités",
+  "update": {
+    "label": "Mise à jour disponible",
+    "text": "La version {{version}} est prête. Redémarrer ferme cette fenêtre.",
+    "restart": "Redémarrer pour mettre à jour",
+    "restartLabel": "Redémarrer TabMerger pour passer à la version {{version}}. Cela ferme la fenêtre.",
+    "dismissLabel": "Ignorer l’avis de mise à jour de la version {{version}}"
+  }
 }

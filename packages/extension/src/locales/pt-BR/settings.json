@@ -117,5 +117,17 @@
     "noGroupsFound": "Nenhum grupo encontrado",
     "invalidFile": "Formato de arquivo inválido",
     "portalFailed": "Não foi possível abrir o portal de cobrança"
+  },
+  "updates": {
+    "label": "Atualizações",
+    "description": "Pedir ao navegador para procurar uma versão mais nova agora",
+    "button": "Verificar atualizações",
+    "checking": "Verificando…",
+    "available": "A versão {{version}} está pronta. Use Reiniciar para atualizar no topo do popup.",
+    "availableNoVersion": "Uma atualização está pronta. Reinicie o navegador para aplicá-la.",
+    "noUpdate": "Você tem a versão mais recente",
+    "throttled": "Verificado vezes demais. Tente de novo em alguns minutos.",
+    "unsupported": "Esta é uma versão de desenvolvimento, que o navegador não atualiza",
+    "error": "Não foi possível verificar atualizações"
   }
 }

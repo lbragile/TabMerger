@@ -25,6 +25,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { useKeyboardNav } from '@/hooks/useKeyboardNav';
 import { SubscriptionStatusBanner } from '@/components/SubscriptionStatusBanner';
 import { WebAppConnectBanner } from '@/components/WebAppConnectBanner';
+import { UpdateAvailableBanner } from '@/components/UpdateAvailableBanner';
 import { UpgradeCTA } from '@/components/UpgradeCTA';
 import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
 import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker';
@@ -143,6 +144,8 @@ function AppContent() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <Header />
+      {/* A downloaded update waiting for a restart (see lib/extensionUpdate.ts) */}
+      <UpdateAvailableBanner />
       <SubscriptionStatusBanner />
       {/* Firefox only: asks to allow a trusted website an update added but Firefox did not grant */}
       <WebAppConnectBanner />

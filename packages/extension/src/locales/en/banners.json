@@ -10,5 +10,12 @@
   "upgrade": "Upgrade",
   "paymentIssue": "Payment issue — update your card",
   "planEnds": "Your Pro plan ends on {{date}}",
-  "approachingLimit": "You're approaching the free limit — upgrade to Pro for unlimited groups and tabs"
+  "approachingLimit": "You're approaching the free limit — upgrade to Pro for unlimited groups and tabs",
+  "update": {
+    "label": "Update available",
+    "text": "Version {{version}} is ready. Restarting closes this popup.",
+    "restart": "Restart to update",
+    "restartLabel": "Restart TabMerger to update to version {{version}}. This closes the popup.",
+    "dismissLabel": "Dismiss the update notice for version {{version}}"
+  }
 }
