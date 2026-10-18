@@ -52,11 +52,25 @@ test.describe('Language picker', () => {
     const button = page.getByRole('button', { name: 'Langue (FR)' });
     await expect(button).toBeVisible();
 
+    // The header logo links to the build's website in the chosen language, always prefixed
+    // (`/en` too, so the site resets its language cookie). Builds without a web
+    // app URL (CI has no .env files) show the plain logo; the manifest's first trusted origin is
+    // that same URL, so it tells the test which case this build is.
+    const origin = await page.evaluate(() => chrome.runtime.getManifest().externally_connectable?.matches?.[0]?.replace(/\/\*$/, ''));
+    const logoLink = page.locator('header').getByTestId('header-logo-link');
+    if (origin) {
+      await expect(logoLink).toHaveAttribute('href', `${origin}/fr`);
+      await expect(logoLink).toHaveAccessibleName('Ouvrir le site web de TabMerger (nouvel onglet)');
+    } else {
+      await expect(logoLink).toHaveCount(0);
+    }
+
     await button.click();
     await expect(page.getByRole('menuitemradio', { name: 'Français' })).toHaveAttribute('aria-checked', 'true');
     await page.getByRole('menuitemradio', { name: 'Langue du navigateur' }).click();
     // Playwright's Chromium runs in English
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.getByRole('button', { name: 'Language (EN)' })).toBeVisible();
+    if (origin) await expect(logoLink).toHaveAttribute('href', `${origin}/en`);
   });
 });

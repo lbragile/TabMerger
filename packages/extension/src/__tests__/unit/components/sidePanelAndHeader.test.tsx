@@ -9,6 +9,7 @@ import { Header } from '@/components/Header'
 import { WindowsPanel } from '@/components/Windows'
 import type { Group, GroupsState } from '@/lib/types'
 import { FreeLimitExceededError } from '@/lib/tierLimits'
+import { i18n } from '@/lib/i18n'
 
 // ─── vi.hoisted — variables needed inside vi.mock factories ──────────────────
 
@@ -446,6 +447,94 @@ describe('Header — logo column alignment with SidePanel', () => {
 
     const logoCell = header?.firstElementChild as HTMLElement
     expect(logoCell.style.width).toBe('240px')
+  })
+})
+
+// ─── Header — logo links to the website ──────────────────────────────────────
+// The logo opens the TabMerger site of the build's environment (VITE_WEB_APP_URL), in the
+// popup's language, always with the language prefix (`/en` too: it resets the site's
+// NEXT_LOCALE cookie). No valid URL: the logo renders exactly as before, with no link.
+
+describe('Header — logo links to the website', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
+    mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5 })
+  })
+
+  afterEach(async () => {
+    vi.unstubAllEnvs()
+    await act(async () => {
+      await i18n.changeLanguage('en')
+    })
+  })
+
+  function logoLink() {
+    return screen.getByRole('link', { name: 'Open the TabMerger website (new tab)' })
+  }
+
+  it.each([
+    ['stable', 'https://tabmerger.com', 'https://tabmerger.com/en'],
+    ['beta', 'https://preview.tabmerger.com', 'https://preview.tabmerger.com/en'],
+    ['development', 'http://localhost:3000', 'http://localhost:3000/en'],
+  ])('links a %s build to its own site, in a new tab', (_build, env, href) => {
+    vi.stubEnv('VITE_WEB_APP_URL', env)
+    wrap(React.createElement(Header))
+    const link = logoLink()
+    expect(link).toHaveAttribute('href', href)
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(link).toHaveTextContent('TabMerger')
+  })
+
+  it.each([['missing', ''], ['not a URL', 'tabmerger.com'], ['a script URL', 'javascript:alert(1)'], ['another scheme', 'ftp://tabmerger.com']])(
+    'renders the plain logo with no link when the web app URL is %s',
+    (_label, env) => {
+      vi.stubEnv('VITE_WEB_APP_URL', env)
+      const { container } = wrap(React.createElement(Header))
+      expect(screen.queryByTestId('header-logo-link')).toBeNull()
+      const logoCell = container.querySelector('header')?.firstElementChild as HTMLElement
+      expect(logoCell.querySelector('a')).toBeNull()
+      expect(logoCell.querySelector('img')).toHaveAttribute('alt', 'TabMerger')
+      expect(logoCell).toHaveTextContent('TabMerger')
+    }
+  )
+
+  it('links to the prefixed home of the popup language, and follows a language change', async () => {
+    vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.com')
+    await act(async () => {
+      await i18n.changeLanguage('de')
+    })
+    wrap(React.createElement(Header))
+    const link = screen.getByRole('link', { name: 'TabMerger-Website öffnen (neuer Tab)' })
+    expect(link).toHaveAttribute('href', 'https://tabmerger.com/de')
+
+    await act(async () => {
+      await i18n.changeLanguage('pt-BR')
+    })
+    expect(screen.getByTestId('header-logo-link')).toHaveAttribute('href', 'https://tabmerger.com/pt-BR')
+
+    await act(async () => {
+      await i18n.changeLanguage('en')
+    })
+    expect(screen.getByTestId('header-logo-link')).toHaveAttribute('href', 'https://tabmerger.com/en')
+  })
+
+  it('opens the site with chrome.tabs.create instead of navigating the popup', () => {
+    vi.stubEnv('VITE_WEB_APP_URL', 'https://preview.tabmerger.com')
+    wrap(React.createElement(Header))
+    const notPrevented = fireEvent.click(logoLink())
+    expect(notPrevented).toBe(false)
+    expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://preview.tabmerger.com/en', active: true })
+  })
+
+  it('keeps the logo cell 240px wide with the link inside it', () => {
+    vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.com')
+    const { container } = wrap(React.createElement(Header))
+    const logoCell = container.querySelector('header')?.firstElementChild as HTMLElement
+    expect(logoCell.style.width).toBe('240px')
+    expect(logoCell.firstElementChild).toBe(logoLink())
   })
 })
 

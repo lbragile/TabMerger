@@ -47,6 +47,8 @@ import { TOUR_ANCHORS } from "@/lib/tourSteps";
 import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
 import { motionScrollBehavior } from "@/lib/reducedMotion";
 import { useTranslation } from "react-i18next";
+import { activeLocale } from "@/lib/i18n";
+import { openInNewTab, websiteHomeUrl } from "@/lib/websiteLink";
 import type { TFunction } from "i18next";
 
 /** Map an internal tier key to a human-readable label. */
@@ -235,6 +237,22 @@ export function Header() {
 
     const userInitials = user?.email?.slice(0, 2).toUpperCase() ?? "TM";
     const currentTierLabel = tierLabel(tier, t);
+    // The site for this build (local, preview or public) in the popup's language; no link when
+    // the build has no valid web app URL. Re-computed on every render, and useTranslation
+    // re-renders on a language change, so the href follows the language picker.
+    const websiteUrl = websiteHomeUrl(import.meta.env.VITE_WEB_APP_URL, activeLocale());
+    const logo = (
+        <>
+            <img
+                src={logoUrl}
+                alt={t("common.appName")}
+                className="h-5 w-5"
+            />
+            <span className="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#00B4CC] to-[#F5921E]">
+                {t("common.appName")}
+            </span>
+        </>
+    );
 
     return (
         <>
@@ -245,14 +263,29 @@ export function Header() {
                 className="flex items-center gap-1.5 px-3 shrink-0"
                 style={{ width: 240 }}
             >
-                <img
-                    src={logoUrl}
-                    alt={t("common.appName")}
-                    className="h-5 w-5"
-                />
-                <span className="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#00B4CC] to-[#F5921E]">
-                    {t("common.appName")}
-                </span>
+                {/* Sized to its content, not the whole column: the rest of the cell stays a
+                    neutral spot (the visual spec parks the pointer there). The outline offset
+                    fits inside the cell's px-3, so the focus ring is never clipped. */}
+                {websiteUrl ? (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <a
+                                href={websiteUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={t("header.openWebsite")}
+                                data-testid="header-logo-link"
+                                className="flex items-center gap-1.5 min-w-0 transition-opacity motion-reduce:transition-none hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                                onClick={(e) => openInNewTab(e, websiteUrl)}
+                            >
+                                {logo}
+                            </a>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">{t("header.openWebsite")}</TooltipContent>
+                    </Tooltip>
+                ) : (
+                    logo
+                )}
             </div>
 
             {/* Search trigger — px-3 matches WindowsPanel toolbar's inset below it */}
