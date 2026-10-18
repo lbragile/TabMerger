@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Rejoindre et installer"
+    },
+    "what-to-test": {
+      "label": "Quoi tester"
+    },
+    "known-issues": {
+      "label": "Problèmes connus"
+    },
+    "report-bugs": {
+      "label": "Signaler un bug"
+    },
+    "faq": {
+      "label": "FAQ"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Paiement réussi (Visa)",
+      "note": "Utilisez celle-ci pour passer à Pro"
+    },
+    "1": {
+      "label": "Refus générique"
+    },
+    "2": {
+      "label": "Fonds insuffisants"
+    },
+    "3": {
+      "label": "Nécessite l’authentification 3D Secure"
+    }
+  },
+  "accessLabels": {
+    "free": "Gratuit : aucun compte requis",
+    "upgrading": "Passer à Pro : paiements de test, aucun argent réel",
+    "some-pro": "Gratuit et Pro : chaque partie Pro est signalée",
+    "pro": "Pro uniquement"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Groupes et onglets",
+      "items": {
+        "0": {
+          "heading": "Groupes, couleurs et annuler/rétablir",
+          "checks": "Que vous pouvez créer, nommer et colorer un groupe, y enregistrer des onglets, et annuler ou rétablir une modification sans rien perdre.",
+          "steps": {
+            "0": "Cliquez sur « Ajouter un groupe » dans la barre latérale et donnez-lui un nom.",
+            "1": "Cliquez sur la pastille de couleur à côté du groupe pour ouvrir le sélecteur de couleur, choisissez une couleur prédéfinie ou faites glisser vers n’importe quelle couleur, puis cliquez sur Appliquer.",
+            "2": "Enregistrez quelques onglets dans le groupe (glissez-les dedans ou utilisez le menu du clic droit).",
+            "3": "Supprimez un onglet, puis cliquez sur le bouton Annuler (en-tête, en haut à droite), puis sur Rétablir."
+          },
+          "examples": {
+            "0": {
+              "alt": "Fenêtre TabMerger avec un nouveau groupe sélectionné et son sélecteur de couleur ouvert : un sélecteur de saturation et de teinte, 12 couleurs prédéfinies, un champ hexadécimal, et les boutons Annuler et Appliquer",
+              "caption": "Cliquer sur la pastille de couleur d’un groupe ouvre ce sélecteur."
+            }
+          },
+          "good": {
+            "0": "Le groupe se met à jour instantanément.",
+            "1": "Annuler restaure l’onglet supprimé exactement à sa place.",
+            "2": "Rétablir le supprime à nouveau.",
+            "3": "Avec la synchronisation activée, Annuler peut devenir grisé après qu’une synchronisation a apporté des modifications d’un autre appareil. C’est normal, pas un bug : l’historique d’annulation est effacé quand des modifications arrivent d’ailleurs."
+          }
+        },
+        "1": {
+          "heading": "« Ouverts maintenant » suit vos onglets ouverts",
+          "checks": "Que le groupe permanent « Ouverts maintenant » reflète toujours les onglets réellement ouverts dans votre navigateur.",
+          "steps": {
+            "0": "Ouvrez la fenêtre de l’extension et regardez « Ouverts maintenant » : c’est toujours le premier groupe de la barre latérale.",
+            "1": "Ouvrez et fermez quelques onglets du navigateur sans toucher à la fenêtre de l’extension.",
+            "2": "Rouvrez la fenêtre de l’extension et vérifiez à nouveau « Ouverts maintenant »."
+          },
+          "examples": {
+            "0": {
+              "alt": "La fenêtre avec « Ouverts maintenant » sélectionné : une fenêtre listant les trois onglets actuellement ouverts dans le navigateur",
+              "caption": "« Ouverts maintenant » est toujours en premier dans la barre latérale et liste les onglets ouverts à cet instant."
+            }
+          },
+          "good": {
+            "0": "« Ouverts maintenant » suit vos vrais onglets sans actualisation manuelle.",
+            "1": "Vous ne pouvez ni le supprimer ni l’éloigner du haut."
+          }
+        },
+        "2": {
+          "heading": "Enregistrer et rouvrir des fenêtres entières",
+          "checks": "Qu’une fenêtre enregistrée garde tous ses onglets, dans l’ordre, et se rouvre intacte.",
+          "steps": {
+            "0": "Enregistrez une fenêtre entière dans un groupe (glissez la poignée de la fenêtre sur un groupe, ou utilisez son menu « … »).",
+            "1": "Ouvrez le groupe et utilisez le menu « … » de la fenêtre pour la rouvrir, en nouvelle fenêtre et en onglets dans la fenêtre actuelle, si les deux options sont proposées."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un groupe TabMerger avec quatre fenêtres enregistrées distinctes, chacune contenant un onglet",
+              "caption": "Un groupe peut contenir plusieurs fenêtres distinctes, chacune avec son nombre d’onglets."
+            }
+          },
+          "good": {
+            "0": "Tous les onglets se rouvrent avec les bons titres et URL, dans le même ordre."
+          }
+        },
+        "3": {
+          "heading": "Archiver et restaurer un groupe",
+          "checks": "Qu’archiver masque un groupe sans le supprimer, et que le restaurer le rend inchangé.",
+          "steps": {
+            "0": "Faites un clic droit sur un groupe enregistré dans la barre latérale et choisissez Archiver.",
+            "1": "Ouvrez la section « Archivés » en bas de la barre latérale et retrouvez-le.",
+            "2": "Restaurez-le à partir de là."
+          },
+          "examples": {
+            "0": {
+              "alt": "La section Archivés en bas de la barre latérale de TabMerger, dépliée pour montrer un groupe archivé",
+              "caption": "La section Archivés en bas de la barre latérale, ouverte : « Shopping » est archivé, avec les boutons Restaurer et Supprimer."
+            }
+          },
+          "good": {
+            "0": "Les groupes archivés disparaissent de la liste active mais ne sont jamais supprimés.",
+            "1": "Ils réapparaissent exactement tels qu’ils étaient une fois restaurés."
+          }
+        },
+        "4": {
+          "heading": "Enregistrer et restaurer des sessions",
+          "checks": "Qu’une session enregistrée remet vos groupes exactement comme ils étaient à l’enregistrement.",
+          "steps": {
+            "0": "Enregistrez une session, un instantané nommé de vos groupes actuels (cherchez « Enregistrer la session » près de la zone Sessions de la barre latérale).",
+            "1": "Modifiez quelques groupes.",
+            "2": "Restaurez la session enregistrée."
+          },
+          "examples": {
+            "0": {
+              "alt": "La section Sessions de la barre latérale de TabMerger, avec une session enregistrée",
+              "caption": "Une session enregistrée dans la section Sessions, avec les boutons Restaurer et Supprimer, et la notification « Session enregistrée »."
+            }
+          },
+          "good": {
+            "0": "La restauration remet les groupes exactement comme ils étaient quand vous avez enregistré la session."
+          }
+        },
+        "5": {
+          "heading": "Recherche",
+          "checks": "Que la recherche trouve les onglets par titre ou URL dans tous vos groupes, et que les filtres group:, window: et tag: l’affinent.",
+          "steps": {
+            "0": "Appuyez sur Ctrl+K (Cmd+K sur Mac) pour ouvrir la recherche.",
+            "1": "Saisissez une simple sous-chaîne, comme « hub », avec un onglet « GitHub » enregistré quelque part : elle correspond au titre ou à l’URL, sans tenir compte de la casse.",
+            "2": "Effacez-la et essayez un préfixe : saisissez « group: » et choisissez l’un de vos groupes dans le sélecteur qui apparaît, ou saisissez par exemple « window: » ou « tag: » de la même façon.",
+            "3": "Cliquez sur l’un des résultats."
+          },
+          "examples": {
+            "0": {
+              "alt": "La recherche TabMerger avec « hub » saisi, montrant un onglet GitHub correspondant",
+              "caption": "Saisie de « hub » : une simple correspondance de sous-chaîne avec le titre ou l’URL de l’onglet."
+            }
+          },
+          "good": {
+            "0": "Les résultats se mettent à jour pendant la saisie.",
+            "1": "Une recherche simple trouve tout onglet dont le titre ou l’URL contient cette sous-chaîne n’importe où (pas des lettres dans l’ordre).",
+            "2": "Un préfixe « group: », « window: » ou « tag: » restreint la recherche et propose un sélecteur pour ce préfixe.",
+            "3": "Cliquer sur un résultat ferme la recherche et vous amène directement au groupe de ce résultat (et à la fenêtre, pour un résultat de fenêtre)."
+          }
+        },
+        "6": {
+          "heading": "Onglets périmés",
+          "checks": "Que les onglets que vous n’avez pas ouverts depuis un moment sont signalés, et peuvent être examinés et supprimés sans risque.",
+          "steps": {
+            "0": "Ouvrez les Paramètres et réglez le seuil d’onglet périmé (par exemple 30 jours).",
+            "1": "Attendez (ou créez) au moins 5 onglets plus anciens que ce seuil.",
+            "2": "Cherchez la bannière ambre au-dessus de la liste d’onglets et essayez ses deux boutons : Examiner, puis Supprimer les périmés."
+          },
+          "examples": {
+            "0": {
+              "alt": "La bannière ambre des onglets périmés au-dessus de la liste d’onglets, avec les boutons Examiner et Supprimer les périmés",
+              "caption": "La bannière des onglets périmés et ses boutons Examiner / Supprimer les périmés."
+            }
+          },
+          "good": {
+            "0": "Examiner montre exactement quels onglets sont périmés.",
+            "1": "Supprimer les périmés demande confirmation avant de supprimer quoi que ce soit (si « confirmer avant de supprimer » est activé dans les Paramètres)."
+          },
+          "report": "Un groupe que vous avez supprimé ou archivé réapparaît tout seul : c’est le bug de « résurrection » que nous traquons en particulier."
+        },
+        "7": {
+          "heading": "Définir des rappels d’onglets",
+          "checks": "Que vous pouvez définir, modifier et effacer un rappel sur un onglet enregistré, et qu’il vous notifie à l’heure choisie.",
+          "steps": {
+            "0": "Faites un clic droit sur un onglet enregistré et choisissez « Me le rappeler… ». Les rappels sont par onglet ; il n’y a pas de réglage dans les Paramètres.",
+            "1": "Dans l’éditeur qui s’ouvre sous l’onglet, cliquez sur un préréglage (30 min, 1 heure, 3 heures ou Demain) pour le définir tout de suite.",
+            "2": "Rouvrez-le (« Modifier le rappel » dans le menu du clic droit, ou cliquez sur l’icône d’horloge de l’onglet). Cette fois, choisissez une date et une heure dans quelques minutes, saisissez une courte note et cliquez sur Définir.",
+            "3": "Survolez l’icône d’horloge, puis attendez que le rappel se déclenche et cliquez sur sa notification.",
+            "4": "Définissez-en un autre, puis faites un clic droit sur l’onglet et choisissez « Effacer le rappel »."
+          },
+          "examples": {
+            "0": {
+              "alt": "L’éditeur « Me rappeler dans… » d’un onglet enregistré : boutons 30 min, 1 heure, 3 heures et Demain, un champ date et heure, une note facultative, et Annuler et Définir",
+              "caption": "Clic droit sur un onglet enregistré → « Me le rappeler… » ouvre cet éditeur sous l’onglet."
+            },
+            "1": {
+              "alt": "La même fenêtre après avoir défini un rappel : une icône d’horloge en fin de ligne de l’onglet Q3 Planning",
+              "caption": "Une fois défini, l’onglet affiche une icône d’horloge."
+            }
+          },
+          "good": {
+            "0": "L’onglet affiche une icône d’horloge une fois le rappel défini, et la survoler montre l’heure (et votre note).",
+            "1": "Le menu du clic droit propose désormais « Modifier le rappel » et « Effacer le rappel » pour lui.",
+            "2": "Définir est ignoré pour une heure passée ; seule une heure future définit le rappel.",
+            "3": "Une notification « Rappel TabMerger » avec le titre de l’onglet (et votre note) apparaît à peu près à l’heure définie, et reste jusqu’à ce que vous agissiez.",
+            "4": "Cliquer sur la notification ouvre l’onglet.",
+            "5": "Effacer le rappel supprime l’icône d’horloge, et aucune notification n’apparaît plus tard."
+          },
+          "report": "Un rappel ne se déclenche jamais, se déclenche deux fois, ou se déclenche encore après l’avoir effacé."
+        },
+        "8": {
+          "heading": "Notes sur les groupes, fenêtres et onglets",
+          "checks": "Que vous pouvez joindre une courte note à un groupe, une fenêtre ou un onglet, et la modifier plus tard.",
+          "steps": {
+            "0": "Groupe : faites un clic droit sur un groupe dans la barre latérale (ou utilisez le bouton ⋯ au-dessus de ses fenêtres) et choisissez « Ajouter une note ». Saisissez quelque chose et cliquez sur Enregistrer.",
+            "1": "Fenêtre : faites un clic droit sur l’en-tête d’une fenêtre (ou utilisez son bouton ⋯) et choisissez « Ajouter une note ». Cette fois, enregistrez avec Ctrl+Entrée (Cmd+Entrée sur Mac).",
+            "2": "Onglet : faites un clic droit sur un onglet enregistré et choisissez « Ajouter une note ». Saisissez quelque chose, puis cliquez ailleurs au lieu d’Enregistrer.",
+            "3": "Cliquez sur une icône de note pour rouvrir la note, modifiez-la et appuyez sur Échap.",
+            "4": "Fermez et rouvrez la fenêtre de l’extension."
+          },
+          "good": {
+            "0": "Chaque note enregistrée affiche une petite icône de note : à côté du nombre de fenêtres du groupe, dans l’en-tête de la fenêtre et sur la ligne de l’onglet. L’élément de menu indique alors « Modifier la note ».",
+            "1": "Enregistrer, Ctrl/Cmd+Entrée et cliquer ailleurs enregistrent la note ; Échap et Annuler la ferment sans enregistrer.",
+            "2": "Les notes sont limitées à 500 caractères, avec un compteur sous la zone.",
+            "3": "Les notes sont toujours là après la réouverture de la fenêtre (et, avec la synchronisation, sur vos autres appareils)."
+          },
+          "report": "Une note est perdue, attachée au mauvais élément, ou enregistrée alors que vous avez appuyé sur Échap ou Annuler."
+        },
+        "9": {
+          "heading": "Supprimer, avec et sans « Confirmer avant de supprimer »",
+          "checks": "Que les suppressions ne demandent confirmation que si « Confirmer avant de supprimer » est activé, et qu’Annuler restaure ce que vous avez supprimé.",
+          "steps": {
+            "0": "Dans Paramètres → Général, vérifiez que « Confirmer avant de supprimer » est désactivé (c’est le cas par défaut) et enregistrez.",
+            "1": "Supprimez un onglet (son ✕, ou clic droit → Supprimer l’onglet), une fenêtre (son ⋯ → Supprimer la fenêtre) et un groupe (clic droit → Supprimer le groupe). Après chacun, cliquez sur Annuler (en haut à droite).",
+            "2": "Activez « Confirmer avant de supprimer », enregistrez et refaites les trois suppressions. Annulez la première boîte de dialogue, puis confirmez la suivante.",
+            "3": "Une fois activé, essayez aussi de supprimer plusieurs groupes sélectionnés depuis la barre de sélection, et « Supprimer les périmés » sur un groupe contenant des onglets périmés."
+          },
+          "good": {
+            "0": "Réglage désactivé, fenêtres et groupes sont supprimés immédiatement, sans boîte de dialogue.",
+            "1": "Activé, supprimer une fenêtre, un groupe, une sélection et « Supprimer les périmés » demandent d’abord confirmation, et Annuler laisse tout comme avant.",
+            "2": "Supprimer un seul onglet ne demande jamais confirmation, réglage activé ou non. Annuler le ramène.",
+            "3": "Annuler restaure ce que vous venez de supprimer : l’onglet, la fenêtre ou le groupe, au même endroit, avec ses onglets."
+          },
+          "report": "Quelque chose est supprimé sans confirmation alors que le réglage est activé (hors onglet seul), une boîte de dialogue apparaît alors qu’il est désactivé, ou Annuler ne ramène pas l’élément exactement."
+        },
+        "10": {
+          "heading": "Le menu du groupe",
+          "checks": "Que chaque action du menu d’un groupe fait ce que son libellé indique.",
+          "steps": {
+            "0": "Faites un clic droit sur un groupe enregistré dans la barre latérale pour ouvrir son menu complet. Le bouton ⋯ au-dessus des fenêtres d’un groupe ouvre une version plus courte.",
+            "1": "Essayez Renommer, Ajouter une note et Dupliquer.",
+            "2": "Essayez Remplacer par l’actuel (remplace les fenêtres du groupe par vos fenêtres de navigateur ouvertes) et Fusionner avec l’actuel (ajoute vos fenêtres ouvertes au groupe). Annulez après chacun.",
+            "3": "Essayez Tout ouvrir dans une nouvelle fenêtre, Réunir les fenêtres, Séparer les fenêtres, Trier par titre, Trier par URL et Dédupliquer les onglets.",
+            "4": "Essayez Archiver le groupe, puis Restaurer le groupe depuis la section Archivés.",
+            "5": "Faites aussi un clic droit sur « Ouverts maintenant » : il n’a ni Renommer, Remplacer, Fusionner, Archiver ni Supprimer."
+          },
+          "good": {
+            "0": "Chaque action fait ce que sa description indique, sur ce groupe uniquement.",
+            "1": "Dupliquer crée une copie avec tous ses onglets ; Réunir laisse une seule fenêtre contenant tous les onglets, et Séparer donne à chaque onglet sa propre fenêtre.",
+            "2": "Trier par titre / URL ordonne tous les onglets alphabétiquement, et Dédupliquer supprime les onglets de même URL.",
+            "3": "Les modifications peuvent être annulées avec Annuler."
+          },
+          "report": "Une action touche le mauvais groupe, perd des onglets ou ne peut pas être annulée."
+        },
+        "11": {
+          "heading": "Les menus de fenêtre",
+          "checks": "Que les deux menus d’une fenêtre fonctionnent : clic droit sur son en-tête, et son bouton ⋯.",
+          "steps": {
+            "0": "Faites un clic droit sur l’en-tête d’une fenêtre : essayez « Déplacer vers un groupe » (choisissez un autre groupe, ou créez-en un nouveau depuis la liste), Ajouter une note et Renommer la fenêtre.",
+            "1": "Ouvrez le bouton ⋯ de la fenêtre : essayez Renommer, Marquer comme privée (puis Retirer le statut privé), Ouvrir dans le navigateur, et Trier cette fenêtre par titre / par URL.",
+            "2": "Faites un clic droit sur une fenêtre dans « Ouverts maintenant » : le premier élément indique « Copier vers un groupe », et sa suppression indique « Fermer la fenêtre »."
+          },
+          "good": {
+            "0": "Déplacer vers un groupe déplace toute la fenêtre, avec ses onglets, dans le groupe choisi ; un nouveau groupe créé depuis le menu reçoit la fenêtre.",
+            "1": "Marquer comme privée ajoute une étiquette « Privée » à la fenêtre, et Retirer le statut privé l’enlève.",
+            "2": "Ouvrir dans le navigateur ouvre les onglets de la fenêtre dans une nouvelle fenêtre du navigateur ; si certains sont déjà ouverts, seuls les manquants sont ajoutés à cette fenêtre.",
+            "3": "Le tri ne réordonne que les onglets de cette fenêtre.",
+            "4": "Depuis « Ouverts maintenant », Copier vers un groupe enregistre une copie et laisse votre vraie fenêtre ouverte."
+          },
+          "report": "Une action de menu modifie une autre fenêtre, ou Fermer la fenêtre dans « Ouverts maintenant » ferme la mauvaise fenêtre du navigateur."
+        },
+        "12": {
+          "heading": "Le menu de l’onglet",
+          "checks": "Que le clic droit sur un onglet propose les bonnes actions.",
+          "steps": {
+            "0": "Faites un clic droit sur un onglet enregistré : essayez « Déplacer vers un groupe », Renommer l’onglet, puis « Rétablir le titre d’origine ».",
+            "1": "Faites un clic droit sur un onglet dans « Ouverts maintenant » : « Copier vers un groupe » remplace « Déplacer vers un groupe », et sa suppression indique « Fermer l’onglet ».",
+            "2": "Si vous avez une règle d’URL correspondant à un onglet ouvert, faites un clic droit sur cet onglet dans « Ouverts maintenant » et cherchez « Enregistrement auto dans … »."
+          },
+          "good": {
+            "0": "Déplacer vers un groupe déplace l’onglet dans le groupe choisi ; Copier vers un groupe (depuis « Ouverts maintenant ») enregistre une copie et laisse le vrai onglet ouvert.",
+            "1": "Renommer l’onglet affiche votre titre avec une petite étiquette « renommé », et Rétablir le titre d’origine ramène le titre propre de la page.",
+            "2": "« Enregistrement auto dans '<'groupe'>' » n’apparaît que pour un onglet dont l’adresse correspond à l’une de vos règles d’URL, et l’enregistre dans le groupe de cette règle."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Menu du clic droit",
+      "items": {
+        "0": {
+          "heading": "Enregistrer depuis le menu du clic droit",
+          "checks": "Que le clic droit sur n’importe quelle page web permet d’enregistrer l’onglet dans TabMerger, ou directement dans un groupe choisi.",
+          "steps": {
+            "0": "Sur n’importe quelle page web, faites un clic droit et ouvrez « Enregistrer dans TabMerger ».",
+            "1": "Essayez d’abord « Enregistrer cet onglet », puis l’enregistrement dans un groupe existant précis."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustration du menu du clic droit sur une page web : « Enregistrer dans TabMerger » ouvre Enregistrer cet onglet, Enregistrer les onglets à gauche, Enregistrer les onglets à droite et Enregistrer tous les autres onglets ; « Enregistrer cet onglet » liste les groupes Work (1f · 5o), Research (1f · 4o), Shopping (1f · 3o) et Reading List (1f · 5o), chacun avec sa couleur",
+              "caption": "Illustration (le navigateur dessine ce menu lui-même, il ne peut pas être capturé) : chacune des quatre options « Enregistrer… » liste vos groupes avec leur couleur, leur nombre de fenêtres et d’onglets."
+            }
+          },
+          "good": {
+            "0": "Le menu contextuel liste vos vrais groupes par nom.",
+            "1": "L’onglet apparaît tout de suite dans le groupe choisi."
+          }
+        },
+        "1": {
+          "heading": "Les nouveaux groupes apparaissent dans le menu du clic droit",
+          "checks": "Que le menu du clic droit prend en compte les nouveaux groupes sans redémarrer le navigateur.",
+          "steps": {
+            "0": "Créez un tout nouveau groupe depuis la fenêtre de l’extension.",
+            "1": "Sans rouvrir le navigateur, faites un clic droit sur une page et vérifiez à nouveau « Enregistrer dans TabMerger »."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustration du même menu du clic droit avec un cinquième groupe, « Trip planning (0f · 0o) », à la fin de la liste des groupes",
+              "caption": "Illustration : un nouveau groupe, encore vide (« Trip planning »), apparaît à la fin de la liste."
+            }
+          },
+          "good": {
+            "0": "Le nouveau groupe apparaît dans le menu contextuel sans redémarrage."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Passer à Pro (paiements de test)",
+      "intro": "La facturation fait partie de cette bêta, mais uniquement avec les cartes de test de Stripe : aucune vraie carte ne fonctionnera et aucun argent réel n’est échangé. Pro AI et les packs de crédits IA sont encore « bientôt disponibles » et ne s’achètent pas ; il s’agit donc uniquement de Pro (groupes/onglets illimités + synchronisation).",
+      "items": {
+        "0": {
+          "heading": "Avertissement sur les cartes de test",
+          "checks": "Que vous n’utilisez jamais que les cartes de test de Stripe : rien dans cette bêta ne débite d’argent réel.",
+          "steps": {
+            "0": "Lisez ceci avant de lancer le paiement : les informations de carte dont vous avez besoin sont ci-dessous."
+          },
+          "good": {
+            "0": "Vous ne saisissez jamais un vrai numéro de carte dans ce parcours."
+          }
+        },
+        "1": {
+          "heading": "Passer à Pro depuis l’extension",
+          "checks": "Que le passage à Pro depuis l’extension fonctionne de bout en bout, et que l’extension affiche ensuite Pro.",
+          "steps": {
+            "0": "Ouvrez la fenêtre de l’extension et utilisez n’importe quel point d’entrée « Passer à Pro » : le bouton d’upgrade de l’en-tête, la bannière qui apparaît à l’approche de la limite gratuite, ou l’invite affichée quand vous atteignez une limite de l’offre gratuite.",
+            "1": "Cela ouvre la page des tarifs de l’application web bêta (preview.tabmerger.com/pricing) dans un nouvel onglet. Connectez-vous-y avec le même compte que dans l’extension.",
+            "2": "Choisissez l’offre Pro, mensuelle ou annuelle, et passez à Stripe Checkout.",
+            "3": "Terminez le paiement avec la carte de test ci-dessus (ou une carte refusée / 3D Secure, si vous testez ce cas), puis revenez à l’application."
+          },
+          "good": {
+            "0": "Le paiement aboutit et vous revenez dans l’application web avec Pro affiché.",
+            "1": "La fenêtre de l’extension vérifie votre offre environ toutes les 30 secondes, elle devrait donc passer à Pro d’elle-même sous peu ; rouvrir la fenêtre force aussi une nouvelle vérification si vous ne voulez pas attendre."
+          },
+          "report": "L’extension affiche toujours les limites de l’offre gratuite ({FREE_TIER_LIMITS_groups} groupes / {FREE_TIER_LIMITS_tabs} onglets / {FREE_TIER_LIMITS_urlRules} règles d’URL) plus de quelques minutes après un paiement réussi et une réouverture de la fenêtre."
+        },
+        "2": {
+          "heading": "Passer à Pro depuis la page de compte web",
+          "checks": "Que le passage à Pro depuis la page de compte du site fonctionne, et que le site et l’extension s’accordent sur votre offre.",
+          "steps": {
+            "0": "Au lieu de passer par l’extension, connectez-vous directement sur preview.tabmerger.com et ouvrez les Paramètres du compte.",
+            "1": "Sous « Abonnement », cliquez sur « Passer à l’offre supérieure » et terminez le paiement avec la carte de test."
+          },
+          "examples": {
+            "0": {
+              "alt": "Paramètres du compte d’un compte gratuit : la carte Abonnement affiche Offre actuelle Gratuit avec un bouton Passer à l’offre supérieure",
+              "caption": "Avant le passage : Gratuit, avec un bouton pour passer à l’offre supérieure. Ensuite, elle affiche Pro et « Gérer la facturation » (voir « Page de compte » plus bas)."
+            }
+          },
+          "good": {
+            "0": "La carte Abonnement de la page de compte affiche maintenant Pro, avec un bouton « Gérer la facturation » à la place de « Passer à l’offre supérieure ».",
+            "1": "L’extension adopte le même statut Pro (voir la note sur la vérification plus haut) : la page de compte web et l’extension ne devraient jamais diverger sur votre offre."
+          },
+          "report": "La page de compte web et la fenêtre de l’extension affichent des offres différentes (l’une indique Pro, l’autre toujours Gratuit) pendant plus de quelques minutes."
+        },
+        "3": {
+          "heading": "Payer dans votre devise locale",
+          "checks": "Que le paiement affiche, et débite, le prix dans votre propre devise.",
+          "steps": {
+            "0": "Les prix du site sont en dollars américains (la page des tarifs l’indique sous les offres ; la page de compte, le tableau de bord et les Paramètres de l’extension les écrivent « US$ »). Hors des États-Unis, le paiement propose votre devise locale.",
+            "1": "Lancez un paiement depuis votre vrai emplacement, ou simulez un autre pays : inscrivez un NOUVEAU compte avec votre e-mail plus « +location_ » et un code pays à deux lettres, par ex. votrenom+location_FR@gmail.com pour la France (Gmail distribue les adresses « +quelquechose » dans votre boîte normale). Un VPN dans un autre pays fonctionne aussi.",
+            "2": "Regardez le prix sur la page de paiement de Stripe, puis terminez-le avec la carte de test dans cette devise."
+          },
+          "examples": {
+            "0": {
+              "alt": "Paiement Stripe pour TabMerger Pro affichant 3,66 € par mois, avec EUR sélectionné et une alternative en USD, et la ligne « 1 USD = 0,9171 EUR. Les montants débités varieront selon les taux de change. »",
+              "caption": "Paiement pour une adresse France (+location_FR) : euros par défaut, dollars américains à un clic. Les taux de change varient, votre montant sera différent."
+            }
+          },
+          "good": {
+            "0": "Le paiement affiche le prix dans votre devise locale (par exemple 3,66 € en France ou CA$5.89 au Canada pour l’offre à US$3.99), avec un choix pour payer plutôt en dollars américains et une ligne indiquant le taux de change et ses frais de conversion. Aux États-Unis, il affiche simplement US$3.99.",
+            "1": "Après le paiement, l’offre fonctionne exactement comme avec des dollars américains."
+          },
+          "report": "Hors des États-Unis, le paiement ne propose que des dollars américains, le montant débité diffère de celui affiché au paiement, ou payer en devise locale ne vous donne pas Pro."
+        },
+        "4": {
+          "heading": "Passer du mensuel à l’annuel",
+          "checks": "Qu’un abonnement Pro peut passer de la facturation mensuelle à annuelle, et inversement, avec le bon montant.",
+          "steps": {
+            "0": "Avec un abonnement Pro actif, ouvrez la page des tarifs. La carte de votre offre est marquée Actuelle et a un bouton « Passer à la facturation annuelle » (ou « Passer à la facturation mensuelle » si vous payez à l’année) : le bouton nomme la facturation vers laquelle vous basculeriez.",
+            "1": "Mensuel → annuel : cliquez sur le bouton et confirmez sur la page de Stripe.",
+            "2": "Annuel → mensuel : faites de même, puis essayez le bouton une seconde fois.",
+            "3": "Ouvrez aussi « Gérer la facturation » sur la page de compte : son option « Mettre à jour l’abonnement » propose le même choix mensuel/annuel."
+          },
+          "examples": {
+            "0": {
+              "alt": "La page des tarifs avec Pro mensuel : la carte Pro est marquée Actuelle et a un bouton « Passer à la facturation annuelle »",
+              "caption": "Sur la page des tarifs, la carte de votre offre est marquée Actuelle et a le bouton de changement."
+            },
+            "1": {
+              "alt": "La page « Mettre à jour votre abonnement » de Stripe avec les onglets Mensuel et Annuel, montrant l’offre TabMerger Pro actuelle à {proMonthly} par mois",
+              "caption": "Le même choix dans Gérer la facturation → Mettre à jour l’abonnement (page de Stripe)."
+            }
+          },
+          "good": {
+            "0": "Mensuel → annuel s’applique tout de suite : Stripe affiche et débite le prix annuel moins ce qu’il reste de votre mois.",
+            "1": "Après le passage à l’annuel, la page de compte affiche le prix annuel ({proYearly}/an) en environ une minute.",
+            "2": "Annuel → mensuel attend la fin de votre année payée, donc rien n’est débité maintenant.",
+            "3": "Appuyer à nouveau sur le bouton explique qu’un changement est déjà programmé.",
+            "4": "Seuls Pro mensuel et annuel sont proposés, jamais une autre offre."
+          },
+          "report": "Un changement débite un mauvais montant, la page de compte affiche encore l’ancienne période de facturation plus de quelques minutes après, annuel → mensuel vous débite immédiatement, ou une offre autre que Pro vous est proposée."
+        },
+        "5": {
+          "heading": "Résilier",
+          "checks": "Que la résiliation conserve Pro jusqu’à la fin de la période payée, puis vous remet en Gratuit.",
+          "steps": {
+            "0": "Sur la page de compte, avec un abonnement Pro actif, cliquez sur « Gérer la facturation » pour ouvrir le portail de facturation de Stripe.",
+            "1": "Résiliez l’abonnement à partir de là et revenez à TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "La boîte de dialogue « Résilier votre abonnement » de Stripe pour TabMerger Pro à {proMonthly} par mois, avec un motif facultatif et les boutons Retour et Continuer la résiliation",
+              "caption": "Stripe demande un motif facultatif avant de résilier."
+            }
+          },
+          "good": {
+            "0": "Vous gardez l’accès Pro jusqu’à la fin de la période de facturation en cours : résilier ne vous remet pas immédiatement en Gratuit.",
+            "1": "Une fois cette période terminée, la page de compte et l’extension devraient toutes deux afficher à nouveau Gratuit."
+          },
+          "report": "Résilier vous remet en Gratuit immédiatement au lieu de la fin de période, ou l’offre ne repasse jamais à Gratuit après la fin réelle de la période."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Glisser-déposer",
+      "intro": "Cette zone couvre toutes les interactions de glissement dans la fenêtre de l’extension : tri, déplacement entre fenêtres et groupes, glissements multiples, les deux zones « Déposer pour un nouveau… », l’annulation, le glissement au clavier seul, et si le résultat persiste. Parcourez-en le plus possible ; c’est la zone sur laquelle nous nous concentrons le plus pour cette bêta.",
+      "items": {
+        "0": {
+          "heading": "Tri : onglets dans une fenêtre",
+          "checks": "Que glisser un onglet le réordonne dans sa fenêtre, exactement là où vous le déposez.",
+          "steps": {
+            "0": "Glissez un onglet vers le bas dans la même fenêtre pour le placer plus loin dans la liste, puis remontez-le à sa place d’origine.",
+            "1": "Glissez un onglet tout en haut de la fenêtre, puis tout en bas."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un onglet glissé dans sa carte de fenêtre : la ligne glissée flotte avec une bordure en surbrillance au-dessus de l’espace où elle atterrira",
+              "caption": "En plein glissement : l’onglet flotte et les autres font de la place là où il sera déposé."
+            }
+          },
+          "good": {
+            "0": "L’onglet atterrit exactement où vous l’avez déposé, et le reste de la liste se décale pour lui faire de la place.",
+            "1": "Aucun autre onglet ne bouge ni ne se duplique."
+          }
+        },
+        "1": {
+          "heading": "Tri : fenêtres dans un groupe",
+          "checks": "Que les cartes de fenêtre peuvent être réordonnées dans un groupe.",
+          "steps": {
+            "0": "Dans un groupe avec au moins deux fenêtres enregistrées, glissez une carte de fenêtre au-dessus ou au-dessous d’une autre."
+          },
+          "examples": {
+            "0": {
+              "alt": "Une carte de fenêtre glissée entre deux autres cartes de fenêtre dans un groupe de quatre fenêtres",
+              "caption": "Glisser une carte de fenêtre entière par sa poignée pour la réordonner dans le groupe."
+            }
+          },
+          "good": {
+            "0": "Les cartes de fenêtre échangent leur ordre et le nouvel ordre s’affiche immédiatement, sans retour fugace à l’ancien."
+          }
+        },
+        "2": {
+          "heading": "Tri : groupes dans la barre latérale",
+          "checks": "Que les groupes se réordonnent librement dans la barre latérale pendant que « Ouverts maintenant » reste en premier.",
+          "steps": {
+            "0": "Glissez un groupe vers le haut ou le bas dans la barre latérale pour le placer au-dessus ou au-dessous d’un autre.",
+            "1": "Essayez de glisser un groupe au-dessus de « Ouverts maintenant » (la première ligne de la barre latérale)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Une ligne de groupe glissée vers une nouvelle position dans la barre latérale de TabMerger",
+              "caption": "Réordonner un groupe dans la barre latérale."
+            }
+          },
+          "good": {
+            "0": "« Ouverts maintenant » reste toujours épinglé en première ligne : vous ne pouvez pas déposer un groupe au-dessus, le glisser, le supprimer ni l’éloigner du haut.",
+            "1": "Tous les autres groupes se réordonnent librement."
+          },
+          "report": "Quelque chose atterrit au-dessus de « Ouverts maintenant », ou « Ouverts maintenant » devient glissable."
+        },
+        "3": {
+          "heading": "Entre fenêtres : déplacer un onglet d’une carte de fenêtre à une autre",
+          "checks": "Qu’un onglet peut passer d’une carte de fenêtre à une autre, à l’endroit exact où vous le déposez.",
+          "steps": {
+            "0": "Dans un groupe avec plusieurs fenêtres, glissez un onglet d’une carte de fenêtre vers une autre.",
+            "1": "Cette fois, déposez-le entre deux onglets existants de la fenêtre de destination plutôt qu’en haut ou en bas."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un onglet glissé d’une fenêtre enregistrée à une autre dans le même groupe TabMerger",
+              "caption": "Déposer un onglet sur une autre fenêtre du même groupe."
+            }
+          },
+          "good": {
+            "0": "L’onglet atterrit exactement à la position où vous l’avez déposé (pas simplement ajouté à la fin).",
+            "1": "Le nombre d’onglets des deux fenêtres se met à jour immédiatement."
+          }
+        },
+        "4": {
+          "heading": "Entre groupes : déposer un onglet sur un groupe de la barre latérale",
+          "checks": "Que déposer un onglet sur un groupe de la barre latérale le déplace dans ce groupe sans ouvrir le groupe d’abord.",
+          "steps": {
+            "0": "Glissez un onglet hors du panneau principal et déposez-le directement sur un groupe de la barre latérale ; essayez sur un groupe actuellement ouvert (actif) et sur un autre.",
+            "1": "Essayez encore une fois, mais en maintenant l’onglet environ une seconde au-dessus d’un autre groupe (non actif) de la barre latérale avant de le relâcher."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un seul onglet glissé sur une ligne de groupe de la barre latérale de TabMerger",
+              "caption": "Déposer un onglet directement sur un groupe de la barre latérale."
+            }
+          },
+          "good": {
+            "0": "L’onglet est ajouté à ce groupe comme nouvelle fenêtre, sans avoir à ouvrir le groupe d’abord.",
+            "1": "Si vous avez attendu au-dessus d’un groupe non actif, il doit s’ouvrir (« ouverture au survol ») après environ une demi-seconde pour que vous voyiez l’onglet arriver, et arriver au bon endroit, pas dans la mauvaise fenêtre."
+          },
+          "report": "Le groupe s’ouvre mais l’onglet atterrit dans la mauvaise fenêtre, ou sur un onglet existant au lieu de sa propre nouvelle fenêtre."
+        },
+        "5": {
+          "heading": "Entre groupes : glisser une fenêtre entière dans un autre groupe",
+          "checks": "Qu’une fenêtre entière, avec tous ses onglets, peut passer dans un autre groupe.",
+          "steps": {
+            "0": "Glissez une carte de fenêtre entière (avec sa propre poignée, pas un onglet à l’intérieur) sur un autre groupe de la barre latérale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Une carte de fenêtre glissée sur la barre latérale, au-dessus du groupe Shopping, qui est en surbrillance et ouvert dans le panneau principal",
+              "caption": "Glisser une fenêtre sur un groupe de la barre latérale. Le groupe sous le pointeur a un bord coloré et s’ouvre derrière la carte."
+            }
+          },
+          "good": {
+            "0": "La fenêtre entière, avec tous ses onglets, devient une nouvelle fenêtre du groupe de destination.",
+            "1": "Cela fonctionne même s’il s’agit de la dernière fenêtre du groupe source."
+          },
+          "report": "Le groupe source ou sa fenêtre vidée disparaît au lieu de rester (une fenêtre/un groupe vide doit rester, pas disparaître)."
+        },
+        "6": {
+          "heading": "Multiple : sélectionner et glisser plusieurs onglets",
+          "checks": "Que plusieurs onglets sélectionnés se glissent ensemble comme un bloc, en gardant leur ordre.",
+          "steps": {
+            "0": "Ctrl-clic (Cmd-clic sur Mac) sur deux ou trois onglets non adjacents pour les sélectionner.",
+            "1": "Maj-clic pour sélectionner plutôt une plage continue d’onglets.",
+            "2": "Avec plusieurs onglets sélectionnés, glissez-les ensemble vers une nouvelle position dans la même fenêtre."
+          },
+          "examples": {
+            "0": {
+              "alt": "Plusieurs onglets sélectionnés ensemble dans la fenêtre TabMerger, affichés avec des cases à cocher",
+              "caption": "Deux onglets cochés en mode sélection ; la barre du bas les compte."
+            }
+          },
+          "good": {
+            "0": "Tous les onglets sélectionnés se déplacent ensemble comme un bloc, en gardant leur ordre relatif : le bloc atterrit à l’emplacement, ni dispersé ni dans l’ordre des clics."
+          }
+        },
+        "7": {
+          "heading": "Multiple : glisser une sélection entre fenêtres et groupes",
+          "checks": "Qu’une sélection de plusieurs onglets garde son ordre quand on la glisse vers une autre fenêtre ou un autre groupe.",
+          "steps": {
+            "0": "Sélectionnez à nouveau plusieurs onglets, puis glissez-les vers une autre fenêtre du même groupe.",
+            "1": "Recommencez, mais en glissant cette fois la sélection sur un autre groupe de la barre latérale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Une sélection de plusieurs onglets en plein glissement dans la fenêtre TabMerger",
+              "caption": "Glisser une sélection de plusieurs onglets."
+            }
+          },
+          "good": {
+            "0": "Toute la sélection se déplace ensemble dans les deux cas, en atterrissant dans le même ordre relatif qu’au départ."
+          }
+        },
+        "8": {
+          "heading": "Multiple : tout sélectionner et glisser plusieurs groupes",
+          "checks": "Que « tout sélectionner » fonctionne dans une fenêtre, et que plusieurs groupes sélectionnés peuvent être glissés ensemble.",
+          "steps": {
+            "0": "Placez le focus sur la liste d’onglets d’une fenêtre et appuyez sur Ctrl+A (Cmd+A sur Mac) pour sélectionner tous les onglets de cette fenêtre, si elle en contient plus d’un.",
+            "1": "Dans la barre latérale, Ctrl-clic sur deux ou trois groupes pour les sélectionner, puis glissez cette sélection par l’une de leurs poignées pour les réordonner ensemble."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mode sélection avec trois groupes sélectionnés ; en glisser un entraîne les autres, avec un badge de nombre sur la ligne glissée et « 3 groupes sélectionnés » dans la barre du bas",
+              "caption": "Trois groupes sélectionnés glissés ensemble dans la barre latérale. La barre du bas compte la sélection."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A sélectionne tous les onglets de la fenêtre ciblée (en ignorant ceux masqués par un filtre de recherche).",
+            "1": "Le glissement multi-groupes déplace les groupes sélectionnés ensemble comme un bloc.",
+            "2": "Le bloc n’atterrit jamais au-dessus de « Ouverts maintenant »."
+          }
+        },
+        "9": {
+          "heading": "Zones de dépôt : « Déposer ici pour une nouvelle fenêtre » et « Déposer pour un nouveau groupe »",
+          "checks": "Que déposer sur ces zones crée une nouvelle fenêtre ou un nouveau groupe à partir de ce que vous avez glissé.",
+          "steps": {
+            "0": "Glissez un onglet (ou une sélection d’onglets) vers le bas de la liste de fenêtres d’un groupe, où apparaît la zone « Déposer ici pour une nouvelle fenêtre », et déposez-le là.",
+            "1": "Glissez un onglet vers le bas de la barre latérale, où apparaît la zone « Déposer pour un nouveau groupe », et déposez-le là."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un onglet glissé sur la zone en surbrillance « Déposer ici pour une nouvelle fenêtre » sous la liste de fenêtres, avec la zone « Déposer pour un nouveau groupe » visible dans la barre latérale",
+              "caption": "Pendant le glissement, les deux zones de dépôt apparaissent. Celle sous le pointeur est en surbrillance."
+            }
+          },
+          "good": {
+            "0": "Chaque dépôt crée une toute nouvelle fenêtre ou un nouveau groupe contenant exactement les éléments glissés, dans leur ordre relatif d’origine."
+          },
+          "report": "La zone « Déposer pour un nouveau groupe » apparaît encore alors que vous avez atteint la limite de groupes de votre offre : elle devrait disparaître plutôt qu’accepter un dépôt qu’elle ne peut pas honorer."
+        },
+        "10": {
+          "heading": "Depuis « Ouverts maintenant » : glisser un onglet actif dans un groupe enregistré",
+          "checks": "Que glisser un onglet ouvert depuis « Ouverts maintenant » le déplace dans un groupe enregistré et ferme le vrai onglet.",
+          "steps": {
+            "0": "Glissez un onglet de la section « Ouverts maintenant » dans l’un de vos groupes enregistrés.",
+            "1": "Vérifiez vos vrais onglets de navigateur ouverts après le dépôt."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un onglet de « Ouverts maintenant » glissé sur le groupe Work dans la barre latérale",
+              "caption": "Un onglet ouvert de « Ouverts maintenant » glissé sur un groupe enregistré de la barre latérale."
+            }
+          },
+          "good": {
+            "0": "Cela DÉPLACE l’onglet, sans le copier : le groupe enregistré reçoit une nouvelle fenêtre contenant un instantané de cet onglet.",
+            "1": "Le vrai onglet du navigateur se ferme. Si l’onglet glissé était l’onglet actif, il se ferme à la fermeture de la fenêtre de l’extension plutôt qu’immédiatement : c’est voulu, pas un bug."
+          },
+          "report": "Le vrai onglet reste ouvert après le dépôt (ce qui ressemble à une copie), ou la fenêtre de l’extension elle-même se ferme/plante en plein glissement."
+        },
+        "11": {
+          "heading": "Annulation et cas limites",
+          "checks": "Que les glissements annulés ou inutiles ne changent rien, et qu’Annuler inverse un vrai glissement.",
+          "steps": {
+            "0": "Commencez à glisser un onglet, puis appuyez sur Échap avant de le déposer.",
+            "1": "Commencez un glissement et relâchez-le à un endroit qui n’est pas une cible valide (par ex. hors de la fenêtre de l’extension, si vous y arrivez) ou déposez-le exactement à son point de départ.",
+            "2": "Après un glissement réussi, cliquez sur le bouton Annuler (en-tête, en haut à droite)."
+          },
+          "examples": {
+            "0": {
+              "alt": "L’en-tête de TabMerger avec les boutons Annuler et Rétablir activés après une modification",
+              "caption": "Les boutons Annuler/Rétablir dans l’en-tête, activés après une modification."
+            }
+          },
+          "good": {
+            "0": "Échap et un dépôt invalide/sans effet laissent tout exactement comme avant : ni onglets dupliqués, ni manquants, ni réordonnés.",
+            "1": "Annuler après un vrai glissement restaure exactement l’ordre précédent."
+          },
+          "report": "Un onglet est dupliqué ou manquant après un glissement annulé ou au même endroit, ou Annuler ne restaure pas entièrement l’ordre d’avant le glissement."
+        },
+        "12": {
+          "heading": "Glissement au clavier",
+          "checks": "Que tout ce que vous pouvez glisser à la souris peut aussi être déplacé au clavier, avec des annonces vocales.",
+          "steps": {
+            "0": "Appuyez sur Tab jusqu’à ce qu’un onglet enregistré, un titre de fenêtre ou un groupe de la barre latérale ait le focus. Chaque ligne est un arrêt de Tab.",
+            "1": "Pour en déplacer plusieurs à la fois, appuyez sur Ctrl+Espace (Ctrl aussi sur Mac) sur chacun pour le sélectionner, puis donnez le focus à l’une des lignes sélectionnées.",
+            "2": "Appuyez sur Espace pour le saisir. Vous entendez « Saisi … », la ligne quitte sa place, et une copie montre où elle atterrira.",
+            "3": "Appuyez sur Haut ou Bas pour le déplacer. Un onglet traverse chaque fenêtre du groupe, puis « Déposer ici pour une nouvelle fenêtre », puis revient en haut.",
+            "4": "Appuyez sur Gauche pour aller à la liste des groupes. Haut et Bas choisissent un groupe (le dernier arrêt est « Nouveau groupe »), et le panneau principal montre chaque groupe à votre passage.",
+            "5": "Appuyez sur Droite pour entrer dans le groupe en surbrillance, puis utilisez Haut et Bas pour placer l’élément dedans.",
+            "6": "Appuyez sur Espace pour déposer, ou sur Échap pour annuler."
+          },
+          "good": {
+            "0": "Espace saisit l’élément au lieu d’ouvrir le lien.",
+            "1": "Ctrl+Espace sélectionne ou désélectionne une ligne sans l’ouvrir ni la saisir.",
+            "2": "Entrée ouvre toujours un onglet, et ne fait rien pendant un déplacement.",
+            "3": "La copie de ce que vous déplacez est toujours à l’écran, et le panneau défile pour la suivre.",
+            "4": "Haut et Bas font le tour aux extrémités, et vous entendez « Retour en haut » ou « Retour en bas ».",
+            "5": "Une fenêtre vide est un emplacement à part entière.",
+            "6": "L’élément finit exactement où se trouvait la copie, et vous entendez ce qui s’est passé.",
+            "7": "Plusieurs éléments sélectionnés se déplacent ensemble comme un bloc, dans leur ordre d’origine.",
+            "8": "Espace dans la liste des groupes dépose l’élément à la fin du groupe en surbrillance.",
+            "9": "Sur « Nouveau groupe », le panneau principal s’estompe, et déposer là crée un tout nouveau groupe.",
+            "10": "Un groupe déplacé avec Haut et Bas ne peut jamais passer au-dessus de « Ouverts maintenant ».",
+            "11": "Déplacer un onglet actif de « Ouverts maintenant » dans un groupe ferme cet onglet du navigateur, comme un dépôt à la souris.",
+            "12": "Échap laisse tout intact et réaffiche le groupe d’où vous êtes parti.",
+            "13": "Après un dépôt, le focus est sur la ligne déplacée ; après Échap, il revient sur la ligne saisie."
+          }
+        },
+        "13": {
+          "heading": "Persistance",
+          "checks": "Qu’un nouvel ordre est enregistré : il survit à la réouverture de la fenêtre et atteint vos autres appareils.",
+          "pro": "Seule la partie second appareil nécessite Pro (elle nécessite la synchronisation).",
+          "steps": {
+            "0": "Après avoir réordonné onglets, fenêtres ou groupes par glissement, fermez complètement la fenêtre de l’extension et rouvrez-la.",
+            "1": "Si la synchronisation est activée et qu’un second appareil est connecté au même compte, vérifiez aussi l’ordre là-bas."
+          },
+          "good": {
+            "0": "Le nouvel ordre est exactement tel que vous l’avez laissé après la réouverture de la fenêtre.",
+            "1": "Avec la synchronisation, le second appareil récupère le même ordre en peu de temps."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "Application web et tableau de bord (site de préversion)",
+      "intro": "Tout ici se passe sur preview.tabmerger.com, pas sur le tabmerger.com principal : cette version bêta ne se synchronise qu’avec le site de préversion.",
+      "items": {
+        "0": {
+          "heading": "Inscription et connexion",
+          "checks": "Que chaque méthode de connexion au site fonctionne : Google, e-mail et mot de passe, et lien magique.",
+          "steps": {
+            "0": "Déconnecté, ouvrez preview.tabmerger.com/auth/sign-in.",
+            "1": "Essayez « Continuer avec Google ».",
+            "2": "Essayez plutôt e-mail + mot de passe : saisissez votre e-mail et votre mot de passe, puis cliquez sur « Continuer ».",
+            "3": "Essayez plutôt « Envoyer un lien magique », avec seulement votre e-mail."
+          },
+          "examples": {
+            "0": {
+              "alt": "La page de connexion « Bon retour » du site : Continuer avec Google, champs E-mail et Mot de passe avec un lien Oublié ?, Continuer, et Envoyer un lien magique",
+              "caption": "La page de connexion du site : Google, e-mail et mot de passe, ou un lien magique."
+            }
+          },
+          "good": {
+            "0": "Les trois méthodes vous connectent.",
+            "1": "Le lien magique et Google vous redirigent dans l’application déjà connecté.",
+            "2": "Les nouveaux comptes arrivent là où mène « S’inscrire gratuitement » (e-mail + mot de passe ou Google, mêmes options)."
+          }
+        },
+        "1": {
+          "heading": "Créer un compte avec e-mail et mot de passe",
+          "checks": "Qu’un nouveau compte e-mail et mot de passe finit connecté, que le site demande ou non de vérifier votre e-mail.",
+          "steps": {
+            "0": "Déconnecté, cliquez sur « S’inscrire gratuitement » et créez un compte avec un e-mail et un mot de passe (8 caractères ou plus)."
+          },
+          "examples": {
+            "0": {
+              "alt": "La page « Créez votre compte » : Continuer avec Google, puis les champs E-mail, Mot de passe (au moins 8 caractères) et Confirmer le mot de passe, et un bouton Continuer",
+              "caption": "La page d’inscription. Google fonctionne aussi ici ; cet élément concerne la voie e-mail et mot de passe."
+            }
+          },
+          "good": {
+            "0": "Soit vous arrivez directement dans le tableau de bord, déjà connecté, soit vous voyez « Vérifiez votre e-mail » et n’êtes connecté qu’après avoir cliqué sur le lien de cet e-mail. Cela dépend de l’exigence de confirmation d’e-mail du site ; les deux conviennent."
+          },
+          "report": "Vous voyez « Vérifiez votre e-mail » mais êtes en réalité déjà connecté (par exemple, ouvrir le tableau de bord dans un autre onglet fonctionne sans cliquer sur le lien)."
+        },
+        "2": {
+          "heading": "Mot de passe oublié et changement de mot de passe",
+          "checks": "Que vous pouvez réinitialiser un mot de passe oublié par e-mail, puis le changer ensuite.",
+          "steps": {
+            "0": "Depuis la connexion, cliquez sur « Oublié ? » à côté du champ du mot de passe et saisissez votre e-mail.",
+            "1": "Ouvrez le lien de réinitialisation de cet e-mail et définissez un nouveau mot de passe (8 caractères minimum, identique à son champ de confirmation)."
+          },
+          "examples": {
+            "0": {
+              "alt": "La page « Réinitialisez votre mot de passe » : un champ E-mail, un bouton Envoyer le lien de réinitialisation, et Retour à la connexion",
+              "caption": "« Oublié ? » sur la page de connexion ouvre ceci. Une fois connecté, les Paramètres du compte ont un champ « Changer le mot de passe »."
+            }
+          },
+          "good": {
+            "0": "Vous revenez dans le tableau de bord déjà connecté avec le nouveau mot de passe.",
+            "1": "Se reconnecter ensuite demande le nouveau mot de passe, pas l’ancien."
+          }
+        },
+        "3": {
+          "heading": "Le tableau de bord correspond à l’extension après synchronisation",
+          "checks": "Que le tableau de bord du site affiche les mêmes groupes que votre extension une fois la synchronisation à jour.",
+          "steps": {
+            "0": "Avec la synchronisation activée et au moins un groupe, ouvrez le tableau de bord sur preview.tabmerger.com/dashboard.",
+            "1": "Comparez la section « Groupes d’onglets » à la barre latérale de la fenêtre de l’extension : noms, couleurs, nombres de fenêtres/onglets et ordre."
+          },
+          "examples": {
+            "0": {
+              "alt": "Le tableau de bord web après déverrouillage : statistiques, carte de l’offre Pro, et la grille de groupes d’onglets avec les cartes Research, Reading List, Work et Shopping indiquant fenêtres et onglets",
+              "caption": "Les groupes du tableau de bord, identiques à la barre latérale de l’extension une fois synchronisés."
+            }
+          },
+          "good": {
+            "0": "Les mêmes groupes apparaissent avec les mêmes noms, couleurs et nombres de fenêtres/onglets, dans le même ordre, une fois la synchronisation à jour."
+          }
+        },
+        "4": {
+          "heading": "Le tableau de bord est en lecture seule pour les groupes",
+          "checks": "Que le tableau de bord affiche vos groupes sans pouvoir les modifier : l’édition se fait uniquement dans l’extension.",
+          "steps": {
+            "0": "Sur le tableau de bord, cherchez un moyen de renommer, supprimer ou créer un groupe, ou de mettre en favori / retirer des favoris."
+          },
+          "good": {
+            "0": "Il n’y a aucun moyen de renommer, supprimer, créer ou (dé)favoriser un groupe depuis le tableau de bord : les modifications de groupes se font uniquement dans l’extension, par conception.",
+            "1": "Les seules vraies actions sur une carte de groupe sont Partager et l’ouverture de ses onglets/fenêtres."
+          },
+          "report": "Un contrôle du tableau de bord qui semble modifier, supprimer ou créer un groupe le fait réellement."
+        },
+        "5": {
+          "heading": "Sessions et statistiques sur le tableau de bord",
+          "checks": "Que les sessions enregistrées et les totaux du tableau de bord correspondent à l’extension.",
+          "steps": {
+            "0": "Enregistrez une session dans l’extension, puis consultez la section « Sessions enregistrées » du tableau de bord.",
+            "1": "Vérifiez les statistiques en haut du tableau de bord (nombre d’onglets, de groupes, de sessions, date d’inscription)."
+          },
+          "good": {
+            "0": "La session que vous avez enregistrée apparaît.",
+            "1": "Les statistiques correspondent à ce que vous compteriez dans l’extension."
+          }
+        },
+        "6": {
+          "heading": "Partager depuis le tableau de bord",
+          "checks": "Que le bouton Partager du tableau de bord copie un lien de partage, comme celui de l’extension.",
+          "steps": {
+            "0": "Sur une carte de groupe (ou via « Sélectionner » et « Partager la sélection » pour plusieurs groupes), cliquez sur Partager."
+          },
+          "good": {
+            "0": "Un lien est copié dans votre presse-papiers immédiatement, avec une notification de confirmation. Cela est détaillé dans la section « Partage » plus bas : le bouton Partager du tableau de bord et celui de l’extension produisent le même type de lien."
+          }
+        },
+        "7": {
+          "heading": "Page de compte",
+          "checks": "Que la page de compte affiche le bon profil, la bonne offre et les bons appareils, et que les deux options de déconnexion fonctionnent.",
+          "pro": "Seule la carte Appareils nécessite Pro ; elle liste les appareils qui se synchronisent.",
+          "steps": {
+            "0": "Ouvrez les Paramètres du compte depuis le tableau de bord.",
+            "1": "Vérifiez la carte Profil (e-mail, membre depuis), la carte Abonnement (offre, « Gérer la facturation » ou « Passer à l’offre supérieure ») et la carte Appareils.",
+            "2": "Essayez « Se déconnecter » puis, séparément, « Se déconnecter de tous les appareils »."
+          },
+          "examples": {
+            "0": {
+              "alt": "Paramètres du compte : la carte Abonnement affiche l’offre Pro, sa date de renouvellement et {proMonthly}/mois, avec un bouton Gérer la facturation ; en dessous, la carte Appareils liste les appareils connectés",
+              "caption": "Les cartes Abonnement et Appareils d’un compte Pro."
+            }
+          },
+          "good": {
+            "0": "Profil et Abonnement affichent des informations exactes et à jour (voir la section « Passer à Pro » plus haut pour le détail de la carte Abonnement).",
+            "1": "Appareils liste vos appareils connectés avec des contrôles de renommage/suppression.",
+            "2": "Les deux boutons de déconnexion vous ramènent à l’état déconnecté ; « tous les appareils » révoque en plus toutes les autres sessions actives.",
+            "3": "Il n’y a pas d’option de suppression de compte sur cette page : c’est normal, pas un manque à signaler."
+          }
+        },
+        "8": {
+          "heading": "Sur un téléphone",
+          "checks": "Que le tableau de bord et les pages de compte sont pleinement utilisables sur un petit écran.",
+          "steps": {
+            "0": "Ouvrez le tableau de bord et les Paramètres du compte sur un téléphone (ou une fenêtre de bureau réduite à environ 390 px de large).",
+            "1": "Touchez les icônes Tableau de bord et Compte en haut, puis le menu de compte rond à droite et son « Se déconnecter »."
+          },
+          "examples": {
+            "0": {
+              "alt": "Le tableau de bord sur un écran de la largeur d’un téléphone : la barre du haut montre le logo TabMerger, les icônes Tableau de bord et Compte, le bouton clair/sombre et le menu de compte, sans rien de coupé",
+              "caption": "Le tableau de bord en largeur téléphone : seulement des icônes dans la barre du haut, rien ne défile latéralement."
+            }
+          },
+          "good": {
+            "0": "Rien ne défile latéralement.",
+            "1": "La barre du haut montre le logo TabMerger, les icônes Tableau de bord et Compte, le bouton clair/sombre et votre menu de compte, tous entièrement visibles et touchables (le nom « TabMerger » et les libellés des icônes se masquent sur les écrans étroits). Les écrans plus larges affichent toujours les libellés."
+          },
+          "report": "Une page défile latéralement sur un téléphone, ou un contrôle du haut est coupé ou inaccessible."
+        },
+        "9": {
+          "heading": "Notifications (toasts)",
+          "checks": "Que les notifications contextuelles sont faciles à lire, se ferment seules après un compte à rebours, et peuvent être fermées plus tôt.",
+          "steps": {
+            "0": "Déclenchez une notification, par exemple : dans les Paramètres du compte, saisissez un mot de passe de moins de 8 caractères dans le formulaire et validez (une erreur s’affiche sans rien changer), ou copiez un lien de partage.",
+            "1": "Observez la notification en bas à droite, puis déclenchez-en une autre et survolez-la.",
+            "2": "Essayez en mode clair et en mode sombre."
+          },
+          "examples": {
+            "0": {
+              "alt": "Une notification d’erreur rouge en bas à droite indiquant « Le mot de passe doit contenir au moins 8 caractères. », avec un ✕ dans son coin et une barre de compte à rebours en partie vidée le long de son bord inférieur",
+              "caption": "Une notification d’erreur : bord rouge, ✕ pour fermer, et la barre de compte à rebours en bas."
+            }
+          },
+          "good": {
+            "0": "Chaque notification est lisible sur la page, avec un bord coloré (vert pour un succès, rouge pour une erreur).",
+            "1": "Une barre en bas se vide en environ 6 secondes et se met en pause au survol, et la notification se ferme quand elle est vide.",
+            "2": "Le ✕ dans son coin supérieur droit la ferme immédiatement."
+          },
+          "report": "Une notification est difficile à lire dans l’un des thèmes, la barre continue pendant le survol, ou le ✕ est mal placé ou ne la ferme pas."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Partage",
+      "intro": "Le partage nécessite Pro (voir « Passer à Pro » plus haut pour y accéder dans cette bêta). La clé de chiffrement d’un partage est générée à neuf pour chaque lien et ne vit que dans le fragment #key= de l’URL : elle n’est jamais envoyée ni stockée sur le serveur, donc toute personne ayant le lien complet (fragment compris) peut voir le contenu partagé. Traitez un lien de partage comme le contenu lui-même.",
+      "items": {
+        "0": {
+          "heading": "Partager un ou plusieurs groupes depuis l’extension",
+          "checks": "Que l’extension crée un lien de partage pour un groupe, ou pour plusieurs à la fois.",
+          "steps": {
+            "0": "Passez en mode sélection et cochez un ou plusieurs groupes dans la barre latérale (pas des onglets ni des fenêtres : Partager n’apparaît que pour une sélection de groupes).",
+            "1": "Cliquez sur « Partager » dans la barre de sélection en bas."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mode sélection dans la fenêtre de l’extension avec Work et Research cochés, « 2 groupes sélectionnés » et un bouton Partager dans la barre du bas",
+              "caption": "Cochez les groupes à partager, puis cliquez sur Partager dans la barre du bas."
+            },
+            "1": {
+              "alt": "Le même écran avec une notification verte « Lien copié dans le presse-papiers »",
+              "caption": "Le lien est copié immédiatement."
+            }
+          },
+          "good": {
+            "0": "Un lien est copié dans votre presse-papiers aussitôt, avec une notification « Lien copié dans le presse-papiers ».",
+            "1": "Sélectionner plusieurs groupes à la fois les partage tous ensemble dans un seul lien/ensemble : pas besoin de les partager un par un."
+          }
+        },
+        "1": {
+          "heading": "Ouvrir un lien partagé",
+          "checks": "Que n’importe qui peut ouvrir un lien de partage sans se connecter et voir les groupes partagés, en lecture seule.",
+          "pro": "Créer le lien nécessite Pro ; l’ouvrir ne nécessite aucun compte.",
+          "steps": {
+            "0": "Ouvrez le lien copié dans une fenêtre de navigateur déconnectée (ou une fenêtre privée).",
+            "1": "Vérifiez les favicons et titres de chaque onglet partagé, et essayez « Ouvrir l’onglet » / « Ouvrir tous les onglets » / « Ouvrir la fenêtre » / « Ouvrir toutes les fenêtres »."
+          },
+          "examples": {
+            "0": {
+              "alt": "La page partagée ouverte sans connexion : « Collection partagée · lecture seule », le lien de partage, « 9 onglets dans 5 fenêtres et 2 groupes », un interrupteur Afficher les aperçus de pages, et les onglets du groupe Work avec des boutons Ouvrir",
+              "caption": "Ce que voit quelqu’un qui ouvre votre lien, sans se connecter. (Ici le lien pointe vers un serveur de test local ; le vôtre sera sur preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "La page se charge sans connexion, intitulée « Collection partagée · lecture seule ».",
+            "1": "Elle montre chaque groupe, fenêtre et onglet avec leurs vrais favicons et titres.",
+            "2": "Les boutons d’ouverture ouvrent les bons onglets/fenêtres dans de nouveaux onglets du navigateur."
+          }
+        },
+        "2": {
+          "heading": "Aperçus de pages sur la page partagée",
+          "checks": "Que les aperçus de pages d’une page partagée restent désactivés jusqu’à ce que le visiteur les active et confirme.",
+          "pro": "Créer le lien nécessite Pro ; l’ouvrir ne nécessite aucun compte.",
+          "steps": {
+            "0": "Sur la page partagée, trouvez l’interrupteur « Afficher les aperçus de pages » au-dessus de la liste des groupes.",
+            "1": "Activez-le et confirmez la boîte de dialogue qui apparaît.",
+            "2": "Survolez un onglet pour voir son image et sa description d’aperçu."
+          },
+          "examples": {
+            "0": {
+              "alt": "La boîte de dialogue « Activer les aperçus de pages ? » expliquant ce qui est envoyé au service d’aperçu, avec les boutons Annuler et Activer",
+              "caption": "Activer l’interrupteur demande d’abord confirmation. Les aperçus restent désactivés jusqu’à votre confirmation."
+            }
+          },
+          "good": {
+            "0": "L’interrupteur est désactivé par défaut.",
+            "1": "L’activer exige d’abord de confirmer une boîte de dialogue (le désactiver ne demande aucune confirmation) : elle explique que survoler un onglet envoie son adresse au service d’aperçu de TabMerger, et qu’elle n’est ni liée à votre compte, ni journalisée, ni stockée.",
+            "2": "Une fois activé, survoler un onglet affiche son image/description ; une page sans image affiche « Pas d’aperçu » au lieu d’une image cassée."
+          }
+        },
+        "3": {
+          "heading": "Partager un groupe contenant de nombreuses fenêtres",
+          "checks": "Qu’un groupe partagé avec plusieurs fenêtres affiche chaque fenêtre séparément.",
+          "steps": {
+            "0": "Partagez un groupe qui a plusieurs fenêtres enregistrées (pas une seule)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Le groupe Research de la page partagée, montrant quatre fenêtres distinctes, chacune avec son lien Ouvrir l’onglet, et « Ouvrir toutes les fenêtres » sur le groupe",
+              "caption": "Un groupe partagé avec quatre fenêtres : chaque fenêtre est listée séparément."
+            }
+          },
+          "good": {
+            "0": "La page partagée montre chaque fenêtre de ce groupe, intitulée « Fenêtre N » (et « Navigation privée » si c’en était une), avec ses propres onglets et son propre contrôle « Ouvrir l’onglet »."
+          }
+        },
+        "4": {
+          "heading": "Partager depuis le tableau de bord web plutôt que l’extension",
+          "checks": "Que partager depuis le site fonctionne comme depuis l’extension.",
+          "steps": {
+            "0": "Sur le tableau de bord, cliquez sur « Partager » sur une carte de groupe, ou cochez plusieurs groupes et cliquez sur « Partager la sélection »."
+          },
+          "examples": {
+            "0": {
+              "alt": "Les cartes de groupes du tableau de bord avec le bouton Partager d’une carte affichant « Copié ! » et une notification « Lien copié : il partage un instantané de ce groupe. »",
+              "caption": "Partager depuis une carte du tableau de bord copie le même type de lien."
+            }
+          },
+          "good": {
+            "0": "Les deux chemins du tableau de bord copient un lien comme le fait l’extension (« Lien copié : il partage un instantané de ce groupe. » ou « Lien copié ! La page de partage est en ligne. » respectivement), produisant le même type de page partagée."
+          }
+        },
+        "5": {
+          "heading": "Modifier, repartager, révoquer et expirer : ce qui n’est PAS possible",
+          "checks": "Ce que les liens de partage ne savent pas encore faire, pour que vous ne perdiez pas de temps à le signaler.",
+          "steps": {
+            "0": "Essayez de trouver un moyen de modifier un partage existant, ou de le révoquer/supprimer/faire expirer, depuis l’extension ou le tableau de bord."
+          },
+          "good": {
+            "0": "Il n’existe actuellement aucune interface pour modifier, révoquer, supprimer ou faire expirer un lien de partage une fois créé : un partage est un instantané permanent et immuable dès sa création. C’est normal ; ne signalez pas l’absence de contrôle de révocation/modification/expiration, confirmez simplement que cela correspond à cette description.",
+            "1": "Repartager le même groupe crée un tout nouveau lien distinct au lieu de mettre à jour l’ancien ; l’ancien lien continue de fonctionner et montre toujours l’ancien instantané."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Paramètres",
+      "intro": "Les Paramètres ont des onglets Général, Compte et Données pour tout le monde. Un onglet Appareils apparaît dès que vous êtes en Pro (voir « Passer à Pro » plus haut). Les onglets IA et Dev ne font pas partie de cette version bêta : l’IA reste masquée derrière l’indicateur « bientôt disponible », et Dev n’apparaît que dans les versions de développement locales, pas dans la bêta que vous avez installée.",
+      "items": {
+        "0": {
+          "heading": "Onglet Général : Thème, Confirmer avant de supprimer, Ouvrir l’onglet au clic, Dédupliquer automatiquement",
+          "checks": "Que ces réglages généraux prennent effet tout de suite et sont mémorisés.",
+          "steps": {
+            "0": "Ouvrez les Paramètres et basculez le Thème entre Clair, Sombre et Système.",
+            "1": "Activez/désactivez « Confirmer avant de supprimer » (supprimez un groupe ou une fenêtre réglage activé, puis désactivé, et comparez).",
+            "2": "Activez/désactivez « Ouvrir l’onglet au clic », puis cliquez sur un onglet enregistré dans le panneau principal.",
+            "3": "Activez/désactivez « Dédupliquer automatiquement à la fusion », puis fusionnez deux fenêtres qui partagent un onglet en double."
+          },
+          "examples": {
+            "0": {
+              "alt": "L’onglet Général de la fenêtre Paramètres, montrant Thème, Confirmer avant de supprimer et d’autres interrupteurs",
+              "caption": "L’onglet Général des Paramètres, avec le badge de version à côté du titre. (L’onglet Dev n’existe que dans notre version interne pour captures d’écran ; vous ne le verrez pas.)"
+            }
+          },
+          "good": {
+            "0": "Le thème change toute l’interface immédiatement et survit à la fermeture/réouverture de la fenêtre.",
+            "1": "Avec « Confirmer avant de supprimer » activé, supprimer un groupe ou une fenêtre demande d’abord confirmation ; désactivé, la suppression est immédiate.",
+            "2": "« Ouvrir l’onglet au clic » activé : un simple clic ouvre l’onglet dans le navigateur ; désactivé : un simple clic le sélectionne/le déplie seulement.",
+            "3": "« Dédupliquer automatiquement à la fusion » supprime automatiquement le doublon quand il est activé."
+          }
+        },
+        "1": {
+          "heading": "Onglet Général : Afficher les images de pages dans les aperçus",
+          "checks": "Que le réglage des images de pages contrôle si les aperçus d’onglets affichent une image de la page.",
+          "steps": {
+            "0": "Désactivez « Afficher les images de pages dans les aperçus ».",
+            "1": "Survolez un onglet enregistré pour voir son aperçu.",
+            "2": "Réactivez le réglage et survolez à nouveau le même onglet."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un aperçu au survol d’un onglet avec les images de pages désactivées, montrant un espace réservé « Non activé »",
+              "caption": "L’aperçu au survol avec « Afficher les images de pages dans les aperçus » désactivé."
+            }
+          },
+          "good": {
+            "0": "Désactivé : l’aperçu indique clairement « Non activé » avec la note « Les images de pages sont désactivées. Activez-les dans les Paramètres. » ; l’interrupteur s’enregistre aussitôt, sans boîte de dialogue de confirmation.",
+            "1": "Activé : une vraie image de la page se charge dans l’aperçu au survol, ou « Pas d’aperçu » si la page n’en a pas.",
+            "2": "La description du réglage renvoie vers la section aperçus de pages de la politique de confidentialité."
+          },
+          "report": "L’aperçu affiche « Pas d’aperçu » (vide) au lieu d’une vraie image avec le réglage activé et une page qui en a une."
+        },
+        "2": {
+          "heading": "Onglet Général : Synchronisation cloud, Seuil d’onglet périmé, Règles d’URL",
+          "checks": "Que ces réglages apparaissent pour les bonnes offres et changent ce qu’ils doivent.",
+          "pro": "Seul l’interrupteur Synchronisation cloud nécessite Pro (Gratuit ne l’affiche pas).",
+          "steps": {
+            "0": "Avec Pro, activez/désactivez « Synchronisation cloud » (ce contrôle n’apparaît qu’avec Pro).",
+            "1": "Changez « Seuil d’onglet périmé » pour une autre valeur (7/14/30/60 jours).",
+            "2": "Cliquez sur « Gérer » à côté de « Règles d’URL » et ajoutez une règle associant un modèle d’URL à un groupe."
+          },
+          "examples": {
+            "0": {
+              "alt": "Paramètres, onglet Général défilé vers le bas : Synchronisation cloud activée, Seuil d’onglet périmé réglé sur 30 jours, et Règles d’URL avec un bouton Gérer",
+              "caption": "La moitié basse de l’onglet Général. (L’onglet Dev n’existe que dans notre version interne pour captures d’écran ; vous ne le verrez pas.)"
+            }
+          },
+          "good": {
+            "0": "La synchronisation cloud n’apparaît que pour les comptes Pro (Gratuit ne la voit jamais).",
+            "1": "Changer le seuil d’onglet périmé change les onglets qui reçoivent le point ambre de péremption.",
+            "2": "Règles d’URL ouvre un gestionnaire où vous pouvez ajouter/modifier/supprimer des règles modèle-groupe.",
+            "3": "Un onglet nouvellement ouvert correspondant à une règle est affecté automatiquement."
+          }
+        },
+        "3": {
+          "heading": "Thème : Clair, Sombre et Système",
+          "checks": "Que chaque thème s’affiche bien dans toute la fenêtre de l’extension, et que le choix est mémorisé.",
+          "steps": {
+            "0": "Dans Paramètres → Général, réglez le Thème sur Sombre et cliquez sur Enregistrer les modifications.",
+            "1": "Parcourez la fenêtre : la barre latérale, un groupe avec plusieurs fenêtres, les menus ⋯, un menu du clic droit, la Recherche (Ctrl+K) et les Paramètres eux-mêmes.",
+            "2": "Fermez et rouvrez la fenêtre de l’extension.",
+            "3": "Réglez le Thème sur Système et enregistrez, puis faites passer votre ordinateur du mode clair au mode sombre.",
+            "4": "Remettez-le sur Clair."
+          },
+          "good": {
+            "0": "Toute la fenêtre change de thème dès l’enregistrement, avec chaque texte, icône et bordure lisibles.",
+            "1": "Les menus, boîtes de dialogue, infobulles et notifications suivent aussi le thème.",
+            "2": "Le thème est toujours appliqué après la réouverture de la fenêtre.",
+            "3": "Système suit le réglage clair ou sombre de votre ordinateur."
+          },
+          "report": "Quelque chose est difficile à lire ou garde l’ancien thème (un menu, une boîte de dialogue, une icône ou une bordure), ou le thème se réinitialise après la réouverture de la fenêtre."
+        },
+        "4": {
+          "heading": "Règles d’URL : enregistrer automatiquement les pages correspondantes",
+          "checks": "Qu’une règle d’URL enregistre les pages que vous ouvrez à des adresses correspondantes dans le groupe choisi.",
+          "steps": {
+            "0": "Dans Paramètres → Général, à côté de Règles d’URL, cliquez sur Gérer, puis sur Ajouter une règle.",
+            "1": "Saisissez un modèle avec * comme joker (par ex. github.com/*), choisissez un groupe, ajoutez la règle, et cliquez sur Enregistrer.",
+            "2": "Dans le navigateur, ouvrez un nouvel onglet à une adresse correspondante (par ex. n’importe quelle page github.com).",
+            "3": "Ouvrez la fenêtre de l’extension et regardez le groupe de la règle. Puis rechargez la page une fois et vérifiez à nouveau le groupe.",
+            "4": "Modifiez la règle pour viser un autre groupe, puis supprimez-la, et ouvrez une autre page correspondante.",
+            "5": "En Gratuit, essayez d’ajouter une quatrième règle."
+          },
+          "examples": {
+            "0": {
+              "alt": "La boîte de dialogue Règles d’URL : « Affecte automatiquement les onglets aux groupes selon un modèle d’URL. Utilisez * comme joker (par ex. github.com/*). La première règle correspondante l’emporte. », aucune règle pour l’instant, un bouton Ajouter une règle, et Annuler et Enregistrer",
+              "caption": "Paramètres → Général → Règles d’URL → Gérer ouvre cet éditeur."
+            }
+          },
+          "good": {
+            "0": "Une copie de la page correspondante est enregistrée dans le groupe de la règle, dans sa première fenêtre (ou une nouvelle fenêtre si le groupe n’en a pas). L’onglet lui-même reste ouvert.",
+            "1": "Quand plusieurs règles correspondent, la première de la liste l’emporte.",
+            "2": "Une fois une règle modifiée ou supprimée, les nouvelles pages suivent le changement.",
+            "3": "Gratuit autorise 3 règles : en ajouter une quatrième affiche « L’offre gratuite autorise jusqu’à 3 règles d’URL. » avec un bouton Passer à l’offre supérieure. Pro n’a pas de limite."
+          },
+          "report": "Une page correspondante n’est pas enregistrée, atterrit dans le mauvais groupe, ou est enregistrée plusieurs fois (par exemple à chaque rechargement)."
+        },
+        "5": {
+          "heading": "Onglet Compte : Offre, Renouvellement, E-mail, Gérer la facturation / Passer à l’offre supérieure, Se déconnecter",
+          "checks": "Que l’onglet Compte affiche votre vraie offre, date de renouvellement et e-mail, et que ses boutons fonctionnent.",
+          "steps": {
+            "0": "Ouvrez l’onglet Compte et vérifiez les lignes Offre, Renouvellement (si payante) et E-mail.",
+            "1": "Cliquez sur « Passer à Pro » (Gratuit) ou « Gérer la facturation » (Pro/Pro AI) : voir « Passer à Pro » plus haut pour la suite.",
+            "2": "Cliquez sur « Se déconnecter »."
+          },
+          "examples": {
+            "0": {
+              "alt": "Paramètres, onglet Compte en Pro : Offre Pro ({proMonthly}/mois), une date de renouvellement, l’e-mail, les boutons Gérer la facturation et Se déconnecter, et « Phrase secrète oubliée ? Réinitialiser le chiffrement »",
+              "caption": "L’onglet Compte d’un compte Pro. Le lien de réinitialisation en bas est l’élément suivant. (L’onglet Dev n’existe que dans notre version interne pour captures d’écran ; vous ne le verrez pas.)"
+            }
+          },
+          "good": {
+            "0": "Offre affiche « Gratuit », « Pro ({proMonthly}/mois) » ou « Pro AI ({proAiMonthly}/mois) » selon votre vrai abonnement.",
+            "1": "Renouvellement n’apparaît que pour une offre payante et donne la vraie date de renouvellement.",
+            "2": "L’e-mail correspond à votre compte connecté.",
+            "3": "« Gérer la facturation » ouvre le portail de facturation de Stripe dans un nouvel onglet ; en Gratuit, c’est « Passer à Pro » à la place, qui ouvre la page des tarifs.",
+            "4": "Se déconnecter vous ramène à l’état déconnecté."
+          }
+        },
+        "6": {
+          "heading": "Onglet Compte : Phrase secrète oubliée ? Réinitialiser le chiffrement",
+          "checks": "Que le lien de réinitialisation du chiffrement apparaît dans l’onglet Compte une fois le chiffrement configuré.",
+          "steps": {
+            "0": "Ce lien n’apparaît que si vous avez terminé la configuration du chiffrement au moins une fois (voir la section « Phrase secrète de chiffrement de bout en bout » plus bas pour le parcours complet ; ne le refaites pas ici, confirmez juste qu’il est accessible depuis cet onglet)."
+          },
+          "good": {
+            "0": "Le lien est visible en bas de l’onglet Compte une fois le chiffrement configuré, et pas avant."
+          }
+        },
+        "7": {
+          "heading": "Onglet Données : Exporter, Importer, Effacer toutes les données",
+          "checks": "Que l’export, l’import et l’effacement de vos données fonctionnent, avec une confirmation avant tout remplacement ou suppression.",
+          "steps": {
+            "0": "Ouvrez l’onglet Données et cliquez sur « Exporter » pour télécharger tous les groupes en fichier JSON.",
+            "1": "Cliquez sur « Importer » et sélectionnez ce même fichier (ou un export de favoris HTML, ou un export OneTab .txt).",
+            "2": "Cliquez sur « Effacer toutes les données » et confirmez."
+          },
+          "examples": {
+            "0": {
+              "alt": "L’onglet Données de la fenêtre Paramètres, montrant les contrôles Exporter les données et Importer les données",
+              "caption": "L’onglet Données des Paramètres."
+            }
+          },
+          "good": {
+            "0": "Exporter télécharge un fichier nommé comme « tabmerger-backup-2026-01-15.json » avec une notification « exporté avec succès ».",
+            "1": "Importer demande de confirmer le nombre de groupes avant l’import, puis affiche « importé avec succès ».",
+            "2": "Réimporter votre propre export ramène chaque groupe avec les mêmes fenêtres, onglets, ordre et couleurs.",
+            "3": "Les trois types de fichier (JSON TabMerger, favoris HTML, OneTab .txt) sont acceptés, détectés par l’extension du fichier.",
+            "4": "« Effacer toutes les données » supprime groupes, sessions et paramètres après confirmation : considérez-le comme destructeur et n’essayez que sur un profil jetable."
+          },
+          "report": "Un fichier invalide ou vide ne fait silencieusement rien au lieu d’afficher une notification d’erreur comme « Format de fichier non valide » ou « Aucun groupe trouvé »."
+        },
+        "8": {
+          "heading": "Enregistrer ou Réinitialiser, et l’indicateur « Modifications non enregistrées »",
+          "checks": "Que les réglages ne s’enregistrent que si vous cliquez sur Enregistrer, et vous avertissent des modifications non enregistrées.",
+          "steps": {
+            "0": "Dans l’onglet Général, changez un réglage (par ex. Thème) sans cliquer sur Enregistrer.",
+            "1": "Remarquez le texte « Modifications non enregistrées » et que « Enregistrer les modifications » n’est activé que si quelque chose diffère réellement de ce qui est enregistré.",
+            "2": "Cliquez sur « Rétablir les valeurs par défaut » au lieu d’Enregistrer, puis fermez les Paramètres sans enregistrer.",
+            "3": "Rouvrez les Paramètres et vérifiez si votre changement a été conservé."
+          },
+          "examples": {
+            "0": {
+              "alt": "Paramètres, onglet Général après une modification : « Modifications non enregistrées » à côté d’un bouton Enregistrer les modifications activé, avec Rétablir les valeurs par défaut à gauche",
+              "caption": "Après avoir changé un réglage : « Modifications non enregistrées » apparaît et Enregistrer les modifications s’active. (L’onglet Dev n’existe que dans notre version interne pour captures d’écran ; vous ne le verrez pas.)"
+            }
+          },
+          "good": {
+            "0": "« Modifications non enregistrées » apparaît à côté de « Enregistrer les modifications » dès que le brouillon diffère des derniers réglages enregistrés.",
+            "1": "« Enregistrer les modifications » est désactivé quand il n’y a rien de nouveau à enregistrer.",
+            "2": "« Rétablir les valeurs par défaut » ne remet à zéro que le brouillon en cours : il n’enregistre pas de lui-même.",
+            "3": "Fermer les Paramètres sans cliquer sur « Enregistrer les modifications » abandonne le brouillon ; rouvrir montre les dernières valeurs réellement enregistrées, pas votre modification non enregistrée."
+          },
+          "report": "« Enregistrer les modifications » reste activé sans aucun changement, ou un réglage modifié mais jamais enregistré persiste malgré tout après fermeture et réouverture des Paramètres."
+        },
+        "9": {
+          "heading": "Le badge de version",
+          "checks": "Où trouver le numéro de version exact à indiquer dans les rapports de bug.",
+          "steps": {
+            "0": "Regardez la barre de titre de la boîte de dialogue des Paramètres."
+          },
+          "good": {
+            "0": "Un petit badge à côté du mot « Paramètres » affiche le vrai numéro semver à indiquer dans vos rapports de bug (par ex. « v3.1.0-beta.5 ») ; cela est détaillé dans la section « Rejoindre et installer » plus haut."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Connexion et synchronisation entre appareils",
+      "intro": "Les versions bêta se synchronisent via l’application web de préversion sur preview.tabmerger.com, pas le site principal : connectez-vous-y pour voir vos groupes synchronisés, le tableau de bord et le partage.",
+      "items": {
+        "0": {
+          "heading": "Configurer deux appareils",
+          "checks": "Que deux appareils connectés au même compte partagent leurs groupes.",
+          "steps": {
+            "0": "Connectez-vous sur deux appareils ou deux profils de navigateur avec l’extension bêta installée sur les deux, avec le même compte."
+          },
+          "examples": {
+            "0": {
+              "alt": "La boîte de dialogue « Se connecter à TabMerger » de l’extension : Continuer avec Google, puis les onglets Connexion, Inscription et Lien magique avec les champs E-mail et Mot de passe",
+              "caption": "Connexion depuis l’extension : l’icône de compte (en haut à droite) → Se connecter."
+            },
+            "1": {
+              "alt": "La fenêtre de l’appareil A avec les groupes Work, Research, Shopping et Reading List ; le pied de page indique 4 groupes, 4 fenêtres, 17 onglets",
+              "caption": "Appareil A."
+            },
+            "2": {
+              "alt": "La fenêtre de l’appareil B après connexion, déverrouillage et synchronisation : les mêmes quatre groupes avec les mêmes nombres de fenêtres et d’onglets, et le même pied de page 4 groupes, 4 fenêtres, 17 onglets",
+              "caption": "Appareil B après connexion et déverrouillage : les mêmes groupes et nombres, dans le même ordre."
+            }
+          },
+          "good": {
+            "0": "Les groupes créés sur un appareil apparaissent sur l’autre en peu de temps."
+          }
+        },
+        "1": {
+          "heading": "Les renommages atteignent l’autre appareil",
+          "checks": "Qu’un renommage sur un appareil apparaît sur l’autre sans actualisation manuelle.",
+          "steps": {
+            "0": "Modifiez le nom d’un groupe sur l’appareil A.",
+            "1": "Vérifiez l’appareil B sans y toucher."
+          },
+          "examples": {
+            "0": {
+              "alt": "La fenêtre de l’appareil A après avoir renommé Research en « Research papers », avec ses quatre onglets affichés",
+              "caption": "Appareil A : « Research » renommé en « Research papers »."
+            },
+            "1": {
+              "alt": "La fenêtre de l’appareil B montrant le groupe « Research papers » avec les mêmes quatre onglets, après simple réouverture de la fenêtre",
+              "caption": "Appareil B, après simple réouverture de la fenêtre : le nouveau nom est là."
+            }
+          },
+          "good": {
+            "0": "L’appareil B récupère le renommage sans que vous ayez à déclencher une actualisation manuelle."
+          }
+        },
+        "2": {
+          "heading": "Les suppressions atteignent l’autre appareil",
+          "checks": "Qu’un groupe supprimé reste supprimé sur chaque appareil au lieu de revenir.",
+          "steps": {
+            "0": "Supprimez un groupe sur l’appareil A.",
+            "1": "Confirmez qu’il disparaît aussi sur l’appareil B."
+          },
+          "examples": {
+            "0": {
+              "alt": "La fenêtre de l’appareil A après suppression de Shopping : Work, Research papers et Reading List restent, et le pied de page indique 3 groupes, 3 fenêtres, 14 onglets",
+              "caption": "Appareil A : « Shopping » supprimé."
+            },
+            "1": {
+              "alt": "La fenêtre de l’appareil B après réouverture : Shopping a disparu et le pied de page indique 3 groupes, 3 fenêtres, 14 onglets",
+              "caption": "Appareil B après réouverture de la fenêtre : « Shopping » a disparu là aussi."
+            }
+          },
+          "good": {
+            "0": "La suppression se propage au lieu que le groupe réapparaisse (« résurrection ») après la synchronisation."
+          },
+          "report": "Un groupe supprimé revient sur l’un des appareils après une synchronisation ultérieure."
+        },
+        "3": {
+          "heading": "Réordonner les groupes se synchronise",
+          "checks": "Que l’ordre de vos groupes est le même sur chaque appareil et sur le tableau de bord.",
+          "steps": {
+            "0": "Glissez un groupe vers une nouvelle position dans la barre latérale de l’appareil A.",
+            "1": "Attendez que la synchronisation soit à jour, puis regardez la barre latérale de l’appareil B et le tableau de bord web."
+          },
+          "good": {
+            "0": "L’appareil B et le tableau de bord montrent les groupes dans le même ordre que l’appareil A.",
+            "1": "Annuler peut être grisé sur un appareil juste après qu’une synchronisation a apporté des modifications d’un autre appareil. C’est normal : l’historique d’annulation est effacé quand des modifications arrivent d’ailleurs, pour que vous ne puissiez pas annuler par erreur la modification de quelqu’un d’autre."
+          },
+          "report": "L’ordre diffère entre appareils une fois la synchronisation à jour, ou un réordonnancement revient à l’ancien ordre."
+        },
+        "4": {
+          "heading": "Les modifications hors ligne se synchronisent à la reconnexion",
+          "checks": "Que les modifications faites hors ligne se synchronisent une fois de nouveau en ligne, sans doublons ni pertes.",
+          "steps": {
+            "0": "Passez hors ligne (désactivez le réseau) sur un appareil.",
+            "1": "Faites des modifications.",
+            "2": "Reconnectez-vous."
+          },
+          "good": {
+            "0": "Une fois de nouveau en ligne, les modifications faites hors ligne se synchronisent sans dupliquer ni perdre silencieusement de groupes."
+          }
+        },
+        "5": {
+          "heading": "Supprimer un groupe hors ligne",
+          "checks": "Qu’un groupe supprimé hors ligne reste supprimé après la reconnexion.",
+          "steps": {
+            "0": "Passez hors ligne (désactivez le réseau) sur l’appareil A.",
+            "1": "Supprimez un groupe sur l’appareil A.",
+            "2": "Reconnectez l’appareil A et laissez-le se synchroniser, puis vérifiez l’appareil B et le tableau de bord."
+          },
+          "good": {
+            "0": "Le groupe est retiré du serveur à la prochaine synchronisation et disparaît sur l’appareil B et le tableau de bord.",
+            "1": "Il ne revient ensuite sur aucun des appareils."
+          },
+          "report": "Un groupe supprimé hors ligne réapparaît sur un appareil après une synchronisation."
+        },
+        "6": {
+          "heading": "Même groupe modifié sur deux appareils (copie de conflit)",
+          "checks": "Que lorsque le même groupe est modifié sur deux appareils avant que l’un ne se synchronise, rien n’est écrasé et vous obtenez une copie à fusionner à la main.",
+          "steps": {
+            "0": "Passez hors ligne (désactivez le réseau) sur l’appareil A. Laissez l’appareil B en ligne.",
+            "1": "Sur l’appareil A, modifiez un groupe (par exemple ajoutez un onglet). Sur l’appareil B, modifiez le même groupe autrement (par exemple ajoutez un autre onglet).",
+            "2": "Laissez l’appareil B se synchroniser d’abord, puis reconnectez l’appareil A et laissez-le se synchroniser.",
+            "3": "Regardez la barre latérale sur les deux appareils."
+          },
+          "good": {
+            "0": "La version arrivée la première sur le serveur (appareil B) garde le nom du groupe.",
+            "1": "La version de l’appareil A est enregistrée juste en dessous comme nouveau groupe nommé « Work{CONFLICT_COPY_SUFFIX} » (avec le nom de votre groupe), et une notification vous le signale.",
+            "2": "Les deux appareils finissent par afficher les deux groupes. Vous pouvez fusionner les onglets à la main puis supprimer la copie.",
+            "3": "Modifier un seul appareil, ou des groupes différents sur chacun, ne crée jamais de copie."
+          },
+          "report": "Une modification disparaît silencieusement sans copie, ou une « copie de conflit » apparaît alors qu’un seul appareil a modifié le groupe."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Phrase secrète de chiffrement de bout en bout",
+      "intro": "Le chiffrement est obligatoire pour tout compte connecté, ce n’est pas un réglage facultatif : il n’y a pas d’interrupteur pour le désactiver. Vos groupes synchronisés, sessions et instantanés « Ouverts maintenant » sont chiffrés avec une clé que seule votre phrase secrète peut déverrouiller ; les serveurs de TabMerger ne voient jamais la phrase secrète ni la clé déchiffrée.",
+      "items": {
+        "0": {
+          "heading": "Première configuration de la phrase secrète",
+          "checks": "Qu’activer la synchronisation vous demande de choisir une phrase secrète de chiffrement avant que vos données ne quittent votre appareil.",
+          "steps": {
+            "0": "Après une nouvelle connexion avec la synchronisation cloud, attendez que l’invite « Configurer le chiffrement » apparaisse d’elle-même (elle se déclenche à la première tentative de synchronisation).",
+            "1": "Lisez le texte de l’invite, puis saisissez une nouvelle phrase secrète et répétez-la dans « Confirmer la phrase secrète ».",
+            "2": "Cliquez sur « Configurer le chiffrement »."
+          },
+          "examples": {
+            "0": {
+              "alt": "La boîte de dialogue « Configurer le chiffrement » expliquant que la phrase secrète ne peut pas être récupérée, avec les champs Nouvelle phrase secrète et Confirmer la phrase secrète et un bouton Configurer le chiffrement",
+              "caption": "Apparaît d’elle-même juste après la connexion en Pro."
+            }
+          },
+          "good": {
+            "0": "L’invite indique « Vos données de groupes et d’onglets synchronisées sont chiffrées de bout en bout avec une phrase secrète que vous seul connaissez. Choisissez-en une maintenant : il est impossible de récupérer vos données si vous l’oubliez, elle ne quitte jamais votre appareil et TabMerger ne peut pas la réinitialiser pour vous. »",
+            "1": "La phrase secrète doit faire au moins 8 caractères sans espace et correspondre à sa confirmation : une différence ou une phrase trop courte affiche une erreur claire en ligne (« La phrase secrète doit contenir au moins 8 caractères » / « Les phrases secrètes ne correspondent pas » / « La phrase secrète ne peut pas contenir d’espaces ») au lieu d’échouer silencieusement.",
+            "2": "En cas de succès, une notification « Chiffrement configuré » s’affiche.",
+            "3": "Rien de ce que vous aviez déjà synchronisé n’est perdu."
+          }
+        },
+        "1": {
+          "heading": "Déverrouiller sur un second appareil",
+          "checks": "Qu’un second appareil a besoin de votre phrase secrète une fois avant de pouvoir lire vos données synchronisées.",
+          "steps": {
+            "0": "Connectez-vous avec le même compte sur un second appareil ou profil de navigateur.",
+            "1": "Quand l’invite « Déverrouiller le chiffrement » apparaît, saisissez votre phrase secrète (une seule fois, il n’y a pas de champ de confirmation) et cliquez sur « Déverrouiller » ou appuyez sur Entrée.",
+            "2": "Recommencez, mais en saisissant volontairement une mauvaise phrase secrète."
+          },
+          "examples": {
+            "0": {
+              "alt": "La boîte de dialogue « Déverrouiller le chiffrement » sur un second appareil, avec un seul champ Phrase secrète et un bouton Déverrouiller",
+              "caption": "Sur un second appareil, l’extension demande une fois votre phrase secrète existante."
+            }
+          },
+          "good": {
+            "0": "L’invite de déverrouillage indique « Saisissez votre phrase secrète de chiffrement pour déverrouiller les données synchronisées sur cet appareil. C’est une étape unique par appareil : on ne vous la redemandera pas tant que vous ne vous déconnectez pas. »",
+            "1": "La bonne phrase secrète déverrouille et affiche une notification « Chiffrement déverrouillé ».",
+            "2": "La mauvaise affiche « Phrase secrète incorrecte » et ne change rien d’autre : ni corruption, ni blocage, vous pouvez simplement réessayer."
+          }
+        },
+        "2": {
+          "heading": "À quoi ressemble « verrouillé », et rester déverrouillé après un redémarrage",
+          "checks": "Que les données verrouillées restent illisibles tant que vous ne les déverrouillez pas, et qu’un appareil reste déverrouillé après le redémarrage du navigateur.",
+          "steps": {
+            "0": "Tant qu’un appareil est verrouillé (avant d’y avoir saisi la phrase secrète), essayez d’utiliser les fonctions de synchronisation cloud.",
+            "1": "Déverrouillez-le, puis quittez complètement et rouvrez votre navigateur (pas seulement la fenêtre de l’extension) sur cet appareil."
+          },
+          "good": {
+            "0": "Tant qu’il est verrouillé, on vous redemande la phrase secrète plutôt que de synchroniser en clair ou de perdre des données.",
+            "1": "Une fois déverrouillée, la clé persiste dans le stockage local du navigateur sur cet appareil : un redémarrage complet du navigateur ne vous la redemande pas ; seule la déconnexion l’efface."
+          }
+        },
+        "3": {
+          "heading": "Phrase secrète oubliée : réinitialiser le chiffrement",
+          "checks": "Que la réinitialisation du chiffrement est clairement confirmée d’abord, et vous permet de définir une nouvelle phrase secrète.",
+          "steps": {
+            "0": "Dans Paramètres → Compte, trouvez « Phrase secrète oubliée ? Réinitialiser le chiffrement » (affiché seulement après avoir terminé la configuration au moins une fois).",
+            "1": "NE l’utilisez PAS sur des données auxquelles vous tenez : cela supprime définitivement l’accès à tout ce qui est chiffré avec votre phrase secrète actuelle. Utilisez un compte de test jetable si vous voulez essayer.",
+            "2": "Si vous essayez, confirmez la boîte de dialogue de réinitialisation, puis définissez une toute nouvelle phrase secrète quand l’invite de configuration se rouvre."
+          },
+          "examples": {
+            "0": {
+              "alt": "L’avertissement de confirmation « Réinitialiser la phrase secrète de chiffrement » indiquant que tout ce qui est chiffré avec la phrase secrète actuelle devient définitivement inaccessible, avec les boutons Annuler et Réinitialiser la phrase secrète",
+              "caption": "La confirmation obtenue avant une réinitialisation. Annuler est sans risque ; Réinitialiser la phrase secrète est irréversible."
+            }
+          },
+          "good": {
+            "0": "La boîte de dialogue de confirmation est claire avant que quoi que ce soit n’arrive.",
+            "1": "Après confirmation, vous voyez une notification « Chiffrement réinitialisé : configurez une nouvelle phrase secrète » et l’invite de configuration se rouvre aussitôt pour en choisir une nouvelle et continuer à synchroniser."
+          }
+        },
+        "4": {
+          "heading": "Vérifier sur le tableau de bord web",
+          "checks": "Que le site demande votre phrase secrète avant d’afficher vos groupes synchronisés.",
+          "steps": {
+            "0": "Connectez-vous au tableau de bord (preview.tabmerger.com) avec un compte dont le chiffrement est configuré.",
+            "1": "Si on vous le demande, saisissez votre phrase secrète dans la carte de déverrouillage intégrée avant que le moindre contenu de groupe n’apparaisse."
+          },
+          "examples": {
+            "0": {
+              "alt": "La section Groupes d’onglets du tableau de bord web verrouillée, avec un cadenas, « Vos groupes sont chiffrés de bout en bout. Saisissez votre phrase secrète pour les afficher ici. », un champ Phrase secrète et un bouton Déverrouiller",
+              "caption": "Tant que vous n’avez pas saisi votre phrase secrète, le tableau de bord affiche ceci à la place de vos groupes."
+            }
+          },
+          "good": {
+            "0": "Le tableau de bord demande la phrase secrète séparément de l’extension : le déverrouiller là est sa propre étape unique par onglet, non partagée avec le déverrouillage de l’extension. L’invite indique « Vos groupes sont chiffrés de bout en bout. Saisissez votre phrase secrète pour les afficher ici. »",
+            "1": "Une mauvaise phrase secrète affiche « Phrase secrète incorrecte. » sans faire planter la page.",
+            "2": "Une fois déverrouillé, vos vrais noms de groupes et onglets s’affichent normalement.",
+            "3": "Après une réinitialisation de la phrase secrète dans l’extension, le tableau de bord demande la nouvelle phrase secrète : au prochain chargement de page, ou, dans un tableau de bord déjà ouvert, quand vous appuyez sur le bouton d’actualisation de l’étiquette de synchronisation.",
+            "4": "Un groupe ou une session que la phrase secrète actuelle ne peut pas lire (enregistré avant une réinitialisation et pas encore renvoyé) s’affiche comme « (verrouillé) » sans rien divulguer. L’élément lui-même indique pourquoi et quoi faire, et il ne peut être ni partagé ni restauré tant qu’il n’est pas de nouveau lisible."
+          }
+        },
+        "5": {
+          "heading": "Comment savoir que vos données sont vraiment chiffrées",
+          "checks": "Comment vérifier par vous-même que vos données sont illisibles sans votre phrase secrète.",
+          "steps": {
+            "0": "Il n’y a pas de badge explicite « Chiffré ✓ » dans l’interface : le signal visible est indirect.",
+            "1": "Sur un appareil que vous n’avez pas encore déverrouillé (ou le tableau de bord, avant d’y saisir votre phrase secrète), remarquez que les noms/contenus de groupes ne s’affichent pas tant que vous ne déverrouillez pas."
+          },
+          "good": {
+            "0": "L’absence de contenu lisible avant le déverrouillage est le signal : aucun nom de groupe ni onglet n’est affiché, et sur le tableau de bord tout ce que la phrase secrète actuelle ne peut pas lire s’affiche comme « (verrouillé) ».",
+            "1": "Le tableau de bord affiche la carte de phrase secrète au lieu de vos groupes. Si du contenu était un jour lisible sans déverrouillage, cela voudrait dire qu’il n’est pas vraiment chiffré : signalez-le immédiatement si vous le voyez."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Toute perte de données : un groupe, onglet ou session qui a disparu alors qu’il ne le devait pas.",
+    "1": "Les conflits de synchronisation : un groupe « {CONFLICT_COPY_SUFFIX} » est normal quand le même groupe a été modifié sur deux appareils avant qu’aucun ne se synchronise. Dites-nous si une modification disparaît silencieusement, ou si une copie apparaît alors qu’un seul appareil a modifié le groupe.",
+    "2": "Tout ce qui est confus, peu clair, ou qui a demandé plus de clics que nécessaire.",
+    "3": "Tout ce qui est lent : l’ouverture de la fenêtre, la recherche, le glisser-déposer ou une synchronisation nettement plus longue que prévu."
+  },
+  "metaTitle": "Programme bêta",
+  "metaDescription": "Rejoignez la bêta de TabMerger : installez la version bêta privée, sachez quoi tester et signalez les bugs directement à l’équipe.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Partiellement Pro",
+    "somePro": "Un peu de Pro",
+    "areaPartial": "Certains éléments ici nécessitent un compte Pro",
+    "itemPartial": "Une partie de cet élément nécessite un compte Pro",
+    "areaAll": "Chaque élément ici nécessite un compte Pro",
+    "itemAll": "Nécessite un compte Pro"
+  },
+  "eyebrow": "Programme bêta",
+  "title": "Aidez-nous à tester TabMerger avant sa sortie",
+  "lead": "Obtenez la prochaine version de TabMerger en avance et dites-nous ce qui casse. Cette page explique comment rejoindre et installer la bêta privée, quoi tester et comment signaler ce que vous trouvez. Les fonctionnalités IA sont masquées (« bientôt disponibles ») dans cette version, elles ne font donc pas encore partie des tests.",
+  "join": "Rejoindre la bêta",
+  "onThisPage": "Sur cette page",
+  "install": {
+    "heading": "1. Rejoindre et installer",
+    "groupTitle": "Rejoignez le groupe de testeurs.",
+    "groupBody": "Ouvrez <link>groups.google.com/g/tabmerger-beta-testers</link> et rejoignez-le. L’adhésion est instantanée, mais rejoignez-le avec le <strong>même compte Google que celui connecté dans Chrome</strong> ; sinon la fiche privée ne vous sera pas visible.",
+    "listingTitle": "Ouvrez la fiche bêta privée.",
+    "listingLink": "Ouvrir la fiche TabMerger BETA",
+    "listingPending": "la fiche « TabMerger BETA » sur le Chrome Web Store (lien bientôt disponible ; en attendant, consultez le groupe de testeurs pour l’URL actuelle).",
+    "listingNotFound": "Si vous voyez <strong>« Élément introuvable »</strong>, vous venez probablement de rejoindre : l’accès peut mettre un peu de temps à apparaître. Patientez et réessayez avant de penser qu’il y a un problème.",
+    "installTitle": "Installez-la.",
+    "installBody": "Cliquez sur « Ajouter à Chrome ». La bêta s’installe comme une extension distincte (« TabMerger BETA ») de la fiche stable « TabMerger » : vous pouvez garder les deux installées côte à côte, et leurs données sont totalement séparées. Nous conseillons de désactiver la version stable pendant vos tests, pour ne pas agir par erreur sur la mauvaise.",
+    "signInTitle": "Connectez-vous via l’application web de préversion.",
+    "signInBody": "Les versions bêta se synchronisent avec <link>preview.tabmerger.com</link>, pas avec le site principal tabmerger. Connectez-vous-y (depuis l’extension ou directement sur le tableau de bord) pour voir les groupes et sessions synchronisés.",
+    "browsersTitle": "Sur quels navigateurs puis-je tester ?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc et Opera utilisent tous cette même fiche TabMerger BETA et le même groupe Google : il n’y a pas de bêta Edge séparée, inutile d’en chercher une. Edge : acceptez « Autoriser les extensions d’autres boutiques » quand c’est proposé. Opera : installez d’abord le module « Install Chrome Extensions » d’Opera, puis utilisez le lien ci-dessus. Si vous avez aussi TabMerger stable installé depuis la boutique Edge Add-ons, désactivez-le pendant le test de la bêta : c’est une extension distincte de celle-ci. Safari n’est pas pris en charge.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox a sa propre version bêta, installée depuis un lien direct plutôt que depuis la fiche Chrome Web Store ci-dessus. <link>Installer la bêta Firefox</link>. Firefox demande s’il faut ajouter « TabMerger BETA » : choisissez Ajouter. Il vérifie seul les mises à jour environ une fois par jour ; pour vérifier tout de suite, ouvrez <code>about:addons</code>, cliquez sur l’icône d’engrenage et choisissez « Rechercher des mises à jour ». Connectez-vous une fois dans l’extension et autorisez la demande d’autorisation de données de Firefox (elle couvre la connexion et la synchronisation) ; ensuite, se connecter sur ce site connecte aussi l’extension. <strong>Toute personne ayant le lien d’installation ci-dessus peut l’installer</strong> : merci de ne pas le partager hors du groupe de testeurs.",
+    "firefoxSoon": "Une bêta Firefox arrive bientôt ; d’ici là, les utilisateurs de Firefox peuvent rejoindre la bêta avec l’un des navigateurs Chromium pris en charge ci-dessus (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Notez votre version.",
+    "versionBody": "Ouvrez les Paramètres de TabMerger et copiez le badge de version à côté du titre « Paramètres » (par ex. <code>v3.1.0-beta.5</code>), ou consultez <code>chrome://extensions</code> et trouvez « TabMerger BETA ». Dans les deux cas, indiquez ce vrai semver, pas le numéro de version interne du Chrome Web Store, qui est décalé et ne correspond pas à ce que nous utilisons pour suivre les versions."
+  },
+  "test": {
+    "heading": "2. Quoi tester",
+    "intro": "Parcourez les zones qui correspondent à votre usage habituel de TabMerger. Chaque élément ci-dessous a des étapes numérotées, un exemple de ce qu’il doit donner, et à quoi ressemble un résultat correct.",
+    "tickNote": "Cochez chaque étape au fur et à mesure. Vos coches ne sont enregistrées que dans ce navigateur, et chaque zone indique votre avancement.",
+    "needPro": "Ai-je besoin de Pro ?",
+    "needProBody": "Les zones sont classées de Gratuit à Pro. Tout ce qui n’est pas marqué fonctionne en Gratuit, sans compte. <full></full> : l’élément entier nécessite un compte Pro (synchronisation, chiffrement et création de liens de partage sont Pro). <partial></partial> : la majeure partie de l’élément fonctionne en Gratuit, et une ligne « Pro : » sous son titre indique quelle partie ne le fait pas. Pro ne coûte rien dans cette bêta : vous payez avec une carte de test (voir <link>Passer à Pro</link>).",
+    "show": "Afficher",
+    "hide": "Masquer",
+    "proLine": "Pro : ",
+    "checksLine": "Ce que cela vérifie : ",
+    "steps": "Étapes",
+    "reportLine": "Signalez-le si : ",
+    "testCheckout": "⚠ Ceci est un paiement de test.",
+    "testCheckoutBody": " Ne saisissez jamais une vraie carte. Aucun argent réel n’est débité, et une vraie carte ne fonctionnerait de toute façon pas ici.",
+    "testCardsFooter": "Avec n’importe quelle carte : une date d’expiration future (par ex. <code>12/34</code>), n’importe quel CVC à 3 chiffres (par ex. <code>123</code>), et n’importe quoi pour le nom, le code postal et les autres champs. Plus de cartes : <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "Ce que nous voulons surtout savoir",
+  "knownIssues": {
+    "heading": "3. Problèmes connus",
+    "intro": "Nous les connaissons déjà, inutile de les signaler. La liste est mise à jour à chaque version bêta ; si l’un d’eux est corrigé pour vous, ou se comporte autrement que décrit, cela mérite d’être signalé.",
+    "meanwhile": "En attendant :"
+  },
+  "report": {
+    "heading": "4. Signaler un bug",
+    "discussions": "Les bugs et idées vont dans nos Discussions GitHub publiques : <link>github.com/{repo}/discussions</link>. Regardez-y d’abord, quelqu’un a peut-être déjà signalé la même chose.",
+    "public": "<strong>Les discussions sont publiques.</strong> Ne collez pas d’URL privées, de titres d’onglets ni de captures d’écran montrant des informations personnelles ; floutez-les ou recadrez-les d’abord. Vous aurez besoin d’un compte GitHub (gratuit) pour publier.",
+    "bugButton": "Signaler un bug sur GitHub",
+    "ideaButton": "Partager une idée sur GitHub",
+    "noGithub": "Pas de compte GitHub ? Utilisez le formulaire de contact.",
+    "template": "Les deux liens préremplissent ce modèle dans le corps de la discussion ; remplissez-le avant de publier, cela nous évite un aller-retour de questions :"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "notFoundQ": "Je vois « Élément introuvable »",
+    "notFoundA": "Vérifiez que vous avez rejoint le groupe Google avec le même compte Google que celui connecté dans Chrome. L’accès peut mettre un peu de temps à apparaître après l’adhésion ; patientez et réessayez avant de penser que quelque chose est cassé.",
+    "stableQ": "Puis-je garder la version stable installée ?",
+    "stableA": "Oui : la bêta (« TabMerger BETA ») est une extension distincte de la stable (« TabMerger »), avec des données totalement séparées. Vous pouvez utiliser les deux, mais nous conseillons de désactiver la stable pendant les tests pour éviter de vous demander laquelle vous utilisez.",
+    "chargedQ": "Serai-je débité si je passe à Pro ?",
+    "chargedA": "Non : le passage à Pro dans la bêta utilise le mode test de Stripe. Utilisez une <link>carte de test Stripe</link> (voir la section « Passer à Pro » plus haut) ; aucune vraie carte ne fonctionne ici, et aucun argent réel n’est échangé dans les deux cas.",
+    "syncQ": "Où mes données se synchronisent-elles ?",
+    "syncA": "Les versions bêta se synchronisent avec l’application web de préversion sur preview.tabmerger.com, pas avec le site principal tabmerger. Connectez-vous-y pour voir vos groupes, sessions et partages synchronisés.",
+    "issuesQ": "Où voir les problèmes connus ?",
+    "issuesA": "Consultez les <link>Discussions Q&A</link> du dépôt : c’est là que vivent les rapports de bugs de la bêta.",
+    "leaveQ": "Comment quitter la bêta ?",
+    "leaveA": "Quittez le <link>groupe Google</link> et désinstallez l’extension « TabMerger BETA ». Votre installation stable, si vous en avez gardé une, n’est pas affectée."
+  },
+  "interactive": {
+    "good": "À quoi ressemble un bon résultat",
+    "allDoneLabel": "Toutes les vérifications faites",
+    "progressLabel": "{done} vérifications sur {total} faites",
+    "allDone": "✓ Tout est fait",
+    "progress": "{done}/{total}",
+    "clear": "Effacer mes coches ({count})",
+    "firefoxAutoStart": "La bêta Firefox devrait démarrer seule : Firefox demande s’il faut l’ajouter, les autres navigateurs téléchargent le fichier. Si rien ne se passe, utilisez « Installer la bêta Firefox » dans cette étape."
+  }
+}

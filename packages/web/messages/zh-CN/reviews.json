@@ -1,0 +1,23 @@
+{
+  "heading": "用户评价",
+  "byStore": "按商店",
+  "loading": "正在加载评价",
+  "averageRating": "平均评分",
+  "averageRatingOn": "{store}上的平均评分",
+  "ratingsOn": "{store}上的{count, plural, other {评分}}",
+  "ratingsAcross": "{stores}的评分",
+  "ratingCount": "{count, plural, other {# 个评分}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": "，满分 5 分",
+  "spokenComma": "，",
+  "skeletonRatingCount": "00 个评分",
+  "stars": "{score} 星（满分 5 星）",
+  "readFull": "阅读完整评价",
+  "readFullBy": "，作者 {author}，来自{store}",
+  "carousel": "轮播",
+  "play": "播放评价",
+  "pause": "暂停评价",
+  "previous": "上一条评价",
+  "next": "下一条评价",
+  "skeletonRating": "0.00 / 5"
+}

@@ -1,0 +1,81 @@
+{
+  "instructions": "Pressione Espaço para pegar, as setas para escolher um lugar (Esquerda e Direita alternam entre janelas e grupos), Espaço para soltar e Esc para cancelar. Shift+Espaço seleciona um intervalo e {{modifier}}+A seleciona tudo, para mover vários de uma vez.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "aba",
+    "window": "janela",
+    "group": "grupo",
+    "item": "item"
+  },
+  "typeStart": {
+    "tab": "Aba",
+    "window": "Janela",
+    "group": "Grupo",
+    "item": "Item"
+  },
+  "untitledTab": "Aba sem título",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, começando por {{name}},",
+  "position": {
+    "tab": "posição {{index}} de {{total}} em {{window}} do grupo {{group}}",
+    "window": "posição {{index}} de {{total}} no grupo {{group}}",
+    "group": "posição {{index}} de {{total}}"
+  },
+  "target": {
+    "newGroup": "um novo grupo",
+    "newWindowAtEnd": "uma nova janela no fim do grupo {{group}}",
+    "nowOpen": "Abertas agora, que as abre em uma nova janela do navegador",
+    "groupAsWindow": "grupo {{group}}, como uma nova janela"
+  },
+  "token": {
+    "dropped": "Solto.",
+    "cancelled": "Cancelado."
+  },
+  "bail": {
+    "cancelled": "Movimento cancelado.",
+    "nothingMoved": "Solto; nada foi movido.",
+    "returnedMany": "Os {{items}} voltaram",
+    "returnedOne": "{{named}} voltou",
+    "noop": "{{what}} solto de volta em {{position}}; nada foi movido.",
+    "stale": "Os grupos mudaram durante o arraste, então nada foi movido. {{returned}} para {{position}}.",
+    "cancelledReturned": "Movimento cancelado. {{returned}} para {{position}}.",
+    "rejected": "Não é possível soltar aí. {{returned}} para {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} foi removido em outro lugar.",
+  "removedElsewhere_other": "{{count}} foram removidos em outro lugar.",
+  "removedElsewhere_many": "{{count}} foram removidos em outro lugar.",
+  "stillSelected_one": "Continua selecionado.",
+  "stillSelected_other": "Continuam selecionados.",
+  "stillSelected_many": "Continuam selecionados.",
+  "dropped": "Solto.",
+  "movedGroups": "{{count}} grupos movidos para {{position}}, como um bloco.",
+  "movedGroup": "Grupo {{name}} movido para {{position}}.",
+  "partial": "{{count}} de {{total}}",
+  "at": "posição {{index}} de {{total}}",
+  "startingAt": "a partir da posição {{index}} de {{total}}",
+  "whereTab": "{{window}} do grupo {{group}}, {{at}}",
+  "whereWindow": "grupo {{group}}, {{at}}",
+  "movedTo": "{{items}} movido(s) para {{where}}.",
+  "openTabsClosed": " As abas abertas foram fechadas.",
+  "groupHidden": " O grupo {{group}} não está visível.",
+  "openedNewWindow": "{{items}} aberto(s) em uma nova janela do navegador.",
+  "openedNowOpen": "{{items}} aberto(s) em Abertas agora.",
+  "movedNewWindow": "{{items}} movido(s) para uma nova janela do navegador.",
+  "movedWithinNowOpen": "{{items}} movido(s) dentro de Abertas agora.",
+  "originalPosition": "Sobre a posição original.",
+  "pickedUpType": "{{type}} pego.",
+  "pickedUpMany": "{{what}} pego(s).",
+  "pickedUpOne": "{{type}} {{name}} pego, {{position}}.",
+  "groupShown": "O grupo {{name}} agora está visível.",
+  "copyHint": "Soltar em um grupo salvo copia; as abas abertas continuam abertas.",
+  "notOver": "Fora de um destino de soltura.",
+  "over": "Sobre {{target}}.",
+  "cantDropOn": "Não é possível soltar em {{target}}.",
+  "typeDropped": "{{type}} solto.",
+  "cancelledReturnedType": "Movimento cancelado; {{type}} voltou à sua posição.",
+  "saveFailed": "Não foi possível salvar a mudança; restaurado."
+}

@@ -1,0 +1,21 @@
+{
+  "features": "Recursos",
+  "pricing": "Preços",
+  "changelog": "Changelog",
+  "faq": "Perguntas frequentes",
+  "dashboard": "Painel",
+  "account": "Conta",
+  "accountSettings": "Configurações da conta",
+  "signIn": "Entrar",
+  "signUp": "Cadastrar",
+  "getStarted": "Começar",
+  "signOut": "Sair",
+  "openMenu": "Abrir menu",
+  "closeMenu": "Fechar menu",
+  "accountMenu": "Menu da conta",
+  "home": "Início do TabMerger",
+  "github": "GitHub",
+  "githubRepo": "TabMerger no GitHub",
+  "githubRepoWithStars": "TabMerger no GitHub, {count, plural, one {# estrela} many {# estrelas} other {# estrelas}}",
+  "toggleTheme": "Alternar tema"
+}

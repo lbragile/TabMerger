@@ -1,0 +1,27 @@
+{
+  "title": "Import / Export",
+  "description": "Verwalte deine TabMerger-Daten",
+  "tabExport": "Export",
+  "tabImport": "Import",
+  "exportIntro": "Exportiere alle deine Gruppen als JSON-Datei. Du kannst diese Datei später wieder importieren.",
+  "downloadJson": "JSON herunterladen",
+  "jsonHeading": "TabMerger-JSON",
+  "jsonIntro": "Aus einer zuvor exportierten JSON-Datei importieren. Ersetzt die aktuellen Gruppen.",
+  "chooseJson": "JSON-Datei wählen",
+  "bookmarksHeading": "Chrome-Lesezeichen",
+  "bookmarksIntro": "Aus einem HTML-Export der Chrome-Lesezeichen importieren. Jeder Ordner wird zu einer Gruppe.",
+  "chooseBookmarks": "Lesezeichen-HTML-Datei wählen",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Aus einem OneTab-Textexport importieren. Jeder durch Leerzeilen getrennte Block wird zu einer Gruppe.",
+  "chooseOneTab": "OneTab-TXT-Datei wählen",
+  "toast": {
+    "exported": "Gruppen erfolgreich exportiert",
+    "imported": "Gruppen erfolgreich importiert",
+    "imported_skipped": "Gruppen erfolgreich importiert, {{skipped}} übersprungen",
+    "importedCounts": "{{groups}}, {{tabs}} importiert",
+    "importedCounts_skipped": "{{groups}}, {{tabs}} importiert, {{skipped}} übersprungen",
+    "invalidJson": "Ungültige JSON-Datei",
+    "noBookmarks": "Keine Lesezeichen gefunden",
+    "noTabs": "Keine Tabs gefunden"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "searchPlaceholder": "Rechercher onglets et groupes…",
+  "undo": "Annuler",
+  "redo": "Rétablir",
+  "selectItems": "Sélectionner des éléments",
+  "exitSelectionMode": "Quitter le mode sélection",
+  "aiActions": "Actions IA",
+  "aiProRequired": "Pro AI requis : cliquez pour passer à l’offre supérieure",
+  "autoGroup": "Regroupement auto",
+  "autoGroupHint": "Regrouper les onglets ouverts avec l’IA",
+  "organize": "Organiser",
+  "organizeHint": "Réorganiser tous les groupes avec l’IA",
+  "takeTour": "Faire la visite",
+  "accountMenu": "Menu du compte",
+  "settingsMenu": "Menu des paramètres",
+  "upgradeToPro": "Passer à Pro",
+  "upgradeToProAi": "Passer à Pro AI",
+  "settings": "Paramètres",
+  "signOut": "Se déconnecter",
+  "signIn": "Se connecter",
+  "toast": {
+    "noTabsToGroup": "Aucun onglet ouvert à regrouper",
+    "aiNoGroups": "L’IA n’a trouvé aucun groupe à créer",
+    "aiNoMatchingTabs": "Aucun onglet correspondant à la suggestion de l’IA",
+    "aiCreated_one": "L’IA a créé {{count}} groupe",
+    "aiCreated_many": "L’IA a créé {{count}} de groupes",
+    "aiCreated_other": "L’IA a créé {{count}} groupes",
+    "aiSkipped": "{{skipped}} autres suggérés mais ignorés : limite de l’offre gratuite atteinte.",
+    "aiGroupingFailed": "Échec du regroupement par IA",
+    "organizeStarted": "Organisation lancée : examinez la proposition dans votre tableau de bord",
+    "organizeFailed": "Impossible de lancer l’organisation"
+  }
+}

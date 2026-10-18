@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Sincronización en pausa: permítela en Firefox",
+  "conflictCopy": "{{names}} también se cambió en otro dispositivo. Tu versión se guardó como copia.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "Un grupo en el que trabajabas cambió o se eliminó en otro sitio, así que no se cambió nada.",
+  "undoConflict": "Tus grupos cambiaron en otro sitio, así que no se deshizo nada. Inténtalo de nuevo.",
+  "freeLimit": {
+    "maxGroups": "El plan gratuito permite hasta {{max}} grupos.",
+    "maxTabs": "El plan gratuito permite hasta {{max}} pestañas.",
+    "maxUrlRules": "El plan gratuito permite hasta {{max}} reglas de URL."
+  },
+  "fileContains": "Este archivo contiene {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Se abrió como ventana normal porque TabMerger no tiene permiso en incógnito. Para cambiarlo, abre Administrar extensión y activa \"Permitir en modo incógnito\".",
+  "encryptionAlreadySetUp": "El cifrado ya está configurado para esta cuenta. Introduce tu frase de contraseña existente para desbloquearlo.",
+  "signInToEnableEncryption": "Debes iniciar sesión para activar el cifrado",
+  "signInToResetEncryption": "Debes iniciar sesión para restablecer el cifrado",
+  "googleUnavailable": "El inicio de sesión con Google no está disponible en este entorno",
+  "googleNoUrl": "El inicio de sesión con Google no devolvió una URL de autorización",
+  "googleCancelled": "Se canceló el inicio de sesión con Google",
+  "googleNoSession": "El inicio de sesión con Google no devolvió una sesión",
+  "googleFailed": "Falló el inicio de sesión con Google",
+  "expectedArray": "Se esperaba una lista",
+  "invalidFormat": "Formato no válido",
+  "noGroupsFound": "No se encontraron grupos",
+  "noGroupsSelected": "No hay grupos seleccionados",
+  "notAuthenticated": "No autenticado",
+  "sharingRequiresPro": "Compartir requiere mejorar a Pro: no se cumple el derecho de acceso",
+  "aiOncePerDay": "Ya se usó hoy: esta acción de IA está limitada a una vez al día",
+  "proAiRequired": "Se requiere el plan Pro AI",
+  "nameGroupOff": "Nombrar grupo está desactivado en Ajustes",
+  "suggestSessionsOff": "Sugerir sesiones está desactivado en Ajustes",
+  "organizeOff": "Organizar está desactivado en Ajustes"
+}

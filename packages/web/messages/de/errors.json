@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Fehler 404 · Seite nicht gefunden",
+    "title": "Dieser Tab hat sich verirrt",
+    "description": "Wir haben jede Gruppe durchsucht und diese Seite nicht gefunden. Sie wurde vielleicht verschoben, geschlossen oder hat nie existiert. Wir bringen dich zurück auf Kurs.",
+    "documentTitle": "Seite nicht gefunden",
+    "tabLabel": "Fehlende Seite"
+  },
+  "serverError": {
+    "eyebrow": "Fehler 500 · Etwas ist schiefgelaufen",
+    "title": "Dieser Tab ist abgestürzt",
+    "description": "Beim Laden dieser Seite ist auf unserer Seite etwas kaputtgegangen. Deine Tabs und Gruppen in der Erweiterung sind nicht betroffen. Versuche es gleich noch einmal.",
+    "documentTitle": "Etwas ist schiefgelaufen",
+    "tabLabel": "Reagiert nicht"
+  },
+  "links": {
+    "features": "Funktionen",
+    "pricing": "Preise",
+    "faq": "FAQ",
+    "dashboard": "Dashboard",
+    "account": "Konto",
+    "contactSupport": "Support kontaktieren"
+  },
+  "helpfulLinks": "Hilfreiche Links",
+  "tryThese": "Oder probiere einen davon",
+  "illustrationTabResearch": "Recherche",
+  "illustrationTabDocs": "Dokumente",
+  "tryAgain": "Erneut versuchen",
+  "backToHome": "Zurück zur Startseite",
+  "backToDashboard": "Zurück zum Dashboard",
+  "devDetails": "Fehlerdetails (nur Entwicklung)",
+  "referenceId": "Referenz-ID",
+  "copyReferenceId": "Referenz-ID kopieren",
+  "referenceIdHint": "Nenne diese ID, wenn du den Support kontaktierst, damit wir finden, was schiefgelaufen ist.",
+  "referenceIdCopied": "Referenz-ID kopiert",
+  "referenceIdCopyFailed": "Kopieren fehlgeschlagen. Markiere die ID, um sie zu kopieren.",
+  "titleWithBrand": "{title} | TabMerger"
+}

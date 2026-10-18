@@ -1,0 +1,31 @@
+{
+  "searchPlaceholder": "タブとグループを検索…",
+  "undo": "元に戻す",
+  "redo": "やり直し",
+  "selectItems": "項目を選択",
+  "exitSelectionMode": "選択モードを終了",
+  "aiActions": "AI操作",
+  "aiProRequired": "Pro AIが必要です。クリックしてアップグレード",
+  "autoGroup": "自動グループ化",
+  "autoGroupHint": "開いているタブをAIでグループ化します",
+  "organize": "整理",
+  "organizeHint": "すべてのグループをAIで再整理します",
+  "takeTour": "ツアーを見る",
+  "accountMenu": "アカウントメニュー",
+  "settingsMenu": "設定メニュー",
+  "upgradeToPro": "Proにアップグレード",
+  "upgradeToProAi": "Pro AIにアップグレード",
+  "settings": "設定",
+  "signOut": "サインアウト",
+  "signIn": "サインイン",
+  "toast": {
+    "noTabsToGroup": "グループ化するタブが開かれていません",
+    "aiNoGroups": "AIがグループを作成できませんでした",
+    "aiNoMatchingTabs": "AIの提案に一致するタブが見つかりませんでした",
+    "aiCreated_other": "AIが{{count}}個のグループを作成しました",
+    "aiSkipped": "ほか{{skipped}}件の提案がありましたが、無料プランの上限に達したためスキップしました。",
+    "aiGroupingFailed": "AIによるグループ化に失敗しました",
+    "organizeStarted": "整理を開始しました。ダッシュボードで提案を確認してください",
+    "organizeFailed": "整理を開始できませんでした"
+  }
+}

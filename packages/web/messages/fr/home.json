@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "eyebrow": "Le gestionnaire d’onglets pour ceux qui en ont trop",
+    "title": "Ne vous noyez plus dans les onglets.",
+    "lead": "TabMerger range chaque fenêtre ouverte en groupes nommés et colorés que vous pouvez rechercher, partager et restaurer, sur n’importe quelle machine, en un clic.",
+    "installChrome": "Installer pour Chrome — gratuit",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Offre gratuite, sans compte."
+  },
+  "install": {
+    "title": "Prêt à organiser votre navigateur ?",
+    "lead": "Installez TabMerger en quelques secondes. Aucun compte requis pour commencer.",
+    "addToChrome": "Ajouter à Chrome",
+    "addToFirefox": "Ajouter à Firefox",
+    "addToEdge": "Ajouter à Edge",
+    "viewPricing": "Voir les tarifs",
+    "note": "Installation gratuite — sans compte · Prise en charge d’Edge bientôt disponible"
+  },
+  "finalCta": {
+    "title": "Ne vous noyez plus dans les onglets.",
+    "leadAi": "Gratuit pour commencer, sans compte. Passez à l’offre supérieure à tout moment pour la synchronisation cloud et l’IA.",
+    "leadNoAi": "Gratuit pour commencer, sans compte. Passez à l’offre supérieure à tout moment pour la synchronisation cloud ; fonctionnalités IA bientôt disponibles.",
+    "installChrome": "Installer pour Chrome — gratuit",
+    "faq": "Des questions ? Consultez la FAQ →"
+  },
+  "features": {
+    "title": "Conçu pour le moment où vous avez quatre-vingt-dix onglets ouverts.",
+    "seeAll": "Voir toutes les fonctionnalités",
+    "ai": {
+      "title": "L’IA range le désordre pour vous",
+      "description": "Un clic regroupe vos onglets ouverts par sujet et nomme chaque groupe. Acceptez, renommez ou ignorez.",
+      "summary": "✦ 24 onglets → 3 groupes",
+      "groupEvals": "Évaluations LLM · 9",
+      "groupHiring": "Recrutement · 7",
+      "groupDocs": "Docs · 8"
+    },
+    "sessions": {
+      "title": "Fermez tout, ne perdez rien",
+      "description": "Enregistrez une session sous un nom et retrouvez demain matin les mêmes fenêtres dans le même ordre.",
+      "sessionName": "Recherches du matin",
+      "sessionStats": "3 groupes · 5 fenêtres · 24 onglets"
+    },
+    "sync": {
+      "title": "Les mêmes onglets sur chaque machine",
+      "description": "La synchronisation est automatique et par onglet : une modification sur l’ordinateur portable n’écrase jamais ce que vous avez fait sur le fixe.",
+      "status": "Synchronisé il y a 4 minutes · 3 appareils"
+    }
+  },
+  "pricing": {
+    "title": "Des tarifs simples et transparents",
+    "seeFull": "Voir tous les tarifs",
+    "cancelNote": "Résiliez à tout moment depuis votre compte, sans engagement ni justification.",
+    "blurbFree": "Pour les utilisateurs occasionnels qui essaient",
+    "blurbPro": "Pour ceux qui veulent des fonctionnalités premium en plus",
+    "blurbProAi": "Pour les utilisateurs avancés qui veulent les fonctionnalités IA"
+  }
+}

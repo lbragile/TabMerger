@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {count} Min.",
+    "hoursAgo": "vor {count} Std.",
+    "daysAgo": "vor {count} Tg.",
+    "renameFailed": "Gerät konnte nicht umbenannt werden",
+    "renamed": "Gerät umbenannt",
+    "removeFailed": "Gerät konnte nicht entfernt werden",
+    "removed": "Gerät entfernt",
+    "removeManyFailed": "Geräte konnten nicht entfernt werden",
+    "removedMany": "{count, plural, one {{count} Gerät entfernt} other {{count} Geräte entfernt}}",
+    "empty": "Noch keine Geräte.",
+    "selectAll": "Alle Geräte auswählen",
+    "selectedCount": "{count} ausgewählt",
+    "removeSelected": "{count, plural, one {{count} Gerät entfernen} other {{count} Geräte entfernen}}",
+    "selectDevice": "{name} auswählen",
+    "active": "Aktiv {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} Fenster} other {{windows} Fenster}} · {tabs, plural, one {{tabs} Tab} other {{tabs} Tabs}}",
+    "options": "Geräteoptionen",
+    "rename": "Umbenennen",
+    "remove": "Entfernen",
+    "removeTitle": "Gerät entfernen?",
+    "removeBody": "„{name}“ synchronisiert keine Tab-Daten mehr. Das lässt sich nicht rückgängig machen.",
+    "removeManyTitle": "{count} Geräte entfernen?",
+    "removeManyBody": "Diese Geräte synchronisieren keine Tab-Daten mehr. Das lässt sich nicht rückgängig machen.",
+    "cancel": "Abbrechen"
+  },
+  "metaTitle": "Konto",
+  "title": "Kontoeinstellungen",
+  "lead": "Verwalte dein Konto und dein Abo.",
+  "stats": {
+    "groups": "Synchronisierte Gruppen",
+    "tabs": "Gespeicherte Tabs",
+    "sessions": "Sitzungen und Backups",
+    "aiCredits": "Verbleibende KI-Credits"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Deine Kontoinformationen.",
+    "email": "E-Mail",
+    "memberSince": "Mitglied seit"
+  },
+  "signOutAll": {
+    "title": "Von allen Geräten abmelden",
+    "description": "Dadurch werden alle aktiven Sitzungen beendet.",
+    "button": "Abmelden"
+  },
+  "subscription": {
+    "title": "Abo",
+    "description": "Verwalte deinen Tarif und die Abrechnung.",
+    "manageBilling": "Abrechnung verwalten",
+    "upgrade": "Upgrade",
+    "cancelNote": "Du kannst jederzeit über <strong>Abrechnung verwalten</strong> kündigen. Du behältst den Zugriff bis zum Ende des aktuellen Abrechnungszeitraums."
+  },
+  "devicesCard": {
+    "title": "Geräte",
+    "description": "Geräte, die deine Gruppen und Tabs synchronisieren. Nur Pro und Pro AI."
+  },
+  "password": {
+    "tooShort": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+    "updated": "Passwort aktualisiert",
+    "set": "Passwort festgelegt – du kannst dich jetzt auch mit E-Mail und Passwort anmelden",
+    "change": "Passwort ändern",
+    "setLabel": "Passwort festlegen",
+    "placeholder": "••••••••••",
+    "save": "Speichern"
+  },
+  "credits": {
+    "failed": "Checkout konnte nicht gestartet werden",
+    "getMore": "Mehr holen"
+  }
+}

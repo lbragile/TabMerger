@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Dashboard",
+  "greeting": "Guten Morgen, {name}",
+  "tierBadge": {
+    "free": "kostenlos",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "KI-Organisation",
+  "aiOrganiseUpgrade": "Wechsle zu Pro AI, um die KI-Organisation zu nutzen",
+  "aiOrganiseFromExtension": "Starte dies im Popup der TabMerger-Erweiterung",
+  "tabGroups": "Tab-Gruppen",
+  "savedSessions": "Gespeicherte Sitzungen",
+  "stats": {
+    "tabs": {
+      "label": "Gespeicherte Tabs",
+      "description": "Tabs in allen synchronisierten Gruppen"
+    },
+    "groups": {
+      "label": "Synchronisierte Gruppen",
+      "description": "In der Cloud synchronisierte Gruppen"
+    },
+    "sessions": {
+      "label": "Gespeicherte Sitzungen",
+      "description": "Gespeicherte Browsing-Sitzungen",
+      "lockedDescription": "Sitzungen und Backups (entsperren, um sie zu unterscheiden)"
+    },
+    "memory": {
+      "label": "Freigegebener Speicher",
+      "description": "Geschätzt, nicht gemessen"
+    },
+    "memberSince": {
+      "label": "Mitglied seit",
+      "description": "Konto erstellt"
+    },
+    "aiCredits": {
+      "label": "KI-Credits diesen Monat",
+      "description": "Monatliche Pro-AI-Nutzung",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Wird geladen"
+  },
+  "subscription": {
+    "currentPlan": "Aktueller Tarif",
+    "renews": "Verlängert sich {date}",
+    "upgrade": "Upgrade",
+    "statuses": {
+      "active": "aktiv",
+      "canceled": "gekündigt",
+      "past_due": "überfällig",
+      "trialing": "Testphase",
+      "incomplete": "unvollständig"
+    }
+  },
+  "upgraded": {
+    "message": "Willkommen bei {plan}! Dein Abo ist jetzt aktiv. Viel Spaß mit den neuen Funktionen.",
+    "dismiss": "Ausblenden"
+  },
+  "locked": {
+    "item": "Mit einer früheren Passphrase gespeichert. Öffne die Erweiterung auf dem Gerät, das sie hat, und lass sie synchronisieren.",
+    "device": "Die geöffneten Tabs wurden mit einer früheren Passphrase gespeichert. Öffne die Erweiterung auf diesem Gerät und lass sie synchronisieren.",
+    "unverified": "Gerade nicht lesbar. Lade die Seite neu, um es erneut zu versuchen."
+  },
+  "passphrase": {
+    "defaultLabel": "Gib deine Verschlüsselungs-Passphrase ein, um diesen Inhalt anzuzeigen.",
+    "groupsLabel": "Deine Gruppen sind Ende-zu-Ende-verschlüsselt. Gib deine Passphrase ein, um sie hier anzuzeigen.",
+    "sessionsLabel": "Deine Sitzungen sind Ende-zu-Ende-verschlüsselt. Gib deine Passphrase ein, um sie hier anzuzeigen.",
+    "backupsLabel": "Deine Backups sind Ende-zu-Ende-verschlüsselt. Gib deine Passphrase ein, um sie hier anzuzeigen.",
+    "placeholder": "Passphrase",
+    "inputLabel": "Verschlüsselungs-Passphrase",
+    "unlock": "Entsperren",
+    "incorrect": "Falsche Passphrase."
+  },
+  "onboarding": {
+    "title": "Erste Schritte mit TabMerger",
+    "progress": "{done} von {total} erledigt",
+    "dismiss": "Ausblenden",
+    "install": "Die TabMerger-Erweiterung installieren",
+    "group": "Deine erste Gruppe in der Erweiterung erstellen",
+    "signin": "Anmelden, um Cloud-Sync zu aktivieren",
+    "upgrade": "Auf Pro upgraden für unbegrenzte Gruppen"
+  },
+  "lockedName": "(gesperrt)",
+  "damagedNote": "Der Inhalt hat kein Format, das TabMerger lesen kann, und kann deshalb hier nicht angezeigt werden.",
+  "counts": {
+    "groups": "{count, plural, one {{count} Gruppe} other {{count} Gruppen}}",
+    "windows": "{count, plural, one {{count} Fenster} other {{count} Fenster}}",
+    "tabs": "{count, plural, one {{count} Tab} other {{count} Tabs}}"
+  },
+  "sessions": {
+    "cantRestore": "Diese Sitzung kann nicht gelesen und daher nicht wiederhergestellt werden.",
+    "restored": "{count, plural, one {{count} Tab aus „{name}“ wiederhergestellt} other {{count} Tabs aus „{name}“ wiederhergestellt}}",
+    "deleted": "Sitzung gelöscht",
+    "deleteFailed": "Sitzung konnte nicht gelöscht werden",
+    "loadFailed": "Deine Sitzungen konnten nicht geladen werden.",
+    "tryAgain": "Erneut versuchen",
+    "loading": "Sitzungen werden geladen",
+    "empty": "Noch keine gespeicherten Sitzungen.",
+    "readOnlyNote": "Neue Sitzungen in deinem Konto zu speichern erfordert Pro. Deine vorhandenen Sitzungen kannst du weiterhin öffnen oder löschen.",
+    "upgrade": "Auf Pro upgraden",
+    "freeLimit": "Kostenloser Tarif: bis zu {count} Sitzungen. <link>Auf Pro upgraden</link> für unbegrenzt viele.",
+    "restore": "Sitzung wiederherstellen",
+    "cantRestoreTooltip": "Diese Sitzung kann nicht gelesen und daher nicht wiederhergestellt werden",
+    "delete": "Sitzung löschen",
+    "hideContents": "Inhalt ausblenden",
+    "showContents": "Inhalt anzeigen ({count})",
+    "groupFallbackName": "Gruppe {number}",
+    "groupTabs": "{count, plural, other {{count} Tabs}}",
+    "moreTabs": "{count, plural, other {+{count} weitere Tabs}}",
+    "moreGroups": "{count, plural, other {+{count} weitere Gruppen}}"
+  },
+  "backups": {
+    "title": "Backups",
+    "upgradeDescription": "Automatische Backups gehören zu Pro: ein verschlüsselter Snapshot deiner Gruppen, regelmäßig gespeichert, wobei die neuesten {count} erhalten bleiben.",
+    "readOnlyNote": "Neue Backups erfordern Pro. Deine vorhandenen Backups kannst du weiterhin herunterladen oder löschen.",
+    "upgrade": "Upgrade",
+    "intro": "Snapshots deiner Gruppen, die die TabMerger-Erweiterung selbstständig in deinem Konto gespeichert hat, das Neueste zuerst. Die neuesten {count} bleiben erhalten. Um eines wiederherzustellen, öffne die Erweiterung und gehe zu {place}; die Wiederherstellung erfolgt nicht auf dieser Seite. Eine hier heruntergeladene Datei ist nicht verschlüsselt.",
+    "extensionPlace": "Einstellungen > Daten",
+    "loadFailed": "Deine Backups konnten nicht geladen werden.",
+    "tryAgain": "Erneut versuchen",
+    "loading": "Backups werden geladen",
+    "unknownKind": "{count, plural, one {1 gespeichertes Element kann nicht gelesen werden, daher ist unbekannt, ob es ein Backup ist. Es steht unter „Gespeicherte Sitzungen“.} other {{count} gespeicherte Elemente können nicht gelesen werden, daher ist unbekannt, ob es Backups sind. Sie stehen unter „Gespeicherte Sitzungen“.}}",
+    "emptyTitle": "Noch keine Backups.",
+    "emptyBody": "Die Erweiterung speichert selbstständig eines, solange dein Browser geöffnet ist und sich deine Gruppen seit dem letzten geändert haben. Der Zeitplan ist „{interval}“, sofern du ihn nicht änderst: Wähle das Intervall oder sichere sofort in der Erweiterung unter {place}.",
+    "intervals": {
+      "60": "Stündlich",
+      "360": "Alle 6 Stunden",
+      "720": "Alle 12 Stunden",
+      "1440": "Täglich",
+      "10080": "Wöchentlich"
+    },
+    "unknownDateInSentence": "einem unbekannten Datum",
+    "unknownDate": "Unbekanntes Datum",
+    "namePrefix": "Automatisches Backup",
+    "downloading": "Das Backup von {when} wird heruntergeladen.",
+    "deleted": "Backup gelöscht",
+    "deletedAnnouncement": "Das Backup von {when} wurde gelöscht.",
+    "deleteFailed": "Backup konnte nicht gelöscht werden",
+    "deleteFailedAnnouncement": "Das Backup von {when} konnte nicht gelöscht werden.",
+    "deleteTitle": "Dieses Backup löschen?",
+    "deleteBody": "Das Backup von {when} wird aus deinem Konto entfernt. Ein Browser, der dieses Backup schon hat, behält seine eigene Kopie.",
+    "deleteBodyWithCounts": "Das Backup von {when} ({groups}, {tabs}) wird aus deinem Konto entfernt. Ein Browser, der dieses Backup schon hat, behält seine eigene Kopie.",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "download": "Herunterladen",
+    "downloadLabel": "Backup von {when} herunterladen",
+    "deleteLabel": "Backup von {when} löschen"
+  },
+  "groups": {
+    "cantShare": "Diese Gruppe kann nicht gelesen und daher nicht geteilt werden.",
+    "linkCopiedSnapshot": "Link kopiert – teilt einen Snapshot dieser Gruppe.",
+    "shareFailed": "Der Freigabelink konnte nicht erstellt werden. Bitte versuche es erneut.",
+    "shareGroup": "Gruppe teilen",
+    "copied": "Kopiert!",
+    "share": "Teilen",
+    "cantShareTooltip": "Diese Gruppe kann nicht gelesen und daher nicht geteilt werden",
+    "shareTooltip": "Kopiert einen Link zu einem Snapshot dieser Gruppe – spätere Änderungen aktualisieren ihn nicht",
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {count} Min.",
+    "hoursAgo": "vor {count} Std.",
+    "daysAgo": "vor {count} Tg.",
+    "lockedCantSelect": "Gesperrte Gruppe kann nicht ausgewählt werden",
+    "deselect": "Abwählen",
+    "select": "Auswählen",
+    "syncedAt": "Synchronisiert {time}",
+    "cardMeta": "{windows, plural, one {{windows} Fenster} other {{windows} Fenster}} · {tabs, plural, one {{tabs} Tab} other {{tabs} Tabs}}",
+    "syncedSuffix": " · synchronisiert {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Tabs sind möglicherweise veraltet – zuletzt vor über 30 Tagen synchronisiert",
+    "moreTabs": "+{count} weitere",
+    "openAllTitle": "Alle Tabs dieser Gruppe öffnen",
+    "openAll": "Alle öffnen",
+    "hideTabs": "Tabs ausblenden",
+    "showTabs": "Tabs anzeigen",
+    "rowMeta": "{windows}F · {tabs}T",
+    "linkCopiedLive": "Link kopiert! Die Freigabeseite ist live.",
+    "empty": "Noch keine synchronisierten Gruppen. Öffne die Erweiterung, um Tab-Gruppen zu erstellen.",
+    "title": "Gruppen",
+    "summary": "{count, plural, one {{count} Gruppe} other {{count} Gruppen}} · {tabs, plural, other {{tabs} Tabs}}",
+    "sort": "Sortieren",
+    "sortLabel": "Gruppen sortieren",
+    "sortRecent": "Zuletzt",
+    "sortName": "Name",
+    "sortTabCount": "Tab-Anzahl",
+    "cancel": "Abbrechen",
+    "gridView": "Rasteransicht",
+    "listView": "Listenansicht",
+    "archived": "Archiviert ({count})",
+    "selectedCount": "{count} ausgewählt",
+    "shareSelected": "Auswahl teilen",
+    "cancelSelection": "Auswahl aufheben"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Öffne die Erweiterung und entsperre die Verschlüsselung, um zu synchronisieren.",
+      "no-session": "Melde dich in der Erweiterung an, um zu synchronisieren.",
+      "error": "Synchronisierung fehlgeschlagen. Versuche es erneut über die Erweiterung."
+    },
+    "failedFallback": "Synchronisierung fehlgeschlagen.",
+    "syncing": "Synchronisiere ...",
+    "busy": "Synchronisierung läuft bereits",
+    "failed": "Synchronisierung fehlgeschlagen",
+    "synced": "Synchronisiert",
+    "never": "Noch keine Synchronisierung",
+    "reasonSeparator": ". ",
+    "refresh": "Sync-Status aktualisieren",
+    "resync": "Jetzt erneut synchronisieren",
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {count} Min.",
+    "hoursAgo": "vor {count} Std.",
+    "daysAgo": "vor {count} Tg."
+  }
+}

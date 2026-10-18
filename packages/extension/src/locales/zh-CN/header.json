@@ -1,0 +1,31 @@
+{
+  "searchPlaceholder": "搜索标签页和分组…",
+  "undo": "撤销",
+  "redo": "重做",
+  "selectItems": "选择项目",
+  "exitSelectionMode": "退出选择模式",
+  "aiActions": "AI 操作",
+  "aiProRequired": "需要 Pro AI，点击升级",
+  "autoGroup": "自动分组",
+  "autoGroupHint": "用 AI 为打开的标签页分组",
+  "organize": "整理",
+  "organizeHint": "用 AI 重新整理所有分组",
+  "takeTour": "开始导览",
+  "accountMenu": "账户菜单",
+  "settingsMenu": "设置菜单",
+  "upgradeToPro": "升级到 Pro",
+  "upgradeToProAi": "升级到 Pro AI",
+  "settings": "设置",
+  "signOut": "退出登录",
+  "signIn": "登录",
+  "toast": {
+    "noTabsToGroup": "没有可分组的打开标签页",
+    "aiNoGroups": "AI 没有找到可创建的分组",
+    "aiNoMatchingTabs": "未找到与 AI 建议匹配的标签页",
+    "aiCreated_other": "AI 创建了 {{count}} 个分组",
+    "aiSkipped": "另有 {{skipped}} 个建议被跳过：已达到免费版上限。",
+    "aiGroupingFailed": "AI 分组失败",
+    "organizeStarted": "已开始整理，请在控制台中查看方案",
+    "organizeFailed": "无法开始整理"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "review": "Revisar",
+  "archive": "Archivar",
+  "dismiss": "Descartar",
+  "getMore": "Obtener más",
+  "removeStale": "Quitar inactivas",
+  "staleTabs": "{{count}} pestañas se guardaron hace más de {{days}} días.",
+  "staleRemoved_one": "Se quitó {{count}} pestaña inactiva",
+  "staleRemoved_many": "Se quitaron {{count}} de pestañas inactivas",
+  "staleRemoved_other": "Se quitaron {{count}} pestañas inactivas",
+  "upgrade": "Mejorar plan",
+  "paymentIssue": "Problema de pago: actualiza tu tarjeta",
+  "planEnds": "Tu plan Pro termina el {{date}}",
+  "approachingLimit": "Te acercas al límite gratuito: mejora a Pro para tener grupos y pestañas ilimitados"
+}

@@ -1,0 +1,89 @@
+{
+  "deleteGroup": {
+    "title": "Eliminar grupo",
+    "description": "¿Seguro que quieres eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+    "confirm": "Eliminar"
+  },
+  "closeWindow": {
+    "title": "Cerrar ventana",
+    "description": "¿Seguro que quieres cerrar esta ventana y todas sus pestañas?",
+    "confirm": "Cerrar"
+  },
+  "removeWindow": {
+    "title": "Quitar ventana",
+    "description": "¿Seguro que quieres quitar esta ventana y todas sus pestañas?",
+    "confirm": "Quitar"
+  },
+  "closeTab": {
+    "title": "Cerrar pestaña",
+    "description": "¿Seguro que quieres cerrar esta pestaña?",
+    "confirm": "Cerrar"
+  },
+  "removeTab": {
+    "title": "Quitar pestaña",
+    "description": "¿Seguro que quieres quitar esta pestaña?",
+    "confirm": "Quitar"
+  },
+  "closeSelection": {
+    "title": "Cerrar selección",
+    "confirm": "Cerrar",
+    "description_tab_one": "¿Seguro que quieres cerrar {{count}} pestaña? Esta acción no se puede deshacer.",
+    "description_tab_many": "¿Seguro que quieres cerrar {{count}} de pestañas? Esta acción no se puede deshacer.",
+    "description_tab_other": "¿Seguro que quieres cerrar {{count}} pestañas? Esta acción no se puede deshacer.",
+    "description_window_one": "¿Seguro que quieres cerrar {{count}} ventana? Esta acción no se puede deshacer.",
+    "description_window_many": "¿Seguro que quieres cerrar {{count}} de ventanas? Esta acción no se puede deshacer.",
+    "description_window_other": "¿Seguro que quieres cerrar {{count}} ventanas? Esta acción no se puede deshacer.",
+    "description_group_one": "¿Seguro que quieres cerrar {{count}} grupo? Esta acción no se puede deshacer.",
+    "description_group_many": "¿Seguro que quieres cerrar {{count}} de grupos? Esta acción no se puede deshacer.",
+    "description_group_other": "¿Seguro que quieres cerrar {{count}} grupos? Esta acción no se puede deshacer."
+  },
+  "deleteSelection": {
+    "title": "Eliminar selección",
+    "confirm": "Eliminar",
+    "description_tab_one": "¿Seguro que quieres eliminar {{count}} pestaña? Esta acción no se puede deshacer.",
+    "description_tab_many": "¿Seguro que quieres eliminar {{count}} de pestañas? Esta acción no se puede deshacer.",
+    "description_tab_other": "¿Seguro que quieres eliminar {{count}} pestañas? Esta acción no se puede deshacer.",
+    "description_window_one": "¿Seguro que quieres eliminar {{count}} ventana? Esta acción no se puede deshacer.",
+    "description_window_many": "¿Seguro que quieres eliminar {{count}} de ventanas? Esta acción no se puede deshacer.",
+    "description_window_other": "¿Seguro que quieres eliminar {{count}} ventanas? Esta acción no se puede deshacer.",
+    "description_group_one": "¿Seguro que quieres eliminar {{count}} grupo? Esta acción no se puede deshacer.",
+    "description_group_many": "¿Seguro que quieres eliminar {{count}} de grupos? Esta acción no se puede deshacer.",
+    "description_group_other": "¿Seguro que quieres eliminar {{count}} grupos? Esta acción no se puede deshacer."
+  },
+  "removeStaleTabs": {
+    "title": "Quitar pestañas inactivas",
+    "confirm": "Quitar",
+    "description_one": "¿Seguro que quieres quitar {{count}} pestaña inactiva? Esta acción no se puede deshacer.",
+    "description_many": "¿Seguro que quieres quitar {{count}} de pestañas inactivas? Esta acción no se puede deshacer.",
+    "description_other": "¿Seguro que quieres quitar {{count}} pestañas inactivas? Esta acción no se puede deshacer."
+  },
+  "closeAllWindows": {
+    "title": "Cerrar todas las ventanas",
+    "description": "¿Seguro que quieres cerrar todas las ventanas del navegador y sus pestañas?",
+    "confirm": "Cerrar todo"
+  },
+  "removeAllWindows": {
+    "title": "Quitar todas las ventanas",
+    "description": "¿Seguro que quieres quitar todas las ventanas y sus pestañas de este grupo? Esta acción no se puede deshacer.",
+    "confirm": "Quitar todo"
+  },
+  "archiveStaleGroups": {
+    "title": "Archivar grupos inactivos",
+    "confirm": "Archivar",
+    "description_one": "¿Seguro que quieres archivar {{count}} grupo inactivo?",
+    "description_many": "¿Seguro que quieres archivar {{count}} de grupos inactivos?",
+    "description_other": "¿Seguro que quieres archivar {{count}} grupos inactivos?"
+  },
+  "clearAllData": {
+    "title": "Borrar todos los datos",
+    "confirm": "Borrar todos los datos",
+    "description": "Esto eliminará de forma permanente todos los grupos, sesiones guardadas y ajustes. Esta acción no se puede deshacer.",
+    "description_kept": "Esto eliminará de forma permanente todos los grupos, sesiones guardadas y ajustes. Esta acción no se puede deshacer. Las copias automáticas almacenadas en tu cuenta se conservan y puedes recuperarlas desde Ajustes → Datos."
+  },
+  "resetEncryption": {
+    "title": "Restablecer frase de contraseña de cifrado",
+    "confirm": "Restablecer frase",
+    "description": "Esta acción no se puede deshacer. Todos los grupos, sesiones y notas sincronizados y cifrados con tu frase de contraseña actual quedarán inaccesibles de forma permanente. Definirás una frase de contraseña nueva y empezarás a sincronizar de cero."
+  },
+  "cancel": "Cancelar"
+}

@@ -1,0 +1,23 @@
+{
+  "dropNewWindow": "ここにドロップして新しいウィンドウ",
+  "removeStale_other": "{{count}}個の古いタブを削除",
+  "editGroupNote": "グループのメモを編集",
+  "editNote": "メモを編集",
+  "moreGroupOptions": "グループのその他のオプション",
+  "notePlaceholder": "このグループのメモを追加…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "このグループにウィンドウはありません",
+  "addWindow": "ウィンドウを追加",
+  "search": {
+    "elsewhere": "{{groups}}の{{tabs}}",
+    "matchingTabs_other": "{{count}}個のタブが一致",
+    "otherGroups_other": "ほか{{count}}個のグループ",
+    "noneInGroup": "このグループには一致するタブがありません",
+    "hidden_other": "検索で{{count}}個のタブが非表示",
+    "allMatch_other": "{{count}}個のタブすべてが一致",
+    "someMatch_other": "{{count}}個のタブ中{{matched}}個が一致",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "このグループには「{{query}}」に一致するタブがありません"
+  },
+  "createGroup": "新しいグループを作成…"
+}

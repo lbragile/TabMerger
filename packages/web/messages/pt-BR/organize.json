@@ -1,0 +1,24 @@
+{
+  "title": "Proposta de organização por IA",
+  "encrypted": "O Organizar com IA ainda não está disponível na web para grupos com criptografia de ponta a ponta — seus grupos são criptografados e esta página não consegue lê-los. Execute-o pela extensão TabMerger.",
+  "applied": "Alterações aplicadas com sucesso.",
+  "cancelled": "Proposta cancelada.",
+  "analyzing": "Analisando seus grupos de abas…",
+  "noChanges": "Nenhuma alteração sugerida.",
+  "approve": "Aprovar",
+  "reject": "Rejeitar",
+  "unknownError": "Erro desconhecido",
+  "submitFailed": "Falha ao enviar a decisão",
+  "types": {
+    "merge": "mesclar",
+    "rename": "renomear",
+    "delete": "excluir",
+    "reorder": "reordenar"
+  },
+  "actions": {
+    "merge": "Mesclar {source} → {target}",
+    "rename": "Renomear grupo → \"{name}\"",
+    "delete": "Excluir grupo {id}",
+    "reorder": "Reordenar grupos: {ids}"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "syncPaused": "同步已暂停：请在 Firefox 中允许",
+  "conflictCopy": "{{names}}也在另一台设备上被修改。您的版本已保存为副本。",
+  "quotedName": "“{{name}}”",
+  "groupsChangedElsewhere": "您正在处理的分组在别处已被更改或移除，因此未做任何更改。",
+  "undoConflict": "您的分组在别处发生了变化，因此未撤销任何内容。请重试。",
+  "freeLimit": {
+    "maxGroups": "免费版最多允许 {{max}} 个分组。",
+    "maxTabs": "免费版最多允许 {{max}} 个标签页。",
+    "maxUrlRules": "免费版最多允许 {{max}} 条网址规则。"
+  },
+  "fileContains": "此文件包含{{groups}}、{{tabs}}。",
+  "incognitoNotAllowed": "已作为普通窗口打开，因为 TabMerger 未被允许在无痕模式下运行。如需更改，请打开“管理扩展程序”并开启“在无痕模式下启用”。",
+  "encryptionAlreadySetUp": "此账户已设置加密。请输入您现有的密码短语进行解锁。",
+  "signInToEnableEncryption": "必须登录才能启用加密",
+  "signInToResetEncryption": "必须登录才能重置加密",
+  "googleUnavailable": "当前环境不支持 Google 登录",
+  "googleNoUrl": "Google 登录未返回授权网址",
+  "googleCancelled": "Google 登录已取消",
+  "googleNoSession": "Google 登录未返回会话",
+  "googleFailed": "Google 登录失败",
+  "expectedArray": "需要数组",
+  "invalidFormat": "格式无效",
+  "noGroupsFound": "未找到分组",
+  "noGroupsSelected": "未选择分组",
+  "notAuthenticated": "未通过身份验证",
+  "sharingRequiresPro": "分享需要升级到 Pro，当前权限不足",
+  "aiOncePerDay": "今天已使用过：此 AI 操作每天限用一次",
+  "proAiRequired": "需要 Pro AI 套餐",
+  "nameGroupOff": "“为分组命名”已在设置中关闭",
+  "suggestSessionsOff": "“建议会话”已在设置中关闭",
+  "organizeOff": "“整理”已在设置中关闭"
+}

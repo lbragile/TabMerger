@@ -1,0 +1,287 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "Conoce TabMerger",
+      "description": "Un vistazo general: dónde aparecen tus pestañas abiertas y cómo está organizada la ventana. Todavía no hay nada que probar."
+    },
+    "groups": {
+      "title": "Organiza con grupos",
+      "description": "Los grupos son donde viven las pestañas guardadas. Crearás uno, le pondrás nombre, le darás un color y lo fijarás arriba."
+    },
+    "drag": {
+      "title": "Mueve cosas arrastrando",
+      "description": "Moverás pestañas y grupos en dos grupos de práctica que añade el recorrido: \"Tour demo\" y \"Tour demo 2\". Contienen pestañas de ejemplo, no las tuyas."
+    },
+    "tabs": {
+      "title": "Guarda y reabre pestañas",
+      "description": "Cómo pasar pestañas abiertas a un grupo, recuperarlas después y ordenar lo guardado. Probarás cada cosa en los grupos de práctica y en una pestaña de repuesto que abre el recorrido: ninguna de tus pestañas se guarda, abre ni cierra."
+    },
+    "find": {
+      "title": "Encuentra cosas y deshaz errores",
+      "description": "Busca en todas las pestañas y grupos a la vez y da marcha atrás si cambias de opinión. Probarás una búsqueda, \"Deshacer\" y \"Rehacer\" en los grupos de práctica."
+    },
+    "later": {
+      "title": "Guarda cosas para después",
+      "description": "Guarda todos tus grupos de una vez, aparta un grupo sin eliminarlo y guarda desde cualquier página web. Este capítulo solo explica."
+    },
+    "settings": {
+      "title": "Ajustes y tu cuenta",
+      "description": "Cambia el aspecto de TabMerger, mira qué más ofrece Ajustes y qué añade iniciar sesión. Probarás a cambiar el tema."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Te damos la bienvenida a TabMerger",
+      "body": "TabMerger ordena tu navegador. Guarda las pestañas que tienes abiertas en grupos con nombre, ciérralas y recupéralas cuando las necesites. Este recorrido tiene siete capítulos breves, cada uno con su nombre en la parte superior de esta tarjeta. Algunos pasos te piden probar algo tú mismo: un aro naranja marca entonces el control que debes usar y el texto lo nombra. Para esos pasos el recorrido añade dos grupos de práctica con pestañas de ejemplo, \"Tour demo\" y \"Tour demo 2\", y los quita solo después. Puedes omitir un paso, un capítulo o todo el recorrido en cualquier momento."
+    },
+    "now-open": {
+      "title": "Abiertas ahora",
+      "body": "\"Abiertas ahora\", arriba de la lista de la izquierda, es una lista en vivo de todas las pestañas abiertas ahora mismo en tu navegador. Siempre va primero y no se puede eliminar."
+    },
+    "main-panel": {
+      "title": "Ventanas y pestañas",
+      "body": "El panel principal muestra lo que hay dentro del grupo que elegiste a la izquierda: sus ventanas y las pestañas de cada ventana. En Abiertas ahora son tus ventanas reales del navegador."
+    },
+    "make-group": {
+      "title": "Crea un grupo",
+      "body": "Un grupo es un lugar con nombre para pestañas guardadas, por ejemplo \"Trabajo\" o \"Planes de vacaciones\". Pruébalo: selecciona \"Agregar grupo\", debajo de tus grupos. Aparece un grupo nuevo con su campo \"Nombre del grupo\" listo, mostrando \"temp group\". Escribe un nombre propio, como \"Práctica\", y pulsa Enter o selecciona \"Guardar\" junto al campo.",
+      "doneText": "Muy bien, tu grupo está listo. Los siguientes pasos lo usan.",
+      "fallbackBody": "Un grupo es un lugar con nombre para pestañas guardadas, por ejemplo \"Trabajo\" o \"Planes de vacaciones\". \"Agregar grupo\", debajo de tus grupos, crea uno. Ya tienes tantos grupos como permite tu plan, así que este paso solo se muestra, no se prueba."
+    },
+    "group-color": {
+      "title": "Dale un color",
+      "body": "Los colores facilitan distinguir los grupos. Pruébalo: en el grupo que acabas de crear, selecciona el punto redondo \"Cambiar el color del grupo\" delante de su nombre. Elige una de las muestras de color redondas y selecciona \"Aplicar\".",
+      "doneText": "Muy bien, color cambiado.",
+      "fallbackBody": "Los colores facilitan distinguir los grupos. Cada grupo tiene un punto redondo \"Cambiar el color del grupo\" delante de su nombre: selecciónalo, elige un color y selecciona \"Aplicar\"."
+    },
+    "group-pin": {
+      "title": "Fija un grupo arriba",
+      "body": "Los grupos fijados se quedan por encima de los demás. Pruébalo: en el grupo que acabas de crear, selecciona la estrella al final de su fila. Se llama \"Fijar grupo\", o \"Desfijar grupo\" cuando el grupo ya está fijado.",
+      "doneText": "Muy bien. Selecciona la estrella otra vez cuando quieras deshacerlo.",
+      "fallbackBody": "Los grupos fijados se quedan por encima de los demás. Cada grupo tiene una estrella al final de su fila, llamada \"Fijar grupo\": selecciónala para fijar el grupo y otra vez para desfijarlo."
+    },
+    "group-menu": {
+      "title": "Más opciones para cada grupo",
+      "body": "Cada grupo guardado tiene un menú de clic derecho. Incluye \"Renombrar\", \"Agregar nota\", \"Duplicar\", \"Combinar con lo actual\" para agregar tus ventanas abiertas al grupo, \"Archivar grupo\" para ocultarlo y \"Eliminar grupo\". Este paso es solo para mirar: la lista está bloqueada mientras el recorrido está abierto, así que prueba el menú después del recorrido."
+    },
+    "drag-tab-reorder": {
+      "title": "Reordena pestañas",
+      "body": "El panel principal muestra el grupo de práctica \"Tour demo\". Cada pestaña tiene delante un asa de puntos, llamada \"Arrastra para reordenar la pestaña\". Mueve la primera pestaña de la ventana \"Reading\" al final de esa ventana.",
+      "subStepText": {
+        "1": "Mantén pulsada el asa de la primera pestaña.",
+        "2": "Muévela hacia abajo hasta la línea bajo la última pestaña, marcada \"Suelta debajo de esta pestaña\".",
+        "3": "Suelta para dejarla ahí."
+      },
+      "subStepKeys": {
+        "1": "pulsa Tab para llegar al asa y luego Espacio para recoger la pestaña.",
+        "2": "pulsa la flecha abajo hasta que la pestaña esté en la línea marcada \"Suelta debajo de esta pestaña\".",
+        "3": "pulsa Espacio para soltarla."
+      },
+      "doneText": "Muy bien, la pestaña se movió.",
+      "fallbackBody": "Cada pestaña guardada tiene delante un asa de puntos, llamada \"Arrastra para reordenar la pestaña\". Al arrastrarla, la pestaña sube o baja dentro de su ventana. Este paso es solo para mirar."
+    },
+    "drag-tab-window": {
+      "title": "Mueve una pestaña a otra ventana",
+      "body": "Una pestaña también puede pasar a otra ventana del mismo grupo. Mueve la primera pestaña a la otra ventana de \"Tour demo\".",
+      "subStepText": {
+        "1": "Mantén pulsada el asa de la primera pestaña.",
+        "2": "Muévela sobre la otra ventana, marcada \"Suelta en esta ventana\".",
+        "3": "Suelta para dejarla ahí."
+      },
+      "subStepKeys": {
+        "1": "pulsa Tab para llegar al asa y luego Espacio para recoger la pestaña.",
+        "2": "pulsa la flecha abajo hasta que la pestaña esté dentro de la ventana marcada \"Suelta en esta ventana\".",
+        "3": "pulsa Espacio para soltarla."
+      },
+      "doneText": "Muy bien, la pestaña está en la otra ventana.",
+      "fallbackBody": "Arrastrar una pestaña por su asa a otra ventana del mismo grupo la mueve allí. Este paso es solo para mirar."
+    },
+    "drag-tab-group": {
+      "title": "Mueve una pestaña a otro grupo",
+      "body": "Soltar una pestaña sobre un grupo de la lista de la izquierda la mueve a ese grupo. Mueve la primera pestaña al grupo de práctica \"Tour demo 2\".",
+      "subStepText": {
+        "1": "Mantén pulsada el asa de la primera pestaña.",
+        "2": "Muévela sobre \"Tour demo 2\" en la lista de la izquierda, marcado \"Suelta en este grupo\".",
+        "3": "Suelta para dejarla ahí."
+      },
+      "subStepKeys": {
+        "1": "pulsa Tab para llegar al asa y luego Espacio para recoger la pestaña.",
+        "2": "pulsa la flecha izquierda para ir a la lista de grupos y luego la flecha abajo hasta llegar a \"Tour demo 2\", marcado \"Suelta en este grupo\".",
+        "3": "pulsa Espacio para soltarla."
+      },
+      "doneText": "Muy bien, la pestaña ya está en \"Tour demo 2\".",
+      "fallbackBody": "Arrastrar una pestaña por su asa sobre un grupo de la lista de la izquierda la mueve a ese grupo. Este paso es solo para mirar."
+    },
+    "drag-group-order": {
+      "title": "Ordena los grupos",
+      "body": "Los grupos también tienen un asa de puntos, al inicio de su fila, llamada \"Arrastra para reordenar el grupo\". Intercambia los dos grupos de práctica. Tus propios grupos se mueven igual.",
+      "subStepText": {
+        "1": "Mantén pulsada el asa del grupo de práctica superior.",
+        "2": "Muévelo hacia abajo hasta la línea bajo el otro grupo de práctica, marcada \"Suelta debajo de este grupo\".",
+        "3": "Suelta para dejarlo ahí."
+      },
+      "subStepKeys": {
+        "1": "pulsa Tab para llegar al asa y luego Espacio para recoger el grupo.",
+        "2": "pulsa la flecha abajo una vez, para que el grupo quede en la línea marcada \"Suelta debajo de este grupo\".",
+        "3": "pulsa Espacio para soltarlo."
+      },
+      "doneText": "Muy bien, los grupos cambiaron de lugar.",
+      "fallbackBody": "Cada grupo guardado tiene un asa de puntos al inicio de su fila, llamada \"Arrastra para reordenar el grupo\". Al arrastrarla, el grupo sube o baja en la lista. Este paso es solo para mirar."
+    },
+    "save-tabs": {
+      "title": "Guarda pestañas en un grupo",
+      "body": "Una pestaña arrastrada desde Abiertas ahora a un grupo se guarda en ese grupo y se cierra en tu navegador. Para que no se cierre ninguna de tus pestañas, el recorrido abrió una pestaña de repuesto llamada \"Tour practice tab\": es la única que puedes mover en este paso. Guárdala en el grupo de práctica \"Tour demo\".",
+      "subStepText": {
+        "1": "Mantén pulsada el asa de puntos delante de \"Tour practice tab\".",
+        "2": "Muévela sobre \"Tour demo\" en la lista de la izquierda, marcado \"Suelta en este grupo\".",
+        "3": "Suelta para dejarla ahí."
+      },
+      "subStepKeys": {
+        "1": "pulsa Tab para llegar al asa y luego Espacio para recoger la pestaña.",
+        "2": "pulsa la flecha izquierda para ir a la lista de grupos y luego la flecha abajo hasta llegar a \"Tour demo\", marcado \"Suelta en este grupo\".",
+        "3": "pulsa Espacio para soltarla."
+      },
+      "doneText": "Muy bien. La pestaña de práctica se guardó en \"Tour demo\" y se cerró en tu navegador. Las ventanas completas se guardan igual.",
+      "fallbackBody": "Una pestaña, o una ventana completa, arrastrada desde Abiertas ahora a un grupo de la izquierda se guarda en ese grupo y se cierra en tu navegador. El recorrido no pudo abrir una pestaña de repuesto para probarlo, así que este paso es solo para mirar: no se toca ninguna de tus pestañas."
+    },
+    "open-tabs": {
+      "title": "Vuelve a abrir tus pestañas",
+      "body": "En un grupo guardado, seleccionar el nombre de una pestaña la vuelve a abrir, y \"Abrir en el navegador\" en el menú de una ventana abre la ventana entera. Prueba ese menú en la ventana \"Reading\" de \"Tour demo\". Las pestañas de ejemplo no son páginas reales, así que durante el recorrido no se abre nada.",
+      "subStepText": {
+        "1": "Selecciona \"Más opciones de ventana\", los tres puntos al final de la fila \"Reading\".",
+        "2": "Elige \"Abrir en el navegador\" en el menú."
+      },
+      "doneText": "Muy bien. Después del recorrido, eso abre la ventana con sus pestañas en tu navegador. Ahora no se abrió nada.",
+      "fallbackBody": "En un grupo guardado, seleccionar el nombre de una pestaña la vuelve a abrir. \"Más opciones de ventana\" en una ventana tiene \"Abrir en el navegador\" para la ventana entera, y el menú de clic derecho de un grupo tiene \"Abrir todo en una ventana nueva\". Este paso es solo para mirar: durante el recorrido no se abre nada."
+    },
+    "tab-extras": {
+      "title": "Notas, recordatorios y nombres",
+      "body": "Una pestaña guardada tiene un menú de clic derecho con más opciones: \"Mover al grupo\", \"Agregar nota\" para apuntar algo, \"Recordarme…\" para que te lo recuerden más tarde, \"Renombrar pestaña\" para ponerle tu propio título y \"Quitar pestaña\". Este paso es solo para mirar: la lista está bloqueada mientras el recorrido está abierto, así que prueba el menú después del recorrido."
+    },
+    "tidy-up": {
+      "title": "Ordena un grupo",
+      "body": "\"Más opciones de grupo\", arriba a la derecha del panel principal, puede ordenar las pestañas por título o dirección, quitar repetidas con \"Quitar duplicadas\" y \"Unir ventanas\" en una o \"Dividir ventanas\". \"Tour demo\" contiene la pestaña \"Sample: books\" dos veces: quita la repetida.",
+      "modalBody": "El diálogo \"Quitar duplicadas\" lista la pestaña repetida. Selecciona \"Quitar 1 duplicada\".",
+      "subStepText": {
+        "1": "Selecciona \"Más opciones de grupo\", los tres puntos arriba a la derecha del panel principal.",
+        "2": "Elige \"Quitar duplicadas\" en el menú.",
+        "3": "En el diálogo \"Quitar duplicadas\", selecciona \"Quitar 1 duplicada\"."
+      },
+      "doneText": "Muy bien, la pestaña repetida desapareció.",
+      "fallbackBody": "\"Más opciones de grupo\", arriba a la derecha del panel principal, puede ordenar las pestañas por título o dirección, quitar repetidas con \"Quitar duplicadas\" y \"Unir ventanas\" en una o \"Dividir ventanas\". Este paso es solo para mirar."
+    },
+    "select-items": {
+      "title": "Trabaja con varias a la vez",
+      "body": "\"Seleccionar elementos\", en el encabezado, muestra una casilla en cada pestaña, ventana y grupo. Con algunos seleccionados, aparece abajo una barra que actúa sobre todos a la vez, por ejemplo para eliminarlos. Compartir grupos seleccionados como enlace requiere un plan Pro. Prueba a seleccionar una pestaña de ejemplo.",
+      "subStepText": {
+        "1": "Selecciona \"Seleccionar elementos\" en el encabezado.",
+        "2": "Marca la casilla delante de la primera pestaña de ejemplo."
+      },
+      "doneText": "Muy bien. La barra de abajo actúa sobre lo que seleccionaste. El recorrido desactiva la selección al continuar.",
+      "fallbackBody": "\"Seleccionar elementos\", en el encabezado, muestra una casilla en cada pestaña, ventana y grupo. Con algunos seleccionados, aparece abajo una barra que actúa sobre todos a la vez, por ejemplo para eliminarlos. Compartir grupos seleccionados como enlace requiere un plan Pro. Este paso es solo para mirar."
+    },
+    "search": {
+      "title": "Encuentra cualquier cosa",
+      "body": "El cuadro de búsqueda de arriba, que dice \"Buscar pestañas y grupos…\", busca en todas las pestañas y grupos a la vez. Las coincidencias aparecen mientras escribes. Pruébalo con las pestañas de ejemplo.",
+      "subStepText": {
+        "1": "Selecciona el cuadro de búsqueda de arriba.",
+        "2": "Escribe la palabra sample."
+      },
+      "doneText": "Muy bien. Cada pestaña que coincide aparece bajo el cuadro de búsqueda. Al seleccionar una, vas a su grupo.",
+      "fallbackBody": "El cuadro de búsqueda de arriba, que dice \"Buscar pestañas y grupos…\", busca en todas las pestañas y grupos a la vez. Las coincidencias aparecen mientras escribes y, al seleccionar una, vas a su grupo."
+    },
+    "search-filters": {
+      "title": "Acota una búsqueda",
+      "body": "Empieza una búsqueda con group: o window: para buscar dentro de un grupo o una ventana, o con tag: para filtrar por una etiqueta de grupo de pestañas del navegador. El cuadro de búsqueda las lista en \"Prueba estas búsquedas\". Prueba group: con el grupo de práctica y luego borra la búsqueda.",
+      "subStepText": {
+        "1": "Selecciona el cuadro de búsqueda de arriba.",
+        "2": "Escribe group:tour sin espacios. Aparece una lista llamada \"Elige un grupo\".",
+        "3": "Elige \"Tour demo\" en esa lista. La búsqueda ahora mira solo dentro de ese grupo.",
+        "4": "Selecciona \"Borrar búsqueda\", la × al final del campo de búsqueda. Una búsqueda permanece hasta que la borras."
+      },
+      "doneText": "Muy bien, la búsqueda está borrada.",
+      "fallbackBody": "Empieza una búsqueda con group: o window: para buscar dentro de un grupo o una ventana, o con tag: para filtrar por una etiqueta de grupo de pestañas del navegador. El cuadro de búsqueda las lista en \"Prueba estas búsquedas\"."
+    },
+    "undo": {
+      "title": "¿Cambiaste de opinión?",
+      "body": "\"Deshacer\" y \"Rehacer\", en el encabezado, retroceden y avanzan por tus últimos 10 cambios en grupos y pestañas. Están atenuados hasta que hay algo que deshacer. Pruébalos con un pequeño cambio en la ventana de ejemplo \"Reading\".",
+      "subStepText": {
+        "1": "Selecciona la estrella al final de la fila \"Reading\", llamada \"Destacar ventana\".",
+        "2": "Selecciona \"Deshacer\" en el encabezado. Eso quita la estrella otra vez.",
+        "3": "Selecciona \"Rehacer\", junto a \"Deshacer\". Eso devuelve la estrella."
+      },
+      "doneText": "Muy bien. \"Deshacer\" y \"Rehacer\" funcionan igual con tus propios grupos y pestañas.",
+      "fallbackBody": "\"Deshacer\" y \"Rehacer\", en el encabezado, retroceden y avanzan por tus últimos 10 cambios en grupos y pestañas. Están atenuados hasta que hay algo que deshacer."
+    },
+    "sessions": {
+      "title": "Guarda todo de una vez",
+      "body": "Una sesión es una copia guardada de todos tus grupos tal como están ahora. En la sección \"Sesiones\" de abajo a la izquierda, \"Guardar sesión actual\" crea una. \"Restaurar sesión\", junto a una sesión guardada, la recupera: pregunta antes, porque cierra tus ventanas abiertas."
+    },
+    "archived": {
+      "title": "Aparta un grupo",
+      "body": "Archivar oculta un grupo sin eliminarlo. Los grupos archivados esperan en la sección \"Archivados\" de abajo a la izquierda, donde puedes restaurarlos o eliminarlos. Siguen contando para el número de grupos de tu plan."
+    },
+    "quick-save": {
+      "title": "Guarda sin abrir TabMerger",
+      "body": "Haz clic derecho en cualquier página web y elige \"Guardar en TabMerger\". Elige qué guardar, por ejemplo \"Guardar esta pestaña\" o \"Guardar todas las demás pestañas\", y luego el grupo donde ponerlo."
+    },
+    "theme": {
+      "title": "Claro u oscuro",
+      "body": "Pruébalo: abre el menú de la esquina superior derecha, llamado \"Menú de ajustes\" (o \"Menú de la cuenta\" una vez que inicies sesión), y elige \"Ajustes\". Abre la lista \"Tema\", elige otro tema y selecciona \"Guardar cambios\".",
+      "modalBody": "En Ajustes: abre la lista \"Tema\", elige otro tema y selecciona \"Guardar cambios\".",
+      "doneText": "Muy bien, tema cambiado. Cierra Ajustes o selecciona Siguiente para continuar."
+    },
+    "settings-more": {
+      "title": "Más en Ajustes",
+      "body": "Ajustes tiene más en su pestaña \"General\": \"Confirmar antes de eliminar\" pregunta antes de quitar algo y \"Reglas de URL\" vincula direcciones web a un grupo. En la pestaña \"Datos\", \"Exportar\" guarda todos tus grupos en un archivo e \"Importar\" carga un archivo de vuelta. Las copias automáticas, en la misma pestaña, requieren un plan Pro."
+    },
+    "account": {
+      "title": "Tu cuenta",
+      "body": "TabMerger funciona sin cuenta: todo se guarda en este dispositivo. Iniciar sesión, desde el mismo menú, con un plan Pro mantiene tus grupos al día entre tus dispositivos. Los datos sincronizados se bloquean en tu dispositivo antes de enviarse, así que solo tú puedes leerlos."
+    },
+    "ai": {
+      "title": "Acciones de IA",
+      "body": "\"Acciones de IA\", en el encabezado, puede ordenar tus pestañas abiertas en grupos por ti. Requiere un plan Pro AI."
+    },
+    "finish": {
+      "title": "Todo listo",
+      "body": "¿Quieres verlo de nuevo? \"Ver el recorrido\", el signo de interrogación de la esquina superior derecha, lo repite cuando quieras."
+    }
+  },
+  "card": {
+    "dialogLabel": "Recorrido de TabMerger",
+    "chapterLine": "Capítulo {{chapter}} de {{chapters}}",
+    "stepLine": "Paso {{step}} de {{total}}",
+    "done": "Hecho.",
+    "withKeyboard": " Con el teclado: {{keys}}",
+    "yourTurnAnnouncement": " Te toca. Para continuar sin probarlo, selecciona \"Omitir este paso\".",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Selecciona Siguiente para continuar.",
+    "part": "Parte",
+    "ofTotal": "{{current}} de {{total}}",
+    "keyboard": "Teclado:",
+    "yourTurn": "Te toca. Este paso espera hasta que lo hayas probado.",
+    "practiceRemoved": "Se quitó el grupo de práctica.",
+    "practiceKept": "El grupo que creaste en este recorrido, “{{name}}”, sigue en tu lista. Consérvalo o quítalo ahora.",
+    "practiceKept_tabs": "El grupo que creaste en este recorrido, “{{name}}” ({{tabs}}), sigue en tu lista. Consérvalo o quítalo ahora.",
+    "removePractice": "Quitar el grupo de práctica",
+    "back": "Atrás",
+    "skipStep": "Omitir este paso",
+    "finish": "Listo",
+    "next": "Siguiente",
+    "skipTour": "Omitir recorrido",
+    "skipChapter": "Omitir capítulo"
+  },
+  "labels": {
+    "confirmDuplicatesPrefix": "Quitar"
+  },
+  "drop": {
+    "belowTab": "Suelta debajo de esta pestaña",
+    "window": "Suelta en esta ventana",
+    "group": "Suelta en este grupo",
+    "belowGroup": "Suelta debajo de este grupo",
+    "default": "Suelta aquí"
+  },
+  "practiceLeft": "El recorrido dejó un grupo de práctica, \"{{name}}\", en tu lista.",
+  "removeIt": "Quitar"
+}

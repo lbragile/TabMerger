@@ -28,12 +28,24 @@ export const LOCALES: readonly AppLocale[] = PSEUDO_LOCALE_ENABLED
 /** Each locale's name in its own language, for the language switcher. */
 export const LOCALE_NATIVE_NAMES: Record<AppLocale, string> = {
   en: 'English',
+  de: 'Deutsch',
+  es: 'Español',
+  fr: 'Français',
+  ja: '日本語',
+  'pt-BR': 'Português (Brasil)',
+  'zh-CN': '简体中文',
   [PSEUDO_LOCALE]: 'Ëñğļîšĥ (pseudo)',
 }
 
 /** Open Graph `og:locale` values (language_TERRITORY). */
 export const OG_LOCALES: Record<AppLocale, string> = {
   en: 'en_US',
+  de: 'de_DE',
+  es: 'es_419',
+  fr: 'fr_FR',
+  ja: 'ja_JP',
+  'pt-BR': 'pt_BR',
+  'zh-CN': 'zh_CN',
   [PSEUDO_LOCALE]: 'en_XA',
 }
 

@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger no pudo conectar con el servidor para comprobar el cifrado de esta cuenta, así que la sincronización está en pausa. Tus grupos siguen guardados en este dispositivo. Revisa tu conexión e inténtalo de nuevo.",
+  "unlockBody": "Introduce tu frase de contraseña de cifrado para desbloquear los datos sincronizados en este dispositivo. Es un paso único por dispositivo: no se te volverá a pedir a menos que cierres sesión. No hay forma de recuperar tus datos si la olvidas: nunca sale de tu dispositivo y TabMerger no puede restablecerla por ti.",
+  "setupBody": "Tus datos sincronizados de grupos y pestañas están cifrados de extremo a extremo con una frase de contraseña que solo tú conoces. Elige una ahora: no hay forma de recuperar tus datos si la olvidas, nunca sale de tu dispositivo y TabMerger no puede restablecerla por ti.",
+  "unavailableTitle": "No se puede comprobar el cifrado ahora",
+  "tryAgain": "Reintentar",
+  "unlockTitle": "Desbloquear cifrado",
+  "passphrase": "Frase de contraseña",
+  "passphraseLabel": "Frase de contraseña de cifrado",
+  "unlock": "Desbloquear",
+  "setupTitle": "Configurar cifrado",
+  "newPassphrase": "Nueva frase de contraseña",
+  "confirmPassphrase": "Confirmar frase de contraseña",
+  "setupButton": "Configurar cifrado",
+  "error": {
+    "spaces": "La frase de contraseña no puede contener espacios",
+    "tooShort": "La frase de contraseña debe tener al menos 8 caracteres",
+    "mismatch": "Las frases de contraseña no coinciden",
+    "setupFailed": "No se pudo configurar el cifrado",
+    "wrong": "Frase de contraseña incorrecta",
+    "wasReset": "Se restableció el cifrado de esta cuenta. Elige una frase de contraseña nueva."
+  },
+  "toast": {
+    "setUp": "Cifrado configurado",
+    "unlocked": "Cifrado desbloqueado"
+  }
+}

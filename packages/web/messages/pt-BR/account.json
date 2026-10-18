@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "agora mesmo",
+    "minutesAgo": "há {count} min",
+    "hoursAgo": "há {count} h",
+    "daysAgo": "há {count} d",
+    "renameFailed": "Falha ao renomear o dispositivo",
+    "renamed": "Dispositivo renomeado",
+    "removeFailed": "Falha ao remover o dispositivo",
+    "removed": "Dispositivo removido",
+    "removeManyFailed": "Falha ao remover os dispositivos",
+    "removedMany": "{count, plural, one {{count} dispositivo removido} many {{count} dispositivos removidos} other {{count} dispositivos removidos}}",
+    "empty": "Nenhum dispositivo ainda.",
+    "selectAll": "Selecionar todos os dispositivos",
+    "selectedCount": "{count} selecionado(s)",
+    "removeSelected": "{count, plural, one {Remover {count} dispositivo} many {Remover {count} dispositivos} other {Remover {count} dispositivos}}",
+    "selectDevice": "Selecionar {name}",
+    "active": "Ativo {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} janela} many {{windows} janelas} other {{windows} janelas}} · {tabs, plural, one {{tabs} aba} many {{tabs} abas} other {{tabs} abas}}",
+    "options": "Opções do dispositivo",
+    "rename": "Renomear",
+    "remove": "Remover",
+    "removeTitle": "Remover dispositivo?",
+    "removeBody": "\"{name}\" deixará de sincronizar dados de abas. Isso não pode ser desfeito.",
+    "removeManyTitle": "Remover {count} dispositivos?",
+    "removeManyBody": "Estes dispositivos deixarão de sincronizar dados de abas. Isso não pode ser desfeito.",
+    "cancel": "Cancelar"
+  },
+  "metaTitle": "Conta",
+  "title": "Configurações da conta",
+  "lead": "Gerencie sua conta e assinatura.",
+  "stats": {
+    "groups": "Grupos sincronizados",
+    "tabs": "Abas salvas",
+    "sessions": "Sessões e backups",
+    "aiCredits": "Créditos de IA restantes"
+  },
+  "profile": {
+    "title": "Perfil",
+    "description": "As informações da sua conta.",
+    "email": "E-mail",
+    "memberSince": "Membro desde"
+  },
+  "signOutAll": {
+    "title": "Sair de todos os dispositivos",
+    "description": "Isso revogará todas as sessões ativas.",
+    "button": "Sair"
+  },
+  "subscription": {
+    "title": "Assinatura",
+    "description": "Gerencie seu plano e a cobrança.",
+    "manageBilling": "Gerenciar cobrança",
+    "upgrade": "Fazer upgrade",
+    "cancelNote": "Você pode cancelar quando quiser em <strong>Gerenciar cobrança</strong>. O acesso continua até o fim do período de cobrança atual."
+  },
+  "devicesCard": {
+    "title": "Dispositivos",
+    "description": "Dispositivos que sincronizam seus grupos e abas. Apenas Pro e Pro AI."
+  },
+  "password": {
+    "tooShort": "A senha deve ter pelo menos 8 caracteres.",
+    "updated": "Senha atualizada",
+    "set": "Senha definida — agora você também pode entrar com e-mail e senha",
+    "change": "Alterar senha",
+    "setLabel": "Definir uma senha",
+    "placeholder": "••••••••••",
+    "save": "Salvar"
+  },
+  "credits": {
+    "failed": "Não foi possível iniciar o checkout",
+    "getMore": "Obter mais"
+  }
+}

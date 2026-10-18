@@ -1,0 +1,18 @@
+{
+  "heading": "设备",
+  "empty": "暂无设备。",
+  "selected": "已选择 {{count}} 项",
+  "remove": "移除",
+  "removeTitle_other": "移除 {{count}} 台设备？",
+  "removeDescription": "移除的设备将不再显示在此列表中。如果该浏览器仍处于活动状态，下次同步时可能会重新注册，因此对在线设备并非永久移除。",
+  "cancel": "取消",
+  "selectDevice": "选择 {{name}}",
+  "nameInput": "此设备名称",
+  "save": "保存",
+  "thisDevice": "（本设备）",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "重命名此设备",
+  "noTabs": "没有标签页。",
+  "restoreTabs_other": "恢复 {{count}} 个标签页",
+  "open": "打开"
+}

@@ -1,0 +1,36 @@
+{
+  "metaTitle": "FAQ",
+  "metaDescription": "Questions fréquentes sur TabMerger.",
+  "title": "Questions fréquentes",
+  "lead": "Un doute ? Nous répondons aux e-mails en moins d’un jour.",
+  "contact": "Contacter l’assistance",
+  "free": {
+    "question": "TabMerger est-il vraiment gratuit ?",
+    "answer": "Oui ! L’offre gratuite inclut toutes les fonctionnalités de base : jusqu’à {groups} groupes, {tabs} onglets, {urlRules} règles d’URL, le glisser-déposer et l’import/export. Vous ne payez que pour la synchronisation cloud, les groupes, onglets et règles d’URL illimités, ou les fonctionnalités IA."
+  },
+  "sync": {
+    "question": "Comment fonctionne la synchronisation cloud ?",
+    "answer": "Avec un abonnement Pro ou Pro AI, vos groupes sont enregistrés automatiquement sur nos serveurs et synchronisés sur tous les navigateurs où vous êtes connecté. La synchronisation s’exécute quand la fenêtre de l’extension est ouverte : les modifications apparaissent à sa prochaine ouverture."
+  },
+  "ai": {
+    "question": "Que fait exactement l’IA ?",
+    "answer": "L’offre Pro AI débloque trois fonctionnalités IA : le regroupement automatique (analyse vos onglets ouverts et les regroupe de façon logique), le nommage intelligent (propose des noms pour vos groupes) et les suggestions de sessions (recommande comment organiser votre travail).",
+    "answerComingSoon": "Bientôt disponible : l’offre Pro AI débloquera trois fonctionnalités IA : le regroupement automatique (analyse vos onglets ouverts et les regroupe de façon logique), le nommage intelligent (propose des noms pour vos groupes) et les suggestions de sessions (recommande comment organiser votre travail)."
+  },
+  "cancel": {
+    "question": "Puis-je résilier mon abonnement ?",
+    "answer": "Bien sûr. Vous pouvez résilier à tout moment depuis la page de votre compte. Vous gardez l’accès jusqu’à la fin de la période de facturation en cours, puis vous repassez à l’offre gratuite."
+  },
+  "browsers": {
+    "question": "Quels navigateurs TabMerger prend-il en charge ?",
+    "answer": "Chrome (Chrome Web Store), Edge (Edge Add-ons ou Chrome Web Store), Brave, Vivaldi et Arc (Chrome Web Store), Opera (Chrome Web Store, via le module « Install Chrome Extensions » d’Opera) et Firefox (Firefox Add-ons). Safari n’est pas pris en charge."
+  },
+  "privacy": {
+    "question": "Mes données sont-elles privées ?",
+    "answer": "Nous prenons la confidentialité très au sérieux. Les données de l’offre gratuite restent stockées localement : rien ne quitte votre navigateur. Les données de synchronisation cloud Pro sont chiffrées de bout en bout sur votre appareil avec une phrase secrète que vous seul connaissez, avant d’atteindre nos serveurs : nous ne stockons que du texte chiffré et ne pouvons lire ni vos groupes ni vos onglets. Nous ne vendons jamais vos données."
+  },
+  "downgrade": {
+    "question": "Que deviennent mes groupes si je rétrograde ?",
+    "answer": "Si vous passez de Pro à Gratuit, vos groupes restent dans le cloud pendant 30 jours. Vos onglets locaux sont toujours conservés. Vous pouvez tout exporter avant de rétrograder."
+  }
+}

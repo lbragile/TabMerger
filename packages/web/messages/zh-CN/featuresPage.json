@@ -1,0 +1,81 @@
+{
+  "metaTitle": "功能",
+  "metaDescription": "了解 TabMerger 的全部功能，从智能标签页分组到 AI 驱动的整理。",
+  "title": "为专注而生的功能",
+  "lead": "掌控浏览器所需的一切，从免费基础功能到 Pro AI 的强大能力。",
+  "addToChrome": "添加到 Chrome，免费使用",
+  "seePricing": "查看定价",
+  "badges": {
+    "core": "核心",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "强大的标签页管理",
+    "description": "TabMerger 的基础：快速、直观的标签页整理，适合任何工作流程。",
+    "groups": {
+      "title": "命名且带颜色的分组",
+      "description": "创建自定义名称和颜色的分组，一眼区分工作、研究、娱乐等内容。"
+    },
+    "search": {
+      "title": "全文搜索",
+      "description": "即时搜索所有标签页的标题和网址。结果与您输入的文字精确匹配（不区分大小写），最佳匹配排在最前。"
+    },
+    "dnd": {
+      "title": "拖放排序",
+      "description": "通过流畅的拖放操作，在分组内重新排列标签页，也可以调整分组本身的顺序。"
+    },
+    "shortcuts": {
+      "title": "键盘快捷键",
+      "description": "无需打开弹出窗口，即可保存当前标签页、其左侧或右侧的标签页，或所有其他标签页。在窗口内，可用 Ctrl/Cmd+K 打开搜索，并仅用键盘移动标签页、窗口和分组。"
+    },
+    "importExport": {
+      "title": "导入与导出",
+      "description": "将标签页集合导出为 JSON，与队友分享或备份工作区，并可在任何设备上导入。"
+    },
+    "memory": {
+      "title": "节省内存",
+      "description": "挂起不活跃的标签页以释放内存，并实时查看 TabMerger 为您节省了多少内存。"
+    }
+  },
+  "pro": {
+    "title": "同步与会话",
+    "description": "随时随地，在任何设备上从上次中断的地方继续。",
+    "cloudSync": {
+      "title": "云同步",
+      "description": "您的分组会自动保存，并在您登录的每个浏览器间同步。实时更新，无需手动导出。"
+    },
+    "sessions": {
+      "title": "保存与恢复会话",
+      "description": "将当前分组保存为命名会话，并可即时恢复。免费版在此浏览器中最多保存 {count} 个会话；Pro 可在所有设备间同步不限数量的会话。"
+    },
+    "autoBackups": {
+      "title": "自动备份",
+      "description": "TabMerger 会按您选择的频率（从每小时到每周一次）保存分组的加密快照，并保留最新的 {count} 份，您可以在“设置”中恢复任意一份。控制台也会列出这些备份，您可以查看其内容或下载。您还可以让每份备份同时保存为电脑上的文件，该副本不会加密。"
+    },
+    "support": {
+      "title": "优先支持",
+      "description": "Pro 订阅用户享受优先支持，保证在 24 小时内回复。"
+    }
+  },
+  "proAi": {
+    "title": "AI 驱动的整理",
+    "description": "让 Claude 分析您的标签页并给出智能建议，让您专注思考，而不是整理归档。",
+    "autoGrouping": {
+      "title": "自动分组",
+      "description": "打开一堆杂乱的标签页，点击一个按钮。AI 会根据主题、域名和意图将它们归入合理的分组。"
+    },
+    "names": {
+      "title": "智能分组名称",
+      "description": "AI 为分组推荐简洁、贴切的名称。一键采纳，或自行输入。"
+    },
+    "summaries": {
+      "title": "标签页摘要",
+      "description": "悬停在任意标签页上，即可看到 AI 生成的一句话页面摘要，无需打开页面。"
+    },
+    "sessionSuggestions": {
+      "title": "会话建议",
+      "description": "AI 分析您的浏览习惯，建议如何组织会话以获得最高效率。"
+    }
+  }
+}

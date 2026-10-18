@@ -1,0 +1,213 @@
+{
+  "metaTitle": "ダッシュボード",
+  "greeting": "おはようございます、{name}さん",
+  "tierBadge": {
+    "free": "無料",
+    "pro": "Pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "AIで整理",
+  "aiOrganiseUpgrade": "AIで整理するにはPro AIにアップグレードしてください",
+  "aiOrganiseFromExtension": "TabMergerの拡張機能のポップアップから開始してください",
+  "tabGroups": "タブグループ",
+  "savedSessions": "保存済みセッション",
+  "stats": {
+    "tabs": {
+      "label": "保存済みのタブ",
+      "description": "同期済みの全グループのタブ数"
+    },
+    "groups": {
+      "label": "同期済みのグループ",
+      "description": "クラウドで同期されたグループ"
+    },
+    "sessions": {
+      "label": "保存済みのセッション",
+      "description": "保存されたブラウジングセッション",
+      "lockedDescription": "セッションとバックアップ（ロック解除すると区別できます）"
+    },
+    "memory": {
+      "label": "解放したメモリ",
+      "description": "推定値であり、実測値ではありません"
+    },
+    "memberSince": {
+      "label": "登録日",
+      "description": "アカウント作成日"
+    },
+    "aiCredits": {
+      "label": "今月のAIクレジット",
+      "description": "Pro AIの月間使用量",
+      "value": "{used}/{limit}"
+    },
+    "loading": "読み込み中"
+  },
+  "subscription": {
+    "currentPlan": "現在のプラン",
+    "renews": "{date}に更新",
+    "upgrade": "アップグレード",
+    "statuses": {
+      "active": "有効",
+      "canceled": "キャンセル済み",
+      "past_due": "支払い遅延",
+      "trialing": "トライアル中",
+      "incomplete": "未完了"
+    }
+  },
+  "upgraded": {
+    "message": "{plan}へようこそ！サブスクリプションが有効になりました。新しい機能をお楽しみください。",
+    "dismiss": "閉じる"
+  },
+  "locked": {
+    "item": "以前のパスフレーズで保存されています。そのパスフレーズを持つデバイスで拡張機能を開き、同期してください。",
+    "device": "開いていたタブは以前のパスフレーズで保存されています。そのデバイスで拡張機能を開き、同期してください。",
+    "unverified": "現在は読み取れません。ページを再読み込みしてもう一度お試しください。"
+  },
+  "passphrase": {
+    "defaultLabel": "このコンテンツを表示するには、暗号化のパスフレーズを入力してください。",
+    "groupsLabel": "グループはエンドツーエンドで暗号化されています。ここで表示するにはパスフレーズを入力してください。",
+    "sessionsLabel": "セッションはエンドツーエンドで暗号化されています。ここで表示するにはパスフレーズを入力してください。",
+    "backupsLabel": "バックアップはエンドツーエンドで暗号化されています。ここで表示するにはパスフレーズを入力してください。",
+    "placeholder": "パスフレーズ",
+    "inputLabel": "暗号化のパスフレーズ",
+    "unlock": "ロック解除",
+    "incorrect": "パスフレーズが正しくありません。"
+  },
+  "onboarding": {
+    "title": "TabMergerを始めましょう",
+    "progress": "{total}件中{done}件完了",
+    "dismiss": "閉じる",
+    "install": "TabMerger拡張機能をインストール",
+    "group": "拡張機能で最初のグループを作成",
+    "signin": "サインインしてクラウド同期を有効にする",
+    "upgrade": "Proにアップグレードしてグループを無制限に"
+  },
+  "lockedName": "（ロック中）",
+  "damagedNote": "内容がTabMergerで読み取れない形式のため、ここには表示できません。",
+  "counts": {
+    "groups": "{count, plural, other {{count}個のグループ}}",
+    "windows": "{count, plural, other {{count}個のウィンドウ}}",
+    "tabs": "{count, plural, other {{count}個のタブ}}"
+  },
+  "sessions": {
+    "cantRestore": "このセッションは読み取れないため、復元できません。",
+    "restored": "{count, plural, other {「{name}」から{count}個のタブを復元しました}}",
+    "deleted": "セッションを削除しました",
+    "deleteFailed": "セッションを削除できませんでした",
+    "loadFailed": "セッションを読み込めませんでした。",
+    "tryAgain": "もう一度試す",
+    "loading": "セッションを読み込み中",
+    "empty": "保存済みのセッションはまだありません。",
+    "readOnlyNote": "アカウントに新しいセッションを保存するにはProが必要です。既存のセッションは引き続き開いたり削除したりできます。",
+    "upgrade": "Proにアップグレード",
+    "freeLimit": "無料プラン: セッションは{count}個まで。<link>Proにアップグレード</link>すると無制限になります。",
+    "restore": "セッションを復元",
+    "cantRestoreTooltip": "このセッションは読み取れないため、復元できません",
+    "delete": "セッションを削除",
+    "hideContents": "内容を非表示",
+    "showContents": "内容を表示（{count}）",
+    "groupFallbackName": "グループ{number}",
+    "groupTabs": "{count, plural, other {{count}個のタブ}}",
+    "moreTabs": "{count, plural, other {ほか{count}個のタブ}}",
+    "moreGroups": "{count, plural, other {ほか{count}個のグループ}}"
+  },
+  "backups": {
+    "title": "バックアップ",
+    "upgradeDescription": "自動バックアップはProの機能です。グループの暗号化されたスナップショットがスケジュールに沿って保存され、最新の{count}件が保持されます。",
+    "readOnlyNote": "新しいバックアップにはProが必要です。既存のバックアップは引き続きダウンロードや削除ができます。",
+    "upgrade": "アップグレード",
+    "intro": "TabMerger拡張機能が自動でアカウントに保存したグループのスナップショットを、新しい順に表示しています。最新の{count}件が保持されます。復元するには、拡張機能を開いて{place}に進んでください。このページからは復元できません。ここでダウンロードしたファイルは暗号化されていません。",
+    "extensionPlace": "設定 > データ",
+    "loadFailed": "バックアップを読み込めませんでした。",
+    "tryAgain": "もう一度試す",
+    "loading": "バックアップを読み込み中",
+    "unknownKind": "{count, plural, other {保存された{count}件の項目が読み取れないため、バックアップかどうか不明です。保存済みセッションに表示されています。}}",
+    "emptyTitle": "バックアップはまだありません。",
+    "emptyBody": "ブラウザを開いている間に、前回から グループが変更されていると、拡張機能が自動で保存します。スケジュールは変更しない限り「{interval}」です。間隔の選択や即時バックアップは、拡張機能の{place}で行えます。",
+    "intervals": {
+      "60": "1時間ごと",
+      "360": "6時間ごと",
+      "720": "12時間ごと",
+      "1440": "毎日",
+      "10080": "毎週"
+    },
+    "unknownDateInSentence": "不明な日付",
+    "unknownDate": "日付不明",
+    "namePrefix": "自動バックアップ",
+    "downloading": "{when}のバックアップをダウンロードしています。",
+    "deleted": "バックアップを削除しました",
+    "deletedAnnouncement": "{when}のバックアップを削除しました。",
+    "deleteFailed": "バックアップを削除できませんでした",
+    "deleteFailedAnnouncement": "{when}のバックアップを削除できませんでした。",
+    "deleteTitle": "このバックアップを削除しますか？",
+    "deleteBody": "{when}のバックアップがアカウントから削除されます。すでにこのバックアップを持っているブラウザには、そのコピーが残ります。",
+    "deleteBodyWithCounts": "{when}のバックアップ（{groups}、{tabs}）がアカウントから削除されます。すでにこのバックアップを持っているブラウザには、そのコピーが残ります。",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "download": "ダウンロード",
+    "downloadLabel": "{when}のバックアップをダウンロード",
+    "deleteLabel": "{when}のバックアップを削除"
+  },
+  "groups": {
+    "cantShare": "このグループは読み取れないため、共有できません。",
+    "linkCopiedSnapshot": "リンクをコピーしました。このグループのスナップショットを共有します。",
+    "shareFailed": "共有リンクを作成できませんでした。もう一度お試しください。",
+    "shareGroup": "グループを共有",
+    "copied": "コピーしました！",
+    "share": "共有",
+    "cantShareTooltip": "このグループは読み取れないため、共有できません",
+    "shareTooltip": "このグループのスナップショットへのリンクをコピーします。以降の編集は反映されません",
+    "justNow": "たった今",
+    "minutesAgo": "{count}分前",
+    "hoursAgo": "{count}時間前",
+    "daysAgo": "{count}日前",
+    "lockedCantSelect": "ロックされたグループは選択できません",
+    "deselect": "選択を解除",
+    "select": "選択",
+    "syncedAt": "同期: {time}",
+    "cardMeta": "{windows, plural, other {{windows}個のウィンドウ}} · {tabs, plural, other {{tabs}個のタブ}}",
+    "syncedSuffix": " · 同期: {time}",
+    "timeSuffix": " · {time}",
+    "stale": "タブが古い可能性があります。最終同期から30日以上経過しています",
+    "moreTabs": "ほか{count}個",
+    "openAllTitle": "このグループのすべてのタブを開く",
+    "openAll": "すべて開く",
+    "hideTabs": "タブを非表示",
+    "showTabs": "タブを表示",
+    "rowMeta": "{windows}ウィンドウ · {tabs}タブ",
+    "linkCopiedLive": "リンクをコピーしました！共有ページが公開されました。",
+    "empty": "同期されたグループはまだありません。拡張機能を開いてタブグループを作成してください。",
+    "title": "グループ",
+    "summary": "{count, plural, other {{count}個のグループ}} · {tabs, plural, other {{tabs}個のタブ}}",
+    "sort": "並べ替え",
+    "sortLabel": "グループを並べ替え",
+    "sortRecent": "最近",
+    "sortName": "名前",
+    "sortTabCount": "タブ数",
+    "cancel": "キャンセル",
+    "gridView": "グリッド表示",
+    "listView": "リスト表示",
+    "archived": "アーカイブ済み（{count}）",
+    "selectedCount": "{count}件を選択中",
+    "shareSelected": "選択を共有",
+    "cancelSelection": "選択をキャンセル"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "同期するには、拡張機能を開いて暗号化のロックを解除してください。",
+      "no-session": "同期するには、拡張機能にサインインしてください。",
+      "error": "同期に失敗しました。拡張機能からもう一度お試しください。"
+    },
+    "failedFallback": "同期に失敗しました。",
+    "syncing": "同期中...",
+    "busy": "同期はすでに実行中です",
+    "failed": "同期に失敗しました",
+    "synced": "同期済み",
+    "never": "まだ同期されていません",
+    "reasonSeparator": "。",
+    "refresh": "同期状態を更新",
+    "resync": "今すぐ再同期",
+    "justNow": "たった今",
+    "minutesAgo": "{count}分前",
+    "hoursAgo": "{count}時間前",
+    "daysAgo": "{count}日前"
+  }
+}

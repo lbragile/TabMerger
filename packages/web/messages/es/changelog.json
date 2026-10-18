@@ -1,0 +1,14 @@
+{
+  "metaTitle": "Registro de cambios",
+  "metaDescription": "Novedades, mejoras y correcciones de TabMerger.",
+  "title": "Registro de cambios",
+  "lead": "Todo lo que hemos publicado, de lo más nuevo a lo más antiguo.",
+  "githubRelease": "Versión en GitHub",
+  "githubReleaseLabel": "Versión {version} en GitHub",
+  "majorRelease": "Versión mayor",
+  "types": {
+    "New": "Nuevo",
+    "Improved": "Mejorado",
+    "Fixed": "Corregido"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Règles d’URL",
+  "description": "Affecte automatiquement les onglets aux groupes selon un modèle d’URL. Utilisez <code>*</code> comme joker (par ex. <code>github.com/*</code>). La première règle correspondante l’emporte.",
+  "empty": "Aucune règle pour le moment.",
+  "deletedGroup": "(groupe supprimé)",
+  "moveUp": "Monter la règle",
+  "moveDown": "Descendre la règle",
+  "edit": "Modifier la règle",
+  "delete": "Supprimer la règle",
+  "used": "{{used}}/{{max}} utilisées",
+  "addRule": "Ajouter une règle",
+  "discard": "Abandonner les modifications",
+  "cancel": "Annuler",
+  "saveAll": "Enregistrer toutes les règles",
+  "save": "Enregistrer",
+  "editTitle": "Modifier la règle d’URL",
+  "addTitle": "Ajouter une règle d’URL",
+  "patternPlaceholder": "Modèle, p. ex. github.com/*",
+  "groupPlaceholder": "Choisir le groupe cible…",
+  "toast": {
+    "limit": "L’offre gratuite autorise jusqu’à {{max}} règles d’URL."
+  }
+}

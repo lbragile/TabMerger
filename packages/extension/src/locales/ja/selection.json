@@ -1,0 +1,18 @@
+{
+  "copyToGroup": "グループにコピー",
+  "moveToGroup": "グループに移動",
+  "star": "スターを付ける",
+  "unstar": "スターを外す",
+  "share": "共有",
+  "shareRequiresPro": "共有にはProが必要です",
+  "close": "閉じる",
+  "delete": "削除",
+  "cancel": "選択をキャンセル",
+  "linkCopied": "リンクをクリップボードにコピーしました",
+  "shareFailed": "共有に失敗しました",
+  "selected_tab_other": "{{count}}個のタブを選択中",
+  "selected_window_other": "{{count}}個のウィンドウを選択中",
+  "selected_group_other": "{{count}}個のグループを選択中",
+  "cleared": "選択を解除しました。",
+  "sentence": "{{text}}。"
+}

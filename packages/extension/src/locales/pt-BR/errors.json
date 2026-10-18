@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Sincronização pausada: permita no Firefox",
+  "conflictCopy": "{{names}} também foi alterado em outro dispositivo. Sua versão foi salva como cópia.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "Um grupo em que você estava trabalhando mudou ou foi removido em outro lugar, então nada foi alterado.",
+  "undoConflict": "Seus grupos mudaram em outro lugar, então nada foi desfeito. Tente novamente.",
+  "freeLimit": {
+    "maxGroups": "O plano gratuito permite até {{max}} grupos.",
+    "maxTabs": "O plano gratuito permite até {{max}} abas.",
+    "maxUrlRules": "O plano gratuito permite até {{max}} regras de URL."
+  },
+  "fileContains": "Este arquivo contém {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Aberto como janela normal porque o TabMerger não tem permissão em janelas anônimas. Para mudar isso, abra Gerenciar extensão e ative \"Permitir no modo anônimo\".",
+  "encryptionAlreadySetUp": "A criptografia já está configurada para esta conta. Digite sua frase secreta atual para desbloqueá-la.",
+  "signInToEnableEncryption": "É preciso estar conectado para ativar a criptografia",
+  "signInToResetEncryption": "É preciso estar conectado para redefinir a criptografia",
+  "googleUnavailable": "O login com o Google não está disponível neste ambiente",
+  "googleNoUrl": "O login com o Google não retornou uma URL de autorização",
+  "googleCancelled": "O login com o Google foi cancelado",
+  "googleNoSession": "O login com o Google não retornou uma sessão",
+  "googleFailed": "Falha no login com o Google",
+  "expectedArray": "Era esperada uma lista",
+  "invalidFormat": "Formato inválido",
+  "noGroupsFound": "Nenhum grupo encontrado",
+  "noGroupsSelected": "Nenhum grupo selecionado",
+  "notAuthenticated": "Não autenticado",
+  "sharingRequiresPro": "O compartilhamento exige upgrade para o Pro — direito não atendido",
+  "aiOncePerDay": "Já usado hoje — esta ação de IA é limitada a uma vez por dia",
+  "proAiRequired": "Plano Pro AI necessário",
+  "nameGroupOff": "Nomear grupo está desativado nas Configurações",
+  "suggestSessionsOff": "Sugerir sessões está desativado nas Configurações",
+  "organizeOff": "Organizar está desativado nas Configurações"
+}

@@ -7,5 +7,28 @@
  */
 import type { SupportedLocale } from '@tabmerger/shared';
 import { en, type Catalog } from './en';
+import { de } from './de';
+import { es } from './es';
+import { fr } from './fr';
+import { ja } from './ja';
+import { ptBR } from './pt-BR';
+import { zhCN } from './zh-CN';
 
-export const catalogs: Record<SupportedLocale, Catalog> = { en };
+/**
+ * A translated catalog: English's feature files, but not English's exact key set, because plural
+ * keys follow each language's own forms (ja/zh-CN have only `_other`, es/fr/pt-BR add `_many`).
+ */
+export type TranslatedCatalog = { [Area in keyof Catalog]: MessageTree };
+
+type MessageTree = { readonly [key: string]: string | MessageTree };
+
+/** English keeps its exact type (the key types in src/i18next.d.ts and the pseudo-locale read it). */
+export const catalogs: { en: Catalog } & Record<Exclude<SupportedLocale, 'en'>, TranslatedCatalog> = {
+    en,
+    de,
+    es,
+    fr,
+    ja,
+    'pt-BR': ptBR,
+    'zh-CN': zhCN,
+};

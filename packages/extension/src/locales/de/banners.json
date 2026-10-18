@@ -1,0 +1,14 @@
+{
+  "review": "Prüfen",
+  "archive": "Archivieren",
+  "dismiss": "Ausblenden",
+  "getMore": "Mehr holen",
+  "removeStale": "Alte entfernen",
+  "staleTabs": "{{count}} Tabs wurden vor mehr als {{days}} Tagen gespeichert.",
+  "staleRemoved_one": "{{count}} alter Tab entfernt",
+  "staleRemoved_other": "{{count}} alte Tabs entfernt",
+  "upgrade": "Upgrade",
+  "paymentIssue": "Zahlungsproblem – aktualisiere deine Karte",
+  "planEnds": "Dein Pro-Abo endet am {{date}}",
+  "approachingLimit": "Du näherst dich dem kostenlosen Limit – wechsle zu Pro für unbegrenzte Gruppen und Tabs"
+}

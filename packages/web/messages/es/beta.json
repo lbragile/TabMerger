@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Únete e instala"
+    },
+    "what-to-test": {
+      "label": "Qué probar"
+    },
+    "known-issues": {
+      "label": "Problemas conocidos"
+    },
+    "report-bugs": {
+      "label": "Informar de un error"
+    },
+    "faq": {
+      "label": "Preguntas frecuentes"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Pago correcto (Visa)",
+      "note": "Usa esta para mejorar de plan"
+    },
+    "1": {
+      "label": "Rechazo genérico"
+    },
+    "2": {
+      "label": "Fondos insuficientes"
+    },
+    "3": {
+      "label": "Requiere autenticación 3D Secure"
+    }
+  },
+  "accessLabels": {
+    "free": "Gratis: no necesitas cuenta",
+    "upgrading": "Conseguir Pro: pagos de prueba, sin dinero real",
+    "some-pro": "Gratis y Pro: cada parte Pro está marcada",
+    "pro": "Solo Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Grupos y pestañas",
+      "items": {
+        "0": {
+          "heading": "Grupos, colores y deshacer/rehacer",
+          "checks": "Que puedes crear, nombrar y colorear un grupo, guardar pestañas en él y deshacer o rehacer un cambio sin perder nada.",
+          "steps": {
+            "0": "Haz clic en \"Agregar grupo\" en la barra lateral y ponle un nombre.",
+            "1": "Haz clic en el punto de color junto al grupo para abrir el selector de color, elige uno predefinido o arrastra hasta cualquier color y haz clic en Aplicar.",
+            "2": "Guarda algunas pestañas en el grupo (arrástralas o usa el menú del clic derecho).",
+            "3": "Elimina una pestaña, haz clic en el botón Deshacer (encabezado, arriba a la derecha) y luego en Rehacer."
+          },
+          "examples": {
+            "0": {
+              "alt": "Popup de TabMerger con un grupo nuevo seleccionado y su selector de color abierto: un selector de saturación y tono, 12 colores predefinidos, un campo hexadecimal y los botones Cancelar y Aplicar",
+              "caption": "Al hacer clic en el punto de color de un grupo se abre este selector."
+            }
+          },
+          "good": {
+            "0": "El grupo se actualiza al instante.",
+            "1": "Deshacer restaura la pestaña eliminada exactamente donde estaba.",
+            "2": "Rehacer la vuelve a eliminar.",
+            "3": "Con la sincronización activada, Deshacer puede quedar en gris después de que una sincronización traiga cambios de otro dispositivo. Es lo esperado, no un error: el historial de deshacer se borra cuando llegan cambios de otro sitio."
+          }
+        },
+        "1": {
+          "heading": "\"Abiertas ahora\" sigue tus pestañas abiertas",
+          "checks": "Que el grupo permanente \"Abiertas ahora\" siempre refleja las pestañas realmente abiertas en tu navegador.",
+          "steps": {
+            "0": "Abre el popup y mira \"Abiertas ahora\": siempre es el primer grupo de la barra lateral.",
+            "1": "Abre y cierra algunas pestañas del navegador sin tocar el popup.",
+            "2": "Vuelve a abrir el popup y revisa \"Abiertas ahora\" otra vez."
+          },
+          "examples": {
+            "0": {
+              "alt": "El popup con \"Abiertas ahora\" seleccionado: una ventana que lista las tres pestañas abiertas actualmente en el navegador",
+              "caption": "\"Abiertas ahora\" siempre está primero en la barra lateral y lista las pestañas abiertas en este momento."
+            }
+          },
+          "good": {
+            "0": "\"Abiertas ahora\" sigue tus pestañas reales sin necesidad de actualizar manualmente.",
+            "1": "No puedes eliminarlo ni moverlo de la primera posición."
+          }
+        },
+        "2": {
+          "heading": "Guardar y reabrir ventanas completas",
+          "checks": "Que una ventana guardada conserva todas sus pestañas, en orden, y se reabre intacta.",
+          "steps": {
+            "0": "Guarda una ventana entera en un grupo (arrastra el asa de la ventana sobre un grupo o usa su menú \"…\").",
+            "1": "Abre el grupo y usa el menú \"…\" de la ventana para reabrirla: como ventana nueva y como pestañas en la ventana actual, si se ofrecen ambas opciones."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un grupo de TabMerger con cuatro ventanas guardadas por separado, cada una con una pestaña",
+              "caption": "Un grupo puede contener varias ventanas separadas, cada una con su propio número de pestañas."
+            }
+          },
+          "good": {
+            "0": "Todas las pestañas se reabren con los títulos y URL correctos, en el mismo orden."
+          }
+        },
+        "3": {
+          "heading": "Archivar y restaurar un grupo",
+          "checks": "Que archivar oculta un grupo sin eliminarlo y que restaurarlo lo devuelve sin cambios.",
+          "steps": {
+            "0": "Haz clic derecho en un grupo guardado de la barra lateral y elige Archivar.",
+            "1": "Abre la sección \"Archivados\" al final de la barra lateral y búscalo.",
+            "2": "Restáuralo desde ahí."
+          },
+          "examples": {
+            "0": {
+              "alt": "La sección Archivados al final de la barra lateral de TabMerger, desplegada para mostrar un grupo archivado",
+              "caption": "La sección Archivados al final de la barra lateral, abierta: \"Compras\" está archivado, con los botones Restaurar y Eliminar."
+            }
+          },
+          "good": {
+            "0": "Los grupos archivados desaparecen de la lista activa pero nunca se eliminan.",
+            "1": "Reaparecen exactamente como estaban una vez restaurados."
+          }
+        },
+        "4": {
+          "heading": "Guardar y restaurar sesiones",
+          "checks": "Que una sesión guardada devuelve tus grupos exactamente como estaban cuando la guardaste.",
+          "steps": {
+            "0": "Guarda una sesión: una instantánea con nombre de tus grupos actuales (busca \"Guardar sesión\" cerca del área de Sesiones de la barra lateral).",
+            "1": "Haz algunos cambios en tus grupos.",
+            "2": "Restaura la sesión guardada."
+          },
+          "examples": {
+            "0": {
+              "alt": "La sección Sesiones de la barra lateral de TabMerger, con una sesión guardada",
+              "caption": "Una sesión guardada en la sección Sesiones, con los botones Restaurar y Eliminar y la notificación \"Sesión guardada\"."
+            }
+          },
+          "good": {
+            "0": "Al restaurar, los grupos vuelven exactamente como estaban cuando guardaste la sesión."
+          }
+        },
+        "5": {
+          "heading": "Búsqueda",
+          "checks": "Que la búsqueda encuentra pestañas por título o URL en todos tus grupos y que los filtros group:, window: y tag: acotan los resultados.",
+          "steps": {
+            "0": "Pulsa Ctrl+K (Cmd+K en Mac) para abrir la búsqueda.",
+            "1": "Escribe una subcadena simple, como \"hub\", con una pestaña de \"GitHub\" guardada en algún sitio: coincide con el título o la URL, sin distinguir mayúsculas.",
+            "2": "Bórralo y prueba con un prefijo: escribe \"group:\" y elige uno de tus grupos en el selector que aparece, o escribe p. ej. \"window:\" o \"tag:\" de la misma forma.",
+            "3": "Haz clic en uno de los resultados."
+          },
+          "examples": {
+            "0": {
+              "alt": "La superposición de búsqueda de TabMerger con \"hub\" escrito, mostrando una pestaña de GitHub coincidente",
+              "caption": "Escribiendo \"hub\": una coincidencia de subcadena simple con el título o la URL de la pestaña."
+            }
+          },
+          "good": {
+            "0": "Los resultados se actualizan mientras escribes.",
+            "1": "Una búsqueda simple coincide con cualquier pestaña cuyo título o URL contenga esa subcadena en cualquier posición (no letras en orden).",
+            "2": "Un prefijo \"group:\", \"window:\" o \"tag:\" acota la búsqueda y ofrece un selector para ese prefijo.",
+            "3": "Al hacer clic en cualquier resultado se cierra la búsqueda y te lleva directamente a su grupo (y a su ventana, si es un resultado de ventana)."
+          }
+        },
+        "6": {
+          "heading": "Pestañas inactivas",
+          "checks": "Que las pestañas que llevas tiempo sin abrir se marcan y se pueden revisar y eliminar con seguridad.",
+          "steps": {
+            "0": "Abre Ajustes y define el umbral de pestañas inactivas (p. ej., 30 días).",
+            "1": "Espera (o crea) al menos 5 pestañas más antiguas que ese umbral.",
+            "2": "Busca el banner ámbar sobre la lista de pestañas y prueba sus dos botones: Revisar y luego Eliminar inactivas."
+          },
+          "examples": {
+            "0": {
+              "alt": "El banner ámbar de pestañas inactivas sobre la lista de pestañas, con los botones Revisar y Eliminar inactivas",
+              "caption": "El banner de pestañas inactivas y sus botones Revisar / Eliminar inactivas."
+            }
+          },
+          "good": {
+            "0": "Revisar muestra exactamente qué pestañas están inactivas.",
+            "1": "Eliminar inactivas pide confirmación antes de borrar nada (si \"Confirmar antes de eliminar\" está activado en Ajustes)."
+          },
+          "report": "Un grupo que eliminaste o archivaste reaparece solo: ese es el error de \"resurrección\" que buscamos específicamente."
+        },
+        "7": {
+          "heading": "Configurar recordatorios de pestañas",
+          "checks": "Que puedes crear, cambiar y quitar un recordatorio en una pestaña guardada y que te avisa a la hora elegida.",
+          "steps": {
+            "0": "Haz clic derecho en una pestaña guardada y elige \"Recordarme…\". Los recordatorios son por pestaña; no hay un ajuste para ellos.",
+            "1": "En el editor que se abre bajo la pestaña, haz clic en un valor predefinido (30 min, 1 hora, 3 horas o Mañana) para fijarlo al instante.",
+            "2": "Ábrelo de nuevo (\"Editar recordatorio\" en el menú del clic derecho, o haz clic en el icono de reloj de la pestaña). Esta vez elige una fecha y hora a un par de minutos, escribe una nota corta y haz clic en Fijar.",
+            "3": "Pasa el cursor sobre el icono de reloj, espera a que salte el recordatorio y haz clic en su notificación.",
+            "4": "Crea otro, haz clic derecho en la pestaña y elige \"Quitar recordatorio\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "El editor \"Recordarme en…\" de una pestaña guardada: botones de 30 min, 1 hora, 3 horas y Mañana, un campo de fecha y hora, una nota opcional, y Cancelar y Fijar",
+              "caption": "Clic derecho en una pestaña guardada → \"Recordarme…\" abre este editor bajo la pestaña."
+            },
+            "1": {
+              "alt": "La misma ventana tras fijar un recordatorio: un icono de reloj al final de la fila de la pestaña Q3 Planning",
+              "caption": "Una vez fijado, la pestaña muestra un icono de reloj."
+            }
+          },
+          "good": {
+            "0": "La pestaña muestra un icono de reloj cuando hay un recordatorio, y al pasar el cursor se ve la hora (y tu nota).",
+            "1": "El menú del clic derecho ahora ofrece \"Editar recordatorio\" y \"Quitar recordatorio\" para ella.",
+            "2": "Fijar se ignora si la hora ya pasó; solo una hora futura crea el recordatorio.",
+            "3": "Una notificación \"Recordatorio de TabMerger\" con el título de la pestaña (y tu nota) aparece aproximadamente a la hora fijada y permanece hasta que actúes.",
+            "4": "Al hacer clic en la notificación se abre la pestaña.",
+            "5": "Quitar recordatorio elimina el icono de reloj y no aparece ninguna notificación después."
+          },
+          "report": "Un recordatorio nunca salta, salta dos veces o sigue saltando después de quitarlo."
+        },
+        "8": {
+          "heading": "Notas en grupos, ventanas y pestañas",
+          "checks": "Que puedes agregar una nota corta a un grupo, una ventana o una pestaña y editarla después.",
+          "steps": {
+            "0": "Grupo: haz clic derecho en un grupo de la barra lateral (o usa el botón ⋯ sobre sus ventanas) y elige \"Agregar nota\". Escribe algo y haz clic en Guardar.",
+            "1": "Ventana: haz clic derecho en el encabezado de una ventana (o usa su botón ⋯) y elige \"Agregar nota\". Esta vez guarda con Ctrl+Enter (Cmd+Enter en Mac).",
+            "2": "Pestaña: haz clic derecho en una pestaña guardada y elige \"Agregar nota\". Escribe algo y haz clic en otro sitio en lugar de en Guardar.",
+            "3": "Haz clic en un icono de nota para reabrirla, cámbiala y pulsa Escape.",
+            "4": "Cierra y vuelve a abrir el popup."
+          },
+          "good": {
+            "0": "Cada nota guardada muestra un pequeño icono de nota: junto al número de ventanas del grupo, en el encabezado de la ventana y en la fila de la pestaña. El elemento del menú ahora dice \"Editar nota\".",
+            "1": "Guardar, Ctrl/Cmd+Enter y hacer clic fuera guardan la nota; Escape y Cancelar la cierran sin guardar.",
+            "2": "Las notas están limitadas a 500 caracteres, con un contador bajo el cuadro.",
+            "3": "Las notas siguen ahí tras reabrir el popup (y, con la sincronización activada, en tus otros dispositivos)."
+          },
+          "report": "Una nota se pierde, se adjunta al elemento equivocado o se guarda al pulsar Escape o Cancelar."
+        },
+        "9": {
+          "heading": "Eliminar, con y sin \"Confirmar antes de eliminar\"",
+          "checks": "Que las eliminaciones piden confirmación solo cuando \"Confirmar antes de eliminar\" está activado y que Deshacer recupera lo eliminado.",
+          "steps": {
+            "0": "En Ajustes → General, asegúrate de que \"Confirmar antes de eliminar\" esté desactivado (lo está por defecto) y guarda.",
+            "1": "Quita una pestaña (con su ✕ o clic derecho → Quitar pestaña), quita una ventana (su ⋯ → Quitar ventana) y elimina un grupo (clic derecho → Eliminar grupo). Después de cada una, haz clic en Deshacer (arriba a la derecha).",
+            "2": "Activa \"Confirmar antes de eliminar\", guarda y repite las tres eliminaciones. Cancela el primer diálogo que aparezca y confirma el siguiente.",
+            "3": "Con la opción activada, prueba también a eliminar varios grupos seleccionados desde la barra de selección y \"Eliminar inactivas\" en un grupo con pestañas inactivas."
+          },
+          "good": {
+            "0": "Con la opción desactivada, las ventanas y los grupos se eliminan al instante, sin diálogo.",
+            "1": "Con ella activada, quitar una ventana, eliminar un grupo, eliminar una selección y \"Eliminar inactivas\" piden confirmación antes, y Cancelar deja todo como estaba.",
+            "2": "Quitar una sola pestaña nunca pide confirmación, con la opción activada o no. Deshacer la recupera.",
+            "3": "Deshacer restaura lo que acabas de eliminar: la pestaña, ventana o grupo, en el mismo lugar y con sus pestañas."
+          },
+          "report": "Algo se elimina sin preguntar con la opción activada (salvo una sola pestaña), aparece un diálogo con ella desactivada, o Deshacer no devuelve el elemento exactamente igual."
+        },
+        "10": {
+          "heading": "El menú del grupo",
+          "checks": "Que cada acción del menú de un grupo hace lo que dice su etiqueta.",
+          "steps": {
+            "0": "Haz clic derecho en un grupo guardado de la barra lateral para abrir su menú completo. El botón ⋯ sobre las ventanas de un grupo abre una versión más corta.",
+            "1": "Prueba Renombrar, Agregar nota y Duplicar.",
+            "2": "Prueba Reemplazar con lo actual (cambia las ventanas del grupo por las ventanas abiertas de tu navegador) y Combinar con lo actual (agrega tus ventanas abiertas al grupo). Deshaz después de cada una.",
+            "3": "Prueba Abrir todo en una ventana nueva, Unir ventanas, Dividir ventanas, Ordenar por título, Ordenar por URL y Quitar pestañas duplicadas.",
+            "4": "Prueba Archivar grupo y luego Restaurar grupo desde la sección Archivados.",
+            "5": "Haz clic derecho también en \"Abiertas ahora\": no tiene Renombrar, Reemplazar, Combinar, Archivar ni Eliminar."
+          },
+          "good": {
+            "0": "Cada acción hace lo que dice su descripción, solo en ese grupo.",
+            "1": "Duplicar crea una copia con todas sus pestañas; Unir deja una ventana con todas las pestañas y Dividir da a cada pestaña su propia ventana.",
+            "2": "Ordenar por título / URL ordena todas las pestañas alfabéticamente y Quitar pestañas duplicadas elimina las que tienen la misma URL.",
+            "3": "Los cambios se pueden deshacer con Deshacer."
+          },
+          "report": "Una acción afecta al grupo equivocado, pierde pestañas o no se puede deshacer."
+        },
+        "11": {
+          "heading": "Los menús de ventana",
+          "checks": "Que los dos menús de una ventana funcionan: el clic derecho en su encabezado y su botón ⋯.",
+          "steps": {
+            "0": "Haz clic derecho en el encabezado de una ventana: prueba \"Mover al grupo\" (elige otro grupo o crea uno nuevo desde la lista), Agregar nota y Renombrar ventana.",
+            "1": "Abre el botón ⋯ de la ventana: prueba Renombrar, Marcar como incógnito (y luego Quitar incógnito), Abrir en el navegador y Ordenar esta ventana por título / por URL.",
+            "2": "Haz clic derecho en una ventana de \"Abiertas ahora\": el primer elemento dice \"Copiar al grupo\" y quitarla dice \"Cerrar ventana\"."
+          },
+          "good": {
+            "0": "Mover al grupo mueve la ventana completa, con sus pestañas, al grupo elegido; un grupo nuevo creado desde el menú recibe la ventana.",
+            "1": "Marcar como incógnito agrega una etiqueta \"Incógnito\" a la ventana y Quitar incógnito la elimina.",
+            "2": "Abrir en el navegador abre las pestañas de la ventana en una ventana nueva del navegador; si algunas ya están abiertas, solo se agregan las que faltan a esa ventana.",
+            "3": "Ordenar solo reordena las pestañas de esa ventana.",
+            "4": "Desde \"Abiertas ahora\", Copiar al grupo guarda una copia y deja abierta tu ventana real."
+          },
+          "report": "Una acción del menú cambia otra ventana, o Cerrar ventana en \"Abiertas ahora\" cierra la ventana equivocada del navegador."
+        },
+        "12": {
+          "heading": "El menú de pestaña",
+          "checks": "Que el clic derecho en una pestaña ofrece las acciones adecuadas.",
+          "steps": {
+            "0": "Haz clic derecho en una pestaña guardada: prueba \"Mover al grupo\", Renombrar pestaña y luego \"Restablecer título original\".",
+            "1": "Haz clic derecho en una pestaña de \"Abiertas ahora\": \"Copiar al grupo\" sustituye a \"Mover al grupo\" y quitarla dice \"Cerrar pestaña\".",
+            "2": "Si tienes una regla de URL que coincide con una pestaña abierta, haz clic derecho en esa pestaña en \"Abiertas ahora\" y busca \"Guardar automáticamente en …\"."
+          },
+          "good": {
+            "0": "Mover al grupo mueve la pestaña al grupo elegido; Copiar al grupo (desde \"Abiertas ahora\") guarda una copia y deja abierta la pestaña real.",
+            "1": "Renombrar pestaña muestra tu título con una pequeña etiqueta \"renombrada\" y Restablecer título original recupera el título propio de la página.",
+            "2": "\"Guardar automáticamente en '<'grupo'>'\" aparece solo en una pestaña cuya dirección coincide con una de tus reglas de URL, y la guarda en el grupo de esa regla."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Menú del clic derecho",
+      "items": {
+        "0": {
+          "heading": "Guardar desde el menú del clic derecho",
+          "checks": "Que el clic derecho en cualquier página web te permite guardar la pestaña en TabMerger, o directamente en un grupo elegido.",
+          "steps": {
+            "0": "En cualquier página web, haz clic derecho y abre \"Guardar en TabMerger\".",
+            "1": "Prueba primero \"Guardar esta pestaña\" y luego guardar en un grupo existente concreto."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustración del menú del clic derecho en una página web: \"Guardar en TabMerger\" abre Guardar esta pestaña, Guardar pestañas a la izquierda, Guardar pestañas a la derecha y Guardar todas las demás pestañas; \"Guardar esta pestaña\" lista los grupos Trabajo (1v · 5p), Investigación (1v · 4p), Compras (1v · 3p) y Lista de lectura (1v · 5p), cada uno con su color",
+              "caption": "Ilustración (el navegador dibuja este menú por sí mismo, así que no se puede capturar): cada una de las cuatro opciones \"Guardar…\" lista tus grupos con su color, número de ventanas y número de pestañas."
+            }
+          },
+          "good": {
+            "0": "El menú contextual lista tus grupos reales por nombre.",
+            "1": "La pestaña aparece enseguida en el grupo elegido."
+          }
+        },
+        "1": {
+          "heading": "Los grupos nuevos aparecen en el menú del clic derecho",
+          "checks": "Que el menú del clic derecho incluye los grupos nuevos sin reiniciar el navegador.",
+          "steps": {
+            "0": "Crea un grupo nuevo desde el popup.",
+            "1": "Sin reabrir el navegador, haz clic derecho en cualquier página y revisa \"Guardar en TabMerger\" otra vez."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustración del mismo menú del clic derecho con un quinto grupo, \"Planificar viaje (0v · 0p)\", al final de la lista de grupos",
+              "caption": "Ilustración: un grupo nuevo, aún vacío (\"Planificar viaje\"), aparece al final de la lista."
+            }
+          },
+          "good": {
+            "0": "El grupo nuevo aparece en el menú contextual sin necesidad de reiniciar."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Mejorar a Pro (pagos de prueba)",
+      "intro": "La facturación forma parte de esta beta, pero solo con las tarjetas de prueba de Stripe: ninguna tarjeta real funcionará y no se mueve dinero real. Pro AI y los paquetes de créditos de IA siguen \"próximamente\" y no se pueden comprar, así que aquí solo se prueba Pro (grupos/pestañas ilimitados + sincronización).",
+      "items": {
+        "0": {
+          "heading": "Aviso sobre tarjetas de prueba",
+          "checks": "Que solo usas las tarjetas de prueba de Stripe: nada en esta beta cobra dinero real.",
+          "steps": {
+            "0": "Lee esto antes de iniciar el pago: los datos de tarjeta que necesitas están abajo."
+          },
+          "good": {
+            "0": "Nunca escribes un número de tarjeta real en este flujo."
+          }
+        },
+        "1": {
+          "heading": "Mejorar de plan desde la extensión",
+          "checks": "Que mejorar de plan desde la extensión funciona de principio a fin y que la extensión muestra después Pro.",
+          "steps": {
+            "0": "Abre el popup de la extensión y usa cualquier punto de entrada de \"Mejorar a Pro\": el botón de mejora del encabezado, el banner que aparece al acercarte al límite gratuito o un aviso que aparece al alcanzar un límite del plan gratuito.",
+            "1": "Esto abre la página de precios de la web beta (preview.tabmerger.com/pricing) en una pestaña nueva del navegador. Inicia sesión allí con la misma cuenta que usas en la extensión.",
+            "2": "Elige el plan Pro, mensual o anual, y continúa a Stripe Checkout.",
+            "3": "Completa el pago con la tarjeta de prueba de arriba (o una tarjeta de rechazo/3D Secure, si pruebas ese caso) y vuelve a la app."
+          },
+          "good": {
+            "0": "El pago se completa y vuelves a la app web con Pro mostrado.",
+            "1": "El popup de la extensión consulta tu plan cada 30 segundos aproximadamente, así que debería detectar Pro por sí solo enseguida; reabrir el popup también fuerza una comprobación si no quieres esperar."
+          },
+          "report": "La extensión sigue mostrando los límites del plan gratuito ({FREE_TIER_LIMITS_groups} grupos / {FREE_TIER_LIMITS_tabs} pestañas / {FREE_TIER_LIMITS_urlRules} reglas de URL) más de un par de minutos después de un pago correcto y de reabrir el popup."
+        },
+        "2": {
+          "heading": "Mejorar de plan desde la página de cuenta web",
+          "checks": "Que mejorar de plan desde la página de cuenta del sitio funciona y que el sitio y la extensión coinciden en tu plan.",
+          "steps": {
+            "0": "En lugar de pasar por la extensión, inicia sesión directamente en preview.tabmerger.com y abre los Ajustes de la cuenta.",
+            "1": "En \"Suscripción\", haz clic en \"Mejorar plan\" y completa el pago con la tarjeta de prueba."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ajustes de la cuenta en una cuenta gratuita: la tarjeta Suscripción muestra Plan actual Gratis con un botón Mejorar plan",
+              "caption": "Antes de mejorar: Gratis, con un botón Mejorar plan. Después muestra Pro y \"Gestionar facturación\" (consulta \"Página de cuenta\" más abajo)."
+            }
+          },
+          "good": {
+            "0": "La tarjeta Suscripción de la página de cuenta ahora muestra Pro, con un botón \"Gestionar facturación\" en lugar de \"Mejorar plan\".",
+            "1": "La extensión detecta el mismo estado Pro (consulta la nota sobre la consulta periódica de arriba): la página de cuenta web y la extensión nunca deberían discrepar sobre tu plan."
+          },
+          "report": "La página de cuenta web y el popup de la extensión muestran planes distintos (uno dice Pro y el otro sigue en Gratis) con más de un par de minutos de diferencia."
+        },
+        "3": {
+          "heading": "Pagar en tu moneda local",
+          "checks": "Que el pago muestra y cobra el precio en tu propia moneda.",
+          "steps": {
+            "0": "Los precios del sitio están en dólares estadounidenses (la página de precios lo indica bajo los planes; la página de cuenta, el panel y los Ajustes de la extensión los escriben como \"US$\"). Fuera de EE. UU., el pago ofrece tu moneda local.",
+            "1": "Inicia un pago desde tu ubicación real o simula otro país: registra una cuenta NUEVA con tu correo más \"+location_\" y un código de país de dos letras, p. ej. tunombre+location_FR@gmail.com para Francia (Gmail entrega las direcciones \"+cualquiercosa\" en tu bandeja normal). Una VPN en otro país también sirve.",
+            "2": "Mira el precio en la página de pago de Stripe y complétalo con la tarjeta de prueba en esa moneda."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pago de Stripe para TabMerger Pro mostrando 3,66 € al mes, con EUR seleccionado y una alternativa en USD, y la línea \"1 USD = 0,9171 EUR. Los cargos variarán según los tipos de cambio.\"",
+              "caption": "Pago para una dirección de Francia (+location_FR): euros por defecto y dólares estadounidenses a un clic. Los tipos de cambio varían, así que tu importe será distinto."
+            }
+          },
+          "good": {
+            "0": "El pago muestra el precio en tu moneda local (por ejemplo, 3,66 € en Francia o CA$5,89 en Canadá para el plan de US$3,99), con un interruptor para pagar en dólares estadounidenses y una línea con el tipo de cambio y su comisión de conversión. En EE. UU. simplemente muestra US$3,99.",
+            "1": "Tras pagar, el plan funciona exactamente igual que con dólares estadounidenses."
+          },
+          "report": "Fuera de EE. UU., el pago ofrece solo dólares estadounidenses, el importe cobrado difiere del mostrado en el pago, o pagar en moneda local no te da Pro."
+        },
+        "4": {
+          "heading": "Cambiar entre mensual y anual",
+          "checks": "Que una suscripción Pro puede pasar de facturación mensual a anual y viceversa, y se cobra correctamente.",
+          "steps": {
+            "0": "Con una suscripción Pro activa, abre la página de precios. La tarjeta de tu plan está marcada como Actual y tiene un botón \"Cambiar a facturación anual\" (o \"Cambiar a facturación mensual\" si pagas anualmente): el botón indica la facturación a la que cambiarías.",
+            "1": "Mensual → anual: haz clic en el botón de cambio y confirma en la página de Stripe.",
+            "2": "Anual → mensual: haz lo mismo y luego prueba el botón una segunda vez.",
+            "3": "Abre también \"Gestionar facturación\" en la página de cuenta: su opción \"Actualizar suscripción\" muestra la misma elección mensual/anual."
+          },
+          "examples": {
+            "0": {
+              "alt": "La página de precios con Pro mensual: la tarjeta Pro está marcada como Actual y tiene un botón \"Cambiar a facturación anual\"",
+              "caption": "En la página de precios, la tarjeta de tu plan está marcada como Actual y tiene el botón de cambio."
+            },
+            "1": {
+              "alt": "La página \"Actualiza tu suscripción\" de Stripe con pestañas Mensual y Anual, mostrando el plan TabMerger Pro actual a {proMonthly} al mes",
+              "caption": "La misma elección en Gestionar facturación → Actualizar suscripción (página de Stripe)."
+            }
+          },
+          "good": {
+            "0": "Mensual → anual se aplica al instante: Stripe muestra y cobra el precio anual menos lo que te queda del mes.",
+            "1": "Tras cambiar a anual, la página de cuenta muestra el precio anual ({proYearly}/año) en aproximadamente un minuto.",
+            "2": "Anual → mensual espera al final de tu año pagado, así que ahora no se cobra nada.",
+            "3": "Al pulsar el botón de nuevo se explica que ya hay un cambio programado.",
+            "4": "Solo se ofrecen Pro mensual y anual, nunca otro plan."
+          },
+          "report": "Un cambio cobra un importe incorrecto, la página de cuenta sigue mostrando el periodo de facturación anterior más de un par de minutos después, anual → mensual te cobra de inmediato o se te ofrece un plan distinto de Pro."
+        },
+        "5": {
+          "heading": "Cancelar",
+          "checks": "Que cancelar mantiene Pro hasta el final del periodo pagado y luego te devuelve a Gratis.",
+          "steps": {
+            "0": "En la página de cuenta, con una suscripción Pro activa, haz clic en \"Gestionar facturación\" para abrir el portal de facturación de Stripe.",
+            "1": "Cancela la suscripción desde ahí y vuelve a TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "El diálogo \"Cancelar tu suscripción\" de Stripe para TabMerger Pro a {proMonthly} al mes, con un motivo opcional y los botones Volver y Continuar con la cancelación",
+              "caption": "Stripe pide un motivo opcional antes de cancelar."
+            }
+          },
+          "good": {
+            "0": "Conservas el acceso a Pro hasta el final del periodo de facturación actual: cancelar no te pasa a Gratis de inmediato.",
+            "1": "Al terminar ese periodo, la página de cuenta y la extensión deberían mostrar Gratis de nuevo."
+          },
+          "report": "Cancelar te pasa a Gratis de inmediato en lugar de al final del periodo, o el plan nunca vuelve a Gratis después de que el periodo termine."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Arrastrar y soltar",
+      "intro": "Esta área cubre todas las interacciones de arrastre del popup: ordenar, mover entre ventanas y grupos, arrastres de varios elementos, las dos zonas \"suelta para crear...\", cancelar, arrastre solo con teclado y si el resultado se conserva. Prueba tantas como puedas; es el área en la que más nos centramos en esta beta.",
+      "items": {
+        "0": {
+          "heading": "Ordenar: pestañas dentro de una ventana",
+          "checks": "Que arrastrar una pestaña la reordena dentro de su ventana, quedando exactamente donde la sueltas.",
+          "steps": {
+            "0": "Arrastra una pestaña hacia abajo dentro de la misma ventana para moverla más abajo en la lista y luego arrástrala de vuelta a su sitio original.",
+            "1": "Arrastra una pestaña hasta la primera posición de la ventana y luego hasta la última."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una pestaña arrastrándose dentro de su tarjeta de ventana: la fila arrastrada flota con un borde resaltado sobre el hueco donde caerá",
+              "caption": "A mitad de arrastre: la pestaña flota y las demás hacen sitio donde caerá."
+            }
+          },
+          "good": {
+            "0": "La pestaña queda exactamente donde la soltaste y el resto de la lista se desplaza para hacerle sitio.",
+            "1": "Ninguna otra pestaña se mueve ni se duplica."
+          }
+        },
+        "1": {
+          "heading": "Ordenar: ventanas dentro de un grupo",
+          "checks": "Que las tarjetas de ventana se pueden reordenar dentro de un grupo.",
+          "steps": {
+            "0": "En un grupo con dos o más ventanas guardadas, arrastra una tarjeta de ventana por encima o por debajo de otra."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una tarjeta de ventana arrastrándose entre otras dos en un grupo con cuatro ventanas",
+              "caption": "Arrastrar una tarjeta de ventana entera por su asa para reordenarla dentro del grupo."
+            }
+          },
+          "good": {
+            "0": "Las tarjetas de ventana intercambian orden y el nuevo orden se ve de inmediato, sin parpadeo de vuelta al orden anterior."
+          }
+        },
+        "2": {
+          "heading": "Ordenar: grupos en la barra lateral",
+          "checks": "Que los grupos se reordenan libremente en la barra lateral mientras \"Abiertas ahora\" sigue primero.",
+          "steps": {
+            "0": "Arrastra un grupo de la barra lateral hacia arriba o abajo para reordenarlo por encima o por debajo de otro grupo.",
+            "1": "Intenta arrastrar un grupo por encima de \"Abiertas ahora\" (la primera fila de la barra lateral)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una fila de grupo arrastrándose a una nueva posición en la barra lateral de TabMerger",
+              "caption": "Reordenar un grupo en la barra lateral."
+            }
+          },
+          "good": {
+            "0": "\"Abiertas ahora\" siempre permanece fijada como primera fila: no puedes soltar un grupo por encima, arrastrarla, eliminarla ni moverla de la parte superior.",
+            "1": "Todos los demás grupos se reordenan libremente."
+          },
+          "report": "Algo queda por encima de \"Abiertas ahora\" o \"Abiertas ahora\" se vuelve arrastrable."
+        },
+        "3": {
+          "heading": "Entre ventanas: mover una pestaña entre tarjetas de ventana",
+          "checks": "Que una pestaña puede moverse de una tarjeta de ventana a otra, en el punto exacto donde la sueltas.",
+          "steps": {
+            "0": "Dentro de un grupo con varias ventanas, arrastra una pestaña de una tarjeta de ventana a otra.",
+            "1": "Esta vez, suéltala entre dos pestañas existentes de la ventana de destino en lugar de arriba o abajo del todo."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una pestaña arrastrándose de una ventana guardada a otra dentro del mismo grupo de TabMerger",
+              "caption": "Soltar una pestaña sobre otra ventana dentro del mismo grupo."
+            }
+          },
+          "good": {
+            "0": "La pestaña queda exactamente en la posición donde la soltaste (no solo añadida al final).",
+            "1": "El número de pestañas de ambas ventanas se actualiza al instante."
+          }
+        },
+        "4": {
+          "heading": "Entre grupos: soltar una pestaña sobre un grupo de la barra lateral",
+          "checks": "Que soltar una pestaña sobre un grupo de la barra lateral la mueve a ese grupo sin abrirlo antes.",
+          "steps": {
+            "0": "Arrastra una pestaña fuera del panel principal y suéltala directamente sobre un grupo de la barra lateral; prueba con un grupo que esté abierto (activo) y con uno que no.",
+            "1": "Inténtalo una vez más, pero mantén la pestaña sobre otro grupo (no activo) de la barra lateral durante aproximadamente un segundo antes de soltar."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una sola pestaña arrastrándose sobre una fila de grupo en la barra lateral de TabMerger",
+              "caption": "Soltar una pestaña directamente sobre un grupo de la barra lateral."
+            }
+          },
+          "good": {
+            "0": "La pestaña se agrega a ese grupo como una ventana nueva sin necesidad de abrir el grupo antes.",
+            "1": "Si esperaste sobre un grupo no activo, debería abrirse (\"se despliega\") al cabo de medio segundo para que veas dónde cae, y caer correctamente, no en la ventana equivocada."
+          },
+          "report": "El grupo se despliega pero la pestaña cae en la ventana equivocada, o encima de una pestaña existente en lugar de como su propia ventana nueva."
+        },
+        "5": {
+          "heading": "Entre grupos: arrastrar una ventana entera a otro grupo",
+          "checks": "Que una ventana entera, con todas sus pestañas, puede moverse a otro grupo.",
+          "steps": {
+            "0": "Arrastra una tarjeta de ventana entera (con su propia asa, no una pestaña dentro de ella) sobre un grupo distinto de la barra lateral."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una tarjeta de ventana arrastrada sobre la barra lateral, encima del grupo Compras, que está resaltado y abierto en el panel principal",
+              "caption": "Arrastrar una ventana sobre un grupo de la barra lateral. El grupo bajo el puntero recibe un borde de color y se abre detrás de la tarjeta."
+            }
+          },
+          "good": {
+            "0": "La ventana entera, con todas sus pestañas, se convierte en una ventana nueva del grupo de destino.",
+            "1": "Funciona incluso si es la última ventana que queda en el grupo de origen."
+          },
+          "report": "El grupo de origen o su ventana vaciada desaparece en lugar de quedarse (una ventana o grupo vacío debe permanecer, no desaparecer)."
+        },
+        "6": {
+          "heading": "Varios elementos: seleccionar y arrastrar varias pestañas",
+          "checks": "Que varias pestañas seleccionadas se arrastran juntas como un bloque, conservando su orden.",
+          "steps": {
+            "0": "Haz Ctrl+clic (Cmd+clic en Mac) en dos o tres pestañas no adyacentes para seleccionarlas.",
+            "1": "Haz Shift+clic para seleccionar un rango continuo de pestañas.",
+            "2": "Con varias pestañas seleccionadas, arrástralas juntas a una nueva posición de la misma ventana."
+          },
+          "examples": {
+            "0": {
+              "alt": "Varias pestañas seleccionadas a la vez en el popup de TabMerger, mostradas con casillas",
+              "caption": "Dos pestañas marcadas en modo de selección; la barra inferior las cuenta."
+            }
+          },
+          "good": {
+            "0": "Todas las pestañas seleccionadas se mueven juntas como un bloque, conservando su orden relativo: el bloque cae en el hueco, no disperso ni en orden de clic."
+          }
+        },
+        "7": {
+          "heading": "Varios elementos: arrastrar una selección entre ventanas y grupos",
+          "checks": "Que una selección de varias pestañas conserva su orden al arrastrarla a otra ventana o grupo.",
+          "steps": {
+            "0": "Selecciona varias pestañas de nuevo y arrástralas a una ventana distinta del mismo grupo.",
+            "1": "Repite una vez más, pero esta vez arrastra la selección sobre un grupo distinto de la barra lateral."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una selección de varias pestañas a mitad de arrastre en el popup de TabMerger",
+              "caption": "Arrastrar una selección de varias pestañas."
+            }
+          },
+          "good": {
+            "0": "Toda la selección se mueve junta en ambos casos y cae en el mismo orden relativo en el que empezó."
+          }
+        },
+        "8": {
+          "heading": "Varios elementos: seleccionar todo y arrastrar varios grupos",
+          "checks": "Que seleccionar todo funciona dentro de una ventana y que varios grupos seleccionados se pueden arrastrar juntos.",
+          "steps": {
+            "0": "Enfoca la lista de pestañas de una ventana y pulsa Ctrl+A (Cmd+A en Mac) para seleccionar todas las pestañas de esa ventana, si tiene más de una.",
+            "1": "En la barra lateral, haz Ctrl+clic en dos o tres grupos para seleccionarlos y arrastra la selección por uno de sus tiradores para reordenarlos juntos."
+          },
+          "examples": {
+            "0": {
+              "alt": "Modo de selección con tres grupos seleccionados; al arrastrar uno se llevan los demás, con una insignia de cantidad en la fila arrastrada y \"3 grupos seleccionados\" en la barra inferior",
+              "caption": "Tres grupos seleccionados arrastrados juntos en la barra lateral. La barra inferior cuenta la selección."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A selecciona todas las pestañas de la ventana enfocada (omitiendo las ocultas por un filtro de búsqueda).",
+            "1": "El arrastre de varios grupos mueve los grupos seleccionados juntos como un bloque.",
+            "2": "El bloque nunca cae por encima de \"Abiertas ahora\"."
+          }
+        },
+        "9": {
+          "heading": "Zonas de suelta: \"Suelta aquí para una ventana nueva\" y \"Suelta para un grupo nuevo\"",
+          "checks": "Que soltar en estas zonas crea una ventana o un grupo nuevo a partir de lo que arrastraste.",
+          "steps": {
+            "0": "Arrastra una pestaña (o una selección de pestañas) hacia el final de la lista de ventanas de un grupo, donde aparece la zona \"Suelta aquí para una ventana nueva\", y suéltala allí.",
+            "1": "Arrastra una pestaña hacia el final de la barra lateral, donde aparece la zona \"Suelta para un grupo nuevo\", y suéltala allí."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una pestaña arrastrada sobre la zona resaltada \"Suelta aquí para una ventana nueva\" bajo la lista de ventanas, con la zona \"Suelta para un grupo nuevo\" visible en la barra lateral",
+              "caption": "Mientras arrastras aparecen ambas zonas de suelta. La que está bajo el puntero se resalta."
+            }
+          },
+          "good": {
+            "0": "Cada suelta crea una ventana o grupo totalmente nuevo con exactamente los elementos arrastrados, en su orden relativo original."
+          },
+          "report": "La zona \"Suelta para un grupo nuevo\" sigue apareciendo cuando ya has llegado al límite de grupos de tu plan; debería desaparecer en lugar de aceptar una suelta que no puede cumplir."
+        },
+        "10": {
+          "heading": "Desde \"Abiertas ahora\": arrastrar una pestaña viva a un grupo guardado",
+          "checks": "Que arrastrar una pestaña abierta desde \"Abiertas ahora\" la mueve a un grupo guardado y cierra la pestaña real.",
+          "steps": {
+            "0": "Arrastra una pestaña de la sección \"Abiertas ahora\" a uno de tus grupos guardados.",
+            "1": "Revisa tus pestañas reales del navegador después de soltar."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una pestaña de \"Abiertas ahora\" arrastrándose sobre el grupo Trabajo en la barra lateral",
+              "caption": "Una pestaña abierta de \"Abiertas ahora\" arrastrada a un grupo guardado en la barra lateral."
+            }
+          },
+          "good": {
+            "0": "Esto MUEVE la pestaña, no la copia: el grupo guardado recibe una ventana nueva con una instantánea de esa pestaña.",
+            "1": "La pestaña real del navegador se cierra. Si la pestaña arrastrada era la activa, se cierra al cerrar el popup y no de inmediato; es intencionado, no un error."
+          },
+          "report": "La pestaña real sigue abierta tras soltar (parece una copia) o el propio popup se cierra o falla a mitad de arrastre."
+        },
+        "11": {
+          "heading": "Cancelar y casos límite",
+          "checks": "Que los arrastres cancelados o inútiles no cambian nada y que deshacer revierte un arrastre real.",
+          "steps": {
+            "0": "Empieza a arrastrar una pestaña y pulsa Escape antes de soltarla.",
+            "1": "Empieza un arrastre y suéltalo en un sitio que no sea un destino válido (p. ej., fuera de la ventana del popup, si puedes) o suéltala en el mismo punto de partida.",
+            "2": "Tras cualquier arrastre correcto, haz clic en el botón Deshacer (encabezado, arriba a la derecha)."
+          },
+          "examples": {
+            "0": {
+              "alt": "El encabezado de TabMerger con los botones Deshacer y Rehacer activados tras un cambio",
+              "caption": "Los botones Deshacer/Rehacer del encabezado, activados tras un cambio."
+            }
+          },
+          "good": {
+            "0": "Escape y una suelta no válida o sin efecto dejan todo exactamente como estaba: sin pestañas duplicadas, sin pestañas perdidas, sin reordenaciones.",
+            "1": "Deshacer tras un arrastre real restaura el orden anterior exactamente."
+          },
+          "report": "Una pestaña se duplica o desaparece tras un arrastre cancelado o soltado en el mismo punto, o Deshacer no restaura por completo el orden previo al arrastre."
+        },
+        "12": {
+          "heading": "Arrastre con teclado",
+          "checks": "Que todo lo que puedes arrastrar con el mouse también se puede mover con el teclado, con anuncios hablados.",
+          "steps": {
+            "0": "Pulsa Tab hasta enfocar una pestaña guardada, el encabezado de una ventana o un grupo de la barra lateral. Cada fila es una parada de Tab.",
+            "1": "Para mover varios a la vez, pulsa Ctrl+Espacio (Ctrl también en Mac) en cada uno para seleccionarlo y luego enfoca cualquiera de las filas seleccionadas.",
+            "2": "Pulsa Espacio para recogerlo. Oyes \"Recogido …\", la fila deja su sitio y una copia muestra dónde caerá.",
+            "3": "Pulsa Arriba o Abajo para moverlo. Una pestaña recorre todas las ventanas del grupo, luego pasa a \"Suelta aquí para una ventana nueva\" y después vuelve al principio.",
+            "4": "Pulsa Izquierda para ir a la lista de grupos. Arriba y Abajo eligen un grupo (la última parada es \"Grupo nuevo\") y el panel principal muestra cada grupo al pasar.",
+            "5": "Pulsa Derecha para entrar en el grupo resaltado y usa Arriba y Abajo para colocar el elemento dentro.",
+            "6": "Pulsa Espacio para soltar o Escape para cancelar."
+          },
+          "good": {
+            "0": "Espacio recoge el elemento en lugar de abrir el enlace.",
+            "1": "Ctrl+Espacio selecciona o deselecciona una fila sin abrirla ni recogerla.",
+            "2": "Enter sigue abriendo una pestaña y no hace nada mientras mueves algo.",
+            "3": "La copia de lo que mueves siempre está en pantalla y el panel se desplaza para seguirla.",
+            "4": "Arriba y Abajo dan la vuelta en los extremos y oyes \"Vuelta al principio\" o \"Vuelta al final\".",
+            "5": "Una ventana vacía es un destino por sí misma.",
+            "6": "El elemento queda exactamente donde estaba la copia y oyes lo que ha pasado.",
+            "7": "Varios elementos seleccionados se mueven juntos como un bloque, en su orden original.",
+            "8": "Espacio en la lista de grupos suelta el elemento al final del grupo resaltado.",
+            "9": "En \"Grupo nuevo\" el panel principal se atenúa y soltar allí crea un grupo totalmente nuevo.",
+            "10": "Un grupo movido con Arriba y Abajo nunca puede quedar por encima de \"Abiertas ahora\".",
+            "11": "Mover una pestaña viva de \"Abiertas ahora\" a un grupo cierra esa pestaña del navegador, igual que al soltar con el mouse.",
+            "12": "Escape no toca nada y vuelve a mostrar el grupo en el que empezaste.",
+            "13": "Tras soltar, el foco queda en la fila movida; tras Escape, vuelve a la fila que recogiste."
+          }
+        },
+        "13": {
+          "heading": "Persistencia",
+          "checks": "Que un nuevo orden se guarda: sobrevive a reabrir el popup y llega a tus otros dispositivos.",
+          "pro": "Solo la parte del segundo dispositivo requiere Pro (necesita sincronización).",
+          "steps": {
+            "0": "Tras reordenar pestañas, ventanas o grupos arrastrando, cierra el popup por completo y vuelve a abrirlo.",
+            "1": "Si tienes la sincronización activada y un segundo dispositivo con la misma cuenta, comprueba también el orden allí."
+          },
+          "good": {
+            "0": "El nuevo orden es exactamente como lo dejaste tras reabrir el popup.",
+            "1": "Con la sincronización activada, el segundo dispositivo recibe el mismo orden en poco tiempo."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "App web y panel (sitio de vista previa)",
+      "intro": "Todo lo de aquí está en preview.tabmerger.com, no en tabmerger.com principal: esta compilación beta solo sincroniza con el sitio de vista previa.",
+      "items": {
+        "0": {
+          "heading": "Registrarse e iniciar sesión",
+          "checks": "Que todas las formas de iniciar sesión en el sitio funcionan: Google, correo y contraseña, y enlace mágico.",
+          "steps": {
+            "0": "Sin sesión iniciada, abre preview.tabmerger.com/auth/sign-in.",
+            "1": "Prueba \"Continuar con Google\".",
+            "2": "Prueba correo + contraseña: escribe tu correo y contraseña y haz clic en \"Continuar\".",
+            "3": "Prueba \"Enviar enlace mágico\" usando solo tu correo."
+          },
+          "examples": {
+            "0": {
+              "alt": "La página de inicio de sesión \"Te damos la bienvenida\" del sitio: Continuar con Google, campos de correo y contraseña con un enlace ¿La olvidaste?, Continuar y Enviar enlace mágico",
+              "caption": "La página de inicio de sesión del sitio: Google, correo y contraseña, o enlace mágico."
+            }
+          },
+          "good": {
+            "0": "Las tres formas inician tu sesión.",
+            "1": "El enlace mágico y Google redirigen de vuelta a la app con la sesión ya iniciada.",
+            "2": "Las cuentas nuevas llegan adonde lleve \"Regístrate gratis\" (correo + contraseña o Google, las mismas opciones)."
+          }
+        },
+        "1": {
+          "heading": "Crear una cuenta con correo y contraseña",
+          "checks": "Que una cuenta nueva de correo y contraseña termina con la sesión iniciada, tanto si el sitio te pide verificar el correo como si no.",
+          "steps": {
+            "0": "Sin sesión iniciada, haz clic en \"Regístrate gratis\" y crea una cuenta con un correo y una contraseña (8 o más caracteres)."
+          },
+          "examples": {
+            "0": {
+              "alt": "La página \"Crea tu cuenta\": Continuar con Google, luego los campos Correo, Contraseña (al menos 8 caracteres) y Confirmar contraseña, y un botón Continuar",
+              "caption": "La página de registro. Google también funciona aquí; este punto trata de la vía de correo y contraseña."
+            }
+          },
+          "good": {
+            "0": "O bien entras directamente al panel con la sesión iniciada, o ves \"Verifica tu correo\" y solo inicias sesión al hacer clic en el enlace de ese correo. Depende de si el sitio exige confirmar el correo; ambas opciones son válidas."
+          },
+          "report": "Ves \"Verifica tu correo\" pero en realidad ya tienes la sesión iniciada (por ejemplo, abrir el panel en otra pestaña funciona sin hacer clic en el enlace)."
+        },
+        "2": {
+          "heading": "Contraseña olvidada y cambiar tu contraseña",
+          "checks": "Que puedes restablecer una contraseña olvidada por correo y cambiarla después.",
+          "steps": {
+            "0": "En el inicio de sesión, haz clic en \"¿La olvidaste?\" junto al campo de contraseña e introduce tu correo.",
+            "1": "Abre el enlace de restablecimiento de ese correo y define una nueva contraseña (mínimo 8 caracteres, y debe coincidir con su campo de confirmación)."
+          },
+          "examples": {
+            "0": {
+              "alt": "La página \"Restablece tu contraseña\": un campo de correo, un botón Enviar enlace de restablecimiento y Volver al inicio de sesión",
+              "caption": "\"¿La olvidaste?\" en la página de inicio de sesión abre esto. Con la sesión iniciada, los Ajustes de la cuenta tienen un campo \"Cambiar contraseña\"."
+            }
+          },
+          "good": {
+            "0": "Vuelves al panel con la sesión iniciada con la nueva contraseña.",
+            "1": "Al iniciar sesión de nuevo después, se necesita la nueva contraseña, no la antigua."
+          }
+        },
+        "3": {
+          "heading": "El panel coincide con la extensión tras sincronizar",
+          "checks": "Que el panel del sitio muestra los mismos grupos que tu extensión cuando la sincronización se ha puesto al día.",
+          "steps": {
+            "0": "Con la sincronización activada y al menos un grupo, abre el panel en preview.tabmerger.com/dashboard.",
+            "1": "Compara la sección \"Grupos de pestañas\" con la barra lateral del popup de la extensión: nombres, colores, número de ventanas/pestañas y orden."
+          },
+          "examples": {
+            "0": {
+              "alt": "El panel web tras desbloquear: estadísticas, la tarjeta del plan Pro y la cuadrícula Grupos de pestañas con tarjetas Investigación, Lista de lectura, Trabajo y Compras que muestran el número de ventanas y pestañas",
+              "caption": "Los grupos del panel, que coinciden con la barra lateral de la extensión una vez sincronizados."
+            }
+          },
+          "good": {
+            "0": "Aparecen los mismos grupos con los mismos nombres, colores y número de ventanas/pestañas, en el mismo orden, cuando la sincronización se ha puesto al día."
+          }
+        },
+        "4": {
+          "heading": "El panel es de solo lectura para los grupos",
+          "checks": "Que el panel muestra tus grupos pero no puede cambiarlos: la edición solo se hace en la extensión.",
+          "steps": {
+            "0": "En el panel, busca cualquier forma de renombrar, eliminar o crear un grupo, o de marcarlo o desmarcarlo con estrella."
+          },
+          "good": {
+            "0": "No hay forma de renombrar, eliminar, crear o (des)marcar con estrella un grupo desde el panel: las ediciones de grupos son solo de la extensión por diseño.",
+            "1": "Las únicas acciones reales en una tarjeta de grupo son Compartir y abrir sus pestañas/ventanas."
+          },
+          "report": "Algún control del panel que parece editar, eliminar o crear un grupo realmente hace algo."
+        },
+        "5": {
+          "heading": "Sesiones y estadísticas en el panel",
+          "checks": "Que las sesiones guardadas y los totales del panel coinciden con la extensión.",
+          "steps": {
+            "0": "Guarda una sesión en la extensión y revisa la sección \"Sesiones guardadas\" del panel.",
+            "1": "Revisa las estadísticas en la parte superior del panel (número de pestañas, de grupos, de sesiones y fecha de alta)."
+          },
+          "good": {
+            "0": "La sesión que guardaste aparece.",
+            "1": "Las estadísticas coinciden con lo que contarías en la extensión."
+          }
+        },
+        "6": {
+          "heading": "Compartir desde el panel",
+          "checks": "Que el botón Compartir del panel copia un enlace para compartir, como el de la extensión.",
+          "steps": {
+            "0": "En una tarjeta de grupo (o con \"Seleccionar\" y \"Compartir selección\" para varios grupos), haz clic en Compartir."
+          },
+          "good": {
+            "0": "Se copia un enlace al portapapeles al instante, con un aviso de confirmación. Esto se explica con detalle en la sección \"Compartir\" más abajo: el botón Compartir del panel y el de la extensión producen el mismo tipo de enlace."
+          }
+        },
+        "7": {
+          "heading": "Página de cuenta",
+          "checks": "Que la página de cuenta muestra el perfil, el plan y los dispositivos correctos, y que ambas opciones de cierre de sesión funcionan.",
+          "pro": "Solo la tarjeta Dispositivos requiere Pro; lista los dispositivos que sincronizan.",
+          "steps": {
+            "0": "Abre los Ajustes de la cuenta desde el panel.",
+            "1": "Revisa la tarjeta Perfil (correo, miembro desde), la tarjeta Suscripción (plan, \"Gestionar facturación\" o \"Mejorar plan\") y la tarjeta Dispositivos.",
+            "2": "Prueba \"Cerrar sesión\" y, por separado, \"Cerrar sesión en todos los dispositivos\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ajustes de la cuenta: la tarjeta Suscripción muestra el plan Pro, su fecha de renovación y {proMonthly}/mes, con un botón Gestionar facturación; debajo, la tarjeta Dispositivos lista los dispositivos con sesión iniciada",
+              "caption": "Las tarjetas Suscripción y Dispositivos en una cuenta Pro."
+            }
+          },
+          "good": {
+            "0": "Perfil y Suscripción muestran información correcta y actual (consulta la sección \"Mejorar a Pro\" de arriba para ver la tarjeta Suscripción en detalle).",
+            "1": "Dispositivos lista tus dispositivos con sesión iniciada con controles para renombrar/eliminar.",
+            "2": "Ambos botones de cierre de sesión te devuelven a un estado sin sesión; \"todos los dispositivos\" además revoca todas las demás sesiones activas.",
+            "3": "En esta página no hay opción para eliminar la cuenta: es lo esperado, no una carencia que informar."
+          }
+        },
+        "8": {
+          "heading": "En el celular",
+          "checks": "Que el panel y las páginas de cuenta se pueden usar por completo en una pantalla pequeña.",
+          "steps": {
+            "0": "Abre el panel y los Ajustes de la cuenta en un celular (o en una ventana de escritorio reducida a unos 390 px de ancho).",
+            "1": "Toca los iconos Panel y Cuenta de la parte superior, luego el menú de cuenta redondo de la derecha y su \"Cerrar sesión\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "El panel en una pantalla del ancho de un celular: la barra superior muestra el logotipo de TabMerger, los iconos Panel y Cuenta, el interruptor claro/oscuro y el menú de cuenta, sin nada cortado",
+              "caption": "El panel con ancho de celular: solo iconos en la barra superior, nada se desplaza lateralmente."
+            }
+          },
+          "good": {
+            "0": "Nada se desplaza lateralmente.",
+            "1": "La barra superior muestra el logotipo de TabMerger, los iconos Panel y Cuenta, el interruptor claro/oscuro y tu menú de cuenta, todo totalmente visible y tocable (el nombre \"TabMerger\" y las etiquetas de los iconos se ocultan en pantallas estrechas). Las pantallas más anchas siguen mostrando las etiquetas."
+          },
+          "report": "Una página se desplaza lateralmente en un celular, o algún control de la parte superior queda cortado o inalcanzable."
+        },
+        "9": {
+          "heading": "Notificaciones (avisos)",
+          "checks": "Que las notificaciones emergentes se leen bien, se cierran solas tras una cuenta atrás y se pueden cerrar antes.",
+          "steps": {
+            "0": "Provoca una notificación, por ejemplo: en los Ajustes de la cuenta, escribe en el formulario de contraseña una contraseña de menos de 8 caracteres y envíala (muestra un error sin cambiar nada), o copia un enlace para compartir.",
+            "1": "Observa la notificación en la esquina inferior derecha, luego provoca otra y pasa el cursor por encima.",
+            "2": "Pruébalo en modo claro y oscuro."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una notificación de error roja en la esquina inferior derecha que dice \"La contraseña debe tener al menos 8 caracteres.\", con una ✕ en su esquina y una barra de cuenta atrás parcialmente vaciada en su borde inferior",
+              "caption": "Una notificación de error: borde rojo, ✕ para cerrar y la barra de cuenta atrás en la parte inferior."
+            }
+          },
+          "good": {
+            "0": "Cada notificación se lee bien sobre la página, con un borde de color (verde para éxito, rojo para errores).",
+            "1": "Una barra en su parte inferior se vacía en unos 6 segundos y se pausa al pasar el cursor, y la notificación se cierra al agotarse.",
+            "2": "La ✕ de su esquina superior derecha la cierra al instante."
+          },
+          "report": "Una notificación es difícil de leer en algún tema, la barra sigue corriendo al pasar el cursor, o la ✕ está mal colocada o no la cierra."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Compartir",
+      "intro": "Compartir requiere Pro (consulta \"Mejorar a Pro\" arriba para conseguirlo en esta beta). La clave de cifrado de un enlace se genera nueva para cada uno y vive solo en el fragmento #key= de la URL: nunca se envía ni se guarda en el servidor, así que quien tenga el enlace completo (incluido ese fragmento) puede ver el contenido compartido. Trata un enlace para compartir como el propio contenido.",
+      "items": {
+        "0": {
+          "heading": "Compartir uno o varios grupos desde la extensión",
+          "checks": "Que la extensión crea un enlace para compartir de un grupo, o de varios a la vez.",
+          "steps": {
+            "0": "Entra en el modo de selección y marca uno o más grupos en la barra lateral (no pestañas ni ventanas: Compartir solo aparece con una selección de grupos).",
+            "1": "Haz clic en \"Compartir\" en la barra de selección de la parte inferior."
+          },
+          "examples": {
+            "0": {
+              "alt": "Modo de selección en el popup con Trabajo e Investigación marcados, \"2 grupos seleccionados\" y un botón Compartir en la barra inferior",
+              "caption": "Marca los grupos que quieras compartir y haz clic en Compartir en la barra inferior."
+            },
+            "1": {
+              "alt": "La misma pantalla con una notificación verde \"Enlace copiado al portapapeles\"",
+              "caption": "El enlace se copia al instante."
+            }
+          },
+          "good": {
+            "0": "Se copia un enlace al portapapeles enseguida, con un aviso \"Enlace copiado al portapapeles\".",
+            "1": "Seleccionar varios grupos a la vez los comparte todos juntos en un único enlace/paquete: no hace falta compartirlos uno por uno."
+          }
+        },
+        "1": {
+          "heading": "Abrir un enlace compartido",
+          "checks": "Que cualquiera puede abrir un enlace compartido sin iniciar sesión y ver los grupos compartidos, solo lectura.",
+          "pro": "Crear el enlace requiere Pro; abrirlo no requiere ninguna cuenta.",
+          "steps": {
+            "0": "Abre el enlace copiado en una ventana del navegador sin sesión iniciada (o en una ventana privada/incógnito).",
+            "1": "Revisa los favicons y títulos de cada pestaña compartida y prueba \"Abrir pestaña\" / \"Abrir todas las pestañas\" / \"Abrir ventana\" / \"Abrir todas las ventanas\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "La página compartida abierta sin sesión: \"Colección compartida · solo lectura\", el enlace compartido, \"9 pestañas en 5 ventanas en 2 grupos\", un interruptor Mostrar vistas previas de páginas y las pestañas del grupo Trabajo con botones Abrir",
+              "caption": "Lo que ve alguien que abre tu enlace sin iniciar sesión. (Aquí el enlace apunta a un servidor de pruebas local; el tuyo estará en preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "La página carga sin pedir inicio de sesión, etiquetada como \"Colección compartida · solo lectura\".",
+            "1": "Muestra cada grupo, ventana y pestaña con sus favicons y títulos reales.",
+            "2": "Los botones de abrir abren las pestañas/ventanas correctas en pestañas nuevas del navegador."
+          }
+        },
+        "2": {
+          "heading": "Vistas previas de páginas en la página compartida",
+          "checks": "Que las vistas previas de páginas en una página compartida siguen desactivadas hasta que el visitante las activa y confirma.",
+          "pro": "Crear el enlace requiere Pro; abrirlo no requiere ninguna cuenta.",
+          "steps": {
+            "0": "En la página compartida, busca el interruptor \"Mostrar vistas previas de páginas\" sobre la lista de grupos.",
+            "1": "Actívalo y confirma el diálogo que aparece.",
+            "2": "Pasa el cursor sobre una pestaña para ver su imagen de vista previa y su descripción."
+          },
+          "examples": {
+            "0": {
+              "alt": "El diálogo \"¿Activar las vistas previas de páginas?\" que explica qué se envía al servicio de vistas previas, con los botones Cancelar y Activar",
+              "caption": "Activar el interruptor pide confirmación antes. Las vistas previas siguen desactivadas hasta que confirmas."
+            }
+          },
+          "good": {
+            "0": "El interruptor está desactivado por defecto.",
+            "1": "Activarlo requiere confirmar antes un diálogo (desactivarlo de nuevo no requiere confirmación): el diálogo explica que al pasar el cursor sobre una pestaña se envía la dirección de esa pestaña al servicio de vistas previas de TabMerger, y que no se vincula a tu cuenta, ni se registra ni se almacena.",
+            "2": "Una vez activado, al pasar el cursor sobre una pestaña se muestra su imagen/descripción; una página sin imagen muestra \"Sin vista previa\" en lugar de una imagen rota."
+          }
+        },
+        "3": {
+          "heading": "Compartir un grupo con muchas ventanas",
+          "checks": "Que un grupo compartido con varias ventanas muestra cada ventana por separado.",
+          "steps": {
+            "0": "Comparte un grupo que tenga varias ventanas guardadas (no solo una)."
+          },
+          "examples": {
+            "0": {
+              "alt": "El grupo Investigación de la página compartida, con cuatro ventanas separadas, cada una con su propio enlace Abrir pestaña, y \"Abrir todas las ventanas\" en el grupo",
+              "caption": "Un grupo compartido con cuatro ventanas: cada ventana aparece por separado."
+            }
+          },
+          "good": {
+            "0": "La página compartida muestra cada ventana del grupo, cada una etiquetada \"Ventana N\" (e \"Incógnito\" si lo era), con sus propias pestañas y su propio control \"Abrir pestaña(s)\"."
+          }
+        },
+        "4": {
+          "heading": "Compartir desde el panel web en lugar de la extensión",
+          "checks": "Que compartir desde el sitio web funciona igual que desde la extensión.",
+          "steps": {
+            "0": "En el panel, haz clic en \"Compartir\" en una tarjeta de grupo, o marca varios grupos y haz clic en \"Compartir selección\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Las tarjetas de grupo del panel con el botón Compartir de una tarjeta mostrando \"¡Copiado!\" y una notificación que dice \"Enlace copiado: comparte una instantánea de este grupo.\"",
+              "caption": "Compartir en una tarjeta del panel copia el mismo tipo de enlace."
+            }
+          },
+          "good": {
+            "0": "Ambas vías del panel copian un enlace igual que la extensión (\"Enlace copiado: comparte una instantánea de este grupo.\" o \"¡Enlace copiado! La página compartida está activa.\" respectivamente), y producen el mismo tipo de página compartida."
+          }
+        },
+        "5": {
+          "heading": "Editar, volver a compartir, revocar y caducidad: lo que NO es posible",
+          "checks": "Lo que los enlaces compartidos aún no pueden hacer, para que no pierdas tiempo informándolo.",
+          "steps": {
+            "0": "Intenta encontrar alguna forma de editar un enlace compartido existente, o de revocarlo, eliminarlo o hacerlo caducar, desde la extensión o el panel."
+          },
+          "good": {
+            "0": "Actualmente no hay ninguna interfaz para editar, revocar, eliminar o hacer caducar un enlace una vez creado: un enlace compartido es una instantánea permanente e inmutable desde el momento en que se crea. Es lo esperado: no informes de la ausencia de un control de revocación/edición/caducidad, solo confirma que coincide con esta descripción.",
+            "1": "Volver a compartir el mismo grupo crea un enlace nuevo y distinto en lugar de actualizar el anterior; el enlace antiguo sigue funcionando y sigue mostrando la instantánea antigua."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Ajustes",
+      "intro": "Ajustes tiene las pestañas General, Cuenta y Datos para todos. La pestaña Dispositivos aparece cuando tienes Pro (consulta \"Mejorar a Pro\" arriba). Las pestañas IA y Dev no forman parte de esta compilación beta: la IA sigue oculta tras el indicador \"próximamente\" y Dev solo aparece en compilaciones de desarrollo locales, no en la beta que instalaste.",
+      "items": {
+        "0": {
+          "heading": "Pestaña General: Tema, Confirmar antes de eliminar, Abrir pestaña al hacer clic, Quitar duplicados automáticamente",
+          "checks": "Que estos ajustes generales surten efecto al instante y se recuerdan.",
+          "steps": {
+            "0": "Abre Ajustes y cambia el Tema entre Claro, Oscuro y Sistema.",
+            "1": "Activa y desactiva \"Confirmar antes de eliminar\" (elimina un grupo o ventana con la opción activada y luego desactivada, y compara).",
+            "2": "Activa y desactiva \"Abrir pestaña al hacer clic\" y luego haz clic en una pestaña guardada del panel principal.",
+            "3": "Activa y desactiva \"Quitar duplicados al combinar\" y luego combina dos ventanas que compartan una pestaña duplicada."
+          },
+          "examples": {
+            "0": {
+              "alt": "La pestaña General del modal de Ajustes, con Tema, Confirmar antes de eliminar y otros interruptores",
+              "caption": "La pestaña General de Ajustes, con la insignia de versión junto al título. (La pestaña Dev solo existe en nuestra compilación interna de capturas; no la verás.)"
+            }
+          },
+          "good": {
+            "0": "El tema cambia toda la interfaz al instante y se mantiene al cerrar y reabrir el popup.",
+            "1": "Con \"Confirmar antes de eliminar\" activado, eliminar un grupo o ventana pide confirmación; desactivado, elimina de inmediato.",
+            "2": "\"Abrir pestaña al hacer clic\" activado: un solo clic abre la pestaña en el navegador; desactivado: un solo clic solo la selecciona/expande.",
+            "3": "\"Quitar duplicados al combinar\" elimina el duplicado automáticamente cuando está activado."
+          }
+        },
+        "1": {
+          "heading": "Pestaña General: Mostrar imágenes de páginas en las vistas previas",
+          "checks": "Que el ajuste de imágenes de páginas controla si las vistas previas de pestañas muestran una imagen de la página.",
+          "steps": {
+            "0": "Desactiva \"Mostrar imágenes de páginas en las vistas previas\".",
+            "1": "Pasa el cursor sobre una pestaña guardada para ver su vista previa.",
+            "2": "Vuelve a activar el ajuste y pasa el cursor sobre la misma pestaña otra vez."
+          },
+          "examples": {
+            "0": {
+              "alt": "La vista previa de una pestaña con las imágenes de páginas desactivadas, mostrando un marcador \"No activado\"",
+              "caption": "La vista previa con \"Mostrar imágenes de páginas en las vistas previas\" desactivado."
+            }
+          },
+          "good": {
+            "0": "Desactivado: la vista previa dice claramente \"No activado\" con la nota \"Las imágenes de páginas están desactivadas. Actívalas en Ajustes.\" El interruptor se guarda al instante, sin diálogo de confirmación.",
+            "1": "Activado: se carga una imagen real de la página en la vista previa, o \"Sin vista previa\" si esa página no tiene ninguna.",
+            "2": "La descripción del propio ajuste enlaza con la sección de vistas previas de páginas de la política de privacidad."
+          },
+          "report": "La vista previa muestra \"Sin vista previa\" (en blanco) en lugar de una imagen real con el ajuste activado y una página que sí la tiene."
+        },
+        "2": {
+          "heading": "Pestaña General: Sincronización en la nube, Umbral de pestañas inactivas, Reglas de URL",
+          "checks": "Que estos ajustes aparecen para los planes correctos y cambian lo que deben.",
+          "pro": "Solo el interruptor de Sincronización en la nube requiere Pro (Gratis no lo muestra).",
+          "steps": {
+            "0": "Con Pro, activa y desactiva \"Sincronización en la nube\" (este control solo aparece con Pro).",
+            "1": "Cambia el \"Umbral de pestañas inactivas\" a otro valor (7/14/30/60 días).",
+            "2": "Haz clic en \"Gestionar\" junto a \"Reglas de URL\" y agrega una regla que asigne un patrón de URL a un grupo."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ajustes, pestaña General desplazada hacia abajo: Sincronización en la nube activada, Umbral de pestañas inactivas en 30 días y Reglas de URL con un botón Gestionar",
+              "caption": "La mitad inferior de la pestaña General. (La pestaña Dev solo existe en nuestra compilación interna de capturas; no la verás.)"
+            }
+          },
+          "good": {
+            "0": "La sincronización en la nube solo aparece en cuentas Pro (Gratis nunca la ve).",
+            "1": "Cambiar el umbral de pestañas inactivas cambia qué pestañas reciben el punto ámbar de inactividad.",
+            "2": "Reglas de URL abre un gestor donde puedes agregar/editar/eliminar reglas de patrón a grupo.",
+            "3": "Una pestaña recién abierta que coincide con una regla se asigna automáticamente."
+          }
+        },
+        "3": {
+          "heading": "Tema: Claro, Oscuro y Sistema",
+          "checks": "Que cada tema se ve bien en todo el popup y que la elección se recuerda.",
+          "steps": {
+            "0": "En Ajustes → General, pon el Tema en Oscuro y haz clic en Guardar cambios.",
+            "1": "Recorre el popup: la barra lateral, un grupo con varias ventanas, los menús ⋯, un menú de clic derecho, la Búsqueda (Ctrl+K) y los propios Ajustes.",
+            "2": "Cierra y vuelve a abrir el popup.",
+            "3": "Pon el Tema en Sistema, guarda y cambia tu computadora entre modo claro y oscuro.",
+            "4": "Vuelve a ponerlo en Claro."
+          },
+          "good": {
+            "0": "Todo el popup cambia de tema en cuanto guardas, con todo el texto, los iconos y los bordes legibles.",
+            "1": "Los menús, diálogos, tooltips y notificaciones también siguen el tema.",
+            "2": "El tema sigue aplicado tras reabrir el popup.",
+            "3": "Sistema sigue el ajuste claro u oscuro de tu computadora."
+          },
+          "report": "Algo es difícil de leer o conserva el tema anterior (un menú, diálogo, icono o borde), o el tema se restablece al reabrir el popup."
+        },
+        "4": {
+          "heading": "Reglas de URL: guardar automáticamente las páginas coincidentes",
+          "checks": "Que una regla de URL guarda las páginas que abres en direcciones coincidentes en el grupo que elegiste.",
+          "steps": {
+            "0": "En Ajustes → General, junto a Reglas de URL, haz clic en Gestionar y luego en Agregar regla.",
+            "1": "Introduce un patrón con * como comodín (p. ej., github.com/*), elige un grupo, agrega la regla y haz clic en Guardar.",
+            "2": "En el navegador, abre una pestaña nueva en una dirección que coincida (p. ej., cualquier página de github.com).",
+            "3": "Abre el popup y mira el grupo de la regla. Luego recarga la página una vez y revisa el grupo otra vez.",
+            "4": "Edita la regla para apuntar a otro grupo, luego elimínala y abre otra página coincidente.",
+            "5": "En Gratis, intenta agregar una cuarta regla."
+          },
+          "examples": {
+            "0": {
+              "alt": "El diálogo Reglas de URL: \"Asigna pestañas a grupos automáticamente por patrón de URL. Usa * como comodín (p. ej., github.com/*). Gana la primera regla que coincida.\", aún sin reglas, un botón Agregar regla y Cancelar y Guardar",
+              "caption": "Ajustes → General → Reglas de URL → Gestionar abre este editor."
+            }
+          },
+          "good": {
+            "0": "Se guarda una copia de la página coincidente en el grupo de la regla, en su primera ventana (o en una ventana nueva si el grupo no tiene ninguna). La pestaña en sí sigue abierta.",
+            "1": "Cuando coinciden varias reglas, gana la primera de la lista.",
+            "2": "Una vez editada o eliminada una regla, las páginas nuevas siguen el cambio.",
+            "3": "Gratis permite 3 reglas: al agregar una cuarta aparece \"El plan gratuito permite hasta 3 reglas de URL.\" con un botón Mejorar plan. Pro no tiene límite."
+          },
+          "report": "Una página coincidente no se guarda, cae en el grupo equivocado o se guarda más de una vez (por ejemplo, de nuevo cada vez que la recargas)."
+        },
+        "5": {
+          "heading": "Pestaña Cuenta: Plan, Renovación, Correo, Gestionar facturación / Mejorar plan, Cerrar sesión",
+          "checks": "Que la pestaña Cuenta muestra tu plan, fecha de renovación y correo reales, y que sus botones funcionan.",
+          "steps": {
+            "0": "Abre la pestaña Cuenta y revisa las filas Plan, Renovación (si es de pago) y Correo.",
+            "1": "Haz clic en \"Mejorar a Pro\" (Gratis) o \"Gestionar facturación\" (Pro/Pro AI); consulta \"Mejorar a Pro\" arriba para ver lo que ocurre después.",
+            "2": "Haz clic en \"Cerrar sesión\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ajustes, pestaña Cuenta en Pro: Plan Pro ({proMonthly}/mes), una fecha de renovación, el correo, los botones Gestionar facturación y Cerrar sesión, y \"¿Olvidaste tu frase de contraseña? Restablecer cifrado\"",
+              "caption": "La pestaña Cuenta en una cuenta Pro. El enlace de restablecimiento de abajo es el siguiente punto. (La pestaña Dev solo existe en nuestra compilación interna de capturas; no la verás.)"
+            }
+          },
+          "good": {
+            "0": "Plan muestra \"Gratis\", \"Pro ({proMonthly}/mes)\" o \"Pro AI ({proAiMonthly}/mes)\" según tu suscripción real.",
+            "1": "Renovación solo aparece en un plan de pago y da la fecha real de renovación.",
+            "2": "El correo coincide con tu cuenta con sesión iniciada.",
+            "3": "\"Gestionar facturación\" abre el portal de facturación de Stripe en una pestaña nueva; en Gratis aparece \"Mejorar a Pro\", que abre la página de precios.",
+            "4": "Cerrar sesión te devuelve a un estado sin sesión."
+          }
+        },
+        "6": {
+          "heading": "Pestaña Cuenta: ¿Olvidaste tu frase de contraseña? Restablecer cifrado",
+          "checks": "Que el enlace de restablecimiento del cifrado aparece en la pestaña Cuenta una vez configurado el cifrado.",
+          "steps": {
+            "0": "Este enlace solo aparece si has completado la configuración del cifrado al menos una vez (consulta la sección \"Frase de contraseña del cifrado de extremo a extremo\" más abajo para ver el flujo completo; no lo repitas aquí, solo confirma que se puede acceder desde esta pestaña)."
+          },
+          "good": {
+            "0": "El enlace es visible al final de la pestaña Cuenta una vez configurado el cifrado, y no antes."
+          }
+        },
+        "7": {
+          "heading": "Pestaña Datos: Exportar, Importar, Borrar todos los datos",
+          "checks": "Que exportar, importar y borrar tus datos funciona, con una confirmación antes de reemplazar o eliminar nada.",
+          "steps": {
+            "0": "Abre la pestaña Datos y haz clic en \"Exportar\" para descargar todos los grupos como archivo JSON.",
+            "1": "Haz clic en \"Importar\" y selecciona ese mismo archivo (o una exportación HTML de marcadores, o una exportación .txt de OneTab).",
+            "2": "Haz clic en \"Borrar todos los datos\" y confirma."
+          },
+          "examples": {
+            "0": {
+              "alt": "La pestaña Datos del modal de Ajustes, con los controles Exportar datos e Importar datos",
+              "caption": "La pestaña Datos de Ajustes."
+            }
+          },
+          "good": {
+            "0": "Exportar descarga un archivo con un nombre como \"tabmerger-backup-2026-01-15.json\" con un aviso de \"exportado correctamente\".",
+            "1": "Importar te pide confirmar el número de grupos antes de importar y luego muestra \"importado correctamente\".",
+            "2": "Volver a importar tu propia exportación recupera todos los grupos con las mismas ventanas, pestañas, orden y colores.",
+            "3": "Se aceptan los tres tipos de archivo (JSON de TabMerger, HTML de marcadores, .txt de OneTab), detectados por la extensión del archivo.",
+            "4": "\"Borrar todos los datos\" elimina grupos, sesiones y ajustes tras confirmar: considéralo destructivo y pruébalo solo en un perfil desechable."
+          },
+          "report": "Un archivo erróneo o vacío no hace nada en silencio en lugar de mostrar un aviso de error como \"Formato de archivo no válido\" o \"No se encontraron grupos\"."
+        },
+        "8": {
+          "heading": "Guardar frente a Restablecer, y el indicador \"Cambios sin guardar\"",
+          "checks": "Que los ajustes solo se guardan al hacer clic en Guardar y que te avisan de los cambios sin guardar.",
+          "steps": {
+            "0": "En la pestaña General, cambia cualquier ajuste (p. ej., el Tema) sin hacer clic en Guardar.",
+            "1": "Fíjate en el texto \"Cambios sin guardar\" y en que \"Guardar cambios\" solo está activado mientras algo difiere realmente de lo guardado.",
+            "2": "Haz clic en \"Restaurar valores\" en lugar de Guardar y cierra Ajustes sin guardar.",
+            "3": "Reabre Ajustes y comprueba si tu cambio se conservó."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ajustes, pestaña General tras un cambio: \"Cambios sin guardar\" junto a un botón Guardar cambios activado, con Restaurar valores a la izquierda",
+              "caption": "Tras cambiar un ajuste: aparece \"Cambios sin guardar\" y Guardar cambios se activa. (La pestaña Dev solo existe en nuestra compilación interna de capturas; no la verás.)"
+            }
+          },
+          "good": {
+            "0": "\"Cambios sin guardar\" aparece junto a \"Guardar cambios\" siempre que el borrador difiere de los últimos ajustes guardados.",
+            "1": "\"Guardar cambios\" está desactivado cuando no hay nada nuevo que guardar.",
+            "2": "\"Restaurar valores\" solo restablece el borrador en curso a los valores por defecto; no guarda por sí solo.",
+            "3": "Cerrar Ajustes sin hacer clic en \"Guardar cambios\" descarta el borrador; al reabrir se muestran los últimos valores realmente guardados, no tu edición sin guardar."
+          },
+          "report": "\"Guardar cambios\" sigue activado sin haber hecho cambios, o un ajuste que cambiaste pero nunca guardaste persiste tras cerrar y reabrir Ajustes."
+        },
+        "9": {
+          "heading": "La insignia de versión",
+          "checks": "Dónde encontrar el número de versión exacto para incluir en los informes de errores.",
+          "steps": {
+            "0": "Mira la barra de título del diálogo de Ajustes."
+          },
+          "good": {
+            "0": "Una pequeña insignia junto a la palabra \"Ajustes\" muestra el semver real que debes indicar en los informes de errores (p. ej., \"v3.1.0-beta.5\"); se explica con más detalle en la sección \"Únete e instala\" de arriba."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Inicio de sesión y sincronización entre dispositivos",
+      "intro": "Las compilaciones beta sincronizan a través de la app web de vista previa en preview.tabmerger.com, no del sitio principal: inicia sesión allí para ver tus grupos sincronizados, el panel y los enlaces para compartir.",
+      "items": {
+        "0": {
+          "heading": "Configurar dos dispositivos",
+          "checks": "Que dos dispositivos con la misma cuenta comparten sus grupos.",
+          "steps": {
+            "0": "Inicia sesión en dos dispositivos o dos perfiles del navegador con la extensión beta instalada en ambos, con la misma cuenta."
+          },
+          "examples": {
+            "0": {
+              "alt": "El diálogo \"Iniciar sesión en TabMerger\" de la extensión en el popup: Continuar con Google, luego las pestañas Iniciar sesión, Registrarse y Enlace mágico con campos de correo y contraseña",
+              "caption": "Iniciar sesión desde la extensión: el icono de cuenta (arriba a la derecha) → Iniciar sesión."
+            },
+            "1": {
+              "alt": "El popup del dispositivo A con los grupos Trabajo, Investigación, Compras y Lista de lectura; el pie dice 4 grupos, 4 ventanas, 17 pestañas",
+              "caption": "Dispositivo A."
+            },
+            "2": {
+              "alt": "El popup del dispositivo B tras iniciar sesión, desbloquear y sincronizar: los mismos cuatro grupos con el mismo número de ventanas y pestañas, y el mismo pie de 4 grupos, 4 ventanas, 17 pestañas",
+              "caption": "Dispositivo B tras iniciar sesión y desbloquear: los mismos grupos y cantidades, en el mismo orden."
+            }
+          },
+          "good": {
+            "0": "Los grupos creados en un dispositivo aparecen en el otro en poco tiempo."
+          }
+        },
+        "1": {
+          "heading": "Los cambios de nombre llegan al otro dispositivo",
+          "checks": "Que un cambio de nombre en un dispositivo aparece en el otro sin actualizar manualmente.",
+          "steps": {
+            "0": "Edita el nombre de un grupo en el dispositivo A.",
+            "1": "Revisa el dispositivo B sin tocar nada allí."
+          },
+          "examples": {
+            "0": {
+              "alt": "El popup del dispositivo A tras renombrar Investigación a \"Artículos de investigación\", con sus cuatro pestañas",
+              "caption": "Dispositivo A: \"Investigación\" renombrado a \"Artículos de investigación\"."
+            },
+            "1": {
+              "alt": "El popup del dispositivo B mostrando el grupo como \"Artículos de investigación\" con las mismas cuatro pestañas, tras solo reabrir el popup",
+              "caption": "Dispositivo B, tras solo reabrir el popup: el nuevo nombre está ahí."
+            }
+          },
+          "good": {
+            "0": "El dispositivo B recibe el cambio de nombre sin que tengas que actualizar manualmente."
+          }
+        },
+        "2": {
+          "heading": "Las eliminaciones llegan al otro dispositivo",
+          "checks": "Que un grupo eliminado sigue eliminado en todos los dispositivos en lugar de volver.",
+          "steps": {
+            "0": "Elimina un grupo en el dispositivo A.",
+            "1": "Confirma que también desaparece en el dispositivo B."
+          },
+          "examples": {
+            "0": {
+              "alt": "El popup del dispositivo A tras eliminar Compras: quedan Trabajo, Artículos de investigación y Lista de lectura, y el pie dice 3 grupos, 3 ventanas, 14 pestañas",
+              "caption": "Dispositivo A: \"Compras\" eliminado."
+            },
+            "1": {
+              "alt": "El popup del dispositivo B tras reabrir: Compras ha desaparecido y el pie dice 3 grupos, 3 ventanas, 14 pestañas",
+              "caption": "Dispositivo B tras reabrir el popup: \"Compras\" también ha desaparecido allí."
+            }
+          },
+          "good": {
+            "0": "La eliminación se propaga en lugar de que el grupo reaparezca (\"resucite\") tras la sincronización."
+          },
+          "report": "Un grupo eliminado vuelve en cualquiera de los dispositivos tras una sincronización posterior."
+        },
+        "3": {
+          "heading": "Reordenar grupos se sincroniza",
+          "checks": "Que el orden de tus grupos es el mismo en todos los dispositivos y en el panel.",
+          "steps": {
+            "0": "Arrastra un grupo a una nueva posición en la barra lateral del dispositivo A.",
+            "1": "Espera a que la sincronización se ponga al día y mira la barra lateral del dispositivo B y el panel web."
+          },
+          "good": {
+            "0": "El dispositivo B y el panel muestran los grupos en el mismo orden que el dispositivo A.",
+            "1": "Deshacer puede aparecer en gris en un dispositivo justo después de que una sincronización traiga cambios de otro. Es lo esperado: el historial de deshacer se borra cuando llegan cambios de otro sitio, para que no deshagas por error la edición de otro dispositivo."
+          },
+          "report": "El orden difiere entre dispositivos cuando la sincronización ya se ha puesto al día, o un reordenamiento vuelve al orden anterior."
+        },
+        "4": {
+          "heading": "Los cambios sin conexión se sincronizan al reconectar",
+          "checks": "Que los cambios hechos sin conexión se sincronizan al volver a estar en línea, sin duplicados ni pérdidas.",
+          "steps": {
+            "0": "Desconéctate (desactiva la red) en un dispositivo.",
+            "1": "Haz cambios.",
+            "2": "Vuelve a conectarte."
+          },
+          "good": {
+            "0": "Al volver a estar en línea, los cambios hechos sin conexión se sincronizan sin duplicar ni perder grupos en silencio."
+          }
+        },
+        "5": {
+          "heading": "Eliminar un grupo sin conexión",
+          "checks": "Que un grupo que eliminas sin conexión sigue eliminado al reconectar.",
+          "steps": {
+            "0": "Desconéctate (desactiva la red) en el dispositivo A.",
+            "1": "Elimina un grupo en el dispositivo A.",
+            "2": "Reconecta el dispositivo A, deja que sincronice y revisa el dispositivo B y el panel."
+          },
+          "good": {
+            "0": "El grupo se elimina del servidor en la siguiente sincronización y desaparece en el dispositivo B y en el panel.",
+            "1": "No vuelve en ninguno de los dispositivos después."
+          },
+          "report": "Un grupo que eliminaste sin conexión reaparece en algún dispositivo tras una sincronización."
+        },
+        "6": {
+          "heading": "El mismo grupo editado en dos dispositivos (copia de conflicto)",
+          "checks": "Que cuando el mismo grupo se edita en dos dispositivos antes de que ninguno sincronice, no se sobrescribe nada y obtienes una copia para combinar a mano.",
+          "steps": {
+            "0": "Desconéctate (desactiva la red) en el dispositivo A. Deja el dispositivo B en línea.",
+            "1": "En el dispositivo A, edita un grupo (por ejemplo, agrega una pestaña). En el dispositivo B, edita el mismo grupo de otra forma (por ejemplo, agrega una pestaña distinta).",
+            "2": "Deja que el dispositivo B sincronice primero, luego reconecta el dispositivo A y deja que sincronice.",
+            "3": "Mira la barra lateral en ambos dispositivos."
+          },
+          "good": {
+            "0": "La versión que llegó primero al servidor (dispositivo B) conserva el nombre del grupo.",
+            "1": "La versión del dispositivo A se guarda justo debajo como un grupo nuevo llamado \"Trabajo{CONFLICT_COPY_SUFFIX}\" (con el nombre de tu grupo), y un aviso te lo indica.",
+            "2": "Ambos dispositivos acaban mostrando ambos grupos. Puedes combinar las pestañas a mano y luego eliminar la copia.",
+            "3": "Editar solo un dispositivo, o editar grupos distintos en cada uno, nunca crea una copia."
+          },
+          "report": "Una edición desaparece en silencio sin copia, o aparece una \"copia de conflicto\" cuando solo un dispositivo editó el grupo."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Frase de contraseña del cifrado de extremo a extremo",
+      "intro": "El cifrado es obligatorio para toda cuenta con sesión iniciada, no un ajuste opcional: no hay interruptor para desactivarlo. Tus grupos sincronizados, sesiones e instantáneas de \"Abiertas ahora\" se cifran con una clave que solo tu frase de contraseña puede desbloquear; los servidores de TabMerger nunca ven la frase de contraseña ni la clave descifrada.",
+      "items": {
+        "0": {
+          "heading": "Configuración inicial de la frase de contraseña",
+          "checks": "Que activar la sincronización te pide elegir una frase de contraseña de cifrado antes de que tus datos salgan de tu dispositivo.",
+          "steps": {
+            "0": "En un inicio de sesión nuevo con sincronización en la nube, espera a que aparezca solo el aviso \"Configurar cifrado\" (lo activa el primer intento de sincronización).",
+            "1": "Lee el texto del aviso, escribe una frase de contraseña nueva y repítela en \"Confirmar frase de contraseña\".",
+            "2": "Haz clic en \"Configurar cifrado\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "El diálogo \"Configurar cifrado\" que explica que la frase de contraseña no se puede recuperar, con campos Nueva frase de contraseña y Confirmar frase de contraseña y un botón Configurar cifrado",
+              "caption": "Aparece solo justo después de iniciar sesión en Pro."
+            }
+          },
+          "good": {
+            "0": "El aviso dice \"Tus datos sincronizados de grupos y pestañas están cifrados de extremo a extremo con una frase de contraseña que solo tú conoces. Elige una ahora: no hay forma de recuperar tus datos si la olvidas, nunca sale de tu dispositivo y TabMerger no puede restablecerla por ti.\"",
+            "1": "La frase de contraseña debe tener al menos 8 caracteres sin espacios y coincidir con su confirmación; si no coinciden o es demasiado corta, aparece un error claro en línea (\"La frase de contraseña debe tener al menos 8 caracteres\" / \"Las frases de contraseña no coinciden\" / \"La frase de contraseña no puede contener espacios\") en lugar de fallar en silencio.",
+            "2": "Si todo va bien, ves un aviso \"Cifrado configurado\".",
+            "3": "No se pierde nada de lo que ya sincronizaste."
+          }
+        },
+        "1": {
+          "heading": "Desbloquear en un segundo dispositivo",
+          "checks": "Que un segundo dispositivo necesita tu frase de contraseña una vez antes de poder leer tus datos sincronizados.",
+          "steps": {
+            "0": "Inicia sesión con la misma cuenta en un segundo dispositivo o perfil del navegador.",
+            "1": "Cuando aparezca el aviso \"Desbloquear cifrado\", introduce tu frase de contraseña (una vez, no hay campo de confirmación) y haz clic en \"Desbloquear\" o pulsa Enter.",
+            "2": "Repite una vez más, pero escribe a propósito una frase de contraseña incorrecta."
+          },
+          "examples": {
+            "0": {
+              "alt": "El diálogo \"Desbloquear cifrado\" en un segundo dispositivo, con un único campo de frase de contraseña y un botón Desbloquear",
+              "caption": "En un segundo dispositivo, la extensión te pide una vez tu frase de contraseña existente."
+            }
+          },
+          "good": {
+            "0": "El aviso de desbloqueo dice \"Introduce tu frase de contraseña de cifrado para desbloquear los datos sincronizados en este dispositivo. Es un paso único por dispositivo: no se te volverá a pedir a menos que cierres sesión.\"",
+            "1": "La frase de contraseña correcta desbloquea y muestra un aviso \"Cifrado desbloqueado\".",
+            "2": "La incorrecta muestra \"Frase de contraseña incorrecta\" y no cambia nada más: sin corrupción ni bloqueo, puedes volver a intentarlo."
+          }
+        },
+        "2": {
+          "heading": "Cómo se ve \"bloqueado\" y seguir desbloqueado tras un reinicio",
+          "checks": "Que los datos bloqueados siguen ilegibles hasta que los desbloqueas y que un dispositivo sigue desbloqueado tras reiniciar el navegador.",
+          "steps": {
+            "0": "Con un dispositivo bloqueado (antes de introducir allí la frase de contraseña), intenta usar las funciones de sincronización en la nube.",
+            "1": "Desbloquéalo, luego cierra por completo y vuelve a abrir tu navegador (no solo el popup) en ese dispositivo."
+          },
+          "good": {
+            "0": "Mientras está bloqueado, se te vuelve a pedir la frase de contraseña en lugar de sincronizar texto sin cifrar o perder datos en silencio.",
+            "1": "Una vez desbloqueada, la clave persiste en el almacenamiento local del navegador en ese dispositivo: un reinicio completo del navegador no vuelve a pedirla; solo cerrar sesión la borra."
+          }
+        },
+        "3": {
+          "heading": "Olvidaste tu frase de contraseña: restablecer el cifrado",
+          "checks": "Que restablecer el cifrado se confirma claramente antes y te permite definir una frase de contraseña nueva.",
+          "steps": {
+            "0": "En Ajustes → Cuenta, busca \"¿Olvidaste tu frase de contraseña? Restablecer cifrado\" (solo aparece una vez que has completado la configuración al menos una vez).",
+            "1": "NO lo uses con datos que te importen: descarta de forma permanente el acceso a todo lo cifrado con tu frase de contraseña actual. Usa una cuenta de prueba desechable si quieres probarlo.",
+            "2": "Si lo pruebas, confirma el diálogo de restablecimiento y define una frase de contraseña totalmente nueva cuando se reabra el aviso de configuración."
+          },
+          "examples": {
+            "0": {
+              "alt": "La advertencia de confirmación \"Restablecer frase de contraseña de cifrado\" que indica que todo lo cifrado con la frase actual quedará inaccesible de forma permanente, con los botones Cancelar y Restablecer frase de contraseña",
+              "caption": "La confirmación que recibes antes de un restablecimiento. Cancelar es seguro; Restablecer frase de contraseña no es reversible."
+            }
+          },
+          "good": {
+            "0": "El diálogo de confirmación es claro antes de que ocurra nada.",
+            "1": "Tras confirmar, ves un aviso \"Cifrado restablecido: configura una frase de contraseña nueva\" y el aviso de configuración se reabre al instante para que elijas una nueva y sigas sincronizando."
+          }
+        },
+        "4": {
+          "heading": "Verificar en el panel web",
+          "checks": "Que el sitio web te pide la frase de contraseña antes de mostrar tus grupos sincronizados.",
+          "steps": {
+            "0": "Inicia sesión en el panel (preview.tabmerger.com) con una cuenta que tenga el cifrado configurado.",
+            "1": "Si se te pide, introduce tu frase de contraseña en la tarjeta de desbloqueo en línea antes de que aparezca cualquier contenido de grupos."
+          },
+          "examples": {
+            "0": {
+              "alt": "La sección Grupos de pestañas del panel web bloqueada, con un candado, \"Tus grupos están cifrados de extremo a extremo. Introduce tu frase de contraseña para verlos aquí.\", un campo de frase de contraseña y un botón Desbloquear",
+              "caption": "Hasta que introduzcas tu frase de contraseña, el panel muestra esto en lugar de tus grupos."
+            }
+          },
+          "good": {
+            "0": "El panel pide la frase de contraseña por separado de la extensión: desbloquear allí es un paso único por pestaña, no compartido con el desbloqueo de la extensión. El aviso dice \"Tus grupos están cifrados de extremo a extremo. Introduce tu frase de contraseña para verlos aquí.\"",
+            "1": "Una frase de contraseña incorrecta muestra \"Frase de contraseña incorrecta.\" sin que la página falle.",
+            "2": "Una vez desbloqueado, los nombres y pestañas reales de tus grupos se muestran con normalidad.",
+            "3": "Tras un restablecimiento de la frase de contraseña en la extensión, el panel pide la nueva: en la siguiente carga de página o, en un panel que ya estaba abierto, cuando pulsas el botón de actualizar en la etiqueta de sincronización.",
+            "4": "Un grupo o sesión que la frase de contraseña actual no puede leer (guardado antes de un restablecimiento y aún no subido de nuevo) aparece como \"(bloqueado)\" en lugar de filtrar contenido. El propio elemento explica por qué y qué hacer, y no se puede compartir ni restaurar hasta que vuelva a poder leerse."
+          }
+        },
+        "5": {
+          "heading": "Cómo comprobar que tus datos realmente están cifrados",
+          "checks": "Cómo puedes ver por ti mismo que tus datos son ilegibles sin tu frase de contraseña.",
+          "steps": {
+            "0": "No hay una insignia explícita \"Cifrado ✓\" en la interfaz: la señal visible es indirecta.",
+            "1": "En un dispositivo en el que aún no has desbloqueado (o en el panel, antes de introducir allí tu frase de contraseña), observa que los nombres y el contenido de los grupos no se muestran hasta que desbloqueas."
+          },
+          "good": {
+            "0": "La ausencia de contenido legible antes de desbloquear es la señal: no se muestra ningún nombre de grupo ni pestaña y, en el panel, todo lo que la frase de contraseña actual no puede leer aparece como \"(bloqueado)\".",
+            "1": "El panel muestra la tarjeta de la frase de contraseña en lugar de tus grupos. Si alguna vez el contenido fuera legible sin desbloquear, significaría que en realidad no está cifrado: infórmanos de inmediato si ves eso."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Cualquier pérdida de datos: un grupo, pestaña o sesión que desapareció y no debería haberlo hecho.",
+    "1": "Conflictos de sincronización: un grupo \"{CONFLICT_COPY_SUFFIX}\" es lo esperado cuando el mismo grupo se editó en dos dispositivos antes de que ninguno sincronizara. Avísanos si una edición desaparece en silencio o si aparece una copia cuando solo un dispositivo editó.",
+    "2": "Cualquier cosa confusa, poco clara o que te haya costado más clics de los necesarios.",
+    "3": "Cualquier lentitud: que el popup tarde en abrirse, la búsqueda, el arrastrar y soltar o la sincronización tarden notablemente más de lo esperado."
+  },
+  "metaTitle": "Programa beta",
+  "metaDescription": "Únete a la beta de TabMerger: instala la versión beta privada, descubre qué probar e informa de errores directamente al equipo.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Parte Pro",
+    "somePro": "Algo Pro",
+    "areaPartial": "Algunos elementos de aquí requieren una cuenta Pro",
+    "itemPartial": "Parte de este elemento requiere una cuenta Pro",
+    "areaAll": "Todos los elementos de aquí requieren una cuenta Pro",
+    "itemAll": "Requiere una cuenta Pro"
+  },
+  "eyebrow": "Programa beta",
+  "title": "Ayúdanos a probar TabMerger antes de lanzarlo",
+  "lead": "Consigue pronto la próxima versión de TabMerger y cuéntanos qué falla. Esta página explica cómo unirte, instalar la beta privada, qué probar y cómo informar de lo que encuentres. Las funciones de IA están ocultas (\"próximamente\") en esta compilación, así que aún no forman parte de las pruebas.",
+  "join": "Únete a la beta",
+  "onThisPage": "En esta página",
+  "install": {
+    "heading": "1. Únete e instala",
+    "groupTitle": "Únete al grupo de probadores.",
+    "groupBody": "Abre <link>groups.google.com/g/tabmerger-beta-testers</link> y únete. Unirse es inmediato, pero asegúrate de hacerlo con la <strong>misma cuenta de Google con la que has iniciado sesión en Chrome</strong>; si no, la ficha privada no te aparecerá.",
+    "listingTitle": "Abre la ficha beta privada.",
+    "listingLink": "Abrir la ficha de TabMerger BETA",
+    "listingPending": "la ficha \"TabMerger BETA\" en Chrome Web Store (enlace próximamente; mientras tanto, consulta el grupo de probadores para ver la URL actual).",
+    "listingNotFound": "Si ves <strong>\"Elemento no encontrado\"</strong>, probablemente te acabas de unir: el acceso puede tardar un poco en aparecer. Espera un rato e inténtalo de nuevo antes de pensar que algo va mal.",
+    "installTitle": "Instálala.",
+    "installBody": "Haz clic en \"Agregar a Chrome\". La beta se instala como una extensión aparte (\"TabMerger BETA\") de la ficha estable \"TabMerger\": puedes tener ambas instaladas a la vez y sus datos son completamente independientes. Te sugerimos desactivar la versión estable mientras pruebas, para no actuar sobre la equivocada sin querer.",
+    "signInTitle": "Inicia sesión en la app web de vista previa.",
+    "signInBody": "Las compilaciones beta sincronizan con <link>preview.tabmerger.com</link>, no con el sitio principal de tabmerger. Inicia sesión allí (desde la extensión o directamente en el panel) para ver los grupos y sesiones sincronizados.",
+    "browsersTitle": "¿En qué navegadores puedo probar?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc y Opera usan la misma ficha TabMerger BETA y el mismo Grupo de Google: no hay una beta de Edge aparte, así que no la busques. Edge: acepta \"Permitir extensiones de otras tiendas\" cuando se te pida. Opera: instala primero el complemento \"Install Chrome Extensions\" de Opera y luego usa el enlace de arriba. Si también tienes el TabMerger estable instalado desde la tienda de complementos de Edge, desactívalo mientras pruebas la beta: es una extensión distinta de esta. Safari no es compatible.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox tiene su propia compilación beta, que se instala desde un enlace directo y no desde la ficha de Chrome Web Store de arriba. <link>Instalar la beta de Firefox</link>. Firefox pregunta si quieres agregar \"TabMerger BETA\": elige Agregar. Busca actualizaciones por sí solo aproximadamente una vez al día; para comprobarlo ahora, abre <code>about:addons</code>, haz clic en el icono de engranaje y elige \"Buscar actualizaciones\". Inicia sesión una vez en la extensión y acepta el aviso de permiso de datos de Firefox (cubre el inicio de sesión y la sincronización); después, iniciar sesión en este sitio web también inicia sesión en la extensión. <strong>Cualquiera con el enlace de instalación de arriba puede instalarla</strong>: por favor, no lo compartas fuera del grupo de probadores.",
+    "firefoxSoon": "Pronto habrá una beta para Firefox; hasta entonces, los usuarios de Firefox pueden unirse a la beta con cualquiera de los navegadores Chromium compatibles de arriba (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Anota tu versión.",
+    "versionBody": "Abre los Ajustes de TabMerger y copia la insignia de versión junto al título \"Ajustes\" (p. ej., <code>v3.1.0-beta.5</code>), o consulta <code>chrome://extensions</code> y busca \"TabMerger BETA\". En cualquier caso, informa de ese semver real, no del número de versión interno de Chrome Web Store, que tiene un desfase y no coincide con el que usamos para seguir las compilaciones."
+  },
+  "test": {
+    "heading": "2. Qué probar",
+    "intro": "Recorre las áreas que coincidan con tu uso habitual de TabMerger. Cada elemento de abajo tiene pasos numerados, un ejemplo de cómo debería verse y cómo se ve un resultado correcto.",
+    "tickNote": "Marca cada paso a medida que avanzas. Tus marcas se guardan solo en este navegador y cada área muestra cuánto llevas.",
+    "needPro": "¿Necesito Pro?",
+    "needProBody": "Las áreas están ordenadas de Gratis a Pro. Todo lo que no está marcado funciona en Gratis, sin cuenta. <full></full>: todo el elemento requiere una cuenta Pro (la sincronización, el cifrado y la creación de enlaces para compartir son Pro). <partial></partial>: la mayor parte del elemento funciona en Gratis y una línea \"Pro:\" bajo su título indica qué parte no. Pro no cuesta nada en esta beta: pagas con una tarjeta de prueba (consulta <link>Mejorar a Pro</link>).",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "proLine": "Pro:",
+    "checksLine": "Qué comprueba esto:",
+    "steps": "Pasos",
+    "reportLine": "Infórmalo si:",
+    "testCheckout": "⚠ Esto es un pago de prueba.",
+    "testCheckoutBody": " No introduzcas nunca una tarjeta real. No se cobra dinero real y una tarjeta real no funcionaría aquí de todos modos.",
+    "testCardsFooter": "Con cualquier tarjeta: una fecha de caducidad futura (p. ej., <code>12/34</code>), cualquier CVC de 3 dígitos (p. ej., <code>123</code>) y lo que quieras para el nombre, el código postal y los demás campos. Más tarjetas: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "Lo que más nos interesa saber",
+  "knownIssues": {
+    "heading": "3. Problemas conocidos",
+    "intro": "Ya conocemos estos problemas, así que no hace falta informar de ellos. La lista se actualiza con cada versión beta; si algo de aquí está arreglado para ti, o se comporta distinto a como se describe, vale la pena informarlo.",
+    "meanwhile": "Mientras tanto:"
+  },
+  "report": {
+    "heading": "4. Informar de un error",
+    "discussions": "Los errores y las ideas van a nuestras Discussions públicas de GitHub: <link>github.com/{repo}/discussions</link>. Échales un vistazo primero: puede que alguien ya haya informado de lo mismo.",
+    "public": "<strong>Las Discussions son públicas.</strong> No pegues URL privadas, títulos de pestañas ni capturas que muestren información personal: difúminalos o recórtalos antes. Necesitarás una cuenta de GitHub (gratuita) para publicar.",
+    "bugButton": "Informar de un error en GitHub",
+    "ideaButton": "Compartir una idea en GitHub",
+    "noGithub": "¿No tienes cuenta de GitHub? Usa el formulario de contacto.",
+    "template": "Ambos enlaces rellenan esta plantilla en el cuerpo de la discusión: complétala antes de publicar, nos ahorra una ronda de preguntas de seguimiento:"
+  },
+  "faq": {
+    "heading": "Preguntas frecuentes",
+    "notFoundQ": "Veo \"Elemento no encontrado\"",
+    "notFoundA": "Asegúrate de haberte unido al Grupo de Google con la misma cuenta de Google con la que has iniciado sesión en Chrome. El acceso puede tardar un poco en aparecer tras unirte: espera un rato e inténtalo de nuevo antes de pensar que algo está roto.",
+    "stableQ": "¿Puedo mantener instalada la versión estable?",
+    "stableA": "Sí: la beta (\"TabMerger BETA\") es una extensión distinta de la estable (\"TabMerger\") con datos completamente independientes. Puedes usar ambas, aunque sugerimos desactivar la estable mientras pruebas para no confundirte sobre cuál estás usando.",
+    "chargedQ": "¿Me cobrarán si mejoro a Pro?",
+    "chargedA": "No: mejorar de plan en la beta usa el modo de prueba de Stripe. Usa una <link>tarjeta de prueba de Stripe</link> (consulta la sección \"Mejorar a Pro\" de arriba): ninguna tarjeta real funciona aquí y tampoco se mueve dinero real en ningún caso.",
+    "syncQ": "¿Dónde se sincronizan mis datos?",
+    "syncA": "Las compilaciones beta sincronizan con la app web de vista previa en preview.tabmerger.com, no con el sitio principal de tabmerger. Inicia sesión allí para ver tus grupos, sesiones y enlaces compartidos sincronizados.",
+    "issuesQ": "¿Dónde veo los problemas conocidos?",
+    "issuesA": "Consulta las <link>Discussions Q&A</link> del repositorio: ahí viven los informes de errores de la beta.",
+    "leaveQ": "¿Cómo salgo de la beta?",
+    "leaveA": "Sal del <link>Grupo de Google</link> y desinstala la extensión \"TabMerger BETA\". Tu instalación estable, si la conservaste, no se ve afectada."
+  },
+  "interactive": {
+    "good": "Así se ve un buen resultado",
+    "allDoneLabel": "Todas las comprobaciones hechas",
+    "progressLabel": "{done} de {total} comprobaciones hechas",
+    "allDone": "✓ Todo hecho",
+    "progress": "{done}/{total}",
+    "clear": "Borrar mis marcas ({count})",
+    "firefoxAutoStart": "La beta de Firefox debería iniciarse sola: Firefox pregunta si quieres agregarla; otros navegadores descargan el archivo. Si no pasa nada, usa \"Instalar la beta de Firefox\" en este paso."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "searchPlaceholder": "Tabs und Gruppen durchsuchen …",
+  "undo": "Rückgängig",
+  "redo": "Wiederholen",
+  "selectItems": "Elemente auswählen",
+  "exitSelectionMode": "Auswahlmodus beenden",
+  "aiActions": "KI-Aktionen",
+  "aiProRequired": "Pro AI erforderlich – zum Upgraden klicken",
+  "autoGroup": "Auto-Gruppieren",
+  "autoGroupHint": "Geöffnete Tabs mit KI gruppieren",
+  "organize": "Organisieren",
+  "organizeHint": "Alle Gruppen mit KI neu organisieren",
+  "takeTour": "Rundgang starten",
+  "accountMenu": "Kontomenü",
+  "settingsMenu": "Einstellungsmenü",
+  "upgradeToPro": "Auf Pro upgraden",
+  "upgradeToProAi": "Auf Pro AI upgraden",
+  "settings": "Einstellungen",
+  "signOut": "Abmelden",
+  "signIn": "Anmelden",
+  "toast": {
+    "noTabsToGroup": "Keine geöffneten Tabs zum Gruppieren",
+    "aiNoGroups": "Die KI hat keine Gruppen zum Erstellen gefunden",
+    "aiNoMatchingTabs": "Keine passenden Tabs für den Vorschlag der KI gefunden",
+    "aiCreated_one": "KI hat {{count}} Gruppe erstellt",
+    "aiCreated_other": "KI hat {{count}} Gruppen erstellt",
+    "aiSkipped": "{{skipped}} weitere vorgeschlagen, aber übersprungen – Limit des kostenlosen Tarifs erreicht.",
+    "aiGroupingFailed": "KI-Gruppierung fehlgeschlagen",
+    "organizeStarted": "Organisieren gestartet – prüfe den Vorschlag in deinem Dashboard",
+    "organizeFailed": "Organisieren konnte nicht gestartet werden"
+  }
+}

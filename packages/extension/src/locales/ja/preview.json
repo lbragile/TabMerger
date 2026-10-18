@@ -1,0 +1,7 @@
+{
+  "noPreview": "プレビューなし",
+  "notEnabled": "無効",
+  "imagesOff": "ページ画像はオフです。設定でオンにできます。",
+  "consentOff": "ページ画像に対するFirefoxの権限がオフになりました。設定で再び有効にしてください。",
+  "generateSummary": "✨ 要約を生成"
+}

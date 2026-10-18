@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Synchronisation en pause : autorisez dans Firefox",
+  "conflictCopy": "{{names}} a aussi été modifié sur un autre appareil. Votre version a été enregistrée comme copie.",
+  "quotedName": "« {{name}} »",
+  "groupsChangedElsewhere": "Un groupe sur lequel vous travailliez a été modifié ou supprimé ailleurs, rien n’a donc été changé.",
+  "undoConflict": "Vos groupes ont changé ailleurs, rien n’a donc été annulé. Réessayez.",
+  "freeLimit": {
+    "maxGroups": "L’offre gratuite autorise jusqu’à {{max}} groupes.",
+    "maxTabs": "L’offre gratuite autorise jusqu’à {{max}} onglets.",
+    "maxUrlRules": "L’offre gratuite autorise jusqu’à {{max}} règles d’URL."
+  },
+  "fileContains": "Ce fichier contient {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Ouvert comme fenêtre normale car TabMerger n’est pas autorisé en navigation privée. Pour changer cela, ouvrez Gérer l’extension et activez « Autoriser en navigation privée ».",
+  "encryptionAlreadySetUp": "Le chiffrement est déjà configuré pour ce compte. Saisissez votre phrase secrète existante pour le déverrouiller.",
+  "signInToEnableEncryption": "Vous devez être connecté pour activer le chiffrement",
+  "signInToResetEncryption": "Vous devez être connecté pour réinitialiser le chiffrement",
+  "googleUnavailable": "La connexion Google n’est pas disponible dans cet environnement",
+  "googleNoUrl": "La connexion Google n’a pas renvoyé d’URL d’autorisation",
+  "googleCancelled": "La connexion Google a été annulée",
+  "googleNoSession": "La connexion Google n’a pas renvoyé de session",
+  "googleFailed": "Échec de la connexion Google",
+  "expectedArray": "Tableau attendu",
+  "invalidFormat": "Format non valide",
+  "noGroupsFound": "Aucun groupe trouvé",
+  "noGroupsSelected": "Aucun groupe sélectionné",
+  "notAuthenticated": "Non authentifié",
+  "sharingRequiresPro": "Le partage nécessite Pro : droit non satisfait",
+  "aiOncePerDay": "Déjà utilisé aujourd’hui : cette action IA est limitée à une fois par jour",
+  "proAiRequired": "Offre Pro AI requise",
+  "nameGroupOff": "Le nommage de groupe est désactivé dans les Paramètres",
+  "suggestSessionsOff": "Les suggestions de sessions sont désactivées dans les Paramètres",
+  "organizeOff": "L’organisation est désactivée dans les Paramètres"
+}

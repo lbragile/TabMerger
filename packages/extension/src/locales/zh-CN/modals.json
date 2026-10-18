@@ -1,0 +1,53 @@
+{
+  "addGroup": {
+    "title": "创建新分组",
+    "name": "名称",
+    "namePlaceholder": "分组名称",
+    "color": "颜色",
+    "cancel": "取消",
+    "create": "创建"
+  },
+  "dedup": {
+    "title": "移除重复项",
+    "description_other": "将移除 {{count}} 个重复的标签页。",
+    "cancel": "取消",
+    "confirm_other": "移除 {{count}} 个重复项"
+  },
+  "staleGroups": {
+    "title": "查看过期分组",
+    "description_other": "有 {{count}} 个分组已有一段时间未动，可展开预览，或直接归档。",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "隐藏",
+    "preview": "预览",
+    "archive": "归档",
+    "empty": "此分组为空。",
+    "close": "关闭"
+  },
+  "staleTabs": {
+    "title": "过期标签页",
+    "description_other": "有 {{count}} 个标签页已有一段时间未动。",
+    "close": "关闭",
+    "removeAll_other": "移除 {{count}} 个标签页"
+  },
+  "saveSession": {
+    "title": "保存会话",
+    "name": "会话名称",
+    "namePlaceholder": "例如：工作研究、周末阅读",
+    "nameRequired": "会话名称为必填项",
+    "description": "描述（可选）",
+    "descriptionPlaceholder": "这个会话是做什么用的？",
+    "cancel": "取消",
+    "save": "保存"
+  },
+  "shortcutSave": {
+    "title_other": "保存 {{count}} 个标签页",
+    "description": "选择保存快捷键所捕获标签页的位置。",
+    "destination": "目标分组",
+    "quickSave": "快速保存（新分组）",
+    "cancel": "取消",
+    "save": "保存"
+  },
+  "confirmDialog": {
+    "cancel": "取消"
+  }
+}

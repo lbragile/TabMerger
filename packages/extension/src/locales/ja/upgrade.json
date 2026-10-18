@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "グループ数の上限に達しました",
+    "description": "無料プランのグループ数の上限（{{max}}個）に達しました。Proにアップグレードすると、グループが無制限になります。"
+  },
+  "maxTabs": {
+    "title": "タブ数の上限に達しました",
+    "description": "無料プランのタブ数の上限（{{max}}個）に達しました。Proにアップグレードすると、タブが無制限になります。"
+  },
+  "cloudSync": {
+    "title": "クラウド同期はProの機能です",
+    "description": "TabMerger Proで、すべてのデバイス間でグループを同期できます。アップグレードしてクラウド同期を有効にしてください。"
+  },
+  "aiFeatures": {
+    "title": "AI機能はPro AIの機能です",
+    "description": "AIによる自動グループ化、スマートな名前付け、タブの要約は、Pro AIプランで利用できます。"
+  },
+  "default": {
+    "title": "TabMergerをアップグレード",
+    "description": "TabMerger Proで、グループの無制限利用、クラウド同期、自動バックアップ、AI機能を利用できます。"
+  },
+  "signInHint": "すでにProアカウントをお持ちですか？サインインして、このデバイスで復元してください。",
+  "planPrice": " — {{price}}/月",
+  "comingSoon": "近日公開",
+  "comingSoonParen": "（{{label}}）",
+  "plans": {
+    "free": {
+      "name": "無料",
+      "f1": "グループ{{groups}}個まで",
+      "f2": "タブ{{tabs}}個まで",
+      "f3": "URLルール{{urlRules}}個まで"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "無料プランのすべての機能",
+      "f2": "グループ、タブ、URLルール、セッションが無制限",
+      "f3": "デバイス間のクラウド同期"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Proのすべての機能",
+      "f2": "AIによるタブの自動グループ化",
+      "f3": "AIによるグループ名の提案"
+    }
+  },
+  "maybeLater": "あとで",
+  "signIn": "サインイン",
+  "upgradeNow": "今すぐアップグレード"
+}

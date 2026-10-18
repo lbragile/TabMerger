@@ -1,0 +1,22 @@
+{
+  "heading": "Appareils",
+  "empty": "Aucun appareil pour le moment.",
+  "selected": "{{count}} sélectionné(s)",
+  "remove": "Supprimer",
+  "removeTitle_one": "Supprimer {{count}} appareil ?",
+  "removeTitle_many": "Supprimer {{count}} d’appareils ?",
+  "removeTitle_other": "Supprimer {{count}} appareils ?",
+  "removeDescription": "Les appareils supprimés disparaissent de cette liste. Si ce navigateur est encore actif, il peut se réinscrire à sa prochaine synchronisation ; ce n’est donc pas définitif pour un appareil en service.",
+  "cancel": "Annuler",
+  "selectDevice": "Sélectionner {{name}}",
+  "nameInput": "Nom de cet appareil",
+  "save": "Enregistrer",
+  "thisDevice": "(cet appareil)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Renommer cet appareil",
+  "noTabs": "Aucun onglet.",
+  "restoreTabs_one": "Restaurer {{count}} onglet",
+  "restoreTabs_many": "Restaurer {{count}} d’onglets",
+  "restoreTabs_other": "Restaurer {{count}} onglets",
+  "open": "Ouvrir"
+}

@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Erro 404 · Página não encontrada",
+    "title": "Esta aba sumiu por aí",
+    "description": "Procuramos em todos os grupos e não encontramos esta página. Ela pode ter sido movida, fechada ou nunca ter existido. Vamos colocar você de volta no caminho.",
+    "documentTitle": "Página não encontrada",
+    "tabLabel": "Página ausente"
+  },
+  "serverError": {
+    "eyebrow": "Erro 500 · Algo deu errado",
+    "title": "Esta aba travou",
+    "description": "Algo quebrou do nosso lado ao carregar esta página. Suas abas e grupos na extensão não foram afetados. Tente de novo daqui a pouco.",
+    "documentTitle": "Algo deu errado",
+    "tabLabel": "Não está respondendo"
+  },
+  "links": {
+    "features": "Recursos",
+    "pricing": "Preços",
+    "faq": "Perguntas frequentes",
+    "dashboard": "Painel",
+    "account": "Conta",
+    "contactSupport": "Falar com o suporte"
+  },
+  "helpfulLinks": "Links úteis",
+  "tryThese": "Ou tente um destes",
+  "illustrationTabResearch": "Pesquisa",
+  "illustrationTabDocs": "Docs",
+  "tryAgain": "Tentar novamente",
+  "backToHome": "Voltar ao início",
+  "backToDashboard": "Voltar ao painel",
+  "devDetails": "Detalhes do erro (somente em desenvolvimento)",
+  "referenceId": "ID de referência",
+  "copyReferenceId": "Copiar ID de referência",
+  "referenceIdHint": "Informe este ID se falar com o suporte, para encontrarmos o que deu errado.",
+  "referenceIdCopied": "ID de referência copiado",
+  "referenceIdCopyFailed": "Falha ao copiar. Selecione o ID para copiá-lo.",
+  "titleWithBrand": "{title} | TabMerger"
+}

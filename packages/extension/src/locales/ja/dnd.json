@@ -1,0 +1,77 @@
+{
+  "instructions": "Spaceで持ち上げ、矢印キーで場所を選び（左右でウィンドウとグループを切り替え）、Spaceでドロップ、Escapeでキャンセルします。Shift+Spaceで範囲を選択し、{{modifier}}+Aですべて選択して、複数をまとめて移動できます。",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "タブ",
+    "window": "ウィンドウ",
+    "group": "グループ",
+    "item": "項目"
+  },
+  "typeStart": {
+    "tab": "タブ",
+    "window": "ウィンドウ",
+    "group": "グループ",
+    "item": "項目"
+  },
+  "untitledTab": "無題のタブ",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{name}}から始まる{{items}}、",
+  "position": {
+    "tab": "グループ{{group}}の{{window}}内の{{total}}件中{{index}}番目",
+    "window": "グループ{{group}}内の{{total}}件中{{index}}番目",
+    "group": "{{total}}件中{{index}}番目"
+  },
+  "target": {
+    "newGroup": "新しいグループ",
+    "newWindowAtEnd": "グループ{{group}}の末尾にある新しいウィンドウ",
+    "nowOpen": "現在開いているタブ（新しいブラウザウィンドウで開きます）",
+    "groupAsWindow": "グループ{{group}}の新しいウィンドウとして"
+  },
+  "token": {
+    "dropped": "ドロップしました。",
+    "cancelled": "キャンセルしました。"
+  },
+  "bail": {
+    "cancelled": "移動をキャンセルしました。",
+    "nothingMoved": "ドロップしました。何も移動していません。",
+    "returnedMany": "{{items}}を元に戻しました",
+    "returnedOne": "{{named}}を元に戻しました",
+    "noop": "{{what}}を{{position}}にドロップしました。何も移動していません。",
+    "stale": "ドラッグ中にグループが変更されたため、何も移動されませんでした。{{returned}}を{{position}}に戻しました。",
+    "cancelledReturned": "移動をキャンセルしました。{{returned}}を{{position}}に戻しました。",
+    "rejected": "そこにはドロップできません。{{returned}}を{{position}}に戻しました。"
+  },
+  "removedElsewhere_other": "{{count}}件が別の場所で削除されました。",
+  "stillSelected_other": "選択されたままです。",
+  "dropped": "ドロップしました。",
+  "movedGroups": "{{count}}個のグループを{{position}}に、1つのまとまりとして移動しました。",
+  "movedGroup": "グループ{{name}}を{{position}}に移動しました。",
+  "partial": "{{total}}件中{{count}}件",
+  "at": "{{total}}件中{{index}}番目",
+  "startingAt": "{{total}}件中{{index}}番目から",
+  "whereTab": "グループ{{group}}の{{window}}、{{at}}",
+  "whereWindow": "グループ{{group}}、{{at}}",
+  "movedTo": "{{items}}を{{where}}に移動しました。",
+  "openTabsClosed": "開いていたタブは閉じられました。",
+  "groupHidden": "グループ{{group}}は表示されていません。",
+  "openedNewWindow": "{{items}}を新しいブラウザウィンドウで開きました。",
+  "openedNowOpen": "{{items}}を現在開いているタブで開きました。",
+  "movedNewWindow": "{{items}}を新しいブラウザウィンドウに移動しました。",
+  "movedWithinNowOpen": "{{items}}を現在開いているタブ内で移動しました。",
+  "originalPosition": "元の位置の上にあります。",
+  "pickedUpType": "{{type}}を持ち上げました。",
+  "pickedUpMany": "{{what}}を持ち上げました。",
+  "pickedUpOne": "{{type}} {{name}}を持ち上げました。{{position}}。",
+  "groupShown": "グループ{{name}}を表示しました。",
+  "copyHint": "保存済みグループへのドロップはコピーになり、開いているタブはそのまま残ります。",
+  "notOver": "ドロップできる場所の上にありません。",
+  "over": "{{target}}の上にあります。",
+  "cantDropOn": "{{target}}にはドロップできません。",
+  "typeDropped": "{{type}}をドロップしました。",
+  "cancelledReturnedType": "移動をキャンセルしました。{{type}}を元の位置に戻しました。",
+  "saveFailed": "移動を保存できなかったため、元に戻しました。"
+}

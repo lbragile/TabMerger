@@ -12,6 +12,12 @@ export type Messages = typeof en
  */
 const CATALOGS: Partial<Record<AppLocale, () => Promise<MessageTree>>> = {
   en: async () => en,
+  de: async () => (await import('@/messages/de')).default,
+  es: async () => (await import('@/messages/es')).default,
+  fr: async () => (await import('@/messages/fr')).default,
+  ja: async () => (await import('@/messages/ja')).default,
+  'pt-BR': async () => (await import('@/messages/pt-BR')).default,
+  'zh-CN': async () => (await import('@/messages/zh-CN')).default,
 }
 
 /** `fallback` with `override` laid over it, key by key: a missing translation shows English. */

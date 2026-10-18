@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "à l’instant",
+    "minutesAgo": "il y a {count} min",
+    "hoursAgo": "il y a {count} h",
+    "daysAgo": "il y a {count} j",
+    "renameFailed": "Impossible de renommer l’appareil",
+    "renamed": "Appareil renommé",
+    "removeFailed": "Impossible de supprimer l’appareil",
+    "removed": "Appareil supprimé",
+    "removeManyFailed": "Impossible de supprimer les appareils",
+    "removedMany": "{count, plural, one {{count} appareil supprimé} many {{count} appareils supprimés} other {{count} appareils supprimés}}",
+    "empty": "Aucun appareil pour le moment.",
+    "selectAll": "Sélectionner tous les appareils",
+    "selectedCount": "{count} sélectionné(s)",
+    "removeSelected": "{count, plural, one {Supprimer {count} appareil} many {Supprimer {count} appareils} other {Supprimer {count} appareils}}",
+    "selectDevice": "Sélectionner {name}",
+    "active": "Actif {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} fenêtre} many {{windows} fenêtres} other {{windows} fenêtres}} · {tabs, plural, one {{tabs} onglet} many {{tabs} onglets} other {{tabs} onglets}}",
+    "options": "Options de l’appareil",
+    "rename": "Renommer",
+    "remove": "Supprimer",
+    "removeTitle": "Supprimer l’appareil ?",
+    "removeBody": "« {name} » ne synchronisera plus ses onglets. Cette action est irréversible.",
+    "removeManyTitle": "Supprimer {count} appareils ?",
+    "removeManyBody": "Ces appareils ne synchroniseront plus leurs onglets. Cette action est irréversible.",
+    "cancel": "Annuler"
+  },
+  "metaTitle": "Compte",
+  "title": "Paramètres du compte",
+  "lead": "Gérez votre compte et votre abonnement.",
+  "stats": {
+    "groups": "Groupes synchronisés",
+    "tabs": "Onglets enregistrés",
+    "sessions": "Sessions et sauvegardes",
+    "aiCredits": "Crédits IA restants"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Les informations de votre compte.",
+    "email": "E-mail",
+    "memberSince": "Membre depuis"
+  },
+  "signOutAll": {
+    "title": "Se déconnecter de tous les appareils",
+    "description": "Cela révoquera toutes les sessions actives.",
+    "button": "Se déconnecter"
+  },
+  "subscription": {
+    "title": "Abonnement",
+    "description": "Gérez votre offre et votre facturation.",
+    "manageBilling": "Gérer la facturation",
+    "upgrade": "Passer à l’offre supérieure",
+    "cancelNote": "Vous pouvez résilier à tout moment via <strong>Gérer la facturation</strong>. Vous gardez l’accès jusqu’à la fin de la période de facturation en cours."
+  },
+  "devicesCard": {
+    "title": "Appareils",
+    "description": "Les appareils qui synchronisent vos groupes et onglets. Pro et Pro AI uniquement."
+  },
+  "password": {
+    "tooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+    "updated": "Mot de passe mis à jour",
+    "set": "Mot de passe défini : vous pouvez aussi vous connecter avec e-mail et mot de passe",
+    "change": "Changer le mot de passe",
+    "setLabel": "Définir un mot de passe",
+    "placeholder": "••••••••••",
+    "save": "Enregistrer"
+  },
+  "credits": {
+    "failed": "Impossible de lancer le paiement",
+    "getMore": "En obtenir plus"
+  }
+}

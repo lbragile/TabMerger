@@ -1,0 +1,287 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "TabMerger kennenlernen",
+      "description": "Ein erster Blick: wo deine geöffneten Tabs erscheinen und wie das Fenster aufgebaut ist. Noch nichts auszuprobieren."
+    },
+    "groups": {
+      "title": "Mit Gruppen organisieren",
+      "description": "In Gruppen leben gespeicherte Tabs. Du erstellst eine, benennst sie, gibst ihr eine Farbe und heftest sie oben an."
+    },
+    "drag": {
+      "title": "Per Ziehen verschieben",
+      "description": "Du verschiebst Tabs und Gruppen, und zwar in zwei Übungsgruppen, die der Rundgang hinzufügt: „Tour demo“ und „Tour demo 2“. Sie enthalten Beispiel-Tabs, nicht deine."
+    },
+    "tabs": {
+      "title": "Tabs speichern und wieder öffnen",
+      "description": "Wie du geöffnete Tabs in eine Gruppe verschiebst, später zurückholst und Gespeichertes aufräumst. Du probierst alles an den Übungsgruppen und an einem Ersatz-Tab aus, den der Rundgang öffnet: Keiner deiner eigenen Tabs wird gespeichert, geöffnet oder geschlossen."
+    },
+    "find": {
+      "title": "Finden und Fehler rückgängig machen",
+      "description": "Durchsuche alle Tabs und Gruppen auf einmal und geh einen Schritt zurück, wenn du es dir anders überlegst. Du probierst eine Suche sowie „Rückgängig“ und „Wiederholen“ an den Übungsgruppen aus."
+    },
+    "later": {
+      "title": "Für später aufbewahren",
+      "description": "Speichere alle Gruppen auf einmal, leg eine Gruppe weg, ohne sie zu löschen, und speichere von jeder Webseite aus. Dieses Kapitel erklärt nur."
+    },
+    "settings": {
+      "title": "Einstellungen und dein Konto",
+      "description": "Ändere das Aussehen von TabMerger und sieh, was die Einstellungen sonst bieten und was die Anmeldung bringt. Du probierst den Wechsel des Designs aus."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Willkommen bei TabMerger",
+      "body": "TabMerger räumt deinen Browser auf. Speichere deine geöffneten Tabs in benannten Gruppen, schließe sie und hol sie zurück, wann immer du sie brauchst. Dieser Rundgang hat sieben kurze Kapitel, die oben auf dieser Karte benannt sind. Bei manchen Schritten sollst du selbst etwas ausprobieren: Ein oranger Ring markiert dann das nächste Bedienelement, und der Text nennt es. Für diese Schritte fügt der Rundgang zwei Übungsgruppen mit Beispiel-Tabs hinzu, „Tour demo“ und „Tour demo 2“, und entfernt sie von selbst wieder. Du kannst jederzeit einen Schritt, ein Kapitel oder den ganzen Rundgang überspringen."
+    },
+    "now-open": {
+      "title": "Jetzt geöffnet",
+      "body": "„Jetzt geöffnet“ ganz oben in der Liste links ist eine Live-Liste aller Tabs, die gerade in deinem Browser offen sind. Sie steht immer an erster Stelle und lässt sich nicht löschen."
+    },
+    "main-panel": {
+      "title": "Fenster und Tabs",
+      "body": "Das Hauptfeld zeigt, was in der links gewählten Gruppe steckt: ihre Fenster und die Tabs in jedem Fenster. Bei „Jetzt geöffnet“ sind das deine echten Browserfenster."
+    },
+    "make-group": {
+      "title": "Eine Gruppe erstellen",
+      "body": "Eine Gruppe ist ein benannter Ort für gespeicherte Tabs, zum Beispiel „Arbeit“ oder „Urlaubspläne“. Probier es aus: Wähle „Gruppe hinzufügen“ unter deinen Gruppen. Eine neue Gruppe erscheint mit bereitem Feld „Gruppenname“, das „temp group“ zeigt. Gib einen eigenen Namen ein, etwa „Übung“, und drücke dann Enter oder wähle „Speichern“ neben dem Feld.",
+      "doneText": "Super, deine Gruppe ist bereit. Die nächsten Schritte nutzen sie.",
+      "fallbackBody": "Eine Gruppe ist ein benannter Ort für gespeicherte Tabs, zum Beispiel „Arbeit“ oder „Urlaubspläne“. Mit „Gruppe hinzufügen“ unter deinen Gruppen erstellst du eine. Du hast bereits so viele Gruppen, wie dein Tarif erlaubt, daher wird dieser Schritt nur gezeigt, nicht ausprobiert."
+    },
+    "group-color": {
+      "title": "Gib ihr eine Farbe",
+      "body": "Farben helfen, Gruppen auseinanderzuhalten. Probier es aus: Wähle in der eben erstellten Gruppe den runden Punkt „Gruppenfarbe ändern“ vor ihrem Namen. Wähle eines der runden Farbfelder und dann „Anwenden“.",
+      "doneText": "Super, Farbe geändert.",
+      "fallbackBody": "Farben helfen, Gruppen auseinanderzuhalten. Jede Gruppe hat vor ihrem Namen einen runden Punkt „Gruppenfarbe ändern“: Wähle ihn, such eine Farbe aus und wähle dann „Anwenden“."
+    },
+    "group-pin": {
+      "title": "Eine Gruppe oben anheften",
+      "body": "Angeheftete Gruppen bleiben über den anderen. Probier es aus: Wähle in der eben erstellten Gruppe den Stern am Ende ihrer Zeile. Er heißt „Gruppe anheften“, oder „Gruppe lösen“, wenn die Gruppe schon angeheftet ist.",
+      "doneText": "Super. Wähle den Stern erneut, wenn du es wieder rückgängig machen willst.",
+      "fallbackBody": "Angeheftete Gruppen bleiben über den anderen. Jede Gruppe hat am Ende ihrer Zeile einen Stern namens „Gruppe anheften“: Wähle ihn, um die Gruppe anzuheften, und noch einmal, um sie zu lösen."
+    },
+    "group-menu": {
+      "title": "Mehr für jede Gruppe",
+      "body": "Jede gespeicherte Gruppe hat ein Rechtsklick-Menü. Es enthält „Umbenennen“, „Notiz hinzufügen“, „Duplizieren“, „Mit aktueller zusammenführen“, um deine geöffneten Fenster zur Gruppe hinzuzufügen, „Gruppe archivieren“, um sie auszublenden, und „Gruppe löschen“. Dieser Schritt ist nur zum Anschauen: Die Liste ist während des Rundgangs gesperrt, probiere das Menü also danach aus."
+    },
+    "drag-tab-reorder": {
+      "title": "Tabs neu anordnen",
+      "body": "Das Hauptfeld zeigt die Übungsgruppe „Tour demo“. Vor jedem Tab sitzt ein gepunkteter Griff namens „Ziehen, um Tab neu anzuordnen“. Verschiebe den ersten Tab des Fensters „Reading“ ans Ende dieses Fensters.",
+      "subStepText": {
+        "1": "Halte den Griff des ersten Tabs gedrückt.",
+        "2": "Zieh ihn nach unten zur Linie unter dem letzten Tab, markiert mit „Unter diesem Tab ablegen“.",
+        "3": "Lass los, um ihn abzulegen."
+      },
+      "subStepKeys": {
+        "1": "mit der Tabulatortaste zum Griff gehen, dann mit der Leertaste den Tab aufnehmen.",
+        "2": "die Pfeiltaste Ab drücken, bis der Tab an der Linie „Unter diesem Tab ablegen“ steht.",
+        "3": "mit der Leertaste ablegen."
+      },
+      "doneText": "Super, der Tab wurde verschoben.",
+      "fallbackBody": "Vor jedem gespeicherten Tab sitzt ein gepunkteter Griff namens „Ziehen, um Tab neu anzuordnen“. Damit verschiebst du den Tab in seinem Fenster nach oben oder unten. Dieser Schritt ist nur zum Anschauen."
+    },
+    "drag-tab-window": {
+      "title": "Einen Tab in ein anderes Fenster verschieben",
+      "body": "Ein Tab kann auch in ein anderes Fenster derselben Gruppe wandern. Verschiebe den ersten Tab in das andere Fenster von „Tour demo“.",
+      "subStepText": {
+        "1": "Halte den Griff des ersten Tabs gedrückt.",
+        "2": "Zieh ihn auf das andere Fenster, markiert mit „In diesem Fenster ablegen“.",
+        "3": "Lass los, um ihn abzulegen."
+      },
+      "subStepKeys": {
+        "1": "mit der Tabulatortaste zum Griff gehen, dann mit der Leertaste den Tab aufnehmen.",
+        "2": "die Pfeiltaste Ab drücken, bis der Tab im Fenster „In diesem Fenster ablegen“ liegt.",
+        "3": "mit der Leertaste ablegen."
+      },
+      "doneText": "Super, der Tab ist im anderen Fenster.",
+      "fallbackBody": "Wenn du einen Tab am Griff auf ein anderes Fenster derselben Gruppe ziehst, wandert er dorthin. Dieser Schritt ist nur zum Anschauen."
+    },
+    "drag-tab-group": {
+      "title": "Einen Tab in eine andere Gruppe verschieben",
+      "body": "Wenn du einen Tab auf eine Gruppe in der Liste links ablegst, wandert er in diese Gruppe. Verschiebe den ersten Tab in die Übungsgruppe „Tour demo 2“.",
+      "subStepText": {
+        "1": "Halte den Griff des ersten Tabs gedrückt.",
+        "2": "Zieh ihn in der Liste links auf „Tour demo 2“, markiert mit „Auf dieser Gruppe ablegen“.",
+        "3": "Lass los, um ihn abzulegen."
+      },
+      "subStepKeys": {
+        "1": "mit der Tabulatortaste zum Griff gehen, dann mit der Leertaste den Tab aufnehmen.",
+        "2": "die Pfeiltaste Links drücken, um zur Gruppenliste zu wechseln, dann die Pfeiltaste Ab, bis du bei „Tour demo 2“ bist, markiert mit „Auf dieser Gruppe ablegen“.",
+        "3": "mit der Leertaste ablegen."
+      },
+      "doneText": "Super, der Tab ist jetzt in „Tour demo 2“.",
+      "fallbackBody": "Wenn du einen Tab am Griff auf eine Gruppe in der Liste links ziehst, wandert er in diese Gruppe. Dieser Schritt ist nur zum Anschauen."
+    },
+    "drag-group-order": {
+      "title": "Gruppen sortieren",
+      "body": "Auch Gruppen haben einen gepunkteten Griff, am Anfang ihrer Zeile, namens „Ziehen, um Gruppe neu anzuordnen“. Tausche die beiden Übungsgruppen. Deine eigenen Gruppen verschiebst du genauso.",
+      "subStepText": {
+        "1": "Halte den Griff der oberen Übungsgruppe gedrückt.",
+        "2": "Zieh sie nach unten zur Linie unter der anderen Übungsgruppe, markiert mit „Unter dieser Gruppe ablegen“.",
+        "3": "Lass los, um sie abzulegen."
+      },
+      "subStepKeys": {
+        "1": "mit der Tabulatortaste zum Griff gehen, dann mit der Leertaste die Gruppe aufnehmen.",
+        "2": "die Pfeiltaste Ab einmal drücken, sodass die Gruppe an der Linie „Unter dieser Gruppe ablegen“ steht.",
+        "3": "mit der Leertaste ablegen."
+      },
+      "doneText": "Super, die Gruppen haben die Plätze getauscht.",
+      "fallbackBody": "Jede gespeicherte Gruppe hat am Anfang ihrer Zeile einen gepunkteten Griff namens „Ziehen, um Gruppe neu anzuordnen“. Damit verschiebst du die Gruppe in der Liste nach oben oder unten. Dieser Schritt ist nur zum Anschauen."
+    },
+    "save-tabs": {
+      "title": "Tabs in einer Gruppe speichern",
+      "body": "Ein Tab, den du aus „Jetzt geöffnet“ auf eine Gruppe ziehst, wird in dieser Gruppe gespeichert und in deinem Browser geschlossen. Damit keiner deiner eigenen Tabs geschlossen wird, hat der Rundgang einen Ersatz-Tab namens „Tour practice tab“ geöffnet: Er ist der einzige Tab, den du in diesem Schritt verschieben kannst. Speichere ihn in der Übungsgruppe „Tour demo“.",
+      "subStepText": {
+        "1": "Halte den gepunkteten Griff vor „Tour practice tab“ gedrückt.",
+        "2": "Zieh ihn in der Liste links auf „Tour demo“, markiert mit „Auf dieser Gruppe ablegen“.",
+        "3": "Lass los, um ihn abzulegen."
+      },
+      "subStepKeys": {
+        "1": "mit der Tabulatortaste zum Griff gehen, dann mit der Leertaste den Tab aufnehmen.",
+        "2": "die Pfeiltaste Links drücken, um zur Gruppenliste zu wechseln, dann die Pfeiltaste Ab, bis du bei „Tour demo“ bist, markiert mit „Auf dieser Gruppe ablegen“.",
+        "3": "mit der Leertaste ablegen."
+      },
+      "doneText": "Super. Der Übungs-Tab ist in „Tour demo“ gespeichert und in deinem Browser geschlossen. Ganze Fenster speicherst du genauso.",
+      "fallbackBody": "Ein Tab oder ein ganzes Fenster, das du aus „Jetzt geöffnet“ auf eine Gruppe links ziehst, wird in dieser Gruppe gespeichert und in deinem Browser geschlossen. Der Rundgang konnte keinen Ersatz-Tab zum Ausprobieren öffnen, daher ist dieser Schritt nur zum Anschauen: Keiner deiner Tabs wird angefasst."
+    },
+    "open-tabs": {
+      "title": "Tabs wieder öffnen",
+      "body": "In einer gespeicherten Gruppe öffnet das Auswählen des Tab-Namens diesen Tab erneut, und „Im Browser öffnen“ im Menü eines Fensters öffnet das ganze Fenster. Probiere dieses Menü am Fenster „Reading“ von „Tour demo“ aus. Die Beispiel-Tabs sind keine echten Seiten, daher wird während des Rundgangs nichts geöffnet.",
+      "subStepText": {
+        "1": "Wähle „Weitere Fensteroptionen“, die drei Punkte am Ende der Zeile „Reading“.",
+        "2": "Wähle im Menü „Im Browser öffnen“."
+      },
+      "doneText": "Super. Nach dem Rundgang öffnet das Fenster mit seinen Tabs in deinem Browser. Jetzt wurde nichts geöffnet.",
+      "fallbackBody": "In einer gespeicherten Gruppe öffnet das Auswählen des Tab-Namens diesen Tab erneut. „Weitere Fensteroptionen“ an einem Fenster bietet „Im Browser öffnen“ für das ganze Fenster, und das Rechtsklick-Menü einer Gruppe hat „Alle in neuem Fenster öffnen“. Dieser Schritt ist nur zum Anschauen: Während des Rundgangs wird nichts geöffnet."
+    },
+    "tab-extras": {
+      "title": "Notizen, Erinnerungen und Namen",
+      "body": "Ein gespeicherter Tab hat ein Rechtsklick-Menü mit mehr: „In Gruppe verschieben“, „Notiz hinzufügen“, um etwas festzuhalten, „Erinnere mich …“, um später daran erinnert zu werden, „Tab umbenennen“ für einen eigenen Titel und „Tab entfernen“. Dieser Schritt ist nur zum Anschauen: Die Liste ist während des Rundgangs gesperrt, probiere das Menü also danach aus."
+    },
+    "tidy-up": {
+      "title": "Eine Gruppe aufräumen",
+      "body": "Über „Weitere Gruppenoptionen“ oben rechts im Hauptfeld kannst du Tabs nach Titel oder Adresse sortieren, Doppelte mit „Doppelte Tabs entfernen“ löschen sowie „Fenster vereinen“ oder „Fenster aufteilen“. „Tour demo“ enthält den Tab „Sample: books“ doppelt: Entferne das Duplikat.",
+      "modalBody": "Der Dialog „Duplikate entfernen“ listet den doppelten Tab auf. Wähle „1 Duplikat entfernen“.",
+      "subStepText": {
+        "1": "Wähle „Weitere Gruppenoptionen“, die drei Punkte oben rechts im Hauptfeld.",
+        "2": "Wähle im Menü „Doppelte Tabs entfernen“.",
+        "3": "Wähle im Dialog „Duplikate entfernen“ die Option „1 Duplikat entfernen“."
+      },
+      "doneText": "Super, der doppelte Tab ist weg.",
+      "fallbackBody": "Über „Weitere Gruppenoptionen“ oben rechts im Hauptfeld kannst du Tabs nach Titel oder Adresse sortieren, Doppelte mit „Doppelte Tabs entfernen“ löschen sowie „Fenster vereinen“ oder „Fenster aufteilen“. Dieser Schritt ist nur zum Anschauen."
+    },
+    "select-items": {
+      "title": "Mehrere auf einmal bearbeiten",
+      "body": "„Elemente auswählen“ in der Kopfleiste zeigt bei jedem Tab, Fenster und jeder Gruppe ein Kontrollkästchen. Sind einige ausgewählt, erscheint unten eine Leiste, die auf alle gemeinsam wirkt, zum Beispiel zum Löschen. Ausgewählte Gruppen als Link zu teilen erfordert einen Pro-Tarif. Probiere, einen Beispiel-Tab auszuwählen.",
+      "subStepText": {
+        "1": "Wähle „Elemente auswählen“ in der Kopfleiste.",
+        "2": "Setze das Häkchen vor dem ersten Beispiel-Tab."
+      },
+      "doneText": "Super. Die Leiste unten wirkt auf das, was du ausgewählt hast. Der Rundgang schaltet das Auswählen wieder aus, sobald du weitergehst.",
+      "fallbackBody": "„Elemente auswählen“ in der Kopfleiste zeigt bei jedem Tab, Fenster und jeder Gruppe ein Kontrollkästchen. Sind einige ausgewählt, erscheint unten eine Leiste, die auf alle gemeinsam wirkt, zum Beispiel zum Löschen. Ausgewählte Gruppen als Link zu teilen erfordert einen Pro-Tarif. Dieser Schritt ist nur zum Anschauen."
+    },
+    "search": {
+      "title": "Alles finden",
+      "body": "Das Suchfeld oben mit „Tabs und Gruppen durchsuchen …“ durchsucht alle Tabs und Gruppen auf einmal. Treffer erscheinen beim Tippen. Probiere es an den Beispiel-Tabs aus.",
+      "subStepText": {
+        "1": "Wähle das Suchfeld oben.",
+        "2": "Tippe das Wort sample."
+      },
+      "doneText": "Super. Jeder passende Tab steht unter dem Suchfeld. Wenn du einen auswählst, gelangst du zu seiner Gruppe.",
+      "fallbackBody": "Das Suchfeld oben mit „Tabs und Gruppen durchsuchen …“ durchsucht alle Tabs und Gruppen auf einmal. Treffer erscheinen beim Tippen, und wenn du einen auswählst, gelangst du zu seiner Gruppe."
+    },
+    "search-filters": {
+      "title": "Eine Suche eingrenzen",
+      "body": "Beginne eine Suche mit group: oder window:, um in einer Gruppe oder einem Fenster zu suchen, oder mit tag:, um nach einem Label der Browser-Tabgruppe zu filtern. Das Suchfeld listet diese unter „Probiere diese Suchen“ auf. Probiere group: an der Übungsgruppe aus und lösche dann die Suche.",
+      "subStepText": {
+        "1": "Wähle das Suchfeld oben.",
+        "2": "Tippe group:tour ohne Leerzeichen. Eine Liste namens „Gruppe wählen“ erscheint.",
+        "3": "Wähle in dieser Liste „Tour demo“. Die Suche durchsucht jetzt nur diese Gruppe.",
+        "4": "Wähle „Suche löschen“, das × am Ende des Suchfelds. Eine Suche bleibt bestehen, bis du sie löschst."
+      },
+      "doneText": "Super, die Suche ist gelöscht.",
+      "fallbackBody": "Beginne eine Suche mit group: oder window:, um in einer Gruppe oder einem Fenster zu suchen, oder mit tag:, um nach einem Label der Browser-Tabgruppe zu filtern. Das Suchfeld listet diese unter „Probiere diese Suchen“ auf."
+    },
+    "undo": {
+      "title": "Anders überlegt?",
+      "body": "„Rückgängig“ und „Wiederholen“ in der Kopfleiste gehen durch deine letzten 10 Änderungen an Gruppen und Tabs zurück und vor. Sie sind ausgegraut, solange nichts rückgängig zu machen ist. Probiere sie an einer kleinen Änderung am Beispielfenster „Reading“ aus.",
+      "subStepText": {
+        "1": "Wähle den Stern am Ende der Zeile „Reading“, namens „Fenster mit Stern markieren“.",
+        "2": "Wähle in der Kopfleiste „Rückgängig“. Das nimmt den Stern wieder weg.",
+        "3": "Wähle „Wiederholen“ neben „Rückgängig“. Das bringt den Stern zurück."
+      },
+      "doneText": "Super. „Rückgängig“ und „Wiederholen“ funktionieren bei deinen eigenen Gruppen und Tabs genauso.",
+      "fallbackBody": "„Rückgängig“ und „Wiederholen“ in der Kopfleiste gehen durch deine letzten 10 Änderungen an Gruppen und Tabs zurück und vor. Sie sind ausgegraut, solange nichts rückgängig zu machen ist."
+    },
+    "sessions": {
+      "title": "Alles auf einmal speichern",
+      "body": "Eine Sitzung ist eine gespeicherte Kopie aller deiner Gruppen, so wie sie jetzt sind. Im Bereich „Sitzungen“ unten links erstellt „Aktuelle Sitzung speichern“ eine. „Sitzung wiederherstellen“ neben einer gespeicherten Sitzung holt sie zurück: Es fragt vorher nach, weil es deine geöffneten Fenster schließt."
+    },
+    "archived": {
+      "title": "Eine Gruppe weglegen",
+      "body": "Archivieren blendet eine Gruppe aus, ohne sie zu löschen. Archivierte Gruppen warten im Bereich „Archiviert“ unten links, wo du sie wiederherstellen oder löschen kannst. Sie zählen weiterhin zur Anzahl der Gruppen in deinem Tarif."
+    },
+    "quick-save": {
+      "title": "Speichern, ohne TabMerger zu öffnen",
+      "body": "Klicke mit der rechten Maustaste auf eine beliebige Webseite und wähle „In TabMerger speichern“. Wähle, was gespeichert werden soll, zum Beispiel „Diesen Tab speichern“ oder „Alle anderen Tabs speichern“, und dann die Gruppe, in die es soll."
+    },
+    "theme": {
+      "title": "Hell oder dunkel",
+      "body": "Probier es aus: Öffne das Menü oben rechts namens „Einstellungsmenü“ (oder „Kontomenü“, sobald du angemeldet bist) und wähle „Einstellungen“. Öffne die Liste „Design“, wähle ein anderes Design und wähle dann „Änderungen speichern“.",
+      "modalBody": "In den Einstellungen: Öffne die Liste „Design“, wähle ein anderes Design und wähle dann „Änderungen speichern“.",
+      "doneText": "Super, Design geändert. Schließe die Einstellungen oder wähle Weiter, um fortzufahren."
+    },
+    "settings-more": {
+      "title": "Mehr in den Einstellungen",
+      "body": "Die Einstellungen bieten auf dem Tab „Allgemein“ mehr: „Vor dem Löschen bestätigen“ fragt nach, bevor etwas entfernt wird, und „URL-Regeln“ verknüpfen Webadressen mit einer Gruppe. Auf dem Tab „Daten“ speichert „Exportieren“ alle deine Gruppen in einer Datei und „Importieren“ lädt eine Datei zurück. Automatische Backups auf demselben Tab erfordern einen Pro-Tarif."
+    },
+    "account": {
+      "title": "Dein Konto",
+      "body": "TabMerger funktioniert ohne Konto: Alles bleibt auf diesem Gerät. Mit der Anmeldung über dasselbe Menü hältst du mit einem Pro-Tarif deine Gruppen auf allen Geräten synchron. Synchronisierte Daten werden auf deinem Gerät verschlüsselt, bevor sie gesendet werden, sodass nur du sie lesen kannst."
+    },
+    "ai": {
+      "title": "KI-Aktionen",
+      "body": "„KI-Aktionen“ in der Kopfleiste kann deine geöffneten Tabs für dich in Gruppen sortieren. Dafür ist ein Pro-AI-Tarif nötig."
+    },
+    "finish": {
+      "title": "Alles bereit",
+      "body": "Möchtest du das noch einmal sehen? „Rundgang starten“, das Fragezeichen oben rechts, spielt ihn jederzeit erneut ab."
+    }
+  },
+  "card": {
+    "dialogLabel": "TabMerger-Rundgang",
+    "chapterLine": "Kapitel {{chapter}} von {{chapters}}",
+    "stepLine": "Schritt {{step}} von {{total}}",
+    "done": "Erledigt.",
+    "withKeyboard": " Mit der Tastatur: {{keys}}",
+    "yourTurnAnnouncement": " Du bist dran. Um ohne Ausprobieren weiterzugehen, wähle „Diesen Schritt überspringen“.",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Wähle Weiter, um fortzufahren.",
+    "part": "Teil ",
+    "ofTotal": "{{current}} von {{total}}",
+    "keyboard": "Tastatur: ",
+    "yourTurn": "Du bist dran. Dieser Schritt wartet, bis du ihn ausprobiert hast.",
+    "practiceRemoved": "Die Übungsgruppe wurde entfernt.",
+    "practiceKept": "Die in diesem Rundgang erstellte Gruppe „{{name}}“ ist noch in deiner Liste. Behalte sie oder entferne sie jetzt.",
+    "practiceKept_tabs": "Die in diesem Rundgang erstellte Gruppe „{{name}}“ ({{tabs}}) ist noch in deiner Liste. Behalte sie oder entferne sie jetzt.",
+    "removePractice": "Übungsgruppe entfernen",
+    "back": "Zurück",
+    "skipStep": "Diesen Schritt überspringen",
+    "finish": "Fertig",
+    "next": "Weiter",
+    "skipTour": "Rundgang überspringen",
+    "skipChapter": "Kapitel überspringen"
+  },
+  "labels": {
+    "confirmDuplicatesPrefix": "1 "
+  },
+  "drop": {
+    "belowTab": "Unter diesem Tab ablegen",
+    "window": "In diesem Fenster ablegen",
+    "group": "Auf dieser Gruppe ablegen",
+    "belowGroup": "Unter dieser Gruppe ablegen",
+    "default": "Hier ablegen"
+  },
+  "practiceLeft": "Der Rundgang hat eine Übungsgruppe, „{{name}}“, in deiner Liste zurückgelassen.",
+  "removeIt": "Entfernen"
+}

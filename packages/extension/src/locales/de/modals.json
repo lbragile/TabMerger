@@ -1,0 +1,59 @@
+{
+  "addGroup": {
+    "title": "Neue Gruppe erstellen",
+    "name": "Name",
+    "namePlaceholder": "Gruppenname",
+    "color": "Farbe",
+    "cancel": "Abbrechen",
+    "create": "Erstellen"
+  },
+  "dedup": {
+    "title": "Duplikate entfernen",
+    "description_one": "{{count}} doppelter Tab wird entfernt.",
+    "description_other": "{{count}} doppelte Tabs werden entfernt.",
+    "cancel": "Abbrechen",
+    "confirm_one": "{{count}} Duplikat entfernen",
+    "confirm_other": "{{count}} Duplikate entfernen"
+  },
+  "staleGroups": {
+    "title": "Alte Gruppen prüfen",
+    "description_one": "{{count}} Gruppe seit einiger Zeit unberührt – zur Vorschau aufklappen oder direkt archivieren.",
+    "description_other": "{{count}} Gruppen seit einiger Zeit unberührt – zur Vorschau aufklappen oder direkt archivieren.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Ausblenden",
+    "preview": "Vorschau",
+    "archive": "Archivieren",
+    "empty": "Diese Gruppe ist leer.",
+    "close": "Schließen"
+  },
+  "staleTabs": {
+    "title": "Alte Tabs",
+    "description_one": "{{count}} Tab wurde seit einiger Zeit nicht berührt.",
+    "description_other": "{{count}} Tabs wurden seit einiger Zeit nicht berührt.",
+    "close": "Schließen",
+    "removeAll_one": "{{count}} Tab entfernen",
+    "removeAll_other": "{{count}} Tabs entfernen"
+  },
+  "saveSession": {
+    "title": "Sitzung speichern",
+    "name": "Sitzungsname",
+    "namePlaceholder": "z. B. Arbeitsrecherche, Wochenendlektüre",
+    "nameRequired": "Ein Sitzungsname ist erforderlich",
+    "description": "Beschreibung (optional)",
+    "descriptionPlaceholder": "Wofür ist diese Sitzung?",
+    "cancel": "Abbrechen",
+    "save": "Speichern"
+  },
+  "shortcutSave": {
+    "title_one": "{{count}} Tab speichern",
+    "title_other": "{{count}} Tabs speichern",
+    "description": "Wähle, wo die per Tastenkürzel erfassten Tabs gespeichert werden.",
+    "destination": "Zielgruppe",
+    "quickSave": "Schnellspeichern (neue Gruppe)",
+    "cancel": "Abbrechen",
+    "save": "Speichern"
+  },
+  "confirmDialog": {
+    "cancel": "Abbrechen"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "heading": "Lo que dice la gente",
+  "byStore": "Por tienda",
+  "loading": "Cargando reseñas",
+  "averageRating": "Valoración media",
+  "averageRatingOn": "Valoración media en {store}",
+  "ratingsOn": "{count, plural, one {Valoración} many {Valoraciones} other {Valoraciones}} en {store}",
+  "ratingsAcross": "Valoraciones en {stores}",
+  "ratingCount": "{count, plural, one {# valoración} many {# de valoraciones} other {# valoraciones}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " de 5",
+  "spokenComma": ",",
+  "skeletonRatingCount": "00 valoraciones",
+  "stars": "{score} de 5 estrellas",
+  "readFull": "Leer la reseña completa",
+  "readFullBy": " de {author} en {store}",
+  "carousel": "carrusel",
+  "play": "Reproducir reseñas",
+  "pause": "Pausar reseñas",
+  "previous": "Reseña anterior",
+  "next": "Reseña siguiente",
+  "skeletonRating": "0,00 / 5"
+}

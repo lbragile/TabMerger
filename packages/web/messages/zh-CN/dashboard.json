@@ -1,0 +1,213 @@
+{
+  "metaTitle": "控制台",
+  "greeting": "早上好，{name}",
+  "tierBadge": {
+    "free": "免费版",
+    "pro": "Pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "AI 整理",
+  "aiOrganiseUpgrade": "升级到 Pro AI 即可使用 AI 整理",
+  "aiOrganiseFromExtension": "请从 TabMerger 扩展弹出窗口中开始",
+  "tabGroups": "标签页分组",
+  "savedSessions": "已保存的会话",
+  "stats": {
+    "tabs": {
+      "label": "已保存的标签页",
+      "description": "所有已同步分组中的标签页"
+    },
+    "groups": {
+      "label": "已同步的分组",
+      "description": "已在云端同步的分组"
+    },
+    "sessions": {
+      "label": "已存储的会话",
+      "description": "已存储的浏览会话",
+      "lockedDescription": "会话与备份（解锁后可区分）"
+    },
+    "memory": {
+      "label": "已回收内存",
+      "description": "估算值，非实测"
+    },
+    "memberSince": {
+      "label": "注册时间",
+      "description": "账户创建时间"
+    },
+    "aiCredits": {
+      "label": "本月 AI 额度",
+      "description": "Pro AI 每月用量",
+      "value": "{used}/{limit}"
+    },
+    "loading": "加载中"
+  },
+  "subscription": {
+    "currentPlan": "当前套餐",
+    "renews": "{date}续订",
+    "upgrade": "升级",
+    "statuses": {
+      "active": "有效",
+      "canceled": "已取消",
+      "past_due": "已逾期",
+      "trialing": "试用中",
+      "incomplete": "未完成"
+    }
+  },
+  "upgraded": {
+    "message": "欢迎使用 {plan}！您的订阅已生效，尽情体验新功能吧。",
+    "dismiss": "关闭"
+  },
+  "locked": {
+    "item": "使用较早的密码短语保存。请在拥有该密码短语的设备上打开扩展并等待同步。",
+    "device": "其打开的标签页是使用较早的密码短语保存的。请在该设备上打开扩展并等待同步。",
+    "unverified": "目前无法读取。请刷新页面重试。"
+  },
+  "passphrase": {
+    "defaultLabel": "请输入加密密码短语以查看此内容。",
+    "groupsLabel": "您的分组已端到端加密。请输入密码短语以在此查看。",
+    "sessionsLabel": "您的会话已端到端加密。请输入密码短语以在此查看。",
+    "backupsLabel": "您的备份已端到端加密。请输入密码短语以在此查看。",
+    "placeholder": "密码短语",
+    "inputLabel": "加密密码短语",
+    "unlock": "解锁",
+    "incorrect": "密码短语不正确。"
+  },
+  "onboarding": {
+    "title": "开始使用 TabMerger",
+    "progress": "已完成 {done}/{total}",
+    "dismiss": "关闭",
+    "install": "安装 TabMerger 扩展",
+    "group": "在扩展中创建第一个分组",
+    "signin": "登录以启用云同步",
+    "upgrade": "升级到 Pro 以使用不限数量的分组"
+  },
+  "lockedName": "（已锁定）",
+  "damagedNote": "其内容的格式 TabMerger 无法读取，因此无法在此显示。",
+  "counts": {
+    "groups": "{count, plural, other {{count} 个分组}}",
+    "windows": "{count, plural, other {{count} 个窗口}}",
+    "tabs": "{count, plural, other {{count} 个标签页}}"
+  },
+  "sessions": {
+    "cantRestore": "无法读取此会话，因此无法恢复。",
+    "restored": "{count, plural, other {已从“{name}”恢复 {count} 个标签页}}",
+    "deleted": "会话已删除",
+    "deleteFailed": "删除会话失败",
+    "loadFailed": "无法加载您的会话。",
+    "tryAgain": "重试",
+    "loading": "正在加载会话",
+    "empty": "暂无已保存的会话。",
+    "readOnlyNote": "将新会话保存到账户需要 Pro。现有会话仍可打开或删除。",
+    "upgrade": "升级到 Pro",
+    "freeLimit": "免费版：最多 {count} 个会话。<link>升级到 Pro</link> 可不限数量。",
+    "restore": "恢复会话",
+    "cantRestoreTooltip": "无法读取此会话，因此无法恢复",
+    "delete": "删除会话",
+    "hideContents": "隐藏内容",
+    "showContents": "显示内容（{count}）",
+    "groupFallbackName": "分组 {number}",
+    "groupTabs": "{count, plural, other {{count} 个标签页}}",
+    "moreTabs": "{count, plural, other {另有 {count} 个标签页}}",
+    "moreGroups": "{count, plural, other {另有 {count} 个分组}}"
+  },
+  "backups": {
+    "title": "备份",
+    "upgradeDescription": "自动备份是 Pro 的一部分：按计划保存分组的加密快照，并保留最新的 {count} 份。",
+    "readOnlyNote": "新建备份需要 Pro。现有备份仍可下载或删除。",
+    "upgrade": "升级",
+    "intro": "TabMerger 扩展自动保存到您账户的分组快照，最新的在前，并保留最新的 {count} 份。如需恢复，请打开扩展并前往{place}；恢复操作无法在此页面进行。在此下载的文件不会加密。",
+    "extensionPlace": "设置 > 数据",
+    "loadFailed": "无法加载您的备份。",
+    "tryAgain": "重试",
+    "loading": "正在加载备份",
+    "unknownKind": "{count, plural, other {有 {count} 个已保存项目无法读取，因此无法确定是否为备份。它们列在“已保存的会话”下。}}",
+    "emptyTitle": "暂无备份。",
+    "emptyBody": "当浏览器处于打开状态且分组自上次备份后有变化时，扩展会自动保存一份。默认计划为“{interval}”，您可以在扩展的{place}中选择间隔，或立即备份。",
+    "intervals": {
+      "60": "每小时",
+      "360": "每 6 小时",
+      "720": "每 12 小时",
+      "1440": "每天",
+      "10080": "每周"
+    },
+    "unknownDateInSentence": "未知日期",
+    "unknownDate": "未知日期",
+    "namePrefix": "自动备份",
+    "downloading": "正在下载{when}的备份。",
+    "deleted": "备份已删除",
+    "deletedAnnouncement": "{when}的备份已删除。",
+    "deleteFailed": "删除备份失败",
+    "deleteFailedAnnouncement": "无法删除{when}的备份。",
+    "deleteTitle": "删除此备份？",
+    "deleteBody": "{when}的备份将从您的账户中移除。已拥有此备份的浏览器会保留其自己的副本。",
+    "deleteBodyWithCounts": "{when}的备份（{groups}，{tabs}）将从您的账户中移除。已拥有此备份的浏览器会保留其自己的副本。",
+    "cancel": "取消",
+    "delete": "删除",
+    "download": "下载",
+    "downloadLabel": "下载{when}的备份",
+    "deleteLabel": "删除{when}的备份"
+  },
+  "groups": {
+    "cantShare": "无法读取此分组，因此无法分享。",
+    "linkCopiedSnapshot": "链接已复制，分享的是此分组的快照。",
+    "shareFailed": "无法创建分享链接，请重试。",
+    "shareGroup": "分享分组",
+    "copied": "已复制！",
+    "share": "分享",
+    "cantShareTooltip": "无法读取此分组，因此无法分享",
+    "shareTooltip": "复制此分组快照的链接，之后的修改不会更新该快照",
+    "justNow": "刚刚",
+    "minutesAgo": "{count}分钟前",
+    "hoursAgo": "{count}小时前",
+    "daysAgo": "{count}天前",
+    "lockedCantSelect": "已锁定的分组无法选择",
+    "deselect": "取消选择",
+    "select": "选择",
+    "syncedAt": "{time}同步",
+    "cardMeta": "{windows, plural, other {{windows} 个窗口}} · {tabs, plural, other {{tabs} 个标签页}}",
+    "syncedSuffix": " · {time}同步",
+    "timeSuffix": " · {time}",
+    "stale": "标签页可能已过时：上次同步已超过 30 天",
+    "moreTabs": "另有 {count} 个",
+    "openAllTitle": "打开此分组中的所有标签页",
+    "openAll": "全部打开",
+    "hideTabs": "隐藏标签页",
+    "showTabs": "显示标签页",
+    "rowMeta": "{windows} 窗口 · {tabs} 标签页",
+    "linkCopiedLive": "链接已复制！分享页面已上线。",
+    "empty": "暂无已同步的分组。请打开扩展创建标签页分组。",
+    "title": "分组",
+    "summary": "{count, plural, other {{count} 个分组}} · {tabs, plural, other {{tabs} 个标签页}}",
+    "sort": "排序",
+    "sortLabel": "分组排序",
+    "sortRecent": "最近",
+    "sortName": "名称",
+    "sortTabCount": "标签页数量",
+    "cancel": "取消",
+    "gridView": "网格视图",
+    "listView": "列表视图",
+    "archived": "已归档（{count}）",
+    "selectedCount": "已选择 {count} 项",
+    "shareSelected": "分享所选",
+    "cancelSelection": "取消选择"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "请打开扩展并解锁加密以进行同步。",
+      "no-session": "请登录扩展以进行同步。",
+      "error": "同步失败。请从扩展中重试。"
+    },
+    "failedFallback": "同步失败。",
+    "syncing": "正在同步…",
+    "busy": "同步正在进行中",
+    "failed": "同步失败",
+    "synced": "已同步",
+    "never": "尚未同步",
+    "reasonSeparator": "。",
+    "refresh": "刷新同步状态",
+    "resync": "立即重新同步",
+    "justNow": "刚刚",
+    "minutesAgo": "{count}分钟前",
+    "hoursAgo": "{count}小时前",
+    "daysAgo": "{count}天前"
+  }
+}

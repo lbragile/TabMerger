@@ -1,0 +1,27 @@
+{
+  "title": "导入 / 导出",
+  "description": "管理您的 TabMerger 数据",
+  "tabExport": "导出",
+  "tabImport": "导入",
+  "exportIntro": "将所有分组导出为 JSON 文件，以后可以重新导入。",
+  "downloadJson": "下载 JSON",
+  "jsonHeading": "TabMerger JSON",
+  "jsonIntro": "从之前导出的 JSON 文件导入。将替换当前分组。",
+  "chooseJson": "选择 JSON 文件",
+  "bookmarksHeading": "Chrome 书签",
+  "bookmarksIntro": "从 Chrome 书签 HTML 导出文件导入。每个文件夹会成为一个分组。",
+  "chooseBookmarks": "选择书签 HTML 文件",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "从 OneTab 纯文本导出文件导入。以空行分隔的每个文本块会成为一个分组。",
+  "chooseOneTab": "选择 OneTab TXT 文件",
+  "toast": {
+    "exported": "分组导出成功",
+    "imported": "分组导入成功",
+    "imported_skipped": "分组导入成功，跳过 {{skipped}} 项",
+    "importedCounts": "已导入 {{groups}}、{{tabs}}",
+    "importedCounts_skipped": "已导入 {{groups}}、{{tabs}}，跳过 {{skipped}} 项",
+    "invalidJson": "JSON 文件无效",
+    "noBookmarks": "未找到书签",
+    "noTabs": "未找到标签页"
+  }
+}

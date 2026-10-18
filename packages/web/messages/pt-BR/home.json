@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "eyebrow": "Gerenciador de abas para quem tem abas demais",
+    "title": "Chega de se afogar em abas do navegador.",
+    "lead": "O TabMerger dobra cada janela aberta em grupos com nome e cor que você pode pesquisar, compartilhar e restaurar — em qualquer máquina, com um clique.",
+    "installChrome": "Instalar no Chrome — grátis",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Plano gratuito, sem precisar de conta."
+  },
+  "install": {
+    "title": "Pronto para organizar seu navegador?",
+    "lead": "Instale o TabMerger em segundos. Não precisa de conta para começar.",
+    "addToChrome": "Adicionar ao Chrome",
+    "addToFirefox": "Adicionar ao Firefox",
+    "addToEdge": "Adicionar ao Edge",
+    "viewPricing": "Ver preços",
+    "note": "Instalação gratuita — Sem precisar de conta · Suporte ao Edge em breve"
+  },
+  "finalCta": {
+    "title": "Chega de se afogar em abas do navegador.",
+    "leadAi": "Comece de graça, sem precisar de conta. Faça upgrade quando quiser para ter sincronização na nuvem e IA.",
+    "leadNoAi": "Comece de graça, sem precisar de conta. Faça upgrade quando quiser para ter sincronização na nuvem — recursos de IA em breve.",
+    "installChrome": "Instalar no Chrome — grátis",
+    "faq": "Tem dúvidas? Veja as perguntas frequentes →"
+  },
+  "features": {
+    "title": "Feito para o momento em que você tem noventa abas abertas.",
+    "seeAll": "Ver todos os recursos",
+    "ai": {
+      "title": "A IA arruma a bagunça por você",
+      "description": "Um clique agrupa suas abas abertas por assunto e dá nome a cada grupo. Aceite, renomeie ou ignore.",
+      "summary": "✦ 24 abas → 3 grupos",
+      "groupEvals": "Avaliações de LLM · 9",
+      "groupHiring": "Contratação · 7",
+      "groupDocs": "Docs · 8"
+    },
+    "sessions": {
+      "title": "Feche tudo, não perca nada",
+      "description": "Salve uma sessão com nome e restaure as janelas e a ordem exatas amanhã de manhã.",
+      "sessionName": "Pesquisa da manhã",
+      "sessionStats": "3 grupos · 5 janelas · 24 abas"
+    },
+    "sync": {
+      "title": "As mesmas abas em todas as máquinas",
+      "description": "A sincronização é automática e por aba, então uma edição no notebook nunca sobrescreve o que você fez no desktop.",
+      "status": "Sincronizado há 4 minutos · 3 dispositivos"
+    }
+  },
+  "pricing": {
+    "title": "Preços simples e transparentes",
+    "seeFull": "Ver todos os preços",
+    "cancelNote": "Cancele quando quiser pela sua conta — sem fidelidade, sem perguntas.",
+    "blurbFree": "Para quem está só experimentando",
+    "blurbPro": "Para quem quer recursos premium extras",
+    "blurbProAi": "Para usuários avançados que querem recursos de IA"
+  }
+}

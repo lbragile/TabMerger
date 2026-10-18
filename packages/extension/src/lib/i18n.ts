@@ -97,7 +97,7 @@ export function initI18n(...modules: Module[]): typeof i18n {
     // and, with it, every reference to lib/pseudoLocale.ts
     void i18n.init(
         pseudoLocaleRequested()
-            ? buildI18nOptions(browserUiLanguage(), { lng: PSEUDO_LOCALE, catalog: pseudoLocalizeCatalog(catalogs[DEFAULT_LOCALE]) })
+            ? buildI18nOptions(browserUiLanguage(), { lng: PSEUDO_LOCALE, catalog: pseudoLocalizeCatalog(catalogs.en) })
             : buildI18nOptions(browserUiLanguage()),
     );
     return i18n;

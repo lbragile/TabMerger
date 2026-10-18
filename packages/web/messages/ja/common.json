@@ -1,0 +1,10 @@
+{
+  "comingSoon": "近日公開",
+  "listTwo": "{first}と{second}",
+  "listMany": "{rest}、{last}",
+  "listSeparator": "、",
+  "opensInNewTab": "（新しいタブで開きます）",
+  "close": "閉じる",
+  "showPassphrase": "パスフレーズを表示",
+  "hidePassphrase": "パスフレーズを非表示"
+}

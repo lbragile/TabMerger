@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Não foi possível acessar o servidor de sincronização. Tente novamente.",
+    "accountMismatch": "Este dispositivo ainda guarda dados de outra conta. Abra a extensão para trocar de conta.",
+    "identityChanged": "A extensão foi desconectada durante a sincronização. Entre e tente novamente.",
+    "keyCheckFailed": "Não foi possível verificar o status da criptografia. Tente novamente.",
+    "setupUnfinished": "Abra a extensão para concluir a configuração da criptografia.",
+    "locked": "Abra a extensão e desbloqueie a criptografia para sincronizar."
+  },
+  "menu": {
+    "saveTo": "Salvar no TabMerger",
+    "scopeCurrent": "Salvar esta aba",
+    "scopeLeft": "Salvar abas à esquerda",
+    "scopeRight": "Salvar abas à direita",
+    "scopeExcluding": "Salvar todas as outras abas",
+    "noGroups": "Nenhum grupo salvo ainda",
+    "groupItem": "{{color}} {{name}} ({{windows}}j · {{tabs}}a)"
+  },
+  "reminder": {
+    "title": "Lembrete do TabMerger"
+  }
+}

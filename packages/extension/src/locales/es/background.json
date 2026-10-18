@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "No se pudo conectar con el servidor de sincronización. Inténtalo de nuevo.",
+    "accountMismatch": "Este dispositivo aún conserva datos de otra cuenta. Abre la extensión para cambiar de cuenta.",
+    "identityChanged": "Se cerró la sesión de la extensión durante la sincronización. Inicia sesión e inténtalo de nuevo.",
+    "keyCheckFailed": "No se pudo comprobar el estado del cifrado. Inténtalo de nuevo.",
+    "setupUnfinished": "Abre la extensión para terminar de configurar el cifrado.",
+    "locked": "Abre la extensión y desbloquea el cifrado para sincronizar."
+  },
+  "menu": {
+    "saveTo": "Guardar en TabMerger",
+    "scopeCurrent": "Guardar esta pestaña",
+    "scopeLeft": "Guardar pestañas a la izquierda",
+    "scopeRight": "Guardar pestañas a la derecha",
+    "scopeExcluding": "Guardar todas las demás pestañas",
+    "noGroups": "Aún no hay grupos guardados",
+    "groupItem": "{{color}} {{name}} ({{windows}}v · {{tabs}}p)"
+  },
+  "reminder": {
+    "title": "Recordatorio de TabMerger"
+  }
+}

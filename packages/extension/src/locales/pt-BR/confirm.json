@@ -1,0 +1,89 @@
+{
+  "deleteGroup": {
+    "title": "Excluir grupo",
+    "description": "Tem certeza de que quer excluir \"{{name}}\"? Isso não pode ser desfeito.",
+    "confirm": "Excluir"
+  },
+  "closeWindow": {
+    "title": "Fechar janela",
+    "description": "Tem certeza de que quer fechar esta janela e todas as suas abas?",
+    "confirm": "Fechar"
+  },
+  "removeWindow": {
+    "title": "Remover janela",
+    "description": "Tem certeza de que quer remover esta janela e todas as suas abas?",
+    "confirm": "Remover"
+  },
+  "closeTab": {
+    "title": "Fechar aba",
+    "description": "Tem certeza de que quer fechar esta aba?",
+    "confirm": "Fechar"
+  },
+  "removeTab": {
+    "title": "Remover aba",
+    "description": "Tem certeza de que quer remover esta aba?",
+    "confirm": "Remover"
+  },
+  "closeSelection": {
+    "title": "Fechar seleção",
+    "confirm": "Fechar",
+    "description_tab_one": "Tem certeza de que quer fechar {{count}} aba? Isso não pode ser desfeito.",
+    "description_tab_other": "Tem certeza de que quer fechar {{count}} abas? Isso não pode ser desfeito.",
+    "description_tab_many": "Tem certeza de que quer fechar {{count}} abas? Isso não pode ser desfeito.",
+    "description_window_one": "Tem certeza de que quer fechar {{count}} janela? Isso não pode ser desfeito.",
+    "description_window_other": "Tem certeza de que quer fechar {{count}} janelas? Isso não pode ser desfeito.",
+    "description_window_many": "Tem certeza de que quer fechar {{count}} janelas? Isso não pode ser desfeito.",
+    "description_group_one": "Tem certeza de que quer fechar {{count}} grupo? Isso não pode ser desfeito.",
+    "description_group_other": "Tem certeza de que quer fechar {{count}} grupos? Isso não pode ser desfeito.",
+    "description_group_many": "Tem certeza de que quer fechar {{count}} grupos? Isso não pode ser desfeito."
+  },
+  "deleteSelection": {
+    "title": "Excluir seleção",
+    "confirm": "Excluir",
+    "description_tab_one": "Tem certeza de que quer excluir {{count}} aba? Isso não pode ser desfeito.",
+    "description_tab_other": "Tem certeza de que quer excluir {{count}} abas? Isso não pode ser desfeito.",
+    "description_tab_many": "Tem certeza de que quer excluir {{count}} abas? Isso não pode ser desfeito.",
+    "description_window_one": "Tem certeza de que quer excluir {{count}} janela? Isso não pode ser desfeito.",
+    "description_window_other": "Tem certeza de que quer excluir {{count}} janelas? Isso não pode ser desfeito.",
+    "description_window_many": "Tem certeza de que quer excluir {{count}} janelas? Isso não pode ser desfeito.",
+    "description_group_one": "Tem certeza de que quer excluir {{count}} grupo? Isso não pode ser desfeito.",
+    "description_group_other": "Tem certeza de que quer excluir {{count}} grupos? Isso não pode ser desfeito.",
+    "description_group_many": "Tem certeza de que quer excluir {{count}} grupos? Isso não pode ser desfeito."
+  },
+  "removeStaleTabs": {
+    "title": "Remover abas inativas",
+    "confirm": "Remover",
+    "description_one": "Tem certeza de que quer remover {{count}} aba inativa? Isso não pode ser desfeito.",
+    "description_other": "Tem certeza de que quer remover {{count}} abas inativas? Isso não pode ser desfeito.",
+    "description_many": "Tem certeza de que quer remover {{count}} abas inativas? Isso não pode ser desfeito."
+  },
+  "closeAllWindows": {
+    "title": "Fechar todas as janelas",
+    "description": "Tem certeza de que quer fechar todas as janelas do navegador e suas abas?",
+    "confirm": "Fechar tudo"
+  },
+  "removeAllWindows": {
+    "title": "Remover todas as janelas",
+    "description": "Tem certeza de que quer remover todas as janelas e suas abas deste grupo? Isso não pode ser desfeito.",
+    "confirm": "Remover tudo"
+  },
+  "archiveStaleGroups": {
+    "title": "Arquivar grupos inativos",
+    "confirm": "Arquivar",
+    "description_one": "Tem certeza de que quer arquivar {{count}} grupo inativo?",
+    "description_other": "Tem certeza de que quer arquivar {{count}} grupos inativos?",
+    "description_many": "Tem certeza de que quer arquivar {{count}} grupos inativos?"
+  },
+  "clearAllData": {
+    "title": "Apagar todos os dados",
+    "confirm": "Apagar todos os dados",
+    "description": "Isso excluirá permanentemente todos os grupos, sessões salvas e configurações. Isso não pode ser desfeito.",
+    "description_kept": "Isso excluirá permanentemente todos os grupos, sessões salvas e configurações. Isso não pode ser desfeito. Os backups automáticos armazenados na sua conta são mantidos, e você pode recuperá-los em Configurações → Dados."
+  },
+  "resetEncryption": {
+    "title": "Redefinir frase secreta de criptografia",
+    "confirm": "Redefinir frase secreta",
+    "description": "Isso não pode ser desfeito. Todos os grupos, sessões e notas sincronizados e criptografados com sua frase secreta atual ficarão permanentemente inacessíveis. Você definirá uma nova frase secreta e começará a sincronizar do zero."
+  },
+  "cancel": "Cancelar"
+}

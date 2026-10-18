@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "エラー404 · ページが見つかりません",
+    "title": "このタブはどこかへ行ってしまいました",
+    "description": "すべてのグループを探しましたが、このページは見つかりませんでした。移動した、閉じられた、または最初から存在しなかった可能性があります。元の場所に戻りましょう。",
+    "documentTitle": "ページが見つかりません",
+    "tabLabel": "見つからないページ"
+  },
+  "serverError": {
+    "eyebrow": "エラー500 · 問題が発生しました",
+    "title": "このタブはクラッシュしました",
+    "description": "このページの読み込み中に、こちら側で問題が発生しました。拡張機能内のタブやグループには影響ありません。しばらくしてからもう一度お試しください。",
+    "documentTitle": "問題が発生しました",
+    "tabLabel": "応答なし"
+  },
+  "links": {
+    "features": "機能",
+    "pricing": "料金",
+    "faq": "よくある質問",
+    "dashboard": "ダッシュボード",
+    "account": "アカウント",
+    "contactSupport": "サポートに問い合わせる"
+  },
+  "helpfulLinks": "役立つリンク",
+  "tryThese": "こちらもどうぞ",
+  "illustrationTabResearch": "リサーチ",
+  "illustrationTabDocs": "ドキュメント",
+  "tryAgain": "もう一度試す",
+  "backToHome": "ホームに戻る",
+  "backToDashboard": "ダッシュボードに戻る",
+  "devDetails": "エラーの詳細（開発時のみ）",
+  "referenceId": "参照ID",
+  "copyReferenceId": "参照IDをコピー",
+  "referenceIdHint": "サポートに問い合わせる際はこのIDをお伝えください。問題の原因を特定できます。",
+  "referenceIdCopied": "参照IDをコピーしました",
+  "referenceIdCopyFailed": "コピーに失敗しました。IDを選択してコピーしてください。",
+  "titleWithBrand": "{title} | TabMerger"
+}

@@ -1,0 +1,65 @@
+{
+  "addGroup": {
+    "title": "Crear grupo nuevo",
+    "name": "Nombre",
+    "namePlaceholder": "Nombre del grupo",
+    "color": "Color",
+    "cancel": "Cancelar",
+    "create": "Crear"
+  },
+  "dedup": {
+    "title": "Quitar duplicadas",
+    "description_one": "Se quitará {{count}} pestaña duplicada.",
+    "description_many": "Se quitarán {{count}} de pestañas duplicadas.",
+    "description_other": "Se quitarán {{count}} pestañas duplicadas.",
+    "cancel": "Cancelar",
+    "confirm_one": "Quitar {{count}} duplicada",
+    "confirm_many": "Quitar {{count}} de duplicadas",
+    "confirm_other": "Quitar {{count}} duplicadas"
+  },
+  "staleGroups": {
+    "title": "Revisar grupos inactivos",
+    "description_one": "{{count}} grupo sin tocar desde hace tiempo: despliégalo para ver una vista previa o archívalo directamente.",
+    "description_many": "{{count}} de grupos sin tocar desde hace tiempo: despliégalos para ver una vista previa o archívalos directamente.",
+    "description_other": "{{count}} grupos sin tocar desde hace tiempo: despliégalos para ver una vista previa o archívalos directamente.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Ocultar",
+    "preview": "Vista previa",
+    "archive": "Archivar",
+    "empty": "Este grupo está vacío.",
+    "close": "Cerrar"
+  },
+  "staleTabs": {
+    "title": "Pestañas inactivas",
+    "description_one": "{{count}} pestaña lleva tiempo sin tocarse.",
+    "description_many": "{{count}} de pestañas llevan tiempo sin tocarse.",
+    "description_other": "{{count}} pestañas llevan tiempo sin tocarse.",
+    "close": "Cerrar",
+    "removeAll_one": "Quitar {{count}} pestaña",
+    "removeAll_many": "Quitar {{count}} de pestañas",
+    "removeAll_other": "Quitar {{count}} pestañas"
+  },
+  "saveSession": {
+    "title": "Guardar sesión",
+    "name": "Nombre de la sesión",
+    "namePlaceholder": "p. ej., Investigación de trabajo, Lectura del fin de semana",
+    "nameRequired": "El nombre de la sesión es obligatorio",
+    "description": "Descripción (opcional)",
+    "descriptionPlaceholder": "¿Para qué es esta sesión?",
+    "cancel": "Cancelar",
+    "save": "Guardar"
+  },
+  "shortcutSave": {
+    "title_one": "Guardar {{count}} pestaña",
+    "title_many": "Guardar {{count}} de pestañas",
+    "title_other": "Guardar {{count}} pestañas",
+    "description": "Elige dónde guardar las pestañas capturadas con el atajo de teclado.",
+    "destination": "Grupo de destino",
+    "quickSave": "Guardado rápido (grupo nuevo)",
+    "cancel": "Cancelar",
+    "save": "Guardar"
+  },
+  "confirmDialog": {
+    "cancel": "Cancelar"
+  }
+}

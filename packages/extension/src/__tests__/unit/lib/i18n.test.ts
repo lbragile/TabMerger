@@ -16,18 +16,39 @@ import {
   t
 } from '@/lib/i18n'
 import { en } from '@/locales/en'
+import { SUPPORTED_LOCALES } from '@tabmerger/shared'
 
 describe('resolveLocale', () => {
   it('falls back to English for no tag or a language without a catalog', () => {
     expect(resolveLocale(undefined)).toBe('en')
     expect(resolveLocale('')).toBe('en')
-    expect(resolveLocale('fr-FR')).toBe('en')
+    expect(resolveLocale('ko')).toBe('en')
+    expect(resolveLocale('xx-YY')).toBe('en')
   })
 
   it('accepts a region or underscore variant of a shipped language', () => {
     expect(resolveLocale('en')).toBe('en')
     expect(resolveLocale('en-GB')).toBe('en')
     expect(resolveLocale('EN_us')).toBe('en')
+    expect(resolveLocale('fr-CA')).toBe('fr')
+    expect(resolveLocale('de-AT')).toBe('de')
+  })
+
+  it('matches a shipped regional tag exactly, then falls back to its language sibling', () => {
+    expect(resolveLocale('pt-BR')).toBe('pt-BR')
+    expect(resolveLocale('pt_br')).toBe('pt-BR')
+    expect(resolveLocale('pt-PT')).toBe('pt-BR')
+    expect(resolveLocale('pt')).toBe('pt-BR')
+    expect(resolveLocale('zh-CN')).toBe('zh-CN')
+    expect(resolveLocale('zh-SG')).toBe('zh-CN')
+    expect(resolveLocale('zh')).toBe('zh-CN')
+  })
+
+  it('keeps Traditional Chinese readers on English rather than Simplified', () => {
+    expect(resolveLocale('zh-TW')).toBe('en')
+    expect(resolveLocale('zh-HK')).toBe('en')
+    expect(resolveLocale('zh-MO')).toBe('en')
+    expect(resolveLocale('zh-Hant-TW')).toBe('en')
   })
 })
 
@@ -38,15 +59,15 @@ describe('buildI18nOptions', () => {
     expect(options.fallbackLng).toBe('en')
     expect(options.initAsync).toBe(false)
     expect(options.interpolation?.escapeValue).toBe(false)
-    expect(Object.keys(options.resources ?? {})).toEqual(['en'])
-    expect(options.supportedLngs).toEqual(['en'])
+    expect(Object.keys(options.resources ?? {}).sort()).toEqual([...SUPPORTED_LOCALES].sort())
+    expect(options.supportedLngs).toEqual([...SUPPORTED_LOCALES])
   })
 
   it('adds and selects a pseudo catalog when one is passed', () => {
     const catalog = { ...en, header: { ...en.header, undo: '[Ûñðö]' } }
     const options = buildI18nOptions('en', { lng: 'en-XA', catalog })
     expect(options.lng).toBe('en-XA')
-    expect(options.supportedLngs).toEqual(['en', 'en-XA'])
+    expect(options.supportedLngs).toEqual([...SUPPORTED_LOCALES, 'en-XA'])
     expect((options.resources?.['en-XA'] as { translation: typeof en }).translation.header.undo).toBe('[Ûñðö]')
   })
 })

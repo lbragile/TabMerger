@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Entrar e instalar"
+    },
+    "what-to-test": {
+      "label": "O que testar"
+    },
+    "known-issues": {
+      "label": "Problemas conhecidos"
+    },
+    "report-bugs": {
+      "label": "Relatar um bug"
+    },
+    "faq": {
+      "label": "Perguntas frequentes"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Pagamento aprovado (Visa)",
+      "note": "Use este para fazer o upgrade"
+    },
+    "1": {
+      "label": "Recusa genérica"
+    },
+    "2": {
+      "label": "Saldo insuficiente"
+    },
+    "3": {
+      "label": "Exige autenticação 3D Secure"
+    }
+  },
+  "accessLabels": {
+    "free": "Grátis: sem precisar de conta",
+    "upgrading": "Obtendo o Pro: pagamentos de teste, sem dinheiro real",
+    "some-pro": "Grátis e Pro: cada parte Pro está marcada",
+    "pro": "Somente Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Grupos e abas",
+      "items": {
+        "0": {
+          "heading": "Grupos, cores e desfazer/refazer",
+          "checks": "Que você consegue criar, nomear e colorir um grupo, salvar abas nele e desfazer ou refazer uma alteração sem perder nada.",
+          "steps": {
+            "0": "Clique em \"Adicionar grupo\" na barra lateral e dê um nome a ele.",
+            "1": "Clique no ponto colorido ao lado do grupo para abrir o seletor de cores, escolha uma predefinição ou arraste para qualquer cor e clique em Aplicar.",
+            "2": "Salve algumas abas no grupo (arraste-as para dentro ou use o menu de clique direito).",
+            "3": "Exclua uma aba, depois clique no botão Desfazer (cabeçalho, canto superior direito) e então em Refazer."
+          },
+          "examples": {
+            "0": {
+              "alt": "Popup do TabMerger com um novo grupo selecionado e o seletor de cores aberto: um seletor de saturação e matiz, 12 cores predefinidas, um campo hex e os botões Cancelar e Aplicar",
+              "caption": "Clicar no ponto de cor de um grupo abre este seletor."
+            }
+          },
+          "good": {
+            "0": "O grupo é atualizado na hora.",
+            "1": "Desfazer restaura a aba excluída exatamente onde ela estava.",
+            "2": "Refazer a remove de novo.",
+            "3": "Com a sincronização ativada, o Desfazer pode ficar cinza depois que uma sincronização traz alterações de outro dispositivo. Isso é esperado, não é um bug: o histórico de desfazer é limpo quando chegam alterações de outro lugar."
+          }
+        },
+        "1": {
+          "heading": "\"Abertas agora\" acompanha suas abas abertas",
+          "checks": "Que o grupo permanente \"Abertas agora\" sempre reflete as abas realmente abertas no seu navegador.",
+          "steps": {
+            "0": "Abra o popup e veja \"Abertas agora\" — é sempre o primeiro grupo da barra lateral.",
+            "1": "Abra e feche algumas abas do navegador sem tocar no popup.",
+            "2": "Reabra o popup e confira \"Abertas agora\" de novo."
+          },
+          "examples": {
+            "0": {
+              "alt": "O popup com \"Abertas agora\" selecionado: uma janela listando as três abas abertas no navegador",
+              "caption": "\"Abertas agora\" é sempre o primeiro na barra lateral e lista as abas abertas neste momento."
+            }
+          },
+          "good": {
+            "0": "\"Abertas agora\" acompanha suas abas reais sem nenhuma atualização manual.",
+            "1": "Você não consegue excluí-lo nem tirá-lo do topo."
+          }
+        },
+        "2": {
+          "heading": "Salvando e reabrindo janelas inteiras",
+          "checks": "Que uma janela salva mantém todas as abas, em ordem, e reabre intacta.",
+          "steps": {
+            "0": "Salve uma janela inteira em um grupo (arraste a alça da janela para um grupo ou use o menu \"…\").",
+            "1": "Abra o grupo e use o menu \"…\" da janela para reabri-la — como nova janela e como abas na janela atual, se as duas opções forem oferecidas."
+          },
+          "examples": {
+            "0": {
+              "alt": "Um grupo do TabMerger com quatro janelas salvas separadas, cada uma com uma aba",
+              "caption": "Um grupo pode ter várias janelas separadas — cada uma com sua própria contagem de abas."
+            }
+          },
+          "good": {
+            "0": "Todas as abas reabrem com os títulos e URLs corretos, na mesma ordem."
+          }
+        },
+        "3": {
+          "heading": "Arquivando e restaurando um grupo",
+          "checks": "Que arquivar oculta um grupo sem excluí-lo e que restaurar o traz de volta sem alterações.",
+          "steps": {
+            "0": "Clique com o botão direito em um grupo salvo na barra lateral e escolha Arquivar.",
+            "1": "Abra a seção \"Arquivados\" no fim da barra lateral e encontre o grupo.",
+            "2": "Restaure-o dali."
+          },
+          "examples": {
+            "0": {
+              "alt": "A seção Arquivados no fim da barra lateral do TabMerger, expandida para mostrar um grupo arquivado",
+              "caption": "A seção Arquivados no fim da barra lateral, aberta: \"Compras\" está arquivado, com os botões Restaurar e Excluir."
+            }
+          },
+          "good": {
+            "0": "Grupos arquivados somem da lista ativa, mas nunca são excluídos.",
+            "1": "Eles reaparecem exatamente como estavam depois de restaurados."
+          }
+        },
+        "4": {
+          "heading": "Salvando e restaurando sessões",
+          "checks": "Que uma sessão salva traz seus grupos de volta exatamente como estavam quando você a salvou.",
+          "steps": {
+            "0": "Salve uma sessão — um instantâneo com nome dos seus grupos atuais (procure \"Salvar sessão\" perto da área Sessões da barra lateral).",
+            "1": "Faça algumas alterações nos seus grupos.",
+            "2": "Restaure a sessão salva."
+          },
+          "examples": {
+            "0": {
+              "alt": "A seção Sessões da barra lateral do TabMerger, mostrando uma sessão salva",
+              "caption": "Uma sessão salva na seção Sessões, com os botões Restaurar e Excluir, e a notificação \"Sessão salva\"."
+            }
+          },
+          "good": {
+            "0": "Restaurar traz os grupos de volta exatamente como estavam quando você salvou a sessão."
+          }
+        },
+        "5": {
+          "heading": "Busca",
+          "checks": "Que a busca encontra abas por título ou URL em todos os seus grupos e que os filtros group:, window: e tag: a refinam.",
+          "steps": {
+            "0": "Pressione Ctrl+K (Cmd+K no Mac) para abrir a busca.",
+            "1": "Digite um trecho simples, como \"hub\", com uma aba \"GitHub\" salva em algum lugar — ele corresponde ao título ou à URL, sem diferenciar maiúsculas de minúsculas.",
+            "2": "Limpe isso e tente um prefixo: digite \"group:\" e escolha um dos seus grupos no seletor que aparece, ou digite \"window:\" ou \"tag:\" do mesmo jeito.",
+            "3": "Clique em um dos resultados."
+          },
+          "examples": {
+            "0": {
+              "alt": "A sobreposição de busca do TabMerger com \"hub\" digitado, mostrando um resultado de aba do GitHub",
+              "caption": "Digitando \"hub\" — uma correspondência de trecho simples com o título ou a URL da aba."
+            }
+          },
+          "good": {
+            "0": "Os resultados são atualizados enquanto você digita.",
+            "1": "Uma busca simples encontra qualquer aba cujo título ou URL contenha esse trecho em qualquer posição (não letras em ordem).",
+            "2": "Um prefixo \"group:\", \"window:\" ou \"tag:\" restringe a busca e oferece um seletor para esse prefixo.",
+            "3": "Clicar em qualquer resultado fecha a busca e leva direto ao grupo desse resultado (e à janela, no caso de um resultado de janela)."
+          }
+        },
+        "6": {
+          "heading": "Abas inativas",
+          "checks": "Que abas que você não abre há um tempo são sinalizadas e podem ser revisadas e removidas com segurança.",
+          "steps": {
+            "0": "Abra as Configurações e defina o limite de abas inativas (ex.: 30 dias).",
+            "1": "Espere (ou crie) pelo menos 5 abas mais antigas que esse limite.",
+            "2": "Procure o banner âmbar acima da lista de abas e teste os dois botões: Revisar e depois Remover inativas."
+          },
+          "examples": {
+            "0": {
+              "alt": "O banner âmbar de abas inativas acima da lista de abas, com os botões Revisar e Remover inativas",
+              "caption": "O banner de abas inativas e seus botões Revisar / Remover inativas."
+            }
+          },
+          "good": {
+            "0": "Revisar mostra exatamente quais abas estão inativas.",
+            "1": "Remover inativas pede confirmação antes de excluir qualquer coisa (se \"confirmar antes de excluir\" estiver ativado nas Configurações)."
+          },
+          "report": "Um grupo que você excluiu ou arquivou reaparece sozinho — é o bug de \"ressurreição\" que estamos caçando especificamente."
+        },
+        "7": {
+          "heading": "Configurando lembretes de abas",
+          "checks": "Que você consegue definir, alterar e limpar um lembrete em uma aba salva, e que ele avisa na hora escolhida.",
+          "steps": {
+            "0": "Clique com o botão direito em uma aba salva e escolha \"Lembrar-me…\". Os lembretes são por aba; não há controle nas Configurações para eles.",
+            "1": "No editor que abre sob a aba, clique em uma predefinição (30 min, 1 hora, 3 horas ou Amanhã) para defini-lo na hora.",
+            "2": "Abra-o de novo (\"Editar lembrete\" no menu de clique direito ou clique no ícone de relógio da aba). Desta vez escolha uma data e hora daqui a alguns minutos, digite uma nota curta e clique em Definir.",
+            "3": "Passe o mouse sobre o ícone de relógio, espere o lembrete disparar e clique na notificação.",
+            "4": "Defina outro, depois clique com o botão direito na aba e escolha \"Limpar lembrete\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "O editor \"Lembrar-me em…\" de uma aba salva: botões 30 min, 1 hora, 3 horas e Amanhã, um campo de data e hora, uma nota opcional e os botões Cancelar e Definir",
+              "caption": "Clique com o botão direito em uma aba salva → \"Lembrar-me…\" abre este editor sob a aba."
+            },
+            "1": {
+              "alt": "A mesma janela depois de definir um lembrete: um ícone de relógio no fim da linha da aba Q3 Planning",
+              "caption": "Depois de definido, a aba mostra um ícone de relógio."
+            }
+          },
+          "good": {
+            "0": "A aba mostra um ícone de relógio quando há um lembrete, e passar o mouse mostra a hora (e sua nota).",
+            "1": "O menu de clique direito agora oferece \"Editar lembrete\" e \"Limpar lembrete\" para ela.",
+            "2": "Definir é ignorado para um horário no passado; só um horário futuro define o lembrete.",
+            "3": "Uma notificação \"Lembrete do TabMerger\" com o título da aba (e sua nota) aparece mais ou menos na hora definida e fica até você agir.",
+            "4": "Clicar na notificação abre a aba.",
+            "5": "Limpar lembrete remove o ícone de relógio, e nenhuma notificação aparece depois."
+          },
+          "report": "Um lembrete nunca dispara, dispara duas vezes ou ainda dispara depois de você limpá-lo."
+        },
+        "8": {
+          "heading": "Notas em grupos, janelas e abas",
+          "checks": "Que você consegue anexar uma nota curta a um grupo, uma janela ou uma aba, e editá-la depois.",
+          "steps": {
+            "0": "Grupo: clique com o botão direito em um grupo na barra lateral (ou use o botão ⋯ acima das janelas dele) e escolha \"Adicionar nota\". Digite algo e clique em Salvar.",
+            "1": "Janela: clique com o botão direito no cabeçalho de uma janela (ou use o botão ⋯ dela) e escolha \"Adicionar nota\". Desta vez salve com Ctrl+Enter (Cmd+Enter no Mac).",
+            "2": "Aba: clique com o botão direito em uma aba salva e escolha \"Adicionar nota\". Digite algo e depois clique em outro lugar em vez de Salvar.",
+            "3": "Clique em um ícone de nota para reabrir a nota, altere-a e pressione Esc.",
+            "4": "Feche e reabra o popup."
+          },
+          "good": {
+            "0": "Cada nota salva mostra um pequeno ícone de nota: ao lado da contagem de janelas do grupo, no cabeçalho da janela e na linha da aba. O item de menu agora diz \"Editar nota\".",
+            "1": "Salvar, Ctrl/Cmd+Enter e clicar fora salvam a nota; Esc e Cancelar a fecham sem salvar.",
+            "2": "As notas são limitadas a 500 caracteres, com um contador sob a caixa.",
+            "3": "As notas continuam lá depois de reabrir o popup (e, com a sincronização ativada, nos seus outros dispositivos)."
+          },
+          "report": "Uma nota é perdida, anexada ao item errado ou salva quando você pressionou Esc ou Cancelar."
+        },
+        "9": {
+          "heading": "Excluir, com e sem \"Confirmar antes de excluir\"",
+          "checks": "Que as exclusões só perguntam antes quando \"Confirmar antes de excluir\" está ativado e que Desfazer traz de volta o que você excluiu.",
+          "steps": {
+            "0": "Em Configurações → Geral, verifique se \"Confirmar antes de excluir\" está desativado (é o padrão) e salve.",
+            "1": "Remova uma aba (o ✕ dela ou clique direito → Remover aba), remova uma janela (⋯ → Remover janela) e exclua um grupo (clique direito → Excluir grupo). Depois de cada uma, clique em Desfazer (canto superior direito).",
+            "2": "Ative \"Confirmar antes de excluir\", salve e repita as três exclusões. Cancele a primeira caixa de diálogo que aparecer e confirme a seguinte.",
+            "3": "Com ele ativado, tente também excluir vários grupos selecionados pela barra de seleção e \"Remover inativas\" em um grupo com abas inativas."
+          },
+          "good": {
+            "0": "Com a configuração desativada, janelas e grupos são removidos na hora, sem caixa de diálogo.",
+            "1": "Com ela ativada, remover uma janela, excluir um grupo, excluir uma seleção e \"Remover inativas\" perguntam antes, e Cancelar deixa tudo como estava.",
+            "2": "Remover uma única aba nunca pergunta, com a configuração ativada ou não. Desfazer a traz de volta.",
+            "3": "Desfazer restaura o que você acabou de excluir: a aba, janela ou grupo, no mesmo lugar, com suas abas."
+          },
+          "report": "Algo é excluído sem perguntar com a configuração ativada (exceto uma única aba), uma caixa de diálogo aparece com ela desativada ou Desfazer não traz o item de volta exatamente."
+        },
+        "10": {
+          "heading": "O menu do grupo",
+          "checks": "Que cada ação do menu de um grupo faz o que seu nome diz.",
+          "steps": {
+            "0": "Clique com o botão direito em um grupo salvo na barra lateral para abrir o menu completo. O botão ⋯ acima das janelas do grupo abre uma versão menor.",
+            "1": "Teste Renomear, Adicionar nota e Duplicar.",
+            "2": "Teste Substituir pelas atuais (troca as janelas do grupo pelas janelas abertas do navegador) e Mesclar com as atuais (adiciona suas janelas abertas ao grupo). Desfaça depois de cada uma.",
+            "3": "Teste Abrir tudo em nova janela, Unir janelas, Dividir janelas, Ordenar por título, Ordenar por URL e Remover abas duplicadas.",
+            "4": "Teste Arquivar grupo e depois Restaurar grupo na seção Arquivados.",
+            "5": "Clique com o botão direito em \"Abertas agora\" também: ele não tem Renomear, Substituir, Mesclar, Arquivar nem Excluir."
+          },
+          "good": {
+            "0": "Cada ação faz o que sua descrição diz, só naquele grupo.",
+            "1": "Duplicar cria uma cópia com todas as abas; Unir deixa uma janela com todas as abas e Dividir dá a cada aba sua própria janela.",
+            "2": "Ordenar por título / URL coloca todas as abas em ordem alfabética, e Remover abas duplicadas tira as abas com a mesma URL.",
+            "3": "As alterações podem ser desfeitas com Desfazer."
+          },
+          "report": "Uma ação afeta o grupo errado, perde abas ou não pode ser desfeita."
+        },
+        "11": {
+          "heading": "Os menus da janela",
+          "checks": "Que os dois menus de uma janela funcionam: clicar com o botão direito no cabeçalho e o botão ⋯.",
+          "steps": {
+            "0": "Clique com o botão direito no cabeçalho de uma janela: teste \"Mover para o grupo\" (escolha outro grupo ou crie um novo na lista), Adicionar nota e Renomear janela.",
+            "1": "Abra o botão ⋯ da janela: teste Renomear, Marcar como anônima (e depois Remover anônima), Abrir no navegador e Ordenar esta janela por título / por URL.",
+            "2": "Clique com o botão direito em uma janela em \"Abertas agora\": o primeiro item é \"Copiar para o grupo\" e o de remover é \"Fechar janela\"."
+          },
+          "good": {
+            "0": "Mover para o grupo move a janela inteira, com suas abas, para o grupo escolhido; um novo grupo criado pelo menu recebe a janela.",
+            "1": "Marcar como anônima adiciona um rótulo \"Anônima\" à janela, e Remover anônima o tira.",
+            "2": "Abrir no navegador abre as abas da janela em uma nova janela do navegador; se algumas já estiverem abertas, só as que faltam são adicionadas a essa janela.",
+            "3": "Ordenar só reordena as abas dessa janela.",
+            "4": "Em \"Abertas agora\", Copiar para o grupo salva uma cópia e deixa sua janela real aberta."
+          },
+          "report": "Uma ação de menu altera outra janela, ou Fechar janela em \"Abertas agora\" fecha a janela errada do navegador."
+        },
+        "12": {
+          "heading": "O menu da aba",
+          "checks": "Que clicar com o botão direito em uma aba oferece as ações certas para ela.",
+          "steps": {
+            "0": "Clique com o botão direito em uma aba salva: teste \"Mover para o grupo\", Renomear aba e depois \"Restaurar título original\".",
+            "1": "Clique com o botão direito em uma aba em \"Abertas agora\": \"Copiar para o grupo\" substitui \"Mover para o grupo\" e o de remover é \"Fechar aba\".",
+            "2": "Se você tem uma regra de URL que corresponde a uma aba aberta, clique com o botão direito nela em \"Abertas agora\" e procure \"Salvar automaticamente em …\"."
+          },
+          "good": {
+            "0": "Mover para o grupo move a aba para o grupo escolhido; Copiar para o grupo (de \"Abertas agora\") salva uma cópia e deixa a aba real aberta.",
+            "1": "Renomear aba mostra seu título com uma pequena marca \"renomeada\", e Restaurar título original traz de volta o título da própria página.",
+            "2": "\"Salvar automaticamente em '<'grupo'>'\" aparece só para uma aba cujo endereço corresponde a uma das suas regras de URL, e a salva no grupo dessa regra."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Menu de clique direito",
+      "items": {
+        "0": {
+          "heading": "Salvando pelo menu de clique direito",
+          "checks": "Que clicar com o botão direito em qualquer página da web permite salvar a aba no TabMerger, ou direto em um grupo escolhido.",
+          "steps": {
+            "0": "Em qualquer página, clique com o botão direito e abra \"Salvar no TabMerger\".",
+            "1": "Teste primeiro \"Salvar esta aba\" e depois salve em um grupo específico já existente."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustração do menu de clique direito em uma página da web: \"Salvar no TabMerger\" abre Salvar esta aba, Salvar abas à esquerda, Salvar abas à direita e Salvar todas as outras abas; \"Salvar esta aba\" lista os grupos Work (1j · 5a), Research (1j · 4a), Shopping (1j · 3a) e Reading List (1j · 5a), cada um com sua cor",
+              "caption": "Ilustração (o navegador desenha esse menu, então ele não pode ser capturado em tela): cada uma das quatro opções \"Salvar…\" lista seus grupos com cor, quantidade de janelas e de abas."
+            }
+          },
+          "good": {
+            "0": "O menu de contexto lista seus grupos reais pelo nome.",
+            "1": "A aba aparece no grupo escolhido na hora."
+          }
+        },
+        "1": {
+          "heading": "Novos grupos aparecem no menu de clique direito",
+          "checks": "Que o menu de clique direito reconhece novos grupos sem reiniciar o navegador.",
+          "steps": {
+            "0": "Crie um grupo totalmente novo pelo popup.",
+            "1": "Sem reabrir o navegador, clique com o botão direito em qualquer página e confira \"Salvar no TabMerger\" de novo."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustração do mesmo menu de clique direito com um quinto grupo, \"Trip planning (0j · 0a)\", no fim da lista de grupos",
+              "caption": "Ilustração: um grupo novo, ainda vazio (\"Trip planning\"), aparece no fim da lista."
+            }
+          },
+          "good": {
+            "0": "O novo grupo aparece no menu de contexto sem precisar reiniciar."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Fazendo upgrade para o Pro (pagamentos de teste)",
+      "intro": "A cobrança faz parte deste beta, mas só com cartões de teste da Stripe — nenhum cartão real funcionará e nenhum dinheiro real é movimentado. O Pro AI e os pacotes de créditos de IA ainda estão \"em breve\" e não podem ser comprados, então aqui é só o Pro (grupos/abas ilimitados + sincronização).",
+      "items": {
+        "0": {
+          "heading": "Aviso sobre o cartão de teste",
+          "checks": "Que você só use cartões de teste da Stripe: nada neste beta cobra dinheiro real.",
+          "steps": {
+            "0": "Leia isto antes de iniciar o checkout — os dados do cartão de que você precisa estão abaixo."
+          },
+          "good": {
+            "0": "Você nunca digita um número de cartão real neste fluxo."
+          }
+        },
+        "1": {
+          "heading": "Fazendo upgrade pela extensão",
+          "checks": "Que o upgrade de dentro da extensão funciona de ponta a ponta e que a extensão passa a mostrar Pro.",
+          "steps": {
+            "0": "Abra o popup da extensão e use qualquer ponto de entrada \"Fazer upgrade para o Pro\" — o botão de upgrade do cabeçalho, o banner que aparece ao se aproximar do limite gratuito ou um aviso de upgrade exibido ao atingir um limite do plano gratuito.",
+            "1": "Isso abre a página de preços do app web beta (preview.tabmerger.com/pricing) em uma nova aba do navegador. Entre lá com a mesma conta que você usa na extensão.",
+            "2": "Escolha o plano Pro, mensal ou anual, e continue para o Stripe Checkout.",
+            "3": "Conclua o checkout com o cartão de teste acima (ou um cartão de recusa/3D Secure, se estiver testando esse caminho) e volte ao app."
+          },
+          "good": {
+            "0": "O checkout é concluído e você volta ao app web com o Pro exibido.",
+            "1": "O popup da extensão consulta seu plano a cada 30 segundos, mais ou menos, então ele deve reconhecer o Pro sozinho em pouco tempo — reabrir o popup também força uma verificação nova se você não quiser esperar."
+          },
+          "report": "A extensão ainda mostra os limites do plano gratuito ({FREE_TIER_LIMITS_groups} grupos / {FREE_TIER_LIMITS_tabs} abas / {FREE_TIER_LIMITS_urlRules} regras de URL) mais de alguns minutos depois de um checkout bem-sucedido e de reabrir o popup."
+        },
+        "2": {
+          "heading": "Fazendo upgrade pela página da conta na web",
+          "checks": "Que o upgrade pela página da conta do site funciona e que o site e a extensão concordam sobre o seu plano.",
+          "steps": {
+            "0": "Em vez de passar pela extensão, entre direto em preview.tabmerger.com e abra as Configurações da conta.",
+            "1": "Em \"Assinatura\", clique em \"Fazer upgrade\" e conclua o checkout com o cartão de teste."
+          },
+          "examples": {
+            "0": {
+              "alt": "Configurações da conta em uma conta gratuita: o cartão Assinatura mostra Plano atual Gratuito com um botão Fazer upgrade",
+              "caption": "Antes do upgrade: Gratuito, com um botão Fazer upgrade. Depois ele mostra Pro e \"Gerenciar cobrança\" (veja \"Página da conta\" abaixo)."
+            }
+          },
+          "good": {
+            "0": "O cartão Assinatura da página da conta agora mostra Pro, com um botão \"Gerenciar cobrança\" no lugar de \"Fazer upgrade\".",
+            "1": "A extensão reconhece o mesmo status Pro (veja a nota sobre consulta acima) — a página da conta na web e a extensão nunca devem divergir sobre o seu plano."
+          },
+          "report": "A página da conta na web e o popup da extensão mostram planos diferentes (um diz Pro, o outro ainda diz Gratuito) por mais de alguns minutos."
+        },
+        "3": {
+          "heading": "Pagando na sua moeda local",
+          "checks": "Que o checkout mostra e cobra o preço na sua própria moeda.",
+          "steps": {
+            "0": "Os preços do site são em dólares americanos (a página de preços diz isso sob os planos; a página da conta, o painel e as Configurações da extensão os escrevem como \"US$\"). Fora dos EUA, o checkout oferece sua moeda local.",
+            "1": "Inicie um checkout da sua localização real ou simule outro país: cadastre uma conta NOVA com seu e-mail mais \"+location_\" e um código de país de duas letras, ex.: seunome+location_FR@gmail.com para a França (o Gmail entrega endereços \"+qualquercoisa\" na sua caixa de entrada normal). Uma VPN em outro país também funciona.",
+            "2": "Veja o preço na página de checkout da Stripe e depois conclua com o cartão de teste nessa moeda."
+          },
+          "examples": {
+            "0": {
+              "alt": "Checkout da Stripe para o TabMerger Pro mostrando €3,66 por mês, com EUR selecionado e uma alternativa em USD, e a linha \"1 USD = 0.9171 EUR. Charges will vary based on exchange rates.\"",
+              "caption": "Checkout para um endereço da França (+location_FR): euros por padrão, dólares americanos a um clique. As taxas de câmbio mudam, então seu valor será diferente."
+            }
+          },
+          "good": {
+            "0": "O checkout mostra o preço na sua moeda local (por exemplo €3,66 na França ou CA$5,89 no Canadá para o plano de US$3,99), com uma opção para pagar em dólares americanos e uma linha com a taxa de câmbio e a tarifa de conversão. Nos EUA, mostra simplesmente US$3,99.",
+            "1": "Depois de pagar, o plano funciona exatamente como com dólares americanos."
+          },
+          "report": "Fora dos EUA, o checkout oferece só dólares americanos, o valor cobrado difere do que o checkout mostrou ou pagar em moeda local não dá o Pro."
+        },
+        "4": {
+          "heading": "Alternando entre mensal e anual",
+          "checks": "Que uma assinatura Pro pode alternar entre cobrança mensal e anual e é cobrada corretamente.",
+          "steps": {
+            "0": "Com uma assinatura Pro ativa, abra a página de preços. O cartão do seu plano está marcado como Atual e tem um botão \"Mudar para cobrança anual\" (ou \"Mudar para cobrança mensal\" se você paga anualmente): o botão indica a cobrança para a qual você mudaria.",
+            "1": "Mensal → anual: clique no botão de mudança e confirme na página da Stripe.",
+            "2": "Anual → mensal: faça o mesmo e depois tente o botão uma segunda vez.",
+            "3": "Abra também \"Gerenciar cobrança\" na página da conta: a opção \"Atualizar assinatura\" mostra a mesma escolha mensal/anual."
+          },
+          "examples": {
+            "0": {
+              "alt": "A página de preços no Pro mensal: o cartão Pro está marcado como Atual e tem um botão \"Mudar para cobrança anual\"",
+              "caption": "Na página de preços, o cartão do seu plano está marcado como Atual e tem o botão de mudança."
+            },
+            "1": {
+              "alt": "A página \"Atualize sua assinatura\" da Stripe com abas Mensal e Anual, mostrando o plano atual do TabMerger Pro a {proMonthly} por mês",
+              "caption": "A mesma escolha em Gerenciar cobrança → Atualizar assinatura (página da Stripe)."
+            }
+          },
+          "good": {
+            "0": "Mensal → anual vale na hora: a Stripe mostra e cobra o preço anual menos o que sobrou do seu mês.",
+            "1": "Depois de mudar para anual, a página da conta mostra o preço anual ({proYearly}/ano) em cerca de um minuto.",
+            "2": "Anual → mensal espera o fim do seu ano pago, então nada é cobrado agora.",
+            "3": "Pressionar o botão de novo explica que uma mudança já está agendada.",
+            "4": "Só Pro mensal e anual são oferecidos, nunca outro plano."
+          },
+          "report": "Uma mudança cobra o valor errado, a página da conta ainda mostra o período de cobrança antigo depois de mais de alguns minutos, anual → mensal cobra de imediato ou lhe oferecem um plano diferente do Pro."
+        },
+        "5": {
+          "heading": "Cancelando",
+          "checks": "Que cancelar mantém o Pro até o fim do período pago e depois volta você ao plano Gratuito.",
+          "steps": {
+            "0": "Na página da conta, com uma assinatura Pro ativa, clique em \"Gerenciar cobrança\" para abrir o portal de cobrança da Stripe.",
+            "1": "Cancele a assinatura por lá e volte ao TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "A caixa \"Cancelar sua assinatura\" da Stripe para o TabMerger Pro a {proMonthly} por mês, com um motivo opcional e os botões Voltar e Continuar para o cancelamento",
+              "caption": "A Stripe pede um motivo opcional antes de cancelar."
+            }
+          },
+          "good": {
+            "0": "Você mantém o acesso Pro até o fim do período de cobrança atual — cancelar não leva você imediatamente ao plano Gratuito.",
+            "1": "Quando esse período termina, a página da conta e a extensão devem mostrar Gratuito de novo."
+          },
+          "report": "Cancelar leva você ao plano Gratuito de imediato em vez de no fim do período, ou o plano nunca volta ao Gratuito depois que o período realmente termina."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Arrastar e soltar",
+      "intro": "Esta área cobre toda interação de arraste no popup — ordenar, mover entre janelas e grupos, arrastes de vários itens, as duas zonas \"Solte para criar...\", cancelar, arraste só com teclado e se o resultado persiste. Faça o máximo que puder; esta é a área em que mais nos concentramos neste beta.",
+      "items": {
+        "0": {
+          "heading": "Ordenar: abas dentro de uma janela",
+          "checks": "Que arrastar uma aba a reordena dentro da janela, caindo exatamente onde você soltar.",
+          "steps": {
+            "0": "Arraste uma aba para baixo na mesma janela para movê-la mais para o fim da lista e depois arraste-a de volta para o lugar original.",
+            "1": "Arraste uma aba até a primeira posição da janela e depois até a última."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma aba sendo arrastada dentro do cartão da janela: a linha arrastada flutua com uma borda destacada acima do espaço onde vai cair",
+              "caption": "No meio do arraste: a aba flutua e as outras abrem espaço onde ela vai cair."
+            }
+          },
+          "good": {
+            "0": "A aba cai exatamente onde você soltou, e o resto da lista se ajusta para abrir espaço.",
+            "1": "Nenhuma outra aba se move ou se duplica."
+          }
+        },
+        "1": {
+          "heading": "Ordenar: janelas dentro de um grupo",
+          "checks": "Que os cartões de janela podem ser reordenados dentro de um grupo.",
+          "steps": {
+            "0": "Em um grupo com duas ou mais janelas salvas, arraste um cartão de janela para cima ou para baixo de outro."
+          },
+          "examples": {
+            "0": {
+              "alt": "Um cartão de janela sendo arrastado entre outros dois em um grupo com quatro janelas",
+              "caption": "Arrastar um cartão de janela inteiro pela alça para reordená-lo dentro do grupo."
+            }
+          },
+          "good": {
+            "0": "Os cartões de janela trocam de ordem e a nova ordem é a que você vê na hora — sem voltar piscando para a ordem antiga."
+          }
+        },
+        "2": {
+          "heading": "Ordenar: grupos na barra lateral",
+          "checks": "Que os grupos se reordenam livremente na barra lateral enquanto \"Abertas agora\" continua em primeiro.",
+          "steps": {
+            "0": "Arraste um grupo na barra lateral para cima ou para baixo para colocá-lo acima ou abaixo de outro grupo.",
+            "1": "Tente arrastar um grupo para cima de \"Abertas agora\" (a primeira linha da barra lateral)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma linha de grupo sendo arrastada para uma nova posição na barra lateral do TabMerger",
+              "caption": "Reordenando um grupo na barra lateral."
+            }
+          },
+          "good": {
+            "0": "\"Abertas agora\" sempre fica fixado como a primeira linha — você não consegue soltar um grupo acima dele, arrastá-lo, excluí-lo nem tirá-lo do topo.",
+            "1": "Todos os outros grupos se reordenam livremente."
+          },
+          "report": "Algo cai acima de \"Abertas agora\", ou o próprio \"Abertas agora\" fica arrastável."
+        },
+        "3": {
+          "heading": "Entre janelas: movendo uma aba entre cartões de janela",
+          "checks": "Que uma aba pode ir de um cartão de janela para outro, exatamente no ponto em que você soltar.",
+          "steps": {
+            "0": "Dentro de um grupo com várias janelas, arraste uma aba de um cartão de janela para outro.",
+            "1": "Desta vez, solte-a entre duas abas existentes na janela de destino, em vez de no topo ou no fim."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma aba sendo arrastada de uma janela salva para outra dentro do mesmo grupo do TabMerger",
+              "caption": "Soltando uma aba em outra janela dentro do mesmo grupo."
+            }
+          },
+          "good": {
+            "0": "A aba cai exatamente na posição em que você soltou (não só no fim).",
+            "1": "A contagem de abas das duas janelas é atualizada na hora."
+          }
+        },
+        "4": {
+          "heading": "Entre grupos: soltando uma aba em um grupo da barra lateral",
+          "checks": "Que soltar uma aba em um grupo da barra lateral a move para esse grupo sem abrir o grupo antes.",
+          "steps": {
+            "0": "Arraste uma aba do painel principal e solte-a direto em um grupo da barra lateral — tente com um grupo que está aberto (ativo) e com um que não está.",
+            "1": "Tente mais uma vez, mas segure a aba por cerca de um segundo sobre outro grupo da barra lateral (não ativo) antes de soltar."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma única aba sendo arrastada para uma linha de grupo na barra lateral do TabMerger",
+              "caption": "Soltando uma aba direto em um grupo da barra lateral."
+            }
+          },
+          "good": {
+            "0": "A aba é adicionada a esse grupo como uma nova janela sem precisar abrir o grupo antes.",
+            "1": "Se você parou sobre um grupo não ativo, ele deve abrir (\"abrir sozinho\") após cerca de meio segundo para você ver a aba cair — e cair corretamente, não na janela errada."
+          },
+          "report": "O grupo abre sozinho, mas a aba cai na janela errada, ou em cima de uma aba existente em vez de como uma nova janela própria."
+        },
+        "5": {
+          "heading": "Entre grupos: arrastando uma janela inteira para outro grupo",
+          "checks": "Que uma janela inteira, com todas as abas, pode ir para outro grupo.",
+          "steps": {
+            "0": "Arraste um cartão de janela inteiro (pela alça dele, não por uma aba dentro) para um grupo diferente na barra lateral."
+          },
+          "examples": {
+            "0": {
+              "alt": "Um cartão de janela arrastado para a barra lateral, sobre o grupo Compras, que fica destacado e aberto no painel principal",
+              "caption": "Arrastando uma janela para um grupo da barra lateral. O grupo sob o ponteiro ganha uma borda colorida e abre atrás do cartão."
+            }
+          },
+          "good": {
+            "0": "A janela inteira — com todas as abas — vira uma nova janela no grupo de destino.",
+            "1": "Isso funciona mesmo que seja a última janela do grupo de origem."
+          },
+          "report": "O grupo de origem ou sua janela esvaziada desaparece em vez de permanecer (uma janela/grupo vazio deve ficar, não sumir)."
+        },
+        "6": {
+          "heading": "Vários itens: selecionando e arrastando várias abas",
+          "checks": "Que várias abas selecionadas são arrastadas juntas como um bloco, mantendo a ordem.",
+          "steps": {
+            "0": "Clique com Ctrl (Cmd no Mac) em duas ou três abas não adjacentes para selecioná-las.",
+            "1": "Clique com Shift para selecionar um intervalo contínuo de abas.",
+            "2": "Com várias abas selecionadas, arraste-as juntas para uma nova posição na mesma janela."
+          },
+          "examples": {
+            "0": {
+              "alt": "Várias abas selecionadas juntas no popup do TabMerger, mostradas com caixas de seleção",
+              "caption": "Duas abas marcadas no modo de seleção; a barra embaixo as conta."
+            }
+          },
+          "good": {
+            "0": "Todas as abas selecionadas se movem juntas como um bloco, mantendo a ordem relativa — o bloco cai no espaço, não espalhado nem na ordem dos cliques."
+          }
+        },
+        "7": {
+          "heading": "Vários itens: arrastando uma seleção entre janelas e grupos",
+          "checks": "Que uma seleção de várias abas mantém a ordem ao ser arrastada para outra janela ou grupo.",
+          "steps": {
+            "0": "Selecione várias abas de novo e arraste-as para uma janela diferente do mesmo grupo.",
+            "1": "Repita mais uma vez, mas desta vez arraste a seleção para um grupo diferente na barra lateral."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma seleção de várias abas no meio do arraste no popup do TabMerger",
+              "caption": "Arrastando uma seleção de várias abas."
+            }
+          },
+          "good": {
+            "0": "A seleção inteira se move junta nos dois casos, caindo na mesma ordem relativa em que começou."
+          }
+        },
+        "8": {
+          "heading": "Vários itens: selecionar tudo e arrastar vários grupos",
+          "checks": "Que selecionar tudo funciona dentro de uma janela e que vários grupos selecionados podem ser arrastados juntos.",
+          "steps": {
+            "0": "Foque a lista de abas de uma janela e pressione Ctrl+A (Cmd+A no Mac) para selecionar todas as abas dessa janela, se ela tiver mais de uma aba.",
+            "1": "Na barra lateral, clique com Ctrl em dois ou três grupos para selecioná-los e arraste essa seleção por uma das alças para reordená-los juntos."
+          },
+          "examples": {
+            "0": {
+              "alt": "Modo de seleção com três grupos selecionados; arrastar um deles leva os outros junto, com um selo de contagem na linha arrastada e \"3 grupos selecionados\" na barra inferior",
+              "caption": "Três grupos selecionados arrastados juntos na barra lateral. A barra embaixo conta a seleção."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A seleciona todas as abas da janela em foco (ignorando as ocultas por um filtro de busca).",
+            "1": "O arraste de vários grupos move os grupos selecionados juntos como um bloco.",
+            "2": "O bloco nunca cai acima de \"Abertas agora\"."
+          }
+        },
+        "9": {
+          "heading": "Zonas de soltura: \"Solte aqui para uma nova janela\" e \"Solte para criar um novo grupo\"",
+          "checks": "Que soltar nessas zonas cria uma nova janela ou um novo grupo com o que você arrastou.",
+          "steps": {
+            "0": "Arraste uma aba (ou uma seleção de abas) para o fim da lista de janelas de um grupo, onde aparece a zona \"Solte aqui para uma nova janela\", e solte ali.",
+            "1": "Arraste uma aba para o fim da barra lateral, onde aparece a zona \"Solte para criar um novo grupo\", e solte ali."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma aba arrastada sobre a zona destacada \"Solte aqui para uma nova janela\" sob a lista de janelas, com a zona \"Solte para criar um novo grupo\" visível na barra lateral",
+              "caption": "Enquanto você arrasta, as duas zonas de soltura aparecem. A que está sob o ponteiro fica destacada."
+            }
+          },
+          "good": {
+            "0": "Cada soltura cria uma janela ou um grupo totalmente novo com exatamente o(s) item(ns) arrastado(s), na ordem relativa original."
+          },
+          "report": "A zona \"Solte para criar um novo grupo\" ainda aparece quando você já está no limite de grupos do seu plano — ela deveria sumir em vez de aceitar uma soltura que não pode cumprir."
+        },
+        "10": {
+          "heading": "De \"Abertas agora\": arrastando uma aba ativa para um grupo salvo",
+          "checks": "Que arrastar uma aba aberta de \"Abertas agora\" a move para um grupo salvo e fecha a aba real.",
+          "steps": {
+            "0": "Arraste uma aba da seção \"Abertas agora\" para um dos seus grupos salvos.",
+            "1": "Confira suas abas reais abertas no navegador depois da soltura."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma aba de \"Abertas agora\" sendo arrastada para o grupo Work na barra lateral",
+              "caption": "Uma aba aberta de \"Abertas agora\" arrastada para um grupo salvo na barra lateral."
+            }
+          },
+          "good": {
+            "0": "Isso MOVE a aba, não a copia: o grupo salvo ganha uma nova janela com um instantâneo dessa aba.",
+            "1": "A aba real do navegador fecha. Se a aba arrastada era a aba ativa, ela fecha quando você fecha o popup, e não de imediato — isso é intencional, não é um bug."
+          },
+          "report": "A aba real continua aberta depois da soltura (parecendo uma cópia), ou o próprio popup fecha/trava no meio do arraste."
+        },
+        "11": {
+          "heading": "Cancelamento e casos extremos",
+          "checks": "Que arrastes cancelados ou sem sentido não mudam nada e que desfazer reverte um arraste real.",
+          "steps": {
+            "0": "Comece a arrastar uma aba e pressione Esc antes de soltá-la.",
+            "1": "Comece um arraste e solte-o onde não há alvo válido (ex.: fora da janela do popup, se conseguir) ou solte-o de volta exatamente no lugar de origem.",
+            "2": "Depois de qualquer arraste bem-sucedido, clique no botão Desfazer (cabeçalho, canto superior direito)."
+          },
+          "examples": {
+            "0": {
+              "alt": "O cabeçalho do TabMerger com os botões Desfazer e Refazer ativados depois de uma alteração",
+              "caption": "Os botões Desfazer/Refazer no cabeçalho, ativados depois de uma alteração."
+            }
+          },
+          "good": {
+            "0": "Esc e uma soltura inválida/sem efeito deixam tudo exatamente como estava — sem abas duplicadas, sem abas faltando, sem reordenação.",
+            "1": "Desfazer depois de um arraste real restaura a ordem anterior exatamente."
+          },
+          "report": "Uma aba é duplicada ou some depois de um arraste cancelado ou no mesmo lugar, ou Desfazer não restaura totalmente a ordem de antes do arraste."
+        },
+        "12": {
+          "heading": "Arraste pelo teclado",
+          "checks": "Que tudo o que você arrasta com o mouse também pode ser movido com o teclado, com avisos falados.",
+          "steps": {
+            "0": "Pressione Tab até focar uma aba salva, um título de janela ou um grupo na barra lateral. Cada linha é uma parada de Tab.",
+            "1": "Para mover vários de uma vez, pressione Ctrl+Espaço (Ctrl também no Mac) em cada um para selecioná-lo e depois foque qualquer uma das linhas selecionadas.",
+            "2": "Pressione Espaço para pegar. Você ouve \"Pego …\", a linha sai do lugar e uma cópia dela mostra onde vai cair.",
+            "3": "Pressione Cima ou Baixo para movê-la. Uma aba passa por todas as janelas do grupo, depois por \"Solte aqui para uma nova janela\" e então volta ao topo.",
+            "4": "Pressione Esquerda para ir à lista de grupos. Cima e Baixo escolhem um grupo (a última parada é \"Novo grupo\"), e o painel principal mostra cada grupo conforme você passa.",
+            "5": "Pressione Direita para entrar no grupo destacado e use Cima e Baixo para posicionar o item dentro dele.",
+            "6": "Pressione Espaço para soltar ou Esc para cancelar."
+          },
+          "good": {
+            "0": "Espaço pega o item em vez de abrir o link.",
+            "1": "Ctrl+Espaço seleciona ou desmarca uma linha sem abri-la nem pegá-la.",
+            "2": "Enter ainda abre uma aba e não faz nada enquanto você está movendo algo.",
+            "3": "A cópia do que você está movendo está sempre na tela, e o painel rola para acompanhá-la.",
+            "4": "Cima e Baixo dão a volta nas pontas, e você ouve \"Voltou ao topo\" ou \"Voltou ao fim\".",
+            "5": "Uma janela vazia é um lugar por si só.",
+            "6": "O item termina exatamente onde a cópia estava, e você ouve o que aconteceu.",
+            "7": "Vários itens selecionados se movem juntos como um bloco, na ordem original.",
+            "8": "Espaço na lista de grupos solta o item no fim do grupo destacado.",
+            "9": "Em \"Novo grupo\" o painel principal esmaece, e soltar ali cria um grupo novo.",
+            "10": "Um grupo movido com Cima e Baixo nunca pode ir acima de \"Abertas agora\".",
+            "11": "Mover uma aba ativa de \"Abertas agora\" para um grupo fecha essa aba do navegador, como uma soltura com o mouse.",
+            "12": "Esc deixa tudo intacto e mostra de novo o grupo em que você começou.",
+            "13": "Depois de soltar, o foco fica na linha movida; depois de Esc, volta para a linha que você pegou."
+          }
+        },
+        "13": {
+          "heading": "Persistência",
+          "checks": "Que uma nova ordem é salva: sobrevive à reabertura do popup e chega aos seus outros dispositivos.",
+          "pro": "Só a parte do segundo dispositivo exige o Pro (precisa de sincronização).",
+          "steps": {
+            "0": "Depois de reordenar abas, janelas ou grupos arrastando, feche o popup por completo e reabra.",
+            "1": "Se você tem a sincronização ativada e um segundo dispositivo conectado à mesma conta, confira a ordem lá também."
+          },
+          "good": {
+            "0": "A nova ordem é exatamente como você deixou depois de reabrir o popup.",
+            "1": "Com a sincronização ativada, o segundo dispositivo recebe a mesma ordem em pouco tempo."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "App web e painel (site de preview)",
+      "intro": "Tudo aqui fica em preview.tabmerger.com, não no tabmerger.com principal — esta versão beta sincroniza apenas com o site de preview.",
+      "items": {
+        "0": {
+          "heading": "Cadastro e login",
+          "checks": "Que todas as formas de entrar no site funcionam: Google, e-mail e senha, e link mágico.",
+          "steps": {
+            "0": "Sem estar conectado, abra preview.tabmerger.com/auth/sign-in.",
+            "1": "Teste \"Continue with Google\".",
+            "2": "Teste e-mail + senha: digite seu e-mail e sua senha e clique em \"Continue\".",
+            "3": "Teste \"Send magic link\", usando só seu e-mail."
+          },
+          "examples": {
+            "0": {
+              "alt": "A página de login \"Welcome back\" do site: Continue with Google, campos Email e Password com um link Forgot?, Continue e Send magic link",
+              "caption": "A página de login do site: Google, e-mail e senha, ou link mágico."
+            }
+          },
+          "good": {
+            "0": "Os três jeitos fazem você entrar.",
+            "1": "O link mágico e o Google redirecionam de volta ao app já conectado.",
+            "2": "Contas novas vão para onde \"Sign up free\" levar (e-mail + senha ou Google, as mesmas opções)."
+          }
+        },
+        "1": {
+          "heading": "Criando uma conta com e-mail e senha",
+          "checks": "Que uma conta nova com e-mail e senha termina conectada, quer o site peça para verificar o e-mail ou não.",
+          "steps": {
+            "0": "Sem estar conectado, clique em \"Sign up free\" e crie uma conta com e-mail e senha (8+ caracteres)."
+          },
+          "examples": {
+            "0": {
+              "alt": "A página \"Create your account\": Continue with Google, depois os campos Email, Password (pelo menos 8 caracteres) e Confirm password, e um botão Continue",
+              "caption": "A página de cadastro. O Google funciona aqui também; este item trata do caminho com e-mail e senha."
+            }
+          },
+          "good": {
+            "0": "Você cai direto no painel, já conectado, ou vê \"Verify your email\" e só entra depois de clicar no link do e-mail. Qual dos dois depende de o site exigir confirmação de e-mail; qualquer um está certo."
+          },
+          "report": "Você vê \"Verify your email\", mas na verdade já está conectado (por exemplo, abrir o painel em outra aba funciona sem clicar no link)."
+        },
+        "2": {
+          "heading": "Esqueci a senha e alteração de senha",
+          "checks": "Que você consegue redefinir uma senha esquecida por e-mail e alterá-la depois.",
+          "steps": {
+            "0": "No login, clique em \"Forgot?\" ao lado do campo de senha e digite seu e-mail.",
+            "1": "Abra o link de redefinição desse e-mail e defina uma nova senha (mínimo de 8 caracteres, e deve coincidir com o campo de confirmação)."
+          },
+          "examples": {
+            "0": {
+              "alt": "A página \"Reset your password\": um campo Email, um botão Send reset link e Back to sign in",
+              "caption": "\"Forgot?\" na página de login abre isto. Depois de conectado, as Configurações da conta têm um campo \"Alterar senha\"."
+            }
+          },
+          "good": {
+            "0": "Você volta ao painel já conectado com a nova senha.",
+            "1": "Entrar de novo depois exige a nova senha, não a antiga."
+          }
+        },
+        "3": {
+          "heading": "O painel confere com a extensão depois da sincronização",
+          "checks": "Que o painel do site mostra os mesmos grupos da extensão depois que a sincronização termina.",
+          "steps": {
+            "0": "Com a sincronização ativada e pelo menos um grupo, abra o painel em preview.tabmerger.com/dashboard.",
+            "1": "Compare a seção \"Grupos de abas\" de lá com a barra lateral do popup da extensão: nomes, cores, contagens de janelas/abas e ordem."
+          },
+          "examples": {
+            "0": {
+              "alt": "O painel web depois de desbloqueado: estatísticas, o cartão do plano Pro e a grade Grupos de abas com cartões Research, Reading List, Work e Shopping mostrando contagens de janelas e abas",
+              "caption": "Os grupos do painel, iguais à barra lateral da extensão depois de sincronizados."
+            }
+          },
+          "good": {
+            "0": "Os mesmos grupos aparecem com os mesmos nomes, cores e contagens de janelas/abas, na mesma ordem, depois que a sincronização termina."
+          }
+        },
+        "4": {
+          "heading": "O painel é somente leitura para grupos",
+          "checks": "Que o painel mostra seus grupos mas não consegue alterá-los: a edição acontece só na extensão.",
+          "steps": {
+            "0": "No painel, procure qualquer forma de renomear, excluir ou criar um grupo, ou marcar/desmarcar um com estrela."
+          },
+          "good": {
+            "0": "Não há como renomear, excluir, criar nem marcar/desmarcar com estrela um grupo pelo painel — editar grupos é só pela extensão, por projeto.",
+            "1": "As únicas ações reais em um cartão de grupo são Compartilhar e abrir suas abas/janelas."
+          },
+          "report": "Algum controle do painel que parece editar, excluir ou criar um grupo na verdade faz isso."
+        },
+        "5": {
+          "heading": "Sessões e estatísticas no painel",
+          "checks": "Que as sessões salvas e os totais do painel conferem com a extensão.",
+          "steps": {
+            "0": "Salve uma sessão na extensão e depois confira a seção \"Sessões salvas\" do painel.",
+            "1": "Confira as estatísticas no topo do painel (quantidade de abas, de grupos, de sessões e data de membro desde)."
+          },
+          "good": {
+            "0": "A sessão que você salvou aparece.",
+            "1": "As estatísticas conferem com o que você contaria na extensão."
+          }
+        },
+        "6": {
+          "heading": "Compartilhando pelo painel",
+          "checks": "Que o botão Compartilhar do painel copia um link de compartilhamento, como o da extensão.",
+          "steps": {
+            "0": "Em um cartão de grupo (ou por \"Selecionar\" e \"Compartilhar selecionados\" para vários grupos), clique em Compartilhar."
+          },
+          "good": {
+            "0": "Um link é copiado para a área de transferência na hora, com um aviso confirmando. Isso é tratado em detalhe na seção \"Compartilhamento\" abaixo — o botão Compartilhar do painel e o da extensão geram o mesmo tipo de link."
+          }
+        },
+        "7": {
+          "heading": "Página da conta",
+          "checks": "Que a página da conta mostra o perfil, o plano e os dispositivos corretos e que as duas opções de sair funcionam.",
+          "pro": "Só o cartão Dispositivos exige o Pro; ele lista os dispositivos que sincronizam.",
+          "steps": {
+            "0": "Abra as Configurações da conta pelo painel.",
+            "1": "Confira o cartão Perfil (e-mail, membro desde), o cartão Assinatura (plano, \"Gerenciar cobrança\" ou \"Fazer upgrade\") e o cartão Dispositivos.",
+            "2": "Teste \"Sair\" e, separadamente, \"Sair de todos os dispositivos\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Configurações da conta: o cartão Assinatura mostra o plano Pro, a data de renovação e {proMonthly}/mês, com um botão Gerenciar cobrança; abaixo dele, o cartão Dispositivos lista os dispositivos conectados",
+              "caption": "Os cartões Assinatura e Dispositivos em uma conta Pro."
+            }
+          },
+          "good": {
+            "0": "Perfil e Assinatura mostram informações corretas e atuais (veja a seção \"Fazendo upgrade para o Pro\" acima para o cartão Assinatura em detalhe).",
+            "1": "Dispositivos lista seus dispositivos conectados com controles de renomear/remover.",
+            "2": "Os dois botões de sair levam você ao estado desconectado; \"todos os dispositivos\" também revoga todas as outras sessões ativas.",
+            "3": "Não há opção de excluir a conta nesta página — isso é esperado, não é uma lacuna a relatar."
+          }
+        },
+        "8": {
+          "heading": "No celular",
+          "checks": "Que o painel e as páginas da conta são totalmente utilizáveis em tela pequena.",
+          "steps": {
+            "0": "Abra o painel e as Configurações da conta em um celular (ou numa janela de computador estreitada para cerca de 390px de largura).",
+            "1": "Toque nos ícones Painel e Conta no topo, depois no menu redondo da conta à direita e em \"Sair\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "O painel em tela de celular: a barra superior mostra o logo do TabMerger, os ícones Painel e Conta, o alternador claro/escuro e o menu da conta, sem nada cortado",
+              "caption": "O painel na largura de um celular: só ícones na barra superior, nada rola para os lados."
+            }
+          },
+          "good": {
+            "0": "Nada rola para os lados.",
+            "1": "A barra superior mostra o logo do TabMerger, os ícones Painel e Conta, o alternador claro/escuro e o menu da conta, tudo totalmente visível e tocável (o nome \"TabMerger\" e os rótulos dos ícones somem em telas estreitas). Telas maiores ainda mostram os rótulos."
+          },
+          "report": "Uma página rola para os lados no celular, ou algum controle do topo fica cortado ou inalcançável."
+        },
+        "9": {
+          "heading": "Notificações (toasts)",
+          "checks": "Que as notificações pop-up são fáceis de ler, fecham sozinhas após uma contagem regressiva e podem ser fechadas antes.",
+          "steps": {
+            "0": "Dispare uma notificação, por exemplo: nas Configurações da conta, digite uma senha com menos de 8 caracteres no formulário de senha e envie (mostra um erro sem alterar nada), ou copie um link de compartilhamento.",
+            "1": "Observe a notificação no canto inferior direito, depois dispare outra e passe o mouse sobre ela.",
+            "2": "Teste nos modos claro e escuro."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma notificação de erro vermelha no canto inferior direito dizendo \"A senha deve ter pelo menos 8 caracteres.\", com um ✕ no canto e uma barra de contagem regressiva parcialmente esvaziada na borda inferior",
+              "caption": "Uma notificação de erro: borda vermelha, ✕ para fechar e a barra de contagem regressiva na parte de baixo."
+            }
+          },
+          "good": {
+            "0": "Cada notificação é fácil de ler sobre a página, com uma borda colorida (verde para sucesso, vermelha para erros).",
+            "1": "Uma barra na parte de baixo se esvazia em cerca de 6 segundos e pausa enquanto você passa o mouse, e a notificação fecha quando ela acaba.",
+            "2": "O ✕ no canto superior direito a fecha na hora."
+          },
+          "report": "Uma notificação é difícil de ler em algum dos temas, a barra continua correndo enquanto você passa o mouse, ou o ✕ está fora do lugar ou não a fecha."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Compartilhamento",
+      "intro": "Compartilhar exige o Pro (veja \"Fazendo upgrade para o Pro\" acima para chegar lá neste beta). A chave de criptografia de um compartilhamento é gerada nova para cada link e fica só no fragmento #key= da URL — nunca é enviada nem armazenada no servidor, então quem tiver o link completo (incluindo esse fragmento) pode ver o conteúdo compartilhado. Trate um link de compartilhamento como o próprio conteúdo.",
+      "items": {
+        "0": {
+          "heading": "Compartilhando um ou mais grupos pela extensão",
+          "checks": "Que a extensão cria um link de compartilhamento para um grupo, ou para vários de uma vez.",
+          "steps": {
+            "0": "Entre no modo de seleção e marque um ou mais grupos na barra lateral (não abas nem janelas — Compartilhar só aparece para uma seleção de grupos).",
+            "1": "Clique em \"Compartilhar\" na barra de seleção embaixo."
+          },
+          "examples": {
+            "0": {
+              "alt": "O modo de seleção no popup com Work e Research marcados e \"2 grupos selecionados\" e um botão Compartilhar na barra inferior",
+              "caption": "Marque os grupos a compartilhar e clique em Compartilhar na barra inferior."
+            },
+            "1": {
+              "alt": "A mesma tela com uma notificação verde \"Link copiado para a área de transferência\"",
+              "caption": "O link é copiado na hora."
+            }
+          },
+          "good": {
+            "0": "Um link é copiado para a área de transferência na hora, com um aviso \"Link copiado para a área de transferência\".",
+            "1": "Selecionar vários grupos de uma vez os compartilha todos juntos em um só link/pacote — você não precisa compartilhá-los um a um."
+          }
+        },
+        "1": {
+          "heading": "Abrindo um link compartilhado",
+          "checks": "Que qualquer pessoa pode abrir um link de compartilhamento sem entrar e ver os grupos compartilhados, somente leitura.",
+          "pro": "Criar o link exige o Pro; abri-lo não exige conta nenhuma.",
+          "steps": {
+            "0": "Abra o link copiado em uma janela de navegador desconectada (ou uma janela privada/anônima).",
+            "1": "Confira os favicons e títulos de cada aba compartilhada e teste \"Abrir aba\" / \"Abrir todas as abas\" / \"Abrir janela\" / \"Abrir todas as janelas\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "A página compartilhada aberta sem login: \"Coleção compartilhada · somente leitura\", o link de compartilhamento, \"9 abas em 5 janelas de 2 grupos\", um interruptor Mostrar prévias das páginas e as abas do grupo Work com botões Abrir",
+              "caption": "O que alguém que abre seu link vê, sem entrar. (Aqui o link aponta para um servidor de teste local; o seu ficará em preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "A página carrega sem exigir login, com o rótulo \"Coleção compartilhada · somente leitura\".",
+            "1": "Ela mostra todos os grupos, janelas e abas com seus favicons e títulos reais.",
+            "2": "Os botões de abrir abrem a(s) aba(s)/janela(s) certa(s) em novas abas do navegador."
+          }
+        },
+        "2": {
+          "heading": "Prévias de páginas na página compartilhada",
+          "checks": "Que as prévias de páginas em uma página compartilhada ficam desativadas até quem vê ativá-las e confirmar.",
+          "pro": "Criar o link exige o Pro; abri-lo não exige conta nenhuma.",
+          "steps": {
+            "0": "Na página compartilhada, encontre o interruptor \"Mostrar prévias das páginas\" acima da lista de grupos.",
+            "1": "Ative-o e confirme a caixa de diálogo que aparece.",
+            "2": "Passe o mouse sobre uma aba para ver a imagem e a descrição da prévia."
+          },
+          "examples": {
+            "0": {
+              "alt": "A caixa \"Ativar prévias das páginas?\" explicando o que é enviado ao serviço de prévia, com os botões Cancelar e Ativar",
+              "caption": "Ativar o interruptor pergunta antes. As prévias ficam desativadas até você confirmar."
+            }
+          },
+          "good": {
+            "0": "O interruptor vem desativado por padrão.",
+            "1": "Ativá-lo exige confirmar antes uma caixa de diálogo (desativá-lo de volta não exige confirmação) — a caixa explica que passar o mouse sobre uma aba envia o endereço dela ao serviço de prévia do TabMerger, e que ele não é vinculado à sua conta, registrado nem armazenado.",
+            "2": "Depois de ativado, passar o mouse sobre uma aba mostra sua imagem/descrição; uma página sem imagem mostra \"Sem prévia\" em vez de uma imagem quebrada."
+          }
+        },
+        "3": {
+          "heading": "Compartilhando um grupo com várias janelas",
+          "checks": "Que um grupo compartilhado com várias janelas mostra cada janela separadamente.",
+          "steps": {
+            "0": "Compartilhe um grupo que tenha várias janelas salvas (não só uma)."
+          },
+          "examples": {
+            "0": {
+              "alt": "O grupo Research da página compartilhada, com quatro janelas separadas, cada uma com seu link Abrir aba, e \"Abrir todas as janelas\" no grupo",
+              "caption": "Um grupo compartilhado com quatro janelas: cada janela é listada separadamente."
+            }
+          },
+          "good": {
+            "0": "A página compartilhada mostra todas as janelas do grupo, cada uma com o rótulo \"Janela N\" (e \"Anônima\" se era uma), com suas próprias abas e seu próprio controle \"Abrir aba(s)\"."
+          }
+        },
+        "4": {
+          "heading": "Compartilhando pelo painel web em vez da extensão",
+          "checks": "Que compartilhar pelo site funciona do mesmo jeito que pela extensão.",
+          "steps": {
+            "0": "No painel, clique em \"Compartilhar\" em um único cartão de grupo, ou marque vários grupos e clique em \"Compartilhar selecionados\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Os cartões de grupo do painel com o botão Compartilhar de um cartão mostrando \"Copiado!\" e uma notificação dizendo \"Link copiado — compartilha um instantâneo deste grupo.\"",
+              "caption": "Compartilhar em um cartão do painel copia o mesmo tipo de link."
+            }
+          },
+          "good": {
+            "0": "Os dois caminhos do painel copiam um link do mesmo jeito que a extensão (\"Link copiado — compartilha um instantâneo deste grupo.\" ou \"Link copiado! A página compartilhada está no ar.\", respectivamente), gerando o mesmo tipo de página compartilhada."
+          }
+        },
+        "5": {
+          "heading": "Editar, recompartilhar, revogar e expirar — o que NÃO é possível",
+          "checks": "O que os links de compartilhamento ainda não fazem, para você não perder tempo relatando.",
+          "steps": {
+            "0": "Tente achar qualquer forma de editar um compartilhamento existente, ou de revogar/excluir/expirar um, pela extensão ou pelo painel."
+          },
+          "good": {
+            "0": "Atualmente não há interface em lugar nenhum para editar, revogar, excluir ou expirar um link de compartilhamento depois de criado — um compartilhamento é um instantâneo permanente e imutável desde o momento em que é feito. Isso é esperado — não relate a falta de um controle de revogar/editar/expirar, só confirme que confere com esta descrição.",
+            "1": "Compartilhar o mesmo grupo de novo cria um link novo e separado, em vez de atualizar o antigo; o link antigo continua funcionando e ainda mostra o instantâneo antigo."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Configurações",
+      "intro": "As Configurações têm as abas Geral, Conta e Dados para todos. Uma aba Dispositivos aparece quando você está no Pro (veja \"Fazendo upgrade para o Pro\" acima). As abas IA e Dev não fazem parte desta versão beta — a IA fica oculta atrás do indicador \"em breve\", e Dev só aparece em builds de desenvolvimento locais, não no beta que você instalou.",
+      "items": {
+        "0": {
+          "heading": "Aba Geral — Tema, Confirmar antes de excluir, Abrir aba ao clicar, Remover duplicatas ao mesclar",
+          "checks": "Que estas configurações gerais têm efeito na hora e são lembradas.",
+          "steps": {
+            "0": "Abra as Configurações e alterne o Tema entre Claro, Escuro e Sistema.",
+            "1": "Alterne \"Confirmar antes de excluir\" (exclua um grupo ou janela com ele ativado e depois desativado, e compare).",
+            "2": "Alterne \"Abrir aba ao clicar\" e depois clique em uma aba salva no painel principal.",
+            "3": "Alterne \"Remover duplicatas ao mesclar\" e depois mescle duas janelas que compartilham uma aba duplicada."
+          },
+          "examples": {
+            "0": {
+              "alt": "A aba Geral da janela de Configurações, mostrando Tema, Confirmar antes de excluir e outros interruptores",
+              "caption": "A aba Geral das Configurações, com o selo de versão ao lado do título. (A aba Dev só existe na nossa build interna de capturas de tela; você não a verá.)"
+            }
+          },
+          "good": {
+            "0": "O Tema muda toda a interface na hora e continua depois de fechar/reabrir o popup.",
+            "1": "Com \"Confirmar antes de excluir\" ativado, excluir um grupo ou janela pergunta antes; desativado, exclui na hora.",
+            "2": "\"Abrir aba ao clicar\" ativado: um clique abre a aba no navegador; desativado: um clique só a seleciona/expande.",
+            "3": "\"Remover duplicatas ao mesclar\" remove a duplicata automaticamente quando ativado."
+          }
+        },
+        "1": {
+          "heading": "Aba Geral — Mostrar imagens das páginas nas prévias",
+          "checks": "Que a configuração de imagens das páginas controla se as prévias das abas mostram uma imagem da página.",
+          "steps": {
+            "0": "Desative \"Mostrar imagens das páginas nas prévias\".",
+            "1": "Passe o mouse sobre uma aba salva para ver a prévia.",
+            "2": "Ative a configuração de novo e passe o mouse sobre a mesma aba outra vez."
+          },
+          "examples": {
+            "0": {
+              "alt": "Uma prévia ao passar o mouse sobre uma aba com as imagens das páginas desativadas, mostrando um espaço \"Não ativado\"",
+              "caption": "A prévia ao passar o mouse com \"Mostrar imagens das páginas nas prévias\" desativado."
+            }
+          },
+          "good": {
+            "0": "Desativado: a prévia diz claramente \"Não ativado\" com a nota \"As imagens das páginas estão desativadas. Ative nas Configurações.\" — o próprio interruptor salva na hora, sem caixa de confirmação.",
+            "1": "Ativado: uma imagem real da página carrega na prévia, ou \"Sem prévia\" se a página não tiver nenhuma.",
+            "2": "A descrição da própria configuração leva à seção de prévias de páginas da política de privacidade."
+          },
+          "report": "A prévia mostra \"Sem prévia\" (em branco) em vez de uma imagem real com a configuração ativada e uma página que tem imagem."
+        },
+        "2": {
+          "heading": "Aba Geral — Sincronização na nuvem, Limite para abas inativas, Regras de URL",
+          "checks": "Que estas configurações aparecem para os planos certos e mudam o que devem.",
+          "pro": "Só o interruptor Sincronização na nuvem exige o Pro (o plano Gratuito não o mostra).",
+          "steps": {
+            "0": "Com o Pro, alterne \"Sincronização na nuvem\" (este controle só aparece quando você tem o Pro).",
+            "1": "Mude o \"Limite para abas inativas\" para outro valor (7/14/30/60 dias).",
+            "2": "Clique em \"Gerenciar\" ao lado de \"Regras de URL\" e adicione uma regra que atribui um padrão de URL a um grupo."
+          },
+          "examples": {
+            "0": {
+              "alt": "Configurações, aba Geral rolada para baixo: Sincronização na nuvem ativada, Limite para abas inativas em 30 dias e Regras de URL com um botão Gerenciar",
+              "caption": "A metade de baixo da aba Geral. (A aba Dev só existe na nossa build interna de capturas de tela; você não a verá.)"
+            }
+          },
+          "good": {
+            "0": "A Sincronização na nuvem só aparece para contas Pro (o plano Gratuito nunca a vê).",
+            "1": "Mudar o limite de abas inativas muda quais abas recebem o ponto âmbar de inatividade.",
+            "2": "Regras de URL abre um gerenciador onde você pode adicionar/editar/remover regras de padrão para grupo.",
+            "3": "Uma aba recém-aberta que corresponde a uma regra é atribuída automaticamente."
+          }
+        },
+        "3": {
+          "heading": "Tema: Claro, Escuro e Sistema",
+          "checks": "Que todo tema fica certo em todo o popup e que a escolha é lembrada.",
+          "steps": {
+            "0": "Em Configurações → Geral, defina o Tema como Escuro e clique em Salvar alterações.",
+            "1": "Explore o popup: a barra lateral, um grupo com várias janelas, os menus ⋯, um menu de clique direito, a Busca (Ctrl+K) e as próprias Configurações.",
+            "2": "Feche e reabra o popup.",
+            "3": "Defina o Tema como Sistema e salve, depois alterne o seu computador entre o modo claro e o escuro.",
+            "4": "Volte para Claro."
+          },
+          "good": {
+            "0": "O popup inteiro troca de tema assim que você salva, com todo texto, ícone e borda legíveis.",
+            "1": "Menus, caixas de diálogo, dicas e notificações também seguem o tema.",
+            "2": "O tema continua definido depois de reabrir o popup.",
+            "3": "Sistema segue a configuração clara ou escura do seu computador."
+          },
+          "report": "Algo fica difícil de ler ou mantém o tema antigo (um menu, caixa de diálogo, ícone ou borda), ou o tema volta ao padrão depois de reabrir o popup."
+        },
+        "4": {
+          "heading": "Regras de URL: salvando páginas correspondentes automaticamente",
+          "checks": "Que uma regra de URL salva as páginas que você abre em endereços correspondentes no grupo que você escolheu.",
+          "steps": {
+            "0": "Em Configurações → Geral, ao lado de Regras de URL, clique em Gerenciar e depois em Adicionar regra.",
+            "1": "Digite um padrão com * como curinga (ex.: github.com/*), escolha um grupo, adicione a regra e clique em Salvar.",
+            "2": "No navegador, abra uma nova aba em um endereço que corresponda (ex.: qualquer página do github.com).",
+            "3": "Abra o popup e veja o grupo da regra. Depois recarregue a página uma vez e confira o grupo de novo.",
+            "4": "Edite a regra para apontar para outro grupo, depois exclua-a e abra outra página correspondente.",
+            "5": "No plano Gratuito, tente adicionar uma quarta regra."
+          },
+          "examples": {
+            "0": {
+              "alt": "A caixa Regras de URL: \"Atribua abas a grupos automaticamente por padrão de URL. Use * como curinga (ex.: github.com/*). Vale a primeira regra que corresponder.\", nenhuma regra ainda, um botão Adicionar regra, e Cancelar e Salvar",
+              "caption": "Configurações → Geral → Regras de URL → Gerenciar abre este editor."
+            }
+          },
+          "good": {
+            "0": "Uma cópia da página correspondente é salva no grupo da regra, na primeira janela dele (ou em uma nova janela se o grupo não tiver nenhuma). A própria aba continua aberta.",
+            "1": "Quando várias regras correspondem, vale a primeira da lista.",
+            "2": "Depois que uma regra é editada ou excluída, as páginas novas seguem a mudança.",
+            "3": "O plano Gratuito permite 3 regras: adicionar uma quarta mostra \"O plano gratuito permite até 3 regras de URL.\" com um botão Upgrade. O Pro não tem limite."
+          },
+          "report": "Uma página correspondente não é salva, cai no grupo errado ou é salva mais de uma vez (por exemplo, de novo toda vez que você a recarrega)."
+        },
+        "5": {
+          "heading": "Aba Conta — Plano, Renova em, E-mail, Gerenciar cobrança / Upgrade, Sair",
+          "checks": "Que a aba Conta mostra seu plano, data de renovação e e-mail reais e que seus botões funcionam.",
+          "steps": {
+            "0": "Abra a aba Conta e confira as linhas Plano, Renova em (se for pago) e E-mail.",
+            "1": "Clique em \"Fazer upgrade para o Pro\" (Gratuito) ou \"Gerenciar cobrança\" (Pro/Pro AI) — veja \"Fazendo upgrade para o Pro\" acima para o que acontece depois.",
+            "2": "Clique em \"Sair\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Configurações, aba Conta no Pro: Plano Pro ({proMonthly}/mês), uma data de renovação, o e-mail, os botões Gerenciar cobrança e Sair, e \"Esqueceu a frase secreta? Redefinir criptografia\"",
+              "caption": "A aba Conta em uma conta Pro. O link de redefinição no fim é o próximo item. (A aba Dev só existe na nossa build interna de capturas de tela; você não a verá.)"
+            }
+          },
+          "good": {
+            "0": "Plano mostra \"Gratuito\", \"Pro ({proMonthly}/mês)\" ou \"Pro AI ({proAiMonthly}/mês)\", conforme sua assinatura real.",
+            "1": "Renova em só aparece em um plano pago e dá a data real de renovação.",
+            "2": "E-mail confere com a conta em que você está conectado.",
+            "3": "\"Gerenciar cobrança\" abre o portal de cobrança da Stripe em uma nova aba; no plano Gratuito é \"Fazer upgrade para o Pro\", que abre a página de preços.",
+            "4": "Sair leva você ao estado desconectado."
+          }
+        },
+        "6": {
+          "heading": "Aba Conta — Esqueceu a frase secreta? Redefinir criptografia",
+          "checks": "Que o link de redefinição da criptografia aparece na aba Conta depois que a criptografia é configurada.",
+          "steps": {
+            "0": "Este link só aparece se você concluiu a configuração da criptografia pelo menos uma vez (veja a seção \"Frase secreta de criptografia de ponta a ponta\" abaixo para o fluxo completo — não o repita aqui, só confirme que ele é acessível por esta aba)."
+          },
+          "good": {
+            "0": "O link fica visível no fim da aba Conta depois que a criptografia é configurada, e não antes."
+          }
+        },
+        "7": {
+          "heading": "Aba Dados — Exportar, Importar, Apagar todos os dados",
+          "checks": "Que exportar, importar e apagar seus dados funcionam, com uma confirmação antes de qualquer substituição ou exclusão.",
+          "steps": {
+            "0": "Abra a aba Dados e clique em \"Exportar\" para baixar todos os grupos como um arquivo JSON.",
+            "1": "Clique em \"Importar\" e selecione esse mesmo arquivo (ou uma exportação HTML de favoritos, ou uma exportação .txt do OneTab).",
+            "2": "Clique em \"Apagar todos os dados\" e confirme."
+          },
+          "examples": {
+            "0": {
+              "alt": "A aba Dados da janela de Configurações, mostrando os controles Exportar dados e Importar dados",
+              "caption": "A aba Dados das Configurações."
+            }
+          },
+          "good": {
+            "0": "Exportar baixa um arquivo com nome como \"tabmerger-backup-2026-01-15.json\" com uma notificação de \"exportado com sucesso\".",
+            "1": "Importar pede que você confirme a quantidade de grupos antes de importar e depois mostra \"importados com sucesso\".",
+            "2": "Reimportar sua própria exportação traz de volta todos os grupos com as mesmas janelas, abas, ordem e cores.",
+            "3": "Os três tipos de arquivo (JSON do TabMerger, HTML de favoritos, .txt do OneTab) são aceitos, detectados pela extensão do arquivo.",
+            "4": "\"Apagar todos os dados\" limpa grupos, sessões e configurações depois que você confirma — trate como destrutivo e só teste em um perfil descartável."
+          },
+          "report": "Um arquivo inválido ou vazio não faz nada em silêncio em vez de mostrar uma notificação de erro como \"Formato de arquivo inválido\" ou \"Nenhum grupo encontrado\"."
+        },
+        "8": {
+          "heading": "Salvar x Redefinir e o indicador \"Alterações não salvas\"",
+          "checks": "Que as configurações só são salvas quando você clica em Salvar e avisam sobre alterações não salvas.",
+          "steps": {
+            "0": "Na aba Geral, altere qualquer configuração (ex.: Tema) sem clicar em Salvar.",
+            "1": "Repare no texto \"Alterações não salvas\" e que \"Salvar alterações\" só fica ativo enquanto algo realmente difere do que está salvo.",
+            "2": "Clique em \"Restaurar padrões\" em vez de Salvar e depois feche as Configurações sem salvar.",
+            "3": "Reabra as Configurações e veja se sua alteração permaneceu."
+          },
+          "examples": {
+            "0": {
+              "alt": "Configurações, aba Geral depois de uma alteração: \"Alterações não salvas\" ao lado de um botão Salvar alterações ativo, com Restaurar padrões à esquerda",
+              "caption": "Depois de alterar uma configuração: \"Alterações não salvas\" aparece e Salvar alterações é ativado. (A aba Dev só existe na nossa build interna de capturas de tela; você não a verá.)"
+            }
+          },
+          "good": {
+            "0": "\"Alterações não salvas\" aparece ao lado de \"Salvar alterações\" sempre que o rascunho difere das últimas configurações salvas.",
+            "1": "\"Salvar alterações\" fica desativado quando não há nada novo para salvar.",
+            "2": "\"Restaurar padrões\" só volta o rascunho em andamento aos padrões — não salva por si só.",
+            "3": "Fechar as Configurações sem clicar em \"Salvar alterações\" descarta o rascunho; reabrir mostra os últimos valores realmente salvos, não sua edição não salva."
+          },
+          "report": "\"Salvar alterações\" continua ativo sem nenhuma alteração feita, ou uma configuração que você alterou mas nunca salvou persiste mesmo assim depois de fechar e reabrir as Configurações."
+        },
+        "9": {
+          "heading": "O selo de versão",
+          "checks": "Onde achar o número exato da versão para colocar nos relatos de bugs.",
+          "steps": {
+            "0": "Olhe a barra de título da caixa de Configurações."
+          },
+          "good": {
+            "0": "Um pequeno selo ao lado da palavra \"Configurações\" mostra o semver real que você deve informar nos relatos de bugs (ex.: \"v3.1.0-beta.5\") — isso é tratado com mais detalhe na seção \"Entrar e instalar\" acima."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Login e sincronização entre dispositivos",
+      "intro": "As builds beta sincronizam pelo app web de preview em preview.tabmerger.com, não pelo site principal — entre lá para ver seus grupos sincronizados, painel e compartilhamento.",
+      "items": {
+        "0": {
+          "heading": "Configurando dois dispositivos",
+          "checks": "Que dois dispositivos conectados à mesma conta compartilham seus grupos.",
+          "steps": {
+            "0": "Entre em dois dispositivos ou dois perfis de navegador com a extensão beta instalada nos dois, apontando para a mesma conta."
+          },
+          "examples": {
+            "0": {
+              "alt": "A caixa \"Entrar no TabMerger\" da extensão no popup: Continuar com o Google, depois as abas Entrar, Cadastrar e Link mágico com campos E-mail e Senha",
+              "caption": "Entrando pela extensão: o ícone da conta (canto superior direito) → Entrar."
+            },
+            "1": {
+              "alt": "O popup do dispositivo A com os grupos Work, Research, Shopping e Reading List; o rodapé diz 4 Grupos, 4 Janelas, 17 Abas",
+              "caption": "Dispositivo A."
+            },
+            "2": {
+              "alt": "O popup do dispositivo B depois de entrar, desbloquear e sincronizar: os mesmos quatro grupos com as mesmas contagens de janelas e abas, e o mesmo rodapé de 4 Grupos, 4 Janelas, 17 Abas",
+              "caption": "Dispositivo B depois de entrar e desbloquear: os mesmos grupos e contagens, na mesma ordem."
+            }
+          },
+          "good": {
+            "0": "Grupos criados em um dispositivo aparecem no outro em pouco tempo."
+          }
+        },
+        "1": {
+          "heading": "Renomeações chegam ao outro dispositivo",
+          "checks": "Que uma renomeação em um dispositivo aparece no outro sem atualização manual.",
+          "steps": {
+            "0": "Edite o nome de um grupo no dispositivo A.",
+            "1": "Confira o dispositivo B sem tocar em nada lá."
+          },
+          "examples": {
+            "0": {
+              "alt": "O popup do dispositivo A depois de renomear Research para \"Research papers\", com suas quatro abas",
+              "caption": "Dispositivo A: \"Research\" renomeado para \"Research papers\"."
+            },
+            "1": {
+              "alt": "O popup do dispositivo B mostrando o grupo como \"Research papers\" com as mesmas quatro abas, só depois de reabrir o popup",
+              "caption": "Dispositivo B, só depois de reabrir o popup: o novo nome está lá."
+            }
+          },
+          "good": {
+            "0": "O dispositivo B recebe a renomeação sem você precisar acionar uma atualização manual."
+          }
+        },
+        "2": {
+          "heading": "Exclusões chegam ao outro dispositivo",
+          "checks": "Que um grupo excluído continua excluído em todos os dispositivos em vez de voltar.",
+          "steps": {
+            "0": "Exclua um grupo no dispositivo A.",
+            "1": "Confirme que ele também some no dispositivo B."
+          },
+          "examples": {
+            "0": {
+              "alt": "O popup do dispositivo A depois de excluir Shopping: restam Work, Research papers e Reading List, e o rodapé diz 3 Grupos, 3 Janelas, 14 Abas",
+              "caption": "Dispositivo A: \"Shopping\" excluído."
+            },
+            "1": {
+              "alt": "O popup do dispositivo B depois de reabrir: Shopping sumiu e o rodapé diz 3 Grupos, 3 Janelas, 14 Abas",
+              "caption": "Dispositivo B depois de reabrir o popup: \"Shopping\" também sumiu lá."
+            }
+          },
+          "good": {
+            "0": "A exclusão se propaga em vez de o grupo reaparecer (\"ressuscitar\") depois da sincronização."
+          },
+          "report": "Um grupo excluído volta em algum dos dispositivos depois de uma sincronização posterior."
+        },
+        "3": {
+          "heading": "A reordenação de grupos sincroniza",
+          "checks": "Que a ordem dos seus grupos é a mesma em todos os dispositivos e no painel.",
+          "steps": {
+            "0": "Arraste um grupo para uma nova posição na barra lateral do dispositivo A.",
+            "1": "Espere a sincronização terminar e depois veja a barra lateral do dispositivo B e o painel web."
+          },
+          "good": {
+            "0": "O dispositivo B e o painel mostram os grupos na mesma ordem do dispositivo A.",
+            "1": "O Desfazer pode ficar cinza em um dispositivo logo depois de uma sincronização trazer alterações de outro dispositivo. Isso é esperado: o histórico de desfazer é limpo quando chegam alterações de outro lugar, então você não desfaz por acidente a edição de outra pessoa."
+          },
+          "report": "A ordem difere entre dispositivos depois que a sincronização termina, ou uma reordenação volta para a ordem antiga."
+        },
+        "4": {
+          "heading": "Alterações offline sincronizam ao reconectar",
+          "checks": "Que alterações feitas offline sincronizam quando você volta a ficar online, sem duplicatas nem perdas.",
+          "steps": {
+            "0": "Fique offline (desative a rede) em um dispositivo.",
+            "1": "Faça alterações.",
+            "2": "Reconecte."
+          },
+          "good": {
+            "0": "Ao voltar online, as alterações feitas offline sincronizam sem duplicar nem descartar grupos em silêncio."
+          }
+        },
+        "5": {
+          "heading": "Excluindo um grupo offline",
+          "checks": "Que um grupo excluído offline continua excluído depois que você reconecta.",
+          "steps": {
+            "0": "Fique offline (desative a rede) no dispositivo A.",
+            "1": "Exclua um grupo no dispositivo A.",
+            "2": "Reconecte o dispositivo A e deixe sincronizar, depois confira o dispositivo B e o painel."
+          },
+          "good": {
+            "0": "O grupo é removido do servidor na próxima sincronização e some no dispositivo B e no painel.",
+            "1": "Ele não volta em nenhum dos dispositivos depois."
+          },
+          "report": "Um grupo que você excluiu offline reaparece em algum dispositivo depois de uma sincronização."
+        },
+        "6": {
+          "heading": "O mesmo grupo editado em dois dispositivos (cópia de conflito)",
+          "checks": "Que, quando o mesmo grupo é editado em dois dispositivos antes de qualquer um sincronizar, nada é sobrescrito e você recebe uma cópia para mesclar à mão.",
+          "steps": {
+            "0": "Fique offline (desative a rede) no dispositivo A. Deixe o dispositivo B online.",
+            "1": "No dispositivo A, edite um grupo (por exemplo, adicione uma aba). No dispositivo B, edite o mesmo grupo de outro jeito (por exemplo, adicione uma aba diferente).",
+            "2": "Deixe o dispositivo B sincronizar primeiro e depois reconecte o dispositivo A e deixe sincronizar.",
+            "3": "Veja a barra lateral nos dois dispositivos."
+          },
+          "good": {
+            "0": "A versão que chegou primeiro ao servidor (dispositivo B) mantém o nome do grupo.",
+            "1": "A versão do dispositivo A é salva logo abaixo como um novo grupo chamado \"Work{CONFLICT_COPY_SUFFIX}\" (usando o nome do seu grupo), e uma notificação avisa.",
+            "2": "Os dois dispositivos acabam mostrando os dois grupos. Você pode mesclar as abas à mão e depois excluir a cópia.",
+            "3": "Editar só um dispositivo, ou editar grupos diferentes em cada um, nunca gera uma cópia."
+          },
+          "report": "Uma edição some em silêncio sem cópia, ou uma \"cópia de conflito\" aparece quando só um dispositivo editou o grupo."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Frase secreta de criptografia de ponta a ponta",
+      "intro": "A criptografia é obrigatória para toda conta conectada, não uma configuração opcional — não há interruptor para desativá-la. Seus grupos sincronizados, sessões e instantâneos de \"Abertas agora\" são criptografados com uma chave que só sua frase secreta desbloqueia; os servidores do TabMerger nunca veem a frase secreta nem a chave desembrulhada.",
+      "items": {
+        "0": {
+          "heading": "Configuração da frase secreta pela primeira vez",
+          "checks": "Que ativar a sincronização pede que você escolha uma frase secreta de criptografia antes de qualquer dado sair do seu dispositivo.",
+          "steps": {
+            "0": "Em um primeiro login com sincronização na nuvem, espere o aviso \"Configurar criptografia\" aparecer sozinho (ele é acionado pela primeira tentativa de sincronização).",
+            "1": "Leia o texto do aviso, depois digite uma nova frase secreta e repita-a em \"Confirmar frase secreta\".",
+            "2": "Clique em \"Configurar criptografia\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "A caixa \"Configurar criptografia\" explicando que a frase secreta não pode ser recuperada, com campos Nova frase secreta e Confirmar frase secreta e um botão Configurar criptografia",
+              "caption": "Aparece sozinha logo depois de entrar no Pro."
+            }
+          },
+          "good": {
+            "0": "O aviso diz \"Seus dados sincronizados de grupos e abas têm criptografia de ponta a ponta com uma frase secreta que só você conhece. Escolha uma agora — não há como recuperar seus dados se você esquecê-la: ela nunca sai do seu dispositivo e o TabMerger não pode redefini-la.\"",
+            "1": "A frase secreta deve ter pelo menos 8 caracteres sem espaços e coincidir com a confirmação — frases que não coincidem ou curtas demais mostram um erro claro na própria tela (\"A frase secreta deve ter pelo menos 8 caracteres\" / \"As frases secretas não coincidem\" / \"A frase secreta não pode conter espaços\") em vez de falhar em silêncio.",
+            "2": "No sucesso, você vê a notificação \"Criptografia configurada\".",
+            "3": "Nada do que você já sincronizou é perdido."
+          }
+        },
+        "1": {
+          "heading": "Desbloqueando em um segundo dispositivo",
+          "checks": "Que um segundo dispositivo precisa da sua frase secreta uma vez antes de conseguir ler seus dados sincronizados.",
+          "steps": {
+            "0": "Entre com a mesma conta em um segundo dispositivo ou perfil de navegador.",
+            "1": "Quando o aviso \"Desbloquear criptografia\" aparecer, digite sua frase secreta (uma vez, não há campo de confirmação) e clique em \"Desbloquear\" ou pressione Enter.",
+            "2": "Repita mais uma vez, mas digite a frase secreta errada de propósito."
+          },
+          "examples": {
+            "0": {
+              "alt": "A caixa \"Desbloquear criptografia\" em um segundo dispositivo, com um único campo Frase secreta e um botão Desbloquear",
+              "caption": "Em um segundo dispositivo, a extensão pede sua frase secreta existente uma vez."
+            }
+          },
+          "good": {
+            "0": "O aviso de desbloqueio diz \"Digite sua frase secreta de criptografia para desbloquear os dados sincronizados neste dispositivo. É uma etapa única por dispositivo — você não será solicitado de novo, a menos que saia da conta.\"",
+            "1": "A frase secreta correta desbloqueia e mostra a notificação \"Criptografia desbloqueada\".",
+            "2": "A errada mostra \"Frase secreta incorreta\" e não muda mais nada — sem corrupção, sem bloqueio, você só tenta de novo."
+          }
+        },
+        "2": {
+          "heading": "Como é o estado \"bloqueado\" e continuar desbloqueado após reiniciar",
+          "checks": "Que os dados bloqueados continuam ilegíveis até você desbloqueá-los e que um dispositivo continua desbloqueado depois de reiniciar o navegador.",
+          "steps": {
+            "0": "Enquanto um dispositivo está bloqueado (antes de você digitar a frase secreta nele), tente usar os recursos de sincronização na nuvem.",
+            "1": "Desbloqueie-o e depois feche por completo e reabra o navegador (não só o popup) nesse dispositivo."
+          },
+          "good": {
+            "0": "Enquanto bloqueado, a frase secreta é pedida de novo em vez de sincronizar texto simples em silêncio ou perder dados.",
+            "1": "Depois de desbloqueada, a chave persiste no armazenamento local do navegador nesse dispositivo — reiniciar o navegador por completo não pede de novo; só sair da conta a apaga."
+          }
+        },
+        "3": {
+          "heading": "Esqueceu a frase secreta — redefinindo a criptografia",
+          "checks": "Que redefinir a criptografia é claramente confirmado antes e permite definir uma nova frase secreta.",
+          "steps": {
+            "0": "Em Configurações → Conta, encontre \"Esqueceu a frase secreta? Redefinir criptografia\" (só aparece depois que você concluiu a configuração pelo menos uma vez).",
+            "1": "NÃO use isto em dados que lhe importam — descarta permanentemente o acesso a tudo que foi criptografado com sua frase secreta atual. Use uma conta de teste descartável se quiser experimentar.",
+            "2": "Se for tentar, confirme a caixa de redefinição e depois defina uma frase secreta totalmente nova quando o aviso de configuração reabrir."
+          },
+          "examples": {
+            "0": {
+              "alt": "A confirmação \"Redefinir frase secreta de criptografia\" avisando que tudo criptografado com a frase secreta atual fica permanentemente inacessível, com os botões Cancelar e Redefinir frase secreta",
+              "caption": "A confirmação que você recebe antes de uma redefinição. Cancelar é seguro; Redefinir frase secreta não é reversível."
+            }
+          },
+          "good": {
+            "0": "A caixa de confirmação é clara antes de qualquer coisa acontecer.",
+            "1": "Depois de confirmar, você vê a notificação \"Criptografia redefinida — configure uma nova frase secreta\" e o aviso de configuração reabre na hora para você escolher uma nova e continuar sincronizando."
+          }
+        },
+        "4": {
+          "heading": "Verificando no painel web",
+          "checks": "Que o site pede sua frase secreta antes de mostrar seus grupos sincronizados.",
+          "steps": {
+            "0": "Entre no painel (preview.tabmerger.com) com uma conta que tenha a criptografia configurada.",
+            "1": "Se for solicitado, digite sua frase secreta no cartão de desbloqueio na própria página antes de qualquer conteúdo de grupo aparecer."
+          },
+          "examples": {
+            "0": {
+              "alt": "A seção Grupos de abas do painel web bloqueada, com um cadeado, \"Seus grupos têm criptografia de ponta a ponta. Digite sua frase secreta para vê-los aqui.\", um campo Frase secreta e um botão Desbloquear",
+              "caption": "Até você digitar sua frase secreta, o painel mostra isto em vez dos seus grupos."
+            }
+          },
+          "good": {
+            "0": "O painel pede a frase secreta separadamente da extensão — desbloquear lá é uma etapa única própria por aba, não compartilhada com o desbloqueio da extensão. O aviso diz \"Seus grupos têm criptografia de ponta a ponta. Digite sua frase secreta para vê-los aqui.\"",
+            "1": "Uma frase secreta errada mostra \"Frase secreta incorreta.\" sem travar a página.",
+            "2": "Depois de desbloqueado, os nomes e abas reais dos seus grupos aparecem normalmente.",
+            "3": "Depois de uma redefinição da frase secreta na extensão, o painel pede a nova frase secreta: no próximo carregamento da página ou, em um painel que já estava aberto, quando você pressionar o botão de atualizar no rótulo de sincronização.",
+            "4": "Um grupo ou sessão que a frase secreta atual não consegue ler (salvo antes de uma redefinição e ainda não enviado de novo) aparece como \"(bloqueado)\" em vez de vazar qualquer conteúdo. O próprio item diz por quê e o que fazer, e ele não pode ser compartilhado nem restaurado até voltar a ser legível."
+          }
+        },
+        "5": {
+          "heading": "Como saber que seus dados realmente estão criptografados",
+          "checks": "Como você pode ver por conta própria que seus dados são ilegíveis sem a sua frase secreta.",
+          "steps": {
+            "0": "Não há um selo explícito \"Criptografado ✓\" na interface — o sinal visível é indireto.",
+            "1": "Em um dispositivo que você ainda não desbloqueou (ou no painel, antes de digitar sua frase secreta lá), repare que nomes/conteúdo dos grupos não aparecem até você desbloquear."
+          },
+          "good": {
+            "0": "A ausência de conteúdo legível antes de desbloquear é o sinal: nenhum nome de grupo ou aba é mostrado e, no painel, tudo que a frase secreta atual não consegue ler aparece como \"(bloqueado)\".",
+            "1": "O painel mostra o cartão da frase secreta em vez dos seus grupos. Se algum conteúdo fosse legível sem desbloquear, isso significaria que ele não está realmente criptografado — relate imediatamente se vir isso."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Qualquer perda de dados — um grupo, aba ou sessão que sumiu e não deveria.",
+    "1": "Conflitos de sincronização — um grupo \"{CONFLICT_COPY_SUFFIX}\" é esperado quando o mesmo grupo foi editado em dois dispositivos antes de qualquer um sincronizar. Avise se uma edição some em silêncio ou se uma cópia aparece quando só um dispositivo editou.",
+    "2": "Qualquer coisa confusa, pouco clara ou que exigiu mais cliques do que deveria.",
+    "3": "Qualquer lentidão — o popup abrindo, a busca, o arrastar e soltar ou a sincronização demorando visivelmente mais que o esperado."
+  },
+  "metaTitle": "Programa beta",
+  "metaDescription": "Participe do beta do TabMerger — instale a versão beta privada, saiba o que testar e relate bugs direto para a equipe.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Parcialmente Pro",
+    "somePro": "Em parte Pro",
+    "areaPartial": "Alguns itens aqui exigem uma conta Pro",
+    "itemPartial": "Parte deste item exige uma conta Pro",
+    "areaAll": "Todos os itens aqui exigem uma conta Pro",
+    "itemAll": "Exige uma conta Pro"
+  },
+  "eyebrow": "Programa beta",
+  "title": "Ajude-nos a testar o TabMerger antes do lançamento",
+  "lead": "Receba cedo a próxima versão do TabMerger e conte-nos o que quebra. Esta página cobre como participar, instalar o beta privado, o que testar e como relatar o que encontrar. Os recursos de IA estão ocultos (\"em breve\") nesta versão, então ainda não fazem parte dos testes.",
+  "join": "Participar do beta",
+  "onThisPage": "Nesta página",
+  "install": {
+    "heading": "1. Entrar e instalar",
+    "groupTitle": "Entre no grupo de testadores.",
+    "groupBody": "Abra <link>groups.google.com/g/tabmerger-beta-testers</link> e participe. Participar é instantâneo, mas entre com a <strong>mesma conta Google em que você está conectado no Chrome</strong> — senão a listagem privada não ficará visível para você.",
+    "listingTitle": "Abra a listagem do beta privado.",
+    "listingLink": "Abrir a listagem do TabMerger BETA",
+    "listingPending": "a listagem \"TabMerger BETA\" na Chrome Web Store (link em breve — enquanto isso, veja a URL atual no grupo de testadores).",
+    "listingNotFound": "Se você vir <strong>\"Item não encontrado\",</strong> provavelmente acabou de entrar — o acesso pode levar um tempo para aparecer. Espere um pouco e tente de novo antes de achar que algo está errado.",
+    "installTitle": "Instale.",
+    "installBody": "Clique em \"Usar no Chrome\". O beta é instalado como uma extensão separada (\"TabMerger BETA\") da listagem estável \"TabMerger\" — você pode manter as duas instaladas lado a lado, e os dados delas são totalmente separados. Sugerimos desativar a versão estável durante os testes, para não agir sem querer na errada.",
+    "signInTitle": "Entre pelo app web de preview.",
+    "signInBody": "As builds beta sincronizam com <link>preview.tabmerger.com</link> — não com o site principal do tabmerger. Entre lá (pela extensão ou direto no painel) para ver os grupos e sessões sincronizados.",
+    "browsersTitle": "Em quais navegadores posso testar?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc e Opera usam esta mesma listagem do TabMerger BETA e o mesmo Grupo do Google — não existe um beta separado para o Edge, então não procure por um. Edge: aceite \"Permitir extensões de outras lojas\" quando solicitado. Opera: instale primeiro o complemento \"Install Chrome Extensions\" do Opera e depois use o link acima. Se você também tem o TabMerger estável instalado pela loja Edge Add-ons, desative-o durante o teste do beta — ele é uma extensão separada desta. O Safari não é compatível.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "O Firefox tem a própria versão beta, instalada por um link direto e não pela listagem da Chrome Web Store acima. <link>Instalar o beta do Firefox</link>. O Firefox pergunta se deve adicionar \"TabMerger BETA\": escolha Adicionar. Ele verifica atualizações sozinho cerca de uma vez por dia; para verificar agora, abra <code>about:addons</code>, clique na engrenagem e escolha \"Verificar atualizações\". Entre uma vez dentro da extensão e permita o aviso de permissão de dados do Firefox (ele cobre login e sincronização); depois disso, entrar neste site também conecta a extensão. <strong>Qualquer pessoa com o link de instalação acima pode instalá-lo</strong> — por favor, não o compartilhe fora do grupo de testadores.",
+    "firefoxSoon": "Um beta do Firefox chegará em breve; até lá, usuários do Firefox podem participar do beta com qualquer um dos navegadores Chromium compatíveis listados acima (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Anote sua versão.",
+    "versionBody": "Abra as Configurações do TabMerger e copie o selo de versão ao lado do título \"Configurações\" (ex.: <code>v3.1.0-beta.5</code>), ou veja <code>chrome://extensions</code> e encontre \"TabMerger BETA\". De qualquer forma, informe esse semver real — não o número de versão interno da Chrome Web Store, que tem deslocamento e não coincide com o que usamos para acompanhar as builds."
+  },
+  "test": {
+    "heading": "2. O que testar",
+    "intro": "Percorra as áreas que combinam com o seu uso normal do TabMerger. Cada item abaixo tem passos numerados, um exemplo de como deve ficar e como é um resultado correto.",
+    "tickNote": "Marque cada passo conforme avança. Suas marcações são salvas apenas neste navegador, e cada área mostra até onde você chegou.",
+    "needPro": "Preciso do Pro?",
+    "needProBody": "As áreas são listadas do Gratuito ao Pro. Tudo que não está marcado funciona no Gratuito, sem conta. <full></full>: o item inteiro exige uma conta Pro (sincronização, criptografia e criação de links de compartilhamento são Pro). <partial></partial>: a maior parte do item funciona no Gratuito, e uma linha \"Pro:\" sob o título diz qual parte não funciona. O Pro não custa nada neste beta: você paga com um cartão de teste (veja <link>Fazendo upgrade para o Pro</link>).",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "proLine": "Pro: ",
+    "checksLine": "O que isto verifica: ",
+    "steps": "Passos",
+    "reportLine": "Relate se: ",
+    "testCheckout": "⚠ Este é um checkout de teste.",
+    "testCheckoutBody": " Nunca digite um cartão real. Nenhum dinheiro real é cobrado, e um cartão real não funcionaria aqui mesmo.",
+    "testCardsFooter": "Com qualquer cartão: uma data de validade futura (ex.: <code>12/34</code>), qualquer CVC de 3 dígitos (ex.: <code>123</code>) e qualquer coisa para o nome, o CEP e os outros campos. Mais cartões: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "O que mais queremos saber",
+  "knownIssues": {
+    "heading": "3. Problemas conhecidos",
+    "intro": "Já conhecemos estes, então não precisa relatá-los. A lista é atualizada a cada versão beta; se algo daqui foi corrigido para você, ou se comporta diferente do descrito, vale relatar.",
+    "meanwhile": "Enquanto isso:"
+  },
+  "report": {
+    "heading": "4. Relatar um bug",
+    "discussions": "Bugs e ideias vão para as nossas Discussions públicas no GitHub — <link>github.com/{repo}/discussions</link>. Dê uma olhada lá primeiro — alguém pode já ter relatado a mesma coisa.",
+    "public": "<strong>As Discussions são públicas.</strong> Não cole URLs privadas, títulos de abas nem capturas de tela que mostrem informações pessoais — desfoque ou recorte antes. Você precisará de uma conta (gratuita) do GitHub para postar.",
+    "bugButton": "Relatar um bug no GitHub",
+    "ideaButton": "Compartilhar uma ideia no GitHub",
+    "noGithub": "Sem conta do GitHub? Use o formulário de contato.",
+    "template": "Os dois links preenchem este modelo no corpo da discussão — preencha antes de postar, isso nos poupa uma rodada de perguntas de acompanhamento:"
+  },
+  "faq": {
+    "heading": "Perguntas frequentes",
+    "notFoundQ": "Vejo \"Item não encontrado\"",
+    "notFoundA": "Confirme que você entrou no Grupo do Google com a mesma conta Google em que está conectado no Chrome. O acesso pode levar um tempo para aparecer depois de entrar — espere um pouco e tente de novo antes de achar que algo está quebrado.",
+    "stableQ": "Posso manter a versão estável instalada?",
+    "stableA": "Sim — o beta (\"TabMerger BETA\") é uma extensão separada da estável (\"TabMerger\"), com dados totalmente separados. Você pode usar as duas, mas sugerimos desativar a estável durante os testes para não se confundir sobre qual está usando.",
+    "chargedQ": "Vou ser cobrado se eu fizer upgrade para o Pro?",
+    "chargedA": "Não — o upgrade no beta usa o modo de teste da Stripe. Use um <link>cartão de teste da Stripe</link> (veja a seção \"Fazendo upgrade para o Pro\" acima) — nenhum cartão real funciona aqui, e nenhum dinheiro real muda de mãos de qualquer forma.",
+    "syncQ": "Onde meus dados são sincronizados?",
+    "syncA": "As builds beta sincronizam com o app web de preview em preview.tabmerger.com, não com o site principal do tabmerger. Entre lá para ver seus grupos, sessões e compartilhamentos sincronizados.",
+    "issuesQ": "Onde vejo os problemas conhecidos?",
+    "issuesA": "Veja as <link>Discussions Q&A</link> do repositório — é onde ficam os relatos de bugs do beta.",
+    "leaveQ": "Como saio do beta?",
+    "leaveA": "Saia do <link>Grupo do Google</link> e desinstale a extensão \"TabMerger BETA\". Sua instalação estável, se você manteve uma, não é afetada."
+  },
+  "interactive": {
+    "good": "Como fica quando está certo",
+    "allDoneLabel": "Todas as verificações concluídas",
+    "progressLabel": "{done} de {total} verificações concluídas",
+    "allDone": "✓ Tudo pronto",
+    "progress": "{done}/{total}",
+    "clear": "Limpar minhas marcações ({count})",
+    "firefoxAutoStart": "O beta do Firefox deve começar sozinho: o Firefox pergunta se deve adicioná-lo, e outros navegadores baixam o arquivo. Se nada acontecer, use \"Instalar o beta do Firefox\" neste passo."
+  }
+}

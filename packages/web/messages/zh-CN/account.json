@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "刚刚",
+    "minutesAgo": "{count}分钟前",
+    "hoursAgo": "{count}小时前",
+    "daysAgo": "{count}天前",
+    "renameFailed": "重命名设备失败",
+    "renamed": "设备已重命名",
+    "removeFailed": "移除设备失败",
+    "removed": "设备已移除",
+    "removeManyFailed": "移除设备失败",
+    "removedMany": "{count, plural, other {已移除 {count} 台设备}}",
+    "empty": "暂无设备。",
+    "selectAll": "选择所有设备",
+    "selectedCount": "已选择 {count} 项",
+    "removeSelected": "{count, plural, other {移除 {count} 台设备}}",
+    "selectDevice": "选择 {name}",
+    "active": "{time}活跃",
+    "snapshotCounts": " · {windows, plural, other {{windows} 个窗口}} · {tabs, plural, other {{tabs} 个标签页}}",
+    "options": "设备选项",
+    "rename": "重命名",
+    "remove": "移除",
+    "removeTitle": "移除设备？",
+    "removeBody": "“{name}”将不再同步标签页数据。此操作无法撤销。",
+    "removeManyTitle": "移除 {count} 台设备？",
+    "removeManyBody": "这些设备将不再同步标签页数据。此操作无法撤销。",
+    "cancel": "取消"
+  },
+  "metaTitle": "账户",
+  "title": "账户设置",
+  "lead": "管理您的账户和订阅。",
+  "stats": {
+    "groups": "已同步的分组",
+    "tabs": "已保存的标签页",
+    "sessions": "会话与备份",
+    "aiCredits": "剩余 AI 额度"
+  },
+  "profile": {
+    "title": "个人资料",
+    "description": "您的账户信息。",
+    "email": "邮箱",
+    "memberSince": "注册时间"
+  },
+  "signOutAll": {
+    "title": "退出所有设备",
+    "description": "这将撤销所有已登录的会话。",
+    "button": "退出登录"
+  },
+  "subscription": {
+    "title": "订阅",
+    "description": "管理您的套餐和账单。",
+    "manageBilling": "管理账单",
+    "upgrade": "升级",
+    "cancelNote": "您可以随时通过<strong>管理账单</strong>取消订阅。当前计费周期结束前，您仍可继续使用。"
+  },
+  "devicesCard": {
+    "title": "设备",
+    "description": "正在同步您的分组和标签页的设备。仅限 Pro 和 Pro AI。"
+  },
+  "password": {
+    "tooShort": "密码至少需要 8 个字符。",
+    "updated": "密码已更新",
+    "set": "密码已设置，现在也可以使用邮箱和密码登录",
+    "change": "修改密码",
+    "setLabel": "设置密码",
+    "placeholder": "••••••••••",
+    "save": "保存"
+  },
+  "credits": {
+    "failed": "无法开始结账",
+    "getMore": "获取更多"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "success": "完了しました。Webサイトが TabMerger を検出できるようになりました。このタブは閉じて構いません。",
+  "refused": "Firefoxに許可されませんでした。もう一度試すか、あとで about:addons で許可してください。",
+  "title": "WebサイトがTabMergerを検出できるようにする",
+  "checking": "サイトのアクセスを確認中…",
+  "explainer": "Firefoxで、{{hosts}}でのTabMergerがまだ許可されていません。許可しないと、Webサイトは TabMerger を検出できず、サインインの引き継ぎや同期の開始もできません。下のボタンをクリックし、Firefoxのプロンプトで確定してください。",
+  "allowOn": "{{hosts}}でTabMergerを許可",
+  "bannerLabel": "Webサイトへのアクセス",
+  "bannerText": "Webサイトが TabMerger を検出してサインインを引き継げるように、{{hosts}}でTabMergerを許可してください。",
+  "allow": "許可",
+  "dismiss": "Webサイトへのアクセスのプロンプトを閉じる",
+  "openFailed": "サイトアクセスのタブを開けませんでした。もう一度試すか、about:addons で許可してください。"
+}

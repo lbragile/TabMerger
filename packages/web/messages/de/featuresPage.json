@@ -1,0 +1,81 @@
+{
+  "metaTitle": "Funktionen",
+  "metaDescription": "Entdecke alles, was TabMerger kann – von intelligenter Tab-Gruppierung bis zu KI-gestützter Organisation.",
+  "title": "Funktionen für mehr Fokus",
+  "lead": "Alles, was du brauchst, um die Kontrolle über deinen Browser zu übernehmen – von kostenlosen Grundlagen bis zu Pro-AI-Superkräften.",
+  "addToChrome": "Zu Chrome hinzufügen – kostenlos",
+  "seePricing": "Preise ansehen",
+  "badges": {
+    "core": "Basis",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Leistungsstarke Tab-Verwaltung",
+    "description": "Das Fundament von TabMerger: schnelle, intuitive Tab-Organisation, die zu jedem Workflow passt.",
+    "groups": {
+      "title": "Benannte und farbcodierte Gruppen",
+      "description": "Erstelle Gruppen mit eigenen Namen und Farben. Trenne Arbeit, Recherche, Unterhaltung und mehr auf einen Blick."
+    },
+    "search": {
+      "title": "Volltextsuche",
+      "description": "Durchsuche alle Tab-Titel und URLs sofort. Treffer entsprechen dem Text genau so, wie du ihn tippst (egal ob Groß- oder Kleinschreibung), die besten zuerst."
+    },
+    "dnd": {
+      "title": "Neu anordnen per Drag-and-drop",
+      "description": "Ordne Tabs innerhalb von Gruppen und die Gruppen selbst per flüssigem Drag-and-drop neu an."
+    },
+    "shortcuts": {
+      "title": "Tastenkürzel",
+      "description": "Speichere den aktuellen Tab, die Tabs links oder rechts davon oder alle anderen Tabs, ohne das Popup zu öffnen. Darin öffnest du die Suche mit Strg/Cmd+K und verschiebst Tabs, Fenster und Gruppen allein mit der Tastatur."
+    },
+    "importExport": {
+      "title": "Import und Export",
+      "description": "Exportiere deine Tab-Sammlungen als JSON, um sie mit dem Team zu teilen oder deinen Arbeitsbereich zu sichern. Importiere sie auf jedem Gerät."
+    },
+    "memory": {
+      "title": "Speicher sparen",
+      "description": "Setze inaktive Tabs in den Ruhezustand, um RAM freizugeben. Sieh in Echtzeit, wie viel Speicher TabMerger dir spart."
+    }
+  },
+  "pro": {
+    "title": "Sync und Sitzungen",
+    "description": "Mach genau da weiter, wo du aufgehört hast – auf jedem Gerät, jederzeit.",
+    "cloudSync": {
+      "title": "Cloud-Sync",
+      "description": "Deine Gruppen werden automatisch gespeichert und in jedem Browser synchronisiert, in dem du angemeldet bist. In Echtzeit, ohne manuellen Export."
+    },
+    "sessions": {
+      "title": "Sitzungen speichern und wiederherstellen",
+      "description": "Speichere deine aktuellen Gruppen als benannte Sitzung und stelle sie sofort wieder her. Kostenlose Tarife speichern bis zu {count} Sitzungen in diesem Browser; Pro synchronisiert unbegrenzt viele Sitzungen auf allen Geräten."
+    },
+    "autoBackups": {
+      "title": "Automatische Backups",
+      "description": "TabMerger speichert in einem von dir gewählten Rhythmus, von stündlich bis wöchentlich, einen verschlüsselten Snapshot deiner Gruppen. Die neuesten {count} bleiben erhalten, und du kannst jedes davon in den Einstellungen zurückholen. Dein Dashboard listet sie ebenfalls auf, dort kannst du in eines hineinsehen oder es herunterladen. Du kannst jedes Backup außerdem als Datei auf deinem Computer speichern lassen; diese Kopie ist nicht verschlüsselt."
+    },
+    "support": {
+      "title": "Priorisierter Support",
+      "description": "Pro-Abonnenten erhalten beschleunigten Support mit garantierter Antwort innerhalb von 24 Stunden."
+    }
+  },
+  "proAi": {
+    "title": "KI-gestützte Organisation",
+    "description": "Lass Claude deine Tabs analysieren und kluge Vorschläge machen, damit du dich aufs Denken konzentrieren kannst statt aufs Ablegen.",
+    "autoGrouping": {
+      "title": "Auto-Gruppierung",
+      "description": "Öffne ein Chaos an Tabs und klicke auf eine Schaltfläche. Die KI sortiert sie nach Thema, Domain und Absicht in sinnvolle Gruppen."
+    },
+    "names": {
+      "title": "Intelligente Gruppennamen",
+      "description": "Die KI schlägt prägnante, aussagekräftige Namen für deine Gruppen vor. Ein Klick zum Übernehmen, oder tippe einen eigenen."
+    },
+    "summaries": {
+      "title": "Tab-Zusammenfassungen",
+      "description": "Fahre über einen Tab und sieh eine einsätzige KI-Zusammenfassung, worum es auf der Seite geht – ohne sie zu öffnen."
+    },
+    "sessionSuggestions": {
+      "title": "Sitzungsvorschläge",
+      "description": "Die KI analysiert dein Surfverhalten und schlägt vor, wie du Sitzungen für maximale Produktivität strukturierst."
+    }
+  }
+}

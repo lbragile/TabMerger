@@ -89,6 +89,8 @@ WHAT YOU CAN DO
   notification at the time you choose.
 - Set URL rules that send matching tabs to a group automatically, and clean up duplicate tabs.
 - Take saved sessions (snapshots of your groups) and restore them later.
+- Use TabMerger in English, German, Spanish, French, Japanese, Brazilian Portuguese or Simplified
+  Chinese: it follows your browser's language.
 - Undo and redo changes, and switch between light and dark themes.
 - Get a guided tour the first time you open TabMerger: seven short chapters in plain language,
   each with a header saying what it covers. Most steps let you try things yourself (make a
@@ -604,6 +606,7 @@ with the real semver string carried in `version_name`.
 | Both | set at release | set at release | next release (unreleased) | — | Draft: the extension now talks to the website on its new domain: sign-in, sync, AI and checkout requests, links and the uninstall page go to `tabmerger.com` (stable) / `preview.tabmerger.com` (BETA). The old `vercel.app` hosts stay trusted. Manifest: the same two `externally_connectable.matches` per build as the previous release, so no permission change and no prompt. The privacy tab needs no new tick: the same data goes to the same operator's site under its own domain. Screenshots: none affected |
 
 | Both | set at release | set at release | next release (unreleased) | — | Draft: after the extension is removed, the browser opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL`. No manifest change and no new permission. The address carries only the extension version, browser and release channel; see Technical privacy notes. The dashboard's privacy tab needs no new tick (the extension sends nothing; the page itself is the website's) |
+| Both | set at release | set at release | next release (unreleased) | — | Draft: the popup, the extension pages, the right-click menu and notifications are translated into German, Spanish, French, Japanese, Brazilian Portuguese and Simplified Chinese, following the browser's UI language (`chrome.i18n.getUILanguage()`, English otherwise). No manifest change and no new permission, so no re-approval prompt; the manifest name and description and this listing stay English. No new data leaves the device. Screenshots: the English ones stay valid; localized store listings and screenshots are optional |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
 Betas 1–3 predate the store-version offset, so their manifest version is the plain

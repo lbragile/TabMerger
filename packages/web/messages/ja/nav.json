@@ -1,0 +1,21 @@
+{
+  "features": "機能",
+  "pricing": "料金",
+  "changelog": "更新履歴",
+  "faq": "よくある質問",
+  "dashboard": "ダッシュボード",
+  "account": "アカウント",
+  "accountSettings": "アカウント設定",
+  "signIn": "サインイン",
+  "signUp": "新規登録",
+  "getStarted": "始める",
+  "signOut": "サインアウト",
+  "openMenu": "メニューを開く",
+  "closeMenu": "メニューを閉じる",
+  "accountMenu": "アカウントメニュー",
+  "home": "TabMergerのホーム",
+  "github": "GitHub",
+  "githubRepo": "GitHubのTabMerger",
+  "githubRepoWithStars": "GitHubのTabMerger（{count, plural, other {#個のスター}}）",
+  "toggleTheme": "テーマを切り替え"
+}

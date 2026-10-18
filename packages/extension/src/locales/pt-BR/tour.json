@@ -1,0 +1,287 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "Conhecendo o TabMerger",
+      "description": "Um olhar geral: onde aparecem suas abas abertas e como a janela está organizada. Nada para testar ainda."
+    },
+    "groups": {
+      "title": "Organize com grupos",
+      "description": "Grupos são onde ficam as abas salvas. Você vai criar um, dar um nome, escolher uma cor e fixá-lo no topo."
+    },
+    "drag": {
+      "title": "Mova itens arrastando",
+      "description": "Você vai mover abas e grupos em dois grupos de prática que o tour adiciona: \"Tour demo\" e \"Tour demo 2\". Eles têm abas de exemplo, não as suas."
+    },
+    "tabs": {
+      "title": "Salve e reabra abas",
+      "description": "Como mover abas abertas para um grupo, trazê-las de volta depois e organizar o que você salvou. Você vai testar cada passo nos grupos de prática e em uma aba extra que o tour abre: nenhuma das suas abas é salva, aberta ou fechada."
+    },
+    "find": {
+      "title": "Encontre coisas e desfaça erros",
+      "description": "Busque em todas as abas e grupos de uma vez e volte atrás quando mudar de ideia. Você vai testar uma busca, \"Desfazer\" e \"Refazer\" nos grupos de prática."
+    },
+    "later": {
+      "title": "Guarde coisas para depois",
+      "description": "Salve todos os seus grupos de uma vez, guarde um grupo sem excluí-lo e salve de qualquer página da web. Este capítulo só explica."
+    },
+    "settings": {
+      "title": "Configurações e sua conta",
+      "description": "Mude a aparência do TabMerger, veja o que mais as Configurações oferecem e o que o login acrescenta. Você vai testar a troca de tema."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Bem-vindo ao TabMerger",
+      "body": "O TabMerger organiza seu navegador. Salve as abas abertas em grupos com nome, feche-as e traga-as de volta quando precisar. Este tour tem sete capítulos curtos, cada um com o nome no topo deste cartão. Alguns passos pedem que você teste algo: um anel laranja marca o controle a usar e o texto o nomeia. Nesses passos, o tour adiciona dois grupos de prática com abas de exemplo, \"Tour demo\" e \"Tour demo 2\", e os remove sozinho depois. Você pode pular um passo, um capítulo ou o tour inteiro quando quiser."
+    },
+    "now-open": {
+      "title": "Abertas agora",
+      "body": "\"Abertas agora\", no topo da lista à esquerda, é uma lista em tempo real de todas as abas abertas no seu navegador agora. Ela é sempre a primeira e não pode ser excluída."
+    },
+    "main-panel": {
+      "title": "Janelas e abas",
+      "body": "O painel principal mostra o que há no grupo escolhido à esquerda: suas janelas e as abas de cada janela. Em Abertas agora, são as janelas reais do seu navegador."
+    },
+    "make-group": {
+      "title": "Crie um grupo",
+      "body": "Um grupo é um lugar com nome para abas salvas, por exemplo \"Trabalho\" ou \"Planos de férias\". Experimente: selecione \"Adicionar grupo\", abaixo dos seus grupos. Um novo grupo aparece com o campo \"Nome do grupo\" pronto, mostrando \"temp group\". Digite um nome seu, como \"Prática\", e pressione Enter ou selecione \"Salvar\" ao lado do campo.",
+      "doneText": "Muito bem, seu grupo está pronto. Os próximos passos o usam.",
+      "fallbackBody": "Um grupo é um lugar com nome para abas salvas, por exemplo \"Trabalho\" ou \"Planos de férias\". \"Adicionar grupo\", abaixo dos seus grupos, cria um. Você já tem tantos grupos quanto seu plano permite, então este passo só é mostrado, não testado."
+    },
+    "group-color": {
+      "title": "Dê uma cor a ele",
+      "body": "As cores facilitam distinguir os grupos. Experimente: no grupo que você acabou de criar, selecione o ponto redondo \"Alterar cor do grupo\" antes do nome. Escolha uma das amostras de cor redondas e selecione \"Aplicar\".",
+      "doneText": "Muito bem, cor alterada.",
+      "fallbackBody": "As cores facilitam distinguir os grupos. Todo grupo tem um ponto redondo \"Alterar cor do grupo\" antes do nome: selecione-o, escolha uma cor e selecione \"Aplicar\"."
+    },
+    "group-pin": {
+      "title": "Fixe um grupo no topo",
+      "body": "Grupos fixados ficam acima dos outros. Experimente: no grupo que você acabou de criar, selecione a estrela no fim da linha. Ela se chama \"Fixar grupo\", ou \"Desafixar grupo\" quando o grupo já está fixado.",
+      "doneText": "Muito bem. Selecione a estrela de novo quando quiser desfazer.",
+      "fallbackBody": "Grupos fixados ficam acima dos outros. Todo grupo tem uma estrela no fim da linha, chamada \"Fixar grupo\": selecione-a para fixar o grupo e de novo para desafixar."
+    },
+    "group-menu": {
+      "title": "Mais opções para cada grupo",
+      "body": "Todo grupo salvo tem um menu de clique direito. Nele há \"Renomear\", \"Adicionar nota\", \"Duplicar\", \"Mesclar com as atuais\" para adicionar suas janelas abertas ao grupo, \"Arquivar grupo\" para ocultá-lo e \"Excluir grupo\". Este passo é só para olhar: a lista fica bloqueada enquanto o tour está aberto, então teste o menu depois do tour."
+    },
+    "drag-tab-reorder": {
+      "title": "Reordene abas",
+      "body": "O painel principal mostra o grupo de prática \"Tour demo\". Cada aba tem uma alça pontilhada antes dela, chamada \"Arraste para reordenar a aba\". Mova a primeira aba da janela \"Reading\" para o fim dessa janela.",
+      "subStepText": {
+        "1": "Pressione e segure a alça da primeira aba.",
+        "2": "Mova-a para baixo até a linha sob a última aba, marcada \"Solte abaixo desta aba\".",
+        "3": "Solte para largá-la."
+      },
+      "subStepKeys": {
+        "1": "pressione Tab para chegar à alça e depois Espaço para pegar a aba.",
+        "2": "pressione a seta para baixo até a aba chegar à linha marcada \"Solte abaixo desta aba\".",
+        "3": "pressione Espaço para soltá-la."
+      },
+      "doneText": "Muito bem, a aba foi movida.",
+      "fallbackBody": "Toda aba salva tem uma alça pontilhada antes dela, chamada \"Arraste para reordenar a aba\". Arrastá-la move a aba para cima ou para baixo na janela. Este passo é só para olhar."
+    },
+    "drag-tab-window": {
+      "title": "Mova uma aba para outra janela",
+      "body": "Uma aba também pode ir para outra janela do mesmo grupo. Mova a primeira aba para a outra janela de \"Tour demo\".",
+      "subStepText": {
+        "1": "Pressione e segure a alça da primeira aba.",
+        "2": "Mova-a sobre a outra janela, marcada \"Solte nesta janela\".",
+        "3": "Solte para largá-la."
+      },
+      "subStepKeys": {
+        "1": "pressione Tab para chegar à alça e depois Espaço para pegar a aba.",
+        "2": "pressione a seta para baixo até a aba ficar dentro da janela marcada \"Solte nesta janela\".",
+        "3": "pressione Espaço para soltá-la."
+      },
+      "doneText": "Muito bem, a aba está na outra janela.",
+      "fallbackBody": "Arrastar uma aba pela alça sobre outra janela do mesmo grupo a move para lá. Este passo é só para olhar."
+    },
+    "drag-tab-group": {
+      "title": "Mova uma aba para outro grupo",
+      "body": "Soltar uma aba em um grupo da lista à esquerda a move para esse grupo. Mova a primeira aba para o grupo de prática \"Tour demo 2\".",
+      "subStepText": {
+        "1": "Pressione e segure a alça da primeira aba.",
+        "2": "Mova-a sobre \"Tour demo 2\" na lista à esquerda, marcado \"Solte neste grupo\".",
+        "3": "Solte para largá-la."
+      },
+      "subStepKeys": {
+        "1": "pressione Tab para chegar à alça e depois Espaço para pegar a aba.",
+        "2": "pressione a seta para a esquerda para ir à lista de grupos e depois a seta para baixo até chegar a \"Tour demo 2\", marcado \"Solte neste grupo\".",
+        "3": "pressione Espaço para soltá-la."
+      },
+      "doneText": "Muito bem, a aba agora está em \"Tour demo 2\".",
+      "fallbackBody": "Arrastar uma aba pela alça sobre um grupo da lista à esquerda a move para esse grupo. Este passo é só para olhar."
+    },
+    "drag-group-order": {
+      "title": "Coloque os grupos em ordem",
+      "body": "Os grupos também têm uma alça pontilhada, no início da linha, chamada \"Arraste para reordenar o grupo\". Troque os dois grupos de prática. Seus próprios grupos se movem do mesmo jeito.",
+      "subStepText": {
+        "1": "Pressione e segure a alça do grupo de prática de cima.",
+        "2": "Mova-o para baixo até a linha sob o outro grupo de prática, marcada \"Solte abaixo deste grupo\".",
+        "3": "Solte para largá-lo."
+      },
+      "subStepKeys": {
+        "1": "pressione Tab para chegar à alça e depois Espaço para pegar o grupo.",
+        "2": "pressione a seta para baixo uma vez, para o grupo ficar na linha marcada \"Solte abaixo deste grupo\".",
+        "3": "pressione Espaço para soltá-lo."
+      },
+      "doneText": "Muito bem, os grupos trocaram de lugar.",
+      "fallbackBody": "Todo grupo salvo tem uma alça pontilhada no início da linha, chamada \"Arraste para reordenar o grupo\". Arrastá-la move o grupo para cima ou para baixo na lista. Este passo é só para olhar."
+    },
+    "save-tabs": {
+      "title": "Salve abas em um grupo",
+      "body": "Uma aba arrastada de Abertas agora para um grupo é salva nesse grupo e fechada no navegador. Para que nenhuma aba sua seja fechada, o tour abriu uma aba extra chamada \"Tour practice tab\": ela é a única aba que você pode mover neste passo. Salve-a no grupo de prática \"Tour demo\".",
+      "subStepText": {
+        "1": "Pressione e segure a alça pontilhada antes de \"Tour practice tab\".",
+        "2": "Mova-a sobre \"Tour demo\" na lista à esquerda, marcado \"Solte neste grupo\".",
+        "3": "Solte para largá-la."
+      },
+      "subStepKeys": {
+        "1": "pressione Tab para chegar à alça e depois Espaço para pegar a aba.",
+        "2": "pressione a seta para a esquerda para ir à lista de grupos e depois a seta para baixo até chegar a \"Tour demo\", marcado \"Solte neste grupo\".",
+        "3": "pressione Espaço para soltá-la."
+      },
+      "doneText": "Muito bem. A aba de prática está salva em \"Tour demo\" e fechada no navegador. Janelas inteiras são salvas do mesmo jeito.",
+      "fallbackBody": "Uma aba, ou uma janela inteira, arrastada de Abertas agora para um grupo à esquerda é salva nesse grupo e fechada no navegador. O tour não conseguiu abrir uma aba extra para testar isso, então este passo é só para olhar: nenhuma das suas abas é tocada."
+    },
+    "open-tabs": {
+      "title": "Abra suas abas de novo",
+      "body": "Em um grupo salvo, selecionar o nome de uma aba a abre de novo, e \"Abrir no navegador\" no menu de uma janela abre a janela inteira. Experimente esse menu na janela \"Reading\" de \"Tour demo\". As abas de exemplo não são páginas reais, então nada é aberto durante o tour.",
+      "subStepText": {
+        "1": "Selecione \"Mais opções da janela\", os três pontos no fim da linha \"Reading\".",
+        "2": "Escolha \"Abrir no navegador\" no menu."
+      },
+      "doneText": "Muito bem. Depois do tour, isso abre a janela com suas abas no navegador. Nada foi aberto agora.",
+      "fallbackBody": "Em um grupo salvo, selecionar o nome de uma aba a abre de novo. \"Mais opções da janela\" tem \"Abrir no navegador\" para a janela inteira, e o menu de clique direito de um grupo tem \"Abrir tudo em nova janela\". Este passo é só para olhar: nada é aberto durante o tour."
+    },
+    "tab-extras": {
+      "title": "Notas, lembretes e nomes",
+      "body": "Uma aba salva tem um menu de clique direito com mais opções: \"Mover para o grupo\", \"Adicionar nota\" para anotar algo, \"Lembrar-me…\" para ser lembrado dela depois, \"Renomear aba\" para dar seu próprio título e \"Remover aba\". Este passo é só para olhar: a lista fica bloqueada enquanto o tour está aberto, então teste o menu depois do tour."
+    },
+    "tidy-up": {
+      "title": "Organize um grupo",
+      "body": "\"Mais opções do grupo\", no canto superior direito do painel principal, pode ordenar as abas por título ou endereço, remover repetidas com \"Remover abas duplicadas\" e \"Unir janelas\" em uma ou \"Dividir janelas\". \"Tour demo\" tem a aba \"Sample: books\" duas vezes: remova a repetida.",
+      "modalBody": "A caixa \"Remover duplicatas\" lista a aba repetida. Selecione \"Remover 1 duplicata\".",
+      "subStepText": {
+        "1": "Selecione \"Mais opções do grupo\", os três pontos no canto superior direito do painel principal.",
+        "2": "Escolha \"Remover abas duplicadas\" no menu.",
+        "3": "Na caixa \"Remover duplicatas\", selecione \"Remover 1 duplicata\"."
+      },
+      "doneText": "Muito bem, a aba repetida sumiu.",
+      "fallbackBody": "\"Mais opções do grupo\", no canto superior direito do painel principal, pode ordenar as abas por título ou endereço, remover repetidas com \"Remover abas duplicadas\" e \"Unir janelas\" em uma ou \"Dividir janelas\". Este passo é só para olhar."
+    },
+    "select-items": {
+      "title": "Trabalhe com vários de uma vez",
+      "body": "\"Selecionar itens\", no cabeçalho, mostra uma caixa de seleção em cada aba, janela e grupo. Com alguns selecionados, uma barra aparece embaixo e age em todos juntos, por exemplo para excluí-los. Compartilhar grupos selecionados como link exige o plano Pro. Experimente selecionar uma aba de exemplo.",
+      "subStepText": {
+        "1": "Selecione \"Selecionar itens\" no cabeçalho.",
+        "2": "Marque a caixa antes da primeira aba de exemplo."
+      },
+      "doneText": "Muito bem. A barra embaixo age sobre o que você selecionou. O tour desativa a seleção de novo quando você avança.",
+      "fallbackBody": "\"Selecionar itens\", no cabeçalho, mostra uma caixa de seleção em cada aba, janela e grupo. Com alguns selecionados, uma barra aparece embaixo e age em todos juntos, por exemplo para excluí-los. Compartilhar grupos selecionados como link exige o plano Pro. Este passo é só para olhar."
+    },
+    "search": {
+      "title": "Encontre qualquer coisa",
+      "body": "A caixa de busca no topo, que diz \"Buscar abas e grupos…\", procura em todas as abas e grupos de uma vez. Os resultados aparecem enquanto você digita. Experimente nas abas de exemplo.",
+      "subStepText": {
+        "1": "Selecione a caixa de busca no topo.",
+        "2": "Digite a palavra sample."
+      },
+      "doneText": "Muito bem. Toda aba que corresponde é listada sob a caixa de busca. Selecionar uma leva ao grupo dela.",
+      "fallbackBody": "A caixa de busca no topo, que diz \"Buscar abas e grupos…\", procura em todas as abas e grupos de uma vez. Os resultados aparecem enquanto você digita, e selecionar um leva ao grupo dele."
+    },
+    "search-filters": {
+      "title": "Refine uma busca",
+      "body": "Comece uma busca com group: ou window: para procurar dentro de um grupo ou uma janela, ou com tag: para filtrar por um rótulo de grupo de abas do navegador. A caixa de busca lista essas opções em \"Experimente estas buscas\". Experimente group: no grupo de prática e depois limpe a busca.",
+      "subStepText": {
+        "1": "Selecione a caixa de busca no topo.",
+        "2": "Digite group:tour sem espaços. Uma lista chamada \"Escolha um grupo\" aparece.",
+        "3": "Escolha \"Tour demo\" nessa lista. A busca agora procura só dentro desse grupo.",
+        "4": "Selecione \"Limpar busca\", o × no fim do campo de busca. Uma busca permanece até você limpá-la."
+      },
+      "doneText": "Muito bem, a busca foi limpa.",
+      "fallbackBody": "Comece uma busca com group: ou window: para procurar dentro de um grupo ou uma janela, ou com tag: para filtrar por um rótulo de grupo de abas do navegador. A caixa de busca lista essas opções em \"Experimente estas buscas\"."
+    },
+    "undo": {
+      "title": "Mudou de ideia?",
+      "body": "\"Desfazer\" e \"Refazer\", no cabeçalho, voltam e avançam pelas suas últimas 10 alterações em grupos e abas. Ficam esmaecidos até haver algo para desfazer. Experimente com uma pequena alteração na janela de exemplo \"Reading\".",
+      "subStepText": {
+        "1": "Selecione a estrela no fim da linha \"Reading\", chamada \"Marcar janela com estrela\".",
+        "2": "Selecione \"Desfazer\" no cabeçalho. Isso tira a estrela de novo.",
+        "3": "Selecione \"Refazer\", ao lado de \"Desfazer\". Isso traz a estrela de volta."
+      },
+      "doneText": "Muito bem. \"Desfazer\" e \"Refazer\" funcionam do mesmo jeito nos seus próprios grupos e abas.",
+      "fallbackBody": "\"Desfazer\" e \"Refazer\", no cabeçalho, voltam e avançam pelas suas últimas 10 alterações em grupos e abas. Ficam esmaecidos até haver algo para desfazer."
+    },
+    "sessions": {
+      "title": "Salve tudo de uma vez",
+      "body": "Uma sessão é uma cópia salva de todos os seus grupos como estão agora. Na seção \"SESSÕES\" no canto inferior esquerdo, \"Salvar sessão atual\" cria uma. \"Restaurar sessão\", ao lado de uma sessão salva, a traz de volta: ele pergunta antes, porque fecha suas janelas abertas."
+    },
+    "archived": {
+      "title": "Guarde um grupo",
+      "body": "Arquivar oculta um grupo sem excluí-lo. Grupos arquivados esperam na seção \"ARQUIVADOS\" no canto inferior esquerdo, onde você pode restaurá-los ou excluí-los. Eles ainda contam no número de grupos do seu plano."
+    },
+    "quick-save": {
+      "title": "Salve sem abrir o TabMerger",
+      "body": "Clique com o botão direito em qualquer página da web e escolha \"Salvar no TabMerger\". Escolha o que salvar, por exemplo \"Salvar esta aba\" ou \"Salvar todas as outras abas\", e depois o grupo de destino."
+    },
+    "theme": {
+      "title": "Claro ou escuro",
+      "body": "Experimente: abra o menu no canto superior direito, chamado \"Menu de configurações\" (ou \"Menu da conta\" depois do login), e escolha \"Configurações\". Abra a lista \"Tema\", escolha outro tema e selecione \"Salvar alterações\".",
+      "modalBody": "Nas Configurações: abra a lista \"Tema\", escolha outro tema e selecione \"Salvar alterações\".",
+      "doneText": "Muito bem, tema alterado. Feche as Configurações ou selecione Próximo para continuar."
+    },
+    "settings-more": {
+      "title": "Mais nas Configurações",
+      "body": "As Configurações têm mais na aba \"Geral\": \"Confirmar antes de excluir\" pergunta antes de remover qualquer coisa, e \"Regras de URL\" ligam endereços da web a um grupo. Na aba \"Dados\", \"Exportar\" salva todos os seus grupos em um arquivo e \"Importar\" carrega um arquivo de volta. Os backups automáticos, na mesma aba, exigem o plano Pro."
+    },
+    "account": {
+      "title": "Sua conta",
+      "body": "O TabMerger funciona sem conta: tudo fica neste dispositivo. Entrar, pelo mesmo menu, com um plano Pro mantém seus grupos em sincronia entre seus dispositivos. Os dados sincronizados são trancados no seu dispositivo antes de serem enviados, então só você pode lê-los."
+    },
+    "ai": {
+      "title": "Ações de IA",
+      "body": "\"Ações de IA\", no cabeçalho, pode separar suas abas abertas em grupos para você. Exige o plano Pro AI."
+    },
+    "finish": {
+      "title": "Tudo pronto",
+      "body": "Quer ver isso de novo? \"Fazer o tour\", o ponto de interrogação no canto superior direito, o repete quando quiser."
+    }
+  },
+  "card": {
+    "dialogLabel": "Tour do TabMerger",
+    "chapterLine": "Capítulo {{chapter}} de {{chapters}}",
+    "stepLine": "Passo {{step}} de {{total}}",
+    "done": "Concluído.",
+    "withKeyboard": " Com o teclado: {{keys}}",
+    "yourTurnAnnouncement": " Sua vez. Para avançar sem testar, selecione \"Pular esta etapa\".",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Selecione Próximo para continuar.",
+    "part": "Parte ",
+    "ofTotal": "{{current}} de {{total}}",
+    "keyboard": "Teclado: ",
+    "yourTurn": "Sua vez. Este passo espera até você testar.",
+    "practiceRemoved": "O grupo de prática foi removido.",
+    "practiceKept": "O grupo que você criou neste tour, “{{name}}”, ainda está na sua lista. Mantenha-o ou remova-o agora.",
+    "practiceKept_tabs": "O grupo que você criou neste tour, “{{name}}” ({{tabs}}), ainda está na sua lista. Mantenha-o ou remova-o agora.",
+    "removePractice": "Remover o grupo de prática",
+    "back": "Voltar",
+    "skipStep": "Pular esta etapa",
+    "finish": "Concluir",
+    "next": "Próximo",
+    "skipTour": "Pular tour",
+    "skipChapter": "Pular capítulo"
+  },
+  "labels": {
+    "confirmDuplicatesPrefix": "Remover "
+  },
+  "drop": {
+    "belowTab": "Solte abaixo desta aba",
+    "window": "Solte nesta janela",
+    "group": "Solte neste grupo",
+    "belowGroup": "Solte abaixo deste grupo",
+    "default": "Solte aqui"
+  },
+  "practiceLeft": "O tour deixou um grupo de prática, \"{{name}}\", na sua lista.",
+  "removeIt": "Remover"
+}

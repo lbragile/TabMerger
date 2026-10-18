@@ -1,0 +1,36 @@
+{
+  "metaTitle": "FAQ",
+  "metaDescription": "Häufig gestellte Fragen zu TabMerger.",
+  "title": "Häufig gefragt",
+  "lead": "Noch unsicher bei etwas? Wir beantworten E-Mails innerhalb eines Tages.",
+  "contact": "Support kontaktieren",
+  "free": {
+    "question": "Ist TabMerger wirklich kostenlos?",
+    "answer": "Ja! Der kostenlose Tarif enthält alle Kernfunktionen – bis zu {groups} Gruppen, {tabs} Tabs, {urlRules} URL-Regeln, Drag-and-drop sowie Import/Export. Du zahlst nur, wenn du Cloud-Sync, unbegrenzte Gruppen, Tabs und URL-Regeln oder KI-Funktionen willst."
+  },
+  "sync": {
+    "question": "Wie funktioniert Cloud-Sync?",
+    "answer": "Wenn du einen Pro- oder Pro-AI-Tarif abschließt, werden deine Gruppen automatisch auf unseren Servern gespeichert. Deine Gruppen werden in jedem Browser synchronisiert, in dem du angemeldet bist – die Synchronisierung läuft, wenn das Popup geöffnet ist, Änderungen erscheinen also beim nächsten Öffnen dort."
+  },
+  "ai": {
+    "question": "Was genau macht die KI?",
+    "answer": "Der Tarif Pro AI schaltet drei KI-Funktionen frei: Auto-Gruppierung (analysiert deine geöffneten Tabs und gruppiert sie sinnvoll), intelligente Benennung (schlägt Namen für deine Gruppen vor) und Sitzungsvorschläge (empfiehlt, wie du deinen Workflow organisieren kannst).",
+    "answerComingSoon": "Demnächst – der Tarif Pro AI schaltet drei KI-Funktionen frei: Auto-Gruppierung (analysiert deine geöffneten Tabs und gruppiert sie sinnvoll), intelligente Benennung (schlägt Namen für deine Gruppen vor) und Sitzungsvorschläge (empfiehlt, wie du deinen Workflow organisieren kannst)."
+  },
+  "cancel": {
+    "question": "Kann ich mein Abo kündigen?",
+    "answer": "Selbstverständlich. Du kannst jederzeit auf deiner Kontoseite kündigen. Du behältst den Zugriff bis zum Ende des aktuellen Abrechnungszeitraums und fällst dann auf den kostenlosen Tarif zurück."
+  },
+  "browsers": {
+    "question": "Welche Browser unterstützt TabMerger?",
+    "answer": "Chrome (Chrome Web Store), Edge (Edge Add-ons oder Chrome Web Store), Brave, Vivaldi und Arc (Chrome Web Store), Opera (Chrome Web Store, über das Opera-Add-on „Install Chrome Extensions“) und Firefox (Firefox Add-ons). Safari wird nicht unterstützt."
+  },
+  "privacy": {
+    "question": "Sind meine Daten privat?",
+    "answer": "Wir nehmen Datenschutz ernst. Daten im kostenlosen Tarif werden nur lokal gespeichert – nichts verlässt deinen Browser. Daten der Pro-Cloud-Synchronisierung werden auf deinem Gerät mit einer Passphrase, die nur du kennst, Ende-zu-Ende-verschlüsselt, bevor sie unsere Server erreichen – wir speichern nur Chiffretext und können deine Gruppen oder Tabs nicht lesen. Wir verkaufen niemals deine Daten."
+  },
+  "downgrade": {
+    "question": "Was passiert mit meinen Gruppen, wenn ich downgrade?",
+    "answer": "Wenn du von Pro auf Kostenlos wechselst, bleiben deine Gruppen 30 Tage lang in der Cloud. Deine lokalen Tabs bleiben immer erhalten. Du kannst vor dem Downgrade alles exportieren."
+  }
+}

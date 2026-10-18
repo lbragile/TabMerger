@@ -1,0 +1,23 @@
+{
+  "title": "网址规则",
+  "description": "按网址模式将标签页自动归入分组。使用 <code>*</code> 作为通配符（例如 <code>github.com/*</code>）。以第一条匹配的规则为准。",
+  "empty": "暂无规则。",
+  "deletedGroup": "（已删除的分组）",
+  "moveUp": "上移规则",
+  "moveDown": "下移规则",
+  "edit": "编辑规则",
+  "delete": "删除规则",
+  "used": "已用 {{used}}/{{max}}",
+  "addRule": "添加规则",
+  "discard": "放弃更改",
+  "cancel": "取消",
+  "saveAll": "保存所有规则",
+  "save": "保存",
+  "editTitle": "编辑网址规则",
+  "addTitle": "添加网址规则",
+  "patternPlaceholder": "模式，例如 github.com/*",
+  "groupPlaceholder": "选择目标分组…",
+  "toast": {
+    "limit": "免费版最多允许 {{max}} 条网址规则。"
+  }
+}

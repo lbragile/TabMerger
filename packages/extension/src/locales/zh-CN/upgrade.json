@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "已达分组上限",
+    "description": "您已达到免费版 {{max}} 个分组的上限。升级到 Pro 可使用不限数量的分组。"
+  },
+  "maxTabs": {
+    "title": "已达标签页上限",
+    "description": "您已达到免费版 {{max}} 个标签页的上限。升级到 Pro 可使用不限数量的标签页。"
+  },
+  "cloudSync": {
+    "title": "云同步属于 Pro",
+    "description": "使用 TabMerger Pro 在所有设备间同步您的分组。升级即可启用云同步。"
+  },
+  "aiFeatures": {
+    "title": "AI 功能属于 Pro AI",
+    "description": "AI 自动分组、智能命名和标签页摘要包含在 Pro AI 套餐中。"
+  },
+  "default": {
+    "title": "升级 TabMerger",
+    "description": "使用 TabMerger Pro 解锁不限数量的分组、云同步、自动备份和 AI 功能。"
+  },
+  "signInHint": "已有 Pro 账户？登录即可在此设备上恢复。",
+  "planPrice": "，{{price}}/月",
+  "comingSoon": "即将推出",
+  "comingSoonParen": "（{{label}}）",
+  "plans": {
+    "free": {
+      "name": "免费版",
+      "f1": "最多 {{groups}} 个分组",
+      "f2": "最多 {{tabs}} 个标签页",
+      "f3": "最多 {{urlRules}} 条网址规则"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "包含免费版的全部功能",
+      "f2": "不限数量的分组、标签页、网址规则和会话",
+      "f3": "跨设备云同步"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "包含 Pro 的全部功能",
+      "f2": "AI 标签页自动分组",
+      "f3": "AI 分组名称建议"
+    }
+  },
+  "maybeLater": "以后再说",
+  "signIn": "登录",
+  "upgradeNow": "立即升级"
+}

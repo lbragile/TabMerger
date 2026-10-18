@@ -1,0 +1,33 @@
+{
+  "searchPlaceholder": "Buscar abas e grupos…",
+  "undo": "Desfazer",
+  "redo": "Refazer",
+  "selectItems": "Selecionar itens",
+  "exitSelectionMode": "Sair do modo de seleção",
+  "aiActions": "Ações de IA",
+  "aiProRequired": "Pro AI necessário — clique para fazer upgrade",
+  "autoGroup": "Agrupar automaticamente",
+  "autoGroupHint": "Agrupar abas abertas com IA",
+  "organize": "Organizar",
+  "organizeHint": "Reorganizar todos os grupos com IA",
+  "takeTour": "Fazer o tour",
+  "accountMenu": "Menu da conta",
+  "settingsMenu": "Menu de configurações",
+  "upgradeToPro": "Fazer upgrade para o Pro",
+  "upgradeToProAi": "Fazer upgrade para o Pro AI",
+  "settings": "Configurações",
+  "signOut": "Sair",
+  "signIn": "Entrar",
+  "toast": {
+    "noTabsToGroup": "Nenhuma aba aberta para agrupar",
+    "aiNoGroups": "A IA não encontrou grupos para criar",
+    "aiNoMatchingTabs": "Nenhuma aba correspondente à sugestão da IA",
+    "aiCreated_one": "A IA criou {{count}} grupo",
+    "aiCreated_other": "A IA criou {{count}} grupos",
+    "aiCreated_many": "A IA criou {{count}} grupos",
+    "aiSkipped": "Mais {{skipped}} sugeridos, mas ignorados — limite do plano gratuito atingido.",
+    "aiGroupingFailed": "Falha no agrupamento por IA",
+    "organizeStarted": "Organização iniciada — revise a proposta no seu painel",
+    "organizeFailed": "Não foi possível iniciar a organização"
+  }
+}

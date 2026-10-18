@@ -1,0 +1,13 @@
+{
+  "review": "確認",
+  "archive": "アーカイブ",
+  "dismiss": "閉じる",
+  "getMore": "追加購入",
+  "removeStale": "古いタブを削除",
+  "staleTabs": "{{count}}個のタブが{{days}}日以上前に保存されました。",
+  "staleRemoved_other": "{{count}}個の古いタブを削除しました",
+  "upgrade": "アップグレード",
+  "paymentIssue": "お支払いの問題: カードを更新してください",
+  "planEnds": "Proプランは{{date}}に終了します",
+  "approachingLimit": "無料プランの上限に近づいています。Proにアップグレードすると、グループとタブが無制限になります"
+}

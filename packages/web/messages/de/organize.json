@@ -1,0 +1,24 @@
+{
+  "title": "Vorschlag der KI-Organisation",
+  "encrypted": "Die KI-Organisation ist für Ende-zu-Ende-verschlüsselte Gruppen im Web noch nicht verfügbar – deine Gruppen sind verschlüsselt und diese Seite kann sie nicht lesen. Starte sie stattdessen über die TabMerger-Erweiterung.",
+  "applied": "Änderungen erfolgreich angewendet.",
+  "cancelled": "Vorschlag abgebrochen.",
+  "analyzing": "Deine Tab-Gruppen werden analysiert …",
+  "noChanges": "Keine Änderungen vorgeschlagen.",
+  "approve": "Genehmigen",
+  "reject": "Ablehnen",
+  "unknownError": "Unbekannter Fehler",
+  "submitFailed": "Entscheidung konnte nicht übermittelt werden",
+  "types": {
+    "merge": "Zusammenführen",
+    "rename": "Umbenennen",
+    "delete": "Löschen",
+    "reorder": "Neu anordnen"
+  },
+  "actions": {
+    "merge": "{source} → {target} zusammenführen",
+    "rename": "Gruppe umbenennen → „{name}“",
+    "delete": "Gruppe {id} löschen",
+    "reorder": "Gruppen neu anordnen: {ids}"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "dropNewWindow": "放到这里创建新窗口",
+  "removeStale_other": "移除 {{count}} 个过期标签页",
+  "editGroupNote": "编辑分组备注",
+  "editNote": "编辑备注",
+  "moreGroupOptions": "更多分组选项",
+  "notePlaceholder": "为此分组添加备注…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "此分组中没有窗口",
+  "addWindow": "添加窗口",
+  "search": {
+    "elsewhere": "{{groups}}中有 {{tabs}}",
+    "matchingTabs_other": "{{count}} 个匹配的标签页",
+    "otherGroups_other": "另外 {{count}} 个分组",
+    "noneInGroup": "此分组中没有匹配的标签页",
+    "hidden_other": "搜索隐藏了 {{count}} 个标签页",
+    "allMatch_other": "全部 {{count}} 个标签页都匹配",
+    "someMatch_other": "{{count}} 个标签页中有 {{matched}} 个匹配",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "此分组中没有与“{{query}}”匹配的标签页"
+  },
+  "createGroup": "创建新分组…"
+}

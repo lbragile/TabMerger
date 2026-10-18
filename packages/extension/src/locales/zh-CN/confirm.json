@@ -1,0 +1,73 @@
+{
+  "deleteGroup": {
+    "title": "删除分组",
+    "description": "确定要删除“{{name}}”吗？此操作无法撤销。",
+    "confirm": "删除"
+  },
+  "closeWindow": {
+    "title": "关闭窗口",
+    "description": "确定要关闭此窗口及其所有标签页吗？",
+    "confirm": "关闭"
+  },
+  "removeWindow": {
+    "title": "移除窗口",
+    "description": "确定要移除此窗口及其所有标签页吗？",
+    "confirm": "移除"
+  },
+  "closeTab": {
+    "title": "关闭标签页",
+    "description": "确定要关闭此标签页吗？",
+    "confirm": "关闭"
+  },
+  "removeTab": {
+    "title": "移除标签页",
+    "description": "确定要移除此标签页吗？",
+    "confirm": "移除"
+  },
+  "closeSelection": {
+    "title": "关闭所选项",
+    "confirm": "关闭",
+    "description_tab_other": "确定要关闭 {{count}} 个标签页吗？此操作无法撤销。",
+    "description_window_other": "确定要关闭 {{count}} 个窗口吗？此操作无法撤销。",
+    "description_group_other": "确定要关闭 {{count}} 个分组吗？此操作无法撤销。"
+  },
+  "deleteSelection": {
+    "title": "删除所选项",
+    "confirm": "删除",
+    "description_tab_other": "确定要删除 {{count}} 个标签页吗？此操作无法撤销。",
+    "description_window_other": "确定要删除 {{count}} 个窗口吗？此操作无法撤销。",
+    "description_group_other": "确定要删除 {{count}} 个分组吗？此操作无法撤销。"
+  },
+  "removeStaleTabs": {
+    "title": "移除过期标签页",
+    "confirm": "移除",
+    "description_other": "确定要移除 {{count}} 个过期标签页吗？此操作无法撤销。"
+  },
+  "closeAllWindows": {
+    "title": "关闭所有窗口",
+    "description": "确定要关闭所有浏览器窗口及其标签页吗？",
+    "confirm": "全部关闭"
+  },
+  "removeAllWindows": {
+    "title": "移除所有窗口",
+    "description": "确定要从此分组中移除所有窗口及其标签页吗？此操作无法撤销。",
+    "confirm": "全部移除"
+  },
+  "archiveStaleGroups": {
+    "title": "归档过期分组",
+    "confirm": "归档",
+    "description_other": "确定要归档 {{count}} 个过期分组吗？"
+  },
+  "clearAllData": {
+    "title": "清除所有数据",
+    "confirm": "清除所有数据",
+    "description": "这将永久删除所有分组、已保存的会话和设置。此操作无法撤销。",
+    "description_kept": "这将永久删除所有分组、已保存的会话和设置。此操作无法撤销。存储在您账户中的自动备份会保留，您可以在“设置 → 数据”中恢复。"
+  },
+  "resetEncryption": {
+    "title": "重置加密密码短语",
+    "confirm": "重置密码短语",
+    "description": "此操作无法撤销。使用当前密码短语加密的所有已同步分组、会话和备注都将永久无法访问。您需要设置新的密码短语并重新开始同步。"
+  },
+  "cancel": "取消"
+}

@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Panel",
+  "greeting": "Buenos días, {name}",
+  "tierBadge": {
+    "free": "gratis",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "Organizar con IA",
+  "aiOrganiseUpgrade": "Mejora a Pro AI para organizar con IA",
+  "aiOrganiseFromExtension": "Inícialo desde el popup de la extensión TabMerger",
+  "tabGroups": "Grupos de pestañas",
+  "savedSessions": "Sesiones guardadas",
+  "stats": {
+    "tabs": {
+      "label": "Pestañas guardadas",
+      "description": "Pestañas de todos los grupos sincronizados"
+    },
+    "groups": {
+      "label": "Grupos sincronizados",
+      "description": "Grupos sincronizados en la nube"
+    },
+    "sessions": {
+      "label": "Sesiones almacenadas",
+      "description": "Sesiones de navegación almacenadas",
+      "lockedDescription": "Sesiones y copias (desbloquea para distinguirlas)"
+    },
+    "memory": {
+      "label": "Memoria liberada",
+      "description": "Estimada, no medida"
+    },
+    "memberSince": {
+      "label": "Miembro desde",
+      "description": "Cuenta creada"
+    },
+    "aiCredits": {
+      "label": "Créditos de IA este mes",
+      "description": "Uso mensual de Pro AI",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Cargando"
+  },
+  "subscription": {
+    "currentPlan": "Plan actual",
+    "renews": "Se renueva el {date}",
+    "upgrade": "Mejorar plan",
+    "statuses": {
+      "active": "activa",
+      "canceled": "cancelada",
+      "past_due": "vencida",
+      "trialing": "en prueba",
+      "incomplete": "incompleta"
+    }
+  },
+  "upgraded": {
+    "message": "¡Te damos la bienvenida a {plan}! Tu suscripción ya está activa. Disfruta de tus nuevas funciones.",
+    "dismiss": "Descartar"
+  },
+  "locked": {
+    "item": "Guardado con una frase de contraseña anterior. Abre la extensión en el dispositivo que lo tiene y deja que sincronice.",
+    "device": "Sus pestañas abiertas se guardaron con una frase de contraseña anterior. Abre la extensión en ese dispositivo y deja que sincronice.",
+    "unverified": "No se puede leer ahora. Recarga la página para intentarlo de nuevo."
+  },
+  "passphrase": {
+    "defaultLabel": "Introduce tu frase de contraseña de cifrado para ver este contenido.",
+    "groupsLabel": "Tus grupos están cifrados de extremo a extremo. Introduce tu frase de contraseña para verlos aquí.",
+    "sessionsLabel": "Tus sesiones están cifradas de extremo a extremo. Introduce tu frase de contraseña para verlas aquí.",
+    "backupsLabel": "Tus copias están cifradas de extremo a extremo. Introduce tu frase de contraseña para verlas aquí.",
+    "placeholder": "Frase de contraseña",
+    "inputLabel": "Frase de contraseña de cifrado",
+    "unlock": "Desbloquear",
+    "incorrect": "Frase de contraseña incorrecta."
+  },
+  "onboarding": {
+    "title": "Empieza con TabMerger",
+    "progress": "{done} de {total} hechos",
+    "dismiss": "Descartar",
+    "install": "Instala la extensión TabMerger",
+    "group": "Crea tu primer grupo en la extensión",
+    "signin": "Inicia sesión para activar la sincronización en la nube",
+    "upgrade": "Mejora a Pro para tener grupos ilimitados"
+  },
+  "lockedName": "(bloqueado)",
+  "damagedNote": "Su contenido no está en un formato que TabMerger pueda leer, así que no se puede mostrar aquí.",
+  "counts": {
+    "groups": "{count, plural, one {{count} grupo} many {{count} de grupos} other {{count} grupos}}",
+    "windows": "{count, plural, one {{count} ventana} many {{count} de ventanas} other {{count} ventanas}}",
+    "tabs": "{count, plural, one {{count} pestaña} many {{count} de pestañas} other {{count} pestañas}}"
+  },
+  "sessions": {
+    "cantRestore": "Esta sesión no se puede leer, así que no se puede restaurar.",
+    "restored": "{count, plural, one {Se restauró {count} pestaña de \"{name}\"} many {Se restauraron {count} de pestañas de \"{name}\"} other {Se restauraron {count} pestañas de \"{name}\"}}",
+    "deleted": "Sesión eliminada",
+    "deleteFailed": "No se pudo eliminar la sesión",
+    "loadFailed": "No se pudieron cargar tus sesiones.",
+    "tryAgain": "Reintentar",
+    "loading": "Cargando sesiones",
+    "empty": "Aún no hay sesiones guardadas.",
+    "readOnlyNote": "Guardar sesiones nuevas en tu cuenta requiere Pro. Tus sesiones existentes aún se pueden abrir o eliminar.",
+    "upgrade": "Mejorar a Pro",
+    "freeLimit": "Plan gratuito: hasta {count} sesiones. <link>Mejora a Pro</link> para tener sesiones ilimitadas.",
+    "restore": "Restaurar sesión",
+    "cantRestoreTooltip": "Esta sesión no se puede leer, así que no se puede restaurar",
+    "delete": "Eliminar sesión",
+    "hideContents": "Ocultar contenido",
+    "showContents": "Mostrar contenido ({count})",
+    "groupFallbackName": "Grupo {number}",
+    "groupTabs": "{count, plural, other {{count} pestañas}}",
+    "moreTabs": "{count, plural, other {+{count} pestañas más}}",
+    "moreGroups": "{count, plural, other {+{count} grupos más}}"
+  },
+  "backups": {
+    "title": "Copias de seguridad",
+    "upgradeDescription": "Las copias automáticas forman parte de Pro: una instantánea cifrada de tus grupos, guardada según un horario, conservando las {count} más recientes.",
+    "readOnlyNote": "Las copias nuevas requieren Pro. Tus copias existentes aún se pueden descargar o eliminar.",
+    "upgrade": "Mejorar plan",
+    "intro": "Instantáneas de tus grupos que la extensión TabMerger guardó en tu cuenta por sí sola, de la más reciente a la más antigua. Se conservan las {count} más recientes. Para restaurar una, abre la extensión y ve a {place}; la restauración no se hace desde esta página. Un archivo que descargues aquí no está cifrado.",
+    "extensionPlace": "Ajustes > Datos",
+    "loadFailed": "No se pudieron cargar tus copias de seguridad.",
+    "tryAgain": "Reintentar",
+    "loading": "Cargando copias de seguridad",
+    "unknownKind": "{count, plural, one {1 elemento guardado no se puede leer, así que no se sabe si es una copia de seguridad. Aparece en Sesiones guardadas.} many {{count} de elementos guardados no se pueden leer, así que no se sabe si son copias de seguridad. Aparecen en Sesiones guardadas.} other {{count} elementos guardados no se pueden leer, así que no se sabe si son copias de seguridad. Aparecen en Sesiones guardadas.}}",
+    "emptyTitle": "Aún no hay copias de seguridad.",
+    "emptyBody": "La extensión guarda una por sí sola mientras tu navegador está abierto, cuando tus grupos han cambiado desde la última. El horario es \"{interval}\" salvo que lo cambies: elige el intervalo, o haz una copia ahora mismo, en la extensión en {place}.",
+    "intervals": {
+      "60": "Cada hora",
+      "360": "Cada 6 horas",
+      "720": "Cada 12 horas",
+      "1440": "Diaria",
+      "10080": "Semanal"
+    },
+    "unknownDateInSentence": "una fecha desconocida",
+    "unknownDate": "Fecha desconocida",
+    "namePrefix": "Copia automática",
+    "downloading": "Descargando la copia del {when}.",
+    "deleted": "Copia eliminada",
+    "deletedAnnouncement": "Se eliminó la copia del {when}.",
+    "deleteFailed": "No se pudo eliminar la copia",
+    "deleteFailedAnnouncement": "No se pudo eliminar la copia del {when}.",
+    "deleteTitle": "¿Eliminar esta copia?",
+    "deleteBody": "La copia del {when} se quitará de tu cuenta. Un navegador que ya tenga esta copia conserva la suya.",
+    "deleteBodyWithCounts": "La copia del {when} ({groups}, {tabs}) se quitará de tu cuenta. Un navegador que ya tenga esta copia conserva la suya.",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "download": "Descargar",
+    "downloadLabel": "Descargar la copia del {when}",
+    "deleteLabel": "Eliminar la copia del {when}"
+  },
+  "groups": {
+    "cantShare": "Este grupo no se puede leer, así que no se puede compartir.",
+    "linkCopiedSnapshot": "Enlace copiado: comparte una instantánea de este grupo.",
+    "shareFailed": "No se pudo crear el enlace para compartir. Inténtalo de nuevo.",
+    "shareGroup": "Compartir grupo",
+    "copied": "¡Copiado!",
+    "share": "Compartir",
+    "cantShareTooltip": "Este grupo no se puede leer, así que no se puede compartir",
+    "shareTooltip": "Copia un enlace a una instantánea de este grupo; los cambios posteriores no la actualizarán",
+    "justNow": "ahora mismo",
+    "minutesAgo": "hace {count} min",
+    "hoursAgo": "hace {count} h",
+    "daysAgo": "hace {count} d",
+    "lockedCantSelect": "Un grupo bloqueado no se puede seleccionar",
+    "deselect": "Deseleccionar",
+    "select": "Seleccionar",
+    "syncedAt": "Sincronizado {time}",
+    "cardMeta": "{windows, plural, one {{windows} ventana} many {{windows} de ventanas} other {{windows} ventanas}} · {tabs, plural, one {{tabs} pestaña} many {{tabs} de pestañas} other {{tabs} pestañas}}",
+    "syncedSuffix": " · sincronizado {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Las pestañas pueden estar desactualizadas: última sincronización hace más de 30 días",
+    "moreTabs": "+{count} más",
+    "openAllTitle": "Abrir todas las pestañas de este grupo",
+    "openAll": "Abrir todo",
+    "hideTabs": "Ocultar pestañas",
+    "showTabs": "Mostrar pestañas",
+    "rowMeta": "{windows}v · {tabs}p",
+    "linkCopiedLive": "¡Enlace copiado! La página compartida está activa.",
+    "empty": "Aún no hay grupos sincronizados. Abre la extensión para crear grupos de pestañas.",
+    "title": "Grupos",
+    "summary": "{count, plural, one {{count} grupo} many {{count} de grupos} other {{count} grupos}} · {tabs, plural, other {{tabs} pestañas}}",
+    "sort": "Ordenar",
+    "sortLabel": "Ordenar grupos",
+    "sortRecent": "Recientes",
+    "sortName": "Nombre",
+    "sortTabCount": "N.º de pestañas",
+    "cancel": "Cancelar",
+    "gridView": "Vista de cuadrícula",
+    "listView": "Vista de lista",
+    "archived": "Archivados ({count})",
+    "selectedCount": "{count} seleccionados",
+    "shareSelected": "Compartir selección",
+    "cancelSelection": "Cancelar selección"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Abre la extensión y desbloquea el cifrado para sincronizar.",
+      "no-session": "Inicia sesión en la extensión para sincronizar.",
+      "error": "La sincronización falló. Inténtalo de nuevo desde la extensión."
+    },
+    "failedFallback": "La sincronización falló.",
+    "syncing": "Sincronizando...",
+    "busy": "Ya hay una sincronización en curso",
+    "failed": "La sincronización falló",
+    "synced": "Sincronizado",
+    "never": "Aún sin sincronizar",
+    "reasonSeparator": ".",
+    "refresh": "Actualizar estado de sincronización",
+    "resync": "Sincronizar ahora",
+    "justNow": "ahora mismo",
+    "minutesAgo": "hace {count} min",
+    "hoursAgo": "hace {count} h",
+    "daysAgo": "hace {count} d"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "success": "完成，网站现在可以找到 TabMerger 了。您可以关闭此标签页。",
+  "refused": "Firefox 未允许。您可以重试，或稍后在 about:addons 中允许。",
+  "title": "让 TabMerger 网站找到 TabMerger",
+  "checking": "正在检查网站访问权限…",
+  "explainer": "Firefox 尚未允许 TabMerger 访问 {{hosts}}。没有此权限，网站无法检测到 TabMerger、传递您的登录状态或开始同步。请点击下方按钮，然后在 Firefox 的提示中确认。",
+  "allowOn": "允许 TabMerger 访问 {{hosts}}",
+  "bannerLabel": "网站访问",
+  "bannerText": "允许 TabMerger 访问 {{hosts}}，以便网站找到它并传递您的登录状态。",
+  "allow": "允许",
+  "dismiss": "忽略网站访问提示",
+  "openFailed": "无法打开网站访问标签页。请重试，或在 about:addons 中允许。"
+}

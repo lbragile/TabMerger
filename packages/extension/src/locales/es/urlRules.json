@@ -1,0 +1,23 @@
+{
+  "title": "Reglas de URL",
+  "description": "Asigna pestañas a grupos automáticamente por patrón de URL. Usa <code>*</code> como comodín (p. ej., <code>github.com/*</code>). Gana la primera regla que coincida.",
+  "empty": "Aún no hay reglas.",
+  "deletedGroup": "(grupo eliminado)",
+  "moveUp": "Subir regla",
+  "moveDown": "Bajar regla",
+  "edit": "Editar regla",
+  "delete": "Eliminar regla",
+  "used": "{{used}}/{{max}} usadas",
+  "addRule": "Agregar regla",
+  "discard": "Descartar cambios",
+  "cancel": "Cancelar",
+  "saveAll": "Guardar todas las reglas",
+  "save": "Guardar",
+  "editTitle": "Editar regla de URL",
+  "addTitle": "Agregar regla de URL",
+  "patternPlaceholder": "Patrón, p. ej., github.com/*",
+  "groupPlaceholder": "Elige el grupo de destino…",
+  "toast": {
+    "limit": "El plan gratuito permite hasta {{max}} reglas de URL."
+  }
+}

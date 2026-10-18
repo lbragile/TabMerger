@@ -1,0 +1,10 @@
+{
+  "comingSoon": "Próximamente",
+  "listTwo": "{first} y {second}",
+  "listMany": "{rest} y {last}",
+  "listSeparator": ",",
+  "opensInNewTab": " (se abre en una pestaña nueva)",
+  "close": "Cerrar",
+  "showPassphrase": "Mostrar frase de contraseña",
+  "hidePassphrase": "Ocultar frase de contraseña"
+}
