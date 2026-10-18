@@ -89,7 +89,8 @@ describe('PrivacyPage', () => {
   it('discloses the uninstall survey: what opening it sends, what the form sends, and where it goes', () => {
     render(<PrivacyPage />)
     const block = document.getElementById('uninstall-survey')
-    expect(block?.textContent).toMatch(/version, which browser it was for, and whether it was the regular or the beta release/)
+    expect(block?.textContent).toMatch(/version, which browser it was for, whether it was the regular or the beta release, and whether the extension was allowed to send anonymous usage statistics/)
+    expect(block?.textContent).toMatch(/one anonymous "extension removed" count in Google Analytics/)
     expect(block?.textContent).toMatch(/Only if you press send/)
     expect(block?.textContent).toMatch(/emailed to our support inbox through Resend/)
     expect(block?.textContent).toMatch(/never your IP address/)
@@ -109,5 +110,14 @@ describe('PrivacyPage', () => {
   it('shows the date of the latest revision', () => {
     render(<PrivacyPage />)
     expect(screen.getByText('Last updated: October 18, 2026')).toBeInTheDocument()
+  })
+
+  it('discloses the extension usage events: install, update, daily, random install id, Firefox opt-in', () => {
+    render(<PrivacyPage />)
+    const text = document.body.textContent ?? ''
+    expect(text).toMatch(/when it is installed or updated, about once a day while it stays installed/)
+    expect(text).toMatch(/version and browser, whether it is the regular or the beta release, and simple counts or labels/)
+    expect(text).toMatch(/random install identifier/)
+    expect(text).toMatch(/On Firefox, nothing is sent unless you allowed/)
   })
 })

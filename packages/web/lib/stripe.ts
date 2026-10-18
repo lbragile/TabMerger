@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { isEntitledSubscriptionStatus } from '@tabmerger/shared'
+import type { CheckoutInterval, CheckoutTier } from './checkoutAnalytics'
 
 /**
  * True when a real Stripe secret key was supplied. False in any environment missing
@@ -47,6 +48,8 @@ export async function createCheckoutSession({
   customerId,
   successUrl,
   cancelUrl,
+  tier,
+  interval,
 }: {
   userId: string
   priceId: string
@@ -54,6 +57,9 @@ export async function createCheckoutSession({
   customerId?: string
   successUrl: string
   cancelUrl: string
+  /** Plan and interval, already validated by the route; stamped on the session for analytics. */
+  tier?: CheckoutTier
+  interval?: CheckoutInterval
 }): Promise<string> {
   if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
 
@@ -79,8 +85,15 @@ export async function createCheckoutSession({
     allow_promotion_codes: true,
     success_url: successUrl,
     cancel_url: cancelUrl,
-    // user_id on session metadata is a fallback readable from session object directly
-    metadata: { user_id: userId },
+    // user_id on session metadata is a fallback readable from session object directly.
+    // tier/interval let the checkout.session.expired webhook report which plan was abandoned
+    // without another Stripe call. The webhook re-validates both; neither is ever trusted for
+    // billing.
+    metadata: {
+      user_id: userId,
+      ...(tier ? { tier } : {}),
+      ...(interval ? { interval } : {}),
+    },
     // user_id on subscription_data metadata travels with the subscription object
     subscription_data: {
       metadata: { user_id: userId },

@@ -137,6 +137,8 @@ export * from './localOnlySyncKeys';
 export * from './uninstallSurvey';
 export * from './search';
 export * from './locales';
+export * from './analyticsEvents';
+export * from './extensionLifecycle';
 
 /** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
 export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

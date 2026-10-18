@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
 import { AI_ENABLED } from '@/lib/aiFlag'
+import { CHECKOUT_TIERS, trackBeginCheckout, type CheckoutTier } from '@/lib/checkoutAnalytics'
 import { useListPrice, useZeroPrice } from './priceFormat'
 import type { TierFeature } from './tierFeatures'
 
@@ -134,6 +135,16 @@ export function PricingCard({
       if (hasPaidPlan) {
         await openBillingPortal()
         return
+      }
+
+      // Funnel start: counted when the checkout request starts, whatever it answers.
+      if ((CHECKOUT_TIERS as readonly string[]).includes(tier)) {
+        trackBeginCheckout({
+          tier: tier as CheckoutTier,
+          interval,
+          source: 'pricing_page',
+          component: 'pricing_card',
+        })
       }
 
       const res = await fetch('/api/checkout', {

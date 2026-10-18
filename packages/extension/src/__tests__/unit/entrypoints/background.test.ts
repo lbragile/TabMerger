@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { EXTENSION_MESSAGE } from '@tabmerger/shared'
+import { ANALYTICS_EVENTS, EXTENSION_MESSAGE } from '@tabmerger/shared'
 
 type BgConfig = { main: () => void } | (() => void)
 let capturedMain: (() => void) | undefined
@@ -42,6 +42,14 @@ vi.mock('@/lib/autoBackupAlarm', () => ({ registerAutoBackup: mockRegisterAutoBa
 // The uninstall survey has its own suite (uninstallSurvey.test.ts): here the worker only has to call it once.
 const { mockRegisterUninstallSurvey } = vi.hoisted(() => ({ mockRegisterUninstallSurvey: vi.fn() }))
 vi.mock('@/lib/uninstallSurvey', () => ({ registerUninstallSurvey: mockRegisterUninstallSurvey }))
+// The heartbeat has its own suite (heartbeat.test.ts).
+const { mockRegisterHeartbeat, mockRecordInstallDate, mockTrackEvent } = vi.hoisted(() => ({
+  mockRegisterHeartbeat: vi.fn(),
+  mockRecordInstallDate: vi.fn().mockResolvedValue(undefined),
+  mockTrackEvent: vi.fn(),
+}))
+vi.mock('@/lib/heartbeat', () => ({ registerHeartbeat: mockRegisterHeartbeat, recordInstallDate: mockRecordInstallDate }))
+vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 
 vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   getGroupsState: mockGetGroupsState,
@@ -510,6 +518,25 @@ describe('background — uninstall survey wiring', () => {
     mockRegisterUninstallSurvey.mockClear()
     capturedMain!()
     expect(mockRegisterUninstallSurvey).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('background — heartbeat and lifecycle events', () => {
+  it('registers the heartbeat once per worker start', () => {
+    mockRegisterHeartbeat.mockClear()
+    capturedMain!()
+    expect(mockRegisterHeartbeat).toHaveBeenCalledTimes(1)
+  })
+
+  it('sends the shared install / update event names and records the install date', () => {
+    mockTrackEvent.mockClear()
+    mockRecordInstallDate.mockClear()
+    stub.listeners.onInstalled[0]({ reason: 'install' })
+    expect(mockTrackEvent).toHaveBeenLastCalledWith(ANALYTICS_EVENTS.extensionInstalled, { reason: 'install' })
+    expect(mockRecordInstallDate).toHaveBeenLastCalledWith('install')
+    stub.listeners.onInstalled[0]({ reason: 'update' })
+    expect(mockTrackEvent).toHaveBeenLastCalledWith(ANALYTICS_EVENTS.extensionUpdated, { reason: 'update' })
+    expect(mockRecordInstallDate).toHaveBeenLastCalledWith('update')
   })
 })
 

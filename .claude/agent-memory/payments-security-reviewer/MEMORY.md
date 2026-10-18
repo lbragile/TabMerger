@@ -5,3 +5,4 @@
 - [Client file path review method](learnings_client_file_path_review_method.md) — settings that become a downloads path: who writes them, validate at use, token expansion, build-time test switches, guard-conditional writes
 - [Mocked gate return values](learnings_mocked_gate_return_values.md) — check mocked entitlement/usage results are ones the real gate can return; require a real-gate test per unpaid account type
 - [Sessions backup gate shape](learnings_sessions_backup_gate_shape.md) — backups gated by sessions RLS insert/update (has_cloud_sync), owner select/delete any tier; auto marker only in ciphertext so server can't count backups separately
+- [Analytics vs privacy page](learnings_analytics_privacy_crosscheck.md) — cross-check GA4/PostHog identifiers sent from payments code against the privacy page wording

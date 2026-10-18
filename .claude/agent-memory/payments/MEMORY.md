@@ -5,3 +5,4 @@
 - [Webhook matching by subscription id](webhook-subscription-id-matching.md) — lookup order for later events, 409 `already_subscribed`, mock shapes, invoice sub id by API version
 - [Webhook stored statuses and retries](webhook-stored-statuses-and-retries.md) — updates write Stripe's retrieved state, not the event's; unstored status and canceled → canceled/free; failed DB call or Stripe read → 500; test helpers
 - [Payments learnings](payments-learnings.md) — AI coming-soon flag gating in checkout routes; `proAi` wire tier vs `pro_ai` DB tier; shared flag helper location
+- [Checkout funnel analytics](checkout-funnel-analytics.md) — expired webhook analytics-only; no user_id, random client id, HMAC keyed by webhook secret; after() test mock

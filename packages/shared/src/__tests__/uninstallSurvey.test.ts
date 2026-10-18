@@ -7,6 +7,7 @@ import {
   buildUninstallSurveyUrl,
   isUninstallSurveyReasonId,
   parseUninstallSurveyParams,
+  uninstallAnalyticsAllowed,
 } from '../constants/uninstallSurvey'
 
 describe('UNINSTALL_SURVEY_REASONS', () => {
@@ -34,7 +35,19 @@ describe('parseUninstallSurveyParams', () => {
       version: '3.1.2',
       browser: 'firefox',
       channel: 'beta',
+      analytics: undefined,
     })
+  })
+
+  it.each([
+    ['1', true],
+    ['0', false],
+    ['true', undefined],
+    ['', undefined],
+    [1, undefined],
+    [['1'], undefined],
+  ])('reads the analytics flag %j as %s', (analytics, expected) => {
+    expect(parseUninstallSurveyParams({ analytics }).analytics).toBe(expected)
   })
 
   it.each(['3', '3.1', '3.1.2', '4.0.0.1', '99999.0'])('accepts the version %s', (version) => {
@@ -53,11 +66,13 @@ describe('parseUninstallSurveyParams', () => {
       version: undefined,
       browser: undefined,
       channel: undefined,
+      analytics: undefined,
     })
     expect(parseUninstallSurveyParams({ version: ['3.1.2'], browser: ['chrome'], channel: {} })).toEqual({
       version: undefined,
       browser: undefined,
       channel: undefined,
+      analytics: undefined,
     })
   })
 })
@@ -90,5 +105,33 @@ describe('buildUninstallSurveyUrl', () => {
       channel: 'stable',
     })
     expect(url!.length).toBeLessThan(1023)
+  })
+})
+
+describe('buildUninstallSurveyUrl analytics flag', () => {
+  it('adds a=1 or a=0 only when the flag is given', () => {
+    const base = { version: '3.1.2', browser: 'firefox', channel: 'stable' }
+    const flag = (analytics?: boolean) =>
+      new URL(buildUninstallSurveyUrl('https://tabmerger.app', { ...base, analytics })!).searchParams.get(
+        UNINSTALL_SURVEY_PARAMS.analytics
+      )
+    expect(flag(true)).toBe('1')
+    expect(flag(false)).toBe('0')
+    expect(flag(undefined)).toBeNull()
+  })
+})
+
+describe('uninstallAnalyticsAllowed', () => {
+  it('follows an explicit flag on every browser', () => {
+    expect(uninstallAnalyticsAllowed({ browser: 'firefox', analytics: true })).toBe(true)
+    expect(uninstallAnalyticsAllowed({ browser: 'chrome', analytics: false })).toBe(false)
+    expect(uninstallAnalyticsAllowed({ analytics: true })).toBe(true)
+  })
+
+  it('without a flag, allows only Chrome and Edge (older builds sent analytics there without an opt-in)', () => {
+    expect(uninstallAnalyticsAllowed({ browser: 'chrome' })).toBe(true)
+    expect(uninstallAnalyticsAllowed({ browser: 'edge' })).toBe(true)
+    expect(uninstallAnalyticsAllowed({ browser: 'firefox' })).toBe(false)
+    expect(uninstallAnalyticsAllowed({})).toBe(false)
   })
 })

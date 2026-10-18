@@ -38,6 +38,24 @@ describe('lib/stripe', () => {
     )
   })
 
+  it('createCheckoutSession stamps tier and interval on the session metadata only (not the subscription)', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/s1' })
+    const { createCheckoutSession } = await import('@/lib/stripe')
+
+    await createCheckoutSession({
+      userId: 'user-1',
+      priceId: 'price_123',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+      tier: 'proAi',
+      interval: 'yearly',
+    })
+
+    const params = mockCheckoutCreate.mock.lastCall![0]
+    expect(params.metadata).toEqual({ user_id: 'user-1', tier: 'proAi', interval: 'yearly' })
+    expect(params.subscription_data.metadata).toEqual({ user_id: 'user-1' })
+  })
+
   it('createCheckoutSession falls back to customerEmail when no customerId', async () => {
     mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/s2' })
     const { createCheckoutSession } = await import('@/lib/stripe')

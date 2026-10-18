@@ -46,6 +46,7 @@
   "switchFailed": "无法开始切换。请在账户页面使用“管理账单”。",
   "alreadySubscribed": "您已有套餐，正在打开账单页面以便您更改。",
   "portalFailed": "无法打开账单页面。请在账户页面使用“管理账单”更改套餐。",
+  "checkoutCanceled": "结账已取消，您未被扣款。",
   "cancelAnytime": "随时可在账户中取消，无捆绑，无需任何理由。",
   "keepAccess": "计费周期结束前您仍可继续使用。",
   "page": {

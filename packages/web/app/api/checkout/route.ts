@@ -5,6 +5,30 @@ import { createCheckoutSession, getStripePriceId } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
 import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
 import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
+import { checkoutCancelPath } from '@/lib/checkoutAnalytics'
+import { DEFAULT_LOCALE, isAppLocale } from '@/i18n/locales'
+
+/** next-intl's locale cookie. */
+const LOCALE_COOKIE = 'NEXT_LOCALE'
+
+/**
+ * The locale the buyer is browsing in, for the cancel_url: the first path segment of the page
+ * that sent the request (Referer), else the NEXT_LOCALE cookie, else the default locale. Both
+ * are client-supplied, so a value is used only when it is one of this build's locales.
+ */
+function requestLocale(request: NextRequest): string {
+  const referer = request.headers.get('referer')
+  if (referer) {
+    try {
+      const segment = new URL(referer).pathname.split('/')[1]
+      if (isAppLocale(segment)) return segment
+    } catch {
+      // Not a URL: fall through to the cookie.
+    }
+  }
+  const cookie = request.cookies.get(LOCALE_COOKIE)?.value
+  return isAppLocale(cookie) ? cookie : DEFAULT_LOCALE
+}
 
 /**
  * Creates a Stripe Checkout session for starting a Pro or Pro AI subscription.
@@ -89,7 +113,10 @@ export async function POST(request: NextRequest) {
       customerEmail: user.email,
       customerId: profile?.stripe_customer_id ?? undefined,
       successUrl: absoluteUrl('/dashboard?upgraded=1'),
-      cancelUrl: absoluteUrl('/pricing'),
+      // The marker lets the pricing page count the cancel (checkout_canceled) once, then drop it.
+      cancelUrl: absoluteUrl(checkoutCancelPath(tier, interval, requestLocale(request))),
+      tier,
+      interval,
     })
 
     return NextResponse.json({ url })

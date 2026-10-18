@@ -1,8 +1,10 @@
+import { Suspense } from 'react'
 import { pageMetadata } from '@/lib/seo'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { PricingTable } from '@/components/pricing/PricingTable'
+import { CheckoutCanceledTracker } from '@/components/pricing/CheckoutCanceledTracker'
 import { getPriceInfo, type BillingInterval } from '@/lib/tiers'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getStoreLinks } from '@/lib/storeLinks'
@@ -40,6 +42,10 @@ export default async function PricingPage() {
 
   return (
     <div className="py-16">
+      {/* Counts a checkout Stripe sent back via cancel_url, then strips the marker from the URL. */}
+      <Suspense fallback={null}>
+        <CheckoutCanceledTracker />
+      </Suspense>
       <div className="container">
         <div className="text-center mb-14">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">

@@ -46,6 +46,7 @@
   "switchFailed": "Não foi possível iniciar a mudança. Tente Gerenciar cobrança na página da sua conta.",
   "alreadySubscribed": "Você já tem um plano. Abrindo a cobrança para você poder alterá-lo.",
   "portalFailed": "Não foi possível abrir a cobrança. Use Gerenciar cobrança na página da sua conta para mudar de plano.",
+  "checkoutCanceled": "Pagamento cancelado. Você não foi cobrado.",
   "cancelAnytime": "Cancele quando quiser pela sua conta — sem fidelidade, sem perguntas.",
   "keepAccess": "Você mantém o acesso até o fim do período de cobrança.",
   "page": {
