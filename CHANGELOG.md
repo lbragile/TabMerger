@@ -1,3 +1,10 @@
+# [3.6.0](https://github.com/lbragile/TabMerger/compare/v3.5.0...v3.6.0) (2026-10-18)
+
+
+### Features
+
+* **extension:** offer to restart when a downloaded update is waiting ([#88](https://github.com/lbragile/TabMerger/issues/88)) ([879f4e1](https://github.com/lbragile/TabMerger/commit/879f4e1a975c8b5fa11e2897dab463b8356b6614))
+
 # [3.5.0](https://github.com/lbragile/TabMerger/compare/v3.4.0...v3.5.0) (2026-10-18)
 
 
