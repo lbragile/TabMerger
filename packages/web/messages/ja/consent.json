@@ -1,0 +1,7 @@
+{
+  "label": "Cookie の同意",
+  "message": "サイトの利用状況を把握するため、分析用 Cookie（Google Analytics と PostHog）を使用させてください。Cookie は同意した場合にのみ設定され、選択はいつでも変更できます。",
+  "learnMore": "Cookie の詳細",
+  "accept": "同意する",
+  "reject": "拒否する"
+}

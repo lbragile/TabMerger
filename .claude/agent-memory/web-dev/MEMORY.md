@@ -40,3 +40,4 @@
 - [i18n for unsegmented routes](learnings/i18n-unsegmented-routes.md) — /auth + root 404 locale via cookie/Accept-Language in request.ts, CLIENT_NAMESPACES, unmocking i18n/navigation to test prefixes
 - [Language switcher = full page load](learnings/language-switcher-hard-navigation.md) — root layout owns html lang + intl provider, cookie before navigating, 1-year NEXT_LOCALE, mount-effect router throws, test stubs
 - [Visitor-browser install order](learnings/visitor-browser-install-order.md) — UA sniff in `lib/visitorBrowser.ts`, page passes `browser` prop (keeps components sync for RTL), icon label doubles accessible name
+- [Cookie consent + analytics](learnings/cookie-consent-analytics.md) — GA Consent Mode loader (why not @next/third-parties), gtag `arguments` trap, posthog memory persistence vs cookieless_mode, Reject leftovers

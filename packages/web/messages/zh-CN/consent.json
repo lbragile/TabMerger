@@ -1,0 +1,7 @@
+{
+  "label": "Cookie 同意",
+  "message": "我们希望使用分析 Cookie（Google Analytics 和 PostHog）来了解网站的使用情况。只有在您同意后才会设置这些 Cookie，您可以随时更改选择。",
+  "learnMore": "Cookie 详情",
+  "accept": "接受",
+  "reject": "拒绝"
+}

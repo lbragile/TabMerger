@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Geist, Geist_Mono } from 'next/font/google'
@@ -9,6 +8,8 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { AppToaster } from '@/components/AppToaster'
 import { PostHogProvider } from '@/components/posthog-provider'
 import { DeferredOnLoad } from '@/components/DeferredOnLoad'
+import { CookieConsentBanner } from '@/components/consent/CookieConsentBanner'
+import { ConsentedGoogleAnalytics } from '@/components/consent/ConsentedGoogleAnalytics'
 import { getMetadataBase } from '@/lib/utils'
 import { siteMetadata } from '@/lib/seo'
 import { clientMessages, type Messages } from '@/i18n/messages'
@@ -65,14 +66,16 @@ export default async function RootLayout({
           <ThemeProvider>
             {children}
             <AppToaster />
+            {/* Asks before Google Analytics and PostHog may use cookies (lib/consent.ts). */}
+            <CookieConsentBanner />
           </ThemeProvider>
         </NextIntlClientProvider>
         {/* Measurement loads after the page has, never during it: it needs none of the first
-            paint's bandwidth or main-thread time. */}
+            paint's bandwidth or main-thread time. Both follow the visitor's cookie choice. */}
         <DeferredOnLoad>
           <PostHogProvider />
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+            <ConsentedGoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
           )}
         </DeferredOnLoad>
         {/* Vercel Web Analytics + Speed Insights. The `/next` entry points hook

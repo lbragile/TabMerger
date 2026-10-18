@@ -1,0 +1,7 @@
+{
+  "label": "Cookie consent",
+  "message": "We'd like to use analytics cookies (Google Analytics and PostHog) to understand how the site is used. They're set only if you accept, and you can change your mind at any time.",
+  "learnMore": "Cookie details",
+  "accept": "Accept",
+  "reject": "Reject"
+}

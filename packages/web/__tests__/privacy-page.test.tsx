@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import PrivacyPage from '@/app/[locale]/(marketing)/privacy/page'
 import { SUPPORT_EMAIL } from '@/lib/supportInbox'
+import { isCookieSettingsOpen, resetConsentStateForTests } from '@/lib/consent'
+import userEvent from '@testing-library/user-event'
 
 const SECTION_IDS = [
   'what-we-collect',
@@ -105,6 +107,31 @@ describe('PrivacyPage', () => {
     expect(document.getElementById('cookie-language')?.textContent).toMatch(/NEXT_LOCALE.*lasts one year/)
     expect(document.getElementById('cookie-analytics')?.textContent).toMatch(/Google Analytics sets _ga cookies/)
     expect(document.getElementById('cookie-analytics')?.textContent).toMatch(/PostHog/)
+    expect(document.getElementById('cookie-choice')?.textContent).toMatch(/tm_consent.*granted or denied.*lasts one year/)
+  })
+
+  describe('cookie consent', () => {
+    afterEach(() => resetConsentStateForTests())
+
+    it('says analytics cookies are set only after Accept, and what happens before and after Reject', () => {
+      render(<PrivacyPage />)
+      const consent = document.getElementById('cookie-consent')?.textContent ?? ''
+      expect(consent).toMatch(/banner at the bottom of the page/)
+      expect(consent).toMatch(/Google Analytics and PostHog set their cookies only after you press Accept/)
+      expect(consent).toMatch(/Rejecting also deletes analytics cookies set earlier/)
+      expect(document.getElementById('cookie-analytics')?.textContent).toMatch(/only if you accept/)
+      expect(document.getElementById('what-we-collect')?.textContent).toMatch(/if you reject, PostHog doesn.t run at all/)
+      expect(document.getElementById('cookie-choice')?.textContent).toMatch(/set only when you press Accept or Reject/)
+    })
+
+    it('explains how to change the choice, with a working Cookie settings button', async () => {
+      render(<PrivacyPage />)
+      const consent = document.getElementById('cookie-consent') as HTMLElement
+      expect(consent.textContent).toMatch(/Cookie settings at the bottom of every page/)
+      expect(isCookieSettingsOpen()).toBe(false)
+      await userEvent.click(within(consent).getByRole('button', { name: 'Cookie settings' }))
+      expect(isCookieSettingsOpen()).toBe(true)
+    })
   })
 
   it('shows the date of the latest revision', () => {

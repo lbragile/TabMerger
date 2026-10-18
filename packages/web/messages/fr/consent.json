@@ -1,0 +1,7 @@
+{
+  "label": "Consentement aux cookies",
+  "message": "Nous aimerions utiliser des cookies de mesure d’audience (Google Analytics et PostHog) pour comprendre comment le site est utilisé. Ils ne sont déposés que si vous acceptez, et vous pouvez changer d’avis à tout moment.",
+  "learnMore": "En savoir plus sur les cookies",
+  "accept": "Accepter",
+  "reject": "Refuser"
+}
