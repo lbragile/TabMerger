@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { NextIntlClientProvider } from 'next-intl'
 import type { ChangeEntry } from '@/lib/changelog'
+import de from '@/messages/de'
 
 const { getGeneratedChangelog } = vi.hoisted(() => ({ getGeneratedChangelog: vi.fn() }))
 
@@ -104,6 +106,100 @@ describe('ChangelogPage', () => {
         'href',
         'https://github.com/lbragile/TabMerger/releases/tag/v2.2.0',
       )
+    })
+  })
+
+  describe('pull request links on changes', () => {
+    it('links a change to its pull request, next to the change text', () => {
+      getGeneratedChangelog.mockReturnValue([
+        {
+          version: 'v3.3.3',
+          date: 'October 16, 2026',
+          changes: [
+            {
+              type: 'Fixed',
+              text: 'extension: Firefox Settings dropdowns',
+              prNumber: 83,
+              prUrl: 'https://github.com/lbragile/TabMerger/pull/83',
+            },
+          ],
+        },
+      ])
+      render(<ChangelogPage />)
+      const link = screen.getByRole('link', { name: 'Pull request #83 on GitHub' })
+      expect(link).toHaveAttribute('href', 'https://github.com/lbragile/TabMerger/pull/83')
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+      expect(link).toHaveTextContent('#83')
+      expect(link.closest('li')).toHaveTextContent('extension: Firefox Settings dropdowns (#83)')
+    })
+
+    // The link's name comes from the `changelog` catalog, not an English literal.
+    it("names the pull request link in the visitor's language", () => {
+      getGeneratedChangelog.mockReturnValue([
+        {
+          version: 'v3.4.0',
+          date: 'October 18, 2026',
+          changes: [
+            { type: 'New', text: 'a feature', prNumber: 1234, prUrl: 'https://github.com/lbragile/TabMerger/pull/1234' },
+          ],
+        },
+      ])
+      render(<ChangelogPage />, {
+        wrapper: ({ children }) => (
+          <NextIntlClientProvider locale="de" messages={de}>
+            {children}
+          </NextIntlClientProvider>
+        ),
+      })
+      // German number formatting would print 1.234: the PR number must stay as written.
+      const link = screen.getByRole('link', { name: 'Pull-Request #1234 auf GitHub' })
+      expect(link).toHaveAttribute('href', 'https://github.com/lbragile/TabMerger/pull/1234')
+      expect(screen.queryByRole('link', { name: /^Pull request/ })).not.toBeInTheDocument()
+    })
+
+    it('does not group the digits of a long PR number in English either', () => {
+      getGeneratedChangelog.mockReturnValue([
+        {
+          version: 'v3.4.0',
+          date: 'October 18, 2026',
+          changes: [
+            { type: 'New', text: 'a feature', prNumber: 1234, prUrl: 'https://github.com/lbragile/TabMerger/pull/1234' },
+          ],
+        },
+      ])
+      render(<ChangelogPage />)
+      expect(screen.getByRole('link', { name: 'Pull request #1234 on GitHub' })).toBeInTheDocument()
+    })
+
+    it('renders a change without a pull request as plain text', () => {
+      getGeneratedChangelog.mockReturnValue([
+        { version: 'v3.1.0', date: 'October 1, 2026', changes: [{ type: 'Fixed', text: 'an early direct commit' }] },
+      ])
+      render(<ChangelogPage />)
+      const item = screen.getByText('an early direct commit').closest('li')
+      expect(item?.querySelector('a')).toBeNull()
+      // Hand-written entries have no PR numbers either, so no change on the page is linked.
+      expect(screen.queryAllByRole('link', { name: /^Pull request/ })).toHaveLength(0)
+    })
+
+    it('links the PR and not the commit when parsing a real CHANGELOG.md section', async () => {
+      const actual = await vi.importActual<typeof import('@/lib/changelog')>('@/lib/changelog')
+      getGeneratedChangelog.mockReturnValue(
+        actual.parseChangelog(`## [3.3.3](https://github.com/lbragile/TabMerger/compare/v3.3.2...v3.3.3) (2026-10-16)
+
+### Bug Fixes
+
+* **extension:** a PR fix ([#83](https://github.com/lbragile/TabMerger/issues/83)) ([faad459](https://github.com/lbragile/TabMerger/commit/faad4591cae64aaead616b70ba15fb2fca7f1732))
+* a direct commit ([1833397](https://github.com/lbragile/TabMerger/commit/1833397abc1833397abc1833397abc1833397ab))
+`),
+      )
+      render(<ChangelogPage />)
+      const section = document.getElementById('v3-3-3')!
+      const hrefs = Array.from(section.querySelectorAll('li a')).map((a) => a.getAttribute('href'))
+      expect(hrefs).toEqual(['https://github.com/lbragile/TabMerger/pull/83'])
+      expect(screen.getByText('a direct commit')).toBeInTheDocument()
+      expect(section.textContent).not.toMatch(/faad459|1833397/)
     })
   })
 

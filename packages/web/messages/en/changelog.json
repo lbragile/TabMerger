@@ -5,6 +5,7 @@
   "lead": "Everything we shipped, newest first.",
   "githubRelease": "GitHub release",
   "githubReleaseLabel": "{version} release on GitHub",
+  "prLinkLabel": "Pull request #{number} on GitHub",
   "majorRelease": "Major release",
   "types": {
     "New": "New",

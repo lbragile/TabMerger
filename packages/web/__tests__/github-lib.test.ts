@@ -5,7 +5,18 @@ import {
   GITHUB_ISSUES_URL,
   GITHUB_DISCUSSIONS_URL,
   githubReleaseUrl,
+  githubPullRequestUrl,
 } from '@/lib/github'
+
+describe('githubPullRequestUrl', () => {
+  it('builds the pull request URL from a PR number', () => {
+    expect(githubPullRequestUrl(83)).toBe('https://github.com/lbragile/TabMerger/pull/83')
+  })
+
+  it.each([0, -1, 1.5, NaN, Infinity, 1e21])('returns undefined for %s', (n) => {
+    expect(githubPullRequestUrl(n)).toBeUndefined()
+  })
+})
 
 describe('GitHub URL constants', () => {
   it('derive every URL from the one repo slug', () => {
