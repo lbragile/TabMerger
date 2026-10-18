@@ -10,8 +10,8 @@ import { cn } from '@/lib/utils'
 import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
-import { formatListPrice } from '@/lib/tiers'
+import { useListPrice, useZeroPrice } from './priceFormat'
+import type { TierFeature } from './tierFeatures'
 
 // ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
 // and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
