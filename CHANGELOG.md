@@ -1,3 +1,12 @@
+# [3.7.0](https://github.com/lbragile/TabMerger/compare/v3.6.0...v3.7.0) (2026-10-18)
+
+
+### Features
+
+* **extension:** link the header logo to the website in the popup's language ([#89](https://github.com/lbragile/TabMerger/issues/89)) ([9b41542](https://github.com/lbragile/TabMerger/commit/9b415426c96074aaef59c988fd853b7144dd7bdb))
+* **web:** link changelog entries to their pull request ([#90](https://github.com/lbragile/TabMerger/issues/90)) ([38d6142](https://github.com/lbragile/TabMerger/commit/38d61426e633c0045fbdaf61e61d76812aa4c8ed))
+* **web:** prioritize the visitor's own browser in install CTAs ([#91](https://github.com/lbragile/TabMerger/issues/91)) ([be0292a](https://github.com/lbragile/TabMerger/commit/be0292a54044986aac85c53c6c313f592a22fe1f))
+
 # [3.6.0](https://github.com/lbragile/TabMerger/compare/v3.5.0...v3.6.0) (2026-10-18)
 
 
