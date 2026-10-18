@@ -138,22 +138,34 @@ describe('maybeSendHeartbeat', () => {
 })
 
 describe('buildHeartbeatParams', () => {
-  it('version + browser only when nothing else is stored', async () => {
-    expect(await buildHeartbeatParams(NOW)).toEqual({ version: '3.4.0', browser: 'chrome' })
+  /** Same names as the server-side extension_uninstalled event (docs/ANALYTICS.md dimensions). */
+  const BASE = { extension_version: '3.4.0', browser: 'chrome', channel: 'stable' }
+
+  it('extension_version, browser and channel only when nothing else is stored', async () => {
+    expect(await buildHeartbeatParams(NOW)).toEqual({ ...BASE })
   })
 
   it('adds the cached tier and whole days since install', async () => {
     store.set(HEARTBEAT_TIER_STORAGE_KEY, 'pro_ai')
     store.set(INSTALLED_AT_STORAGE_KEY, NOW - 3 * DAY - 5000)
-    expect(await buildHeartbeatParams(NOW)).toEqual({ version: '3.4.0', browser: 'chrome', tier: 'pro_ai', days_since_install: 3 })
+    expect(await buildHeartbeatParams(NOW)).toEqual({ ...BASE, tier: 'pro_ai', days_since_install: 3 })
   })
 
   it('ignores an unknown tier and a future or malformed install date', async () => {
     store.set(HEARTBEAT_TIER_STORAGE_KEY, 'enterprise')
     store.set(INSTALLED_AT_STORAGE_KEY, NOW + DAY)
-    expect(await buildHeartbeatParams(NOW)).toEqual({ version: '3.4.0', browser: 'chrome' })
+    expect(await buildHeartbeatParams(NOW)).toEqual({ ...BASE })
     store.set(INSTALLED_AT_STORAGE_KEY, 'x')
-    expect(await buildHeartbeatParams(NOW)).toEqual({ version: '3.4.0', browser: 'chrome' })
+    expect(await buildHeartbeatParams(NOW)).toEqual({ ...BASE })
+  })
+
+  it('never sends the old `version` param', async () => {
+    expect(await buildHeartbeatParams(NOW)).not.toHaveProperty('version')
+  })
+
+  it('reports the beta channel for a beta-mode build', async () => {
+    vi.stubEnv('MODE', 'beta')
+    expect((await buildHeartbeatParams(NOW)).channel).toBe('beta')
   })
 
   it('signed_out is a valid tier', async () => {

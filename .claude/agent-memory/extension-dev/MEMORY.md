@@ -118,3 +118,4 @@
 - [Firefox popup same-size resize](learnings_firefox_popup_same_size_resize.md) — Radix Select closed on open in Firefox popups; capture guard in SelectContent; real-popup BiDi repro
 - [Extension i18n (i18next)](learnings_i18n_i18next.md) — JSON catalogs per area, sync init order, no module-scope t(), data-dnd-grip selectors, dev-only pseudo-locale, lint + catalog guards
 - [Language picker](learnings_language_picker.md) — localStorage + chrome.storage.local (storage wins), worker localeReady, lazy shared reads, Button svg size-4
+- [GA4 param names match dimensions](learnings_ga4_param_names_match_dimensions.md) — heartbeat uses extension_version + channel like extension_uninstalled; releaseChannel.ts shared

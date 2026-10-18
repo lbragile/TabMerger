@@ -11,14 +11,15 @@ import {
 } from '@tabmerger/shared';
 import { trackEvent } from '@/lib/analytics';
 import { hasDataConsent } from '@/lib/dataConsent';
+import { releaseChannel } from '@/lib/releaseChannel';
 
 /**
  * Daily `extension_heartbeat`: proves the extension still runs in the wild and lets GA4 count
  * active installs (unique client ids sending it in 1/7/28 days). Sent from the background worker
  * at most once per {@link HEARTBEAT_INTERVAL_MS}, on a one-shot `chrome.alarms` alarm and on every
  * worker start (alarms can be missed while the browser is closed). The stored last-sent time is
- * the decision, the alarm only a trigger. No personal data: version, browser, coarse plan and
- * whole days since install.
+ * the decision, the alarm only a trigger. No personal data: version, browser, release channel,
+ * coarse plan and whole days since install.
  */
 
 export type HeartbeatOutcome = 'sent' | 'not-due' | 'no-consent' | 'disabled';
@@ -53,8 +54,11 @@ export function heartbeatBrowser(): string {
 /** The event's parameters. Only values the worker already has locally; never a network request. */
 export async function buildHeartbeatParams(now: number): Promise<Record<string, string | number>> {
   const params: Record<string, string | number> = {
-    version: chrome.runtime.getManifest().version,
+    // Same parameter names as the server-side `extension_uninstalled` event (and the GA4 custom
+    // dimensions in docs/ANALYTICS.md), so both break down by version and channel together.
+    extension_version: chrome.runtime.getManifest().version,
     browser: heartbeatBrowser(),
+    channel: releaseChannel(),
   };
   const tier = await readLocal(HEARTBEAT_TIER_STORAGE_KEY);
   if ((HEARTBEAT_TIERS as readonly unknown[]).includes(tier)) params.tier = tier as HeartbeatTier;

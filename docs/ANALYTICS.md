@@ -22,7 +22,7 @@ never reach a browser or the extension bundle.
 | `extension_installed` | Extension background → `POST /api/track` | `runtime.onInstalled`, reason `install` | `reason` |
 | `extension_updated` | Extension background → `POST /api/track` | `runtime.onInstalled`, any other reason | `reason` |
 | `extension_uninstalled` | Web server (server action on `/uninstalled`) | The uninstall page loads, once per page view | `browser`, `extension_version`, `channel`, `environment` |
-| `extension_heartbeat` | Extension background → `POST /api/track` | Once a day per install | Defined by the extension; at least `browser` and `extension_version` recommended |
+| `extension_heartbeat` | Extension background → `POST /api/track` | Once a day per install | `browser`, `extension_version`, `channel` (`stable` / `beta`), `tier` (cached plan, when known), `days_since_install` (whole days, when the install date is known) |
 | `web_heartbeat` | Vercel cron → `GET /api/cron/web-heartbeat` | Daily at 12:00 UTC (`packages/web/vercel.json`) | `environment`, `commit`, `supabase` (`ok` / `down` / `unconfigured`) |
 
 `/api/track` already accepts any GA4-valid event name, so `extension_heartbeat` needs no server
@@ -78,11 +78,15 @@ GA4 Admin, Custom definitions, Create custom dimension, scope **Event**:
 | Browser | `browser` | extension |
 | Extension version | `extension_version` | extension |
 | Channel | `channel` | extension |
+| Tier | `tier` | extension |
 | Environment | `environment` | both |
 | Commit | `commit` | web |
 | Supabase status | `supabase` | web |
 
 Dimensions only apply to events received after they are registered.
+
+Optionally, register the heartbeat's `days_since_install` as an event-scoped custom **metric**
+(Create custom metric, unit: Standard) to chart install age.
 
 ## Liveness checks
 

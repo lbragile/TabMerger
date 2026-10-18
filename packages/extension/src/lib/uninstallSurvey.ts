@@ -1,15 +1,6 @@
 import { ANALYTICS_DATA_CONSENT_CATEGORIES, buildUninstallSurveyUrl } from '@tabmerger/shared';
 import { hasDataConsent, isFirefoxBuild } from './dataConsent';
-
-/**
- * Release channel of this build. Beta store builds are `wxt zip --mode beta` (the same mode
- * `wxt.config.ts` keys the "TabMerger BETA" name and the beta store IDs off); every other
- * registering build, development included, reports `stable` (the survey only accepts `stable`
- * and `beta`).
- */
-function releaseChannel(): string {
-  return import.meta.env.MODE === 'beta' ? 'beta' : 'stable';
-}
+import { releaseChannel } from './releaseChannel';
 
 /**
  * Only the demo-video build (`VITE_DEMO_BUILD`, see .env.demo) skips the survey. Development

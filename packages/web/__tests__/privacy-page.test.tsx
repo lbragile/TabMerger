@@ -116,6 +116,7 @@ describe('PrivacyPage', () => {
     render(<PrivacyPage />)
     const text = document.body.textContent ?? ''
     expect(text).toMatch(/when it is installed or updated, about once a day while it stays installed/)
+    expect(text).toMatch(/version and browser, whether it is the regular or the beta release, and simple counts or labels/)
     expect(text).toMatch(/random install identifier/)
     expect(text).toMatch(/On Firefox, nothing is sent unless you allowed/)
   })
