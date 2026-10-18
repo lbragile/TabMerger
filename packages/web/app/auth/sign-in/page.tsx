@@ -2,6 +2,8 @@
 
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link as LocaleLink } from '@/i18n/navigation'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { safeRedirectPath } from '@/lib/utils'
@@ -28,6 +30,7 @@ export default function SignInPage() {
 }
 
 function SignInForm() {
+  const t = useTranslations('auth')
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = safeRedirectPath(searchParams.get('redirectTo'))
@@ -70,7 +73,7 @@ function SignInForm() {
 
   async function handleMagicLink() {
     if (!email) {
-      setError('Enter your email address first.')
+      setError(t('signIn.enterEmailFirst'))
       return
     }
     setError('')
@@ -96,15 +99,14 @@ function SignInForm() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-sm text-center">
           <CardHeader>
-            <CardTitle>Check your email</CardTitle>
+            <CardTitle>{t('checkEmailTitle')}</CardTitle>
             <CardDescription>
-              We sent a magic link to <strong>{email}</strong>. Click the link
-              to sign in.
+              {t.rich('signIn.magicLinkSent', { email, strong: (chunks) => <strong>{chunks}</strong> })}
             </CardDescription>
           </CardHeader>
           <CardFooter className="justify-center">
             <Button variant="ghost" onClick={() => setMagicLinkSent(false)}>
-              Use a different email
+              {t('signIn.useDifferentEmail')}
             </Button>
           </CardFooter>
         </Card>
@@ -125,11 +127,9 @@ function SignInForm() {
         </Link>
 
         <div className="w-full max-w-[380px] mx-auto my-auto py-10">
-          <h1 className="text-[30px] font-semibold tracking-tight mb-2">Welcome back</h1>
+          <h1 className="text-[30px] font-semibold tracking-tight mb-2">{t('signIn.title')}</h1>
           <p className="text-[14.5px] text-text2 mb-7">
-            {fromExtension
-              ? 'Sign in to sync your tabs across devices via the extension.'
-              : 'Sign in to sync your groups across devices.'}
+            {fromExtension ? t('signIn.leadExtension') : t('signIn.lead')}
           </p>
 
           <form onSubmit={handleEmailPassword} className="flex flex-col gap-4">
@@ -147,21 +147,21 @@ function SignInForm() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Continue with Google
+              {t('continueWithGoogle')}
             </Button>
 
             <div className="flex items-center gap-3">
               <div className="flex-1 h-px bg-border" />
-              <span className="text-xs text-text3">or</span>
+              <span className="text-xs text-text3">{t('or')}</span>
               <div className="flex-1 h-px bg-border" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={t('emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -171,12 +171,12 @@ function SignInForm() {
             </div>
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('password')}</Label>
                 <Link
                   href="/auth/forgot-password"
                   className="text-xs text-primary hover:underline"
                 >
-                  Forgot?
+                  {t('signIn.forgot')}
                 </Link>
               </div>
               <PasswordInput
@@ -193,7 +193,7 @@ function SignInForm() {
               <p className="text-sm text-destructive">{error}</p>
             )}
             <Button type="submit" className="w-full h-[46px] rounded-lg" disabled={loading} loading={loading}>
-              Continue
+              {t('continue')}
             </Button>
             <Button
               variant="outline"
@@ -203,21 +203,21 @@ function SignInForm() {
               loading={loading}
               type="button"
             >
-              Send magic link
+              {t('signIn.sendMagicLink')}
             </Button>
           </form>
 
           <p className="text-[13.5px] text-text2 mt-5">
-            No account?{' '}
+            {t('signIn.noAccount')}{' '}
             <Link href="/auth/sign-up" className="text-primary font-medium hover:underline">
-              Sign up free
+              {t('signIn.signUpFree')}
             </Link>
           </p>
         </div>
 
         <div className="text-xs text-text3 text-center">
-          Protected by industry-standard encryption.{' '}
-          <Link href="/privacy" className="text-primary hover:underline">Privacy</Link>
+          {t('protectedBy')}{' '}
+          <LocaleLink href="/privacy" className="text-primary hover:underline">{t('privacy')}</LocaleLink>
         </div>
       </div>
     </div>

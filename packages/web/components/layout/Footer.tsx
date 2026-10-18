@@ -1,10 +1,15 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import Image from "next/image";
 import { isProductionDeployment } from "@/lib/deployment";
 
 export function Footer() {
     // The beta tester guide answers 404 on the production deployment, so don't link to it there.
     const showBetaGuide = !isProductionDeployment();
+    const t = useTranslations("footer");
+    const nav = useTranslations("nav");
 
     return (
         <footer className="border-t bg-background">
@@ -21,19 +26,19 @@ export function Footer() {
                         <span className="font-bold">TabMerger</span>
                     </Link>
                     <p className="text-sm text-muted-foreground max-w-xs">
-                        Organize your tabs. Reclaim your focus.
+                        {t("tagline")}
                     </p>
                 </div>
                 <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-sm font-semibold">Product</h2>
+                        <h2 className="text-sm font-semibold">{t("product")}</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
                                 <Link
                                     href="/features"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Features
+                                    {nav("features")}
                                 </Link>
                             </li>
                             <li>
@@ -41,7 +46,7 @@ export function Footer() {
                                     href="/pricing"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Pricing
+                                    {nav("pricing")}
                                 </Link>
                             </li>
                             <li>
@@ -49,7 +54,7 @@ export function Footer() {
                                     href="/changelog"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Changelog
+                                    {nav("changelog")}
                                 </Link>
                             </li>
                             <li>
@@ -57,41 +62,41 @@ export function Footer() {
                                     href="/faq"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    FAQ
+                                    {nav("faq")}
                                 </Link>
                             </li>
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-sm font-semibold">Account</h2>
+                        <h2 className="text-sm font-semibold">{t("account")}</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
-                                <Link
+                                <NextLink
                                     href="/auth/sign-in"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Sign in
-                                </Link>
+                                    {nav("signIn")}
+                                </NextLink>
                             </li>
                             <li>
-                                <Link
+                                <NextLink
                                     href="/auth/sign-up"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Sign up
-                                </Link>
+                                    {nav("signUp")}
+                                </NextLink>
                             </li>
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-sm font-semibold">Legal</h2>
+                        <h2 className="text-sm font-semibold">{t("legal")}</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
                                 <Link
                                     href="/privacy"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Privacy Policy
+                                    {t("privacy")}
                                 </Link>
                             </li>
                             <li>
@@ -99,7 +104,7 @@ export function Footer() {
                                     href="/terms"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Terms of Service
+                                    {t("terms")}
                                 </Link>
                             </li>
                             <li>
@@ -107,20 +112,20 @@ export function Footer() {
                                     href="/contact"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Contact
+                                    {t("contact")}
                                 </Link>
                             </li>
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-sm font-semibold">Public</h2>
+                        <h2 className="text-sm font-semibold">{t("public")}</h2>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
                             <li>
                                 <Link
                                     href="/share/demo"
                                     className="hover:text-foreground transition-colors"
                                 >
-                                    Shared group demo
+                                    {t("shareDemo")}
                                 </Link>
                             </li>
                             {showBetaGuide && (
@@ -129,7 +134,7 @@ export function Footer() {
                                         href="/beta"
                                         className="hover:text-foreground transition-colors"
                                     >
-                                        Beta
+                                        {t("beta")}
                                     </Link>
                                 </li>
                             )}
@@ -139,9 +144,10 @@ export function Footer() {
             </div>
             <div className="container border-t px-6 py-6 sm:px-10 lg:px-16">
                 <p className="text-center text-sm text-muted-foreground">
-                    &copy; {new Date().getFullYear()} TabMerger. All rights
-                    reserved.
+                    {t("copyright", { year: new Date().getFullYear() })}
                 </p>
+                {/* Renders nothing while only one language is public. */}
+                <LanguageSwitcher className="mt-4" />
             </div>
         </footer>
     );

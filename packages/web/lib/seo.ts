@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { PRICING_TIERS, STORE_LISTING_URL } from '@tabmerger/shared'
+import { DEFAULT_LOCALE, OG_LOCALES, isAppLocale, languageAlternates, localizedPath, type AppLocale } from '@/i18n/locales'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { getMetadataBase } from '@/lib/utils'
 
@@ -18,64 +20,115 @@ export const SITE_NAME = 'TabMerger'
 /** Child page titles render as "<page> | TabMerger". */
 export const TITLE_TEMPLATE = `%s | ${SITE_NAME}`
 
-/** The homepage's title, and the title of pages that set none. */
-export const HOME_TITLE = `${SITE_NAME} — Organize your tabs. Reclaim your focus.`
-
-export const SITE_DESCRIPTION =
-  'TabMerger groups your open tabs into a clean, searchable panel — saving memory and mental bandwidth.'
-
 /**
  * `app/opengraph-image.png` and `app/twitter-image.png` (the same 1280×640 picture). Next adds
  * them only to pages that set no `openGraph`/`twitter` of their own, so the helper names them
- * explicitly. The alt text matches the `.alt.txt` files next to them (a test checks).
+ * explicitly. The English alt text (`metadata.socialImageAlt`) matches the `.alt.txt` files next
+ * to them (a test checks).
  */
-export const SOCIAL_IMAGE_ALT = 'TabMerger: Tab chaos in. Order out. The TabMerger popup with tabs saved into groups.'
-const OG_IMAGE = { url: '/opengraph-image.png', width: 1280, height: 640, alt: SOCIAL_IMAGE_ALT }
-const TWITTER_IMAGE = { url: '/twitter-image.png', width: 1280, height: 640, alt: SOCIAL_IMAGE_ALT }
+const SOCIAL_IMAGE = { width: 1280, height: 640 }
 
 /** For pages search engines should never list (sign-in, share links, the signed-in app). */
 export const NOINDEX: Metadata['robots'] = { index: false }
 
 interface PageMetadataInput {
-  /** The page's path ("/" for the homepage). Resolved against `metadataBase` by Next. */
+  /** The page's path ("/" for the homepage), without a locale prefix. Resolved against `metadataBase` by Next. */
   path: string
   /** The page's own title, without the brand: the template adds " | TabMerger". */
   title: string
   description: string
   /** Use `title` as the whole document title, skipping the template (the homepage). */
   absoluteTitle?: boolean
+  /**
+   * English-only pages (Privacy, Terms: the binding text is not translated). Every locale's copy
+   * points its canonical at the English URL and only English is listed as an alternate.
+   */
+  englishOnly?: boolean
+  /** Defaults to the request's locale. */
+  locale?: AppLocale
+}
+
+/** The request's locale, narrowed (a non-locale value can't reach here, but never trust it). */
+async function currentLocale(): Promise<AppLocale> {
+  const locale = await getLocale()
+  return isAppLocale(locale) ? locale : DEFAULT_LOCALE
 }
 
 /**
- * A page's `Metadata`: title, description, canonical URL, and Open Graph + Twitter cards that
- * carry the same title, description and URL as the page itself.
+ * A page's `Metadata`: title, description, canonical URL, hreflang alternates, and Open Graph +
+ * Twitter cards that carry the same title, description and URL as the page itself.
  *
  * The canonical is relative, so it resolves against `metadataBase` (`getMetadataBase()`), which is
  * the deployment's own origin. On the preview deployment that is the preview host, which is fine
  * because a Vercel preview deployment (`VERCEL_ENV === 'preview'`) answers `X-Robots-Tag: noindex`
  * (`previewNoindexHeaders()` in next.config.ts). Local development, CI and production send no such
  * header.
+ *
+ * Alternates list the public locales only (`en` today) plus `x-default`.
  */
-export function pageMetadata({ path, title, description, absoluteTitle = false }: PageMetadataInput): Metadata {
+export async function pageMetadata({
+  path,
+  title,
+  description,
+  absoluteTitle = false,
+  englishOnly = false,
+  locale: requested,
+}: PageMetadataInput): Promise<Metadata> {
+  const locale = requested ?? (await currentLocale())
+  const t = await getTranslations({ locale, namespace: 'metadata' })
+  const url = englishOnly ? path : localizedPath(locale, path)
   const fullTitle = absoluteTitle ? title : TITLE_TEMPLATE.replace('%s', title)
+  const alt = t('socialImageAlt')
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: url,
+      languages: englishOnly ? { [DEFAULT_LOCALE]: path, 'x-default': path } : languageAlternates(path),
+    },
     openGraph: {
       type: 'website',
-      locale: 'en_US',
+      locale: OG_LOCALES[locale],
       siteName: SITE_NAME,
-      url: path,
+      url,
       title: fullTitle,
       description,
-      images: [OG_IMAGE],
+      images: [{ url: '/opengraph-image.png', ...SOCIAL_IMAGE, alt }],
     },
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: [TWITTER_IMAGE],
+      images: [{ url: '/twitter-image.png', ...SOCIAL_IMAGE, alt }],
+    },
+  }
+}
+
+/**
+ * Site-wide defaults for a locale: the title template, and the cards for pages that set none of
+ * their own (the signed-in app, auth, 404). Indexable pages set theirs through `pageMetadata()`:
+ * Next replaces these objects whole, it does not merge them. No `url` here: one URL for every page
+ * is what made all pages share as the homepage.
+ */
+export async function siteMetadata(locale: AppLocale): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'metadata' })
+  const homeTitle = t('homeTitle')
+  const description = t('siteDescription')
+  return {
+    title: { default: homeTitle, template: TITLE_TEMPLATE },
+    description,
+    keywords: t('keywords').split(',').map((k) => k.trim()),
+    openGraph: {
+      type: 'website',
+      locale: OG_LOCALES[locale],
+      siteName: SITE_NAME,
+      title: homeTitle,
+      description,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: homeTitle,
+      description,
     },
   }
 }
@@ -88,7 +141,7 @@ export function pageMetadata({ path, title, description, absoluteTitle = false }
  * page wait on those requests, and a rating in structured data must match one visible on the
  * page, which a cached build-time figure would not reliably do.
  */
-export function homeJsonLd(base: URL = getMetadataBase()) {
+export function homeJsonLd(description: string, base: URL = getMetadataBase()) {
   const origin = base.origin
   const free = PRICING_TIERS.find((tier) => tier.id === 'free')
   const organizationId = `${origin}/#organization`
@@ -113,15 +166,15 @@ export function homeJsonLd(base: URL = getMetadataBase()) {
         '@id': `${origin}/#website`,
         name: SITE_NAME,
         url: `${origin}/`,
-        description: SITE_DESCRIPTION,
+        description,
         publisher: { '@id': organizationId },
       },
       {
         '@type': 'SoftwareApplication',
         name: SITE_NAME,
-        description: SITE_DESCRIPTION,
+        description,
         url: `${origin}/`,
-        image: `${origin}${OG_IMAGE.url}`,
+        image: `${origin}/opengraph-image.png`,
         applicationCategory: 'BrowserApplication',
         operatingSystem: 'Chrome, Firefox, Edge',
         offers: {

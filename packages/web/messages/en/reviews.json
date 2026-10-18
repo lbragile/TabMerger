@@ -1,0 +1,23 @@
+{
+  "heading": "What people are saying",
+  "byStore": "By store",
+  "loading": "Loading reviews",
+  "averageRating": "Average rating",
+  "averageRatingOn": "Average rating on {store}",
+  "ratingsOn": "{count, plural, one {Rating} other {Ratings}} on {store}",
+  "ratingsAcross": "Ratings across {stores}",
+  "ratingCount": "{count, plural, one {# rating} other {# ratings}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " out of 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 ratings",
+  "stars": "{score} out of 5 stars",
+  "readFull": "Read full review",
+  "readFullBy": " by {author} on {store}",
+  "carousel": "carousel",
+  "play": "Play reviews",
+  "pause": "Pause reviews",
+  "previous": "Previous review",
+  "next": "Next review",
+  "skeletonRating": "0.00 / 5"
+}

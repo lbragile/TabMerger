@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link as LocaleLink } from '@/i18n/navigation'
+import { MIN_PASSWORD_LENGTH } from '@/lib/passwordPolicy'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics'
@@ -20,6 +23,7 @@ import {
 import Image from 'next/image'
 
 export default function SignUpPage() {
+  const t = useTranslations('auth')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -44,12 +48,12 @@ export default function SignUpPage() {
     setError('')
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.')
+      setError(t('passwordsDontMatch'))
       return
     }
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters.')
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(t('passwordTooShort', { min: MIN_PASSWORD_LENGTH }))
       return
     }
 
@@ -71,7 +75,7 @@ export default function SignUpPage() {
 
     // Supabase returns a fake session with no identities when the email already exists
     if (data.user && data.user.identities?.length === 0) {
-      setError('An account with this email already exists. Please sign in instead.')
+      setError(t('signUp.emailExists'))
       setLoading(false)
       return
     }
@@ -96,17 +100,16 @@ export default function SignUpPage() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-sm text-center">
           <CardHeader>
-            <CardTitle>Verify your email</CardTitle>
+            <CardTitle>{t('signUp.verifyTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              We sent a verification link to <strong>{email}</strong>. Click the
-              link to activate your account.
+              {t.rich('signUp.verificationSent', { email, strong: (chunks) => <strong>{chunks}</strong> })}
             </p>
           </CardContent>
           <CardFooter className="justify-center">
             <Button variant="ghost" asChild>
-              <Link href="/auth/sign-in">Back to sign in</Link>
+              <Link href="/auth/sign-in">{t('backToSignIn')}</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -125,9 +128,9 @@ export default function SignUpPage() {
         </Link>
 
         <div className="w-full max-w-[380px] mx-auto my-auto py-10">
-          <h1 className="text-[30px] font-semibold tracking-tight mb-2">Create your account</h1>
+          <h1 className="text-[30px] font-semibold tracking-tight mb-2">{t('signUp.title')}</h1>
           <p className="text-[14.5px] text-text2 mb-7">
-            Free forever for {FREE_TIER_LIMITS.groups} groups. No card required.
+            {t('signUp.lead', { groups: FREE_TIER_LIMITS.groups })}
           </p>
 
           <div className="flex flex-col gap-4">
@@ -145,22 +148,22 @@ export default function SignUpPage() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Continue with Google
+              {t('continueWithGoogle')}
             </Button>
 
             <div className="flex items-center gap-3">
               <div className="flex-1 h-px bg-border" />
-              <span className="text-xs text-text3">or</span>
+              <span className="text-xs text-text3">{t('or')}</span>
               <div className="flex-1 h-px bg-border" />
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('email')}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -169,14 +172,14 @@ export default function SignUpPage() {
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('password')}</Label>
                 <PasswordInput
                   id="password"
-                  placeholder="At least 8 characters"
+                  placeholder={t('newPasswordPlaceholder', { min: MIN_PASSWORD_LENGTH })}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={8}
+                  minLength={MIN_PASSWORD_LENGTH}
                   autoComplete="new-password"
                   className="h-11 rounded-md"
                   visible={passwordVisible}
@@ -184,7 +187,7 @@ export default function SignUpPage() {
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="confirm-password">Confirm password</Label>
+                <Label htmlFor="confirm-password">{t('confirmPassword')}</Label>
                 <PasswordInput
                   id="confirm-password"
                   placeholder="••••••••"
@@ -201,22 +204,22 @@ export default function SignUpPage() {
                 <p className="text-sm text-destructive">{error}</p>
               )}
               <Button type="submit" className="w-full h-[46px] rounded-lg" disabled={loading} loading={loading}>
-                Continue
+                {t('continue')}
               </Button>
             </form>
           </div>
 
           <p className="text-[13.5px] text-text2 mt-5">
-            Already have one?{' '}
+            {t('signUp.alreadyHaveOne')}{' '}
             <Link href="/auth/sign-in" className="text-primary font-medium hover:underline">
-              Sign in
+              {t('signUp.signIn')}
             </Link>
           </p>
         </div>
 
         <div className="text-xs text-text3 text-center">
-          Protected by industry-standard encryption.{' '}
-          <Link href="/privacy" className="text-primary hover:underline">Privacy</Link>
+          {t('protectedBy')}{' '}
+          <LocaleLink href="/privacy" className="text-primary hover:underline">{t('privacy')}</LocaleLink>
         </div>
       </div>
     </div>

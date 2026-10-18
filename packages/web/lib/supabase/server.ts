@@ -20,7 +20,7 @@ export const isSupabaseConfigured = Boolean(
 // normal network error. auth-js wraps every such call in try/catch (GoTrueClient._getUser /
 // lib/fetch.ts's _handleRequest), so `auth.getUser()` degrades to `{ data: { user: null }, error }`
 // instead of throwing — every caller in this codebase already treats `!user` as signed-out (see
-// Navbar, app/(app)/layout.tsx's redirect, and the `if (!user) return ...`/401 checks in the API
+// Navbar, app/[locale]/(app)/layout.tsx's redirect, and the `if (!user) return ...`/401 checks in the API
 // routes under app/api/), so this degrades to "signed out", not an auth bypass.
 const FALLBACK_URL = 'https://supabase-not-configured.invalid'
 const FALLBACK_KEY = 'not-configured'

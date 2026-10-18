@@ -1,18 +1,20 @@
 'use client'
 
 import { Moon, Sun } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useTheme } from '@/components/theme-provider'
 import { Button } from '@/components/ui/button'
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
+  const t = useTranslations('nav')
 
   return (
     <Button
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      aria-label="Toggle theme"
+      aria-label={t('toggleTheme')}
       // h-9 and the Button's own rounded-md: the same box as the size="sm" buttons and the
       // GitHub badge it sits beside in the marketing navbar.
       className="h-9 w-9 border-border2 text-text2 hover:bg-surface2 hover:text-foreground"

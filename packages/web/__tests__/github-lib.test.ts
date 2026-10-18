@@ -5,8 +5,6 @@ import {
   GITHUB_ISSUES_URL,
   GITHUB_DISCUSSIONS_URL,
   githubReleaseUrl,
-  formatStarCount,
-  githubRepoLabel,
 } from '@/lib/github'
 
 describe('GitHub URL constants', () => {
@@ -34,35 +32,4 @@ describe('githubReleaseUrl', () => {
   })
 })
 
-describe('formatStarCount', () => {
-  it.each([
-    [0, '0'],
-    [1, '1'],
-    [187, '187'],
-    [1234, '1.2K'],
-    [12_500, '12.5K'],
-  ])('formats %i as %s', (count, text) => {
-    expect(formatStarCount(count)).toBe(text)
-  })
-})
-
-describe('githubRepoLabel', () => {
-  it('states the exact count, plural', () => {
-    expect(githubRepoLabel(187)).toBe('TabMerger on GitHub, 187 stars')
-    expect(githubRepoLabel(0)).toBe('TabMerger on GitHub, 0 stars')
-  })
-
-  it('uses the singular for exactly one star', () => {
-    expect(githubRepoLabel(1)).toBe('TabMerger on GitHub, 1 star')
-  })
-
-  it('writes the full number with a separator, not the compact form', () => {
-    expect(githubRepoLabel(1234)).toBe('TabMerger on GitHub, 1,234 stars')
-  })
-
-  it('names only the destination when there is no count', () => {
-    expect(githubRepoLabel(null)).toBe('TabMerger on GitHub')
-    expect(githubRepoLabel(undefined)).toBe('TabMerger on GitHub')
-    expect(githubRepoLabel()).toBe('TabMerger on GitHub')
-  })
-})
+// The star count's format and the link's accessible name: __tests__/i18n-infrastructure.test.tsx.

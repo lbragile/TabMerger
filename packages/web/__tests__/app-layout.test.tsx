@@ -46,7 +46,7 @@ vi.mock('@/lib/supabase/client', () => ({
   }),
 }))
 
-import AppLayout from '@/app/(app)/layout'
+import AppLayout from '@/app/[locale]/(app)/layout'
 
 describe('AppLayout', () => {
   it('renders the theme toggle button next to the account menu', async () => {
@@ -87,7 +87,7 @@ describe('AppLayout — free account', () => {
       }),
     }))
     vi.resetModules()
-    const { default: FreshAppLayout } = await import('@/app/(app)/layout')
+    const { default: FreshAppLayout } = await import('@/app/[locale]/(app)/layout')
     render(await FreshAppLayout({ children: <div>content</div> }))
     expect(screen.queryByRole('button', { name: 'Refresh sync status' })).not.toBeInTheDocument()
   })

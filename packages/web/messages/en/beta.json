@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Join & install"
+    },
+    "what-to-test": {
+      "label": "What to test"
+    },
+    "known-issues": {
+      "label": "Known issues"
+    },
+    "report-bugs": {
+      "label": "Report a bug"
+    },
+    "faq": {
+      "label": "FAQ"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Successful payment (Visa)",
+      "note": "Use this one to upgrade"
+    },
+    "1": {
+      "label": "Generic decline"
+    },
+    "2": {
+      "label": "Insufficient funds"
+    },
+    "3": {
+      "label": "Needs 3D Secure authentication"
+    }
+  },
+  "accessLabels": {
+    "free": "Free: no account needed",
+    "upgrading": "Getting Pro: test payments, no real money",
+    "some-pro": "Free and Pro: each Pro part is marked",
+    "pro": "Pro only"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Groups and tabs",
+      "items": {
+        "0": {
+          "heading": "Groups, colors, and undo/redo",
+          "checks": "That you can create, name and color a group, save tabs into it, and undo or redo a change without losing anything.",
+          "steps": {
+            "0": "Click \"Add Group\" in the sidebar and give it a name.",
+            "1": "Click the colored dot next to the group to open the color picker, pick a preset or drag to any color, then click Apply.",
+            "2": "Save a few tabs into the group (drag them in, or use the right-click menu).",
+            "3": "Delete one tab, then click the Undo button (header, top right) and then Redo."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger popup with a new group selected and its color picker open: a saturation and hue picker, 12 preset colors, a hex field, and Cancel and Apply buttons",
+              "caption": "Clicking a group's color dot opens this picker."
+            }
+          },
+          "good": {
+            "0": "The group updates instantly.",
+            "1": "Undo restores the deleted tab exactly where it was.",
+            "2": "Redo removes it again.",
+            "3": "With sync on, Undo can turn grey after a sync brings in changes from another device. That is expected, not a bug: the undo history is cleared when changes arrive from elsewhere."
+          }
+        },
+        "1": {
+          "heading": "\"Now Open\" follows your open tabs",
+          "checks": "That the permanent \"Now Open\" group always mirrors the tabs actually open in your browser.",
+          "steps": {
+            "0": "Open the popup and look at \"Now Open\" — it's always the first group in the sidebar.",
+            "1": "Open and close a few browser tabs without touching the popup.",
+            "2": "Reopen the popup and check \"Now Open\" again."
+          },
+          "examples": {
+            "0": {
+              "alt": "The popup with \"Now Open\" selected: one window listing the three tabs currently open in the browser",
+              "caption": "\"Now Open\" is always first in the sidebar and lists the tabs open right now."
+            }
+          },
+          "good": {
+            "0": "\"Now Open\" tracks your real tabs without any manual refresh.",
+            "1": "You can't delete or reorder it away from the top."
+          }
+        },
+        "2": {
+          "heading": "Saving and reopening whole windows",
+          "checks": "That a saved window keeps every tab, in order, and reopens intact.",
+          "steps": {
+            "0": "Save an entire window into a group (drag the window's drag-handle onto a group, or use its \"…\" menu).",
+            "1": "Open the group and use the window's \"…\" menu to reopen it — as a new window, and as tabs in the current window, if both options are offered."
+          },
+          "examples": {
+            "0": {
+              "alt": "A TabMerger group with four separate saved windows, each holding one tab",
+              "caption": "A group can hold several separate windows — each with its own tab count."
+            }
+          },
+          "good": {
+            "0": "All tabs reopen with the right titles and URLs, in the same order."
+          }
+        },
+        "3": {
+          "heading": "Archiving and restoring a group",
+          "checks": "That archiving hides a group without deleting it, and restoring brings it back unchanged.",
+          "steps": {
+            "0": "Right-click a saved group in the sidebar and choose Archive.",
+            "1": "Open the \"Archived\" section at the bottom of the sidebar and find it.",
+            "2": "Restore it from there."
+          },
+          "examples": {
+            "0": {
+              "alt": "The Archived section at the bottom of the TabMerger sidebar, expanded to show an archived group",
+              "caption": "The Archived section at the bottom of the sidebar, opened: \"Shopping\" is archived, with Restore and Delete buttons."
+            }
+          },
+          "good": {
+            "0": "Archived groups disappear from the active list but are never deleted.",
+            "1": "They reappear exactly as they were once restored."
+          }
+        },
+        "4": {
+          "heading": "Saving and restoring sessions",
+          "checks": "That a saved session brings your groups back exactly as they were when you saved it.",
+          "steps": {
+            "0": "Save a session — a named snapshot of your current groups (look for \"Save Session\" near the sidebar's Sessions area).",
+            "1": "Make some changes to your groups.",
+            "2": "Restore the saved session."
+          },
+          "examples": {
+            "0": {
+              "alt": "The Sessions section of the TabMerger sidebar, showing a saved session",
+              "caption": "A saved session in the Sessions section, with Restore and Delete buttons, and the \"Session saved\" notification."
+            }
+          },
+          "good": {
+            "0": "Restoring brings the groups back exactly as they were when you saved the session."
+          }
+        },
+        "5": {
+          "heading": "Search",
+          "checks": "That search finds tabs by title or URL across all your groups, and that the group:, window: and tag: filters narrow it down.",
+          "steps": {
+            "0": "Press Ctrl+K (Cmd+K on Mac) to open search.",
+            "1": "Type a plain substring, like \"hub\", with a \"GitHub\" tab saved somewhere — it matches title or URL, case-insensitive.",
+            "2": "Clear that and try a prefix instead: type \"group:\" and pick one of your groups from the picker that appears, or type e.g. \"window:\" or \"tag:\" the same way.",
+            "3": "Click one of the results."
+          },
+          "examples": {
+            "0": {
+              "alt": "The TabMerger search overlay with \"hub\" typed, showing a matching GitHub tab result",
+              "caption": "Typing \"hub\" — a plain substring match against tab title or URL."
+            }
+          },
+          "good": {
+            "0": "Results update as you type.",
+            "1": "A plain search matches any tab whose title or URL contains that substring anywhere (not letters-in-order).",
+            "2": "A \"group:\", \"window:\" or \"tag:\" prefix scopes the search and offers a picker for that prefix.",
+            "3": "Clicking any result closes search and jumps you straight to that result's group (and window, for a window result)."
+          }
+        },
+        "6": {
+          "heading": "Stale tabs",
+          "checks": "That tabs you haven't opened for a while get flagged, and can be reviewed and removed safely.",
+          "steps": {
+            "0": "Open Settings and set the stale-tab threshold (e.g. 30 days).",
+            "1": "Wait for (or seed) at least 5 tabs older than that threshold.",
+            "2": "Look for the amber banner above the tab list and try both of its buttons: Review, then Remove stale."
+          },
+          "examples": {
+            "0": {
+              "alt": "The amber stale-tab banner above the tab list, with Review and Remove stale buttons",
+              "caption": "The stale-tab banner and its Review / Remove stale buttons."
+            }
+          },
+          "good": {
+            "0": "Review shows exactly which tabs are stale.",
+            "1": "Remove stale asks for confirmation before deleting anything (if \"confirm before delete\" is on in Settings)."
+          },
+          "report": "A group you deleted or archived reappears on its own — that's the \"resurrection\" bug we're specifically hunting."
+        },
+        "7": {
+          "heading": "Setting up tab reminders",
+          "checks": "That you can set, change and clear a reminder on a saved tab, and that it notifies you at the time you chose.",
+          "steps": {
+            "0": "Right-click a saved tab and choose \"Remind me…\". Reminders are per tab; there's no Settings control for them.",
+            "1": "In the editor that opens under the tab, click a preset (30 min, 1 hour, 3 hours or Tomorrow) to set it straight away.",
+            "2": "Open it again (\"Edit reminder\" in the right-click menu, or click the tab's clock icon). This time pick a date and time a couple of minutes out, type a short note, and click Set.",
+            "3": "Hover the clock icon, then wait for the reminder to fire and click its notification.",
+            "4": "Set another one, then right-click the tab and choose \"Clear reminder\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "A saved tab's \"Remind me in…\" editor: 30 min, 1 hour, 3 hours and Tomorrow buttons, a date and time field, an optional note, and Cancel and Set",
+              "caption": "Right-click a saved tab → \"Remind me…\" opens this editor under the tab."
+            },
+            "1": {
+              "alt": "The same window after setting a reminder: a clock icon at the end of the Q3 Planning tab's row",
+              "caption": "Once set, the tab shows a clock icon."
+            }
+          },
+          "good": {
+            "0": "The tab shows a clock icon once a reminder is set, and hovering it shows the time (and your note).",
+            "1": "The right-click menu now offers \"Edit reminder\" and \"Clear reminder\" for it.",
+            "2": "Set is ignored for a time in the past; only a future time sets the reminder.",
+            "3": "A \"TabMerger Reminder\" notification with the tab's title (and your note) appears at roughly the time you set, and stays until you act on it.",
+            "4": "Clicking the notification opens the tab.",
+            "5": "Clear reminder removes the clock icon, and no notification appears later."
+          },
+          "report": "A reminder never fires, fires twice, or still fires after you cleared it."
+        },
+        "8": {
+          "heading": "Notes on groups, windows and tabs",
+          "checks": "That you can attach a short note to a group, a window or a tab, and edit it later.",
+          "steps": {
+            "0": "Group: right-click a group in the sidebar (or use the ⋯ button above its windows) and choose \"Add note\". Type something and click Save.",
+            "1": "Window: right-click a window's header (or use its ⋯ button) and choose \"Add note\". This time save with Ctrl+Enter (Cmd+Enter on Mac).",
+            "2": "Tab: right-click a saved tab and choose \"Add note\". Type something, then click somewhere else instead of Save.",
+            "3": "Click a note icon to reopen the note, change it, and press Escape.",
+            "4": "Close and reopen the popup."
+          },
+          "good": {
+            "0": "Each saved note shows a small note icon: next to the group's window count, in the window's header, and on the tab's row. The menu item now says \"Edit note\".",
+            "1": "Save, Ctrl/Cmd+Enter and clicking away all save the note; Escape and Cancel close it without saving.",
+            "2": "Notes are limited to 500 characters, with a counter under the box.",
+            "3": "Notes are still there after reopening the popup (and, with sync on, on your other devices)."
+          },
+          "report": "A note is lost, attached to the wrong item, or saved when you pressed Escape or Cancel."
+        },
+        "9": {
+          "heading": "Deleting, with and without \"Confirm before deleting\"",
+          "checks": "That deletions ask first only when \"Confirm before deleting\" is on, and that Undo brings back what you deleted.",
+          "steps": {
+            "0": "In Settings → General, make sure \"Confirm before deleting\" is off (it's off by default) and save.",
+            "1": "Remove a tab (its ✕, or right-click → Remove tab), remove a window (its ⋯ → Remove window), and delete a group (right-click it → Delete group). After each one, click Undo (top right).",
+            "2": "Turn \"Confirm before deleting\" on, save, and repeat the three deletions. Cancel the first dialog you get, then confirm the next.",
+            "3": "With it on, also try deleting several selected groups from the selection bar, and \"Remove stale\" on a group with stale tabs."
+          },
+          "good": {
+            "0": "With the setting off, windows and groups are removed straight away, with no dialog.",
+            "1": "With it on, removing a window, deleting a group, deleting a selection and \"Remove stale\" each ask first, and Cancel leaves everything as it was.",
+            "2": "Removing a single tab never asks, with the setting on or off. Undo brings it back.",
+            "3": "Undo restores whatever you just deleted: the tab, window or group, in the same place, with its tabs."
+          },
+          "report": "Something is deleted without asking while the setting is on (other than a single tab), a dialog appears while it's off, or Undo doesn't bring the item back exactly."
+        },
+        "10": {
+          "heading": "The group menu",
+          "checks": "That every action in a group's menu does what its label says.",
+          "steps": {
+            "0": "Right-click a saved group in the sidebar to open its full menu. The ⋯ button above a group's windows opens a shorter version of it.",
+            "1": "Try Rename, Add note and Duplicate.",
+            "2": "Try Replace with current (swaps the group's windows for your open browser windows) and Merge with current (adds your open windows to the group). Undo after each.",
+            "3": "Try Open all in new window, Unite windows, Split windows, Sort by title, Sort by URL and Deduplicate tabs.",
+            "4": "Try Archive group, then Restore group from the Archived section.",
+            "5": "Right-click \"Now Open\" too: it has no Rename, Replace, Merge, Archive or Delete."
+          },
+          "good": {
+            "0": "Each action does what its description says, on that group only.",
+            "1": "Duplicate makes a copy with all its tabs; Unite leaves one window holding every tab, and Split gives each tab its own window.",
+            "2": "Sort by title / URL orders every tab alphabetically, and Deduplicate removes tabs with the same URL.",
+            "3": "Changes can be undone with Undo."
+          },
+          "report": "An action affects the wrong group, loses tabs, or can't be undone."
+        },
+        "11": {
+          "heading": "The window menus",
+          "checks": "That both of a window's menus work: right-clicking its header, and its ⋯ button.",
+          "steps": {
+            "0": "Right-click a window's header: try \"Move to group\" (pick another group, or create a new one from the list), Add note and Rename window.",
+            "1": "Open the window's ⋯ button: try Rename, Mark incognito (then Remove incognito), Open in browser, and Sort this window by title / by URL.",
+            "2": "Right-click a window in \"Now Open\": the first item reads \"Copy to group\", and removing it reads \"Close window\"."
+          },
+          "good": {
+            "0": "Move to group moves the whole window, with its tabs, into the chosen group; a new group created from the menu gets the window.",
+            "1": "Mark incognito adds an \"Incognito\" label to the window, and Remove incognito takes it away.",
+            "2": "Open in browser opens the window's tabs in a new browser window; if some of them are already open, only the missing ones are added to that window.",
+            "3": "Sorting only reorders that window's tabs.",
+            "4": "From \"Now Open\", Copy to group saves a copy and leaves your real window open."
+          },
+          "report": "A menu action changes a different window, or Close window in \"Now Open\" closes the wrong browser window."
+        },
+        "12": {
+          "heading": "The tab menu",
+          "checks": "That right-clicking a tab offers the right actions for it.",
+          "steps": {
+            "0": "Right-click a saved tab: try \"Move to group\", Rename tab, then \"Reset to original title\".",
+            "1": "Right-click a tab in \"Now Open\": \"Copy to group\" replaces \"Move to group\", and removing it reads \"Close tab\".",
+            "2": "If you have a URL rule that matches an open tab, right-click that tab in \"Now Open\" and look for \"Auto-save to …\"."
+          },
+          "good": {
+            "0": "Move to group moves the tab into the chosen group; Copy to group (from \"Now Open\") saves a copy and leaves the real tab open.",
+            "1": "Rename tab shows your title with a small \"renamed\" tag, and Reset to original title brings back the page's own title.",
+            "2": "\"Auto-save to '<'group'>'\" appears only for a tab whose address matches one of your URL rules, and saves it to that rule's group."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Right-click menu",
+      "items": {
+        "0": {
+          "heading": "Saving from the right-click menu",
+          "checks": "That right-clicking any web page lets you save the tab to TabMerger, or straight into a chosen group.",
+          "steps": {
+            "0": "On any webpage, right-click and open \"Save to TabMerger\".",
+            "1": "Try \"Save this tab\" first, then try saving to a specific existing group."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustration of the right-click menu on a web page: \"Save to TabMerger\" opens Save this tab, Save tabs to the left, Save tabs to the right and Save all other tabs; \"Save this tab\" lists the groups Work (1w · 5t), Research (1w · 4t), Shopping (1w · 3t) and Reading List (1w · 5t), each with its color",
+              "caption": "Illustration (the browser draws this menu itself, so it can't be screenshotted): each of the four \"Save…\" options lists your groups with their color, window count and tab count."
+            }
+          },
+          "good": {
+            "0": "The context menu lists your real groups by name.",
+            "1": "The tab appears in the chosen group right away."
+          }
+        },
+        "1": {
+          "heading": "New groups appear in the right-click menu",
+          "checks": "That the right-click menu picks up new groups without restarting the browser.",
+          "steps": {
+            "0": "Create a brand-new group from the popup.",
+            "1": "Without reopening the browser, right-click any page and check \"Save to TabMerger\" again."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustration of the same right-click menu with a fifth group, \"Trip planning (0w · 0t)\", at the end of the group list",
+              "caption": "Illustration: a new, still-empty group (\"Trip planning\") appears at the end of the list."
+            }
+          },
+          "good": {
+            "0": "The new group shows up in the context menu without needing a restart."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Upgrading to Pro (test payments)",
+      "intro": "Billing is part of this beta, but only with Stripe's test cards — no real card will work and no real money changes hands. Pro AI and AI credit packs are still \"coming soon\" and are not purchasable, so this is Pro (unlimited groups/tabs + sync) only.",
+      "items": {
+        "0": {
+          "heading": "Test card warning",
+          "checks": "That you only ever use Stripe's test cards: nothing in this beta charges real money.",
+          "steps": {
+            "0": "Read this before starting checkout — the card details you need are below."
+          },
+          "good": {
+            "0": "You never type a real card number into this flow."
+          }
+        },
+        "1": {
+          "heading": "Upgrading from the extension",
+          "checks": "That upgrading from inside the extension works end to end, and the extension then shows Pro.",
+          "steps": {
+            "0": "Open the extension popup and use any \"Upgrade to Pro\" entry point — the header's upgrade button, the nag banner that appears as you approach the free limit, or an upgrade prompt shown when you hit a free-tier limit.",
+            "1": "This opens the beta web app's pricing page (preview.tabmerger.com/pricing) in a new browser tab. Sign in there with the same account you use in the extension.",
+            "2": "Choose the Pro plan, monthly or yearly, and continue to Stripe Checkout.",
+            "3": "Complete checkout with the test card above (or a decline/3D-Secure card, if you're testing that path), then return to the app."
+          },
+          "good": {
+            "0": "Checkout completes and you land back in the web app with Pro shown.",
+            "1": "The extension's popup polls for your plan roughly every 30 seconds, so it should pick up Pro on its own shortly — reopening the popup also forces a fresh check if you don't want to wait."
+          },
+          "report": "The extension still shows free-tier limits ({FREE_TIER_LIMITS_groups} groups / {FREE_TIER_LIMITS_tabs} tabs / {FREE_TIER_LIMITS_urlRules} URL rules) more than a couple of minutes after a successful checkout and a popup reopen."
+        },
+        "2": {
+          "heading": "Upgrading from the web account page",
+          "checks": "That upgrading from the website's account page works, and the website and extension agree on your plan.",
+          "steps": {
+            "0": "Instead of going through the extension, sign in directly at preview.tabmerger.com and open Account settings.",
+            "1": "Under \"Subscription,\" click \"Upgrade\" and complete checkout with the test card."
+          },
+          "examples": {
+            "0": {
+              "alt": "Account settings on a free account: the Subscription card shows Current plan Free with an Upgrade button",
+              "caption": "Before upgrading: Free, with an Upgrade button. Afterwards it shows Pro and \"Manage billing\" (see \"Account page\" below)."
+            }
+          },
+          "good": {
+            "0": "The Subscription card on the account page now shows Pro, with a \"Manage billing\" button in place of \"Upgrade.\"",
+            "1": "The extension picks up the same Pro status (see the polling note above) — the web account page and the extension should never disagree about your plan."
+          },
+          "report": "The web account page and the extension popup show different plans (one says Pro, the other still says Free) more than a couple of minutes apart."
+        },
+        "3": {
+          "heading": "Paying in your local currency",
+          "checks": "That checkout shows, and charges, the price in your own currency.",
+          "steps": {
+            "0": "Prices on the site are in US dollars (the pricing page says so under the plans; the account page, dashboard and extension Settings write them as \"US$\"). Outside the US, checkout offers your local currency.",
+            "1": "Start a checkout from your real location, or simulate another country: sign up a NEW account with your email plus \"+location_\" and a two-letter country code, e.g. yourname+location_FR@gmail.com for France (Gmail delivers \"+anything\" addresses to your normal inbox). A VPN in another country works too.",
+            "2": "Look at the price on Stripe's checkout page, then complete it with the test card in that currency."
+          },
+          "examples": {
+            "0": {
+              "alt": "Stripe checkout for TabMerger Pro showing €3.66 per month, with EUR selected and a USD alternative, and the line \"1 USD = 0.9171 EUR. Charges will vary based on exchange rates.\"",
+              "caption": "Checkout for a France (+location_FR) address: euros by default, US dollars one click away. Exchange rates change, so your amount will differ."
+            }
+          },
+          "good": {
+            "0": "Checkout shows the price in your local currency (for example €3.66 in France or CA$5.89 in Canada for the US$3.99 plan), with a switch to pay in US dollars instead and a line showing the exchange rate and its conversion fee. In the US it simply shows US$3.99.",
+            "1": "After paying, the plan works exactly as with US dollars."
+          },
+          "report": "Outside the US, checkout offers only US dollars, the amount charged differs from what checkout showed, or paying in a local currency doesn't give you Pro."
+        },
+        "4": {
+          "heading": "Switching between monthly and yearly",
+          "checks": "That a Pro subscription can move between monthly and yearly billing, and is charged correctly for it.",
+          "steps": {
+            "0": "With an active Pro subscription, open the pricing page. Your plan's card is marked Current and has a \"Switch to yearly billing\" button (or \"Switch to monthly billing\" if you pay yearly): the button names the billing you would switch to.",
+            "1": "Monthly → yearly: click the switch button and confirm on Stripe's page.",
+            "2": "Yearly → monthly: do the same, then try the button a second time.",
+            "3": "Also open \"Manage billing\" on the account page: its \"Update subscription\" option shows the same monthly/yearly choice."
+          },
+          "examples": {
+            "0": {
+              "alt": "The pricing page while on Pro monthly: the Pro card is marked Current and has a \"Switch to yearly billing\" button",
+              "caption": "On the pricing page, your plan's card is marked Current and has the switch button."
+            },
+            "1": {
+              "alt": "Stripe's \"Update your subscription\" page with Monthly and Yearly tabs, showing the current TabMerger Pro plan at {proMonthly} per month",
+              "caption": "The same choice in Manage billing → Update subscription (Stripe's page)."
+            }
+          },
+          "good": {
+            "0": "Monthly → yearly applies straight away: Stripe shows and charges the yearly price minus what's left of your month.",
+            "1": "After switching to yearly, the account page shows the yearly price ({proYearly}/yr) within about a minute.",
+            "2": "Yearly → monthly waits for the end of your paid year, so nothing is charged now.",
+            "3": "Pressing the button again explains that a change is already scheduled.",
+            "4": "Only Pro monthly and yearly are offered, never a different plan."
+          },
+          "report": "A switch charges the wrong amount, the account page still shows the old billing period more than a couple of minutes later, yearly → monthly charges you immediately, or you're offered a plan other than Pro."
+        },
+        "5": {
+          "heading": "Cancelling",
+          "checks": "That cancelling keeps Pro until the end of the period you paid for, then returns you to Free.",
+          "steps": {
+            "0": "On the account page, with an active Pro subscription, click \"Manage billing\" to open Stripe's billing portal.",
+            "1": "Cancel the subscription from there and return to TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "Stripe's \"Cancel your subscription\" dialog for TabMerger Pro at {proMonthly} per month, with an optional reason and Go back and Continue to cancellation buttons",
+              "caption": "Stripe asks for an optional reason before cancelling."
+            }
+          },
+          "good": {
+            "0": "You keep Pro access until the end of the current billing period — cancelling doesn't immediately drop you to Free.",
+            "1": "After that period ends, the account page and extension should both show Free again."
+          },
+          "report": "Cancelling drops you to Free immediately instead of at period end, or the plan never reverts to Free after the period actually ends."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Drag and drop",
+      "intro": "This area covers every drag interaction in the popup — sorting, moving between windows and groups, multi-item drags, the two \"drop for a new...\" zones, cancelling, keyboard-only dragging, and whether the result sticks. Work through as many of these as you can; this is the single area we're most focused on for this beta.",
+      "items": {
+        "0": {
+          "heading": "Sorting: tabs within a window",
+          "checks": "That dragging a tab reorders it within its window, landing exactly where you drop it.",
+          "steps": {
+            "0": "Drag a tab down within the same window to move it later in the list, then drag it back up to its original spot.",
+            "1": "Drag a tab all the way to the first position in the window, then all the way to the last."
+          },
+          "examples": {
+            "0": {
+              "alt": "A tab being dragged within its window card: the dragged row floats with a highlighted border above the gap where it will land",
+              "caption": "Mid-drag: the tab floats and the others make room where it will drop."
+            }
+          },
+          "good": {
+            "0": "The tab lands exactly where you dropped it, and the rest of the list shifts to make room.",
+            "1": "No other tab moves or duplicates."
+          }
+        },
+        "1": {
+          "heading": "Sorting: windows within a group",
+          "checks": "That window cards can be reordered inside a group.",
+          "steps": {
+            "0": "In a group with two or more saved windows, drag a window card above or below another one."
+          },
+          "examples": {
+            "0": {
+              "alt": "A window card being dragged between two other window cards in a group with four windows",
+              "caption": "Dragging a whole window card by its handle to reorder it within the group."
+            }
+          },
+          "good": {
+            "0": "The window cards swap order and the new order is what you see immediately — no flicker back to the old order."
+          }
+        },
+        "2": {
+          "heading": "Sorting: groups in the sidebar",
+          "checks": "That groups reorder freely in the sidebar while \"Now Open\" stays first.",
+          "steps": {
+            "0": "Drag a group in the sidebar up or down to reorder it above or below another group.",
+            "1": "Try dragging a group above \"Now Open\" (the first row in the sidebar)."
+          },
+          "examples": {
+            "0": {
+              "alt": "A group row being dragged to a new position in the TabMerger sidebar",
+              "caption": "Reordering a group in the sidebar."
+            }
+          },
+          "good": {
+            "0": "\"Now Open\" always stays pinned as the first row — you cannot drop a group above it, drag it, delete it, or reorder it away from the top.",
+            "1": "Every other group reorders freely."
+          },
+          "report": "Anything lands above \"Now Open\", or \"Now Open\" itself becomes draggable."
+        },
+        "3": {
+          "heading": "Cross-window: moving a tab between window cards",
+          "checks": "That a tab can move from one window card to another, at the exact spot you drop it.",
+          "steps": {
+            "0": "Inside a group with several windows, drag a tab from one window card onto another window card.",
+            "1": "This time, drop it between two existing tabs in the destination window rather than at the top or bottom."
+          },
+          "examples": {
+            "0": {
+              "alt": "A tab being dragged from one saved window to another inside the same TabMerger group",
+              "caption": "Dropping a tab onto another window inside the same group."
+            }
+          },
+          "good": {
+            "0": "The tab lands exactly at the position you dropped it (not just appended to the end).",
+            "1": "Both windows' tab counts update immediately."
+          }
+        },
+        "4": {
+          "heading": "Cross-group: dropping a tab onto a sidebar group",
+          "checks": "That dropping a tab on a group in the sidebar moves it into that group without opening the group first.",
+          "steps": {
+            "0": "Drag a tab out of the main panel and drop it directly onto a group in the sidebar — try this on a group that's currently open (active) and one that isn't.",
+            "1": "Try it once more, but pause with the tab held over a different (non-active) sidebar group for about a second before releasing."
+          },
+          "examples": {
+            "0": {
+              "alt": "A single tab being dragged onto a group row in the TabMerger sidebar",
+              "caption": "Dropping a tab directly onto a sidebar group."
+            }
+          },
+          "good": {
+            "0": "The tab is added to that group as a new window without needing to open the group first.",
+            "1": "If you paused over a non-active group, it should open (\"spring open\") after about half a second so you can see it land — and land correctly, not on the wrong window."
+          },
+          "report": "The group springs open but the tab lands in the wrong window, or on top of an existing tab instead of as its own new window."
+        },
+        "5": {
+          "heading": "Cross-group: dragging a whole window into another group",
+          "checks": "That a whole window, with all its tabs, can move into another group.",
+          "steps": {
+            "0": "Drag an entire window card (using its own drag handle, not a single tab inside it) onto a different group in the sidebar."
+          },
+          "examples": {
+            "0": {
+              "alt": "A window card dragged onto the sidebar, over the Shopping group, which is highlighted and opened in the main panel",
+              "caption": "Dragging a window onto a sidebar group. The group under the pointer gets a colored edge and opens behind the card."
+            }
+          },
+          "good": {
+            "0": "The whole window — with all its tabs — becomes a new window in the destination group.",
+            "1": "This works even if it's the last window left in the source group."
+          },
+          "report": "The source group or its emptied window disappears instead of staying (an empty window/group should stick around, not vanish)."
+        },
+        "6": {
+          "heading": "Multi-item: selecting and dragging several tabs",
+          "checks": "That several selected tabs drag together as one block, keeping their order.",
+          "steps": {
+            "0": "Ctrl-click (Cmd-click on Mac) two or three non-adjacent tabs to select them.",
+            "1": "Shift-click to select a contiguous range of tabs instead.",
+            "2": "With several tabs selected, drag them together to a new position in the same window."
+          },
+          "examples": {
+            "0": {
+              "alt": "Several tabs selected together in the TabMerger popup, shown with checkboxes",
+              "caption": "Two tabs checked in selection mode; the bar at the bottom counts them."
+            }
+          },
+          "good": {
+            "0": "All selected tabs move together as one block, keeping their relative order — the block lands at the gap, not scattered or in click order."
+          }
+        },
+        "7": {
+          "heading": "Multi-item: dragging a selection across windows and groups",
+          "checks": "That a multi-tab selection keeps its order when dragged into another window or group.",
+          "steps": {
+            "0": "Select several tabs again, then drag them across to a different window in the same group.",
+            "1": "Repeat once more, but drag the selection onto a different group in the sidebar this time."
+          },
+          "examples": {
+            "0": {
+              "alt": "A multi-tab selection mid-drag in the TabMerger popup",
+              "caption": "Dragging a multi-tab selection."
+            }
+          },
+          "good": {
+            "0": "The whole selection moves together in both cases, landing in the same relative order it started in."
+          }
+        },
+        "8": {
+          "heading": "Multi-item: select all and multi-group drag",
+          "checks": "That select-all works within a window, and that several selected groups can be dragged together.",
+          "steps": {
+            "0": "Focus a window's tab list and press Ctrl+A (Cmd+A on Mac) to select every tab in that window, if your window has more than one tab.",
+            "1": "In the sidebar, Ctrl-click two or three groups to select them, then drag that selection by one of their grips to reorder them together."
+          },
+          "examples": {
+            "0": {
+              "alt": "Selection mode with three groups selected; dragging one of them carries the others along, with a count badge on the dragged row and \"3 groups selected\" in the bottom bar",
+              "caption": "Three selected groups dragged together in the sidebar. The bar at the bottom counts the selection."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A selects every tab in the focused window (skipping any that are hidden by a search filter).",
+            "1": "The multi-group drag moves the selected groups together as one block.",
+            "2": "The block never lands above \"Now Open\"."
+          }
+        },
+        "9": {
+          "heading": "Drop zones: \"Drop here for a new window\" and \"Drop for a new group\"",
+          "checks": "That dropping on these zones creates a new window or a new group from what you dragged.",
+          "steps": {
+            "0": "Drag a tab (or a selection of tabs) toward the bottom of a group's window list, where the \"Drop here for a new window\" zone appears, and drop there.",
+            "1": "Drag a tab toward the bottom of the sidebar, where the \"Drop for a new group\" zone appears, and drop there."
+          },
+          "examples": {
+            "0": {
+              "alt": "A tab dragged over the highlighted \"Drop here for a new window\" zone under the window list, with the \"Drop for a new group\" zone visible in the sidebar",
+              "caption": "While you drag, both drop zones appear. The one under the pointer is highlighted."
+            }
+          },
+          "good": {
+            "0": "Each drop creates a brand-new window or group holding exactly the dragged item(s), in their original relative order."
+          },
+          "report": "The \"Drop for a new group\" zone still appears once you're already at your plan's group limit — it should disappear instead of accepting a drop it can't fulfill."
+        },
+        "10": {
+          "heading": "From \"Now Open\": dragging a live tab into a saved group",
+          "checks": "That dragging an open tab from \"Now Open\" moves it into a saved group and closes the real tab.",
+          "steps": {
+            "0": "Drag a tab from the \"Now Open\" section into one of your saved groups.",
+            "1": "Check your actual open browser tabs after the drop."
+          },
+          "examples": {
+            "0": {
+              "alt": "A tab from \"Now Open\" being dragged onto the Work group in the sidebar",
+              "caption": "An open tab from \"Now Open\" dragged onto a saved group in the sidebar."
+            }
+          },
+          "good": {
+            "0": "This MOVES the tab, not copies it: the saved group gets a new window containing a snapshot of that tab.",
+            "1": "The real browser tab closes. If the tab you dragged was the active tab, it closes once you close the popup rather than immediately — that's intentional, not a bug."
+          },
+          "report": "The real tab stays open after the drop (making it look like a copy), or the popup itself closes/crashes mid-drag."
+        },
+        "11": {
+          "heading": "Cancel and edge cases",
+          "checks": "That cancelled or pointless drags change nothing, and that undo reverses a real drag.",
+          "steps": {
+            "0": "Start dragging a tab, then press Escape before dropping it.",
+            "1": "Start a drag and release it somewhere that isn't a valid target (e.g. outside the popup window, if you can manage it) or drop it back in the exact spot it started.",
+            "2": "After any successful drag, click the Undo button (header, top right)."
+          },
+          "examples": {
+            "0": {
+              "alt": "The TabMerger header with the Undo and Redo buttons enabled after a change",
+              "caption": "The Undo/Redo buttons in the header, enabled after a change."
+            }
+          },
+          "good": {
+            "0": "Escape and an invalid/no-op drop leave everything exactly as it was — no duplicate tabs, no missing tabs, no reordering.",
+            "1": "Undo after a real drag restores the previous order exactly."
+          },
+          "report": "A tab is duplicated or goes missing after a cancelled or same-spot drag, or Undo doesn't fully restore the pre-drag order."
+        },
+        "12": {
+          "heading": "Keyboard drag",
+          "checks": "That everything you can drag with a mouse can also be moved with the keyboard, with spoken announcements.",
+          "steps": {
+            "0": "Press Tab until a saved tab, a window heading, or a group in the sidebar is focused. Each row is one Tab stop.",
+            "1": "To move several at once, press Ctrl+Space (Ctrl on a Mac too) on each one to select it, then focus any of the selected rows.",
+            "2": "Press Space to pick it up. You hear \"Picked up …\", the row leaves its spot, and a copy of it shows where it will land.",
+            "3": "Press Up or Down to move it. A tab moves through every window of the group, then onto \"Drop here for a new window\", then wraps around to the top.",
+            "4": "Press Left to go to the group list. Up and Down pick a group (the last stop is \"New group\"), and the main panel shows each group as you pass it.",
+            "5": "Press Right to enter the highlighted group, then use Up and Down to place the item inside it.",
+            "6": "Press Space to drop, or Escape to cancel."
+          },
+          "good": {
+            "0": "Space picks the item up instead of opening the link.",
+            "1": "Ctrl+Space selects or deselects a row without opening it or picking it up.",
+            "2": "Enter still opens a tab, and does nothing while you're moving something.",
+            "3": "The copy of what you're moving is always on screen, and the panel scrolls to follow it.",
+            "4": "Up and Down wrap around at the ends, and you hear \"Wrapped to top\" or \"Wrapped to bottom\".",
+            "5": "An empty window is a place of its own.",
+            "6": "The item ends up exactly where the copy was, and you hear what happened.",
+            "7": "Several selected items move together as one block, in their original order.",
+            "8": "Space in the group list drops the item at the end of the highlighted group.",
+            "9": "On \"New group\" the main panel fades, and dropping there makes a brand-new group.",
+            "10": "A group moved with Up and Down can never go above \"Now Open\".",
+            "11": "Moving a live \"Now Open\" tab into a group closes that browser tab, as a mouse drop does.",
+            "12": "Escape leaves everything untouched and shows the group you started in again.",
+            "13": "After a drop, focus is on the moved row; after Escape, it's back on the row you picked up."
+          }
+        },
+        "13": {
+          "heading": "Persistence",
+          "checks": "That a new order is saved: it survives reopening the popup and reaches your other devices.",
+          "pro": "Only the second-device part needs Pro (it needs sync).",
+          "steps": {
+            "0": "After reordering tabs, windows, or groups by drag, close the popup entirely and reopen it.",
+            "1": "If you have sync enabled and a second device signed in to the same account, check the order there too."
+          },
+          "good": {
+            "0": "The new order is exactly as you left it after reopening the popup.",
+            "1": "With sync on, the second device picks up the same order within a short time."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "Web app and dashboard (preview site)",
+      "intro": "Everything here is at preview.tabmerger.com, not the main tabmerger.com — this beta build syncs with the preview site only.",
+      "items": {
+        "0": {
+          "heading": "Signing up and signing in",
+          "checks": "That every way of signing in to the website works: Google, email and password, and a magic link.",
+          "steps": {
+            "0": "From a signed-out state, open preview.tabmerger.com/auth/sign-in.",
+            "1": "Try \"Continue with Google\".",
+            "2": "Try email + password instead: enter your email and password, then click \"Continue\".",
+            "3": "Try \"Send magic link\" instead, using just your email."
+          },
+          "examples": {
+            "0": {
+              "alt": "The website's \"Welcome back\" sign-in page: Continue with Google, Email and Password fields with a Forgot? link, Continue, and Send magic link",
+              "caption": "The website's sign-in page: Google, email and password, or a magic link."
+            }
+          },
+          "good": {
+            "0": "All three ways sign you in.",
+            "1": "The magic link and Google both redirect back into the app already signed in.",
+            "2": "New accounts land wherever \"Sign up free\" takes them (email + password or Google, same options)."
+          }
+        },
+        "1": {
+          "heading": "Creating an account with email and password",
+          "checks": "That a new email-and-password account ends up signed in, whether or not the site asks you to verify your email.",
+          "steps": {
+            "0": "Signed out, click \"Sign up free\" and create an account with an email and a password (8+ characters)."
+          },
+          "examples": {
+            "0": {
+              "alt": "The \"Create your account\" page: Continue with Google, then Email, Password (at least 8 characters) and Confirm password fields, and a Continue button",
+              "caption": "The sign-up page. Google works here too; this item is about the email and password route."
+            }
+          },
+          "good": {
+            "0": "You either land straight in the dashboard, already signed in, or see \"Verify your email\" and are signed in only after clicking the link in that email. Which one depends on whether the site requires email confirmation; either is fine."
+          },
+          "report": "You see \"Verify your email\" but are actually already signed in (for example, opening the dashboard in another tab works without clicking the link)."
+        },
+        "2": {
+          "heading": "Forgot password and changing your password",
+          "checks": "That you can reset a forgotten password by email, and change it afterwards.",
+          "steps": {
+            "0": "From sign-in, click \"Forgot?\" next to the password field and enter your email.",
+            "1": "Open the reset link from that email and set a new password (minimum 8 characters, and it must match its confirmation field)."
+          },
+          "examples": {
+            "0": {
+              "alt": "The \"Reset your password\" page: an Email field, a Send reset link button, and Back to sign in",
+              "caption": "\"Forgot?\" on the sign-in page opens this. Once signed in, Account settings has a \"Change password\" field instead."
+            }
+          },
+          "good": {
+            "0": "You land back in the dashboard already signed in with the new password.",
+            "1": "Signing in again afterward requires the new password, not the old one."
+          }
+        },
+        "3": {
+          "heading": "Dashboard matches the extension after sync",
+          "checks": "That the website's dashboard shows the same groups as your extension once sync has caught up.",
+          "steps": {
+            "0": "With sync on and at least one group, open the dashboard at preview.tabmerger.com/dashboard.",
+            "1": "Compare the \"Tab Groups\" section there to the extension popup's sidebar: names, colors, window/tab counts and order."
+          },
+          "examples": {
+            "0": {
+              "alt": "The web dashboard after unlocking: stats, the Pro plan card, and the Tab Groups grid with Research, Reading List, Work and Shopping cards showing window and tab counts",
+              "caption": "The dashboard's groups, matching the extension's sidebar once synced."
+            }
+          },
+          "good": {
+            "0": "The same groups appear with the same names, colors, and window/tab counts, in the same order, once sync has caught up."
+          }
+        },
+        "4": {
+          "heading": "The dashboard is read-only for groups",
+          "checks": "That the dashboard shows your groups but can't change them: editing happens only in the extension.",
+          "steps": {
+            "0": "On the dashboard, look for any way to rename, delete, or create a group, or star/unstar one."
+          },
+          "good": {
+            "0": "There is no way to rename, delete, create, or (un)star a group from the dashboard — group edits are extension-only by design.",
+            "1": "The only real actions on a group card are Share and opening its tabs/windows."
+          },
+          "report": "Any control on the dashboard that appears to edit, delete, or create a group actually does something."
+        },
+        "5": {
+          "heading": "Sessions and stats on the dashboard",
+          "checks": "That the saved sessions and totals on the dashboard match the extension.",
+          "steps": {
+            "0": "Save a session in the extension, then check the dashboard's \"Saved Sessions\" section.",
+            "1": "Check the stats near the top of the dashboard (tab count, group count, session count, member-since date)."
+          },
+          "good": {
+            "0": "The session you saved shows up.",
+            "1": "The stats match what you'd count in the extension."
+          }
+        },
+        "6": {
+          "heading": "Sharing from the dashboard",
+          "checks": "That the dashboard's Share button copies a share link, like the extension's.",
+          "steps": {
+            "0": "On a group card (or via \"Select\" and \"Share selected\" for multiple groups), click Share."
+          },
+          "good": {
+            "0": "A link is copied to your clipboard immediately, with a toast confirming it. This is covered in depth in the \"Sharing\" section below — the dashboard's Share button and the extension's produce the same kind of link."
+          }
+        },
+        "7": {
+          "heading": "Account page",
+          "checks": "That the account page shows the right profile, plan and devices, and that both sign-out options work.",
+          "pro": "Only the Devices card needs Pro; it lists the devices that sync.",
+          "steps": {
+            "0": "Open Account settings from the dashboard.",
+            "1": "Check the Profile card (email, member since), the Subscription card (plan, \"Manage billing\" or \"Upgrade\"), and the Devices card.",
+            "2": "Try \"Sign out\" and separately \"Sign out of all devices\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Account settings: the Subscription card shows the Pro plan, its renewal date and {proMonthly}/mo, with a Manage billing button; below it the Devices card lists signed-in devices",
+              "caption": "The Subscription and Devices cards on a Pro account."
+            }
+          },
+          "good": {
+            "0": "Profile and Subscription show accurate, current info (see the \"Upgrading to Pro\" section above for the Subscription card in detail).",
+            "1": "Devices lists your signed-in devices with rename/remove controls.",
+            "2": "Both sign-out buttons return you to a signed-out state; \"all devices\" additionally revokes every other active session.",
+            "3": "There is no account-deletion option on this page — that's expected, not a gap to report."
+          }
+        },
+        "8": {
+          "heading": "On a phone",
+          "checks": "That the dashboard and account pages are fully usable on a small screen.",
+          "steps": {
+            "0": "Open the dashboard and Account settings on a phone (or a desktop window narrowed to about 390px wide).",
+            "1": "Tap the Dashboard and Account icons at the top, then the round account menu on the right and its \"Sign out\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "The dashboard on a phone-width screen: the top bar shows the TabMerger logo, the Dashboard and Account icons, the light/dark toggle and the account menu, with nothing cut off",
+              "caption": "The dashboard at phone width: icons only in the top bar, nothing scrolls sideways."
+            }
+          },
+          "good": {
+            "0": "Nothing scrolls sideways.",
+            "1": "The top bar shows the TabMerger logo, the Dashboard and Account icons, the light/dark toggle and your account menu, all fully visible and tappable (the \"TabMerger\" name and the icon labels hide on narrow screens). Wider screens still show the labels."
+          },
+          "report": "A page scrolls sideways on a phone, or any control at the top is cut off or unreachable."
+        },
+        "9": {
+          "heading": "Notifications (toasts)",
+          "checks": "That pop-up notifications are easy to read, close on their own after a countdown, and can be closed early.",
+          "steps": {
+            "0": "Trigger a notification, for example: on Account settings, enter a password shorter than 8 characters in the password form and submit it (it shows an error without changing anything), or copy a share link.",
+            "1": "Watch the notification in the bottom-right corner, then trigger another and hover over it.",
+            "2": "Try it in both light and dark mode."
+          },
+          "examples": {
+            "0": {
+              "alt": "A red error notification in the bottom-right corner reading \"Password must be at least 8 characters.\", with a ✕ in its corner and a countdown bar partly emptied along its bottom edge",
+              "caption": "An error notification: red edge, ✕ to close, and the countdown bar along the bottom."
+            }
+          },
+          "good": {
+            "0": "Each notification is easy to read against the page, with a colored edge (green for success, red for errors).",
+            "1": "A bar along its bottom empties over about 6 seconds and pauses while you hover, and the notification closes when it runs out.",
+            "2": "The ✕ in its top-right corner closes it straight away."
+          },
+          "report": "A notification is hard to read in either theme, the bar keeps running while you hover, or the ✕ is misplaced or doesn't close it."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Sharing",
+      "intro": "Sharing requires Pro (see \"Upgrading to Pro\" above to get there in this beta). The encryption key for a share is generated fresh per link and lives only in the URL's #key= fragment — it's never sent to or stored on the server, so anyone who has the full link (including that fragment) can view the shared content. Treat a share link like the content itself.",
+      "items": {
+        "0": {
+          "heading": "Sharing one or more groups from the extension",
+          "checks": "That the extension creates a share link for one group, or for several at once.",
+          "steps": {
+            "0": "Enter selection mode and check one or more groups in the sidebar (not tabs or windows — Share only appears for a group-type selection).",
+            "1": "Click \"Share\" in the selection bar at the bottom."
+          },
+          "examples": {
+            "0": {
+              "alt": "Selection mode in the popup with Work and Research checked and \"2 groups selected\" and a Share button in the bottom bar",
+              "caption": "Check the groups to share, then click Share in the bottom bar."
+            },
+            "1": {
+              "alt": "The same screen with a green \"Link copied to clipboard\" notification",
+              "caption": "The link is copied straight away."
+            }
+          },
+          "good": {
+            "0": "A link is copied to your clipboard right away, with a \"Link copied to clipboard\" toast.",
+            "1": "Selecting several groups at once shares all of them together as one link/bundle — you don't need to share them one at a time."
+          }
+        },
+        "1": {
+          "heading": "Opening a shared link",
+          "checks": "That anyone can open a share link without signing in and see the shared groups, read-only.",
+          "pro": "Creating the link needs Pro; opening it needs no account at all.",
+          "steps": {
+            "0": "Open the copied link in a signed-out browser window (or a private/incognito window).",
+            "1": "Check the favicons and titles on each shared tab, and try \"Open tab\" / \"Open all tabs\" / \"Open window\" / \"Open all windows\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "The shared page opened signed out: \"Shared collection · read-only\", the share link, \"9 tabs across 5 windows in 2 groups\", a Show page previews switch, and the Work group's tabs with Open buttons",
+              "caption": "What someone opening your link sees, without signing in. (Here the link points at a local test server; yours will be on preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "The page loads with no sign-in required, labeled \"Shared collection · read-only\".",
+            "1": "It shows every group, window, and tab with their real favicons and titles.",
+            "2": "The open buttons open the right tab(s)/window(s) in new browser tabs."
+          }
+        },
+        "2": {
+          "heading": "Page previews on the shared page",
+          "checks": "That page previews on a shared page stay off until the viewer turns them on and confirms.",
+          "pro": "Creating the link needs Pro; opening it needs no account at all.",
+          "steps": {
+            "0": "On the shared page, find the \"Show page previews\" switch above the group list.",
+            "1": "Turn it on and confirm the dialog that appears.",
+            "2": "Hover a tab to see its preview image and description."
+          },
+          "examples": {
+            "0": {
+              "alt": "The \"Turn on page previews?\" dialog explaining what is sent to the preview service, with Cancel and Turn on buttons",
+              "caption": "Turning on the switch asks first. Previews stay off until you confirm."
+            }
+          },
+          "good": {
+            "0": "The switch is off by default.",
+            "1": "Turning it on requires confirming a dialog first (turning it back off needs no confirmation) — the dialog explains that hovering a tab sends that tab's address to TabMerger's preview service, and that it isn't linked to your account, logged, or stored.",
+            "2": "Once on, hovering a tab shows its image/description; a page with no image shows \"No preview\" instead of a broken image."
+          }
+        },
+        "3": {
+          "heading": "Sharing a group with many windows",
+          "checks": "That a shared group with several windows shows each window separately.",
+          "steps": {
+            "0": "Share a group that has several saved windows (not just one)."
+          },
+          "examples": {
+            "0": {
+              "alt": "The shared page's Research group, showing four separate windows, each with its own Open tab link, and \"Open all windows\" on the group",
+              "caption": "A shared group with four windows: each window is listed separately."
+            }
+          },
+          "good": {
+            "0": "The shared page shows every window in that group, each labeled \"Window N\" (and \"Incognito\" if it was one), with its own tabs and its own \"Open tab(s)\" control."
+          }
+        },
+        "4": {
+          "heading": "Sharing from the web dashboard instead of the extension",
+          "checks": "That sharing from the website works the same way as from the extension.",
+          "steps": {
+            "0": "On the dashboard, click \"Share\" on a single group card, or check several groups and click \"Share selected\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "The dashboard's group cards with one card's Share button showing \"Copied!\" and a notification reading \"Link copied — shares a snapshot of this group.\"",
+              "caption": "Share on a dashboard card copies the same kind of link."
+            }
+          },
+          "good": {
+            "0": "Both dashboard paths copy a link the same way the extension does (\"Link copied — shares a snapshot of this group.\" or \"Link copied! Share page is live.\" respectively), producing the same kind of shared page."
+          }
+        },
+        "5": {
+          "heading": "Editing, re-sharing, revoking, and expiry — what's NOT possible",
+          "checks": "What share links can't do yet, so you don't spend time reporting it.",
+          "steps": {
+            "0": "Try to find any way to edit an existing share, or to revoke/delete/expire one, from either the extension or the dashboard."
+          },
+          "good": {
+            "0": "There is currently no UI anywhere to edit, revoke, delete, or expire a share link once created — a share is a permanent, immutable snapshot from the moment it's made. This is expected — don't report the absence of a revoke/edit/expiry control, just confirm it matches this description.",
+            "1": "Re-sharing the same group creates a brand-new, separate link rather than updating the old one; the old link keeps working and still shows the old snapshot."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "intro": "Settings has General, Account, and Data tabs for everyone. A Devices tab appears once you're on Pro (see \"Upgrading to Pro\" above). AI and Dev tabs are not part of this beta build — AI stays hidden behind the \"coming soon\" flag, and Dev only shows in local development builds, not the beta you installed.",
+      "items": {
+        "0": {
+          "heading": "General tab — Theme, Confirm before deleting, Open tab on click, Auto-deduplicate",
+          "checks": "That these General settings take effect right away and are remembered.",
+          "steps": {
+            "0": "Open Settings and switch Theme between Light, Dark, and System.",
+            "1": "Toggle \"Confirm before deleting\" (delete a group or window with it on, then off, and compare).",
+            "2": "Toggle \"Open tab on click\", then click a saved tab in the main panel.",
+            "3": "Toggle \"Auto-deduplicate on merge\", then merge two windows that share a duplicate tab."
+          },
+          "examples": {
+            "0": {
+              "alt": "The Settings modal General tab, showing Theme, Confirm before deleting, and other toggles",
+              "caption": "The General tab of Settings, with the version badge next to the title. (The Dev tab only exists in our internal screenshot build; you won't see it.)"
+            }
+          },
+          "good": {
+            "0": "Theme changes the whole UI immediately and survives closing/reopening the popup.",
+            "1": "With \"Confirm before deleting\" on, deleting a group or window asks first; off, it deletes immediately.",
+            "2": "\"Open tab on click\" on: a single click opens the tab in the browser; off: single click just selects/expands it.",
+            "3": "\"Auto-deduplicate on merge\" removes the duplicate automatically when on."
+          }
+        },
+        "1": {
+          "heading": "General tab — Show page images in previews",
+          "checks": "That the page-images setting controls whether tab previews show a page image.",
+          "steps": {
+            "0": "Toggle \"Show page images in previews\" off.",
+            "1": "Hover a saved tab to see its preview.",
+            "2": "Turn the setting back on and hover the same tab again."
+          },
+          "examples": {
+            "0": {
+              "alt": "A tab hover preview with page images disabled, showing a \"Not enabled\" placeholder",
+              "caption": "The hover preview with \"Show page images in previews\" off."
+            }
+          },
+          "good": {
+            "0": "Off: the preview clearly says \"Not enabled\" with the note \"Page images are off. Turn on in Settings.\" — the switch itself saves right away, no confirmation dialog.",
+            "1": "On: a real page image loads in the hover preview, or \"No preview\" if that page has none.",
+            "2": "The setting's own description links to the privacy policy's page-previews section."
+          },
+          "report": "The preview shows \"No preview\" (blank) instead of a real image with the setting on and a page that has one."
+        },
+        "2": {
+          "heading": "General tab — Cloud sync, Stale tab threshold, URL rules",
+          "checks": "That these settings appear for the right plans and change what they should.",
+          "pro": "Only the Cloud sync switch needs Pro (Free doesn't show it).",
+          "steps": {
+            "0": "With Pro, toggle \"Cloud sync\" (this control only appears once you have Pro).",
+            "1": "Change \"Stale tab threshold\" to a different value (7/14/30/60 days).",
+            "2": "Click \"Manage\" next to \"URL rules\" and add a rule assigning a URL pattern to a group."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, General tab scrolled down: Cloud sync on, Stale tab threshold set to 30 days, and URL rules with a Manage button",
+              "caption": "The lower half of the General tab. (The Dev tab only exists in our internal screenshot build; you won't see it.)"
+            }
+          },
+          "good": {
+            "0": "Cloud sync only shows up for Pro accounts (Free never sees it).",
+            "1": "Changing the stale-tab threshold changes which tabs get the amber stale dot.",
+            "2": "URL rules opens a manager where you can add/edit/remove pattern-to-group rules.",
+            "3": "A newly-opened tab matching a rule gets auto-assigned."
+          }
+        },
+        "3": {
+          "heading": "Theme: Light, Dark and System",
+          "checks": "That every theme looks right across the popup, and that the choice is remembered.",
+          "steps": {
+            "0": "In Settings → General, set Theme to Dark and click Save changes.",
+            "1": "Look around the popup: the sidebar, a group with several windows, the ⋯ menus, a right-click menu, Search (Ctrl+K), and Settings itself.",
+            "2": "Close and reopen the popup.",
+            "3": "Set Theme to System and save, then switch your computer between light and dark mode.",
+            "4": "Set it back to Light."
+          },
+          "good": {
+            "0": "The whole popup switches theme as soon as you save, with every text, icon and border readable.",
+            "1": "Menus, dialogs, tooltips and notifications follow the theme too.",
+            "2": "The theme is still set after reopening the popup.",
+            "3": "System follows your computer's light or dark setting."
+          },
+          "report": "Anything is hard to read or keeps the old theme (a menu, dialog, icon or border), or the theme resets after reopening the popup."
+        },
+        "4": {
+          "heading": "URL rules: saving matching pages automatically",
+          "checks": "That a URL rule saves pages you open at matching addresses into the group you chose.",
+          "steps": {
+            "0": "In Settings → General, next to URL rules, click Manage, then Add rule.",
+            "1": "Enter a pattern with * as a wildcard (e.g. github.com/*), pick a group, add the rule, and click Save.",
+            "2": "In the browser, open a new tab at an address that matches (e.g. any github.com page).",
+            "3": "Open the popup and look at the rule's group. Then reload the page once, and check the group again.",
+            "4": "Edit the rule to point at another group, then delete it, and open another matching page.",
+            "5": "On Free, try adding a fourth rule."
+          },
+          "examples": {
+            "0": {
+              "alt": "The URL Rules dialog: \"Auto-assign tabs to groups by URL pattern. Use * as a wildcard (e.g. github.com/*). First matching rule wins.\", no rules yet, an Add rule button, and Cancel and Save",
+              "caption": "Settings → General → URL rules → Manage opens this editor."
+            }
+          },
+          "good": {
+            "0": "A copy of the matching page is saved into the rule's group, in its first window (or a new window if the group has none). The tab itself stays open.",
+            "1": "When several rules match, the first one in the list wins.",
+            "2": "Once a rule is edited or deleted, new pages follow the change.",
+            "3": "Free allows 3 rules: adding a fourth shows \"Free plan allows up to 3 URL rules.\" with an Upgrade button. Pro has no limit."
+          },
+          "report": "A matching page isn't saved, lands in the wrong group, or is saved more than once (for example again every time you reload it)."
+        },
+        "5": {
+          "heading": "Account tab — Plan, Renews, Email, Manage billing / Upgrade, Sign out",
+          "checks": "That the Account tab shows your real plan, renewal date and email, and that its buttons work.",
+          "steps": {
+            "0": "Open the Account tab and check the Plan, Renews (if paid), and Email rows.",
+            "1": "Click \"Upgrade to Pro\" (Free) or \"Manage billing\" (Pro/Pro AI) — see \"Upgrading to Pro\" above for what happens next.",
+            "2": "Click \"Sign out\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, Account tab on Pro: Plan Pro ({proMonthly}/mo), a renewal date, the email, Manage billing and Sign out buttons, and \"Forgot your passphrase? Reset encryption\"",
+              "caption": "The Account tab on a Pro account. The reset link at the bottom is the next item. (The Dev tab only exists in our internal screenshot build; you won't see it.)"
+            }
+          },
+          "good": {
+            "0": "Plan shows \"Free\", \"Pro ({proMonthly}/mo)\", or \"Pro AI ({proAiMonthly}/mo)\" matching your real subscription.",
+            "1": "Renews only shows for a paid plan and gives the real renewal date.",
+            "2": "Email matches your signed-in account.",
+            "3": "\"Manage billing\" opens Stripe's billing portal in a new tab; on Free it's \"Upgrade to Pro\" instead, opening the pricing page.",
+            "4": "Sign out returns you to a signed-out state."
+          }
+        },
+        "6": {
+          "heading": "Account tab — Forgot your passphrase? Reset encryption",
+          "checks": "That the encryption-reset link appears in the Account tab once encryption is set up.",
+          "steps": {
+            "0": "This link only appears if you've completed encryption setup at least once (see the \"End-to-end encryption passphrase\" section below for the full flow — don't repeat that here, just confirm it's reachable from this tab)."
+          },
+          "good": {
+            "0": "The link is visible at the bottom of the Account tab once encryption is set up, and not before."
+          }
+        },
+        "7": {
+          "heading": "Data tab — Export, Import, Clear all data",
+          "checks": "That exporting, importing and clearing your data work, with a confirmation before anything is replaced or deleted.",
+          "steps": {
+            "0": "Open the Data tab and click \"Export\" to download all groups as a JSON file.",
+            "1": "Click \"Import\" and select that same file (or a Bookmarks HTML export, or a OneTab .txt export).",
+            "2": "Click \"Clear all data\" and confirm."
+          },
+          "examples": {
+            "0": {
+              "alt": "The Settings modal Data tab, showing Export data and Import data controls",
+              "caption": "The Data tab of Settings."
+            }
+          },
+          "good": {
+            "0": "Export downloads a file named like \"tabmerger-backup-2026-01-15.json\" with an \"exported successfully\" toast.",
+            "1": "Import asks you to confirm the group count before importing, then shows \"imported successfully\".",
+            "2": "Re-importing your own export brings back every group with the same windows, tabs, order and colours.",
+            "3": "All three file types (TabMerger JSON, Bookmarks HTML, OneTab .txt) are accepted, detected by file extension.",
+            "4": "\"Clear all data\" wipes groups, sessions, and settings after you confirm — treat it as destructive and only try it on a throwaway profile."
+          },
+          "report": "A bad or empty file silently does nothing instead of showing an error toast like \"Invalid file format\" or \"No groups found\"."
+        },
+        "8": {
+          "heading": "Save vs Reset, and the \"Unsaved changes\" indicator",
+          "checks": "That settings only save when you click Save, and warn you about unsaved changes.",
+          "steps": {
+            "0": "On the General tab, change any setting (e.g. Theme) without clicking Save.",
+            "1": "Notice the \"Unsaved changes\" text and that \"Save changes\" is only enabled while something is actually different from what's saved.",
+            "2": "Click \"Restore defaults\" instead of Save, then close Settings without saving.",
+            "3": "Reopen Settings and check whether your change stuck."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, General tab after a change: \"Unsaved changes\" next to an enabled Save changes button, with Restore defaults on the left",
+              "caption": "After changing a setting: \"Unsaved changes\" appears and Save changes turns on. (The Dev tab only exists in our internal screenshot build; you won't see it.)"
+            }
+          },
+          "good": {
+            "0": "\"Unsaved changes\" appears next to \"Save changes\" whenever the draft differs from the last saved settings.",
+            "1": "\"Save changes\" is disabled when there's nothing new to save.",
+            "2": "\"Restore defaults\" only resets the in-progress draft back to defaults — it does not save by itself.",
+            "3": "Closing Settings without clicking \"Save changes\" discards the draft; reopening shows the last actually-saved values, not your unsaved edit."
+          },
+          "report": "\"Save changes\" stays enabled with no changes made, or a setting you changed but never saved persists after closing and reopening Settings anyway."
+        },
+        "9": {
+          "heading": "The version badge",
+          "checks": "Where to find the exact version number to put in bug reports.",
+          "steps": {
+            "0": "Look at the Settings dialog title bar."
+          },
+          "good": {
+            "0": "A small badge next to the word \"Settings\" shows the real semver you should report in bug reports (e.g. \"v3.1.0-beta.5\") — this is covered in more detail in the \"Join and install\" section above."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Sign-in and sync across devices",
+      "intro": "Beta builds sync through the preview web app at preview.tabmerger.com, not the main site — sign in there to see your synced groups, dashboard, and sharing.",
+      "items": {
+        "0": {
+          "heading": "Setting up two devices",
+          "checks": "That two devices signed in to the same account share their groups.",
+          "steps": {
+            "0": "Sign in on two devices or two browser profiles with the beta extension installed on both, pointed at the same account."
+          },
+          "examples": {
+            "0": {
+              "alt": "The extension's \"Sign In to TabMerger\" dialog in the popup: Continue with Google, then Sign In, Sign Up and Magic Link tabs with Email and Password fields",
+              "caption": "Signing in from the extension: the account icon (top right) → Sign in."
+            },
+            "1": {
+              "alt": "Device A's popup with the groups Work, Research, Shopping and Reading List; the footer reads 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Device A."
+            },
+            "2": {
+              "alt": "Device B's popup after signing in, unlocking and syncing: the same four groups with the same window and tab counts, and the same 4 Groups, 4 Windows, 17 Tabs footer",
+              "caption": "Device B after signing in and unlocking: the same groups and counts, in the same order."
+            }
+          },
+          "good": {
+            "0": "Groups created on one device appear on the other within a short time."
+          }
+        },
+        "1": {
+          "heading": "Renames reach the other device",
+          "checks": "That a rename on one device shows up on the other without a manual refresh.",
+          "steps": {
+            "0": "Edit a group name on device A.",
+            "1": "Check device B without touching anything there."
+          },
+          "examples": {
+            "0": {
+              "alt": "Device A's popup after renaming Research to \"Research papers\", with its four tabs shown",
+              "caption": "Device A: \"Research\" renamed to \"Research papers\"."
+            },
+            "1": {
+              "alt": "Device B's popup showing the group as \"Research papers\" with the same four tabs, after only reopening the popup",
+              "caption": "Device B, after just reopening the popup: the new name is there."
+            }
+          },
+          "good": {
+            "0": "Device B picks up the rename without you needing to trigger a manual refresh."
+          }
+        },
+        "2": {
+          "heading": "Deletes reach the other device",
+          "checks": "That a deleted group stays deleted on every device instead of coming back.",
+          "steps": {
+            "0": "Delete a group on device A.",
+            "1": "Confirm it also disappears on device B."
+          },
+          "examples": {
+            "0": {
+              "alt": "Device A's popup after deleting Shopping: Work, Research papers and Reading List remain, and the footer reads 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Device A: \"Shopping\" deleted."
+            },
+            "1": {
+              "alt": "Device B's popup after reopening: Shopping is gone and the footer reads 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Device B after reopening the popup: \"Shopping\" is gone there too."
+            }
+          },
+          "good": {
+            "0": "The deletion propagates instead of the group reappearing (\"resurrecting\") after sync."
+          },
+          "report": "A deleted group comes back on either device after a later sync."
+        },
+        "3": {
+          "heading": "Reordering groups syncs",
+          "checks": "That the order of your groups is the same on every device and on the dashboard.",
+          "steps": {
+            "0": "Drag a group to a new position in the sidebar on device A.",
+            "1": "Wait for sync to catch up, then look at device B's sidebar and the web dashboard."
+          },
+          "good": {
+            "0": "Device B and the dashboard show the groups in the same order as device A.",
+            "1": "Undo may be greyed out on a device right after a sync brings in changes from another device. That is expected: the undo history is cleared when changes arrive from elsewhere, so you can't accidentally undo over someone else's edit."
+          },
+          "report": "The order differs between devices after sync has caught up, or a reorder jumps back to the old order."
+        },
+        "4": {
+          "heading": "Offline changes sync when you reconnect",
+          "checks": "That changes made offline sync once you're back online, without duplicates or losses.",
+          "steps": {
+            "0": "Go offline (disable network) on one device.",
+            "1": "Make changes.",
+            "2": "Reconnect."
+          },
+          "good": {
+            "0": "Once back online, changes made offline sync up without duplicating or silently dropping groups."
+          }
+        },
+        "5": {
+          "heading": "Deleting a group while offline",
+          "checks": "That a group you delete while offline stays deleted once you reconnect.",
+          "steps": {
+            "0": "Go offline (disable network) on device A.",
+            "1": "Delete a group on device A.",
+            "2": "Reconnect device A and let it sync, then check device B and the dashboard."
+          },
+          "good": {
+            "0": "The group is removed from the server on the next sync and disappears on device B and the dashboard.",
+            "1": "It does not come back on either device afterwards."
+          },
+          "report": "A group you deleted while offline reappears on any device after a sync."
+        },
+        "6": {
+          "heading": "Same group edited on two devices (conflict copy)",
+          "checks": "That when the same group is edited on two devices before either has synced, nothing is overwritten and you get a copy to merge by hand.",
+          "steps": {
+            "0": "Go offline (disable network) on device A. Leave device B online.",
+            "1": "On device A, edit a group (for example add a tab). On device B, edit the same group differently (for example add a different tab).",
+            "2": "Let device B sync first, then reconnect device A and let it sync.",
+            "3": "Look at the sidebar on both devices."
+          },
+          "good": {
+            "0": "The version that reached the server first (device B) keeps the group's name.",
+            "1": "Device A's version is saved right below it as a new group named \"Work{CONFLICT_COPY_SUFFIX}\" (using your group's name), and a toast tells you so.",
+            "2": "Both devices end up showing both groups. You can merge the tabs by hand and then delete the copy.",
+            "3": "Editing only one device, or editing different groups on each, never makes a copy."
+          },
+          "report": "An edit silently disappears with no copy, or a \"conflict copy\" appears when only one device edited the group."
+        }
+      }
+    },
+    "encryption": {
+      "title": "End-to-end encryption passphrase",
+      "intro": "Encryption is mandatory for every signed-in account, not an opt-in setting — there's no toggle to turn it off. Your synced groups, sessions, and \"Now Open\" snapshots are encrypted with a key only your passphrase can unlock; TabMerger's servers never see the passphrase or the unwrapped key.",
+      "items": {
+        "0": {
+          "heading": "First-time passphrase setup",
+          "checks": "That turning on sync asks you to choose an encryption passphrase before any of your data leaves your device.",
+          "steps": {
+            "0": "On a fresh sign-in with cloud sync, wait for the \"Set up encryption\" prompt to appear on its own (it's triggered by the first sync attempt).",
+            "1": "Read the prompt text, then enter a new passphrase and repeat it in \"Confirm passphrase\".",
+            "2": "Click \"Set up encryption\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "The \"Set up encryption\" dialog explaining the passphrase can't be recovered, with New passphrase and Confirm passphrase fields and a Set up encryption button",
+              "caption": "Appears on its own right after signing in on Pro."
+            }
+          },
+          "good": {
+            "0": "The prompt reads \"Your synced group and tab data is end-to-end encrypted with a passphrase only you know. Choose one now — there is no way to recover your data if you forget it, it never leaves your device and TabMerger cannot reset it for you.\"",
+            "1": "The passphrase must be at least 8 characters with no spaces, and must match its confirmation — mismatches or a too-short passphrase show a clear inline error (\"Passphrase must be at least 8 characters\" / \"Passphrases do not match\" / \"Passphrase cannot contain spaces\") instead of silently failing.",
+            "2": "On success you see an \"Encryption set up\" toast.",
+            "3": "Nothing you already synced is lost."
+          }
+        },
+        "1": {
+          "heading": "Unlocking on a second device",
+          "checks": "That a second device needs your passphrase once before it can read your synced data.",
+          "steps": {
+            "0": "Sign in with the same account on a second device or browser profile.",
+            "1": "When the \"Unlock encryption\" prompt appears, enter your passphrase (once, there is no confirmation field) and click \"Unlock\" or press Enter.",
+            "2": "Repeat once more, but deliberately type the wrong passphrase."
+          },
+          "examples": {
+            "0": {
+              "alt": "The \"Unlock encryption\" dialog on a second device, with a single Passphrase field and an Unlock button",
+              "caption": "On a second device, the extension asks for your existing passphrase once."
+            }
+          },
+          "good": {
+            "0": "The unlock prompt reads \"Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won't be asked again unless you sign out.\"",
+            "1": "The correct passphrase unlocks and shows an \"Encryption unlocked\" toast.",
+            "2": "The wrong one shows \"Wrong passphrase\" and changes nothing else — no corruption, no lockout, you can just try again."
+          }
+        },
+        "2": {
+          "heading": "What \"locked\" looks like, and staying unlocked after a restart",
+          "checks": "That locked data stays unreadable until you unlock it, and a device stays unlocked after restarting the browser.",
+          "steps": {
+            "0": "While a device is locked (before you've entered the passphrase there), try to use cloud sync features.",
+            "1": "Unlock it, then fully quit and reopen your browser (not just the popup) on that device."
+          },
+          "good": {
+            "0": "While locked, you get re-prompted for the passphrase rather than silently syncing plaintext or losing data.",
+            "1": "Once unlocked, the key persists in the browser's local storage on that device — a full browser restart does not re-prompt you; only signing out clears it."
+          }
+        },
+        "3": {
+          "heading": "Forgot your passphrase — resetting encryption",
+          "checks": "That resetting encryption is clearly confirmed first, and lets you set a new passphrase.",
+          "steps": {
+            "0": "In Settings → Account, find \"Forgot your passphrase? Reset encryption\" (only shown once you've completed setup at least once).",
+            "1": "Do NOT use this on data you care about — it permanently discards access to everything encrypted under your current passphrase. Use a throwaway test account if you want to try it.",
+            "2": "If you do try it, confirm the reset dialog, then set a brand-new passphrase when the setup prompt reopens."
+          },
+          "examples": {
+            "0": {
+              "alt": "The \"Reset Encryption Passphrase\" confirmation warning that everything encrypted under the current passphrase becomes permanently inaccessible, with Cancel and Reset Passphrase buttons",
+              "caption": "The confirmation you get before a reset. Cancel is safe; Reset Passphrase is not reversible."
+            }
+          },
+          "good": {
+            "0": "The confirmation dialog is clear before anything happens.",
+            "1": "After confirming, you see an \"Encryption reset — set up a new passphrase\" toast and the setup prompt reopens immediately so you can pick a new one and keep syncing."
+          }
+        },
+        "4": {
+          "heading": "Verifying on the web dashboard",
+          "checks": "That the website asks for your passphrase before it shows your synced groups.",
+          "steps": {
+            "0": "Sign in to the dashboard (preview.tabmerger.com) with an account that has encryption set up.",
+            "1": "If prompted, enter your passphrase in the inline unlock card before any group content appears."
+          },
+          "examples": {
+            "0": {
+              "alt": "The web dashboard's Tab Groups section locked, with a padlock, \"Your groups are end-to-end encrypted. Enter your passphrase to view them here.\", a Passphrase field and an Unlock button",
+              "caption": "Until you enter your passphrase, the dashboard shows this instead of your groups."
+            }
+          },
+          "good": {
+            "0": "The dashboard asks for the passphrase separately from the extension — unlocking there is its own one-time-per-tab step, not shared with the extension's unlock. The prompt reads \"Your groups are end-to-end encrypted. Enter your passphrase to view them here.\"",
+            "1": "A wrong passphrase shows \"Incorrect passphrase.\" without crashing the page.",
+            "2": "Once unlocked, your real group names and tabs render normally.",
+            "3": "After a passphrase reset in the extension, the dashboard asks for the new passphrase: on the next page load, or in a dashboard that was already open, once you press the refresh button on the sync label.",
+            "4": "A group or session the current passphrase cannot read (saved before a reset and not uploaded again yet) shows as \"(locked)\" instead of leaking any content. The item itself says why and what to do, and it cannot be shared or restored until it is readable again."
+          }
+        },
+        "5": {
+          "heading": "How to tell your data really is encrypted",
+          "checks": "How you can see for yourself that your data is unreadable without your passphrase.",
+          "steps": {
+            "0": "There's no explicit \"Encrypted ✓\" badge in the UI — the visible signal is indirect.",
+            "1": "On a device where you haven't unlocked yet (or the dashboard, before entering your passphrase there), notice that group names/content don't render until you unlock."
+          },
+          "good": {
+            "0": "The absence of readable content before unlocking is the signal: no group name or tab is shown, and on the dashboard anything the current passphrase cannot read renders as \"(locked)\".",
+            "1": "The dashboard shows the passphrase card instead of your groups. If content were ever readable without unlocking, that would mean it isn't actually encrypted — report it immediately if you see that."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Any data loss — a group, tab, or session that disappeared and shouldn't have.",
+    "1": "Sync conflicts — a \"{CONFLICT_COPY_SUFFIX}\" group is expected when the same group was edited on two devices before either synced. Tell us if an edit silently disappears, or if a copy appears when only one device edited.",
+    "2": "Anything confusing, unclear, or that took you more clicks than it should have.",
+    "3": "Anything slow — the popup opening, search, drag-and-drop, or sync taking noticeably longer than expected."
+  },
+  "metaTitle": "Beta Program",
+  "metaDescription": "Join the TabMerger beta — install the private beta build, know what to test, and report bugs directly to the team.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Partly Pro",
+    "somePro": "Some Pro",
+    "areaPartial": "Some items here need a Pro account",
+    "itemPartial": "Part of this item needs a Pro account",
+    "areaAll": "Every item here needs a Pro account",
+    "itemAll": "Needs a Pro account"
+  },
+  "eyebrow": "Beta program",
+  "title": "Help us test TabMerger before it ships",
+  "lead": "Get the next version of TabMerger early and tell us what breaks. This page covers joining, installing the private beta, what to test, and how to report what you find. AI features are hidden (\"coming soon\") in this build, so they're not part of testing yet.",
+  "join": "Join the beta",
+  "onThisPage": "On this page",
+  "install": {
+    "heading": "1. Join and install",
+    "groupTitle": "Join the tester group.",
+    "groupBody": "Open <link>groups.google.com/g/tabmerger-beta-testers</link> and join. Joining is instant, but make sure you join with the <strong>same Google account you're signed in to in Chrome</strong> — otherwise the private listing won't be visible to you.",
+    "listingTitle": "Open the private beta listing.",
+    "listingLink": "Open the TabMerger BETA listing",
+    "listingPending": "the \"TabMerger BETA\" listing on the Chrome Web Store (link coming soon — check the tester group for the current URL in the meantime).",
+    "listingNotFound": "If you see <strong>\"Item not found,\"</strong> you likely just joined — access can take a little while to appear. Wait a bit and try again before assuming something's wrong.",
+    "installTitle": "Install it.",
+    "installBody": "Click \"Add to Chrome.\" The beta installs as a separate extension (\"TabMerger BETA\") from the stable \"TabMerger\" listing — you can keep both installed side by side, and their data is completely separate. We suggest disabling the stable version while you're testing, so you don't accidentally act on the wrong one.",
+    "signInTitle": "Sign in through the preview web app.",
+    "signInBody": "Beta builds sync with <link>preview.tabmerger.com</link> — not the main tabmerger site. Sign in there (from the extension or the dashboard directly) to see synced groups and sessions.",
+    "browsersTitle": "Which browsers can I test on?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc, and Opera all use this same TabMerger BETA listing and the same Google Group — there's no separate Edge beta, so don't go looking for one. Edge: accept \"Allow extensions from other stores\" when prompted. Opera: install Opera's \"Install Chrome Extensions\" add-on first, then use the link above. If you also have the stable TabMerger installed from the Edge Add-ons store, turn it off while testing the beta — it's a separate extension from this one. Safari isn't supported.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox has its own beta build, installed from a direct link rather than the Chrome Web Store listing above. <link>Install the Firefox beta</link>. Firefox asks whether to add \"TabMerger BETA\": choose Add. It checks for updates on its own roughly once a day; to check right now, open <code>about:addons</code>, click the gear icon, and choose \"Check for Updates.\" Sign in once inside the extension and allow Firefox's data permission prompt (it covers sign-in and sync); after that, signing in on this website also signs the extension in. <strong>Anyone with the install link above can install it</strong> — please don't share it outside the tester group.",
+    "firefoxSoon": "A Firefox beta is coming soon; until then, Firefox users can join the beta with any of the supported Chromium browsers listed above (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Note your version.",
+    "versionBody": "Open TabMerger's Settings and copy the version badge next to the \"Settings\" title (e.g. <code>v3.1.0-beta.5</code>), or check <code>chrome://extensions</code> and find \"TabMerger BETA\". Either way, report that real semver — not the Chrome Web Store's internal store version number, which is offset and won't match what we use to track builds."
+  },
+  "test": {
+    "heading": "2. What to test",
+    "intro": "Work through whichever areas match how you'd normally use TabMerger. Each item below has numbered steps, an example of what it should look like, and what a working result looks like.",
+    "tickNote": "Tick each step as you go. Your checkmarks are saved in this browser only, and each area shows how far you've got.",
+    "needPro": "Do I need Pro?",
+    "needProBody": "Areas are listed from Free to Pro. Everything unmarked works on Free, without an account. <full></full>: the whole item needs a Pro account (sync, encryption and creating share links are Pro). <partial></partial>: most of the item works on Free, and a \"Pro:\" line under its title says which part doesn't. Pro costs nothing in this beta: you pay with a test card (see <link>Upgrading to Pro</link>).",
+    "show": "Show",
+    "hide": "Hide",
+    "proLine": "Pro: ",
+    "checksLine": "What this checks: ",
+    "steps": "Steps",
+    "reportLine": "Report it if: ",
+    "testCheckout": "⚠ This is a test checkout.",
+    "testCheckoutBody": " Never enter a real card. No real money is charged, and a real card won't work here anyway.",
+    "testCardsFooter": "With any card: an expiry date in the future (e.g. <code>12/34</code>), any 3-digit CVC (e.g. <code>123</code>), and anything for the name, postal code and other fields. More cards: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "What we especially want to hear about",
+  "knownIssues": {
+    "heading": "3. Known issues",
+    "intro": "We already know about these, so there's no need to report them. The list is updated with every beta release; if something here is fixed for you, or behaves differently from how it's described, that is worth reporting.",
+    "meanwhile": "Meanwhile:"
+  },
+  "report": {
+    "heading": "4. Report a bug",
+    "discussions": "Bugs and ideas go to our public GitHub Discussions — <link>github.com/{repo}/discussions</link>. Take a look there first — someone may have already reported the same thing.",
+    "public": "<strong>Discussions are public.</strong> Don't paste private URLs, tab titles, or screenshots that show personal information — blur or crop them first. You'll need a (free) GitHub account to post.",
+    "bugButton": "Report a bug on GitHub",
+    "ideaButton": "Share an idea on GitHub",
+    "noGithub": "No GitHub account? Use the contact form.",
+    "template": "Both links prefill this template into the discussion body — fill it in before posting, it saves us a round trip of follow-up questions:"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "notFoundQ": "I see \"Item not found\"",
+    "notFoundA": "Make sure you joined the Google Group with the same Google account you're signed into in Chrome. Access can take a little while to show up after joining — wait a bit and try again before assuming something's broken.",
+    "stableQ": "Can I keep the stable version installed?",
+    "stableA": "Yes — the beta (\"TabMerger BETA\") is a separate extension from stable (\"TabMerger\") with completely separate data. You can run both, though we suggest disabling stable while testing to avoid confusing yourself about which one you're using.",
+    "chargedQ": "Will I be charged if I upgrade to Pro?",
+    "chargedA": "No — upgrading in the beta uses Stripe's test mode. Use a <link>Stripe test card</link> (see the \"Upgrading to Pro\" section above) — no real card works here, and no real money changes hands either way.",
+    "syncQ": "Where does my data sync?",
+    "syncA": "Beta builds sync with the preview web app at preview.tabmerger.com, not the main tabmerger site. Sign in there to see your synced groups, sessions, and sharing.",
+    "issuesQ": "Where do I see known issues?",
+    "issuesA": "Check the repo's <link>Discussions Q&A</link> — that's where beta bug reports live.",
+    "leaveQ": "How do I leave the beta?",
+    "leaveA": "Leave the <link>Google Group</link> and uninstall the \"TabMerger BETA\" extension. Your stable installation, if you kept one, is unaffected."
+  },
+  "interactive": {
+    "good": "Good looks like",
+    "allDoneLabel": "All checks done",
+    "progressLabel": "{done} of {total} checks done",
+    "allDone": "✓ All done",
+    "progress": "{done}/{total}",
+    "clear": "Clear my checkmarks ({count})",
+    "firefoxAutoStart": "The Firefox beta should start on its own: Firefox asks whether to add it, other browsers download the file. If nothing happens, use \"Install the Firefox beta\" in this step."
+  }
+}

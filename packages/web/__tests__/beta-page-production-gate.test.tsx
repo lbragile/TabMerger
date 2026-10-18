@@ -15,7 +15,7 @@ async function loadBetaPage(vercelEnv: string) {
   vi.stubEnv('VERCEL_ENV', vercelEnv)
   vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', vercelEnv)
   vi.resetModules()
-  return import('@/app/(marketing)/beta/page')
+  return import('@/app/[locale]/(marketing)/beta/page')
 }
 
 describe('BetaPage production gate', () => {
@@ -50,14 +50,14 @@ describe('BetaPage production gate', () => {
   })
 
   it('advertises nothing and asks not to be indexed on production', async () => {
-    const { metadata } = await loadBetaPage('production')
+    const metadata = await (await loadBetaPage('production')).generateMetadata()
     expect(metadata.title).toBeUndefined()
     expect(metadata.description).toBeUndefined()
     expect(metadata.robots).toEqual({ index: false, follow: false })
   })
 
   it.each(['preview', ''])('keeps its title and description when VERCEL_ENV is "%s"', async (vercelEnv) => {
-    const { metadata } = await loadBetaPage(vercelEnv)
+    const metadata = await (await loadBetaPage(vercelEnv)).generateMetadata()
     expect(metadata.title).toBe('Beta Program')
     expect(metadata.description).toMatch(/join the tabmerger beta/i)
     expect(metadata.robots).toBeUndefined()

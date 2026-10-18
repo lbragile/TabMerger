@@ -1,5 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import createIntlMiddleware from 'next-intl/middleware'
+import { routing } from '@/i18n/routing'
+import { LOCALES } from '@/i18n/locales'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -154,6 +157,79 @@ export function legacyHostRedirect(request: NextRequest): URL | null {
   return target.origin === origin ? target : null
 }
 
+/**
+ * Sections outside `app/[locale]/`: the locale handler never sees them. They have no prefixed
+ * version, so rewriting `/api/x` to `/en/api/x` would break them.
+ * - `/api/*`: route handlers (and the auth callback, `/api/auth/callback`).
+ * - `/auth/*`: sign-in, sign-up and password pages (unprefixed, default locale).
+ * - `/firefox-beta/*`: rewritten to the Blob store (the matcher skips it too).
+ * - `/sentry-test`, `/sentry-tunnel`: diagnostics and Sentry's tunnel route.
+ * - `/_next/*`, `/_vercel/*`: framework and Vercel assets.
+ */
+export const NON_LOCALIZED_PREFIXES: readonly string[] = [
+  '/api',
+  '/auth',
+  '/firefox-beta',
+  '/sentry-test',
+  '/sentry-tunnel',
+  '/_next',
+  '/_vercel',
+]
+
+/** Root files served by metadata routes. */
+export const NON_LOCALIZED_FILES: ReadonlySet<string> = new Set([
+  '/robots.txt',
+  '/sitemap.xml',
+  '/llms.txt',
+  '/favicon.ico',
+])
+
+/**
+ * Whether the locale handler runs for this path. Also false for any path whose last segment has
+ * a file extension: icons, Open Graph images (`/opengraph-image.png`) and files in `public/`.
+ */
+export function isLocalizedPath(pathname: string): boolean {
+  if (NON_LOCALIZED_PREFIXES.some((prefix) => isUnderPath(pathname, prefix))) return false
+  if (NON_LOCALIZED_FILES.has(pathname)) return false
+  return !/\.[^/]+$/.test(pathname)
+}
+
+/** `/es/dashboard` → `/dashboard`; unprefixed paths are returned as they are. */
+export function stripLocalePrefix(pathname: string): string {
+  const [, first] = pathname.split('/')
+  if (!first || !(LOCALES as readonly string[]).includes(first)) return pathname
+  const rest = pathname.slice(first.length + 1)
+  return rest === '' ? '/' : rest
+}
+
+/** The header next-intl's handler uses to pass the locale to the render. */
+const LOCALE_HEADER = 'X-NEXT-INTL-LOCALE'
+
+const handleI18nRouting = createIntlMiddleware(routing)
+
+/**
+ * The response that lets the request through: next-intl's for a localized path (a rewrite to
+ * `/<default locale>/…`, a `/en/…` → `/…` redirect, or a pass-through for a prefixed path), a
+ * plain pass-through otherwise. The request's headers are forwarded, including any cookies the
+ * Supabase client refreshed on it. A locale header the client sent itself is dropped on paths
+ * the handler skips, so it can't choose the locale of `/auth/*` (the request config would
+ * reject an unknown one anyway).
+ */
+function passThrough(request: NextRequest): NextResponse {
+  if (isLocalizedPath(request.nextUrl.pathname)) return handleI18nRouting(request)
+  const headers = new Headers(request.headers)
+  headers.delete(LOCALE_HEADER)
+  return NextResponse.next({ request: { headers } })
+}
+
+/**
+ * Runs on every matched request, in this order (each step may answer on its own):
+ * 1. Legacy host redirect (old `*.vercel.app` hosts → custom domain).
+ * 2. CORS preflight for the extension's `/api/*` calls.
+ * 3. Supabase session refresh, then route protection for the signed-in pages.
+ * 4. Locale routing (next-intl) for paths under `app/[locale]/`.
+ * A new host-level redirect belongs beside step 1, before anything else runs.
+ */
 export async function proxy(request: NextRequest) {
   // First, before CORS and the Supabase client: an old host's public page has nothing to do here.
   const legacyTarget = legacyHostRedirect(request)
@@ -180,10 +256,12 @@ export async function proxy(request: NextRequest) {
   // not a silent security hole in a properly configured deployment.
   if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('[TabMerger] Supabase env vars missing — proxy running unauthenticated, auth routes not enforced')
-    return withCors(NextResponse.next(), cors)
+    return withCors(passThrough(request), cors)
   }
 
-  let supabaseResponse = NextResponse.next({ request })
+  // Cookies the Supabase client refreshes: written onto the request at once (so the render
+  // reads the new session) and onto whichever response lets the request through.
+  let refreshedCookies: { name: string; value: string; options: CookieOptions }[] = []
 
   const supabase = createServerClient(
     supabaseUrl,
@@ -197,10 +275,7 @@ export async function proxy(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
+          refreshedCookies = cookiesToSet
         },
       },
     }
@@ -212,10 +287,12 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
+  // `/es/dashboard` is the same protected page as `/dashboard`.
+  const appPath = stripLocalePrefix(pathname)
 
   // Protect app routes
   if (
-    (pathname.startsWith('/dashboard') || pathname.startsWith('/account')) &&
+    (appPath.startsWith('/dashboard') || appPath.startsWith('/account')) &&
     !user
   ) {
     const redirectUrl = request.nextUrl.clone()
@@ -235,9 +312,15 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
+  // Created after getUser(), so the forwarded request headers carry any refreshed cookies.
+  const response = passThrough(request)
+  refreshedCookies.forEach(({ name, value, options }) =>
+    response.cookies.set(name, value, options)
+  )
+
   // Headers set on the proxy's response are merged into the route's response,
   // which is what the browser checks against the preflight it already passed.
-  return withCors(supabaseResponse, cors)
+  return withCors(response, cors)
 }
 
 export const config = {

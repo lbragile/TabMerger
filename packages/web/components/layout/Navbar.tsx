@@ -1,5 +1,7 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import NextLink from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ export async function Navbar() {
     // Started, not awaited: the header renders straight away and the star count streams in
     // behind a Suspense boundary. The one promise feeds both the badge and the mobile panel.
     const starsPromise = getGithubStarCount();
+    const t = await getTranslations("nav");
 
     const supabase = await createClient();
     const {
@@ -30,8 +33,11 @@ export async function Navbar() {
                     holds the logo, four links, the GitHub mark, the theme toggle and two buttons. The
                     tighter spacing below lg (mr-4 here and on the logo, px-2 on the links) is what
                     makes them fit: this block shrinks instead of overflowing, so when it is too wide
-                    the right-hand cluster slides over the last link rather than causing a scrollbar. */}
-                <div className="mr-4 flex items-center">
+                    the right-hand cluster slides over the last link rather than causing a scrollbar.
+                    min-w-0 here and on the nav is what lets it shrink: with longer (translated) link
+                    labels the last links are cut off at the cluster instead of pushing the sign-in
+                    buttons off the screen. English fits without it. */}
+                <div className="mr-4 flex min-w-0 items-center">
                     <Link href="/" className="mr-4 flex shrink-0 items-center gap-[9px] lg:mr-8">
                         <Image
                             src="/logo.png"
@@ -42,30 +48,30 @@ export async function Navbar() {
                         />
                         <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">TabMerger</span>
                     </Link>
-                    <nav className="hidden items-center gap-1 text-[13.5px] md:flex">
+                    <nav className="hidden min-w-0 items-center gap-1 overflow-hidden text-[13.5px] md:flex">
                         <Link
                             href="/features"
                             className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
-                            Features
+                            {t("features")}
                         </Link>
                         <Link
                             href="/pricing"
                             className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
-                            Pricing
+                            {t("pricing")}
                         </Link>
                         <Link
                             href="/changelog"
                             className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
-                            Changelog
+                            {t("changelog")}
                         </Link>
                         <Link
                             href="/faq"
                             className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
                         >
-                            FAQ
+                            {t("faq")}
                         </Link>
                     </nav>
                 </div>
@@ -85,12 +91,12 @@ export async function Navbar() {
                                         or the fill colour), so all four are the same 36px box and the browser snaps
                                         them to the same device pixels at any zoom. */}
                                     <Button variant="ghost" size="sm" className="border border-transparent" asChild>
-                                        <Link href="/auth/sign-in">Sign in</Link>
+                                        <NextLink href="/auth/sign-in">{t("signIn")}</NextLink>
                                     </Button>
                                     <Button size="sm" className="border border-primary" asChild>
-                                        <Link href="/auth/sign-up">
-                                            Get started
-                                        </Link>
+                                        <NextLink href="/auth/sign-up">
+                                            {t("getStarted")}
+                                        </NextLink>
                                     </Button>
                                 </>
                             )}

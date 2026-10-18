@@ -1,9 +1,9 @@
+import { useTranslations } from 'next-intl'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { listNames, STORE_BROWSER, STORE_IDS, STORE_LABEL } from '@/lib/stores'
 import {
   BREAKDOWN_CAPTION_CLASS,
-  BREAKDOWN_CAPTION_TEXT,
   BREAKDOWN_CLASS,
   CARD_BOX_CLASS,
   CARD_STRIDE_PX,
@@ -12,7 +12,6 @@ import {
   REVIEWS_CONTAINER_CLASS,
   REVIEWS_HEADING_CLASS,
   REVIEWS_HEADING_ID,
-  REVIEWS_HEADING_TEXT,
   REVIEWS_SECTION_CLASS,
   STAT_BLOCK_CLASS,
   STAT_LABEL_CLASS,
@@ -31,7 +30,7 @@ import {
 /**
  * What the reviews section shows while the stores are being asked for their figures. The
  * landing page streams: everything else is sent at once and this stands in for the section
- * until its data arrives (see the `<Suspense>` in `app/(marketing)/page.tsx`).
+ * until its data arrives (see the `<Suspense>` in `app/[locale]/(marketing)/page.tsx`).
  *
  * It takes up exactly the space the loaded section does, so nothing below it moves when the
  * two are swapped. That is why it is built from the same boxes (`./reviewsLayout`) and why
@@ -64,9 +63,11 @@ function TextBar({ className, children }: { className?: string; children: string
 }
 
 export function ReviewsStripSkeleton() {
+  const t = useTranslations('reviews')
+  const common = useTranslations('common')
   const stats = [
-    { number: '0.00 / 5', label: 'Average rating' },
-    { number: '00', label: `Ratings across ${listNames(STORE_IDS.map((id) => STORE_BROWSER[id]))}` },
+    { number: t('skeletonRating'), label: t('averageRating') },
+    { number: '00', label: t('ratingsAcross', { stores: listNames(STORE_IDS.map((id) => STORE_BROWSER[id]), common) }) },
   ]
 
   return (
@@ -74,9 +75,9 @@ export function ReviewsStripSkeleton() {
       <div className={REVIEWS_CONTAINER_CLASS}>
         {/* The heading needs no data, so it is the real one from the start. */}
         <h2 id={REVIEWS_HEADING_ID} className={REVIEWS_HEADING_CLASS}>
-          {REVIEWS_HEADING_TEXT}
+          {t('heading')}
         </h2>
-        <p className="sr-only">Loading reviews</p>
+        <p className="sr-only">{t('loading')}</p>
 
         <div aria-hidden="true">
           <div className={`${STATS_GRID_CLASS} ${STATS_WITH_BREAKDOWN_CLASS}`}>
@@ -90,7 +91,7 @@ export function ReviewsStripSkeleton() {
 
           <div className={BREAKDOWN_CLASS}>
             <div className="flex justify-center">
-              <TextBar className={BREAKDOWN_CAPTION_CLASS}>{BREAKDOWN_CAPTION_TEXT}</TextBar>
+              <TextBar className={BREAKDOWN_CAPTION_CLASS}>{t('byStore')}</TextBar>
             </div>
             <div className={`${TILES_GRID_CLASS} ${TILES_THREE_COLUMNS_CLASS}`}>
               {STORE_IDS.map((id) => (
@@ -98,9 +99,9 @@ export function ReviewsStripSkeleton() {
                   <Skeleton className={`${pulse} h-6 w-6 shrink-0`} />
                   <div className="flex min-w-0 flex-1 flex-col items-start">
                     <TextBar className={`max-w-full truncate ${TILE_NAME_LINE_CLASS}`}>{STORE_LABEL[id]}</TextBar>
-                    <TextBar className={TILE_COUNT_LINE_CLASS}>00 ratings</TextBar>
+                    <TextBar className={TILE_COUNT_LINE_CLASS}>{t('skeletonRatingCount')}</TextBar>
                   </div>
-                  <TextBar className={`shrink-0 ${TILE_RATING_CLASS}`}>0.00 / 5</TextBar>
+                  <TextBar className={`shrink-0 ${TILE_RATING_CLASS}`}>{t('skeletonRating')}</TextBar>
                 </div>
               ))}
             </div>

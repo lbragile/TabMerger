@@ -1,3 +1,4 @@
+import { IntlWrapper } from './helpers/intl'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { act } from 'react'
 import { renderToString } from 'react-dom/server'
@@ -35,11 +36,14 @@ function Toggle() {
   return <button onClick={toggleTheme}>toggle</button>
 }
 
+// renderToString/hydrateRoot bypass RTL's render, so the translations provider is added here.
 const App = () => (
-  <ThemeProvider>
-    <Toggle />
-    <DemoVideo {...SOURCES} />
-  </ThemeProvider>
+  <IntlWrapper>
+    <ThemeProvider>
+      <Toggle />
+      <DemoVideo {...SOURCES} />
+    </ThemeProvider>
+  </IntlWrapper>
 )
 
 describe('ThemeProvider hydration', () => {

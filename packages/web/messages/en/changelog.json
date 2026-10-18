@@ -1,0 +1,14 @@
+{
+  "metaTitle": "Changelog",
+  "metaDescription": "New features, improvements, and fixes in TabMerger.",
+  "title": "Changelog",
+  "lead": "Everything we shipped, newest first.",
+  "githubRelease": "GitHub release",
+  "githubReleaseLabel": "{version} release on GitHub",
+  "majorRelease": "Major release",
+  "types": {
+    "New": "New",
+    "Improved": "Improved",
+    "Fixed": "Fixed"
+  }
+}

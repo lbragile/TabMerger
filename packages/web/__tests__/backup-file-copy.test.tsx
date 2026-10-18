@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import { AUTO_BACKUP_COPY, BACKUP_FILE_COPY } from '@tabmerger/shared'
-import PrivacyPage from '@/app/(marketing)/privacy/page'
-import FeaturesPage from '@/app/(marketing)/features/page'
+import PrivacyPage from '@/app/[locale]/(marketing)/privacy/page'
+import FeaturesPage from '@/app/[locale]/(marketing)/features/page'
 import { PricingTable } from '@/components/pricing/PricingTable'
 
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }), useSearchParams: () => new URLSearchParams() }))

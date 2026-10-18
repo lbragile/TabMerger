@@ -1,6 +1,7 @@
 'use client'
 
 import { useId, useSyncExternalStore } from 'react'
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { betaAreaKeys, betaGoodKey, betaStepKey } from '@/lib/betaChecklist'
 
@@ -100,10 +101,11 @@ export function BetaStepList({ areaId, steps }: { areaId: string; steps: string[
  */
 export function BetaGoodCheck({ areaId, good }: { areaId: string; good: string[] }) {
   const checked = useCheckedSteps()
+  const t = useTranslations('beta.interactive')
   const baseId = useId()
   return (
     <div className="text-muted-foreground">
-      <p className="font-medium text-foreground/80 mb-1.5">Good looks like</p>
+      <p className="font-medium text-foreground/80 mb-1.5">{t('good')}</p>
       <ul className="space-y-1">
         {good.map((outcome, i) => {
           const key = betaGoodKey(areaId, outcome)
@@ -132,6 +134,7 @@ export function BetaGoodCheck({ areaId, good }: { areaId: string; good: string[]
 /** "3/12" (or "✓ All done") for a test area, shown in its collapsed header. */
 export function BetaAreaProgress({ areaId, items }: { areaId: string; items: { steps: string[]; good: string[] }[] }) {
   const checked = useCheckedSteps()
+  const t = useTranslations('beta.interactive')
   const keys = betaAreaKeys(areaId, items)
   const done = keys.filter((key) => checked.has(key)).length
   if (done === 0) return null
@@ -139,9 +142,9 @@ export function BetaAreaProgress({ areaId, items }: { areaId: string; items: { s
   return (
     <span
       className={cn('ml-auto mr-3 text-xs tabular-nums', all ? 'text-ok font-medium' : 'text-muted-foreground')}
-      aria-label={all ? 'All checks done' : `${done} of ${keys.length} checks done`}
+      aria-label={all ? t('allDoneLabel') : t('progressLabel', { done, total: keys.length })}
     >
-      {all ? '✓ All done' : `${done}/${keys.length}`}
+      {all ? t('allDone') : t('progress', { done, total: keys.length })}
     </span>
   )
 }
@@ -149,6 +152,7 @@ export function BetaAreaProgress({ areaId, items }: { areaId: string; items: { s
 /** Clears every checkmark on the page, e.g. to test a new release from scratch. */
 export function BetaChecklistReset() {
   const checked = useCheckedSteps()
+  const t = useTranslations('beta.interactive')
   if (checked.size === 0) return null
   return (
     <button
@@ -156,7 +160,7 @@ export function BetaChecklistReset() {
       onClick={() => writeChecked(new Set())}
       className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
     >
-      Clear my checkmarks ({checked.size})
+      {t('clear', { count: checked.size })}
     </button>
   )
 }

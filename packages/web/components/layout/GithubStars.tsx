@@ -1,7 +1,8 @@
 import { use } from 'react'
 import { Star } from 'lucide-react'
 import { GitHubMark } from '@/components/GitHubMark'
-import { GITHUB_REPO_URL, formatStarCount, githubRepoLabel } from '@/lib/github'
+import { GITHUB_REPO_URL } from '@/lib/github'
+import { useGithubRepoLabel, useStarCount } from '@/components/layout/githubLabels'
 import { cn } from '@/lib/utils'
 
 interface GithubBadgeProps {
@@ -16,12 +17,14 @@ interface GithubBadgeProps {
  * When there is no count to show it is the mark alone: no "0", no placeholder.
  */
 function GithubBadge({ count, className }: GithubBadgeProps) {
+  const repoLabel = useGithubRepoLabel(count)
+  const formatStars = useStarCount()
   return (
     <a
       href={GITHUB_REPO_URL}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={githubRepoLabel(count)}
+      aria-label={repoLabel}
       className={cn(
         // A sibling of the theme toggle next to it: same height (h-9, as the size="sm"
         // buttons), border colour and radius.
@@ -39,7 +42,7 @@ function GithubBadge({ count, className }: GithubBadgeProps) {
         <span className="flex items-center gap-1 md:hidden lg:flex">
           <Star aria-hidden="true" className="size-3.5 shrink-0" />
           <span className="min-w-[1.25rem] text-center tabular-nums">
-            {count === undefined ? '' : formatStarCount(count)}
+            {count === undefined ? '' : formatStars(count)}
           </span>
         </span>
       )}

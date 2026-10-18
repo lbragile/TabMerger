@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { ChromeIcon } from './BrowserIcons'
 import { AI_ENABLED } from '@/lib/aiFlag'
@@ -7,27 +8,26 @@ import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 export function FinalCta() {
   // Server component: the links follow the deployment answering this request.
   const storeLinks = getStoreLinks()
+  const t = useTranslations('home.finalCta')
 
   return (
     <section className="py-16 sm:py-[72px] px-6 sm:px-11 bg-surface2">
       <div className="container max-w-[720px] text-center">
         <h2 className="font-semibold tracking-tight mb-3 text-[28px] sm:text-[34px] leading-tight">
-          Stop drowning in browser tabs.
+          {t('title')}
         </h2>
         <p className="text-text2 mb-7 text-[15.5px]">
-          {AI_ENABLED
-            ? 'Free to start, no account needed. Upgrade any time for cloud sync and AI.'
-            : 'Free to start, no account needed. Upgrade any time for cloud sync — AI features coming soon.'}
+          {AI_ENABLED ? t('leadAi') : t('leadNoAi')}
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button size="lg" className="gap-2" asChild>
             <a {...storeLinkProps(storeLinks.chrome)}>
               <ChromeIcon size={18} />
-              Install for Chrome — free
+              {t('installChrome')}
             </a>
           </Button>
           <Link href="/faq" className="text-[13.5px] text-text2 hover:text-primary transition-colors">
-            Have questions? See the FAQ →
+            {t('faq')}
           </Link>
         </div>
       </div>

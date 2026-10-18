@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AlertTriangle, Check, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { subscribeWithUserToken } from '@/lib/supabase/realtimeAuth'
 import { cn } from '@/lib/utils'
@@ -19,12 +20,10 @@ import { EXTENSION_MESSAGE } from '@tabmerger/shared'
  */
 type SyncNowResponse = { ok: true; skipped?: boolean } | { ok: false; reason?: string; message?: string }
 
-const SYNC_NOW_REASON_MESSAGES = new Map<string, string>([
-  ['locked', 'Open the extension and unlock encryption to sync.'],
-  ['no-session', 'Sign in to the extension to sync.'],
-  ['error', 'Sync failed. Try again from the extension.'],
-])
-const SYNC_FAILED_FALLBACK_MESSAGE = 'Sync failed.'
+/** The `reason` values the extension sends that have their own message (`dashboard.sync.reasons.*`). */
+const SYNC_NOW_REASONS = ['locked', 'no-session', 'error'] as const
+
+type SyncT = ReturnType<typeof useTranslations<'dashboard.sync'>>
 
 /**
  * localStorage key prefix (one entry per user: `<prefix>:<userId>`, epoch milliseconds) for the
@@ -59,11 +58,13 @@ type SyncStatus =
 const IDLE: SyncStatus = { kind: 'idle' }
 
 /** For `error` the extension's own message says what went wrong, so it wins over the generic text. */
-function failureMessage(result: { reason?: string; message?: string }): string {
+function failureMessage(result: { reason?: string; message?: string }, t: SyncT): string {
   const extensionMessage = typeof result.message === 'string' ? result.message.trim() : ''
   if (result.reason === 'error' && extensionMessage) return extensionMessage
-  const mapped = typeof result.reason === 'string' ? SYNC_NOW_REASON_MESSAGES.get(result.reason) : undefined
-  return mapped ?? (extensionMessage || SYNC_FAILED_FALLBACK_MESSAGE)
+  const reason = (SYNC_NOW_REASONS as readonly string[]).includes(result.reason ?? '')
+    ? (result.reason as (typeof SYNC_NOW_REASONS)[number])
+    : undefined
+  return reason ? t(`reasons.${reason}`) : extensionMessage || t('failedFallback')
 }
 
 /**
@@ -136,6 +137,7 @@ interface SyncIndicatorProps {
  */
 export function SyncIndicator({ userId }: SyncIndicatorProps) {
   const router = useRouter()
+  const t = useTranslations('dashboard.sync')
   useSyncExtensionAuth()
   const reasonId = useId()
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null)
@@ -227,7 +229,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
         await fetchLatestSync()
         next = { kind: 'checked' }
       } else if (!result.ok) {
-        const message = failureMessage(result)
+        const message = failureMessage(result, t)
         toast.error(message)
         await fetchLatestSync()
         next = { kind: 'failed', message }
@@ -257,7 +259,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
       })
     }
     router.refresh()
-  }, [clearTimer, fetchLatestSync, recordSync, router, startTimer])
+  }, [clearTimer, fetchLatestSync, recordSync, router, startTimer, t])
 
   useEffect(() => {
     const supabase = createClient()
@@ -311,15 +313,15 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
 
   const statusText =
     status.kind === 'syncing'
-      ? 'Syncing...'
+      ? t('syncing')
       : status.kind === 'busy'
-        ? 'Sync already in progress'
+        ? t('busy')
         : failed
-          ? 'Sync failed'
+          ? t('failed')
           : lastSyncedAt
-            ? 'Synced'
-            : 'No sync yet'
-  const timeText = !failed && !active && lastSyncedAt ? relativeTime(lastSyncedAt, now) : null
+            ? t('synced')
+            : t('never')
+  const timeText = !failed && !active && lastSyncedAt ? relativeTime(lastSyncedAt, now, t) : null
 
   return (
     <div
@@ -353,7 +355,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
           {statusText}
           {failed && (
             <>
-              <span className="sr-only">. </span>
+              <span className="sr-only">{t('reasonSeparator')}</span>
               <span id={reasonId} className="sr-only">
                 {status.message}
               </span>
@@ -369,7 +371,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
               type="button"
               onClick={handleRefreshClick}
               disabled={requesting}
-              aria-label="Refresh sync status"
+              aria-label={t('refresh')}
               // Spread, not `aria-describedby={… : undefined}`: an explicit undefined would
               // override the description the tooltip trigger sets while the tooltip is open.
               {...(failed ? { 'aria-describedby': reasonId } : {})}
@@ -383,7 +385,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
             </button>
           </TooltipTrigger>
           {/* Shown on hover and on keyboard focus, so the reason for a failure is reachable both ways. */}
-          <TooltipContent side="top">{failed ? status.message : 'Re-sync now'}</TooltipContent>
+          <TooltipContent side="top">{failed ? status.message : t('resync')}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>
@@ -402,13 +404,13 @@ function latestOf(a: Date | null, b: Date | null): Date | null {
   return b > a ? b : a
 }
 
-function relativeTime(date: Date, now: number): string {
+function relativeTime(date: Date, now: number, t: SyncT): string {
   const seconds = Math.max(0, Math.floor((now - date.getTime()) / 1000))
-  if (seconds < 60) return 'just now'
+  if (seconds < 60) return t('justNow')
   const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `${minutes}m ago`
+  if (minutes < 60) return t('minutesAgo', { count: minutes })
   const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
+  if (hours < 24) return t('hoursAgo', { count: hours })
   const days = Math.floor(hours / 24)
-  return `${days}d ago`
+  return t('daysAgo', { count: days })
 }

@@ -19,10 +19,10 @@ vi.mock('@/components/layout/Footer', () => ({
   Footer: () => <footer data-testid="footer" />,
 }))
 
-import NotFound, { metadata as notFoundMetadata } from '@/app/not-found'
+import NotFound, { generateMetadata as notFoundMetadataFor } from '@/app/not-found'
 import RootError from '@/app/error'
-import MarketingError from '@/app/(marketing)/error'
-import AppError from '@/app/(app)/error'
+import MarketingError from '@/app/[locale]/(marketing)/error'
+import AppError from '@/app/[locale]/(app)/error'
 import { ReferenceId } from '@/components/errors/ReferenceId'
 
 function serverError(digest?: string, message = 'boom') {
@@ -60,7 +60,8 @@ describe('not-found page', () => {
     expect(screen.getByTestId('error-illustration')).toHaveTextContent('404')
   })
 
-  it('is titled "Page not found" and leaves noindex to Next, which adds it to every 404', () => {
+  it('is titled "Page not found" and leaves noindex to Next, which adds it to every 404', async () => {
+    const notFoundMetadata = await notFoundMetadataFor()
     expect(notFoundMetadata.title).toBe('Page not found')
     // A page-level robots would be a second <meta name="robots"> next to Next's own.
     expect(notFoundMetadata.robots).toBeUndefined()

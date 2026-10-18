@@ -50,7 +50,7 @@ describe('DashboardPage header restyle', () => {
   })
 
   it('greets the user with "Good morning, {FirstName}" derived from the email local-part', async () => {
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
@@ -60,7 +60,7 @@ describe('DashboardPage header restyle', () => {
   })
 
   it('renders an "AI organise" button with an accessible name', async () => {
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
@@ -68,7 +68,7 @@ describe('DashboardPage header restyle', () => {
   })
 
   it('has no "New group" button: groups are created in the extension only', async () => {
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
@@ -78,7 +78,7 @@ describe('DashboardPage header restyle', () => {
   })
 
   it('does not duplicate sync status text outside of the SyncIndicator pill', async () => {
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     const { container } = render(jsx as React.ReactElement)
 
@@ -95,7 +95,7 @@ describe('DashboardPage header restyle', () => {
     ['the Chrome BETA listing on preview', 'preview', 'https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd'],
   ])('hands the onboarding checklist %s', async (_label, vercelEnv, expectedHref) => {
     vi.stubEnv('VERCEL_ENV', vercelEnv)
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
@@ -105,7 +105,7 @@ describe('DashboardPage header restyle', () => {
   it('hides the "AI organise" button entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {
     vi.resetModules()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
@@ -149,7 +149,7 @@ describe('DashboardPage — free account (no cloud sync)', () => {
   })
 
   it('does not render "New group", "Tab Groups", or "Saved Sessions"', async () => {
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
@@ -166,7 +166,7 @@ describe('DashboardPage — free account (no cloud sync)', () => {
         <div>stats:{String(showSyncStats)}</div>
       ),
     }))
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
@@ -197,7 +197,7 @@ describe('DashboardPage — free account (no cloud sync)', () => {
         },
       }),
     }))
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 

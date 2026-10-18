@@ -1,16 +1,12 @@
 'use client'
 
 import { useId, useRef, useState, useTransition } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Download, Trash2 } from 'lucide-react'
-import {
-  AUTO_BACKUP_COPY,
-  AUTO_BACKUP_INTERVALS,
-  AUTO_BACKUP_RETENTION_COUNT,
-  DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES,
-} from '@tabmerger/shared'
+import { AUTO_BACKUP_RETENTION_COUNT, DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES } from '@tabmerger/shared'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -23,7 +19,7 @@ import {
 } from '@/components/ui/dialog'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
 import { useSavedSessions } from '@/components/dashboard/SavedSessionsProvider'
-import { DAMAGED_ITEM_NOTE, SessionGroupsPreview } from '@/components/dashboard/SessionCard'
+import { SessionGroupsPreview } from '@/components/dashboard/SessionCard'
 import {
   backupFileContent,
   backupFileName,
@@ -34,22 +30,17 @@ import {
   type SavedItem,
 } from '@/lib/savedSessions'
 
-/** Where the extension keeps the backup controls; the dashboard sends people there to restore. */
-export const BACKUPS_EXTENSION_PLACE = 'Settings > Data'
 
 /** Groups and tabs listed when a backup is expanded; the rest is summarised ("+N more"). */
 const PREVIEW_GROUPS = 50
 const PREVIEW_TABS_PER_GROUP = 20
 
-const DEFAULT_INTERVAL_LABEL =
-  AUTO_BACKUP_INTERVALS.find((o) => o.minutes === DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES)?.label ?? 'Daily'
+type DashboardT = ReturnType<typeof useTranslations<'dashboard'>>
 
-const p = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
-
-/** The backup's time as text, or a fallback for a row whose date cannot be read. */
-function whenLabel(item: SavedItem): string {
+/** When a backup was made, for a sentence ("the backup from …"), in the viewer's locale and time zone. */
+function whenLabel(item: SavedItem, t: DashboardT): string {
   const ms = createdAtMs(item)
-  return ms === null ? 'an unknown date' : formatAbsoluteTime(ms)
+  return ms === null ? t('backups.unknownDateInSentence') : formatAbsoluteTime(ms)
 }
 
 /** Saves the backup as a JSON file through a temporary link. The file is built in the browser from the decrypted content. */
@@ -103,10 +94,13 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
   const focusAfterCloseRef = useRef<HTMLElement | null>(null)
   // Relative times are measured from when the section was first shown; a lazy initializer keeps render pure.
   const [now] = useState(() => Date.now())
+  const t = useTranslations('dashboard')
+  const passphrase = useTranslations('dashboard.passphrase')
+  const extensionPlace = t('backups.extensionPlace')
 
   function handleDownload(item: SavedItem) {
     downloadBackup(item)
-    setAnnouncement(`Downloading the backup from ${whenLabel(item)}.`)
+    setAnnouncement(t('backups.downloading', { when: whenLabel(item, t) }))
   }
 
   async function confirmDelete() {
@@ -122,23 +116,23 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
     setDeleting(false)
     setDeleteTarget(null)
     if (ok) {
-      toast.success('Backup deleted')
-      setAnnouncement(`The backup from ${whenLabel(target)} was deleted.`)
+      toast.success(t('backups.deleted'))
+      setAnnouncement(t('backups.deletedAnnouncement', { when: whenLabel(target, t) }))
       // The row (and the button that had focus) is about to leave the page.
       focusAfterCloseRef.current = headingRef.current
       startTransition(() => {
         router.refresh()
       })
     } else {
-      toast.error('Failed to delete backup')
-      setAnnouncement(`The backup from ${whenLabel(target)} could not be deleted.`)
+      toast.error(t('backups.deleteFailed'))
+      setAnnouncement(t('backups.deleteFailedAnnouncement', { when: whenLabel(target, t) }))
     }
   }
 
   return (
     <section aria-labelledby={headingId} id="backups" className="scroll-mt-20">
       <h2 id={headingId} ref={headingRef} tabIndex={-1} className="text-lg font-semibold mb-1 focus:outline-none">
-        Backups
+        {t('backups.title')}
       </h2>
       <p role="status" aria-live="polite" className="sr-only">
         {announcement}
@@ -146,10 +140,10 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
 
       {!syncEnabled && (
         <div className="mt-3 mb-4 rounded-lg border border-dashed p-6 flex flex-col items-start gap-3">
-          <p className="text-sm text-muted-foreground max-w-prose">{AUTO_BACKUP_COPY.upgradeDescription}</p>
-          {showRows && <p className="text-sm text-muted-foreground max-w-prose">{AUTO_BACKUP_COPY.readOnlyNote}</p>}
+          <p className="text-sm text-muted-foreground max-w-prose">{t('backups.upgradeDescription', { count: AUTO_BACKUP_RETENTION_COUNT })}</p>
+          {showRows && <p className="text-sm text-muted-foreground max-w-prose">{t('backups.readOnlyNote')}</p>}
           <Button size="sm" asChild>
-            <Link href="/pricing">Upgrade</Link>
+            <Link href="/pricing">{t('backups.upgrade')}</Link>
           </Button>
         </div>
       )}
@@ -158,27 +152,25 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
         <>
           {syncEnabled && (
             <p className="text-sm text-muted-foreground mb-4 max-w-prose">
-              Snapshots of your groups that the TabMerger extension saved to your account by itself, newest first. The
-              newest {AUTO_BACKUP_RETENTION_COUNT} are kept. To restore one, open the extension and go to{' '}
-              {BACKUPS_EXTENSION_PLACE}; restoring is not done from this page. A file you download here is not encrypted.
+              {t('backups.intro', { count: AUTO_BACKUP_RETENTION_COUNT, place: extensionPlace })}
             </p>
           )}
 
           {status === 'error' && (
             <div role="alert" className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-              <p>Your backups could not be loaded.</p>
+              <p>{t('backups.loadFailed')}</p>
               <Button variant="outline" size="sm" onClick={() => startTransition(() => router.refresh())} loading={isPending}>
-                Try again
+                {t('backups.tryAgain')}
               </Button>
             </div>
           )}
 
           {status === 'locked' && (
-            <PassphrasePrompt label="Your backups are end-to-end encrypted. Enter your passphrase to view them here." />
+            <PassphrasePrompt label={passphrase('backupsLabel')} />
           )}
 
           {(status === 'checking' || status === 'loading') && (
-            <div role="status" aria-label="Loading backups" className="flex flex-col gap-3">
+            <div role="status" aria-label={t('backups.loading')} className="flex flex-col gap-3">
               <Skeleton className="h-20 w-full" />
               <Skeleton className="h-20 w-full" />
             </div>
@@ -188,20 +180,19 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
             <>
               {unknownKind > 0 && (
                 <p className="mb-3 text-xs text-muted-foreground">
-                  {unknownKind === 1
-                    ? "1 saved item can't be read, so it isn't known whether it is a backup. It is listed under Saved Sessions."
-                    : `${unknownKind} saved items can't be read, so it isn't known whether they are backups. They are listed under Saved Sessions.`}
+                  {t('backups.unknownKind', { count: unknownKind })}
                 </p>
               )}
               {backups.length === 0 ? (
                 // Without cloud sync the extension saves no new backups, so the "how they are made" text does not apply.
                 syncEnabled && (
                   <div className="text-sm text-muted-foreground max-w-prose">
-                    <p className="font-medium text-foreground">No backups yet.</p>
+                    <p className="font-medium text-foreground">{t('backups.emptyTitle')}</p>
                     <p className="mt-1">
-                      The extension saves one by itself while your browser is open, when your groups have changed since
-                      the last one. The schedule is &quot;{DEFAULT_INTERVAL_LABEL}&quot; unless you change it: pick the
-                      interval, or back up right away, in the extension under {BACKUPS_EXTENSION_PLACE}.
+                      {t('backups.emptyBody', {
+                        interval: t(`backups.intervals.${DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES}`),
+                        place: extensionPlace,
+                      })}
                     </p>
                   </div>
                 )
@@ -234,21 +225,25 @@ export function BackupsSection({ syncEnabled }: { syncEnabled: boolean }) {
           }}
         >
           <DialogHeader>
-            <DialogTitle>Delete this backup?</DialogTitle>
+            <DialogTitle>{t('backups.deleteTitle')}</DialogTitle>
             <DialogDescription>
               {deleteTarget
-                ? `The backup from ${whenLabel(deleteTarget)}${
-                    deleteTarget.damaged ? '' : ` (${p(deleteTarget.groups.length, 'group')}, ${p(countTabs(deleteTarget.groups), 'tab')})`
-                  } will be removed from your account. A browser that already has this backup keeps its own copy.`
+                ? deleteTarget.damaged
+                  ? t('backups.deleteBody', { when: whenLabel(deleteTarget, t) })
+                  : t('backups.deleteBodyWithCounts', {
+                      when: whenLabel(deleteTarget, t),
+                      groups: t('counts.groups', { count: deleteTarget.groups.length }),
+                      tabs: t('counts.tabs', { count: countTabs(deleteTarget.groups) }),
+                    })
                 : ''}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" size="sm" onClick={() => setDeleteTarget(null)} disabled={deleting}>
-              Cancel
+              {t('backups.cancel')}
             </Button>
             <Button variant="destructive" size="sm" onClick={confirmDelete} loading={deleting}>
-              Delete
+              {t('backups.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -270,10 +265,11 @@ function BackupRow({
   onDelete: (opener: HTMLElement) => void
 }) {
   const [open, setOpen] = useState(false)
+  const t = useTranslations('dashboard')
   const contentsId = useId()
   const titleId = useId()
   const ms = createdAtMs(backup)
-  const when = whenLabel(backup)
+  const when = whenLabel(backup, t)
   const groupCount = backup.groups.length
   const tabCount = countTabs(backup.groups)
 
@@ -282,39 +278,39 @@ function BackupRow({
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0">
           <h3 id={titleId} className="font-bold text-[0.9375rem] break-words">
-            {ms === null ? 'Unknown date' : <time dateTime={new Date(ms).toISOString()}>{when}</time>}
+            {ms === null ? t('backups.unknownDate') : <time dateTime={new Date(ms).toISOString()}>{when}</time>}
           </h3>
           <p className="text-xs text-text2">
-            {AUTO_BACKUP_COPY.namePrefix}
+            {t('backups.namePrefix')}
             {ms !== null && <> · {formatRelativeTime(ms, now)}</>}
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {!backup.damaged && (
-            <Button variant="outline" size="sm" onClick={onDownload} aria-label={`Download backup from ${when}`}>
+            <Button variant="outline" size="sm" onClick={onDownload} aria-label={t('backups.downloadLabel', { when })}>
               <Download className="h-4 w-4" aria-hidden="true" />
-              Download
+              {t('backups.download')}
             </Button>
           )}
           <Button
             variant="outline"
             size="sm"
             onClick={(event) => onDelete(event.currentTarget)}
-            aria-label={`Delete backup from ${when}`}
+            aria-label={t('backups.deleteLabel', { when })}
             className="text-destructive hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
-            Delete
+            {t('backups.delete')}
           </Button>
         </div>
       </div>
 
       {backup.damaged ? (
-        <p className="mt-2 text-xs text-muted-foreground">{DAMAGED_ITEM_NOTE}</p>
+        <p className="mt-2 text-xs text-muted-foreground">{t('damagedNote')}</p>
       ) : (
         <div className="mt-2 flex flex-wrap gap-2">
-          <span className="text-[0.75rem] bg-surface3 px-2 py-0.5 rounded-md">{p(groupCount, 'group')}</span>
-          <span className="text-[0.75rem] bg-surface3 px-2 py-0.5 rounded-md">{p(tabCount, 'tab')}</span>
+          <span className="text-[0.75rem] bg-surface3 px-2 py-0.5 rounded-md">{t('counts.groups', { count: groupCount })}</span>
+          <span className="text-[0.75rem] bg-surface3 px-2 py-0.5 rounded-md">{t('counts.tabs', { count: tabCount })}</span>
         </div>
       )}
 
@@ -328,7 +324,7 @@ function BackupRow({
             aria-describedby={titleId}
             className="text-xs text-text2 hover:text-foreground px-2 py-1 -ml-2 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
           >
-            {open ? 'Hide contents' : `Show contents (${groupCount})`}
+            {open ? t('sessions.hideContents') : t('sessions.showContents', { count: groupCount })}
           </button>
           {open && (
             <SessionGroupsPreview

@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -18,13 +19,14 @@ import { SignOutForm } from "@/components/auth/SignOutForm";
  * visitor to the marketing pages would otherwise download and never use.
  */
 export function AccountMenu({ email, initials }: { email: string; initials?: string }) {
+    const t = useTranslations("nav");
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
                     className={ACCOUNT_AVATAR_BUTTON_CLASS}
-                    aria-label="Account menu"
+                    aria-label={t("accountMenu")}
                 >
                     <AccountAvatar initials={initials} />
                 </Button>
@@ -41,10 +43,10 @@ export function AccountMenu({ email, initials }: { email: string; initials?: str
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href="/dashboard">{t("dashboard")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <Link href="/account">Account</Link>
+                    <Link href="/account">{t("account")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {/* Red on hover and focus, like the same item in the dashboard's menu. */}
@@ -54,7 +56,7 @@ export function AccountMenu({ email, initials }: { email: string; initials?: str
                             className="w-full text-left"
                             type="submit"
                         >
-                            Sign out
+                            {t("signOut")}
                         </button>
                     </SignOutForm>
                 </DropdownMenuItem>

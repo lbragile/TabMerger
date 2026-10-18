@@ -13,6 +13,11 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./vitest.setup.tsx'],
+    // next-intl is bundled rather than loaded from node_modules as is, so the `next/link` and
+    // `next/navigation` mocks in vitest.setup.tsx also apply inside it. use-intl (which holds the
+    // React context) stays external: a test that calls vi.resetModules() then still shares one
+    // context with the provider vitest.setup.tsx renders around it.
+    server: { deps: { inline: ['next-intl'] } },
     include: ['**/*.{test,spec}.{ts,tsx}'],
     exclude: ['**/node_modules/**', '**/e2e/**', '**/.next/**'],
     coverage: {

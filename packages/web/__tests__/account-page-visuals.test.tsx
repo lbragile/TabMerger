@@ -45,7 +45,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     vi.resetModules()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockSupabase('free')
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -59,7 +59,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     vi.resetModules()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockSupabase('pro_ai')
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -73,7 +73,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     vi.resetModules()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockSupabase('pro_ai', 100, [{ credits: 50 }, { credits: 50 }])
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     render((await AccountPage()) as React.ReactElement)
 
     // 300 base + 100 purchased - 100 used
@@ -84,7 +84,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     vi.resetModules()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
     mockSupabase('pro_ai')
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     render((await AccountPage()) as React.ReactElement)
 
     expect(screen.queryByText('AI credits left')).not.toBeInTheDocument()
@@ -125,7 +125,7 @@ describe('AccountPage — buy more AI calls', () => {
     vi.doMock('@/lib/stripe', () => ({
       createBillingPortalSession: async () => 'https://billing.example.com',
     }))
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -141,7 +141,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
   it('hides Devices card, device list, and sync-stat cards for a free account', async () => {
     vi.resetModules()
     mockSupabase('free')
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -158,7 +158,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
   it('still offers "Sign out of all devices" for a free account (moved into Profile)', async () => {
     vi.resetModules()
     mockSupabase('free')
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -168,7 +168,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
   it('shows the Devices card and real (non-placeholder) sync-stat cards for an active Pro account', async () => {
     vi.resetModules()
     mockSupabase('pro')
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -210,7 +210,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
     vi.doMock('@/lib/stripe', () => ({
       createBillingPortalSession: async () => 'https://billing.example.com',
     }))
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -246,7 +246,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
     vi.doMock('@/lib/stripe', () => ({
       createBillingPortalSession: async () => 'https://billing.example.com',
     }))
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
@@ -260,7 +260,7 @@ describe('AccountPage — dev-only device mock fallback', () => {
     mockSupabase('pro')
     vi.stubEnv('NODE_ENV', 'production')
     try {
-      const { default: AccountPage } = await import('@/app/(app)/account/page')
+      const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
       const jsx = await AccountPage()
       render(jsx as React.ReactElement)
       expect(screen.getByText('No devices yet.')).toBeInTheDocument()

@@ -2,6 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
@@ -87,6 +89,7 @@ function groupUrls(group: Group): string[] {
 
 function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; row: React.ReactNode }) {
   const previewsEnabled = useContext(PreviewsEnabledContext)
+  const t = useTranslations('share')
   const [ogImage, setOgImage] = useState<string | null>(tab.ogImage ?? null)
   const [loading, setLoading] = useState(false)
   const fetchedRef = useRef(false)
@@ -150,7 +153,7 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span className="text-xs opacity-40">No preview</span>
+                <span className="text-xs opacity-40">{t('noPreview')}</span>
               </div>
             )}
           </div>
@@ -170,6 +173,7 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
  */
 function PreviewsToggle({ enabled, onChange }: { enabled: boolean; onChange: (next: boolean) => void }) {
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const t = useTranslations('share')
 
   const handleSwitchChange = useCallback((next: boolean) => {
     if (!next) {
@@ -196,36 +200,35 @@ function PreviewsToggle({ enabled, onChange }: { enabled: boolean; onChange: (ne
       <div className="flex items-center gap-2.5">
         <Switch id="show-page-previews" checked={enabled} onCheckedChange={handleSwitchChange} />
         <label htmlFor="show-page-previews" className="text-sm font-medium cursor-pointer">
-          Show page previews
+          {t('previewsToggle')}
         </label>
       </div>
       <p className="text-xs text-muted-foreground max-w-md">
-        When on, hovering a tab sends that tab&apos;s web address to TabMerger&apos;s preview
-        service to fetch its image. It isn&apos;t linked to any account, logged, or stored.
+        {t('previewsNote')}
       </p>
 
       <Dialog open={confirmOpen} onOpenChange={handleOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Turn on page previews?</DialogTitle>
+            <DialogTitle>{t('previewsDialogTitle')}</DialogTitle>
             <DialogDescription>
-              Hovering a tab will send that tab&apos;s web address to TabMerger&apos;s preview
-              service, which fetches the page&apos;s preview image and description. The address
-              isn&apos;t linked to your account, isn&apos;t logged, and isn&apos;t stored. Read more in our{' '}
-              <a
-                href="/privacy#page-previews"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-foreground transition-colors"
-              >
-                privacy policy&apos;s Page previews section
-              </a>
-              .
+              {t.rich('previewsDialogBody', {
+                link: (chunks) => (
+                  <Link
+                    href="/privacy#page-previews"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-4 hover:text-foreground transition-colors"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmOpen(false)}>Cancel</Button>
-            <Button onClick={handleConfirm}>Turn on</Button>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>{t('cancel')}</Button>
+            <Button onClick={handleConfirm}>{t('turnOn')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -297,6 +300,7 @@ function useDecryptedGroups(groups: Group[] | EncryptedSnapshot) {
 export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
   // Hooks must run unconditionally — pass a harmless placeholder when there's no bundle.
   const decryptState = useDecryptedGroups(bundle?.groups ?? [])
+  const t = useTranslations('share')
 
   // Lazy initializer (not an effect): runs once on the client during the
   // first render, never during SSR (`readPreviewsEnabled` itself guards on
@@ -314,7 +318,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
   if (!bundle) {
     return (
       <div className="flex items-center justify-center min-h-[200px] text-muted-foreground">
-        <p>Link not found.</p>
+        <p>{t('notFound')}</p>
       </div>
     )
   }
@@ -322,7 +326,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
   if (bundle.expiresAt && new Date(bundle.expiresAt) < new Date()) {
     return (
       <div className="flex items-center justify-center min-h-[200px] text-muted-foreground">
-        <p>Link expired.</p>
+        <p>{t('expired')}</p>
       </div>
     )
   }
@@ -330,7 +334,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
   if (decryptState.status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-[200px] text-muted-foreground">
-        <p>Decrypting…</p>
+        <p>{t('decrypting')}</p>
       </div>
     )
   }
@@ -338,7 +342,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
   if (decryptState.status === 'error') {
     return (
       <div className="flex items-center justify-center min-h-[200px] text-muted-foreground">
-        <p>Can&apos;t decrypt this link — the key is missing or invalid.</p>
+        <p>{t('decryptFailed')}</p>
       </div>
     )
   }
@@ -352,7 +356,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
   const totalWindows = groups.reduce((sum, g) => sum + g.windows.length, 0)
 
   if (groups.length === 0) {
-    return <p className="text-muted-foreground">No groups in this bundle.</p>
+    return <p className="text-muted-foreground">{t('empty')}</p>
   }
 
   return (
@@ -360,7 +364,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
     <PreviewsEnabledContext.Provider value={previewsEnabled}>
     <div className="space-y-4">
       <p className="text-sm text-text2">
-        {totalTabs} tabs across {totalWindows} windows in {groups.length} groups
+        {t('summary', { tabs: totalTabs, windows: totalWindows, groups: groups.length })}
       </p>
       <PreviewsToggle enabled={previewsEnabled} onChange={handlePreviewsChange} />
       {groups.map((group) => {
@@ -374,34 +378,34 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
             />
             <h2 className="font-semibold text-[15px]">{group.name}</h2>
             <span className="text-xs text-text3">
-              {group.windows.length} windows &middot; {groupTabs} tabs
+              {t('groupSummary', { windows: group.windows.length, tabs: groupTabs })}
             </span>
             <button
               type="button"
-              aria-label={group.windows.length === 1 ? 'Open window' : 'Open all windows'}
+              aria-label={group.windows.length === 1 ? t('openWindow') : t('openAllWindows')}
               className="ml-auto text-xs text-primary hover:underline disabled:opacity-50 disabled:no-underline"
               disabled={groupUrls(group).length === 0}
               onClick={() => groupUrls(group).forEach((url) => window.open(url, '_blank', 'noopener,noreferrer'))}
             >
-              {group.windows.length === 1 ? 'Open window' : 'Open all windows'}
+              {group.windows.length === 1 ? t('openWindow') : t('openAllWindows')}
             </button>
           </div>
           <div className="p-2 flex flex-col gap-2">
           {group.windows.map((win, winIndex) => (
             <div key={`${group.id}-win-${winIndex}`} className="rounded-sm border border-line divide-y divide-line">
               <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-text3">
-                <span>Window {winIndex + 1}</span>
+                <span>{t('window', { number: winIndex + 1 })}</span>
                 {win.incognito && (
-                  <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium">Incognito</span>
+                  <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium">{t('incognito')}</span>
                 )}
                 <button
                   type="button"
-                  aria-label={windowUrls(win).length === 1 ? 'Open tab' : 'Open all tabs'}
+                  aria-label={windowUrls(win).length === 1 ? t('openTab') : t('openAllTabs')}
                   className="ml-auto text-primary hover:underline disabled:opacity-50 disabled:no-underline"
                   disabled={windowUrls(win).length === 0}
                   onClick={() => windowUrls(win).forEach((url) => window.open(url, '_blank', 'noopener,noreferrer'))}
                 >
-                  {windowUrls(win).length === 1 ? 'Open tab' : 'Open all tabs'}
+                  {windowUrls(win).length === 1 ? t('openTab') : t('openAllTabs')}
                 </button>
               </div>
               {win.tabs.map((tab, tabIndex) => {

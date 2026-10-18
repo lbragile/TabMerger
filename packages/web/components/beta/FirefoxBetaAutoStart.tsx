@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { BETA_GUIDE_START_FIREFOX, BETA_GUIDE_START_PARAM } from '@/lib/storeLinks'
 import { startFile } from '@/lib/startFile'
 
@@ -24,6 +25,7 @@ interface Props {
  */
 export function FirefoxBetaAutoStart({ xpiHref }: Props) {
   const [arrivedToInstall, setArrivedToInstall] = useState(false)
+  const t = useTranslations('beta.interactive')
 
   useEffect(() => {
     const url = new URL(window.location.href)
@@ -44,7 +46,7 @@ export function FirefoxBetaAutoStart({ xpiHref }: Props) {
   return (
     <span role="status" className={arrivedToInstall ? 'mt-2 block text-sm text-foreground' : undefined}>
       {arrivedToInstall
-        ? 'The Firefox beta should start on its own: Firefox asks whether to add it, other browsers download the file. If nothing happens, use "Install the Firefox beta" in this step.'
+        ? t('firefoxAutoStart')
         : ''}
     </span>
   )

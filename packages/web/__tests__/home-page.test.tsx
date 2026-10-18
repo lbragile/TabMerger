@@ -1,7 +1,7 @@
 import { Children, isValidElement, Suspense, type ReactElement, type ReactNode } from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import HomePage from '@/app/(marketing)/page'
+import HomePage from '@/app/[locale]/(marketing)/page'
 import { ReviewsStrip } from '@/components/marketing/ReviewsStrip'
 import { ReviewsStripSkeleton } from '@/components/marketing/ReviewsStripSkeleton'
 

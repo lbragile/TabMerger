@@ -1,11 +1,12 @@
 'use client'
 
 import { House, LayoutDashboard, RotateCw } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { ErrorPageShell, ShellLink } from './ErrorPageShell'
 import { ReferenceId } from './ReferenceId'
 import { useReportError } from './useReportError'
-import { APP_LINKS, SERVER_ERROR_COPY, SITE_LINKS } from './copy'
+import { APP_LINKS, SITE_LINKS } from './copy'
 
 /** The props Next.js passes an `error.tsx` / `global-error.tsx` boundary. */
 export interface ErrorBoundaryProps {
@@ -33,6 +34,7 @@ interface ErrorBoundaryViewProps extends ErrorBoundaryProps {
  */
 export function ErrorBoundaryView({ error, retry, reset, context, as = 'div', className }: ErrorBoundaryViewProps) {
   useReportError(error)
+  const t = useTranslations('errors')
 
   const tryAgain = () => {
     if (retry) retry()
@@ -41,24 +43,23 @@ export function ErrorBoundaryView({ error, retry, reset, context, as = 'div', cl
   }
 
   const plain = context === 'global'
-  const home = context === 'app' ? { href: '/dashboard', label: 'Back to dashboard' } : { href: '/', label: 'Back to home' }
+  const home = context === 'app' ? { href: '/dashboard', label: t('backToDashboard') } : { href: '/', label: t('backToHome') }
   const HomeIcon = context === 'app' ? LayoutDashboard : House
 
   return (
     <>
-      <title>{`${SERVER_ERROR_COPY.documentTitle} | TabMerger`}</title>
+      <title>{t('titleWithBrand', { title: t('serverError.documentTitle') })}</title>
       <ErrorPageShell
         as={as}
         className={className}
-        copy={SERVER_ERROR_COPY}
-        variant="crashed"
+        kind="serverError"
         links={context === 'app' ? APP_LINKS : SITE_LINKS}
         plainLinks={plain}
         actions={
           <>
             <Button size="lg" onClick={tryAgain}>
               <RotateCw className="h-4 w-4" aria-hidden="true" />
-              Try again
+              {t('tryAgain')}
             </Button>
             <Button size="lg" variant="outline" asChild>
               <ShellLink href={home.href} plain={plain}>
@@ -72,7 +73,7 @@ export function ErrorBoundaryView({ error, retry, reset, context, as = 'div', cl
         {error.digest ? <ReferenceId digest={error.digest} /> : null}
         {process.env.NODE_ENV === 'development' && error.message ? (
           <details className="mt-6 w-full max-w-full border border-dashed border-border2 bg-surface2 p-3 text-left text-xs">
-            <summary className="cursor-pointer font-medium text-text2">Error details (development only)</summary>
+            <summary className="cursor-pointer font-medium text-text2">{t('devDetails')}</summary>
             <pre className="mt-2 whitespace-pre-wrap break-words font-mono text-text2">{error.message}</pre>
           </details>
         ) : null}

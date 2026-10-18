@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "eyebrow": "Tab manager for people with too many tabs",
+    "title": "Stop drowning in browser tabs.",
+    "lead": "TabMerger folds every open window into named, colour-coded groups you can search, share and restore — on any machine, in one click.",
+    "installChrome": "Install for Chrome — free",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Free plan, no account needed."
+  },
+  "install": {
+    "title": "Ready to organize your browser?",
+    "lead": "Install TabMerger in seconds. No account required to get started.",
+    "addToChrome": "Add to Chrome",
+    "addToFirefox": "Add to Firefox",
+    "addToEdge": "Add to Edge",
+    "viewPricing": "View pricing",
+    "note": "Free to install — No account required · Edge support coming soon"
+  },
+  "finalCta": {
+    "title": "Stop drowning in browser tabs.",
+    "leadAi": "Free to start, no account needed. Upgrade any time for cloud sync and AI.",
+    "leadNoAi": "Free to start, no account needed. Upgrade any time for cloud sync — AI features coming soon.",
+    "installChrome": "Install for Chrome — free",
+    "faq": "Have questions? See the FAQ →"
+  },
+  "features": {
+    "title": "Built for the moment you have ninety tabs open.",
+    "seeAll": "See all features",
+    "ai": {
+      "title": "AI files the mess for you",
+      "description": "One click clusters your open tabs by topic and names each group. Accept, rename, or ignore.",
+      "summary": "✦ 24 tabs → 3 groups",
+      "groupEvals": "LLM evals · 9",
+      "groupHiring": "Hiring · 7",
+      "groupDocs": "Docs · 8"
+    },
+    "sessions": {
+      "title": "Close everything, lose nothing",
+      "description": "Save a session by name and restore the exact windows and order tomorrow morning.",
+      "sessionName": "Morning Research",
+      "sessionStats": "3 groups · 5 windows · 24 tabs"
+    },
+    "sync": {
+      "title": "The same tabs on every machine",
+      "description": "Sync is automatic and per-tab, so a laptop edit never clobbers what you did on the desktop.",
+      "status": "Synced 4 minutes ago · 3 devices"
+    }
+  },
+  "pricing": {
+    "title": "Simple, transparent pricing",
+    "seeFull": "See full pricing",
+    "cancelNote": "Cancel anytime from your account — no lock-in, no questions asked.",
+    "blurbFree": "For casual users trying it out",
+    "blurbPro": "For users who want extra premium features",
+    "blurbProAi": "For power users who want AI related features"
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,6 +18,7 @@ import {
 import Image from 'next/image'
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations('auth')
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -48,14 +50,14 @@ export default function ForgotPasswordPage() {
       <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-sm text-center">
           <CardHeader>
-            <CardTitle>Check your email</CardTitle>
+            <CardTitle>{t('checkEmailTitle')}</CardTitle>
             <CardDescription>
-              We sent a password reset link to <strong>{email}</strong>.
+              {t.rich('forgotPassword.sent', { email, strong: (chunks) => <strong>{chunks}</strong> })}
             </CardDescription>
           </CardHeader>
           <CardFooter className="justify-center">
             <Button variant="ghost" asChild>
-              <Link href="/auth/sign-in">Back to sign in</Link>
+              <Link href="/auth/sign-in">{t('backToSignIn')}</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -70,24 +72,24 @@ export default function ForgotPasswordPage() {
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="TabMerger" width={32} height={32} className="rounded-md" />
           </Link>
-          <h1 className="text-2xl font-bold">Reset your password</h1>
+          <h1 className="text-2xl font-bold">{t('forgotPassword.title')}</h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email and we&apos;ll send you a reset link
+            {t('forgotPassword.lead')}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Forgot password</CardTitle>
+            <CardTitle className="text-lg">{t('forgotPassword.cardTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('email')}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -96,13 +98,13 @@ export default function ForgotPasswordPage() {
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
               <Button type="submit" className="w-full" disabled={loading} loading={loading}>
-                Send reset link
+                {t('forgotPassword.submit')}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="justify-center">
             <Button variant="ghost" asChild>
-              <Link href="/auth/sign-in">Back to sign in</Link>
+              <Link href="/auth/sign-in">{t('backToSignIn')}</Link>
             </Button>
           </CardFooter>
         </Card>

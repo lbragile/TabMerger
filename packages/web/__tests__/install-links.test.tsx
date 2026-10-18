@@ -23,9 +23,9 @@ import { ShareInstallCta } from '@/components/ShareInstallCta'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { PricingCard } from '@/components/pricing/PricingCard'
 import { PricingTable } from '@/components/pricing/PricingTable'
-import FeaturesPage from '@/app/(marketing)/features/page'
-import ShareDemoPage from '@/app/(marketing)/share/demo/page'
-import PricingPage from '@/app/(marketing)/pricing/page'
+import FeaturesPage from '@/app/[locale]/(marketing)/features/page'
+import ShareDemoPage from '@/app/[locale]/(marketing)/share/demo/page'
+import PricingPage from '@/app/[locale]/(marketing)/pricing/page'
 
 const CHROME_STABLE = 'https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc'
 const CHROME_BETA = 'https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd'
@@ -170,7 +170,7 @@ describe('client components use the install link passed from the server', () => 
           name="Free"
           monthlyPrice={0}
           yearlyPrice={0}
-          features={['Feature A']}
+          features={[{ text: 'Feature A', inherited: false }]}
           interval="monthly"
           installHref={INSTALL_HREF}
         />

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { CheckCircle2, Circle, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { useExtensionInstalled } from '@/lib/hooks/useExtensionInstalled'
 import { storeLinkProps } from '@/lib/storeLinks'
@@ -33,17 +34,18 @@ export function OnboardingChecklist({ isSignedIn, isPro, installHref }: Props) {
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setDismissed(localStorage.getItem(STORAGE_KEY) === '1') }, [])
   const extensionInstalled = useExtensionInstalled()
+  const t = useTranslations('dashboard.onboarding')
 
   const steps: Step[] = [
     {
       id: 'install',
-      label: 'Install the TabMerger extension',
+      label: t('install'),
       href: installHref,
       done: extensionInstalled,
     },
     {
       id: 'group',
-      label: 'Create your first group in the extension',
+      label: t('group'),
       href: undefined, // informational only
       // ponytail: no browser signal to verify this from the web app either — treat as
       // optimistically done so the checklist doesn't stall forever on an unverifiable step
@@ -51,13 +53,13 @@ export function OnboardingChecklist({ isSignedIn, isPro, installHref }: Props) {
     },
     {
       id: 'signin',
-      label: 'Sign in to enable cloud sync',
+      label: t('signin'),
       href: '/auth/sign-in',
       done: isSignedIn,
     },
     {
       id: 'upgrade',
-      label: 'Upgrade to Pro for unlimited groups',
+      label: t('upgrade'),
       href: '/pricing',
       done: isPro,
     },
@@ -75,15 +77,15 @@ export function OnboardingChecklist({ isSignedIn, isPro, installHref }: Props) {
   return (
     <div className="rounded-lg border border-blue-200 dark:border-blue-500/30 bg-blue-50/50 dark:bg-blue-500/10 px-4 py-3">
       <div className="flex items-center justify-between gap-3 mb-2">
-        <span className="text-sm font-semibold">Get started with TabMerger</span>
+        <span className="text-sm font-semibold">{t('title')}</span>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-blue-700 dark:text-blue-300">{doneCount} of 4 done</span>
+          <span className="text-xs text-blue-700 dark:text-blue-300">{t('progress', { done: doneCount, total: steps.length })}</span>
           <Button
             variant="ghost"
             size="icon"
             className="h-6 w-6 text-muted-foreground"
             onClick={dismiss}
-            aria-label="Dismiss"
+            aria-label={t('dismiss')}
           >
             <X className="h-4 w-4" />
           </Button>

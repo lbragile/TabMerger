@@ -1,0 +1,32 @@
+{
+  "metaTitle": "Contact",
+  "metaDescription": "Get in touch with the TabMerger team: report a bug, ask about billing or your account, or share feedback and ideas.",
+  "eyebrow": "Support",
+  "title": "Contact Us",
+  "lead": "Have a question, found a bug, or need help with your subscription? We typically reply within one business day.",
+  "bugReport": "Reporting a bug? <link>Open a GitHub issue</link> for faster tracking and visibility.",
+  "preferEmail": "Prefer email? Write to <email>{address}</email>.",
+  "sentTitle": "Message sent",
+  "sentBody": "We'll get back to you shortly.",
+  "email": "Email",
+  "emailPlaceholder": "you@example.com",
+  "subject": "Subject",
+  "subjectPlaceholder": "Select a reason…",
+  "subjects": {
+    "bug": "Bug report",
+    "betaBug": "Beta bug report",
+    "feedback": "Feedback and ideas",
+    "billing": "Billing question",
+    "feature": "Feature request",
+    "account": "Account help",
+    "other": "Other"
+  },
+  "otherSubject": "Please specify",
+  "otherSubjectPlaceholder": "What's this about?",
+  "message": "Message",
+  "messagePlaceholder": "Describe your issue or question in as much detail as helpful.",
+  "rateLimited": "Too many messages sent — try again later.",
+  "failed": "Something went wrong. Please try again or email us at <email>{address}</email>.",
+  "sending": "Sending…",
+  "send": "Send message"
+}

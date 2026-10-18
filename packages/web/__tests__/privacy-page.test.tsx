@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
-import PrivacyPage from '@/app/(marketing)/privacy/page'
+import PrivacyPage from '@/app/[locale]/(marketing)/privacy/page'
 import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
 const SECTION_IDS = [

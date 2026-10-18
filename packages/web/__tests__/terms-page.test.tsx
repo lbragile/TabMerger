@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import TermsPage from '@/app/(marketing)/terms/page'
+import TermsPage from '@/app/[locale]/(marketing)/terms/page'
 
 const SECTION_IDS = [
   'description',

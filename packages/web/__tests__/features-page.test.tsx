@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import FeaturesPage from '@/app/(marketing)/features/page'
+import FeaturesPage from '@/app/[locale]/(marketing)/features/page'
 
 describe('FeaturesPage', () => {
   it('wraps the Pro AI section cards in a styled surface2 container', () => {

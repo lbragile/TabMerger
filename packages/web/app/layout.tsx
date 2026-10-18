@@ -3,12 +3,16 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AppToaster } from '@/components/AppToaster'
 import { PostHogProvider } from '@/components/posthog-provider'
 import { DeferredOnLoad } from '@/components/DeferredOnLoad'
 import { getMetadataBase } from '@/lib/utils'
-import { HOME_TITLE, SITE_DESCRIPTION, SITE_NAME, TITLE_TEMPLATE } from '@/lib/seo'
+import { siteMetadata } from '@/lib/seo'
+import { clientMessages, type Messages } from '@/i18n/messages'
+import { DEFAULT_LOCALE, isAppLocale, localeDirection, type AppLocale } from '@/i18n/locales'
 import { noFlashThemeScript } from '@/lib/themeScript'
 import './globals.css'
 
@@ -21,56 +25,48 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 })
 
-export const metadata: Metadata = {
-  metadataBase: getMetadataBase(),
-  title: {
-    default: HOME_TITLE,
-    template: TITLE_TEMPLATE,
-  },
-  description: SITE_DESCRIPTION,
-  keywords: [
-    'tab manager',
-    'browser extension',
-    'productivity',
-    'chrome extension',
-    'tab organizer',
-  ],
-  // Fallback cards for pages that set none (the signed-in app, auth, 404). Indexable pages set
-  // their own through `pageMetadata()` (lib/seo.ts): Next replaces these objects whole, it does
-  // not merge them. No `url` here: one URL for every page is what made all pages share as the
-  // homepage.
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    siteName: SITE_NAME,
-    title: HOME_TITLE,
-    description: SITE_DESCRIPTION,
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: HOME_TITLE,
-    description: SITE_DESCRIPTION,
-  },
-  verification: {
-    google: 'OW3tfEcFL_xiCb5p0XfnF7B1BILkp-gkxDuNg4XZFK8',
-  },
+/**
+ * The request's locale: the `[locale]` segment for the translated site (the proxy passes it in a
+ * request header), the default locale for routes outside it (`/auth/*`, the root 404).
+ */
+async function requestLocale(): Promise<AppLocale> {
+  const locale = await getLocale()
+  return isAppLocale(locale) ? locale : DEFAULT_LOCALE
 }
 
-export default function RootLayout({
+// Fallback cards for pages that set none (the signed-in app, auth, 404). Indexable pages set
+// their own through `pageMetadata()` (lib/seo.ts).
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    metadataBase: getMetadataBase(),
+    ...(await siteMetadata(await requestLocale())),
+    verification: {
+      google: 'OW3tfEcFL_xiCb5p0XfnF7B1BILkp-gkxDuNg4XZFK8',
+    },
+  }
+}
+
+/** `lang` and `dir` follow the active locale; Client Components get their namespaces of its catalog. */
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const locale = await requestLocale()
+  const messages = (await getMessages({ locale })) as Messages
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} dir={localeDirection(locale)} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashThemeScript }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
-        <ThemeProvider>
-          {children}
-          <AppToaster />
-        </ThemeProvider>
+        <NextIntlClientProvider locale={locale} messages={clientMessages(messages)}>
+          <ThemeProvider>
+            {children}
+            <AppToaster />
+          </ThemeProvider>
+        </NextIntlClientProvider>
         {/* Measurement loads after the page has, never during it: it needs none of the first
             paint's bandwidth or main-thread time. */}
         <DeferredOnLoad>

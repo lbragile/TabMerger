@@ -1,6 +1,8 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ReviewsStrip, buildMarqueeHalf, buildMarqueeTrack, listNames } from '@/components/marketing/ReviewsStrip'
+import { createTranslator } from 'next-intl'
+import en from '@/messages/en'
 import { getChromeStoreStats } from '@/lib/chromeStoreStats'
 import { getEdgeAddonStats } from '@/lib/edgeAddonStats'
 import { getFirefoxAddonStats } from '@/lib/firefoxAddonStats'
@@ -358,7 +360,8 @@ describe('listNames', () => {
     [['Chrome', 'Firefox'], 'Chrome and Firefox'],
     [['Chrome', 'Firefox', 'Edge'], 'Chrome, Firefox and Edge'],
   ])('joins %j as %j', (names, expected) => {
-    expect(listNames(names)).toBe(expected)
+    const t = createTranslator({ locale: 'en', messages: en, namespace: 'common' })
+    expect(listNames(names, t)).toBe(expected)
   })
 })
 

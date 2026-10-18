@@ -2,18 +2,16 @@
 
 import { useId, useState } from 'react'
 import { RotateCcw, Trash2 } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { LockedItemNote } from '@/components/dashboard/LockedItemNote'
 import { toHttpUrl } from '@tabmerger/shared'
 
 /** Shown inside an item whose content decrypted but is not in a shape TabMerger can show. */
-export const DAMAGED_ITEM_NOTE = "Its contents are not in a format TabMerger can read, so they can't be shown here."
 
 // ponytail: inline datetime format — no need for full Intl config overhead
-const formatDateTime = (date: string) =>
-  new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(date))
-
-const p = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
+const formatDateTime = (date: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short' }).format(new Date(date))
 
 interface SessionTab {
   url: string
@@ -69,6 +67,8 @@ export function SessionCard({
   onRestore,
 }: SessionCardProps) {
   const [open, setOpen] = useState(false)
+  const t = useTranslations('dashboard')
+  const locale = useLocale()
   const lockedNoteId = useId()
   const contentsId = useId()
   const hasContents = !!groups && groups.length > 0
@@ -81,7 +81,7 @@ export function SessionCard({
     // to min-width:auto and a hard-coded w-[280px] side panel that didn't fit at 3-up.
     <div className="min-w-0 border border-border rounded-lg overflow-hidden bg-surface p-4 transition-shadow duration-200 hover:shadow-sh2">
       <div className="flex items-start justify-between gap-2 mb-2">
-        <h3 className="font-bold truncate min-w-0" style={{ fontSize: '17px' }}>{name}</h3>
+        <h3 className="font-bold truncate min-w-0" style={{ fontSize: '17px' }}>{locked ? t('lockedName') : name}</h3>
         <div className="flex items-center gap-1 shrink-0">
           <TooltipProvider>
             {onRestore && (
@@ -91,7 +91,7 @@ export function SessionCard({
                       keyboard so the reason (tooltip and the card's note) can be read. */}
                   <button
                     onClick={unreadable ? undefined : () => onRestore(id)}
-                    aria-label="Restore session"
+                    aria-label={t('sessions.restore')}
                     aria-disabled={unreadable ? true : undefined}
                     aria-describedby={unreadable ? lockedNoteId : undefined}
                     className={`text-muted-foreground rounded-md p-1 ${unreadable ? 'opacity-50 cursor-not-allowed' : 'hover:text-foreground'}`}
@@ -100,7 +100,7 @@ export function SessionCard({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top">
-                  {unreadable ? "This session can't be read, so it can't be restored" : 'Restore session'}
+                  {unreadable ? t('sessions.cantRestoreTooltip') : t('sessions.restore')}
                 </TooltipContent>
               </Tooltip>
             )}
@@ -109,13 +109,13 @@ export function SessionCard({
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => onDelete(id)}
-                    aria-label="Delete session"
+                    aria-label={t('sessions.delete')}
                     className="text-destructive hover:text-destructive/80 rounded-md p-1"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="top">Delete session</TooltipContent>
+                <TooltipContent side="top">{t('sessions.delete')}</TooltipContent>
               </Tooltip>
             )}
           </TooltipProvider>
@@ -125,12 +125,12 @@ export function SessionCard({
         // Instead of the counts: the placeholder's "0 groups, 0 tabs" is not what the session holds.
         <LockedItemNote id={lockedNoteId} className="mb-2" />
       ) : damaged ? (
-        <p id={lockedNoteId} className="mb-2 text-xs text-muted-foreground">{DAMAGED_ITEM_NOTE}</p>
+        <p id={lockedNoteId} className="mb-2 text-xs text-muted-foreground">{t('damagedNote')}</p>
       ) : (
         <div className="flex flex-wrap gap-2 mb-2">
-          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(groupCount, 'group')}</span>
-          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(windowCount ?? 0, 'window')}</span>
-          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(tabCount, 'tab')}</span>
+          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{t('counts.groups', { count: groupCount })}</span>
+          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{t('counts.windows', { count: windowCount ?? 0 })}</span>
+          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{t('counts.tabs', { count: tabCount })}</span>
         </div>
       )}
       {hasContents && tabCount > 0 && (
@@ -150,7 +150,7 @@ export function SessionCard({
           })}
         </div>
       )}
-      <p className="text-[12px] text-text2 mb-3">{formatDateTime(createdAt)}</p>
+      <p className="text-[12px] text-text2 mb-3">{formatDateTime(createdAt, locale)}</p>
       {description && (
         <p className="text-[12px] italic text-text2 mb-3 truncate">{description}</p>
       )}
@@ -165,7 +165,7 @@ export function SessionCard({
             aria-controls={contentsId}
             className="text-xs text-text2 hover:text-foreground px-2 py-1 -ml-2 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
           >
-            {open ? 'Hide contents' : `Show contents (${groups!.length})`}
+            {open ? t('sessions.hideContents') : t('sessions.showContents', { count: groups!.length })}
           </button>
           {open && <SessionGroupsPreview id={contentsId} groups={groups!} className="mt-2" />}
         </div>
@@ -196,6 +196,7 @@ export function SessionGroupsPreview({
   id?: string
   className?: string
 }) {
+  const t = useTranslations('dashboard.sessions')
   return (
     <div id={id} className={`space-y-2 ${className ?? ''}`}>
       {groups.slice(0, maxGroups).map((group, i) => {
@@ -207,8 +208,8 @@ export function SessionGroupsPreview({
                 className="w-2 h-2 rounded-full shrink-0"
                 style={{ background: group.color ?? 'var(--color-divider)' }}
               />
-              <span className="font-bold text-[12px] truncate flex-1 min-w-0">{group.name ?? `Group ${i + 1}`}</span>
-              <span className="text-[11px] text-muted-foreground shrink-0">{allTabs.length} tabs</span>
+              <span className="font-bold text-[12px] truncate flex-1 min-w-0">{group.name ?? t('groupFallbackName', { number: i + 1 })}</span>
+              <span className="text-[11px] text-muted-foreground shrink-0">{t('groupTabs', { count: allTabs.length })}</span>
             </div>
             {allTabs.slice(0, maxTabs).map((tab, j) => {
               const href = linkTabs ? toHttpUrl(tab.url) : undefined
@@ -225,13 +226,13 @@ export function SessionGroupsPreview({
               )
             })}
             {linkTabs && allTabs.length > maxTabs && (
-              <p className="text-[11px] text-muted-foreground pl-4">+{allTabs.length - maxTabs} more tabs</p>
+              <p className="text-[11px] text-muted-foreground pl-4">{t('moreTabs', { count: allTabs.length - maxTabs })}</p>
             )}
           </div>
         )
       })}
       {groups.length > maxGroups && (
-        <p className="text-[11px] text-muted-foreground">+{groups.length - maxGroups} more groups</p>
+        <p className="text-[11px] text-muted-foreground">{t('moreGroups', { count: groups.length - maxGroups })}</p>
       )}
     </div>
   )

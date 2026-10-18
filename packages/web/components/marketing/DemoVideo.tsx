@@ -8,12 +8,8 @@ import {
   useSyncExternalStore,
   type SyntheticEvent,
 } from 'react'
+import { useTranslations } from 'next-intl'
 import { useTheme } from '@/components/theme-provider'
-
-export const TOUR_VIDEO_LABEL = 'TabMerger feature tour video'
-export const TOUR_POSTER_LABEL = 'TabMerger feature tour preview'
-export const TOUR_LOADING_LABEL = 'Loading video'
-export const TOUR_ERROR_LABEL = 'The video could not be loaded.'
 
 // HTMLMediaElement.HAVE_FUTURE_DATA: enough data to keep playing from the current position.
 const HAVE_FUTURE_DATA = 3
@@ -96,6 +92,7 @@ function PosterImages({ darkPoster, lightPoster }: { darkPoster: string | null; 
 
 export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVideoProps) {
   const { theme } = useTheme()
+  const t = useTranslations('demoVideo')
   const videoRef = useRef<HTMLVideoElement>(null)
   const lastSrcRef = useRef<string | null>(null)
   // Position and play state to restore once a swapped-in source can seek. Kept in a ref so a
@@ -170,7 +167,7 @@ export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVi
 
   if (!src) {
     return (
-      <div role="img" aria-label={TOUR_POSTER_LABEL} className={BOX_CLASS_NAME}>
+      <div role="img" aria-label={t('poster')} className={BOX_CLASS_NAME}>
         <PosterImages darkPoster={darkPoster} lightPoster={lightPoster} />
       </div>
     )
@@ -195,7 +192,7 @@ export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVi
       <PosterImages darkPoster={darkPoster} lightPoster={lightPoster} />
       <video
         ref={videoRef}
-        aria-label={TOUR_VIDEO_LABEL}
+        aria-label={t('video')}
         // Same ratio as the box, so `cover` only hides sub-pixel rounding, never content.
         className="absolute inset-0 h-full w-full object-cover"
         width={1280}
@@ -228,12 +225,12 @@ export function DemoVideo({ darkSrc, lightSrc, darkPoster, lightPoster }: DemoVi
           >
             {/* Under prefers-reduced-motion the ring stays, without the spin. */}
             <Loader2 className="h-7 w-7 animate-spin motion-reduce:animate-none" aria-hidden="true" />
-            <span className="sr-only">{TOUR_LOADING_LABEL}</span>
+            <span className="sr-only">{t('loading')}</span>
           </span>
         )}
         {loadState === 'error' && (
           <span className={`rounded-md px-3 py-2 text-center text-sm ${BACKDROP_CLASS_NAME}`}>
-            {TOUR_ERROR_LABEL}
+            {t('error')}
           </span>
         )}
       </div>

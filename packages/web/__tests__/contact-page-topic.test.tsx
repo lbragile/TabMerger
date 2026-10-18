@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(mockSearch.value),
 }))
 
-import ContactPage from '@/app/(marketing)/contact/page'
+import ContactPage from '@/app/[locale]/(marketing)/contact/page'
 
 describe('ContactPage — ?topic= preselection', () => {
   afterEach(() => {

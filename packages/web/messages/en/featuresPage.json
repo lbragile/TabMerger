@@ -1,0 +1,81 @@
+{
+  "metaTitle": "Features",
+  "metaDescription": "Explore everything TabMerger can do — from smart tab grouping to AI-powered organization.",
+  "title": "Features built for focus",
+  "lead": "Everything you need to take control of your browser — from free essentials to pro AI superpowers.",
+  "addToChrome": "Add to Chrome — It's Free",
+  "seePricing": "See pricing",
+  "badges": {
+    "core": "Core",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Powerful tab management",
+    "description": "The foundation of TabMerger: fast, intuitive tab organization that fits any workflow.",
+    "groups": {
+      "title": "Named & color-coded groups",
+      "description": "Create groups with custom names and colors. Visually separate work, research, entertainment, and more at a glance."
+    },
+    "search": {
+      "title": "Full-text search",
+      "description": "Search across all your tab titles and URLs instantly. Results match the text exactly as you type it (any case), best matches first."
+    },
+    "dnd": {
+      "title": "Drag-and-drop reordering",
+      "description": "Rearrange tabs within groups and reorder groups themselves with smooth drag-and-drop interactions."
+    },
+    "shortcuts": {
+      "title": "Keyboard shortcuts",
+      "description": "Save the current tab, the tabs to its left or right, or all other tabs without opening the popup. Inside it, open search with Ctrl/Cmd+K and move tabs, windows and groups with the keyboard alone."
+    },
+    "importExport": {
+      "title": "Import & export",
+      "description": "Export your tab collections as JSON to share with teammates or back up your workspace. Import them on any device."
+    },
+    "memory": {
+      "title": "Memory savings",
+      "description": "Suspend inactive tabs to free RAM. See exactly how much memory TabMerger is saving you in real time."
+    }
+  },
+  "pro": {
+    "title": "Sync & sessions",
+    "description": "Pick up exactly where you left off, on any device, any time.",
+    "cloudSync": {
+      "title": "Cloud sync",
+      "description": "Your groups are automatically saved and synced across every browser you sign into. Real-time, no manual export needed."
+    },
+    "sessions": {
+      "title": "Session save & restore",
+      "description": "Snapshot your current groups as a named session and restore them instantly. Free plans save up to {count} sessions in this browser; Pro syncs unlimited sessions across every device."
+    },
+    "autoBackups": {
+      "title": "Automatic backups",
+      "description": "TabMerger saves an encrypted snapshot of your groups on a schedule you choose, from every hour to once a week. The newest {count} are kept, and you can bring any of them back from Settings. Your dashboard lists them too, where you can look inside one or download it. You can also have each one saved as a file on your computer; that copy is not encrypted."
+    },
+    "support": {
+      "title": "Priority support",
+      "description": "Pro subscribers get fast-tracked support with a guaranteed response within 24 hours."
+    }
+  },
+  "proAi": {
+    "title": "AI-powered organization",
+    "description": "Let Claude analyze your tabs and make smart suggestions so you can focus on thinking, not filing.",
+    "autoGrouping": {
+      "title": "Auto-grouping",
+      "description": "Open a mess of tabs, click one button. AI clusters them into logical groups based on topic, domain, and intent."
+    },
+    "names": {
+      "title": "Smart group names",
+      "description": "AI suggests concise, descriptive names for your groups. One click to accept, or type your own."
+    },
+    "summaries": {
+      "title": "Tab summaries",
+      "description": "Hover any tab to see a one-sentence AI summary of what the page is about — without opening it."
+    },
+    "sessionSuggestions": {
+      "title": "Session suggestions",
+      "description": "AI analyzes your browsing patterns and suggests how to structure sessions for maximum productivity."
+    }
+  }
+}
