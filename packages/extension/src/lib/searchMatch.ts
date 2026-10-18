@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import { isHiddenFromSearch } from '@/lib/tourSandbox';
 import type { Group, Tab, Window } from '@/lib/types';
 import { parseSearchQuery } from '@/lib/utils';
@@ -226,11 +227,8 @@ export function summarizeSearch(groups: Group[], f: SearchFilters): SearchSummar
   return { perGroup, matchingTabs, groupsWithMatches };
 }
 
-const count = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
-
 /** The screen-reader result line: "5 tabs match in 2 groups". */
 export function searchResultMessage(summary: Pick<SearchSummary, 'matchingTabs' | 'groupsWithMatches'>): string {
-  if (summary.matchingTabs === 0) return 'No tabs match';
-  const verb = summary.matchingTabs === 1 ? 'matches' : 'match';
-  return `${count(summary.matchingTabs, 'tab')} ${verb} in ${count(summary.groupsWithMatches, 'group')}`;
+  if (summary.matchingTabs === 0) return t('search.summaryNone');
+  return t('search.summary', { count: summary.matchingTabs, groups: t('common.groupCount', { count: summary.groupsWithMatches }) });
 }

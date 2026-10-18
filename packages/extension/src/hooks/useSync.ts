@@ -1,3 +1,4 @@
+import { formatList, t } from '@/lib/i18n';
 import { useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { performSync, subscribeToRemoteChanges, canUploadOnFirefox } from '@/lib/syncEngine';
@@ -83,7 +84,7 @@ export function useSync() {
     // changes isn't gated, see canUploadOnFirefox's doc comment), but nothing local should be
     // uploaded. Surfaced in Settings' Cloud sync row rather than failing silently.
     const canUpload = await canUploadOnFirefox();
-    setSyncPausedReason(canUpload ? null : 'Sync paused: allow in Firefox');
+    setSyncPausedReason(canUpload ? null : t('errors.syncPaused'));
 
     // Self-heal accounts that completed encryption setup before markAllGroupsPendingSync
     // was added to setupEncryption() — those groups have a data key but were never
@@ -250,8 +251,8 @@ export function useSync() {
   useEffect(
     () =>
       onSyncConflict((names) => {
-        const list = names.map((n) => `"${n}"`).join(', ');
-        toast.info(`${list} was also changed on another device. Your version was saved as a copy.`, { id: 'sync-conflict-copy' });
+        const list = formatList(names.map((name) => t('errors.quotedName', { name })));
+        toast.info(t('errors.conflictCopy', { names: list }), { id: 'sync-conflict-copy' });
       }),
     []
   );

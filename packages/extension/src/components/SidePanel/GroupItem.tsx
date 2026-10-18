@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DND_GRIP_ATTR } from '@/lib/dndGrip';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDroppable } from '@dnd-kit/core';
@@ -23,7 +25,7 @@ import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { TOUR_ANCHORS, TOUR_READY_ATTR } from '@/lib/tourSteps';
-import { isTourDemoGroup, SEARCH_COPY } from '@tabmerger/shared';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import { Highlighted } from '@/components/Highlighted';
 
 interface GroupItemProps {
@@ -43,6 +45,9 @@ interface GroupItemProps {
 }
 
 export function GroupItem({ group, groupIndex, isActive, isLocked = false, onClick, searchMatchCount, searchNameQuery = '', searchDimmed = false, reorderLocked = false }: GroupItemProps) {
+  const { t } = useTranslation();
+  // The permanent group's name is the app's own label, shown in the UI language
+  const displayName = group.permanent ? t('common.nowOpen') : group.name;
   const { data: groupsState } = useGroups();
   const savedGroupCount = (groupsState?.available ?? []).filter((g) => !g.permanent).length;
   // MODEL id — the group's real `group.id` (not positional "group-N"). Same id for
@@ -246,7 +251,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       wrapperRef={setNodeRef}
       // Static row id for the multi-drag registry (collapse + `+N`) and focus-by-identity.
       wrapperDndId={group.id}
-      wrapperLabel={searchDimmed ? `${group.name}${SEARCH_COPY.noMatchSuffix}` : undefined}
+      wrapperLabel={searchDimmed ? t('sidePanel.groupNoMatch', { name: displayName, suffix: t('search.noMatchSuffix') }) : group.permanent ? displayName : undefined}
       // Space on the focused row starts keyboard move mode — only for a row that has a grip.
       moveGroupId={group.permanent || savedGroupCount <= 1 || reorderLocked ? undefined : group.id}
       // Ctrl+Space on the focused row toggles it in the selection (never Now Open).
@@ -315,8 +320,9 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             tabIndex={-1}
             // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
             // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
-            // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
-            aria-label={`Drag to reorder group: ${group.name}`}
+            // The DnD sensor/visuals and the tour find the grip by this attribute, not its (translated) name.
+            {...{ [DND_GRIP_ATTR]: 'group' }}
+            aria-label={t('sidePanel.dragGroup', { name: displayName })}
             onClick={(e) => e.stopPropagation()}
             onMouseDown={onDragHandleMouseDown}
             onKeyDown={onDragHandleKeyDown}
@@ -332,7 +338,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             onMouseDown={(e) => e.stopPropagation()}
             role="checkbox"
             aria-checked={isSelected}
-            aria-label={`Select ${group.name}`}
+            aria-label={t('sidePanel.selectGroup', { name: displayName })}
           >
             {isSelected ? (
               <CheckSquare className="h-3.5 w-3.5 text-accent-foreground" />
@@ -353,7 +359,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     className="h-2.5 w-2.5 shrink-0 rounded-full transition-all hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                     style={{ backgroundColor: displayColor }}
                     onClick={(e) => e.stopPropagation()}
-                    aria-label="Change group color"
+                    aria-label={t('sidePanel.changeColorLabel')}
                     data-tour={TOUR_ANCHORS.groupColor}
                   />
                 </PopoverTrigger>
@@ -380,7 +386,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 />
               </PopoverContent>
             </Popover>
-            <TooltipContent side="top">Change color</TooltipContent>
+            <TooltipContent side="top">{t('sidePanel.changeColor')}</TooltipContent>
           </Tooltip>
         )}
 
@@ -395,13 +401,13 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); if (e.key === 'Escape') handleCancelRename(); }}
                 onBlur={handleRename}
-                aria-label="Group name"
+                aria-label={t('sidePanel.groupName')}
                 data-tour={TOUR_ANCHORS.groupNameInput}
                 className="min-w-0 flex-1 bg-transparent outline-none text-xs"
                 style={{ borderBottom: '1px solid rgba(0,180,204,0.6)', color: 'var(--sidebar-text-active)' }}
               />
-              <button type="button" aria-label="Save" data-tour={TOUR_ANCHORS.groupNameSave} {...{ [TOUR_READY_ATTR]: editValue.trim() && editValue.trim() !== DEFAULT_GROUP_TITLE ? '' : undefined }} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleRename(); }}><Check className="h-2.5 w-2.5" /></button>
-              <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleCancelRename(); }}><X className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label={t('sidePanel.save')} data-tour={TOUR_ANCHORS.groupNameSave} {...{ [TOUR_READY_ATTR]: editValue.trim() && editValue.trim() !== DEFAULT_GROUP_TITLE ? '' : undefined }} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleRename(); }}><Check className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label={t('sidePanel.cancel')} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleCancelRename(); }}><X className="h-2.5 w-2.5" /></button>
             </div>
           ) : (
             <Tooltip open={isNameTruncated ? undefined : false}>
@@ -416,10 +422,10 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     setRenameTarget({ kind: 'group', groupIndex });
                   }}
                 >
-                  <Highlighted text={group.name} query={searchNameQuery} />
+                  <Highlighted text={displayName} query={searchNameQuery} />
                 </span>
               </TooltipTrigger>
-              <TooltipContent side="top">{group.name}</TooltipContent>
+              <TooltipContent side="top">{displayName}</TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -431,9 +437,9 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
             style={{ background: 'var(--sidebar-badge-bg)', color: 'var(--sidebar-text-muted)' }}
             data-testid="group-search-count"
-            title={`${searchMatchCount} of ${tabCount} tabs match the search`}
+            title={t('sidePanel.matchTitle', { matched: searchMatchCount, total: tabCount })}
           >
-            {searchMatchCount} found
+            {t('sidePanel.found', { count: searchMatchCount })}
           </span>
         )}
         {!isRenaming && searchMatchCount === undefined && <span
@@ -452,11 +458,11 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         {!isRenaming && (isLocked ? (
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="shrink-0 text-muted-foreground/60" aria-label="Pro required">
+              <span className="shrink-0 text-muted-foreground/60" aria-label={t('sidePanel.proRequired')}>
                 <Lock className="h-3 w-3" />
               </span>
             </TooltipTrigger>
-            <TooltipContent side="top">Upgrade to Pro to access this group</TooltipContent>
+            <TooltipContent side="top">{t('sidePanel.locked')}</TooltipContent>
           </Tooltip>
         ) : (group.permanent || selectionMode) ? (
           <span className="h-3 w-3 shrink-0" aria-hidden="true" />
@@ -469,7 +475,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                   'shrink-0 transition-opacity focus-visible:ring-2 focus-visible:ring-ring',
                   group.starred ? 'opacity-100' : 'opacity-30 group-hover:opacity-100'
                 )}
-                aria-label={group.starred ? 'Unpin group' : 'Pin group'}
+                aria-label={group.starred ? t('sidePanel.unpin') : t('sidePanel.pin')}
                 data-tour={TOUR_ANCHORS.groupPin}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -485,7 +491,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top">{group.starred ? 'Unpin group' : 'Pin group'}</TooltipContent>
+            <TooltipContent side="top">{group.starred ? t('sidePanel.unpin') : t('sidePanel.pin')}</TooltipContent>
           </Tooltip>
         ))}
 

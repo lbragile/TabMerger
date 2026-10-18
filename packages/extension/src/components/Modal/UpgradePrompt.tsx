@@ -1,44 +1,40 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatNumber, type MessageKey } from '@/lib/i18n';
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 import { AI_ENABLED } from '@/lib/aiFlag';
-import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS, PRICING_TIERS } from '@tabmerger/shared';
+import { FREE_TIER_LIMITS, PRICING_TIERS } from '@tabmerger/shared';
 
-/** How many of each plan's features the compact comparison shows (the popup is 800×600). */
-const PROMPT_FEATURE_COUNT = 3;
+/**
+ * The compact comparison's first features of each plan (the popup is 800×600), in the same order
+ * as PRICING_TIERS' feature lists (a catalog test keeps the English identical to those).
+ */
+const PLAN_FEATURE_KEYS: Record<string, readonly MessageKey[]> = {
+  free: ['upgrade.plans.free.f1', 'upgrade.plans.free.f2', 'upgrade.plans.free.f3'],
+  pro: ['upgrade.plans.pro.f1', 'upgrade.plans.pro.f2', 'upgrade.plans.pro.f3'],
+  pro_ai: ['upgrade.plans.pro_ai.f1', 'upgrade.plans.pro_ai.f2', 'upgrade.plans.pro_ai.f3'],
+};
+const PLAN_NAME_KEYS: Record<string, MessageKey> = {
+  free: 'upgrade.plans.free.name',
+  pro: 'upgrade.plans.pro.name',
+  pro_ai: 'upgrade.plans.pro_ai.name',
+};
 
 interface UpgradePromptModalProps {
   reason?: string;
   onClose: () => void;
 }
 
-const REASON_MESSAGES: Record<string, { title: string; description: string }> = {
-  maxGroups: {
-    title: 'Group Limit Reached',
-    description:
-      `You have reached the free plan limit of ${FREE_TIER_LIMITS.groups} groups. Upgrade to Pro for unlimited groups.`
-  },
-  maxTabs: {
-    title: 'Tab Limit Reached',
-    description:
-      `You have reached the free plan limit of ${FREE_TIER_LIMITS.tabs} tabs. Upgrade to Pro for unlimited tabs.`
-  },
-  cloudSync: {
-    title: 'Cloud Sync is Pro',
-    description:
-      'Sync your groups across all your devices with TabMerger Pro. Upgrade to enable cloud sync.'
-  },
-  aiFeatures: {
-    title: 'AI Features are Pro AI',
-    description:
-      'AI auto-grouping, smart naming, and tab summaries are available in the Pro AI plan.'
-  }
-};
+const REASON_KEYS = ['maxGroups', 'maxTabs', 'cloudSync', 'aiFeatures'] as const;
+type Reason = (typeof REASON_KEYS)[number];
+const isReason = (r: string | undefined): r is Reason => (REASON_KEYS as readonly string[]).includes(r ?? '');
 
 export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const openModal = useUIStore((s) => s.openModal);
 
@@ -47,11 +43,10 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { title, description } =
-    REASON_MESSAGES[reason ?? ''] ?? {
-      title: 'Upgrade TabMerger',
-      description: 'Unlock unlimited groups, cloud sync, automatic backups, and AI features with TabMerger Pro.'
-    };
+  const limits = { max: reason === 'maxTabs' ? FREE_TIER_LIMITS.tabs : FREE_TIER_LIMITS.groups };
+  const { title, description } = isReason(reason)
+    ? { title: t(`upgrade.${reason}.title`), description: t(`upgrade.${reason}.description`, limits) }
+    : { title: t('upgrade.default.title'), description: t('upgrade.default.description') };
 
   // AI features: coming soon — this modal is the one place the Pro AI tier row is
   // never fully hidden (per product decision), it just shows a coming-soon price
@@ -82,7 +77,7 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>
           {description}
-          {!user && ' Already have a Pro account? Sign in to restore it on this device.'}
+          {!user && t('upgrade.signInHint')}
         </DialogDescription>
       </DialogHeader>
 
@@ -91,17 +86,17 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
           {PRICING_TIERS.map((plan, i) => (
             <div key={plan.id}>
               <div className={i > 0 ? 'font-semibold mt-2' : 'font-semibold'}>
-                {plan.name}
-                {plan.monthlyPrice > 0 && ` — $${plan.monthlyPrice}/mo`}
+                {PLAN_NAME_KEYS[plan.id] ? t(PLAN_NAME_KEYS[plan.id]) : plan.name}
+                {plan.monthlyPrice > 0 && t('upgrade.planPrice', { price: formatNumber(plan.monthlyPrice, { style: 'currency', currency: 'USD' }) })}
                 {plan.id === 'pro_ai' && proAiComingSoon && (
                   <span className="ml-1 text-muted-foreground font-normal">
-                    ({AI_COMING_SOON_LABEL})
+                    {t('upgrade.comingSoonParen', { label: t('upgrade.comingSoon') })}
                   </span>
                 )}
               </div>
               <ul className="text-muted-foreground space-y-0.5 ml-2">
-                {plan.features.slice(0, PROMPT_FEATURE_COUNT).map((feature) => (
-                  <li key={feature}>{feature}</li>
+                {(PLAN_FEATURE_KEYS[plan.id] ?? []).map((key) => (
+                  <li key={key}>{t(key, FREE_TIER_LIMITS)}</li>
                 ))}
               </ul>
             </div>
@@ -111,15 +106,15 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
 
       <DialogFooter className="mt-4">
         <Button variant="outline" onClick={onClose}>
-          Maybe later
+          {t('upgrade.maybeLater')}
         </Button>
         {!user && (
           <Button variant="outline" onClick={handleSignIn}>
-            Sign in
+            {t('upgrade.signIn')}
           </Button>
         )}
         <Button onClick={handleUpgrade} disabled={ctaDisabled} aria-disabled={ctaDisabled}>
-          {ctaDisabled ? AI_COMING_SOON_LABEL : 'Upgrade now'}
+          {ctaDisabled ? t('upgrade.comingSoon') : t('upgrade.upgradeNow')}
         </Button>
       </DialogFooter>
     </>

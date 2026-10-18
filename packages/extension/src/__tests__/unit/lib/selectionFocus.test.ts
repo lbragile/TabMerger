@@ -26,7 +26,7 @@ describe('moveFocusOutOfSelectionControls', () => {
   })
 
   it('focus inside the ACTION BAR → the header selection toggle (not a row the bar happens to follow)', () => {
-    const toggle = el('button', { 'aria-label': 'Exit selection mode' })
+    const toggle = el('button', { 'aria-label': 'Exit selection mode', 'data-tour': 'select-items' })
     const bar = el('div', { [SELECTION_ACTION_BAR_ATTR]: '' })
     const cancel = el('button', { 'aria-label': 'Cancel selection' }, bar)
     cancel.focus()
@@ -36,7 +36,7 @@ describe('moveFocusOutOfSelectionControls', () => {
 
   it('no toggle → the first drag grip in the panel', () => {
     const row = el('div', { 'data-tm-dnd-id': 'g::w0::t0' })
-    const grip = el('span', { 'aria-label': 'Drag to reorder tab: a', tabindex: '0' }, row)
+    const grip = el('span', { 'aria-label': 'Drag to reorder tab: a', 'data-dnd-grip': 'tab', tabindex: '0' }, row)
     const bar = el('div', { [SELECTION_ACTION_BAR_ATTR]: '' })
     el('button', {}, bar).focus()
     moveFocusOutOfSelectionControls()
@@ -44,7 +44,7 @@ describe('moveFocusOutOfSelectionControls', () => {
   })
 
   it('focus elsewhere → left alone', () => {
-    el('button', { 'aria-label': 'Select items' })
+    el('button', { 'aria-label': 'Select items', 'data-tour': 'select-items' })
     const other = el('button', { 'aria-label': 'Search' })
     other.focus()
     moveFocusOutOfSelectionControls()
@@ -52,7 +52,7 @@ describe('moveFocusOutOfSelectionControls', () => {
   })
 
   it('selectionFocusFallback with no source (focus already lost) → the toggle', () => {
-    const toggle = el('button', { 'aria-label': 'Select items' })
+    const toggle = el('button', { 'aria-label': 'Select items', 'data-tour': 'select-items' })
     expect(selectionFocusFallback()).toBe(toggle)
   })
 })

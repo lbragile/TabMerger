@@ -16,7 +16,7 @@ import { renderHook, act } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider, useQuery, isCancelledError } from '@tanstack/react-query'
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
-import { useDndHandlers, DND_SAVE_FAILED_TEXT } from '@/hooks/useDndHandlers'
+import { useDndHandlers, dndSaveFailedText } from '@/hooks/useDndHandlers'
 import { useKeyboardNav } from '@/hooks/useKeyboardNav'
 import { useUIStore } from '@/stores/uiStore'
 import { saveGroupsState } from '@/lib/localDb'
@@ -255,7 +255,7 @@ describe('#18 a failed write only rolls back what is still ours', () => {
     expect(useUIStore.getState().selectedItems).not.toEqual(selection)
     await drop.fail()
     expect(useUIStore.getState().selectedItems).toEqual(selection)
-    expect(liveRegionText()).toBe(DND_SAVE_FAILED_TEXT)
+    expect(liveRegionText()).toBe(dndSaveFailedText())
   })
 
   it('the user changed the selection while the write was queued → their selection is NOT overwritten', async () => {
@@ -414,7 +414,7 @@ describe('a throw AFTER the write was issued is handled as a probable SUCCESS', 
 
     // The cache write happened, so the move is real: undo must survive.
     expect(useUIStore.getState().undoStack).toHaveLength(1)
-    expect(liveRegionText()).not.toContain(DND_SAVE_FAILED_TEXT)
+    expect(liveRegionText()).not.toContain(dndSaveFailedText())
     // …and the drag state is still fully cleared.
     expect(isDndDragLive()).toBe(false)
     expect(getDndDragSelection()).toBeNull()
@@ -433,7 +433,7 @@ describe('a throw AFTER the write was issued is handled as a probable SUCCESS', 
     })
     // Now the write really failed: the undo entry goes, and the user is told.
     expect(useUIStore.getState().undoStack).toHaveLength(0)
-    expect(liveRegionText()).toContain(DND_SAVE_FAILED_TEXT)
+    expect(liveRegionText()).toContain(dndSaveFailedText())
   })
 
   it('reset() runs BEFORE rollback, so the "no drag is live" restores are reachable', async () => {
@@ -461,7 +461,7 @@ describe('a throw AFTER the write was issued is handled as a probable SUCCESS', 
     // Nothing was written, so this IS a failure — announced through dnd-kit's own end
     // announcement (the pointer path), not the app-owned keyboard live region.
     const { takeDndDropOutcome } = await import('@/lib/dndAnnouncements')
-    expect(takeDndDropOutcome()).toBe(DND_SAVE_FAILED_TEXT)
+    expect(takeDndDropOutcome()).toBe(dndSaveFailedText())
   })
 })
 

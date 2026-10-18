@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatAndList } from '@/lib/i18n';
 import { CheckCircle2, Link2 } from 'lucide-react';
 import logoUrl from '@/assets/logo.png';
 import { Button } from '@/components/ui/button';
@@ -9,8 +11,6 @@ type Status = 'loading' | 'needed' | 'requesting' | 'refused' | 'granted';
 /** How long the success message shows before the tab closes itself. */
 export const SITE_ACCESS_CLOSE_DELAY_MS = 1500;
 
-const SUCCESS = 'Done — the website can now find TabMerger. You can close this tab.';
-const REFUSED = "Firefox didn't allow it. You can try again, or allow it later in about:addons.";
 
 /**
  * Firefox only (`entrypoints/site-access/`): asks Firefox to let TabMerger run on the trusted
@@ -23,6 +23,7 @@ const REFUSED = "Firefox didn't allow it. You can try again, or allow it later i
  * the message if the browser doesn't allow it.
  */
 export function SiteAccessPage() {
+  const { t } = useTranslation();
   const [status, setStatus] = useState<Status>('loading');
   const [missing, setMissing] = useState<string[]>([]);
   // Close only after access was gained while this tab was open, not when it opened already done.
@@ -76,34 +77,32 @@ export function SiteAccessPage() {
     void pending.then((granted) => recheck(!granted));
   };
 
-  const hosts = missing.map(hostOfPattern).join(' and ');
+  const hosts = formatAndList(missing.map(hostOfPattern));
   const showButton = status === 'needed' || status === 'requesting' || status === 'refused';
-  const message = status === 'granted' ? SUCCESS : status === 'refused' ? REFUSED : '';
+  const message = status === 'granted' ? t('siteAccess.success') : status === 'refused' ? t('siteAccess.refused') : '';
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md border bg-card text-card-foreground p-6 flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <img src={logoUrl} alt="" className="h-8 w-8" />
-          <h1 className="text-lg font-semibold">Let the TabMerger website find TabMerger</h1>
+          <h1 className="text-lg font-semibold">{t('siteAccess.title')}</h1>
         </div>
-        {status === 'loading' && <p className="text-sm text-muted-foreground">Checking site access…</p>}
+        {status === 'loading' && <p className="text-sm text-muted-foreground">{t('siteAccess.checking')}</p>}
         {showButton && (
           <>
             <p className="text-sm text-muted-foreground">
-              Firefox hasn&apos;t allowed TabMerger on {hosts} yet. Without it the website can&apos;t detect
-              TabMerger, pass your sign-in or start a sync. Click the button below, then confirm in
-              Firefox&apos;s prompt.
+              {t('siteAccess.explainer', { hosts })}
             </p>
             <Button
               type="button"
               className="self-start"
-              aria-label={`Allow TabMerger on ${hosts}`}
+              aria-label={t('siteAccess.allowOn', { hosts })}
               loading={status === 'requesting'}
               onClick={allow}
             >
               <Link2 aria-hidden="true" />
-              Allow TabMerger on {hosts}
+              {t('siteAccess.allowOn', { hosts })}
             </Button>
           </>
         )}

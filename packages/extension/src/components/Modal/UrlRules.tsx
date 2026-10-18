@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { nanoid } from 'nanoid';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ function GroupDot({ color }: { color: string }) {
 }
 
 export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
+  const { t } = useTranslation();
   const { data: groupsState } = useGroups();
   const { data: persistedRules = [] } = useUrlRules();
   const { tier, maxUrlRules } = useEntitlements();
@@ -59,9 +61,9 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
 
   const handleAdd = (pattern: string, groupId: string) => {
     if (atLimit) {
-      toast.error(`Free plan allows up to ${maxUrlRules} URL rules.`, {
+      toast.error(t('urlRules.toast.limit', { max: maxUrlRules }), {
         action: {
-          label: 'Upgrade',
+          label: t('common.upgrade'),
           onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })
         }
       });
@@ -96,16 +98,15 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle>URL Rules</DialogTitle>
+        <DialogTitle>{t('urlRules.title')}</DialogTitle>
         <DialogDescription>
-          Auto-assign tabs to groups by URL pattern. Use <code>*</code> as a wildcard (e.g.{' '}
-          <code>github.com/*</code>). First matching rule wins.
+          <Trans i18nKey="urlRules.description" components={{ code: <code /> }} />
         </DialogDescription>
       </DialogHeader>
 
       <div className="mt-4 space-y-2 max-h-52 overflow-y-auto pr-1">
         {draft.length === 0 && (
-          <p className="text-xs text-muted-foreground text-center py-4">No rules yet.</p>
+          <p className="text-xs text-muted-foreground text-center py-4">{t('urlRules.empty')}</p>
         )}
         {draft.map((rule, i) => {
           const group = savedGroups.find((g) => g.id === rule.groupId);
@@ -116,7 +117,7 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
               <span className="flex-1 min-w-0 font-mono truncate" title={rule.pattern}>{rule.pattern}</span>
               <span className="flex items-center shrink-0 max-w-[120px]">
                 {group && <GroupDot color={group.color} />}
-                <span className="truncate" title={group?.name}>{group?.name ?? '(deleted group)'}</span>
+                <span className="truncate" title={group?.name}>{group?.name ?? t('urlRules.deletedGroup')}</span>
               </span>
               <div className="flex items-center shrink-0 gap-0.5">
                 <div className="flex flex-col">
@@ -124,24 +125,24 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
                     variant="ghost" size="icon" className="h-5 w-5"
                     disabled={i === 0}
                     onClick={() => reorder(i, i - 1)}
-                    aria-label="Move rule up"
+                    aria-label={t('urlRules.moveUp')}
                   ><ChevronUp className="h-3 w-3" /></Button>
                   <Button
                     variant="ghost" size="icon" className="h-5 w-5"
                     disabled={i === draft.length - 1}
                     onClick={() => reorder(i, i + 1)}
-                    aria-label="Move rule down"
+                    aria-label={t('urlRules.moveDown')}
                   ><ChevronDown className="h-3 w-3" /></Button>
                 </div>
                 <Button
                   variant="ghost" size="icon" className="h-5 w-5"
                   onClick={() => setEditingRule(rule)}
-                  aria-label="Edit rule"
+                  aria-label={t('urlRules.edit')}
                 ><Pencil className="h-3 w-3" /></Button>
                 <Button
                   variant="ghost" size="icon" className="h-5 w-5 text-destructive hover:text-destructive"
                   onClick={() => deleteRule(rule.id)}
-                  aria-label="Delete rule"
+                  aria-label={t('urlRules.delete')}
                 ><Trash2 className="h-3 w-3" /></Button>
               </div>
             </div>
@@ -151,16 +152,16 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
 
       <div className="mt-4 flex items-center justify-between">
         <p className="text-xs font-medium">
-          {tier === 'free' && <span className="text-muted-foreground">{draft.length}/{maxUrlRules} used</span>}
+          {tier === 'free' && <span className="text-muted-foreground">{t('urlRules.used', { used: draft.length, max: maxUrlRules })}</span>}
         </p>
         <Button size="sm" variant="outline" onClick={() => setAddOpen(true)} disabled={atLimit}>
-          <Plus className="h-3 w-3 mr-1" />Add rule
+          <Plus className="h-3 w-3 mr-1" />{t('urlRules.addRule')}
         </Button>
       </div>
 
       <DialogFooter className="mt-4">
-        <Button variant="outline" aria-label="Discard changes" onClick={onClose}>Cancel</Button>
-        <Button aria-label="Save all rules" onClick={handleSave}>Save</Button>
+        <Button variant="outline" aria-label={t('urlRules.discard')} onClick={onClose}>{t('urlRules.cancel')}</Button>
+        <Button aria-label={t('urlRules.saveAll')} onClick={handleSave}>{t('urlRules.save')}</Button>
       </DialogFooter>
 
       <AddUrlRuleModal
@@ -189,6 +190,7 @@ interface AddUrlRuleModalProps {
 }
 
 function AddUrlRuleModal({ open, onClose, onSubmit, savedGroups, initialRule }: AddUrlRuleModalProps) {
+  const { t } = useTranslation();
   const isEdit = !!initialRule;
   const [pattern, setPattern] = useState(initialRule?.pattern ?? '');
   const [groupId, setGroupId] = useState(initialRule?.groupId ?? '');
@@ -219,11 +221,11 @@ function AddUrlRuleModal({ open, onClose, onSubmit, savedGroups, initialRule }: 
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent className="max-w-xs">
         <DialogHeader>
-          <DialogTitle>{isEdit ? 'Edit URL Rule' : 'Add URL Rule'}</DialogTitle>
+          <DialogTitle>{isEdit ? t('urlRules.editTitle') : t('urlRules.addTitle')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-2 mt-2">
           <Input
-            placeholder="Pattern, e.g. github.com/*"
+            placeholder={t('urlRules.patternPlaceholder')}
             value={pattern}
             onChange={(e) => setPattern(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && submit()}
@@ -232,7 +234,7 @@ function AddUrlRuleModal({ open, onClose, onSubmit, savedGroups, initialRule }: 
           />
           <Select value={groupId} onValueChange={setGroupId}>
             <SelectTrigger className="text-xs h-8">
-              <SelectValue placeholder="Select target group…" />
+              <SelectValue placeholder={t('urlRules.groupPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
               {savedGroups.map((g) => (
@@ -246,7 +248,7 @@ function AddUrlRuleModal({ open, onClose, onSubmit, savedGroups, initialRule }: 
         </div>
         <DialogFooter className="mt-2">
           <Button size="sm" className="w-full" disabled={disabled} onClick={submit}>
-            {isEdit ? 'Save' : 'Add rule'}
+            {isEdit ? t('urlRules.save') : t('urlRules.addRule')}
           </Button>
         </DialogFooter>
       </DialogContent>

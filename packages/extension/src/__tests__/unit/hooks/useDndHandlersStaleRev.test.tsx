@@ -9,7 +9,7 @@ import { renderHook, act } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
-import { useDndHandlers, DND_SAVE_FAILED_TEXT } from '@/hooks/useDndHandlers'
+import { useDndHandlers, dndSaveFailedText } from '@/hooks/useDndHandlers'
 import { useUIStore } from '@/stores/uiStore'
 import { saveGroupsState, updateGroupsState } from '@/lib/localDb'
 import { clearDndDragLive } from '@/lib/dndMultiDrag'
@@ -94,7 +94,7 @@ describe('drop commit with a stale base rev', () => {
     expect(stored.available.map((g) => g.id)).toEqual(['now', 'work', 'play', 'foreign'])
     expect(titles(stored.available.find((g) => g.id === 'work'))).toEqual(['a2'])
     expect(titles(stored.available.find((g) => g.id === 'play'))).toEqual(['p1', 'a1'])
-    expect(liveRegionText()).not.toBe(DND_SAVE_FAILED_TEXT)
+    expect(liveRegionText()).not.toBe(dndSaveFailedText())
   })
 
   it('rolls back and announces the failure when the drop no longer applies to the fresh state', async () => {
@@ -103,7 +103,7 @@ describe('drop commit with a stale base rev', () => {
     update.mockImplementation(async (fn: (s: GroupsState) => GroupsState | null) => fn(fresh) ?? fresh)
     const { run } = drop()
     await run()
-    expect(liveRegionText()).toBe(DND_SAVE_FAILED_TEXT)
+    expect(liveRegionText()).toBe(dndSaveFailedText())
   })
 
   it('any other write failure still takes the normal failure path (no retry)', async () => {
@@ -111,6 +111,6 @@ describe('drop commit with a stale base rev', () => {
     const { run } = drop()
     await run()
     expect(update).not.toHaveBeenCalled()
-    expect(liveRegionText()).toBe(DND_SAVE_FAILED_TEXT)
+    expect(liveRegionText()).toBe(dndSaveFailedText())
   })
 })

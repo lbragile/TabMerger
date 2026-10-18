@@ -126,8 +126,8 @@ describe('setupEncryption', () => {
     mockDeriveWrappingKey.mockResolvedValue(fakeWrappingKey)
     mockWrapDataKey.mockResolvedValue({ wrappedKey: 'wrapped', iv: 'iv1' })
 
-    const { setupEncryption, getDataKey, ENCRYPTION_ALREADY_SET_UP_MESSAGE } = await import('@/lib/encryptionKey')
-    await expect(setupEncryption('pass')).rejects.toThrow(ENCRYPTION_ALREADY_SET_UP_MESSAGE)
+    const { setupEncryption, getDataKey, encryptionAlreadySetUpMessage } = await import('@/lib/encryptionKey')
+    await expect(setupEncryption('pass')).rejects.toThrow(encryptionAlreadySetUpMessage())
 
     // the freshly generated key was never cached: it would encrypt data nobody can unlock
     expect(await getDataKey()).toBeNull()

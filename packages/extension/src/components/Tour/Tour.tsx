@@ -63,6 +63,7 @@ import { toast } from '@/lib/toast';
 import { trackEvent } from '@/lib/analytics';
 import type { Group, GroupsState } from '@/lib/types';
 import { TourCard, type TourTaskStatus } from './TourCard';
+import { t } from '@/lib/i18n';
 
 // Sizes in rem, converted to pixels where the positioning maths needs them
 const SPOTLIGHT_PADDING_REM = 0.25;
@@ -470,10 +471,10 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
       // The last step offers this on the card. A skipped tour never gets there.
       if (outcome === 'skipped' && practice) {
         const { id, name } = practice;
-        toast(`The tour left a practice group, "${name}", in your list.`, {
+        toast(t('tour.practiceLeft', { name }), {
           id: PRACTICE_TOAST_ID,
           duration: 12_000,
-          action: { label: 'Remove it', onClick: () => removePracticeGroup(id) }
+          action: { label: t('tour.removeIt'), onClick: () => removePracticeGroup(id) }
         });
       }
     },
@@ -919,7 +920,7 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
         >
           <span data-tour-drop-label={dropLabelPlace}>
             <span data-tour-drop-arrow="" />
-            {targets?.dropLabel ?? 'Drop here'}
+            {targets?.dropLabel ?? t('tour.drop.default')}
           </span>
           {dropPulse && (
             <span

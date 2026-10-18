@@ -82,6 +82,7 @@ function gripFor(id: string) {
   const g = document.createElement('span')
   g.tabIndex = 0
   g.setAttribute('aria-label', `Drag to reorder tab: ${id}`)
+  g.setAttribute('data-dnd-grip', 'tab')
   r.appendChild(g)
   document.body.appendChild(r)
   return g

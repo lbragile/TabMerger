@@ -45,16 +45,18 @@ import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
 import { TOUR_ANCHORS } from "@/lib/tourSteps";
 import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
 import { motionScrollBehavior } from "@/lib/reducedMotion";
-import { SEARCH_COPY } from "@tabmerger/shared";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 /** Map an internal tier key to a human-readable label. */
-function tierLabel(tier: string): string {
-    if (tier === "pro_ai") return "Pro AI";
-    if (tier === "pro") return "Pro";
-    return "Free tier";
+function tierLabel(tier: string, t: TFunction): string {
+    if (tier === "pro_ai") return t("common.tier.proAi");
+    if (tier === "pro") return t("common.tier.pro");
+    return t("common.tier.free");
 }
 
 export function Header() {
+    const { t } = useTranslation();
     const {
         searchFilter,
         setSearchFilter,
@@ -107,14 +109,14 @@ export function Header() {
         const tabs =
             groupsState.available[0]?.windows.flatMap((w) => w.tabs) ?? [];
         if (tabs.length === 0) {
-            toast.error("No tabs open to group");
+            toast.error(t("header.toast.noTabsToGroup"));
             return;
         }
         setAiQuotaExceeded(false);
         try {
             const result = await autoGroup(tabs);
             if (result.groups.length === 0) {
-                toast.info("AI didn't find any groups to create");
+                toast.info(t("header.toast.aiNoGroups"));
                 return;
             }
 
@@ -124,20 +126,20 @@ export function Header() {
             const suggestions = result.groups.slice(0, remaining);
             if (suggestions.length === 0) {
                 trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
-                toast.error(`Free plan allows up to ${maxGroups} groups.`, {
-                    action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+                toast.error(t('common.freeGroupLimit', { max: maxGroups }), {
+                    action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
                 });
                 return;
             }
 
             const { appliedGroups } = await applyAIGroups(suggestions);
             if (appliedGroups === 0) {
-                toast.info("No matching tabs found for AI's suggestion");
+                toast.info(t("header.toast.aiNoMatchingTabs"));
                 return;
             }
-            toast.success(`AI created ${appliedGroups} group${appliedGroups === 1 ? '' : 's'}`, {
+            toast.success(t('header.toast.aiCreated', { count: appliedGroups }), {
                 ...(suggestions.length < result.groups.length
-                    ? { description: `${result.groups.length - suggestions.length} more suggested but skipped — free plan limit reached.` }
+                    ? { description: t('header.toast.aiSkipped', { skipped: result.groups.length - suggestions.length }) }
                     : {})
             });
         } catch (err) {
@@ -148,7 +150,7 @@ export function Header() {
             // The backstop already showed the upgrade toast
             if (err instanceof FreeLimitExceededError) return;
             console.error("[TabMerger] AI grouping failed:", err);
-            toast.error("AI grouping failed");
+            toast.error(t("header.toast.aiGroupingFailed"));
         }
     };
 
@@ -160,14 +162,14 @@ export function Header() {
         setAiQuotaExceeded(false);
         try {
             await organizeTabs();
-            toast.success('Organize started — review the proposal in your dashboard');
+            toast.success(t('header.toast.organizeStarted'));
             chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/dashboard` });
         } catch (err) {
             if (err instanceof QuotaExceededError) {
                 setAiQuotaExceeded(true);
                 return;
             }
-            toast.error(err instanceof Error ? err.message : 'Could not start organize');
+            toast.error(err instanceof Error ? err.message : t('header.toast.organizeFailed'));
         }
     };
 
@@ -231,7 +233,7 @@ export function Header() {
     };
 
     const userInitials = user?.email?.slice(0, 2).toUpperCase() ?? "TM";
-    const currentTierLabel = tierLabel(tier);
+    const currentTierLabel = tierLabel(tier, t);
 
     return (
         <>
@@ -244,11 +246,11 @@ export function Header() {
             >
                 <img
                     src={logoUrl}
-                    alt="TabMerger"
+                    alt={t("common.appName")}
                     className="h-5 w-5"
                 />
                 <span className="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#00B4CC] to-[#F5921E]">
-                    TabMerger
+                    {t("common.appName")}
                 </span>
             </div>
 
@@ -260,13 +262,13 @@ export function Header() {
                     className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full min-w-0 border border-border bg-muted/40 text-xs text-foreground/70 hover:bg-muted transition-colors"
                     onClick={() => setSearchOpen(true)}
                     // The visible query is part of the name (WCAG 2.5.3, label in name)
-                    aria-label={searchFilter ? `${SEARCH_COPY.openSearch}, ${SEARCH_COPY.currentSearch}: ${searchFilter}` : SEARCH_COPY.openSearch}
+                    aria-label={searchFilter ? t('search.openSearchWithQuery', { query: searchFilter }) : t('search.openSearch')}
                     data-tour={TOUR_ANCHORS.search}
                 >
                     <span className="flex-1 text-left truncate">
-                        {searchFilter || 'Search tabs and groups…'}
+                        {searchFilter || t('header.searchPlaceholder')}
                     </span>
-                    <kbd className="text-[10px] border border-border px-1 py-px font-mono shrink-0">Ctrl K</kbd>
+                    <kbd className="text-[10px] border border-border px-1 py-px font-mono shrink-0">{t("common.shortcutSearch")}</kbd>
                 </button>
                 {/* A sibling of the opener (a button inside a button is invalid). Only while a
                     query is active: the query stays until the user clears it. */}
@@ -278,13 +280,13 @@ export function Header() {
                                 size="icon"
                                 className="h-7 w-7 shrink-0 rounded-none border border-l-0 border-border"
                                 onClick={handleClearSearch}
-                                aria-label={SEARCH_COPY.clearSearch}
+                                aria-label={t("search.clearSearch")}
                                 data-testid="header-clear-search"
                             >
                                 <X className="h-3.5 w-3.5 text-muted-foreground" />
                             </Button>
                         </TooltipTrigger>
-                        <TooltipContent side="bottom">{SEARCH_COPY.clearSearch}</TooltipContent>
+                        <TooltipContent side="bottom">{t("search.clearSearch")}</TooltipContent>
                     </Tooltip>
                 )}
             </div>
@@ -312,13 +314,13 @@ export function Header() {
                             className="h-7 w-7"
                             onClick={() => void handleUndo()}
                             disabled={!canUndo}
-                            aria-label="Undo"
+                            aria-label={t("header.undo")}
                             data-tour={TOUR_ANCHORS.undo}
                         >
                             <Undo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">Undo</TooltipContent>
+                    <TooltipContent side="bottom">{t("header.undo")}</TooltipContent>
                 </Tooltip>
 
                 <Tooltip>
@@ -329,13 +331,13 @@ export function Header() {
                             className="h-7 w-7"
                             onClick={() => void handleRedo()}
                             disabled={!canRedo}
-                            aria-label="Redo"
+                            aria-label={t("header.redo")}
                             data-tour={TOUR_ANCHORS.redo}
                         >
                             <Redo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">Redo</TooltipContent>
+                    <TooltipContent side="bottom">{t("header.redo")}</TooltipContent>
                 </Tooltip>
 
                 {/* Selection mode toggle */}
@@ -354,8 +356,8 @@ export function Header() {
                             data-tour={TOUR_ANCHORS.selectItems}
                             aria-label={
                                 selectionMode
-                                    ? "Exit selection mode"
-                                    : "Select items"
+                                    ? t("header.exitSelectionMode")
+                                    : t("header.selectItems")
                             }
                         >
                             {selectionMode ? (
@@ -366,7 +368,7 @@ export function Header() {
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">
-                        {selectionMode ? "Exit selection mode" : "Select items"}
+                        {selectionMode ? t("header.exitSelectionMode") : t("header.selectItems")}
                     </TooltipContent>
                 </Tooltip>
 
@@ -388,7 +390,7 @@ export function Header() {
                                     onClick={aiFeatures ? undefined : () => openModal('upgrade')}
                                     disabled={aiLoading || organizeLoading}
                                     aria-disabled={!aiFeatures}
-                                    aria-label="AI actions"
+                                    aria-label={t("header.aiActions")}
                                     data-tour={TOUR_ANCHORS.aiActions}
                                 >
                                     <Sparkles className={cn(
@@ -399,7 +401,7 @@ export function Header() {
                             </DropdownMenuTrigger>
                         </TooltipTrigger>
                         <TooltipContent side="bottom">
-                            {aiFeatures ? 'AI actions' : 'Pro AI required — click to upgrade'}
+                            {aiFeatures ? t('header.aiActions') : t('header.aiProRequired')}
                         </TooltipContent>
                     </Tooltip>
 
@@ -408,16 +410,16 @@ export function Header() {
                             {appSettings?.aiAutoGroupEnabled !== false && (
                                 <DropdownMenuItem onClick={() => void handleAIGroup()}>
                                     <div>
-                                        <div>Auto-group</div>
-                                        <div className="text-[10px] text-muted-foreground font-normal">Group open tabs with AI</div>
+                                        <div>{t("header.autoGroup")}</div>
+                                        <div className="text-[10px] text-muted-foreground font-normal">{t("header.autoGroupHint")}</div>
                                     </div>
                                 </DropdownMenuItem>
                             )}
                             {appSettings?.aiOrganizeEnabled !== false && (
                                 <DropdownMenuItem onClick={() => void handleOrganize()}>
                                     <div>
-                                        <div>Organize</div>
-                                        <div className="text-[10px] text-muted-foreground font-normal">Reorganize all groups with AI</div>
+                                        <div>{t("header.organize")}</div>
+                                        <div className="text-[10px] text-muted-foreground font-normal">{t("header.organizeHint")}</div>
                                     </div>
                                 </DropdownMenuItem>
                             )}
@@ -434,13 +436,13 @@ export function Header() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={handleStartTour}
-                            aria-label="Take the tour"
+                            aria-label={t("header.takeTour")}
                             data-tour={TOUR_ANCHORS.help}
                         >
                             <CircleQuestionMark className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">Take the tour</TooltipContent>
+                    <TooltipContent side="bottom">{t("header.takeTour")}</TooltipContent>
                 </Tooltip>
 
                 {/* Profile dropdown — consolidated sign-in / account widget */}
@@ -450,7 +452,7 @@ export function Header() {
                             <DropdownMenuTrigger asChild>
                                 <button
                                     className="ml-0.5 flex items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                    aria-label={user ? 'Account menu' : 'Settings menu'}
+                                    aria-label={user ? t('header.accountMenu') : t('header.settingsMenu')}
                                     data-tour={TOUR_ANCHORS.accountMenu}
                                 >
                                     {user ? (
@@ -500,7 +502,7 @@ export function Header() {
                                             }
                                         >
                                             <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
-                                            Upgrade to Pro
+                                            {t("header.upgradeToPro")}
                                         </DropdownMenuItem>
                                     )}
                                     {tier === "pro" && AI_ENABLED && (
@@ -513,7 +515,7 @@ export function Header() {
                                             }
                                         >
                                             <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
-                                            Upgrade to Pro AI
+                                            {t("header.upgradeToProAi")}
                                         </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem
@@ -522,21 +524,21 @@ export function Header() {
                                         data-tour={TOUR_ANCHORS.menuSettings}
                                     >
                                         <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
-                                        Settings
+                                        {t("header.settings")}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
                                         className="text-xs text-destructive focus:bg-destructive/10 focus:text-destructive"
                                         onClick={() => void signOut()}
                                     >
-                                        Sign out
+                                        {t("header.signOut")}
                                     </DropdownMenuItem>
                                 </>
                             ) : (
                                 <>
                                     {/* Not signed in — Upgrade hidden, sign-in only */}
                                     <div className="px-2 py-1.5 pointer-events-none select-none">
-                                        <Badge variant="secondary" className="text-xs px-2 py-0.5">Free tier</Badge>
+                                        <Badge variant="secondary" className="text-xs px-2 py-0.5">{t("common.tier.free")}</Badge>
                                     </div>
                                     <DropdownMenuItem
                                         className="text-xs cursor-pointer"
@@ -544,7 +546,7 @@ export function Header() {
                                         data-tour={TOUR_ANCHORS.menuSettings}
                                     >
                                         <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
-                                        Settings
+                                        {t("header.settings")}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
@@ -552,7 +554,7 @@ export function Header() {
                                         onClick={() => openModal("auth")}
                                     >
                                         <UserCircle className="h-3.5 w-3.5 mr-2 shrink-0" />
-                                        Sign in
+                                        {t("header.signIn")}
                                     </DropdownMenuItem>
                                 </>
                             )}

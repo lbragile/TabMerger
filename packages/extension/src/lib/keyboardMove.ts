@@ -1,6 +1,7 @@
 import { buildDndModel, type DndModel } from '@/hooks/useDndModel';
 import { canDrop, NEW_GROUP_ID, type DndRef } from '@/lib/dndMove';
-import { describeItem, plural, windowName } from '@/lib/dndAnnouncements';
+import { describeItem, plural, typeName, windowName } from '@/lib/dndAnnouncements';
+import { t } from '@/lib/i18n';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import type { GroupsState } from '@/lib/types';
 
@@ -127,12 +128,12 @@ function slotOver(ids: string[], k: number, type: 'tab' | 'window' | 'group', mo
 /** What the announcements call the moving item(s): "Play" for one, "3 tabs" for a selection. */
 function movingLabel(state: GroupsState, model: DndModel, source: MoveSource): string {
   if (source.ids.length > 1) return plural(source.ids.length, source.kind);
-  return describeItem(state, source.anchorId, model)?.name ?? source.kind;
+  return describeItem(state, source.anchorId, model)?.name ?? typeName(source.kind);
 }
 
 /** "first" / "last" / "position 3 of 5": slot `k` among `rest` staying rows, `total` including the moving ones. */
 const slotPhrase = (k: number, rest: number, total: number): string =>
-  k <= 0 ? 'first' : k >= rest ? 'last' : `position ${k + 1} of ${total}`;
+  k <= 0 ? t('keyboardMove.first') : k >= rest ? t('keyboardMove.last') : t('keyboardMove.position', { index: k + 1, total });
 
 const rowMarker = (rest: string[], k: number): MarkerSpec => ({
   type: 'line',
@@ -152,7 +153,7 @@ export function buildTargets(
   const sel = new Set(source.ids);
   const count = source.ids.length;
   const me = movingLabel(state, model, source);
-  const original = `${me}, original position`;
+  const original = t('keyboardMove.original', { item: me });
   const gi = Math.min(Math.max(opts.activeGroupIndex, 0), Math.max(state.available.length - 1, 0));
   const shown = state.available[gi];
   const targets: MoveTarget[] = [];
@@ -175,7 +176,7 @@ export function buildTargets(
           targets.push({
             key: `win:${wid}`,
             over,
-            text: holdsAnchor ? original : `${me}, in ${wname}${w.tabIds.length === 0 ? ', empty' : ''}`,
+            text: holdsAnchor ? original : t(w.tabIds.length === 0 ? 'keyboardMove.inEmptyWindow' : 'keyboardMove.inWindow', { item: me, window: wname }),
             marker: { type: 'box', elementId: wid },
             gap: { containerKey: wid, shiftIds: [] },
             origin: holdsAnchor
@@ -201,7 +202,7 @@ export function buildTargets(
         targets.push({
           key: `tab:${wid}:${k}`,
           over,
-          text: isOrigin ? original : `${me}, ${slotPhrase(k, rest.length, rest.length + count)} in ${wname}`,
+          text: isOrigin ? original : t('keyboardMove.slotInWindow', { item: me, slot: slotPhrase(k, rest.length, rest.length + count), window: wname }),
           marker: rowMarker(rest, k),
           gap: { containerKey: wid, shiftIds: rest.slice(k) },
           origin: isOrigin
@@ -213,7 +214,7 @@ export function buildTargets(
       targets.push({
         key: 'zone:new-window',
         over: zoneOver,
-        text: `${me}, in a new window`,
+        text: t('keyboardMove.newWindow', { item: me }),
         marker: { type: 'zone', zone: 'new-window' },
         gap: { containerKey: null, shiftIds: [] },
         zone: true
@@ -247,7 +248,7 @@ export function buildTargets(
           targets.push({
             key: 'win:append',
             over,
-            text: `${me}, first window in ${shown.name}`,
+            text: t('keyboardMove.firstWindowIn', { item: me, group: shown.name }),
             marker: null,
             gap: { containerKey: shown.id, shiftIds: [] }
           });
@@ -262,7 +263,7 @@ export function buildTargets(
       targets.push({
         key: `win:${k}`,
         over,
-        text: isOrigin ? original : `${me}, ${slotPhrase(k, pool.length, pool.length + count)} in ${shown.name}`,
+        text: isOrigin ? original : t('keyboardMove.slotInGroup', { item: me, slot: slotPhrase(k, pool.length, pool.length + count), group: shown.name }),
         marker: rowMarker(pool, k),
         gap: { containerKey: shown.id, shiftIds: pool.slice(k) },
         origin: isOrigin
@@ -295,7 +296,7 @@ export function buildTargets(
       targets.push({
         key: `grp:${k}`,
         over,
-        text: isOrigin ? original : `${me}, ${slotPhrase(k, pool.length, pool.length + count)}`,
+        text: isOrigin ? original : t('keyboardMove.slot', { item: me, slot: slotPhrase(k, pool.length, pool.length + count) }),
         marker: rowMarker(pool, k),
         gap: { containerKey: 'groups', shiftIds: pool.slice(k) },
         origin: isOrigin
@@ -315,7 +316,7 @@ export function buildNewGroupTargets(state: GroupsState, source: MoveSource, opt
     {
       key: 'zone:new-group',
       over,
-      text: `${movingLabel(state, model, source)}, in a new group`,
+      text: t('keyboardMove.newGroup', { item: movingLabel(state, model, source) }),
       marker: { type: 'zone', zone: 'new-group' },
       gap: { containerKey: null, shiftIds: [] },
       zone: true
@@ -465,27 +466,26 @@ export function rebuildMove(ms: MoveState, state: GroupsState, opts: MoveOptions
 /** Spoken on pick-up: what was picked up, where it is, and how to move it. */
 export function describePickup(state: GroupsState, source: MoveSource): string {
   const label = describeItem(state, source.anchorId);
-  if (!label) return 'Picked up.';
+  if (!label) return t('keyboardMove.pickedUp');
   const count = source.ids.length;
-  const head = count > 1 ? `Picked up ${plural(count, source.kind)}.` : `Picked up ${label.type} ${label.name}, ${label.position}.`;
-  const how =
-    source.kind === 'group'
-      ? 'Up and Down arrows move it, Space drops, Escape cancels.'
-      : 'Up and Down arrows move it, Left chooses a group, Space drops, Escape cancels.';
-  return `${head} ${how}`;
+  const head = count > 1
+    ? t('keyboardMove.pickedUpMany', { items: plural(count, source.kind) })
+    : t('keyboardMove.pickedUpOne', { type: typeName(label.type), name: label.name, position: label.position });
+  const how = source.kind === 'group' ? t('keyboardMove.howGroup') : t('keyboardMove.howItem');
+  return t('keyboardMove.pickup', { head, how });
 }
 
 /** Spoken when the cursor lands on a list stop: "Group list: Play" / "Group list: New group". */
 export function describeListStop(state: GroupsState, scope: MoveScope): string {
-  if (scope === 'new-group') return 'Group list: New group';
-  return `Group list: ${typeof scope === 'number' ? (state.available[scope]?.name ?? '') : ''}`;
+  if (scope === 'new-group') return t('keyboardMove.listNewGroup');
+  return t('keyboardMove.listGroup', { name: typeof scope === 'number' ? (state.available[scope]?.name ?? '') : '' });
 }
 
 /** Spoken when Right enters a group from the list: the group name, then where the item sits in it. */
 export function describeGroupEntry(state: GroupsState, ms: MoveState): string {
   const name = typeof ms.scope === 'number' ? (state.available[ms.scope]?.name ?? '') : '';
-  return `${name}: ${currentTarget(ms)?.text ?? ''}`;
+  return t('keyboardMove.groupEntry', { name, target: currentTarget(ms)?.text ?? '' });
 }
 
 /** Spoken before the target text when an Up / Down step wrapped around. */
-export const describeWrap = (dir: MoveDirection): string => (dir === 'down' ? 'Wrapped to top.' : 'Wrapped to bottom.');
+export const describeWrap = (dir: MoveDirection): string => (dir === 'down' ? t('keyboardMove.wrappedTop') : t('keyboardMove.wrappedBottom'));

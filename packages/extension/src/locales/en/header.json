@@ -1,0 +1,32 @@
+{
+  "searchPlaceholder": "Search tabs and groups…",
+  "undo": "Undo",
+  "redo": "Redo",
+  "selectItems": "Select items",
+  "exitSelectionMode": "Exit selection mode",
+  "aiActions": "AI actions",
+  "aiProRequired": "Pro AI required — click to upgrade",
+  "autoGroup": "Auto-group",
+  "autoGroupHint": "Group open tabs with AI",
+  "organize": "Organize",
+  "organizeHint": "Reorganize all groups with AI",
+  "takeTour": "Take the tour",
+  "accountMenu": "Account menu",
+  "settingsMenu": "Settings menu",
+  "upgradeToPro": "Upgrade to Pro",
+  "upgradeToProAi": "Upgrade to Pro AI",
+  "settings": "Settings",
+  "signOut": "Sign out",
+  "signIn": "Sign in",
+  "toast": {
+    "noTabsToGroup": "No tabs open to group",
+    "aiNoGroups": "AI didn't find any groups to create",
+    "aiNoMatchingTabs": "No matching tabs found for AI's suggestion",
+    "aiCreated_one": "AI created {{count}} group",
+    "aiCreated_other": "AI created {{count}} groups",
+    "aiSkipped": "{{skipped}} more suggested but skipped — free plan limit reached.",
+    "aiGroupingFailed": "AI grouping failed",
+    "organizeStarted": "Organize started — review the proposal in your dashboard",
+    "organizeFailed": "Could not start organize"
+  }
+}

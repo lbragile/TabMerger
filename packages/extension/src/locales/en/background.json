@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Could not reach the sync server. Try again.",
+    "accountMismatch": "This device still holds another account's data. Open the extension to switch accounts.",
+    "identityChanged": "The extension was signed out during the sync. Sign in and try again.",
+    "keyCheckFailed": "Could not check the encryption status. Try again.",
+    "setupUnfinished": "Open the extension to finish encryption setup.",
+    "locked": "Open the extension and unlock encryption to sync."
+  },
+  "menu": {
+    "saveTo": "Save to TabMerger",
+    "scopeCurrent": "Save this tab",
+    "scopeLeft": "Save tabs to the left",
+    "scopeRight": "Save tabs to the right",
+    "scopeExcluding": "Save all other tabs",
+    "noGroups": "No saved groups yet",
+    "groupItem": "{{color}} {{name}} ({{windows}}w · {{tabs}}t)"
+  },
+  "reminder": {
+    "title": "TabMerger Reminder"
+  }
+}

@@ -1,3 +1,5 @@
+// First: the catalog must be ready before any other module asks for a string
+import '@/lib/i18nReact';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';

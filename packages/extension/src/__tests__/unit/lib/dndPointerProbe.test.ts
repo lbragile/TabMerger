@@ -22,6 +22,7 @@ function makeGrip() {
     hasPointerCapture?: (id: number) => boolean;
   };
   grip.setAttribute('aria-label', 'Drag to reorder tab');
+  grip.setAttribute('data-dnd-grip', 'tab');
   const icon = document.createElement('i');
   grip.appendChild(icon);
   row.appendChild(grip);

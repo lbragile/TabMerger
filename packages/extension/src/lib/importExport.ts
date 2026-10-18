@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n'
 import { GROUP_COLOR_RE, isReservedTourDemoId, isScriptUrl, withoutTourDemoGroups } from '@tabmerger/shared'
 import { nanoid } from 'nanoid'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
@@ -20,7 +21,7 @@ export interface ImportStateResult {
 }
 
 /** Name given to an imported group whose file entry has no usable name. */
-export const IMPORTED_GROUP_FALLBACK_NAME = 'Imported group'
+export const importedGroupFallbackName = (): string => t('common.importedGroup')
 
 /** The colours `chrome.tabGroups` accepts; any other value makes `tabGroups.update` reject. */
 const CHROME_GROUP_COLORS: readonly string[] = ['grey', 'blue', 'red', 'yellow', 'green', 'pink', 'purple', 'cyan', 'orange']
@@ -52,8 +53,12 @@ function isImageUrl(url: unknown): url is string {
 }
 
 /** `" (3 skipped)"`-style suffix for the import success toast; empty when nothing was left out. */
-export function skippedSuffix(skipped: number): string {
-  return skipped > 0 ? `, ${skipped} skipped` : ''
+/**
+ * i18next options for a message that has a "some entries were left out" variant: the plain key
+ * when nothing was skipped, `<key>_skipped` (with `{{skipped}}`) otherwise.
+ */
+export function skippedContext(skipped: number): { context?: 'skipped'; skipped: number } {
+  return skipped > 0 ? { context: 'skipped', skipped } : { skipped }
 }
 
 /**
@@ -122,7 +127,7 @@ function sanitizeGroup(raw: unknown, counter: Counter): Group | null {
   const group: Group = {
     // (an id the tour's practice groups use gets a fresh one: the tour removes groups by that id)
     id: typeof raw.id === 'string' && raw.id && !isReservedTourDemoId(raw.id) ? raw.id : nanoid(10),
-    name: typeof raw.name === 'string' && raw.name ? raw.name : IMPORTED_GROUP_FALLBACK_NAME,
+    name: typeof raw.name === 'string' && raw.name ? raw.name : importedGroupFallbackName(),
     color: typeof raw.color === 'string' && GROUP_COLOR_RE.test(raw.color) ? raw.color : DEFAULT_GROUP_COLOR,
     updatedAt: isFiniteNumber(raw.updatedAt) ? raw.updatedAt : Date.now(),
     windows,
@@ -173,7 +178,7 @@ export function exportGroupsState(state: GroupsState): string {
  */
 export function importGroups(json: string): ImportResult {
   const parsed: unknown = JSON.parse(json) // throws on invalid JSON
-  if (!Array.isArray(parsed)) throw new Error('Expected an array')
+  if (!Array.isArray(parsed)) throw new Error(t('errors.expectedArray'))
   const { groups, skipped } = sanitizeGroups(parsed)
   return { groups, skipped }
 }
@@ -187,9 +192,9 @@ export function importGroups(json: string): ImportResult {
  */
 export function importGroupsState(json: string): ImportStateResult {
   const parsed: unknown = JSON.parse(json) // throws on invalid JSON
-  if (!isRecord(parsed) || !Array.isArray(parsed.available)) throw new Error('Invalid format')
+  if (!isRecord(parsed) || !Array.isArray(parsed.available)) throw new Error(t('errors.invalidFormat'))
   const { groups, nowOpen, skipped } = sanitizeGroups(parsed.available)
-  if (groups.length === 0 && skipped > 0) throw new Error('No groups found')
+  if (groups.length === 0 && skipped > 0) throw new Error(t('errors.noGroupsFound'))
   const active = isRecord(parsed.active) ? parsed.active : {}
   return {
     state: {
@@ -254,7 +259,7 @@ export function parseBookmarksHtml(html: string): ImportResult {
     if (dt.tagName !== 'DT') continue
     const h3 = dt.querySelector(':scope > h3')
     if (!h3) continue
-    const name = h3.textContent?.trim() || 'Imported'
+    const name = h3.textContent?.trim() || t('common.importedFolder')
     const dl = dt.querySelector(':scope > dl')
     const tabs = dl ? collectTabs(dl) : []
     if (tabs.length === 0) continue

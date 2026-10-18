@@ -1,4 +1,6 @@
-import { SEARCH_COPY, isTourDemoGroup } from '@tabmerger/shared';
+import { isTourDemoGroup } from '@tabmerger/shared';
+import { dndGripSelector } from './dndGrip';
+import { lazyMessages, t } from './i18n';
 import { DEFAULT_GROUP_TITLE, type Group } from './types';
 import { findDuplicateTabs } from './deduplication';
 import { TOUR_DEMO_FIRST_WINDOW_NAME, TOUR_DEMO_MAIN_ID, TOUR_DEMO_TARGET_ID } from './tourDemo';
@@ -305,7 +307,7 @@ export const TOUR_TASKS: Record<Exclude<TourTaskId, keyof typeof TOUR_DRAG_TASKS
     isDone: (ctx, baseline) => typeof baseline === 'number' && (ctx.signals[TOUR_SIGNALS.openWindow] ?? 0) > baseline,
     targets: () => {
       const win = tourDemoWindowSelector(TOUR_DEMO_MAIN_ID, 0);
-      const trigger = `${win} ${WINDOW_MENU}`;
+      const trigger = `${win} ${windowControls.menu}`;
       const item = tourMenuItemSelector(TOUR_MENU_LABELS.openWindow);
       return {
         highlight: [[anchor(TOUR_ANCHORS.tabsPanel), ANY_MENU]],
@@ -426,7 +428,7 @@ export const TOUR_TASKS: Record<Exclude<TourTaskId, keyof typeof TOUR_DRAG_TASKS
     targets: (ctx) => {
       const overlay = anchor(TOUR_ANCHORS.searchOverlay);
       const input = `${overlay} input`;
-      const clear = `[aria-label="${quoted(SEARCH_COPY.clearSearch)}"]`;
+      const clear = `[aria-label="${quoted(t('search.clearSearch'))}"]`;
       // "Clear search" inside the open search box, or next to the closed one in the header
       const clears = [`${overlay} ${clear}`, `header ${clear}`];
       // The list of groups the search box offers: its rows are the only buttons in there without
@@ -468,7 +470,7 @@ export const TOUR_TASKS: Record<Exclude<TourTaskId, keyof typeof TOUR_DRAG_TASKS
       return (ctx.signals[TOUR_SIGNALS.undo] ?? 0) > start.undo && (ctx.signals[TOUR_SIGNALS.redo] ?? 0) > start.redo;
     },
     targets: () => {
-      const star = `${tourDemoWindowSelector(TOUR_DEMO_MAIN_ID, 0)} ${WINDOW_STAR}`;
+      const star = `${tourDemoWindowSelector(TOUR_DEMO_MAIN_ID, 0)} ${windowControls.star}`;
       const undo = anchor(TOUR_ANCHORS.undo);
       const redo = anchor(TOUR_ANCHORS.redo);
       return {
@@ -533,24 +535,27 @@ export const TOUR_TASKS: Record<Exclude<TourTaskId, keyof typeof TOUR_DRAG_TASKS
 
 /** The element that holds focus during a keyboard move (`KeyboardMoveHost`): it must stay usable. */
 export const TOUR_MOVE_HOST = '[data-testid="keyboard-move-host"]';
-const TAB_GRIP = '[aria-label^="Drag to reorder tab"]';
-const GROUP_GRIP = '[aria-label^="Drag to reorder group"]';
+const TAB_GRIP = dndGripSelector('tab');
+const GROUP_GRIP = dndGripSelector('group');
 /** Any menu a press could still open is locked as a whole. */
 const ANY_MENU = '[role="menu"]';
 /** On a window card: the button that opens its menu, and its star (named by what it will do). */
-const WINDOW_MENU = '[aria-label="More window options"]';
-const WINDOW_STAR = ':is([aria-label="Star window"], [aria-label="Unstar window"])';
+// By accessible name, read when used: in the language the UI is shown in
+const windowControls = {
+  get menu() { return `[aria-label="${quoted(t('window.moreOptions'))}"]`; },
+  get star() { return `:is([aria-label="${quoted(t('window.star'))}"], [aria-label="${quoted(t('window.unstar'))}"])`; }
+};
 
 /**
  * The visible text of the menu items and dialog buttons the steps name. The step text in
  * `tourSteps.ts` quotes the same words, and a unit test checks the two against each other.
  */
-export const TOUR_MENU_LABELS = {
-  openWindow: 'Open in browser',
-  deduplicate: 'Deduplicate tabs',
+export const TOUR_MENU_LABELS = lazyMessages({
+  openWindow: 'window.openInBrowser',
+  deduplicate: 'groupMenu.deduplicate',
   /** Start of the confirm button's text in the "Remove duplicates" dialog ("Remove 1 duplicate"). */
-  confirmDuplicates: 'Remove '
-} as const;
+  confirmDuplicates: 'tour.labels.confirmDuplicatesPrefix'
+});
 
 /** True while the search query's `group:` filter is the name of a practice group. */
 const filtersOnDemoGroup = (ctx: TourTaskContext): boolean => {
@@ -604,14 +609,14 @@ function tabDragTargets(
 }
 
 /** The words on each drop marker (quoted by the sub-step text in `tourSteps.ts`). */
-export const TOUR_DROP_LABELS = {
+export const TOUR_DROP_LABELS = lazyMessages({
   /** On the line under the last tab of a window: the tab goes into the gap below that tab. */
-  belowTab: 'Drop below this tab',
-  window: 'Drop in this window',
-  group: 'Drop on this group',
+  belowTab: 'tour.drop.belowTab',
+  window: 'tour.drop.window',
+  group: 'tour.drop.group',
   /** On the line under the lower practice group. */
-  belowGroup: 'Drop below this group'
-} as const;
+  belowGroup: 'tour.drop.belowGroup'
+});
 
 /** Where the practice tab is in "Now Open" right now, or `null` while it is not on the list. */
 function practiceTabPlace(ctx: TourTaskContext): { groupId: string; windowIndex: number; tabIndex: number } | null {

@@ -10,7 +10,6 @@ import {
   getGroupInfo,
   getGroupTabCount,
   parseSearchQuery,
-  pluralize,
   relativeTimeStr,
   sortWindowsByStarred,
 } from '@/lib/utils'
@@ -26,17 +25,6 @@ describe('cn', () => {
 
   it('handles falsy values', () => {
     expect(cn('a', false && 'b', undefined, 'c')).toBe('a c')
-  })
-})
-
-describe('pluralize', () => {
-  it('returns singular for 1', () => {
-    expect(pluralize(1, 'tab')).toBe('tab')
-  })
-
-  it('appends s for other counts', () => {
-    expect(pluralize(0, 'tab')).toBe('tabs')
-    expect(pluralize(2, 'tab')).toBe('tabs')
   })
 })
 

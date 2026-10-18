@@ -91,7 +91,7 @@ vi.mock('@/lib/importExport', () => ({
   importGroups: vi.fn().mockReturnValue({ groups: [{ name: 'g' }], skipped: 0 }),
   parseBookmarksHtml: vi.fn().mockReturnValue({ groups: [], skipped: 0 }),
   parseOneTabs: vi.fn().mockReturnValue({ groups: [], skipped: 0 }),
-  skippedSuffix: (n: number) => (n > 0 ? `, ${n} skipped` : ''),
+  skippedContext: (n: number) => (n > 0 ? { context: 'skipped', skipped: n } : { skipped: n }),
   exportGroups: mockExportGroups,
 }))
 vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: mockToastError } }))

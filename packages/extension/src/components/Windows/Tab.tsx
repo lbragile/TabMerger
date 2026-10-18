@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { formatDateTime } from '@/lib/i18n';
+import { DND_GRIP_ATTR } from '@/lib/dndGrip';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { X, MoveRight, CheckSquare, Square, GripVertical, Lock, StickyNote, Clock, Pencil, Check } from 'lucide-react';
@@ -30,7 +33,6 @@ import { usePanelSearch, withoutFilteredOut } from '@/hooks/useSearchView';
 import { Highlighted } from '@/components/Highlighted';
 import { matchRanges, snippetAroundMatch, tabMatchesFilters, urlPrefixLength } from '@/lib/searchMatch';
 import { announceDnd } from '@/lib/dndLiveRegion';
-import { SEARCH_COPY } from '@tabmerger/shared';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
@@ -91,6 +93,7 @@ interface TabItemProps {
 }
 
 export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, siblingCount: _siblingCount, searchFilter, tagFilter, groupColor, isLocked = false, staleThresholdMs }: TabItemProps) {
+  const { t } = useTranslation();
   const sortableId = `${groupId}::w${windowIndex}::t${tabIndex}`;
   // `transition` is intentionally discarded — see drag-and-drop spec §8 (no live dnd-kit
   // transform/transition on a dragged row; an insertion gap is rendered instead).
@@ -341,7 +344,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
   const selectionId = `tab-${groupIndex}-${windowIndex}-${tabIndex}`;
   const isSelected = selectedItems.some((s) => s.id === selectionId);
 
-  const tabTitle = getDisplayTitle(tab) || tab.url || 'tab';
+  const tabTitle = getDisplayTitle(tab) || tab.url || t('tab.fallbackTitle');
 
   const extendRange = () => {
     const item = { type: 'tab' as const, id: selectionId };
@@ -403,7 +406,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
       )}
       tabIndex={0}
       role="listitem"
-      aria-label={dimmedBySearch ? `${getDisplayTitle(tab) || tab.url}${SEARCH_COPY.noMatchSuffix}` : getDisplayTitle(tab) || tab.url}
+      aria-label={dimmedBySearch ? `${getDisplayTitle(tab) || tab.url}${t('search.noMatchSuffix')}` : getDisplayTitle(tab) || tab.url}
       data-group-index={groupIndex}
       data-window-index={windowIndex}
       data-tab-index={tabIndex}
@@ -435,7 +438,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
         // Rows hidden by the search: no keyboard move either. Space is consumed and says why.
         if (!editingTitle && reorderLocked && e.key === ' ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
           e.preventDefault();
-          if (!e.repeat) announceDnd(SEARCH_COPY.reorderLocked);
+          if (!e.repeat) announceDnd(t('search.reorderLocked'));
           return;
         }
         if (!editingTitle && startMoveOnSpace(e, 'tab', sortableId)) return;
@@ -461,7 +464,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="text-xs">
               <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-              {isNowOpen ? 'Copy to group' : 'Move to group'}
+              {isNowOpen ? t('tab.copyToGroup') : t('tab.moveToGroup')}
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="max-h-48 overflow-y-auto">
               {targetGroups.map(({ group, index }) => (
@@ -487,7 +490,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               ))}
               {targetGroups.length === 0 && (
                 <DropdownMenuItem disabled className="text-xs text-muted-foreground">
-                  No other groups
+                  {t('tab.noOtherGroups')}
                 </DropdownMenuItem>
               )}
               <CreateGroupMenuItem
@@ -523,7 +526,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                 }
               >
                 <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                <span>Auto-save to <strong>{matchedGroup.name}</strong></span>
+                <span><Trans i18nKey="tab.autoSaveTo" values={{ group: matchedGroup.name }} components={{ strong: <strong /> }} /></span>
               </DropdownMenuItem>
             ) : null;
           })()}
@@ -533,14 +536,14 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             onClick={() => setNoteOpen(true)}
           >
             <StickyNote className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-            {tab.note ? 'Edit note' : 'Add note'}
+            {tab.note ? t('tab.editNote') : t('tab.addNote')}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-xs"
             onClick={() => { setReminderOpen(true); setReminderNote(tab.reminder?.note ?? ''); }}
           >
             <Clock className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-            {tab.reminder ? 'Edit reminder' : 'Remind me…'}
+            {tab.reminder ? t('tab.editReminder') : t('tab.remindMe')}
           </DropdownMenuItem>
           {tab.reminder && (
             <DropdownMenuItem
@@ -548,7 +551,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               onClick={() => clearTabReminder({ groupIndex, windowIndex, tabIndex })}
             >
               <Clock className="h-3.5 w-3.5 mr-2" />
-              Clear reminder
+              {t('tab.clearReminder')}
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
@@ -557,7 +560,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             onClick={() => { setTitleValue(getDisplayTitle(tab)); setEditingTitle(true); }}
           >
             <Pencil className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-            Rename tab
+            {t('tab.rename')}
           </DropdownMenuItem>
           {tab.customTitle && (
             <DropdownMenuItem
@@ -565,7 +568,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               onClick={() => { void commitTitle(''); }}
             >
               <Pencil className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-              Reset to original title
+              {t('tab.resetTitle')}
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
@@ -574,7 +577,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             onClick={() => deleteTab({ groupIndex, windowIndex, tabIndex })}
           >
             <X className="h-3.5 w-3.5 mr-2" />
-            {isNowOpen ? 'Close tab' : 'Remove tab'}
+            {isNowOpen ? t('tab.close') : t('tab.remove')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -598,8 +601,9 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           // `aria-pressed` is left to dnd-kit (it flips at pickup): an attribute-only change,
           // even synchronously inside `dragstart`, does NOT abort the native drag — measured
           // with `gripAriaPressed` in e2e/repro/popupAbortWindow.repro.ts (spec C4).
-          // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
-          aria-label={`Drag to reorder tab: ${tabTitle}`}
+          // The DnD sensor/visuals and the tour find the grip by this attribute, not its (translated) name.
+          {...{ [DND_GRIP_ATTR]: 'tab' }}
+          aria-label={t('tab.dragToReorder', { title: tabTitle })}
           onMouseDown={onDragHandleMouseDown}
           onKeyDown={onDragHandleKeyDown}
         >
@@ -614,7 +618,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           onMouseDown={(e) => e.stopPropagation()}
           role="checkbox"
           aria-checked={isSelected}
-          aria-label={`Select ${tabTitle}`}
+          aria-label={t('tab.select', { title: tabTitle })}
         >
           {isSelected ? (
             <CheckSquare className="h-3.5 w-3.5 text-primary" />
@@ -637,7 +641,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           <span
             className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full ring-1 ring-background"
             style={{ backgroundColor: groupColor || DEFAULT_GROUP_COLOR }}
-            aria-label="Stale tab"
+            aria-label={t('tab.stale')}
           />
         )}
       </span>
@@ -657,8 +661,8 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               onBlur={() => void commitTitle(titleValue)}
               onMouseDown={(e) => e.stopPropagation()}
             />
-            <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={() => void commitTitle(titleValue)}><Check className="h-2.5 w-2.5" /></button>
-            <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={() => setEditingTitle(false)}><X className="h-2.5 w-2.5" /></button>
+            <button type="button" aria-label={t('tab.save')} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={() => void commitTitle(titleValue)}><Check className="h-2.5 w-2.5" /></button>
+            <button type="button" aria-label={t('tab.cancel')} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={() => setEditingTitle(false)}><X className="h-2.5 w-2.5" /></button>
           </div>
         ) : (
           <>
@@ -700,7 +704,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                 style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
                 onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
                 onMouseDown={(e) => e.stopPropagation()}
-                aria-label={`Reopen Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
+                aria-label={t('tab.reopenChromeGroup', { name: tab.chromeGroup.name || t('tab.unnamedChromeGroup') })}
               >
                 <Highlighted text={tab.chromeGroup.name || ' '} query={markTag} />
               </button>
@@ -709,7 +713,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                 className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0"
                 style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
                 onMouseDown={(e) => e.stopPropagation()}
-                aria-label={`Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
+                aria-label={t('tab.chromeGroup', { name: tab.chromeGroup.name || t('tab.unnamedChromeGroup') })}
               >
                 <Highlighted text={tab.chromeGroup.name || ' '} query={markTag} />
               </span>
@@ -720,10 +724,10 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             <span
               className="relative z-10 text-[9px] px-1.5 py-0 leading-4 rounded-none shrink-0 flex items-center gap-0.5 whitespace-nowrap"
               style={{ backgroundColor: withAlpha(groupColor || DEFAULT_GROUP_COLOR, 0.18), color: groupColor || DEFAULT_GROUP_COLOR }}
-              aria-label="Custom title"
+              aria-label={t('tab.customTitle')}
             >
               <Pencil className="h-2 w-2" />
-              renamed
+              {t('tab.renamed')}
             </span>
           )}
 
@@ -736,12 +740,12 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                   className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
                   onClick={(e) => { e.stopPropagation(); setNoteOpen(true); }}
                   onMouseDown={(e) => e.stopPropagation()}
-                  aria-label="Edit tab note"
+                  aria-label={t('tab.editTabNote')}
                 >
                   <StickyNote className="h-3 w-3" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>Edit note</TooltipContent>
+              <TooltipContent>{t('tab.editNote')}</TooltipContent>
             </Tooltip>
           )}
 
@@ -755,13 +759,13 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                   style={{ color: groupColor || DEFAULT_GROUP_COLOR }}
                   onClick={(e) => { e.stopPropagation(); setReminderOpen(true); }}
                   onMouseDown={(e) => e.stopPropagation()}
-                  aria-label="Edit tab reminder"
+                  aria-label={t('tab.editTabReminder')}
                 >
                   <Clock className="h-3 w-3" />
                 </button>
               </TooltipTrigger>
               <TooltipContent className="text-xs">
-                Reminder: {new Date(tab.reminder.fireAt).toLocaleString()}
+                {t('tab.reminderAt', { when: formatDateTime(tab.reminder.fireAt) })}
                 {tab.reminder.note ? ` — ${tab.reminder.note}` : ''}
               </TooltipContent>
             </Tooltip>
@@ -774,7 +778,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                   <Lock className="h-3 w-3" />
                 </span>
               </TooltipTrigger>
-              <TooltipContent>Upgrade to Pro to access this tab</TooltipContent>
+              <TooltipContent>{t('tab.locked')}</TooltipContent>
             </Tooltip>
           ) : selectionMode ? <span className="h-4 w-4 shrink-0" /> : <Tooltip>
             <TooltipTrigger asChild>
@@ -782,7 +786,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                 variant="ghost"
                 size="icon"
                 className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
-                aria-label={isNowOpen ? 'Close tab' : 'Remove tab'}
+                aria-label={isNowOpen ? t('tab.close') : t('tab.remove')}
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteTab({ groupIndex, windowIndex, tabIndex });
@@ -792,7 +796,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                 <X className="h-3 w-3" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent className="bg-destructive text-destructive-foreground">{isNowOpen ? 'Close tab' : 'Remove tab'}</TooltipContent>
+            <TooltipContent className="bg-destructive text-destructive-foreground">{isNowOpen ? t('tab.close') : t('tab.remove')}</TooltipContent>
           </Tooltip>}
         </div>
       )}
@@ -805,13 +809,13 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
         className="mx-6 mb-1 flex flex-col gap-1.5 border border-amber-400/40 bg-card p-2 shadow-xs"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <p className="text-[10px] font-medium text-muted-foreground">Remind me in…</p>
+        <p className="text-[10px] font-medium text-muted-foreground">{t('tab.remindIn')}</p>
         <div className="flex flex-wrap gap-1">
           {([
-            { label: '30 min', ms: 30 * 60_000 },
-            { label: '1 hour', ms: 60 * 60_000 },
-            { label: '3 hours', ms: 3 * 60 * 60_000 },
-            { label: 'Tomorrow', ms: 24 * 60 * 60_000 }
+            { label: 'tab.in30Minutes', ms: 30 * 60_000 },
+            { label: 'tab.in1Hour', ms: 60 * 60_000 },
+            { label: 'tab.in3Hours', ms: 3 * 60 * 60_000 },
+            { label: 'tab.tomorrow', ms: 24 * 60 * 60_000 }
           ] as const).map(({ label, ms }) => (
             <Button
               key={label}
@@ -823,7 +827,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                 setReminderOpen(false);
               }}
             >
-              {label}
+              {t(label)}
             </Button>
           ))}
         </div>
@@ -839,13 +843,13 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           type="text"
           maxLength={200}
           className="w-full border border-border bg-muted/50 px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
-          placeholder="Optional note…"
+          placeholder={t('tab.reminderNotePlaceholder')}
           value={reminderNote}
           onChange={(e) => setReminderNote(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Escape') setReminderOpen(false); }}
         />
         <div className="flex items-center justify-end gap-1">
-          <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setReminderOpen(false)}>Cancel</Button>
+          <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setReminderOpen(false)}>{t('common.cancel')}</Button>
           <Button
             size="sm"
             className="h-5 text-[10px] px-2 bg-amber-500 hover:bg-amber-600 text-white"
@@ -858,7 +862,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               setReminderOpen(false);
             }}
           >
-            Set
+            {t('tab.setReminder')}
           </Button>
         </div>
       </div>
@@ -876,7 +880,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           rows={2}
           maxLength={500}
           className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
-          placeholder="Add a note…"
+          placeholder={t('tab.notePlaceholder')}
           value={noteValue}
           onChange={(e) => setNoteValue(e.target.value)}
           onKeyDown={(e) => {
@@ -886,10 +890,10 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           onBlur={handleNoteBlur}
         />
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-muted-foreground">{noteValue.length}/500</span>
+          <span className="text-[10px] text-muted-foreground">{t('windows.noteLength', { length: noteValue.length, max: 500 })}</span>
           <div className="flex gap-1">
-            <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)} onMouseDown={(e) => e.stopPropagation()}>Cancel</Button>
-            <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitNote} onMouseDown={(e) => e.stopPropagation()}>Save</Button>
+            <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)} onMouseDown={(e) => e.stopPropagation()}>{t('common.cancel')}</Button>
+            <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitNote} onMouseDown={(e) => e.stopPropagation()}>{t('common.save')}</Button>
           </div>
         </div>
       </div>

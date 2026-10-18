@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger couldn't reach the server to check this account's encryption, so sync is paused. Your groups are still saved on this device. Check your connection and try again.",
+  "unlockBody": "Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won't be asked again unless you sign out. There is no way to recover your data if you forget it — it never leaves your device and TabMerger cannot reset it for you.",
+  "setupBody": "Your synced group and tab data is end-to-end encrypted with a passphrase only you know. Choose one now — there is no way to recover your data if you forget it, it never leaves your device and TabMerger cannot reset it for you.",
+  "unavailableTitle": "Can't check encryption right now",
+  "tryAgain": "Try again",
+  "unlockTitle": "Unlock encryption",
+  "passphrase": "Passphrase",
+  "passphraseLabel": "Encryption passphrase",
+  "unlock": "Unlock",
+  "setupTitle": "Set up encryption",
+  "newPassphrase": "New passphrase",
+  "confirmPassphrase": "Confirm passphrase",
+  "setupButton": "Set up encryption",
+  "error": {
+    "spaces": "Passphrase cannot contain spaces",
+    "tooShort": "Passphrase must be at least 8 characters",
+    "mismatch": "Passphrases do not match",
+    "setupFailed": "Failed to set up encryption",
+    "wrong": "Wrong passphrase",
+    "wasReset": "Encryption was reset for this account. Choose a new passphrase."
+  },
+  "toast": {
+    "setUp": "Encryption set up",
+    "unlocked": "Encryption unlocked"
+  }
+}

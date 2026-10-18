@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
 
 /**
@@ -13,7 +14,7 @@ import { supabase } from '@/lib/supabase';
  */
 export async function runGoogleOAuthFlow(): Promise<void> {
   if (!chrome?.identity) {
-    throw new Error('Google sign-in is unavailable in this environment');
+    throw new Error(t('errors.googleUnavailable'));
   }
 
   const redirectUrl = chrome.identity.getRedirectURL();
@@ -22,12 +23,12 @@ export async function runGoogleOAuthFlow(): Promise<void> {
     options: { redirectTo: redirectUrl, skipBrowserRedirect: true },
   });
   if (error) throw error;
-  if (!data.url) throw new Error('Google sign-in did not return an authorization URL');
+  if (!data.url) throw new Error(t('errors.googleNoUrl'));
 
   const responseUrl = await new Promise<string>((resolve, reject) => {
     chrome.identity.launchWebAuthFlow({ url: data.url, interactive: true }, (redirectedTo) => {
       if (chrome.runtime.lastError || !redirectedTo) {
-        reject(new Error(chrome.runtime.lastError?.message ?? 'Google sign-in was cancelled'));
+        reject(new Error(chrome.runtime.lastError?.message ?? t('errors.googleCancelled')));
         return;
       }
       resolve(redirectedTo);
@@ -55,5 +56,5 @@ export async function runGoogleOAuthFlow(): Promise<void> {
     return;
   }
 
-  throw new Error('Google sign-in did not return a session');
+  throw new Error(t('errors.googleNoSession'));
 }

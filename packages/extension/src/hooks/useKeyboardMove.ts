@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import { useEffect, useRef, type RefObject } from 'react';
 import { flushSync } from 'react-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -54,7 +55,7 @@ export { markerElement };
 const GHOST_FOLLOW_FRAMES = 24;
 
 /** Spoken when the groups changed and the picked-up item(s) can no longer be identified in them. */
-const GROUPS_CHANGED_TEXT = 'The groups changed, so the movement was cancelled.';
+const groupsChangedText = () => t('keyboardMove.groupsChanged');
 
 /**
  * The target handed to `rebaseMove` when only the picked-up SOURCE is re-anchored (the
@@ -359,14 +360,14 @@ export function useKeyboardMove(hostRef?: RefObject<HTMLElement | null>): void {
       publish();
     };
 
-    const onPointerDown = () => cancel('Movement cancelled.');
-    const onBlur = () => cancel('Movement cancelled.');
+    const onPointerDown = () => cancel(t('keyboardMove.cancelled'));
+    const onBlur = () => cancel(t('keyboardMove.cancelled'));
     const onLayout = () => placeGhost();
 
     /** The picked-up item(s) can no longer be identified in the groups: end the move and say why. */
     const cancelStale = () => {
       dndDebugLog('keyboard:cancelled-stale', { from: id });
-      cancel(GROUPS_CHANGED_TEXT, false);
+      cancel(groupsChangedText(), false);
     };
 
     /** The moving items now sit at `next`'s ids: the collapsed / marked rows of the preview follow them. */

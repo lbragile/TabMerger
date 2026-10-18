@@ -9,8 +9,9 @@
  * Runs in an animation frame after the drop commit — never inside a native `dragstart`
  * (spec C4), and only for keyboard drags (a pointer drag leaves focus alone).
  */
+import { dndGripSelector } from './dndGrip';
 
-const GRIP = '[aria-label^="Drag to reorder"]';
+const GRIP = dndGripSelector();
 
 const rowSel = (id: string) => `[data-tm-dnd-id="${id.replace(/["\\]/g, '\\$&')}"]`;
 
@@ -28,7 +29,7 @@ export function focusSelectorsForItem(id: string): string[] {
     // real control for any header that is not focusable, then its first tab row.
     return [
       `${rowSel(id)} [data-window-header]`,
-      `${rowSel(id)} [aria-label^="Drag to reorder window"]`,
+      `${rowSel(id)} ${dndGripSelector('window')}`,
       `${rowSel(id)} [data-window-header] button:not([aria-hidden="true"])`,
       `${rowSel(id)} [role="listitem"]`
     ];

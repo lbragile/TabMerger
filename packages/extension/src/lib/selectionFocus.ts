@@ -7,11 +7,13 @@
  * Focus goes to the owning row (tab row, window grip, sidebar group row), else the header's
  * selection-mode toggle, else the first drag grip in the panel.
  */
+import { dndGripSelector } from './dndGrip';
 
 /** Marks the selection action bar root (static attribute). */
 export const SELECTION_ACTION_BAR_ATTR = 'data-selection-action-bar';
 
-const TOGGLE = 'button[aria-label="Exit selection mode"], button[aria-label="Select items"]';
+// The header's selection-mode toggle (its accessible name is translated and changes with the mode)
+const TOGGLE = 'button[data-tour="select-items"]';
 
 /** Where focus should go when `from` (a selection control) is about to unmount. */
 export function selectionFocusFallback(from?: Element | null): HTMLElement | null {
@@ -21,12 +23,12 @@ export function selectionFocusFallback(from?: Element | null): HTMLElement | nul
   const own = inBar
     ? null
     : (el?.closest?.<HTMLElement>('[role="listitem"]') ??
-      el?.closest?.('[data-window-index]')?.querySelector<HTMLElement>('[aria-label^="Drag to reorder window"]') ??
+      el?.closest?.('[data-window-index]')?.querySelector<HTMLElement>(dndGripSelector('window')) ??
       el?.closest?.<HTMLElement>('[data-sidebar-group-index]'));
   return (
     own ??
     document.querySelector<HTMLElement>(TOGGLE) ??
-    document.querySelector<HTMLElement>('[data-tm-dnd-id] [aria-label^="Drag to reorder"]')
+    document.querySelector<HTMLElement>(`[data-tm-dnd-id] ${dndGripSelector()}`)
   );
 }
 

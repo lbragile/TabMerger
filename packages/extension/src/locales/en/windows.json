@@ -1,0 +1,29 @@
+{
+  "dropNewWindow": "Drop here for a new window",
+  "removeStale_one": "Remove {{count}} stale tab",
+  "removeStale_other": "Remove {{count}} stale tabs",
+  "editGroupNote": "Edit group note",
+  "editNote": "Edit note",
+  "moreGroupOptions": "More group options",
+  "notePlaceholder": "Add a note for this group…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "No windows in this group",
+  "addWindow": "Add Window",
+  "search": {
+    "elsewhere": "{{tabs}} in {{groups}}",
+    "matchingTabs_one": "{{count}} matching tab",
+    "matchingTabs_other": "{{count}} matching tabs",
+    "otherGroups_one": "{{count}} other group",
+    "otherGroups_other": "{{count}} other groups",
+    "noneInGroup": "No tabs match in this group",
+    "hidden_one": "{{count}} tab hidden by search",
+    "hidden_other": "{{count}} tabs hidden by search",
+    "allMatch_one": "All {{count}} tab match",
+    "allMatch_other": "All {{count}} tabs match",
+    "someMatch_one": "{{matched}} of {{count}} tab match",
+    "someMatch_other": "{{matched}} of {{count}} tabs match",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "No tabs match “{{query}}” in this group"
+  },
+  "createGroup": "Create new group…"
+}

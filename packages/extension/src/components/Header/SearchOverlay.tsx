@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Search, Folder, AppWindow, X } from 'lucide-react';
-import { SEARCH_COPY } from '@tabmerger/shared';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Input } from '@/components/ui/input';
 import { parseSearchQuery } from '@/lib/utils';
 import type { GroupsState } from '@/lib/types';
@@ -12,12 +13,13 @@ import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { motionScrollBehavior } from '@/lib/reducedMotion';
 import { SEARCH_ANNOUNCE_DELAY_MS } from '@/components/SearchAnnouncer';
 
+// The queries are search syntax (and an example word), not translated; the descriptions are.
 const EXAMPLES = [
-    { query: 'react',     desc: 'Find any tab or group containing "react"' },
-    { query: 'group:',    desc: 'Scope to a group — pick from your groups below' },
-    { query: 'window:',   desc: 'Scope to a window — pick from your windows below' },
-    { query: 'tag:',      desc: 'Filter by Chrome tab group label' },
-];
+    { query: 'react',     desc: 'search.exampleText' },
+    { query: 'group:',    desc: 'search.exampleGroup' },
+    { query: 'window:',   desc: 'search.exampleWindow' },
+    { query: 'tag:',      desc: 'search.exampleTag' },
+] as const;
 
 /**
  * Returns picker context when the query ends with a bare `group:WORD`, `window:WORD`, or `tag:WORD` (no quotes yet).
@@ -49,7 +51,7 @@ type Result =
  * match first (exact, then prefix, then word start, then anywhere: `matchRank`), keeping their
  * list order within a rank, and only then cut to the first 12.
  */
-function getResults(query: string, groupsState: GroupsState | undefined): Result[] {
+function getResults(query: string, groupsState: GroupsState | undefined, t: TFunction): Result[] {
     if (!groupsState || !query.trim()) return [];
     const { groupFilter, windowFilter, tagFilter, tabQuery } = parseSearchQuery(query);
     const ranked: Array<{ result: Result; rank: MatchRank }> = [];
@@ -63,7 +65,7 @@ function getResults(query: string, groupsState: GroupsState | undefined): Result
 
         if (groupFilter && !tabQuery && !tagFilter && !windowFilter) {
             group.windows.forEach((win, windowIndex) => {
-                push({ kind: 'window', label: win.name ?? 'Window', meta: `${win.tabs.length} tab${win.tabs.length !== 1 ? 's' : ''} · ${group.name}`, groupName: group.name, groupIndex, windowIndex, color: group.color }, matchRank(group.name, groupFilter));
+                push({ kind: 'window', label: win.name ?? t('common.window'), meta: t('search.windowMeta', { tabs: t('common.tabCount', { count: win.tabs.length }), group: group.name }), groupName: group.name, groupIndex, windowIndex, color: group.color }, matchRank(group.name, groupFilter));
             });
             return;
         }
@@ -84,14 +86,14 @@ function getResults(query: string, groupsState: GroupsState | undefined): Result
                           : windowFilter
                             ? matchRank(win.name, windowFilter)
                             : matchRank(group.name, groupFilter);
-                    push({ kind: 'tab', label: tab.title || tab.url || 'Untitled', meta: group.name, url: tab.url, groupIndex, windowIndex, tabIndex, groupColor: group.color, chromeGroup: tab.chromeGroup }, rank);
+                    push({ kind: 'tab', label: tab.title || tab.url || t('common.untitled'), meta: group.permanent ? t('common.nowOpen') : group.name, url: tab.url, groupIndex, windowIndex, tabIndex, groupColor: group.color, chromeGroup: tab.chromeGroup }, rank);
                 }
             });
         });
 
         // Surface group by name only if the plain query actually matches it
         if (!tabQuery && !tagFilter && !groupFilter && !windowFilter && textMatches(group.name, query)) {
-            push({ kind: 'group', label: group.name, meta: `${group.windows.length} windows · ${tabCount} tabs`, groupIndex, color: group.color }, matchRank(group.name, query));
+            push({ kind: 'group', label: group.name, meta: t('search.groupMeta', { windows: group.windows.length, tabs: tabCount }), groupIndex, color: group.color }, matchRank(group.name, query));
         }
     });
 
@@ -145,10 +147,10 @@ function getTagPicks(typed: string, groupsState: GroupsState | undefined) {
     groupsState.available.forEach((g) => {
         if (isHiddenFromSearch(g)) return;
         g.windows.forEach((w) => {
-            w.tabs.forEach((t) => {
-                if (t.chromeGroup && !seen.has(t.chromeGroup.name) && textMatches(t.chromeGroup.name, typed)) {
-                    seen.add(t.chromeGroup.name);
-                    picks.push({ name: t.chromeGroup.name, color: t.chromeGroup.color });
+            w.tabs.forEach((tab) => {
+                if (tab.chromeGroup && !seen.has(tab.chromeGroup.name) && textMatches(tab.chromeGroup.name, typed)) {
+                    seen.add(tab.chromeGroup.name);
+                    picks.push({ name: tab.chromeGroup.name, color: tab.chromeGroup.color });
                 }
             });
         });
@@ -177,6 +179,7 @@ interface Props {
  * Selecting any result navigates to that group via `onSelectGroup`.
  */
 export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup, onSelectWindow, onSelectTab, onClose, inputRef }: Props) {
+    const { t } = useTranslation();
     const [cursor, setCursor] = useState(-1);
     // Suppresses results for one render cycle after a picker selection completes.
     // Without this, the render that transitions from picker→results mode can show
@@ -205,9 +208,9 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
     }, [pickerCtx, groupsState, searchShowsDemo]);
 
     const results = useMemo(
-        () => (inPicker || isPicking) ? [] : getResults(query, groupsState),
+        () => (inPicker || isPicking) ? [] : getResults(query, groupsState, t),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [inPicker, isPicking, query, groupsState, searchShowsDemo]
+        [inPicker, isPicking, query, groupsState, searchShowsDemo, t]
     );
     const listLength = inPicker ? pickerItems.length : (query.trim() ? results.length : EXAMPLES.length);
 
@@ -226,7 +229,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
     }, [cursor, optionId]);
 
     // Polite count of what the list shows, once typing pauses (nothing for the examples)
-    const countText = isPicking || !query.trim() ? '' : SEARCH_COPY.resultCount(listLength);
+    const countText = isPicking || !query.trim() ? '' : listLength === 0 ? t('search.noResults') : t('search.resultCount', { count: listLength });
     const [announced, setAnnounced] = useState('');
     useEffect(() => {
         if (!countText) { setAnnounced(''); return; }
@@ -315,8 +318,8 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                     <Search className="h-4 w-4 text-muted-foreground shrink-0" />
                     <Input
                         ref={inputRef}
-                        placeholder="Search tabs, groups…"
-                        aria-label={SEARCH_COPY.searchInput}
+                        placeholder={t('search.inputPlaceholder')}
+                        aria-label={t('search.searchInput')}
                         role="combobox"
                         aria-autocomplete="list"
                         aria-expanded={hasOptions}
@@ -330,7 +333,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                         <button
                             type="button"
                             className="shrink-0 flex items-center justify-center h-5 w-5 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            aria-label={SEARCH_COPY.clearSearch}
+                            aria-label={t('search.clearSearch')}
                             data-testid="overlay-clear-search"
                             // Focus first: this button unmounts when the text is gone.
                             onClick={() => { inputRef.current?.focus(); onQueryChange(''); }}
@@ -338,7 +341,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                             <X className="h-3.5 w-3.5" />
                         </button>
                     )}
-                    <kbd className="text-[10px] text-muted-foreground border border-border px-1.5 py-px font-mono shrink-0">Ctrl K</kbd>
+                    <kbd className="text-[10px] text-muted-foreground border border-border px-1.5 py-px font-mono shrink-0">{t('common.shortcutSearch')}</kbd>
                 </div>
 
                 <div ref={listRef} className="max-h-72 overflow-y-auto py-1.5">
@@ -346,11 +349,11 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                     {isPicking ? null : inPicker ? (
                         <div>
                             <p className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                                {pickerCtx.prefix === 'group:' ? 'Pick a group' : pickerCtx.prefix === 'window:' ? 'Pick a window' : 'Pick a tag'}
+                                {pickerCtx.prefix === 'group:' ? t('search.pickGroup') : pickerCtx.prefix === 'window:' ? t('search.pickWindow') : t('search.pickTag')}
                             </p>
                             {pickerItems.length === 0 ? (
-                                <p className="px-4 py-4 text-center text-[12px] text-muted-foreground">No matches</p>
-                            ) : <div role="listbox" id={listId} aria-label={pickerCtx.prefix === 'group:' ? 'Groups' : pickerCtx.prefix === 'window:' ? 'Windows' : 'Tags'}>{pickerItems.map((item, i) => (
+                                <p className="px-4 py-4 text-center text-[12px] text-muted-foreground">{t('search.noMatches')}</p>
+                            ) : <div role="listbox" id={listId} aria-label={pickerCtx.prefix === 'group:' ? t('search.groups') : pickerCtx.prefix === 'window:' ? t('search.windows') : t('search.tags')}>{pickerItems.map((item, i) => (
                                 <button
                                     key={`${item.name}-${i}`}
                                     type="button"
@@ -373,12 +376,12 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                     ) : query.trim() ? (
                         /* Search results */
                         results.length === 0 ? (
-                            <p className="px-4 py-6 text-center text-[12px] text-muted-foreground">No matches for "{query}"</p>
+                            <p className="px-4 py-6 text-center text-[12px] text-muted-foreground">{t('search.noMatchesFor', { query })}</p>
                         ) : (
-                            <div role="listbox" id={listId} aria-label="Search results">
+                            <div role="listbox" id={listId} aria-label={t('search.results')}>
                                 {results.filter((r) => r.kind === 'group').length > 0 && (
                                     <div role="group" aria-labelledby={`${listId}-groups`}>
-                                        <p id={`${listId}-groups`} className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Groups</p>
+                                        <p id={`${listId}-groups`} className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{t('search.groups')}</p>
                                         {results.filter((r) => r.kind === 'group').map((r, i) => {
                                             const ri = results.indexOf(r);
                                             return <ResultRow key={`g${i}`} label={r.label} meta={r.meta}
@@ -391,12 +394,12 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                                 )}
                                 {results.filter((r) => r.kind === 'window').length > 0 && (
                                     <div role="group" aria-labelledby={`${listId}-windows`}>
-                                        <p id={`${listId}-windows`} className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Windows</p>
+                                        <p id={`${listId}-windows`} className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{t('search.windows')}</p>
                                         {results.filter((r) => r.kind === 'window').map((r, i) => {
                                             const ri = results.indexOf(r);
                                             return <ResultRow key={`w${i}`} label={r.label} meta={r.kind === 'window' ? r.meta : ''}
                                                 labelRanges={matchRanges(r.label, parsed.windowFilter)}
-                                                metaRanges={r.kind === 'window' ? shiftRanges(matchRanges(r.groupName, parsed.groupFilter), r.meta.length - r.groupName.length) : undefined}
+                                                metaRanges={r.kind === 'window' ? shiftRanges(matchRanges(r.groupName, parsed.groupFilter), r.meta.lastIndexOf(r.groupName)) : undefined}
                                                 windowColor={r.kind === 'window' ? r.color : undefined}
                                                 id={optionId(ri)} active={cursor === ri} onMouseEnter={() => setCursor(ri)}
                                                 onClick={() => { if (r.kind === 'window') { onQueryChange(`${query.trimEnd()} window:"${r.label}" `); inputRef.current?.focus(); setCursor(-1); } }} />;
@@ -405,7 +408,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                                 )}
                                 {results.filter((r) => r.kind === 'tab').length > 0 && (
                                     <div role="group" aria-labelledby={`${listId}-tabs`}>
-                                        <p id={`${listId}-tabs`} className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Tabs</p>
+                                        <p id={`${listId}-tabs`} className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{t('search.tabs')}</p>
                                         {results.filter((r) => r.kind === 'tab').map((r, i) => {
                                             const ri = results.indexOf(r);
                                             const labelRanges = matchRanges(r.label, parsed.tabQuery);
@@ -433,7 +436,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                     ) : (
                         /* Empty state — examples */
                         <div>
-                            <p id={`${listId}-examples`} className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Try these searches</p>
+                            <p id={`${listId}-examples`} className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{t('search.tryThese')}</p>
                             <div role="listbox" id={listId} aria-labelledby={`${listId}-examples`}>
                             {EXAMPLES.map(({ query: ex, desc }, i) => (
                                 <button key={ex} type="button"
@@ -443,7 +446,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                                     onClick={() => { onQueryChange(ex); inputRef.current?.focus(); setCursor(-1); }}
                                 >
                                     <code className="text-[11px] font-mono text-primary bg-primary/10 px-1.5 py-0.5 shrink-0 mt-px">{ex}</code>
-                                    <span className="text-[11px] text-muted-foreground leading-relaxed">{desc}</span>
+                                    <span className="text-[11px] text-muted-foreground leading-relaxed">{t(desc)}</span>
                                 </button>
                             ))}
                             </div>
@@ -454,9 +457,9 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                 <div role="status" aria-live="polite" aria-atomic="true" className="sr-only" data-testid="search-overlay-count">{announced}</div>
 
                 <div className="px-3 py-1.5 border-t border-border flex gap-3 text-[10px] text-muted-foreground">
-                    <span><kbd className="border border-border px-1 font-mono">↑↓</kbd> navigate</span>
-                    <span><kbd className="border border-border px-1 font-mono">↵</kbd> select</span>
-                    <span><kbd className="border border-border px-1 font-mono">Ctrl K</kbd> close</span>
+                    <span><kbd className="border border-border px-1 font-mono">↑↓</kbd> {t('search.navigate')}</span>
+                    <span><kbd className="border border-border px-1 font-mono">↵</kbd> {t('search.select')}</span>
+                    <span><kbd className="border border-border px-1 font-mono">{t('common.shortcutSearch')}</kbd> {t('search.close')}</span>
                 </div>
             </div>
         </>

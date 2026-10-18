@@ -73,6 +73,7 @@ function renderRows(ids: string[]) {
     const grip = document.createElement('span')
     grip.tabIndex = 0
     grip.setAttribute('aria-label', `Drag to reorder ${isWindow ? 'window' : 'tab'}: ${id}`)
+    grip.setAttribute('data-dnd-grip', isWindow ? 'window' : 'tab')
     row.appendChild(grip)
     document.body.appendChild(row)
     out[id] = grip

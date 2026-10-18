@@ -3,6 +3,7 @@ import { buildDndModel, type DndModel } from '@/hooks/useDndModel';
 import { canDrop, type DndLanded, type DndRef, type DndSideEffect } from '@/lib/dndMove';
 import { getDndDragCount, getDndDragSelection } from '@/lib/dndMultiDrag';
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types';
+import { t } from '@/lib/i18n';
 
 /**
  * Screen-reader text for popup drags — real names and positions instead of raw
@@ -26,7 +27,7 @@ export function modifierKeyName(): string {
   const nav = typeof navigator !== 'undefined' ? navigator : undefined;
   const platform =
     (nav as { userAgentData?: { platform?: string } } | undefined)?.userAgentData?.platform ?? nav?.platform ?? '';
-  return /mac/i.test(platform) ? 'Command' : 'Control';
+  return /mac/i.test(platform) ? t('dnd.keys.command') : t('dnd.keys.control');
 }
 
 /**
@@ -35,21 +36,31 @@ export function modifierKeyName(): string {
  * (Shift+Space range, Command/Control+A) are announced by the selection bar itself.
  */
 export const DND_SCREEN_READER_INSTRUCTIONS: ScreenReaderInstructions = {
-  draggable:
-    'Press Space to pick up, arrow keys to choose a place (Left and Right switch between windows and groups), Space to drop, Escape to cancel. ' +
-    `Shift+Space selects a range and ${modifierKeyName()}+A selects all, to move several at once.`
+  get draggable() {
+    return t('dnd.instructions', { modifier: modifierKeyName() });
+  }
 };
 
-export const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+type CountableType = 'tab' | 'window' | 'group';
+const COUNT_KEYS = { tab: 'common.tabCount', window: 'common.windowCount', group: 'common.groupCount' } as const;
+const isCountable = (type: string): type is CountableType => type === 'tab' || type === 'window' || type === 'group';
+
+/** "1 tab", "3 windows": a count of one kind of row. */
+export const plural = (n: number, type: CountableType) => t(COUNT_KEYS[type], { count: n });
+/** The spoken name of a kind of row ("tab"), or "item" for anything else. */
+export const typeName = (type: string) => t(isCountable(type) ? `dnd.type.${type}` : 'dnd.type.item');
+/** The same, as the first word of a sentence ("Tab"). */
+const typeNameStart = (type: string) => t(isCountable(type) ? `dnd.typeStart.${type}` : 'dnd.typeStart.item');
+/** "tab GitHub" */
+const named = (label: DndItemLabel) => t('dnd.named', { type: typeName(label.type), name: label.name });
 
 const tabsOf = (w: ExtWindow | undefined): Tab[] => (w?.tabs ?? []).filter(Boolean);
-const tabName = (t: Tab | undefined) => t?.customTitle || t?.title || t?.url || 'Untitled tab';
-export const windowName = (w: ExtWindow | undefined, wi: number) => w?.name || `Window ${wi + 1}`;
+const tabName = (tab: Tab | undefined) => tab?.customTitle || tab?.title || tab?.url || t('dnd.untitledTab');
+export const windowName = (w: ExtWindow | undefined, wi: number) => w?.name || t('window.numbered', { number: wi + 1 });
 const savedGroupCount = (state: GroupsState) => state.available.filter((g) => !g.permanent).length;
 /** 1-based sidebar position among saved groups (Now Open, when present, isn't counted). */
 const groupPosition = (state: GroupsState, gi: number) =>
-  `position ${state.available.some((g) => g.permanent) ? gi : gi + 1} of ${savedGroupCount(state)}`;
+  t('dnd.position.group', { index: state.available.some((g) => g.permanent) ? gi : gi + 1, total: savedGroupCount(state) });
 
 export type DndItemType = 'tab' | 'window' | 'group';
 
@@ -65,15 +76,15 @@ export interface DndItemLabel {
 export function describeItem(state: GroupsState | null | undefined, id: string, model?: DndModel): DndItemLabel | null {
   if (!state) return null;
   const m = model ?? buildDndModel(state);
-  const t = m.tabs[id];
-  if (t) {
-    const g = state.available[t.groupIndex];
-    const w = g?.windows[t.windowIndex];
+  const tabRef = m.tabs[id];
+  if (tabRef) {
+    const g = state.available[tabRef.groupIndex];
+    const w = g?.windows[tabRef.windowIndex];
     const tabs = tabsOf(w);
     return {
       type: 'tab',
-      name: tabName(tabs[t.tabIndex]),
-      position: `position ${t.tabIndex + 1} of ${tabs.length} in ${windowName(w, t.windowIndex)} of group ${g?.name ?? ''}`,
+      name: tabName(tabs[tabRef.tabIndex]),
+      position: t('dnd.position.tab', { index: tabRef.tabIndex + 1, total: tabs.length, window: windowName(w, tabRef.windowIndex), group: g?.name ?? '' }),
       group: g
     };
   }
@@ -83,7 +94,7 @@ export function describeItem(state: GroupsState | null | undefined, id: string, 
     return {
       type: 'window',
       name: windowName(g?.windows[w.windowIndex], w.windowIndex),
-      position: `position ${w.windowIndex + 1} of ${g?.windows.length ?? 0} in group ${g?.name ?? ''}`,
+      position: t('dnd.position.window', { index: w.windowIndex + 1, total: g?.windows.length ?? 0, group: g?.name ?? '' }),
       group: g
     };
   }
@@ -97,19 +108,19 @@ export function describeItem(state: GroupsState | null | undefined, id: string, 
 
 /** "tab GitHub" for one item, "3 tabs, starting with GitHub" for a multi-drag. */
 export function what(label: DndItemLabel, count: number): string {
-  return count > 1 ? `${plural(count, label.type)}, starting with ${label.name},` : `${label.type} ${label.name}`;
+  return count > 1 ? t('dnd.whatMany', { items: plural(count, label.type), name: label.name }) : named(label);
 }
 
 export function targetPhrase(state: GroupsState, model: DndModel, activeType: string, overId: string): string | null {
-  if (overId === NEW_GROUP_ID) return 'a new group';
+  if (overId === NEW_GROUP_ID) return t('dnd.target.newGroup');
   if (overId.endsWith(NEW_WINDOW_SUFFIX)) {
     const g = model.groups[overId.slice(0, -NEW_WINDOW_SUFFIX.length)];
-    return g ? `a new window at the end of group ${state.available[g.index]?.name ?? ''}` : null;
+    return g ? t('dnd.target.newWindowAtEnd', { group: state.available[g.index]?.name ?? '' }) : null;
   }
   const g = model.groups[overId];
   if (g && activeType !== 'group') {
     const grp = state.available[g.index];
-    return grp?.permanent ? 'Now Open, which opens them in a new browser window' : `group ${grp?.name ?? ''}, as a new window`;
+    return grp?.permanent ? t('dnd.target.nowOpen') : t('dnd.target.groupAsWindow', { group: grp?.name ?? '' });
   }
   const label = describeItem(state, overId, model);
   return label ? label.position : null;
@@ -145,8 +156,8 @@ export function takeDndDropOutcome(): string | null {
  * after the drop, and NVDA/JAWS cancel speech on a focus change, so the full outcome is
  * written to the app-owned live region (`@/lib/dndLiveRegion`) once focus has landed.
  */
-export const DND_KEYBOARD_DROP_TOKEN = 'Dropped.';
-export const DND_KEYBOARD_CANCEL_TOKEN = 'Cancelled.';
+export const dndKeyboardDropToken = (): string => t('dnd.token.dropped');
+export const dndKeyboardCancelToken = (): string => t('dnd.token.cancelled');
 
 // ─── selection remap after a drop (read by SelectionAnnouncer) ──────────────────────
 //
@@ -173,17 +184,20 @@ export type DndBailReason = 'noop' | 'rejected' | 'stale' | 'cancelled';
 /** Text for a drop that moved nothing. `state` is the drag-start snapshot. */
 export function describeDropBail(state: GroupsState | null | undefined, id: string, reason: DndBailReason, count = 1): string {
   const label = describeItem(state, id);
-  if (!label) return reason === 'cancelled' ? 'Movement cancelled.' : 'Dropped; nothing moved.';
-  const items = count > 1 ? `The ${plural(count, label.type)} returned` : `${capitalize(label.type)} ${label.name} returned`;
+  if (!label) return reason === 'cancelled' ? t('dnd.bail.cancelled') : t('dnd.bail.nothingMoved');
+  const returned = count > 1
+    ? t('dnd.bail.returnedMany', { items: plural(count, label.type) })
+    : t('dnd.bail.returnedOne', { named: t('dnd.namedStart', { type: typeNameStart(label.type), name: label.name }) });
+  const position = label.position;
   switch (reason) {
     case 'noop':
-      return `Dropped ${what(label, count)} back at ${label.position}; nothing moved.`;
+      return t('dnd.bail.noop', { what: what(label, count), position });
     case 'stale':
-      return `The groups changed during the drag, so nothing was moved. ${items} to ${label.position}.`;
+      return t('dnd.bail.stale', { returned, position });
     case 'cancelled':
-      return `Movement cancelled. ${items} to ${label.position}.`;
+      return t('dnd.bail.cancelledReturned', { returned, position });
     default:
-      return `Can't drop there. ${items} to ${label.position}.`;
+      return t('dnd.bail.rejected', { returned, position });
   }
 }
 
@@ -204,8 +218,8 @@ export function describeDropCommitted(opts: {
   const text = describeDropCommittedCore(opts);
   const removed = opts.removed ?? 0;
   const parts = [text];
-  if (removed > 0) parts.push(`${removed} ${removed === 1 ? 'was' : 'were'} removed elsewhere.`);
-  if (opts.stillSelected) parts.push(opts.count > 1 ? "They're still selected." : "It's still selected.");
+  if (removed > 0) parts.push(t('dnd.removedElsewhere', { count: removed }));
+  if (opts.stillSelected) parts.push(t('dnd.stillSelected', { count: opts.count > 1 ? opts.count : 1 }));
   return parts.join(' ');
 }
 
@@ -213,39 +227,41 @@ function describeDropCommittedCore(opts: Parameters<typeof describeDropCommitted
   const { before, next, active, count, landed, sideEffects, activeGroupIndex } = opts;
   const removed = opts.removed ?? 0;
   const label = describeItem(before, active.id);
-  if (!label) return 'Dropped.';
+  if (!label) return t('dnd.dropped');
   if (label.type === 'group') {
     const gi = next.available.findIndex((g) => g.id === active.id);
     // Multi-group drag: the anchor's new slot is where the whole block starts.
-    if (count > 1) return `Moved ${count} groups to ${groupPosition(next, gi)}, as one block.`;
-    return `Moved group ${label.name} to ${groupPosition(next, gi)}.`;
+    if (count > 1) return t('dnd.movedGroups', { count, position: groupPosition(next, gi) });
+    return t('dnd.movedGroup', { name: label.name, position: groupPosition(next, gi) });
   }
   const items =
     removed > 0
-      ? `${count} of ${plural(count + removed, label.type)}`
+      ? t('dnd.partial', { count, total: plural(count + removed, label.type) })
       : count > 1
         ? plural(count, label.type)
-        : `${label.type} ${label.name}`;
+        : named(label);
   if (landed && landed.positions.length > 0) {
     const p = landed.positions[0];
     const g = next.available[p.groupIndex];
-    const starting = count > 1 ? 'starting at ' : '';
+    const atKey = count > 1 ? 'dnd.startingAt' : 'dnd.at';
     const where =
       landed.type === 'tab'
-        ? `${windowName(g?.windows[p.windowIndex], p.windowIndex)} of group ${g?.name ?? ''}, ${starting}position ${
-            (p as { tabIndex: number }).tabIndex + 1
-          } of ${tabsOf(g?.windows[p.windowIndex]).length}`
-        : `group ${g?.name ?? ''}, ${starting}position ${p.windowIndex + 1} of ${g?.windows.length ?? 0}`;
+        ? t('dnd.whereTab', {
+            window: windowName(g?.windows[p.windowIndex], p.windowIndex),
+            group: g?.name ?? '',
+            at: t(atKey, { index: (p as { tabIndex: number }).tabIndex + 1, total: tabsOf(g?.windows[p.windowIndex]).length })
+          })
+        : t('dnd.whereWindow', { group: g?.name ?? '', at: t(atKey, { index: p.windowIndex + 1, total: g?.windows.length ?? 0 }) });
     // Out of Now Open is a MOVE now, not a copy: the real tabs close (an active one on
     // popup close — spec C7), so say so rather than "the open tabs stay open".
     const fromNowOpen = !!label.group?.permanent;
-    const hidden = p.groupIndex !== activeGroupIndex ? ` Group ${g?.name ?? ''} is not shown.` : '';
-    return `Moved ${items} to ${where}.${fromNowOpen ? ' The open tabs are closed.' : ''}${hidden}`;
+    const hidden = p.groupIndex !== activeGroupIndex ? t('dnd.groupHidden', { group: g?.name ?? '' }) : '';
+    return `${t('dnd.movedTo', { items, where })}${fromNowOpen ? t('dnd.openTabsClosed') : ''}${hidden}`;
   }
-  if (sideEffects.some((fx) => fx.type === 'windows.create')) return `Opened ${items} in a new browser window.`;
-  if (sideEffects.some((fx) => fx.type === 'tabs.create')) return `Opened ${items} in Now Open.`;
-  if (sideEffects.some((fx) => fx.type === 'tabs.detachToNewWindow')) return `Moved ${items} to a new browser window.`;
-  return `Moved ${items} within Now Open.`;
+  if (sideEffects.some((fx) => fx.type === 'windows.create')) return t('dnd.openedNewWindow', { items });
+  if (sideEffects.some((fx) => fx.type === 'tabs.create')) return t('dnd.openedNowOpen', { items });
+  if (sideEffects.some((fx) => fx.type === 'tabs.detachToNewWindow')) return t('dnd.movedNewWindow', { items });
+  return t('dnd.movedWithinNowOpen', { items });
 }
 
 // ─── the Announcements object ────────────────────────────────────────────────
@@ -254,7 +270,7 @@ export function createDndAnnouncements(deps: {
   getState: () => GroupsState | null | undefined;
   getActiveGroupIndex: () => number;
 }): Announcements {
-  const ORIGINAL_POSITION = 'Over its original position.';
+  const ORIGINAL_POSITION = t('dnd.originalPosition');
   let lastOver: string | null = null;
   const typeOf = (entry: { data?: { current?: { type?: string } | null } } | null | undefined) =>
     entry?.data?.current?.type ?? 'item';
@@ -268,16 +284,18 @@ export function createDndAnnouncements(deps: {
       const state = deps.getState();
       const id = String(active.id);
       const label = describeItem(state, id);
-      if (!state || !label) return `Picked up ${typeOf(active)}.`;
+      if (!state || !label) return t('dnd.pickedUpType', { type: typeName(typeOf(active)) });
       const count = getDndDragCount();
       const parts = [
-        count > 1 ? `Picked up ${what(label, count).replace(/,$/, '')}.` : `Picked up ${label.type} ${label.name}, ${label.position}.`
+        count > 1
+          ? t('dnd.pickedUpMany', { what: what(label, count).replace(/,$/, '') })
+          : t('dnd.pickedUpOne', { type: typeName(label.type), name: label.name, position: label.position })
       ];
       if (label.type === 'group') {
         const gi = state.available.indexOf(label.group!);
-        if (gi > 0 && !label.group?.permanent && gi !== deps.getActiveGroupIndex()) parts.push(`Group ${label.name} is now shown.`);
+        if (gi > 0 && !label.group?.permanent && gi !== deps.getActiveGroupIndex()) parts.push(t('dnd.groupShown', { name: label.name }));
       } else if (label.group?.permanent) {
-        parts.push('Dropping into a saved group copies; the open tabs stay open.');
+        parts.push(t('dnd.copyHint'));
       }
       return parts.join(' ');
     },
@@ -286,18 +304,18 @@ export function createDndAnnouncements(deps: {
       const state = deps.getState();
       let text: string;
       if (!over || !state) {
-        text = 'Not over a drop target.';
+        text = t('dnd.notOver');
       } else {
         const model = buildDndModel(state);
         const a = refFor(model, String(active.id), typeOf(active));
         const o = refFor(model, String(over.id), typeOf(over));
         const phrase = a ? targetPhrase(state, model, a.type, String(over.id)) : null;
         if (!a || !o || !phrase || a.id === o.id) {
-          text = a && o && a.id === o.id ? ORIGINAL_POSITION : 'Not over a drop target.';
+          text = a && o && a.id === o.id ? ORIGINAL_POSITION : t('dnd.notOver');
         } else {
           const selection = getDndDragSelection();
           if (selection) a.selectionIds = [...selection];
-          text = canDrop(model, a, o) ? `Over ${phrase}.` : `Can't drop on ${phrase}.`;
+          text = canDrop(model, a, o) ? t('dnd.over', { target: phrase }) : t('dnd.cantDropOn', { target: phrase });
         }
       }
       // Announce only when the resolved target actually changes (native drags re-fire this
@@ -309,12 +327,12 @@ export function createDndAnnouncements(deps: {
 
     onDragEnd({ active }) {
       lastOver = null;
-      return takeDndDropOutcome() ?? `${capitalize(typeOf(active))} dropped.`;
+      return takeDndDropOutcome() ?? t('dnd.typeDropped', { type: typeNameStart(typeOf(active)) });
     },
 
     onDragCancel({ active }) {
       lastOver = null;
-      return takeDndDropOutcome() ?? `Movement cancelled; ${typeOf(active)} returned to its position.`;
+      return takeDndDropOutcome() ?? t('dnd.cancelledReturnedType', { type: typeName(typeOf(active)) });
     }
   };
 }

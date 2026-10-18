@@ -21,6 +21,7 @@ function row(id: string, label: string, withGrip = true) {
     const grip = document.createElement('span')
     grip.tabIndex = 0
     grip.setAttribute('aria-label', `Drag to reorder tab: ${label}`)
+    grip.setAttribute('data-dnd-grip', 'tab')
     el.appendChild(grip)
   }
   document.body.appendChild(el)
@@ -38,18 +39,18 @@ describe('selector builders', () => {
   it('tab → its row then the grip; window → its (focusable, roving) header, then its grip, then that header first real control, then its first tab row; group → the row then its grip', () => {
     expect(focusSelectorsForItem('g::w1::t2')).toEqual([
       '[data-tm-dnd-id="g::w1::t2"]',
-      '[data-tm-dnd-id="g::w1::t2"] [aria-label^="Drag to reorder"]'
+      '[data-tm-dnd-id="g::w1::t2"] [data-dnd-grip]'
     ])
     expect(focusSelectorsForItem('g::w1')).toEqual([
       '[data-tm-dnd-id="g::w1"] [data-window-header]',
-      '[data-tm-dnd-id="g::w1"] [aria-label^="Drag to reorder window"]',
+      '[data-tm-dnd-id="g::w1"] [data-dnd-grip="window"]',
       '[data-tm-dnd-id="g::w1"] [data-window-header] button:not([aria-hidden="true"])',
       '[data-tm-dnd-id="g::w1"] [role="listitem"]'
     ])
     expect(focusSelectorsForItem('groupId')).toEqual([])
     expect(focusSelectorsForGroupIndex(3)).toEqual([
       '[data-sidebar-group-index="3"]',
-      '[data-sidebar-group-index="3"] [aria-label^="Drag to reorder"]'
+      '[data-sidebar-group-index="3"] [data-dnd-grip]'
     ])
   })
 
@@ -59,7 +60,7 @@ describe('selector builders', () => {
     expect(sels[2]).toContain('g::w1::t1')
     expect(sels.some((s) => s.includes('"g::w1"'))).toBe(true)
     expect(sels.some((s) => s.includes('"g::w0"'))).toBe(true)
-    expect(sels[sels.length - 1]).toBe('[data-sidebar-group-index="4"] [aria-label^="Drag to reorder"]')
+    expect(sels[sels.length - 1]).toBe('[data-sidebar-group-index="4"] [data-dnd-grip]')
     // first tab of the first window: no negative indices
     expect(focusSelectorsNear('g::w0::t0', 1).join(' ')).not.toMatch(/-1/)
     expect(focusSelectorsNear('g::w0', 1)[0]).toContain('"g::w0"')

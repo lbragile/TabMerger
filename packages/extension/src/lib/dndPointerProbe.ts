@@ -1,4 +1,5 @@
 import { showDndDebugChip } from './dndDebug';
+import { dndGripSelector } from './dndGrip';
 
 /**
  * DIAGNOSTIC ONLY — flag-gated pointer-stream probe for the MV3 toolbar popup.
@@ -52,7 +53,7 @@ export function readDndPointerProbeFlag(): boolean {
  */
 export const DND_POINTER_PROBE_ACTIVE: boolean = readDndPointerProbeFlag();
 
-const GRIP_SELECTOR = '[aria-label^="Drag to reorder"]';
+const GRIP_SELECTOR = dndGripSelector();
 /** Grace period after `pointerup`/`mouseup` so trailing `lostpointercapture`/`mouseup` are counted. */
 const SETTLE_MS = 80;
 /** Hard stop if no release event ever arrives (e.g. the popup closed mid-press). */

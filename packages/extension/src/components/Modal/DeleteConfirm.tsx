@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useDeleteGroup, useDeleteWindow, useDeleteTab } from '@/hooks/useGroups';
 import { useBulkDelete } from '@/hooks/useBulkActions';
 import type { SelectedItem } from '@/stores/uiStore';
-import { pluralize } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface DeleteConfirmModalProps {
   type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection' | 'removeStaleTabs' | 'removeAllWindows' | 'archiveStaleGroups' | 'clearAllData' | 'resetEncryption';
@@ -12,6 +12,7 @@ interface DeleteConfirmModalProps {
 }
 
 export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalProps) {
+  const { t } = useTranslation();
   const { mutate: deleteGroup } = useDeleteGroup();
   const { mutate: deleteWindow } = useDeleteWindow();
   const { mutate: deleteTab } = useDeleteTab();
@@ -23,62 +24,51 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
 
   const labels: Record<string, { title: string; description: string; confirm: string }> = {
     deleteGroup: {
-      title: 'Delete Group',
-      description: `Are you sure you want to delete "${data.groupName as string}"? This cannot be undone.`,
-      confirm: 'Delete',
+      title: t('confirm.deleteGroup.title'),
+      description: t('confirm.deleteGroup.description', { name: data.groupName as string }),
+      confirm: t('confirm.deleteGroup.confirm'),
     },
-    deleteWindow: {
-      title: isNowOpen ? 'Close Window' : 'Remove Window',
-      description: isNowOpen
-        ? 'Are you sure you want to close this window and all its tabs?'
-        : 'Are you sure you want to remove this window and all its tabs?',
-      confirm: isNowOpen ? 'Close' : 'Remove',
-    },
-    deleteTab: {
-      title: isNowOpen ? 'Close Tab' : 'Remove Tab',
-      description: isNowOpen
-        ? 'Are you sure you want to close this tab?'
-        : 'Are you sure you want to remove this tab?',
-      confirm: isNowOpen ? 'Close' : 'Remove',
-    },
-    deleteSelection: {
-      title: isNowOpen ? 'Close Selection' : 'Delete Selection',
-      description: `Are you sure you want to ${isNowOpen ? 'close' : 'delete'} ${items?.length ?? 0} ${pluralize(items?.length ?? 0, selectionNoun)}? This cannot be undone.`,
-      confirm: isNowOpen ? 'Close' : 'Delete',
-    },
+    deleteWindow: isNowOpen
+      ? { title: t('confirm.closeWindow.title'), description: t('confirm.closeWindow.description'), confirm: t('confirm.closeWindow.confirm') }
+      : { title: t('confirm.removeWindow.title'), description: t('confirm.removeWindow.description'), confirm: t('confirm.removeWindow.confirm') },
+    deleteTab: isNowOpen
+      ? { title: t('confirm.closeTab.title'), description: t('confirm.closeTab.description'), confirm: t('confirm.closeTab.confirm') }
+      : { title: t('confirm.removeTab.title'), description: t('confirm.removeTab.description'), confirm: t('confirm.removeTab.confirm') },
+    deleteSelection: isNowOpen
+      ? {
+          title: t('confirm.closeSelection.title'),
+          description: t('confirm.closeSelection.description', { count: items?.length ?? 0, context: selectionNoun }),
+          confirm: t('confirm.closeSelection.confirm'),
+        }
+      : {
+          title: t('confirm.deleteSelection.title'),
+          description: t('confirm.deleteSelection.description', { count: items?.length ?? 0, context: selectionNoun }),
+          confirm: t('confirm.deleteSelection.confirm'),
+        },
     removeStaleTabs: {
-      title: 'Remove Stale Tabs',
-      description: `Are you sure you want to remove ${data.count as number} stale ${pluralize(data.count as number, 'tab')}? This cannot be undone.`,
-      confirm: 'Remove',
+      title: t('confirm.removeStaleTabs.title'),
+      description: t('confirm.removeStaleTabs.description', { count: data.count as number }),
+      confirm: t('confirm.removeStaleTabs.confirm'),
     },
-    removeAllWindows: {
-      title: isNowOpen ? 'Close All Windows' : 'Remove All Windows',
-      description: isNowOpen
-        ? 'Are you sure you want to close all browser windows and their tabs?'
-        : 'Are you sure you want to remove all windows and their tabs from this group? This cannot be undone.',
-      confirm: isNowOpen ? 'Close All' : 'Remove All',
-    },
+    removeAllWindows: isNowOpen
+      ? { title: t('confirm.closeAllWindows.title'), description: t('confirm.closeAllWindows.description'), confirm: t('confirm.closeAllWindows.confirm') }
+      : { title: t('confirm.removeAllWindows.title'), description: t('confirm.removeAllWindows.description'), confirm: t('confirm.removeAllWindows.confirm') },
     archiveStaleGroups: {
-      title: 'Archive Stale Groups',
-      description: `Are you sure you want to archive ${data.count as number} stale ${pluralize(data.count as number, 'group')}?`,
-      confirm: 'Archive',
+      title: t('confirm.archiveStaleGroups.title'),
+      description: t('confirm.archiveStaleGroups.description', { count: data.count as number }),
+      confirm: t('confirm.archiveStaleGroups.confirm'),
     },
     clearAllData: {
-      title: 'Clear All Data',
-      // The second sentence is only added when the caller has seen automatic backups in the
+      title: t('confirm.clearAllData.title'),
+      // The longer text is only used when the caller has seen automatic backups in the
       // signed-in account (Settings passes `cloudBackupsKept: true`): the wipe is local.
-      description:
-        'This will permanently delete all groups, saved sessions, and settings. This cannot be undone.' +
-        (data.cloudBackupsKept === true
-          ? ' Automatic backups stored in your account are kept, and you can bring them back from Settings → Data.'
-          : ''),
-      confirm: 'Clear All Data',
+      description: t('confirm.clearAllData.description', { context: data.cloudBackupsKept === true ? 'kept' : undefined }),
+      confirm: t('confirm.clearAllData.confirm'),
     },
     resetEncryption: {
-      title: 'Reset Encryption Passphrase',
-      description:
-        "This cannot be undone. All synced groups, sessions, and notes encrypted under your current passphrase will become permanently inaccessible. You'll set up a new passphrase and start syncing fresh.",
-      confirm: 'Reset Passphrase',
+      title: t('confirm.resetEncryption.title'),
+      description: t('confirm.resetEncryption.description'),
+      confirm: t('confirm.resetEncryption.confirm'),
     },
   };
 
@@ -114,7 +104,7 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
       </DialogHeader>
       <DialogFooter className="mt-4">
         <Button variant="outline" onClick={onClose}>
-          Cancel
+          {t('confirm.cancel')}
         </Button>
         <Button variant="destructive" onClick={handleConfirm}>
           {confirm}

@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DND_GRIP_ATTR } from '@/lib/dndGrip';
 import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {
@@ -47,7 +49,7 @@ import {
   useSortTabs
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
-import { cn, pluralize } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { withAlpha } from '@/lib/color';
 import { getSetting } from '@/lib/localDb';
 import { useOpenWindow } from '@/hooks/useOpenWindow';
@@ -81,6 +83,9 @@ interface WindowProps {
 }
 
 export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCount: _siblingCount, tabIds, groupColor, searchFilter, tagFilter, tabOffset = 0, maxTabs = Infinity, staleThresholdMs }: WindowProps) {
+  const { t } = useTranslation();
+  // A saved window's own name, or the generic label (this prop shadows the global `window`)
+  const shownName = window.name ?? t('common.window');
   const sortableId = `${groupId}::w${windowIndex}`;
   // `transition` is intentionally discarded — see drag-and-drop spec §8 (no live dnd-kit
   // transform/transition on a dragged row; an insertion gap is rendered instead).
@@ -97,7 +102,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
   const search = usePanelSearch();
   const windowSearch = search.state?.windows[windowIndex];
   const reorderLocked = search.reorderLocked;
-  const windowTitle = window.name ?? `Window ${windowIndex + 1}`;
+  const windowTitle = window.name ?? t('window.numbered', { number: windowIndex + 1 });
   // The header row is ONE Tab stop (a11y M3): `role="toolbar"` + `tabIndex=0` on the
   // container, `useRovingRow` pinning every control to -1 and walking them with
   // Left/Right/Home/End. `toolbar` is chosen over a bare `group` precisely because it is
@@ -106,7 +111,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
   const headerRoving = useRovingRow<HTMLDivElement>();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [nameValue, setNameValue] = useState(window.name ?? 'Window');
+  const [nameValue, setNameValue] = useState(shownName);
   const renameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -265,7 +270,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           style={groupColor ? { backgroundColor: withAlpha(groupColor, 0.1) } : undefined}
         >
           <EyeOff className="h-2.5 w-2.5 shrink-0 text-primary" style={groupColor ? { color: groupColor } : undefined} />
-          <span className="text-[10px] font-medium text-foreground">Incognito</span>
+          <span className="text-[10px] font-medium text-foreground">{t('window.incognito')}</span>
         </div>
       )}
 
@@ -281,7 +286,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         // announces the affordance, which a bare focusable `div` would not.
         tabIndex={0}
         role="toolbar"
-        aria-label={`${windowTitle} controls`}
+        aria-label={t('window.controls', { title: windowTitle })}
         onKeyDown={(e) => {
           // Inert mid-drag, so dnd-kit still receives the arrows (spec C13).
           headerRoving.onKeyDown(e);
@@ -317,7 +322,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="text-xs">
                 <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                {isNowOpen ? 'Copy to group' : 'Move to group'}
+                {isNowOpen ? t('window.copyToGroup') : t('window.moveToGroup')}
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="max-h-48 overflow-y-auto">
                 {targetGroups.map(({ group, index }) => (
@@ -337,7 +342,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 ))}
                 {targetGroups.length === 0 && (
                   <DropdownMenuItem disabled className="text-xs text-muted-foreground">
-                    No other groups
+                    {t('window.noOtherGroups')}
                   </DropdownMenuItem>
                 )}
                 <CreateGroupMenuItem
@@ -348,11 +353,11 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-xs" onClick={() => setNoteOpen(true)}>
               <StickyNote className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-              {window.note ? 'Edit note' : 'Add note'}
+              {window.note ? t('window.editNote') : t('window.addNote')}
             </DropdownMenuItem>
             <DropdownMenuItem className="text-xs" onClick={() => setIsEditing(true)}>
               <Edit3 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-              Rename window
+              {t('window.rename')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -370,7 +375,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
               }}
             >
               <Trash2 className="h-3.5 w-3.5 mr-2" />
-              {isNowOpen ? 'Close window' : 'Remove window'}
+              {isNowOpen ? t('window.close') : t('window.remove')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -414,8 +419,9 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           }}
           // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
           // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
-          // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
-          aria-label={`Drag to reorder window: ${windowTitle}`}
+          // The DnD sensor/visuals and the tour find the grip by this attribute, not its (translated) name.
+          {...{ [DND_GRIP_ATTR]: 'window' }}
+          aria-label={t('window.dragToReorder', { title: windowTitle })}
         >
           <GripVertical className="h-3.5 w-3.5" />
         </span>
@@ -427,7 +433,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             onClick={handleCheckboxClick}
             role="checkbox"
             aria-checked={isSelected}
-            aria-label={`Select ${windowTitle}`}
+            aria-label={t('window.select', { title: windowTitle })}
           >
             {isSelected ? (
               <CheckSquare className="h-3.5 w-3.5 text-primary" />
@@ -449,8 +455,8 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 onBlur={handleRename}
                 className="min-w-0 flex-1 bg-transparent border-b border-primary outline-none text-xs px-0"
               />
-              <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={handleRename}><Check className="h-2.5 w-2.5" /></button>
-              <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={() => setIsEditing(false)}><X className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label={t('window.save')} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={handleRename}><Check className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label={t('window.cancel')} className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={() => setIsEditing(false)}><X className="h-2.5 w-2.5" /></button>
             </div>
           ) : (
             <Tooltip>
@@ -461,14 +467,14 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 >
                   {search.filters.windowFilter && windowSearch?.visible !== false ? (
                     // A `window:` search marks the name where it matched; CSS truncates it.
-                    <Highlighted text={window.name ?? 'Window'} query={search.filters.windowFilter} />
-                  ) : (window.name ?? 'Window').length > 20
-                    ? `${(window.name ?? 'Window').slice(0, 20)}…`
-                    : (window.name ?? 'Window')}
+                    <Highlighted text={shownName} query={search.filters.windowFilter} />
+                  ) : shownName.length > 20
+                    ? `${shownName.slice(0, 20)}…`
+                    : shownName}
                 </span>
               </TooltipTrigger>
-              {(window.name ?? 'Window').length > 20 && (
-                <TooltipContent side="top">{window.name ?? 'Window'}</TooltipContent>
+              {shownName.length > 20 && (
+                <TooltipContent side="top">{shownName}</TooltipContent>
               )}
             </Tooltip>
           )}
@@ -476,8 +482,8 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
 
         <span className="text-[10px] text-muted-foreground shrink-0 whitespace-nowrap">
           {windowSearch && windowSearch.matchCount < window.tabs.length
-            ? `${windowSearch.matchCount} of ${window.tabs.length} ${pluralize(window.tabs.length, 'tab')}`
-            : `${window.tabs.length} ${pluralize(window.tabs.length, 'tab')}`}
+            ? t('window.someOfTabs', { matched: windowSearch.matchCount, count: window.tabs.length })
+            : t('common.tabCount', { count: window.tabs.length })}
         </span>
 
         {window.note && !selectionMode && (
@@ -488,12 +494,12 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
                 onClick={(e) => { e.stopPropagation(); setNoteOpen(true); }}
                 onMouseDown={(e) => e.stopPropagation()}
-                aria-label="Edit window note"
+                aria-label={t('window.editWindowNote')}
               >
                 <StickyNote className="h-3 w-3" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>Edit note</TooltipContent>
+            <TooltipContent>{t('window.editNote')}</TooltipContent>
           </Tooltip>
         )}
 
@@ -506,12 +512,12 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 className={cn('h-5 w-5 rounded-none', !window.starred && 'text-muted-foreground')}
                 style={window.starred ? { color: groupColor ?? 'var(--star-active)' } : undefined}
                 onClick={() => toggleStarred({ groupIndex, windowIndex })}
-                aria-label={window.starred ? 'Unstar window' : 'Star window'}
+                aria-label={window.starred ? t('window.unstar') : t('window.star')}
               >
                 <Star className="h-3 w-3" fill={window.starred ? 'currentColor' : 'none'} />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{window.starred ? 'Unstar window' : 'Star window'}</TooltipContent>
+            <TooltipContent>{window.starred ? t('window.unstar') : t('window.star')}</TooltipContent>
           </Tooltip>
         )}
 
@@ -520,7 +526,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           <DropdownMenu open={moreMenuOpen} onOpenChange={setMoreMenuOpen}>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild disabled={selectionMode}>
-                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 invisible' : 'h-5 w-5 text-muted-foreground'} aria-label="More window options">
+                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 invisible' : 'h-5 w-5 text-muted-foreground'} aria-label={t('window.moreOptions')}>
                   <MoreHorizontal className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
@@ -528,30 +534,30 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             <DropdownMenuContent align="end" className="w-48 text-xs" onCloseAutoFocus={(e) => e.preventDefault()}>
               <DropdownMenuItem className="text-xs" onClick={() => setIsEditing(true)}>
                 <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                Rename
+                {t('window.renameShort')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => toggleIncognito({ groupIndex, windowIndex })}>
                 {window.incognito ? (
-                  <><Shield className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />Remove incognito</>
+                  <><Shield className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />{t('window.removeIncognito')}</>
                 ) : (
-                  <><ShieldOff className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />Mark incognito</>
+                  <><ShieldOff className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />{t('window.markIncognito')}</>
                 )}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" disabled={window.tabs.length === 0} onClick={() => void openWindow(window)}>
                 <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                Open in browser
+                {t('window.openInBrowser')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, windowIndex, by: 'title' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                Sort this window by title
+                {t('window.sortByTitle')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, windowIndex, by: 'url' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                Sort this window by URL
+                {t('window.sortByUrl')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => setNoteOpen(true)}>
                 <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                {window.note ? 'Edit note' : 'Add note'}
+                {window.note ? t('window.editNote') : t('window.addNote')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -569,11 +575,11 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 }}
               >
                 <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
-                {isNowOpen ? 'Close window' : 'Remove window'}
+                {isNowOpen ? t('window.close') : t('window.remove')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {!selectionMode && <TooltipContent>More options</TooltipContent>}
+          {!selectionMode && <TooltipContent>{t('window.moreOptionsShort')}</TooltipContent>}
         </Tooltip>
       </div>
 
@@ -589,7 +595,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             rows={2}
             maxLength={500}
             className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
-            placeholder="Add a note…"
+            placeholder={t('window.notePlaceholder')}
             value={noteValue}
             onChange={(e) => setNoteValue(e.target.value)}
             onKeyDown={(e) => {
@@ -599,10 +605,10 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             onBlur={handleWindowNoteBlur}
           />
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">{noteValue.length}/500</span>
+            <span className="text-[10px] text-muted-foreground">{t('windows.noteLength', { length: noteValue.length, max: 500 })}</span>
             <div className="flex gap-1">
-              <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)} onMouseDown={(e) => e.stopPropagation()}>Cancel</Button>
-              <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitWindowNote} onMouseDown={(e) => e.stopPropagation()}>Save</Button>
+              <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)} onMouseDown={(e) => e.stopPropagation()}>{t('common.cancel')}</Button>
+              <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitWindowNote} onMouseDown={(e) => e.stopPropagation()}>{t('common.save')}</Button>
             </div>
           </div>
         </div>
@@ -637,7 +643,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           ))}
         </SortableContext>
         {window.tabs.length === 0 && (
-          <p className="px-3 py-1.5 text-xs text-muted-foreground italic">Empty window</p>
+          <p className="px-3 py-1.5 text-xs text-muted-foreground italic">{t('window.empty')}</p>
         )}
       </div>
     </div>

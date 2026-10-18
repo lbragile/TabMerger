@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useKeyboardMove } from '@/hooks/useKeyboardMove';
 
 /**
@@ -13,6 +14,7 @@ import { useKeyboardMove } from '@/hooks/useKeyboardMove';
  * The keys themselves are handled by the controller's document-level capture listener.
  */
 export function KeyboardMoveHost() {
+  const { t } = useTranslation();
   const hostRef = useRef<HTMLDivElement>(null);
   useKeyboardMove(hostRef);
   return (
@@ -20,7 +22,7 @@ export function KeyboardMoveHost() {
       ref={hostRef}
       tabIndex={-1}
       role="group"
-      aria-label="Moving items"
+      aria-label={t('keyboardMove.hostLabel')}
       data-testid="keyboard-move-host"
       // The guided tour keeps this element usable during its drag steps (a keyboard move needs
       // it for focus) but never offers it as a Tab stop

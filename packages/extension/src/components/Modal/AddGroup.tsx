@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +19,7 @@ interface AddGroupModalProps {
 }
 
 export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState(DEFAULT_GROUP_TITLE);
   const [color, setColor] = useState(DEFAULT_GROUP_COLOR);
   // Live Custom-picker preview, separate from the committed draft `color` — a drag/typing
@@ -49,23 +51,23 @@ export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
   return (
     <form onSubmit={handleSubmit}>
       <DialogHeader>
-        <DialogTitle>Create New Group</DialogTitle>
+        <DialogTitle>{t('modals.addGroup.title')}</DialogTitle>
       </DialogHeader>
 
       <div className="space-y-4 py-4">
         <div className="space-y-1.5">
-          <Label htmlFor="group-name">Name</Label>
+          <Label htmlFor="group-name">{t('modals.addGroup.name')}</Label>
           <Input
             id="group-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Group name"
+            placeholder={t('modals.addGroup.namePlaceholder')}
             autoFocus
           />
         </div>
 
         <div className="space-y-1.5">
-          <Label id="group-color-label">Color</Label>
+          <Label id="group-color-label">{t('modals.addGroup.color')}</Label>
           {/* Same popover picker as the sidebar's group swatch, so both edit colours the same way. */}
           <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
             <PopoverTrigger asChild>
@@ -103,10 +105,10 @@ export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          {t('modals.addGroup.cancel')}
         </Button>
         <Button type="submit" disabled={isPending}>
-          Create
+          {t('modals.addGroup.create')}
         </Button>
       </DialogFooter>
     </form>

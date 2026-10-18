@@ -19,6 +19,7 @@ import {
   readPressEvidence,
   type DndDragPath
 } from './dndPressTracker';
+import { dndGripSelector } from './dndGrip';
 
 /**
  * The popup's ONE drag sensor, with **two runtime paths chosen per press**
@@ -620,7 +621,7 @@ export class Html5DragSensor {
       if (typeof MutationObserver === 'undefined') return;
       const el = rawTarget instanceof Element ? rawTarget : null;
       if (!el || typeof document === 'undefined') return;
-      const grip = el.closest('[aria-label^="Drag to reorder"]') ?? el;
+      const grip = el.closest(dndGripSelector()) ?? el;
       const row =
         grip.closest('[role="listitem"]') ??
         grip.closest('[data-testid="tab-item"]') ??
@@ -792,7 +793,7 @@ export class Html5DragSensor {
     try {
       const el = rawTarget instanceof Element ? rawTarget : null;
       if (!el) return;
-      const grip = (el.closest('[aria-label^="Drag to reorder"]') ?? el) as Element;
+      const grip = (el.closest(dndGripSelector()) ?? el) as Element;
       if (grip === row || !row.contains(grip)) return;
       // Ancestors of the grip UP TO AND INCLUDING `row`, excluding the grip
       // itself — these get walked (recursed into) but never hidden directly.

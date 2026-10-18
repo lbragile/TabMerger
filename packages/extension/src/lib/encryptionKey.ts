@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import {
   KDF_ITERATIONS,
   deriveWrappingKey,
@@ -148,8 +149,7 @@ function base64ToBuf(b64: string): Uint8Array<ArrayBuffer> {
 const UNIQUE_VIOLATION = '23505';
 
 /** Shown when setup is attempted for an account that already has a key (see {@link setupEncryption}). */
-export const ENCRYPTION_ALREADY_SET_UP_MESSAGE =
-  'Encryption is already set up for this account. Enter your existing passphrase to unlock it.';
+export const encryptionAlreadySetUpMessage = (): string => t('errors.encryptionAlreadySetUp');
 
 /**
  * First-time enable: generates a data key, wraps it with a passphrase-derived key, and uploads it.
@@ -161,7 +161,7 @@ export const ENCRYPTION_ALREADY_SET_UP_MESSAGE =
  */
 export async function setupEncryption(passphrase: string): Promise<void> {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) throw new Error('Must be signed in to enable encryption');
+  if (!session) throw new Error(t('errors.signInToEnableEncryption'));
 
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const dataKey = await generateDataKey();
@@ -176,7 +176,7 @@ export async function setupEncryption(passphrase: string): Promise<void> {
     wrap_iv: iv
   });
   if (error) {
-    throw new Error((error as { code?: string }).code === UNIQUE_VIOLATION ? ENCRYPTION_ALREADY_SET_UP_MESSAGE : error.message);
+    throw new Error((error as { code?: string }).code === UNIQUE_VIOLATION ? encryptionAlreadySetUpMessage() : error.message);
   }
 
   await cacheDataKey(dataKey, session.user.id, keyRowFingerprint({ salt: bufToBase64(salt), wrap_iv: iv }));
@@ -283,7 +283,7 @@ export async function getDataKey(expectedUserId?: string): Promise<CryptoKey | n
  */
 export async function resetEncryption(): Promise<void> {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) throw new Error('Must be signed in to reset encryption');
+  if (!session) throw new Error(t('errors.signInToResetEncryption'));
 
   const { error } = await supabase.from('encryption_keys').delete().eq('user_id', session.user.id);
   if (error) throw new Error(error.message);

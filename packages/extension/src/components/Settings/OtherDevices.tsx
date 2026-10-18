@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatTimeAgo } from '@/lib/i18n';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { DeviceSession } from '@tabmerger/shared';
@@ -22,16 +24,9 @@ import { Check, ChevronDown, ChevronRight, ExternalLink, Laptop, Pencil, X } fro
 // DevicesSection.tsx `DeviceRow` pattern.
 type DeviceSessionRow = DeviceSession & { id: string };
 
-/** Formats elapsed time as a short "Xm ago" / "Xh ago" / "Xd ago" label. */
-function relativeAgo(iso: string, now = Date.now()): string {
-  const elapsed = now - new Date(iso).getTime();
-  const MIN = 60 * 1000;
-  const HOUR = 60 * MIN;
-  const DAY = 24 * HOUR;
-  if (elapsed < MIN) return 'just now';
-  if (elapsed < HOUR) return `${Math.round(elapsed / MIN)}m ago`;
-  if (elapsed < DAY) return `${Math.round(elapsed / HOUR)}h ago`;
-  return `${Math.round(elapsed / DAY)}d ago`;
+/** Formats elapsed time as a short "Xm ago" / "Xh ago" / "Xd ago" label (nearest whole unit). */
+function relativeAgo(iso: string): string {
+  return formatTimeAgo(new Date(iso).getTime(), { round: true });
 }
 
 // ponytail: DeviceSession.now_open_snapshot is `unknown` (jsonb, loose so malformed
@@ -68,6 +63,7 @@ function snapshotWindowCount(snapshot: unknown): number {
  * the snapshot.
  */
 export function OtherDevices() {
+  const { t } = useTranslation();
   const { tier } = useEntitlements();
   const queryClient = useQueryClient();
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -142,21 +138,21 @@ export function OtherDevices() {
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-xs font-medium mb-1.5">Devices</p>
+        <p className="text-xs font-medium mb-1.5">{t('devices.heading')}</p>
         {devices.length === 0 ? (
-          <p className="text-xs text-muted-foreground py-4 text-center">No devices yet.</p>
+          <p className="text-xs text-muted-foreground py-4 text-center">{t('devices.empty')}</p>
         ) : (
           <>
             {selectedIds.length > 0 && (
               <div className="flex items-center justify-between gap-2 border border-border bg-muted/50 px-2 py-1.5 mb-1.5 text-xs">
-                <span>{selectedIds.length} selected</span>
+                <span>{t('devices.selected', { count: selectedIds.length })}</span>
                 <Button
                   variant="destructive"
                   size="sm"
                   className="h-6 px-2 text-xs"
                   onClick={() => setConfirmOpen(true)}
                 >
-                  Remove
+                  {t('devices.remove')}
                 </Button>
               </div>
             )}
@@ -191,18 +187,17 @@ export function OtherDevices() {
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Remove {selectedIds.length} device{selectedIds.length === 1 ? '' : 's'}?</DialogTitle>
+            <DialogTitle>{t('devices.removeTitle', { count: selectedIds.length })}</DialogTitle>
             <DialogDescription>
-              Removed devices stop appearing in this list. If that browser is still active it may
-              re-register itself the next time it syncs, so this isn&apos;t permanent for a live device.
+              {t('devices.removeDescription')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" size="sm" onClick={() => setConfirmOpen(false)}>
-              Cancel
+              {t('devices.cancel')}
             </Button>
             <Button variant="destructive" size="sm" onClick={handleConfirmRemove}>
-              Remove
+              {t('devices.remove')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -244,6 +239,7 @@ function DeviceRow({
   onOpenTab,
   onRestoreAll
 }: DeviceRowProps) {
+  const { t } = useTranslation();
   const tabs = snapshotTabs(device.now_open_snapshot);
   const windowCount = snapshotWindowCount(device.now_open_snapshot);
   const editInputRef = useRef<HTMLInputElement>(null);
@@ -261,7 +257,7 @@ function DeviceRow({
             checked={isSelected}
             onChange={onToggleSelected}
             onClick={(e) => e.stopPropagation()}
-            aria-label={`Select ${device.device_name}`}
+            aria-label={t('devices.selectDevice', { name: device.device_name })}
             className="shrink-0"
           />
         )}
@@ -276,12 +272,12 @@ function DeviceRow({
                 if (e.key === 'Enter') onSaveRename();
                 if (e.key === 'Escape') onCancelRename();
               }}
-              aria-label="This device name"
+              aria-label={t('devices.nameInput')}
               className="h-6 text-xs"
             />
             <button
               type="button"
-              aria-label="Save"
+              aria-label={t('devices.save')}
               className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary"
               onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => { e.stopPropagation(); onSaveRename(); }}
@@ -290,7 +286,7 @@ function DeviceRow({
             </button>
             <button
               type="button"
-              aria-label="Cancel"
+              aria-label={t('devices.cancel')}
               className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground"
               onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => { e.stopPropagation(); onCancelRename(); }}
@@ -309,12 +305,12 @@ function DeviceRow({
               <Laptop className="h-3 w-3 shrink-0 text-primary" />
               <span className="min-w-0 truncate font-medium">{device.device_name}</span>
               {isCurrentDevice && (
-                <span className="shrink-0 text-muted-foreground font-normal">(this device)</span>
+                <span className="shrink-0 text-muted-foreground font-normal">{t('devices.thisDevice')}</span>
               )}
             </span>
             <span className="text-muted-foreground shrink-0">{relativeAgo(device.last_active)}</span>
             <span className="text-muted-foreground shrink-0 truncate">
-              {windowCount} {windowCount === 1 ? 'window' : 'windows'} · {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
+              {t('devices.counts', { windows: t('common.windowCount', { count: windowCount }), tabs: t('common.tabCount', { count: tabs.length }) })}
             </span>
           </button>
         )}
@@ -323,7 +319,7 @@ function DeviceRow({
             variant="ghost"
             size="sm"
             className="h-5 w-5 p-0 shrink-0"
-            aria-label="Rename this device"
+            aria-label={t('devices.rename')}
             onClick={(e) => {
               e.stopPropagation();
               onStartRename();
@@ -335,7 +331,7 @@ function DeviceRow({
       </div>
       {isExpanded && (
         <div className="min-w-0 border-t border-border px-2 py-1.5 space-y-1">
-          {tabs.length === 0 && <p className="text-xs text-muted-foreground">No tabs.</p>}
+          {tabs.length === 0 && <p className="text-xs text-muted-foreground">{t('devices.noTabs')}</p>}
           {tabs.length > 0 && (
             <div className="flex justify-end">
               <Button
@@ -344,7 +340,7 @@ function DeviceRow({
                 className="h-6 px-2 text-xs"
                 onClick={() => onRestoreAll(tabs)}
               >
-                Restore {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
+                {t('devices.restoreTabs', { count: tabs.length })}
               </Button>
             </div>
           )}
@@ -357,10 +353,10 @@ function DeviceRow({
                 variant="ghost"
                 size="sm"
                 className="h-5 px-1.5 text-xs shrink-0"
-                aria-label="Open"
+                aria-label={t('devices.open')}
                 onClick={() => onOpenTab(tab)}
               >
-                <ExternalLink className="h-3 w-3 mr-1" />Open
+                <ExternalLink className="h-3 w-3 mr-1" />{t('devices.open')}
               </Button>
             </div>
           ))}

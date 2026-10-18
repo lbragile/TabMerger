@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { lazyMessages, t } from '@/lib/i18n';
 import {
   AUTO_BACKUP_FREE_RECHECK_MS,
   AUTO_BACKUP_RETENTION_COUNT,
@@ -517,30 +518,30 @@ export function parseAutoBackupOutcome(raw: unknown): AutoBackupOutcome | null {
   return null;
 }
 
-const SKIP_MESSAGES: Record<AutoBackupSkipReason, string> = {
-  disabled: 'Automatic backups are turned off.',
-  'signed-out': 'Sign in to back up your groups.',
-  'account-mismatch': 'This device still holds another account\'s data. Reopen TabMerger and try again.',
-  'not-due': 'A backup is not due yet.',
-  empty: 'There are no saved groups to back up.',
-  unchanged: 'Nothing has changed since the last backup.',
-  'tier-unknown': 'Could not check your plan. Check your connection and try again.',
-  'not-entitled': 'Automatic backups are part of Pro.',
-  'identity-changed': 'The signed-in account changed while backing up, so the backup was stopped. Try again.',
-  busy: 'A backup is already running.'
-};
+const SKIP_MESSAGES: Readonly<Record<AutoBackupSkipReason, string>> = lazyMessages({
+  disabled: 'backups.outcome.skip.disabled',
+  'signed-out': 'backups.outcome.skip.signedOut',
+  'account-mismatch': 'backups.outcome.skip.accountMismatch',
+  'not-due': 'backups.outcome.skip.notDue',
+  empty: 'backups.outcome.skip.empty',
+  unchanged: 'backups.outcome.skip.unchanged',
+  'tier-unknown': 'backups.outcome.skip.tierUnknown',
+  'not-entitled': 'backups.outcome.skip.notEntitled',
+  'identity-changed': 'backups.outcome.skip.identityChanged',
+  busy: 'backups.outcome.skip.busy'
+});
 
 /** One sentence about the copy on this computer. `path` is relative to the Downloads folder. */
 export function describeBackupFile(result: BackupFileResult, path: string): string {
-  if (result === 'saved') return `File saved to Downloads/${path}`;
-  if (result === 'no-permission') return 'The file was not saved: TabMerger no longer has permission to save files.';
-  return 'The file could not be saved to this computer.';
+  if (result === 'saved') return t('backups.fileResult.saved', { path });
+  if (result === 'no-permission') return t('backups.fileResult.noPermission');
+  return t('backups.fileResult.failed');
 }
 
 /** What to tell the user after "Back up now". `ok` picks the success or the neutral/error toast. */
 export function describeAutoBackupOutcome(outcome: AutoBackupOutcome | null): { ok: boolean; message: string } {
-  if (!outcome || outcome.status === 'error') return { ok: false, message: 'The backup could not be created. Try again.' };
+  if (!outcome || outcome.status === 'error') return { ok: false, message: t('backups.outcome.failed') };
   if (outcome.status === 'skipped') return { ok: false, message: SKIP_MESSAGES[outcome.reason] };
-  const saved = outcome.uploaded ? 'Backup saved.' : 'Backup saved on this device. It will upload the next time TabMerger syncs.';
-  return { ok: true, message: outcome.file ? `${saved} ${describeBackupFile(outcome.file, outcome.filePath ?? '')}` : saved };
+  const saved = outcome.uploaded ? t('backups.outcome.saved') : t('backups.outcome.savedLocally');
+  return { ok: true, message: outcome.file ? t('backups.outcome.withFile', { saved, file: describeBackupFile(outcome.file, outcome.filePath ?? '') }) : saved };
 }

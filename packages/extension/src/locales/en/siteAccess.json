@@ -1,0 +1,13 @@
+{
+  "success": "Done — the website can now find TabMerger. You can close this tab.",
+  "refused": "Firefox didn't allow it. You can try again, or allow it later in about:addons.",
+  "title": "Let the TabMerger website find TabMerger",
+  "checking": "Checking site access…",
+  "explainer": "Firefox hasn't allowed TabMerger on {{hosts}} yet. Without it the website can't detect TabMerger, pass your sign-in or start a sync. Click the button below, then confirm in Firefox's prompt.",
+  "allowOn": "Allow TabMerger on {{hosts}}",
+  "bannerLabel": "Website access",
+  "bannerText": "Allow TabMerger on {{hosts}} so the website can find it and pass your sign-in.",
+  "allow": "Allow",
+  "dismiss": "Dismiss website access prompt",
+  "openFailed": "Couldn't open the site access tab. Try again, or allow it in about:addons."
+}

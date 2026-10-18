@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -16,6 +17,7 @@ interface ShortcutSavePickerModalProps {
 
 /** Lets the user pick a destination group for tabs captured by a global keyboard shortcut. */
 export function ShortcutSavePickerModal({ data, onClose }: ShortcutSavePickerModalProps) {
+  const { t } = useTranslation();
   const tabs = (data.tabs as Tab[]) ?? [];
   const { data: groupsState } = useGroups();
   const { mutate: saveTabs, isPending } = useSaveShortcutTabs();
@@ -39,17 +41,17 @@ export function ShortcutSavePickerModal({ data, onClose }: ShortcutSavePickerMod
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Save {tabs.length} tab{tabs.length === 1 ? '' : 's'}</DialogTitle>
-        <DialogDescription>Choose where to save the tabs captured by the keyboard shortcut.</DialogDescription>
+        <DialogTitle>{t('modals.shortcutSave.title', { count: tabs.length })}</DialogTitle>
+        <DialogDescription>{t('modals.shortcutSave.description')}</DialogDescription>
       </DialogHeader>
 
       <div className="py-4">
         <Select value={selected} onValueChange={setSelected}>
-          <SelectTrigger aria-label="Destination group">
+          <SelectTrigger aria-label={t('modals.shortcutSave.destination')}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={NEW_GROUP_VALUE}>Quick Save (new group)</SelectItem>
+            <SelectItem value={NEW_GROUP_VALUE}>{t('modals.shortcutSave.quickSave')}</SelectItem>
             {groups.map((g) => (
               <SelectItem key={g.id} value={g.id}>
                 <span className="flex items-center gap-2">
@@ -67,10 +69,10 @@ export function ShortcutSavePickerModal({ data, onClose }: ShortcutSavePickerMod
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={handleCancel}>
-          Cancel
+          {t('modals.shortcutSave.cancel')}
         </Button>
         <Button type="button" onClick={handleSave} disabled={isPending || tabs.length === 0}>
-          Save
+          {t('modals.shortcutSave.save')}
         </Button>
       </DialogFooter>
     </>

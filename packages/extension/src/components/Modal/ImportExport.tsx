@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useGroups, useImportGroups, useReplaceSavedGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
-import { exportGroupsState, importGroupsState, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@/lib/importExport';
+import { exportGroupsState, importGroupsState, parseBookmarksHtml, parseOneTabs, skippedContext } from '@/lib/importExport';
 import { toast } from '@/lib/toast';
 import { blockImportOverFreeLimit, countSavedGroupsAndTabs } from '@/lib/tierLimits';
 
@@ -15,6 +16,7 @@ interface ImportExportModalProps {
 }
 
 export function ImportExportModal({ mode: initialMode, data: _data, onClose }: ImportExportModalProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<string>(initialMode === 'import' ? 'import' : 'export');
   const { data: groupsState } = useGroups();
   const replaceSavedGroups = useReplaceSavedGroups();
@@ -34,7 +36,7 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
     a.download = `tabmerger-export-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('Groups exported successfully');
+    toast.success(t('importExport.toast.exported'));
     onClose();
   };
 
@@ -47,62 +49,62 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
       // Replaces every saved group (Now Open is kept), as ONE undoable step, and asks for the
       // replaced groups' remote delete: the same path as restoring an automatic backup
       await replaceSavedGroups.mutateAsync(parsed.available.filter((g) => !g.permanent));
-      toast.success(`Groups imported successfully${skippedSuffix(skipped)}`);
+      toast.success(t('importExport.toast.imported', skippedContext(skipped)));
       onClose();
     } catch {
-      toast.error('Invalid JSON file');
+      toast.error(t('importExport.toast.invalidJson'));
     }
   };
 
   const handleBookmarksImport = async (file: File) => {
     const html = await file.text();
     const { groups, skipped } = parseBookmarksHtml(html);
-    if (groups.length === 0) { toast.error('No bookmarks found'); return; }
+    if (groups.length === 0) { toast.error(t('importExport.toast.noBookmarks')); return; }
     if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
     const imported = countSavedGroupsAndTabs(groups);
     await importGroups.mutateAsync(groups);
-    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}${skippedSuffix(skipped)}`);
+    toast.success(t('importExport.toast.importedCounts', { groups: t('common.groupCount', { count: imported.groups }), tabs: t('common.tabCount', { count: imported.tabs }), ...skippedContext(skipped) }));
     onClose();
   };
 
   const handleOneTabImport = async (file: File) => {
     const text = await file.text();
     const { groups, skipped } = parseOneTabs(text);
-    if (groups.length === 0) { toast.error('No tabs found'); return; }
+    if (groups.length === 0) { toast.error(t('importExport.toast.noTabs')); return; }
     if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
     const imported = countSavedGroupsAndTabs(groups);
     await importGroups.mutateAsync(groups);
-    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}${skippedSuffix(skipped)}`);
+    toast.success(t('importExport.toast.importedCounts', { groups: t('common.groupCount', { count: imported.groups }), tabs: t('common.tabCount', { count: imported.tabs }), ...skippedContext(skipped) }));
     onClose();
   };
 
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Import / Export</DialogTitle>
-        <DialogDescription>Manage your TabMerger data</DialogDescription>
+        <DialogTitle>{t('importExport.title')}</DialogTitle>
+        <DialogDescription>{t('importExport.description')}</DialogDescription>
       </DialogHeader>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
         <TabsList className="w-full">
-          <TabsTrigger value="export" className="flex-1 text-xs">Export</TabsTrigger>
-          <TabsTrigger value="import" className="flex-1 text-xs">Import</TabsTrigger>
+          <TabsTrigger value="export" className="flex-1 text-xs">{t('importExport.tabExport')}</TabsTrigger>
+          <TabsTrigger value="import" className="flex-1 text-xs">{t('importExport.tabImport')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="export" className="space-y-3 mt-3">
           <p className="text-sm text-muted-foreground">
-            Export all your groups as a JSON file. You can re-import this file later.
+            {t('importExport.exportIntro')}
           </p>
           <Button onClick={handleExport} className="w-full">
-            Download JSON
+            {t('importExport.downloadJson')}
           </Button>
         </TabsContent>
 
         <TabsContent value="import" className="space-y-4 mt-3">
           <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">TabMerger JSON</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('importExport.jsonHeading')}</p>
             <p className="text-sm text-muted-foreground">
-              Import from a previously exported JSON file. Replaces current groups.
+              {t('importExport.jsonIntro')}
             </p>
             <input
               ref={fileInputRef}
@@ -115,14 +117,14 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
               }}
             />
             <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="w-full">
-              Choose JSON file
+              {t('importExport.chooseJson')}
             </Button>
           </div>
 
           <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Chrome Bookmarks</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('importExport.bookmarksHeading')}</p>
             <p className="text-sm text-muted-foreground">
-              Import from a Chrome bookmarks HTML export. Each folder becomes a group.
+              {t('importExport.bookmarksIntro')}
             </p>
             <input
               ref={bookmarksInputRef}
@@ -135,14 +137,14 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
               }}
             />
             <Button variant="outline" onClick={() => bookmarksInputRef.current?.click()} className="w-full">
-              Choose Bookmarks HTML file
+              {t('importExport.chooseBookmarks')}
             </Button>
           </div>
 
           <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">OneTab</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('importExport.oneTabHeading')}</p>
             <p className="text-sm text-muted-foreground">
-              Import from a OneTab plain-text export. Each blank-line-separated block becomes a group.
+              {t('importExport.oneTabIntro')}
             </p>
             <input
               ref={onetabInputRef}
@@ -155,7 +157,7 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
               }}
             />
             <Button variant="outline" onClick={() => onetabInputRef.current?.click()} className="w-full">
-              Choose OneTab TXT file
+              {t('importExport.chooseOneTab')}
             </Button>
           </div>
         </TabsContent>

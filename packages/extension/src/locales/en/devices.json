@@ -1,0 +1,20 @@
+{
+  "heading": "Devices",
+  "empty": "No devices yet.",
+  "selected": "{{count}} selected",
+  "remove": "Remove",
+  "removeTitle_one": "Remove {{count}} device?",
+  "removeTitle_other": "Remove {{count}} devices?",
+  "removeDescription": "Removed devices stop appearing in this list. If that browser is still active it may re-register itself the next time it syncs, so this isn't permanent for a live device.",
+  "cancel": "Cancel",
+  "selectDevice": "Select {{name}}",
+  "nameInput": "This device name",
+  "save": "Save",
+  "thisDevice": "(this device)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Rename this device",
+  "noTabs": "No tabs.",
+  "restoreTabs_one": "Restore {{count}} tab",
+  "restoreTabs_other": "Restore {{count}} tabs",
+  "open": "Open"
+}

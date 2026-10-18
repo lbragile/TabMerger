@@ -180,6 +180,7 @@ describe('SelectionActionBar — group selection', () => {
   it('Cancel hands keyboard focus to the header selection toggle BEFORE the bar unmounts', async () => {
     const toggle = document.createElement('button')
     toggle.setAttribute('aria-label', 'Exit selection mode')
+    toggle.setAttribute('data-tour', 'select-items')
     document.body.appendChild(toggle)
     try {
       const user = userEvent.setup()
@@ -197,6 +198,7 @@ describe('SelectionActionBar — group selection', () => {
   it('a bulk action that empties the selection while focus is in the bar → focus is restored, not left on <body>', async () => {
     const toggle = document.createElement('button')
     toggle.setAttribute('aria-label', 'Select items')
+    toggle.setAttribute('data-tour', 'select-items')
     document.body.appendChild(toggle)
     try {
       const view = wrap(React.createElement(SelectionActionBar))

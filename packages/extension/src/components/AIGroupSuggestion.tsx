@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sparkles, X } from 'lucide-react';
 import { useSuggestSessions, QuotaExceededError } from '@/hooks/useAI';
 import { useGroups, useArchiveGroups } from '@/hooks/useGroups';
@@ -13,6 +14,7 @@ const STORAGE_KEY = 'tm_ai_suggestion';
 type Stored = { message: string; staleGroupIds: string[]; dismissed: boolean } | null;
 
 export function AIGroupSuggestion() {
+  const { t } = useTranslation();
   // Start fully hidden until chrome.storage read completes — prevents any flash
   const [stored, setStored] = useState<Stored>(null);
   const [storageReady, setStorageReady] = useState(false);
@@ -133,18 +135,18 @@ export function AIGroupSuggestion() {
           openModal('reviewStaleGroup', { groups: staleGroups, onArchive: (groupId: string) => handleArchive([groupId]) })
         }
       >
-        Review
+        {t('banners.review')}
       </button>
       <button
         className="shrink-0 border border-purple-400 text-purple-700 dark:text-purple-300 px-2 py-0.5 text-xs hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
         onClick={archiveAll}
       >
-        Archive
+        {t('banners.archive')}
       </button>
       <button
         className="shrink-0 text-purple-500 hover:opacity-70 transition-opacity ml-1"
         onClick={dismiss}
-        aria-label="Dismiss"
+        aria-label={t('banners.dismiss')}
       >
         <X className="h-3.5 w-3.5" />
       </button>

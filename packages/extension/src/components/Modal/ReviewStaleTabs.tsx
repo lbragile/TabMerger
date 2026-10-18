@@ -1,4 +1,5 @@
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { Tab } from '@/lib/types'
@@ -12,6 +13,7 @@ interface ReviewStaleTabsModalProps {
  * CleanupSuggestionBanner. Distinct from the per-group Clock icon in Windows/index.tsx,
  * which removes immediately (with its own confirm gate). */
 export function ReviewStaleTabsModal({ data, onClose }: ReviewStaleTabsModalProps) {
+  const { t } = useTranslation();
   const staleTabs = data.staleTabs as Tab[]
   const onRemoveAll = data.onRemoveAll as () => void | Promise<void>
 
@@ -23,9 +25,9 @@ export function ReviewStaleTabsModal({ data, onClose }: ReviewStaleTabsModalProp
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Stale tabs</DialogTitle>
+        <DialogTitle>{t('modals.staleTabs.title')}</DialogTitle>
         <DialogDescription>
-          {staleTabs.length} {staleTabs.length === 1 ? 'tab has' : 'tabs have'} not been touched in a while.
+          {t('modals.staleTabs.description', { count: staleTabs.length })}
         </DialogDescription>
       </DialogHeader>
 
@@ -41,10 +43,10 @@ export function ReviewStaleTabsModal({ data, onClose }: ReviewStaleTabsModalProp
 
       <div className="flex gap-2 mt-4">
         <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={onClose}>
-          Close
+          {t('modals.staleTabs.close')}
         </Button>
         <Button variant="destructive" size="sm" className="flex-1 text-xs" onClick={handleRemoveAll}>
-          Remove {staleTabs.length} {staleTabs.length === 1 ? 'tab' : 'tabs'}
+          {t('modals.staleTabs.removeAll', { count: staleTabs.length })}
         </Button>
       </div>
     </>

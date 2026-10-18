@@ -1,0 +1,59 @@
+{
+  "addGroup": {
+    "title": "Create New Group",
+    "name": "Name",
+    "namePlaceholder": "Group name",
+    "color": "Color",
+    "cancel": "Cancel",
+    "create": "Create"
+  },
+  "dedup": {
+    "title": "Remove duplicates",
+    "description_one": "{{count}} duplicate tab will be removed.",
+    "description_other": "{{count}} duplicate tabs will be removed.",
+    "cancel": "Cancel",
+    "confirm_one": "Remove {{count}} duplicate",
+    "confirm_other": "Remove {{count}} duplicates"
+  },
+  "staleGroups": {
+    "title": "Review stale groups",
+    "description_one": "{{count}} group untouched for a while — expand to preview, or archive directly.",
+    "description_other": "{{count}} groups untouched for a while — expand to preview, or archive directly.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Hide",
+    "preview": "Preview",
+    "archive": "Archive",
+    "empty": "This group is empty.",
+    "close": "Close"
+  },
+  "staleTabs": {
+    "title": "Stale tabs",
+    "description_one": "{{count}} tab has not been touched in a while.",
+    "description_other": "{{count}} tabs have not been touched in a while.",
+    "close": "Close",
+    "removeAll_one": "Remove {{count}} tab",
+    "removeAll_other": "Remove {{count}} tabs"
+  },
+  "saveSession": {
+    "title": "Save Session",
+    "name": "Session name",
+    "namePlaceholder": "e.g. Work research, Weekend reading",
+    "nameRequired": "Session name is required",
+    "description": "Description (optional)",
+    "descriptionPlaceholder": "What's this session for?",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "shortcutSave": {
+    "title_one": "Save {{count}} tab",
+    "title_other": "Save {{count}} tabs",
+    "description": "Choose where to save the tabs captured by the keyboard shortcut.",
+    "destination": "Destination group",
+    "quickSave": "Quick Save (new group)",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "confirmDialog": {
+    "cancel": "Cancel"
+  }
+}

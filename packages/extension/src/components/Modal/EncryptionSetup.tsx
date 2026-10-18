@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { PasswordInput } from '@/components/ui/password-input';
@@ -6,7 +7,7 @@ import {
   setupEncryption,
   unlockEncryption,
   getEncryptionKeyState,
-  ENCRYPTION_ALREADY_SET_UP_MESSAGE,
+  encryptionAlreadySetUpMessage,
   type EncryptionKeyState
 } from '@/lib/encryptionKey';
 import { toast } from '@/lib/toast';
@@ -34,6 +35,7 @@ interface EncryptionSetupModalProps {
  * falling back to plaintext.
  */
 export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>('checking');
   const [attempt, setAttempt] = useState(0);
   const [pass1, setPass1] = useState('');
@@ -60,26 +62,26 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
   const handleSetup = async () => {
     setError('');
     if (/\s/.test(pass1)) {
-      setError('Passphrase cannot contain spaces');
+      setError(t('encryption.error.spaces'));
       return;
     }
     if (pass1.length < 8) {
-      setError('Passphrase must be at least 8 characters');
+      setError(t('encryption.error.tooShort'));
       return;
     }
     if (pass1 !== pass2) {
-      setError('Passphrases do not match');
+      setError(t('encryption.error.mismatch'));
       return;
     }
     setBusy(true);
     try {
       await setupEncryption(pass1);
-      toast.success('Encryption set up');
+      toast.success(t('encryption.toast.setUp'));
       onClose();
     } catch (e) {
-      const message = e instanceof Error ? e.message : 'Failed to set up encryption';
+      const message = e instanceof Error ? e.message : t('encryption.error.setupFailed');
       // Another device finished setup first (the server refuses a second key): ask for that passphrase.
-      if (message === ENCRYPTION_ALREADY_SET_UP_MESSAGE) {
+      if (message === encryptionAlreadySetUpMessage()) {
         setMode('unlock');
         setPass1('');
         setPass2('');
@@ -98,10 +100,10 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
     try {
       const result = await unlockEncryption(pass1);
       if (result === 'unlocked') {
-        toast.success('Encryption unlocked');
+        toast.success(t('encryption.toast.unlocked'));
         onClose();
       } else if (result === 'wrong-passphrase') {
-        setError('Wrong passphrase');
+        setError(t('encryption.error.wrong'));
       } else if (result === 'unavailable') {
         // The key could not be read (offline, server error): that says nothing about the passphrase.
         setMode('unavailable');
@@ -110,7 +112,7 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
         setMode('setup');
         setPass1('');
         setPass2('');
-        setError('Encryption was reset for this account. Choose a new passphrase.');
+        setError(t('encryption.error.wasReset'));
       }
     } finally {
       setBusy(false);
@@ -123,15 +125,14 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
     return (
       <>
         <DialogHeader>
-          <DialogTitle>Can&apos;t check encryption right now</DialogTitle>
+          <DialogTitle>{t('encryption.unavailableTitle')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground">
-            TabMerger couldn&apos;t reach the server to check this account&apos;s encryption, so sync is
-            paused. Your groups are still saved on this device. Check your connection and try again.
+            {t('encryption.unavailableBody')}
           </p>
           <Button size="sm" className="text-xs w-full" onClick={retryCheck}>
-            Try again
+            {t('encryption.tryAgain')}
           </Button>
         </div>
       </>
@@ -142,7 +143,7 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
     return (
       <>
         <DialogHeader>
-          <DialogTitle>Unlock encryption</DialogTitle>
+          <DialogTitle>{t('encryption.unlockTitle')}</DialogTitle>
         </DialogHeader>
         <form
           className="space-y-3"
@@ -152,14 +153,11 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
           }}
         >
           <p className="text-xs text-muted-foreground">
-            Enter your encryption passphrase to unlock synced data on this device. This is a
-            one-time step per device — you won&apos;t be asked again unless you sign out. There
-            is no way to recover your data if you forget it — it never leaves your device and
-            TabMerger cannot reset it for you.
+            {t('encryption.unlockBody')}
           </p>
           <PasswordInput
-            placeholder="Passphrase"
-            aria-label="Encryption passphrase"
+            placeholder={t('encryption.passphrase')}
+            aria-label={t('encryption.passphraseLabel')}
             value={pass1}
             onChange={(e) => setPass1(e.target.value)}
             className="h-8 text-xs rounded-none"
@@ -168,7 +166,7 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
           />
           {error && <p className="text-xs text-destructive">{error}</p>}
           <Button type="submit" size="sm" className="text-xs w-full" disabled={busy || !pass1} loading={busy}>
-            Unlock
+            {t('encryption.unlock')}
           </Button>
         </form>
       </>
@@ -178,16 +176,14 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Set up encryption</DialogTitle>
+        <DialogTitle>{t('encryption.setupTitle')}</DialogTitle>
       </DialogHeader>
       <div className="space-y-3">
         <p className="text-xs text-muted-foreground">
-          Your synced group and tab data is end-to-end encrypted with a passphrase only you
-          know. Choose one now — there is no way to recover your data if you forget it, it
-          never leaves your device and TabMerger cannot reset it for you.
+          {t('encryption.setupBody')}
         </p>
         <PasswordInput
-          placeholder="New passphrase"
+          placeholder={t('encryption.newPassphrase')}
           value={pass1}
           onChange={(e) => setPass1(e.target.value)}
           className="h-8 text-xs rounded-none"
@@ -195,7 +191,7 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
           onVisibleChange={setVisible}
         />
         <PasswordInput
-          placeholder="Confirm passphrase"
+          placeholder={t('encryption.confirmPassphrase')}
           value={pass2}
           onChange={(e) => setPass2(e.target.value)}
           className="h-8 text-xs rounded-none"
@@ -210,7 +206,7 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
           loading={busy}
           onClick={() => void handleSetup()}
         >
-          Set up encryption
+          {t('encryption.setupButton')}
         </Button>
       </div>
     </>

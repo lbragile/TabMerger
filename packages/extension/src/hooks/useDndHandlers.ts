@@ -38,12 +38,13 @@ import {
   setDndDragSelection
 } from '@/lib/dndMultiDrag';
 import { announceDnd, cancelDndAnnouncement } from '@/lib/dndLiveRegion';
+import { t } from '@/lib/i18n';
 import {
   createDndAnnouncements,
   describeDropBail,
   describeDropCommitted,
-  DND_KEYBOARD_CANCEL_TOKEN,
-  DND_KEYBOARD_DROP_TOKEN,
+  dndKeyboardCancelToken,
+  dndKeyboardDropToken,
   noteDropSelectionRemap,
   setDndDropOutcome,
   type DndBailReason
@@ -60,7 +61,7 @@ import { GROUPS_QUERY_KEY } from './useGroups';
 export { partitionClosableTabs };
 
 /** Announced when a drop's write fails (or the commit throws) and the UI is rolled back. */
-export const DND_SAVE_FAILED_TEXT = "Couldn't save the move; restored.";
+export const dndSaveFailedText = (): string => t('dnd.saveFailed');
 
 /** How far a drop's commit got — what {@link useDndHandlers}' rollback may undo. */
 interface CommitProgress {
@@ -1021,7 +1022,7 @@ export function useDndHandlers() {
           describeDropBail(snapshot, act.id, 'cancelled', getDndDragCount()),
           keyboard,
           keyboard ? ownFocusSelectors(snapshot, act.id) : null,
-          DND_KEYBOARD_CANCEL_TOKEN
+          dndKeyboardCancelToken()
         );
       }
     } finally {
@@ -1098,7 +1099,7 @@ export function useDndHandlers() {
         describeDropBail(base, draggedId, reason, dragCount),
         keyboard,
         keyboard ? ownFocusSelectors(base, draggedId) : null,
-        DND_KEYBOARD_DROP_TOKEN
+        dndKeyboardDropToken()
       );
       return null;
     };
@@ -1301,7 +1302,7 @@ export function useDndHandlers() {
       }),
       keyboard,
       keyboard ? landedFocusSelectors(commitBase, commitModel, next, ca, landed, visibleGroupIndex) : null,
-      DND_KEYBOARD_DROP_TOKEN
+      dndKeyboardDropToken()
     );
 
     // A keyboard reorder inside Now Open lands later, via the browser re-sync (A4).
@@ -1321,7 +1322,7 @@ export function useDndHandlers() {
         console.error('[tm-dnd] drop could not be saved; reloading groups from IndexedDB', err);
         p.settleOpened?.([]);
         rollback(p);
-        announceDnd(DND_SAVE_FAILED_TEXT);
+        announceDnd(dndSaveFailedText());
         return;
       }
       // A saved item dropped INTO Now Open opened real tabs: Undo closes exactly those (by id)
@@ -1374,14 +1375,14 @@ export function useDndHandlers() {
                 message: writeErr instanceof Error ? writeErr.message : String(writeErr)
               });
               rollback(p);
-              announceDnd(DND_SAVE_FAILED_TEXT);
+              announceDnd(dndSaveFailedText());
             }
           };
         }
       } else {
         // Nothing was written: the drop is a clean no-op, so undo it fully and say so.
         rollback(p);
-        setDndDropOutcome(DND_SAVE_FAILED_TEXT);
+        setDndDropOutcome(dndSaveFailedText());
       }
     } finally {
       // EVERY exit — commit, bail or throw — clears the drag state and the live-drag flag.
@@ -1409,7 +1410,7 @@ export function useDndHandlers() {
         const base = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY) ?? null;
         const count = active.selectionIds?.length ?? 1;
         const bail = (reason: DndBailReason): null => {
-          announceOutcome(describeDropBail(base, active.id, reason, count), 'move', ownFocusSelectors(base, active.id), DND_KEYBOARD_DROP_TOKEN);
+          announceOutcome(describeDropBail(base, active.id, reason, count), 'move', ownFocusSelectors(base, active.id), dndKeyboardDropToken());
           return null;
         };
         if (!base) return bail('rejected');

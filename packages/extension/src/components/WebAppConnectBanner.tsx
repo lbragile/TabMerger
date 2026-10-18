@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatAndList, t as translate } from '@/lib/i18n';
 import { Link2, X } from 'lucide-react';
 import { useWebAppHostAccess } from '@/hooks/useWebAppHostAccess';
 import { closePopupView, hostOfPattern } from '@/lib/webAppHostAccess';
 
 /** Shown in the banner when the site-access tab could not be opened. */
-export const OPEN_FAILED_MESSAGE = "Couldn't open the site access tab. Try again, or allow it in about:addons.";
+/** Shown when the site access tab could not be opened. */
+export const openFailedMessage = (): string => translate('siteAccess.openFailed');
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -31,6 +34,7 @@ function nextFocusableAfter(node: HTMLElement): HTMLElement | null {
  * The banner hides once the grant is seen, and a refusal leaves it in place.
  */
 export function WebAppConnectBanner() {
+  const { t } = useTranslation();
   const { missing, connect, dismiss } = useWebAppHostAccess();
   const ref = useRef<HTMLDivElement>(null);
   // Where focus goes once the banner is gone, set only when a click inside it may remove it.
@@ -47,7 +51,7 @@ export function WebAppConnectBanner() {
 
   if (missing.length === 0) return null;
 
-  const hosts = missing.map(hostOfPattern).join(' and ');
+  const hosts = formatAndList(missing.map(hostOfPattern));
 
   const rememberFocusTarget = () => {
     focusAfterHide.current = ref.current ? nextFocusableAfter(ref.current) : null;
@@ -57,17 +61,17 @@ export function WebAppConnectBanner() {
     <div
       ref={ref}
       role="region"
-      aria-label="Website access"
+      aria-label={t('siteAccess.bannerLabel')}
       className="flex flex-col px-3 py-2 text-xs shrink-0 bg-primary/10 text-primary"
     >
       <div className="flex items-center gap-2 min-w-0">
         <Link2 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-        <span className="flex-1 min-w-0 truncate" title={`Allow TabMerger on ${hosts} so the website can find it and pass your sign-in.`}>
-          Allow TabMerger on {hosts} so the website can find it and pass your sign-in.
+        <span className="flex-1 min-w-0 truncate" title={t('siteAccess.bannerText', { hosts })}>
+          {t('siteAccess.bannerText', { hosts })}
         </span>
         <button
           type="button"
-          aria-label={`Allow TabMerger on ${hosts}`}
+          aria-label={t('siteAccess.allowOn', { hosts })}
           className="shrink-0 border border-primary/40 text-primary px-2 py-0.5 text-xs hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           // Opens the site-access tab, which makes the request, then closes the popup (opening a
           // tab leaves a Firefox popup open). On failure the popup stays and focus stays here.
@@ -80,11 +84,11 @@ export function WebAppConnectBanner() {
             });
           }}
         >
-          Allow
+          {t('siteAccess.allow')}
         </button>
         <button
           type="button"
-          aria-label="Dismiss website access prompt"
+          aria-label={t('siteAccess.dismiss')}
           className="shrink-0 text-primary hover:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           onClick={() => {
             rememberFocusTarget();
@@ -96,7 +100,7 @@ export function WebAppConnectBanner() {
       </div>
       {/* Always mounted, so screen readers announce the message when it appears. */}
       <p role="alert" className={openFailed ? 'mt-1 pl-5.5 text-destructive' : undefined}>
-        {openFailed ? OPEN_FAILED_MESSAGE : null}
+        {openFailed ? openFailedMessage() : null}
       </p>
     </div>
   );

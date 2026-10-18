@@ -48,10 +48,17 @@ function getExtensionName(mode: string): string {
 const cliWxtMode = resolveWxtModeFromArgv(process.argv);
 process.env.NODE_ENV = resolveNodeEnv(cliWxtMode);
 
+// Development-only layout stress test (`pnpm build:dev:pseudo`, sets VITE_PSEUDO_LOCALE=1): the popup
+// shows every catalog string accented and padded (src/lib/pseudoLocale.ts). Written to its own
+// output folder so it never replaces the e2e build. The app only honours the flag when
+// import.meta.env.DEV, which beta, demo and production builds never are.
+const pseudoLocale = cliWxtMode === "development" && process.env.VITE_PSEUDO_LOCALE === "1";
+
 export default defineConfig({
     srcDir: "src",
     publicDir: "src/public",
     modules: ["@wxt-dev/module-react"], // HMR enabled by default — popup React components hot-reload via Fast Refresh; background/content scripts auto-reload on save
+    ...(pseudoLocale ? { outDirTemplate: "{{browser}}-mv{{manifestVersion}}-pseudo" } : {}),
     vite: () => ({
         resolve: {
             alias: {

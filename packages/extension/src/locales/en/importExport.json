@@ -1,0 +1,27 @@
+{
+  "title": "Import / Export",
+  "description": "Manage your TabMerger data",
+  "tabExport": "Export",
+  "tabImport": "Import",
+  "exportIntro": "Export all your groups as a JSON file. You can re-import this file later.",
+  "downloadJson": "Download JSON",
+  "jsonHeading": "TabMerger JSON",
+  "jsonIntro": "Import from a previously exported JSON file. Replaces current groups.",
+  "chooseJson": "Choose JSON file",
+  "bookmarksHeading": "Chrome Bookmarks",
+  "bookmarksIntro": "Import from a Chrome bookmarks HTML export. Each folder becomes a group.",
+  "chooseBookmarks": "Choose Bookmarks HTML file",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Import from a OneTab plain-text export. Each blank-line-separated block becomes a group.",
+  "chooseOneTab": "Choose OneTab TXT file",
+  "toast": {
+    "exported": "Groups exported successfully",
+    "imported": "Groups imported successfully",
+    "imported_skipped": "Groups imported successfully, {{skipped}} skipped",
+    "importedCounts": "Imported {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Imported {{groups}}, {{tabs}}, {{skipped}} skipped",
+    "invalidJson": "Invalid JSON file",
+    "noBookmarks": "No bookmarks found",
+    "noTabs": "No tabs found"
+  }
+}
