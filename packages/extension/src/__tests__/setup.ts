@@ -1,5 +1,11 @@
 import '@testing-library/jest-dom'
 import { vi, beforeEach } from 'vitest'
+import { initReactI18next } from 'react-i18next'
+import { initI18n } from '@/lib/i18n'
+
+// The real i18next instance with the bundled English catalog, initialized synchronously (no t()
+// mock), so components render the exact copy users see and a missing key shows up as the raw key.
+initI18n(initReactI18next)
 
 // ponytail: minimal chrome.* stub so any module touched transitively (e.g. supabase.ts's
 // chrome.storage.local auth adapter) doesn't crash tests that never intended to exercise

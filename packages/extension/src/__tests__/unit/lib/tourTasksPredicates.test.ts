@@ -4,7 +4,6 @@ import {
   TOUR_TASKS,
   tourDemoTabRowSelector,
   tourDemoWindowSelector,
-  tourMenuItemSelector,
   tourTask,
   type TourTaskContext,
 } from '@/lib/tourTasks'
@@ -67,7 +66,7 @@ describe('open-tabs', () => {
   it('unlocks the window menu button and the one item', () => {
     const { allow, action, lockRoots } = t.targets(ctx())
     expect(allow).toHaveLength(2)
-    expect(allow[1]).toBe(tourMenuItemSelector('Open in browser'))
+    expect(allow[1]).toBe('[data-tour="window-open"]')
     expect(action).toHaveLength(2)
     expect(lockRoots).toEqual(['[role="menu"]'])
   })
@@ -254,7 +253,6 @@ describe('selectors', () => {
   it('escape quotes in the group id', () => {
     expect(tourDemoTabRowSelector('a"b', 1, 2)).toBe('[data-tab-index][data-tm-dnd-id="a\\"b::w1::t2"]')
     expect(tourDemoWindowSelector('a"b', 1)).toBe('[data-tm-dnd-id="a\\"b::w1"]')
-    expect(tourMenuItemSelector('He said "hi"')).toContain('He said \\"hi\\"')
   })
 })
 
@@ -435,4 +433,32 @@ describe('drag-group-order', () => {
     expect(one.action).toHaveLength(1)
     expect(one.drop).toEqual([])
   })
+})
+
+describe('selectors never depend on translated text', () => {
+  // A selector built from an accessible name or visible text breaks in every other language
+  const TEXT_BASED = /aria-label="|data-tour-label|:contains|title="/
+  const contexts = [
+    ctx(),
+    ctx({ modalType: 'settings' }),
+    ctx({ modalType: 'deduplicateGroup' }),
+    ctx({ searchFilter: 'group:tou' }),
+    ctx({ searchFilter: 'group:"Tour demo"' }),
+  ]
+  for (const [id, task] of Object.entries({ ...TOUR_TASKS, ...TOUR_DRAG_TASKS })) {
+    it(id, () => {
+      for (const c of contexts) {
+        const targets = task.targets(c)
+        const selectors = [
+          ...targets.highlight.flat(),
+          ...(targets.action ?? []).flat(),
+          ...(targets.drop ?? []).flat(),
+          ...(targets.keepClear ?? []).flat(),
+          ...targets.allow,
+          ...targets.lockRoots,
+        ]
+        for (const selector of selectors) expect(selector).not.toMatch(TEXT_BASED)
+      }
+    })
+  }
 })

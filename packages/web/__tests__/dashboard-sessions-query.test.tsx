@@ -68,7 +68,7 @@ vi.mock('@/components/dashboard/BackupsSection', () => ({
 }))
 
 async function renderPage() {
-  const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+  const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
   render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 }
 

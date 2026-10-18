@@ -1,0 +1,73 @@
+{
+  "deleteGroup": {
+    "title": "グループを削除",
+    "description": "「{{name}}」を削除しますか？この操作は元に戻せません。",
+    "confirm": "削除"
+  },
+  "closeWindow": {
+    "title": "ウィンドウを閉じる",
+    "description": "このウィンドウとすべてのタブを閉じますか？",
+    "confirm": "閉じる"
+  },
+  "removeWindow": {
+    "title": "ウィンドウを削除",
+    "description": "このウィンドウとすべてのタブを削除しますか？",
+    "confirm": "削除"
+  },
+  "closeTab": {
+    "title": "タブを閉じる",
+    "description": "このタブを閉じますか？",
+    "confirm": "閉じる"
+  },
+  "removeTab": {
+    "title": "タブを削除",
+    "description": "このタブを削除しますか？",
+    "confirm": "削除"
+  },
+  "closeSelection": {
+    "title": "選択項目を閉じる",
+    "confirm": "閉じる",
+    "description_tab_other": "{{count}}個のタブを閉じますか？この操作は元に戻せません。",
+    "description_window_other": "{{count}}個のウィンドウを閉じますか？この操作は元に戻せません。",
+    "description_group_other": "{{count}}個のグループを閉じますか？この操作は元に戻せません。"
+  },
+  "deleteSelection": {
+    "title": "選択項目を削除",
+    "confirm": "削除",
+    "description_tab_other": "{{count}}個のタブを削除しますか？この操作は元に戻せません。",
+    "description_window_other": "{{count}}個のウィンドウを削除しますか？この操作は元に戻せません。",
+    "description_group_other": "{{count}}個のグループを削除しますか？この操作は元に戻せません。"
+  },
+  "removeStaleTabs": {
+    "title": "古いタブを削除",
+    "confirm": "削除",
+    "description_other": "{{count}}個の古いタブを削除しますか？この操作は元に戻せません。"
+  },
+  "closeAllWindows": {
+    "title": "すべてのウィンドウを閉じる",
+    "description": "ブラウザのすべてのウィンドウとタブを閉じますか？",
+    "confirm": "すべて閉じる"
+  },
+  "removeAllWindows": {
+    "title": "すべてのウィンドウを削除",
+    "description": "このグループのすべてのウィンドウとタブを削除しますか？この操作は元に戻せません。",
+    "confirm": "すべて削除"
+  },
+  "archiveStaleGroups": {
+    "title": "古いグループをアーカイブ",
+    "confirm": "アーカイブ",
+    "description_other": "{{count}}個の古いグループをアーカイブしますか？"
+  },
+  "clearAllData": {
+    "title": "すべてのデータを消去",
+    "confirm": "すべてのデータを消去",
+    "description": "すべてのグループ、保存済みセッション、設定が完全に削除されます。この操作は元に戻せません。",
+    "description_kept": "すべてのグループ、保存済みセッション、設定が完全に削除されます。この操作は元に戻せません。アカウントに保存された自動バックアップは残り、設定 → データから復元できます。"
+  },
+  "resetEncryption": {
+    "title": "暗号化パスフレーズのリセット",
+    "confirm": "パスフレーズをリセット",
+    "description": "この操作は元に戻せません。現在のパスフレーズで暗号化された、同期済みのすべてのグループ、セッション、メモに完全にアクセスできなくなります。新しいパスフレーズを設定し、最初から同期を始めます。"
+  },
+  "cancel": "キャンセル"
+}

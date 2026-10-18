@@ -1,0 +1,10 @@
+{
+  "comingSoon": "即将推出",
+  "listTwo": "{first}和{second}",
+  "listMany": "{rest}和{last}",
+  "listSeparator": "、",
+  "opensInNewTab": "（在新标签页中打开）",
+  "close": "关闭",
+  "showPassphrase": "显示密码短语",
+  "hidePassphrase": "隐藏密码短语"
+}

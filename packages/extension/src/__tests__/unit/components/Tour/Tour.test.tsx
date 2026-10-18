@@ -147,7 +147,9 @@ describe('Tour', () => {
     }
     expect(titles).not.toContain('Save everything at once')
     expect(titles).toHaveLength(total)
-  }, 6000)
+    // The walk clicks through every step: ~1s alone, but it passed 6s in the full suite under
+    // coverage instrumentation, so the cap leaves room for a loaded run.
+  }, 20_000)
 
   it('Next and Back move between steps, Back is absent on step 1', async () => {
     mountApp()

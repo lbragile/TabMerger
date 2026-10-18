@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import {
   Bug,
   Check,
@@ -49,6 +50,7 @@ const ERROR_TEXT = 'text-sm text-destructive dark:text-red-400'
 
 /** The card: a small browser window (tab strip, then the content), like the 404/500 illustration. */
 function WindowCard({ children }: { children: ReactNode }) {
+  const t = useTranslations('uninstalled.form')
   return (
     <div className="min-w-0 overflow-hidden border border-border bg-card shadow-sh3">
       <div aria-hidden="true" className="flex items-end gap-1 border-b border-border bg-surface2 px-2 pt-2">
@@ -59,7 +61,7 @@ function WindowCard({ children }: { children: ReactNode }) {
         </span>
         <span className="flex h-7 items-center gap-1.5 border border-b-0 border-border bg-card px-2.5 text-[0.6875rem] font-medium text-foreground">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-          Feedback
+          {t('cardTab')}
         </span>
       </div>
       <div className="p-5 sm:p-7">{children}</div>
@@ -82,6 +84,7 @@ interface UninstallSurveyFormProps {
  */
 export function UninstallSurveyForm({ version, browser, channel }: UninstallSurveyFormProps) {
   const id = useId()
+  const t = useTranslations('uninstalled.form')
   const [reasons, setReasons] = useState<UninstallSurveyReasonId[]>([])
   const [details, setDetails] = useState('')
   const [email, setEmail] = useState('')
@@ -158,8 +161,8 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
           <span aria-hidden="true" className="grid h-12 w-12 place-items-center bg-primary/15 text-primary">
             <Check className="h-6 w-6" />
           </span>
-          <p className="mb-1 mt-4 text-lg font-semibold">Thanks, this was sent.</p>
-          <p className="text-sm text-text2">We read every answer.</p>
+          <p className="mb-1 mt-4 text-lg font-semibold">{t('sentTitle')}</p>
+          <p className="text-sm text-text2">{t('sentBody')}</p>
         </div>
       </WindowCard>
     )
@@ -176,8 +179,8 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
         className="space-y-6"
       >
         <fieldset aria-describedby={answerError ? answerErrorId : undefined} className="space-y-3">
-          <legend className="mb-1 text-base font-semibold">Why did you remove TabMerger?</legend>
-          <p className="text-sm text-text2">Pick as many as you like.</p>
+          <legend className="mb-1 text-base font-semibold">{t('question')}</legend>
+          <p className="text-sm text-text2">{t('pickMany')}</p>
           <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {UNINSTALL_SURVEY_REASONS.map((reason, i) => {
               const inputId = `${id}-reason-${reason.id}`
@@ -207,7 +210,7 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
                       className={cn('h-4 w-4 shrink-0', checked ? 'text-primary' : 'text-text3')}
                       aria-hidden="true"
                     />
-                    <span className="min-w-0 flex-1">{reason.label}</span>
+                    <span className="min-w-0 flex-1">{t(`reasons.${reason.id}`)}</span>
                     <span
                       aria-hidden="true"
                       className={cn(
@@ -225,7 +228,7 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
         </fieldset>
 
         <div className="space-y-1.5">
-          <Label htmlFor={`${id}-details`}>Anything else you want to tell us? (optional)</Label>
+          <Label htmlFor={`${id}-details`}>{t('details')}</Label>
           <Textarea
             id={`${id}-details`}
             name="details"
@@ -239,20 +242,20 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
             aria-describedby={cn(countId, answerError && answerErrorId)}
           />
           <p id={countId} className="text-right text-xs tabular-nums text-text2">
-            {details.length} of {UNINSTALL_SURVEY_LIMITS.details} characters
+            {t('characterCount', { count: details.length, max: UNINSTALL_SURVEY_LIMITS.details })}
           </p>
         </div>
 
         {answerError && (
           <p id={answerErrorId} className={ERROR_TEXT}>
-            Tick a reason or write a few words before sending.
+            {t('needAnswer')}
           </p>
         )}
 
         <div className="space-y-1.5">
-          <Label htmlFor={`${id}-email`}>Your email (optional)</Label>
+          <Label htmlFor={`${id}-email`}>{t('email')}</Label>
           <p id={emailHintId} className="text-xs text-text2">
-            Only if you would like a reply. We will not use it for anything else.
+            {t('emailHint')}
           </p>
           <Input
             ref={emailRef}
@@ -271,14 +274,14 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
           />
           {emailError && (
             <p id={emailErrorId} className={ERROR_TEXT}>
-              This does not look like an email address. Check it, or leave the box empty.
+              {t('emailInvalid')}
             </p>
           )}
         </div>
 
         {/* Honeypot: hidden from people and screen readers; bots that fill every field give themselves away. */}
         <div aria-hidden="true" inert className="absolute -left-[625rem] h-px w-px overflow-hidden">
-          <label htmlFor={`${id}-website`}>Website</label>
+          <label htmlFor={`${id}-website`}>{t('honeypot')}</label>
           <input
             id={`${id}-website`}
             name="website"
@@ -299,22 +302,24 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
           >
             <p className="font-medium text-destructive dark:text-red-400">
               {rateLimited
-                ? 'This was not sent: too many answers came from your connection. Please try again later.'
-                : 'This was not sent. Please check your connection and try again.'}
+                ? t('rateLimited')
+                : t('failed')}
             </p>
             <p className="text-text2">
-              Still not working?{' '}
-              <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">
-                Contact us
-              </Link>{' '}
-              instead.
+              {t.rich('stillFailing', {
+                link: (chunks) => (
+                  <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </p>
           </div>
         )}
 
         <Button type="submit" size="lg" className="w-full" disabled={status === 'sending'}>
           {status === 'sending' && <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />}
-          {status === 'sending' ? 'Sending…' : status === 'error' ? 'Try again' : 'Send answer'}
+          {status === 'sending' ? t('sending') : status === 'error' ? t('tryAgain') : t('send')}
         </Button>
       </form>
     </WindowCard>

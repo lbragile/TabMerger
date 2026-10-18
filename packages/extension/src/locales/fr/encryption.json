@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger n’a pas pu joindre le serveur pour vérifier le chiffrement de ce compte, la synchronisation est donc en pause. Vos groupes restent enregistrés sur cet appareil. Vérifiez votre connexion et réessayez.",
+  "unlockBody": "Saisissez votre phrase secrète de chiffrement pour déverrouiller les données synchronisées sur cet appareil. C’est une étape unique par appareil : on ne vous la redemandera pas tant que vous ne vous déconnectez pas. Il est impossible de récupérer vos données si vous l’oubliez : elle ne quitte jamais votre appareil et TabMerger ne peut pas la réinitialiser pour vous.",
+  "setupBody": "Vos données de groupes et d’onglets synchronisées sont chiffrées de bout en bout avec une phrase secrète que vous seul connaissez. Choisissez-en une maintenant : il est impossible de récupérer vos données si vous l’oubliez, elle ne quitte jamais votre appareil et TabMerger ne peut pas la réinitialiser pour vous.",
+  "unavailableTitle": "Vérification du chiffrement impossible",
+  "tryAgain": "Réessayer",
+  "unlockTitle": "Déverrouiller le chiffrement",
+  "passphrase": "Phrase secrète",
+  "passphraseLabel": "Phrase secrète de chiffrement",
+  "unlock": "Déverrouiller",
+  "setupTitle": "Configurer le chiffrement",
+  "newPassphrase": "Nouvelle phrase secrète",
+  "confirmPassphrase": "Confirmer la phrase secrète",
+  "setupButton": "Configurer le chiffrement",
+  "error": {
+    "spaces": "La phrase secrète ne peut pas contenir d’espaces",
+    "tooShort": "La phrase secrète doit contenir au moins 8 caractères",
+    "mismatch": "Les phrases secrètes ne correspondent pas",
+    "setupFailed": "Échec de la configuration du chiffrement",
+    "wrong": "Phrase secrète incorrecte",
+    "wasReset": "Le chiffrement a été réinitialisé pour ce compte. Choisissez une nouvelle phrase secrète."
+  },
+  "toast": {
+    "setUp": "Chiffrement configuré",
+    "unlocked": "Chiffrement déverrouillé"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "appName": "TabMerger",
+  "tier": {
+    "free": "免费版",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "upgrade": "升级",
+  "untitled": "无标题",
+  "window": "窗口",
+  "cancel": "取消",
+  "close": "关闭",
+  "save": "保存",
+  "delete": "删除",
+  "shortcutSearch": "Ctrl K",
+  "tabCount_other": "{{count}} 个标签页",
+  "windowCount_other": "{{count}} 个窗口",
+  "groupCount_other": "{{count}} 个分组",
+  "freeGroupLimit": "免费版最多允许 {{max}} 个分组。",
+  "aiQuotaUsed": "您本月的 AI 额度已用完。",
+  "buyMore": "购买更多",
+  "windowCountTitle_other": "{{count}} 个窗口",
+  "tabCountTitle_other": "{{count}} 个标签页",
+  "groupCounts": "{{windows}} ◆ {{tabs}}",
+  "nowOpen": "当前打开",
+  "groupCountTitle_other": "{{count}} 个分组",
+  "time": {
+    "justNow": "刚刚",
+    "minutesAgo_other": "{{count}}分钟前",
+    "hoursAgo_other": "{{count}}小时前",
+    "daysAgo_other": "{{count}}天前"
+  },
+  "duration": {
+    "lessThanMinute": "不足 1 分钟",
+    "minutes_other": "{{count}} 分钟",
+    "hours_other": "{{count}} 小时",
+    "days_other": "{{count}} 天",
+    "months_other": "{{count}} 个月",
+    "years_other": "{{count}} 年"
+  },
+  "quickSaveGroup": "快速保存",
+  "importedGroup": "导入的分组",
+  "importedFolder": "已导入",
+  "noGroupSelected": "未选择分组",
+  "showPassphrase": "显示密码短语",
+  "hidePassphrase": "隐藏密码短语",
+  "notifications": "通知",
+  "closeToast": "关闭提示"
+}

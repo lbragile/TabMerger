@@ -1,4 +1,6 @@
 import { Trash2, MoveRight, Copy, Star, X, Share2, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { t as translate } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,7 +11,7 @@ import {
 import { useUIStore } from '@/stores/uiStore';
 import { useGroups } from '@/hooks/useGroups';
 import { useBulkDelete, useBulkMoveToGroup, useBulkStar, parseGroupId } from '@/hooks/useBulkActions';
-import { cn, pluralize } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 import { CreateGroupMenuItem } from '@/components/Windows/CreateGroupMenuItem';
 import { toast } from '@/lib/toast';
@@ -26,7 +28,7 @@ import {
 /** Maps a selection type to a human-readable plural noun. */
 function itemLabel(type: string, count: number): string {
   const noun = type === 'tab' ? 'tab' : type === 'window' ? 'window' : 'group';
-  return `${count} ${pluralize(count, noun)} selected`;
+  return translate('selection.selected', { count, context: noun });
 }
 
 /** Parse the source groupIndex from the first selected item ID. */
@@ -36,6 +38,7 @@ function sourceGroupIndex(id: string): number {
 }
 
 export function SelectionActionBar() {
+  const { t } = useTranslation();
   const selectedItems = useUIStore((s) => s.selectedItems);
   const exitSelectionMode = useUIStore((s) => s.exitSelectionMode);
   const openModal = useUIStore((s) => s.openModal);
@@ -78,9 +81,9 @@ export function SelectionActionBar() {
     try {
       const url = await createSharedBundle(groupIds, allGroups, supabase, entitlement);
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied to clipboard');
+      toast.success(t('selection.linkCopied'));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to share');
+      toast.error(err instanceof Error ? err.message : t('selection.shareFailed'));
     } finally {
       setIsSharing(false);
     }
@@ -147,7 +150,7 @@ export function SelectionActionBar() {
               disabled={isPending}
             >
               {isNowOpen ? <Copy className="h-3.5 w-3.5" /> : <MoveRight className="h-3.5 w-3.5" />}
-              {isNowOpen ? 'Copy to group' : 'Move to group'}
+              {isNowOpen ? t('selection.copyToGroup') : t('selection.moveToGroup')}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="text-xs max-h-56 overflow-y-auto">
@@ -182,7 +185,7 @@ export function SelectionActionBar() {
             onClick={() => bulkStar({ items: selectedItems, starred: true })}
           >
             <Star className="h-3.5 w-3.5" fill="currentColor" />
-            Star
+            {t('selection.star')}
           </Button>
           <Button
             variant="outline"
@@ -192,7 +195,7 @@ export function SelectionActionBar() {
             onClick={() => bulkStar({ items: selectedItems, starred: false })}
           >
             <Star className="h-3.5 w-3.5" />
-            Unstar
+            {t('selection.unstar')}
           </Button>
         </>
       )}
@@ -204,11 +207,11 @@ export function SelectionActionBar() {
           size="sm"
           className="h-7 px-2 text-xs gap-1"
           disabled={isPending || !entitlements.cloudSync}
-          title={!entitlements.cloudSync ? 'Sharing requires Pro' : undefined}
+          title={!entitlements.cloudSync ? t('selection.shareRequiresPro') : undefined}
           onClick={handleShare}
         >
           {isSharing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Share2 className="h-3.5 w-3.5" />}
-          Share
+          {t('selection.share')}
         </Button>
       )}
 
@@ -221,7 +224,7 @@ export function SelectionActionBar() {
         onClick={handleDelete}
       >
         <Trash2 className="h-3.5 w-3.5" />
-        {isNowOpen ? 'Close' : 'Delete'}
+        {isNowOpen ? t('selection.close') : t('selection.delete')}
       </Button>
 
       {/* Cancel */}
@@ -231,7 +234,7 @@ export function SelectionActionBar() {
         className="h-7 w-7 shrink-0"
         disabled={isPending}
         onClick={handleCancel}
-        aria-label="Cancel selection"
+        aria-label={t('selection.cancel')}
       >
         <X className="h-3.5 w-3.5" />
       </Button>

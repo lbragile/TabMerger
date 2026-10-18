@@ -1,0 +1,22 @@
+{
+  "heading": "Dispositivos",
+  "empty": "Aún no hay dispositivos.",
+  "selected": "{{count}} seleccionados",
+  "remove": "Quitar",
+  "removeTitle_one": "¿Quitar {{count}} dispositivo?",
+  "removeTitle_many": "¿Quitar {{count}} de dispositivos?",
+  "removeTitle_other": "¿Quitar {{count}} dispositivos?",
+  "removeDescription": "Los dispositivos quitados dejan de aparecer en esta lista. Si ese navegador sigue activo, puede volver a registrarse la próxima vez que sincronice, así que no es permanente para un dispositivo en uso.",
+  "cancel": "Cancelar",
+  "selectDevice": "Seleccionar {{name}}",
+  "nameInput": "Nombre de este dispositivo",
+  "save": "Guardar",
+  "thisDevice": "(este dispositivo)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Renombrar este dispositivo",
+  "noTabs": "Sin pestañas.",
+  "restoreTabs_one": "Restaurar {{count}} pestaña",
+  "restoreTabs_many": "Restaurar {{count}} de pestañas",
+  "restoreTabs_other": "Restaurar {{count}} pestañas",
+  "open": "Abrir"
+}

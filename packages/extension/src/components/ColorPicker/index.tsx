@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, forwardRef, type ButtonHTMLAttributes } from 'react';
+import { useTranslation } from 'react-i18next';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
 import { PRESET_COLORS } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -113,6 +114,7 @@ SwatchButton.displayName = 'SwatchButton';
  * is seeded from `value` once per open.
  */
 export function ColorPicker({ value, onChange, onCancel, onPreview }: ColorPickerProps) {
+  const { t } = useTranslation();
   // Single source of truth for the in-progress edit, in the project's rgba() format —
   // the picker, swatches and hex field all read/write this (always opaque).
   const [draftRgba, setDraftRgba] = useState(value);
@@ -233,19 +235,19 @@ export function ColorPicker({ value, onChange, onCancel, onPreview }: ColorPicke
             if (e.key === 'Enter') handleApply();
           }}
           spellCheck={false}
-          aria-label="Hex colour"
+          aria-label={t('colorPicker.hex')}
           className="h-6 flex-1 min-w-0 border border-border bg-transparent px-1.5 text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-ring"
-          title="Enter hex colour (#rrggbb)"
-          placeholder="#rrggbb"
+          title={t('colorPicker.hexTitle')}
+          placeholder={t('colorPicker.hexPlaceholder')}
         />
       </div>
 
       <div className="flex justify-end gap-1.5">
         <Button type="button" size="sm" variant="outline" onClick={handleCancel}>
-          Cancel
+          {t('colorPicker.cancel')}
         </Button>
         <Button type="button" size="sm" onClick={handleApply} data-tour={TOUR_ANCHORS.colorApply}>
-          Apply
+          {t('colorPicker.apply')}
         </Button>
       </div>
     </div>

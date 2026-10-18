@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Error 404 · Página no encontrada",
+    "title": "Esta pestaña se perdió",
+    "description": "Buscamos en todos los grupos y no encontramos esta página. Puede que se haya movido, cerrado o que nunca haya existido. Te ayudamos a volver al camino.",
+    "documentTitle": "Página no encontrada",
+    "tabLabel": "Página perdida"
+  },
+  "serverError": {
+    "eyebrow": "Error 500 · Algo salió mal",
+    "title": "Esta pestaña se colgó",
+    "description": "Algo falló de nuestro lado al cargar esta página. Tus pestañas y grupos en la extensión no se ven afectados. Inténtalo de nuevo en un momento.",
+    "documentTitle": "Algo salió mal",
+    "tabLabel": "No responde"
+  },
+  "links": {
+    "features": "Funciones",
+    "pricing": "Precios",
+    "faq": "Preguntas frecuentes",
+    "dashboard": "Panel",
+    "account": "Cuenta",
+    "contactSupport": "Contactar con soporte"
+  },
+  "helpfulLinks": "Enlaces útiles",
+  "tryThese": "O prueba una de estas opciones",
+  "illustrationTabResearch": "Investigación",
+  "illustrationTabDocs": "Documentos",
+  "tryAgain": "Reintentar",
+  "backToHome": "Volver al inicio",
+  "backToDashboard": "Volver al panel",
+  "devDetails": "Detalles del error (solo desarrollo)",
+  "referenceId": "ID de referencia",
+  "copyReferenceId": "Copiar ID de referencia",
+  "referenceIdHint": "Indica este ID si contactas con soporte, para que podamos encontrar qué falló.",
+  "referenceIdCopied": "ID de referencia copiado",
+  "referenceIdCopyFailed": "No se pudo copiar. Selecciona el ID para copiarlo.",
+  "titleWithBrand": "{title} | TabMerger"
+}

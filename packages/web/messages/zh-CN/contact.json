@@ -1,0 +1,32 @@
+{
+  "metaTitle": "联系我们",
+  "metaDescription": "联系 TabMerger 团队：报告问题、咨询账单或账户事宜，或分享反馈和想法。",
+  "eyebrow": "支持",
+  "title": "联系我们",
+  "lead": "有问题、发现了错误，或需要订阅方面的帮助？我们通常会在一个工作日内回复。",
+  "bugReport": "要报告错误？请<link>提交 GitHub issue</link>，以便更快跟进和公开追踪。",
+  "preferEmail": "更喜欢邮件？请发送至 <email>{address}</email>。",
+  "sentTitle": "消息已发送",
+  "sentBody": "我们会尽快回复您。",
+  "email": "邮箱",
+  "emailPlaceholder": "you@example.com",
+  "subject": "主题",
+  "subjectPlaceholder": "请选择原因…",
+  "subjects": {
+    "bug": "错误报告",
+    "betaBug": "测试版错误报告",
+    "feedback": "反馈与建议",
+    "billing": "账单问题",
+    "feature": "功能请求",
+    "account": "账户帮助",
+    "other": "其他"
+  },
+  "otherSubject": "请说明",
+  "otherSubjectPlaceholder": "想咨询什么？",
+  "message": "消息",
+  "messagePlaceholder": "请尽量详细地描述您的问题。",
+  "rateLimited": "发送的消息过多，请稍后再试。",
+  "failed": "出错了。请重试，或发送邮件至 <email>{address}</email>。",
+  "sending": "发送中…",
+  "send": "发送消息"
+}

@@ -1,0 +1,13 @@
+{
+  "success": "Erledigt – die Website kann TabMerger jetzt finden. Du kannst diesen Tab schließen.",
+  "refused": "Firefox hat es nicht erlaubt. Versuche es erneut oder erlaube es später in about:addons.",
+  "title": "Der TabMerger-Website erlauben, TabMerger zu finden",
+  "checking": "Website-Zugriff wird geprüft …",
+  "explainer": "Firefox hat TabMerger auf {{hosts}} noch nicht erlaubt. Ohne diese Erlaubnis kann die Website TabMerger nicht erkennen, deine Anmeldung nicht weitergeben und keine Synchronisierung starten. Klicke auf die Schaltfläche unten und bestätige dann in der Abfrage von Firefox.",
+  "allowOn": "TabMerger auf {{hosts}} erlauben",
+  "bannerLabel": "Website-Zugriff",
+  "bannerText": "Erlaube TabMerger auf {{hosts}}, damit die Website es finden und deine Anmeldung weitergeben kann.",
+  "allow": "Erlauben",
+  "dismiss": "Abfrage zum Website-Zugriff ausblenden",
+  "openFailed": "Der Tab für den Website-Zugriff konnte nicht geöffnet werden. Versuche es erneut oder erlaube es in about:addons."
+}

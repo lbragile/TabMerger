@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Der Sync-Server ist nicht erreichbar. Versuche es erneut.",
+    "accountMismatch": "Dieses Gerät enthält noch Daten eines anderen Kontos. Öffne die Erweiterung, um das Konto zu wechseln.",
+    "identityChanged": "Die Erweiterung wurde während der Synchronisierung abgemeldet. Melde dich an und versuche es erneut.",
+    "keyCheckFailed": "Der Verschlüsselungsstatus konnte nicht geprüft werden. Versuche es erneut.",
+    "setupUnfinished": "Öffne die Erweiterung, um die Verschlüsselung einzurichten.",
+    "locked": "Öffne die Erweiterung und entsperre die Verschlüsselung, um zu synchronisieren."
+  },
+  "menu": {
+    "saveTo": "In TabMerger speichern",
+    "scopeCurrent": "Diesen Tab speichern",
+    "scopeLeft": "Tabs links davon speichern",
+    "scopeRight": "Tabs rechts davon speichern",
+    "scopeExcluding": "Alle anderen Tabs speichern",
+    "noGroups": "Noch keine gespeicherten Gruppen",
+    "groupItem": "{{color}} {{name}} ({{windows}}F · {{tabs}}T)"
+  },
+  "reminder": {
+    "title": "TabMerger-Erinnerung"
+  }
+}

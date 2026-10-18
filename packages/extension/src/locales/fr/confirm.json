@@ -1,0 +1,89 @@
+{
+  "deleteGroup": {
+    "title": "Supprimer le groupe",
+    "description": "Voulez-vous vraiment supprimer « {{name}} » ? Cette action est irréversible.",
+    "confirm": "Supprimer"
+  },
+  "closeWindow": {
+    "title": "Fermer la fenêtre",
+    "description": "Voulez-vous vraiment fermer cette fenêtre et tous ses onglets ?",
+    "confirm": "Fermer"
+  },
+  "removeWindow": {
+    "title": "Supprimer la fenêtre",
+    "description": "Voulez-vous vraiment supprimer cette fenêtre et tous ses onglets ?",
+    "confirm": "Supprimer"
+  },
+  "closeTab": {
+    "title": "Fermer l’onglet",
+    "description": "Voulez-vous vraiment fermer cet onglet ?",
+    "confirm": "Fermer"
+  },
+  "removeTab": {
+    "title": "Supprimer l’onglet",
+    "description": "Voulez-vous vraiment supprimer cet onglet ?",
+    "confirm": "Supprimer"
+  },
+  "closeSelection": {
+    "title": "Fermer la sélection",
+    "confirm": "Fermer",
+    "description_tab_one": "Voulez-vous vraiment fermer {{count}} onglet ? Cette action est irréversible.",
+    "description_tab_many": "Voulez-vous vraiment fermer {{count}} d’onglets ? Cette action est irréversible.",
+    "description_tab_other": "Voulez-vous vraiment fermer {{count}} onglets ? Cette action est irréversible.",
+    "description_window_one": "Voulez-vous vraiment fermer {{count}} fenêtre ? Cette action est irréversible.",
+    "description_window_many": "Voulez-vous vraiment fermer {{count}} de fenêtres ? Cette action est irréversible.",
+    "description_window_other": "Voulez-vous vraiment fermer {{count}} fenêtres ? Cette action est irréversible.",
+    "description_group_one": "Voulez-vous vraiment fermer {{count}} groupe ? Cette action est irréversible.",
+    "description_group_many": "Voulez-vous vraiment fermer {{count}} de groupes ? Cette action est irréversible.",
+    "description_group_other": "Voulez-vous vraiment fermer {{count}} groupes ? Cette action est irréversible."
+  },
+  "deleteSelection": {
+    "title": "Supprimer la sélection",
+    "confirm": "Supprimer",
+    "description_tab_one": "Voulez-vous vraiment supprimer {{count}} onglet ? Cette action est irréversible.",
+    "description_tab_many": "Voulez-vous vraiment supprimer {{count}} d’onglets ? Cette action est irréversible.",
+    "description_tab_other": "Voulez-vous vraiment supprimer {{count}} onglets ? Cette action est irréversible.",
+    "description_window_one": "Voulez-vous vraiment supprimer {{count}} fenêtre ? Cette action est irréversible.",
+    "description_window_many": "Voulez-vous vraiment supprimer {{count}} de fenêtres ? Cette action est irréversible.",
+    "description_window_other": "Voulez-vous vraiment supprimer {{count}} fenêtres ? Cette action est irréversible.",
+    "description_group_one": "Voulez-vous vraiment supprimer {{count}} groupe ? Cette action est irréversible.",
+    "description_group_many": "Voulez-vous vraiment supprimer {{count}} de groupes ? Cette action est irréversible.",
+    "description_group_other": "Voulez-vous vraiment supprimer {{count}} groupes ? Cette action est irréversible."
+  },
+  "removeStaleTabs": {
+    "title": "Supprimer les onglets périmés",
+    "confirm": "Supprimer",
+    "description_one": "Voulez-vous vraiment supprimer {{count}} onglet périmé ? Cette action est irréversible.",
+    "description_many": "Voulez-vous vraiment supprimer {{count}} d’onglets périmés ? Cette action est irréversible.",
+    "description_other": "Voulez-vous vraiment supprimer {{count}} onglets périmés ? Cette action est irréversible."
+  },
+  "closeAllWindows": {
+    "title": "Fermer toutes les fenêtres",
+    "description": "Voulez-vous vraiment fermer toutes les fenêtres du navigateur et leurs onglets ?",
+    "confirm": "Tout fermer"
+  },
+  "removeAllWindows": {
+    "title": "Supprimer toutes les fenêtres",
+    "description": "Voulez-vous vraiment supprimer toutes les fenêtres et leurs onglets de ce groupe ? Cette action est irréversible.",
+    "confirm": "Tout supprimer"
+  },
+  "archiveStaleGroups": {
+    "title": "Archiver les groupes périmés",
+    "confirm": "Archiver",
+    "description_one": "Voulez-vous vraiment archiver {{count}} groupe périmé ?",
+    "description_many": "Voulez-vous vraiment archiver {{count}} de groupes périmés ?",
+    "description_other": "Voulez-vous vraiment archiver {{count}} groupes périmés ?"
+  },
+  "clearAllData": {
+    "title": "Effacer toutes les données",
+    "confirm": "Tout effacer",
+    "description": "Cela supprimera définitivement tous les groupes, sessions enregistrées et paramètres. Cette action est irréversible.",
+    "description_kept": "Cela supprimera définitivement tous les groupes, sessions enregistrées et paramètres. Cette action est irréversible. Les sauvegardes automatiques stockées dans votre compte sont conservées, et vous pouvez les récupérer depuis Paramètres → Données."
+  },
+  "resetEncryption": {
+    "title": "Réinitialiser la phrase secrète de chiffrement",
+    "confirm": "Réinitialiser la phrase secrète",
+    "description": "Cette action est irréversible. Tous les groupes, sessions et notes synchronisés chiffrés avec votre phrase secrète actuelle deviendront définitivement inaccessibles. Vous définirez une nouvelle phrase secrète et repartirez de zéro pour la synchronisation."
+  },
+  "cancel": "Annuler"
+}

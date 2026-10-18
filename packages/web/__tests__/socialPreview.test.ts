@@ -14,7 +14,8 @@ const appDir = join(__dirname, '..', 'app')
 
 describe('social preview image', () => {
   it('root metadata sets an absolute metadataBase', async () => {
-    const { metadata } = await import('@/app/layout')
+    const { generateMetadata } = await import('@/app/layout')
+    const metadata = await generateMetadata()
     expect(metadata.metadataBase).toBeInstanceOf(URL)
     expect(metadata.twitter).toMatchObject({ card: 'summary_large_image' })
   })
@@ -25,8 +26,9 @@ describe('social preview image', () => {
   })
 
   it('beta page names the social image itself, since its own openGraph/twitter replace the root ones', async () => {
-    const mod = await import('@/app/(marketing)/beta/page')
-    expect(mod.metadata.openGraph).toMatchObject({ url: '/beta', images: [expect.objectContaining({ url: '/opengraph-image.png' })] })
-    expect(mod.metadata.twitter).toMatchObject({ images: [expect.objectContaining({ url: '/twitter-image.png' })] })
+    const mod = await import('@/app/[locale]/(marketing)/beta/page')
+    const metadata = await mod.generateMetadata()
+    expect(metadata.openGraph).toMatchObject({ url: '/beta', images: [expect.objectContaining({ url: '/opengraph-image.png' })] })
+    expect(metadata.twitter).toMatchObject({ images: [expect.objectContaining({ url: '/twitter-image.png' })] })
   })
 })

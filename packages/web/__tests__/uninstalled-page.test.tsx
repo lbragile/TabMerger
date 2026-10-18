@@ -13,7 +13,7 @@ import {
   UNINSTALL_SURVEY_LIMITS,
   UNINSTALL_SURVEY_REASONS,
 } from '@tabmerger/shared'
-import UninstalledPage, { metadata } from '@/app/(marketing)/uninstalled/page'
+import UninstalledPage, { generateMetadata } from '@/app/[locale]/(marketing)/uninstalled/page'
 
 type Query = Record<string, string | string[] | undefined>
 
@@ -40,7 +40,8 @@ afterEach(() => {
 })
 
 describe('/uninstalled page', () => {
-  it('is never indexed', () => {
+  it('is never indexed', async () => {
+    const metadata = await generateMetadata()
     expect(metadata.robots).toEqual({ index: false, follow: false })
   })
 

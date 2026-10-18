@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "eyebrow": "Administrador de pestañas para quienes tienen demasiadas",
+    "title": "Deja de ahogarte en pestañas.",
+    "lead": "TabMerger convierte cada ventana abierta en grupos con nombre y color que puedes buscar, compartir y restaurar, en cualquier equipo y con un clic.",
+    "installChrome": "Instalar en Chrome: gratis",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Plan gratuito, sin cuenta."
+  },
+  "install": {
+    "title": "¿Listo para organizar tu navegador?",
+    "lead": "Instala TabMerger en segundos. No necesitas cuenta para empezar.",
+    "addToChrome": "Agregar a Chrome",
+    "addToFirefox": "Agregar a Firefox",
+    "addToEdge": "Agregar a Edge",
+    "viewPricing": "Ver precios",
+    "note": "Instalación gratuita, sin cuenta · Compatibilidad con Edge próximamente"
+  },
+  "finalCta": {
+    "title": "Deja de ahogarte en pestañas.",
+    "leadAi": "Empieza gratis, sin cuenta. Mejora cuando quieras para tener sincronización en la nube e IA.",
+    "leadNoAi": "Empieza gratis, sin cuenta. Mejora cuando quieras para tener sincronización en la nube; funciones de IA próximamente.",
+    "installChrome": "Instalar en Chrome: gratis",
+    "faq": "¿Tienes preguntas? Mira las preguntas frecuentes →"
+  },
+  "features": {
+    "title": "Hecho para cuando tienes noventa pestañas abiertas.",
+    "seeAll": "Ver todas las funciones",
+    "ai": {
+      "title": "La IA archiva el desorden por ti",
+      "description": "Un clic agrupa tus pestañas abiertas por tema y pone nombre a cada grupo. Acepta, renombra o ignora.",
+      "summary": "✦ 24 pestañas → 3 grupos",
+      "groupEvals": "Evaluaciones LLM · 9",
+      "groupHiring": "Contratación · 7",
+      "groupDocs": "Documentos · 8"
+    },
+    "sessions": {
+      "title": "Cierra todo, no pierdas nada",
+      "description": "Guarda una sesión con nombre y restaura mañana por la mañana las mismas ventanas y el mismo orden.",
+      "sessionName": "Investigación matutina",
+      "sessionStats": "3 grupos · 5 ventanas · 24 pestañas"
+    },
+    "sync": {
+      "title": "Las mismas pestañas en cada equipo",
+      "description": "La sincronización es automática y por pestaña, así que un cambio en la laptop nunca pisa lo que hiciste en el escritorio.",
+      "status": "Sincronizado hace 4 minutos · 3 dispositivos"
+    }
+  },
+  "pricing": {
+    "title": "Precios simples y transparentes",
+    "seeFull": "Ver todos los precios",
+    "cancelNote": "Cancela cuando quieras desde tu cuenta: sin compromisos ni preguntas.",
+    "blurbFree": "Para usuarios ocasionales que lo prueban",
+    "blurbPro": "Para quienes quieren funciones premium adicionales",
+    "blurbProAi": "Para usuarios avanzados que quieren funciones de IA"
+  }
+}

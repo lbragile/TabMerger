@@ -1,0 +1,14 @@
+{
+  "review": "Review",
+  "archive": "Archive",
+  "dismiss": "Dismiss",
+  "getMore": "Get more",
+  "removeStale": "Remove stale",
+  "staleTabs": "{{count}} tabs were saved over {{days}} days ago.",
+  "staleRemoved_one": "Removed {{count}} stale tab",
+  "staleRemoved_other": "Removed {{count}} stale tabs",
+  "upgrade": "Upgrade",
+  "paymentIssue": "Payment issue — update your card",
+  "planEnds": "Your Pro plan ends on {{date}}",
+  "approachingLimit": "You're approaching the free limit — upgrade to Pro for unlimited groups and tabs"
+}

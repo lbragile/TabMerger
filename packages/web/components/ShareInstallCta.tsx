@@ -1,15 +1,17 @@
+import { useTranslations } from 'next-intl'
 import { ChromeIcon } from '@/components/marketing/BrowserIcons'
 import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 
 export function ShareInstallCta() {
   // Server component: the links follow the deployment answering this request.
   const storeLinks = getStoreLinks()
+  const t = useTranslations('share')
 
   return (
     <div className="mt-8 rounded-2xl border border-dashed border-border2 p-5 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
       <div className="flex-1">
-        <p className="font-semibold text-[14.5px] mb-0.5">Open all your tabs at once</p>
-        <p className="text-[13px] text-text2">Install TabMerger and this collection becomes a group you can restore in a click.</p>
+        <p className="font-semibold text-[14.5px] mb-0.5">{t('ctaTitle')}</p>
+        <p className="text-[13px] text-text2">{t('ctaBody')}</p>
       </div>
       <a
         {...storeLinkProps(storeLinks.chrome)}
@@ -17,7 +19,7 @@ export function ShareInstallCta() {
         style={{ backgroundImage: 'var(--gradient-brand)' }}
       >
         <ChromeIcon size={16} />
-        Install free
+        {t('installFree')}
       </a>
     </div>
   )

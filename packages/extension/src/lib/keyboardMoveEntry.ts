@@ -1,7 +1,7 @@
 import type { MoveKind } from '@/lib/keyboardMove';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { announceDnd } from '@/lib/dndLiveRegion';
-import { plural } from '@/lib/dndAnnouncements';
+import { t } from '@/lib/i18n';
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useUIStore, type SelectedItem } from '@/stores/uiStore';
 
@@ -44,7 +44,7 @@ export function toggleSelectionOnCtrlSpace(e: React.KeyboardEvent, item: Selecte
   ui.enterSelectionMode();
   ui.toggleSelection(item);
   const now = useUIStore.getState().selectedItems;
-  const left = now.length === 0 ? 'nothing selected' : `${plural(now.length, now[0].type)} selected`;
-  announceDnd(`${was ? 'Deselected' : 'Selected'}. ${left}.`);
+  const left = now.length === 0 ? t('keyboardMove.nothingSelected') : t('selection.selected', { count: now.length, context: now[0].type });
+  announceDnd(t(was ? 'keyboardMove.deselected' : 'keyboardMove.selected', { left }));
   return true;
 }

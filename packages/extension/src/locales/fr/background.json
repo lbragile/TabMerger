@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Impossible de joindre le serveur de synchronisation. Réessayez.",
+    "accountMismatch": "Cet appareil contient encore les données d’un autre compte. Ouvrez l’extension pour changer de compte.",
+    "identityChanged": "L’extension a été déconnectée pendant la synchronisation. Connectez-vous et réessayez.",
+    "keyCheckFailed": "Impossible de vérifier l’état du chiffrement. Réessayez.",
+    "setupUnfinished": "Ouvrez l’extension pour terminer la configuration du chiffrement.",
+    "locked": "Ouvrez l’extension et déverrouillez le chiffrement pour synchroniser."
+  },
+  "menu": {
+    "saveTo": "Enregistrer dans TabMerger",
+    "scopeCurrent": "Enregistrer cet onglet",
+    "scopeLeft": "Enregistrer les onglets à gauche",
+    "scopeRight": "Enregistrer les onglets à droite",
+    "scopeExcluding": "Enregistrer tous les autres onglets",
+    "noGroups": "Aucun groupe enregistré",
+    "groupItem": "{{color}} {{name}} ({{windows}}f · {{tabs}}o)"
+  },
+  "reminder": {
+    "title": "Rappel TabMerger"
+  }
+}

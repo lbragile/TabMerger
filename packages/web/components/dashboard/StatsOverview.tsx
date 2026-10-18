@@ -1,3 +1,4 @@
+import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Layers, Globe, Clock, FileStack, Sparkles } from 'lucide-react'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
@@ -27,10 +28,13 @@ interface StatsOverviewProps {
 // per-tab memory to a web app. ~4.2MB/tab is a rough average from public browser-memory studies.
 const MB_PER_TAB = 4.2
 
-function formatMemory(tabCount: number) {
+/** "123 MB", "1.2 GB" in the active locale. */
+function formatMemory(format: ReturnType<typeof useFormatter>, tabCount: number) {
   const mb = tabCount * MB_PER_TAB
-  if (mb >= 1024) return `${(mb / 1024).toFixed(1)} GB`
-  return `${Math.round(mb)} MB`
+  if (mb >= 1024) {
+    return format.number(mb / 1024, { style: 'unit', unit: 'gigabyte', minimumFractionDigits: 1, maximumFractionDigits: 1 })
+  }
+  return format.number(Math.round(mb), { style: 'unit', unit: 'megabyte', maximumFractionDigits: 0 })
 }
 
 export function StatsOverview({
@@ -42,51 +46,60 @@ export function StatsOverview({
   aiUsage,
   showSyncStats = true,
 }: StatsOverviewProps) {
+  const t = useTranslations('dashboard.stats')
+  const format = useFormatter()
+  const locale = useLocale()
   const stats = [
     ...(showSyncStats
       ? [
           {
-            label: 'Tabs saved',
+            id: 'tabs',
+            label: t('tabs.label'),
             value: tabCount,
             icon: FileStack,
-            description: 'Tabs across all synced groups',
+            description: t('tabs.description'),
           },
           {
-            label: 'Groups synced',
+            id: 'groups',
+            label: t('groups.label'),
             value: groupCount,
             icon: Layers,
-            description: 'Groups synced in cloud',
+            description: t('groups.description'),
           },
           {
-            label: 'Sessions stored',
+            id: 'sessions',
+            label: t('sessions.label'),
             value: sessionStat?.value ?? sessionCount,
             icon: Clock,
-            description: sessionStat?.description ?? 'Browsing sessions stored',
+            description: sessionStat?.description ?? t('sessions.description'),
           },
           {
-            label: 'Memory reclaimed',
-            value: formatMemory(tabCount),
+            id: 'memory',
+            label: t('memory.label'),
+            value: formatMemory(format, tabCount),
             icon: Globe,
-            description: 'Estimated, not measured',
+            description: t('memory.description'),
           },
         ]
       : []),
     {
-      label: 'Member Since',
-      value: new Date(memberSince).toLocaleDateString('en-US', {
+      id: 'memberSince',
+      label: t('memberSince.label'),
+      value: new Date(memberSince).toLocaleDateString(locale, {
         month: 'short',
         year: 'numeric',
       }),
       icon: Globe,
-      description: 'Account created',
+      description: t('memberSince.description'),
     },
     ...(aiUsage
       ? [
           {
-            label: 'AI credits this month',
-            value: `${aiUsage.used}/${aiUsage.limit}`,
+            id: 'aiCredits',
+            label: t('aiCredits.label'),
+            value: t('aiCredits.value', { used: aiUsage.used, limit: aiUsage.limit }),
             icon: Sparkles,
-            description: 'Pro AI monthly usage',
+            description: t('aiCredits.description'),
           },
         ]
       : []),
@@ -104,7 +117,7 @@ export function StatsOverview({
       {stats.map((stat) => {
         const Icon = stat.icon
         return (
-          <Card key={stat.label}>
+          <Card key={stat.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>
               <Icon className="h-4 w-4 text-muted-foreground" />
@@ -113,7 +126,7 @@ export function StatsOverview({
               <div className="text-2xl font-bold">{stat.value}</div>
               <p className="text-xs text-muted-foreground">
                 {stat.description}
-                {stat.label === 'AI credits this month' && aiUsage && aiUsage.used >= aiUsage.limit && (
+                {stat.id === 'aiCredits' && aiUsage && aiUsage.used >= aiUsage.limit && (
                   <>
                     {' · '}
                     <BuyCreditsButton />

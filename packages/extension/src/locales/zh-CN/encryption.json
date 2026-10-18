@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger 无法连接服务器检查此账户的加密状态，因此同步已暂停。您的分组仍保存在此设备上。请检查网络连接后重试。",
+  "unlockBody": "输入加密密码短语以在此设备上解锁已同步的数据。每台设备只需操作一次，除非退出登录，否则不会再次询问。如果忘记密码短语，将无法恢复您的数据，它从不离开您的设备，TabMerger 也无法为您重置。",
+  "setupBody": "您同步的分组和标签页数据使用只有您知道的密码短语进行端到端加密。请现在设置一个。如果忘记，将无法恢复您的数据，它从不离开您的设备，TabMerger 也无法为您重置。",
+  "unavailableTitle": "暂时无法检查加密状态",
+  "tryAgain": "重试",
+  "unlockTitle": "解锁加密",
+  "passphrase": "密码短语",
+  "passphraseLabel": "加密密码短语",
+  "unlock": "解锁",
+  "setupTitle": "设置加密",
+  "newPassphrase": "新密码短语",
+  "confirmPassphrase": "确认密码短语",
+  "setupButton": "设置加密",
+  "error": {
+    "spaces": "密码短语不能包含空格",
+    "tooShort": "密码短语至少需要 8 个字符",
+    "mismatch": "两次输入的密码短语不一致",
+    "setupFailed": "设置加密失败",
+    "wrong": "密码短语错误",
+    "wasReset": "此账户的加密已被重置。请选择新的密码短语。"
+  },
+  "toast": {
+    "setUp": "加密已设置",
+    "unlocked": "加密已解锁"
+  }
+}

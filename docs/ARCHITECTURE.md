@@ -86,8 +86,8 @@ In CI there are no env files. `.github/workflows/publish.yml` sets each build's 
 
 **Routes:**
 
-- `app/(marketing)/` — landing, features, pricing, faq, changelog, contact, privacy, terms, the public share page `share/[slug]`, and `uninstalled` (the not-indexed survey the browser opens after the extension is removed).
-- `app/(app)/` — `dashboard`, `account`. `proxy.ts` redirects signed-out users to `/auth/sign-in`.
+- `app/[locale]/(marketing)/` — landing, features, pricing, faq, changelog, contact, privacy, terms, the public share page `share/[slug]`, and `uninstalled` (the not-indexed survey the browser opens after the extension is removed).
+- `app/[locale]/(app)/` — `dashboard`, `account`. `proxy.ts` redirects signed-out users to `/auth/sign-in`.
 - `app/auth/` — sign-in/sign-up pages. `app/api/auth/{callback,sign-out}`.
 - `app/api/`:
 

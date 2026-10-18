@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useLocationHash } from '@/lib/hooks/useLocationHash'
 
 /**
@@ -11,6 +12,7 @@ import { useLocationHash } from '@/lib/hooks/useLocationHash'
  */
 export function CopyShareUrl({ url }: { url: string }) {
   const [copied, setCopied] = useState(false)
+  const t = useTranslations('share')
   // The `url` prop is server-computed and can never include the `#key=` fragment — fragments
   // aren't sent over HTTP, so the server has no way to know it. Read it client-side instead,
   // otherwise this button silently strips the decryption key from an encrypted share link.
@@ -28,7 +30,7 @@ export function CopyShareUrl({ url }: { url: string }) {
       type="button"
       onClick={handleCopy}
       className="flex items-center gap-2 max-w-full h-8 px-2.5 rounded-md bg-surface2 border border-border text-[12.5px] text-text2 hover:text-text hover:border-border2 transition-colors"
-      aria-label="Copy share link"
+      aria-label={t('copyLink')}
     >
       <span className="truncate font-mono">{fullUrl}</span>
       {copied ? <Check className="h-3.5 w-3.5 shrink-0 text-primary" /> : <Copy className="h-3.5 w-3.5 shrink-0" />}

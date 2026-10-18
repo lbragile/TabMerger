@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,7 @@ interface ConfirmDialogProps {
  * `role="alertdialog"`: it interrupts and needs an answer, so a click outside does not dismiss it.
  */
 export function ConfirmDialog({ options, onResult, onClosed }: ConfirmDialogProps) {
+  const { t } = useTranslation();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
   // The texts stay on screen while the dialog animates out, after `options` became null.
@@ -82,7 +84,7 @@ export function ConfirmDialog({ options, onResult, onClosed }: ConfirmDialogProp
           </DialogHeader>
           <DialogFooter className="mt-4 gap-2 sm:space-x-0">
             <Button ref={cancelRef} variant="outline" onClick={() => onResult(false)}>
-              {shown.cancelLabel ?? 'Cancel'}
+              {shown.cancelLabel ?? t('modals.confirmDialog.cancel')}
             </Button>
             <Button ref={confirmRef} variant={shown.destructive ? 'destructive' : 'default'} onClick={() => onResult(true)}>
               {shown.confirmLabel}

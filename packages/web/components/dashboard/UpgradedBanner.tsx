@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
  */
 export function UpgradedBanner({ planName }: Props) {
   const [dismissed, setDismissed] = useState(false)
+  const t = useTranslations('dashboard.upgraded')
 
   function dismiss() {
     setDismissed(true)
@@ -33,14 +35,14 @@ export function UpgradedBanner({ planName }: Props) {
       className="flex items-start justify-between gap-3 rounded-lg border border-ok/30 bg-ok-soft p-4 text-sm text-ok"
     >
       <p>
-        Welcome to {planName}! Your subscription is now active. Enjoy your new features.
+        {t('message', { plan: planName })}
       </p>
       <Button
         variant="ghost"
         size="icon"
         className="-my-1 -mr-1 h-6 w-6 shrink-0 text-ok hover:bg-ok/10 hover:text-ok"
         onClick={dismiss}
-        aria-label="Dismiss"
+        aria-label={t('dismiss')}
       >
         <X className="h-4 w-4" />
       </Button>

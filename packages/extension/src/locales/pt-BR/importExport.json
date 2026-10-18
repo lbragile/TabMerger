@@ -1,0 +1,27 @@
+{
+  "title": "Importar / Exportar",
+  "description": "Gerencie seus dados do TabMerger",
+  "tabExport": "Exportar",
+  "tabImport": "Importar",
+  "exportIntro": "Exporte todos os seus grupos como um arquivo JSON. Você pode importá-lo de novo depois.",
+  "downloadJson": "Baixar JSON",
+  "jsonHeading": "JSON do TabMerger",
+  "jsonIntro": "Importe de um arquivo JSON exportado anteriormente. Substitui os grupos atuais.",
+  "chooseJson": "Escolher arquivo JSON",
+  "bookmarksHeading": "Favoritos do Chrome",
+  "bookmarksIntro": "Importe de uma exportação HTML de favoritos do Chrome. Cada pasta vira um grupo.",
+  "chooseBookmarks": "Escolher arquivo HTML de favoritos",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Importe de uma exportação em texto simples do OneTab. Cada bloco separado por linha em branco vira um grupo.",
+  "chooseOneTab": "Escolher arquivo TXT do OneTab",
+  "toast": {
+    "exported": "Grupos exportados com sucesso",
+    "imported": "Grupos importados com sucesso",
+    "imported_skipped": "Grupos importados com sucesso, {{skipped}} ignorados",
+    "importedCounts": "Importados: {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Importados: {{groups}}, {{tabs}}, {{skipped}} ignorados",
+    "invalidJson": "Arquivo JSON inválido",
+    "noBookmarks": "Nenhum favorito encontrado",
+    "noTabs": "Nenhuma aba encontrada"
+  }
+}

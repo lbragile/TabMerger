@@ -1,0 +1,23 @@
+{
+  "heading": "Das sagen andere",
+  "byStore": "Nach Store",
+  "loading": "Rezensionen werden geladen",
+  "averageRating": "Durchschnittsbewertung",
+  "averageRatingOn": "Durchschnittsbewertung bei {store}",
+  "ratingsOn": "{count, plural, one {Bewertung} other {Bewertungen}} bei {store}",
+  "ratingsAcross": "Bewertungen bei {stores}",
+  "ratingCount": "{count, plural, one {# Bewertung} other {# Bewertungen}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " von 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 Bewertungen",
+  "stars": "{score} von 5 Sternen",
+  "readFull": "Ganze Rezension lesen",
+  "readFullBy": " von {author} bei {store}",
+  "carousel": "Karussell",
+  "play": "Rezensionen abspielen",
+  "pause": "Rezensionen pausieren",
+  "previous": "Vorherige Rezension",
+  "next": "Nächste Rezension",
+  "skeletonRating": "0,00 / 5"
+}

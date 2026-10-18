@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from 'sonner';
 import { Header } from '@/components/Header';
@@ -33,6 +34,7 @@ import { Tour } from '@/components/Tour/Tour';
 import { SearchAnnouncer } from '@/components/SearchAnnouncer';
 
 function AppContent() {
+  const { t } = useTranslation();
   const { data: groupsState, isLoading } = useGroups();
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
   const searchFilter = useUIStore((s) => s.searchFilter);
@@ -158,7 +160,7 @@ function AppContent() {
               <WindowsPanel group={activeGroup} groupIndex={safeActiveIndex} allGroups={groupsState.available} />
             ) : (
               <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                No group selected
+                {t('common.noGroupSelected')}
               </div>
             )}
           </main>
@@ -175,6 +177,7 @@ function AppContent() {
 }
 
 export function App() {
+  const { t } = useTranslation();
   return (
     <TooltipProvider delayDuration={400}>
       <AppContent />
@@ -185,11 +188,13 @@ export function App() {
         position="bottom-right"
         richColors
         closeButton
+        containerAriaLabel={t('common.notifications')}
         // Square corners to match the popup's other surfaces. Sonner rounds toasts with
         // its own --border-radius variable (8px); inline so it wins over the stylesheet
         // sonner injects at runtime, whatever the load order.
         style={{ '--border-radius': '0px' } as React.CSSProperties}
         toastOptions={{
+          closeButtonAriaLabel: t('common.closeToast'),
           classNames: {
             actionButton: 'toast-action-btn'
           }

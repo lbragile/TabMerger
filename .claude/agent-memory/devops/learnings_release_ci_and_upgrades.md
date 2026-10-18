@@ -67,6 +67,7 @@ Do NOT use `typescript-eslint` (the convenience package) unless it's in direct d
 - Add the size check as steps in the existing `build-extension` job rather than a new job; saves a full runner spin-up and the build artifact is already there.
 - `rollup-plugin-visualizer` must be a devDependency in `packages/extension/package.json`. Gate it with `process.env.ANALYZE` in `wxt.config.ts` so it is never loaded in normal dev or CI builds.
 - WXT's `vite` config key is a function `() => ({...})` — plugins go inside the returned object, not as top-level wxt config.
+- The budget measures the uncompressed unpacked build, not the store zip. Decision (Oct 2026): raised from 2 MB to 3.5 MB when the seven UI languages were bundled (build went from ~1.64 MB to ~2.95 MB; each language catalog is ~70-90 KB and is bundled into both the popup chunk and `background.js`). Lazy-loading languages would not lower this number, since the chunks stay in the measured folder.
 
 ## Beta channel rollout (Sept 2026) — semantic-release dry-run trap confirmed real
 

@@ -23,7 +23,7 @@ const { mockGetEncryptionKeyState, mockSetupEncryption, mockUnlockEncryption } =
 
 vi.mock('@/lib/encryptionKey', () => ({
   getEncryptionKeyState: mockGetEncryptionKeyState,
-  ENCRYPTION_ALREADY_SET_UP_MESSAGE: 'Encryption is already set up for this account.',
+  encryptionAlreadySetUpMessage: () => 'Encryption is already set up for this account.',
   setupEncryption: mockSetupEncryption,
   unlockEncryption: mockUnlockEncryption,
 }))

@@ -1,0 +1,14 @@
+{
+  "metaTitle": "更新日志",
+  "metaDescription": "TabMerger 的新功能、改进和修复。",
+  "title": "更新日志",
+  "lead": "我们发布的全部内容，最新的在前。",
+  "githubRelease": "GitHub 发布版本",
+  "githubReleaseLabel": "GitHub 上的 {version} 版本",
+  "majorRelease": "重大版本",
+  "types": {
+    "New": "新增",
+    "Improved": "改进",
+    "Fixed": "修复"
+  }
+}

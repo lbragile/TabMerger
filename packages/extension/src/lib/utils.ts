@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { nanoid } from 'nanoid';
 import type { Group, Window, Tab } from './types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE, FIRST_GROUP_TITLE } from './types';
+import { t } from './i18n';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -93,7 +94,10 @@ export function getGroupTabCount(group: Group): number {
  * e.g. formatGroupCounts(1, 3) → "1 Window ◆ 3 Tabs"
  */
 export function formatGroupCounts(windowCount: number, tabCount: number): string {
-  return `${windowCount} ${pluralize(windowCount, 'Window')} ◆ ${tabCount} ${pluralize(tabCount, 'Tab')}`;
+  return t('common.groupCounts', {
+    windows: t('common.windowCountTitle', { count: windowCount }),
+    tabs: t('common.tabCountTitle', { count: tabCount }),
+  });
 }
 
 export function getGroupInfo(group: Group): string {
@@ -170,9 +174,6 @@ export function parseSearchQuery(query: string): { groupFilter: string; windowFi
   return { groupFilter, windowFilter, tagFilter, tabQuery: plainParts.filter(Boolean).join(' ') };
 }
 
-export function pluralize(amount: number, baseStr: string): string {
-  return amount === 1 ? baseStr : baseStr + 's';
-}
 
 export function relativeTimeStr(previous: number, current = Date.now()): string {
   const MS_PER_MINUTE = 60 * 1000;
@@ -183,10 +184,10 @@ export function relativeTimeStr(previous: number, current = Date.now()): string 
 
   const elapsed = current - previous;
 
-  if (elapsed < MS_PER_MINUTE) return '< 1 min';
-  if (elapsed < MS_PER_HOUR) return `${Math.round(elapsed / MS_PER_MINUTE)} ${pluralize(Math.round(elapsed / MS_PER_MINUTE), 'min')}`;
-  if (elapsed < MS_PER_DAY) return `${Math.round(elapsed / MS_PER_HOUR)} ${pluralize(Math.round(elapsed / MS_PER_HOUR), 'hour')}`;
-  if (elapsed < MS_PER_MONTH) return `${Math.round(elapsed / MS_PER_DAY)} ${pluralize(Math.round(elapsed / MS_PER_DAY), 'day')}`;
-  if (elapsed < MS_PER_YEAR) return `${Math.round(elapsed / MS_PER_MONTH)} ${pluralize(Math.round(elapsed / MS_PER_MONTH), 'month')}`;
-  return `${Math.round(elapsed / MS_PER_YEAR)} ${pluralize(Math.round(elapsed / MS_PER_YEAR), 'year')}`;
+  if (elapsed < MS_PER_MINUTE) return t('common.duration.lessThanMinute');
+  if (elapsed < MS_PER_HOUR) return t('common.duration.minutes', { count: Math.round(elapsed / MS_PER_MINUTE) });
+  if (elapsed < MS_PER_DAY) return t('common.duration.hours', { count: Math.round(elapsed / MS_PER_HOUR) });
+  if (elapsed < MS_PER_MONTH) return t('common.duration.days', { count: Math.round(elapsed / MS_PER_DAY) });
+  if (elapsed < MS_PER_YEAR) return t('common.duration.months', { count: Math.round(elapsed / MS_PER_MONTH) });
+  return t('common.duration.years', { count: Math.round(elapsed / MS_PER_YEAR) });
 }

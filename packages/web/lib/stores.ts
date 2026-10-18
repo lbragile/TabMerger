@@ -1,3 +1,5 @@
+import type { useTranslations } from 'next-intl'
+
 /**
  * The stores the extension is listed on, and what to call them. Plain values with no
  * dependencies, so client components can import them too (`lib/storeReviews.ts` cannot be:
@@ -23,8 +25,15 @@ export const STORE_BROWSER: Record<StoreId, string> = {
   edge: 'Edge',
 }
 
-/** "Chrome", "Chrome and Firefox", "Chrome, Firefox and Edge". */
-export function listNames(names: string[]): string {
+/** The `common.list*` messages `listNames` joins with (any translator for the `common` namespace). */
+export type ListTranslator = ReturnType<typeof useTranslations<'common'>>
+
+/**
+ * "Chrome", "Chrome and Firefox", "Chrome, Firefox and Edge" (no serial comma, in English), with
+ * the separator and conjunction from the catalog so each language joins its own way.
+ */
+export function listNames(names: string[], t: ListTranslator): string {
   if (names.length <= 1) return names.join('')
-  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
+  if (names.length === 2) return t('listTwo', { first: names[0], second: names[1] })
+  return t('listMany', { rest: names.slice(0, -1).join(t('listSeparator')), last: names[names.length - 1] })
 }

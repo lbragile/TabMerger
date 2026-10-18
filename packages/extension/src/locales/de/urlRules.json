@@ -1,0 +1,23 @@
+{
+  "title": "URL-Regeln",
+  "description": "Tabs per URL-Muster automatisch Gruppen zuweisen. Verwende <code>*</code> als Platzhalter (z. B. <code>github.com/*</code>). Die erste passende Regel gilt.",
+  "empty": "Noch keine Regeln.",
+  "deletedGroup": "(gelöschte Gruppe)",
+  "moveUp": "Regel nach oben",
+  "moveDown": "Regel nach unten",
+  "edit": "Regel bearbeiten",
+  "delete": "Regel löschen",
+  "used": "{{used}}/{{max}} genutzt",
+  "addRule": "Regel hinzufügen",
+  "discard": "Änderungen verwerfen",
+  "cancel": "Abbrechen",
+  "saveAll": "Alle Regeln speichern",
+  "save": "Speichern",
+  "editTitle": "URL-Regel bearbeiten",
+  "addTitle": "URL-Regel hinzufügen",
+  "patternPlaceholder": "Muster, z. B. github.com/*",
+  "groupPlaceholder": "Zielgruppe wählen …",
+  "toast": {
+    "limit": "Der kostenlose Tarif erlaubt bis zu {{max}} URL-Regeln."
+  }
+}

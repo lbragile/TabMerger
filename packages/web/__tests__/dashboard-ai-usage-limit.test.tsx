@@ -45,7 +45,7 @@ afterEach(() => vi.unstubAllEnvs())
 describe('DashboardPage — AI usage limit', () => {
   it('uses the base cap when the user has bought no credits', async () => {
     mockDashboard([])
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
     expect(screen.getByText('100/300')).toBeInTheDocument()
@@ -53,7 +53,7 @@ describe('DashboardPage — AI usage limit', () => {
 
   it('extends the displayed limit by purchased credit packs', async () => {
     mockDashboard([{ credits: 50 }, { credits: 50 }])
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
     expect(screen.getByText('100/400')).toBeInTheDocument()
@@ -62,7 +62,7 @@ describe('DashboardPage — AI usage limit', () => {
   it('hides the AI usage card entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
     mockDashboard([])
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
     expect(screen.queryByText(/^100\//)).not.toBeInTheDocument()

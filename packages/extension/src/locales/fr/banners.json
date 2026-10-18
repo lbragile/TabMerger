@@ -1,0 +1,15 @@
+{
+  "review": "Examiner",
+  "archive": "Archiver",
+  "dismiss": "Ignorer",
+  "getMore": "En obtenir plus",
+  "removeStale": "Supprimer les périmés",
+  "staleTabs": "{{count}} onglets ont été enregistrés il y a plus de {{days}} jours.",
+  "staleRemoved_one": "{{count}} onglet périmé supprimé",
+  "staleRemoved_many": "{{count}} d’onglets périmés supprimés",
+  "staleRemoved_other": "{{count}} onglets périmés supprimés",
+  "upgrade": "Passer à Pro",
+  "paymentIssue": "Problème de paiement : mettez à jour votre carte",
+  "planEnds": "Votre offre Pro se termine le {{date}}",
+  "approachingLimit": "Vous approchez de la limite gratuite : passez à Pro pour des groupes et onglets illimités"
+}

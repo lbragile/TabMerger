@@ -1,36 +1,40 @@
-import Link from 'next/link'
+import type { ReactNode } from 'react'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
 
-const leadFeatures = [
+type FeaturesT = ReturnType<typeof useTranslations<'home.features'>>
+
+const leadFeatures: {
+  number: string
+  key: 'ai' | 'sessions' | 'sync'
+  isAi?: boolean
+  illustration: (t: FeaturesT) => ReactNode
+}[] = [
   {
     number: '01',
-    title: 'AI files the mess for you',
+    key: 'ai',
     isAi: true,
-    description:
-      'One click clusters your open tabs by topic and names each group. Accept, rename, or ignore.',
-    illustration: (
+    illustration: (t) => (
       <div className="h-full rounded-md border border-border bg-surface p-3 flex flex-col gap-2">
         <div className="flex items-center gap-1.5 text-[12px] font-semibold text-primary">
-          ✦ 24 tabs → 3 groups
+          {t('ai.summary')}
         </div>
         <div className="flex gap-1.5 flex-wrap">
-          <span className="h-[22px] px-2 rounded-md bg-violet-soft text-violet text-[11px] font-medium grid place-items-center">LLM evals · 9</span>
-          <span className="h-[22px] px-2 rounded-md bg-secondary/20 text-[hsl(33_90%_28%)] dark:text-secondary text-[11px] font-medium grid place-items-center">Hiring · 7</span>
-          <span className="h-[22px] px-2 rounded-md bg-ok-soft text-ok text-[11px] font-medium grid place-items-center">Docs · 8</span>
+          <span className="h-[22px] px-2 rounded-md bg-violet-soft text-violet text-[11px] font-medium grid place-items-center">{t('ai.groupEvals')}</span>
+          <span className="h-[22px] px-2 rounded-md bg-secondary/20 text-[hsl(33_90%_28%)] dark:text-secondary text-[11px] font-medium grid place-items-center">{t('ai.groupHiring')}</span>
+          <span className="h-[22px] px-2 rounded-md bg-ok-soft text-ok text-[11px] font-medium grid place-items-center">{t('ai.groupDocs')}</span>
         </div>
       </div>
     ),
   },
   {
     number: '02',
-    title: 'Close everything, lose nothing',
-    description:
-      'Save a session by name and restore the exact windows and order tomorrow morning.',
-    illustration: (
+    key: 'sessions',
+    illustration: (t) => (
       <div className="h-full rounded-md border border-border bg-surface p-3">
-        <div className="text-[12.5px] font-semibold mb-0.5">Morning Research</div>
-        <div className="text-[11.5px] text-text3 mb-2">3 groups · 5 windows · 24 tabs</div>
+        <div className="text-[12.5px] font-semibold mb-0.5">{t('sessions.sessionName')}</div>
+        <div className="text-[11.5px] text-text3 mb-2">{t('sessions.sessionStats')}</div>
         <div className="flex overflow-hidden rounded-md">
           <div className="h-1 bg-violet" style={{ flex: 2 }} />
           <div className="h-1 bg-secondary" style={{ flex: 1 }} />
@@ -41,24 +45,24 @@ const leadFeatures = [
   },
   {
     number: '03',
-    title: 'The same tabs on every machine',
-    description:
-      'Sync is automatic and per-tab, so a laptop edit never clobbers what you did on the desktop.',
-    illustration: (
+    key: 'sync',
+    illustration: (t) => (
       <div className="h-full rounded-md border border-border bg-surface p-3 flex items-center gap-2.5">
         <span className="h-2 w-2 rounded-full bg-ok shrink-0" />
-        <span className="text-[12.5px]">Synced 4 minutes ago · 3 devices</span>
+        <span className="text-[12.5px]">{t('sync.status')}</span>
       </div>
     ),
   },
 ]
 
 export function Features() {
+  const t = useTranslations('home.features')
+  const common = useTranslations('common')
   return (
     <section className="py-16 sm:py-[72px] px-6 sm:px-11 border-b border-border">
       <div className="container max-w-[960px]">
         <h2 className="font-semibold tracking-tight max-w-[460px] mb-8 sm:mb-11 text-[28px] sm:text-[34px] leading-tight">
-          Built for the moment you have ninety tabs open.
+          {t('title')}
         </h2>
 
         <div className="flex flex-col">
@@ -70,16 +74,16 @@ export function Features() {
               <div className="font-mono text-[13px] font-medium text-primary">{f.number}</div>
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <h3 className="font-semibold text-[19px] tracking-tight">{f.title}</h3>
+                  <h3 className="font-semibold text-[19px] tracking-tight">{t(`${f.key}.title`)}</h3>
                   {f.isAi && !AI_ENABLED && (
                     <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-muted text-muted-foreground">
-                      {AI_COMING_SOON_LABEL}
+                      {common('comingSoon')}
                     </span>
                   )}
                 </div>
-                <p className="text-[14.5px] leading-relaxed text-text2">{f.description}</p>
+                <p className="text-[14.5px] leading-relaxed text-text2">{t(`${f.key}.description`)}</p>
               </div>
-              {f.illustration}
+              {f.illustration(t)}
             </div>
           ))}
         </div>
@@ -89,7 +93,7 @@ export function Features() {
             href="/features"
             className="inline-flex items-center gap-1.5 h-10 px-5 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors"
           >
-            See all features
+            {t('seeAll')}
             <span aria-hidden="true">→</span>
           </Link>
         </div>

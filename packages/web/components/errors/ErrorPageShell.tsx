@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { TriangleAlert } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { ErrorPageCopy, ErrorPageLink } from './copy'
+import { ERROR_CODES, type ErrorKind, type ErrorPageLink } from './copy'
 import { ShellGlows } from './ShellGlows'
 
 /**
@@ -10,13 +11,15 @@ import { ShellGlows } from './ShellGlows'
  * heading and copy, the caller's actions, and a row of helpful links, over soft glows that follow
  * the pointer.
  *
- * Presentational only (no hooks, no context), so the server-rendered 404, the client `error.tsx`
- * boundaries and the provider-less `global-error.tsx` can all render it.
+ * No async work and no context but the translations, so the server-rendered 404, the client
+ * `error.tsx` boundaries and `global-error.tsx` (which brings its own provider) can all render it.
  */
 export interface ErrorPageShellProps {
-  copy: ErrorPageCopy
-  /** `lost` (404): a tab has drifted out of the strip. `crashed` (500): the drifting tab shows a warning. */
-  variant: 'lost' | 'crashed'
+  /**
+   * `notFound` (404): a tab has drifted out of the strip. `serverError` (500): the drifting tab
+   * shows a warning. Picks the `errors.<kind>` messages.
+   */
+  kind: ErrorKind
   /** Buttons under the copy (Back to home, Try again). */
   actions: ReactNode
   links: ErrorPageLink[]
@@ -47,8 +50,7 @@ export function ShellBackdrop() {
 }
 
 export function ErrorPageShell({
-  copy,
-  variant,
+  kind,
   actions,
   links,
   children,
@@ -56,6 +58,7 @@ export function ErrorPageShell({
   plainLinks = false,
   className,
 }: ErrorPageShellProps) {
+  const t = useTranslations('errors')
   return (
     <Component
       className={cn(
@@ -66,16 +69,16 @@ export function ErrorPageShell({
       <ShellBackdrop />
 
       <div className="relative mx-auto flex w-full min-w-0 max-w-[36rem] flex-col items-center text-center">
-        <BrowserIllustration code={copy.code} variant={variant} />
+        <BrowserIllustration kind={kind} />
 
-        <p className="mt-10 text-xs font-semibold uppercase tracking-widest text-primary">{copy.eyebrow}</p>
+        <p className="mt-10 text-xs font-semibold uppercase tracking-widest text-primary">{t(`${kind}.eyebrow`)}</p>
         <h1
           className="mt-3 text-[2rem] font-bold leading-tight tracking-tight text-foreground sm:text-[2.75rem]"
           style={{ letterSpacing: '-0.02em' }}
         >
-          {copy.title}
+          {t(`${kind}.title`)}
         </h1>
-        <p className="mt-4 max-w-[40ch] text-base text-text2">{copy.description}</p>
+        <p className="mt-4 max-w-[40ch] text-base text-text2">{t(`${kind}.description`)}</p>
 
         <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
           {actions}
@@ -83,8 +86,8 @@ export function ErrorPageShell({
 
         {children}
 
-        <nav aria-label="Helpful links" className="mt-10 w-full border-t border-border pt-6">
-          <p className="mb-3 text-xs text-text3">Or try one of these</p>
+        <nav aria-label={t('helpfulLinks')} className="mt-10 w-full border-t border-border pt-6">
+          <p className="mb-3 text-xs text-text3">{t('tryThese')}</p>
           <ul className="flex flex-wrap justify-center gap-x-1 gap-y-2">
             {links.map((link) => (
               <li key={link.href}>
@@ -93,7 +96,7 @@ export function ErrorPageShell({
                   plain={plainLinks}
                   className="inline-flex h-8 items-center px-3 text-sm text-text2 transition-colors hover:bg-surface2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  {link.label}
+                  {t(`links.${link.label}`)}
                 </ShellLink>
               </li>
             ))}
@@ -131,7 +134,9 @@ export function ShellLink({
  * A small browser window: a tab strip with an empty slot where one tab used to be, and that tab
  * floating away above it. Purely decorative (the eyebrow states the status in words).
  */
-function BrowserIllustration({ code, variant }: { code: string; variant: 'lost' | 'crashed' }) {
+function BrowserIllustration({ kind }: { kind: ErrorKind }) {
+  const t = useTranslations('errors')
+  const lost = kind === 'notFound'
   return (
     <div aria-hidden="true" className="relative w-full max-w-[22rem] select-none" data-testid="error-illustration">
       {/* The tab that left the strip. `rotate-*` is the CSS `rotate` property in Tailwind v4, so
@@ -140,17 +145,17 @@ function BrowserIllustration({ code, variant }: { code: string; variant: 'lost' 
         <div
           className={cn(
             'flex h-8 items-center gap-1.5 border border-dashed bg-card px-2.5 text-[0.75rem] font-medium text-text2 shadow-sh2',
-            variant === 'lost' ? 'border-primary/70' : 'border-destructive/70'
+            lost ? 'border-primary/70' : 'border-destructive/70'
           )}
         >
-          {variant === 'lost' ? (
+          {lost ? (
             <span className="grid h-4 w-4 place-items-center bg-primary/15 text-[0.625rem] font-bold text-primary">
               ?
             </span>
           ) : (
             <TriangleAlert className="h-3.5 w-3.5 text-destructive" />
           )}
-          <span>{variant === 'lost' ? 'Missing page' : 'Not responding'}</span>
+          <span>{t(`${kind}.tabLabel`)}</span>
         </div>
       </div>
 
@@ -161,8 +166,8 @@ function BrowserIllustration({ code, variant }: { code: string; variant: 'lost' 
             <span className="h-2 w-2 rounded-full bg-border2" />
             <span className="h-2 w-2 rounded-full bg-border2" />
           </span>
-          <MiniTab label="Research" dotClassName="bg-primary" active />
-          <MiniTab label="Docs" dotClassName="bg-ok" />
+          <MiniTab label={t('illustrationTabResearch')} dotClassName="bg-primary" active />
+          <MiniTab label={t('illustrationTabDocs')} dotClassName="bg-ok" />
           {/* Where the drifting tab used to sit. */}
           <span className="h-7 w-14 shrink-0 border border-b-0 border-dashed border-border2 sm:w-16" />
         </div>
@@ -177,7 +182,7 @@ function BrowserIllustration({ code, variant }: { code: string; variant: 'lost' 
             className="bg-clip-text text-[5rem] font-bold leading-none tracking-tighter text-transparent sm:text-[6.5rem]"
             style={{ backgroundImage: 'var(--gradient-brand)' }}
           >
-            {code}
+            {ERROR_CODES[kind]}
           </span>
         </div>
       </div>

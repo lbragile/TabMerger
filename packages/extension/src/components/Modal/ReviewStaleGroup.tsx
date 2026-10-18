@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -21,6 +22,7 @@ function tabCountOf(group: Group) {
  * earlier single-group version now that the banner has one "Review" CTA for all stale
  * groups instead of a per-row button. */
 export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalProps) {
+  const { t } = useTranslation();
   const groups = data.groups as Group[]
   const onArchive = data.onArchive as (groupId: string) => void | Promise<void>
   const [expandedId, setExpandedId] = useState<string | null>(groups.length === 1 ? groups[0].id : null)
@@ -28,9 +30,9 @@ export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalPr
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Review stale groups</DialogTitle>
+        <DialogTitle>{t('modals.staleGroups.title')}</DialogTitle>
         <DialogDescription>
-          {groups.length} group{groups.length === 1 ? '' : 's'} untouched for a while — expand to preview, or archive directly.
+          {t('modals.staleGroups.description', { count: groups.length })}
         </DialogDescription>
       </DialogHeader>
 
@@ -49,14 +51,14 @@ export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalPr
                   >
                     <p className="text-xs font-medium truncate">{group.name}</p>
                     <p className="text-[10px] text-muted-foreground">
-                      {group.windows.length} window{group.windows.length === 1 ? '' : 's'} · {tabCount} tab{tabCount === 1 ? '' : 's'}
+                      {t('modals.staleGroups.counts', { windows: t('common.windowCount', { count: group.windows.length }), tabs: t('common.tabCount', { count: tabCount }) })}
                     </p>
                   </button>
                   <Button variant="outline" size="sm" className="text-xs shrink-0" onClick={() => setExpandedId(expanded ? null : group.id)}>
-                    {expanded ? 'Hide' : 'Preview'}
+                    {expanded ? t('modals.staleGroups.hide') : t('modals.staleGroups.preview')}
                   </Button>
                   <Button variant="destructive" size="sm" className="text-xs shrink-0" onClick={() => void onArchive(group.id)}>
-                    Archive
+                    {t('modals.staleGroups.archive')}
                   </Button>
                 </div>
                 {expanded && (
@@ -64,7 +66,7 @@ export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalPr
                     {group.windows.map((w, wi) => (
                       <div key={w.id ?? wi}>
                         <p className="text-[10px] font-medium text-muted-foreground px-1 mb-1">
-                          {w.name || `Window ${wi + 1}`}
+                          {w.name || t('window.numbered', { number: wi + 1 })}
                         </p>
                         <ul className="space-y-1">
                           {w.tabs.map((tab, ti) => (
@@ -82,7 +84,7 @@ export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalPr
                       </div>
                     ))}
                     {group.windows.length === 0 && (
-                      <p className="text-xs text-muted-foreground px-1">This group is empty.</p>
+                      <p className="text-xs text-muted-foreground px-1">{t('modals.staleGroups.empty')}</p>
                     )}
                   </div>
                 )}
@@ -94,7 +96,7 @@ export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalPr
 
       <div className="flex gap-2 mt-4">
         <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={onClose}>
-          Close
+          {t('modals.staleGroups.close')}
         </Button>
       </div>
     </>

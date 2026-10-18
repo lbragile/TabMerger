@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import ContactPage from '@/app/(marketing)/contact/page'
+import ContactPage from '@/app/[locale]/(marketing)/contact/page'
 
 describe('ContactPage', () => {
   beforeEach(() => {

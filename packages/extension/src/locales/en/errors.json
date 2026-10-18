@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Sync paused: allow in Firefox",
+  "conflictCopy": "{{names}} was also changed on another device. Your version was saved as a copy.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "A group you were working on changed or was removed elsewhere, so nothing was changed.",
+  "undoConflict": "Your groups changed elsewhere, so nothing was undone. Try again.",
+  "freeLimit": {
+    "maxGroups": "Free plan allows up to {{max}} groups.",
+    "maxTabs": "Free plan allows up to {{max}} tabs.",
+    "maxUrlRules": "Free plan allows up to {{max}} URL rules."
+  },
+  "fileContains": "This file contains {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Opened as a normal window because TabMerger isn't allowed in incognito. To change this, open Manage extension and turn on \"Allow in Incognito\".",
+  "encryptionAlreadySetUp": "Encryption is already set up for this account. Enter your existing passphrase to unlock it.",
+  "signInToEnableEncryption": "Must be signed in to enable encryption",
+  "signInToResetEncryption": "Must be signed in to reset encryption",
+  "googleUnavailable": "Google sign-in is unavailable in this environment",
+  "googleNoUrl": "Google sign-in did not return an authorization URL",
+  "googleCancelled": "Google sign-in was cancelled",
+  "googleNoSession": "Google sign-in did not return a session",
+  "googleFailed": "Google sign-in failed",
+  "expectedArray": "Expected an array",
+  "invalidFormat": "Invalid format",
+  "noGroupsFound": "No groups found",
+  "noGroupsSelected": "No groups selected",
+  "notAuthenticated": "Not authenticated",
+  "sharingRequiresPro": "Sharing requires a Pro upgrade — entitlement not met",
+  "aiOncePerDay": "Already used today — this AI action is limited to once per day",
+  "proAiRequired": "Pro AI plan required",
+  "nameGroupOff": "Name group is turned off in Settings",
+  "suggestSessionsOff": "Suggest sessions is turned off in Settings",
+  "organizeOff": "Organize is turned off in Settings"
+}

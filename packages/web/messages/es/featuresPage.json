@@ -1,0 +1,81 @@
+{
+  "metaTitle": "Funciones",
+  "metaDescription": "Descubre todo lo que TabMerger puede hacer: desde la agrupación inteligente de pestañas hasta la organización con IA.",
+  "title": "Funciones creadas para concentrarte",
+  "lead": "Todo lo que necesitas para controlar tu navegador: desde lo esencial gratuito hasta los superpoderes de la IA Pro.",
+  "addToChrome": "Agregar a Chrome: es gratis",
+  "seePricing": "Ver precios",
+  "badges": {
+    "core": "Básico",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Gestión de pestañas potente",
+    "description": "La base de TabMerger: una organización de pestañas rápida e intuitiva que se adapta a cualquier flujo de trabajo.",
+    "groups": {
+      "title": "Grupos con nombre y color",
+      "description": "Crea grupos con nombres y colores personalizados. Separa visualmente trabajo, investigación, ocio y más de un vistazo."
+    },
+    "search": {
+      "title": "Búsqueda de texto completo",
+      "description": "Busca al instante en los títulos y URL de todas tus pestañas. Los resultados coinciden con el texto tal como lo escribes (sin distinguir mayúsculas), con las mejores coincidencias primero."
+    },
+    "dnd": {
+      "title": "Reordenar arrastrando y soltando",
+      "description": "Reorganiza las pestañas dentro de los grupos y reordena los propios grupos con fluidas interacciones de arrastrar y soltar."
+    },
+    "shortcuts": {
+      "title": "Atajos de teclado",
+      "description": "Guarda la pestaña actual, las pestañas a su izquierda o derecha, o todas las demás sin abrir el popup. Dentro de él, abre la búsqueda con Ctrl/Cmd+K y mueve pestañas, ventanas y grupos solo con el teclado."
+    },
+    "importExport": {
+      "title": "Importar y exportar",
+      "description": "Exporta tus colecciones de pestañas como JSON para compartirlas con tu equipo o respaldar tu espacio de trabajo. Impórtalas en cualquier dispositivo."
+    },
+    "memory": {
+      "title": "Ahorro de memoria",
+      "description": "Suspende las pestañas inactivas para liberar RAM. Mira en tiempo real cuánta memoria te ahorra TabMerger."
+    }
+  },
+  "pro": {
+    "title": "Sincronización y sesiones",
+    "description": "Retoma exactamente donde lo dejaste, en cualquier dispositivo y en cualquier momento.",
+    "cloudSync": {
+      "title": "Sincronización en la nube",
+      "description": "Tus grupos se guardan y sincronizan automáticamente en todos los navegadores en los que inicies sesión. En tiempo real, sin exportar a mano."
+    },
+    "sessions": {
+      "title": "Guardar y restaurar sesiones",
+      "description": "Guarda una instantánea de tus grupos actuales como una sesión con nombre y restáurala al instante. Los planes gratuitos guardan hasta {count} sesiones en este navegador; Pro sincroniza sesiones ilimitadas en todos tus dispositivos."
+    },
+    "autoBackups": {
+      "title": "Copias de seguridad automáticas",
+      "description": "TabMerger guarda una instantánea cifrada de tus grupos según el horario que elijas, desde cada hora hasta una vez por semana. Se conservan las {count} más recientes y puedes recuperar cualquiera desde Ajustes. Tu panel también las lista, y ahí puedes ver el contenido de una o descargarla. También puedes guardar cada una como archivo en tu computadora; esa copia no está cifrada."
+    },
+    "support": {
+      "title": "Soporte prioritario",
+      "description": "Los suscriptores Pro reciben soporte prioritario con respuesta garantizada en 24 horas."
+    }
+  },
+  "proAi": {
+    "title": "Organización con IA",
+    "description": "Deja que Claude analice tus pestañas y haga sugerencias inteligentes para que te concentres en pensar, no en archivar.",
+    "autoGrouping": {
+      "title": "Agrupación automática",
+      "description": "Abre un montón de pestañas y haz clic en un botón. La IA las agrupa en grupos lógicos según tema, dominio e intención."
+    },
+    "names": {
+      "title": "Nombres de grupo inteligentes",
+      "description": "La IA sugiere nombres breves y descriptivos para tus grupos. Un clic para aceptar, o escribe el tuyo."
+    },
+    "summaries": {
+      "title": "Resúmenes de pestañas",
+      "description": "Pasa el cursor sobre cualquier pestaña para ver un resumen de una frase, generado por IA, de qué trata la página, sin abrirla."
+    },
+    "sessionSuggestions": {
+      "title": "Sugerencias de sesión",
+      "description": "La IA analiza tus patrones de navegación y sugiere cómo estructurar las sesiones para máxima productividad."
+    }
+  }
+}

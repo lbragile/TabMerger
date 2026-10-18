@@ -24,6 +24,9 @@ export default defineConfig({
     // while passing locally. Individual specs can still vi.stubEnv() a different value.
     env: {
       VITE_WEB_APP_URL: 'http://localhost:3000',
+      // Same reason: a developer's .env.local may list extra (http) origins, which the Firefox
+      // web-bridge sender check and web-bridge `matches` would then reject or include.
+      VITE_EXTRA_WEB_APP_URLS: '',
     },
     // ponytail: 'scripts/**' covers build-tooling tests (e.g. the semver->manifest-version
     // mapping in scripts/manifestVersion.ts) that intentionally live outside src/ — it's

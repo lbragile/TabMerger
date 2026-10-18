@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "たった今",
+    "minutesAgo": "{count}分前",
+    "hoursAgo": "{count}時間前",
+    "daysAgo": "{count}日前",
+    "renameFailed": "デバイス名を変更できませんでした",
+    "renamed": "デバイス名を変更しました",
+    "removeFailed": "デバイスを削除できませんでした",
+    "removed": "デバイスを削除しました",
+    "removeManyFailed": "デバイスを削除できませんでした",
+    "removedMany": "{count, plural, other {{count}台のデバイスを削除しました}}",
+    "empty": "デバイスはまだありません。",
+    "selectAll": "すべてのデバイスを選択",
+    "selectedCount": "{count}件を選択中",
+    "removeSelected": "{count, plural, other {{count}台のデバイスを削除}}",
+    "selectDevice": "{name}を選択",
+    "active": "最終アクティブ: {time}",
+    "snapshotCounts": " · {windows, plural, other {{windows}個のウィンドウ}} · {tabs, plural, other {{tabs}個のタブ}}",
+    "options": "デバイスのオプション",
+    "rename": "名前を変更",
+    "remove": "削除",
+    "removeTitle": "デバイスを削除しますか？",
+    "removeBody": "「{name}」ではタブデータが同期されなくなります。この操作は元に戻せません。",
+    "removeManyTitle": "{count}台のデバイスを削除しますか？",
+    "removeManyBody": "これらのデバイスではタブデータが同期されなくなります。この操作は元に戻せません。",
+    "cancel": "キャンセル"
+  },
+  "metaTitle": "アカウント",
+  "title": "アカウント設定",
+  "lead": "アカウントとサブスクリプションを管理します。",
+  "stats": {
+    "groups": "同期済みのグループ",
+    "tabs": "保存済みのタブ",
+    "sessions": "セッションとバックアップ",
+    "aiCredits": "AIクレジット残高"
+  },
+  "profile": {
+    "title": "プロフィール",
+    "description": "アカウント情報です。",
+    "email": "メールアドレス",
+    "memberSince": "登録日"
+  },
+  "signOutAll": {
+    "title": "すべてのデバイスからサインアウト",
+    "description": "有効なセッションをすべて無効にします。",
+    "button": "サインアウト"
+  },
+  "subscription": {
+    "title": "サブスクリプション",
+    "description": "プランと請求を管理します。",
+    "manageBilling": "請求を管理",
+    "upgrade": "アップグレード",
+    "cancelNote": "<strong>請求を管理</strong>からいつでも解約できます。現在の請求期間の終了まではご利用いただけます。"
+  },
+  "devicesCard": {
+    "title": "デバイス",
+    "description": "グループとタブを同期しているデバイスです。ProとPro AIのみ。"
+  },
+  "password": {
+    "tooShort": "パスワードは8文字以上にしてください。",
+    "updated": "パスワードを更新しました",
+    "set": "パスワードを設定しました。メールアドレスとパスワードでもサインインできます",
+    "change": "パスワードを変更",
+    "setLabel": "パスワードを設定",
+    "placeholder": "••••••••••",
+    "save": "保存"
+  },
+  "credits": {
+    "failed": "チェックアウトを開始できませんでした",
+    "getMore": "追加購入"
+  }
+}

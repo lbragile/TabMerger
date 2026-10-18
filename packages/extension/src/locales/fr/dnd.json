@@ -1,0 +1,81 @@
+{
+  "instructions": "Appuyez sur Espace pour saisir, sur les flèches pour choisir une place (Gauche et Droite passent des fenêtres aux groupes), sur Espace pour déposer, sur Échap pour annuler. Maj+Espace sélectionne une plage et {{modifier}}+A sélectionne tout, pour en déplacer plusieurs à la fois.",
+  "keys": {
+    "command": "Commande",
+    "control": "Contrôle"
+  },
+  "type": {
+    "tab": "onglet",
+    "window": "fenêtre",
+    "group": "groupe",
+    "item": "élément"
+  },
+  "typeStart": {
+    "tab": "Onglet",
+    "window": "Fenêtre",
+    "group": "Groupe",
+    "item": "Élément"
+  },
+  "untitledTab": "Onglet sans titre",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, à commencer par {{name}},",
+  "position": {
+    "tab": "position {{index}} sur {{total}} dans {{window}} du groupe {{group}}",
+    "window": "position {{index}} sur {{total}} dans le groupe {{group}}",
+    "group": "position {{index}} sur {{total}}"
+  },
+  "target": {
+    "newGroup": "un nouveau groupe",
+    "newWindowAtEnd": "une nouvelle fenêtre à la fin du groupe {{group}}",
+    "nowOpen": "Ouverts maintenant, qui les ouvre dans une nouvelle fenêtre du navigateur",
+    "groupAsWindow": "le groupe {{group}}, en nouvelle fenêtre"
+  },
+  "token": {
+    "dropped": "Déposé.",
+    "cancelled": "Annulé."
+  },
+  "bail": {
+    "cancelled": "Déplacement annulé.",
+    "nothingMoved": "Déposé ; rien n’a bougé.",
+    "returnedMany": "Les {{items}} sont revenus",
+    "returnedOne": "{{named}} est revenu",
+    "noop": "{{what}} redéposé à {{position}} ; rien n’a bougé.",
+    "stale": "Les groupes ont changé pendant le glissement, rien n’a donc été déplacé. {{returned}} à {{position}}.",
+    "cancelledReturned": "Déplacement annulé. {{returned}} à {{position}}.",
+    "rejected": "Dépôt impossible ici. {{returned}} à {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} a été supprimé ailleurs.",
+  "removedElsewhere_many": "{{count}} ont été supprimés ailleurs.",
+  "removedElsewhere_other": "{{count}} ont été supprimés ailleurs.",
+  "stillSelected_one": "Il est toujours sélectionné.",
+  "stillSelected_many": "Ils sont toujours sélectionnés.",
+  "stillSelected_other": "Ils sont toujours sélectionnés.",
+  "dropped": "Déposé.",
+  "movedGroups": "{{count}} groupes déplacés à {{position}}, en un seul bloc.",
+  "movedGroup": "Groupe {{name}} déplacé à {{position}}.",
+  "partial": "{{count}} sur {{total}}",
+  "at": "position {{index}} sur {{total}}",
+  "startingAt": "à partir de la position {{index}} sur {{total}}",
+  "whereTab": "{{window}} du groupe {{group}}, {{at}}",
+  "whereWindow": "groupe {{group}}, {{at}}",
+  "movedTo": "{{items}} déplacé(s) vers {{where}}.",
+  "openTabsClosed": " Les onglets ouverts sont fermés.",
+  "groupHidden": " Le groupe {{group}} n’est pas affiché.",
+  "openedNewWindow": "{{items}} ouvert(s) dans une nouvelle fenêtre du navigateur.",
+  "openedNowOpen": "{{items}} ouvert(s) dans Ouverts maintenant.",
+  "movedNewWindow": "{{items}} déplacé(s) vers une nouvelle fenêtre du navigateur.",
+  "movedWithinNowOpen": "{{items}} déplacé(s) dans Ouverts maintenant.",
+  "originalPosition": "Sur sa position d’origine.",
+  "pickedUpType": "{{type}} saisi.",
+  "pickedUpMany": "{{what}} saisi(s).",
+  "pickedUpOne": "{{type}} {{name}} saisi, {{position}}.",
+  "groupShown": "Le groupe {{name}} est maintenant affiché.",
+  "copyHint": "Déposer dans un groupe enregistré copie ; les onglets ouverts restent ouverts.",
+  "notOver": "Pas au-dessus d’une cible de dépôt.",
+  "over": "Au-dessus de {{target}}.",
+  "cantDropOn": "Dépôt impossible sur {{target}}.",
+  "typeDropped": "{{type}} déposé.",
+  "cancelledReturnedType": "Déplacement annulé ; {{type}} revenu à sa position.",
+  "saveFailed": "Impossible d’enregistrer le déplacement ; état restauré."
+}

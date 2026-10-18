@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n'
 import { nanoid } from 'nanoid'
 import { generateDataKey, encryptBlob, exportKeyToBase64, isTourDemoGroup } from '@tabmerger/shared'
 import type { Group } from './types'
@@ -22,18 +23,18 @@ export async function createSharedBundle(
   supabaseClient: any,
   entitlements?: Entitlement
 ): Promise<string> {
-  if (groupIds.length === 0) throw new Error('No groups selected')
+  if (groupIds.length === 0) throw new Error(t('errors.noGroupsSelected'))
 
   const { data: { session } } = await supabaseClient.auth.getSession()
-  if (!session) throw new Error('Not authenticated')
+  if (!session) throw new Error(t('errors.notAuthenticated'))
 
   if (entitlements && !entitlements.sharing) {
-    throw new Error('Sharing requires a Pro upgrade — entitlement not met')
+    throw new Error(t('errors.sharingRequiresPro'))
   }
 
   // The guided tour's practice groups are never shared, whatever was selected
   const selected = groups.filter((g) => groupIds.includes(g.id) && !isTourDemoGroup(g))
-  if (selected.length === 0) throw new Error('No groups selected')
+  if (selected.length === 0) throw new Error(t('errors.noGroupsSelected'))
 
   const dataKey = await generateDataKey()
   const encrypted = await encryptBlob(dataKey, selected)

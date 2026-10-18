@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import { useEffect, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -106,13 +107,13 @@ export function useAuth(): AuthState & {
     // ponytail: guard — some test environments replace globalThis.chrome wholesale
     // without a `runtime` key (same pattern as the chrome.storage guard above).
     if (!chrome?.runtime) {
-      throw new Error('Google sign-in is unavailable in this environment');
+      throw new Error(t('errors.googleUnavailable'));
     }
     const response = (await chrome.runtime.sendMessage({ type: 'SIGN_IN_WITH_GOOGLE' })) as
       | { ok: boolean; error?: string }
       | undefined;
     if (!response?.ok) {
-      throw new Error(response?.error ?? 'Google sign-in failed');
+      throw new Error(response?.error ?? t('errors.googleFailed'));
     }
   };
 

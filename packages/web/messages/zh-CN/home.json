@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "eyebrow": "为标签页太多的人打造的标签页管理器",
+    "title": "别再淹没在浏览器标签页里。",
+    "lead": "TabMerger 将所有打开的窗口整理成带名称、带颜色的分组，支持搜索、分享和恢复，在任何设备上一键完成。",
+    "installChrome": "安装 Chrome 版，免费",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "免费版，无需账户。"
+  },
+  "install": {
+    "title": "准备好整理浏览器了吗？",
+    "lead": "几秒钟即可安装 TabMerger，无需账户即可开始使用。",
+    "addToChrome": "添加到 Chrome",
+    "addToFirefox": "添加到 Firefox",
+    "addToEdge": "添加到 Edge",
+    "viewPricing": "查看定价",
+    "note": "免费安装，无需账户 · Edge 支持即将推出"
+  },
+  "finalCta": {
+    "title": "别再淹没在浏览器标签页里。",
+    "leadAi": "免费开始，无需账户。随时升级即可使用云同步和 AI。",
+    "leadNoAi": "免费开始，无需账户。随时升级即可使用云同步，AI 功能即将推出。",
+    "installChrome": "安装 Chrome 版，免费",
+    "faq": "有疑问？查看常见问题 →"
+  },
+  "features": {
+    "title": "为同时打开九十个标签页的时刻而生。",
+    "seeAll": "查看全部功能",
+    "ai": {
+      "title": "AI 替您归档整理",
+      "description": "一键按主题归类打开的标签页，并为每个分组命名。可采纳、重命名或忽略。",
+      "summary": "✦ 24 个标签页 → 3 个分组",
+      "groupEvals": "LLM 评测 · 9",
+      "groupHiring": "招聘 · 7",
+      "groupDocs": "文档 · 8"
+    },
+    "sessions": {
+      "title": "全部关闭，毫无损失",
+      "description": "按名称保存会话，明天早上即可原样恢复窗口和顺序。",
+      "sessionName": "晨间研究",
+      "sessionStats": "3 个分组 · 5 个窗口 · 24 个标签页"
+    },
+    "sync": {
+      "title": "每台设备上都是同样的标签页",
+      "description": "同步是自动的，并以标签页为单位，因此笔记本上的修改不会覆盖您在台式机上所做的更改。",
+      "status": "4 分钟前已同步 · 3 台设备"
+    }
+  },
+  "pricing": {
+    "title": "简单透明的定价",
+    "seeFull": "查看完整定价",
+    "cancelNote": "随时可在账户中取消，无捆绑，无需任何理由。",
+    "blurbFree": "适合想先试用的普通用户",
+    "blurbPro": "适合需要更多高级功能的用户",
+    "blurbProAi": "适合需要 AI 相关功能的高级用户"
+  }
+}

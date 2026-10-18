@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { toast } from '@/lib/toast';
 import { DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { useGroups } from '@/hooks/useGroups';
@@ -16,6 +17,7 @@ import { trackEvent } from '@/lib/analytics';
  * Reuses the same free-tier gate as SidePanel's "+" button (handleNewGroup).
  */
 export function CreateGroupMenuItem({ onCreated }: { onCreated: (groupIndex: number) => Promise<unknown> }) {
+  const { t } = useTranslation();
   const { data: groupsState } = useGroups();
   const { maxGroups } = useEntitlements();
   const openModal = useUIStore((s) => s.openModal);
@@ -24,8 +26,8 @@ export function CreateGroupMenuItem({ onCreated }: { onCreated: (groupIndex: num
     const activeCount = countedGroups(groupsState?.available ?? []).length;
     if (activeCount >= maxGroups) {
       trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
-      toast.error(`Free plan allows up to ${maxGroups} groups.`, {
-        action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+      toast.error(t('common.freeGroupLimit', { max: maxGroups }), {
+        action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
       });
       return;
     }
@@ -37,7 +39,7 @@ export function CreateGroupMenuItem({ onCreated }: { onCreated: (groupIndex: num
       <DropdownMenuSeparator />
       <DropdownMenuItem className="text-xs" onClick={handleClick}>
         <Plus className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-        Create new group…
+        {t('windows.createGroup')}
       </DropdownMenuItem>
     </>
   );

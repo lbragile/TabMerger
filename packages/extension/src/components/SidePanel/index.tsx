@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { formatTimeAgo } from '@/lib/i18n';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2, BookmarkPlus } from 'lucide-react';
@@ -20,7 +22,6 @@ import { isTourDemoGroup } from '@tabmerger/shared';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession, useSaveSession } from '@/hooks/useSessions';
 import { useConfirm } from '@/hooks/useConfirm';
-import { pluralize } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
@@ -64,6 +65,7 @@ function SidebarSection({
   tourAnchor?: string;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={className} data-tour={tourAnchor}>
       <div className="flex items-center gap-1 pr-1">
@@ -73,7 +75,7 @@ function SidebarSection({
           onClick={onToggle}
         >
           {open ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />}
-          <span className="truncate">{label} ({count})</span>
+          <span className="truncate">{t('sidePanel.sectionLabel', { label, count })}</span>
         </button>
         {action}
       </div>
@@ -88,14 +90,6 @@ function SidebarSection({
   );
 }
 
-// ponytail: no date-fns dep needed for this
-function timeAgo(ms: number): string {
-  const diff = Math.floor((Date.now() - ms) / 1000);
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
-}
 
 interface SidePanelProps {
   groupsState: GroupsState;
@@ -122,6 +116,7 @@ interface SidePanelProps {
  * own at-cap behaviour (warn + upgrade toast) is unchanged.
  */
 function NewGroupDropZone({ active }: { active: boolean }) {
+  const { t } = useTranslation();
   const { setNodeRef, isOver: pointerOver } = useDroppable({
     id: NEW_GROUP_ID,
     data: { type: 'new-group' },
@@ -144,12 +139,13 @@ function NewGroupDropZone({ active }: { active: boolean }) {
       )}
     >
       <Plus className="h-3.5 w-3.5 mr-1 shrink-0" />
-      Drop for a new group
+      {t('sidePanel.dropNewGroup')}
     </div>
   );
 }
 
 export function SidePanel({ groupsState }: SidePanelProps) {
+  const { t } = useTranslation();
   const { isDragging, gap, active } = useDndContext();
   const moveKind = useKeyboardMoveStore((s) => s.kind);
   const atNewGroupStop = useKeyboardMoveStore((s) => s.marker?.type === 'zone' && s.marker.zone === 'new-group');
@@ -181,14 +177,14 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       onSave: async (name: string, description?: string) => {
         try {
           await saveSession({ name, description, sessionCount: sessions.length, hasSessions, cloudSync });
-          toast.success('Session saved');
+          toast.success(t('sidePanel.toast.sessionSaved'));
         } catch (err) {
           if (err instanceof Error && err.message === 'SESSION_LIMIT') {
-            toast.error(`Free plan allows up to ${FREE_TIER_LIMITS.sessions} sessions.`, {
-              action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+            toast.error(t('sidePanel.toast.sessionLimit', { max: FREE_TIER_LIMITS.sessions }), {
+              action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
             });
           } else {
-            toast.error('Failed to save session');
+            toast.error(t('sidePanel.toast.sessionFailed'));
           }
         }
       }
@@ -249,10 +245,10 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const atGroupLimit = countedGroups(raw).length >= maxGroups;
   const warnGroupLimit = useCallback(() => {
     trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
-    toast.error(`Free plan allows up to ${maxGroups} groups.`, {
-      action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+    toast.error(t('common.freeGroupLimit', { max: maxGroups }), {
+      action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
     });
-  }, [maxGroups]);
+  }, [maxGroups, t]);
 
   // The "new group" drop zone takes tab AND window drags (a group is already a group),
   // and is hidden outright at the free-group cap (user decision, 2026-09-18).
@@ -291,7 +287,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     >
       {/* Groups list */}
       <ScrollArea className="flex-1">
-        <div className="py-1.5">
+        <div className="pb-1.5">
           {/* List wrapper: grows by the gap height while a group drag's gap is here. */}
           <div ref={groupListRef} onFocusCapture={keepFocus.onFocusCapture} onBlurCapture={keepFocus.onBlurCapture} data-tm-dnd-list="groups" data-tour={TOUR_ANCHORS.groups} style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
           <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>
@@ -336,7 +332,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                 disabled={selectionMode || isDragging || moveKind !== null}
               >
                 <Plus className="h-3.5 w-3.5 mr-1" />
-                Add Group
+                {t('sidePanel.addGroup')}
               </Button>
             </div>
           </div>
@@ -351,12 +347,12 @@ export function SidePanel({ groupsState }: SidePanelProps) {
         style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
       >
         <SidebarSection
-          label="ARCHIVED"
+          label={t('sidePanel.archived')}
           count={archivedGroups.length}
           open={archivedOpen}
           onToggle={() => setArchivedOpen((o) => !o)}
           isEmpty={archivedGroups.length === 0}
-          emptyLabel="No archived groups"
+          emptyLabel={t('sidePanel.noArchived')}
           className="mt-1.5"
           tourAnchor={TOUR_ANCHORS.archived}
         >
@@ -370,7 +366,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             >
               <div className="flex-1 min-w-0">
                 <span className="block truncate text-[11px] text-muted-foreground">{group.name}</span>
-                <span className="block text-[9px] text-muted-foreground/50">{timeAgo(group.updatedAt)}</span>
+                <span className="block text-[9px] text-muted-foreground/50">{formatTimeAgo(group.updatedAt)}</span>
               </div>
               <span
                 className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
@@ -386,12 +382,12 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                     type="button"
                     className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
                     onClick={() => restoreGroup(realIndex)}
-                    aria-label={`Restore ${group.name}`}
+                    aria-label={t('sidePanel.restoreNamed', { name: group.name })}
                   >
                     <RotateCcw className="h-3 w-3" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="top">Restore group</TooltipContent>
+                <TooltipContent side="top">{t('sidePanel.restoreGroup')}</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -399,24 +395,24 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                     type="button"
                     className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
                     onClick={() => deleteGroup(realIndex)}
-                    aria-label={`Delete ${group.name}`}
+                    aria-label={t('sidePanel.deleteNamed', { name: group.name })}
                   >
                     <Trash2 className="h-3 w-3" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="top">Delete group</TooltipContent>
+                <TooltipContent side="top">{t('sidePanel.deleteGroup')}</TooltipContent>
               </Tooltip>
             </div>
           ))}
         </SidebarSection>
 
         <SidebarSection
-          label="SESSIONS"
+          label={t('sidePanel.sessions')}
           count={sessions.length}
           open={sessionsOpen}
           onToggle={() => setSessionsOpen((o) => !o)}
           isEmpty={sessions.length === 0}
-          emptyLabel="No saved sessions"
+          emptyLabel={t('sidePanel.noSessions')}
           className="mt-1.5 mb-1.5"
           tourAnchor={TOUR_ANCHORS.sessions}
           action={
@@ -426,12 +422,12 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                   type="button"
                   className="shrink-0 text-muted-foreground hover:text-foreground transition-colors p-0.5"
                   onClick={handleSaveSession}
-                  aria-label="Save current session"
+                  aria-label={t('sidePanel.saveSession')}
                 >
                   <BookmarkPlus className="h-3.5 w-3.5" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="top">Save current session</TooltipContent>
+              <TooltipContent side="top">{t('sidePanel.saveSession')}</TooltipContent>
             </Tooltip>
           }
         >
@@ -453,7 +449,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                       {session.description}
                     </span>
                   )}
-                  <span className="block text-[9px] text-muted-foreground/50">{timeAgo(session.createdAt)}</span>
+                  <span className="block text-[9px] text-muted-foreground/50">{formatTimeAgo(session.createdAt)}</span>
                 </div>
                 <span
                   className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
@@ -471,13 +467,13 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                       type="button"
                       className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
                       disabled={restoring}
-                      aria-label={`Restore session: ${session.name}`}
+                      aria-label={t('sidePanel.restoreSessionNamed', { name: session.name })}
                       onClick={() => {
                         const name = session.name.length > 60 ? `${session.name.slice(0, 60)}…` : session.name;
                         void confirm({
-                          title: 'Restore this session?',
-                          description: `This will close all open windows and open the tabs saved in "${name}" instead.`,
-                          confirmLabel: 'Close all windows',
+                          title: t('sidePanel.restoreConfirmTitle'),
+                          description: t('sidePanel.restoreConfirmDescription', { name }),
+                          confirmLabel: t('sidePanel.restoreConfirmLabel'),
                           destructive: true
                         }).then((confirmed) => {
                           if (confirmed) restoreSession(session);
@@ -487,7 +483,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                       <RotateCcw className="h-3 w-3" />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="top">Restore session</TooltipContent>
+                  <TooltipContent side="top">{t('sidePanel.restoreSession')}</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -495,12 +491,12 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                       type="button"
                       className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
                       onClick={() => deleteSession(session.id)}
-                      aria-label={`Delete session ${session.name}`}
+                      aria-label={t('sidePanel.deleteSessionNamed', { name: session.name })}
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="top">Delete session</TooltipContent>
+                  <TooltipContent side="top">{t('sidePanel.deleteSession')}</TooltipContent>
                 </Tooltip>
               </div>
             );
@@ -521,9 +517,15 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           const tabCount = saved.reduce((acc, g) => acc + g.windows.reduce((a, w) => a + w.tabs.length, 0), 0);
           return (
             <p className="text-[10px] text-center text-muted-foreground">
-              {groupCount} {pluralize(groupCount, 'Group')} <span className="opacity-40">◆</span>{' '}
-              {winCount} {pluralize(winCount, 'Window')} <span className="opacity-40">◆</span>{' '}
-              {tabCount} {pluralize(tabCount, 'Tab')}
+              <Trans
+                i18nKey="sidePanel.stats"
+                values={{
+                  groups: t('common.groupCountTitle', { count: groupCount }),
+                  windows: t('common.windowCountTitle', { count: winCount }),
+                  tabs: t('common.tabCountTitle', { count: tabCount })
+                }}
+                components={{ sep: <span className="opacity-40" /> }}
+              />
             </p>
           );
         })()}

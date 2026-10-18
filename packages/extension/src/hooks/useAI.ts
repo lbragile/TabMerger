@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import { useMutation } from '@tanstack/react-query';
 import { trackEvent } from '@/lib/analytics';
 import type { Tab, Group } from '@/lib/types';
@@ -32,7 +33,7 @@ export class QuotaExceededError extends Error {
 async function enforceDailyThrottle(action: string, throttleEnabled: boolean) {
   if (!throttleEnabled) return;
   if (await wasCalledToday(action)) {
-    throw new Error('Already used today — this AI action is limited to once per day');
+    throw new Error(t('errors.aiOncePerDay'));
   }
   await markCalledToday(action);
 }
@@ -87,9 +88,9 @@ export function useAutoGroup() {
     // (subject to the existing server-side monthly quota only).
     mutationFn: async (tabs: Tab[]) => {
       if (!AI_ENABLED) throw new Error('AI features are coming soon');
-      if (!aiFeatures) throw new Error('Pro AI plan required');
+      if (!aiFeatures) throw new Error(t('errors.proAiRequired'));
       if (settings?.aiAutoGroupEnabled === false) throw new Error('Auto-group is turned off in Settings');
-      if (!session?.access_token) throw new Error('Not authenticated');
+      if (!session?.access_token) throw new Error(t('errors.notAuthenticated'));
       assertQuotaRemaining(remaining);
 
       return aiPost<{ groups: { name: string; color: string; tabIds: number[] }[] }>(
@@ -112,9 +113,9 @@ export function useNameGroup() {
     // ponytail: no daily throttle — manual, always run it.
     mutationFn: async (tabs: Tab[]) => {
       if (!AI_ENABLED) throw new Error('AI features are coming soon');
-      if (!aiFeatures) throw new Error('Pro AI plan required');
-      if (settings?.aiNameGroupEnabled === false) throw new Error('Name group is turned off in Settings');
-      if (!session?.access_token) throw new Error('Not authenticated');
+      if (!aiFeatures) throw new Error(t('errors.proAiRequired'));
+      if (settings?.aiNameGroupEnabled === false) throw new Error(t('errors.nameGroupOff'));
+      if (!session?.access_token) throw new Error(t('errors.notAuthenticated'));
       assertQuotaRemaining(remaining);
 
       return aiPost<{ name: string }>('/api/ai/name-group', { tabs }, session.access_token);
@@ -135,9 +136,9 @@ export function useSuggestSessions() {
     // exists to protect.
     mutationFn: async (recentGroups: Group[]) => {
       if (!AI_ENABLED) throw new Error('AI features are coming soon');
-      if (!aiFeatures) throw new Error('Pro AI plan required');
-      if (settings?.aiSuggestSessionsEnabled === false) throw new Error('Suggest sessions is turned off in Settings');
-      if (!session?.access_token) throw new Error('Not authenticated');
+      if (!aiFeatures) throw new Error(t('errors.proAiRequired'));
+      if (settings?.aiSuggestSessionsEnabled === false) throw new Error(t('errors.suggestSessionsOff'));
+      if (!session?.access_token) throw new Error(t('errors.notAuthenticated'));
       assertQuotaRemaining(remaining);
       await enforceDailyThrottle('suggest-sessions', settings?.aiDailyThrottle ?? true);
 
@@ -164,9 +165,9 @@ export function useOrganizeTabs() {
     // ponytail: no daily throttle — manual, always run it.
     mutationFn: async () => {
       if (!AI_ENABLED) throw new Error('AI features are coming soon');
-      if (!aiFeatures) throw new Error('Pro AI plan required');
-      if (settings?.aiOrganizeEnabled === false) throw new Error('Organize is turned off in Settings');
-      if (!session?.access_token) throw new Error('Not authenticated');
+      if (!aiFeatures) throw new Error(t('errors.proAiRequired'));
+      if (settings?.aiOrganizeEnabled === false) throw new Error(t('errors.organizeOff'));
+      if (!session?.access_token) throw new Error(t('errors.notAuthenticated'));
       assertQuotaRemaining(remaining);
 
       // Once encryption is set up, `groups.windows` in Supabase is ciphertext the

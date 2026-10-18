@@ -1,0 +1,36 @@
+{
+  "metaTitle": "Preguntas frecuentes",
+  "metaDescription": "Preguntas frecuentes sobre TabMerger.",
+  "title": "Preguntas frecuentes",
+  "lead": "¿Aún tienes dudas? Respondemos el correo en menos de un día.",
+  "contact": "Contactar con soporte",
+  "free": {
+    "question": "¿TabMerger es realmente gratis?",
+    "answer": "¡Sí! El plan gratuito incluye todas las funciones básicas: hasta {groups} grupos, {tabs} pestañas, {urlRules} reglas de URL, arrastrar y soltar, e importar/exportar. Solo pagas si quieres sincronización en la nube, grupos, pestañas y reglas de URL ilimitados, o funciones de IA."
+  },
+  "sync": {
+    "question": "¿Cómo funciona la sincronización en la nube?",
+    "answer": "Al suscribirte a un plan Pro o Pro AI, tus grupos se guardan automáticamente en nuestros servidores. Tus grupos se sincronizan en todos los navegadores donde hayas iniciado sesión: la sincronización se ejecuta mientras el popup está abierto, así que los cambios aparecen la próxima vez que lo abras allí."
+  },
+  "ai": {
+    "question": "¿Qué hace exactamente la IA?",
+    "answer": "El plan Pro AI desbloquea tres funciones de IA: agrupación automática (analiza tus pestañas abiertas y las agrupa de forma lógica), nombres inteligentes (sugiere nombres para tus grupos) y sugerencias de sesión (recomienda cómo organizar tu flujo de trabajo).",
+    "answerComingSoon": "Próximamente: el plan Pro AI desbloqueará tres funciones de IA: agrupación automática (analiza tus pestañas abiertas y las agrupa de forma lógica), nombres inteligentes (sugiere nombres para tus grupos) y sugerencias de sesión (recomienda cómo organizar tu flujo de trabajo)."
+  },
+  "cancel": {
+    "question": "¿Puedo cancelar mi suscripción?",
+    "answer": "Por supuesto. Puedes cancelar en cualquier momento desde la página de tu cuenta. Conservarás el acceso hasta el final del periodo de facturación actual y luego pasarás al plan gratuito."
+  },
+  "browsers": {
+    "question": "¿Qué navegadores admite TabMerger?",
+    "answer": "Chrome (Chrome Web Store), Edge (Edge Add-ons o Chrome Web Store), Brave, Vivaldi y Arc (Chrome Web Store), Opera (Chrome Web Store, mediante el complemento \"Install Chrome Extensions\" de Opera) y Firefox (Firefox Add-ons). Safari no es compatible."
+  },
+  "privacy": {
+    "question": "¿Mis datos son privados?",
+    "answer": "Nos tomamos la privacidad muy en serio. Los datos del plan gratuito se guardan solo de forma local: nada sale de tu navegador. Los datos de la sincronización en la nube de Pro se cifran de extremo a extremo en tu dispositivo con una frase de contraseña que solo tú conoces antes de llegar a nuestros servidores: solo guardamos texto cifrado y no podemos leer tus grupos ni pestañas. Nunca vendemos tus datos."
+  },
+  "downgrade": {
+    "question": "¿Qué pasa con mis grupos si bajo de plan?",
+    "answer": "Si pasas de Pro a Gratis, tus grupos permanecen en la nube durante 30 días. Tus pestañas locales siempre se conservan. Puedes exportarlo todo antes de bajar de plan."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "instructions": "按空格键拿起，用方向键选择位置（左右键在窗口和分组之间切换），按空格键放下，按 Esc 取消。Shift+空格键可选择范围，{{modifier}}+A 可全选，以便一次移动多项。",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "标签页",
+    "window": "窗口",
+    "group": "分组",
+    "item": "项目"
+  },
+  "typeStart": {
+    "tab": "标签页",
+    "window": "窗口",
+    "group": "分组",
+    "item": "项目"
+  },
+  "untitledTab": "无标题标签页",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}（从 {{name}} 开始）",
+  "position": {
+    "tab": "分组 {{group}} 的{{window}}中第 {{index}}/{{total}} 位",
+    "window": "分组 {{group}} 中第 {{index}}/{{total}} 位",
+    "group": "第 {{index}}/{{total}} 位"
+  },
+  "target": {
+    "newGroup": "新分组",
+    "newWindowAtEnd": "分组 {{group}} 末尾的新窗口",
+    "nowOpen": "“当前打开”，将在新的浏览器窗口中打开",
+    "groupAsWindow": "分组 {{group}}，作为新窗口"
+  },
+  "token": {
+    "dropped": "已放下。",
+    "cancelled": "已取消。"
+  },
+  "bail": {
+    "cancelled": "已取消移动。",
+    "nothingMoved": "已放下，未移动任何内容。",
+    "returnedMany": "{{items}}已返回",
+    "returnedOne": "{{named}}已返回",
+    "noop": "已将{{what}}放回{{position}}，未移动。",
+    "stale": "拖动期间分组发生了变化，因此未移动任何内容。{{returned}}到{{position}}。",
+    "cancelledReturned": "已取消移动。{{returned}}到{{position}}。",
+    "rejected": "无法放在那里。{{returned}}到{{position}}。"
+  },
+  "removedElsewhere_other": "其中 {{count}} 项已在别处被移除。",
+  "stillSelected_other": "它们仍处于选中状态。",
+  "dropped": "已放下。",
+  "movedGroups": "已将 {{count}} 个分组作为一个整体移动到{{position}}。",
+  "movedGroup": "已将分组 {{name}} 移动到{{position}}。",
+  "partial": "{{count}}/{{total}}",
+  "at": "第 {{index}}/{{total}} 位",
+  "startingAt": "从第 {{index}}/{{total}} 位开始",
+  "whereTab": "分组 {{group}} 的{{window}}，{{at}}",
+  "whereWindow": "分组 {{group}}，{{at}}",
+  "movedTo": "已将{{items}}移动到{{where}}。",
+  "openTabsClosed": "已关闭这些打开的标签页。",
+  "groupHidden": "分组 {{group}} 未显示。",
+  "openedNewWindow": "已在新的浏览器窗口中打开{{items}}。",
+  "openedNowOpen": "已在“当前打开”中打开{{items}}。",
+  "movedNewWindow": "已将{{items}}移动到新的浏览器窗口。",
+  "movedWithinNowOpen": "已在“当前打开”内移动{{items}}。",
+  "originalPosition": "位于原来的位置上方。",
+  "pickedUpType": "已拿起{{type}}。",
+  "pickedUpMany": "已拿起{{what}}。",
+  "pickedUpOne": "已拿起{{type}} {{name}}，{{position}}。",
+  "groupShown": "分组 {{name}} 现已显示。",
+  "copyHint": "放入已保存的分组会复制；打开的标签页保持打开。",
+  "notOver": "不在放置目标上方。",
+  "over": "位于{{target}}上方。",
+  "cantDropOn": "无法放在{{target}}上。",
+  "typeDropped": "{{type}}已放下。",
+  "cancelledReturnedType": "已取消移动；{{type}}已回到原位。",
+  "saveFailed": "无法保存此次移动，已恢复。"
+}

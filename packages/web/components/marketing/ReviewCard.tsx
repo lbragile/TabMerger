@@ -1,3 +1,4 @@
+import { useLocale, useTranslations } from 'next-intl'
 import { STORE_LABEL } from '@/lib/stores'
 // Type only: `lib/storeReviews.ts` is server-only (it builds a profanity matcher at load).
 import type { StoreReview } from '@/lib/storeReviews'
@@ -23,8 +24,8 @@ export { CARD_STRIDE_PX } from './reviewsLayout'
  * machine renders it, so a review posted at 2020-12-01T00:00Z reads "Dec 2020" on
  * a UTC server and "Nov 2020" anywhere west of Greenwich.
  */
-export function formatMonth(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+export function formatMonth(iso: string, locale: string = 'en-US'): string {
+  return new Date(iso).toLocaleDateString(locale, { month: 'short', year: 'numeric', timeZone: 'UTC' })
 }
 
 /**
@@ -57,6 +58,9 @@ export function formatMonth(iso: string): string {
 export function ReviewCard({ review, hidden = false }: { review: StoreReview; hidden?: boolean }) {
   const StoreIcon = STORE_ICON[review.store]
   const storeLabel = STORE_LABEL[review.store]
+  const t = useTranslations('reviews')
+  const common = useTranslations('common')
+  const locale = useLocale()
   return (
     <div
       className={`${CARD_BOX_CLASS} flex flex-col`}
@@ -67,14 +71,14 @@ export function ReviewCard({ review, hidden = false }: { review: StoreReview; hi
     >
       <div className="flex items-center gap-2 mb-2.5 text-xs text-text3">
         {/* Not `text-primary`: the light theme's brand cyan is under 3:1 on a white card. */}
-        <div className="shrink-0 text-[hsl(var(--star))]" role="img" aria-label={`${review.score} out of 5 stars`}>
+        <div className="shrink-0 text-[hsl(var(--star))]" role="img" aria-label={t('stars', { score: review.score })}>
           {'★'.repeat(review.score)}
           {'☆'.repeat(5 - review.score)}
         </div>
         {/* The date is deliberate: these reviews may predate the current version,
             and a reader should be able to see that rather than assume otherwise. */}
         <time dateTime={review.date} className="shrink-0 whitespace-nowrap">
-          {formatMonth(review.date)}
+          {formatMonth(review.date, locale)}
         </time>
         <span className="ml-auto min-w-0 truncate">{storeLabel}</span>
       </div>
@@ -93,12 +97,11 @@ export function ReviewCard({ review, hidden = false }: { review: StoreReview; hi
           tabIndex={hidden ? -1 : undefined}
           className="ml-auto shrink-0 whitespace-nowrap pl-1.5 underline underline-offset-2 hover:text-foreground"
         >
-          Read full review
+          {t('readFull')}
           <span className="sr-only">
-            {' '}
-            by {review.author} on {storeLabel}
+            {t('readFullBy', { author: review.author, store: storeLabel })}
           </span>
-          <span className="sr-only"> (opens in a new tab)</span>
+          <span className="sr-only">{common('opensInNewTab')}</span>
         </a>
       </p>
     </div>

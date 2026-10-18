@@ -42,7 +42,7 @@ vi.mock('@/components/dashboard/OnboardingChecklist', () => ({ OnboardingCheckli
 
 describe('DashboardPage responsive layout', () => {
   it('does not use a fixed-width container that would overflow on mobile', async () => {
-    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     const { container } = render(jsx as React.ReactElement)
 
@@ -84,7 +84,7 @@ describe('AccountPage responsive layout', () => {
       }),
     }))
     vi.resetModules()
-    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     const jsx = await AccountPage()
     const { container } = render(jsx as React.ReactElement)
 

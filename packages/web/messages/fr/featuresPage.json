@@ -1,0 +1,81 @@
+{
+  "metaTitle": "Fonctionnalités",
+  "metaDescription": "Découvrez tout ce que TabMerger sait faire, du regroupement intelligent d’onglets à l’organisation par IA.",
+  "title": "Des fonctionnalités pour rester concentré",
+  "lead": "Tout pour reprendre le contrôle de votre navigateur, des essentiels gratuits aux super-pouvoirs de l’IA.",
+  "addToChrome": "Ajouter à Chrome — c’est gratuit",
+  "seePricing": "Voir les tarifs",
+  "badges": {
+    "core": "Essentiel",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Une gestion d’onglets puissante",
+    "description": "Le socle de TabMerger : une organisation rapide et intuitive, adaptée à tous les usages.",
+    "groups": {
+      "title": "Groupes nommés et colorés",
+      "description": "Créez des groupes avec noms et couleurs personnalisés. Séparez d’un coup d’œil travail, recherche, loisirs et plus encore."
+    },
+    "search": {
+      "title": "Recherche plein texte",
+      "description": "Recherchez instantanément dans les titres et URL de tous vos onglets. Les résultats correspondent exactement à votre saisie (majuscules ou minuscules), les meilleurs en premier."
+    },
+    "dnd": {
+      "title": "Réorganisation par glisser-déposer",
+      "description": "Déplacez les onglets dans les groupes et réordonnez les groupes eux-mêmes par de fluides glisser-déposer."
+    },
+    "shortcuts": {
+      "title": "Raccourcis clavier",
+      "description": "Enregistrez l’onglet actuel, ceux à sa gauche ou à sa droite, ou tous les autres sans ouvrir la fenêtre de l’extension. Dedans, ouvrez la recherche avec Ctrl/Cmd+K et déplacez onglets, fenêtres et groupes au clavier seul."
+    },
+    "importExport": {
+      "title": "Import et export",
+      "description": "Exportez vos collections d’onglets en JSON pour les partager avec vos collègues ou sauvegarder votre espace de travail. Importez-les sur n’importe quel appareil."
+    },
+    "memory": {
+      "title": "Économie de mémoire",
+      "description": "Suspendez les onglets inactifs pour libérer de la RAM. Voyez en temps réel la mémoire que TabMerger vous fait économiser."
+    }
+  },
+  "pro": {
+    "title": "Synchronisation et sessions",
+    "description": "Reprenez exactement où vous vous êtes arrêté, sur n’importe quel appareil, à tout moment.",
+    "cloudSync": {
+      "title": "Synchronisation cloud",
+      "description": "Vos groupes sont enregistrés et synchronisés automatiquement sur tous les navigateurs où vous êtes connecté. En temps réel, sans export manuel."
+    },
+    "sessions": {
+      "title": "Enregistrement et restauration de sessions",
+      "description": "Enregistrez vos groupes actuels comme session nommée et restaurez-les instantanément. L’offre gratuite enregistre jusqu’à {count} sessions dans ce navigateur ; Pro synchronise un nombre illimité de sessions sur tous vos appareils."
+    },
+    "autoBackups": {
+      "title": "Sauvegardes automatiques",
+      "description": "TabMerger enregistre un instantané chiffré de vos groupes selon le rythme de votre choix, de toutes les heures à une fois par semaine. Les {count} plus récents sont conservés, et vous pouvez en restaurer un depuis les Paramètres. Votre tableau de bord les liste aussi : vous pouvez en consulter le contenu ou le télécharger. Chacun peut aussi être enregistré en fichier sur votre ordinateur ; cette copie n’est pas chiffrée."
+    },
+    "support": {
+      "title": "Assistance prioritaire",
+      "description": "Les abonnés Pro bénéficient d’une assistance accélérée avec une réponse garantie sous 24 heures."
+    }
+  },
+  "proAi": {
+    "title": "Organisation par IA",
+    "description": "Laissez Claude analyser vos onglets et faire des suggestions pertinentes pour que vous vous concentriez sur la réflexion, pas le rangement.",
+    "autoGrouping": {
+      "title": "Regroupement automatique",
+      "description": "Ouvrez un tas d’onglets, cliquez sur un bouton. L’IA les regroupe logiquement selon le sujet, le domaine et l’intention."
+    },
+    "names": {
+      "title": "Noms de groupes intelligents",
+      "description": "L’IA propose des noms concis et descriptifs pour vos groupes. Un clic pour accepter, ou saisissez le vôtre."
+    },
+    "summaries": {
+      "title": "Résumés d’onglets",
+      "description": "Survolez un onglet pour voir un résumé IA d’une phrase de la page, sans l’ouvrir."
+    },
+    "sessionSuggestions": {
+      "title": "Suggestions de sessions",
+      "description": "L’IA analyse vos habitudes de navigation et suggère comment structurer vos sessions pour une productivité maximale."
+    }
+  }
+}

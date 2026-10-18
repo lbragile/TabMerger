@@ -1,0 +1,81 @@
+{
+  "deleteGroup": {
+    "title": "Delete Group",
+    "description": "Are you sure you want to delete \"{{name}}\"? This cannot be undone.",
+    "confirm": "Delete"
+  },
+  "closeWindow": {
+    "title": "Close Window",
+    "description": "Are you sure you want to close this window and all its tabs?",
+    "confirm": "Close"
+  },
+  "removeWindow": {
+    "title": "Remove Window",
+    "description": "Are you sure you want to remove this window and all its tabs?",
+    "confirm": "Remove"
+  },
+  "closeTab": {
+    "title": "Close Tab",
+    "description": "Are you sure you want to close this tab?",
+    "confirm": "Close"
+  },
+  "removeTab": {
+    "title": "Remove Tab",
+    "description": "Are you sure you want to remove this tab?",
+    "confirm": "Remove"
+  },
+  "closeSelection": {
+    "title": "Close Selection",
+    "confirm": "Close",
+    "description_tab_one": "Are you sure you want to close {{count}} tab? This cannot be undone.",
+    "description_tab_other": "Are you sure you want to close {{count}} tabs? This cannot be undone.",
+    "description_window_one": "Are you sure you want to close {{count}} window? This cannot be undone.",
+    "description_window_other": "Are you sure you want to close {{count}} windows? This cannot be undone.",
+    "description_group_one": "Are you sure you want to close {{count}} group? This cannot be undone.",
+    "description_group_other": "Are you sure you want to close {{count}} groups? This cannot be undone."
+  },
+  "deleteSelection": {
+    "title": "Delete Selection",
+    "confirm": "Delete",
+    "description_tab_one": "Are you sure you want to delete {{count}} tab? This cannot be undone.",
+    "description_tab_other": "Are you sure you want to delete {{count}} tabs? This cannot be undone.",
+    "description_window_one": "Are you sure you want to delete {{count}} window? This cannot be undone.",
+    "description_window_other": "Are you sure you want to delete {{count}} windows? This cannot be undone.",
+    "description_group_one": "Are you sure you want to delete {{count}} group? This cannot be undone.",
+    "description_group_other": "Are you sure you want to delete {{count}} groups? This cannot be undone."
+  },
+  "removeStaleTabs": {
+    "title": "Remove Stale Tabs",
+    "confirm": "Remove",
+    "description_one": "Are you sure you want to remove {{count}} stale tab? This cannot be undone.",
+    "description_other": "Are you sure you want to remove {{count}} stale tabs? This cannot be undone."
+  },
+  "closeAllWindows": {
+    "title": "Close All Windows",
+    "description": "Are you sure you want to close all browser windows and their tabs?",
+    "confirm": "Close All"
+  },
+  "removeAllWindows": {
+    "title": "Remove All Windows",
+    "description": "Are you sure you want to remove all windows and their tabs from this group? This cannot be undone.",
+    "confirm": "Remove All"
+  },
+  "archiveStaleGroups": {
+    "title": "Archive Stale Groups",
+    "confirm": "Archive",
+    "description_one": "Are you sure you want to archive {{count}} stale group?",
+    "description_other": "Are you sure you want to archive {{count}} stale groups?"
+  },
+  "clearAllData": {
+    "title": "Clear All Data",
+    "confirm": "Clear All Data",
+    "description": "This will permanently delete all groups, saved sessions, and settings. This cannot be undone.",
+    "description_kept": "This will permanently delete all groups, saved sessions, and settings. This cannot be undone. Automatic backups stored in your account are kept, and you can bring them back from Settings → Data."
+  },
+  "resetEncryption": {
+    "title": "Reset Encryption Passphrase",
+    "confirm": "Reset Passphrase",
+    "description": "This cannot be undone. All synced groups, sessions, and notes encrypted under your current passphrase will become permanently inaccessible. You'll set up a new passphrase and start syncing fresh."
+  },
+  "cancel": "Cancel"
+}

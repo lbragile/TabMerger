@@ -47,3 +47,23 @@ vi.mock('next/navigation', () => ({
     throw new Error('NEXT_HTTP_ERROR_FALLBACK;404')
   },
 }))
+
+// Translations: every render gets the English catalog through a NextIntlClientProvider (composed
+// with the test's own wrapper, if any), and `next-intl/server` (request-only in a real Next app)
+// answers from the same catalog. See __tests__/helpers/intl.tsx.
+vi.mock('@testing-library/react', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@testing-library/react')>()
+  const { withIntlWrapper } = await import('./__tests__/helpers/intl')
+  return {
+    ...actual,
+    render: ((ui: React.ReactNode, options?: Parameters<typeof actual.render>[1]) =>
+      actual.render(ui, { ...options, wrapper: withIntlWrapper(options?.wrapper) })) as typeof actual.render,
+    renderHook: ((hook: (props: unknown) => unknown, options?: Parameters<typeof actual.renderHook>[1]) =>
+      actual.renderHook(hook, { ...options, wrapper: withIntlWrapper(options?.wrapper) })) as typeof actual.renderHook,
+  }
+})
+
+vi.mock('next-intl/server', async () => (await import('./__tests__/helpers/intl')).serverIntlMock)
+vi.mock('@/i18n/navigation', async () =>
+  (await import('./__tests__/helpers/intl')).createNavigationMock((await import('next/link')).default)
+)

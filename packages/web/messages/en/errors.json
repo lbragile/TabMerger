@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Error 404 · Page not found",
+    "title": "This tab wandered off",
+    "description": "We looked through every group and couldn't find this page. It may have moved, been closed, or never existed. Let's get you back on track.",
+    "documentTitle": "Page not found",
+    "tabLabel": "Missing page"
+  },
+  "serverError": {
+    "eyebrow": "Error 500 · Something went wrong",
+    "title": "This tab crashed",
+    "description": "Something broke on our side while loading this page. Your tabs and groups in the extension are not affected. Try again in a moment.",
+    "documentTitle": "Something went wrong",
+    "tabLabel": "Not responding"
+  },
+  "links": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "dashboard": "Dashboard",
+    "account": "Account",
+    "contactSupport": "Contact support"
+  },
+  "helpfulLinks": "Helpful links",
+  "tryThese": "Or try one of these",
+  "illustrationTabResearch": "Research",
+  "illustrationTabDocs": "Docs",
+  "tryAgain": "Try again",
+  "backToHome": "Back to home",
+  "backToDashboard": "Back to dashboard",
+  "devDetails": "Error details (development only)",
+  "referenceId": "Reference ID",
+  "copyReferenceId": "Copy reference ID",
+  "referenceIdHint": "Quote this ID if you contact support, so we can find what went wrong.",
+  "referenceIdCopied": "Reference ID copied",
+  "referenceIdCopyFailed": "Copy failed. Select the ID to copy it.",
+  "titleWithBrand": "{title} | TabMerger"
+}

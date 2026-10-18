@@ -1,0 +1,23 @@
+{
+  "heading": "Ce que disent les utilisateurs",
+  "byStore": "Par boutique",
+  "loading": "Chargement des avis",
+  "averageRating": "Note moyenne",
+  "averageRatingOn": "Note moyenne sur {store}",
+  "ratingsOn": "{count, plural, one {Note} many {Notes} other {Notes}} sur {store}",
+  "ratingsAcross": "Notes sur {stores}",
+  "ratingCount": "{count, plural, one {# note} many {# de notes} other {# notes}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " sur 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 notes",
+  "stars": "{score} étoiles sur 5",
+  "readFull": "Lire l’avis complet",
+  "readFullBy": " de {author} sur {store}",
+  "carousel": "carrousel",
+  "play": "Lancer les avis",
+  "pause": "Mettre les avis en pause",
+  "previous": "Avis précédent",
+  "next": "Avis suivant",
+  "skeletonRating": "0,00 / 5"
+}

@@ -1,0 +1,65 @@
+{
+  "addGroup": {
+    "title": "Créer un groupe",
+    "name": "Nom",
+    "namePlaceholder": "Nom du groupe",
+    "color": "Couleur",
+    "cancel": "Annuler",
+    "create": "Créer"
+  },
+  "dedup": {
+    "title": "Supprimer les doublons",
+    "description_one": "{{count}} onglet en double sera supprimé.",
+    "description_many": "{{count}} d’onglets en double seront supprimés.",
+    "description_other": "{{count}} onglets en double seront supprimés.",
+    "cancel": "Annuler",
+    "confirm_one": "Supprimer {{count}} doublon",
+    "confirm_many": "Supprimer {{count}} de doublons",
+    "confirm_other": "Supprimer {{count}} doublons"
+  },
+  "staleGroups": {
+    "title": "Examiner les groupes périmés",
+    "description_one": "{{count}} groupe inutilisé depuis un moment : dépliez pour l’aperçu, ou archivez directement.",
+    "description_many": "{{count}} de groupes inutilisés depuis un moment : dépliez pour l’aperçu, ou archivez directement.",
+    "description_other": "{{count}} groupes inutilisés depuis un moment : dépliez pour l’aperçu, ou archivez directement.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Masquer",
+    "preview": "Aperçu",
+    "archive": "Archiver",
+    "empty": "Ce groupe est vide.",
+    "close": "Fermer"
+  },
+  "staleTabs": {
+    "title": "Onglets périmés",
+    "description_one": "{{count}} onglet n’a pas été touché depuis un moment.",
+    "description_many": "{{count}} d’onglets n’ont pas été touchés depuis un moment.",
+    "description_other": "{{count}} onglets n’ont pas été touchés depuis un moment.",
+    "close": "Fermer",
+    "removeAll_one": "Supprimer {{count}} onglet",
+    "removeAll_many": "Supprimer {{count}} d’onglets",
+    "removeAll_other": "Supprimer {{count}} onglets"
+  },
+  "saveSession": {
+    "title": "Enregistrer la session",
+    "name": "Nom de la session",
+    "namePlaceholder": "p. ex. Recherches de travail, Lecture du week-end",
+    "nameRequired": "Le nom de la session est obligatoire",
+    "description": "Description (facultative)",
+    "descriptionPlaceholder": "À quoi sert cette session ?",
+    "cancel": "Annuler",
+    "save": "Enregistrer"
+  },
+  "shortcutSave": {
+    "title_one": "Enregistrer {{count}} onglet",
+    "title_many": "Enregistrer {{count}} d’onglets",
+    "title_other": "Enregistrer {{count}} onglets",
+    "description": "Choisissez où enregistrer les onglets capturés par le raccourci clavier.",
+    "destination": "Groupe de destination",
+    "quickSave": "Enregistrement rapide (nouveau groupe)",
+    "cancel": "Annuler",
+    "save": "Enregistrer"
+  },
+  "confirmDialog": {
+    "cancel": "Annuler"
+  }
+}

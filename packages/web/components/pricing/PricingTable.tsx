@@ -1,15 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { PricingCard } from './PricingCard'
-import {
-  TIERS,
-  PRICES_IN_USD_NOTE,
-  YEARLY_DISCOUNT_PERCENT,
-  YEARLY_SAVINGS,
-  formatListPrice,
-  yearlySubtext,
-} from '@/lib/tiers'
+import { TIERS, YEARLY_DISCOUNT_PERCENT, YEARLY_SAVINGS } from '@/lib/tiers'
+import { useListPrice, useZeroPrice } from './priceFormat'
+import { useTierFeatures, useTierName } from './tierFeatures'
+import { useYearlySubtext } from './useYearlySubtext'
 import { cn } from '@/lib/utils'
 
 interface PricingTableProps {
@@ -23,6 +20,12 @@ interface PricingTableProps {
 export function PricingTable({ currentTier, currentInterval, installHref }: PricingTableProps) {
   // Always opens on Monthly, whatever the current plan is billed at.
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
+  const t = useTranslations('pricing')
+  const tierName = useTierName()
+  const tierFeatures = useTierFeatures()
+  const listPrice = useListPrice()
+  const zeroPrice = useZeroPrice()
+  const yearlySubtext = useYearlySubtext()
 
   return (
     <div className="flex flex-col items-center gap-10">
@@ -39,9 +42,9 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
                 : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            {opt === 'monthly' ? 'Monthly' : 'Yearly'}
+            {opt === 'monthly' ? t('monthly') : t('yearly')}
             {opt === 'yearly' && YEARLY_DISCOUNT_PERCENT > 0 && (
-              <span className="text-[11px] font-semibold text-primary">−{YEARLY_DISCOUNT_PERCENT}%</span>
+              <span className="text-[11px] font-semibold text-primary">{t('discountBadge', { percent: YEARLY_DISCOUNT_PERCENT })}</span>
             )}
           </button>
         ))}
@@ -53,59 +56,59 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
       >
         <PricingCard
           tier="free"
-          name={TIERS.free.name}
+          name={tierName('free')}
           monthlyPrice={TIERS.free.monthlyPrice}
           yearlyPrice={TIERS.free.yearlyPrice}
-          features={TIERS.free.features}
+          features={tierFeatures('free')}
           interval={interval}
           currentTier={currentTier}
           currentInterval={currentInterval}
           installHref={installHref}
-          displayMonthly="$0"
-          displayYearly="$0"
+          displayMonthly={zeroPrice}
+          displayYearly={zeroPrice}
         />
 
         {/* Pro — highlighted, same order as desktop */}
         <div>
           <PricingCard
             tier="pro"
-            name={TIERS.pro.name}
+            name={tierName('pro')}
             monthlyPrice={TIERS.pro.monthlyPrice}
             yearlyPrice={TIERS.pro.yearlyPrice}
-            features={TIERS.pro.features}
+            features={tierFeatures('pro')}
             interval={interval}
             highlighted
             currentTier={currentTier}
             currentInterval={currentInterval}
             installHref={installHref}
-            displayMonthly={formatListPrice(TIERS.pro.monthlyPrice)}
-            displayYearly={formatListPrice(TIERS.pro.yearlyPrice)}
+            displayMonthly={listPrice(TIERS.pro.monthlyPrice)}
+            displayYearly={listPrice(TIERS.pro.yearlyPrice)}
             yearlySubtext={yearlySubtext(YEARLY_SAVINGS.pro)}
           />
         </div>
 
         <PricingCard
           tier="proAi"
-          name={TIERS.proAi.name}
+          name={tierName('proAi')}
           monthlyPrice={TIERS.proAi.monthlyPrice}
           yearlyPrice={TIERS.proAi.yearlyPrice}
-          features={TIERS.proAi.features}
+          features={tierFeatures('proAi')}
           interval={interval}
           currentTier={currentTier}
           currentInterval={currentInterval}
           installHref={installHref}
-          displayMonthly={formatListPrice(TIERS.proAi.monthlyPrice)}
-          displayYearly={formatListPrice(TIERS.proAi.yearlyPrice)}
+          displayMonthly={listPrice(TIERS.proAi.monthlyPrice)}
+          displayYearly={listPrice(TIERS.proAi.yearlyPrice)}
           yearlySubtext={yearlySubtext(YEARLY_SAVINGS.proAi)}
         />
       </div>
 
       <p className="text-sm text-muted-foreground text-center">
-        Cancel anytime from your account — no lock-in, no questions asked.
+        {t('cancelAnytime')}
         <br />
-        You keep access until the end of your billing period.
+        {t('keepAccess')}
       </p>
-      <p className="-mt-6 text-xs text-text3 text-center">{PRICES_IN_USD_NOTE}</p>
+      <p className="-mt-6 text-xs text-text3 text-center">{t('usdNote')}</p>
     </div>
   )
 }

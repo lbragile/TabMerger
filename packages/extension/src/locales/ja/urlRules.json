@@ -1,0 +1,23 @@
+{
+  "title": "URLルール",
+  "description": "URLパターンでタブをグループに自動で割り当てます。<code>*</code> をワイルドカードとして使用します（例: <code>github.com/*</code>）。最初に一致したルールが優先されます。",
+  "empty": "ルールはまだありません。",
+  "deletedGroup": "（削除されたグループ）",
+  "moveUp": "ルールを上へ移動",
+  "moveDown": "ルールを下へ移動",
+  "edit": "ルールを編集",
+  "delete": "ルールを削除",
+  "used": "{{used}}/{{max}}を使用中",
+  "addRule": "ルールを追加",
+  "discard": "変更を破棄",
+  "cancel": "キャンセル",
+  "saveAll": "すべてのルールを保存",
+  "save": "保存",
+  "editTitle": "URLルールを編集",
+  "addTitle": "URLルールを追加",
+  "patternPlaceholder": "パターン（例: github.com/*）",
+  "groupPlaceholder": "対象のグループを選択…",
+  "toast": {
+    "limit": "無料プランではURLルールは{{max}}個までです。"
+  }
+}

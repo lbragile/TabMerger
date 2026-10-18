@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "无法连接同步服务器，请重试。",
+    "accountMismatch": "此设备仍保存着另一个账户的数据。请打开扩展以切换账户。",
+    "identityChanged": "同步期间扩展已退出登录。请登录后重试。",
+    "keyCheckFailed": "无法检查加密状态，请重试。",
+    "setupUnfinished": "请打开扩展以完成加密设置。",
+    "locked": "请打开扩展并解锁加密以进行同步。"
+  },
+  "menu": {
+    "saveTo": "保存到 TabMerger",
+    "scopeCurrent": "保存此标签页",
+    "scopeLeft": "保存左侧的标签页",
+    "scopeRight": "保存右侧的标签页",
+    "scopeExcluding": "保存所有其他标签页",
+    "noGroups": "暂无已保存的分组",
+    "groupItem": "{{color}} {{name}}（{{windows}} 窗口 · {{tabs}} 标签页）"
+  },
+  "reminder": {
+    "title": "TabMerger 提醒"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "O TabMerger não conseguiu acessar o servidor para verificar a criptografia desta conta, então a sincronização está pausada. Seus grupos continuam salvos neste dispositivo. Verifique sua conexão e tente novamente.",
+  "unlockBody": "Digite sua frase secreta de criptografia para desbloquear os dados sincronizados neste dispositivo. É uma etapa única por dispositivo — você não será solicitado de novo, a menos que saia da conta. Não há como recuperar seus dados se você esquecer a frase: ela nunca sai do seu dispositivo e o TabMerger não pode redefini-la.",
+  "setupBody": "Seus dados sincronizados de grupos e abas têm criptografia de ponta a ponta com uma frase secreta que só você conhece. Escolha uma agora — não há como recuperar seus dados se você esquecê-la: ela nunca sai do seu dispositivo e o TabMerger não pode redefini-la.",
+  "unavailableTitle": "Não é possível verificar a criptografia agora",
+  "tryAgain": "Tentar novamente",
+  "unlockTitle": "Desbloquear criptografia",
+  "passphrase": "Frase secreta",
+  "passphraseLabel": "Frase secreta de criptografia",
+  "unlock": "Desbloquear",
+  "setupTitle": "Configurar criptografia",
+  "newPassphrase": "Nova frase secreta",
+  "confirmPassphrase": "Confirmar frase secreta",
+  "setupButton": "Configurar criptografia",
+  "error": {
+    "spaces": "A frase secreta não pode conter espaços",
+    "tooShort": "A frase secreta deve ter pelo menos 8 caracteres",
+    "mismatch": "As frases secretas não coincidem",
+    "setupFailed": "Falha ao configurar a criptografia",
+    "wrong": "Frase secreta incorreta",
+    "wasReset": "A criptografia foi redefinida para esta conta. Escolha uma nova frase secreta."
+  },
+  "toast": {
+    "setUp": "Criptografia configurada",
+    "unlocked": "Criptografia desbloqueada"
+  }
+}

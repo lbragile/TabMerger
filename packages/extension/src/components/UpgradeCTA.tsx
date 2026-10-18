@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Zap } from 'lucide-react';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { useGroups } from '@/hooks/useGroups';
@@ -9,6 +10,7 @@ const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 const DISMISSED_KEY = 'upgrade_cta_dismissed';
 
 export function UpgradeCTA() {
+  const { t } = useTranslation();
   // ponytail: sessionStorage, not localStorage — nag banner reappears next
   // browser session rather than being permanently dismissed.
   const [dismissed, setDismissed] = useState(
@@ -42,7 +44,7 @@ export function UpgradeCTA() {
     <div className="flex items-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-700 text-xs dark:bg-indigo-950 dark:text-indigo-300">
       <Zap className="h-3.5 w-3.5 shrink-0" />
       <span className="flex-1">
-        You're approaching the free limit — upgrade to Pro for unlimited groups and tabs
+        {t('banners.approachingLimit')}
       </span>
       <button
         className="font-semibold underline underline-offset-2 hover:no-underline shrink-0"
@@ -51,12 +53,12 @@ export function UpgradeCTA() {
           chrome.tabs.create({ url: `${WEB_APP_URL}/pricing` });
         }}
       >
-        Upgrade
+        {t('banners.upgrade')}
       </button>
       <button
         className="ml-1 hover:opacity-70 shrink-0"
         onClick={dismiss}
-        aria-label="Dismiss"
+        aria-label={t('banners.dismiss')}
       >
         <X className="h-3.5 w-3.5" />
       </button>

@@ -1,0 +1,24 @@
+{
+  "title": "AIによる整理の提案",
+  "encrypted": "AIによる整理は、エンドツーエンド暗号化されたグループではWebではまだ利用できません。グループは暗号化されており、このページでは読み取れません。代わりにTabMerger拡張機能から実行してください。",
+  "applied": "変更を適用しました。",
+  "cancelled": "提案をキャンセルしました。",
+  "analyzing": "タブグループを分析中…",
+  "noChanges": "変更の提案はありません。",
+  "approve": "承認",
+  "reject": "却下",
+  "unknownError": "不明なエラー",
+  "submitFailed": "決定を送信できませんでした",
+  "types": {
+    "merge": "統合",
+    "rename": "名前変更",
+    "delete": "削除",
+    "reorder": "並べ替え"
+  },
+  "actions": {
+    "merge": "{source} → {target} を統合",
+    "rename": "グループ名を「{name}」に変更",
+    "delete": "グループ{id}を削除",
+    "reorder": "グループを並べ替え: {ids}"
+  }
+}

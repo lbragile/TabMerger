@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,23 +13,22 @@ import { cn } from '@/lib/utils';
 import { SIGN_IN_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
 import { requestDataConsent } from '@/lib/dataConsent';
 
-/** Shown inline (not just as a toast, per the coordinator's request for a clear explanation
- *  the user can still see after the toast auto-dismisses) when Firefox's data-collection
- *  permission prompt is denied for a sign-in attempt. Every sign-in entry point below requests
- *  the same categories — see SIGN_IN_DATA_CONSENT_CATEGORIES — since signing in also enables
- *  cloud sync. No-op (never shown) on Chrome/Edge, where requestDataConsent always resolves true. */
-const SIGN_IN_CONSENT_DENIED_MESSAGE =
-  "Firefox needs permission to sign in and sync. Allow it in the browser's prompt to continue.";
+/* `auth.consentDenied` is shown inline (not just as a toast, so the explanation stays visible
+ * after the toast auto-dismisses) when Firefox's data-collection permission prompt is denied for
+ * a sign-in attempt. Every sign-in entry point below requests the same categories — see
+ * SIGN_IN_DATA_CONSENT_CATEGORIES — since signing in also enables cloud sync. Never shown on
+ * Chrome/Edge, where requestDataConsent always resolves true. */
 
 interface AuthModalProps {
   onClose: () => void;
 }
 
 function PasswordStrength({ password }: { password: string }) {
+  const { t } = useTranslation();
   const rules = [
-    { label: 'At least 8 characters', ok: password.length >= 8 },
-    { label: 'One uppercase letter', ok: /[A-Z]/.test(password) },
-    { label: 'One number', ok: /[0-9]/.test(password) },
+    { label: t('auth.rules.length'), ok: password.length >= 8 },
+    { label: t('auth.rules.uppercase'), ok: /[A-Z]/.test(password) },
+    { label: t('auth.rules.number'), ok: /[0-9]/.test(password) },
   ];
   if (!password) return null;
   return (
@@ -44,6 +44,7 @@ function PasswordStrength({ password }: { password: string }) {
 }
 
 export function AuthModal({ onClose }: AuthModalProps) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -66,7 +67,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
   const ensureSignInConsent = async () => {
     const granted = await requestDataConsent(SIGN_IN_DATA_CONSENT_CATEGORIES);
     setConsentDenied(!granted);
-    if (!granted) toast.error(SIGN_IN_CONSENT_DENIED_MESSAGE);
+    if (!granted) toast.error(t('auth.consentDenied'));
     return granted;
   };
 
@@ -76,7 +77,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
     try {
       await updatePassword(newPassword);
       setNewPassword('');
-      toast.success(hasPasswordIdentity ? 'Password updated' : 'Password set — you can now sign in with email + password too');
+      toast.success(hasPasswordIdentity ? t('auth.toast.passwordUpdated') : t('auth.toast.passwordSet'));
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
@@ -92,7 +93,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
     setLoading(true);
     try {
       await signIn(email, password);
-      toast.success('Signed in');
+      toast.success(t('auth.toast.signedIn'));
       onClose();
     } catch (err) {
       toast.error((err as Error).message);
@@ -121,7 +122,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
     setLoading(true);
     try {
       await resetPassword(forgotEmail);
-      toast.success('Check your email for a reset link');
+      toast.success(t('auth.toast.resetSent'));
       setForgotPassword(false);
       setForgotEmail('');
     } catch (err) {
@@ -150,7 +151,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
     setGoogleLoading(true);
     try {
       await signInWithGoogle();
-      toast.success('Signed in');
+      toast.success(t('auth.toast.signedIn'));
       onClose();
     } catch (err) {
       toast.error((err as Error).message);
@@ -161,7 +162,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
 
   const handleSignOut = async () => {
     await signOut();
-    toast.success('Signed out');
+    toast.success(t('auth.toast.signedOut'));
     onClose();
   };
 
@@ -169,21 +170,21 @@ export function AuthModal({ onClose }: AuthModalProps) {
     return (
       <>
         <DialogHeader>
-          <DialogTitle>Account</DialogTitle>
+          <DialogTitle>{t('auth.account.title')}</DialogTitle>
           <DialogDescription>{user.email}</DialogDescription>
         </DialogHeader>
         <div className="mt-4 space-y-5">
           <p className="text-sm text-muted-foreground">
-            You are signed in as <strong>{user.email}</strong>.
+            <Trans i18nKey="auth.account.signedInAs" values={{ email: user.email }} components={{ strong: <strong /> }} />
           </p>
 
           <form onSubmit={handleSetPassword} className="flex flex-col gap-2">
             <Label htmlFor="account-password" className="text-xs">
-              {hasPasswordIdentity ? 'Change password' : 'Set a password'}
+              {hasPasswordIdentity ? t('auth.account.changePassword') : t('auth.account.setPassword')}
             </Label>
             {!hasPasswordIdentity && (
               <p className="text-[11px] text-muted-foreground">
-                This account was created via Google/magic link and has no password yet.
+                {t('auth.account.noPasswordYet')}
               </p>
             )}
             <div className="flex items-center gap-2">
@@ -194,14 +195,14 @@ export function AuthModal({ onClose }: AuthModalProps) {
                 className="flex-1"
               />
               <Button type="submit" size="sm" disabled={passwordSaving || newPassword.length < 8} loading={passwordSaving}>
-                Save
+                {t('auth.account.save')}
               </Button>
             </div>
             <PasswordStrength password={newPassword} />
           </form>
 
           <Button variant="outline" onClick={handleSignOut} className="w-full">
-            Sign out
+            {t('auth.account.signOut')}
           </Button>
         </div>
       </>
@@ -212,12 +213,12 @@ export function AuthModal({ onClose }: AuthModalProps) {
     return (
       <>
         <DialogHeader>
-          <DialogTitle>Reset Password</DialogTitle>
-          <DialogDescription>Enter your email to receive a reset link.</DialogDescription>
+          <DialogTitle>{t('auth.reset.title')}</DialogTitle>
+          <DialogDescription>{t('auth.reset.description')}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleResetPassword} className="mt-4 space-y-5">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="reset-email">Email</Label>
+            <Label htmlFor="reset-email">{t('auth.email')}</Label>
             <Input
               id="reset-email"
               type="email"
@@ -228,10 +229,10 @@ export function AuthModal({ onClose }: AuthModalProps) {
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading} loading={loading}>
-            Send reset email
+            {t('auth.reset.send')}
           </Button>
           <Button type="button" variant="ghost" className="w-full text-xs" onClick={() => setForgotPassword(false)}>
-            Back to sign in
+            {t('auth.backToSignIn')}
           </Button>
         </form>
       </>
@@ -242,14 +243,13 @@ export function AuthModal({ onClose }: AuthModalProps) {
     return (
       <>
         <DialogHeader>
-          <DialogTitle>Check your email</DialogTitle>
+          <DialogTitle>{t('auth.checkEmail')}</DialogTitle>
           <DialogDescription>
-            We sent a magic link to <strong>{magicLinkEmail}</strong>. Click it to finish signing in, then
-            reopen this popup.
+            <Trans i18nKey="auth.magicLinkSent" values={{ email: magicLinkEmail }} components={{ strong: <strong /> }} />
           </DialogDescription>
         </DialogHeader>
         <Button className="mt-4 w-full" variant="outline" onClick={() => setMagicLinkSent(false)}>
-          Back to sign in
+          {t('auth.backToSignIn')}
         </Button>
       </>
     );
@@ -259,11 +259,11 @@ export function AuthModal({ onClose }: AuthModalProps) {
     return (
       <>
         <DialogHeader>
-          <DialogTitle>Check your email</DialogTitle>
-          <DialogDescription>Account created! Check your email to confirm, then sign in.</DialogDescription>
+          <DialogTitle>{t('auth.checkEmail')}</DialogTitle>
+          <DialogDescription>{t('auth.signedUp')}</DialogDescription>
         </DialogHeader>
         <Button className="mt-4 w-full" variant="outline" onClick={() => setSignedUp(false)}>
-          Back to sign in
+          {t('auth.backToSignIn')}
         </Button>
       </>
     );
@@ -272,13 +272,13 @@ export function AuthModal({ onClose }: AuthModalProps) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Sign In to TabMerger</DialogTitle>
-        <DialogDescription>Signing in is free. Syncing your groups across devices comes with Pro.</DialogDescription>
+        <DialogTitle>{t('auth.title')}</DialogTitle>
+        <DialogDescription>{t('auth.description')}</DialogDescription>
       </DialogHeader>
 
       {consentDenied && (
         <p role="alert" className="mt-3 text-xs text-destructive text-center">
-          {SIGN_IN_CONSENT_DENIED_MESSAGE}
+          {t('auth.consentDenied')}
         </p>
       )}
 
@@ -297,32 +297,32 @@ export function AuthModal({ onClose }: AuthModalProps) {
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-          Continue with Google
+          {t('auth.google')}
         </Button>
 
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-[11px] text-muted-foreground">or</span>
+          <span className="text-[11px] text-muted-foreground">{t('auth.or')}</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
         <Tabs defaultValue="signin">
           <TabsList className="w-full">
             <TabsTrigger value="signin" className="flex-1 text-xs">
-              Sign In
+              {t('auth.tabSignIn')}
             </TabsTrigger>
             <TabsTrigger value="signup" className="flex-1 text-xs">
-              Sign Up
+              {t('auth.tabSignUp')}
             </TabsTrigger>
             <TabsTrigger value="magiclink" className="flex-1 text-xs">
-              Magic Link
+              {t('auth.tabMagicLink')}
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="signin">
             <form onSubmit={handleSignIn} className="space-y-5 mt-3">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="signin-email">Email</Label>
+                <Label htmlFor="signin-email">{t('auth.email')}</Label>
                 <Input
                   id="signin-email"
                   type="email"
@@ -338,7 +338,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   group stops reading as one field. As a form-level sibling the
                   link picks up the form's own 16px rhythm instead. */}
               <div className="flex flex-col gap-2">
-                <Label htmlFor="signin-password">Password</Label>
+                <Label htmlFor="signin-password">{t('auth.password')}</Label>
                 <PasswordInput
                   id="signin-password"
                   value={password}
@@ -352,11 +352,11 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   className="text-[11px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline"
                   onClick={() => { setForgotPassword(true); setForgotEmail(email); }}
                 >
-                  Forgot password?
+                  {t('auth.forgotPassword')}
                 </button>
               </div>
               <Button type="submit" className="w-full" disabled={loading} loading={loading}>
-                Sign In
+                {t('auth.signIn')}
               </Button>
             </form>
           </TabsContent>
@@ -364,7 +364,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
           <TabsContent value="signup">
             <form onSubmit={handleSignUp} className="space-y-5 mt-3">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="signup-email">Email</Label>
+                <Label htmlFor="signup-email">{t('auth.email')}</Label>
                 <Input
                   id="signup-email"
                   type="email"
@@ -374,7 +374,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="signup-password">Password</Label>
+                <Label htmlFor="signup-password">{t('auth.password')}</Label>
                 <PasswordInput
                   id="signup-password"
                   value={password}
@@ -384,7 +384,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
                 <PasswordStrength password={password} />
               </div>
               <Button type="submit" className="w-full" disabled={loading || !passwordValid} loading={loading}>
-                Create Account
+                {t('auth.createAccount')}
               </Button>
             </form>
           </TabsContent>
@@ -392,7 +392,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
           <TabsContent value="magiclink">
             <form onSubmit={handleMagicLink} className="space-y-5 mt-3">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="magiclink-email">Email</Label>
+                <Label htmlFor="magiclink-email">{t('auth.email')}</Label>
                 <Input
                   id="magiclink-email"
                   type="email"
@@ -402,7 +402,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading} loading={loading}>
-                Send magic link
+                {t('auth.sendMagicLink')}
               </Button>
             </form>
           </TabsContent>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 import { X } from "lucide-react";
 import { toast } from "@/lib/toast";
@@ -15,6 +16,7 @@ function isDismissed() {
 }
 
 export function CleanupSuggestionBanner() {
+    const { t } = useTranslation();
     const [dismissed, setDismissed] = useState(isDismissed);
     const { staleTabs, staleGroupIndexes, staleThresholdDays, thresholdMs } =
         useCleanupSuggestions();
@@ -43,7 +45,7 @@ export function CleanupSuggestionBanner() {
             groupIndexes: staleGroupIndexes,
             staleThresholdMs: thresholdMs,
         });
-        toast.success(`Removed ${count} stale ${count === 1 ? "tab" : "tabs"}`);
+        toast.success(t('banners.staleRemoved', { count }));
         dismiss();
     }
 
@@ -62,24 +64,24 @@ export function CleanupSuggestionBanner() {
             style={{ height: 38 }}
         >
             <span className="flex-1 truncate">
-                {count} tabs were saved over {staleThresholdDays} days ago.
+                {t('banners.staleTabs', { count, days: staleThresholdDays })}
             </span>
             <button
                 className="shrink-0 border border-primary/40 text-primary px-2 py-0.5 text-xs hover:bg-primary/10 transition-colors"
                 onClick={review}
             >
-                Review
+                {t('banners.review')}
             </button>
             <button
                 className="shrink-0 border border-primary/40 text-primary px-2 py-0.5 text-xs hover:bg-primary/10 transition-colors"
                 onClick={removeAll}
             >
-                Remove stale
+                {t('banners.removeStale')}
             </button>
             <button
                 className="shrink-0 text-primary hover:opacity-70 transition-opacity ml-1"
                 onClick={dismiss}
-                aria-label="Dismiss"
+                aria-label={t('banners.dismiss')}
             >
                 <X className="h-3.5 w-3.5" />
             </button>

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatDateTime, t as translate } from '@/lib/i18n';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { RotateCcw, Trash2 } from 'lucide-react';
-import { AUTO_BACKUP_COPY, AUTO_BACKUP_INTERVALS, AUTO_BACKUP_MESSAGE, AUTO_BACKUP_RETENTION_COUNT, normalizeAutoBackupInterval } from '@tabmerger/shared';
+import { AUTO_BACKUP_INTERVALS, AUTO_BACKUP_MESSAGE, AUTO_BACKUP_RETENTION_COUNT, normalizeAutoBackupInterval } from '@tabmerger/shared';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -18,9 +20,9 @@ import { BACKUP_DOWNLOAD_MESSAGES, downloadAutoBackups, type BackupDownloadResul
 import { autoBackupDownloadQueryKey, backupFileStatusQueryKey } from '@/lib/autoBackupQueryKeys';
 import { countSavedGroupsAndTabs } from '@/lib/tierLimits';
 import { useUIStore } from '@/stores/uiStore';
-import { importGroups, skippedSuffix } from '@/lib/importExport';
+import { importGroups, skippedContext } from '@/lib/importExport';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
-import { cn, getGroupTabCount, pluralize, relativeTimeStr } from '@/lib/utils';
+import { cn, getGroupTabCount, relativeTimeStr } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { toast } from '@/lib/toast';
 import type { Session } from '@/lib/types';
@@ -44,22 +46,22 @@ interface AutoBackupsProps {
  * had cloud backups), only what applies to it.
  */
 export function describeBackupDownload(result: BackupDownloadResult | undefined, loading: boolean, paid: boolean): string | null {
-  if (loading) return 'Checking for backups stored in your account...';
+  if (loading) return translate('backups.download.checking');
   if (!result || result.status === 'busy') return null;
   if (result.status === 'blocked') {
     if (!paid && result.reason === 'no-key') return null;
     return BACKUP_DOWNLOAD_MESSAGES[result.reason];
   }
   const parts: string[] = [];
-  if (result.added > 0) parts.push(`Brought back ${result.added} ${pluralize(result.added, 'backup')} stored in your account.`);
+  if (result.added > 0) parts.push(translate('backups.download.broughtBack', { count: result.added }));
   if (result.unreadable > 0) {
-    parts.push("Some entries in your account can't be read with this device's encryption key, so any backups among them are not shown.");
+    parts.push(translate('backups.download.unreadable'));
   }
   return parts.length > 0 ? parts.join(' ') : null;
 }
 
 const formatBackupDate = (ms: number) =>
-  new Date(ms).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  formatDateTime(ms, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 /**
  * Settings → Data → "Automatic backups". Paid accounts get the switch, the interval, "Back up
@@ -70,6 +72,7 @@ const formatBackupDate = (ms: number) =>
  * backup, and the server rejects the cloud copy for an account that is not paid.
  */
 export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
+  const { t } = useTranslation();
   const qc = useQueryClient();
   const { cloudSync, maxGroups, maxTabs, loading: planLoading } = useEntitlements();
   const { data: saved, isLoading: settingsLoading } = useAppSettings();
@@ -152,7 +155,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
       await saveAppSettings({ ...(saved ?? DEFAULT_APP_SETTINGS), ...patch });
       onSettingsSaved(patch);
     } catch {
-      toast.error('Could not save the backup setting');
+      toast.error(t('backups.toast.settingFailed'));
     }
   };
 
@@ -189,37 +192,38 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
     try {
       parsed = importGroups(JSON.stringify(backup.groups));
     } catch {
-      toast.error('This backup could not be read');
+      toast.error(t('backups.toast.unreadable'));
       return;
     }
     const { groups, skipped } = parsed;
     if (groups.length === 0) {
-      toast.error('This backup has no groups to restore');
+      toast.error(t('backups.toast.noGroups'));
       return;
     }
     if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, mode === 'add' ? 'append' : 'replace')) return;
-    const count = `${groups.length} ${pluralize(groups.length, 'group')}`;
+    const backupGroups = t('common.groupCount', { count: groups.length });
     const done = {
       onSuccess: () => {
         trackEvent('auto_backup_restored', { mode });
-        toast.success(`Restored ${count}${skippedSuffix(skipped)}. Undo brings back what you had.`);
+        toast.success(t('backups.toast.restored', { backup: backupGroups, ...skippedContext(skipped) }));
         setRestoreId(null);
         onRestored();
       },
-      onError: () => toast.error('Could not restore this backup')
+      onError: () => toast.error(t('backups.toast.restoreFailed'))
     };
     if (mode === 'add') {
       importGroupsMutation(groups, done);
       return;
     }
     const current = countSavedGroupsAndTabs(groupsState?.available ?? []).groups;
-    const losing = current === 0 ? '' : ` Your ${current} current ${pluralize(current, 'group')} will be removed.`;
     // a replace that is still being written must not be started a second time
     if (replacing) return;
     const confirmed = await confirm({
-      title: 'Replace your groups?',
-      description: `Your groups will be replaced with the ${count} from this backup.${losing} You can undo this.`,
-      confirmLabel: 'Replace groups',
+      title: t('backups.replaceTitle'),
+      description: current === 0
+        ? t('backups.replaceDescription', { backup: backupGroups })
+        : t('backups.replaceDescriptionLosing', { backup: backupGroups, count: current }),
+      confirmLabel: t('backups.replaceConfirm'),
       destructive: true
     });
     if (!confirmed) return;
@@ -235,9 +239,9 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
 
   const handleDelete = async (backup: Session) => {
     const confirmed = await confirm({
-      title: 'Delete this backup?',
-      description: `The backup from ${formatBackupDate(backup.createdAt)} will be deleted. ${AUTO_BACKUP_COPY.deleteScope} This cannot be undone.`,
-      confirmLabel: 'Delete backup',
+      title: t('backups.deleteTitle'),
+      description: t('backups.deleteDescription', { when: formatBackupDate(backup.createdAt), scope: t('backups.deleteScope') }),
+      confirmLabel: t('backups.deleteConfirm'),
       destructive: true
     });
     if (!confirmed) return;
@@ -248,24 +252,24 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
   };
 
   return (
-    <section ref={sectionRef} tabIndex={-1} aria-label={AUTO_BACKUP_COPY.title} className="min-w-0 space-y-3 focus:outline-none">
+    <section ref={sectionRef} tabIndex={-1} aria-label={t('backups.title')} className="min-w-0 space-y-3 focus:outline-none">
       {planLoading ? (
         // The plan is not known yet: neither the controls nor the upgrade offer (a paid user must
         // not see "Upgrade to Pro" flash by while their subscription loads).
         <div className="min-w-0">
-          <Label className="text-sm">{AUTO_BACKUP_COPY.title}</Label>
-          <p className="text-xs text-muted-foreground">Checking your plan...</p>
+          <Label className="text-sm">{t('backups.title')}</Label>
+          <p className="text-xs text-muted-foreground">{t('backups.checkingPlan')}</p>
         </div>
       ) : cloudSync ? (
         <>
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">{AUTO_BACKUP_COPY.title}</Label>
-              <p className="text-xs text-muted-foreground">{AUTO_BACKUP_COPY.description}</p>
+              <Label className="text-sm">{t('backups.title')}</Label>
+              <p className="text-xs text-muted-foreground">{t('backups.description', { count: AUTO_BACKUP_RETENTION_COUNT })}</p>
             </div>
             <Switch
               className="shrink-0"
-              aria-label={AUTO_BACKUP_COPY.title}
+              aria-label={t('backups.title')}
               checked={enabled}
               disabled={settingsLoading}
               onCheckedChange={(v) => void save({ autoBackupEnabled: v === true })}
@@ -274,9 +278,9 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Back up</Label>
+              <Label className="text-sm">{t('backups.intervalLabel')}</Label>
               <p className="text-xs text-muted-foreground">
-                Only when something changed. The newest {AUTO_BACKUP_RETENTION_COUNT} backups are kept; older ones are removed.
+                {t('backups.intervalDescription', { count: AUTO_BACKUP_RETENTION_COUNT })}
               </p>
             </div>
             <Select
@@ -284,13 +288,13 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
               disabled={!enabled || settingsLoading}
               onValueChange={(v) => void save({ autoBackupIntervalMinutes: normalizeAutoBackupInterval(Number(v)) })}
             >
-              <SelectTrigger className="w-32 h-7 text-xs shrink-0" aria-label="Backup interval">
+              <SelectTrigger className="w-32 h-7 text-xs shrink-0" aria-label={t('backups.intervalAria')}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {AUTO_BACKUP_INTERVALS.map((option) => (
                   <SelectItem key={option.minutes} value={String(option.minutes)}>
-                    {option.label}
+                    {t(`backups.interval.${option.minutes}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -299,7 +303,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
 
           <div className="flex items-center justify-between gap-4">
             <p className="min-w-0 flex-1 text-xs text-muted-foreground">
-              {latest ? `Last backup: ${relativeTimeStr(latest.createdAt)} ago` : 'No backup yet'}
+              {latest ? t('backups.lastBackup', { when: relativeTimeStr(latest.createdAt) }) : t('backups.noBackupYet')}
             </p>
             <Button
               variant="outline"
@@ -314,7 +318,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
                 void handleBackupNow();
               }}
             >
-              {running ? 'Backing up...' : 'Back up now'}
+              {running ? t('backups.backingUp') : t('backups.backUpNow')}
             </Button>
           </div>
 
@@ -323,8 +327,8 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
       ) : (
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <Label className="text-sm">{AUTO_BACKUP_COPY.title}</Label>
-            <p className="text-xs text-muted-foreground">{AUTO_BACKUP_COPY.upgradeDescription}</p>
+            <Label className="text-sm">{t('backups.title')}</Label>
+            <p className="text-xs text-muted-foreground">{t('backups.upgradeDescription', { count: AUTO_BACKUP_RETENTION_COUNT })}</p>
           </div>
           <Button
             variant="outline"
@@ -335,7 +339,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
               chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`, active: true });
             }}
           >
-            Upgrade to Pro
+            {t('backups.upgradeToPro')}
           </Button>
         </div>
       )}
@@ -350,13 +354,12 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
 
       {!cloudSync && backups.length > 0 && (
         <p className="min-w-0 text-xs text-muted-foreground">
-          Your plan no longer includes automatic backups, so no new ones are made. The ones below are still yours to restore
-          or delete.
+          {t('backups.planEnded')}
         </p>
       )}
 
       {backups.length > 0 && (
-        <ul className="min-w-0 border border-border divide-y divide-border" aria-label="Automatic backups list">
+        <ul className="min-w-0 border border-border divide-y divide-border" aria-label={t('backups.listLabel')}>
           {backups.map((backup) => {
             const tabCount = backup.groups.reduce((sum, g) => sum + getGroupTabCount(g), 0);
             const when = formatBackupDate(backup.createdAt);
@@ -366,25 +369,25 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
                 <div className="min-w-0 flex-1">
                   <span className="block truncate text-xs">{when}</span>
                   <span className="block truncate text-[11px] text-muted-foreground">
-                    {backup.groups.length} {pluralize(backup.groups.length, 'group')} · {tabCount} {pluralize(tabCount, 'tab')}
+                    {t('backups.counts', { groups: t('common.groupCount', { count: backup.groups.length }), tabs: t('common.tabCount', { count: tabCount }) })}
                   </span>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   className="h-7 gap-1 text-xs shrink-0 rounded-none"
-                  aria-label={`Restore backup from ${when}`}
+                  aria-label={t('backups.restoreFrom', { when })}
                   aria-expanded={restoreId === backup.id}
                   onClick={() => setRestoreId(restoreId === backup.id ? null : backup.id)}
                 >
                   <RotateCcw className="h-3 w-3" />
-                  Restore
+                  {t('backups.restore')}
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   className="h-7 px-2 shrink-0 rounded-none text-muted-foreground hover:text-destructive"
-                  aria-label={`Delete backup from ${when}`}
+                  aria-label={t('backups.deleteFrom', { when })}
                   data-backup-delete={backup.id}
                   onClick={() => void handleDelete(backup)}
                 >
@@ -392,20 +395,19 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
                 </Button>
                 </div>
                 {restoreId === backup.id && (
-                  <div className="mt-1.5 min-w-0 space-y-1.5" role="group" aria-label={`How to restore the backup from ${when}`}>
+                  <div className="mt-1.5 min-w-0 space-y-1.5" role="group" aria-label={t('backups.howToRestore', { when })}>
                     <p className="text-[11px] text-muted-foreground">
-                      Add keeps your current groups and puts the backup&apos;s next to them. Replace makes your groups exactly what
-                      this backup holds. Either way you can undo it.
+                      {t('backups.restoreExplainer')}
                     </p>
                     <div className="flex flex-wrap items-center gap-1.5 min-w-0">
                       <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => void handleRestore(backup, 'add')}>
-                        Add to my groups
+                        {t('backups.addToMine')}
                       </Button>
                       <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => void handleRestore(backup, 'replace')}>
-                        Replace my groups
+                        {t('backups.replaceMine')}
                       </Button>
                       <Button variant="ghost" size="sm" className="h-7 text-xs rounded-none" onClick={() => setRestoreId(null)}>
-                        Cancel
+                        {t('backups.cancel')}
                       </Button>
                     </div>
                   </div>

@@ -15,7 +15,7 @@ vi.mock('@/lib/changelog', async (importOriginal) => {
 })
 
 // Import after the mock is registered so ChangelogPage picks up the mocked function.
-const { default: ChangelogPage } = await import('@/app/(marketing)/changelog/page')
+const { default: ChangelogPage } = await import('@/app/[locale]/(marketing)/changelog/page')
 
 describe('ChangelogPage', () => {
   beforeEach(() => {

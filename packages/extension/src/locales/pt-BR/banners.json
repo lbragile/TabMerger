@@ -1,0 +1,15 @@
+{
+  "review": "Revisar",
+  "archive": "Arquivar",
+  "dismiss": "Dispensar",
+  "getMore": "Obter mais",
+  "removeStale": "Remover inativas",
+  "staleTabs": "{{count}} abas foram salvas há mais de {{days}} dias.",
+  "staleRemoved_one": "{{count}} aba inativa removida",
+  "staleRemoved_other": "{{count}} abas inativas removidas",
+  "staleRemoved_many": "{{count}} abas inativas removidas",
+  "upgrade": "Upgrade",
+  "paymentIssue": "Problema no pagamento — atualize seu cartão",
+  "planEnds": "Seu plano Pro termina em {{date}}",
+  "approachingLimit": "Você está perto do limite gratuito — faça upgrade para o Pro e tenha grupos e abas ilimitados"
+}

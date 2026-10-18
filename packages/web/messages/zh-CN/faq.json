@@ -1,0 +1,36 @@
+{
+  "metaTitle": "常见问题",
+  "metaDescription": "关于 TabMerger 的常见问题。",
+  "title": "常见问题",
+  "lead": "还有疑问？我们会在一天内回复邮件。",
+  "contact": "联系支持",
+  "free": {
+    "question": "TabMerger 真的免费吗？",
+    "answer": "是的！免费版包含全部核心功能：最多 {groups} 个分组、{tabs} 个标签页、{urlRules} 条网址规则、拖放以及导入/导出。只有在需要云同步、不限数量的分组、标签页和网址规则，或 AI 功能时才需付费。"
+  },
+  "sync": {
+    "question": "云同步是如何工作的？",
+    "answer": "订阅 Pro 或 Pro AI 套餐后，您的分组会自动保存到我们的服务器，并在您登录的每个浏览器间同步。只要弹出窗口处于打开状态就会进行同步，因此更改会在您下次打开时显示。"
+  },
+  "ai": {
+    "question": "AI 具体能做什么？",
+    "answer": "Pro AI 套餐提供三项 AI 功能：自动分组（分析您打开的标签页并按逻辑分组）、智能命名（为分组推荐名称）和会话建议（推荐如何组织您的工作流程）。",
+    "answerComingSoon": "即将推出：Pro AI 套餐将提供三项 AI 功能：自动分组（分析您打开的标签页并按逻辑分组）、智能命名（为分组推荐名称）和会话建议（推荐如何组织您的工作流程）。"
+  },
+  "cancel": {
+    "question": "我可以取消订阅吗？",
+    "answer": "当然可以。您可以随时在账户页面取消。当前计费周期结束前您仍可继续使用，之后将恢复为免费版。"
+  },
+  "browsers": {
+    "question": "TabMerger 支持哪些浏览器？",
+    "answer": "Chrome（Chrome Web Store）、Edge（Edge 加载项商店或 Chrome Web Store）、Brave、Vivaldi 和 Arc（Chrome Web Store）、Opera（Chrome Web Store，需借助 Opera 的“Install Chrome Extensions”扩展）以及 Firefox（Firefox 附加组件）。不支持 Safari。"
+  },
+  "privacy": {
+    "question": "我的数据是私密的吗？",
+    "answer": "我们非常重视隐私。免费版数据仅保存在本地，不会离开您的浏览器。Pro 云同步数据在到达我们的服务器之前，会在您的设备上使用只有您知道的密码短语进行端到端加密，我们只存储密文，无法读取您的分组或标签页。我们绝不会出售您的数据。"
+  },
+  "downgrade": {
+    "question": "降级后我的分组会怎样？",
+    "answer": "从 Pro 降级到免费版后，您的分组会在云端保留 30 天。本地标签页始终保留。降级前您可以导出所有内容。"
+  }
+}

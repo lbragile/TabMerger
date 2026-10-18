@@ -12,11 +12,14 @@ import {
 import { toast } from 'sonner'
 import { BackupsSection } from '@/components/dashboard/BackupsSection'
 import { SavedSessionsProvider } from '@/components/dashboard/SavedSessionsProvider'
-import { DAMAGED_ITEM_NOTE } from '@/components/dashboard/SessionCard'
 import { SessionList } from '@/components/dashboard/SessionList'
 import { SessionsStatDescription, SessionsStatValue } from '@/components/dashboard/SessionsStat'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
-import { SAVED_SESSIONS_READ_ONLY_NOTE, formatAbsoluteTime, formatRelativeTime } from '@/lib/savedSessions'
+import { formatAbsoluteTime, formatRelativeTime } from '@/lib/savedSessions'
+import en from '@/messages/en'
+
+const DAMAGED_ITEM_NOTE = en.dashboard.damagedNote
+const SAVED_SESSIONS_READ_ONLY_NOTE = en.dashboard.sessions.readOnlyNote
 
 /**
  * The dashboard's split between "Saved Sessions" and "Backups". Rows are really encrypted and

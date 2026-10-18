@@ -1,0 +1,13 @@
+{
+  "success": "C’est fait : le site web peut maintenant trouver TabMerger. Vous pouvez fermer cet onglet.",
+  "refused": "Firefox ne l’a pas autorisé. Vous pouvez réessayer, ou l’autoriser plus tard dans about:addons.",
+  "title": "Permettre au site web de trouver TabMerger",
+  "checking": "Vérification de l’accès au site…",
+  "explainer": "Firefox n’a pas encore autorisé TabMerger sur {{hosts}}. Sans cela, le site web ne peut pas détecter TabMerger, transmettre votre connexion ni lancer une synchronisation. Cliquez sur le bouton ci-dessous, puis confirmez dans l’invite de Firefox.",
+  "allowOn": "Autoriser TabMerger sur {{hosts}}",
+  "bannerLabel": "Accès au site web",
+  "bannerText": "Autorisez TabMerger sur {{hosts}} pour que le site web puisse le trouver et transmettre votre connexion.",
+  "allow": "Autoriser",
+  "dismiss": "Ignorer l’invite d’accès au site web",
+  "openFailed": "Impossible d’ouvrir l’onglet d’accès au site. Réessayez, ou autorisez-le dans about:addons."
+}

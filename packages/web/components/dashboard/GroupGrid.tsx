@@ -5,6 +5,7 @@ import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, External
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 import { isEncryptedBlob, decryptBlob, toHttpUrl, type EncryptedBlob } from '@tabmerger/shared'
 import { useEncryptionKey, unreadableRowKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
@@ -105,10 +106,11 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
 function ShareButton({ group, lockedNoteId }: { group: DashboardGroup; lockedNoteId?: string }) {
   const [busy, setBusy] = useState(false)
   const [copied, setCopied] = useState(false)
+  const t = useTranslations('dashboard.groups')
 
   async function share() {
     if (group.locked) {
-      toast.error("This group can't be read, so it can't be shared.")
+      toast.error(t('cantShare'))
       return
     }
     setBusy(true)
@@ -118,10 +120,10 @@ function ShareButton({ group, lockedNoteId }: { group: DashboardGroup; lockedNot
       ])
       await navigator.clipboard.writeText(url)
       setCopied(true)
-      toast.success('Link copied — shares a snapshot of this group.')
+      toast.success(t('linkCopiedSnapshot'))
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      toast.error('Could not create share link. Please try again.')
+      toast.error(t('shareFailed'))
     } finally {
       setBusy(false)
     }
@@ -136,19 +138,19 @@ function ShareButton({ group, lockedNoteId }: { group: DashboardGroup; lockedNot
             disabled={busy}
             aria-disabled={group.locked ? true : undefined}
             aria-describedby={group.locked ? lockedNoteId : undefined}
-            aria-label="Share group"
+            aria-label={t('shareGroup')}
             className={`flex items-center gap-1 text-xs text-muted-foreground px-2 py-1 rounded-md border border-transparent transition-colors disabled:opacity-50 ${
               group.locked ? 'opacity-50 cursor-not-allowed' : 'hover:text-foreground hover:border-border'
             }`}
           >
             {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Share2 className="w-3 h-3" />}
-            {copied ? 'Copied!' : 'Share'}
+            {copied ? t('copied') : t('share')}
           </button>
         </TooltipTrigger>
         <TooltipContent side="top">
           {group.locked
-            ? "This group can't be read, so it can't be shared"
-            : 'Copies a link to a snapshot of this group — later edits won’t update it'}
+            ? t('cantShareTooltip')
+            : t('shareTooltip')}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -170,14 +172,17 @@ function isStale(updatedAt: string) {
   return Date.now() - new Date(updatedAt).getTime() > STALE_MS
 }
 
-function relativeTime(iso: string) {
+type GroupsT = ReturnType<typeof useTranslations<'dashboard.groups'>>
+
+/** "just now", "5m ago", "3h ago", "2d ago". */
+function relativeTime(iso: string, t: GroupsT) {
   const diff = Date.now() - new Date(iso).getTime()
   const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'just now'
-  if (mins < 60) return `${mins}m ago`
+  if (mins < 1) return t('justNow')
+  if (mins < 60) return t('minutesAgo', { count: mins })
   const hrs = Math.floor(mins / 60)
-  if (hrs < 24) return `${hrs}h ago`
-  return `${Math.floor(hrs / 24)}d ago`
+  if (hrs < 24) return t('hoursAgo', { count: hrs })
+  return t('daysAgo', { count: Math.floor(hrs / 24) })
 }
 
 function GroupCard({
@@ -196,6 +201,8 @@ function GroupCard({
   readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const t = useTranslations('dashboard.groups')
+  const dashboard = useTranslations('dashboard')
   const lockedNoteId = useId()
   const tabs = group.windows.flatMap((w) => w.tabs)
   const firstThree = tabs.slice(0, 3)
@@ -218,7 +225,7 @@ function GroupCard({
           onClick={(e) => { e.stopPropagation(); onToggle(group.id) }}
           disabled={group.locked}
           aria-describedby={group.locked ? lockedNoteId : undefined}
-          aria-label={group.locked ? "Locked group can't be selected" : selected ? 'Deselect' : 'Select'}
+          aria-label={group.locked ? t('lockedCantSelect') : selected ? t('deselect') : t('select')}
         >
           {selected ? <CheckSquare className="w-4 h-4 text-primary" /> : <Square className="w-4 h-4" />}
         </button>
@@ -227,7 +234,7 @@ function GroupCard({
       <div className="px-4 pt-3.5 pb-3">
         {/* Name + star */}
         <div className="flex items-center gap-1.5 mb-1">
-          <span className="font-bold text-[15px] truncate flex-1">{group.name}</span>
+          <span className="font-bold text-[15px] truncate flex-1">{group.locked ? dashboard('lockedName') : group.name}</span>
           {group.starred && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />}
           {readOnly && <Archive className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
         </div>
@@ -237,23 +244,22 @@ function GroupCard({
           // No window/tab counts: the placeholder's empty content is not what the group holds.
           <>
             <p className="text-xs text-muted-foreground mb-2">
-              {isPro ? `Synced ${relativeTime(group.updated_at)}` : relativeTime(group.updated_at)}
+              {isPro ? t('syncedAt', { time: relativeTime(group.updated_at, t) }) : relativeTime(group.updated_at, t)}
             </p>
             <LockedItemNote id={lockedNoteId} className="mb-3" />
           </>
         ) : (
           <p className="text-xs text-muted-foreground mb-3">
-            {group.windows.length} {group.windows.length === 1 ? 'window' : 'windows'} ·{' '}
-            {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
-            {isPro && ` · synced ${relativeTime(group.updated_at)}`}
-            {!isPro && ` · ${relativeTime(group.updated_at)}`}
+            {t('cardMeta', { windows: group.windows.length, tabs: tabs.length })}
+            {isPro && t('syncedSuffix', { time: relativeTime(group.updated_at, t) })}
+            {!isPro && t('timeSuffix', { time: relativeTime(group.updated_at, t) })}
           </p>
         )}
 
         {isStale(group.updated_at) && (
           <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2 py-1 mb-3">
             <AlertTriangle className="w-3 h-3 shrink-0" />
-            Tabs may be stale — last synced over 30 days ago
+            {t('stale')}
           </div>
         )}
 
@@ -272,7 +278,7 @@ function GroupCard({
                 </li>
               ))}
               {overflow > 0 && (
-                <li className="text-xs text-muted-foreground pl-6">+{overflow} more</li>
+                <li className="text-xs text-muted-foreground pl-6">{t('moreTabs', { count: overflow })}</li>
               )}
             </ul>
           </div>
@@ -286,10 +292,10 @@ function GroupCard({
               <button
                 onClick={() => openAllTabs(group)}
                 className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors"
-                title="Open all tabs in this group"
+                title={t('openAllTitle')}
               >
                 <ExternalLink className="w-3 h-3" />
-                Open all
+                {t('openAll')}
               </button>
             )}
             {tabs.length > 0 && (
@@ -297,7 +303,7 @@ function GroupCard({
                 onClick={() => setOpen((v) => !v)}
                 className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
               >
-                {open ? 'Hide tabs' : 'Show tabs'}
+                {open ? t('hideTabs') : t('showTabs')}
               </button>
             )}
             {isPro && !readOnly && <Cloud className="w-3 h-3 text-primary/60 ml-auto" />}
@@ -324,6 +330,8 @@ function GroupRow({
   readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const t = useTranslations('dashboard.groups')
+  const dashboard = useTranslations('dashboard')
   const lockedNoteId = useId()
   const tabs = group.windows.flatMap((w) => w.tabs)
 
@@ -346,9 +354,9 @@ function GroupRow({
           </span>
         )}
         <span className="w-3 h-3 rounded-full shrink-0" style={{ background: group.color }} />
-        <span className="font-medium text-sm flex-1 truncate">{group.name}</span>
+        <span className="font-medium text-sm flex-1 truncate">{group.locked ? dashboard('lockedName') : group.name}</span>
         <div className="flex items-center gap-2 shrink-0 text-xs text-muted-foreground">
-          {!group.locked && <span>{group.windows.length}w · {tabs.length}t</span>}
+          {!group.locked && <span>{t('rowMeta', { windows: group.windows.length, tabs: tabs.length })}</span>}
           {readOnly && <Archive className="w-3 h-3" />}
           {isPro && !readOnly && <Cloud className="w-3 h-3" />}
           {isPro && !selecting && !readOnly && <ShareButton group={group} lockedNoteId={lockedNoteId} />}
@@ -356,13 +364,13 @@ function GroupRow({
             <button
               onClick={(e) => { e.stopPropagation(); openAllTabs(group) }}
               className="flex items-center gap-1 hover:text-foreground"
-              title="Open all tabs in this group"
+              title={t('openAllTitle')}
             >
               <ExternalLink className="w-3 h-3" />
-              Open all
+              {t('openAll')}
             </button>
           )}
-          <span>{relativeTime(group.updated_at)}</span>
+          <span>{relativeTime(group.updated_at, t)}</span>
         </div>
       </div>
       {/* On its own line under the row, so the reason is fully visible without widening the row. */}
@@ -422,6 +430,8 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
   const [sharing, setSharing] = useState(false)
   const [sort, setSort] = useState<'recent' | 'name' | 'tabCount'>('recent')
   const [archivedOpen, setArchivedOpen] = useState(false)
+  const t = useTranslations('dashboard.groups')
+  const passphrase = useTranslations('dashboard.passphrase')
 
   function toggle(next: 'grid' | 'list') {
     setStoredView(next)
@@ -454,10 +464,10 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
       const shareGroups = shareableSelected.map((g) => ({ id: g.id, name: g.name, color: g.color, windows: g.windows }))
       const url = await createSharedBundle(shareGroups)
       await navigator.clipboard.writeText(url)
-      toast.success('Link copied! Share page is live.')
+      toast.success(t('linkCopiedLive'))
       exitSelecting()
     } catch {
-      toast.error('Could not create share link. Please try again.')
+      toast.error(t('shareFailed'))
     } finally {
       setSharing(false)
     }
@@ -484,14 +494,14 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
   const sortedArchivedGroups = [...archivedGroups].sort(sortFn)
 
   if (needsUnlock) {
-    return <PassphrasePrompt label="Your groups are end-to-end encrypted. Enter your passphrase to view them here." />
+    return <PassphrasePrompt label={passphrase('groupsLabel')} />
   }
 
   if (groups.length === 0) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
         <p className="text-sm text-muted-foreground">
-          No synced groups yet. Open the extension to create tab groups.
+          {t('empty')}
         </p>
       </div>
     )
@@ -502,21 +512,21 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
       {/* Page header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <h3 className="font-bold" style={{ fontSize: '24px' }}>Groups</h3>
+          <h3 className="font-bold" style={{ fontSize: '24px' }}>{t('title')}</h3>
           <span className="text-sm text-muted-foreground">
-            {activeGroups.length} {activeGroups.length === 1 ? 'group' : 'groups'} · {totalTabs} tabs
+            {t('summary', { count: activeGroups.length, tabs: totalTabs })}
           </span>
           <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            Sort
+            {t('sort')}
             <select
-              aria-label="Sort groups"
+              aria-label={t('sortLabel')}
               value={sort}
               onChange={(e) => setSort(e.target.value as typeof sort)}
               className="h-7 rounded-md border border-border bg-background px-1.5 text-xs"
             >
-              <option value="recent">Recent</option>
-              <option value="name">Name</option>
-              <option value="tabCount">Tab count</option>
+              <option value="recent">{t('sortRecent')}</option>
+              <option value="name">{t('sortName')}</option>
+              <option value="tabCount">{t('sortTabCount')}</option>
             </select>
           </label>
         </div>
@@ -528,7 +538,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
               className="h-8 text-xs"
               onClick={() => selecting ? exitSelecting() : setSelecting(true)}
             >
-              {selecting ? 'Cancel' : 'Select'}
+              {selecting ? t('cancel') : t('select')}
             </Button>
           )}
           {/* Grid/List segmented toggle */}
@@ -536,14 +546,14 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
             <button
               onClick={() => toggle('grid')}
               className={`p-1.5 ${view === 'grid' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
-              aria-label="Grid view"
+              aria-label={t('gridView')}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
             <button
               onClick={() => toggle('list')}
               className={`p-1.5 ${view === 'list' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
-              aria-label="List view"
+              aria-label={t('listView')}
             >
               <List className="h-4 w-4" />
             </button>
@@ -589,7 +599,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
             className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground uppercase tracking-wide mb-2"
           >
             {archivedOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-            Archived ({archivedGroups.length})
+            {t('archived', { count: archivedGroups.length })}
           </button>
           {archivedOpen && (
             view === 'grid' ? (
@@ -628,12 +638,12 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
       {/* ponytail: floating bar — only rendered when items are selected */}
       {selecting && shareableSelected.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-popover border shadow-lg rounded-none px-4 py-2 z-50">
-          <span className="text-sm font-medium">{shareableSelected.length} selected</span>
+          <span className="text-sm font-medium">{t('selectedCount', { count: shareableSelected.length })}</span>
           <Button size="sm" className="rounded-none" onClick={shareBundle} disabled={sharing} loading={sharing}>
             {!sharing && <Share2 className="w-4 h-4 mr-1" />}
-            Share selected
+            {t('shareSelected')}
           </Button>
-          <button onClick={exitSelecting} className="text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Cancel selection">
+          <button onClick={exitSelecting} className="text-muted-foreground hover:text-foreground cursor-pointer" aria-label={t('cancelSelection')}>
             <X className="w-4 h-4" />
           </button>
         </div>

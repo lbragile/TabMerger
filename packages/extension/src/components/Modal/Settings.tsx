@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
@@ -19,11 +20,13 @@ import { useConfirm } from '@/hooks/useConfirm';
 import { useGroups, useImportGroups } from '@/hooks/useGroups';
 import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
 import { useAiUsage } from '@/hooks/useAiUsage';
-import { importGroups, parseBookmarksHtml, parseOneTabs, skippedSuffix } from '@/lib/importExport';
+import { importGroups, parseBookmarksHtml, parseOneTabs, skippedContext } from '@/lib/importExport';
 import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
 import { AutoBackups } from '@/components/Settings/AutoBackups';
+import { LanguageSetting } from '@/components/Settings/LanguageSetting';
+import { useLanguageSetting } from '@/hooks/useLocalePreference';
 import { autoBackupDownloadQueryKey } from '@/lib/autoBackupQueryKeys';
 import type { BackupDownloadResult } from '@/lib/autoBackupDownload';
 import { toast } from '@/lib/toast';
@@ -34,7 +37,16 @@ import { getEncryptionKeyState, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
-import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, SEARCH_COPY, SEARCH_NON_MATCHING_OPTIONS, formatUsd, normalizeSearchNonMatching, toHttpUrl } from '@tabmerger/shared';
+import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, SEARCH_NON_MATCHING, formatUsd, normalizeSearchNonMatching, toHttpUrl } from '@tabmerger/shared';
+import { formatDate } from '@/lib/i18n';
+
+/** The search setting's options, in the order the select lists them. */
+const SEARCH_NON_MATCHING_CHOICES = [
+  { value: SEARCH_NON_MATCHING.HIDE, label: 'search.hide' },
+  { value: SEARCH_NON_MATCHING.DIM, label: 'search.dim' },
+] as const;
+
+const STALE_THRESHOLD_DAYS = [7, 14, 30, 60] as const;
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   // A key that settings saved by an older version lack counts as its default, so a newer
@@ -47,6 +59,7 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ onClose }: SettingsModalProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('general');
   const [devUsageInput, setDevUsageInput] = useState('0');
   const queryClient = useQueryClient();
@@ -55,6 +68,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { data: saved = DEFAULT_APP_SETTINGS } = useAppSettings();
   const { mutateAsync: saveAppSettings } = useSaveAppSettings();
   const [draft, setDraft] = useState<AppSettings>(saved);
+  // Per-device, not an AppSetting: saved and applied with the rest by "Save changes"
+  const language = useLanguageSetting();
   const { tier, cloudSync, currentPeriodEnd, aiFeatures, maxGroups, maxTabs } = useEntitlements();
   const { remaining: aiUsageRemaining, cap: aiUsageCap, loading: aiUsageLoading } = useAiUsage();
   const { user, session, signOut } = useAuth();
@@ -85,10 +100,10 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       onConfirm: () => {
         void resetEncryption()
           .then(() => {
-            toast.success('Encryption reset — set up a new passphrase');
+            toast.success(t('settings.toast.encryptionReset'));
             openModal('encryptionSetup');
           })
-          .catch((e) => toast.error(e instanceof Error ? e.message : 'Failed to reset encryption'));
+          .catch((e) => toast.error(e instanceof Error ? e.message : t('settings.toast.encryptionResetFailed')));
       }
     });
   };
@@ -101,14 +116,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     await setDevAiUsage(count);
     queryClient.invalidateQueries({ queryKey: ['aiUsage', user?.id] });
     if (!session?.access_token) {
-      toast.error('Sign in to sync AI usage to the server');
+      toast.error(t('settings.toast.signInForAiUsage'));
       return;
     }
     try {
       await aiPost<{ count: number }>('/api/ai/dev-usage', { count }, session.access_token);
-      toast.success(`Server AI usage set to ${count}`);
+      toast.success(t('settings.toast.aiUsageSet', { count }));
     } catch {
-      toast.error('Failed to sync AI usage to server');
+      toast.error(t('settings.toast.aiUsageFailed'));
     }
   };
 
@@ -127,7 +142,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     }
   }, [saved]);
 
-  const isDirty = !settingsEqual(draft, saved);
+  const isDirty = !settingsEqual(draft, saved) || language.isDirty;
 
   // upgrade_prompt_shown pairs with the upgrade_clicked fired below — fire once per mount when the CTA is visible
   useEffect(() => {
@@ -146,7 +161,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     if (checked) {
       const granted = await requestDataConsent(PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES);
       if (!granted) {
-        toast.error("Firefox needs permission to fetch page images. Allow it in the browser's prompt to turn this on.");
+        toast.error(t('settings.toast.previewImagesDenied'));
         return;
       }
     }
@@ -157,18 +172,20 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     if (draft.syncEnabled && !saved.syncEnabled) trackEvent('sync_enabled');
     await saveAppSettings(draft);
     applyTheme(draft.theme);
-    toast.success('Settings saved');
+    await language.save();
+    toast.success(t('settings.toast.saved'));
   };
 
   const handleRestoreDefaults = () => {
     setDraft(DEFAULT_APP_SETTINGS);
+    language.reset();
   };
 
   const performClearAll = async () => {
     // one QUEUED wipe: raw store clears raced in-flight groups writes, which could re-populate the store
     await import('@/lib/localDb').then((m) => m.clearAllLocalData());
     useUIStore.getState().clearHistory(); // snapshots of the wiped data must not be restorable
-    toast.success('All data cleared');
+    toast.success(t('settings.toast.cleared'));
     onClose();
   };
 
@@ -191,7 +208,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     a.download = `tabmerger-backup-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('Groups exported successfully');
+    toast.success(t('importExport.toast.exported'));
   };
 
   const handleImport = async (file: File) => {
@@ -201,31 +218,30 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       // Every parser validates what it reads and reports how many entries it left out
       const parse = ext === 'html' ? parseBookmarksHtml : ext === 'txt' ? parseOneTabs : importGroups;
       const { groups, skipped } = parse(text);
-      if (groups.length === 0) throw new Error('No groups found');
+      if (groups.length === 0) throw new Error(t('settings.toast.noGroupsFound'));
 
       // Free-tier backstop: this import path is additive (appends to existing groups),
       // so gate on current + imported, same as ImportExport.tsx's Bookmarks/OneTab paths.
       if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
 
-      const count = `${groups.length} group${groups.length === 1 ? '' : 's'}`;
       // The file name is the user's own, shown as text and cut short so it cannot fill the dialog.
       const from = file.name.length > 60 ? `${file.name.slice(0, 60)}…` : file.name;
       const confirmed = await confirm({
-        title: `Import ${count}?`,
-        description: `The ${count} in "${from}" will be added next to the groups you already have.`,
-        confirmLabel: `Import ${count}`,
+        title: t('settings.data.importTitle', { count: groups.length }),
+        description: t('settings.data.importDescription', { count: groups.length, file: from }),
+        confirmLabel: t('settings.data.importConfirm', { count: groups.length }),
         // the file picker took focus away: give it back to the Import button
         returnFocusTo: importButtonRef.current
       });
       if (!confirmed) return;
       importGroupsMutation(groups, {
         onSuccess: () => {
-          toast.success(`Groups imported successfully${skippedSuffix(skipped)}`);
+          toast.success(t('importExport.toast.imported', skippedContext(skipped)));
           onClose();
         }
       });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Invalid file format');
+      toast.error(e instanceof Error ? e.message : t('settings.toast.invalidFile'));
     }
   };
 
@@ -243,7 +259,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       if (error || !portalUrl) throw new Error(error ?? 'No portal URL');
       chrome.tabs.create({ url: portalUrl, active: true });
     } catch {
-      toast.error('Could not open billing portal');
+      toast.error(t('settings.toast.portalFailed'));
     } finally {
       setPortalLoading(false);
     }
@@ -252,7 +268,10 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   // Built from PRICING_TIERS, so a price change can't leave this label stale: "Pro (US$3.99/mo)".
   // US$ because nothing here says the price is in US dollars (see formatUsd).
   const tierLabels: Record<string, string> = Object.fromEntries(
-    PRICING_TIERS.map((t) => [t.id, t.monthlyPrice > 0 ? `${t.name} (${formatUsd(t.monthlyPrice)}/mo)` : t.name])
+    PRICING_TIERS.map((plan) => {
+      const name = plan.id === 'pro_ai' ? t('common.tier.proAi') : plan.id === 'pro' ? t('common.tier.pro') : t('settings.account.planFree');
+      return [plan.id, plan.monthlyPrice > 0 ? t('settings.account.planWithPrice', { name, price: formatUsd(plan.monthlyPrice) }) : name];
+    })
   );
 
   // __TABMERGER_VERSION__ is a Vite `define` (src/env.d.ts) carrying the same raw semver string
@@ -269,10 +288,10 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     <>
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2 min-w-0">
-          <span className="shrink-0">Settings</span>
+          <span className="shrink-0">{t('settings.title')}</span>
           {extensionVersion && (
             <Badge className="shrink-0 select-text whitespace-nowrap text-[10px] font-normal">
-              v{extensionVersion}
+              {t('settings.version', { version: extensionVersion })}
             </Badge>
           )}
         </DialogTitle>
@@ -281,27 +300,27 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4 min-w-0">
         <TabsList className="w-full">
           <TabsTrigger value="general" className="flex-1 text-xs">
-            General
+            {t('settings.tabs.general')}
           </TabsTrigger>
           <TabsTrigger value="account" className="flex-1 text-xs">
-            Account
+            {t('settings.tabs.account')}
           </TabsTrigger>
           <TabsTrigger value="data" className="flex-1 text-xs">
-            Data
+            {t('settings.tabs.data')}
           </TabsTrigger>
           {tier !== 'free' && (
             <TabsTrigger value="devices" className="flex-1 text-xs">
-              Devices
+              {t('settings.tabs.devices')}
             </TabsTrigger>
           )}
           {aiFeatures && (
             <TabsTrigger value="ai" className="flex-1 text-xs">
-              AI
+              {t('settings.tabs.ai')}
             </TabsTrigger>
           )}
           {(import.meta.env.DEV || import.meta.env.VITE_DEMO_BUILD === 'true') && (
             <TabsTrigger value="dev" className="flex-1 text-xs">
-              Dev
+              {t('settings.tabs.dev')}
             </TabsTrigger>
           )}
         </TabsList>
@@ -310,42 +329,44 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Take the tour</Label>
-              <p className="text-xs text-muted-foreground">A quick walkthrough of TabMerger</p>
+              <Label className="text-sm">{t('settings.general.tourLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.general.tourDescription')}</p>
             </div>
-            <Button variant="outline" size="sm" className="h-7 shrink-0 text-xs" onClick={handleStartTour} aria-label="Start the tour">
-              Start
+            <Button variant="outline" size="sm" className="h-7 shrink-0 text-xs" onClick={handleStartTour} aria-label={t('settings.general.tourButtonLabel')}>
+              {t('settings.general.tourButton')}
             </Button>
           </div>
 
           <div className="flex items-center justify-between gap-4" data-tour={TOUR_ANCHORS.settingsTheme}>
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Theme</Label>
-              <p className="text-xs text-muted-foreground">Choose your preferred theme</p>
+              <Label className="text-sm">{t('settings.general.themeLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.general.themeDescription')}</p>
             </div>
             <Select
               value={draft.theme}
               onValueChange={(v) => patch('theme', v as AppSettings['theme'])}
             >
-              <SelectTrigger className="w-28 h-7 text-xs shrink-0" aria-label="Theme" data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
+              <SelectTrigger className="w-28 h-7 text-xs shrink-0" aria-label={t('settings.general.themeLabel')} data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
+                <SelectItem value="light">{t('settings.general.themeLight')}</SelectItem>
+                <SelectItem value="dark">{t('settings.general.themeDark')}</SelectItem>
+                <SelectItem value="system">{t('settings.general.themeSystem')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
+          <LanguageSetting value={language.draft} onChange={language.setDraft} />
+
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Confirm before deleting</Label>
-              <p className="text-xs text-muted-foreground">Ask before deleting groups or saved windows</p>
+              <Label className="text-sm">{t('settings.general.confirmDeleteLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.general.confirmDeleteDescription')}</p>
             </div>
             <Switch
               className="shrink-0"
-              aria-label="Confirm before deleting"
+              aria-label={t('settings.general.confirmDeleteLabel')}
               checked={draft.confirmOnDelete}
               onCheckedChange={(v) => patch('confirmOnDelete', v)}
             />
@@ -353,12 +374,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Open tab on click</Label>
-              <p className="text-xs text-muted-foreground">Single click opens tab in browser</p>
+              <Label className="text-sm">{t('settings.general.openOnClickLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.general.openOnClickDescription')}</p>
             </div>
             <Switch
               className="shrink-0"
-              aria-label="Open tab on click"
+              aria-label={t('settings.general.openOnClickLabel')}
               checked={draft.openTabOnClick}
               onCheckedChange={(v) => patch('openTabOnClick', v)}
             />
@@ -366,20 +387,20 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">{SEARCH_COPY.settingLabel}</Label>
-              <p className="text-xs text-muted-foreground">{SEARCH_COPY.settingDescription}</p>
+              <Label className="text-sm">{t('search.settingLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('search.settingDescription')}</p>
             </div>
             <Select
               // A stored value is only trusted when it is one of the options (older saves have none).
               value={normalizeSearchNonMatching(draft.searchNonMatching)}
               onValueChange={(v) => patch('searchNonMatching', normalizeSearchNonMatching(v))}
             >
-              <SelectTrigger className="w-24 h-7 text-xs shrink-0" aria-label={SEARCH_COPY.settingLabel}>
+              <SelectTrigger className="w-24 h-7 text-xs shrink-0" aria-label={t('search.settingLabel')}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {SEARCH_NON_MATCHING_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                {SEARCH_NON_MATCHING_CHOICES.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>{t(option.label)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -387,12 +408,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Auto-deduplicate on merge</Label>
-              <p className="text-xs text-muted-foreground">Remove duplicate tabs when merging windows</p>
+              <Label className="text-sm">{t('settings.general.dedupLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.general.dedupDescription')}</p>
             </div>
             <Switch
               className="shrink-0"
-              aria-label="Auto-deduplicate on merge"
+              aria-label={t('settings.general.dedupLabel')}
               checked={draft.autoDedupOnMerge}
               onCheckedChange={(v) => patch('autoDedupOnMerge', v)}
             />
@@ -400,9 +421,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Show page images in previews</Label>
+              <Label className="text-sm">{t('settings.general.previewImagesLabel')}</Label>
               <p className="text-xs text-muted-foreground">
-                Hovering a tab sends its address to fetch a page image. Not stored or linked to you.{' '}
+                {t('settings.general.previewImagesDescription')}{' '}
                 <a
                   href={`${import.meta.env.VITE_WEB_APP_URL ?? ''}/privacy#page-previews`}
                   className="underline"
@@ -414,13 +435,13 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                     });
                   }}
                 >
-                  Privacy policy
+                  {t('settings.general.privacyPolicy')}
                 </a>
               </p>
             </div>
             <Switch
               className="shrink-0"
-              aria-label="Show page images in previews"
+              aria-label={t('settings.general.previewImagesLabel')}
               checked={draft.showPreviewImages}
               onCheckedChange={(v) => void handlePreviewImagesToggle(v)}
             />
@@ -429,15 +450,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           {cloudSync && (
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Cloud sync</Label>
-                <p className="text-xs text-muted-foreground">Sync groups across your devices</p>
+                <Label className="text-sm">{t('settings.general.cloudSyncLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.general.cloudSyncDescription')}</p>
+                {/* The stored reason is the message in the language of when sync paused: shown from
+                    the catalog, so a language switched since then shows here too */}
                 {syncPausedReason && (
-                  <p className="text-xs text-amber-500 mt-0.5">{syncPausedReason}</p>
+                  <p className="text-xs text-amber-500 mt-0.5">{t('errors.syncPaused')}</p>
                 )}
               </div>
               <Switch
                 className="shrink-0"
-                aria-label="Cloud sync"
+                aria-label={t('settings.general.cloudSyncLabel')}
                 checked={draft.syncEnabled}
                 onCheckedChange={(v) => patch('syncEnabled', v)}
               />
@@ -446,8 +469,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Stale tab threshold</Label>
-              <p className="text-xs text-muted-foreground">Show amber dot on tabs older than this</p>
+              <Label className="text-sm">{t('settings.general.staleLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.general.staleDescription')}</p>
             </div>
             <Select
               value={String(draft.staleThresholdDays ?? 30)}
@@ -457,19 +480,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="7">7 days</SelectItem>
-                <SelectItem value="14">14 days</SelectItem>
-                <SelectItem value="30">30 days</SelectItem>
-                <SelectItem value="60">60 days</SelectItem>
+                {STALE_THRESHOLD_DAYS.map((days) => (
+                  <SelectItem key={days} value={String(days)}>{t('settings.general.staleDays', { count: days })}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">URL rules</Label>
+              <Label className="text-sm">{t('settings.general.urlRulesLabel')}</Label>
               <p className="text-xs text-muted-foreground">
-                Auto-assign newly-opened tabs to a group by URL pattern
+                {t('settings.general.urlRulesDescription')}
               </p>
             </div>
             <Button
@@ -478,7 +500,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               className="text-xs shrink-0 rounded-none"
               onClick={() => openModal('urlRules')}
             >
-              Manage
+              {t('settings.general.urlRulesButton')}
             </Button>
           </div>
         </TabsContent>
@@ -486,14 +508,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         <TabsContent value="account" className="space-y-4">
           <div className="border border-border p-3 space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Plan</span>
-              <span className="text-xs font-medium">{tierLabels[tier] ?? 'Free'}</span>
+              <span className="text-xs text-muted-foreground">{t('settings.account.plan')}</span>
+              <span className="text-xs font-medium">{tierLabels[tier] ?? t('settings.account.planFree')}</span>
             </div>
             {tier !== 'free' && currentPeriodEnd && (
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">Renews</span>
+                <span className="text-xs text-muted-foreground">{t('settings.account.renews')}</span>
                 <span className="text-xs font-medium">
-                  {new Date(currentPeriodEnd).toLocaleDateString('en-US', {
+                  {formatDate(currentPeriodEnd, {
                     month: 'long',
                     day: 'numeric',
                     year: 'numeric'
@@ -503,15 +525,15 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             )}
             {user && (
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">Email</span>
+                <span className="text-xs text-muted-foreground">{t('settings.account.email')}</span>
                 <span className="text-xs">{user.email}</span>
               </div>
             )}
             {aiFeatures && (
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">AI credits left this month</span>
+                <span className="text-xs text-muted-foreground">{t('settings.account.aiCreditsLeft')}</span>
                 <span className="text-xs font-medium">
-                  {aiUsageLoading ? '…' : `${aiUsageRemaining} / ${aiUsageCap}`}
+                  {aiUsageLoading ? '…' : t('settings.account.aiCreditsValue', { remaining: aiUsageRemaining, cap: aiUsageCap })}
                 </span>
               </div>
             )}
@@ -530,7 +552,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 });
               }}
             >
-              Upgrade to Pro
+              {t('settings.account.upgradeToPro')}
             </Button>
           )}
 
@@ -542,7 +564,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               onClick={() => void handleManageBilling()}
               disabled={portalLoading}
             >
-              {portalLoading ? 'Opening...' : 'Manage billing'}
+              {portalLoading ? t('settings.account.openingPortal') : t('settings.account.manageBilling')}
             </Button>
           )}
 
@@ -553,7 +575,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               onClick={() => void signOut()}
               className="w-full text-xs rounded-none hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
             >
-              Sign out
+              {t('settings.account.signOut')}
             </Button>
           )}
 
@@ -565,7 +587,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 onClick={handleResetEncryption}
                 className="h-auto p-0 text-xs text-destructive"
               >
-                Forgot your passphrase? Reset encryption
+                {t('settings.account.resetEncryption')}
               </Button>
             </div>
           )}
@@ -573,15 +595,15 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
         <TabsContent value="data" className="space-y-4">
           <p className="text-xs text-muted-foreground">
-            TabMerger stores all data locally in IndexedDB. Cloud sync requires a Pro account.
+            {t('settings.data.intro')}
           </p>
 
           <Separator />
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Export data</Label>
-              <p className="text-xs text-muted-foreground">Download all groups as a JSON file</p>
+              <Label className="text-sm">{t('settings.data.exportLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.data.exportDescription')}</p>
             </div>
             <Button
               variant="outline"
@@ -590,14 +612,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               onClick={handleExport}
             >
               <Download className="h-3.5 w-3.5" />
-              Export
+              {t('settings.data.exportButton')}
             </Button>
           </div>
 
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <Label className="text-sm">Import data</Label>
-              <p className="text-xs text-muted-foreground">Restore groups from a JSON export</p>
+              <Label className="text-sm">{t('settings.data.importLabel')}</Label>
+              <p className="text-xs text-muted-foreground">{t('settings.data.importDescription')}</p>
             </div>
             <Button
               ref={importButtonRef}
@@ -607,7 +629,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-3.5 w-3.5" />
-              Import
+              {t('settings.data.importButton')}
             </Button>
           </div>
           <input
@@ -635,7 +657,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <Separator />
 
           <Button variant="destructive" size="sm" className="w-full text-xs rounded-none" onClick={handleClearAll}>
-            Clear all data
+            {t('settings.data.clearAll')}
           </Button>
         </TabsContent>
 
@@ -648,18 +670,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         {aiFeatures && (
           <TabsContent value="ai" className="space-y-4">
             <p className="text-xs text-muted-foreground">
-              Every AI action below draws from the same monthly AI quota (see Account tab).
-              Turn off features you don&apos;t use to save quota for the ones you do.
+              {t('settings.ai.intro')}
             </p>
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Auto-group</Label>
-                <p className="text-xs text-muted-foreground">Group open tabs with AI</p>
+                <Label className="text-sm">{t('settings.ai.autoGroupLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.ai.autoGroupDescription')}</p>
               </div>
               <Switch
                 className="shrink-0"
-                aria-label="Auto-group"
+                aria-label={t('settings.ai.autoGroupLabel')}
                 checked={draft.aiAutoGroupEnabled}
                 onCheckedChange={(v) => patch('aiAutoGroupEnabled', v)}
               />
@@ -667,12 +688,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Name group</Label>
-                <p className="text-xs text-muted-foreground">Suggest a name for a group with AI</p>
+                <Label className="text-sm">{t('settings.ai.nameGroupLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.ai.nameGroupDescription')}</p>
               </div>
               <Switch
                 className="shrink-0"
-                aria-label="Name group"
+                aria-label={t('settings.ai.nameGroupLabel')}
                 checked={draft.aiNameGroupEnabled}
                 onCheckedChange={(v) => patch('aiNameGroupEnabled', v)}
               />
@@ -680,12 +701,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Suggest sessions</Label>
-                <p className="text-xs text-muted-foreground">Background banner suggesting when to save a session</p>
+                <Label className="text-sm">{t('settings.ai.suggestSessionsLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.ai.suggestSessionsDescription')}</p>
               </div>
               <Switch
                 className="shrink-0"
-                aria-label="Suggest sessions"
+                aria-label={t('settings.ai.suggestSessionsLabel')}
                 checked={draft.aiSuggestSessionsEnabled}
                 onCheckedChange={(v) => patch('aiSuggestSessionsEnabled', v)}
               />
@@ -693,12 +714,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Organize</Label>
-                <p className="text-xs text-muted-foreground">Reorganize all groups with AI</p>
+                <Label className="text-sm">{t('settings.ai.organizeLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.ai.organizeDescription')}</p>
               </div>
               <Switch
                 className="shrink-0"
-                aria-label="Organize"
+                aria-label={t('settings.ai.organizeLabel')}
                 checked={draft.aiOrganizeEnabled}
                 onCheckedChange={(v) => patch('aiOrganizeEnabled', v)}
               />
@@ -706,12 +727,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Tab preview summaries</Label>
-                <p className="text-xs text-muted-foreground">AI summary on tab hover preview</p>
+                <Label className="text-sm">{t('settings.ai.summariesLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.ai.summariesDescription')}</p>
               </div>
               <Switch
                 className="shrink-0"
-                aria-label="Tab preview summaries"
+                aria-label={t('settings.ai.summariesLabel')}
                 checked={draft.aiTabSummaryEnabled}
                 onCheckedChange={(v) => patch('aiTabSummaryEnabled', v)}
               />
@@ -721,16 +742,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Limit automatic AI suggestions to once a day</Label>
+                <Label className="text-sm">{t('settings.ai.throttleLabel')}</Label>
                 <p className="text-xs text-muted-foreground">
-                  The background suggest-sessions banner fires at most once per day to protect
-                  your monthly AI quota. AI actions you trigger manually (Auto-group, Name group,
-                  Organize) are never limited by this.
+                  {t('settings.ai.throttleDescription')}
                 </p>
               </div>
               <Switch
                 className="shrink-0"
-                aria-label="Limit automatic AI suggestions to once a day"
+                aria-label={t('settings.ai.throttleLabel')}
                 checked={draft.aiDailyThrottle}
                 onCheckedChange={(v) => patch('aiDailyThrottle', v)}
               />
@@ -744,8 +763,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 visible in demo builds too (not just DEV) since recording runs against one */}
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <Label className="text-sm">Demo Mode</Label>
-                <p className="text-xs text-muted-foreground">Seed sample data for the marketing demo pipeline</p>
+                <Label className="text-sm">{t('settings.dev.demoLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.dev.demoDescription')}</p>
               </div>
               <Button
                 variant="outline"
@@ -753,7 +772,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 className="text-xs shrink-0 rounded-none"
                 onClick={() => void enterDemoMode()}
               >
-                Enter
+                {t('settings.dev.demoButton')}
               </Button>
             </div>
 
@@ -762,10 +781,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 <Separator />
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <Label className="text-sm">Mocked AI usage count</Label>
+                    <Label className="text-sm">{t('settings.dev.usageLabel')}</Label>
                     <p className="text-xs text-muted-foreground">
-                      Sets the AI credit counter (out of {aiUsageCap}) locally and syncs it to your
-                      real Supabase account, so server-side quota enforcement can be tested end-to-end.
+                      {t('settings.dev.usageDescription', { cap: aiUsageCap })}
                     </p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
@@ -782,7 +800,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       className="text-xs rounded-none"
                       onClick={() => void handleSyncDevUsage(Number(devUsageInput) || 0)}
                     >
-                      Set
+                      {t('settings.dev.usageSet')}
                     </Button>
                     <Button
                       variant="outline"
@@ -790,15 +808,15 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       className="text-xs rounded-none"
                       onClick={() => void handleSyncDevUsage(0)}
                     >
-                      Reset
+                      {t('settings.dev.usageReset')}
                     </Button>
                   </div>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <Label className="text-sm">Sentry</Label>
-                    <p className="text-xs text-muted-foreground">Throw a test error to verify reporting</p>
+                    <Label className="text-sm">{t('settings.dev.sentryLabel')}</Label>
+                    <p className="text-xs text-muted-foreground">{t('settings.dev.sentryDescription')}</p>
                   </div>
                   <Button
                     variant="outline"
@@ -808,7 +826,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       throw new Error('Sentry test error — thrown from Settings > Dev (dev only)');
                     }}
                   >
-                    Throw error
+                    {t('settings.dev.sentryButton')}
                   </Button>
                 </div>
               </>
@@ -827,11 +845,11 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             className="text-xs text-muted-foreground shrink-0"
             onClick={handleRestoreDefaults}
           >
-            Restore defaults
+            {t('settings.general.restoreDefaults')}
           </Button>
           <div className="flex items-center gap-2 min-w-0">
             {isDirty && (
-              <span className="text-xs text-muted-foreground shrink-0">Unsaved changes</span>
+              <span className="text-xs text-muted-foreground shrink-0">{t('settings.general.unsavedChanges')}</span>
             )}
             <Button
               size="sm"
@@ -840,7 +858,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               onClick={() => void handleSave()}
               data-tour={TOUR_ANCHORS.settingsSaveButton}
             >
-              Save changes
+              {t('settings.general.saveChanges')}
             </Button>
           </div>
         </div>

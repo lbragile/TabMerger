@@ -163,7 +163,6 @@ describe('TOUR_STEPS', () => {
     expect(open.subStepText!.join(' ')).toContain(`"${TOUR_MENU_LABELS.openWindow}"`)
     const tidy = TOUR_STEPS.find((s) => s.id === 'tidy-up')!
     expect(tidy.subStepText!.join(' ')).toContain(`"${TOUR_MENU_LABELS.deduplicate}"`)
-    expect(tidy.subStepText!.join(' ')).toContain(TOUR_MENU_LABELS.confirmDuplicates.trim())
   })
 
   it('every task step has sub-step text when its task visits several controls', () => {

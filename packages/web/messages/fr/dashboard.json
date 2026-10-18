@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Tableau de bord",
+  "greeting": "Bonjour, {name}",
+  "tierBadge": {
+    "free": "gratuit",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "Organisation IA",
+  "aiOrganiseUpgrade": "Passez à Pro AI pour utiliser l’organisation IA",
+  "aiOrganiseFromExtension": "Lancez-la depuis la fenêtre de l’extension TabMerger",
+  "tabGroups": "Groupes d’onglets",
+  "savedSessions": "Sessions enregistrées",
+  "stats": {
+    "tabs": {
+      "label": "Onglets enregistrés",
+      "description": "Onglets de tous les groupes synchronisés"
+    },
+    "groups": {
+      "label": "Groupes synchronisés",
+      "description": "Groupes synchronisés dans le cloud"
+    },
+    "sessions": {
+      "label": "Sessions stockées",
+      "description": "Sessions de navigation stockées",
+      "lockedDescription": "Sessions et sauvegardes (déverrouillez pour les distinguer)"
+    },
+    "memory": {
+      "label": "Mémoire récupérée",
+      "description": "Estimation, non mesurée"
+    },
+    "memberSince": {
+      "label": "Membre depuis",
+      "description": "Compte créé"
+    },
+    "aiCredits": {
+      "label": "Crédits IA ce mois-ci",
+      "description": "Utilisation mensuelle Pro AI",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Chargement"
+  },
+  "subscription": {
+    "currentPlan": "Offre actuelle",
+    "renews": "Renouvellement le {date}",
+    "upgrade": "Passer à l’offre supérieure",
+    "statuses": {
+      "active": "actif",
+      "canceled": "résilié",
+      "past_due": "impayé",
+      "trialing": "en essai",
+      "incomplete": "incomplet"
+    }
+  },
+  "upgraded": {
+    "message": "Bienvenue dans {plan} ! Votre abonnement est actif. Profitez de vos nouvelles fonctionnalités.",
+    "dismiss": "Fermer"
+  },
+  "locked": {
+    "item": "Enregistré avec une ancienne phrase secrète. Ouvrez l’extension sur l’appareil qui la possède et laissez-la se synchroniser.",
+    "device": "Ses onglets ouverts ont été enregistrés avec une ancienne phrase secrète. Ouvrez l’extension sur cet appareil et laissez-la se synchroniser.",
+    "unverified": "Illisible pour le moment. Rechargez la page pour réessayer."
+  },
+  "passphrase": {
+    "defaultLabel": "Saisissez votre phrase secrète de chiffrement pour afficher ce contenu.",
+    "groupsLabel": "Vos groupes sont chiffrés de bout en bout. Saisissez votre phrase secrète pour les afficher ici.",
+    "sessionsLabel": "Vos sessions sont chiffrées de bout en bout. Saisissez votre phrase secrète pour les afficher ici.",
+    "backupsLabel": "Vos sauvegardes sont chiffrées de bout en bout. Saisissez votre phrase secrète pour les afficher ici.",
+    "placeholder": "Phrase secrète",
+    "inputLabel": "Phrase secrète de chiffrement",
+    "unlock": "Déverrouiller",
+    "incorrect": "Phrase secrète incorrecte."
+  },
+  "onboarding": {
+    "title": "Premiers pas avec TabMerger",
+    "progress": "{done} sur {total} terminés",
+    "dismiss": "Fermer",
+    "install": "Installez l’extension TabMerger",
+    "group": "Créez votre premier groupe dans l’extension",
+    "signin": "Connectez-vous pour activer la synchronisation cloud",
+    "upgrade": "Passez à Pro pour des groupes illimités"
+  },
+  "lockedName": "(verrouillé)",
+  "damagedNote": "Son contenu n’est pas dans un format que TabMerger sait lire, il ne peut donc pas être affiché ici.",
+  "counts": {
+    "groups": "{count, plural, one {{count} groupe} many {{count} groupes} other {{count} groupes}}",
+    "windows": "{count, plural, one {{count} fenêtre} many {{count} fenêtres} other {{count} fenêtres}}",
+    "tabs": "{count, plural, one {{count} onglet} many {{count} onglets} other {{count} onglets}}"
+  },
+  "sessions": {
+    "cantRestore": "Cette session est illisible, elle ne peut donc pas être restaurée.",
+    "restored": "{count, plural, one {{count} onglet restauré depuis « {name} »} many {{count} onglets restaurés depuis « {name} »} other {{count} onglets restaurés depuis « {name} »}}",
+    "deleted": "Session supprimée",
+    "deleteFailed": "Impossible de supprimer la session",
+    "loadFailed": "Impossible de charger vos sessions.",
+    "tryAgain": "Réessayer",
+    "loading": "Chargement des sessions",
+    "empty": "Aucune session enregistrée pour le moment.",
+    "readOnlyNote": "Enregistrer de nouvelles sessions sur votre compte nécessite Pro. Vos sessions existantes peuvent toujours être ouvertes ou supprimées.",
+    "upgrade": "Passer à Pro",
+    "freeLimit": "Offre gratuite : jusqu’à {count} sessions. <link>Passez à Pro</link> pour un nombre illimité.",
+    "restore": "Restaurer la session",
+    "cantRestoreTooltip": "Cette session est illisible, elle ne peut pas être restaurée",
+    "delete": "Supprimer la session",
+    "hideContents": "Masquer le contenu",
+    "showContents": "Afficher le contenu ({count})",
+    "groupFallbackName": "Groupe {number}",
+    "groupTabs": "{count, plural, other {{count} onglets}}",
+    "moreTabs": "{count, plural, other {+{count} autres onglets}}",
+    "moreGroups": "{count, plural, other {+{count} autres groupes}}"
+  },
+  "backups": {
+    "title": "Sauvegardes",
+    "upgradeDescription": "Les sauvegardes automatiques font partie de Pro : un instantané chiffré de vos groupes, enregistré selon un calendrier, avec les {count} plus récents conservés.",
+    "readOnlyNote": "Les nouvelles sauvegardes nécessitent Pro. Vos sauvegardes existantes peuvent toujours être téléchargées ou supprimées.",
+    "upgrade": "Passer à l’offre supérieure",
+    "intro": "Instantanés de vos groupes que l’extension TabMerger a enregistrés seule sur votre compte, du plus récent au plus ancien. Les {count} plus récents sont conservés. Pour en restaurer un, ouvrez l’extension et allez dans {place} ; la restauration ne se fait pas depuis cette page. Un fichier téléchargé ici n’est pas chiffré.",
+    "extensionPlace": "Paramètres > Données",
+    "loadFailed": "Impossible de charger vos sauvegardes.",
+    "tryAgain": "Réessayer",
+    "loading": "Chargement des sauvegardes",
+    "unknownKind": "{count, plural, one {1 élément enregistré est illisible, on ne sait donc pas s’il s’agit d’une sauvegarde. Il figure dans Sessions enregistrées.} many {{count} éléments enregistrés sont illisibles, on ne sait donc pas s’il s’agit de sauvegardes. Ils figurent dans Sessions enregistrées.} other {{count} éléments enregistrés sont illisibles, on ne sait donc pas s’il s’agit de sauvegardes. Ils figurent dans Sessions enregistrées.}}",
+    "emptyTitle": "Aucune sauvegarde pour le moment.",
+    "emptyBody": "L’extension en enregistre une seule tant que votre navigateur est ouvert, si vos groupes ont changé depuis la dernière. Le calendrier est « {interval} » par défaut : choisissez l’intervalle, ou sauvegardez tout de suite, dans l’extension sous {place}.",
+    "intervals": {
+      "60": "Toutes les heures",
+      "360": "Toutes les 6 heures",
+      "720": "Toutes les 12 heures",
+      "1440": "Tous les jours",
+      "10080": "Toutes les semaines"
+    },
+    "unknownDateInSentence": "une date inconnue",
+    "unknownDate": "Date inconnue",
+    "namePrefix": "Sauvegarde automatique",
+    "downloading": "Téléchargement de la sauvegarde du {when}.",
+    "deleted": "Sauvegarde supprimée",
+    "deletedAnnouncement": "La sauvegarde du {when} a été supprimée.",
+    "deleteFailed": "Impossible de supprimer la sauvegarde",
+    "deleteFailedAnnouncement": "La sauvegarde du {when} n’a pas pu être supprimée.",
+    "deleteTitle": "Supprimer cette sauvegarde ?",
+    "deleteBody": "La sauvegarde du {when} sera retirée de votre compte. Un navigateur qui possède déjà cette sauvegarde en garde sa propre copie.",
+    "deleteBodyWithCounts": "La sauvegarde du {when} ({groups}, {tabs}) sera retirée de votre compte. Un navigateur qui possède déjà cette sauvegarde en garde sa propre copie.",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "download": "Télécharger",
+    "downloadLabel": "Télécharger la sauvegarde du {when}",
+    "deleteLabel": "Supprimer la sauvegarde du {when}"
+  },
+  "groups": {
+    "cantShare": "Ce groupe est illisible, il ne peut donc pas être partagé.",
+    "linkCopiedSnapshot": "Lien copié : il partage un instantané de ce groupe.",
+    "shareFailed": "Impossible de créer le lien de partage. Veuillez réessayer.",
+    "shareGroup": "Partager le groupe",
+    "copied": "Copié !",
+    "share": "Partager",
+    "cantShareTooltip": "Ce groupe est illisible, il ne peut pas être partagé",
+    "shareTooltip": "Copie un lien vers un instantané de ce groupe ; les modifications ultérieures n’y apparaîtront pas",
+    "justNow": "à l’instant",
+    "minutesAgo": "il y a {count} min",
+    "hoursAgo": "il y a {count} h",
+    "daysAgo": "il y a {count} j",
+    "lockedCantSelect": "Un groupe verrouillé ne peut pas être sélectionné",
+    "deselect": "Désélectionner",
+    "select": "Sélectionner",
+    "syncedAt": "Synchronisé {time}",
+    "cardMeta": "{windows, plural, one {{windows} fenêtre} many {{windows} fenêtres} other {{windows} fenêtres}} · {tabs, plural, one {{tabs} onglet} many {{tabs} onglets} other {{tabs} onglets}}",
+    "syncedSuffix": " · synchronisé {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Les onglets sont peut-être obsolètes : dernière synchronisation il y a plus de 30 jours",
+    "moreTabs": "+{count} autres",
+    "openAllTitle": "Ouvrir tous les onglets de ce groupe",
+    "openAll": "Tout ouvrir",
+    "hideTabs": "Masquer les onglets",
+    "showTabs": "Afficher les onglets",
+    "rowMeta": "{windows} f · {tabs} o",
+    "linkCopiedLive": "Lien copié ! La page de partage est en ligne.",
+    "empty": "Aucun groupe synchronisé pour le moment. Ouvrez l’extension pour créer des groupes d’onglets.",
+    "title": "Groupes",
+    "summary": "{count, plural, one {{count} groupe} many {{count} groupes} other {{count} groupes}} · {tabs, plural, other {{tabs} onglets}}",
+    "sort": "Trier",
+    "sortLabel": "Trier les groupes",
+    "sortRecent": "Récents",
+    "sortName": "Nom",
+    "sortTabCount": "Nombre d’onglets",
+    "cancel": "Annuler",
+    "gridView": "Vue en grille",
+    "listView": "Vue en liste",
+    "archived": "Archivés ({count})",
+    "selectedCount": "{count} sélectionné(s)",
+    "shareSelected": "Partager la sélection",
+    "cancelSelection": "Annuler la sélection"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Ouvrez l’extension et déverrouillez le chiffrement pour synchroniser.",
+      "no-session": "Connectez-vous dans l’extension pour synchroniser.",
+      "error": "Échec de la synchronisation. Réessayez depuis l’extension."
+    },
+    "failedFallback": "Échec de la synchronisation.",
+    "syncing": "Synchronisation…",
+    "busy": "Synchronisation déjà en cours",
+    "failed": "Échec de la synchronisation",
+    "synced": "Synchronisé",
+    "never": "Pas encore synchronisé",
+    "reasonSeparator": ". ",
+    "refresh": "Actualiser l’état de synchronisation",
+    "resync": "Resynchroniser",
+    "justNow": "à l’instant",
+    "minutesAgo": "il y a {count} min",
+    "hoursAgo": "il y a {count} h",
+    "daysAgo": "il y a {count} j"
+  }
+}

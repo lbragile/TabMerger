@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -23,16 +24,18 @@ interface Props {
   encrypted?: boolean
 }
 
-function actionLabel(action: ReorganizeAction): string {
+type OrganizeT = ReturnType<typeof useTranslations<'organize'>>
+
+function actionLabel(action: ReorganizeAction, t: OrganizeT): string {
   switch (action.type) {
     case 'merge':
-      return `Merge ${action.sourceGroupId} → ${action.targetGroupId}`
+      return t('actions.merge', { source: action.sourceGroupId, target: action.targetGroupId })
     case 'rename':
-      return `Rename group → "${action.newName}"`
+      return t('actions.rename', { name: action.newName })
     case 'delete':
-      return `Delete group ${action.groupId}`
+      return t('actions.delete', { id: action.groupId })
     case 'reorder':
-      return `Reorder groups: ${action.groupIds.join(', ')}`
+      return t('actions.reorder', { ids: action.groupIds.join(', ') })
   }
 }
 
@@ -49,6 +52,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<'pending' | 'approved' | 'rejected'>('pending')
   const [submitting, setSubmitting] = useState(false)
+  const t = useTranslations('organize')
 
   useEffect(() => {
     if (encrypted) return
@@ -84,7 +88,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
           }
         }
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : 'Unknown error')
+        if (!cancelled) setError(e instanceof Error ? e.message : t('unknownError'))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -92,7 +96,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
 
     stream()
     return () => { cancelled = true }
-  }, [runId, supabaseToken, encrypted])
+  }, [runId, supabaseToken, encrypted, t])
 
   async function handleDecision(approved: boolean) {
     setSubmitting(true)
@@ -108,7 +112,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
       if (!res.ok) throw new Error(`Server error ${res.status}`)
       setStatus(approved ? 'approved' : 'rejected')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to submit decision')
+      setError(e instanceof Error ? e.message : t('submitFailed'))
     } finally {
       setSubmitting(false)
     }
@@ -118,12 +122,10 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
     return (
       <Card className="border-amber-200 bg-amber-50">
         <CardHeader>
-          <CardTitle className="text-base">AI Organization Proposal</CardTitle>
+          <CardTitle className="text-base">{t('title')}</CardTitle>
         </CardHeader>
         <CardContent className="pt-0 text-sm text-amber-900">
-          AI organise isn&apos;t available for end-to-end encrypted groups on the web yet —
-          your groups are encrypted and this page can&apos;t read them. Run it from the
-          TabMerger extension instead.
+          {t('encrypted')}
         </CardContent>
       </Card>
     )
@@ -133,7 +135,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
     return (
       <Card className="border-green-200 bg-green-50">
         <CardContent className="pt-6 text-sm text-green-800">
-          Changes applied successfully.
+          {t('applied')}
         </CardContent>
       </Card>
     )
@@ -143,7 +145,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
     return (
       <Card className="border-muted">
         <CardContent className="pt-6 text-sm text-muted-foreground">
-          Proposal cancelled.
+          {t('cancelled')}
         </CardContent>
       </Card>
     )
@@ -152,7 +154,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">AI Organization Proposal</CardTitle>
+        <CardTitle className="text-base">{t('title')}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {error && (
@@ -162,12 +164,12 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
         {loading && !error && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            Analyzing your tab groups…
+            {t('analyzing')}
           </div>
         )}
 
         {!loading && !error && actions.length === 0 && (
-          <p className="text-sm text-muted-foreground">No changes suggested.</p>
+          <p className="text-sm text-muted-foreground">{t('noChanges')}</p>
         )}
 
         {actions.length > 0 && (
@@ -175,9 +177,9 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
             {actions.map((action, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
                 <Badge variant={TYPE_VARIANT[action.type]} className="mt-0.5 shrink-0 capitalize">
-                  {action.type}
+                  {t(`types.${action.type}`)}
                 </Badge>
-                <span>{actionLabel(action)}</span>
+                <span>{actionLabel(action, t)}</span>
               </li>
             ))}
           </ul>
@@ -190,7 +192,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
               onClick={() => handleDecision(true)}
               disabled={submitting || actions.length === 0}
             >
-              Approve
+              {t('approve')}
             </Button>
             <Button
               size="sm"
@@ -198,7 +200,7 @@ export function OrganizeProposal({ runId, token, supabaseToken, encrypted = fals
               onClick={() => handleDecision(false)}
               disabled={submitting}
             >
-              Reject
+              {t('reject')}
             </Button>
           </div>
         )}

@@ -1,0 +1,33 @@
+{
+  "syncPaused": "同期を一時停止中: Firefoxで許可してください",
+  "conflictCopy": "{{names}}は別のデバイスでも変更されました。あなたのバージョンはコピーとして保存されました。",
+  "quotedName": "「{{name}}」",
+  "groupsChangedElsewhere": "作業中のグループが別の場所で変更または削除されたため、何も変更されませんでした。",
+  "undoConflict": "グループが別の場所で変更されたため、何も元に戻されませんでした。もう一度お試しください。",
+  "freeLimit": {
+    "maxGroups": "無料プランではグループは{{max}}個までです。",
+    "maxTabs": "無料プランではタブは{{max}}個までです。",
+    "maxUrlRules": "無料プランではURLルールは{{max}}個までです。"
+  },
+  "fileContains": "このファイルには{{groups}}、{{tabs}}が含まれています。",
+  "incognitoNotAllowed": "TabMergerがシークレットモードで許可されていないため、通常のウィンドウで開きました。変更するには、拡張機能の管理を開き、「シークレットモードでの実行を許可」をオンにしてください。",
+  "encryptionAlreadySetUp": "このアカウントの暗号化はすでに設定されています。既存のパスフレーズを入力してロックを解除してください。",
+  "signInToEnableEncryption": "暗号化を有効にするには、サインインが必要です",
+  "signInToResetEncryption": "暗号化をリセットするには、サインインが必要です",
+  "googleUnavailable": "この環境ではGoogleサインインを利用できません",
+  "googleNoUrl": "Googleサインインが認証URLを返しませんでした",
+  "googleCancelled": "Googleサインインがキャンセルされました",
+  "googleNoSession": "Googleサインインがセッションを返しませんでした",
+  "googleFailed": "Googleサインインに失敗しました",
+  "expectedArray": "配列が必要です",
+  "invalidFormat": "形式が正しくありません",
+  "noGroupsFound": "グループが見つかりません",
+  "noGroupsSelected": "グループが選択されていません",
+  "notAuthenticated": "認証されていません",
+  "sharingRequiresPro": "共有にはProへのアップグレードが必要です。利用資格を満たしていません",
+  "aiOncePerDay": "本日はすでに使用済みです。このAI機能は1日1回までです",
+  "proAiRequired": "Pro AIプランが必要です",
+  "nameGroupOff": "「グループ名を付ける」は設定でオフになっています",
+  "suggestSessionsOff": "「セッションを提案」は設定でオフになっています",
+  "organizeOff": "「整理」は設定でオフになっています"
+}

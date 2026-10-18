@@ -1,0 +1,21 @@
+{
+  "features": "功能",
+  "pricing": "定价",
+  "changelog": "更新日志",
+  "faq": "常见问题",
+  "dashboard": "控制台",
+  "account": "账户",
+  "accountSettings": "账户设置",
+  "signIn": "登录",
+  "signUp": "注册",
+  "getStarted": "开始使用",
+  "signOut": "退出登录",
+  "openMenu": "打开菜单",
+  "closeMenu": "关闭菜单",
+  "accountMenu": "账户菜单",
+  "home": "TabMerger 首页",
+  "github": "GitHub",
+  "githubRepo": "TabMerger 的 GitHub 仓库",
+  "githubRepoWithStars": "TabMerger 的 GitHub 仓库，{count, plural, other {# 个星标}}",
+  "toggleTheme": "切换主题"
+}

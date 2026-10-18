@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { CARD_STRIDE_PX, CAROUSEL_TRACK_CLASS, CAROUSEL_VIEWPORT_CLASS } from './reviewsLayout'
 
 /**
@@ -142,6 +143,7 @@ const pauseClass =
   `focus-visible:text-[0.75rem] focus-visible:font-medium focus-visible:text-foreground focus-visible:shadow-sm ${focusRing}`
 
 export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode; labelledBy: string }) {
+  const t = useTranslations('reviews')
   const viewportRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const m = useRef({
@@ -354,7 +356,7 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
     <div
       className="relative"
       role="region"
-      aria-roledescription="carousel"
+      aria-roledescription={t('carousel')}
       aria-labelledby={labelledBy}
       // Mouse only: on touch screens a tap fires a synthetic mouseenter with no matching
       // leave, which would pause the strip for good after a single tap.
@@ -371,14 +373,14 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
       {!reducedMotion && (
         <button type="button" aria-pressed={paused} onClick={() => setUserPaused(!paused)} className={pauseClass}>
           {paused ? <Play className="h-3.5 w-3.5" aria-hidden /> : <Pause className="h-3.5 w-3.5" aria-hidden />}
-          {paused ? 'Play reviews' : 'Pause reviews'}
+          {paused ? t('play') : t('pause')}
         </button>
       )}
       {/* Arrows from sm up; on phones the strip is swiped instead. */}
-      <button type="button" aria-label="Previous review" onClick={() => step(-1)} className={`${arrowClass} left-3`}>
+      <button type="button" aria-label={t('previous')} onClick={() => step(-1)} className={`${arrowClass} left-3`}>
         <ChevronLeft className="h-5 w-5" aria-hidden />
       </button>
-      <button type="button" aria-label="Next review" onClick={() => step(1)} className={`${arrowClass} right-3`}>
+      <button type="button" aria-label={t('next')} onClick={() => step(1)} className={`${arrowClass} right-3`}>
         <ChevronRight className="h-5 w-5" aria-hidden />
       </button>
 

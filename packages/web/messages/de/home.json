@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "eyebrow": "Tab-Manager für alle mit zu vielen Tabs",
+    "title": "Schluss mit dem Tab-Chaos.",
+    "lead": "TabMerger faltet jedes geöffnete Fenster in benannte, farbcodierte Gruppen, die du durchsuchen, teilen und wiederherstellen kannst – auf jedem Rechner, mit einem Klick.",
+    "installChrome": "Für Chrome installieren – kostenlos",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Kostenloser Tarif, kein Konto nötig."
+  },
+  "install": {
+    "title": "Bereit, deinen Browser zu ordnen?",
+    "lead": "Installiere TabMerger in Sekunden. Zum Start ist kein Konto nötig.",
+    "addToChrome": "Zu Chrome hinzufügen",
+    "addToFirefox": "Zu Firefox hinzufügen",
+    "addToEdge": "Zu Edge hinzufügen",
+    "viewPricing": "Preise ansehen",
+    "note": "Kostenlos installieren – kein Konto nötig · Edge-Unterstützung folgt bald"
+  },
+  "finalCta": {
+    "title": "Schluss mit dem Tab-Chaos.",
+    "leadAi": "Kostenlos starten, kein Konto nötig. Jederzeit upgraden für Cloud-Sync und KI.",
+    "leadNoAi": "Kostenlos starten, kein Konto nötig. Jederzeit upgraden für Cloud-Sync – KI-Funktionen folgen bald.",
+    "installChrome": "Für Chrome installieren – kostenlos",
+    "faq": "Fragen? Sieh dir die FAQ an →"
+  },
+  "features": {
+    "title": "Gebaut für den Moment, in dem neunzig Tabs offen sind.",
+    "seeAll": "Alle Funktionen ansehen",
+    "ai": {
+      "title": "Die KI sortiert das Chaos für dich",
+      "description": "Ein Klick sortiert deine geöffneten Tabs nach Thema und benennt jede Gruppe. Übernehmen, umbenennen oder ignorieren.",
+      "summary": "✦ 24 Tabs → 3 Gruppen",
+      "groupEvals": "LLM-Evals · 9",
+      "groupHiring": "Recruiting · 7",
+      "groupDocs": "Doku · 8"
+    },
+    "sessions": {
+      "title": "Alles schließen, nichts verlieren",
+      "description": "Speichere eine Sitzung unter einem Namen und stelle morgen früh genau die Fenster und ihre Reihenfolge wieder her.",
+      "sessionName": "Morgendliche Recherche",
+      "sessionStats": "3 Gruppen · 5 Fenster · 24 Tabs"
+    },
+    "sync": {
+      "title": "Dieselben Tabs auf jedem Rechner",
+      "description": "Die Synchronisierung läuft automatisch und pro Tab, sodass eine Änderung am Laptop nie überschreibt, was du am Desktop getan hast.",
+      "status": "Vor 4 Minuten synchronisiert · 3 Geräte"
+    }
+  },
+  "pricing": {
+    "title": "Einfache, transparente Preise",
+    "seeFull": "Alle Preise ansehen",
+    "cancelNote": "Jederzeit über dein Konto kündbar – ohne Bindung, ohne Rückfragen.",
+    "blurbFree": "Für Gelegenheitsnutzer zum Ausprobieren",
+    "blurbPro": "Für alle, die zusätzliche Premium-Funktionen wollen",
+    "blurbProAi": "Für Power-User, die KI-Funktionen wollen"
+  }
+}

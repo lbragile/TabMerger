@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import { toast } from '@/lib/toast';
 
 /** Fixed toast id so a restore that reopens several incognito windows shows the notice once. */
@@ -29,7 +30,7 @@ export async function resolveIncognito(wasIncognito: boolean | undefined): Promi
   if (!wasIncognito) return false;
   if (await isIncognitoAllowed()) return true;
   toast.info(
-    'Opened as a normal window because TabMerger isn\'t allowed in incognito. To change this, open Manage extension and turn on "Allow in Incognito".',
+    t('errors.incognitoNotAllowed'),
     { id: INCOGNITO_NOT_ALLOWED_TOAST_ID }
   );
   return false;

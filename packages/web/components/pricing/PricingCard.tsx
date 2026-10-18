@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Check, Plus } from 'lucide-react'
 import { toast } from 'sonner'
@@ -9,8 +10,8 @@ import { cn } from '@/lib/utils'
 import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
-import { formatListPrice } from '@/lib/tiers'
+import { useListPrice, useZeroPrice } from './priceFormat'
+import type { TierFeature } from './tierFeatures'
 
 // ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
 // and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
@@ -24,7 +25,8 @@ interface PricingCardProps {
   name: string
   monthlyPrice: number
   yearlyPrice: number
-  features: readonly string[]
+  /** Already translated; `inherited` lines ("Everything in Free") get a check mark, the rest a +. */
+  features: readonly TierFeature[]
   interval: 'monthly' | 'yearly'
   tier: string
   highlighted?: boolean
@@ -57,6 +59,10 @@ export function PricingCard({
   installHref,
 }: PricingCardProps) {
   const router = useRouter()
+  const t = useTranslations('pricing')
+  const common = useTranslations('common')
+  const listPrice = useListPrice()
+  const zeroPrice = useZeroPrice()
   const [loading, setLoading] = useState(false)
   const [switchError, setSwitchError] = useState<string | null>(null)
 
@@ -101,7 +107,7 @@ export function PricingCard({
       setSwitchError(
         res.status === 409 && typeof data.error === 'string'
           ? data.error
-          : "Couldn't start the switch. Try Manage billing on your account page."
+          : t('switchFailed')
       )
     } finally {
       setLoading(false)
@@ -111,8 +117,8 @@ export function PricingCard({
   // Display price: use override strings if provided, otherwise format from number
   const displayPrice =
     interval === 'monthly'
-      ? (displayMonthly ?? (rawPrice === 0 ? '$0' : formatListPrice(rawPrice)))
-      : (displayYearly ?? (rawPrice === 0 ? '$0' : formatListPrice(rawPrice)))
+      ? (displayMonthly ?? (rawPrice === 0 ? zeroPrice : listPrice(rawPrice)))
+      : (displayYearly ?? (rawPrice === 0 ? zeroPrice : listPrice(rawPrice)))
 
   async function handleClick() {
     if (isComingSoon) return
@@ -146,7 +152,7 @@ export function PricingCard({
       // The server found a paid plan this page didn't know about (e.g. the page was loaded
       // before subscribing in another tab). Same destination as above: the billing portal.
       if (res.status === 409 && data.error === ALREADY_SUBSCRIBED_ERROR) {
-        toast.info('You already have a plan. Opening billing so you can change it.')
+        toast.info(t('alreadySubscribed'))
         await openBillingPortal()
         return
       }
@@ -180,7 +186,7 @@ export function PricingCard({
       return
     }
 
-    toast.error("Couldn't open billing. Use Manage billing on your account page to change your plan.")
+    toast.error(t('portalFailed'))
   }
 
   return (
@@ -196,18 +202,18 @@ export function PricingCard({
         <h2 className="text-sm font-semibold">{name}</h2>
         {isCurrentPlan && (
           <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary text-primary-foreground self-center">
-            Current
+            {t('current')}
           </span>
         )}
         {showRecommended && (
           <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary/15 text-primary self-center">
-            Recommended
+            {t('recommended')}
           </span>
         )}
         {tier === 'proAi' && !isComingSoon && <span className="text-primary text-xs">✦</span>}
         {isComingSoon && (
           <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-muted text-muted-foreground self-center">
-            Coming soon
+            {common('comingSoon')}
           </span>
         )}
       </div>
@@ -220,7 +226,7 @@ export function PricingCard({
           {displayPrice}
         </span>
         <span className="text-[13px] text-text3">
-          {rawPrice === 0 ? 'forever' : interval === 'monthly' ? '/mo' : '/yr'}
+          {rawPrice === 0 ? t('forever') : interval === 'monthly' ? t('perMonth') : t('perYear')}
         </span>
       </div>
       {interval === 'yearly' && rawPrice > 0 && yearlySubtext && (
@@ -228,27 +234,27 @@ export function PricingCard({
           {yearlySubtext}
         </p>
       )}
-      {isFree && <p className="-mt-4 mb-5 text-[11.5px] text-text3">No credit card required</p>}
+      {isFree && <p className="-mt-4 mb-5 text-[11.5px] text-text3">{t('noCard')}</p>}
 
       {/* Feature list */}
       <ul className="flex flex-col gap-2 mb-6 text-[13.5px]">
         {features.map((feature) => (
-          <li key={feature} className="flex items-center gap-2 text-text2">
+          <li key={feature.text} className="flex items-center gap-2 text-text2">
             {/* ponytail: "Everything in X" line confirms an already-established capability →
                 checkmark. Every other line is new to this tier → +. Free has no "Everything in"
                 line, so all of its features are +. */}
-            {feature.startsWith('Everything in ') ? (
+            {feature.inherited ? (
               <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
             ) : (
               <Plus className="h-3.5 w-3.5 shrink-0 text-primary" />
             )}
-            <span>{feature}</span>
+            <span>{feature.text}</span>
           </li>
         ))}
         {tier === 'proAi' && !isComingSoon && (
           <li className="flex items-center gap-2 text-text2">
             <Plus className="h-3.5 w-3.5 shrink-0 text-primary" />
-            <span>{AI_MONTHLY_CAP} AI credits / month</span>
+            <span>{t('features.aiCredits', { count: AI_MONTHLY_CAP })}</span>
           </li>
         )}
       </ul>
@@ -263,7 +269,7 @@ export function PricingCard({
             disabled
             aria-disabled="true"
           >
-            {AI_COMING_SOON_LABEL}
+            {common('comingSoon')}
           </Button>
         ) : isFree ? (
           <Button
@@ -271,7 +277,7 @@ export function PricingCard({
             className="w-full rounded-lg"
             onClick={handleClick}
           >
-            Install free
+            {t('installFree')}
           </Button>
         ) : switchTarget ? (
           <>
@@ -282,7 +288,7 @@ export function PricingCard({
               disabled={loading}
               loading={loading}
             >
-              {switchTarget === 'yearly' ? 'Switch to yearly billing' : 'Switch to monthly billing'}
+              {switchTarget === 'yearly' ? t('switchToYearly') : t('switchToMonthly')}
             </Button>
             {switchError && (
               <p role="alert" className="mt-2 text-center text-[11.5px] text-destructive">
@@ -300,7 +306,7 @@ export function PricingCard({
             disabled={loading}
             loading={loading}
           >
-            {`Downgrade to ${name}`}
+            {t('downgradeTo', { name })}
           </Button>
         ) : (
           <Button
@@ -313,7 +319,7 @@ export function PricingCard({
             disabled={loading}
             loading={loading}
           >
-            {`Upgrade to ${name}`}
+            {t('upgradeTo', { name })}
           </Button>
         )}
       </div>

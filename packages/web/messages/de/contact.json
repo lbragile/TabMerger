@@ -1,0 +1,32 @@
+{
+  "metaTitle": "Kontakt",
+  "metaDescription": "Kontaktiere das TabMerger-Team: Melde einen Fehler, frag zur Abrechnung oder zu deinem Konto oder teile Feedback und Ideen.",
+  "eyebrow": "Support",
+  "title": "Kontakt",
+  "lead": "Du hast eine Frage, einen Fehler gefunden oder brauchst Hilfe mit deinem Abo? Wir antworten in der Regel innerhalb eines Werktags.",
+  "bugReport": "Du möchtest einen Fehler melden? <link>Öffne ein GitHub-Issue</link> für schnellere Bearbeitung und mehr Sichtbarkeit.",
+  "preferEmail": "Lieber per E-Mail? Schreib an <email>{address}</email>.",
+  "sentTitle": "Nachricht gesendet",
+  "sentBody": "Wir melden uns in Kürze bei dir.",
+  "email": "E-Mail",
+  "emailPlaceholder": "du@example.com",
+  "subject": "Betreff",
+  "subjectPlaceholder": "Grund auswählen …",
+  "subjects": {
+    "bug": "Fehlermeldung",
+    "betaBug": "Beta-Fehlermeldung",
+    "feedback": "Feedback und Ideen",
+    "billing": "Frage zur Abrechnung",
+    "feature": "Funktionswunsch",
+    "account": "Hilfe zum Konto",
+    "other": "Sonstiges"
+  },
+  "otherSubject": "Bitte angeben",
+  "otherSubjectPlaceholder": "Worum geht es?",
+  "message": "Nachricht",
+  "messagePlaceholder": "Beschreibe dein Problem oder deine Frage so ausführlich, wie es hilfreich ist.",
+  "rateLimited": "Zu viele Nachrichten gesendet – versuche es später erneut.",
+  "failed": "Etwas ist schiefgelaufen. Bitte versuche es erneut oder schreib uns an <email>{address}</email>.",
+  "sending": "Wird gesendet …",
+  "send": "Nachricht senden"
+}

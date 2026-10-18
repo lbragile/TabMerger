@@ -1,3 +1,5 @@
+import { useFormatter, useTranslations } from 'next-intl'
+import { getFormatter, getTranslations } from 'next-intl/server'
 import { STABLE_STORE_LINKS, storeLinkProps } from '@/lib/storeLinks'
 import { formatRating, getStoreRatings, type StoreRating } from '@/lib/storeRatings'
 import { listNames, STORE_BROWSER, STORE_LABEL } from '@/lib/stores'
@@ -6,7 +8,6 @@ import { ReviewCard } from './ReviewCard'
 import { ReviewsCarousel } from './ReviewsCarousel'
 import {
   BREAKDOWN_CAPTION_CLASS,
-  BREAKDOWN_CAPTION_TEXT,
   BREAKDOWN_CLASS,
   STAT_SECOND_BLOCK_CLASS,
   STATS_WITH_BREAKDOWN_CLASS,
@@ -14,7 +15,6 @@ import {
   REVIEWS_CONTAINER_CLASS,
   REVIEWS_HEADING_CLASS,
   REVIEWS_HEADING_ID,
-  REVIEWS_HEADING_TEXT,
   REVIEWS_SECTION_CLASS,
   STAT_BLOCK_CLASS,
   STAT_LABEL_CLASS,
@@ -91,32 +91,43 @@ export function buildMarqueeTrack<T>(items: T[]): T[] {
 // Lives in `lib/stores.ts` so the loading placeholder can word its label the same way.
 export { listNames }
 
-const formatCount = (count: number) => count.toLocaleString('en-US')
-const ratingsNoun = (count: number) => (count === 1 ? 'rating' : 'ratings')
+type ReviewsT = Awaited<ReturnType<typeof getTranslations<'reviews'>>>
+type CommonT = Awaited<ReturnType<typeof getTranslations<'common'>>>
+type Formatter = Awaited<ReturnType<typeof getFormatter>>
+
+/** A rating as shown ("4.57"): two decimals, in the active locale. */
+function formatRatingFor(format: Formatter, rating: number): string {
+  return format.number(Number(formatRating(rating)), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
 
 /**
  * The two headline figures and their labels. With several stores they are the combined
  * figures, labelled as spanning those stores. With one store they are that store's own,
  * under its own name. `outOfFive` marks the rating, which is written "4.23 / 5".
  */
-function headlineStats(stores: StoreRating[], rating: number, ratingCount: number) {
+function headlineStats(
+  stores: StoreRating[],
+  rating: number,
+  ratingCount: number,
+  { t, common, format }: { t: ReviewsT; common: CommonT; format: Formatter }
+) {
   if (stores.length === 1) {
     const label = STORE_LABEL[stores[0].store]
     return [
-      { value: formatRating(rating), outOfFive: true, label: `Average rating on ${label}` },
+      { value: formatRatingFor(format, rating), outOfFive: true, label: t('averageRatingOn', { store: label }) },
       {
-        value: formatCount(ratingCount),
+        value: format.number(ratingCount),
         outOfFive: false,
-        label: `${ratingCount === 1 ? 'Rating' : 'Ratings'} on ${label}`,
+        label: t('ratingsOn', { count: ratingCount, store: label }),
       },
     ]
   }
   return [
-    { value: formatRating(rating), outOfFive: true, label: 'Average rating' },
+    { value: formatRatingFor(format, rating), outOfFive: true, label: t('averageRating') },
     {
-      value: formatCount(ratingCount),
+      value: format.number(ratingCount),
       outOfFive: false,
-      label: `Ratings across ${listNames(stores.map((s) => STORE_BROWSER[s.store]))}`,
+      label: t('ratingsAcross', { stores: listNames(stores.map((s) => STORE_BROWSER[s.store]), common) }),
     },
   ]
 }
@@ -126,10 +137,11 @@ function headlineStats(stores: StoreRating[], rating: number, ratingCount: numbe
  * as "4.23 slash 5", or drop the slash and say "4.23 5".
  */
 function OutOfFive({ leadingSpace = false }: { leadingSpace?: boolean }) {
+  const t = useTranslations('reviews')
   return (
     <>
-      <span aria-hidden="true">{leadingSpace ? ' / 5' : '/ 5'}</span>
-      <span className="sr-only"> out of 5</span>
+      <span aria-hidden="true">{leadingSpace ? ` ${t('outOfFiveVisual')}` : t('outOfFiveVisual')}</span>
+      <span className="sr-only">{t('outOfFiveSpoken')}</span>
     </>
   )
 }
@@ -137,7 +149,10 @@ function OutOfFive({ leadingSpace = false }: { leadingSpace?: boolean }) {
 const BREAKDOWN_CAPTION_ID = 'reviews-by-store'
 
 /** Read by a screen reader between the parts of a tile, which are only laid out apart. */
-const SpokenComma = () => <span className="sr-only">, </span>
+function SpokenComma() {
+  const t = useTranslations('reviews')
+  return <span className="sr-only">{t('spokenComma')}</span>
+}
 
 /**
  * One store's own figures, under the headline they add up to. The whole tile is a link to
@@ -150,10 +165,13 @@ const SpokenComma = () => <span className="sr-only">, </span>
  * written name.
  */
 function StoreTile({ store }: { store: StoreRating }) {
+  const t = useTranslations('reviews')
+  const format = useFormatter()
   const Icon = STORE_ICON[store.store]
   const label = STORE_LABEL[store.store]
-  const rating = formatRating(store.rating)
-  const count = `${formatCount(store.ratingCount)} ${ratingsNoun(store.ratingCount)}`
+  const rating = format.number(Number(formatRating(store.rating)), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  const count = t('ratingCount', { count: store.ratingCount })
+  const common = useTranslations('common')
   const linkProps = storeLinkProps(STABLE_STORE_LINKS[store.store])
 
   return (
@@ -182,7 +200,7 @@ function StoreTile({ store }: { store: StoreRating }) {
           <OutOfFive />
         </span>
       </span>
-      {linkProps.target === '_blank' && <span className="sr-only"> (opens in a new tab)</span>}
+      {linkProps.target === '_blank' && <span className="sr-only">{common('opensInNewTab')}</span>}
     </a>
   )
 }
@@ -195,16 +213,17 @@ export async function ReviewsStrip() {
   const track = buildMarqueeHalf(reviews)
   // One store's breakdown would only repeat the headline, which already names it.
   const showBreakdown = stores.length > 1
+  const [t, common, format] = await Promise.all([getTranslations('reviews'), getTranslations('common'), getFormatter()])
 
   return (
     <section className={REVIEWS_SECTION_CLASS}>
       <div className={REVIEWS_CONTAINER_CLASS}>
         <h2 id={REVIEWS_HEADING_ID} className={REVIEWS_HEADING_CLASS}>
-          {REVIEWS_HEADING_TEXT}
+          {t('heading')}
         </h2>
 
         <div className={`${STATS_GRID_CLASS} ${showBreakdown ? STATS_WITH_BREAKDOWN_CLASS : BREAKDOWN_CLASS}`}>
-          {headlineStats(stores, ratings.rating, ratings.ratingCount).map((stat, i) => (
+          {headlineStats(stores, ratings.rating, ratings.ratingCount, { t, common, format }).map((stat, i) => (
             <div key={stat.label} className={`${STAT_BLOCK_CLASS} ${i === 1 ? STAT_SECOND_BLOCK_CLASS : ''}`}>
               <span className={STAT_NUMBER_CLASS}>
                 {stat.value}
@@ -218,7 +237,7 @@ export async function ReviewsStrip() {
         {showBreakdown && (
           <div className={BREAKDOWN_CLASS}>
             <p id={BREAKDOWN_CAPTION_ID} className={BREAKDOWN_CAPTION_CLASS}>
-              {BREAKDOWN_CAPTION_TEXT}
+              {t('byStore')}
             </p>
             {/* Three stores fill the row; two sit centred at the same tile width.
                 role="list": Tailwind's reset sets `list-style: none`, and Safari then stops

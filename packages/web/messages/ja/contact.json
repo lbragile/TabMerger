@@ -1,0 +1,32 @@
+{
+  "metaTitle": "お問い合わせ",
+  "metaDescription": "TabMergerチームへのお問い合わせ: バグの報告、請求やアカウントについてのご質問、ご意見やアイデアをお寄せください。",
+  "eyebrow": "サポート",
+  "title": "お問い合わせ",
+  "lead": "ご質問、バグの発見、サブスクリプションに関するお困りごとなど、お気軽にご連絡ください。通常、1営業日以内にお返事します。",
+  "bugReport": "バグの報告ですか？追跡と可視化のため、<link>GitHubでissueを作成</link>していただくとスムーズです。",
+  "preferEmail": "メールをご希望ですか？<email>{address}</email>までご連絡ください。",
+  "sentTitle": "メッセージを送信しました",
+  "sentBody": "まもなくご返信します。",
+  "email": "メールアドレス",
+  "emailPlaceholder": "you@example.com",
+  "subject": "件名",
+  "subjectPlaceholder": "理由を選択…",
+  "subjects": {
+    "bug": "バグ報告",
+    "betaBug": "ベータ版のバグ報告",
+    "feedback": "ご意見・アイデア",
+    "billing": "請求に関するご質問",
+    "feature": "機能のリクエスト",
+    "account": "アカウントのサポート",
+    "other": "その他"
+  },
+  "otherSubject": "内容をご記入ください",
+  "otherSubjectPlaceholder": "どのようなご用件ですか？",
+  "message": "メッセージ",
+  "messagePlaceholder": "問題やご質問を、できるだけ詳しくご記入ください。",
+  "rateLimited": "送信されたメッセージが多すぎます。しばらくしてからもう一度お試しください。",
+  "failed": "問題が発生しました。もう一度お試しいただくか、<email>{address}</email>までメールでご連絡ください。",
+  "sending": "送信中…",
+  "send": "メッセージを送信"
+}

@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Group Limit Reached",
+    "description": "You have reached the free plan limit of {{max}} groups. Upgrade to Pro for unlimited groups."
+  },
+  "maxTabs": {
+    "title": "Tab Limit Reached",
+    "description": "You have reached the free plan limit of {{max}} tabs. Upgrade to Pro for unlimited tabs."
+  },
+  "cloudSync": {
+    "title": "Cloud Sync is Pro",
+    "description": "Sync your groups across all your devices with TabMerger Pro. Upgrade to enable cloud sync."
+  },
+  "aiFeatures": {
+    "title": "AI Features are Pro AI",
+    "description": "AI auto-grouping, smart naming, and tab summaries are available in the Pro AI plan."
+  },
+  "default": {
+    "title": "Upgrade TabMerger",
+    "description": "Unlock unlimited groups, cloud sync, automatic backups, and AI features with TabMerger Pro."
+  },
+  "signInHint": " Already have a Pro account? Sign in to restore it on this device.",
+  "planPrice": " — {{price}}/mo",
+  "comingSoon": "Coming soon",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Free",
+      "f1": "Up to {{groups}} groups",
+      "f2": "Up to {{tabs}} tabs",
+      "f3": "Up to {{urlRules}} URL rules"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Everything in Free",
+      "f2": "Unlimited groups, tabs, URL rules & sessions",
+      "f3": "Cloud sync across devices"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Everything in Pro",
+      "f2": "AI auto-grouping of tabs",
+      "f3": "AI group name suggestions"
+    }
+  },
+  "maybeLater": "Maybe later",
+  "signIn": "Sign in",
+  "upgradeNow": "Upgrade now"
+}

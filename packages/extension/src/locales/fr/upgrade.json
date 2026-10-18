@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Limite de groupes atteinte",
+    "description": "Vous avez atteint la limite de {{max}} groupes de l’offre gratuite. Passez à Pro pour des groupes illimités."
+  },
+  "maxTabs": {
+    "title": "Limite d’onglets atteinte",
+    "description": "Vous avez atteint la limite de {{max}} onglets de l’offre gratuite. Passez à Pro pour des onglets illimités."
+  },
+  "cloudSync": {
+    "title": "La synchronisation cloud est Pro",
+    "description": "Synchronisez vos groupes sur tous vos appareils avec TabMerger Pro. Passez à Pro pour activer la synchronisation cloud."
+  },
+  "aiFeatures": {
+    "title": "Les fonctions IA sont Pro AI",
+    "description": "Le regroupement automatique, le nommage intelligent et les résumés d’onglets par IA sont disponibles dans l’offre Pro AI."
+  },
+  "default": {
+    "title": "Passer à la version supérieure de TabMerger",
+    "description": "Débloquez groupes illimités, synchronisation cloud, sauvegardes automatiques et fonctions IA avec TabMerger Pro."
+  },
+  "signInHint": " Vous avez déjà un compte Pro ? Connectez-vous pour le restaurer sur cet appareil.",
+  "planPrice": " — {{price}}/mois",
+  "comingSoon": "Bientôt disponible",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Gratuit",
+      "f1": "Jusqu’à {{groups}} groupes",
+      "f2": "Jusqu’à {{tabs}} onglets",
+      "f3": "Jusqu’à {{urlRules}} règles d’URL"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Tout ce qui est dans Gratuit",
+      "f2": "Groupes, onglets, règles d’URL et sessions illimités",
+      "f3": "Synchronisation cloud entre appareils"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Tout ce qui est dans Pro",
+      "f2": "Regroupement automatique des onglets par IA",
+      "f3": "Suggestions de noms de groupes par IA"
+    }
+  },
+  "maybeLater": "Plus tard",
+  "signIn": "Se connecter",
+  "upgradeNow": "Passer à Pro maintenant"
+}

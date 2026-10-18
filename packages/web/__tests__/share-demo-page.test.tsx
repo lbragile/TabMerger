@@ -6,7 +6,7 @@ vi.mock('@/lib/supabase/server', () => {
   throw new Error('ShareDemoPage must not import the Supabase server client')
 })
 
-import ShareDemoPage from '@/app/(marketing)/share/demo/page'
+import ShareDemoPage from '@/app/[locale]/(marketing)/share/demo/page'
 
 describe('ShareDemoPage — static /share/demo route', () => {
   it('renders fixture group names and tab titles without hitting Supabase', () => {

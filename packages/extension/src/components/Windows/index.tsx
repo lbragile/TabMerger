@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import { NEW_WINDOW_SUFFIX } from '@/hooks/useDndHandlers';
@@ -45,7 +46,7 @@ import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { isHiddenFromSearch } from '@/lib/tourSandbox';
 import { useTourSearchShowsDemo } from '@/hooks/useTourSearchShowsDemo';
-import { SEARCH_COPY, SEARCH_NON_MATCHING } from '@tabmerger/shared';
+import { SEARCH_NON_MATCHING } from '@tabmerger/shared';
 import { PanelSearchContext, buildPanelSearchView, useSearchFilters, useSearchMode } from '@/hooks/useSearchView';
 import { useKeepFocusInList, SEARCH_STATUS_CLEAR_ATTR } from '@/hooks/useKeepFocusInList';
 import { groupSearchState, isSearchActive, summarizeSearch, tabMatchesFilters } from '@/lib/searchMatch';
@@ -57,7 +58,6 @@ interface WindowsPanelProps {
   allGroups?: Group[];
 }
 
-const count = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 /** The typed query as shown back to the user: plain text, cut short so it cannot fill the panel. */
 const shortQuery = (q: string) => (q.length > 60 ? `${q.slice(0, 60)}…` : q);
 
@@ -86,6 +86,7 @@ function NewWindowDropZone({
   groupIndex: number;
   activeForTab: boolean;
 }) {
+  const { t } = useTranslation();
   const { setNodeRef, isOver: pointerOver } = useDroppable({
     id: `${groupId}${NEW_WINDOW_SUFFIX}`,
     data: { type: 'new-window', groupId, groupIndex },
@@ -111,7 +112,7 @@ function NewWindowDropZone({
       )}
     >
       <Plus className="h-3.5 w-3.5 mr-1" />
-      Drop here for a new window
+      {t('windows.dropNewWindow')}
     </div>
   );
 }
@@ -131,6 +132,7 @@ export function WindowsPanel({ group, groupIndex, allGroups }: WindowsPanelProps
 }
 
 function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsPanelProps) {
+  const { t } = useTranslation();
   const dnd = useDndContext();
   const moveKind = useKeyboardMoveStore((s) => s.kind);
   // Keyboard move on the "new group" stop: the shown group is NOT where the item will land, so dim it.
@@ -168,7 +170,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
   const clearSearch = () => {
     // The button that was clicked is about to go away: put focus on the search box's opener
     // before it does, so it never falls back to <body>.
-    document.querySelector<HTMLElement>('button[aria-label="Open search"]')?.focus();
+    document.querySelector<HTMLElement>(`button[data-tour="${TOUR_ANCHORS.search}"]`)?.focus();
     setSearchFilter?.('');
   };
   const scrollToWindowIndex = useUIStore((s) => s.scrollToWindowIndex);
@@ -248,7 +250,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
   const handleDeduplicate = () => {
     const duplicates = findDuplicateTabs(group.windows);
     if (duplicates.length === 0) {
-      toast.info('No duplicates found');
+      toast.info(t('groupMenu.toast.noDuplicates'));
       return;
     }
     openModal('deduplicateGroup', { groupIndex, duplicates });
@@ -339,17 +341,17 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
   const nothingToShow = !!searchState && !searchState.windows.some((w) => w.visible);
   const elsewhere =
     otherGroups && otherGroups.tabs > 0
-      ? `${count(otherGroups.tabs, 'matching tab')} in ${count(otherGroups.groups, 'other group')}`
+      ? t('windows.search.elsewhere', { tabs: t('windows.search.matchingTabs', { count: otherGroups.tabs }), groups: t('windows.search.otherGroups', { count: otherGroups.groups }) })
       : null;
   const searchStatus = !searchState
     ? ''
     : nothingToShow
-      ? 'No tabs match in this group'
+      ? t('windows.search.noneInGroup')
       : searchMode === SEARCH_NON_MATCHING.HIDE
         ? hiddenTabs > 0
-          ? `${count(hiddenTabs, 'tab')} hidden by search`
-          : `All ${count(searchState.tabCount, 'tab')} match`
-        : `${searchState.matchCount} of ${count(searchState.tabCount, 'tab')} match`;
+          ? t('windows.search.hidden', { count: hiddenTabs })
+          : t('windows.search.allMatch', { count: searchState.tabCount })
+        : t('windows.search.someMatch', { matched: searchState.matchCount, count: searchState.tabCount });
 
   return (
     <div className="flex flex-col h-full min-w-0 overflow-hidden" data-tour={TOUR_ANCHORS.tabsPanel}>
@@ -368,12 +370,12 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   className="h-6 w-6 hover:opacity-80"
                   style={{ color: displayColor || DEFAULT_GROUP_COLOR }}
                   onClick={() => void handleRemoveStaleTabs()}
-                  aria-label={`Remove ${staleCount} stale tab${staleCount !== 1 ? 's' : ''}`}
+                  aria-label={t('windows.removeStale', { count: staleCount })}
                 >
                   <Clock className="h-3.5 w-3.5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Remove {staleCount} stale tab{staleCount !== 1 ? 's' : ''}</TooltipContent>
+              <TooltipContent side="bottom">{t('windows.removeStale', { count: staleCount })}</TooltipContent>
             </Tooltip>
           )}
           {group.note && (
@@ -384,18 +386,18 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring rounded"
                   onClick={() => setNoteOpen((o) => !o)}
                   onMouseDown={(e) => e.stopPropagation()}
-                  aria-label="Edit group note"
+                  aria-label={t('windows.editGroupNote')}
                 >
                   <StickyNote className="h-3 w-3" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Edit note</TooltipContent>
+              <TooltipContent side="bottom">{t('windows.editNote')}</TooltipContent>
             </Tooltip>
           )}
           {/* Controlled so `useCloseOnOverlayDismiss` can shut it when a multi-select starts. */}
           <DropdownMenu open={groupMenuOpen} onOpenChange={setGroupMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="More group options" data-tour={TOUR_ANCHORS.groupOptions}>
+              <Button variant="ghost" size="icon" className="h-6 w-6" aria-label={t('windows.moreGroupOptions')} data-tour={TOUR_ANCHORS.groupOptions}>
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
@@ -407,38 +409,38 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   item here without adding its twin there, and vice versa for the shared set. */}
               <DropdownMenuItem onClick={() => setNoteOpen((o) => !o)}>
                 <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0" />
-                {group.note ? 'Edit note' : 'Add note'}
+                {group.note ? t('groupMenu.editNote') : t('groupMenu.addNote')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
                 <RefreshCw className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Replace with current</div><div className="text-[10px] text-muted-foreground font-normal">Swap all windows with your open browser session</div></div>
+                <div><div>{t('groupMenu.replaceWithCurrent')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.replaceWithCurrentHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => mergeWithCurrent(groupIndex)}>
                 <GitMerge className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Merge with current</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
+                <div><div>{t('groupMenu.mergeWithCurrent')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.mergeWithCurrentHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
                 <Layers className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Unite windows</div><div className="text-[10px] text-muted-foreground font-normal">Combine all windows into one</div></div>
+                <div><div>{t('groupMenu.uniteWindows')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.uniteWindowsHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => splitWindows(groupIndex)}>
                 <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Split windows</div><div className="text-[10px] text-muted-foreground font-normal">Move each tab into its own window</div></div>
+                <div><div>{t('groupMenu.splitWindows')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.splitWindowsHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Sort by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by name</div></div>
+                <div><div>{t('groupMenu.sortByTitle')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.sortByTitleHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Sort by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by address</div></div>
+                <div><div>{t('groupMenu.sortByUrl')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.sortByUrlHint')}</div></div>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDeduplicate}>
+              <DropdownMenuItem onClick={handleDeduplicate} data-tour={TOUR_ANCHORS.groupDeduplicate}>
                 <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Deduplicate tabs</div><div className="text-[10px] text-muted-foreground font-normal">Remove tabs with duplicate URLs</div></div>
+                <div><div>{t('groupMenu.deduplicate')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.deduplicateHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -447,9 +449,9 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
               >
                 <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
                 <div>
-                  <div>{group.permanent ? 'Close all windows' : 'Remove all windows'}</div>
+                  <div>{group.permanent ? t('groupMenu.closeAllWindows') : t('groupMenu.removeAllWindows')}</div>
                   <div className="text-[10px] font-normal opacity-60">
-                    {group.permanent ? 'Close all browser windows in this group' : 'Permanently remove all windows and their tabs'}
+                    {group.permanent ? t('groupMenu.closeAllWindowsHint') : t('groupMenu.removeAllWindowsHint')}
                   </div>
                 </div>
               </DropdownMenuItem>
@@ -469,7 +471,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
             rows={2}
             maxLength={500}
             className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
-            placeholder="Add a note for this group…"
+            placeholder={t('windows.notePlaceholder')}
             value={noteValue}
             onChange={(e) => setNoteValue(e.target.value)}
             onKeyDown={(e) => {
@@ -478,10 +480,10 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
             }}
           />
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">{noteValue.length}/500</span>
+            <span className="text-[10px] text-muted-foreground">{t('windows.noteLength', { length: noteValue.length, max: 500 })}</span>
             <div className="flex gap-1">
-              <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)}>Cancel</Button>
-              <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitGroupNote}>Save</Button>
+              <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)}>{t('common.cancel')}</Button>
+              <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitGroupNote}>{t('common.save')}</Button>
             </div>
           </div>
         </div>
@@ -493,11 +495,10 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
           data-testid="search-status"
         >
           <span className="truncate min-w-0">
-            {searchStatus}
-            {nothingToShow && elsewhere ? ` · ${elsewhere}` : ''}
+            {nothingToShow && elsewhere ? t('windows.search.statusElsewhere', { status: searchStatus, elsewhere }) : searchStatus}
           </span>
           <Button variant="link" size="sm" className="h-5 px-0 text-[11px] shrink-0" onClick={clearSearch} {...{ [SEARCH_STATUS_CLEAR_ATTR]: '' }}>
-            {SEARCH_COPY.clearSearch}
+            {t('search.clearSearch')}
           </Button>
         </div>
       )}
@@ -556,17 +557,17 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
           {searchView.hide && nothingToShow && group.windows.length > 0 && (
             <div className="py-6 px-3 text-center min-w-0" data-testid="search-empty">
               <p className="text-sm text-muted-foreground break-words">
-                No tabs match &ldquo;{shortQuery(rawSearchFilter.trim())}&rdquo; in this group
+                {t('windows.search.noneForQuery', { query: shortQuery(rawSearchFilter.trim()) })}
               </p>
               {elsewhere && <p className="mt-1 text-xs text-muted-foreground">{elsewhere}</p>}
               <Button variant="outline" size="sm" className="mt-3 h-7 rounded-none px-3 text-xs" onClick={clearSearch}>
-                {SEARCH_COPY.clearSearch}
+                {t('search.clearSearch')}
               </Button>
             </div>
           )}
 
           {group.windows.length === 0 && (
-            <p className="py-6 text-center text-sm text-muted-foreground">No windows in this group</p>
+            <p className="py-6 text-center text-sm text-muted-foreground">{t('windows.noWindows')}</p>
           )}
 
           {group.permanent ? (
@@ -597,7 +598,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   disabled={selectionMode || dnd.isDragging}
                 >
                   <Plus className="h-3.5 w-3.5 mr-1" />
-                  Add Window
+                  {t('windows.addWindow')}
                 </Button>
               </div>
             </div>
@@ -623,7 +624,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   disabled={selectionMode || dnd.isDragging}
                 >
                   <Plus className="h-3.5 w-3.5 mr-1" />
-                  Add Window
+                  {t('windows.addWindow')}
                 </Button>
               </div>
             </div>

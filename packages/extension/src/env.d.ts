@@ -17,6 +17,8 @@ interface ImportMetaEnv {
   readonly VITE_STRIPE_PUBLISHABLE_KEY: string;
   readonly VITE_DEMO_BUILD?: string;
   readonly VITE_AI_ENABLED?: string;
+  /** "1" in a development build shows the pseudo-locale (src/lib/pseudoLocale.ts); ignored elsewhere. */
+  readonly VITE_PSEUDO_LOCALE?: string;
   readonly VITE_POSTHOG_API_KEY?: string;
   readonly VITE_POSTHOG_HOST?: string;
 }

@@ -73,18 +73,7 @@ describe('yearlySavings', () => {
   })
 })
 
-describe('yearlySubtext', () => {
-  it('writes the monthly equivalent and the saving for each paid plan', async () => {
-    const { yearlySubtext, YEARLY_SAVINGS } = await import('@/lib/tiers')
-    expect(yearlySubtext(YEARLY_SAVINGS.pro)).toBe('$3.58/mo billed yearly · save 10%')
-    expect(yearlySubtext(YEARLY_SAVINGS.proAi)).toBe('$7.17/mo billed yearly · save 10%')
-  })
-
-  it('leaves the saving out when there is none', async () => {
-    const { yearlySubtext, yearlySavings } = await import('@/lib/tiers')
-    expect(yearlySubtext(yearlySavings(5, 60))).toBe('$5.00/mo billed yearly')
-  })
-})
+// The yearly line's wording: __tests__/i18n-infrastructure.test.tsx (useYearlySubtext).
 
 describe('YEARLY_DISCOUNT_PERCENT', () => {
   it('is the smaller of the paid plans’ savings, so the toggle badge is true for both', async () => {

@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
@@ -8,16 +9,17 @@ import { getStoreLinks } from '@/lib/storeLinks'
 export function InstallButtons() {
   // Server component: the links follow the deployment answering this request.
   const storeLinks = getStoreLinks()
+  const t = useTranslations('home.install')
 
   return (
     <section className="py-24">
       <div className="container">
         <div className="rounded-2xl bg-primary px-8 py-16 text-center text-primary-foreground">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Ready to organize your browser?
+            {t('title')}
           </h2>
           <p className="mt-4 text-lg opacity-80 max-w-xl mx-auto">
-            Install TabMerger in seconds. No account required to get started.
+            {t('lead')}
           </p>
 
           {/* Browser install buttons */}
@@ -27,21 +29,21 @@ export function InstallButtons() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-xs"
             >
               <ChromeIcon size={20} />
-              Add to Chrome
+              {t('addToChrome')}
             </StoreLink>
             <StoreLink
               href={storeLinks.firefox}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-xs"
             >
               <FirefoxIcon size={20} />
-              Add to Firefox
+              {t('addToFirefox')}
             </StoreLink>
             <StoreLink
               href={storeLinks.edge}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-xs"
             >
               <EdgeIcon size={20} />
-              Add to Edge
+              {t('addToEdge')}
             </StoreLink>
           </div>
 
@@ -54,14 +56,14 @@ export function InstallButtons() {
               asChild
             >
               <Link href="/pricing">
-                View pricing
+                {t('viewPricing')}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
 
           <p className="mt-4 text-xs opacity-50">
-            Free to install — No account required &middot; Edge support coming soon
+            {t('note')}
           </p>
         </div>
       </div>

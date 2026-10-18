@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 /**
  * Plain "Get more" CTA — starts a Stripe Checkout session at the default
@@ -13,6 +14,7 @@ import { toast } from 'sonner'
  */
 export function BuyCreditsButton() {
   const [loading, setLoading] = useState(false)
+  const t = useTranslations('account.credits')
 
   async function handleClick() {
     setLoading(true)
@@ -24,7 +26,7 @@ export function BuyCreditsButton() {
       }
       window.location.href = data.url
     } catch {
-      toast.error('Could not start checkout')
+      toast.error(t('failed'))
       setLoading(false)
     }
   }
@@ -37,7 +39,7 @@ export function BuyCreditsButton() {
       disabled={loading}
     >
       {loading && <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />}
-      Get more
+      {t('getMore')}
     </button>
   )
 }

@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { MIN_PASSWORD_LENGTH } from '@/lib/passwordPolicy'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -17,6 +19,7 @@ import {
 import Image from 'next/image'
 
 export default function ResetPasswordPage() {
+  const t = useTranslations('auth')
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -31,12 +34,12 @@ export default function ResetPasswordPage() {
     setError('')
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.')
+      setError(t('passwordsDontMatch'))
       return
     }
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters.')
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(t('passwordTooShort', { min: MIN_PASSWORD_LENGTH }))
       return
     }
 
@@ -60,34 +63,34 @@ export default function ResetPasswordPage() {
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="TabMerger" width={32} height={32} className="rounded-md" />
           </Link>
-          <h1 className="text-2xl font-bold">Set new password</h1>
+          <h1 className="text-2xl font-bold">{t('resetPassword.title')}</h1>
           <p className="text-sm text-muted-foreground">
-            Choose a new password for your account
+            {t('resetPassword.lead')}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">New password</CardTitle>
+            <CardTitle className="text-lg">{t('resetPassword.cardTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('password')}</Label>
                 <PasswordInput
                   id="password"
-                  placeholder="At least 8 characters"
+                  placeholder={t('newPasswordPlaceholder', { min: MIN_PASSWORD_LENGTH })}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={8}
+                  minLength={MIN_PASSWORD_LENGTH}
                   autoComplete="new-password"
                   visible={passwordVisible}
                   onVisibleChange={setPasswordVisible}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="confirm-password">Confirm password</Label>
+                <Label htmlFor="confirm-password">{t('confirmPassword')}</Label>
                 <PasswordInput
                   id="confirm-password"
                   placeholder="••••••••"
@@ -101,13 +104,13 @@ export default function ResetPasswordPage() {
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
               <Button type="submit" className="w-full" disabled={loading} loading={loading}>
-                Update password
+                {t('resetPassword.submit')}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="justify-center">
             <Button variant="ghost" asChild>
-              <Link href="/auth/sign-in">Back to sign in</Link>
+              <Link href="/auth/sign-in">{t('backToSignIn')}</Link>
             </Button>
           </CardFooter>
         </Card>

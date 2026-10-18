@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { openableUrls } from '@/lib/safeOpen';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
@@ -100,6 +101,7 @@ export function GroupContextMenu({
   onWrapperMouseEnter,
   onWrapperMouseLeave,
 }: GroupContextMenuProps) {
+  const { t } = useTranslation();
   const { mutate: _deleteGroup } = useDeleteGroup();
   const { mutate: archiveGroup } = useArchiveGroup();
   const { mutate: restoreGroup } = useRestoreGroup();
@@ -126,7 +128,7 @@ export function GroupContextMenu({
   const handleDeduplicate = () => {
     const duplicates = findDuplicateTabs(group.windows);
     if (duplicates.length === 0) {
-      toast.info('No duplicates found');
+      toast.info(t('groupMenu.toast.noDuplicates'));
       return;
     }
     openModal('deduplicateGroup', { groupIndex, duplicates });
@@ -142,7 +144,7 @@ export function GroupContextMenu({
   const handleAIRename = async () => {
     const tabs = group.windows.flatMap((w) => w.tabs);
     if (tabs.length === 0) {
-      toast.error('No tabs in this group to name');
+      toast.error(t('groupMenu.toast.noTabsToName'));
       return;
     }
     try {
@@ -150,12 +152,12 @@ export function GroupContextMenu({
       updateGroupName({ groupIndex, name });
     } catch (err) {
       if (err instanceof QuotaExceededError) {
-        toast.error("You've used all your AI credits for this month.", {
-          action: { label: 'Buy more', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+        toast.error(t('common.aiQuotaUsed'), {
+          action: { label: t('common.buyMore'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
         });
         return;
       }
-      toast.error(err instanceof Error ? err.message : 'AI rename failed');
+      toast.error(err instanceof Error ? err.message : t('groupMenu.toast.aiRenameFailed'));
     }
   };
 
@@ -163,7 +165,7 @@ export function GroupContextMenu({
     <div
       ref={wrapperRef as React.RefCallback<HTMLDivElement>}
       style={wrapperStyle}
-      className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-ring', wrapperClassName)}
+      className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring', wrapperClassName)}
       tabIndex={0}
       role="button"
       aria-label={wrapperLabel ?? group.name}
@@ -202,34 +204,34 @@ export function GroupContextMenu({
           {!group.permanent && (
             <DropdownMenuItem onClick={() => setRenameTarget({ kind: 'group', groupIndex })}>
               <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0" />
-              <div><div>Rename</div><div className="text-[10px] text-muted-foreground font-normal">Set a new name for this group</div></div>
+              <div><div>{t('groupMenu.rename')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.renameHint')}</div></div>
             </DropdownMenuItem>
           )}
 
           {!group.permanent && aiFeatures && appSettings?.aiNameGroupEnabled !== false && (
             <DropdownMenuItem onClick={handleAIRename}>
               <Sparkles className="h-3.5 w-3.5 mr-2 shrink-0" />
-              <div><div>AI rename</div><div className="text-[10px] text-muted-foreground font-normal">Suggest a name for this group with AI</div></div>
+              <div><div>{t('groupMenu.aiRename')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.aiRenameHint')}</div></div>
             </DropdownMenuItem>
           )}
 
           <DropdownMenuItem onClick={handleOpenNote}>
             <FileText className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>{group.note ? 'Edit note' : 'Add note'}</div><div className="text-[10px] text-muted-foreground font-normal">{group.note ? 'Update the note for this group' : 'Attach a note to this group'}</div></div>
+            <div><div>{group.note ? t('groupMenu.editNote') : t('groupMenu.addNote')}</div><div className="text-[10px] text-muted-foreground font-normal">{group.note ? t('groupMenu.editNoteHint') : t('groupMenu.addNoteHint')}</div></div>
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => {
             if (countedGroups(groupsState?.available ?? []).length >= maxGroups) {
               trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
-              toast.error(`Free plan allows up to ${maxGroups} groups.`, {
-                action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+              toast.error(t('common.freeGroupLimit', { max: maxGroups }), {
+                action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
               });
               return;
             }
             duplicateGroup(groupIndex);
           }}>
             <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>Duplicate</div><div className="text-[10px] text-muted-foreground font-normal">Copy this group with all its tabs</div></div>
+            <div><div>{t('groupMenu.duplicate')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.duplicateHint')}</div></div>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -241,21 +243,21 @@ export function GroupContextMenu({
             <>
               <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
                 <RefreshCw className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Replace with current</div><div className="text-[10px] text-muted-foreground font-normal">Swap all windows with your open browser session</div></div>
+                <div><div>{t('groupMenu.replaceWithCurrent')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.replaceWithCurrentHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => mergeWithCurrent(groupIndex)}>
                 <GitMerge className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Merge with current</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
+                <div><div>{t('groupMenu.mergeWithCurrent')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.mergeWithCurrentHint')}</div></div>
               </DropdownMenuItem>
               {(() => {
-                const urls = openableUrls(group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http'))));
+                const urls = openableUrls(group.windows.flatMap(w => w.tabs.map(tab => tab.url).filter(u => u?.startsWith('http'))));
                 return (
                   <DropdownMenuItem
                     disabled={urls.length === 0}
                     onClick={() => { trackEvent('session_restored', { source: 'open_all' }); chrome.windows.create({ url: urls }); }}
                   >
                     <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0" />
-                    <div><div>Open all in new window</div><div className="text-[10px] text-muted-foreground font-normal">Open every tab in this group in a new window</div></div>
+                    <div><div>{t('groupMenu.openAll')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.openAllHint')}</div></div>
                   </DropdownMenuItem>
                 );
               })()}
@@ -265,23 +267,23 @@ export function GroupContextMenu({
 
           <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
             <Layers className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>Unite windows</div><div className="text-[10px] text-muted-foreground font-normal">Combine all windows into one</div></div>
+            <div><div>{t('groupMenu.uniteWindows')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.uniteWindowsHint')}</div></div>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => splitWindows(groupIndex)}>
             <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>Split windows</div><div className="text-[10px] text-muted-foreground font-normal">Move each tab into its own window</div></div>
+            <div><div>{t('groupMenu.splitWindows')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.splitWindowsHint')}</div></div>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
             <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>Sort by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by name</div></div>
+            <div><div>{t('groupMenu.sortByTitle')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.sortByTitleHint')}</div></div>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
             <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>Sort by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by address</div></div>
+            <div><div>{t('groupMenu.sortByUrl')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.sortByUrlHint')}</div></div>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDeduplicate}>
+          <DropdownMenuItem onClick={handleDeduplicate} data-tour={TOUR_ANCHORS.groupDeduplicate}>
             <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>Deduplicate tabs</div><div className="text-[10px] text-muted-foreground font-normal">Remove tabs with duplicate URLs</div></div>
+            <div><div>{t('groupMenu.deduplicate')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.deduplicateHint')}</div></div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
 
@@ -293,12 +295,12 @@ export function GroupContextMenu({
               {group.archived ? (
                 <DropdownMenuItem onClick={() => restoreGroup(groupIndex)}>
                   <Archive className="h-3.5 w-3.5 mr-2 shrink-0" />
-                  <div><div>Restore group</div><div className="text-[10px] text-muted-foreground font-normal">Move back to active groups</div></div>
+                  <div><div>{t('groupMenu.restore')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.restoreHint')}</div></div>
                 </DropdownMenuItem>
               ) : (
                 <DropdownMenuItem onClick={() => archiveGroup(groupIndex)}>
                   <Archive className="h-3.5 w-3.5 mr-2 shrink-0" />
-                  <div><div>Archive group</div><div className="text-[10px] text-muted-foreground font-normal">Hide this group; restore it anytime</div></div>
+                  <div><div>{t('groupMenu.archive')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.archiveHint')}</div></div>
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
@@ -327,9 +329,9 @@ export function GroupContextMenu({
           >
             <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div>
-              <div>{group.permanent ? 'Close all windows' : 'Remove all windows'}</div>
+              <div>{group.permanent ? t('groupMenu.closeAllWindows') : t('groupMenu.removeAllWindows')}</div>
               <div className="text-[10px] font-normal opacity-60">
-                {group.permanent ? 'Close all browser windows in this group' : 'Permanently remove all windows and their tabs'}
+                {group.permanent ? t('groupMenu.closeAllWindowsHint') : t('groupMenu.removeAllWindowsHint')}
               </div>
             </div>
           </DropdownMenuItem>
@@ -349,7 +351,7 @@ export function GroupContextMenu({
               }}
             >
               <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
-              <div><div>Delete group</div><div className="text-[10px] font-normal opacity-60">Permanently remove this group and its tabs</div></div>
+              <div><div>{t('groupMenu.deleteGroup')}</div><div className="text-[10px] font-normal opacity-60">{t('groupMenu.deleteGroupHint')}</div></div>
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

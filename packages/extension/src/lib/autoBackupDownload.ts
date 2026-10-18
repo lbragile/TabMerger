@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { lazyMessages } from '@/lib/i18n';
 import { AUTO_BACKUP_DOWNLOAD_LIMITS, AUTO_BACKUP_RETENTION_COUNT, autoBackupName, decryptBlob, isEncryptedBlob } from '@tabmerger/shared';
 import type { Group, Session } from '@/lib/types';
 import { getSessions, getSetting, commitSessionsIfGuardHolds } from '@/lib/localDb';
@@ -199,15 +200,15 @@ export type BackupDownloadResult =
   | { status: 'busy' };
 
 /** Plain-language line for each reason the download could not run. */
-export const BACKUP_DOWNLOAD_MESSAGES: Record<BackupDownloadBlockedReason, string> = {
-  'signed-out': 'Sign in to see backups stored in your account.',
-  'account-mismatch': 'This device still holds another account\'s data. Reopen TabMerger to switch accounts, then come back here.',
-  'no-key': 'Finish setting up encryption to store backups in your account.',
-  'key-unknown': 'Could not check for backups stored in your account. Check your connection and try again.',
-  locked: 'Unlock encryption to see backups stored in your account.',
-  'fetch-failed': 'Could not load the backups stored in your account. Check your connection and try again.',
-  'identity-changed': 'The signed-in account changed while loading backups, so nothing was added. Open Settings again to retry.'
-};
+export const BACKUP_DOWNLOAD_MESSAGES: Readonly<Record<BackupDownloadBlockedReason, string>> = lazyMessages({
+  'signed-out': 'backups.download.signedOut',
+  'account-mismatch': 'backups.download.accountMismatch',
+  'no-key': 'backups.download.noKey',
+  'key-unknown': 'backups.download.keyUnknown',
+  locked: 'backups.download.locked',
+  'fetch-failed': 'backups.download.fetchFailed',
+  'identity-changed': 'backups.download.identityChanged'
+});
 
 /**
  * Decrypts the rows and keeps the valid automatic backups. A row that is not `{v:1,iv,ct}`

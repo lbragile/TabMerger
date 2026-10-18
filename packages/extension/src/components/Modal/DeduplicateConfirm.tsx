@@ -1,4 +1,6 @@
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { useTranslation } from 'react-i18next';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useDeduplicateGroup } from '@/hooks/useGroups'
@@ -15,6 +17,7 @@ interface DeduplicateConfirmModalProps {
  * the mutation matches on.
  */
 export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmModalProps) {
+  const { t } = useTranslation();
   const groupIndex = data.groupIndex as number
   const duplicates = data.duplicates as DuplicateTab[]
   const { mutate: deduplicate, isPending } = useDeduplicateGroup()
@@ -32,9 +35,9 @@ export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmMod
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Remove duplicates</DialogTitle>
+        <DialogTitle>{t('modals.dedup.title')}</DialogTitle>
         <DialogDescription>
-          {duplicates.length} duplicate {duplicates.length === 1 ? 'tab' : 'tabs'} will be removed.
+          {t('modals.dedup.description', { count: duplicates.length })}
         </DialogDescription>
       </DialogHeader>
 
@@ -50,7 +53,7 @@ export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmMod
 
       <div className="flex gap-2 mt-4">
         <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={onClose}>
-          Cancel
+          {t('modals.dedup.cancel')}
         </Button>
         <Button
           variant="destructive"
@@ -58,8 +61,9 @@ export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmMod
           className="flex-1 text-xs"
           onClick={handleConfirm}
           disabled={isPending}
+          data-tour={TOUR_ANCHORS.dedupConfirm}
         >
-          Remove {duplicates.length} {duplicates.length === 1 ? 'duplicate' : 'duplicates'}
+          {t('modals.dedup.confirm', { count: duplicates.length })}
         </Button>
       </div>
     </>

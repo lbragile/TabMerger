@@ -19,7 +19,7 @@ describe('/faq page', () => {
   it(
     'renders the FAQ list and its own heading',
     async () => {
-      const { default: FaqPage } = await import('@/app/(marketing)/faq/page')
+      const { default: FaqPage } = await import('@/app/[locale]/(marketing)/faq/page')
       render(<FaqPage />)
       expect(screen.getByRole('heading', { name: 'Frequently asked' })).toBeInTheDocument()
       expect(screen.getByText(SAMPLE_QUESTION)).toBeInTheDocument()
@@ -31,7 +31,7 @@ describe('/faq page', () => {
 
 describe('Home page', () => {
   it('no longer renders FAQ content', async () => {
-    const { default: HomePage } = await import('@/app/(marketing)/page')
+    const { default: HomePage } = await import('@/app/[locale]/(marketing)/page')
     render(<HomePage />)
     expect(screen.queryByText(SAMPLE_QUESTION)).not.toBeInTheDocument()
   })
@@ -41,7 +41,7 @@ describe('Pricing page', () => {
   it('no longer renders FAQ content, links to /faq instead', async () => {
     vi.resetModules()
     mockSupabase()
-    const { default: PricingPage } = await import('@/app/(marketing)/pricing/page')
+    const { default: PricingPage } = await import('@/app/[locale]/(marketing)/pricing/page')
     const jsx = await PricingPage()
     render(jsx as React.ReactElement)
     expect(screen.queryByText(SAMPLE_QUESTION)).not.toBeInTheDocument()

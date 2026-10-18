@@ -21,7 +21,10 @@ const baseProps = {
   name: 'Pro',
   monthlyPrice: 4,
   yearlyPrice: 38,
-  features: ['Feature A', 'Feature B'],
+  features: [
+    { text: 'Feature A', inherited: false },
+    { text: 'Feature B', inherited: false },
+  ],
   interval: 'monthly' as const,
   tier: 'pro',
   installHref: 'https://store.example/tabmerger',
@@ -85,7 +88,7 @@ describe('PricingCard', () => {
   it('renders a Check icon for "Everything in X" lines and Plus icons for the rest', async () => {
     const PricingCard = await loadPricingCard(true)
     const { container } = render(
-      <PricingCard {...baseProps} features={['Everything in Free', 'Feature A', 'Feature B']} />
+      <PricingCard {...baseProps} features={[{ text: 'Everything in Free', inherited: true }, ...baseProps.features]} />
     )
     expect(container.querySelectorAll('.lucide-check').length).toBe(1)
     expect(container.querySelectorAll('.lucide-plus').length).toBe(2)

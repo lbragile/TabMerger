@@ -1,0 +1,23 @@
+{
+  "title": "Regras de URL",
+  "description": "Atribua abas a grupos automaticamente por padrão de URL. Use <code>*</code> como curinga (ex.: <code>github.com/*</code>). Vale a primeira regra que corresponder.",
+  "empty": "Nenhuma regra ainda.",
+  "deletedGroup": "(grupo excluído)",
+  "moveUp": "Mover regra para cima",
+  "moveDown": "Mover regra para baixo",
+  "edit": "Editar regra",
+  "delete": "Excluir regra",
+  "used": "{{used}}/{{max}} em uso",
+  "addRule": "Adicionar regra",
+  "discard": "Descartar alterações",
+  "cancel": "Cancelar",
+  "saveAll": "Salvar todas as regras",
+  "save": "Salvar",
+  "editTitle": "Editar regra de URL",
+  "addTitle": "Adicionar regra de URL",
+  "patternPlaceholder": "Padrão, ex.: github.com/*",
+  "groupPlaceholder": "Selecione o grupo de destino…",
+  "toast": {
+    "limit": "O plano gratuito permite até {{max}} regras de URL."
+  }
+}

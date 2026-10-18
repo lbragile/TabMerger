@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Límite de grupos alcanzado",
+    "description": "Has alcanzado el límite de {{max}} grupos del plan gratuito. Mejora a Pro para tener grupos ilimitados."
+  },
+  "maxTabs": {
+    "title": "Límite de pestañas alcanzado",
+    "description": "Has alcanzado el límite de {{max}} pestañas del plan gratuito. Mejora a Pro para tener pestañas ilimitadas."
+  },
+  "cloudSync": {
+    "title": "La sincronización en la nube es Pro",
+    "description": "Sincroniza tus grupos en todos tus dispositivos con TabMerger Pro. Mejora tu plan para activar la sincronización en la nube."
+  },
+  "aiFeatures": {
+    "title": "Las funciones de IA son Pro AI",
+    "description": "La agrupación automática con IA, los nombres inteligentes y los resúmenes de pestañas están en el plan Pro AI."
+  },
+  "default": {
+    "title": "Mejora TabMerger",
+    "description": "Desbloquea grupos ilimitados, sincronización en la nube, copias automáticas y funciones de IA con TabMerger Pro."
+  },
+  "signInHint": " ¿Ya tienes una cuenta Pro? Inicia sesión para restaurarla en este dispositivo.",
+  "planPrice": " — {{price}}/mes",
+  "comingSoon": "Próximamente",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Gratis",
+      "f1": "Hasta {{groups}} grupos",
+      "f2": "Hasta {{tabs}} pestañas",
+      "f3": "Hasta {{urlRules}} reglas de URL"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Todo lo de Gratis",
+      "f2": "Grupos, pestañas, reglas de URL y sesiones ilimitados",
+      "f3": "Sincronización en la nube entre dispositivos"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Todo lo de Pro",
+      "f2": "Agrupación automática de pestañas con IA",
+      "f3": "Sugerencias de nombres de grupo con IA"
+    }
+  },
+  "maybeLater": "Quizá más tarde",
+  "signIn": "Iniciar sesión",
+  "upgradeNow": "Mejorar ahora"
+}

@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Gruppenlimit erreicht",
+    "description": "Du hast das Limit des kostenlosen Tarifs von {{max}} Gruppen erreicht. Wechsle zu Pro für unbegrenzte Gruppen."
+  },
+  "maxTabs": {
+    "title": "Tab-Limit erreicht",
+    "description": "Du hast das Limit des kostenlosen Tarifs von {{max}} Tabs erreicht. Wechsle zu Pro für unbegrenzte Tabs."
+  },
+  "cloudSync": {
+    "title": "Cloud-Sync ist Pro",
+    "description": "Synchronisiere deine Gruppen mit TabMerger Pro auf allen deinen Geräten. Upgrade, um Cloud-Sync zu aktivieren."
+  },
+  "aiFeatures": {
+    "title": "KI-Funktionen sind Pro AI",
+    "description": "KI-Auto-Gruppierung, intelligente Benennung und Tab-Zusammenfassungen gibt es im Tarif Pro AI."
+  },
+  "default": {
+    "title": "TabMerger upgraden",
+    "description": "Schalte mit TabMerger Pro unbegrenzte Gruppen, Cloud-Sync, automatische Backups und KI-Funktionen frei."
+  },
+  "signInHint": " Du hast schon ein Pro-Konto? Melde dich an, um es auf diesem Gerät wiederherzustellen.",
+  "planPrice": " – {{price}}/Monat",
+  "comingSoon": "Demnächst",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Kostenlos",
+      "f1": "Bis zu {{groups}} Gruppen",
+      "f2": "Bis zu {{tabs}} Tabs",
+      "f3": "Bis zu {{urlRules}} URL-Regeln"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Alles aus Kostenlos",
+      "f2": "Unbegrenzte Gruppen, Tabs, URL-Regeln und Sitzungen",
+      "f3": "Cloud-Sync zwischen Geräten"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Alles aus Pro",
+      "f2": "KI-Auto-Gruppierung von Tabs",
+      "f3": "KI-Vorschläge für Gruppennamen"
+    }
+  },
+  "maybeLater": "Vielleicht später",
+  "signIn": "Anmelden",
+  "upgradeNow": "Jetzt upgraden"
+}

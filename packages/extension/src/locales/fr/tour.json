@@ -1,0 +1,284 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "Découvrir TabMerger",
+      "description": "Un tour d’horizon : où apparaissent vos onglets ouverts et comment la fenêtre est organisée. Rien à essayer pour l’instant."
+    },
+    "groups": {
+      "title": "Organiser avec des groupes",
+      "description": "Les groupes accueillent les onglets enregistrés. Vous allez en créer un, le nommer, lui donner une couleur et l’épingler en haut."
+    },
+    "drag": {
+      "title": "Déplacer par glisser-déposer",
+      "description": "Vous allez déplacer onglets et groupes sur deux groupes d’entraînement ajoutés par la visite : « Tour demo » et « Tour demo 2 ». Ils contiennent des onglets d’exemple, pas les vôtres."
+    },
+    "tabs": {
+      "title": "Enregistrer et rouvrir des onglets",
+      "description": "Comment ranger des onglets ouverts dans un groupe, les retrouver plus tard et ranger ce que vous avez enregistré. Vous essaierez chaque action sur les groupes d’entraînement et sur un onglet de rechange ouvert par la visite : aucun de vos onglets n’est enregistré, ouvert ou fermé."
+    },
+    "find": {
+      "title": "Chercher et annuler les erreurs",
+      "description": "Recherchez dans tous les onglets et groupes à la fois, et revenez en arrière si vous changez d’avis. Vous essaierez une recherche, « Annuler » et « Rétablir » sur les groupes d’entraînement."
+    },
+    "later": {
+      "title": "Garder pour plus tard",
+      "description": "Enregistrez tous vos groupes d’un coup, mettez un groupe de côté sans le supprimer, et enregistrez depuis n’importe quelle page web. Ce chapitre se contente d’expliquer."
+    },
+    "settings": {
+      "title": "Paramètres et compte",
+      "description": "Changez l’apparence de TabMerger, découvrez ce que proposent d’autre les Paramètres et ce qu’apporte la connexion. Vous essaierez de changer de thème."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Bienvenue dans TabMerger",
+      "body": "TabMerger range votre navigateur. Enregistrez vos onglets ouverts dans des groupes nommés, fermez-les, et retrouvez-les quand vous en avez besoin. Cette visite compte sept courts chapitres, nommés en haut de cette carte. Certaines étapes vous demandent d’essayer vous-même : un anneau orange marque alors la commande à utiliser, et le texte la nomme. Pour ces étapes, la visite ajoute deux groupes d’entraînement avec des onglets d’exemple, « Tour demo » et « Tour demo 2 », et les retire seule ensuite. Vous pouvez ignorer une étape, un chapitre ou toute la visite à tout moment."
+    },
+    "now-open": {
+      "title": "Ouverts maintenant",
+      "body": "« Ouverts maintenant », en haut de la liste à gauche, est la liste en direct de tous les onglets ouverts dans votre navigateur. Il est toujours en premier et ne peut pas être supprimé."
+    },
+    "main-panel": {
+      "title": "Fenêtres et onglets",
+      "body": "Le panneau principal montre le contenu du groupe choisi à gauche : ses fenêtres, et les onglets de chacune. Pour Ouverts maintenant, ce sont vos vraies fenêtres de navigateur."
+    },
+    "make-group": {
+      "title": "Créer un groupe",
+      "body": "Un groupe est un endroit nommé pour des onglets enregistrés, par exemple « Travail » ou « Projets de vacances ». Essayez : sélectionnez « Ajouter un groupe », sous vos groupes. Un nouveau groupe apparaît avec son champ « Nom du groupe » prêt, affichant « temp group ». Saisissez un nom de votre choix, comme « Entraînement », puis appuyez sur Entrée ou sélectionnez « Enregistrer » à côté du champ.",
+      "doneText": "Bravo, votre groupe est prêt. Les étapes suivantes l’utilisent.",
+      "fallbackBody": "Un groupe est un endroit nommé pour des onglets enregistrés, par exemple « Travail » ou « Projets de vacances ». « Ajouter un groupe », sous vos groupes, en crée un. Vous avez déjà autant de groupes que votre offre le permet : cette étape est donc seulement montrée, pas essayée."
+    },
+    "group-color": {
+      "title": "Lui donner une couleur",
+      "body": "Les couleurs aident à distinguer les groupes. Essayez : dans le groupe que vous venez de créer, sélectionnez la pastille ronde « Changer la couleur du groupe » devant son nom. Choisissez l’une des pastilles de couleur rondes, puis sélectionnez « Appliquer ».",
+      "doneText": "Bravo, couleur changée.",
+      "fallbackBody": "Les couleurs aident à distinguer les groupes. Chaque groupe a une pastille ronde « Changer la couleur du groupe » devant son nom : sélectionnez-la, choisissez une couleur, puis sélectionnez « Appliquer »."
+    },
+    "group-pin": {
+      "title": "Épingler un groupe en haut",
+      "body": "Les groupes épinglés restent au-dessus des autres. Essayez : dans le groupe que vous venez de créer, sélectionnez l’étoile à la fin de sa ligne. Elle s’appelle « Épingler le groupe », ou « Détacher le groupe » si le groupe est déjà épinglé.",
+      "doneText": "Bravo. Sélectionnez à nouveau l’étoile quand vous voulez revenir en arrière.",
+      "fallbackBody": "Les groupes épinglés restent au-dessus des autres. Chaque groupe a une étoile à la fin de sa ligne, nommée « Épingler le groupe » : sélectionnez-la pour épingler le groupe, et à nouveau pour le détacher."
+    },
+    "group-menu": {
+      "title": "Plus d’options pour chaque groupe",
+      "body": "Chaque groupe enregistré a un menu du clic droit. Il contient « Renommer », « Ajouter une note », « Dupliquer », « Fusionner avec l’actuel » pour ajouter vos fenêtres ouvertes au groupe, « Archiver le groupe » pour le masquer, et « Supprimer le groupe ». Cette étape est juste une démonstration : la liste est verrouillée pendant la visite, essayez donc le menu après."
+    },
+    "drag-tab-reorder": {
+      "title": "Réordonner les onglets",
+      "body": "Le panneau principal montre le groupe d’entraînement « Tour demo ». Chaque onglet a devant lui une poignée en pointillés, nommée « Glisser pour réordonner l’onglet ». Déplacez le premier onglet de la fenêtre « Reading » à la fin de cette fenêtre.",
+      "subStepText": {
+        "1": "Maintenez appuyée la poignée du premier onglet.",
+        "2": "Descendez-la jusqu’à la ligne sous le dernier onglet, marquée « Déposer sous cet onglet ».",
+        "3": "Relâchez pour le déposer."
+      },
+      "subStepKeys": {
+        "1": "appuyez sur Tab pour atteindre la poignée, puis sur Espace pour saisir l’onglet.",
+        "2": "appuyez sur la flèche Bas jusqu’à ce que l’onglet soit sur la ligne marquée « Déposer sous cet onglet ».",
+        "3": "appuyez sur Espace pour le déposer."
+      },
+      "doneText": "Bravo, l’onglet a bougé.",
+      "fallbackBody": "Chaque onglet enregistré a devant lui une poignée en pointillés, nommée « Glisser pour réordonner l’onglet ». La faire glisser déplace l’onglet vers le haut ou le bas dans sa fenêtre. Cette étape est juste une démonstration."
+    },
+    "drag-tab-window": {
+      "title": "Déplacer un onglet vers une autre fenêtre",
+      "body": "Un onglet peut aussi aller dans une autre fenêtre du même groupe. Déplacez le premier onglet dans l’autre fenêtre de « Tour demo ».",
+      "subStepText": {
+        "1": "Maintenez appuyée la poignée du premier onglet.",
+        "2": "Amenez-la sur l’autre fenêtre, marquée « Déposer dans cette fenêtre ».",
+        "3": "Relâchez pour le déposer."
+      },
+      "subStepKeys": {
+        "1": "appuyez sur Tab pour atteindre la poignée, puis sur Espace pour saisir l’onglet.",
+        "2": "appuyez sur la flèche Bas jusqu’à ce que l’onglet soit dans la fenêtre marquée « Déposer dans cette fenêtre ».",
+        "3": "appuyez sur Espace pour le déposer."
+      },
+      "doneText": "Bravo, l’onglet est dans l’autre fenêtre.",
+      "fallbackBody": "Faire glisser un onglet par sa poignée sur une autre fenêtre du même groupe l’y déplace. Cette étape est juste une démonstration."
+    },
+    "drag-tab-group": {
+      "title": "Déplacer un onglet vers un autre groupe",
+      "body": "Déposer un onglet sur un groupe de la liste à gauche le déplace dans ce groupe. Déplacez le premier onglet dans le groupe d’entraînement « Tour demo 2 ».",
+      "subStepText": {
+        "1": "Maintenez appuyée la poignée du premier onglet.",
+        "2": "Amenez-la sur « Tour demo 2 » dans la liste à gauche, marqué « Déposer sur ce groupe ».",
+        "3": "Relâchez pour le déposer."
+      },
+      "subStepKeys": {
+        "1": "appuyez sur Tab pour atteindre la poignée, puis sur Espace pour saisir l’onglet.",
+        "2": "appuyez sur la flèche Gauche pour aller à la liste des groupes, puis sur la flèche Bas jusqu’à « Tour demo 2 », marqué « Déposer sur ce groupe ».",
+        "3": "appuyez sur Espace pour le déposer."
+      },
+      "doneText": "Bravo, l’onglet est maintenant dans « Tour demo 2 ».",
+      "fallbackBody": "Faire glisser un onglet par sa poignée sur un groupe de la liste à gauche le déplace dans ce groupe. Cette étape est juste une démonstration."
+    },
+    "drag-group-order": {
+      "title": "Mettre les groupes dans l’ordre",
+      "body": "Les groupes ont aussi une poignée en pointillés, au début de leur ligne, nommée « Glisser pour réordonner le groupe ». Échangez les deux groupes d’entraînement. Vos propres groupes se déplacent de la même façon.",
+      "subStepText": {
+        "1": "Maintenez appuyée la poignée du groupe d’entraînement du haut.",
+        "2": "Descendez-la jusqu’à la ligne sous l’autre groupe d’entraînement, marquée « Déposer sous ce groupe ».",
+        "3": "Relâchez pour le déposer."
+      },
+      "subStepKeys": {
+        "1": "appuyez sur Tab pour atteindre la poignée, puis sur Espace pour saisir le groupe.",
+        "2": "appuyez une fois sur la flèche Bas, pour que le groupe soit sur la ligne marquée « Déposer sous ce groupe ».",
+        "3": "appuyez sur Espace pour le déposer."
+      },
+      "doneText": "Bravo, les groupes ont échangé leur place.",
+      "fallbackBody": "Chaque groupe enregistré a une poignée en pointillés au début de sa ligne, nommée « Glisser pour réordonner le groupe ». La faire glisser déplace le groupe vers le haut ou le bas de la liste. Cette étape est juste une démonstration."
+    },
+    "save-tabs": {
+      "title": "Enregistrer des onglets dans un groupe",
+      "body": "Un onglet glissé depuis Ouverts maintenant sur un groupe est enregistré dans ce groupe et fermé dans votre navigateur. Pour qu’aucun de vos onglets ne soit fermé, la visite a ouvert un onglet de rechange nommé « Tour practice tab » : c’est le seul onglet que vous pouvez déplacer à cette étape. Enregistrez-le dans le groupe d’entraînement « Tour demo ».",
+      "subStepText": {
+        "1": "Maintenez appuyée la poignée en pointillés devant « Tour practice tab ».",
+        "2": "Amenez-la sur « Tour demo » dans la liste à gauche, marqué « Déposer sur ce groupe ».",
+        "3": "Relâchez pour le déposer."
+      },
+      "subStepKeys": {
+        "1": "appuyez sur Tab pour atteindre la poignée, puis sur Espace pour saisir l’onglet.",
+        "2": "appuyez sur la flèche Gauche pour aller à la liste des groupes, puis sur la flèche Bas jusqu’à « Tour demo », marqué « Déposer sur ce groupe ».",
+        "3": "appuyez sur Espace pour le déposer."
+      },
+      "doneText": "Bravo. L’onglet d’entraînement est enregistré dans « Tour demo » et fermé dans votre navigateur. Les fenêtres entières s’enregistrent de la même façon.",
+      "fallbackBody": "Un onglet, ou une fenêtre entière, glissé depuis Ouverts maintenant sur un groupe à gauche est enregistré dans ce groupe et fermé dans votre navigateur. La visite n’a pas pu ouvrir d’onglet de rechange pour l’essayer : cette étape est donc juste une démonstration, aucun de vos onglets n’est touché."
+    },
+    "open-tabs": {
+      "title": "Rouvrir vos onglets",
+      "body": "Dans un groupe enregistré, sélectionner le nom d’un onglet le rouvre, et « Ouvrir dans le navigateur » dans le menu d’une fenêtre ouvre toute la fenêtre. Essayez ce menu sur la fenêtre « Reading » de « Tour demo ». Les onglets d’exemple ne sont pas de vraies pages, donc rien ne s’ouvre pendant la visite.",
+      "subStepText": {
+        "1": "Sélectionnez « Plus d’options de fenêtre », les trois points au bout de la ligne « Reading ».",
+        "2": "Choisissez « Ouvrir dans le navigateur » dans le menu."
+      },
+      "doneText": "Bravo. Après la visite, cela ouvre la fenêtre avec ses onglets dans votre navigateur. Rien n’a été ouvert maintenant.",
+      "fallbackBody": "Dans un groupe enregistré, sélectionner le nom d’un onglet le rouvre. « Plus d’options de fenêtre » sur une fenêtre propose « Ouvrir dans le navigateur » pour toute la fenêtre, et le menu du clic droit d’un groupe propose « Tout ouvrir dans une nouvelle fenêtre ». Cette étape est juste une démonstration : rien ne s’ouvre pendant la visite."
+    },
+    "tab-extras": {
+      "title": "Notes, rappels et noms",
+      "body": "Un onglet enregistré a un menu du clic droit plus complet : « Déplacer vers un groupe », « Ajouter une note » pour noter quelque chose, « Me le rappeler… » pour être relancé plus tard, « Renommer l’onglet » pour lui donner votre propre titre, et « Supprimer l’onglet ». Cette étape est juste une démonstration : la liste est verrouillée pendant la visite, essayez donc le menu après."
+    },
+    "tidy-up": {
+      "title": "Ranger un groupe",
+      "body": "« Plus d’options de groupe », en haut à droite du panneau principal, peut trier les onglets par titre ou adresse, supprimer les répétitions avec « Dédupliquer les onglets », et « Réunir les fenêtres » en une ou les « Séparer ». « Tour demo » contient deux fois l’onglet « Sample: books » : supprimez la répétition.",
+      "modalBody": "La boîte de dialogue « Supprimer les doublons » liste l’onglet répété. Sélectionnez « Supprimer 1 doublon ».",
+      "subStepText": {
+        "1": "Sélectionnez « Plus d’options de groupe », les trois points en haut à droite du panneau principal.",
+        "2": "Choisissez « Dédupliquer les onglets » dans le menu.",
+        "3": "Dans la boîte de dialogue « Supprimer les doublons », sélectionnez « Supprimer 1 doublon »."
+      },
+      "doneText": "Bravo, l’onglet répété a disparu.",
+      "fallbackBody": "« Plus d’options de groupe », en haut à droite du panneau principal, peut trier les onglets par titre ou adresse, supprimer les répétitions avec « Dédupliquer les onglets », et « Réunir les fenêtres » en une ou les « Séparer ». Cette étape est juste une démonstration."
+    },
+    "select-items": {
+      "title": "Agir sur plusieurs éléments à la fois",
+      "body": "« Sélectionner des éléments », dans l’en-tête, affiche une case à cocher sur chaque onglet, fenêtre et groupe. Une fois quelques éléments sélectionnés, une barre apparaît en bas et agit sur tous ensemble, par exemple pour les supprimer. Partager des groupes sélectionnés par lien nécessite l’offre Pro. Essayez de sélectionner un onglet d’exemple.",
+      "subStepText": {
+        "1": "Sélectionnez « Sélectionner des éléments » dans l’en-tête.",
+        "2": "Cochez la case devant le premier onglet d’exemple."
+      },
+      "doneText": "Bravo. La barre du bas agit sur ce que vous avez sélectionné. La visite désactive la sélection quand vous passez à la suite.",
+      "fallbackBody": "« Sélectionner des éléments », dans l’en-tête, affiche une case à cocher sur chaque onglet, fenêtre et groupe. Une fois quelques éléments sélectionnés, une barre apparaît en bas et agit sur tous ensemble, par exemple pour les supprimer. Partager des groupes sélectionnés par lien nécessite l’offre Pro. Cette étape est juste une démonstration."
+    },
+    "search": {
+      "title": "Tout retrouver",
+      "body": "La zone de recherche en haut, qui indique « Rechercher onglets et groupes… », parcourt tous les onglets et groupes à la fois. Les résultats apparaissent pendant la saisie. Essayez-la sur les onglets d’exemple.",
+      "subStepText": {
+        "1": "Sélectionnez la zone de recherche en haut.",
+        "2": "Saisissez le mot sample."
+      },
+      "doneText": "Bravo. Chaque onglet correspondant est listé sous la zone de recherche. En sélectionner un vous amène à son groupe.",
+      "fallbackBody": "La zone de recherche en haut, qui indique « Rechercher onglets et groupes… », parcourt tous les onglets et groupes à la fois. Les résultats apparaissent pendant la saisie, et en sélectionner un vous amène à son groupe."
+    },
+    "search-filters": {
+      "title": "Affiner une recherche",
+      "body": "Commencez une recherche par group: ou window: pour chercher dans un groupe ou une fenêtre, ou par tag: pour filtrer selon une étiquette de groupe d’onglets du navigateur. La zone de recherche les liste sous « Essayez ces recherches ». Essayez group: sur le groupe d’entraînement, puis effacez la recherche.",
+      "subStepText": {
+        "1": "Sélectionnez la zone de recherche en haut.",
+        "2": "Saisissez group:tour sans espace. Une liste nommée « Choisir un groupe » apparaît.",
+        "3": "Choisissez « Tour demo » dans cette liste. La recherche porte maintenant sur ce groupe seulement.",
+        "4": "Sélectionnez « Effacer la recherche », le × au bout du champ. Une recherche reste active tant que vous ne l’effacez pas."
+      },
+      "doneText": "Bravo, la recherche est effacée.",
+      "fallbackBody": "Commencez une recherche par group: ou window: pour chercher dans un groupe ou une fenêtre, ou par tag: pour filtrer selon une étiquette de groupe d’onglets du navigateur. La zone de recherche les liste sous « Essayez ces recherches »."
+    },
+    "undo": {
+      "title": "Vous avez changé d’avis ?",
+      "body": "« Annuler » et « Rétablir », dans l’en-tête, reculent et avancent dans vos 10 dernières modifications de groupes et d’onglets. Ils sont grisés tant qu’il n’y a rien à annuler. Essayez-les sur un petit changement de la fenêtre d’exemple « Reading ».",
+      "subStepText": {
+        "1": "Sélectionnez l’étoile au bout de la ligne « Reading », nommée « Mettre la fenêtre en favori ».",
+        "2": "Sélectionnez « Annuler » dans l’en-tête. Cela retire à nouveau l’étoile.",
+        "3": "Sélectionnez « Rétablir », à côté d’« Annuler ». Cela ramène l’étoile."
+      },
+      "doneText": "Bravo. « Annuler » et « Rétablir » fonctionnent de la même façon sur vos propres groupes et onglets.",
+      "fallbackBody": "« Annuler » et « Rétablir », dans l’en-tête, reculent et avancent dans vos 10 dernières modifications de groupes et d’onglets. Ils sont grisés tant qu’il n’y a rien à annuler."
+    },
+    "sessions": {
+      "title": "Tout enregistrer d’un coup",
+      "body": "Une session est une copie enregistrée de tous vos groupes tels qu’ils sont à l’instant. Dans la section « Sessions » en bas à gauche, « Enregistrer la session actuelle » en crée une. « Restaurer la session », à côté d’une session enregistrée, la ramène : une confirmation est demandée d’abord, car cela ferme vos fenêtres ouvertes."
+    },
+    "archived": {
+      "title": "Mettre un groupe de côté",
+      "body": "Archiver masque un groupe sans le supprimer. Les groupes archivés attendent dans la section « Archivés » en bas à gauche, où vous pouvez les restaurer ou les supprimer. Ils comptent toujours dans le nombre de groupes de votre offre."
+    },
+    "quick-save": {
+      "title": "Enregistrer sans ouvrir TabMerger",
+      "body": "Faites un clic droit sur n’importe quelle page web et choisissez « Enregistrer dans TabMerger ». Choisissez quoi enregistrer, par exemple « Enregistrer cet onglet » ou « Enregistrer tous les autres onglets », puis le groupe de destination."
+    },
+    "theme": {
+      "title": "Clair ou sombre",
+      "body": "Essayez : ouvrez le menu dans le coin supérieur droit, nommé « Menu des paramètres » (ou « Menu du compte » une fois connecté), et choisissez « Paramètres ». Ouvrez la liste « Thème », choisissez un autre thème, puis sélectionnez « Enregistrer les modifications ».",
+      "modalBody": "Dans les Paramètres : ouvrez la liste « Thème », choisissez un autre thème, puis sélectionnez « Enregistrer les modifications ».",
+      "doneText": "Bravo, thème changé. Fermez les Paramètres, ou sélectionnez Suivant, pour continuer."
+    },
+    "settings-more": {
+      "title": "Plus dans les Paramètres",
+      "body": "Les Paramètres offrent plus dans l’onglet « Général » : « Confirmer avant de supprimer » demande confirmation avant toute suppression, et « Règles d’URL » associent des adresses web à un groupe. Dans l’onglet « Données », « Exporter » enregistre tous vos groupes dans un fichier et « Importer » recharge un fichier. Les sauvegardes automatiques, dans le même onglet, nécessitent l’offre Pro."
+    },
+    "account": {
+      "title": "Votre compte",
+      "body": "TabMerger fonctionne sans compte : tout reste sur cet appareil. Se connecter, depuis le même menu, avec l’offre Pro, garde vos groupes synchronisés entre vos appareils. Les données synchronisées sont verrouillées sur votre appareil avant l’envoi, donc vous seul pouvez les lire."
+    },
+    "ai": {
+      "title": "Actions IA",
+      "body": "« Actions IA », dans l’en-tête, peut ranger vos onglets ouverts en groupes pour vous. Cela nécessite l’offre Pro AI."
+    },
+    "finish": {
+      "title": "Tout est prêt",
+      "body": "Envie de la revoir ? « Faire la visite », le point d’interrogation dans le coin supérieur droit, la relance à tout moment."
+    }
+  },
+  "card": {
+    "dialogLabel": "Visite de TabMerger",
+    "chapterLine": "Chapitre {{chapter}} sur {{chapters}}",
+    "stepLine": "Étape {{step}} sur {{total}}",
+    "done": "Terminé.",
+    "withKeyboard": " Au clavier : {{keys}}",
+    "yourTurnAnnouncement": " À vous. Pour continuer sans essayer, sélectionnez « Ignorer cette étape ».",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}} : {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Sélectionnez Suivant pour continuer.",
+    "part": "Partie ",
+    "ofTotal": "{{current}} sur {{total}}",
+    "keyboard": "Clavier : ",
+    "yourTurn": "À vous. Cette étape attend que vous l’ayez essayée.",
+    "practiceRemoved": "Le groupe d’entraînement a été supprimé.",
+    "practiceKept": "Le groupe que vous avez créé pendant cette visite, « {{name}} », est toujours dans votre liste. Gardez-le, ou supprimez-le maintenant.",
+    "practiceKept_tabs": "Le groupe que vous avez créé pendant cette visite, « {{name}} » ({{tabs}}), est toujours dans votre liste. Gardez-le, ou supprimez-le maintenant.",
+    "removePractice": "Supprimer le groupe d’entraînement",
+    "back": "Retour",
+    "skipStep": "Ignorer cette étape",
+    "finish": "Terminer",
+    "next": "Suivant",
+    "skipTour": "Ignorer la visite",
+    "skipChapter": "Ignorer le chapitre"
+  },
+  "drop": {
+    "belowTab": "Déposer sous cet onglet",
+    "window": "Déposer dans cette fenêtre",
+    "group": "Déposer sur ce groupe",
+    "belowGroup": "Déposer sous ce groupe",
+    "default": "Déposer ici"
+  },
+  "practiceLeft": "La visite a laissé un groupe d’entraînement, « {{name}} », dans votre liste.",
+  "removeIt": "Le supprimer"
+}

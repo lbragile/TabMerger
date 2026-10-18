@@ -1,0 +1,81 @@
+{
+  "deleteGroup": {
+    "title": "Gruppe löschen",
+    "description": "Möchtest du „{{name}}“ wirklich löschen? Das lässt sich nicht rückgängig machen.",
+    "confirm": "Löschen"
+  },
+  "closeWindow": {
+    "title": "Fenster schließen",
+    "description": "Möchtest du dieses Fenster mit allen Tabs wirklich schließen?",
+    "confirm": "Schließen"
+  },
+  "removeWindow": {
+    "title": "Fenster entfernen",
+    "description": "Möchtest du dieses Fenster mit allen Tabs wirklich entfernen?",
+    "confirm": "Entfernen"
+  },
+  "closeTab": {
+    "title": "Tab schließen",
+    "description": "Möchtest du diesen Tab wirklich schließen?",
+    "confirm": "Schließen"
+  },
+  "removeTab": {
+    "title": "Tab entfernen",
+    "description": "Möchtest du diesen Tab wirklich entfernen?",
+    "confirm": "Entfernen"
+  },
+  "closeSelection": {
+    "title": "Auswahl schließen",
+    "confirm": "Schließen",
+    "description_tab_one": "Möchtest du {{count}} Tab wirklich schließen? Das lässt sich nicht rückgängig machen.",
+    "description_tab_other": "Möchtest du {{count}} Tabs wirklich schließen? Das lässt sich nicht rückgängig machen.",
+    "description_window_one": "Möchtest du {{count}} Fenster wirklich schließen? Das lässt sich nicht rückgängig machen.",
+    "description_window_other": "Möchtest du {{count}} Fenster wirklich schließen? Das lässt sich nicht rückgängig machen.",
+    "description_group_one": "Möchtest du {{count}} Gruppe wirklich schließen? Das lässt sich nicht rückgängig machen.",
+    "description_group_other": "Möchtest du {{count}} Gruppen wirklich schließen? Das lässt sich nicht rückgängig machen."
+  },
+  "deleteSelection": {
+    "title": "Auswahl löschen",
+    "confirm": "Löschen",
+    "description_tab_one": "Möchtest du {{count}} Tab wirklich löschen? Das lässt sich nicht rückgängig machen.",
+    "description_tab_other": "Möchtest du {{count}} Tabs wirklich löschen? Das lässt sich nicht rückgängig machen.",
+    "description_window_one": "Möchtest du {{count}} Fenster wirklich löschen? Das lässt sich nicht rückgängig machen.",
+    "description_window_other": "Möchtest du {{count}} Fenster wirklich löschen? Das lässt sich nicht rückgängig machen.",
+    "description_group_one": "Möchtest du {{count}} Gruppe wirklich löschen? Das lässt sich nicht rückgängig machen.",
+    "description_group_other": "Möchtest du {{count}} Gruppen wirklich löschen? Das lässt sich nicht rückgängig machen."
+  },
+  "removeStaleTabs": {
+    "title": "Alte Tabs entfernen",
+    "confirm": "Entfernen",
+    "description_one": "Möchtest du {{count}} alten Tab wirklich entfernen? Das lässt sich nicht rückgängig machen.",
+    "description_other": "Möchtest du {{count}} alte Tabs wirklich entfernen? Das lässt sich nicht rückgängig machen."
+  },
+  "closeAllWindows": {
+    "title": "Alle Fenster schließen",
+    "description": "Möchtest du alle Browserfenster mit ihren Tabs wirklich schließen?",
+    "confirm": "Alle schließen"
+  },
+  "removeAllWindows": {
+    "title": "Alle Fenster entfernen",
+    "description": "Möchtest du alle Fenster mit ihren Tabs wirklich aus dieser Gruppe entfernen? Das lässt sich nicht rückgängig machen.",
+    "confirm": "Alle entfernen"
+  },
+  "archiveStaleGroups": {
+    "title": "Alte Gruppen archivieren",
+    "confirm": "Archivieren",
+    "description_one": "Möchtest du {{count}} alte Gruppe wirklich archivieren?",
+    "description_other": "Möchtest du {{count}} alte Gruppen wirklich archivieren?"
+  },
+  "clearAllData": {
+    "title": "Alle Daten löschen",
+    "confirm": "Alle Daten löschen",
+    "description": "Dadurch werden alle Gruppen, gespeicherten Sitzungen und Einstellungen dauerhaft gelöscht. Das lässt sich nicht rückgängig machen.",
+    "description_kept": "Dadurch werden alle Gruppen, gespeicherten Sitzungen und Einstellungen dauerhaft gelöscht. Das lässt sich nicht rückgängig machen. In deinem Konto gespeicherte automatische Backups bleiben erhalten und lassen sich unter Einstellungen → Daten zurückholen."
+  },
+  "resetEncryption": {
+    "title": "Verschlüsselungs-Passphrase zurücksetzen",
+    "confirm": "Passphrase zurücksetzen",
+    "description": "Das lässt sich nicht rückgängig machen. Alle synchronisierten Gruppen, Sitzungen und Notizen, die mit deiner aktuellen Passphrase verschlüsselt sind, werden dauerhaft unzugänglich. Du richtest eine neue Passphrase ein und beginnst die Synchronisierung von vorn."
+  },
+  "cancel": "Abbrechen"
+}

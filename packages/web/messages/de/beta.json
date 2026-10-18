@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Beitreten und installieren"
+    },
+    "what-to-test": {
+      "label": "Was testen"
+    },
+    "known-issues": {
+      "label": "Bekannte Probleme"
+    },
+    "report-bugs": {
+      "label": "Fehler melden"
+    },
+    "faq": {
+      "label": "FAQ"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Erfolgreiche Zahlung (Visa)",
+      "note": "Nimm diese für das Upgrade"
+    },
+    "1": {
+      "label": "Allgemeine Ablehnung"
+    },
+    "2": {
+      "label": "Unzureichende Deckung"
+    },
+    "3": {
+      "label": "Erfordert 3-D-Secure-Authentifizierung"
+    }
+  },
+  "accessLabels": {
+    "free": "Kostenlos: kein Konto nötig",
+    "upgrading": "Pro erhalten: Testzahlungen, kein echtes Geld",
+    "some-pro": "Kostenlos und Pro: jeder Pro-Teil ist markiert",
+    "pro": "Nur Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Gruppen und Tabs",
+      "items": {
+        "0": {
+          "heading": "Gruppen, Farben und Rückgängig/Wiederholen",
+          "checks": "Dass du eine Gruppe erstellen, benennen und einfärben, Tabs darin speichern und eine Änderung rückgängig machen oder wiederholen kannst, ohne etwas zu verlieren.",
+          "steps": {
+            "0": "Klicke in der Seitenleiste auf „Gruppe hinzufügen“ und gib der Gruppe einen Namen.",
+            "1": "Klicke auf den farbigen Punkt neben der Gruppe, um die Farbauswahl zu öffnen, wähle eine Voreinstellung oder ziehe auf eine beliebige Farbe und klicke dann auf Anwenden.",
+            "2": "Speichere ein paar Tabs in der Gruppe (zieh sie hinein oder nutze das Rechtsklick-Menü).",
+            "3": "Lösche einen Tab, klicke dann auf die Schaltfläche „Rückgängig“ (Kopfleiste, oben rechts) und anschließend auf „Wiederholen“."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger-Popup mit einer neuen ausgewählten Gruppe und geöffneter Farbauswahl: Sättigungs- und Farbtonwähler, 12 voreingestellte Farben, ein Hex-Feld sowie die Schaltflächen Abbrechen und Anwenden",
+              "caption": "Ein Klick auf den Farbpunkt einer Gruppe öffnet diese Auswahl."
+            }
+          },
+          "good": {
+            "0": "Die Gruppe wird sofort aktualisiert.",
+            "1": "„Rückgängig“ stellt den gelöschten Tab genau dort wieder her, wo er war.",
+            "2": "„Wiederholen“ entfernt ihn erneut.",
+            "3": "Bei aktiviertem Sync kann „Rückgängig“ ausgegraut werden, nachdem eine Synchronisierung Änderungen von einem anderen Gerät gebracht hat. Das ist zu erwarten und kein Fehler: Der Rückgängig-Verlauf wird gelöscht, wenn Änderungen von anderswo eintreffen."
+          }
+        },
+        "1": {
+          "heading": "„Jetzt geöffnet“ folgt deinen geöffneten Tabs",
+          "checks": "Dass die permanente Gruppe „Jetzt geöffnet“ immer die tatsächlich im Browser geöffneten Tabs widerspiegelt.",
+          "steps": {
+            "0": "Öffne das Popup und sieh dir „Jetzt geöffnet“ an – es ist immer die erste Gruppe in der Seitenleiste.",
+            "1": "Öffne und schließe ein paar Browser-Tabs, ohne das Popup anzufassen.",
+            "2": "Öffne das Popup erneut und sieh dir „Jetzt geöffnet“ noch einmal an."
+          },
+          "examples": {
+            "0": {
+              "alt": "Das Popup mit ausgewähltem „Jetzt geöffnet“: ein Fenster mit den drei aktuell im Browser geöffneten Tabs",
+              "caption": "„Jetzt geöffnet“ steht immer an erster Stelle der Seitenleiste und listet die gerade geöffneten Tabs."
+            }
+          },
+          "good": {
+            "0": "„Jetzt geöffnet“ verfolgt deine echten Tabs ohne manuelles Aktualisieren.",
+            "1": "Du kannst es weder löschen noch von der obersten Position wegsortieren."
+          }
+        },
+        "2": {
+          "heading": "Ganze Fenster speichern und wieder öffnen",
+          "checks": "Dass ein gespeichertes Fenster jeden Tab in der richtigen Reihenfolge behält und unversehrt wieder öffnet.",
+          "steps": {
+            "0": "Speichere ein ganzes Fenster in einer Gruppe (zieh den Ziehgriff des Fensters auf eine Gruppe oder nutze sein „…“-Menü).",
+            "1": "Öffne die Gruppe und öffne das Fenster über sein „…“-Menü erneut – als neues Fenster und als Tabs im aktuellen Fenster, falls beide Optionen angeboten werden."
+          },
+          "examples": {
+            "0": {
+              "alt": "Eine TabMerger-Gruppe mit vier getrennten gespeicherten Fenstern, die je einen Tab enthalten",
+              "caption": "Eine Gruppe kann mehrere getrennte Fenster enthalten – jedes mit eigener Tab-Anzahl."
+            }
+          },
+          "good": {
+            "0": "Alle Tabs öffnen sich mit den richtigen Titeln und URLs in derselben Reihenfolge."
+          }
+        },
+        "3": {
+          "heading": "Eine Gruppe archivieren und wiederherstellen",
+          "checks": "Dass Archivieren eine Gruppe ausblendet, ohne sie zu löschen, und das Wiederherstellen sie unverändert zurückbringt.",
+          "steps": {
+            "0": "Klicke in der Seitenleiste mit der rechten Maustaste auf eine gespeicherte Gruppe und wähle „Gruppe archivieren“.",
+            "1": "Öffne unten in der Seitenleiste den Bereich „Archiviert“ und such sie dort.",
+            "2": "Stelle sie von dort wieder her."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Bereich „Archiviert“ unten in der TabMerger-Seitenleiste, aufgeklappt mit einer archivierten Gruppe",
+              "caption": "Der geöffnete Bereich „Archiviert“ unten in der Seitenleiste: „Shopping“ ist archiviert, mit den Schaltflächen Wiederherstellen und Löschen."
+            }
+          },
+          "good": {
+            "0": "Archivierte Gruppen verschwinden aus der aktiven Liste, werden aber nie gelöscht.",
+            "1": "Nach dem Wiederherstellen erscheinen sie genau so wie vorher."
+          }
+        },
+        "4": {
+          "heading": "Sitzungen speichern und wiederherstellen",
+          "checks": "Dass eine gespeicherte Sitzung deine Gruppen genau so zurückbringt, wie sie beim Speichern waren.",
+          "steps": {
+            "0": "Speichere eine Sitzung – einen benannten Snapshot deiner aktuellen Gruppen (such „Sitzung speichern“ im Bereich „Sitzungen“ der Seitenleiste).",
+            "1": "Nimm einige Änderungen an deinen Gruppen vor.",
+            "2": "Stelle die gespeicherte Sitzung wieder her."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Bereich „Sitzungen“ der TabMerger-Seitenleiste mit einer gespeicherten Sitzung",
+              "caption": "Eine gespeicherte Sitzung im Bereich „Sitzungen“, mit den Schaltflächen Wiederherstellen und Löschen sowie der Meldung „Sitzung gespeichert“."
+            }
+          },
+          "good": {
+            "0": "Das Wiederherstellen bringt die Gruppen genau so zurück, wie sie beim Speichern der Sitzung waren."
+          }
+        },
+        "5": {
+          "heading": "Suche",
+          "checks": "Dass die Suche Tabs über alle Gruppen hinweg nach Titel oder URL findet und die Filter group:, window: und tag: sie eingrenzen.",
+          "steps": {
+            "0": "Drücke Strg+K (Cmd+K auf dem Mac), um die Suche zu öffnen.",
+            "1": "Tippe einen einfachen Textteil, etwa „hub“, während irgendwo ein Tab „GitHub“ gespeichert ist – er passt auf Titel oder URL, ohne Beachtung der Groß-/Kleinschreibung.",
+            "2": "Lösche das und probiere stattdessen ein Präfix: Tippe „group:“ und wähle eine deiner Gruppen aus der erscheinenden Auswahl, oder tippe z. B. „window:“ oder „tag:“ auf die gleiche Weise.",
+            "3": "Klicke auf eines der Ergebnisse."
+          },
+          "examples": {
+            "0": {
+              "alt": "Das TabMerger-Such-Overlay mit eingetipptem „hub“ und einem passenden GitHub-Tab als Ergebnis",
+              "caption": "Eingabe von „hub“ – eine einfache Teilstring-Übereinstimmung mit Tab-Titel oder URL."
+            }
+          },
+          "good": {
+            "0": "Die Ergebnisse aktualisieren sich beim Tippen.",
+            "1": "Eine einfache Suche findet jeden Tab, dessen Titel oder URL den Textteil irgendwo enthält (nicht nur Buchstaben in Reihenfolge).",
+            "2": "Ein Präfix „group:“, „window:“ oder „tag:“ grenzt die Suche ein und bietet eine Auswahl für dieses Präfix an.",
+            "3": "Ein Klick auf ein Ergebnis schließt die Suche und springt direkt zur Gruppe dieses Ergebnisses (und zum Fenster bei einem Fenster-Ergebnis)."
+          }
+        },
+        "6": {
+          "heading": "Alte Tabs",
+          "checks": "Dass Tabs, die du länger nicht geöffnet hast, markiert werden und sich sicher prüfen und entfernen lassen.",
+          "steps": {
+            "0": "Öffne die Einstellungen und lege die Schwelle für alte Tabs fest (z. B. 30 Tage).",
+            "1": "Warte, bis mindestens 5 Tabs älter als diese Schwelle sind (oder lege entsprechende an).",
+            "2": "Such das gelbe Banner über der Tab-Liste und probiere beide Schaltflächen aus: Prüfen, dann Alte entfernen."
+          },
+          "examples": {
+            "0": {
+              "alt": "Das gelbe Banner für alte Tabs über der Tab-Liste mit den Schaltflächen Prüfen und Alte entfernen",
+              "caption": "Das Banner für alte Tabs und seine Schaltflächen Prüfen / Alte entfernen."
+            }
+          },
+          "good": {
+            "0": "„Prüfen“ zeigt genau, welche Tabs alt sind.",
+            "1": "„Alte entfernen“ fragt vor dem Löschen nach (wenn „Vor dem Löschen bestätigen“ in den Einstellungen aktiviert ist)."
+          },
+          "report": "Eine Gruppe, die du gelöscht oder archiviert hast, taucht von selbst wieder auf – das ist der „Wiederauferstehungs“-Fehler, den wir gezielt jagen."
+        },
+        "7": {
+          "heading": "Tab-Erinnerungen einrichten",
+          "checks": "Dass du eine Erinnerung an einem gespeicherten Tab setzen, ändern und löschen kannst und dass sie dich zur gewählten Zeit benachrichtigt.",
+          "steps": {
+            "0": "Klicke mit der rechten Maustaste auf einen gespeicherten Tab und wähle „Erinnere mich …“. Erinnerungen gelten pro Tab; es gibt dafür keine Einstellung.",
+            "1": "Klicke im Editor, der unter dem Tab erscheint, auf eine Voreinstellung (30 Min., 1 Stunde, 3 Stunden oder Morgen), um sie sofort zu setzen.",
+            "2": "Öffne ihn erneut („Erinnerung bearbeiten“ im Rechtsklick-Menü oder Klick auf das Uhr-Symbol des Tabs). Wähle diesmal Datum und Uhrzeit in ein paar Minuten, tippe eine kurze Notiz und klicke auf Setzen.",
+            "3": "Fahre über das Uhr-Symbol, warte dann, bis die Erinnerung ausgelöst wird, und klicke auf die Benachrichtigung.",
+            "4": "Setze eine weitere, klicke dann mit der rechten Maustaste auf den Tab und wähle „Erinnerung löschen“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Editor „Erinnere mich in …“ eines gespeicherten Tabs: Schaltflächen 30 Min., 1 Stunde, 3 Stunden und Morgen, ein Feld für Datum und Uhrzeit, eine optionale Notiz sowie Abbrechen und Setzen",
+              "caption": "Rechtsklick auf einen gespeicherten Tab → „Erinnere mich …“ öffnet diesen Editor unter dem Tab."
+            },
+            "1": {
+              "alt": "Dasselbe Fenster nach dem Setzen einer Erinnerung: ein Uhr-Symbol am Ende der Zeile des Tabs „Q3 Planning“",
+              "caption": "Sobald gesetzt, zeigt der Tab ein Uhr-Symbol."
+            }
+          },
+          "good": {
+            "0": "Der Tab zeigt ein Uhr-Symbol, sobald eine Erinnerung gesetzt ist, und beim Darüberfahren erscheinen die Zeit (und deine Notiz).",
+            "1": "Das Rechtsklick-Menü bietet jetzt „Erinnerung bearbeiten“ und „Erinnerung löschen“ dafür an.",
+            "2": "„Setzen“ wird bei einer Zeit in der Vergangenheit ignoriert; nur eine zukünftige Zeit setzt die Erinnerung.",
+            "3": "Eine Benachrichtigung „TabMerger-Erinnerung“ mit dem Titel des Tabs (und deiner Notiz) erscheint ungefähr zur gesetzten Zeit und bleibt, bis du reagierst.",
+            "4": "Ein Klick auf die Benachrichtigung öffnet den Tab.",
+            "5": "„Erinnerung löschen“ entfernt das Uhr-Symbol, und später erscheint keine Benachrichtigung."
+          },
+          "report": "Eine Erinnerung wird nie ausgelöst, zweimal ausgelöst oder löst nach dem Löschen noch aus."
+        },
+        "8": {
+          "heading": "Notizen zu Gruppen, Fenstern und Tabs",
+          "checks": "Dass du eine kurze Notiz an eine Gruppe, ein Fenster oder einen Tab anhängen und später bearbeiten kannst.",
+          "steps": {
+            "0": "Gruppe: Klicke in der Seitenleiste mit der rechten Maustaste auf eine Gruppe (oder nutze die ⋯-Schaltfläche über ihren Fenstern) und wähle „Notiz hinzufügen“. Tippe etwas und klicke auf Speichern.",
+            "1": "Fenster: Klicke mit der rechten Maustaste auf die Kopfzeile eines Fensters (oder nutze seine ⋯-Schaltfläche) und wähle „Notiz hinzufügen“. Speichere diesmal mit Strg+Enter (Cmd+Enter auf dem Mac).",
+            "2": "Tab: Klicke mit der rechten Maustaste auf einen gespeicherten Tab und wähle „Notiz hinzufügen“. Tippe etwas und klicke dann woanders hin statt auf Speichern.",
+            "3": "Klicke auf ein Notiz-Symbol, um die Notiz erneut zu öffnen, ändere sie und drücke Escape.",
+            "4": "Schließe das Popup und öffne es erneut."
+          },
+          "good": {
+            "0": "Jede gespeicherte Notiz zeigt ein kleines Notiz-Symbol: neben der Fensteranzahl der Gruppe, in der Kopfzeile des Fensters und in der Zeile des Tabs. Der Menüpunkt heißt jetzt „Notiz bearbeiten“.",
+            "1": "Speichern, Strg/Cmd+Enter und das Wegklicken speichern die Notiz; Escape und Abbrechen schließen sie ohne Speichern.",
+            "2": "Notizen sind auf 500 Zeichen begrenzt, mit einem Zähler unter dem Feld.",
+            "3": "Die Notizen sind nach dem erneuten Öffnen des Popups noch da (und bei aktiviertem Sync auch auf deinen anderen Geräten)."
+          },
+          "report": "Eine Notiz geht verloren, hängt am falschen Element oder wird gespeichert, obwohl du Escape oder Abbrechen gedrückt hast."
+        },
+        "9": {
+          "heading": "Löschen, mit und ohne „Vor dem Löschen bestätigen“",
+          "checks": "Dass Löschvorgänge nur nachfragen, wenn „Vor dem Löschen bestätigen“ aktiviert ist, und dass „Rückgängig“ Gelöschtes zurückbringt.",
+          "steps": {
+            "0": "Stelle in Einstellungen → Allgemein sicher, dass „Vor dem Löschen bestätigen“ ausgeschaltet ist (standardmäßig aus), und speichere.",
+            "1": "Entferne einen Tab (sein ✕ oder Rechtsklick → Tab entfernen), entferne ein Fenster (sein ⋯ → Fenster entfernen) und lösche eine Gruppe (Rechtsklick → Gruppe löschen). Klicke nach jedem auf „Rückgängig“ (oben rechts).",
+            "2": "Schalte „Vor dem Löschen bestätigen“ ein, speichere und wiederhole die drei Löschvorgänge. Brich den ersten Dialog ab und bestätige den nächsten.",
+            "3": "Probiere bei aktivierter Einstellung auch, mehrere ausgewählte Gruppen über die Auswahlleiste zu löschen, sowie „Alte entfernen“ bei einer Gruppe mit alten Tabs."
+          },
+          "good": {
+            "0": "Bei ausgeschalteter Einstellung werden Fenster und Gruppen sofort ohne Dialog entfernt.",
+            "1": "Bei aktivierter Einstellung fragen das Entfernen eines Fensters, das Löschen einer Gruppe, das Löschen einer Auswahl und „Alte entfernen“ jeweils vorher nach, und Abbrechen lässt alles wie es war.",
+            "2": "Das Entfernen eines einzelnen Tabs fragt nie nach, ob die Einstellung an oder aus ist. „Rückgängig“ bringt ihn zurück.",
+            "3": "„Rückgängig“ stellt wieder her, was du gerade gelöscht hast: den Tab, das Fenster oder die Gruppe, an derselben Stelle, mit ihren Tabs."
+          },
+          "report": "Etwas wird bei aktivierter Einstellung ohne Nachfrage gelöscht (außer ein einzelner Tab), ein Dialog erscheint bei ausgeschalteter Einstellung, oder „Rückgängig“ bringt das Element nicht genau zurück."
+        },
+        "10": {
+          "heading": "Das Gruppenmenü",
+          "checks": "Dass jede Aktion im Menü einer Gruppe tut, was ihre Beschriftung sagt.",
+          "steps": {
+            "0": "Klicke in der Seitenleiste mit der rechten Maustaste auf eine gespeicherte Gruppe, um ihr vollständiges Menü zu öffnen. Die ⋯-Schaltfläche über den Fenstern einer Gruppe öffnet eine kürzere Version.",
+            "1": "Probiere Umbenennen, Notiz hinzufügen und Duplizieren.",
+            "2": "Probiere Durch aktuelle ersetzen (tauscht die Fenster der Gruppe gegen deine geöffneten Browserfenster) und Mit aktueller zusammenführen (fügt deine geöffneten Fenster zur Gruppe hinzu). Mach nach jedem Rückgängig.",
+            "3": "Probiere Alle in neuem Fenster öffnen, Fenster vereinen, Fenster aufteilen, Nach Titel sortieren, Nach URL sortieren und Doppelte Tabs entfernen.",
+            "4": "Probiere Gruppe archivieren und dann Gruppe wiederherstellen im Bereich „Archiviert“.",
+            "5": "Klicke auch mit der rechten Maustaste auf „Jetzt geöffnet“: Dort gibt es kein Umbenennen, Ersetzen, Zusammenführen, Archivieren oder Löschen."
+          },
+          "good": {
+            "0": "Jede Aktion tut, was ihre Beschreibung sagt, und zwar nur bei dieser Gruppe.",
+            "1": "Duplizieren erstellt eine Kopie mit allen Tabs; Vereinen hinterlässt ein Fenster mit allen Tabs, und Aufteilen gibt jedem Tab ein eigenes Fenster.",
+            "2": "Nach Titel / URL sortieren ordnet alle Tabs alphabetisch, und Doppelte Tabs entfernen entfernt Tabs mit derselben URL.",
+            "3": "Änderungen lassen sich mit „Rückgängig“ zurücknehmen."
+          },
+          "report": "Eine Aktion betrifft die falsche Gruppe, verliert Tabs oder lässt sich nicht rückgängig machen."
+        },
+        "11": {
+          "heading": "Die Fenstermenüs",
+          "checks": "Dass beide Menüs eines Fensters funktionieren: der Rechtsklick auf seine Kopfzeile und seine ⋯-Schaltfläche.",
+          "steps": {
+            "0": "Klicke mit der rechten Maustaste auf die Kopfzeile eines Fensters: Probiere „In Gruppe verschieben“ (wähle eine andere Gruppe oder erstelle in der Liste eine neue), Notiz hinzufügen und Fenster umbenennen.",
+            "1": "Öffne die ⋯-Schaltfläche des Fensters: Probiere Umbenennen, Als Inkognito markieren (dann Inkognito entfernen), Im Browser öffnen und Dieses Fenster nach Titel / nach URL sortieren.",
+            "2": "Klicke mit der rechten Maustaste auf ein Fenster in „Jetzt geöffnet“: Der erste Punkt lautet „In Gruppe kopieren“, und das Entfernen heißt „Fenster schließen“."
+          },
+          "good": {
+            "0": "„In Gruppe verschieben“ verschiebt das ganze Fenster mit seinen Tabs in die gewählte Gruppe; eine über das Menü erstellte neue Gruppe erhält das Fenster.",
+            "1": "„Als Inkognito markieren“ fügt dem Fenster ein Label „Inkognito“ hinzu, und „Inkognito entfernen“ nimmt es weg.",
+            "2": "„Im Browser öffnen“ öffnet die Tabs des Fensters in einem neuen Browserfenster; sind einige schon offen, werden nur die fehlenden zu diesem Fenster hinzugefügt.",
+            "3": "Das Sortieren ordnet nur die Tabs dieses Fensters neu.",
+            "4": "Aus „Jetzt geöffnet“ speichert „In Gruppe kopieren“ eine Kopie und lässt dein echtes Fenster geöffnet."
+          },
+          "report": "Eine Menüaktion ändert ein anderes Fenster, oder „Fenster schließen“ in „Jetzt geöffnet“ schließt das falsche Browserfenster."
+        },
+        "12": {
+          "heading": "Das Tab-Menü",
+          "checks": "Dass ein Rechtsklick auf einen Tab die passenden Aktionen dafür anbietet.",
+          "steps": {
+            "0": "Klicke mit der rechten Maustaste auf einen gespeicherten Tab: Probiere „In Gruppe verschieben“, Tab umbenennen, dann „Auf ursprünglichen Titel zurücksetzen“.",
+            "1": "Klicke mit der rechten Maustaste auf einen Tab in „Jetzt geöffnet“: „In Gruppe kopieren“ ersetzt „In Gruppe verschieben“, und das Entfernen heißt „Tab schließen“.",
+            "2": "Wenn du eine URL-Regel hast, die zu einem geöffneten Tab passt, klicke in „Jetzt geöffnet“ mit der rechten Maustaste auf diesen Tab und such „Automatisch in … speichern“."
+          },
+          "good": {
+            "0": "„In Gruppe verschieben“ verschiebt den Tab in die gewählte Gruppe; „In Gruppe kopieren“ (aus „Jetzt geöffnet“) speichert eine Kopie und lässt den echten Tab geöffnet.",
+            "1": "„Tab umbenennen“ zeigt deinen Titel mit einem kleinen Tag „umbenannt“, und „Auf ursprünglichen Titel zurücksetzen“ bringt den eigenen Titel der Seite zurück.",
+            "2": "„Automatisch in '<'Gruppe'>' speichern“ erscheint nur bei einem Tab, dessen Adresse zu einer deiner URL-Regeln passt, und speichert ihn in der Gruppe dieser Regel."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Rechtsklick-Menü",
+      "items": {
+        "0": {
+          "heading": "Speichern über das Rechtsklick-Menü",
+          "checks": "Dass ein Rechtsklick auf eine beliebige Webseite den Tab in TabMerger oder direkt in eine gewählte Gruppe speichern lässt.",
+          "steps": {
+            "0": "Klicke auf einer beliebigen Webseite mit der rechten Maustaste und öffne „In TabMerger speichern“.",
+            "1": "Probiere zuerst „Diesen Tab speichern“, dann das Speichern in einer bestimmten vorhandenen Gruppe."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustration des Rechtsklick-Menüs auf einer Webseite: „In TabMerger speichern“ öffnet Diesen Tab speichern, Tabs links davon speichern, Tabs rechts davon speichern und Alle anderen Tabs speichern; „Diesen Tab speichern“ listet die Gruppen Work (1F · 5T), Research (1F · 4T), Shopping (1F · 3T) und Reading List (1F · 5T), jeweils mit ihrer Farbe",
+              "caption": "Illustration (der Browser zeichnet dieses Menü selbst, es lässt sich also nicht als Screenshot erfassen): Jede der vier „Speichern“-Optionen listet deine Gruppen mit Farbe, Fensteranzahl und Tab-Anzahl."
+            }
+          },
+          "good": {
+            "0": "Das Kontextmenü listet deine echten Gruppen mit Namen.",
+            "1": "Der Tab erscheint sofort in der gewählten Gruppe."
+          }
+        },
+        "1": {
+          "heading": "Neue Gruppen erscheinen im Rechtsklick-Menü",
+          "checks": "Dass das Rechtsklick-Menü neue Gruppen ohne Neustart des Browsers übernimmt.",
+          "steps": {
+            "0": "Erstelle im Popup eine ganz neue Gruppe.",
+            "1": "Klicke, ohne den Browser neu zu öffnen, mit der rechten Maustaste auf eine beliebige Seite und prüfe „In TabMerger speichern“ erneut."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustration desselben Rechtsklick-Menüs mit einer fünften Gruppe, „Trip planning (0F · 0T)“, am Ende der Gruppenliste",
+              "caption": "Illustration: Eine neue, noch leere Gruppe („Trip planning“) erscheint am Ende der Liste."
+            }
+          },
+          "good": {
+            "0": "Die neue Gruppe erscheint im Kontextmenü, ohne dass ein Neustart nötig ist."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Auf Pro upgraden (Testzahlungen)",
+      "intro": "Die Abrechnung ist Teil dieser Beta, aber nur mit den Testkarten von Stripe – keine echte Karte funktioniert, und es fließt kein echtes Geld. Pro AI und KI-Credit-Pakete sind noch „demnächst“ und nicht kaufbar, es geht hier also nur um Pro (unbegrenzte Gruppen/Tabs + Sync).",
+      "items": {
+        "0": {
+          "heading": "Warnung zu Testkarten",
+          "checks": "Dass du nur Testkarten von Stripe verwendest: Nichts in dieser Beta belastet echtes Geld.",
+          "steps": {
+            "0": "Lies dies, bevor du den Checkout startest – die benötigten Kartendaten stehen unten."
+          },
+          "good": {
+            "0": "Du tippst in diesem Ablauf nie eine echte Kartennummer ein."
+          }
+        },
+        "1": {
+          "heading": "Upgrade aus der Erweiterung",
+          "checks": "Dass das Upgrade aus der Erweiterung heraus durchgängig funktioniert und die Erweiterung danach Pro anzeigt.",
+          "steps": {
+            "0": "Öffne das Popup der Erweiterung und nutze einen beliebigen Einstieg „Auf Pro upgraden“ – die Upgrade-Schaltfläche in der Kopfleiste, das Hinweis-Banner, das erscheint, wenn du dich dem kostenlosen Limit näherst, oder eine Upgrade-Aufforderung, die beim Erreichen eines Limits des kostenlosen Tarifs erscheint.",
+            "1": "Dadurch öffnet sich die Preisseite der Beta-Web-App (preview.tabmerger.com/pricing) in einem neuen Browser-Tab. Melde dich dort mit demselben Konto an, das du in der Erweiterung nutzt.",
+            "2": "Wähle den Pro-Tarif, monatlich oder jährlich, und fahre mit Stripe Checkout fort.",
+            "3": "Schließe den Checkout mit der Testkarte oben ab (oder mit einer Ablehnungs-/3-D-Secure-Karte, wenn du diesen Pfad testest) und kehre dann zur App zurück."
+          },
+          "good": {
+            "0": "Der Checkout wird abgeschlossen, und du landest wieder in der Web-App, die Pro anzeigt.",
+            "1": "Das Popup der Erweiterung fragt deinen Tarif etwa alle 30 Sekunden ab, sollte Pro also bald von selbst erkennen – das erneute Öffnen des Popups erzwingt ebenfalls eine frische Prüfung, falls du nicht warten willst."
+          },
+          "report": "Die Erweiterung zeigt mehr als ein paar Minuten nach einem erfolgreichen Checkout und dem erneuten Öffnen des Popups noch die Limits des kostenlosen Tarifs ({FREE_TIER_LIMITS_groups} Gruppen / {FREE_TIER_LIMITS_tabs} Tabs / {FREE_TIER_LIMITS_urlRules} URL-Regeln)."
+        },
+        "2": {
+          "heading": "Upgrade über die Konto-Seite im Web",
+          "checks": "Dass das Upgrade über die Kontoseite der Website funktioniert und Website und Erweiterung sich über deinen Tarif einig sind.",
+          "steps": {
+            "0": "Statt über die Erweiterung zu gehen, melde dich direkt auf preview.tabmerger.com an und öffne die Kontoeinstellungen.",
+            "1": "Klicke unter „Abo“ auf „Upgrade“ und schließe den Checkout mit der Testkarte ab."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kontoeinstellungen eines kostenlosen Kontos: Die Abo-Karte zeigt Aktueller Tarif Kostenlos mit einer Upgrade-Schaltfläche",
+              "caption": "Vor dem Upgrade: Kostenlos, mit einer Upgrade-Schaltfläche. Danach zeigt sie Pro und „Abrechnung verwalten“ (siehe „Kontoseite“ unten)."
+            }
+          },
+          "good": {
+            "0": "Die Abo-Karte auf der Kontoseite zeigt jetzt Pro, mit einer Schaltfläche „Abrechnung verwalten“ statt „Upgrade“.",
+            "1": "Die Erweiterung übernimmt denselben Pro-Status (siehe Hinweis zur Abfrage oben) – Konto-Seite im Web und Erweiterung sollten nie uneins über deinen Tarif sein."
+          },
+          "report": "Die Konto-Seite im Web und das Popup der Erweiterung zeigen verschiedene Tarife (eine sagt Pro, die andere noch Kostenlos), und das über mehr als ein paar Minuten."
+        },
+        "3": {
+          "heading": "In deiner Landeswährung zahlen",
+          "checks": "Dass der Checkout den Preis in deiner eigenen Währung zeigt und berechnet.",
+          "steps": {
+            "0": "Die Preise auf der Website sind in US-Dollar (die Preisseite sagt das unter den Tarifen; Kontoseite, Dashboard und die Einstellungen der Erweiterung schreiben sie als „US$“). Außerhalb der USA bietet der Checkout deine Landeswährung an.",
+            "1": "Starte einen Checkout von deinem echten Standort aus oder simuliere ein anderes Land: Registriere ein NEUES Konto mit deiner E-Mail plus „+location_“ und einem zweistelligen Ländercode, z. B. yourname+location_FR@gmail.com für Frankreich (Gmail stellt „+beliebig“-Adressen in dein normales Postfach zu). Ein VPN in einem anderen Land funktioniert auch.",
+            "2": "Sieh dir den Preis auf der Checkout-Seite von Stripe an und schließe ihn dann mit der Testkarte in dieser Währung ab."
+          },
+          "examples": {
+            "0": {
+              "alt": "Stripe-Checkout für TabMerger Pro mit €3.66 pro Monat, EUR ausgewählt und einer USD-Alternative sowie der Zeile „1 USD = 0.9171 EUR. Charges will vary based on exchange rates.“",
+              "caption": "Checkout für eine Adresse in Frankreich (+location_FR): standardmäßig Euro, US-Dollar einen Klick entfernt. Wechselkurse ändern sich, dein Betrag wird also abweichen."
+            }
+          },
+          "good": {
+            "0": "Der Checkout zeigt den Preis in deiner Landeswährung (zum Beispiel €3.66 in Frankreich oder CA$5.89 in Kanada für den Tarif zu US$3.99), mit einem Umschalter, stattdessen in US-Dollar zu zahlen, und einer Zeile mit dem Wechselkurs und der Umrechnungsgebühr. In den USA zeigt er einfach US$3.99.",
+            "1": "Nach der Zahlung funktioniert der Tarif genau wie mit US-Dollar."
+          },
+          "report": "Außerhalb der USA bietet der Checkout nur US-Dollar an, der berechnete Betrag weicht von dem im Checkout gezeigten ab, oder die Zahlung in Landeswährung ergibt kein Pro."
+        },
+        "4": {
+          "heading": "Zwischen monatlich und jährlich wechseln",
+          "checks": "Dass ein Pro-Abo zwischen monatlicher und jährlicher Abrechnung wechseln kann und dafür korrekt belastet wird.",
+          "steps": {
+            "0": "Öffne mit aktivem Pro-Abo die Preisseite. Die Karte deines Tarifs ist als Aktuell markiert und hat die Schaltfläche „Zu jährlicher Abrechnung wechseln“ (oder „Zu monatlicher Abrechnung wechseln“, wenn du jährlich zahlst): Die Schaltfläche nennt die Abrechnung, zu der du wechseln würdest.",
+            "1": "Monatlich → jährlich: Klicke auf die Wechsel-Schaltfläche und bestätige auf der Seite von Stripe.",
+            "2": "Jährlich → monatlich: Mach dasselbe und probiere die Schaltfläche dann ein zweites Mal.",
+            "3": "Öffne auch „Abrechnung verwalten“ auf der Kontoseite: Die Option „Abo aktualisieren“ zeigt dieselbe Auswahl zwischen monatlich und jährlich."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die Preisseite bei Pro monatlich: Die Pro-Karte ist als Aktuell markiert und hat die Schaltfläche „Zu jährlicher Abrechnung wechseln“",
+              "caption": "Auf der Preisseite ist die Karte deines Tarifs als Aktuell markiert und hat die Wechsel-Schaltfläche."
+            },
+            "1": {
+              "alt": "Die Stripe-Seite „Update your subscription“ mit den Tabs Monthly und Yearly, die den aktuellen Tarif TabMerger Pro mit {proMonthly} pro Monat zeigt",
+              "caption": "Dieselbe Auswahl unter Abrechnung verwalten → Abo aktualisieren (Seite von Stripe)."
+            }
+          },
+          "good": {
+            "0": "Monatlich → jährlich wird sofort angewendet: Stripe zeigt und berechnet den Jahrespreis abzüglich des Rests deines Monats.",
+            "1": "Nach dem Wechsel zu jährlich zeigt die Kontoseite innerhalb von etwa einer Minute den Jahrespreis ({proYearly}/Jahr).",
+            "2": "Jährlich → monatlich wartet bis zum Ende deines bezahlten Jahres, jetzt wird also nichts berechnet.",
+            "3": "Erneutes Drücken der Schaltfläche erklärt, dass bereits eine Änderung geplant ist.",
+            "4": "Es werden nur Pro monatlich und jährlich angeboten, nie ein anderer Tarif."
+          },
+          "report": "Ein Wechsel berechnet den falschen Betrag, die Kontoseite zeigt mehr als ein paar Minuten später noch den alten Abrechnungszeitraum, jährlich → monatlich belastet dich sofort, oder dir wird ein anderer Tarif als Pro angeboten."
+        },
+        "5": {
+          "heading": "Kündigen",
+          "checks": "Dass die Kündigung Pro bis zum Ende des bezahlten Zeitraums erhält und dich dann auf Kostenlos zurückstuft.",
+          "steps": {
+            "0": "Klicke auf der Kontoseite mit aktivem Pro-Abo auf „Abrechnung verwalten“, um das Abrechnungsportal von Stripe zu öffnen.",
+            "1": "Kündige das Abo dort und kehre zu TabMerger zurück."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Dialog „Cancel your subscription“ von Stripe für TabMerger Pro zu {proMonthly} pro Monat, mit optionalem Grund sowie den Schaltflächen Go back und Continue to cancellation",
+              "caption": "Stripe fragt vor dem Kündigen nach einem optionalen Grund."
+            }
+          },
+          "good": {
+            "0": "Du behältst den Pro-Zugriff bis zum Ende des aktuellen Abrechnungszeitraums – die Kündigung stuft dich nicht sofort auf Kostenlos zurück.",
+            "1": "Nach Ende dieses Zeitraums sollten Kontoseite und Erweiterung wieder Kostenlos anzeigen."
+          },
+          "report": "Die Kündigung stuft dich sofort statt zum Zeitraumende auf Kostenlos zurück, oder der Tarif kehrt nach tatsächlichem Zeitraumende nie auf Kostenlos zurück."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Drag-and-drop",
+      "intro": "Dieser Bereich deckt jede Zieh-Interaktion im Popup ab – Sortieren, Verschieben zwischen Fenstern und Gruppen, Ziehen mehrerer Elemente, die beiden Zonen „Ablegen für neue …“, Abbrechen, Ziehen nur per Tastatur und ob das Ergebnis Bestand hat. Gehe so viele davon durch, wie du kannst; das ist der Bereich, auf den wir uns in dieser Beta am meisten konzentrieren.",
+      "items": {
+        "0": {
+          "heading": "Sortieren: Tabs innerhalb eines Fensters",
+          "checks": "Dass das Ziehen eines Tabs ihn innerhalb seines Fensters neu anordnet und genau dort landet, wo du ihn ablegst.",
+          "steps": {
+            "0": "Zieh einen Tab im selben Fenster nach unten, um ihn weiter hinten in die Liste zu setzen, und zieh ihn dann zurück an seine ursprüngliche Stelle.",
+            "1": "Zieh einen Tab ganz an die erste Position im Fenster, dann ganz ans Ende."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ein Tab, der innerhalb seiner Fensterkarte gezogen wird: Die gezogene Zeile schwebt mit hervorgehobenem Rand über der Lücke, in der sie landen wird",
+              "caption": "Mitten im Ziehen: Der Tab schwebt, und die anderen machen dort Platz, wo er abgelegt wird."
+            }
+          },
+          "good": {
+            "0": "Der Tab landet genau dort, wo du ihn abgelegt hast, und der Rest der Liste rückt zur Seite, um Platz zu machen.",
+            "1": "Kein anderer Tab bewegt sich oder wird dupliziert."
+          }
+        },
+        "1": {
+          "heading": "Sortieren: Fenster innerhalb einer Gruppe",
+          "checks": "Dass Fensterkarten innerhalb einer Gruppe neu angeordnet werden können.",
+          "steps": {
+            "0": "Zieh in einer Gruppe mit zwei oder mehr gespeicherten Fenstern eine Fensterkarte über oder unter eine andere."
+          },
+          "examples": {
+            "0": {
+              "alt": "Eine Fensterkarte, die in einer Gruppe mit vier Fenstern zwischen zwei andere Fensterkarten gezogen wird",
+              "caption": "Eine ganze Fensterkarte am Griff ziehen, um sie innerhalb der Gruppe neu anzuordnen."
+            }
+          },
+          "good": {
+            "0": "Die Fensterkarten tauschen die Reihenfolge, und die neue Reihenfolge ist sofort zu sehen – kein Zurückspringen auf die alte."
+          }
+        },
+        "2": {
+          "heading": "Sortieren: Gruppen in der Seitenleiste",
+          "checks": "Dass sich Gruppen in der Seitenleiste frei neu anordnen lassen, während „Jetzt geöffnet“ an erster Stelle bleibt.",
+          "steps": {
+            "0": "Zieh eine Gruppe in der Seitenleiste nach oben oder unten, um sie über oder unter eine andere Gruppe zu setzen.",
+            "1": "Versuche, eine Gruppe über „Jetzt geöffnet“ (die erste Zeile der Seitenleiste) zu ziehen."
+          },
+          "examples": {
+            "0": {
+              "alt": "Eine Gruppenzeile, die in der TabMerger-Seitenleiste an eine neue Position gezogen wird",
+              "caption": "Eine Gruppe in der Seitenleiste neu anordnen."
+            }
+          },
+          "good": {
+            "0": "„Jetzt geöffnet“ bleibt immer als erste Zeile angeheftet – du kannst keine Gruppe darüber ablegen, es nicht ziehen, löschen oder von der obersten Position wegsortieren.",
+            "1": "Jede andere Gruppe lässt sich frei neu anordnen."
+          },
+          "report": "Etwas landet über „Jetzt geöffnet“, oder „Jetzt geöffnet“ selbst wird ziehbar."
+        },
+        "3": {
+          "heading": "Fensterübergreifend: einen Tab zwischen Fensterkarten verschieben",
+          "checks": "Dass ein Tab von einer Fensterkarte in eine andere wandern kann, genau an die Stelle, an der du ihn ablegst.",
+          "steps": {
+            "0": "Zieh in einer Gruppe mit mehreren Fenstern einen Tab von einer Fensterkarte auf eine andere Fensterkarte.",
+            "1": "Lege ihn diesmal zwischen zwei vorhandenen Tabs im Zielfenster ab statt ganz oben oder unten."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ein Tab, der innerhalb derselben TabMerger-Gruppe von einem gespeicherten Fenster in ein anderes gezogen wird",
+              "caption": "Einen Tab auf ein anderes Fenster derselben Gruppe ablegen."
+            }
+          },
+          "good": {
+            "0": "Der Tab landet genau an der Position, an der du ihn abgelegt hast (nicht nur ans Ende angehängt).",
+            "1": "Die Tab-Anzahl beider Fenster wird sofort aktualisiert."
+          }
+        },
+        "4": {
+          "heading": "Gruppenübergreifend: einen Tab auf eine Gruppe in der Seitenleiste ablegen",
+          "checks": "Dass das Ablegen eines Tabs auf einer Gruppe in der Seitenleiste ihn in diese Gruppe verschiebt, ohne die Gruppe vorher zu öffnen.",
+          "steps": {
+            "0": "Zieh einen Tab aus dem Hauptfeld und lege ihn direkt auf einer Gruppe in der Seitenleiste ab – probiere das mit einer Gruppe, die gerade geöffnet (aktiv) ist, und mit einer, die es nicht ist.",
+            "1": "Probiere es noch einmal, halte den Tab aber etwa eine Sekunde über einer anderen (nicht aktiven) Gruppe in der Seitenleiste, bevor du loslässt."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ein einzelner Tab, der in der TabMerger-Seitenleiste auf eine Gruppenzeile gezogen wird",
+              "caption": "Einen Tab direkt auf eine Gruppe in der Seitenleiste ablegen."
+            }
+          },
+          "good": {
+            "0": "Der Tab wird dieser Gruppe als neues Fenster hinzugefügt, ohne dass die Gruppe vorher geöffnet werden muss.",
+            "1": "Hast du über einer nicht aktiven Gruppe pausiert, sollte sie sich nach etwa einer halben Sekunde öffnen („aufspringen“), damit du siehst, wie er landet – und zwar korrekt, nicht im falschen Fenster."
+          },
+          "report": "Die Gruppe springt auf, aber der Tab landet im falschen Fenster oder auf einem vorhandenen Tab statt als eigenes neues Fenster."
+        },
+        "5": {
+          "heading": "Gruppenübergreifend: ein ganzes Fenster in eine andere Gruppe ziehen",
+          "checks": "Dass ein ganzes Fenster mit allen Tabs in eine andere Gruppe wandern kann.",
+          "steps": {
+            "0": "Zieh eine ganze Fensterkarte (am eigenen Ziehgriff, nicht an einem einzelnen Tab darin) auf eine andere Gruppe in der Seitenleiste."
+          },
+          "examples": {
+            "0": {
+              "alt": "Eine Fensterkarte, die in der Seitenleiste über die Gruppe Shopping gezogen wird, die hervorgehoben und im Hauptfeld geöffnet ist",
+              "caption": "Ein Fenster auf eine Gruppe in der Seitenleiste ziehen. Die Gruppe unter dem Zeiger erhält einen farbigen Rand und öffnet sich hinter der Karte."
+            }
+          },
+          "good": {
+            "0": "Das ganze Fenster – mit allen Tabs – wird zu einem neuen Fenster in der Zielgruppe.",
+            "1": "Das funktioniert auch, wenn es das letzte Fenster der Quellgruppe ist."
+          },
+          "report": "Die Quellgruppe oder ihr geleertes Fenster verschwindet, statt zu bleiben (ein leeres Fenster bzw. eine leere Gruppe sollte bleiben, nicht verschwinden)."
+        },
+        "6": {
+          "heading": "Mehrere Elemente: mehrere Tabs auswählen und ziehen",
+          "checks": "Dass mehrere ausgewählte Tabs gemeinsam als ein Block gezogen werden und ihre Reihenfolge behalten.",
+          "steps": {
+            "0": "Klicke mit gedrückter Strg-Taste (Cmd-Klick auf dem Mac) zwei oder drei nicht benachbarte Tabs an, um sie auszuwählen.",
+            "1": "Wähle stattdessen mit Umschalt-Klick einen zusammenhängenden Bereich von Tabs aus.",
+            "2": "Zieh mehrere ausgewählte Tabs gemeinsam an eine neue Position im selben Fenster."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mehrere gemeinsam ausgewählte Tabs im TabMerger-Popup, mit Kontrollkästchen dargestellt",
+              "caption": "Zwei Tabs im Auswahlmodus angehakt; die Leiste unten zählt sie."
+            }
+          },
+          "good": {
+            "0": "Alle ausgewählten Tabs bewegen sich gemeinsam als ein Block und behalten ihre relative Reihenfolge – der Block landet in der Lücke, nicht verstreut oder in Klick-Reihenfolge."
+          }
+        },
+        "7": {
+          "heading": "Mehrere Elemente: eine Auswahl über Fenster und Gruppen ziehen",
+          "checks": "Dass eine Auswahl mehrerer Tabs beim Ziehen in ein anderes Fenster oder eine andere Gruppe ihre Reihenfolge behält.",
+          "steps": {
+            "0": "Wähle erneut mehrere Tabs aus und zieh sie dann in ein anderes Fenster derselben Gruppe.",
+            "1": "Wiederhole es noch einmal, zieh die Auswahl diesmal aber auf eine andere Gruppe in der Seitenleiste."
+          },
+          "examples": {
+            "0": {
+              "alt": "Eine Auswahl mehrerer Tabs mitten im Ziehen im TabMerger-Popup",
+              "caption": "Eine Auswahl mehrerer Tabs ziehen."
+            }
+          },
+          "good": {
+            "0": "In beiden Fällen bewegt sich die ganze Auswahl gemeinsam und landet in derselben relativen Reihenfolge, in der sie begonnen hat."
+          }
+        },
+        "8": {
+          "heading": "Mehrere Elemente: alles auswählen und mehrere Gruppen ziehen",
+          "checks": "Dass „Alles auswählen“ innerhalb eines Fensters funktioniert und dass mehrere ausgewählte Gruppen gemeinsam gezogen werden können.",
+          "steps": {
+            "0": "Fokussiere die Tab-Liste eines Fensters und drücke Strg+A (Cmd+A auf dem Mac), um jeden Tab dieses Fensters auszuwählen, sofern dein Fenster mehr als einen Tab hat.",
+            "1": "Klicke in der Seitenleiste mit gedrückter Strg-Taste zwei oder drei Gruppen an, um sie auszuwählen, und zieh diese Auswahl dann an einem ihrer Griffe, um sie gemeinsam neu anzuordnen."
+          },
+          "examples": {
+            "0": {
+              "alt": "Auswahlmodus mit drei ausgewählten Gruppen; beim Ziehen einer davon werden die anderen mitgenommen, mit einem Zähler-Abzeichen auf der gezogenen Zeile und „3 Gruppen ausgewählt“ in der unteren Leiste",
+              "caption": "Drei ausgewählte Gruppen gemeinsam in der Seitenleiste gezogen. Die Leiste unten zählt die Auswahl."
+            }
+          },
+          "good": {
+            "0": "Strg/Cmd+A wählt jeden Tab im fokussierten Fenster aus (außer denen, die ein Suchfilter ausblendet).",
+            "1": "Das Ziehen mehrerer Gruppen verschiebt die ausgewählten Gruppen gemeinsam als ein Block.",
+            "2": "Der Block landet nie über „Jetzt geöffnet“."
+          }
+        },
+        "9": {
+          "heading": "Ablagezonen: „Hier ablegen für neues Fenster“ und „Ablegen für neue Gruppe“",
+          "checks": "Dass das Ablegen auf diesen Zonen aus dem Gezogenen ein neues Fenster oder eine neue Gruppe erstellt.",
+          "steps": {
+            "0": "Zieh einen Tab (oder eine Auswahl von Tabs) zum unteren Ende der Fensterliste einer Gruppe, wo die Zone „Hier ablegen für neues Fenster“ erscheint, und lege ihn dort ab.",
+            "1": "Zieh einen Tab zum unteren Ende der Seitenleiste, wo die Zone „Ablegen für neue Gruppe“ erscheint, und lege ihn dort ab."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ein Tab, der über die hervorgehobene Zone „Hier ablegen für neues Fenster“ unter der Fensterliste gezogen wird, mit der sichtbaren Zone „Ablegen für neue Gruppe“ in der Seitenleiste",
+              "caption": "Beim Ziehen erscheinen beide Ablagezonen. Die unter dem Zeiger ist hervorgehoben."
+            }
+          },
+          "good": {
+            "0": "Jedes Ablegen erstellt ein ganz neues Fenster oder eine neue Gruppe, die genau das Gezogene enthält, in der ursprünglichen relativen Reihenfolge."
+          },
+          "report": "Die Zone „Ablegen für neue Gruppe“ erscheint noch, wenn du bereits am Gruppenlimit deines Tarifs bist – sie sollte stattdessen verschwinden, statt ein Ablegen anzunehmen, das sie nicht erfüllen kann."
+        },
+        "10": {
+          "heading": "Aus „Jetzt geöffnet“: einen offenen Tab in eine gespeicherte Gruppe ziehen",
+          "checks": "Dass das Ziehen eines offenen Tabs aus „Jetzt geöffnet“ ihn in eine gespeicherte Gruppe verschiebt und den echten Tab schließt.",
+          "steps": {
+            "0": "Zieh einen Tab aus dem Bereich „Jetzt geöffnet“ in eine deiner gespeicherten Gruppen.",
+            "1": "Sieh dir nach dem Ablegen deine tatsächlich geöffneten Browser-Tabs an."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ein Tab aus „Jetzt geöffnet“, der in der Seitenleiste auf die Gruppe Work gezogen wird",
+              "caption": "Ein offener Tab aus „Jetzt geöffnet“ auf eine gespeicherte Gruppe in der Seitenleiste gezogen."
+            }
+          },
+          "good": {
+            "0": "Der Tab wird VERSCHOBEN, nicht kopiert: Die gespeicherte Gruppe erhält ein neues Fenster mit einem Snapshot dieses Tabs.",
+            "1": "Der echte Browser-Tab wird geschlossen. War der gezogene Tab der aktive Tab, wird er erst geschlossen, wenn du das Popup schließt, nicht sofort – das ist Absicht, kein Fehler."
+          },
+          "report": "Der echte Tab bleibt nach dem Ablegen geöffnet (sieht also nach Kopie aus), oder das Popup selbst schließt sich bzw. stürzt mitten im Ziehen ab."
+        },
+        "11": {
+          "heading": "Abbrechen und Sonderfälle",
+          "checks": "Dass abgebrochene oder sinnlose Ziehvorgänge nichts ändern und dass „Rückgängig“ einen echten Ziehvorgang umkehrt.",
+          "steps": {
+            "0": "Beginne, einen Tab zu ziehen, und drücke Escape, bevor du ihn ablegst.",
+            "1": "Beginne einen Ziehvorgang und lass ihn an einer Stelle los, die kein gültiges Ziel ist (z. B. außerhalb des Popup-Fensters, falls das geht), oder lege ihn genau an der Stelle zurück, an der er begann.",
+            "2": "Klicke nach einem erfolgreichen Ziehvorgang auf die Schaltfläche „Rückgängig“ (Kopfleiste, oben rechts)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die TabMerger-Kopfleiste mit aktivierten Schaltflächen Rückgängig und Wiederholen nach einer Änderung",
+              "caption": "Die Schaltflächen Rückgängig/Wiederholen in der Kopfleiste, nach einer Änderung aktiviert."
+            }
+          },
+          "good": {
+            "0": "Escape und ein ungültiges bzw. wirkungsloses Ablegen lassen alles genau wie vorher – keine doppelten Tabs, keine fehlenden Tabs, keine Neuanordnung.",
+            "1": "„Rückgängig“ nach einem echten Ziehvorgang stellt die vorherige Reihenfolge genau wieder her."
+          },
+          "report": "Ein Tab wird nach einem abgebrochenen oder gleichstelligen Ziehvorgang dupliziert oder fehlt, oder „Rückgängig“ stellt die Reihenfolge vor dem Ziehen nicht vollständig wieder her."
+        },
+        "12": {
+          "heading": "Tastatur-Ziehen",
+          "checks": "Dass alles, was du mit der Maus ziehen kannst, auch per Tastatur verschoben werden kann, mit gesprochenen Ansagen.",
+          "steps": {
+            "0": "Drücke die Tabulatortaste, bis ein gespeicherter Tab, eine Fensterüberschrift oder eine Gruppe in der Seitenleiste fokussiert ist. Jede Zeile ist ein Tabulatorstopp.",
+            "1": "Um mehrere gleichzeitig zu verschieben, drücke bei jedem Strg+Leertaste (auf dem Mac ebenfalls Ctrl), um ihn auszuwählen, und fokussiere dann eine beliebige der ausgewählten Zeilen.",
+            "2": "Drücke die Leertaste zum Aufnehmen. Du hörst „… aufgenommen“, die Zeile verlässt ihren Platz, und eine Kopie davon zeigt, wo sie landen wird.",
+            "3": "Verschiebe sie mit Auf oder Ab. Ein Tab läuft durch alle Fenster der Gruppe, dann auf „Hier ablegen für neues Fenster“ und springt dann wieder nach oben.",
+            "4": "Drücke Links, um zur Gruppenliste zu wechseln. Auf und Ab wählen eine Gruppe (der letzte Stopp ist „Neue Gruppe“), und das Hauptfeld zeigt jede Gruppe, an der du vorbeikommst.",
+            "5": "Drücke Rechts, um in die hervorgehobene Gruppe zu gelangen, und platziere das Element dann mit Auf und Ab darin.",
+            "6": "Drücke die Leertaste zum Ablegen oder Escape zum Abbrechen."
+          },
+          "good": {
+            "0": "Die Leertaste nimmt das Element auf, statt den Link zu öffnen.",
+            "1": "Strg+Leertaste wählt eine Zeile aus oder ab, ohne sie zu öffnen oder aufzunehmen.",
+            "2": "Enter öffnet weiterhin einen Tab und tut nichts, während du etwas verschiebst.",
+            "3": "Die Kopie dessen, was du verschiebst, ist immer auf dem Bildschirm, und das Feld scrollt mit.",
+            "4": "Auf und Ab laufen an den Enden um, und du hörst „Nach oben umgebrochen“ oder „Nach unten umgebrochen“.",
+            "5": "Ein leeres Fenster ist ein eigener Platz.",
+            "6": "Das Element landet genau dort, wo die Kopie war, und du hörst, was passiert ist.",
+            "7": "Mehrere ausgewählte Elemente bewegen sich gemeinsam als ein Block, in ihrer ursprünglichen Reihenfolge.",
+            "8": "Die Leertaste in der Gruppenliste legt das Element am Ende der hervorgehobenen Gruppe ab.",
+            "9": "Bei „Neue Gruppe“ wird das Hauptfeld abgeblendet, und das Ablegen dort erstellt eine ganz neue Gruppe.",
+            "10": "Eine mit Auf und Ab verschobene Gruppe kann nie über „Jetzt geöffnet“ gelangen.",
+            "11": "Das Verschieben eines offenen Tabs aus „Jetzt geöffnet“ in eine Gruppe schließt diesen Browser-Tab, wie beim Ablegen mit der Maus.",
+            "12": "Escape lässt alles unberührt und zeigt wieder die Gruppe, in der du angefangen hast.",
+            "13": "Nach dem Ablegen liegt der Fokus auf der verschobenen Zeile; nach Escape wieder auf der Zeile, die du aufgenommen hast."
+          }
+        },
+        "13": {
+          "heading": "Beständigkeit",
+          "checks": "Dass eine neue Reihenfolge gespeichert wird: Sie übersteht das erneute Öffnen des Popups und erreicht deine anderen Geräte.",
+          "pro": "Nur der Teil mit dem zweiten Gerät erfordert Pro (er braucht Sync).",
+          "steps": {
+            "0": "Schließe nach dem Neuanordnen von Tabs, Fenstern oder Gruppen per Ziehen das Popup vollständig und öffne es erneut.",
+            "1": "Hast du Sync aktiviert und ein zweites Gerät mit demselben Konto angemeldet, prüfe die Reihenfolge auch dort."
+          },
+          "good": {
+            "0": "Die neue Reihenfolge ist nach dem erneuten Öffnen des Popups genau so, wie du sie hinterlassen hast.",
+            "1": "Bei aktiviertem Sync übernimmt das zweite Gerät dieselbe Reihenfolge nach kurzer Zeit."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "Web-App und Dashboard (Vorschau-Website)",
+      "intro": "Alles hier findet auf preview.tabmerger.com statt, nicht auf der Haupt-Website tabmerger.com – dieser Beta-Build synchronisiert nur mit der Vorschau-Website.",
+      "items": {
+        "0": {
+          "heading": "Registrieren und anmelden",
+          "checks": "Dass jeder Weg, sich auf der Website anzumelden, funktioniert: Google, E-Mail und Passwort sowie ein Magic Link.",
+          "steps": {
+            "0": "Öffne im abgemeldeten Zustand preview.tabmerger.com/auth/sign-in.",
+            "1": "Probiere „Continue with Google“.",
+            "2": "Probiere stattdessen E-Mail + Passwort: Gib deine E-Mail-Adresse und dein Passwort ein und klicke dann auf „Continue“.",
+            "3": "Probiere stattdessen „Send magic link“, nur mit deiner E-Mail-Adresse."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die Anmeldeseite „Welcome back“ der Website: Continue with Google, die Felder Email und Password mit einem Link Forgot?, Continue und Send magic link",
+              "caption": "Die Anmeldeseite der Website: Google, E-Mail und Passwort oder ein Magic Link."
+            }
+          },
+          "good": {
+            "0": "Alle drei Wege melden dich an.",
+            "1": "Magic Link und Google leiten beide bereits angemeldet zurück in die App.",
+            "2": "Neue Konten landen dort, wohin „Sign up free“ führt (E-Mail + Passwort oder Google, dieselben Optionen)."
+          }
+        },
+        "1": {
+          "heading": "Ein Konto mit E-Mail und Passwort erstellen",
+          "checks": "Dass ein neues Konto mit E-Mail und Passwort am Ende angemeldet ist, egal ob die Website die Bestätigung der E-Mail verlangt oder nicht.",
+          "steps": {
+            "0": "Klicke im abgemeldeten Zustand auf „Sign up free“ und erstelle ein Konto mit E-Mail-Adresse und Passwort (mindestens 8 Zeichen)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die Seite „Create your account“: Continue with Google, dann die Felder Email, Password (at least 8 characters) und Confirm password sowie eine Schaltfläche Continue",
+              "caption": "Die Registrierungsseite. Google funktioniert hier ebenfalls; dieser Punkt betrifft den Weg mit E-Mail und Passwort."
+            }
+          },
+          "good": {
+            "0": "Du landest entweder direkt im Dashboard, bereits angemeldet, oder siehst „Verify your email“ und bist erst nach Klick auf den Link in dieser E-Mail angemeldet. Was passiert, hängt davon ab, ob die Website eine E-Mail-Bestätigung verlangt; beides ist in Ordnung."
+          },
+          "report": "Du siehst „Verify your email“, bist aber tatsächlich schon angemeldet (zum Beispiel funktioniert das Öffnen des Dashboards in einem anderen Tab, ohne auf den Link zu klicken)."
+        },
+        "2": {
+          "heading": "Passwort vergessen und Passwort ändern",
+          "checks": "Dass du ein vergessenes Passwort per E-Mail zurücksetzen und es danach ändern kannst.",
+          "steps": {
+            "0": "Klicke bei der Anmeldung neben dem Passwortfeld auf „Forgot?“ und gib deine E-Mail-Adresse ein.",
+            "1": "Öffne den Reset-Link aus dieser E-Mail und lege ein neues Passwort fest (mindestens 8 Zeichen, und es muss mit dem Bestätigungsfeld übereinstimmen)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die Seite „Reset your password“: ein Feld Email, eine Schaltfläche Send reset link und Back to sign in",
+              "caption": "„Forgot?“ auf der Anmeldeseite öffnet diese Seite. Nach der Anmeldung hat die Kontoeinstellung stattdessen ein Feld „Passwort ändern“."
+            }
+          },
+          "good": {
+            "0": "Du landest wieder im Dashboard, bereits mit dem neuen Passwort angemeldet.",
+            "1": "Eine spätere Anmeldung erfordert das neue Passwort, nicht das alte."
+          }
+        },
+        "3": {
+          "heading": "Das Dashboard entspricht nach dem Sync der Erweiterung",
+          "checks": "Dass das Dashboard der Website dieselben Gruppen zeigt wie deine Erweiterung, sobald der Sync aufgeholt hat.",
+          "steps": {
+            "0": "Öffne bei aktiviertem Sync und mindestens einer Gruppe das Dashboard unter preview.tabmerger.com/dashboard.",
+            "1": "Vergleiche den Bereich „Tab-Gruppen“ dort mit der Seitenleiste des Popups der Erweiterung: Namen, Farben, Fenster-/Tab-Anzahlen und Reihenfolge."
+          },
+          "examples": {
+            "0": {
+              "alt": "Das Web-Dashboard nach dem Entsperren: Statistiken, die Karte des Pro-Tarifs und das Raster Tab-Gruppen mit den Karten Research, Reading List, Work und Shopping, die Fenster- und Tab-Anzahlen zeigen",
+              "caption": "Die Gruppen des Dashboards, nach dem Sync identisch mit der Seitenleiste der Erweiterung."
+            }
+          },
+          "good": {
+            "0": "Dieselben Gruppen erscheinen mit denselben Namen, Farben und Fenster-/Tab-Anzahlen in derselben Reihenfolge, sobald der Sync aufgeholt hat."
+          }
+        },
+        "4": {
+          "heading": "Das Dashboard ist für Gruppen schreibgeschützt",
+          "checks": "Dass das Dashboard deine Gruppen zeigt, sie aber nicht ändern kann: Bearbeitet wird nur in der Erweiterung.",
+          "steps": {
+            "0": "Such im Dashboard nach einer Möglichkeit, eine Gruppe umzubenennen, zu löschen oder zu erstellen oder mit einem Stern zu markieren bzw. den Stern zu entfernen."
+          },
+          "good": {
+            "0": "Im Dashboard gibt es keine Möglichkeit, eine Gruppe umzubenennen, zu löschen, zu erstellen oder mit Stern zu markieren – Gruppenänderungen sind absichtlich nur in der Erweiterung möglich.",
+            "1": "Die einzigen echten Aktionen auf einer Gruppenkarte sind Teilen und das Öffnen ihrer Tabs/Fenster."
+          },
+          "report": "Ein Bedienelement im Dashboard, das scheinbar eine Gruppe bearbeitet, löscht oder erstellt, tut tatsächlich etwas."
+        },
+        "5": {
+          "heading": "Sitzungen und Statistiken im Dashboard",
+          "checks": "Dass die gespeicherten Sitzungen und Summen im Dashboard mit der Erweiterung übereinstimmen.",
+          "steps": {
+            "0": "Speichere eine Sitzung in der Erweiterung und sieh dir dann den Bereich „Gespeicherte Sitzungen“ des Dashboards an.",
+            "1": "Prüfe die Statistiken oben im Dashboard (Tab-Anzahl, Gruppenanzahl, Sitzungsanzahl, Mitglied-seit-Datum)."
+          },
+          "good": {
+            "0": "Die gespeicherte Sitzung erscheint.",
+            "1": "Die Statistiken stimmen mit dem überein, was du in der Erweiterung zählen würdest."
+          }
+        },
+        "6": {
+          "heading": "Vom Dashboard aus teilen",
+          "checks": "Dass die Schaltfläche „Teilen“ im Dashboard wie in der Erweiterung einen Freigabelink kopiert.",
+          "steps": {
+            "0": "Klicke auf einer Gruppenkarte (oder über „Auswählen“ und „Auswahl teilen“ bei mehreren Gruppen) auf Teilen."
+          },
+          "good": {
+            "0": "Ein Link wird sofort in deine Zwischenablage kopiert, mit einer Meldung als Bestätigung. Das wird im Abschnitt „Teilen“ unten ausführlich behandelt – die Schaltfläche „Teilen“ im Dashboard und die der Erweiterung erzeugen dieselbe Art von Link."
+          }
+        },
+        "7": {
+          "heading": "Kontoseite",
+          "checks": "Dass die Kontoseite das richtige Profil, den richtigen Tarif und die richtigen Geräte zeigt und dass beide Abmelde-Optionen funktionieren.",
+          "pro": "Nur die Karte Geräte erfordert Pro; sie listet die Geräte, die synchronisieren.",
+          "steps": {
+            "0": "Öffne die Kontoeinstellungen vom Dashboard aus.",
+            "1": "Prüfe die Karte Profil (E-Mail, Mitglied seit), die Karte Abo (Tarif, „Abrechnung verwalten“ oder „Upgrade“) und die Karte Geräte.",
+            "2": "Probiere „Abmelden“ und getrennt davon „Von allen Geräten abmelden“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kontoeinstellungen: Die Abo-Karte zeigt den Pro-Tarif, sein Verlängerungsdatum und {proMonthly}/Monat mit einer Schaltfläche Abrechnung verwalten; darunter listet die Karte Geräte angemeldete Geräte",
+              "caption": "Die Karten Abo und Geräte bei einem Pro-Konto."
+            }
+          },
+          "good": {
+            "0": "Profil und Abo zeigen korrekte, aktuelle Angaben (siehe Abschnitt „Auf Pro upgraden“ oben zur Abo-Karte im Detail).",
+            "1": "Geräte listet deine angemeldeten Geräte mit Steuerelementen zum Umbenennen/Entfernen.",
+            "2": "Beide Abmelde-Schaltflächen bringen dich in den abgemeldeten Zustand; „Von allen Geräten“ beendet zusätzlich jede andere aktive Sitzung.",
+            "3": "Auf dieser Seite gibt es keine Option zum Löschen des Kontos – das ist zu erwarten und keine Lücke, die du melden musst."
+          }
+        },
+        "8": {
+          "heading": "Auf dem Smartphone",
+          "checks": "Dass Dashboard und Kontoseiten auf einem kleinen Bildschirm voll nutzbar sind.",
+          "steps": {
+            "0": "Öffne das Dashboard und die Kontoeinstellungen auf einem Smartphone (oder in einem auf etwa 390 px Breite verkleinerten Desktop-Fenster).",
+            "1": "Tippe oben auf die Symbole Dashboard und Konto, dann rechts auf das runde Kontomenü und dessen „Abmelden“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Das Dashboard auf einem Bildschirm in Smartphone-Breite: Die obere Leiste zeigt das TabMerger-Logo, die Symbole Dashboard und Konto, den Hell/Dunkel-Schalter und das Kontomenü, nichts ist abgeschnitten",
+              "caption": "Das Dashboard in Smartphone-Breite: nur Symbole in der oberen Leiste, nichts scrollt seitwärts."
+            }
+          },
+          "good": {
+            "0": "Nichts scrollt seitwärts.",
+            "1": "Die obere Leiste zeigt das TabMerger-Logo, die Symbole Dashboard und Konto, den Hell/Dunkel-Schalter und dein Kontomenü, alles vollständig sichtbar und antippbar (der Name „TabMerger“ und die Symbolbeschriftungen werden auf schmalen Bildschirmen ausgeblendet). Breitere Bildschirme zeigen weiterhin die Beschriftungen."
+          },
+          "report": "Eine Seite scrollt auf dem Smartphone seitwärts, oder ein Bedienelement oben ist abgeschnitten oder nicht erreichbar."
+        },
+        "9": {
+          "heading": "Benachrichtigungen (Toasts)",
+          "checks": "Dass Pop-up-Benachrichtigungen gut lesbar sind, sich nach einem Countdown von selbst schließen und vorzeitig geschlossen werden können.",
+          "steps": {
+            "0": "Löse eine Benachrichtigung aus, zum Beispiel: Gib in den Kontoeinstellungen im Passwortformular ein Passwort mit weniger als 8 Zeichen ein und sende es ab (es zeigt einen Fehler, ohne etwas zu ändern), oder kopiere einen Freigabelink.",
+            "1": "Beobachte die Benachrichtigung unten rechts, löse dann eine weitere aus und fahre mit der Maus darüber.",
+            "2": "Probiere es im hellen und im dunklen Modus."
+          },
+          "examples": {
+            "0": {
+              "alt": "Eine rote Fehlerbenachrichtigung unten rechts mit dem Text „Das Passwort muss mindestens 8 Zeichen lang sein.“, mit einem ✕ in der Ecke und einer teilweise geleerten Countdown-Leiste am unteren Rand",
+              "caption": "Eine Fehlerbenachrichtigung: roter Rand, ✕ zum Schließen und die Countdown-Leiste am unteren Rand."
+            }
+          },
+          "good": {
+            "0": "Jede Benachrichtigung ist vor der Seite gut lesbar, mit farbigem Rand (grün für Erfolg, rot für Fehler).",
+            "1": "Eine Leiste am unteren Rand leert sich über etwa 6 Sekunden und pausiert, solange du darüberfährst, und die Benachrichtigung schließt sich, wenn sie abgelaufen ist.",
+            "2": "Das ✕ in der oberen rechten Ecke schließt sie sofort."
+          },
+          "report": "Eine Benachrichtigung ist in einem der Designs schwer lesbar, die Leiste läuft beim Darüberfahren weiter, oder das ✕ sitzt falsch bzw. schließt sie nicht."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Teilen",
+      "intro": "Das Teilen erfordert Pro (siehe „Auf Pro upgraden“ oben, um in dieser Beta dorthin zu gelangen). Der Verschlüsselungsschlüssel einer Freigabe wird pro Link neu erzeugt und lebt nur im #key=-Fragment der URL – er wird nie an den Server gesendet oder dort gespeichert, sodass jeder, der den vollständigen Link (einschließlich dieses Fragments) hat, den geteilten Inhalt ansehen kann. Behandle einen Freigabelink wie den Inhalt selbst.",
+      "items": {
+        "0": {
+          "heading": "Eine oder mehrere Gruppen aus der Erweiterung teilen",
+          "checks": "Dass die Erweiterung einen Freigabelink für eine Gruppe oder für mehrere auf einmal erstellt.",
+          "steps": {
+            "0": "Wechsle in den Auswahlmodus und hake in der Seitenleiste eine oder mehrere Gruppen an (nicht Tabs oder Fenster – Teilen erscheint nur bei einer Auswahl von Gruppen).",
+            "1": "Klicke in der Auswahlleiste unten auf „Teilen“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Auswahlmodus im Popup mit angehakten Gruppen Work und Research sowie „2 Gruppen ausgewählt“ und einer Schaltfläche Teilen in der unteren Leiste",
+              "caption": "Hake die zu teilenden Gruppen an und klicke dann in der unteren Leiste auf Teilen."
+            },
+            "1": {
+              "alt": "Derselbe Bildschirm mit einer grünen Meldung „Link in die Zwischenablage kopiert“",
+              "caption": "Der Link wird sofort kopiert."
+            }
+          },
+          "good": {
+            "0": "Ein Link wird sofort in deine Zwischenablage kopiert, mit der Meldung „Link in die Zwischenablage kopiert“.",
+            "1": "Wählst du mehrere Gruppen auf einmal, werden alle gemeinsam als ein Link/Paket geteilt – du musst sie nicht einzeln teilen."
+          }
+        },
+        "1": {
+          "heading": "Einen geteilten Link öffnen",
+          "checks": "Dass jeder einen Freigabelink ohne Anmeldung öffnen und die geteilten Gruppen schreibgeschützt sehen kann.",
+          "pro": "Das Erstellen des Links erfordert Pro; zum Öffnen ist überhaupt kein Konto nötig.",
+          "steps": {
+            "0": "Öffne den kopierten Link in einem abgemeldeten Browserfenster (oder in einem privaten/Inkognito-Fenster).",
+            "1": "Prüfe die Favicons und Titel jedes geteilten Tabs und probiere „Tab öffnen“ / „Alle Tabs öffnen“ / „Fenster öffnen“ / „Alle Fenster öffnen“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die geteilte Seite, abgemeldet geöffnet: „Geteilte Sammlung · schreibgeschützt“, der Freigabelink, „9 Tabs in 5 Fenstern in 2 Gruppen“, ein Schalter Seitenvorschauen anzeigen und die Tabs der Gruppe Work mit Schaltflächen zum Öffnen",
+              "caption": "Das sieht jemand, der deinen Link ohne Anmeldung öffnet. (Hier zeigt der Link auf einen lokalen Testserver; deiner liegt auf preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "Die Seite lädt ohne erforderliche Anmeldung, mit der Kennzeichnung „Geteilte Sammlung · schreibgeschützt“.",
+            "1": "Sie zeigt jede Gruppe, jedes Fenster und jeden Tab mit ihren echten Favicons und Titeln.",
+            "2": "Die Öffnen-Schaltflächen öffnen die richtigen Tabs/Fenster in neuen Browser-Tabs."
+          }
+        },
+        "2": {
+          "heading": "Seitenvorschauen auf der geteilten Seite",
+          "checks": "Dass Seitenvorschauen auf einer geteilten Seite aus bleiben, bis der Betrachter sie einschaltet und bestätigt.",
+          "pro": "Das Erstellen des Links erfordert Pro; zum Öffnen ist überhaupt kein Konto nötig.",
+          "steps": {
+            "0": "Such auf der geteilten Seite den Schalter „Seitenvorschauen anzeigen“ über der Gruppenliste.",
+            "1": "Schalte ihn ein und bestätige den erscheinenden Dialog.",
+            "2": "Fahre über einen Tab, um sein Vorschaubild und seine Beschreibung zu sehen."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Dialog „Seitenvorschauen aktivieren?“, der erklärt, was an den Vorschaudienst gesendet wird, mit den Schaltflächen Abbrechen und Aktivieren",
+              "caption": "Das Einschalten des Schalters fragt zuerst nach. Vorschauen bleiben aus, bis du bestätigst."
+            }
+          },
+          "good": {
+            "0": "Der Schalter ist standardmäßig aus.",
+            "1": "Das Einschalten erfordert zuerst die Bestätigung eines Dialogs (das Ausschalten braucht keine Bestätigung) – der Dialog erklärt, dass das Überfahren eines Tabs dessen Adresse an den Vorschaudienst von TabMerger sendet und dass sie weder deinem Konto zugeordnet noch protokolliert oder gespeichert wird.",
+            "2": "Eingeschaltet zeigt das Überfahren eines Tabs sein Bild/seine Beschreibung; eine Seite ohne Bild zeigt „Keine Vorschau“ statt eines kaputten Bildes."
+          }
+        },
+        "3": {
+          "heading": "Eine Gruppe mit vielen Fenstern teilen",
+          "checks": "Dass eine geteilte Gruppe mit mehreren Fenstern jedes Fenster getrennt zeigt.",
+          "steps": {
+            "0": "Teile eine Gruppe, die mehrere gespeicherte Fenster hat (nicht nur eines)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die Gruppe Research auf der geteilten Seite mit vier getrennten Fenstern, jedes mit eigenem Link Tab öffnen, und „Alle Fenster öffnen“ bei der Gruppe",
+              "caption": "Eine geteilte Gruppe mit vier Fenstern: Jedes Fenster wird getrennt aufgelistet."
+            }
+          },
+          "good": {
+            "0": "Die geteilte Seite zeigt jedes Fenster dieser Gruppe, jeweils beschriftet mit „Fenster N“ (und „Inkognito“, falls es eines war), mit eigenen Tabs und eigener Schaltfläche „Tab(s) öffnen“."
+          }
+        },
+        "4": {
+          "heading": "Vom Web-Dashboard statt von der Erweiterung teilen",
+          "checks": "Dass das Teilen von der Website genauso funktioniert wie von der Erweiterung.",
+          "steps": {
+            "0": "Klicke im Dashboard bei einer einzelnen Gruppenkarte auf „Teilen“, oder hake mehrere Gruppen an und klicke auf „Auswahl teilen“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die Gruppenkarten des Dashboards, wobei die Schaltfläche Teilen einer Karte „Kopiert!“ zeigt, und eine Meldung „Link kopiert – teilt einen Snapshot dieser Gruppe.“",
+              "caption": "Teilen auf einer Dashboard-Karte kopiert dieselbe Art von Link."
+            }
+          },
+          "good": {
+            "0": "Beide Dashboard-Wege kopieren einen Link wie die Erweiterung („Link kopiert – teilt einen Snapshot dieser Gruppe.“ bzw. „Link kopiert! Die Freigabeseite ist live.“) und erzeugen dieselbe Art geteilter Seite."
+          }
+        },
+        "5": {
+          "heading": "Bearbeiten, erneut teilen, widerrufen und Ablauf – was NICHT möglich ist",
+          "checks": "Was Freigabelinks noch nicht können, damit du keine Zeit mit dem Melden verbringst.",
+          "steps": {
+            "0": "Such nach einer Möglichkeit, in der Erweiterung oder im Dashboard eine bestehende Freigabe zu bearbeiten oder eine zu widerrufen/zu löschen/ablaufen zu lassen."
+          },
+          "good": {
+            "0": "Es gibt derzeit nirgends eine Oberfläche, um einen Freigabelink nach dem Erstellen zu bearbeiten, zu widerrufen, zu löschen oder ablaufen zu lassen – eine Freigabe ist ab dem Moment ihrer Erstellung ein dauerhafter, unveränderlicher Snapshot. Das ist zu erwarten – melde das Fehlen eines Widerrufs-/Bearbeitungs-/Ablauf-Bedienelements nicht, sondern bestätige nur, dass es dieser Beschreibung entspricht.",
+            "1": "Dieselbe Gruppe erneut zu teilen erstellt einen ganz neuen, separaten Link, statt den alten zu aktualisieren; der alte Link funktioniert weiter und zeigt den alten Snapshot."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Einstellungen",
+      "intro": "Die Einstellungen haben für alle die Tabs Allgemein, Konto und Daten. Ein Tab Geräte erscheint, sobald du Pro hast (siehe „Auf Pro upgraden“ oben). Die Tabs KI und Dev sind nicht Teil dieses Beta-Builds – KI bleibt hinter dem Flag „demnächst“ verborgen, und Dev erscheint nur in lokalen Entwicklungs-Builds, nicht in der installierten Beta.",
+      "items": {
+        "0": {
+          "heading": "Tab „Allgemein“ – Design, Vor dem Löschen bestätigen, Tab per Klick öffnen, Automatisch deduplizieren",
+          "checks": "Dass diese allgemeinen Einstellungen sofort wirken und gespeichert bleiben.",
+          "steps": {
+            "0": "Öffne die Einstellungen und wechsle das Design zwischen Hell, Dunkel und System.",
+            "1": "Schalte „Vor dem Löschen bestätigen“ um (lösche eine Gruppe oder ein Fenster einmal bei eingeschalteter, dann bei ausgeschalteter Einstellung und vergleiche).",
+            "2": "Schalte „Tab per Klick öffnen“ um und klicke dann im Hauptfeld auf einen gespeicherten Tab.",
+            "3": "Schalte „Beim Zusammenführen automatisch deduplizieren“ um und führe dann zwei Fenster zusammen, die einen doppelten Tab teilen."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Einstellungsdialog, Tab Allgemein, mit Design, Vor dem Löschen bestätigen und weiteren Schaltern",
+              "caption": "Der Tab „Allgemein“ der Einstellungen, mit dem Versionsabzeichen neben dem Titel. (Der Tab Dev existiert nur in unserem internen Screenshot-Build; du siehst ihn nicht.)"
+            }
+          },
+          "good": {
+            "0": "Das Design ändert sofort die gesamte Oberfläche und bleibt nach dem Schließen/erneuten Öffnen des Popups erhalten.",
+            "1": "Bei eingeschaltetem „Vor dem Löschen bestätigen“ fragt das Löschen einer Gruppe oder eines Fensters vorher nach; bei ausgeschaltetem wird sofort gelöscht.",
+            "2": "„Tab per Klick öffnen“ ein: Ein einzelner Klick öffnet den Tab im Browser; aus: Ein einzelner Klick wählt ihn nur aus bzw. klappt ihn auf.",
+            "3": "„Beim Zusammenführen automatisch deduplizieren“ entfernt das Duplikat automatisch, wenn eingeschaltet."
+          }
+        },
+        "1": {
+          "heading": "Tab „Allgemein“ – Seitenbilder in Vorschauen zeigen",
+          "checks": "Dass die Einstellung für Seitenbilder steuert, ob Tab-Vorschauen ein Seitenbild zeigen.",
+          "steps": {
+            "0": "Schalte „Seitenbilder in Vorschauen zeigen“ aus.",
+            "1": "Fahre über einen gespeicherten Tab, um seine Vorschau zu sehen.",
+            "2": "Schalte die Einstellung wieder ein und fahre erneut über denselben Tab."
+          },
+          "examples": {
+            "0": {
+              "alt": "Eine Tab-Hover-Vorschau bei deaktivierten Seitenbildern mit einem Platzhalter „Nicht aktiviert“",
+              "caption": "Die Hover-Vorschau bei ausgeschaltetem „Seitenbilder in Vorschauen zeigen“."
+            }
+          },
+          "good": {
+            "0": "Aus: Die Vorschau sagt deutlich „Nicht aktiviert“ mit dem Hinweis „Seitenbilder sind deaktiviert. In den Einstellungen aktivieren.“ – der Schalter selbst speichert sofort, ohne Bestätigungsdialog.",
+            "1": "Ein: Ein echtes Seitenbild lädt in der Hover-Vorschau, oder „Keine Vorschau“, wenn diese Seite keines hat.",
+            "2": "Die Beschreibung der Einstellung verlinkt auf den Abschnitt zu Seitenvorschauen in der Datenschutzerklärung."
+          },
+          "report": "Die Vorschau zeigt „Keine Vorschau“ (leer) statt eines echten Bildes, obwohl die Einstellung an ist und die Seite eines hat."
+        },
+        "2": {
+          "heading": "Tab „Allgemein“ – Cloud-Sync, Schwelle für alte Tabs, URL-Regeln",
+          "checks": "Dass diese Einstellungen für die richtigen Tarife erscheinen und ändern, was sie sollen.",
+          "pro": "Nur der Schalter Cloud-Sync erfordert Pro (Kostenlos zeigt ihn nicht).",
+          "steps": {
+            "0": "Schalte mit Pro „Cloud-Sync“ um (dieses Bedienelement erscheint erst mit Pro).",
+            "1": "Ändere die „Schwelle für alte Tabs“ auf einen anderen Wert (7/14/30/60 Tage).",
+            "2": "Klicke neben „URL-Regeln“ auf „Verwalten“ und füge eine Regel hinzu, die einer Gruppe ein URL-Muster zuweist."
+          },
+          "examples": {
+            "0": {
+              "alt": "Einstellungen, Tab Allgemein nach unten gescrollt: Cloud-Sync ein, Schwelle für alte Tabs auf 30 Tage, und URL-Regeln mit einer Schaltfläche Verwalten",
+              "caption": "Die untere Hälfte des Tabs „Allgemein“. (Der Tab Dev existiert nur in unserem internen Screenshot-Build; du siehst ihn nicht.)"
+            }
+          },
+          "good": {
+            "0": "Cloud-Sync erscheint nur bei Pro-Konten (Kostenlos sieht es nie).",
+            "1": "Das Ändern der Schwelle für alte Tabs ändert, welche Tabs den gelben Punkt für alte Tabs erhalten.",
+            "2": "URL-Regeln öffnet eine Verwaltung, in der du Regeln von Muster zu Gruppe hinzufügen/bearbeiten/entfernen kannst.",
+            "3": "Ein neu geöffneter Tab, der zu einer Regel passt, wird automatisch zugewiesen."
+          }
+        },
+        "3": {
+          "heading": "Design: Hell, Dunkel und System",
+          "checks": "Dass jedes Design im ganzen Popup korrekt aussieht und die Auswahl gespeichert bleibt.",
+          "steps": {
+            "0": "Stelle in Einstellungen → Allgemein das Design auf Dunkel und klicke auf „Änderungen speichern“.",
+            "1": "Sieh dich im Popup um: die Seitenleiste, eine Gruppe mit mehreren Fenstern, die ⋯-Menüs, ein Rechtsklick-Menü, die Suche (Strg+K) und die Einstellungen selbst.",
+            "2": "Schließe das Popup und öffne es erneut.",
+            "3": "Stelle das Design auf System und speichere, wechsle dann deinen Computer zwischen hellem und dunklem Modus.",
+            "4": "Stelle es wieder auf Hell."
+          },
+          "good": {
+            "0": "Das ganze Popup wechselt das Design, sobald du speicherst, wobei jeder Text, jedes Symbol und jeder Rand lesbar ist.",
+            "1": "Menüs, Dialoge, Tooltips und Benachrichtigungen folgen dem Design ebenfalls.",
+            "2": "Das Design ist nach dem erneuten Öffnen des Popups noch gesetzt.",
+            "3": "System folgt der hellen oder dunklen Einstellung deines Computers."
+          },
+          "report": "Etwas ist schwer lesbar oder behält das alte Design (ein Menü, Dialog, Symbol oder Rand), oder das Design wird nach dem erneuten Öffnen des Popups zurückgesetzt."
+        },
+        "4": {
+          "heading": "URL-Regeln: passende Seiten automatisch speichern",
+          "checks": "Dass eine URL-Regel Seiten, die du unter passenden Adressen öffnest, in der gewählten Gruppe speichert.",
+          "steps": {
+            "0": "Klicke in Einstellungen → Allgemein neben URL-Regeln auf Verwalten, dann auf Regel hinzufügen.",
+            "1": "Gib ein Muster mit * als Platzhalter ein (z. B. github.com/*), wähle eine Gruppe, füge die Regel hinzu und klicke auf Speichern.",
+            "2": "Öffne im Browser einen neuen Tab unter einer passenden Adresse (z. B. einer beliebigen github.com-Seite).",
+            "3": "Öffne das Popup und sieh dir die Gruppe der Regel an. Lade die Seite dann einmal neu und prüfe die Gruppe erneut.",
+            "4": "Bearbeite die Regel so, dass sie auf eine andere Gruppe zeigt, lösche sie dann und öffne eine weitere passende Seite.",
+            "5": "Versuche im kostenlosen Tarif, eine vierte Regel hinzuzufügen."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Dialog URL-Regeln: „Tabs per URL-Muster automatisch Gruppen zuweisen. Verwende * als Platzhalter (z. B. github.com/*). Die erste passende Regel gilt.“, noch keine Regeln, eine Schaltfläche Regel hinzufügen sowie Abbrechen und Speichern",
+              "caption": "Einstellungen → Allgemein → URL-Regeln → Verwalten öffnet diesen Editor."
+            }
+          },
+          "good": {
+            "0": "Eine Kopie der passenden Seite wird in der Gruppe der Regel gespeichert, in deren erstem Fenster (oder einem neuen Fenster, falls die Gruppe keines hat). Der Tab selbst bleibt offen.",
+            "1": "Passen mehrere Regeln, gewinnt die erste in der Liste.",
+            "2": "Nachdem eine Regel bearbeitet oder gelöscht wurde, folgen neue Seiten der Änderung.",
+            "3": "Der kostenlose Tarif erlaubt 3 Regeln: Eine vierte hinzuzufügen zeigt „Der kostenlose Tarif erlaubt bis zu 3 URL-Regeln.“ mit einer Schaltfläche Upgrade. Pro hat kein Limit."
+          },
+          "report": "Eine passende Seite wird nicht gespeichert, landet in der falschen Gruppe oder wird mehrfach gespeichert (zum Beispiel bei jedem Neuladen erneut)."
+        },
+        "5": {
+          "heading": "Tab „Konto“ – Tarif, Verlängert sich, E-Mail, Abrechnung verwalten / Upgrade, Abmelden",
+          "checks": "Dass der Tab „Konto“ deinen echten Tarif, dein Verlängerungsdatum und deine E-Mail zeigt und seine Schaltflächen funktionieren.",
+          "steps": {
+            "0": "Öffne den Tab „Konto“ und prüfe die Zeilen Tarif, Verlängert sich (bei bezahltem Tarif) und E-Mail.",
+            "1": "Klicke auf „Auf Pro upgraden“ (Kostenlos) oder „Abrechnung verwalten“ (Pro/Pro AI) – was danach passiert, steht oben unter „Auf Pro upgraden“.",
+            "2": "Klicke auf „Abmelden“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Einstellungen, Tab Konto bei Pro: Tarif Pro ({proMonthly}/Monat), ein Verlängerungsdatum, die E-Mail, die Schaltflächen Abrechnung verwalten und Abmelden sowie „Passphrase vergessen? Verschlüsselung zurücksetzen“",
+              "caption": "Der Tab „Konto“ bei einem Pro-Konto. Der Reset-Link unten ist der nächste Punkt. (Der Tab Dev existiert nur in unserem internen Screenshot-Build; du siehst ihn nicht.)"
+            }
+          },
+          "good": {
+            "0": "Der Tarif zeigt „Kostenlos“, „Pro ({proMonthly}/Monat)“ oder „Pro AI ({proAiMonthly}/Monat)“, passend zu deinem echten Abo.",
+            "1": "„Verlängert sich“ erscheint nur bei einem bezahlten Tarif und nennt das echte Verlängerungsdatum.",
+            "2": "Die E-Mail entspricht deinem angemeldeten Konto.",
+            "3": "„Abrechnung verwalten“ öffnet das Abrechnungsportal von Stripe in einem neuen Tab; im kostenlosen Tarif steht stattdessen „Auf Pro upgraden“, was die Preisseite öffnet.",
+            "4": "„Abmelden“ bringt dich in den abgemeldeten Zustand zurück."
+          }
+        },
+        "6": {
+          "heading": "Tab „Konto“ – Passphrase vergessen? Verschlüsselung zurücksetzen",
+          "checks": "Dass der Link zum Zurücksetzen der Verschlüsselung im Tab „Konto“ erscheint, sobald die Verschlüsselung eingerichtet ist.",
+          "steps": {
+            "0": "Dieser Link erscheint nur, wenn du die Einrichtung der Verschlüsselung mindestens einmal abgeschlossen hast (den vollständigen Ablauf siehe Abschnitt „Ende-zu-Ende-Verschlüsselungs-Passphrase“ unten – wiederhole ihn hier nicht, bestätige nur, dass der Link von diesem Tab aus erreichbar ist)."
+          },
+          "good": {
+            "0": "Der Link ist unten im Tab „Konto“ sichtbar, sobald die Verschlüsselung eingerichtet ist, und nicht vorher."
+          }
+        },
+        "7": {
+          "heading": "Tab „Daten“ – Exportieren, Importieren, Alle Daten löschen",
+          "checks": "Dass Exportieren, Importieren und Löschen deiner Daten funktionieren, mit einer Bestätigung, bevor etwas ersetzt oder gelöscht wird.",
+          "steps": {
+            "0": "Öffne den Tab „Daten“ und klicke auf „Exportieren“, um alle Gruppen als JSON-Datei herunterzuladen.",
+            "1": "Klicke auf „Importieren“ und wähle genau diese Datei (oder einen HTML-Export von Lesezeichen oder einen OneTab-.txt-Export).",
+            "2": "Klicke auf „Alle Daten löschen“ und bestätige."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Einstellungsdialog, Tab Daten, mit den Bedienelementen Daten exportieren und Daten importieren",
+              "caption": "Der Tab „Daten“ der Einstellungen."
+            }
+          },
+          "good": {
+            "0": "Der Export lädt eine Datei mit einem Namen wie „tabmerger-backup-2026-01-15.json“ herunter, mit der Meldung „Gruppen erfolgreich exportiert“.",
+            "1": "Der Import bittet dich vor dem Importieren, die Gruppenanzahl zu bestätigen, und zeigt dann „Gruppen erfolgreich importiert“.",
+            "2": "Der erneute Import deines eigenen Exports bringt jede Gruppe mit denselben Fenstern, Tabs, Reihenfolge und Farben zurück.",
+            "3": "Alle drei Dateitypen (TabMerger-JSON, Lesezeichen-HTML, OneTab-.txt) werden akzeptiert, erkannt an der Dateiendung.",
+            "4": "„Alle Daten löschen“ löscht nach deiner Bestätigung Gruppen, Sitzungen und Einstellungen – betrachte es als destruktiv und probiere es nur in einem Wegwerf-Profil."
+          },
+          "report": "Eine fehlerhafte oder leere Datei tut stillschweigend nichts, statt eine Fehlermeldung wie „Ungültiges Dateiformat“ oder „Keine Gruppen gefunden“ zu zeigen."
+        },
+        "8": {
+          "heading": "Speichern vs. Zurücksetzen und die Anzeige „Ungespeicherte Änderungen“",
+          "checks": "Dass Einstellungen nur gespeichert werden, wenn du auf Speichern klickst, und dich vor ungespeicherten Änderungen warnen.",
+          "steps": {
+            "0": "Ändere im Tab „Allgemein“ eine beliebige Einstellung (z. B. das Design), ohne auf Speichern zu klicken.",
+            "1": "Beachte den Text „Ungespeicherte Änderungen“ und dass „Änderungen speichern“ nur aktiviert ist, solange sich etwas tatsächlich vom Gespeicherten unterscheidet.",
+            "2": "Klicke statt auf Speichern auf „Standard wiederherstellen“ und schließe die Einstellungen dann ohne Speichern.",
+            "3": "Öffne die Einstellungen erneut und prüfe, ob deine Änderung Bestand hat."
+          },
+          "examples": {
+            "0": {
+              "alt": "Einstellungen, Tab Allgemein nach einer Änderung: „Ungespeicherte Änderungen“ neben einer aktivierten Schaltfläche Änderungen speichern, mit Standard wiederherstellen links",
+              "caption": "Nach dem Ändern einer Einstellung: „Ungespeicherte Änderungen“ erscheint und Änderungen speichern wird aktiv. (Der Tab Dev existiert nur in unserem internen Screenshot-Build; du siehst ihn nicht.)"
+            }
+          },
+          "good": {
+            "0": "„Ungespeicherte Änderungen“ erscheint neben „Änderungen speichern“, sobald sich der Entwurf von den zuletzt gespeicherten Einstellungen unterscheidet.",
+            "1": "„Änderungen speichern“ ist deaktiviert, wenn nichts Neues zu speichern ist.",
+            "2": "„Standard wiederherstellen“ setzt nur den laufenden Entwurf auf die Standardwerte zurück – es speichert nicht von selbst.",
+            "3": "Das Schließen der Einstellungen ohne Klick auf „Änderungen speichern“ verwirft den Entwurf; beim erneuten Öffnen siehst du die zuletzt tatsächlich gespeicherten Werte, nicht deine ungespeicherte Änderung."
+          },
+          "report": "„Änderungen speichern“ bleibt ohne Änderungen aktiviert, oder eine Einstellung, die du geändert, aber nie gespeichert hast, bleibt nach dem Schließen und erneuten Öffnen der Einstellungen trotzdem bestehen."
+        },
+        "9": {
+          "heading": "Das Versionsabzeichen",
+          "checks": "Wo du die genaue Versionsnummer für Fehlerberichte findest.",
+          "steps": {
+            "0": "Sieh dir die Titelleiste des Einstellungsdialogs an."
+          },
+          "good": {
+            "0": "Ein kleines Abzeichen neben dem Wort „Einstellungen“ zeigt die echte Semver-Version, die du in Fehlerberichten angeben solltest (z. B. „v3.1.0-beta.5“) – das wird im Abschnitt „Beitreten und installieren“ oben ausführlicher behandelt."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Anmeldung und Sync zwischen Geräten",
+      "intro": "Beta-Builds synchronisieren über die Vorschau-Web-App unter preview.tabmerger.com, nicht über die Hauptseite – melde dich dort an, um deine synchronisierten Gruppen, das Dashboard und das Teilen zu sehen.",
+      "items": {
+        "0": {
+          "heading": "Zwei Geräte einrichten",
+          "checks": "Dass zwei Geräte, die mit demselben Konto angemeldet sind, ihre Gruppen teilen.",
+          "steps": {
+            "0": "Melde dich auf zwei Geräten oder zwei Browserprofilen an, auf denen jeweils die Beta-Erweiterung installiert ist, mit demselben Konto."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Dialog „Bei TabMerger anmelden“ der Erweiterung im Popup: Weiter mit Google, dann die Tabs Anmelden, Registrieren und Magic Link mit den Feldern E-Mail und Passwort",
+              "caption": "Anmelden aus der Erweiterung: das Kontosymbol (oben rechts) → Anmelden."
+            },
+            "1": {
+              "alt": "Das Popup von Gerät A mit den Gruppen Work, Research, Shopping und Reading List; die Fußzeile zeigt 4 Gruppen, 4 Fenster, 17 Tabs",
+              "caption": "Gerät A."
+            },
+            "2": {
+              "alt": "Das Popup von Gerät B nach Anmeldung, Entsperren und Sync: dieselben vier Gruppen mit denselben Fenster- und Tab-Anzahlen und derselben Fußzeile mit 4 Gruppen, 4 Fenstern, 17 Tabs",
+              "caption": "Gerät B nach Anmeldung und Entsperren: dieselben Gruppen und Anzahlen in derselben Reihenfolge."
+            }
+          },
+          "good": {
+            "0": "Auf einem Gerät erstellte Gruppen erscheinen nach kurzer Zeit auf dem anderen."
+          }
+        },
+        "1": {
+          "heading": "Umbenennungen erreichen das andere Gerät",
+          "checks": "Dass eine Umbenennung auf einem Gerät ohne manuelles Aktualisieren auf dem anderen erscheint.",
+          "steps": {
+            "0": "Bearbeite einen Gruppennamen auf Gerät A.",
+            "1": "Sieh auf Gerät B nach, ohne dort etwas anzufassen."
+          },
+          "examples": {
+            "0": {
+              "alt": "Das Popup von Gerät A nach der Umbenennung von Research in „Research papers“, mit seinen vier Tabs",
+              "caption": "Gerät A: „Research“ in „Research papers“ umbenannt."
+            },
+            "1": {
+              "alt": "Das Popup von Gerät B, das die Gruppe als „Research papers“ mit denselben vier Tabs zeigt, nachdem das Popup nur erneut geöffnet wurde",
+              "caption": "Gerät B, nach bloßem erneutem Öffnen des Popups: Der neue Name ist da."
+            }
+          },
+          "good": {
+            "0": "Gerät B übernimmt die Umbenennung, ohne dass du ein manuelles Aktualisieren auslösen musst."
+          }
+        },
+        "2": {
+          "heading": "Löschungen erreichen das andere Gerät",
+          "checks": "Dass eine gelöschte Gruppe auf jedem Gerät gelöscht bleibt, statt zurückzukommen.",
+          "steps": {
+            "0": "Lösche eine Gruppe auf Gerät A.",
+            "1": "Bestätige, dass sie auch auf Gerät B verschwindet."
+          },
+          "examples": {
+            "0": {
+              "alt": "Das Popup von Gerät A nach dem Löschen von Shopping: Work, Research papers und Reading List bleiben, und die Fußzeile zeigt 3 Gruppen, 3 Fenster, 14 Tabs",
+              "caption": "Gerät A: „Shopping“ gelöscht."
+            },
+            "1": {
+              "alt": "Das Popup von Gerät B nach dem erneuten Öffnen: Shopping ist weg, und die Fußzeile zeigt 3 Gruppen, 3 Fenster, 14 Tabs",
+              "caption": "Gerät B nach dem erneuten Öffnen des Popups: „Shopping“ ist auch dort weg."
+            }
+          },
+          "good": {
+            "0": "Die Löschung wird übertragen, statt dass die Gruppe nach dem Sync wieder auftaucht („Wiederauferstehung“)."
+          },
+          "report": "Eine gelöschte Gruppe kommt bei einer späteren Synchronisierung auf einem der Geräte zurück."
+        },
+        "3": {
+          "heading": "Das Neuanordnen von Gruppen wird synchronisiert",
+          "checks": "Dass die Reihenfolge deiner Gruppen auf jedem Gerät und im Dashboard gleich ist.",
+          "steps": {
+            "0": "Zieh auf Gerät A eine Gruppe in der Seitenleiste an eine neue Position.",
+            "1": "Warte, bis der Sync aufgeholt hat, und sieh dir dann die Seitenleiste von Gerät B und das Web-Dashboard an."
+          },
+          "good": {
+            "0": "Gerät B und das Dashboard zeigen die Gruppen in derselben Reihenfolge wie Gerät A.",
+            "1": "„Rückgängig“ kann auf einem Gerät unmittelbar nach einem Sync, der Änderungen von einem anderen Gerät bringt, ausgegraut sein. Das ist zu erwarten: Der Rückgängig-Verlauf wird gelöscht, wenn Änderungen von anderswo eintreffen, sodass du nicht versehentlich eine fremde Änderung überschreibst."
+          },
+          "report": "Die Reihenfolge unterscheidet sich zwischen Geräten, nachdem der Sync aufgeholt hat, oder eine Neuanordnung springt auf die alte Reihenfolge zurück."
+        },
+        "4": {
+          "heading": "Offline-Änderungen werden beim Wiederverbinden synchronisiert",
+          "checks": "Dass offline vorgenommene Änderungen synchronisiert werden, sobald du wieder online bist, ohne Duplikate oder Verluste.",
+          "steps": {
+            "0": "Geh auf einem Gerät offline (Netzwerk deaktivieren).",
+            "1": "Nimm Änderungen vor.",
+            "2": "Verbinde dich wieder."
+          },
+          "good": {
+            "0": "Wieder online, werden offline vorgenommene Änderungen synchronisiert, ohne Gruppen zu duplizieren oder stillschweigend zu verlieren."
+          }
+        },
+        "5": {
+          "heading": "Eine Gruppe offline löschen",
+          "checks": "Dass eine offline gelöschte Gruppe nach dem Wiederverbinden gelöscht bleibt.",
+          "steps": {
+            "0": "Geh auf Gerät A offline (Netzwerk deaktivieren).",
+            "1": "Lösche eine Gruppe auf Gerät A.",
+            "2": "Verbinde Gerät A wieder, lass es synchronisieren und prüfe dann Gerät B und das Dashboard."
+          },
+          "good": {
+            "0": "Die Gruppe wird beim nächsten Sync vom Server entfernt und verschwindet auf Gerät B und im Dashboard.",
+            "1": "Sie kommt danach auf keinem Gerät zurück."
+          },
+          "report": "Eine offline gelöschte Gruppe taucht nach einem Sync auf irgendeinem Gerät wieder auf."
+        },
+        "6": {
+          "heading": "Dieselbe Gruppe auf zwei Geräten bearbeitet (Konfliktkopie)",
+          "checks": "Dass nichts überschrieben wird und du eine Kopie zum manuellen Zusammenführen erhältst, wenn dieselbe Gruppe auf zwei Geräten bearbeitet wird, bevor eines synchronisiert hat.",
+          "steps": {
+            "0": "Geh auf Gerät A offline (Netzwerk deaktivieren). Lass Gerät B online.",
+            "1": "Bearbeite auf Gerät A eine Gruppe (füge zum Beispiel einen Tab hinzu). Bearbeite auf Gerät B dieselbe Gruppe anders (füge zum Beispiel einen anderen Tab hinzu).",
+            "2": "Lass zuerst Gerät B synchronisieren, verbinde dann Gerät A wieder und lass es synchronisieren.",
+            "3": "Sieh dir die Seitenleiste auf beiden Geräten an."
+          },
+          "good": {
+            "0": "Die Version, die den Server zuerst erreicht hat (Gerät B), behält den Namen der Gruppe.",
+            "1": "Die Version von Gerät A wird direkt darunter als neue Gruppe namens „Work{CONFLICT_COPY_SUFFIX}“ gespeichert (mit dem Namen deiner Gruppe), und eine Meldung sagt dir das.",
+            "2": "Beide Geräte zeigen am Ende beide Gruppen. Du kannst die Tabs von Hand zusammenführen und dann die Kopie löschen.",
+            "3": "Das Bearbeiten nur eines Geräts oder verschiedener Gruppen auf jedem erzeugt nie eine Kopie."
+          },
+          "report": "Eine Änderung verschwindet stillschweigend ohne Kopie, oder eine „Konfliktkopie“ erscheint, obwohl nur ein Gerät die Gruppe bearbeitet hat."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Ende-zu-Ende-Verschlüsselungs-Passphrase",
+      "intro": "Die Verschlüsselung ist für jedes angemeldete Konto verpflichtend, keine optionale Einstellung – es gibt keinen Schalter zum Ausschalten. Deine synchronisierten Gruppen, Sitzungen und „Jetzt geöffnet“-Snapshots sind mit einem Schlüssel verschlüsselt, den nur deine Passphrase entsperren kann; die Server von TabMerger sehen nie die Passphrase oder den entpackten Schlüssel.",
+      "items": {
+        "0": {
+          "heading": "Erstmalige Einrichtung der Passphrase",
+          "checks": "Dass dich das Einschalten des Syncs auffordert, eine Verschlüsselungs-Passphrase zu wählen, bevor Daten dein Gerät verlassen.",
+          "steps": {
+            "0": "Warte bei einer frischen Anmeldung mit Cloud-Sync, bis die Aufforderung „Verschlüsselung einrichten“ von selbst erscheint (sie wird durch den ersten Sync-Versuch ausgelöst).",
+            "1": "Lies den Text der Aufforderung, gib dann eine neue Passphrase ein und wiederhole sie in „Passphrase bestätigen“.",
+            "2": "Klicke auf „Verschlüsselung einrichten“."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Dialog „Verschlüsselung einrichten“, der erklärt, dass die Passphrase nicht wiederhergestellt werden kann, mit den Feldern Neue Passphrase und Passphrase bestätigen sowie einer Schaltfläche Verschlüsselung einrichten",
+              "caption": "Erscheint direkt nach der Anmeldung mit Pro von selbst."
+            }
+          },
+          "good": {
+            "0": "Die Aufforderung lautet „Deine synchronisierten Gruppen- und Tab-Daten sind Ende-zu-Ende-verschlüsselt, mit einer Passphrase, die nur du kennst. Wähle jetzt eine – deine Daten lassen sich nicht wiederherstellen, wenn du sie vergisst, sie verlässt nie dein Gerät und TabMerger kann sie nicht für dich zurücksetzen.“",
+            "1": "Die Passphrase muss mindestens 8 Zeichen lang sein, darf keine Leerzeichen enthalten und muss mit ihrer Bestätigung übereinstimmen – Abweichungen oder eine zu kurze Passphrase zeigen einen klaren Inline-Fehler („Die Passphrase muss mindestens 8 Zeichen lang sein“ / „Die Passphrasen stimmen nicht überein“ / „Die Passphrase darf keine Leerzeichen enthalten“), statt stillschweigend zu scheitern.",
+            "2": "Bei Erfolg siehst du die Meldung „Verschlüsselung eingerichtet“.",
+            "3": "Nichts, was du bereits synchronisiert hast, geht verloren."
+          }
+        },
+        "1": {
+          "heading": "Auf einem zweiten Gerät entsperren",
+          "checks": "Dass ein zweites Gerät einmal deine Passphrase braucht, bevor es deine synchronisierten Daten lesen kann.",
+          "steps": {
+            "0": "Melde dich mit demselben Konto auf einem zweiten Gerät oder Browserprofil an.",
+            "1": "Gib bei der Aufforderung „Verschlüsselung entsperren“ deine Passphrase ein (einmal, es gibt kein Bestätigungsfeld) und klicke auf „Entsperren“ oder drücke Enter.",
+            "2": "Wiederhole es noch einmal, tippe aber absichtlich die falsche Passphrase."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der Dialog „Verschlüsselung entsperren“ auf einem zweiten Gerät, mit einem einzelnen Feld Passphrase und einer Schaltfläche Entsperren",
+              "caption": "Auf einem zweiten Gerät fragt die Erweiterung einmal nach deiner bestehenden Passphrase."
+            }
+          },
+          "good": {
+            "0": "Die Aufforderung zum Entsperren lautet „Gib deine Verschlüsselungs-Passphrase ein, um synchronisierte Daten auf diesem Gerät zu entsperren. Das ist pro Gerät nur einmal nötig – du wirst nicht erneut gefragt, solange du dich nicht abmeldest.“",
+            "1": "Die richtige Passphrase entsperrt und zeigt die Meldung „Verschlüsselung entsperrt“.",
+            "2": "Die falsche zeigt „Falsche Passphrase“ und ändert sonst nichts – keine Beschädigung, keine Sperre, du kannst es einfach erneut versuchen."
+          }
+        },
+        "2": {
+          "heading": "Wie „gesperrt“ aussieht und wie es nach einem Neustart entsperrt bleibt",
+          "checks": "Dass gesperrte Daten unlesbar bleiben, bis du sie entsperrst, und ein Gerät nach einem Neustart des Browsers entsperrt bleibt.",
+          "steps": {
+            "0": "Versuche, solange ein Gerät gesperrt ist (bevor du dort die Passphrase eingegeben hast), Cloud-Sync-Funktionen zu nutzen.",
+            "1": "Entsperre es, beende dann auf diesem Gerät deinen Browser vollständig und öffne ihn erneut (nicht nur das Popup)."
+          },
+          "good": {
+            "0": "Im gesperrten Zustand wirst du erneut nach der Passphrase gefragt, statt dass stillschweigend Klartext synchronisiert wird oder Daten verloren gehen.",
+            "1": "Einmal entsperrt, bleibt der Schlüssel im lokalen Speicher des Browsers auf diesem Gerät – ein vollständiger Browser-Neustart fragt nicht erneut; nur das Abmelden löscht ihn."
+          }
+        },
+        "3": {
+          "heading": "Passphrase vergessen – Verschlüsselung zurücksetzen",
+          "checks": "Dass das Zurücksetzen der Verschlüsselung vorher klar bestätigt werden muss und dich eine neue Passphrase festlegen lässt.",
+          "steps": {
+            "0": "Such in Einstellungen → Konto „Passphrase vergessen? Verschlüsselung zurücksetzen“ (nur sichtbar, wenn du die Einrichtung mindestens einmal abgeschlossen hast).",
+            "1": "Nutze dies NICHT bei Daten, die dir wichtig sind – es verwirft dauerhaft den Zugriff auf alles, was mit deiner aktuellen Passphrase verschlüsselt ist. Verwende ein Wegwerf-Testkonto, wenn du es ausprobieren willst.",
+            "2": "Wenn du es probierst, bestätige den Reset-Dialog und lege eine ganz neue Passphrase fest, wenn die Einrichtungsaufforderung wieder erscheint."
+          },
+          "examples": {
+            "0": {
+              "alt": "Die Bestätigungswarnung „Verschlüsselungs-Passphrase zurücksetzen“, dass alles, was mit der aktuellen Passphrase verschlüsselt ist, dauerhaft unzugänglich wird, mit den Schaltflächen Abbrechen und Passphrase zurücksetzen",
+              "caption": "Die Bestätigung vor einem Reset. Abbrechen ist sicher; Passphrase zurücksetzen ist nicht umkehrbar."
+            }
+          },
+          "good": {
+            "0": "Der Bestätigungsdialog ist klar, bevor etwas passiert.",
+            "1": "Nach der Bestätigung siehst du die Meldung „Verschlüsselung zurückgesetzt – richte eine neue Passphrase ein“, und die Einrichtungsaufforderung öffnet sich sofort wieder, damit du eine neue wählen und weiter synchronisieren kannst."
+          }
+        },
+        "4": {
+          "heading": "Auf dem Web-Dashboard prüfen",
+          "checks": "Dass die Website nach deiner Passphrase fragt, bevor sie deine synchronisierten Gruppen zeigt.",
+          "steps": {
+            "0": "Melde dich mit einem Konto, bei dem die Verschlüsselung eingerichtet ist, im Dashboard (preview.tabmerger.com) an.",
+            "1": "Gib bei Aufforderung deine Passphrase in der Inline-Entsperrkarte ein, bevor Gruppeninhalt erscheint."
+          },
+          "examples": {
+            "0": {
+              "alt": "Der gesperrte Bereich Tab-Gruppen des Web-Dashboards, mit einem Vorhängeschloss, „Deine Gruppen sind Ende-zu-Ende-verschlüsselt. Gib deine Passphrase ein, um sie hier anzuzeigen.“, einem Feld Passphrase und einer Schaltfläche Entsperren",
+              "caption": "Bis du deine Passphrase eingibst, zeigt das Dashboard dies statt deiner Gruppen."
+            }
+          },
+          "good": {
+            "0": "Das Dashboard fragt getrennt von der Erweiterung nach der Passphrase – das Entsperren dort ist ein eigener Schritt, einmal pro Tab, und nicht mit dem Entsperren der Erweiterung geteilt. Die Aufforderung lautet „Deine Gruppen sind Ende-zu-Ende-verschlüsselt. Gib deine Passphrase ein, um sie hier anzuzeigen.“",
+            "1": "Eine falsche Passphrase zeigt „Falsche Passphrase.“, ohne die Seite abstürzen zu lassen.",
+            "2": "Einmal entsperrt, werden deine echten Gruppennamen und Tabs normal angezeigt.",
+            "3": "Nach dem Zurücksetzen der Passphrase in der Erweiterung fragt das Dashboard nach der neuen Passphrase: beim nächsten Laden der Seite oder, in einem bereits geöffneten Dashboard, sobald du die Aktualisieren-Schaltfläche am Sync-Label drückst.",
+            "4": "Eine Gruppe oder Sitzung, die die aktuelle Passphrase nicht lesen kann (vor einem Reset gespeichert und noch nicht erneut hochgeladen), erscheint als „(gesperrt)“, ohne Inhalt preiszugeben. Das Element selbst sagt, warum und was zu tun ist, und es lässt sich nicht teilen oder wiederherstellen, bis es wieder lesbar ist."
+          }
+        },
+        "5": {
+          "heading": "Woran du erkennst, dass deine Daten wirklich verschlüsselt sind",
+          "checks": "Wie du selbst sehen kannst, dass deine Daten ohne deine Passphrase unlesbar sind.",
+          "steps": {
+            "0": "In der Oberfläche gibt es kein ausdrückliches Abzeichen „Verschlüsselt ✓“ – das sichtbare Signal ist indirekt.",
+            "1": "Beachte auf einem Gerät, das du noch nicht entsperrt hast (oder im Dashboard, bevor du dort die Passphrase eingibst), dass Gruppennamen/-inhalte erst nach dem Entsperren erscheinen."
+          },
+          "good": {
+            "0": "Das Fehlen lesbarer Inhalte vor dem Entsperren ist das Signal: Es wird kein Gruppenname und kein Tab angezeigt, und im Dashboard erscheint alles, was die aktuelle Passphrase nicht lesen kann, als „(gesperrt)“.",
+            "1": "Das Dashboard zeigt die Passphrase-Karte statt deiner Gruppen. Wäre Inhalt je ohne Entsperren lesbar, hieße das, er ist nicht wirklich verschlüsselt – melde das sofort, wenn du es siehst."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Jeglicher Datenverlust – eine Gruppe, ein Tab oder eine Sitzung, die verschwunden ist und es nicht sollte.",
+    "1": "Sync-Konflikte – eine Gruppe „{CONFLICT_COPY_SUFFIX}“ ist zu erwarten, wenn dieselbe Gruppe auf zwei Geräten bearbeitet wurde, bevor eines synchronisiert hat. Sag uns Bescheid, wenn eine Änderung stillschweigend verschwindet oder wenn eine Kopie erscheint, obwohl nur ein Gerät bearbeitet hat.",
+    "2": "Alles, was verwirrend oder unklar ist oder mehr Klicks gekostet hat, als es sollte.",
+    "3": "Alles, was langsam ist – das Öffnen des Popups, die Suche, Drag-and-drop oder die Synchronisierung dauern spürbar länger als erwartet."
+  },
+  "metaTitle": "Beta-Programm",
+  "metaDescription": "Werde Teil der TabMerger-Beta – installiere den privaten Beta-Build, erfahre, was zu testen ist, und melde Fehler direkt an das Team.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Teils Pro",
+    "somePro": "Teils Pro",
+    "areaPartial": "Einige Punkte hier erfordern ein Pro-Konto",
+    "itemPartial": "Ein Teil dieses Punkts erfordert ein Pro-Konto",
+    "areaAll": "Jeder Punkt hier erfordert ein Pro-Konto",
+    "itemAll": "Erfordert ein Pro-Konto"
+  },
+  "eyebrow": "Beta-Programm",
+  "title": "Hilf uns, TabMerger vor dem Release zu testen",
+  "lead": "Hol dir die nächste Version von TabMerger früh und sag uns, was kaputtgeht. Diese Seite behandelt den Beitritt, die Installation der privaten Beta, was zu testen ist und wie du Gefundenes meldest. KI-Funktionen sind in diesem Build ausgeblendet („demnächst“) und noch nicht Teil des Tests.",
+  "join": "Der Beta beitreten",
+  "onThisPage": "Auf dieser Seite",
+  "install": {
+    "heading": "1. Beitreten und installieren",
+    "groupTitle": "Tritt der Testergruppe bei.",
+    "groupBody": "Öffne <link>groups.google.com/g/tabmerger-beta-testers</link> und tritt bei. Der Beitritt erfolgt sofort, aber tritt mit demselben <strong>Google-Konto bei, mit dem du in Chrome angemeldet bist</strong> – sonst ist der private Eintrag für dich nicht sichtbar.",
+    "listingTitle": "Öffne den privaten Beta-Eintrag.",
+    "listingLink": "Den TabMerger-BETA-Eintrag öffnen",
+    "listingPending": "der Eintrag „TabMerger BETA“ im Chrome Web Store (Link folgt bald – die aktuelle URL findest du bis dahin in der Testergruppe).",
+    "listingNotFound": "Siehst du <strong>„Element nicht gefunden“</strong>, bist du wahrscheinlich gerade erst beigetreten – der Zugriff kann etwas dauern. Warte kurz und versuche es erneut, bevor du ein Problem vermutest.",
+    "installTitle": "Installiere sie.",
+    "installBody": "Klicke auf „Zu Chrome hinzufügen“. Die Beta wird als eigene Erweiterung („TabMerger BETA“) getrennt vom stabilen Eintrag „TabMerger“ installiert – du kannst beide parallel installiert lassen, ihre Daten sind völlig getrennt. Wir empfehlen, die stabile Version während des Testens zu deaktivieren, damit du nicht versehentlich in der falschen arbeitest.",
+    "signInTitle": "Melde dich über die Vorschau-Web-App an.",
+    "signInBody": "Beta-Builds synchronisieren mit <link>preview.tabmerger.com</link> – nicht mit der Haupt-Website von tabmerger. Melde dich dort an (über die Erweiterung oder direkt im Dashboard), um synchronisierte Gruppen und Sitzungen zu sehen.",
+    "browsersTitle": "In welchen Browsern kann ich testen?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc und Opera nutzen alle denselben TabMerger-BETA-Eintrag und dieselbe Google-Gruppe – es gibt keine separate Edge-Beta, such also nicht danach. Edge: Bestätige bei der Abfrage „Erweiterungen aus anderen Stores zulassen“. Opera: Installiere zuerst das Opera-Add-on „Install Chrome Extensions“ und nutze dann den Link oben. Wenn du außerdem das stabile TabMerger aus dem Edge-Add-ons-Store installiert hast, deaktiviere es beim Testen der Beta – es ist eine andere Erweiterung als diese. Safari wird nicht unterstützt.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox hat einen eigenen Beta-Build, der über einen direkten Link statt über den Chrome-Web-Store-Eintrag oben installiert wird. <link>Die Firefox-Beta installieren</link>. Firefox fragt, ob „TabMerger BETA“ hinzugefügt werden soll: Wähle Hinzufügen. Firefox sucht etwa einmal täglich selbst nach Updates; um sofort zu prüfen, öffne <code>about:addons</code>, klicke auf das Zahnrad und wähle „Nach Updates suchen“. Melde dich einmal in der Erweiterung an und erlaube die Datenberechtigung von Firefox (sie umfasst Anmeldung und Synchronisierung); danach meldet dich die Anmeldung auf dieser Website auch in der Erweiterung an. <strong>Jeder mit dem Installationslink oben kann sie installieren</strong> – bitte gib ihn nicht außerhalb der Testergruppe weiter.",
+    "firefoxSoon": "Eine Firefox-Beta folgt bald; bis dahin können Firefox-Nutzer der Beta mit einem der oben genannten unterstützten Chromium-Browser beitreten (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Notiere deine Version.",
+    "versionBody": "Öffne die Einstellungen von TabMerger und kopiere das Versionsabzeichen neben dem Titel „Einstellungen“ (z. B. <code>v3.1.0-beta.5</code>), oder öffne <code>chrome://extensions</code> und such „TabMerger BETA“. Melde in beiden Fällen diese echte Semver-Version – nicht die interne Versionsnummer des Chrome Web Store, die versetzt ist und nicht zu der passt, mit der wir Builds nachverfolgen."
+  },
+  "test": {
+    "heading": "2. Was testen",
+    "intro": "Gehe die Bereiche durch, die dazu passen, wie du TabMerger normalerweise nutzt. Jeder Punkt unten hat nummerierte Schritte, ein Beispiel, wie es aussehen soll, und woran du ein funktionierendes Ergebnis erkennst.",
+    "tickNote": "Hake jeden Schritt ab, während du vorgehst. Deine Häkchen werden nur in diesem Browser gespeichert, und jeder Bereich zeigt, wie weit du bist.",
+    "needPro": "Brauche ich Pro?",
+    "needProBody": "Die Bereiche sind von Kostenlos bis Pro sortiert. Alles ohne Markierung funktioniert kostenlos und ohne Konto. <full></full>: der ganze Punkt erfordert ein Pro-Konto (Sync, Verschlüsselung und das Erstellen von Freigabelinks sind Pro). <partial></partial>: das meiste des Punkts funktioniert kostenlos, und eine Zeile „Pro:“ unter dem Titel sagt, welcher Teil nicht. Pro kostet in dieser Beta nichts: Du zahlst mit einer Testkarte (siehe <link>Auf Pro upgraden</link>).",
+    "show": "Anzeigen",
+    "hide": "Ausblenden",
+    "proLine": "Pro: ",
+    "checksLine": "Das wird geprüft: ",
+    "steps": "Schritte",
+    "reportLine": "Melde es, wenn: ",
+    "testCheckout": "⚠ Dies ist ein Test-Checkout.",
+    "testCheckoutBody": " Gib niemals eine echte Karte ein. Es wird kein echtes Geld abgebucht, und eine echte Karte funktioniert hier ohnehin nicht.",
+    "testCardsFooter": "Bei jeder Karte: ein Ablaufdatum in der Zukunft (z. B. <code>12/34</code>), ein beliebiger dreistelliger CVC (z. B. <code>123</code>) und beliebige Angaben für Name, Postleitzahl und andere Felder. Weitere Karten: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "Worüber wir uns besonders freuen",
+  "knownIssues": {
+    "heading": "3. Bekannte Probleme",
+    "intro": "Diese kennen wir bereits, du musst sie also nicht melden. Die Liste wird mit jedem Beta-Release aktualisiert; wenn etwas hier für dich behoben ist oder sich anders verhält als beschrieben, solltest du das melden.",
+    "meanwhile": "Bis dahin:"
+  },
+  "report": {
+    "heading": "4. Fehler melden",
+    "discussions": "Fehler und Ideen gehören in unsere öffentlichen GitHub Discussions – <link>github.com/{repo}/discussions</link>. Schau dort zuerst nach – vielleicht hat jemand dasselbe schon gemeldet.",
+    "public": "<strong>Discussions sind öffentlich.</strong> Füge keine privaten URLs, Tab-Titel oder Screenshots mit persönlichen Informationen ein – verwische oder beschneide sie vorher. Zum Posten brauchst du ein (kostenloses) GitHub-Konto.",
+    "bugButton": "Fehler auf GitHub melden",
+    "ideaButton": "Idee auf GitHub teilen",
+    "noGithub": "Kein GitHub-Konto? Nutze das Kontaktformular.",
+    "template": "Beide Links tragen diese Vorlage in den Text der Discussion ein – fülle sie vor dem Posten aus, das erspart uns eine Runde Rückfragen:"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "notFoundQ": "Ich sehe „Element nicht gefunden“",
+    "notFoundA": "Stelle sicher, dass du der Google-Gruppe mit demselben Google-Konto beigetreten bist, mit dem du in Chrome angemeldet bist. Der Zugriff kann nach dem Beitritt etwas dauern – warte kurz und versuche es erneut, bevor du ein Problem vermutest.",
+    "stableQ": "Kann ich die stabile Version installiert lassen?",
+    "stableA": "Ja – die Beta („TabMerger BETA“) ist eine eigene Erweiterung, getrennt von der stabilen („TabMerger“), mit völlig getrennten Daten. Du kannst beide betreiben, wir empfehlen aber, die stabile Version beim Testen zu deaktivieren, damit du nicht durcheinanderkommst, welche du gerade nutzt.",
+    "chargedQ": "Wird mir etwas berechnet, wenn ich auf Pro upgrade?",
+    "chargedA": "Nein – das Upgrade in der Beta nutzt den Testmodus von Stripe. Nutze eine <link>Stripe-Testkarte</link> (siehe Abschnitt „Auf Pro upgraden“ oben) – keine echte Karte funktioniert hier, und es fließt in keinem Fall echtes Geld.",
+    "syncQ": "Wohin werden meine Daten synchronisiert?",
+    "syncA": "Beta-Builds synchronisieren mit der Vorschau-Web-App unter preview.tabmerger.com, nicht mit der Haupt-Website von tabmerger. Melde dich dort an, um deine synchronisierten Gruppen, Sitzungen und Freigaben zu sehen.",
+    "issuesQ": "Wo sehe ich bekannte Probleme?",
+    "issuesA": "Sieh im <link>Discussions-Q&A</link> des Repos nach – dort liegen die Beta-Fehlermeldungen.",
+    "leaveQ": "Wie verlasse ich die Beta?",
+    "leaveA": "Verlasse die <link>Google-Gruppe</link> und deinstalliere die Erweiterung „TabMerger BETA“. Deine stabile Installation, falls du eine behalten hast, bleibt unberührt."
+  },
+  "interactive": {
+    "good": "So sieht es richtig aus",
+    "allDoneLabel": "Alle Prüfungen erledigt",
+    "progressLabel": "{done} von {total} Prüfungen erledigt",
+    "allDone": "✓ Alles erledigt",
+    "progress": "{done}/{total}",
+    "clear": "Meine Häkchen löschen ({count})",
+    "firefoxAutoStart": "Die Firefox-Beta sollte von selbst starten: Firefox fragt, ob sie hinzugefügt werden soll, andere Browser laden die Datei herunter. Passiert nichts, nutze in diesem Schritt „Die Firefox-Beta installieren“."
+  }
+}

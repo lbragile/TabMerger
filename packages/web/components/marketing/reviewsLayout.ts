@@ -11,7 +11,6 @@
 
 /** The section's `<h2>`. The carousel region is labelled by it. */
 export const REVIEWS_HEADING_ID = 'reviews-heading'
-export const REVIEWS_HEADING_TEXT = 'What people are saying'
 
 export const REVIEWS_SECTION_CLASS = 'py-16 sm:py-[72px] px-6 sm:px-11 border-b border-border overflow-hidden'
 export const REVIEWS_CONTAINER_CLASS = 'container max-w-[960px]'
@@ -29,7 +28,6 @@ export const STAT_LABEL_CLASS = 'text-xs font-semibold uppercase tracking-wider 
 
 /** The per-store tiles under the headline. BREAKDOWN_CLASS is the gap above the carousel. */
 export const BREAKDOWN_CLASS = 'mb-8 sm:mb-11'
-export const BREAKDOWN_CAPTION_TEXT = 'By store'
 export const BREAKDOWN_CAPTION_CLASS = 'mb-3 text-center text-[0.6875rem] font-semibold uppercase tracking-wider text-text3'
 export const TILES_GRID_CLASS = 'mx-auto grid grid-cols-1 gap-3'
 export const TILES_THREE_COLUMNS_CLASS = 'sm:grid-cols-3'

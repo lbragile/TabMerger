@@ -1,0 +1,21 @@
+{
+  "features": "Features",
+  "pricing": "Pricing",
+  "changelog": "Changelog",
+  "faq": "FAQ",
+  "dashboard": "Dashboard",
+  "account": "Account",
+  "accountSettings": "Account settings",
+  "signIn": "Sign in",
+  "signUp": "Sign up",
+  "getStarted": "Get started",
+  "signOut": "Sign out",
+  "openMenu": "Open menu",
+  "closeMenu": "Close menu",
+  "accountMenu": "Account menu",
+  "home": "TabMerger home",
+  "github": "GitHub",
+  "githubRepo": "TabMerger on GitHub",
+  "githubRepoWithStars": "TabMerger on GitHub, {count, plural, one {# star} other {# stars}}",
+  "toggleTheme": "Toggle theme"
+}

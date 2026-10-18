@@ -1,0 +1,21 @@
+{
+  "copyToGroup": "Copy to group",
+  "moveToGroup": "Move to group",
+  "star": "Star",
+  "unstar": "Unstar",
+  "share": "Share",
+  "shareRequiresPro": "Sharing requires Pro",
+  "close": "Close",
+  "delete": "Delete",
+  "cancel": "Cancel selection",
+  "linkCopied": "Link copied to clipboard",
+  "shareFailed": "Failed to share",
+  "selected_tab_one": "{{count}} tab selected",
+  "selected_tab_other": "{{count}} tabs selected",
+  "selected_window_one": "{{count}} window selected",
+  "selected_window_other": "{{count}} windows selected",
+  "selected_group_one": "{{count}} group selected",
+  "selected_group_other": "{{count}} groups selected",
+  "cleared": "Selection cleared.",
+  "sentence": "{{text}}."
+}

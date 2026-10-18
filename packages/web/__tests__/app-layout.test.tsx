@@ -46,12 +46,20 @@ vi.mock('@/lib/supabase/client', () => ({
   }),
 }))
 
-import AppLayout from '@/app/(app)/layout'
+import AppLayout from '@/app/[locale]/(app)/layout'
 
 describe('AppLayout', () => {
   it('renders the theme toggle button next to the account menu', async () => {
     render(await AppLayout({ children: <div>content</div> }))
     expect(screen.getByRole('button', { name: 'Toggle theme' })).toBeInTheDocument()
+  })
+
+  it('renders the language button just before the theme toggle', async () => {
+    render(await AppLayout({ children: <div>content</div> }))
+    const language = await screen.findByRole('button', { name: 'Language: English (EN)' })
+    expect(language.nextElementSibling).toBe(screen.getByRole('button', { name: 'Toggle theme' }))
+    // The code is hidden on phones, where the header row is tight.
+    expect(language.querySelector('span')).toHaveClass('hidden', 'sm:inline')
   })
 
   it('renders children and nav links', async () => {
@@ -87,7 +95,7 @@ describe('AppLayout — free account', () => {
       }),
     }))
     vi.resetModules()
-    const { default: FreshAppLayout } = await import('@/app/(app)/layout')
+    const { default: FreshAppLayout } = await import('@/app/[locale]/(app)/layout')
     render(await FreshAppLayout({ children: <div>content</div> }))
     expect(screen.queryByRole('button', { name: 'Refresh sync status' })).not.toBeInTheDocument()
   })

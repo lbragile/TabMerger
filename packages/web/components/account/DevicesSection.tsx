@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Laptop, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useLocale, useTranslations } from 'next-intl'
 
 /** device_sessions row shape as returned by Supabase — DeviceSession (shared) plus its primary key. */
 type DeviceRow = DeviceSession & { id: string }
@@ -48,20 +49,24 @@ function snapshotCounts(snapshot: unknown): { windows: number; tabs: number } {
 }
 
 /** Formats an ISO timestamp as "3 minutes ago" / "2 days ago", falling back to a date for anything over a month old. */
-function formatRelativeTime(iso: string): string {
+function formatRelativeTime(iso: string, t: DevicesT, locale: string): string {
   const diffMs = Date.now() - new Date(iso).getTime()
   const diffMin = Math.round(diffMs / 60000)
-  if (diffMin < 1) return 'just now'
-  if (diffMin < 60) return `${diffMin}m ago`
+  if (diffMin < 1) return t('justNow')
+  if (diffMin < 60) return t('minutesAgo', { count: diffMin })
   const diffHr = Math.round(diffMin / 60)
-  if (diffHr < 24) return `${diffHr}h ago`
+  if (diffHr < 24) return t('hoursAgo', { count: diffHr })
   const diffDay = Math.round(diffHr / 24)
-  if (diffDay < 30) return `${diffDay}d ago`
-  return new Date(iso).toLocaleDateString()
+  if (diffDay < 30) return t('daysAgo', { count: diffDay })
+  return new Date(iso).toLocaleDateString(locale)
 }
+
+type DevicesT = ReturnType<typeof useTranslations<'account.devices'>>
 
 export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) {
   const { dataKey, recheck } = useEncryptionKey()
+  const t = useTranslations('account.devices')
+  const locale = useLocale()
   const [devices, setDevices] = useState(initialDevices)
   /** Ids of devices whose snapshot the current key could not decrypt; their row says why. */
   const [unreadableIds, setUnreadableIds] = useState<ReadonlySet<string>>(new Set())
@@ -141,11 +146,11 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
       .eq('user_id', userId)
 
     if (error) {
-      toast.error('Failed to rename device')
+      toast.error(t('renameFailed'))
       setDevices((prev) => prev.map((d) => (d.id === device.id ? device : d)))
       return
     }
-    toast.success('Device renamed')
+    toast.success(t('renamed'))
   }
 
   async function confirmDelete() {
@@ -162,11 +167,11 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
       .eq('user_id', userId)
 
     if (error) {
-      toast.error('Failed to remove device')
+      toast.error(t('removeFailed'))
       setDevices(prevDevices)
       return
     }
-    toast.success('Device removed')
+    toast.success(t('removed'))
   }
 
   async function confirmBulkDelete() {
@@ -179,17 +184,17 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
     const { error } = await supabase.from('device_sessions').delete().in('id', ids).eq('user_id', userId)
 
     if (error) {
-      toast.error('Failed to remove devices')
+      toast.error(t('removeManyFailed'))
       setDevices(prevDevices)
       return
     }
-    toast.success(`${ids.length} device${ids.length === 1 ? '' : 's'} removed`)
+    toast.success(t('removedMany', { count: ids.length }))
   }
 
   return (
     <>
       {devices.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No devices yet.</p>
+        <p className="text-sm text-muted-foreground">{t('empty')}</p>
       ) : (
         <div className="flex flex-col gap-3">
           {selectedIds.length > 0 && (
@@ -199,12 +204,12 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
                   type="checkbox"
                   checked={selectedIds.length === devices.length}
                   onChange={toggleSelectAll}
-                  aria-label="Select all devices"
+                  aria-label={t('selectAll')}
                 />
-                {selectedIds.length} selected
+                {t('selectedCount', { count: selectedIds.length })}
               </label>
               <Button variant="destructive" size="sm" onClick={() => setBulkDeleteOpen(true)}>
-                Remove {selectedIds.length} device{selectedIds.length === 1 ? '' : 's'}
+                {t('removeSelected', { count: selectedIds.length })}
               </Button>
             </div>
           )}
@@ -215,7 +220,7 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
                 type="checkbox"
                 checked={selectedIds.includes(device.id)}
                 onChange={() => toggleSelected(device.id)}
-                aria-label={`Select ${device.device_name}`}
+                aria-label={t('selectDevice', { name: device.device_name })}
               />
               <Laptop className="h-4 w-4 shrink-0 text-primary" />
               <div className="flex-1 min-w-0 -ml-1.5">
@@ -235,31 +240,31 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
                   <p className="text-sm font-medium truncate">{device.device_name}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Active {formatRelativeTime(device.last_active)}
+                  {t('active', { time: formatRelativeTime(device.last_active, t, locale) })}
                   {(() => {
                     const { windows, tabs } = snapshotCounts(device.now_open_snapshot)
-                    return windows > 0 ? ` · ${windows} window${windows === 1 ? '' : 's'} · ${tabs} tab${tabs === 1 ? '' : 's'}` : ''
+                    return windows > 0 ? t('snapshotCounts', { windows, tabs }) : ''
                   })()}
                 </p>
                 {dataKey && unreadableIds.has(device.id) && <LockedItemNote kind="device" className="mt-1" />}
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label="Device options">
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={t('options')}>
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => startRename(device)} className="gap-2">
                     <Pencil className="h-3.5 w-3.5" />
-                    Rename
+                    {t('rename')}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive"
                     onClick={() => setDeleteTarget(device)}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                    Remove
+                    {t('remove')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -272,19 +277,19 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove device?</DialogTitle>
+            <DialogTitle>{t('removeTitle')}</DialogTitle>
             <DialogDescription>
               {deleteTarget
-                ? `"${deleteTarget.device_name}" will no longer sync tab data. This can't be undone.`
+                ? t('removeBody', { name: deleteTarget.device_name })
                 : ''}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" size="sm" onClick={() => setDeleteTarget(null)}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button variant="destructive" size="sm" onClick={confirmDelete}>
-              Remove
+              {t('remove')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -293,17 +298,17 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
       <Dialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove {selectedIds.length} devices?</DialogTitle>
+            <DialogTitle>{t('removeManyTitle', { count: selectedIds.length })}</DialogTitle>
             <DialogDescription>
-              These devices will no longer sync tab data. This can't be undone.
+              {t('removeManyBody')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" size="sm" onClick={() => setBulkDeleteOpen(false)}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button variant="destructive" size="sm" onClick={confirmBulkDelete}>
-              Remove
+              {t('remove')}
             </Button>
           </DialogFooter>
         </DialogContent>

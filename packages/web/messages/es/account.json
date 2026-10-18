@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "ahora mismo",
+    "minutesAgo": "hace {count} min",
+    "hoursAgo": "hace {count} h",
+    "daysAgo": "hace {count} d",
+    "renameFailed": "No se pudo renombrar el dispositivo",
+    "renamed": "Dispositivo renombrado",
+    "removeFailed": "No se pudo eliminar el dispositivo",
+    "removed": "Dispositivo eliminado",
+    "removeManyFailed": "No se pudieron eliminar los dispositivos",
+    "removedMany": "{count, plural, one {{count} dispositivo eliminado} many {{count} de dispositivos eliminados} other {{count} dispositivos eliminados}}",
+    "empty": "Aún no hay dispositivos.",
+    "selectAll": "Seleccionar todos los dispositivos",
+    "selectedCount": "{count} seleccionados",
+    "removeSelected": "{count, plural, one {Eliminar {count} dispositivo} many {Eliminar {count} de dispositivos} other {Eliminar {count} dispositivos}}",
+    "selectDevice": "Seleccionar {name}",
+    "active": "Activo {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} ventana} many {{windows} de ventanas} other {{windows} ventanas}} · {tabs, plural, one {{tabs} pestaña} many {{tabs} de pestañas} other {{tabs} pestañas}}",
+    "options": "Opciones del dispositivo",
+    "rename": "Renombrar",
+    "remove": "Eliminar",
+    "removeTitle": "¿Eliminar dispositivo?",
+    "removeBody": "\"{name}\" dejará de sincronizar datos de pestañas. Esta acción no se puede deshacer.",
+    "removeManyTitle": "¿Eliminar {count} dispositivos?",
+    "removeManyBody": "Estos dispositivos dejarán de sincronizar datos de pestañas. Esta acción no se puede deshacer.",
+    "cancel": "Cancelar"
+  },
+  "metaTitle": "Cuenta",
+  "title": "Ajustes de la cuenta",
+  "lead": "Gestiona tu cuenta y tu suscripción.",
+  "stats": {
+    "groups": "Grupos sincronizados",
+    "tabs": "Pestañas guardadas",
+    "sessions": "Sesiones y copias",
+    "aiCredits": "Créditos de IA restantes"
+  },
+  "profile": {
+    "title": "Perfil",
+    "description": "La información de tu cuenta.",
+    "email": "Correo electrónico",
+    "memberSince": "Miembro desde"
+  },
+  "signOutAll": {
+    "title": "Cerrar sesión en todos los dispositivos",
+    "description": "Esto revocará todas las sesiones activas.",
+    "button": "Cerrar sesión"
+  },
+  "subscription": {
+    "title": "Suscripción",
+    "description": "Gestiona tu plan y la facturación.",
+    "manageBilling": "Gestionar facturación",
+    "upgrade": "Mejorar plan",
+    "cancelNote": "Puedes cancelar en cualquier momento desde <strong>Gestionar facturación</strong>. Conservas el acceso hasta el final del periodo de facturación actual."
+  },
+  "devicesCard": {
+    "title": "Dispositivos",
+    "description": "Dispositivos que sincronizan tus grupos y pestañas. Solo Pro y Pro AI."
+  },
+  "password": {
+    "tooShort": "La contraseña debe tener al menos 8 caracteres.",
+    "updated": "Contraseña actualizada",
+    "set": "Contraseña establecida: ahora también puedes iniciar sesión con correo y contraseña",
+    "change": "Cambiar contraseña",
+    "setLabel": "Establecer una contraseña",
+    "placeholder": "••••••••••",
+    "save": "Guardar"
+  },
+  "credits": {
+    "failed": "No se pudo iniciar el pago",
+    "getMore": "Obtener más"
+  }
+}

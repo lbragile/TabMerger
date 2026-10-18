@@ -8,6 +8,7 @@
  * opened real browser tabs carries a `LiveTabsEffect` (lib/undoLiveTabs.ts) that undo/redo runs
  * after the restore. See docs/undo-redo-spec.md.
  */
+import { t } from '@/lib/i18n';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useUIStore } from '@/stores/uiStore';
 import { updateGroupsState } from '@/lib/localDb';
@@ -90,7 +91,7 @@ async function moveHistoryCursor(qc: QueryClient, direction: 'undo' | 'redo', si
   }
   if (conflict) {
     resolveInverse(null);
-    toast.info('Your groups changed elsewhere, so nothing was undone. Try again.', { id: 'undo-conflict' });
+    toast.info(t('errors.undoConflict'), { id: 'undo-conflict' });
     return;
   }
   if (!entry || !base) {

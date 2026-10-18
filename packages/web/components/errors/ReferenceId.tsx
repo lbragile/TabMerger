@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Check, Copy } from 'lucide-react'
-import { REFERENCE_ID_HINT } from './copy'
+import { useTranslations } from 'next-intl'
 
 type CopyState = 'idle' | 'copied' | 'failed'
 
@@ -13,6 +13,7 @@ type CopyState = 'idle' | 'copied' | 'failed'
  */
 export function ReferenceId({ digest }: { digest: string }) {
   const [state, setState] = useState<CopyState>('idle')
+  const t = useTranslations('errors')
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   // Digests are short hashes; the cap only guards the layout against anything unexpected.
   const id = digest.slice(0, 64)
@@ -33,14 +34,14 @@ export function ReferenceId({ digest }: { digest: string }) {
   return (
     <div className="mt-6 flex w-full flex-col items-center gap-2">
       <div className="flex max-w-full items-center border border-border bg-surface2 text-[0.8125rem]">
-        <span className="shrink-0 border-r border-border px-2.5 py-1.5 text-text3">Reference ID</span>
+        <span className="shrink-0 border-r border-border px-2.5 py-1.5 text-text3">{t('referenceId')}</span>
         <code className="min-w-0 truncate px-2.5 py-1.5 font-mono text-foreground" data-testid="error-reference-id">
           {id}
         </code>
         <button
           type="button"
           onClick={handleCopy}
-          aria-label="Copy reference ID"
+          aria-label={t('copyReferenceId')}
           className="grid h-8 w-8 shrink-0 place-items-center border-l border-border text-text2 transition-colors hover:bg-surface3 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         >
           {state === 'copied' ? (
@@ -50,9 +51,9 @@ export function ReferenceId({ digest }: { digest: string }) {
           )}
         </button>
       </div>
-      <p className="max-w-[40ch] text-xs text-text3">{REFERENCE_ID_HINT}</p>
+      <p className="max-w-[40ch] text-xs text-text3">{t('referenceIdHint')}</p>
       <p role="status" aria-live="polite" className="sr-only">
-        {state === 'copied' ? 'Reference ID copied' : state === 'failed' ? 'Copy failed. Select the ID to copy it.' : ''}
+        {state === 'copied' ? t('referenceIdCopied') : state === 'failed' ? t('referenceIdCopyFailed') : ''}
       </p>
     </div>
   )

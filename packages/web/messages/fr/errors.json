@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Erreur 404 · Page introuvable",
+    "title": "Cet onglet s’est égaré",
+    "description": "Nous avons fouillé tous les groupes sans trouver cette page. Elle a peut-être été déplacée, fermée, ou n’a jamais existé. Revenons sur la bonne voie.",
+    "documentTitle": "Page introuvable",
+    "tabLabel": "Page manquante"
+  },
+  "serverError": {
+    "eyebrow": "Erreur 500 · Une erreur s’est produite",
+    "title": "Cet onglet a planté",
+    "description": "Un problème est survenu de notre côté au chargement de cette page. Vos onglets et groupes dans l’extension ne sont pas touchés. Réessayez dans un instant.",
+    "documentTitle": "Une erreur s’est produite",
+    "tabLabel": "Ne répond pas"
+  },
+  "links": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "faq": "FAQ",
+    "dashboard": "Tableau de bord",
+    "account": "Compte",
+    "contactSupport": "Contacter l’assistance"
+  },
+  "helpfulLinks": "Liens utiles",
+  "tryThese": "Ou essayez l’un de ceux-ci",
+  "illustrationTabResearch": "Recherche",
+  "illustrationTabDocs": "Docs",
+  "tryAgain": "Réessayer",
+  "backToHome": "Retour à l’accueil",
+  "backToDashboard": "Retour au tableau de bord",
+  "devDetails": "Détails de l’erreur (développement uniquement)",
+  "referenceId": "ID de référence",
+  "copyReferenceId": "Copier l’ID de référence",
+  "referenceIdHint": "Indiquez cet ID si vous contactez l’assistance, pour que nous retrouvions le problème.",
+  "referenceIdCopied": "ID de référence copié",
+  "referenceIdCopyFailed": "Échec de la copie. Sélectionnez l’ID pour le copier.",
+  "titleWithBrand": "{title} | TabMerger"
+}

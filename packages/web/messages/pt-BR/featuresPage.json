@@ -1,0 +1,81 @@
+{
+  "metaTitle": "Recursos",
+  "metaDescription": "Explore tudo o que o TabMerger pode fazer — do agrupamento inteligente de abas à organização com IA.",
+  "title": "Recursos feitos para o foco",
+  "lead": "Tudo de que você precisa para assumir o controle do seu navegador — do básico gratuito aos superpoderes do Pro AI.",
+  "addToChrome": "Adicionar ao Chrome — é grátis",
+  "seePricing": "Ver preços",
+  "badges": {
+    "core": "Essencial",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Gerenciamento de abas poderoso",
+    "description": "A base do TabMerger: organização de abas rápida e intuitiva que serve a qualquer fluxo de trabalho.",
+    "groups": {
+      "title": "Grupos nomeados e coloridos",
+      "description": "Crie grupos com nomes e cores personalizados. Separe trabalho, pesquisa, lazer e mais num piscar de olhos."
+    },
+    "search": {
+      "title": "Busca em texto completo",
+      "description": "Pesquise na hora por todos os títulos e URLs das suas abas. Os resultados correspondem ao texto exatamente como você digita (qualquer caixa), com as melhores correspondências primeiro."
+    },
+    "dnd": {
+      "title": "Reordenação por arrastar e soltar",
+      "description": "Reorganize abas dentro dos grupos e reordene os próprios grupos com interações suaves de arrastar e soltar."
+    },
+    "shortcuts": {
+      "title": "Atalhos de teclado",
+      "description": "Salve a aba atual, as abas à esquerda ou à direita, ou todas as outras abas sem abrir o popup. Dentro dele, abra a busca com Ctrl/Cmd+K e mova abas, janelas e grupos só com o teclado."
+    },
+    "importExport": {
+      "title": "Importar e exportar",
+      "description": "Exporte suas coleções de abas como JSON para compartilhar com colegas ou fazer backup do seu espaço de trabalho. Importe-as em qualquer dispositivo."
+    },
+    "memory": {
+      "title": "Economia de memória",
+      "description": "Suspenda abas inativas para liberar RAM. Veja exatamente quanta memória o TabMerger está economizando em tempo real."
+    }
+  },
+  "pro": {
+    "title": "Sincronização e sessões",
+    "description": "Continue exatamente de onde parou, em qualquer dispositivo, a qualquer hora.",
+    "cloudSync": {
+      "title": "Sincronização na nuvem",
+      "description": "Seus grupos são salvos e sincronizados automaticamente em todos os navegadores em que você entra. Em tempo real, sem exportação manual."
+    },
+    "sessions": {
+      "title": "Salvar e restaurar sessões",
+      "description": "Faça um instantâneo dos seus grupos atuais como uma sessão com nome e restaure-os na hora. Os planos gratuitos salvam até {count} sessões neste navegador; o Pro sincroniza sessões ilimitadas em todos os dispositivos."
+    },
+    "autoBackups": {
+      "title": "Backups automáticos",
+      "description": "O TabMerger salva um instantâneo criptografado dos seus grupos no intervalo que você escolher, de toda hora a uma vez por semana. Os {count} mais recentes são mantidos, e você pode recuperar qualquer um nas Configurações. Seu painel também os lista, onde você pode ver dentro de um ou baixá-lo. Você também pode salvar cada um como arquivo no seu computador; essa cópia não é criptografada."
+    },
+    "support": {
+      "title": "Suporte prioritário",
+      "description": "Assinantes Pro têm suporte acelerado, com resposta garantida em até 24 horas."
+    }
+  },
+  "proAi": {
+    "title": "Organização com IA",
+    "description": "Deixe o Claude analisar suas abas e dar sugestões inteligentes para você se concentrar em pensar, não em arquivar.",
+    "autoGrouping": {
+      "title": "Agrupamento automático",
+      "description": "Abra uma bagunça de abas e clique em um botão. A IA as agrupa de forma lógica por assunto, domínio e intenção."
+    },
+    "names": {
+      "title": "Nomes de grupos inteligentes",
+      "description": "A IA sugere nomes concisos e descritivos para seus grupos. Um clique para aceitar, ou digite o seu."
+    },
+    "summaries": {
+      "title": "Resumos de abas",
+      "description": "Passe o mouse sobre qualquer aba para ver um resumo de uma frase feito pela IA sobre o que a página trata — sem abri-la."
+    },
+    "sessionSuggestions": {
+      "title": "Sugestões de sessões",
+      "description": "A IA analisa seus padrões de navegação e sugere como estruturar sessões para a máxima produtividade."
+    }
+  }
+}

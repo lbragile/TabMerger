@@ -946,13 +946,15 @@ jobs:
       - name: Build extension (Chrome MV3)
         run: pnpm --filter @tabmerger/extension build
 
+      # Uncompressed size of the unpacked build. 3.5 MB since the seven bundled UI languages
+      # (about 2.95 MB at the time; the catalogs are plain text, so the store zip grows far less).
       - name: Check bundle size budget
         run: |
           SIZE=$(du -sb packages/extension/.output/chrome-mv3 | cut -f1)
-          BUDGET=2097152
-          echo "Bundle size: ${SIZE} bytes (budget: ${BUDGET} bytes / 2 MB)"
+          BUDGET=3670016
+          echo "Bundle size: ${SIZE} bytes (budget: ${BUDGET} bytes / 3.5 MB)"
           if [ "$SIZE" -gt "$BUDGET" ]; then
-            echo "::error::Bundle too large: ${SIZE} bytes exceeds 2 MB budget (${BUDGET} bytes)"
+            echo "::error::Bundle too large: ${SIZE} bytes exceeds 3.5 MB budget (${BUDGET} bytes)"
             exit 1
           fi
           echo "Bundle OK"

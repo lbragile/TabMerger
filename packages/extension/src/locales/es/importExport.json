@@ -1,0 +1,27 @@
+{
+  "title": "Importar / Exportar",
+  "description": "Gestiona tus datos de TabMerger",
+  "tabExport": "Exportar",
+  "tabImport": "Importar",
+  "exportIntro": "Exporta todos tus grupos como un archivo JSON. Podrás volver a importarlo más tarde.",
+  "downloadJson": "Descargar JSON",
+  "jsonHeading": "JSON de TabMerger",
+  "jsonIntro": "Importa desde un archivo JSON exportado antes. Reemplaza los grupos actuales.",
+  "chooseJson": "Elegir archivo JSON",
+  "bookmarksHeading": "Marcadores de Chrome",
+  "bookmarksIntro": "Importa desde una exportación HTML de marcadores de Chrome. Cada carpeta se convierte en un grupo.",
+  "chooseBookmarks": "Elegir archivo HTML de marcadores",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Importa desde una exportación de texto plano de OneTab. Cada bloque separado por una línea en blanco se convierte en un grupo.",
+  "chooseOneTab": "Elegir archivo TXT de OneTab",
+  "toast": {
+    "exported": "Grupos exportados correctamente",
+    "imported": "Grupos importados correctamente",
+    "imported_skipped": "Grupos importados correctamente, {{skipped}} omitidos",
+    "importedCounts": "Importados {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Importados {{groups}}, {{tabs}}, {{skipped}} omitidos",
+    "invalidJson": "Archivo JSON no válido",
+    "noBookmarks": "No se encontraron marcadores",
+    "noTabs": "No se encontraron pestañas"
+  }
+}

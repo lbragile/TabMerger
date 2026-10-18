@@ -115,9 +115,11 @@ Whenever you create or change the Chrome extension, create and maintain `package
 **Framework:** Next.js 16 App Router + React 19 + TypeScript (`proxy.ts` replaces `middleware.ts`).
 
 **Route groups:**
-- `app/(marketing)/` — landing, features, pricing (public)
-- `app/(app)/` — dashboard, account (auth-required; protected by middleware)
-- `app/api/` — webhooks/stripe, auth/callback, checkout, ai/* routes
+- `app/[locale]/(marketing)/` — landing, features, pricing (public)
+- `app/[locale]/(app)/` — dashboard, account (auth-required; protected by `proxy.ts`)
+- `app/api/` — webhooks/stripe, auth/callback, checkout, ai/* routes (not localized)
+
+**i18n:** next-intl with locale-prefixed URLs (`as-needed`: English unprefixed, `/es/pricing` etc.). UI copy lives in `messages/<locale>/*.json`; JSX string literals fail lint. The extension uses react-i18next with catalogs in `src/locales/<lng>/`. See `docs/I18N.md`.
 
 **Critical patterns:**
 - `cookies()` and `headers()` are async (Next.js 15+) — always `await` them

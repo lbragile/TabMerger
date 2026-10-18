@@ -1,0 +1,79 @@
+{
+  "instructions": "Press Space to pick up, arrow keys to choose a place (Left and Right switch between windows and groups), Space to drop, Escape to cancel. Shift+Space selects a range and {{modifier}}+A selects all, to move several at once.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "tab",
+    "window": "window",
+    "group": "group",
+    "item": "item"
+  },
+  "typeStart": {
+    "tab": "Tab",
+    "window": "Window",
+    "group": "Group",
+    "item": "Item"
+  },
+  "untitledTab": "Untitled tab",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, starting with {{name}},",
+  "position": {
+    "tab": "position {{index}} of {{total}} in {{window}} of group {{group}}",
+    "window": "position {{index}} of {{total}} in group {{group}}",
+    "group": "position {{index}} of {{total}}"
+  },
+  "target": {
+    "newGroup": "a new group",
+    "newWindowAtEnd": "a new window at the end of group {{group}}",
+    "nowOpen": "Now Open, which opens them in a new browser window",
+    "groupAsWindow": "group {{group}}, as a new window"
+  },
+  "token": {
+    "dropped": "Dropped.",
+    "cancelled": "Cancelled."
+  },
+  "bail": {
+    "cancelled": "Movement cancelled.",
+    "nothingMoved": "Dropped; nothing moved.",
+    "returnedMany": "The {{items}} returned",
+    "returnedOne": "{{named}} returned",
+    "noop": "Dropped {{what}} back at {{position}}; nothing moved.",
+    "stale": "The groups changed during the drag, so nothing was moved. {{returned}} to {{position}}.",
+    "cancelledReturned": "Movement cancelled. {{returned}} to {{position}}.",
+    "rejected": "Can't drop there. {{returned}} to {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} was removed elsewhere.",
+  "removedElsewhere_other": "{{count}} were removed elsewhere.",
+  "stillSelected_one": "It's still selected.",
+  "stillSelected_other": "They're still selected.",
+  "dropped": "Dropped.",
+  "movedGroups": "Moved {{count}} groups to {{position}}, as one block.",
+  "movedGroup": "Moved group {{name}} to {{position}}.",
+  "partial": "{{count}} of {{total}}",
+  "at": "position {{index}} of {{total}}",
+  "startingAt": "starting at position {{index}} of {{total}}",
+  "whereTab": "{{window}} of group {{group}}, {{at}}",
+  "whereWindow": "group {{group}}, {{at}}",
+  "movedTo": "Moved {{items}} to {{where}}.",
+  "openTabsClosed": " The open tabs are closed.",
+  "groupHidden": " Group {{group}} is not shown.",
+  "openedNewWindow": "Opened {{items}} in a new browser window.",
+  "openedNowOpen": "Opened {{items}} in Now Open.",
+  "movedNewWindow": "Moved {{items}} to a new browser window.",
+  "movedWithinNowOpen": "Moved {{items}} within Now Open.",
+  "originalPosition": "Over its original position.",
+  "pickedUpType": "Picked up {{type}}.",
+  "pickedUpMany": "Picked up {{what}}.",
+  "pickedUpOne": "Picked up {{type}} {{name}}, {{position}}.",
+  "groupShown": "Group {{name}} is now shown.",
+  "copyHint": "Dropping into a saved group copies; the open tabs stay open.",
+  "notOver": "Not over a drop target.",
+  "over": "Over {{target}}.",
+  "cantDropOn": "Can't drop on {{target}}.",
+  "typeDropped": "{{type}} dropped.",
+  "cancelledReturnedType": "Movement cancelled; {{type}} returned to its position.",
+  "saveFailed": "Couldn't save the move; restored."
+}

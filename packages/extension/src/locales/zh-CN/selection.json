@@ -1,0 +1,18 @@
+{
+  "copyToGroup": "复制到分组",
+  "moveToGroup": "移动到分组",
+  "star": "加星标",
+  "unstar": "取消星标",
+  "share": "分享",
+  "shareRequiresPro": "分享需要 Pro",
+  "close": "关闭",
+  "delete": "删除",
+  "cancel": "取消选择",
+  "linkCopied": "链接已复制到剪贴板",
+  "shareFailed": "分享失败",
+  "selected_tab_other": "已选择 {{count}} 个标签页",
+  "selected_window_other": "已选择 {{count}} 个窗口",
+  "selected_group_other": "已选择 {{count}} 个分组",
+  "cleared": "已清除选择。",
+  "sentence": "{{text}}。"
+}

@@ -1,0 +1,53 @@
+{
+  "addGroup": {
+    "title": "新しいグループを作成",
+    "name": "名前",
+    "namePlaceholder": "グループ名",
+    "color": "色",
+    "cancel": "キャンセル",
+    "create": "作成"
+  },
+  "dedup": {
+    "title": "重複を削除",
+    "description_other": "{{count}}個の重複タブが削除されます。",
+    "cancel": "キャンセル",
+    "confirm_other": "重複を削除（{{count}}個）"
+  },
+  "staleGroups": {
+    "title": "古いグループを確認",
+    "description_other": "{{count}}個のグループがしばらく使われていません。展開してプレビューするか、直接アーカイブできます。",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "非表示",
+    "preview": "プレビュー",
+    "archive": "アーカイブ",
+    "empty": "このグループは空です。",
+    "close": "閉じる"
+  },
+  "staleTabs": {
+    "title": "古いタブ",
+    "description_other": "{{count}}個のタブがしばらく使われていません。",
+    "close": "閉じる",
+    "removeAll_other": "{{count}}個のタブを削除"
+  },
+  "saveSession": {
+    "title": "セッションを保存",
+    "name": "セッション名",
+    "namePlaceholder": "例: 仕事のリサーチ、週末の読書",
+    "nameRequired": "セッション名は必須です",
+    "description": "説明（任意）",
+    "descriptionPlaceholder": "このセッションの用途は？",
+    "cancel": "キャンセル",
+    "save": "保存"
+  },
+  "shortcutSave": {
+    "title_other": "{{count}}個のタブを保存",
+    "description": "キーボードショートカットで取得したタブの保存先を選んでください。",
+    "destination": "保存先のグループ",
+    "quickSave": "クイック保存（新しいグループ）",
+    "cancel": "キャンセル",
+    "save": "保存"
+  },
+  "confirmDialog": {
+    "cancel": "キャンセル"
+  }
+}

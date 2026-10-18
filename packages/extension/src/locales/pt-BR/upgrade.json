@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Limite de grupos atingido",
+    "description": "Você atingiu o limite de {{max}} grupos do plano gratuito. Faça upgrade para o Pro e tenha grupos ilimitados."
+  },
+  "maxTabs": {
+    "title": "Limite de abas atingido",
+    "description": "Você atingiu o limite de {{max}} abas do plano gratuito. Faça upgrade para o Pro e tenha abas ilimitadas."
+  },
+  "cloudSync": {
+    "title": "A sincronização na nuvem é do Pro",
+    "description": "Sincronize seus grupos entre todos os seus dispositivos com o TabMerger Pro. Faça upgrade para ativar a sincronização na nuvem."
+  },
+  "aiFeatures": {
+    "title": "Os recursos de IA são do Pro AI",
+    "description": "Agrupamento automático por IA, nomes inteligentes e resumos de abas estão disponíveis no plano Pro AI."
+  },
+  "default": {
+    "title": "Faça upgrade do TabMerger",
+    "description": "Libere grupos ilimitados, sincronização na nuvem, backups automáticos e recursos de IA com o TabMerger Pro."
+  },
+  "signInHint": " Já tem uma conta Pro? Entre para restaurá-la neste dispositivo.",
+  "planPrice": " — {{price}}/mês",
+  "comingSoon": "Em breve",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Gratuito",
+      "f1": "Até {{groups}} grupos",
+      "f2": "Até {{tabs}} abas",
+      "f3": "Até {{urlRules}} regras de URL"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Tudo do plano Gratuito",
+      "f2": "Grupos, abas, regras de URL e sessões ilimitados",
+      "f3": "Sincronização na nuvem entre dispositivos"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Tudo do Pro",
+      "f2": "Agrupamento automático de abas por IA",
+      "f3": "Sugestões de nomes de grupos por IA"
+    }
+  },
+  "maybeLater": "Talvez depois",
+  "signIn": "Entrar",
+  "upgradeNow": "Fazer upgrade agora"
+}

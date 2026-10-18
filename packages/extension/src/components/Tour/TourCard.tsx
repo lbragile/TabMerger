@@ -1,4 +1,6 @@
 import { forwardRef, useEffect, useId, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { t as translate } from '@/lib/i18n';
 import { Check, Hand } from 'lucide-react';
 import type { TourProgress, TourStep } from '@/lib/tour';
 import { TOUR_BODY_ATTR } from '@/hooks/useTourKeys';
@@ -59,7 +61,7 @@ interface TourCardProps {
 }
 
 /** Accessible name of the dialog. Constant on purpose, see the announcement note below. */
-export const TOUR_DIALOG_LABEL = 'TabMerger tour';
+export const tourDialogLabel = (): string => translate('tour.card.dialogLabel');
 
 // Solid, high-contrast buttons from the theme's own foreground/background pair: AA in both
 // themes without depending on the brand color (white on the light theme's cyan is too faint).
@@ -68,7 +70,6 @@ const BUTTON =
 const LINK =
   'cursor-pointer text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
-const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? '' : 's'}`;
 
 /**
  * The tour's card: a modal dialog. Purely presentational. Positioning, focus and keys are
@@ -85,7 +86,7 @@ const plural = (count: number, word: string) => `${count} ${word}${count === 1 ?
  * on no other step. It is the only thing that
  * changes for a screen reader when the step changes, whether the user pressed a button or an
  * arrow key, because focus stays where it is inside the card. For the same reason the dialog's
- * name is a constant (`TOUR_DIALOG_LABEL`) and the card has no `aria-describedby`: a name or
+ * name is a constant (`tourDialogLabel()`) and the card has no `aria-describedby`: a name or
  * description built from the title and text would be read a second time whenever focus lands
  * on the card. When an interactive step is completed the same line changes to the step's
  * "done" text, so the result is announced without moving focus.
@@ -104,12 +105,13 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
   { step, body, progress, position, taskStatus, subStep = null, introducesChapter = false, compact = false, wide = false, practice, onNext, onBack, onSkip, onSkipStep, onSkipChapter, onRemovePractice },
   ref
 ) {
+  const { t } = useTranslation();
   const titleId = useId();
   const isFirst = progress.step === 1;
   const isLast = progress.step === progress.total;
-  const chapterLine = `Chapter ${progress.chapter} of ${progress.chapters}`;
-  const stepLine = `Step ${progress.step} of ${progress.total}`;
-  const doneText = step.doneText ?? 'Done.';
+  const chapterLine = t('tour.card.chapterLine', { chapter: progress.chapter, chapters: progress.chapters });
+  const stepLine = t('tour.card.stepLine', { step: progress.step, total: progress.total });
+  const doneText = step.doneText ?? t('tour.card.done');
 
   const showChapterIntro = !compact && !wide && !!progress.chapterDescription && (introducesChapter || progress.stepInChapter === 1);
   const chapterIntro = introducesChapter && progress.chapterDescription ? ` ${progress.chapterDescription}` : '';
@@ -118,11 +120,20 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
   const subStepText = step.subStepText ?? [];
   const subStepKeys = step.subStepKeys ?? [];
   const showSubStepText = taskStatus === 'todo' && !!subStep && subStepText.length > 0;
-  const allSubSteps = taskStatus === 'todo' && subStepText.length > 0 ? ` ${subStepText.join(' ')}${subStepKeys.length ? ` With the keyboard: ${subStepKeys.join(' ')}` : ''}` : '';
-  const stepAnnouncement = `${chapterLine}, ${progress.chapterTitle}.${chapterIntro} ${stepLine}: ${step.title}. ${body}${allSubSteps}${
-    taskStatus === 'todo' ? ' Your turn. To move on without trying it, select "Skip this step".' : ''
-  }`;
-  const announcement = taskStatus === 'done' ? `${doneText} Select Next to continue.` : stepAnnouncement;
+  const allSubSteps = taskStatus === 'todo' && subStepText.length > 0
+    ? ` ${subStepText.join(' ')}${subStepKeys.length ? t('tour.card.withKeyboard', { keys: subStepKeys.join(' ') }) : ''}`
+    : '';
+  const stepAnnouncement = t('tour.card.announcement', {
+    chapterLine,
+    chapterTitle: progress.chapterTitle,
+    chapterIntro,
+    stepLine,
+    title: step.title,
+    body,
+    subSteps: allSubSteps,
+    yourTurn: taskStatus === 'todo' ? t('tour.card.yourTurnAnnouncement') : ''
+  });
+  const announcement = taskStatus === 'done' ? t('tour.card.doneAnnouncement', { done: doneText }) : stepAnnouncement;
   const [announced, setAnnounced] = useState('');
   useEffect(() => {
     setAnnounced(announcement);
@@ -133,7 +144,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
       ref={ref}
       role="dialog"
       aria-modal="true"
-      aria-label={TOUR_DIALOG_LABEL}
+      aria-label={tourDialogLabel()}
       tabIndex={-1}
       data-tour-card={step.id}
       data-tour-task={taskStatus}
@@ -197,8 +208,8 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
                 ))}
               </span>
               <span>
-                <span className="sr-only">Part </span>
-                {subStep.current} of {subStep.total}
+                <span className="sr-only">{t('tour.card.part')}</span>
+                {t('tour.card.ofTotal', { current: subStep.current, total: subStep.total })}
               </span>
             </p>
           )}
@@ -211,7 +222,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
             </p>
             {subStepKeys[subStep.current - 1] && (
               <p data-tour-substep-keys="" className="mt-1 pl-2.5 text-xs leading-snug text-muted-foreground">
-                <span className="font-medium text-foreground">Keyboard: </span>
+                <span className="font-medium text-foreground">{t('tour.card.keyboard')}</span>
                 {subStepKeys[subStep.current - 1]}
               </p>
             )}
@@ -223,7 +234,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
         {taskStatus === 'todo' && !showSubStepText && (
           <p data-tour-task-line="todo" className="mt-2.5 flex items-start gap-1.5 border border-foreground/30 px-2 py-1.5 text-xs font-medium">
             <Hand aria-hidden="true" className="mt-px h-3.5 w-3.5 shrink-0" />
-            <span>Your turn. This step waits until you have tried it.</span>
+            <span>{t('tour.card.yourTurn')}</span>
           </p>
         )}
         {taskStatus === 'done' && (
@@ -236,15 +247,16 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
         {isLast && practice && (
           <div data-tour-practice="" className="mt-2.5 border border-foreground/30 px-2 py-1.5 text-xs">
             {practice.removed ? (
-              <p>The practice group was removed.</p>
+              <p>{t('tour.card.practiceRemoved')}</p>
             ) : (
               <>
                 <p>
-                  The group you made in this tour, &ldquo;{practice.name}&rdquo;
-                  {practice.tabCount > 0 ? ` (${plural(practice.tabCount, 'tab')})` : ''}, is still in your list. Keep it, or remove it now.
+                  {practice.tabCount > 0
+                    ? t('tour.card.practiceKept', { context: 'tabs', name: practice.name, tabs: t('common.tabCount', { count: practice.tabCount }) })
+                    : t('tour.card.practiceKept', { name: practice.name })}
                 </p>
                 <button type="button" className={cn(BUTTON, 'mt-1.5 border border-border hover:bg-muted')} onClick={onRemovePractice}>
-                  Remove the practice group
+                  {t('tour.card.removePractice')}
                 </button>
               </>
             )}
@@ -258,16 +270,16 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
       <div className={cn('flex shrink-0 items-center justify-end gap-2', !wide && 'mt-4')}>
         {!isFirst && (
           <button type="button" className={cn(BUTTON, 'border border-border hover:bg-muted')} onClick={onBack}>
-            Back
+            {t('tour.card.back')}
           </button>
         )}
         {taskStatus === 'todo' ? (
           <button type="button" className={cn(BUTTON, 'border border-foreground/60 hover:bg-muted')} onClick={onSkipStep}>
-            Skip this step
+            {t('tour.card.skipStep')}
           </button>
         ) : (
           <button type="button" className={cn(BUTTON, 'bg-foreground text-background hover:bg-foreground/85')} onClick={onNext}>
-            {isLast ? 'Done' : 'Next'}
+            {isLast ? t('tour.card.finish') : t('tour.card.next')}
           </button>
         )}
       </div>
@@ -275,11 +287,11 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
       {!isLast && (
         <div className={cn('flex shrink-0 items-center', wide ? 'order-first gap-4' : 'mt-2.5 justify-between gap-3 border-t border-foreground/15 pt-2')}>
           <button type="button" className={LINK} onClick={onSkip}>
-            Skip tour
+            {t('tour.card.skipTour')}
           </button>
           {onSkipChapter && (
             <button type="button" className={LINK} onClick={onSkipChapter}>
-              Skip chapter
+              {t('tour.card.skipChapter')}
             </button>
           )}
         </div>

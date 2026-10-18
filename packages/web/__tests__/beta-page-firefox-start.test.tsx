@@ -12,7 +12,7 @@ async function renderBetaPage({ configured }: { configured: boolean }) {
   vi.stubEnv('VERCEL_ENV', 'preview')
   vi.stubEnv('FIREFOX_BETA_BLOB_BASE_URL', configured ? 'https://placeholder.example' : '')
   vi.resetModules()
-  const { default: BetaPage } = await import('@/app/(marketing)/beta/page')
+  const { default: BetaPage } = await import('@/app/[locale]/(marketing)/beta/page')
   return render(<BetaPage />)
 }
 

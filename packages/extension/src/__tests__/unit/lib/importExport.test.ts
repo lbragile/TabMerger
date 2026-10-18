@@ -5,8 +5,8 @@ import {
   importGroupsState,
   parseBookmarksHtml,
   parseOneTabs,
-  skippedSuffix,
-  IMPORTED_GROUP_FALLBACK_NAME
+  skippedContext,
+  importedGroupFallbackName
 } from '@/lib/importExport'
 import { createGroup, createTab, createWindow } from '@/lib/utils'
 import { DEFAULT_GROUP_COLOR, type Group } from '@/lib/types'
@@ -50,11 +50,11 @@ describe('exportGroups', () => {
   })
 })
 
-describe('skippedSuffix', () => {
-  it('is empty for nothing skipped and names the count otherwise', () => {
-    expect(skippedSuffix(0)).toBe('')
-    expect(skippedSuffix(1)).toBe(', 1 skipped')
-    expect(skippedSuffix(12)).toBe(', 12 skipped')
+describe('skippedContext', () => {
+  it('picks the plain message for nothing skipped and the "skipped" variant otherwise', () => {
+    expect(skippedContext(0)).toEqual({ skipped: 0 })
+    expect(skippedContext(1)).toEqual({ context: 'skipped', skipped: 1 })
+    expect(skippedContext(12)).toEqual({ context: 'skipped', skipped: 12 })
   })
 })
 
@@ -252,7 +252,7 @@ describe('importGroups', () => {
     const [g] = importGroups(jsonOf([group])).groups
     expect(typeof g.id).toBe('string')
     expect(g.id).toHaveLength(10)
-    expect(g.name).toBe(IMPORTED_GROUP_FALLBACK_NAME)
+    expect(g.name).toBe(importedGroupFallbackName())
     expect(g.color).toBe(DEFAULT_GROUP_COLOR)
     expect(g.updatedAt).toBeGreaterThanOrEqual(before)
     expect(g.info).toBe('1 Window ◆ 1 Tab')

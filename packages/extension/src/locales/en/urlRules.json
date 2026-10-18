@@ -1,0 +1,23 @@
+{
+  "title": "URL Rules",
+  "description": "Auto-assign tabs to groups by URL pattern. Use <code>*</code> as a wildcard (e.g. <code>github.com/*</code>). First matching rule wins.",
+  "empty": "No rules yet.",
+  "deletedGroup": "(deleted group)",
+  "moveUp": "Move rule up",
+  "moveDown": "Move rule down",
+  "edit": "Edit rule",
+  "delete": "Delete rule",
+  "used": "{{used}}/{{max}} used",
+  "addRule": "Add rule",
+  "discard": "Discard changes",
+  "cancel": "Cancel",
+  "saveAll": "Save all rules",
+  "save": "Save",
+  "editTitle": "Edit URL Rule",
+  "addTitle": "Add URL Rule",
+  "patternPlaceholder": "Pattern, e.g. github.com/*",
+  "groupPlaceholder": "Select target group…",
+  "toast": {
+    "limit": "Free plan allows up to {{max}} URL rules."
+  }
+}

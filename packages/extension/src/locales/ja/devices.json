@@ -1,0 +1,18 @@
+{
+  "heading": "デバイス",
+  "empty": "デバイスはまだありません。",
+  "selected": "{{count}}件を選択中",
+  "remove": "削除",
+  "removeTitle_other": "{{count}}台のデバイスを削除しますか？",
+  "removeDescription": "削除したデバイスはこの一覧に表示されなくなります。そのブラウザがまだ有効な場合は、次回の同期時に自動で再登録されることがあるため、使用中のデバイスでは永続的な削除ではありません。",
+  "cancel": "キャンセル",
+  "selectDevice": "{{name}}を選択",
+  "nameInput": "このデバイスの名前",
+  "save": "保存",
+  "thisDevice": "（このデバイス）",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "このデバイスの名前を変更",
+  "noTabs": "タブはありません。",
+  "restoreTabs_other": "{{count}}個のタブを復元",
+  "open": "開く"
+}

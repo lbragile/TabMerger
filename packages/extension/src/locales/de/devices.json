@@ -1,0 +1,20 @@
+{
+  "heading": "Geräte",
+  "empty": "Noch keine Geräte.",
+  "selected": "{{count}} ausgewählt",
+  "remove": "Entfernen",
+  "removeTitle_one": "{{count}} Gerät entfernen?",
+  "removeTitle_other": "{{count}} Geräte entfernen?",
+  "removeDescription": "Entfernte Geräte erscheinen nicht mehr in dieser Liste. Ist der Browser noch aktiv, registriert er sich bei der nächsten Synchronisierung eventuell erneut – bei einem aktiven Gerät ist das Entfernen also nicht dauerhaft.",
+  "cancel": "Abbrechen",
+  "selectDevice": "{{name}} auswählen",
+  "nameInput": "Name dieses Geräts",
+  "save": "Speichern",
+  "thisDevice": "(dieses Gerät)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Dieses Gerät umbenennen",
+  "noTabs": "Keine Tabs.",
+  "restoreTabs_one": "{{count}} Tab wiederherstellen",
+  "restoreTabs_other": "{{count}} Tabs wiederherstellen",
+  "open": "Öffnen"
+}

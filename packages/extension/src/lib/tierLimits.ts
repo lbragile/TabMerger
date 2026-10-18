@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import type { Group } from '@/lib/types';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { toast } from '@/lib/toast';
@@ -42,11 +43,6 @@ export class FreeLimitExceededError extends Error {
   }
 }
 
-const NAME_BY_LIMIT: Record<LimitName, string> = {
-  maxGroups: 'groups',
-  maxTabs: 'tabs',
-  maxUrlRules: 'URL rules'
-};
 
 /**
  * Single source of truth for "would this take a Free user over their limit?" Paid tiers
@@ -102,10 +98,10 @@ export function countSavedGroupsAndTabs(groups: Group[]): { groups: number; tabs
  */
 export function showFreeLimitToast(limit: LimitName, maxAllowed: number, detail?: string): void {
   trackEvent('entitlement_limit_hit', { limit });
-  toast.error(`Free plan allows up to ${maxAllowed} ${NAME_BY_LIMIT[limit]}.`, {
+  toast.error(t(`errors.freeLimit.${limit}`, { max: maxAllowed }), {
     ...(detail ? { description: detail } : {}),
     action: {
-      label: 'Upgrade',
+      label: t('common.upgrade'),
       onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })
     }
   });
@@ -149,7 +145,7 @@ export function blockImportOverFreeLimit(
   showFreeLimitToast(
     check.limit,
     check.maxAllowed,
-    `This file contains ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}.`
+    t('errors.fileContains', { groups: t('common.groupCount', { count: imported.groups }), tabs: t('common.tabCount', { count: imported.tabs }) })
   );
   return true;
 }

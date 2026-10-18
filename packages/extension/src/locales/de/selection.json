@@ -1,0 +1,21 @@
+{
+  "copyToGroup": "In Gruppe kopieren",
+  "moveToGroup": "In Gruppe verschieben",
+  "star": "Mit Stern markieren",
+  "unstar": "Stern entfernen",
+  "share": "Teilen",
+  "shareRequiresPro": "Teilen erfordert Pro",
+  "close": "Schließen",
+  "delete": "Löschen",
+  "cancel": "Auswahl aufheben",
+  "linkCopied": "Link in die Zwischenablage kopiert",
+  "shareFailed": "Teilen fehlgeschlagen",
+  "selected_tab_one": "{{count}} Tab ausgewählt",
+  "selected_tab_other": "{{count}} Tabs ausgewählt",
+  "selected_window_one": "{{count}} Fenster ausgewählt",
+  "selected_window_other": "{{count}} Fenster ausgewählt",
+  "selected_group_one": "{{count}} Gruppe ausgewählt",
+  "selected_group_other": "{{count}} Gruppen ausgewählt",
+  "cleared": "Auswahl aufgehoben.",
+  "sentence": "{{text}}."
+}

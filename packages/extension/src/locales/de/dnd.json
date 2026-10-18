@@ -1,0 +1,79 @@
+{
+  "instructions": "Mit der Leertaste aufnehmen, mit den Pfeiltasten eine Stelle wählen (Links und Rechts wechseln zwischen Fenstern und Gruppen), mit der Leertaste ablegen, mit Escape abbrechen. Mit Umschalt+Leertaste wählst du einen Bereich aus, mit {{modifier}}+A alles, um mehrere gleichzeitig zu verschieben.",
+  "keys": {
+    "command": "Befehl",
+    "control": "Strg"
+  },
+  "type": {
+    "tab": "Tab",
+    "window": "Fenster",
+    "group": "Gruppe",
+    "item": "Element"
+  },
+  "typeStart": {
+    "tab": "Tab",
+    "window": "Fenster",
+    "group": "Gruppe",
+    "item": "Element"
+  },
+  "untitledTab": "Tab ohne Titel",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, beginnend mit {{name}},",
+  "position": {
+    "tab": "Position {{index}} von {{total}} in {{window}} von Gruppe {{group}}",
+    "window": "Position {{index}} von {{total}} in Gruppe {{group}}",
+    "group": "Position {{index}} von {{total}}"
+  },
+  "target": {
+    "newGroup": "eine neue Gruppe",
+    "newWindowAtEnd": "ein neues Fenster am Ende von Gruppe {{group}}",
+    "nowOpen": "„Jetzt geöffnet“, wodurch sie in einem neuen Browserfenster geöffnet werden",
+    "groupAsWindow": "Gruppe {{group}}, als neues Fenster"
+  },
+  "token": {
+    "dropped": "Abgelegt.",
+    "cancelled": "Abgebrochen."
+  },
+  "bail": {
+    "cancelled": "Verschieben abgebrochen.",
+    "nothingMoved": "Abgelegt; nichts verschoben.",
+    "returnedMany": "{{items}} zurückgelegt",
+    "returnedOne": "{{named}} zurückgelegt",
+    "noop": "{{what}} wieder an {{position}} abgelegt; nichts verschoben.",
+    "stale": "Die Gruppen haben sich während des Ziehens geändert, daher wurde nichts verschoben. {{returned}} an {{position}}.",
+    "cancelledReturned": "Verschieben abgebrochen. {{returned}} an {{position}}.",
+    "rejected": "Hier kann nicht abgelegt werden. {{returned}} an {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} wurde anderswo entfernt.",
+  "removedElsewhere_other": "{{count}} wurden anderswo entfernt.",
+  "stillSelected_one": "Es ist weiterhin ausgewählt.",
+  "stillSelected_other": "Sie sind weiterhin ausgewählt.",
+  "dropped": "Abgelegt.",
+  "movedGroups": "{{count}} Gruppen als ein Block an {{position}} verschoben.",
+  "movedGroup": "Gruppe {{name}} an {{position}} verschoben.",
+  "partial": "{{count}} von {{total}}",
+  "at": "Position {{index}} von {{total}}",
+  "startingAt": "ab Position {{index}} von {{total}}",
+  "whereTab": "{{window}} von Gruppe {{group}}, {{at}}",
+  "whereWindow": "Gruppe {{group}}, {{at}}",
+  "movedTo": "{{items}} nach {{where}} verschoben.",
+  "openTabsClosed": " Die geöffneten Tabs werden geschlossen.",
+  "groupHidden": " Gruppe {{group}} wird nicht angezeigt.",
+  "openedNewWindow": "{{items}} in einem neuen Browserfenster geöffnet.",
+  "openedNowOpen": "{{items}} in „Jetzt geöffnet“ geöffnet.",
+  "movedNewWindow": "{{items}} in ein neues Browserfenster verschoben.",
+  "movedWithinNowOpen": "{{items}} innerhalb von „Jetzt geöffnet“ verschoben.",
+  "originalPosition": "Über der ursprünglichen Position.",
+  "pickedUpType": "{{type}} aufgenommen.",
+  "pickedUpMany": "{{what}} aufgenommen.",
+  "pickedUpOne": "{{type}} {{name}} aufgenommen, {{position}}.",
+  "groupShown": "Gruppe {{name}} wird jetzt angezeigt.",
+  "copyHint": "Beim Ablegen in einer gespeicherten Gruppe wird kopiert; die geöffneten Tabs bleiben offen.",
+  "notOver": "Nicht über einem Ablageziel.",
+  "over": "Über {{target}}.",
+  "cantDropOn": "Auf {{target}} kann nicht abgelegt werden.",
+  "typeDropped": "{{type}} abgelegt.",
+  "cancelledReturnedType": "Verschieben abgebrochen; {{type}} wieder an seiner Position.",
+  "saveFailed": "Das Verschieben konnte nicht gespeichert werden; zurückgesetzt."
+}

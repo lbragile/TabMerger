@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Dashboard",
+  "greeting": "Good morning, {name}",
+  "tierBadge": {
+    "free": "free",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "AI organise",
+  "aiOrganiseUpgrade": "Upgrade to Pro AI to use AI organise",
+  "aiOrganiseFromExtension": "Start this from the TabMerger extension popup",
+  "tabGroups": "Tab Groups",
+  "savedSessions": "Saved Sessions",
+  "stats": {
+    "tabs": {
+      "label": "Tabs saved",
+      "description": "Tabs across all synced groups"
+    },
+    "groups": {
+      "label": "Groups synced",
+      "description": "Groups synced in cloud"
+    },
+    "sessions": {
+      "label": "Sessions stored",
+      "description": "Browsing sessions stored",
+      "lockedDescription": "Sessions and backups (unlock to tell them apart)"
+    },
+    "memory": {
+      "label": "Memory reclaimed",
+      "description": "Estimated, not measured"
+    },
+    "memberSince": {
+      "label": "Member Since",
+      "description": "Account created"
+    },
+    "aiCredits": {
+      "label": "AI credits this month",
+      "description": "Pro AI monthly usage",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Loading"
+  },
+  "subscription": {
+    "currentPlan": "Current plan",
+    "renews": "Renews {date}",
+    "upgrade": "Upgrade",
+    "statuses": {
+      "active": "active",
+      "canceled": "canceled",
+      "past_due": "past_due",
+      "trialing": "trialing",
+      "incomplete": "incomplete"
+    }
+  },
+  "upgraded": {
+    "message": "Welcome to {plan}! Your subscription is now active. Enjoy your new features.",
+    "dismiss": "Dismiss"
+  },
+  "locked": {
+    "item": "Saved with an earlier passphrase. Open the extension on the device that has it and let it sync.",
+    "device": "Its open tabs were saved with an earlier passphrase. Open the extension on that device and let it sync.",
+    "unverified": "Can't be read right now. Reload the page to try again."
+  },
+  "passphrase": {
+    "defaultLabel": "Enter your encryption passphrase to view this content.",
+    "groupsLabel": "Your groups are end-to-end encrypted. Enter your passphrase to view them here.",
+    "sessionsLabel": "Your sessions are end-to-end encrypted. Enter your passphrase to view them here.",
+    "backupsLabel": "Your backups are end-to-end encrypted. Enter your passphrase to view them here.",
+    "placeholder": "Passphrase",
+    "inputLabel": "Encryption passphrase",
+    "unlock": "Unlock",
+    "incorrect": "Incorrect passphrase."
+  },
+  "onboarding": {
+    "title": "Get started with TabMerger",
+    "progress": "{done} of {total} done",
+    "dismiss": "Dismiss",
+    "install": "Install the TabMerger extension",
+    "group": "Create your first group in the extension",
+    "signin": "Sign in to enable cloud sync",
+    "upgrade": "Upgrade to Pro for unlimited groups"
+  },
+  "lockedName": "(locked)",
+  "damagedNote": "Its contents are not in a format TabMerger can read, so they can't be shown here.",
+  "counts": {
+    "groups": "{count, plural, one {{count} group} other {{count} groups}}",
+    "windows": "{count, plural, one {{count} window} other {{count} windows}}",
+    "tabs": "{count, plural, one {{count} tab} other {{count} tabs}}"
+  },
+  "sessions": {
+    "cantRestore": "This session can't be read, so it can't be restored.",
+    "restored": "{count, plural, one {Restored {count} tab from \"{name}\"} other {Restored {count} tabs from \"{name}\"}}",
+    "deleted": "Session deleted",
+    "deleteFailed": "Failed to delete session",
+    "loadFailed": "Your sessions could not be loaded.",
+    "tryAgain": "Try again",
+    "loading": "Loading sessions",
+    "empty": "No saved sessions yet.",
+    "readOnlyNote": "Saving new sessions to your account needs Pro. Your existing sessions can still be opened or deleted.",
+    "upgrade": "Upgrade to Pro",
+    "freeLimit": "Free plan: up to {count} sessions. <link>Upgrade to Pro</link> for unlimited.",
+    "restore": "Restore session",
+    "cantRestoreTooltip": "This session can't be read, so it can't be restored",
+    "delete": "Delete session",
+    "hideContents": "Hide contents",
+    "showContents": "Show contents ({count})",
+    "groupFallbackName": "Group {number}",
+    "groupTabs": "{count, plural, other {{count} tabs}}",
+    "moreTabs": "{count, plural, other {+{count} more tabs}}",
+    "moreGroups": "{count, plural, other {+{count} more groups}}"
+  },
+  "backups": {
+    "title": "Backups",
+    "upgradeDescription": "Automatic backups are part of Pro: an encrypted snapshot of your groups, saved on a schedule, with the newest {count} kept.",
+    "readOnlyNote": "New backups need Pro. Your existing backups can still be downloaded or deleted.",
+    "upgrade": "Upgrade",
+    "intro": "Snapshots of your groups that the TabMerger extension saved to your account by itself, newest first. The newest {count} are kept. To restore one, open the extension and go to {place}; restoring is not done from this page. A file you download here is not encrypted.",
+    "extensionPlace": "Settings > Data",
+    "loadFailed": "Your backups could not be loaded.",
+    "tryAgain": "Try again",
+    "loading": "Loading backups",
+    "unknownKind": "{count, plural, one {1 saved item can't be read, so it isn't known whether it is a backup. It is listed under Saved Sessions.} other {{count} saved items can't be read, so it isn't known whether they are backups. They are listed under Saved Sessions.}}",
+    "emptyTitle": "No backups yet.",
+    "emptyBody": "The extension saves one by itself while your browser is open, when your groups have changed since the last one. The schedule is \"{interval}\" unless you change it: pick the interval, or back up right away, in the extension under {place}.",
+    "intervals": {
+      "60": "Every hour",
+      "360": "Every 6 hours",
+      "720": "Every 12 hours",
+      "1440": "Daily",
+      "10080": "Weekly"
+    },
+    "unknownDateInSentence": "an unknown date",
+    "unknownDate": "Unknown date",
+    "namePrefix": "Automatic backup",
+    "downloading": "Downloading the backup from {when}.",
+    "deleted": "Backup deleted",
+    "deletedAnnouncement": "The backup from {when} was deleted.",
+    "deleteFailed": "Failed to delete backup",
+    "deleteFailedAnnouncement": "The backup from {when} could not be deleted.",
+    "deleteTitle": "Delete this backup?",
+    "deleteBody": "The backup from {when} will be removed from your account. A browser that already has this backup keeps its own copy.",
+    "deleteBodyWithCounts": "The backup from {when} ({groups}, {tabs}) will be removed from your account. A browser that already has this backup keeps its own copy.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "download": "Download",
+    "downloadLabel": "Download backup from {when}",
+    "deleteLabel": "Delete backup from {when}"
+  },
+  "groups": {
+    "cantShare": "This group can't be read, so it can't be shared.",
+    "linkCopiedSnapshot": "Link copied — shares a snapshot of this group.",
+    "shareFailed": "Could not create share link. Please try again.",
+    "shareGroup": "Share group",
+    "copied": "Copied!",
+    "share": "Share",
+    "cantShareTooltip": "This group can't be read, so it can't be shared",
+    "shareTooltip": "Copies a link to a snapshot of this group — later edits won’t update it",
+    "justNow": "just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago",
+    "lockedCantSelect": "Locked group can't be selected",
+    "deselect": "Deselect",
+    "select": "Select",
+    "syncedAt": "Synced {time}",
+    "cardMeta": "{windows, plural, one {{windows} window} other {{windows} windows}} · {tabs, plural, one {{tabs} tab} other {{tabs} tabs}}",
+    "syncedSuffix": " · synced {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Tabs may be stale — last synced over 30 days ago",
+    "moreTabs": "+{count} more",
+    "openAllTitle": "Open all tabs in this group",
+    "openAll": "Open all",
+    "hideTabs": "Hide tabs",
+    "showTabs": "Show tabs",
+    "rowMeta": "{windows}w · {tabs}t",
+    "linkCopiedLive": "Link copied! Share page is live.",
+    "empty": "No synced groups yet. Open the extension to create tab groups.",
+    "title": "Groups",
+    "summary": "{count, plural, one {{count} group} other {{count} groups}} · {tabs, plural, other {{tabs} tabs}}",
+    "sort": "Sort",
+    "sortLabel": "Sort groups",
+    "sortRecent": "Recent",
+    "sortName": "Name",
+    "sortTabCount": "Tab count",
+    "cancel": "Cancel",
+    "gridView": "Grid view",
+    "listView": "List view",
+    "archived": "Archived ({count})",
+    "selectedCount": "{count} selected",
+    "shareSelected": "Share selected",
+    "cancelSelection": "Cancel selection"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Open the extension and unlock encryption to sync.",
+      "no-session": "Sign in to the extension to sync.",
+      "error": "Sync failed. Try again from the extension."
+    },
+    "failedFallback": "Sync failed.",
+    "syncing": "Syncing...",
+    "busy": "Sync already in progress",
+    "failed": "Sync failed",
+    "synced": "Synced",
+    "never": "No sync yet",
+    "reasonSeparator": ". ",
+    "refresh": "Refresh sync status",
+    "resync": "Re-sync now",
+    "justNow": "just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago"
+  }
+}

@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isOpenableUrl, openableUrls } from '@/lib/safeOpen';
 import { nanoid } from 'nanoid';
@@ -150,7 +151,7 @@ function useGroupsMutation() {
       }
     ).then((next) => {
       if (gone) {
-        toast.info('A group you were working on changed or was removed elsewhere, so nothing was changed.', { id: 'groups-changed-elsewhere' });
+        toast.info(t('errors.groupsChangedElsewhere'), { id: 'groups-changed-elsewhere' });
         markAborted(next); // onSuccess analytics must not count a mutation that did nothing
       }
       qc.setQueryData(GROUPS_QUERY_KEY, next);
@@ -1456,7 +1457,7 @@ export function useSaveShortcutTabs() {
         let targetIndex = groupId ? available.findIndex((g) => g.id === groupId && !g.permanent) : -1;
 
         if (targetIndex < 0 && !groupId) {
-          available.push(createGroup(undefined, 'Quick Save'));
+          available.push(createGroup(undefined, t('common.quickSaveGroup')));
           targetIndex = available.length - 1;
         }
         if (targetIndex < 0) return prev;

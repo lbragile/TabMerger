@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 import path from 'path'
 import { withSentryConfig } from '@sentry/nextjs'
+import createNextIntlPlugin from 'next-intl/plugin'
 import { FIREFOX_BETA } from '@tabmerger/shared'
 import { isPreviewDeployment } from './lib/deployment'
 
@@ -64,7 +65,7 @@ const nextConfig: NextConfig = {
     // so it finds node_modules/next that we've hoisted there.
     root: path.resolve(process.cwd(), '../..'),
   },
-  // The /changelog route (app/(marketing)/changelog/page.tsx via lib/changelog.ts) reads
+  // The /changelog route (app/[locale]/(marketing)/changelog/page.tsx via lib/changelog.ts) reads
   // the repo-root CHANGELOG.md with a *dynamically computed* fs path
   // (path.resolve(process.cwd(), '../..', 'CHANGELOG.md')). Next's build-time file tracer
   // (@vercel/nft) only bundles files it can find via static analysis of imports/requires,
@@ -88,7 +89,8 @@ const nextConfig: NextConfig = {
   // different root in some environment. Pin it explicitly, mirroring turbopack.root above.
   outputFileTracingRoot: path.resolve(process.cwd(), '../..'),
   outputFileTracingIncludes: {
-    '/changelog': ['../../CHANGELOG.md'],
+    // The page lives under app/[locale]/ (the key is the route as Next names it).
+    '/[locale]/changelog': ['../../CHANGELOG.md'],
   },
   images: {
     remotePatterns: [
@@ -128,7 +130,10 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withSentryConfig(nextConfig, {
+// next-intl: points the `next-intl/server` APIs at the per-request config (locale + catalog).
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
+
+export default withSentryConfig(withNextIntl(nextConfig), {
   silent: true,
   telemetry: false,
   // Routes Sentry requests through our own origin so ad blockers that target

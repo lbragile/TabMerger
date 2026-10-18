@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "错误 404 · 页面未找到",
+    "title": "这个标签页走丢了",
+    "description": "我们翻遍了所有分组，也没找到这个页面。它可能已被移动、关闭，或从未存在过。让我们带您回到正轨。",
+    "documentTitle": "页面未找到",
+    "tabLabel": "页面丢失"
+  },
+  "serverError": {
+    "eyebrow": "错误 500 · 出错了",
+    "title": "这个标签页崩溃了",
+    "description": "加载此页面时我们这边出了问题。扩展中的标签页和分组不受影响。请稍后再试。",
+    "documentTitle": "出错了",
+    "tabLabel": "无响应"
+  },
+  "links": {
+    "features": "功能",
+    "pricing": "定价",
+    "faq": "常见问题",
+    "dashboard": "控制台",
+    "account": "账户",
+    "contactSupport": "联系支持"
+  },
+  "helpfulLinks": "实用链接",
+  "tryThese": "或试试这些",
+  "illustrationTabResearch": "研究",
+  "illustrationTabDocs": "文档",
+  "tryAgain": "重试",
+  "backToHome": "返回首页",
+  "backToDashboard": "返回控制台",
+  "devDetails": "错误详情（仅限开发环境）",
+  "referenceId": "参考编号",
+  "copyReferenceId": "复制参考编号",
+  "referenceIdHint": "联系支持时请提供此编号，以便我们查明问题。",
+  "referenceIdCopied": "参考编号已复制",
+  "referenceIdCopyFailed": "复制失败。请选中编号后手动复制。",
+  "titleWithBrand": "{title} | TabMerger"
+}

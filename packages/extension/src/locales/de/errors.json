@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Sync pausiert: in Firefox erlauben",
+  "conflictCopy": "{{names}} wurde auch auf einem anderen Gerät geändert. Deine Version wurde als Kopie gespeichert.",
+  "quotedName": "„{{name}}“",
+  "groupsChangedElsewhere": "Eine Gruppe, an der du gearbeitet hast, wurde anderswo geändert oder entfernt, daher wurde nichts geändert.",
+  "undoConflict": "Deine Gruppen wurden anderswo geändert, daher wurde nichts rückgängig gemacht. Versuche es erneut.",
+  "freeLimit": {
+    "maxGroups": "Der kostenlose Tarif erlaubt bis zu {{max}} Gruppen.",
+    "maxTabs": "Der kostenlose Tarif erlaubt bis zu {{max}} Tabs.",
+    "maxUrlRules": "Der kostenlose Tarif erlaubt bis zu {{max}} URL-Regeln."
+  },
+  "fileContains": "Diese Datei enthält {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Als normales Fenster geöffnet, da TabMerger im Inkognito-Modus nicht erlaubt ist. Öffne zum Ändern „Erweiterung verwalten“ und aktiviere „Im Inkognito-Modus zulassen“.",
+  "encryptionAlreadySetUp": "Die Verschlüsselung ist für dieses Konto bereits eingerichtet. Gib deine bestehende Passphrase zum Entsperren ein.",
+  "signInToEnableEncryption": "Zum Aktivieren der Verschlüsselung musst du angemeldet sein",
+  "signInToResetEncryption": "Zum Zurücksetzen der Verschlüsselung musst du angemeldet sein",
+  "googleUnavailable": "Die Anmeldung mit Google ist in dieser Umgebung nicht verfügbar",
+  "googleNoUrl": "Die Anmeldung mit Google hat keine Autorisierungs-URL geliefert",
+  "googleCancelled": "Die Anmeldung mit Google wurde abgebrochen",
+  "googleNoSession": "Die Anmeldung mit Google hat keine Sitzung geliefert",
+  "googleFailed": "Die Anmeldung mit Google ist fehlgeschlagen",
+  "expectedArray": "Ein Array wurde erwartet",
+  "invalidFormat": "Ungültiges Format",
+  "noGroupsFound": "Keine Gruppen gefunden",
+  "noGroupsSelected": "Keine Gruppen ausgewählt",
+  "notAuthenticated": "Nicht authentifiziert",
+  "sharingRequiresPro": "Teilen erfordert ein Pro-Upgrade – Berechtigung fehlt",
+  "aiOncePerDay": "Heute bereits genutzt – diese KI-Aktion ist auf einmal pro Tag begrenzt",
+  "proAiRequired": "Pro-AI-Tarif erforderlich",
+  "nameGroupOff": "„Gruppe benennen“ ist in den Einstellungen deaktiviert",
+  "suggestSessionsOff": "„Sitzungen vorschlagen“ ist in den Einstellungen deaktiviert",
+  "organizeOff": "„Organisieren“ ist in den Einstellungen deaktiviert"
+}

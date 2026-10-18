@@ -1,0 +1,49 @@
+{
+  "appName": "TabMerger",
+  "tier": {
+    "free": "無料プラン",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "upgrade": "アップグレード",
+  "untitled": "無題",
+  "window": "ウィンドウ",
+  "cancel": "キャンセル",
+  "close": "閉じる",
+  "save": "保存",
+  "delete": "削除",
+  "shortcutSearch": "Ctrl K",
+  "tabCount_other": "{{count}}個のタブ",
+  "windowCount_other": "{{count}}個のウィンドウ",
+  "groupCount_other": "{{count}}個のグループ",
+  "freeGroupLimit": "無料プランではグループは{{max}}個までです。",
+  "aiQuotaUsed": "今月のAIクレジットをすべて使い切りました。",
+  "buyMore": "追加購入",
+  "windowCountTitle_other": "{{count}}個のウィンドウ",
+  "tabCountTitle_other": "{{count}}個のタブ",
+  "groupCounts": "{{windows}} ◆ {{tabs}}",
+  "nowOpen": "現在開いているタブ",
+  "groupCountTitle_other": "{{count}}個のグループ",
+  "time": {
+    "justNow": "たった今",
+    "minutesAgo_other": "{{count}}分前",
+    "hoursAgo_other": "{{count}}時間前",
+    "daysAgo_other": "{{count}}日前"
+  },
+  "duration": {
+    "lessThanMinute": "1分未満",
+    "minutes_other": "{{count}}分",
+    "hours_other": "{{count}}時間",
+    "days_other": "{{count}}日",
+    "months_other": "{{count}}か月",
+    "years_other": "{{count}}年"
+  },
+  "quickSaveGroup": "クイック保存",
+  "importedGroup": "インポートしたグループ",
+  "importedFolder": "インポート済み",
+  "noGroupSelected": "グループが選択されていません",
+  "showPassphrase": "パスフレーズを表示",
+  "hidePassphrase": "パスフレーズを非表示",
+  "notifications": "通知",
+  "closeToast": "通知を閉じる"
+}

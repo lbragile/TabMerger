@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { isExternalStoreLink, storeLinkProps } from '@/lib/storeLinks'
 
 type StoreLinkProps = Omit<ComponentProps<'a'>, 'href' | 'target' | 'rel'> & {

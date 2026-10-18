@@ -1,49 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { FREE_TIER_LIMITS } from '@tabmerger/shared'
 
-const faqs = [
-  {
-    question: 'Is TabMerger really free?',
-    answer:
-      `Yes! The free tier includes all the core features — up to ${FREE_TIER_LIMITS.groups} groups, ${FREE_TIER_LIMITS.tabs} tabs, ${FREE_TIER_LIMITS.urlRules} URL rules, drag-and-drop, and import/export. You only pay if you want cloud sync, unlimited groups, tabs and URL rules, or AI features.`,
-  },
-  {
-    question: 'How does cloud sync work?',
-    answer:
-      'When you sign up for a Pro or Pro AI plan, your groups are automatically saved to our servers. Your groups sync across every browser where you\'re signed in — sync runs whenever the popup is open, so changes show up the next time you open it there.',
-  },
-  {
-    question: 'What does the AI do exactly?',
-    answer: AI_ENABLED
-      ? 'The Pro AI tier unlocks three AI features: auto-grouping (analyzes your open tabs and groups them logically), smart naming (suggests names for your groups), and session suggestions (recommends how to organize your workflow).'
-      : `${AI_COMING_SOON_LABEL} — the Pro AI tier will unlock three AI features: auto-grouping (analyzes your open tabs and groups them logically), smart naming (suggests names for your groups), and session suggestions (recommends how to organize your workflow).`,
-  },
-  {
-    question: 'Can I cancel my subscription?',
-    answer:
-      'Absolutely. You can cancel anytime from your account page. You\'ll keep access until the end of your current billing period, then drop back to the free tier.',
-  },
-  {
-    question: 'Which browsers does TabMerger support?',
-    answer:
-      'Chrome (Chrome Web Store), Edge (Edge Add-ons, or the Chrome Web Store), Brave, Vivaldi, and Arc (Chrome Web Store), Opera (Chrome Web Store, via Opera\'s "Install Chrome Extensions" add-on), and Firefox (Firefox Add-ons). Safari isn\'t supported.',
-  },
-  {
-    question: 'Is my data private?',
-    answer:
-      'We take privacy seriously. Free tier data is stored locally only — nothing leaves your browser. Pro cloud sync data is end-to-end encrypted on your device with a passphrase only you know before it ever reaches our servers — we store only ciphertext and cannot read your groups or tabs. We never sell your data.',
-  },
-  {
-    question: 'What happens to my groups if I downgrade?',
-    answer:
-      'If you downgrade from Pro to Free, your groups remain in the cloud for 30 days. Your local tabs are always kept. You can export everything before downgrading.',
-  },
-]
+/** Each question is a key under `faq` (its `question` and `answer`), in display order. */
+const FAQ_KEYS = ['free', 'sync', 'ai', 'cancel', 'browsers', 'privacy', 'downgrade'] as const
 
 function FAQItem({
   question,
@@ -91,27 +56,39 @@ function FAQItem({
 // No bottom border on the section: the FAQ is the whole /faq page and the footer draws its own
 // top border, so a second line above it left two lines with an empty band between them.
 export function FAQ() {
+  const t = useTranslations('faq')
+  const answer = (key: (typeof FAQ_KEYS)[number]) => {
+    if (key === 'free') {
+      return t('free.answer', {
+        groups: FREE_TIER_LIMITS.groups,
+        tabs: FREE_TIER_LIMITS.tabs,
+        urlRules: FREE_TIER_LIMITS.urlRules,
+      })
+    }
+    if (key === 'ai') return AI_ENABLED ? t('ai.answer') : t('ai.answerComingSoon')
+    return t(`${key}.answer`)
+  }
   return (
     <section className="py-16 sm:py-[72px] px-6 sm:px-11">
       <div className="container max-w-[960px] grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
         <div className="sm:col-span-1">
           <h1 className="font-semibold tracking-tight mb-2 text-[28px] sm:text-[34px] leading-tight">
-            Frequently asked
+            {t('title')}
           </h1>
           <p className="text-text2 text-sm mb-6">
-            Still unsure about something? We answer email in under a day.
+            {t('lead')}
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center h-10 px-5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground text-[13.5px] font-medium transition-colors"
           >
-            Contact support
+            {t('contact')}
           </Link>
         </div>
 
         <div className="sm:col-span-2 flex flex-col">
-          {faqs.map((faq, i) => (
-            <FAQItem key={faq.question} {...faq} defaultOpen={i === 0} />
+          {FAQ_KEYS.map((key, i) => (
+            <FAQItem key={key} question={t(`${key}.question`)} answer={answer(key)} defaultOpen={i === 0} />
           ))}
           <div className="border-t border-line" />
         </div>

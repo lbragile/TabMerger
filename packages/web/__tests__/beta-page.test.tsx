@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import BetaPage from '@/app/(marketing)/beta/page'
+import BetaPage from '@/app/[locale]/(marketing)/beta/page'
 
 describe('BetaPage', () => {
   it('renders the hero with a Join the beta button pointing to the tester Google Group', () => {
@@ -403,7 +403,7 @@ describe('BetaPage', () => {
     it('shows a real Firefox install section when FIREFOX_BETA_BLOB_BASE_URL is set', async () => {
       vi.stubEnv('FIREFOX_BETA_BLOB_BASE_URL', 'https://abc123.public.blob.vercel-storage.com')
       vi.resetModules()
-      const { default: ConfiguredBetaPage } = await import('@/app/(marketing)/beta/page')
+      const { default: ConfiguredBetaPage } = await import('@/app/[locale]/(marketing)/beta/page')
       render(<ConfiguredBetaPage />)
 
       expect(document.body.textContent).not.toMatch(/A Firefox beta is coming/)
@@ -432,7 +432,7 @@ describe('BetaPage screenshots', () => {
   it('only references screenshots that exist in public/beta', async () => {
     const { readFileSync, existsSync } = await import('node:fs')
     const { join } = await import('node:path')
-    const source = readFileSync(join(__dirname, '../app/(marketing)/beta/page.tsx'), 'utf8')
+    const source = readFileSync(join(__dirname, '../app/[locale]/(marketing)/beta/page.tsx'), 'utf8')
     const srcs = [...source.matchAll(/src: '(\/beta\/[^']+)'/g)].map((m) => m[1])
     expect(srcs.length).toBeGreaterThan(20)
     const missing = srcs.filter((src) => !existsSync(join(__dirname, '../public', src)))

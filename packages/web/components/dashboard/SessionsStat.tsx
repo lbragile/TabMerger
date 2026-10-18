@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useSavedSessions } from '@/components/dashboard/SavedSessionsProvider'
 
 /**
@@ -10,17 +11,19 @@ import { useSavedSessions } from '@/components/dashboard/SavedSessionsProvider'
  */
 export function SessionsStatValue() {
   const { status, sessions, totalRows } = useSavedSessions()
+  const t = useTranslations('dashboard.stats')
   if (status === 'ready') return <>{sessions.length}</>
   if (status === 'locked' || status === 'error') return <>{totalRows}</>
   return (
     <>
       <span aria-hidden="true">…</span>
-      <span className="sr-only">Loading</span>
+      <span className="sr-only">{t('loading')}</span>
     </>
   )
 }
 
 export function SessionsStatDescription() {
   const { status } = useSavedSessions()
-  return <>{status === 'locked' ? 'Sessions and backups (unlock to tell them apart)' : 'Browsing sessions stored'}</>
+  const t = useTranslations('dashboard.stats')
+  return <>{status === 'locked' ? t('sessions.lockedDescription') : t('sessions.description')}</>
 }

@@ -1,0 +1,7 @@
+{
+  "hex": "Couleur hexadécimale",
+  "hexTitle": "Saisir une couleur hexadécimale (#rrggbb)",
+  "hexPlaceholder": "#rrggbb",
+  "cancel": "Annuler",
+  "apply": "Appliquer"
+}

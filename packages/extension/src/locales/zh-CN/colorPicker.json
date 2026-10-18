@@ -1,0 +1,7 @@
+{
+  "hex": "十六进制颜色",
+  "hexTitle": "输入十六进制颜色（#rrggbb）",
+  "hexPlaceholder": "#rrggbb",
+  "cancel": "取消",
+  "apply": "应用"
+}

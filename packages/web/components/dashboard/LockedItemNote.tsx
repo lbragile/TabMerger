@@ -1,17 +1,17 @@
 'use client'
 
 import { Lock } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { useEncryptionKey } from '@/lib/encryption/context'
 
-/** Why an item shows as "(locked)" although the passphrase in this tab is the account's current one. */
-export const LOCKED_ITEM_NOTE = {
-  item: 'Saved with an earlier passphrase. Open the extension on the device that has it and let it sync.',
-  device: 'Its open tabs were saved with an earlier passphrase. Open the extension on that device and let it sync.',
-} as const
-
-/** Shown instead while the key could not be compared with the account's key row (the lookup failed). */
-export const LOCKED_ITEM_UNVERIFIED_NOTE = "Can't be read right now. Reload the page to try again."
+/**
+ * Why an item shows as "(locked)" although the passphrase in this tab is the account's current
+ * one (`dashboard.locked.<kind>`): `item` for a group, session or backup, `device` for a device's
+ * open-tabs snapshot. `dashboard.locked.unverified` is shown instead while the key could not be
+ * compared with the account's key row (the lookup failed).
+ */
+type LockedItemKind = 'item' | 'device'
 
 /**
  * The reason a single group, session or device row cannot be read, shown inside that item: a lock
@@ -27,14 +27,15 @@ export function LockedItemNote({
   className,
 }: {
   id?: string
-  kind?: keyof typeof LOCKED_ITEM_NOTE
+  kind?: LockedItemKind
   className?: string
 }) {
   const { keyVerified } = useEncryptionKey()
+  const t = useTranslations('dashboard.locked')
   return (
     <p id={id} className={cn('flex items-start gap-1.5 text-xs text-muted-foreground', className)}>
       <Lock aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" />
-      <span className="min-w-0">{keyVerified ? LOCKED_ITEM_NOTE[kind] : LOCKED_ITEM_UNVERIFIED_NOTE}</span>
+      <span className="min-w-0">{keyVerified ? t(kind) : t('unverified')}</span>
     </p>
   )
 }

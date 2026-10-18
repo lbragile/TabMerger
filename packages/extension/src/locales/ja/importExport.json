@@ -1,0 +1,27 @@
+{
+  "title": "インポート/エクスポート",
+  "description": "TabMergerのデータを管理します",
+  "tabExport": "エクスポート",
+  "tabImport": "インポート",
+  "exportIntro": "すべてのグループをJSONファイルとしてエクスポートします。このファイルは後で再インポートできます。",
+  "downloadJson": "JSONをダウンロード",
+  "jsonHeading": "TabMerger JSON",
+  "jsonIntro": "以前エクスポートしたJSONファイルからインポートします。現在のグループは置き換えられます。",
+  "chooseJson": "JSONファイルを選択",
+  "bookmarksHeading": "Chromeブックマーク",
+  "bookmarksIntro": "ChromeのブックマークHTMLのエクスポートからインポートします。各フォルダがグループになります。",
+  "chooseBookmarks": "ブックマークHTMLファイルを選択",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "OneTabのプレーンテキストのエクスポートからインポートします。空行で区切られた各ブロックがグループになります。",
+  "chooseOneTab": "OneTabのTXTファイルを選択",
+  "toast": {
+    "exported": "グループをエクスポートしました",
+    "imported": "グループをインポートしました",
+    "imported_skipped": "グループをインポートしました（{{skipped}}件をスキップ）",
+    "importedCounts": "{{groups}}、{{tabs}}をインポートしました",
+    "importedCounts_skipped": "{{groups}}、{{tabs}}をインポートしました（{{skipped}}件をスキップ）",
+    "invalidJson": "無効なJSONファイルです",
+    "noBookmarks": "ブックマークが見つかりません",
+    "noTabs": "タブが見つかりません"
+  }
+}

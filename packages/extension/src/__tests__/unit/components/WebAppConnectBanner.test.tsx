@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { WebAppConnectBanner } from '@/components/WebAppConnectBanner'
-import { OPEN_FAILED_MESSAGE } from '@/components/WebAppConnectBanner'
+import { openFailedMessage } from '@/components/WebAppConnectBanner'
 import { WEB_APP_ACCESS_DISMISSED_KEY } from '@/lib/webAppHostAccess'
 
 // Firefox-only "Allow TabMerger on <site>" prompt (useWebAppHostAccess + lib/webAppHostAccess):
@@ -159,7 +159,7 @@ describe('WebAppConnectBanner', () => {
     expect(screen.getByRole('alert')).toBeEmptyDOMElement()
     allow.focus()
     fireEvent.click(allow)
-    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(OPEN_FAILED_MESSAGE))
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(openFailedMessage()))
     expect(closeWindow).not.toHaveBeenCalled()
     expect(request).not.toHaveBeenCalled()
     expect(await allowButton()).toHaveFocus()
@@ -170,7 +170,7 @@ describe('WebAppConnectBanner', () => {
     granted.add(OLD)
     render(<WebAppConnectBanner />)
     fireEvent.click(await allowButton())
-    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(OPEN_FAILED_MESSAGE))
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(openFailedMessage()))
     fireEvent.click(await allowButton())
     await waitFor(() => expect(closeWindow).toHaveBeenCalledTimes(1))
     expect(screen.getByRole('alert')).toBeEmptyDOMElement()

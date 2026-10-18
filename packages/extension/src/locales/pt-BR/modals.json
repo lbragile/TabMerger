@@ -1,0 +1,65 @@
+{
+  "addGroup": {
+    "title": "Criar novo grupo",
+    "name": "Nome",
+    "namePlaceholder": "Nome do grupo",
+    "color": "Cor",
+    "cancel": "Cancelar",
+    "create": "Criar"
+  },
+  "dedup": {
+    "title": "Remover duplicatas",
+    "description_one": "{{count}} aba duplicada será removida.",
+    "description_other": "{{count}} abas duplicadas serão removidas.",
+    "description_many": "{{count}} abas duplicadas serão removidas.",
+    "cancel": "Cancelar",
+    "confirm_one": "Remover {{count}} duplicata",
+    "confirm_other": "Remover {{count}} duplicatas",
+    "confirm_many": "Remover {{count}} duplicatas"
+  },
+  "staleGroups": {
+    "title": "Revisar grupos inativos",
+    "description_one": "{{count}} grupo sem alterações há um tempo — expanda para ver ou arquive direto.",
+    "description_other": "{{count}} grupos sem alterações há um tempo — expanda para ver ou arquive direto.",
+    "description_many": "{{count}} grupos sem alterações há um tempo — expanda para ver ou arquive direto.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Ocultar",
+    "preview": "Prévia",
+    "archive": "Arquivar",
+    "empty": "Este grupo está vazio.",
+    "close": "Fechar"
+  },
+  "staleTabs": {
+    "title": "Abas inativas",
+    "description_one": "{{count}} aba sem uso há um tempo.",
+    "description_other": "{{count}} abas sem uso há um tempo.",
+    "description_many": "{{count}} abas sem uso há um tempo.",
+    "close": "Fechar",
+    "removeAll_one": "Remover {{count}} aba",
+    "removeAll_other": "Remover {{count}} abas",
+    "removeAll_many": "Remover {{count}} abas"
+  },
+  "saveSession": {
+    "title": "Salvar sessão",
+    "name": "Nome da sessão",
+    "namePlaceholder": "ex.: Pesquisa de trabalho, Leitura de fim de semana",
+    "nameRequired": "O nome da sessão é obrigatório",
+    "description": "Descrição (opcional)",
+    "descriptionPlaceholder": "Para que serve esta sessão?",
+    "cancel": "Cancelar",
+    "save": "Salvar"
+  },
+  "shortcutSave": {
+    "title_one": "Salvar {{count}} aba",
+    "title_other": "Salvar {{count}} abas",
+    "title_many": "Salvar {{count}} abas",
+    "description": "Escolha onde salvar as abas capturadas pelo atalho de teclado.",
+    "destination": "Grupo de destino",
+    "quickSave": "Salvar rápido (novo grupo)",
+    "cancel": "Cancelar",
+    "save": "Salvar"
+  },
+  "confirmDialog": {
+    "cancel": "Cancelar"
+  }
+}

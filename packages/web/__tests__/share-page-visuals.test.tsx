@@ -38,7 +38,7 @@ describe('SharePage — visual restyle additions', () => {
       expires_at: null,
       groups_snapshot: [],
     })
-    const { default: SharePage } = await import('@/app/(marketing)/share/[slug]/page')
+    const { default: SharePage } = await import('@/app/[locale]/(marketing)/share/[slug]/page')
     const jsx = await SharePage({ params: Promise.resolve({ slug: 'abc123' }) })
     render(jsx as React.ReactElement)
 
@@ -56,7 +56,7 @@ describe('SharePage — visual restyle additions', () => {
       expires_at: future,
       groups_snapshot: [],
     })
-    const { default: SharePage } = await import('@/app/(marketing)/share/[slug]/page')
+    const { default: SharePage } = await import('@/app/[locale]/(marketing)/share/[slug]/page')
     const jsx = await SharePage({ params: Promise.resolve({ slug: 'abc123' }) })
     render(jsx as React.ReactElement)
 
@@ -72,7 +72,7 @@ describe('SharePage — visual restyle additions', () => {
       expires_at: null,
       groups_snapshot: [],
     })
-    const { default: SharePage } = await import('@/app/(marketing)/share/[slug]/page')
+    const { default: SharePage } = await import('@/app/[locale]/(marketing)/share/[slug]/page')
     const jsx = await SharePage({ params: Promise.resolve({ slug: 'abc123' }) })
     render(jsx as React.ReactElement)
 
@@ -92,7 +92,7 @@ describe('SharePage — visual restyle additions', () => {
       expires_at: null,
       groups_snapshot: [],
     })
-    const { default: SharePage } = await import('@/app/(marketing)/share/[slug]/page')
+    const { default: SharePage } = await import('@/app/[locale]/(marketing)/share/[slug]/page')
     const jsx = await SharePage({ params: Promise.resolve({ slug: 'abc123' }) })
     render(jsx as React.ReactElement)
 

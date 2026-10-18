@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago",
+    "renameFailed": "Failed to rename device",
+    "renamed": "Device renamed",
+    "removeFailed": "Failed to remove device",
+    "removed": "Device removed",
+    "removeManyFailed": "Failed to remove devices",
+    "removedMany": "{count, plural, one {{count} device removed} other {{count} devices removed}}",
+    "empty": "No devices yet.",
+    "selectAll": "Select all devices",
+    "selectedCount": "{count} selected",
+    "removeSelected": "{count, plural, one {Remove {count} device} other {Remove {count} devices}}",
+    "selectDevice": "Select {name}",
+    "active": "Active {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} window} other {{windows} windows}} · {tabs, plural, one {{tabs} tab} other {{tabs} tabs}}",
+    "options": "Device options",
+    "rename": "Rename",
+    "remove": "Remove",
+    "removeTitle": "Remove device?",
+    "removeBody": "\"{name}\" will no longer sync tab data. This can't be undone.",
+    "removeManyTitle": "Remove {count} devices?",
+    "removeManyBody": "These devices will no longer sync tab data. This can't be undone.",
+    "cancel": "Cancel"
+  },
+  "metaTitle": "Account",
+  "title": "Account settings",
+  "lead": "Manage your account and subscription.",
+  "stats": {
+    "groups": "Groups synced",
+    "tabs": "Tabs saved",
+    "sessions": "Sessions and backups",
+    "aiCredits": "AI credits left"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Your account information.",
+    "email": "Email",
+    "memberSince": "Member since"
+  },
+  "signOutAll": {
+    "title": "Sign out of all devices",
+    "description": "This will revoke all active sessions.",
+    "button": "Sign out"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "description": "Manage your plan and billing.",
+    "manageBilling": "Manage billing",
+    "upgrade": "Upgrade",
+    "cancelNote": "You can cancel anytime via <strong>Manage billing</strong>. You keep access until the end of your current billing period."
+  },
+  "devicesCard": {
+    "title": "Devices",
+    "description": "Devices syncing your groups and tabs. Pro and Pro AI only."
+  },
+  "password": {
+    "tooShort": "Password must be at least 8 characters.",
+    "updated": "Password updated",
+    "set": "Password set — you can now sign in with email + password too",
+    "change": "Change password",
+    "setLabel": "Set a password",
+    "placeholder": "••••••••••",
+    "save": "Save"
+  },
+  "credits": {
+    "failed": "Could not start checkout",
+    "getMore": "Get more"
+  }
+}

@@ -71,6 +71,17 @@ describe('Navbar', () => {
     expect(screen.getByRole('button', { name: 'Toggle theme' })).toBeInTheDocument()
   })
 
+  it('puts the language button just before the theme toggle, from md, icon-only below lg', async () => {
+    await act(async () => {
+      render(await Navbar())
+    })
+    const language = await screen.findByRole('button', { name: 'Language: English (EN)' })
+    expect(language.nextElementSibling).toBe(screen.getByRole('button', { name: 'Toggle theme' }))
+    expect(language).toHaveClass('hidden', 'md:inline-flex')
+    expect(language).toHaveTextContent('EN')
+    expect(language.querySelector('span')).toHaveClass('hidden', 'lg:inline')
+  })
+
   it('shows sign-in controls when logged out', async () => {
     render(await Navbar())
     expect(screen.getByRole('link', { name: 'Sign in' })).toBeInTheDocument()

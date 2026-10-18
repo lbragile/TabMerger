@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger konnte den Server nicht erreichen, um die Verschlüsselung dieses Kontos zu prüfen, deshalb ist die Synchronisierung pausiert. Deine Gruppen bleiben auf diesem Gerät gespeichert. Prüfe deine Verbindung und versuche es erneut.",
+  "unlockBody": "Gib deine Verschlüsselungs-Passphrase ein, um synchronisierte Daten auf diesem Gerät zu entsperren. Das ist pro Gerät nur einmal nötig – du wirst nicht erneut gefragt, solange du dich nicht abmeldest. Deine Daten lassen sich nicht wiederherstellen, wenn du die Passphrase vergisst – sie verlässt nie dein Gerät und TabMerger kann sie nicht für dich zurücksetzen.",
+  "setupBody": "Deine synchronisierten Gruppen- und Tab-Daten sind Ende-zu-Ende-verschlüsselt, mit einer Passphrase, die nur du kennst. Wähle jetzt eine – deine Daten lassen sich nicht wiederherstellen, wenn du sie vergisst, sie verlässt nie dein Gerät und TabMerger kann sie nicht für dich zurücksetzen.",
+  "unavailableTitle": "Verschlüsselung gerade nicht prüfbar",
+  "tryAgain": "Erneut versuchen",
+  "unlockTitle": "Verschlüsselung entsperren",
+  "passphrase": "Passphrase",
+  "passphraseLabel": "Verschlüsselungs-Passphrase",
+  "unlock": "Entsperren",
+  "setupTitle": "Verschlüsselung einrichten",
+  "newPassphrase": "Neue Passphrase",
+  "confirmPassphrase": "Passphrase bestätigen",
+  "setupButton": "Verschlüsselung einrichten",
+  "error": {
+    "spaces": "Die Passphrase darf keine Leerzeichen enthalten",
+    "tooShort": "Die Passphrase muss mindestens 8 Zeichen lang sein",
+    "mismatch": "Die Passphrasen stimmen nicht überein",
+    "setupFailed": "Verschlüsselung konnte nicht eingerichtet werden",
+    "wrong": "Falsche Passphrase",
+    "wasReset": "Die Verschlüsselung dieses Kontos wurde zurückgesetzt. Wähle eine neue Passphrase."
+  },
+  "toast": {
+    "setUp": "Verschlüsselung eingerichtet",
+    "unlocked": "Verschlüsselung entsperrt"
+  }
+}

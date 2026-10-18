@@ -1,0 +1,29 @@
+{
+  "dropNewWindow": "Hier ablegen für neues Fenster",
+  "removeStale_one": "{{count}} alten Tab entfernen",
+  "removeStale_other": "{{count}} alte Tabs entfernen",
+  "editGroupNote": "Gruppen-Notiz bearbeiten",
+  "editNote": "Notiz bearbeiten",
+  "moreGroupOptions": "Weitere Gruppenoptionen",
+  "notePlaceholder": "Notiz für diese Gruppe hinzufügen …",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "Keine Fenster in dieser Gruppe",
+  "addWindow": "Fenster hinzufügen",
+  "search": {
+    "elsewhere": "{{tabs}} in {{groups}}",
+    "matchingTabs_one": "{{count}} passender Tab",
+    "matchingTabs_other": "{{count}} passende Tabs",
+    "otherGroups_one": "{{count}} andere Gruppe",
+    "otherGroups_other": "{{count}} andere Gruppen",
+    "noneInGroup": "Keine Tabs in dieser Gruppe passen",
+    "hidden_one": "{{count}} Tab durch Suche ausgeblendet",
+    "hidden_other": "{{count}} Tabs durch Suche ausgeblendet",
+    "allMatch_one": "Alle {{count}} Tab passen",
+    "allMatch_other": "Alle {{count}} Tabs passen",
+    "someMatch_one": "{{matched}} von {{count}} Tab passen",
+    "someMatch_other": "{{matched}} von {{count}} Tabs passen",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "Keine Tabs in dieser Gruppe passen zu „{{query}}“"
+  },
+  "createGroup": "Neue Gruppe erstellen …"
+}

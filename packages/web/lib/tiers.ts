@@ -1,4 +1,4 @@
-import { formatListPrice, getPricingTier, type PricingTier } from '@tabmerger/shared'
+import { getPricingTier, type PricingTier } from '@tabmerger/shared'
 
 /** Name, prices, features and limits come from the shared PRICING_TIERS, the single source. */
 function display(tier: PricingTier) {
@@ -55,10 +55,8 @@ export const YEARLY_DISCOUNT_PERCENT = Math.min(
   YEARLY_SAVINGS.proAi.percent
 )
 
-/** "$3.58/mo billed yearly · save 10%": the yearly plan's monthly equivalent, under its price. */
-export function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>): string {
-  return `${formatListPrice(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
-}
+// "$3.58/mo billed yearly · save 10%" is written per locale by `useYearlySubtext`
+// (components/pricing/useYearlySubtext.ts).
 
 export function getStripePriceId(
   tier: 'pro' | 'proAi',

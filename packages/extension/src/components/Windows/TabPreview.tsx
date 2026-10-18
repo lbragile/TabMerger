@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,7 @@ interface TabPreviewProps {
 }
 
 export function TabPreview({ tab, children }: TabPreviewProps) {
+  const { t } = useTranslation();
   const { aiFeatures } = useEntitlements();
   const { data: appSettings = DEFAULT_APP_SETTINGS } = useAppSettings();
   const { mutateAsync: fetchSummary } = useTabSummary();
@@ -134,18 +136,18 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="text-xs opacity-40">
-                  {appSettings.showPreviewImages && !blockedByConsent ? 'No preview' : 'Not enabled'}
+                  {appSettings.showPreviewImages && !blockedByConsent ? t('preview.noPreview') : t('preview.notEnabled')}
                 </span>
               </div>
             )}
             {!loading && !ogImage && !appSettings.showPreviewImages && (
               <p className="mt-1 text-[11px] text-muted-foreground text-center leading-tight">
-                Page images are off. Turn on in Settings.
+                {t('preview.imagesOff')}
               </p>
             )}
             {!loading && !ogImage && appSettings.showPreviewImages && blockedByConsent && (
               <p className="mt-1 text-[11px] text-muted-foreground text-center leading-tight">
-                Firefox permission for page images was turned off. Re-enable in Settings.
+                {t('preview.consentOff')}
               </p>
             )}
             {aiFeatures && (
@@ -168,7 +170,7 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
                   className="mt-2 h-6 text-xs"
                   onClick={generateSummary}
                 >
-                  ✨ Generate summary
+                  {t('preview.generateSummary')}
                 </Button>
               )
             )}

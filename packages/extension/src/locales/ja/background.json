@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "同期サーバーに接続できませんでした。もう一度お試しください。",
+    "accountMismatch": "このデバイスには別のアカウントのデータが残っています。拡張機能を開いてアカウントを切り替えてください。",
+    "identityChanged": "同期中に拡張機能がサインアウトされました。サインインしてもう一度お試しください。",
+    "keyCheckFailed": "暗号化の状態を確認できませんでした。もう一度お試しください。",
+    "setupUnfinished": "拡張機能を開いて、暗号化の設定を完了してください。",
+    "locked": "同期するには、拡張機能を開いて暗号化のロックを解除してください。"
+  },
+  "menu": {
+    "saveTo": "TabMergerに保存",
+    "scopeCurrent": "このタブを保存",
+    "scopeLeft": "左側のタブを保存",
+    "scopeRight": "右側のタブを保存",
+    "scopeExcluding": "他のすべてのタブを保存",
+    "noGroups": "保存済みのグループはまだありません",
+    "groupItem": "{{color}} {{name}}（{{windows}}w · {{tabs}}t）"
+  },
+  "reminder": {
+    "title": "TabMerger リマインダー"
+  }
+}

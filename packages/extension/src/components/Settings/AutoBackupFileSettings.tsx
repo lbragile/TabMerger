@@ -1,8 +1,9 @@
 import { useEffect, useId, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatDateTime, formatList } from '@/lib/i18n';
 import { useQuery } from '@tanstack/react-query';
 import { FolderOpen } from 'lucide-react';
 import {
-  BACKUP_FILE_COPY,
   BACKUP_FILE_EXTENSION,
   BACKUP_FILE_PERMISSION,
   BACKUP_FILE_TOKENS,
@@ -43,7 +44,7 @@ interface AutoBackupFileSettingsProps {
 }
 
 const formatFileTime = (ms: number) =>
-  new Date(ms).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  formatDateTime(ms, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 /** What the preview is built from: a fixed example, so it does not jump around while typing. */
 const PREVIEW = { groups: 4, tabs: 37 };
@@ -56,6 +57,7 @@ const PREVIEW = { groups: 4, tabs: 37 };
  * the stored values again before it writes (it never trusts what this component saved).
  */
 export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFileSettingsProps) {
+  const { t } = useTranslation();
   const folderId = useId();
   const patternId = useId();
   const lastFileId = useId();
@@ -111,8 +113,8 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
     // Ask again first: a file deleted a moment ago must open the Downloads folder, not nothing.
     const current = (await recheckLocation()).data;
     const result = await showBackupFile(current?.kind === 'found' ? current.id : null);
-    if (result === 'unavailable') toast.error(BACKUP_FILE_COPY.showUnavailable);
-    else if (result === 'failed') toast.error(BACKUP_FILE_COPY.showFailed);
+    if (result === 'unavailable') toast.error(t('backups.file.showUnavailable'));
+    else if (result === 'failed') toast.error(t('backups.file.showFailed'));
   };
   const folderCheck = validateBackupFolder(folder);
   const patternCheck = validateBackupFilePattern(pattern);
@@ -130,12 +132,12 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
       .then(async (granted) => {
         await recheckPermission();
         if (!granted) {
-          toast.error(BACKUP_FILE_COPY.permissionDenied);
+          toast.error(t('backups.file.permissionDenied'));
           return;
         }
         await onSave({ autoBackupFileEnabled: true });
       })
-      .catch(() => toast.error(BACKUP_FILE_COPY.permissionDenied));
+      .catch(() => toast.error(t('backups.file.permissionDenied')));
   };
 
   const commitFolder = () => {
@@ -153,27 +155,27 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
   const isDefault = file.folder === DEFAULT_BACKUP_FILE_FOLDER && file.pattern === DEFAULT_BACKUP_FILE_PATTERN && folder === file.folder && pattern === file.pattern;
   const preview =
     folderCheck.ok && patternCheck.ok
-      ? `Downloads/${buildBackupFilePath(folderCheck.value, patternCheck.value, { createdAt: previewAt, ...PREVIEW })}`
+      ? t('backups.file.downloadsPath', { path: buildBackupFilePath(folderCheck.value, patternCheck.value, { createdAt: previewAt, ...PREVIEW }) })
       : null;
 
   return (
     <div className="min-w-0 space-y-3">
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <Label className="text-sm">{BACKUP_FILE_COPY.toggle}</Label>
-          <p className="text-xs text-muted-foreground">{BACKUP_FILE_COPY.description}</p>
-          {revoked && <p className="text-xs text-amber-500 mt-0.5">{BACKUP_FILE_COPY.permissionRevoked}</p>}
+          <Label className="text-sm">{t('backups.file.toggle')}</Label>
+          <p className="text-xs text-muted-foreground">{t('backups.file.description')}</p>
+          {revoked && <p className="text-xs text-amber-500 mt-0.5">{t('backups.file.permissionRevoked')}</p>}
         </div>
-        <Switch className="shrink-0" aria-label={BACKUP_FILE_COPY.toggle} checked={on} disabled={disabled} onCheckedChange={handleToggle} />
+        <Switch className="shrink-0" aria-label={t('backups.file.toggle')} checked={on} disabled={disabled} onCheckedChange={handleToggle} />
       </div>
 
       {on && (
         <div className="min-w-0 space-y-2 border border-border p-2">
-          <p className="text-xs text-muted-foreground">{BACKUP_FILE_COPY.location}</p>
+          <p className="text-xs text-muted-foreground">{t('backups.file.location')}</p>
 
           <div className="min-w-0 space-y-1">
             <Label htmlFor={folderId} className="text-xs">
-              {BACKUP_FILE_COPY.folderLabel}
+              {t('backups.file.folderLabel')}
             </Label>
             <Input
               id={folderId}
@@ -196,7 +198,7 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
 
           <div className="min-w-0 space-y-1">
             <Label htmlFor={patternId} className="text-xs">
-              {BACKUP_FILE_COPY.patternLabel}
+              {t('backups.file.patternLabel')}
             </Label>
             <Input
               id={patternId}
@@ -216,21 +218,24 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
               </p>
             )}
             <p id={`${patternId}-help`} className="text-[11px] text-muted-foreground break-words">
-              You can use {BACKUP_FILE_TOKENS.map((t) => `${t.token} (${t.meaning})`).join(', ')}. {BACKUP_FILE_EXTENSION} is added for you.
+              {t('backups.file.tokenHelp', {
+                tokens: formatList(BACKUP_FILE_TOKENS.map((tk) => t('backups.file.token', { token: tk.token, meaning: tk.meaning }))),
+                extension: BACKUP_FILE_EXTENSION
+              })}
             </p>
           </div>
 
           <div className="flex items-start justify-between gap-2 min-w-0">
             <p className="min-w-0 flex-1 text-[11px] text-muted-foreground break-all" aria-live="polite">
-              {preview ? `Example: ${preview}` : 'Fix the highlighted field to see where files will go.'}
+              {preview ? t('backups.file.example', { path: preview }) : t('backups.file.fixField')}
             </p>
             <Button variant="ghost" size="sm" className="h-6 px-2 text-xs shrink-0 rounded-none" disabled={fieldsDisabled || isDefault} onClick={handleReset}>
-              Reset
+              {t('backups.file.reset')}
             </Button>
           </div>
 
-          <p className="text-[11px] text-muted-foreground">{BACKUP_FILE_COPY.whereToFind}</p>
-          <p className="text-[11px] text-muted-foreground">{BACKUP_FILE_COPY.retention}</p>
+          <p className="text-[11px] text-muted-foreground">{t('backups.file.whereToFind')}</p>
+          <p className="text-[11px] text-muted-foreground">{t('backups.file.retention')}</p>
 
           {/* Where the last file really is. The path comes from the browser, so it is shown as
               text only (never a link, never markup) and wraps inside the popup's width. */}
@@ -238,7 +243,7 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
             <div className="flex items-start justify-between gap-2 min-w-0">
               <div className="min-w-0 flex-1 space-y-0.5">
                 <p id={lastFileId} className="text-xs font-medium">
-                  {BACKUP_FILE_COPY.lastFileLabel}
+                  {t('backups.file.lastFileLabel')}
                 </p>
                 {location?.kind === 'found' && (
                   <>
@@ -246,14 +251,14 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
                       {location.path}
                     </p>
                     <p className="text-[11px] text-muted-foreground">
-                      Saved {relativeTimeStr(location.at)} ago ({formatFileTime(location.at)})
+                      {t('backups.file.savedAgo', { ago: relativeTimeStr(location.at), when: formatFileTime(location.at) })}
                     </p>
                   </>
                 )}
-                {location?.kind === 'pending' && <p className="text-[11px] text-muted-foreground">{BACKUP_FILE_COPY.lastFilePending}</p>}
+                {location?.kind === 'pending' && <p className="text-[11px] text-muted-foreground">{t('backups.file.lastFilePending')}</p>}
                 {location?.kind === 'gone' && (
                   <p className="text-[11px] text-muted-foreground">
-                    {BACKUP_FILE_COPY.lastFileGone} It was saved {relativeTimeStr(location.at)} ago ({formatFileTime(location.at)}).
+                    {t('backups.file.goneSavedAgo', { gone: t('backups.file.lastFileGone'), ago: relativeTimeStr(location.at), when: formatFileTime(location.at) })}
                   </p>
                 )}
                 {/* The browser was not asked, or has nothing recorded: say what the last write did
@@ -261,10 +266,10 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
                 {(location?.kind === 'none' || location?.kind === 'unavailable') &&
                   (status ? (
                     <p className="text-[11px] text-muted-foreground break-all">
-                      Last file, {relativeTimeStr(status.at)} ago: {describeBackupFile(status.result, status.path)}
+                      {t('backups.file.lastFileAgo', { ago: relativeTimeStr(status.at), result: describeBackupFile(status.result, status.path) })}
                     </p>
                   ) : (
-                    <p className="text-[11px] text-muted-foreground">No file has been saved yet.</p>
+                    <p className="text-[11px] text-muted-foreground">{t('backups.file.noneYet')}</p>
                   ))}
               </div>
               <Button
@@ -277,18 +282,18 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
                 onClick={() => void handleShow()}
               >
                 <FolderOpen className="h-3 w-3" />
-                {location?.kind === 'found' ? BACKUP_FILE_COPY.showInFolder : BACKUP_FILE_COPY.showDownloadsFolder}
+                {location?.kind === 'found' ? t('backups.file.showInFolder') : t('backups.file.showDownloadsFolder')}
               </Button>
             </div>
             {!canShow && (
               <p id={`${lastFileId}-unavailable`} className="text-[11px] text-muted-foreground">
-                {BACKUP_FILE_COPY.showUnavailable}
+                {t('backups.file.showUnavailable')}
               </p>
             )}
             {/* A newer write that did not produce a file: the last file above is the one before it. */}
             {status && status.result !== 'saved' && location && location.kind !== 'none' && location.kind !== 'unavailable' && (
               <p className="text-[11px] text-amber-500">
-                Last attempt, {relativeTimeStr(status.at)} ago: {describeBackupFile(status.result, status.path)}
+                {t('backups.file.lastAttemptAgo', { ago: relativeTimeStr(status.at), result: describeBackupFile(status.result, status.path) })}
               </p>
             )}
           </div>

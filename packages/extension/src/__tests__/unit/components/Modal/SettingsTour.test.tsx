@@ -33,7 +33,7 @@ vi.mock('@/lib/importExport', () => ({
   importGroups: vi.fn(),
   parseBookmarksHtml: vi.fn(),
   parseOneTabs: vi.fn(),
-  skippedSuffix: () => '',
+  skippedContext: (n: number) => ({ skipped: n }),
   exportGroups: vi.fn().mockReturnValue('{}'),
 }))
 vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
