@@ -45,7 +45,7 @@ _Last updated 2026-10-18. Keep this current in the same change as the work (a CL
 - [x] Signed-in pages (dashboard, account) fit phone screens
 - [x] Translation-ready web app (next-intl): every public and signed-in page reads its words from `packages/web/messages/<locale>/`, English URLs unchanged, other languages under `/<locale>/…`, hreflang in metadata and the sitemap, a dev-only pseudo-locale (`/en-XA`) for layout testing, and a language switcher in the footer and on the account page. Privacy and Terms stay English. See [I18N.md](I18N.md). In the code, unreleased.
 - [x] The website and the extension in German, Spanish, French, Japanese, Brazilian Portuguese and Simplified Chinese. The site picks the visitor's language from the browser and the switcher; the extension follows the browser's language. In the code, unreleased.
-- [ ] A language picker in the extension's Settings (today it always follows the browser's language)
+- [x] A language picker in the extension: Settings → General → Language (applied with "Save changes") and a language menu in the popup header (applied at once). "Browser default" follows the browser's language; the choice is per device and never synced. In the code, unreleased.
 
 ### Billing
 

@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUIStore } from "@/stores/uiStore";
 import { SearchOverlay } from './SearchOverlay';
+import { LanguageMenu } from './LanguageMenu';
 import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
@@ -427,6 +428,9 @@ export function Header() {
                     )}
                 </DropdownMenu>
                 )}
+
+                {/* Language: applies at once (Settings → General has the same choice) */}
+                <LanguageMenu />
 
                 {/* Replays the guided tour (components/Tour). The tour's last step points here. */}
                 <Tooltip>

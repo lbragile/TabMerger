@@ -1135,3 +1135,57 @@ describe('background — tabsForScope', () => {
     expect(await scoped('current', 1, tabs)).toEqual(['https://a.com'])
   })
 })
+
+describe('background — follows the language chosen in Settings', () => {
+  type StorageListener = (changes: Record<string, { newValue?: unknown }>, area: string) => void
+  let storageListeners: StorageListener[]
+
+  /** A worker start with `tm_locale` already stored, as after a browser restart. */
+  async function startWith(stored: Record<string, unknown>) {
+    vi.resetModules()
+    storageListeners = []
+    stub = makeChromeStub()
+    const storage = stub.chrome.storage as unknown as Record<string, unknown>
+    storage.local = {
+      get: vi.fn(async (key: string | null) => (key === null ? { ...stored } : key in stored ? { [key]: stored[key] } : {})),
+      set: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn(),
+    }
+    storage.onChanged = { addListener: (l: StorageListener) => storageListeners.push(l), removeListener: vi.fn() }
+    globalThis.chrome = stub.chrome as unknown as typeof chrome
+    await import('@/entrypoints/background')
+    capturedMain!()
+  }
+
+  afterEach(async () => {
+    const { i18n } = await import('@/lib/i18n')
+    await i18n.changeLanguage('en')
+  })
+
+  it('rebuilds the right-click menu in the stored language on worker start', async () => {
+    await startWith({ tm_locale: 'de' })
+    await vi.waitFor(() =>
+      expect(stub.chrome.contextMenus.create).toHaveBeenCalledWith(expect.objectContaining({ id: 'tm-add', title: 'In TabMerger speichern' }))
+    )
+  })
+
+  it('rebuilds the menu when the choice changes, and shows later notifications in it', async () => {
+    await startWith({})
+    stub.chrome.contextMenus.create.mockClear()
+    storageListeners.forEach((l) => l({ tm_locale: { newValue: 'fr' } }, 'local'))
+    await vi.waitFor(() =>
+      expect(stub.chrome.contextMenus.create).toHaveBeenCalledWith(expect.objectContaining({ id: 'tm-add', title: 'Enregistrer dans TabMerger' }))
+    )
+
+    ;(stub.chrome.storage.local.get as ReturnType<typeof vi.fn>).mockResolvedValue({ 'reminder-1': { url: 'https://example.com', title: 'Example', note: '' } })
+    await stub.listeners.onAlarm[0]({ name: 'reminder-1' })
+    expect(stub.chrome.notifications.create).toHaveBeenCalledWith('reminder-1', expect.objectContaining({ title: 'Rappel TabMerger' }))
+  })
+
+  it('ignores an invalid stored value (untrusted storage) and keeps the browser language', async () => {
+    await startWith({ tm_locale: 'xx-evil' })
+    await new Promise((r) => setTimeout(r, 0))
+    expect(stub.chrome.contextMenus.create).toHaveBeenCalledWith(expect.objectContaining({ id: 'tm-add', title: 'Save to TabMerger' }))
+    expect(stub.chrome.contextMenus.create).not.toHaveBeenCalledWith(expect.objectContaining({ title: 'In TabMerger speichern' }))
+  })
+})

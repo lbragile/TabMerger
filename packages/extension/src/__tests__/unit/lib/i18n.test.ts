@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   activeLocale,
   applyDocumentLocale,
+  applyLocalePreference,
   buildI18nOptions,
+  followLocalePreference,
   formatAndList,
   formatDate,
   formatDateTime,
@@ -11,11 +13,13 @@ import {
   formatTimeAgo,
   i18n,
   initI18n,
+  initialUiLanguage,
   lazyMessages,
   resolveLocale,
   t
 } from '@/lib/i18n'
 import { en } from '@/locales/en'
+import { LOCALE_PREFERENCE_LOCAL_STORAGE_KEY, LOCALE_PREFERENCE_STORAGE_KEY } from '@/lib/localePreference'
 import { SUPPORTED_LOCALES } from '@tabmerger/shared'
 
 describe('resolveLocale', () => {
@@ -141,5 +145,96 @@ describe('applyDocumentLocale', () => {
     const doc = document.implementation.createHTMLDocument('x')
     applyDocumentLocale(doc)
     expect(doc.documentElement.dir).toBe('rtl')
+  })
+})
+
+describe('language preference', () => {
+  /** The browser's UI language as chrome.i18n reports it, with the setup's storage stub kept. */
+  const browserLanguage = (tag: string) =>
+    vi.stubGlobal('chrome', { ...globalThis.chrome, i18n: { getUILanguage: () => tag } })
+
+  afterEach(async () => {
+    vi.unstubAllGlobals()
+    localStorage.clear()
+    await i18n.changeLanguage('en')
+    applyDocumentLocale()
+  })
+
+  it('starts in the stored choice, else the browser language', () => {
+    browserLanguage('fr-CA')
+    expect(initialUiLanguage()).toBe('fr-CA')
+    localStorage.setItem(LOCALE_PREFERENCE_LOCAL_STORAGE_KEY, 'ja')
+    expect(initialUiLanguage()).toBe('ja')
+    expect(buildI18nOptions(initialUiLanguage()).lng).toBe('ja')
+    // an invalid stored value is ignored
+    localStorage.setItem(LOCALE_PREFERENCE_LOCAL_STORAGE_KEY, 'xx')
+    expect(initialUiLanguage()).toBe('fr-CA')
+  })
+
+  it('switches the language, <html lang>, dates, numbers and plurals at once', async () => {
+    expect(await applyLocalePreference('de')).toBe(true)
+    expect(i18n.language).toBe('de')
+    expect(activeLocale()).toBe('de')
+    expect(document.documentElement.lang).toBe('de')
+    expect(formatNumber(1234.5)).toBe(new Intl.NumberFormat('de').format(1234.5))
+    expect(formatDate(0, { month: 'long', timeZone: 'UTC' })).toBe(new Date(0).toLocaleDateString('de', { month: 'long', timeZone: 'UTC' }))
+    expect(t('settings.general.languageLabel')).toBe('Sprache')
+    expect(formatTimeAgo(0, { now: 5 * 60_000 })).not.toBe('5m ago')
+    // the same choice again changes nothing
+    expect(await applyLocalePreference('de')).toBe(false)
+  })
+
+  it('"Browser default" goes back to the resolved browser language, not the last choice', async () => {
+    browserLanguage('pt-PT')
+    await applyLocalePreference('ja')
+    expect(i18n.language).toBe('ja')
+    expect(await applyLocalePreference('auto')).toBe(true)
+    expect(i18n.language).toBe('pt-BR')
+    expect(document.documentElement.lang).toBe('pt-BR')
+    browserLanguage('zh-TW')
+    await applyLocalePreference('auto')
+    expect(i18n.language).toBe('en')
+  })
+
+  it('followLocalePreference applies the stored choice, then every change, and reports each switch', async () => {
+    type Listener = (changes: Record<string, { newValue?: unknown }>, area: string) => void
+    const listeners = new Set<Listener>()
+    const store: Record<string, unknown> = { [LOCALE_PREFERENCE_STORAGE_KEY]: 'es' }
+    vi.stubGlobal('chrome', {
+      storage: {
+        local: { get: vi.fn(async (key: string) => ({ [key]: store[key] })) },
+        onChanged: { addListener: (l: Listener) => listeners.add(l), removeListener: (l: Listener) => listeners.delete(l) },
+      },
+    })
+    const changed = vi.fn()
+    const { ready, stop } = followLocalePreference(changed)
+    await ready
+    expect(i18n.language).toBe('es')
+    expect(changed).toHaveBeenCalledTimes(1)
+
+    listeners.forEach((l) => l({ [LOCALE_PREFERENCE_STORAGE_KEY]: { newValue: 'fr' } }, 'local'))
+    await vi.waitFor(() => expect(i18n.language).toBe('fr'))
+    await vi.waitFor(() => expect(changed).toHaveBeenCalledTimes(2))
+    expect(t('background.menu.saveTo')).not.toBe(en.background.menu.saveTo)
+
+    stop()
+    expect(listeners.size).toBe(0)
+  })
+
+  it('a change saved while the first read is in flight wins over that read', async () => {
+    type Listener = (changes: Record<string, { newValue?: unknown }>, area: string) => void
+    const listeners = new Set<Listener>()
+    let resolveRead: (v: Record<string, unknown>) => void = () => {}
+    vi.stubGlobal('chrome', {
+      storage: {
+        local: { get: vi.fn(() => new Promise((r) => { resolveRead = r })) },
+        onChanged: { addListener: (l: Listener) => listeners.add(l), removeListener: () => {} },
+      },
+    })
+    const { ready } = followLocalePreference(() => {})
+    listeners.forEach((l) => l({ [LOCALE_PREFERENCE_STORAGE_KEY]: { newValue: 'ja' } }, 'local'))
+    resolveRead({ [LOCALE_PREFERENCE_STORAGE_KEY]: 'de' })
+    await ready
+    await vi.waitFor(() => expect(i18n.language).toBe('ja'))
   })
 })

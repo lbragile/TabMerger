@@ -117,3 +117,4 @@
 - [Firefox popup permissions.request](learnings_firefox_popup_permission_request.md) — no doorhanger over a popup; ask from a Firefox-only tab; tabs.create leaves the popup open, window.close() it
 - [Firefox popup same-size resize](learnings_firefox_popup_same_size_resize.md) — Radix Select closed on open in Firefox popups; capture guard in SelectContent; real-popup BiDi repro
 - [Extension i18n (i18next)](learnings_i18n_i18next.md) — JSON catalogs per area, sync init order, no module-scope t(), data-dnd-grip selectors, dev-only pseudo-locale, lint + catalog guards
+- [Language picker](learnings_language_picker.md) — localStorage + chrome.storage.local (storage wins), worker localeReady, lazy shared reads, Button svg size-4

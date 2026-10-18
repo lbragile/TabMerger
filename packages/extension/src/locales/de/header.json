@@ -11,6 +11,8 @@
   "organize": "Organisieren",
   "organizeHint": "Alle Gruppen mit KI neu organisieren",
   "takeTour": "Rundgang starten",
+  "language": "Sprache",
+  "languageButton": "Sprache ({{code}})",
   "accountMenu": "Kontomenü",
   "settingsMenu": "Einstellungsmenü",
   "upgradeToPro": "Auf Pro upgraden",

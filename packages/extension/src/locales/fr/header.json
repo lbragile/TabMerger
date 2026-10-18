@@ -11,6 +11,8 @@
   "organize": "Organiser",
   "organizeHint": "Réorganiser tous les groupes avec l’IA",
   "takeTour": "Faire la visite",
+  "language": "Langue",
+  "languageButton": "Langue ({{code}})",
   "accountMenu": "Menu du compte",
   "settingsMenu": "Menu des paramètres",
   "upgradeToPro": "Passer à Pro",

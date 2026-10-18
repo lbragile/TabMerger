@@ -25,6 +25,7 @@ import { registerAutoBackup } from '@/lib/autoBackupAlarm';
 import { registerUninstallSurvey } from '@/lib/uninstallSurvey';
 import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
 import { resolveTrustedWebAppOrigins } from '@/lib/webAppOrigins';
+import { followLocalePreference, initI18n, t } from '@/lib/i18n';
 
 /**
  * `skipped: true` = another sync cycle (the popup's, or an earlier request) held the sync lock, so
@@ -40,32 +41,37 @@ type SyncNowResult = { ok: true; skipped: boolean } | { ok: false; reason: 'no-s
 // so an account whose encryption was never unlocked THIS worker lifetime reports 'locked' rather
 // than silently no-op'ing — the web UI surfaces that as "open the extension and unlock".
 /** What the dashboard is told when a cycle ran but did not complete (nothing was merged or lost). */
-const SYNC_NOW_FAILURE_MESSAGE: Record<Exclude<SyncCycleStatus, 'synced' | 'busy'>, string> = {
-  'pull-failed': 'Could not reach the sync server. Try again.',
+const SYNC_NOW_FAILURE_MESSAGE: Record<Exclude<SyncCycleStatus, 'synced' | 'busy'>, () => string> = {
+  'pull-failed': () => t('background.syncNow.pullFailed'),
   // The worker never switches (wipes) the local store itself: that is destructive and belongs to
   // the popup's sign-in flow, where the user is present. Until then nothing is pushed or merged.
-  'account-mismatch': 'This device still holds another account\'s data. Open the extension to switch accounts.',
-  'identity-changed': 'The extension was signed out during the sync. Sign in and try again.'
+  'account-mismatch': () => t('background.syncNow.accountMismatch'),
+  'identity-changed': () => t('background.syncNow.identityChanged')
 };
 
+// Settles once the Settings language choice is applied (see followLocalePreference)
+let localeReady: Promise<void> = Promise.resolve();
+
 async function handleSyncNow(): Promise<SyncNowResult> {
+  // Its messages are shown on the dashboard: in the language chosen in Settings
+  await localeReady;
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return { ok: false, reason: 'no-session' };
     const keyState = await getEncryptionKeyState();
     // The check failed (offline, 401, 5xx): not "setup unfinished", and nothing may be uploaded.
     if (keyState === 'unknown') {
-      return { ok: false, reason: 'error', message: 'Could not check the encryption status. Try again.' };
+      return { ok: false, reason: 'error', message: t('background.syncNow.keyCheckFailed') };
     }
     if (keyState === 'absent') {
-      return { ok: false, reason: 'locked', message: 'Open the extension to finish encryption setup.' };
+      return { ok: false, reason: 'locked', message: t('background.syncNow.setupUnfinished') };
     }
     if (!(await getDataKey())) {
-      return { ok: false, reason: 'locked', message: 'Open the extension and unlock encryption to sync.' };
+      return { ok: false, reason: 'locked', message: t('background.syncNow.locked') };
     }
     const { status } = await performSyncCycle(session);
     if (status === 'synced' || status === 'busy') return { ok: true, skipped: status === 'busy' };
-    return { ok: false, reason: 'error', message: SYNC_NOW_FAILURE_MESSAGE[status] };
+    return { ok: false, reason: 'error', message: SYNC_NOW_FAILURE_MESSAGE[status]() };
   } catch (err) {
     return { ok: false, reason: 'error', message: err instanceof Error ? err.message : String(err) };
   }
@@ -90,11 +96,11 @@ const COLOR_EMOJI: Record<string, string> = {
 };
 const colorEmoji = (rgba: string) => COLOR_EMOJI[rgba] ?? '⚪';
 
-const SCOPE_LABELS: Record<Scope, string> = {
-  current:   'Save this tab',
-  left:      'Save tabs to the left',
-  right:     'Save tabs to the right',
-  excluding: 'Save all other tabs',
+const SCOPE_LABELS: Record<Scope, () => string> = {
+  current:   () => t('background.menu.scopeCurrent'),
+  left:      () => t('background.menu.scopeLeft'),
+  right:     () => t('background.menu.scopeRight'),
+  excluding: () => t('background.menu.scopeExcluding'),
 };
 
 // Shared by the context-menu handler and the global keyboard shortcuts: picks the
@@ -176,19 +182,19 @@ async function _buildMenus() {
   // gesture than right-clicking the tab strip itself, and omitting it made the menu appear
   // "missing" to users.
   const CONTEXTS: chrome.contextMenus.CreateProperties['contexts'] = ['tab', 'page'];
-  chrome.contextMenus.create({ id: 'tm-add', title: 'Save to TabMerger', contexts: CONTEXTS });
+  chrome.contextMenus.create({ id: 'tm-add', title: t('background.menu.saveTo'), contexts: CONTEXTS });
 
   for (const scope of Object.keys(SCOPE_LABELS) as Scope[]) {
-    chrome.contextMenus.create({ id: `tm-scope-${scope}`, parentId: 'tm-add', title: SCOPE_LABELS[scope], contexts: CONTEXTS });
+    chrome.contextMenus.create({ id: `tm-scope-${scope}`, parentId: 'tm-add', title: SCOPE_LABELS[scope](), contexts: CONTEXTS });
     if (groups.length === 0) {
-      chrome.contextMenus.create({ id: `tm-scope-${scope}-none`, parentId: `tm-scope-${scope}`, title: 'No saved groups yet', contexts: CONTEXTS, enabled: false });
+      chrome.contextMenus.create({ id: `tm-scope-${scope}-none`, parentId: `tm-scope-${scope}`, title: t('background.menu.noGroups'), contexts: CONTEXTS, enabled: false });
     } else {
       for (const group of groups) {
         const tabCount = group.windows.reduce((n, w) => n + w.tabs.length, 0);
         chrome.contextMenus.create({
           id: `tm-scope-${scope}-${group.id}`,
           parentId: `tm-scope-${scope}`,
-          title: `${colorEmoji(group.color)} ${group.name} (${group.windows.length}w · ${tabCount}t)`,
+          title: t('background.menu.groupItem', { color: colorEmoji(group.color), name: group.name, windows: group.windows.length, tabs: tabCount }),
           contexts: CONTEXTS,
         });
       }
@@ -211,6 +217,11 @@ async function reRegisterReminders() {
 }
 
 export default defineBackground(() => {
+  // First: menus, notifications and sync-now replies all read the catalog
+  initI18n();
+  // ...in the language chosen in Settings, once read (the worker has no synchronous storage):
+  // a change rebuilds the right-click menu, notifications read the catalog when shown
+  localeReady = followLocalePreference(scheduleMenuRebuild).ready;
   // MV3 background is a service worker (`self`, no `window`/DOM) — placed inside
   // this callback (not module scope) because WXT statically imports entrypoint
   // files during dev-server startup to detect manifest metadata, and `self` isn't
@@ -401,6 +412,8 @@ export default defineBackground(() => {
   // none exist yet — used by the global keyboard shortcut, which has no menu selection.
   async function appendTabsToGroup(tmTabs: TmTab[], groupId?: string) {
     if (tmTabs.length === 0) return;
+    // A new "Quick Save" group is named in the language chosen in Settings
+    await localeReady;
 
     // One atomic read-modify-write: the popup may be saving/editing at the same time, and it
     // has its own write queue, so a plain get-then-save here could drop its write (or ours).
@@ -411,7 +424,7 @@ export default defineBackground(() => {
         : available.findIndex((g) => !g.permanent && !isTourDemoGroup(g));
 
       if (targetIndex < 0 && !groupId) {
-        available.push(createGroup(undefined, 'Quick Save'));
+        available.push(createGroup(undefined, t('common.quickSaveGroup')));
         targetIndex = available.length - 1;
       }
       if (targetIndex < 0) return null;
@@ -545,11 +558,13 @@ export default defineBackground(() => {
         | { url: string; title: string; note: string }
         | undefined;
       if (!data) return;
+      // The alarm may be what woke the worker: its title must not beat the stored language
+      await localeReady;
       const notifId = alarm.name;
       chrome.notifications.create(notifId, {
         type: 'basic',
         iconUrl: chrome.runtime.getURL('icon/128.png'),
-        title: 'TabMerger Reminder',
+        title: t('background.reminder.title'),
         message: data.title + (data.note ? `\n${data.note}` : ''),
         requireInteraction: true
       });

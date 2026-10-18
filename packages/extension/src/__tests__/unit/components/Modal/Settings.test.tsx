@@ -907,3 +907,53 @@ describe('SettingsModal — switches are findable by role and name', () => {
     expect(await screen.findByRole('combobox', { name: 'Tabs that do not match a search' })).toBeInTheDocument()
   })
 })
+
+describe('SettingsModal — Language', () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn()
+    Element.prototype.hasPointerCapture = vi.fn(() => false)
+    localStorage.clear()
+  })
+  afterEach(async () => {
+    localStorage.clear()
+    const { i18n } = await import('@/lib/i18n')
+    await i18n.changeLanguage('en')
+  })
+
+  it('lists Browser default first, then every language by its own name', async () => {
+    renderModal()
+    fireEvent.click(screen.getByRole('combobox', { name: 'Language' }))
+    const options = await screen.findAllByRole('option')
+    expect(options.map((o) => o.textContent)).toEqual([
+      'Browser default', 'English', 'Deutsch', 'Español', 'Français', '日本語', 'Português (Brasil)', '简体中文',
+    ])
+    expect(screen.getByRole('option', { name: 'Deutsch' })).toHaveAttribute('lang', 'de')
+  })
+
+  it('applies a picked language on Save, not before, and stores it', async () => {
+    const { i18n } = await import('@/lib/i18n')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    fireEvent.click(screen.getByRole('combobox', { name: 'Language' }))
+    fireEvent.click(await screen.findByRole('option', { name: 'Deutsch' }))
+    expect(i18n.language).toBe('en')
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+    await waitFor(() => expect(i18n.language).toBe('de'))
+    expect(localStorage.getItem('tabmerger-locale')).toBe('de')
+    expect(document.documentElement.lang).toBe('de')
+    // the open modal re-renders in German
+    expect(await screen.findByRole('combobox', { name: 'Sprache' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Änderungen speichern' })).toBeDisabled()
+  })
+
+  it('starts from the stored choice, and Restore defaults puts it back to Browser default', async () => {
+    localStorage.setItem('tabmerger-locale', 'fr')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByRole('combobox', { name: 'Language' })).toHaveTextContent('Français')
+    expect(screen.getByRole('button', { name: /save changes/i })).toBeDisabled()
+    fireEvent.click(screen.getByRole('button', { name: /restore defaults/i }))
+    expect(screen.getByRole('combobox', { name: 'Language' })).toHaveTextContent('Browser default')
+    expect(screen.getByRole('button', { name: /save changes/i })).not.toBeDisabled()
+  })
+})

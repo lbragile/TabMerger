@@ -14,3 +14,17 @@ export const DEFAULT_LOCALE: SupportedLocale = 'en';
 export function isSupportedLocale(value: unknown): value is SupportedLocale {
   return typeof value === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(value);
 }
+
+/**
+ * Each shipped language's name in its own language, for language pickers (the web app's switcher,
+ * the extension's Settings). Never translated: a reader finds their language by its own name.
+ */
+export const LOCALE_NATIVE_NAMES: Readonly<Record<SupportedLocale, string>> = {
+  en: 'English',
+  de: 'Deutsch',
+  es: 'Español',
+  fr: 'Français',
+  ja: '日本語',
+  'pt-BR': 'Português (Brasil)',
+  'zh-CN': '简体中文',
+};

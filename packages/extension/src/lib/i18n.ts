@@ -2,10 +2,11 @@
  * UI copy and locale-aware formatting, on i18next. Every user-facing string comes from the
  * catalogs in src/locales/<lng>/ (English is the default and the source of the key types).
  *
- * The language follows the browser's UI language (`chrome.i18n.getUILanguage()`), narrowed to a
- * shipped catalog (`SUPPORTED_LOCALES`), with English as the fallback for a language or key that
- * has no translation. There is no in-app switcher yet; one would call `i18n.changeLanguage(lng)`
- * and store the choice (components re-render through `useTranslation`).
+ * The language is the one chosen in Settings → General → Language (`lib/localePreference.ts`), or
+ * by default the browser's UI language (`chrome.i18n.getUILanguage()`), narrowed to a shipped
+ * catalog (`SUPPORTED_LOCALES`), with English as the fallback for a language or key that has no
+ * translation. A change applies through {@link applyLocalePreference} (components re-render
+ * through `useTranslation`).
  *
  * - React components: `const { t } = useTranslation()` (react-i18next), and `<Trans>` for a
  *   sentence with markup inside. Never concatenate translated pieces.
@@ -22,6 +23,13 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES, isSupportedLocale, type SupportedLoc
 import { catalogs } from '@/locales';
 import type { Catalog } from '@/locales/en';
 import { PSEUDO_LOCALE, pseudoLocalizeCatalog } from '@/lib/pseudoLocale';
+import {
+    onLocalePreferenceChanged,
+    preferredLanguageTag,
+    readLocalePreference,
+    readLocalePreferenceSync,
+    type LocalePreference,
+} from '@/lib/localePreference';
 
 export { i18n };
 
@@ -89,6 +97,16 @@ export function buildI18nOptions(uiLanguage: string | undefined, pseudo?: { lng:
     };
 }
 
+/**
+ * The language tag to start in: the Settings choice where one is stored (read synchronously from
+ * `localStorage`, so the first render is already in it), else the browser's UI language. The
+ * background worker has no `localStorage` and starts in the browser's language, then follows the
+ * stored choice (`followLocalePreference` in the background script).
+ */
+export function initialUiLanguage(): string | undefined {
+    return preferredLanguageTag(readLocalePreferenceSync(), browserUiLanguage());
+}
+
 /** Initializes the shared i18next instance once; later calls are no-ops. */
 export function initI18n(...modules: Module[]): typeof i18n {
     if (i18n.isInitialized) return i18n;
@@ -97,10 +115,47 @@ export function initI18n(...modules: Module[]): typeof i18n {
     // and, with it, every reference to lib/pseudoLocale.ts
     void i18n.init(
         pseudoLocaleRequested()
-            ? buildI18nOptions(browserUiLanguage(), { lng: PSEUDO_LOCALE, catalog: pseudoLocalizeCatalog(catalogs.en) })
-            : buildI18nOptions(browserUiLanguage()),
+            ? buildI18nOptions(initialUiLanguage(), { lng: PSEUDO_LOCALE, catalog: pseudoLocalizeCatalog(catalogs.en) })
+            : buildI18nOptions(initialUiLanguage()),
     );
     return i18n;
+}
+
+/**
+ * Switches the UI to a language preference (`auto` = the browser's UI language) and, on a page,
+ * updates `<html lang dir>` so dates and numbers follow. Resolves to true when the language
+ * changed (the background script then rebuilds its menu).
+ */
+export async function applyLocalePreference(preference: LocalePreference): Promise<boolean> {
+    const lng = resolveLocale(preferredLanguageTag(preference, browserUiLanguage()));
+    if (lng === i18n.language) return false;
+    await i18n.changeLanguage(lng);
+    if (typeof document !== 'undefined') applyDocumentLocale();
+    return true;
+}
+
+/**
+ * For the background worker, which cannot read the Settings language choice synchronously: applies
+ * the stored choice once read, then every later change, and calls `onLanguageChanged` each time
+ * the language actually changes (to rebuild the right-click menu). `ready` settles once the stored
+ * choice is applied: a handler that runs right as the worker wakes (an alarm's notification) awaits
+ * it so its text is not in the browser's language. `stop` removes the listener.
+ */
+export function followLocalePreference(onLanguageChanged: () => void): { ready: Promise<void>; stop: () => void } {
+    let changedMeanwhile = false;
+    const apply = (preference: LocalePreference) =>
+        applyLocalePreference(preference)
+            .then((changed) => {
+                if (changed) onLanguageChanged();
+            })
+            .catch(() => {});
+    const stop = onLocalePreferenceChanged((preference) => {
+        changedMeanwhile = true;
+        void apply(preference);
+    });
+    // A change saved while the first read was in flight is newer than what that read returns
+    const ready = readLocalePreference().then((preference) => (changedMeanwhile ? undefined : apply(preference)));
+    return { ready, stop };
 }
 
 /** Looks up a catalog message outside React (toasts from hooks, the background script). */

@@ -11,6 +11,8 @@
   "organize": "整理",
   "organizeHint": "用 AI 重新整理所有分组",
   "takeTour": "开始导览",
+  "language": "语言",
+  "languageButton": "语言（{{code}}）",
   "accountMenu": "账户菜单",
   "settingsMenu": "设置菜单",
   "upgradeToPro": "升级到 Pro",

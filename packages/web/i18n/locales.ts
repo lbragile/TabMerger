@@ -1,4 +1,9 @@
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from '@tabmerger/shared'
+import {
+  DEFAULT_LOCALE,
+  LOCALE_NATIVE_NAMES as PUBLIC_LOCALE_NATIVE_NAMES,
+  SUPPORTED_LOCALES,
+  type SupportedLocale,
+} from '@tabmerger/shared'
 
 /**
  * Locale lists for the web app. Pure data, no next-intl imports, so the proxy, metadata helpers,
@@ -25,15 +30,12 @@ export const LOCALES: readonly AppLocale[] = PSEUDO_LOCALE_ENABLED
   ? [...PUBLIC_LOCALES, PSEUDO_LOCALE]
   : PUBLIC_LOCALES
 
-/** Each locale's name in its own language, for the language switcher. */
+/**
+ * Each locale's name in its own language, for the language switcher. The shipped ones come from
+ * `@tabmerger/shared` (the extension's Settings lists the same names); the pseudo-locale is web-only.
+ */
 export const LOCALE_NATIVE_NAMES: Record<AppLocale, string> = {
-  en: 'English',
-  de: 'Deutsch',
-  es: 'Español',
-  fr: 'Français',
-  ja: '日本語',
-  'pt-BR': 'Português (Brasil)',
-  'zh-CN': '简体中文',
+  ...PUBLIC_LOCALE_NATIVE_NAMES,
   [PSEUDO_LOCALE]: 'Ëñğļîšĥ (pseudo)',
 }
 
