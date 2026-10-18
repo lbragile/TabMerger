@@ -468,9 +468,15 @@ All three certifications can be ticked, because they are true as built:
   `chrome.runtime.setUninstallURL` (no permission needed), so after the extension is removed the
   browser opens `<web app>/uninstalled` (`https://tabmerger.com/uninstalled` for the stable
   item). The address carries only the extension version, the browser (`chrome`, `firefox`,
-  `edge`) and the channel (`stable`, `beta`), e.g. `?v=3.1.2&b=chrome&c=stable`: no user id,
-  email, install id, group or tab data, or settings. The survey on that page is optional; anything
-  typed there is sent by the web page, not by the extension. Not set in the demo-video build.
+  `edge`), the channel (`stable`, `beta`) and an analytics flag (`a=1` when anonymous usage
+  analytics are allowed: always on Chrome and Edge, on Firefox only with the
+  `technicalAndInteraction` consent; otherwise `a=0`), e.g. `?v=3.1.2&b=chrome&c=stable&a=1`: no
+  user id, email, install id, group or tab data, or settings. On Firefox the URL is registered
+  again when that consent is granted or revoked. When the flag is `1`, the website's server
+  records one anonymous `extension_uninstalled` count in Google Analytics (version, browser,
+  channel; a random one-off client id), so the extension itself sends nothing. The survey on that
+  page is optional; anything typed there is sent by the web page, not by the extension. Not set in
+  the demo-video build.
 - Direct network destinations from the extension: the TabMerger website (`/api/track`,
   `/api/og-preview` when enabled, `/api/portal` for the billing link), Supabase, Google's favicon
   service, and the Google sign-in window. PostHog's capture endpoint and Sentry are in the code
@@ -606,6 +612,7 @@ with the real semver string carried in `version_name`.
 | Both | set at release | set at release | next release (unreleased) | — | Draft: the extension now talks to the website on its new domain: sign-in, sync, AI and checkout requests, links and the uninstall page go to `tabmerger.com` (stable) / `preview.tabmerger.com` (BETA). The old `vercel.app` hosts stay trusted. Manifest: the same two `externally_connectable.matches` per build as the previous release, so no permission change and no prompt. The privacy tab needs no new tick: the same data goes to the same operator's site under its own domain. Screenshots: none affected |
 
 | Both | set at release | set at release | next release (unreleased) | — | Draft: after the extension is removed, the browser opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL`. No manifest change and no new permission. The address carries only the extension version, browser and release channel; see Technical privacy notes. The dashboard's privacy tab needs no new tick (the extension sends nothing; the page itself is the website's) |
+| Both | set at release | set at release | next release (unreleased) | — | Draft: the uninstall survey address gains an analytics on/off flag (`a=1` / `a=0`; on Firefox it follows the `technicalAndInteraction` consent and is re-registered when that consent changes). When it is `1`, the website's server records one anonymous `extension_uninstalled` count in Google Analytics; the extension itself sends nothing new. No manifest change, no new permission. Privacy tab: already covered by "User activity" (anonymous usage events); no new tick. Screenshots: none affected |
 | Both | set at release | set at release | next release (unreleased) | — | Draft: the popup, the extension pages, the right-click menu and notifications are translated into German, Spanish, French, Japanese, Brazilian Portuguese and Simplified Chinese, following the browser's UI language (`chrome.i18n.getUILanguage()`, English otherwise) unless a language is picked in the header's language menu or Settings, General (stored on the device only, never synced). No manifest change and no new permission, so no re-approval prompt; the manifest name and description and this listing stay English. No new data leaves the device. Screenshots: the popup header gained a language button (globe icon and a two-letter code) next to the "?" button, so the ones showing the header need refreshing; localized store listings and screenshots are optional |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
@@ -637,7 +644,7 @@ Paste into the dashboard's test-instructions field for the v2 to v3 update:
 > content script on Chrome. The background script only runs user-set reminders, the right-click
 > menu, the badge, shortcuts and the user's URL rules. AI is off. Version 2 data is not imported.
 > Uninstalling opens an optional survey on the TabMerger website (runtime.setUninstallURL, no
-> permission); its URL holds only version, browser and channel.
+> permission); its URL holds only version, browser, channel and an analytics on/off flag.
 
 ### Known Issues / Limitations
 

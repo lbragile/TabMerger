@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { UNINSTALL_SURVEY_PARAMS, UNINSTALL_SURVEY_PATH } from '@tabmerger/shared'
-import { registerUninstallSurvey } from '@/lib/uninstallSurvey'
+import { _resetUninstallSurveyForTests, registerUninstallSurvey } from '@/lib/uninstallSurvey'
+import { _resetDataConsentForTests } from '@/lib/dataConsent'
 
 /**
  * registerUninstallSurvey: which builds register the uninstall survey URL, what the URL holds,
@@ -26,6 +27,9 @@ beforeEach(() => {
   vi.stubEnv('VITE_WEB_APP_URL', WEB_APP)
   vi.stubEnv('VITE_DEMO_BUILD', '')
   vi.stubEnv('BROWSER', 'chrome')
+  vi.stubEnv('FIREFOX', 'false')
+  _resetUninstallSurveyForTests()
+  _resetDataConsentForTests()
 })
 
 afterEach(() => {
@@ -60,7 +64,7 @@ describe('registerUninstallSurvey', () => {
     expect(registeredUrl().searchParams.has(UNINSTALL_SURVEY_PARAMS.browser)).toBe(false)
   })
 
-  it('carries only the version, browser and channel parameters (no identifier of any kind)', () => {
+  it('carries only the version, browser, channel and analytics-flag parameters (no identifier of any kind)', () => {
     registerUninstallSurvey()
     const keys = [...registeredUrl().searchParams.keys()].sort()
     expect(keys).toEqual(Object.values(UNINSTALL_SURVEY_PARAMS).sort())
@@ -113,5 +117,91 @@ describe('registerUninstallSurvey', () => {
     setUninstallURL.mockReturnValue(undefined)
     expect(() => registerUninstallSurvey()).not.toThrow()
     expect(setUninstallURL).toHaveBeenCalledTimes(1)
+  })
+
+  it('marks a Chrome or Edge build as allowing analytics (no opt-in exists there)', () => {
+    registerUninstallSurvey()
+    expect(registeredUrl().searchParams.get(UNINSTALL_SURVEY_PARAMS.analytics)).toBe('1')
+  })
+})
+
+describe('registerUninstallSurvey on Firefox (analytics consent flag)', () => {
+  type Listener = (perms: { data_collection?: string[] }) => void
+  let contains: ReturnType<typeof vi.fn>
+  let onAdded: Listener[]
+  let onRemoved: Listener[]
+
+  function stubFirefox(granted: boolean | Error) {
+    vi.stubEnv('FIREFOX', 'true')
+    vi.stubEnv('BROWSER', 'firefox')
+    onAdded = []
+    onRemoved = []
+    contains = granted instanceof Error ? vi.fn().mockRejectedValue(granted) : vi.fn().mockResolvedValue(granted)
+    vi.stubGlobal('chrome', {
+      runtime: { getManifest: () => ({ version: '3.1.2' }), setUninstallURL },
+      permissions: {
+        contains,
+        onAdded: { addListener: (cb: Listener) => onAdded.push(cb) },
+        onRemoved: { addListener: (cb: Listener) => onRemoved.push(cb) },
+      },
+    })
+  }
+
+  async function flush() {
+    await new Promise((r) => setTimeout(r, 0))
+  }
+
+  function lastFlag(): string | null {
+    const calls = setUninstallURL.mock.calls
+    return new URL(calls[calls.length - 1][0] as string).searchParams.get(UNINSTALL_SURVEY_PARAMS.analytics)
+  }
+
+  it('sends a=1 when technicalAndInteraction is granted', async () => {
+    stubFirefox(true)
+    registerUninstallSurvey()
+    await flush()
+    expect(contains).toHaveBeenCalledWith({ data_collection: ['technicalAndInteraction'] })
+    expect(lastFlag()).toBe('1')
+  })
+
+  it('sends a=0 when it is not granted, or the check fails', async () => {
+    stubFirefox(false)
+    registerUninstallSurvey()
+    await flush()
+    expect(lastFlag()).toBe('0')
+
+    _resetUninstallSurveyForTests()
+    _resetDataConsentForTests()
+    stubFirefox(new Error('no permissions API'))
+    registerUninstallSurvey()
+    await flush()
+    expect(lastFlag()).toBe('0')
+  })
+
+  it('re-registers with the new flag when the consent is granted or revoked later', async () => {
+    stubFirefox(false)
+    registerUninstallSurvey()
+    await flush()
+    expect(lastFlag()).toBe('0')
+
+    contains.mockResolvedValue(true)
+    onAdded.forEach((cb) => cb({ data_collection: ['technicalAndInteraction'] }))
+    await flush()
+    expect(lastFlag()).toBe('1')
+
+    contains.mockResolvedValue(false)
+    onRemoved.forEach((cb) => cb({ data_collection: ['technicalAndInteraction'] }))
+    await flush()
+    expect(lastFlag()).toBe('0')
+  })
+
+  it('attaches the consent listeners only once across worker-start calls', async () => {
+    stubFirefox(true)
+    registerUninstallSurvey()
+    registerUninstallSurvey()
+    await flush()
+    // dataConsent.ts adds its own pair once; this module adds one more pair once.
+    expect(onAdded).toHaveLength(2)
+    expect(onRemoved).toHaveLength(2)
   })
 })

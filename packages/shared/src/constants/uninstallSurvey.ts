@@ -17,7 +17,14 @@ export const UNINSTALL_SURVEY_PARAMS = {
   /** Browser the extension was built for. */
   browser: 'b',
   /** Release channel. */
-  channel: 'c'
+  channel: 'c',
+  /**
+   * Whether the install may send anonymous usage analytics: `1` yes, `0` no. On Firefox this is the
+   * `technicalAndInteraction` data-collection consent; Chrome and Edge builds always send `1`
+   * (analytics there need no separate opt-in). The web app only counts the uninstall when it is
+   * `1`, or, for URLs registered before this flag existed, when the browser is Chrome or Edge.
+   */
+  analytics: 'a'
 } as const;
 
 export const UNINSTALL_SURVEY_BROWSERS = ['chrome', 'firefox', 'edge'] as const;
@@ -61,7 +68,7 @@ export const UNINSTALL_SURVEY_LIMITS = {
  */
 export function buildUninstallSurveyUrl(
   webAppUrl: string | undefined,
-  info: { version?: string; browser?: string; channel?: string }
+  info: { version?: string; browser?: string; channel?: string; analytics?: boolean }
 ): string | undefined {
   if (!webAppUrl) return undefined;
   let url: URL;
@@ -75,6 +82,7 @@ export function buildUninstallSurveyUrl(
   if (version) url.searchParams.set(UNINSTALL_SURVEY_PARAMS.version, version);
   if (browser) url.searchParams.set(UNINSTALL_SURVEY_PARAMS.browser, browser);
   if (channel) url.searchParams.set(UNINSTALL_SURVEY_PARAMS.channel, channel);
+  if (typeof info.analytics === 'boolean') url.searchParams.set(UNINSTALL_SURVEY_PARAMS.analytics, info.analytics ? '1' : '0');
   return url.toString();
 }
 
@@ -82,15 +90,36 @@ export function buildUninstallSurveyUrl(
  * Keeps only the values that are a known version shape, browser and channel. Used on both ends:
  * the URL comes from the address bar, so anyone can type anything into it.
  */
-export function parseUninstallSurveyParams(raw: { version?: unknown; browser?: unknown; channel?: unknown }): {
+export function parseUninstallSurveyParams(raw: {
+  version?: unknown;
+  browser?: unknown;
+  channel?: unknown;
+  analytics?: unknown;
+}): {
   version?: string;
   browser?: UninstallSurveyBrowser;
   channel?: UninstallSurveyChannel;
+  analytics?: boolean;
 } {
   const version = typeof raw.version === 'string' && UNINSTALL_SURVEY_VERSION_RE.test(raw.version) ? raw.version : undefined;
   const browser = UNINSTALL_SURVEY_BROWSERS.find((b) => b === raw.browser);
   const channel = UNINSTALL_SURVEY_CHANNELS.find((c) => c === raw.channel);
-  return { version, browser, channel };
+  const analytics = raw.analytics === '1' ? true : raw.analytics === '0' ? false : undefined;
+  return { version, browser, channel, analytics };
+}
+
+/** Browsers whose builds send analytics without a separate opt-in (no Firefox-style data consent). */
+const NO_CONSENT_NEEDED_BROWSERS: readonly UninstallSurveyBrowser[] = ['chrome', 'edge'];
+
+/**
+ * Whether the web app may record an `extension_uninstalled` analytics event for these (already
+ * parsed) survey params. An explicit `analytics` flag wins; without one (a URL registered by a
+ * build older than the flag) only Chrome and Edge count, because those builds sent analytics
+ * without asking. An unknown browser could be Firefox, so it does not count.
+ */
+export function uninstallAnalyticsAllowed(params: { browser?: UninstallSurveyBrowser; analytics?: boolean }): boolean {
+  if (params.analytics !== undefined) return params.analytics;
+  return params.browser !== undefined && NO_CONSENT_NEEDED_BROWSERS.includes(params.browser);
 }
 
 /** True for an id in {@link UNINSTALL_SURVEY_REASONS}. */

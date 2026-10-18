@@ -1,22 +1,24 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { UNINSTALL_SURVEY_PARAMS, parseUninstallSurveyParams } from '@tabmerger/shared'
+import { UNINSTALL_SURVEY_PARAMS, parseUninstallSurveyParams, uninstallAnalyticsAllowed } from '@tabmerger/shared'
 import { Info, Layers } from 'lucide-react'
 import { ShellBackdrop } from '@/components/errors/ErrorPageShell'
 import { STORE_ICON } from '@/components/marketing/BrowserIcons'
 import { StoreLink } from '@/components/StoreLink'
 import { Button } from '@/components/ui/button'
 import { UninstallSurveyForm } from '@/components/uninstall/UninstallSurveyForm'
+import { UninstallTracker } from '@/components/uninstall/UninstallTracker'
 import { getReinstallLinks } from '@/lib/storeLinks'
 
 /**
  * /uninstalled — the page the browser opens after TabMerger is removed (the extension sets it
  * with `runtime.setUninstallURL`). Public, never indexed, and linked from nowhere on the site.
  *
- * The query string carries the extension version, browser and channel.
+ * The query string carries the extension version, browser, channel and analytics-consent flag.
  * Only values that pass `parseUninstallSurveyParams` are used, both here and in what the form
- * sends; the raw query is never rendered or forwarded.
+ * sends; the raw query is never rendered or forwarded. When the install allowed analytics
+ * (`uninstallAnalyticsAllowed`), `UninstallTracker` records one `extension_uninstalled` event.
  */
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('uninstalled')
@@ -43,6 +45,7 @@ export default async function UninstalledPage({ searchParams }: { searchParams: 
     version: query[UNINSTALL_SURVEY_PARAMS.version],
     browser: query[UNINSTALL_SURVEY_PARAMS.browser],
     channel: query[UNINSTALL_SURVEY_PARAMS.channel],
+    analytics: query[UNINSTALL_SURVEY_PARAMS.analytics],
   })
   const reinstall = getReinstallLinks(params.browser, params.channel)
   const t = await getTranslations('uninstalled')
@@ -50,6 +53,14 @@ export default async function UninstalledPage({ searchParams }: { searchParams: 
   return (
     <div className="relative isolate overflow-hidden px-4 py-16 sm:px-6 sm:py-24">
       <ShellBackdrop />
+      {uninstallAnalyticsAllowed(params) && (
+        <UninstallTracker
+          version={params.version}
+          browser={params.browser}
+          channel={params.channel}
+          analytics={params.analytics}
+        />
+      )}
 
       <div className="relative mx-auto flex w-full min-w-0 max-w-[36rem] flex-col">
         <div className="flex flex-col items-center text-center">
