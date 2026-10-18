@@ -1,17 +1,31 @@
-import { NextResponse, type NextRequest } from 'next/server'
-import { createHash } from 'crypto'
+import { NextResponse, after, type NextRequest } from 'next/server'
+import { createHmac, randomUUID } from 'crypto'
 import { stripe } from '@/lib/stripe'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import {
+  ANALYTICS_EVENTS,
   STORED_SUBSCRIPTION_STATUSES,
+  getPricingTier,
   isEntitledSubscriptionStatus,
   type SubscriptionStatus,
 } from '@tabmerger/shared'
+import { gaEnvironment, sendGa4Event, type Ga4Params } from '@/lib/ga4'
+import {
+  CHECKOUT_CURRENCY,
+  CHECKOUT_INTERVALS,
+  CHECKOUT_TIERS,
+  analyticsTier,
+  checkoutValue,
+  type CheckoutInterval,
+  type CheckoutTier,
+} from '@/lib/checkoutAnalytics'
 import type Stripe from 'stripe'
 
 /**
  * Stripe webhook receiver. Verifies the event signature, then handles subscription lifecycle
  * events (checkout completed, updated, deleted, payment failed) by syncing state to Supabase.
+ * `checkout.session.expired` writes nothing: it only reports a `checkout_abandoned` analytics
+ * event (see trackCheckoutAbandoned()) and always answers 200.
  * Must read the body as raw text — JSON parsing mutates bytes and breaks the HMAC signature check.
  *
  * Events after the first purchase are matched to a row by Stripe subscription id: an update
@@ -142,7 +156,8 @@ export async function POST(request: NextRequest) {
           )
         }
 
-        await trackCheckoutCompleted(subscription, resolvedUserId)
+        // After the response: GA's latency or an outage never delays Stripe's 200.
+        after(() => trackCheckoutCompleted(subscription, session))
 
         break
       }
@@ -214,6 +229,14 @@ export async function POST(request: NextRequest) {
         await updateSubscriptionById(supabase, event.type, subscriptionId, {
           status: subscription.status,
         })
+        break
+      }
+
+      case 'checkout.session.expired': {
+        // Analytics only, sent after the response: no database read or write and no Stripe
+        // call, so it cannot fail in a way that asks Stripe to send it again.
+        const expiredSession = event.data.object as Stripe.Checkout.Session
+        after(() => trackCheckoutAbandoned(expiredSession))
         break
       }
 
@@ -648,38 +671,186 @@ function getTierAndBilling(priceId: string | undefined): {
 }
 
 /**
- * Fires a GA4 Measurement Protocol `checkout_completed` event server-side, since checkout
- * success can happen via redirect where the client-side page load isn't a reliable "did the
- * payment actually succeed" signal — this webhook, post signature-verification, is the source
- * of truth. Never throws: a GA outage must not affect the Stripe webhook's response.
- * client_id is a SHA-256 hash of the Supabase user ID (not the raw Stripe customer ID) so GA
- * never receives a reversible identifier, while still being stable per-user across events.
+ * The GA client id for a server-side checkout event: a random id, new for every event. Server
+ * events are deliberately not joined to the buyer's browser session or account (the privacy
+ * policy promises GA data isn't linked to an account), so the funnel is read as event counts.
  */
-async function trackCheckoutCompleted(subscription: Stripe.Subscription, userId: string) {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-  const apiSecret = process.env.GA_API_SECRET
-  if (!measurementId || !apiSecret) return // ponytail: no-op if not configured
+function analyticsClientId(): string {
+  return randomUUID()
+}
 
-  try {
-    const item = subscription.items.data[0]
-    const priceId = item?.price.id
-    const { tier, billing } = getTierAndBilling(priceId)
-    if (tier === 'free' || !billing) return
+/** Domain label for the subkey derived from STRIPE_WEBHOOK_SECRET; bump the version to re-key. */
+const GA_SESSION_ID_LABEL = 'tabmerger:ga-session-id:v1'
 
-    const clientId = createHash('sha256').update(userId).digest('hex')
-    const value = (item?.price.unit_amount ?? 0) / 100
+/** The subkey for the last STRIPE_WEBHOOK_SECRET seen, derived once (re-derived on rotation). */
+let sessionIdSubkey: { secret: string; key: Buffer } | null = null
 
-    await fetch(
-      `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          client_id: clientId,
-          events: [{ name: 'checkout_completed', params: { tier, value, currency: 'usd', billing } }],
-        }),
-      }
-    )
-  } catch (err) {
-    console.error('GA4 checkout_completed tracking failed:', err)
+/**
+ * A subkey only for GA session ids: HMAC-SHA256(STRIPE_WEBHOOK_SECRET, GA_SESSION_ID_LABEL). The
+ * webhook secret itself never keys anything but Stripe's signature check.
+ */
+function sessionIdKey(secret: string): Buffer {
+  if (sessionIdSubkey?.secret !== secret) {
+    sessionIdSubkey = {
+      secret,
+      key: createHmac('sha256', secret).update(GA_SESSION_ID_LABEL).digest(),
+    }
   }
+  return sessionIdSubkey.key
+}
+
+/**
+ * An opaque id for a Checkout Session in GA4 (`transaction_id`, `checkout_session_id`): the
+ * HMAC-SHA256 (hex) of the session id, keyed with a subkey derived from `STRIPE_WEBHOOK_SECRET`
+ * (sessionIdKey()). Stable for one
+ * session, so GA4 can deduplicate a redelivered `purchase` and reports can count unique sessions,
+ * but GA never sees the Stripe id. The key is server-only and never sent to Google (unlike
+ * `GA_API_SECRET`, which travels in the Measurement Protocol query string) and is never logged.
+ * Rotating it changes every id from then on. Null without it (no event is sent then).
+ */
+function analyticsSessionId(sessionId: string | undefined): string | null {
+  const secret = process.env.STRIPE_WEBHOOK_SECRET
+  if (!secret || typeof sessionId !== 'string' || !sessionId) return null
+  return createHmac('sha256', sessionIdKey(secret)).update(sessionId).digest('hex')
+}
+
+/**
+ * What the buyer paid, in USD, for the GA4 `purchase` value: the session's total after any
+ * promotion code. With Adaptive Pricing the buyer may pay in a local currency, and the USD total
+ * is then `currency_conversion.amount_total`. Falls back to `listPrice` when neither total is in
+ * USD, or the payload carries no total.
+ */
+function usdAmountPaid(session: Stripe.Checkout.Session, listPrice: number): number {
+  const conversion = session.currency_conversion
+  if (
+    conversion?.source_currency?.toLowerCase() === 'usd' &&
+    typeof conversion.amount_total === 'number'
+  ) {
+    return conversion.amount_total / 100
+  }
+  if (session.currency?.toLowerCase() === 'usd' && typeof session.amount_total === 'number') {
+    return session.amount_total / 100
+  }
+  return listPrice
+}
+
+/**
+ * Reports a completed subscription checkout to GA4 server-side, since checkout success can happen
+ * via redirect where the client-side page load isn't a reliable "did the payment actually
+ * succeed" signal: this webhook, post signature-verification, is the source of truth. Sends two
+ * events for the same moment, in parallel:
+ *
+ * - `checkout_completed`: the original custom event, params unchanged, so existing reports keep
+ *   working. GA4 doesn't deduplicate it: a redelivery counts it again.
+ * - `purchase`: GA4's recommended e-commerce event. `transaction_id` is analyticsSessionId(), which
+ *   GA4 uses to drop a duplicate when Stripe delivers the event again; `value` is what was paid in
+ *   USD (usdAmountPaid()), with one item for the plan.
+ *
+ * Each event gets its own random client id (analyticsClientId()); no `user_id` is sent. Called
+ * after the response (via `after()`), and never throws: sendGa4Event() swallows errors and times
+ * out.
+ */
+async function trackCheckoutCompleted(
+  subscription: Stripe.Subscription,
+  session: Stripe.Checkout.Session
+) {
+  const item = subscription.items.data[0]
+  const { tier, billing } = getTierAndBilling(item?.price.id)
+  if (tier === 'free' || !billing) return
+
+  const transactionId = analyticsSessionId(session.id)
+  if (!transactionId) return
+
+  const listPrice = (item?.price.unit_amount ?? 0) / 100
+
+  await Promise.all([
+    sendGa4Event('web', {
+      clientId: analyticsClientId(),
+      name: ANALYTICS_EVENTS.checkoutCompleted,
+      params: { tier, value: listPrice, currency: 'usd', billing },
+    }),
+    sendGa4Event('web', {
+      clientId: analyticsClientId(),
+      name: ANALYTICS_EVENTS.purchase,
+      params: {
+        transaction_id: transactionId,
+        value: usdAmountPaid(session, listPrice),
+        currency: CHECKOUT_CURRENCY,
+        tier,
+        billing_interval: billing,
+        environment: gaEnvironment(),
+        items: [
+          {
+            item_id: tier,
+            item_name: getPricingTier(tier === 'pro_ai' ? 'pro_ai' : 'pro').name,
+            item_variant: billing,
+            price: listPrice,
+            quantity: 1,
+          },
+        ],
+      },
+    }),
+  ])
+}
+
+/**
+ * Reports `checkout_abandoned` for a subscription Checkout Session that expired unpaid
+ * (`checkout.session.expired`). Writes nothing, calls nothing but GA4 and never throws, so the
+ * webhook always answers 200 for it. GA4 doesn't deduplicate this event: if Stripe delivers it
+ * twice, both carry the same `checkout_session_id` (analyticsSessionId()), so count unique ids.
+ *
+ * Only sessions this app created are reported: subscription mode with a well-formed
+ * `metadata.user_id`, stamped by createCheckoutSession(). The user id only decides that; it is
+ * never sent. Tier and interval come from metadata stamped from values the checkout route had
+ * already validated; each is checked again here, and one that isn't a known value is left out.
+ */
+async function trackCheckoutAbandoned(session: Stripe.Checkout.Session) {
+  if (session.mode !== 'subscription') return
+
+  const userId = session.metadata?.user_id
+  if (!userId || !UUID_PATTERN.test(userId)) {
+    console.warn(
+      `Stripe webhook: checkout.session.expired was not created by this app; not reported (session ${session.id ?? 'unknown'})`
+    )
+    return
+  }
+
+  const checkoutSessionId = analyticsSessionId(session.id)
+  if (!checkoutSessionId) return
+
+  const rawTier = session.metadata?.tier ?? ''
+  const rawInterval = session.metadata?.interval ?? ''
+  const tier = (CHECKOUT_TIERS as readonly string[]).includes(rawTier)
+    ? (rawTier as CheckoutTier)
+    : null
+  const interval = (CHECKOUT_INTERVALS as readonly string[]).includes(rawInterval)
+    ? (rawInterval as CheckoutInterval)
+    : null
+
+  const params: Ga4Params = {
+    checkout_session_id: checkoutSessionId,
+    environment: gaEnvironment(),
+  }
+  if (tier) params.tier = analyticsTier(tier)
+  if (interval) params.billing_interval = interval
+  if (tier && interval) {
+    const value = checkoutValue(tier, interval)
+    params.value = value
+    params.currency = CHECKOUT_CURRENCY
+    params.items = [
+      {
+        item_id: analyticsTier(tier),
+        item_name: getPricingTier(analyticsTier(tier)).name,
+        item_variant: interval,
+        price: value,
+        quantity: 1,
+      },
+    ]
+  }
+
+  await sendGa4Event('web', {
+    clientId: analyticsClientId(),
+    name: ANALYTICS_EVENTS.checkoutAbandoned,
+    params,
+  })
 }

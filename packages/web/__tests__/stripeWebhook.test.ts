@@ -16,6 +16,19 @@ import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vite
 import { NextRequest } from 'next/server'
 import { STORED_SUBSCRIPTION_STATUSES, isEntitledSubscriptionStatus } from '@tabmerger/shared'
 
+// The route sends GA events with next/server's after(), which needs a live request scope. Collect
+// the callbacks instead and run them with flushAfter(), as Next does once the response is sent.
+const { afterTasks } = vi.hoisted(() => ({ afterTasks: [] as Array<() => unknown> }))
+vi.mock('next/server', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('next/server')>()),
+  after: (task: () => unknown) => {
+    afterTasks.push(task)
+  },
+}))
+async function flushAfter() {
+  while (afterTasks.length) await afterTasks.shift()!()
+}
+
 // ── Stripe mock ──────────────────────────────────────────────────────────────
 const mockConstructEvent = vi.fn()
 const mockSubscriptionsRetrieve = vi.fn()
@@ -91,6 +104,7 @@ describe('POST /api/webhooks/stripe', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    afterTasks.length = 0
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test'
     process.env.STRIPE_PRO_MONTHLY_PRICE_ID = 'price_pro_monthly'
     process.env.STRIPE_PRO_YEARLY_PRICE_ID = 'price_pro_yearly'
@@ -311,6 +325,7 @@ describe('POST /api/webhooks/stripe', () => {
       type: 'checkout.session.completed',
       data: {
         object: {
+          id: 'cs_test_ga_1',
           mode: 'subscription',
           subscription: 'sub_test123',
           customer: 'cus_test123',
@@ -321,6 +336,9 @@ describe('POST /api/webhooks/stripe', () => {
 
     const res = await POST(makeRequest('{}'))
     expect(res.status).toBe(200)
+    // Sent after the response, never before it.
+    expect(fetchMock).not.toHaveBeenCalled()
+    await flushAfter()
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining('https://www.google-analytics.com/mp/collect?measurement_id=G-TEST123&api_secret=secret_test'),
       expect.objectContaining({ method: 'POST' })
@@ -330,9 +348,10 @@ describe('POST /api/webhooks/stripe', () => {
       name: 'checkout_completed',
       params: { tier: 'pro', value: 3.99, currency: 'usd', billing: 'monthly' },
     })
-    // client_id must not be the raw Stripe/Supabase user id
-    expect(callBody.client_id).not.toBe('user-uuid-1')
-    expect(typeof callBody.client_id).toBe('string')
+    // client_id is a random one-off id, never derived from the account or the browser session.
+    // No user_id is sent at all.
+    expect(callBody.client_id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)
+    expect(callBody).not.toHaveProperty('user_id')
 
     vi.unstubAllGlobals()
     delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
@@ -353,6 +372,7 @@ describe('POST /api/webhooks/stripe', () => {
       type: 'checkout.session.completed',
       data: {
         object: {
+          id: 'cs_test_ga_1',
           mode: 'subscription',
           subscription: 'sub_test123',
           customer: 'cus_test123',
@@ -363,6 +383,7 @@ describe('POST /api/webhooks/stripe', () => {
 
     const res = await POST(makeRequest('{}'))
     expect(res.status).toBe(200)
+    await expect(flushAfter()).resolves.toBeUndefined()
     expect(fetchMock).toHaveBeenCalled()
 
     vi.unstubAllGlobals()

@@ -80,7 +80,7 @@ PricingCard → POST /api/checkout { tier: 'pro' | 'proAi', interval: 'monthly' 
        metadata.user_id AND subscription_data.metadata.user_id,
        allow_promotion_codes: true)
   → { url }  (client navigates to Stripe)
-  success → /dashboard?upgraded=1   cancel → /pricing
+  success → /dashboard?upgraded=1   cancel → [/<locale>]/pricing?checkout=canceled&tier=…&interval=… (counted once as checkout_canceled, then stripped)
 ```
 
 Credit packs: `BuyCreditsButton` → `POST /api/checkout/credits { quantity? }` → auth (401) → AI
@@ -183,7 +183,8 @@ Events handled (the `switch`):
 
 | Event | Effect |
 | --- | --- |
-| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` → insert `ai_credit_purchases` (quantity from `listLineItems`; idempotent on unique `stripe_checkout_session_id`: 23505 is answered 200, any other insert error 500). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` (no-op without `GA_API_SECRET`). |
+| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` → insert `ai_credit_purchases` (quantity from `listLineItems`; idempotent on unique `stripe_checkout_session_id`: 23505 is answered 200, any other insert error 500). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` and `purchase` after the response (`after()`; random `client_id` per event; `transaction_id` = HMAC of the session id keyed with `STRIPE_WEBHOOK_SECRET`; no `user_id`; no-op without `GA_API_SECRET`). |
+| `checkout.session.expired` | Analytics only, after the response: `mode: 'subscription'` with a uuid `metadata.user_id` → GA4 `checkout_abandoned` (tier/interval from session metadata, re-validated; random `client_id`; no `user_id` sent). No database or Stripe call; always 200. See `docs/ANALYTICS.md`. |
 | `customer.subscription.updated` | Retrieve the subscription's current state from Stripe by the id in the event → resolve the user (order below) → upsert that state, unless the user's row does not track this subscription and it is not entitled (then nothing is written). The object embedded in the event is not written. |
 | `customer.subscription.deleted` | `status = 'canceled'`, `tier = 'free'` on the row whose `subscriptions.id` is the event's subscription id. No user or profile lookup, no retrieve. |
 | `invoice.payment_failed` | Retrieve the current state of the invoice's subscription from Stripe → write its status (`past_due` while Stripe retries the payment) on the row whose `subscriptions.id` is that id. No user or profile lookup; an invoice that bills no subscription changes nothing. |
@@ -318,8 +319,8 @@ Each environment (production, preview, local) needs its **own** Stripe webhook d
    `<NEXT_PUBLIC_APP_URL>/api/webhooks/stripe`, e.g.
    `https://preview.tabmerger.com/api/webhooks/stripe`. Endpoints already on the old
    `*.vercel.app` hosts can stay: those hosts serve the same deployment and keep `/api/*`.
-2. Subscribe it to `checkout.session.completed`, `customer.subscription.updated`,
-   `customer.subscription.deleted`, `invoice.payment_failed`.
+2. Subscribe it to `checkout.session.completed`, `checkout.session.expired`,
+   `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`.
 3. Put that endpoint's signing secret in the environment's `STRIPE_WEBHOOK_SECRET` (Vercel env var
    for that environment), alongside the matching-mode `STRIPE_SECRET_KEY` and price IDs.
 4. Redeploy (`NEXT_PUBLIC_*` values are inlined at build time).

@@ -46,6 +46,7 @@
   "switchFailed": "Der Wechsel konnte nicht gestartet werden. Versuche „Abrechnung verwalten“ auf deiner Kontoseite.",
   "alreadySubscribed": "Du hast bereits einen Tarif. Die Abrechnung wird geöffnet, damit du ihn ändern kannst.",
   "portalFailed": "Die Abrechnung konnte nicht geöffnet werden. Nutze „Abrechnung verwalten“ auf deiner Kontoseite, um deinen Tarif zu ändern.",
+  "checkoutCanceled": "Checkout abgebrochen. Dir wurde nichts berechnet.",
   "cancelAnytime": "Jederzeit über dein Konto kündbar – ohne Bindung, ohne Rückfragen.",
   "keepAccess": "Du behältst den Zugriff bis zum Ende deines Abrechnungszeitraums.",
   "page": {

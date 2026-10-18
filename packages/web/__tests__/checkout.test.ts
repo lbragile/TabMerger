@@ -26,9 +26,10 @@ vi.mock('@/lib/stripe', () => ({
   getStripePriceId: mockGetStripePriceId,
 }))
 
-function makeRequest(body: unknown) {
+function makeRequest(body: unknown, headers: Record<string, string> = {}) {
   return new NextRequest('http://localhost/api/checkout', {
     method: 'POST',
+    headers,
     body: JSON.stringify(body),
   })
 }
@@ -132,6 +133,49 @@ describe('POST /api/checkout', () => {
       expect.objectContaining({ userId: 'user-1', priceId: 'price_pro_monthly' })
     )
   })
+
+  it('sends a cancel_url carrying the checkout_canceled marker, and stamps tier/interval for the expired webhook', async () => {
+    const { POST } = await import('@/app/api/checkout/route')
+
+    await POST(makeRequest({ tier: 'pro', interval: 'yearly' }))
+    const args = mockCreateCheckoutSession.mock.calls[0][0]
+    expect(new URL(args.cancelUrl).pathname).toBe('/pricing')
+    expect(new URL(args.cancelUrl).search).toBe('?checkout=canceled&tier=pro&interval=yearly')
+    expect(args).toEqual(expect.objectContaining({ tier: 'pro', interval: 'yearly' }))
+  })
+
+  describe('cancel_url locale', () => {
+    async function cancelUrlFor(headers: Record<string, string>) {
+      const { POST } = await import('@/app/api/checkout/route')
+      await POST(makeRequest({ tier: 'pro', interval: 'monthly' }, headers))
+      return new URL(mockCreateCheckoutSession.mock.lastCall![0].cancelUrl)
+    }
+
+    it('keeps the locale of the page the click came from (Referer)', async () => {
+      const url = await cancelUrlFor({ referer: 'https://tabmerger.app/fr/pricing' })
+      expect(url.pathname).toBe('/fr/pricing')
+      expect(url.searchParams.get('checkout')).toBe('canceled')
+    })
+
+    it('falls back to the NEXT_LOCALE cookie, then to the unprefixed default', async () => {
+      expect((await cancelUrlFor({ cookie: 'NEXT_LOCALE=ja' })).pathname).toBe('/ja/pricing')
+      expect((await cancelUrlFor({})).pathname).toBe('/pricing')
+    })
+
+    it("ignores a locale that is not one of this build's, from either source", async () => {
+      const url = await cancelUrlFor({
+        referer: 'https://evil.example/..%2f..%2fevil/pricing',
+        cookie: 'NEXT_LOCALE=<script>',
+      })
+      expect(url.origin).toBe('https://tabmerger.app')
+      expect(url.pathname).toBe('/pricing')
+    })
+
+    it('an /en referer stays unprefixed (default locale)', async () => {
+      expect((await cancelUrlFor({ referer: 'https://tabmerger.app/en/pricing' })).pathname).toBe('/pricing')
+    })
+  })
+
 
   it('reuses an existing stripe_customer_id when present', async () => {
     mockSingle.mockResolvedValue({ data: { stripe_customer_id: 'cus_existing' } })
