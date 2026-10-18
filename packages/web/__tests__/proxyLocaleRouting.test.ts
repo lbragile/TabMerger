@@ -164,6 +164,17 @@ describe('proxy — shipped languages', () => {
     getUser.mockReset()
   })
 
+  it("remembers a language other than the browser's in a NEXT_LOCALE cookie that lasts a year", async () => {
+    getUser.mockResolvedValue({ data: { user: null } })
+    const { proxy } = await loadProxy()
+    const res = await proxy(req('/fr/pricing', { 'accept-language': 'en-US,en;q=0.9', 'sec-fetch-dest': 'document' }))
+    const cookie = res.headers.get('set-cookie') ?? ''
+    expect(cookie).toMatch(/NEXT_LOCALE=fr;/)
+    expect(cookie).toMatch(/Max-Age=31536000/i)
+    expect(cookie).toMatch(/Path=\/(;|$)/i)
+    expect(cookie).toMatch(/SameSite=lax/i)
+  })
+
   it('serves /fr/pricing from the French segment, without a redirect or an English rewrite', async () => {
     getUser.mockResolvedValue({ data: { user: null } })
     const { proxy } = await loadProxy()

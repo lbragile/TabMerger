@@ -4,7 +4,7 @@ import { Languages } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { getPathname, usePathname } from '@/i18n/navigation'
 import { LOCALE_NATIVE_NAMES, PUBLIC_LOCALES, isAppLocale, type AppLocale } from '@/i18n/locales'
-import { LOCALE_COOKIE } from '@/i18n/negotiate'
+import { localeCookieString } from '@/i18n/negotiate'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -44,12 +44,12 @@ export function localeCode(locale: string): string {
  * client-side navigation never re-renders, so after a soft switch the document kept `lang="en"`
  * and every Client Component kept its English strings and formatting.
  *
- * The `NEXT_LOCALE` cookie is written first (with next-intl's attributes: path `/`, SameSite Lax,
- * session lifetime): with locale detection on, an unprefixed English URL would otherwise be
- * redirected back to the old language's prefix by the proxy.
+ * The `NEXT_LOCALE` cookie is written first, with the attributes the routing config gives
+ * next-intl (one year, path `/`, SameSite Lax): with locale detection on, an unprefixed English
+ * URL would otherwise be redirected back to the old language's prefix by the proxy.
  */
 export function switchLocale(next: AppLocale, pathname: string): void {
-  document.cookie = `${LOCALE_COOKIE}=${next}; path=/; SameSite=Lax`
+  document.cookie = localeCookieString(next)
   const { search, hash } = window.location
   window.location.replace(`${getPathname({ href: pathname, locale: next })}${search}${hash}`)
 }

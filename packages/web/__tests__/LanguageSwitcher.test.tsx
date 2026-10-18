@@ -137,6 +137,24 @@ describe('LanguageMenu menu', () => {
     expect(router.push).not.toHaveBeenCalled()
   })
 
+  it('saves the choice for a year, site-wide, with the attributes next-intl uses', async () => {
+    // jsdom's document.cookie getter hides attributes, so read what was written.
+    const cookieSet = vi.spyOn(document, 'cookie', 'set')
+    const user = userEvent.setup()
+    setLocation('/pricing')
+    await renderIn('en', <LanguageMenu />)
+    await user.click(screen.getByRole('button', { name: 'Language: English (EN)' }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Deutsch' }))
+
+    expect(cookieSet).toHaveBeenCalledTimes(1)
+    const written = cookieSet.mock.calls[0][0]
+    expect(written).toMatch(/^NEXT_LOCALE=de;/)
+    expect(written).toMatch(/; max-age=31536000(;|$)/i)
+    expect(written).toMatch(/; path=\/(;|$)/i)
+    expect(written).toMatch(/; SameSite=lax(;|$)/i)
+    cookieSet.mockRestore()
+  })
+
   it('switching back to English drops the prefix and stores "en", so unprefixed URLs stay English', async () => {
     const user = userEvent.setup()
     nav.pathname = '/de/pricing'

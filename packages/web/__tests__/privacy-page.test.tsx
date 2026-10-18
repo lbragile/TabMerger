@@ -95,4 +95,19 @@ describe('PrivacyPage', () => {
     expect(block?.textContent).toMatch(/never your IP address/)
     expect(screen.getByRole('link', { name: 'Resend' })).toHaveAttribute('href', 'https://resend.com/legal/privacy-policy')
   })
+
+  it('lists every cookie the site sets, including the year-long language cookie', () => {
+    render(<PrivacyPage />)
+    const cookies = document.getElementById('cookies') as HTMLElement
+    expect(cookies.textContent).not.toMatch(/solely for session management/)
+    expect(document.getElementById('cookie-sign-in')?.textContent).toMatch(/Supabase Auth/)
+    expect(document.getElementById('cookie-language')?.textContent).toMatch(/NEXT_LOCALE.*lasts one year/)
+    expect(document.getElementById('cookie-analytics')?.textContent).toMatch(/Google Analytics sets _ga cookies/)
+    expect(document.getElementById('cookie-analytics')?.textContent).toMatch(/PostHog/)
+  })
+
+  it('shows the date of the latest revision', () => {
+    render(<PrivacyPage />)
+    expect(screen.getByText('Last updated: October 18, 2026')).toBeInTheDocument()
+  })
 })

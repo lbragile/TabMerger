@@ -4,9 +4,29 @@
  * `[locale]` segment always wins.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { negotiateLocale, parseAcceptLanguage } from '@/i18n/negotiate'
+import {
+  LOCALE_COOKIE_ATTRIBUTES,
+  localeCookieString,
+  negotiateLocale,
+  parseAcceptLanguage,
+} from '@/i18n/negotiate'
 
 const LOCALES = ['en', 'de', 'fr', 'ja', 'pt-BR', 'zh-CN'] as const
+
+describe('locale cookie', () => {
+  it('lasts one year, site-wide, SameSite Lax', () => {
+    expect(LOCALE_COOKIE_ATTRIBUTES).toEqual({ name: 'NEXT_LOCALE', maxAge: 31_536_000, path: '/', sameSite: 'lax' })
+  })
+
+  it('is written by the switcher with the same attributes', () => {
+    expect(localeCookieString('de')).toBe('NEXT_LOCALE=de; max-age=31536000; path=/; SameSite=lax')
+  })
+
+  it('is the cookie next-intl sets, with the same attributes', async () => {
+    const { routing } = await import('@/i18n/routing')
+    expect(routing.localeCookie).toEqual(LOCALE_COOKIE_ATTRIBUTES)
+  })
+})
 
 describe('parseAcceptLanguage', () => {
   it('orders ranges by q, then by position, and drops q=0 and junk', () => {

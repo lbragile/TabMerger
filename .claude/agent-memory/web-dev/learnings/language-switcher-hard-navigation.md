@@ -16,7 +16,15 @@ English catalog. Probe: switch, then read `document.documentElement.lang` and a 
 `NEXT_LOCALE=de` redirects to `/de/pricing`, so picking English must write `NEXT_LOCALE=en` before
 navigating. next-intl's middleware only sets the cookie on `Sec-Fetch-Dest: document` requests and
 only when it differs from the URL/Accept-Language locale; its default cookie has no max-age
-(session), path `/`, SameSite Lax. `LOCALE_COOKIE` lives in `i18n/negotiate.ts`.
+(session). Decision: one year via `localeCookie: LOCALE_COOKIE_ATTRIBUTES` in `i18n/routing.ts`;
+the switcher writes `localeCookieString()` from the same constant (`i18n/negotiate.ts`). The
+middleware never rewrites a cookie whose value already matches, so an old session cookie only
+becomes a year-long one after the browser drops it or the language changes. Testing the written
+attributes: jsdom's `document.cookie` getter hides them, so `vi.spyOn(document, 'cookie', 'set')`;
+for the proxy, read `set-cookie` on a `/fr/...` request with `sec-fetch-dest: document` and an
+English `accept-language`. Privacy page `#cookies` lists every cookie the site sets (Supabase
+`sb-*`, `NEXT_LOCALE`, GA `_ga*`, PostHog `ph_*_posthog`: posthog-js defaults to
+`localStorage+cookie` persistence); update it with any new cookie.
 
 **Router calls in mount effects.** A child's mount `useEffect` can run before the App Router
 finishes initializing; `router.replace` there throws "Router action dispatched before

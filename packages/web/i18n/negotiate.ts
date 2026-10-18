@@ -12,6 +12,28 @@
 /** Cookie next-intl stores the visitor's locale in. */
 export const LOCALE_COOKIE = 'NEXT_LOCALE'
 
+/** How long the language choice is remembered: one year, in seconds. */
+export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
+
+/**
+ * The locale cookie's attributes, shared by next-intl's routing config (the proxy sets the cookie
+ * when a visitor lands on another language) and the language switcher's own write. next-intl's
+ * default has no max-age, so the choice was lost when the browser closed.
+ */
+export const LOCALE_COOKIE_ATTRIBUTES = {
+  name: LOCALE_COOKIE,
+  maxAge: LOCALE_COOKIE_MAX_AGE,
+  path: '/',
+  sameSite: 'lax',
+} as const
+
+/** `document.cookie` value that stores `locale` with {@link LOCALE_COOKIE_ATTRIBUTES}. */
+export function localeCookieString(locale: string): string {
+  const { name, maxAge, path, sameSite } = LOCALE_COOKIE_ATTRIBUTES
+  // Attribute names and values are case-insensitive: `SameSite=lax` is `SameSite=Lax`.
+  return `${name}=${locale}; max-age=${maxAge}; path=${path}; SameSite=${sameSite}`
+}
+
 /** Longest `Accept-Language` header read; anything after is ignored. */
 const MAX_ACCEPT_LANGUAGE_LENGTH = 512
 

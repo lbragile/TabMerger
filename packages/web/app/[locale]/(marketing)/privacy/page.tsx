@@ -44,7 +44,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: October 15, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 18, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -181,7 +181,15 @@ export default function PrivacyPage() {
 
         <section id="cookies" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">7. Cookies and Local Storage</h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">TabMerger uses cookies solely for session management (Supabase Auth) when you are signed in to the web app. We do not use tracking or advertising cookies. The extension stores data in IndexedDB and <code className="text-xs bg-muted px-1.5 py-0.5 rounded">chrome.storage.local</code>, not in browser cookies.</p>
+          <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
+            <p>The TabMerger website sets these cookies:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li id="cookie-sign-in"><span className="font-medium text-foreground">Sign-in</span> (Supabase Auth, names starting with <code className="text-xs bg-muted px-1.5 py-0.5 rounded">sb-</code>): keep you signed in to the web app. They are set only when you sign in and removed when you sign out.</li>
+              <li id="cookie-language"><span className="font-medium text-foreground">Language</span> (<code className="text-xs bg-muted px-1.5 py-0.5 rounded">NEXT_LOCALE</code>): remembers the language you chose, or the one you last browsed the site in, so the site opens in that language next time. It holds only a language code such as <code className="text-xs bg-muted px-1.5 py-0.5 rounded">de</code> and lasts one year.</li>
+              <li id="cookie-analytics"><span className="font-medium text-foreground">Analytics</span>: Google Analytics sets <code className="text-xs bg-muted px-1.5 py-0.5 rounded">_ga</code> cookies holding its anonymous client identifier (kept for up to two years), and PostHog sets a <code className="text-xs bg-muted px-1.5 py-0.5 rounded">ph_…_posthog</code> cookie with its own identifier. See &quot;Analytics&quot; above for what they collect.</li>
+            </ul>
+            <p>We do not use advertising cookies. The website also keeps a few settings in your browser&apos;s local storage, such as your light or dark theme, the dashboard&apos;s grid or list view and whether page previews are on for shared links; these stay in your browser and are not sent to us. While you use the dashboard, the key that decrypts your synced data is kept in session storage, which your browser clears when you close the tab. The analytics and error-monitoring tools also keep their identifiers in local or session storage. The extension stores its data in IndexedDB and <code className="text-xs bg-muted px-1.5 py-0.5 rounded">chrome.storage.local</code>, not in browser cookies.</p>
+          </div>
         </section>
 
         <section id="children" className="scroll-mt-24">
