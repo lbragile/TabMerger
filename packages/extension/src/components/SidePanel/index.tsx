@@ -287,7 +287,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     >
       {/* Groups list */}
       <ScrollArea className="flex-1">
-        <div className="py-1.5">
+        <div className="pb-1.5">
           {/* List wrapper: grows by the gap height while a group drag's gap is here. */}
           <div ref={groupListRef} onFocusCapture={keepFocus.onFocusCapture} onBlurCapture={keepFocus.onBlurCapture} data-tm-dnd-list="groups" data-tour={TOUR_ANCHORS.groups} style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
           <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>

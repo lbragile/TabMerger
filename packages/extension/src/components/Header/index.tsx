@@ -455,13 +455,16 @@ export function Header() {
                     <DropdownMenu>
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
-                                <button
-                                    className="ml-0.5 flex items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                {/* Same box as the icon buttons beside it, so the row is evenly spaced */}
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-7 w-7"
                                     aria-label={user ? t('header.accountMenu') : t('header.settingsMenu')}
                                     data-tour={TOUR_ANCHORS.accountMenu}
                                 >
                                     {user ? (
-                                        <Avatar className="h-6 w-6 ring-1 ring-border hover:ring-primary/60 transition-all">
+                                        <Avatar className="h-5 w-5 ring-1 ring-border hover:ring-primary/60 transition-all">
                                             <AvatarImage
                                                 src={
                                                     user.user_metadata
@@ -473,9 +476,9 @@ export function Header() {
                                             </AvatarFallback>
                                         </Avatar>
                                     ) : (
-                                        <UserCircle className="h-5 w-5 text-foreground/70 hover:text-foreground transition-colors" />
+                                        <UserCircle className="h-3.5 w-3.5 text-muted-foreground" />
                                     )}
-                                </button>
+                                </Button>
                             </DropdownMenuTrigger>
                         </TooltipTrigger>
 

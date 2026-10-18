@@ -165,7 +165,7 @@ export function GroupContextMenu({
     <div
       ref={wrapperRef as React.RefCallback<HTMLDivElement>}
       style={wrapperStyle}
-      className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-ring', wrapperClassName)}
+      className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring', wrapperClassName)}
       tabIndex={0}
       role="button"
       aria-label={wrapperLabel ?? group.name}
