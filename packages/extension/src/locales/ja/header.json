@@ -11,6 +11,7 @@
   "organize": "整理",
   "organizeHint": "すべてのグループをAIで再整理します",
   "takeTour": "ツアーを見る",
+  "openWebsite": "TabMerger のウェブサイトを開く（新しいタブ）",
   "language": "言語",
   "languageButton": "言語（{{code}}）",
   "accountMenu": "アカウントメニュー",

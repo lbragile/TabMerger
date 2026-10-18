@@ -11,6 +11,7 @@
   "organize": "Organize",
   "organizeHint": "Reorganize all groups with AI",
   "takeTour": "Take the tour",
+  "openWebsite": "Open the TabMerger website (new tab)",
   "language": "Language",
   "languageButton": "Language ({{code}})",
   "accountMenu": "Account menu",
