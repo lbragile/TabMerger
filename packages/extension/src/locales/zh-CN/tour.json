@@ -272,9 +272,6 @@
     "skipTour": "跳过导览",
     "skipChapter": "跳过本章"
   },
-  "labels": {
-    "confirmDuplicatesPrefix": "移除 "
-  },
   "drop": {
     "belowTab": "放在此标签页下方",
     "window": "放在此窗口中",

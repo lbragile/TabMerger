@@ -272,9 +272,6 @@
     "skipTour": "Ignorer la visite",
     "skipChapter": "Ignorer le chapitre"
   },
-  "labels": {
-    "confirmDuplicatesPrefix": "Supprimer "
-  },
   "drop": {
     "belowTab": "Déposer sous cet onglet",
     "window": "Déposer dans cette fenêtre",

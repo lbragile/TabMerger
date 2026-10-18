@@ -1,5 +1,6 @@
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { useTranslation } from 'react-i18next';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useDeduplicateGroup } from '@/hooks/useGroups'
@@ -60,6 +61,7 @@ export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmMod
           className="flex-1 text-xs"
           onClick={handleConfirm}
           disabled={isPending}
+          data-tour={TOUR_ANCHORS.dedupConfirm}
         >
           {t('modals.dedup.confirm', { count: duplicates.length })}
         </Button>

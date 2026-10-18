@@ -59,8 +59,8 @@ describe('extension catalog matches the shared English copy', () => {
     expect(t('common.nowOpen')).toBe(FIRST_GROUP_TITLE)
   })
 
-  it('the tour names the dialog button by the start of its real text', () => {
-    expect(t('modals.dedup.confirm', { count: 1 }).startsWith(TOUR_MENU_LABELS.confirmDuplicates)).toBe(true)
+  it('the tour quotes the menu items by their real text', () => {
     expect(TOUR_MENU_LABELS.openWindow).toBe(t('window.openInBrowser'))
+    expect(TOUR_MENU_LABELS.deduplicate).toBe(t('groupMenu.deduplicate'))
   })
 })

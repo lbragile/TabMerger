@@ -272,9 +272,6 @@
     "skipTour": "Rundgang überspringen",
     "skipChapter": "Kapitel überspringen"
   },
-  "labels": {
-    "confirmDuplicatesPrefix": "1 "
-  },
   "drop": {
     "belowTab": "Unter diesem Tab ablegen",
     "window": "In diesem Fenster ablegen",

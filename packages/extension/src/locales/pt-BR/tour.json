@@ -272,9 +272,6 @@
     "skipTour": "Pular tour",
     "skipChapter": "Pular capítulo"
   },
-  "labels": {
-    "confirmDuplicatesPrefix": "Remover "
-  },
   "drop": {
     "belowTab": "Solte abaixo desta aba",
     "window": "Solte nesta janela",

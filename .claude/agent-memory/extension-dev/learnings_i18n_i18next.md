@@ -24,8 +24,8 @@ Extension i18n (packages/extension) uses i18next + react-i18next, not chrome.i18
   `description_tab_one`), typed fine without a base key.
 - Code that FOUND elements by English accessible names broke under translation: DnD grips now
   carry `data-dnd-grip="tab|window|group"` (`lib/dndGrip.ts`), the selection toggle is found by
-  `data-tour="select-items"`. Tour selectors for window menu/star build their aria-label from `t()`
-  at use time.
+  `data-tour="select-items"`. All tour task selectors are `data-tour` anchors now (see
+  [[learnings-language-picker]]).
 - Pseudo-locale `en-XA`: generated at runtime from en (`lib/pseudoLocale.ts`) only when
   `import.meta.env.DEV && VITE_PSEUDO_LOCALE === '1'` (`pnpm build:dev:pseudo`, own outDir
   `chrome-mv3-pseudo`). The pseudo catalog is built inside initI18n's DEV branch and passed to

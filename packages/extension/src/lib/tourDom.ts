@@ -107,47 +107,6 @@ export function measureTourHighlight(groups: readonly (readonly string[])[]): To
   return null;
 }
 
-/**
- * Attribute the tour writes on menu items and dialog buttons while a step is up: the control's
- * visible text ({@link markTourLabels}). It lets a step name a control exactly the way its text
- * does (`[data-tour-label="Open in browser"]`), for controls that carry no `data-tour` anchor.
- */
-export const TOUR_LABEL_ATTR = 'data-tour-label';
-
-const LABELED = `[role="menuitem"], ${TOUR_APP_DIALOG} button`;
-
-/**
- * The first line of visible text inside an element: a menu item's title without the hint under
- * it, a button's whole text. It is the text of the element that holds the first words, pieces
- * joined (React renders "Remove {count} duplicates" as several text nodes).
- */
-function firstText(el: Element): string {
-  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-    if (!(node.textContent ?? '').trim()) continue;
-    const pieces = Array.from(node.parentNode?.childNodes ?? [node]).filter((child) => child.nodeType === Node.TEXT_NODE);
-    return pieces
-      .map((piece) => piece.textContent ?? '')
-      .join('')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 80);
-  }
-  return '';
-}
-
-/**
- * Writes {@link TOUR_LABEL_ATTR} on every menu item and dialog button on the page. Cheap (a
- * handful of elements, and only while a menu or dialog is open), and an attribute is only
- * written when its value changes, so calling it every frame causes no mutations when idle.
- */
-export function markTourLabels(): void {
-  document.querySelectorAll(LABELED).forEach((el) => {
-    const text = firstText(el);
-    if (el.getAttribute(TOUR_LABEL_ATTR) !== text) el.setAttribute(TOUR_LABEL_ATTR, text);
-  });
-}
-
 /** Every element on the page matching any of the selectors. */
 export function findTourElements(selectors: readonly string[]): HTMLElement[] {
   return selectors.flatMap(queryAll);

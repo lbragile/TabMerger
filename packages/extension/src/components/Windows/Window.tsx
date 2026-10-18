@@ -63,6 +63,7 @@ import { usePanelSearch, withoutFilteredOut } from '@/hooks/useSearchView';
 import { Highlighted } from '@/components/Highlighted';
 import { announceDnd } from '@/lib/dndLiveRegion';
 import { SEARCH_COPY } from '@tabmerger/shared';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
 
 interface WindowProps {
   /** parent group's model id — window sortable id is `${groupId}::w${windowIndex}` */
@@ -513,6 +514,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 style={window.starred ? { color: groupColor ?? 'var(--star-active)' } : undefined}
                 onClick={() => toggleStarred({ groupIndex, windowIndex })}
                 aria-label={window.starred ? t('window.unstar') : t('window.star')}
+                data-tour={TOUR_ANCHORS.windowStar}
               >
                 <Star className="h-3 w-3" fill={window.starred ? 'currentColor' : 'none'} />
               </Button>
@@ -526,7 +528,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           <DropdownMenu open={moreMenuOpen} onOpenChange={setMoreMenuOpen}>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild disabled={selectionMode}>
-                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 invisible' : 'h-5 w-5 text-muted-foreground'} aria-label={t('window.moreOptions')}>
+                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 invisible' : 'h-5 w-5 text-muted-foreground'} aria-label={t('window.moreOptions')} data-tour={TOUR_ANCHORS.windowMenu}>
                   <MoreHorizontal className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
@@ -543,7 +545,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                   <><ShieldOff className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />{t('window.markIncognito')}</>
                 )}
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-xs" disabled={window.tabs.length === 0} onClick={() => void openWindow(window)}>
+              <DropdownMenuItem className="text-xs" disabled={window.tabs.length === 0} onClick={() => void openWindow(window)} data-tour={TOUR_ANCHORS.windowOpen}>
                 <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
                 {t('window.openInBrowser')}
               </DropdownMenuItem>

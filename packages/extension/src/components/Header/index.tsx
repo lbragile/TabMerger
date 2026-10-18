@@ -283,6 +283,7 @@ export function Header() {
                                 onClick={handleClearSearch}
                                 aria-label={t("search.clearSearch")}
                                 data-testid="header-clear-search"
+                                data-tour={TOUR_ANCHORS.searchClear}
                             >
                                 <X className="h-3.5 w-3.5 text-muted-foreground" />
                             </Button>

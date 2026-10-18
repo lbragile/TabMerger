@@ -272,9 +272,6 @@
     "skipTour": "Skip tour",
     "skipChapter": "Skip chapter"
   },
-  "labels": {
-    "confirmDuplicatesPrefix": "Remove "
-  },
   "drop": {
     "belowTab": "Drop below this tab",
     "window": "Drop in this window",

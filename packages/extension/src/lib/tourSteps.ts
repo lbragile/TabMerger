@@ -67,7 +67,16 @@ export const TOUR_ANCHORS = {
   settingsThemeTrigger: 'settings-theme-trigger',
   /** The "Save changes" button in Settings. */
   settingsSaveButton: 'settings-save-button',
-  help: 'help'
+  help: 'help',
+  /** On a window card: its star and its "More window options" button; in that menu, "Open in browser". */
+  windowStar: 'window-star',
+  windowMenu: 'window-menu',
+  windowOpen: 'window-open',
+  /** "Deduplicate tabs" in a group's menu, and the confirm button of the dialog it opens. */
+  groupDeduplicate: 'group-deduplicate',
+  dedupConfirm: 'dedup-confirm',
+  /** "Clear search", in the open search box and next to the closed one. */
+  searchClear: 'search-clear'
 } as const;
 
 /**

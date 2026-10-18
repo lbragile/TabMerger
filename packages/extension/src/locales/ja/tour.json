@@ -272,9 +272,6 @@
     "skipTour": "ツアーをスキップ",
     "skipChapter": "章をスキップ"
   },
-  "labels": {
-    "confirmDuplicatesPrefix": "重複を削除"
-  },
   "drop": {
     "belowTab": "このタブの下にドロップ",
     "window": "このウィンドウにドロップ",

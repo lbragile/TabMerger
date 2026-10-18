@@ -335,6 +335,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                             className="shrink-0 flex items-center justify-center h-5 w-5 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                             aria-label={t('search.clearSearch')}
                             data-testid="overlay-clear-search"
+                            data-tour={TOUR_ANCHORS.searchClear}
                             // Focus first: this button unmounts when the text is gone.
                             onClick={() => { inputRef.current?.focus(); onQueryChange(''); }}
                         >

@@ -49,7 +49,6 @@ import {
   isInForeignLayer,
   isTextEntry,
   lockTourApp,
-  markTourLabels,
   revealTourTarget,
   tourFocusReturnTarget,
   tourFrame,
@@ -771,8 +770,6 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
     // the card's DIRECT children (the card itself is spared, as the parent of a live region), and
     // none of them is ever hidden on purpose. Not found by the library's marker attribute: when
     // a menu and then a dialog open back to back, the second one hides without marking.
-    // Menu items and dialog buttons carry their visible text, for the steps that name one
-    markTourLabels();
     Array.from(cardRef.current?.children ?? []).forEach((el) => {
       if (el.hasAttribute('aria-hidden')) el.removeAttribute('aria-hidden');
     });

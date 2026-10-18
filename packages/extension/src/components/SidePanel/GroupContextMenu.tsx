@@ -281,7 +281,7 @@ export function GroupContextMenu({
             <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>{t('groupMenu.sortByUrl')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.sortByUrlHint')}</div></div>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDeduplicate}>
+          <DropdownMenuItem onClick={handleDeduplicate} data-tour={TOUR_ANCHORS.groupDeduplicate}>
             <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>{t('groupMenu.deduplicate')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.deduplicateHint')}</div></div>
           </DropdownMenuItem>

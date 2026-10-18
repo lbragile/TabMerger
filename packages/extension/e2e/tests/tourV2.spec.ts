@@ -508,3 +508,58 @@ test.describe('Guided tour v2: action ring, chapters, keyboard', () => {
     }
   });
 });
+
+test.describe('Guided tour v2 in another language', () => {
+  test.beforeEach(({}, info) => {
+    info.setTimeout(120_000);
+  });
+
+  /** Reloads the popup in German (the stored language choice), resuming the tour on `step`. */
+  async function inGerman(page: Page, context: BrowserContext, step: string) {
+    await waitForTour(context, (r) => r?.stepId === step, `${step} stored`);
+    // Both copies of the choice, as Settings saves it (the page trusts chrome.storage over localStorage)
+    await page.evaluate(async () => {
+      localStorage.setItem('tabmerger-locale', 'de');
+      await chrome.storage.local.set({ tm_locale: 'de' });
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    await expect(page.locator('html')).toHaveAttribute('lang', 'de');
+    await expect(cardOf(page)).toHaveAttribute('data-tour-card', step);
+    await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'todo');
+  }
+
+  /** Back to English (the tour's card buttons are matched by their English text below). */
+  async function inEnglish(page: Page) {
+    await page.evaluate(async () => {
+      localStorage.removeItem('tabmerger-locale');
+      await chrome.storage.local.remove('tm_locale');
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  }
+
+  test('the menu and dialog tasks find their controls by anchor, not by English text', async ({ context, extensionId }) => {
+    const page = await startTour(context, extensionId);
+
+    // "Open in browser" from the first sample window's menu
+    await goToStep(page, stepId('open-tabs'));
+    await inGerman(page, context, stepId('open-tabs'));
+    const win = '[data-tm-dnd-id="tour-demo-1::w0"]';
+    await expectRingOn(page, `${win} [data-tour="window-menu"]`, 'open-tabs 1 (de)');
+    await page.locator(`${win} [data-tour="window-menu"]`).click();
+    await expectRingOn(page, '[data-tour="window-open"]', 'open-tabs 2 (de)');
+    await page.locator('[data-tour="window-open"]').click();
+    await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
+
+    // "Deduplicate tabs", then the dialog's confirm button (its text starts with the count in German)
+    await inEnglish(page);
+    await goToStep(page, stepId('tidy-up'));
+    await inGerman(page, context, stepId('tidy-up'));
+    await page.locator('[data-tour="group-options"]').click();
+    await expectRingOn(page, '[data-tour="group-deduplicate"]', 'tidy-up 2 (de)');
+    await page.locator('[data-tour="group-deduplicate"]').click();
+    await expectRingOn(page, '[data-tour="dedup-confirm"]', 'tidy-up 3 (de)');
+    await page.locator('[data-tour="dedup-confirm"]').click();
+    await expect(cardOf(page)).toHaveAttribute('data-tour-task', 'done');
+  });
+});
