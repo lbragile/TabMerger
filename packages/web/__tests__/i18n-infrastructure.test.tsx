@@ -6,7 +6,8 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { render, renderHook, screen, within } from '@testing-library/react'
+import { render, renderHook, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { PRICING_TIERS, SUPPORTED_LOCALES, formatListPrice } from '@tabmerger/shared'
 import en from '@/messages/en'
 import {
@@ -182,19 +183,17 @@ describe('client namespaces', () => {
   })
 })
 
+// Placement and switching behavior: LanguageSwitcher.test.tsx.
 describe('LanguageSwitcher', () => {
-  it('renders a labelled select with one option per public locale, the current one selected', () => {
+  it('offers one menu item per public locale, each in its own language, the current one checked', async () => {
     render(<LanguageSwitcher />)
-    const select = screen.getByRole('combobox')
-    const options = within(select).getAllByRole('option') as HTMLOptionElement[]
-    expect(options.map((o) => o.value)).toEqual([...SUPPORTED_LOCALES])
-    // Each option is marked with its own language and names it (not an empty or English label).
-    for (const option of options) {
-      expect(option.lang).toBe(option.value)
-      expect(option.textContent?.trim()).not.toBe('')
-    }
-    expect((select as HTMLSelectElement).value).toBe(DEFAULT_LOCALE)
-    expect(options.some((o) => o.value === PSEUDO_LOCALE)).toBe(false)
+    await userEvent.click(await screen.findByRole('button', { name: 'Language: English (EN)' }))
+    const items = screen.getAllByRole('menuitemradio')
+    expect(items.map((item) => item.getAttribute('lang'))).toEqual([...SUPPORTED_LOCALES])
+    // Each item names its language (not an empty or English label).
+    for (const item of items) expect(item.textContent?.trim()).not.toBe('')
+    expect(items.filter((item) => item.getAttribute('aria-checked') === 'true').map((i) => i.getAttribute('lang'))).toEqual([DEFAULT_LOCALE])
+    expect(items.some((item) => item.getAttribute('lang') === PSEUDO_LOCALE)).toBe(false)
   })
 })
 

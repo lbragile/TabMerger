@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Link } from '@/i18n/navigation'
-import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
 import { absoluteUrl, formatDate } from '@/lib/utils'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 import { SetPasswordForm } from '@/components/account/SetPasswordForm'
@@ -140,8 +139,6 @@ export default async function AccountPage() {
         <p className="text-muted-foreground text-sm mt-1">
           {t('lead')}
         </p>
-        {/* Renders nothing while only one language is public. */}
-        <LanguageSwitcher className="mt-3 justify-start" />
       </div>
 
       {/* Usage summary — real Supabase counts, not placeholder numbers. Sync-derived cards

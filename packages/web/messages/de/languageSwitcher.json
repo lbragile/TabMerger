@@ -1,3 +1,4 @@
 {
-  "label": "Sprache"
+  "label": "Sprache",
+  "trigger": "Sprache: {language} ({code})"
 }

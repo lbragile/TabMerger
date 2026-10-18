@@ -35,3 +35,6 @@
 - [Error pages in Next 16](learnings/error-pages-next16.md) — retry vs reset, which layout each boundary keeps, duplicate 404 noindex meta, global-error theming, previewing 500s, Playwright on another port
 - [Backdrop pointer glow](learnings/backdrop-pointer-glow.md) — error-page/uninstalled glow: client-module helper export 500s server pages, -z-10 parent rules, fixed-layer trade-offs, jsdom gaps, light-mode AA maths
 - [Host redirect URL building](learnings/host-redirect-url-building.md) — `new URL(path, base)` lets `//evil.com` swap the origin, use pathname/search setters; legacy-host redirect is a public-page allow-list (sign-in stays on old host)
+- [next-intl i18n](learnings/i18n-next-intl.md) — proxy order with Supabase, keep sync pages sync, test mocks (RTL wrapper, use-intl external), global-error catalog bundle trap, lint gaps
+- [i18n for unsegmented routes](learnings/i18n-unsegmented-routes.md) — /auth + root 404 locale via cookie/Accept-Language in request.ts, CLIENT_NAMESPACES, unmocking i18n/navigation to test prefixes
+- [Language switcher = full page load](learnings/language-switcher-hard-navigation.md) — root layout owns html lang + intl provider, cookie before navigating, mount-effect router throws, test stubs

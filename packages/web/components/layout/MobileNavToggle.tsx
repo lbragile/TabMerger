@@ -9,6 +9,7 @@ import { SignOutForm } from '@/components/auth/SignOutForm'
 import { GitHubMark } from '@/components/GitHubMark'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { useGithubRepoLabel, useStarCount } from '@/components/layout/githubLabels'
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
 
 const links = [
     { href: '/features', label: 'features' },
@@ -104,6 +105,8 @@ export function MobileNavToggle({ email, initials, starsPromise }: MobileNavTogg
                     ) : (
                         <GithubRow onNavigate={() => setOpen(false)} />
                     )}
+                    {/* The bar shows the language button from md, when this panel is gone. */}
+                    <LanguageSwitcher variant="row" onSwitch={() => setOpen(false)} />
                     <div className="my-1 border-t border-border" />
                     {initials ? (
                         <>

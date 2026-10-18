@@ -74,3 +74,20 @@ describe('MobileNavToggle GitHub row', () => {
     expect(screen.getByRole('button', { name: 'Open menu' })).toBeInTheDocument()
   })
 })
+
+describe('MobileNavToggle language row', () => {
+  it('sits after the GitHub row, opens the language menu, and is gone with the panel', async () => {
+    const user = await openPanel(Promise.resolve(10))
+    const row = await screen.findByRole('button', { name: 'Language: English (EN)' })
+    expect(row).toHaveTextContent('Language')
+    expect(row).toHaveTextContent('English')
+    expect(screen.getByRole('link', { name: 'TabMerger on GitHub, 10 stars' }).nextElementSibling).toBe(row)
+
+    await user.click(row)
+    expect(screen.getAllByRole('menuitemradio')).toHaveLength(7)
+    await user.keyboard('{Escape}')
+
+    await user.click(screen.getByRole('button', { name: 'Close menu' }))
+    expect(screen.queryByRole('button', { name: 'Language: English (EN)' })).not.toBeInTheDocument()
+  })
+})

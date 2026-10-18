@@ -54,6 +54,14 @@ describe('AppLayout', () => {
     expect(screen.getByRole('button', { name: 'Toggle theme' })).toBeInTheDocument()
   })
 
+  it('renders the language button just before the theme toggle', async () => {
+    render(await AppLayout({ children: <div>content</div> }))
+    const language = await screen.findByRole('button', { name: 'Language: English (EN)' })
+    expect(language.nextElementSibling).toBe(screen.getByRole('button', { name: 'Toggle theme' }))
+    // The code is hidden on phones, where the header row is tight.
+    expect(language.querySelector('span')).toHaveClass('hidden', 'sm:inline')
+  })
+
   it('renders children and nav links', async () => {
     render(await AppLayout({ children: <div>content</div> }))
     expect(screen.getByText('content')).toBeInTheDocument()

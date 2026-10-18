@@ -35,5 +35,7 @@ especially) and the last control's right edge against the container's content bo
 768, 800 and 1023 logged out, not only phone widths.
 
 Decision: the GitHub badge is hidden below `sm` (the mobile panel has a row), full from
-`sm`, a mark-only square from `md` to `lg`, full again from `lg`. Badge, theme toggle and the
+`sm`, a mark-only square from `md` to `lg`, full again from `lg`. The language button sits beside the
+theme toggle from `md` (icon-only below `lg`, a row in the mobile panel below `md`), and the logo
+drops its wordmark from `md` to `lg` to make room for it. Badge, theme toggle and the
 `size="sm"` buttons share `h-9`, `rounded-md` and (badge and toggle) `border-border2`.

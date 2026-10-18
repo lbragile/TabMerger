@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { LayoutDashboard, Settings } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
 import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
 import { EncryptionKeyProvider } from '@/lib/encryption/context'
 import { hasCloudSync } from '@/lib/cloudSync'
@@ -82,6 +83,8 @@ export default async function AppLayout({
 
           <div className="flex shrink-0 items-center gap-2.5">
           {syncEnabled && <SyncIndicator userId={user.id} />}
+          {/* Icon only on phones, where the row has ~340px. */}
+          <LanguageSwitcher codeClassName="hidden sm:inline" />
           <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AccountMenuLoader } from "@/components/layout/AccountMenuLoader";
 import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { GithubStars, GithubStarsFallback } from "@/components/layout/GithubStars";
 import { getGithubStarCount } from "@/lib/githubStats";
 
@@ -30,9 +31,10 @@ export async function Navbar() {
         <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
             <div className="container relative flex items-center">
                 {/* Width budget from md to lg: the container is capped at 768px there and, logged out,
-                    holds the logo, four links, the GitHub mark, the theme toggle and two buttons. The
-                    tighter spacing below lg (mr-4 here and on the logo, px-2 on the links) is what
-                    makes them fit: this block shrinks instead of overflowing, so when it is too wide
+                    holds the logo, four links, the GitHub mark, the language button, the theme toggle
+                    and two buttons. The tighter spacing below lg (mr-4 here and on the logo, px-2 on
+                    the links), the logo without its wordmark and the icon-only language button are
+                    what make them fit: this block shrinks instead of overflowing, so when it is too wide
                     the right-hand cluster slides over the last link rather than causing a scrollbar.
                     min-w-0 here and on the nav is what lets it shrink: with longer (translated) link
                     labels the last links are cut off at the cluster instead of pushing the sign-in
@@ -46,7 +48,9 @@ export async function Navbar() {
                             height={26}
                             className="rounded-md"
                         />
-                        <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">TabMerger</span>
+                        {/* Hidden from md to lg (the logo's alt text still names the link): the language
+                            button needs the room. */}
+                        <span className="hidden text-[15px] font-semibold tracking-tight sm:inline md:hidden lg:inline">TabMerger</span>
                     </Link>
                     <nav className="hidden min-w-0 items-center gap-1 overflow-hidden text-[13.5px] md:flex">
                         <Link
@@ -80,6 +84,8 @@ export async function Navbar() {
                         <Suspense fallback={<GithubStarsFallback />}>
                             <GithubStars starsPromise={starsPromise} />
                         </Suspense>
+                        {/* From md; below that it is a row in the mobile panel. */}
+                        <LanguageSwitcher className="hidden md:inline-flex" codeClassName="hidden lg:inline" />
                         <ThemeToggle />
                         {/* Sign-in/account controls move into the mobile hamburger panel below md */}
                         <div className="hidden items-center gap-2.5 md:flex">

@@ -1,7 +1,6 @@
 import NextLink from "next/link";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import Image from "next/image";
 import { isProductionDeployment } from "@/lib/deployment";
 
@@ -146,8 +145,6 @@ export function Footer() {
                 <p className="text-center text-sm text-muted-foreground">
                     {t("copyright", { year: new Date().getFullYear() })}
                 </p>
-                {/* Renders nothing while only one language is public. */}
-                <LanguageSwitcher className="mt-4" />
             </div>
         </footer>
     );

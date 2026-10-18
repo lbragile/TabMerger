@@ -10,6 +10,13 @@ describe('Footer', () => {
     expect(link).toHaveAttribute('href', '/share/demo')
   })
 
+  it('has no language switcher (it lives in the header)', () => {
+    render(<Footer />)
+    expect(screen.queryByRole('combobox')).toBeNull()
+    expect(screen.queryByRole('button', { name: /^Language/ })).toBeNull()
+    expect(screen.queryByText('Language')).toBeNull()
+  })
+
   it('still renders the existing Product/Account/Legal columns', () => {
     render(<Footer />)
     expect(screen.getByRole('heading', { name: 'Product' })).toBeInTheDocument()
