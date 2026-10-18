@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/lbragile/TabMerger/compare/v3.3.3...v3.4.0) (2026-10-18)
+
+
+### Features
+
+* translate the extension and website into seven languages ([#85](https://github.com/lbragile/TabMerger/issues/85)) ([4d97121](https://github.com/lbragile/TabMerger/commit/4d971219171ec2e8a2af0924e8061336637ff27a))
+
 ## [3.3.3](https://github.com/lbragile/TabMerger/compare/v3.3.2...v3.3.3) (2026-10-17)
 
 
