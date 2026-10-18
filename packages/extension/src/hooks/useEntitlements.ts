@@ -5,6 +5,7 @@ import { TIER_LIMITS } from '@/lib/types';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { resolveTier } from '@/lib/entitlementTier';
 import { useAuth } from './useAuth';
+import { HEARTBEAT_TIER_STORAGE_KEY, type HeartbeatTier } from '@tabmerger/shared';
 
 type SubRow = {
   tier: string;
@@ -46,6 +47,28 @@ const DEMO_MODE = import.meta.env.VITE_DEMO_BUILD === 'true';
 
 const POLL_MS = 1000 * 30;
 
+/** The plan last written for the heartbeat in this popup, so a re-render writes nothing. */
+let rememberedTier: HeartbeatTier | null = null;
+
+/**
+ * Keeps the coarse plan in `chrome.storage.local` for the background worker's daily heartbeat
+ * (lib/heartbeat.ts), which must not make a network request to learn it. Only on a change.
+ */
+function rememberTierForHeartbeat(tier: HeartbeatTier): void {
+  if (rememberedTier === tier) return;
+  rememberedTier = tier;
+  try {
+    void Promise.resolve(chrome.storage.local.set({ [HEARTBEAT_TIER_STORAGE_KEY]: tier })).catch(() => {});
+  } catch {
+    // no extension storage (tests, a non-extension page): nothing to remember
+  }
+}
+
+/** Test-only: forgets the last plan written for the heartbeat. */
+export function _resetRememberedTierForTests(): void {
+  rememberedTier = null;
+}
+
 /**
  * Returns the current user's feature limits and subscription metadata.
  * Polls Supabase every 30 s rather than using Realtime, to keep the entitlement path simple and offline-safe.
@@ -70,6 +93,8 @@ export function useEntitlements(): Entitlements & { loading: boolean } {
   }
 
   const effectiveTier: Tier = user ? resolveTier(sub ?? null) : 'free';
+  const loading = authLoading || (!!user && isLoading);
+  if (!loading) rememberTierForHeartbeat(user ? effectiveTier : 'signed_out');
 
   return {
     ...TIER_LIMITS[effectiveTier],
@@ -82,6 +107,6 @@ export function useEntitlements(): Entitlements & { loading: boolean } {
     currentPeriodEnd: sub?.current_period_end ?? null,
     subscriptionStatus: sub?.status ?? null,
     /** !!user guard: query is disabled when logged out, so isLoading would be false — but the guard documents intent */
-    loading: authLoading || (!!user && isLoading)
+    loading
   };
 }

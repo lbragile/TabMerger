@@ -3,5 +3,11 @@
   "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
   "git": {
     "deploymentEnabled": false
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/web-heartbeat",
+      "schedule": "0 12 * * *"
+    }
+  ]
 }

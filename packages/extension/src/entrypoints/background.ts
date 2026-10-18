@@ -15,6 +15,7 @@ import { isTourPracticeUrl } from '@/lib/tourPracticeTab';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
 import {
+  ANALYTICS_EVENTS,
   EXTENSION_MESSAGE,
   SIGN_IN_DATA_CONSENT_CATEGORIES,
   SYNC_AUTH_CONSENT_REQUIRED_REASON,
@@ -23,6 +24,7 @@ import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 import { markTourPendingOnInstall } from '@/lib/tour';
 import { registerAutoBackup } from '@/lib/autoBackupAlarm';
 import { registerUninstallSurvey } from '@/lib/uninstallSurvey';
+import { recordInstallDate, registerHeartbeat } from '@/lib/heartbeat';
 import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
 import { resolveTrustedWebAppOrigins } from '@/lib/webAppOrigins';
 import { followLocalePreference, initI18n, t } from '@/lib/i18n';
@@ -247,9 +249,11 @@ export default defineBackground(() => {
     void buildMenus();
     // Guided tour: pending on a first install only, never on an update (see lib/tour.ts)
     void markTourPendingOnInstall(details.reason);
-    trackEvent(details.reason === 'install' ? 'extension_installed' : 'extension_updated', {
+    trackEvent(details.reason === 'install' ? ANALYTICS_EVENTS.extensionInstalled : ANALYTICS_EVENTS.extensionUpdated, {
       reason: details.reason,
     });
+    // Install date for the heartbeat's "days since install" (first install only)
+    void recordInstallDate(details.reason).catch(() => {});
   });
   chrome.runtime.onStartup.addListener(() => { void buildMenus(); void reRegisterReminders(); });
   void buildMenus();
@@ -587,4 +591,7 @@ export default defineBackground(() => {
   // they never touch), see lib/autoBackupAlarm.ts. Only creates and uploads a backup session; it
   // never runs a groups sync cycle.
   registerAutoBackup();
+
+  // Daily extension_heartbeat (own alarm, own onAlarm listener, see lib/heartbeat.ts)
+  registerHeartbeat();
 });
