@@ -10,5 +10,12 @@
   "upgrade": "Upgrade",
   "paymentIssue": "Zahlungsproblem – aktualisiere deine Karte",
   "planEnds": "Dein Pro-Abo endet am {{date}}",
-  "approachingLimit": "Du näherst dich dem kostenlosen Limit – wechsle zu Pro für unbegrenzte Gruppen und Tabs"
+  "approachingLimit": "Du näherst dich dem kostenlosen Limit – wechsle zu Pro für unbegrenzte Gruppen und Tabs",
+  "update": {
+    "label": "Update verfügbar",
+    "text": "Version {{version}} ist bereit. Ein Neustart schließt dieses Popup.",
+    "restart": "Zum Aktualisieren neu starten",
+    "restartLabel": "TabMerger neu starten, um auf Version {{version}} zu aktualisieren. Dadurch wird das Popup geschlossen.",
+    "dismissLabel": "Hinweis auf das Update auf Version {{version}} ausblenden"
+  }
 }

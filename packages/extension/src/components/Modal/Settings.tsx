@@ -25,6 +25,7 @@ import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
 import { AutoBackups } from '@/components/Settings/AutoBackups';
+import { CheckForUpdates } from '@/components/Settings/CheckForUpdates';
 import { LanguageSetting } from '@/components/Settings/LanguageSetting';
 import { useLanguageSetting } from '@/hooks/useLocalePreference';
 import { autoBackupDownloadQueryKey } from '@/lib/autoBackupQueryKeys';
@@ -503,6 +504,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               {t('settings.general.urlRulesButton')}
             </Button>
           </div>
+
+          <CheckForUpdates />
         </TabsContent>
 
         <TabsContent value="account" className="space-y-4">

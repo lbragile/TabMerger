@@ -1,8 +1,18 @@
 /**
- * Extension lifecycle state kept in `chrome.storage.local` for the daily `extension_heartbeat`
- * analytics event. The background worker writes most of it and the popup reads it, so both sides
- * use these names instead of repeating string literals.
+ * Extension lifecycle state kept in `chrome.storage.local`: the "update available" prompt and the
+ * daily `extension_heartbeat` analytics event. The background worker writes most of it and the
+ * popup reads it, so both sides use these names instead of repeating string literals.
  */
+
+/**
+ * `{ version, detectedAt }`: an update the browser has downloaded but cannot apply while the
+ * extension is running (`runtime.onUpdateAvailable`, or a "Check for updates" that found one).
+ * Removed on worker start once the running version has caught up.
+ */
+export const UPDATE_AVAILABLE_STORAGE_KEY = 'tm_update_available';
+
+/** The update version whose banner the user dismissed. A newer version shows the banner again. */
+export const UPDATE_BANNER_DISMISSED_STORAGE_KEY = 'tm_update_banner_dismissed';
 
 /** `chrome.alarms` name of the daily heartbeat. Must not start with the reminder prefix (`reminder-`). */
 export const HEARTBEAT_ALARM_NAME = 'tm-heartbeat';

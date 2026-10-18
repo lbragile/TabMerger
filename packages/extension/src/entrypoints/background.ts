@@ -24,6 +24,7 @@ import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 import { markTourPendingOnInstall } from '@/lib/tour';
 import { registerAutoBackup } from '@/lib/autoBackupAlarm';
 import { registerUninstallSurvey } from '@/lib/uninstallSurvey';
+import { registerUpdateAvailable } from '@/lib/extensionUpdate';
 import { recordInstallDate, registerHeartbeat } from '@/lib/heartbeat';
 import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
 import { resolveTrustedWebAppOrigins } from '@/lib/webAppOrigins';
@@ -591,6 +592,10 @@ export default defineBackground(() => {
   // they never touch), see lib/autoBackupAlarm.ts. Only creates and uploads a backup session; it
   // never runs a groups sync cycle.
   registerAutoBackup();
+
+  // "Update available" prompt: records a downloaded update the popup offers to apply, and drops
+  // the record once applied (see lib/extensionUpdate.ts). Registered after the listeners above.
+  registerUpdateAvailable();
 
   // Daily extension_heartbeat (own alarm, own onAlarm listener, see lib/heartbeat.ts)
   registerHeartbeat();

@@ -113,5 +113,17 @@
     "noGroupsFound": "No groups found",
     "invalidFile": "Invalid file format",
     "portalFailed": "Could not open billing portal"
+  },
+  "updates": {
+    "label": "Updates",
+    "description": "Ask the browser to look for a newer version now",
+    "button": "Check for updates",
+    "checking": "Checking…",
+    "available": "Version {{version}} is ready. Use Restart to update at the top of the popup.",
+    "availableNoVersion": "An update is ready. Restart the browser to apply it.",
+    "noUpdate": "You have the latest version",
+    "throttled": "Checked too often. Try again in a few minutes.",
+    "unsupported": "This is a development build, which the browser does not update",
+    "error": "Could not check for updates"
   }
 }

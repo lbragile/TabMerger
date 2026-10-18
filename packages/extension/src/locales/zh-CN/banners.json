@@ -9,5 +9,12 @@
   "upgrade": "升级",
   "paymentIssue": "付款有问题，请更新银行卡",
   "planEnds": "您的 Pro 套餐将于 {{date}} 结束",
-  "approachingLimit": "您即将达到免费版上限，升级到 Pro 可使用不限数量的分组和标签页"
+  "approachingLimit": "您即将达到免费版上限，升级到 Pro 可使用不限数量的分组和标签页",
+  "update": {
+    "label": "有可用更新",
+    "text": "版本 {{version}} 已就绪。重启会关闭此弹出窗口。",
+    "restart": "重启以更新",
+    "restartLabel": "重启 TabMerger 以更新到版本 {{version}}。这会关闭弹出窗口。",
+    "dismissLabel": "忽略版本 {{version}} 的更新提示"
+  }
 }

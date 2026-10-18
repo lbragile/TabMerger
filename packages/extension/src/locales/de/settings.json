@@ -113,5 +113,17 @@
     "noGroupsFound": "Keine Gruppen gefunden",
     "invalidFile": "Ungültiges Dateiformat",
     "portalFailed": "Das Abrechnungsportal konnte nicht geöffnet werden"
+  },
+  "updates": {
+    "label": "Updates",
+    "description": "Den Browser jetzt nach einer neueren Version suchen lassen",
+    "button": "Nach Updates suchen",
+    "checking": "Wird geprüft…",
+    "available": "Version {{version}} ist bereit. Nutze „Zum Aktualisieren neu starten“ oben im Popup.",
+    "availableNoVersion": "Ein Update ist bereit. Starte den Browser neu, um es zu installieren.",
+    "noUpdate": "Du hast die neueste Version",
+    "throttled": "Zu oft geprüft. Versuche es in ein paar Minuten erneut.",
+    "unsupported": "Dies ist ein Entwicklungs-Build, den der Browser nicht aktualisiert",
+    "error": "Die Suche nach Updates ist fehlgeschlagen"
   }
 }

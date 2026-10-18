@@ -42,12 +42,14 @@ vi.mock('@/lib/autoBackupAlarm', () => ({ registerAutoBackup: mockRegisterAutoBa
 // The uninstall survey has its own suite (uninstallSurvey.test.ts): here the worker only has to call it once.
 const { mockRegisterUninstallSurvey } = vi.hoisted(() => ({ mockRegisterUninstallSurvey: vi.fn() }))
 vi.mock('@/lib/uninstallSurvey', () => ({ registerUninstallSurvey: mockRegisterUninstallSurvey }))
-// The heartbeat has its own suite (heartbeat.test.ts).
-const { mockRegisterHeartbeat, mockRecordInstallDate, mockTrackEvent } = vi.hoisted(() => ({
+// The update prompt and the heartbeat have their own suites (extensionUpdate.test.ts, heartbeat.test.ts).
+const { mockRegisterUpdateAvailable, mockRegisterHeartbeat, mockRecordInstallDate, mockTrackEvent } = vi.hoisted(() => ({
+  mockRegisterUpdateAvailable: vi.fn(),
   mockRegisterHeartbeat: vi.fn(),
   mockRecordInstallDate: vi.fn().mockResolvedValue(undefined),
   mockTrackEvent: vi.fn(),
 }))
+vi.mock('@/lib/extensionUpdate', () => ({ registerUpdateAvailable: mockRegisterUpdateAvailable }))
 vi.mock('@/lib/heartbeat', () => ({ registerHeartbeat: mockRegisterHeartbeat, recordInstallDate: mockRecordInstallDate }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 
@@ -521,10 +523,12 @@ describe('background — uninstall survey wiring', () => {
   })
 })
 
-describe('background — heartbeat and lifecycle events', () => {
-  it('registers the heartbeat once per worker start', () => {
+describe('background — update prompt, heartbeat and lifecycle events', () => {
+  it('registers the update listener and the heartbeat once per worker start', () => {
+    mockRegisterUpdateAvailable.mockClear()
     mockRegisterHeartbeat.mockClear()
     capturedMain!()
+    expect(mockRegisterUpdateAvailable).toHaveBeenCalledTimes(1)
     expect(mockRegisterHeartbeat).toHaveBeenCalledTimes(1)
   })
 

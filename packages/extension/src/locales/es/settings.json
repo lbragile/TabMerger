@@ -117,5 +117,17 @@
     "noGroupsFound": "No se encontraron grupos",
     "invalidFile": "Formato de archivo no válido",
     "portalFailed": "No se pudo abrir el portal de facturación"
+  },
+  "updates": {
+    "label": "Actualizaciones",
+    "description": "Pide al navegador que busque ahora una versión más reciente",
+    "button": "Buscar actualizaciones",
+    "checking": "Comprobando…",
+    "available": "La versión {{version}} está lista. Usa Reiniciar para actualizar en la parte superior del popup.",
+    "availableNoVersion": "Hay una actualización lista. Reinicia el navegador para aplicarla.",
+    "noUpdate": "Tienes la última versión",
+    "throttled": "Se comprobó demasiadas veces. Inténtalo de nuevo en unos minutos.",
+    "unsupported": "Esta es una compilación de desarrollo, que el navegador no actualiza",
+    "error": "No se pudo buscar actualizaciones"
   }
 }

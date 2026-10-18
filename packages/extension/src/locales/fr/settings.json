@@ -117,5 +117,17 @@
     "noGroupsFound": "Aucun groupe trouvé",
     "invalidFile": "Format de fichier non valide",
     "portalFailed": "Impossible d’ouvrir le portail de facturation"
+  },
+  "updates": {
+    "label": "Mises à jour",
+    "description": "Demander au navigateur de rechercher une version plus récente maintenant",
+    "button": "Rechercher des mises à jour",
+    "checking": "Vérification…",
+    "available": "La version {{version}} est prête. Utilisez « Redémarrer pour mettre à jour » en haut de la fenêtre.",
+    "availableNoVersion": "Une mise à jour est prête. Redémarrez le navigateur pour l’appliquer.",
+    "noUpdate": "Vous avez la dernière version",
+    "throttled": "Vérifications trop fréquentes. Réessayez dans quelques minutes.",
+    "unsupported": "Ceci est une version de développement, que le navigateur ne met pas à jour",
+    "error": "Impossible de rechercher des mises à jour"
   }
 }
