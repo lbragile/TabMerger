@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/lbragile/TabMerger/compare/v3.4.0...v3.5.0) (2026-10-18)
+
+
+### Features
+
+* **analytics:** track installs, uninstalls, the checkout funnel and daily heartbeats ([#87](https://github.com/lbragile/TabMerger/issues/87)) ([0b545f6](https://github.com/lbragile/TabMerger/commit/0b545f6a44397ad68b9d54542e07c96573699ea3))
+
 # [3.4.0](https://github.com/lbragile/TabMerger/compare/v3.3.3...v3.4.0) (2026-10-18)
 
 
