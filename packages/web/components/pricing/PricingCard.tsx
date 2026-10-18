@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useRouter as useLocaleRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Check, Plus } from 'lucide-react'
@@ -11,6 +12,7 @@ import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { CHECKOUT_TIERS, trackBeginCheckout, type CheckoutTier } from '@/lib/checkoutAnalytics'
+import { isExternalStoreLink } from '@/lib/storeLinks'
 import { useListPrice, useZeroPrice } from './priceFormat'
 import type { TierFeature } from './tierFeatures'
 
@@ -60,6 +62,9 @@ export function PricingCard({
   installHref,
 }: PricingCardProps) {
   const router = useRouter()
+  // For links into the localized site (the Firefox beta guide): keeps the visitor's language prefix.
+  // `/auth/*` has no prefixed version, so those pushes use the plain router.
+  const localeRouter = useLocaleRouter()
   const t = useTranslations('pricing')
   const common = useTranslations('common')
   const listPrice = useListPrice()
@@ -124,7 +129,10 @@ export function PricingCard({
   async function handleClick() {
     if (isComingSoon) return
     if (isFree) {
-      window.open(installHref, '_blank', 'noopener')
+      // A store listing opens in a new tab. A link into this site (the Firefox beta guide) is a
+      // client-side navigation, so the guide's install still counts as this click (see StoreLink).
+      if (isExternalStoreLink(installHref)) window.open(installHref, '_blank', 'noopener')
+      else localeRouter.push(installHref)
       return
     }
 

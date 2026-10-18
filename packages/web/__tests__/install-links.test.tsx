@@ -120,15 +120,15 @@ describe.each(DEPLOYMENTS)('install links on $label', ({ vercelEnv, chrome, fire
     expectNewTab(link)
   })
 
-  it('the features page links the Chrome listing', () => {
-    render(<FeaturesPage />)
+  it('the features page links the Chrome listing', async () => {
+    render(await FeaturesPage())
     const link = screen.getByRole('link', { name: /add to chrome/i })
     expect(link).toHaveAttribute('href', chrome)
     expectNewTab(link)
   })
 
-  it('the share demo page links the Chrome listing', () => {
-    render(<ShareDemoPage />)
+  it('the share demo page links the Chrome listing', async () => {
+    render(await ShareDemoPage())
     const link = screen.getByRole('link', { name: /install free/i })
     expect(link).toHaveAttribute('href', chrome)
     expectNewTab(link)

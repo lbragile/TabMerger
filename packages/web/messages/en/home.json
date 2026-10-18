@@ -4,6 +4,9 @@
     "title": "Stop drowning in browser tabs.",
     "lead": "TabMerger folds every open window into named, colour-coded groups you can search, share and restore — on any machine, in one click.",
     "installChrome": "Install for Chrome — free",
+    "installFirefox": "Install for Firefox — free",
+    "installEdge": "Install for Edge — free",
+    "chrome": "Chrome",
     "firefox": "Firefox",
     "edge": "Edge",
     "note": "Free plan, no account needed."
@@ -22,6 +25,8 @@
     "leadAi": "Free to start, no account needed. Upgrade any time for cloud sync and AI.",
     "leadNoAi": "Free to start, no account needed. Upgrade any time for cloud sync — AI features coming soon.",
     "installChrome": "Install for Chrome — free",
+    "installFirefox": "Install for Firefox — free",
+    "installEdge": "Install for Edge — free",
     "faq": "Have questions? See the FAQ →"
   },
   "features": {

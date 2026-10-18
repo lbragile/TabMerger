@@ -4,6 +4,8 @@
   "title": "为专注而生的功能",
   "lead": "掌控浏览器所需的一切，从免费基础功能到 Pro AI 的强大能力。",
   "addToChrome": "添加到 Chrome，免费使用",
+  "addToFirefox": "添加到 Firefox，免费使用",
+  "addToEdge": "添加到 Edge，免费使用",
   "seePricing": "查看定价",
   "badges": {
     "core": "核心",

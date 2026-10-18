@@ -4,6 +4,9 @@
     "title": "Schluss mit dem Tab-Chaos.",
     "lead": "TabMerger faltet jedes geöffnete Fenster in benannte, farbcodierte Gruppen, die du durchsuchen, teilen und wiederherstellen kannst – auf jedem Rechner, mit einem Klick.",
     "installChrome": "Für Chrome installieren – kostenlos",
+    "installFirefox": "Für Firefox installieren – kostenlos",
+    "installEdge": "Für Edge installieren – kostenlos",
+    "chrome": "Chrome",
     "firefox": "Firefox",
     "edge": "Edge",
     "note": "Kostenloser Tarif, kein Konto nötig."
@@ -22,6 +25,8 @@
     "leadAi": "Kostenlos starten, kein Konto nötig. Jederzeit upgraden für Cloud-Sync und KI.",
     "leadNoAi": "Kostenlos starten, kein Konto nötig. Jederzeit upgraden für Cloud-Sync – KI-Funktionen folgen bald.",
     "installChrome": "Für Chrome installieren – kostenlos",
+    "installFirefox": "Für Firefox installieren – kostenlos",
+    "installEdge": "Für Edge installieren – kostenlos",
     "faq": "Fragen? Sieh dir die FAQ an →"
   },
   "features": {

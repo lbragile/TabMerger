@@ -3,8 +3,8 @@ import { describe, it, expect } from 'vitest'
 import FeaturesPage from '@/app/[locale]/(marketing)/features/page'
 
 describe('FeaturesPage', () => {
-  it('wraps the Pro AI section cards in a styled surface2 container', () => {
-    render(<FeaturesPage />)
+  it('wraps the Pro AI section cards in a styled surface2 container', async () => {
+    render(await FeaturesPage())
 
     const aiHeading = screen.getByRole('heading', { name: 'AI-powered organization' })
     const aiSection = aiHeading.closest('div')?.parentElement as HTMLElement
@@ -15,8 +15,8 @@ describe('FeaturesPage', () => {
     expect(wrapper?.className).toMatch(/p-8/)
   })
 
-  it('does not wrap the Core and Pro sections in the surface2 container', () => {
-    render(<FeaturesPage />)
+  it('does not wrap the Core and Pro sections in the surface2 container', async () => {
+    render(await FeaturesPage())
 
     const coreHeading = screen.getByRole('heading', { name: 'Powerful tab management' })
     const coreSection = coreHeading.closest('div')?.parentElement as HTMLElement
@@ -28,8 +28,8 @@ describe('FeaturesPage', () => {
   })
 
   // The shortcuts work on every plan (see the pricing tiers), so the card must not sit under Pro.
-  it('lists keyboard shortcuts in the Core section, not under Pro, without claiming every action has one', () => {
-    render(<FeaturesPage />)
+  it('lists keyboard shortcuts in the Core section, not under Pro, without claiming every action has one', async () => {
+    render(await FeaturesPage())
 
     const sectionOf = (heading: string) =>
       screen.getByRole('heading', { name: heading }).closest('div')?.parentElement as HTMLElement
@@ -41,8 +41,8 @@ describe('FeaturesPage', () => {
     expect(document.body.textContent).not.toMatch(/every action has a keyboard shortcut/i)
   })
 
-  it('restarts row numbering at "01" for each of the three tier sections', () => {
-    render(<FeaturesPage />)
+  it('restarts row numbering at "01" for each of the three tier sections', async () => {
+    render(await FeaturesPage())
 
     const coreFirst = screen.getByText('Named & color-coded groups')
     const proFirst = screen.getByText('Cloud sync')

@@ -4,6 +4,9 @@
     "title": "Chega de se afogar em abas do navegador.",
     "lead": "O TabMerger dobra cada janela aberta em grupos com nome e cor que você pode pesquisar, compartilhar e restaurar — em qualquer máquina, com um clique.",
     "installChrome": "Instalar no Chrome — grátis",
+    "installFirefox": "Instalar no Firefox — grátis",
+    "installEdge": "Instalar no Edge — grátis",
+    "chrome": "Chrome",
     "firefox": "Firefox",
     "edge": "Edge",
     "note": "Plano gratuito, sem precisar de conta."
@@ -22,6 +25,8 @@
     "leadAi": "Comece de graça, sem precisar de conta. Faça upgrade quando quiser para ter sincronização na nuvem e IA.",
     "leadNoAi": "Comece de graça, sem precisar de conta. Faça upgrade quando quiser para ter sincronização na nuvem — recursos de IA em breve.",
     "installChrome": "Instalar no Chrome — grátis",
+    "installFirefox": "Instalar no Firefox — grátis",
+    "installEdge": "Instalar no Edge — grátis",
     "faq": "Tem dúvidas? Veja as perguntas frequentes →"
   },
   "features": {

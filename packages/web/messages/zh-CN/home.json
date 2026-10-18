@@ -4,6 +4,9 @@
     "title": "别再淹没在浏览器标签页里。",
     "lead": "TabMerger 将所有打开的窗口整理成带名称、带颜色的分组，支持搜索、分享和恢复，在任何设备上一键完成。",
     "installChrome": "安装 Chrome 版，免费",
+    "installFirefox": "安装 Firefox 版，免费",
+    "installEdge": "安装 Edge 版，免费",
+    "chrome": "Chrome",
     "firefox": "Firefox",
     "edge": "Edge",
     "note": "免费版，无需账户。"
@@ -22,6 +25,8 @@
     "leadAi": "免费开始，无需账户。随时升级即可使用云同步和 AI。",
     "leadNoAi": "免费开始，无需账户。随时升级即可使用云同步，AI 功能即将推出。",
     "installChrome": "安装 Chrome 版，免费",
+    "installFirefox": "安装 Firefox 版，免费",
+    "installEdge": "安装 Edge 版，免费",
     "faq": "有疑问？查看常见问题 →"
   },
   "features": {

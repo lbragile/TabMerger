@@ -1,6 +1,8 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { ShareBundleContent } from '@/components/ShareBundleContent'
-import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
+import { StoreLink } from '@/components/StoreLink'
+import { getStoreLinks } from '@/lib/storeLinks'
+import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
 // ponytail: static fixture, no Supabase call — this route must always work for marketing links
 const DEMO_BUNDLE = {
@@ -43,10 +45,11 @@ const DEMO_BUNDLE = {
   ],
 }
 
-export default function ShareDemoPage() {
-  // Server component: the links follow the deployment answering this request.
+export default async function ShareDemoPage() {
+  // Server component: the links follow the deployment answering this request, and "Install
+  // free" installs for the visitor's browser.
   const storeLinks = getStoreLinks()
-  const t = useTranslations('share')
+  const [t, browser] = await Promise.all([getTranslations('share'), getVisitorBrowser()])
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-14">
@@ -65,12 +68,12 @@ export default function ShareDemoPage() {
           <p className="font-semibold text-[14.5px] mb-0.5">{t('ctaTitle')}</p>
           <p className="text-[13px] text-text2">{t('ctaBody')}</p>
         </div>
-        <a
-          {...storeLinkProps(storeLinks.chrome)}
+        <StoreLink
+          href={storeLinks[browser]}
           className="shrink-0 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors inline-flex items-center justify-center"
         >
           {t('installFree')}
-        </a>
+        </StoreLink>
       </div>
     </main>
   )

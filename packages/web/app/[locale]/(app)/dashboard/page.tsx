@@ -20,6 +20,7 @@ import { AUTO_BACKUP_DOWNLOAD_LIMITS, isEncryptedBlob } from '@tabmerger/shared'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getStoreLinks } from '@/lib/storeLinks'
+import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
 // ponytail: capitalize the whole email local-part as a first name proxy — no profile
 // display-name column exists yet, and splitting on '.' would mangle names like "mary.jane"
@@ -172,7 +173,7 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      <OnboardingChecklist isSignedIn={!!user} isPro={isPro} installHref={getStoreLinks().chrome} />
+      <OnboardingChecklist isSignedIn={!!user} isPro={isPro} installHref={getStoreLinks()[await getVisitorBrowser()]} />
 
       <StatsOverview
         tabCount={tabCount}

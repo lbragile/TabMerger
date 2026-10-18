@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { ShareBundleContent } from '@/components/ShareBundleContent'
 import { CopyShareUrl } from '@/components/CopyShareUrl'
-import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
+import { StoreLink } from '@/components/StoreLink'
+import { getStoreLinks } from '@/lib/storeLinks'
+import { detectInstallBrowser } from '@/lib/visitorBrowser'
 
 export const dynamic = 'force-dynamic'
 
@@ -66,6 +68,8 @@ export default async function SharePage({ params }: Props) {
   const shareUrl = `${proto}://${host}/share/${slug}`
   const storeLinks = getStoreLinks()
   const [t, locale] = await Promise.all([getTranslations('share'), getLocale()])
+  // "Install free" installs for the visitor's browser (same request headers as above).
+  const browser = detectInstallBrowser(h.get('user-agent'))
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-14">
@@ -74,12 +78,12 @@ export default async function SharePage({ params }: Props) {
           <p className="font-semibold text-[14.5px] mb-0.5">{t('ctaTitle')}</p>
           <p className="text-[13px] text-text2">{t('ctaBody')}</p>
         </div>
-        <a
-          {...storeLinkProps(storeLinks.chrome)}
+        <StoreLink
+          href={storeLinks[browser]}
           className="shrink-0 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors inline-flex items-center justify-center"
         >
           {t('installFree')}
-        </a>
+        </StoreLink>
       </div>
       <div className="mb-8">
         <span className="inline-flex items-center h-6 px-2.5 rounded-md bg-surface2 border border-border text-[11.5px] text-text2 mb-3.5">

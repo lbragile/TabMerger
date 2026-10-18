@@ -9,22 +9,22 @@ vi.mock('@/lib/supabase/server', () => {
 import ShareDemoPage from '@/app/[locale]/(marketing)/share/demo/page'
 
 describe('ShareDemoPage — static /share/demo route', () => {
-  it('renders fixture group names and tab titles without hitting Supabase', () => {
-    render(<ShareDemoPage />)
+  it('renders fixture group names and tab titles without hitting Supabase', async () => {
+    render(await ShareDemoPage())
     expect(screen.getByText('Work')).toBeInTheDocument()
     expect(screen.getByText('Research')).toBeInTheDocument()
     expect(screen.getByText(/GitHub/)).toBeInTheDocument()
     expect(screen.getByText(/MDN/)).toBeInTheDocument()
   })
 
-  it('shows the read-only badge and install CTA', () => {
-    render(<ShareDemoPage />)
+  it('shows the read-only badge and install CTA', async () => {
+    render(await ShareDemoPage())
     expect(screen.getByText(/shared collection/i)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /install free/i })).toBeInTheDocument()
   })
 
-  it('shows a preview note about installing TabMerger for real links', () => {
-    render(<ShareDemoPage />)
+  it('shows a preview note about installing TabMerger for real links', async () => {
+    render(await ShareDemoPage())
     expect(screen.getByText(/this is a preview/i)).toBeInTheDocument()
   })
 })

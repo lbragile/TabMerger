@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
 import { pageMetadata } from '@/lib/seo'
 import { Link } from '@/i18n/navigation'
@@ -6,8 +5,10 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AUTO_BACKUP_RETENTION_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
-import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
-import { ChromeIcon } from '@/components/marketing/BrowserIcons'
+import { getStoreLinks } from '@/lib/storeLinks'
+import { STORE_ICON } from '@/components/marketing/BrowserIcons'
+import { StoreLink } from '@/components/StoreLink'
+import { getVisitorBrowser, type InstallBrowser } from '@/lib/visitorBrowser'
 import {
   Layers,
   Search,
@@ -74,11 +75,24 @@ const featureSections: { key: SectionKey; features: { key: string; icon: LucideI
   },
 ]
 
-export default function FeaturesPage() {
-  // Server component: the links follow the deployment answering this request.
+/** The header button's label for each browser. */
+const ADD_TO_LABEL = {
+  chrome: 'addToChrome',
+  firefox: 'addToFirefox',
+  edge: 'addToEdge',
+} as const satisfies Record<InstallBrowser, string>
+
+export default async function FeaturesPage() {
+  // Server component: the links follow the deployment answering this request, and the button
+  // installs for the visitor's browser (read here so the first HTML is already right). Async, so
+  // the translations come from `getTranslations` (hooks can't run in an async component).
   const storeLinks = getStoreLinks()
-  const t = useTranslations('featuresPage')
-  const common = useTranslations('common')
+  const [t, common, browser] = await Promise.all([
+    getTranslations('featuresPage'),
+    getTranslations('common'),
+    getVisitorBrowser(),
+  ])
+  const BrowserIcon = STORE_ICON[browser]
   // Feature keys come from the list above (a test renders every one). Messages without a
   // `{count}` ignore the value.
   const featureText = (path: string, count = 0) => t(path as 'pro.sessions.description', { count })
@@ -96,10 +110,10 @@ export default function FeaturesPage() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="gap-2" asChild>
-              <a {...storeLinkProps(storeLinks.chrome)}>
-                <ChromeIcon size={18} />
-                {t('addToChrome')}
-              </a>
+              <StoreLink href={storeLinks[browser]}>
+                <BrowserIcon size={18} />
+                {t(ADD_TO_LABEL[browser])}
+              </StoreLink>
             </Button>
             <Button variant="outline" size="lg" className="gap-2" asChild>
               <Link href="/pricing">

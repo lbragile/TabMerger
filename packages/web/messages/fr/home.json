@@ -4,6 +4,9 @@
     "title": "Ne vous noyez plus dans les onglets.",
     "lead": "TabMerger range chaque fenêtre ouverte en groupes nommés et colorés que vous pouvez rechercher, partager et restaurer, sur n’importe quelle machine, en un clic.",
     "installChrome": "Installer pour Chrome — gratuit",
+    "installFirefox": "Installer pour Firefox — gratuit",
+    "installEdge": "Installer pour Edge — gratuit",
+    "chrome": "Chrome",
     "firefox": "Firefox",
     "edge": "Edge",
     "note": "Offre gratuite, sans compte."
@@ -22,6 +25,8 @@
     "leadAi": "Gratuit pour commencer, sans compte. Passez à l’offre supérieure à tout moment pour la synchronisation cloud et l’IA.",
     "leadNoAi": "Gratuit pour commencer, sans compte. Passez à l’offre supérieure à tout moment pour la synchronisation cloud ; fonctionnalités IA bientôt disponibles.",
     "installChrome": "Installer pour Chrome — gratuit",
+    "installFirefox": "Installer pour Firefox — gratuit",
+    "installEdge": "Installer pour Edge — gratuit",
     "faq": "Des questions ? Consultez la FAQ →"
   },
   "features": {

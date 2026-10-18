@@ -8,6 +8,7 @@ import { FinalCta } from '@/components/marketing/FinalCta'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { useTranslations } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
+import { getVisitorBrowser } from '@/lib/visitorBrowser'
 import { homeJsonLd, pageMetadata } from '@/lib/seo'
 
 // Absolute: the root layout's title template would otherwise append the brand a second time.
@@ -22,11 +23,14 @@ function HomeJsonLd() {
   return <JsonLd data={homeJsonLd(t('siteDescription'))} />
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Server side, so the first HTML already leads with the visitor's browser (no reorder flash).
+  const browser = await getVisitorBrowser()
+
   return (
     <>
       <HomeJsonLd />
-      <Hero />
+      <Hero browser={browser} />
       {/* The reviews wait on three stores. Without this boundary the whole page waits with
           them; with it the page is sent at once and the section follows in the same
           response, a placeholder of the same size holding its place until then. */}
@@ -35,7 +39,7 @@ export default function HomePage() {
       </Suspense>
       <Features />
       <PricingTeaser />
-      <FinalCta />
+      <FinalCta browser={browser} />
     </>
   )
 }
