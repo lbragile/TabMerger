@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { createElement } from 'react'
+import { act, render } from '@testing-library/react'
 import { GTAG_SCRIPT_ID, loadGoogleAnalytics, trackEvent, updateGoogleAnalyticsConsent } from '@/lib/analytics'
+import { ConsentedGoogleAnalytics } from '@/components/consent/ConsentedGoogleAnalytics'
+import { resetConsentStateForTests, setConsentChoice } from '@/lib/consent'
 
 const GA_ID = 'G-TEST12345'
 
@@ -96,5 +100,74 @@ describe('trackEvent under Consent Mode', () => {
     loadGoogleAnalytics(GA_ID, choice)
     trackEvent('cta_click', { location: 'hero' })
     expect(commands().at(-1)).toEqual(['event', 'cta_click', expect.objectContaining({ location: 'hero' })])
+  })
+})
+
+describe('the ga-disable switch', () => {
+  const flag = () => (window as unknown as Record<string, unknown>)[`ga-disable-${GA_ID}`]
+  afterEach(() => {
+    delete (window as unknown as Record<string, unknown>)[`ga-disable-${GA_ID}`]
+  })
+
+  it('is set on Reject and cleared on a later Accept, when given the measurement ID', () => {
+    loadGoogleAnalytics(GA_ID, 'granted')
+    updateGoogleAnalyticsConsent('denied', GA_ID)
+    expect(flag()).toBe(true)
+    updateGoogleAnalyticsConsent('granted', GA_ID)
+    expect(flag()).toBe(false)
+  })
+
+  it('is never set for a malformed measurement ID', () => {
+    loadGoogleAnalytics(GA_ID, 'granted')
+    updateGoogleAnalyticsConsent('denied', 'G-abc"><script>')
+    expect(Object.keys(window).filter((k) => k.startsWith('ga-disable-'))).toEqual([])
+  })
+})
+
+describe('ConsentedGoogleAnalytics by region and Global Privacy Control', () => {
+  const setGpc = (value: boolean) => Object.defineProperty(navigator, 'globalPrivacyControl', { value, configurable: true })
+  afterEach(() => {
+    resetConsentStateForTests()
+    delete (navigator as unknown as Record<string, unknown>).globalPrivacyControl
+    delete (window as unknown as Record<string, unknown>)[`ga-disable-${GA_ID}`]
+  })
+
+  it('loads nothing in an opt-in region (or with no region cookie) until Accept', () => {
+    render(createElement(ConsentedGoogleAnalytics, { gaId: GA_ID }))
+    expect(document.getElementById(GTAG_SCRIPT_ID)).toBeNull()
+    expect(window.dataLayer).toBeUndefined()
+    act(() => setConsentChoice('granted'))
+    expect(document.getElementById(GTAG_SCRIPT_ID)).toBeInTheDocument()
+  })
+
+  it('loads gtag.js with analytics storage granted in an opt-out region, without a click', () => {
+    document.cookie = 'tm_consent_region=optout; Path=/'
+    render(createElement(ConsentedGoogleAnalytics, { gaId: GA_ID }))
+    expect(document.getElementById(GTAG_SCRIPT_ID)).toBeInTheDocument()
+    expect(commands()).toContainEqual(['consent', 'update', { analytics_storage: 'granted' }])
+  })
+
+  it('stops sending and clears GA cookies on a Reject in an opt-out region', () => {
+    document.cookie = 'tm_consent_region=optout; Path=/'
+    render(createElement(ConsentedGoogleAnalytics, { gaId: GA_ID }))
+    document.cookie = '_ga=GA1.1.1; Path=/'
+    act(() => setConsentChoice('denied'))
+    expect(commands().at(-1)).toEqual(['consent', 'update', { analytics_storage: 'denied' }])
+    expect((window as unknown as Record<string, unknown>)[`ga-disable-${GA_ID}`]).toBe(true)
+    expect(document.cookie).not.toContain('_ga=')
+  })
+
+  it.each(['optin', 'optout'])('loads nothing under Global Privacy Control (%s region)', (region) => {
+    document.cookie = `tm_consent_region=${region}; Path=/`
+    setGpc(true)
+    render(createElement(ConsentedGoogleAnalytics, { gaId: GA_ID }))
+    expect(document.getElementById(GTAG_SCRIPT_ID)).toBeNull()
+  })
+
+  it('does not load after a stored Reject in an opt-out region', () => {
+    document.cookie = 'tm_consent_region=optout; Path=/'
+    document.cookie = 'tm_consent=denied; Path=/'
+    render(createElement(ConsentedGoogleAnalytics, { gaId: GA_ID }))
+    expect(document.getElementById(GTAG_SCRIPT_ID)).toBeNull()
   })
 })

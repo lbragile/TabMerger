@@ -3,12 +3,19 @@
  *
  * The visitor's choice lives in one first-party cookie, `tm_consent`, set only when they press
  * Accept or Reject in the banner (it is strictly necessary: it records the choice itself). Until
- * then the choice is `null` and analytics run without cookies. The cookie is untrusted input like
- * any other: anything but the two exact values reads as "no choice", so the banner shows again.
+ * then the stored choice is `null`. The cookie is untrusted input like any other: anything but the
+ * two exact values reads as "no choice".
+ *
+ * What happens without a stored choice depends on the visitor (see `getEffectiveConsent`): in an
+ * opt-in region (EEA, UK, Switzerland, Quebec, or unknown) nothing loads until they accept; in an
+ * opt-out region analytics run until they reject; a browser sending Global Privacy Control counts
+ * as a Reject everywhere until the visitor accepts explicitly.
  *
  * This module is the single source of truth for the choice and for whether the banner is open;
  * the banner, the footer's "Cookie settings" button and the analytics loaders subscribe to it.
  */
+
+import { CONSENT_REGION_COOKIE, parseConsentRegion, type ConsentRegion } from '@/lib/consentRegions'
 
 export const CONSENT_COOKIE = 'tm_consent'
 
@@ -72,6 +79,62 @@ export function getConsentChoice(): ConsentChoice | null {
   return readConsentCookie(document.cookie) ?? sessionChoice
 }
 
+/** The value of the first cookie called `name` in a `document.cookie`-style string, or `null`. */
+function readCookie(cookieHeader: string, name: string): string | null {
+  for (const part of cookieHeader.split(';')) {
+    const eq = part.indexOf('=')
+    if (eq !== -1 && part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim()
+  }
+  return null
+}
+
+/**
+ * The visitor's consent region, from the `tm_consent_region` cookie the proxy sets. Missing or
+ * anything but the two exact values is opt-in, the safe side.
+ */
+export function getConsentRegion(): ConsentRegion {
+  if (typeof document === 'undefined') return 'optin'
+  return parseConsentRegion(readCookie(document.cookie, CONSENT_REGION_COOKIE)) ?? 'optin'
+}
+
+/**
+ * Whether the browser sends Global Privacy Control (`navigator.globalPrivacyControl`, exactly `true`).
+ *
+ * Read in the browser only, and that is enough: the GPC spec has every browser that sends the
+ * `Sec-GPC: 1` header expose this property too, and nothing on the website tracks before the
+ * browser has checked it (gtag.js and PostHog load from effects that ask `getEffectiveConsent`
+ * first). Honouring the header in the proxy or the layout instead would make the static pages
+ * render per request for no gain.
+ */
+export function hasGlobalPrivacyControl(): boolean {
+  if (typeof navigator === 'undefined') return false
+  return (navigator as Navigator & { globalPrivacyControl?: unknown }).globalPrivacyControl === true
+}
+
+/**
+ * The choice analytics follow: the stored one if there is one; otherwise Reject for a browser
+ * sending Global Privacy Control, Accept in an opt-out region, and `null` (ask first, load
+ * nothing) in an opt-in region.
+ */
+export function getEffectiveConsent(): ConsentChoice | null {
+  const stored = getConsentChoice()
+  if (stored) return stored
+  if (hasGlobalPrivacyControl()) return 'denied'
+  return getConsentRegion() === 'optout' ? 'granted' : null
+}
+
+/**
+ * What the banner says when it opens: `ask` (the visitor hasn't chosen, or has and reopened it),
+ * `on` (analytics are on by default in their region) or `gpc` (off because of Global Privacy Control).
+ */
+export type ConsentNotice = 'ask' | 'on' | 'gpc'
+
+export function getConsentNotice(): ConsentNotice {
+  if (getConsentChoice()) return 'ask'
+  if (hasGlobalPrivacyControl()) return 'gpc'
+  return getConsentRegion() === 'optout' ? 'on' : 'ask'
+}
+
 /** Whether the visitor reopened the banner from "Cookie settings". */
 export function isCookieSettingsOpen(): boolean {
   return settingsOpen
@@ -91,6 +154,16 @@ export function setConsentChoice(choice: ConsentChoice): void {
 export function openCookieSettings(): void {
   if (settingsOpen) return
   settingsOpen = true
+  notify()
+}
+
+/**
+ * Closes a banner opened from "Cookie settings" without a new choice (the phone layout's
+ * collapse button and Escape). The stored choice, if any, stays as it was.
+ */
+export function closeCookieSettings(): void {
+  if (!settingsOpen) return
+  settingsOpen = false
   notify()
 }
 

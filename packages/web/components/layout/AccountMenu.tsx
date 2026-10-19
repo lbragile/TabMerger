@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AccountAvatar, ACCOUNT_AVATAR_BUTTON_CLASS } from "@/components/layout/AccountAvatar";
 import { SignOutForm } from "@/components/auth/SignOutForm";
+import { NO_CAPTURE_CLASS } from "@/lib/analyticsPrivacy";
 
 /**
  * The signed-in visitor's account menu. Reached only through `AccountMenuLoader` (a lazy
@@ -37,7 +38,7 @@ export function AccountMenu({ email, initials }: { email: string; initials?: str
                 forceMount
             >
                 <div className="flex flex-col space-y-1 p-2">
-                    <p className="text-sm font-medium leading-none">
+                    <p className={`text-sm font-medium leading-none ${NO_CAPTURE_CLASS}`}>
                         {email}
                     </p>
                 </div>

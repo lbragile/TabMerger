@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useLocationHash } from '@/lib/hooks/useLocationHash'
+import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
+import { cn } from '@/lib/utils'
 
 /**
  * Displays the canonical share URL as a copyable chip so a visitor landing on a
@@ -25,11 +27,12 @@ export function CopyShareUrl({ url }: { url: string }) {
     setTimeout(() => setCopied(false), 1500)
   }
 
+  // The link on show holds the decryption key, so it stays out of analytics (lib/analyticsPrivacy.ts).
   return (
     <button
       type="button"
       onClick={handleCopy}
-      className="flex items-center gap-2 max-w-full h-8 px-2.5 rounded-md bg-surface2 border border-border text-[12.5px] text-text2 hover:text-text hover:border-border2 transition-colors"
+      className={cn(NO_CAPTURE_CLASS, 'flex items-center gap-2 max-w-full h-8 px-2.5 rounded-md bg-surface2 border border-border text-[12.5px] text-text2 hover:text-text hover:border-border2 transition-colors')}
       aria-label={t('copyLink')}
     >
       <span className="truncate font-mono">{fullUrl}</span>

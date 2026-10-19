@@ -18,11 +18,11 @@ const GA_COOKIE = /^_ga(_[A-Za-z0-9]+)?$/
 
 /**
  * Loads Google Analytics (gtag.js) with Consent Mode v2. The consent defaults are queued before
- * `config`, so GA never sets or reads a cookie before the visitor accepts: until then (and after
- * Reject) it only sends cookieless pings. Ads signals stay denied for good; this site shows no
- * ads. Loaded here rather than through `@next/third-parties`' `<GoogleAnalytics>`, whose inline
- * script runs `config` with no way to put a consent default ahead of it. Returns whether GA is
- * (now) loaded.
+ * `config`, so GA never sets or reads a cookie unless `choice` grants it. Ads signals stay denied
+ * for good; this site shows no ads. `ConsentedGoogleAnalytics` only calls this once analytics are
+ * allowed (Consent Mode "basic": no gtag.js at all before that). Loaded here rather than through
+ * `@next/third-parties`' `<GoogleAnalytics>`, whose inline script runs `config` with no way to
+ * put a consent default ahead of it. Returns whether GA is (now) loaded.
  */
 export function loadGoogleAnalytics(gaId: string, choice: ConsentChoice | null): boolean {
   if (typeof window === 'undefined' || !GA_MEASUREMENT_ID.test(gaId)) return false
@@ -55,18 +55,22 @@ export function loadGoogleAnalytics(gaId: string, choice: ConsentChoice | null):
 
 /**
  * Tells a loaded Google Analytics about a changed choice: Accept lets it use its cookies from now
- * on; Reject stops that for the rest of the visit and deletes the cookies it already set.
+ * on; Reject stops that for the rest of the visit and deletes the cookies it already set. Given the
+ * measurement ID, Reject also sets Google's `ga-disable-<ID>` switch, so GA sends nothing at all
+ * (not even cookieless pings) until a later Accept turns it back off.
  */
-export function updateGoogleAnalyticsConsent(choice: ConsentChoice | null): void {
+export function updateGoogleAnalyticsConsent(choice: ConsentChoice | null, gaId?: string): void {
   if (typeof window === 'undefined' || typeof window.gtag !== 'function') return
-  window.gtag('consent', 'update', { analytics_storage: choice === 'granted' ? 'granted' : 'denied' })
-  if (choice !== 'granted') deleteCookies(GA_COOKIE)
+  const granted = choice === 'granted'
+  if (gaId && GA_MEASUREMENT_ID.test(gaId)) (window as unknown as Record<string, unknown>)[`ga-disable-${gaId}`] = !granted
+  window.gtag('consent', 'update', { analytics_storage: granted ? 'granted' : 'denied' })
+  if (!granted) deleteCookies(GA_COOKIE)
 }
 
 /**
- * Fires a GA4 custom event through the gtag global `loadGoogleAnalytics` sets up. Works whatever
- * the visitor chose (without consent GA sends it as a cookieless ping); no-ops if GA isn't
- * configured or hasn't loaded yet.
+ * Fires a GA4 custom event through the gtag global `loadGoogleAnalytics` sets up. No-ops if GA
+ * isn't configured or isn't loaded: it only loads once analytics are allowed (lib/consent.ts), and
+ * after a Reject GA's own `ga-disable-<ID>` switch drops the event.
  */
 export function trackEvent(name: string, params?: Record<string, unknown>) {
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') {

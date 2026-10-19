@@ -3,6 +3,14 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import createIntlMiddleware from 'next-intl/middleware'
 import { routing } from '@/i18n/routing'
 import { LOCALES } from '@/i18n/locales'
+import { isProductionDeployment } from '@/lib/deployment'
+import {
+  CONSENT_REGION_COOKIE,
+  CONSENT_REGION_MAX_AGE_SECONDS,
+  consentRegionFor,
+  parseRegionOverride,
+  type ConsentRegion,
+} from '@/lib/consentRegions'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -222,6 +230,50 @@ function passThrough(request: NextRequest): NextResponse {
   return NextResponse.next({ request: { headers } })
 }
 
+/** Sections with no page, so no cookie banner: they need no consent region. */
+const NO_PAGE_PREFIXES: readonly string[] = ['/api', '/firefox-beta', '/sentry-tunnel', '/_next', '/_vercel']
+
+/**
+ * Whether `pathname` renders a page (and with it the root layout's cookie banner): every localized
+ * page plus `/auth/*`, `/sentry-test` and any unknown path's 404. Not API routes, assets or files.
+ */
+export function rendersPage(pathname: string): boolean {
+  if (NO_PAGE_PREFIXES.some((prefix) => isUnderPath(pathname, prefix))) return false
+  if (NON_LOCALIZED_FILES.has(pathname)) return false
+  return !/\.[^/]+$/.test(pathname)
+}
+
+/**
+ * The visitor's consent region from Vercel's geo-IP headers (lib/consentRegions.ts). Off Vercel
+ * there are none, so it is opt-in. `CONSENT_REGION_OVERRIDE` (a country such as `US`, or
+ * `CA-QC`) stands in for the headers so the opt-out path can be tried locally; it is ignored on
+ * the production deployment.
+ */
+export function consentRegionForRequest(request: NextRequest): ConsentRegion {
+  const override = isProductionDeployment() ? null : parseRegionOverride(process.env.CONSENT_REGION_OVERRIDE)
+  if (override) return consentRegionFor(override.country, override.region)
+  return consentRegionFor(request.headers.get('x-vercel-ip-country'), request.headers.get('x-vercel-ip-country-region'))
+}
+
+/**
+ * Hands a page request's consent region to the browser in the `tm_consent_region` cookie, set
+ * only when it is missing or different. A cookie rather than anything in the HTML: pages stay
+ * static (the root layout never reads it), and the banner reads it in the browser. Readable by
+ * script on purpose (not HttpOnly); it holds only `optin` or `optout`.
+ */
+export function withConsentRegion<T extends NextResponse>(request: NextRequest, response: T): T {
+  if (!rendersPage(request.nextUrl.pathname)) return response
+  const region = consentRegionForRequest(request)
+  if (request.cookies.get(CONSENT_REGION_COOKIE)?.value === region) return response
+  response.cookies.set(CONSENT_REGION_COOKIE, region, {
+    maxAge: CONSENT_REGION_MAX_AGE_SECONDS,
+    path: '/',
+    sameSite: 'lax',
+    secure: request.nextUrl.protocol === 'https:',
+  })
+  return response
+}
+
 /**
  * Runs on every matched request, in this order (each step may answer on its own):
  * 1. Legacy host redirect (old `*.vercel.app` hosts → custom domain).
@@ -229,6 +281,12 @@ function passThrough(request: NextRequest): NextResponse {
  * 3. Supabase session refresh, then route protection for the signed-in pages.
  * 4. Locale routing (next-intl) for paths under `app/[locale]/`.
  * A new host-level redirect belongs beside step 1, before anything else runs.
+ *
+ * Every response from steps 3 and 4 for a page path carries the consent-region cookie
+ * (`withConsentRegion`): the pass-throughs, next-intl's rewrites and `/en/…` redirects, and the
+ * sign-in redirects. A new response for a page belongs inside `withConsentRegion` too, or that
+ * visitor's banner falls back to opt-in. Not needed for step 1 (the cookie would be for the old
+ * host, and the new host's own response sets it) or step 2 (`/api/*` only).
  */
 export async function proxy(request: NextRequest) {
   // First, before CORS and the Supabase client: an old host's public page has nothing to do here.
@@ -256,7 +314,7 @@ export async function proxy(request: NextRequest) {
   // not a silent security hole in a properly configured deployment.
   if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('[TabMerger] Supabase env vars missing — proxy running unauthenticated, auth routes not enforced')
-    return withCors(passThrough(request), cors)
+    return withCors(withConsentRegion(request, passThrough(request)), cors)
   }
 
   // Cookies the Supabase client refreshes: written onto the request at once (so the render
@@ -298,7 +356,7 @@ export async function proxy(request: NextRequest) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/auth/sign-in'
     redirectUrl.searchParams.set('redirectTo', pathname)
-    return NextResponse.redirect(redirectUrl)
+    return withConsentRegion(request, NextResponse.redirect(redirectUrl))
   }
 
   // Redirect authenticated users away from auth pages
@@ -309,11 +367,11 @@ export async function proxy(request: NextRequest) {
   ) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/dashboard'
-    return NextResponse.redirect(redirectUrl)
+    return withConsentRegion(request, NextResponse.redirect(redirectUrl))
   }
 
   // Created after getUser(), so the forwarded request headers carry any refreshed cookies.
-  const response = passThrough(request)
+  const response = withConsentRegion(request, passThrough(request))
   refreshedCookies.forEach(({ name, value, options }) =>
     response.cookies.set(name, value, options)
   )

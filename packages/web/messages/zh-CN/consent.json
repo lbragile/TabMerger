@@ -1,7 +1,11 @@
 {
   "label": "Cookie 同意",
   "message": "我们希望使用分析 Cookie（Google Analytics 和 PostHog）来了解网站的使用情况。只有在您同意后才会设置这些 Cookie，您可以随时更改选择。",
+  "messageOn": "在您所在的地区，本网站的分析功能（Google Analytics 和 PostHog，包括会话录制）默认开启。点击“拒绝”即可关闭，您可以随时更改选择。",
+  "messageGpc": "您的浏览器发送了全球隐私控制（GPC）信号，因此分析功能（Google Analytics 和 PostHog）已关闭。点击“接受”即可开启，您可以随时更改选择。",
   "learnMore": "Cookie 详情",
   "accept": "接受",
-  "reject": "拒绝"
+  "reject": "拒绝",
+  "chip": "Cookie 选项",
+  "collapse": "收起 Cookie 选项"
 }

@@ -91,3 +91,14 @@ describe('MobileNavToggle language row', () => {
     expect(screen.queryByRole('button', { name: 'Language: English (EN)' })).not.toBeInTheDocument()
   })
 })
+
+describe('MobileNavToggle — analytics privacy', () => {
+  it('keeps the signed-in email out of analytics', async () => {
+    const user = userEvent.setup()
+    render(<MobileNavToggle email="someone@example.test" initials="SO" />)
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: 'Open menu' }))
+    })
+    expect(screen.getByText('someone@example.test')).toHaveClass('ph-no-capture')
+  })
+})

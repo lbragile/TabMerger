@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
+import { VercelInsights } from '@/components/VercelInsights'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
@@ -86,8 +85,7 @@ export default async function RootLayout({
             Speed Insights tabs); in local dev they run in debug mode and send
             nothing. */}
         <DeferredOnLoad>
-          <Analytics />
-          <SpeedInsights />
+          <VercelInsights />
         </DeferredOnLoad>
       </body>
     </html>

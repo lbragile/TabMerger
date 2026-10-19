@@ -3,6 +3,7 @@ import { act, render, waitFor } from '@testing-library/react'
 import type { PostHog } from 'posthog-js'
 import { PostHogProvider, applyPostHogConsent, postHogConfig } from '@/components/posthog-provider'
 import { openCookieSettings, resetConsentStateForTests, setConsentChoice } from '@/lib/consent'
+import { REPLAY_BLOCK_SELECTOR, scrubPostHogEvent } from '@/lib/analyticsPrivacy'
 
 const fake = vi.hoisted(() => {
   const posthog = {
@@ -42,7 +43,15 @@ afterEach(() => {
   clearCookies()
   resetConsentStateForTests()
   vi.unstubAllEnvs()
+  delete (navigator as unknown as Record<string, unknown>).globalPrivacyControl
 })
+
+/** Lets the on-demand `import('posthog-js')` settle. */
+const settle = () =>
+  act(async () => {
+    await import('posthog-js')
+    await new Promise((resolve) => setTimeout(resolve, 0))
+  })
 
 describe('postHogConfig', () => {
   it('keeps identifiers in memory and records nothing without consent', () => {
@@ -63,18 +72,33 @@ describe('postHogConfig', () => {
       disable_surveys: true,
     })
   })
+
+  it.each([null, 'denied', 'granted'] as const)(
+    'keeps private data out whatever the choice (%s): no URL fragments, popups blocked from replay, events scrubbed',
+    (choice) => {
+      expect(postHogConfig(choice)).toMatchObject({
+        disable_capture_url_hashes: true,
+        before_send: scrubPostHogEvent,
+        session_recording: { maskAllInputs: true, blockSelector: REPLAY_BLOCK_SELECTOR },
+      })
+    }
+  )
 })
 
 describe('applyPostHogConsent', () => {
-  it('starts cookieless, without recording, when no choice is stored', () => {
+  it('does not start PostHog at all before a choice (opt-in region), and removes old identifiers', () => {
     localStorage.setItem('ph_old_posthog', '{}')
     document.cookie = 'ph_old_posthog=1; Path=/'
     applyPostHogConsent(instance, KEY, null)
-    expect(fake.init).toHaveBeenCalledWith(KEY, expect.objectContaining({ persistence: 'memory', disable_session_recording: true }))
-    expect(fake.register).toHaveBeenCalledWith({ environment: expect.any(String) })
+    expect(fake.init).not.toHaveBeenCalled()
     // Identifiers left from before consent existed are removed.
     expect(localStorage.getItem('ph_old_posthog')).toBeNull()
     expect(document.cookie).not.toContain('ph_old_posthog')
+  })
+
+  it('tags every event with the deployment environment once started', () => {
+    applyPostHogConsent(instance, KEY, 'granted')
+    expect(fake.register).toHaveBeenCalledWith({ environment: expect.any(String) })
   })
 
   it('does not start PostHog at all after a stored Reject', () => {
@@ -132,23 +156,52 @@ describe('PostHogProvider', () => {
     expect(fake.init).not.toHaveBeenCalled()
   })
 
-  it('follows each change of choice, and ignores the banner merely opening', async () => {
+  it('starts nothing before a choice in an opt-in region, then follows Accept and Reject', async () => {
     vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', KEY)
     render(<PostHogProvider />)
-    await waitFor(() => expect(fake.init).toHaveBeenCalledWith(KEY, expect.objectContaining({ persistence: 'memory' })))
+    await settle()
+    expect(fake.init).not.toHaveBeenCalled()
 
     act(() => setConsentChoice('granted'))
-    expect(fake.startSessionRecording).toHaveBeenCalledTimes(1)
+    expect(fake.init).toHaveBeenCalledWith(KEY, expect.objectContaining({ persistence: 'localStorage+cookie', disable_session_recording: false }))
 
     act(() => openCookieSettings())
-    expect(fake.set_config).toHaveBeenCalledTimes(1)
+    expect(fake.set_config).not.toHaveBeenCalled()
 
     act(() => setConsentChoice('denied'))
     expect(fake.opt_out_capturing).toHaveBeenCalledTimes(1)
     expect(fake.stopSessionRecording).toHaveBeenCalledTimes(1)
   })
 
+  it('starts with recording straight away in an opt-out region, and a Reject there stops and clears it', async () => {
+    document.cookie = 'tm_consent_region=optout; Path=/'
+    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', KEY)
+    render(<PostHogProvider />)
+    await waitFor(() =>
+      expect(fake.init).toHaveBeenCalledWith(KEY, expect.objectContaining({ persistence: 'localStorage+cookie', disable_session_recording: false }))
+    )
+    sessionStorage.setItem(`ph_${KEY}_window_id`, 'w')
+
+    act(() => setConsentChoice('denied'))
+    expect(fake.stopSessionRecording).toHaveBeenCalledTimes(1)
+    expect(fake.opt_out_capturing).toHaveBeenCalledTimes(1)
+    expect(fake.set_config).toHaveBeenCalledWith({ persistence: 'memory', disable_persistence: true })
+    expect(sessionStorage.getItem(`ph_${KEY}_window_id`)).toBeNull()
+  })
+
+  it.each(['optin', 'optout'])('never starts under Global Privacy Control (%s region) until an explicit Accept', async (region) => {
+    document.cookie = `tm_consent_region=${region}; Path=/`
+    Object.defineProperty(navigator, 'globalPrivacyControl', { value: true, configurable: true })
+    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', KEY)
+    render(<PostHogProvider />)
+    await settle()
+    expect(fake.init).not.toHaveBeenCalled()
+    act(() => setConsentChoice('granted'))
+    expect(fake.init).toHaveBeenCalled()
+  })
+
   it('stops listening once unmounted', async () => {
+    document.cookie = 'tm_consent_region=optout; Path=/'
     vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', KEY)
     const { unmount } = render(<PostHogProvider />)
     await waitFor(() => expect(fake.init).toHaveBeenCalled())

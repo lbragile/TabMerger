@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { importKeyFromBase64, decryptBlob, toHttpUrl } from '@tabmerger/shared'
 import { useLocationHash } from '@/lib/hooks/useLocationHash'
+import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
 
 interface Tab { id: number; title?: string; url?: string; favIconUrl?: string; ogImage?: string }
 
@@ -297,7 +298,19 @@ function useDecryptedGroups(groups: Group[] | EncryptedSnapshot) {
   return asyncResult ?? ({ status: 'loading' } as const)
 }
 
+/**
+ * A shared link's groups and tabs, decrypted in the browser. Wrapped in `NO_CAPTURE_CLASS`: the
+ * decrypted tabs never reach analytics (session replay or click autocapture).
+ */
 export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
+  return (
+    <div className={NO_CAPTURE_CLASS}>
+      <ShareBundleBody bundle={bundle} />
+    </div>
+  )
+}
+
+function ShareBundleBody({ bundle }: { bundle: Bundle | null }) {
   // Hooks must run unconditionally — pass a harmless placeholder when there's no bundle.
   const decryptState = useDecryptedGroups(bundle?.groups ?? [])
   const t = useTranslations('share')

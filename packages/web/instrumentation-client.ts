@@ -1,4 +1,4 @@
-import { scrubEvent } from '@/lib/sentry-scrubber'
+import { scrubBreadcrumb, scrubEvent, scrubPreparedEvent, scrubRecordingEvent } from '@/lib/sentry-scrubber'
 import { whenPageIdle } from '@/components/DeferredOnLoad'
 
 type SentryModule = typeof import('@sentry/nextjs')
@@ -17,12 +17,16 @@ const sentry: Promise<SentryModule> | null =
               environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? 'development',
               sendDefaultPii: false,
               beforeSend: scrubEvent,
+              // Replay records breadcrumbs as they're added, so fragments (`#key=…`) go here too.
+              beforeBreadcrumb: scrubBreadcrumb,
               // Session Replay: low background sample, full capture on error (crash-context video).
               // maskAllText/blockAllMedia default to true — keep them, this app handles auth/billing.
-              integrations: [Sentry.replayIntegration()],
+              integrations: [Sentry.replayIntegration({ beforeAddRecordingEvent: scrubRecordingEvent })],
               replaysSessionSampleRate: 0.1,
               replaysOnErrorSampleRate: 1.0,
             })
+            // Replay events skip `beforeSend`; this strips fragments from their `urls` list.
+            Sentry.getClient()?.on('postprocessEvent', scrubPreparedEvent)
             resolve(Sentry)
           })
         })

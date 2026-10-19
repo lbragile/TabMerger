@@ -113,15 +113,72 @@ describe('PrivacyPage', () => {
   describe('cookie consent', () => {
     afterEach(() => resetConsentStateForTests())
 
-    it('says analytics cookies are set only after Accept, and what happens before and after Reject', () => {
+    it('says which regions are asked first, and that nothing loads there before Accept', () => {
+      render(<PrivacyPage />)
+      const askFirst = document.getElementById('consent-ask-first')?.textContent ?? ''
+      expect(askFirst).toMatch(/European Economic Area \(the EU, Norway, Iceland and Liechtenstein\), the United Kingdom/)
+      expect(askFirst).toMatch(/Switzerland and Quebec, and whenever we can.t tell where you are/)
+      expect(askFirst).toMatch(/nothing is loaded before you answer: Google Analytics and PostHog don.t run, set no cookies and record nothing until you press Accept/)
+      expect(askFirst).toMatch(/Accept and Reject are equal choices/)
+    })
+
+    it('says analytics are on by default elsewhere, with Reject in Cookie settings', () => {
+      render(<PrivacyPage />)
+      const elsewhere = document.getElementById('consent-on-by-default')?.textContent ?? ''
+      expect(elsewhere).toMatch(/On by default everywhere else\. No banner appears/)
+      expect(elsewhere).toMatch(/including session replay/)
+      expect(elsewhere).toMatch(/Reject in Cookie settings/)
+    })
+
+    it('says Global Privacy Control counts as a Reject everywhere until an explicit Accept', () => {
+      render(<PrivacyPage />)
+      const gpc = document.getElementById('consent-gpc')?.textContent ?? ''
+      expect(gpc).toMatch(/Global Privacy Control signal, we treat it as a Reject wherever you are/)
+      expect(gpc).toMatch(/only if you press Accept in Cookie settings yourself/)
+    })
+
+    it('says what Reject does straight away, and what the cookie entries hold', () => {
       render(<PrivacyPage />)
       const consent = document.getElementById('cookie-consent')?.textContent ?? ''
-      expect(consent).toMatch(/banner at the bottom of the page/)
-      expect(consent).toMatch(/Google Analytics and PostHog set their cookies only after you press Accept/)
-      expect(consent).toMatch(/Rejecting also deletes analytics cookies set earlier/)
-      expect(document.getElementById('cookie-analytics')?.textContent).toMatch(/only if you accept/)
-      expect(document.getElementById('what-we-collect')?.textContent).toMatch(/if you reject, PostHog doesn.t run at all/)
+      expect(consent).toMatch(/after Reject, Google Analytics stops sending, PostHog stops capturing and recording/)
+      expect(consent).toMatch(/the analytics cookies set earlier are deleted/)
+      expect(document.getElementById('cookie-analytics')?.textContent).toMatch(/only while analytics are on for you/)
       expect(document.getElementById('cookie-choice')?.textContent).toMatch(/set only when you press Accept or Reject/)
+      // The old "basic measurements before you choose" behaviour is gone.
+      expect(document.body.textContent).not.toMatch(/basic measurements/)
+      expect(document.body.textContent).not.toMatch(/temporary identifier kept only in the open page/)
+    })
+
+    it('lists the strictly necessary, day-long tm_consent_region cookie', () => {
+      render(<PrivacyPage />)
+      const region = document.getElementById('cookie-region')?.textContent ?? ''
+      expect(region).toMatch(/tm_consent_region/)
+      expect(region).toMatch(/strictly necessary, holds only optin \(ask first\) or optout \(on by default\), never your country or IP address, and lasts one day/)
+    })
+
+    it('describes session replay plainly: what it records, masking, private pages, when it runs and how to stop it', () => {
+      render(<PrivacyPage />)
+      const replay = document.getElementById('session-replay')?.textContent ?? ''
+      expect(replay).toMatch(/your clicks, scrolling and mouse movements/)
+      expect(replay).toMatch(/Everything you type into a form field, such as an email address or a password, is masked in your browser/)
+      expect(replay).toMatch(/Your dashboard and the tabs on a shared link.s page are left out of recordings/)
+      expect(replay).toMatch(/\(its decryption key\) is removed from the addresses PostHog receives/)
+      expect(replay).toMatch(/never before you accept in the regions above, never after you reject, and never while your browser sends Global Privacy Control/)
+      expect(replay).toMatch(/press Reject in Cookie settings; it stops straight away/)
+      expect(document.querySelector('#what-we-collect a[href="#session-replay"]')).toBeInTheDocument()
+    })
+
+    it('keeps the processor table in line with the region split', () => {
+      render(<PrivacyPage />)
+      const table = document.getElementById('third-party')?.textContent ?? ''
+      expect(table).toMatch(/Google Analytics.*Asks first in the EEA, the UK, Switzerland and Quebec; on by default elsewhere until you reject/)
+      expect(table).toMatch(/PostHog.*session replay on the website, with every form input masked/)
+      expect(table).not.toMatch(/only if you accept them/)
+    })
+
+    it('still says we cannot read synced group or tab data', () => {
+      render(<PrivacyPage />)
+      expect(document.getElementById('what-we-collect')?.textContent).toMatch(/we cannot read your stored or synced group or tab data/)
     })
 
     it('explains how to change the choice, with a working Cookie settings button', async () => {

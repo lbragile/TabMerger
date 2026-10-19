@@ -1,10 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   CONSENT_COOKIE,
+  closeCookieSettings,
   CONSENT_MAX_AGE_SECONDS,
   consentCookieString,
   deleteCookies,
   getConsentChoice,
+  getConsentNotice,
+  getConsentRegion,
+  getEffectiveConsent,
+  hasGlobalPrivacyControl,
   isCookieSettingsOpen,
   openCookieSettings,
   parseConsent,
@@ -21,9 +26,19 @@ function clearCookies() {
   }
 }
 
+/** Sets (or, with `undefined`, removes) `navigator.globalPrivacyControl` for one test. */
+function setGpc(value: unknown) {
+  if (value === undefined) {
+    delete (navigator as unknown as Record<string, unknown>).globalPrivacyControl
+    return
+  }
+  Object.defineProperty(navigator, 'globalPrivacyControl', { value, configurable: true })
+}
+
 afterEach(() => {
   clearCookies()
   resetConsentStateForTests()
+  setGpc(undefined)
 })
 
 describe('parseConsent', () => {
@@ -134,6 +149,20 @@ describe('consent store', () => {
     setConsentChoice('denied')
     expect(listener).toHaveBeenCalledTimes(2)
   })
+
+  it('closes the settings without touching the stored choice, and only tells subscribers when it was open', () => {
+    setConsentChoice('granted')
+    const listener = vi.fn()
+    const unsubscribe = subscribeConsent(listener)
+    closeCookieSettings() // not open: no news
+    expect(listener).not.toHaveBeenCalled()
+    openCookieSettings()
+    closeCookieSettings()
+    expect(isCookieSettingsOpen()).toBe(false)
+    expect(listener).toHaveBeenCalledTimes(2)
+    expect(getConsentChoice()).toBe('granted')
+    unsubscribe()
+  })
 })
 
 describe('deleteCookies', () => {
@@ -165,5 +194,70 @@ describe('deleteCookies', () => {
       vi.restoreAllMocks()
       vi.unstubAllGlobals()
     }
+  })
+})
+
+describe('getConsentRegion', () => {
+  it('reads the region the proxy set', () => {
+    document.cookie = 'tm_consent_region=optout; Path=/'
+    expect(getConsentRegion()).toBe('optout')
+    document.cookie = 'tm_consent_region=optin; Path=/'
+    expect(getConsentRegion()).toBe('optin')
+  })
+
+  it.each(['', 'OPTOUT', 'optout%20', 'granted', '<script>'])('is opt-in for a cookie holding %j', (value) => {
+    document.cookie = `tm_consent_region=${value}; Path=/`
+    expect(getConsentRegion()).toBe('optin')
+  })
+
+  it('is opt-in without the cookie, and only matches its exact name', () => {
+    expect(getConsentRegion()).toBe('optin')
+    document.cookie = 'xtm_consent_region=optout; Path=/'
+    expect(getConsentRegion()).toBe('optin')
+  })
+})
+
+describe('hasGlobalPrivacyControl', () => {
+  it('is true only for exactly `true`', () => {
+    expect(hasGlobalPrivacyControl()).toBe(false)
+    setGpc(true)
+    expect(hasGlobalPrivacyControl()).toBe(true)
+    for (const value of [false, 1, '1', 'true', null, {}]) {
+      setGpc(value)
+      expect(hasGlobalPrivacyControl()).toBe(false)
+    }
+  })
+})
+
+describe('getEffectiveConsent and getConsentNotice', () => {
+  // stored choice x Global Privacy Control x region -> [effective choice, notice]
+  const cases: [string | null, boolean, 'optin' | 'optout' | null, 'granted' | 'denied' | null, 'ask' | 'on' | 'gpc'][] = [
+    [null, false, null, null, 'ask'],
+    [null, false, 'optin', null, 'ask'],
+    [null, false, 'optout', 'granted', 'on'],
+    [null, true, 'optin', 'denied', 'gpc'],
+    [null, true, 'optout', 'denied', 'gpc'],
+    [null, true, null, 'denied', 'gpc'],
+    ['granted', false, 'optin', 'granted', 'ask'],
+    ['granted', true, 'optin', 'granted', 'ask'],
+    ['granted', true, 'optout', 'granted', 'ask'],
+    ['denied', false, 'optout', 'denied', 'ask'],
+    ['denied', false, 'optin', 'denied', 'ask'],
+    ['denied', true, 'optout', 'denied', 'ask'],
+  ]
+
+  it.each(cases)('stored %j, GPC %j, region %j -> %j, notice %j', (stored, gpc, region, effective, notice) => {
+    if (region) document.cookie = `tm_consent_region=${region}; Path=/`
+    if (stored) document.cookie = `tm_consent=${stored}; Path=/`
+    setGpc(gpc)
+    expect(getEffectiveConsent()).toBe(effective)
+    expect(getConsentNotice()).toBe(notice)
+  })
+
+  it('lets an Accept made in this page override GPC and the region', () => {
+    setGpc(true)
+    setConsentChoice('granted')
+    expect(getEffectiveConsent()).toBe('granted')
+    expect(getConsentNotice()).toBe('ask')
   })
 })

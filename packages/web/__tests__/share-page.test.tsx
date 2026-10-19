@@ -117,3 +117,17 @@ describe('ShareBundleContent — Feature 64 multi-group share page', () => {
     expect(screen.getByText('Empty Group')).toBeInTheDocument()
   })
 })
+
+describe('ShareBundleContent — analytics privacy', () => {
+  it('wraps the decrypted groups and tabs in ph-no-capture', () => {
+    render(<ShareBundleContent bundle={BUNDLE} />)
+    for (const group of BUNDLE.groups) {
+      expect(screen.getByText(group.name).closest('.ph-no-capture')).not.toBeNull()
+    }
+  })
+
+  it('wraps the not-found message too (every state renders inside the same wrapper)', () => {
+    render(<ShareBundleContent bundle={null} />)
+    expect(screen.getByText('Not found', { exact: false }).closest('.ph-no-capture')).not.toBeNull()
+  })
+})

@@ -1,7 +1,11 @@
 {
   "label": "Consentimento de cookies",
   "message": "Gostaríamos de usar cookies de análise (Google Analytics e PostHog) para entender como o site é usado. Eles só são definidos se você aceitar, e você pode mudar de ideia a qualquer momento.",
+  "messageOn": "Na sua região, a análise deste site (Google Analytics e PostHog, incluindo gravações de sessão) está ativada. “Recusar” a desativa, e você pode mudar de ideia a qualquer momento.",
+  "messageGpc": "Seu navegador enviou um sinal de Global Privacy Control, então a análise (Google Analytics e PostHog) está desativada. “Aceitar” a ativa, e você pode mudar de ideia a qualquer momento.",
   "learnMore": "Detalhes sobre cookies",
   "accept": "Aceitar",
-  "reject": "Recusar"
+  "reject": "Recusar",
+  "chip": "Opções de cookies",
+  "collapse": "Ocultar opções de cookies"
 }

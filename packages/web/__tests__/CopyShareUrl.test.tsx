@@ -30,3 +30,10 @@ describe('CopyShareUrl', () => {
     expect(screen.getByText('https://tabmerger.app/share/abc123')).toBeInTheDocument()
   })
 })
+
+describe('CopyShareUrl — analytics privacy', () => {
+  it('keeps the link on show (it holds the decryption key) out of analytics', () => {
+    render(<CopyShareUrl url="https://tabmerger.app/share/abc123" />)
+    expect(screen.getByRole('button')).toHaveClass('ph-no-capture')
+  })
+})

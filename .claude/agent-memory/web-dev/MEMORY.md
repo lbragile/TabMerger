@@ -41,3 +41,5 @@
 - [Language switcher = full page load](learnings/language-switcher-hard-navigation.md) — root layout owns html lang + intl provider, cookie before navigating, 1-year NEXT_LOCALE, mount-effect router throws, test stubs
 - [Visitor-browser install order](learnings/visitor-browser-install-order.md) — UA sniff in `lib/visitorBrowser.ts`, page passes `browser` prop (keeps components sync for RTL), icon label doubles accessible name
 - [Cookie consent + analytics](learnings/cookie-consent-analytics.md) — GA Consent Mode loader (why not @next/third-parties), gtag `arguments` trap, posthog memory persistence vs cookieless_mode, Reject leftovers
+- [Consent regions + replay privacy](learnings/consent-regions-and-replay-privacy.md) — proxy region cookie on every page response, GPC client-side, deferred-load waits, ph-no-capture vs Radix portals, disable_capture_url_hashes
+- [Sentry Replay + Vercel URL scrubbing](learnings/sentry-replay-vercel-url-scrubbing.md) — replay skips beforeSend: beforeAddRecordingEvent, beforeBreadcrumb, postprocessEvent for urls[]; Vercel beforeSend needs a client wrapper
