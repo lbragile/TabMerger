@@ -27,3 +27,10 @@ describe('AccountAvatar size', () => {
     expect((container.firstElementChild as HTMLElement).className).toContain('h-9')
   })
 })
+
+describe('AccountAvatar — analytics privacy', () => {
+  it('keeps the initials (taken from the email) out of analytics', () => {
+    render(<AccountAvatar initials="LB" />)
+    expect(screen.getByText('LB').closest('.ph-no-capture')).not.toBeNull()
+  })
+})

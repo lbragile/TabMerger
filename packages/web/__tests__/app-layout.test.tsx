@@ -100,3 +100,10 @@ describe('AppLayout — free account', () => {
     expect(screen.queryByRole('button', { name: 'Refresh sync status' })).not.toBeInTheDocument()
   })
 })
+
+describe('AppLayout — analytics privacy', () => {
+  it('wraps the whole signed-in page (decrypted groups, the email) in ph-no-capture', async () => {
+    render(await AppLayout({ children: <div>content</div> }))
+    expect(screen.getByText('content').closest('.ph-no-capture')).not.toBeNull()
+  })
+})

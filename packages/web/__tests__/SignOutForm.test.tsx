@@ -77,3 +77,11 @@ describe('account menu: Sign out', () => {
     expect(item.className).toContain('focus:text-destructive')
   })
 })
+
+describe('AccountMenu — analytics privacy', () => {
+  it('keeps the signed-in email out of analytics', async () => {
+    render(<AccountMenu email="someone@example.test" initials="SO" />)
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Account menu' }), { key: 'Enter' })
+    expect(await screen.findByText('someone@example.test')).toHaveClass('ph-no-capture')
+  })
+})

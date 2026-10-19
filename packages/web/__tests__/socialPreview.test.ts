@@ -6,7 +6,6 @@ vi.mock('next/font/google', () => ({
   Geist: () => ({ variable: 'x' }),
   Geist_Mono: () => ({ variable: 'y' }),
 }))
-vi.mock('@next/third-parties/google', () => ({ GoogleAnalytics: () => null }))
 vi.mock('@vercel/analytics/next', () => ({ Analytics: () => null }))
 vi.mock('@vercel/speed-insights/next', () => ({ SpeedInsights: () => null }))
 

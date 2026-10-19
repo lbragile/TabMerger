@@ -10,6 +10,7 @@ import { GitHubMark } from '@/components/GitHubMark'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { useGithubRepoLabel, useStarCount } from '@/components/layout/githubLabels'
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
+import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
 
 const links = [
     { href: '/features', label: 'features' },
@@ -110,7 +111,7 @@ export function MobileNavToggle({ email, initials, starsPromise }: MobileNavTogg
                     <div className="my-1 border-t border-border" />
                     {initials ? (
                         <>
-                            <div className="px-3 py-1.5 text-[13px] font-medium text-foreground">{email}</div>
+                            <div className={`px-3 py-1.5 text-[13px] font-medium text-foreground ${NO_CAPTURE_CLASS}`}>{email}</div>
                             <Link
                                 href="/dashboard"
                                 onClick={() => setOpen(false)}

@@ -20,6 +20,7 @@ import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
 import { EncryptionKeyProvider } from '@/lib/encryption/context'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { NOINDEX } from '@/lib/seo'
+import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
 
 // Signed-in pages: robots.txt keeps crawlers out and signed-out visitors are redirected, so this
 // only matters if a crawler ever reaches one anyway.
@@ -54,7 +55,8 @@ export default async function AppLayout({
 
   return (
     <EncryptionKeyProvider>
-    <div className="flex min-h-screen flex-col">
+    {/* Decrypted groups, tabs and the account email: never in analytics (lib/analyticsPrivacy.ts). */}
+    <div className={`flex min-h-screen flex-col ${NO_CAPTURE_CLASS}`}>
       {/* On phones the row must fit ~340px: the wordmark and the nav labels hide below `sm`
           (the icons stay, named by aria-label), and the sync pill hides itself. Without
           this the header was 442px wide on a 390px screen and pushed the account menu off it. */}
@@ -97,7 +99,7 @@ export default async function AppLayout({
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <div className="flex flex-col space-y-1 p-2">
-                <p className="text-sm font-medium leading-none">{user.email}</p>
+                <p className={`text-sm font-medium leading-none ${NO_CAPTURE_CLASS}`}>{user.email}</p>
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>

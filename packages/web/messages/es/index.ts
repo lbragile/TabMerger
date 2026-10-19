@@ -20,6 +20,7 @@ import account from './account.json'
 import organize from './organize.json'
 import beta from './beta.json'
 import auth from './auth.json'
+import consent from './consent.json'
 
 const messages = {
   metadata,
@@ -43,6 +44,7 @@ const messages = {
   organize,
   beta,
   auth,
+  consent,
 }
 
 export default messages

@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
 
 /**
  * The account menu's trigger button, as one class string for the marketing navbar and the
@@ -8,10 +9,10 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
  */
 export const ACCOUNT_AVATAR_BUTTON_CLASS = 'relative h-9 w-9 rounded-md'
 
-/** The initials inside the trigger button. */
+/** The initials inside the trigger button (from the email, so kept out of analytics). */
 export function AccountAvatar({ initials }: { initials?: string }) {
   return (
-    <Avatar className="h-9 w-9 rounded-md">
+    <Avatar className={`h-9 w-9 rounded-md ${NO_CAPTURE_CLASS}`}>
       <AvatarFallback className="text-xs rounded-md">{initials}</AvatarFallback>
     </Avatar>
   )

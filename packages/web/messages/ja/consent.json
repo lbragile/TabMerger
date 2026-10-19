@@ -1,0 +1,11 @@
+{
+  "label": "Cookie の同意",
+  "message": "サイトの利用状況を把握するため、分析用 Cookie（Google Analytics と PostHog）を使用させてください。Cookie は同意した場合にのみ設定され、選択はいつでも変更できます。",
+  "messageOn": "お住まいの地域では、このサイトの分析機能（Google Analytics と PostHog、セッション記録を含む）がオンになっています。「拒否する」でオフにでき、選択はいつでも変更できます。",
+  "messageGpc": "ブラウザーからグローバル プライバシー コントロール（GPC）のシグナルが送信されたため、分析機能（Google Analytics と PostHog）はオフになっています。「同意する」でオンにでき、選択はいつでも変更できます。",
+  "learnMore": "Cookie の詳細",
+  "accept": "同意する",
+  "reject": "拒否する",
+  "chip": "Cookie の選択",
+  "collapse": "Cookie の選択を閉じる"
+}

@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { isProductionDeployment } from "@/lib/deployment";
+import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 
 export function Footer() {
     // The beta tester guide answers 404 on the production deployment, so don't link to it there.
@@ -113,6 +114,12 @@ export function Footer() {
                                 >
                                     {t("contact")}
                                 </Link>
+                            </li>
+                            <li>
+                                <CookieSettingsButton
+                                    label={t("cookieSettings")}
+                                    className="cursor-pointer text-left hover:text-foreground transition-colors"
+                                />
                             </li>
                         </ul>
                     </div>

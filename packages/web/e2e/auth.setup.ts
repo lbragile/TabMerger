@@ -90,6 +90,22 @@ setup('authenticate ephemeral test user', async () => {
         secure: false,
         sameSite: 'Lax' as const,
       },
+      // A stored consent choice (lib/consent.ts, CONSENT_COOKIE), so the ephemeral user behaves
+      // like a returning visitor who already answered the banner. Without this, CI has no
+      // geo-IP headers (same as localhost) and defaults to the opt-in region, so every
+      // authenticated test's first page load would show the banner unasked and its fixed
+      // bottom-left card could sit over nearby page content. cookie-consent.spec.ts sets its
+      // own consent/region cookies per test and is unaffected by this default.
+      {
+        name: 'tm_consent',
+        value: 'granted',
+        domain: 'localhost',
+        path: '/',
+        expires: -1,
+        httpOnly: false,
+        secure: false,
+        sameSite: 'Lax' as const,
+      },
     ],
     origins: [],
   }

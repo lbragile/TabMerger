@@ -1,0 +1,11 @@
+{
+  "label": "Cookie-Einwilligung",
+  "message": "Wir würden gern Analyse-Cookies (Google Analytics und PostHog) verwenden, um zu verstehen, wie die Website genutzt wird. Sie werden nur gesetzt, wenn du zustimmst, und du kannst deine Wahl jederzeit ändern.",
+  "messageOn": "In deiner Region sind Analysen (Google Analytics und PostHog, einschließlich Sitzungsaufzeichnungen) auf dieser Website eingeschaltet. Mit „Ablehnen“ schaltest du sie aus, und du kannst deine Wahl jederzeit ändern.",
+  "messageGpc": "Dein Browser hat ein Global-Privacy-Control-Signal gesendet, deshalb sind Analysen (Google Analytics und PostHog) ausgeschaltet. Mit „Akzeptieren“ schaltest du sie ein, und du kannst deine Wahl jederzeit ändern.",
+  "learnMore": "Details zu Cookies",
+  "accept": "Akzeptieren",
+  "reject": "Ablehnen",
+  "chip": "Cookie-Auswahl",
+  "collapse": "Cookie-Auswahl ausblenden"
+}

@@ -15,6 +15,47 @@ Every server-side event goes through `sendGa4Event(stream, …)` in `packages/we
 (Measurement Protocol). Server-side events can't be dropped by ad blockers, and the API secrets
 never reach a browser or the extension bundle.
 
+## Website consent (web property)
+
+The website's browser analytics (gtag.js for GA4, posthog-js with session replay) follow the
+visitor's cookie choice (`packages/web/lib/consent.ts`, `lib/consentRegions.ts`). Server-side
+Measurement Protocol events (above) are not browser analytics and are unaffected.
+
+| Visitor | Before any choice | Banner |
+|---|---|---|
+| Opt-in region: EEA (EU 27 + NO/IS/LI and EU territories with their own ISO code), GB (+ GG/JE/IM/GI), CH, CA-QC, or an unknown/missing/malformed country | Nothing loads: no gtag.js request, PostHog not initialised | Shows unasked (on the home page after scrolling past the first screen) |
+| Opt-out region (everywhere else) | GA (analytics storage granted) and PostHog with session replay run | Hidden; the footer's "Cookie settings" opens it with the "analytics are on" text and a Reject |
+| Browser sends Global Privacy Control (`navigator.globalPrivacyControl === true`), any region | Treated as Reject: nothing loads | Hidden; "Cookie settings" explains GPC and offers Accept |
+
+A stored Accept or Reject (`tm_consent`, one year) always wins over the region and GPC.
+
+**How the browser learns its region.** `proxy.ts` reads Vercel's `x-vercel-ip-country` and
+`x-vercel-ip-country-region` headers on every page request and sets `tm_consent_region`
+(`optin`/`optout`, one day, not HttpOnly, Secure on https) when it is missing or different. It is
+never set on `/api/*`, `/_next/*`, files or metadata routes. Pages stay static: the root layout
+never reads the cookie; the banner and the loaders read it in the browser. GPC is read in the
+browser only (`navigator.globalPrivacyControl`); browsers that send the `Sec-GPC: 1` header also
+expose it there, and nothing tracks before that check runs.
+
+**Trying the opt-out path locally.** Localhost has no geo headers, so it is always opt-in. Set
+`CONSENT_REGION_OVERRIDE` in `packages/web/.env.local` (or the shell that runs `pnpm dev:web`) to
+a country code (`US`, `DE`) or `CA-QC`, and restart the dev server; it replaces the geo headers.
+It is ignored on the production deployment (`isProductionDeployment()`), and a malformed value
+(lowercase, three letters, anything else) is ignored too. Alternatively, send
+`x-vercel-ip-country: US` with the site's own requests, as `e2e/cookie-consent.spec.ts` does. To
+simulate GPC, run `Object.defineProperty(navigator, 'globalPrivacyControl', { value: true })` in
+an init script, or use a browser with GPC turned on (Brave, Firefox with
+`privacy.globalprivacycontrol.enabled`). Delete `tm_consent` to see the first-visit state again.
+
+**What PostHog never receives** (`lib/analyticsPrivacy.ts`): URL fragments (a share link's
+`#key=`; `disable_capture_url_hashes` plus a `before_send` that strips `#…` from every http(s) URL
+property, `$set` and `$set_once` included), anything inside a `ph-no-capture` element (the
+signed-in layout, shared-link tabs, the share-link chip, the account email and initials), Radix
+popups and dialogs in replays (`session_recording.blockSelector`), click/copy/heatmap events on
+`/dashboard`, `/account` and `/share/*`, and form input values (`maskAllInputs`). gtag.js already
+leaves the fragment out of `page_location`. Wrap any new element that shows decrypted or personal
+data in `NO_CAPTURE_CLASS`.
+
 ## Extension lifecycle and liveness events
 
 | Event | Sent by | When | Params |
