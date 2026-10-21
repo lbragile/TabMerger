@@ -5,6 +5,18 @@ const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string | undefined;
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_API_KEY as string | undefined;
 const POSTHOG_HOST = (import.meta.env.VITE_POSTHOG_HOST as string | undefined) || 'https://us.i.posthog.com';
 
+/**
+ * True only for a real automated-test *build* (wxt.config.ts's `VITE_E2E_TEST` define — always on
+ * for a `development`-mode build, which is never a real user's install), never for a Vitest unit
+ * test run. Vitest's own `import.meta.env.MODE` is `'test'` by default, but this module is built
+ * fresh by esbuild/rollup under WXT for every real build, so `VITE_E2E_TEST` is simply absent
+ * (`undefined`) there and this stays `false` — unit tests that mock `fetch` and assert on it (see
+ * `__tests__/unit/lib/analytics.test.ts`) are unaffected. Gated at this "about to fire a real
+ * network call" layer, not inside `hasDataConsent`, so it can't be confused with a real consent
+ * decision.
+ */
+const IS_AUTOMATED_TEST_BUILD = import.meta.env.VITE_E2E_TEST === 'true';
+
 async function getClientId(): Promise<string> {
   const stored = await chrome.storage.local.get('ga_client_id');
   if (stored.ga_client_id) return stored.ga_client_id as string;
@@ -29,6 +41,7 @@ export async function hashUserId(userId: string): Promise<string> {
  * Fire-and-forget — errors are swallowed.
  */
 export function trackEvent(name: string, params?: Record<string, string | number>): void {
+  if (IS_AUTOMATED_TEST_BUILD) return; // never fire real analytics during an e2e run
   void (async () => {
     // On Firefox, technicalAndInteraction is an install-time opt-in checkbox, not granted by
     // default — see dataConsent.ts and firefoxDataConsent.ts. On Chrome/Edge this resolves true
@@ -56,6 +69,7 @@ export function trackEvent(name: string, params?: Record<string, string | number
  * No-ops silently when `VITE_POSTHOG_API_KEY` is unset.
  */
 export function trackPostHogEvent(name: string, properties?: Record<string, string | number>): void {
+  if (IS_AUTOMATED_TEST_BUILD) return; // never fire real analytics during an e2e run
   if (!POSTHOG_KEY) return; // ponytail: no-op if not configured
   void (async () => {
     // Only re-checked here (in addition to trackEvent's gate) because this is itself exported

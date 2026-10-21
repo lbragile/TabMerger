@@ -122,3 +122,4 @@
 - [GA4 param names match dimensions](learnings_ga4_param_names_match_dimensions.md) — heartbeat uses extension_version + channel like extension_uninstalled; releaseChannel.ts shared
 - [Header logo website link](learnings_header_logo_website_link.md) — content-sized link (visual spec neutral point), first-child 240px cell, manifest oracle for the env URL in e2e
 - [Adding a locale](learnings_adding_a_locale.md) — catalog + shared/web registration, Intl plural forms (_many), tests that hard-code the locale list
+- [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST define (auto-true for dev-mode builds) gates analytics + Sentry; CI's production-mode builds set it in ci.yml

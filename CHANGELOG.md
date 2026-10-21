@@ -1,3 +1,15 @@
+## [3.7.1](https://github.com/lbragile/TabMerger/compare/v3.7.0...v3.7.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **web,extension:** suppress analytics and Sentry during test runs ([#93](https://github.com/lbragile/TabMerger/issues/93)) ([a704f03](https://github.com/lbragile/TabMerger/commit/a704f03449f59ac25f9aa8f85c3e439a3a5befd0))
+
+
+### Features
+
+* **web:** ask for consent before analytics cookies ([#92](https://github.com/lbragile/TabMerger/issues/92)) ([2ed86d7](https://github.com/lbragile/TabMerger/commit/2ed86d70f1e1570f1ad504f28171aaa103a5d9f3))
+
 # [3.7.0](https://github.com/lbragile/TabMerger/compare/v3.6.0...v3.7.0) (2026-10-18)
 
 

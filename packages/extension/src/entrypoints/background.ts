@@ -8,6 +8,7 @@ import { performSyncCycle, type SyncCycleStatus } from '@/lib/syncEngine';
 import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
 import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
+import { releaseChannel } from '@/lib/releaseChannel';
 import { createGroup } from '@/lib/utils';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { copyLiveTab } from '@/lib/dndMove';
@@ -232,7 +233,8 @@ export default defineBackground(() => {
   // files during dev-server startup to detect manifest metadata, and `self` isn't
   // a full service-worker global in that analysis pass. defaultIntegrations assume
   // a window, so they're disabled and errors are reported via self's error events.
-  if (import.meta.env.VITE_SENTRY_DSN) {
+  // Skipped during e2e/dev builds (VITE_E2E_TEST, see analytics.ts) — same reason as the popup.
+  if (import.meta.env.VITE_SENTRY_DSN && !import.meta.env.VITE_E2E_TEST) {
     Sentry.init({
       dsn: import.meta.env.VITE_SENTRY_DSN,
       environment: import.meta.env.MODE,
@@ -252,8 +254,13 @@ export default defineBackground(() => {
     void buildMenus();
     // Guided tour: pending on a first install only, never on an update (see lib/tour.ts)
     void markTourPendingOnInstall(details.reason);
+    // Same param keys as the web's extension_uninstalled event so GA4 can join installs and uninstalls
+    const browserName = import.meta.env.BROWSER as unknown as string | undefined;
     trackEvent(details.reason === 'install' ? ANALYTICS_EVENTS.extensionInstalled : ANALYTICS_EVENTS.extensionUpdated, {
       reason: details.reason,
+      extension_version: chrome.runtime.getManifest().version,
+      channel: releaseChannel(),
+      ...(browserName ? { browser: browserName } : {}),
     });
     // Install date for the heartbeat's "days since install" (first install only)
     void recordInstallDate(details.reason).catch(() => {});
