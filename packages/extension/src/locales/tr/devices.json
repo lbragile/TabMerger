@@ -1,0 +1,20 @@
+{
+  "heading": "Cihazlar",
+  "empty": "Henüz cihaz yok.",
+  "selected": "{{count}} seçildi",
+  "remove": "Kaldır",
+  "removeTitle_one": "{{count}} cihaz kaldırılsın mı?",
+  "removeTitle_other": "{{count}} cihaz kaldırılsın mı?",
+  "removeDescription": "Kaldırılan cihazlar bu listede görünmez. O tarayıcı hâlâ etkinse bir sonraki eşitlemede kendini yeniden kaydedebilir, bu yüzden canlı bir cihaz için bu kalıcı değildir.",
+  "cancel": "İptal",
+  "selectDevice": "{{name}} seç",
+  "nameInput": "Bu cihazın adı",
+  "save": "Kaydet",
+  "thisDevice": "(bu cihaz)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Bu cihazı yeniden adlandır",
+  "noTabs": "Sekme yok.",
+  "restoreTabs_one": "{{count}} sekmeyi geri yükle",
+  "restoreTabs_other": "{{count}} sekmeyi geri yükle",
+  "open": "Aç"
+}

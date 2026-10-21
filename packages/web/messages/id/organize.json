@@ -1,0 +1,24 @@
+{
+  "title": "Usulan Penataan AI",
+  "encrypted": "Penataan AI belum tersedia di web untuk grup yang dienkripsi end-to-end — grup Anda terenkripsi dan halaman ini tidak dapat membacanya. Jalankan dari ekstensi TabMerger.",
+  "applied": "Perubahan berhasil diterapkan.",
+  "cancelled": "Usulan dibatalkan.",
+  "analyzing": "Menganalisis grup tab Anda…",
+  "noChanges": "Tidak ada perubahan yang disarankan.",
+  "approve": "Setujui",
+  "reject": "Tolak",
+  "unknownError": "Error tidak diketahui",
+  "submitFailed": "Gagal mengirim keputusan",
+  "types": {
+    "merge": "gabung",
+    "rename": "ganti nama",
+    "delete": "hapus",
+    "reorder": "urutkan ulang"
+  },
+  "actions": {
+    "merge": "Gabungkan {source} → {target}",
+    "rename": "Ganti nama grup → \"{name}\"",
+    "delete": "Hapus grup {id}",
+    "reorder": "Urutkan ulang grup: {ids}"
+  }
+}

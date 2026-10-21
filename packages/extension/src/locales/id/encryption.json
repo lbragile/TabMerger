@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger tidak dapat menghubungi server untuk memeriksa enkripsi akun ini, jadi sinkronisasi dijeda. Grup Anda masih tersimpan di perangkat ini. Periksa koneksi Anda dan coba lagi.",
+  "unlockBody": "Masukkan frasa sandi enkripsi Anda untuk membuka data tersinkronisasi di perangkat ini. Ini adalah langkah satu kali per perangkat — Anda tidak akan diminta lagi kecuali Anda keluar. Tidak ada cara untuk memulihkan data Anda jika Anda lupa — frasa sandi ini tidak pernah meninggalkan perangkat Anda dan TabMerger tidak dapat mengaturnya ulang untuk Anda.",
+  "setupBody": "Data grup dan tab tersinkronisasi Anda dienkripsi end-to-end dengan frasa sandi yang hanya Anda ketahui. Pilih satu sekarang — tidak ada cara untuk memulihkan data Anda jika Anda lupa, frasa sandi ini tidak pernah meninggalkan perangkat Anda dan TabMerger tidak dapat mengaturnya ulang untuk Anda.",
+  "unavailableTitle": "Tidak dapat memeriksa enkripsi sekarang",
+  "tryAgain": "Coba lagi",
+  "unlockTitle": "Buka kunci enkripsi",
+  "passphrase": "Frasa sandi",
+  "passphraseLabel": "Frasa sandi enkripsi",
+  "unlock": "Buka kunci",
+  "setupTitle": "Atur enkripsi",
+  "newPassphrase": "Frasa sandi baru",
+  "confirmPassphrase": "Konfirmasi frasa sandi",
+  "setupButton": "Atur enkripsi",
+  "error": {
+    "spaces": "Frasa sandi tidak boleh mengandung spasi",
+    "tooShort": "Frasa sandi harus minimal 8 karakter",
+    "mismatch": "Frasa sandi tidak cocok",
+    "setupFailed": "Gagal mengatur enkripsi",
+    "wrong": "Frasa sandi salah",
+    "wasReset": "Enkripsi direset untuk akun ini. Pilih frasa sandi baru."
+  },
+  "toast": {
+    "setUp": "Enkripsi diatur",
+    "unlocked": "Enkripsi dibuka"
+  }
+}

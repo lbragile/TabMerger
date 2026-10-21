@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Iscriviti e installa"
+    },
+    "what-to-test": {
+      "label": "Cosa testare"
+    },
+    "known-issues": {
+      "label": "Problemi noti"
+    },
+    "report-bugs": {
+      "label": "Segnala un bug"
+    },
+    "faq": {
+      "label": "FAQ"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Pagamento riuscito (Visa)",
+      "note": "Usa questa per passare a Pro"
+    },
+    "1": {
+      "label": "Rifiuto generico"
+    },
+    "2": {
+      "label": "Fondi insufficienti"
+    },
+    "3": {
+      "label": "Richiede l'autenticazione 3D Secure"
+    }
+  },
+  "accessLabels": {
+    "free": "Free: nessun account necessario",
+    "upgrading": "Ottenere Pro: pagamenti di prova, nessun denaro reale",
+    "some-pro": "Free e Pro: ogni parte Pro è indicata",
+    "pro": "Solo Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Gruppi e schede",
+      "items": {
+        "0": {
+          "heading": "Gruppi, colori e annulla/ripeti",
+          "checks": "Che tu possa creare un gruppo, dargli un nome e un colore, salvarci delle schede e annullare o ripetere una modifica senza perdere nulla.",
+          "steps": {
+            "0": "Fai clic su \"Add Group\" nella barra laterale e dagli un nome.",
+            "1": "Fai clic sul punto colorato accanto al gruppo per aprire il selettore colori, scegli un colore predefinito o trascina su un colore qualsiasi, poi fai clic su Apply.",
+            "2": "Salva alcune schede nel gruppo (trascinale dentro o usa il menu del tasto destro).",
+            "3": "Elimina una scheda, poi fai clic sul pulsante Annulla (intestazione, in alto a destra) e poi su Ripeti."
+          },
+          "examples": {
+            "0": {
+              "alt": "Popup di TabMerger con un nuovo gruppo selezionato e il suo selettore colori aperto: un selettore di saturazione e tonalità, 12 colori predefiniti, un campo esadecimale e i pulsanti Cancel e Apply",
+              "caption": "Facendo clic sul punto colorato di un gruppo si apre questo selettore."
+            }
+          },
+          "good": {
+            "0": "Il gruppo si aggiorna all'istante.",
+            "1": "Annulla ripristina la scheda eliminata esattamente dov'era.",
+            "2": "Ripeti la rimuove di nuovo.",
+            "3": "Con la sincronizzazione attiva, Annulla può diventare grigio dopo che una sincronizzazione porta modifiche da un altro dispositivo. È previsto, non è un bug: la cronologia di annullamento viene cancellata quando arrivano modifiche da altrove."
+          }
+        },
+        "1": {
+          "heading": "\"Now Open\" segue le tue schede aperte",
+          "checks": "Che il gruppo permanente \"Now Open\" rispecchi sempre le schede effettivamente aperte nel browser.",
+          "steps": {
+            "0": "Apri il popup e guarda \"Now Open\": è sempre il primo gruppo nella barra laterale.",
+            "1": "Apri e chiudi alcune schede del browser senza toccare il popup.",
+            "2": "Riapri il popup e controlla di nuovo \"Now Open\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Il popup con \"Now Open\" selezionato: una finestra che elenca le tre schede attualmente aperte nel browser",
+              "caption": "\"Now Open\" è sempre il primo nella barra laterale ed elenca le schede aperte in questo momento."
+            }
+          },
+          "good": {
+            "0": "\"Now Open\" segue le tue schede reali senza alcun aggiornamento manuale.",
+            "1": "Non puoi eliminarlo né spostarlo dalla prima posizione."
+          }
+        },
+        "2": {
+          "heading": "Salvare e riaprire finestre intere",
+          "checks": "Che una finestra salvata mantenga tutte le schede, nell'ordine, e si riapra intatta.",
+          "steps": {
+            "0": "Salva un'intera finestra in un gruppo (trascina la maniglia della finestra su un gruppo oppure usa il suo menu \"…\").",
+            "1": "Apri il gruppo e usa il menu \"…\" della finestra per riaprirla: come nuova finestra e come schede nella finestra corrente, se vengono offerte entrambe le opzioni."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un gruppo di TabMerger con quattro finestre salvate separate, ciascuna con una scheda",
+              "caption": "Un gruppo può contenere più finestre separate, ciascuna con il proprio numero di schede."
+            }
+          },
+          "good": {
+            "0": "Tutte le schede si riaprono con i titoli e gli URL corretti, nello stesso ordine."
+          }
+        },
+        "3": {
+          "heading": "Archiviare e ripristinare un gruppo",
+          "checks": "Che l'archiviazione nasconda un gruppo senza eliminarlo e che il ripristino lo riporti invariato.",
+          "steps": {
+            "0": "Fai clic con il tasto destro su un gruppo salvato nella barra laterale e scegli Archive.",
+            "1": "Apri la sezione \"Archived\" in fondo alla barra laterale e trovalo.",
+            "2": "Ripristinalo da lì."
+          },
+          "examples": {
+            "0": {
+              "alt": "La sezione Archived in fondo alla barra laterale di TabMerger, espansa per mostrare un gruppo archiviato",
+              "caption": "La sezione Archived in fondo alla barra laterale, aperta: \"Shopping\" è archiviato, con i pulsanti Restore e Delete."
+            }
+          },
+          "good": {
+            "0": "I gruppi archiviati scompaiono dall'elenco attivo ma non vengono mai eliminati.",
+            "1": "Una volta ripristinati, ricompaiono esattamente com'erano."
+          }
+        },
+        "4": {
+          "heading": "Salvare e ripristinare le sessioni",
+          "checks": "Che una sessione salvata riporti i tuoi gruppi esattamente com'erano quando l'hai salvata.",
+          "steps": {
+            "0": "Salva una sessione, cioè un'istantanea con nome dei tuoi gruppi attuali (cerca \"Save Session\" vicino all'area Sessions della barra laterale).",
+            "1": "Apporta alcune modifiche ai tuoi gruppi.",
+            "2": "Ripristina la sessione salvata."
+          },
+          "examples": {
+            "0": {
+              "alt": "La sezione Sessions della barra laterale di TabMerger, con una sessione salvata",
+              "caption": "Una sessione salvata nella sezione Sessions, con i pulsanti Restore e Delete e la notifica \"Session saved\"."
+            }
+          },
+          "good": {
+            "0": "Il ripristino riporta i gruppi esattamente com'erano quando hai salvato la sessione."
+          }
+        },
+        "5": {
+          "heading": "Ricerca",
+          "checks": "Che la ricerca trovi le schede per titolo o URL in tutti i tuoi gruppi e che i filtri group:, window: e tag: la restringano.",
+          "steps": {
+            "0": "Premi Ctrl+K (Cmd+K su Mac) per aprire la ricerca.",
+            "1": "Digita una semplice sottostringa, come \"hub\", con una scheda \"GitHub\" salvata da qualche parte: corrisponde a titolo o URL, senza distinzione tra maiuscole e minuscole.",
+            "2": "Cancella e prova invece un prefisso: digita \"group:\" e scegli uno dei tuoi gruppi dal selettore che compare, oppure digita ad esempio \"window:\" o \"tag:\" allo stesso modo.",
+            "3": "Fai clic su uno dei risultati."
+          },
+          "examples": {
+            "0": {
+              "alt": "La finestra di ricerca di TabMerger con \"hub\" digitato, che mostra come risultato una scheda GitHub corrispondente",
+              "caption": "Digitando \"hub\": una semplice corrispondenza di sottostringa con il titolo o l'URL della scheda."
+            }
+          },
+          "good": {
+            "0": "I risultati si aggiornano mentre digiti.",
+            "1": "Una ricerca semplice trova qualsiasi scheda il cui titolo o URL contenga quella sottostringa in qualunque punto (non lettere in sequenza).",
+            "2": "Un prefisso \"group:\", \"window:\" o \"tag:\" limita la ricerca e offre un selettore per quel prefisso.",
+            "3": "Facendo clic su un risultato la ricerca si chiude e passi direttamente al gruppo di quel risultato (e alla finestra, per un risultato di tipo finestra)."
+          }
+        },
+        "6": {
+          "heading": "Schede inutilizzate",
+          "checks": "Che le schede che non apri da un po' vengano segnalate e possano essere riviste e rimosse in sicurezza.",
+          "steps": {
+            "0": "Apri Settings e imposta la soglia per le schede inutilizzate (ad es. 30 giorni).",
+            "1": "Attendi (o crea) almeno 5 schede più vecchie di quella soglia.",
+            "2": "Cerca il banner ambra sopra l'elenco delle schede e prova entrambi i pulsanti: Review, poi Remove stale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Il banner ambra delle schede inutilizzate sopra l'elenco delle schede, con i pulsanti Review e Remove stale",
+              "caption": "Il banner delle schede inutilizzate e i suoi pulsanti Review / Remove stale."
+            }
+          },
+          "good": {
+            "0": "Review mostra esattamente quali schede sono inutilizzate.",
+            "1": "Remove stale chiede conferma prima di eliminare qualsiasi cosa (se \"confirm before delete\" è attivo in Settings)."
+          },
+          "report": "Un gruppo che hai eliminato o archiviato ricompare da solo: è il bug della \"resurrezione\" che stiamo cercando in particolare."
+        },
+        "7": {
+          "heading": "Impostare promemoria per le schede",
+          "checks": "Che tu possa impostare, modificare e cancellare un promemoria su una scheda salvata e che ti avvisi all'ora scelta.",
+          "steps": {
+            "0": "Fai clic con il tasto destro su una scheda salvata e scegli \"Remind me…\". I promemoria sono per singola scheda; non c'è un'opzione in Settings per gestirli.",
+            "1": "Nell'editor che si apre sotto la scheda, fai clic su un'opzione predefinita (30 min, 1 hour, 3 hours o Tomorrow) per impostarlo subito.",
+            "2": "Riaprilo (\"Edit reminder\" nel menu del tasto destro, oppure fai clic sull'icona dell'orologio della scheda). Questa volta scegli una data e un'ora tra un paio di minuti, scrivi una breve nota e fai clic su Set.",
+            "3": "Passa il mouse sull'icona dell'orologio, poi attendi che il promemoria scatti e fai clic sulla notifica.",
+            "4": "Impostane un altro, poi fai clic con il tasto destro sulla scheda e scegli \"Clear reminder\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "L'editor \"Remind me in…\" di una scheda salvata: i pulsanti 30 min, 1 hour, 3 hours e Tomorrow, un campo per data e ora, una nota facoltativa e Cancel e Set",
+              "caption": "Tasto destro su una scheda salvata → \"Remind me…\" apre questo editor sotto la scheda."
+            },
+            "1": {
+              "alt": "La stessa finestra dopo aver impostato un promemoria: un'icona a forma di orologio alla fine della riga della scheda Q3 Planning",
+              "caption": "Una volta impostato, la scheda mostra un'icona a forma di orologio."
+            }
+          },
+          "good": {
+            "0": "La scheda mostra un'icona a forma di orologio una volta impostato il promemoria e, passandoci sopra il mouse, compare l'ora (e la tua nota).",
+            "1": "Il menu del tasto destro ora offre \"Edit reminder\" e \"Clear reminder\" per quella scheda.",
+            "2": "Set viene ignorato per un'ora nel passato; solo un'ora futura imposta il promemoria.",
+            "3": "Una notifica \"TabMerger Reminder\" con il titolo della scheda (e la tua nota) compare più o meno all'ora impostata e resta finché non interagisci.",
+            "4": "Facendo clic sulla notifica si apre la scheda.",
+            "5": "Clear reminder rimuove l'icona dell'orologio e in seguito non compare alcuna notifica."
+          },
+          "report": "Un promemoria non scatta mai, scatta due volte o scatta ancora dopo che l'hai cancellato."
+        },
+        "8": {
+          "heading": "Note su gruppi, finestre e schede",
+          "checks": "Che tu possa allegare una breve nota a un gruppo, a una finestra o a una scheda e modificarla in seguito.",
+          "steps": {
+            "0": "Gruppo: fai clic con il tasto destro su un gruppo nella barra laterale (o usa il pulsante ⋯ sopra le sue finestre) e scegli \"Add note\". Scrivi qualcosa e fai clic su Save.",
+            "1": "Finestra: fai clic con il tasto destro sull'intestazione di una finestra (o usa il suo pulsante ⋯) e scegli \"Add note\". Questa volta salva con Ctrl+Invio (Cmd+Invio su Mac).",
+            "2": "Scheda: fai clic con il tasto destro su una scheda salvata e scegli \"Add note\". Scrivi qualcosa, poi fai clic altrove invece di Save.",
+            "3": "Fai clic sull'icona di una nota per riaprirla, modificala e premi Esc.",
+            "4": "Chiudi e riapri il popup."
+          },
+          "good": {
+            "0": "Ogni nota salvata mostra una piccola icona: accanto al numero di finestre del gruppo, nell'intestazione della finestra e nella riga della scheda. La voce di menu ora dice \"Edit note\".",
+            "1": "Save, Ctrl/Cmd+Invio e il clic altrove salvano tutti la nota; Esc e Cancel la chiudono senza salvare.",
+            "2": "Le note sono limitate a 500 caratteri, con un contatore sotto il campo.",
+            "3": "Le note sono ancora lì dopo aver riaperto il popup (e, con la sincronizzazione attiva, sugli altri dispositivi)."
+          },
+          "report": "Una nota va persa, viene allegata all'elemento sbagliato o viene salvata quando hai premuto Esc o Cancel."
+        },
+        "9": {
+          "heading": "Eliminare, con e senza \"Confirm before deleting\"",
+          "checks": "Che le eliminazioni chiedano conferma solo quando \"Confirm before deleting\" è attivo e che Annulla riporti ciò che hai eliminato.",
+          "steps": {
+            "0": "In Settings → General, assicurati che \"Confirm before deleting\" sia disattivato (lo è per impostazione predefinita) e salva.",
+            "1": "Rimuovi una scheda (la sua ✕, o tasto destro → Remove tab), rimuovi una finestra (il suo ⋯ → Remove window) ed elimina un gruppo (tasto destro → Delete group). Dopo ognuna, fai clic su Annulla (in alto a destra).",
+            "2": "Attiva \"Confirm before deleting\", salva e ripeti le tre eliminazioni. Annulla la prima finestra di dialogo che ricevi, poi conferma la successiva.",
+            "3": "Con l'opzione attiva, prova anche a eliminare più gruppi selezionati dalla barra di selezione e \"Remove stale\" su un gruppo con schede inutilizzate."
+          },
+          "good": {
+            "0": "Con l'opzione disattivata, finestre e gruppi vengono rimossi subito, senza finestra di dialogo.",
+            "1": "Con l'opzione attiva, la rimozione di una finestra, l'eliminazione di un gruppo, l'eliminazione di una selezione e \"Remove stale\" chiedono prima conferma, e Cancel lascia tutto com'era.",
+            "2": "La rimozione di una singola scheda non chiede mai conferma, con l'opzione attiva o disattivata. Annulla la riporta indietro.",
+            "3": "Annulla ripristina ciò che hai appena eliminato: la scheda, la finestra o il gruppo, nello stesso punto, con le sue schede."
+          },
+          "report": "Qualcosa viene eliminato senza chiedere mentre l'opzione è attiva (a parte una singola scheda), compare una finestra di dialogo mentre è disattivata, oppure Annulla non riporta l'elemento esattamente com'era."
+        },
+        "10": {
+          "heading": "Il menu del gruppo",
+          "checks": "Che ogni azione nel menu di un gruppo faccia ciò che dice la sua etichetta.",
+          "steps": {
+            "0": "Fai clic con il tasto destro su un gruppo salvato nella barra laterale per aprirne il menu completo. Il pulsante ⋯ sopra le finestre di un gruppo ne apre una versione ridotta.",
+            "1": "Prova Rename, Add note e Duplicate.",
+            "2": "Prova Replace with current (sostituisce le finestre del gruppo con le finestre del browser aperte) e Merge with current (aggiunge le finestre aperte al gruppo). Annulla dopo ciascuna.",
+            "3": "Prova Open all in new window, Unite windows, Split windows, Sort by title, Sort by URL e Deduplicate tabs.",
+            "4": "Prova Archive group, poi Restore group dalla sezione Archived.",
+            "5": "Fai clic con il tasto destro anche su \"Now Open\": non ha Rename, Replace, Merge, Archive né Delete."
+          },
+          "good": {
+            "0": "Ogni azione fa ciò che dice la sua descrizione, solo su quel gruppo.",
+            "1": "Duplicate crea una copia con tutte le sue schede; Unite lascia un'unica finestra con tutte le schede e Split dà a ogni scheda la propria finestra.",
+            "2": "Sort by title / URL ordina tutte le schede alfabeticamente e Deduplicate rimuove le schede con lo stesso URL.",
+            "3": "Le modifiche possono essere annullate con Annulla."
+          },
+          "report": "Un'azione interessa il gruppo sbagliato, perde schede o non può essere annullata."
+        },
+        "11": {
+          "heading": "I menu della finestra",
+          "checks": "Che entrambi i menu di una finestra funzionino: il clic con il tasto destro sull'intestazione e il pulsante ⋯.",
+          "steps": {
+            "0": "Fai clic con il tasto destro sull'intestazione di una finestra: prova \"Move to group\" (scegli un altro gruppo o creane uno nuovo dall'elenco), Add note e Rename window.",
+            "1": "Apri il pulsante ⋯ della finestra: prova Rename, Mark incognito (poi Remove incognito), Open in browser e l'ordinamento della finestra per titolo / per URL.",
+            "2": "Fai clic con il tasto destro su una finestra in \"Now Open\": la prima voce è \"Copy to group\" e quella per rimuoverla è \"Close window\"."
+          },
+          "good": {
+            "0": "Move to group sposta l'intera finestra, con le sue schede, nel gruppo scelto; un nuovo gruppo creato dal menu riceve la finestra.",
+            "1": "Mark incognito aggiunge un'etichetta \"Incognito\" alla finestra e Remove incognito la toglie.",
+            "2": "Open in browser apre le schede della finestra in una nuova finestra del browser; se alcune sono già aperte, in quella finestra vengono aggiunte solo quelle mancanti.",
+            "3": "L'ordinamento riordina solo le schede di quella finestra.",
+            "4": "Da \"Now Open\", Copy to group salva una copia e lascia aperta la tua finestra reale."
+          },
+          "report": "Un'azione del menu modifica una finestra diversa, oppure Close window in \"Now Open\" chiude la finestra del browser sbagliata."
+        },
+        "12": {
+          "heading": "Il menu della scheda",
+          "checks": "Che il clic con il tasto destro su una scheda offra le azioni corrette per quella scheda.",
+          "steps": {
+            "0": "Fai clic con il tasto destro su una scheda salvata: prova \"Move to group\", Rename tab, poi \"Reset to original title\".",
+            "1": "Fai clic con il tasto destro su una scheda in \"Now Open\": \"Copy to group\" sostituisce \"Move to group\" e la voce per rimuoverla è \"Close tab\".",
+            "2": "Se hai una regola URL che corrisponde a una scheda aperta, fai clic con il tasto destro su quella scheda in \"Now Open\" e cerca \"Auto-save to …\"."
+          },
+          "good": {
+            "0": "Move to group sposta la scheda nel gruppo scelto; Copy to group (da \"Now Open\") salva una copia e lascia aperta la scheda reale.",
+            "1": "Rename tab mostra il tuo titolo con una piccola etichetta \"renamed\" e Reset to original title riporta il titolo originale della pagina.",
+            "2": "\"Auto-save to '<'group'>'\" compare solo per una scheda il cui indirizzo corrisponde a una delle tue regole URL e la salva nel gruppo di quella regola."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Menu del tasto destro",
+      "items": {
+        "0": {
+          "heading": "Salvare dal menu del tasto destro",
+          "checks": "Che il clic con il tasto destro su qualsiasi pagina web ti permetta di salvare la scheda in TabMerger, o direttamente in un gruppo scelto.",
+          "steps": {
+            "0": "Su una pagina web qualsiasi, fai clic con il tasto destro e apri \"Save to TabMerger\".",
+            "1": "Prova prima \"Save this tab\", poi prova a salvare in un gruppo esistente specifico."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustrazione del menu del tasto destro su una pagina web: \"Save to TabMerger\" apre Save this tab, Save tabs to the left, Save tabs to the right e Save all other tabs; \"Save this tab\" elenca i gruppi Work (1w · 5t), Research (1w · 4t), Shopping (1w · 3t) e Reading List (1w · 5t), ciascuno con il suo colore",
+              "caption": "Illustrazione (il browser disegna questo menu da sé, quindi non è possibile catturarlo): ciascuna delle quattro opzioni \"Save…\" elenca i tuoi gruppi con il loro colore, numero di finestre e numero di schede."
+            }
+          },
+          "good": {
+            "0": "Il menu contestuale elenca i tuoi gruppi reali per nome.",
+            "1": "La scheda compare subito nel gruppo scelto."
+          }
+        },
+        "1": {
+          "heading": "I nuovi gruppi compaiono nel menu del tasto destro",
+          "checks": "Che il menu del tasto destro rilevi i nuovi gruppi senza riavviare il browser.",
+          "steps": {
+            "0": "Crea un gruppo nuovo dal popup.",
+            "1": "Senza riaprire il browser, fai clic con il tasto destro su una pagina qualsiasi e controlla di nuovo \"Save to TabMerger\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Illustrazione dello stesso menu del tasto destro con un quinto gruppo, \"Trip planning (0w · 0t)\", alla fine dell'elenco dei gruppi",
+              "caption": "Illustrazione: un gruppo nuovo, ancora vuoto (\"Trip planning\"), compare alla fine dell'elenco."
+            }
+          },
+          "good": {
+            "0": "Il nuovo gruppo compare nel menu contestuale senza bisogno di riavviare."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Passare a Pro (pagamenti di prova)",
+      "intro": "La fatturazione fa parte di questa beta, ma solo con le carte di prova di Stripe: nessuna carta reale funziona e non viene scambiato denaro reale. Pro AI e i pacchetti di crediti IA sono ancora \"in arrivo\" e non si possono acquistare, quindi si tratta solo di Pro (gruppi/schede illimitati + sincronizzazione).",
+      "items": {
+        "0": {
+          "heading": "Avviso sulle carte di prova",
+          "checks": "Che tu usi sempre e solo le carte di prova di Stripe: nulla in questa beta addebita denaro reale.",
+          "steps": {
+            "0": "Leggi qui prima di avviare il pagamento: i dati della carta che ti servono sono qui sotto."
+          },
+          "good": {
+            "0": "Non inserisci mai il numero di una carta reale in questo flusso."
+          }
+        },
+        "1": {
+          "heading": "Passare a Pro dall'estensione",
+          "checks": "Che il passaggio a Pro dall'interno dell'estensione funzioni dall'inizio alla fine e che l'estensione mostri poi Pro.",
+          "steps": {
+            "0": "Apri il popup dell'estensione e usa un qualsiasi punto di accesso \"Upgrade to Pro\": il pulsante di upgrade nell'intestazione, il banner che compare quando ti avvicini al limite gratuito o un invito all'upgrade mostrato quando raggiungi un limite del piano gratuito.",
+            "1": "Si apre la pagina dei prezzi dell'app web beta (preview.tabmerger.com/pricing) in una nuova scheda del browser. Accedi lì con lo stesso account che usi nell'estensione.",
+            "2": "Scegli il piano Pro, mensile o annuale, e prosegui verso Stripe Checkout.",
+            "3": "Completa il pagamento con la carta di prova qui sopra (o una carta di rifiuto/3D Secure, se stai testando quel percorso), poi torna all'app."
+          },
+          "good": {
+            "0": "Il pagamento si completa e torni all'app web con Pro visualizzato.",
+            "1": "Il popup dell'estensione controlla il tuo piano circa ogni 30 secondi, quindi dovrebbe rilevare Pro da solo a breve; riaprire il popup forza comunque un nuovo controllo se non vuoi aspettare."
+          },
+          "report": "L'estensione mostra ancora i limiti del piano gratuito ({FREE_TIER_LIMITS_groups} gruppi / {FREE_TIER_LIMITS_tabs} schede / {FREE_TIER_LIMITS_urlRules} regole URL) più di un paio di minuti dopo un pagamento riuscito e la riapertura del popup."
+        },
+        "2": {
+          "heading": "Passare a Pro dalla pagina dell'account web",
+          "checks": "Che il passaggio a Pro dalla pagina dell'account del sito funzioni e che sito ed estensione concordino sul tuo piano.",
+          "steps": {
+            "0": "Invece di passare dall'estensione, accedi direttamente su preview.tabmerger.com e apri Impostazioni account.",
+            "1": "In \"Abbonamento\", fai clic su \"Passa a un piano superiore\" e completa il pagamento con la carta di prova."
+          },
+          "examples": {
+            "0": {
+              "alt": "Impostazioni account di un account gratuito: la scheda Abbonamento mostra il piano attuale Free con un pulsante per passare a un piano superiore",
+              "caption": "Prima dell'upgrade: Free, con un pulsante di upgrade. Dopo mostra Pro e \"Gestisci fatturazione\" (vedi \"Pagina dell'account\" più sotto)."
+            }
+          },
+          "good": {
+            "0": "La scheda Abbonamento nella pagina dell'account ora mostra Pro, con un pulsante \"Gestisci fatturazione\" al posto di quello di upgrade.",
+            "1": "L'estensione rileva lo stesso stato Pro (vedi la nota sul controllo periodico qui sopra): la pagina dell'account web e l'estensione non devono mai essere in disaccordo sul tuo piano."
+          },
+          "report": "La pagina dell'account web e il popup dell'estensione mostrano piani diversi (uno dice Pro, l'altro ancora Free) per più di un paio di minuti."
+        },
+        "3": {
+          "heading": "Pagare nella tua valuta locale",
+          "checks": "Che il pagamento mostri, e addebiti, il prezzo nella tua valuta.",
+          "steps": {
+            "0": "I prezzi sul sito sono in dollari statunitensi (la pagina dei prezzi lo indica sotto i piani; la pagina dell'account, la dashboard e le Settings dell'estensione li scrivono come \"US$\"). Fuori dagli Stati Uniti, il pagamento offre la tua valuta locale.",
+            "1": "Avvia un pagamento dalla tua posizione reale oppure simula un altro paese: registra un NUOVO account con la tua email più \"+location_\" e un codice paese di due lettere, ad es. tuonome+location_FR@gmail.com per la Francia (Gmail recapita gli indirizzi \"+qualsiasicosa\" nella tua normale casella di posta). Funziona anche una VPN in un altro paese.",
+            "2": "Guarda il prezzo nella pagina di pagamento di Stripe, poi completalo con la carta di prova in quella valuta."
+          },
+          "examples": {
+            "0": {
+              "alt": "Stripe checkout per TabMerger Pro che mostra 3,66 € al mese, con EUR selezionato e un'alternativa in USD, e la riga \"1 USD = 0.9171 EUR. Charges will vary based on exchange rates.\"",
+              "caption": "Pagamento per un indirizzo francese (+location_FR): euro per impostazione predefinita, dollari statunitensi a un clic di distanza. I tassi di cambio variano, quindi il tuo importo sarà diverso."
+            }
+          },
+          "good": {
+            "0": "Il pagamento mostra il prezzo nella tua valuta locale (ad esempio 3,66 € in Francia o 5,89 CA$ in Canada per il piano da 3,99 US$), con un'opzione per pagare invece in dollari statunitensi e una riga che mostra il tasso di cambio e la relativa commissione di conversione. Negli Stati Uniti mostra semplicemente 3,99 US$.",
+            "1": "Dopo il pagamento, il piano funziona esattamente come con i dollari statunitensi."
+          },
+          "report": "Fuori dagli Stati Uniti il pagamento offre solo dollari statunitensi, l'importo addebitato è diverso da quello mostrato al pagamento, oppure pagare in una valuta locale non ti dà Pro."
+        },
+        "4": {
+          "heading": "Passare dalla fatturazione mensile a quella annuale e viceversa",
+          "checks": "Che un abbonamento Pro possa passare dalla fatturazione mensile a quella annuale e viceversa, con l'addebito corretto.",
+          "steps": {
+            "0": "Con un abbonamento Pro attivo, apri la pagina dei prezzi. La scheda del tuo piano è contrassegnata come Attuale e ha un pulsante \"Passa alla fatturazione annuale\" (o \"Passa alla fatturazione mensile\" se paghi annualmente): il pulsante indica la fatturazione verso cui passeresti.",
+            "1": "Da mensile ad annuale: fai clic sul pulsante e conferma nella pagina di Stripe.",
+            "2": "Da annuale a mensile: fai lo stesso, poi prova il pulsante una seconda volta.",
+            "3": "Apri anche \"Gestisci fatturazione\" nella pagina dell'account: la sua opzione \"Update subscription\" mostra la stessa scelta tra mensile e annuale."
+          },
+          "examples": {
+            "0": {
+              "alt": "La pagina dei prezzi con Pro mensile attivo: la scheda Pro è contrassegnata come Attuale e ha un pulsante \"Passa alla fatturazione annuale\"",
+              "caption": "Nella pagina dei prezzi, la scheda del tuo piano è contrassegnata come Attuale e ha il pulsante per cambiare."
+            },
+            "1": {
+              "alt": "La pagina \"Update your subscription\" di Stripe con le schede Monthly e Yearly, che mostra il piano TabMerger Pro attuale a {proMonthly} al mese",
+              "caption": "La stessa scelta in Gestisci fatturazione → Update subscription (pagina di Stripe)."
+            }
+          },
+          "good": {
+            "0": "Da mensile ad annuale si applica subito: Stripe mostra e addebita il prezzo annuale meno quanto resta del tuo mese.",
+            "1": "Dopo il passaggio all'annuale, la pagina dell'account mostra il prezzo annuale ({proYearly}/anno) entro circa un minuto.",
+            "2": "Da annuale a mensile attende la fine dell'anno pagato, quindi ora non viene addebitato nulla.",
+            "3": "Premendo di nuovo il pulsante viene spiegato che una modifica è già programmata.",
+            "4": "Vengono offerti solo Pro mensile e annuale, mai un piano diverso."
+          },
+          "report": "Un cambio addebita l'importo sbagliato, la pagina dell'account mostra ancora il vecchio periodo di fatturazione dopo più di un paio di minuti, il passaggio da annuale a mensile ti addebita subito, oppure ti viene offerto un piano diverso da Pro."
+        },
+        "5": {
+          "heading": "Annullare",
+          "checks": "Che l'annullamento mantenga Pro fino alla fine del periodo pagato e poi ti riporti a Free.",
+          "steps": {
+            "0": "Nella pagina dell'account, con un abbonamento Pro attivo, fai clic su \"Gestisci fatturazione\" per aprire il portale di fatturazione di Stripe.",
+            "1": "Annulla l'abbonamento da lì e torna a TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "La finestra \"Cancel your subscription\" di Stripe per TabMerger Pro a {proMonthly} al mese, con un motivo facoltativo e i pulsanti Go back e Continue to cancellation",
+              "caption": "Stripe chiede un motivo facoltativo prima dell'annullamento."
+            }
+          },
+          "good": {
+            "0": "Mantieni l'accesso Pro fino alla fine del periodo di fatturazione in corso: l'annullamento non ti riporta subito a Free.",
+            "1": "Al termine di quel periodo, la pagina dell'account e l'estensione dovrebbero entrambe mostrare di nuovo Free."
+          },
+          "report": "L'annullamento ti riporta subito a Free invece che alla fine del periodo, oppure il piano non torna mai a Free dopo la fine effettiva del periodo."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Trascinamento",
+      "intro": "Quest'area copre ogni interazione di trascinamento nel popup: ordinamento, spostamento tra finestre e gruppi, trascinamento di più elementi, le due zone \"rilascia per un nuovo...\", annullamento, trascinamento solo da tastiera e persistenza del risultato. Prova quanti più casi puoi: è l'area su cui ci concentriamo di più in questa beta.",
+      "items": {
+        "0": {
+          "heading": "Ordinamento: schede all'interno di una finestra",
+          "checks": "Che trascinando una scheda la si riordini all'interno della sua finestra, esattamente dove la rilasci.",
+          "steps": {
+            "0": "Trascina una scheda verso il basso nella stessa finestra per spostarla più avanti nell'elenco, poi riportala su nella posizione originale.",
+            "1": "Trascina una scheda fino alla prima posizione della finestra, poi fino all'ultima."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una scheda trascinata all'interno della sua finestra: la riga trascinata fluttua con un bordo evidenziato sopra lo spazio in cui atterrerà",
+              "caption": "Durante il trascinamento: la scheda fluttua e le altre fanno spazio dove verrà rilasciata."
+            }
+          },
+          "good": {
+            "0": "La scheda atterra esattamente dove l'hai rilasciata e il resto dell'elenco si sposta per farle spazio.",
+            "1": "Nessun'altra scheda si sposta o si duplica."
+          }
+        },
+        "1": {
+          "heading": "Ordinamento: finestre all'interno di un gruppo",
+          "checks": "Che le schede delle finestre possano essere riordinate all'interno di un gruppo.",
+          "steps": {
+            "0": "In un gruppo con due o più finestre salvate, trascina una finestra sopra o sotto un'altra."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una finestra trascinata tra altre due finestre in un gruppo con quattro finestre",
+              "caption": "Trascinare un'intera finestra dalla sua maniglia per riordinarla all'interno del gruppo."
+            }
+          },
+          "good": {
+            "0": "Le finestre si scambiano di posto e il nuovo ordine è quello che vedi subito, senza tornare per un attimo al vecchio ordine."
+          }
+        },
+        "2": {
+          "heading": "Ordinamento: gruppi nella barra laterale",
+          "checks": "Che i gruppi si riordinino liberamente nella barra laterale mentre \"Now Open\" resta il primo.",
+          "steps": {
+            "0": "Trascina un gruppo nella barra laterale in alto o in basso per spostarlo sopra o sotto un altro gruppo.",
+            "1": "Prova a trascinare un gruppo sopra \"Now Open\" (la prima riga della barra laterale)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una riga di gruppo trascinata in una nuova posizione nella barra laterale di TabMerger",
+              "caption": "Riordinare un gruppo nella barra laterale."
+            }
+          },
+          "good": {
+            "0": "\"Now Open\" resta sempre fissato come prima riga: non puoi rilasciare un gruppo sopra di esso, trascinarlo, eliminarlo o spostarlo dalla prima posizione.",
+            "1": "Tutti gli altri gruppi si riordinano liberamente."
+          },
+          "report": "Qualcosa atterra sopra \"Now Open\", oppure \"Now Open\" stesso diventa trascinabile."
+        },
+        "3": {
+          "heading": "Tra finestre: spostare una scheda da una finestra all'altra",
+          "checks": "Che una scheda possa passare da una finestra a un'altra, esattamente nel punto in cui la rilasci.",
+          "steps": {
+            "0": "In un gruppo con più finestre, trascina una scheda da una finestra a un'altra.",
+            "1": "Questa volta rilasciala tra due schede esistenti nella finestra di destinazione invece che in cima o in fondo."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una scheda trascinata da una finestra salvata a un'altra all'interno dello stesso gruppo di TabMerger",
+              "caption": "Rilasciare una scheda su un'altra finestra all'interno dello stesso gruppo."
+            }
+          },
+          "good": {
+            "0": "La scheda atterra esattamente nella posizione in cui l'hai rilasciata (non semplicemente aggiunta in fondo).",
+            "1": "Il numero di schede di entrambe le finestre si aggiorna subito."
+          }
+        },
+        "4": {
+          "heading": "Tra gruppi: rilasciare una scheda su un gruppo della barra laterale",
+          "checks": "Che rilasciando una scheda su un gruppo nella barra laterale la si sposti in quel gruppo senza doverlo aprire prima.",
+          "steps": {
+            "0": "Trascina una scheda fuori dal pannello principale e rilasciala direttamente su un gruppo nella barra laterale: prova con un gruppo attualmente aperto (attivo) e con uno che non lo è.",
+            "1": "Prova ancora una volta, ma tieni la scheda ferma sopra un altro gruppo (non attivo) della barra laterale per circa un secondo prima di rilasciarla."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una singola scheda trascinata su una riga di gruppo nella barra laterale di TabMerger",
+              "caption": "Rilasciare una scheda direttamente su un gruppo della barra laterale."
+            }
+          },
+          "good": {
+            "0": "La scheda viene aggiunta a quel gruppo come nuova finestra senza bisogno di aprire prima il gruppo.",
+            "1": "Se ti sei fermato sopra un gruppo non attivo, dovrebbe aprirsi (\"apertura automatica\") dopo circa mezzo secondo così puoi vederla atterrare, e atterrare correttamente, non nella finestra sbagliata."
+          },
+          "report": "Il gruppo si apre ma la scheda atterra nella finestra sbagliata, oppure sopra una scheda esistente invece che come nuova finestra a sé."
+        },
+        "5": {
+          "heading": "Tra gruppi: trascinare un'intera finestra in un altro gruppo",
+          "checks": "Che un'intera finestra, con tutte le sue schede, possa essere spostata in un altro gruppo.",
+          "steps": {
+            "0": "Trascina un'intera finestra (usando la sua maniglia, non una singola scheda al suo interno) su un altro gruppo nella barra laterale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una finestra trascinata sulla barra laterale, sopra il gruppo Shopping, che è evidenziato e aperto nel pannello principale",
+              "caption": "Trascinare una finestra su un gruppo della barra laterale. Il gruppo sotto il puntatore riceve un bordo colorato e si apre dietro la finestra."
+            }
+          },
+          "good": {
+            "0": "L'intera finestra, con tutte le sue schede, diventa una nuova finestra nel gruppo di destinazione.",
+            "1": "Funziona anche se è l'ultima finestra rimasta nel gruppo di origine."
+          },
+          "report": "Il gruppo di origine o la sua finestra svuotata scompaiono invece di restare (una finestra o un gruppo vuoti devono restare, non sparire)."
+        },
+        "6": {
+          "heading": "Più elementi: selezionare e trascinare più schede",
+          "checks": "Che più schede selezionate si trascinino insieme come un unico blocco, mantenendo il loro ordine.",
+          "steps": {
+            "0": "Fai Ctrl-clic (Cmd-clic su Mac) su due o tre schede non adiacenti per selezionarle.",
+            "1": "Fai invece Maiusc-clic per selezionare un intervallo continuo di schede.",
+            "2": "Con più schede selezionate, trascinale insieme in una nuova posizione nella stessa finestra."
+          },
+          "examples": {
+            "0": {
+              "alt": "Più schede selezionate insieme nel popup di TabMerger, mostrate con caselle di controllo",
+              "caption": "Due schede spuntate in modalità selezione; la barra in basso le conta."
+            }
+          },
+          "good": {
+            "0": "Tutte le schede selezionate si spostano insieme come un unico blocco, mantenendo il loro ordine relativo: il blocco atterra nello spazio indicato, non sparpagliato né nell'ordine dei clic."
+          }
+        },
+        "7": {
+          "heading": "Più elementi: trascinare una selezione tra finestre e gruppi",
+          "checks": "Che una selezione di più schede mantenga il suo ordine quando viene trascinata in un'altra finestra o in un altro gruppo.",
+          "steps": {
+            "0": "Seleziona di nuovo più schede, poi trascinale in un'altra finestra dello stesso gruppo.",
+            "1": "Ripeti ancora una volta, ma questa volta trascina la selezione su un altro gruppo nella barra laterale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una selezione di più schede durante il trascinamento nel popup di TabMerger",
+              "caption": "Trascinare una selezione di più schede."
+            }
+          },
+          "good": {
+            "0": "In entrambi i casi l'intera selezione si sposta insieme, atterrando nello stesso ordine relativo di partenza."
+          }
+        },
+        "8": {
+          "heading": "Più elementi: seleziona tutto e trascinamento di più gruppi",
+          "checks": "Che seleziona tutto funzioni all'interno di una finestra e che più gruppi selezionati possano essere trascinati insieme.",
+          "steps": {
+            "0": "Porta il focus sull'elenco delle schede di una finestra e premi Ctrl+A (Cmd+A su Mac) per selezionare tutte le schede di quella finestra, se ne ha più di una.",
+            "1": "Nella barra laterale, fai Ctrl-clic su due o tre gruppi per selezionarli, poi trascina la selezione da una delle loro maniglie per riordinarli insieme."
+          },
+          "examples": {
+            "0": {
+              "alt": "Modalità selezione con tre gruppi selezionati; trascinandone uno si portano dietro gli altri, con un badge di conteggio sulla riga trascinata e \"3 groups selected\" nella barra in basso",
+              "caption": "Tre gruppi selezionati trascinati insieme nella barra laterale. La barra in basso conta la selezione."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A seleziona tutte le schede della finestra attiva (saltando quelle nascoste da un filtro di ricerca).",
+            "1": "Il trascinamento di più gruppi sposta i gruppi selezionati insieme come un unico blocco.",
+            "2": "Il blocco non atterra mai sopra \"Now Open\"."
+          }
+        },
+        "9": {
+          "heading": "Zone di rilascio: \"Drop here for a new window\" e \"Drop for a new group\"",
+          "checks": "Che rilasciando su queste zone si crei una nuova finestra o un nuovo gruppo da ciò che hai trascinato.",
+          "steps": {
+            "0": "Trascina una scheda (o una selezione di schede) verso il fondo dell'elenco delle finestre di un gruppo, dove compare la zona \"Drop here for a new window\", e rilasciala lì.",
+            "1": "Trascina una scheda verso il fondo della barra laterale, dove compare la zona \"Drop for a new group\", e rilasciala lì."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una scheda trascinata sopra la zona evidenziata \"Drop here for a new window\" sotto l'elenco delle finestre, con la zona \"Drop for a new group\" visibile nella barra laterale",
+              "caption": "Durante il trascinamento compaiono entrambe le zone di rilascio. Quella sotto il puntatore è evidenziata."
+            }
+          },
+          "good": {
+            "0": "Ogni rilascio crea una finestra o un gruppo nuovi che contengono esattamente gli elementi trascinati, nel loro ordine relativo originale."
+          },
+          "report": "La zona \"Drop for a new group\" compare ancora quando hai già raggiunto il limite di gruppi del tuo piano: dovrebbe invece sparire anziché accettare un rilascio che non può soddisfare."
+        },
+        "10": {
+          "heading": "Da \"Now Open\": trascinare una scheda aperta in un gruppo salvato",
+          "checks": "Che trascinando una scheda aperta da \"Now Open\" la si sposti in un gruppo salvato e si chiuda la scheda reale.",
+          "steps": {
+            "0": "Trascina una scheda dalla sezione \"Now Open\" in uno dei tuoi gruppi salvati.",
+            "1": "Dopo il rilascio, controlla le schede effettivamente aperte nel browser."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una scheda di \"Now Open\" trascinata sul gruppo Work nella barra laterale",
+              "caption": "Una scheda aperta di \"Now Open\" trascinata su un gruppo salvato nella barra laterale."
+            }
+          },
+          "good": {
+            "0": "Questo SPOSTA la scheda, non la copia: il gruppo salvato riceve una nuova finestra con un'istantanea di quella scheda.",
+            "1": "La scheda reale del browser si chiude. Se la scheda trascinata era quella attiva, si chiude quando chiudi il popup anziché subito: è voluto, non è un bug."
+          },
+          "report": "La scheda reale resta aperta dopo il rilascio (facendola sembrare una copia), oppure il popup stesso si chiude o va in crash durante il trascinamento."
+        },
+        "11": {
+          "heading": "Annullamento e casi limite",
+          "checks": "Che i trascinamenti annullati o inutili non cambino nulla e che Annulla inverta un trascinamento reale.",
+          "steps": {
+            "0": "Inizia a trascinare una scheda, poi premi Esc prima di rilasciarla.",
+            "1": "Inizia un trascinamento e rilascialo in un punto che non è una destinazione valida (ad es. fuori dalla finestra del popup, se ci riesci) oppure rilascialo esattamente nel punto di partenza.",
+            "2": "Dopo un trascinamento riuscito, fai clic sul pulsante Annulla (intestazione, in alto a destra)."
+          },
+          "examples": {
+            "0": {
+              "alt": "L'intestazione di TabMerger con i pulsanti Annulla e Ripeti attivi dopo una modifica",
+              "caption": "I pulsanti Annulla/Ripeti nell'intestazione, attivi dopo una modifica."
+            }
+          },
+          "good": {
+            "0": "Esc e un rilascio non valido o senza effetto lasciano tutto esattamente com'era: nessuna scheda duplicata, nessuna scheda mancante, nessun riordino.",
+            "1": "Annulla dopo un trascinamento reale ripristina esattamente l'ordine precedente."
+          },
+          "report": "Una scheda viene duplicata o va persa dopo un trascinamento annullato o nello stesso punto, oppure Annulla non ripristina completamente l'ordine precedente al trascinamento."
+        },
+        "12": {
+          "heading": "Trascinamento da tastiera",
+          "checks": "Che tutto ciò che puoi trascinare con il mouse si possa spostare anche con la tastiera, con annunci vocali.",
+          "steps": {
+            "0": "Premi Tab finché non è attiva una scheda salvata, l'intestazione di una finestra o un gruppo nella barra laterale. Ogni riga è una tappa di Tab.",
+            "1": "Per spostarne più di una alla volta, premi Ctrl+Spazio (Ctrl anche su Mac) su ciascuna per selezionarla, poi porta il focus su una qualsiasi delle righe selezionate.",
+            "2": "Premi Spazio per prenderla. Senti \"Picked up …\", la riga lascia il suo posto e una sua copia mostra dove atterrerà.",
+            "3": "Premi Su o Giù per spostarla. Una scheda attraversa tutte le finestre del gruppo, poi passa su \"Drop here for a new window\" e infine riparte dall'inizio.",
+            "4": "Premi Sinistra per andare all'elenco dei gruppi. Su e Giù scelgono un gruppo (l'ultima tappa è \"New group\") e il pannello principale mostra ogni gruppo mentre lo attraversi.",
+            "5": "Premi Destra per entrare nel gruppo evidenziato, poi usa Su e Giù per posizionare l'elemento al suo interno.",
+            "6": "Premi Spazio per rilasciare o Esc per annullare."
+          },
+          "good": {
+            "0": "Spazio prende l'elemento invece di aprire il link.",
+            "1": "Ctrl+Spazio seleziona o deseleziona una riga senza aprirla né prenderla.",
+            "2": "Invio apre ancora una scheda e non fa nulla mentre stai spostando qualcosa.",
+            "3": "La copia di ciò che stai spostando è sempre visibile e il pannello scorre per seguirla.",
+            "4": "Su e Giù ripartono dall'altra estremità quando arrivano in fondo e senti \"Wrapped to top\" o \"Wrapped to bottom\".",
+            "5": "Una finestra vuota è una posizione a sé.",
+            "6": "L'elemento finisce esattamente dov'era la copia e senti cosa è successo.",
+            "7": "Più elementi selezionati si spostano insieme come un unico blocco, nel loro ordine originale.",
+            "8": "Spazio nell'elenco dei gruppi rilascia l'elemento alla fine del gruppo evidenziato.",
+            "9": "Su \"New group\" il pannello principale si attenua e rilasciando lì si crea un gruppo nuovo.",
+            "10": "Un gruppo spostato con Su e Giù non può mai finire sopra \"Now Open\".",
+            "11": "Spostare una scheda aperta di \"Now Open\" in un gruppo chiude quella scheda del browser, come fa un rilascio con il mouse.",
+            "12": "Esc lascia tutto invariato e mostra di nuovo il gruppo da cui eri partito.",
+            "13": "Dopo un rilascio il focus è sulla riga spostata; dopo Esc torna sulla riga che avevi preso."
+          }
+        },
+        "13": {
+          "heading": "Persistenza",
+          "checks": "Che un nuovo ordine venga salvato: resiste alla riapertura del popup e raggiunge gli altri dispositivi.",
+          "pro": "Solo la parte sul secondo dispositivo richiede Pro (serve la sincronizzazione).",
+          "steps": {
+            "0": "Dopo aver riordinato schede, finestre o gruppi con il trascinamento, chiudi completamente il popup e riaprilo.",
+            "1": "Se hai la sincronizzazione attiva e un secondo dispositivo connesso allo stesso account, controlla l'ordine anche lì."
+          },
+          "good": {
+            "0": "Dopo la riapertura del popup, il nuovo ordine è esattamente come l'avevi lasciato.",
+            "1": "Con la sincronizzazione attiva, il secondo dispositivo riceve lo stesso ordine in breve tempo."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "App web e dashboard (sito di anteprima)",
+      "intro": "Tutto ciò che è descritto qui si trova su preview.tabmerger.com, non sul sito principale tabmerger.com: questa build beta si sincronizza solo con il sito di anteprima.",
+      "items": {
+        "0": {
+          "heading": "Registrazione e accesso",
+          "checks": "Che ogni modalità di accesso al sito funzioni: Google, email e password e link magico.",
+          "steps": {
+            "0": "Senza aver effettuato l'accesso, apri preview.tabmerger.com/auth/sign-in.",
+            "1": "Prova \"Continua con Google\".",
+            "2": "Prova invece email + password: inserisci email e password, poi fai clic su \"Continua\".",
+            "3": "Prova invece \"Invia link magico\", usando solo la tua email."
+          },
+          "examples": {
+            "0": {
+              "alt": "La pagina di accesso \"Bentornato\" del sito: Continua con Google, i campi Email e Password con un link Dimenticata?, Continua e Invia link magico",
+              "caption": "La pagina di accesso del sito: Google, email e password oppure un link magico."
+            }
+          },
+          "good": {
+            "0": "Tutte e tre le modalità ti fanno accedere.",
+            "1": "Il link magico e Google ti riportano entrambi nell'app con l'accesso già effettuato.",
+            "2": "I nuovi account arrivano dove li porta \"Registrati gratis\" (email + password o Google, stesse opzioni)."
+          }
+        },
+        "1": {
+          "heading": "Creare un account con email e password",
+          "checks": "Che un nuovo account con email e password risulti connesso, indipendentemente dal fatto che il sito ti chieda di verificare l'email.",
+          "steps": {
+            "0": "Senza aver effettuato l'accesso, fai clic su \"Registrati gratis\" e crea un account con un'email e una password (almeno 8 caratteri)."
+          },
+          "examples": {
+            "0": {
+              "alt": "La pagina \"Crea il tuo account\": Continua con Google, poi i campi Email, Password (almeno 8 caratteri) e Conferma password, e un pulsante Continua",
+              "caption": "La pagina di registrazione. Anche qui funziona Google; questo punto riguarda il percorso con email e password."
+            }
+          },
+          "good": {
+            "0": "Arrivi direttamente nella dashboard con l'accesso già effettuato, oppure vedi \"Verifica la tua email\" e accedi solo dopo aver fatto clic sul link in quell'email. Dipende dal fatto che il sito richieda la conferma dell'email; vanno bene entrambi."
+          },
+          "report": "Vedi \"Verifica la tua email\" ma in realtà hai già effettuato l'accesso (ad esempio, aprire la dashboard in un'altra scheda funziona senza fare clic sul link)."
+        },
+        "2": {
+          "heading": "Password dimenticata e modifica della password",
+          "checks": "Che tu possa reimpostare una password dimenticata via email e cambiarla in seguito.",
+          "steps": {
+            "0": "Dalla pagina di accesso, fai clic su \"Dimenticata?\" accanto al campo password e inserisci la tua email.",
+            "1": "Apri il link di reimpostazione da quell'email e imposta una nuova password (minimo 8 caratteri, e deve corrispondere al campo di conferma)."
+          },
+          "examples": {
+            "0": {
+              "alt": "La pagina \"Reimposta la password\": un campo Email, un pulsante Invia link di reimpostazione e Torna all'accesso",
+              "caption": "\"Dimenticata?\" nella pagina di accesso apre questa pagina. Dopo l'accesso, Impostazioni account ha invece un campo \"Cambia password\"."
+            }
+          },
+          "good": {
+            "0": "Torni nella dashboard con l'accesso già effettuato con la nuova password.",
+            "1": "Per accedere di nuovo in seguito serve la nuova password, non quella vecchia."
+          }
+        },
+        "3": {
+          "heading": "La dashboard corrisponde all'estensione dopo la sincronizzazione",
+          "checks": "Che la dashboard del sito mostri gli stessi gruppi dell'estensione una volta completata la sincronizzazione.",
+          "steps": {
+            "0": "Con la sincronizzazione attiva e almeno un gruppo, apri la dashboard su preview.tabmerger.com/dashboard.",
+            "1": "Confronta lì la sezione \"Gruppi di schede\" con la barra laterale del popup dell'estensione: nomi, colori, numero di finestre/schede e ordine."
+          },
+          "examples": {
+            "0": {
+              "alt": "La dashboard web dopo lo sblocco: statistiche, la scheda del piano Pro e la griglia Gruppi di schede con le schede Research, Reading List, Work e Shopping che mostrano il numero di finestre e schede",
+              "caption": "I gruppi della dashboard, che corrispondono alla barra laterale dell'estensione dopo la sincronizzazione."
+            }
+          },
+          "good": {
+            "0": "Una volta completata la sincronizzazione, compaiono gli stessi gruppi con gli stessi nomi, colori e numero di finestre/schede, nello stesso ordine."
+          }
+        },
+        "4": {
+          "heading": "La dashboard è di sola lettura per i gruppi",
+          "checks": "Che la dashboard mostri i tuoi gruppi ma non possa modificarli: le modifiche avvengono solo nell'estensione.",
+          "steps": {
+            "0": "Nella dashboard, cerca un modo qualsiasi per rinominare, eliminare o creare un gruppo, oppure aggiungerlo o toglierlo dai preferiti."
+          },
+          "good": {
+            "0": "Non c'è modo di rinominare, eliminare, creare o aggiungere/togliere dai preferiti un gruppo dalla dashboard: per scelta, i gruppi si modificano solo nell'estensione.",
+            "1": "Le uniche azioni reali sulla scheda di un gruppo sono Condividi e l'apertura delle sue schede/finestre."
+          },
+          "report": "Un controllo qualsiasi della dashboard che sembra modificare, eliminare o creare un gruppo fa effettivamente qualcosa."
+        },
+        "5": {
+          "heading": "Sessioni e statistiche nella dashboard",
+          "checks": "Che le sessioni salvate e i totali nella dashboard corrispondano all'estensione.",
+          "steps": {
+            "0": "Salva una sessione nell'estensione, poi controlla la sezione \"Sessioni salvate\" della dashboard.",
+            "1": "Controlla le statistiche nella parte alta della dashboard (numero di schede, di gruppi, di sessioni, data di iscrizione)."
+          },
+          "good": {
+            "0": "La sessione che hai salvato compare.",
+            "1": "Le statistiche corrispondono a ciò che conteresti nell'estensione."
+          }
+        },
+        "6": {
+          "heading": "Condividere dalla dashboard",
+          "checks": "Che il pulsante Condividi della dashboard copi un link di condivisione, come quello dell'estensione.",
+          "steps": {
+            "0": "Sulla scheda di un gruppo (o tramite \"Seleziona\" e \"Condividi selezionati\" per più gruppi), fai clic su Condividi."
+          },
+          "good": {
+            "0": "Un link viene copiato subito negli appunti, con una notifica di conferma. Questo aspetto è trattato in dettaglio nella sezione \"Condivisione\" più sotto: il pulsante Condividi della dashboard e quello dell'estensione producono lo stesso tipo di link."
+          }
+        },
+        "7": {
+          "heading": "Pagina dell'account",
+          "checks": "Che la pagina dell'account mostri il profilo, il piano e i dispositivi corretti e che entrambe le opzioni di uscita funzionino.",
+          "pro": "Solo la scheda Dispositivi richiede Pro; elenca i dispositivi che si sincronizzano.",
+          "steps": {
+            "0": "Apri Impostazioni account dalla dashboard.",
+            "1": "Controlla la scheda Profilo (email, membro dal), la scheda Abbonamento (piano, \"Gestisci fatturazione\" o \"Passa a un piano superiore\") e la scheda Dispositivi.",
+            "2": "Prova \"Esci\" e, separatamente, \"Esci da tutti i dispositivi\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Impostazioni account: la scheda Abbonamento mostra il piano Pro, la data di rinnovo e {proMonthly}/mese, con un pulsante Gestisci fatturazione; sotto, la scheda Dispositivi elenca i dispositivi connessi",
+              "caption": "Le schede Abbonamento e Dispositivi su un account Pro."
+            }
+          },
+          "good": {
+            "0": "Profilo e Abbonamento mostrano informazioni accurate e aggiornate (vedi la sezione \"Passare a Pro\" qui sopra per i dettagli sulla scheda Abbonamento).",
+            "1": "Dispositivi elenca i tuoi dispositivi connessi con i controlli per rinominarli/rimuoverli.",
+            "2": "Entrambi i pulsanti di uscita ti disconnettono; \"tutti i dispositivi\" revoca inoltre ogni altra sessione attiva.",
+            "3": "In questa pagina non c'è un'opzione per eliminare l'account: è previsto, non è una lacuna da segnalare."
+          }
+        },
+        "8": {
+          "heading": "Su un telefono",
+          "checks": "Che la dashboard e le pagine dell'account siano pienamente utilizzabili su uno schermo piccolo.",
+          "steps": {
+            "0": "Apri la dashboard e Impostazioni account su un telefono (o in una finestra desktop ristretta a circa 390px di larghezza).",
+            "1": "Tocca le icone Dashboard e Account in alto, poi il menu rotondo dell'account a destra e il suo \"Esci\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "La dashboard su uno schermo della larghezza di un telefono: la barra superiore mostra il logo di TabMerger, le icone Dashboard e Account, l'interruttore chiaro/scuro e il menu dell'account, senza nulla di tagliato",
+              "caption": "La dashboard alla larghezza di un telefono: solo icone nella barra superiore, nulla scorre lateralmente."
+            }
+          },
+          "good": {
+            "0": "Nulla scorre lateralmente.",
+            "1": "La barra superiore mostra il logo di TabMerger, le icone Dashboard e Account, l'interruttore chiaro/scuro e il menu del tuo account, tutti completamente visibili e toccabili (il nome \"TabMerger\" e le etichette delle icone si nascondono sugli schermi stretti). Sugli schermi più larghi le etichette sono ancora visibili."
+          },
+          "report": "Una pagina scorre lateralmente su un telefono, oppure un controllo in alto è tagliato o irraggiungibile."
+        },
+        "9": {
+          "heading": "Notifiche (toast)",
+          "checks": "Che le notifiche a comparsa siano facili da leggere, si chiudano da sole dopo un conto alla rovescia e possano essere chiuse prima.",
+          "steps": {
+            "0": "Fai comparire una notifica, ad esempio: in Impostazioni account, inserisci nel modulo della password una password più corta di 8 caratteri e inviala (mostra un errore senza cambiare nulla), oppure copia un link di condivisione.",
+            "1": "Osserva la notifica nell'angolo in basso a destra, poi fanne comparire un'altra e passaci sopra con il mouse.",
+            "2": "Prova sia in modalità chiara sia in modalità scura."
+          },
+          "examples": {
+            "0": {
+              "alt": "Una notifica di errore rossa nell'angolo in basso a destra con il testo \"La password deve contenere almeno 8 caratteri.\", con una ✕ nell'angolo e una barra del conto alla rovescia parzialmente svuotata lungo il bordo inferiore",
+              "caption": "Una notifica di errore: bordo rosso, ✕ per chiudere e la barra del conto alla rovescia lungo il fondo."
+            }
+          },
+          "good": {
+            "0": "Ogni notifica è facile da leggere sullo sfondo della pagina, con un bordo colorato (verde per i successi, rosso per gli errori).",
+            "1": "Una barra lungo il fondo si svuota in circa 6 secondi e si ferma mentre ci passi sopra con il mouse, e la notifica si chiude quando la barra si esaurisce.",
+            "2": "La ✕ nell'angolo in alto a destra la chiude subito."
+          },
+          "report": "Una notifica è difficile da leggere in uno dei due temi, la barra continua a scorrere mentre ci passi sopra con il mouse, oppure la ✕ è fuori posto o non la chiude."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Condivisione",
+      "intro": "La condivisione richiede Pro (vedi \"Passare a Pro\" qui sopra per ottenerlo in questa beta). La chiave di crittografia di una condivisione viene generata ex novo per ogni link e risiede solo nel frammento #key= dell'URL: non viene mai inviata al server né conservata lì, quindi chiunque abbia il link completo (incluso quel frammento) può vedere il contenuto condiviso. Tratta un link di condivisione come il contenuto stesso.",
+      "items": {
+        "0": {
+          "heading": "Condividere uno o più gruppi dall'estensione",
+          "checks": "Che l'estensione crei un link di condivisione per un gruppo o per più gruppi insieme.",
+          "steps": {
+            "0": "Entra in modalità selezione e spunta uno o più gruppi nella barra laterale (non schede o finestre: Share compare solo per una selezione di gruppi).",
+            "1": "Fai clic su \"Share\" nella barra di selezione in basso."
+          },
+          "examples": {
+            "0": {
+              "alt": "Modalità selezione nel popup con Work e Research spuntati e \"2 groups selected\" e un pulsante Share nella barra in basso",
+              "caption": "Spunta i gruppi da condividere, poi fai clic su Share nella barra in basso."
+            },
+            "1": {
+              "alt": "La stessa schermata con una notifica verde \"Link copied to clipboard\"",
+              "caption": "Il link viene copiato subito."
+            }
+          },
+          "good": {
+            "0": "Un link viene copiato subito negli appunti, con una notifica \"Link copied to clipboard\".",
+            "1": "Selezionando più gruppi insieme li condividi tutti in un unico link/pacchetto: non devi condividerli uno alla volta."
+          }
+        },
+        "1": {
+          "heading": "Aprire un link condiviso",
+          "checks": "Che chiunque possa aprire un link di condivisione senza accedere e vedere i gruppi condivisi, in sola lettura.",
+          "pro": "Creare il link richiede Pro; aprirlo non richiede alcun account.",
+          "steps": {
+            "0": "Apri il link copiato in una finestra del browser senza accesso (o in una finestra privata/in incognito).",
+            "1": "Controlla le favicon e i titoli di ogni scheda condivisa e prova \"Apri scheda\" / \"Apri tutte le schede\" / \"Apri finestra\" / \"Apri tutte le finestre\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "La pagina condivisa aperta senza accesso: \"Raccolta condivisa · sola lettura\", il link di condivisione, \"9 schede in 5 finestre di 2 gruppi\", un interruttore Mostra anteprime delle pagine e le schede del gruppo Work con i pulsanti Apri",
+              "caption": "Ciò che vede chi apre il tuo link, senza accedere. (Qui il link punta a un server di test locale; il tuo sarà su preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "La pagina si carica senza richiedere l'accesso, con l'etichetta \"Raccolta condivisa · sola lettura\".",
+            "1": "Mostra ogni gruppo, finestra e scheda con le favicon e i titoli reali.",
+            "2": "I pulsanti di apertura aprono le schede/finestre giuste in nuove schede del browser."
+          }
+        },
+        "2": {
+          "heading": "Anteprime delle pagine nella pagina condivisa",
+          "checks": "Che le anteprime delle pagine in una pagina condivisa restino disattivate finché chi la visualizza non le attiva e conferma.",
+          "pro": "Creare il link richiede Pro; aprirlo non richiede alcun account.",
+          "steps": {
+            "0": "Nella pagina condivisa, trova l'interruttore \"Mostra anteprime delle pagine\" sopra l'elenco dei gruppi.",
+            "1": "Attivalo e conferma la finestra di dialogo che compare.",
+            "2": "Passa il mouse su una scheda per vederne l'immagine di anteprima e la descrizione."
+          },
+          "examples": {
+            "0": {
+              "alt": "La finestra di dialogo \"Attivare le anteprime delle pagine?\" che spiega cosa viene inviato al servizio di anteprima, con i pulsanti Annulla e Attiva",
+              "caption": "Attivando l'interruttore viene chiesta prima una conferma. Le anteprime restano disattivate finché non confermi."
+            }
+          },
+          "good": {
+            "0": "L'interruttore è disattivato per impostazione predefinita.",
+            "1": "Per attivarlo bisogna prima confermare una finestra di dialogo (per disattivarlo non serve conferma): la finestra spiega che passando il mouse su una scheda il suo indirizzo viene inviato al servizio di anteprima di TabMerger e che non è collegato al tuo account, né registrato o conservato.",
+            "2": "Una volta attivo, passando il mouse su una scheda se ne vedono immagine/descrizione; una pagina senza immagine mostra \"Nessuna anteprima\" invece di un'immagine rotta."
+          }
+        },
+        "3": {
+          "heading": "Condividere un gruppo con molte finestre",
+          "checks": "Che un gruppo condiviso con più finestre mostri ogni finestra separatamente.",
+          "steps": {
+            "0": "Condividi un gruppo che ha più finestre salvate (non solo una)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Il gruppo Research della pagina condivisa, che mostra quattro finestre separate, ciascuna con il proprio link Apri scheda, e \"Apri tutte le finestre\" sul gruppo",
+              "caption": "Un gruppo condiviso con quattro finestre: ogni finestra è elencata separatamente."
+            }
+          },
+          "good": {
+            "0": "La pagina condivisa mostra ogni finestra di quel gruppo, ciascuna con l'etichetta \"Finestra N\" (e \"In incognito\" se lo era), con le proprie schede e il proprio controllo \"Apri scheda/e\"."
+          }
+        },
+        "4": {
+          "heading": "Condividere dalla dashboard web invece che dall'estensione",
+          "checks": "Che la condivisione dal sito funzioni allo stesso modo che dall'estensione.",
+          "steps": {
+            "0": "Nella dashboard, fai clic su \"Condividi\" sulla scheda di un singolo gruppo, oppure spunta più gruppi e fai clic su \"Condividi selezionati\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Le schede dei gruppi della dashboard, con il pulsante Condividi di una scheda che mostra \"Copiato!\" e una notifica con il testo \"Link copiato: condivide un'istantanea di questo gruppo.\"",
+              "caption": "Condividi sulla scheda della dashboard copia lo stesso tipo di link."
+            }
+          },
+          "good": {
+            "0": "Entrambi i percorsi della dashboard copiano un link allo stesso modo dell'estensione (rispettivamente \"Link copiato: condivide un'istantanea di questo gruppo.\" o \"Link copiato! La pagina di condivisione è online.\"), producendo lo stesso tipo di pagina condivisa."
+          }
+        },
+        "5": {
+          "heading": "Modifica, nuova condivisione, revoca e scadenza: cosa NON è possibile",
+          "checks": "Cosa non possono ancora fare i link di condivisione, così non perdi tempo a segnalarlo.",
+          "steps": {
+            "0": "Prova a trovare un modo qualsiasi per modificare una condivisione esistente o per revocarla/eliminarla/farla scadere, dall'estensione o dalla dashboard."
+          },
+          "good": {
+            "0": "Al momento non esiste da nessuna parte un'interfaccia per modificare, revocare, eliminare o far scadere un link di condivisione una volta creato: una condivisione è un'istantanea permanente e immutabile dal momento in cui viene creata. È previsto: non segnalare l'assenza di un controllo di revoca/modifica/scadenza, conferma solo che corrisponde a questa descrizione.",
+            "1": "Condividere di nuovo lo stesso gruppo crea un link nuovo e separato invece di aggiornare quello vecchio; il vecchio link continua a funzionare e mostra ancora la vecchia istantanea."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Impostazioni",
+      "intro": "Settings ha le schede General, Account e Data per tutti. Una scheda Devices compare quando passi a Pro (vedi \"Passare a Pro\" qui sopra). Le schede AI e Dev non fanno parte di questa build beta: l'IA resta nascosta dietro il flag \"in arrivo\" e Dev compare solo nelle build di sviluppo locali, non nella beta che hai installato.",
+      "items": {
+        "0": {
+          "heading": "Scheda General: Theme, Confirm before deleting, Open tab on click, Auto-deduplicate",
+          "checks": "Che queste impostazioni General abbiano effetto subito e vengano ricordate.",
+          "steps": {
+            "0": "Apri Settings e cambia Theme tra Light, Dark e System.",
+            "1": "Attiva e disattiva \"Confirm before deleting\" (elimina un gruppo o una finestra con l'opzione attiva, poi disattivata, e confronta).",
+            "2": "Attiva e disattiva \"Open tab on click\", poi fai clic su una scheda salvata nel pannello principale.",
+            "3": "Attiva e disattiva \"Auto-deduplicate on merge\", poi unisci due finestre che hanno una scheda duplicata in comune."
+          },
+          "examples": {
+            "0": {
+              "alt": "La scheda General della finestra Settings, che mostra Theme, Confirm before deleting e altri interruttori",
+              "caption": "La scheda General di Settings, con il badge della versione accanto al titolo. (La scheda Dev esiste solo nella nostra build interna per gli screenshot; non la vedrai.)"
+            }
+          },
+          "good": {
+            "0": "Theme cambia subito l'intera interfaccia e resta dopo la chiusura e la riapertura del popup.",
+            "1": "Con \"Confirm before deleting\" attivo, l'eliminazione di un gruppo o di una finestra chiede prima conferma; disattivato, elimina subito.",
+            "2": "\"Open tab on click\" attivo: un singolo clic apre la scheda nel browser; disattivato: un singolo clic si limita a selezionarla/espanderla.",
+            "3": "\"Auto-deduplicate on merge\" rimuove automaticamente il duplicato quando è attivo."
+          }
+        },
+        "1": {
+          "heading": "Scheda General: Show page images in previews",
+          "checks": "Che l'impostazione delle immagini delle pagine controlli se le anteprime delle schede mostrano un'immagine della pagina.",
+          "steps": {
+            "0": "Disattiva \"Show page images in previews\".",
+            "1": "Passa il mouse su una scheda salvata per vederne l'anteprima.",
+            "2": "Riattiva l'impostazione e passa di nuovo il mouse sulla stessa scheda."
+          },
+          "examples": {
+            "0": {
+              "alt": "Un'anteprima al passaggio del mouse con le immagini delle pagine disattivate, che mostra un segnaposto \"Not enabled\"",
+              "caption": "L'anteprima al passaggio del mouse con \"Show page images in previews\" disattivato."
+            }
+          },
+          "good": {
+            "0": "Disattivato: l'anteprima indica chiaramente \"Not enabled\" con la nota \"Page images are off. Turn on in Settings.\"; l'interruttore stesso salva subito, senza finestra di conferma.",
+            "1": "Attivato: nell'anteprima al passaggio del mouse si carica un'immagine reale della pagina, oppure \"No preview\" se quella pagina non ne ha.",
+            "2": "La descrizione dell'impostazione rimanda alla sezione sulle anteprime delle pagine dell'informativa sulla privacy."
+          },
+          "report": "L'anteprima mostra \"No preview\" (vuota) invece di un'immagine reale con l'impostazione attiva e una pagina che ne ha una."
+        },
+        "2": {
+          "heading": "Scheda General: Cloud sync, Stale tab threshold, URL rules",
+          "checks": "Che queste impostazioni compaiano per i piani giusti e cambino ciò che devono.",
+          "pro": "Solo l'interruttore Cloud sync richiede Pro (Free non lo mostra).",
+          "steps": {
+            "0": "Con Pro, attiva e disattiva \"Cloud sync\" (questo controllo compare solo quando hai Pro).",
+            "1": "Cambia \"Stale tab threshold\" con un valore diverso (7/14/30/60 giorni).",
+            "2": "Fai clic su \"Manage\" accanto a \"URL rules\" e aggiungi una regola che assegna uno schema di URL a un gruppo."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, scheda General scorsa verso il basso: Cloud sync attivo, Stale tab threshold impostato su 30 giorni e URL rules con un pulsante Manage",
+              "caption": "La metà inferiore della scheda General. (La scheda Dev esiste solo nella nostra build interna per gli screenshot; non la vedrai.)"
+            }
+          },
+          "good": {
+            "0": "Cloud sync compare solo per gli account Pro (Free non lo vede mai).",
+            "1": "Cambiare la soglia delle schede inutilizzate cambia quali schede ricevono il punto ambra.",
+            "2": "URL rules apre un gestore in cui puoi aggiungere/modificare/rimuovere regole da schema a gruppo.",
+            "3": "Una scheda appena aperta che corrisponde a una regola viene assegnata automaticamente."
+          }
+        },
+        "3": {
+          "heading": "Tema: Light, Dark e System",
+          "checks": "Che ogni tema abbia un aspetto corretto in tutto il popup e che la scelta venga ricordata.",
+          "steps": {
+            "0": "In Settings → General, imposta Theme su Dark e fai clic su Save changes.",
+            "1": "Guardati intorno nel popup: la barra laterale, un gruppo con più finestre, i menu ⋯, un menu del tasto destro, la ricerca (Ctrl+K) e Settings stesso.",
+            "2": "Chiudi e riapri il popup.",
+            "3": "Imposta Theme su System e salva, poi passa il computer dalla modalità chiara a quella scura.",
+            "4": "Reimpostalo su Light."
+          },
+          "good": {
+            "0": "L'intero popup cambia tema appena salvi, con ogni testo, icona e bordo leggibili.",
+            "1": "Anche menu, finestre di dialogo, tooltip e notifiche seguono il tema.",
+            "2": "Il tema è ancora impostato dopo la riapertura del popup.",
+            "3": "System segue l'impostazione chiara o scura del computer."
+          },
+          "report": "Qualcosa è difficile da leggere o mantiene il vecchio tema (un menu, una finestra di dialogo, un'icona o un bordo), oppure il tema si reimposta dopo la riapertura del popup."
+        },
+        "4": {
+          "heading": "URL rules: salvare automaticamente le pagine corrispondenti",
+          "checks": "Che una regola URL salvi nel gruppo scelto le pagine che apri a indirizzi corrispondenti.",
+          "steps": {
+            "0": "In Settings → General, accanto a URL rules, fai clic su Manage, poi su Add rule.",
+            "1": "Inserisci uno schema con * come carattere jolly (ad es. github.com/*), scegli un gruppo, aggiungi la regola e fai clic su Save.",
+            "2": "Nel browser, apri una nuova scheda a un indirizzo corrispondente (ad es. una pagina qualsiasi di github.com).",
+            "3": "Apri il popup e guarda il gruppo della regola. Poi ricarica la pagina una volta e controlla di nuovo il gruppo.",
+            "4": "Modifica la regola perché punti a un altro gruppo, poi eliminala e apri un'altra pagina corrispondente.",
+            "5": "Su Free, prova ad aggiungere una quarta regola."
+          },
+          "examples": {
+            "0": {
+              "alt": "La finestra URL Rules: \"Auto-assign tabs to groups by URL pattern. Use * as a wildcard (e.g. github.com/*). First matching rule wins.\", ancora nessuna regola, un pulsante Add rule e Cancel e Save",
+              "caption": "Settings → General → URL rules → Manage apre questo editor."
+            }
+          },
+          "good": {
+            "0": "Una copia della pagina corrispondente viene salvata nel gruppo della regola, nella sua prima finestra (o in una nuova finestra se il gruppo non ne ha). La scheda stessa resta aperta.",
+            "1": "Quando più regole corrispondono, vince la prima dell'elenco.",
+            "2": "Una volta modificata o eliminata una regola, le nuove pagine seguono la modifica.",
+            "3": "Free consente 3 regole: aggiungendone una quarta compare \"Free plan allows up to 3 URL rules.\" con un pulsante Upgrade. Pro non ha limiti."
+          },
+          "report": "Una pagina corrispondente non viene salvata, finisce nel gruppo sbagliato o viene salvata più di una volta (ad esempio di nuovo ogni volta che la ricarichi)."
+        },
+        "5": {
+          "heading": "Scheda Account: Plan, Renews, Email, Manage billing / Upgrade, Sign out",
+          "checks": "Che la scheda Account mostri il tuo piano reale, la data di rinnovo e l'email e che i suoi pulsanti funzionino.",
+          "steps": {
+            "0": "Apri la scheda Account e controlla le righe Plan, Renews (se a pagamento) ed Email.",
+            "1": "Fai clic su \"Upgrade to Pro\" (Free) o \"Manage billing\" (Pro/Pro AI): vedi \"Passare a Pro\" qui sopra per cosa succede dopo.",
+            "2": "Fai clic su \"Sign out\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, scheda Account su Pro: Plan Pro ({proMonthly}/mese), una data di rinnovo, l'email, i pulsanti Manage billing e Sign out e \"Forgot your passphrase? Reset encryption\"",
+              "caption": "La scheda Account su un account Pro. Il link di reimpostazione in fondo è il punto successivo. (La scheda Dev esiste solo nella nostra build interna per gli screenshot; non la vedrai.)"
+            }
+          },
+          "good": {
+            "0": "Plan mostra \"Free\", \"Pro ({proMonthly}/mo)\" o \"Pro AI ({proAiMonthly}/mo)\" in base al tuo abbonamento reale.",
+            "1": "Renews compare solo per un piano a pagamento e indica la data di rinnovo reale.",
+            "2": "Email corrisponde all'account con cui hai effettuato l'accesso.",
+            "3": "\"Manage billing\" apre il portale di fatturazione di Stripe in una nuova scheda; su Free c'è invece \"Upgrade to Pro\", che apre la pagina dei prezzi.",
+            "4": "Sign out ti disconnette."
+          }
+        },
+        "6": {
+          "heading": "Scheda Account: Forgot your passphrase? Reset encryption",
+          "checks": "Che il link per reimpostare la crittografia compaia nella scheda Account una volta configurata la crittografia.",
+          "steps": {
+            "0": "Questo link compare solo se hai completato la configurazione della crittografia almeno una volta (vedi la sezione \"Passphrase della crittografia end-to-end\" più sotto per il flusso completo: non ripeterlo qui, conferma solo che è raggiungibile da questa scheda)."
+          },
+          "good": {
+            "0": "Il link è visibile in fondo alla scheda Account una volta configurata la crittografia, e non prima."
+          }
+        },
+        "7": {
+          "heading": "Scheda Data: Export, Import, Clear all data",
+          "checks": "Che esportazione, importazione e cancellazione dei dati funzionino, con una conferma prima che qualcosa venga sostituito o eliminato.",
+          "steps": {
+            "0": "Apri la scheda Data e fai clic su \"Export\" per scaricare tutti i gruppi come file JSON.",
+            "1": "Fai clic su \"Import\" e seleziona lo stesso file (oppure un'esportazione HTML dei preferiti o un'esportazione .txt di OneTab).",
+            "2": "Fai clic su \"Clear all data\" e conferma."
+          },
+          "examples": {
+            "0": {
+              "alt": "La scheda Data della finestra Settings, che mostra i controlli Export data e Import data",
+              "caption": "La scheda Data di Settings."
+            }
+          },
+          "good": {
+            "0": "Export scarica un file con un nome come \"tabmerger-backup-2026-01-15.json\" con una notifica \"exported successfully\".",
+            "1": "Import ti chiede di confermare il numero di gruppi prima di importare, poi mostra \"imported successfully\".",
+            "2": "Reimportare la tua esportazione riporta ogni gruppo con le stesse finestre, schede, ordine e colori.",
+            "3": "Sono accettati tutti e tre i tipi di file (JSON di TabMerger, HTML dei preferiti, .txt di OneTab), riconosciuti dall'estensione del file.",
+            "4": "\"Clear all data\" cancella gruppi, sessioni e impostazioni dopo la conferma: consideralo distruttivo e provalo solo su un profilo usa e getta."
+          },
+          "report": "Un file non valido o vuoto non fa nulla senza avvisare invece di mostrare una notifica di errore come \"Invalid file format\" o \"No groups found\"."
+        },
+        "8": {
+          "heading": "Save e Reset, e l'indicatore \"Unsaved changes\"",
+          "checks": "Che le impostazioni vengano salvate solo quando fai clic su Save e che ti avvisino delle modifiche non salvate.",
+          "steps": {
+            "0": "Nella scheda General, cambia un'impostazione qualsiasi (ad es. Theme) senza fare clic su Save.",
+            "1": "Nota il testo \"Unsaved changes\" e che \"Save changes\" è attivo solo mentre qualcosa è effettivamente diverso da ciò che è salvato.",
+            "2": "Fai clic su \"Restore defaults\" invece di Save, poi chiudi Settings senza salvare.",
+            "3": "Riapri Settings e controlla se la modifica è rimasta."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, scheda General dopo una modifica: \"Unsaved changes\" accanto a un pulsante Save changes attivo, con Restore defaults a sinistra",
+              "caption": "Dopo aver cambiato un'impostazione: compare \"Unsaved changes\" e Save changes si attiva. (La scheda Dev esiste solo nella nostra build interna per gli screenshot; non la vedrai.)"
+            }
+          },
+          "good": {
+            "0": "\"Unsaved changes\" compare accanto a \"Save changes\" ogni volta che la bozza differisce dalle ultime impostazioni salvate.",
+            "1": "\"Save changes\" è disattivato quando non c'è nulla di nuovo da salvare.",
+            "2": "\"Restore defaults\" riporta ai valori predefiniti solo la bozza in corso: non salva da solo.",
+            "3": "Chiudere Settings senza fare clic su \"Save changes\" scarta la bozza; riaprendolo vedi gli ultimi valori effettivamente salvati, non la modifica non salvata."
+          },
+          "report": "\"Save changes\" resta attivo senza modifiche, oppure un'impostazione che hai cambiato ma mai salvato persiste comunque dopo la chiusura e la riapertura di Settings."
+        },
+        "9": {
+          "heading": "Il badge della versione",
+          "checks": "Dove trovare il numero di versione esatto da indicare nelle segnalazioni di bug.",
+          "steps": {
+            "0": "Guarda la barra del titolo della finestra Settings."
+          },
+          "good": {
+            "0": "Un piccolo badge accanto alla parola \"Settings\" mostra la versione semver reale da indicare nelle segnalazioni di bug (ad es. \"v3.1.0-beta.5\"): è spiegato più in dettaglio nella sezione \"Iscriviti e installa\" qui sopra."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Accesso e sincronizzazione tra dispositivi",
+      "intro": "Le build beta si sincronizzano tramite l'app web di anteprima su preview.tabmerger.com, non tramite il sito principale: accedi lì per vedere i gruppi sincronizzati, la dashboard e la condivisione.",
+      "items": {
+        "0": {
+          "heading": "Configurare due dispositivi",
+          "checks": "Che due dispositivi connessi allo stesso account condividano i loro gruppi.",
+          "steps": {
+            "0": "Accedi su due dispositivi o due profili del browser con l'estensione beta installata su entrambi, collegati allo stesso account."
+          },
+          "examples": {
+            "0": {
+              "alt": "La finestra \"Sign In to TabMerger\" dell'estensione nel popup: Continue with Google, poi le schede Sign In, Sign Up e Magic Link con i campi Email e Password",
+              "caption": "Accesso dall'estensione: l'icona dell'account (in alto a destra) → Sign in."
+            },
+            "1": {
+              "alt": "Il popup del dispositivo A con i gruppi Work, Research, Shopping e Reading List; il piè di pagina indica 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Dispositivo A."
+            },
+            "2": {
+              "alt": "Il popup del dispositivo B dopo accesso, sblocco e sincronizzazione: gli stessi quattro gruppi con lo stesso numero di finestre e schede e lo stesso piè di pagina 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Il dispositivo B dopo l'accesso e lo sblocco: stessi gruppi e stessi conteggi, nello stesso ordine."
+            }
+          },
+          "good": {
+            "0": "I gruppi creati su un dispositivo compaiono sull'altro in breve tempo."
+          }
+        },
+        "1": {
+          "heading": "Le rinomine raggiungono l'altro dispositivo",
+          "checks": "Che una rinomina su un dispositivo compaia sull'altro senza un aggiornamento manuale.",
+          "steps": {
+            "0": "Modifica il nome di un gruppo sul dispositivo A.",
+            "1": "Controlla il dispositivo B senza toccare nulla lì."
+          },
+          "examples": {
+            "0": {
+              "alt": "Il popup del dispositivo A dopo aver rinominato Research in \"Research papers\", con le sue quattro schede visibili",
+              "caption": "Dispositivo A: \"Research\" rinominato in \"Research papers\"."
+            },
+            "1": {
+              "alt": "Il popup del dispositivo B che mostra il gruppo come \"Research papers\" con le stesse quattro schede, dopo aver solo riaperto il popup",
+              "caption": "Dispositivo B, dopo aver solo riaperto il popup: il nuovo nome c'è."
+            }
+          },
+          "good": {
+            "0": "Il dispositivo B rileva la rinomina senza che tu debba avviare un aggiornamento manuale."
+          }
+        },
+        "2": {
+          "heading": "Le eliminazioni raggiungono l'altro dispositivo",
+          "checks": "Che un gruppo eliminato resti eliminato su ogni dispositivo invece di tornare.",
+          "steps": {
+            "0": "Elimina un gruppo sul dispositivo A.",
+            "1": "Verifica che scompaia anche sul dispositivo B."
+          },
+          "examples": {
+            "0": {
+              "alt": "Il popup del dispositivo A dopo aver eliminato Shopping: restano Work, Research papers e Reading List e il piè di pagina indica 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Dispositivo A: \"Shopping\" eliminato."
+            },
+            "1": {
+              "alt": "Il popup del dispositivo B dopo la riapertura: Shopping non c'è più e il piè di pagina indica 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Il dispositivo B dopo la riapertura del popup: anche lì \"Shopping\" non c'è più."
+            }
+          },
+          "good": {
+            "0": "L'eliminazione si propaga invece di far ricomparire (\"resuscitare\") il gruppo dopo la sincronizzazione."
+          },
+          "report": "Un gruppo eliminato torna su uno dei due dispositivi dopo una sincronizzazione successiva."
+        },
+        "3": {
+          "heading": "Il riordino dei gruppi si sincronizza",
+          "checks": "Che l'ordine dei tuoi gruppi sia lo stesso su ogni dispositivo e nella dashboard.",
+          "steps": {
+            "0": "Trascina un gruppo in una nuova posizione nella barra laterale del dispositivo A.",
+            "1": "Attendi che la sincronizzazione si completi, poi guarda la barra laterale del dispositivo B e la dashboard web."
+          },
+          "good": {
+            "0": "Il dispositivo B e la dashboard mostrano i gruppi nello stesso ordine del dispositivo A.",
+            "1": "Annulla può essere disattivato su un dispositivo subito dopo che una sincronizzazione porta modifiche da un altro dispositivo. È previsto: la cronologia di annullamento viene cancellata quando arrivano modifiche da altrove, così non puoi annullare per errore la modifica di qualcun altro."
+          },
+          "report": "L'ordine differisce tra i dispositivi dopo che la sincronizzazione si è completata, oppure un riordino torna al vecchio ordine."
+        },
+        "4": {
+          "heading": "Le modifiche offline si sincronizzano alla riconnessione",
+          "checks": "Che le modifiche fatte offline si sincronizzino quando torni online, senza duplicati né perdite.",
+          "steps": {
+            "0": "Vai offline (disattiva la rete) su un dispositivo.",
+            "1": "Apporta delle modifiche.",
+            "2": "Riconnettiti."
+          },
+          "good": {
+            "0": "Una volta tornato online, le modifiche fatte offline si sincronizzano senza duplicare o perdere silenziosamente gruppi."
+          }
+        },
+        "5": {
+          "heading": "Eliminare un gruppo mentre sei offline",
+          "checks": "Che un gruppo eliminato mentre sei offline resti eliminato quando ti riconnetti.",
+          "steps": {
+            "0": "Vai offline (disattiva la rete) sul dispositivo A.",
+            "1": "Elimina un gruppo sul dispositivo A.",
+            "2": "Riconnetti il dispositivo A e lascialo sincronizzare, poi controlla il dispositivo B e la dashboard."
+          },
+          "good": {
+            "0": "Il gruppo viene rimosso dal server alla sincronizzazione successiva e scompare dal dispositivo B e dalla dashboard.",
+            "1": "In seguito non torna su nessuno dei due dispositivi."
+          },
+          "report": "Un gruppo eliminato mentre eri offline ricompare su un dispositivo qualsiasi dopo una sincronizzazione."
+        },
+        "6": {
+          "heading": "Stesso gruppo modificato su due dispositivi (copia di conflitto)",
+          "checks": "Che quando lo stesso gruppo viene modificato su due dispositivi prima che uno dei due si sia sincronizzato, nulla venga sovrascritto e tu riceva una copia da unire a mano.",
+          "steps": {
+            "0": "Vai offline (disattiva la rete) sul dispositivo A. Lascia online il dispositivo B.",
+            "1": "Sul dispositivo A, modifica un gruppo (ad esempio aggiungi una scheda). Sul dispositivo B, modifica lo stesso gruppo in modo diverso (ad esempio aggiungi un'altra scheda).",
+            "2": "Lascia che il dispositivo B si sincronizzi per primo, poi riconnetti il dispositivo A e lascialo sincronizzare.",
+            "3": "Guarda la barra laterale su entrambi i dispositivi."
+          },
+          "good": {
+            "0": "La versione arrivata per prima al server (dispositivo B) mantiene il nome del gruppo.",
+            "1": "La versione del dispositivo A viene salvata subito sotto come nuovo gruppo chiamato \"Work{CONFLICT_COPY_SUFFIX}\" (con il nome del tuo gruppo) e una notifica te lo comunica.",
+            "2": "Alla fine entrambi i dispositivi mostrano entrambi i gruppi. Puoi unire le schede a mano e poi eliminare la copia.",
+            "3": "Modificare un solo dispositivo, o modificare gruppi diversi su ciascuno, non crea mai una copia."
+          },
+          "report": "Una modifica scompare senza avviso e senza copia, oppure compare una \"copia di conflitto\" quando solo un dispositivo ha modificato il gruppo."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Passphrase della crittografia end-to-end",
+      "intro": "La crittografia è obbligatoria per ogni account connesso, non è un'impostazione facoltativa: non c'è un interruttore per disattivarla. I tuoi gruppi sincronizzati, le sessioni e le istantanee di \"Now Open\" sono crittografati con una chiave che solo la tua passphrase può sbloccare; i server di TabMerger non vedono mai la passphrase né la chiave in chiaro.",
+      "items": {
+        "0": {
+          "heading": "Prima configurazione della passphrase",
+          "checks": "Che l'attivazione della sincronizzazione ti chieda di scegliere una passphrase di crittografia prima che qualsiasi dato lasci il tuo dispositivo.",
+          "steps": {
+            "0": "Con un nuovo accesso con sincronizzazione cloud, attendi che il messaggio \"Set up encryption\" compaia da solo (viene attivato dal primo tentativo di sincronizzazione).",
+            "1": "Leggi il testo del messaggio, poi inserisci una nuova passphrase e ripetila in \"Confirm passphrase\".",
+            "2": "Fai clic su \"Set up encryption\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "La finestra \"Set up encryption\" che spiega che la passphrase non può essere recuperata, con i campi New passphrase e Confirm passphrase e un pulsante Set up encryption",
+              "caption": "Compare da sola subito dopo l'accesso su Pro."
+            }
+          },
+          "good": {
+            "0": "Il messaggio dice \"Your synced group and tab data is end-to-end encrypted with a passphrase only you know. Choose one now — there is no way to recover your data if you forget it, it never leaves your device and TabMerger cannot reset it for you.\"",
+            "1": "La passphrase deve avere almeno 8 caratteri senza spazi e deve corrispondere alla conferma: discrepanze o una passphrase troppo corta mostrano un chiaro errore in linea (\"Passphrase must be at least 8 characters\" / \"Passphrases do not match\" / \"Passphrase cannot contain spaces\") invece di fallire senza avvisare.",
+            "2": "In caso di successo vedi una notifica \"Encryption set up\".",
+            "3": "Nulla di ciò che avevi già sincronizzato va perso."
+          }
+        },
+        "1": {
+          "heading": "Sbloccare su un secondo dispositivo",
+          "checks": "Che un secondo dispositivo abbia bisogno della tua passphrase una volta prima di poter leggere i dati sincronizzati.",
+          "steps": {
+            "0": "Accedi con lo stesso account su un secondo dispositivo o profilo del browser.",
+            "1": "Quando compare il messaggio \"Unlock encryption\", inserisci la passphrase (una volta, non c'è un campo di conferma) e fai clic su \"Unlock\" o premi Invio.",
+            "2": "Ripeti ancora una volta, ma digita di proposito la passphrase sbagliata."
+          },
+          "examples": {
+            "0": {
+              "alt": "La finestra \"Unlock encryption\" su un secondo dispositivo, con un unico campo Passphrase e un pulsante Unlock",
+              "caption": "Su un secondo dispositivo, l'estensione chiede una volta la passphrase esistente."
+            }
+          },
+          "good": {
+            "0": "Il messaggio di sblocco dice \"Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won't be asked again unless you sign out.\"",
+            "1": "La passphrase corretta sblocca e mostra una notifica \"Encryption unlocked\".",
+            "2": "Quella sbagliata mostra \"Wrong passphrase\" e non cambia nient'altro: nessun danneggiamento, nessun blocco, puoi semplicemente riprovare."
+          }
+        },
+        "2": {
+          "heading": "Come appare lo stato \"bloccato\" e restare sbloccati dopo un riavvio",
+          "checks": "Che i dati bloccati restino illeggibili finché non li sblocchi e che un dispositivo resti sbloccato dopo il riavvio del browser.",
+          "steps": {
+            "0": "Mentre un dispositivo è bloccato (prima di avervi inserito la passphrase), prova a usare le funzionalità di sincronizzazione cloud.",
+            "1": "Sbloccalo, poi chiudi completamente e riapri il browser (non solo il popup) su quel dispositivo."
+          },
+          "good": {
+            "0": "Mentre è bloccato, ti viene richiesta di nuovo la passphrase invece di sincronizzare silenziosamente testo in chiaro o perdere dati.",
+            "1": "Una volta sbloccato, la chiave resta nell'archiviazione locale del browser su quel dispositivo: un riavvio completo del browser non te la richiede; solo l'uscita dall'account la cancella."
+          }
+        },
+        "3": {
+          "heading": "Passphrase dimenticata: reimpostare la crittografia",
+          "checks": "Che la reimpostazione della crittografia venga prima confermata chiaramente e ti permetta di impostare una nuova passphrase.",
+          "steps": {
+            "0": "In Settings → Account, trova \"Forgot your passphrase? Reset encryption\" (compare solo se hai completato la configurazione almeno una volta).",
+            "1": "NON usarlo su dati a cui tieni: elimina definitivamente l'accesso a tutto ciò che è crittografato con la passphrase attuale. Usa un account di prova usa e getta se vuoi provarlo.",
+            "2": "Se lo provi, conferma la finestra di reimpostazione, poi imposta una passphrase completamente nuova quando si riapre il messaggio di configurazione."
+          },
+          "examples": {
+            "0": {
+              "alt": "La conferma \"Reset Encryption Passphrase\" che avverte che tutto ciò che è crittografato con la passphrase attuale diventerà definitivamente inaccessibile, con i pulsanti Cancel e Reset Passphrase",
+              "caption": "La conferma che ricevi prima di una reimpostazione. Cancel è sicuro; Reset Passphrase non è reversibile."
+            }
+          },
+          "good": {
+            "0": "La finestra di conferma è chiara prima che accada qualsiasi cosa.",
+            "1": "Dopo la conferma vedi una notifica \"Encryption reset — set up a new passphrase\" e il messaggio di configurazione si riapre subito, così puoi sceglierne una nuova e continuare a sincronizzare."
+          }
+        },
+        "4": {
+          "heading": "Verifica nella dashboard web",
+          "checks": "Che il sito ti chieda la passphrase prima di mostrare i gruppi sincronizzati.",
+          "steps": {
+            "0": "Accedi alla dashboard (preview.tabmerger.com) con un account che ha la crittografia configurata.",
+            "1": "Se richiesto, inserisci la passphrase nella scheda di sblocco in linea prima che compaia qualsiasi contenuto dei gruppi."
+          },
+          "examples": {
+            "0": {
+              "alt": "La sezione Gruppi di schede della dashboard web bloccata, con un lucchetto, \"I tuoi gruppi sono crittografati end-to-end. Inserisci la passphrase per visualizzarli qui.\", un campo Passphrase e un pulsante Sblocca",
+              "caption": "Finché non inserisci la passphrase, la dashboard mostra questo al posto dei tuoi gruppi."
+            }
+          },
+          "good": {
+            "0": "La dashboard chiede la passphrase separatamente dall'estensione: lo sblocco lì è un passaggio a sé, una volta per scheda, non condiviso con lo sblocco dell'estensione. Il messaggio dice \"I tuoi gruppi sono crittografati end-to-end. Inserisci la passphrase per visualizzarli qui.\"",
+            "1": "Una passphrase errata mostra \"Passphrase errata.\" senza far andare in crash la pagina.",
+            "2": "Una volta sbloccata, i nomi reali dei gruppi e le schede vengono mostrati normalmente.",
+            "3": "Dopo una reimpostazione della passphrase nell'estensione, la dashboard chiede la nuova passphrase: al caricamento successivo della pagina oppure, in una dashboard già aperta, quando premi il pulsante di aggiornamento sull'etichetta della sincronizzazione.",
+            "4": "Un gruppo o una sessione che la passphrase attuale non può leggere (salvati prima di una reimpostazione e non ancora caricati di nuovo) compaiono come \"(bloccato)\" invece di rivelare qualsiasi contenuto. L'elemento stesso spiega il motivo e cosa fare, e non può essere condiviso o ripristinato finché non torna leggibile."
+          }
+        },
+        "5": {
+          "heading": "Come capire che i tuoi dati sono davvero crittografati",
+          "checks": "Come puoi verificare di persona che i tuoi dati sono illeggibili senza la passphrase.",
+          "steps": {
+            "0": "Nell'interfaccia non c'è un badge esplicito \"Crittografato ✓\": il segnale visibile è indiretto.",
+            "1": "Su un dispositivo che non hai ancora sbloccato (o nella dashboard, prima di inserirvi la passphrase), nota che i nomi e i contenuti dei gruppi non vengono mostrati finché non sblocchi."
+          },
+          "good": {
+            "0": "L'assenza di contenuti leggibili prima dello sblocco è il segnale: non viene mostrato alcun nome di gruppo né alcuna scheda e, nella dashboard, tutto ciò che la passphrase attuale non può leggere compare come \"(bloccato)\".",
+            "1": "La dashboard mostra la scheda della passphrase al posto dei tuoi gruppi. Se un contenuto fosse mai leggibile senza sblocco, significherebbe che non è davvero crittografato: segnalalo subito se lo vedi."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Qualsiasi perdita di dati: un gruppo, una scheda o una sessione scomparsi quando non dovevano.",
+    "1": "Conflitti di sincronizzazione: un gruppo \"{CONFLICT_COPY_SUFFIX}\" è previsto quando lo stesso gruppo è stato modificato su due dispositivi prima che uno dei due si sincronizzasse. Dicci se una modifica scompare senza avviso o se compare una copia quando solo un dispositivo ha apportato modifiche.",
+    "2": "Qualsiasi cosa confusa, poco chiara o che ti ha richiesto più clic del necessario.",
+    "3": "Qualsiasi lentezza: l'apertura del popup, la ricerca, il trascinamento o la sincronizzazione che impiegano molto più del previsto."
+  },
+  "metaTitle": "Programma beta",
+  "metaDescription": "Partecipa alla beta di TabMerger: installa la build beta privata, scopri cosa testare e segnala i bug direttamente al team.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "In parte Pro",
+    "somePro": "Alcuni Pro",
+    "areaPartial": "Alcuni punti qui richiedono un account Pro",
+    "itemPartial": "Una parte di questo punto richiede un account Pro",
+    "areaAll": "Ogni punto qui richiede un account Pro",
+    "itemAll": "Richiede un account Pro"
+  },
+  "eyebrow": "Programma beta",
+  "title": "Aiutaci a testare TabMerger prima del rilascio",
+  "lead": "Ottieni in anteprima la prossima versione di TabMerger e dicci cosa non funziona. Questa pagina spiega come iscriversi, installare la beta privata, cosa testare e come segnalare ciò che trovi. Le funzionalità IA sono nascoste (\"in arrivo\") in questa build, quindi non fanno ancora parte dei test.",
+  "join": "Partecipa alla beta",
+  "onThisPage": "In questa pagina",
+  "install": {
+    "heading": "1. Iscriviti e installa",
+    "groupTitle": "Iscriviti al gruppo dei tester.",
+    "groupBody": "Apri <link>groups.google.com/g/tabmerger-beta-testers</link> e iscriviti. L'iscrizione è immediata, ma assicurati di iscriverti con lo <strong>stesso account Google con cui hai effettuato l'accesso in Chrome</strong>, altrimenti la scheda privata non sarà visibile per te.",
+    "listingTitle": "Apri la scheda privata della beta.",
+    "listingLink": "Apri la scheda di TabMerger BETA",
+    "listingPending": "la scheda \"TabMerger BETA\" sul Chrome Web Store (link in arrivo: nel frattempo controlla l'URL attuale nel gruppo dei tester).",
+    "listingNotFound": "Se vedi <strong>\"Item not found\"</strong>, probabilmente ti sei appena iscritto: l'accesso può richiedere un po' di tempo. Attendi un momento e riprova prima di pensare che ci sia un problema.",
+    "installTitle": "Installala.",
+    "installBody": "Fai clic su \"Aggiungi a Chrome\". La beta si installa come estensione separata (\"TabMerger BETA\") rispetto alla scheda stabile \"TabMerger\": puoi tenerle installate entrambe, una accanto all'altra, e i loro dati sono completamente separati. Ti consigliamo di disattivare la versione stabile durante i test, così non agisci per errore su quella sbagliata.",
+    "signInTitle": "Accedi tramite l'app web di anteprima.",
+    "signInBody": "Le build beta si sincronizzano con <link>preview.tabmerger.com</link>, non con il sito principale di TabMerger. Accedi lì (dall'estensione o direttamente dalla dashboard) per vedere i gruppi e le sessioni sincronizzati.",
+    "browsersTitle": "Su quali browser posso fare i test?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc e Opera usano tutti la stessa scheda TabMerger BETA e lo stesso gruppo Google: non esiste una beta separata per Edge, quindi non cercarla. Edge: accetta \"Consenti estensioni da altri store\" quando richiesto. Opera: installa prima il componente aggiuntivo \"Install Chrome Extensions\" di Opera, poi usa il link qui sopra. Se hai installato anche la versione stabile di TabMerger dai Componenti aggiuntivi di Edge, disattivala mentre testi la beta: è un'estensione separata da questa. Safari non è supportato.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox ha una propria build beta, installata da un link diretto anziché dalla scheda del Chrome Web Store qui sopra. <link>Installa la beta per Firefox</link>. Firefox chiede se aggiungere \"TabMerger BETA\": scegli Aggiungi. Controlla gli aggiornamenti da solo circa una volta al giorno; per controllare subito, apri <code>about:addons</code>, fai clic sull'icona dell'ingranaggio e scegli \"Controlla aggiornamenti\". Accedi una volta all'interno dell'estensione e consenti la richiesta di autorizzazione ai dati di Firefox (copre accesso e sincronizzazione); dopodiché, accedendo a questo sito accedi anche all'estensione. <strong>Chiunque abbia il link di installazione qui sopra può installarla</strong>: per favore non condividerlo al di fuori del gruppo dei tester.",
+    "firefoxSoon": "Una beta per Firefox arriverà presto; fino ad allora, gli utenti di Firefox possono partecipare alla beta con uno qualsiasi dei browser Chromium supportati elencati qui sopra (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Annota la tua versione.",
+    "versionBody": "Apri le Settings di TabMerger e copia il badge della versione accanto al titolo \"Settings\" (ad es. <code>v3.1.0-beta.5</code>), oppure controlla <code>chrome://extensions</code> e trova \"TabMerger BETA\". In entrambi i casi, segnala quella versione semver reale, non il numero di versione interno del Chrome Web Store, che è sfalsato e non corrisponde a quello che usiamo per tracciare le build."
+  },
+  "test": {
+    "heading": "2. Cosa testare",
+    "intro": "Esplora le aree che corrispondono al modo in cui usi normalmente TabMerger. Ogni punto qui sotto ha passaggi numerati, un esempio di come dovrebbe apparire e come si presenta un risultato corretto.",
+    "tickNote": "Spunta ogni passaggio man mano. Le spunte vengono salvate solo in questo browser e ogni area mostra a che punto sei arrivato.",
+    "needPro": "Mi serve Pro?",
+    "needProBody": "Le aree sono elencate da Free a Pro. Tutto ciò che non è contrassegnato funziona su Free, senza account. <full></full>: l'intero punto richiede un account Pro (sincronizzazione, crittografia e creazione di link di condivisione sono Pro). <partial></partial>: la maggior parte del punto funziona su Free e una riga \"Pro:\" sotto il titolo indica quale parte no. In questa beta Pro non costa nulla: paghi con una carta di prova (vedi <link>Passare a Pro</link>).",
+    "show": "Mostra",
+    "hide": "Nascondi",
+    "proLine": "Pro: ",
+    "checksLine": "Cosa verifica: ",
+    "steps": "Passaggi",
+    "reportLine": "Segnalalo se: ",
+    "testCheckout": "⚠ Questo è un pagamento di prova.",
+    "testCheckoutBody": " Non inserire mai una carta reale. Non viene addebitato denaro reale e una carta reale qui non funzionerebbe comunque.",
+    "testCardsFooter": "Con qualsiasi carta: una data di scadenza futura (ad es. <code>12/34</code>), un CVC qualsiasi di 3 cifre (ad es. <code>123</code>) e qualsiasi valore per nome, codice postale e altri campi. Altre carte: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "Cosa ci interessa sapere in particolare",
+  "knownIssues": {
+    "heading": "3. Problemi noti",
+    "intro": "Siamo già a conoscenza di questi problemi, quindi non serve segnalarli. L'elenco viene aggiornato a ogni release beta; se qualcosa di questo elenco per te è risolto, o si comporta diversamente da come è descritto, vale la pena segnalarlo.",
+    "meanwhile": "Nel frattempo:"
+  },
+  "report": {
+    "heading": "4. Segnala un bug",
+    "discussions": "Bug e idee vanno nelle nostre GitHub Discussions pubbliche: <link>github.com/{repo}/discussions</link>. Dai prima un'occhiata lì: qualcuno potrebbe aver già segnalato la stessa cosa.",
+    "public": "<strong>Le Discussions sono pubbliche.</strong> Non incollare URL privati, titoli di schede o screenshot che mostrano informazioni personali: sfocali o ritagliali prima. Per pubblicare ti serve un account GitHub (gratuito).",
+    "bugButton": "Segnala un bug su GitHub",
+    "ideaButton": "Condividi un'idea su GitHub",
+    "noGithub": "Non hai un account GitHub? Usa il modulo di contatto.",
+    "template": "Entrambi i link precompilano questo modello nel corpo della discussione: compilalo prima di pubblicare, ci risparmia un giro di domande di approfondimento:"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "notFoundQ": "Vedo \"Item not found\"",
+    "notFoundA": "Assicurati di esserti iscritto al gruppo Google con lo stesso account Google con cui hai effettuato l'accesso in Chrome. L'accesso può richiedere un po' di tempo dopo l'iscrizione: attendi un momento e riprova prima di pensare che qualcosa non funzioni.",
+    "stableQ": "Posso tenere installata la versione stabile?",
+    "stableA": "Sì: la beta (\"TabMerger BETA\") è un'estensione separata dalla versione stabile (\"TabMerger\"), con dati completamente separati. Puoi usarle entrambe, anche se ti consigliamo di disattivare la stabile durante i test per non confonderti su quale stai usando.",
+    "chargedQ": "Mi verrà addebitato qualcosa se passo a Pro?",
+    "chargedA": "No: il passaggio a Pro nella beta usa la modalità di test di Stripe. Usa una <link>carta di prova di Stripe</link> (vedi la sezione \"Passare a Pro\" qui sopra): nessuna carta reale funziona qui e in ogni caso non viene scambiato denaro reale.",
+    "syncQ": "Dove si sincronizzano i miei dati?",
+    "syncA": "Le build beta si sincronizzano con l'app web di anteprima su preview.tabmerger.com, non con il sito principale di TabMerger. Accedi lì per vedere i gruppi sincronizzati, le sessioni e la condivisione.",
+    "issuesQ": "Dove trovo i problemi noti?",
+    "issuesA": "Consulta le <link>Discussions Q&A</link> del repository: è lì che si trovano le segnalazioni di bug della beta.",
+    "leaveQ": "Come lascio la beta?",
+    "leaveA": "Lascia il <link>gruppo Google</link> e disinstalla l'estensione \"TabMerger BETA\". L'eventuale installazione stabile che hai mantenuto non viene toccata."
+  },
+  "interactive": {
+    "good": "Risultato corretto",
+    "allDoneLabel": "Tutte le verifiche completate",
+    "progressLabel": "{done} di {total} verifiche completate",
+    "allDone": "✓ Tutto fatto",
+    "progress": "{done}/{total}",
+    "clear": "Cancella le mie spunte ({count})",
+    "firefoxAutoStart": "La beta per Firefox dovrebbe avviarsi da sola: Firefox chiede se aggiungerla, gli altri browser scaricano il file. Se non succede nulla, usa \"Installa la beta per Firefox\" in questo passaggio."
+  }
+}

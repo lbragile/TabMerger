@@ -1,0 +1,27 @@
+{
+  "title": "가져오기 / 내보내기",
+  "description": "TabMerger 데이터 관리",
+  "tabExport": "내보내기",
+  "tabImport": "가져오기",
+  "exportIntro": "모든 그룹을 JSON 파일로 내보냅니다. 나중에 이 파일을 다시 가져올 수 있습니다.",
+  "downloadJson": "JSON 다운로드",
+  "jsonHeading": "TabMerger JSON",
+  "jsonIntro": "이전에 내보낸 JSON 파일에서 가져옵니다. 현재 그룹을 대체합니다.",
+  "chooseJson": "JSON 파일 선택",
+  "bookmarksHeading": "Chrome 북마크",
+  "bookmarksIntro": "Chrome 북마크 HTML 내보내기 파일에서 가져옵니다. 폴더마다 그룹이 됩니다.",
+  "chooseBookmarks": "북마크 HTML 파일 선택",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "OneTab 일반 텍스트 내보내기 파일에서 가져옵니다. 빈 줄로 구분된 블록마다 그룹이 됩니다.",
+  "chooseOneTab": "OneTab TXT 파일 선택",
+  "toast": {
+    "exported": "그룹을 내보냈습니다",
+    "imported": "그룹을 가져왔습니다",
+    "imported_skipped": "그룹을 가져왔습니다. {{skipped}}은(는) 건너뛰었습니다",
+    "importedCounts": "{{groups}}, {{tabs}}을(를) 가져왔습니다",
+    "importedCounts_skipped": "{{groups}}, {{tabs}}을(를) 가져왔고 {{skipped}}은(는) 건너뛰었습니다",
+    "invalidJson": "올바르지 않은 JSON 파일입니다",
+    "noBookmarks": "북마크를 찾을 수 없습니다",
+    "noTabs": "탭을 찾을 수 없습니다"
+  }
+}

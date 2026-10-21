@@ -1,0 +1,23 @@
+{
+  "heading": "Что говорят пользователи",
+  "byStore": "По магазинам",
+  "loading": "Загрузка отзывов",
+  "averageRating": "Средняя оценка",
+  "averageRatingOn": "Средняя оценка в {store}",
+  "ratingsOn": "{count, plural, one {Оценка} few {Оценки} many {Оценки} other {Оценки}} в {store}",
+  "ratingsAcross": "Оценки в {stores}",
+  "ratingCount": "{count, plural, one {# оценка} few {# оценки} many {# оценок} other {# оценки}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " из 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 оценок",
+  "stars": "{score} из 5 звёзд",
+  "readFull": "Читать отзыв полностью",
+  "readFullBy": " от {author} в {store}",
+  "carousel": "карусель",
+  "play": "Запустить отзывы",
+  "pause": "Приостановить отзывы",
+  "previous": "Предыдущий отзыв",
+  "next": "Следующий отзыв",
+  "skeletonRating": "0.00 / 5"
+}

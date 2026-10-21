@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Dołącz i zainstaluj"
+    },
+    "what-to-test": {
+      "label": "Co testować"
+    },
+    "known-issues": {
+      "label": "Znane problemy"
+    },
+    "report-bugs": {
+      "label": "Zgłoś błąd"
+    },
+    "faq": {
+      "label": "FAQ"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Udana płatność (Visa)",
+      "note": "Użyj tej karty, aby przejść na wyższy plan"
+    },
+    "1": {
+      "label": "Ogólna odmowa"
+    },
+    "2": {
+      "label": "Niewystarczające środki"
+    },
+    "3": {
+      "label": "Wymaga uwierzytelnienia 3D Secure"
+    }
+  },
+  "accessLabels": {
+    "free": "Bezpłatnie: konto nie jest potrzebne",
+    "upgrading": "Przejście na Pro: płatności testowe, bez prawdziwych pieniędzy",
+    "some-pro": "Free i Pro: każda część Pro jest oznaczona",
+    "pro": "Tylko Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Grupy i karty",
+      "items": {
+        "0": {
+          "heading": "Grupy, kolory oraz cofanie/ponawianie",
+          "checks": "Czy możesz utworzyć grupę, nadać jej nazwę i kolor, zapisać w niej karty oraz cofnąć lub ponowić zmianę bez utraty czegokolwiek.",
+          "steps": {
+            "0": "Kliknij „Add Group” na pasku bocznym i nadaj grupie nazwę.",
+            "1": "Kliknij kolorową kropkę obok grupy, aby otworzyć selektor kolorów, wybierz gotowy kolor lub przeciągnij do dowolnego koloru, a następnie kliknij Apply.",
+            "2": "Zapisz kilka kart w grupie (przeciągnij je lub użyj menu kontekstowego).",
+            "3": "Usuń jedną kartę, a potem kliknij przycisk Cofnij (nagłówek, prawy górny róg), a następnie Ponów."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno TabMerger z zaznaczoną nową grupą i otwartym selektorem kolorów: selektor nasycenia i odcienia, 12 gotowych kolorów, pole hex oraz przyciski Cancel i Apply",
+              "caption": "Kliknięcie kolorowej kropki grupy otwiera ten selektor."
+            }
+          },
+          "good": {
+            "0": "Grupa aktualizuje się natychmiast.",
+            "1": "Cofnij przywraca usuniętą kartę dokładnie w to samo miejsce.",
+            "2": "Ponów usuwa ją ponownie.",
+            "3": "Przy włączonej synchronizacji przycisk Cofnij może zrobić się szary po tym, jak synchronizacja wprowadzi zmiany z innego urządzenia. To oczekiwane zachowanie, a nie błąd: historia cofania jest czyszczona, gdy nadchodzą zmiany z innego miejsca."
+          }
+        },
+        "1": {
+          "heading": "„Now Open” podąża za otwartymi kartami",
+          "checks": "Czy stała grupa „Now Open” zawsze odzwierciedla karty faktycznie otwarte w przeglądarce.",
+          "steps": {
+            "0": "Otwórz okno rozszerzenia i spójrz na „Now Open” — to zawsze pierwsza grupa na pasku bocznym.",
+            "1": "Otwórz i zamknij kilka kart przeglądarki, nie dotykając okna rozszerzenia.",
+            "2": "Ponownie otwórz okno rozszerzenia i jeszcze raz sprawdź „Now Open”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno rozszerzenia z zaznaczonym „Now Open”: jedno okno z listą trzech kart aktualnie otwartych w przeglądarce",
+              "caption": "„Now Open” jest zawsze pierwsza na pasku bocznym i pokazuje karty otwarte w tej chwili."
+            }
+          },
+          "good": {
+            "0": "„Now Open” śledzi Twoje prawdziwe karty bez ręcznego odświeżania.",
+            "1": "Nie można jej usunąć ani przenieść z pierwszej pozycji."
+          }
+        },
+        "2": {
+          "heading": "Zapisywanie i ponowne otwieranie całych okien",
+          "checks": "Czy zapisane okno zachowuje wszystkie karty, w kolejności, i otwiera się ponownie w nienaruszonym stanie.",
+          "steps": {
+            "0": "Zapisz całe okno w grupie (przeciągnij uchwyt okna na grupę lub użyj jego menu „…”).",
+            "1": "Otwórz grupę i użyj menu „…” okna, aby otworzyć je ponownie — jako nowe okno oraz jako karty w bieżącym oknie, jeśli dostępne są obie opcje."
+          },
+          "examples": {
+            "0": {
+              "alt": "Grupa TabMerger z czterema osobnymi zapisanymi oknami, z których każde zawiera jedną kartę",
+              "caption": "Grupa może zawierać kilka osobnych okien — każde z własną liczbą kart."
+            }
+          },
+          "good": {
+            "0": "Wszystkie karty otwierają się z właściwymi tytułami i adresami URL, w tej samej kolejności."
+          }
+        },
+        "3": {
+          "heading": "Archiwizowanie i przywracanie grupy",
+          "checks": "Czy archiwizacja ukrywa grupę bez jej usuwania, a przywrócenie przywraca ją bez zmian.",
+          "steps": {
+            "0": "Kliknij prawym przyciskiem zapisaną grupę na pasku bocznym i wybierz Archive.",
+            "1": "Otwórz sekcję „Archived” na dole paska bocznego i znajdź ją.",
+            "2": "Przywróć ją stamtąd."
+          },
+          "examples": {
+            "0": {
+              "alt": "Sekcja Archived na dole paska bocznego TabMerger, rozwinięta, z zarchiwizowaną grupą",
+              "caption": "Otwarta sekcja Archived na dole paska bocznego: „Shopping” jest zarchiwizowana, z przyciskami Restore i Delete."
+            }
+          },
+          "good": {
+            "0": "Zarchiwizowane grupy znikają z listy aktywnych, ale nigdy nie są usuwane.",
+            "1": "Po przywróceniu pojawiają się dokładnie takie, jakie były."
+          }
+        },
+        "4": {
+          "heading": "Zapisywanie i przywracanie sesji",
+          "checks": "Czy zapisana sesja przywraca grupy dokładnie w takim stanie, w jakim były w chwili zapisu.",
+          "steps": {
+            "0": "Zapisz sesję — nazwany zrzut bieżących grup (szukaj „Save Session” w obszarze Sessions na pasku bocznym).",
+            "1": "Wprowadź kilka zmian w grupach.",
+            "2": "Przywróć zapisaną sesję."
+          },
+          "examples": {
+            "0": {
+              "alt": "Sekcja Sessions na pasku bocznym TabMerger z zapisaną sesją",
+              "caption": "Zapisana sesja w sekcji Sessions, z przyciskami Restore i Delete oraz powiadomieniem „Session saved”."
+            }
+          },
+          "good": {
+            "0": "Przywrócenie przywraca grupy dokładnie takie, jakie były w chwili zapisania sesji."
+          }
+        },
+        "5": {
+          "heading": "Wyszukiwanie",
+          "checks": "Czy wyszukiwanie znajduje karty po tytule lub adresie URL we wszystkich grupach oraz czy filtry group:, window: i tag: zawężają wyniki.",
+          "steps": {
+            "0": "Naciśnij Ctrl+K (Cmd+K na Macu), aby otworzyć wyszukiwanie.",
+            "1": "Wpisz zwykły fragment tekstu, np. „hub”, mając gdzieś zapisaną kartę „GitHub” — dopasowuje tytuł lub URL, bez rozróżniania wielkości liter.",
+            "2": "Wyczyść to pole i spróbuj prefiksu: wpisz „group:” i wybierz jedną z grup z wyświetlonego selektora albo w ten sam sposób wpisz np. „window:” lub „tag:”.",
+            "3": "Kliknij jeden z wyników."
+          },
+          "examples": {
+            "0": {
+              "alt": "Nakładka wyszukiwania TabMerger z wpisanym „hub”, pokazująca pasujący wynik — kartę GitHub",
+              "caption": "Wpisanie „hub” — zwykłe dopasowanie fragmentu do tytułu lub adresu URL karty."
+            }
+          },
+          "good": {
+            "0": "Wyniki aktualizują się w trakcie pisania.",
+            "1": "Zwykłe wyszukiwanie dopasowuje każdą kartę, której tytuł lub URL zawiera ten fragment w dowolnym miejscu (a nie litery po kolei).",
+            "2": "Prefiks „group:”, „window:” lub „tag:” zawęża wyszukiwanie i oferuje selektor dla tego prefiksu.",
+            "3": "Kliknięcie dowolnego wyniku zamyka wyszukiwanie i przenosi Cię prosto do grupy tego wyniku (oraz okna, w przypadku wyniku okna)."
+          }
+        },
+        "6": {
+          "heading": "Nieużywane karty",
+          "checks": "Czy karty, których dawno nie otwierałeś, są oznaczane i można je bezpiecznie przejrzeć oraz usunąć.",
+          "steps": {
+            "0": "Otwórz Settings i ustaw próg nieużywanych kart (np. 30 dni).",
+            "1": "Poczekaj na (lub przygotuj) co najmniej 5 kart starszych niż ten próg.",
+            "2": "Znajdź bursztynowy baner nad listą kart i wypróbuj oba jego przyciski: Review, a potem Remove stale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bursztynowy baner nieużywanych kart nad listą kart, z przyciskami Review i Remove stale",
+              "caption": "Baner nieużywanych kart i jego przyciski Review / Remove stale."
+            }
+          },
+          "good": {
+            "0": "Review pokazuje dokładnie, które karty są nieużywane.",
+            "1": "Remove stale prosi o potwierdzenie przed usunięciem czegokolwiek (jeśli w Settings włączone jest „confirm before delete”)."
+          },
+          "report": "Usunięta lub zarchiwizowana grupa pojawia się ponownie sama z siebie — to właśnie błąd „wskrzeszania”, na który szczególnie polujemy."
+        },
+        "7": {
+          "heading": "Ustawianie przypomnień o kartach",
+          "checks": "Czy możesz ustawić, zmienić i wyczyścić przypomnienie dla zapisanej karty oraz czy powiadamia Cię ono o wybranej porze.",
+          "steps": {
+            "0": "Kliknij prawym przyciskiem zapisaną kartę i wybierz „Remind me…”. Przypomnienia są ustawiane dla poszczególnych kart; w Settings nie ma dla nich opcji.",
+            "1": "W edytorze, który otworzy się pod kartą, kliknij gotową opcję (30 min, 1 hour, 3 hours lub Tomorrow), aby od razu je ustawić.",
+            "2": "Otwórz go ponownie („Edit reminder” w menu kontekstowym lub kliknij ikonę zegara przy karcie). Tym razem wybierz datę i godzinę za kilka minut, wpisz krótką notatkę i kliknij Set.",
+            "3": "Najedź na ikonę zegara, a następnie poczekaj, aż przypomnienie się uruchomi, i kliknij jego powiadomienie.",
+            "4": "Ustaw kolejne, a potem kliknij kartę prawym przyciskiem i wybierz „Clear reminder”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Edytor „Remind me in…” zapisanej karty: przyciski 30 min, 1 hour, 3 hours i Tomorrow, pole daty i godziny, opcjonalna notatka oraz Cancel i Set",
+              "caption": "Kliknięcie prawym przyciskiem zapisanej karty → „Remind me…” otwiera ten edytor pod kartą."
+            },
+            "1": {
+              "alt": "To samo okno po ustawieniu przypomnienia: ikona zegara na końcu wiersza karty Q3 Planning",
+              "caption": "Po ustawieniu karta pokazuje ikonę zegara."
+            }
+          },
+          "good": {
+            "0": "Po ustawieniu przypomnienia karta pokazuje ikonę zegara, a najechanie na nią pokazuje godzinę (i Twoją notatkę).",
+            "1": "Menu kontekstowe oferuje teraz dla niej „Edit reminder” i „Clear reminder”.",
+            "2": "Set jest ignorowane dla czasu z przeszłości; przypomnienie ustawia tylko czas w przyszłości.",
+            "3": "Powiadomienie „TabMerger Reminder” z tytułem karty (i Twoją notatką) pojawia się mniej więcej o ustawionej porze i pozostaje, dopóki na nie nie zareagujesz.",
+            "4": "Kliknięcie powiadomienia otwiera kartę.",
+            "5": "Clear reminder usuwa ikonę zegara i później nie pojawia się żadne powiadomienie."
+          },
+          "report": "Przypomnienie nigdy się nie uruchamia, uruchamia się dwa razy lub nadal się uruchamia po wyczyszczeniu."
+        },
+        "8": {
+          "heading": "Notatki do grup, okien i kart",
+          "checks": "Czy możesz dołączyć krótką notatkę do grupy, okna lub karty i później ją edytować.",
+          "steps": {
+            "0": "Grupa: kliknij prawym przyciskiem grupę na pasku bocznym (lub użyj przycisku ⋯ nad jej oknami) i wybierz „Add note”. Wpisz coś i kliknij Save.",
+            "1": "Okno: kliknij prawym przyciskiem nagłówek okna (lub użyj jego przycisku ⋯) i wybierz „Add note”. Tym razem zapisz za pomocą Ctrl+Enter (Cmd+Enter na Macu).",
+            "2": "Karta: kliknij prawym przyciskiem zapisaną kartę i wybierz „Add note”. Wpisz coś, a potem kliknij gdzie indziej zamiast Save.",
+            "3": "Kliknij ikonę notatki, aby ponownie ją otworzyć, zmień ją i naciśnij Escape.",
+            "4": "Zamknij i ponownie otwórz okno rozszerzenia."
+          },
+          "good": {
+            "0": "Każda zapisana notatka pokazuje małą ikonę notatki: obok liczby okien grupy, w nagłówku okna i w wierszu karty. Pozycja menu brzmi teraz „Edit note”.",
+            "1": "Save, Ctrl/Cmd+Enter i kliknięcie obok zapisują notatkę; Escape i Cancel zamykają ją bez zapisywania.",
+            "2": "Notatki są ograniczone do 500 znaków, z licznikiem pod polem.",
+            "3": "Notatki są nadal na miejscu po ponownym otwarciu okna rozszerzenia (a przy włączonej synchronizacji — na innych urządzeniach)."
+          },
+          "report": "Notatka ginie, zostaje dołączona do niewłaściwego elementu lub zapisuje się po naciśnięciu Escape albo Cancel."
+        },
+        "9": {
+          "heading": "Usuwanie z opcją „Confirm before deleting” i bez niej",
+          "checks": "Czy usuwanie pyta o potwierdzenie tylko wtedy, gdy włączone jest „Confirm before deleting”, oraz czy Cofnij przywraca to, co usunąłeś.",
+          "steps": {
+            "0": "W Settings → General upewnij się, że „Confirm before deleting” jest wyłączone (domyślnie jest wyłączone) i zapisz.",
+            "1": "Usuń kartę (jej ✕ lub prawy przycisk → Remove tab), usuń okno (jego ⋯ → Remove window) i usuń grupę (prawy przycisk → Delete group). Po każdej operacji kliknij Cofnij (prawy górny róg).",
+            "2": "Włącz „Confirm before deleting”, zapisz i powtórz trzy usunięcia. Anuluj pierwsze okno dialogowe, a następne potwierdź.",
+            "3": "Przy włączonej opcji spróbuj też usunąć kilka zaznaczonych grup z paska zaznaczenia oraz użyć „Remove stale” w grupie z nieużywanymi kartami."
+          },
+          "good": {
+            "0": "Przy wyłączonym ustawieniu okna i grupy są usuwane od razu, bez okna dialogowego.",
+            "1": "Przy włączonym usunięcie okna, usunięcie grupy, usunięcie zaznaczenia i „Remove stale” najpierw pytają, a Cancel pozostawia wszystko bez zmian.",
+            "2": "Usunięcie pojedynczej karty nigdy nie pyta, niezależnie od ustawienia. Cofnij ją przywraca.",
+            "3": "Cofnij przywraca to, co właśnie usunąłeś: kartę, okno lub grupę, w tym samym miejscu, wraz z kartami."
+          },
+          "report": "Coś zostaje usunięte bez pytania przy włączonym ustawieniu (poza pojedynczą kartą), okno dialogowe pojawia się przy wyłączonym lub Cofnij nie przywraca elementu dokładnie."
+        },
+        "10": {
+          "heading": "Menu grupy",
+          "checks": "Czy każda akcja w menu grupy robi to, co mówi jej etykieta.",
+          "steps": {
+            "0": "Kliknij prawym przyciskiem zapisaną grupę na pasku bocznym, aby otworzyć jej pełne menu. Przycisk ⋯ nad oknami grupy otwiera jego krótszą wersję.",
+            "1": "Wypróbuj Rename, Add note i Duplicate.",
+            "2": "Wypróbuj Replace with current (zamienia okna grupy na otwarte okna przeglądarki) i Merge with current (dodaje otwarte okna do grupy). Po każdej użyj Cofnij.",
+            "3": "Wypróbuj Open all in new window, Unite windows, Split windows, Sort by title, Sort by URL i Deduplicate tabs.",
+            "4": "Wypróbuj Archive group, a potem Restore group z sekcji Archived.",
+            "5": "Kliknij prawym przyciskiem także „Now Open”: nie ma tam Rename, Replace, Merge, Archive ani Delete."
+          },
+          "good": {
+            "0": "Każda akcja robi to, co mówi jej opis, i tylko w tej grupie.",
+            "1": "Duplicate tworzy kopię ze wszystkimi kartami; Unite zostawia jedno okno ze wszystkimi kartami, a Split daje każdej karcie osobne okno.",
+            "2": "Sort by title / URL porządkuje wszystkie karty alfabetycznie, a Deduplicate usuwa karty o tym samym adresie URL.",
+            "3": "Zmiany można cofnąć przyciskiem Cofnij."
+          },
+          "report": "Akcja dotyczy niewłaściwej grupy, gubi karty lub nie da się jej cofnąć."
+        },
+        "11": {
+          "heading": "Menu okna",
+          "checks": "Czy działają oba menu okna: kliknięcie prawym przyciskiem nagłówka oraz przycisk ⋯.",
+          "steps": {
+            "0": "Kliknij prawym przyciskiem nagłówek okna: wypróbuj „Move to group” (wybierz inną grupę lub utwórz nową z listy), Add note i Rename window.",
+            "1": "Otwórz przycisk ⋯ okna: wypróbuj Rename, Mark incognito (a potem Remove incognito), Open in browser oraz sortowanie tego okna według tytułu / adresu URL.",
+            "2": "Kliknij prawym przyciskiem okno w „Now Open”: pierwsza pozycja to „Copy to group”, a usuwanie brzmi „Close window”."
+          },
+          "good": {
+            "0": "Move to group przenosi całe okno wraz z kartami do wybranej grupy; nowa grupa utworzona z menu otrzymuje to okno.",
+            "1": "Mark incognito dodaje do okna etykietę „Incognito”, a Remove incognito ją usuwa.",
+            "2": "Open in browser otwiera karty okna w nowym oknie przeglądarki; jeśli niektóre są już otwarte, do tego okna dodawane są tylko brakujące.",
+            "3": "Sortowanie zmienia kolejność kart tylko w tym oknie.",
+            "4": "Z „Now Open” Copy to group zapisuje kopię i pozostawia prawdziwe okno otwarte."
+          },
+          "report": "Akcja z menu zmienia inne okno lub Close window w „Now Open” zamyka niewłaściwe okno przeglądarki."
+        },
+        "12": {
+          "heading": "Menu karty",
+          "checks": "Czy kliknięcie prawym przyciskiem karty oferuje dla niej właściwe akcje.",
+          "steps": {
+            "0": "Kliknij prawym przyciskiem zapisaną kartę: wypróbuj „Move to group”, Rename tab, a potem „Reset to original title”.",
+            "1": "Kliknij prawym przyciskiem kartę w „Now Open”: „Copy to group” zastępuje „Move to group”, a usuwanie brzmi „Close tab”.",
+            "2": "Jeśli masz regułę URL pasującą do otwartej karty, kliknij tę kartę prawym przyciskiem w „Now Open” i poszukaj „Auto-save to …”."
+          },
+          "good": {
+            "0": "Move to group przenosi kartę do wybranej grupy; Copy to group (z „Now Open”) zapisuje kopię i pozostawia prawdziwą kartę otwartą.",
+            "1": "Rename tab pokazuje Twój tytuł z małym znacznikiem „renamed”, a Reset to original title przywraca tytuł strony.",
+            "2": "„Auto-save to '<'group'>'” pojawia się tylko dla karty, której adres pasuje do jednej z Twoich reguł URL, i zapisuje ją w grupie tej reguły."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Menu kontekstowe",
+      "items": {
+        "0": {
+          "heading": "Zapisywanie z menu kontekstowego",
+          "checks": "Czy kliknięcie prawym przyciskiem na dowolnej stronie pozwala zapisać kartę w TabMerger lub bezpośrednio w wybranej grupie.",
+          "steps": {
+            "0": "Na dowolnej stronie kliknij prawym przyciskiem i otwórz „Save to TabMerger”.",
+            "1": "Najpierw wypróbuj „Save this tab”, a potem zapisz do konkretnej istniejącej grupy."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustracja menu kontekstowego na stronie: „Save to TabMerger” otwiera Save this tab, Save tabs to the left, Save tabs to the right i Save all other tabs; „Save this tab” pokazuje grupy Work (1w · 5t), Research (1w · 4t), Shopping (1w · 3t) i Reading List (1w · 5t), każdą z jej kolorem",
+              "caption": "Ilustracja (przeglądarka sama rysuje to menu, więc nie da się zrobić zrzutu ekranu): każda z czterech opcji „Save…” pokazuje Twoje grupy z kolorem, liczbą okien i liczbą kart."
+            }
+          },
+          "good": {
+            "0": "Menu kontekstowe pokazuje Twoje prawdziwe grupy z nazwy.",
+            "1": "Karta od razu pojawia się w wybranej grupie."
+          }
+        },
+        "1": {
+          "heading": "Nowe grupy pojawiają się w menu kontekstowym",
+          "checks": "Czy menu kontekstowe uwzględnia nowe grupy bez ponownego uruchamiania przeglądarki.",
+          "steps": {
+            "0": "Utwórz zupełnie nową grupę z okna rozszerzenia.",
+            "1": "Bez ponownego otwierania przeglądarki kliknij prawym przyciskiem dowolną stronę i ponownie sprawdź „Save to TabMerger”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustracja tego samego menu kontekstowego z piątą grupą, „Trip planning (0w · 0t)”, na końcu listy grup",
+              "caption": "Ilustracja: nowa, jeszcze pusta grupa („Trip planning”) pojawia się na końcu listy."
+            }
+          },
+          "good": {
+            "0": "Nowa grupa pojawia się w menu kontekstowym bez potrzeby ponownego uruchamiania."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Przejście na Pro (płatności testowe)",
+      "intro": "Płatności są częścią tej bety, ale tylko z testowymi kartami Stripe — żadna prawdziwa karta nie zadziała i żadne prawdziwe pieniądze nie zmieniają właściciela. Pro AI i pakiety kredytów AI są nadal „wkrótce” i nie można ich kupić, więc dotyczy to tylko Pro (nielimitowane grupy/karty + synchronizacja).",
+      "items": {
+        "0": {
+          "heading": "Ostrzeżenie o karcie testowej",
+          "checks": "Czy używasz wyłącznie testowych kart Stripe: nic w tej becie nie pobiera prawdziwych pieniędzy.",
+          "steps": {
+            "0": "Przeczytaj to przed rozpoczęciem płatności — potrzebne dane karty znajdziesz poniżej."
+          },
+          "good": {
+            "0": "Nigdy nie wpisujesz w tym procesie numeru prawdziwej karty."
+          }
+        },
+        "1": {
+          "heading": "Przejście na wyższy plan z rozszerzenia",
+          "checks": "Czy przejście na wyższy plan z poziomu rozszerzenia działa od początku do końca, a rozszerzenie pokazuje potem Pro.",
+          "steps": {
+            "0": "Otwórz okno rozszerzenia i użyj dowolnego punktu „Upgrade to Pro” — przycisku w nagłówku, baneru przypominającego, który pojawia się przy zbliżaniu się do darmowego limitu, lub komunikatu wyświetlanego po osiągnięciu limitu planu darmowego.",
+            "1": "Otworzy to stronę cennika aplikacji internetowej w wersji beta (preview.tabmerger.com/pricing) w nowej karcie. Zaloguj się tam na to samo konto, którego używasz w rozszerzeniu.",
+            "2": "Wybierz plan Pro, miesięczny lub roczny, i przejdź do Stripe Checkout.",
+            "3": "Dokończ płatność kartą testową podaną powyżej (lub kartą odrzucaną/3D Secure, jeśli testujesz tę ścieżkę), a potem wróć do aplikacji."
+          },
+          "good": {
+            "0": "Płatność kończy się, a Ty wracasz do aplikacji internetowej z widocznym planem Pro.",
+            "1": "Okno rozszerzenia sprawdza Twój plan mniej więcej co 30 sekund, więc wkrótce samo wykryje Pro — ponowne otwarcie okna również wymusza nowe sprawdzenie, jeśli nie chcesz czekać."
+          },
+          "report": "Rozszerzenie nadal pokazuje limity planu darmowego ({FREE_TIER_LIMITS_groups} grup / {FREE_TIER_LIMITS_tabs} kart / {FREE_TIER_LIMITS_urlRules} reguł URL) dłużej niż kilka minut po udanej płatności i ponownym otwarciu okna."
+        },
+        "2": {
+          "heading": "Przejście na wyższy plan ze strony konta w serwisie",
+          "checks": "Czy przejście na wyższy plan ze strony konta w serwisie działa oraz czy serwis i rozszerzenie zgadzają się co do Twojego planu.",
+          "steps": {
+            "0": "Zamiast przez rozszerzenie zaloguj się bezpośrednio na preview.tabmerger.com i otwórz ustawienia konta.",
+            "1": "W sekcji „Subscription” kliknij „Upgrade” i dokończ płatność kartą testową."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ustawienia konta na darmowym koncie: karta Subscription pokazuje bieżący plan Free z przyciskiem Upgrade",
+              "caption": "Przed przejściem: Free, z przyciskiem Upgrade. Potem pokazuje Pro i „Manage billing” (zob. „Strona konta” poniżej)."
+            }
+          },
+          "good": {
+            "0": "Karta Subscription na stronie konta pokazuje teraz Pro, z przyciskiem „Manage billing” zamiast „Upgrade”.",
+            "1": "Rozszerzenie wykrywa ten sam status Pro (zob. uwagę o sprawdzaniu powyżej) — strona konta i rozszerzenie nigdy nie powinny się różnić co do Twojego planu."
+          },
+          "report": "Strona konta i okno rozszerzenia pokazują różne plany (jedno Pro, drugie nadal Free) dłużej niż przez kilka minut."
+        },
+        "3": {
+          "heading": "Płacenie w lokalnej walucie",
+          "checks": "Czy strona płatności pokazuje i pobiera cenę w Twojej walucie.",
+          "steps": {
+            "0": "Ceny w serwisie są w dolarach amerykańskich (strona cennika informuje o tym pod planami; strona konta, panel i Settings rozszerzenia zapisują je jako „US$”). Poza USA płatność oferuje Twoją lokalną walutę.",
+            "1": "Rozpocznij płatność ze swojej prawdziwej lokalizacji lub zasymuluj inny kraj: załóż NOWE konto z adresem e-mail z dopiskiem „+location_” i dwuliterowym kodem kraju, np. yourname+location_FR@gmail.com dla Francji (Gmail dostarcza adresy „+cokolwiek” do zwykłej skrzynki). VPN w innym kraju też zadziała.",
+            "2": "Sprawdź cenę na stronie płatności Stripe, a potem dokończ płatność kartą testową w tej walucie."
+          },
+          "examples": {
+            "0": {
+              "alt": "Strona płatności Stripe dla TabMerger Pro pokazująca 3,66 € miesięcznie, z wybranym EUR i alternatywą w USD oraz wierszem „1 USD = 0.9171 EUR. Charges will vary based on exchange rates.”",
+              "caption": "Płatność dla adresu z Francji (+location_FR): domyślnie euro, dolary amerykańskie o jedno kliknięcie dalej. Kursy walut się zmieniają, więc Twoja kwota będzie inna."
+            }
+          },
+          "good": {
+            "0": "Strona płatności pokazuje cenę w Twojej lokalnej walucie (na przykład 3,66 € we Francji lub 5,89 CA$ w Kanadzie dla planu za US$3.99), z przełącznikiem do płacenia w dolarach amerykańskich oraz wierszem pokazującym kurs wymiany i opłatę za przewalutowanie. W USA pokazuje po prostu US$3.99.",
+            "1": "Po zapłaceniu plan działa dokładnie tak samo jak przy płatności w dolarach."
+          },
+          "report": "Poza USA płatność oferuje tylko dolary amerykańskie, pobrana kwota różni się od pokazanej lub płatność w lokalnej walucie nie daje Ci Pro."
+        },
+        "4": {
+          "heading": "Przełączanie między rozliczeniem miesięcznym a rocznym",
+          "checks": "Czy subskrypcję Pro można przełączać między rozliczeniem miesięcznym a rocznym i czy jest za to prawidłowo naliczana.",
+          "steps": {
+            "0": "Mając aktywną subskrypcję Pro, otwórz stronę cennika. Karta Twojego planu jest oznaczona jako Current i ma przycisk „Switch to yearly billing” (lub „Switch to monthly billing”, jeśli płacisz rocznie): przycisk wskazuje rozliczenie, na które się przełączysz.",
+            "1": "Miesięczne → roczne: kliknij przycisk przełączenia i potwierdź na stronie Stripe.",
+            "2": "Roczne → miesięczne: zrób to samo, a potem spróbuj kliknąć przycisk drugi raz.",
+            "3": "Otwórz też „Manage billing” na stronie konta: opcja „Update subscription” pokazuje ten sam wybór miesięczny/roczny."
+          },
+          "examples": {
+            "0": {
+              "alt": "Strona cennika przy planie Pro miesięcznym: karta Pro jest oznaczona jako Current i ma przycisk „Switch to yearly billing”",
+              "caption": "Na stronie cennika karta Twojego planu jest oznaczona jako Current i ma przycisk przełączenia."
+            },
+            "1": {
+              "alt": "Strona Stripe „Update your subscription” z zakładkami Monthly i Yearly, pokazująca bieżący plan TabMerger Pro za {proMonthly} miesięcznie",
+              "caption": "Ten sam wybór w Manage billing → Update subscription (strona Stripe)."
+            }
+          },
+          "good": {
+            "0": "Zmiana z miesięcznego na roczne działa od razu: Stripe pokazuje i pobiera cenę roczną pomniejszoną o pozostałą część miesiąca.",
+            "1": "Po przełączeniu na roczne strona konta pokazuje cenę roczną ({proYearly}/rok) w ciągu mniej więcej minuty.",
+            "2": "Zmiana z rocznego na miesięczne czeka do końca opłaconego roku, więc teraz nic nie jest pobierane.",
+            "3": "Ponowne naciśnięcie przycisku wyjaśnia, że zmiana jest już zaplanowana.",
+            "4": "Oferowane są tylko Pro miesięczne i roczne, nigdy inny plan."
+          },
+          "report": "Przełączenie pobiera złą kwotę, strona konta nadal pokazuje stary okres rozliczeniowy po kilku minutach, zmiana z rocznego na miesięczne pobiera opłatę od razu lub oferowany jest plan inny niż Pro."
+        },
+        "5": {
+          "heading": "Anulowanie",
+          "checks": "Czy anulowanie zachowuje Pro do końca opłaconego okresu, a potem przywraca plan Free.",
+          "steps": {
+            "0": "Na stronie konta, mając aktywną subskrypcję Pro, kliknij „Manage billing”, aby otworzyć portal rozliczeń Stripe.",
+            "1": "Anuluj tam subskrypcję i wróć do TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno Stripe „Cancel your subscription” dla TabMerger Pro za {proMonthly} miesięcznie, z opcjonalnym powodem oraz przyciskami Go back i Continue to cancellation",
+              "caption": "Stripe pyta o opcjonalny powód przed anulowaniem."
+            }
+          },
+          "good": {
+            "0": "Zachowujesz dostęp do Pro do końca bieżącego okresu rozliczeniowego — anulowanie nie przenosi Cię od razu na Free.",
+            "1": "Po zakończeniu tego okresu strona konta i rozszerzenie powinny znowu pokazywać Free."
+          },
+          "report": "Anulowanie od razu przenosi Cię na Free zamiast na koniec okresu albo plan nigdy nie wraca do Free po faktycznym zakończeniu okresu."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Przeciąganie i upuszczanie",
+      "intro": "Ten obszar obejmuje każdą interakcję przeciągania w oknie rozszerzenia — sortowanie, przenoszenie między oknami i grupami, przeciąganie wielu elementów, dwie strefy „upuść, aby utworzyć nowe…”, anulowanie, przeciąganie samą klawiaturą oraz to, czy wynik się utrzymuje. Przejdź przez tyle z nich, ile zdołasz; to obszar, na którym w tej becie skupiamy się najbardziej.",
+      "items": {
+        "0": {
+          "heading": "Sortowanie: karty w obrębie okna",
+          "checks": "Czy przeciągnięcie karty zmienia jej pozycję w oknie, dokładnie tam, gdzie ją upuścisz.",
+          "steps": {
+            "0": "Przeciągnij kartę w dół w tym samym oknie, aby przesunąć ją niżej na liście, a potem przeciągnij ją z powrotem na pierwotne miejsce.",
+            "1": "Przeciągnij kartę na samą pierwszą pozycję w oknie, a potem na samą ostatnią."
+          },
+          "examples": {
+            "0": {
+              "alt": "Karta przeciągana w obrębie karty okna: przeciągany wiersz unosi się z podświetloną ramką nad luką, w którą trafi",
+              "caption": "W trakcie przeciągania: karta się unosi, a pozostałe robią miejsce tam, gdzie zostanie upuszczona."
+            }
+          },
+          "good": {
+            "0": "Karta ląduje dokładnie tam, gdzie ją upuściłeś, a reszta listy przesuwa się, robiąc miejsce.",
+            "1": "Żadna inna karta się nie przesuwa ani nie duplikuje."
+          }
+        },
+        "1": {
+          "heading": "Sortowanie: okna w obrębie grupy",
+          "checks": "Czy karty okien można zmieniać kolejność wewnątrz grupy.",
+          "steps": {
+            "0": "W grupie z co najmniej dwoma zapisanymi oknami przeciągnij kartę okna nad lub pod inną."
+          },
+          "examples": {
+            "0": {
+              "alt": "Karta okna przeciągana między dwiema innymi kartami okien w grupie z czterema oknami",
+              "caption": "Przeciąganie całej karty okna za uchwyt, aby zmienić jej kolejność w grupie."
+            }
+          },
+          "good": {
+            "0": "Karty okien zamieniają się miejscami i nowa kolejność jest widoczna od razu — bez migania z powrotem do starej kolejności."
+          }
+        },
+        "2": {
+          "heading": "Sortowanie: grupy na pasku bocznym",
+          "checks": "Czy grupy można swobodnie przestawiać na pasku bocznym, a „Now Open” pozostaje pierwsza.",
+          "steps": {
+            "0": "Przeciągnij grupę na pasku bocznym w górę lub w dół, aby umieścić ją nad lub pod inną grupą.",
+            "1": "Spróbuj przeciągnąć grupę nad „Now Open” (pierwszy wiersz paska bocznego)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Wiersz grupy przeciągany na nową pozycję na pasku bocznym TabMerger",
+              "caption": "Zmiana kolejności grupy na pasku bocznym."
+            }
+          },
+          "good": {
+            "0": "„Now Open” zawsze pozostaje przypięta jako pierwszy wiersz — nie można upuścić nad nią grupy, przeciągnąć jej, usunąć ani przenieść z pierwszej pozycji.",
+            "1": "Każdą inną grupę można swobodnie przestawiać."
+          },
+          "report": "Cokolwiek ląduje nad „Now Open” albo samą „Now Open” da się przeciągnąć."
+        },
+        "3": {
+          "heading": "Między oknami: przenoszenie karty między kartami okien",
+          "checks": "Czy kartę można przenieść z jednej karty okna do innej, dokładnie w miejsce upuszczenia.",
+          "steps": {
+            "0": "W grupie z kilkoma oknami przeciągnij kartę z jednej karty okna na inną.",
+            "1": "Tym razem upuść ją między dwiema istniejącymi kartami w docelowym oknie, a nie na górze czy na dole."
+          },
+          "examples": {
+            "0": {
+              "alt": "Karta przeciągana z jednego zapisanego okna do innego w tej samej grupie TabMerger",
+              "caption": "Upuszczanie karty na inne okno w tej samej grupie."
+            }
+          },
+          "good": {
+            "0": "Karta ląduje dokładnie w miejscu upuszczenia (a nie tylko dopisana na końcu).",
+            "1": "Liczby kart w obu oknach aktualizują się od razu."
+          }
+        },
+        "4": {
+          "heading": "Między grupami: upuszczanie karty na grupę na pasku bocznym",
+          "checks": "Czy upuszczenie karty na grupę na pasku bocznym przenosi ją do tej grupy bez wcześniejszego otwierania grupy.",
+          "steps": {
+            "0": "Przeciągnij kartę z głównego panelu i upuść ją bezpośrednio na grupę na pasku bocznym — spróbuj z grupą, która jest aktualnie otwarta (aktywna), i z taką, która nie jest.",
+            "1": "Spróbuj jeszcze raz, ale przed puszczeniem przytrzymaj kartę przez około sekundę nad inną (nieaktywną) grupą na pasku bocznym."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pojedyncza karta przeciągana na wiersz grupy na pasku bocznym TabMerger",
+              "caption": "Upuszczanie karty bezpośrednio na grupę na pasku bocznym."
+            }
+          },
+          "good": {
+            "0": "Karta zostaje dodana do tej grupy jako nowe okno bez potrzeby wcześniejszego otwierania grupy.",
+            "1": "Jeśli zatrzymałeś się nad nieaktywną grupą, powinna się ona otworzyć („spring open”) po około pół sekundy, abyś widział, gdzie karta ląduje — i ląduje poprawnie, nie w złym oknie."
+          },
+          "report": "Grupa się otwiera, ale karta ląduje w złym oknie albo na istniejącej karcie zamiast jako osobne nowe okno."
+        },
+        "5": {
+          "heading": "Między grupami: przeciąganie całego okna do innej grupy",
+          "checks": "Czy całe okno, ze wszystkimi kartami, można przenieść do innej grupy.",
+          "steps": {
+            "0": "Przeciągnij całą kartę okna (za jej własny uchwyt, a nie pojedynczą kartę w środku) na inną grupę na pasku bocznym."
+          },
+          "examples": {
+            "0": {
+              "alt": "Karta okna przeciągnięta na pasek boczny, nad grupę Shopping, która jest podświetlona i otwarta w głównym panelu",
+              "caption": "Przeciąganie okna na grupę na pasku bocznym. Grupa pod wskaźnikiem dostaje kolorową krawędź i otwiera się za kartą."
+            }
+          },
+          "good": {
+            "0": "Całe okno — ze wszystkimi kartami — staje się nowym oknem w grupie docelowej.",
+            "1": "Działa to nawet wtedy, gdy jest to ostatnie okno w grupie źródłowej."
+          },
+          "report": "Grupa źródłowa lub jej opróżnione okno znika zamiast pozostać (puste okno/grupa powinny zostać, a nie zniknąć)."
+        },
+        "6": {
+          "heading": "Wiele elementów: zaznaczanie i przeciąganie kilku kart",
+          "checks": "Czy kilka zaznaczonych kart przeciąga się razem jako jeden blok, zachowując kolejność.",
+          "steps": {
+            "0": "Kliknij z Ctrl (Cmd na Macu) dwie lub trzy niesąsiadujące karty, aby je zaznaczyć.",
+            "1": "Zamiast tego kliknij z Shift, aby zaznaczyć ciągły zakres kart.",
+            "2": "Mając zaznaczonych kilka kart, przeciągnij je razem na nową pozycję w tym samym oknie."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kilka kart zaznaczonych razem w oknie TabMerger, pokazanych z polami wyboru",
+              "caption": "Dwie karty zaznaczone w trybie zaznaczania; pasek na dole je zlicza."
+            }
+          },
+          "good": {
+            "0": "Wszystkie zaznaczone karty przesuwają się razem jako jeden blok, zachowując względną kolejność — blok ląduje w luce, a nie rozrzucony ani w kolejności klikania."
+          }
+        },
+        "7": {
+          "heading": "Wiele elementów: przeciąganie zaznaczenia między oknami i grupami",
+          "checks": "Czy zaznaczenie wielu kart zachowuje kolejność po przeciągnięciu do innego okna lub grupy.",
+          "steps": {
+            "0": "Ponownie zaznacz kilka kart, a potem przeciągnij je do innego okna w tej samej grupie.",
+            "1": "Powtórz jeszcze raz, ale tym razem przeciągnij zaznaczenie na inną grupę na pasku bocznym."
+          },
+          "examples": {
+            "0": {
+              "alt": "Zaznaczenie wielu kart w trakcie przeciągania w oknie TabMerger",
+              "caption": "Przeciąganie zaznaczenia wielu kart."
+            }
+          },
+          "good": {
+            "0": "W obu przypadkach całe zaznaczenie przesuwa się razem, lądując w tej samej względnej kolejności, w jakiej było."
+          }
+        },
+        "8": {
+          "heading": "Wiele elementów: zaznacz wszystko i przeciąganie wielu grup",
+          "checks": "Czy zaznaczanie wszystkiego działa w obrębie okna oraz czy kilka zaznaczonych grup można przeciągnąć razem.",
+          "steps": {
+            "0": "Ustaw fokus na liście kart okna i naciśnij Ctrl+A (Cmd+A na Macu), aby zaznaczyć wszystkie karty w tym oknie, jeśli okno ma więcej niż jedną kartę.",
+            "1": "Na pasku bocznym kliknij z Ctrl dwie lub trzy grupy, aby je zaznaczyć, a potem przeciągnij to zaznaczenie za uchwyt jednej z nich, aby razem zmienić ich kolejność."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tryb zaznaczania z trzema zaznaczonymi grupami; przeciąganie jednej z nich przenosi pozostałe, z plakietką licznika na przeciąganym wierszu i „3 groups selected” na dolnym pasku",
+              "caption": "Trzy zaznaczone grupy przeciągane razem na pasku bocznym. Pasek na dole zlicza zaznaczenie."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A zaznacza wszystkie karty w oknie z fokusem (pomijając te ukryte przez filtr wyszukiwania).",
+            "1": "Przeciąganie wielu grup przesuwa zaznaczone grupy razem jako jeden blok.",
+            "2": "Blok nigdy nie ląduje nad „Now Open”."
+          }
+        },
+        "9": {
+          "heading": "Strefy upuszczania: „Drop here for a new window” i „Drop for a new group”",
+          "checks": "Czy upuszczenie w tych strefach tworzy nowe okno lub nową grupę z przeciągniętych elementów.",
+          "steps": {
+            "0": "Przeciągnij kartę (lub zaznaczenie kart) w stronę dołu listy okien grupy, gdzie pojawia się strefa „Drop here for a new window”, i upuść tam.",
+            "1": "Przeciągnij kartę w stronę dołu paska bocznego, gdzie pojawia się strefa „Drop for a new group”, i upuść tam."
+          },
+          "examples": {
+            "0": {
+              "alt": "Karta przeciągnięta nad podświetloną strefę „Drop here for a new window” pod listą okien, ze strefą „Drop for a new group” widoczną na pasku bocznym",
+              "caption": "Podczas przeciągania pojawiają się obie strefy upuszczania. Ta pod wskaźnikiem jest podświetlona."
+            }
+          },
+          "good": {
+            "0": "Każde upuszczenie tworzy zupełnie nowe okno lub grupę zawierającą dokładnie przeciągnięte elementy, w ich pierwotnej względnej kolejności."
+          },
+          "report": "Strefa „Drop for a new group” nadal się pojawia, gdy osiągnąłeś już limit grup swojego planu — powinna wtedy zniknąć, zamiast przyjmować upuszczenie, którego nie może zrealizować."
+        },
+        "10": {
+          "heading": "Z „Now Open”: przeciąganie otwartej karty do zapisanej grupy",
+          "checks": "Czy przeciągnięcie otwartej karty z „Now Open” przenosi ją do zapisanej grupy i zamyka prawdziwą kartę.",
+          "steps": {
+            "0": "Przeciągnij kartę z sekcji „Now Open” do jednej z zapisanych grup.",
+            "1": "Po upuszczeniu sprawdź faktycznie otwarte karty przeglądarki."
+          },
+          "examples": {
+            "0": {
+              "alt": "Karta z „Now Open” przeciągana na grupę Work na pasku bocznym",
+              "caption": "Otwarta karta z „Now Open” przeciągnięta na zapisaną grupę na pasku bocznym."
+            }
+          },
+          "good": {
+            "0": "To PRZENOSI kartę, a nie kopiuje: zapisana grupa dostaje nowe okno ze zrzutem tej karty.",
+            "1": "Prawdziwa karta przeglądarki się zamyka. Jeśli przeciągnięta karta była aktywna, zamknie się dopiero po zamknięciu okna rozszerzenia, a nie od razu — to zamierzone, a nie błąd."
+          },
+          "report": "Prawdziwa karta pozostaje otwarta po upuszczeniu (przez co wygląda to na kopię) albo samo okno rozszerzenia zamyka się/ulega awarii w trakcie przeciągania."
+        },
+        "11": {
+          "heading": "Anulowanie i przypadki brzegowe",
+          "checks": "Czy anulowane lub bezcelowe przeciągnięcia niczego nie zmieniają oraz czy Cofnij odwraca prawdziwe przeciągnięcie.",
+          "steps": {
+            "0": "Zacznij przeciągać kartę, a potem naciśnij Escape przed upuszczeniem.",
+            "1": "Zacznij przeciąganie i puść w miejscu, które nie jest prawidłowym celem (np. poza oknem rozszerzenia, jeśli się da), albo upuść dokładnie w miejscu, z którego zacząłeś.",
+            "2": "Po każdym udanym przeciągnięciu kliknij przycisk Cofnij (nagłówek, prawy górny róg)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Nagłówek TabMerger z aktywnymi przyciskami Cofnij i Ponów po zmianie",
+              "caption": "Przyciski Cofnij/Ponów w nagłówku, aktywne po zmianie."
+            }
+          },
+          "good": {
+            "0": "Escape oraz nieprawidłowe/puste upuszczenie pozostawiają wszystko dokładnie tak, jak było — bez zduplikowanych kart, bez brakujących kart, bez zmiany kolejności.",
+            "1": "Cofnij po prawdziwym przeciągnięciu dokładnie przywraca poprzednią kolejność."
+          },
+          "report": "Karta zostaje zduplikowana lub znika po anulowanym przeciągnięciu albo upuszczeniu w tym samym miejscu, lub Cofnij nie przywraca w pełni kolejności sprzed przeciągnięcia."
+        },
+        "12": {
+          "heading": "Przeciąganie klawiaturą",
+          "checks": "Czy wszystko, co można przeciągnąć myszą, da się też przenieść klawiaturą, z komunikatami głosowymi.",
+          "steps": {
+            "0": "Naciskaj Tab, aż fokus znajdzie się na zapisanej karcie, nagłówku okna lub grupie na pasku bocznym. Każdy wiersz to jeden przystanek klawisza Tab.",
+            "1": "Aby przenieść kilka naraz, naciśnij Ctrl+Space (Ctrl także na Macu) na każdym, aby go zaznaczyć, a potem ustaw fokus na dowolnym z zaznaczonych wierszy.",
+            "2": "Naciśnij Space, aby go podnieść. Usłyszysz „Picked up …”, wiersz opuszcza swoje miejsce, a jego kopia pokazuje, gdzie wyląduje.",
+            "3": "Naciskaj strzałkę w górę lub w dół, aby go przesuwać. Karta przechodzi przez wszystkie okna grupy, potem na „Drop here for a new window”, a następnie wraca na górę.",
+            "4": "Naciśnij strzałkę w lewo, aby przejść do listy grup. Strzałki w górę i w dół wybierają grupę (ostatni przystanek to „New group”), a główny panel pokazuje każdą mijaną grupę.",
+            "5": "Naciśnij strzałkę w prawo, aby wejść do podświetlonej grupy, a potem użyj strzałek w górę i w dół, aby umieścić w niej element.",
+            "6": "Naciśnij Space, aby upuścić, lub Escape, aby anulować."
+          },
+          "good": {
+            "0": "Space podnosi element zamiast otwierać link.",
+            "1": "Ctrl+Space zaznacza lub odznacza wiersz bez otwierania go ani podnoszenia.",
+            "2": "Enter nadal otwiera kartę i nic nie robi, gdy coś przenosisz.",
+            "3": "Kopia przenoszonego elementu jest zawsze na ekranie, a panel przewija się za nią.",
+            "4": "Strzałki w górę i w dół zawijają na końcach, a Ty słyszysz „Wrapped to top” lub „Wrapped to bottom”.",
+            "5": "Puste okno jest osobnym miejscem.",
+            "6": "Element trafia dokładnie tam, gdzie była kopia, i słyszysz, co się stało.",
+            "7": "Kilka zaznaczonych elementów przesuwa się razem jako jeden blok, w pierwotnej kolejności.",
+            "8": "Space na liście grup upuszcza element na końcu podświetlonej grupy.",
+            "9": "Na „New group” główny panel blednie, a upuszczenie tam tworzy zupełnie nową grupę.",
+            "10": "Grupa przenoszona strzałkami nigdy nie może trafić nad „Now Open”.",
+            "11": "Przeniesienie otwartej karty z „Now Open” do grupy zamyka tę kartę przeglądarki, tak jak upuszczenie myszą.",
+            "12": "Escape pozostawia wszystko bez zmian i ponownie pokazuje grupę, w której zacząłeś.",
+            "13": "Po upuszczeniu fokus jest na przeniesionym wierszu; po Escape wraca na wiersz, który podniosłeś."
+          }
+        },
+        "13": {
+          "heading": "Trwałość",
+          "checks": "Czy nowa kolejność jest zapisywana: przetrwa ponowne otwarcie okna rozszerzenia i dociera na inne urządzenia.",
+          "pro": "Tylko część z drugim urządzeniem wymaga Pro (potrzebuje synchronizacji).",
+          "steps": {
+            "0": "Po zmianie kolejności kart, okien lub grup przez przeciąganie całkowicie zamknij okno rozszerzenia i otwórz je ponownie.",
+            "1": "Jeśli masz włączoną synchronizację i drugie urządzenie zalogowane na to samo konto, sprawdź kolejność także tam."
+          },
+          "good": {
+            "0": "Po ponownym otwarciu okna nowa kolejność jest dokładnie taka, jak ją zostawiłeś.",
+            "1": "Przy włączonej synchronizacji drugie urządzenie w krótkim czasie otrzymuje tę samą kolejność."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "Aplikacja internetowa i panel (serwis podglądowy)",
+      "intro": "Wszystko tutaj znajduje się na preview.tabmerger.com, a nie na głównym tabmerger.com — ta wersja beta synchronizuje się tylko z serwisem podglądowym.",
+      "items": {
+        "0": {
+          "heading": "Rejestracja i logowanie",
+          "checks": "Czy działa każdy sposób logowania do serwisu: Google, e-mail i hasło oraz magiczny link.",
+          "steps": {
+            "0": "Będąc wylogowanym, otwórz preview.tabmerger.com/auth/sign-in.",
+            "1": "Wypróbuj „Continue with Google”.",
+            "2": "Zamiast tego wypróbuj e-mail + hasło: wpisz e-mail i hasło, a potem kliknij „Continue”.",
+            "3": "Zamiast tego wypróbuj „Send magic link”, podając tylko e-mail."
+          },
+          "examples": {
+            "0": {
+              "alt": "Strona logowania „Welcome back” w serwisie: Continue with Google, pola Email i Password z linkiem Forgot?, Continue oraz Send magic link",
+              "caption": "Strona logowania w serwisie: Google, e-mail i hasło lub magiczny link."
+            }
+          },
+          "good": {
+            "0": "Wszystkie trzy sposoby Cię logują.",
+            "1": "Magiczny link i Google przekierowują z powrotem do aplikacji, już po zalogowaniu.",
+            "2": "Nowe konta trafiają tam, dokąd prowadzi „Sign up free” (e-mail + hasło lub Google, te same opcje)."
+          }
+        },
+        "1": {
+          "heading": "Zakładanie konta z e-mailem i hasłem",
+          "checks": "Czy nowe konto z e-mailem i hasłem kończy się zalogowaniem, niezależnie od tego, czy serwis prosi o weryfikację e-maila.",
+          "steps": {
+            "0": "Będąc wylogowanym, kliknij „Sign up free” i załóż konto z e-mailem i hasłem (co najmniej 8 znaków)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Strona „Create your account”: Continue with Google, a potem pola Email, Password (co najmniej 8 znaków) i Confirm password oraz przycisk Continue",
+              "caption": "Strona rejestracji. Google działa tu również; ten punkt dotyczy ścieżki z e-mailem i hasłem."
+            }
+          },
+          "good": {
+            "0": "Albo trafiasz od razu do panelu, już zalogowany, albo widzisz „Verify your email” i zostajesz zalogowany dopiero po kliknięciu linku w tym e-mailu. Zależy to od tego, czy serwis wymaga potwierdzenia e-maila; obie opcje są w porządku."
+          },
+          "report": "Widzisz „Verify your email”, ale w rzeczywistości jesteś już zalogowany (na przykład otwarcie panelu w innej karcie działa bez klikania linku)."
+        },
+        "2": {
+          "heading": "Zapomniane hasło i zmiana hasła",
+          "checks": "Czy możesz zresetować zapomniane hasło przez e-mail, a potem je zmienić.",
+          "steps": {
+            "0": "Na stronie logowania kliknij „Forgot?” obok pola hasła i wpisz swój e-mail.",
+            "1": "Otwórz link resetujący z tego e-maila i ustaw nowe hasło (minimum 8 znaków, musi zgadzać się z polem potwierdzenia)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Strona „Reset your password”: pole Email, przycisk Send reset link oraz Back to sign in",
+              "caption": "„Forgot?” na stronie logowania otwiera tę stronę. Po zalogowaniu ustawienia konta mają zamiast tego pole „Change password”."
+            }
+          },
+          "good": {
+            "0": "Wracasz do panelu, już zalogowany nowym hasłem.",
+            "1": "Ponowne logowanie wymaga potem nowego hasła, a nie starego."
+          }
+        },
+        "3": {
+          "heading": "Panel zgadza się z rozszerzeniem po synchronizacji",
+          "checks": "Czy panel w serwisie pokazuje te same grupy co rozszerzenie, gdy synchronizacja nadąży.",
+          "steps": {
+            "0": "Mając włączoną synchronizację i co najmniej jedną grupę, otwórz panel pod adresem preview.tabmerger.com/dashboard.",
+            "1": "Porównaj tamtejszą sekcję „Tab Groups” z paskiem bocznym okna rozszerzenia: nazwy, kolory, liczby okien/kart i kolejność."
+          },
+          "examples": {
+            "0": {
+              "alt": "Panel w serwisie po odblokowaniu: statystyki, karta planu Pro oraz siatka Tab Groups z kartami Research, Reading List, Work i Shopping pokazującymi liczby okien i kart",
+              "caption": "Grupy w panelu, zgodne z paskiem bocznym rozszerzenia po synchronizacji."
+            }
+          },
+          "good": {
+            "0": "Po zakończeniu synchronizacji pojawiają się te same grupy z tymi samymi nazwami, kolorami i liczbami okien/kart, w tej samej kolejności."
+          }
+        },
+        "4": {
+          "heading": "Panel jest tylko do odczytu dla grup",
+          "checks": "Czy panel pokazuje Twoje grupy, ale nie może ich zmieniać: edycja odbywa się wyłącznie w rozszerzeniu.",
+          "steps": {
+            "0": "W panelu poszukaj jakiegokolwiek sposobu na zmianę nazwy, usunięcie lub utworzenie grupy albo oznaczenie/odznaczenie jej gwiazdką."
+          },
+          "good": {
+            "0": "Z panelu nie da się zmienić nazwy, usunąć, utworzyć ani oznaczyć/odznaczyć gwiazdką grupy — edycja grup jest celowo dostępna tylko w rozszerzeniu.",
+            "1": "Jedyne prawdziwe akcje na karcie grupy to Share i otwieranie jej kart/okien."
+          },
+          "report": "Jakakolwiek kontrolka w panelu, która wydaje się edytować, usuwać lub tworzyć grupę, faktycznie coś robi."
+        },
+        "5": {
+          "heading": "Sesje i statystyki w panelu",
+          "checks": "Czy zapisane sesje i sumy w panelu zgadzają się z rozszerzeniem.",
+          "steps": {
+            "0": "Zapisz sesję w rozszerzeniu, a potem sprawdź sekcję „Saved Sessions” w panelu.",
+            "1": "Sprawdź statystyki u góry panelu (liczba kart, liczba grup, liczba sesji, data dołączenia)."
+          },
+          "good": {
+            "0": "Zapisana sesja się pojawia.",
+            "1": "Statystyki zgadzają się z tym, co policzyłbyś w rozszerzeniu."
+          }
+        },
+        "6": {
+          "heading": "Udostępnianie z panelu",
+          "checks": "Czy przycisk Share w panelu kopiuje link do udostępnienia, tak jak w rozszerzeniu.",
+          "steps": {
+            "0": "Na karcie grupy (lub przez „Select” i „Share selected” dla wielu grup) kliknij Share."
+          },
+          "good": {
+            "0": "Link jest od razu kopiowany do schowka, z powiadomieniem to potwierdzającym. Szczegółowo opisuje to sekcja „Udostępnianie” poniżej — przycisk Share w panelu i w rozszerzeniu tworzy ten sam rodzaj linku."
+          }
+        },
+        "7": {
+          "heading": "Strona konta",
+          "checks": "Czy strona konta pokazuje właściwy profil, plan i urządzenia oraz czy działają obie opcje wylogowania.",
+          "pro": "Tylko karta Devices wymaga Pro; pokazuje urządzenia, które się synchronizują.",
+          "steps": {
+            "0": "Otwórz ustawienia konta z panelu.",
+            "1": "Sprawdź kartę Profile (e-mail, data dołączenia), kartę Subscription (plan, „Manage billing” lub „Upgrade”) i kartę Devices.",
+            "2": "Wypróbuj „Sign out” i osobno „Sign out of all devices”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ustawienia konta: karta Subscription pokazuje plan Pro, datę odnowienia i {proMonthly}/mies., z przyciskiem Manage billing; poniżej karta Devices z listą zalogowanych urządzeń",
+              "caption": "Karty Subscription i Devices na koncie Pro."
+            }
+          },
+          "good": {
+            "0": "Profile i Subscription pokazują dokładne, aktualne informacje (szczegóły karty Subscription opisuje sekcja „Przejście na Pro” powyżej).",
+            "1": "Devices pokazuje zalogowane urządzenia z opcjami zmiany nazwy/usunięcia.",
+            "2": "Oba przyciski wylogowania przenoszą Cię do stanu wylogowanego; „all devices” dodatkowo unieważnia wszystkie inne aktywne sesje.",
+            "3": "Na tej stronie nie ma opcji usunięcia konta — to oczekiwane, a nie brak do zgłoszenia."
+          }
+        },
+        "8": {
+          "heading": "Na telefonie",
+          "checks": "Czy panel i strony konta są w pełni użyteczne na małym ekranie.",
+          "steps": {
+            "0": "Otwórz panel i ustawienia konta na telefonie (lub w oknie przeglądarki zwężonym do około 390px).",
+            "1": "Stuknij ikony Dashboard i Account u góry, a potem okrągłe menu konta po prawej i jego „Sign out”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Panel na ekranie o szerokości telefonu: górny pasek pokazuje logo TabMerger, ikony Dashboard i Account, przełącznik jasny/ciemny i menu konta, nic nie jest ucięte",
+              "caption": "Panel na szerokości telefonu: tylko ikony na górnym pasku, nic nie przewija się na boki."
+            }
+          },
+          "good": {
+            "0": "Nic nie przewija się na boki.",
+            "1": "Górny pasek pokazuje logo TabMerger, ikony Dashboard i Account, przełącznik jasny/ciemny i menu konta, wszystko w pełni widoczne i klikalne (nazwa „TabMerger” i etykiety ikon chowają się na wąskich ekranach). Szersze ekrany nadal pokazują etykiety."
+          },
+          "report": "Strona przewija się na boki na telefonie albo jakaś kontrolka u góry jest ucięta lub nieosiągalna."
+        },
+        "9": {
+          "heading": "Powiadomienia (toasty)",
+          "checks": "Czy wyskakujące powiadomienia są czytelne, zamykają się same po odliczaniu i można je zamknąć wcześniej.",
+          "steps": {
+            "0": "Wywołaj powiadomienie, na przykład: w ustawieniach konta wpisz w formularzu hasła hasło krótsze niż 8 znaków i je wyślij (pokaże błąd bez wprowadzania zmian) albo skopiuj link do udostępnienia.",
+            "1": "Obserwuj powiadomienie w prawym dolnym rogu, a potem wywołaj kolejne i najedź na nie kursorem.",
+            "2": "Wypróbuj w trybie jasnym i ciemnym."
+          },
+          "examples": {
+            "0": {
+              "alt": "Czerwone powiadomienie o błędzie w prawym dolnym rogu o treści „Password must be at least 8 characters.”, z ✕ w rogu i częściowo opróżnionym paskiem odliczania wzdłuż dolnej krawędzi",
+              "caption": "Powiadomienie o błędzie: czerwona krawędź, ✕ do zamknięcia i pasek odliczania na dole."
+            }
+          },
+          "good": {
+            "0": "Każde powiadomienie jest czytelne na tle strony, z kolorową krawędzią (zieloną dla sukcesu, czerwoną dla błędów).",
+            "1": "Pasek na dole opróżnia się przez około 6 sekund i zatrzymuje się, gdy najeżdżasz kursorem, a powiadomienie zamyka się, gdy pasek się skończy.",
+            "2": "✕ w prawym górnym rogu zamyka je od razu."
+          },
+          "report": "Powiadomienie jest trudne do odczytania w którymś motywie, pasek biegnie dalej podczas najechania kursorem albo ✕ jest w złym miejscu lub go nie zamyka."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Udostępnianie",
+      "intro": "Udostępnianie wymaga Pro (zob. „Przejście na Pro” powyżej, aby uzyskać je w tej becie). Klucz szyfrowania udostępnienia jest generowany od nowa dla każdego linku i istnieje tylko we fragmencie #key= adresu URL — nigdy nie jest wysyłany na serwer ani tam przechowywany, więc każdy, kto ma pełny link (wraz z tym fragmentem), może zobaczyć udostępnioną zawartość. Traktuj link do udostępnienia jak samą zawartość.",
+      "items": {
+        "0": {
+          "heading": "Udostępnianie jednej lub wielu grup z rozszerzenia",
+          "checks": "Czy rozszerzenie tworzy link do udostępnienia jednej grupy lub kilku naraz.",
+          "steps": {
+            "0": "Włącz tryb zaznaczania i zaznacz jedną lub więcej grup na pasku bocznym (nie karty ani okna — Share pojawia się tylko przy zaznaczeniu grup).",
+            "1": "Kliknij „Share” na pasku zaznaczenia na dole."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tryb zaznaczania w oknie rozszerzenia z zaznaczonymi Work i Research oraz „2 groups selected” i przyciskiem Share na dolnym pasku",
+              "caption": "Zaznacz grupy do udostępnienia, a potem kliknij Share na dolnym pasku."
+            },
+            "1": {
+              "alt": "Ten sam ekran z zielonym powiadomieniem „Link copied to clipboard”",
+              "caption": "Link jest kopiowany od razu."
+            }
+          },
+          "good": {
+            "0": "Link jest od razu kopiowany do schowka, z powiadomieniem „Link copied to clipboard”.",
+            "1": "Zaznaczenie kilku grup naraz udostępnia je wszystkie razem jako jeden link/pakiet — nie musisz udostępniać ich pojedynczo."
+          }
+        },
+        "1": {
+          "heading": "Otwieranie udostępnionego linku",
+          "checks": "Czy każdy może otworzyć link do udostępnienia bez logowania i zobaczyć udostępnione grupy, tylko do odczytu.",
+          "pro": "Utworzenie linku wymaga Pro; jego otwarcie nie wymaga żadnego konta.",
+          "steps": {
+            "0": "Otwórz skopiowany link w wylogowanym oknie przeglądarki (lub w oknie prywatnym/incognito).",
+            "1": "Sprawdź ikony i tytuły każdej udostępnionej karty i wypróbuj „Open tab” / „Open all tabs” / „Open window” / „Open all windows”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Udostępniona strona otwarta bez logowania: „Shared collection · read-only”, link do udostępnienia, „9 tabs across 5 windows in 2 groups”, przełącznik Show page previews oraz karty grupy Work z przyciskami Open",
+              "caption": "Co widzi osoba otwierająca Twój link, bez logowania. (Tutaj link wskazuje na lokalny serwer testowy; Twój będzie na preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "Strona ładuje się bez wymogu logowania, z oznaczeniem „Shared collection · read-only”.",
+            "1": "Pokazuje każdą grupę, okno i kartę z ich prawdziwymi ikonami i tytułami.",
+            "2": "Przyciski otwierania otwierają właściwe karty/okna w nowych kartach przeglądarki."
+          }
+        },
+        "2": {
+          "heading": "Podglądy stron na udostępnionej stronie",
+          "checks": "Czy podglądy stron na udostępnionej stronie pozostają wyłączone, dopóki oglądający ich nie włączy i nie potwierdzi.",
+          "pro": "Utworzenie linku wymaga Pro; jego otwarcie nie wymaga żadnego konta.",
+          "steps": {
+            "0": "Na udostępnionej stronie znajdź przełącznik „Show page previews” nad listą grup.",
+            "1": "Włącz go i potwierdź wyświetlone okno dialogowe.",
+            "2": "Najedź na kartę, aby zobaczyć jej obraz podglądu i opis."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno dialogowe „Turn on page previews?” wyjaśniające, co jest wysyłane do usługi podglądów, z przyciskami Cancel i Turn on",
+              "caption": "Włączenie przełącznika najpierw pyta. Podglądy pozostają wyłączone, dopóki nie potwierdzisz."
+            }
+          },
+          "good": {
+            "0": "Przełącznik jest domyślnie wyłączony.",
+            "1": "Włączenie go wymaga najpierw potwierdzenia w oknie dialogowym (wyłączenie nie wymaga potwierdzenia) — okno wyjaśnia, że najechanie na kartę wysyła jej adres do usługi podglądów TabMerger i że nie jest on powiązany z Twoim kontem, logowany ani przechowywany.",
+            "2": "Po włączeniu najechanie na kartę pokazuje jej obraz/opis; strona bez obrazu pokazuje „No preview” zamiast uszkodzonego obrazu."
+          }
+        },
+        "3": {
+          "heading": "Udostępnianie grupy z wieloma oknami",
+          "checks": "Czy udostępniona grupa z kilkoma oknami pokazuje każde okno osobno.",
+          "steps": {
+            "0": "Udostępnij grupę, która ma kilka zapisanych okien (a nie tylko jedno)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Grupa Research na udostępnionej stronie, pokazująca cztery osobne okna, każde z własnym linkiem Open tab, oraz „Open all windows” przy grupie",
+              "caption": "Udostępniona grupa z czterema oknami: każde okno jest wymienione osobno."
+            }
+          },
+          "good": {
+            "0": "Udostępniona strona pokazuje każde okno w tej grupie, każde oznaczone „Window N” (oraz „Incognito”, jeśli takie było), z własnymi kartami i własną kontrolką „Open tab(s)”."
+          }
+        },
+        "4": {
+          "heading": "Udostępnianie z panelu w serwisie zamiast z rozszerzenia",
+          "checks": "Czy udostępnianie z serwisu działa tak samo jak z rozszerzenia.",
+          "steps": {
+            "0": "W panelu kliknij „Share” na pojedynczej karcie grupy albo zaznacz kilka grup i kliknij „Share selected”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Karty grup w panelu, z przyciskiem Share jednej karty pokazującym „Copied!” i powiadomieniem o treści „Link copied — shares a snapshot of this group.”",
+              "caption": "Share na karcie w panelu kopiuje ten sam rodzaj linku."
+            }
+          },
+          "good": {
+            "0": "Obie ścieżki w panelu kopiują link tak samo jak rozszerzenie (odpowiednio „Link copied — shares a snapshot of this group.” lub „Link copied! Share page is live.”), tworząc ten sam rodzaj udostępnionej strony."
+          }
+        },
+        "5": {
+          "heading": "Edycja, ponowne udostępnianie, unieważnianie i wygasanie — czego NIE da się zrobić",
+          "checks": "Czego linki do udostępnienia jeszcze nie potrafią, abyś nie tracił czasu na zgłaszanie tego.",
+          "steps": {
+            "0": "Spróbuj znaleźć jakikolwiek sposób na edycję istniejącego udostępnienia albo na jego unieważnienie/usunięcie/wygaszenie, w rozszerzeniu lub w panelu."
+          },
+          "good": {
+            "0": "Obecnie nigdzie nie ma interfejsu do edycji, unieważnienia, usunięcia ani wygaszenia utworzonego linku — udostępnienie jest trwałym, niezmiennym zrzutem od chwili utworzenia. To oczekiwane — nie zgłaszaj braku kontrolki unieważniania/edycji/wygasania, po prostu potwierdź, że zgadza się to z tym opisem.",
+            "1": "Ponowne udostępnienie tej samej grupy tworzy zupełnie nowy, osobny link zamiast aktualizować stary; stary link nadal działa i pokazuje stary zrzut."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Ustawienia",
+      "intro": "Settings ma dla wszystkich zakładki General, Account i Data. Zakładka Devices pojawia się po przejściu na Pro (zob. „Przejście na Pro” powyżej). Zakładki AI i Dev nie są częścią tej wersji beta — AI pozostaje ukryte za flagą „wkrótce”, a Dev pokazuje się tylko w lokalnych wersjach deweloperskich, a nie w zainstalowanej becie.",
+      "items": {
+        "0": {
+          "heading": "Zakładka General — Theme, Confirm before deleting, Open tab on click, Auto-deduplicate",
+          "checks": "Czy te ustawienia z zakładki General działają od razu i są zapamiętywane.",
+          "steps": {
+            "0": "Otwórz Settings i przełącz Theme między Light, Dark i System.",
+            "1": "Przełącz „Confirm before deleting” (usuń grupę lub okno przy włączonej opcji, potem przy wyłączonej, i porównaj).",
+            "2": "Przełącz „Open tab on click”, a potem kliknij zapisaną kartę w głównym panelu.",
+            "3": "Przełącz „Auto-deduplicate on merge”, a potem scal dwa okna, które mają zduplikowaną kartę."
+          },
+          "examples": {
+            "0": {
+              "alt": "Zakładka General okna Settings z Theme, Confirm before deleting i innymi przełącznikami",
+              "caption": "Zakładka General w Settings, z plakietką wersji obok tytułu. (Zakładka Dev istnieje tylko w naszej wewnętrznej wersji do zrzutów ekranu; nie zobaczysz jej.)"
+            }
+          },
+          "good": {
+            "0": "Theme od razu zmienia cały interfejs i przetrwa zamknięcie/ponowne otwarcie okna rozszerzenia.",
+            "1": "Przy włączonym „Confirm before deleting” usunięcie grupy lub okna najpierw pyta; przy wyłączonym usuwa od razu.",
+            "2": "„Open tab on click” włączone: pojedyncze kliknięcie otwiera kartę w przeglądarce; wyłączone: pojedyncze kliknięcie tylko ją zaznacza/rozwija.",
+            "3": "„Auto-deduplicate on merge” po włączeniu automatycznie usuwa duplikat."
+          }
+        },
+        "1": {
+          "heading": "Zakładka General — Show page images in previews",
+          "checks": "Czy ustawienie obrazów stron decyduje, czy podglądy kart pokazują obraz strony.",
+          "steps": {
+            "0": "Wyłącz „Show page images in previews”.",
+            "1": "Najedź na zapisaną kartę, aby zobaczyć jej podgląd.",
+            "2": "Włącz ustawienie z powrotem i ponownie najedź na tę samą kartę."
+          },
+          "examples": {
+            "0": {
+              "alt": "Podgląd karty po najechaniu z wyłączonymi obrazami stron, pokazujący zastępczy napis „Not enabled”",
+              "caption": "Podgląd po najechaniu przy wyłączonym „Show page images in previews”."
+            }
+          },
+          "good": {
+            "0": "Wyłączone: podgląd wyraźnie pokazuje „Not enabled” z uwagą „Page images are off. Turn on in Settings.” — sam przełącznik zapisuje się od razu, bez okna potwierdzenia.",
+            "1": "Włączone: w podglądzie ładuje się prawdziwy obraz strony albo „No preview”, jeśli strona go nie ma.",
+            "2": "Opis ustawienia zawiera link do sekcji o podglądach stron w polityce prywatności."
+          },
+          "report": "Podgląd pokazuje „No preview” (pusty) zamiast prawdziwego obrazu przy włączonym ustawieniu i stronie, która obraz ma."
+        },
+        "2": {
+          "heading": "Zakładka General — Cloud sync, Stale tab threshold, URL rules",
+          "checks": "Czy te ustawienia pojawiają się dla właściwych planów i zmieniają to, co powinny.",
+          "pro": "Tylko przełącznik Cloud sync wymaga Pro (Free go nie pokazuje).",
+          "steps": {
+            "0": "Mając Pro, przełącz „Cloud sync” (ta kontrolka pojawia się dopiero, gdy masz Pro).",
+            "1": "Zmień „Stale tab threshold” na inną wartość (7/14/30/60 dni).",
+            "2": "Kliknij „Manage” obok „URL rules” i dodaj regułę przypisującą wzorzec URL do grupy."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, zakładka General przewinięta w dół: Cloud sync włączone, Stale tab threshold ustawiony na 30 dni oraz URL rules z przyciskiem Manage",
+              "caption": "Dolna część zakładki General. (Zakładka Dev istnieje tylko w naszej wewnętrznej wersji do zrzutów ekranu; nie zobaczysz jej.)"
+            }
+          },
+          "good": {
+            "0": "Cloud sync pokazuje się tylko dla kont Pro (Free nigdy go nie widzi).",
+            "1": "Zmiana progu nieużywanych kart zmienia to, które karty dostają bursztynową kropkę.",
+            "2": "URL rules otwiera menedżer, w którym można dodawać/edytować/usuwać reguły wzorzec–grupa.",
+            "3": "Nowo otwarta karta pasująca do reguły zostaje automatycznie przypisana."
+          }
+        },
+        "3": {
+          "heading": "Motyw: Light, Dark i System",
+          "checks": "Czy każdy motyw wygląda poprawnie w całym oknie rozszerzenia i czy wybór jest zapamiętywany.",
+          "steps": {
+            "0": "W Settings → General ustaw Theme na Dark i kliknij Save changes.",
+            "1": "Rozejrzyj się po oknie rozszerzenia: pasek boczny, grupa z kilkoma oknami, menu ⋯, menu kontekstowe, wyszukiwanie (Ctrl+K) i same Settings.",
+            "2": "Zamknij i ponownie otwórz okno rozszerzenia.",
+            "3": "Ustaw Theme na System i zapisz, a potem przełącz komputer między trybem jasnym i ciemnym.",
+            "4": "Ustaw z powrotem Light."
+          },
+          "good": {
+            "0": "Całe okno rozszerzenia zmienia motyw zaraz po zapisaniu, a każdy tekst, ikona i ramka są czytelne.",
+            "1": "Menu, okna dialogowe, podpowiedzi i powiadomienia również stosują motyw.",
+            "2": "Motyw jest nadal ustawiony po ponownym otwarciu okna rozszerzenia.",
+            "3": "System podąża za jasnym lub ciemnym ustawieniem komputera."
+          },
+          "report": "Coś jest trudne do odczytania lub zachowuje stary motyw (menu, okno dialogowe, ikona lub ramka) albo motyw resetuje się po ponownym otwarciu okna."
+        },
+        "4": {
+          "heading": "Reguły URL: automatyczne zapisywanie pasujących stron",
+          "checks": "Czy reguła URL zapisuje strony otwierane pod pasującymi adresami do wybranej grupy.",
+          "steps": {
+            "0": "W Settings → General, obok URL rules, kliknij Manage, a potem Add rule.",
+            "1": "Wpisz wzorzec z * jako symbolem wieloznacznym (np. github.com/*), wybierz grupę, dodaj regułę i kliknij Save.",
+            "2": "W przeglądarce otwórz nową kartę pod pasującym adresem (np. dowolną stronę github.com).",
+            "3": "Otwórz okno rozszerzenia i spójrz na grupę reguły. Potem raz przeładuj stronę i ponownie sprawdź grupę.",
+            "4": "Edytuj regułę, aby wskazywała inną grupę, potem ją usuń i otwórz kolejną pasującą stronę.",
+            "5": "Na planie Free spróbuj dodać czwartą regułę."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno dialogowe URL Rules: „Auto-assign tabs to groups by URL pattern. Use * as a wildcard (e.g. github.com/*). First matching rule wins.”, brak reguł, przycisk Add rule oraz Cancel i Save",
+              "caption": "Settings → General → URL rules → Manage otwiera ten edytor."
+            }
+          },
+          "good": {
+            "0": "Kopia pasującej strony jest zapisywana w grupie reguły, w jej pierwszym oknie (lub w nowym oknie, jeśli grupa żadnego nie ma). Sama karta pozostaje otwarta.",
+            "1": "Gdy pasuje kilka reguł, wygrywa pierwsza na liście.",
+            "2": "Po edycji lub usunięciu reguły nowe strony stosują się do zmiany.",
+            "3": "Free pozwala na 3 reguły: dodanie czwartej pokazuje „Free plan allows up to 3 URL rules.” z przyciskiem Upgrade. Pro nie ma limitu."
+          },
+          "report": "Pasująca strona nie jest zapisywana, trafia do złej grupy lub jest zapisywana więcej niż raz (na przykład ponownie przy każdym przeładowaniu)."
+        },
+        "5": {
+          "heading": "Zakładka Account — Plan, Renews, Email, Manage billing / Upgrade, Sign out",
+          "checks": "Czy zakładka Account pokazuje Twój prawdziwy plan, datę odnowienia i e-mail oraz czy jej przyciski działają.",
+          "steps": {
+            "0": "Otwórz zakładkę Account i sprawdź wiersze Plan, Renews (jeśli płatny) i Email.",
+            "1": "Kliknij „Upgrade to Pro” (Free) lub „Manage billing” (Pro/Pro AI) — co dzieje się dalej, opisuje „Przejście na Pro” powyżej.",
+            "2": "Kliknij „Sign out”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, zakładka Account na Pro: Plan Pro ({proMonthly}/mies.), data odnowienia, e-mail, przyciski Manage billing i Sign out oraz „Forgot your passphrase? Reset encryption”",
+              "caption": "Zakładka Account na koncie Pro. Link resetujący na dole to kolejny punkt. (Zakładka Dev istnieje tylko w naszej wewnętrznej wersji do zrzutów ekranu; nie zobaczysz jej.)"
+            }
+          },
+          "good": {
+            "0": "Plan pokazuje „Free”, „Pro ({proMonthly}/mo)” lub „Pro AI ({proAiMonthly}/mo)”, zgodnie z Twoją prawdziwą subskrypcją.",
+            "1": "Renews pokazuje się tylko przy płatnym planie i podaje prawdziwą datę odnowienia.",
+            "2": "Email zgadza się z kontem, na które jesteś zalogowany.",
+            "3": "„Manage billing” otwiera portal rozliczeń Stripe w nowej karcie; na Free jest zamiast tego „Upgrade to Pro”, otwierające stronę cennika.",
+            "4": "Sign out przenosi Cię do stanu wylogowanego."
+          }
+        },
+        "6": {
+          "heading": "Zakładka Account — Forgot your passphrase? Reset encryption",
+          "checks": "Czy link do resetu szyfrowania pojawia się w zakładce Account po skonfigurowaniu szyfrowania.",
+          "steps": {
+            "0": "Ten link pojawia się tylko wtedy, gdy co najmniej raz ukończyłeś konfigurację szyfrowania (pełny proces opisuje sekcja „Hasło szyfrowania end-to-end” poniżej — nie powtarzaj go tutaj, tylko potwierdź, że jest dostępny z tej zakładki)."
+          },
+          "good": {
+            "0": "Link jest widoczny na dole zakładki Account po skonfigurowaniu szyfrowania, a nie wcześniej."
+          }
+        },
+        "7": {
+          "heading": "Zakładka Data — Export, Import, Clear all data",
+          "checks": "Czy eksport, import i czyszczenie danych działają, z potwierdzeniem przed zastąpieniem lub usunięciem czegokolwiek.",
+          "steps": {
+            "0": "Otwórz zakładkę Data i kliknij „Export”, aby pobrać wszystkie grupy jako plik JSON.",
+            "1": "Kliknij „Import” i wybierz ten sam plik (albo eksport zakładek w HTML lub eksport OneTab .txt).",
+            "2": "Kliknij „Clear all data” i potwierdź."
+          },
+          "examples": {
+            "0": {
+              "alt": "Zakładka Data okna Settings z kontrolkami Export data i Import data",
+              "caption": "Zakładka Data w Settings."
+            }
+          },
+          "good": {
+            "0": "Export pobiera plik o nazwie w rodzaju „tabmerger-backup-2026-01-15.json” z powiadomieniem „exported successfully”.",
+            "1": "Import prosi o potwierdzenie liczby grup przed importem, a potem pokazuje „imported successfully”.",
+            "2": "Ponowny import własnego eksportu przywraca każdą grupę z tymi samymi oknami, kartami, kolejnością i kolorami.",
+            "3": "Akceptowane są wszystkie trzy typy plików (TabMerger JSON, zakładki HTML, OneTab .txt), rozpoznawane po rozszerzeniu pliku.",
+            "4": "„Clear all data” po potwierdzeniu usuwa grupy, sesje i ustawienia — traktuj to jako operację niszczącą i próbuj tylko na profilu testowym."
+          },
+          "report": "Zły lub pusty plik po cichu nic nie robi zamiast pokazać powiadomienie o błędzie, np. „Invalid file format” lub „No groups found”."
+        },
+        "8": {
+          "heading": "Save a Reset oraz wskaźnik „Unsaved changes”",
+          "checks": "Czy ustawienia zapisują się tylko po kliknięciu Save i ostrzegają o niezapisanych zmianach.",
+          "steps": {
+            "0": "Na zakładce General zmień dowolne ustawienie (np. Theme) bez klikania Save.",
+            "1": "Zwróć uwagę na tekst „Unsaved changes” i na to, że „Save changes” jest aktywne tylko wtedy, gdy coś faktycznie różni się od zapisanego stanu.",
+            "2": "Kliknij „Restore defaults” zamiast Save, a potem zamknij Settings bez zapisywania.",
+            "3": "Ponownie otwórz Settings i sprawdź, czy zmiana się utrzymała."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, zakładka General po zmianie: „Unsaved changes” obok aktywnego przycisku Save changes, z Restore defaults po lewej",
+              "caption": "Po zmianie ustawienia: pojawia się „Unsaved changes”, a Save changes staje się aktywne. (Zakładka Dev istnieje tylko w naszej wewnętrznej wersji do zrzutów ekranu; nie zobaczysz jej.)"
+            }
+          },
+          "good": {
+            "0": "„Unsaved changes” pojawia się obok „Save changes” zawsze, gdy wersja robocza różni się od ostatnio zapisanych ustawień.",
+            "1": "„Save changes” jest nieaktywne, gdy nie ma nic nowego do zapisania.",
+            "2": "„Restore defaults” tylko przywraca wartości domyślne w wersji roboczej — samo niczego nie zapisuje.",
+            "3": "Zamknięcie Settings bez kliknięcia „Save changes” odrzuca wersję roboczą; po ponownym otwarciu widać ostatnio faktycznie zapisane wartości, a nie niezapisaną zmianę."
+          },
+          "report": "„Save changes” pozostaje aktywne bez żadnych zmian albo zmienione, ale niezapisane ustawienie mimo to utrzymuje się po zamknięciu i ponownym otwarciu Settings."
+        },
+        "9": {
+          "heading": "Plakietka wersji",
+          "checks": "Gdzie znaleźć dokładny numer wersji do zgłoszeń błędów.",
+          "steps": {
+            "0": "Spójrz na pasek tytułu okna Settings."
+          },
+          "good": {
+            "0": "Mała plakietka obok słowa „Settings” pokazuje prawdziwą wersję semver, którą należy podawać w zgłoszeniach błędów (np. „v3.1.0-beta.5”) — szczegółowo opisuje to sekcja „Dołącz i zainstaluj” powyżej."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Logowanie i synchronizacja między urządzeniami",
+      "intro": "Wersje beta synchronizują się przez podglądową aplikację internetową na preview.tabmerger.com, a nie przez główny serwis — zaloguj się tam, aby zobaczyć zsynchronizowane grupy, panel i udostępnianie.",
+      "items": {
+        "0": {
+          "heading": "Konfiguracja dwóch urządzeń",
+          "checks": "Czy dwa urządzenia zalogowane na to samo konto współdzielą grupy.",
+          "steps": {
+            "0": "Zaloguj się na dwóch urządzeniach lub w dwóch profilach przeglądarki z zainstalowanym na obu rozszerzeniem beta, na to samo konto."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno dialogowe „Sign In to TabMerger” w oknie rozszerzenia: Continue with Google, a potem zakładki Sign In, Sign Up i Magic Link z polami Email i Password",
+              "caption": "Logowanie z rozszerzenia: ikona konta (prawy górny róg) → Sign in."
+            },
+            "1": {
+              "alt": "Okno rozszerzenia na urządzeniu A z grupami Work, Research, Shopping i Reading List; stopka pokazuje 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Urządzenie A."
+            },
+            "2": {
+              "alt": "Okno rozszerzenia na urządzeniu B po zalogowaniu, odblokowaniu i synchronizacji: te same cztery grupy z tymi samymi liczbami okien i kart oraz ta sama stopka 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Urządzenie B po zalogowaniu i odblokowaniu: te same grupy i liczby, w tej samej kolejności."
+            }
+          },
+          "good": {
+            "0": "Grupy utworzone na jednym urządzeniu w krótkim czasie pojawiają się na drugim."
+          }
+        },
+        "1": {
+          "heading": "Zmiany nazw docierają na drugie urządzenie",
+          "checks": "Czy zmiana nazwy na jednym urządzeniu pojawia się na drugim bez ręcznego odświeżania.",
+          "steps": {
+            "0": "Zmień nazwę grupy na urządzeniu A.",
+            "1": "Sprawdź urządzenie B, niczego tam nie dotykając."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno rozszerzenia na urządzeniu A po zmianie nazwy Research na „Research papers”, z jej czterema kartami",
+              "caption": "Urządzenie A: „Research” przemianowane na „Research papers”."
+            },
+            "1": {
+              "alt": "Okno rozszerzenia na urządzeniu B pokazujące grupę jako „Research papers” z tymi samymi czterema kartami, po samym ponownym otwarciu okna",
+              "caption": "Urządzenie B po samym ponownym otwarciu okna: nowa nazwa jest na miejscu."
+            }
+          },
+          "good": {
+            "0": "Urządzenie B odbiera zmianę nazwy bez potrzeby ręcznego odświeżania."
+          }
+        },
+        "2": {
+          "heading": "Usunięcia docierają na drugie urządzenie",
+          "checks": "Czy usunięta grupa pozostaje usunięta na każdym urządzeniu, zamiast wracać.",
+          "steps": {
+            "0": "Usuń grupę na urządzeniu A.",
+            "1": "Potwierdź, że znika również na urządzeniu B."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno rozszerzenia na urządzeniu A po usunięciu Shopping: zostają Work, Research papers i Reading List, a stopka pokazuje 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Urządzenie A: „Shopping” usunięte."
+            },
+            "1": {
+              "alt": "Okno rozszerzenia na urządzeniu B po ponownym otwarciu: Shopping zniknęło, a stopka pokazuje 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Urządzenie B po ponownym otwarciu okna: „Shopping” zniknęło także tam."
+            }
+          },
+          "good": {
+            "0": "Usunięcie się propaguje, zamiast grupy pojawiającej się ponownie („wskrzeszonej”) po synchronizacji."
+          },
+          "report": "Usunięta grupa wraca na którymś urządzeniu po późniejszej synchronizacji."
+        },
+        "3": {
+          "heading": "Zmiana kolejności grup się synchronizuje",
+          "checks": "Czy kolejność grup jest taka sama na każdym urządzeniu i w panelu.",
+          "steps": {
+            "0": "Przeciągnij grupę na nową pozycję na pasku bocznym na urządzeniu A.",
+            "1": "Poczekaj, aż synchronizacja nadąży, a potem spójrz na pasek boczny urządzenia B i na panel w serwisie."
+          },
+          "good": {
+            "0": "Urządzenie B i panel pokazują grupy w tej samej kolejności co urządzenie A.",
+            "1": "Cofnij może być wyszarzone na urządzeniu tuż po tym, jak synchronizacja wprowadzi zmiany z innego urządzenia. To oczekiwane: historia cofania jest czyszczona, gdy nadchodzą zmiany z innego miejsca, więc nie cofniesz przypadkiem cudzej edycji."
+          },
+          "report": "Kolejność różni się między urządzeniami po zakończeniu synchronizacji albo zmiana kolejności wraca do starej."
+        },
+        "4": {
+          "heading": "Zmiany offline synchronizują się po ponownym połączeniu",
+          "checks": "Czy zmiany wprowadzone offline synchronizują się po powrocie online, bez duplikatów i strat.",
+          "steps": {
+            "0": "Przejdź w tryb offline (wyłącz sieć) na jednym urządzeniu.",
+            "1": "Wprowadź zmiany.",
+            "2": "Połącz się ponownie."
+          },
+          "good": {
+            "0": "Po powrocie online zmiany wprowadzone offline synchronizują się bez duplikowania ani cichego gubienia grup."
+          }
+        },
+        "5": {
+          "heading": "Usuwanie grupy w trybie offline",
+          "checks": "Czy grupa usunięta w trybie offline pozostaje usunięta po ponownym połączeniu.",
+          "steps": {
+            "0": "Przejdź w tryb offline (wyłącz sieć) na urządzeniu A.",
+            "1": "Usuń grupę na urządzeniu A.",
+            "2": "Połącz ponownie urządzenie A i pozwól mu się zsynchronizować, a potem sprawdź urządzenie B i panel."
+          },
+          "good": {
+            "0": "Grupa zostaje usunięta z serwera przy następnej synchronizacji i znika na urządzeniu B oraz w panelu.",
+            "1": "Później nie wraca na żadnym urządzeniu."
+          },
+          "report": "Grupa usunięta w trybie offline pojawia się ponownie na którymkolwiek urządzeniu po synchronizacji."
+        },
+        "6": {
+          "heading": "Ta sama grupa edytowana na dwóch urządzeniach (kopia konfliktu)",
+          "checks": "Czy gdy ta sama grupa jest edytowana na dwóch urządzeniach, zanim którekolwiek się zsynchronizuje, nic nie zostaje nadpisane, a Ty dostajesz kopię do ręcznego scalenia.",
+          "steps": {
+            "0": "Przejdź w tryb offline (wyłącz sieć) na urządzeniu A. Urządzenie B zostaw online.",
+            "1": "Na urządzeniu A edytuj grupę (na przykład dodaj kartę). Na urządzeniu B edytuj tę samą grupę inaczej (na przykład dodaj inną kartę).",
+            "2": "Pozwól urządzeniu B zsynchronizować się jako pierwszemu, a potem połącz ponownie urządzenie A i pozwól mu się zsynchronizować.",
+            "3": "Spójrz na pasek boczny na obu urządzeniach."
+          },
+          "good": {
+            "0": "Wersja, która pierwsza dotarła na serwer (urządzenie B), zachowuje nazwę grupy.",
+            "1": "Wersja z urządzenia A jest zapisywana tuż pod nią jako nowa grupa o nazwie „Work{CONFLICT_COPY_SUFFIX}” (z nazwą Twojej grupy), a powiadomienie Cię o tym informuje.",
+            "2": "Oba urządzenia pokazują ostatecznie obie grupy. Możesz ręcznie scalić karty, a potem usunąć kopię.",
+            "3": "Edycja tylko na jednym urządzeniu lub edycja różnych grup na każdym nigdy nie tworzy kopii."
+          },
+          "report": "Edycja po cichu znika bez kopii albo „kopia konfliktu” pojawia się, gdy grupę edytowało tylko jedno urządzenie."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Hasło szyfrowania end-to-end",
+      "intro": "Szyfrowanie jest obowiązkowe dla każdego zalogowanego konta, a nie opcjonalnym ustawieniem — nie ma przełącznika, który by je wyłączał. Zsynchronizowane grupy, sesje i zrzuty „Now Open” są szyfrowane kluczem, który może odblokować tylko Twoje hasło; serwery TabMerger nigdy nie widzą hasła ani odszyfrowanego klucza.",
+      "items": {
+        "0": {
+          "heading": "Pierwsza konfiguracja hasła",
+          "checks": "Czy włączenie synchronizacji prosi o wybranie hasła szyfrowania, zanim jakiekolwiek dane opuszczą Twoje urządzenie.",
+          "steps": {
+            "0": "Przy nowym logowaniu z synchronizacją w chmurze poczekaj, aż samo pojawi się okno „Set up encryption” (wywołuje je pierwsza próba synchronizacji).",
+            "1": "Przeczytaj tekst okna, a potem wpisz nowe hasło i powtórz je w polu „Confirm passphrase”.",
+            "2": "Kliknij „Set up encryption”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno dialogowe „Set up encryption” wyjaśniające, że hasła nie da się odzyskać, z polami New passphrase i Confirm passphrase oraz przyciskiem Set up encryption",
+              "caption": "Pojawia się samo zaraz po zalogowaniu na Pro."
+            }
+          },
+          "good": {
+            "0": "Okno brzmi: „Your synced group and tab data is end-to-end encrypted with a passphrase only you know. Choose one now — there is no way to recover your data if you forget it, it never leaves your device and TabMerger cannot reset it for you.”",
+            "1": "Hasło musi mieć co najmniej 8 znaków, bez spacji, i zgadzać się z potwierdzeniem — niezgodność lub zbyt krótkie hasło pokazuje wyraźny błąd przy polu („Passphrase must be at least 8 characters” / „Passphrases do not match” / „Passphrase cannot contain spaces”), zamiast cicho zawodzić.",
+            "2": "Po powodzeniu widzisz powiadomienie „Encryption set up”.",
+            "3": "Nic, co już zsynchronizowałeś, nie ginie."
+          }
+        },
+        "1": {
+          "heading": "Odblokowanie na drugim urządzeniu",
+          "checks": "Czy drugie urządzenie raz potrzebuje Twojego hasła, zanim odczyta zsynchronizowane dane.",
+          "steps": {
+            "0": "Zaloguj się na to samo konto na drugim urządzeniu lub w drugim profilu przeglądarki.",
+            "1": "Gdy pojawi się okno „Unlock encryption”, wpisz hasło (raz, nie ma pola potwierdzenia) i kliknij „Unlock” lub naciśnij Enter.",
+            "2": "Powtórz jeszcze raz, ale celowo wpisz złe hasło."
+          },
+          "examples": {
+            "0": {
+              "alt": "Okno dialogowe „Unlock encryption” na drugim urządzeniu, z jednym polem Passphrase i przyciskiem Unlock",
+              "caption": "Na drugim urządzeniu rozszerzenie raz prosi o istniejące hasło."
+            }
+          },
+          "good": {
+            "0": "Okno odblokowania brzmi: „Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won't be asked again unless you sign out.”",
+            "1": "Poprawne hasło odblokowuje i pokazuje powiadomienie „Encryption unlocked”.",
+            "2": "Złe hasło pokazuje „Wrong passphrase” i niczego więcej nie zmienia — bez uszkodzenia danych, bez blokady, możesz po prostu spróbować ponownie."
+          }
+        },
+        "2": {
+          "heading": "Jak wygląda stan „zablokowany” i pozostawanie odblokowanym po restarcie",
+          "checks": "Czy zablokowane dane pozostają nieczytelne do odblokowania oraz czy urządzenie pozostaje odblokowane po ponownym uruchomieniu przeglądarki.",
+          "steps": {
+            "0": "Gdy urządzenie jest zablokowane (zanim wpiszesz na nim hasło), spróbuj użyć funkcji synchronizacji w chmurze.",
+            "1": "Odblokuj je, a potem całkowicie zamknij i ponownie otwórz przeglądarkę (nie tylko okno rozszerzenia) na tym urządzeniu."
+          },
+          "good": {
+            "0": "W stanie zablokowanym jesteś ponownie proszony o hasło, zamiast po cichu synchronizować tekst jawny lub tracić dane.",
+            "1": "Po odblokowaniu klucz pozostaje w lokalnej pamięci przeglądarki na tym urządzeniu — pełny restart przeglądarki nie wywołuje ponownej prośby; czyści go tylko wylogowanie."
+          }
+        },
+        "3": {
+          "heading": "Zapomniane hasło — resetowanie szyfrowania",
+          "checks": "Czy reset szyfrowania jest najpierw wyraźnie potwierdzany i pozwala ustawić nowe hasło.",
+          "steps": {
+            "0": "W Settings → Account znajdź „Forgot your passphrase? Reset encryption” (pokazywane dopiero po co najmniej jednokrotnym ukończeniu konfiguracji).",
+            "1": "NIE używaj tego na danych, na których Ci zależy — trwale odbiera to dostęp do wszystkiego zaszyfrowanego bieżącym hasłem. Jeśli chcesz to wypróbować, użyj jednorazowego konta testowego.",
+            "2": "Jeśli spróbujesz, potwierdź okno resetu, a potem ustaw zupełnie nowe hasło, gdy ponownie otworzy się okno konfiguracji."
+          },
+          "examples": {
+            "0": {
+              "alt": "Potwierdzenie „Reset Encryption Passphrase” ostrzegające, że wszystko zaszyfrowane bieżącym hasłem stanie się trwale niedostępne, z przyciskami Cancel i Reset Passphrase",
+              "caption": "Potwierdzenie wyświetlane przed resetem. Cancel jest bezpieczne; Reset Passphrase jest nieodwracalne."
+            }
+          },
+          "good": {
+            "0": "Okno potwierdzenia jest jasne, zanim cokolwiek się stanie.",
+            "1": "Po potwierdzeniu widzisz powiadomienie „Encryption reset — set up a new passphrase”, a okno konfiguracji od razu otwiera się ponownie, abyś mógł wybrać nowe hasło i dalej synchronizować."
+          }
+        },
+        "4": {
+          "heading": "Weryfikacja w panelu w serwisie",
+          "checks": "Czy serwis prosi o hasło, zanim pokaże zsynchronizowane grupy.",
+          "steps": {
+            "0": "Zaloguj się do panelu (preview.tabmerger.com) na konto ze skonfigurowanym szyfrowaniem.",
+            "1": "Jeśli pojawi się prośba, wpisz hasło w karcie odblokowania, zanim pojawi się jakakolwiek zawartość grup."
+          },
+          "examples": {
+            "0": {
+              "alt": "Zablokowana sekcja Tab Groups w panelu, z kłódką, „Your groups are end-to-end encrypted. Enter your passphrase to view them here.”, polem Passphrase i przyciskiem Unlock",
+              "caption": "Dopóki nie wpiszesz hasła, panel pokazuje to zamiast Twoich grup."
+            }
+          },
+          "good": {
+            "0": "Panel prosi o hasło niezależnie od rozszerzenia — odblokowanie tam jest osobnym, jednorazowym krokiem dla każdej karty, niewspółdzielonym z odblokowaniem w rozszerzeniu. Prośba brzmi: „Your groups are end-to-end encrypted. Enter your passphrase to view them here.”",
+            "1": "Złe hasło pokazuje „Incorrect passphrase.” bez awarii strony.",
+            "2": "Po odblokowaniu prawdziwe nazwy grup i karty wyświetlają się normalnie.",
+            "3": "Po resecie hasła w rozszerzeniu panel prosi o nowe hasło: przy następnym załadowaniu strony lub, w już otwartym panelu, po naciśnięciu przycisku odświeżania przy etykiecie synchronizacji.",
+            "4": "Grupa lub sesja, której bieżące hasło nie może odczytać (zapisana przed resetem i jeszcze nie przesłana ponownie), pokazuje się jako „(locked)”, nie ujawniając żadnej zawartości. Sam element wyjaśnia dlaczego i co zrobić, i nie można go udostępnić ani przywrócić, dopóki znów nie będzie czytelny."
+          }
+        },
+        "5": {
+          "heading": "Jak sprawdzić, że Twoje dane naprawdę są zaszyfrowane",
+          "checks": "Jak możesz sam zobaczyć, że Twoje dane są nieczytelne bez hasła.",
+          "steps": {
+            "0": "W interfejsie nie ma wyraźnej plakietki „Encrypted ✓” — widoczny sygnał jest pośredni.",
+            "1": "Na urządzeniu, którego jeszcze nie odblokowałeś (lub w panelu, przed wpisaniem tam hasła), zauważ, że nazwy/zawartość grup nie wyświetlają się do momentu odblokowania."
+          },
+          "good": {
+            "0": "Brak czytelnej zawartości przed odblokowaniem jest właśnie sygnałem: nie widać żadnej nazwy grupy ani karty, a w panelu wszystko, czego bieżące hasło nie może odczytać, wyświetla się jako „(locked)”.",
+            "1": "Panel pokazuje kartę hasła zamiast Twoich grup. Gdyby zawartość była kiedykolwiek czytelna bez odblokowania, oznaczałoby to, że nie jest naprawdę zaszyfrowana — jeśli to zobaczysz, zgłoś to natychmiast."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Każda utrata danych — grupa, karta lub sesja, która zniknęła, a nie powinna.",
+    "1": "Konflikty synchronizacji — grupa „{CONFLICT_COPY_SUFFIX}” jest oczekiwana, gdy ta sama grupa była edytowana na dwóch urządzeniach, zanim którekolwiek się zsynchronizowało. Daj nam znać, jeśli edycja po cichu znika albo kopia pojawia się, gdy edytowało tylko jedno urządzenie.",
+    "2": "Wszystko, co jest mylące, niejasne lub wymagało więcej kliknięć, niż powinno.",
+    "3": "Wszystko, co działa wolno — otwieranie okna rozszerzenia, wyszukiwanie, przeciąganie lub synchronizacja trwające zauważalnie dłużej niż oczekiwano."
+  },
+  "metaTitle": "Program beta",
+  "metaDescription": "Dołącz do bety TabMerger — zainstaluj prywatną wersję beta, dowiedz się, co testować, i zgłaszaj błędy bezpośrednio zespołowi.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Częściowo Pro",
+    "somePro": "Częściowo Pro",
+    "areaPartial": "Niektóre punkty tutaj wymagają konta Pro",
+    "itemPartial": "Część tego punktu wymaga konta Pro",
+    "areaAll": "Każdy punkt tutaj wymaga konta Pro",
+    "itemAll": "Wymaga konta Pro"
+  },
+  "eyebrow": "Program beta",
+  "title": "Pomóż nam przetestować TabMerger przed wydaniem",
+  "lead": "Otrzymaj następną wersję TabMerger wcześniej i powiedz nam, co nie działa. Ta strona opisuje dołączanie, instalację prywatnej bety, co testować i jak zgłaszać znalezione problemy. Funkcje AI są w tej wersji ukryte („wkrótce”), więc nie są jeszcze częścią testów.",
+  "join": "Dołącz do bety",
+  "onThisPage": "Na tej stronie",
+  "install": {
+    "heading": "1. Dołącz i zainstaluj",
+    "groupTitle": "Dołącz do grupy testerów.",
+    "groupBody": "Otwórz <link>groups.google.com/g/tabmerger-beta-testers</link> i dołącz. Dołączenie jest natychmiastowe, ale upewnij się, że dołączasz <strong>tym samym kontem Google, na które jesteś zalogowany w Chrome</strong> — w przeciwnym razie prywatna strona w sklepie nie będzie dla Ciebie widoczna.",
+    "listingTitle": "Otwórz prywatną stronę bety w sklepie.",
+    "listingLink": "Otwórz stronę TabMerger BETA w sklepie",
+    "listingPending": "stronę „TabMerger BETA” w Chrome Web Store (link wkrótce — w międzyczasie aktualny adres znajdziesz w grupie testerów).",
+    "listingNotFound": "Jeśli widzisz <strong>„Item not found”</strong>, prawdopodobnie dopiero dołączyłeś — dostęp może pojawić się po chwili. Poczekaj trochę i spróbuj ponownie, zanim uznasz, że coś jest nie tak.",
+    "installTitle": "Zainstaluj ją.",
+    "installBody": "Kliknij „Dodaj do Chrome”. Beta instaluje się jako osobne rozszerzenie („TabMerger BETA”), niezależne od stabilnego „TabMerger” — możesz mieć zainstalowane oba obok siebie, a ich dane są całkowicie oddzielne. Na czas testów zalecamy wyłączenie wersji stabilnej, aby przypadkiem nie działać na niewłaściwej.",
+    "signInTitle": "Zaloguj się przez podglądową aplikację internetową.",
+    "signInBody": "Wersje beta synchronizują się z <link>preview.tabmerger.com</link> — a nie z głównym serwisem tabmerger. Zaloguj się tam (z rozszerzenia lub bezpośrednio w panelu), aby zobaczyć zsynchronizowane grupy i sesje.",
+    "browsersTitle": "Na jakich przeglądarkach mogę testować?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc i Opera korzystają z tej samej strony TabMerger BETA i tej samej grupy Google — nie ma osobnej bety dla Edge, więc jej nie szukaj. Edge: zaakceptuj „Zezwalaj na rozszerzenia z innych sklepów”, gdy pojawi się taka prośba. Opera: najpierw zainstaluj dodatek Opery „Install Chrome Extensions”, a potem użyj linku powyżej. Jeśli masz też stabilny TabMerger zainstalowany ze sklepu Edge Add-ons, wyłącz go na czas testowania bety — to osobne rozszerzenie. Safari nie jest obsługiwane.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox ma własną wersję beta, instalowaną z bezpośredniego linku, a nie ze strony w Chrome Web Store powyżej. <link>Zainstaluj betę dla Firefoksa</link>. Firefox zapyta, czy dodać „TabMerger BETA”: wybierz Dodaj. Sam sprawdza aktualizacje mniej więcej raz dziennie; aby sprawdzić od razu, otwórz <code>about:addons</code>, kliknij ikonę koła zębatego i wybierz „Sprawdź aktualizacje”. Zaloguj się raz w rozszerzeniu i zezwól na prośbę Firefoksa o dostęp do danych (obejmuje logowanie i synchronizację); potem logowanie w tym serwisie loguje też rozszerzenie. <strong>Każdy, kto ma powyższy link instalacyjny, może ją zainstalować</strong> — prosimy, nie udostępniaj go poza grupą testerów.",
+    "firefoxSoon": "Beta dla Firefoksa pojawi się wkrótce; do tego czasu użytkownicy Firefoksa mogą dołączyć do bety w dowolnej z obsługiwanych przeglądarek opartych na Chromium wymienionych powyżej (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Zanotuj swoją wersję.",
+    "versionBody": "Otwórz Settings w TabMerger i skopiuj plakietkę wersji obok tytułu „Settings” (np. <code>v3.1.0-beta.5</code>) albo sprawdź <code>chrome://extensions</code> i znajdź „TabMerger BETA”. Tak czy inaczej, zgłaszaj tę prawdziwą wersję semver — a nie wewnętrzny numer wersji Chrome Web Store, który jest przesunięty i nie zgadza się z tym, czego używamy do śledzenia wersji."
+  },
+  "test": {
+    "heading": "2. Co testować",
+    "intro": "Przejdź przez te obszary, które odpowiadają temu, jak zwykle używasz TabMerger. Każdy punkt poniżej ma ponumerowane kroki, przykład tego, jak powinno to wyglądać, oraz opis poprawnego wyniku.",
+    "tickNote": "Zaznaczaj każdy krok na bieżąco. Twoje zaznaczenia są zapisywane tylko w tej przeglądarce, a każdy obszar pokazuje Twój postęp.",
+    "needPro": "Czy potrzebuję Pro?",
+    "needProBody": "Obszary są ułożone od Free do Pro. Wszystko nieoznaczone działa na Free, bez konta. <full></full>: cały punkt wymaga konta Pro (synchronizacja, szyfrowanie i tworzenie linków do udostępnienia to Pro). <partial></partial>: większość punktu działa na Free, a wiersz „Pro:” pod jego tytułem mówi, która część nie. Pro w tej becie nic nie kosztuje: płacisz kartą testową (zob. <link>Przejście na Pro</link>).",
+    "show": "Pokaż",
+    "hide": "Ukryj",
+    "proLine": "Pro: ",
+    "checksLine": "Co to sprawdza: ",
+    "steps": "Kroki",
+    "reportLine": "Zgłoś, jeśli: ",
+    "testCheckout": "⚠ To jest płatność testowa.",
+    "testCheckoutBody": " Nigdy nie wpisuj prawdziwej karty. Żadne prawdziwe pieniądze nie są pobierane, a prawdziwa karta i tak tu nie zadziała.",
+    "testCardsFooter": "Dla każdej karty: data ważności w przyszłości (np. <code>12/34</code>), dowolny 3-cyfrowy CVC (np. <code>123</code>) i cokolwiek w polach imienia, kodu pocztowego i pozostałych. Więcej kart: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "O czym szczególnie chcemy usłyszeć",
+  "knownIssues": {
+    "heading": "3. Znane problemy",
+    "intro": "Już o nich wiemy, więc nie trzeba ich zgłaszać. Lista jest aktualizowana przy każdym wydaniu bety; jeśli coś z tej listy zostało u Ciebie naprawione lub zachowuje się inaczej, niż opisano, warto to zgłosić.",
+    "meanwhile": "W międzyczasie:"
+  },
+  "report": {
+    "heading": "4. Zgłoś błąd",
+    "discussions": "Błędy i pomysły trafiają do naszych publicznych GitHub Discussions — <link>github.com/{repo}/discussions</link>. Najpierw tam zajrzyj — ktoś mógł już zgłosić to samo.",
+    "public": "<strong>Dyskusje są publiczne.</strong> Nie wklejaj prywatnych adresów URL, tytułów kart ani zrzutów ekranu z danymi osobowymi — najpierw je rozmyj lub przytnij. Do publikowania potrzebujesz (darmowego) konta GitHub.",
+    "bugButton": "Zgłoś błąd na GitHubie",
+    "ideaButton": "Podziel się pomysłem na GitHubie",
+    "noGithub": "Nie masz konta GitHub? Użyj formularza kontaktowego.",
+    "template": "Oba linki wstawiają ten szablon do treści dyskusji — wypełnij go przed publikacją, oszczędzi nam to dodatkowych pytań:"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "notFoundQ": "Widzę „Item not found”",
+    "notFoundA": "Upewnij się, że dołączyłeś do grupy Google tym samym kontem Google, na które jesteś zalogowany w Chrome. Dostęp może pojawić się dopiero po chwili od dołączenia — poczekaj trochę i spróbuj ponownie, zanim uznasz, że coś nie działa.",
+    "stableQ": "Czy mogę zachować zainstalowaną wersję stabilną?",
+    "stableA": "Tak — beta („TabMerger BETA”) to osobne rozszerzenie niezależne od wersji stabilnej („TabMerger”), z całkowicie oddzielnymi danymi. Możesz używać obu, choć na czas testów zalecamy wyłączenie wersji stabilnej, aby nie pomylić, której używasz.",
+    "chargedQ": "Czy zostanę obciążony, jeśli przejdę na Pro?",
+    "chargedA": "Nie — przejście na wyższy plan w becie korzysta z trybu testowego Stripe. Użyj <link>testowej karty Stripe</link> (zob. sekcję „Przejście na Pro” powyżej) — żadna prawdziwa karta tu nie działa i w żadnym wypadku nie przepływają prawdziwe pieniądze.",
+    "syncQ": "Gdzie synchronizują się moje dane?",
+    "syncA": "Wersje beta synchronizują się z podglądową aplikacją internetową na preview.tabmerger.com, a nie z głównym serwisem tabmerger. Zaloguj się tam, aby zobaczyć zsynchronizowane grupy, sesje i udostępnianie.",
+    "issuesQ": "Gdzie zobaczę znane problemy?",
+    "issuesA": "Sprawdź <link>Discussions Q&A</link> w repozytorium — tam trafiają zgłoszenia błędów z bety.",
+    "leaveQ": "Jak opuścić betę?",
+    "leaveA": "Opuść <link>grupę Google</link> i odinstaluj rozszerzenie „TabMerger BETA”. Twoja stabilna instalacja, jeśli ją zachowałeś, pozostaje nienaruszona."
+  },
+  "interactive": {
+    "good": "Poprawny wynik to",
+    "allDoneLabel": "Wszystkie sprawdzenia ukończone",
+    "progressLabel": "Ukończono {done} z {total} sprawdzeń",
+    "allDone": "✓ Wszystko gotowe",
+    "progress": "{done}/{total}",
+    "clear": "Wyczyść moje zaznaczenia ({count})",
+    "firefoxAutoStart": "Beta dla Firefoksa powinna uruchomić się sama: Firefox zapyta, czy ją dodać, inne przeglądarki pobiorą plik. Jeśli nic się nie dzieje, użyj w tym kroku „Zainstaluj betę dla Firefoksa”."
+  }
+}

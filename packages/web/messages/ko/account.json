@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "방금 전",
+    "minutesAgo": "{count}분 전",
+    "hoursAgo": "{count}시간 전",
+    "daysAgo": "{count}일 전",
+    "renameFailed": "기기 이름을 변경하지 못했습니다",
+    "renamed": "기기 이름을 변경했습니다",
+    "removeFailed": "기기를 삭제하지 못했습니다",
+    "removed": "기기를 삭제했습니다",
+    "removeManyFailed": "기기들을 삭제하지 못했습니다",
+    "removedMany": "{count, plural, other {기기 {count}대를 삭제했습니다}}",
+    "empty": "아직 기기가 없습니다.",
+    "selectAll": "모든 기기 선택",
+    "selectedCount": "{count}개 선택됨",
+    "removeSelected": "{count, plural, other {기기 {count}대 삭제}}",
+    "selectDevice": "{name} 선택",
+    "active": "{time} 활동",
+    "snapshotCounts": " · {windows, plural, other {창 {windows}개}} · {tabs, plural, other {탭 {tabs}개}}",
+    "options": "기기 옵션",
+    "rename": "이름 변경",
+    "remove": "삭제",
+    "removeTitle": "기기를 삭제할까요?",
+    "removeBody": "\"{name}\" 기기는 더 이상 탭 데이터를 동기화하지 않습니다. 이 작업은 되돌릴 수 없습니다.",
+    "removeManyTitle": "기기 {count}대를 삭제할까요?",
+    "removeManyBody": "이 기기들은 더 이상 탭 데이터를 동기화하지 않습니다. 이 작업은 되돌릴 수 없습니다.",
+    "cancel": "취소"
+  },
+  "metaTitle": "계정",
+  "title": "계정 설정",
+  "lead": "계정과 구독을 관리하세요.",
+  "stats": {
+    "groups": "동기화된 그룹",
+    "tabs": "저장된 탭",
+    "sessions": "세션 및 백업",
+    "aiCredits": "남은 AI 크레딧"
+  },
+  "profile": {
+    "title": "프로필",
+    "description": "계정 정보입니다.",
+    "email": "이메일",
+    "memberSince": "가입일"
+  },
+  "signOutAll": {
+    "title": "모든 기기에서 로그아웃",
+    "description": "활성화된 모든 세션이 해제됩니다.",
+    "button": "로그아웃"
+  },
+  "subscription": {
+    "title": "구독",
+    "description": "요금제와 결제를 관리하세요.",
+    "manageBilling": "결제 관리",
+    "upgrade": "업그레이드",
+    "cancelNote": "<strong>결제 관리</strong>에서 언제든지 해지할 수 있습니다. 현재 결제 기간이 끝날 때까지는 계속 이용할 수 있습니다."
+  },
+  "devicesCard": {
+    "title": "기기",
+    "description": "그룹과 탭을 동기화하는 기기입니다. Pro 및 Pro AI 전용입니다."
+  },
+  "password": {
+    "tooShort": "비밀번호는 8자 이상이어야 합니다.",
+    "updated": "비밀번호를 변경했습니다",
+    "set": "비밀번호를 설정했습니다. 이제 이메일과 비밀번호로도 로그인할 수 있습니다",
+    "change": "비밀번호 변경",
+    "setLabel": "비밀번호 설정",
+    "placeholder": "••••••••••",
+    "save": "저장"
+  },
+  "credits": {
+    "failed": "결제를 시작할 수 없습니다",
+    "getMore": "더 받기"
+  }
+}

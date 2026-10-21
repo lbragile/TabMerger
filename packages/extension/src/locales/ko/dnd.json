@@ -1,0 +1,77 @@
+{
+  "instructions": "Space로 들어 올리고, 방향키로 위치를 고르고(왼쪽·오른쪽 방향키로 창과 그룹 사이를 오갑니다), Space로 놓고, Escape로 취소합니다. 여러 항목을 한 번에 옮기려면 Shift+Space로 범위를 선택하거나 {{modifier}}+A로 모두 선택하세요.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "탭",
+    "window": "창",
+    "group": "그룹",
+    "item": "항목"
+  },
+  "typeStart": {
+    "tab": "탭",
+    "window": "창",
+    "group": "그룹",
+    "item": "항목"
+  },
+  "untitledTab": "제목 없는 탭",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{name}}부터 시작하는 {{items}}",
+  "position": {
+    "tab": "그룹 {{group}}의 {{window}}에서 {{total}}개 중 {{index}}번째 위치",
+    "window": "그룹 {{group}}에서 {{total}}개 중 {{index}}번째 위치",
+    "group": "{{total}}개 중 {{index}}번째 위치"
+  },
+  "target": {
+    "newGroup": "새 그룹",
+    "newWindowAtEnd": "그룹 {{group}} 끝의 새 창",
+    "nowOpen": "현재 열린 탭(새 브라우저 창에서 엽니다)",
+    "groupAsWindow": "그룹 {{group}}의 새 창"
+  },
+  "token": {
+    "dropped": "놓았습니다.",
+    "cancelled": "취소했습니다."
+  },
+  "bail": {
+    "cancelled": "이동을 취소했습니다.",
+    "nothingMoved": "놓았지만 옮겨진 것은 없습니다.",
+    "returnedMany": "{{items}}이(가) 돌아갔습니다",
+    "returnedOne": "{{named}}이(가) 돌아갔습니다",
+    "noop": "{{what}}을(를) {{position}}에 다시 놓았습니다. 옮겨진 것은 없습니다.",
+    "stale": "드래그하는 동안 그룹이 바뀌어 아무것도 옮기지 않았습니다. {{returned}}: {{position}}.",
+    "cancelledReturned": "이동을 취소했습니다. {{returned}}: {{position}}.",
+    "rejected": "그곳에는 놓을 수 없습니다. {{returned}}: {{position}}."
+  },
+  "removedElsewhere_other": "{{count}}개가 다른 곳에서 제거되었습니다.",
+  "stillSelected_other": "아직 선택되어 있습니다.",
+  "dropped": "놓았습니다.",
+  "movedGroups": "그룹 {{count}}개를 한 덩어리로 {{position}}(으)로 옮겼습니다.",
+  "movedGroup": "그룹 {{name}}을(를) {{position}}(으)로 옮겼습니다.",
+  "partial": "{{total}}개 중 {{count}}개",
+  "at": "{{total}}개 중 {{index}}번째 위치",
+  "startingAt": "{{total}}개 중 {{index}}번째 위치부터",
+  "whereTab": "그룹 {{group}}의 {{window}}, {{at}}",
+  "whereWindow": "그룹 {{group}}, {{at}}",
+  "movedTo": "{{items}}을(를) {{where}}(으)로 옮겼습니다.",
+  "openTabsClosed": " 열려 있던 탭은 닫혔습니다.",
+  "groupHidden": " 그룹 {{group}}은(는) 표시되지 않습니다.",
+  "openedNewWindow": "{{items}}을(를) 새 브라우저 창에서 열었습니다.",
+  "openedNowOpen": "{{items}}을(를) 현재 열린 탭에서 열었습니다.",
+  "movedNewWindow": "{{items}}을(를) 새 브라우저 창으로 옮겼습니다.",
+  "movedWithinNowOpen": "{{items}}을(를) 현재 열린 탭 안에서 옮겼습니다.",
+  "originalPosition": "원래 위치 위에 있습니다.",
+  "pickedUpType": "{{type}}을(를) 들어 올렸습니다.",
+  "pickedUpMany": "{{what}}을(를) 들어 올렸습니다.",
+  "pickedUpOne": "{{type}} {{name}}을(를) 들어 올렸습니다. {{position}}.",
+  "groupShown": "이제 그룹 {{name}}이(가) 표시됩니다.",
+  "copyHint": "저장된 그룹에 놓으면 복사되며 열린 탭은 그대로 열려 있습니다.",
+  "notOver": "놓을 수 있는 위치 위에 있지 않습니다.",
+  "over": "{{target}} 위에 있습니다.",
+  "cantDropOn": "{{target}}에는 놓을 수 없습니다.",
+  "typeDropped": "{{type}}을(를) 놓았습니다.",
+  "cancelledReturnedType": "이동을 취소했습니다. {{type}}이(가) 원래 위치로 돌아갔습니다.",
+  "saveFailed": "이동을 저장하지 못해 원래대로 되돌렸습니다."
+}

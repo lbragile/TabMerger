@@ -1,0 +1,32 @@
+{
+  "metaTitle": "İletişim",
+  "metaDescription": "TabMerger ekibiyle iletişime geçin: bir hata bildirin, faturalandırma veya hesabınız hakkında soru sorun ya da geri bildirim ve fikirlerinizi paylaşın.",
+  "eyebrow": "Destek",
+  "title": "Bize Ulaşın",
+  "lead": "Bir sorunuz mu var, bir hata mı buldunuz ya da aboneliğinizle ilgili yardıma mı ihtiyacınız var? Genellikle bir iş günü içinde yanıt veririz.",
+  "bugReport": "Hata mı bildiriyorsunuz? Daha hızlı takip ve görünürlük için <link>bir GitHub sorunu açın</link>.",
+  "preferEmail": "E-postayı mı tercih edersiniz? <email>{address}</email> adresine yazın.",
+  "sentTitle": "Mesaj gönderildi",
+  "sentBody": "Size kısa süre içinde dönüş yapacağız.",
+  "email": "E-posta",
+  "emailPlaceholder": "siz@ornek.com",
+  "subject": "Konu",
+  "subjectPlaceholder": "Bir neden seçin…",
+  "subjects": {
+    "bug": "Hata bildirimi",
+    "betaBug": "Beta hata bildirimi",
+    "feedback": "Geri bildirim ve fikirler",
+    "billing": "Faturalandırma sorusu",
+    "feature": "Özellik isteği",
+    "account": "Hesap yardımı",
+    "other": "Diğer"
+  },
+  "otherSubject": "Lütfen belirtin",
+  "otherSubjectPlaceholder": "Konu nedir?",
+  "message": "Mesaj",
+  "messagePlaceholder": "Sorununuzu veya sorunuzu mümkün olduğunca ayrıntılı açıklayın.",
+  "rateLimited": "Çok fazla mesaj gönderildi — lütfen daha sonra tekrar deneyin.",
+  "failed": "Bir şeyler ters gitti. Lütfen tekrar deneyin veya bize <email>{address}</email> adresinden e-posta gönderin.",
+  "sending": "Gönderiliyor…",
+  "send": "Mesaj gönder"
+}

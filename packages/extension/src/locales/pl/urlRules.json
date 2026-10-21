@@ -1,0 +1,23 @@
+{
+  "title": "Reguły URL",
+  "description": "Automatycznie przypisuj karty do grup według wzorca URL. Użyj <code>*</code> jako symbolu wieloznacznego (np. <code>github.com/*</code>). Wygrywa pierwsza pasująca reguła.",
+  "empty": "Brak reguł.",
+  "deletedGroup": "(usunięta grupa)",
+  "moveUp": "Przesuń regułę w górę",
+  "moveDown": "Przesuń regułę w dół",
+  "edit": "Edytuj regułę",
+  "delete": "Usuń regułę",
+  "used": "Użyto {{used}}/{{max}}",
+  "addRule": "Dodaj regułę",
+  "discard": "Odrzuć zmiany",
+  "cancel": "Anuluj",
+  "saveAll": "Zapisz wszystkie reguły",
+  "save": "Zapisz",
+  "editTitle": "Edytuj Regułę URL",
+  "addTitle": "Dodaj Regułę URL",
+  "patternPlaceholder": "Wzorzec, np. github.com/*",
+  "groupPlaceholder": "Wybierz grupę docelową…",
+  "toast": {
+    "limit": "Plan darmowy pozwala na maksymalnie {{max}} reguł URL."
+  }
+}

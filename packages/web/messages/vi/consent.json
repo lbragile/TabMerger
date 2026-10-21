@@ -1,0 +1,11 @@
+{
+  "label": "Đồng ý cookie",
+  "message": "Chúng tôi muốn dùng cookie phân tích (Google Analytics và PostHog) để hiểu cách trang web được sử dụng. Chúng chỉ được đặt nếu bạn chấp nhận, và bạn có thể thay đổi lựa chọn bất cứ lúc nào.",
+  "messageOn": "Tính năng phân tích (Google Analytics và PostHog, bao gồm ghi lại phiên) đang bật cho trang này ở khu vực của bạn. Từ chối sẽ tắt chúng, và bạn có thể thay đổi lựa chọn bất cứ lúc nào.",
+  "messageGpc": "Trình duyệt của bạn đã gửi tín hiệu Global Privacy Control, nên tính năng phân tích (Google Analytics và PostHog) đang tắt. Chấp nhận sẽ bật chúng, và bạn có thể thay đổi lựa chọn bất cứ lúc nào.",
+  "learnMore": "Chi tiết cookie",
+  "accept": "Chấp nhận",
+  "reject": "Từ chối",
+  "chip": "Lựa chọn cookie",
+  "collapse": "Ẩn lựa chọn cookie"
+}

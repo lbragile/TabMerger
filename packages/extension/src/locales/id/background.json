@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Tidak dapat menghubungi server sinkronisasi. Coba lagi.",
+    "accountMismatch": "Perangkat ini masih menyimpan data akun lain. Buka ekstensi untuk beralih akun.",
+    "identityChanged": "Ekstensi keluar saat sinkronisasi berlangsung. Masuk dan coba lagi.",
+    "keyCheckFailed": "Tidak dapat memeriksa status enkripsi. Coba lagi.",
+    "setupUnfinished": "Buka ekstensi untuk menyelesaikan pengaturan enkripsi.",
+    "locked": "Buka ekstensi dan buka kunci enkripsi untuk menyinkronkan."
+  },
+  "menu": {
+    "saveTo": "Simpan ke TabMerger",
+    "scopeCurrent": "Simpan tab ini",
+    "scopeLeft": "Simpan tab di sebelah kiri",
+    "scopeRight": "Simpan tab di sebelah kanan",
+    "scopeExcluding": "Simpan semua tab lainnya",
+    "noGroups": "Belum ada grup tersimpan",
+    "groupItem": "{{color}} {{name}} ({{windows}}j · {{tabs}}t)"
+  },
+  "reminder": {
+    "title": "Pengingat TabMerger"
+  }
+}

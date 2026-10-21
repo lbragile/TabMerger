@@ -1,0 +1,15 @@
+{
+  "metaTitle": "변경 내역",
+  "metaDescription": "TabMerger의 새 기능, 개선 사항 및 수정 사항.",
+  "title": "변경 내역",
+  "lead": "지금까지 출시한 모든 내용을 최신순으로 보여 드립니다.",
+  "githubRelease": "GitHub 릴리스",
+  "githubReleaseLabel": "GitHub의 {version} 릴리스",
+  "prLinkLabel": "GitHub의 풀 리퀘스트 #{number}",
+  "majorRelease": "메이저 릴리스",
+  "types": {
+    "New": "새 기능",
+    "Improved": "개선",
+    "Fixed": "수정"
+  }
+}

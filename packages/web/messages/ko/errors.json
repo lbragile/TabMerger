@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "오류 404 · 페이지를 찾을 수 없음",
+    "title": "이 탭이 길을 잃었어요",
+    "description": "모든 그룹을 찾아봤지만 이 페이지를 찾을 수 없었습니다. 이동되었거나 닫혔거나 처음부터 없었던 페이지일 수 있습니다. 다시 원래 자리로 안내해 드릴게요.",
+    "documentTitle": "페이지를 찾을 수 없음",
+    "tabLabel": "없는 페이지"
+  },
+  "serverError": {
+    "eyebrow": "오류 500 · 문제가 발생했습니다",
+    "title": "이 탭이 멈췄어요",
+    "description": "이 페이지를 불러오는 중 저희 쪽에서 문제가 발생했습니다. 확장 프로그램의 탭과 그룹에는 영향이 없습니다. 잠시 후 다시 시도해 주세요.",
+    "documentTitle": "문제가 발생했습니다",
+    "tabLabel": "응답 없음"
+  },
+  "links": {
+    "features": "기능",
+    "pricing": "요금제",
+    "faq": "자주 묻는 질문",
+    "dashboard": "대시보드",
+    "account": "계정",
+    "contactSupport": "고객 지원 문의"
+  },
+  "helpfulLinks": "유용한 링크",
+  "tryThese": "또는 다음 중 하나를 시도해 보세요",
+  "illustrationTabResearch": "자료 조사",
+  "illustrationTabDocs": "문서",
+  "tryAgain": "다시 시도",
+  "backToHome": "홈으로 돌아가기",
+  "backToDashboard": "대시보드로 돌아가기",
+  "devDetails": "오류 세부 정보(개발 환경 전용)",
+  "referenceId": "참조 ID",
+  "copyReferenceId": "참조 ID 복사",
+  "referenceIdHint": "고객 지원에 문의하실 때 이 ID를 알려 주시면 무엇이 잘못되었는지 찾을 수 있습니다.",
+  "referenceIdCopied": "참조 ID를 복사했습니다",
+  "referenceIdCopyFailed": "복사하지 못했습니다. ID를 선택해 복사해 주세요.",
+  "titleWithBrand": "{title} | TabMerger"
+}

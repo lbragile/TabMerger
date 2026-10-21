@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Osiągnięto Limit Grup",
+    "description": "Osiągnąłeś limit planu darmowego wynoszący {{max}} grup. Przejdź na Pro, aby uzyskać nieograniczoną liczbę grup."
+  },
+  "maxTabs": {
+    "title": "Osiągnięto Limit Kart",
+    "description": "Osiągnąłeś limit planu darmowego wynoszący {{max}} kart. Przejdź na Pro, aby uzyskać nieograniczoną liczbę kart."
+  },
+  "cloudSync": {
+    "title": "Synchronizacja w Chmurze to Pro",
+    "description": "Synchronizuj swoje grupy na wszystkich urządzeniach dzięki TabMerger Pro. Ulepsz, aby włączyć synchronizację w chmurze."
+  },
+  "aiFeatures": {
+    "title": "Funkcje AI to Pro AI",
+    "description": "Automatyczne grupowanie AI, inteligentne nazywanie i podsumowania kart są dostępne w planie Pro AI."
+  },
+  "default": {
+    "title": "Ulepsz TabMerger",
+    "description": "Odblokuj nieograniczoną liczbę grup, synchronizację w chmurze, automatyczne kopie zapasowe i funkcje AI dzięki TabMerger Pro."
+  },
+  "signInHint": " Masz już konto Pro? Zaloguj się, aby je przywrócić na tym urządzeniu.",
+  "planPrice": " — {{price}}/mies.",
+  "comingSoon": "Wkrótce",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Darmowy",
+      "f1": "Do {{groups}} grup",
+      "f2": "Do {{tabs}} kart",
+      "f3": "Do {{urlRules}} reguł URL"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Wszystko z planu Darmowy",
+      "f2": "Nieograniczona liczba grup, kart, reguł URL i sesji",
+      "f3": "Synchronizacja w chmurze na wszystkich urządzeniach"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Wszystko z planu Pro",
+      "f2": "Automatyczne grupowanie kart przez AI",
+      "f3": "Sugestie nazw grup przez AI"
+    }
+  },
+  "maybeLater": "Może później",
+  "signIn": "Zaloguj się",
+  "upgradeNow": "Ulepsz teraz"
+}

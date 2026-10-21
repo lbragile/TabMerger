@@ -1,0 +1,23 @@
+{
+  "title": "Quy Tắc URL",
+  "description": "Tự động gán thẻ vào nhóm theo mẫu URL. Dùng <code>*</code> làm ký tự đại diện (vd. <code>github.com/*</code>). Quy tắc khớp đầu tiên sẽ được áp dụng.",
+  "empty": "Chưa có quy tắc nào.",
+  "deletedGroup": "(nhóm đã xóa)",
+  "moveUp": "Di chuyển quy tắc lên",
+  "moveDown": "Di chuyển quy tắc xuống",
+  "edit": "Sửa quy tắc",
+  "delete": "Xóa quy tắc",
+  "used": "Đã dùng {{used}}/{{max}}",
+  "addRule": "Thêm quy tắc",
+  "discard": "Bỏ thay đổi",
+  "cancel": "Hủy",
+  "saveAll": "Lưu tất cả quy tắc",
+  "save": "Lưu",
+  "editTitle": "Sửa Quy Tắc URL",
+  "addTitle": "Thêm Quy Tắc URL",
+  "patternPlaceholder": "Mẫu, vd. github.com/*",
+  "groupPlaceholder": "Chọn nhóm đích…",
+  "toast": {
+    "limit": "Gói miễn phí cho phép tối đa {{max}} quy tắc URL."
+  }
+}

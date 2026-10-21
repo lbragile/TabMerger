@@ -1,0 +1,284 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "Poznaj TabMerger",
+      "description": "Rozejrzyj się: gdzie pojawiają się Twoje otwarte karty i jak zbudowane jest okno. Nic jeszcze do wypróbowania."
+    },
+    "groups": {
+      "title": "Organizuj za pomocą grup",
+      "description": "Grupy to miejsce, w którym żyją zapisane karty. Utworzysz jedną, nazwiesz ją, nadasz jej kolor i przypniesz na górze."
+    },
+    "drag": {
+      "title": "Przenoś rzeczy przeciąganiem",
+      "description": "Przeniesiesz karty i grupy na dwóch grupach ćwiczeniowych dodanych przez wycieczkę: \"Tour demo\" i \"Tour demo 2\". Zawierają przykładowe karty, nie Twoje."
+    },
+    "tabs": {
+      "title": "Zapisuj i otwieraj ponownie karty",
+      "description": "Jak przenieść otwarte karty do grupy, przywrócić je później i uporządkować to, co zapisałeś. Wypróbujesz każdą z nich na grupach ćwiczeniowych i na zapasowej karcie otwartej przez wycieczkę: żadna z Twoich własnych kart nie zostanie zapisana, otwarta ani zamknięta."
+    },
+    "find": {
+      "title": "Znajduj rzeczy i cofaj błędy",
+      "description": "Przeszukuj wszystkie karty i grupy naraz, i cofaj się, gdy zmienisz zdanie. Wypróbujesz wyszukiwanie, \"Cofnij\" i \"Ponów\" na grupach ćwiczeniowych."
+    },
+    "later": {
+      "title": "Zachowaj rzeczy na później",
+      "description": "Zapisz wszystkie swoje grupy naraz, odłóż grupę bez jej usuwania i zapisuj z dowolnej strony internetowej. Ten rozdział tylko wyjaśnia."
+    },
+    "settings": {
+      "title": "Ustawienia i Twoje konto",
+      "description": "Zmień wygląd TabMerger, zobacz, co jeszcze oferują Ustawienia i co dodaje logowanie. Wypróbujesz zmianę motywu."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Witaj w TabMerger",
+      "body": "TabMerger porządkuje Twoją przeglądarkę. Zapisuj otwarte karty w nazwanych grupach, zamykaj je i przywracaj, kiedy tylko potrzebujesz. Ta wycieczka ma siedem krótkich rozdziałów, każdy nazwany u góry tej karty. Niektóre kroki proszą Cię o samodzielne wypróbowanie czegoś: pomarańczowy pierścień oznacza wtedy kolejny element do użycia, a tekst podaje jego nazwę. Dla tych kroków wycieczka dodaje dwie grupy ćwiczeniowe z przykładowymi kartami, \"Tour demo\" i \"Tour demo 2\", i sama je usuwa. Możesz pominąć krok, rozdział lub całą wycieczkę w dowolnym momencie."
+    },
+    "now-open": {
+      "title": "Teraz Otwarte",
+      "body": "\"Teraz Otwarte\", na górze listy po lewej, to na żywo lista każdej karty otwartej teraz w Twojej przeglądarce. Jest zawsze pierwsza i nie można jej usunąć."
+    },
+    "main-panel": {
+      "title": "Okna i karty",
+      "body": "Główny panel pokazuje zawartość grupy wybranej po lewej: jej okna oraz karty w każdym oknie. Dla Teraz Otwarte są to Twoje prawdziwe okna przeglądarki."
+    },
+    "make-group": {
+      "title": "Utwórz grupę",
+      "body": "Grupa to nazwane miejsce na zapisane karty, na przykład \"Praca\" lub \"Plany na wakacje\". Wypróbuj: wybierz \"Dodaj Grupę\" pod swoimi grupami. Pojawia się nowa grupa z gotowym polem \"Nazwa grupy\", pokazującym \"temp group\". Wpisz własną nazwę, na przykład \"Ćwiczenie\", a następnie naciśnij Enter lub wybierz \"Zapisz\" obok pola.",
+      "doneText": "Świetnie, Twoja grupa jest gotowa. Kolejne kroki jej użyją.",
+      "fallbackBody": "Grupa to nazwane miejsce na zapisane karty, na przykład \"Praca\" lub \"Plany na wakacje\". \"Dodaj Grupę\", pod Twoimi grupami, tworzy ją. Masz już tyle grup, ile pozwala Twój plan, więc ten krok jest tylko pokazany, nie wypróbowany."
+    },
+    "group-color": {
+      "title": "Nadaj jej kolor",
+      "body": "Kolory ułatwiają odróżnianie grup. Wypróbuj: w grupie, którą właśnie utworzyłeś, wybierz okrągłą kropkę \"Zmień kolor grupy\" przed jej nazwą. Wybierz jedną z okrągłych próbek kolorów, a następnie wybierz \"Zastosuj\".",
+      "doneText": "Świetnie, kolor zmieniony.",
+      "fallbackBody": "Kolory ułatwiają odróżnianie grup. Każda grupa ma okrągłą kropkę \"Zmień kolor grupy\" przed jej nazwą: wybierz ją, wybierz kolor, a następnie wybierz \"Zastosuj\"."
+    },
+    "group-pin": {
+      "title": "Przypnij grupę na górze",
+      "body": "Przypięte grupy pozostają nad pozostałymi. Wypróbuj: w grupie, którą właśnie utworzyłeś, wybierz gwiazdkę na końcu jej wiersza. Nazywa się \"Przypnij grupę\" lub \"Odepnij grupę\", gdy grupa jest już przypięta.",
+      "doneText": "Świetnie. Wybierz gwiazdkę ponownie, kiedy zechcesz to cofnąć.",
+      "fallbackBody": "Przypięte grupy pozostają nad pozostałymi. Każda grupa ma gwiazdkę na końcu swojego wiersza, nazwaną \"Przypnij grupę\": wybierz ją, aby przypiąć grupę, i ponownie, aby ją odpiąć."
+    },
+    "group-menu": {
+      "title": "Więcej dla każdej grupy",
+      "body": "Każda zapisana grupa ma menu po kliknięciu prawym przyciskiem myszy. Zawiera \"Zmień nazwę\", \"Dodaj notatkę\", \"Duplikuj\", \"Scal z bieżącą sesją\", aby dodać otwarte okna do grupy, \"Archiwizuj grupę\", aby ją ukryć, oraz \"Usuń grupę\". Ten krok to tylko spojrzenie: lista jest zablokowana podczas trwania wycieczki, więc wypróbuj menu po jej zakończeniu."
+    },
+    "drag-tab-reorder": {
+      "title": "Zmień kolejność kart",
+      "body": "Główny panel pokazuje grupę ćwiczeniową \"Tour demo\". Każda karta ma przed sobą kropkowany uchwyt, nazwany \"Przeciągnij, aby zmienić kolejność karty\". Przenieś pierwszą kartę okna \"Reading\" na koniec tego okna.",
+      "subStepText": {
+        "1": "Naciśnij i przytrzymaj uchwyt pierwszej karty.",
+        "2": "Przesuń go w dół do linii pod ostatnią kartą, oznaczonej \"Upuść pod tą kartą\".",
+        "3": "Puść, aby ją upuścić."
+      },
+      "subStepKeys": {
+        "1": "naciśnij Tab, aby dotrzeć do uchwytu, a następnie spację, aby podnieść kartę.",
+        "2": "naciskaj strzałkę w dół, aż karta znajdzie się na linii oznaczonej \"Upuść pod tą kartą\".",
+        "3": "naciśnij spację, aby ją upuścić."
+      },
+      "doneText": "Świetnie, karta została przeniesiona.",
+      "fallbackBody": "Każda zapisana karta ma przed sobą kropkowany uchwyt, nazwany \"Przeciągnij, aby zmienić kolejność karty\". Przeciąganie go przenosi kartę w górę lub w dół w jej oknie. Ten krok to tylko spojrzenie."
+    },
+    "drag-tab-window": {
+      "title": "Przenieś kartę do innego okna",
+      "body": "Karta może też trafić do innego okna tej samej grupy. Przenieś pierwszą kartę do drugiego okna \"Tour demo\".",
+      "subStepText": {
+        "1": "Naciśnij i przytrzymaj uchwyt pierwszej karty.",
+        "2": "Przesuń ją na drugie okno, oznaczone \"Upuść w tym oknie\".",
+        "3": "Puść, aby ją upuścić."
+      },
+      "subStepKeys": {
+        "1": "naciśnij Tab, aby dotrzeć do uchwytu, a następnie spację, aby podnieść kartę.",
+        "2": "naciskaj strzałkę w dół, aż karta znajdzie się wewnątrz okna oznaczonego \"Upuść w tym oknie\".",
+        "3": "naciśnij spację, aby ją upuścić."
+      },
+      "doneText": "Świetnie, karta jest teraz w drugim oknie.",
+      "fallbackBody": "Przeciąganie karty za jej uchwyt na inne okno tej samej grupy przenosi ją tam. Ten krok to tylko spojrzenie."
+    },
+    "drag-tab-group": {
+      "title": "Przenieś kartę do innej grupy",
+      "body": "Upuszczenie karty na grupę na liście po lewej przenosi ją do tej grupy. Przenieś pierwszą kartę do grupy ćwiczeniowej \"Tour demo 2\".",
+      "subStepText": {
+        "1": "Naciśnij i przytrzymaj uchwyt pierwszej karty.",
+        "2": "Przesuń ją na \"Tour demo 2\" na liście po lewej, oznaczone \"Upuść na tę grupę\".",
+        "3": "Puść, aby ją upuścić."
+      },
+      "subStepKeys": {
+        "1": "naciśnij Tab, aby dotrzeć do uchwytu, a następnie spację, aby podnieść kartę.",
+        "2": "naciśnij strzałkę w lewo, aby przejść do listy grup, a następnie strzałkę w dół, aż dotrzesz do \"Tour demo 2\", oznaczonego \"Upuść na tę grupę\".",
+        "3": "naciśnij spację, aby ją upuścić."
+      },
+      "doneText": "Świetnie, karta jest teraz w \"Tour demo 2\".",
+      "fallbackBody": "Przeciąganie karty za jej uchwyt na grupę na liście po lewej przenosi ją do tej grupy. Ten krok to tylko spojrzenie."
+    },
+    "drag-group-order": {
+      "title": "Ustaw kolejność grup",
+      "body": "Grupy również mają kropkowany uchwyt, na początku swojego wiersza, nazwany \"Przeciągnij, aby zmienić kolejność grupy\". Zamień miejscami dwie grupy ćwiczeniowe. Twoje własne grupy przemieszczają się w ten sam sposób.",
+      "subStepText": {
+        "1": "Naciśnij i przytrzymaj uchwyt górnej grupy ćwiczeniowej.",
+        "2": "Przesuń go w dół do linii pod drugą grupą ćwiczeniową, oznaczonej \"Upuść pod tą grupą\".",
+        "3": "Puść, aby ją upuścić."
+      },
+      "subStepKeys": {
+        "1": "naciśnij Tab, aby dotrzeć do uchwytu, a następnie spację, aby podnieść grupę.",
+        "2": "naciśnij strzałkę w dół raz, aby grupa znalazła się na linii oznaczonej \"Upuść pod tą grupą\".",
+        "3": "naciśnij spację, aby ją upuścić."
+      },
+      "doneText": "Świetnie, grupy zamieniły się miejscami.",
+      "fallbackBody": "Każda zapisana grupa ma kropkowany uchwyt na początku swojego wiersza, nazwany \"Przeciągnij, aby zmienić kolejność grupy\". Przeciąganie go przenosi grupę w górę lub w dół listy. Ten krok to tylko spojrzenie."
+    },
+    "save-tabs": {
+      "title": "Zapisz karty do grupy",
+      "body": "Karta przeciągnięta z Teraz Otwarte na grupę zostaje zapisana w tej grupie i zamknięta w Twojej przeglądarce. Aby żadna z Twoich własnych kart nie została zamknięta, wycieczka otworzyła zapasową kartę o nazwie \"Tour practice tab\": to jedyna karta, którą możesz przenieść w tym kroku. Zapisz ją w grupie ćwiczeniowej \"Tour demo\".",
+      "subStepText": {
+        "1": "Naciśnij i przytrzymaj kropkowany uchwyt przed \"Tour practice tab\".",
+        "2": "Przesuń ją na \"Tour demo\" na liście po lewej, oznaczone \"Upuść na tę grupę\".",
+        "3": "Puść, aby ją upuścić."
+      },
+      "subStepKeys": {
+        "1": "naciśnij Tab, aby dotrzeć do uchwytu, a następnie spację, aby podnieść kartę.",
+        "2": "naciśnij strzałkę w lewo, aby przejść do listy grup, a następnie strzałkę w dół, aż dotrzesz do \"Tour demo\", oznaczonego \"Upuść na tę grupę\".",
+        "3": "naciśnij spację, aby ją upuścić."
+      },
+      "doneText": "Świetnie. Karta ćwiczeniowa jest zapisana w \"Tour demo\" i zamknięta w Twojej przeglądarce. Całe okna są zapisywane w ten sam sposób.",
+      "fallbackBody": "Karta, lub całe okno, przeciągnięte z Teraz Otwarte na grupę po lewej zostaje zapisane w tej grupie i zamknięte w Twojej przeglądarce. Wycieczka nie mogła otworzyć zapasowej karty, aby to wypróbować, więc ten krok to tylko spojrzenie: żadna z Twoich kart nie została naruszona."
+    },
+    "open-tabs": {
+      "title": "Otwórz ponownie swoje karty",
+      "body": "W zapisanej grupie wybranie nazwy karty otwiera ją ponownie, a \"Otwórz w przeglądarce\" w menu okna otwiera całe okno. Wypróbuj to menu na oknie \"Reading\" grupy \"Tour demo\". Przykładowe karty nie są prawdziwymi stronami, więc nic nie zostaje otwarte podczas wycieczki.",
+      "subStepText": {
+        "1": "Wybierz \"Więcej opcji okna\", trzy kropki na końcu wiersza \"Reading\".",
+        "2": "Wybierz \"Otwórz w przeglądarce\" w menu."
+      },
+      "doneText": "Świetnie. Po wycieczce to otwiera okno wraz z jego kartami w Twojej przeglądarce. Teraz nic nie zostało otwarte.",
+      "fallbackBody": "W zapisanej grupie wybranie nazwy karty otwiera ją ponownie. \"Więcej opcji okna\" na oknie ma \"Otwórz w przeglądarce\" dla całego okna, a menu po kliknięciu prawym przyciskiem myszy grupy ma \"Otwórz wszystkie w nowym oknie\". Ten krok to tylko spojrzenie: nic nie zostaje otwarte podczas wycieczki."
+    },
+    "tab-extras": {
+      "title": "Notatki, przypomnienia i nazwy",
+      "body": "Zapisana karta ma menu po kliknięciu prawym przyciskiem myszy z czymś więcej: \"Przenieś do grupy\", \"Dodaj notatkę\", aby coś zapisać, \"Przypomnij mi…\", aby zostać przypomnianym później, \"Zmień nazwę karty\", aby nadać jej własny tytuł, oraz \"Usuń kartę\". Ten krok to tylko spojrzenie: lista jest zablokowana podczas trwania wycieczki, więc wypróbuj menu po jej zakończeniu."
+    },
+    "tidy-up": {
+      "title": "Uporządkuj grupę",
+      "body": "\"Więcej opcji grupy\", w prawym górnym rogu głównego panelu, może sortować karty według tytułu lub adresu, usuwać powtórzenia za pomocą \"Usuń duplikaty kart\" i \"Połącz okna\" w jedno lub \"Rozdziel okna\" osobno. \"Tour demo\" zawiera kartę \"Sample: books\" dwukrotnie: usuń powtórzenie.",
+      "modalBody": "Okno dialogowe \"Usuń duplikaty\" wyświetla powtórzoną kartę. Wybierz \"Usuń 1 duplikat\".",
+      "subStepText": {
+        "1": "Wybierz \"Więcej opcji grupy\", trzy kropki w prawym górnym rogu głównego panelu.",
+        "2": "Wybierz \"Usuń duplikaty kart\" w menu.",
+        "3": "W oknie dialogowym \"Usuń duplikaty\" wybierz \"Usuń 1 duplikat\"."
+      },
+      "doneText": "Świetnie, powtórzona karta zniknęła.",
+      "fallbackBody": "\"Więcej opcji grupy\", w prawym górnym rogu głównego panelu, może sortować karty według tytułu lub adresu, usuwać powtórzenia za pomocą \"Usuń duplikaty kart\" i \"Połącz okna\" w jedno lub \"Rozdziel okna\" osobno. Ten krok to tylko spojrzenie."
+    },
+    "select-items": {
+      "title": "Pracuj na kilku naraz",
+      "body": "\"Zaznacz elementy\", w nagłówku, pokazuje pole wyboru na każdej karcie, oknie i grupie. Gdy kilka jest zaznaczonych, na dole pojawia się pasek, który działa na wszystkie naraz, na przykład aby je usunąć. Udostępnianie zaznaczonych grup jako linku wymaga planu Pro. Wypróbuj zaznaczenie przykładowej karty.",
+      "subStepText": {
+        "1": "Wybierz \"Zaznacz elementy\" w nagłówku.",
+        "2": "Zaznacz pole wyboru przed pierwszą przykładową kartą."
+      },
+      "doneText": "Świetnie. Pasek na dole działa na to, co zaznaczyłeś. Wycieczka wyłącza zaznaczanie ponownie, gdy przejdziesz dalej.",
+      "fallbackBody": "\"Zaznacz elementy\", w nagłówku, pokazuje pole wyboru na każdej karcie, oknie i grupie. Gdy kilka jest zaznaczonych, na dole pojawia się pasek, który działa na wszystkie naraz, na przykład aby je usunąć. Udostępnianie zaznaczonych grup jako linku wymaga planu Pro. Ten krok to tylko spojrzenie."
+    },
+    "search": {
+      "title": "Znajdź cokolwiek",
+      "body": "Pole wyszukiwania u góry, z napisem \"Szukaj kart i grup…\", przeszukuje wszystkie karty i grupy naraz. Dopasowania pojawiają się w miarę pisania. Wypróbuj to na przykładowych kartach.",
+      "subStepText": {
+        "1": "Wybierz pole wyszukiwania u góry.",
+        "2": "Wpisz słowo sample."
+      },
+      "doneText": "Świetnie. Każda pasująca karta jest wymieniona pod polem wyszukiwania. Wybranie jednej przenosi Cię do jej grupy.",
+      "fallbackBody": "Pole wyszukiwania u góry, z napisem \"Szukaj kart i grup…\", przeszukuje wszystkie karty i grupy naraz. Dopasowania pojawiają się w miarę pisania, a wybranie jednego przenosi Cię do jego grupy."
+    },
+    "search-filters": {
+      "title": "Zawęź wyszukiwanie",
+      "body": "Zacznij wyszukiwanie od group: lub window:, aby szukać w jednej grupie lub jednym oknie, albo od tag:, aby filtrować według etykiety grupy kart przeglądarki. Pole wyszukiwania wymienia te opcje pod \"Wypróbuj te wyszukiwania\". Wypróbuj group: na grupie ćwiczeniowej, a następnie wyczyść wyszukiwanie.",
+      "subStepText": {
+        "1": "Wybierz pole wyszukiwania u góry.",
+        "2": "Wpisz group:tour bez spacji. Pojawia się lista o nazwie \"Wybierz grupę\".",
+        "3": "Wybierz \"Tour demo\" z tej listy. Wyszukiwanie teraz przeszukuje tylko tę grupę.",
+        "4": "Wybierz \"Wyczyść wyszukiwanie\", znak × na końcu pola wyszukiwania. Wyszukiwanie pozostaje, dopóki go nie wyczyścisz."
+      },
+      "doneText": "Świetnie, wyszukiwanie zostało wyczyszczone.",
+      "fallbackBody": "Zacznij wyszukiwanie od group: lub window:, aby szukać w jednej grupie lub jednym oknie, albo od tag:, aby filtrować według etykiety grupy kart przeglądarki. Pole wyszukiwania wymienia te opcje pod \"Wypróbuj te wyszukiwania\"."
+    },
+    "undo": {
+      "title": "Zmieniłeś zdanie?",
+      "body": "\"Cofnij\" i \"Ponów\", w nagłówku, cofają się i przechodzą do przodu przez Twoje ostatnie 10 zmian w grupach i kartach. Są wyszarzone, dopóki nie ma czego cofnąć. Wypróbuj je na małej zmianie w przykładowym oknie \"Reading\".",
+      "subStepText": {
+        "1": "Wybierz gwiazdkę na końcu wiersza \"Reading\", nazwaną \"Oznacz okno gwiazdką\".",
+        "2": "Wybierz \"Cofnij\" w nagłówku. To znów usuwa gwiazdkę.",
+        "3": "Wybierz \"Ponów\", obok \"Cofnij\". To przywraca gwiazdkę."
+      },
+      "doneText": "Świetnie. \"Cofnij\" i \"Ponów\" działają tak samo na Twoich własnych grupach i kartach.",
+      "fallbackBody": "\"Cofnij\" i \"Ponów\", w nagłówku, cofają się i przechodzą do przodu przez Twoje ostatnie 10 zmian w grupach i kartach. Są wyszarzone, dopóki nie ma czego cofnąć."
+    },
+    "sessions": {
+      "title": "Zapisz wszystko naraz",
+      "body": "Sesja to zapisana kopia wszystkich Twoich grup w ich obecnym stanie. W sekcji \"SESJE\" w lewym dolnym rogu, \"Zapisz bieżącą sesję\" ją tworzy. \"Przywróć sesję\", obok zapisanej sesji, przywraca ją: najpierw zapyta, ponieważ zamyka Twoje otwarte okna."
+    },
+    "archived": {
+      "title": "Odłóż grupę",
+      "body": "Archiwizowanie ukrywa grupę bez jej usuwania. Zarchiwizowane grupy czekają w sekcji \"ZARCHIWIZOWANE\" w lewym dolnym rogu, gdzie możesz je przywrócić lub usunąć. Nadal liczą się do liczby grup w Twoim planie."
+    },
+    "quick-save": {
+      "title": "Zapisuj bez otwierania TabMerger",
+      "body": "Kliknij prawym przyciskiem myszy dowolną stronę internetową i wybierz \"Zapisz w TabMerger\". Wybierz, co zapisać, na przykład \"Zapisz tę kartę\" lub \"Zapisz wszystkie inne karty\", a następnie grupę, do której to trafi."
+    },
+    "theme": {
+      "title": "Jasny czy ciemny",
+      "body": "Wypróbuj: otwórz menu w prawym górnym rogu, nazwane \"Menu ustawień\" (lub \"Menu konta\" po zalogowaniu), i wybierz \"Ustawienia\". Otwórz listę \"Motyw\", wybierz inny motyw, a następnie wybierz \"Zapisz zmiany\".",
+      "modalBody": "W Ustawieniach: otwórz listę \"Motyw\", wybierz inny motyw, a następnie wybierz \"Zapisz zmiany\".",
+      "doneText": "Świetnie, motyw zmieniony. Zamknij Ustawienia lub wybierz Dalej, aby kontynuować."
+    },
+    "settings-more": {
+      "title": "Więcej w Ustawieniach",
+      "body": "Ustawienia mają więcej na karcie \"Ogólne\": \"Potwierdź przed usunięciem\" pyta przed usunięciem czegokolwiek, a \"Reguły URL\" łączą adresy internetowe z grupą. Na karcie \"Dane\" \"Eksport\" zapisuje wszystkie Twoje grupy do pliku, a \"Import\" wczytuje plik z powrotem. Automatyczne kopie zapasowe, na tej samej karcie, wymagają planu Pro."
+    },
+    "account": {
+      "title": "Twoje konto",
+      "body": "TabMerger działa bez konta: wszystko jest przechowywane na tym urządzeniu. Logowanie, z tego samego menu, z planem Pro utrzymuje Twoje grupy zsynchronizowane na wszystkich urządzeniach. Zsynchronizowane dane są blokowane na Twoim urządzeniu, zanim zostaną wysłane, więc tylko Ty możesz je odczytać."
+    },
+    "ai": {
+      "title": "Działania AI",
+      "body": "\"Działania AI\", w nagłówku, mogą posortować Twoje otwarte karty na grupy za Ciebie. Wymaga planu Pro AI."
+    },
+    "finish": {
+      "title": "Wszystko gotowe",
+      "body": "Chcesz zobaczyć to ponownie? \"Rozpocznij wycieczkę\", znak zapytania w prawym górnym rogu, odtwarza ją w dowolnym momencie."
+    }
+  },
+  "card": {
+    "dialogLabel": "Wycieczka po TabMerger",
+    "chapterLine": "Rozdział {{chapter}} z {{chapters}}",
+    "stepLine": "Krok {{step}} z {{total}}",
+    "done": "Gotowe.",
+    "withKeyboard": " Za pomocą klawiatury: {{keys}}",
+    "yourTurnAnnouncement": " Twoja kolej. Aby przejść dalej bez próbowania, wybierz \"Pomiń ten krok\".",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Wybierz Dalej, aby kontynuować.",
+    "part": "Część ",
+    "ofTotal": "{{current}} z {{total}}",
+    "keyboard": "Klawiatura: ",
+    "yourTurn": "Twoja kolej. Ten krok czeka, aż go wypróbujesz.",
+    "practiceRemoved": "Grupa ćwiczeniowa została usunięta.",
+    "practiceKept": "Grupa, którą utworzyłeś w tej wycieczce, \"{{name}}\", nadal jest na Twojej liście. Zachowaj ją lub usuń teraz.",
+    "practiceKept_tabs": "Grupa, którą utworzyłeś w tej wycieczce, \"{{name}}\" ({{tabs}}), nadal jest na Twojej liście. Zachowaj ją lub usuń teraz.",
+    "removePractice": "Usuń grupę ćwiczeniową",
+    "back": "Wstecz",
+    "skipStep": "Pomiń ten krok",
+    "finish": "Gotowe",
+    "next": "Dalej",
+    "skipTour": "Pomiń wycieczkę",
+    "skipChapter": "Pomiń rozdział"
+  },
+  "drop": {
+    "belowTab": "Upuść pod tą kartą",
+    "window": "Upuść w tym oknie",
+    "group": "Upuść na tę grupę",
+    "belowGroup": "Upuść pod tą grupą",
+    "default": "Upuść tutaj"
+  },
+  "practiceLeft": "Wycieczka zostawiła grupę ćwiczeniową, \"{{name}}\", na Twojej liście.",
+  "removeIt": "Usuń ją"
+}

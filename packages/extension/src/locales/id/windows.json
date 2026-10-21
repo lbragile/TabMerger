@@ -1,0 +1,23 @@
+{
+  "dropNewWindow": "Jatuhkan di sini untuk jendela baru",
+  "removeStale_other": "Hapus {{count}} tab usang",
+  "editGroupNote": "Edit catatan grup",
+  "editNote": "Edit catatan",
+  "moreGroupOptions": "Opsi grup lainnya",
+  "notePlaceholder": "Tambah catatan untuk grup ini…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "Tidak ada jendela di grup ini",
+  "addWindow": "Tambah Jendela",
+  "search": {
+    "elsewhere": "{{tabs}} di {{groups}}",
+    "matchingTabs_other": "{{count}} tab cocok",
+    "otherGroups_other": "{{count}} grup lainnya",
+    "noneInGroup": "Tidak ada tab yang cocok dalam grup ini",
+    "hidden_other": "{{count}} tab disembunyikan oleh pencarian",
+    "allMatch_other": "Semua {{count}} tab cocok",
+    "someMatch_other": "{{matched}} dari {{count}} tab cocok",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "Tidak ada tab yang cocok dengan \"{{query}}\" dalam grup ini"
+  },
+  "createGroup": "Buat grup baru…"
+}

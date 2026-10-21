@@ -1,0 +1,36 @@
+{
+  "metaTitle": "Câu hỏi thường gặp",
+  "metaDescription": "Các câu hỏi thường gặp về TabMerger.",
+  "title": "Câu hỏi thường gặp",
+  "lead": "Vẫn còn thắc mắc? Chúng tôi trả lời email trong vòng chưa đầy một ngày.",
+  "contact": "Liên hệ hỗ trợ",
+  "free": {
+    "question": "TabMerger có thực sự miễn phí không?",
+    "answer": "Có! Gói miễn phí bao gồm tất cả tính năng cốt lõi — tối đa {groups} nhóm, {tabs} tab, {urlRules} quy tắc URL, kéo và thả, cùng nhập/xuất. Bạn chỉ trả phí nếu muốn đồng bộ đám mây, không giới hạn nhóm, tab và quy tắc URL, hoặc các tính năng AI."
+  },
+  "sync": {
+    "question": "Đồng bộ đám mây hoạt động như thế nào?",
+    "answer": "Khi bạn đăng ký gói Pro hoặc Pro AI, các nhóm của bạn sẽ tự động được lưu lên máy chủ của chúng tôi. Nhóm được đồng bộ trên mọi trình duyệt mà bạn đã đăng nhập — đồng bộ chạy mỗi khi cửa sổ bật lên đang mở, nên thay đổi sẽ hiển thị vào lần tới bạn mở nó ở đó."
+  },
+  "ai": {
+    "question": "AI chính xác làm gì?",
+    "answer": "Gói Pro AI mở khóa ba tính năng AI: tự động nhóm (phân tích các tab đang mở và nhóm chúng một cách hợp lý), đặt tên thông minh (gợi ý tên cho các nhóm) và gợi ý phiên (đề xuất cách sắp xếp quy trình làm việc của bạn).",
+    "answerComingSoon": "Sắp ra mắt — gói Pro AI sẽ mở khóa ba tính năng AI: tự động nhóm (phân tích các tab đang mở và nhóm chúng một cách hợp lý), đặt tên thông minh (gợi ý tên cho các nhóm) và gợi ý phiên (đề xuất cách sắp xếp quy trình làm việc của bạn)."
+  },
+  "cancel": {
+    "question": "Tôi có thể hủy gói đăng ký không?",
+    "answer": "Hoàn toàn được. Bạn có thể hủy bất cứ lúc nào từ trang tài khoản. Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán hiện tại, sau đó trở về gói miễn phí."
+  },
+  "browsers": {
+    "question": "TabMerger hỗ trợ những trình duyệt nào?",
+    "answer": "Chrome (Chrome Web Store), Edge (Edge Add-ons hoặc Chrome Web Store), Brave, Vivaldi và Arc (Chrome Web Store), Opera (Chrome Web Store, qua tiện ích \"Install Chrome Extensions\" của Opera) và Firefox (Firefox Add-ons). Safari không được hỗ trợ."
+  },
+  "privacy": {
+    "question": "Dữ liệu của tôi có được bảo mật không?",
+    "answer": "Chúng tôi rất coi trọng quyền riêng tư. Dữ liệu gói miễn phí chỉ được lưu cục bộ — không có gì rời khỏi trình duyệt của bạn. Dữ liệu đồng bộ đám mây của gói Pro được mã hóa đầu cuối ngay trên thiết bị của bạn bằng cụm mật khẩu chỉ bạn biết, trước khi đến máy chủ của chúng tôi — chúng tôi chỉ lưu bản mã hóa và không thể đọc nhóm hay tab của bạn. Chúng tôi không bao giờ bán dữ liệu của bạn."
+  },
+  "downgrade": {
+    "question": "Điều gì xảy ra với các nhóm của tôi nếu tôi hạ cấp?",
+    "answer": "Nếu bạn hạ cấp từ Pro xuống Miễn phí, các nhóm của bạn vẫn được giữ trên đám mây trong 30 ngày. Tab cục bộ của bạn luôn được giữ lại. Bạn có thể xuất mọi thứ trước khi hạ cấp."
+  }
+}

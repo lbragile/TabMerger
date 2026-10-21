@@ -1,0 +1,20 @@
+{
+  "review": "검토",
+  "archive": "보관",
+  "dismiss": "닫기",
+  "getMore": "더 받기",
+  "removeStale": "오래된 탭 제거",
+  "staleTabs": "탭 {{count}}개가 {{days}}일보다 전에 저장되었습니다.",
+  "staleRemoved_other": "오래된 탭 {{count}}개를 제거했습니다",
+  "upgrade": "업그레이드",
+  "paymentIssue": "결제 문제: 카드 정보를 업데이트하세요",
+  "planEnds": "Pro 요금제가 {{date}}에 종료됩니다",
+  "approachingLimit": "무료 한도에 가까워지고 있습니다. Pro로 업그레이드하면 그룹과 탭을 무제한으로 쓸 수 있습니다",
+  "update": {
+    "label": "업데이트 가능",
+    "text": "버전 {{version}}이(가) 준비되었습니다. 다시 시작하면 이 팝업이 닫힙니다.",
+    "restart": "다시 시작하여 업데이트",
+    "restartLabel": "TabMerger를 다시 시작하여 버전 {{version}}(으)로 업데이트합니다. 팝업이 닫힙니다.",
+    "dismissLabel": "버전 {{version}} 업데이트 알림 닫기"
+  }
+}

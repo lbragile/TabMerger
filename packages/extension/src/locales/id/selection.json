@@ -1,0 +1,18 @@
+{
+  "copyToGroup": "Salin ke grup",
+  "moveToGroup": "Pindahkan ke grup",
+  "star": "Bintangi",
+  "unstar": "Batalkan bintang",
+  "share": "Bagikan",
+  "shareRequiresPro": "Berbagi memerlukan Pro",
+  "close": "Tutup",
+  "delete": "Hapus",
+  "cancel": "Batalkan pilihan",
+  "linkCopied": "Tautan disalin ke papan klip",
+  "shareFailed": "Gagal membagikan",
+  "selected_tab_other": "{{count}} tab dipilih",
+  "selected_window_other": "{{count}} jendela dipilih",
+  "selected_group_other": "{{count}} grup dipilih",
+  "cleared": "Pilihan dihapus.",
+  "sentence": "{{text}}."
+}

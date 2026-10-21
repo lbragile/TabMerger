@@ -1,0 +1,36 @@
+{
+  "metaTitle": "FAQ",
+  "metaDescription": "Najczęściej zadawane pytania o TabMerger.",
+  "title": "Częste pytania",
+  "lead": "Nadal masz wątpliwości? Na e-maile odpowiadamy w mniej niż dobę.",
+  "contact": "Skontaktuj się z pomocą",
+  "free": {
+    "question": "Czy TabMerger jest naprawdę darmowy?",
+    "answer": "Tak! Plan darmowy obejmuje wszystkie podstawowe funkcje — do {groups} grup, {tabs} kart, {urlRules} reguł URL, przeciąganie i upuszczanie oraz import/eksport. Płacisz tylko wtedy, gdy chcesz synchronizacji w chmurze, nielimitowanych grup, kart i reguł URL lub funkcji AI."
+  },
+  "sync": {
+    "question": "Jak działa synchronizacja w chmurze?",
+    "answer": "Po wykupieniu planu Pro lub Pro AI Twoje grupy są automatycznie zapisywane na naszych serwerach. Grupy synchronizują się w każdej przeglądarce, w której jesteś zalogowany — synchronizacja działa, gdy okienko rozszerzenia jest otwarte, więc zmiany pojawią się przy jego następnym otwarciu."
+  },
+  "ai": {
+    "question": "Co dokładnie robi AI?",
+    "answer": "Plan Pro AI odblokowuje trzy funkcje AI: automatyczne grupowanie (analizuje otwarte karty i logicznie je grupuje), inteligentne nazywanie (proponuje nazwy grup) oraz sugestie sesji (podpowiada, jak zorganizować pracę).",
+    "answerComingSoon": "Wkrótce — plan Pro AI odblokuje trzy funkcje AI: automatyczne grupowanie (analizuje otwarte karty i logicznie je grupuje), inteligentne nazywanie (proponuje nazwy grup) oraz sugestie sesji (podpowiada, jak zorganizować pracę)."
+  },
+  "cancel": {
+    "question": "Czy mogę anulować subskrypcję?",
+    "answer": "Oczywiście. Możesz zrezygnować w dowolnym momencie na stronie konta. Dostęp zachowasz do końca bieżącego okresu rozliczeniowego, a potem wrócisz do planu darmowego."
+  },
+  "browsers": {
+    "question": "Które przeglądarki obsługuje TabMerger?",
+    "answer": "Chrome (Chrome Web Store), Edge (Dodatki Edge lub Chrome Web Store), Brave, Vivaldi i Arc (Chrome Web Store), Opera (Chrome Web Store, przez dodatek Opery „Install Chrome Extensions”) oraz Firefox (Dodatki Firefoksa). Safari nie jest obsługiwane."
+  },
+  "privacy": {
+    "question": "Czy moje dane są prywatne?",
+    "answer": "Traktujemy prywatność poważnie. Dane w planie darmowym są przechowywane wyłącznie lokalnie — nic nie opuszcza Twojej przeglądarki. Dane synchronizowane w planie Pro są szyfrowane end-to-end na Twoim urządzeniu frazą hasła znaną tylko Tobie, zanim w ogóle trafią na nasze serwery — przechowujemy wyłącznie szyfrogram i nie możemy odczytać Twoich grup ani kart. Nigdy nie sprzedajemy Twoich danych."
+  },
+  "downgrade": {
+    "question": "Co stanie się z moimi grupami po obniżeniu planu?",
+    "answer": "Po przejściu z Pro na plan darmowy Twoje grupy pozostaną w chmurze przez 30 dni. Lokalne karty są zawsze zachowywane. Przed obniżeniem planu możesz wszystko wyeksportować."
+  }
+}

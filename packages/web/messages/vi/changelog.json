@@ -1,0 +1,15 @@
+{
+  "metaTitle": "Nhật ký thay đổi",
+  "metaDescription": "Tính năng mới, cải tiến và bản sửa lỗi trong TabMerger.",
+  "title": "Nhật ký thay đổi",
+  "lead": "Mọi thứ chúng tôi đã phát hành, mới nhất trước.",
+  "githubRelease": "Bản phát hành GitHub",
+  "githubReleaseLabel": "Bản phát hành {version} trên GitHub",
+  "prLinkLabel": "Pull request #{number} trên GitHub",
+  "majorRelease": "Bản phát hành lớn",
+  "types": {
+    "New": "Mới",
+    "Improved": "Cải tiến",
+    "Fixed": "Đã sửa"
+  }
+}

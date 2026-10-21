@@ -84,7 +84,7 @@ describe('MobileNavToggle language row', () => {
     expect(screen.getByRole('link', { name: 'TabMerger on GitHub, 10 stars' }).nextElementSibling).toBe(row)
 
     await user.click(row)
-    expect(screen.getAllByRole('menuitemradio')).toHaveLength(7)
+    expect(screen.getAllByRole('menuitemradio')).toHaveLength(15)
     await user.keyboard('{Escape}')
 
     await user.click(screen.getByRole('button', { name: 'Close menu' }))

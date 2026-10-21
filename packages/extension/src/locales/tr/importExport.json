@@ -1,0 +1,27 @@
+{
+  "title": "İçe / Dışa Aktar",
+  "description": "TabMerger verilerinizi yönetin",
+  "tabExport": "Dışa aktar",
+  "tabImport": "İçe aktar",
+  "exportIntro": "Tüm gruplarınızı bir JSON dosyası olarak dışa aktarın. Bu dosyayı daha sonra yeniden içe aktarabilirsiniz.",
+  "downloadJson": "JSON indir",
+  "jsonHeading": "TabMerger JSON",
+  "jsonIntro": "Daha önce dışa aktarılmış bir JSON dosyasından içe aktarın. Mevcut grupların yerini alır.",
+  "chooseJson": "JSON dosyası seç",
+  "bookmarksHeading": "Chrome Yer İşaretleri",
+  "bookmarksIntro": "Chrome yer işaretleri HTML dışa aktarımından içe aktarın. Her klasör bir grup olur.",
+  "chooseBookmarks": "Yer İşaretleri HTML dosyası seç",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "OneTab düz metin dışa aktarımından içe aktarın. Boş satırla ayrılan her blok bir grup olur.",
+  "chooseOneTab": "OneTab TXT dosyası seç",
+  "toast": {
+    "exported": "Gruplar başarıyla dışa aktarıldı",
+    "imported": "Gruplar başarıyla içe aktarıldı",
+    "imported_skipped": "Gruplar başarıyla içe aktarıldı, {{skipped}} atlandı",
+    "importedCounts": "{{groups}}, {{tabs}} içe aktarıldı",
+    "importedCounts_skipped": "{{groups}}, {{tabs}} içe aktarıldı, {{skipped}} atlandı",
+    "invalidJson": "Geçersiz JSON dosyası",
+    "noBookmarks": "Yer işareti bulunamadı",
+    "noTabs": "Sekme bulunamadı"
+  }
+}

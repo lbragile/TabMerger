@@ -1,0 +1,21 @@
+{
+  "review": "İncele",
+  "archive": "Arşivle",
+  "dismiss": "Kapat",
+  "getMore": "Daha fazla al",
+  "removeStale": "Eskileri kaldır",
+  "staleTabs": "{{count}} sekme {{days}} günden daha önce kaydedildi.",
+  "staleRemoved_one": "{{count}} eski sekme kaldırıldı",
+  "staleRemoved_other": "{{count}} eski sekme kaldırıldı",
+  "upgrade": "Yükselt",
+  "paymentIssue": "Ödeme sorunu — kartınızı güncelleyin",
+  "planEnds": "Pro planınız {{date}} tarihinde sona eriyor",
+  "approachingLimit": "Ücretsiz sınıra yaklaşıyorsunuz — sınırsız grup ve sekme için Pro'ya yükseltin",
+  "update": {
+    "label": "Güncelleme mevcut",
+    "text": "{{version}} sürümü hazır. Yeniden başlatmak bu açılır pencereyi kapatır.",
+    "restart": "Güncellemek için yeniden başlat",
+    "restartLabel": "{{version}} sürümüne güncellemek için TabMerger'ı yeniden başlatın. Bu, açılır pencereyi kapatır.",
+    "dismissLabel": "{{version}} sürümü için güncelleme bildirimini kapat"
+  }
+}

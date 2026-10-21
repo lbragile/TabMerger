@@ -1,0 +1,83 @@
+{
+  "metaTitle": "Tính năng",
+  "metaDescription": "Khám phá mọi điều TabMerger có thể làm — từ nhóm tab thông minh đến sắp xếp bằng AI.",
+  "title": "Tính năng được xây dựng để tập trung",
+  "lead": "Mọi thứ bạn cần để làm chủ trình duyệt — từ các tính năng thiết yếu miễn phí đến sức mạnh AI của gói Pro.",
+  "addToChrome": "Thêm vào Chrome — Miễn phí",
+  "addToFirefox": "Thêm vào Firefox — Miễn phí",
+  "addToEdge": "Thêm vào Edge — Miễn phí",
+  "seePricing": "Xem bảng giá",
+  "badges": {
+    "core": "Cốt lõi",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Quản lý tab mạnh mẽ",
+    "description": "Nền tảng của TabMerger: sắp xếp tab nhanh, trực quan, phù hợp với mọi quy trình làm việc.",
+    "groups": {
+      "title": "Nhóm có tên và mã màu",
+      "description": "Tạo nhóm với tên và màu tùy chỉnh. Phân biệt công việc, nghiên cứu, giải trí và nhiều hơn nữa chỉ trong nháy mắt."
+    },
+    "search": {
+      "title": "Tìm kiếm toàn văn",
+      "description": "Tìm kiếm tức thì trên mọi tiêu đề và URL của tab. Kết quả khớp chính xác với văn bản bạn gõ (không phân biệt chữ hoa thường), kết quả phù hợp nhất hiển thị trước."
+    },
+    "dnd": {
+      "title": "Sắp xếp lại bằng kéo và thả",
+      "description": "Sắp xếp lại tab trong nhóm và thay đổi thứ tự các nhóm bằng thao tác kéo và thả mượt mà."
+    },
+    "shortcuts": {
+      "title": "Phím tắt",
+      "description": "Lưu tab hiện tại, các tab bên trái hoặc bên phải của nó, hoặc tất cả các tab khác mà không cần mở cửa sổ bật lên. Bên trong cửa sổ, mở tìm kiếm bằng Ctrl/Cmd+K và di chuyển tab, cửa sổ, nhóm chỉ bằng bàn phím."
+    },
+    "importExport": {
+      "title": "Nhập và xuất",
+      "description": "Xuất bộ sưu tập tab dưới dạng JSON để chia sẻ với đồng nghiệp hoặc sao lưu không gian làm việc. Nhập chúng trên bất kỳ thiết bị nào."
+    },
+    "memory": {
+      "title": "Tiết kiệm bộ nhớ",
+      "description": "Tạm ngưng các tab không hoạt động để giải phóng RAM. Xem chính xác TabMerger đang giúp bạn tiết kiệm bao nhiêu bộ nhớ theo thời gian thực."
+    }
+  },
+  "pro": {
+    "title": "Đồng bộ và phiên",
+    "description": "Tiếp tục đúng nơi bạn đã dừng, trên mọi thiết bị, vào bất cứ lúc nào.",
+    "cloudSync": {
+      "title": "Đồng bộ đám mây",
+      "description": "Các nhóm của bạn được tự động lưu và đồng bộ trên mọi trình duyệt bạn đăng nhập. Theo thời gian thực, không cần xuất thủ công."
+    },
+    "sessions": {
+      "title": "Lưu và khôi phục phiên",
+      "description": "Chụp lại các nhóm hiện tại thành một phiên có tên và khôi phục chúng tức thì. Gói miễn phí lưu tối đa {count} phiên trong trình duyệt này; Pro đồng bộ không giới hạn phiên trên mọi thiết bị."
+    },
+    "autoBackups": {
+      "title": "Sao lưu tự động",
+      "description": "TabMerger lưu một bản chụp được mã hóa của các nhóm theo lịch bạn chọn, từ mỗi giờ đến mỗi tuần một lần. {count} bản mới nhất được giữ lại, và bạn có thể khôi phục bất kỳ bản nào từ Cài đặt. Bảng điều khiển cũng liệt kê chúng, nơi bạn có thể xem bên trong hoặc tải xuống. Bạn cũng có thể lưu mỗi bản thành một tệp trên máy tính; bản sao đó không được mã hóa."
+    },
+    "support": {
+      "title": "Hỗ trợ ưu tiên",
+      "description": "Người đăng ký Pro được hỗ trợ ưu tiên với cam kết phản hồi trong vòng 24 giờ."
+    }
+  },
+  "proAi": {
+    "title": "Sắp xếp bằng AI",
+    "description": "Để Claude phân tích tab của bạn và đưa ra gợi ý thông minh, để bạn tập trung suy nghĩ thay vì sắp xếp.",
+    "autoGrouping": {
+      "title": "Tự động nhóm",
+      "description": "Mở một mớ tab lộn xộn, nhấp một nút. AI gom chúng thành các nhóm hợp lý dựa trên chủ đề, tên miền và mục đích."
+    },
+    "names": {
+      "title": "Tên nhóm thông minh",
+      "description": "AI gợi ý tên ngắn gọn, mô tả rõ ràng cho các nhóm. Một cú nhấp để chấp nhận, hoặc tự nhập tên của bạn."
+    },
+    "summaries": {
+      "title": "Tóm tắt tab",
+      "description": "Di chuột lên bất kỳ tab nào để xem bản tóm tắt AI một câu về nội dung trang — mà không cần mở nó."
+    },
+    "sessionSuggestions": {
+      "title": "Gợi ý phiên",
+      "description": "AI phân tích thói quen duyệt web của bạn và gợi ý cách tổ chức phiên để đạt năng suất tối đa."
+    }
+  }
+}

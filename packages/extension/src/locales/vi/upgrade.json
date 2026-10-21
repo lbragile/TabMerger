@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Đã Đạt Giới Hạn Nhóm",
+    "description": "Bạn đã đạt giới hạn gói miễn phí là {{max}} nhóm. Nâng cấp lên Pro để có nhóm không giới hạn."
+  },
+  "maxTabs": {
+    "title": "Đã Đạt Giới Hạn Thẻ",
+    "description": "Bạn đã đạt giới hạn gói miễn phí là {{max}} thẻ. Nâng cấp lên Pro để có thẻ không giới hạn."
+  },
+  "cloudSync": {
+    "title": "Đồng Bộ Đám Mây thuộc Pro",
+    "description": "Đồng bộ các nhóm của bạn trên tất cả thiết bị với TabMerger Pro. Nâng cấp để bật đồng bộ đám mây."
+  },
+  "aiFeatures": {
+    "title": "Tính Năng AI thuộc Pro AI",
+    "description": "Tự động nhóm bằng AI, đặt tên thông minh và tóm tắt thẻ có sẵn trong gói Pro AI."
+  },
+  "default": {
+    "title": "Nâng Cấp TabMerger",
+    "description": "Mở khóa nhóm không giới hạn, đồng bộ đám mây, sao lưu tự động và tính năng AI với TabMerger Pro."
+  },
+  "signInHint": " Đã có tài khoản Pro? Đăng nhập để khôi phục nó trên thiết bị này.",
+  "planPrice": " — {{price}}/tháng",
+  "comingSoon": "Sắp ra mắt",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Miễn phí",
+      "f1": "Tối đa {{groups}} nhóm",
+      "f2": "Tối đa {{tabs}} thẻ",
+      "f3": "Tối đa {{urlRules}} quy tắc URL"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Tất cả những gì có trong Miễn phí",
+      "f2": "Nhóm, thẻ, quy tắc URL & phiên không giới hạn",
+      "f3": "Đồng bộ đám mây trên các thiết bị"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Tất cả những gì có trong Pro",
+      "f2": "Tự động nhóm thẻ bằng AI",
+      "f3": "Gợi ý tên nhóm bằng AI"
+    }
+  },
+  "maybeLater": "Để sau",
+  "signIn": "Đăng nhập",
+  "upgradeNow": "Nâng cấp ngay"
+}

@@ -1,0 +1,10 @@
+{
+  "comingSoon": "Скоро",
+  "listTwo": "{first} и {second}",
+  "listMany": "{rest} и {last}",
+  "listSeparator": ", ",
+  "opensInNewTab": " (откроется в новой вкладке)",
+  "close": "Закрыть",
+  "showPassphrase": "Показать парольную фразу",
+  "hidePassphrase": "Скрыть парольную фразу"
+}

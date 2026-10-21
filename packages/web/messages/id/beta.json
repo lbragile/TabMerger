@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Bergabung & pasang"
+    },
+    "what-to-test": {
+      "label": "Yang perlu diuji"
+    },
+    "known-issues": {
+      "label": "Masalah yang diketahui"
+    },
+    "report-bugs": {
+      "label": "Laporkan bug"
+    },
+    "faq": {
+      "label": "FAQ"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Pembayaran berhasil (Visa)",
+      "note": "Gunakan kartu ini untuk meningkatkan paket"
+    },
+    "1": {
+      "label": "Penolakan umum"
+    },
+    "2": {
+      "label": "Dana tidak mencukupi"
+    },
+    "3": {
+      "label": "Memerlukan autentikasi 3D Secure"
+    }
+  },
+  "accessLabels": {
+    "free": "Gratis: tanpa perlu akun",
+    "upgrading": "Mendapatkan Pro: pembayaran uji, tanpa uang sungguhan",
+    "some-pro": "Gratis dan Pro: setiap bagian Pro ditandai",
+    "pro": "Khusus Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Grup dan tab",
+      "items": {
+        "0": {
+          "heading": "Grup, warna, dan urungkan/ulangi",
+          "checks": "Bahwa Anda dapat membuat, menamai, dan mewarnai grup, menyimpan tab ke dalamnya, serta mengurungkan atau mengulangi perubahan tanpa kehilangan apa pun.",
+          "steps": {
+            "0": "Klik \"Add Group\" di sidebar dan beri nama.",
+            "1": "Klik titik berwarna di samping grup untuk membuka pemilih warna, pilih preset atau seret ke warna apa pun, lalu klik Apply.",
+            "2": "Simpan beberapa tab ke grup tersebut (seret ke dalamnya, atau gunakan menu klik kanan).",
+            "3": "Hapus satu tab, lalu klik tombol Undo (header, kanan atas), lalu Redo."
+          },
+          "examples": {
+            "0": {
+              "alt": "Popup TabMerger dengan grup baru terpilih dan pemilih warnanya terbuka: pemilih saturasi dan rona, 12 warna preset, kolom hex, serta tombol Cancel dan Apply",
+              "caption": "Mengklik titik warna grup akan membuka pemilih ini."
+            }
+          },
+          "good": {
+            "0": "Grup langsung diperbarui.",
+            "1": "Undo memulihkan tab yang dihapus tepat di posisi semula.",
+            "2": "Redo menghapusnya lagi.",
+            "3": "Dengan sinkronisasi aktif, Undo dapat berubah abu-abu setelah sinkronisasi membawa perubahan dari perangkat lain. Itu wajar, bukan bug: riwayat undo dihapus saat ada perubahan dari tempat lain."
+          }
+        },
+        "1": {
+          "heading": "\"Now Open\" mengikuti tab yang terbuka",
+          "checks": "Bahwa grup permanen \"Now Open\" selalu mencerminkan tab yang benar-benar terbuka di browser Anda.",
+          "steps": {
+            "0": "Buka popup dan lihat \"Now Open\" — grup ini selalu menjadi grup pertama di sidebar.",
+            "1": "Buka dan tutup beberapa tab browser tanpa menyentuh popup.",
+            "2": "Buka kembali popup dan periksa \"Now Open\" lagi."
+          },
+          "examples": {
+            "0": {
+              "alt": "Popup dengan \"Now Open\" terpilih: satu jendela yang mencantumkan tiga tab yang sedang terbuka di browser",
+              "caption": "\"Now Open\" selalu berada paling atas di sidebar dan mencantumkan tab yang sedang terbuka."
+            }
+          },
+          "good": {
+            "0": "\"Now Open\" melacak tab Anda yang sebenarnya tanpa perlu dimuat ulang secara manual.",
+            "1": "Anda tidak dapat menghapusnya atau memindahkannya dari posisi teratas."
+          }
+        },
+        "2": {
+          "heading": "Menyimpan dan membuka kembali seluruh jendela",
+          "checks": "Bahwa jendela yang disimpan mempertahankan setiap tab, sesuai urutan, dan terbuka kembali dengan utuh.",
+          "steps": {
+            "0": "Simpan seluruh jendela ke dalam grup (seret pegangan jendela ke grup, atau gunakan menu \"…\" jendela tersebut).",
+            "1": "Buka grup dan gunakan menu \"…\" jendela untuk membukanya kembali — sebagai jendela baru, dan sebagai tab di jendela saat ini, jika kedua opsi tersedia."
+          },
+          "examples": {
+            "0": {
+              "alt": "Grup TabMerger dengan empat jendela tersimpan yang terpisah, masing-masing berisi satu tab",
+              "caption": "Satu grup dapat menampung beberapa jendela terpisah — masing-masing dengan jumlah tabnya sendiri."
+            }
+          },
+          "good": {
+            "0": "Semua tab terbuka kembali dengan judul dan URL yang benar, dalam urutan yang sama."
+          }
+        },
+        "3": {
+          "heading": "Mengarsipkan dan memulihkan grup",
+          "checks": "Bahwa pengarsipan menyembunyikan grup tanpa menghapusnya, dan pemulihan mengembalikannya tanpa perubahan.",
+          "steps": {
+            "0": "Klik kanan grup tersimpan di sidebar dan pilih Archive.",
+            "1": "Buka bagian \"Archived\" di bagian bawah sidebar dan temukan grup tersebut.",
+            "2": "Pulihkan dari sana."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bagian Archived di bagian bawah sidebar TabMerger, dibentangkan untuk menampilkan grup yang diarsipkan",
+              "caption": "Bagian Archived di bawah sidebar, dalam keadaan terbuka: \"Shopping\" diarsipkan, dengan tombol Restore dan Delete."
+            }
+          },
+          "good": {
+            "0": "Grup yang diarsipkan hilang dari daftar aktif tetapi tidak pernah dihapus.",
+            "1": "Grup tersebut muncul kembali persis seperti semula setelah dipulihkan."
+          }
+        },
+        "4": {
+          "heading": "Menyimpan dan memulihkan sesi",
+          "checks": "Bahwa sesi yang disimpan mengembalikan grup Anda persis seperti saat Anda menyimpannya.",
+          "steps": {
+            "0": "Simpan sesi — snapshot bernama dari grup Anda saat ini (cari \"Save Session\" di dekat area Sessions di sidebar).",
+            "1": "Lakukan beberapa perubahan pada grup Anda.",
+            "2": "Pulihkan sesi yang disimpan."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bagian Sessions di sidebar TabMerger, menampilkan sesi yang disimpan",
+              "caption": "Sesi tersimpan di bagian Sessions, dengan tombol Restore dan Delete, serta notifikasi \"Session saved\"."
+            }
+          },
+          "good": {
+            "0": "Pemulihan mengembalikan grup persis seperti saat Anda menyimpan sesi."
+          }
+        },
+        "5": {
+          "heading": "Pencarian",
+          "checks": "Bahwa pencarian menemukan tab berdasarkan judul atau URL di semua grup Anda, dan filter group:, window:, dan tag: mempersempit hasilnya.",
+          "steps": {
+            "0": "Tekan Ctrl+K (Cmd+K di Mac) untuk membuka pencarian.",
+            "1": "Ketik potongan teks biasa, seperti \"hub\", dengan tab \"GitHub\" tersimpan di suatu tempat — pencarian mencocokkan judul atau URL, tanpa membedakan huruf besar/kecil.",
+            "2": "Hapus teks itu dan coba awalan: ketik \"group:\" lalu pilih salah satu grup Anda dari pemilih yang muncul, atau ketik misalnya \"window:\" atau \"tag:\" dengan cara yang sama.",
+            "3": "Klik salah satu hasil."
+          },
+          "examples": {
+            "0": {
+              "alt": "Overlay pencarian TabMerger dengan \"hub\" diketik, menampilkan hasil tab GitHub yang cocok",
+              "caption": "Mengetik \"hub\" — pencocokan potongan teks biasa terhadap judul atau URL tab."
+            }
+          },
+          "good": {
+            "0": "Hasil diperbarui saat Anda mengetik.",
+            "1": "Pencarian biasa mencocokkan tab mana pun yang judul atau URL-nya mengandung potongan teks tersebut di posisi mana pun (bukan huruf berurutan).",
+            "2": "Awalan \"group:\", \"window:\", atau \"tag:\" membatasi cakupan pencarian dan menampilkan pemilih untuk awalan tersebut.",
+            "3": "Mengklik hasil mana pun akan menutup pencarian dan langsung membawa Anda ke grup hasil tersebut (dan jendelanya, untuk hasil berupa jendela)."
+          }
+        },
+        "6": {
+          "heading": "Tab usang",
+          "checks": "Bahwa tab yang sudah lama tidak Anda buka akan ditandai, dan dapat ditinjau serta dihapus dengan aman.",
+          "steps": {
+            "0": "Buka Settings dan atur ambang tab usang (misalnya 30 hari).",
+            "1": "Tunggu (atau siapkan) setidaknya 5 tab yang lebih lama dari ambang tersebut.",
+            "2": "Cari banner kuning di atas daftar tab dan coba kedua tombolnya: Review, lalu Remove stale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Banner kuning tab usang di atas daftar tab, dengan tombol Review dan Remove stale",
+              "caption": "Banner tab usang dan tombol Review / Remove stale-nya."
+            }
+          },
+          "good": {
+            "0": "Review menampilkan dengan tepat tab mana yang usang.",
+            "1": "Remove stale meminta konfirmasi sebelum menghapus apa pun (jika \"confirm before delete\" aktif di Settings)."
+          },
+          "report": "Grup yang Anda hapus atau arsipkan muncul kembali dengan sendirinya — itulah bug \"kebangkitan\" yang khusus sedang kami buru."
+        },
+        "7": {
+          "heading": "Mengatur pengingat tab",
+          "checks": "Bahwa Anda dapat mengatur, mengubah, dan menghapus pengingat pada tab tersimpan, dan pengingat tersebut memberi notifikasi pada waktu yang Anda pilih.",
+          "steps": {
+            "0": "Klik kanan tab tersimpan dan pilih \"Remind me…\". Pengingat berlaku per tab; tidak ada kontrol untuknya di Settings.",
+            "1": "Di editor yang terbuka di bawah tab, klik preset (30 min, 1 hour, 3 hours, atau Tomorrow) untuk langsung mengaturnya.",
+            "2": "Buka lagi (\"Edit reminder\" di menu klik kanan, atau klik ikon jam pada tab). Kali ini pilih tanggal dan waktu beberapa menit ke depan, ketik catatan singkat, lalu klik Set.",
+            "3": "Arahkan kursor ke ikon jam, lalu tunggu pengingat muncul dan klik notifikasinya.",
+            "4": "Atur pengingat lain, lalu klik kanan tab dan pilih \"Clear reminder\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Editor \"Remind me in…\" pada tab tersimpan: tombol 30 min, 1 hour, 3 hours, dan Tomorrow, kolom tanggal dan waktu, catatan opsional, serta Cancel dan Set",
+              "caption": "Klik kanan tab tersimpan → \"Remind me…\" membuka editor ini di bawah tab."
+            },
+            "1": {
+              "alt": "Jendela yang sama setelah mengatur pengingat: ikon jam di ujung baris tab Q3 Planning",
+              "caption": "Setelah diatur, tab menampilkan ikon jam."
+            }
+          },
+          "good": {
+            "0": "Tab menampilkan ikon jam setelah pengingat diatur, dan mengarahkan kursor ke ikon tersebut menampilkan waktunya (dan catatan Anda).",
+            "1": "Menu klik kanan kini menawarkan \"Edit reminder\" dan \"Clear reminder\" untuk tab tersebut.",
+            "2": "Set diabaikan untuk waktu yang sudah lewat; hanya waktu di masa depan yang mengatur pengingat.",
+            "3": "Notifikasi \"TabMerger Reminder\" dengan judul tab (dan catatan Anda) muncul kira-kira pada waktu yang Anda atur, dan tetap ada sampai Anda menindaklanjutinya.",
+            "4": "Mengklik notifikasi akan membuka tab.",
+            "5": "Clear reminder menghapus ikon jam, dan tidak ada notifikasi yang muncul kemudian."
+          },
+          "report": "Pengingat tidak pernah muncul, muncul dua kali, atau tetap muncul setelah Anda menghapusnya."
+        },
+        "8": {
+          "heading": "Catatan pada grup, jendela, dan tab",
+          "checks": "Bahwa Anda dapat melampirkan catatan singkat ke grup, jendela, atau tab, dan mengeditnya nanti.",
+          "steps": {
+            "0": "Grup: klik kanan grup di sidebar (atau gunakan tombol ⋯ di atas jendelanya) dan pilih \"Add note\". Ketik sesuatu dan klik Save.",
+            "1": "Jendela: klik kanan header jendela (atau gunakan tombol ⋯-nya) dan pilih \"Add note\". Kali ini simpan dengan Ctrl+Enter (Cmd+Enter di Mac).",
+            "2": "Tab: klik kanan tab tersimpan dan pilih \"Add note\". Ketik sesuatu, lalu klik di tempat lain alih-alih Save.",
+            "3": "Klik ikon catatan untuk membuka kembali catatan, ubah, lalu tekan Escape.",
+            "4": "Tutup dan buka kembali popup."
+          },
+          "good": {
+            "0": "Setiap catatan tersimpan menampilkan ikon catatan kecil: di samping jumlah jendela grup, di header jendela, dan di baris tab. Item menu kini bertuliskan \"Edit note\".",
+            "1": "Save, Ctrl/Cmd+Enter, dan mengklik di luar semuanya menyimpan catatan; Escape dan Cancel menutupnya tanpa menyimpan.",
+            "2": "Catatan dibatasi 500 karakter, dengan penghitung di bawah kotak.",
+            "3": "Catatan masih ada setelah popup dibuka kembali (dan, dengan sinkronisasi aktif, di perangkat Anda yang lain)."
+          },
+          "report": "Catatan hilang, terlampir pada item yang salah, atau tersimpan saat Anda menekan Escape atau Cancel."
+        },
+        "9": {
+          "heading": "Menghapus, dengan dan tanpa \"Confirm before deleting\"",
+          "checks": "Bahwa penghapusan meminta konfirmasi lebih dulu hanya jika \"Confirm before deleting\" aktif, dan Undo mengembalikan apa yang Anda hapus.",
+          "steps": {
+            "0": "Di Settings → General, pastikan \"Confirm before deleting\" nonaktif (nonaktif secara default) lalu simpan.",
+            "1": "Hapus tab (tombol ✕-nya, atau klik kanan → Remove tab), hapus jendela (⋯ → Remove window), dan hapus grup (klik kanan → Delete group). Setelah masing-masing, klik Undo (kanan atas).",
+            "2": "Aktifkan \"Confirm before deleting\", simpan, lalu ulangi ketiga penghapusan. Batalkan dialog pertama yang muncul, lalu konfirmasi dialog berikutnya.",
+            "3": "Dengan pengaturan aktif, coba juga hapus beberapa grup terpilih dari bilah pilihan, dan \"Remove stale\" pada grup yang memiliki tab usang."
+          },
+          "good": {
+            "0": "Dengan pengaturan nonaktif, jendela dan grup langsung dihapus, tanpa dialog.",
+            "1": "Dengan pengaturan aktif, menghapus jendela, menghapus grup, menghapus pilihan, dan \"Remove stale\" masing-masing meminta konfirmasi lebih dulu, dan Cancel membiarkan semuanya seperti semula.",
+            "2": "Menghapus satu tab tidak pernah meminta konfirmasi, baik pengaturan aktif maupun nonaktif. Undo mengembalikannya.",
+            "3": "Undo memulihkan apa pun yang baru saja Anda hapus: tab, jendela, atau grup, di tempat yang sama, beserta tab-tabnya."
+          },
+          "report": "Sesuatu terhapus tanpa konfirmasi saat pengaturan aktif (selain satu tab), dialog muncul saat pengaturan nonaktif, atau Undo tidak mengembalikan item persis seperti semula."
+        },
+        "10": {
+          "heading": "Menu grup",
+          "checks": "Bahwa setiap tindakan di menu grup melakukan apa yang tertulis pada labelnya.",
+          "steps": {
+            "0": "Klik kanan grup tersimpan di sidebar untuk membuka menu lengkapnya. Tombol ⋯ di atas jendela grup membuka versi yang lebih singkat.",
+            "1": "Coba Rename, Add note, dan Duplicate.",
+            "2": "Coba Replace with current (mengganti jendela grup dengan jendela browser yang sedang terbuka) dan Merge with current (menambahkan jendela yang terbuka ke grup). Undo setelah masing-masing.",
+            "3": "Coba Open all in new window, Unite windows, Split windows, Sort by title, Sort by URL, dan Deduplicate tabs.",
+            "4": "Coba Archive group, lalu Restore group dari bagian Archived.",
+            "5": "Klik kanan \"Now Open\" juga: grup ini tidak memiliki Rename, Replace, Merge, Archive, atau Delete."
+          },
+          "good": {
+            "0": "Setiap tindakan melakukan apa yang dijelaskan, hanya pada grup tersebut.",
+            "1": "Duplicate membuat salinan beserta semua tabnya; Unite menyisakan satu jendela yang berisi semua tab, dan Split memberi setiap tab jendelanya sendiri.",
+            "2": "Sort by title / URL mengurutkan setiap tab secara alfabetis, dan Deduplicate menghapus tab dengan URL yang sama.",
+            "3": "Perubahan dapat diurungkan dengan Undo."
+          },
+          "report": "Suatu tindakan memengaruhi grup yang salah, menghilangkan tab, atau tidak dapat diurungkan."
+        },
+        "11": {
+          "heading": "Menu jendela",
+          "checks": "Bahwa kedua menu jendela berfungsi: klik kanan pada header-nya, dan tombol ⋯-nya.",
+          "steps": {
+            "0": "Klik kanan header jendela: coba \"Move to group\" (pilih grup lain, atau buat grup baru dari daftar), Add note, dan Rename window.",
+            "1": "Buka tombol ⋯ jendela: coba Rename, Mark incognito (lalu Remove incognito), Open in browser, dan Sort this window by title / by URL.",
+            "2": "Klik kanan jendela di \"Now Open\": item pertama bertuliskan \"Copy to group\", dan opsi hapusnya bertuliskan \"Close window\"."
+          },
+          "good": {
+            "0": "Move to group memindahkan seluruh jendela, beserta tabnya, ke grup yang dipilih; grup baru yang dibuat dari menu mendapatkan jendela tersebut.",
+            "1": "Mark incognito menambahkan label \"Incognito\" ke jendela, dan Remove incognito menghapusnya.",
+            "2": "Open in browser membuka tab jendela di jendela browser baru; jika beberapa di antaranya sudah terbuka, hanya yang belum terbuka yang ditambahkan ke jendela itu.",
+            "3": "Pengurutan hanya mengubah urutan tab di jendela tersebut.",
+            "4": "Dari \"Now Open\", Copy to group menyimpan salinan dan membiarkan jendela asli Anda tetap terbuka."
+          },
+          "report": "Tindakan menu mengubah jendela lain, atau Close window di \"Now Open\" menutup jendela browser yang salah."
+        },
+        "12": {
+          "heading": "Menu tab",
+          "checks": "Bahwa klik kanan pada tab menawarkan tindakan yang tepat untuk tab tersebut.",
+          "steps": {
+            "0": "Klik kanan tab tersimpan: coba \"Move to group\", Rename tab, lalu \"Reset to original title\".",
+            "1": "Klik kanan tab di \"Now Open\": \"Copy to group\" menggantikan \"Move to group\", dan opsi hapusnya bertuliskan \"Close tab\".",
+            "2": "Jika Anda memiliki aturan URL yang cocok dengan tab yang terbuka, klik kanan tab tersebut di \"Now Open\" dan cari \"Auto-save to …\"."
+          },
+          "good": {
+            "0": "Move to group memindahkan tab ke grup yang dipilih; Copy to group (dari \"Now Open\") menyimpan salinan dan membiarkan tab asli tetap terbuka.",
+            "1": "Rename tab menampilkan judul Anda dengan tag kecil \"renamed\", dan Reset to original title mengembalikan judul asli halaman.",
+            "2": "\"Auto-save to '<'group'>'\" hanya muncul untuk tab yang alamatnya cocok dengan salah satu aturan URL Anda, dan menyimpannya ke grup aturan tersebut."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Menu klik kanan",
+      "items": {
+        "0": {
+          "heading": "Menyimpan dari menu klik kanan",
+          "checks": "Bahwa klik kanan di halaman web mana pun memungkinkan Anda menyimpan tab ke TabMerger, atau langsung ke grup yang dipilih.",
+          "steps": {
+            "0": "Di halaman web mana pun, klik kanan dan buka \"Save to TabMerger\".",
+            "1": "Coba \"Save this tab\" terlebih dahulu, lalu coba simpan ke grup tertentu yang sudah ada."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustrasi menu klik kanan di halaman web: \"Save to TabMerger\" membuka Save this tab, Save tabs to the left, Save tabs to the right, dan Save all other tabs; \"Save this tab\" mencantumkan grup Work (1w · 5t), Research (1w · 4t), Shopping (1w · 3t), dan Reading List (1w · 5t), masing-masing dengan warnanya",
+              "caption": "Ilustrasi (browser menggambar menu ini sendiri, jadi tidak dapat di-screenshot): masing-masing dari empat opsi \"Save…\" mencantumkan grup Anda dengan warna, jumlah jendela, dan jumlah tabnya."
+            }
+          },
+          "good": {
+            "0": "Menu konteks mencantumkan grup Anda yang sebenarnya berdasarkan nama.",
+            "1": "Tab langsung muncul di grup yang dipilih."
+          }
+        },
+        "1": {
+          "heading": "Grup baru muncul di menu klik kanan",
+          "checks": "Bahwa menu klik kanan mengenali grup baru tanpa perlu memulai ulang browser.",
+          "steps": {
+            "0": "Buat grup baru dari popup.",
+            "1": "Tanpa membuka ulang browser, klik kanan halaman mana pun dan periksa \"Save to TabMerger\" lagi."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ilustrasi menu klik kanan yang sama dengan grup kelima, \"Trip planning (0w · 0t)\", di akhir daftar grup",
+              "caption": "Ilustrasi: grup baru yang masih kosong (\"Trip planning\") muncul di akhir daftar."
+            }
+          },
+          "good": {
+            "0": "Grup baru muncul di menu konteks tanpa perlu memulai ulang."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Meningkatkan ke Pro (pembayaran uji)",
+      "intro": "Penagihan adalah bagian dari beta ini, tetapi hanya dengan kartu uji Stripe — kartu sungguhan tidak akan berfungsi dan tidak ada uang sungguhan yang berpindah tangan. Pro AI dan paket kredit AI masih \"segera hadir\" dan belum dapat dibeli, jadi ini hanya untuk Pro (grup/tab tanpa batas + sinkronisasi).",
+      "items": {
+        "0": {
+          "heading": "Peringatan kartu uji",
+          "checks": "Bahwa Anda hanya menggunakan kartu uji Stripe: tidak ada apa pun di beta ini yang menagih uang sungguhan.",
+          "steps": {
+            "0": "Baca ini sebelum memulai pembayaran — detail kartu yang Anda butuhkan ada di bawah."
+          },
+          "good": {
+            "0": "Anda tidak pernah mengetik nomor kartu sungguhan dalam alur ini."
+          }
+        },
+        "1": {
+          "heading": "Meningkatkan dari ekstensi",
+          "checks": "Bahwa peningkatan dari dalam ekstensi berfungsi dari awal hingga akhir, dan ekstensi kemudian menampilkan Pro.",
+          "steps": {
+            "0": "Buka popup ekstensi dan gunakan titik masuk \"Upgrade to Pro\" mana pun — tombol upgrade di header, banner pengingat yang muncul saat Anda mendekati batas gratis, atau prompt upgrade yang muncul saat Anda mencapai batas paket gratis.",
+            "1": "Ini membuka halaman harga aplikasi web beta (preview.tabmerger.com/pricing) di tab browser baru. Masuk di sana dengan akun yang sama yang Anda gunakan di ekstensi.",
+            "2": "Pilih paket Pro, bulanan atau tahunan, lalu lanjutkan ke Stripe Checkout.",
+            "3": "Selesaikan pembayaran dengan kartu uji di atas (atau kartu tolak/3D-Secure, jika Anda menguji jalur tersebut), lalu kembali ke aplikasi."
+          },
+          "good": {
+            "0": "Pembayaran selesai dan Anda kembali ke aplikasi web dengan status Pro ditampilkan.",
+            "1": "Popup ekstensi memeriksa paket Anda kira-kira setiap 30 detik, jadi seharusnya segera mengenali Pro dengan sendirinya — membuka ulang popup juga memaksa pemeriksaan baru jika Anda tidak ingin menunggu."
+          },
+          "report": "Ekstensi masih menampilkan batas paket gratis ({FREE_TIER_LIMITS_groups} grup / {FREE_TIER_LIMITS_tabs} tab / {FREE_TIER_LIMITS_urlRules} aturan URL) lebih dari beberapa menit setelah pembayaran berhasil dan popup dibuka ulang."
+        },
+        "2": {
+          "heading": "Meningkatkan dari halaman akun web",
+          "checks": "Bahwa peningkatan dari halaman akun situs web berfungsi, dan situs web serta ekstensi sepakat tentang paket Anda.",
+          "steps": {
+            "0": "Alih-alih melalui ekstensi, masuk langsung di preview.tabmerger.com dan buka Pengaturan akun.",
+            "1": "Di bawah \"Langganan\", klik \"Tingkatkan\" dan selesaikan pembayaran dengan kartu uji."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pengaturan akun pada akun gratis: kartu Langganan menampilkan Paket saat ini Gratis dengan tombol Tingkatkan",
+              "caption": "Sebelum peningkatan: Gratis, dengan tombol Tingkatkan. Setelahnya menampilkan Pro dan \"Kelola tagihan\" (lihat \"Halaman akun\" di bawah)."
+            }
+          },
+          "good": {
+            "0": "Kartu Langganan di halaman akun kini menampilkan Pro, dengan tombol \"Kelola tagihan\" menggantikan \"Tingkatkan\".",
+            "1": "Ekstensi mengenali status Pro yang sama (lihat catatan pemeriksaan berkala di atas) — halaman akun web dan ekstensi seharusnya tidak pernah berbeda pendapat tentang paket Anda."
+          },
+          "report": "Halaman akun web dan popup ekstensi menampilkan paket yang berbeda (satu menyatakan Pro, yang lain masih Gratis) dengan selisih lebih dari beberapa menit."
+        },
+        "3": {
+          "heading": "Membayar dalam mata uang lokal",
+          "checks": "Bahwa pembayaran menampilkan, dan menagih, harga dalam mata uang Anda sendiri.",
+          "steps": {
+            "0": "Harga di situs dalam dolar AS (halaman harga menyebutkannya di bawah paket; halaman akun, dasbor, dan Settings ekstensi menuliskannya sebagai \"US$\"). Di luar AS, pembayaran menawarkan mata uang lokal Anda.",
+            "1": "Mulai pembayaran dari lokasi Anda yang sebenarnya, atau simulasikan negara lain: daftarkan akun BARU dengan email Anda ditambah \"+location_\" dan kode negara dua huruf, misalnya yourname+location_FR@gmail.com untuk Prancis (Gmail mengirimkan alamat \"+apa saja\" ke kotak masuk biasa Anda). VPN di negara lain juga bisa.",
+            "2": "Lihat harga di halaman pembayaran Stripe, lalu selesaikan dengan kartu uji dalam mata uang tersebut."
+          },
+          "examples": {
+            "0": {
+              "alt": "Stripe checkout untuk TabMerger Pro yang menampilkan €3,66 per bulan, dengan EUR terpilih dan alternatif USD, serta baris \"1 USD = 0.9171 EUR. Charges will vary based on exchange rates.\"",
+              "caption": "Pembayaran untuk alamat Prancis (+location_FR): euro secara default, dolar AS hanya sekali klik. Kurs berubah-ubah, jadi jumlah Anda akan berbeda."
+            }
+          },
+          "good": {
+            "0": "Checkout menampilkan harga dalam mata uang lokal Anda (misalnya €3,66 di Prancis atau CA$5,89 di Kanada untuk paket US$3.99), dengan opsi untuk membayar dalam dolar AS sebagai gantinya dan baris yang menunjukkan kurs serta biaya konversinya. Di AS, checkout cukup menampilkan US$3.99.",
+            "1": "Setelah membayar, paket berfungsi persis seperti dengan dolar AS."
+          },
+          "report": "Di luar AS, checkout hanya menawarkan dolar AS, jumlah yang ditagih berbeda dari yang ditampilkan checkout, atau membayar dalam mata uang lokal tidak memberi Anda Pro."
+        },
+        "4": {
+          "heading": "Beralih antara bulanan dan tahunan",
+          "checks": "Bahwa langganan Pro dapat berpindah antara penagihan bulanan dan tahunan, dan ditagih dengan benar untuk itu.",
+          "steps": {
+            "0": "Dengan langganan Pro aktif, buka halaman harga. Kartu paket Anda ditandai Current dan memiliki tombol \"Switch to yearly billing\" (atau \"Switch to monthly billing\" jika Anda membayar tahunan): tombol tersebut menyebutkan penagihan yang akan Anda pilih.",
+            "1": "Bulanan → tahunan: klik tombol beralih dan konfirmasi di halaman Stripe.",
+            "2": "Tahunan → bulanan: lakukan hal yang sama, lalu coba tombolnya sekali lagi.",
+            "3": "Buka juga \"Manage billing\" di halaman akun: opsi \"Update subscription\"-nya menampilkan pilihan bulanan/tahunan yang sama."
+          },
+          "examples": {
+            "0": {
+              "alt": "Halaman harga saat berlangganan Pro bulanan: kartu Pro ditandai Current dan memiliki tombol \"Switch to yearly billing\"",
+              "caption": "Di halaman harga, kartu paket Anda ditandai Current dan memiliki tombol beralih."
+            },
+            "1": {
+              "alt": "Halaman \"Update your subscription\" Stripe dengan tab Monthly dan Yearly, menampilkan paket TabMerger Pro saat ini seharga {proMonthly} per bulan",
+              "caption": "Pilihan yang sama di Manage billing → Update subscription (halaman Stripe)."
+            }
+          },
+          "good": {
+            "0": "Bulanan → tahunan langsung berlaku: Stripe menampilkan dan menagih harga tahunan dikurangi sisa bulan Anda.",
+            "1": "Setelah beralih ke tahunan, halaman akun menampilkan harga tahunan ({proYearly}/thn) dalam waktu sekitar satu menit.",
+            "2": "Tahunan → bulanan menunggu hingga akhir tahun yang telah Anda bayar, jadi tidak ada yang ditagih sekarang.",
+            "3": "Menekan tombol lagi menjelaskan bahwa perubahan sudah dijadwalkan.",
+            "4": "Hanya Pro bulanan dan tahunan yang ditawarkan, tidak pernah paket lain."
+          },
+          "report": "Peralihan menagih jumlah yang salah, halaman akun masih menampilkan periode penagihan lama lebih dari beberapa menit kemudian, tahunan → bulanan langsung menagih Anda, atau Anda ditawari paket selain Pro."
+        },
+        "5": {
+          "heading": "Membatalkan",
+          "checks": "Bahwa pembatalan mempertahankan Pro hingga akhir periode yang telah Anda bayar, lalu mengembalikan Anda ke Free.",
+          "steps": {
+            "0": "Di halaman akun, dengan langganan Pro aktif, klik \"Manage billing\" untuk membuka portal penagihan Stripe.",
+            "1": "Batalkan langganan dari sana dan kembali ke TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dialog \"Cancel your subscription\" Stripe untuk TabMerger Pro seharga {proMonthly} per bulan, dengan alasan opsional serta tombol Go back dan Continue to cancellation",
+              "caption": "Stripe menanyakan alasan opsional sebelum membatalkan."
+            }
+          },
+          "good": {
+            "0": "Anda tetap memiliki akses Pro hingga akhir periode penagihan saat ini — pembatalan tidak langsung menurunkan Anda ke Free.",
+            "1": "Setelah periode itu berakhir, halaman akun dan ekstensi seharusnya sama-sama menampilkan Free lagi."
+          },
+          "report": "Pembatalan langsung menurunkan Anda ke Free alih-alih di akhir periode, atau paket tidak pernah kembali ke Free setelah periode benar-benar berakhir."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Seret dan lepas",
+      "intro": "Area ini mencakup setiap interaksi seret di popup — pengurutan, pemindahan antar jendela dan grup, seret banyak item, dua zona \"lepas untuk ... baru\", pembatalan, seret dengan keyboard saja, dan apakah hasilnya tetap tersimpan. Kerjakan sebanyak yang Anda bisa; ini adalah area yang paling kami fokuskan untuk beta ini.",
+      "items": {
+        "0": {
+          "heading": "Pengurutan: tab di dalam jendela",
+          "checks": "Bahwa menyeret tab mengurutkannya ulang di dalam jendelanya, mendarat tepat di tempat Anda melepasnya.",
+          "steps": {
+            "0": "Seret tab ke bawah di jendela yang sama untuk memindahkannya ke posisi lebih akhir dalam daftar, lalu seret kembali ke atas ke tempat semula.",
+            "1": "Seret tab sampai ke posisi pertama di jendela, lalu sampai ke posisi terakhir."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab yang sedang diseret di dalam kartu jendelanya: baris yang diseret melayang dengan bingkai tersorot di atas celah tempat ia akan mendarat",
+              "caption": "Saat menyeret: tab melayang dan yang lain memberi ruang di tempat ia akan dilepas."
+            }
+          },
+          "good": {
+            "0": "Tab mendarat tepat di tempat Anda melepasnya, dan sisa daftar bergeser untuk memberi ruang.",
+            "1": "Tidak ada tab lain yang berpindah atau terduplikasi."
+          }
+        },
+        "1": {
+          "heading": "Pengurutan: jendela di dalam grup",
+          "checks": "Bahwa kartu jendela dapat diurutkan ulang di dalam grup.",
+          "steps": {
+            "0": "Di grup dengan dua jendela tersimpan atau lebih, seret kartu jendela ke atas atau ke bawah kartu lainnya."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kartu jendela yang sedang diseret di antara dua kartu jendela lain dalam grup berisi empat jendela",
+              "caption": "Menyeret seluruh kartu jendela dengan pegangannya untuk mengurutkannya ulang di dalam grup."
+            }
+          },
+          "good": {
+            "0": "Urutan kartu jendela bertukar dan urutan baru langsung terlihat — tanpa berkedip kembali ke urutan lama."
+          }
+        },
+        "2": {
+          "heading": "Pengurutan: grup di sidebar",
+          "checks": "Bahwa grup dapat diurutkan ulang dengan bebas di sidebar sementara \"Now Open\" tetap di urutan pertama.",
+          "steps": {
+            "0": "Seret grup di sidebar ke atas atau ke bawah untuk mengurutkannya di atas atau di bawah grup lain.",
+            "1": "Coba seret grup ke atas \"Now Open\" (baris pertama di sidebar)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Baris grup yang sedang diseret ke posisi baru di sidebar TabMerger",
+              "caption": "Mengurutkan ulang grup di sidebar."
+            }
+          },
+          "good": {
+            "0": "\"Now Open\" selalu tetap tersemat sebagai baris pertama — Anda tidak dapat melepas grup di atasnya, menyeretnya, menghapusnya, atau memindahkannya dari posisi teratas.",
+            "1": "Setiap grup lain dapat diurutkan ulang dengan bebas."
+          },
+          "report": "Ada yang mendarat di atas \"Now Open\", atau \"Now Open\" sendiri menjadi dapat diseret."
+        },
+        "3": {
+          "heading": "Antar jendela: memindahkan tab antar kartu jendela",
+          "checks": "Bahwa tab dapat berpindah dari satu kartu jendela ke kartu lain, tepat di tempat Anda melepasnya.",
+          "steps": {
+            "0": "Di dalam grup dengan beberapa jendela, seret tab dari satu kartu jendela ke kartu jendela lain.",
+            "1": "Kali ini, lepaskan di antara dua tab yang ada di jendela tujuan, bukan di bagian atas atau bawah."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab yang sedang diseret dari satu jendela tersimpan ke jendela lain di dalam grup TabMerger yang sama",
+              "caption": "Melepas tab ke jendela lain di dalam grup yang sama."
+            }
+          },
+          "good": {
+            "0": "Tab mendarat tepat di posisi tempat Anda melepasnya (tidak hanya ditambahkan ke akhir).",
+            "1": "Jumlah tab kedua jendela langsung diperbarui."
+          }
+        },
+        "4": {
+          "heading": "Antar grup: melepas tab ke grup di sidebar",
+          "checks": "Bahwa melepas tab ke grup di sidebar memindahkannya ke grup tersebut tanpa membuka grup terlebih dahulu.",
+          "steps": {
+            "0": "Seret tab keluar dari panel utama dan lepaskan langsung ke grup di sidebar — coba pada grup yang sedang terbuka (aktif) dan grup yang tidak.",
+            "1": "Coba sekali lagi, tetapi tahan tab di atas grup sidebar lain (tidak aktif) selama sekitar satu detik sebelum melepaskannya."
+          },
+          "examples": {
+            "0": {
+              "alt": "Satu tab yang sedang diseret ke baris grup di sidebar TabMerger",
+              "caption": "Melepas tab langsung ke grup di sidebar."
+            }
+          },
+          "good": {
+            "0": "Tab ditambahkan ke grup tersebut sebagai jendela baru tanpa perlu membuka grup terlebih dahulu.",
+            "1": "Jika Anda berhenti di atas grup yang tidak aktif, grup itu seharusnya terbuka (\"spring open\") setelah sekitar setengah detik sehingga Anda dapat melihat tab mendarat — dan mendarat dengan benar, bukan di jendela yang salah."
+          },
+          "report": "Grup terbuka otomatis tetapi tab mendarat di jendela yang salah, atau di atas tab yang ada alih-alih sebagai jendela barunya sendiri."
+        },
+        "5": {
+          "heading": "Antar grup: menyeret seluruh jendela ke grup lain",
+          "checks": "Bahwa seluruh jendela, beserta semua tabnya, dapat dipindahkan ke grup lain.",
+          "steps": {
+            "0": "Seret seluruh kartu jendela (menggunakan pegangan seretnya sendiri, bukan satu tab di dalamnya) ke grup lain di sidebar."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kartu jendela yang diseret ke sidebar, di atas grup Shopping, yang tersorot dan terbuka di panel utama",
+              "caption": "Menyeret jendela ke grup di sidebar. Grup di bawah penunjuk mendapat tepi berwarna dan terbuka di belakang kartu."
+            }
+          },
+          "good": {
+            "0": "Seluruh jendela — beserta semua tabnya — menjadi jendela baru di grup tujuan.",
+            "1": "Ini berfungsi bahkan jika itu adalah jendela terakhir yang tersisa di grup asal."
+          },
+          "report": "Grup asal atau jendelanya yang kosong hilang alih-alih tetap ada (jendela/grup kosong seharusnya tetap ada, tidak lenyap)."
+        },
+        "6": {
+          "heading": "Banyak item: memilih dan menyeret beberapa tab",
+          "checks": "Bahwa beberapa tab terpilih diseret bersama sebagai satu blok, dengan urutan tetap.",
+          "steps": {
+            "0": "Ctrl-klik (Cmd-klik di Mac) dua atau tiga tab yang tidak bersebelahan untuk memilihnya.",
+            "1": "Shift-klik untuk memilih rentang tab yang berurutan sebagai gantinya.",
+            "2": "Dengan beberapa tab terpilih, seret bersama ke posisi baru di jendela yang sama."
+          },
+          "examples": {
+            "0": {
+              "alt": "Beberapa tab yang dipilih bersama di popup TabMerger, ditampilkan dengan kotak centang",
+              "caption": "Dua tab dicentang dalam mode pilihan; bilah di bagian bawah menghitungnya."
+            }
+          },
+          "good": {
+            "0": "Semua tab terpilih bergerak bersama sebagai satu blok, dengan urutan relatif tetap — blok mendarat di celah, tidak tercerai-berai atau mengikuti urutan klik."
+          }
+        },
+        "7": {
+          "heading": "Banyak item: menyeret pilihan antar jendela dan grup",
+          "checks": "Bahwa pilihan banyak tab mempertahankan urutannya saat diseret ke jendela atau grup lain.",
+          "steps": {
+            "0": "Pilih beberapa tab lagi, lalu seret ke jendela lain di grup yang sama.",
+            "1": "Ulangi sekali lagi, tetapi kali ini seret pilihan ke grup lain di sidebar."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pilihan banyak tab yang sedang diseret di popup TabMerger",
+              "caption": "Menyeret pilihan banyak tab."
+            }
+          },
+          "good": {
+            "0": "Seluruh pilihan bergerak bersama dalam kedua kasus, mendarat dengan urutan relatif yang sama seperti awalnya."
+          }
+        },
+        "8": {
+          "heading": "Banyak item: pilih semua dan seret banyak grup",
+          "checks": "Bahwa pilih semua berfungsi di dalam jendela, dan beberapa grup terpilih dapat diseret bersama.",
+          "steps": {
+            "0": "Fokuskan daftar tab jendela dan tekan Ctrl+A (Cmd+A di Mac) untuk memilih setiap tab di jendela itu, jika jendela Anda memiliki lebih dari satu tab.",
+            "1": "Di sidebar, Ctrl-klik dua atau tiga grup untuk memilihnya, lalu seret pilihan itu dengan salah satu pegangannya untuk mengurutkannya ulang bersama."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mode pilihan dengan tiga grup terpilih; menyeret salah satunya ikut membawa yang lain, dengan lencana jumlah pada baris yang diseret dan \"3 groups selected\" di bilah bawah",
+              "caption": "Tiga grup terpilih diseret bersama di sidebar. Bilah di bagian bawah menghitung pilihan."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A memilih setiap tab di jendela yang difokuskan (melewati tab yang disembunyikan oleh filter pencarian).",
+            "1": "Seret banyak grup memindahkan grup terpilih bersama sebagai satu blok.",
+            "2": "Blok tidak pernah mendarat di atas \"Now Open\"."
+          }
+        },
+        "9": {
+          "heading": "Zona lepas: \"Drop here for a new window\" dan \"Drop for a new group\"",
+          "checks": "Bahwa melepas di zona ini membuat jendela baru atau grup baru dari apa yang Anda seret.",
+          "steps": {
+            "0": "Seret tab (atau pilihan tab) ke bagian bawah daftar jendela grup, tempat zona \"Drop here for a new window\" muncul, dan lepaskan di sana.",
+            "1": "Seret tab ke bagian bawah sidebar, tempat zona \"Drop for a new group\" muncul, dan lepaskan di sana."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab yang diseret di atas zona \"Drop here for a new window\" yang tersorot di bawah daftar jendela, dengan zona \"Drop for a new group\" terlihat di sidebar",
+              "caption": "Saat Anda menyeret, kedua zona lepas muncul. Zona di bawah penunjuk akan tersorot."
+            }
+          },
+          "good": {
+            "0": "Setiap pelepasan membuat jendela atau grup yang benar-benar baru berisi tepat item yang diseret, dalam urutan relatif aslinya."
+          },
+          "report": "Zona \"Drop for a new group\" masih muncul ketika Anda sudah mencapai batas grup paket Anda — zona itu seharusnya hilang alih-alih menerima pelepasan yang tidak dapat dipenuhinya."
+        },
+        "10": {
+          "heading": "Dari \"Now Open\": menyeret tab aktif ke grup tersimpan",
+          "checks": "Bahwa menyeret tab terbuka dari \"Now Open\" memindahkannya ke grup tersimpan dan menutup tab aslinya.",
+          "steps": {
+            "0": "Seret tab dari bagian \"Now Open\" ke salah satu grup tersimpan Anda.",
+            "1": "Periksa tab browser Anda yang benar-benar terbuka setelah pelepasan."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab dari \"Now Open\" yang sedang diseret ke grup Work di sidebar",
+              "caption": "Tab terbuka dari \"Now Open\" diseret ke grup tersimpan di sidebar."
+            }
+          },
+          "good": {
+            "0": "Ini MEMINDAHKAN tab, bukan menyalinnya: grup tersimpan mendapat jendela baru berisi snapshot tab tersebut.",
+            "1": "Tab browser asli tertutup. Jika tab yang Anda seret adalah tab aktif, tab itu tertutup setelah Anda menutup popup, bukan langsung — itu disengaja, bukan bug."
+          },
+          "report": "Tab asli tetap terbuka setelah pelepasan (sehingga tampak seperti salinan), atau popup itu sendiri tertutup/crash saat menyeret."
+        },
+        "11": {
+          "heading": "Pembatalan dan kasus tepi",
+          "checks": "Bahwa seretan yang dibatalkan atau tidak berarti tidak mengubah apa pun, dan undo membalikkan seretan yang sebenarnya.",
+          "steps": {
+            "0": "Mulai menyeret tab, lalu tekan Escape sebelum melepasnya.",
+            "1": "Mulai seretan dan lepaskan di tempat yang bukan target valid (misalnya di luar jendela popup, jika bisa) atau lepaskan kembali tepat di tempat awalnya.",
+            "2": "Setelah seretan apa pun yang berhasil, klik tombol Undo (header, kanan atas)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Header TabMerger dengan tombol Undo dan Redo aktif setelah perubahan",
+              "caption": "Tombol Undo/Redo di header, aktif setelah perubahan."
+            }
+          },
+          "good": {
+            "0": "Escape dan pelepasan yang tidak valid/tanpa efek membiarkan semuanya persis seperti semula — tidak ada tab duplikat, tidak ada tab hilang, tidak ada pengurutan ulang.",
+            "1": "Undo setelah seretan sungguhan memulihkan urutan sebelumnya dengan tepat."
+          },
+          "report": "Tab terduplikasi atau hilang setelah seretan yang dibatalkan atau di tempat yang sama, atau Undo tidak sepenuhnya memulihkan urutan sebelum seretan."
+        },
+        "12": {
+          "heading": "Seret dengan keyboard",
+          "checks": "Bahwa semua yang dapat Anda seret dengan mouse juga dapat dipindahkan dengan keyboard, dengan pengumuman suara.",
+          "steps": {
+            "0": "Tekan Tab hingga tab tersimpan, judul jendela, atau grup di sidebar terfokus. Setiap baris adalah satu perhentian Tab.",
+            "1": "Untuk memindahkan beberapa sekaligus, tekan Ctrl+Space (Ctrl juga di Mac) pada masing-masing untuk memilihnya, lalu fokuskan salah satu baris terpilih.",
+            "2": "Tekan Space untuk mengangkatnya. Anda mendengar \"Picked up …\", baris meninggalkan tempatnya, dan salinannya muncul di tempat ia akan mendarat.",
+            "3": "Tekan Up atau Down untuk memindahkannya. Tab bergerak melalui setiap jendela grup, lalu ke \"Drop here for a new window\", lalu kembali ke atas.",
+            "4": "Tekan Left untuk pergi ke daftar grup. Up dan Down memilih grup (perhentian terakhir adalah \"New group\"), dan panel utama menampilkan setiap grup saat Anda melewatinya.",
+            "5": "Tekan Right untuk masuk ke grup yang tersorot, lalu gunakan Up dan Down untuk menempatkan item di dalamnya.",
+            "6": "Tekan Space untuk melepas, atau Escape untuk membatalkan."
+          },
+          "good": {
+            "0": "Space mengangkat item alih-alih membuka tautan.",
+            "1": "Ctrl+Space memilih atau membatalkan pilihan baris tanpa membukanya atau mengangkatnya.",
+            "2": "Enter tetap membuka tab, dan tidak melakukan apa pun saat Anda sedang memindahkan sesuatu.",
+            "3": "Salinan dari apa yang Anda pindahkan selalu ada di layar, dan panel bergulir untuk mengikutinya.",
+            "4": "Up dan Down berputar di ujung-ujungnya, dan Anda mendengar \"Wrapped to top\" atau \"Wrapped to bottom\".",
+            "5": "Jendela kosong adalah tempat tersendiri.",
+            "6": "Item berakhir tepat di tempat salinannya berada, dan Anda mendengar apa yang terjadi.",
+            "7": "Beberapa item terpilih bergerak bersama sebagai satu blok, dalam urutan aslinya.",
+            "8": "Space di daftar grup melepas item di akhir grup yang tersorot.",
+            "9": "Pada \"New group\" panel utama memudar, dan melepas di sana membuat grup yang benar-benar baru.",
+            "10": "Grup yang dipindahkan dengan Up dan Down tidak pernah bisa berada di atas \"Now Open\".",
+            "11": "Memindahkan tab aktif dari \"Now Open\" ke grup menutup tab browser itu, seperti halnya pelepasan dengan mouse.",
+            "12": "Escape membiarkan semuanya tidak tersentuh dan menampilkan kembali grup tempat Anda memulai.",
+            "13": "Setelah pelepasan, fokus berada di baris yang dipindahkan; setelah Escape, fokus kembali ke baris yang Anda angkat."
+          }
+        },
+        "13": {
+          "heading": "Persistensi",
+          "checks": "Bahwa urutan baru tersimpan: bertahan setelah popup dibuka ulang dan sampai ke perangkat Anda yang lain.",
+          "pro": "Hanya bagian perangkat kedua yang memerlukan Pro (memerlukan sinkronisasi).",
+          "steps": {
+            "0": "Setelah mengurutkan ulang tab, jendela, atau grup dengan menyeret, tutup popup sepenuhnya dan buka kembali.",
+            "1": "Jika sinkronisasi aktif dan perangkat kedua masuk ke akun yang sama, periksa urutannya di sana juga."
+          },
+          "good": {
+            "0": "Urutan baru persis seperti yang Anda tinggalkan setelah membuka ulang popup.",
+            "1": "Dengan sinkronisasi aktif, perangkat kedua menangkap urutan yang sama dalam waktu singkat."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "Aplikasi web dan dasbor (situs pratinjau)",
+      "intro": "Semua di sini ada di preview.tabmerger.com, bukan tabmerger.com utama — build beta ini hanya tersinkron dengan situs pratinjau.",
+      "items": {
+        "0": {
+          "heading": "Mendaftar dan masuk",
+          "checks": "Bahwa setiap cara masuk ke situs web berfungsi: Google, email dan kata sandi, serta magic link.",
+          "steps": {
+            "0": "Dalam keadaan keluar, buka preview.tabmerger.com/auth/sign-in.",
+            "1": "Coba \"Continue with Google\".",
+            "2": "Coba email + kata sandi sebagai gantinya: masukkan email dan kata sandi Anda, lalu klik \"Continue\".",
+            "3": "Coba \"Send magic link\" sebagai gantinya, hanya dengan email Anda."
+          },
+          "examples": {
+            "0": {
+              "alt": "Halaman masuk \"Welcome back\" situs web: Continue with Google, kolom Email dan Password dengan tautan Forgot?, Continue, dan Send magic link",
+              "caption": "Halaman masuk situs web: Google, email dan kata sandi, atau magic link."
+            }
+          },
+          "good": {
+            "0": "Ketiga cara membuat Anda masuk.",
+            "1": "Magic link dan Google sama-sama mengarahkan kembali ke aplikasi dalam keadaan sudah masuk.",
+            "2": "Akun baru mendarat di mana pun \"Sign up free\" membawanya (email + kata sandi atau Google, opsi yang sama)."
+          }
+        },
+        "1": {
+          "heading": "Membuat akun dengan email dan kata sandi",
+          "checks": "Bahwa akun email-dan-kata-sandi baru berakhir dalam keadaan masuk, baik situs meminta Anda memverifikasi email maupun tidak.",
+          "steps": {
+            "0": "Dalam keadaan keluar, klik \"Sign up free\" dan buat akun dengan email dan kata sandi (8+ karakter)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Halaman \"Create your account\": Continue with Google, lalu kolom Email, Password (minimal 8 karakter) dan Confirm password, serta tombol Continue",
+              "caption": "Halaman pendaftaran. Google juga berfungsi di sini; item ini tentang jalur email dan kata sandi."
+            }
+          },
+          "good": {
+            "0": "Anda langsung mendarat di dasbor dalam keadaan sudah masuk, atau melihat \"Verify your email\" dan baru masuk setelah mengklik tautan di email tersebut. Yang mana tergantung apakah situs memerlukan konfirmasi email; keduanya tidak masalah."
+          },
+          "report": "Anda melihat \"Verify your email\" tetapi sebenarnya sudah masuk (misalnya, membuka dasbor di tab lain berhasil tanpa mengklik tautan)."
+        },
+        "2": {
+          "heading": "Lupa kata sandi dan mengubah kata sandi",
+          "checks": "Bahwa Anda dapat mengatur ulang kata sandi yang terlupa melalui email, dan mengubahnya setelahnya.",
+          "steps": {
+            "0": "Dari halaman masuk, klik \"Forgot?\" di samping kolom kata sandi dan masukkan email Anda.",
+            "1": "Buka tautan reset dari email tersebut dan atur kata sandi baru (minimal 8 karakter, dan harus cocok dengan kolom konfirmasinya)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Halaman \"Reset your password\": kolom Email, tombol Send reset link, dan Back to sign in",
+              "caption": "\"Forgot?\" di halaman masuk membuka ini. Setelah masuk, Account settings memiliki kolom \"Change password\" sebagai gantinya."
+            }
+          },
+          "good": {
+            "0": "Anda kembali ke dasbor dalam keadaan sudah masuk dengan kata sandi baru.",
+            "1": "Masuk lagi setelahnya memerlukan kata sandi baru, bukan yang lama."
+          }
+        },
+        "3": {
+          "heading": "Dasbor cocok dengan ekstensi setelah sinkronisasi",
+          "checks": "Bahwa dasbor situs web menampilkan grup yang sama dengan ekstensi Anda setelah sinkronisasi menyusul.",
+          "steps": {
+            "0": "Dengan sinkronisasi aktif dan setidaknya satu grup, buka dasbor di preview.tabmerger.com/dashboard.",
+            "1": "Bandingkan bagian \"Tab Groups\" di sana dengan sidebar popup ekstensi: nama, warna, jumlah jendela/tab, dan urutan."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dasbor web setelah dibuka kuncinya: statistik, kartu paket Pro, dan kisi Tab Groups dengan kartu Research, Reading List, Work dan Shopping yang menampilkan jumlah jendela dan tab",
+              "caption": "Grup di dasbor, cocok dengan sidebar ekstensi setelah tersinkron."
+            }
+          },
+          "good": {
+            "0": "Grup yang sama muncul dengan nama, warna, dan jumlah jendela/tab yang sama, dalam urutan yang sama, setelah sinkronisasi menyusul."
+          }
+        },
+        "4": {
+          "heading": "Dasbor hanya-baca untuk grup",
+          "checks": "Bahwa dasbor menampilkan grup Anda tetapi tidak dapat mengubahnya: pengeditan hanya dilakukan di ekstensi.",
+          "steps": {
+            "0": "Di dasbor, cari cara apa pun untuk mengganti nama, menghapus, atau membuat grup, atau memberi/menghapus bintang pada grup."
+          },
+          "good": {
+            "0": "Tidak ada cara untuk mengganti nama, menghapus, membuat, atau memberi/menghapus bintang grup dari dasbor — pengeditan grup memang hanya di ekstensi.",
+            "1": "Satu-satunya tindakan nyata pada kartu grup adalah Share dan membuka tab/jendelanya."
+          },
+          "report": "Kontrol apa pun di dasbor yang tampak mengedit, menghapus, atau membuat grup ternyata benar-benar melakukan sesuatu."
+        },
+        "5": {
+          "heading": "Sesi dan statistik di dasbor",
+          "checks": "Bahwa sesi tersimpan dan total di dasbor cocok dengan ekstensi.",
+          "steps": {
+            "0": "Simpan sesi di ekstensi, lalu periksa bagian \"Saved Sessions\" di dasbor.",
+            "1": "Periksa statistik di dekat bagian atas dasbor (jumlah tab, jumlah grup, jumlah sesi, tanggal bergabung)."
+          },
+          "good": {
+            "0": "Sesi yang Anda simpan muncul.",
+            "1": "Statistiknya cocok dengan yang akan Anda hitung di ekstensi."
+          }
+        },
+        "6": {
+          "heading": "Berbagi dari dasbor",
+          "checks": "Bahwa tombol Share di dasbor menyalin tautan berbagi, seperti di ekstensi.",
+          "steps": {
+            "0": "Pada kartu grup (atau melalui \"Select\" dan \"Share selected\" untuk beberapa grup), klik Share."
+          },
+          "good": {
+            "0": "Tautan langsung disalin ke clipboard Anda, dengan toast yang mengonfirmasinya. Ini dibahas secara mendalam di bagian \"Berbagi\" di bawah — tombol Share di dasbor dan di ekstensi menghasilkan jenis tautan yang sama."
+          }
+        },
+        "7": {
+          "heading": "Halaman akun",
+          "checks": "Bahwa halaman akun menampilkan profil, paket, dan perangkat yang benar, dan kedua opsi keluar berfungsi.",
+          "pro": "Hanya kartu Devices yang memerlukan Pro; kartu ini mencantumkan perangkat yang tersinkron.",
+          "steps": {
+            "0": "Buka Account settings dari dasbor.",
+            "1": "Periksa kartu Profile (email, bergabung sejak), kartu Subscription (paket, \"Manage billing\" atau \"Upgrade\"), dan kartu Devices.",
+            "2": "Coba \"Sign out\" dan secara terpisah \"Sign out of all devices\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Account settings: kartu Subscription menampilkan paket Pro, tanggal perpanjangannya dan {proMonthly}/bln, dengan tombol Manage billing; di bawahnya kartu Devices mencantumkan perangkat yang masuk",
+              "caption": "Kartu Subscription dan Devices pada akun Pro."
+            }
+          },
+          "good": {
+            "0": "Profile dan Subscription menampilkan info yang akurat dan terkini (lihat bagian \"Upgrade ke Pro\" di atas untuk detail kartu Subscription).",
+            "1": "Devices mencantumkan perangkat Anda yang masuk dengan kontrol ganti nama/hapus.",
+            "2": "Kedua tombol keluar mengembalikan Anda ke keadaan keluar; \"all devices\" juga mencabut setiap sesi aktif lainnya.",
+            "3": "Tidak ada opsi penghapusan akun di halaman ini — itu wajar, bukan kekurangan yang perlu dilaporkan."
+          }
+        },
+        "8": {
+          "heading": "Di ponsel",
+          "checks": "Bahwa halaman dasbor dan akun dapat digunakan sepenuhnya di layar kecil.",
+          "steps": {
+            "0": "Buka dasbor dan Account settings di ponsel (atau jendela desktop yang dipersempit hingga sekitar 390px).",
+            "1": "Ketuk ikon Dashboard dan Account di bagian atas, lalu menu akun bulat di kanan dan \"Sign out\"-nya."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dasbor di layar selebar ponsel: bilah atas menampilkan logo TabMerger, ikon Dashboard dan Account, sakelar terang/gelap dan menu akun, tanpa ada yang terpotong",
+              "caption": "Dasbor selebar ponsel: hanya ikon di bilah atas, tidak ada yang bergulir ke samping."
+            }
+          },
+          "good": {
+            "0": "Tidak ada yang bergulir ke samping.",
+            "1": "Bilah atas menampilkan logo TabMerger, ikon Dashboard dan Account, sakelar terang/gelap, dan menu akun Anda, semuanya terlihat penuh dan dapat diketuk (nama \"TabMerger\" dan label ikon disembunyikan di layar sempit). Layar yang lebih lebar tetap menampilkan label."
+          },
+          "report": "Halaman bergulir ke samping di ponsel, atau kontrol apa pun di bagian atas terpotong atau tidak dapat dijangkau."
+        },
+        "9": {
+          "heading": "Notifikasi (toast)",
+          "checks": "Bahwa notifikasi pop-up mudah dibaca, tertutup sendiri setelah hitungan mundur, dan dapat ditutup lebih awal.",
+          "steps": {
+            "0": "Picu notifikasi, misalnya: di Account settings, masukkan kata sandi kurang dari 8 karakter di formulir kata sandi dan kirim (menampilkan error tanpa mengubah apa pun), atau salin tautan berbagi.",
+            "1": "Perhatikan notifikasi di sudut kanan bawah, lalu picu yang lain dan arahkan kursor ke atasnya.",
+            "2": "Coba dalam mode terang dan gelap."
+          },
+          "examples": {
+            "0": {
+              "alt": "Notifikasi error merah di sudut kanan bawah bertuliskan \"Password must be at least 8 characters.\", dengan ✕ di sudutnya dan bilah hitung mundur yang sebagian kosong di tepi bawahnya",
+              "caption": "Notifikasi error: tepi merah, ✕ untuk menutup, dan bilah hitung mundur di bagian bawah."
+            }
+          },
+          "good": {
+            "0": "Setiap notifikasi mudah dibaca dengan latar halaman, dengan tepi berwarna (hijau untuk berhasil, merah untuk error).",
+            "1": "Bilah di bagian bawahnya mengosong selama sekitar 6 detik dan berhenti saat Anda mengarahkan kursor, dan notifikasi tertutup saat bilah habis.",
+            "2": "✕ di sudut kanan atas langsung menutupnya."
+          },
+          "report": "Notifikasi sulit dibaca di salah satu tema, bilah terus berjalan saat Anda mengarahkan kursor, atau ✕ salah tempat atau tidak menutupnya."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Berbagi",
+      "intro": "Berbagi memerlukan Pro (lihat \"Upgrade ke Pro\" di atas untuk mendapatkannya di beta ini). Kunci enkripsi untuk setiap berbagi dibuat baru per tautan dan hanya ada di fragmen #key= URL — tidak pernah dikirim ke atau disimpan di server, jadi siapa pun yang memiliki tautan lengkap (termasuk fragmen itu) dapat melihat konten yang dibagikan. Perlakukan tautan berbagi seperti konten itu sendiri.",
+      "items": {
+        "0": {
+          "heading": "Membagikan satu grup atau lebih dari ekstensi",
+          "checks": "Bahwa ekstensi membuat tautan berbagi untuk satu grup, atau untuk beberapa sekaligus.",
+          "steps": {
+            "0": "Masuk ke mode pilihan dan centang satu grup atau lebih di sidebar (bukan tab atau jendela — Share hanya muncul untuk pilihan berjenis grup).",
+            "1": "Klik \"Share\" di bilah pilihan di bagian bawah."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mode pilihan di popup dengan Work dan Research dicentang serta \"2 groups selected\" dan tombol Share di bilah bawah",
+              "caption": "Centang grup yang ingin dibagikan, lalu klik Share di bilah bawah."
+            },
+            "1": {
+              "alt": "Layar yang sama dengan notifikasi hijau \"Link copied to clipboard\"",
+              "caption": "Tautan langsung disalin."
+            }
+          },
+          "good": {
+            "0": "Tautan langsung disalin ke clipboard Anda, dengan toast \"Link copied to clipboard\".",
+            "1": "Memilih beberapa grup sekaligus membagikan semuanya bersama sebagai satu tautan/bundel — Anda tidak perlu membagikannya satu per satu."
+          }
+        },
+        "1": {
+          "heading": "Membuka tautan yang dibagikan",
+          "checks": "Bahwa siapa pun dapat membuka tautan berbagi tanpa masuk dan melihat grup yang dibagikan, hanya-baca.",
+          "pro": "Membuat tautan memerlukan Pro; membukanya tidak memerlukan akun sama sekali.",
+          "steps": {
+            "0": "Buka tautan yang disalin di jendela browser dalam keadaan keluar (atau jendela privat/incognito).",
+            "1": "Periksa favicon dan judul pada setiap tab yang dibagikan, dan coba \"Open tab\" / \"Open all tabs\" / \"Open window\" / \"Open all windows\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Halaman berbagi dibuka dalam keadaan keluar: \"Shared collection · read-only\", tautan berbagi, \"9 tabs across 5 windows in 2 groups\", sakelar Show page previews, dan tab grup Work dengan tombol Open",
+              "caption": "Yang dilihat seseorang saat membuka tautan Anda, tanpa masuk. (Di sini tautan mengarah ke server uji lokal; tautan Anda akan berada di preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "Halaman dimuat tanpa perlu masuk, berlabel \"Shared collection · read-only\".",
+            "1": "Halaman menampilkan setiap grup, jendela, dan tab dengan favicon dan judul aslinya.",
+            "2": "Tombol buka membuka tab/jendela yang benar di tab browser baru."
+          }
+        },
+        "2": {
+          "heading": "Pratinjau halaman di halaman berbagi",
+          "checks": "Bahwa pratinjau halaman di halaman berbagi tetap nonaktif sampai penampil mengaktifkan dan mengonfirmasinya.",
+          "pro": "Membuat tautan memerlukan Pro; membukanya tidak memerlukan akun sama sekali.",
+          "steps": {
+            "0": "Di halaman berbagi, temukan sakelar \"Show page previews\" di atas daftar grup.",
+            "1": "Aktifkan dan konfirmasi dialog yang muncul.",
+            "2": "Arahkan kursor ke tab untuk melihat gambar pratinjau dan deskripsinya."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dialog \"Turn on page previews?\" yang menjelaskan apa yang dikirim ke layanan pratinjau, dengan tombol Cancel dan Turn on",
+              "caption": "Mengaktifkan sakelar akan meminta konfirmasi terlebih dahulu. Pratinjau tetap nonaktif sampai Anda mengonfirmasi."
+            }
+          },
+          "good": {
+            "0": "Sakelar nonaktif secara default.",
+            "1": "Mengaktifkannya memerlukan konfirmasi dialog terlebih dahulu (menonaktifkannya kembali tidak perlu konfirmasi) — dialog menjelaskan bahwa mengarahkan kursor ke tab mengirimkan alamat tab itu ke layanan pratinjau TabMerger, dan bahwa itu tidak ditautkan ke akun Anda, dicatat, atau disimpan.",
+            "2": "Setelah aktif, mengarahkan kursor ke tab menampilkan gambar/deskripsinya; halaman tanpa gambar menampilkan \"No preview\" alih-alih gambar rusak."
+          }
+        },
+        "3": {
+          "heading": "Membagikan grup dengan banyak jendela",
+          "checks": "Bahwa grup yang dibagikan dengan beberapa jendela menampilkan setiap jendela secara terpisah.",
+          "steps": {
+            "0": "Bagikan grup yang memiliki beberapa jendela tersimpan (tidak hanya satu)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Grup Research di halaman berbagi, menampilkan empat jendela terpisah, masing-masing dengan tautan Open tab sendiri, dan \"Open all windows\" pada grup",
+              "caption": "Grup yang dibagikan dengan empat jendela: setiap jendela dicantumkan secara terpisah."
+            }
+          },
+          "good": {
+            "0": "Halaman berbagi menampilkan setiap jendela di grup tersebut, masing-masing berlabel \"Window N\" (dan \"Incognito\" jika memang begitu), dengan tabnya sendiri dan kontrol \"Open tab(s)\"-nya sendiri."
+          }
+        },
+        "4": {
+          "heading": "Berbagi dari dasbor web alih-alih ekstensi",
+          "checks": "Bahwa berbagi dari situs web berfungsi dengan cara yang sama seperti dari ekstensi.",
+          "steps": {
+            "0": "Di dasbor, klik \"Share\" pada satu kartu grup, atau centang beberapa grup dan klik \"Share selected\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kartu grup dasbor dengan tombol Share pada satu kartu menampilkan \"Copied!\" dan notifikasi bertuliskan \"Link copied — shares a snapshot of this group.\"",
+              "caption": "Share pada kartu dasbor menyalin jenis tautan yang sama."
+            }
+          },
+          "good": {
+            "0": "Kedua jalur di dasbor menyalin tautan dengan cara yang sama seperti ekstensi (masing-masing \"Link copied — shares a snapshot of this group.\" atau \"Link copied! Share page is live.\"), menghasilkan jenis halaman berbagi yang sama."
+          }
+        },
+        "5": {
+          "heading": "Mengedit, membagikan ulang, mencabut, dan kedaluwarsa — yang TIDAK mungkin",
+          "checks": "Apa yang belum bisa dilakukan tautan berbagi, agar Anda tidak menghabiskan waktu melaporkannya.",
+          "steps": {
+            "0": "Coba temukan cara apa pun untuk mengedit berbagi yang ada, atau mencabut/menghapus/mengakhiri masa berlakunya, dari ekstensi maupun dasbor."
+          },
+          "good": {
+            "0": "Saat ini tidak ada UI di mana pun untuk mengedit, mencabut, menghapus, atau mengakhiri masa berlaku tautan berbagi setelah dibuat — berbagi adalah snapshot permanen yang tidak dapat diubah sejak dibuat. Ini wajar — jangan laporkan tidak adanya kontrol cabut/edit/kedaluwarsa, cukup konfirmasi bahwa ini sesuai dengan deskripsi ini.",
+            "1": "Membagikan ulang grup yang sama membuat tautan baru yang terpisah alih-alih memperbarui yang lama; tautan lama tetap berfungsi dan masih menampilkan snapshot lama."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Pengaturan",
+      "intro": "Settings memiliki tab General, Account, dan Data untuk semua orang. Tab Devices muncul setelah Anda menggunakan Pro (lihat \"Upgrade ke Pro\" di atas). Tab AI dan Dev bukan bagian dari build beta ini — AI tetap tersembunyi di balik tanda \"segera hadir\", dan Dev hanya muncul di build pengembangan lokal, bukan beta yang Anda instal.",
+      "items": {
+        "0": {
+          "heading": "Tab General — Theme, Confirm before deleting, Open tab on click, Auto-deduplicate",
+          "checks": "Bahwa pengaturan General ini langsung berlaku dan diingat.",
+          "steps": {
+            "0": "Buka Settings dan ganti Theme antara Light, Dark, dan System.",
+            "1": "Alihkan \"Confirm before deleting\" (hapus grup atau jendela dengan pengaturan aktif, lalu nonaktif, dan bandingkan).",
+            "2": "Alihkan \"Open tab on click\", lalu klik tab tersimpan di panel utama.",
+            "3": "Alihkan \"Auto-deduplicate on merge\", lalu gabungkan dua jendela yang memiliki tab duplikat."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab General di modal Settings, menampilkan Theme, Confirm before deleting, dan sakelar lainnya",
+              "caption": "Tab General di Settings, dengan lencana versi di samping judul. (Tab Dev hanya ada di build screenshot internal kami; Anda tidak akan melihatnya.)"
+            }
+          },
+          "good": {
+            "0": "Theme langsung mengubah seluruh UI dan bertahan setelah popup ditutup/dibuka ulang.",
+            "1": "Dengan \"Confirm before deleting\" aktif, menghapus grup atau jendela meminta konfirmasi terlebih dahulu; jika nonaktif, langsung dihapus.",
+            "2": "\"Open tab on click\" aktif: satu klik membuka tab di browser; nonaktif: satu klik hanya memilih/memperluasnya.",
+            "3": "\"Auto-deduplicate on merge\" menghapus duplikat secara otomatis saat aktif."
+          }
+        },
+        "1": {
+          "heading": "Tab General — Show page images in previews",
+          "checks": "Bahwa pengaturan gambar halaman mengontrol apakah pratinjau tab menampilkan gambar halaman.",
+          "steps": {
+            "0": "Nonaktifkan \"Show page images in previews\".",
+            "1": "Arahkan kursor ke tab tersimpan untuk melihat pratinjaunya.",
+            "2": "Aktifkan kembali pengaturan dan arahkan kursor ke tab yang sama lagi."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pratinjau hover tab dengan gambar halaman dinonaktifkan, menampilkan placeholder \"Not enabled\"",
+              "caption": "Pratinjau hover dengan \"Show page images in previews\" nonaktif."
+            }
+          },
+          "good": {
+            "0": "Nonaktif: pratinjau dengan jelas bertuliskan \"Not enabled\" dengan catatan \"Page images are off. Turn on in Settings.\" — sakelarnya sendiri langsung tersimpan, tanpa dialog konfirmasi.",
+            "1": "Aktif: gambar halaman asli dimuat di pratinjau hover, atau \"No preview\" jika halaman itu tidak memilikinya.",
+            "2": "Deskripsi pengaturan itu sendiri menautkan ke bagian pratinjau halaman di kebijakan privasi."
+          },
+          "report": "Pratinjau menampilkan \"No preview\" (kosong) alih-alih gambar asli dengan pengaturan aktif dan halaman yang memiliki gambar."
+        },
+        "2": {
+          "heading": "Tab General — Cloud sync, Stale tab threshold, URL rules",
+          "checks": "Bahwa pengaturan ini muncul untuk paket yang tepat dan mengubah apa yang seharusnya.",
+          "pro": "Hanya sakelar Cloud sync yang memerlukan Pro (Free tidak menampilkannya).",
+          "steps": {
+            "0": "Dengan Pro, alihkan \"Cloud sync\" (kontrol ini hanya muncul setelah Anda memiliki Pro).",
+            "1": "Ubah \"Stale tab threshold\" ke nilai lain (7/14/30/60 hari).",
+            "2": "Klik \"Manage\" di samping \"URL rules\" dan tambahkan aturan yang menetapkan pola URL ke sebuah grup."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, tab General digulir ke bawah: Cloud sync aktif, Stale tab threshold diatur ke 30 hari, dan URL rules dengan tombol Manage",
+              "caption": "Bagian bawah tab General. (Tab Dev hanya ada di build screenshot internal kami; Anda tidak akan melihatnya.)"
+            }
+          },
+          "good": {
+            "0": "Cloud sync hanya muncul untuk akun Pro (Free tidak pernah melihatnya).",
+            "1": "Mengubah ambang batas tab usang mengubah tab mana yang mendapat titik kuning usang.",
+            "2": "URL rules membuka pengelola tempat Anda dapat menambah/mengedit/menghapus aturan pola-ke-grup.",
+            "3": "Tab yang baru dibuka dan cocok dengan aturan akan ditetapkan secara otomatis."
+          }
+        },
+        "3": {
+          "heading": "Tema: Light, Dark, dan System",
+          "checks": "Bahwa setiap tema terlihat benar di seluruh popup, dan pilihannya diingat.",
+          "steps": {
+            "0": "Di Settings → General, atur Theme ke Dark dan klik Save changes.",
+            "1": "Lihat-lihat popup: sidebar, grup dengan beberapa jendela, menu ⋯, menu klik kanan, Search (Ctrl+K), dan Settings itu sendiri.",
+            "2": "Tutup dan buka kembali popup.",
+            "3": "Atur Theme ke System dan simpan, lalu alihkan komputer Anda antara mode terang dan gelap.",
+            "4": "Kembalikan ke Light."
+          },
+          "good": {
+            "0": "Seluruh popup berganti tema segera setelah Anda menyimpan, dengan setiap teks, ikon, dan bingkai dapat dibaca.",
+            "1": "Menu, dialog, tooltip, dan notifikasi juga mengikuti tema.",
+            "2": "Tema masih teratur setelah membuka ulang popup.",
+            "3": "System mengikuti pengaturan terang atau gelap komputer Anda."
+          },
+          "report": "Ada yang sulit dibaca atau tetap memakai tema lama (menu, dialog, ikon, atau bingkai), atau tema kembali ke semula setelah membuka ulang popup."
+        },
+        "4": {
+          "heading": "URL rules: menyimpan halaman yang cocok secara otomatis",
+          "checks": "Bahwa aturan URL menyimpan halaman yang Anda buka di alamat yang cocok ke grup yang Anda pilih.",
+          "steps": {
+            "0": "Di Settings → General, di samping URL rules, klik Manage, lalu Add rule.",
+            "1": "Masukkan pola dengan * sebagai wildcard (misalnya github.com/*), pilih grup, tambahkan aturan, dan klik Save.",
+            "2": "Di browser, buka tab baru di alamat yang cocok (misalnya halaman github.com mana pun).",
+            "3": "Buka popup dan lihat grup aturan tersebut. Lalu muat ulang halaman sekali, dan periksa grup lagi.",
+            "4": "Edit aturan agar mengarah ke grup lain, lalu hapus, dan buka halaman lain yang cocok.",
+            "5": "Di Free, coba tambahkan aturan keempat."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dialog URL Rules: \"Auto-assign tabs to groups by URL pattern. Use * as a wildcard (e.g. github.com/*). First matching rule wins.\", belum ada aturan, tombol Add rule, serta Cancel dan Save",
+              "caption": "Settings → General → URL rules → Manage membuka editor ini."
+            }
+          },
+          "good": {
+            "0": "Salinan halaman yang cocok disimpan ke grup aturan, di jendela pertamanya (atau jendela baru jika grup tidak memilikinya). Tab itu sendiri tetap terbuka.",
+            "1": "Jika beberapa aturan cocok, yang pertama di daftar yang berlaku.",
+            "2": "Setelah aturan diedit atau dihapus, halaman baru mengikuti perubahan.",
+            "3": "Free mengizinkan 3 aturan: menambahkan yang keempat menampilkan \"Free plan allows up to 3 URL rules.\" dengan tombol Upgrade. Pro tidak memiliki batas."
+          },
+          "report": "Halaman yang cocok tidak tersimpan, masuk ke grup yang salah, atau tersimpan lebih dari sekali (misalnya lagi setiap kali Anda memuat ulang)."
+        },
+        "5": {
+          "heading": "Tab Account — Plan, Renews, Email, Manage billing / Upgrade, Sign out",
+          "checks": "Bahwa tab Account menampilkan paket, tanggal perpanjangan, dan email Anda yang sebenarnya, dan tombol-tombolnya berfungsi.",
+          "steps": {
+            "0": "Buka tab Account dan periksa baris Plan, Renews (jika berbayar), dan Email.",
+            "1": "Klik \"Upgrade to Pro\" (Free) atau \"Manage billing\" (Pro/Pro AI) — lihat \"Upgrade ke Pro\" di atas untuk apa yang terjadi selanjutnya.",
+            "2": "Klik \"Sign out\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, tab Account pada Pro: Plan Pro ({proMonthly}/mo), tanggal perpanjangan, email, tombol Manage billing dan Sign out, serta \"Forgot your passphrase? Reset encryption\"",
+              "caption": "Tab Account pada akun Pro. Tautan reset di bagian bawah adalah item berikutnya. (Tab Dev hanya ada di build screenshot internal kami; Anda tidak akan melihatnya.)"
+            }
+          },
+          "good": {
+            "0": "Plan menampilkan \"Free\", \"Pro ({proMonthly}/mo)\", atau \"Pro AI ({proAiMonthly}/mo)\" sesuai langganan Anda yang sebenarnya.",
+            "1": "Renews hanya muncul untuk paket berbayar dan memberikan tanggal perpanjangan yang sebenarnya.",
+            "2": "Email cocok dengan akun yang Anda gunakan untuk masuk.",
+            "3": "\"Manage billing\" membuka portal penagihan Stripe di tab baru; di Free tombolnya adalah \"Upgrade to Pro\", yang membuka halaman harga.",
+            "4": "Sign out mengembalikan Anda ke keadaan keluar."
+          }
+        },
+        "6": {
+          "heading": "Tab Account — Forgot your passphrase? Reset encryption",
+          "checks": "Bahwa tautan reset enkripsi muncul di tab Account setelah enkripsi disiapkan.",
+          "steps": {
+            "0": "Tautan ini hanya muncul jika Anda telah menyelesaikan penyiapan enkripsi setidaknya sekali (lihat bagian \"Frasa sandi enkripsi end-to-end\" di bawah untuk alur lengkapnya — jangan ulangi di sini, cukup konfirmasi bahwa tautan dapat dijangkau dari tab ini)."
+          },
+          "good": {
+            "0": "Tautan terlihat di bagian bawah tab Account setelah enkripsi disiapkan, dan tidak sebelumnya."
+          }
+        },
+        "7": {
+          "heading": "Tab Data — Export, Import, Clear all data",
+          "checks": "Bahwa ekspor, impor, dan penghapusan data Anda berfungsi, dengan konfirmasi sebelum apa pun diganti atau dihapus.",
+          "steps": {
+            "0": "Buka tab Data dan klik \"Export\" untuk mengunduh semua grup sebagai file JSON.",
+            "1": "Klik \"Import\" dan pilih file yang sama (atau ekspor Bookmarks HTML, atau ekspor OneTab .txt).",
+            "2": "Klik \"Clear all data\" dan konfirmasi."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab Data di modal Settings, menampilkan kontrol Export data dan Import data",
+              "caption": "Tab Data di Settings."
+            }
+          },
+          "good": {
+            "0": "Export mengunduh file bernama seperti \"tabmerger-backup-2026-01-15.json\" dengan toast \"exported successfully\".",
+            "1": "Import meminta Anda mengonfirmasi jumlah grup sebelum mengimpor, lalu menampilkan \"imported successfully\".",
+            "2": "Mengimpor ulang ekspor Anda sendiri mengembalikan setiap grup dengan jendela, tab, urutan, dan warna yang sama.",
+            "3": "Ketiga jenis file (TabMerger JSON, Bookmarks HTML, OneTab .txt) diterima, dideteksi berdasarkan ekstensi file.",
+            "4": "\"Clear all data\" menghapus grup, sesi, dan pengaturan setelah Anda mengonfirmasi — anggap ini destruktif dan hanya coba di profil yang tidak terpakai."
+          },
+          "report": "File yang rusak atau kosong diam-diam tidak melakukan apa pun alih-alih menampilkan toast error seperti \"Invalid file format\" atau \"No groups found\"."
+        },
+        "8": {
+          "heading": "Save vs Reset, dan indikator \"Unsaved changes\"",
+          "checks": "Bahwa pengaturan hanya tersimpan saat Anda mengklik Save, dan memperingatkan Anda tentang perubahan yang belum disimpan.",
+          "steps": {
+            "0": "Di tab General, ubah pengaturan apa pun (misalnya Theme) tanpa mengklik Save.",
+            "1": "Perhatikan teks \"Unsaved changes\" dan bahwa \"Save changes\" hanya aktif selama ada sesuatu yang benar-benar berbeda dari yang tersimpan.",
+            "2": "Klik \"Restore defaults\" alih-alih Save, lalu tutup Settings tanpa menyimpan.",
+            "3": "Buka kembali Settings dan periksa apakah perubahan Anda tetap ada."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, tab General setelah perubahan: \"Unsaved changes\" di samping tombol Save changes yang aktif, dengan Restore defaults di kiri",
+              "caption": "Setelah mengubah pengaturan: \"Unsaved changes\" muncul dan Save changes menjadi aktif. (Tab Dev hanya ada di build screenshot internal kami; Anda tidak akan melihatnya.)"
+            }
+          },
+          "good": {
+            "0": "\"Unsaved changes\" muncul di samping \"Save changes\" setiap kali draf berbeda dari pengaturan terakhir yang disimpan.",
+            "1": "\"Save changes\" dinonaktifkan saat tidak ada yang baru untuk disimpan.",
+            "2": "\"Restore defaults\" hanya mengembalikan draf yang sedang dikerjakan ke default — tidak menyimpan dengan sendirinya.",
+            "3": "Menutup Settings tanpa mengklik \"Save changes\" membuang draf; membuka kembali menampilkan nilai terakhir yang benar-benar tersimpan, bukan suntingan Anda yang belum disimpan."
+          },
+          "report": "\"Save changes\" tetap aktif tanpa ada perubahan, atau pengaturan yang Anda ubah tetapi tidak pernah disimpan tetap bertahan setelah menutup dan membuka kembali Settings."
+        },
+        "9": {
+          "heading": "Lencana versi",
+          "checks": "Di mana menemukan nomor versi yang tepat untuk dicantumkan dalam laporan bug.",
+          "steps": {
+            "0": "Lihat bilah judul dialog Settings."
+          },
+          "good": {
+            "0": "Lencana kecil di samping kata \"Settings\" menampilkan semver sebenarnya yang harus Anda cantumkan dalam laporan bug (misalnya \"v3.1.0-beta.5\") — ini dibahas lebih detail di bagian \"Bergabung dan instal\" di atas."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Masuk dan sinkronisasi antar perangkat",
+      "intro": "Build beta tersinkron melalui aplikasi web pratinjau di preview.tabmerger.com, bukan situs utama — masuk di sana untuk melihat grup tersinkron, dasbor, dan berbagi Anda.",
+      "items": {
+        "0": {
+          "heading": "Menyiapkan dua perangkat",
+          "checks": "Bahwa dua perangkat yang masuk ke akun yang sama berbagi grup mereka.",
+          "steps": {
+            "0": "Masuk di dua perangkat atau dua profil browser dengan ekstensi beta terinstal di keduanya, menggunakan akun yang sama."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dialog \"Sign In to TabMerger\" ekstensi di popup: Continue with Google, lalu tab Sign In, Sign Up dan Magic Link dengan kolom Email dan Password",
+              "caption": "Masuk dari ekstensi: ikon akun (kanan atas) → Sign in."
+            },
+            "1": {
+              "alt": "Popup perangkat A dengan grup Work, Research, Shopping dan Reading List; footer bertuliskan 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Perangkat A."
+            },
+            "2": {
+              "alt": "Popup perangkat B setelah masuk, membuka kunci, dan sinkronisasi: empat grup yang sama dengan jumlah jendela dan tab yang sama, serta footer 4 Groups, 4 Windows, 17 Tabs yang sama",
+              "caption": "Perangkat B setelah masuk dan membuka kunci: grup dan jumlah yang sama, dalam urutan yang sama."
+            }
+          },
+          "good": {
+            "0": "Grup yang dibuat di satu perangkat muncul di perangkat lain dalam waktu singkat."
+          }
+        },
+        "1": {
+          "heading": "Penggantian nama sampai ke perangkat lain",
+          "checks": "Bahwa penggantian nama di satu perangkat muncul di perangkat lain tanpa penyegaran manual.",
+          "steps": {
+            "0": "Edit nama grup di perangkat A.",
+            "1": "Periksa perangkat B tanpa menyentuh apa pun di sana."
+          },
+          "examples": {
+            "0": {
+              "alt": "Popup perangkat A setelah mengganti nama Research menjadi \"Research papers\", dengan empat tabnya ditampilkan",
+              "caption": "Perangkat A: \"Research\" diganti namanya menjadi \"Research papers\"."
+            },
+            "1": {
+              "alt": "Popup perangkat B menampilkan grup sebagai \"Research papers\" dengan empat tab yang sama, setelah hanya membuka ulang popup",
+              "caption": "Perangkat B, setelah hanya membuka ulang popup: nama baru sudah ada."
+            }
+          },
+          "good": {
+            "0": "Perangkat B menangkap penggantian nama tanpa Anda perlu memicu penyegaran manual."
+          }
+        },
+        "2": {
+          "heading": "Penghapusan sampai ke perangkat lain",
+          "checks": "Bahwa grup yang dihapus tetap terhapus di setiap perangkat alih-alih kembali.",
+          "steps": {
+            "0": "Hapus grup di perangkat A.",
+            "1": "Pastikan grup itu juga hilang di perangkat B."
+          },
+          "examples": {
+            "0": {
+              "alt": "Popup perangkat A setelah menghapus Shopping: Work, Research papers dan Reading List tersisa, dan footer bertuliskan 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Perangkat A: \"Shopping\" dihapus."
+            },
+            "1": {
+              "alt": "Popup perangkat B setelah dibuka ulang: Shopping hilang dan footer bertuliskan 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Perangkat B setelah membuka ulang popup: \"Shopping\" juga hilang di sana."
+            }
+          },
+          "good": {
+            "0": "Penghapusan menyebar alih-alih grup muncul kembali (\"bangkit\") setelah sinkronisasi."
+          },
+          "report": "Grup yang dihapus kembali di salah satu perangkat setelah sinkronisasi berikutnya."
+        },
+        "3": {
+          "heading": "Pengurutan ulang grup tersinkron",
+          "checks": "Bahwa urutan grup Anda sama di setiap perangkat dan di dasbor.",
+          "steps": {
+            "0": "Seret grup ke posisi baru di sidebar pada perangkat A.",
+            "1": "Tunggu sinkronisasi menyusul, lalu lihat sidebar perangkat B dan dasbor web."
+          },
+          "good": {
+            "0": "Perangkat B dan dasbor menampilkan grup dalam urutan yang sama dengan perangkat A.",
+            "1": "Undo mungkin berwarna abu-abu di perangkat tepat setelah sinkronisasi membawa perubahan dari perangkat lain. Itu wajar: riwayat urungkan dihapus saat perubahan datang dari tempat lain, sehingga Anda tidak dapat secara tidak sengaja mengurungkan di atas suntingan orang lain."
+          },
+          "report": "Urutan berbeda antar perangkat setelah sinkronisasi menyusul, atau pengurutan ulang kembali ke urutan lama."
+        },
+        "4": {
+          "heading": "Perubahan offline tersinkron saat Anda terhubung kembali",
+          "checks": "Bahwa perubahan yang dibuat secara offline tersinkron setelah Anda kembali online, tanpa duplikat atau kehilangan.",
+          "steps": {
+            "0": "Jadikan satu perangkat offline (nonaktifkan jaringan).",
+            "1": "Lakukan perubahan.",
+            "2": "Hubungkan kembali."
+          },
+          "good": {
+            "0": "Setelah kembali online, perubahan yang dibuat secara offline tersinkron tanpa menduplikasi atau diam-diam menghilangkan grup."
+          }
+        },
+        "5": {
+          "heading": "Menghapus grup saat offline",
+          "checks": "Bahwa grup yang Anda hapus saat offline tetap terhapus setelah Anda terhubung kembali.",
+          "steps": {
+            "0": "Jadikan perangkat A offline (nonaktifkan jaringan).",
+            "1": "Hapus grup di perangkat A.",
+            "2": "Hubungkan kembali perangkat A dan biarkan tersinkron, lalu periksa perangkat B dan dasbor."
+          },
+          "good": {
+            "0": "Grup dihapus dari server pada sinkronisasi berikutnya dan hilang di perangkat B dan dasbor.",
+            "1": "Grup tidak kembali di perangkat mana pun setelahnya."
+          },
+          "report": "Grup yang Anda hapus saat offline muncul kembali di perangkat mana pun setelah sinkronisasi."
+        },
+        "6": {
+          "heading": "Grup yang sama diedit di dua perangkat (salinan konflik)",
+          "checks": "Bahwa saat grup yang sama diedit di dua perangkat sebelum salah satunya tersinkron, tidak ada yang ditimpa dan Anda mendapat salinan untuk digabungkan secara manual.",
+          "steps": {
+            "0": "Jadikan perangkat A offline (nonaktifkan jaringan). Biarkan perangkat B online.",
+            "1": "Di perangkat A, edit grup (misalnya tambahkan tab). Di perangkat B, edit grup yang sama secara berbeda (misalnya tambahkan tab lain).",
+            "2": "Biarkan perangkat B tersinkron terlebih dahulu, lalu hubungkan kembali perangkat A dan biarkan tersinkron.",
+            "3": "Lihat sidebar di kedua perangkat."
+          },
+          "good": {
+            "0": "Versi yang sampai ke server lebih dulu (perangkat B) mempertahankan nama grup.",
+            "1": "Versi perangkat A disimpan tepat di bawahnya sebagai grup baru bernama \"Work{CONFLICT_COPY_SUFFIX}\" (menggunakan nama grup Anda), dan sebuah toast memberi tahu Anda.",
+            "2": "Kedua perangkat akhirnya menampilkan kedua grup. Anda dapat menggabungkan tab secara manual lalu menghapus salinannya.",
+            "3": "Mengedit hanya di satu perangkat, atau mengedit grup yang berbeda di masing-masing, tidak pernah membuat salinan."
+          },
+          "report": "Suntingan diam-diam hilang tanpa salinan, atau \"salinan konflik\" muncul padahal hanya satu perangkat yang mengedit grup."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Frasa sandi enkripsi end-to-end",
+      "intro": "Enkripsi wajib untuk setiap akun yang masuk, bukan pengaturan opsional — tidak ada sakelar untuk menonaktifkannya. Grup, sesi, dan snapshot \"Now Open\" Anda yang tersinkron dienkripsi dengan kunci yang hanya dapat dibuka oleh frasa sandi Anda; server TabMerger tidak pernah melihat frasa sandi atau kunci yang terbuka.",
+      "items": {
+        "0": {
+          "heading": "Penyiapan frasa sandi pertama kali",
+          "checks": "Bahwa mengaktifkan sinkronisasi meminta Anda memilih frasa sandi enkripsi sebelum data Anda meninggalkan perangkat.",
+          "steps": {
+            "0": "Pada login baru dengan sinkronisasi cloud, tunggu prompt \"Set up encryption\" muncul dengan sendirinya (dipicu oleh percobaan sinkronisasi pertama).",
+            "1": "Baca teks prompt, lalu masukkan frasa sandi baru dan ulangi di \"Confirm passphrase\".",
+            "2": "Klik \"Set up encryption\"."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dialog \"Set up encryption\" yang menjelaskan bahwa frasa sandi tidak dapat dipulihkan, dengan kolom New passphrase dan Confirm passphrase serta tombol Set up encryption",
+              "caption": "Muncul dengan sendirinya tepat setelah masuk di Pro."
+            }
+          },
+          "good": {
+            "0": "Prompt bertuliskan \"Your synced group and tab data is end-to-end encrypted with a passphrase only you know. Choose one now — there is no way to recover your data if you forget it, it never leaves your device and TabMerger cannot reset it for you.\"",
+            "1": "Frasa sandi harus minimal 8 karakter tanpa spasi, dan harus cocok dengan konfirmasinya — ketidakcocokan atau frasa sandi yang terlalu pendek menampilkan error inline yang jelas (\"Passphrase must be at least 8 characters\" / \"Passphrases do not match\" / \"Passphrase cannot contain spaces\") alih-alih gagal diam-diam.",
+            "2": "Jika berhasil, Anda melihat toast \"Encryption set up\".",
+            "3": "Tidak ada data yang sudah Anda sinkronkan yang hilang."
+          }
+        },
+        "1": {
+          "heading": "Membuka kunci di perangkat kedua",
+          "checks": "Bahwa perangkat kedua memerlukan frasa sandi Anda sekali sebelum dapat membaca data tersinkron Anda.",
+          "steps": {
+            "0": "Masuk dengan akun yang sama di perangkat atau profil browser kedua.",
+            "1": "Saat prompt \"Unlock encryption\" muncul, masukkan frasa sandi Anda (sekali, tidak ada kolom konfirmasi) dan klik \"Unlock\" atau tekan Enter.",
+            "2": "Ulangi sekali lagi, tetapi sengaja ketik frasa sandi yang salah."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dialog \"Unlock encryption\" di perangkat kedua, dengan satu kolom Passphrase dan tombol Unlock",
+              "caption": "Di perangkat kedua, ekstensi meminta frasa sandi Anda yang sudah ada sekali saja."
+            }
+          },
+          "good": {
+            "0": "Prompt buka kunci bertuliskan \"Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won't be asked again unless you sign out.\"",
+            "1": "Frasa sandi yang benar membuka kunci dan menampilkan toast \"Encryption unlocked\".",
+            "2": "Yang salah menampilkan \"Wrong passphrase\" dan tidak mengubah apa pun — tidak ada kerusakan, tidak ada penguncian, Anda cukup mencoba lagi."
+          }
+        },
+        "2": {
+          "heading": "Seperti apa tampilan \"terkunci\", dan tetap terbuka setelah mulai ulang",
+          "checks": "Bahwa data terkunci tetap tidak dapat dibaca sampai Anda membukanya, dan perangkat tetap terbuka setelah browser dimulai ulang.",
+          "steps": {
+            "0": "Saat perangkat terkunci (sebelum Anda memasukkan frasa sandi di sana), coba gunakan fitur sinkronisasi cloud.",
+            "1": "Buka kuncinya, lalu tutup sepenuhnya dan buka kembali browser Anda (bukan hanya popup) di perangkat itu."
+          },
+          "good": {
+            "0": "Saat terkunci, Anda diminta lagi memasukkan frasa sandi alih-alih diam-diam menyinkronkan teks biasa atau kehilangan data.",
+            "1": "Setelah dibuka, kunci tetap tersimpan di penyimpanan lokal browser di perangkat itu — memulai ulang browser sepenuhnya tidak memicu prompt lagi; hanya keluar yang menghapusnya."
+          }
+        },
+        "3": {
+          "heading": "Lupa frasa sandi — mengatur ulang enkripsi",
+          "checks": "Bahwa pengaturan ulang enkripsi dikonfirmasi dengan jelas terlebih dahulu, dan memungkinkan Anda mengatur frasa sandi baru.",
+          "steps": {
+            "0": "Di Settings → Account, temukan \"Forgot your passphrase? Reset encryption\" (hanya ditampilkan setelah Anda menyelesaikan penyiapan setidaknya sekali).",
+            "1": "JANGAN gunakan ini pada data yang penting bagi Anda — ini secara permanen menghilangkan akses ke semua yang dienkripsi dengan frasa sandi Anda saat ini. Gunakan akun uji sekali pakai jika ingin mencobanya.",
+            "2": "Jika Anda mencobanya, konfirmasi dialog reset, lalu atur frasa sandi yang benar-benar baru saat prompt penyiapan terbuka kembali."
+          },
+          "examples": {
+            "0": {
+              "alt": "Konfirmasi \"Reset Encryption Passphrase\" yang memperingatkan bahwa semua yang dienkripsi dengan frasa sandi saat ini menjadi tidak dapat diakses secara permanen, dengan tombol Cancel dan Reset Passphrase",
+              "caption": "Konfirmasi yang Anda dapatkan sebelum reset. Cancel aman; Reset Passphrase tidak dapat dibatalkan."
+            }
+          },
+          "good": {
+            "0": "Dialog konfirmasi jelas sebelum apa pun terjadi.",
+            "1": "Setelah mengonfirmasi, Anda melihat toast \"Encryption reset — set up a new passphrase\" dan prompt penyiapan langsung terbuka kembali sehingga Anda dapat memilih yang baru dan terus menyinkronkan."
+          }
+        },
+        "4": {
+          "heading": "Memverifikasi di dasbor web",
+          "checks": "Bahwa situs web meminta frasa sandi Anda sebelum menampilkan grup tersinkron Anda.",
+          "steps": {
+            "0": "Masuk ke dasbor (preview.tabmerger.com) dengan akun yang sudah menyiapkan enkripsi.",
+            "1": "Jika diminta, masukkan frasa sandi Anda di kartu buka kunci inline sebelum konten grup apa pun muncul."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bagian Tab Groups di dasbor web terkunci, dengan gembok, \"Your groups are end-to-end encrypted. Enter your passphrase to view them here.\", kolom Passphrase dan tombol Unlock",
+              "caption": "Sampai Anda memasukkan frasa sandi, dasbor menampilkan ini alih-alih grup Anda."
+            }
+          },
+          "good": {
+            "0": "Dasbor meminta frasa sandi secara terpisah dari ekstensi — membuka kunci di sana adalah langkah tersendiri sekali per tab, tidak dibagi dengan pembukaan kunci ekstensi. Prompt bertuliskan \"Your groups are end-to-end encrypted. Enter your passphrase to view them here.\"",
+            "1": "Frasa sandi yang salah menampilkan \"Incorrect passphrase.\" tanpa membuat halaman crash.",
+            "2": "Setelah dibuka, nama grup dan tab Anda yang sebenarnya ditampilkan secara normal.",
+            "3": "Setelah reset frasa sandi di ekstensi, dasbor meminta frasa sandi baru: pada pemuatan halaman berikutnya, atau di dasbor yang sudah terbuka, setelah Anda menekan tombol segarkan pada label sinkronisasi.",
+            "4": "Grup atau sesi yang tidak dapat dibaca oleh frasa sandi saat ini (disimpan sebelum reset dan belum diunggah lagi) ditampilkan sebagai \"(locked)\" alih-alih membocorkan konten apa pun. Item itu sendiri menjelaskan alasannya dan apa yang harus dilakukan, dan tidak dapat dibagikan atau dipulihkan sampai dapat dibaca lagi."
+          }
+        },
+        "5": {
+          "heading": "Cara mengetahui data Anda benar-benar terenkripsi",
+          "checks": "Bagaimana Anda dapat melihat sendiri bahwa data Anda tidak dapat dibaca tanpa frasa sandi Anda.",
+          "steps": {
+            "0": "Tidak ada lencana \"Encrypted ✓\" eksplisit di UI — sinyal yang terlihat bersifat tidak langsung.",
+            "1": "Di perangkat yang belum Anda buka kuncinya (atau dasbor, sebelum memasukkan frasa sandi di sana), perhatikan bahwa nama/konten grup tidak ditampilkan sampai Anda membuka kunci."
+          },
+          "good": {
+            "0": "Tidak adanya konten yang dapat dibaca sebelum membuka kunci adalah sinyalnya: tidak ada nama grup atau tab yang ditampilkan, dan di dasbor apa pun yang tidak dapat dibaca oleh frasa sandi saat ini ditampilkan sebagai \"(locked)\".",
+            "1": "Dasbor menampilkan kartu frasa sandi alih-alih grup Anda. Jika konten pernah dapat dibaca tanpa membuka kunci, itu berarti konten tersebut sebenarnya tidak terenkripsi — segera laporkan jika Anda melihatnya."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Kehilangan data apa pun — grup, tab, atau sesi yang hilang padahal seharusnya tidak.",
+    "1": "Konflik sinkronisasi — grup \"{CONFLICT_COPY_SUFFIX}\" memang diharapkan saat grup yang sama diedit di dua perangkat sebelum salah satunya tersinkron. Beri tahu kami jika suntingan diam-diam hilang, atau jika salinan muncul padahal hanya satu perangkat yang mengedit.",
+    "2": "Apa pun yang membingungkan, tidak jelas, atau membutuhkan lebih banyak klik dari yang seharusnya.",
+    "3": "Apa pun yang lambat — popup terbuka, pencarian, seret dan lepas, atau sinkronisasi yang memakan waktu jauh lebih lama dari yang diharapkan."
+  },
+  "metaTitle": "Program Beta",
+  "metaDescription": "Bergabunglah dengan beta TabMerger — instal build beta privat, ketahui apa yang perlu diuji, dan laporkan bug langsung ke tim.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Sebagian Pro",
+    "somePro": "Beberapa Pro",
+    "areaPartial": "Beberapa item di sini memerlukan akun Pro",
+    "itemPartial": "Sebagian item ini memerlukan akun Pro",
+    "areaAll": "Setiap item di sini memerlukan akun Pro",
+    "itemAll": "Memerlukan akun Pro"
+  },
+  "eyebrow": "Program beta",
+  "title": "Bantu kami menguji TabMerger sebelum dirilis",
+  "lead": "Dapatkan versi TabMerger berikutnya lebih awal dan beri tahu kami apa yang rusak. Halaman ini mencakup cara bergabung, menginstal beta privat, apa yang perlu diuji, dan cara melaporkan temuan Anda. Fitur AI disembunyikan (\"segera hadir\") di build ini, jadi belum termasuk dalam pengujian.",
+  "join": "Bergabung dengan beta",
+  "onThisPage": "Di halaman ini",
+  "install": {
+    "heading": "1. Bergabung dan instal",
+    "groupTitle": "Bergabunglah dengan grup penguji.",
+    "groupBody": "Buka <link>groups.google.com/g/tabmerger-beta-testers</link> dan bergabunglah. Bergabung berlangsung instan, tetapi pastikan Anda bergabung dengan <strong>akun Google yang sama dengan yang Anda gunakan untuk masuk di Chrome</strong> — jika tidak, listing privat tidak akan terlihat oleh Anda.",
+    "listingTitle": "Buka listing beta privat.",
+    "listingLink": "Buka listing TabMerger BETA",
+    "listingPending": "listing \"TabMerger BETA\" di Chrome Web Store (tautan segera hadir — sementara itu, periksa grup penguji untuk URL terkini).",
+    "listingNotFound": "Jika Anda melihat <strong>\"Item not found,\"</strong> kemungkinan Anda baru saja bergabung — akses bisa memerlukan sedikit waktu untuk muncul. Tunggu sebentar dan coba lagi sebelum menganggap ada yang salah.",
+    "installTitle": "Instal.",
+    "installBody": "Klik \"Add to Chrome.\" Beta terinstal sebagai ekstensi terpisah (\"TabMerger BETA\") dari listing stabil \"TabMerger\" — Anda dapat menginstal keduanya berdampingan, dan datanya sepenuhnya terpisah. Kami menyarankan menonaktifkan versi stabil selama pengujian, agar Anda tidak secara tidak sengaja menggunakan yang salah.",
+    "signInTitle": "Masuk melalui aplikasi web pratinjau.",
+    "signInBody": "Build beta tersinkron dengan <link>preview.tabmerger.com</link> — bukan situs tabmerger utama. Masuk di sana (dari ekstensi atau langsung dari dasbor) untuk melihat grup dan sesi yang tersinkron.",
+    "browsersTitle": "Di browser mana saya bisa menguji?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc, dan Opera semuanya menggunakan listing TabMerger BETA yang sama dan Google Group yang sama — tidak ada beta Edge terpisah, jadi tidak perlu mencarinya. Edge: terima \"Allow extensions from other stores\" saat diminta. Opera: instal add-on \"Install Chrome Extensions\" dari Opera terlebih dahulu, lalu gunakan tautan di atas. Jika Anda juga menginstal TabMerger stabil dari toko Edge Add-ons, nonaktifkan selama menguji beta — itu ekstensi yang terpisah dari yang ini. Safari tidak didukung.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox memiliki build beta sendiri, diinstal dari tautan langsung, bukan dari listing Chrome Web Store di atas. <link>Instal beta Firefox</link>. Firefox menanyakan apakah akan menambahkan \"TabMerger BETA\": pilih Add. Firefox memeriksa pembaruan sendiri kira-kira sekali sehari; untuk memeriksa sekarang, buka <code>about:addons</code>, klik ikon roda gigi, dan pilih \"Check for Updates.\" Masuk sekali di dalam ekstensi dan izinkan prompt izin data Firefox (mencakup masuk dan sinkronisasi); setelah itu, masuk di situs web ini juga membuat ekstensi masuk. <strong>Siapa pun yang memiliki tautan instal di atas dapat menginstalnya</strong> — mohon jangan bagikan di luar grup penguji.",
+    "firefoxSoon": "Beta Firefox akan segera hadir; sampai saat itu, pengguna Firefox dapat bergabung dengan beta menggunakan salah satu browser Chromium yang didukung di atas (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Catat versi Anda.",
+    "versionBody": "Buka Settings TabMerger dan salin lencana versi di samping judul \"Settings\" (misalnya <code>v3.1.0-beta.5</code>), atau periksa <code>chrome://extensions</code> dan temukan \"TabMerger BETA\". Bagaimanapun, laporkan semver yang sebenarnya — bukan nomor versi internal Chrome Web Store, yang digeser dan tidak akan cocok dengan yang kami gunakan untuk melacak build."
+  },
+  "test": {
+    "heading": "2. Yang perlu diuji",
+    "intro": "Kerjakan area mana pun yang sesuai dengan cara Anda biasanya menggunakan TabMerger. Setiap item di bawah memiliki langkah bernomor, contoh tampilannya, dan seperti apa hasil yang berfungsi.",
+    "tickNote": "Centang setiap langkah sambil berjalan. Tanda centang Anda hanya disimpan di browser ini, dan setiap area menunjukkan sejauh mana kemajuan Anda.",
+    "needPro": "Apakah saya perlu Pro?",
+    "needProBody": "Area dicantumkan dari Free hingga Pro. Semua yang tidak bertanda berfungsi di Free, tanpa akun. <full></full>: seluruh item memerlukan akun Pro (sinkronisasi, enkripsi, dan membuat tautan berbagi adalah Pro). <partial></partial>: sebagian besar item berfungsi di Free, dan baris \"Pro:\" di bawah judulnya menyebutkan bagian mana yang tidak. Pro tidak dipungut biaya di beta ini: Anda membayar dengan kartu uji (lihat <link>Upgrade ke Pro</link>).",
+    "show": "Tampilkan",
+    "hide": "Sembunyikan",
+    "proLine": "Pro: ",
+    "checksLine": "Yang diperiksa: ",
+    "steps": "Langkah",
+    "reportLine": "Laporkan jika: ",
+    "testCheckout": "⚠ Ini adalah checkout uji.",
+    "testCheckoutBody": " Jangan pernah memasukkan kartu sungguhan. Tidak ada uang sungguhan yang ditagih, dan kartu sungguhan juga tidak akan berfungsi di sini.",
+    "testCardsFooter": "Dengan kartu apa pun: tanggal kedaluwarsa di masa depan (misalnya <code>12/34</code>), CVC 3 digit apa pun (misalnya <code>123</code>), dan apa saja untuk nama, kode pos, dan kolom lainnya. Kartu lainnya: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "Yang terutama ingin kami dengar",
+  "knownIssues": {
+    "heading": "3. Masalah yang diketahui",
+    "intro": "Kami sudah mengetahui masalah ini, jadi tidak perlu melaporkannya. Daftar ini diperbarui di setiap rilis beta; jika sesuatu di sini sudah diperbaiki untuk Anda, atau berperilaku berbeda dari yang dijelaskan, itu layak dilaporkan.",
+    "meanwhile": "Sementara itu:"
+  },
+  "report": {
+    "heading": "4. Laporkan bug",
+    "discussions": "Bug dan ide disampaikan ke GitHub Discussions publik kami — <link>github.com/{repo}/discussions</link>. Lihat di sana terlebih dahulu — mungkin seseorang sudah melaporkan hal yang sama.",
+    "public": "<strong>Discussions bersifat publik.</strong> Jangan tempel URL privat, judul tab, atau screenshot yang menampilkan informasi pribadi — buramkan atau potong terlebih dahulu. Anda memerlukan akun GitHub (gratis) untuk memposting.",
+    "bugButton": "Laporkan bug di GitHub",
+    "ideaButton": "Bagikan ide di GitHub",
+    "noGithub": "Tidak punya akun GitHub? Gunakan formulir kontak.",
+    "template": "Kedua tautan mengisi template ini ke isi diskusi secara otomatis — isi sebelum memposting, ini menghemat satu putaran pertanyaan lanjutan:"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "notFoundQ": "Saya melihat \"Item not found\"",
+    "notFoundA": "Pastikan Anda bergabung dengan Google Group menggunakan akun Google yang sama dengan yang Anda gunakan untuk masuk di Chrome. Akses bisa memerlukan sedikit waktu untuk muncul setelah bergabung — tunggu sebentar dan coba lagi sebelum menganggap ada yang rusak.",
+    "stableQ": "Bisakah saya tetap menginstal versi stabil?",
+    "stableA": "Ya — beta (\"TabMerger BETA\") adalah ekstensi yang terpisah dari versi stabil (\"TabMerger\") dengan data yang sepenuhnya terpisah. Anda dapat menjalankan keduanya, meskipun kami menyarankan menonaktifkan versi stabil selama pengujian agar Anda tidak bingung sedang menggunakan yang mana.",
+    "chargedQ": "Apakah saya akan ditagih jika upgrade ke Pro?",
+    "chargedA": "Tidak — upgrade di beta menggunakan mode uji Stripe. Gunakan <link>kartu uji Stripe</link> (lihat bagian \"Upgrade ke Pro\" di atas) — tidak ada kartu sungguhan yang berfungsi di sini, dan tidak ada uang sungguhan yang berpindah tangan.",
+    "syncQ": "Ke mana data saya tersinkron?",
+    "syncA": "Build beta tersinkron dengan aplikasi web pratinjau di preview.tabmerger.com, bukan situs tabmerger utama. Masuk di sana untuk melihat grup, sesi, dan berbagi Anda yang tersinkron.",
+    "issuesQ": "Di mana saya melihat masalah yang diketahui?",
+    "issuesA": "Periksa <link>Discussions Q&A</link> di repo — di sanalah laporan bug beta berada.",
+    "leaveQ": "Bagaimana cara keluar dari beta?",
+    "leaveA": "Keluar dari <link>Google Group</link> dan copot ekstensi \"TabMerger BETA\". Instalasi stabil Anda, jika Anda menyimpannya, tidak terpengaruh."
+  },
+  "interactive": {
+    "good": "Hasil yang baik",
+    "allDoneLabel": "Semua pemeriksaan selesai",
+    "progressLabel": "{done} dari {total} pemeriksaan selesai",
+    "allDone": "✓ Semua selesai",
+    "progress": "{done}/{total}",
+    "clear": "Hapus tanda centang saya ({count})",
+    "firefoxAutoStart": "Beta Firefox seharusnya mulai dengan sendirinya: Firefox menanyakan apakah akan menambahkannya, browser lain mengunduh file. Jika tidak terjadi apa-apa, gunakan \"Instal beta Firefox\" di langkah ini."
+  }
+}

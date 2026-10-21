@@ -1,0 +1,11 @@
+{
+  "label": "Zgoda na pliki cookie",
+  "message": "Chcielibyśmy używać analitycznych plików cookie (Google Analytics i PostHog), aby zrozumieć, jak korzystasz z witryny. Są ustawiane tylko po Twojej akceptacji, a decyzję możesz zmienić w dowolnym momencie.",
+  "messageOn": "W Twoim regionie analityka (Google Analytics i PostHog, w tym nagrania sesji) jest w tej witrynie włączona. Przycisk Odrzuć ją wyłącza, a decyzję możesz zmienić w dowolnym momencie.",
+  "messageGpc": "Twoja przeglądarka wysłała sygnał Global Privacy Control, więc analityka (Google Analytics i PostHog) jest wyłączona. Przycisk Akceptuj ją włącza, a decyzję możesz zmienić w dowolnym momencie.",
+  "learnMore": "Szczegóły plików cookie",
+  "accept": "Akceptuj",
+  "reject": "Odrzuć",
+  "chip": "Ustawienia cookie",
+  "collapse": "Ukryj ustawienia cookie"
+}

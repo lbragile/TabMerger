@@ -1,0 +1,71 @@
+{
+  "addGroup": {
+    "title": "Utwórz Nową Grupę",
+    "name": "Nazwa",
+    "namePlaceholder": "Nazwa grupy",
+    "color": "Kolor",
+    "cancel": "Anuluj",
+    "create": "Utwórz"
+  },
+  "dedup": {
+    "title": "Usuń duplikaty",
+    "description_one": "{{count}} zduplikowana karta zostanie usunięta.",
+    "description_few": "{{count}} zduplikowane karty zostaną usunięte.",
+    "description_many": "{{count}} zduplikowanych kart zostanie usuniętych.",
+    "description_other": "{{count}} zduplikowanej karty zostanie usuniętych.",
+    "cancel": "Anuluj",
+    "confirm_one": "Usuń {{count}} duplikat",
+    "confirm_few": "Usuń {{count}} duplikaty",
+    "confirm_many": "Usuń {{count}} duplikatów",
+    "confirm_other": "Usuń {{count}} duplikatu"
+  },
+  "staleGroups": {
+    "title": "Przejrzyj nieaktywne grupy",
+    "description_one": "{{count}} grupa nieużywana od jakiegoś czasu — rozwiń, aby zobaczyć podgląd, lub zarchiwizuj od razu.",
+    "description_few": "{{count}} grupy nieużywane od jakiegoś czasu — rozwiń, aby zobaczyć podgląd, lub zarchiwizuj od razu.",
+    "description_many": "{{count}} grup nieużywanych od jakiegoś czasu — rozwiń, aby zobaczyć podgląd, lub zarchiwizuj od razu.",
+    "description_other": "{{count}} grupy nieużywanej od jakiegoś czasu — rozwiń, aby zobaczyć podgląd, lub zarchiwizuj od razu.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Ukryj",
+    "preview": "Podgląd",
+    "archive": "Archiwizuj",
+    "empty": "Ta grupa jest pusta.",
+    "close": "Zamknij"
+  },
+  "staleTabs": {
+    "title": "Nieaktywne karty",
+    "description_one": "{{count}} karta nie była używana od jakiegoś czasu.",
+    "description_few": "{{count}} karty nie były używane od jakiegoś czasu.",
+    "description_many": "{{count}} kart nie było używanych od jakiegoś czasu.",
+    "description_other": "{{count}} karty nie było używane od jakiegoś czasu.",
+    "close": "Zamknij",
+    "removeAll_one": "Usuń {{count}} kartę",
+    "removeAll_few": "Usuń {{count}} karty",
+    "removeAll_many": "Usuń {{count}} kart",
+    "removeAll_other": "Usuń {{count}} karty"
+  },
+  "saveSession": {
+    "title": "Zapisz Sesję",
+    "name": "Nazwa sesji",
+    "namePlaceholder": "np. Badania do pracy, Czytanie w weekend",
+    "nameRequired": "Nazwa sesji jest wymagana",
+    "description": "Opis (opcjonalnie)",
+    "descriptionPlaceholder": "Do czego służy ta sesja?",
+    "cancel": "Anuluj",
+    "save": "Zapisz"
+  },
+  "shortcutSave": {
+    "title_one": "Zapisz {{count}} kartę",
+    "title_few": "Zapisz {{count}} karty",
+    "title_many": "Zapisz {{count}} kart",
+    "title_other": "Zapisz {{count}} karty",
+    "description": "Wybierz, gdzie zapisać karty przechwycone przez skrót klawiszowy.",
+    "destination": "Grupa docelowa",
+    "quickSave": "Szybki Zapis (nowa grupa)",
+    "cancel": "Anuluj",
+    "save": "Zapisz"
+  },
+  "confirmDialog": {
+    "cancel": "Anuluj"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "heading": "लोग क्या कह रहे हैं",
+  "byStore": "स्टोर के अनुसार",
+  "loading": "समीक्षाएँ लोड हो रही हैं",
+  "averageRating": "औसत रेटिंग",
+  "averageRatingOn": "{store} पर औसत रेटिंग",
+  "ratingsOn": "{store} पर {count, plural, one {रेटिंग} other {रेटिंग}}",
+  "ratingsAcross": "{stores} पर रेटिंग",
+  "ratingCount": "{count, plural, one {# रेटिंग} other {# रेटिंग}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " (5 में से)",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 रेटिंग",
+  "stars": "5 में से {score} स्टार",
+  "readFull": "पूरी समीक्षा पढ़ें",
+  "readFullBy": " — {store} पर {author} द्वारा",
+  "carousel": "कैरोसेल",
+  "play": "समीक्षाएँ चलाएँ",
+  "pause": "समीक्षाएँ रोकें",
+  "previous": "पिछली समीक्षा",
+  "next": "अगली समीक्षा",
+  "skeletonRating": "0.00 / 5"
+}

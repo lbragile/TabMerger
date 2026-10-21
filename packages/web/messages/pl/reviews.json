@@ -1,0 +1,23 @@
+{
+  "heading": "Co mówią użytkownicy",
+  "byStore": "Według sklepu",
+  "loading": "Ładowanie opinii",
+  "averageRating": "Średnia ocena",
+  "averageRatingOn": "Średnia ocena w {store}",
+  "ratingsOn": "{count, plural, one {Ocena} few {Oceny} many {Oceny} other {Oceny}} w {store}",
+  "ratingsAcross": "Oceny w {stores}",
+  "ratingCount": "{count, plural, one {# ocena} few {# oceny} many {# ocen} other {# oceny}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " na 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 ocen",
+  "stars": "{score} na 5 gwiazdek",
+  "readFull": "Przeczytaj całą opinię",
+  "readFullBy": " autorstwa {author} w {store}",
+  "carousel": "karuzela",
+  "play": "Odtwarzaj opinie",
+  "pause": "Wstrzymaj opinie",
+  "previous": "Poprzednia opinia",
+  "next": "Następna opinia",
+  "skeletonRating": "0,00 / 5"
+}

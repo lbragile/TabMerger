@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Impossibile raggiungere il server di sincronizzazione. Riprova.",
+    "accountMismatch": "Questo dispositivo contiene ancora i dati di un altro account. Apri l'estensione per cambiare account.",
+    "identityChanged": "L'estensione è stata disconnessa durante la sincronizzazione. Accedi e riprova.",
+    "keyCheckFailed": "Impossibile verificare lo stato della crittografia. Riprova.",
+    "setupUnfinished": "Apri l'estensione per completare la configurazione della crittografia.",
+    "locked": "Apri l'estensione e sblocca la crittografia per sincronizzare."
+  },
+  "menu": {
+    "saveTo": "Salva in TabMerger",
+    "scopeCurrent": "Salva questa scheda",
+    "scopeLeft": "Salva le schede a sinistra",
+    "scopeRight": "Salva le schede a destra",
+    "scopeExcluding": "Salva tutte le altre schede",
+    "noGroups": "Ancora nessun gruppo salvato",
+    "groupItem": "{{color}} {{name}} ({{windows}}f · {{tabs}}s)"
+  },
+  "reminder": {
+    "title": "Promemoria TabMerger"
+  }
+}

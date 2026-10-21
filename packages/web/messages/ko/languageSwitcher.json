@@ -1,0 +1,4 @@
+{
+  "label": "언어",
+  "trigger": "언어: {language} ({code})"
+}

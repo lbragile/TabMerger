@@ -1,0 +1,11 @@
+{
+  "label": "쿠키 동의",
+  "message": "사이트 이용 방식을 파악하기 위해 분석 쿠키(Google Analytics 및 PostHog)를 사용하고자 합니다. 동의하신 경우에만 설정되며, 언제든지 선택을 변경할 수 있습니다.",
+  "messageOn": "회원님의 지역에서는 이 사이트의 분석 기능(세션 녹화를 포함한 Google Analytics 및 PostHog)이 켜져 있습니다. 거부를 누르면 꺼지며, 언제든지 선택을 변경할 수 있습니다.",
+  "messageGpc": "브라우저에서 Global Privacy Control 신호를 보냈기 때문에 분석 기능(Google Analytics 및 PostHog)이 꺼져 있습니다. 동의를 누르면 켜지며, 언제든지 선택을 변경할 수 있습니다.",
+  "learnMore": "쿠키 세부 정보",
+  "accept": "동의",
+  "reject": "거부",
+  "chip": "쿠키 선택",
+  "collapse": "쿠키 선택 숨기기"
+}

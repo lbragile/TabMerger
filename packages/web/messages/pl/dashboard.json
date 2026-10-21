@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Panel",
+  "greeting": "Dzień dobry, {name}",
+  "tierBadge": {
+    "free": "darmowy",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "Organizuj z AI",
+  "aiOrganiseUpgrade": "Przejdź na Pro AI, aby organizować z AI",
+  "aiOrganiseFromExtension": "Uruchom to z okienka rozszerzenia TabMerger",
+  "tabGroups": "Grupy kart",
+  "savedSessions": "Zapisane sesje",
+  "stats": {
+    "tabs": {
+      "label": "Zapisane karty",
+      "description": "Karty we wszystkich zsynchronizowanych grupach"
+    },
+    "groups": {
+      "label": "Zsynchronizowane grupy",
+      "description": "Grupy zsynchronizowane w chmurze"
+    },
+    "sessions": {
+      "label": "Zapisane sesje",
+      "description": "Zapisane sesje przeglądania",
+      "lockedDescription": "Sesje i kopie zapasowe (odblokuj, aby je rozróżnić)"
+    },
+    "memory": {
+      "label": "Odzyskana pamięć",
+      "description": "Szacunek, nie pomiar"
+    },
+    "memberSince": {
+      "label": "Członek od",
+      "description": "Data utworzenia konta"
+    },
+    "aiCredits": {
+      "label": "Kredyty AI w tym miesiącu",
+      "description": "Miesięczne zużycie Pro AI",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Ładowanie"
+  },
+  "subscription": {
+    "currentPlan": "Obecny plan",
+    "renews": "Odnawia się {date}",
+    "upgrade": "Ulepsz",
+    "statuses": {
+      "active": "aktywna",
+      "canceled": "anulowana",
+      "past_due": "zaległa płatność",
+      "trialing": "okres próbny",
+      "incomplete": "niekompletna"
+    }
+  },
+  "upgraded": {
+    "message": "Witamy w {plan}! Twoja subskrypcja jest już aktywna. Ciesz się nowymi funkcjami.",
+    "dismiss": "Zamknij"
+  },
+  "locked": {
+    "item": "Zapisano z wcześniejszą frazą hasła. Otwórz rozszerzenie na urządzeniu, które ją ma, i pozwól mu się zsynchronizować.",
+    "device": "Otwarte karty tego urządzenia zapisano z wcześniejszą frazą hasła. Otwórz na nim rozszerzenie i pozwól mu się zsynchronizować.",
+    "unverified": "Nie można teraz tego odczytać. Odśwież stronę, aby spróbować ponownie."
+  },
+  "passphrase": {
+    "defaultLabel": "Wpisz frazę hasła szyfrowania, aby zobaczyć tę zawartość.",
+    "groupsLabel": "Twoje grupy są szyfrowane end-to-end. Wpisz frazę hasła, aby je tutaj zobaczyć.",
+    "sessionsLabel": "Twoje sesje są szyfrowane end-to-end. Wpisz frazę hasła, aby je tutaj zobaczyć.",
+    "backupsLabel": "Twoje kopie zapasowe są szyfrowane end-to-end. Wpisz frazę hasła, aby je tutaj zobaczyć.",
+    "placeholder": "Fraza hasła",
+    "inputLabel": "Fraza hasła szyfrowania",
+    "unlock": "Odblokuj",
+    "incorrect": "Nieprawidłowa fraza hasła."
+  },
+  "onboarding": {
+    "title": "Pierwsze kroki z TabMerger",
+    "progress": "Ukończono {done} z {total}",
+    "dismiss": "Zamknij",
+    "install": "Zainstaluj rozszerzenie TabMerger",
+    "group": "Utwórz pierwszą grupę w rozszerzeniu",
+    "signin": "Zaloguj się, aby włączyć synchronizację w chmurze",
+    "upgrade": "Przejdź na Pro, aby mieć nielimitowane grupy"
+  },
+  "lockedName": "(zablokowane)",
+  "damagedNote": "Zawartość ma format, którego TabMerger nie potrafi odczytać, więc nie można jej tu pokazać.",
+  "counts": {
+    "groups": "{count, plural, one {{count} grupa} few {{count} grupy} many {{count} grup} other {{count} grupy}}",
+    "windows": "{count, plural, one {{count} okno} few {{count} okna} many {{count} okien} other {{count} okna}}",
+    "tabs": "{count, plural, one {{count} karta} few {{count} karty} many {{count} kart} other {{count} karty}}"
+  },
+  "sessions": {
+    "cantRestore": "Nie można odczytać tej sesji, więc nie można jej przywrócić.",
+    "restored": "{count, plural, one {Przywrócono {count} kartę z „{name}”} few {Przywrócono {count} karty z „{name}”} many {Przywrócono {count} kart z „{name}”} other {Przywrócono {count} karty z „{name}”}}",
+    "deleted": "Usunięto sesję",
+    "deleteFailed": "Nie udało się usunąć sesji",
+    "loadFailed": "Nie udało się załadować Twoich sesji.",
+    "tryAgain": "Spróbuj ponownie",
+    "loading": "Ładowanie sesji",
+    "empty": "Brak zapisanych sesji.",
+    "readOnlyNote": "Zapisywanie nowych sesji na koncie wymaga planu Pro. Istniejące sesje nadal możesz otwierać i usuwać.",
+    "upgrade": "Przejdź na Pro",
+    "freeLimit": "Plan darmowy: do {count} sesji. <link>Przejdź na Pro</link>, aby mieć ich bez limitu.",
+    "restore": "Przywróć sesję",
+    "cantRestoreTooltip": "Nie można odczytać tej sesji, więc nie można jej przywrócić",
+    "delete": "Usuń sesję",
+    "hideContents": "Ukryj zawartość",
+    "showContents": "Pokaż zawartość ({count})",
+    "groupFallbackName": "Grupa {number}",
+    "groupTabs": "{count, plural, one {{count} karta} few {{count} karty} many {{count} kart} other {{count} karty}}",
+    "moreTabs": "{count, plural, one {+{count} karta więcej} few {+{count} karty więcej} many {+{count} kart więcej} other {+{count} karty więcej}}",
+    "moreGroups": "{count, plural, one {+{count} grupa więcej} few {+{count} grupy więcej} many {+{count} grup więcej} other {+{count} grupy więcej}}"
+  },
+  "backups": {
+    "title": "Kopie zapasowe",
+    "upgradeDescription": "Automatyczne kopie zapasowe są częścią planu Pro: zaszyfrowana migawka Twoich grup, zapisywana według harmonogramu; przechowywanych jest {count} najnowszych.",
+    "readOnlyNote": "Nowe kopie zapasowe wymagają planu Pro. Istniejące kopie nadal możesz pobierać i usuwać.",
+    "upgrade": "Ulepsz",
+    "intro": "Migawki Twoich grup, które rozszerzenie TabMerger samo zapisało na Twoim koncie, od najnowszych. Przechowywanych jest {count} najnowszych. Aby przywrócić kopię, otwórz rozszerzenie i przejdź do {place}; przywracanie nie odbywa się na tej stronie. Plik pobrany tutaj nie jest zaszyfrowany.",
+    "extensionPlace": "Ustawienia > Dane",
+    "loadFailed": "Nie udało się załadować Twoich kopii zapasowych.",
+    "tryAgain": "Spróbuj ponownie",
+    "loading": "Ładowanie kopii zapasowych",
+    "unknownKind": "{count, plural, one {Nie można odczytać 1 zapisanego elementu, więc nie wiadomo, czy jest kopią zapasową. Jest widoczny w sekcji Zapisane sesje.} few {Nie można odczytać {count} zapisanych elementów, więc nie wiadomo, czy są kopiami zapasowymi. Są widoczne w sekcji Zapisane sesje.} many {Nie można odczytać {count} zapisanych elementów, więc nie wiadomo, czy są kopiami zapasowymi. Są widoczne w sekcji Zapisane sesje.} other {Nie można odczytać {count} zapisanego elementu, więc nie wiadomo, czy są kopiami zapasowymi. Są widoczne w sekcji Zapisane sesje.}}",
+    "emptyTitle": "Brak kopii zapasowych.",
+    "emptyBody": "Rozszerzenie samo zapisuje kopię, gdy przeglądarka jest otwarta, a Twoje grupy zmieniły się od ostatniej kopii. Harmonogram to „{interval}”, chyba że go zmienisz: wybierz częstotliwość lub utwórz kopię od razu w rozszerzeniu, w sekcji {place}.",
+    "intervals": {
+      "60": "Co godzinę",
+      "360": "Co 6 godzin",
+      "720": "Co 12 godzin",
+      "1440": "Codziennie",
+      "10080": "Co tydzień"
+    },
+    "unknownDateInSentence": "nieznanego dnia",
+    "unknownDate": "Nieznana data",
+    "namePrefix": "Automatyczna kopia zapasowa",
+    "downloading": "Pobieranie kopii zapasowej z {when}.",
+    "deleted": "Usunięto kopię zapasową",
+    "deletedAnnouncement": "Usunięto kopię zapasową z {when}.",
+    "deleteFailed": "Nie udało się usunąć kopii zapasowej",
+    "deleteFailedAnnouncement": "Nie udało się usunąć kopii zapasowej z {when}.",
+    "deleteTitle": "Usunąć tę kopię zapasową?",
+    "deleteBody": "Kopia zapasowa z {when} zostanie usunięta z Twojego konta. Przeglądarka, która już ma tę kopię, zachowa własny egzemplarz.",
+    "deleteBodyWithCounts": "Kopia zapasowa z {when} ({groups}, {tabs}) zostanie usunięta z Twojego konta. Przeglądarka, która już ma tę kopię, zachowa własny egzemplarz.",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "download": "Pobierz",
+    "downloadLabel": "Pobierz kopię zapasową z {when}",
+    "deleteLabel": "Usuń kopię zapasową z {when}"
+  },
+  "groups": {
+    "cantShare": "Nie można odczytać tej grupy, więc nie można jej udostępnić.",
+    "linkCopiedSnapshot": "Skopiowano link — udostępnia migawkę tej grupy.",
+    "shareFailed": "Nie udało się utworzyć linku do udostępnienia. Spróbuj ponownie.",
+    "shareGroup": "Udostępnij grupę",
+    "copied": "Skopiowano!",
+    "share": "Udostępnij",
+    "cantShareTooltip": "Nie można odczytać tej grupy, więc nie można jej udostępnić",
+    "shareTooltip": "Kopiuje link do migawki tej grupy — późniejsze zmiany jej nie zaktualizują",
+    "justNow": "przed chwilą",
+    "minutesAgo": "{count} min temu",
+    "hoursAgo": "{count} godz. temu",
+    "daysAgo": "{count} dn. temu",
+    "lockedCantSelect": "Nie można zaznaczyć zablokowanej grupy",
+    "deselect": "Odznacz",
+    "select": "Zaznacz",
+    "syncedAt": "Zsynchronizowano {time}",
+    "cardMeta": "{windows, plural, one {{windows} okno} few {{windows} okna} many {{windows} okien} other {{windows} okna}} · {tabs, plural, one {{tabs} karta} few {{tabs} karty} many {{tabs} kart} other {{tabs} karty}}",
+    "syncedSuffix": " · zsynchronizowano {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Karty mogą być nieaktualne — ostatnia synchronizacja ponad 30 dni temu",
+    "moreTabs": "+{count} więcej",
+    "openAllTitle": "Otwórz wszystkie karty z tej grupy",
+    "openAll": "Otwórz wszystkie",
+    "hideTabs": "Ukryj karty",
+    "showTabs": "Pokaż karty",
+    "rowMeta": "{windows} okn. · {tabs} kart.",
+    "linkCopiedLive": "Skopiowano link! Strona udostępniania jest aktywna.",
+    "empty": "Brak zsynchronizowanych grup. Otwórz rozszerzenie, aby utworzyć grupy kart.",
+    "title": "Grupy",
+    "summary": "{count, plural, one {{count} grupa} few {{count} grupy} many {{count} grup} other {{count} grupy}} · {tabs, plural, one {{tabs} karta} few {{tabs} karty} many {{tabs} kart} other {{tabs} karty}}",
+    "sort": "Sortuj",
+    "sortLabel": "Sortuj grupy",
+    "sortRecent": "Ostatnie",
+    "sortName": "Nazwa",
+    "sortTabCount": "Liczba kart",
+    "cancel": "Anuluj",
+    "gridView": "Widok siatki",
+    "listView": "Widok listy",
+    "archived": "Zarchiwizowane ({count})",
+    "selectedCount": "Zaznaczono: {count}",
+    "shareSelected": "Udostępnij zaznaczone",
+    "cancelSelection": "Anuluj zaznaczenie"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Otwórz rozszerzenie i odblokuj szyfrowanie, aby synchronizować.",
+      "no-session": "Zaloguj się w rozszerzeniu, aby synchronizować.",
+      "error": "Synchronizacja nie powiodła się. Spróbuj ponownie w rozszerzeniu."
+    },
+    "failedFallback": "Synchronizacja nie powiodła się.",
+    "syncing": "Synchronizowanie...",
+    "busy": "Synchronizacja już trwa",
+    "failed": "Synchronizacja nie powiodła się",
+    "synced": "Zsynchronizowano",
+    "never": "Jeszcze nie synchronizowano",
+    "reasonSeparator": ". ",
+    "refresh": "Odśwież stan synchronizacji",
+    "resync": "Synchronizuj ponownie",
+    "justNow": "przed chwilą",
+    "minutesAgo": "{count} min temu",
+    "hoursAgo": "{count} godz. temu",
+    "daysAgo": "{count} dn. temu"
+  }
+}

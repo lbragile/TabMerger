@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "eyebrow": "Menedżer kart dla ludzi, którzy mają ich za dużo",
+    "title": "Przestań tonąć w kartach przeglądarki.",
+    "lead": "TabMerger składa każde otwarte okno w nazwane, kolorowe grupy, które możesz przeszukiwać, udostępniać i przywracać — na dowolnym komputerze, jednym kliknięciem.",
+    "installChrome": "Zainstaluj w Chrome — za darmo",
+    "installFirefox": "Zainstaluj w Firefoksie — za darmo",
+    "installEdge": "Zainstaluj w Edge — za darmo",
+    "chrome": "Chrome",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Plan darmowy, bez zakładania konta."
+  },
+  "install": {
+    "title": "Gotowy, by uporządkować przeglądarkę?",
+    "lead": "Zainstaluj TabMerger w kilka sekund. Na start nie potrzebujesz konta.",
+    "addToChrome": "Dodaj do Chrome",
+    "addToFirefox": "Dodaj do Firefoksa",
+    "addToEdge": "Dodaj do Edge",
+    "viewPricing": "Zobacz cennik",
+    "note": "Darmowa instalacja — bez zakładania konta · Obsługa Edge już wkrótce"
+  },
+  "finalCta": {
+    "title": "Przestań tonąć w kartach przeglądarki.",
+    "leadAi": "Zacznij za darmo, bez zakładania konta. W każdej chwili przejdź na wyższy plan, by mieć synchronizację w chmurze i AI.",
+    "leadNoAi": "Zacznij za darmo, bez zakładania konta. W każdej chwili przejdź na wyższy plan, by mieć synchronizację w chmurze — funkcje AI już wkrótce.",
+    "installChrome": "Zainstaluj w Chrome — za darmo",
+    "installFirefox": "Zainstaluj w Firefoksie — za darmo",
+    "installEdge": "Zainstaluj w Edge — za darmo",
+    "faq": "Masz pytania? Zajrzyj do FAQ →"
+  },
+  "features": {
+    "title": "Stworzony na chwilę, gdy masz otwartych dziewięćdziesiąt kart.",
+    "seeAll": "Zobacz wszystkie funkcje",
+    "ai": {
+      "title": "AI posprząta bałagan za Ciebie",
+      "description": "Jedno kliknięcie grupuje otwarte karty według tematu i nadaje nazwę każdej grupie. Zaakceptuj, zmień nazwę lub zignoruj.",
+      "summary": "✦ 24 karty → 3 grupy",
+      "groupEvals": "Ewaluacje LLM · 9",
+      "groupHiring": "Rekrutacja · 7",
+      "groupDocs": "Dokumentacja · 8"
+    },
+    "sessions": {
+      "title": "Zamknij wszystko, nie trać niczego",
+      "description": "Zapisz sesję pod nazwą i jutro rano przywróć dokładnie te same okna w tej samej kolejności.",
+      "sessionName": "Poranny research",
+      "sessionStats": "3 grupy · 5 okien · 24 karty"
+    },
+    "sync": {
+      "title": "Te same karty na każdym komputerze",
+      "description": "Synchronizacja jest automatyczna i działa na poziomie pojedynczych kart, więc zmiana na laptopie nigdy nie nadpisze tego, co zrobiłeś na komputerze stacjonarnym.",
+      "status": "Zsynchronizowano 4 minuty temu · 3 urządzenia"
+    }
+  },
+  "pricing": {
+    "title": "Prosty, przejrzysty cennik",
+    "seeFull": "Zobacz pełny cennik",
+    "cancelNote": "Zrezygnuj w dowolnej chwili na swoim koncie — bez zobowiązań i zbędnych pytań.",
+    "blurbFree": "Dla okazjonalnych użytkowników, którzy chcą wypróbować",
+    "blurbPro": "Dla użytkowników, którzy chcą dodatkowych funkcji premium",
+    "blurbProAi": "Dla zaawansowanych użytkowników, którzy chcą funkcji AI"
+  }
+}

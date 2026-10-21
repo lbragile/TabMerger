@@ -1,0 +1,59 @@
+{
+  "addGroup": {
+    "title": "Yeni Grup Oluştur",
+    "name": "Ad",
+    "namePlaceholder": "Grup adı",
+    "color": "Renk",
+    "cancel": "İptal",
+    "create": "Oluştur"
+  },
+  "dedup": {
+    "title": "Yinelenenleri kaldır",
+    "description_one": "{{count}} yinelenen sekme kaldırılacak.",
+    "description_other": "{{count}} yinelenen sekme kaldırılacak.",
+    "cancel": "İptal",
+    "confirm_one": "{{count}} yineleneni kaldır",
+    "confirm_other": "{{count}} yineleneni kaldır"
+  },
+  "staleGroups": {
+    "title": "Eski grupları incele",
+    "description_one": "{{count}} grup bir süredir dokunulmadı — önizlemek için genişletin veya doğrudan arşivleyin.",
+    "description_other": "{{count}} grup bir süredir dokunulmadı — önizlemek için genişletin veya doğrudan arşivleyin.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Gizle",
+    "preview": "Önizle",
+    "archive": "Arşivle",
+    "empty": "Bu grup boş.",
+    "close": "Kapat"
+  },
+  "staleTabs": {
+    "title": "Eski sekmeler",
+    "description_one": "{{count}} sekmeye bir süredir dokunulmadı.",
+    "description_other": "{{count}} sekmeye bir süredir dokunulmadı.",
+    "close": "Kapat",
+    "removeAll_one": "{{count}} sekmeyi kaldır",
+    "removeAll_other": "{{count}} sekmeyi kaldır"
+  },
+  "saveSession": {
+    "title": "Oturumu Kaydet",
+    "name": "Oturum adı",
+    "namePlaceholder": "ör. İş araştırması, Hafta sonu okumaları",
+    "nameRequired": "Oturum adı gerekli",
+    "description": "Açıklama (isteğe bağlı)",
+    "descriptionPlaceholder": "Bu oturum ne için?",
+    "cancel": "İptal",
+    "save": "Kaydet"
+  },
+  "shortcutSave": {
+    "title_one": "{{count}} sekmeyi kaydet",
+    "title_other": "{{count}} sekmeyi kaydet",
+    "description": "Klavye kısayoluyla yakalanan sekmelerin nereye kaydedileceğini seçin.",
+    "destination": "Hedef grup",
+    "quickSave": "Hızlı Kayıt (yeni grup)",
+    "cancel": "İptal",
+    "save": "Kaydet"
+  },
+  "confirmDialog": {
+    "cancel": "İptal"
+  }
+}

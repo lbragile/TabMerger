@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Błąd 404 · Nie znaleziono strony",
+    "title": "Ta karta gdzieś się zgubiła",
+    "description": "Przejrzeliśmy wszystkie grupy i nie znaleźliśmy tej strony. Mogła zostać przeniesiona, zamknięta lub nigdy nie istniała. Pomożemy Ci wrócić na właściwą drogę.",
+    "documentTitle": "Nie znaleziono strony",
+    "tabLabel": "Brakująca strona"
+  },
+  "serverError": {
+    "eyebrow": "Błąd 500 · Coś poszło nie tak",
+    "title": "Ta karta uległa awarii",
+    "description": "Podczas ładowania tej strony coś zepsuło się po naszej stronie. Twoje karty i grupy w rozszerzeniu nie zostały naruszone. Spróbuj ponownie za chwilę.",
+    "documentTitle": "Coś poszło nie tak",
+    "tabLabel": "Nie odpowiada"
+  },
+  "links": {
+    "features": "Funkcje",
+    "pricing": "Cennik",
+    "faq": "FAQ",
+    "dashboard": "Panel",
+    "account": "Konto",
+    "contactSupport": "Skontaktuj się z pomocą"
+  },
+  "helpfulLinks": "Przydatne linki",
+  "tryThese": "Albo spróbuj jednego z tych",
+  "illustrationTabResearch": "Badania",
+  "illustrationTabDocs": "Dokumenty",
+  "tryAgain": "Spróbuj ponownie",
+  "backToHome": "Wróć na stronę główną",
+  "backToDashboard": "Wróć do panelu",
+  "devDetails": "Szczegóły błędu (tylko w trybie deweloperskim)",
+  "referenceId": "Identyfikator zgłoszenia",
+  "copyReferenceId": "Kopiuj identyfikator",
+  "referenceIdHint": "Podaj ten identyfikator, kontaktując się z pomocą, abyśmy mogli ustalić, co poszło nie tak.",
+  "referenceIdCopied": "Skopiowano identyfikator",
+  "referenceIdCopyFailed": "Nie udało się skopiować. Zaznacz identyfikator, aby go skopiować.",
+  "titleWithBrand": "{title} | TabMerger"
+}

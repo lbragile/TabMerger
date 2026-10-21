@@ -1,0 +1,53 @@
+{
+  "addGroup": {
+    "title": "Buat Grup Baru",
+    "name": "Nama",
+    "namePlaceholder": "Nama grup",
+    "color": "Warna",
+    "cancel": "Batal",
+    "create": "Buat"
+  },
+  "dedup": {
+    "title": "Hapus duplikat",
+    "description_other": "{{count}} tab duplikat akan dihapus.",
+    "cancel": "Batal",
+    "confirm_other": "Hapus {{count}} duplikat"
+  },
+  "staleGroups": {
+    "title": "Tinjau grup usang",
+    "description_other": "{{count}} grup tidak disentuh untuk sementara waktu — perluas untuk pratinjau, atau arsipkan langsung.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Sembunyikan",
+    "preview": "Pratinjau",
+    "archive": "Arsipkan",
+    "empty": "Grup ini kosong.",
+    "close": "Tutup"
+  },
+  "staleTabs": {
+    "title": "Tab usang",
+    "description_other": "{{count}} tab belum disentuh untuk sementara waktu.",
+    "close": "Tutup",
+    "removeAll_other": "Hapus {{count}} tab"
+  },
+  "saveSession": {
+    "title": "Simpan Sesi",
+    "name": "Nama sesi",
+    "namePlaceholder": "mis. Riset kerja, Bacaan akhir pekan",
+    "nameRequired": "Nama sesi diperlukan",
+    "description": "Deskripsi (opsional)",
+    "descriptionPlaceholder": "Untuk apa sesi ini?",
+    "cancel": "Batal",
+    "save": "Simpan"
+  },
+  "shortcutSave": {
+    "title_other": "Simpan {{count}} tab",
+    "description": "Pilih tempat untuk menyimpan tab yang ditangkap oleh pintasan keyboard.",
+    "destination": "Grup tujuan",
+    "quickSave": "Simpan Cepat (grup baru)",
+    "cancel": "Batal",
+    "save": "Simpan"
+  },
+  "confirmDialog": {
+    "cancel": "Batal"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "동기화 서버에 연결할 수 없습니다. 다시 시도하세요.",
+    "accountMismatch": "이 기기에 아직 다른 계정의 데이터가 있습니다. 확장 프로그램을 열어 계정을 전환하세요.",
+    "identityChanged": "동기화 중에 확장 프로그램에서 로그아웃되었습니다. 로그인한 다음 다시 시도하세요.",
+    "keyCheckFailed": "암호화 상태를 확인할 수 없습니다. 다시 시도하세요.",
+    "setupUnfinished": "확장 프로그램을 열어 암호화 설정을 마치세요.",
+    "locked": "동기화하려면 확장 프로그램을 열고 암호화 잠금을 해제하세요."
+  },
+  "menu": {
+    "saveTo": "TabMerger에 저장",
+    "scopeCurrent": "이 탭 저장",
+    "scopeLeft": "왼쪽 탭 저장",
+    "scopeRight": "오른쪽 탭 저장",
+    "scopeExcluding": "다른 탭 모두 저장",
+    "noGroups": "아직 저장된 그룹이 없습니다",
+    "groupItem": "{{color}} {{name}} (창 {{windows}} · 탭 {{tabs}})"
+  },
+  "reminder": {
+    "title": "TabMerger 알림"
+  }
+}

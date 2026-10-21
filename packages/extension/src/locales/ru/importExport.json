@@ -1,0 +1,27 @@
+{
+  "title": "Импорт / экспорт",
+  "description": "Управление данными TabMerger",
+  "tabExport": "Экспорт",
+  "tabImport": "Импорт",
+  "exportIntro": "Экспортируйте все группы в JSON-файл. Позже этот файл можно импортировать снова.",
+  "downloadJson": "Скачать JSON",
+  "jsonHeading": "JSON TabMerger",
+  "jsonIntro": "Импорт из ранее экспортированного JSON-файла. Заменяет текущие группы.",
+  "chooseJson": "Выбрать JSON-файл",
+  "bookmarksHeading": "Закладки Chrome",
+  "bookmarksIntro": "Импорт из HTML-экспорта закладок Chrome. Каждая папка становится группой.",
+  "chooseBookmarks": "Выбрать HTML-файл закладок",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Импорт из текстового экспорта OneTab. Каждый блок, отделённый пустой строкой, становится группой.",
+  "chooseOneTab": "Выбрать TXT-файл OneTab",
+  "toast": {
+    "exported": "Группы успешно экспортированы",
+    "imported": "Группы успешно импортированы",
+    "imported_skipped": "Группы успешно импортированы, пропущено: {{skipped}}",
+    "importedCounts": "Импортировано: {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Импортировано: {{groups}}, {{tabs}}, пропущено: {{skipped}}",
+    "invalidJson": "Неверный JSON-файл",
+    "noBookmarks": "Закладки не найдены",
+    "noTabs": "Вкладки не найдены"
+  }
+}

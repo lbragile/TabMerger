@@ -1,0 +1,15 @@
+{
+  "metaTitle": "Novità",
+  "metaDescription": "Nuove funzionalità, miglioramenti e correzioni in TabMerger.",
+  "title": "Novità",
+  "lead": "Tutto ciò che abbiamo rilasciato, dal più recente.",
+  "githubRelease": "Release su GitHub",
+  "githubReleaseLabel": "Release {version} su GitHub",
+  "prLinkLabel": "Pull request #{number} su GitHub",
+  "majorRelease": "Versione principale",
+  "types": {
+    "New": "Nuovo",
+    "Improved": "Migliorato",
+    "Fixed": "Corretto"
+  }
+}

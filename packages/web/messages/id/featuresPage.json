@@ -1,0 +1,83 @@
+{
+  "metaTitle": "Fitur",
+  "metaDescription": "Jelajahi semua yang dapat dilakukan TabMerger — dari pengelompokan tab cerdas hingga penataan berbasis AI.",
+  "title": "Fitur yang dibuat untuk fokus",
+  "lead": "Semua yang Anda butuhkan untuk mengendalikan browser — dari fitur dasar gratis hingga kemampuan AI Pro.",
+  "addToChrome": "Tambahkan ke Chrome — Gratis",
+  "addToFirefox": "Tambahkan ke Firefox — Gratis",
+  "addToEdge": "Tambahkan ke Edge — Gratis",
+  "seePricing": "Lihat harga",
+  "badges": {
+    "core": "Inti",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Pengelolaan tab yang andal",
+    "description": "Fondasi TabMerger: penataan tab yang cepat dan intuitif, cocok untuk alur kerja apa pun.",
+    "groups": {
+      "title": "Grup bernama & berkode warna",
+      "description": "Buat grup dengan nama dan warna sendiri. Pisahkan pekerjaan, riset, hiburan, dan lainnya secara visual dalam sekejap."
+    },
+    "search": {
+      "title": "Pencarian teks lengkap",
+      "description": "Cari di semua judul dan URL tab secara instan. Hasil cocok dengan teks persis seperti yang Anda ketik (huruf besar atau kecil), dengan kecocokan terbaik di urutan teratas."
+    },
+    "dnd": {
+      "title": "Penataan ulang dengan seret dan lepas",
+      "description": "Atur ulang tab di dalam grup dan ubah urutan grup itu sendiri dengan interaksi seret dan lepas yang mulus."
+    },
+    "shortcuts": {
+      "title": "Pintasan keyboard",
+      "description": "Simpan tab saat ini, tab di sebelah kiri atau kanannya, atau semua tab lain tanpa membuka popup. Di dalam popup, buka pencarian dengan Ctrl/Cmd+K dan pindahkan tab, jendela, dan grup hanya dengan keyboard."
+    },
+    "importExport": {
+      "title": "Impor & ekspor",
+      "description": "Ekspor koleksi tab Anda sebagai JSON untuk dibagikan dengan rekan tim atau mencadangkan ruang kerja. Impor di perangkat mana pun."
+    },
+    "memory": {
+      "title": "Penghematan memori",
+      "description": "Tangguhkan tab yang tidak aktif untuk membebaskan RAM. Lihat secara real time berapa banyak memori yang dihemat TabMerger."
+    }
+  },
+  "pro": {
+    "title": "Sinkronisasi & sesi",
+    "description": "Lanjutkan tepat dari tempat Anda berhenti, di perangkat mana pun, kapan saja.",
+    "cloudSync": {
+      "title": "Sinkronisasi cloud",
+      "description": "Grup Anda otomatis disimpan dan disinkronkan di setiap browser tempat Anda masuk. Real time, tanpa perlu ekspor manual."
+    },
+    "sessions": {
+      "title": "Simpan & pulihkan sesi",
+      "description": "Abadikan grup Anda saat ini sebagai sesi bernama dan pulihkan secara instan. Paket gratis menyimpan hingga {count} sesi di browser ini; Pro menyinkronkan sesi tanpa batas di setiap perangkat."
+    },
+    "autoBackups": {
+      "title": "Cadangan otomatis",
+      "description": "TabMerger menyimpan snapshot terenkripsi dari grup Anda sesuai jadwal pilihan Anda, dari setiap jam hingga seminggu sekali. {count} cadangan terbaru disimpan, dan Anda dapat memulihkan salah satunya dari Pengaturan. Dasbor Anda juga menampilkannya, tempat Anda dapat melihat isinya atau mengunduhnya. Anda juga dapat menyimpan setiap cadangan sebagai file di komputer; salinan tersebut tidak dienkripsi."
+    },
+    "support": {
+      "title": "Dukungan prioritas",
+      "description": "Pelanggan Pro mendapatkan dukungan jalur cepat dengan jaminan respons dalam 24 jam."
+    }
+  },
+  "proAi": {
+    "title": "Penataan berbasis AI",
+    "description": "Biarkan Claude menganalisis tab Anda dan memberi saran cerdas agar Anda bisa fokus berpikir, bukan memilah.",
+    "autoGrouping": {
+      "title": "Pengelompokan otomatis",
+      "description": "Buka setumpuk tab, klik satu tombol. AI mengelompokkannya ke dalam grup yang logis berdasarkan topik, domain, dan tujuan."
+    },
+    "names": {
+      "title": "Nama grup cerdas",
+      "description": "AI menyarankan nama yang ringkas dan deskriptif untuk grup Anda. Terima dengan sekali klik, atau ketik nama sendiri."
+    },
+    "summaries": {
+      "title": "Ringkasan tab",
+      "description": "Arahkan kursor ke tab mana pun untuk melihat ringkasan AI satu kalimat tentang isi halaman — tanpa membukanya."
+    },
+    "sessionSuggestions": {
+      "title": "Saran sesi",
+      "description": "AI menganalisis pola penjelajahan Anda dan menyarankan cara menyusun sesi untuk produktivitas maksimal."
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Propozycja organizacji AI",
+  "encrypted": "Organizacja przez AI nie jest jeszcze dostępna w sieci dla grup szyfrowanych end-to-end — Twoje grupy są zaszyfrowane i ta strona nie może ich odczytać. Uruchom ją w rozszerzeniu TabMerger.",
+  "applied": "Zmiany zostały zastosowane.",
+  "cancelled": "Propozycja anulowana.",
+  "analyzing": "Analizowanie grup kart…",
+  "noChanges": "Brak proponowanych zmian.",
+  "approve": "Zatwierdź",
+  "reject": "Odrzuć",
+  "unknownError": "Nieznany błąd",
+  "submitFailed": "Nie udało się przesłać decyzji",
+  "types": {
+    "merge": "scalenie",
+    "rename": "zmiana nazwy",
+    "delete": "usunięcie",
+    "reorder": "zmiana kolejności"
+  },
+  "actions": {
+    "merge": "Scal {source} → {target}",
+    "rename": "Zmień nazwę grupy → „{name}”",
+    "delete": "Usuń grupę {id}",
+    "reorder": "Zmień kolejność grup: {ids}"
+  }
+}

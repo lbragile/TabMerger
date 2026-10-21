@@ -3,10 +3,11 @@ import 'fake-indexeddb/auto'
 import { vi } from 'vitest'
 import { initReactI18next } from 'react-i18next'
 import { initI18n } from '@/lib/i18n'
+import { catalogs } from '@/locales'
 
 // The real i18next instance with the bundled English catalog, initialized synchronously (no t()
 // mock), so components render the exact copy users see and a missing key shows up as the raw key.
-initI18n(initReactI18next)
+initI18n(catalogs, initReactI18next)
 
 // ponytail: real IndexedDB (fake-indexeddb) is in play here — only chrome.* and network
 // (Supabase) get stubbed/gated. Do NOT mock '@/lib/localDb' in any file under this directory.

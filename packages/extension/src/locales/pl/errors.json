@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Synchronizacja wstrzymana: zezwól w Firefoksie",
+  "conflictCopy": "{{names}} zostało również zmienione na innym urządzeniu. Twoja wersja została zapisana jako kopia.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "Grupa, nad którą pracowałeś, zmieniła się lub została usunięta gdzie indziej, więc nic nie zostało zmienione.",
+  "undoConflict": "Twoje grupy zmieniły się gdzie indziej, więc nic nie zostało cofnięte. Spróbuj ponownie.",
+  "freeLimit": {
+    "maxGroups": "Plan darmowy pozwala na maksymalnie {{max}} grup.",
+    "maxTabs": "Plan darmowy pozwala na maksymalnie {{max}} kart.",
+    "maxUrlRules": "Plan darmowy pozwala na maksymalnie {{max}} reguł URL."
+  },
+  "fileContains": "Ten plik zawiera {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Otwarto jako zwykłe okno, ponieważ TabMerger nie jest dozwolony w trybie incognito. Aby to zmienić, otwórz Zarządzaj rozszerzeniem i włącz \"Zezwalaj w trybie incognito\".",
+  "encryptionAlreadySetUp": "Szyfrowanie jest już skonfigurowane dla tego konta. Wpisz swoje istniejące hasło, aby je odblokować.",
+  "signInToEnableEncryption": "Musisz być zalogowany, aby włączyć szyfrowanie",
+  "signInToResetEncryption": "Musisz być zalogowany, aby zresetować szyfrowanie",
+  "googleUnavailable": "Logowanie przez Google jest niedostępne w tym środowisku",
+  "googleNoUrl": "Logowanie przez Google nie zwróciło adresu URL autoryzacji",
+  "googleCancelled": "Logowanie przez Google zostało anulowane",
+  "googleNoSession": "Logowanie przez Google nie zwróciło sesji",
+  "googleFailed": "Logowanie przez Google nie powiodło się",
+  "expectedArray": "Oczekiwano tablicy",
+  "invalidFormat": "Nieprawidłowy format",
+  "noGroupsFound": "Nie znaleziono grup",
+  "noGroupsSelected": "Nie wybrano grup",
+  "notAuthenticated": "Brak uwierzytelnienia",
+  "sharingRequiresPro": "Udostępnianie wymaga przejścia na Pro — brak uprawnień",
+  "aiOncePerDay": "Już użyto dzisiaj — ta akcja AI jest ograniczona do jednego razu dziennie",
+  "proAiRequired": "Wymagany plan Pro AI",
+  "nameGroupOff": "Nazywanie grupy jest wyłączone w Ustawieniach",
+  "suggestSessionsOff": "Sugerowanie sesji jest wyłączone w Ustawieniach",
+  "organizeOff": "Organizowanie jest wyłączone w Ustawieniach"
+}

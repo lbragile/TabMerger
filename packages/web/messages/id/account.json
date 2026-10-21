@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "baru saja",
+    "minutesAgo": "{count} mnt lalu",
+    "hoursAgo": "{count} jam lalu",
+    "daysAgo": "{count} hr lalu",
+    "renameFailed": "Gagal mengganti nama perangkat",
+    "renamed": "Nama perangkat diganti",
+    "removeFailed": "Gagal menghapus perangkat",
+    "removed": "Perangkat dihapus",
+    "removeManyFailed": "Gagal menghapus perangkat",
+    "removedMany": "{count, plural, other {{count} perangkat dihapus}}",
+    "empty": "Belum ada perangkat.",
+    "selectAll": "Pilih semua perangkat",
+    "selectedCount": "{count} dipilih",
+    "removeSelected": "{count, plural, other {Hapus {count} perangkat}}",
+    "selectDevice": "Pilih {name}",
+    "active": "Aktif {time}",
+    "snapshotCounts": " · {windows, plural, other {{windows} jendela}} · {tabs, plural, other {{tabs} tab}}",
+    "options": "Opsi perangkat",
+    "rename": "Ganti nama",
+    "remove": "Hapus",
+    "removeTitle": "Hapus perangkat?",
+    "removeBody": "\"{name}\" tidak akan lagi menyinkronkan data tab. Tindakan ini tidak dapat dibatalkan.",
+    "removeManyTitle": "Hapus {count} perangkat?",
+    "removeManyBody": "Perangkat ini tidak akan lagi menyinkronkan data tab. Tindakan ini tidak dapat dibatalkan.",
+    "cancel": "Batal"
+  },
+  "metaTitle": "Akun",
+  "title": "Pengaturan akun",
+  "lead": "Kelola akun dan langganan Anda.",
+  "stats": {
+    "groups": "Grup disinkronkan",
+    "tabs": "Tab disimpan",
+    "sessions": "Sesi dan cadangan",
+    "aiCredits": "Sisa kredit AI"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Informasi akun Anda.",
+    "email": "Email",
+    "memberSince": "Anggota sejak"
+  },
+  "signOutAll": {
+    "title": "Keluar dari semua perangkat",
+    "description": "Ini akan mencabut semua sesi aktif.",
+    "button": "Keluar"
+  },
+  "subscription": {
+    "title": "Langganan",
+    "description": "Kelola paket dan tagihan Anda.",
+    "manageBilling": "Kelola tagihan",
+    "upgrade": "Tingkatkan",
+    "cancelNote": "Anda dapat membatalkan kapan saja melalui <strong>Kelola tagihan</strong>. Akses tetap tersedia hingga akhir periode tagihan saat ini."
+  },
+  "devicesCard": {
+    "title": "Perangkat",
+    "description": "Perangkat yang menyinkronkan grup dan tab Anda. Khusus Pro dan Pro AI."
+  },
+  "password": {
+    "tooShort": "Kata sandi minimal 8 karakter.",
+    "updated": "Kata sandi diperbarui",
+    "set": "Kata sandi diatur — kini Anda juga dapat masuk dengan email + kata sandi",
+    "change": "Ubah kata sandi",
+    "setLabel": "Atur kata sandi",
+    "placeholder": "••••••••••",
+    "save": "Simpan"
+  },
+  "credits": {
+    "failed": "Tidak dapat memulai pembayaran",
+    "getMore": "Beli lagi"
+  }
+}

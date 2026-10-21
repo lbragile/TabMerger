@@ -1,0 +1,77 @@
+{
+  "instructions": "Nhấn Space để nhấc lên, phím mũi tên để chọn vị trí (Trái và Phải chuyển giữa cửa sổ và nhóm), Space để thả, Escape để hủy. Shift+Space chọn một khoảng và {{modifier}}+A chọn tất cả, để di chuyển nhiều mục cùng lúc.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "thẻ",
+    "window": "cửa sổ",
+    "group": "nhóm",
+    "item": "mục"
+  },
+  "typeStart": {
+    "tab": "Thẻ",
+    "window": "Cửa sổ",
+    "group": "Nhóm",
+    "item": "Mục"
+  },
+  "untitledTab": "Thẻ chưa đặt tên",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, bắt đầu từ {{name}},",
+  "position": {
+    "tab": "vị trí {{index}} trong {{total}} tại {{window}} của nhóm {{group}}",
+    "window": "vị trí {{index}} trong {{total}} tại nhóm {{group}}",
+    "group": "vị trí {{index}} trong {{total}}"
+  },
+  "target": {
+    "newGroup": "một nhóm mới",
+    "newWindowAtEnd": "một cửa sổ mới ở cuối nhóm {{group}}",
+    "nowOpen": "Đang Mở, mục này sẽ mở chúng trong một cửa sổ trình duyệt mới",
+    "groupAsWindow": "nhóm {{group}}, dưới dạng cửa sổ mới"
+  },
+  "token": {
+    "dropped": "Đã thả.",
+    "cancelled": "Đã hủy."
+  },
+  "bail": {
+    "cancelled": "Đã hủy di chuyển.",
+    "nothingMoved": "Đã thả; không có gì được di chuyển.",
+    "returnedMany": "{{items}} đã được trả về",
+    "returnedOne": "{{named}} đã được trả về",
+    "noop": "Đã thả {{what}} trở lại {{position}}; không có gì được di chuyển.",
+    "stale": "Các nhóm đã thay đổi trong khi kéo, vì vậy không có gì được di chuyển. {{returned}} đến {{position}}.",
+    "cancelledReturned": "Đã hủy di chuyển. {{returned}} đến {{position}}.",
+    "rejected": "Không thể thả ở đó. {{returned}} đến {{position}}."
+  },
+  "removedElsewhere_other": "{{count}} đã bị xóa ở nơi khác.",
+  "stillSelected_other": "Chúng vẫn đang được chọn.",
+  "dropped": "Đã thả.",
+  "movedGroups": "Đã di chuyển {{count}} nhóm đến {{position}}, dưới dạng một khối.",
+  "movedGroup": "Đã di chuyển nhóm {{name}} đến {{position}}.",
+  "partial": "{{count}} trong {{total}}",
+  "at": "vị trí {{index}} trong {{total}}",
+  "startingAt": "bắt đầu tại vị trí {{index}} trong {{total}}",
+  "whereTab": "{{window}} của nhóm {{group}}, {{at}}",
+  "whereWindow": "nhóm {{group}}, {{at}}",
+  "movedTo": "Đã di chuyển {{items}} đến {{where}}.",
+  "openTabsClosed": " Các thẻ đang mở đã bị đóng.",
+  "groupHidden": " Nhóm {{group}} không được hiển thị.",
+  "openedNewWindow": "Đã mở {{items}} trong một cửa sổ trình duyệt mới.",
+  "openedNowOpen": "Đã mở {{items}} trong Đang Mở.",
+  "movedNewWindow": "Đã di chuyển {{items}} đến một cửa sổ trình duyệt mới.",
+  "movedWithinNowOpen": "Đã di chuyển {{items}} trong Đang Mở.",
+  "originalPosition": "Ở vị trí ban đầu.",
+  "pickedUpType": "Đã nhấc {{type}}.",
+  "pickedUpMany": "Đã nhấc {{what}}.",
+  "pickedUpOne": "Đã nhấc {{type}} {{name}}, {{position}}.",
+  "groupShown": "Nhóm {{name}} hiện đang được hiển thị.",
+  "copyHint": "Thả vào một nhóm đã lưu sẽ sao chép; các thẻ đang mở vẫn mở.",
+  "notOver": "Không ở trên mục tiêu thả.",
+  "over": "Ở trên {{target}}.",
+  "cantDropOn": "Không thể thả trên {{target}}.",
+  "typeDropped": "{{type}} đã được thả.",
+  "cancelledReturnedType": "Đã hủy di chuyển; {{type}} đã được trả về vị trí của nó.",
+  "saveFailed": "Không thể lưu lần di chuyển; đã khôi phục."
+}

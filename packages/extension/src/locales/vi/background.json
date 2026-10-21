@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Không thể kết nối đến máy chủ đồng bộ. Hãy thử lại.",
+    "accountMismatch": "Thiết bị này vẫn đang giữ dữ liệu của tài khoản khác. Mở tiện ích để chuyển tài khoản.",
+    "identityChanged": "Tiện ích đã đăng xuất trong khi đồng bộ. Đăng nhập và thử lại.",
+    "keyCheckFailed": "Không thể kiểm tra trạng thái mã hóa. Hãy thử lại.",
+    "setupUnfinished": "Mở tiện ích để hoàn tất thiết lập mã hóa.",
+    "locked": "Mở tiện ích và mở khóa mã hóa để đồng bộ."
+  },
+  "menu": {
+    "saveTo": "Lưu vào TabMerger",
+    "scopeCurrent": "Lưu thẻ này",
+    "scopeLeft": "Lưu các thẻ bên trái",
+    "scopeRight": "Lưu các thẻ bên phải",
+    "scopeExcluding": "Lưu tất cả các thẻ khác",
+    "noGroups": "Chưa có nhóm nào được lưu",
+    "groupItem": "{{color}} {{name}} ({{windows}}c · {{tabs}}t)"
+  },
+  "reminder": {
+    "title": "Nhắc nhở TabMerger"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "comingSoon": "출시 예정",
+  "listTwo": "{first} 및 {second}",
+  "listMany": "{rest} 및 {last}",
+  "listSeparator": ", ",
+  "opensInNewTab": " (새 탭에서 열림)",
+  "close": "닫기",
+  "showPassphrase": "암호 문구 표시",
+  "hidePassphrase": "암호 문구 숨기기"
+}

@@ -1,0 +1,22 @@
+{
+  "heading": "Dispositivi",
+  "empty": "Ancora nessun dispositivo.",
+  "selected": "{{count}} selezionati",
+  "remove": "Rimuovi",
+  "removeTitle_one": "Rimuovere {{count}} dispositivo?",
+  "removeTitle_other": "Rimuovere {{count}} dispositivi?",
+  "removeTitle_many": "Rimuovere {{count}} dispositivi?",
+  "removeDescription": "I dispositivi rimossi non compaiono più in questo elenco. Se quel browser è ancora attivo potrebbe registrarsi di nuovo alla prossima sincronizzazione, quindi la rimozione non è definitiva per un dispositivo in uso.",
+  "cancel": "Annulla",
+  "selectDevice": "Seleziona {{name}}",
+  "nameInput": "Nome di questo dispositivo",
+  "save": "Salva",
+  "thisDevice": "(questo dispositivo)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Rinomina questo dispositivo",
+  "noTabs": "Nessuna scheda.",
+  "restoreTabs_one": "Ripristina {{count}} scheda",
+  "restoreTabs_other": "Ripristina {{count}} schede",
+  "restoreTabs_many": "Ripristina {{count}} schede",
+  "open": "Apri"
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Regole URL",
+  "description": "Assegna automaticamente le schede ai gruppi in base a un modello di URL. Usa <code>*</code> come carattere jolly (es. <code>github.com/*</code>). Vince la prima regola corrispondente.",
+  "empty": "Ancora nessuna regola.",
+  "deletedGroup": "(gruppo eliminato)",
+  "moveUp": "Sposta la regola in alto",
+  "moveDown": "Sposta la regola in basso",
+  "edit": "Modifica regola",
+  "delete": "Elimina regola",
+  "used": "{{used}}/{{max}} usate",
+  "addRule": "Aggiungi regola",
+  "discard": "Annulla modifiche",
+  "cancel": "Annulla",
+  "saveAll": "Salva tutte le regole",
+  "save": "Salva",
+  "editTitle": "Modifica regola URL",
+  "addTitle": "Aggiungi regola URL",
+  "patternPlaceholder": "Modello, es. github.com/*",
+  "groupPlaceholder": "Seleziona il gruppo di destinazione…",
+  "toast": {
+    "limit": "Il piano gratuito consente fino a {{max}} regole URL."
+  }
+}

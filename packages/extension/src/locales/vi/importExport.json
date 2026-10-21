@@ -1,0 +1,27 @@
+{
+  "title": "Nhập / Xuất",
+  "description": "Quản lý dữ liệu TabMerger của bạn",
+  "tabExport": "Xuất",
+  "tabImport": "Nhập",
+  "exportIntro": "Xuất tất cả các nhóm của bạn dưới dạng tệp JSON. Bạn có thể nhập lại tệp này sau.",
+  "downloadJson": "Tải xuống JSON",
+  "jsonHeading": "JSON TabMerger",
+  "jsonIntro": "Nhập từ tệp JSON đã xuất trước đó. Thay thế các nhóm hiện tại.",
+  "chooseJson": "Chọn tệp JSON",
+  "bookmarksHeading": "Dấu trang Chrome",
+  "bookmarksIntro": "Nhập từ bản xuất HTML dấu trang Chrome. Mỗi thư mục trở thành một nhóm.",
+  "chooseBookmarks": "Chọn tệp HTML Dấu trang",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Nhập từ bản xuất văn bản thuần của OneTab. Mỗi khối được ngăn cách bởi dòng trống trở thành một nhóm.",
+  "chooseOneTab": "Chọn tệp TXT OneTab",
+  "toast": {
+    "exported": "Xuất nhóm thành công",
+    "imported": "Nhập nhóm thành công",
+    "imported_skipped": "Nhập nhóm thành công, {{skipped}} bị bỏ qua",
+    "importedCounts": "Đã nhập {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Đã nhập {{groups}}, {{tabs}}, {{skipped}} bị bỏ qua",
+    "invalidJson": "Tệp JSON không hợp lệ",
+    "noBookmarks": "Không tìm thấy dấu trang nào",
+    "noTabs": "Không tìm thấy thẻ nào"
+  }
+}

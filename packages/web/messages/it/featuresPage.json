@@ -1,0 +1,83 @@
+{
+  "metaTitle": "Funzionalità",
+  "metaDescription": "Scopri tutto ciò che TabMerger sa fare, dal raggruppamento intelligente delle schede all'organizzazione basata sull'IA.",
+  "title": "Funzionalità pensate per la concentrazione",
+  "lead": "Tutto ciò che ti serve per prendere il controllo del browser, dagli strumenti essenziali gratuiti ai superpoteri IA del piano Pro.",
+  "addToChrome": "Aggiungi a Chrome — È gratis",
+  "addToFirefox": "Aggiungi a Firefox — È gratis",
+  "addToEdge": "Aggiungi a Edge — È gratis",
+  "seePricing": "Vedi i prezzi",
+  "badges": {
+    "core": "Base",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Gestione delle schede potente",
+    "description": "Le fondamenta di TabMerger: un'organizzazione delle schede rapida e intuitiva, adatta a qualsiasi flusso di lavoro.",
+    "groups": {
+      "title": "Gruppi con nome e colore",
+      "description": "Crea gruppi con nomi e colori personalizzati. Separa a colpo d'occhio lavoro, ricerca, svago e altro ancora."
+    },
+    "search": {
+      "title": "Ricerca full-text",
+      "description": "Cerca all'istante tra tutti i titoli e gli URL delle tue schede. I risultati corrispondono al testo esattamente come lo digiti (senza distinzione tra maiuscole e minuscole), con le corrispondenze migliori in cima."
+    },
+    "dnd": {
+      "title": "Riordino con trascinamento",
+      "description": "Sposta le schede all'interno dei gruppi e riordina i gruppi stessi con un trascinamento fluido."
+    },
+    "shortcuts": {
+      "title": "Scorciatoie da tastiera",
+      "description": "Salva la scheda corrente, le schede alla sua sinistra o destra, oppure tutte le altre schede senza aprire il popup. Al suo interno, apri la ricerca con Ctrl/Cmd+K e sposta schede, finestre e gruppi usando solo la tastiera."
+    },
+    "importExport": {
+      "title": "Importazione ed esportazione",
+      "description": "Esporta le tue raccolte di schede in JSON per condividerle con i colleghi o fare un backup del tuo spazio di lavoro. Importale su qualsiasi dispositivo."
+    },
+    "memory": {
+      "title": "Risparmio di memoria",
+      "description": "Sospendi le schede inattive per liberare RAM. Scopri in tempo reale quanta memoria ti sta facendo risparmiare TabMerger."
+    }
+  },
+  "pro": {
+    "title": "Sincronizzazione e sessioni",
+    "description": "Riprendi esattamente da dove avevi lasciato, su qualsiasi dispositivo, in qualsiasi momento.",
+    "cloudSync": {
+      "title": "Sincronizzazione cloud",
+      "description": "I tuoi gruppi vengono salvati e sincronizzati automaticamente su ogni browser in cui accedi. In tempo reale, senza esportazioni manuali."
+    },
+    "sessions": {
+      "title": "Salvataggio e ripristino delle sessioni",
+      "description": "Salva i gruppi correnti come sessione con un nome e ripristinali all'istante. I piani gratuiti salvano fino a {count} sessioni in questo browser; Pro sincronizza sessioni illimitate su ogni dispositivo."
+    },
+    "autoBackups": {
+      "title": "Backup automatici",
+      "description": "TabMerger salva un'istantanea crittografata dei tuoi gruppi con la frequenza che scegli, da ogni ora a una volta a settimana. Vengono conservate le {count} più recenti e puoi ripristinarne una qualsiasi dalle Impostazioni. Le trovi elencate anche nella dashboard, dove puoi vederne il contenuto o scaricarle. Puoi anche salvarle ciascuna come file sul tuo computer; quella copia non è crittografata."
+    },
+    "support": {
+      "title": "Assistenza prioritaria",
+      "description": "Gli abbonati Pro ricevono assistenza prioritaria con risposta garantita entro 24 ore."
+    }
+  },
+  "proAi": {
+    "title": "Organizzazione basata sull'IA",
+    "description": "Lascia che Claude analizzi le tue schede e ti dia suggerimenti intelligenti, così puoi concentrarti sul pensare, non sull'archiviare.",
+    "autoGrouping": {
+      "title": "Raggruppamento automatico",
+      "description": "Apri un caos di schede e fai clic su un pulsante. L'IA le raggruppa in gruppi logici in base ad argomento, dominio e intento."
+    },
+    "names": {
+      "title": "Nomi dei gruppi intelligenti",
+      "description": "L'IA suggerisce nomi concisi e descrittivi per i tuoi gruppi. Un clic per accettare, oppure scrivi il tuo."
+    },
+    "summaries": {
+      "title": "Riepiloghi delle schede",
+      "description": "Passa il mouse su una scheda per vedere un riepilogo IA di una frase sul contenuto della pagina, senza aprirla."
+    },
+    "sessionSuggestions": {
+      "title": "Suggerimenti di sessione",
+      "description": "L'IA analizza le tue abitudini di navigazione e suggerisce come strutturare le sessioni per la massima produttività."
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "instructions": "Almak için Boşluk'a, yer seçmek için ok tuşlarına (Sol ve Sağ pencereler ve gruplar arasında geçiş yapar), bırakmak için Boşluk'a, iptal için Escape'e basın. Birkaçını birden taşımak için Shift+Boşluk bir aralık seçer, {{modifier}}+A tümünü seçer.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "sekme",
+    "window": "pencere",
+    "group": "grup",
+    "item": "öğe"
+  },
+  "typeStart": {
+    "tab": "Sekme",
+    "window": "Pencere",
+    "group": "Grup",
+    "item": "Öğe"
+  },
+  "untitledTab": "Adsız sekme",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{name}} ile başlayan {{items}},",
+  "position": {
+    "tab": "{{group}} grubunun {{window}} içinde {{total}} konumdan {{index}}.",
+    "window": "{{group}} grubunda {{total}} konumdan {{index}}.",
+    "group": "{{total}} konumdan {{index}}."
+  },
+  "target": {
+    "newGroup": "yeni bir grup",
+    "newWindowAtEnd": "{{group}} grubunun sonunda yeni bir pencere",
+    "nowOpen": "Şu An Açık; bunları yeni bir tarayıcı penceresinde açar",
+    "groupAsWindow": "{{group}} grubu, yeni bir pencere olarak"
+  },
+  "token": {
+    "dropped": "Bırakıldı.",
+    "cancelled": "İptal edildi."
+  },
+  "bail": {
+    "cancelled": "Taşıma iptal edildi.",
+    "nothingMoved": "Bırakıldı; hiçbir şey taşınmadı.",
+    "returnedMany": "{{items}} geri döndü",
+    "returnedOne": "{{named}} geri döndü",
+    "noop": "{{what}} {{position}} konumuna geri bırakıldı; hiçbir şey taşınmadı.",
+    "stale": "Sürükleme sırasında gruplar değişti, bu yüzden hiçbir şey taşınmadı. {{returned}}: {{position}}.",
+    "cancelledReturned": "Taşıma iptal edildi. {{returned}}: {{position}}.",
+    "rejected": "Oraya bırakılamaz. {{returned}}: {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} öğe başka bir yerde kaldırıldı.",
+  "removedElsewhere_other": "{{count}} öğe başka bir yerde kaldırıldı.",
+  "stillSelected_one": "Hâlâ seçili.",
+  "stillSelected_other": "Hâlâ seçililer.",
+  "dropped": "Bırakıldı.",
+  "movedGroups": "{{count}} grup tek blok olarak {{position}} konumuna taşındı.",
+  "movedGroup": "{{name}} grubu {{position}} konumuna taşındı.",
+  "partial": "{{total}} öğeden {{count}}",
+  "at": "{{total}} konumdan {{index}}.",
+  "startingAt": "{{total}} konumdan {{index}}. konumdan başlayarak",
+  "whereTab": "{{group}} grubunun {{window}} penceresi, {{at}}",
+  "whereWindow": "{{group}} grubu, {{at}}",
+  "movedTo": "{{items}} şuraya taşındı: {{where}}.",
+  "openTabsClosed": " Açık sekmeler kapatıldı.",
+  "groupHidden": " {{group}} grubu gösterilmiyor.",
+  "openedNewWindow": "{{items}} yeni bir tarayıcı penceresinde açıldı.",
+  "openedNowOpen": "{{items}} Şu An Açık içinde açıldı.",
+  "movedNewWindow": "{{items}} yeni bir tarayıcı penceresine taşındı.",
+  "movedWithinNowOpen": "{{items}} Şu An Açık içinde taşındı.",
+  "originalPosition": "Özgün konumunun üzerinde.",
+  "pickedUpType": "{{type}} alındı.",
+  "pickedUpMany": "{{what}} alındı.",
+  "pickedUpOne": "{{type}} {{name}} alındı, {{position}}.",
+  "groupShown": "{{name}} grubu artık gösteriliyor.",
+  "copyHint": "Kayıtlı bir gruba bırakmak kopyalar; açık sekmeler açık kalır.",
+  "notOver": "Bir bırakma hedefinin üzerinde değil.",
+  "over": "{{target}} üzerinde.",
+  "cantDropOn": "{{target}} üzerine bırakılamaz.",
+  "typeDropped": "{{type}} bırakıldı.",
+  "cancelledReturnedType": "Taşıma iptal edildi; {{type}} konumuna geri döndü.",
+  "saveFailed": "Taşıma kaydedilemedi; geri yüklendi."
+}

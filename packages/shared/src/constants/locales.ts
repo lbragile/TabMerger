@@ -3,7 +3,7 @@
  * here; the extension can too. Add a locale here only once its catalog is complete: every entry is
  * a public, indexable language (sitemap, hreflang, language switcher).
  */
-export const SUPPORTED_LOCALES = ['en', 'de', 'es', 'fr', 'ja', 'pt-BR', 'zh-CN'] as const;
+export const SUPPORTED_LOCALES = ['en', 'de', 'es', 'fr', 'it', 'ru', 'ko', 'tr', 'id', 'pl', 'vi', 'hi', 'ja', 'pt-BR', 'zh-CN'] as const;
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -25,6 +25,14 @@ export const LOCALE_NATIVE_NAMES: Readonly<Record<SupportedLocale, string>> = {
   es: 'Español',
   fr: 'Français',
   ja: '日本語',
+  it: 'Italiano',
+  ru: 'Русский',
+  ko: '한국어',
+  tr: 'Türkçe',
+  id: 'Bahasa Indonesia',
+  pl: 'Polski',
+  vi: 'Tiếng Việt',
+  hi: 'हिन्दी',
   'pt-BR': 'Português (Brasil)',
   'zh-CN': '简体中文',
 };

@@ -1,0 +1,21 @@
+{
+  "features": "सुविधाएँ",
+  "pricing": "कीमतें",
+  "changelog": "बदलाव सूची",
+  "faq": "सामान्य प्रश्न",
+  "dashboard": "डैशबोर्ड",
+  "account": "खाता",
+  "accountSettings": "खाता सेटिंग्स",
+  "signIn": "साइन इन",
+  "signUp": "साइन अप",
+  "getStarted": "शुरू करें",
+  "signOut": "साइन आउट",
+  "openMenu": "मेनू खोलें",
+  "closeMenu": "मेनू बंद करें",
+  "accountMenu": "खाता मेनू",
+  "home": "TabMerger होम",
+  "github": "GitHub",
+  "githubRepo": "GitHub पर TabMerger",
+  "githubRepoWithStars": "GitHub पर TabMerger, {count, plural, one {# स्टार} other {# स्टार}}",
+  "toggleTheme": "थीम बदलें"
+}

@@ -1,0 +1,32 @@
+{
+  "metaTitle": "문의하기",
+  "metaDescription": "TabMerger 팀에 연락하세요. 버그를 신고하거나, 결제 또는 계정에 대해 문의하거나, 의견과 아이디어를 공유해 주세요.",
+  "eyebrow": "고객 지원",
+  "title": "문의하기",
+  "lead": "궁금한 점이 있거나, 버그를 발견했거나, 구독 관련 도움이 필요하신가요? 보통 영업일 기준 하루 안에 답변해 드립니다.",
+  "bugReport": "버그를 신고하시나요? 더 빠른 추적과 공유를 위해 <link>GitHub 이슈를 열어 주세요</link>.",
+  "preferEmail": "이메일이 편하신가요? <email>{address}</email>(으)로 보내 주세요.",
+  "sentTitle": "메시지를 보냈습니다",
+  "sentBody": "곧 답변해 드리겠습니다.",
+  "email": "이메일",
+  "emailPlaceholder": "you@example.com",
+  "subject": "제목",
+  "subjectPlaceholder": "문의 유형을 선택하세요…",
+  "subjects": {
+    "bug": "버그 신고",
+    "betaBug": "베타 버그 신고",
+    "feedback": "의견 및 아이디어",
+    "billing": "결제 문의",
+    "feature": "기능 요청",
+    "account": "계정 도움말",
+    "other": "기타"
+  },
+  "otherSubject": "구체적으로 적어 주세요",
+  "otherSubjectPlaceholder": "어떤 내용인가요?",
+  "message": "메시지",
+  "messagePlaceholder": "문제나 질문을 가능한 한 자세히 설명해 주세요.",
+  "rateLimited": "메시지를 너무 많이 보냈습니다. 나중에 다시 시도해 주세요.",
+  "failed": "문제가 발생했습니다. 다시 시도하시거나 <email>{address}</email>(으)로 이메일을 보내 주세요.",
+  "sending": "보내는 중…",
+  "send": "메시지 보내기"
+}

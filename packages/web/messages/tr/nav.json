@@ -1,0 +1,21 @@
+{
+  "features": "Özellikler",
+  "pricing": "Fiyatlandırma",
+  "changelog": "Değişiklik günlüğü",
+  "faq": "SSS",
+  "dashboard": "Kontrol paneli",
+  "account": "Hesap",
+  "accountSettings": "Hesap ayarları",
+  "signIn": "Oturum aç",
+  "signUp": "Kaydol",
+  "getStarted": "Başlayın",
+  "signOut": "Oturumu kapat",
+  "openMenu": "Menüyü aç",
+  "closeMenu": "Menüyü kapat",
+  "accountMenu": "Hesap menüsü",
+  "home": "TabMerger ana sayfa",
+  "github": "GitHub",
+  "githubRepo": "GitHub'da TabMerger",
+  "githubRepoWithStars": "GitHub'da TabMerger, {count, plural, one {# yıldız} other {# yıldız}}",
+  "toggleTheme": "Temayı değiştir"
+}

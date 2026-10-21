@@ -1,0 +1,83 @@
+{
+  "metaTitle": "Özellikler",
+  "metaDescription": "TabMerger'ın yapabildiği her şeyi keşfedin — akıllı sekme gruplamadan yapay zekâ destekli düzenlemeye.",
+  "title": "Odaklanmak için tasarlanmış özellikler",
+  "lead": "Tarayıcınızın kontrolünü ele almak için ihtiyacınız olan her şey — ücretsiz temel özelliklerden Pro yapay zekâ süper güçlerine.",
+  "addToChrome": "Chrome'a ekleyin — Ücretsiz",
+  "addToFirefox": "Firefox'a ekleyin — Ücretsiz",
+  "addToEdge": "Edge'e ekleyin — Ücretsiz",
+  "seePricing": "Fiyatlandırmayı görün",
+  "badges": {
+    "core": "Temel",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Güçlü sekme yönetimi",
+    "description": "TabMerger'ın temeli: her iş akışına uyan hızlı ve sezgisel sekme düzenleme.",
+    "groups": {
+      "title": "Adlandırılmış ve renk kodlu gruplar",
+      "description": "Özel adlar ve renklerle gruplar oluşturun. İşi, araştırmayı, eğlenceyi ve daha fazlasını bir bakışta görsel olarak ayırın."
+    },
+    "search": {
+      "title": "Tam metin arama",
+      "description": "Tüm sekme başlıklarınızda ve URL'lerinizde anında arama yapın. Sonuçlar metni tam yazdığınız gibi (büyük/küçük harf fark etmeksizin) eşleştirir, en iyi eşleşmeler önce gelir."
+    },
+    "dnd": {
+      "title": "Sürükle-bırak ile yeniden sıralama",
+      "description": "Akıcı sürükle-bırak etkileşimleriyle gruplardaki sekmeleri ve grupların kendisini yeniden düzenleyin."
+    },
+    "shortcuts": {
+      "title": "Klavye kısayolları",
+      "description": "Açılır pencereyi açmadan geçerli sekmeyi, solundaki veya sağındaki sekmeleri ya da diğer tüm sekmeleri kaydedin. Pencerenin içinde Ctrl/Cmd+K ile aramayı açın, sekmeleri, pencereleri ve grupları yalnızca klavyeyle taşıyın."
+    },
+    "importExport": {
+      "title": "İçe ve dışa aktarma",
+      "description": "Sekme koleksiyonlarınızı ekip arkadaşlarınızla paylaşmak veya çalışma alanınızı yedeklemek için JSON olarak dışa aktarın. Herhangi bir cihazda içe aktarın."
+    },
+    "memory": {
+      "title": "Bellek tasarrufu",
+      "description": "RAM'i boşaltmak için etkin olmayan sekmeleri askıya alın. TabMerger'ın size ne kadar bellek kazandırdığını gerçek zamanlı olarak görün."
+    }
+  },
+  "pro": {
+    "title": "Eşitleme ve oturumlar",
+    "description": "Kaldığınız yerden, her cihazda, her zaman devam edin.",
+    "cloudSync": {
+      "title": "Bulut eşitleme",
+      "description": "Gruplarınız otomatik olarak kaydedilir ve oturum açtığınız her tarayıcı arasında eşitlenir. Gerçek zamanlı, elle dışa aktarma gerekmez."
+    },
+    "sessions": {
+      "title": "Oturum kaydetme ve geri yükleme",
+      "description": "Mevcut gruplarınızın anlık görüntüsünü adlandırılmış bir oturum olarak kaydedin ve anında geri yükleyin. Ücretsiz planlar bu tarayıcıda en fazla {count} oturum kaydeder; Pro sınırsız oturumu tüm cihazlar arasında eşitler."
+    },
+    "autoBackups": {
+      "title": "Otomatik yedekler",
+      "description": "TabMerger, gruplarınızın şifreli bir anlık görüntüsünü saatte birden haftada bire kadar seçtiğiniz bir programla kaydeder. En yeni {count} tanesi saklanır ve herhangi birini Ayarlar'dan geri getirebilirsiniz. Kontrol panelinizde de listelenirler; orada birinin içine bakabilir veya indirebilirsiniz. Her birinin bilgisayarınıza dosya olarak kaydedilmesini de seçebilirsiniz; bu kopya şifreli değildir."
+    },
+    "support": {
+      "title": "Öncelikli destek",
+      "description": "Pro aboneleri, 24 saat içinde garantili yanıtla hızlandırılmış destek alır."
+    }
+  },
+  "proAi": {
+    "title": "Yapay zekâ destekli düzenleme",
+    "description": "Claude sekmelerinizi analiz edip akıllı öneriler sunsun; siz dosyalamaya değil, düşünmeye odaklanın.",
+    "autoGrouping": {
+      "title": "Otomatik gruplama",
+      "description": "Bir yığın sekme açın, tek bir düğmeye tıklayın. Yapay zekâ bunları konuya, alan adına ve amaca göre mantıklı gruplara ayırır."
+    },
+    "names": {
+      "title": "Akıllı grup adları",
+      "description": "Yapay zekâ gruplarınız için kısa ve açıklayıcı adlar önerir. Kabul etmek için tek tıklayın ya da kendi adınızı yazın."
+    },
+    "summaries": {
+      "title": "Sekme özetleri",
+      "description": "Sayfayı açmadan, ne hakkında olduğunu tek cümlelik bir yapay zekâ özetiyle görmek için herhangi bir sekmenin üzerine gelin."
+    },
+    "sessionSuggestions": {
+      "title": "Oturum önerileri",
+      "description": "Yapay zekâ tarama alışkanlıklarınızı analiz eder ve en yüksek verimlilik için oturumları nasıl yapılandıracağınızı önerir."
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "그룹 한도에 도달했습니다",
+    "description": "무료 요금제의 그룹 한도 {{max}}개에 도달했습니다. Pro로 업그레이드하면 그룹을 무제한으로 만들 수 있습니다."
+  },
+  "maxTabs": {
+    "title": "탭 한도에 도달했습니다",
+    "description": "무료 요금제의 탭 한도 {{max}}개에 도달했습니다. Pro로 업그레이드하면 탭을 무제한으로 저장할 수 있습니다."
+  },
+  "cloudSync": {
+    "title": "클라우드 동기화는 Pro 기능입니다",
+    "description": "TabMerger Pro로 모든 기기에서 그룹을 동기화하세요. 클라우드 동기화를 사용하려면 업그레이드하세요."
+  },
+  "aiFeatures": {
+    "title": "AI 기능은 Pro AI 기능입니다",
+    "description": "AI 자동 그룹화, 스마트 이름 짓기, 탭 요약은 Pro AI 요금제에서 사용할 수 있습니다."
+  },
+  "default": {
+    "title": "TabMerger 업그레이드",
+    "description": "TabMerger Pro로 무제한 그룹, 클라우드 동기화, 자동 백업, AI 기능을 사용하세요."
+  },
+  "signInHint": " 이미 Pro 계정이 있으신가요? 로그인하면 이 기기에서 복원됩니다.",
+  "planPrice": " — 월 {{price}}",
+  "comingSoon": "출시 예정",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "무료",
+      "f1": "그룹 최대 {{groups}}개",
+      "f2": "탭 최대 {{tabs}}개",
+      "f3": "URL 규칙 최대 {{urlRules}}개"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "무료의 모든 기능",
+      "f2": "그룹, 탭, URL 규칙, 세션 무제한",
+      "f3": "기기 간 클라우드 동기화"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Pro의 모든 기능",
+      "f2": "AI 탭 자동 그룹화",
+      "f3": "AI 그룹 이름 추천"
+    }
+  },
+  "maybeLater": "나중에",
+  "signIn": "로그인",
+  "upgradeNow": "지금 업그레이드"
+}

@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Sincronizzazione in pausa: consentila in Firefox",
+  "conflictCopy": "{{names}} è stato modificato anche su un altro dispositivo. La tua versione è stata salvata come copia.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "Un gruppo su cui stavi lavorando è stato modificato o rimosso altrove, quindi non è stato modificato nulla.",
+  "undoConflict": "I tuoi gruppi sono cambiati altrove, quindi non è stato annullato nulla. Riprova.",
+  "freeLimit": {
+    "maxGroups": "Il piano gratuito consente fino a {{max}} gruppi.",
+    "maxTabs": "Il piano gratuito consente fino a {{max}} schede.",
+    "maxUrlRules": "Il piano gratuito consente fino a {{max}} regole URL."
+  },
+  "fileContains": "Questo file contiene {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Aperta come finestra normale perché TabMerger non è consentito in incognito. Per cambiarlo, apri Gestisci estensione e attiva \"Consenti in modalità di navigazione in incognito\".",
+  "encryptionAlreadySetUp": "La crittografia è già configurata per questo account. Inserisci la passphrase esistente per sbloccarla.",
+  "signInToEnableEncryption": "Devi accedere per attivare la crittografia",
+  "signInToResetEncryption": "Devi accedere per reimpostare la crittografia",
+  "googleUnavailable": "L'accesso con Google non è disponibile in questo ambiente",
+  "googleNoUrl": "L'accesso con Google non ha restituito un URL di autorizzazione",
+  "googleCancelled": "L'accesso con Google è stato annullato",
+  "googleNoSession": "L'accesso con Google non ha restituito una sessione",
+  "googleFailed": "Accesso con Google non riuscito",
+  "expectedArray": "Era previsto un array",
+  "invalidFormat": "Formato non valido",
+  "noGroupsFound": "Nessun gruppo trovato",
+  "noGroupsSelected": "Nessun gruppo selezionato",
+  "notAuthenticated": "Non autenticato",
+  "sharingRequiresPro": "La condivisione richiede Pro: requisito del piano non soddisfatto",
+  "aiOncePerDay": "Già usata oggi: questa azione AI è limitata a una volta al giorno",
+  "proAiRequired": "È richiesto il piano Pro AI",
+  "nameGroupOff": "Assegna nome al gruppo è disattivato nelle Impostazioni",
+  "suggestSessionsOff": "Suggerisci sessioni è disattivato nelle Impostazioni",
+  "organizeOff": "Organizza è disattivato nelle Impostazioni"
+}

@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "vừa xong",
+    "minutesAgo": "{count} phút trước",
+    "hoursAgo": "{count} giờ trước",
+    "daysAgo": "{count} ngày trước",
+    "renameFailed": "Không thể đổi tên thiết bị",
+    "renamed": "Đã đổi tên thiết bị",
+    "removeFailed": "Không thể xóa thiết bị",
+    "removed": "Đã xóa thiết bị",
+    "removeManyFailed": "Không thể xóa các thiết bị",
+    "removedMany": "{count, plural, other {Đã xóa {count} thiết bị}}",
+    "empty": "Chưa có thiết bị nào.",
+    "selectAll": "Chọn tất cả thiết bị",
+    "selectedCount": "Đã chọn {count}",
+    "removeSelected": "{count, plural, other {Xóa {count} thiết bị}}",
+    "selectDevice": "Chọn {name}",
+    "active": "Hoạt động {time}",
+    "snapshotCounts": " · {windows, plural, other {{windows} cửa sổ}} · {tabs, plural, other {{tabs} tab}}",
+    "options": "Tùy chọn thiết bị",
+    "rename": "Đổi tên",
+    "remove": "Xóa",
+    "removeTitle": "Xóa thiết bị?",
+    "removeBody": "\"{name}\" sẽ không còn đồng bộ dữ liệu tab. Thao tác này không thể hoàn tác.",
+    "removeManyTitle": "Xóa {count} thiết bị?",
+    "removeManyBody": "Các thiết bị này sẽ không còn đồng bộ dữ liệu tab. Thao tác này không thể hoàn tác.",
+    "cancel": "Hủy"
+  },
+  "metaTitle": "Tài khoản",
+  "title": "Cài đặt tài khoản",
+  "lead": "Quản lý tài khoản và gói đăng ký của bạn.",
+  "stats": {
+    "groups": "Nhóm đã đồng bộ",
+    "tabs": "Tab đã lưu",
+    "sessions": "Phiên và bản sao lưu",
+    "aiCredits": "Tín dụng AI còn lại"
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "description": "Thông tin tài khoản của bạn.",
+    "email": "Email",
+    "memberSince": "Thành viên từ"
+  },
+  "signOutAll": {
+    "title": "Đăng xuất khỏi tất cả thiết bị",
+    "description": "Thao tác này sẽ thu hồi mọi phiên đang hoạt động.",
+    "button": "Đăng xuất"
+  },
+  "subscription": {
+    "title": "Gói đăng ký",
+    "description": "Quản lý gói và thanh toán của bạn.",
+    "manageBilling": "Quản lý thanh toán",
+    "upgrade": "Nâng cấp",
+    "cancelNote": "Bạn có thể hủy bất cứ lúc nào qua <strong>Quản lý thanh toán</strong>. Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán hiện tại."
+  },
+  "devicesCard": {
+    "title": "Thiết bị",
+    "description": "Các thiết bị đang đồng bộ nhóm và tab của bạn. Chỉ dành cho Pro và Pro AI."
+  },
+  "password": {
+    "tooShort": "Mật khẩu phải có ít nhất 8 ký tự.",
+    "updated": "Đã cập nhật mật khẩu",
+    "set": "Đã đặt mật khẩu — giờ bạn cũng có thể đăng nhập bằng email + mật khẩu",
+    "change": "Đổi mật khẩu",
+    "setLabel": "Đặt mật khẩu",
+    "placeholder": "••••••••••",
+    "save": "Lưu"
+  },
+  "credits": {
+    "failed": "Không thể bắt đầu thanh toán",
+    "getMore": "Mua thêm"
+  }
+}

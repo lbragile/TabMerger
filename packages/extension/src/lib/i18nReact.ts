@@ -6,8 +6,9 @@
 import { initReactI18next } from 'react-i18next';
 import { applyDocumentLocale, applyLocalePreference, initI18n } from '@/lib/i18n';
 import { onLocalePreferenceChanged, reconcileLocalePreference } from '@/lib/localePreference';
+import { catalogs } from '@/locales';
 
-initI18n(initReactI18next);
+initI18n(catalogs, initReactI18next);
 applyDocumentLocale();
 // The page started from its localStorage copy of the Settings language choice; if that copy is
 // missing or stale (cleared site data), the one the background follows wins

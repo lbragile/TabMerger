@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Lỗi 404 · Không tìm thấy trang",
+    "title": "Tab này đã đi lạc",
+    "description": "Chúng tôi đã tìm qua mọi nhóm nhưng không thấy trang này. Có thể trang đã bị chuyển, bị đóng hoặc chưa từng tồn tại. Hãy để chúng tôi đưa bạn quay lại đúng hướng.",
+    "documentTitle": "Không tìm thấy trang",
+    "tabLabel": "Trang bị thiếu"
+  },
+  "serverError": {
+    "eyebrow": "Lỗi 500 · Đã xảy ra lỗi",
+    "title": "Tab này đã gặp sự cố",
+    "description": "Đã có lỗi ở phía chúng tôi khi tải trang này. Tab và nhóm trong tiện ích của bạn không bị ảnh hưởng. Vui lòng thử lại sau giây lát.",
+    "documentTitle": "Đã xảy ra lỗi",
+    "tabLabel": "Không phản hồi"
+  },
+  "links": {
+    "features": "Tính năng",
+    "pricing": "Bảng giá",
+    "faq": "Câu hỏi thường gặp",
+    "dashboard": "Bảng điều khiển",
+    "account": "Tài khoản",
+    "contactSupport": "Liên hệ hỗ trợ"
+  },
+  "helpfulLinks": "Liên kết hữu ích",
+  "tryThese": "Hoặc thử một trong các liên kết sau",
+  "illustrationTabResearch": "Nghiên cứu",
+  "illustrationTabDocs": "Tài liệu",
+  "tryAgain": "Thử lại",
+  "backToHome": "Về trang chủ",
+  "backToDashboard": "Về bảng điều khiển",
+  "devDetails": "Chi tiết lỗi (chỉ trong môi trường phát triển)",
+  "referenceId": "Mã tham chiếu",
+  "copyReferenceId": "Sao chép mã tham chiếu",
+  "referenceIdHint": "Hãy cung cấp mã này nếu bạn liên hệ hỗ trợ để chúng tôi tìm ra lỗi.",
+  "referenceIdCopied": "Đã sao chép mã tham chiếu",
+  "referenceIdCopyFailed": "Sao chép thất bại. Hãy chọn mã để sao chép.",
+  "titleWithBrand": "{title} | TabMerger"
+}

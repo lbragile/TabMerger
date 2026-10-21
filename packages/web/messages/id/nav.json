@@ -1,0 +1,21 @@
+{
+  "features": "Fitur",
+  "pricing": "Harga",
+  "changelog": "Log perubahan",
+  "faq": "FAQ",
+  "dashboard": "Dasbor",
+  "account": "Akun",
+  "accountSettings": "Pengaturan akun",
+  "signIn": "Masuk",
+  "signUp": "Daftar",
+  "getStarted": "Mulai",
+  "signOut": "Keluar",
+  "openMenu": "Buka menu",
+  "closeMenu": "Tutup menu",
+  "accountMenu": "Menu akun",
+  "home": "Beranda TabMerger",
+  "github": "GitHub",
+  "githubRepo": "TabMerger di GitHub",
+  "githubRepoWithStars": "TabMerger di GitHub, {count, plural, other {# bintang}}",
+  "toggleTheme": "Ganti tema"
+}

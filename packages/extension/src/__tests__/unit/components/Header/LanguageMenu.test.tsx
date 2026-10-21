@@ -55,7 +55,7 @@ describe('LanguageMenu', () => {
     await user.click(screen.getByRole('button', { name: 'Language (EN)' }))
     const items = await screen.findAllByRole('menuitemradio')
     expect(items.map((i) => i.textContent)).toEqual([
-      'Browser default', 'English', 'Deutsch', 'Español', 'Français', '日本語', 'Português (Brasil)', '简体中文',
+      'Browser default', 'English', 'Deutsch', 'Español', 'Français', 'Italiano', 'Русский', '한국어', 'Türkçe', 'Bahasa Indonesia', 'Polski', 'Tiếng Việt', 'हिन्दी', '日本語', 'Português (Brasil)', '简体中文',
     ])
     expect(screen.getByRole('menuitemradio', { name: 'Browser default' })).toHaveAttribute('aria-checked', 'true')
     expect(screen.getByRole('menuitemradio', { name: '日本語' })).toHaveAttribute('lang', 'ja')

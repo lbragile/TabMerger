@@ -1,0 +1,21 @@
+{
+  "features": "기능",
+  "pricing": "요금제",
+  "changelog": "변경 내역",
+  "faq": "자주 묻는 질문",
+  "dashboard": "대시보드",
+  "account": "계정",
+  "accountSettings": "계정 설정",
+  "signIn": "로그인",
+  "signUp": "회원가입",
+  "getStarted": "시작하기",
+  "signOut": "로그아웃",
+  "openMenu": "메뉴 열기",
+  "closeMenu": "메뉴 닫기",
+  "accountMenu": "계정 메뉴",
+  "home": "TabMerger 홈",
+  "github": "GitHub",
+  "githubRepo": "GitHub의 TabMerger",
+  "githubRepoWithStars": "GitHub의 TabMerger, 별 {count, plural, other {#개}}",
+  "toggleTheme": "테마 전환"
+}

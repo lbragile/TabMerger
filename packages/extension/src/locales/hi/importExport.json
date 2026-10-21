@@ -1,0 +1,27 @@
+{
+  "title": "आयात / निर्यात",
+  "description": "अपने TabMerger डेटा को प्रबंधित करें",
+  "tabExport": "निर्यात",
+  "tabImport": "आयात",
+  "exportIntro": "अपने सभी समूहों को JSON फ़ाइल के रूप में निर्यात करें। आप बाद में इस फ़ाइल को फिर से आयात कर सकते हैं।",
+  "downloadJson": "JSON डाउनलोड करें",
+  "jsonHeading": "TabMerger JSON",
+  "jsonIntro": "पहले से निर्यात की गई JSON फ़ाइल से आयात करें। वर्तमान समूहों को बदल देता है।",
+  "chooseJson": "JSON फ़ाइल चुनें",
+  "bookmarksHeading": "Chrome बुकमार्क",
+  "bookmarksIntro": "Chrome बुकमार्क HTML निर्यात से आयात करें। प्रत्येक फ़ोल्डर एक समूह बन जाता है।",
+  "chooseBookmarks": "बुकमार्क HTML फ़ाइल चुनें",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "OneTab प्लेन-टेक्स्ट निर्यात से आयात करें। प्रत्येक खाली-पंक्ति-पृथक ब्लॉक एक समूह बन जाता है।",
+  "chooseOneTab": "OneTab TXT फ़ाइल चुनें",
+  "toast": {
+    "exported": "समूह सफलतापूर्वक निर्यात किए गए",
+    "imported": "समूह सफलतापूर्वक आयात किए गए",
+    "imported_skipped": "समूह सफलतापूर्वक आयात किए गए, {{skipped}} छोड़ दिए गए",
+    "importedCounts": "{{groups}}, {{tabs}} आयात किए गए",
+    "importedCounts_skipped": "{{groups}}, {{tabs}} आयात किए गए, {{skipped}} छोड़ दिए गए",
+    "invalidJson": "अमान्य JSON फ़ाइल",
+    "noBookmarks": "कोई बुकमार्क नहीं मिला",
+    "noTabs": "कोई टैब नहीं मिला"
+  }
+}

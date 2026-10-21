@@ -117,7 +117,9 @@
 - [Firefox popup permissions.request](learnings_firefox_popup_permission_request.md) — no doorhanger over a popup; ask from a Firefox-only tab; tabs.create leaves the popup open, window.close() it
 - [Firefox popup same-size resize](learnings_firefox_popup_same_size_resize.md) — Radix Select closed on open in Firefox popups; capture guard in SelectContent; real-popup BiDi repro
 - [Extension i18n (i18next)](learnings_i18n_i18next.md) — JSON catalogs per area, sync init order, no module-scope t(), data-dnd-grip selectors, dev-only pseudo-locale, lint + catalog guards
+- [i18n bundle size](learnings_i18n_bundle_size.md) — catalogs ship once per bundle (popup + worker); WXT forces esbuild ascii; worker catalog set + utf8 for HTML pages
 - [Language picker](learnings_language_picker.md) — localStorage + chrome.storage.local (storage wins), worker localeReady, lazy shared reads, Button svg size-4
 - [GA4 param names match dimensions](learnings_ga4_param_names_match_dimensions.md) — heartbeat uses extension_version + channel like extension_uninstalled; releaseChannel.ts shared
 - [Header logo website link](learnings_header_logo_website_link.md) — content-sized link (visual spec neutral point), first-child 240px cell, manifest oracle for the env URL in e2e
+- [Adding a locale](learnings_adding_a_locale.md) — catalog + shared/web registration, Intl plural forms (_many), tests that hard-code the locale list
 - [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST define (auto-true for dev-mode builds) gates analytics + Sentry; CI's production-mode builds set it in ci.yml

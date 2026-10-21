@@ -1,0 +1,13 @@
+{
+  "success": "Selesai — situs web sekarang dapat menemukan TabMerger. Anda dapat menutup tab ini.",
+  "refused": "Firefox tidak mengizinkannya. Anda dapat mencoba lagi, atau mengizinkannya nanti di about:addons.",
+  "title": "Biarkan situs web TabMerger menemukan TabMerger",
+  "checking": "Memeriksa akses situs…",
+  "explainer": "Firefox belum mengizinkan TabMerger di {{hosts}}. Tanpa itu situs web tidak dapat mendeteksi TabMerger, meneruskan status masuk Anda, atau memulai sinkronisasi. Klik tombol di bawah, lalu konfirmasi di permintaan Firefox.",
+  "allowOn": "Izinkan TabMerger di {{hosts}}",
+  "bannerLabel": "Akses situs web",
+  "bannerText": "Izinkan TabMerger di {{hosts}} agar situs web dapat menemukannya dan meneruskan status masuk Anda.",
+  "allow": "Izinkan",
+  "dismiss": "Tutup permintaan akses situs web",
+  "openFailed": "Tidak dapat membuka tab akses situs. Coba lagi, atau izinkan di about:addons."
+}

@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Nie można połączyć się z serwerem synchronizacji. Spróbuj ponownie.",
+    "accountMismatch": "To urządzenie wciąż przechowuje dane innego konta. Otwórz rozszerzenie, aby zmienić konto.",
+    "identityChanged": "Rozszerzenie zostało wylogowane podczas synchronizacji. Zaloguj się i spróbuj ponownie.",
+    "keyCheckFailed": "Nie można sprawdzić stanu szyfrowania. Spróbuj ponownie.",
+    "setupUnfinished": "Otwórz rozszerzenie, aby dokończyć konfigurację szyfrowania.",
+    "locked": "Otwórz rozszerzenie i odblokuj szyfrowanie, aby zsynchronizować."
+  },
+  "menu": {
+    "saveTo": "Zapisz w TabMerger",
+    "scopeCurrent": "Zapisz tę kartę",
+    "scopeLeft": "Zapisz karty po lewej",
+    "scopeRight": "Zapisz karty po prawej",
+    "scopeExcluding": "Zapisz wszystkie inne karty",
+    "noGroups": "Brak zapisanych grup",
+    "groupItem": "{{color}} {{name}} ({{windows}}o · {{tabs}}k)"
+  },
+  "reminder": {
+    "title": "Przypomnienie TabMerger"
+  }
+}

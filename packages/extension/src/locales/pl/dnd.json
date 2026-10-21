@@ -1,0 +1,83 @@
+{
+  "instructions": "Naciśnij spację, aby podnieść, strzałki aby wybrać miejsce (Lewo i Prawo przełączają między oknami a grupami), spację, aby upuścić, Escape, aby anulować. Shift+spacja zaznacza zakres, a {{modifier}}+A zaznacza wszystko, aby przenieść kilka naraz.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "karta",
+    "window": "okno",
+    "group": "grupa",
+    "item": "element"
+  },
+  "typeStart": {
+    "tab": "Karta",
+    "window": "Okno",
+    "group": "Grupa",
+    "item": "Element"
+  },
+  "untitledTab": "Karta bez nazwy",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, zaczynając od {{name}},",
+  "position": {
+    "tab": "pozycja {{index}} z {{total}} w {{window}} grupy {{group}}",
+    "window": "pozycja {{index}} z {{total}} w grupie {{group}}",
+    "group": "pozycja {{index}} z {{total}}"
+  },
+  "target": {
+    "newGroup": "nowa grupa",
+    "newWindowAtEnd": "nowe okno na końcu grupy {{group}}",
+    "nowOpen": "Teraz Otwarte, co otwiera je w nowym oknie przeglądarki",
+    "groupAsWindow": "grupa {{group}}, jako nowe okno"
+  },
+  "token": {
+    "dropped": "Upuszczono.",
+    "cancelled": "Anulowano."
+  },
+  "bail": {
+    "cancelled": "Przenoszenie anulowane.",
+    "nothingMoved": "Upuszczono; nic nie zostało przeniesione.",
+    "returnedMany": "{{items}} zostały zwrócone",
+    "returnedOne": "{{named}} zostało zwrócone",
+    "noop": "Upuszczono {{what}} z powrotem na {{position}}; nic nie zostało przeniesione.",
+    "stale": "Grupy zmieniły się podczas przeciągania, więc nic nie zostało przeniesione. {{returned}} na {{position}}.",
+    "cancelledReturned": "Przenoszenie anulowane. {{returned}} na {{position}}.",
+    "rejected": "Nie można tam upuścić. {{returned}} na {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} został usunięty gdzie indziej.",
+  "removedElsewhere_few": "{{count}} zostały usunięte gdzie indziej.",
+  "removedElsewhere_many": "{{count}} zostało usuniętych gdzie indziej.",
+  "removedElsewhere_other": "{{count}} zostało usunięte gdzie indziej.",
+  "stillSelected_one": "Nadal jest zaznaczony.",
+  "stillSelected_few": "Nadal są zaznaczone.",
+  "stillSelected_many": "Nadal są zaznaczone.",
+  "stillSelected_other": "Nadal są zaznaczone.",
+  "dropped": "Upuszczono.",
+  "movedGroups": "Przeniesiono {{count}} grup na {{position}}, jako jeden blok.",
+  "movedGroup": "Przeniesiono grupę {{name}} na {{position}}.",
+  "partial": "{{count}} z {{total}}",
+  "at": "pozycja {{index}} z {{total}}",
+  "startingAt": "zaczynając od pozycji {{index}} z {{total}}",
+  "whereTab": "{{window}} grupy {{group}}, {{at}}",
+  "whereWindow": "grupa {{group}}, {{at}}",
+  "movedTo": "Przeniesiono {{items}} do {{where}}.",
+  "openTabsClosed": " Otwarte karty zostały zamknięte.",
+  "groupHidden": " Grupa {{group}} nie jest wyświetlana.",
+  "openedNewWindow": "Otwarto {{items}} w nowym oknie przeglądarki.",
+  "openedNowOpen": "Otwarto {{items}} w Teraz Otwarte.",
+  "movedNewWindow": "Przeniesiono {{items}} do nowego okna przeglądarki.",
+  "movedWithinNowOpen": "Przeniesiono {{items}} w ramach Teraz Otwarte.",
+  "originalPosition": "Nad swoją pierwotną pozycją.",
+  "pickedUpType": "Podniesiono {{type}}.",
+  "pickedUpMany": "Podniesiono {{what}}.",
+  "pickedUpOne": "Podniesiono {{type}} {{name}}, {{position}}.",
+  "groupShown": "Grupa {{name}} jest teraz wyświetlana.",
+  "copyHint": "Upuszczenie do zapisanej grupy kopiuje; otwarte karty pozostają otwarte.",
+  "notOver": "Nie nad celem upuszczenia.",
+  "over": "Nad {{target}}.",
+  "cantDropOn": "Nie można upuścić na {{target}}.",
+  "typeDropped": "{{type}} upuszczono.",
+  "cancelledReturnedType": "Przenoszenie anulowane; {{type}} wrócił na swoje miejsce.",
+  "saveFailed": "Nie udało się zapisać przeniesienia; przywrócono."
+}

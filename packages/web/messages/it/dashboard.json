@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Dashboard",
+  "greeting": "Buongiorno, {name}",
+  "tierBadge": {
+    "free": "free",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "Organizza con IA",
+  "aiOrganiseUpgrade": "Passa a Pro AI per usare l'organizzazione IA",
+  "aiOrganiseFromExtension": "Avvialo dal popup dell'estensione TabMerger",
+  "tabGroups": "Gruppi di schede",
+  "savedSessions": "Sessioni salvate",
+  "stats": {
+    "tabs": {
+      "label": "Schede salvate",
+      "description": "Schede in tutti i gruppi sincronizzati"
+    },
+    "groups": {
+      "label": "Gruppi sincronizzati",
+      "description": "Gruppi sincronizzati nel cloud"
+    },
+    "sessions": {
+      "label": "Sessioni archiviate",
+      "description": "Sessioni di navigazione archiviate",
+      "lockedDescription": "Sessioni e backup (sblocca per distinguerli)"
+    },
+    "memory": {
+      "label": "Memoria recuperata",
+      "description": "Stimata, non misurata"
+    },
+    "memberSince": {
+      "label": "Membro dal",
+      "description": "Account creato"
+    },
+    "aiCredits": {
+      "label": "Crediti IA questo mese",
+      "description": "Utilizzo mensile Pro AI",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Caricamento"
+  },
+  "subscription": {
+    "currentPlan": "Piano attuale",
+    "renews": "Si rinnova il {date}",
+    "upgrade": "Passa a un piano superiore",
+    "statuses": {
+      "active": "attivo",
+      "canceled": "annullato",
+      "past_due": "pagamento scaduto",
+      "trialing": "in prova",
+      "incomplete": "incompleto"
+    }
+  },
+  "upgraded": {
+    "message": "Benvenuto in {plan}! Il tuo abbonamento è ora attivo. Goditi le nuove funzionalità.",
+    "dismiss": "Chiudi"
+  },
+  "locked": {
+    "item": "Salvato con una passphrase precedente. Apri l'estensione sul dispositivo che la possiede e lascia che si sincronizzi.",
+    "device": "Le sue schede aperte sono state salvate con una passphrase precedente. Apri l'estensione su quel dispositivo e lascia che si sincronizzi.",
+    "unverified": "Al momento non è leggibile. Ricarica la pagina per riprovare."
+  },
+  "passphrase": {
+    "defaultLabel": "Inserisci la passphrase di crittografia per visualizzare questo contenuto.",
+    "groupsLabel": "I tuoi gruppi sono crittografati end-to-end. Inserisci la passphrase per visualizzarli qui.",
+    "sessionsLabel": "Le tue sessioni sono crittografate end-to-end. Inserisci la passphrase per visualizzarle qui.",
+    "backupsLabel": "I tuoi backup sono crittografati end-to-end. Inserisci la passphrase per visualizzarli qui.",
+    "placeholder": "Passphrase",
+    "inputLabel": "Passphrase di crittografia",
+    "unlock": "Sblocca",
+    "incorrect": "Passphrase errata."
+  },
+  "onboarding": {
+    "title": "Inizia a usare TabMerger",
+    "progress": "{done} di {total} completati",
+    "dismiss": "Chiudi",
+    "install": "Installa l'estensione TabMerger",
+    "group": "Crea il tuo primo gruppo nell'estensione",
+    "signin": "Accedi per attivare la sincronizzazione cloud",
+    "upgrade": "Passa a Pro per avere gruppi illimitati"
+  },
+  "lockedName": "(bloccato)",
+  "damagedNote": "Il contenuto non è in un formato leggibile da TabMerger, quindi non può essere mostrato qui.",
+  "counts": {
+    "groups": "{count, plural, one {{count} gruppo} other {{count} gruppi}}",
+    "windows": "{count, plural, one {{count} finestra} other {{count} finestre}}",
+    "tabs": "{count, plural, one {{count} scheda} other {{count} schede}}"
+  },
+  "sessions": {
+    "cantRestore": "Questa sessione non è leggibile, quindi non può essere ripristinata.",
+    "restored": "{count, plural, one {Ripristinata {count} scheda da \"{name}\"} other {Ripristinate {count} schede da \"{name}\"}}",
+    "deleted": "Sessione eliminata",
+    "deleteFailed": "Impossibile eliminare la sessione",
+    "loadFailed": "Impossibile caricare le tue sessioni.",
+    "tryAgain": "Riprova",
+    "loading": "Caricamento delle sessioni",
+    "empty": "Ancora nessuna sessione salvata.",
+    "readOnlyNote": "Per salvare nuove sessioni nel tuo account serve Pro. Le sessioni esistenti possono ancora essere aperte o eliminate.",
+    "upgrade": "Passa a Pro",
+    "freeLimit": "Piano gratuito: fino a {count} sessioni. <link>Passa a Pro</link> per averne illimitate.",
+    "restore": "Ripristina sessione",
+    "cantRestoreTooltip": "Questa sessione non è leggibile, quindi non può essere ripristinata",
+    "delete": "Elimina sessione",
+    "hideContents": "Nascondi contenuto",
+    "showContents": "Mostra contenuto ({count})",
+    "groupFallbackName": "Gruppo {number}",
+    "groupTabs": "{count, plural, one {{count} scheda} other {{count} schede}}",
+    "moreTabs": "{count, plural, one {+{count} altra scheda} other {+{count} altre schede}}",
+    "moreGroups": "{count, plural, one {+{count} altro gruppo} other {+{count} altri gruppi}}"
+  },
+  "backups": {
+    "title": "Backup",
+    "upgradeDescription": "I backup automatici fanno parte di Pro: un'istantanea crittografata dei tuoi gruppi, salvata secondo una pianificazione, con le {count} più recenti conservate.",
+    "readOnlyNote": "I nuovi backup richiedono Pro. I backup esistenti possono ancora essere scaricati o eliminati.",
+    "upgrade": "Passa a un piano superiore",
+    "intro": "Istantanee dei tuoi gruppi che l'estensione TabMerger ha salvato automaticamente nel tuo account, dalla più recente. Vengono conservate le {count} più recenti. Per ripristinarne una, apri l'estensione e vai in {place}; il ripristino non si fa da questa pagina. Un file che scarichi da qui non è crittografato.",
+    "extensionPlace": "Impostazioni > Dati",
+    "loadFailed": "Impossibile caricare i tuoi backup.",
+    "tryAgain": "Riprova",
+    "loading": "Caricamento dei backup",
+    "unknownKind": "{count, plural, one {1 elemento salvato non è leggibile, quindi non si sa se sia un backup. È elencato tra le Sessioni salvate.} other {{count} elementi salvati non sono leggibili, quindi non si sa se siano backup. Sono elencati tra le Sessioni salvate.}}",
+    "emptyTitle": "Ancora nessun backup.",
+    "emptyBody": "L'estensione ne salva uno automaticamente mentre il browser è aperto, quando i tuoi gruppi sono cambiati dall'ultimo. La frequenza è \"{interval}\" a meno che tu non la modifichi: scegli l'intervallo, o esegui subito un backup, nell'estensione in {place}.",
+    "intervals": {
+      "60": "Ogni ora",
+      "360": "Ogni 6 ore",
+      "720": "Ogni 12 ore",
+      "1440": "Ogni giorno",
+      "10080": "Ogni settimana"
+    },
+    "unknownDateInSentence": "una data sconosciuta",
+    "unknownDate": "Data sconosciuta",
+    "namePrefix": "Backup automatico",
+    "downloading": "Download del backup del {when}.",
+    "deleted": "Backup eliminato",
+    "deletedAnnouncement": "Il backup del {when} è stato eliminato.",
+    "deleteFailed": "Impossibile eliminare il backup",
+    "deleteFailedAnnouncement": "Impossibile eliminare il backup del {when}.",
+    "deleteTitle": "Eliminare questo backup?",
+    "deleteBody": "Il backup del {when} verrà rimosso dal tuo account. Un browser che ha già questo backup ne conserva la propria copia.",
+    "deleteBodyWithCounts": "Il backup del {when} ({groups}, {tabs}) verrà rimosso dal tuo account. Un browser che ha già questo backup ne conserva la propria copia.",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "download": "Scarica",
+    "downloadLabel": "Scarica il backup del {when}",
+    "deleteLabel": "Elimina il backup del {when}"
+  },
+  "groups": {
+    "cantShare": "Questo gruppo non è leggibile, quindi non può essere condiviso.",
+    "linkCopiedSnapshot": "Link copiato: condivide un'istantanea di questo gruppo.",
+    "shareFailed": "Impossibile creare il link di condivisione. Riprova.",
+    "shareGroup": "Condividi gruppo",
+    "copied": "Copiato!",
+    "share": "Condividi",
+    "cantShareTooltip": "Questo gruppo non è leggibile, quindi non può essere condiviso",
+    "shareTooltip": "Copia un link a un'istantanea di questo gruppo: le modifiche successive non lo aggiorneranno",
+    "justNow": "proprio ora",
+    "minutesAgo": "{count} min fa",
+    "hoursAgo": "{count} h fa",
+    "daysAgo": "{count} g fa",
+    "lockedCantSelect": "Un gruppo bloccato non può essere selezionato",
+    "deselect": "Deseleziona",
+    "select": "Seleziona",
+    "syncedAt": "Sincronizzato {time}",
+    "cardMeta": "{windows, plural, one {{windows} finestra} other {{windows} finestre}} · {tabs, plural, one {{tabs} scheda} other {{tabs} schede}}",
+    "syncedSuffix": " · sincronizzato {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Le schede potrebbero non essere aggiornate: ultima sincronizzazione oltre 30 giorni fa",
+    "moreTabs": "+{count} altre",
+    "openAllTitle": "Apri tutte le schede di questo gruppo",
+    "openAll": "Apri tutte",
+    "hideTabs": "Nascondi schede",
+    "showTabs": "Mostra schede",
+    "rowMeta": "{windows}f · {tabs}s",
+    "linkCopiedLive": "Link copiato! La pagina di condivisione è online.",
+    "empty": "Ancora nessun gruppo sincronizzato. Apri l'estensione per creare gruppi di schede.",
+    "title": "Gruppi",
+    "summary": "{count, plural, one {{count} gruppo} other {{count} gruppi}} · {tabs, plural, one {{tabs} scheda} other {{tabs} schede}}",
+    "sort": "Ordina",
+    "sortLabel": "Ordina gruppi",
+    "sortRecent": "Recenti",
+    "sortName": "Nome",
+    "sortTabCount": "Numero di schede",
+    "cancel": "Annulla",
+    "gridView": "Vista a griglia",
+    "listView": "Vista a elenco",
+    "archived": "Archiviati ({count})",
+    "selectedCount": "{count} selezionati",
+    "shareSelected": "Condividi selezionati",
+    "cancelSelection": "Annulla selezione"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Apri l'estensione e sblocca la crittografia per sincronizzare.",
+      "no-session": "Accedi all'estensione per sincronizzare.",
+      "error": "Sincronizzazione non riuscita. Riprova dall'estensione."
+    },
+    "failedFallback": "Sincronizzazione non riuscita.",
+    "syncing": "Sincronizzazione...",
+    "busy": "Sincronizzazione già in corso",
+    "failed": "Sincronizzazione non riuscita",
+    "synced": "Sincronizzato",
+    "never": "Ancora nessuna sincronizzazione",
+    "reasonSeparator": ". ",
+    "refresh": "Aggiorna lo stato della sincronizzazione",
+    "resync": "Sincronizza ora",
+    "justNow": "proprio ora",
+    "minutesAgo": "{count} min fa",
+    "hoursAgo": "{count} h fa",
+    "daysAgo": "{count} g fa"
+  }
+}

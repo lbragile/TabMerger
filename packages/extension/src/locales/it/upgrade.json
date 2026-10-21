@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Limite di gruppi raggiunto",
+    "description": "Hai raggiunto il limite del piano gratuito di {{max}} gruppi. Passa a Pro per avere gruppi illimitati."
+  },
+  "maxTabs": {
+    "title": "Limite di schede raggiunto",
+    "description": "Hai raggiunto il limite del piano gratuito di {{max}} schede. Passa a Pro per avere schede illimitate."
+  },
+  "cloudSync": {
+    "title": "La sincronizzazione cloud è Pro",
+    "description": "Sincronizza i tuoi gruppi su tutti i tuoi dispositivi con TabMerger Pro. Passa a Pro per attivare la sincronizzazione cloud."
+  },
+  "aiFeatures": {
+    "title": "Le funzioni AI sono Pro AI",
+    "description": "Raggruppamento automatico con AI, nomi intelligenti e riepiloghi delle schede sono disponibili nel piano Pro AI."
+  },
+  "default": {
+    "title": "Potenzia TabMerger",
+    "description": "Sblocca gruppi illimitati, sincronizzazione cloud, backup automatici e funzioni AI con TabMerger Pro."
+  },
+  "signInHint": " Hai già un account Pro? Accedi per ripristinarlo su questo dispositivo.",
+  "planPrice": " — {{price}}/mese",
+  "comingSoon": "Prossimamente",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Gratuito",
+      "f1": "Fino a {{groups}} gruppi",
+      "f2": "Fino a {{tabs}} schede",
+      "f3": "Fino a {{urlRules}} regole URL"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Tutto ciò che è incluso in Gratuito",
+      "f2": "Gruppi, schede, regole URL e sessioni illimitati",
+      "f3": "Sincronizzazione cloud tra dispositivi"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Tutto ciò che è incluso in Pro",
+      "f2": "Raggruppamento automatico delle schede con AI",
+      "f3": "Suggerimenti AI per i nomi dei gruppi"
+    }
+  },
+  "maybeLater": "Forse più tardi",
+  "signIn": "Accedi",
+  "upgradeNow": "Passa a Pro ora"
+}

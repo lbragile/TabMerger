@@ -1,0 +1,10 @@
+{
+  "comingSoon": "जल्द आ रहा है",
+  "listTwo": "{first} और {second}",
+  "listMany": "{rest} और {last}",
+  "listSeparator": ", ",
+  "opensInNewTab": " (नए टैब में खुलता है)",
+  "close": "बंद करें",
+  "showPassphrase": "पासफ़्रेज़ दिखाएँ",
+  "hidePassphrase": "पासफ़्रेज़ छिपाएँ"
+}

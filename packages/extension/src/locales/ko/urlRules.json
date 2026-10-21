@@ -1,0 +1,23 @@
+{
+  "title": "URL 규칙",
+  "description": "URL 패턴에 따라 탭을 그룹에 자동 배정합니다. <code>*</code>를 와일드카드로 사용하세요(예: <code>github.com/*</code>). 처음 일치하는 규칙이 적용됩니다.",
+  "empty": "아직 규칙이 없습니다.",
+  "deletedGroup": "(삭제된 그룹)",
+  "moveUp": "규칙 위로 이동",
+  "moveDown": "규칙 아래로 이동",
+  "edit": "규칙 편집",
+  "delete": "규칙 삭제",
+  "used": "{{max}}개 중 {{used}}개 사용",
+  "addRule": "규칙 추가",
+  "discard": "변경 사항 취소",
+  "cancel": "취소",
+  "saveAll": "모든 규칙 저장",
+  "save": "저장",
+  "editTitle": "URL 규칙 편집",
+  "addTitle": "URL 규칙 추가",
+  "patternPlaceholder": "패턴(예: github.com/*)",
+  "groupPlaceholder": "대상 그룹 선택…",
+  "toast": {
+    "limit": "무료 요금제에서는 URL 규칙을 최대 {{max}}개까지 만들 수 있습니다."
+  }
+}

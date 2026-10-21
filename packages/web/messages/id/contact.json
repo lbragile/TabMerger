@@ -1,0 +1,32 @@
+{
+  "metaTitle": "Kontak",
+  "metaDescription": "Hubungi tim TabMerger: laporkan bug, tanyakan soal tagihan atau akun Anda, atau bagikan masukan dan ide.",
+  "eyebrow": "Dukungan",
+  "title": "Hubungi Kami",
+  "lead": "Punya pertanyaan, menemukan bug, atau butuh bantuan terkait langganan? Kami biasanya membalas dalam satu hari kerja.",
+  "bugReport": "Melaporkan bug? <link>Buka issue di GitHub</link> agar lebih cepat dilacak dan terlihat.",
+  "preferEmail": "Lebih suka email? Kirim ke <email>{address}</email>.",
+  "sentTitle": "Pesan terkirim",
+  "sentBody": "Kami akan segera membalas Anda.",
+  "email": "Email",
+  "emailPlaceholder": "anda@contoh.com",
+  "subject": "Subjek",
+  "subjectPlaceholder": "Pilih alasan…",
+  "subjects": {
+    "bug": "Laporan bug",
+    "betaBug": "Laporan bug beta",
+    "feedback": "Masukan dan ide",
+    "billing": "Pertanyaan tagihan",
+    "feature": "Permintaan fitur",
+    "account": "Bantuan akun",
+    "other": "Lainnya"
+  },
+  "otherSubject": "Harap jelaskan",
+  "otherSubjectPlaceholder": "Tentang apa ini?",
+  "message": "Pesan",
+  "messagePlaceholder": "Jelaskan masalah atau pertanyaan Anda sedetail mungkin.",
+  "rateLimited": "Terlalu banyak pesan terkirim — coba lagi nanti.",
+  "failed": "Terjadi kesalahan. Silakan coba lagi atau kirim email ke <email>{address}</email>.",
+  "sending": "Mengirim…",
+  "send": "Kirim pesan"
+}

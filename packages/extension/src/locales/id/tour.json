@@ -1,0 +1,284 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "Mengenal TabMerger",
+      "description": "Lihat sekeliling: di mana tab yang terbuka muncul dan bagaimana jendela ditata. Belum ada yang perlu dicoba."
+    },
+    "groups": {
+      "title": "Atur dengan grup",
+      "description": "Grup adalah tempat tab tersimpan berada. Anda akan membuat satu, memberinya nama, warna, dan menyematkannya di atas."
+    },
+    "drag": {
+      "title": "Pindahkan dengan menyeret",
+      "description": "Anda akan memindahkan tab dan grup, pada dua grup latihan yang ditambahkan tur: \"Tour demo\" dan \"Tour demo 2\". Grup ini berisi tab contoh, bukan milik Anda."
+    },
+    "tabs": {
+      "title": "Simpan dan buka kembali tab",
+      "description": "Cara memindahkan tab yang terbuka ke grup, membawanya kembali nanti, dan merapikan yang telah disimpan. Anda akan mencoba masing-masing pada grup latihan dan pada tab cadangan yang dibuka tur: tidak ada tab Anda sendiri yang disimpan, dibuka, atau ditutup."
+    },
+    "find": {
+      "title": "Temukan sesuatu dan batalkan kesalahan",
+      "description": "Cari semua tab dan grup sekaligus, dan mundur saat Anda berubah pikiran. Anda akan mencoba pencarian, \"Batalkan\" dan \"Ulangi\" pada grup latihan."
+    },
+    "later": {
+      "title": "Simpan untuk nanti",
+      "description": "Simpan semua grup Anda sekaligus, sisihkan grup tanpa menghapusnya, dan simpan dari halaman web mana pun. Bab ini hanya menjelaskan."
+    },
+    "settings": {
+      "title": "Pengaturan dan akun Anda",
+      "description": "Ubah tampilan TabMerger, lihat apa lagi yang ditawarkan Pengaturan dan apa yang ditambahkan dengan masuk. Anda akan mencoba mengganti tema."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Selamat datang di TabMerger",
+      "body": "TabMerger merapikan browser Anda. Simpan tab yang terbuka ke dalam grup bernama, tutup, dan bawa kembali kapan pun Anda butuhkan. Tur ini memiliki tujuh bab singkat, masing-masing diberi nama di bagian atas kartu ini. Beberapa langkah meminta Anda mencoba sesuatu sendiri: cincin oranye menandai kontrol yang harus digunakan selanjutnya, dan teksnya menyebutkan namanya. Untuk langkah-langkah itu, tur menambahkan dua grup latihan dengan tab contoh, \"Tour demo\" dan \"Tour demo 2\", dan menghapusnya lagi secara otomatis. Anda dapat melewati satu langkah, satu bab, atau seluruh tur kapan saja."
+    },
+    "now-open": {
+      "title": "Sedang Terbuka",
+      "body": "\"Sedang Terbuka\", di bagian atas daftar sebelah kiri, adalah daftar langsung dari setiap tab yang terbuka di browser Anda sekarang. Selalu berada di urutan pertama dan tidak dapat dihapus."
+    },
+    "main-panel": {
+      "title": "Jendela dan tab",
+      "body": "Panel utama menampilkan isi grup yang Anda pilih di sebelah kiri: jendelanya, dan tab di setiap jendela. Untuk Sedang Terbuka, ini adalah jendela browser Anda yang sesungguhnya."
+    },
+    "make-group": {
+      "title": "Buat grup",
+      "body": "Grup adalah tempat bernama untuk tab tersimpan, misalnya \"Kerja\" atau \"Rencana liburan\". Coba: pilih \"Tambah Grup\", di bawah grup Anda. Grup baru muncul dengan kolom \"Nama grup\" siap diisi, menampilkan \"temp group\". Ketik nama Anda sendiri, misalnya \"Latihan\", lalu tekan Enter atau pilih \"Simpan\" di sebelah kolom.",
+      "doneText": "Bagus, grup Anda siap. Langkah selanjutnya menggunakannya.",
+      "fallbackBody": "Grup adalah tempat bernama untuk tab tersimpan, misalnya \"Kerja\" atau \"Rencana liburan\". \"Tambah Grup\", di bawah grup Anda, membuat satu. Anda sudah memiliki sebanyak grup yang diizinkan paket Anda, jadi langkah ini hanya ditampilkan, tidak dicoba."
+    },
+    "group-color": {
+      "title": "Beri warna",
+      "body": "Warna memudahkan membedakan grup. Coba: pada grup yang baru Anda buat, pilih titik bundar \"Ubah warna grup\" di depan namanya. Pilih salah satu contoh warna bundar, lalu pilih \"Terapkan\".",
+      "doneText": "Bagus, warna telah diubah.",
+      "fallbackBody": "Warna memudahkan membedakan grup. Setiap grup memiliki titik bundar \"Ubah warna grup\" di depan namanya: pilih, pilih warna, lalu pilih \"Terapkan\"."
+    },
+    "group-pin": {
+      "title": "Sematkan grup di atas",
+      "body": "Grup yang disematkan tetap berada di atas grup lainnya. Coba: pada grup yang baru Anda buat, pilih bintang di akhir barisnya. Bintang ini bernama \"Sematkan grup\", atau \"Lepas sematan grup\" jika grup sudah disematkan.",
+      "doneText": "Bagus. Pilih bintang lagi kapan pun Anda ingin mengembalikannya.",
+      "fallbackBody": "Grup yang disematkan tetap berada di atas grup lainnya. Setiap grup memiliki bintang di akhir barisnya, bernama \"Sematkan grup\": pilih untuk menyematkan grup, dan pilih lagi untuk melepas sematan."
+    },
+    "group-menu": {
+      "title": "Lebih banyak untuk setiap grup",
+      "body": "Setiap grup tersimpan memiliki menu klik kanan. Di dalamnya ada \"Ganti nama\", \"Tambah catatan\", \"Duplikat\", \"Gabungkan dengan sesi saat ini\" untuk menambahkan jendela terbuka Anda ke grup, \"Arsipkan grup\" untuk menyembunyikannya, dan \"Hapus grup\". Langkah ini hanya sekadar melihat: daftar terkunci selama tur berlangsung, jadi coba menunya setelah tur."
+    },
+    "drag-tab-reorder": {
+      "title": "Urutkan ulang tab",
+      "body": "Panel utama menampilkan grup latihan \"Tour demo\". Setiap tab memiliki pegangan titik-titik di depannya, bernama \"Seret untuk mengurutkan ulang tab\". Pindahkan tab pertama dari jendela \"Reading\" ke akhir jendela itu.",
+      "subStepText": {
+        "1": "Tekan dan tahan pegangan tab pertama.",
+        "2": "Pindahkan ke bawah hingga garis di bawah tab terakhir, ditandai \"Jatuhkan di bawah tab ini\".",
+        "3": "Lepaskan untuk menjatuhkannya."
+      },
+      "subStepKeys": {
+        "1": "tekan Tab untuk mencapai pegangan, lalu Space untuk mengambil tab.",
+        "2": "tekan tombol panah Bawah hingga tab berada di garis yang ditandai \"Jatuhkan di bawah tab ini\".",
+        "3": "tekan Space untuk menjatuhkannya."
+      },
+      "doneText": "Bagus, tab telah berpindah.",
+      "fallbackBody": "Setiap tab tersimpan memiliki pegangan titik-titik di depannya, bernama \"Seret untuk mengurutkan ulang tab\". Menyeretnya memindahkan tab ke atas atau bawah dalam jendelanya. Langkah ini hanya sekadar melihat."
+    },
+    "drag-tab-window": {
+      "title": "Pindahkan tab ke jendela lain",
+      "body": "Tab juga dapat dipindahkan ke jendela lain dalam grup yang sama. Pindahkan tab pertama ke jendela lain dari \"Tour demo\".",
+      "subStepText": {
+        "1": "Tekan dan tahan pegangan tab pertama.",
+        "2": "Pindahkan ke jendela lain, ditandai \"Jatuhkan di jendela ini\".",
+        "3": "Lepaskan untuk menjatuhkannya."
+      },
+      "subStepKeys": {
+        "1": "tekan Tab untuk mencapai pegangan, lalu Space untuk mengambil tab.",
+        "2": "tekan tombol panah Bawah hingga tab berada di dalam jendela yang ditandai \"Jatuhkan di jendela ini\".",
+        "3": "tekan Space untuk menjatuhkannya."
+      },
+      "doneText": "Bagus, tab kini ada di jendela lain.",
+      "fallbackBody": "Menyeret tab dengan pegangannya ke jendela lain dalam grup yang sama memindahkannya ke sana. Langkah ini hanya sekadar melihat."
+    },
+    "drag-tab-group": {
+      "title": "Pindahkan tab ke grup lain",
+      "body": "Menjatuhkan tab pada grup di daftar sebelah kiri memindahkannya ke grup itu. Pindahkan tab pertama ke grup latihan \"Tour demo 2\".",
+      "subStepText": {
+        "1": "Tekan dan tahan pegangan tab pertama.",
+        "2": "Pindahkan ke \"Tour demo 2\" di daftar sebelah kiri, ditandai \"Jatuhkan pada grup ini\".",
+        "3": "Lepaskan untuk menjatuhkannya."
+      },
+      "subStepKeys": {
+        "1": "tekan Tab untuk mencapai pegangan, lalu Space untuk mengambil tab.",
+        "2": "tekan tombol panah Kiri untuk ke daftar grup, lalu tombol panah Bawah hingga mencapai \"Tour demo 2\", ditandai \"Jatuhkan pada grup ini\".",
+        "3": "tekan Space untuk menjatuhkannya."
+      },
+      "doneText": "Bagus, tab kini ada di \"Tour demo 2\".",
+      "fallbackBody": "Menyeret tab dengan pegangannya ke grup di daftar sebelah kiri memindahkannya ke grup itu. Langkah ini hanya sekadar melihat."
+    },
+    "drag-group-order": {
+      "title": "Urutkan grup",
+      "body": "Grup juga memiliki pegangan titik-titik di awal barisnya, bernama \"Seret untuk mengurutkan ulang grup\". Tukar kedua grup latihan. Grup Anda sendiri bergerak dengan cara yang sama.",
+      "subStepText": {
+        "1": "Tekan dan tahan pegangan grup latihan atas.",
+        "2": "Pindahkan ke bawah hingga garis di bawah grup latihan lainnya, ditandai \"Jatuhkan di bawah grup ini\".",
+        "3": "Lepaskan untuk menjatuhkannya."
+      },
+      "subStepKeys": {
+        "1": "tekan Tab untuk mencapai pegangan, lalu Space untuk mengambil grup.",
+        "2": "tekan tombol panah Bawah sekali, sehingga grup berada di garis yang ditandai \"Jatuhkan di bawah grup ini\".",
+        "3": "tekan Space untuk menjatuhkannya."
+      },
+      "doneText": "Bagus, grup telah bertukar tempat.",
+      "fallbackBody": "Setiap grup tersimpan memiliki pegangan titik-titik di awal barisnya, bernama \"Seret untuk mengurutkan ulang grup\". Menyeretnya memindahkan grup ke atas atau bawah daftar. Langkah ini hanya sekadar melihat."
+    },
+    "save-tabs": {
+      "title": "Simpan tab ke grup",
+      "body": "Tab yang diseret dari Sedang Terbuka ke grup disimpan di grup itu dan ditutup di browser Anda. Agar tidak ada tab Anda sendiri yang ditutup, tur membuka tab cadangan bernama \"Tour practice tab\": itulah satu-satunya tab yang dapat Anda pindahkan di langkah ini. Simpan ke grup latihan \"Tour demo\".",
+      "subStepText": {
+        "1": "Tekan dan tahan pegangan titik-titik di depan \"Tour practice tab\".",
+        "2": "Pindahkan ke \"Tour demo\" di daftar sebelah kiri, ditandai \"Jatuhkan pada grup ini\".",
+        "3": "Lepaskan untuk menjatuhkannya."
+      },
+      "subStepKeys": {
+        "1": "tekan Tab untuk mencapai pegangan, lalu Space untuk mengambil tab.",
+        "2": "tekan tombol panah Kiri untuk ke daftar grup, lalu tombol panah Bawah hingga mencapai \"Tour demo\", ditandai \"Jatuhkan pada grup ini\".",
+        "3": "tekan Space untuk menjatuhkannya."
+      },
+      "doneText": "Bagus. Tab latihan disimpan di \"Tour demo\" dan ditutup di browser Anda. Seluruh jendela disimpan dengan cara yang sama.",
+      "fallbackBody": "Tab, atau seluruh jendela, yang diseret dari Sedang Terbuka ke grup di sebelah kiri disimpan di grup itu dan ditutup di browser Anda. Tur tidak dapat membuka tab cadangan untuk mencoba ini, jadi langkah ini hanya sekadar melihat: tidak ada tab Anda yang tersentuh."
+    },
+    "open-tabs": {
+      "title": "Buka kembali tab Anda",
+      "body": "Dalam grup tersimpan, memilih nama tab membukanya kembali, dan \"Buka di browser\" pada menu jendela membuka seluruh jendela. Coba menu itu pada jendela \"Reading\" di \"Tour demo\". Tab contoh bukan halaman sungguhan, jadi tidak ada yang dibuka selama tur.",
+      "subStepText": {
+        "1": "Pilih \"Opsi jendela lainnya\", tiga titik di akhir baris \"Reading\".",
+        "2": "Pilih \"Buka di browser\" pada menu."
+      },
+      "doneText": "Bagus. Setelah tur, ini membuka jendela beserta tabnya di browser Anda. Tidak ada yang dibuka sekarang.",
+      "fallbackBody": "Dalam grup tersimpan, memilih nama tab membukanya kembali. \"Opsi jendela lainnya\" pada jendela memiliki \"Buka di browser\" untuk seluruh jendela, dan menu klik kanan grup memiliki \"Buka semua di jendela baru\". Langkah ini hanya sekadar melihat: tidak ada yang dibuka selama tur."
+    },
+    "tab-extras": {
+      "title": "Catatan, pengingat, dan nama",
+      "body": "Tab tersimpan memiliki menu klik kanan dengan lebih banyak pilihan: \"Pindahkan ke grup\", \"Tambah catatan\" untuk menuliskan sesuatu, \"Ingatkan saya…\" untuk diingatkan nanti, \"Ganti nama tab\" untuk memberinya judul sendiri, dan \"Hapus tab\". Langkah ini hanya sekadar melihat: daftar terkunci selama tur berlangsung, jadi coba menunya setelah tur."
+    },
+    "tidy-up": {
+      "title": "Rapikan grup",
+      "body": "\"Opsi grup lainnya\", di kanan atas panel utama, dapat mengurutkan tab berdasarkan judul atau alamat, menghapus pengulangan dengan \"Hapus tab duplikat\", dan \"Satukan jendela\" menjadi satu atau \"Pisahkan jendela\" terpisah. \"Tour demo\" memiliki tab \"Sample: books\" dua kali: hapus pengulangannya.",
+      "modalBody": "Dialog \"Hapus duplikat\" menampilkan tab yang berulang. Pilih \"Hapus 1 duplikat\".",
+      "subStepText": {
+        "1": "Pilih \"Opsi grup lainnya\", tiga titik di kanan atas panel utama.",
+        "2": "Pilih \"Hapus tab duplikat\" pada menu.",
+        "3": "Pada dialog \"Hapus duplikat\", pilih \"Hapus 1 duplikat\"."
+      },
+      "doneText": "Bagus, tab yang berulang telah hilang.",
+      "fallbackBody": "\"Opsi grup lainnya\", di kanan atas panel utama, dapat mengurutkan tab berdasarkan judul atau alamat, menghapus pengulangan dengan \"Hapus tab duplikat\", dan \"Satukan jendela\" menjadi satu atau \"Pisahkan jendela\" terpisah. Langkah ini hanya sekadar melihat."
+    },
+    "select-items": {
+      "title": "Kerjakan beberapa sekaligus",
+      "body": "\"Pilih item\", di header, menampilkan kotak centang pada setiap tab, jendela, dan grup. Dengan beberapa dipilih, sebuah bilah muncul di bawah yang bertindak atas semuanya sekaligus, misalnya untuk menghapusnya. Membagikan grup yang dipilih sebagai tautan memerlukan paket Pro. Coba pilih tab contoh.",
+      "subStepText": {
+        "1": "Pilih \"Pilih item\" di header.",
+        "2": "Pilih kotak centang di depan tab contoh pertama."
+      },
+      "doneText": "Bagus. Bilah di bawah bertindak atas apa yang Anda pilih. Tur mematikan pemilihan lagi saat Anda melanjutkan.",
+      "fallbackBody": "\"Pilih item\", di header, menampilkan kotak centang pada setiap tab, jendela, dan grup. Dengan beberapa dipilih, sebuah bilah muncul di bawah yang bertindak atas semuanya sekaligus, misalnya untuk menghapusnya. Membagikan grup yang dipilih sebagai tautan memerlukan paket Pro. Langkah ini hanya sekadar melihat."
+    },
+    "search": {
+      "title": "Temukan apa saja",
+      "body": "Kotak pencarian di atas, bertuliskan \"Cari tab dan grup…\", mencari di semua tab dan grup sekaligus. Hasil cocok muncul saat Anda mengetik. Coba pada tab contoh.",
+      "subStepText": {
+        "1": "Pilih kotak pencarian di atas.",
+        "2": "Ketik kata sample."
+      },
+      "doneText": "Bagus. Setiap tab yang cocok terdaftar di bawah kotak pencarian. Memilih salah satu membawa Anda ke grupnya.",
+      "fallbackBody": "Kotak pencarian di atas, bertuliskan \"Cari tab dan grup…\", mencari di semua tab dan grup sekaligus. Hasil cocok muncul saat Anda mengetik, dan memilih salah satu membawa Anda ke grupnya."
+    },
+    "search-filters": {
+      "title": "Persempit pencarian",
+      "body": "Mulai pencarian dengan group: atau window: untuk mencari dalam satu grup atau satu jendela, atau dengan tag: untuk memfilter berdasarkan label grup tab browser. Kotak pencarian mencantumkan ini di bawah \"Coba pencarian ini\". Coba group: pada grup latihan, lalu hapus pencarian.",
+      "subStepText": {
+        "1": "Pilih kotak pencarian di atas.",
+        "2": "Ketik group:tour tanpa spasi. Daftar bernama \"Pilih grup\" muncul.",
+        "3": "Pilih \"Tour demo\" pada daftar itu. Pencarian sekarang hanya mencari dalam grup itu.",
+        "4": "Pilih \"Hapus pencarian\", tanda × di akhir kolom pencarian. Pencarian tetap ada sampai Anda menghapusnya."
+      },
+      "doneText": "Bagus, pencarian telah dihapus.",
+      "fallbackBody": "Mulai pencarian dengan group: atau window: untuk mencari dalam satu grup atau satu jendela, atau dengan tag: untuk memfilter berdasarkan label grup tab browser. Kotak pencarian mencantumkan ini di bawah \"Coba pencarian ini\"."
+    },
+    "undo": {
+      "title": "Berubah pikiran?",
+      "body": "\"Batalkan\" dan \"Ulangi\", di header, mundur dan maju melalui 10 perubahan terakhir pada grup dan tab. Keduanya tampak pudar sampai ada yang bisa dibatalkan. Coba pada perubahan kecil di jendela contoh \"Reading\".",
+      "subStepText": {
+        "1": "Pilih bintang di akhir baris \"Reading\", bernama \"Bintangi jendela\".",
+        "2": "Pilih \"Batalkan\" di header. Ini menghapus bintangnya lagi.",
+        "3": "Pilih \"Ulangi\", di sebelah \"Batalkan\". Ini mengembalikan bintangnya."
+      },
+      "doneText": "Bagus. \"Batalkan\" dan \"Ulangi\" bekerja dengan cara yang sama pada grup dan tab Anda sendiri.",
+      "fallbackBody": "\"Batalkan\" dan \"Ulangi\", di header, mundur dan maju melalui 10 perubahan terakhir pada grup dan tab. Keduanya tampak pudar sampai ada yang bisa dibatalkan."
+    },
+    "sessions": {
+      "title": "Simpan semuanya sekaligus",
+      "body": "Sesi adalah salinan tersimpan dari semua grup Anda apa adanya saat ini. Di bagian \"SESI\" kiri bawah, \"Simpan sesi saat ini\" membuat satu. \"Pulihkan sesi\", di sebelah sesi tersimpan, membawanya kembali: ia akan bertanya dulu, karena ini menutup jendela yang terbuka."
+    },
+    "archived": {
+      "title": "Sisihkan grup",
+      "body": "Mengarsipkan menyembunyikan grup tanpa menghapusnya. Grup yang diarsipkan menunggu di bagian \"DIARSIPKAN\" kiri bawah, di mana Anda dapat memulihkan atau menghapusnya. Grup ini tetap dihitung dalam jumlah grup paket Anda."
+    },
+    "quick-save": {
+      "title": "Simpan tanpa membuka TabMerger",
+      "body": "Klik kanan halaman web mana pun dan pilih \"Simpan ke TabMerger\". Pilih apa yang akan disimpan, misalnya \"Simpan tab ini\" atau \"Simpan semua tab lainnya\", lalu grup tempat menyimpannya."
+    },
+    "theme": {
+      "title": "Terang atau gelap",
+      "body": "Coba: buka menu di sudut kanan atas, bernama \"Menu pengaturan\" (atau \"Menu akun\" setelah Anda masuk), dan pilih \"Pengaturan\". Buka daftar \"Tema\", pilih tema lain, lalu pilih \"Simpan perubahan\".",
+      "modalBody": "Di Pengaturan: buka daftar \"Tema\", pilih tema lain, lalu pilih \"Simpan perubahan\".",
+      "doneText": "Bagus, tema telah diubah. Tutup Pengaturan, atau pilih Berikutnya, untuk melanjutkan."
+    },
+    "settings-more": {
+      "title": "Lebih banyak di Pengaturan",
+      "body": "Pengaturan memiliki lebih banyak di tab \"Umum\": \"Konfirmasi sebelum menghapus\" bertanya sebelum apa pun dihapus, dan \"Aturan URL\" menghubungkan alamat web ke grup. Pada tab \"Data\", \"Ekspor\" menyimpan semua grup Anda ke file dan \"Impor\" memuat kembali file. Cadangan otomatis, pada tab yang sama, memerlukan paket Pro."
+    },
+    "account": {
+      "title": "Akun Anda",
+      "body": "TabMerger bekerja tanpa akun: semuanya disimpan di perangkat ini. Masuk, dari menu yang sama, dengan paket Pro menjaga grup Anda selaras di berbagai perangkat. Data tersinkronisasi dikunci di perangkat Anda sebelum dikirim, jadi hanya Anda yang dapat membacanya."
+    },
+    "ai": {
+      "title": "Tindakan AI",
+      "body": "\"Tindakan AI\", di header, dapat mengelompokkan tab terbuka Anda menjadi grup untuk Anda. Memerlukan paket Pro AI."
+    },
+    "finish": {
+      "title": "Anda sudah siap",
+      "body": "Ingin melihatnya lagi? \"Ikuti tur\", tanda tanya di sudut kanan atas, memutarnya kembali kapan saja."
+    }
+  },
+  "card": {
+    "dialogLabel": "Tur TabMerger",
+    "chapterLine": "Bab {{chapter}} dari {{chapters}}",
+    "stepLine": "Langkah {{step}} dari {{total}}",
+    "done": "Selesai.",
+    "withKeyboard": " Dengan keyboard: {{keys}}",
+    "yourTurnAnnouncement": " Giliran Anda. Untuk melanjutkan tanpa mencobanya, pilih \"Lewati langkah ini\".",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Pilih Berikutnya untuk melanjutkan.",
+    "part": "Bagian ",
+    "ofTotal": "{{current}} dari {{total}}",
+    "keyboard": "Keyboard: ",
+    "yourTurn": "Giliran Anda. Langkah ini menunggu sampai Anda mencobanya.",
+    "practiceRemoved": "Grup latihan telah dihapus.",
+    "practiceKept": "Grup yang Anda buat dalam tur ini, \"{{name}}\", masih ada dalam daftar Anda. Simpan, atau hapus sekarang.",
+    "practiceKept_tabs": "Grup yang Anda buat dalam tur ini, \"{{name}}\" ({{tabs}}), masih ada dalam daftar Anda. Simpan, atau hapus sekarang.",
+    "removePractice": "Hapus grup latihan",
+    "back": "Kembali",
+    "skipStep": "Lewati langkah ini",
+    "finish": "Selesai",
+    "next": "Berikutnya",
+    "skipTour": "Lewati tur",
+    "skipChapter": "Lewati bab"
+  },
+  "drop": {
+    "belowTab": "Jatuhkan di bawah tab ini",
+    "window": "Jatuhkan di jendela ini",
+    "group": "Jatuhkan pada grup ini",
+    "belowGroup": "Jatuhkan di bawah grup ini",
+    "default": "Jatuhkan di sini"
+  },
+  "practiceLeft": "Tur meninggalkan grup latihan, \"{{name}}\", dalam daftar Anda.",
+  "removeIt": "Hapus"
+}
