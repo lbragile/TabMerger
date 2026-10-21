@@ -29,6 +29,8 @@ import { recordInstallDate, registerHeartbeat } from '@/lib/heartbeat';
 import { isOwnExtensionPage, isReminderAlarmName, isAlarmDelayMinutes } from '@/lib/messageSender';
 import { resolveTrustedWebAppOrigins } from '@/lib/webAppOrigins';
 import { followLocalePreference, initI18n, t } from '@/lib/i18n';
+// Only the catalog areas this worker reads (the popup bundles every catalog on its own)
+import { workerCatalogs } from '@/locales/worker';
 
 /**
  * `skipped: true` = another sync cycle (the popup's, or an earlier request) held the sync lock, so
@@ -221,7 +223,7 @@ async function reRegisterReminders() {
 
 export default defineBackground(() => {
   // First: menus, notifications and sync-now replies all read the catalog
-  initI18n();
+  initI18n(workerCatalogs);
   // ...in the language chosen in Settings, once read (the worker has no synchronous storage):
   // a change rebuilds the right-click menu, notifications read the catalog when shown
   localeReady = followLocalePreference(scheduleMenuRebuild).ready;

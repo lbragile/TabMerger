@@ -16,11 +16,14 @@
  *   `_many`, ... for languages that have them) with `Intl.PluralRules`.
  *
  * `initI18n` runs once, synchronously, before anything renders: popup and extension pages pass
- * `initReactI18next`, the background script nothing (no React there).
+ * every catalog (`@/locales`) and `initReactI18next`, the background script its slim catalog set
+ * (`@/locales/worker`) and no module (no React there).
  */
 import i18n, { type InitOptions, type Module, type ParseKeys, type Resource } from 'i18next';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, isSupportedLocale, type SupportedLocale } from '@tabmerger/shared';
-import { catalogs } from '@/locales';
+// Type only: each bundle passes its own catalog set to initI18n (the popup every catalog, the
+// background worker a slim set), so importing the catalogs here would put all of them in both
+import type { CatalogSet } from '@/locales';
 import type { Catalog } from '@/locales/en';
 import { PSEUDO_LOCALE, pseudoLocalizeCatalog } from '@/lib/pseudoLocale';
 import {
@@ -68,11 +71,16 @@ function pseudoLocaleRequested(): boolean {
 }
 
 /**
- * The i18next options for a browser UI language. `pseudo` (development builds only, see
- * {@link pseudoLocaleRequested}) adds that generated catalog and selects it. It is passed in, not
- * built here, so a store build (where only the plain call remains) contains no pseudo-locale code.
+ * The i18next options for a browser UI language, over `catalogs`. `pseudo` (development builds
+ * only, see {@link pseudoLocaleRequested}) adds that generated catalog and selects it. It is passed
+ * in, not built here, so a store build (where only the plain call remains) contains no
+ * pseudo-locale code.
  */
-export function buildI18nOptions(uiLanguage: string | undefined, pseudo?: { lng: string; catalog: Catalog }): InitOptions {
+export function buildI18nOptions(
+    catalogs: CatalogSet,
+    uiLanguage: string | undefined,
+    pseudo?: { lng: string; catalog: Catalog },
+): InitOptions {
     const resources: Resource = Object.fromEntries(
         Object.entries(catalogs).map(([lng, catalog]) => [lng, { translation: catalog }]),
     );
@@ -107,16 +115,22 @@ export function initialUiLanguage(): string | undefined {
     return preferredLanguageTag(readLocalePreferenceSync(), browserUiLanguage());
 }
 
-/** Initializes the shared i18next instance once; later calls are no-ops. */
-export function initI18n(...modules: Module[]): typeof i18n {
+/**
+ * Initializes the shared i18next instance once with `catalogs` (`@/locales` on pages,
+ * `@/locales/worker` in the background worker); later calls are no-ops.
+ */
+export function initI18n(catalogs: CatalogSet, ...modules: Module[]): typeof i18n {
     if (i18n.isInitialized) return i18n;
     for (const module of modules) i18n.use(module);
     // `pseudoLocaleRequested()` is a build-time constant, so a store build drops the pseudo branch
     // and, with it, every reference to lib/pseudoLocale.ts
     void i18n.init(
         pseudoLocaleRequested()
-            ? buildI18nOptions(initialUiLanguage(), { lng: PSEUDO_LOCALE, catalog: pseudoLocalizeCatalog(catalogs.en) })
-            : buildI18nOptions(initialUiLanguage()),
+            ? buildI18nOptions(catalogs, initialUiLanguage(), {
+                  lng: PSEUDO_LOCALE,
+                  catalog: pseudoLocalizeCatalog(catalogs.en),
+              })
+            : buildI18nOptions(catalogs, initialUiLanguage()),
     );
     return i18n;
 }

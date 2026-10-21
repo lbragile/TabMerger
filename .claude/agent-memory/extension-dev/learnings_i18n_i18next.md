@@ -12,9 +12,10 @@ Extension i18n (packages/extension) uses i18next + react-i18next, not chrome.i18
   `src/i18next.d.ts` (`CustomTypeOptions.resources`), so a missing key fails tsc. The index's JSON
   imports carry `with { type: 'json' }`: e2e (Playwright, plain Node ESM) imports
   `src/lib/tourSteps.ts`, which reaches the catalog, and Node refuses JSON without it.
-- `initI18n()` (src/lib/i18n.ts) is synchronous (`initAsync: false`). Popup and site-access import
-  `@/lib/i18nReact` FIRST in main.tsx; background calls `initI18n()` at the top of
-  `defineBackground`. Never call `t()` at module scope: background-imported modules evaluate before
+- `initI18n(catalogSet, ...modules)` (src/lib/i18n.ts) is synchronous (`initAsync: false`). Popup and
+  site-access import `@/lib/i18nReact` FIRST in main.tsx (full `@/locales`); background calls
+  `initI18n(workerCatalogs)` at the top of `defineBackground` (slim set, see
+  [[learnings-i18n-bundle-size]]). Never call `t()` at module scope: background-imported modules evaluate before
   init. Tables indexed by a code use `lazyMessages({...})` (getters), tour steps use getters, and
   exported message constants became functions (`dndSaveFailedText()`, `openFailedMessage()`).
 - `t` from `react-i18next`'s hook in components; `t` from `@/lib/i18n` elsewhere. Overloaded

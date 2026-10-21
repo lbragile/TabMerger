@@ -18,6 +18,7 @@ import {
   resolveLocale,
   t
 } from '@/lib/i18n'
+import { catalogs } from '@/locales'
 import { en } from '@/locales/en'
 import { LOCALE_PREFERENCE_LOCAL_STORAGE_KEY, LOCALE_PREFERENCE_STORAGE_KEY } from '@/lib/localePreference'
 import { SUPPORTED_LOCALES } from '@tabmerger/shared'
@@ -58,7 +59,7 @@ describe('resolveLocale', () => {
 
 describe('buildI18nOptions', () => {
   it('bundles every catalog, picks the resolved language and initializes synchronously', () => {
-    const options = buildI18nOptions('en-US')
+    const options = buildI18nOptions(catalogs, 'en-US')
     expect(options.lng).toBe('en')
     expect(options.fallbackLng).toBe('en')
     expect(options.initAsync).toBe(false)
@@ -69,7 +70,7 @@ describe('buildI18nOptions', () => {
 
   it('adds and selects a pseudo catalog when one is passed', () => {
     const catalog = { ...en, header: { ...en.header, undo: '[Ûñðö]' } }
-    const options = buildI18nOptions('en', { lng: 'en-XA', catalog })
+    const options = buildI18nOptions(catalogs, 'en', { lng: 'en-XA', catalog })
     expect(options.lng).toBe('en-XA')
     expect(options.supportedLngs).toEqual([...SUPPORTED_LOCALES, 'en-XA'])
     expect((options.resources?.['en-XA'] as { translation: typeof en }).translation.header.undo).toBe('[Ûñðö]')
@@ -79,7 +80,7 @@ describe('buildI18nOptions', () => {
 describe('initI18n / t', () => {
   it('is already initialized by the test setup, and a second call keeps the same instance', () => {
     expect(i18n.isInitialized).toBe(true)
-    expect(initI18n()).toBe(i18n)
+    expect(initI18n(catalogs)).toBe(i18n)
   })
 
   it('looks up plain, interpolated and plural messages', () => {
@@ -165,7 +166,7 @@ describe('language preference', () => {
     expect(initialUiLanguage()).toBe('fr-CA')
     localStorage.setItem(LOCALE_PREFERENCE_LOCAL_STORAGE_KEY, 'ja')
     expect(initialUiLanguage()).toBe('ja')
-    expect(buildI18nOptions(initialUiLanguage()).lng).toBe('ja')
+    expect(buildI18nOptions(catalogs, initialUiLanguage()).lng).toBe('ja')
     // an invalid stored value is ignored
     localStorage.setItem(LOCALE_PREFERENCE_LOCAL_STORAGE_KEY, 'xx')
     expect(initialUiLanguage()).toBe('fr-CA')

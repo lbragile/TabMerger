@@ -1,9 +1,10 @@
 /**
- * Every shipped catalog, bundled statically (no fetch backend: MV3 CSP and no remote code).
+ * Every shipped catalog, bundled statically (no fetch backend: MV3 CSP and no remote code). This is
+ * the popup's (and other extension pages') set; the background worker bundles ./worker.ts instead.
  *
  * Adding a language: create src/locales/<lng>/ with the same files and keys as en/ (the catalog
- * test fails on a missing or extra key, or a changed {{placeholder}}), add it here and to
- * SUPPORTED_LOCALES in @tabmerger/shared.
+ * test fails on a missing or extra key, or a changed {{placeholder}}), add it here, to ./worker.ts
+ * and to SUPPORTED_LOCALES in @tabmerger/shared.
  */
 import type { SupportedLocale } from '@tabmerger/shared';
 import { en, type Catalog } from './en';
@@ -31,8 +32,15 @@ export type TranslatedCatalog = { [Area in keyof Catalog]: MessageTree };
 
 type MessageTree = { readonly [key: string]: string | MessageTree };
 
+/**
+ * The catalogs `initI18n` loads: English in full (the fallback language, and the source of the key
+ * types and the pseudo-locale), every other language whole (the popup, this file) or only in some
+ * areas (the background worker, ./worker.ts).
+ */
+export type CatalogSet = { en: Catalog } & Record<Exclude<SupportedLocale, 'en'>, Partial<TranslatedCatalog>>;
+
 /** English keeps its exact type (the key types in src/i18next.d.ts and the pseudo-locale read it). */
-export const catalogs: { en: Catalog } & Record<Exclude<SupportedLocale, 'en'>, TranslatedCatalog> = {
+export const catalogs: CatalogSet & Record<Exclude<SupportedLocale, 'en'>, TranslatedCatalog> = {
     en,
     de,
     es,

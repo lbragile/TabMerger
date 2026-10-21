@@ -304,9 +304,21 @@ export default defineConfig({
         // multi-page config included, though it has no competing define), so
         // re-asserting it here last is what actually wins for every
         // entrypoint, not just the popup.
-        "vite:build:extendConfig": (_entrypoints, viteConfig) => {
+        "vite:build:extendConfig": (entrypoints, viteConfig) => {
             viteConfig.define ??= {};
             viteConfig.define["process.env.NODE_ENV"] = JSON.stringify(resolveNodeEnv(cliWxtMode));
+            // WXT sets esbuild `charset: "ascii"` for every build (dist/core/builders/vite/index.mjs,
+            // getBaseConfig), so each non-ASCII character in the bundled translations becomes a
+            // 6-byte `\uXXXX` escape: about 0.75 MB of the popup chunk, and the build size budget.
+            // Content scripts need that (Chrome refuses one it doesn't consider valid UTF-8, and
+            // its check rejects noncharacters such as U+FFFF that libraries put in regexes), so
+            // scripts (background included) keep it; only HTML page builds (popup, site access),
+            // whose module scripts are always decoded as UTF-8, switch to raw UTF-8. Vite reads
+            // `esbuild.charset` for both the transform and the minify step.
+            const htmlPagesOnly = entrypoints.length > 0 && entrypoints.every((e) => e.inputPath.endsWith(".html"));
+            if (htmlPagesOnly && viteConfig.esbuild !== false) {
+                viteConfig.esbuild = { ...viteConfig.esbuild, charset: "utf8" };
+            }
         },
     },
 });
