@@ -536,10 +536,23 @@ describe('background — update prompt, heartbeat and lifecycle events', () => {
     mockTrackEvent.mockClear()
     mockRecordInstallDate.mockClear()
     stub.listeners.onInstalled[0]({ reason: 'install' })
-    expect(mockTrackEvent).toHaveBeenLastCalledWith(ANALYTICS_EVENTS.extensionInstalled, { reason: 'install' })
+    const joinParams = {
+      extension_version: expect.any(String),
+      channel: expect.stringMatching(/^(stable|beta)$/),
+    }
+    expect(mockTrackEvent).toHaveBeenLastCalledWith(
+      ANALYTICS_EVENTS.extensionInstalled,
+      expect.objectContaining({ reason: 'install', ...joinParams }),
+    )
     expect(mockRecordInstallDate).toHaveBeenLastCalledWith('install')
     stub.listeners.onInstalled[0]({ reason: 'update' })
-    expect(mockTrackEvent).toHaveBeenLastCalledWith(ANALYTICS_EVENTS.extensionUpdated, { reason: 'update' })
+    expect(mockTrackEvent).toHaveBeenLastCalledWith(
+      ANALYTICS_EVENTS.extensionUpdated,
+      expect.objectContaining({ reason: 'update', ...joinParams }),
+    )
+    // Never a key with an undefined value (trackEvent's params are string | number)
+    const params = mockTrackEvent.mock.calls.at(-1)?.[1] as Record<string, unknown>
+    expect(Object.values(params).every((v) => v !== undefined)).toBe(true)
     expect(mockRecordInstallDate).toHaveBeenLastCalledWith('update')
   })
 })
