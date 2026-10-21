@@ -1,3 +1,10 @@
+## [3.9.1](https://github.com/lbragile/TabMerger/compare/v3.9.0...v3.9.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **extension:** stop telling Firefox users they run a development build ([#98](https://github.com/lbragile/TabMerger/issues/98)) ([2c2fedd](https://github.com/lbragile/TabMerger/commit/2c2fedd3bad008bb6127076c55265f741ff35978))
+
 # [3.9.0](https://github.com/lbragile/TabMerger/compare/v3.8.0...v3.9.0) (2026-10-21)
 
 
