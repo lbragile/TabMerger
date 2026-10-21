@@ -1,3 +1,10 @@
+# [3.8.0](https://github.com/lbragile/TabMerger/compare/v3.7.1...v3.8.0) (2026-10-21)
+
+
+### Features
+
+* **extension:** send browser and version with install and update events ([#95](https://github.com/lbragile/TabMerger/issues/95)) ([fdc3993](https://github.com/lbragile/TabMerger/commit/fdc399322dc1195ef7b62053750b48e6a7f35737))
+
 ## [3.7.1](https://github.com/lbragile/TabMerger/compare/v3.7.0...v3.7.1) (2026-10-21)
 
 
