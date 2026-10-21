@@ -23,6 +23,8 @@ describe('POST /api/track', () => {
     vi.stubGlobal('fetch', mockFetch)
     mockFetch.mockClear()
     process.env = { ...ORIGINAL_ENV }
+    delete process.env.VERCEL_ENV
+    delete process.env.NEXT_PUBLIC_VERCEL_ENV
   })
 
   afterEach(() => {
@@ -44,7 +46,7 @@ describe('POST /api/track', () => {
         method: 'POST',
         body: JSON.stringify({
           client_id: 'abc-123',
-          events: [{ name: 'group_created', params: { count: 3 } }],
+          events: [{ name: 'group_created', params: { count: 3, environment: 'development' } }],
         }),
       })
     )
@@ -68,33 +70,87 @@ describe('POST /api/track', () => {
 
     const sentBody = () => JSON.parse(mockFetch.mock.calls[0][1].body as string)
 
-    it('forwards string and number params unchanged', async () => {
+    it('forwards string and number params unchanged, plus environment', async () => {
       const params = { feature_name: 'organize', count: 1, ratio: 0.5 }
       const res = await POST(makeRequest({ event: 'ai_feature_used', params, client_id: 'abc-123' }))
 
       expect(res.status).toBe(204)
-      expect(sentBody()).toEqual({ client_id: 'abc-123', events: [{ name: 'ai_feature_used', params }] })
+      expect(sentBody()).toEqual({
+        client_id: 'abc-123',
+        events: [{ name: 'ai_feature_used', params: { ...params, environment: 'development' } }],
+      })
     })
 
-    it('forwards an event with no params', async () => {
+    it('adds environment to an event with no params', async () => {
       const res = await POST(makeRequest({ event: 'extension_opened', client_id: 'abc-123' }))
 
       expect(res.status).toBe(204)
-      expect(sentBody()).toEqual({ client_id: 'abc-123', events: [{ name: 'extension_opened' }] })
+      expect(sentBody()).toEqual({
+        client_id: 'abc-123',
+        events: [{ name: 'extension_opened', params: { environment: 'development' } }],
+      })
+    })
+
+    it.each(['production', 'preview'])('stamps environment=%s from VERCEL_ENV', async (env) => {
+      process.env.VERCEL_ENV = env
+      await POST(makeRequest({ event: 'extension_installed', client_id: 'abc-123' }))
+
+      expect(sentBody().events[0].params).toEqual({ environment: env })
+    })
+
+    it('overrides a client-sent environment param with the server value', async () => {
+      process.env.VERCEL_ENV = 'production'
+      await POST(makeRequest({ event: 'group_created', client_id: 'abc-123', params: { environment: 'fake' } }))
+
+      expect(sentBody().events[0].params).toEqual({ environment: 'production' })
     })
 
     it('forwards only the event, params and client_id fields', async () => {
       await POST(makeRequest({ event: 'group_created', client_id: 'abc-123', user_id: 'someone', extra: 1 }))
 
-      expect(sentBody()).toEqual({ client_id: 'abc-123', events: [{ name: 'group_created' }] })
+      expect(sentBody()).toEqual({
+        client_id: 'abc-123',
+        events: [{ name: 'group_created', params: { environment: 'development' } }],
+      })
     })
 
     it('accepts names and values at the limits', async () => {
-      const params = Object.fromEntries(Array.from({ length: 25 }, (_, i) => [`p${i}`, 'v'.repeat(100)]))
+      const params = Object.fromEntries(Array.from({ length: 24 }, (_, i) => [`p${i}`, 'v'.repeat(100)]))
       const res = await POST(makeRequest({ event: 'e'.repeat(40), params, client_id: 'c'.repeat(100) }))
 
       expect(res.status).toBe(204)
       expect(mockFetch).toHaveBeenCalledTimes(1)
+    })
+
+    it('forwards 24 client params plus environment as 25 params', async () => {
+      const params = Object.fromEntries(Array.from({ length: 24 }, (_, i) => [`p${i}`, i]))
+      const res = await POST(makeRequest({ event: 'group_created', params, client_id: 'abc-123' }))
+
+      expect(res.status).toBe(204)
+      const sent = sentBody().events[0].params
+      expect(Object.keys(sent)).toHaveLength(25)
+      expect(sent).toEqual({ ...params, environment: 'development' })
+    })
+
+    it('returns 400 without calling GA for 25 client params (no room for environment)', async () => {
+      const params = Object.fromEntries(Array.from({ length: 25 }, (_, i) => [`p${i}`, i]))
+      const res = await POST(makeRequest({ event: 'group_created', params, client_id: 'abc-123' }))
+
+      expect(res.status).toBe(400)
+      expect(mockFetch).not.toHaveBeenCalled()
+    })
+
+    it('accepts 24 params plus a client environment, replacing it with the server value', async () => {
+      process.env.VERCEL_ENV = 'production'
+      const params = Object.fromEntries(Array.from({ length: 24 }, (_, i) => [`p${i}`, i]))
+      const res = await POST(
+        makeRequest({ event: 'group_created', params: { ...params, environment: 'fake' }, client_id: 'abc-123' })
+      )
+
+      expect(res.status).toBe(204)
+      const sent = sentBody().events[0].params
+      expect(Object.keys(sent)).toHaveLength(25)
+      expect(sent).toEqual({ ...params, environment: 'production' })
     })
 
     it('returns 400 for a body that is not JSON', async () => {
