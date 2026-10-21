@@ -30,5 +30,9 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // Tells the client bundle this is an automated run (lib/isAutomatedTestEnvironment.ts), so
+    // GA/PostHog never load real scripts even though the authenticated storage state now carries
+    // a stored "granted" consent choice.
+    env: { ...process.env, NEXT_PUBLIC_E2E_TEST: 'true' },
   },
 })

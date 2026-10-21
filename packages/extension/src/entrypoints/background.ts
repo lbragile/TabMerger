@@ -230,7 +230,8 @@ export default defineBackground(() => {
   // files during dev-server startup to detect manifest metadata, and `self` isn't
   // a full service-worker global in that analysis pass. defaultIntegrations assume
   // a window, so they're disabled and errors are reported via self's error events.
-  if (import.meta.env.VITE_SENTRY_DSN) {
+  // Skipped during e2e/dev builds (VITE_E2E_TEST, see analytics.ts) — same reason as the popup.
+  if (import.meta.env.VITE_SENTRY_DSN && !import.meta.env.VITE_E2E_TEST) {
     Sentry.init({
       dsn: import.meta.env.VITE_SENTRY_DSN,
       environment: import.meta.env.MODE,

@@ -21,6 +21,14 @@ interface ImportMetaEnv {
   readonly VITE_PSEUDO_LOCALE?: string;
   readonly VITE_POSTHOG_API_KEY?: string;
   readonly VITE_POSTHOG_HOST?: string;
+  /**
+   * Set via a Vite `define` in wxt.config.ts: always `"true"` for a `development`-mode build
+   * (`wxt build/dev --mode development` — only ever used locally or by the e2e/unit harnesses,
+   * never shipped), and otherwise mirrors the `VITE_E2E_TEST` process env var at build time, so a
+   * CI/local invocation can force it on for a non-development build too. Read by
+   * src/lib/analytics.ts to skip real network calls during automated test runs.
+   */
+  readonly VITE_E2E_TEST?: string;
 }
 
 interface ImportMeta {
