@@ -1,4 +1,5 @@
 import type { FirefoxDataConsentCategory } from '@tabmerger/shared';
+import { isFirefoxBuild } from '@/lib/buildTarget';
 
 /**
  * Firefox's `browser.permissions` "data collection" consent — the runtime counterpart of
@@ -25,14 +26,8 @@ interface DataCollectionPermissions {
 const consentCache = new Map<FirefoxDataConsentCategory, boolean>();
 let listenersRegistered = false;
 
-export function isFirefoxBuild(): boolean {
-  // ponytail: `import.meta.env.FIREFOX` is a real boolean at build time (a WXT-injected Vite
-  // `define`), but `vi.stubEnv()` in tests only ever assigns strings — `Boolean('false')` is
-  // `true`, so a naive `Boolean(...)` here would treat a test's explicit "not Firefox" stub as
-  // Firefox. Accept both the real boolean and vitest's stringified form.
-  const flag = import.meta.env.FIREFOX as unknown;
-  return flag === true || flag === 'true';
-}
+/** Re-exported for existing callers; defined in `buildTarget.ts`. */
+export { isFirefoxBuild };
 
 // A minimal local shape for the two Firefox-only events this module listens to — deliberately
 // NOT intersected with @types/chrome's own `chrome.permissions` typing (whose `onAdded`/

@@ -1,22 +1,37 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 
 /**
  * Settings → "Check for updates": one toast per result (update_available / no_update / throttled /
- * unsupported dev build / error), the button busy while checking.
+ * unsupported dev build / no_api / error), the button busy while checking. A browser without
+ * `runtime.requestUpdateCheck` (Firefox) gets a hint instead of the button.
  */
 
-const { mockCheckForUpdate, mockToast } = vi.hoisted(() => ({
+const { mockCheckForUpdate, mockHasUpdateCheckApi, mockToast } = vi.hoisted(() => ({
   mockCheckForUpdate: vi.fn(),
+  mockHasUpdateCheckApi: vi.fn(() => true),
   mockToast: { success: vi.fn(), info: vi.fn(), error: vi.fn() },
 }))
-vi.mock('@/lib/extensionUpdate', () => ({ checkForUpdate: mockCheckForUpdate }))
+vi.mock('@/lib/extensionUpdate', () => ({
+  checkForUpdate: mockCheckForUpdate,
+  hasUpdateCheckApi: mockHasUpdateCheckApi,
+}))
 vi.mock('@/lib/toast', () => ({ toast: mockToast }))
 
 import { CheckForUpdates } from '@/components/Settings/CheckForUpdates'
 
+const FIREFOX_HINT =
+  'Firefox updates add-ons automatically. To check now, open about:addons, click the gear icon, then Check for Updates.'
+const GENERIC_HINT = 'Your browser updates TabMerger automatically'
+
 beforeEach(() => {
   vi.clearAllMocks()
+  mockHasUpdateCheckApi.mockReturnValue(true)
+  vi.stubEnv('FIREFOX', 'false')
+})
+
+afterEach(() => {
+  vi.unstubAllEnvs()
 })
 
 async function clickCheck() {
@@ -59,6 +74,13 @@ describe('CheckForUpdates', () => {
     )
   })
 
+  it('no_api from the check (API gone after render) shows the browser hint, not the dev-build toast', async () => {
+    mockCheckForUpdate.mockResolvedValue({ status: 'no_api' })
+    await clickCheck()
+    await waitFor(() => expect(mockToast.info).toHaveBeenCalledWith(GENERIC_HINT))
+    expect(mockToast.info).not.toHaveBeenCalledWith('This is a development build, which the browser does not update')
+  })
+
   it('error result and a thrown check both show the error toast', async () => {
     mockCheckForUpdate.mockResolvedValueOnce({ status: 'error', message: 'x' })
     await clickCheck()
@@ -77,5 +99,35 @@ describe('CheckForUpdates', () => {
     expect(busy).toHaveAttribute('aria-busy', 'true')
     resolve({ status: 'no_update' })
     await waitFor(() => expect(screen.getByRole('button', { name: 'Check for updates' })).toBeEnabled())
+  })
+})
+
+describe('CheckForUpdates without runtime.requestUpdateCheck', () => {
+  beforeEach(() => {
+    mockHasUpdateCheckApi.mockReturnValue(false)
+  })
+
+  it('Firefox: shows the about:addons hint and no button, without checking', () => {
+    vi.stubEnv('FIREFOX', 'true')
+    render(<CheckForUpdates />)
+    expect(screen.getByText('Updates')).toBeInTheDocument()
+    expect(screen.getByText(FIREFOX_HINT)).toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.queryByText('Ask the browser to look for a newer version now')).not.toBeInTheDocument()
+    expect(mockCheckForUpdate).not.toHaveBeenCalled()
+    expect(mockToast.info).not.toHaveBeenCalled()
+  })
+
+  it('another browser: a generic hint without about:addons', () => {
+    render(<CheckForUpdates />)
+    expect(screen.getByText(GENERIC_HINT)).toBeInTheDocument()
+    expect(screen.queryByText(/about:addons/)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('decides once on mount', () => {
+    const { rerender } = render(<CheckForUpdates />)
+    rerender(<CheckForUpdates />)
+    expect(mockHasUpdateCheckApi).toHaveBeenCalledTimes(1)
   })
 })

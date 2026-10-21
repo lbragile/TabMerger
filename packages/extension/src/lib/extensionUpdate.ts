@@ -4,7 +4,8 @@ import { UPDATE_AVAILABLE_STORAGE_KEY, UPDATE_BANNER_DISMISSED_STORAGE_KEY } fro
  * "Update available": the browser downloaded a new version but cannot apply it while the extension
  * is running. The background worker records it (`runtime.onUpdateAvailable`), the popup shows a
  * banner with "Restart to update" (`runtime.reload()`), and Settings can ask the browser to check
- * now (`runtime.requestUpdateCheck()`). The state lives in `chrome.storage.local` under
+ * now (`runtime.requestUpdateCheck()`, Chrome and Edge only: Firefox has no such API, see
+ * {@link hasUpdateCheckApi}). The state lives in `chrome.storage.local` under
  * {@link UPDATE_AVAILABLE_STORAGE_KEY} and is removed on worker start once the running version
  * has caught up.
  */
@@ -14,12 +15,17 @@ export interface PendingUpdate {
   detectedAt: number;
 }
 
-/** What "Check for updates" ended with. `unsupported`: a development or unpacked install, which the browser never updates. */
+/**
+ * What "Check for updates" ended with. `unsupported`: a development, unpacked or temporary
+ * install, which the browser never updates. `no_api`: a store install on a browser without
+ * `runtime.requestUpdateCheck` (Firefox), which updates add-ons on its own schedule.
+ */
 export type UpdateCheckResult =
   | { status: 'update_available'; version?: string }
   | { status: 'no_update' }
   | { status: 'throttled' }
   | { status: 'unsupported' }
+  | { status: 'no_api' }
   | { status: 'error'; message: string };
 
 const VERSION_RE = /^\d+(\.\d+){0,3}$/;
@@ -155,6 +161,15 @@ function updateRuntime(): RuntimeWithUpdateCheck | undefined {
 }
 
 /**
+ * Whether this browser can be asked to check for an update now. Firefox (desktop and Android)
+ * and Safari have no `runtime.requestUpdateCheck`, so Settings shows how the browser updates
+ * instead of a button that can only fail. Synchronous, so the UI decides before any click.
+ */
+export function hasUpdateCheckApi(): boolean {
+  return typeof updateRuntime()?.requestUpdateCheck === 'function';
+}
+
+/**
  * Turns any of the shapes browsers answer with into one result: Chrome's promise
  * (`{ status, version }`), the callback (`status, { version }`), Firefox's promise
  * (`{ status, details: { version } }`) or an array `[status, details]`.
@@ -234,12 +249,13 @@ function callUpdateCheck(runtime: RuntimeWithUpdateCheck): Promise<UpdateCheckRe
 
 /**
  * Asks the browser to look for an update now. When one is found it is recorded like an
- * `onUpdateAvailable` event, so the popup banner appears. Never throws.
+ * `onUpdateAvailable` event, so the popup banner appears. Never throws. A development install
+ * answers `unsupported` before the API is looked at; a browser without the API answers `no_api`.
  */
 export async function checkForUpdate(now: number = Date.now()): Promise<UpdateCheckResult> {
   if (!(await isUpdatableInstall())) return { status: 'unsupported' };
   const runtime = updateRuntime();
-  if (typeof runtime?.requestUpdateCheck !== 'function') return { status: 'unsupported' };
+  if (!runtime || typeof runtime.requestUpdateCheck !== 'function') return { status: 'no_api' };
   const result = await callUpdateCheck(runtime);
   if (result.status === 'update_available' && result.version) {
     await recordPendingUpdate(result.version, now).catch(() => {});

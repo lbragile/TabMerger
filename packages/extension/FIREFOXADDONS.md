@@ -1,6 +1,6 @@
 # Firefox Add-ons Listings — TabMerger
 
-> Last Updated: 2026-10-15
+> Last Updated: 2026-10-20
 >
 > **State of the stable add-on:** the public AMO listing is still the v2 build (`2.0.0`). The
 > first v3 stable release is planned as `v3.1.0` and is not yet released. The listing copy,
@@ -322,6 +322,7 @@ TabMerger's Settings (the true semver).
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: fix: the "Allow TabMerger on <site>" banner's Allow button now opens a TabMerger tab that asks Firefox for the site, because Firefox shows no permission prompt over the popup (in 3.3.0 the click seemed to do nothing and the banner stayed). After opening the tab the popup now closes itself, since opening a tab leaves a Firefox popup open; if the tab can't be opened the banner shows a short error instead. The tab is a Firefox-only extension page (`site-access.html`). No manifest permission change. Screenshots: none |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: the add-on now talks to the website on its new domain: sign-in, sync, AI and checkout requests, links and the uninstall page go to `tabmerger.com` (stable) / `preview.tabmerger.com` (BETA), and the BETA `update_url` moves to `preview.tabmerger.com/firefox-beta/updates.json`. The old `vercel.app` hosts stay trusted. Manifest: the same two web-bridge `content_scripts` matches as the previous release, so no new site access and no prompt; installs that never clicked "Allow" for the new site still see the banner. No `data_collection_permissions` change |
 | Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: after the add-on is removed, Firefox opens the optional uninstall survey page (`/uninstalled` on the TabMerger website) via `runtime.setUninstallURL` (no permission). No manifest, permission or `data_collection_permissions` change: the address holds only the build's own version, browser and channel (constants of the build, nothing read from the user or device), and anything typed in the survey is sent by the web page, not the add-on |
+| Stable and BETA | set at release | (ignored by Firefox) | next release (unreleased) | — | Draft: fix: Settings, General no longer shows a "Check for updates" button on Firefox, which has no `runtime.requestUpdateCheck`; on a normal AMO install the button always answered "This is a development build". It now says Firefox updates add-ons automatically and how to check by hand (about:addons, gear icon, Check for Updates). The "Version X is ready / Restart to update" banner is unchanged (`runtime.onUpdateAvailable` and `runtime.reload` exist on Firefox). No manifest, permission or `data_collection_permissions` change. Screenshots: none show Settings, General's update row |
 
 ## Notes for a future review / support request
 

@@ -124,6 +124,8 @@
     "noUpdate": "Du hast die neueste Version",
     "throttled": "Zu oft geprüft. Versuche es in ein paar Minuten erneut.",
     "unsupported": "Dies ist ein Entwicklungs-Build, den der Browser nicht aktualisiert",
+    "autoUpdate": "Dein Browser aktualisiert TabMerger automatisch",
+    "autoUpdateFirefox": "Firefox aktualisiert Add-ons automatisch. Um jetzt zu prüfen, öffne about:addons, klicke auf das Zahnradsymbol und dann auf „Nach Updates suchen“.",
     "error": "Die Suche nach Updates ist fehlgeschlagen"
   }
 }

@@ -128,6 +128,8 @@
     "noUpdate": "Hai la versione più recente",
     "throttled": "Controlli troppo frequenti. Riprova tra qualche minuto.",
     "unsupported": "Questa è una build di sviluppo, che il browser non aggiorna",
+    "autoUpdate": "Il browser aggiorna TabMerger automaticamente",
+    "autoUpdateFirefox": "Firefox aggiorna i componenti aggiuntivi automaticamente. Per controllare ora, apri about:addons, fai clic sull’icona a forma di ingranaggio, poi su “Controlla aggiornamenti”.",
     "error": "Impossibile cercare aggiornamenti"
   }
 }
