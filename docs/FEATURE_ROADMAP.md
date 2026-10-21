@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-10-18. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-10-20. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.3.1` and the beta channel is at `v3.3.2-beta.1`
   (Chrome BETA listing, and the self-hosted Firefox beta). Releases come from semantic-release:
@@ -14,7 +14,7 @@ _Last updated 2026-10-18. Keep this current in the same change as the work (a CL
 - **Stores:** the Chrome Web Store stable listing and the Firefox AMO listing are both still on v2
   (`2.0.0`); v3 is only on the beta channels. The
   Edge Add-ons listing isn't published from CI yet (its secrets aren't set).
-- **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption, enforced server-side (RLS requires an active paid plan). Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Guided tour of the popup for new installs, replayable from the header and Settings (in the code, unreleased). Stripe subscriptions and AI credit packs. Monthly ↔ yearly plan switching. Local-currency checkout (Stripe Adaptive Pricing). Web dashboard and account pages, usable on phones. Public `/changelog`. Beta tester guide at `/beta` with a known-issues list (`packages/web/lib/knownIssues.ts`). The website and the extension in seven languages (English, German, Spanish, French, Japanese, Brazilian Portuguese, Simplified Chinese; in the code, unreleased).
+- **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption, enforced server-side (RLS requires an active paid plan). Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Guided tour of the popup for new installs, replayable from the header and Settings (in the code, unreleased). Stripe subscriptions and AI credit packs. Monthly ↔ yearly plan switching. Local-currency checkout (Stripe Adaptive Pricing). Web dashboard and account pages, usable on phones. Public `/changelog`. Beta tester guide at `/beta` with a known-issues list (`packages/web/lib/knownIssues.ts`). The website and the extension in fifteen languages (English, German, Spanish, French, Italian, Russian, Korean, Turkish, Indonesian, Polish, Vietnamese, Hindi, Japanese, Brazilian Portuguese, Simplified Chinese; in the code, unreleased).
 - **Built but off:** AI features (auto-group, name group, tab summary, session suggestions, organize) are behind the "coming soon" flag (`NEXT_PUBLIC_AI_ENABLED` / `VITE_AI_ENABLED`, off unless `"true"`).
 
 ---
@@ -45,6 +45,7 @@ _Last updated 2026-10-18. Keep this current in the same change as the work (a CL
 - [x] Signed-in pages (dashboard, account) fit phone screens
 - [x] Translation-ready web app (next-intl): every public and signed-in page reads its words from `packages/web/messages/<locale>/`, English URLs unchanged, other languages under `/<locale>/…`, hreflang in metadata and the sitemap, a dev-only pseudo-locale (`/en-XA`) for layout testing, and a language switcher in the footer and on the account page. Privacy and Terms stay English. See [I18N.md](I18N.md). In the code, unreleased.
 - [x] The website and the extension in German, Spanish, French, Japanese, Brazilian Portuguese and Simplified Chinese. The site picks the visitor's language from the browser and the switcher; the extension follows the browser's language. In the code, unreleased.
+- [x] Eight more languages on the website and in the extension: Italian, Russian, Korean, Turkish, Indonesian, Polish, Vietnamese and Hindi (fifteen in all). The plan names "Pro" and "Pro AI" stay as brand names in every language. In the code, unreleased.
 - [x] A language picker in the extension: Settings → General → Language (applied with "Save changes") and a language menu in the popup header (applied at once). "Browser default" follows the browser's language; the choice is per device and never synced. In the code, unreleased.
 
 ### Billing
