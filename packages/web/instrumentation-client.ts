@@ -1,13 +1,16 @@
 import { scrubBreadcrumb, scrubEvent, scrubPreparedEvent, scrubRecordingEvent } from '@/lib/sentry-scrubber'
 import { whenPageIdle } from '@/components/DeferredOnLoad'
+import { isAutomatedTestEnvironment } from '@/lib/isAutomatedTestEnvironment'
 
 type SentryModule = typeof import('@sentry/nextjs')
 
 // Sentry and its Replay integration are several hundred KB. They are imported once the page has
 // loaded and the browser is idle, so they never delay first paint or input. The cost is that an
 // error thrown before then goes unreported; those are errors the visitor never got to see.
+// Also skipped entirely during e2e/visual regression (isAutomatedTestEnvironment) — otherwise
+// every thrown error and session replay from those runs reports to the real Sentry project.
 const sentry: Promise<SentryModule> | null =
-  typeof window === 'undefined' || !process.env.NEXT_PUBLIC_SENTRY_DSN
+  typeof window === 'undefined' || !process.env.NEXT_PUBLIC_SENTRY_DSN || isAutomatedTestEnvironment()
     ? null
     : new Promise((resolve) => {
         whenPageIdle(() => {

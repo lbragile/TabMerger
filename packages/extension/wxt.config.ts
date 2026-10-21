@@ -76,6 +76,15 @@ export default defineConfig({
         // rawVersionString's comment above. Declared in src/env.d.ts.
         define: {
             __TABMERGER_VERSION__: JSON.stringify(rawVersionString),
+            // ponytail: src/lib/analytics.ts's automated-test guard. A `development`-mode build
+            // (`wxt build/dev --mode development`) is never a real user's build — only the e2e
+            // harness, `pnpm dev:extension`, or a developer's manual load — so it's always exempt,
+            // the same precedent as `e2eGrantDownloads` above. `VITE_E2E_TEST=true` additionally
+            // forces it on for any OTHER mode (e.g. a CI step that builds in production mode for
+            // e2e and wants to export the var on that one step), without needing a `.env.e2e` file.
+            "import.meta.env.VITE_E2E_TEST": JSON.stringify(
+                cliWxtMode === "development" || process.env.VITE_E2E_TEST === "true",
+            ),
         },
     }),
     manifestVersion: 3,

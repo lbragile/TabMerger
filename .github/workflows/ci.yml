@@ -420,6 +420,11 @@ jobs:
 
       - run: pnpm --filter @tabmerger/extension build
         if: steps.gate.outputs.run == 'true'
+        env:
+          # Production builds normally load the real .env.production (real PostHog key,
+          # real tabmerger.com); this makes trackEvent/trackPostHogEvent no-op instead of
+          # sending real analytics traffic from every CI e2e run.
+          VITE_E2E_TEST: 'true'
       # No `--` before --shard: pnpm appends args after the script name as-is, and a
       # literal `--` would make Playwright read --shard as a file filter.
       - run: pnpm --filter @tabmerger/extension test:e2e --shard=${{ matrix.shard }}/${{ strategy.job-total }}
@@ -804,6 +809,10 @@ jobs:
         if: steps.gate.outputs.run == 'true'
       - run: pnpm --filter @tabmerger/extension build
         if: steps.gate.outputs.run == 'true'
+        env:
+          # See e2e-extension's build step: production builds load the real .env.production,
+          # so this stops trackEvent/trackPostHogEvent from sending real analytics in CI.
+          VITE_E2E_TEST: 'true'
 
       # continue-on-error on the STEP so the report steps below still run after a
       # failing comparison. No `--` before the options: pnpm appends them as-is.

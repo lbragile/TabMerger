@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import type { PostHog, PostHogConfig } from 'posthog-js'
 import { deleteCookies, getEffectiveConsent, subscribeConsent, type ConsentChoice } from '@/lib/consent'
 import { REPLAY_BLOCK_SELECTOR, scrubPostHogEvent } from '@/lib/analyticsPrivacy'
+import { isAutomatedTestEnvironment } from '@/lib/isAutomatedTestEnvironment'
 
 /** Where PostHog keeps its identifiers once the visitor accepts cookies (its default). */
 const CONSENTED_PERSISTENCE = 'localStorage+cookie' as const
@@ -103,11 +104,15 @@ export function applyPostHogConsent(posthog: PostHog, key: string, choice: Conse
  *
  * Separate concern from Sentry Replay (crash-context video only). No-ops if
  * NEXT_PUBLIC_POSTHOG_KEY isn't set, same as trackEvent() in lib/analytics.ts for GA4.
+ *
+ * Also no-ops during an automated test run (see `isAutomatedTestEnvironment`), regardless of
+ * consent: e2e's authenticated storage state grants consent so other specs don't see the banner,
+ * which would otherwise init real posthog-js against PostHog's servers with test traffic.
  */
 export function PostHogProvider() {
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
-    if (!key) return
+    if (!key || isAutomatedTestEnvironment()) return
 
     let cancelled = false
     let posthog: PostHog | undefined

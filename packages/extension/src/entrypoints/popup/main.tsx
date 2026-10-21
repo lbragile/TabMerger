@@ -12,7 +12,9 @@ import { AI_ENABLED } from '@/lib/aiFlag';
 import '@/styles/globals.css';
 
 
-if (import.meta.env.VITE_SENTRY_DSN) {
+// Skipped during e2e/dev builds (VITE_E2E_TEST, see analytics.ts) — otherwise every popup
+// error/replay during e2e would report to the real Sentry project.
+if (import.meta.env.VITE_SENTRY_DSN && !import.meta.env.VITE_E2E_TEST) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
     environment: import.meta.env.MODE,
