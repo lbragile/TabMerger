@@ -1,0 +1,27 @@
+{
+  "title": "Impor / Ekspor",
+  "description": "Kelola data TabMerger Anda",
+  "tabExport": "Ekspor",
+  "tabImport": "Impor",
+  "exportIntro": "Ekspor semua grup Anda sebagai file JSON. Anda dapat mengimpor kembali file ini nanti.",
+  "downloadJson": "Unduh JSON",
+  "jsonHeading": "JSON TabMerger",
+  "jsonIntro": "Impor dari file JSON yang sebelumnya diekspor. Menggantikan grup saat ini.",
+  "chooseJson": "Pilih file JSON",
+  "bookmarksHeading": "Bookmark Chrome",
+  "bookmarksIntro": "Impor dari ekspor HTML bookmark Chrome. Setiap folder menjadi sebuah grup.",
+  "chooseBookmarks": "Pilih file HTML Bookmark",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Impor dari ekspor teks biasa OneTab. Setiap blok yang dipisahkan baris kosong menjadi sebuah grup.",
+  "chooseOneTab": "Pilih file TXT OneTab",
+  "toast": {
+    "exported": "Grup berhasil diekspor",
+    "imported": "Grup berhasil diimpor",
+    "imported_skipped": "Grup berhasil diimpor, {{skipped}} dilewati",
+    "importedCounts": "Mengimpor {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Mengimpor {{groups}}, {{tabs}}, {{skipped}} dilewati",
+    "invalidJson": "File JSON tidak valid",
+    "noBookmarks": "Tidak ada bookmark ditemukan",
+    "noTabs": "Tidak ada tab ditemukan"
+  }
+}

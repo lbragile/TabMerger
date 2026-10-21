@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Error 404 · Halaman tidak ditemukan",
+    "title": "Tab ini tersesat",
+    "description": "Kami sudah mencari di setiap grup dan tidak menemukan halaman ini. Mungkin sudah dipindahkan, ditutup, atau memang tidak pernah ada. Mari kembali ke jalur yang benar.",
+    "documentTitle": "Halaman tidak ditemukan",
+    "tabLabel": "Halaman hilang"
+  },
+  "serverError": {
+    "eyebrow": "Error 500 · Terjadi kesalahan",
+    "title": "Tab ini mogok",
+    "description": "Ada yang rusak di pihak kami saat memuat halaman ini. Tab dan grup Anda di ekstensi tidak terpengaruh. Coba lagi sebentar lagi.",
+    "documentTitle": "Terjadi kesalahan",
+    "tabLabel": "Tidak merespons"
+  },
+  "links": {
+    "features": "Fitur",
+    "pricing": "Harga",
+    "faq": "FAQ",
+    "dashboard": "Dasbor",
+    "account": "Akun",
+    "contactSupport": "Hubungi dukungan"
+  },
+  "helpfulLinks": "Tautan berguna",
+  "tryThese": "Atau coba salah satu ini",
+  "illustrationTabResearch": "Riset",
+  "illustrationTabDocs": "Dokumen",
+  "tryAgain": "Coba lagi",
+  "backToHome": "Kembali ke beranda",
+  "backToDashboard": "Kembali ke dasbor",
+  "devDetails": "Detail error (khusus pengembangan)",
+  "referenceId": "ID referensi",
+  "copyReferenceId": "Salin ID referensi",
+  "referenceIdHint": "Sebutkan ID ini jika menghubungi dukungan, agar kami dapat menemukan penyebab masalahnya.",
+  "referenceIdCopied": "ID referensi disalin",
+  "referenceIdCopyFailed": "Gagal menyalin. Pilih ID untuk menyalinnya.",
+  "titleWithBrand": "{title} | TabMerger"
+}

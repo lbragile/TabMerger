@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Sinkronisasi dijeda: izinkan di Firefox",
+  "conflictCopy": "{{names}} juga diubah di perangkat lain. Versi Anda disimpan sebagai salinan.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "Grup yang sedang Anda kerjakan berubah atau dihapus di tempat lain, jadi tidak ada yang diubah.",
+  "undoConflict": "Grup Anda berubah di tempat lain, jadi tidak ada yang dibatalkan. Coba lagi.",
+  "freeLimit": {
+    "maxGroups": "Paket gratis mengizinkan hingga {{max}} grup.",
+    "maxTabs": "Paket gratis mengizinkan hingga {{max}} tab.",
+    "maxUrlRules": "Paket gratis mengizinkan hingga {{max}} aturan URL."
+  },
+  "fileContains": "File ini berisi {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Dibuka sebagai jendela normal karena TabMerger tidak diizinkan dalam mode penyamaran. Untuk mengubah ini, buka Kelola ekstensi dan aktifkan \"Izinkan dalam mode Penyamaran\".",
+  "encryptionAlreadySetUp": "Enkripsi sudah diatur untuk akun ini. Masukkan frasa sandi yang sudah ada untuk membukanya.",
+  "signInToEnableEncryption": "Harus masuk untuk mengaktifkan enkripsi",
+  "signInToResetEncryption": "Harus masuk untuk mengatur ulang enkripsi",
+  "googleUnavailable": "Masuk dengan Google tidak tersedia di lingkungan ini",
+  "googleNoUrl": "Masuk dengan Google tidak mengembalikan URL otorisasi",
+  "googleCancelled": "Masuk dengan Google dibatalkan",
+  "googleNoSession": "Masuk dengan Google tidak mengembalikan sesi",
+  "googleFailed": "Masuk dengan Google gagal",
+  "expectedArray": "Diharapkan sebuah array",
+  "invalidFormat": "Format tidak valid",
+  "noGroupsFound": "Tidak ada grup yang ditemukan",
+  "noGroupsSelected": "Tidak ada grup yang dipilih",
+  "notAuthenticated": "Tidak terautentikasi",
+  "sharingRequiresPro": "Berbagi memerlukan peningkatan ke Pro — hak akses tidak terpenuhi",
+  "aiOncePerDay": "Sudah digunakan hari ini — tindakan AI ini dibatasi sekali sehari",
+  "proAiRequired": "Paket Pro AI diperlukan",
+  "nameGroupOff": "Nama grup dimatikan di Pengaturan",
+  "suggestSessionsOff": "Saran sesi dimatikan di Pengaturan",
+  "organizeOff": "Pengaturan ulang dimatikan di Pengaturan"
+}

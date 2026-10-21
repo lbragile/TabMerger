@@ -26,7 +26,7 @@ describe('resolveLocale', () => {
   it('falls back to English for no tag or a language without a catalog', () => {
     expect(resolveLocale(undefined)).toBe('en')
     expect(resolveLocale('')).toBe('en')
-    expect(resolveLocale('ko')).toBe('en')
+    expect(resolveLocale('ar')).toBe('en')
     expect(resolveLocale('xx-YY')).toBe('en')
   })
 

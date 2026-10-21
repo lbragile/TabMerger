@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger non è riuscito a raggiungere il server per verificare la crittografia di questo account, quindi la sincronizzazione è in pausa. I tuoi gruppi sono ancora salvati su questo dispositivo. Controlla la connessione e riprova.",
+  "unlockBody": "Inserisci la passphrase di crittografia per sbloccare i dati sincronizzati su questo dispositivo. È un passaggio da fare una sola volta per dispositivo: non ti verrà richiesta di nuovo a meno che tu non esca. Se la dimentichi non c'è modo di recuperare i tuoi dati: non lascia mai il tuo dispositivo e TabMerger non può reimpostarla per te.",
+  "setupBody": "I dati sincronizzati di gruppi e schede sono crittografati end-to-end con una passphrase che conosci solo tu. Scegline una ora: se la dimentichi non c'è modo di recuperare i tuoi dati, non lascia mai il tuo dispositivo e TabMerger non può reimpostarla per te.",
+  "unavailableTitle": "Impossibile verificare la crittografia ora",
+  "tryAgain": "Riprova",
+  "unlockTitle": "Sblocca la crittografia",
+  "passphrase": "Passphrase",
+  "passphraseLabel": "Passphrase di crittografia",
+  "unlock": "Sblocca",
+  "setupTitle": "Configura la crittografia",
+  "newPassphrase": "Nuova passphrase",
+  "confirmPassphrase": "Conferma passphrase",
+  "setupButton": "Configura la crittografia",
+  "error": {
+    "spaces": "La passphrase non può contenere spazi",
+    "tooShort": "La passphrase deve contenere almeno 8 caratteri",
+    "mismatch": "Le passphrase non corrispondono",
+    "setupFailed": "Configurazione della crittografia non riuscita",
+    "wrong": "Passphrase errata",
+    "wasReset": "La crittografia di questo account è stata reimpostata. Scegli una nuova passphrase."
+  },
+  "toast": {
+    "setUp": "Crittografia configurata",
+    "unlocked": "Crittografia sbloccata"
+  }
+}

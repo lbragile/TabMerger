@@ -120,3 +120,4 @@
 - [Language picker](learnings_language_picker.md) — localStorage + chrome.storage.local (storage wins), worker localeReady, lazy shared reads, Button svg size-4
 - [GA4 param names match dimensions](learnings_ga4_param_names_match_dimensions.md) — heartbeat uses extension_version + channel like extension_uninstalled; releaseChannel.ts shared
 - [Header logo website link](learnings_header_logo_website_link.md) — content-sized link (visual spec neutral point), first-child 240px cell, manifest oracle for the env URL in e2e
+- [Adding a locale](learnings_adding_a_locale.md) — catalog + shared/web registration, Intl plural forms (_many), tests that hard-code the locale list

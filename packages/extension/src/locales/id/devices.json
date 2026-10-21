@@ -1,0 +1,18 @@
+{
+  "heading": "Perangkat",
+  "empty": "Belum ada perangkat.",
+  "selected": "{{count}} dipilih",
+  "remove": "Hapus",
+  "removeTitle_other": "Hapus {{count}} perangkat?",
+  "removeDescription": "Perangkat yang dihapus berhenti muncul di daftar ini. Jika browser itu masih aktif, mungkin akan mendaftar lagi saat berikutnya menyinkronkan, jadi ini tidak permanen untuk perangkat yang aktif.",
+  "cancel": "Batal",
+  "selectDevice": "Pilih {{name}}",
+  "nameInput": "Nama perangkat ini",
+  "save": "Simpan",
+  "thisDevice": "(perangkat ini)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Ganti nama perangkat ini",
+  "noTabs": "Tidak ada tab.",
+  "restoreTabs_other": "Pulihkan {{count}} tab",
+  "open": "Buka"
+}

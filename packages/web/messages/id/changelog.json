@@ -1,0 +1,15 @@
+{
+  "metaTitle": "Log perubahan",
+  "metaDescription": "Fitur baru, peningkatan, dan perbaikan di TabMerger.",
+  "title": "Log perubahan",
+  "lead": "Semua yang kami rilis, terbaru lebih dulu.",
+  "githubRelease": "Rilis GitHub",
+  "githubReleaseLabel": "Rilis {version} di GitHub",
+  "prLinkLabel": "Pull request #{number} di GitHub",
+  "majorRelease": "Rilis besar",
+  "types": {
+    "New": "Baru",
+    "Improved": "Ditingkatkan",
+    "Fixed": "Diperbaiki"
+  }
+}

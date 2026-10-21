@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger bu hesabın şifrelemesini kontrol etmek için sunucuya ulaşamadı, bu yüzden eşitleme duraklatıldı. Gruplarınız bu cihazda hâlâ kayıtlı. Bağlantınızı kontrol edip tekrar deneyin.",
+  "unlockBody": "Bu cihazdaki eşitlenmiş verilerin kilidini açmak için şifreleme parolanızı girin. Bu, cihaz başına bir kerelik bir adımdır — oturumu kapatmadığınız sürece tekrar sorulmaz. Parolanızı unutursanız verilerinizi kurtarmanın bir yolu yoktur — parola cihazınızdan asla çıkmaz ve TabMerger onu sizin için sıfırlayamaz.",
+  "setupBody": "Eşitlenen grup ve sekme verileriniz yalnızca sizin bildiğiniz bir parolayla uçtan uca şifrelenir. Şimdi bir tane seçin — unutursanız verilerinizi kurtarmanın bir yolu yoktur, parola cihazınızdan asla çıkmaz ve TabMerger onu sizin için sıfırlayamaz.",
+  "unavailableTitle": "Şifreleme şu anda kontrol edilemiyor",
+  "tryAgain": "Tekrar dene",
+  "unlockTitle": "Şifrelemenin kilidini aç",
+  "passphrase": "Parola",
+  "passphraseLabel": "Şifreleme parolası",
+  "unlock": "Kilidi aç",
+  "setupTitle": "Şifrelemeyi kur",
+  "newPassphrase": "Yeni parola",
+  "confirmPassphrase": "Parolayı onayla",
+  "setupButton": "Şifrelemeyi kur",
+  "error": {
+    "spaces": "Parola boşluk içeremez",
+    "tooShort": "Parola en az 8 karakter olmalıdır",
+    "mismatch": "Parolalar eşleşmiyor",
+    "setupFailed": "Şifreleme kurulamadı",
+    "wrong": "Yanlış parola",
+    "wasReset": "Bu hesap için şifreleme sıfırlandı. Yeni bir parola seçin."
+  },
+  "toast": {
+    "setUp": "Şifreleme kuruldu",
+    "unlocked": "Şifrelemenin kilidi açıldı"
+  }
+}

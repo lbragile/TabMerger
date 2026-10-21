@@ -1,0 +1,33 @@
+{
+  "syncPaused": "동기화 일시 중지됨: Firefox에서 허용하세요",
+  "conflictCopy": "{{names}}이(가) 다른 기기에서도 변경되었습니다. 내 버전은 사본으로 저장되었습니다.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "작업 중인 그룹이 다른 곳에서 변경되거나 제거되어 아무것도 변경하지 않았습니다.",
+  "undoConflict": "그룹이 다른 곳에서 변경되어 아무것도 실행 취소하지 않았습니다. 다시 시도하세요.",
+  "freeLimit": {
+    "maxGroups": "무료 요금제에서는 그룹을 최대 {{max}}개까지 만들 수 있습니다.",
+    "maxTabs": "무료 요금제에서는 탭을 최대 {{max}}개까지 저장할 수 있습니다.",
+    "maxUrlRules": "무료 요금제에서는 URL 규칙을 최대 {{max}}개까지 만들 수 있습니다."
+  },
+  "fileContains": "이 파일에는 {{groups}}, {{tabs}}이(가) 들어 있습니다.",
+  "incognitoNotAllowed": "TabMerger가 시크릿 모드에서 허용되지 않아 일반 창으로 열었습니다. 바꾸려면 확장 프로그램 관리를 열고 \"시크릿 모드에서 허용\"을 켜세요.",
+  "encryptionAlreadySetUp": "이 계정에는 이미 암호화가 설정되어 있습니다. 잠금을 해제하려면 기존 암호문구를 입력하세요.",
+  "signInToEnableEncryption": "암호화를 사용하려면 로그인해야 합니다",
+  "signInToResetEncryption": "암호화를 재설정하려면 로그인해야 합니다",
+  "googleUnavailable": "이 환경에서는 Google 로그인을 사용할 수 없습니다",
+  "googleNoUrl": "Google 로그인이 인증 URL을 반환하지 않았습니다",
+  "googleCancelled": "Google 로그인이 취소되었습니다",
+  "googleNoSession": "Google 로그인이 세션을 반환하지 않았습니다",
+  "googleFailed": "Google 로그인에 실패했습니다",
+  "expectedArray": "배열이어야 합니다",
+  "invalidFormat": "형식이 올바르지 않습니다",
+  "noGroupsFound": "그룹을 찾을 수 없습니다",
+  "noGroupsSelected": "선택한 그룹이 없습니다",
+  "notAuthenticated": "인증되지 않았습니다",
+  "sharingRequiresPro": "공유하려면 Pro로 업그레이드해야 합니다(이용 권한 없음)",
+  "aiOncePerDay": "오늘 이미 사용했습니다. 이 AI 작업은 하루에 한 번만 할 수 있습니다",
+  "proAiRequired": "Pro AI 요금제가 필요합니다",
+  "nameGroupOff": "그룹 이름 짓기가 설정에서 꺼져 있습니다",
+  "suggestSessionsOff": "세션 추천이 설정에서 꺼져 있습니다",
+  "organizeOff": "정리가 설정에서 꺼져 있습니다"
+}

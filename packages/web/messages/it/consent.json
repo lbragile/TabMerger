@@ -1,0 +1,11 @@
+{
+  "label": "Consenso ai cookie",
+  "message": "Vorremmo usare cookie di analisi (Google Analytics e PostHog) per capire come viene utilizzato il sito. Vengono impostati solo se accetti e puoi cambiare idea in qualsiasi momento.",
+  "messageOn": "Gli strumenti di analisi (Google Analytics e PostHog, incluse le registrazioni delle sessioni) sono attivi per questo sito nella tua area geografica. Rifiuta li disattiva e puoi cambiare idea in qualsiasi momento.",
+  "messageGpc": "Il tuo browser ha inviato un segnale Global Privacy Control, quindi gli strumenti di analisi (Google Analytics e PostHog) sono disattivati. Accetta li attiva e puoi cambiare idea in qualsiasi momento.",
+  "learnMore": "Dettagli sui cookie",
+  "accept": "Accetta",
+  "reject": "Rifiuta",
+  "chip": "Scelte sui cookie",
+  "collapse": "Nascondi le scelte sui cookie"
+}

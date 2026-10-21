@@ -1,0 +1,81 @@
+{
+  "deleteGroup": {
+    "title": "Grubu Sil",
+    "description": "\"{{name}}\" grubunu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "confirm": "Sil"
+  },
+  "closeWindow": {
+    "title": "Pencereyi Kapat",
+    "description": "Bu pencereyi ve tüm sekmelerini kapatmak istediğinizden emin misiniz?",
+    "confirm": "Kapat"
+  },
+  "removeWindow": {
+    "title": "Pencereyi Kaldır",
+    "description": "Bu pencereyi ve tüm sekmelerini kaldırmak istediğinizden emin misiniz?",
+    "confirm": "Kaldır"
+  },
+  "closeTab": {
+    "title": "Sekmeyi Kapat",
+    "description": "Bu sekmeyi kapatmak istediğinizden emin misiniz?",
+    "confirm": "Kapat"
+  },
+  "removeTab": {
+    "title": "Sekmeyi Kaldır",
+    "description": "Bu sekmeyi kaldırmak istediğinizden emin misiniz?",
+    "confirm": "Kaldır"
+  },
+  "closeSelection": {
+    "title": "Seçimi Kapat",
+    "confirm": "Kapat",
+    "description_tab_one": "{{count}} sekmeyi kapatmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_tab_other": "{{count}} sekmeyi kapatmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_window_one": "{{count}} pencereyi kapatmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_window_other": "{{count}} pencereyi kapatmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_group_one": "{{count}} grubu kapatmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_group_other": "{{count}} grubu kapatmak istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "deleteSelection": {
+    "title": "Seçimi Sil",
+    "confirm": "Sil",
+    "description_tab_one": "{{count}} sekmeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_tab_other": "{{count}} sekmeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_window_one": "{{count}} pencereyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_window_other": "{{count}} pencereyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_group_one": "{{count}} grubu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_group_other": "{{count}} grubu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "removeStaleTabs": {
+    "title": "Eski Sekmeleri Kaldır",
+    "confirm": "Kaldır",
+    "description_one": "{{count}} eski sekmeyi kaldırmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "description_other": "{{count}} eski sekmeyi kaldırmak istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "closeAllWindows": {
+    "title": "Tüm Pencereleri Kapat",
+    "description": "Tüm tarayıcı pencerelerini ve sekmelerini kapatmak istediğinizden emin misiniz?",
+    "confirm": "Tümünü Kapat"
+  },
+  "removeAllWindows": {
+    "title": "Tüm Pencereleri Kaldır",
+    "description": "Tüm pencereleri ve sekmelerini bu gruptan kaldırmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "confirm": "Tümünü Kaldır"
+  },
+  "archiveStaleGroups": {
+    "title": "Eski Grupları Arşivle",
+    "confirm": "Arşivle",
+    "description_one": "{{count}} eski grubu arşivlemek istediğinizden emin misiniz?",
+    "description_other": "{{count}} eski grubu arşivlemek istediğinizden emin misiniz?"
+  },
+  "clearAllData": {
+    "title": "Tüm Verileri Temizle",
+    "confirm": "Tüm Verileri Temizle",
+    "description": "Bu, tüm grupları, kayıtlı oturumları ve ayarları kalıcı olarak silecek. Bu işlem geri alınamaz.",
+    "description_kept": "Bu, tüm grupları, kayıtlı oturumları ve ayarları kalıcı olarak silecek. Bu işlem geri alınamaz. Hesabınızda saklanan otomatik yedekler korunur ve bunları Ayarlar → Veri bölümünden geri getirebilirsiniz."
+  },
+  "resetEncryption": {
+    "title": "Şifreleme Parolasını Sıfırla",
+    "confirm": "Parolayı Sıfırla",
+    "description": "Bu işlem geri alınamaz. Mevcut parolanızla şifrelenmiş tüm eşitlenmiş gruplar, oturumlar ve notlar kalıcı olarak erişilemez hâle gelecek. Yeni bir parola belirleyip eşitlemeye sıfırdan başlayacaksınız."
+  },
+  "cancel": "İptal"
+}

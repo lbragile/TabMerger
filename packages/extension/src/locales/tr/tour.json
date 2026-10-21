@@ -1,0 +1,284 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "TabMerger'ı tanıyın",
+      "description": "Bir göz atış: açık sekmelerinizin nerede göründüğü ve pencerenin nasıl düzenlendiği. Henüz denenecek bir şey yok."
+    },
+    "groups": {
+      "title": "Gruplarla düzenleyin",
+      "description": "Gruplar, kayıtlı sekmelerin yaşadığı yerdir. Bir tane oluşturacak, adlandıracak, renk verecek ve en üste sabitleyeceksiniz."
+    },
+    "drag": {
+      "title": "Sürükleyerek taşıyın",
+      "description": "Turun eklediği iki alıştırma grubunda, \"Tour demo\" ve \"Tour demo 2\", sekmeleri ve grupları taşıyacaksınız. Bunlarda sizin değil, örnek sekmeler var."
+    },
+    "tabs": {
+      "title": "Sekmeleri kaydedin ve yeniden açın",
+      "description": "Açık sekmeleri bir gruba taşımak, daha sonra geri getirmek ve kaydettiklerinizi toparlamak. Her birini alıştırma gruplarında ve turun açtığı yedek bir sekmede deneyeceksiniz: kendi sekmelerinizden hiçbiri kaydedilmez, açılmaz veya kapatılmaz."
+    },
+    "find": {
+      "title": "Bulun ve hataları geri alın",
+      "description": "Tüm sekmelerde ve gruplarda aynı anda arayın, fikrinizi değiştirdiğinizde geri adım atın. Alıştırma gruplarında bir arama, \"Geri al\" ve \"Yinele\" deneyeceksiniz."
+    },
+    "later": {
+      "title": "Sonrası için saklayın",
+      "description": "Tüm gruplarınızı tek seferde kaydedin, bir grubu silmeden kaldırın ve herhangi bir web sayfasından kaydedin. Bu bölüm yalnızca açıklar."
+    },
+    "settings": {
+      "title": "Ayarlar ve hesabınız",
+      "description": "TabMerger'ın görünümünü değiştirin, Ayarlar'ın başka neler sunduğunu ve oturum açmanın neler eklediğini görün. Temayı değiştirmeyi deneyeceksiniz."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "TabMerger'a hoş geldiniz",
+      "body": "TabMerger tarayıcınızı toparlar. Açık sekmelerinizi adlandırılmış gruplara kaydedin, kapatın ve ihtiyaç duyduğunuzda geri getirin. Bu turun yedi kısa bölümü var, her birinin adı bu kartın üstünde yazar. Bazı adımlar bir şeyi kendiniz denemenizi ister: o zaman turuncu bir halka bir sonraki kullanılacak denetimi işaretler ve metin onun adını verir. Bu adımlar için tur, örnek sekmeli iki alıştırma grubu ekler, \"Tour demo\" ve \"Tour demo 2\", ve bunları kendisi yeniden kaldırır. Bir adımı, bir bölümü veya tüm turu istediğiniz zaman atlayabilirsiniz."
+    },
+    "now-open": {
+      "title": "Şu An Açık",
+      "body": "Soldaki listenin en üstündeki \"Şu An Açık\", şu anda tarayıcınızda açık olan her sekmenin canlı listesidir. Her zaman ilk sıradadır ve silinemez."
+    },
+    "main-panel": {
+      "title": "Pencereler ve sekmeler",
+      "body": "Ana panel, solda seçtiğiniz grubun içindekileri gösterir: pencerelerini ve her penceredeki sekmeleri. Şu An Açık için bunlar gerçek tarayıcı pencerelerinizdir."
+    },
+    "make-group": {
+      "title": "Bir grup oluşturun",
+      "body": "Grup, kayıtlı sekmeler için adlandırılmış bir yerdir; örneğin \"İş\" veya \"Tatil planları\". Deneyin: gruplarınızın altındaki \"Grup Ekle\"yi seçin. \"Grup adı\" alanı hazır, \"temp group\" yazan yeni bir grup görünür. \"Alıştırma\" gibi kendi adınızı yazın, ardından Enter'a basın veya alanın yanındaki \"Kaydet\"i seçin.",
+      "doneText": "Güzel, grubunuz hazır. Sonraki adımlar onu kullanır.",
+      "fallbackBody": "Grup, kayıtlı sekmeler için adlandırılmış bir yerdir; örneğin \"İş\" veya \"Tatil planları\". Gruplarınızın altındaki \"Grup Ekle\" bir tane oluşturur. Planınızın izin verdiği kadar grubunuz zaten var, bu yüzden bu adım yalnızca gösterilir, denenmez."
+    },
+    "group-color": {
+      "title": "Bir renk verin",
+      "body": "Renkler grupları birbirinden ayırmayı kolaylaştırır. Deneyin: az önce oluşturduğunuz grupta, adının önündeki yuvarlak \"Grup rengini değiştir\" noktasını seçin. Yuvarlak renk örneklerinden birini seçin, ardından \"Uygula\"yı seçin.",
+      "doneText": "Güzel, renk değişti.",
+      "fallbackBody": "Renkler grupları birbirinden ayırmayı kolaylaştırır. Her grubun adının önünde yuvarlak bir \"Grup rengini değiştir\" noktası vardır: onu seçin, bir renk seçin, ardından \"Uygula\"yı seçin."
+    },
+    "group-pin": {
+      "title": "Bir grubu en üste sabitleyin",
+      "body": "Sabitlenmiş gruplar diğerlerinin üstünde kalır. Deneyin: az önce oluşturduğunuz grupta, satırının sonundaki yıldızı seçin. Adı \"Grubu sabitle\"dir, grup zaten sabitlenmişse \"Grubun sabitlemesini kaldır\".",
+      "doneText": "Güzel. Geri değiştirmek istediğinizde yıldızı yeniden seçin.",
+      "fallbackBody": "Sabitlenmiş gruplar diğerlerinin üstünde kalır. Her grubun satırının sonunda \"Grubu sabitle\" adlı bir yıldız vardır: grubu sabitlemek için seçin, sabitlemeyi kaldırmak için yeniden seçin."
+    },
+    "group-menu": {
+      "title": "Her grup için daha fazlası",
+      "body": "Her kayıtlı grubun bir sağ tıklama menüsü vardır. İçinde \"Yeniden adlandır\", \"Not ekle\", \"Çoğalt\", açık pencerelerinizi gruba eklemek için \"Mevcutla birleştir\", gizlemek için \"Grubu arşivle\" ve \"Grubu sil\" bulunur. Bu adım yalnızca bir bakış: tur açıkken liste kilitlidir, menüyü turdan sonra deneyin."
+    },
+    "drag-tab-reorder": {
+      "title": "Sekmeleri yeniden sıralayın",
+      "body": "Ana panel \"Tour demo\" alıştırma grubunu gösterir. Her sekmenin önünde \"Sekmeyi yeniden sıralamak için sürükleyin\" adlı noktalı bir tutamaç vardır. \"Reading\" penceresinin ilk sekmesini o pencerenin sonuna taşıyın.",
+      "subStepText": {
+        "1": "İlk sekmenin tutamacına basılı tutun.",
+        "2": "Onu, \"Bu sekmenin altına bırakın\" olarak işaretlenen son sekmenin altındaki çizgiye taşıyın.",
+        "3": "Bırakmak için bırakın."
+      },
+      "subStepKeys": {
+        "1": "tutamaca ulaşmak için Tab'a, sekmeyi almak için Boşluk'a basın.",
+        "2": "sekme \"Bu sekmenin altına bırakın\" olarak işaretlenen çizgiye gelene kadar Aşağı ok tuşuna basın.",
+        "3": "bırakmak için Boşluk'a basın."
+      },
+      "doneText": "Güzel, sekme taşındı.",
+      "fallbackBody": "Her kayıtlı sekmenin önünde \"Sekmeyi yeniden sıralamak için sürükleyin\" adlı noktalı bir tutamaç vardır. Onu sürüklemek sekmeyi penceresinde yukarı veya aşağı taşır. Bu adım yalnızca bir bakış."
+    },
+    "drag-tab-window": {
+      "title": "Bir sekmeyi başka bir pencereye taşıyın",
+      "body": "Bir sekme aynı grubun başka bir penceresine de gidebilir. İlk sekmeyi \"Tour demo\" grubunun diğer penceresine taşıyın.",
+      "subStepText": {
+        "1": "İlk sekmenin tutamacına basılı tutun.",
+        "2": "Onu \"Bu pencereye bırakın\" olarak işaretlenen diğer pencerenin üzerine taşıyın.",
+        "3": "Bırakmak için bırakın."
+      },
+      "subStepKeys": {
+        "1": "tutamaca ulaşmak için Tab'a, sekmeyi almak için Boşluk'a basın.",
+        "2": "sekme \"Bu pencereye bırakın\" olarak işaretlenen pencerenin içine gelene kadar Aşağı ok tuşuna basın.",
+        "3": "bırakmak için Boşluk'a basın."
+      },
+      "doneText": "Güzel, sekme diğer pencerede.",
+      "fallbackBody": "Bir sekmeyi tutamacından aynı grubun başka bir penceresine sürüklemek onu oraya taşır. Bu adım yalnızca bir bakış."
+    },
+    "drag-tab-group": {
+      "title": "Bir sekmeyi başka bir gruba taşıyın",
+      "body": "Bir sekmeyi soldaki listedeki bir grubun üzerine bırakmak onu o gruba taşır. İlk sekmeyi \"Tour demo 2\" alıştırma grubuna taşıyın.",
+      "subStepText": {
+        "1": "İlk sekmenin tutamacına basılı tutun.",
+        "2": "Onu soldaki listede \"Bu gruba bırakın\" olarak işaretlenen \"Tour demo 2\" üzerine taşıyın.",
+        "3": "Bırakmak için bırakın."
+      },
+      "subStepKeys": {
+        "1": "tutamaca ulaşmak için Tab'a, sekmeyi almak için Boşluk'a basın.",
+        "2": "grup listesine gitmek için Sol ok tuşuna, ardından \"Bu gruba bırakın\" olarak işaretlenen \"Tour demo 2\"ye ulaşana kadar Aşağı ok tuşuna basın.",
+        "3": "bırakmak için Boşluk'a basın."
+      },
+      "doneText": "Güzel, sekme artık \"Tour demo 2\" içinde.",
+      "fallbackBody": "Bir sekmeyi tutamacından soldaki listedeki bir grubun üzerine sürüklemek onu o gruba taşır. Bu adım yalnızca bir bakış."
+    },
+    "drag-group-order": {
+      "title": "Grupları sıraya koyun",
+      "body": "Grupların da satırlarının başında \"Grubu yeniden sıralamak için sürükleyin\" adlı noktalı bir tutamaç vardır. İki alıştırma grubunun yerini değiştirin. Kendi gruplarınız da aynı şekilde taşınır.",
+      "subStepText": {
+        "1": "Üstteki alıştırma grubunun tutamacına basılı tutun.",
+        "2": "Onu, \"Bu grubun altına bırakın\" olarak işaretlenen diğer alıştırma grubunun altındaki çizgiye taşıyın.",
+        "3": "Bırakmak için bırakın."
+      },
+      "subStepKeys": {
+        "1": "tutamaca ulaşmak için Tab'a, grubu almak için Boşluk'a basın.",
+        "2": "grup \"Bu grubun altına bırakın\" olarak işaretlenen çizgide olacak şekilde Aşağı ok tuşuna bir kez basın.",
+        "3": "bırakmak için Boşluk'a basın."
+      },
+      "doneText": "Güzel, grupların yeri değişti.",
+      "fallbackBody": "Her kayıtlı grubun satırının başında \"Grubu yeniden sıralamak için sürükleyin\" adlı noktalı bir tutamaç vardır. Onu sürüklemek grubu listede yukarı veya aşağı taşır. Bu adım yalnızca bir bakış."
+    },
+    "save-tabs": {
+      "title": "Sekmeleri bir gruba kaydedin",
+      "body": "Şu An Açık'tan bir grubun üzerine sürüklenen sekme o gruba kaydedilir ve tarayıcınızda kapatılır. Kendi sekmelerinizden hiçbiri kapanmasın diye tur, \"Tour practice tab\" adlı yedek bir sekme açtı: bu adımda taşıyabileceğiniz tek sekme odur. Onu \"Tour demo\" alıştırma grubuna kaydedin.",
+      "subStepText": {
+        "1": "\"Tour practice tab\" önündeki noktalı tutamaca basılı tutun.",
+        "2": "Onu soldaki listede \"Bu gruba bırakın\" olarak işaretlenen \"Tour demo\" üzerine taşıyın.",
+        "3": "Bırakmak için bırakın."
+      },
+      "subStepKeys": {
+        "1": "tutamaca ulaşmak için Tab'a, sekmeyi almak için Boşluk'a basın.",
+        "2": "grup listesine gitmek için Sol ok tuşuna, ardından \"Bu gruba bırakın\" olarak işaretlenen \"Tour demo\"ya ulaşana kadar Aşağı ok tuşuna basın.",
+        "3": "bırakmak için Boşluk'a basın."
+      },
+      "doneText": "Güzel. Alıştırma sekmesi \"Tour demo\" içine kaydedildi ve tarayıcınızda kapatıldı. Tüm pencereler de aynı şekilde kaydedilir.",
+      "fallbackBody": "Şu An Açık'tan soldaki bir grubun üzerine sürüklenen bir sekme veya tüm pencere o gruba kaydedilir ve tarayıcınızda kapatılır. Tur bunu denemek için yedek bir sekme açamadı, bu yüzden bu adım yalnızca bir bakış: sekmelerinizin hiçbirine dokunulmaz."
+    },
+    "open-tabs": {
+      "title": "Sekmelerinizi yeniden açın",
+      "body": "Kayıtlı bir grupta, bir sekmenin adını seçmek o sekmeyi yeniden açar; bir pencerenin menüsündeki \"Tarayıcıda aç\" ise tüm pencereyi açar. Bu menüyü \"Tour demo\" grubunun \"Reading\" penceresinde deneyin. Örnek sekmeler gerçek sayfalar değildir, bu yüzden tur sırasında hiçbir şey açılmaz.",
+      "subStepText": {
+        "1": "\"Reading\" satırının sonundaki üç nokta olan \"Diğer pencere seçenekleri\"ni seçin.",
+        "2": "Menüde \"Tarayıcıda aç\"ı seçin."
+      },
+      "doneText": "Güzel. Turdan sonra bu, pencereyi sekmeleriyle birlikte tarayıcınızda açar. Şimdi hiçbir şey açılmadı.",
+      "fallbackBody": "Kayıtlı bir grupta, bir sekmenin adını seçmek o sekmeyi yeniden açar. Bir penceredeki \"Diğer pencere seçenekleri\"nde tüm pencere için \"Tarayıcıda aç\" bulunur, bir grubun sağ tıklama menüsünde ise \"Tümünü yeni pencerede aç\". Bu adım yalnızca bir bakış: tur sırasında hiçbir şey açılmaz."
+    },
+    "tab-extras": {
+      "title": "Notlar, hatırlatıcılar ve adlar",
+      "body": "Kayıtlı bir sekmenin daha fazlasını içeren bir sağ tıklama menüsü vardır: \"Gruba taşı\", bir şey yazmak için \"Not ekle\", daha sonra hatırlatılmak için \"Bana hatırlat…\", kendi başlığınızı vermek için \"Sekmeyi yeniden adlandır\" ve \"Sekmeyi kaldır\". Bu adım yalnızca bir bakış: tur açıkken liste kilitlidir, menüyü turdan sonra deneyin."
+    },
+    "tidy-up": {
+      "title": "Bir grubu toparlayın",
+      "body": "Ana panelin sağ üstündeki \"Diğer grup seçenekleri\", sekmeleri başlığa veya adrese göre sıralayabilir, \"Yinelenen sekmeleri kaldır\" ile tekrarları kaldırabilir ve \"Pencereleri birleştir\" ile tek pencerede toplayabilir veya \"Pencereleri ayır\" ile ayırabilir. \"Tour demo\" grubunda \"Sample: books\" sekmesi iki kez var: tekrarı kaldırın.",
+      "modalBody": "\"Yinelenenleri kaldır\" iletişim kutusu tekrarlanan sekmeyi listeler. \"1 yineleneni kaldır\"ı seçin.",
+      "subStepText": {
+        "1": "Ana panelin sağ üstündeki üç nokta olan \"Diğer grup seçenekleri\"ni seçin.",
+        "2": "Menüde \"Yinelenen sekmeleri kaldır\"ı seçin.",
+        "3": "\"Yinelenenleri kaldır\" iletişim kutusunda \"1 yineleneni kaldır\"ı seçin."
+      },
+      "doneText": "Güzel, tekrarlanan sekme gitti.",
+      "fallbackBody": "Ana panelin sağ üstündeki \"Diğer grup seçenekleri\", sekmeleri başlığa veya adrese göre sıralayabilir, \"Yinelenen sekmeleri kaldır\" ile tekrarları kaldırabilir ve \"Pencereleri birleştir\" ile tek pencerede toplayabilir veya \"Pencereleri ayır\" ile ayırabilir. Bu adım yalnızca bir bakış."
+    },
+    "select-items": {
+      "title": "Birkaçı üzerinde aynı anda çalışın",
+      "body": "Üst bilgideki \"Öğeleri seç\", her sekme, pencere ve grupta bir onay kutusu gösterir. Bazıları seçiliyken altta hepsine birlikte etki eden bir çubuk çıkar, örneğin onları silmek için. Seçili grupları bağlantı olarak paylaşmak Pro plan gerektirir. Bir örnek sekme seçmeyi deneyin.",
+      "subStepText": {
+        "1": "Üst bilgide \"Öğeleri seç\"i seçin.",
+        "2": "İlk örnek sekmenin önündeki onay kutusunu seçin."
+      },
+      "doneText": "Güzel. Alttaki çubuk seçtiklerinize etki eder. İlerlediğinizde tur seçimi yeniden kapatır.",
+      "fallbackBody": "Üst bilgideki \"Öğeleri seç\", her sekme, pencere ve grupta bir onay kutusu gösterir. Bazıları seçiliyken altta hepsine birlikte etki eden bir çubuk çıkar, örneğin onları silmek için. Seçili grupları bağlantı olarak paylaşmak Pro plan gerektirir. Bu adım yalnızca bir bakış."
+    },
+    "search": {
+      "title": "Her şeyi bulun",
+      "body": "Üstte \"Sekmelerde ve gruplarda ara…\" yazan arama kutusu tüm sekmelere ve gruplara aynı anda bakar. Eşleşmeler siz yazarken görünür. Örnek sekmelerde deneyin.",
+      "subStepText": {
+        "1": "Üstteki arama kutusunu seçin.",
+        "2": "sample kelimesini yazın."
+      },
+      "doneText": "Güzel. Eşleşen her sekme arama kutusunun altında listelenir. Birini seçmek sizi grubuna götürür.",
+      "fallbackBody": "Üstte \"Sekmelerde ve gruplarda ara…\" yazan arama kutusu tüm sekmelere ve gruplara aynı anda bakar. Eşleşmeler siz yazarken görünür ve birini seçmek sizi grubuna götürür."
+    },
+    "search-filters": {
+      "title": "Aramayı daraltın",
+      "body": "Bir grubun veya pencerenin içine bakmak için aramaya group: veya window: ile, tarayıcı sekme grubu etiketine göre filtrelemek için tag: ile başlayın. Arama kutusu bunları \"Bu aramaları deneyin\" altında listeler. Alıştırma grubunda group: deneyin, ardından aramayı temizleyin.",
+      "subStepText": {
+        "1": "Üstteki arama kutusunu seçin.",
+        "2": "Boşluksuz group:tour yazın. \"Bir grup seçin\" adlı bir liste görünür.",
+        "3": "Bu listede \"Tour demo\"yu seçin. Arama artık yalnızca o grubun içine bakar.",
+        "4": "Arama alanının sonundaki × olan \"Aramayı temizle\"yi seçin. Arama siz temizleyene kadar kalır."
+      },
+      "doneText": "Güzel, arama temizlendi.",
+      "fallbackBody": "Bir grubun veya pencerenin içine bakmak için aramaya group: veya window: ile, tarayıcı sekme grubu etiketine göre filtrelemek için tag: ile başlayın. Arama kutusu bunları \"Bu aramaları deneyin\" altında listeler."
+    },
+    "undo": {
+      "title": "Fikrinizi mi değiştirdiniz?",
+      "body": "Üst bilgideki \"Geri al\" ve \"Yinele\", gruplarda ve sekmelerde yaptığınız son 10 değişiklikte geri ve ileri gider. Geri alınacak bir şey olana kadar gridir. Bunları \"Reading\" örnek penceresindeki küçük bir değişiklikte deneyin.",
+      "subStepText": {
+        "1": "\"Reading\" satırının sonundaki \"Pencereyi yıldızla\" adlı yıldızı seçin.",
+        "2": "Üst bilgide \"Geri al\"ı seçin. Bu yıldızı yeniden kaldırır.",
+        "3": "\"Geri al\"ın yanındaki \"Yinele\"yi seçin. Bu yıldızı geri getirir."
+      },
+      "doneText": "Güzel. \"Geri al\" ve \"Yinele\" kendi gruplarınızda ve sekmelerinizde de aynı şekilde çalışır.",
+      "fallbackBody": "Üst bilgideki \"Geri al\" ve \"Yinele\", gruplarda ve sekmelerde yaptığınız son 10 değişiklikte geri ve ileri gider. Geri alınacak bir şey olana kadar gridir."
+    },
+    "sessions": {
+      "title": "Her şeyi tek seferde kaydedin",
+      "body": "Oturum, tüm gruplarınızın şu anki hâlinin kayıtlı bir kopyasıdır. Sol alttaki \"Oturumlar\" bölümünde \"Mevcut oturumu kaydet\" bir tane oluşturur. Kayıtlı bir oturumun yanındaki \"Oturumu geri yükle\" onu geri getirir: önce sorar, çünkü açık pencerelerinizi kapatır."
+    },
+    "archived": {
+      "title": "Bir grubu kaldırın",
+      "body": "Arşivlemek bir grubu silmeden gizler. Arşivlenen gruplar sol alttaki \"Arşiv\" bölümünde bekler; orada onları geri yükleyebilir veya silebilirsiniz. Planınızdaki grup sayısına yine de dahil edilirler."
+    },
+    "quick-save": {
+      "title": "TabMerger'ı açmadan kaydedin",
+      "body": "Herhangi bir web sayfasına sağ tıklayın ve \"TabMerger'a kaydet\"i seçin. Neyin kaydedileceğini seçin, örneğin \"Bu sekmeyi kaydet\" veya \"Diğer tüm sekmeleri kaydet\", ardından konacağı grubu seçin."
+    },
+    "theme": {
+      "title": "Açık veya koyu",
+      "body": "Deneyin: sağ üst köşedeki \"Ayarlar menüsü\" (oturum açtıktan sonra \"Hesap menüsü\") adlı menüyü açın ve \"Ayarlar\"ı seçin. \"Tema\" listesini açın, farklı bir tema seçin, ardından \"Değişiklikleri kaydet\"i seçin.",
+      "modalBody": "Ayarlar'da: \"Tema\" listesini açın, farklı bir tema seçin, ardından \"Değişiklikleri kaydet\"i seçin.",
+      "doneText": "Güzel, tema değişti. Devam etmek için Ayarlar'ı kapatın veya İleri'yi seçin."
+    },
+    "settings-more": {
+      "title": "Ayarlar'da daha fazlası",
+      "body": "Ayarlar'ın \"Genel\" sekmesinde daha fazlası var: \"Silmeden önce onayla\" bir şey kaldırılmadan önce sorar, \"URL kuralları\" ise web adreslerini bir gruba bağlar. \"Veri\" sekmesinde \"Dışa aktar\" tüm gruplarınızı bir dosyaya kaydeder, \"İçe aktar\" bir dosyayı geri yükler. Aynı sekmedeki otomatik yedekler Pro plan gerektirir."
+    },
+    "account": {
+      "title": "Hesabınız",
+      "body": "TabMerger hesap olmadan çalışır: her şey bu cihazda tutulur. Aynı menüden Pro planla oturum açmak, gruplarınızı cihazlarınız arasında eşit tutar. Eşitlenen veriler gönderilmeden önce cihazınızda kilitlenir, böylece yalnızca siz okuyabilirsiniz."
+    },
+    "ai": {
+      "title": "AI işlemleri",
+      "body": "Üst bilgideki \"AI işlemleri\", açık sekmelerinizi sizin için gruplara ayırabilir. Pro AI planı gerektirir."
+    },
+    "finish": {
+      "title": "Hazırsınız",
+      "body": "Bunu yeniden görmek mi istiyorsunuz? Sağ üst köşedeki soru işareti olan \"Turu başlat\" onu istediğiniz zaman yeniden oynatır."
+    }
+  },
+  "card": {
+    "dialogLabel": "TabMerger turu",
+    "chapterLine": "Bölüm {{chapter}} / {{chapters}}",
+    "stepLine": "Adım {{step}} / {{total}}",
+    "done": "Tamam.",
+    "withKeyboard": " Klavyeyle: {{keys}}",
+    "yourTurnAnnouncement": " Sıra sizde. Denemeden devam etmek için \"Bu adımı atla\"yı seçin.",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Devam etmek için İleri'yi seçin.",
+    "part": "Kısım ",
+    "ofTotal": "{{current}} / {{total}}",
+    "keyboard": "Klavye: ",
+    "yourTurn": "Sıra sizde. Bu adım siz deneyene kadar bekler.",
+    "practiceRemoved": "Alıştırma grubu kaldırıldı.",
+    "practiceKept": "Bu turda oluşturduğunuz grup, “{{name}}”, hâlâ listenizde. Saklayın veya şimdi kaldırın.",
+    "practiceKept_tabs": "Bu turda oluşturduğunuz grup, “{{name}}” ({{tabs}}), hâlâ listenizde. Saklayın veya şimdi kaldırın.",
+    "removePractice": "Alıştırma grubunu kaldır",
+    "back": "Geri",
+    "skipStep": "Bu adımı atla",
+    "finish": "Bitti",
+    "next": "İleri",
+    "skipTour": "Turu atla",
+    "skipChapter": "Bölümü atla"
+  },
+  "drop": {
+    "belowTab": "Bu sekmenin altına bırakın",
+    "window": "Bu pencereye bırakın",
+    "group": "Bu gruba bırakın",
+    "belowGroup": "Bu grubun altına bırakın",
+    "default": "Buraya bırakın"
+  },
+  "practiceLeft": "Tur listenizde bir alıştırma grubu bıraktı: \"{{name}}\".",
+  "removeIt": "Kaldır"
+}

@@ -1,0 +1,18 @@
+{
+  "copyToGroup": "Sao chép vào nhóm",
+  "moveToGroup": "Di chuyển vào nhóm",
+  "star": "Gắn sao",
+  "unstar": "Bỏ gắn sao",
+  "share": "Chia sẻ",
+  "shareRequiresPro": "Chia sẻ yêu cầu gói Pro",
+  "close": "Đóng",
+  "delete": "Xóa",
+  "cancel": "Hủy lựa chọn",
+  "linkCopied": "Đã sao chép liên kết vào bộ nhớ tạm",
+  "shareFailed": "Chia sẻ thất bại",
+  "selected_tab_other": "Đã chọn {{count}} thẻ",
+  "selected_window_other": "Đã chọn {{count}} cửa sổ",
+  "selected_group_other": "Đã chọn {{count}} nhóm",
+  "cleared": "Đã xóa lựa chọn.",
+  "sentence": "{{text}}."
+}

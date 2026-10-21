@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "eyebrow": "Il gestore di schede per chi ha troppe schede aperte",
+    "title": "Smetti di annegare tra le schede del browser.",
+    "lead": "TabMerger raccoglie ogni finestra aperta in gruppi con nome e colore che puoi cercare, condividere e ripristinare, su qualsiasi computer, con un clic.",
+    "installChrome": "Installa per Chrome — gratis",
+    "installFirefox": "Installa per Firefox — gratis",
+    "installEdge": "Installa per Edge — gratis",
+    "chrome": "Chrome",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Piano gratuito, nessun account necessario."
+  },
+  "install": {
+    "title": "Pronto a mettere ordine nel tuo browser?",
+    "lead": "Installa TabMerger in pochi secondi. Nessun account richiesto per iniziare.",
+    "addToChrome": "Aggiungi a Chrome",
+    "addToFirefox": "Aggiungi a Firefox",
+    "addToEdge": "Aggiungi a Edge",
+    "viewPricing": "Vedi i prezzi",
+    "note": "Installazione gratuita — Nessun account richiesto · Supporto per Edge in arrivo"
+  },
+  "finalCta": {
+    "title": "Smetti di annegare tra le schede del browser.",
+    "leadAi": "Inizia gratis, senza account. Passa a un piano superiore in qualsiasi momento per la sincronizzazione cloud e l'IA.",
+    "leadNoAi": "Inizia gratis, senza account. Passa a un piano superiore in qualsiasi momento per la sincronizzazione cloud; le funzionalità IA arriveranno presto.",
+    "installChrome": "Installa per Chrome — gratis",
+    "installFirefox": "Installa per Firefox — gratis",
+    "installEdge": "Installa per Edge — gratis",
+    "faq": "Hai domande? Consulta le FAQ →"
+  },
+  "features": {
+    "title": "Pensato per quando hai novanta schede aperte.",
+    "seeAll": "Vedi tutte le funzionalità",
+    "ai": {
+      "title": "L'IA mette ordine al posto tuo",
+      "description": "Con un clic le schede aperte vengono raggruppate per argomento e ogni gruppo riceve un nome. Accetta, rinomina o ignora.",
+      "summary": "✦ 24 schede → 3 gruppi",
+      "groupEvals": "Valutazioni LLM · 9",
+      "groupHiring": "Assunzioni · 7",
+      "groupDocs": "Documenti · 8"
+    },
+    "sessions": {
+      "title": "Chiudi tutto, non perdi niente",
+      "description": "Salva una sessione con un nome e ripristina domattina le stesse finestre nello stesso ordine.",
+      "sessionName": "Ricerca del mattino",
+      "sessionStats": "3 gruppi · 5 finestre · 24 schede"
+    },
+    "sync": {
+      "title": "Le stesse schede su ogni computer",
+      "description": "La sincronizzazione è automatica e per singola scheda, così una modifica sul portatile non sovrascrive mai ciò che hai fatto sul desktop.",
+      "status": "Sincronizzato 4 minuti fa · 3 dispositivi"
+    }
+  },
+  "pricing": {
+    "title": "Prezzi semplici e trasparenti",
+    "seeFull": "Vedi tutti i prezzi",
+    "cancelNote": "Annulla in qualsiasi momento dal tuo account: nessun vincolo, nessuna domanda.",
+    "blurbFree": "Per chi vuole provarlo",
+    "blurbPro": "Per chi vuole funzionalità premium aggiuntive",
+    "blurbProAi": "Per gli utenti esperti che vogliono le funzionalità IA"
+  }
+}

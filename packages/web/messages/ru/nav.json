@@ -1,0 +1,21 @@
+{
+  "features": "Возможности",
+  "pricing": "Цены",
+  "changelog": "Изменения",
+  "faq": "Вопросы",
+  "dashboard": "Панель управления",
+  "account": "Аккаунт",
+  "accountSettings": "Настройки аккаунта",
+  "signIn": "Войти",
+  "signUp": "Регистрация",
+  "getStarted": "Начать",
+  "signOut": "Выйти",
+  "openMenu": "Открыть меню",
+  "closeMenu": "Закрыть меню",
+  "accountMenu": "Меню аккаунта",
+  "home": "Главная TabMerger",
+  "github": "GitHub",
+  "githubRepo": "TabMerger на GitHub",
+  "githubRepoWithStars": "TabMerger на GitHub, {count, plural, one {# звезда} few {# звезды} many {# звёзд} other {# звезды}}",
+  "toggleTheme": "Переключить тему"
+}

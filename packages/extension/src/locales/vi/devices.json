@@ -1,0 +1,18 @@
+{
+  "heading": "Thiết bị",
+  "empty": "Chưa có thiết bị nào.",
+  "selected": "{{count}} đã chọn",
+  "remove": "Xóa",
+  "removeTitle_other": "Xóa {{count}} thiết bị?",
+  "removeDescription": "Các thiết bị bị xóa sẽ không còn xuất hiện trong danh sách này nữa. Nếu trình duyệt đó vẫn đang hoạt động, nó có thể tự đăng ký lại vào lần đồng bộ tiếp theo, vì vậy việc này không vĩnh viễn đối với một thiết bị đang hoạt động.",
+  "cancel": "Hủy",
+  "selectDevice": "Chọn {{name}}",
+  "nameInput": "Tên thiết bị này",
+  "save": "Lưu",
+  "thisDevice": "(thiết bị này)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "Đổi tên thiết bị này",
+  "noTabs": "Không có thẻ nào.",
+  "restoreTabs_other": "Khôi phục {{count}} thẻ",
+  "open": "Mở"
+}

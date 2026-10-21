@@ -1,0 +1,21 @@
+{
+  "copyToGroup": "Gruba kopyala",
+  "moveToGroup": "Gruba taşı",
+  "star": "Yıldızla",
+  "unstar": "Yıldızı kaldır",
+  "share": "Paylaş",
+  "shareRequiresPro": "Paylaşım Pro gerektirir",
+  "close": "Kapat",
+  "delete": "Sil",
+  "cancel": "Seçimi iptal et",
+  "linkCopied": "Bağlantı panoya kopyalandı",
+  "shareFailed": "Paylaşılamadı",
+  "selected_tab_one": "{{count}} sekme seçildi",
+  "selected_tab_other": "{{count}} sekme seçildi",
+  "selected_window_one": "{{count}} pencere seçildi",
+  "selected_window_other": "{{count}} pencere seçildi",
+  "selected_group_one": "{{count}} grup seçildi",
+  "selected_group_other": "{{count}} grup seçildi",
+  "cleared": "Seçim temizlendi.",
+  "sentence": "{{text}}."
+}

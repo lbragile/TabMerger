@@ -1,0 +1,27 @@
+{
+  "title": "Importa / Esporta",
+  "description": "Gestisci i tuoi dati di TabMerger",
+  "tabExport": "Esporta",
+  "tabImport": "Importa",
+  "exportIntro": "Esporta tutti i tuoi gruppi come file JSON. Potrai reimportare questo file in seguito.",
+  "downloadJson": "Scarica JSON",
+  "jsonHeading": "JSON di TabMerger",
+  "jsonIntro": "Importa da un file JSON esportato in precedenza. Sostituisce i gruppi attuali.",
+  "chooseJson": "Scegli file JSON",
+  "bookmarksHeading": "Segnalibri di Chrome",
+  "bookmarksIntro": "Importa da un'esportazione HTML dei segnalibri di Chrome. Ogni cartella diventa un gruppo.",
+  "chooseBookmarks": "Scegli file HTML dei segnalibri",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Importa da un'esportazione in testo semplice di OneTab. Ogni blocco separato da una riga vuota diventa un gruppo.",
+  "chooseOneTab": "Scegli file TXT di OneTab",
+  "toast": {
+    "exported": "Gruppi esportati correttamente",
+    "imported": "Gruppi importati correttamente",
+    "imported_skipped": "Gruppi importati correttamente, {{skipped}} saltati",
+    "importedCounts": "Importati {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Importati {{groups}}, {{tabs}}, {{skipped}} saltati",
+    "invalidJson": "File JSON non valido",
+    "noBookmarks": "Nessun segnalibro trovato",
+    "noTabs": "Nessuna scheda trovata"
+  }
+}

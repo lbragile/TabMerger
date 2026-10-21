@@ -1,0 +1,59 @@
+{
+  "addGroup": {
+    "title": "नया समूह बनाएं",
+    "name": "नाम",
+    "namePlaceholder": "समूह नाम",
+    "color": "रंग",
+    "cancel": "रद्द करें",
+    "create": "बनाएं"
+  },
+  "dedup": {
+    "title": "डुप्लिकेट हटाएं",
+    "description_one": "{{count}} डुप्लिकेट टैब हटाया जाएगा।",
+    "description_other": "{{count}} डुप्लिकेट टैब हटाए जाएंगे।",
+    "cancel": "रद्द करें",
+    "confirm_one": "{{count}} डुप्लिकेट हटाएं",
+    "confirm_other": "{{count}} डुप्लिकेट हटाएं"
+  },
+  "staleGroups": {
+    "title": "पुराने समूहों की समीक्षा करें",
+    "description_one": "{{count}} समूह कुछ समय से नहीं छुआ गया — पूर्वावलोकन के लिए विस्तृत करें, या सीधे संग्रहित करें।",
+    "description_other": "{{count}} समूह कुछ समय से नहीं छुए गए — पूर्वावलोकन के लिए विस्तृत करें, या सीधे संग्रहित करें।",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "छिपाएं",
+    "preview": "पूर्वावलोकन",
+    "archive": "संग्रहित करें",
+    "empty": "यह समूह खाली है।",
+    "close": "बंद करें"
+  },
+  "staleTabs": {
+    "title": "पुराने टैब",
+    "description_one": "{{count}} टैब कुछ समय से नहीं छुआ गया है।",
+    "description_other": "{{count}} टैब कुछ समय से नहीं छुए गए हैं।",
+    "close": "बंद करें",
+    "removeAll_one": "{{count}} टैब हटाएं",
+    "removeAll_other": "{{count}} टैब हटाएं"
+  },
+  "saveSession": {
+    "title": "सत्र सहेजें",
+    "name": "सत्र नाम",
+    "namePlaceholder": "उदा. कार्य अनुसंधान, सप्ताहांत पठन",
+    "nameRequired": "सत्र नाम आवश्यक है",
+    "description": "विवरण (वैकल्पिक)",
+    "descriptionPlaceholder": "यह सत्र किस लिए है?",
+    "cancel": "रद्द करें",
+    "save": "सहेजें"
+  },
+  "shortcutSave": {
+    "title_one": "{{count}} टैब सहेजें",
+    "title_other": "{{count}} टैब सहेजें",
+    "description": "कीबोर्ड शॉर्टकट द्वारा कैप्चर किए गए टैब को सहेजने के लिए स्थान चुनें।",
+    "destination": "गंतव्य समूह",
+    "quickSave": "त्वरित सहेज (नया समूह)",
+    "cancel": "रद्द करें",
+    "save": "सहेजें"
+  },
+  "confirmDialog": {
+    "cancel": "रद्द करें"
+  }
+}

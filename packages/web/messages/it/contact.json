@@ -1,0 +1,32 @@
+{
+  "metaTitle": "Contatti",
+  "metaDescription": "Contatta il team di TabMerger: segnala un bug, fai domande sulla fatturazione o sul tuo account, oppure condividi feedback e idee.",
+  "eyebrow": "Assistenza",
+  "title": "Contattaci",
+  "lead": "Hai una domanda, hai trovato un bug o ti serve aiuto con l'abbonamento? Di solito rispondiamo entro un giorno lavorativo.",
+  "bugReport": "Vuoi segnalare un bug? <link>Apri una issue su GitHub</link> per un monitoraggio più rapido e visibile.",
+  "preferEmail": "Preferisci l'email? Scrivi a <email>{address}</email>.",
+  "sentTitle": "Messaggio inviato",
+  "sentBody": "Ti risponderemo a breve.",
+  "email": "Email",
+  "emailPlaceholder": "tu@esempio.com",
+  "subject": "Oggetto",
+  "subjectPlaceholder": "Seleziona un motivo…",
+  "subjects": {
+    "bug": "Segnalazione bug",
+    "betaBug": "Segnalazione bug della beta",
+    "feedback": "Feedback e idee",
+    "billing": "Domanda sulla fatturazione",
+    "feature": "Richiesta di funzionalità",
+    "account": "Aiuto con l'account",
+    "other": "Altro"
+  },
+  "otherSubject": "Specifica",
+  "otherSubjectPlaceholder": "Di cosa si tratta?",
+  "message": "Messaggio",
+  "messagePlaceholder": "Descrivi il problema o la domanda con tutti i dettagli utili.",
+  "rateLimited": "Troppi messaggi inviati: riprova più tardi.",
+  "failed": "Qualcosa è andato storto. Riprova oppure scrivici a <email>{address}</email>.",
+  "sending": "Invio in corso…",
+  "send": "Invia messaggio"
+}

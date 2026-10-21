@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "eyebrow": "Pengelola tab untuk Anda yang membuka terlalu banyak tab",
+    "title": "Berhenti tenggelam dalam tab browser.",
+    "lead": "TabMerger merangkum setiap jendela yang terbuka ke dalam grup bernama dan berwarna yang dapat Anda cari, bagikan, dan pulihkan — di perangkat mana pun, dengan sekali klik.",
+    "installChrome": "Pasang untuk Chrome — gratis",
+    "installFirefox": "Pasang untuk Firefox — gratis",
+    "installEdge": "Pasang untuk Edge — gratis",
+    "chrome": "Chrome",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Paket gratis, tanpa perlu akun."
+  },
+  "install": {
+    "title": "Siap merapikan browser Anda?",
+    "lead": "Pasang TabMerger dalam hitungan detik. Tidak perlu akun untuk memulai.",
+    "addToChrome": "Tambahkan ke Chrome",
+    "addToFirefox": "Tambahkan ke Firefox",
+    "addToEdge": "Tambahkan ke Edge",
+    "viewPricing": "Lihat harga",
+    "note": "Gratis dipasang — Tanpa perlu akun · Dukungan Edge segera hadir"
+  },
+  "finalCta": {
+    "title": "Berhenti tenggelam dalam tab browser.",
+    "leadAi": "Gratis untuk memulai, tanpa perlu akun. Tingkatkan kapan saja untuk sinkronisasi cloud dan AI.",
+    "leadNoAi": "Gratis untuk memulai, tanpa perlu akun. Tingkatkan kapan saja untuk sinkronisasi cloud — fitur AI segera hadir.",
+    "installChrome": "Pasang untuk Chrome — gratis",
+    "installFirefox": "Pasang untuk Firefox — gratis",
+    "installEdge": "Pasang untuk Edge — gratis",
+    "faq": "Ada pertanyaan? Lihat FAQ →"
+  },
+  "features": {
+    "title": "Dibuat untuk saat Anda membuka sembilan puluh tab.",
+    "seeAll": "Lihat semua fitur",
+    "ai": {
+      "title": "AI merapikan kekacauan untuk Anda",
+      "description": "Sekali klik mengelompokkan tab yang terbuka berdasarkan topik dan menamai setiap grup. Terima, ganti nama, atau abaikan.",
+      "summary": "✦ 24 tab → 3 grup",
+      "groupEvals": "Evaluasi LLM · 9",
+      "groupHiring": "Rekrutmen · 7",
+      "groupDocs": "Dokumen · 8"
+    },
+    "sessions": {
+      "title": "Tutup semuanya, tanpa kehilangan apa pun",
+      "description": "Simpan sesi dengan nama dan pulihkan jendela serta urutan yang sama persis besok pagi.",
+      "sessionName": "Riset Pagi",
+      "sessionStats": "3 grup · 5 jendela · 24 tab"
+    },
+    "sync": {
+      "title": "Tab yang sama di setiap perangkat",
+      "description": "Sinkronisasi berjalan otomatis dan per tab, jadi perubahan di laptop tidak pernah menimpa apa yang Anda lakukan di desktop.",
+      "status": "Disinkronkan 4 menit lalu · 3 perangkat"
+    }
+  },
+  "pricing": {
+    "title": "Harga sederhana dan transparan",
+    "seeFull": "Lihat harga lengkap",
+    "cancelNote": "Batalkan kapan saja dari akun Anda — tanpa ikatan, tanpa banyak tanya.",
+    "blurbFree": "Untuk pengguna santai yang ingin mencoba",
+    "blurbPro": "Untuk pengguna yang menginginkan fitur premium tambahan",
+    "blurbProAi": "Untuk pengguna mahir yang menginginkan fitur berbasis AI"
+  }
+}

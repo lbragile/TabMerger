@@ -1,0 +1,11 @@
+{
+  "label": "Persetujuan cookie",
+  "message": "Kami ingin menggunakan cookie analitik (Google Analytics dan PostHog) untuk memahami cara situs ini digunakan. Cookie tersebut hanya dipasang jika Anda menerima, dan Anda dapat berubah pikiran kapan saja.",
+  "messageOn": "Analitik (Google Analytics dan PostHog, termasuk rekaman sesi) aktif untuk situs ini di wilayah Anda. Tolak akan menonaktifkannya, dan Anda dapat berubah pikiran kapan saja.",
+  "messageGpc": "Browser Anda mengirim sinyal Global Privacy Control, sehingga analitik (Google Analytics dan PostHog) nonaktif. Terima akan mengaktifkannya, dan Anda dapat berubah pikiran kapan saja.",
+  "learnMore": "Detail cookie",
+  "accept": "Terima",
+  "reject": "Tolak",
+  "chip": "Pilihan cookie",
+  "collapse": "Sembunyikan pilihan cookie"
+}

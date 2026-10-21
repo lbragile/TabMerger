@@ -1,0 +1,23 @@
+{
+  "heading": "Mọi người nói gì",
+  "byStore": "Theo cửa hàng",
+  "loading": "Đang tải đánh giá",
+  "averageRating": "Điểm đánh giá trung bình",
+  "averageRatingOn": "Điểm đánh giá trung bình trên {store}",
+  "ratingsOn": "{count, plural, other {Lượt đánh giá}} trên {store}",
+  "ratingsAcross": "Lượt đánh giá trên {stores}",
+  "ratingCount": "{count, plural, other {# lượt đánh giá}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " trên 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 lượt đánh giá",
+  "stars": "{score} trên 5 sao",
+  "readFull": "Đọc toàn bộ đánh giá",
+  "readFullBy": " của {author} trên {store}",
+  "carousel": "băng chuyền",
+  "play": "Phát đánh giá",
+  "pause": "Tạm dừng đánh giá",
+  "previous": "Đánh giá trước",
+  "next": "Đánh giá tiếp theo",
+  "skeletonRating": "0.00 / 5"
+}

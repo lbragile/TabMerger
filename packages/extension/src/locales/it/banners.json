@@ -1,0 +1,22 @@
+{
+  "review": "Rivedi",
+  "archive": "Archivia",
+  "dismiss": "Ignora",
+  "getMore": "Ottieni di più",
+  "removeStale": "Rimuovi inattive",
+  "staleTabs": "{{count}} schede sono state salvate più di {{days}} giorni fa.",
+  "staleRemoved_one": "Rimossa {{count}} scheda inattiva",
+  "staleRemoved_other": "Rimosse {{count}} schede inattive",
+  "staleRemoved_many": "Rimosse {{count}} schede inattive",
+  "upgrade": "Passa a Pro",
+  "paymentIssue": "Problema di pagamento: aggiorna la tua carta",
+  "planEnds": "Il tuo piano Pro termina il {{date}}",
+  "approachingLimit": "Ti stai avvicinando al limite gratuito: passa a Pro per gruppi e schede illimitati",
+  "update": {
+    "label": "Aggiornamento disponibile",
+    "text": "La versione {{version}} è pronta. Il riavvio chiude questo popup.",
+    "restart": "Riavvia per aggiornare",
+    "restartLabel": "Riavvia TabMerger per aggiornare alla versione {{version}}. Questo chiude il popup.",
+    "dismissLabel": "Ignora l'avviso di aggiornamento per la versione {{version}}"
+  }
+}

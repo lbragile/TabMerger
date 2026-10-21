@@ -1,0 +1,77 @@
+{
+  "instructions": "Tekan Space untuk mengambil, tombol panah untuk memilih tempat (Kiri dan Kanan beralih antara jendela dan grup), Space untuk menjatuhkan, Escape untuk membatalkan. Shift+Space memilih rentang dan {{modifier}}+A memilih semua, untuk memindahkan beberapa sekaligus.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "tab",
+    "window": "jendela",
+    "group": "grup",
+    "item": "item"
+  },
+  "typeStart": {
+    "tab": "Tab",
+    "window": "Jendela",
+    "group": "Grup",
+    "item": "Item"
+  },
+  "untitledTab": "Tab tanpa judul",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, dimulai dengan {{name}},",
+  "position": {
+    "tab": "posisi {{index}} dari {{total}} di {{window}} pada grup {{group}}",
+    "window": "posisi {{index}} dari {{total}} pada grup {{group}}",
+    "group": "posisi {{index}} dari {{total}}"
+  },
+  "target": {
+    "newGroup": "grup baru",
+    "newWindowAtEnd": "jendela baru di akhir grup {{group}}",
+    "nowOpen": "Sedang Terbuka, yang membukanya di jendela browser baru",
+    "groupAsWindow": "grup {{group}}, sebagai jendela baru"
+  },
+  "token": {
+    "dropped": "Dijatuhkan.",
+    "cancelled": "Dibatalkan."
+  },
+  "bail": {
+    "cancelled": "Perpindahan dibatalkan.",
+    "nothingMoved": "Dijatuhkan; tidak ada yang dipindahkan.",
+    "returnedMany": "{{items}} dikembalikan",
+    "returnedOne": "{{named}} dikembalikan",
+    "noop": "Menjatuhkan {{what}} kembali di {{position}}; tidak ada yang dipindahkan.",
+    "stale": "Grup berubah selama penyeretan, jadi tidak ada yang dipindahkan. {{returned}} ke {{position}}.",
+    "cancelledReturned": "Perpindahan dibatalkan. {{returned}} ke {{position}}.",
+    "rejected": "Tidak dapat menjatuhkan di sana. {{returned}} ke {{position}}."
+  },
+  "removedElsewhere_other": "{{count}} dihapus di tempat lain.",
+  "stillSelected_other": "Masih dipilih.",
+  "dropped": "Dijatuhkan.",
+  "movedGroups": "Memindahkan {{count}} grup ke {{position}}, sebagai satu blok.",
+  "movedGroup": "Memindahkan grup {{name}} ke {{position}}.",
+  "partial": "{{count}} dari {{total}}",
+  "at": "posisi {{index}} dari {{total}}",
+  "startingAt": "dimulai di posisi {{index}} dari {{total}}",
+  "whereTab": "{{window}} pada grup {{group}}, {{at}}",
+  "whereWindow": "grup {{group}}, {{at}}",
+  "movedTo": "Memindahkan {{items}} ke {{where}}.",
+  "openTabsClosed": " Tab yang terbuka ditutup.",
+  "groupHidden": " Grup {{group}} tidak ditampilkan.",
+  "openedNewWindow": "Membuka {{items}} di jendela browser baru.",
+  "openedNowOpen": "Membuka {{items}} di Sedang Terbuka.",
+  "movedNewWindow": "Memindahkan {{items}} ke jendela browser baru.",
+  "movedWithinNowOpen": "Memindahkan {{items}} di dalam Sedang Terbuka.",
+  "originalPosition": "Di atas posisi aslinya.",
+  "pickedUpType": "Mengambil {{type}}.",
+  "pickedUpMany": "Mengambil {{what}}.",
+  "pickedUpOne": "Mengambil {{type}} {{name}}, {{position}}.",
+  "groupShown": "Grup {{name}} sekarang ditampilkan.",
+  "copyHint": "Menjatuhkan ke grup tersimpan akan menyalin; tab yang terbuka tetap terbuka.",
+  "notOver": "Tidak berada di atas target penjatuhan.",
+  "over": "Di atas {{target}}.",
+  "cantDropOn": "Tidak dapat menjatuhkan di {{target}}.",
+  "typeDropped": "{{type}} dijatuhkan.",
+  "cancelledReturnedType": "Perpindahan dibatalkan; {{type}} dikembalikan ke posisinya.",
+  "saveFailed": "Tidak dapat menyimpan perpindahan; dipulihkan."
+}

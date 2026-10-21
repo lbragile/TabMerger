@@ -1,0 +1,20 @@
+{
+  "review": "Tinjau",
+  "archive": "Arsipkan",
+  "dismiss": "Tutup",
+  "getMore": "Dapatkan lebih banyak",
+  "removeStale": "Hapus yang usang",
+  "staleTabs": "{{count}} tab telah disimpan lebih dari {{days}} hari yang lalu.",
+  "staleRemoved_other": "Menghapus {{count}} tab usang",
+  "upgrade": "Tingkatkan",
+  "paymentIssue": "Masalah pembayaran — perbarui kartu Anda",
+  "planEnds": "Paket Pro Anda berakhir pada {{date}}",
+  "approachingLimit": "Anda mendekati batas gratis — tingkatkan ke Pro untuk grup dan tab tanpa batas",
+  "update": {
+    "label": "Pembaruan tersedia",
+    "text": "Versi {{version}} siap. Memulai ulang akan menutup popup ini.",
+    "restart": "Mulai ulang untuk memperbarui",
+    "restartLabel": "Mulai ulang TabMerger untuk memperbarui ke versi {{version}}. Ini akan menutup popup.",
+    "dismissLabel": "Tutup pemberitahuan pembaruan untuk versi {{version}}"
+  }
+}

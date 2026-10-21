@@ -1,0 +1,21 @@
+{
+  "features": "Tính năng",
+  "pricing": "Bảng giá",
+  "changelog": "Nhật ký thay đổi",
+  "faq": "Câu hỏi thường gặp",
+  "dashboard": "Bảng điều khiển",
+  "account": "Tài khoản",
+  "accountSettings": "Cài đặt tài khoản",
+  "signIn": "Đăng nhập",
+  "signUp": "Đăng ký",
+  "getStarted": "Bắt đầu",
+  "signOut": "Đăng xuất",
+  "openMenu": "Mở menu",
+  "closeMenu": "Đóng menu",
+  "accountMenu": "Menu tài khoản",
+  "home": "Trang chủ TabMerger",
+  "github": "GitHub",
+  "githubRepo": "TabMerger trên GitHub",
+  "githubRepoWithStars": "TabMerger trên GitHub, {count, plural, other {# sao}}",
+  "toggleTheme": "Chuyển giao diện"
+}

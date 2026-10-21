@@ -1,0 +1,65 @@
+{
+  "addGroup": {
+    "title": "Crea nuovo gruppo",
+    "name": "Nome",
+    "namePlaceholder": "Nome del gruppo",
+    "color": "Colore",
+    "cancel": "Annulla",
+    "create": "Crea"
+  },
+  "dedup": {
+    "title": "Rimuovi duplicati",
+    "description_one": "Verrà rimossa {{count}} scheda duplicata.",
+    "description_other": "Verranno rimosse {{count}} schede duplicate.",
+    "description_many": "Verranno rimosse {{count}} schede duplicate.",
+    "cancel": "Annulla",
+    "confirm_one": "Rimuovi {{count}} duplicato",
+    "confirm_other": "Rimuovi {{count}} duplicati",
+    "confirm_many": "Rimuovi {{count}} duplicati"
+  },
+  "staleGroups": {
+    "title": "Rivedi i gruppi inattivi",
+    "description_one": "{{count}} gruppo non toccato da un po': espandi per vedere l'anteprima o archivialo direttamente.",
+    "description_other": "{{count}} gruppi non toccati da un po': espandi per vedere l'anteprima o archiviali direttamente.",
+    "description_many": "{{count}} gruppi non toccati da un po': espandi per vedere l'anteprima o archiviali direttamente.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Nascondi",
+    "preview": "Anteprima",
+    "archive": "Archivia",
+    "empty": "Questo gruppo è vuoto.",
+    "close": "Chiudi"
+  },
+  "staleTabs": {
+    "title": "Schede inattive",
+    "description_one": "{{count}} scheda non viene toccata da un po'.",
+    "description_other": "{{count}} schede non vengono toccate da un po'.",
+    "description_many": "{{count}} schede non vengono toccate da un po'.",
+    "close": "Chiudi",
+    "removeAll_one": "Rimuovi {{count}} scheda",
+    "removeAll_other": "Rimuovi {{count}} schede",
+    "removeAll_many": "Rimuovi {{count}} schede"
+  },
+  "saveSession": {
+    "title": "Salva sessione",
+    "name": "Nome della sessione",
+    "namePlaceholder": "es. Ricerca di lavoro, Letture del weekend",
+    "nameRequired": "Il nome della sessione è obbligatorio",
+    "description": "Descrizione (facoltativa)",
+    "descriptionPlaceholder": "A cosa serve questa sessione?",
+    "cancel": "Annulla",
+    "save": "Salva"
+  },
+  "shortcutSave": {
+    "title_one": "Salva {{count}} scheda",
+    "title_other": "Salva {{count}} schede",
+    "title_many": "Salva {{count}} schede",
+    "description": "Scegli dove salvare le schede acquisite con la scorciatoia da tastiera.",
+    "destination": "Gruppo di destinazione",
+    "quickSave": "Salvataggio rapido (nuovo gruppo)",
+    "cancel": "Annulla",
+    "save": "Salva"
+  },
+  "confirmDialog": {
+    "cancel": "Annulla"
+  }
+}

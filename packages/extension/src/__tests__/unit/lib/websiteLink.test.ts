@@ -16,6 +16,9 @@ describe('websiteHomeUrl', () => {
     ['de', 'https://tabmerger.com/de'],
     ['es', 'https://tabmerger.com/es'],
     ['fr', 'https://tabmerger.com/fr'],
+    ['it', 'https://tabmerger.com/it'],
+    ['ru', 'https://tabmerger.com/ru'],
+    ['ko', 'https://tabmerger.com/ko'],
     ['ja', 'https://tabmerger.com/ja'],
     ['pt-BR', 'https://tabmerger.com/pt-BR'],
     ['zh-CN', 'https://tabmerger.com/zh-CN'],
@@ -23,7 +26,7 @@ describe('websiteHomeUrl', () => {
     expect(websiteHomeUrl('https://tabmerger.com', locale)).toBe(expected)
   })
 
-  it.each([[undefined], ['en-XA'], ['it'], ['de-AT'], ['EN'], ['../admin']])(
+  it.each([[undefined], ['en-XA'], ['ar'], ['de-AT'], ['EN'], ['../admin']])(
     'links to the English home for %s (unknown or not shipped)',
     (locale) => {
       expect(websiteHomeUrl('https://tabmerger.com', locale)).toBe('https://tabmerger.com/en')

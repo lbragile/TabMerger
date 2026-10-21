@@ -10,13 +10,22 @@ import { en, type Catalog } from './en';
 import { de } from './de';
 import { es } from './es';
 import { fr } from './fr';
+import { hi } from './hi';
+import { id } from './id';
+import { it } from './it';
 import { ja } from './ja';
+import { ko } from './ko';
+import { pl } from './pl';
 import { ptBR } from './pt-BR';
+import { ru } from './ru';
+import { tr } from './tr';
+import { vi } from './vi';
 import { zhCN } from './zh-CN';
 
 /**
  * A translated catalog: English's feature files, but not English's exact key set, because plural
- * keys follow each language's own forms (ja/zh-CN have only `_other`, es/fr/pt-BR add `_many`).
+ * keys follow each language's own forms (ja/ko/zh-CN/id/vi have only `_other`, es/fr/it/pt-BR add
+ * `_many`, ru/pl have `_one`/`_few`/`_many`/`_other`, tr/hi have `_one`/`_other` like English).
  */
 export type TranslatedCatalog = { [Area in keyof Catalog]: MessageTree };
 
@@ -28,7 +37,15 @@ export const catalogs: { en: Catalog } & Record<Exclude<SupportedLocale, 'en'>, 
     de,
     es,
     fr,
+    hi,
+    id,
+    it,
     ja,
+    ko,
+    pl,
     'pt-BR': ptBR,
+    ru,
+    tr,
+    vi,
     'zh-CN': zhCN,
 };

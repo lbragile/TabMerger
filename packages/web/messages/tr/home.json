@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "eyebrow": "Çok fazla sekmesi olanlar için sekme yöneticisi",
+    "title": "Tarayıcı sekmelerinde boğulmayı bırakın.",
+    "lead": "TabMerger her açık pencereyi arayabileceğiniz, paylaşabileceğiniz ve geri yükleyebileceğiniz adlandırılmış, renk kodlu gruplarda toplar — her bilgisayarda, tek tıkla.",
+    "installChrome": "Chrome için yükleyin — ücretsiz",
+    "installFirefox": "Firefox için yükleyin — ücretsiz",
+    "installEdge": "Edge için yükleyin — ücretsiz",
+    "chrome": "Chrome",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Ücretsiz plan, hesap gerekmez."
+  },
+  "install": {
+    "title": "Tarayıcınızı düzenlemeye hazır mısınız?",
+    "lead": "TabMerger'ı saniyeler içinde yükleyin. Başlamak için hesap gerekmez.",
+    "addToChrome": "Chrome'a ekle",
+    "addToFirefox": "Firefox'a ekle",
+    "addToEdge": "Edge'e ekle",
+    "viewPricing": "Fiyatlandırmayı görün",
+    "note": "Ücretsiz yükleme — Hesap gerekmez · Edge desteği çok yakında"
+  },
+  "finalCta": {
+    "title": "Tarayıcı sekmelerinde boğulmayı bırakın.",
+    "leadAi": "Başlamak ücretsiz, hesap gerekmez. Bulut eşitleme ve yapay zekâ için istediğiniz zaman yükseltin.",
+    "leadNoAi": "Başlamak ücretsiz, hesap gerekmez. Bulut eşitleme için istediğiniz zaman yükseltin — yapay zekâ özellikleri çok yakında.",
+    "installChrome": "Chrome için yükleyin — ücretsiz",
+    "installFirefox": "Firefox için yükleyin — ücretsiz",
+    "installEdge": "Edge için yükleyin — ücretsiz",
+    "faq": "Sorularınız mı var? SSS'ye göz atın →"
+  },
+  "features": {
+    "title": "Doksan sekmenin açık olduğu anlar için tasarlandı.",
+    "seeAll": "Tüm özellikleri görün",
+    "ai": {
+      "title": "Yapay zekâ karmaşayı sizin yerinize düzenler",
+      "description": "Tek tıkla açık sekmeleriniz konuya göre kümelenir ve her gruba bir ad verilir. Kabul edin, yeniden adlandırın veya yok sayın.",
+      "summary": "✦ 24 sekme → 3 grup",
+      "groupEvals": "LLM değerlendirmeleri · 9",
+      "groupHiring": "İşe alım · 7",
+      "groupDocs": "Belgeler · 8"
+    },
+    "sessions": {
+      "title": "Her şeyi kapatın, hiçbir şey kaybetmeyin",
+      "description": "Bir oturumu adıyla kaydedin, yarın sabah pencereleri tam aynı düzende geri yükleyin.",
+      "sessionName": "Sabah Araştırması",
+      "sessionStats": "3 grup · 5 pencere · 24 sekme"
+    },
+    "sync": {
+      "title": "Her bilgisayarda aynı sekmeler",
+      "description": "Eşitleme otomatiktir ve sekme bazında çalışır; böylece dizüstünde yaptığınız bir düzenleme masaüstünde yaptıklarınızın üzerine asla yazmaz.",
+      "status": "4 dakika önce eşitlendi · 3 cihaz"
+    }
+  },
+  "pricing": {
+    "title": "Basit, şeffaf fiyatlandırma",
+    "seeFull": "Tüm fiyatlandırmayı görün",
+    "cancelNote": "Hesabınızdan istediğiniz zaman iptal edin — taahhüt yok, soru sorulmaz.",
+    "blurbFree": "Denemek isteyen ara sıra kullananlar için",
+    "blurbPro": "Ek premium özellikler isteyen kullanıcılar için",
+    "blurbProAi": "Yapay zekâ özellikleri isteyen ileri düzey kullanıcılar için"
+  }
+}

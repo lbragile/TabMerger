@@ -1,0 +1,24 @@
+{
+  "title": "Đề xuất sắp xếp bằng AI",
+  "encrypted": "Tính năng sắp xếp bằng AI chưa khả dụng trên web cho các nhóm được mã hóa đầu cuối — nhóm của bạn đã được mã hóa và trang này không thể đọc chúng. Hãy chạy tính năng này từ tiện ích TabMerger.",
+  "applied": "Đã áp dụng thay đổi thành công.",
+  "cancelled": "Đã hủy đề xuất.",
+  "analyzing": "Đang phân tích các nhóm tab của bạn…",
+  "noChanges": "Không có thay đổi nào được đề xuất.",
+  "approve": "Chấp thuận",
+  "reject": "Từ chối",
+  "unknownError": "Lỗi không xác định",
+  "submitFailed": "Không thể gửi quyết định",
+  "types": {
+    "merge": "gộp",
+    "rename": "đổi tên",
+    "delete": "xóa",
+    "reorder": "sắp xếp lại"
+  },
+  "actions": {
+    "merge": "Gộp {source} → {target}",
+    "rename": "Đổi tên nhóm → \"{name}\"",
+    "delete": "Xóa nhóm {id}",
+    "reorder": "Sắp xếp lại nhóm: {ids}"
+  }
+}

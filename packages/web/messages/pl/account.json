@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "przed chwilą",
+    "minutesAgo": "{count} min temu",
+    "hoursAgo": "{count} godz. temu",
+    "daysAgo": "{count} dn. temu",
+    "renameFailed": "Nie udało się zmienić nazwy urządzenia",
+    "renamed": "Zmieniono nazwę urządzenia",
+    "removeFailed": "Nie udało się usunąć urządzenia",
+    "removed": "Usunięto urządzenie",
+    "removeManyFailed": "Nie udało się usunąć urządzeń",
+    "removedMany": "{count, plural, one {Usunięto {count} urządzenie} few {Usunięto {count} urządzenia} many {Usunięto {count} urządzeń} other {Usunięto {count} urządzenia}}",
+    "empty": "Brak urządzeń.",
+    "selectAll": "Zaznacz wszystkie urządzenia",
+    "selectedCount": "Zaznaczono: {count}",
+    "removeSelected": "{count, plural, one {Usuń {count} urządzenie} few {Usuń {count} urządzenia} many {Usuń {count} urządzeń} other {Usuń {count} urządzenia}}",
+    "selectDevice": "Zaznacz {name}",
+    "active": "Aktywne {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} okno} few {{windows} okna} many {{windows} okien} other {{windows} okna}} · {tabs, plural, one {{tabs} karta} few {{tabs} karty} many {{tabs} kart} other {{tabs} karty}}",
+    "options": "Opcje urządzenia",
+    "rename": "Zmień nazwę",
+    "remove": "Usuń",
+    "removeTitle": "Usunąć urządzenie?",
+    "removeBody": "„{name}” przestanie synchronizować dane kart. Tej operacji nie można cofnąć.",
+    "removeManyTitle": "Usunąć urządzenia ({count})?",
+    "removeManyBody": "Te urządzenia przestaną synchronizować dane kart. Tej operacji nie można cofnąć.",
+    "cancel": "Anuluj"
+  },
+  "metaTitle": "Konto",
+  "title": "Ustawienia konta",
+  "lead": "Zarządzaj kontem i subskrypcją.",
+  "stats": {
+    "groups": "Zsynchronizowane grupy",
+    "tabs": "Zapisane karty",
+    "sessions": "Sesje i kopie zapasowe",
+    "aiCredits": "Pozostałe kredyty AI"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Informacje o Twoim koncie.",
+    "email": "E-mail",
+    "memberSince": "Członek od"
+  },
+  "signOutAll": {
+    "title": "Wyloguj ze wszystkich urządzeń",
+    "description": "Spowoduje to unieważnienie wszystkich aktywnych sesji.",
+    "button": "Wyloguj"
+  },
+  "subscription": {
+    "title": "Subskrypcja",
+    "description": "Zarządzaj planem i płatnościami.",
+    "manageBilling": "Zarządzaj płatnościami",
+    "upgrade": "Ulepsz",
+    "cancelNote": "Możesz zrezygnować w dowolnym momencie w sekcji <strong>Zarządzaj płatnościami</strong>. Dostęp zachowasz do końca bieżącego okresu rozliczeniowego."
+  },
+  "devicesCard": {
+    "title": "Urządzenia",
+    "description": "Urządzenia synchronizujące Twoje grupy i karty. Tylko Pro i Pro AI."
+  },
+  "password": {
+    "tooShort": "Hasło musi mieć co najmniej 8 znaków.",
+    "updated": "Zaktualizowano hasło",
+    "set": "Hasło ustawione — możesz teraz logować się również e-mailem i hasłem",
+    "change": "Zmień hasło",
+    "setLabel": "Ustaw hasło",
+    "placeholder": "••••••••••",
+    "save": "Zapisz"
+  },
+  "credits": {
+    "failed": "Nie udało się rozpocząć płatności",
+    "getMore": "Kup więcej"
+  }
+}

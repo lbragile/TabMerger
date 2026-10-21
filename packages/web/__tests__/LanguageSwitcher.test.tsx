@@ -111,13 +111,13 @@ describe('LanguageMenu trigger', () => {
 })
 
 describe('LanguageMenu menu', () => {
-  it('lists the seven public languages by their own names, each in its own lang, the current one checked', async () => {
+  it('lists the fifteen public languages by their own names, each in its own lang, the current one checked', async () => {
     const user = userEvent.setup()
     await renderIn('fr', <LanguageMenu />)
     await user.click(screen.getByRole('button', { name: 'Langue : Français (FR)' }))
 
     const items = screen.getAllByRole('menuitemradio')
-    expect(items).toHaveLength(7)
+    expect(items).toHaveLength(15)
     expect(items.map((item) => item.textContent)).toEqual(SUPPORTED_LOCALES.map((code) => LOCALE_NATIVE_NAMES[code]))
     expect(items.map((item) => item.getAttribute('lang'))).toEqual([...SUPPORTED_LOCALES])
     expect(items.filter((item) => item.getAttribute('aria-checked') === 'true').map((i) => i.textContent)).toEqual(['Français'])

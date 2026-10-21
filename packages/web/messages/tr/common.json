@@ -1,0 +1,10 @@
+{
+  "comingSoon": "Çok yakında",
+  "listTwo": "{first} ve {second}",
+  "listMany": "{rest} ve {last}",
+  "listSeparator": ", ",
+  "opensInNewTab": " (yeni sekmede açılır)",
+  "close": "Kapat",
+  "showPassphrase": "Parola ifadesini göster",
+  "hidePassphrase": "Parola ifadesini gizle"
+}

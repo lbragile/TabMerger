@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Eşitleme duraklatıldı: Firefox'ta izin verin",
+  "conflictCopy": "{{names}} başka bir cihazda da değiştirildi. Sizin sürümünüz bir kopya olarak kaydedildi.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "Üzerinde çalıştığınız bir grup başka bir yerde değişti veya kaldırıldı, bu yüzden hiçbir şey değiştirilmedi.",
+  "undoConflict": "Gruplarınız başka bir yerde değişti, bu yüzden hiçbir şey geri alınmadı. Tekrar deneyin.",
+  "freeLimit": {
+    "maxGroups": "Ücretsiz plan en fazla {{max}} gruba izin verir.",
+    "maxTabs": "Ücretsiz plan en fazla {{max}} sekmeye izin verir.",
+    "maxUrlRules": "Ücretsiz plan en fazla {{max}} URL kuralına izin verir."
+  },
+  "fileContains": "Bu dosya {{groups}}, {{tabs}} içeriyor.",
+  "incognitoNotAllowed": "TabMerger'a gizli modda izin verilmediği için normal pencere olarak açıldı. Bunu değiştirmek için Uzantıyı yönet'i açın ve \"Gizli modda izin ver\" seçeneğini açın.",
+  "encryptionAlreadySetUp": "Bu hesap için şifreleme zaten kurulu. Kilidi açmak için mevcut parolanızı girin.",
+  "signInToEnableEncryption": "Şifrelemeyi etkinleştirmek için oturum açmalısınız",
+  "signInToResetEncryption": "Şifrelemeyi sıfırlamak için oturum açmalısınız",
+  "googleUnavailable": "Google ile oturum açma bu ortamda kullanılamıyor",
+  "googleNoUrl": "Google ile oturum açma bir yetkilendirme URL'si döndürmedi",
+  "googleCancelled": "Google ile oturum açma iptal edildi",
+  "googleNoSession": "Google ile oturum açma bir oturum döndürmedi",
+  "googleFailed": "Google ile oturum açma başarısız oldu",
+  "expectedArray": "Bir dizi bekleniyordu",
+  "invalidFormat": "Geçersiz biçim",
+  "noGroupsFound": "Grup bulunamadı",
+  "noGroupsSelected": "Grup seçilmedi",
+  "notAuthenticated": "Kimlik doğrulanmadı",
+  "sharingRequiresPro": "Paylaşım Pro yükseltmesi gerektirir — yetki karşılanmadı",
+  "aiOncePerDay": "Bugün zaten kullanıldı — bu AI işlemi günde bir kezle sınırlıdır",
+  "proAiRequired": "Pro AI planı gerekli",
+  "nameGroupOff": "Grup adlandırma Ayarlar'da kapalı",
+  "suggestSessionsOff": "Oturum önerme Ayarlar'da kapalı",
+  "organizeOff": "Düzenleme Ayarlar'da kapalı"
+}

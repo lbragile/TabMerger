@@ -1,0 +1,23 @@
+{
+  "heading": "Kullanıcılar ne diyor",
+  "byStore": "Mağazaya göre",
+  "loading": "Yorumlar yükleniyor",
+  "averageRating": "Ortalama puan",
+  "averageRatingOn": "{store} ortalama puanı",
+  "ratingsOn": "{store} {count, plural, one {puanı} other {puanları}}",
+  "ratingsAcross": "{stores} genelindeki puanlar",
+  "ratingCount": "{count, plural, one {# puan} other {# puan}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " / 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 puan",
+  "stars": "5 üzerinden {score} yıldız",
+  "readFull": "Yorumun tamamını okuyun",
+  "readFullBy": " ({store}, {author})",
+  "carousel": "kayan galeri",
+  "play": "Yorumları oynat",
+  "pause": "Yorumları duraklat",
+  "previous": "Önceki yorum",
+  "next": "Sonraki yorum",
+  "skeletonRating": "0.00 / 5"
+}

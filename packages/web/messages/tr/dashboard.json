@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Kontrol paneli",
+  "greeting": "Günaydın, {name}",
+  "tierBadge": {
+    "free": "ücretsiz",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "Yapay zekâ ile düzenle",
+  "aiOrganiseUpgrade": "Yapay zekâ ile düzenlemeyi kullanmak için Pro AI'ya yükseltin",
+  "aiOrganiseFromExtension": "Bunu TabMerger uzantısının açılır penceresinden başlatın",
+  "tabGroups": "Sekme Grupları",
+  "savedSessions": "Kayıtlı Oturumlar",
+  "stats": {
+    "tabs": {
+      "label": "Kaydedilen sekmeler",
+      "description": "Eşitlenen tüm gruplardaki sekmeler"
+    },
+    "groups": {
+      "label": "Eşitlenen gruplar",
+      "description": "Bulutta eşitlenen gruplar"
+    },
+    "sessions": {
+      "label": "Saklanan oturumlar",
+      "description": "Saklanan tarama oturumları",
+      "lockedDescription": "Oturumlar ve yedekler (ayırt etmek için kilidi açın)"
+    },
+    "memory": {
+      "label": "Geri kazanılan bellek",
+      "description": "Tahmini, ölçülmemiş"
+    },
+    "memberSince": {
+      "label": "Üyelik Tarihi",
+      "description": "Hesap oluşturuldu"
+    },
+    "aiCredits": {
+      "label": "Bu ayki yapay zekâ kredileri",
+      "description": "Pro AI aylık kullanımı",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Yükleniyor"
+  },
+  "subscription": {
+    "currentPlan": "Mevcut plan",
+    "renews": "Yenilenme: {date}",
+    "upgrade": "Yükselt",
+    "statuses": {
+      "active": "etkin",
+      "canceled": "iptal edildi",
+      "past_due": "ödemesi gecikmiş",
+      "trialing": "deneme sürümünde",
+      "incomplete": "tamamlanmamış"
+    }
+  },
+  "upgraded": {
+    "message": "{plan} planına hoş geldiniz! Aboneliğiniz artık etkin. Yeni özelliklerinizin keyfini çıkarın.",
+    "dismiss": "Kapat"
+  },
+  "locked": {
+    "item": "Önceki bir parola ifadesiyle kaydedildi. Uzantıyı bu ifadeye sahip cihazda açın ve eşitlemesini bekleyin.",
+    "device": "Açık sekmeleri önceki bir parola ifadesiyle kaydedildi. Uzantıyı o cihazda açın ve eşitlemesini bekleyin.",
+    "unverified": "Şu anda okunamıyor. Tekrar denemek için sayfayı yeniden yükleyin."
+  },
+  "passphrase": {
+    "defaultLabel": "Bu içeriği görüntülemek için şifreleme parola ifadenizi girin.",
+    "groupsLabel": "Gruplarınız uçtan uca şifrelidir. Burada görüntülemek için parola ifadenizi girin.",
+    "sessionsLabel": "Oturumlarınız uçtan uca şifrelidir. Burada görüntülemek için parola ifadenizi girin.",
+    "backupsLabel": "Yedekleriniz uçtan uca şifrelidir. Burada görüntülemek için parola ifadenizi girin.",
+    "placeholder": "Parola ifadesi",
+    "inputLabel": "Şifreleme parola ifadesi",
+    "unlock": "Kilidi aç",
+    "incorrect": "Parola ifadesi yanlış."
+  },
+  "onboarding": {
+    "title": "TabMerger'ı kullanmaya başlayın",
+    "progress": "{total} adımdan {done} tanesi tamamlandı",
+    "dismiss": "Kapat",
+    "install": "TabMerger uzantısını yükleyin",
+    "group": "Uzantıda ilk grubunuzu oluşturun",
+    "signin": "Bulut eşitlemeyi etkinleştirmek için oturum açın",
+    "upgrade": "Sınırsız grup için Pro'ya yükseltin"
+  },
+  "lockedName": "(kilitli)",
+  "damagedNote": "İçeriği TabMerger'ın okuyabileceği bir biçimde değil, bu nedenle burada gösterilemiyor.",
+  "counts": {
+    "groups": "{count, plural, one {{count} grup} other {{count} grup}}",
+    "windows": "{count, plural, one {{count} pencere} other {{count} pencere}}",
+    "tabs": "{count, plural, one {{count} sekme} other {{count} sekme}}"
+  },
+  "sessions": {
+    "cantRestore": "Bu oturum okunamıyor, bu nedenle geri yüklenemiyor.",
+    "restored": "{count, plural, one {\"{name}\" oturumundan {count} sekme geri yüklendi} other {\"{name}\" oturumundan {count} sekme geri yüklendi}}",
+    "deleted": "Oturum silindi",
+    "deleteFailed": "Oturum silinemedi",
+    "loadFailed": "Oturumlarınız yüklenemedi.",
+    "tryAgain": "Tekrar dene",
+    "loading": "Oturumlar yükleniyor",
+    "empty": "Henüz kayıtlı oturum yok.",
+    "readOnlyNote": "Hesabınıza yeni oturum kaydetmek için Pro gerekir. Mevcut oturumlarınızı yine de açabilir veya silebilirsiniz.",
+    "upgrade": "Pro'ya yükseltin",
+    "freeLimit": "Ücretsiz plan: en fazla {count} oturum. Sınırsız için <link>Pro'ya yükseltin</link>.",
+    "restore": "Oturumu geri yükle",
+    "cantRestoreTooltip": "Bu oturum okunamıyor, bu nedenle geri yüklenemiyor",
+    "delete": "Oturumu sil",
+    "hideContents": "İçeriği gizle",
+    "showContents": "İçeriği göster ({count})",
+    "groupFallbackName": "Grup {number}",
+    "groupTabs": "{count, plural, other {{count} sekme}}",
+    "moreTabs": "{count, plural, other {+{count} sekme daha}}",
+    "moreGroups": "{count, plural, other {+{count} grup daha}}"
+  },
+  "backups": {
+    "title": "Yedekler",
+    "upgradeDescription": "Otomatik yedekler Pro'nun bir parçasıdır: gruplarınızın bir program dahilinde kaydedilen şifreli anlık görüntüsü; en yeni {count} tanesi saklanır.",
+    "readOnlyNote": "Yeni yedekler için Pro gerekir. Mevcut yedeklerinizi yine de indirebilir veya silebilirsiniz.",
+    "upgrade": "Yükselt",
+    "intro": "TabMerger uzantısının hesabınıza kendiliğinden kaydettiği grup anlık görüntüleri, en yeniden eskiye. En yeni {count} tanesi saklanır. Birini geri yüklemek için uzantıyı açıp {place} bölümüne gidin; geri yükleme bu sayfadan yapılmaz. Buradan indirdiğiniz dosya şifreli değildir.",
+    "extensionPlace": "Ayarlar > Veriler",
+    "loadFailed": "Yedekleriniz yüklenemedi.",
+    "tryAgain": "Tekrar dene",
+    "loading": "Yedekler yükleniyor",
+    "unknownKind": "{count, plural, one {Kayıtlı 1 öğe okunamıyor, bu nedenle yedek olup olmadığı bilinmiyor. Kayıtlı Oturumlar altında listeleniyor.} other {Kayıtlı {count} öğe okunamıyor, bu nedenle yedek olup olmadıkları bilinmiyor. Kayıtlı Oturumlar altında listeleniyorlar.}}",
+    "emptyTitle": "Henüz yedek yok.",
+    "emptyBody": "Uzantı, tarayıcınız açıkken ve gruplarınız son yedekten bu yana değiştiğinde kendiliğinden bir yedek kaydeder. Siz değiştirmedikçe program \"{interval}\" şeklindedir: aralığı seçmek veya hemen yedeklemek için uzantıda {place} bölümüne gidin.",
+    "intervals": {
+      "60": "Her saat",
+      "360": "6 saatte bir",
+      "720": "12 saatte bir",
+      "1440": "Her gün",
+      "10080": "Her hafta"
+    },
+    "unknownDateInSentence": "bilinmeyen bir tarih",
+    "unknownDate": "Bilinmeyen tarih",
+    "namePrefix": "Otomatik yedek",
+    "downloading": "Yedek indiriliyor: {when}.",
+    "deleted": "Yedek silindi",
+    "deletedAnnouncement": "Yedek silindi: {when}.",
+    "deleteFailed": "Yedek silinemedi",
+    "deleteFailedAnnouncement": "Yedek silinemedi: {when}.",
+    "deleteTitle": "Bu yedek silinsin mi?",
+    "deleteBody": "{when} tarihli yedek hesabınızdan kaldırılacak. Bu yedeğe zaten sahip olan bir tarayıcı kendi kopyasını saklar.",
+    "deleteBodyWithCounts": "{when} tarihli yedek ({groups}, {tabs}) hesabınızdan kaldırılacak. Bu yedeğe zaten sahip olan bir tarayıcı kendi kopyasını saklar.",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "download": "İndir",
+    "downloadLabel": "Yedeği indir: {when}",
+    "deleteLabel": "Yedeği sil: {when}"
+  },
+  "groups": {
+    "cantShare": "Bu grup okunamıyor, bu nedenle paylaşılamıyor.",
+    "linkCopiedSnapshot": "Bağlantı kopyalandı — bu grubun anlık görüntüsünü paylaşır.",
+    "shareFailed": "Paylaşım bağlantısı oluşturulamadı. Lütfen tekrar deneyin.",
+    "shareGroup": "Grubu paylaş",
+    "copied": "Kopyalandı!",
+    "share": "Paylaş",
+    "cantShareTooltip": "Bu grup okunamıyor, bu nedenle paylaşılamıyor",
+    "shareTooltip": "Bu grubun anlık görüntüsüne bir bağlantı kopyalar — sonraki düzenlemeler onu güncellemez",
+    "justNow": "az önce",
+    "minutesAgo": "{count} dk önce",
+    "hoursAgo": "{count} sa önce",
+    "daysAgo": "{count} gün önce",
+    "lockedCantSelect": "Kilitli grup seçilemez",
+    "deselect": "Seçimi kaldır",
+    "select": "Seç",
+    "syncedAt": "Eşitlendi: {time}",
+    "cardMeta": "{windows, plural, one {{windows} pencere} other {{windows} pencere}} · {tabs, plural, one {{tabs} sekme} other {{tabs} sekme}}",
+    "syncedSuffix": " · eşitlendi: {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Sekmeler güncel olmayabilir — son eşitleme 30 günden önce",
+    "moreTabs": "+{count} daha",
+    "openAllTitle": "Bu gruptaki tüm sekmeleri aç",
+    "openAll": "Tümünü aç",
+    "hideTabs": "Sekmeleri gizle",
+    "showTabs": "Sekmeleri göster",
+    "rowMeta": "{windows}p · {tabs}s",
+    "linkCopiedLive": "Bağlantı kopyalandı! Paylaşım sayfası yayında.",
+    "empty": "Henüz eşitlenmiş grup yok. Sekme grupları oluşturmak için uzantıyı açın.",
+    "title": "Gruplar",
+    "summary": "{count, plural, one {{count} grup} other {{count} grup}} · {tabs, plural, other {{tabs} sekme}}",
+    "sort": "Sırala",
+    "sortLabel": "Grupları sırala",
+    "sortRecent": "En son",
+    "sortName": "Ad",
+    "sortTabCount": "Sekme sayısı",
+    "cancel": "İptal",
+    "gridView": "Izgara görünümü",
+    "listView": "Liste görünümü",
+    "archived": "Arşivlenen ({count})",
+    "selectedCount": "{count} seçildi",
+    "shareSelected": "Seçilenleri paylaş",
+    "cancelSelection": "Seçimi iptal et"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Eşitlemek için uzantıyı açın ve şifrelemenin kilidini açın.",
+      "no-session": "Eşitlemek için uzantıda oturum açın.",
+      "error": "Eşitleme başarısız oldu. Uzantıdan tekrar deneyin."
+    },
+    "failedFallback": "Eşitleme başarısız oldu.",
+    "syncing": "Eşitleniyor...",
+    "busy": "Eşitleme zaten sürüyor",
+    "failed": "Eşitleme başarısız",
+    "synced": "Eşitlendi",
+    "never": "Henüz eşitleme yok",
+    "reasonSeparator": ". ",
+    "refresh": "Eşitleme durumunu yenile",
+    "resync": "Şimdi yeniden eşitle",
+    "justNow": "az önce",
+    "minutesAgo": "{count} dk önce",
+    "hoursAgo": "{count} sa önce",
+    "daysAgo": "{count} gün önce"
+  }
+}

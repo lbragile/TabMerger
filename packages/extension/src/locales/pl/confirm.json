@@ -1,0 +1,97 @@
+{
+  "deleteGroup": {
+    "title": "Usuń Grupę",
+    "description": "Czy na pewno chcesz usunąć \"{{name}}\"? Tej operacji nie można cofnąć.",
+    "confirm": "Usuń"
+  },
+  "closeWindow": {
+    "title": "Zamknij Okno",
+    "description": "Czy na pewno chcesz zamknąć to okno i wszystkie jego karty?",
+    "confirm": "Zamknij"
+  },
+  "removeWindow": {
+    "title": "Usuń Okno",
+    "description": "Czy na pewno chcesz usunąć to okno i wszystkie jego karty?",
+    "confirm": "Usuń"
+  },
+  "closeTab": {
+    "title": "Zamknij Kartę",
+    "description": "Czy na pewno chcesz zamknąć tę kartę?",
+    "confirm": "Zamknij"
+  },
+  "removeTab": {
+    "title": "Usuń Kartę",
+    "description": "Czy na pewno chcesz usunąć tę kartę?",
+    "confirm": "Usuń"
+  },
+  "closeSelection": {
+    "title": "Zamknij Zaznaczone",
+    "confirm": "Zamknij",
+    "description_tab_one": "Czy na pewno chcesz zamknąć {{count}} kartę? Tej operacji nie można cofnąć.",
+    "description_tab_few": "Czy na pewno chcesz zamknąć {{count}} karty? Tej operacji nie można cofnąć.",
+    "description_tab_many": "Czy na pewno chcesz zamknąć {{count}} kart? Tej operacji nie można cofnąć.",
+    "description_tab_other": "Czy na pewno chcesz zamknąć {{count}} karty? Tej operacji nie można cofnąć.",
+    "description_window_one": "Czy na pewno chcesz zamknąć {{count}} okno? Tej operacji nie można cofnąć.",
+    "description_window_few": "Czy na pewno chcesz zamknąć {{count}} okna? Tej operacji nie można cofnąć.",
+    "description_window_many": "Czy na pewno chcesz zamknąć {{count}} okien? Tej operacji nie można cofnąć.",
+    "description_window_other": "Czy na pewno chcesz zamknąć {{count}} okna? Tej operacji nie można cofnąć.",
+    "description_group_one": "Czy na pewno chcesz zamknąć {{count}} grupę? Tej operacji nie można cofnąć.",
+    "description_group_few": "Czy na pewno chcesz zamknąć {{count}} grupy? Tej operacji nie można cofnąć.",
+    "description_group_many": "Czy na pewno chcesz zamknąć {{count}} grup? Tej operacji nie można cofnąć.",
+    "description_group_other": "Czy na pewno chcesz zamknąć {{count}} grupy? Tej operacji nie można cofnąć."
+  },
+  "deleteSelection": {
+    "title": "Usuń Zaznaczone",
+    "confirm": "Usuń",
+    "description_tab_one": "Czy na pewno chcesz usunąć {{count}} kartę? Tej operacji nie można cofnąć.",
+    "description_tab_few": "Czy na pewno chcesz usunąć {{count}} karty? Tej operacji nie można cofnąć.",
+    "description_tab_many": "Czy na pewno chcesz usunąć {{count}} kart? Tej operacji nie można cofnąć.",
+    "description_tab_other": "Czy na pewno chcesz usunąć {{count}} karty? Tej operacji nie można cofnąć.",
+    "description_window_one": "Czy na pewno chcesz usunąć {{count}} okno? Tej operacji nie można cofnąć.",
+    "description_window_few": "Czy na pewno chcesz usunąć {{count}} okna? Tej operacji nie można cofnąć.",
+    "description_window_many": "Czy na pewno chcesz usunąć {{count}} okien? Tej operacji nie można cofnąć.",
+    "description_window_other": "Czy na pewno chcesz usunąć {{count}} okna? Tej operacji nie można cofnąć.",
+    "description_group_one": "Czy na pewno chcesz usunąć {{count}} grupę? Tej operacji nie można cofnąć.",
+    "description_group_few": "Czy na pewno chcesz usunąć {{count}} grupy? Tej operacji nie można cofnąć.",
+    "description_group_many": "Czy na pewno chcesz usunąć {{count}} grup? Tej operacji nie można cofnąć.",
+    "description_group_other": "Czy na pewno chcesz usunąć {{count}} grupy? Tej operacji nie można cofnąć."
+  },
+  "removeStaleTabs": {
+    "title": "Usuń Nieaktywne Karty",
+    "confirm": "Usuń",
+    "description_one": "Czy na pewno chcesz usunąć {{count}} nieaktywną kartę? Tej operacji nie można cofnąć.",
+    "description_few": "Czy na pewno chcesz usunąć {{count}} nieaktywne karty? Tej operacji nie można cofnąć.",
+    "description_many": "Czy na pewno chcesz usunąć {{count}} nieaktywnych kart? Tej operacji nie można cofnąć.",
+    "description_other": "Czy na pewno chcesz usunąć {{count}} nieaktywnej karty? Tej operacji nie można cofnąć."
+  },
+  "closeAllWindows": {
+    "title": "Zamknij Wszystkie Okna",
+    "description": "Czy na pewno chcesz zamknąć wszystkie okna przeglądarki i ich karty?",
+    "confirm": "Zamknij Wszystkie"
+  },
+  "removeAllWindows": {
+    "title": "Usuń Wszystkie Okna",
+    "description": "Czy na pewno chcesz usunąć wszystkie okna i ich karty z tej grupy? Tej operacji nie można cofnąć.",
+    "confirm": "Usuń Wszystkie"
+  },
+  "archiveStaleGroups": {
+    "title": "Archiwizuj Nieaktywne Grupy",
+    "confirm": "Archiwizuj",
+    "description_one": "Czy na pewno chcesz zarchiwizować {{count}} nieaktywną grupę?",
+    "description_few": "Czy na pewno chcesz zarchiwizować {{count}} nieaktywne grupy?",
+    "description_many": "Czy na pewno chcesz zarchiwizować {{count}} nieaktywnych grup?",
+    "description_other": "Czy na pewno chcesz zarchiwizować {{count}} nieaktywnej grupy?"
+  },
+  "clearAllData": {
+    "title": "Wyczyść Wszystkie Dane",
+    "confirm": "Wyczyść Wszystkie Dane",
+    "description": "Spowoduje to trwałe usunięcie wszystkich grup, zapisanych sesji i ustawień. Tej operacji nie można cofnąć.",
+    "description_kept": "Spowoduje to trwałe usunięcie wszystkich grup, zapisanych sesji i ustawień. Tej operacji nie można cofnąć. Automatyczne kopie zapasowe przechowywane na Twoim koncie zostają zachowane i możesz je przywrócić z Ustawień → Dane."
+  },
+  "resetEncryption": {
+    "title": "Zresetuj Hasło Szyfrujące",
+    "confirm": "Zresetuj Hasło",
+    "description": "Tej operacji nie można cofnąć. Wszystkie zsynchronizowane grupy, sesje i notatki zaszyfrowane Twoim obecnym hasłem staną się trwale niedostępne. Ustawisz nowe hasło i zaczniesz synchronizację od nowa."
+  },
+  "cancel": "Anuluj"
+}

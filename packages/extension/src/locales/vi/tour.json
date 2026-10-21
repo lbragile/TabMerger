@@ -1,0 +1,284 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "Làm quen với TabMerger",
+      "description": "Nhìn qua một lượt: các thẻ đang mở của bạn xuất hiện ở đâu và cửa sổ được bố trí như thế nào. Chưa cần thử gì cả."
+    },
+    "groups": {
+      "title": "Sắp xếp bằng nhóm",
+      "description": "Nhóm là nơi các thẻ đã lưu được giữ. Bạn sẽ tạo một nhóm, đặt tên, chọn màu và ghim nó lên đầu."
+    },
+    "drag": {
+      "title": "Di chuyển mọi thứ bằng cách kéo",
+      "description": "Bạn sẽ di chuyển thẻ và nhóm trên hai nhóm luyện tập mà hướng dẫn thêm vào: \"Tour demo\" và \"Tour demo 2\". Chúng chứa các thẻ mẫu, không phải của bạn."
+    },
+    "tabs": {
+      "title": "Lưu và mở lại thẻ",
+      "description": "Cách chuyển các thẻ đang mở vào một nhóm, mang chúng trở lại sau này và dọn dẹp những gì bạn đã lưu. Bạn sẽ thử từng thao tác trên các nhóm luyện tập và trên một thẻ dự phòng mà hướng dẫn mở: không có thẻ nào của riêng bạn bị lưu, mở hoặc đóng."
+    },
+    "find": {
+      "title": "Tìm mọi thứ và hoàn tác lỗi",
+      "description": "Tìm kiếm mọi thẻ và nhóm cùng lúc, và lùi lại khi bạn đổi ý. Bạn sẽ thử tìm kiếm, \"Hoàn tác\" và \"Làm lại\" trên các nhóm luyện tập."
+    },
+    "later": {
+      "title": "Giữ mọi thứ cho sau này",
+      "description": "Lưu tất cả nhóm của bạn cùng một lúc, cất một nhóm sang một bên mà không xóa nó, và lưu từ bất kỳ trang web nào. Chương này chỉ giải thích."
+    },
+    "settings": {
+      "title": "Cài đặt và tài khoản của bạn",
+      "description": "Thay đổi giao diện của TabMerger, xem Cài đặt còn cung cấp gì khác và đăng nhập mang lại thêm điều gì. Bạn sẽ thử chuyển đổi giao diện."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Chào mừng đến với TabMerger",
+      "body": "TabMerger giúp dọn dẹp trình duyệt của bạn. Lưu các thẻ đang mở vào các nhóm có tên, đóng chúng, và mang chúng trở lại bất cứ khi nào bạn cần. Hướng dẫn này có bảy chương ngắn, mỗi chương được đặt tên ở đầu thẻ này. Một số bước yêu cầu bạn tự thử: một vòng tròn màu cam sẽ đánh dấu điều khiển cần dùng tiếp theo, và văn bản sẽ gọi tên nó. Với những bước đó, hướng dẫn thêm hai nhóm luyện tập với các thẻ mẫu, \"Tour demo\" và \"Tour demo 2\", và tự xóa chúng sau đó. Bạn có thể bỏ qua một bước, một chương, hoặc toàn bộ hướng dẫn bất cứ lúc nào."
+    },
+    "now-open": {
+      "title": "Đang Mở",
+      "body": "\"Đang Mở\", ở đầu danh sách bên trái, là danh sách trực tiếp của mọi thẻ đang mở trong trình duyệt của bạn ngay bây giờ. Nó luôn ở vị trí đầu tiên và không thể bị xóa."
+    },
+    "main-panel": {
+      "title": "Cửa sổ và thẻ",
+      "body": "Bảng chính hiển thị những gì có trong nhóm bạn chọn ở bên trái: các cửa sổ của nó, và các thẻ trong mỗi cửa sổ. Đối với Đang Mở, đây là các cửa sổ trình duyệt thực của bạn."
+    },
+    "make-group": {
+      "title": "Tạo một nhóm",
+      "body": "Nhóm là nơi có tên cho các thẻ đã lưu, ví dụ \"Công việc\" hoặc \"Kế hoạch nghỉ lễ\". Hãy thử: chọn \"Thêm Nhóm\", bên dưới các nhóm của bạn. Một nhóm mới xuất hiện với trường \"Tên nhóm\" sẵn sàng, hiển thị \"temp group\". Gõ tên của riêng bạn, ví dụ \"Luyện tập\", rồi nhấn Enter hoặc chọn \"Lưu\" bên cạnh trường đó.",
+      "doneText": "Tốt lắm, nhóm của bạn đã sẵn sàng. Các bước tiếp theo sẽ dùng nó.",
+      "fallbackBody": "Nhóm là nơi có tên cho các thẻ đã lưu, ví dụ \"Công việc\" hoặc \"Kế hoạch nghỉ lễ\". \"Thêm Nhóm\", bên dưới các nhóm của bạn, tạo ra một nhóm. Bạn đã có đủ số nhóm mà gói của bạn cho phép, vì vậy bước này chỉ được hiển thị, không được thử."
+    },
+    "group-color": {
+      "title": "Đặt màu cho nó",
+      "body": "Màu sắc giúp phân biệt các nhóm dễ dàng hơn. Hãy thử: trong nhóm bạn vừa tạo, chọn chấm tròn \"Đổi màu nhóm\" trước tên của nó. Chọn một trong các mẫu màu tròn, sau đó chọn \"Áp dụng\".",
+      "doneText": "Tốt lắm, màu đã được đổi.",
+      "fallbackBody": "Màu sắc giúp phân biệt các nhóm dễ dàng hơn. Mỗi nhóm có một chấm tròn \"Đổi màu nhóm\" trước tên của nó: chọn nó, chọn màu, rồi chọn \"Áp dụng\"."
+    },
+    "group-pin": {
+      "title": "Ghim một nhóm lên đầu",
+      "body": "Các nhóm được ghim luôn ở trên các nhóm khác. Hãy thử: trong nhóm bạn vừa tạo, chọn ngôi sao ở cuối hàng của nó. Nó có tên \"Ghim nhóm\", hoặc \"Bỏ ghim nhóm\" khi nhóm đã được ghim.",
+      "doneText": "Tốt lắm. Chọn ngôi sao lần nữa bất cứ khi nào bạn muốn đổi lại.",
+      "fallbackBody": "Các nhóm được ghim luôn ở trên các nhóm khác. Mỗi nhóm có một ngôi sao ở cuối hàng của nó, có tên \"Ghim nhóm\": chọn nó để ghim nhóm, và chọn lại để bỏ ghim."
+    },
+    "group-menu": {
+      "title": "Thêm cho mỗi nhóm",
+      "body": "Mỗi nhóm đã lưu có một menu nhấp chuột phải. Nó chứa \"Đổi tên\", \"Thêm ghi chú\", \"Nhân bản\", \"Hợp nhất với phiên hiện tại\" để thêm các cửa sổ đang mở của bạn vào nhóm, \"Lưu trữ nhóm\" để ẩn nó, và \"Xóa nhóm\". Bước này chỉ là xem qua: danh sách bị khóa trong khi hướng dẫn mở, vì vậy hãy thử menu sau khi hướng dẫn kết thúc."
+    },
+    "drag-tab-reorder": {
+      "title": "Sắp xếp lại thẻ",
+      "body": "Bảng chính hiển thị nhóm luyện tập \"Tour demo\". Mỗi thẻ có một tay cầm dạng chấm trước nó, có tên \"Kéo để sắp xếp lại thẻ\". Di chuyển thẻ đầu tiên của cửa sổ \"Reading\" đến cuối cửa sổ đó.",
+      "subStepText": {
+        "1": "Nhấn và giữ tay cầm của thẻ đầu tiên.",
+        "2": "Di chuyển xuống dòng dưới thẻ cuối cùng, được đánh dấu \"Thả xuống dưới thẻ này\".",
+        "3": "Thả ra để đặt nó xuống."
+      },
+      "subStepKeys": {
+        "1": "nhấn Tab để đến tay cầm, rồi Space để nhấc thẻ lên.",
+        "2": "nhấn phím mũi tên Xuống cho đến khi thẻ ở dòng được đánh dấu \"Thả xuống dưới thẻ này\".",
+        "3": "nhấn Space để thả nó."
+      },
+      "doneText": "Tốt lắm, thẻ đã được di chuyển.",
+      "fallbackBody": "Mỗi thẻ đã lưu có một tay cầm dạng chấm trước nó, có tên \"Kéo để sắp xếp lại thẻ\". Kéo nó di chuyển thẻ lên hoặc xuống trong cửa sổ của nó. Bước này chỉ là xem qua."
+    },
+    "drag-tab-window": {
+      "title": "Di chuyển một thẻ sang cửa sổ khác",
+      "body": "Một thẻ cũng có thể chuyển sang một cửa sổ khác trong cùng nhóm. Di chuyển thẻ đầu tiên vào cửa sổ còn lại của \"Tour demo\".",
+      "subStepText": {
+        "1": "Nhấn và giữ tay cầm của thẻ đầu tiên.",
+        "2": "Di chuyển nó lên cửa sổ còn lại, được đánh dấu \"Thả vào cửa sổ này\".",
+        "3": "Thả ra để đặt nó xuống."
+      },
+      "subStepKeys": {
+        "1": "nhấn Tab để đến tay cầm, rồi Space để nhấc thẻ lên.",
+        "2": "nhấn phím mũi tên Xuống cho đến khi thẻ nằm trong cửa sổ được đánh dấu \"Thả vào cửa sổ này\".",
+        "3": "nhấn Space để thả nó."
+      },
+      "doneText": "Tốt lắm, thẻ đã ở trong cửa sổ còn lại.",
+      "fallbackBody": "Kéo một thẻ bằng tay cầm của nó lên một cửa sổ khác trong cùng nhóm sẽ di chuyển nó đến đó. Bước này chỉ là xem qua."
+    },
+    "drag-tab-group": {
+      "title": "Di chuyển một thẻ sang nhóm khác",
+      "body": "Thả một thẻ lên một nhóm trong danh sách bên trái sẽ di chuyển nó vào nhóm đó. Di chuyển thẻ đầu tiên vào nhóm luyện tập \"Tour demo 2\".",
+      "subStepText": {
+        "1": "Nhấn và giữ tay cầm của thẻ đầu tiên.",
+        "2": "Di chuyển nó lên \"Tour demo 2\" trong danh sách bên trái, được đánh dấu \"Thả lên nhóm này\".",
+        "3": "Thả ra để đặt nó xuống."
+      },
+      "subStepKeys": {
+        "1": "nhấn Tab để đến tay cầm, rồi Space để nhấc thẻ lên.",
+        "2": "nhấn phím mũi tên Trái để đến danh sách nhóm, rồi phím mũi tên Xuống cho đến khi đến \"Tour demo 2\", được đánh dấu \"Thả lên nhóm này\".",
+        "3": "nhấn Space để thả nó."
+      },
+      "doneText": "Tốt lắm, thẻ giờ đã ở trong \"Tour demo 2\".",
+      "fallbackBody": "Kéo một thẻ bằng tay cầm của nó lên một nhóm trong danh sách bên trái sẽ di chuyển nó vào nhóm đó. Bước này chỉ là xem qua."
+    },
+    "drag-group-order": {
+      "title": "Sắp xếp thứ tự các nhóm",
+      "body": "Các nhóm cũng có một tay cầm dạng chấm ở đầu hàng của chúng, có tên \"Kéo để sắp xếp lại nhóm\". Hoán đổi hai nhóm luyện tập. Các nhóm của riêng bạn cũng di chuyển theo cách tương tự.",
+      "subStepText": {
+        "1": "Nhấn và giữ tay cầm của nhóm luyện tập phía trên.",
+        "2": "Di chuyển xuống dòng dưới nhóm luyện tập còn lại, được đánh dấu \"Thả xuống dưới nhóm này\".",
+        "3": "Thả ra để đặt nó xuống."
+      },
+      "subStepKeys": {
+        "1": "nhấn Tab để đến tay cầm, rồi Space để nhấc nhóm lên.",
+        "2": "nhấn phím mũi tên Xuống một lần, để nhóm ở dòng được đánh dấu \"Thả xuống dưới nhóm này\".",
+        "3": "nhấn Space để thả nó."
+      },
+      "doneText": "Tốt lắm, hai nhóm đã đổi chỗ.",
+      "fallbackBody": "Mỗi nhóm đã lưu có một tay cầm dạng chấm ở đầu hàng của nó, có tên \"Kéo để sắp xếp lại nhóm\". Kéo nó di chuyển nhóm lên hoặc xuống danh sách. Bước này chỉ là xem qua."
+    },
+    "save-tabs": {
+      "title": "Lưu thẻ vào một nhóm",
+      "body": "Một thẻ được kéo từ Đang Mở lên một nhóm sẽ được lưu vào nhóm đó và đóng lại trong trình duyệt của bạn. Để không có thẻ nào của riêng bạn bị đóng, hướng dẫn đã mở một thẻ dự phòng có tên \"Tour practice tab\": đó là thẻ duy nhất bạn có thể di chuyển ở bước này. Lưu nó vào nhóm luyện tập \"Tour demo\".",
+      "subStepText": {
+        "1": "Nhấn và giữ tay cầm dạng chấm trước \"Tour practice tab\".",
+        "2": "Di chuyển nó lên \"Tour demo\" trong danh sách bên trái, được đánh dấu \"Thả lên nhóm này\".",
+        "3": "Thả ra để đặt nó xuống."
+      },
+      "subStepKeys": {
+        "1": "nhấn Tab để đến tay cầm, rồi Space để nhấc thẻ lên.",
+        "2": "nhấn phím mũi tên Trái để đến danh sách nhóm, rồi phím mũi tên Xuống cho đến khi đến \"Tour demo\", được đánh dấu \"Thả lên nhóm này\".",
+        "3": "nhấn Space để thả nó."
+      },
+      "doneText": "Tốt lắm. Thẻ luyện tập đã được lưu trong \"Tour demo\" và đóng lại trong trình duyệt của bạn. Toàn bộ cửa sổ được lưu theo cách tương tự.",
+      "fallbackBody": "Một thẻ, hoặc toàn bộ cửa sổ, được kéo từ Đang Mở lên một nhóm bên trái sẽ được lưu vào nhóm đó và đóng lại trong trình duyệt của bạn. Hướng dẫn không thể mở một thẻ dự phòng để thử điều này, vì vậy bước này chỉ là xem qua: không có thẻ nào của bạn bị chạm vào."
+    },
+    "open-tabs": {
+      "title": "Mở lại các thẻ của bạn",
+      "body": "Trong một nhóm đã lưu, chọn tên của một thẻ sẽ mở lại thẻ đó, và \"Mở trong trình duyệt\" trong menu của một cửa sổ sẽ mở toàn bộ cửa sổ. Hãy thử menu đó trên cửa sổ \"Reading\" của \"Tour demo\". Các thẻ mẫu không phải là trang thực, vì vậy không có gì được mở trong khi hướng dẫn diễn ra.",
+      "subStepText": {
+        "1": "Chọn \"Tùy chọn cửa sổ khác\", ba dấu chấm ở cuối hàng \"Reading\".",
+        "2": "Chọn \"Mở trong trình duyệt\" trong menu."
+      },
+      "doneText": "Tốt lắm. Sau hướng dẫn, thao tác đó sẽ mở cửa sổ cùng các thẻ của nó trong trình duyệt của bạn. Không có gì được mở ngay bây giờ.",
+      "fallbackBody": "Trong một nhóm đã lưu, chọn tên của một thẻ sẽ mở lại thẻ đó. \"Tùy chọn cửa sổ khác\" trên một cửa sổ có \"Mở trong trình duyệt\" cho toàn bộ cửa sổ, và menu nhấp chuột phải của một nhóm có \"Mở tất cả trong cửa sổ mới\". Bước này chỉ là xem qua: không có gì được mở trong khi hướng dẫn diễn ra."
+    },
+    "tab-extras": {
+      "title": "Ghi chú, lời nhắc và tên",
+      "body": "Một thẻ đã lưu có menu nhấp chuột phải với nhiều hơn: \"Di chuyển vào nhóm\", \"Thêm ghi chú\" để viết điều gì đó xuống, \"Nhắc tôi…\" để được nhắc nhở sau này, \"Đổi tên thẻ\" để đặt tiêu đề riêng của bạn, và \"Xóa thẻ\". Bước này chỉ là xem qua: danh sách bị khóa trong khi hướng dẫn mở, vì vậy hãy thử menu sau khi hướng dẫn kết thúc."
+    },
+    "tidy-up": {
+      "title": "Dọn dẹp một nhóm",
+      "body": "\"Tùy chọn nhóm khác\", ở góc trên bên phải của bảng chính, có thể sắp xếp các thẻ theo tiêu đề hoặc địa chỉ, loại bỏ bản trùng với \"Loại bỏ thẻ trùng lặp\", và \"Hợp nhất cửa sổ\" thành một hoặc \"Tách cửa sổ\" ra riêng. \"Tour demo\" chứa thẻ \"Sample: books\" hai lần: hãy xóa bản trùng lặp.",
+      "modalBody": "Hộp thoại \"Xóa bản trùng lặp\" liệt kê thẻ bị lặp lại. Chọn \"Xóa 1 bản trùng lặp\".",
+      "subStepText": {
+        "1": "Chọn \"Tùy chọn nhóm khác\", ba dấu chấm ở góc trên bên phải của bảng chính.",
+        "2": "Chọn \"Loại bỏ thẻ trùng lặp\" trong menu.",
+        "3": "Trong hộp thoại \"Xóa bản trùng lặp\", chọn \"Xóa 1 bản trùng lặp\"."
+      },
+      "doneText": "Tốt lắm, thẻ bị lặp lại đã biến mất.",
+      "fallbackBody": "\"Tùy chọn nhóm khác\", ở góc trên bên phải của bảng chính, có thể sắp xếp các thẻ theo tiêu đề hoặc địa chỉ, loại bỏ bản trùng với \"Loại bỏ thẻ trùng lặp\", và \"Hợp nhất cửa sổ\" thành một hoặc \"Tách cửa sổ\" ra riêng. Bước này chỉ là xem qua."
+    },
+    "select-items": {
+      "title": "Thao tác trên nhiều mục cùng lúc",
+      "body": "\"Chọn mục\", trong tiêu đề, hiển thị một hộp kiểm trên mỗi thẻ, cửa sổ và nhóm. Khi đã chọn một số mục, một thanh xuất hiện ở dưới cùng tác động lên tất cả chúng cùng lúc, ví dụ để xóa chúng. Chia sẻ các nhóm đã chọn dưới dạng liên kết cần gói Pro. Hãy thử chọn một thẻ mẫu.",
+      "subStepText": {
+        "1": "Chọn \"Chọn mục\" trong tiêu đề.",
+        "2": "Chọn hộp kiểm trước thẻ mẫu đầu tiên."
+      },
+      "doneText": "Tốt lắm. Thanh ở dưới cùng tác động lên những gì bạn đã chọn. Hướng dẫn sẽ tắt chế độ chọn lại khi bạn tiếp tục.",
+      "fallbackBody": "\"Chọn mục\", trong tiêu đề, hiển thị một hộp kiểm trên mỗi thẻ, cửa sổ và nhóm. Khi đã chọn một số mục, một thanh xuất hiện ở dưới cùng tác động lên tất cả chúng cùng lúc, ví dụ để xóa chúng. Chia sẻ các nhóm đã chọn dưới dạng liên kết cần gói Pro. Bước này chỉ là xem qua."
+    },
+    "search": {
+      "title": "Tìm bất cứ thứ gì",
+      "body": "Ô tìm kiếm ở trên cùng, ghi \"Tìm kiếm thẻ và nhóm…\", tìm qua mọi thẻ và nhóm cùng lúc. Kết quả khớp xuất hiện khi bạn gõ. Hãy thử trên các thẻ mẫu.",
+      "subStepText": {
+        "1": "Chọn ô tìm kiếm ở trên cùng.",
+        "2": "Gõ từ sample."
+      },
+      "doneText": "Tốt lắm. Mọi thẻ khớp được liệt kê dưới ô tìm kiếm. Chọn một thẻ sẽ đưa bạn đến nhóm của nó.",
+      "fallbackBody": "Ô tìm kiếm ở trên cùng, ghi \"Tìm kiếm thẻ và nhóm…\", tìm qua mọi thẻ và nhóm cùng lúc. Kết quả khớp xuất hiện khi bạn gõ, và chọn một kết quả sẽ đưa bạn đến nhóm của nó."
+    },
+    "search-filters": {
+      "title": "Thu hẹp một tìm kiếm",
+      "body": "Bắt đầu tìm kiếm bằng group: hoặc window: để tìm trong một nhóm hoặc một cửa sổ, hoặc bằng tag: để lọc theo nhãn nhóm thẻ trình duyệt. Ô tìm kiếm liệt kê các mục này dưới \"Hãy thử các tìm kiếm này\". Hãy thử group: trên nhóm luyện tập, sau đó xóa tìm kiếm.",
+      "subStepText": {
+        "1": "Chọn ô tìm kiếm ở trên cùng.",
+        "2": "Gõ group:tour không có khoảng trắng. Một danh sách có tên \"Chọn một nhóm\" xuất hiện.",
+        "3": "Chọn \"Tour demo\" trong danh sách đó. Tìm kiếm giờ chỉ tìm trong nhóm đó.",
+        "4": "Chọn \"Xóa tìm kiếm\", dấu × ở cuối ô tìm kiếm. Một tìm kiếm vẫn tồn tại cho đến khi bạn xóa nó."
+      },
+      "doneText": "Tốt lắm, tìm kiếm đã được xóa.",
+      "fallbackBody": "Bắt đầu tìm kiếm bằng group: hoặc window: để tìm trong một nhóm hoặc một cửa sổ, hoặc bằng tag: để lọc theo nhãn nhóm thẻ trình duyệt. Ô tìm kiếm liệt kê các mục này dưới \"Hãy thử các tìm kiếm này\"."
+    },
+    "undo": {
+      "title": "Đổi ý rồi?",
+      "body": "\"Hoàn tác\" và \"Làm lại\", trong tiêu đề, lùi lại và tiến tới qua 10 thay đổi gần nhất của bạn đối với nhóm và thẻ. Chúng bị mờ đi cho đến khi có điều gì đó để hoàn tác. Hãy thử chúng trên một thay đổi nhỏ ở cửa sổ mẫu \"Reading\".",
+      "subStepText": {
+        "1": "Chọn ngôi sao ở cuối hàng \"Reading\", có tên \"Gắn sao cửa sổ\".",
+        "2": "Chọn \"Hoàn tác\" trong tiêu đề. Việc này xóa ngôi sao đi lần nữa.",
+        "3": "Chọn \"Làm lại\", bên cạnh \"Hoàn tác\". Việc này đưa ngôi sao trở lại."
+      },
+      "doneText": "Tốt lắm. \"Hoàn tác\" và \"Làm lại\" hoạt động theo cách tương tự trên các nhóm và thẻ của riêng bạn.",
+      "fallbackBody": "\"Hoàn tác\" và \"Làm lại\", trong tiêu đề, lùi lại và tiến tới qua 10 thay đổi gần nhất của bạn đối với nhóm và thẻ. Chúng bị mờ đi cho đến khi có điều gì đó để hoàn tác."
+    },
+    "sessions": {
+      "title": "Lưu mọi thứ cùng một lúc",
+      "body": "Một phiên là bản sao đã lưu của tất cả các nhóm của bạn ở hiện trạng ngay bây giờ. Trong phần \"PHIÊN\" ở dưới cùng bên trái, \"Lưu phiên hiện tại\" tạo ra một bản. \"Khôi phục phiên\", bên cạnh một phiên đã lưu, mang nó trở lại: nó sẽ hỏi trước, vì việc này đóng các cửa sổ đang mở của bạn."
+    },
+    "archived": {
+      "title": "Cất một nhóm sang một bên",
+      "body": "Lưu trữ ẩn một nhóm mà không xóa nó. Các nhóm đã lưu trữ chờ trong phần \"ĐÃ LƯU TRỮ\" ở dưới cùng bên trái, nơi bạn có thể khôi phục hoặc xóa chúng. Chúng vẫn được tính vào số lượng nhóm trong gói của bạn."
+    },
+    "quick-save": {
+      "title": "Lưu mà không cần mở TabMerger",
+      "body": "Nhấp chuột phải vào bất kỳ trang web nào và chọn \"Lưu vào TabMerger\". Chọn những gì cần lưu, ví dụ \"Lưu thẻ này\" hoặc \"Lưu tất cả các thẻ khác\", sau đó chọn nhóm để đặt nó vào."
+    },
+    "theme": {
+      "title": "Sáng hay tối",
+      "body": "Hãy thử: mở menu ở góc trên bên phải, có tên \"Menu cài đặt\" (hoặc \"Menu tài khoản\" sau khi bạn đăng nhập), và chọn \"Cài đặt\". Mở danh sách \"Giao diện\", chọn một giao diện khác, rồi chọn \"Lưu thay đổi\".",
+      "modalBody": "Trong Cài đặt: mở danh sách \"Giao diện\", chọn một giao diện khác, rồi chọn \"Lưu thay đổi\".",
+      "doneText": "Tốt lắm, giao diện đã được đổi. Đóng Cài đặt, hoặc chọn Tiếp theo, để tiếp tục."
+    },
+    "settings-more": {
+      "title": "Thêm trong Cài đặt",
+      "body": "Cài đặt có nhiều hơn trong tab \"Chung\": \"Xác nhận trước khi xóa\" hỏi trước khi bất cứ thứ gì bị xóa, và \"Quy tắc URL\" liên kết địa chỉ web với một nhóm. Trên tab \"Dữ liệu\", \"Xuất\" lưu tất cả nhóm của bạn vào một tệp và \"Nhập\" tải lại một tệp. Sao lưu tự động, trên cùng tab đó, cần gói Pro."
+    },
+    "account": {
+      "title": "Tài khoản của bạn",
+      "body": "TabMerger hoạt động mà không cần tài khoản: mọi thứ được giữ trên thiết bị này. Đăng nhập, từ cùng menu đó, với gói Pro giữ các nhóm của bạn đồng bộ trên các thiết bị của bạn. Dữ liệu đã đồng bộ được khóa trên thiết bị của bạn trước khi được gửi đi, vì vậy chỉ mình bạn mới đọc được nó."
+    },
+    "ai": {
+      "title": "Hành động AI",
+      "body": "\"Hành động AI\", trong tiêu đề, có thể sắp xếp các thẻ đang mở của bạn thành các nhóm cho bạn. Cần gói Pro AI."
+    },
+    "finish": {
+      "title": "Bạn đã sẵn sàng",
+      "body": "Muốn xem lại điều này? \"Xem hướng dẫn\", dấu chấm hỏi ở góc trên bên phải, sẽ phát lại bất cứ lúc nào."
+    }
+  },
+  "card": {
+    "dialogLabel": "Hướng dẫn TabMerger",
+    "chapterLine": "Chương {{chapter}} trong {{chapters}}",
+    "stepLine": "Bước {{step}} trong {{total}}",
+    "done": "Xong.",
+    "withKeyboard": " Với bàn phím: {{keys}}",
+    "yourTurnAnnouncement": " Đến lượt bạn. Để tiếp tục mà không thử, chọn \"Bỏ qua bước này\".",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Chọn Tiếp theo để tiếp tục.",
+    "part": "Phần ",
+    "ofTotal": "{{current}} trong {{total}}",
+    "keyboard": "Bàn phím: ",
+    "yourTurn": "Đến lượt bạn. Bước này chờ cho đến khi bạn thử nó.",
+    "practiceRemoved": "Nhóm luyện tập đã được xóa.",
+    "practiceKept": "Nhóm bạn đã tạo trong hướng dẫn này, \"{{name}}\", vẫn còn trong danh sách của bạn. Giữ lại, hoặc xóa ngay bây giờ.",
+    "practiceKept_tabs": "Nhóm bạn đã tạo trong hướng dẫn này, \"{{name}}\" ({{tabs}}), vẫn còn trong danh sách của bạn. Giữ lại, hoặc xóa ngay bây giờ.",
+    "removePractice": "Xóa nhóm luyện tập",
+    "back": "Quay lại",
+    "skipStep": "Bỏ qua bước này",
+    "finish": "Xong",
+    "next": "Tiếp theo",
+    "skipTour": "Bỏ qua hướng dẫn",
+    "skipChapter": "Bỏ qua chương"
+  },
+  "drop": {
+    "belowTab": "Thả xuống dưới thẻ này",
+    "window": "Thả vào cửa sổ này",
+    "group": "Thả lên nhóm này",
+    "belowGroup": "Thả xuống dưới nhóm này",
+    "default": "Thả vào đây"
+  },
+  "practiceLeft": "Hướng dẫn đã để lại một nhóm luyện tập, \"{{name}}\", trong danh sách của bạn.",
+  "removeIt": "Xóa nó"
+}

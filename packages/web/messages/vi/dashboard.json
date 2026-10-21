@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Bảng điều khiển",
+  "greeting": "Chào buổi sáng, {name}",
+  "tierBadge": {
+    "free": "miễn phí",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "Sắp xếp bằng AI",
+  "aiOrganiseUpgrade": "Nâng cấp lên Pro AI để dùng tính năng sắp xếp bằng AI",
+  "aiOrganiseFromExtension": "Hãy bắt đầu từ cửa sổ bật lên của tiện ích TabMerger",
+  "tabGroups": "Nhóm tab",
+  "savedSessions": "Phiên đã lưu",
+  "stats": {
+    "tabs": {
+      "label": "Tab đã lưu",
+      "description": "Số tab trong tất cả các nhóm đã đồng bộ"
+    },
+    "groups": {
+      "label": "Nhóm đã đồng bộ",
+      "description": "Số nhóm đã đồng bộ lên đám mây"
+    },
+    "sessions": {
+      "label": "Phiên đã lưu trữ",
+      "description": "Số phiên duyệt web đã lưu trữ",
+      "lockedDescription": "Phiên và bản sao lưu (mở khóa để phân biệt)"
+    },
+    "memory": {
+      "label": "Bộ nhớ đã giải phóng",
+      "description": "Ước tính, không phải đo thực tế"
+    },
+    "memberSince": {
+      "label": "Thành viên từ",
+      "description": "Ngày tạo tài khoản"
+    },
+    "aiCredits": {
+      "label": "Tín dụng AI tháng này",
+      "description": "Mức sử dụng hàng tháng của Pro AI",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Đang tải"
+  },
+  "subscription": {
+    "currentPlan": "Gói hiện tại",
+    "renews": "Gia hạn vào {date}",
+    "upgrade": "Nâng cấp",
+    "statuses": {
+      "active": "đang hoạt động",
+      "canceled": "đã hủy",
+      "past_due": "quá hạn thanh toán",
+      "trialing": "đang dùng thử",
+      "incomplete": "chưa hoàn tất"
+    }
+  },
+  "upgraded": {
+    "message": "Chào mừng bạn đến với {plan}! Gói đăng ký của bạn đã được kích hoạt. Hãy tận hưởng các tính năng mới.",
+    "dismiss": "Đóng"
+  },
+  "locked": {
+    "item": "Được lưu bằng cụm mật khẩu cũ hơn. Hãy mở tiện ích trên thiết bị có cụm mật khẩu đó và để nó đồng bộ.",
+    "device": "Các tab đang mở của thiết bị này được lưu bằng cụm mật khẩu cũ hơn. Hãy mở tiện ích trên thiết bị đó và để nó đồng bộ.",
+    "unverified": "Hiện không thể đọc được. Hãy tải lại trang để thử lại."
+  },
+  "passphrase": {
+    "defaultLabel": "Nhập cụm mật khẩu mã hóa để xem nội dung này.",
+    "groupsLabel": "Các nhóm của bạn được mã hóa đầu cuối. Nhập cụm mật khẩu để xem chúng tại đây.",
+    "sessionsLabel": "Các phiên của bạn được mã hóa đầu cuối. Nhập cụm mật khẩu để xem chúng tại đây.",
+    "backupsLabel": "Các bản sao lưu của bạn được mã hóa đầu cuối. Nhập cụm mật khẩu để xem chúng tại đây.",
+    "placeholder": "Cụm mật khẩu",
+    "inputLabel": "Cụm mật khẩu mã hóa",
+    "unlock": "Mở khóa",
+    "incorrect": "Cụm mật khẩu không đúng."
+  },
+  "onboarding": {
+    "title": "Bắt đầu với TabMerger",
+    "progress": "Đã xong {done}/{total}",
+    "dismiss": "Đóng",
+    "install": "Cài đặt tiện ích TabMerger",
+    "group": "Tạo nhóm đầu tiên trong tiện ích",
+    "signin": "Đăng nhập để bật đồng bộ đám mây",
+    "upgrade": "Nâng cấp lên Pro để có không giới hạn nhóm"
+  },
+  "lockedName": "(đã khóa)",
+  "damagedNote": "Nội dung không ở định dạng TabMerger có thể đọc, nên không thể hiển thị tại đây.",
+  "counts": {
+    "groups": "{count, plural, other {{count} nhóm}}",
+    "windows": "{count, plural, other {{count} cửa sổ}}",
+    "tabs": "{count, plural, other {{count} tab}}"
+  },
+  "sessions": {
+    "cantRestore": "Không thể đọc phiên này, nên không thể khôi phục.",
+    "restored": "{count, plural, other {Đã khôi phục {count} tab từ \"{name}\"}}",
+    "deleted": "Đã xóa phiên",
+    "deleteFailed": "Không thể xóa phiên",
+    "loadFailed": "Không thể tải các phiên của bạn.",
+    "tryAgain": "Thử lại",
+    "loading": "Đang tải phiên",
+    "empty": "Chưa có phiên nào được lưu.",
+    "readOnlyNote": "Cần gói Pro để lưu phiên mới vào tài khoản. Bạn vẫn có thể mở hoặc xóa các phiên hiện có.",
+    "upgrade": "Nâng cấp lên Pro",
+    "freeLimit": "Gói miễn phí: tối đa {count} phiên. <link>Nâng cấp lên Pro</link> để không giới hạn.",
+    "restore": "Khôi phục phiên",
+    "cantRestoreTooltip": "Không thể đọc phiên này, nên không thể khôi phục",
+    "delete": "Xóa phiên",
+    "hideContents": "Ẩn nội dung",
+    "showContents": "Hiện nội dung ({count})",
+    "groupFallbackName": "Nhóm {number}",
+    "groupTabs": "{count, plural, other {{count} tab}}",
+    "moreTabs": "{count, plural, other {+{count} tab khác}}",
+    "moreGroups": "{count, plural, other {+{count} nhóm khác}}"
+  },
+  "backups": {
+    "title": "Bản sao lưu",
+    "upgradeDescription": "Sao lưu tự động là một phần của gói Pro: một bản chụp được mã hóa của các nhóm, lưu theo lịch, giữ lại {count} bản mới nhất.",
+    "readOnlyNote": "Cần gói Pro để tạo bản sao lưu mới. Bạn vẫn có thể tải xuống hoặc xóa các bản sao lưu hiện có.",
+    "upgrade": "Nâng cấp",
+    "intro": "Các bản chụp nhóm mà tiện ích TabMerger tự động lưu vào tài khoản của bạn, mới nhất trước. {count} bản mới nhất được giữ lại. Để khôi phục, hãy mở tiện ích và vào {place}; không thể khôi phục từ trang này. Tệp bạn tải xuống ở đây không được mã hóa.",
+    "extensionPlace": "Cài đặt > Dữ liệu",
+    "loadFailed": "Không thể tải các bản sao lưu của bạn.",
+    "tryAgain": "Thử lại",
+    "loading": "Đang tải bản sao lưu",
+    "unknownKind": "{count, plural, other {Không thể đọc {count} mục đã lưu, nên không rõ chúng có phải bản sao lưu hay không. Chúng được liệt kê trong Phiên đã lưu.}}",
+    "emptyTitle": "Chưa có bản sao lưu nào.",
+    "emptyBody": "Tiện ích tự động lưu một bản khi trình duyệt đang mở, nếu các nhóm đã thay đổi kể từ bản trước. Lịch mặc định là \"{interval}\" trừ khi bạn thay đổi: chọn khoảng thời gian, hoặc sao lưu ngay, trong tiện ích tại {place}.",
+    "intervals": {
+      "60": "Mỗi giờ",
+      "360": "Mỗi 6 giờ",
+      "720": "Mỗi 12 giờ",
+      "1440": "Hàng ngày",
+      "10080": "Hàng tuần"
+    },
+    "unknownDateInSentence": "một ngày không xác định",
+    "unknownDate": "Ngày không xác định",
+    "namePrefix": "Sao lưu tự động",
+    "downloading": "Đang tải xuống bản sao lưu từ {when}.",
+    "deleted": "Đã xóa bản sao lưu",
+    "deletedAnnouncement": "Đã xóa bản sao lưu từ {when}.",
+    "deleteFailed": "Không thể xóa bản sao lưu",
+    "deleteFailedAnnouncement": "Không thể xóa bản sao lưu từ {when}.",
+    "deleteTitle": "Xóa bản sao lưu này?",
+    "deleteBody": "Bản sao lưu từ {when} sẽ bị xóa khỏi tài khoản của bạn. Trình duyệt nào đã có bản sao lưu này vẫn giữ bản sao riêng của nó.",
+    "deleteBodyWithCounts": "Bản sao lưu từ {when} ({groups}, {tabs}) sẽ bị xóa khỏi tài khoản của bạn. Trình duyệt nào đã có bản sao lưu này vẫn giữ bản sao riêng của nó.",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "download": "Tải xuống",
+    "downloadLabel": "Tải xuống bản sao lưu từ {when}",
+    "deleteLabel": "Xóa bản sao lưu từ {when}"
+  },
+  "groups": {
+    "cantShare": "Không thể đọc nhóm này, nên không thể chia sẻ.",
+    "linkCopiedSnapshot": "Đã sao chép liên kết — chia sẻ một bản chụp của nhóm này.",
+    "shareFailed": "Không thể tạo liên kết chia sẻ. Vui lòng thử lại.",
+    "shareGroup": "Chia sẻ nhóm",
+    "copied": "Đã sao chép!",
+    "share": "Chia sẻ",
+    "cantShareTooltip": "Không thể đọc nhóm này, nên không thể chia sẻ",
+    "shareTooltip": "Sao chép liên kết đến bản chụp của nhóm này — các chỉnh sửa sau đó sẽ không cập nhật vào liên kết",
+    "justNow": "vừa xong",
+    "minutesAgo": "{count} phút trước",
+    "hoursAgo": "{count} giờ trước",
+    "daysAgo": "{count} ngày trước",
+    "lockedCantSelect": "Không thể chọn nhóm đã khóa",
+    "deselect": "Bỏ chọn",
+    "select": "Chọn",
+    "syncedAt": "Đã đồng bộ {time}",
+    "cardMeta": "{windows, plural, other {{windows} cửa sổ}} · {tabs, plural, other {{tabs} tab}}",
+    "syncedSuffix": " · đã đồng bộ {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Tab có thể đã cũ — lần đồng bộ cuối cách đây hơn 30 ngày",
+    "moreTabs": "+{count} tab khác",
+    "openAllTitle": "Mở tất cả tab trong nhóm này",
+    "openAll": "Mở tất cả",
+    "hideTabs": "Ẩn tab",
+    "showTabs": "Hiện tab",
+    "rowMeta": "{windows} cửa sổ · {tabs} tab",
+    "linkCopiedLive": "Đã sao chép liên kết! Trang chia sẻ đã hoạt động.",
+    "empty": "Chưa có nhóm nào được đồng bộ. Hãy mở tiện ích để tạo nhóm tab.",
+    "title": "Nhóm",
+    "summary": "{count, plural, other {{count} nhóm}} · {tabs, plural, other {{tabs} tab}}",
+    "sort": "Sắp xếp",
+    "sortLabel": "Sắp xếp nhóm",
+    "sortRecent": "Gần đây",
+    "sortName": "Tên",
+    "sortTabCount": "Số tab",
+    "cancel": "Hủy",
+    "gridView": "Dạng lưới",
+    "listView": "Dạng danh sách",
+    "archived": "Đã lưu trữ ({count})",
+    "selectedCount": "Đã chọn {count}",
+    "shareSelected": "Chia sẻ mục đã chọn",
+    "cancelSelection": "Hủy chọn"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Hãy mở tiện ích và mở khóa mã hóa để đồng bộ.",
+      "no-session": "Hãy đăng nhập vào tiện ích để đồng bộ.",
+      "error": "Đồng bộ thất bại. Hãy thử lại từ tiện ích."
+    },
+    "failedFallback": "Đồng bộ thất bại.",
+    "syncing": "Đang đồng bộ...",
+    "busy": "Đang đồng bộ rồi",
+    "failed": "Đồng bộ thất bại",
+    "synced": "Đã đồng bộ",
+    "never": "Chưa đồng bộ lần nào",
+    "reasonSeparator": ". ",
+    "refresh": "Làm mới trạng thái đồng bộ",
+    "resync": "Đồng bộ lại ngay",
+    "justNow": "vừa xong",
+    "minutesAgo": "{count} phút trước",
+    "hoursAgo": "{count} giờ trước",
+    "daysAgo": "{count} ngày trước"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "review": "Xem lại",
+  "archive": "Lưu trữ",
+  "dismiss": "Bỏ qua",
+  "getMore": "Lấy thêm",
+  "removeStale": "Xóa thẻ cũ",
+  "staleTabs": "{{count}} thẻ đã được lưu hơn {{days}} ngày trước.",
+  "staleRemoved_other": "Đã xóa {{count}} thẻ cũ",
+  "upgrade": "Nâng cấp",
+  "paymentIssue": "Sự cố thanh toán — cập nhật thẻ của bạn",
+  "planEnds": "Gói Pro của bạn kết thúc vào {{date}}",
+  "approachingLimit": "Bạn sắp đạt đến giới hạn gói miễn phí — nâng cấp lên Pro để có nhóm và thẻ không giới hạn",
+  "update": {
+    "label": "Có bản cập nhật",
+    "text": "Phiên bản {{version}} đã sẵn sàng. Khởi động lại sẽ đóng popup này.",
+    "restart": "Khởi động lại để cập nhật",
+    "restartLabel": "Khởi động lại TabMerger để cập nhật lên phiên bản {{version}}. Việc này sẽ đóng popup.",
+    "dismissLabel": "Bỏ qua thông báo cập nhật cho phiên bản {{version}}"
+  }
+}

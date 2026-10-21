@@ -1,0 +1,7 @@
+{
+  "hex": "Цвет в HEX",
+  "hexTitle": "Введите цвет в HEX (#rrggbb)",
+  "hexPlaceholder": "#rrggbb",
+  "cancel": "Отмена",
+  "apply": "Применить"
+}

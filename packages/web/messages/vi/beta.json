@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Tham gia và cài đặt"
+    },
+    "what-to-test": {
+      "label": "Cần kiểm thử gì"
+    },
+    "known-issues": {
+      "label": "Sự cố đã biết"
+    },
+    "report-bugs": {
+      "label": "Báo lỗi"
+    },
+    "faq": {
+      "label": "Câu hỏi thường gặp"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Thanh toán thành công (Visa)",
+      "note": "Dùng thẻ này để nâng cấp"
+    },
+    "1": {
+      "label": "Từ chối chung"
+    },
+    "2": {
+      "label": "Không đủ tiền"
+    },
+    "3": {
+      "label": "Cần xác thực 3D Secure"
+    }
+  },
+  "accessLabels": {
+    "free": "Miễn phí: không cần tài khoản",
+    "upgrading": "Nâng cấp Pro: thanh toán thử, không dùng tiền thật",
+    "some-pro": "Miễn phí và Pro: mỗi phần Pro đều được đánh dấu",
+    "pro": "Chỉ dành cho Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Nhóm và tab",
+      "items": {
+        "0": {
+          "heading": "Nhóm, màu sắc và hoàn tác/làm lại",
+          "checks": "Bạn có thể tạo, đặt tên và tô màu cho một nhóm, lưu tab vào đó, và hoàn tác hoặc làm lại một thay đổi mà không mất gì.",
+          "steps": {
+            "0": "Nhấp “Add Group” trong thanh bên và đặt tên cho nhóm.",
+            "1": "Nhấp vào chấm màu cạnh nhóm để mở bộ chọn màu, chọn một màu có sẵn hoặc kéo để chọn màu bất kỳ, rồi nhấp Apply.",
+            "2": "Lưu vài tab vào nhóm (kéo chúng vào, hoặc dùng menu chuột phải).",
+            "3": "Xóa một tab, rồi nhấp nút Hoàn tác (đầu trang, góc trên bên phải) và sau đó Làm lại."
+          },
+          "examples": {
+            "0": {
+              "alt": "Cửa sổ bật lên TabMerger với một nhóm mới được chọn và bộ chọn màu đang mở: bộ chọn độ bão hòa và sắc độ, 12 màu có sẵn, ô mã hex, và các nút Cancel và Apply",
+              "caption": "Nhấp vào chấm màu của nhóm sẽ mở bộ chọn này."
+            }
+          },
+          "good": {
+            "0": "Nhóm được cập nhật ngay lập tức.",
+            "1": "Hoàn tác khôi phục tab đã xóa đúng vị trí cũ.",
+            "2": "Làm lại sẽ xóa nó một lần nữa.",
+            "3": "Khi bật đồng bộ, nút Hoàn tác có thể chuyển sang màu xám sau khi đồng bộ mang về thay đổi từ thiết bị khác. Đây là điều bình thường, không phải lỗi: lịch sử hoàn tác bị xóa khi có thay đổi đến từ nơi khác."
+          }
+        },
+        "1": {
+          "heading": "“Now Open” theo dõi các tab đang mở",
+          "checks": "Nhóm cố định “Now Open” luôn phản ánh đúng các tab thực sự đang mở trong trình duyệt.",
+          "steps": {
+            "0": "Mở cửa sổ bật lên và xem “Now Open” — nó luôn là nhóm đầu tiên trong thanh bên.",
+            "1": "Mở và đóng vài tab trình duyệt mà không chạm vào cửa sổ bật lên.",
+            "2": "Mở lại cửa sổ bật lên và kiểm tra “Now Open” lần nữa."
+          },
+          "examples": {
+            "0": {
+              "alt": "Cửa sổ bật lên với “Now Open” được chọn: một cửa sổ liệt kê ba tab đang mở trong trình duyệt",
+              "caption": "“Now Open” luôn đứng đầu thanh bên và liệt kê các tab đang mở ngay lúc này."
+            }
+          },
+          "good": {
+            "0": "“Now Open” theo dõi các tab thật mà không cần làm mới thủ công.",
+            "1": "Bạn không thể xóa nó hay sắp xếp lại để đưa nó khỏi vị trí đầu."
+          }
+        },
+        "2": {
+          "heading": "Lưu và mở lại toàn bộ cửa sổ",
+          "checks": "Một cửa sổ đã lưu giữ nguyên mọi tab, đúng thứ tự, và mở lại đầy đủ.",
+          "steps": {
+            "0": "Lưu toàn bộ một cửa sổ vào một nhóm (kéo tay nắm của cửa sổ vào nhóm, hoặc dùng menu “…” của nó).",
+            "1": "Mở nhóm và dùng menu “…” của cửa sổ để mở lại — dưới dạng cửa sổ mới, và dưới dạng các tab trong cửa sổ hiện tại, nếu có cả hai tùy chọn."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một nhóm TabMerger có bốn cửa sổ đã lưu riêng biệt, mỗi cửa sổ chứa một tab",
+              "caption": "Một nhóm có thể chứa nhiều cửa sổ riêng biệt — mỗi cửa sổ có số tab riêng."
+            }
+          },
+          "good": {
+            "0": "Mọi tab mở lại với đúng tiêu đề và URL, theo đúng thứ tự."
+          }
+        },
+        "3": {
+          "heading": "Lưu trữ và khôi phục một nhóm",
+          "checks": "Lưu trữ sẽ ẩn nhóm mà không xóa nó, và khôi phục sẽ mang nó trở lại nguyên vẹn.",
+          "steps": {
+            "0": "Nhấp chuột phải vào một nhóm đã lưu trong thanh bên và chọn Archive.",
+            "1": "Mở mục “Archived” ở cuối thanh bên và tìm nhóm đó.",
+            "2": "Khôi phục nó từ đó."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mục Archived ở cuối thanh bên TabMerger, được mở rộng để hiển thị một nhóm đã lưu trữ",
+              "caption": "Mục Archived ở cuối thanh bên, đang mở: “Shopping” đã được lưu trữ, với các nút Restore và Delete."
+            }
+          },
+          "good": {
+            "0": "Nhóm đã lưu trữ biến mất khỏi danh sách đang hoạt động nhưng không bao giờ bị xóa.",
+            "1": "Chúng xuất hiện lại đúng như cũ sau khi khôi phục."
+          }
+        },
+        "4": {
+          "heading": "Lưu và khôi phục phiên",
+          "checks": "Một phiên đã lưu mang các nhóm trở lại đúng như lúc bạn lưu.",
+          "steps": {
+            "0": "Lưu một phiên — ảnh chụp có tên của các nhóm hiện tại (tìm “Save Session” gần khu vực Sessions của thanh bên).",
+            "1": "Thực hiện vài thay đổi với các nhóm.",
+            "2": "Khôi phục phiên đã lưu."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mục Sessions của thanh bên TabMerger, hiển thị một phiên đã lưu",
+              "caption": "Một phiên đã lưu trong mục Sessions, với các nút Restore và Delete, và thông báo “Session saved”."
+            }
+          },
+          "good": {
+            "0": "Khôi phục mang các nhóm trở lại đúng như lúc bạn lưu phiên."
+          }
+        },
+        "5": {
+          "heading": "Tìm kiếm",
+          "checks": "Tìm kiếm tìm ra tab theo tiêu đề hoặc URL trên mọi nhóm, và các bộ lọc group:, window: và tag: thu hẹp kết quả.",
+          "steps": {
+            "0": "Nhấn Ctrl+K (Cmd+K trên Mac) để mở tìm kiếm.",
+            "1": "Gõ một chuỗi con đơn giản, như “hub”, khi có tab “GitHub” được lưu ở đâu đó — nó khớp với tiêu đề hoặc URL, không phân biệt hoa thường.",
+            "2": "Xóa đi và thử một tiền tố: gõ “group:” và chọn một nhóm trong bộ chọn hiện ra, hoặc gõ “window:” hay “tag:” theo cách tương tự.",
+            "3": "Nhấp vào một kết quả."
+          },
+          "examples": {
+            "0": {
+              "alt": "Lớp phủ tìm kiếm TabMerger với chữ “hub” đã gõ, hiển thị một kết quả tab GitHub khớp",
+              "caption": "Gõ “hub” — khớp chuỗi con đơn giản với tiêu đề hoặc URL của tab."
+            }
+          },
+          "good": {
+            "0": "Kết quả cập nhật khi bạn gõ.",
+            "1": "Tìm kiếm đơn giản khớp với mọi tab có tiêu đề hoặc URL chứa chuỗi con đó ở bất kỳ đâu (không phải các chữ cái theo thứ tự).",
+            "2": "Tiền tố “group:”, “window:” hoặc “tag:” giới hạn phạm vi tìm kiếm và mở bộ chọn cho tiền tố đó.",
+            "3": "Nhấp vào bất kỳ kết quả nào sẽ đóng tìm kiếm và đưa bạn thẳng đến nhóm của kết quả đó (và cửa sổ, với kết quả là cửa sổ)."
+          }
+        },
+        "6": {
+          "heading": "Tab cũ",
+          "checks": "Các tab bạn lâu không mở được đánh dấu, và có thể được xem lại và xóa an toàn.",
+          "steps": {
+            "0": "Mở Settings và đặt ngưỡng tab cũ (ví dụ 30 ngày).",
+            "1": "Chờ (hoặc tạo sẵn) ít nhất 5 tab cũ hơn ngưỡng đó.",
+            "2": "Tìm biểu ngữ màu hổ phách phía trên danh sách tab và thử cả hai nút: Review, rồi Remove stale."
+          },
+          "examples": {
+            "0": {
+              "alt": "Biểu ngữ tab cũ màu hổ phách phía trên danh sách tab, với các nút Review và Remove stale",
+              "caption": "Biểu ngữ tab cũ và các nút Review / Remove stale."
+            }
+          },
+          "good": {
+            "0": "Review hiển thị chính xác những tab nào đã cũ.",
+            "1": "Remove stale yêu cầu xác nhận trước khi xóa bất cứ thứ gì (nếu “confirm before delete” được bật trong Settings)."
+          },
+          "report": "Một nhóm bạn đã xóa hoặc lưu trữ tự xuất hiện lại — đó là lỗi “hồi sinh” mà chúng tôi đang đặc biệt truy tìm."
+        },
+        "7": {
+          "heading": "Đặt lời nhắc cho tab",
+          "checks": "Bạn có thể đặt, thay đổi và xóa lời nhắc trên một tab đã lưu, và nó thông báo cho bạn vào thời điểm đã chọn.",
+          "steps": {
+            "0": "Nhấp chuột phải vào một tab đã lưu và chọn “Remind me…”. Lời nhắc được đặt theo từng tab; không có điều khiển nào trong Settings cho chúng.",
+            "1": "Trong trình chỉnh sửa mở ra dưới tab, nhấp một mốc có sẵn (30 min, 1 hour, 3 hours hoặc Tomorrow) để đặt ngay.",
+            "2": "Mở lại (“Edit reminder” trong menu chuột phải, hoặc nhấp biểu tượng đồng hồ của tab). Lần này chọn ngày giờ cách vài phút, gõ một ghi chú ngắn, và nhấp Set.",
+            "3": "Di chuột lên biểu tượng đồng hồ, rồi chờ lời nhắc kích hoạt và nhấp vào thông báo của nó.",
+            "4": "Đặt một lời nhắc khác, rồi nhấp chuột phải vào tab và chọn “Clear reminder”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Trình chỉnh sửa “Remind me in…” của một tab đã lưu: các nút 30 min, 1 hour, 3 hours và Tomorrow, ô ngày giờ, ghi chú tùy chọn, và Cancel và Set",
+              "caption": "Nhấp chuột phải vào tab đã lưu → “Remind me…” mở trình chỉnh sửa này dưới tab."
+            },
+            "1": {
+              "alt": "Cùng cửa sổ đó sau khi đặt lời nhắc: một biểu tượng đồng hồ ở cuối hàng của tab Q3 Planning",
+              "caption": "Sau khi đặt, tab hiển thị biểu tượng đồng hồ."
+            }
+          },
+          "good": {
+            "0": "Tab hiển thị biểu tượng đồng hồ khi lời nhắc được đặt, và di chuột lên sẽ hiện thời gian (và ghi chú của bạn).",
+            "1": "Menu chuột phải giờ có “Edit reminder” và “Clear reminder” cho tab đó.",
+            "2": "Set bị bỏ qua với thời điểm trong quá khứ; chỉ thời điểm trong tương lai mới đặt được lời nhắc.",
+            "3": "Thông báo “TabMerger Reminder” với tiêu đề tab (và ghi chú của bạn) xuất hiện vào khoảng thời gian bạn đặt, và ở lại cho đến khi bạn xử lý.",
+            "4": "Nhấp vào thông báo sẽ mở tab.",
+            "5": "Clear reminder xóa biểu tượng đồng hồ, và sau đó không có thông báo nào xuất hiện."
+          },
+          "report": "Lời nhắc không bao giờ kích hoạt, kích hoạt hai lần, hoặc vẫn kích hoạt sau khi bạn đã xóa."
+        },
+        "8": {
+          "heading": "Ghi chú trên nhóm, cửa sổ và tab",
+          "checks": "Bạn có thể gắn một ghi chú ngắn vào nhóm, cửa sổ hoặc tab, và chỉnh sửa sau.",
+          "steps": {
+            "0": "Nhóm: nhấp chuột phải vào nhóm trong thanh bên (hoặc dùng nút ⋯ phía trên các cửa sổ của nó) và chọn “Add note”. Gõ gì đó và nhấp Save.",
+            "1": "Cửa sổ: nhấp chuột phải vào tiêu đề cửa sổ (hoặc dùng nút ⋯ của nó) và chọn “Add note”. Lần này lưu bằng Ctrl+Enter (Cmd+Enter trên Mac).",
+            "2": "Tab: nhấp chuột phải vào một tab đã lưu và chọn “Add note”. Gõ gì đó, rồi nhấp ra chỗ khác thay vì Save.",
+            "3": "Nhấp vào biểu tượng ghi chú để mở lại, thay đổi nó, và nhấn Escape.",
+            "4": "Đóng và mở lại cửa sổ bật lên."
+          },
+          "good": {
+            "0": "Mỗi ghi chú đã lưu hiển thị một biểu tượng ghi chú nhỏ: cạnh số cửa sổ của nhóm, trong tiêu đề cửa sổ, và trên hàng của tab. Mục menu giờ ghi “Edit note”.",
+            "1": "Save, Ctrl/Cmd+Enter và nhấp ra ngoài đều lưu ghi chú; Escape và Cancel đóng mà không lưu.",
+            "2": "Ghi chú giới hạn 500 ký tự, có bộ đếm dưới ô nhập.",
+            "3": "Ghi chú vẫn còn sau khi mở lại cửa sổ bật lên (và, khi bật đồng bộ, trên các thiết bị khác của bạn)."
+          },
+          "report": "Một ghi chú bị mất, gắn nhầm mục, hoặc được lưu khi bạn nhấn Escape hay Cancel."
+        },
+        "9": {
+          "heading": "Xóa, có và không có “Confirm before deleting”",
+          "checks": "Việc xóa chỉ hỏi trước khi “Confirm before deleting” được bật, và Hoàn tác mang lại những gì bạn đã xóa.",
+          "steps": {
+            "0": "Trong Settings → General, đảm bảo “Confirm before deleting” đang tắt (mặc định là tắt) và lưu.",
+            "1": "Xóa một tab (nút ✕ của nó, hoặc chuột phải → Remove tab), xóa một cửa sổ (⋯ → Remove window), và xóa một nhóm (chuột phải → Delete group). Sau mỗi lần, nhấp Hoàn tác (góc trên bên phải).",
+            "2": "Bật “Confirm before deleting”, lưu, và lặp lại ba thao tác xóa. Hủy hộp thoại đầu tiên, rồi xác nhận hộp thoại tiếp theo.",
+            "3": "Khi bật, cũng thử xóa nhiều nhóm đã chọn từ thanh chọn, và “Remove stale” trên một nhóm có tab cũ."
+          },
+          "good": {
+            "0": "Khi tắt cài đặt, cửa sổ và nhóm bị xóa ngay, không có hộp thoại.",
+            "1": "Khi bật, xóa cửa sổ, xóa nhóm, xóa vùng chọn và “Remove stale” đều hỏi trước, và Cancel giữ nguyên mọi thứ.",
+            "2": "Xóa một tab đơn lẻ không bao giờ hỏi, dù cài đặt bật hay tắt. Hoàn tác sẽ mang nó trở lại.",
+            "3": "Hoàn tác khôi phục bất cứ thứ gì bạn vừa xóa: tab, cửa sổ hoặc nhóm, ở đúng vị trí, cùng các tab của nó."
+          },
+          "report": "Một thứ bị xóa mà không hỏi khi cài đặt đang bật (ngoài một tab đơn lẻ), có hộp thoại xuất hiện khi đang tắt, hoặc Hoàn tác không mang mục trở lại chính xác."
+        },
+        "10": {
+          "heading": "Menu nhóm",
+          "checks": "Mọi thao tác trong menu của nhóm làm đúng như nhãn của nó.",
+          "steps": {
+            "0": "Nhấp chuột phải vào một nhóm đã lưu trong thanh bên để mở menu đầy đủ. Nút ⋯ phía trên các cửa sổ của nhóm mở một phiên bản ngắn hơn.",
+            "1": "Thử Rename, Add note và Duplicate.",
+            "2": "Thử Replace with current (thay các cửa sổ của nhóm bằng các cửa sổ trình duyệt đang mở) và Merge with current (thêm các cửa sổ đang mở vào nhóm). Hoàn tác sau mỗi lần.",
+            "3": "Thử Open all in new window, Unite windows, Split windows, Sort by title, Sort by URL và Deduplicate tabs.",
+            "4": "Thử Archive group, rồi Restore group từ mục Archived.",
+            "5": "Nhấp chuột phải vào “Now Open” nữa: nó không có Rename, Replace, Merge, Archive hay Delete."
+          },
+          "good": {
+            "0": "Mỗi thao tác làm đúng như mô tả, chỉ trên nhóm đó.",
+            "1": "Duplicate tạo một bản sao với mọi tab; Unite để lại một cửa sổ chứa mọi tab, và Split cho mỗi tab một cửa sổ riêng.",
+            "2": "Sort by title / URL sắp xếp mọi tab theo thứ tự chữ cái, và Deduplicate xóa các tab trùng URL.",
+            "3": "Các thay đổi có thể được hoàn tác bằng Hoàn tác."
+          },
+          "report": "Một thao tác ảnh hưởng nhầm nhóm, làm mất tab, hoặc không thể hoàn tác."
+        },
+        "11": {
+          "heading": "Các menu cửa sổ",
+          "checks": "Cả hai menu của cửa sổ đều hoạt động: nhấp chuột phải vào tiêu đề, và nút ⋯ của nó.",
+          "steps": {
+            "0": "Nhấp chuột phải vào tiêu đề cửa sổ: thử “Move to group” (chọn nhóm khác, hoặc tạo nhóm mới từ danh sách), Add note và Rename window.",
+            "1": "Mở nút ⋯ của cửa sổ: thử Rename, Mark incognito (rồi Remove incognito), Open in browser, và Sort this window by title / by URL.",
+            "2": "Nhấp chuột phải vào một cửa sổ trong “Now Open”: mục đầu tiên là “Copy to group”, và mục xóa là “Close window”."
+          },
+          "good": {
+            "0": "Move to group di chuyển toàn bộ cửa sổ, cùng các tab, vào nhóm đã chọn; một nhóm mới tạo từ menu sẽ nhận cửa sổ đó.",
+            "1": "Mark incognito thêm nhãn “Incognito” cho cửa sổ, và Remove incognito gỡ nó đi.",
+            "2": "Open in browser mở các tab của cửa sổ trong một cửa sổ trình duyệt mới; nếu một số đã mở sẵn, chỉ những tab còn thiếu được thêm vào cửa sổ đó.",
+            "3": "Sắp xếp chỉ thay đổi thứ tự các tab của cửa sổ đó.",
+            "4": "Từ “Now Open”, Copy to group lưu một bản sao và giữ cửa sổ thật của bạn mở."
+          },
+          "report": "Một thao tác menu thay đổi cửa sổ khác, hoặc Close window trong “Now Open” đóng nhầm cửa sổ trình duyệt."
+        },
+        "12": {
+          "heading": "Menu tab",
+          "checks": "Nhấp chuột phải vào tab cung cấp đúng các thao tác cho nó.",
+          "steps": {
+            "0": "Nhấp chuột phải vào một tab đã lưu: thử “Move to group”, Rename tab, rồi “Reset to original title”.",
+            "1": "Nhấp chuột phải vào một tab trong “Now Open”: “Copy to group” thay thế “Move to group”, và mục xóa là “Close tab”.",
+            "2": "Nếu bạn có quy tắc URL khớp với một tab đang mở, nhấp chuột phải vào tab đó trong “Now Open” và tìm “Auto-save to …”."
+          },
+          "good": {
+            "0": "Move to group di chuyển tab vào nhóm đã chọn; Copy to group (từ “Now Open”) lưu một bản sao và giữ tab thật mở.",
+            "1": "Rename tab hiển thị tiêu đề của bạn với nhãn nhỏ “renamed”, và Reset to original title mang lại tiêu đề gốc của trang.",
+            "2": "“Auto-save to '<'group'>'” chỉ xuất hiện với tab có địa chỉ khớp một trong các quy tắc URL của bạn, và lưu nó vào nhóm của quy tắc đó."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Menu chuột phải",
+      "items": {
+        "0": {
+          "heading": "Lưu từ menu chuột phải",
+          "checks": "Nhấp chuột phải vào bất kỳ trang web nào cho phép bạn lưu tab vào TabMerger, hoặc thẳng vào một nhóm đã chọn.",
+          "steps": {
+            "0": "Trên bất kỳ trang web nào, nhấp chuột phải và mở “Save to TabMerger”.",
+            "1": "Thử “Save this tab” trước, rồi thử lưu vào một nhóm có sẵn cụ thể."
+          },
+          "examples": {
+            "0": {
+              "alt": "Minh họa menu chuột phải trên một trang web: “Save to TabMerger” mở ra Save this tab, Save tabs to the left, Save tabs to the right và Save all other tabs; “Save this tab” liệt kê các nhóm Work (1w · 5t), Research (1w · 4t), Shopping (1w · 3t) và Reading List (1w · 5t), mỗi nhóm có màu riêng",
+              "caption": "Minh họa (trình duyệt tự vẽ menu này nên không thể chụp màn hình): mỗi tùy chọn trong bốn mục “Save…” liệt kê các nhóm của bạn với màu, số cửa sổ và số tab."
+            }
+          },
+          "good": {
+            "0": "Menu ngữ cảnh liệt kê các nhóm thật của bạn theo tên.",
+            "1": "Tab xuất hiện ngay trong nhóm đã chọn."
+          }
+        },
+        "1": {
+          "heading": "Nhóm mới xuất hiện trong menu chuột phải",
+          "checks": "Menu chuột phải nhận các nhóm mới mà không cần khởi động lại trình duyệt.",
+          "steps": {
+            "0": "Tạo một nhóm hoàn toàn mới từ cửa sổ bật lên.",
+            "1": "Không mở lại trình duyệt, nhấp chuột phải vào trang bất kỳ và kiểm tra lại “Save to TabMerger”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Minh họa cùng menu chuột phải với nhóm thứ năm, “Trip planning (0w · 0t)”, ở cuối danh sách nhóm",
+              "caption": "Minh họa: một nhóm mới, còn trống (“Trip planning”) xuất hiện ở cuối danh sách."
+            }
+          },
+          "good": {
+            "0": "Nhóm mới hiện ra trong menu ngữ cảnh mà không cần khởi động lại."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Nâng cấp lên Pro (thanh toán thử)",
+      "intro": "Thanh toán là một phần của bản beta này, nhưng chỉ với thẻ thử của Stripe — không thẻ thật nào hoạt động và không có tiền thật nào được chuyển. Pro AI và gói tín dụng AI vẫn “sắp ra mắt” và chưa thể mua, nên phần này chỉ dành cho Pro (không giới hạn nhóm/tab + đồng bộ).",
+      "items": {
+        "0": {
+          "heading": "Cảnh báo về thẻ thử",
+          "checks": "Bạn chỉ dùng thẻ thử của Stripe: không có gì trong bản beta này tính tiền thật.",
+          "steps": {
+            "0": "Đọc phần này trước khi bắt đầu thanh toán — thông tin thẻ bạn cần nằm bên dưới."
+          },
+          "good": {
+            "0": "Bạn không bao giờ nhập số thẻ thật vào quy trình này."
+          }
+        },
+        "1": {
+          "heading": "Nâng cấp từ tiện ích",
+          "checks": "Nâng cấp từ bên trong tiện ích hoạt động trọn vẹn, và sau đó tiện ích hiển thị Pro.",
+          "steps": {
+            "0": "Mở cửa sổ bật lên của tiện ích và dùng bất kỳ lối vào “Upgrade to Pro” nào — nút nâng cấp ở đầu trang, biểu ngữ nhắc nhở xuất hiện khi bạn gần chạm giới hạn miễn phí, hoặc lời nhắc nâng cấp hiện ra khi bạn chạm giới hạn gói miễn phí.",
+            "1": "Thao tác này mở trang giá của ứng dụng web beta (preview.tabmerger.com/pricing) trong một tab mới. Đăng nhập ở đó bằng cùng tài khoản bạn dùng trong tiện ích.",
+            "2": "Chọn gói Pro, theo tháng hoặc theo năm, và tiếp tục đến Stripe Checkout.",
+            "3": "Hoàn tất thanh toán bằng thẻ thử ở trên (hoặc thẻ bị từ chối/3D-Secure, nếu bạn đang kiểm thử trường hợp đó), rồi quay lại ứng dụng."
+          },
+          "good": {
+            "0": "Thanh toán hoàn tất và bạn quay lại ứng dụng web với Pro được hiển thị.",
+            "1": "Cửa sổ bật lên của tiện ích kiểm tra gói của bạn khoảng mỗi 30 giây, nên nó sẽ tự nhận Pro sau ít lâu — mở lại cửa sổ bật lên cũng buộc kiểm tra mới nếu bạn không muốn chờ."
+          },
+          "report": "Tiện ích vẫn hiển thị giới hạn gói miễn phí ({FREE_TIER_LIMITS_groups} nhóm / {FREE_TIER_LIMITS_tabs} tab / {FREE_TIER_LIMITS_urlRules} quy tắc URL) hơn vài phút sau khi thanh toán thành công và mở lại cửa sổ bật lên."
+        },
+        "2": {
+          "heading": "Nâng cấp từ trang tài khoản trên web",
+          "checks": "Nâng cấp từ trang tài khoản của trang web hoạt động, và trang web cùng tiện ích thống nhất về gói của bạn.",
+          "steps": {
+            "0": "Thay vì đi qua tiện ích, đăng nhập trực tiếp tại preview.tabmerger.com và mở Account settings.",
+            "1": "Trong “Subscription”, nhấp “Upgrade” và hoàn tất thanh toán bằng thẻ thử."
+          },
+          "examples": {
+            "0": {
+              "alt": "Account settings trên tài khoản miễn phí: thẻ Subscription hiển thị Current plan Free với nút Upgrade",
+              "caption": "Trước khi nâng cấp: Free, với nút Upgrade. Sau đó nó hiển thị Pro và “Manage billing” (xem “Trang tài khoản” bên dưới)."
+            }
+          },
+          "good": {
+            "0": "Thẻ Subscription trên trang tài khoản giờ hiển thị Pro, với nút “Manage billing” thay cho “Upgrade”.",
+            "1": "Tiện ích nhận cùng trạng thái Pro (xem ghi chú về việc kiểm tra định kỳ ở trên) — trang tài khoản web và tiện ích không bao giờ được hiển thị khác nhau về gói của bạn."
+          },
+          "report": "Trang tài khoản web và cửa sổ bật lên của tiện ích hiển thị gói khác nhau (một bên là Pro, bên kia vẫn là Free) cách nhau hơn vài phút."
+        },
+        "3": {
+          "heading": "Thanh toán bằng nội tệ",
+          "checks": "Trang thanh toán hiển thị và tính giá bằng đơn vị tiền tệ của bạn.",
+          "steps": {
+            "0": "Giá trên trang web tính bằng đô la Mỹ (trang giá ghi rõ điều này dưới các gói; trang tài khoản, bảng điều khiển và Settings của tiện ích ghi là “US$”). Ngoài Hoa Kỳ, trang thanh toán đề xuất nội tệ của bạn.",
+            "1": "Bắt đầu thanh toán từ vị trí thật của bạn, hoặc giả lập quốc gia khác: đăng ký một tài khoản MỚI bằng email của bạn cộng “+location_” và mã quốc gia hai chữ cái, ví dụ yourname+location_FR@gmail.com cho Pháp (Gmail gửi các địa chỉ “+anything” vào hộp thư bình thường của bạn). VPN ở quốc gia khác cũng được.",
+            "2": "Xem giá trên trang thanh toán của Stripe, rồi hoàn tất bằng thẻ thử với đơn vị tiền đó."
+          },
+          "examples": {
+            "0": {
+              "alt": "Trang thanh toán Stripe cho TabMerger Pro hiển thị €3.66 mỗi tháng, với EUR được chọn và tùy chọn USD, và dòng “1 USD = 0.9171 EUR. Charges will vary based on exchange rates.”",
+              "caption": "Thanh toán với địa chỉ Pháp (+location_FR): mặc định là euro, đô la Mỹ chỉ cách một cú nhấp. Tỷ giá thay đổi nên số tiền của bạn sẽ khác."
+            }
+          },
+          "good": {
+            "0": "Trang thanh toán hiển thị giá bằng nội tệ của bạn (ví dụ €3.66 ở Pháp hoặc CA$5.89 ở Canada cho gói US$3.99), với tùy chọn chuyển sang trả bằng đô la Mỹ và một dòng cho biết tỷ giá cùng phí chuyển đổi. Ở Hoa Kỳ nó chỉ hiển thị US$3.99.",
+            "1": "Sau khi trả tiền, gói hoạt động hệt như khi trả bằng đô la Mỹ."
+          },
+          "report": "Ngoài Hoa Kỳ, trang thanh toán chỉ có đô la Mỹ, số tiền bị tính khác với số hiển thị, hoặc trả bằng nội tệ không mang lại Pro."
+        },
+        "4": {
+          "heading": "Chuyển giữa theo tháng và theo năm",
+          "checks": "Một gói Pro có thể chuyển giữa thanh toán theo tháng và theo năm, và được tính tiền đúng.",
+          "steps": {
+            "0": "Với gói Pro đang hoạt động, mở trang giá. Thẻ gói của bạn được đánh dấu Current và có nút “Switch to yearly billing” (hoặc “Switch to monthly billing” nếu bạn trả theo năm): nút ghi tên kiểu thanh toán bạn sẽ chuyển sang.",
+            "1": "Tháng → năm: nhấp nút chuyển và xác nhận trên trang của Stripe.",
+            "2": "Năm → tháng: làm tương tự, rồi thử nhấn nút lần thứ hai.",
+            "3": "Cũng mở “Manage billing” trên trang tài khoản: tùy chọn “Update subscription” của nó hiển thị cùng lựa chọn tháng/năm."
+          },
+          "examples": {
+            "0": {
+              "alt": "Trang giá khi đang dùng Pro theo tháng: thẻ Pro được đánh dấu Current và có nút “Switch to yearly billing”",
+              "caption": "Trên trang giá, thẻ gói của bạn được đánh dấu Current và có nút chuyển."
+            },
+            "1": {
+              "alt": "Trang “Update your subscription” của Stripe với các tab Monthly và Yearly, hiển thị gói TabMerger Pro hiện tại giá {proMonthly} mỗi tháng",
+              "caption": "Cùng lựa chọn đó trong Manage billing → Update subscription (trang của Stripe)."
+            }
+          },
+          "good": {
+            "0": "Tháng → năm áp dụng ngay: Stripe hiển thị và tính giá năm trừ phần còn lại của tháng.",
+            "1": "Sau khi chuyển sang năm, trang tài khoản hiển thị giá năm ({proYearly}/năm) trong khoảng một phút.",
+            "2": "Năm → tháng chờ đến cuối năm đã trả, nên hiện tại không bị tính gì.",
+            "3": "Nhấn nút lần nữa sẽ giải thích rằng một thay đổi đã được lên lịch.",
+            "4": "Chỉ có Pro theo tháng và theo năm được đề xuất, không bao giờ là gói khác."
+          },
+          "report": "Việc chuyển tính sai số tiền, trang tài khoản vẫn hiển thị kỳ thanh toán cũ hơn vài phút sau, năm → tháng tính tiền ngay lập tức, hoặc bạn được đề xuất gói khác ngoài Pro."
+        },
+        "5": {
+          "heading": "Hủy gói",
+          "checks": "Hủy gói vẫn giữ Pro đến cuối kỳ bạn đã trả, rồi đưa bạn về Free.",
+          "steps": {
+            "0": "Trên trang tài khoản, với gói Pro đang hoạt động, nhấp “Manage billing” để mở cổng thanh toán của Stripe.",
+            "1": "Hủy gói từ đó và quay lại TabMerger."
+          },
+          "examples": {
+            "0": {
+              "alt": "Hộp thoại “Cancel your subscription” của Stripe cho TabMerger Pro giá {proMonthly} mỗi tháng, với lý do tùy chọn và các nút Go back và Continue to cancellation",
+              "caption": "Stripe hỏi lý do (không bắt buộc) trước khi hủy."
+            }
+          },
+          "good": {
+            "0": "Bạn giữ quyền truy cập Pro đến hết kỳ thanh toán hiện tại — hủy không đưa bạn về Free ngay lập tức.",
+            "1": "Sau khi kỳ đó kết thúc, cả trang tài khoản và tiện ích đều hiển thị lại Free."
+          },
+          "report": "Hủy đưa bạn về Free ngay thay vì vào cuối kỳ, hoặc gói không bao giờ trở về Free sau khi kỳ thực sự kết thúc."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Kéo và thả",
+      "intro": "Phần này bao gồm mọi thao tác kéo trong cửa sổ bật lên — sắp xếp, di chuyển giữa các cửa sổ và nhóm, kéo nhiều mục, hai vùng “thả để tạo mới...”, hủy, kéo chỉ bằng bàn phím, và kết quả có được giữ lại không. Hãy thử càng nhiều càng tốt; đây là phần chúng tôi tập trung nhất trong bản beta này.",
+      "items": {
+        "0": {
+          "heading": "Sắp xếp: tab trong một cửa sổ",
+          "checks": "Kéo một tab sẽ sắp xếp lại nó trong cửa sổ, đặt đúng nơi bạn thả.",
+          "steps": {
+            "0": "Kéo một tab xuống trong cùng cửa sổ để đưa nó xuống dưới, rồi kéo lên lại vị trí ban đầu.",
+            "1": "Kéo một tab lên vị trí đầu tiên trong cửa sổ, rồi xuống vị trí cuối cùng."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một tab đang được kéo trong thẻ cửa sổ: hàng được kéo nổi lên với viền nổi bật phía trên khoảng trống nơi nó sẽ được thả",
+              "caption": "Đang kéo: tab nổi lên và các tab khác nhường chỗ nơi nó sẽ được thả."
+            }
+          },
+          "good": {
+            "0": "Tab nằm đúng nơi bạn thả, và phần còn lại của danh sách dịch chuyển để nhường chỗ.",
+            "1": "Không tab nào khác bị di chuyển hay nhân đôi."
+          }
+        },
+        "1": {
+          "heading": "Sắp xếp: cửa sổ trong một nhóm",
+          "checks": "Các thẻ cửa sổ có thể được sắp xếp lại trong nhóm.",
+          "steps": {
+            "0": "Trong một nhóm có hai cửa sổ đã lưu trở lên, kéo một thẻ cửa sổ lên trên hoặc xuống dưới thẻ khác."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một thẻ cửa sổ đang được kéo giữa hai thẻ cửa sổ khác trong một nhóm có bốn cửa sổ",
+              "caption": "Kéo cả thẻ cửa sổ bằng tay nắm của nó để sắp xếp lại trong nhóm."
+            }
+          },
+          "good": {
+            "0": "Các thẻ cửa sổ đổi chỗ và thứ tự mới hiển thị ngay — không nhấp nháy quay về thứ tự cũ."
+          }
+        },
+        "2": {
+          "heading": "Sắp xếp: nhóm trong thanh bên",
+          "checks": "Các nhóm được sắp xếp lại tự do trong thanh bên trong khi “Now Open” luôn đứng đầu.",
+          "steps": {
+            "0": "Kéo một nhóm trong thanh bên lên hoặc xuống để đặt nó trên hoặc dưới nhóm khác.",
+            "1": "Thử kéo một nhóm lên trên “Now Open” (hàng đầu tiên trong thanh bên)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một hàng nhóm đang được kéo đến vị trí mới trong thanh bên TabMerger",
+              "caption": "Sắp xếp lại một nhóm trong thanh bên."
+            }
+          },
+          "good": {
+            "0": "“Now Open” luôn được ghim ở hàng đầu — bạn không thể thả nhóm lên trên nó, kéo nó, xóa nó, hay đưa nó khỏi vị trí đầu.",
+            "1": "Mọi nhóm khác được sắp xếp lại tự do."
+          },
+          "report": "Có thứ gì đó nằm trên “Now Open”, hoặc chính “Now Open” có thể kéo được."
+        },
+        "3": {
+          "heading": "Giữa các cửa sổ: di chuyển tab giữa các thẻ cửa sổ",
+          "checks": "Một tab có thể di chuyển từ thẻ cửa sổ này sang thẻ khác, đúng vị trí bạn thả.",
+          "steps": {
+            "0": "Trong một nhóm có nhiều cửa sổ, kéo một tab từ thẻ cửa sổ này sang thẻ cửa sổ khác.",
+            "1": "Lần này, thả nó giữa hai tab có sẵn trong cửa sổ đích thay vì ở đầu hay cuối."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một tab đang được kéo từ cửa sổ đã lưu này sang cửa sổ khác trong cùng nhóm TabMerger",
+              "caption": "Thả một tab vào cửa sổ khác trong cùng nhóm."
+            }
+          },
+          "good": {
+            "0": "Tab nằm đúng vị trí bạn thả (không chỉ được thêm vào cuối).",
+            "1": "Số tab của cả hai cửa sổ cập nhật ngay lập tức."
+          }
+        },
+        "4": {
+          "heading": "Giữa các nhóm: thả tab vào một nhóm trong thanh bên",
+          "checks": "Thả tab vào một nhóm trong thanh bên sẽ chuyển nó vào nhóm đó mà không cần mở nhóm trước.",
+          "steps": {
+            "0": "Kéo một tab ra khỏi khung chính và thả trực tiếp vào một nhóm trong thanh bên — thử với nhóm đang mở (đang hoạt động) và nhóm không mở.",
+            "1": "Thử lần nữa, nhưng giữ tab trên một nhóm khác (không hoạt động) trong thanh bên khoảng một giây trước khi thả."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một tab đơn đang được kéo vào hàng nhóm trong thanh bên TabMerger",
+              "caption": "Thả tab trực tiếp vào một nhóm trong thanh bên."
+            }
+          },
+          "good": {
+            "0": "Tab được thêm vào nhóm đó dưới dạng cửa sổ mới mà không cần mở nhóm trước.",
+            "1": "Nếu bạn dừng trên một nhóm không hoạt động, nó sẽ mở ra (“bật mở”) sau khoảng nửa giây để bạn thấy tab được thả — và thả đúng, không vào nhầm cửa sổ."
+          },
+          "report": "Nhóm bật mở nhưng tab rơi vào nhầm cửa sổ, hoặc đè lên một tab có sẵn thay vì thành cửa sổ mới riêng."
+        },
+        "5": {
+          "heading": "Giữa các nhóm: kéo cả cửa sổ sang nhóm khác",
+          "checks": "Cả một cửa sổ, cùng mọi tab của nó, có thể chuyển sang nhóm khác.",
+          "steps": {
+            "0": "Kéo cả một thẻ cửa sổ (bằng tay nắm riêng của nó, không phải một tab bên trong) vào một nhóm khác trong thanh bên."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một thẻ cửa sổ được kéo vào thanh bên, trên nhóm Shopping, nhóm này được làm nổi bật và mở trong khung chính",
+              "caption": "Kéo cửa sổ vào một nhóm trong thanh bên. Nhóm dưới con trỏ có viền màu và mở ra phía sau thẻ."
+            }
+          },
+          "good": {
+            "0": "Cả cửa sổ — cùng mọi tab — trở thành cửa sổ mới trong nhóm đích.",
+            "1": "Việc này vẫn hoạt động ngay cả khi đó là cửa sổ cuối cùng còn lại trong nhóm nguồn."
+          },
+          "report": "Nhóm nguồn hoặc cửa sổ đã trống của nó biến mất thay vì ở lại (cửa sổ/nhóm trống phải được giữ lại, không biến mất)."
+        },
+        "6": {
+          "heading": "Nhiều mục: chọn và kéo nhiều tab",
+          "checks": "Nhiều tab đã chọn được kéo cùng nhau như một khối, giữ nguyên thứ tự.",
+          "steps": {
+            "0": "Ctrl-nhấp (Cmd-nhấp trên Mac) hai hoặc ba tab không liền kề để chọn chúng.",
+            "1": "Shift-nhấp để chọn một dải tab liên tiếp.",
+            "2": "Với nhiều tab đã chọn, kéo chúng cùng lúc đến vị trí mới trong cùng cửa sổ."
+          },
+          "examples": {
+            "0": {
+              "alt": "Nhiều tab được chọn cùng lúc trong cửa sổ bật lên TabMerger, hiển thị kèm hộp kiểm",
+              "caption": "Hai tab được chọn trong chế độ chọn; thanh ở dưới cùng đếm số lượng."
+            }
+          },
+          "good": {
+            "0": "Mọi tab đã chọn di chuyển cùng nhau như một khối, giữ nguyên thứ tự tương đối — khối nằm ở khoảng trống, không bị rải rác hay theo thứ tự nhấp."
+          }
+        },
+        "7": {
+          "heading": "Nhiều mục: kéo vùng chọn qua các cửa sổ và nhóm",
+          "checks": "Một vùng chọn nhiều tab giữ nguyên thứ tự khi được kéo sang cửa sổ hoặc nhóm khác.",
+          "steps": {
+            "0": "Chọn lại vài tab, rồi kéo chúng sang một cửa sổ khác trong cùng nhóm.",
+            "1": "Lặp lại một lần nữa, nhưng lần này kéo vùng chọn vào một nhóm khác trong thanh bên."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một vùng chọn nhiều tab đang được kéo trong cửa sổ bật lên TabMerger",
+              "caption": "Kéo một vùng chọn nhiều tab."
+            }
+          },
+          "good": {
+            "0": "Cả vùng chọn di chuyển cùng nhau trong cả hai trường hợp, giữ đúng thứ tự tương đối ban đầu."
+          }
+        },
+        "8": {
+          "heading": "Nhiều mục: chọn tất cả và kéo nhiều nhóm",
+          "checks": "Chọn tất cả hoạt động trong một cửa sổ, và nhiều nhóm đã chọn có thể được kéo cùng nhau.",
+          "steps": {
+            "0": "Đặt tiêu điểm vào danh sách tab của một cửa sổ và nhấn Ctrl+A (Cmd+A trên Mac) để chọn mọi tab trong cửa sổ đó, nếu cửa sổ có nhiều hơn một tab.",
+            "1": "Trong thanh bên, Ctrl-nhấp hai hoặc ba nhóm để chọn, rồi kéo vùng chọn bằng tay nắm của một trong số chúng để sắp xếp lại cùng nhau."
+          },
+          "examples": {
+            "0": {
+              "alt": "Chế độ chọn với ba nhóm được chọn; kéo một nhóm sẽ kéo theo các nhóm khác, với huy hiệu đếm trên hàng được kéo và “3 groups selected” ở thanh dưới",
+              "caption": "Ba nhóm đã chọn được kéo cùng nhau trong thanh bên. Thanh ở dưới cùng đếm vùng chọn."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A chọn mọi tab trong cửa sổ đang được tiêu điểm (bỏ qua các tab bị ẩn bởi bộ lọc tìm kiếm).",
+            "1": "Kéo nhiều nhóm di chuyển các nhóm đã chọn cùng nhau như một khối.",
+            "2": "Khối không bao giờ nằm trên “Now Open”."
+          }
+        },
+        "9": {
+          "heading": "Vùng thả: “Drop here for a new window” và “Drop for a new group”",
+          "checks": "Thả vào các vùng này tạo một cửa sổ mới hoặc một nhóm mới từ thứ bạn đã kéo.",
+          "steps": {
+            "0": "Kéo một tab (hoặc vùng chọn tab) về phía cuối danh sách cửa sổ của nhóm, nơi vùng “Drop here for a new window” xuất hiện, và thả ở đó.",
+            "1": "Kéo một tab về phía cuối thanh bên, nơi vùng “Drop for a new group” xuất hiện, và thả ở đó."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một tab được kéo trên vùng “Drop here for a new window” đang được làm nổi bật dưới danh sách cửa sổ, với vùng “Drop for a new group” hiển thị trong thanh bên",
+              "caption": "Khi bạn kéo, cả hai vùng thả xuất hiện. Vùng dưới con trỏ được làm nổi bật."
+            }
+          },
+          "good": {
+            "0": "Mỗi lần thả tạo một cửa sổ hoặc nhóm hoàn toàn mới chứa đúng (các) mục đã kéo, theo thứ tự tương đối ban đầu."
+          },
+          "report": "Vùng “Drop for a new group” vẫn xuất hiện khi bạn đã đạt giới hạn nhóm của gói — nó phải biến mất thay vì chấp nhận một lần thả không thể thực hiện."
+        },
+        "10": {
+          "heading": "Từ “Now Open”: kéo một tab đang mở vào nhóm đã lưu",
+          "checks": "Kéo một tab đang mở từ “Now Open” sẽ chuyển nó vào nhóm đã lưu và đóng tab thật.",
+          "steps": {
+            "0": "Kéo một tab từ mục “Now Open” vào một trong các nhóm đã lưu.",
+            "1": "Kiểm tra các tab trình duyệt thực sự đang mở sau khi thả."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một tab từ “Now Open” đang được kéo vào nhóm Work trong thanh bên",
+              "caption": "Một tab đang mở từ “Now Open” được kéo vào nhóm đã lưu trong thanh bên."
+            }
+          },
+          "good": {
+            "0": "Thao tác này DI CHUYỂN tab, không sao chép: nhóm đã lưu nhận một cửa sổ mới chứa ảnh chụp của tab đó.",
+            "1": "Tab trình duyệt thật sẽ đóng. Nếu tab bạn kéo là tab đang hoạt động, nó sẽ đóng khi bạn đóng cửa sổ bật lên thay vì ngay lập tức — đó là chủ ý, không phải lỗi."
+          },
+          "report": "Tab thật vẫn mở sau khi thả (khiến nó trông như bản sao), hoặc chính cửa sổ bật lên đóng/sập giữa lúc kéo."
+        },
+        "11": {
+          "heading": "Hủy và các trường hợp biên",
+          "checks": "Các thao tác kéo bị hủy hoặc vô nghĩa không thay đổi gì, và hoàn tác đảo ngược một thao tác kéo thật.",
+          "steps": {
+            "0": "Bắt đầu kéo một tab, rồi nhấn Escape trước khi thả.",
+            "1": "Bắt đầu kéo và thả ở nơi không phải đích hợp lệ (ví dụ bên ngoài cửa sổ bật lên, nếu bạn làm được) hoặc thả lại đúng vị trí ban đầu.",
+            "2": "Sau bất kỳ thao tác kéo thành công nào, nhấp nút Hoàn tác (đầu trang, góc trên bên phải)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Đầu trang TabMerger với các nút Hoàn tác và Làm lại được bật sau một thay đổi",
+              "caption": "Các nút Hoàn tác/Làm lại ở đầu trang, được bật sau một thay đổi."
+            }
+          },
+          "good": {
+            "0": "Escape và thả không hợp lệ/không thay đổi giữ mọi thứ nguyên như cũ — không tab trùng, không tab thiếu, không sắp xếp lại.",
+            "1": "Hoàn tác sau một thao tác kéo thật khôi phục chính xác thứ tự trước đó."
+          },
+          "report": "Một tab bị nhân đôi hoặc biến mất sau khi kéo bị hủy hoặc thả tại chỗ, hoặc Hoàn tác không khôi phục hoàn toàn thứ tự trước khi kéo."
+        },
+        "12": {
+          "heading": "Kéo bằng bàn phím",
+          "checks": "Mọi thứ bạn có thể kéo bằng chuột cũng có thể di chuyển bằng bàn phím, kèm thông báo bằng giọng nói.",
+          "steps": {
+            "0": "Nhấn Tab cho đến khi một tab đã lưu, tiêu đề cửa sổ hoặc một nhóm trong thanh bên được tiêu điểm. Mỗi hàng là một điểm dừng Tab.",
+            "1": "Để di chuyển nhiều mục cùng lúc, nhấn Ctrl+Space (trên Mac cũng là Ctrl) trên từng mục để chọn, rồi đặt tiêu điểm vào bất kỳ hàng đã chọn nào.",
+            "2": "Nhấn Space để nhấc lên. Bạn nghe “Picked up …”, hàng rời khỏi vị trí, và một bản sao của nó hiện ở nơi nó sẽ được thả.",
+            "3": "Nhấn Up hoặc Down để di chuyển. Một tab đi qua mọi cửa sổ của nhóm, rồi đến “Drop here for a new window”, rồi quay vòng lên đầu.",
+            "4": "Nhấn Left để đến danh sách nhóm. Up và Down chọn nhóm (điểm dừng cuối là “New group”), và khung chính hiển thị từng nhóm khi bạn đi qua.",
+            "5": "Nhấn Right để vào nhóm đang được làm nổi bật, rồi dùng Up và Down để đặt mục bên trong.",
+            "6": "Nhấn Space để thả, hoặc Escape để hủy."
+          },
+          "good": {
+            "0": "Space nhấc mục lên thay vì mở liên kết.",
+            "1": "Ctrl+Space chọn hoặc bỏ chọn một hàng mà không mở hay nhấc nó.",
+            "2": "Enter vẫn mở tab, và không làm gì khi bạn đang di chuyển một mục.",
+            "3": "Bản sao của thứ bạn đang di chuyển luôn hiển thị trên màn hình, và khung cuộn theo nó.",
+            "4": "Up và Down quay vòng ở hai đầu, và bạn nghe “Wrapped to top” hoặc “Wrapped to bottom”.",
+            "5": "Một cửa sổ trống là một vị trí riêng.",
+            "6": "Mục nằm đúng nơi bản sao đã ở, và bạn nghe được điều gì đã xảy ra.",
+            "7": "Nhiều mục đã chọn di chuyển cùng nhau như một khối, theo thứ tự ban đầu.",
+            "8": "Space trong danh sách nhóm thả mục vào cuối nhóm đang được làm nổi bật.",
+            "9": "Trên “New group” khung chính mờ đi, và thả ở đó tạo một nhóm hoàn toàn mới.",
+            "10": "Một nhóm di chuyển bằng Up và Down không bao giờ lên trên “Now Open”.",
+            "11": "Di chuyển một tab đang mở trong “Now Open” vào nhóm sẽ đóng tab trình duyệt đó, như khi thả bằng chuột.",
+            "12": "Escape giữ nguyên mọi thứ và hiển thị lại nhóm bạn bắt đầu.",
+            "13": "Sau khi thả, tiêu điểm ở trên hàng đã di chuyển; sau Escape, nó trở lại hàng bạn đã nhấc."
+          }
+        },
+        "13": {
+          "heading": "Tính bền vững",
+          "checks": "Thứ tự mới được lưu: nó vẫn còn sau khi mở lại cửa sổ bật lên và đến được các thiết bị khác.",
+          "pro": "Chỉ phần thiết bị thứ hai cần Pro (nó cần đồng bộ).",
+          "steps": {
+            "0": "Sau khi sắp xếp lại tab, cửa sổ hoặc nhóm bằng cách kéo, đóng hẳn cửa sổ bật lên và mở lại.",
+            "1": "Nếu bạn bật đồng bộ và có thiết bị thứ hai đăng nhập cùng tài khoản, kiểm tra thứ tự ở đó nữa."
+          },
+          "good": {
+            "0": "Thứ tự mới vẫn y như bạn để lại sau khi mở lại cửa sổ bật lên.",
+            "1": "Khi bật đồng bộ, thiết bị thứ hai nhận cùng thứ tự sau một thời gian ngắn."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "Ứng dụng web và bảng điều khiển (trang preview)",
+      "intro": "Mọi thứ ở đây nằm tại preview.tabmerger.com, không phải tabmerger.com chính — bản beta này chỉ đồng bộ với trang preview.",
+      "items": {
+        "0": {
+          "heading": "Đăng ký và đăng nhập",
+          "checks": "Mọi cách đăng nhập vào trang web đều hoạt động: Google, email và mật khẩu, và liên kết ma thuật.",
+          "steps": {
+            "0": "Từ trạng thái chưa đăng nhập, mở preview.tabmerger.com/auth/sign-in.",
+            "1": "Thử “Continue with Google”.",
+            "2": "Thử email + mật khẩu: nhập email và mật khẩu, rồi nhấp “Continue”.",
+            "3": "Thử “Send magic link”, chỉ dùng email."
+          },
+          "examples": {
+            "0": {
+              "alt": "Trang đăng nhập “Welcome back” của trang web: Continue with Google, các ô Email và Password với liên kết Forgot?, Continue, và Send magic link",
+              "caption": "Trang đăng nhập của trang web: Google, email và mật khẩu, hoặc liên kết ma thuật."
+            }
+          },
+          "good": {
+            "0": "Cả ba cách đều đăng nhập được.",
+            "1": "Liên kết ma thuật và Google đều chuyển hướng về ứng dụng ở trạng thái đã đăng nhập.",
+            "2": "Tài khoản mới đến nơi mà “Sign up free” đưa tới (email + mật khẩu hoặc Google, cùng các tùy chọn)."
+          }
+        },
+        "1": {
+          "heading": "Tạo tài khoản bằng email và mật khẩu",
+          "checks": "Một tài khoản email-và-mật-khẩu mới cuối cùng sẽ được đăng nhập, dù trang web có yêu cầu xác minh email hay không.",
+          "steps": {
+            "0": "Khi chưa đăng nhập, nhấp “Sign up free” và tạo tài khoản bằng email và mật khẩu (8 ký tự trở lên)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Trang “Create your account”: Continue with Google, rồi các ô Email, Password (ít nhất 8 ký tự) và Confirm password, và nút Continue",
+              "caption": "Trang đăng ký. Google cũng dùng được ở đây; mục này nói về cách dùng email và mật khẩu."
+            }
+          },
+          "good": {
+            "0": "Bạn hoặc vào thẳng bảng điều khiển, đã đăng nhập, hoặc thấy “Verify your email” và chỉ được đăng nhập sau khi nhấp liên kết trong email đó. Điều này tùy thuộc vào việc trang web có yêu cầu xác nhận email hay không; cả hai đều ổn."
+          },
+          "report": "Bạn thấy “Verify your email” nhưng thực ra đã được đăng nhập (ví dụ, mở bảng điều khiển trong tab khác vẫn được mà không cần nhấp liên kết)."
+        },
+        "2": {
+          "heading": "Quên mật khẩu và đổi mật khẩu",
+          "checks": "Bạn có thể đặt lại mật khẩu đã quên qua email, và đổi nó sau đó.",
+          "steps": {
+            "0": "Từ trang đăng nhập, nhấp “Forgot?” cạnh ô mật khẩu và nhập email.",
+            "1": "Mở liên kết đặt lại từ email đó và đặt mật khẩu mới (tối thiểu 8 ký tự, và phải khớp với ô xác nhận)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Trang “Reset your password”: ô Email, nút Send reset link, và Back to sign in",
+              "caption": "“Forgot?” trên trang đăng nhập mở trang này. Sau khi đăng nhập, Account settings có ô “Change password” thay thế."
+            }
+          },
+          "good": {
+            "0": "Bạn quay lại bảng điều khiển ở trạng thái đã đăng nhập với mật khẩu mới.",
+            "1": "Đăng nhập lại sau đó cần mật khẩu mới, không phải mật khẩu cũ."
+          }
+        },
+        "3": {
+          "heading": "Bảng điều khiển khớp với tiện ích sau khi đồng bộ",
+          "checks": "Bảng điều khiển của trang web hiển thị cùng các nhóm như tiện ích sau khi đồng bộ hoàn tất.",
+          "steps": {
+            "0": "Khi bật đồng bộ và có ít nhất một nhóm, mở bảng điều khiển tại preview.tabmerger.com/dashboard.",
+            "1": "So sánh mục “Tab Groups” ở đó với thanh bên của cửa sổ bật lên tiện ích: tên, màu, số cửa sổ/tab và thứ tự."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bảng điều khiển web sau khi mở khóa: thống kê, thẻ gói Pro, và lưới Tab Groups với các thẻ Research, Reading List, Work và Shopping hiển thị số cửa sổ và tab",
+              "caption": "Các nhóm trên bảng điều khiển, khớp với thanh bên của tiện ích sau khi đồng bộ."
+            }
+          },
+          "good": {
+            "0": "Cùng các nhóm xuất hiện với cùng tên, màu và số cửa sổ/tab, theo cùng thứ tự, khi đồng bộ hoàn tất."
+          }
+        },
+        "4": {
+          "heading": "Bảng điều khiển chỉ đọc đối với nhóm",
+          "checks": "Bảng điều khiển hiển thị nhóm nhưng không thể thay đổi chúng: chỉnh sửa chỉ diễn ra trong tiện ích.",
+          "steps": {
+            "0": "Trên bảng điều khiển, tìm bất kỳ cách nào để đổi tên, xóa hoặc tạo nhóm, hoặc gắn/bỏ sao cho nhóm."
+          },
+          "good": {
+            "0": "Không có cách nào để đổi tên, xóa, tạo hoặc gắn/bỏ sao cho nhóm từ bảng điều khiển — chỉnh sửa nhóm chỉ có trong tiện ích theo thiết kế.",
+            "1": "Các thao tác thật duy nhất trên thẻ nhóm là Share và mở tab/cửa sổ của nó."
+          },
+          "report": "Bất kỳ điều khiển nào trên bảng điều khiển có vẻ chỉnh sửa, xóa hoặc tạo nhóm thực sự làm được điều đó."
+        },
+        "5": {
+          "heading": "Phiên và thống kê trên bảng điều khiển",
+          "checks": "Các phiên đã lưu và tổng số trên bảng điều khiển khớp với tiện ích.",
+          "steps": {
+            "0": "Lưu một phiên trong tiện ích, rồi kiểm tra mục “Saved Sessions” trên bảng điều khiển.",
+            "1": "Kiểm tra thống kê gần đầu bảng điều khiển (số tab, số nhóm, số phiên, ngày tham gia)."
+          },
+          "good": {
+            "0": "Phiên bạn đã lưu xuất hiện.",
+            "1": "Thống kê khớp với những gì bạn đếm được trong tiện ích."
+          }
+        },
+        "6": {
+          "heading": "Chia sẻ từ bảng điều khiển",
+          "checks": "Nút Share của bảng điều khiển sao chép một liên kết chia sẻ, giống của tiện ích.",
+          "steps": {
+            "0": "Trên một thẻ nhóm (hoặc qua “Select” và “Share selected” cho nhiều nhóm), nhấp Share."
+          },
+          "good": {
+            "0": "Một liên kết được sao chép vào bộ nhớ tạm ngay lập tức, kèm thông báo xác nhận. Điều này được trình bày chi tiết trong mục “Chia sẻ” bên dưới — nút Share của bảng điều khiển và của tiện ích tạo ra cùng loại liên kết."
+          }
+        },
+        "7": {
+          "heading": "Trang tài khoản",
+          "checks": "Trang tài khoản hiển thị đúng hồ sơ, gói và thiết bị, và cả hai tùy chọn đăng xuất đều hoạt động.",
+          "pro": "Chỉ thẻ Devices cần Pro; nó liệt kê các thiết bị đồng bộ.",
+          "steps": {
+            "0": "Mở Account settings từ bảng điều khiển.",
+            "1": "Kiểm tra thẻ Profile (email, ngày tham gia), thẻ Subscription (gói, “Manage billing” hoặc “Upgrade”), và thẻ Devices.",
+            "2": "Thử “Sign out” và riêng “Sign out of all devices”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Account settings: thẻ Subscription hiển thị gói Pro, ngày gia hạn và {proMonthly}/tháng, với nút Manage billing; bên dưới thẻ Devices liệt kê các thiết bị đã đăng nhập",
+              "caption": "Các thẻ Subscription và Devices trên tài khoản Pro."
+            }
+          },
+          "good": {
+            "0": "Profile và Subscription hiển thị thông tin chính xác, cập nhật (xem mục “Nâng cấp lên Pro” ở trên để biết chi tiết về thẻ Subscription).",
+            "1": "Devices liệt kê các thiết bị đã đăng nhập với điều khiển đổi tên/xóa.",
+            "2": "Cả hai nút đăng xuất đưa bạn về trạng thái chưa đăng nhập; “all devices” còn thu hồi mọi phiên đang hoạt động khác.",
+            "3": "Không có tùy chọn xóa tài khoản trên trang này — đó là điều bình thường, không phải thiếu sót cần báo cáo."
+          }
+        },
+        "8": {
+          "heading": "Trên điện thoại",
+          "checks": "Bảng điều khiển và trang tài khoản hoàn toàn dùng được trên màn hình nhỏ.",
+          "steps": {
+            "0": "Mở bảng điều khiển và Account settings trên điện thoại (hoặc cửa sổ máy tính thu hẹp còn khoảng 390px).",
+            "1": "Chạm vào biểu tượng Dashboard và Account ở trên cùng, rồi menu tài khoản tròn bên phải và mục “Sign out” của nó."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bảng điều khiển trên màn hình cỡ điện thoại: thanh trên cùng hiển thị logo TabMerger, biểu tượng Dashboard và Account, nút chuyển sáng/tối và menu tài khoản, không có gì bị cắt",
+              "caption": "Bảng điều khiển ở chiều rộng điện thoại: chỉ có biểu tượng trên thanh trên cùng, không có gì cuộn ngang."
+            }
+          },
+          "good": {
+            "0": "Không có gì cuộn ngang.",
+            "1": "Thanh trên cùng hiển thị logo TabMerger, biểu tượng Dashboard và Account, nút chuyển sáng/tối và menu tài khoản, tất cả đều hiển thị đầy đủ và chạm được (tên “TabMerger” và nhãn biểu tượng ẩn trên màn hình hẹp). Màn hình rộng hơn vẫn hiển thị nhãn."
+          },
+          "report": "Một trang cuộn ngang trên điện thoại, hoặc bất kỳ điều khiển nào ở trên cùng bị cắt hay không chạm tới được."
+        },
+        "9": {
+          "heading": "Thông báo (toast)",
+          "checks": "Các thông báo bật lên dễ đọc, tự đóng sau khi đếm ngược, và có thể đóng sớm.",
+          "steps": {
+            "0": "Kích hoạt một thông báo, ví dụ: trong Account settings, nhập mật khẩu ngắn hơn 8 ký tự vào biểu mẫu mật khẩu và gửi (nó hiển thị lỗi mà không thay đổi gì), hoặc sao chép một liên kết chia sẻ.",
+            "1": "Quan sát thông báo ở góc dưới bên phải, rồi kích hoạt một thông báo khác và di chuột lên nó.",
+            "2": "Thử ở cả chế độ sáng và tối."
+          },
+          "examples": {
+            "0": {
+              "alt": "Một thông báo lỗi màu đỏ ở góc dưới bên phải ghi “Password must be at least 8 characters.”, với dấu ✕ ở góc và thanh đếm ngược đã vơi một phần dọc cạnh dưới",
+              "caption": "Một thông báo lỗi: viền đỏ, ✕ để đóng, và thanh đếm ngược dọc cạnh dưới."
+            }
+          },
+          "good": {
+            "0": "Mỗi thông báo dễ đọc trên nền trang, với viền màu (xanh lá cho thành công, đỏ cho lỗi).",
+            "1": "Một thanh dọc cạnh dưới vơi dần trong khoảng 6 giây và tạm dừng khi bạn di chuột lên, và thông báo đóng khi thanh hết.",
+            "2": "Dấu ✕ ở góc trên bên phải đóng nó ngay lập tức."
+          },
+          "report": "Một thông báo khó đọc ở một trong hai giao diện, thanh vẫn chạy khi bạn di chuột lên, hoặc dấu ✕ đặt sai chỗ hay không đóng được."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Chia sẻ",
+      "intro": "Chia sẻ yêu cầu Pro (xem “Nâng cấp lên Pro” ở trên để có Pro trong bản beta này). Khóa mã hóa của mỗi lần chia sẻ được tạo mới cho từng liên kết và chỉ nằm trong phần #key= của URL — nó không bao giờ được gửi đến hay lưu trên máy chủ, nên bất kỳ ai có liên kết đầy đủ (gồm cả phần đó) đều xem được nội dung chia sẻ. Hãy coi liên kết chia sẻ như chính nội dung đó.",
+      "items": {
+        "0": {
+          "heading": "Chia sẻ một hoặc nhiều nhóm từ tiện ích",
+          "checks": "Tiện ích tạo liên kết chia sẻ cho một nhóm, hoặc nhiều nhóm cùng lúc.",
+          "steps": {
+            "0": "Vào chế độ chọn và chọn một hoặc nhiều nhóm trong thanh bên (không phải tab hay cửa sổ — Share chỉ xuất hiện với vùng chọn kiểu nhóm).",
+            "1": "Nhấp “Share” trong thanh chọn ở dưới cùng."
+          },
+          "examples": {
+            "0": {
+              "alt": "Chế độ chọn trong cửa sổ bật lên với Work và Research được chọn, “2 groups selected” và nút Share ở thanh dưới",
+              "caption": "Chọn các nhóm cần chia sẻ, rồi nhấp Share ở thanh dưới."
+            },
+            "1": {
+              "alt": "Cùng màn hình với thông báo màu xanh “Link copied to clipboard”",
+              "caption": "Liên kết được sao chép ngay lập tức."
+            }
+          },
+          "good": {
+            "0": "Một liên kết được sao chép vào bộ nhớ tạm ngay, kèm thông báo “Link copied to clipboard”.",
+            "1": "Chọn nhiều nhóm cùng lúc sẽ chia sẻ tất cả chúng trong một liên kết/gói — bạn không cần chia sẻ từng nhóm một."
+          }
+        },
+        "1": {
+          "heading": "Mở một liên kết chia sẻ",
+          "checks": "Bất kỳ ai cũng có thể mở liên kết chia sẻ mà không cần đăng nhập và xem các nhóm được chia sẻ, ở chế độ chỉ đọc.",
+          "pro": "Tạo liên kết cần Pro; mở liên kết không cần tài khoản nào.",
+          "steps": {
+            "0": "Mở liên kết đã sao chép trong một cửa sổ trình duyệt chưa đăng nhập (hoặc cửa sổ riêng tư/ẩn danh).",
+            "1": "Kiểm tra favicon và tiêu đề của từng tab được chia sẻ, và thử “Open tab” / “Open all tabs” / “Open window” / “Open all windows”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Trang chia sẻ mở khi chưa đăng nhập: “Shared collection · read-only”, liên kết chia sẻ, “9 tabs across 5 windows in 2 groups”, công tắc Show page previews, và các tab của nhóm Work với nút Open",
+              "caption": "Những gì người mở liên kết của bạn thấy, không cần đăng nhập. (Ở đây liên kết trỏ đến máy chủ thử nghiệm cục bộ; liên kết của bạn sẽ ở preview.tabmerger.com.)"
+            }
+          },
+          "good": {
+            "0": "Trang tải mà không cần đăng nhập, có nhãn “Shared collection · read-only”.",
+            "1": "Nó hiển thị mọi nhóm, cửa sổ và tab với favicon và tiêu đề thật.",
+            "2": "Các nút mở mở đúng (các) tab/cửa sổ trong tab trình duyệt mới."
+          }
+        },
+        "2": {
+          "heading": "Xem trước trang trên trang chia sẻ",
+          "checks": "Xem trước trang trên trang chia sẻ luôn tắt cho đến khi người xem bật và xác nhận.",
+          "pro": "Tạo liên kết cần Pro; mở liên kết không cần tài khoản nào.",
+          "steps": {
+            "0": "Trên trang chia sẻ, tìm công tắc “Show page previews” phía trên danh sách nhóm.",
+            "1": "Bật nó và xác nhận hộp thoại xuất hiện.",
+            "2": "Di chuột lên một tab để xem ảnh xem trước và mô tả."
+          },
+          "examples": {
+            "0": {
+              "alt": "Hộp thoại “Turn on page previews?” giải thích những gì được gửi đến dịch vụ xem trước, với các nút Cancel và Turn on",
+              "caption": "Bật công tắc sẽ hỏi trước. Xem trước luôn tắt cho đến khi bạn xác nhận."
+            }
+          },
+          "good": {
+            "0": "Công tắc mặc định tắt.",
+            "1": "Bật nó cần xác nhận hộp thoại trước (tắt lại không cần xác nhận) — hộp thoại giải thích rằng di chuột lên một tab sẽ gửi địa chỉ của tab đó đến dịch vụ xem trước của TabMerger, và nó không được liên kết với tài khoản của bạn, ghi nhật ký hay lưu trữ.",
+            "2": "Khi bật, di chuột lên tab hiển thị ảnh/mô tả; trang không có ảnh hiển thị “No preview” thay vì ảnh lỗi."
+          }
+        },
+        "3": {
+          "heading": "Chia sẻ một nhóm có nhiều cửa sổ",
+          "checks": "Một nhóm được chia sẻ có nhiều cửa sổ hiển thị từng cửa sổ riêng biệt.",
+          "steps": {
+            "0": "Chia sẻ một nhóm có nhiều cửa sổ đã lưu (không chỉ một)."
+          },
+          "examples": {
+            "0": {
+              "alt": "Nhóm Research trên trang chia sẻ, hiển thị bốn cửa sổ riêng biệt, mỗi cửa sổ có liên kết Open tab riêng, và “Open all windows” trên nhóm",
+              "caption": "Một nhóm được chia sẻ có bốn cửa sổ: mỗi cửa sổ được liệt kê riêng."
+            }
+          },
+          "good": {
+            "0": "Trang chia sẻ hiển thị mọi cửa sổ trong nhóm đó, mỗi cửa sổ có nhãn “Window N” (và “Incognito” nếu là cửa sổ ẩn danh), với các tab riêng và điều khiển “Open tab(s)” riêng."
+          }
+        },
+        "4": {
+          "heading": "Chia sẻ từ bảng điều khiển web thay vì tiện ích",
+          "checks": "Chia sẻ từ trang web hoạt động giống như từ tiện ích.",
+          "steps": {
+            "0": "Trên bảng điều khiển, nhấp “Share” trên một thẻ nhóm, hoặc chọn nhiều nhóm và nhấp “Share selected”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Các thẻ nhóm trên bảng điều khiển với nút Share của một thẻ hiển thị “Copied!” và thông báo “Link copied — shares a snapshot of this group.”",
+              "caption": "Share trên một thẻ bảng điều khiển sao chép cùng loại liên kết."
+            }
+          },
+          "good": {
+            "0": "Cả hai cách trên bảng điều khiển đều sao chép liên kết giống như tiện ích (lần lượt là “Link copied — shares a snapshot of this group.” hoặc “Link copied! Share page is live.”), tạo ra cùng loại trang chia sẻ."
+          }
+        },
+        "5": {
+          "heading": "Chỉnh sửa, chia sẻ lại, thu hồi và hết hạn — những gì KHÔNG thể làm",
+          "checks": "Những gì liên kết chia sẻ chưa làm được, để bạn không mất thời gian báo cáo.",
+          "steps": {
+            "0": "Thử tìm bất kỳ cách nào để chỉnh sửa một lần chia sẻ hiện có, hoặc thu hồi/xóa/đặt hết hạn, từ tiện ích hoặc bảng điều khiển."
+          },
+          "good": {
+            "0": "Hiện chưa có giao diện nào để chỉnh sửa, thu hồi, xóa hoặc đặt hết hạn cho liên kết chia sẻ sau khi tạo — một lần chia sẻ là ảnh chụp cố định, không thay đổi kể từ lúc tạo. Đây là điều bình thường — đừng báo cáo việc thiếu điều khiển thu hồi/chỉnh sửa/hết hạn, chỉ cần xác nhận nó khớp với mô tả này.",
+            "1": "Chia sẻ lại cùng nhóm tạo một liên kết hoàn toàn mới, riêng biệt thay vì cập nhật liên kết cũ; liên kết cũ vẫn hoạt động và vẫn hiển thị ảnh chụp cũ."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Cài đặt",
+      "intro": "Settings có các tab General, Account và Data cho mọi người. Tab Devices xuất hiện khi bạn dùng Pro (xem “Nâng cấp lên Pro” ở trên). Các tab AI và Dev không thuộc bản beta này — AI vẫn ẩn sau cờ “sắp ra mắt”, và Dev chỉ hiển thị trong bản dựng phát triển cục bộ, không phải bản beta bạn đã cài.",
+      "items": {
+        "0": {
+          "heading": "Tab General — Theme, Confirm before deleting, Open tab on click, Auto-deduplicate",
+          "checks": "Các cài đặt General này có hiệu lực ngay và được ghi nhớ.",
+          "steps": {
+            "0": "Mở Settings và chuyển Theme giữa Light, Dark và System.",
+            "1": "Bật/tắt “Confirm before deleting” (xóa một nhóm hoặc cửa sổ khi bật, rồi khi tắt, và so sánh).",
+            "2": "Bật/tắt “Open tab on click”, rồi nhấp vào một tab đã lưu trong khung chính.",
+            "3": "Bật/tắt “Auto-deduplicate on merge”, rồi gộp hai cửa sổ có chung một tab trùng."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab General của hộp thoại Settings, hiển thị Theme, Confirm before deleting và các công tắc khác",
+              "caption": "Tab General của Settings, với huy hiệu phiên bản cạnh tiêu đề. (Tab Dev chỉ có trong bản dựng chụp màn hình nội bộ của chúng tôi; bạn sẽ không thấy nó.)"
+            }
+          },
+          "good": {
+            "0": "Theme thay đổi toàn bộ giao diện ngay lập tức và vẫn giữ sau khi đóng/mở lại cửa sổ bật lên.",
+            "1": "Khi bật “Confirm before deleting”, xóa nhóm hoặc cửa sổ sẽ hỏi trước; khi tắt, xóa ngay lập tức.",
+            "2": "“Open tab on click” bật: một lần nhấp mở tab trong trình duyệt; tắt: một lần nhấp chỉ chọn/mở rộng nó.",
+            "3": "“Auto-deduplicate on merge” tự động xóa tab trùng khi bật."
+          }
+        },
+        "1": {
+          "heading": "Tab General — Show page images in previews",
+          "checks": "Cài đặt ảnh trang kiểm soát việc xem trước tab có hiển thị ảnh trang hay không.",
+          "steps": {
+            "0": "Tắt “Show page images in previews”.",
+            "1": "Di chuột lên một tab đã lưu để xem bản xem trước.",
+            "2": "Bật lại cài đặt và di chuột lên cùng tab đó lần nữa."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bản xem trước khi di chuột lên tab với ảnh trang bị tắt, hiển thị chỗ giữ chỗ “Not enabled”",
+              "caption": "Bản xem trước khi di chuột với “Show page images in previews” đang tắt."
+            }
+          },
+          "good": {
+            "0": "Tắt: bản xem trước ghi rõ “Not enabled” với ghi chú “Page images are off. Turn on in Settings.” — bản thân công tắc lưu ngay, không có hộp thoại xác nhận.",
+            "1": "Bật: một ảnh trang thật tải trong bản xem trước, hoặc “No preview” nếu trang đó không có ảnh.",
+            "2": "Mô tả của cài đặt liên kết đến mục xem trước trang trong chính sách quyền riêng tư."
+          },
+          "report": "Bản xem trước hiển thị “No preview” (trống) thay vì ảnh thật khi cài đặt đang bật và trang có ảnh."
+        },
+        "2": {
+          "heading": "Tab General — Cloud sync, Stale tab threshold, URL rules",
+          "checks": "Các cài đặt này xuất hiện đúng gói và thay đổi đúng những gì cần thay đổi.",
+          "pro": "Chỉ công tắc Cloud sync cần Pro (Free không hiển thị nó).",
+          "steps": {
+            "0": "Với Pro, bật/tắt “Cloud sync” (điều khiển này chỉ xuất hiện khi bạn có Pro).",
+            "1": "Đổi “Stale tab threshold” sang giá trị khác (7/14/30/60 ngày).",
+            "2": "Nhấp “Manage” cạnh “URL rules” và thêm một quy tắc gán mẫu URL cho một nhóm."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, tab General cuộn xuống: Cloud sync bật, Stale tab threshold đặt 30 ngày, và URL rules với nút Manage",
+              "caption": "Nửa dưới của tab General. (Tab Dev chỉ có trong bản dựng chụp màn hình nội bộ của chúng tôi; bạn sẽ không thấy nó.)"
+            }
+          },
+          "good": {
+            "0": "Cloud sync chỉ hiển thị cho tài khoản Pro (Free không bao giờ thấy).",
+            "1": "Thay đổi ngưỡng tab cũ thay đổi những tab nào có chấm cũ màu hổ phách.",
+            "2": "URL rules mở trình quản lý nơi bạn có thể thêm/sửa/xóa quy tắc mẫu-đến-nhóm.",
+            "3": "Một tab mới mở khớp quy tắc sẽ được tự động gán."
+          }
+        },
+        "3": {
+          "heading": "Theme: Light, Dark và System",
+          "checks": "Mọi giao diện đều hiển thị đúng trên cửa sổ bật lên, và lựa chọn được ghi nhớ.",
+          "steps": {
+            "0": "Trong Settings → General, đặt Theme thành Dark và nhấp Save changes.",
+            "1": "Xem quanh cửa sổ bật lên: thanh bên, một nhóm có nhiều cửa sổ, các menu ⋯, một menu chuột phải, Search (Ctrl+K), và chính Settings.",
+            "2": "Đóng và mở lại cửa sổ bật lên.",
+            "3": "Đặt Theme thành System và lưu, rồi chuyển máy tính giữa chế độ sáng và tối.",
+            "4": "Đặt lại về Light."
+          },
+          "good": {
+            "0": "Toàn bộ cửa sổ bật lên đổi giao diện ngay khi bạn lưu, với mọi chữ, biểu tượng và đường viền đều đọc được.",
+            "1": "Menu, hộp thoại, chú giải và thông báo cũng theo giao diện.",
+            "2": "Giao diện vẫn được đặt sau khi mở lại cửa sổ bật lên.",
+            "3": "System theo cài đặt sáng hoặc tối của máy tính."
+          },
+          "report": "Bất cứ thứ gì khó đọc hoặc giữ giao diện cũ (menu, hộp thoại, biểu tượng hay đường viền), hoặc giao diện bị đặt lại sau khi mở lại cửa sổ bật lên."
+        },
+        "4": {
+          "heading": "URL rules: tự động lưu các trang khớp",
+          "checks": "Một quy tắc URL lưu các trang bạn mở ở địa chỉ khớp vào nhóm bạn đã chọn.",
+          "steps": {
+            "0": "Trong Settings → General, cạnh URL rules, nhấp Manage, rồi Add rule.",
+            "1": "Nhập một mẫu với * làm ký tự đại diện (ví dụ github.com/*), chọn một nhóm, thêm quy tắc, và nhấp Save.",
+            "2": "Trong trình duyệt, mở một tab mới ở địa chỉ khớp (ví dụ bất kỳ trang github.com nào).",
+            "3": "Mở cửa sổ bật lên và xem nhóm của quy tắc. Rồi tải lại trang một lần, và kiểm tra nhóm lần nữa.",
+            "4": "Sửa quy tắc để trỏ đến nhóm khác, rồi xóa nó, và mở một trang khớp khác.",
+            "5": "Trên Free, thử thêm quy tắc thứ tư."
+          },
+          "examples": {
+            "0": {
+              "alt": "Hộp thoại URL Rules: “Auto-assign tabs to groups by URL pattern. Use * as a wildcard (e.g. github.com/*). First matching rule wins.”, chưa có quy tắc nào, nút Add rule, và Cancel và Save",
+              "caption": "Settings → General → URL rules → Manage mở trình chỉnh sửa này."
+            }
+          },
+          "good": {
+            "0": "Một bản sao của trang khớp được lưu vào nhóm của quy tắc, trong cửa sổ đầu tiên (hoặc cửa sổ mới nếu nhóm chưa có). Bản thân tab vẫn mở.",
+            "1": "Khi nhiều quy tắc khớp, quy tắc đầu tiên trong danh sách được áp dụng.",
+            "2": "Khi một quy tắc được sửa hoặc xóa, các trang mới theo thay đổi đó.",
+            "3": "Free cho phép 3 quy tắc: thêm quy tắc thứ tư hiển thị “Free plan allows up to 3 URL rules.” với nút Upgrade. Pro không giới hạn."
+          },
+          "report": "Một trang khớp không được lưu, rơi vào nhầm nhóm, hoặc được lưu nhiều lần (ví dụ lại được lưu mỗi lần bạn tải lại)."
+        },
+        "5": {
+          "heading": "Tab Account — Plan, Renews, Email, Manage billing / Upgrade, Sign out",
+          "checks": "Tab Account hiển thị đúng gói, ngày gia hạn và email của bạn, và các nút của nó hoạt động.",
+          "steps": {
+            "0": "Mở tab Account và kiểm tra các hàng Plan, Renews (nếu trả phí) và Email.",
+            "1": "Nhấp “Upgrade to Pro” (Free) hoặc “Manage billing” (Pro/Pro AI) — xem “Nâng cấp lên Pro” ở trên để biết điều gì xảy ra tiếp theo.",
+            "2": "Nhấp “Sign out”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, tab Account trên Pro: Plan Pro ({proMonthly}/tháng), ngày gia hạn, email, các nút Manage billing và Sign out, và “Forgot your passphrase? Reset encryption”",
+              "caption": "Tab Account trên tài khoản Pro. Liên kết đặt lại ở dưới cùng là mục tiếp theo. (Tab Dev chỉ có trong bản dựng chụp màn hình nội bộ của chúng tôi; bạn sẽ không thấy nó.)"
+            }
+          },
+          "good": {
+            "0": "Plan hiển thị “Free”, “Pro ({proMonthly}/mo)” hoặc “Pro AI ({proAiMonthly}/mo)” khớp với gói thật của bạn.",
+            "1": "Renews chỉ hiển thị với gói trả phí và cho biết ngày gia hạn thật.",
+            "2": "Email khớp với tài khoản đã đăng nhập.",
+            "3": "“Manage billing” mở cổng thanh toán của Stripe trong tab mới; trên Free thì là “Upgrade to Pro”, mở trang giá.",
+            "4": "Sign out đưa bạn về trạng thái chưa đăng nhập."
+          }
+        },
+        "6": {
+          "heading": "Tab Account — Forgot your passphrase? Reset encryption",
+          "checks": "Liên kết đặt lại mã hóa xuất hiện trong tab Account khi đã thiết lập mã hóa.",
+          "steps": {
+            "0": "Liên kết này chỉ xuất hiện nếu bạn đã hoàn tất thiết lập mã hóa ít nhất một lần (xem mục “Cụm mật khẩu mã hóa đầu cuối” bên dưới để biết toàn bộ quy trình — đừng lặp lại ở đây, chỉ cần xác nhận có thể truy cập từ tab này)."
+          },
+          "good": {
+            "0": "Liên kết hiển thị ở cuối tab Account khi đã thiết lập mã hóa, và không hiển thị trước đó."
+          }
+        },
+        "7": {
+          "heading": "Tab Data — Export, Import, Clear all data",
+          "checks": "Xuất, nhập và xóa dữ liệu hoạt động, với xác nhận trước khi bất cứ thứ gì bị thay thế hoặc xóa.",
+          "steps": {
+            "0": "Mở tab Data và nhấp “Export” để tải mọi nhóm xuống dưới dạng tệp JSON.",
+            "1": "Nhấp “Import” và chọn chính tệp đó (hoặc tệp xuất Bookmarks HTML, hoặc tệp xuất OneTab .txt).",
+            "2": "Nhấp “Clear all data” và xác nhận."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tab Data của hộp thoại Settings, hiển thị các điều khiển Export data và Import data",
+              "caption": "Tab Data của Settings."
+            }
+          },
+          "good": {
+            "0": "Export tải xuống tệp có tên như “tabmerger-backup-2026-01-15.json” kèm thông báo “exported successfully”.",
+            "1": "Import yêu cầu bạn xác nhận số nhóm trước khi nhập, rồi hiển thị “imported successfully”.",
+            "2": "Nhập lại tệp xuất của chính bạn mang lại mọi nhóm với cùng cửa sổ, tab, thứ tự và màu sắc.",
+            "3": "Cả ba loại tệp (TabMerger JSON, Bookmarks HTML, OneTab .txt) đều được chấp nhận, nhận diện theo phần mở rộng tệp.",
+            "4": "“Clear all data” xóa sạch nhóm, phiên và cài đặt sau khi bạn xác nhận — hãy coi nó là thao tác phá hủy và chỉ thử trên hồ sơ dùng một lần."
+          },
+          "report": "Một tệp lỗi hoặc trống âm thầm không làm gì thay vì hiển thị thông báo lỗi như “Invalid file format” hoặc “No groups found”."
+        },
+        "8": {
+          "heading": "Save và Reset, và chỉ báo “Unsaved changes”",
+          "checks": "Cài đặt chỉ được lưu khi bạn nhấp Save, và cảnh báo bạn về các thay đổi chưa lưu.",
+          "steps": {
+            "0": "Trên tab General, thay đổi một cài đặt bất kỳ (ví dụ Theme) mà không nhấp Save.",
+            "1": "Để ý dòng chữ “Unsaved changes” và rằng “Save changes” chỉ được bật khi có gì đó thực sự khác với những gì đã lưu.",
+            "2": "Nhấp “Restore defaults” thay vì Save, rồi đóng Settings mà không lưu.",
+            "3": "Mở lại Settings và kiểm tra xem thay đổi của bạn có được giữ không."
+          },
+          "examples": {
+            "0": {
+              "alt": "Settings, tab General sau một thay đổi: “Unsaved changes” cạnh nút Save changes đang bật, với Restore defaults ở bên trái",
+              "caption": "Sau khi thay đổi một cài đặt: “Unsaved changes” xuất hiện và Save changes được bật. (Tab Dev chỉ có trong bản dựng chụp màn hình nội bộ của chúng tôi; bạn sẽ không thấy nó.)"
+            }
+          },
+          "good": {
+            "0": "“Unsaved changes” xuất hiện cạnh “Save changes” bất cứ khi nào bản nháp khác với cài đặt đã lưu gần nhất.",
+            "1": "“Save changes” bị tắt khi không có gì mới để lưu.",
+            "2": "“Restore defaults” chỉ đặt lại bản nháp đang chỉnh về mặc định — nó không tự lưu.",
+            "3": "Đóng Settings mà không nhấp “Save changes” sẽ hủy bản nháp; mở lại hiển thị các giá trị thực sự đã lưu gần nhất, không phải chỉnh sửa chưa lưu."
+          },
+          "report": "“Save changes” vẫn bật khi không có thay đổi nào, hoặc một cài đặt bạn đã đổi nhưng chưa lưu vẫn được giữ sau khi đóng và mở lại Settings."
+        },
+        "9": {
+          "heading": "Huy hiệu phiên bản",
+          "checks": "Nơi tìm số phiên bản chính xác để ghi vào báo cáo lỗi.",
+          "steps": {
+            "0": "Xem thanh tiêu đề của hộp thoại Settings."
+          },
+          "good": {
+            "0": "Một huy hiệu nhỏ cạnh chữ “Settings” hiển thị số semver thật mà bạn nên ghi trong báo cáo lỗi (ví dụ “v3.1.0-beta.5”) — điều này được trình bày chi tiết hơn trong mục “Tham gia và cài đặt” ở trên."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Đăng nhập và đồng bộ giữa các thiết bị",
+      "intro": "Bản beta đồng bộ qua ứng dụng web preview tại preview.tabmerger.com, không phải trang chính — đăng nhập ở đó để xem các nhóm đã đồng bộ, bảng điều khiển và chia sẻ.",
+      "items": {
+        "0": {
+          "heading": "Thiết lập hai thiết bị",
+          "checks": "Hai thiết bị đăng nhập cùng tài khoản chia sẻ các nhóm của chúng.",
+          "steps": {
+            "0": "Đăng nhập trên hai thiết bị hoặc hai hồ sơ trình duyệt đều cài tiện ích beta, cùng một tài khoản."
+          },
+          "examples": {
+            "0": {
+              "alt": "Hộp thoại “Sign In to TabMerger” của tiện ích trong cửa sổ bật lên: Continue with Google, rồi các tab Sign In, Sign Up và Magic Link với các ô Email và Password",
+              "caption": "Đăng nhập từ tiện ích: biểu tượng tài khoản (góc trên bên phải) → Sign in."
+            },
+            "1": {
+              "alt": "Cửa sổ bật lên của thiết bị A với các nhóm Work, Research, Shopping và Reading List; chân trang ghi 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Thiết bị A."
+            },
+            "2": {
+              "alt": "Cửa sổ bật lên của thiết bị B sau khi đăng nhập, mở khóa và đồng bộ: cùng bốn nhóm với cùng số cửa sổ và tab, và cùng chân trang 4 Groups, 4 Windows, 17 Tabs",
+              "caption": "Thiết bị B sau khi đăng nhập và mở khóa: cùng các nhóm và số lượng, theo cùng thứ tự."
+            }
+          },
+          "good": {
+            "0": "Nhóm tạo trên một thiết bị xuất hiện trên thiết bị kia sau một thời gian ngắn."
+          }
+        },
+        "1": {
+          "heading": "Đổi tên đến được thiết bị khác",
+          "checks": "Đổi tên trên một thiết bị hiển thị trên thiết bị kia mà không cần làm mới thủ công.",
+          "steps": {
+            "0": "Sửa tên một nhóm trên thiết bị A.",
+            "1": "Kiểm tra thiết bị B mà không chạm vào gì ở đó."
+          },
+          "examples": {
+            "0": {
+              "alt": "Cửa sổ bật lên của thiết bị A sau khi đổi tên Research thành “Research papers”, hiển thị bốn tab của nó",
+              "caption": "Thiết bị A: “Research” được đổi tên thành “Research papers”."
+            },
+            "1": {
+              "alt": "Cửa sổ bật lên của thiết bị B hiển thị nhóm là “Research papers” với cùng bốn tab, chỉ sau khi mở lại cửa sổ bật lên",
+              "caption": "Thiết bị B, chỉ sau khi mở lại cửa sổ bật lên: tên mới đã có."
+            }
+          },
+          "good": {
+            "0": "Thiết bị B nhận việc đổi tên mà bạn không cần kích hoạt làm mới thủ công."
+          }
+        },
+        "2": {
+          "heading": "Xóa đến được thiết bị khác",
+          "checks": "Một nhóm đã xóa vẫn bị xóa trên mọi thiết bị thay vì quay trở lại.",
+          "steps": {
+            "0": "Xóa một nhóm trên thiết bị A.",
+            "1": "Xác nhận nó cũng biến mất trên thiết bị B."
+          },
+          "examples": {
+            "0": {
+              "alt": "Cửa sổ bật lên của thiết bị A sau khi xóa Shopping: còn lại Work, Research papers và Reading List, và chân trang ghi 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Thiết bị A: “Shopping” đã bị xóa."
+            },
+            "1": {
+              "alt": "Cửa sổ bật lên của thiết bị B sau khi mở lại: Shopping đã biến mất và chân trang ghi 3 Groups, 3 Windows, 14 Tabs",
+              "caption": "Thiết bị B sau khi mở lại cửa sổ bật lên: “Shopping” cũng biến mất ở đó."
+            }
+          },
+          "good": {
+            "0": "Việc xóa được lan truyền thay vì nhóm xuất hiện lại (“hồi sinh”) sau khi đồng bộ."
+          },
+          "report": "Một nhóm đã xóa quay lại trên một trong hai thiết bị sau lần đồng bộ tiếp theo."
+        },
+        "3": {
+          "heading": "Sắp xếp lại nhóm được đồng bộ",
+          "checks": "Thứ tự các nhóm giống nhau trên mọi thiết bị và trên bảng điều khiển.",
+          "steps": {
+            "0": "Kéo một nhóm đến vị trí mới trong thanh bên trên thiết bị A.",
+            "1": "Chờ đồng bộ hoàn tất, rồi xem thanh bên của thiết bị B và bảng điều khiển web."
+          },
+          "good": {
+            "0": "Thiết bị B và bảng điều khiển hiển thị các nhóm theo cùng thứ tự như thiết bị A.",
+            "1": "Hoàn tác có thể bị làm mờ trên một thiết bị ngay sau khi đồng bộ mang về thay đổi từ thiết bị khác. Đây là điều bình thường: lịch sử hoàn tác bị xóa khi có thay đổi đến từ nơi khác, để bạn không vô tình hoàn tác đè lên chỉnh sửa của người khác."
+          },
+          "report": "Thứ tự khác nhau giữa các thiết bị sau khi đồng bộ hoàn tất, hoặc việc sắp xếp lại nhảy về thứ tự cũ."
+        },
+        "4": {
+          "heading": "Thay đổi ngoại tuyến được đồng bộ khi kết nối lại",
+          "checks": "Thay đổi thực hiện khi ngoại tuyến được đồng bộ khi bạn trực tuyến trở lại, không trùng lặp hay mất mát.",
+          "steps": {
+            "0": "Chuyển sang ngoại tuyến (tắt mạng) trên một thiết bị.",
+            "1": "Thực hiện thay đổi.",
+            "2": "Kết nối lại."
+          },
+          "good": {
+            "0": "Khi trực tuyến trở lại, các thay đổi ngoại tuyến được đồng bộ mà không nhân đôi hay âm thầm làm mất nhóm."
+          }
+        },
+        "5": {
+          "heading": "Xóa nhóm khi ngoại tuyến",
+          "checks": "Một nhóm bạn xóa khi ngoại tuyến vẫn bị xóa khi bạn kết nối lại.",
+          "steps": {
+            "0": "Chuyển sang ngoại tuyến (tắt mạng) trên thiết bị A.",
+            "1": "Xóa một nhóm trên thiết bị A.",
+            "2": "Kết nối lại thiết bị A và để nó đồng bộ, rồi kiểm tra thiết bị B và bảng điều khiển."
+          },
+          "good": {
+            "0": "Nhóm bị xóa khỏi máy chủ ở lần đồng bộ tiếp theo và biến mất trên thiết bị B và bảng điều khiển.",
+            "1": "Nó không quay lại trên thiết bị nào sau đó."
+          },
+          "report": "Một nhóm bạn đã xóa khi ngoại tuyến xuất hiện lại trên bất kỳ thiết bị nào sau khi đồng bộ."
+        },
+        "6": {
+          "heading": "Cùng một nhóm được sửa trên hai thiết bị (bản sao xung đột)",
+          "checks": "Khi cùng một nhóm được sửa trên hai thiết bị trước khi một trong hai đồng bộ, không có gì bị ghi đè và bạn nhận một bản sao để gộp thủ công.",
+          "steps": {
+            "0": "Chuyển sang ngoại tuyến (tắt mạng) trên thiết bị A. Để thiết bị B trực tuyến.",
+            "1": "Trên thiết bị A, sửa một nhóm (ví dụ thêm một tab). Trên thiết bị B, sửa cùng nhóm đó theo cách khác (ví dụ thêm một tab khác).",
+            "2": "Để thiết bị B đồng bộ trước, rồi kết nối lại thiết bị A và để nó đồng bộ.",
+            "3": "Xem thanh bên trên cả hai thiết bị."
+          },
+          "good": {
+            "0": "Phiên bản đến máy chủ trước (thiết bị B) giữ tên của nhóm.",
+            "1": "Phiên bản của thiết bị A được lưu ngay bên dưới thành một nhóm mới tên “Work{CONFLICT_COPY_SUFFIX}” (dùng tên nhóm của bạn), và một thông báo cho bạn biết điều đó.",
+            "2": "Cả hai thiết bị cuối cùng đều hiển thị cả hai nhóm. Bạn có thể gộp các tab thủ công rồi xóa bản sao.",
+            "3": "Chỉ sửa trên một thiết bị, hoặc sửa các nhóm khác nhau trên mỗi thiết bị, không bao giờ tạo bản sao."
+          },
+          "report": "Một chỉnh sửa âm thầm biến mất mà không có bản sao, hoặc “bản sao xung đột” xuất hiện khi chỉ một thiết bị sửa nhóm."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Cụm mật khẩu mã hóa đầu cuối",
+      "intro": "Mã hóa là bắt buộc cho mọi tài khoản đã đăng nhập, không phải cài đặt tùy chọn — không có công tắc nào để tắt nó. Các nhóm, phiên và ảnh chụp “Now Open” đã đồng bộ của bạn được mã hóa bằng khóa mà chỉ cụm mật khẩu của bạn mở được; máy chủ của TabMerger không bao giờ thấy cụm mật khẩu hay khóa đã giải bọc.",
+      "items": {
+        "0": {
+          "heading": "Thiết lập cụm mật khẩu lần đầu",
+          "checks": "Bật đồng bộ sẽ yêu cầu bạn chọn cụm mật khẩu mã hóa trước khi bất kỳ dữ liệu nào rời khỏi thiết bị.",
+          "steps": {
+            "0": "Khi mới đăng nhập với đồng bộ đám mây, chờ lời nhắc “Set up encryption” tự xuất hiện (nó được kích hoạt bởi lần đồng bộ đầu tiên).",
+            "1": "Đọc nội dung lời nhắc, rồi nhập cụm mật khẩu mới và nhập lại trong “Confirm passphrase”.",
+            "2": "Nhấp “Set up encryption”."
+          },
+          "examples": {
+            "0": {
+              "alt": "Hộp thoại “Set up encryption” giải thích rằng cụm mật khẩu không thể khôi phục, với các ô New passphrase và Confirm passphrase và nút Set up encryption",
+              "caption": "Tự xuất hiện ngay sau khi đăng nhập trên Pro."
+            }
+          },
+          "good": {
+            "0": "Lời nhắc ghi “Your synced group and tab data is end-to-end encrypted with a passphrase only you know. Choose one now — there is no way to recover your data if you forget it, it never leaves your device and TabMerger cannot reset it for you.”",
+            "1": "Cụm mật khẩu phải có ít nhất 8 ký tự, không có dấu cách, và phải khớp với ô xác nhận — không khớp hoặc quá ngắn sẽ hiển thị lỗi rõ ràng ngay tại chỗ (“Passphrase must be at least 8 characters” / “Passphrases do not match” / “Passphrase cannot contain spaces”) thay vì âm thầm thất bại.",
+            "2": "Khi thành công, bạn thấy thông báo “Encryption set up”.",
+            "3": "Không có gì bạn đã đồng bộ bị mất."
+          }
+        },
+        "1": {
+          "heading": "Mở khóa trên thiết bị thứ hai",
+          "checks": "Thiết bị thứ hai cần cụm mật khẩu của bạn một lần trước khi đọc được dữ liệu đã đồng bộ.",
+          "steps": {
+            "0": "Đăng nhập cùng tài khoản trên thiết bị hoặc hồ sơ trình duyệt thứ hai.",
+            "1": "Khi lời nhắc “Unlock encryption” xuất hiện, nhập cụm mật khẩu (một lần, không có ô xác nhận) và nhấp “Unlock” hoặc nhấn Enter.",
+            "2": "Lặp lại một lần nữa, nhưng cố ý gõ sai cụm mật khẩu."
+          },
+          "examples": {
+            "0": {
+              "alt": "Hộp thoại “Unlock encryption” trên thiết bị thứ hai, với một ô Passphrase duy nhất và nút Unlock",
+              "caption": "Trên thiết bị thứ hai, tiện ích hỏi cụm mật khẩu hiện có của bạn một lần."
+            }
+          },
+          "good": {
+            "0": "Lời nhắc mở khóa ghi “Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won't be asked again unless you sign out.”",
+            "1": "Cụm mật khẩu đúng sẽ mở khóa và hiển thị thông báo “Encryption unlocked”.",
+            "2": "Cụm sai hiển thị “Wrong passphrase” và không thay đổi gì khác — không hỏng dữ liệu, không bị khóa, bạn chỉ cần thử lại."
+          }
+        },
+        "2": {
+          "heading": "Trạng thái “bị khóa” trông thế nào, và giữ mở khóa sau khi khởi động lại",
+          "checks": "Dữ liệu bị khóa vẫn không đọc được cho đến khi bạn mở khóa, và thiết bị vẫn mở khóa sau khi khởi động lại trình duyệt.",
+          "steps": {
+            "0": "Khi thiết bị đang bị khóa (trước khi bạn nhập cụm mật khẩu ở đó), thử dùng các tính năng đồng bộ đám mây.",
+            "1": "Mở khóa, rồi thoát hẳn và mở lại trình duyệt (không chỉ cửa sổ bật lên) trên thiết bị đó."
+          },
+          "good": {
+            "0": "Khi bị khóa, bạn được nhắc nhập lại cụm mật khẩu thay vì âm thầm đồng bộ văn bản thô hay mất dữ liệu.",
+            "1": "Sau khi mở khóa, khóa được lưu trong bộ nhớ cục bộ của trình duyệt trên thiết bị đó — khởi động lại hoàn toàn trình duyệt không nhắc lại; chỉ đăng xuất mới xóa nó."
+          }
+        },
+        "3": {
+          "heading": "Quên cụm mật khẩu — đặt lại mã hóa",
+          "checks": "Đặt lại mã hóa được xác nhận rõ ràng trước, và cho phép bạn đặt cụm mật khẩu mới.",
+          "steps": {
+            "0": "Trong Settings → Account, tìm “Forgot your passphrase? Reset encryption” (chỉ hiển thị khi bạn đã hoàn tất thiết lập ít nhất một lần).",
+            "1": "KHÔNG dùng thao tác này trên dữ liệu bạn quan tâm — nó vĩnh viễn mất quyền truy cập mọi thứ được mã hóa bằng cụm mật khẩu hiện tại. Hãy dùng tài khoản thử nghiệm dùng một lần nếu muốn thử.",
+            "2": "Nếu bạn thử, hãy xác nhận hộp thoại đặt lại, rồi đặt cụm mật khẩu hoàn toàn mới khi lời nhắc thiết lập mở lại."
+          },
+          "examples": {
+            "0": {
+              "alt": "Cảnh báo xác nhận “Reset Encryption Passphrase” rằng mọi thứ được mã hóa bằng cụm mật khẩu hiện tại sẽ vĩnh viễn không truy cập được, với các nút Cancel và Reset Passphrase",
+              "caption": "Xác nhận bạn nhận được trước khi đặt lại. Cancel là an toàn; Reset Passphrase không thể đảo ngược."
+            }
+          },
+          "good": {
+            "0": "Hộp thoại xác nhận rõ ràng trước khi bất cứ điều gì xảy ra.",
+            "1": "Sau khi xác nhận, bạn thấy thông báo “Encryption reset — set up a new passphrase” và lời nhắc thiết lập mở lại ngay để bạn chọn cụm mới và tiếp tục đồng bộ."
+          }
+        },
+        "4": {
+          "heading": "Kiểm tra trên bảng điều khiển web",
+          "checks": "Trang web hỏi cụm mật khẩu của bạn trước khi hiển thị các nhóm đã đồng bộ.",
+          "steps": {
+            "0": "Đăng nhập vào bảng điều khiển (preview.tabmerger.com) bằng tài khoản đã thiết lập mã hóa.",
+            "1": "Nếu được nhắc, nhập cụm mật khẩu vào thẻ mở khóa ngay tại chỗ trước khi bất kỳ nội dung nhóm nào xuất hiện."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mục Tab Groups của bảng điều khiển web đang bị khóa, với ổ khóa, “Your groups are end-to-end encrypted. Enter your passphrase to view them here.”, ô Passphrase và nút Unlock",
+              "caption": "Cho đến khi bạn nhập cụm mật khẩu, bảng điều khiển hiển thị thẻ này thay vì các nhóm của bạn."
+            }
+          },
+          "good": {
+            "0": "Bảng điều khiển hỏi cụm mật khẩu riêng với tiện ích — mở khóa ở đó là bước một-lần-mỗi-tab riêng, không dùng chung với việc mở khóa của tiện ích. Lời nhắc ghi “Your groups are end-to-end encrypted. Enter your passphrase to view them here.”",
+            "1": "Cụm mật khẩu sai hiển thị “Incorrect passphrase.” mà không làm sập trang.",
+            "2": "Sau khi mở khóa, tên nhóm và tab thật của bạn hiển thị bình thường.",
+            "3": "Sau khi đặt lại cụm mật khẩu trong tiện ích, bảng điều khiển hỏi cụm mật khẩu mới: ở lần tải trang tiếp theo, hoặc trong bảng điều khiển đang mở sẵn, khi bạn nhấn nút làm mới trên nhãn đồng bộ.",
+            "4": "Một nhóm hoặc phiên mà cụm mật khẩu hiện tại không đọc được (lưu trước khi đặt lại và chưa được tải lên lại) hiển thị là “(locked)” thay vì làm lộ nội dung. Chính mục đó cho biết lý do và cần làm gì, và nó không thể được chia sẻ hay khôi phục cho đến khi đọc được trở lại."
+          }
+        },
+        "5": {
+          "heading": "Cách biết dữ liệu của bạn thực sự được mã hóa",
+          "checks": "Cách bạn tự thấy rằng dữ liệu không đọc được nếu không có cụm mật khẩu.",
+          "steps": {
+            "0": "Không có huy hiệu “Encrypted ✓” rõ ràng trong giao diện — tín hiệu nhìn thấy được là gián tiếp.",
+            "1": "Trên thiết bị bạn chưa mở khóa (hoặc bảng điều khiển, trước khi nhập cụm mật khẩu ở đó), để ý rằng tên/nội dung nhóm không hiển thị cho đến khi bạn mở khóa."
+          },
+          "good": {
+            "0": "Việc không có nội dung đọc được trước khi mở khóa chính là tín hiệu: không có tên nhóm hay tab nào được hiển thị, và trên bảng điều khiển mọi thứ mà cụm mật khẩu hiện tại không đọc được hiển thị là “(locked)”.",
+            "1": "Bảng điều khiển hiển thị thẻ cụm mật khẩu thay vì các nhóm của bạn. Nếu nội dung có thể đọc được mà không cần mở khóa, điều đó nghĩa là nó không thực sự được mã hóa — hãy báo cáo ngay nếu bạn thấy vậy."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Bất kỳ mất mát dữ liệu nào — một nhóm, tab hoặc phiên biến mất khi không nên.",
+    "1": "Xung đột đồng bộ — nhóm “{CONFLICT_COPY_SUFFIX}” là điều bình thường khi cùng một nhóm được sửa trên hai thiết bị trước khi một trong hai đồng bộ. Hãy cho chúng tôi biết nếu một chỉnh sửa âm thầm biến mất, hoặc nếu bản sao xuất hiện khi chỉ một thiết bị chỉnh sửa.",
+    "2": "Bất cứ điều gì gây khó hiểu, không rõ ràng, hoặc tốn nhiều cú nhấp hơn mức cần thiết.",
+    "3": "Bất cứ điều gì chậm — mở cửa sổ bật lên, tìm kiếm, kéo và thả, hoặc đồng bộ mất thời gian lâu hơn đáng kể so với mong đợi."
+  },
+  "metaTitle": "Chương trình Beta",
+  "metaDescription": "Tham gia beta TabMerger — cài đặt bản beta riêng tư, biết cần kiểm thử gì, và báo lỗi trực tiếp cho nhóm phát triển.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Một phần Pro",
+    "somePro": "Có phần Pro",
+    "areaPartial": "Một số mục ở đây cần tài khoản Pro",
+    "itemPartial": "Một phần của mục này cần tài khoản Pro",
+    "areaAll": "Mọi mục ở đây đều cần tài khoản Pro",
+    "itemAll": "Cần tài khoản Pro"
+  },
+  "eyebrow": "Chương trình beta",
+  "title": "Giúp chúng tôi kiểm thử TabMerger trước khi phát hành",
+  "lead": "Nhận phiên bản tiếp theo của TabMerger sớm và cho chúng tôi biết điều gì bị lỗi. Trang này hướng dẫn cách tham gia, cài đặt bản beta riêng tư, cần kiểm thử gì, và cách báo cáo những gì bạn phát hiện. Các tính năng AI bị ẩn (“sắp ra mắt”) trong bản dựng này, nên chưa thuộc phạm vi kiểm thử.",
+  "join": "Tham gia beta",
+  "onThisPage": "Trên trang này",
+  "install": {
+    "heading": "1. Tham gia và cài đặt",
+    "groupTitle": "Tham gia nhóm người kiểm thử.",
+    "groupBody": "Mở <link>groups.google.com/g/tabmerger-beta-testers</link> và tham gia. Việc tham gia diễn ra ngay lập tức, nhưng hãy chắc chắn bạn tham gia bằng <strong>cùng tài khoản Google bạn đang đăng nhập trong Chrome</strong> — nếu không, trang sản phẩm riêng tư sẽ không hiển thị với bạn.",
+    "listingTitle": "Mở trang sản phẩm beta riêng tư.",
+    "listingLink": "Mở trang sản phẩm TabMerger BETA",
+    "listingPending": "trang sản phẩm “TabMerger BETA” trên Chrome Web Store (liên kết sắp có — trong lúc chờ, hãy xem URL hiện tại trong nhóm người kiểm thử).",
+    "listingNotFound": "Nếu bạn thấy <strong>“Item not found”</strong>, có thể bạn vừa mới tham gia — quyền truy cập có thể mất một lúc mới xuất hiện. Hãy đợi một chút và thử lại trước khi cho rằng có lỗi.",
+    "installTitle": "Cài đặt.",
+    "installBody": "Nhấp “Add to Chrome”. Bản beta được cài như một tiện ích riêng (“TabMerger BETA”) tách biệt với trang sản phẩm ổn định “TabMerger” — bạn có thể cài cả hai cùng lúc, và dữ liệu của chúng hoàn toàn tách biệt. Chúng tôi khuyên bạn tắt bản ổn định khi kiểm thử, để không vô tình thao tác nhầm trên bản kia.",
+    "signInTitle": "Đăng nhập qua ứng dụng web preview.",
+    "signInBody": "Bản beta đồng bộ với <link>preview.tabmerger.com</link> — không phải trang tabmerger chính. Đăng nhập ở đó (từ tiện ích hoặc trực tiếp từ bảng điều khiển) để xem các nhóm và phiên đã đồng bộ.",
+    "browsersTitle": "Tôi có thể kiểm thử trên những trình duyệt nào?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc và Opera đều dùng cùng trang sản phẩm TabMerger BETA và cùng Google Group — không có bản beta Edge riêng, nên đừng tìm. Edge: chấp nhận “Allow extensions from other stores” khi được hỏi. Opera: cài tiện ích “Install Chrome Extensions” của Opera trước, rồi dùng liên kết ở trên. Nếu bạn cũng cài bản TabMerger ổn định từ cửa hàng Edge Add-ons, hãy tắt nó khi kiểm thử bản beta — đó là tiện ích khác với tiện ích này. Safari không được hỗ trợ.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox có bản beta riêng, được cài từ một liên kết trực tiếp thay vì trang sản phẩm Chrome Web Store ở trên. <link>Cài bản beta cho Firefox</link>. Firefox sẽ hỏi có thêm “TabMerger BETA” không: chọn Add. Nó tự kiểm tra cập nhật khoảng mỗi ngày một lần; để kiểm tra ngay, mở <code>about:addons</code>, nhấp biểu tượng bánh răng, và chọn “Check for Updates”. Đăng nhập một lần bên trong tiện ích và cho phép lời nhắc quyền dữ liệu của Firefox (nó dùng cho đăng nhập và đồng bộ); sau đó, đăng nhập trên trang web này cũng sẽ đăng nhập tiện ích. <strong>Bất kỳ ai có liên kết cài đặt ở trên đều có thể cài nó</strong> — vui lòng đừng chia sẻ nó ra ngoài nhóm người kiểm thử.",
+    "firefoxSoon": "Bản beta cho Firefox sắp ra mắt; cho đến lúc đó, người dùng Firefox có thể tham gia beta bằng bất kỳ trình duyệt Chromium được hỗ trợ nào ở trên (Chrome, Edge, Brave, Vivaldi, Arc, Opera).",
+    "versionTitle": "Ghi lại phiên bản của bạn.",
+    "versionBody": "Mở Settings của TabMerger và sao chép huy hiệu phiên bản cạnh tiêu đề “Settings” (ví dụ <code>v3.1.0-beta.5</code>), hoặc mở <code>chrome://extensions</code> và tìm “TabMerger BETA”. Dù cách nào, hãy báo cáo số semver thật đó — không phải số phiên bản nội bộ của Chrome Web Store, vốn bị lệch và không khớp với số chúng tôi dùng để theo dõi bản dựng."
+  },
+  "test": {
+    "heading": "2. Cần kiểm thử gì",
+    "intro": "Hãy thử những phần phù hợp với cách bạn thường dùng TabMerger. Mỗi mục bên dưới có các bước đánh số, ví dụ về giao diện mong đợi, và kết quả hoạt động đúng trông như thế nào.",
+    "tickNote": "Đánh dấu từng bước khi bạn làm. Dấu kiểm chỉ được lưu trong trình duyệt này, và mỗi phần hiển thị tiến độ của bạn.",
+    "needPro": "Tôi có cần Pro không?",
+    "needProBody": "Các phần được liệt kê từ Free đến Pro. Mọi thứ không được đánh dấu đều hoạt động trên Free, không cần tài khoản. <full></full>: toàn bộ mục cần tài khoản Pro (đồng bộ, mã hóa và tạo liên kết chia sẻ là Pro). <partial></partial>: phần lớn mục hoạt động trên Free, và dòng “Pro:” dưới tiêu đề cho biết phần nào không. Pro miễn phí trong bản beta này: bạn trả bằng thẻ thử (xem <link>Nâng cấp lên Pro</link>).",
+    "show": "Hiện",
+    "hide": "Ẩn",
+    "proLine": "Pro: ",
+    "checksLine": "Mục này kiểm tra: ",
+    "steps": "Các bước",
+    "reportLine": "Báo cáo nếu: ",
+    "testCheckout": "⚠ Đây là thanh toán thử.",
+    "testCheckoutBody": " Không bao giờ nhập thẻ thật. Không có tiền thật nào bị tính, và thẻ thật cũng sẽ không hoạt động ở đây.",
+    "testCardsFooter": "Với mọi thẻ: ngày hết hạn trong tương lai (ví dụ <code>12/34</code>), CVC 3 chữ số bất kỳ (ví dụ <code>123</code>), và nhập gì cũng được cho tên, mã bưu chính và các ô khác. Thêm thẻ khác: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "Những gì chúng tôi đặc biệt muốn nghe",
+  "knownIssues": {
+    "heading": "3. Sự cố đã biết",
+    "intro": "Chúng tôi đã biết những sự cố này, nên bạn không cần báo cáo. Danh sách được cập nhật với mỗi bản phát hành beta; nếu một mục ở đây đã được khắc phục với bạn, hoặc hoạt động khác với mô tả, thì điều đó đáng để báo cáo.",
+    "meanwhile": "Trong lúc chờ:"
+  },
+  "report": {
+    "heading": "4. Báo lỗi",
+    "discussions": "Lỗi và ý tưởng được gửi đến GitHub Discussions công khai của chúng tôi — <link>github.com/{repo}/discussions</link>. Hãy xem ở đó trước — có thể ai đó đã báo cáo điều tương tự.",
+    "public": "<strong>Discussions là công khai.</strong> Đừng dán URL riêng tư, tiêu đề tab, hoặc ảnh chụp màn hình có thông tin cá nhân — hãy làm mờ hoặc cắt chúng trước. Bạn cần tài khoản GitHub (miễn phí) để đăng bài.",
+    "bugButton": "Báo lỗi trên GitHub",
+    "ideaButton": "Chia sẻ ý tưởng trên GitHub",
+    "noGithub": "Không có tài khoản GitHub? Hãy dùng biểu mẫu liên hệ.",
+    "template": "Cả hai liên kết đều điền sẵn mẫu này vào nội dung thảo luận — hãy điền vào trước khi đăng, điều đó giúp chúng tôi tránh phải hỏi thêm:"
+  },
+  "faq": {
+    "heading": "Câu hỏi thường gặp",
+    "notFoundQ": "Tôi thấy “Item not found”",
+    "notFoundA": "Hãy chắc chắn bạn đã tham gia Google Group bằng cùng tài khoản Google bạn đang đăng nhập trong Chrome. Quyền truy cập có thể mất một lúc mới xuất hiện sau khi tham gia — hãy đợi một chút và thử lại trước khi cho rằng có lỗi.",
+    "stableQ": "Tôi có thể giữ bản ổn định không?",
+    "stableA": "Có — bản beta (“TabMerger BETA”) là tiện ích riêng tách biệt với bản ổn định (“TabMerger”) và có dữ liệu hoàn toàn riêng. Bạn có thể chạy cả hai, dù chúng tôi khuyên tắt bản ổn định khi kiểm thử để tránh nhầm lẫn bạn đang dùng bản nào.",
+    "chargedQ": "Tôi có bị tính tiền nếu nâng cấp lên Pro không?",
+    "chargedA": "Không — nâng cấp trong bản beta dùng chế độ thử nghiệm của Stripe. Hãy dùng <link>thẻ thử của Stripe</link> (xem mục “Nâng cấp lên Pro” ở trên) — không thẻ thật nào hoạt động ở đây, và dù thế nào cũng không có tiền thật nào được chuyển.",
+    "syncQ": "Dữ liệu của tôi được đồng bộ ở đâu?",
+    "syncA": "Bản beta đồng bộ với ứng dụng web preview tại preview.tabmerger.com, không phải trang tabmerger chính. Đăng nhập ở đó để xem các nhóm, phiên và chia sẻ đã đồng bộ.",
+    "issuesQ": "Tôi xem các sự cố đã biết ở đâu?",
+    "issuesA": "Xem <link>Discussions Q&A</link> của kho mã — đó là nơi lưu các báo cáo lỗi beta.",
+    "leaveQ": "Làm thế nào để rời khỏi beta?",
+    "leaveA": "Rời khỏi <link>Google Group</link> và gỡ cài đặt tiện ích “TabMerger BETA”. Bản cài đặt ổn định của bạn, nếu bạn giữ lại, không bị ảnh hưởng."
+  },
+  "interactive": {
+    "good": "Kết quả đúng trông như thế này",
+    "allDoneLabel": "Đã hoàn tất mọi kiểm tra",
+    "progressLabel": "Đã hoàn tất {done} trên {total} kiểm tra",
+    "allDone": "✓ Hoàn tất",
+    "progress": "{done}/{total}",
+    "clear": "Xóa dấu kiểm của tôi ({count})",
+    "firefoxAutoStart": "Bản beta cho Firefox sẽ tự bắt đầu: Firefox hỏi có thêm nó không, các trình duyệt khác tải tệp xuống. Nếu không có gì xảy ra, hãy dùng “Cài bản beta cho Firefox” trong bước này."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "metaTitle": "Liên hệ",
+  "metaDescription": "Liên hệ với đội ngũ TabMerger: báo lỗi, hỏi về thanh toán hoặc tài khoản, hoặc chia sẻ góp ý và ý tưởng.",
+  "eyebrow": "Hỗ trợ",
+  "title": "Liên hệ với chúng tôi",
+  "lead": "Bạn có câu hỏi, phát hiện lỗi hoặc cần trợ giúp về gói đăng ký? Chúng tôi thường phản hồi trong vòng một ngày làm việc.",
+  "bugReport": "Báo lỗi? <link>Mở một issue trên GitHub</link> để được theo dõi nhanh và minh bạch hơn.",
+  "preferEmail": "Muốn dùng email? Hãy viết cho <email>{address}</email>.",
+  "sentTitle": "Đã gửi tin nhắn",
+  "sentBody": "Chúng tôi sẽ sớm phản hồi bạn.",
+  "email": "Email",
+  "emailPlaceholder": "you@example.com",
+  "subject": "Chủ đề",
+  "subjectPlaceholder": "Chọn lý do…",
+  "subjects": {
+    "bug": "Báo lỗi",
+    "betaBug": "Báo lỗi bản beta",
+    "feedback": "Góp ý và ý tưởng",
+    "billing": "Câu hỏi về thanh toán",
+    "feature": "Đề xuất tính năng",
+    "account": "Trợ giúp tài khoản",
+    "other": "Khác"
+  },
+  "otherSubject": "Vui lòng ghi rõ",
+  "otherSubjectPlaceholder": "Nội dung về vấn đề gì?",
+  "message": "Tin nhắn",
+  "messagePlaceholder": "Mô tả vấn đề hoặc câu hỏi của bạn càng chi tiết càng tốt.",
+  "rateLimited": "Bạn đã gửi quá nhiều tin nhắn — vui lòng thử lại sau.",
+  "failed": "Đã xảy ra lỗi. Vui lòng thử lại hoặc gửi email cho chúng tôi tại <email>{address}</email>.",
+  "sending": "Đang gửi…",
+  "send": "Gửi tin nhắn"
+}

@@ -1,0 +1,89 @@
+{
+  "deleteGroup": {
+    "title": "Elimina gruppo",
+    "description": "Vuoi davvero eliminare \"{{name}}\"? Questa operazione non può essere annullata.",
+    "confirm": "Elimina"
+  },
+  "closeWindow": {
+    "title": "Chiudi finestra",
+    "description": "Vuoi davvero chiudere questa finestra e tutte le sue schede?",
+    "confirm": "Chiudi"
+  },
+  "removeWindow": {
+    "title": "Rimuovi finestra",
+    "description": "Vuoi davvero rimuovere questa finestra e tutte le sue schede?",
+    "confirm": "Rimuovi"
+  },
+  "closeTab": {
+    "title": "Chiudi scheda",
+    "description": "Vuoi davvero chiudere questa scheda?",
+    "confirm": "Chiudi"
+  },
+  "removeTab": {
+    "title": "Rimuovi scheda",
+    "description": "Vuoi davvero rimuovere questa scheda?",
+    "confirm": "Rimuovi"
+  },
+  "closeSelection": {
+    "title": "Chiudi selezione",
+    "confirm": "Chiudi",
+    "description_tab_one": "Vuoi davvero chiudere {{count}} scheda? Questa operazione non può essere annullata.",
+    "description_tab_other": "Vuoi davvero chiudere {{count}} schede? Questa operazione non può essere annullata.",
+    "description_tab_many": "Vuoi davvero chiudere {{count}} schede? Questa operazione non può essere annullata.",
+    "description_window_one": "Vuoi davvero chiudere {{count}} finestra? Questa operazione non può essere annullata.",
+    "description_window_other": "Vuoi davvero chiudere {{count}} finestre? Questa operazione non può essere annullata.",
+    "description_window_many": "Vuoi davvero chiudere {{count}} finestre? Questa operazione non può essere annullata.",
+    "description_group_one": "Vuoi davvero chiudere {{count}} gruppo? Questa operazione non può essere annullata.",
+    "description_group_other": "Vuoi davvero chiudere {{count}} gruppi? Questa operazione non può essere annullata.",
+    "description_group_many": "Vuoi davvero chiudere {{count}} gruppi? Questa operazione non può essere annullata."
+  },
+  "deleteSelection": {
+    "title": "Elimina selezione",
+    "confirm": "Elimina",
+    "description_tab_one": "Vuoi davvero eliminare {{count}} scheda? Questa operazione non può essere annullata.",
+    "description_tab_other": "Vuoi davvero eliminare {{count}} schede? Questa operazione non può essere annullata.",
+    "description_tab_many": "Vuoi davvero eliminare {{count}} schede? Questa operazione non può essere annullata.",
+    "description_window_one": "Vuoi davvero eliminare {{count}} finestra? Questa operazione non può essere annullata.",
+    "description_window_other": "Vuoi davvero eliminare {{count}} finestre? Questa operazione non può essere annullata.",
+    "description_window_many": "Vuoi davvero eliminare {{count}} finestre? Questa operazione non può essere annullata.",
+    "description_group_one": "Vuoi davvero eliminare {{count}} gruppo? Questa operazione non può essere annullata.",
+    "description_group_other": "Vuoi davvero eliminare {{count}} gruppi? Questa operazione non può essere annullata.",
+    "description_group_many": "Vuoi davvero eliminare {{count}} gruppi? Questa operazione non può essere annullata."
+  },
+  "removeStaleTabs": {
+    "title": "Rimuovi schede inattive",
+    "confirm": "Rimuovi",
+    "description_one": "Vuoi davvero rimuovere {{count}} scheda inattiva? Questa operazione non può essere annullata.",
+    "description_other": "Vuoi davvero rimuovere {{count}} schede inattive? Questa operazione non può essere annullata.",
+    "description_many": "Vuoi davvero rimuovere {{count}} schede inattive? Questa operazione non può essere annullata."
+  },
+  "closeAllWindows": {
+    "title": "Chiudi tutte le finestre",
+    "description": "Vuoi davvero chiudere tutte le finestre del browser e le relative schede?",
+    "confirm": "Chiudi tutte"
+  },
+  "removeAllWindows": {
+    "title": "Rimuovi tutte le finestre",
+    "description": "Vuoi davvero rimuovere tutte le finestre e le relative schede da questo gruppo? Questa operazione non può essere annullata.",
+    "confirm": "Rimuovi tutte"
+  },
+  "archiveStaleGroups": {
+    "title": "Archivia gruppi inattivi",
+    "confirm": "Archivia",
+    "description_one": "Vuoi davvero archiviare {{count}} gruppo inattivo?",
+    "description_other": "Vuoi davvero archiviare {{count}} gruppi inattivi?",
+    "description_many": "Vuoi davvero archiviare {{count}} gruppi inattivi?"
+  },
+  "clearAllData": {
+    "title": "Cancella tutti i dati",
+    "confirm": "Cancella tutti i dati",
+    "description": "Questa operazione eliminerà definitivamente tutti i gruppi, le sessioni salvate e le impostazioni. Non può essere annullata.",
+    "description_kept": "Questa operazione eliminerà definitivamente tutti i gruppi, le sessioni salvate e le impostazioni. Non può essere annullata. I backup automatici salvati nel tuo account vengono conservati e puoi recuperarli da Impostazioni → Dati."
+  },
+  "resetEncryption": {
+    "title": "Reimposta la passphrase di crittografia",
+    "confirm": "Reimposta passphrase",
+    "description": "Questa operazione non può essere annullata. Tutti i gruppi, le sessioni e le note sincronizzati e crittografati con la passphrase attuale diventeranno definitivamente inaccessibili. Imposterai una nuova passphrase e la sincronizzazione ripartirà da zero."
+  },
+  "cancel": "Annulla"
+}

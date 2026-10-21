@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Hata 404 · Sayfa bulunamadı",
+    "title": "Bu sekme kaybolmuş",
+    "description": "Tüm grupları aradık ama bu sayfayı bulamadık. Taşınmış, kapatılmış ya da hiç var olmamış olabilir. Sizi doğru yola geri getirelim.",
+    "documentTitle": "Sayfa bulunamadı",
+    "tabLabel": "Eksik sayfa"
+  },
+  "serverError": {
+    "eyebrow": "Hata 500 · Bir şeyler ters gitti",
+    "title": "Bu sekme çöktü",
+    "description": "Bu sayfa yüklenirken bizim tarafımızda bir sorun oluştu. Uzantıdaki sekmeleriniz ve gruplarınız etkilenmedi. Birazdan tekrar deneyin.",
+    "documentTitle": "Bir şeyler ters gitti",
+    "tabLabel": "Yanıt vermiyor"
+  },
+  "links": {
+    "features": "Özellikler",
+    "pricing": "Fiyatlandırma",
+    "faq": "SSS",
+    "dashboard": "Kontrol paneli",
+    "account": "Hesap",
+    "contactSupport": "Destekle iletişime geçin"
+  },
+  "helpfulLinks": "Faydalı bağlantılar",
+  "tryThese": "Ya da bunlardan birini deneyin",
+  "illustrationTabResearch": "Araştırma",
+  "illustrationTabDocs": "Belgeler",
+  "tryAgain": "Tekrar dene",
+  "backToHome": "Ana sayfaya dön",
+  "backToDashboard": "Kontrol paneline dön",
+  "devDetails": "Hata ayrıntıları (yalnızca geliştirme)",
+  "referenceId": "Referans kimliği",
+  "copyReferenceId": "Referans kimliğini kopyala",
+  "referenceIdHint": "Destekle iletişime geçerseniz bu kimliği belirtin, böylece neyin ters gittiğini bulabiliriz.",
+  "referenceIdCopied": "Referans kimliği kopyalandı",
+  "referenceIdCopyFailed": "Kopyalanamadı. Kopyalamak için kimliği seçin.",
+  "titleWithBrand": "{title} | TabMerger"
+}

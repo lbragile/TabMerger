@@ -1,0 +1,13 @@
+{
+  "success": "Gotowe — strona może teraz znaleźć TabMerger. Możesz zamknąć tę kartę.",
+  "refused": "Firefox na to nie pozwolił. Możesz spróbować ponownie lub zezwolić później w about:addons.",
+  "title": "Pozwól stronie TabMerger znaleźć TabMerger",
+  "checking": "Sprawdzanie dostępu do strony…",
+  "explainer": "Firefox nie zezwolił jeszcze TabMerger na {{hosts}}. Bez tego strona nie może wykryć TabMerger, przekazać Twojego logowania ani rozpocząć synchronizacji. Kliknij poniższy przycisk, a następnie potwierdź w oknie Firefoksa.",
+  "allowOn": "Zezwól TabMerger na {{hosts}}",
+  "bannerLabel": "Dostęp do strony",
+  "bannerText": "Zezwól TabMerger na {{hosts}}, aby strona mogła go znaleźć i przekazać Twoje logowanie.",
+  "allow": "Zezwól",
+  "dismiss": "Odrzuć prośbę o dostęp do strony",
+  "openFailed": "Nie udało się otworzyć karty dostępu do strony. Spróbuj ponownie lub zezwól w about:addons."
+}

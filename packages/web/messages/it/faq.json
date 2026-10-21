@@ -1,0 +1,36 @@
+{
+  "metaTitle": "FAQ",
+  "metaDescription": "Domande frequenti su TabMerger.",
+  "title": "Domande frequenti",
+  "lead": "Hai ancora qualche dubbio? Rispondiamo alle email in meno di un giorno.",
+  "contact": "Contatta l'assistenza",
+  "free": {
+    "question": "TabMerger è davvero gratuito?",
+    "answer": "Sì! Il piano gratuito include tutte le funzionalità principali: fino a {groups} gruppi, {tabs} schede, {urlRules} regole URL, trascinamento e importazione/esportazione. Paghi solo se vuoi la sincronizzazione cloud, gruppi, schede e regole URL illimitati o le funzionalità IA."
+  },
+  "sync": {
+    "question": "Come funziona la sincronizzazione cloud?",
+    "answer": "Quando sottoscrivi un piano Pro o Pro AI, i tuoi gruppi vengono salvati automaticamente sui nostri server. I gruppi si sincronizzano su ogni browser in cui hai effettuato l'accesso: la sincronizzazione avviene ogni volta che il popup è aperto, quindi le modifiche compaiono la prossima volta che lo apri lì."
+  },
+  "ai": {
+    "question": "Che cosa fa esattamente l'IA?",
+    "answer": "Il piano Pro AI sblocca tre funzionalità IA: raggruppamento automatico (analizza le schede aperte e le raggruppa in modo logico), nomi intelligenti (suggerisce nomi per i tuoi gruppi) e suggerimenti di sessione (consiglia come organizzare il tuo flusso di lavoro).",
+    "answerComingSoon": "Prossimamente: il piano Pro AI sbloccherà tre funzionalità IA: raggruppamento automatico (analizza le schede aperte e le raggruppa in modo logico), nomi intelligenti (suggerisce nomi per i tuoi gruppi) e suggerimenti di sessione (consiglia come organizzare il tuo flusso di lavoro)."
+  },
+  "cancel": {
+    "question": "Posso annullare l'abbonamento?",
+    "answer": "Certo. Puoi annullarlo in qualsiasi momento dalla pagina del tuo account. Mantieni l'accesso fino alla fine del periodo di fatturazione in corso, poi torni al piano gratuito."
+  },
+  "browsers": {
+    "question": "Quali browser supporta TabMerger?",
+    "answer": "Chrome (Chrome Web Store), Edge (Componenti aggiuntivi di Edge o Chrome Web Store), Brave, Vivaldi e Arc (Chrome Web Store), Opera (Chrome Web Store, tramite il componente aggiuntivo \"Install Chrome Extensions\" di Opera) e Firefox (Componenti aggiuntivi di Firefox). Safari non è supportato."
+  },
+  "privacy": {
+    "question": "I miei dati sono privati?",
+    "answer": "Prendiamo la privacy sul serio. I dati del piano gratuito sono salvati solo in locale: nulla esce dal tuo browser. I dati della sincronizzazione cloud Pro vengono crittografati end-to-end sul tuo dispositivo con una passphrase che conosci solo tu, prima ancora di raggiungere i nostri server: conserviamo solo testo cifrato e non possiamo leggere i tuoi gruppi o le tue schede. Non vendiamo mai i tuoi dati."
+  },
+  "downgrade": {
+    "question": "Che cosa succede ai miei gruppi se passo a un piano inferiore?",
+    "answer": "Se passi da Pro a Free, i tuoi gruppi restano nel cloud per 30 giorni. Le schede locali vengono sempre conservate. Puoi esportare tutto prima del downgrade."
+  }
+}

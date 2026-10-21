@@ -1,0 +1,22 @@
+{
+  "syncNow": {
+    "pullFailed": "Eşitleme sunucusuna ulaşılamadı. Tekrar deneyin.",
+    "accountMismatch": "Bu cihazda hâlâ başka bir hesabın verileri var. Hesap değiştirmek için uzantıyı açın.",
+    "identityChanged": "Eşitleme sırasında uzantıdan çıkış yapıldı. Oturum açıp tekrar deneyin.",
+    "keyCheckFailed": "Şifreleme durumu kontrol edilemedi. Tekrar deneyin.",
+    "setupUnfinished": "Şifreleme kurulumunu tamamlamak için uzantıyı açın.",
+    "locked": "Eşitlemek için uzantıyı açın ve şifrelemenin kilidini açın."
+  },
+  "menu": {
+    "saveTo": "TabMerger'a kaydet",
+    "scopeCurrent": "Bu sekmeyi kaydet",
+    "scopeLeft": "Soldaki sekmeleri kaydet",
+    "scopeRight": "Sağdaki sekmeleri kaydet",
+    "scopeExcluding": "Diğer tüm sekmeleri kaydet",
+    "noGroups": "Henüz kayıtlı grup yok",
+    "groupItem": "{{color}} {{name}} ({{windows}}p · {{tabs}}s)"
+  },
+  "reminder": {
+    "title": "TabMerger Hatırlatıcısı"
+  }
+}

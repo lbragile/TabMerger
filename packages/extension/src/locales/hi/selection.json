@@ -1,0 +1,21 @@
+{
+  "copyToGroup": "समूह में कॉपी करें",
+  "moveToGroup": "समूह में ले जाएं",
+  "star": "स्टार करें",
+  "unstar": "अनस्टार करें",
+  "share": "साझा करें",
+  "shareRequiresPro": "साझा करने के लिए Pro आवश्यक है",
+  "close": "बंद करें",
+  "delete": "हटाएं",
+  "cancel": "चयन रद्द करें",
+  "linkCopied": "लिंक क्लिपबोर्ड में कॉपी किया गया",
+  "shareFailed": "साझा करना विफल रहा",
+  "selected_tab_one": "{{count}} टैब चयनित",
+  "selected_tab_other": "{{count}} टैब चयनित",
+  "selected_window_one": "{{count}} विंडो चयनित",
+  "selected_window_other": "{{count}} विंडो चयनित",
+  "selected_group_one": "{{count}} समूह चयनित",
+  "selected_group_other": "{{count}} समूह चयनित",
+  "cleared": "चयन साफ़ किया गया।",
+  "sentence": "{{text}}।"
+}

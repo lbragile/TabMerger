@@ -1,0 +1,73 @@
+{
+  "deleteGroup": {
+    "title": "그룹 삭제",
+    "description": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 실행 취소할 수 없습니다.",
+    "confirm": "삭제"
+  },
+  "closeWindow": {
+    "title": "창 닫기",
+    "description": "이 창과 그 안의 모든 탭을 닫으시겠습니까?",
+    "confirm": "닫기"
+  },
+  "removeWindow": {
+    "title": "창 제거",
+    "description": "이 창과 그 안의 모든 탭을 제거하시겠습니까?",
+    "confirm": "제거"
+  },
+  "closeTab": {
+    "title": "탭 닫기",
+    "description": "이 탭을 닫으시겠습니까?",
+    "confirm": "닫기"
+  },
+  "removeTab": {
+    "title": "탭 제거",
+    "description": "이 탭을 제거하시겠습니까?",
+    "confirm": "제거"
+  },
+  "closeSelection": {
+    "title": "선택 항목 닫기",
+    "confirm": "닫기",
+    "description_tab_other": "탭 {{count}}개를 닫으시겠습니까? 이 작업은 실행 취소할 수 없습니다.",
+    "description_window_other": "창 {{count}}개를 닫으시겠습니까? 이 작업은 실행 취소할 수 없습니다.",
+    "description_group_other": "그룹 {{count}}개를 닫으시겠습니까? 이 작업은 실행 취소할 수 없습니다."
+  },
+  "deleteSelection": {
+    "title": "선택 항목 삭제",
+    "confirm": "삭제",
+    "description_tab_other": "탭 {{count}}개를 삭제하시겠습니까? 이 작업은 실행 취소할 수 없습니다.",
+    "description_window_other": "창 {{count}}개를 삭제하시겠습니까? 이 작업은 실행 취소할 수 없습니다.",
+    "description_group_other": "그룹 {{count}}개를 삭제하시겠습니까? 이 작업은 실행 취소할 수 없습니다."
+  },
+  "removeStaleTabs": {
+    "title": "오래된 탭 제거",
+    "confirm": "제거",
+    "description_other": "오래된 탭 {{count}}개를 제거하시겠습니까? 이 작업은 실행 취소할 수 없습니다."
+  },
+  "closeAllWindows": {
+    "title": "모든 창 닫기",
+    "description": "모든 브라우저 창과 그 안의 탭을 닫으시겠습니까?",
+    "confirm": "모두 닫기"
+  },
+  "removeAllWindows": {
+    "title": "모든 창 제거",
+    "description": "이 그룹에서 모든 창과 그 안의 탭을 제거하시겠습니까? 이 작업은 실행 취소할 수 없습니다.",
+    "confirm": "모두 제거"
+  },
+  "archiveStaleGroups": {
+    "title": "오래된 그룹 보관",
+    "confirm": "보관",
+    "description_other": "오래된 그룹 {{count}}개를 보관하시겠습니까?"
+  },
+  "clearAllData": {
+    "title": "모든 데이터 지우기",
+    "confirm": "모든 데이터 지우기",
+    "description": "모든 그룹, 저장된 세션, 설정이 영구적으로 삭제됩니다. 이 작업은 실행 취소할 수 없습니다.",
+    "description_kept": "모든 그룹, 저장된 세션, 설정이 영구적으로 삭제됩니다. 이 작업은 실행 취소할 수 없습니다. 계정에 저장된 자동 백업은 유지되며, 설정 → 데이터에서 다시 가져올 수 있습니다."
+  },
+  "resetEncryption": {
+    "title": "암호화 암호문구 재설정",
+    "confirm": "암호문구 재설정",
+    "description": "이 작업은 실행 취소할 수 없습니다. 현재 암호문구로 암호화된 동기화된 그룹, 세션, 메모에 영구적으로 접근할 수 없게 됩니다. 새 암호문구를 설정하고 처음부터 다시 동기화하게 됩니다."
+  },
+  "cancel": "취소"
+}

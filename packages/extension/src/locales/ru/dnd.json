@@ -1,0 +1,83 @@
+{
+  "instructions": "Нажмите Пробел, чтобы взять элемент, стрелки — чтобы выбрать место (Влево и Вправо переключают между окнами и группами), Пробел — чтобы бросить, Escape — чтобы отменить. Shift+Пробел выделяет диапазон, а {{modifier}}+A — всё, чтобы переместить сразу несколько элементов.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "вкладка",
+    "window": "окно",
+    "group": "группа",
+    "item": "элемент"
+  },
+  "typeStart": {
+    "tab": "Вкладка",
+    "window": "Окно",
+    "group": "Группа",
+    "item": "Элемент"
+  },
+  "untitledTab": "Вкладка без названия",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, начиная с {{name}},",
+  "position": {
+    "tab": "позиция {{index}} из {{total}} в {{window}} группы {{group}}",
+    "window": "позиция {{index}} из {{total}} в группе {{group}}",
+    "group": "позиция {{index}} из {{total}}"
+  },
+  "target": {
+    "newGroup": "новая группа",
+    "newWindowAtEnd": "новое окно в конце группы {{group}}",
+    "nowOpen": "«Сейчас открыто», где они откроются в новом окне браузера",
+    "groupAsWindow": "группа {{group}}, как новое окно"
+  },
+  "token": {
+    "dropped": "Перемещено.",
+    "cancelled": "Отменено."
+  },
+  "bail": {
+    "cancelled": "Перемещение отменено.",
+    "nothingMoved": "Отпущено; ничего не перемещено.",
+    "returnedMany": "Элементы ({{items}}) возвращены",
+    "returnedOne": "{{named}}: возвращено",
+    "noop": "{{what}} отпущено на прежнем месте: {{position}}; ничего не перемещено.",
+    "stale": "Группы изменились во время перетаскивания, поэтому ничего не перемещено. {{returned}} на место: {{position}}.",
+    "cancelledReturned": "Перемещение отменено. {{returned}} на место: {{position}}.",
+    "rejected": "Сюда нельзя переместить. {{returned}} на место: {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} элемент удалён в другом месте.",
+  "removedElsewhere_few": "{{count}} элемента удалены в другом месте.",
+  "removedElsewhere_many": "{{count}} элементов удалены в другом месте.",
+  "removedElsewhere_other": "{{count}} элемента удалены в другом месте.",
+  "stillSelected_one": "Он по-прежнему выбран.",
+  "stillSelected_few": "Они по-прежнему выбраны.",
+  "stillSelected_many": "Они по-прежнему выбраны.",
+  "stillSelected_other": "Они по-прежнему выбраны.",
+  "dropped": "Перемещено.",
+  "movedGroups": "Группы ({{count}}) перемещены единым блоком: {{position}}.",
+  "movedGroup": "Группа {{name}} перемещена: {{position}}.",
+  "partial": "{{count}} из {{total}}",
+  "at": "позиция {{index}} из {{total}}",
+  "startingAt": "начиная с позиции {{index}} из {{total}}",
+  "whereTab": "{{window}} группы {{group}}, {{at}}",
+  "whereWindow": "группа {{group}}, {{at}}",
+  "movedTo": "{{items}}: перемещено в {{where}}.",
+  "openTabsClosed": " Открытые вкладки закрыты.",
+  "groupHidden": " Группа {{group}} не показана.",
+  "openedNewWindow": "{{items}}: открыто в новом окне браузера.",
+  "openedNowOpen": "{{items}}: открыто в «Сейчас открыто».",
+  "movedNewWindow": "{{items}}: перемещено в новое окно браузера.",
+  "movedWithinNowOpen": "{{items}}: перемещено внутри «Сейчас открыто».",
+  "originalPosition": "Над исходной позицией.",
+  "pickedUpType": "Взято: {{type}}.",
+  "pickedUpMany": "Взято: {{what}}.",
+  "pickedUpOne": "Взято: {{type}} {{name}}, {{position}}.",
+  "groupShown": "Группа {{name}} теперь показана.",
+  "copyHint": "При перемещении в сохранённую группу создаётся копия; открытые вкладки остаются открытыми.",
+  "notOver": "Не над местом для перемещения.",
+  "over": "Над: {{target}}.",
+  "cantDropOn": "Нельзя переместить сюда: {{target}}.",
+  "typeDropped": "{{type}}: перемещено.",
+  "cancelledReturnedType": "Перемещение отменено; {{type}} возвращено на место.",
+  "saveFailed": "Не удалось сохранить перемещение; изменения отменены."
+}

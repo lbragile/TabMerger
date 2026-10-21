@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Grup Sınırına Ulaşıldı",
+    "description": "Ücretsiz planın {{max}} grup sınırına ulaştınız. Sınırsız grup için Pro'ya yükseltin."
+  },
+  "maxTabs": {
+    "title": "Sekme Sınırına Ulaşıldı",
+    "description": "Ücretsiz planın {{max}} sekme sınırına ulaştınız. Sınırsız sekme için Pro'ya yükseltin."
+  },
+  "cloudSync": {
+    "title": "Bulut Eşitleme Pro'dadır",
+    "description": "TabMerger Pro ile gruplarınızı tüm cihazlarınız arasında eşitleyin. Bulut eşitlemeyi etkinleştirmek için yükseltin."
+  },
+  "aiFeatures": {
+    "title": "AI Özellikleri Pro AI'dadır",
+    "description": "AI ile otomatik gruplama, akıllı adlandırma ve sekme özetleri Pro AI planında mevcuttur."
+  },
+  "default": {
+    "title": "TabMerger'ı Yükselt",
+    "description": "TabMerger Pro ile sınırsız grup, bulut eşitleme, otomatik yedekler ve AI özelliklerinin kilidini açın."
+  },
+  "signInHint": " Zaten bir Pro hesabınız mı var? Bu cihazda geri yüklemek için oturum açın.",
+  "planPrice": " — {{price}}/ay",
+  "comingSoon": "Yakında",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Ücretsiz",
+      "f1": "En fazla {{groups}} grup",
+      "f2": "En fazla {{tabs}} sekme",
+      "f3": "En fazla {{urlRules}} URL kuralı"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Ücretsiz plandaki her şey",
+      "f2": "Sınırsız grup, sekme, URL kuralı ve oturum",
+      "f3": "Cihazlar arası bulut eşitleme"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Pro'daki her şey",
+      "f2": "Sekmelerin AI ile otomatik gruplanması",
+      "f3": "AI ile grup adı önerileri"
+    }
+  },
+  "maybeLater": "Belki sonra",
+  "signIn": "Oturum aç",
+  "upgradeNow": "Şimdi yükselt"
+}

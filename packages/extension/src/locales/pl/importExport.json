@@ -1,0 +1,27 @@
+{
+  "title": "Import / Eksport",
+  "description": "Zarządzaj swoimi danymi TabMerger",
+  "tabExport": "Eksport",
+  "tabImport": "Import",
+  "exportIntro": "Eksportuj wszystkie grupy jako plik JSON. Możesz zaimportować ten plik ponownie później.",
+  "downloadJson": "Pobierz JSON",
+  "jsonHeading": "JSON TabMerger",
+  "jsonIntro": "Importuj z wcześniej wyeksportowanego pliku JSON. Zastępuje bieżące grupy.",
+  "chooseJson": "Wybierz plik JSON",
+  "bookmarksHeading": "Zakładki Chrome",
+  "bookmarksIntro": "Importuj z eksportu HTML zakładek Chrome. Każdy folder staje się grupą.",
+  "chooseBookmarks": "Wybierz plik HTML Zakładek",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "Importuj z eksportu tekstowego OneTab. Każdy blok oddzielony pustą linią staje się grupą.",
+  "chooseOneTab": "Wybierz plik TXT OneTab",
+  "toast": {
+    "exported": "Grupy wyeksportowane pomyślnie",
+    "imported": "Grupy zaimportowane pomyślnie",
+    "imported_skipped": "Grupy zaimportowane pomyślnie, pominięto {{skipped}}",
+    "importedCounts": "Zaimportowano {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "Zaimportowano {{groups}}, {{tabs}}, pominięto {{skipped}}",
+    "invalidJson": "Nieprawidłowy plik JSON",
+    "noBookmarks": "Nie znaleziono zakładek",
+    "noTabs": "Nie znaleziono kart"
+  }
+}

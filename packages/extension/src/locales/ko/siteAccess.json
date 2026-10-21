@@ -1,0 +1,13 @@
+{
+  "success": "완료되었습니다. 이제 웹사이트에서 TabMerger를 찾을 수 있습니다. 이 탭은 닫아도 됩니다.",
+  "refused": "Firefox에서 허용하지 않았습니다. 다시 시도하거나 나중에 about:addons에서 허용할 수 있습니다.",
+  "title": "TabMerger 웹사이트가 TabMerger를 찾을 수 있게 하기",
+  "checking": "사이트 접근 권한을 확인하는 중…",
+  "explainer": "Firefox에서 아직 {{hosts}}에 TabMerger를 허용하지 않았습니다. 허용하지 않으면 웹사이트가 TabMerger를 감지하거나, 로그인 정보를 전달하거나, 동기화를 시작할 수 없습니다. 아래 버튼을 클릭한 다음 Firefox 안내 창에서 확인하세요.",
+  "allowOn": "{{hosts}}에 TabMerger 허용",
+  "bannerLabel": "웹사이트 접근",
+  "bannerText": "웹사이트가 TabMerger를 찾고 로그인 정보를 전달할 수 있도록 {{hosts}}에 TabMerger를 허용하세요.",
+  "allow": "허용",
+  "dismiss": "웹사이트 접근 안내 닫기",
+  "openFailed": "사이트 접근 탭을 열 수 없습니다. 다시 시도하거나 about:addons에서 허용하세요."
+}

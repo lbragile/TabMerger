@@ -1,0 +1,29 @@
+{
+  "dropNewWindow": "नई विंडो के लिए यहां छोड़ें",
+  "removeStale_one": "{{count}} पुराना टैब हटाएं",
+  "removeStale_other": "{{count}} पुराने टैब हटाएं",
+  "editGroupNote": "समूह नोट संपादित करें",
+  "editNote": "नोट संपादित करें",
+  "moreGroupOptions": "अधिक समूह विकल्प",
+  "notePlaceholder": "इस समूह के लिए एक नोट जोड़ें…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "इस समूह में कोई विंडो नहीं",
+  "addWindow": "विंडो जोड़ें",
+  "search": {
+    "elsewhere": "{{groups}} में {{tabs}}",
+    "matchingTabs_one": "{{count}} मिलान टैब",
+    "matchingTabs_other": "{{count}} मिलान टैब",
+    "otherGroups_one": "{{count}} अन्य समूह",
+    "otherGroups_other": "{{count}} अन्य समूह",
+    "noneInGroup": "इस समूह में कोई टैब मेल नहीं खाता",
+    "hidden_one": "खोज द्वारा {{count}} टैब छिपाया गया",
+    "hidden_other": "खोज द्वारा {{count}} टैब छिपाए गए",
+    "allMatch_one": "सभी {{count}} टैब मेल खाता है",
+    "allMatch_other": "सभी {{count}} टैब मेल खाते हैं",
+    "someMatch_one": "{{count}} में से {{matched}} टैब मेल खाता है",
+    "someMatch_other": "{{count}} में से {{matched}} टैब मेल खाते हैं",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "इस समूह में \"{{query}}\" से कोई टैब मेल नहीं खाता"
+  },
+  "createGroup": "नया समूह बनाएं…"
+}

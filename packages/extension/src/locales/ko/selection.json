@@ -1,0 +1,18 @@
+{
+  "copyToGroup": "그룹에 복사",
+  "moveToGroup": "그룹으로 이동",
+  "star": "별표",
+  "unstar": "별표 해제",
+  "share": "공유",
+  "shareRequiresPro": "공유하려면 Pro가 필요합니다",
+  "close": "닫기",
+  "delete": "삭제",
+  "cancel": "선택 취소",
+  "linkCopied": "링크를 클립보드에 복사했습니다",
+  "shareFailed": "공유하지 못했습니다",
+  "selected_tab_other": "탭 {{count}}개 선택됨",
+  "selected_window_other": "창 {{count}}개 선택됨",
+  "selected_group_other": "그룹 {{count}}개 선택됨",
+  "cleared": "선택을 해제했습니다.",
+  "sentence": "{{text}}."
+}

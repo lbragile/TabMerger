@@ -1,0 +1,36 @@
+{
+  "metaTitle": "SSS",
+  "metaDescription": "TabMerger hakkında sıkça sorulan sorular.",
+  "title": "Sıkça sorulanlar",
+  "lead": "Hâlâ emin olmadığınız bir şey mi var? E-postalara bir günden kısa sürede yanıt veriyoruz.",
+  "contact": "Destekle iletişime geçin",
+  "free": {
+    "question": "TabMerger gerçekten ücretsiz mi?",
+    "answer": "Evet! Ücretsiz plan tüm temel özellikleri içerir: {groups} gruba, {tabs} sekmeye ve {urlRules} URL kuralına kadar, sürükle-bırak ve içe/dışa aktarma. Yalnızca bulut eşitleme, sınırsız grup, sekme ve URL kuralı ya da yapay zekâ özellikleri istiyorsanız ödeme yaparsınız."
+  },
+  "sync": {
+    "question": "Bulut eşitleme nasıl çalışır?",
+    "answer": "Pro veya Pro AI planına kaydolduğunuzda gruplarınız otomatik olarak sunucularımıza kaydedilir. Gruplarınız oturum açtığınız her tarayıcı arasında eşitlenir — eşitleme açılır pencere açıkken çalışır, bu nedenle değişiklikler orada pencereyi bir sonraki açışınızda görünür."
+  },
+  "ai": {
+    "question": "Yapay zekâ tam olarak ne yapıyor?",
+    "answer": "Pro AI planı üç yapay zekâ özelliğinin kilidini açar: otomatik gruplama (açık sekmelerinizi analiz edip mantıklı şekilde gruplar), akıllı adlandırma (gruplarınız için ad önerir) ve oturum önerileri (iş akışınızı nasıl düzenleyeceğinizi önerir).",
+    "answerComingSoon": "Çok yakında — Pro AI planı üç yapay zekâ özelliğinin kilidini açacak: otomatik gruplama (açık sekmelerinizi analiz edip mantıklı şekilde gruplar), akıllı adlandırma (gruplarınız için ad önerir) ve oturum önerileri (iş akışınızı nasıl düzenleyeceğinizi önerir)."
+  },
+  "cancel": {
+    "question": "Aboneliğimi iptal edebilir miyim?",
+    "answer": "Elbette. Hesap sayfanızdan istediğiniz zaman iptal edebilirsiniz. Erişiminiz mevcut fatura döneminin sonuna kadar devam eder, ardından ücretsiz plana geçersiniz."
+  },
+  "browsers": {
+    "question": "TabMerger hangi tarayıcıları destekliyor?",
+    "answer": "Chrome (Chrome Web Mağazası), Edge (Edge Eklentileri veya Chrome Web Mağazası), Brave, Vivaldi ve Arc (Chrome Web Mağazası), Opera (Opera'nın \"Install Chrome Extensions\" eklentisi aracılığıyla Chrome Web Mağazası) ve Firefox (Firefox Eklentileri). Safari desteklenmez."
+  },
+  "privacy": {
+    "question": "Verilerim gizli mi?",
+    "answer": "Gizliliği ciddiye alıyoruz. Ücretsiz plan verileri yalnızca yerel olarak saklanır — hiçbir şey tarayıcınızdan çıkmaz. Pro bulut eşitleme verileri, sunucularımıza ulaşmadan önce cihazınızda yalnızca sizin bildiğiniz bir parola ifadesiyle uçtan uca şifrelenir — yalnızca şifreli metni saklarız ve gruplarınızı veya sekmelerinizi okuyamayız. Verilerinizi asla satmayız."
+  },
+  "downgrade": {
+    "question": "Planımı düşürürsem gruplarıma ne olur?",
+    "answer": "Pro'dan Ücretsiz plana geçerseniz gruplarınız 30 gün boyunca bulutta kalır. Yerel sekmeleriniz her zaman korunur. Planınızı düşürmeden önce her şeyi dışa aktarabilirsiniz."
+  }
+}

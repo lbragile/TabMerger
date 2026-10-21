@@ -1,0 +1,71 @@
+{
+  "addGroup": {
+    "title": "Создать группу",
+    "name": "Название",
+    "namePlaceholder": "Название группы",
+    "color": "Цвет",
+    "cancel": "Отмена",
+    "create": "Создать"
+  },
+  "dedup": {
+    "title": "Удалить дубликаты",
+    "description_one": "Будет удалена {{count}} повторяющаяся вкладка.",
+    "description_few": "Будут удалены {{count}} повторяющиеся вкладки.",
+    "description_many": "Будет удалено {{count}} повторяющихся вкладок.",
+    "description_other": "Будет удалено {{count}} повторяющейся вкладки.",
+    "cancel": "Отмена",
+    "confirm_one": "Удалить {{count}} дубликат",
+    "confirm_few": "Удалить {{count}} дубликата",
+    "confirm_many": "Удалить {{count}} дубликатов",
+    "confirm_other": "Удалить {{count}} дубликата"
+  },
+  "staleGroups": {
+    "title": "Проверить устаревшие группы",
+    "description_one": "{{count}} группа давно не менялась — разверните для просмотра или сразу отправьте в архив.",
+    "description_few": "{{count}} группы давно не менялись — разверните для просмотра или сразу отправьте в архив.",
+    "description_many": "{{count}} групп давно не менялись — разверните для просмотра или сразу отправьте в архив.",
+    "description_other": "{{count}} группы давно не менялись — разверните для просмотра или сразу отправьте в архив.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Скрыть",
+    "preview": "Просмотр",
+    "archive": "В архив",
+    "empty": "Эта группа пуста.",
+    "close": "Закрыть"
+  },
+  "staleTabs": {
+    "title": "Устаревшие вкладки",
+    "description_one": "{{count}} вкладку давно не открывали.",
+    "description_few": "{{count}} вкладки давно не открывали.",
+    "description_many": "{{count}} вкладок давно не открывали.",
+    "description_other": "{{count}} вкладки давно не открывали.",
+    "close": "Закрыть",
+    "removeAll_one": "Удалить {{count}} вкладку",
+    "removeAll_few": "Удалить {{count}} вкладки",
+    "removeAll_many": "Удалить {{count}} вкладок",
+    "removeAll_other": "Удалить {{count}} вкладки"
+  },
+  "saveSession": {
+    "title": "Сохранить сеанс",
+    "name": "Название сеанса",
+    "namePlaceholder": "например, Рабочее исследование, Чтение на выходных",
+    "nameRequired": "Укажите название сеанса",
+    "description": "Описание (необязательно)",
+    "descriptionPlaceholder": "Для чего этот сеанс?",
+    "cancel": "Отмена",
+    "save": "Сохранить"
+  },
+  "shortcutSave": {
+    "title_one": "Сохранить {{count}} вкладку",
+    "title_few": "Сохранить {{count}} вкладки",
+    "title_many": "Сохранить {{count}} вкладок",
+    "title_other": "Сохранить {{count}} вкладки",
+    "description": "Выберите, куда сохранить вкладки, захваченные сочетанием клавиш.",
+    "destination": "Группа назначения",
+    "quickSave": "Быстрое сохранение (новая группа)",
+    "cancel": "Отмена",
+    "save": "Сохранить"
+  },
+  "confirmDialog": {
+    "cancel": "Отмена"
+  }
+}

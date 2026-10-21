@@ -1,0 +1,79 @@
+{
+  "instructions": "उठाने के लिए Space दबाएं, जगह चुनने के लिए तीर कुंजियां (बाएं और दाएं विंडो और समूहों के बीच स्विच करते हैं), छोड़ने के लिए Space, रद्द करने के लिए Escape। Shift+Space एक सीमा चुनता है और {{modifier}}+A सभी चुनता है, एक साथ कई ले जाने के लिए।",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "टैब",
+    "window": "विंडो",
+    "group": "समूह",
+    "item": "आइटम"
+  },
+  "typeStart": {
+    "tab": "टैब",
+    "window": "विंडो",
+    "group": "समूह",
+    "item": "आइटम"
+  },
+  "untitledTab": "शीर्षकहीन टैब",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, {{name}} से शुरू होकर,",
+  "position": {
+    "tab": "समूह {{group}} के {{window}} में स्थिति {{index}} / {{total}}",
+    "window": "समूह {{group}} में स्थिति {{index}} / {{total}}",
+    "group": "स्थिति {{index}} / {{total}}"
+  },
+  "target": {
+    "newGroup": "एक नया समूह",
+    "newWindowAtEnd": "समूह {{group}} के अंत में एक नई विंडो",
+    "nowOpen": "अभी खुले हुए, जो उन्हें एक नई ब्राउज़र विंडो में खोलता है",
+    "groupAsWindow": "समूह {{group}}, एक नई विंडो के रूप में"
+  },
+  "token": {
+    "dropped": "छोड़ा गया।",
+    "cancelled": "रद्द किया गया।"
+  },
+  "bail": {
+    "cancelled": "स्थानांतरण रद्द किया गया।",
+    "nothingMoved": "छोड़ा गया; कुछ भी नहीं ले जाया गया।",
+    "returnedMany": "{{items}} वापस किए गए",
+    "returnedOne": "{{named}} वापस किया गया",
+    "noop": "{{what}} को {{position}} पर वापस छोड़ा गया; कुछ भी नहीं ले जाया गया।",
+    "stale": "खींचने के दौरान समूह बदल गए, इसलिए कुछ भी नहीं ले जाया गया। {{returned}} {{position}} पर।",
+    "cancelledReturned": "स्थानांतरण रद्द किया गया। {{returned}} {{position}} पर।",
+    "rejected": "वहां छोड़ा नहीं जा सकता। {{returned}} {{position}} पर।"
+  },
+  "removedElsewhere_one": "{{count}} कहीं और हटा दिया गया।",
+  "removedElsewhere_other": "{{count}} कहीं और हटा दिए गए।",
+  "stillSelected_one": "यह अभी भी चयनित है।",
+  "stillSelected_other": "वे अभी भी चयनित हैं।",
+  "dropped": "छोड़ा गया।",
+  "movedGroups": "{{count}} समूहों को {{position}} पर एक ब्लॉक के रूप में ले जाया गया।",
+  "movedGroup": "समूह {{name}} को {{position}} पर ले जाया गया।",
+  "partial": "{{total}} में से {{count}}",
+  "at": "स्थिति {{index}} / {{total}}",
+  "startingAt": "स्थिति {{index}} / {{total}} से शुरू",
+  "whereTab": "समूह {{group}} का {{window}}, {{at}}",
+  "whereWindow": "समूह {{group}}, {{at}}",
+  "movedTo": "{{items}} को {{where}} पर ले जाया गया।",
+  "openTabsClosed": " खुले टैब बंद कर दिए गए हैं।",
+  "groupHidden": " समूह {{group}} नहीं दिखाया गया है।",
+  "openedNewWindow": "{{items}} को एक नई ब्राउज़र विंडो में खोला गया।",
+  "openedNowOpen": "{{items}} को अभी खुले हुए में खोला गया।",
+  "movedNewWindow": "{{items}} को एक नई ब्राउज़र विंडो में ले जाया गया।",
+  "movedWithinNowOpen": "{{items}} को अभी खुले हुए के भीतर ले जाया गया।",
+  "originalPosition": "अपनी मूल स्थिति पर।",
+  "pickedUpType": "{{type}} उठाया गया।",
+  "pickedUpMany": "{{what}} उठाया गया।",
+  "pickedUpOne": "{{type}} {{name}} उठाया गया, {{position}}।",
+  "groupShown": "समूह {{name}} अब दिखाया गया है।",
+  "copyHint": "सहेजे गए समूह में छोड़ने से कॉपी होता है; खुले टैब खुले रहते हैं।",
+  "notOver": "छोड़ने के लक्ष्य पर नहीं।",
+  "over": "{{target}} पर।",
+  "cantDropOn": "{{target}} पर नहीं छोड़ सकते।",
+  "typeDropped": "{{type}} छोड़ा गया।",
+  "cancelledReturnedType": "स्थानांतरण रद्द किया गया; {{type}} अपनी स्थिति पर वापस आ गया।",
+  "saveFailed": "स्थानांतरण सहेजा नहीं जा सका; पुनर्स्थापित किया गया।"
+}

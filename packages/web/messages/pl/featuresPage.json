@@ -1,0 +1,83 @@
+{
+  "metaTitle": "Funkcje",
+  "metaDescription": "Poznaj wszystko, co potrafi TabMerger — od inteligentnego grupowania kart po organizację wspieraną przez AI.",
+  "title": "Funkcje stworzone dla skupienia",
+  "lead": "Wszystko, czego potrzebujesz, by zapanować nad przeglądarką — od darmowych podstaw po supermoce AI w planie Pro.",
+  "addToChrome": "Dodaj do Chrome — za darmo",
+  "addToFirefox": "Dodaj do Firefoksa — za darmo",
+  "addToEdge": "Dodaj do Edge — za darmo",
+  "seePricing": "Zobacz cennik",
+  "badges": {
+    "core": "Podstawy",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "core": {
+    "title": "Zaawansowane zarządzanie kartami",
+    "description": "Fundament TabMerger: szybka, intuicyjna organizacja kart dopasowana do każdego sposobu pracy.",
+    "groups": {
+      "title": "Nazwane grupy z kolorami",
+      "description": "Twórz grupy z własnymi nazwami i kolorami. Na pierwszy rzut oka oddzielaj pracę, research, rozrywkę i nie tylko."
+    },
+    "search": {
+      "title": "Wyszukiwanie pełnotekstowe",
+      "description": "Błyskawicznie przeszukuj tytuły i adresy URL wszystkich kart. Wyniki pasują do wpisanego tekstu dokładnie (bez względu na wielkość liter), najlepsze dopasowania na górze."
+    },
+    "dnd": {
+      "title": "Zmiana kolejności przeciąganiem",
+      "description": "Przestawiaj karty w grupach i zmieniaj kolejność samych grup płynnym przeciąganiem i upuszczaniem."
+    },
+    "shortcuts": {
+      "title": "Skróty klawiszowe",
+      "description": "Zapisuj bieżącą kartę, karty po jej lewej lub prawej stronie albo wszystkie pozostałe karty bez otwierania okienka. W samym okienku otwieraj wyszukiwanie skrótem Ctrl/Cmd+K i przenoś karty, okna oraz grupy wyłącznie klawiaturą."
+    },
+    "importExport": {
+      "title": "Import i eksport",
+      "description": "Eksportuj kolekcje kart do JSON, aby udostępnić je współpracownikom lub zrobić kopię zapasową. Importuj je na dowolnym urządzeniu."
+    },
+    "memory": {
+      "title": "Oszczędność pamięci",
+      "description": "Usypiaj nieaktywne karty, aby zwolnić RAM. Sprawdzaj na bieżąco, ile dokładnie pamięci oszczędza Ci TabMerger."
+    }
+  },
+  "pro": {
+    "title": "Synchronizacja i sesje",
+    "description": "Wracaj dokładnie tam, gdzie skończyłeś — na dowolnym urządzeniu, w dowolnej chwili.",
+    "cloudSync": {
+      "title": "Synchronizacja w chmurze",
+      "description": "Twoje grupy są automatycznie zapisywane i synchronizowane w każdej przeglądarce, w której się logujesz. Na bieżąco, bez ręcznego eksportu."
+    },
+    "sessions": {
+      "title": "Zapisywanie i przywracanie sesji",
+      "description": "Zapisz migawkę bieżących grup jako nazwaną sesję i przywracaj ją w mgnieniu oka. Plan darmowy zapisuje do {count} sesji w tej przeglądarce; Pro synchronizuje nielimitowane sesje na wszystkich urządzeniach."
+    },
+    "autoBackups": {
+      "title": "Automatyczne kopie zapasowe",
+      "description": "TabMerger zapisuje zaszyfrowaną migawkę Twoich grup według wybranego harmonogramu — od co godzinę po raz w tygodniu. Przechowywanych jest {count} najnowszych, a każdą z nich możesz przywrócić w Ustawieniach. Znajdziesz je też w panelu, gdzie możesz zajrzeć do środka lub je pobrać. Możesz również zapisywać każdą jako plik na komputerze; ta kopia nie jest zaszyfrowana."
+    },
+    "support": {
+      "title": "Priorytetowa pomoc",
+      "description": "Subskrybenci Pro otrzymują przyspieszoną pomoc z gwarantowaną odpowiedzią w ciągu 24 godzin."
+    }
+  },
+  "proAi": {
+    "title": "Organizacja wspierana przez AI",
+    "description": "Pozwól Claude przeanalizować Twoje karty i podsunąć trafne sugestie, abyś mógł skupić się na myśleniu, a nie segregowaniu.",
+    "autoGrouping": {
+      "title": "Automatyczne grupowanie",
+      "description": "Otwórz bałagan kart i kliknij jeden przycisk. AI pogrupuje je logicznie według tematu, domeny i celu."
+    },
+    "names": {
+      "title": "Inteligentne nazwy grup",
+      "description": "AI proponuje zwięzłe, opisowe nazwy grup. Zaakceptuj jednym kliknięciem lub wpisz własną."
+    },
+    "summaries": {
+      "title": "Podsumowania kart",
+      "description": "Najedź na dowolną kartę, aby zobaczyć jednozdaniowe podsumowanie AI tego, o czym jest strona — bez jej otwierania."
+    },
+    "sessionSuggestions": {
+      "title": "Sugestie sesji",
+      "description": "AI analizuje Twoje nawyki przeglądania i podpowiada, jak układać sesje, by pracować jak najwydajniej."
+    }
+  }
+}

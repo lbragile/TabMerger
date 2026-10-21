@@ -1,0 +1,10 @@
+{
+  "comingSoon": "Segera hadir",
+  "listTwo": "{first} dan {second}",
+  "listMany": "{rest}, dan {last}",
+  "listSeparator": ", ",
+  "opensInNewTab": " (terbuka di tab baru)",
+  "close": "Tutup",
+  "showPassphrase": "Tampilkan frasa sandi",
+  "hidePassphrase": "Sembunyikan frasa sandi"
+}

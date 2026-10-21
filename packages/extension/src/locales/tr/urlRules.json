@@ -1,0 +1,23 @@
+{
+  "title": "URL Kuralları",
+  "description": "Sekmeleri URL desenine göre gruplara otomatik atayın. Joker karakter olarak <code>*</code> kullanın (ör. <code>github.com/*</code>). İlk eşleşen kural geçerlidir.",
+  "empty": "Henüz kural yok.",
+  "deletedGroup": "(silinmiş grup)",
+  "moveUp": "Kuralı yukarı taşı",
+  "moveDown": "Kuralı aşağı taşı",
+  "edit": "Kuralı düzenle",
+  "delete": "Kuralı sil",
+  "used": "{{used}}/{{max}} kullanıldı",
+  "addRule": "Kural ekle",
+  "discard": "Değişiklikleri at",
+  "cancel": "İptal",
+  "saveAll": "Tüm kuralları kaydet",
+  "save": "Kaydet",
+  "editTitle": "URL Kuralını Düzenle",
+  "addTitle": "URL Kuralı Ekle",
+  "patternPlaceholder": "Desen, ör. github.com/*",
+  "groupPlaceholder": "Hedef grubu seçin…",
+  "toast": {
+    "limit": "Ücretsiz plan en fazla {{max}} URL kuralına izin verir."
+  }
+}

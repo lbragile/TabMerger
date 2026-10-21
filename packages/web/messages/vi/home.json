@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "eyebrow": "Trình quản lý tab cho người mở quá nhiều tab",
+    "title": "Thôi chìm ngập trong các tab trình duyệt.",
+    "lead": "TabMerger gom mọi cửa sổ đang mở vào các nhóm có tên và mã màu mà bạn có thể tìm kiếm, chia sẻ và khôi phục — trên mọi máy, chỉ với một cú nhấp.",
+    "installChrome": "Cài đặt cho Chrome — miễn phí",
+    "installFirefox": "Cài đặt cho Firefox — miễn phí",
+    "installEdge": "Cài đặt cho Edge — miễn phí",
+    "chrome": "Chrome",
+    "firefox": "Firefox",
+    "edge": "Edge",
+    "note": "Gói miễn phí, không cần tài khoản."
+  },
+  "install": {
+    "title": "Sẵn sàng sắp xếp trình duyệt của bạn?",
+    "lead": "Cài đặt TabMerger trong vài giây. Không cần tài khoản để bắt đầu.",
+    "addToChrome": "Thêm vào Chrome",
+    "addToFirefox": "Thêm vào Firefox",
+    "addToEdge": "Thêm vào Edge",
+    "viewPricing": "Xem bảng giá",
+    "note": "Cài đặt miễn phí — Không cần tài khoản · Sắp hỗ trợ Edge"
+  },
+  "finalCta": {
+    "title": "Thôi chìm ngập trong các tab trình duyệt.",
+    "leadAi": "Bắt đầu miễn phí, không cần tài khoản. Nâng cấp bất cứ lúc nào để có đồng bộ đám mây và AI.",
+    "leadNoAi": "Bắt đầu miễn phí, không cần tài khoản. Nâng cấp bất cứ lúc nào để có đồng bộ đám mây — tính năng AI sắp ra mắt.",
+    "installChrome": "Cài đặt cho Chrome — miễn phí",
+    "installFirefox": "Cài đặt cho Firefox — miễn phí",
+    "installEdge": "Cài đặt cho Edge — miễn phí",
+    "faq": "Có câu hỏi? Xem phần Câu hỏi thường gặp →"
+  },
+  "features": {
+    "title": "Được tạo ra cho lúc bạn đang mở chín mươi tab.",
+    "seeAll": "Xem tất cả tính năng",
+    "ai": {
+      "title": "AI dọn dẹp mớ hỗn độn giúp bạn",
+      "description": "Một cú nhấp gom các tab đang mở theo chủ đề và đặt tên cho từng nhóm. Chấp nhận, đổi tên hoặc bỏ qua.",
+      "summary": "✦ 24 tab → 3 nhóm",
+      "groupEvals": "Đánh giá LLM · 9",
+      "groupHiring": "Tuyển dụng · 7",
+      "groupDocs": "Tài liệu · 8"
+    },
+    "sessions": {
+      "title": "Đóng tất cả, không mất gì",
+      "description": "Lưu một phiên theo tên và khôi phục chính xác các cửa sổ cùng thứ tự vào sáng mai.",
+      "sessionName": "Nghiên cứu buổi sáng",
+      "sessionStats": "3 nhóm · 5 cửa sổ · 24 tab"
+    },
+    "sync": {
+      "title": "Cùng các tab trên mọi máy",
+      "description": "Đồng bộ tự động và theo từng tab, nên chỉnh sửa trên laptop không bao giờ ghi đè những gì bạn đã làm trên máy tính để bàn.",
+      "status": "Đã đồng bộ 4 phút trước · 3 thiết bị"
+    }
+  },
+  "pricing": {
+    "title": "Bảng giá đơn giản, minh bạch",
+    "seeFull": "Xem bảng giá đầy đủ",
+    "cancelNote": "Hủy bất cứ lúc nào từ tài khoản của bạn — không ràng buộc, không cần giải thích.",
+    "blurbFree": "Dành cho người dùng thông thường muốn dùng thử",
+    "blurbPro": "Dành cho người dùng muốn thêm tính năng cao cấp",
+    "blurbProAi": "Dành cho người dùng chuyên sâu muốn các tính năng liên quan đến AI"
+  }
+}

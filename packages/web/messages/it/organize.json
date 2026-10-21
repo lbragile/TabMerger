@@ -1,0 +1,24 @@
+{
+  "title": "Proposta di organizzazione IA",
+  "encrypted": "L'organizzazione IA non è ancora disponibile sul web per i gruppi crittografati end-to-end: i tuoi gruppi sono crittografati e questa pagina non può leggerli. Avviala invece dall'estensione TabMerger.",
+  "applied": "Modifiche applicate correttamente.",
+  "cancelled": "Proposta annullata.",
+  "analyzing": "Analisi dei tuoi gruppi di schede…",
+  "noChanges": "Nessuna modifica suggerita.",
+  "approve": "Approva",
+  "reject": "Rifiuta",
+  "unknownError": "Errore sconosciuto",
+  "submitFailed": "Impossibile inviare la decisione",
+  "types": {
+    "merge": "unione",
+    "rename": "rinomina",
+    "delete": "eliminazione",
+    "reorder": "riordino"
+  },
+  "actions": {
+    "merge": "Unisci {source} → {target}",
+    "rename": "Rinomina gruppo → \"{name}\"",
+    "delete": "Elimina gruppo {id}",
+    "reorder": "Riordina gruppi: {ids}"
+  }
+}

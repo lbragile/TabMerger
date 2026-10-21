@@ -1,0 +1,49 @@
+{
+  "appName": "TabMerger",
+  "tier": {
+    "free": "Gói Miễn phí",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "upgrade": "Nâng cấp",
+  "untitled": "Chưa đặt tên",
+  "window": "Cửa sổ",
+  "cancel": "Hủy",
+  "close": "Đóng",
+  "save": "Lưu",
+  "delete": "Xóa",
+  "shortcutSearch": "Ctrl K",
+  "tabCount_other": "{{count}} thẻ",
+  "windowCount_other": "{{count}} cửa sổ",
+  "groupCount_other": "{{count}} nhóm",
+  "freeGroupLimit": "Gói miễn phí cho phép tối đa {{max}} nhóm.",
+  "aiQuotaUsed": "Bạn đã dùng hết tất cả tín dụng AI của tháng này.",
+  "buyMore": "Mua thêm",
+  "windowCountTitle_other": "{{count}} Cửa Sổ",
+  "tabCountTitle_other": "{{count}} Thẻ",
+  "groupCounts": "{{windows}} ◆ {{tabs}}",
+  "nowOpen": "Đang Mở",
+  "groupCountTitle_other": "{{count}} Nhóm",
+  "time": {
+    "justNow": "vừa xong",
+    "minutesAgo_other": "{{count}} phút trước",
+    "hoursAgo_other": "{{count}} giờ trước",
+    "daysAgo_other": "{{count}} ngày trước"
+  },
+  "duration": {
+    "lessThanMinute": "< 1 phút",
+    "minutes_other": "{{count}} phút",
+    "hours_other": "{{count}} giờ",
+    "days_other": "{{count}} ngày",
+    "months_other": "{{count}} tháng",
+    "years_other": "{{count}} năm"
+  },
+  "quickSaveGroup": "Lưu Nhanh",
+  "importedGroup": "Nhóm đã nhập",
+  "importedFolder": "Đã nhập",
+  "noGroupSelected": "Chưa chọn nhóm nào",
+  "showPassphrase": "Hiện cụm mật khẩu",
+  "hidePassphrase": "Ẩn cụm mật khẩu",
+  "notifications": "Thông báo",
+  "closeToast": "Đóng thông báo"
+}

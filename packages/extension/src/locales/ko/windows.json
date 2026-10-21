@@ -1,0 +1,23 @@
+{
+  "dropNewWindow": "여기에 놓아 새 창 만들기",
+  "removeStale_other": "오래된 탭 {{count}}개 제거",
+  "editGroupNote": "그룹 메모 편집",
+  "editNote": "메모 편집",
+  "moreGroupOptions": "그룹 옵션 더보기",
+  "notePlaceholder": "이 그룹에 메모 추가…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "이 그룹에 창이 없습니다",
+  "addWindow": "창 추가",
+  "search": {
+    "elsewhere": "{{groups}}에 {{tabs}}",
+    "matchingTabs_other": "일치하는 탭 {{count}}개",
+    "otherGroups_other": "다른 그룹 {{count}}개",
+    "noneInGroup": "이 그룹에는 일치하는 탭이 없습니다",
+    "hidden_other": "검색으로 숨겨진 탭 {{count}}개",
+    "allMatch_other": "탭 {{count}}개 모두 일치",
+    "someMatch_other": "탭 {{count}}개 중 {{matched}}개 일치",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "이 그룹에는 “{{query}}”와(과) 일치하는 탭이 없습니다"
+  },
+  "createGroup": "새 그룹 만들기…"
+}

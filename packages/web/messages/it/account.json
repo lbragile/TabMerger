@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "proprio ora",
+    "minutesAgo": "{count} min fa",
+    "hoursAgo": "{count} h fa",
+    "daysAgo": "{count} g fa",
+    "renameFailed": "Impossibile rinominare il dispositivo",
+    "renamed": "Dispositivo rinominato",
+    "removeFailed": "Impossibile rimuovere il dispositivo",
+    "removed": "Dispositivo rimosso",
+    "removeManyFailed": "Impossibile rimuovere i dispositivi",
+    "removedMany": "{count, plural, one {{count} dispositivo rimosso} other {{count} dispositivi rimossi}}",
+    "empty": "Ancora nessun dispositivo.",
+    "selectAll": "Seleziona tutti i dispositivi",
+    "selectedCount": "{count} selezionati",
+    "removeSelected": "{count, plural, one {Rimuovi {count} dispositivo} other {Rimuovi {count} dispositivi}}",
+    "selectDevice": "Seleziona {name}",
+    "active": "Attivo {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} finestra} other {{windows} finestre}} · {tabs, plural, one {{tabs} scheda} other {{tabs} schede}}",
+    "options": "Opzioni dispositivo",
+    "rename": "Rinomina",
+    "remove": "Rimuovi",
+    "removeTitle": "Rimuovere il dispositivo?",
+    "removeBody": "\"{name}\" non sincronizzerà più i dati delle schede. Questa azione non può essere annullata.",
+    "removeManyTitle": "Rimuovere {count} dispositivi?",
+    "removeManyBody": "Questi dispositivi non sincronizzeranno più i dati delle schede. Questa azione non può essere annullata.",
+    "cancel": "Annulla"
+  },
+  "metaTitle": "Account",
+  "title": "Impostazioni account",
+  "lead": "Gestisci il tuo account e l'abbonamento.",
+  "stats": {
+    "groups": "Gruppi sincronizzati",
+    "tabs": "Schede salvate",
+    "sessions": "Sessioni e backup",
+    "aiCredits": "Crediti IA rimasti"
+  },
+  "profile": {
+    "title": "Profilo",
+    "description": "Le informazioni del tuo account.",
+    "email": "Email",
+    "memberSince": "Membro dal"
+  },
+  "signOutAll": {
+    "title": "Esci da tutti i dispositivi",
+    "description": "Tutte le sessioni attive verranno revocate.",
+    "button": "Esci"
+  },
+  "subscription": {
+    "title": "Abbonamento",
+    "description": "Gestisci il tuo piano e la fatturazione.",
+    "manageBilling": "Gestisci fatturazione",
+    "upgrade": "Passa a un piano superiore",
+    "cancelNote": "Puoi annullare in qualsiasi momento da <strong>Gestisci fatturazione</strong>. Mantieni l'accesso fino alla fine del periodo di fatturazione in corso."
+  },
+  "devicesCard": {
+    "title": "Dispositivi",
+    "description": "Dispositivi che sincronizzano i tuoi gruppi e le tue schede. Solo Pro e Pro AI."
+  },
+  "password": {
+    "tooShort": "La password deve contenere almeno 8 caratteri.",
+    "updated": "Password aggiornata",
+    "set": "Password impostata: ora puoi accedere anche con email e password",
+    "change": "Cambia password",
+    "setLabel": "Imposta una password",
+    "placeholder": "••••••••••",
+    "save": "Salva"
+  },
+  "credits": {
+    "failed": "Impossibile avviare il pagamento",
+    "getMore": "Acquista altri"
+  }
+}

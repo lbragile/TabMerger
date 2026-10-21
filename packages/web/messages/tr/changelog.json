@@ -1,0 +1,15 @@
+{
+  "metaTitle": "Değişiklik günlüğü",
+  "metaDescription": "TabMerger'daki yeni özellikler, iyileştirmeler ve düzeltmeler.",
+  "title": "Değişiklik günlüğü",
+  "lead": "Yayımladığımız her şey, en yeniden eskiye.",
+  "githubRelease": "GitHub sürümü",
+  "githubReleaseLabel": "GitHub'da {version} sürümü",
+  "prLinkLabel": "GitHub'da #{number} numaralı çekme isteği",
+  "majorRelease": "Büyük sürüm",
+  "types": {
+    "New": "Yeni",
+    "Improved": "İyileştirildi",
+    "Fixed": "Düzeltildi"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger không thể kết nối đến máy chủ để kiểm tra mã hóa của tài khoản này, vì vậy đồng bộ đã tạm dừng. Các nhóm của bạn vẫn được lưu trên thiết bị này. Kiểm tra kết nối và thử lại.",
+  "unlockBody": "Nhập cụm mật khẩu mã hóa của bạn để mở khóa dữ liệu đã đồng bộ trên thiết bị này. Đây là bước thực hiện một lần cho mỗi thiết bị — bạn sẽ không được hỏi lại trừ khi bạn đăng xuất. Không có cách nào khôi phục dữ liệu của bạn nếu bạn quên nó — nó không bao giờ rời khỏi thiết bị của bạn và TabMerger không thể đặt lại nó giúp bạn.",
+  "setupBody": "Dữ liệu nhóm và thẻ đã đồng bộ của bạn được mã hóa đầu cuối bằng một cụm mật khẩu chỉ mình bạn biết. Hãy chọn một cụm ngay bây giờ — không có cách nào khôi phục dữ liệu của bạn nếu bạn quên nó, nó không bao giờ rời khỏi thiết bị của bạn và TabMerger không thể đặt lại nó giúp bạn.",
+  "unavailableTitle": "Không thể kiểm tra mã hóa ngay bây giờ",
+  "tryAgain": "Thử lại",
+  "unlockTitle": "Mở khóa mã hóa",
+  "passphrase": "Cụm mật khẩu",
+  "passphraseLabel": "Cụm mật khẩu mã hóa",
+  "unlock": "Mở khóa",
+  "setupTitle": "Thiết lập mã hóa",
+  "newPassphrase": "Cụm mật khẩu mới",
+  "confirmPassphrase": "Xác nhận cụm mật khẩu",
+  "setupButton": "Thiết lập mã hóa",
+  "error": {
+    "spaces": "Cụm mật khẩu không được chứa khoảng trắng",
+    "tooShort": "Cụm mật khẩu phải có ít nhất 8 ký tự",
+    "mismatch": "Cụm mật khẩu không khớp",
+    "setupFailed": "Thiết lập mã hóa thất bại",
+    "wrong": "Sai cụm mật khẩu",
+    "wasReset": "Mã hóa đã được đặt lại cho tài khoản này. Hãy chọn một cụm mật khẩu mới."
+  },
+  "toast": {
+    "setUp": "Đã thiết lập mã hóa",
+    "unlocked": "Đã mở khóa mã hóa"
+  }
+}

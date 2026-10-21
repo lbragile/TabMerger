@@ -1,0 +1,33 @@
+{
+  "syncPaused": "Đồng bộ tạm dừng: cho phép trong Firefox",
+  "conflictCopy": "{{names}} cũng đã bị thay đổi trên thiết bị khác. Phiên bản của bạn đã được lưu dưới dạng bản sao.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "Một nhóm bạn đang làm việc đã thay đổi hoặc bị xóa ở nơi khác, vì vậy không có gì được thay đổi.",
+  "undoConflict": "Các nhóm của bạn đã thay đổi ở nơi khác, vì vậy không có gì được hoàn tác. Hãy thử lại.",
+  "freeLimit": {
+    "maxGroups": "Gói miễn phí cho phép tối đa {{max}} nhóm.",
+    "maxTabs": "Gói miễn phí cho phép tối đa {{max}} thẻ.",
+    "maxUrlRules": "Gói miễn phí cho phép tối đa {{max}} quy tắc URL."
+  },
+  "fileContains": "Tệp này chứa {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "Đã mở dưới dạng cửa sổ bình thường vì TabMerger không được phép trong chế độ ẩn danh. Để thay đổi điều này, hãy mở Quản lý tiện ích và bật \"Cho phép trong chế độ Ẩn danh\".",
+  "encryptionAlreadySetUp": "Mã hóa đã được thiết lập cho tài khoản này. Nhập cụm mật khẩu hiện có của bạn để mở khóa nó.",
+  "signInToEnableEncryption": "Phải đăng nhập để bật mã hóa",
+  "signInToResetEncryption": "Phải đăng nhập để đặt lại mã hóa",
+  "googleUnavailable": "Đăng nhập bằng Google không khả dụng trong môi trường này",
+  "googleNoUrl": "Đăng nhập bằng Google không trả về URL ủy quyền",
+  "googleCancelled": "Đăng nhập bằng Google đã bị hủy",
+  "googleNoSession": "Đăng nhập bằng Google không trả về phiên",
+  "googleFailed": "Đăng nhập bằng Google thất bại",
+  "expectedArray": "Mong đợi một mảng",
+  "invalidFormat": "Định dạng không hợp lệ",
+  "noGroupsFound": "Không tìm thấy nhóm nào",
+  "noGroupsSelected": "Chưa chọn nhóm nào",
+  "notAuthenticated": "Chưa xác thực",
+  "sharingRequiresPro": "Chia sẻ yêu cầu nâng cấp lên Pro — chưa đủ quyền",
+  "aiOncePerDay": "Đã sử dụng hôm nay — hành động AI này bị giới hạn một lần mỗi ngày",
+  "proAiRequired": "Yêu cầu gói Pro AI",
+  "nameGroupOff": "Đặt tên nhóm đang tắt trong Cài đặt",
+  "suggestSessionsOff": "Gợi ý phiên đang tắt trong Cài đặt",
+  "organizeOff": "Sắp xếp đang tắt trong Cài đặt"
+}

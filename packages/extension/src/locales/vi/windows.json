@@ -1,0 +1,23 @@
+{
+  "dropNewWindow": "Thả vào đây để tạo cửa sổ mới",
+  "removeStale_other": "Xóa {{count}} thẻ cũ",
+  "editGroupNote": "Sửa ghi chú nhóm",
+  "editNote": "Sửa ghi chú",
+  "moreGroupOptions": "Tùy chọn nhóm khác",
+  "notePlaceholder": "Thêm ghi chú cho nhóm này…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "Không có cửa sổ nào trong nhóm này",
+  "addWindow": "Thêm Cửa Sổ",
+  "search": {
+    "elsewhere": "{{tabs}} trong {{groups}}",
+    "matchingTabs_other": "{{count}} thẻ khớp",
+    "otherGroups_other": "{{count}} nhóm khác",
+    "noneInGroup": "Không có thẻ nào khớp trong nhóm này",
+    "hidden_other": "{{count}} thẻ bị ẩn bởi tìm kiếm",
+    "allMatch_other": "Tất cả {{count}} thẻ đều khớp",
+    "someMatch_other": "{{matched}} trong {{count}} thẻ khớp",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "Không có thẻ nào khớp với \"{{query}}\" trong nhóm này"
+  },
+  "createGroup": "Tạo nhóm mới…"
+}

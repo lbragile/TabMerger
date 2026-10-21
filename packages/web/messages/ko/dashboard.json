@@ -1,0 +1,213 @@
+{
+  "metaTitle": "대시보드",
+  "greeting": "좋은 아침입니다, {name}님",
+  "tierBadge": {
+    "free": "무료",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "AI 정리",
+  "aiOrganiseUpgrade": "AI 정리를 사용하려면 Pro AI로 업그레이드하세요",
+  "aiOrganiseFromExtension": "TabMerger 확장 프로그램 팝업에서 시작하세요",
+  "tabGroups": "탭 그룹",
+  "savedSessions": "저장된 세션",
+  "stats": {
+    "tabs": {
+      "label": "저장된 탭",
+      "description": "동기화된 모든 그룹의 탭"
+    },
+    "groups": {
+      "label": "동기화된 그룹",
+      "description": "클라우드에 동기화된 그룹"
+    },
+    "sessions": {
+      "label": "저장된 세션",
+      "description": "저장된 브라우징 세션",
+      "lockedDescription": "세션 및 백업(잠금을 해제하면 구분됩니다)"
+    },
+    "memory": {
+      "label": "확보한 메모리",
+      "description": "측정값이 아닌 추정값"
+    },
+    "memberSince": {
+      "label": "가입일",
+      "description": "계정 생성일"
+    },
+    "aiCredits": {
+      "label": "이번 달 AI 크레딧",
+      "description": "Pro AI 월간 사용량",
+      "value": "{used}/{limit}"
+    },
+    "loading": "불러오는 중"
+  },
+  "subscription": {
+    "currentPlan": "현재 요금제",
+    "renews": "{date} 갱신",
+    "upgrade": "업그레이드",
+    "statuses": {
+      "active": "활성",
+      "canceled": "해지됨",
+      "past_due": "결제 연체",
+      "trialing": "체험 중",
+      "incomplete": "미완료"
+    }
+  },
+  "upgraded": {
+    "message": "{plan}에 오신 것을 환영합니다! 구독이 활성화되었습니다. 새로운 기능을 즐겨 보세요.",
+    "dismiss": "닫기"
+  },
+  "locked": {
+    "item": "이전 암호 문구로 저장되었습니다. 해당 암호 문구가 있는 기기에서 확장 프로그램을 열어 동기화하세요.",
+    "device": "이 기기의 열린 탭은 이전 암호 문구로 저장되었습니다. 해당 기기에서 확장 프로그램을 열어 동기화하세요.",
+    "unverified": "지금은 읽을 수 없습니다. 페이지를 새로고침해 다시 시도하세요."
+  },
+  "passphrase": {
+    "defaultLabel": "이 콘텐츠를 보려면 암호화 암호 문구를 입력하세요.",
+    "groupsLabel": "그룹은 종단 간 암호화되어 있습니다. 여기에서 보려면 암호 문구를 입력하세요.",
+    "sessionsLabel": "세션은 종단 간 암호화되어 있습니다. 여기에서 보려면 암호 문구를 입력하세요.",
+    "backupsLabel": "백업은 종단 간 암호화되어 있습니다. 여기에서 보려면 암호 문구를 입력하세요.",
+    "placeholder": "암호 문구",
+    "inputLabel": "암호화 암호 문구",
+    "unlock": "잠금 해제",
+    "incorrect": "암호 문구가 올바르지 않습니다."
+  },
+  "onboarding": {
+    "title": "TabMerger 시작하기",
+    "progress": "{total}개 중 {done}개 완료",
+    "dismiss": "닫기",
+    "install": "TabMerger 확장 프로그램 설치",
+    "group": "확장 프로그램에서 첫 그룹 만들기",
+    "signin": "로그인하여 클라우드 동기화 사용",
+    "upgrade": "Pro로 업그레이드해 그룹 무제한 사용"
+  },
+  "lockedName": "(잠김)",
+  "damagedNote": "TabMerger가 읽을 수 없는 형식이라 여기에 내용을 표시할 수 없습니다.",
+  "counts": {
+    "groups": "{count, plural, other {그룹 {count}개}}",
+    "windows": "{count, plural, other {창 {count}개}}",
+    "tabs": "{count, plural, other {탭 {count}개}}"
+  },
+  "sessions": {
+    "cantRestore": "이 세션은 읽을 수 없어 복원할 수 없습니다.",
+    "restored": "{count, plural, other {\"{name}\"에서 탭 {count}개를 복원했습니다}}",
+    "deleted": "세션을 삭제했습니다",
+    "deleteFailed": "세션을 삭제하지 못했습니다",
+    "loadFailed": "세션을 불러올 수 없습니다.",
+    "tryAgain": "다시 시도",
+    "loading": "세션 불러오는 중",
+    "empty": "아직 저장된 세션이 없습니다.",
+    "readOnlyNote": "계정에 새 세션을 저장하려면 Pro가 필요합니다. 기존 세션은 계속 열거나 삭제할 수 있습니다.",
+    "upgrade": "Pro로 업그레이드",
+    "freeLimit": "무료 요금제: 세션 최대 {count}개. 무제한으로 사용하려면 <link>Pro로 업그레이드</link>하세요.",
+    "restore": "세션 복원",
+    "cantRestoreTooltip": "이 세션은 읽을 수 없어 복원할 수 없습니다",
+    "delete": "세션 삭제",
+    "hideContents": "내용 숨기기",
+    "showContents": "내용 보기({count})",
+    "groupFallbackName": "그룹 {number}",
+    "groupTabs": "{count, plural, other {탭 {count}개}}",
+    "moreTabs": "{count, plural, other {탭 {count}개 더 있음}}",
+    "moreGroups": "{count, plural, other {그룹 {count}개 더 있음}}"
+  },
+  "backups": {
+    "title": "백업",
+    "upgradeDescription": "자동 백업은 Pro에 포함됩니다. 그룹의 암호화된 스냅샷이 일정에 따라 저장되며, 최신 {count}개가 보관됩니다.",
+    "readOnlyNote": "새 백업에는 Pro가 필요합니다. 기존 백업은 계속 다운로드하거나 삭제할 수 있습니다.",
+    "upgrade": "업그레이드",
+    "intro": "TabMerger 확장 프로그램이 자동으로 계정에 저장한 그룹 스냅샷입니다(최신순). 최신 {count}개가 보관됩니다. 복원하려면 확장 프로그램을 열고 {place}(으)로 이동하세요. 이 페이지에서는 복원할 수 없습니다. 여기에서 다운로드한 파일은 암호화되지 않습니다.",
+    "extensionPlace": "설정 > 데이터",
+    "loadFailed": "백업을 불러올 수 없습니다.",
+    "tryAgain": "다시 시도",
+    "loading": "백업 불러오는 중",
+    "unknownKind": "{count, plural, other {저장된 항목 {count}개를 읽을 수 없어 백업인지 알 수 없습니다. 저장된 세션 아래에 표시됩니다.}}",
+    "emptyTitle": "아직 백업이 없습니다.",
+    "emptyBody": "브라우저가 열려 있고 마지막 백업 이후 그룹이 변경되었을 때 확장 프로그램이 자동으로 백업을 저장합니다. 변경하지 않으면 일정은 \"{interval}\"입니다. 확장 프로그램의 {place}에서 주기를 선택하거나 바로 백업하세요.",
+    "intervals": {
+      "60": "매시간",
+      "360": "6시간마다",
+      "720": "12시간마다",
+      "1440": "매일",
+      "10080": "매주"
+    },
+    "unknownDateInSentence": "알 수 없는 날짜",
+    "unknownDate": "알 수 없는 날짜",
+    "namePrefix": "자동 백업",
+    "downloading": "{when} 백업을 다운로드하는 중입니다.",
+    "deleted": "백업을 삭제했습니다",
+    "deletedAnnouncement": "{when} 백업을 삭제했습니다.",
+    "deleteFailed": "백업을 삭제하지 못했습니다",
+    "deleteFailedAnnouncement": "{when} 백업을 삭제할 수 없습니다.",
+    "deleteTitle": "이 백업을 삭제할까요?",
+    "deleteBody": "{when} 백업이 계정에서 삭제됩니다. 이미 이 백업이 있는 브라우저는 자체 사본을 유지합니다.",
+    "deleteBodyWithCounts": "{when} 백업({groups}, {tabs})이 계정에서 삭제됩니다. 이미 이 백업이 있는 브라우저는 자체 사본을 유지합니다.",
+    "cancel": "취소",
+    "delete": "삭제",
+    "download": "다운로드",
+    "downloadLabel": "{when} 백업 다운로드",
+    "deleteLabel": "{when} 백업 삭제"
+  },
+  "groups": {
+    "cantShare": "이 그룹은 읽을 수 없어 공유할 수 없습니다.",
+    "linkCopiedSnapshot": "링크를 복사했습니다. 이 그룹의 스냅샷이 공유됩니다.",
+    "shareFailed": "공유 링크를 만들 수 없습니다. 다시 시도해 주세요.",
+    "shareGroup": "그룹 공유",
+    "copied": "복사했습니다!",
+    "share": "공유",
+    "cantShareTooltip": "이 그룹은 읽을 수 없어 공유할 수 없습니다",
+    "shareTooltip": "이 그룹의 스냅샷 링크를 복사합니다. 이후 수정 사항은 반영되지 않습니다",
+    "justNow": "방금 전",
+    "minutesAgo": "{count}분 전",
+    "hoursAgo": "{count}시간 전",
+    "daysAgo": "{count}일 전",
+    "lockedCantSelect": "잠긴 그룹은 선택할 수 없습니다",
+    "deselect": "선택 해제",
+    "select": "선택",
+    "syncedAt": "{time} 동기화됨",
+    "cardMeta": "{windows, plural, other {창 {windows}개}} · {tabs, plural, other {탭 {tabs}개}}",
+    "syncedSuffix": " · {time} 동기화됨",
+    "timeSuffix": " · {time}",
+    "stale": "탭이 최신이 아닐 수 있습니다. 마지막 동기화가 30일도 더 전입니다",
+    "moreTabs": "+{count}개 더",
+    "openAllTitle": "이 그룹의 모든 탭 열기",
+    "openAll": "모두 열기",
+    "hideTabs": "탭 숨기기",
+    "showTabs": "탭 보기",
+    "rowMeta": "창 {windows} · 탭 {tabs}",
+    "linkCopiedLive": "링크를 복사했습니다! 공유 페이지가 게시되었습니다.",
+    "empty": "아직 동기화된 그룹이 없습니다. 확장 프로그램을 열어 탭 그룹을 만드세요.",
+    "title": "그룹",
+    "summary": "{count, plural, other {그룹 {count}개}} · {tabs, plural, other {탭 {tabs}개}}",
+    "sort": "정렬",
+    "sortLabel": "그룹 정렬",
+    "sortRecent": "최근순",
+    "sortName": "이름",
+    "sortTabCount": "탭 개수",
+    "cancel": "취소",
+    "gridView": "그리드 보기",
+    "listView": "목록 보기",
+    "archived": "보관됨({count})",
+    "selectedCount": "{count}개 선택됨",
+    "shareSelected": "선택 항목 공유",
+    "cancelSelection": "선택 취소"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "동기화하려면 확장 프로그램을 열고 암호화 잠금을 해제하세요.",
+      "no-session": "동기화하려면 확장 프로그램에 로그인하세요.",
+      "error": "동기화에 실패했습니다. 확장 프로그램에서 다시 시도하세요."
+    },
+    "failedFallback": "동기화에 실패했습니다.",
+    "syncing": "동기화 중...",
+    "busy": "이미 동기화 중입니다",
+    "failed": "동기화 실패",
+    "synced": "동기화됨",
+    "never": "아직 동기화되지 않음",
+    "reasonSeparator": ". ",
+    "refresh": "동기화 상태 새로고침",
+    "resync": "지금 다시 동기화",
+    "justNow": "방금 전",
+    "minutesAgo": "{count}분 전",
+    "hoursAgo": "{count}시간 전",
+    "daysAgo": "{count}일 전"
+  }
+}

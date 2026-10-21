@@ -1,0 +1,23 @@
+{
+  "title": "Aturan URL",
+  "description": "Otomatis menetapkan tab ke grup berdasarkan pola URL. Gunakan <code>*</code> sebagai wildcard (mis. <code>github.com/*</code>). Aturan yang cocok pertama yang menang.",
+  "empty": "Belum ada aturan.",
+  "deletedGroup": "(grup dihapus)",
+  "moveUp": "Pindahkan aturan ke atas",
+  "moveDown": "Pindahkan aturan ke bawah",
+  "edit": "Edit aturan",
+  "delete": "Hapus aturan",
+  "used": "{{used}}/{{max}} digunakan",
+  "addRule": "Tambah aturan",
+  "discard": "Buang perubahan",
+  "cancel": "Batal",
+  "saveAll": "Simpan semua aturan",
+  "save": "Simpan",
+  "editTitle": "Edit Aturan URL",
+  "addTitle": "Tambah Aturan URL",
+  "patternPlaceholder": "Pola, mis. github.com/*",
+  "groupPlaceholder": "Pilih grup tujuan…",
+  "toast": {
+    "limit": "Paket gratis mengizinkan hingga {{max}} aturan URL."
+  }
+}

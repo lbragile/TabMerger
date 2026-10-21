@@ -1,0 +1,73 @@
+{
+  "deleteGroup": {
+    "title": "Xóa Nhóm",
+    "description": "Bạn có chắc chắn muốn xóa \"{{name}}\" không? Việc này không thể hoàn tác.",
+    "confirm": "Xóa"
+  },
+  "closeWindow": {
+    "title": "Đóng Cửa Sổ",
+    "description": "Bạn có chắc chắn muốn đóng cửa sổ này cùng tất cả các thẻ của nó không?",
+    "confirm": "Đóng"
+  },
+  "removeWindow": {
+    "title": "Xóa Cửa Sổ",
+    "description": "Bạn có chắc chắn muốn xóa cửa sổ này cùng tất cả các thẻ của nó không?",
+    "confirm": "Xóa"
+  },
+  "closeTab": {
+    "title": "Đóng Thẻ",
+    "description": "Bạn có chắc chắn muốn đóng thẻ này không?",
+    "confirm": "Đóng"
+  },
+  "removeTab": {
+    "title": "Xóa Thẻ",
+    "description": "Bạn có chắc chắn muốn xóa thẻ này không?",
+    "confirm": "Xóa"
+  },
+  "closeSelection": {
+    "title": "Đóng Mục Đã Chọn",
+    "confirm": "Đóng",
+    "description_tab_other": "Bạn có chắc chắn muốn đóng {{count}} thẻ không? Việc này không thể hoàn tác.",
+    "description_window_other": "Bạn có chắc chắn muốn đóng {{count}} cửa sổ không? Việc này không thể hoàn tác.",
+    "description_group_other": "Bạn có chắc chắn muốn đóng {{count}} nhóm không? Việc này không thể hoàn tác."
+  },
+  "deleteSelection": {
+    "title": "Xóa Mục Đã Chọn",
+    "confirm": "Xóa",
+    "description_tab_other": "Bạn có chắc chắn muốn xóa {{count}} thẻ không? Việc này không thể hoàn tác.",
+    "description_window_other": "Bạn có chắc chắn muốn xóa {{count}} cửa sổ không? Việc này không thể hoàn tác.",
+    "description_group_other": "Bạn có chắc chắn muốn xóa {{count}} nhóm không? Việc này không thể hoàn tác."
+  },
+  "removeStaleTabs": {
+    "title": "Xóa Thẻ Cũ",
+    "confirm": "Xóa",
+    "description_other": "Bạn có chắc chắn muốn xóa {{count}} thẻ cũ không? Việc này không thể hoàn tác."
+  },
+  "closeAllWindows": {
+    "title": "Đóng Tất Cả Cửa Sổ",
+    "description": "Bạn có chắc chắn muốn đóng tất cả cửa sổ trình duyệt cùng các thẻ của chúng không?",
+    "confirm": "Đóng Tất Cả"
+  },
+  "removeAllWindows": {
+    "title": "Xóa Tất Cả Cửa Sổ",
+    "description": "Bạn có chắc chắn muốn xóa tất cả cửa sổ cùng các thẻ của chúng khỏi nhóm này không? Việc này không thể hoàn tác.",
+    "confirm": "Xóa Tất Cả"
+  },
+  "archiveStaleGroups": {
+    "title": "Lưu Trữ Nhóm Cũ",
+    "confirm": "Lưu trữ",
+    "description_other": "Bạn có chắc chắn muốn lưu trữ {{count}} nhóm cũ không?"
+  },
+  "clearAllData": {
+    "title": "Xóa Tất Cả Dữ Liệu",
+    "confirm": "Xóa Tất Cả Dữ Liệu",
+    "description": "Thao tác này sẽ xóa vĩnh viễn tất cả nhóm, phiên đã lưu và cài đặt. Việc này không thể hoàn tác.",
+    "description_kept": "Thao tác này sẽ xóa vĩnh viễn tất cả nhóm, phiên đã lưu và cài đặt. Việc này không thể hoàn tác. Các bản sao lưu tự động được lưu trong tài khoản của bạn vẫn được giữ lại, và bạn có thể khôi phục chúng từ Cài đặt → Dữ liệu."
+  },
+  "resetEncryption": {
+    "title": "Đặt Lại Cụm Mật Khẩu Mã Hóa",
+    "confirm": "Đặt Lại Cụm Mật Khẩu",
+    "description": "Việc này không thể hoàn tác. Tất cả nhóm, phiên và ghi chú đã đồng bộ được mã hóa bằng cụm mật khẩu hiện tại của bạn sẽ trở nên vĩnh viễn không thể truy cập được. Bạn sẽ thiết lập cụm mật khẩu mới và bắt đầu đồng bộ lại từ đầu."
+  },
+  "cancel": "Hủy"
+}

@@ -1,0 +1,53 @@
+{
+  "addGroup": {
+    "title": "Tạo Nhóm Mới",
+    "name": "Tên",
+    "namePlaceholder": "Tên nhóm",
+    "color": "Màu",
+    "cancel": "Hủy",
+    "create": "Tạo"
+  },
+  "dedup": {
+    "title": "Xóa bản trùng lặp",
+    "description_other": "{{count}} thẻ trùng lặp sẽ bị xóa.",
+    "cancel": "Hủy",
+    "confirm_other": "Xóa {{count}} bản trùng lặp"
+  },
+  "staleGroups": {
+    "title": "Xem lại các nhóm cũ",
+    "description_other": "{{count}} nhóm chưa được chạm vào một thời gian — mở rộng để xem trước, hoặc lưu trữ ngay.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "Ẩn",
+    "preview": "Xem trước",
+    "archive": "Lưu trữ",
+    "empty": "Nhóm này trống.",
+    "close": "Đóng"
+  },
+  "staleTabs": {
+    "title": "Thẻ cũ",
+    "description_other": "{{count}} thẻ chưa được chạm vào một thời gian.",
+    "close": "Đóng",
+    "removeAll_other": "Xóa {{count}} thẻ"
+  },
+  "saveSession": {
+    "title": "Lưu Phiên",
+    "name": "Tên phiên",
+    "namePlaceholder": "vd. Nghiên cứu công việc, Đọc sách cuối tuần",
+    "nameRequired": "Tên phiên là bắt buộc",
+    "description": "Mô tả (tùy chọn)",
+    "descriptionPlaceholder": "Phiên này dùng để làm gì?",
+    "cancel": "Hủy",
+    "save": "Lưu"
+  },
+  "shortcutSave": {
+    "title_other": "Lưu {{count}} thẻ",
+    "description": "Chọn nơi lưu các thẻ được chụp bởi phím tắt.",
+    "destination": "Nhóm đích",
+    "quickSave": "Lưu Nhanh (nhóm mới)",
+    "cancel": "Hủy",
+    "save": "Lưu"
+  },
+  "confirmDialog": {
+    "cancel": "Hủy"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "comingSoon": "Sắp ra mắt",
+  "listTwo": "{first} và {second}",
+  "listMany": "{rest} và {last}",
+  "listSeparator": ", ",
+  "opensInNewTab": " (mở trong tab mới)",
+  "close": "Đóng",
+  "showPassphrase": "Hiện cụm mật khẩu",
+  "hidePassphrase": "Ẩn cụm mật khẩu"
+}

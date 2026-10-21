@@ -1,0 +1,13 @@
+{
+  "success": "Xong — trang web giờ có thể tìm thấy TabMerger. Bạn có thể đóng thẻ này.",
+  "refused": "Firefox đã không cho phép. Bạn có thể thử lại, hoặc cho phép sau trong about:addons.",
+  "title": "Cho phép trang web TabMerger tìm thấy TabMerger",
+  "checking": "Đang kiểm tra quyền truy cập trang…",
+  "explainer": "Firefox chưa cho phép TabMerger trên {{hosts}}. Nếu không có nó, trang web không thể phát hiện TabMerger, chuyển thông tin đăng nhập của bạn hoặc bắt đầu đồng bộ. Nhấp vào nút bên dưới, sau đó xác nhận trong hộp thoại của Firefox.",
+  "allowOn": "Cho phép TabMerger trên {{hosts}}",
+  "bannerLabel": "Quyền truy cập trang web",
+  "bannerText": "Cho phép TabMerger trên {{hosts}} để trang web có thể tìm thấy nó và chuyển thông tin đăng nhập của bạn.",
+  "allow": "Cho phép",
+  "dismiss": "Bỏ qua lời nhắc truy cập trang web",
+  "openFailed": "Không thể mở thẻ truy cập trang. Hãy thử lại, hoặc cho phép trong about:addons."
+}

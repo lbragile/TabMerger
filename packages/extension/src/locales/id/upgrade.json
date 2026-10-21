@@ -1,0 +1,49 @@
+{
+  "maxGroups": {
+    "title": "Batas Grup Tercapai",
+    "description": "Anda telah mencapai batas paket gratis sebanyak {{max}} grup. Tingkatkan ke Pro untuk grup tanpa batas."
+  },
+  "maxTabs": {
+    "title": "Batas Tab Tercapai",
+    "description": "Anda telah mencapai batas paket gratis sebanyak {{max}} tab. Tingkatkan ke Pro untuk tab tanpa batas."
+  },
+  "cloudSync": {
+    "title": "Sinkronisasi Cloud adalah Pro",
+    "description": "Sinkronkan grup Anda di semua perangkat dengan TabMerger Pro. Tingkatkan untuk mengaktifkan sinkronisasi cloud."
+  },
+  "aiFeatures": {
+    "title": "Fitur AI adalah Pro AI",
+    "description": "Pengelompokan otomatis AI, penamaan cerdas, dan ringkasan tab tersedia di paket Pro AI."
+  },
+  "default": {
+    "title": "Tingkatkan TabMerger",
+    "description": "Buka kunci grup tanpa batas, sinkronisasi cloud, cadangan otomatis, dan fitur AI dengan TabMerger Pro."
+  },
+  "signInHint": " Sudah punya akun Pro? Masuk untuk memulihkannya di perangkat ini.",
+  "planPrice": " — {{price}}/bln",
+  "comingSoon": "Segera hadir",
+  "comingSoonParen": "({{label}})",
+  "plans": {
+    "free": {
+      "name": "Gratis",
+      "f1": "Hingga {{groups}} grup",
+      "f2": "Hingga {{tabs}} tab",
+      "f3": "Hingga {{urlRules}} aturan URL"
+    },
+    "pro": {
+      "name": "Pro",
+      "f1": "Semua yang ada di Gratis",
+      "f2": "Grup, tab, aturan URL & sesi tanpa batas",
+      "f3": "Sinkronisasi cloud di semua perangkat"
+    },
+    "pro_ai": {
+      "name": "Pro AI",
+      "f1": "Semua yang ada di Pro",
+      "f2": "Pengelompokan tab otomatis dengan AI",
+      "f3": "Saran nama grup dengan AI"
+    }
+  },
+  "maybeLater": "Mungkin nanti",
+  "signIn": "Masuk",
+  "upgradeNow": "Tingkatkan sekarang"
+}

@@ -1,0 +1,73 @@
+{
+  "deleteGroup": {
+    "title": "Hapus Grup",
+    "description": "Apakah Anda yakin ingin menghapus \"{{name}}\"? Ini tidak dapat dibatalkan.",
+    "confirm": "Hapus"
+  },
+  "closeWindow": {
+    "title": "Tutup Jendela",
+    "description": "Apakah Anda yakin ingin menutup jendela ini dan semua tabnya?",
+    "confirm": "Tutup"
+  },
+  "removeWindow": {
+    "title": "Hapus Jendela",
+    "description": "Apakah Anda yakin ingin menghapus jendela ini dan semua tabnya?",
+    "confirm": "Hapus"
+  },
+  "closeTab": {
+    "title": "Tutup Tab",
+    "description": "Apakah Anda yakin ingin menutup tab ini?",
+    "confirm": "Tutup"
+  },
+  "removeTab": {
+    "title": "Hapus Tab",
+    "description": "Apakah Anda yakin ingin menghapus tab ini?",
+    "confirm": "Hapus"
+  },
+  "closeSelection": {
+    "title": "Tutup Pilihan",
+    "confirm": "Tutup",
+    "description_tab_other": "Apakah Anda yakin ingin menutup {{count}} tab? Ini tidak dapat dibatalkan.",
+    "description_window_other": "Apakah Anda yakin ingin menutup {{count}} jendela? Ini tidak dapat dibatalkan.",
+    "description_group_other": "Apakah Anda yakin ingin menutup {{count}} grup? Ini tidak dapat dibatalkan."
+  },
+  "deleteSelection": {
+    "title": "Hapus Pilihan",
+    "confirm": "Hapus",
+    "description_tab_other": "Apakah Anda yakin ingin menghapus {{count}} tab? Ini tidak dapat dibatalkan.",
+    "description_window_other": "Apakah Anda yakin ingin menghapus {{count}} jendela? Ini tidak dapat dibatalkan.",
+    "description_group_other": "Apakah Anda yakin ingin menghapus {{count}} grup? Ini tidak dapat dibatalkan."
+  },
+  "removeStaleTabs": {
+    "title": "Hapus Tab Usang",
+    "confirm": "Hapus",
+    "description_other": "Apakah Anda yakin ingin menghapus {{count}} tab usang? Ini tidak dapat dibatalkan."
+  },
+  "closeAllWindows": {
+    "title": "Tutup Semua Jendela",
+    "description": "Apakah Anda yakin ingin menutup semua jendela browser dan tabnya?",
+    "confirm": "Tutup Semua"
+  },
+  "removeAllWindows": {
+    "title": "Hapus Semua Jendela",
+    "description": "Apakah Anda yakin ingin menghapus semua jendela dan tabnya dari grup ini? Ini tidak dapat dibatalkan.",
+    "confirm": "Hapus Semua"
+  },
+  "archiveStaleGroups": {
+    "title": "Arsipkan Grup Usang",
+    "confirm": "Arsipkan",
+    "description_other": "Apakah Anda yakin ingin mengarsipkan {{count}} grup usang?"
+  },
+  "clearAllData": {
+    "title": "Hapus Semua Data",
+    "confirm": "Hapus Semua Data",
+    "description": "Ini akan menghapus permanen semua grup, sesi tersimpan, dan pengaturan. Ini tidak dapat dibatalkan.",
+    "description_kept": "Ini akan menghapus permanen semua grup, sesi tersimpan, dan pengaturan. Ini tidak dapat dibatalkan. Cadangan otomatis yang tersimpan di akun Anda tetap disimpan, dan Anda dapat memulihkannya dari Pengaturan → Data."
+  },
+  "resetEncryption": {
+    "title": "Atur Ulang Frasa Sandi Enkripsi",
+    "confirm": "Atur Ulang Frasa Sandi",
+    "description": "Ini tidak dapat dibatalkan. Semua grup, sesi, dan catatan yang disinkronkan dan dienkripsi dengan frasa sandi Anda saat ini akan menjadi tidak dapat diakses secara permanen. Anda akan mengatur frasa sandi baru dan memulai sinkronisasi dari awal."
+  },
+  "cancel": "Batal"
+}

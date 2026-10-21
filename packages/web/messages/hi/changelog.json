@@ -1,0 +1,15 @@
+{
+  "metaTitle": "बदलाव सूची",
+  "metaDescription": "TabMerger में नई सुविधाएँ, सुधार और फ़िक्स।",
+  "title": "बदलाव सूची",
+  "lead": "हमने जो कुछ भी जारी किया, सबसे नया पहले।",
+  "githubRelease": "GitHub रिलीज़",
+  "githubReleaseLabel": "GitHub पर {version} रिलीज़",
+  "prLinkLabel": "GitHub पर पुल रिक्वेस्ट #{number}",
+  "majorRelease": "बड़ी रिलीज़",
+  "types": {
+    "New": "नया",
+    "Improved": "बेहतर",
+    "Fixed": "ठीक किया गया"
+  }
+}

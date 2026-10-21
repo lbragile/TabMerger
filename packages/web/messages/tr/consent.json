@@ -1,0 +1,11 @@
+{
+  "label": "Çerez onayı",
+  "message": "Sitenin nasıl kullanıldığını anlamak için analiz çerezleri (Google Analytics ve PostHog) kullanmak istiyoruz. Bu çerezler yalnızca kabul ederseniz ayarlanır ve fikrinizi istediğiniz zaman değiştirebilirsiniz.",
+  "messageOn": "Bölgenizde bu site için analizler (oturum kayıtları dahil Google Analytics ve PostHog) açıktır. Reddet seçeneği bunları kapatır ve fikrinizi istediğiniz zaman değiştirebilirsiniz.",
+  "messageGpc": "Tarayıcınız bir Global Privacy Control sinyali gönderdi, bu nedenle analizler (Google Analytics ve PostHog) kapalı. Kabul et seçeneği bunları açar ve fikrinizi istediğiniz zaman değiştirebilirsiniz.",
+  "learnMore": "Çerez ayrıntıları",
+  "accept": "Kabul et",
+  "reject": "Reddet",
+  "chip": "Çerez tercihleri",
+  "collapse": "Çerez tercihlerini gizle"
+}

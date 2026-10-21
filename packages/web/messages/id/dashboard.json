@@ -1,0 +1,213 @@
+{
+  "metaTitle": "Dasbor",
+  "greeting": "Selamat pagi, {name}",
+  "tierBadge": {
+    "free": "gratis",
+    "pro": "pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "Penataan AI",
+  "aiOrganiseUpgrade": "Tingkatkan ke Pro AI untuk menggunakan penataan AI",
+  "aiOrganiseFromExtension": "Mulai dari popup ekstensi TabMerger",
+  "tabGroups": "Grup Tab",
+  "savedSessions": "Sesi Tersimpan",
+  "stats": {
+    "tabs": {
+      "label": "Tab disimpan",
+      "description": "Tab di semua grup yang tersinkron"
+    },
+    "groups": {
+      "label": "Grup disinkronkan",
+      "description": "Grup yang tersinkron di cloud"
+    },
+    "sessions": {
+      "label": "Sesi tersimpan",
+      "description": "Sesi penjelajahan yang tersimpan",
+      "lockedDescription": "Sesi dan cadangan (buka kunci untuk membedakannya)"
+    },
+    "memory": {
+      "label": "Memori dihemat",
+      "description": "Perkiraan, bukan hasil pengukuran"
+    },
+    "memberSince": {
+      "label": "Anggota Sejak",
+      "description": "Akun dibuat"
+    },
+    "aiCredits": {
+      "label": "Kredit AI bulan ini",
+      "description": "Penggunaan bulanan Pro AI",
+      "value": "{used}/{limit}"
+    },
+    "loading": "Memuat"
+  },
+  "subscription": {
+    "currentPlan": "Paket saat ini",
+    "renews": "Diperpanjang {date}",
+    "upgrade": "Tingkatkan",
+    "statuses": {
+      "active": "aktif",
+      "canceled": "dibatalkan",
+      "past_due": "lewat jatuh tempo",
+      "trialing": "masa uji coba",
+      "incomplete": "belum selesai"
+    }
+  },
+  "upgraded": {
+    "message": "Selamat datang di {plan}! Langganan Anda kini aktif. Nikmati fitur-fitur baru Anda.",
+    "dismiss": "Tutup"
+  },
+  "locked": {
+    "item": "Disimpan dengan frasa sandi sebelumnya. Buka ekstensi di perangkat yang memilikinya dan biarkan tersinkron.",
+    "device": "Tab yang terbuka di perangkat ini disimpan dengan frasa sandi sebelumnya. Buka ekstensi di perangkat tersebut dan biarkan tersinkron.",
+    "unverified": "Tidak dapat dibaca saat ini. Muat ulang halaman untuk mencoba lagi."
+  },
+  "passphrase": {
+    "defaultLabel": "Masukkan frasa sandi enkripsi Anda untuk melihat konten ini.",
+    "groupsLabel": "Grup Anda dienkripsi end-to-end. Masukkan frasa sandi untuk melihatnya di sini.",
+    "sessionsLabel": "Sesi Anda dienkripsi end-to-end. Masukkan frasa sandi untuk melihatnya di sini.",
+    "backupsLabel": "Cadangan Anda dienkripsi end-to-end. Masukkan frasa sandi untuk melihatnya di sini.",
+    "placeholder": "Frasa sandi",
+    "inputLabel": "Frasa sandi enkripsi",
+    "unlock": "Buka kunci",
+    "incorrect": "Frasa sandi salah."
+  },
+  "onboarding": {
+    "title": "Mulai menggunakan TabMerger",
+    "progress": "{done} dari {total} selesai",
+    "dismiss": "Tutup",
+    "install": "Pasang ekstensi TabMerger",
+    "group": "Buat grup pertama Anda di ekstensi",
+    "signin": "Masuk untuk mengaktifkan sinkronisasi cloud",
+    "upgrade": "Tingkatkan ke Pro untuk grup tanpa batas"
+  },
+  "lockedName": "(terkunci)",
+  "damagedNote": "Isinya tidak dalam format yang dapat dibaca TabMerger, sehingga tidak dapat ditampilkan di sini.",
+  "counts": {
+    "groups": "{count, plural, other {{count} grup}}",
+    "windows": "{count, plural, other {{count} jendela}}",
+    "tabs": "{count, plural, other {{count} tab}}"
+  },
+  "sessions": {
+    "cantRestore": "Sesi ini tidak dapat dibaca, sehingga tidak dapat dipulihkan.",
+    "restored": "{count, plural, other {{count} tab dipulihkan dari \"{name}\"}}",
+    "deleted": "Sesi dihapus",
+    "deleteFailed": "Gagal menghapus sesi",
+    "loadFailed": "Sesi Anda tidak dapat dimuat.",
+    "tryAgain": "Coba lagi",
+    "loading": "Memuat sesi",
+    "empty": "Belum ada sesi tersimpan.",
+    "readOnlyNote": "Menyimpan sesi baru ke akun Anda memerlukan Pro. Sesi yang sudah ada tetap dapat dibuka atau dihapus.",
+    "upgrade": "Tingkatkan ke Pro",
+    "freeLimit": "Paket gratis: hingga {count} sesi. <link>Tingkatkan ke Pro</link> untuk sesi tanpa batas.",
+    "restore": "Pulihkan sesi",
+    "cantRestoreTooltip": "Sesi ini tidak dapat dibaca, sehingga tidak dapat dipulihkan",
+    "delete": "Hapus sesi",
+    "hideContents": "Sembunyikan isi",
+    "showContents": "Tampilkan isi ({count})",
+    "groupFallbackName": "Grup {number}",
+    "groupTabs": "{count, plural, other {{count} tab}}",
+    "moreTabs": "{count, plural, other {+{count} tab lainnya}}",
+    "moreGroups": "{count, plural, other {+{count} grup lainnya}}"
+  },
+  "backups": {
+    "title": "Cadangan",
+    "upgradeDescription": "Cadangan otomatis adalah bagian dari Pro: snapshot terenkripsi dari grup Anda, disimpan sesuai jadwal, dengan {count} cadangan terbaru dipertahankan.",
+    "readOnlyNote": "Cadangan baru memerlukan Pro. Cadangan yang sudah ada tetap dapat diunduh atau dihapus.",
+    "upgrade": "Tingkatkan",
+    "intro": "Snapshot grup Anda yang disimpan otomatis oleh ekstensi TabMerger ke akun Anda, terbaru lebih dulu. {count} cadangan terbaru dipertahankan. Untuk memulihkan salah satunya, buka ekstensi dan masuk ke {place}; pemulihan tidak dilakukan dari halaman ini. File yang Anda unduh di sini tidak dienkripsi.",
+    "extensionPlace": "Pengaturan > Data",
+    "loadFailed": "Cadangan Anda tidak dapat dimuat.",
+    "tryAgain": "Coba lagi",
+    "loading": "Memuat cadangan",
+    "unknownKind": "{count, plural, other {{count} item tersimpan tidak dapat dibaca, sehingga tidak diketahui apakah item tersebut cadangan. Item tersebut tercantum di Sesi Tersimpan.}}",
+    "emptyTitle": "Belum ada cadangan.",
+    "emptyBody": "Ekstensi menyimpan cadangan secara otomatis selama browser terbuka, ketika grup Anda berubah sejak cadangan terakhir. Jadwalnya \"{interval}\" kecuali Anda mengubahnya: pilih intervalnya, atau langsung buat cadangan, di ekstensi pada {place}.",
+    "intervals": {
+      "60": "Setiap jam",
+      "360": "Setiap 6 jam",
+      "720": "Setiap 12 jam",
+      "1440": "Harian",
+      "10080": "Mingguan"
+    },
+    "unknownDateInSentence": "tanggal yang tidak diketahui",
+    "unknownDate": "Tanggal tidak diketahui",
+    "namePrefix": "Cadangan otomatis",
+    "downloading": "Mengunduh cadangan dari {when}.",
+    "deleted": "Cadangan dihapus",
+    "deletedAnnouncement": "Cadangan dari {when} telah dihapus.",
+    "deleteFailed": "Gagal menghapus cadangan",
+    "deleteFailedAnnouncement": "Cadangan dari {when} tidak dapat dihapus.",
+    "deleteTitle": "Hapus cadangan ini?",
+    "deleteBody": "Cadangan dari {when} akan dihapus dari akun Anda. Browser yang sudah memiliki cadangan ini tetap menyimpan salinannya sendiri.",
+    "deleteBodyWithCounts": "Cadangan dari {when} ({groups}, {tabs}) akan dihapus dari akun Anda. Browser yang sudah memiliki cadangan ini tetap menyimpan salinannya sendiri.",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "download": "Unduh",
+    "downloadLabel": "Unduh cadangan dari {when}",
+    "deleteLabel": "Hapus cadangan dari {when}"
+  },
+  "groups": {
+    "cantShare": "Grup ini tidak dapat dibaca, sehingga tidak dapat dibagikan.",
+    "linkCopiedSnapshot": "Tautan disalin — membagikan snapshot grup ini.",
+    "shareFailed": "Tidak dapat membuat tautan berbagi. Silakan coba lagi.",
+    "shareGroup": "Bagikan grup",
+    "copied": "Disalin!",
+    "share": "Bagikan",
+    "cantShareTooltip": "Grup ini tidak dapat dibaca, sehingga tidak dapat dibagikan",
+    "shareTooltip": "Menyalin tautan ke snapshot grup ini — perubahan berikutnya tidak akan memperbaruinya",
+    "justNow": "baru saja",
+    "minutesAgo": "{count} mnt lalu",
+    "hoursAgo": "{count} jam lalu",
+    "daysAgo": "{count} hr lalu",
+    "lockedCantSelect": "Grup terkunci tidak dapat dipilih",
+    "deselect": "Batalkan pilihan",
+    "select": "Pilih",
+    "syncedAt": "Disinkronkan {time}",
+    "cardMeta": "{windows, plural, other {{windows} jendela}} · {tabs, plural, other {{tabs} tab}}",
+    "syncedSuffix": " · disinkronkan {time}",
+    "timeSuffix": " · {time}",
+    "stale": "Tab mungkin sudah usang — terakhir disinkronkan lebih dari 30 hari lalu",
+    "moreTabs": "+{count} lainnya",
+    "openAllTitle": "Buka semua tab di grup ini",
+    "openAll": "Buka semua",
+    "hideTabs": "Sembunyikan tab",
+    "showTabs": "Tampilkan tab",
+    "rowMeta": "{windows}j · {tabs}t",
+    "linkCopiedLive": "Tautan disalin! Halaman berbagi sudah aktif.",
+    "empty": "Belum ada grup yang tersinkron. Buka ekstensi untuk membuat grup tab.",
+    "title": "Grup",
+    "summary": "{count, plural, other {{count} grup}} · {tabs, plural, other {{tabs} tab}}",
+    "sort": "Urutkan",
+    "sortLabel": "Urutkan grup",
+    "sortRecent": "Terbaru",
+    "sortName": "Nama",
+    "sortTabCount": "Jumlah tab",
+    "cancel": "Batal",
+    "gridView": "Tampilan kisi",
+    "listView": "Tampilan daftar",
+    "archived": "Diarsipkan ({count})",
+    "selectedCount": "{count} dipilih",
+    "shareSelected": "Bagikan yang dipilih",
+    "cancelSelection": "Batalkan pilihan"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "Buka ekstensi dan buka kunci enkripsi untuk menyinkronkan.",
+      "no-session": "Masuk ke ekstensi untuk menyinkronkan.",
+      "error": "Sinkronisasi gagal. Coba lagi dari ekstensi."
+    },
+    "failedFallback": "Sinkronisasi gagal.",
+    "syncing": "Menyinkronkan...",
+    "busy": "Sinkronisasi sedang berjalan",
+    "failed": "Sinkronisasi gagal",
+    "synced": "Tersinkron",
+    "never": "Belum pernah disinkronkan",
+    "reasonSeparator": ". ",
+    "refresh": "Segarkan status sinkronisasi",
+    "resync": "Sinkronkan ulang sekarang",
+    "justNow": "baru saja",
+    "minutesAgo": "{count} mnt lalu",
+    "hoursAgo": "{count} jam lalu",
+    "daysAgo": "{count} hr lalu"
+  }
+}

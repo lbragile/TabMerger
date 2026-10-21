@@ -1,0 +1,284 @@
+{
+  "chapters": {
+    "basics": {
+      "title": "Conoscere TabMerger",
+      "description": "Uno sguardo in giro: dove compaiono le schede aperte e com'è organizzata la finestra. Ancora niente da provare."
+    },
+    "groups": {
+      "title": "Organizza con i gruppi",
+      "description": "I gruppi sono il posto delle schede salvate. Ne creerai uno, gli darai un nome e un colore e lo fisserai in cima."
+    },
+    "drag": {
+      "title": "Sposta le cose trascinandole",
+      "description": "Sposterai schede e gruppi su due gruppi di prova aggiunti dal tour: \"Tour demo\" e \"Tour demo 2\". Contengono schede di esempio, non le tue."
+    },
+    "tabs": {
+      "title": "Salva e riapri le schede",
+      "description": "Come spostare le schede aperte in un gruppo, riaprirle in seguito e mettere in ordine ciò che hai salvato. Proverai ogni azione sui gruppi di prova e su una scheda di riserva aperta dal tour: nessuna delle tue schede viene salvata, aperta o chiusa."
+    },
+    "find": {
+      "title": "Trova le cose e annulla gli errori",
+      "description": "Cerca in tutte le schede e i gruppi insieme e torna indietro quando cambi idea. Proverai una ricerca, \"Annulla\" e \"Ripeti\" sui gruppi di prova."
+    },
+    "later": {
+      "title": "Conserva le cose per dopo",
+      "description": "Salva tutti i gruppi in un colpo solo, metti da parte un gruppo senza eliminarlo e salva da qualsiasi pagina web. Questo capitolo spiega soltanto."
+    },
+    "settings": {
+      "title": "Impostazioni e account",
+      "description": "Cambia l'aspetto di TabMerger, scopri cos'altro offrono le Impostazioni e cosa aggiunge l'accesso. Proverai a cambiare il tema."
+    }
+  },
+  "steps": {
+    "welcome": {
+      "title": "Benvenuto in TabMerger",
+      "body": "TabMerger mette ordine nel tuo browser. Salva le schede aperte in gruppi con un nome, chiudile e riaprile quando ti servono. Questo tour ha sette brevi capitoli, ognuno indicato in cima a questa scheda. Alcuni passaggi ti chiedono di provare qualcosa: un anello arancione evidenzia il controllo da usare e il testo lo nomina. Per questi passaggi il tour aggiunge due gruppi di prova con schede di esempio, \"Tour demo\" e \"Tour demo 2\", e li rimuove da solo alla fine. Puoi saltare un passaggio, un capitolo o l'intero tour in qualsiasi momento."
+    },
+    "now-open": {
+      "title": "Aperte ora",
+      "body": "\"Aperte ora\", in cima all'elenco a sinistra, è un elenco in tempo reale di tutte le schede aperte nel browser in questo momento. È sempre il primo e non può essere eliminato."
+    },
+    "main-panel": {
+      "title": "Finestre e schede",
+      "body": "Il pannello principale mostra il contenuto del gruppo scelto a sinistra: le sue finestre e le schede di ogni finestra. Per Aperte ora sono le vere finestre del tuo browser."
+    },
+    "make-group": {
+      "title": "Crea un gruppo",
+      "body": "Un gruppo è un posto con un nome per le schede salvate, per esempio \"Lavoro\" o \"Vacanze\". Prova: seleziona \"Aggiungi gruppo\", sotto i tuoi gruppi. Compare un nuovo gruppo con il campo \"Nome del gruppo\" pronto, che mostra \"temp group\". Digita un nome tuo, ad esempio \"Prova\", poi premi Invio o seleziona \"Salva\" accanto al campo.",
+      "doneText": "Ottimo, il tuo gruppo è pronto. I prossimi passaggi lo usano.",
+      "fallbackBody": "Un gruppo è un posto con un nome per le schede salvate, per esempio \"Lavoro\" o \"Vacanze\". \"Aggiungi gruppo\", sotto i tuoi gruppi, ne crea uno. Hai già tutti i gruppi consentiti dal tuo piano, quindi questo passaggio viene solo mostrato, non provato."
+    },
+    "group-color": {
+      "title": "Dagli un colore",
+      "body": "I colori rendono i gruppi facili da distinguere. Prova: nel gruppo che hai appena creato, seleziona il pallino rotondo \"Cambia colore del gruppo\" davanti al nome. Scegli uno dei campioni di colore rotondi, poi seleziona \"Applica\".",
+      "doneText": "Ottimo, colore cambiato.",
+      "fallbackBody": "I colori rendono i gruppi facili da distinguere. Ogni gruppo ha un pallino rotondo \"Cambia colore del gruppo\" davanti al nome: selezionalo, scegli un colore, poi seleziona \"Applica\"."
+    },
+    "group-pin": {
+      "title": "Fissa un gruppo in cima",
+      "body": "I gruppi fissati restano sopra gli altri. Prova: nel gruppo che hai appena creato, seleziona la stella alla fine della sua riga. Si chiama \"Fissa gruppo\", oppure \"Sblocca gruppo\" se il gruppo è già fissato.",
+      "doneText": "Ottimo. Seleziona di nuovo la stella quando vuoi annullare.",
+      "fallbackBody": "I gruppi fissati restano sopra gli altri. Ogni gruppo ha una stella alla fine della riga, chiamata \"Fissa gruppo\": selezionala per fissare il gruppo e di nuovo per sbloccarlo."
+    },
+    "group-menu": {
+      "title": "Altro per ogni gruppo",
+      "body": "Ogni gruppo salvato ha un menu contestuale (clic destro). Contiene \"Rinomina\", \"Aggiungi nota\", \"Duplica\", \"Unisci con l'attuale\" per aggiungere al gruppo le finestre aperte, \"Archivia gruppo\" per nasconderlo ed \"Elimina gruppo\". Questo passaggio è solo da guardare: l'elenco è bloccato mentre il tour è aperto, quindi prova il menu dopo il tour."
+    },
+    "drag-tab-reorder": {
+      "title": "Riordina le schede",
+      "body": "Il pannello principale mostra il gruppo di prova \"Tour demo\". Ogni scheda ha davanti una maniglia punteggiata, chiamata \"Trascina per riordinare la scheda\". Sposta la prima scheda della finestra \"Reading\" alla fine di quella finestra.",
+      "subStepText": {
+        "1": "Tieni premuta la maniglia della prima scheda.",
+        "2": "Spostala in basso fino alla linea sotto l'ultima scheda, contrassegnata \"Rilascia sotto questa scheda\".",
+        "3": "Lasciala andare per rilasciarla."
+      },
+      "subStepKeys": {
+        "1": "premi Tab per raggiungere la maniglia, poi Spazio per prendere la scheda.",
+        "2": "premi la freccia Giù finché la scheda non è sulla linea contrassegnata \"Rilascia sotto questa scheda\".",
+        "3": "premi Spazio per rilasciarla."
+      },
+      "doneText": "Ottimo, la scheda si è spostata.",
+      "fallbackBody": "Ogni scheda salvata ha davanti una maniglia punteggiata, chiamata \"Trascina per riordinare la scheda\". Trascinandola sposti la scheda in alto o in basso nella sua finestra. Questo passaggio è solo da guardare."
+    },
+    "drag-tab-window": {
+      "title": "Sposta una scheda in un'altra finestra",
+      "body": "Una scheda può anche andare in un'altra finestra dello stesso gruppo. Sposta la prima scheda nell'altra finestra di \"Tour demo\".",
+      "subStepText": {
+        "1": "Tieni premuta la maniglia della prima scheda.",
+        "2": "Spostala sull'altra finestra, contrassegnata \"Rilascia in questa finestra\".",
+        "3": "Lasciala andare per rilasciarla."
+      },
+      "subStepKeys": {
+        "1": "premi Tab per raggiungere la maniglia, poi Spazio per prendere la scheda.",
+        "2": "premi la freccia Giù finché la scheda non è dentro la finestra contrassegnata \"Rilascia in questa finestra\".",
+        "3": "premi Spazio per rilasciarla."
+      },
+      "doneText": "Ottimo, la scheda è nell'altra finestra.",
+      "fallbackBody": "Trascinando una scheda per la maniglia su un'altra finestra dello stesso gruppo la sposti lì. Questo passaggio è solo da guardare."
+    },
+    "drag-tab-group": {
+      "title": "Sposta una scheda in un altro gruppo",
+      "body": "Rilasciando una scheda su un gruppo dell'elenco a sinistra la sposti in quel gruppo. Sposta la prima scheda nel gruppo di prova \"Tour demo 2\".",
+      "subStepText": {
+        "1": "Tieni premuta la maniglia della prima scheda.",
+        "2": "Spostala su \"Tour demo 2\" nell'elenco a sinistra, contrassegnato \"Rilascia su questo gruppo\".",
+        "3": "Lasciala andare per rilasciarla."
+      },
+      "subStepKeys": {
+        "1": "premi Tab per raggiungere la maniglia, poi Spazio per prendere la scheda.",
+        "2": "premi la freccia Sinistra per passare all'elenco dei gruppi, poi la freccia Giù finché non raggiungi \"Tour demo 2\", contrassegnato \"Rilascia su questo gruppo\".",
+        "3": "premi Spazio per rilasciarla."
+      },
+      "doneText": "Ottimo, ora la scheda è in \"Tour demo 2\".",
+      "fallbackBody": "Trascinando una scheda per la maniglia su un gruppo dell'elenco a sinistra la sposti in quel gruppo. Questo passaggio è solo da guardare."
+    },
+    "drag-group-order": {
+      "title": "Metti in ordine i gruppi",
+      "body": "Anche i gruppi hanno una maniglia punteggiata, all'inizio della riga, chiamata \"Trascina per riordinare il gruppo\". Scambia i due gruppi di prova. I tuoi gruppi si spostano allo stesso modo.",
+      "subStepText": {
+        "1": "Tieni premuta la maniglia del gruppo di prova più in alto.",
+        "2": "Spostalo in basso fino alla linea sotto l'altro gruppo di prova, contrassegnata \"Rilascia sotto questo gruppo\".",
+        "3": "Lascialo andare per rilasciarlo."
+      },
+      "subStepKeys": {
+        "1": "premi Tab per raggiungere la maniglia, poi Spazio per prendere il gruppo.",
+        "2": "premi la freccia Giù una volta, così il gruppo è sulla linea contrassegnata \"Rilascia sotto questo gruppo\".",
+        "3": "premi Spazio per rilasciarlo."
+      },
+      "doneText": "Ottimo, i gruppi si sono scambiati di posto.",
+      "fallbackBody": "Ogni gruppo salvato ha una maniglia punteggiata all'inizio della riga, chiamata \"Trascina per riordinare il gruppo\". Trascinandola sposti il gruppo in alto o in basso nell'elenco. Questo passaggio è solo da guardare."
+    },
+    "save-tabs": {
+      "title": "Salva le schede in un gruppo",
+      "body": "Una scheda trascinata da Aperte ora su un gruppo viene salvata in quel gruppo e chiusa nel browser. Per non chiudere nessuna delle tue schede, il tour ha aperto una scheda di riserva chiamata \"Tour practice tab\": è l'unica scheda che puoi spostare in questo passaggio. Salvala nel gruppo di prova \"Tour demo\".",
+      "subStepText": {
+        "1": "Tieni premuta la maniglia punteggiata davanti a \"Tour practice tab\".",
+        "2": "Spostala su \"Tour demo\" nell'elenco a sinistra, contrassegnato \"Rilascia su questo gruppo\".",
+        "3": "Lasciala andare per rilasciarla."
+      },
+      "subStepKeys": {
+        "1": "premi Tab per raggiungere la maniglia, poi Spazio per prendere la scheda.",
+        "2": "premi la freccia Sinistra per passare all'elenco dei gruppi, poi la freccia Giù finché non raggiungi \"Tour demo\", contrassegnato \"Rilascia su questo gruppo\".",
+        "3": "premi Spazio per rilasciarla."
+      },
+      "doneText": "Ottimo. La scheda di prova è salvata in \"Tour demo\" e chiusa nel browser. Le finestre intere si salvano allo stesso modo.",
+      "fallbackBody": "Una scheda, o un'intera finestra, trascinata da Aperte ora su un gruppo a sinistra viene salvata in quel gruppo e chiusa nel browser. Il tour non è riuscito ad aprire una scheda di riserva per provarlo, quindi questo passaggio è solo da guardare: nessuna delle tue schede viene toccata."
+    },
+    "open-tabs": {
+      "title": "Riapri le tue schede",
+      "body": "In un gruppo salvato, selezionando il nome di una scheda la riapri, e \"Apri nel browser\" nel menu di una finestra apre l'intera finestra. Prova quel menu sulla finestra \"Reading\" di \"Tour demo\". Le schede di esempio non sono pagine reali, quindi durante il tour non viene aperto nulla.",
+      "subStepText": {
+        "1": "Seleziona \"Altre opzioni della finestra\", i tre puntini alla fine della riga \"Reading\".",
+        "2": "Scegli \"Apri nel browser\" nel menu."
+      },
+      "doneText": "Ottimo. Dopo il tour, questo apre la finestra con le sue schede nel browser. Per ora non è stato aperto nulla.",
+      "fallbackBody": "In un gruppo salvato, selezionando il nome di una scheda la riapri. \"Altre opzioni della finestra\" su una finestra contiene \"Apri nel browser\" per l'intera finestra, e il menu contestuale di un gruppo contiene \"Apri tutto in una nuova finestra\". Questo passaggio è solo da guardare: durante il tour non viene aperto nulla."
+    },
+    "tab-extras": {
+      "title": "Note, promemoria e nomi",
+      "body": "Una scheda salvata ha un menu contestuale con altre opzioni: \"Sposta nel gruppo\", \"Aggiungi nota\" per annotare qualcosa, \"Ricordamelo…\" per ricevere un promemoria in seguito, \"Rinomina scheda\" per darle un titolo tuo e \"Rimuovi scheda\". Questo passaggio è solo da guardare: l'elenco è bloccato mentre il tour è aperto, quindi prova il menu dopo il tour."
+    },
+    "tidy-up": {
+      "title": "Metti in ordine un gruppo",
+      "body": "\"Altre opzioni del gruppo\", in alto a destra nel pannello principale, può ordinare le schede per titolo o indirizzo, rimuovere le ripetizioni con \"Rimuovi schede duplicate\", e \"Unisci finestre\" in una sola o \"Dividi finestre\". \"Tour demo\" contiene due volte la scheda \"Sample: books\": rimuovi la ripetizione.",
+      "modalBody": "La finestra di dialogo \"Rimuovi duplicati\" elenca la scheda ripetuta. Seleziona \"Rimuovi 1 duplicato\".",
+      "subStepText": {
+        "1": "Seleziona \"Altre opzioni del gruppo\", i tre puntini in alto a destra nel pannello principale.",
+        "2": "Scegli \"Rimuovi schede duplicate\" nel menu.",
+        "3": "Nella finestra di dialogo \"Rimuovi duplicati\", seleziona \"Rimuovi 1 duplicato\"."
+      },
+      "doneText": "Ottimo, la scheda ripetuta non c'è più.",
+      "fallbackBody": "\"Altre opzioni del gruppo\", in alto a destra nel pannello principale, può ordinare le schede per titolo o indirizzo, rimuovere le ripetizioni con \"Rimuovi schede duplicate\", e \"Unisci finestre\" in una sola o \"Dividi finestre\". Questo passaggio è solo da guardare."
+    },
+    "select-items": {
+      "title": "Lavora su più elementi insieme",
+      "body": "\"Seleziona elementi\", nell'intestazione, mostra una casella di controllo su ogni scheda, finestra e gruppo. Quando ne selezioni alcuni, in basso compare una barra che agisce su tutti insieme, per esempio per eliminarli. Condividere i gruppi selezionati come link richiede un piano Pro. Prova a selezionare una scheda di esempio.",
+      "subStepText": {
+        "1": "Seleziona \"Seleziona elementi\" nell'intestazione.",
+        "2": "Seleziona la casella di controllo davanti alla prima scheda di esempio."
+      },
+      "doneText": "Ottimo. La barra in basso agisce su ciò che hai selezionato. Il tour disattiva di nuovo la selezione quando vai avanti.",
+      "fallbackBody": "\"Seleziona elementi\", nell'intestazione, mostra una casella di controllo su ogni scheda, finestra e gruppo. Quando ne selezioni alcuni, in basso compare una barra che agisce su tutti insieme, per esempio per eliminarli. Condividere i gruppi selezionati come link richiede un piano Pro. Questo passaggio è solo da guardare."
+    },
+    "search": {
+      "title": "Trova qualsiasi cosa",
+      "body": "La casella di ricerca in alto, con il testo \"Cerca schede e gruppi…\", cerca in tutte le schede e i gruppi insieme. I risultati compaiono mentre digiti. Provala sulle schede di esempio.",
+      "subStepText": {
+        "1": "Seleziona la casella di ricerca in alto.",
+        "2": "Digita la parola sample."
+      },
+      "doneText": "Ottimo. Ogni scheda corrispondente è elencata sotto la casella di ricerca. Selezionandone una vai al suo gruppo.",
+      "fallbackBody": "La casella di ricerca in alto, con il testo \"Cerca schede e gruppi…\", cerca in tutte le schede e i gruppi insieme. I risultati compaiono mentre digiti e selezionandone uno vai al suo gruppo."
+    },
+    "search-filters": {
+      "title": "Restringi una ricerca",
+      "body": "Inizia una ricerca con group: o window: per cercare dentro un solo gruppo o una sola finestra, oppure con tag: per filtrare per etichetta di un gruppo di schede del browser. La casella di ricerca li elenca sotto \"Prova queste ricerche\". Prova group: sul gruppo di prova, poi cancella la ricerca.",
+      "subStepText": {
+        "1": "Seleziona la casella di ricerca in alto.",
+        "2": "Digita group:tour senza spazi. Compare un elenco chiamato \"Scegli un gruppo\".",
+        "3": "Scegli \"Tour demo\" in quell'elenco. Ora la ricerca guarda solo dentro quel gruppo.",
+        "4": "Seleziona \"Cancella ricerca\", la × alla fine del campo di ricerca. Una ricerca resta finché non la cancelli."
+      },
+      "doneText": "Ottimo, la ricerca è cancellata.",
+      "fallbackBody": "Inizia una ricerca con group: o window: per cercare dentro un solo gruppo o una sola finestra, oppure con tag: per filtrare per etichetta di un gruppo di schede del browser. La casella di ricerca li elenca sotto \"Prova queste ricerche\"."
+    },
+    "undo": {
+      "title": "Hai cambiato idea?",
+      "body": "\"Annulla\" e \"Ripeti\", nell'intestazione, vanno avanti e indietro tra le ultime 10 modifiche a gruppi e schede. Sono disattivati finché non c'è qualcosa da annullare. Provali con una piccola modifica alla finestra di esempio \"Reading\".",
+      "subStepText": {
+        "1": "Seleziona la stella alla fine della riga \"Reading\", chiamata \"Aggiungi stella alla finestra\".",
+        "2": "Seleziona \"Annulla\" nell'intestazione. La stella viene tolta di nuovo.",
+        "3": "Seleziona \"Ripeti\", accanto ad \"Annulla\". La stella ritorna."
+      },
+      "doneText": "Ottimo. \"Annulla\" e \"Ripeti\" funzionano allo stesso modo sui tuoi gruppi e sulle tue schede.",
+      "fallbackBody": "\"Annulla\" e \"Ripeti\", nell'intestazione, vanno avanti e indietro tra le ultime 10 modifiche a gruppi e schede. Sono disattivati finché non c'è qualcosa da annullare."
+    },
+    "sessions": {
+      "title": "Salva tutto in una volta",
+      "body": "Una sessione è una copia salvata di tutti i tuoi gruppi così come sono ora. Nella sezione \"Sessioni\" in basso a sinistra, \"Salva la sessione attuale\" ne crea una. \"Ripristina sessione\", accanto a una sessione salvata, la riporta: chiede prima conferma, perché chiude le finestre aperte."
+    },
+    "archived": {
+      "title": "Metti da parte un gruppo",
+      "body": "Archiviare nasconde un gruppo senza eliminarlo. I gruppi archiviati attendono nella sezione \"Archiviati\" in basso a sinistra, dove puoi ripristinarli o eliminarli. Contano comunque nel numero di gruppi del tuo piano."
+    },
+    "quick-save": {
+      "title": "Salva senza aprire TabMerger",
+      "body": "Fai clic destro su qualsiasi pagina web e scegli \"Salva in TabMerger\". Scegli cosa salvare, per esempio \"Salva questa scheda\" o \"Salva tutte le altre schede\", e poi il gruppo in cui metterlo."
+    },
+    "theme": {
+      "title": "Chiaro o scuro",
+      "body": "Prova: apri il menu nell'angolo in alto a destra, chiamato \"Menu impostazioni\" (o \"Menu account\" dopo l'accesso), e scegli \"Impostazioni\". Apri l'elenco \"Tema\", scegli un tema diverso, poi seleziona \"Salva modifiche\".",
+      "modalBody": "Nelle Impostazioni: apri l'elenco \"Tema\", scegli un tema diverso, poi seleziona \"Salva modifiche\".",
+      "doneText": "Ottimo, tema cambiato. Chiudi le Impostazioni, oppure seleziona Avanti, per continuare."
+    },
+    "settings-more": {
+      "title": "Altro nelle Impostazioni",
+      "body": "Le Impostazioni offrono altro nella scheda \"Generale\": \"Conferma prima di eliminare\" chiede conferma prima di rimuovere qualcosa, e le \"Regole URL\" collegano indirizzi web a un gruppo. Nella scheda \"Dati\", \"Esporta\" salva tutti i tuoi gruppi in un file e \"Importa\" carica di nuovo un file. I backup automatici, nella stessa scheda, richiedono un piano Pro."
+    },
+    "account": {
+      "title": "Il tuo account",
+      "body": "TabMerger funziona senza account: tutto resta su questo dispositivo. Accedendo, dallo stesso menu, con un piano Pro i tuoi gruppi restano allineati su tutti i dispositivi. I dati sincronizzati vengono bloccati sul tuo dispositivo prima di essere inviati, quindi solo tu puoi leggerli."
+    },
+    "ai": {
+      "title": "Azioni AI",
+      "body": "\"Azioni AI\", nell'intestazione, può ordinare le schede aperte in gruppi al posto tuo. Richiede un piano Pro AI."
+    },
+    "finish": {
+      "title": "Ecco fatto",
+      "body": "Vuoi rivederlo? \"Fai il tour\", il punto interrogativo nell'angolo in alto a destra, lo riavvia in qualsiasi momento."
+    }
+  },
+  "card": {
+    "dialogLabel": "Tour di TabMerger",
+    "chapterLine": "Capitolo {{chapter}} di {{chapters}}",
+    "stepLine": "Passaggio {{step}} di {{total}}",
+    "done": "Fatto.",
+    "withKeyboard": " Con la tastiera: {{keys}}",
+    "yourTurnAnnouncement": " Tocca a te. Per andare avanti senza provare, seleziona \"Salta questo passaggio\".",
+    "announcement": "{{chapterLine}}, {{chapterTitle}}.{{chapterIntro}} {{stepLine}}: {{title}}. {{body}}{{subSteps}}{{yourTurn}}",
+    "doneAnnouncement": "{{done}} Seleziona Avanti per continuare.",
+    "part": "Parte ",
+    "ofTotal": "{{current}} di {{total}}",
+    "keyboard": "Tastiera: ",
+    "yourTurn": "Tocca a te. Questo passaggio attende finché non l'hai provato.",
+    "practiceRemoved": "Il gruppo di prova è stato rimosso.",
+    "practiceKept": "Il gruppo che hai creato in questo tour, “{{name}}”, è ancora nel tuo elenco. Tienilo o rimuovilo ora.",
+    "practiceKept_tabs": "Il gruppo che hai creato in questo tour, “{{name}}” ({{tabs}}), è ancora nel tuo elenco. Tienilo o rimuovilo ora.",
+    "removePractice": "Rimuovi il gruppo di prova",
+    "back": "Indietro",
+    "skipStep": "Salta questo passaggio",
+    "finish": "Fine",
+    "next": "Avanti",
+    "skipTour": "Salta il tour",
+    "skipChapter": "Salta il capitolo"
+  },
+  "drop": {
+    "belowTab": "Rilascia sotto questa scheda",
+    "window": "Rilascia in questa finestra",
+    "group": "Rilascia su questo gruppo",
+    "belowGroup": "Rilascia sotto questo gruppo",
+    "default": "Rilascia qui"
+  },
+  "practiceLeft": "Il tour ha lasciato un gruppo di prova, \"{{name}}\", nel tuo elenco.",
+  "removeIt": "Rimuovilo"
+}

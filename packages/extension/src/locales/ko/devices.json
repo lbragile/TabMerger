@@ -1,0 +1,18 @@
+{
+  "heading": "기기",
+  "empty": "아직 기기가 없습니다.",
+  "selected": "{{count}}개 선택됨",
+  "remove": "제거",
+  "removeTitle_other": "기기 {{count}}대를 제거하시겠습니까?",
+  "removeDescription": "제거한 기기는 이 목록에 더 이상 표시되지 않습니다. 해당 브라우저가 아직 사용 중이면 다음 동기화 때 다시 등록될 수 있으므로, 사용 중인 기기에서는 영구적이지 않습니다.",
+  "cancel": "취소",
+  "selectDevice": "{{name}} 선택",
+  "nameInput": "이 기기 이름",
+  "save": "저장",
+  "thisDevice": "(이 기기)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "이 기기 이름 바꾸기",
+  "noTabs": "탭이 없습니다.",
+  "restoreTabs_other": "탭 {{count}}개 복원",
+  "open": "열기"
+}

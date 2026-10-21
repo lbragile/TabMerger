@@ -1,0 +1,36 @@
+{
+  "metaTitle": "FAQ",
+  "metaDescription": "Pertanyaan yang sering diajukan tentang TabMerger.",
+  "title": "Pertanyaan umum",
+  "lead": "Masih ragu tentang sesuatu? Kami membalas email dalam waktu kurang dari sehari.",
+  "contact": "Hubungi dukungan",
+  "free": {
+    "question": "Apakah TabMerger benar-benar gratis?",
+    "answer": "Ya! Paket gratis mencakup semua fitur inti — hingga {groups} grup, {tabs} tab, {urlRules} aturan URL, seret dan lepas, serta impor/ekspor. Anda hanya membayar jika menginginkan sinkronisasi cloud, grup, tab, dan aturan URL tanpa batas, atau fitur AI."
+  },
+  "sync": {
+    "question": "Bagaimana cara kerja sinkronisasi cloud?",
+    "answer": "Saat Anda berlangganan paket Pro atau Pro AI, grup Anda otomatis disimpan ke server kami. Grup Anda disinkronkan di setiap browser tempat Anda masuk — sinkronisasi berjalan setiap kali popup terbuka, jadi perubahan akan muncul saat Anda membukanya lagi di sana."
+  },
+  "ai": {
+    "question": "Apa sebenarnya yang dilakukan AI?",
+    "answer": "Paket Pro AI membuka tiga fitur AI: pengelompokan otomatis (menganalisis tab yang terbuka dan mengelompokkannya secara logis), penamaan cerdas (menyarankan nama untuk grup Anda), dan saran sesi (merekomendasikan cara mengatur alur kerja Anda).",
+    "answerComingSoon": "Segera hadir — paket Pro AI akan membuka tiga fitur AI: pengelompokan otomatis (menganalisis tab yang terbuka dan mengelompokkannya secara logis), penamaan cerdas (menyarankan nama untuk grup Anda), dan saran sesi (merekomendasikan cara mengatur alur kerja Anda)."
+  },
+  "cancel": {
+    "question": "Bisakah saya membatalkan langganan?",
+    "answer": "Tentu saja. Anda dapat membatalkan kapan saja dari halaman akun. Akses tetap tersedia hingga akhir periode tagihan saat ini, lalu Anda kembali ke paket gratis."
+  },
+  "browsers": {
+    "question": "Browser apa saja yang didukung TabMerger?",
+    "answer": "Chrome (Chrome Web Store), Edge (Edge Add-ons, atau Chrome Web Store), Brave, Vivaldi, dan Arc (Chrome Web Store), Opera (Chrome Web Store, melalui add-on \"Install Chrome Extensions\" dari Opera), dan Firefox (Firefox Add-ons). Safari tidak didukung."
+  },
+  "privacy": {
+    "question": "Apakah data saya bersifat pribadi?",
+    "answer": "Kami menganggap serius privasi. Data paket gratis hanya disimpan secara lokal — tidak ada yang keluar dari browser Anda. Data sinkronisasi cloud Pro dienkripsi end-to-end di perangkat Anda dengan frasa sandi yang hanya Anda ketahui sebelum mencapai server kami — kami hanya menyimpan ciphertext dan tidak dapat membaca grup atau tab Anda. Kami tidak pernah menjual data Anda."
+  },
+  "downgrade": {
+    "question": "Apa yang terjadi pada grup saya jika saya menurunkan paket?",
+    "answer": "Jika Anda turun dari Pro ke Gratis, grup Anda tetap tersimpan di cloud selama 30 hari. Tab lokal Anda selalu disimpan. Anda dapat mengekspor semuanya sebelum menurunkan paket."
+  }
+}

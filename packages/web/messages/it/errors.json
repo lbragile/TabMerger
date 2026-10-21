@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "Errore 404 · Pagina non trovata",
+    "title": "Questa scheda si è persa",
+    "description": "Abbiamo cercato in ogni gruppo ma non abbiamo trovato questa pagina. Potrebbe essere stata spostata, chiusa o non essere mai esistita. Ti rimettiamo in carreggiata.",
+    "documentTitle": "Pagina non trovata",
+    "tabLabel": "Pagina mancante"
+  },
+  "serverError": {
+    "eyebrow": "Errore 500 · Qualcosa è andato storto",
+    "title": "Questa scheda si è bloccata",
+    "description": "Qualcosa si è rotto da parte nostra durante il caricamento di questa pagina. Le schede e i gruppi nell'estensione non sono interessati. Riprova tra un momento.",
+    "documentTitle": "Qualcosa è andato storto",
+    "tabLabel": "Non risponde"
+  },
+  "links": {
+    "features": "Funzionalità",
+    "pricing": "Prezzi",
+    "faq": "FAQ",
+    "dashboard": "Dashboard",
+    "account": "Account",
+    "contactSupport": "Contatta l'assistenza"
+  },
+  "helpfulLinks": "Link utili",
+  "tryThese": "Oppure prova uno di questi",
+  "illustrationTabResearch": "Ricerca",
+  "illustrationTabDocs": "Documenti",
+  "tryAgain": "Riprova",
+  "backToHome": "Torna alla home",
+  "backToDashboard": "Torna alla dashboard",
+  "devDetails": "Dettagli dell'errore (solo sviluppo)",
+  "referenceId": "ID di riferimento",
+  "copyReferenceId": "Copia ID di riferimento",
+  "referenceIdHint": "Indica questo ID se contatti l'assistenza, così potremo capire cosa è andato storto.",
+  "referenceIdCopied": "ID di riferimento copiato",
+  "referenceIdCopyFailed": "Copia non riuscita. Seleziona l'ID per copiarlo.",
+  "titleWithBrand": "{title} | TabMerger"
+}

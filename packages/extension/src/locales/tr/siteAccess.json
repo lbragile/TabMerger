@@ -1,0 +1,13 @@
+{
+  "success": "Tamam — web sitesi artık TabMerger'ı bulabilir. Bu sekmeyi kapatabilirsiniz.",
+  "refused": "Firefox buna izin vermedi. Tekrar deneyebilir veya daha sonra about:addons üzerinden izin verebilirsiniz.",
+  "title": "TabMerger web sitesinin TabMerger'ı bulmasına izin verin",
+  "checking": "Site erişimi kontrol ediliyor…",
+  "explainer": "Firefox, TabMerger'a {{hosts}} üzerinde henüz izin vermedi. Bu olmadan web sitesi TabMerger'ı algılayamaz, oturumunuzu aktaramaz veya eşitleme başlatamaz. Aşağıdaki düğmeye tıklayın, ardından Firefox'un isteminde onaylayın.",
+  "allowOn": "TabMerger'a {{hosts}} üzerinde izin ver",
+  "bannerLabel": "Web sitesi erişimi",
+  "bannerText": "Web sitesinin TabMerger'ı bulup oturumunuzu aktarabilmesi için TabMerger'a {{hosts}} üzerinde izin verin.",
+  "allow": "İzin ver",
+  "dismiss": "Web sitesi erişimi istemini kapat",
+  "openFailed": "Site erişimi sekmesi açılamadı. Tekrar deneyin veya about:addons üzerinden izin verin."
+}

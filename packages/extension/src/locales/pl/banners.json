@@ -1,0 +1,23 @@
+{
+  "review": "Przejrzyj",
+  "archive": "Archiwizuj",
+  "dismiss": "Odrzuć",
+  "getMore": "Zdobądź więcej",
+  "removeStale": "Usuń nieaktywne",
+  "staleTabs": "{{count}} kart zostało zapisanych ponad {{days}} dni temu.",
+  "staleRemoved_one": "Usunięto {{count}} nieaktywną kartę",
+  "staleRemoved_few": "Usunięto {{count}} nieaktywne karty",
+  "staleRemoved_many": "Usunięto {{count}} nieaktywnych kart",
+  "staleRemoved_other": "Usunięto {{count}} nieaktywnej karty",
+  "upgrade": "Przejdź na wyższy plan",
+  "paymentIssue": "Problem z płatnością — zaktualizuj kartę",
+  "planEnds": "Twój plan Pro kończy się {{date}}",
+  "approachingLimit": "Zbliżasz się do limitu darmowego planu — przejdź na Pro dla nieograniczonej liczby grup i kart",
+  "update": {
+    "label": "Dostępna aktualizacja",
+    "text": "Wersja {{version}} jest gotowa. Ponowne uruchomienie zamknie ten popup.",
+    "restart": "Uruchom ponownie, aby zaktualizować",
+    "restartLabel": "Uruchom ponownie TabMerger, aby zaktualizować do wersji {{version}}. To zamknie popup.",
+    "dismissLabel": "Odrzuć powiadomienie o aktualizacji dla wersji {{version}}"
+  }
+}

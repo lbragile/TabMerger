@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "अभी-अभी",
+    "minutesAgo": "{count} मिनट पहले",
+    "hoursAgo": "{count} घंटे पहले",
+    "daysAgo": "{count} दिन पहले",
+    "renameFailed": "डिवाइस का नाम बदला नहीं जा सका",
+    "renamed": "डिवाइस का नाम बदल दिया गया",
+    "removeFailed": "डिवाइस हटाया नहीं जा सका",
+    "removed": "डिवाइस हटा दिया गया",
+    "removeManyFailed": "डिवाइस हटाए नहीं जा सके",
+    "removedMany": "{count, plural, one {{count} डिवाइस हटाया गया} other {{count} डिवाइस हटाए गए}}",
+    "empty": "अभी तक कोई डिवाइस नहीं।",
+    "selectAll": "सभी डिवाइस चुनें",
+    "selectedCount": "{count} चुने गए",
+    "removeSelected": "{count, plural, one {{count} डिवाइस हटाएँ} other {{count} डिवाइस हटाएँ}}",
+    "selectDevice": "{name} चुनें",
+    "active": "सक्रिय {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} विंडो} other {{windows} विंडो}} · {tabs, plural, one {{tabs} टैब} other {{tabs} टैब}}",
+    "options": "डिवाइस विकल्प",
+    "rename": "नाम बदलें",
+    "remove": "हटाएँ",
+    "removeTitle": "डिवाइस हटाएँ?",
+    "removeBody": "\"{name}\" अब टैब डेटा सिंक नहीं करेगा। इसे पूर्ववत नहीं किया जा सकता।",
+    "removeManyTitle": "{count} डिवाइस हटाएँ?",
+    "removeManyBody": "ये डिवाइस अब टैब डेटा सिंक नहीं करेंगे। इसे पूर्ववत नहीं किया जा सकता।",
+    "cancel": "रद्द करें"
+  },
+  "metaTitle": "खाता",
+  "title": "खाता सेटिंग्स",
+  "lead": "अपना खाता और सदस्यता प्रबंधित करें।",
+  "stats": {
+    "groups": "सिंक किए गए ग्रुप",
+    "tabs": "सहेजे गए टैब",
+    "sessions": "सत्र और बैकअप",
+    "aiCredits": "शेष AI क्रेडिट"
+  },
+  "profile": {
+    "title": "प्रोफ़ाइल",
+    "description": "आपके खाते की जानकारी।",
+    "email": "ईमेल",
+    "memberSince": "सदस्य बने"
+  },
+  "signOutAll": {
+    "title": "सभी डिवाइस से साइन आउट करें",
+    "description": "इससे सभी सक्रिय सत्र रद्द हो जाएँगे।",
+    "button": "साइन आउट"
+  },
+  "subscription": {
+    "title": "सदस्यता",
+    "description": "अपना प्लान और बिलिंग प्रबंधित करें।",
+    "manageBilling": "बिलिंग प्रबंधित करें",
+    "upgrade": "अपग्रेड करें",
+    "cancelNote": "आप <strong>बिलिंग प्रबंधित करें</strong> से कभी भी रद्द कर सकते हैं। मौजूदा बिलिंग अवधि के अंत तक आपकी पहुँच बनी रहती है।"
+  },
+  "devicesCard": {
+    "title": "डिवाइस",
+    "description": "आपके ग्रुप और टैब सिंक करने वाले डिवाइस। केवल Pro और Pro AI।"
+  },
+  "password": {
+    "tooShort": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    "updated": "पासवर्ड अपडेट हो गया",
+    "set": "पासवर्ड सेट हो गया — अब आप ईमेल + पासवर्ड से भी साइन इन कर सकते हैं",
+    "change": "पासवर्ड बदलें",
+    "setLabel": "पासवर्ड सेट करें",
+    "placeholder": "••••••••••",
+    "save": "सहेजें"
+  },
+  "credits": {
+    "failed": "चेकआउट शुरू नहीं हो सका",
+    "getMore": "और पाएँ"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "appName": "TabMerger",
+  "tier": {
+    "free": "Paket Gratis",
+    "pro": "Pro",
+    "proAi": "Pro AI"
+  },
+  "upgrade": "Tingkatkan",
+  "untitled": "Tanpa judul",
+  "window": "Jendela",
+  "cancel": "Batal",
+  "close": "Tutup",
+  "save": "Simpan",
+  "delete": "Hapus",
+  "shortcutSearch": "Ctrl K",
+  "tabCount_other": "{{count}} tab",
+  "windowCount_other": "{{count}} jendela",
+  "groupCount_other": "{{count}} grup",
+  "freeGroupLimit": "Paket gratis mengizinkan hingga {{max}} grup.",
+  "aiQuotaUsed": "Anda telah menggunakan semua kredit AI bulan ini.",
+  "buyMore": "Beli lebih banyak",
+  "windowCountTitle_other": "{{count}} Jendela",
+  "tabCountTitle_other": "{{count}} Tab",
+  "groupCounts": "{{windows}} ◆ {{tabs}}",
+  "nowOpen": "Sedang Terbuka",
+  "groupCountTitle_other": "{{count}} Grup",
+  "time": {
+    "justNow": "baru saja",
+    "minutesAgo_other": "{{count}} men lalu",
+    "hoursAgo_other": "{{count}} j lalu",
+    "daysAgo_other": "{{count}} h lalu"
+  },
+  "duration": {
+    "lessThanMinute": "< 1 men",
+    "minutes_other": "{{count}} men",
+    "hours_other": "{{count}} jam",
+    "days_other": "{{count}} hari",
+    "months_other": "{{count}} bulan",
+    "years_other": "{{count}} tahun"
+  },
+  "quickSaveGroup": "Simpan Cepat",
+  "importedGroup": "Grup yang diimpor",
+  "importedFolder": "Diimpor",
+  "noGroupSelected": "Tidak ada grup yang dipilih",
+  "showPassphrase": "Tampilkan frasa sandi",
+  "hidePassphrase": "Sembunyikan frasa sandi",
+  "notifications": "Notifikasi",
+  "closeToast": "Tutup notifikasi"
+}

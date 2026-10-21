@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "az önce",
+    "minutesAgo": "{count} dk önce",
+    "hoursAgo": "{count} sa önce",
+    "daysAgo": "{count} gün önce",
+    "renameFailed": "Cihaz yeniden adlandırılamadı",
+    "renamed": "Cihaz yeniden adlandırıldı",
+    "removeFailed": "Cihaz kaldırılamadı",
+    "removed": "Cihaz kaldırıldı",
+    "removeManyFailed": "Cihazlar kaldırılamadı",
+    "removedMany": "{count, plural, one {{count} cihaz kaldırıldı} other {{count} cihaz kaldırıldı}}",
+    "empty": "Henüz cihaz yok.",
+    "selectAll": "Tüm cihazları seç",
+    "selectedCount": "{count} seçildi",
+    "removeSelected": "{count, plural, one {{count} cihazı kaldır} other {{count} cihazı kaldır}}",
+    "selectDevice": "Seç: {name}",
+    "active": "Etkin: {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} pencere} other {{windows} pencere}} · {tabs, plural, one {{tabs} sekme} other {{tabs} sekme}}",
+    "options": "Cihaz seçenekleri",
+    "rename": "Yeniden adlandır",
+    "remove": "Kaldır",
+    "removeTitle": "Cihaz kaldırılsın mı?",
+    "removeBody": "\"{name}\" artık sekme verilerini eşitlemeyecek. Bu işlem geri alınamaz.",
+    "removeManyTitle": "{count} cihaz kaldırılsın mı?",
+    "removeManyBody": "Bu cihazlar artık sekme verilerini eşitlemeyecek. Bu işlem geri alınamaz.",
+    "cancel": "İptal"
+  },
+  "metaTitle": "Hesap",
+  "title": "Hesap ayarları",
+  "lead": "Hesabınızı ve aboneliğinizi yönetin.",
+  "stats": {
+    "groups": "Eşitlenen gruplar",
+    "tabs": "Kaydedilen sekmeler",
+    "sessions": "Oturumlar ve yedekler",
+    "aiCredits": "Kalan yapay zekâ kredisi"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Hesap bilgileriniz.",
+    "email": "E-posta",
+    "memberSince": "Üyelik tarihi"
+  },
+  "signOutAll": {
+    "title": "Tüm cihazlarda oturumu kapat",
+    "description": "Bu işlem tüm etkin oturumları sonlandırır.",
+    "button": "Oturumu kapat"
+  },
+  "subscription": {
+    "title": "Abonelik",
+    "description": "Planınızı ve faturalandırmanızı yönetin.",
+    "manageBilling": "Faturalandırmayı yönet",
+    "upgrade": "Yükselt",
+    "cancelNote": "<strong>Faturalandırmayı yönet</strong> üzerinden istediğiniz zaman iptal edebilirsiniz. Erişiminiz mevcut fatura döneminin sonuna kadar devam eder."
+  },
+  "devicesCard": {
+    "title": "Cihazlar",
+    "description": "Gruplarınızı ve sekmelerinizi eşitleyen cihazlar. Yalnızca Pro ve Pro AI."
+  },
+  "password": {
+    "tooShort": "Parola en az 8 karakter olmalıdır.",
+    "updated": "Parola güncellendi",
+    "set": "Parola belirlendi — artık e-posta ve parolayla da oturum açabilirsiniz",
+    "change": "Parolayı değiştir",
+    "setLabel": "Parola belirle",
+    "placeholder": "••••••••••",
+    "save": "Kaydet"
+  },
+  "credits": {
+    "failed": "Ödeme başlatılamadı",
+    "getMore": "Daha fazla al"
+  }
+}

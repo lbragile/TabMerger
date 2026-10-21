@@ -1,0 +1,7 @@
+{
+  "hex": "16진수 색상",
+  "hexTitle": "16진수 색상 입력(#rrggbb)",
+  "hexPlaceholder": "#rrggbb",
+  "cancel": "취소",
+  "apply": "적용"
+}

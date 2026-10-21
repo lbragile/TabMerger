@@ -1,0 +1,29 @@
+{
+  "dropNewWindow": "Yeni pencere için buraya bırakın",
+  "removeStale_one": "{{count}} eski sekmeyi kaldır",
+  "removeStale_other": "{{count}} eski sekmeyi kaldır",
+  "editGroupNote": "Grup notunu düzenle",
+  "editNote": "Notu düzenle",
+  "moreGroupOptions": "Diğer grup seçenekleri",
+  "notePlaceholder": "Bu grup için not ekleyin…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "Bu grupta pencere yok",
+  "addWindow": "Pencere Ekle",
+  "search": {
+    "elsewhere": "{{groups}} içinde {{tabs}}",
+    "matchingTabs_one": "{{count}} eşleşen sekme",
+    "matchingTabs_other": "{{count}} eşleşen sekme",
+    "otherGroups_one": "{{count}} diğer grup",
+    "otherGroups_other": "{{count}} diğer grup",
+    "noneInGroup": "Bu grupta eşleşen sekme yok",
+    "hidden_one": "{{count}} sekme arama tarafından gizlendi",
+    "hidden_other": "{{count}} sekme arama tarafından gizlendi",
+    "allMatch_one": "{{count}} sekmenin tümü eşleşiyor",
+    "allMatch_other": "{{count}} sekmenin tümü eşleşiyor",
+    "someMatch_one": "{{count}} sekmeden {{matched}} tanesi eşleşiyor",
+    "someMatch_other": "{{count}} sekmeden {{matched}} tanesi eşleşiyor",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "Bu grupta “{{query}}” ile eşleşen sekme yok"
+  },
+  "createGroup": "Yeni grup oluştur…"
+}

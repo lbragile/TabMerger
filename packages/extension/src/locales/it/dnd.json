@@ -1,0 +1,81 @@
+{
+  "instructions": "Premi Spazio per prendere, i tasti freccia per scegliere una posizione (Sinistra e Destra passano tra finestre e gruppi), Spazio per rilasciare, Esc per annullare. Maiusc+Spazio seleziona un intervallo e {{modifier}}+A seleziona tutto, per spostare più elementi insieme.",
+  "keys": {
+    "command": "Comando",
+    "control": "Ctrl"
+  },
+  "type": {
+    "tab": "scheda",
+    "window": "finestra",
+    "group": "gruppo",
+    "item": "elemento"
+  },
+  "typeStart": {
+    "tab": "Scheda",
+    "window": "Finestra",
+    "group": "Gruppo",
+    "item": "Elemento"
+  },
+  "untitledTab": "Scheda senza titolo",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, a partire da {{name}},",
+  "position": {
+    "tab": "posizione {{index}} di {{total}} in {{window}} del gruppo {{group}}",
+    "window": "posizione {{index}} di {{total}} nel gruppo {{group}}",
+    "group": "posizione {{index}} di {{total}}"
+  },
+  "target": {
+    "newGroup": "un nuovo gruppo",
+    "newWindowAtEnd": "una nuova finestra alla fine del gruppo {{group}}",
+    "nowOpen": "Aperte ora, che le apre in una nuova finestra del browser",
+    "groupAsWindow": "il gruppo {{group}}, come nuova finestra"
+  },
+  "token": {
+    "dropped": "Rilasciato.",
+    "cancelled": "Annullato."
+  },
+  "bail": {
+    "cancelled": "Spostamento annullato.",
+    "nothingMoved": "Rilasciato; non è stato spostato nulla.",
+    "returnedMany": "Gli elementi ({{items}}) sono tornati",
+    "returnedOne": "{{named}} è tornato",
+    "noop": "{{what}} rilasciato di nuovo in {{position}}; non è stato spostato nulla.",
+    "stale": "I gruppi sono cambiati durante il trascinamento, quindi non è stato spostato nulla. {{returned}} in {{position}}.",
+    "cancelledReturned": "Spostamento annullato. {{returned}} in {{position}}.",
+    "rejected": "Impossibile rilasciare qui. {{returned}} in {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} è stato rimosso altrove.",
+  "removedElsewhere_other": "{{count}} sono stati rimossi altrove.",
+  "removedElsewhere_many": "{{count}} sono stati rimossi altrove.",
+  "stillSelected_one": "È ancora selezionato.",
+  "stillSelected_other": "Sono ancora selezionati.",
+  "stillSelected_many": "Sono ancora selezionati.",
+  "dropped": "Rilasciato.",
+  "movedGroups": "Spostati {{count}} gruppi in {{position}}, come un unico blocco.",
+  "movedGroup": "Gruppo {{name}} spostato in {{position}}.",
+  "partial": "{{count}} di {{total}}",
+  "at": "posizione {{index}} di {{total}}",
+  "startingAt": "a partire dalla posizione {{index}} di {{total}}",
+  "whereTab": "{{window}} del gruppo {{group}}, {{at}}",
+  "whereWindow": "gruppo {{group}}, {{at}}",
+  "movedTo": "Spostato {{items}} in {{where}}.",
+  "openTabsClosed": " Le schede aperte vengono chiuse.",
+  "groupHidden": " Il gruppo {{group}} non è visibile.",
+  "openedNewWindow": "Aperto {{items}} in una nuova finestra del browser.",
+  "openedNowOpen": "Aperto {{items}} in Aperte ora.",
+  "movedNewWindow": "Spostato {{items}} in una nuova finestra del browser.",
+  "movedWithinNowOpen": "Spostato {{items}} all'interno di Aperte ora.",
+  "originalPosition": "Sopra la posizione originale.",
+  "pickedUpType": "Preso {{type}}.",
+  "pickedUpMany": "Preso {{what}}.",
+  "pickedUpOne": "Preso {{type}} {{name}}, {{position}}.",
+  "groupShown": "Il gruppo {{name}} è ora visibile.",
+  "copyHint": "Rilasciando in un gruppo salvato si crea una copia; le schede aperte restano aperte.",
+  "notOver": "Non sopra una destinazione di rilascio.",
+  "over": "Sopra {{target}}.",
+  "cantDropOn": "Impossibile rilasciare su {{target}}.",
+  "typeDropped": "{{type}} rilasciato.",
+  "cancelledReturnedType": "Spostamento annullato; {{type}} è tornato nella sua posizione.",
+  "saveFailed": "Impossibile salvare lo spostamento; ripristinato."
+}

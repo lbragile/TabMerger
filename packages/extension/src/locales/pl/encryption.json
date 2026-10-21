@@ -1,0 +1,27 @@
+{
+  "unavailableBody": "TabMerger nie mógł połączyć się z serwerem, aby sprawdzić szyfrowanie tego konta, więc synchronizacja jest wstrzymana. Twoje grupy są nadal zapisane na tym urządzeniu. Sprawdź połączenie i spróbuj ponownie.",
+  "unlockBody": "Wpisz hasło szyfrujące, aby odblokować zsynchronizowane dane na tym urządzeniu. To jednorazowy krok dla każdego urządzenia — nie zostaniesz o to ponownie poproszony, chyba że się wylogujesz. Nie ma sposobu na odzyskanie danych, jeśli zapomnisz hasła — nigdy nie opuszcza ono Twojego urządzenia i TabMerger nie może go za Ciebie zresetować.",
+  "setupBody": "Twoje zsynchronizowane dane grup i kart są szyfrowane end-to-end hasłem znanym tylko Tobie. Wybierz je teraz — nie ma sposobu na odzyskanie danych, jeśli je zapomnisz, nigdy nie opuszcza ono Twojego urządzenia i TabMerger nie może go za Ciebie zresetować.",
+  "unavailableTitle": "Nie można teraz sprawdzić szyfrowania",
+  "tryAgain": "Spróbuj ponownie",
+  "unlockTitle": "Odblokuj szyfrowanie",
+  "passphrase": "Hasło",
+  "passphraseLabel": "Hasło szyfrujące",
+  "unlock": "Odblokuj",
+  "setupTitle": "Skonfiguruj szyfrowanie",
+  "newPassphrase": "Nowe hasło",
+  "confirmPassphrase": "Potwierdź hasło",
+  "setupButton": "Skonfiguruj szyfrowanie",
+  "error": {
+    "spaces": "Hasło nie może zawierać spacji",
+    "tooShort": "Hasło musi mieć co najmniej 8 znaków",
+    "mismatch": "Hasła nie są zgodne",
+    "setupFailed": "Nie udało się skonfigurować szyfrowania",
+    "wrong": "Nieprawidłowe hasło",
+    "wasReset": "Szyfrowanie zostało zresetowane dla tego konta. Wybierz nowe hasło."
+  },
+  "toast": {
+    "setUp": "Szyfrowanie skonfigurowane",
+    "unlocked": "Szyfrowanie odblokowane"
+  }
+}

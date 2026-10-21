@@ -1,0 +1,23 @@
+{
+  "heading": "사용자들의 이야기",
+  "byStore": "스토어별",
+  "loading": "리뷰 불러오는 중",
+  "averageRating": "평균 평점",
+  "averageRatingOn": "{store} 평균 평점",
+  "ratingsOn": "{store} {count, plural, other {평점}}",
+  "ratingsAcross": "{stores} 전체 평점",
+  "ratingCount": "{count, plural, other {평점 #개}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": "점(5점 만점)",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "평점 00개",
+  "stars": "별 5개 중 {score}개",
+  "readFull": "리뷰 전체 보기",
+  "readFullBy": " ({store}, {author} 작성)",
+  "carousel": "캐러셀",
+  "play": "리뷰 재생",
+  "pause": "리뷰 일시 중지",
+  "previous": "이전 리뷰",
+  "next": "다음 리뷰",
+  "skeletonRating": "0.00 / 5"
+}

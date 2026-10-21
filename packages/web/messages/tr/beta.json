@@ -1,0 +1,1549 @@
+{
+  "toc": {
+    "join": {
+      "label": "Katıl ve yükle"
+    },
+    "what-to-test": {
+      "label": "Neler test edilmeli"
+    },
+    "known-issues": {
+      "label": "Bilinen sorunlar"
+    },
+    "report-bugs": {
+      "label": "Hata bildir"
+    },
+    "faq": {
+      "label": "SSS"
+    }
+  },
+  "testCards": {
+    "0": {
+      "label": "Başarılı ödeme (Visa)",
+      "note": "Yükseltmek için bunu kullanın"
+    },
+    "1": {
+      "label": "Genel ret"
+    },
+    "2": {
+      "label": "Yetersiz bakiye"
+    },
+    "3": {
+      "label": "3D Secure doğrulaması gerektirir"
+    }
+  },
+  "accessLabels": {
+    "free": "Ücretsiz: hesap gerekmez",
+    "upgrading": "Pro'ya geçiş: test ödemeleri, gerçek para yok",
+    "some-pro": "Ücretsiz ve Pro: her Pro kısmı işaretlidir",
+    "pro": "Yalnızca Pro"
+  },
+  "areas": {
+    "groups-and-tabs": {
+      "title": "Gruplar ve sekmeler",
+      "items": {
+        "0": {
+          "heading": "Gruplar, renkler ve geri al/yinele",
+          "checks": "Bir grup oluşturup adlandırabildiğinizi ve renklendirebildiğinizi, içine sekme kaydedebildiğinizi ve bir değişikliği hiçbir şey kaybetmeden geri alıp yineleyebildiğinizi.",
+          "steps": {
+            "0": "Kenar çubuğunda \"Grup Ekle\"ye tıklayın ve bir ad verin.",
+            "1": "Renk seçiciyi açmak için grubun yanındaki renkli noktaya tıklayın, bir hazır renk seçin veya herhangi bir renge sürükleyin, ardından Uygula'ya tıklayın.",
+            "2": "Gruba birkaç sekme kaydedin (sürükleyip bırakın veya sağ tık menüsünü kullanın).",
+            "3": "Bir sekmeyi silin, ardından Geri Al düğmesine (başlık, sağ üst) ve sonra Yinele'ye tıklayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Yeni bir grubun seçili olduğu ve renk seçicisinin açık olduğu TabMerger açılır penceresi: doygunluk ve ton seçici, 12 hazır renk, bir hex alanı ve İptal ile Uygula düğmeleri",
+              "caption": "Bir grubun renk noktasına tıklamak bu seçiciyi açar."
+            }
+          },
+          "good": {
+            "0": "Grup anında güncellenir.",
+            "1": "Geri Al, silinen sekmeyi tam olarak bulunduğu yere geri getirir.",
+            "2": "Yinele onu tekrar kaldırır.",
+            "3": "Senkronizasyon açıkken, başka bir cihazdan değişiklik getiren bir senkronizasyondan sonra Geri Al grileşebilir. Bu beklenen bir durumdur, hata değildir: değişiklikler başka bir yerden geldiğinde geri alma geçmişi temizlenir."
+          }
+        },
+        "1": {
+          "heading": "\"Şu An Açık\" açık sekmelerinizi takip eder",
+          "checks": "Kalıcı \"Şu An Açık\" grubunun, tarayıcınızda gerçekten açık olan sekmeleri her zaman yansıttığını.",
+          "steps": {
+            "0": "Açılır pencereyi açın ve \"Şu An Açık\"a bakın — kenar çubuğunda her zaman ilk gruptur.",
+            "1": "Açılır pencereye dokunmadan birkaç tarayıcı sekmesi açıp kapatın.",
+            "2": "Açılır pencereyi yeniden açın ve \"Şu An Açık\"ı tekrar kontrol edin."
+          },
+          "examples": {
+            "0": {
+              "alt": "\"Şu An Açık\" seçiliyken açılır pencere: tarayıcıda şu anda açık olan üç sekmeyi listeleyen tek bir pencere",
+              "caption": "\"Şu An Açık\" kenar çubuğunda her zaman ilktir ve şu anda açık olan sekmeleri listeler."
+            }
+          },
+          "good": {
+            "0": "\"Şu An Açık\", herhangi bir elle yenileme gerekmeden gerçek sekmelerinizi takip eder.",
+            "1": "Onu silemez veya en üstten başka bir yere taşıyamazsınız."
+          }
+        },
+        "2": {
+          "heading": "Tüm pencereleri kaydetme ve yeniden açma",
+          "checks": "Kaydedilen bir pencerenin her sekmeyi sırasıyla koruduğunu ve eksiksiz yeniden açıldığını.",
+          "steps": {
+            "0": "Bir pencerenin tamamını bir gruba kaydedin (pencerenin sürükleme tutamacını bir grubun üzerine sürükleyin veya \"…\" menüsünü kullanın).",
+            "1": "Grubu açın ve pencereyi yeniden açmak için pencerenin \"…\" menüsünü kullanın — her iki seçenek de sunuluyorsa hem yeni pencere olarak hem de mevcut pencerede sekmeler olarak."
+          },
+          "examples": {
+            "0": {
+              "alt": "Her biri tek sekme içeren dört ayrı kaydedilmiş pencereye sahip bir TabMerger grubu",
+              "caption": "Bir grup, her biri kendi sekme sayısına sahip birkaç ayrı pencere tutabilir."
+            }
+          },
+          "good": {
+            "0": "Tüm sekmeler doğru başlık ve URL'lerle, aynı sırada yeniden açılır."
+          }
+        },
+        "3": {
+          "heading": "Bir grubu arşivleme ve geri yükleme",
+          "checks": "Arşivlemenin bir grubu silmeden gizlediğini ve geri yüklemenin onu değişmeden geri getirdiğini.",
+          "steps": {
+            "0": "Kenar çubuğunda kaydedilmiş bir gruba sağ tıklayın ve Arşivle'yi seçin.",
+            "1": "Kenar çubuğunun altındaki \"Arşivlenenler\" bölümünü açın ve grubu bulun.",
+            "2": "Oradan geri yükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger kenar çubuğunun altındaki Arşivlenenler bölümü, arşivlenmiş bir grubu gösterecek şekilde genişletilmiş",
+              "caption": "Kenar çubuğunun altındaki Arşivlenenler bölümü açık: \"Alışveriş\" arşivlenmiş, Geri Yükle ve Sil düğmeleriyle."
+            }
+          },
+          "good": {
+            "0": "Arşivlenen gruplar etkin listeden kaybolur ama asla silinmez.",
+            "1": "Geri yüklendiklerinde tam olarak eskisi gibi yeniden görünürler."
+          }
+        },
+        "4": {
+          "heading": "Oturumları kaydetme ve geri yükleme",
+          "checks": "Kaydedilen bir oturumun gruplarınızı kaydettiğiniz andaki haliyle geri getirdiğini.",
+          "steps": {
+            "0": "Bir oturum kaydedin — mevcut gruplarınızın adlandırılmış bir anlık görüntüsü (kenar çubuğunun Oturumlar alanının yakınında \"Oturumu Kaydet\"i arayın).",
+            "1": "Gruplarınızda bazı değişiklikler yapın.",
+            "2": "Kaydedilen oturumu geri yükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kaydedilmiş bir oturumu gösteren TabMerger kenar çubuğunun Oturumlar bölümü",
+              "caption": "Oturumlar bölümünde Geri Yükle ve Sil düğmeleriyle kaydedilmiş bir oturum ve \"Oturum kaydedildi\" bildirimi."
+            }
+          },
+          "good": {
+            "0": "Geri yükleme, grupları oturumu kaydettiğiniz andaki haliyle geri getirir."
+          }
+        },
+        "5": {
+          "heading": "Arama",
+          "checks": "Aramanın tüm gruplarınızda başlığa veya URL'ye göre sekme bulduğunu ve group:, window: ve tag: filtrelerinin sonuçları daralttığını.",
+          "steps": {
+            "0": "Aramayı açmak için Ctrl+K'ya (Mac'te Cmd+K) basın.",
+            "1": "Bir yerde kaydedilmiş bir \"GitHub\" sekmesi varken \"hub\" gibi düz bir alt dize yazın — büyük/küçük harf duyarsız olarak başlık veya URL ile eşleşir.",
+            "2": "Bunu temizleyin ve bunun yerine bir önek deneyin: \"group:\" yazın ve beliren seçiciden gruplarınızdan birini seçin veya aynı şekilde örneğin \"window:\" ya da \"tag:\" yazın.",
+            "3": "Sonuçlardan birine tıklayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "\"hub\" yazılmış TabMerger arama katmanı, eşleşen bir GitHub sekmesi sonucunu gösteriyor",
+              "caption": "\"hub\" yazmak — sekme başlığı veya URL'ye karşı düz bir alt dize eşleşmesi."
+            }
+          },
+          "good": {
+            "0": "Sonuçlar siz yazdıkça güncellenir.",
+            "1": "Düz bir arama, başlığı veya URL'si herhangi bir yerde o alt dizeyi içeren her sekmeyle eşleşir (harflerin sırayla geçmesi değil).",
+            "2": "\"group:\", \"window:\" veya \"tag:\" öneki aramanın kapsamını belirler ve o önek için bir seçici sunar.",
+            "3": "Herhangi bir sonuca tıklamak aramayı kapatır ve sizi doğrudan o sonucun grubuna (pencere sonucu için penceresine) götürür."
+          }
+        },
+        "6": {
+          "heading": "Eskimiş sekmeler",
+          "checks": "Bir süredir açmadığınız sekmelerin işaretlendiğini ve güvenle gözden geçirilip kaldırılabildiğini.",
+          "steps": {
+            "0": "Ayarlar'ı açın ve eskimiş sekme eşiğini belirleyin (ör. 30 gün).",
+            "1": "Bu eşikten eski en az 5 sekme olmasını bekleyin (veya oluşturun).",
+            "2": "Sekme listesinin üstündeki turuncu başlığı arayın ve her iki düğmesini de deneyin: Gözden Geçir, ardından Eskimişleri kaldır."
+          },
+          "examples": {
+            "0": {
+              "alt": "Sekme listesinin üstünde Gözden Geçir ve Eskimişleri kaldır düğmeleriyle turuncu eskimiş sekme başlığı",
+              "caption": "Eskimiş sekme başlığı ve Gözden Geçir / Eskimişleri kaldır düğmeleri."
+            }
+          },
+          "good": {
+            "0": "Gözden Geçir, tam olarak hangi sekmelerin eskimiş olduğunu gösterir.",
+            "1": "Eskimişleri kaldır, herhangi bir şeyi silmeden önce onay ister (Ayarlar'da \"silmeden önce onayla\" açıksa)."
+          },
+          "report": "Sildiğiniz veya arşivlediğiniz bir grup kendiliğinden yeniden ortaya çıkıyor — özellikle aradığımız \"diriliş\" hatası budur."
+        },
+        "7": {
+          "heading": "Sekme hatırlatıcıları kurma",
+          "checks": "Kaydedilmiş bir sekmede hatırlatıcı ayarlayabildiğinizi, değiştirebildiğinizi ve temizleyebildiğinizi ve seçtiğiniz saatte sizi bilgilendirdiğini.",
+          "steps": {
+            "0": "Kaydedilmiş bir sekmeye sağ tıklayın ve \"Bana hatırlat…\"ı seçin. Hatırlatıcılar sekme başınadır; Ayarlar'da bunlar için bir denetim yoktur.",
+            "1": "Sekmenin altında açılan düzenleyicide, hemen ayarlamak için bir hazır seçeneğe (30 dk, 1 saat, 3 saat veya Yarın) tıklayın.",
+            "2": "Tekrar açın (sağ tık menüsünde \"Hatırlatıcıyı düzenle\" veya sekmenin saat simgesine tıklayın). Bu kez birkaç dakika sonrası için bir tarih ve saat seçin, kısa bir not yazın ve Ayarla'ya tıklayın.",
+            "3": "Saat simgesinin üzerine gelin, ardından hatırlatıcının tetiklenmesini bekleyin ve bildirimine tıklayın.",
+            "4": "Bir tane daha ayarlayın, ardından sekmeye sağ tıklayın ve \"Hatırlatıcıyı temizle\"yi seçin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kaydedilmiş bir sekmenin \"Şu süre sonra hatırlat…\" düzenleyicisi: 30 dk, 1 saat, 3 saat ve Yarın düğmeleri, bir tarih ve saat alanı, isteğe bağlı bir not ve İptal ile Ayarla",
+              "caption": "Kaydedilmiş bir sekmeye sağ tıklayın → \"Bana hatırlat…\" bu düzenleyiciyi sekmenin altında açar."
+            },
+            "1": {
+              "alt": "Hatırlatıcı ayarlandıktan sonra aynı pencere: Q3 Planlama sekmesinin satırının sonunda bir saat simgesi",
+              "caption": "Ayarlandıktan sonra sekmede bir saat simgesi görünür."
+            }
+          },
+          "good": {
+            "0": "Hatırlatıcı ayarlandığında sekmede bir saat simgesi görünür ve üzerine gelmek saati (ve notunuzu) gösterir.",
+            "1": "Sağ tık menüsü artık bunun için \"Hatırlatıcıyı düzenle\" ve \"Hatırlatıcıyı temizle\" seçeneklerini sunar.",
+            "2": "Geçmişteki bir saat için Ayarla yok sayılır; yalnızca gelecekteki bir saat hatırlatıcıyı ayarlar.",
+            "3": "Sekmenin başlığını (ve notunuzu) içeren bir \"TabMerger Hatırlatıcısı\" bildirimi, ayarladığınız saate yakın bir zamanda görünür ve siz bir işlem yapana kadar kalır.",
+            "4": "Bildirime tıklamak sekmeyi açar.",
+            "5": "Hatırlatıcıyı temizle saat simgesini kaldırır ve daha sonra hiçbir bildirim görünmez."
+          },
+          "report": "Bir hatırlatıcı hiç tetiklenmiyor, iki kez tetikleniyor veya temizledikten sonra hâlâ tetikleniyor."
+        },
+        "8": {
+          "heading": "Gruplar, pencereler ve sekmelerdeki notlar",
+          "checks": "Bir gruba, pencereye veya sekmeye kısa bir not ekleyebildiğinizi ve daha sonra düzenleyebildiğinizi.",
+          "steps": {
+            "0": "Grup: kenar çubuğunda bir gruba sağ tıklayın (veya pencerelerinin üstündeki ⋯ düğmesini kullanın) ve \"Not ekle\"yi seçin. Bir şey yazın ve Kaydet'e tıklayın.",
+            "1": "Pencere: bir pencerenin başlığına sağ tıklayın (veya ⋯ düğmesini kullanın) ve \"Not ekle\"yi seçin. Bu kez Ctrl+Enter (Mac'te Cmd+Enter) ile kaydedin.",
+            "2": "Sekme: kaydedilmiş bir sekmeye sağ tıklayın ve \"Not ekle\"yi seçin. Bir şey yazın, ardından Kaydet yerine başka bir yere tıklayın.",
+            "3": "Notu yeniden açmak için bir not simgesine tıklayın, değiştirin ve Escape'e basın.",
+            "4": "Açılır pencereyi kapatıp yeniden açın."
+          },
+          "good": {
+            "0": "Kaydedilen her not küçük bir not simgesi gösterir: grubun pencere sayısının yanında, pencerenin başlığında ve sekmenin satırında. Menü öğesi artık \"Notu düzenle\" der.",
+            "1": "Kaydet, Ctrl/Cmd+Enter ve başka yere tıklamak notu kaydeder; Escape ve İptal kaydetmeden kapatır.",
+            "2": "Notlar, kutunun altında bir sayaçla 500 karakterle sınırlıdır.",
+            "3": "Notlar açılır pencere yeniden açıldıktan sonra (ve senkronizasyon açıkken diğer cihazlarınızda) hâlâ oradadır."
+          },
+          "report": "Bir not kayboluyor, yanlış öğeye ekleniyor veya Escape ya da İptal'e bastığınızda kaydediliyor."
+        },
+        "9": {
+          "heading": "\"Silmeden önce onayla\" açıkken ve kapalıyken silme",
+          "checks": "Silme işlemlerinin yalnızca \"Silmeden önce onayla\" açıkken önce sorduğunu ve Geri Al'ın sildiğiniz şeyi geri getirdiğini.",
+          "steps": {
+            "0": "Ayarlar → Genel'de \"Silmeden önce onayla\"nın kapalı olduğundan emin olun (varsayılan olarak kapalıdır) ve kaydedin.",
+            "1": "Bir sekmeyi kaldırın (✕ işareti veya sağ tık → Sekmeyi kaldır), bir pencereyi kaldırın (⋯ → Pencereyi kaldır) ve bir grubu silin (sağ tık → Grubu sil). Her birinden sonra Geri Al'a (sağ üst) tıklayın.",
+            "2": "\"Silmeden önce onayla\"yı açın, kaydedin ve üç silme işlemini tekrarlayın. Aldığınız ilk iletişim kutusunu iptal edin, sonrakini onaylayın.",
+            "3": "Açıkken, seçim çubuğundan birkaç seçili grubu silmeyi ve eskimiş sekmeleri olan bir grupta \"Eskimişleri kaldır\"ı da deneyin."
+          },
+          "good": {
+            "0": "Ayar kapalıyken pencereler ve gruplar iletişim kutusu olmadan hemen kaldırılır.",
+            "1": "Açıkken bir pencereyi kaldırmak, bir grubu silmek, bir seçimi silmek ve \"Eskimişleri kaldır\" önce sorar ve İptal her şeyi olduğu gibi bırakır.",
+            "2": "Tek bir sekmeyi kaldırmak, ayar açık da olsa kapalı da olsa asla sormaz. Geri Al onu geri getirir.",
+            "3": "Geri Al, az önce sildiğiniz şeyi geri yükler: sekmeyi, pencereyi veya grubu, aynı yerde, sekmeleriyle birlikte."
+          },
+          "report": "Ayar açıkken bir şey sormadan siliniyor (tek bir sekme dışında), kapalıyken bir iletişim kutusu görünüyor veya Geri Al öğeyi tam olarak geri getirmiyor."
+        },
+        "10": {
+          "heading": "Grup menüsü",
+          "checks": "Bir grubun menüsündeki her işlemin etiketinde yazanı yaptığını.",
+          "steps": {
+            "0": "Tam menüsünü açmak için kenar çubuğunda kaydedilmiş bir gruba sağ tıklayın. Bir grubun pencerelerinin üstündeki ⋯ düğmesi bunun daha kısa bir sürümünü açar.",
+            "1": "Yeniden adlandır, Not ekle ve Çoğalt'ı deneyin.",
+            "2": "Mevcutla değiştir (grubun pencerelerini açık tarayıcı pencerelerinizle değiştirir) ve Mevcutla birleştir'i (açık pencerelerinizi gruba ekler) deneyin. Her birinden sonra geri alın.",
+            "3": "Tümünü yeni pencerede aç, Pencereleri birleştir, Pencereleri ayır, Başlığa göre sırala, URL'ye göre sırala ve Yinelenen sekmeleri kaldır'ı deneyin.",
+            "4": "Grubu arşivle'yi, ardından Arşivlenenler bölümünden Grubu geri yükle'yi deneyin.",
+            "5": "\"Şu An Açık\"a da sağ tıklayın: onda Yeniden adlandır, Değiştir, Birleştir, Arşivle veya Sil yoktur."
+          },
+          "good": {
+            "0": "Her işlem, yalnızca o grupta, açıklamasında yazanı yapar.",
+            "1": "Çoğalt tüm sekmeleriyle bir kopya oluşturur; Birleştir her sekmeyi tutan tek bir pencere bırakır ve Ayır her sekmeye kendi penceresini verir.",
+            "2": "Başlığa / URL'ye göre sırala her sekmeyi alfabetik olarak sıralar ve Yinelenenleri kaldır aynı URL'ye sahip sekmeleri kaldırır.",
+            "3": "Değişiklikler Geri Al ile geri alınabilir."
+          },
+          "report": "Bir işlem yanlış grubu etkiliyor, sekme kaybediyor veya geri alınamıyor."
+        },
+        "11": {
+          "heading": "Pencere menüleri",
+          "checks": "Bir pencerenin her iki menüsünün de çalıştığını: başlığına sağ tıklamak ve ⋯ düğmesi.",
+          "steps": {
+            "0": "Bir pencerenin başlığına sağ tıklayın: \"Gruba taşı\"yı (başka bir grup seçin veya listeden yeni bir grup oluşturun), Not ekle'yi ve Pencereyi yeniden adlandır'ı deneyin.",
+            "1": "Pencerenin ⋯ düğmesini açın: Yeniden adlandır, Gizli olarak işaretle (ardından Gizli işaretini kaldır), Tarayıcıda aç ve Bu pencereyi başlığa / URL'ye göre sırala'yı deneyin.",
+            "2": "\"Şu An Açık\"taki bir pencereye sağ tıklayın: ilk öğe \"Gruba kopyala\" olarak görünür ve kaldırma \"Pencereyi kapat\" olarak görünür."
+          },
+          "good": {
+            "0": "Gruba taşı, pencerenin tamamını sekmeleriyle birlikte seçilen gruba taşır; menüden oluşturulan yeni bir grup pencereyi alır.",
+            "1": "Gizli olarak işaretle pencereye bir \"Gizli\" etiketi ekler ve Gizli işaretini kaldır onu kaldırır.",
+            "2": "Tarayıcıda aç, pencerenin sekmelerini yeni bir tarayıcı penceresinde açar; bazıları zaten açıksa, o pencereye yalnızca eksik olanlar eklenir.",
+            "3": "Sıralama yalnızca o pencerenin sekmelerini yeniden düzenler.",
+            "4": "\"Şu An Açık\"tan Gruba kopyala bir kopya kaydeder ve gerçek pencerenizi açık bırakır."
+          },
+          "report": "Bir menü işlemi farklı bir pencereyi değiştiriyor veya \"Şu An Açık\"taki Pencereyi kapat yanlış tarayıcı penceresini kapatıyor."
+        },
+        "12": {
+          "heading": "Sekme menüsü",
+          "checks": "Bir sekmeye sağ tıklamanın onun için doğru işlemleri sunduğunu.",
+          "steps": {
+            "0": "Kaydedilmiş bir sekmeye sağ tıklayın: \"Gruba taşı\"yı, Sekmeyi yeniden adlandır'ı, ardından \"Orijinal başlığa sıfırla\"yı deneyin.",
+            "1": "\"Şu An Açık\"taki bir sekmeye sağ tıklayın: \"Gruba taşı\"nın yerini \"Gruba kopyala\" alır ve kaldırma \"Sekmeyi kapat\" olarak görünür.",
+            "2": "Açık bir sekmeyle eşleşen bir URL kuralınız varsa, \"Şu An Açık\"ta o sekmeye sağ tıklayın ve \"Şuraya otomatik kaydet: …\" seçeneğini arayın."
+          },
+          "good": {
+            "0": "Gruba taşı sekmeyi seçilen gruba taşır; Gruba kopyala (\"Şu An Açık\"tan) bir kopya kaydeder ve gerçek sekmeyi açık bırakır.",
+            "1": "Sekmeyi yeniden adlandır başlığınızı küçük bir \"yeniden adlandırıldı\" etiketiyle gösterir ve Orijinal başlığa sıfırla sayfanın kendi başlığını geri getirir.",
+            "2": "\"Şuraya otomatik kaydet: '<'group'>'\" yalnızca adresi URL kurallarınızdan biriyle eşleşen bir sekme için görünür ve onu o kuralın grubuna kaydeder."
+          }
+        }
+      }
+    },
+    "right-click-menu": {
+      "title": "Sağ tık menüsü",
+      "items": {
+        "0": {
+          "heading": "Sağ tık menüsünden kaydetme",
+          "checks": "Herhangi bir web sayfasına sağ tıklamanın sekmeyi TabMerger'a veya doğrudan seçilen bir gruba kaydetmenize izin verdiğini.",
+          "steps": {
+            "0": "Herhangi bir web sayfasında sağ tıklayın ve \"TabMerger'a kaydet\"i açın.",
+            "1": "Önce \"Bu sekmeyi kaydet\"i, ardından belirli bir mevcut gruba kaydetmeyi deneyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bir web sayfasındaki sağ tık menüsünün çizimi: \"TabMerger'a kaydet\" Bu sekmeyi kaydet, Soldaki sekmeleri kaydet, Sağdaki sekmeleri kaydet ve Diğer tüm sekmeleri kaydet seçeneklerini açar; \"Bu sekmeyi kaydet\" İş (1p · 5s), Araştırma (1p · 4s), Alışveriş (1p · 3s) ve Okuma Listesi (1p · 5s) gruplarını her biri kendi rengiyle listeler",
+              "caption": "Çizim (bu menüyü tarayıcının kendisi çizdiği için ekran görüntüsü alınamaz): dört \"Kaydet…\" seçeneğinin her biri gruplarınızı renkleri, pencere sayıları ve sekme sayılarıyla listeler."
+            }
+          },
+          "good": {
+            "0": "Bağlam menüsü gerçek gruplarınızı adlarıyla listeler.",
+            "1": "Sekme hemen seçilen grupta görünür."
+          }
+        },
+        "1": {
+          "heading": "Yeni gruplar sağ tık menüsünde görünür",
+          "checks": "Sağ tık menüsünün tarayıcıyı yeniden başlatmadan yeni grupları algıladığını.",
+          "steps": {
+            "0": "Açılır pencereden yepyeni bir grup oluşturun.",
+            "1": "Tarayıcıyı yeniden açmadan herhangi bir sayfaya sağ tıklayın ve \"TabMerger'a kaydet\"i tekrar kontrol edin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Grup listesinin sonunda beşinci bir grup, \"Gezi planı (0p · 0s)\", bulunan aynı sağ tık menüsünün çizimi",
+              "caption": "Çizim: yeni, henüz boş bir grup (\"Gezi planı\") listenin sonunda görünür."
+            }
+          },
+          "good": {
+            "0": "Yeni grup, yeniden başlatma gerekmeden bağlam menüsünde görünür."
+          }
+        }
+      }
+    },
+    "upgrading-to-pro": {
+      "title": "Pro'ya yükseltme (test ödemeleri)",
+      "intro": "Faturalandırma bu betanın bir parçasıdır, ancak yalnızca Stripe'ın test kartlarıyla — hiçbir gerçek kart çalışmaz ve hiçbir gerçek para el değiştirmez. Pro AI ve AI kredi paketleri hâlâ \"yakında\" durumundadır ve satın alınamaz, bu yüzden bu yalnızca Pro (sınırsız grup/sekme + senkronizasyon) içindir.",
+      "items": {
+        "0": {
+          "heading": "Test kartı uyarısı",
+          "checks": "Yalnızca Stripe'ın test kartlarını kullandığınızı: bu betada hiçbir şey gerçek para çekmez.",
+          "steps": {
+            "0": "Ödemeye başlamadan önce bunu okuyun — ihtiyacınız olan kart bilgileri aşağıdadır."
+          },
+          "good": {
+            "0": "Bu akışta asla gerçek bir kart numarası yazmazsınız."
+          }
+        },
+        "1": {
+          "heading": "Uzantıdan yükseltme",
+          "checks": "Uzantının içinden yükseltmenin baştan sona çalıştığını ve uzantının ardından Pro gösterdiğini.",
+          "steps": {
+            "0": "Uzantının açılır penceresini açın ve herhangi bir \"Pro'ya Yükselt\" giriş noktasını kullanın — başlıktaki yükseltme düğmesi, ücretsiz sınıra yaklaştıkça görünen hatırlatma başlığı veya ücretsiz katman sınırına ulaştığınızda gösterilen bir yükseltme istemi.",
+            "1": "Bu, beta web uygulamasının fiyatlandırma sayfasını (preview.tabmerger.com/pricing) yeni bir tarayıcı sekmesinde açar. Orada uzantıda kullandığınız hesapla oturum açın.",
+            "2": "Aylık veya yıllık Pro planını seçin ve Stripe Checkout'a devam edin.",
+            "3": "Ödemeyi yukarıdaki test kartıyla (veya o yolu test ediyorsanız bir ret/3D-Secure kartıyla) tamamlayın, ardından uygulamaya dönün."
+          },
+          "good": {
+            "0": "Ödeme tamamlanır ve Pro gösterilerek web uygulamasına geri dönersiniz.",
+            "1": "Uzantının açılır penceresi planınızı yaklaşık her 30 saniyede bir sorgular, bu yüzden kısa süre içinde Pro'yu kendiliğinden algılamalıdır — beklemek istemiyorsanız açılır pencereyi yeniden açmak da yeni bir kontrolü zorlar."
+          },
+          "report": "Başarılı bir ödeme ve açılır pencerenin yeniden açılmasından birkaç dakikadan fazla sonra uzantı hâlâ ücretsiz katman sınırlarını ({FREE_TIER_LIMITS_groups} grup / {FREE_TIER_LIMITS_tabs} sekme / {FREE_TIER_LIMITS_urlRules} URL kuralı) gösteriyor."
+        },
+        "2": {
+          "heading": "Web hesap sayfasından yükseltme",
+          "checks": "Web sitesinin hesap sayfasından yükseltmenin çalıştığını ve web sitesi ile uzantının planınız konusunda hemfikir olduğunu.",
+          "steps": {
+            "0": "Uzantı üzerinden gitmek yerine doğrudan preview.tabmerger.com adresinde oturum açın ve Hesap ayarları'nı açın.",
+            "1": "\"Abonelik\" altında \"Yükselt\"e tıklayın ve ödemeyi test kartıyla tamamlayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ücretsiz bir hesapta Hesap ayarları: Abonelik kartı Mevcut plan Ücretsiz'i ve bir Yükselt düğmesini gösteriyor",
+              "caption": "Yükseltmeden önce: Ücretsiz, bir Yükselt düğmesiyle. Sonrasında Pro ve \"Faturalandırmayı yönet\" gösterilir (aşağıdaki \"Hesap sayfası\"na bakın)."
+            }
+          },
+          "good": {
+            "0": "Hesap sayfasındaki Abonelik kartı artık Pro'yu, \"Yükselt\" yerine bir \"Faturalandırmayı yönet\" düğmesiyle gösterir.",
+            "1": "Uzantı aynı Pro durumunu algılar (yukarıdaki sorgulama notuna bakın) — web hesap sayfası ve uzantı planınız konusunda asla farklı bir şey söylememelidir."
+          },
+          "report": "Web hesap sayfası ve uzantının açılır penceresi birkaç dakikadan fazla bir süre farklı planlar gösteriyor (biri Pro, diğeri hâlâ Ücretsiz diyor)."
+        },
+        "3": {
+          "heading": "Yerel para biriminizle ödeme",
+          "checks": "Ödeme sayfasının fiyatı kendi para biriminizde gösterdiğini ve tahsil ettiğini.",
+          "steps": {
+            "0": "Sitedeki fiyatlar ABD doları cinsindendir (fiyatlandırma sayfası bunu planların altında belirtir; hesap sayfası, kontrol paneli ve uzantı Ayarları bunları \"US$\" olarak yazar). ABD dışında ödeme sayfası yerel para biriminizi sunar.",
+            "1": "Gerçek konumunuzdan bir ödeme başlatın veya başka bir ülkeyi simüle edin: e-postanıza \"+location_\" ve iki harfli bir ülke kodu ekleyerek YENİ bir hesap oluşturun, ör. Fransa için yourname+location_FR@gmail.com (Gmail \"+herhangi\" adreslerini normal gelen kutunuza teslim eder). Başka bir ülkedeki bir VPN de işe yarar.",
+            "2": "Stripe'ın ödeme sayfasındaki fiyata bakın, ardından o para biriminde test kartıyla tamamlayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger Pro için aylık 3,66 € gösteren Stripe ödeme sayfası, EUR seçili ve bir USD alternatifiyle, ve \"1 USD = 0.9171 EUR. Charges will vary based on exchange rates.\" satırı",
+              "caption": "Fransa (+location_FR) adresi için ödeme: varsayılan olarak euro, ABD doları bir tık uzakta. Döviz kurları değişir, bu yüzden tutarınız farklı olacaktır."
+            }
+          },
+          "good": {
+            "0": "Ödeme sayfası fiyatı yerel para biriminizde gösterir (örneğin US$3.99 planı için Fransa'da 3,66 € veya Kanada'da CA$5.89), bunun yerine ABD doları ile ödeme seçeneği ve döviz kurunu ile çevirme ücretini gösteren bir satır sunar. ABD'de yalnızca US$3.99 gösterir.",
+            "1": "Ödemeden sonra plan, ABD doları ile ödendiğinde olduğu gibi çalışır."
+          },
+          "report": "ABD dışında ödeme sayfası yalnızca ABD doları sunuyor, tahsil edilen tutar ödeme sayfasında gösterilenden farklı veya yerel para birimiyle ödemek size Pro vermiyor."
+        },
+        "4": {
+          "heading": "Aylık ve yıllık arasında geçiş",
+          "checks": "Bir Pro aboneliğinin aylık ve yıllık faturalandırma arasında geçiş yapabildiğini ve bunun için doğru ücretlendirildiğini.",
+          "steps": {
+            "0": "Etkin bir Pro aboneliğiyle fiyatlandırma sayfasını açın. Planınızın kartı Mevcut olarak işaretlidir ve bir \"Yıllık faturalandırmaya geç\" düğmesi vardır (yıllık ödüyorsanız \"Aylık faturalandırmaya geç\"): düğme geçeceğiniz faturalandırmayı belirtir.",
+            "1": "Aylık → yıllık: geçiş düğmesine tıklayın ve Stripe'ın sayfasında onaylayın.",
+            "2": "Yıllık → aylık: aynısını yapın, ardından düğmeyi ikinci kez deneyin.",
+            "3": "Hesap sayfasında \"Faturalandırmayı yönet\"i de açın: \"Aboneliği güncelle\" seçeneği aynı aylık/yıllık seçimini gösterir."
+          },
+          "examples": {
+            "0": {
+              "alt": "Aylık Pro'dayken fiyatlandırma sayfası: Pro kartı Mevcut olarak işaretli ve bir \"Yıllık faturalandırmaya geç\" düğmesi var",
+              "caption": "Fiyatlandırma sayfasında planınızın kartı Mevcut olarak işaretlidir ve geçiş düğmesine sahiptir."
+            },
+            "1": {
+              "alt": "Aylık ve Yıllık sekmeleriyle Stripe'ın \"Aboneliğinizi güncelleyin\" sayfası, mevcut TabMerger Pro planını aylık {proMonthly} olarak gösteriyor",
+              "caption": "Faturalandırmayı yönet → Aboneliği güncelle'deki aynı seçim (Stripe'ın sayfası)."
+            }
+          },
+          "good": {
+            "0": "Aylık → yıllık hemen uygulanır: Stripe yıllık fiyattan ayınızın kalan kısmını düşerek gösterir ve tahsil eder.",
+            "1": "Yıllığa geçtikten sonra hesap sayfası yaklaşık bir dakika içinde yıllık fiyatı ({proYearly}/yıl) gösterir.",
+            "2": "Yıllık → aylık, ödenmiş yılınızın sonunu bekler, bu yüzden şu anda hiçbir ücret alınmaz.",
+            "3": "Düğmeye tekrar basmak, bir değişikliğin zaten planlandığını açıklar.",
+            "4": "Yalnızca aylık ve yıllık Pro sunulur, asla farklı bir plan sunulmaz."
+          },
+          "report": "Bir geçiş yanlış tutar tahsil ediyor, hesap sayfası birkaç dakikadan fazla sonra hâlâ eski faturalandırma dönemini gösteriyor, yıllık → aylık sizden hemen ücret alıyor veya size Pro dışında bir plan sunuluyor."
+        },
+        "5": {
+          "heading": "İptal etme",
+          "checks": "İptal etmenin Pro'yu ödediğiniz dönemin sonuna kadar koruduğunu, ardından sizi Ücretsiz'e döndürdüğünü.",
+          "steps": {
+            "0": "Hesap sayfasında, etkin bir Pro aboneliğiyle, Stripe'ın faturalandırma portalını açmak için \"Faturalandırmayı yönet\"e tıklayın.",
+            "1": "Aboneliği oradan iptal edin ve TabMerger'a dönün."
+          },
+          "examples": {
+            "0": {
+              "alt": "Aylık {proMonthly} TabMerger Pro için Stripe'ın \"Aboneliğinizi iptal edin\" iletişim kutusu, isteğe bağlı bir neden ve Geri dön ile İptale devam et düğmeleriyle",
+              "caption": "Stripe iptal etmeden önce isteğe bağlı bir neden sorar."
+            }
+          },
+          "good": {
+            "0": "Mevcut faturalandırma döneminin sonuna kadar Pro erişiminizi korursunuz — iptal etmek sizi hemen Ücretsiz'e düşürmez.",
+            "1": "O dönem bittikten sonra hesap sayfası ve uzantı yeniden Ücretsiz göstermelidir."
+          },
+          "report": "İptal etmek sizi dönem sonu yerine hemen Ücretsiz'e düşürüyor veya dönem gerçekten bittikten sonra plan hiç Ücretsiz'e dönmüyor."
+        }
+      }
+    },
+    "drag-and-drop": {
+      "title": "Sürükle ve bırak",
+      "intro": "Bu alan açılır penceredeki her sürükleme etkileşimini kapsar — sıralama, pencereler ve gruplar arasında taşıma, çoklu öğe sürüklemeleri, iki \"yeni... için bırakın\" alanı, iptal etme, yalnızca klavyeyle sürükleme ve sonucun kalıcı olup olmadığı. Bunlardan olabildiğince çoğunu deneyin; bu beta için en çok odaklandığımız alan budur.",
+      "items": {
+        "0": {
+          "heading": "Sıralama: pencere içindeki sekmeler",
+          "checks": "Bir sekmeyi sürüklemenin onu penceresi içinde yeniden sıraladığını ve tam bıraktığınız yere yerleştiğini.",
+          "steps": {
+            "0": "Listede daha aşağı taşımak için bir sekmeyi aynı pencere içinde aşağı sürükleyin, ardından eski yerine geri sürükleyin.",
+            "1": "Bir sekmeyi pencerede en baştaki konuma, ardından en sondaki konuma kadar sürükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pencere kartı içinde sürüklenen bir sekme: sürüklenen satır, yerleşeceği boşluğun üzerinde vurgulanmış bir kenarlıkla süzülüyor",
+              "caption": "Sürükleme sırasında: sekme süzülür ve diğerleri bırakılacağı yerde yer açar."
+            }
+          },
+          "good": {
+            "0": "Sekme tam bıraktığınız yere yerleşir ve listenin geri kalanı yer açmak için kayar.",
+            "1": "Başka hiçbir sekme yer değiştirmez veya çoğalmaz."
+          }
+        },
+        "1": {
+          "heading": "Sıralama: grup içindeki pencereler",
+          "checks": "Pencere kartlarının bir grup içinde yeniden sıralanabildiğini.",
+          "steps": {
+            "0": "İki veya daha fazla kaydedilmiş pencereye sahip bir grupta, bir pencere kartını diğerinin üstüne veya altına sürükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Dört pencereli bir grupta iki pencere kartı arasında sürüklenen bir pencere kartı",
+              "caption": "Grup içinde yeniden sıralamak için bütün bir pencere kartını tutamacından sürükleme."
+            }
+          },
+          "good": {
+            "0": "Pencere kartlarının sırası değişir ve yeni sırayı hemen görürsünüz — eski sıraya geri titreme olmaz."
+          }
+        },
+        "2": {
+          "heading": "Sıralama: kenar çubuğundaki gruplar",
+          "checks": "Grupların kenar çubuğunda serbestçe yeniden sıralandığını ve \"Şu An Açık\"ın ilk sırada kaldığını.",
+          "steps": {
+            "0": "Kenar çubuğundaki bir grubu başka bir grubun üstüne veya altına yeniden sıralamak için yukarı veya aşağı sürükleyin.",
+            "1": "Bir grubu \"Şu An Açık\"ın (kenar çubuğundaki ilk satır) üstüne sürüklemeyi deneyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger kenar çubuğunda yeni bir konuma sürüklenen bir grup satırı",
+              "caption": "Kenar çubuğunda bir grubu yeniden sıralama."
+            }
+          },
+          "good": {
+            "0": "\"Şu An Açık\" her zaman ilk satır olarak sabit kalır — üstüne bir grup bırakamaz, onu sürükleyemez, silemez veya en üstten başka yere taşıyamazsınız.",
+            "1": "Diğer tüm gruplar serbestçe yeniden sıralanır."
+          },
+          "report": "Herhangi bir şey \"Şu An Açık\"ın üstüne yerleşiyor veya \"Şu An Açık\"ın kendisi sürüklenebilir hale geliyor."
+        },
+        "3": {
+          "heading": "Pencereler arası: bir sekmeyi pencere kartları arasında taşıma",
+          "checks": "Bir sekmenin bir pencere kartından diğerine, tam bıraktığınız noktaya taşınabildiğini.",
+          "steps": {
+            "0": "Birkaç pencereli bir grup içinde, bir sekmeyi bir pencere kartından başka bir pencere kartının üzerine sürükleyin.",
+            "1": "Bu kez onu en üst veya en alt yerine hedef penceredeki mevcut iki sekmenin arasına bırakın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Aynı TabMerger grubu içinde kaydedilmiş bir pencereden diğerine sürüklenen bir sekme",
+              "caption": "Bir sekmeyi aynı grup içindeki başka bir pencereye bırakma."
+            }
+          },
+          "good": {
+            "0": "Sekme tam bıraktığınız konuma yerleşir (yalnızca sona eklenmez).",
+            "1": "Her iki pencerenin sekme sayısı hemen güncellenir."
+          }
+        },
+        "4": {
+          "heading": "Gruplar arası: bir sekmeyi kenar çubuğundaki bir gruba bırakma",
+          "checks": "Bir sekmeyi kenar çubuğundaki bir gruba bırakmanın, önce grubu açmadan onu o gruba taşıdığını.",
+          "steps": {
+            "0": "Bir sekmeyi ana panelden sürükleyip doğrudan kenar çubuğundaki bir grubun üzerine bırakın — bunu şu anda açık (etkin) bir grupta ve açık olmayan bir grupta deneyin.",
+            "1": "Bir kez daha deneyin, ancak bırakmadan önce sekmeyi farklı (etkin olmayan) bir kenar çubuğu grubunun üzerinde yaklaşık bir saniye tutun."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger kenar çubuğundaki bir grup satırının üzerine sürüklenen tek bir sekme",
+              "caption": "Bir sekmeyi doğrudan bir kenar çubuğu grubuna bırakma."
+            }
+          },
+          "good": {
+            "0": "Sekme, önce grubu açmaya gerek kalmadan o gruba yeni bir pencere olarak eklenir.",
+            "1": "Etkin olmayan bir grubun üzerinde beklediyseniz, yerleştiğini görebilmeniz için yaklaşık yarım saniye sonra açılmalıdır (\"yaylanarak açılma\") — ve yanlış pencereye değil, doğru yere yerleşmelidir."
+          },
+          "report": "Grup yaylanarak açılıyor ancak sekme yanlış pencereye veya kendi yeni penceresi olarak değil de mevcut bir sekmenin üzerine yerleşiyor."
+        },
+        "5": {
+          "heading": "Gruplar arası: bütün bir pencereyi başka bir gruba sürükleme",
+          "checks": "Bütün bir pencerenin, tüm sekmeleriyle birlikte başka bir gruba taşınabildiğini.",
+          "steps": {
+            "0": "Bütün bir pencere kartını (içindeki tek bir sekmeyi değil, kendi sürükleme tutamacını kullanarak) kenar çubuğundaki farklı bir grubun üzerine sürükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kenar çubuğuna, vurgulanan ve ana panelde açılan Alışveriş grubunun üzerine sürüklenen bir pencere kartı",
+              "caption": "Bir pencereyi kenar çubuğu grubuna sürükleme. İmlecin altındaki grup renkli bir kenar alır ve kartın arkasında açılır."
+            }
+          },
+          "good": {
+            "0": "Bütün pencere — tüm sekmeleriyle birlikte — hedef grupta yeni bir pencere olur.",
+            "1": "Bu, kaynak grupta kalan son pencere olsa bile çalışır."
+          },
+          "report": "Kaynak grup veya boşalan penceresi kalmak yerine kayboluyor (boş bir pencere/grup kaybolmamalı, yerinde kalmalı)."
+        },
+        "6": {
+          "heading": "Çoklu öğe: birkaç sekme seçip sürükleme",
+          "checks": "Seçilen birkaç sekmenin sıralarını koruyarak tek bir blok halinde birlikte sürüklendiğini.",
+          "steps": {
+            "0": "Seçmek için bitişik olmayan iki veya üç sekmeye Ctrl ile tıklayın (Mac'te Cmd ile tıklayın).",
+            "1": "Bunun yerine bitişik bir sekme aralığı seçmek için Shift ile tıklayın.",
+            "2": "Birkaç sekme seçiliyken onları aynı pencerede yeni bir konuma birlikte sürükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger açılır penceresinde onay kutularıyla gösterilen, birlikte seçilmiş birkaç sekme",
+              "caption": "Seçim modunda işaretlenmiş iki sekme; alttaki çubuk onları sayar."
+            }
+          },
+          "good": {
+            "0": "Seçilen tüm sekmeler göreli sıralarını koruyarak tek bir blok halinde birlikte taşınır — blok boşluğa yerleşir, dağılmaz veya tıklama sırasına göre dizilmez."
+          }
+        },
+        "7": {
+          "heading": "Çoklu öğe: bir seçimi pencereler ve gruplar arasında sürükleme",
+          "checks": "Çoklu sekme seçiminin başka bir pencereye veya gruba sürüklendiğinde sırasını koruduğunu.",
+          "steps": {
+            "0": "Yine birkaç sekme seçin, ardından onları aynı gruptaki farklı bir pencereye sürükleyin.",
+            "1": "Bir kez daha tekrarlayın, ancak bu kez seçimi kenar çubuğundaki farklı bir grubun üzerine sürükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "TabMerger açılır penceresinde sürükleme sırasındaki çoklu sekme seçimi",
+              "caption": "Çoklu sekme seçimini sürükleme."
+            }
+          },
+          "good": {
+            "0": "Her iki durumda da tüm seçim birlikte taşınır ve başladığı göreli sırayla yerleşir."
+          }
+        },
+        "8": {
+          "heading": "Çoklu öğe: tümünü seç ve çoklu grup sürükleme",
+          "checks": "Tümünü seçmenin bir pencere içinde çalıştığını ve seçilen birkaç grubun birlikte sürüklenebildiğini.",
+          "steps": {
+            "0": "Pencerenizde birden fazla sekme varsa, bir pencerenin sekme listesine odaklanın ve o penceredeki her sekmeyi seçmek için Ctrl+A'ya (Mac'te Cmd+A) basın.",
+            "1": "Kenar çubuğunda iki veya üç gruba Ctrl ile tıklayarak seçin, ardından onları birlikte yeniden sıralamak için seçimi tutamaçlarından birinden sürükleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Üç grubun seçili olduğu seçim modu; birini sürüklemek diğerlerini de beraberinde götürür, sürüklenen satırda bir sayı rozeti ve alt çubukta \"3 grup seçildi\" yazısı",
+              "caption": "Kenar çubuğunda birlikte sürüklenen üç seçili grup. Alttaki çubuk seçimi sayar."
+            }
+          },
+          "good": {
+            "0": "Ctrl/Cmd+A, odaklanılan penceredeki her sekmeyi seçer (arama filtresiyle gizlenenleri atlayarak).",
+            "1": "Çoklu grup sürükleme, seçilen grupları tek bir blok halinde birlikte taşır.",
+            "2": "Blok asla \"Şu An Açık\"ın üstüne yerleşmez."
+          }
+        },
+        "9": {
+          "heading": "Bırakma alanları: \"Yeni pencere için buraya bırakın\" ve \"Yeni grup için bırakın\"",
+          "checks": "Bu alanlara bırakmanın, sürüklediğiniz şeyden yeni bir pencere veya yeni bir grup oluşturduğunu.",
+          "steps": {
+            "0": "Bir sekmeyi (veya sekme seçimini) bir grubun pencere listesinin altına doğru, \"Yeni pencere için buraya bırakın\" alanının göründüğü yere sürükleyin ve oraya bırakın.",
+            "1": "Bir sekmeyi kenar çubuğunun altına doğru, \"Yeni grup için bırakın\" alanının göründüğü yere sürükleyin ve oraya bırakın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pencere listesinin altındaki vurgulanmış \"Yeni pencere için buraya bırakın\" alanının üzerine sürüklenen bir sekme, kenar çubuğunda \"Yeni grup için bırakın\" alanı görünüyor",
+              "caption": "Siz sürüklerken her iki bırakma alanı da görünür. İmlecin altındaki vurgulanır."
+            }
+          },
+          "good": {
+            "0": "Her bırakma, tam olarak sürüklenen öğeleri orijinal göreli sıralarıyla içeren yepyeni bir pencere veya grup oluşturur."
+          },
+          "report": "Planınızın grup sınırına zaten ulaştığınızda \"Yeni grup için bırakın\" alanı hâlâ görünüyor — karşılayamayacağı bir bırakmayı kabul etmek yerine kaybolmalıdır."
+        },
+        "10": {
+          "heading": "\"Şu An Açık\"tan: canlı bir sekmeyi kaydedilmiş bir gruba sürükleme",
+          "checks": "Açık bir sekmeyi \"Şu An Açık\"tan sürüklemenin onu kaydedilmiş bir gruba taşıdığını ve gerçek sekmeyi kapattığını.",
+          "steps": {
+            "0": "\"Şu An Açık\" bölümünden bir sekmeyi kaydedilmiş gruplarınızdan birine sürükleyin.",
+            "1": "Bıraktıktan sonra gerçek açık tarayıcı sekmelerinizi kontrol edin."
+          },
+          "examples": {
+            "0": {
+              "alt": "\"Şu An Açık\"tan kenar çubuğundaki İş grubunun üzerine sürüklenen bir sekme",
+              "caption": "\"Şu An Açık\"tan kenar çubuğundaki kaydedilmiş bir gruba sürüklenen açık bir sekme."
+            }
+          },
+          "good": {
+            "0": "Bu, sekmeyi kopyalamaz, TAŞIR: kaydedilmiş grup, o sekmenin anlık görüntüsünü içeren yeni bir pencere alır.",
+            "1": "Gerçek tarayıcı sekmesi kapanır. Sürüklediğiniz sekme etkin sekmeyse, hemen değil açılır pencereyi kapattığınızda kapanır — bu kasıtlıdır, hata değildir."
+          },
+          "report": "Gerçek sekme bıraktıktan sonra açık kalıyor (kopya gibi görünmesine neden oluyor) veya açılır pencerenin kendisi sürükleme sırasında kapanıyor/çöküyor."
+        },
+        "11": {
+          "heading": "İptal ve uç durumlar",
+          "checks": "İptal edilen veya anlamsız sürüklemelerin hiçbir şeyi değiştirmediğini ve geri almanın gerçek bir sürüklemeyi tersine çevirdiğini.",
+          "steps": {
+            "0": "Bir sekmeyi sürüklemeye başlayın, ardından bırakmadan önce Escape'e basın.",
+            "1": "Bir sürükleme başlatın ve geçerli bir hedef olmayan bir yerde bırakın (ör. becerebilirseniz açılır pencerenin dışında) veya tam başladığı yere geri bırakın.",
+            "2": "Başarılı herhangi bir sürüklemeden sonra Geri Al düğmesine (başlık, sağ üst) tıklayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bir değişiklikten sonra Geri Al ve Yinele düğmeleri etkin olan TabMerger başlığı",
+              "caption": "Başlıktaki Geri Al/Yinele düğmeleri, bir değişiklikten sonra etkin."
+            }
+          },
+          "good": {
+            "0": "Escape ve geçersiz/etkisiz bir bırakma her şeyi tam olarak olduğu gibi bırakır — yinelenen sekme yok, eksik sekme yok, yeniden sıralama yok.",
+            "1": "Gerçek bir sürüklemeden sonra Geri Al önceki sırayı tam olarak geri yükler."
+          },
+          "report": "İptal edilen veya aynı yere yapılan bir sürüklemeden sonra bir sekme çoğalıyor veya kayboluyor ya da Geri Al sürükleme öncesi sırayı tamamen geri yüklemiyor."
+        },
+        "12": {
+          "heading": "Klavyeyle sürükleme",
+          "checks": "Fareyle sürükleyebildiğiniz her şeyin, sesli duyurularla klavyeyle de taşınabildiğini.",
+          "steps": {
+            "0": "Kaydedilmiş bir sekme, bir pencere başlığı veya kenar çubuğundaki bir grup odaklanana kadar Tab'a basın. Her satır bir Tab durağıdır.",
+            "1": "Birkaçını aynı anda taşımak için seçmek üzere her birinde Ctrl+Space'e (Mac'te de Ctrl) basın, ardından seçili satırlardan herhangi birine odaklanın.",
+            "2": "Almak için Space'e basın. \"Alındı …\" duyarsınız, satır yerinden ayrılır ve bir kopyası nereye yerleşeceğini gösterir.",
+            "3": "Taşımak için Yukarı veya Aşağı'ya basın. Bir sekme grubun her penceresinden geçer, ardından \"Yeni pencere için buraya bırakın\"a gelir, sonra başa döner.",
+            "4": "Grup listesine gitmek için Sol'a basın. Yukarı ve Aşağı bir grup seçer (son durak \"Yeni grup\"tur) ve ana panel geçtiğiniz her grubu gösterir.",
+            "5": "Vurgulanan gruba girmek için Sağ'a basın, ardından öğeyi içine yerleştirmek için Yukarı ve Aşağı'yı kullanın.",
+            "6": "Bırakmak için Space'e veya iptal etmek için Escape'e basın."
+          },
+          "good": {
+            "0": "Space bağlantıyı açmak yerine öğeyi alır.",
+            "1": "Ctrl+Space bir satırı açmadan veya almadan seçer ya da seçimini kaldırır.",
+            "2": "Enter hâlâ bir sekmeyi açar ve siz bir şey taşırken hiçbir şey yapmaz.",
+            "3": "Taşıdığınız şeyin kopyası her zaman ekrandadır ve panel onu takip etmek için kayar.",
+            "4": "Yukarı ve Aşağı uçlarda başa/sona döner ve \"Başa dönüldü\" veya \"Sona dönüldü\" duyarsınız.",
+            "5": "Boş bir pencere kendi başına bir konumdur.",
+            "6": "Öğe tam olarak kopyanın bulunduğu yere yerleşir ve ne olduğunu duyarsınız.",
+            "7": "Seçili birkaç öğe orijinal sıralarıyla tek bir blok halinde birlikte taşınır.",
+            "8": "Grup listesinde Space, öğeyi vurgulanan grubun sonuna bırakır.",
+            "9": "\"Yeni grup\" üzerindeyken ana panel soluklaşır ve oraya bırakmak yepyeni bir grup oluşturur.",
+            "10": "Yukarı ve Aşağı ile taşınan bir grup asla \"Şu An Açık\"ın üstüne çıkamaz.",
+            "11": "Canlı bir \"Şu An Açık\" sekmesini bir gruba taşımak, fareyle bırakmada olduğu gibi o tarayıcı sekmesini kapatır.",
+            "12": "Escape her şeyi olduğu gibi bırakır ve başladığınız grubu yeniden gösterir.",
+            "13": "Bırakmadan sonra odak taşınan satırdadır; Escape'ten sonra aldığınız satıra geri döner."
+          }
+        },
+        "13": {
+          "heading": "Kalıcılık",
+          "checks": "Yeni bir sıranın kaydedildiğini: açılır pencereyi yeniden açtıktan sonra korunduğunu ve diğer cihazlarınıza ulaştığını.",
+          "pro": "Yalnızca ikinci cihaz kısmı Pro gerektirir (senkronizasyon gerektirir).",
+          "steps": {
+            "0": "Sekmeleri, pencereleri veya grupları sürükleyerek yeniden sıraladıktan sonra açılır pencereyi tamamen kapatıp yeniden açın.",
+            "1": "Senkronizasyon etkinse ve aynı hesapta oturum açmış ikinci bir cihazınız varsa, sırayı orada da kontrol edin."
+          },
+          "good": {
+            "0": "Açılır pencereyi yeniden açtıktan sonra yeni sıra tam olarak bıraktığınız gibidir.",
+            "1": "Senkronizasyon açıkken ikinci cihaz kısa süre içinde aynı sırayı alır."
+          }
+        }
+      }
+    },
+    "web-app-and-dashboard": {
+      "title": "Web uygulaması ve kontrol paneli (önizleme sitesi)",
+      "intro": "Buradaki her şey ana tabmerger.com'da değil, preview.tabmerger.com adresindedir — bu beta sürümü yalnızca önizleme sitesiyle senkronize olur.",
+      "items": {
+        "0": {
+          "heading": "Kaydolma ve oturum açma",
+          "checks": "Web sitesinde oturum açmanın her yolunun çalıştığını: Google, e-posta ve parola ve sihirli bağlantı.",
+          "steps": {
+            "0": "Oturum kapalıyken preview.tabmerger.com/auth/sign-in adresini açın.",
+            "1": "\"Google ile devam et\"i deneyin.",
+            "2": "Bunun yerine e-posta + parola deneyin: e-postanızı ve parolanızı girin, ardından \"Devam\"a tıklayın.",
+            "3": "Bunun yerine yalnızca e-postanızı kullanarak \"Sihirli bağlantı gönder\"i deneyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Web sitesinin \"Tekrar hoş geldiniz\" oturum açma sayfası: Google ile devam et, Unuttunuz mu? bağlantısıyla E-posta ve Parola alanları, Devam ve Sihirli bağlantı gönder",
+              "caption": "Web sitesinin oturum açma sayfası: Google, e-posta ve parola veya sihirli bağlantı."
+            }
+          },
+          "good": {
+            "0": "Üç yolun hepsi oturumunuzu açar.",
+            "1": "Sihirli bağlantı ve Google, oturum zaten açık şekilde uygulamaya geri yönlendirir.",
+            "2": "Yeni hesaplar \"Ücretsiz kaydol\"un götürdüğü yere ulaşır (e-posta + parola veya Google, aynı seçenekler)."
+          }
+        },
+        "1": {
+          "heading": "E-posta ve parolayla hesap oluşturma",
+          "checks": "Yeni bir e-posta ve parola hesabının, site e-postanızı doğrulamanızı istese de istemese de oturumu açık şekilde sonuçlandığını.",
+          "steps": {
+            "0": "Oturum kapalıyken \"Ücretsiz kaydol\"a tıklayın ve bir e-posta ve parolayla (8+ karakter) hesap oluşturun."
+          },
+          "examples": {
+            "0": {
+              "alt": "\"Hesabınızı oluşturun\" sayfası: Google ile devam et, ardından E-posta, Parola (en az 8 karakter) ve Parolayı onayla alanları ve bir Devam düğmesi",
+              "caption": "Kayıt sayfası. Google burada da çalışır; bu öğe e-posta ve parola yolu hakkındadır."
+            }
+          },
+          "good": {
+            "0": "Ya doğrudan kontrol paneline oturum açılmış olarak ulaşırsınız ya da \"E-postanızı doğrulayın\" görürsünüz ve oturumunuz yalnızca o e-postadaki bağlantıya tıkladıktan sonra açılır. Hangisi olacağı sitenin e-posta onayı gerektirip gerektirmediğine bağlıdır; ikisi de uygundur."
+          },
+          "report": "\"E-postanızı doğrulayın\" görüyorsunuz ama aslında oturumunuz zaten açık (örneğin kontrol panelini başka bir sekmede açmak bağlantıya tıklamadan çalışıyor)."
+        },
+        "2": {
+          "heading": "Parolamı unuttum ve parolanızı değiştirme",
+          "checks": "Unutulan bir parolayı e-postayla sıfırlayabildiğinizi ve sonrasında değiştirebildiğinizi.",
+          "steps": {
+            "0": "Oturum açma sayfasında parola alanının yanındaki \"Unuttunuz mu?\"ya tıklayın ve e-postanızı girin.",
+            "1": "O e-postadaki sıfırlama bağlantısını açın ve yeni bir parola belirleyin (en az 8 karakter ve onay alanıyla eşleşmelidir)."
+          },
+          "examples": {
+            "0": {
+              "alt": "\"Parolanızı sıfırlayın\" sayfası: bir E-posta alanı, bir Sıfırlama bağlantısı gönder düğmesi ve Oturum açmaya dön",
+              "caption": "Oturum açma sayfasındaki \"Unuttunuz mu?\" bunu açar. Oturum açtıktan sonra Hesap ayarları'nda bunun yerine bir \"Parolayı değiştir\" alanı vardır."
+            }
+          },
+          "good": {
+            "0": "Yeni parolayla oturumunuz açık olarak kontrol paneline geri dönersiniz.",
+            "1": "Sonrasında tekrar oturum açmak eskisini değil yeni parolayı gerektirir."
+          }
+        },
+        "3": {
+          "heading": "Kontrol paneli senkronizasyondan sonra uzantıyla eşleşir",
+          "checks": "Senkronizasyon tamamlandığında web sitesinin kontrol panelinin uzantınızla aynı grupları gösterdiğini.",
+          "steps": {
+            "0": "Senkronizasyon açık ve en az bir grup varken preview.tabmerger.com/dashboard adresinden kontrol panelini açın.",
+            "1": "Oradaki \"Sekme Grupları\" bölümünü uzantı açılır penceresinin kenar çubuğuyla karşılaştırın: adlar, renkler, pencere/sekme sayıları ve sıra."
+          },
+          "examples": {
+            "0": {
+              "alt": "Kilit açıldıktan sonra web kontrol paneli: istatistikler, Pro plan kartı ve pencere ile sekme sayılarını gösteren Araştırma, Okuma Listesi, İş ve Alışveriş kartlarıyla Sekme Grupları ızgarası",
+              "caption": "Senkronize edildikten sonra uzantının kenar çubuğuyla eşleşen kontrol paneli grupları."
+            }
+          },
+          "good": {
+            "0": "Senkronizasyon tamamlandığında aynı gruplar aynı adlar, renkler ve pencere/sekme sayılarıyla, aynı sırada görünür."
+          }
+        },
+        "4": {
+          "heading": "Kontrol paneli gruplar için salt okunurdur",
+          "checks": "Kontrol panelinin gruplarınızı gösterdiğini ancak değiştiremediğini: düzenleme yalnızca uzantıda yapılır.",
+          "steps": {
+            "0": "Kontrol panelinde bir grubu yeniden adlandırmanın, silmenin veya oluşturmanın ya da yıldızlamanın/yıldızını kaldırmanın herhangi bir yolunu arayın."
+          },
+          "good": {
+            "0": "Kontrol panelinden bir grubu yeniden adlandırmanın, silmenin, oluşturmanın veya yıldızlamanın (ya da yıldızını kaldırmanın) hiçbir yolu yoktur — grup düzenlemeleri tasarım gereği yalnızca uzantıdadır.",
+            "1": "Bir grup kartındaki tek gerçek işlemler Paylaş ve sekmelerini/pencerelerini açmaktır."
+          },
+          "report": "Kontrol panelinde bir grubu düzenliyor, siliyor veya oluşturuyor gibi görünen herhangi bir denetim gerçekten bir şey yapıyor."
+        },
+        "5": {
+          "heading": "Kontrol panelindeki oturumlar ve istatistikler",
+          "checks": "Kontrol panelindeki kaydedilmiş oturumların ve toplamların uzantıyla eşleştiğini.",
+          "steps": {
+            "0": "Uzantıda bir oturum kaydedin, ardından kontrol panelinin \"Kaydedilen Oturumlar\" bölümünü kontrol edin.",
+            "1": "Kontrol panelinin üst kısmındaki istatistikleri kontrol edin (sekme sayısı, grup sayısı, oturum sayısı, üyelik tarihi)."
+          },
+          "good": {
+            "0": "Kaydettiğiniz oturum görünür.",
+            "1": "İstatistikler uzantıda sayacağınız değerlerle eşleşir."
+          }
+        },
+        "6": {
+          "heading": "Kontrol panelinden paylaşma",
+          "checks": "Kontrol panelinin Paylaş düğmesinin, uzantınınki gibi bir paylaşım bağlantısı kopyaladığını.",
+          "steps": {
+            "0": "Bir grup kartında (veya birden fazla grup için \"Seç\" ve \"Seçilenleri paylaş\" ile) Paylaş'a tıklayın."
+          },
+          "good": {
+            "0": "Bir bağlantı hemen panonuza kopyalanır ve bunu onaylayan bir bildirim görünür. Bu, aşağıdaki \"Paylaşım\" bölümünde ayrıntılı olarak ele alınmıştır — kontrol panelinin Paylaş düğmesi ve uzantınınki aynı türde bağlantı üretir."
+          }
+        },
+        "7": {
+          "heading": "Hesap sayfası",
+          "checks": "Hesap sayfasının doğru profili, planı ve cihazları gösterdiğini ve her iki oturum kapatma seçeneğinin de çalıştığını.",
+          "pro": "Yalnızca Cihazlar kartı Pro gerektirir; senkronize olan cihazları listeler.",
+          "steps": {
+            "0": "Kontrol panelinden Hesap ayarları'nı açın.",
+            "1": "Profil kartını (e-posta, üyelik tarihi), Abonelik kartını (plan, \"Faturalandırmayı yönet\" veya \"Yükselt\") ve Cihazlar kartını kontrol edin.",
+            "2": "\"Oturumu kapat\"ı ve ayrıca \"Tüm cihazlarda oturumu kapat\"ı deneyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Hesap ayarları: Abonelik kartı Pro planını, yenileme tarihini ve {proMonthly}/ay tutarını Faturalandırmayı yönet düğmesiyle gösteriyor; altında Cihazlar kartı oturum açılmış cihazları listeliyor",
+              "caption": "Bir Pro hesabındaki Abonelik ve Cihazlar kartları."
+            }
+          },
+          "good": {
+            "0": "Profil ve Abonelik doğru, güncel bilgileri gösterir (Abonelik kartının ayrıntıları için yukarıdaki \"Pro'ya yükseltme\" bölümüne bakın).",
+            "1": "Cihazlar, oturum açılmış cihazlarınızı yeniden adlandırma/kaldırma denetimleriyle listeler.",
+            "2": "Her iki oturum kapatma düğmesi de sizi oturum kapalı duruma döndürür; \"tüm cihazlar\" ayrıca diğer tüm etkin oturumları iptal eder.",
+            "3": "Bu sayfada hesap silme seçeneği yoktur — bu beklenen bir durumdur, bildirilecek bir eksiklik değildir."
+          }
+        },
+        "8": {
+          "heading": "Telefonda",
+          "checks": "Kontrol paneli ve hesap sayfalarının küçük bir ekranda tamamen kullanılabilir olduğunu.",
+          "steps": {
+            "0": "Kontrol panelini ve Hesap ayarları'nı bir telefonda (veya yaklaşık 390px genişliğe daraltılmış bir masaüstü penceresinde) açın.",
+            "1": "Üstteki Kontrol Paneli ve Hesap simgelerine, ardından sağdaki yuvarlak hesap menüsüne ve onun \"Oturumu kapat\" öğesine dokunun."
+          },
+          "examples": {
+            "0": {
+              "alt": "Telefon genişliğinde bir ekranda kontrol paneli: üst çubukta TabMerger logosu, Kontrol Paneli ve Hesap simgeleri, açık/koyu geçişi ve hesap menüsü hiçbir şey kesilmeden görünüyor",
+              "caption": "Telefon genişliğinde kontrol paneli: üst çubukta yalnızca simgeler, hiçbir şey yana kaymaz."
+            }
+          },
+          "good": {
+            "0": "Hiçbir şey yana kaymaz.",
+            "1": "Üst çubuk TabMerger logosunu, Kontrol Paneli ve Hesap simgelerini, açık/koyu geçişini ve hesap menünüzü gösterir; hepsi tamamen görünür ve dokunulabilirdir (\"TabMerger\" adı ve simge etiketleri dar ekranlarda gizlenir). Daha geniş ekranlar etiketleri hâlâ gösterir."
+          },
+          "report": "Bir sayfa telefonda yana kayıyor veya üstteki herhangi bir denetim kesiliyor ya da erişilemiyor."
+        },
+        "9": {
+          "heading": "Bildirimler (toast'lar)",
+          "checks": "Açılır bildirimlerin kolay okunduğunu, bir geri sayımdan sonra kendiliğinden kapandığını ve erken kapatılabildiğini.",
+          "steps": {
+            "0": "Bir bildirim tetikleyin, örneğin: Hesap ayarları'nda parola formuna 8 karakterden kısa bir parola girip gönderin (hiçbir şeyi değiştirmeden bir hata gösterir) veya bir paylaşım bağlantısı kopyalayın.",
+            "1": "Sağ alt köşedeki bildirimi izleyin, ardından bir tane daha tetikleyin ve üzerine gelin.",
+            "2": "Bunu hem açık hem de koyu modda deneyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Sağ alt köşede \"Password must be at least 8 characters.\" yazan kırmızı bir hata bildirimi, köşesinde bir ✕ ve alt kenarı boyunca kısmen boşalmış bir geri sayım çubuğu",
+              "caption": "Bir hata bildirimi: kırmızı kenar, kapatmak için ✕ ve alt boyunca geri sayım çubuğu."
+            }
+          },
+          "good": {
+            "0": "Her bildirim sayfaya karşı kolay okunur ve renkli bir kenara sahiptir (başarı için yeşil, hatalar için kırmızı).",
+            "1": "Alt kenarındaki bir çubuk yaklaşık 6 saniyede boşalır ve siz üzerine geldiğinizde durur; bittiğinde bildirim kapanır.",
+            "2": "Sağ üst köşesindeki ✕ onu hemen kapatır."
+          },
+          "report": "Bir bildirim temalardan birinde zor okunuyor, siz üzerine gelirken çubuk akmaya devam ediyor veya ✕ yanlış yerde ya da onu kapatmıyor."
+        }
+      }
+    },
+    "sharing": {
+      "title": "Paylaşım",
+      "intro": "Paylaşım Pro gerektirir (bu betada oraya ulaşmak için yukarıdaki \"Pro'ya yükseltme\" bölümüne bakın). Bir paylaşımın şifreleme anahtarı her bağlantı için yeniden oluşturulur ve yalnızca URL'nin #key= parçasında bulunur — asla sunucuya gönderilmez veya sunucuda saklanmaz, bu yüzden tam bağlantıya (o parça dahil) sahip olan herkes paylaşılan içeriği görüntüleyebilir. Bir paylaşım bağlantısına içeriğin kendisi gibi davranın.",
+      "items": {
+        "0": {
+          "heading": "Uzantıdan bir veya daha fazla grubu paylaşma",
+          "checks": "Uzantının bir grup veya aynı anda birkaç grup için paylaşım bağlantısı oluşturduğunu.",
+          "steps": {
+            "0": "Seçim moduna girin ve kenar çubuğunda bir veya daha fazla grubu işaretleyin (sekmeleri veya pencereleri değil — Paylaş yalnızca grup türünde bir seçim için görünür).",
+            "1": "Alttaki seçim çubuğunda \"Paylaş\"a tıklayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Açılır pencerede İş ve Araştırma'nın işaretli olduğu seçim modu, alt çubukta \"2 grup seçildi\" ve bir Paylaş düğmesi",
+              "caption": "Paylaşılacak grupları işaretleyin, ardından alt çubukta Paylaş'a tıklayın."
+            },
+            "1": {
+              "alt": "Yeşil bir \"Bağlantı panoya kopyalandı\" bildirimiyle aynı ekran",
+              "caption": "Bağlantı hemen kopyalanır."
+            }
+          },
+          "good": {
+            "0": "Bir bağlantı hemen panonuza kopyalanır ve bir \"Bağlantı panoya kopyalandı\" bildirimi görünür.",
+            "1": "Aynı anda birkaç grup seçmek hepsini tek bir bağlantı/paket olarak birlikte paylaşır — onları tek tek paylaşmanız gerekmez."
+          }
+        },
+        "1": {
+          "heading": "Paylaşılan bir bağlantıyı açma",
+          "checks": "Herkesin bir paylaşım bağlantısını oturum açmadan açabildiğini ve paylaşılan grupları salt okunur olarak görebildiğini.",
+          "pro": "Bağlantıyı oluşturmak Pro gerektirir; açmak hiç hesap gerektirmez.",
+          "steps": {
+            "0": "Kopyalanan bağlantıyı oturum kapalı bir tarayıcı penceresinde (veya gizli/özel bir pencerede) açın.",
+            "1": "Paylaşılan her sekmedeki favicon'ları ve başlıkları kontrol edin ve \"Sekmeyi aç\" / \"Tüm sekmeleri aç\" / \"Pencereyi aç\" / \"Tüm pencereleri aç\"ı deneyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Oturum kapalıyken açılan paylaşılan sayfa: \"Paylaşılan koleksiyon · salt okunur\", paylaşım bağlantısı, \"2 grupta 5 pencereye yayılmış 9 sekme\", bir Sayfa önizlemelerini göster anahtarı ve Aç düğmeleriyle İş grubunun sekmeleri",
+              "caption": "Bağlantınızı açan birinin oturum açmadan gördüğü. (Burada bağlantı yerel bir test sunucusunu gösteriyor; sizinki preview.tabmerger.com'da olacak.)"
+            }
+          },
+          "good": {
+            "0": "Sayfa oturum açma gerektirmeden yüklenir ve \"Paylaşılan koleksiyon · salt okunur\" olarak etiketlenir.",
+            "1": "Her grubu, pencereyi ve sekmeyi gerçek favicon'ları ve başlıklarıyla gösterir.",
+            "2": "Aç düğmeleri doğru sekme(ler)i/pencere(ler)i yeni tarayıcı sekmelerinde açar."
+          }
+        },
+        "2": {
+          "heading": "Paylaşılan sayfadaki sayfa önizlemeleri",
+          "checks": "Paylaşılan bir sayfadaki sayfa önizlemelerinin, görüntüleyen kişi bunları açıp onaylayana kadar kapalı kaldığını.",
+          "pro": "Bağlantıyı oluşturmak Pro gerektirir; açmak hiç hesap gerektirmez.",
+          "steps": {
+            "0": "Paylaşılan sayfada, grup listesinin üstündeki \"Sayfa önizlemelerini göster\" anahtarını bulun.",
+            "1": "Açın ve görünen iletişim kutusunu onaylayın.",
+            "2": "Önizleme görselini ve açıklamasını görmek için bir sekmenin üzerine gelin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Önizleme hizmetine neyin gönderildiğini açıklayan \"Sayfa önizlemeleri açılsın mı?\" iletişim kutusu, İptal ve Aç düğmeleriyle",
+              "caption": "Anahtarı açmak önce sorar. Önizlemeler siz onaylayana kadar kapalı kalır."
+            }
+          },
+          "good": {
+            "0": "Anahtar varsayılan olarak kapalıdır.",
+            "1": "Açmak önce bir iletişim kutusunun onaylanmasını gerektirir (tekrar kapatmak onay gerektirmez) — iletişim kutusu, bir sekmenin üzerine gelmenin o sekmenin adresini TabMerger'ın önizleme hizmetine gönderdiğini ve bunun hesabınıza bağlanmadığını, kaydedilmediğini veya saklanmadığını açıklar.",
+            "2": "Açıldığında bir sekmenin üzerine gelmek görselini/açıklamasını gösterir; görseli olmayan bir sayfa bozuk bir görsel yerine \"Önizleme yok\" gösterir."
+          }
+        },
+        "3": {
+          "heading": "Çok pencereli bir grubu paylaşma",
+          "checks": "Birkaç pencereli paylaşılan bir grubun her pencereyi ayrı ayrı gösterdiğini.",
+          "steps": {
+            "0": "Birkaç kaydedilmiş penceresi olan (yalnızca bir değil) bir grubu paylaşın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Paylaşılan sayfanın Araştırma grubu, her biri kendi Sekmeyi aç bağlantısına sahip dört ayrı pencere ve grupta \"Tüm pencereleri aç\" gösteriyor",
+              "caption": "Dört pencereli paylaşılan bir grup: her pencere ayrı ayrı listelenir."
+            }
+          },
+          "good": {
+            "0": "Paylaşılan sayfa o gruptaki her pencereyi, her biri \"Pencere N\" (ve öyleyse \"Gizli\") olarak etiketlenmiş şekilde, kendi sekmeleri ve kendi \"Sekme(ler)i aç\" denetimiyle gösterir."
+          }
+        },
+        "4": {
+          "heading": "Uzantı yerine web kontrol panelinden paylaşma",
+          "checks": "Web sitesinden paylaşmanın uzantıdan paylaşmayla aynı şekilde çalıştığını.",
+          "steps": {
+            "0": "Kontrol panelinde tek bir grup kartında \"Paylaş\"a tıklayın veya birkaç grubu işaretleyip \"Seçilenleri paylaş\"a tıklayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bir kartın Paylaş düğmesinin \"Kopyalandı!\" gösterdiği kontrol paneli grup kartları ve \"Bağlantı kopyalandı — bu grubun anlık görüntüsünü paylaşır.\" yazan bir bildirim",
+              "caption": "Bir kontrol paneli kartındaki Paylaş aynı türde bağlantıyı kopyalar."
+            }
+          },
+          "good": {
+            "0": "Her iki kontrol paneli yolu da uzantıyla aynı şekilde bir bağlantı kopyalar (sırasıyla \"Bağlantı kopyalandı — bu grubun anlık görüntüsünü paylaşır.\" veya \"Bağlantı kopyalandı! Paylaşım sayfası yayında.\") ve aynı türde paylaşılan sayfa üretir."
+          }
+        },
+        "5": {
+          "heading": "Düzenleme, yeniden paylaşma, iptal etme ve süre sonu — neyin MÜMKÜN OLMADIĞI",
+          "checks": "Paylaşım bağlantılarının henüz neler yapamadığını, böylece bunu bildirmekle zaman kaybetmezsiniz.",
+          "steps": {
+            "0": "Uzantıdan veya kontrol panelinden mevcut bir paylaşımı düzenlemenin ya da iptal etmenin/silmenin/süresini sonlandırmanın herhangi bir yolunu bulmaya çalışın."
+          },
+          "good": {
+            "0": "Şu anda oluşturulduktan sonra bir paylaşım bağlantısını düzenlemek, iptal etmek, silmek veya süresini sonlandırmak için hiçbir yerde bir arayüz yoktur — bir paylaşım, oluşturulduğu andan itibaren kalıcı, değiştirilemez bir anlık görüntüdür. Bu beklenen bir durumdur — iptal/düzenleme/süre sonu denetiminin yokluğunu bildirmeyin, yalnızca bu açıklamayla eşleştiğini doğrulayın.",
+            "1": "Aynı grubu yeniden paylaşmak eskisini güncellemek yerine yepyeni, ayrı bir bağlantı oluşturur; eski bağlantı çalışmaya devam eder ve hâlâ eski anlık görüntüyü gösterir."
+          }
+        }
+      }
+    },
+    "settings": {
+      "title": "Ayarlar",
+      "intro": "Ayarlar'da herkes için Genel, Hesap ve Veri sekmeleri vardır. Pro'ya geçtiğinizde bir Cihazlar sekmesi görünür (yukarıdaki \"Pro'ya yükseltme\" bölümüne bakın). AI ve Geliştirici sekmeleri bu beta sürümünün bir parçası değildir — AI \"yakında\" bayrağının arkasında gizli kalır ve Geliştirici yalnızca yerel geliştirme sürümlerinde görünür, yüklediğiniz betada değil.",
+      "items": {
+        "0": {
+          "heading": "Genel sekmesi — Tema, Silmeden önce onayla, Tıklayınca sekmeyi aç, Otomatik yinelenen kaldırma",
+          "checks": "Bu Genel ayarlarının hemen etkili olduğunu ve hatırlandığını.",
+          "steps": {
+            "0": "Ayarlar'ı açın ve Temayı Açık, Koyu ve Sistem arasında değiştirin.",
+            "1": "\"Silmeden önce onayla\"yı açıp kapatın (açıkken, ardından kapalıyken bir grubu veya pencereyi silin ve karşılaştırın).",
+            "2": "\"Tıklayınca sekmeyi aç\"ı açıp kapatın, ardından ana paneldeki kaydedilmiş bir sekmeye tıklayın.",
+            "3": "\"Birleştirmede yinelenenleri otomatik kaldır\"ı açıp kapatın, ardından yinelenen bir sekmeyi paylaşan iki pencereyi birleştirin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Tema, Silmeden önce onayla ve diğer anahtarları gösteren Ayarlar penceresinin Genel sekmesi",
+              "caption": "Başlığın yanında sürüm rozetiyle Ayarlar'ın Genel sekmesi. (Geliştirici sekmesi yalnızca dahili ekran görüntüsü sürümümüzde bulunur; siz görmezsiniz.)"
+            }
+          },
+          "good": {
+            "0": "Tema tüm arayüzü hemen değiştirir ve açılır pencere kapatılıp yeniden açıldıktan sonra korunur.",
+            "1": "\"Silmeden önce onayla\" açıkken bir grubu veya pencereyi silmek önce sorar; kapalıyken hemen siler.",
+            "2": "\"Tıklayınca sekmeyi aç\" açıkken: tek tıklama sekmeyi tarayıcıda açar; kapalıyken: tek tıklama yalnızca seçer/genişletir.",
+            "3": "\"Birleştirmede yinelenenleri otomatik kaldır\" açıkken yineleneni otomatik olarak kaldırır."
+          }
+        },
+        "1": {
+          "heading": "Genel sekmesi — Önizlemelerde sayfa görsellerini göster",
+          "checks": "Sayfa görselleri ayarının sekme önizlemelerinin bir sayfa görseli gösterip göstermeyeceğini denetlediğini.",
+          "steps": {
+            "0": "\"Önizlemelerde sayfa görsellerini göster\"i kapatın.",
+            "1": "Önizlemesini görmek için kaydedilmiş bir sekmenin üzerine gelin.",
+            "2": "Ayarı tekrar açın ve aynı sekmenin üzerine yeniden gelin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Sayfa görselleri devre dışıyken \"Etkin değil\" yer tutucusunu gösteren bir sekme önizlemesi",
+              "caption": "\"Önizlemelerde sayfa görsellerini göster\" kapalıyken üzerine gelme önizlemesi."
+            }
+          },
+          "good": {
+            "0": "Kapalı: önizleme açıkça \"Etkin değil\" der ve \"Sayfa görselleri kapalı. Ayarlar'dan açın.\" notunu gösterir — anahtarın kendisi onay iletişim kutusu olmadan hemen kaydeder.",
+            "1": "Açık: üzerine gelme önizlemesinde gerçek bir sayfa görseli yüklenir veya sayfanın görseli yoksa \"Önizleme yok\" görünür.",
+            "2": "Ayarın kendi açıklaması, gizlilik politikasının sayfa önizlemeleri bölümüne bağlantı verir."
+          },
+          "report": "Ayar açıkken ve görseli olan bir sayfada önizleme gerçek bir görsel yerine \"Önizleme yok\" (boş) gösteriyor."
+        },
+        "2": {
+          "heading": "Genel sekmesi — Bulut senkronizasyonu, Eskimiş sekme eşiği, URL kuralları",
+          "checks": "Bu ayarların doğru planlar için göründüğünü ve değiştirmeleri gerekeni değiştirdiğini.",
+          "pro": "Yalnızca Bulut senkronizasyonu anahtarı Pro gerektirir (Ücretsiz'de görünmez).",
+          "steps": {
+            "0": "Pro ile \"Bulut senkronizasyonu\"nu açıp kapatın (bu denetim yalnızca Pro'ya sahip olduğunuzda görünür).",
+            "1": "\"Eskimiş sekme eşiği\"ni farklı bir değere (7/14/30/60 gün) değiştirin.",
+            "2": "\"URL kuralları\"nın yanındaki \"Yönet\"e tıklayın ve bir URL desenini bir gruba atayan bir kural ekleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Ayarlar, aşağı kaydırılmış Genel sekmesi: Bulut senkronizasyonu açık, Eskimiş sekme eşiği 30 gün ve Yönet düğmesiyle URL kuralları",
+              "caption": "Genel sekmesinin alt yarısı. (Geliştirici sekmesi yalnızca dahili ekran görüntüsü sürümümüzde bulunur; siz görmezsiniz.)"
+            }
+          },
+          "good": {
+            "0": "Bulut senkronizasyonu yalnızca Pro hesaplarında görünür (Ücretsiz asla görmez).",
+            "1": "Eskimiş sekme eşiğini değiştirmek, hangi sekmelerin turuncu eskimiş noktasını aldığını değiştirir.",
+            "2": "URL kuralları, desen-grup kuralları ekleyebileceğiniz/düzenleyebileceğiniz/kaldırabileceğiniz bir yönetici açar.",
+            "3": "Bir kuralla eşleşen yeni açılmış bir sekme otomatik olarak atanır."
+          }
+        },
+        "3": {
+          "heading": "Tema: Açık, Koyu ve Sistem",
+          "checks": "Her temanın açılır pencerenin tamamında doğru göründüğünü ve seçimin hatırlandığını.",
+          "steps": {
+            "0": "Ayarlar → Genel'de Temayı Koyu olarak ayarlayın ve Değişiklikleri kaydet'e tıklayın.",
+            "1": "Açılır pencerede etrafa bakın: kenar çubuğu, birkaç pencereli bir grup, ⋯ menüleri, bir sağ tık menüsü, Arama (Ctrl+K) ve Ayarlar'ın kendisi.",
+            "2": "Açılır pencereyi kapatıp yeniden açın.",
+            "3": "Temayı Sistem olarak ayarlayıp kaydedin, ardından bilgisayarınızı açık ve koyu mod arasında değiştirin.",
+            "4": "Tekrar Açık olarak ayarlayın."
+          },
+          "good": {
+            "0": "Kaydettiğiniz anda tüm açılır pencere temayı değiştirir ve her metin, simge ve kenarlık okunabilir olur.",
+            "1": "Menüler, iletişim kutuları, araç ipuçları ve bildirimler de temayı takip eder.",
+            "2": "Açılır pencere yeniden açıldıktan sonra tema hâlâ ayarlıdır.",
+            "3": "Sistem, bilgisayarınızın açık veya koyu ayarını takip eder."
+          },
+          "report": "Herhangi bir şey zor okunuyor veya eski temada kalıyor (bir menü, iletişim kutusu, simge veya kenarlık) ya da açılır pencere yeniden açıldıktan sonra tema sıfırlanıyor."
+        },
+        "4": {
+          "heading": "URL kuralları: eşleşen sayfaları otomatik kaydetme",
+          "checks": "Bir URL kuralının, eşleşen adreslerde açtığınız sayfaları seçtiğiniz gruba kaydettiğini.",
+          "steps": {
+            "0": "Ayarlar → Genel'de, URL kuralları'nın yanında Yönet'e, ardından Kural ekle'ye tıklayın.",
+            "1": "Joker karakter olarak * ile bir desen girin (ör. github.com/*), bir grup seçin, kuralı ekleyin ve Kaydet'e tıklayın.",
+            "2": "Tarayıcıda eşleşen bir adreste yeni bir sekme açın (ör. herhangi bir github.com sayfası).",
+            "3": "Açılır pencereyi açın ve kuralın grubuna bakın. Ardından sayfayı bir kez yeniden yükleyin ve grubu tekrar kontrol edin.",
+            "4": "Kuralı başka bir grubu gösterecek şekilde düzenleyin, ardından silin ve eşleşen başka bir sayfa açın.",
+            "5": "Ücretsiz'de dördüncü bir kural eklemeyi deneyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "URL Kuralları iletişim kutusu: \"Sekmeleri URL desenine göre gruplara otomatik ata. Joker karakter olarak * kullanın (ör. github.com/*). Eşleşen ilk kural geçerlidir.\", henüz kural yok, bir Kural ekle düğmesi ve İptal ile Kaydet",
+              "caption": "Ayarlar → Genel → URL kuralları → Yönet bu düzenleyiciyi açar."
+            }
+          },
+          "good": {
+            "0": "Eşleşen sayfanın bir kopyası kuralın grubuna, ilk penceresine (veya grubun penceresi yoksa yeni bir pencereye) kaydedilir. Sekmenin kendisi açık kalır.",
+            "1": "Birkaç kural eşleştiğinde listedeki ilk kural geçerli olur.",
+            "2": "Bir kural düzenlendiğinde veya silindiğinde yeni sayfalar değişikliği takip eder.",
+            "3": "Ücretsiz 3 kurala izin verir: dördüncüyü eklemek bir Yükselt düğmesiyle \"Ücretsiz plan en fazla 3 URL kuralına izin verir.\" mesajını gösterir. Pro'nun sınırı yoktur."
+          },
+          "report": "Eşleşen bir sayfa kaydedilmiyor, yanlış gruba gidiyor veya birden fazla kez kaydediliyor (örneğin her yeniden yüklediğinizde tekrar)."
+        },
+        "5": {
+          "heading": "Hesap sekmesi — Plan, Yenileme, E-posta, Faturalandırmayı yönet / Yükselt, Oturumu kapat",
+          "checks": "Hesap sekmesinin gerçek planınızı, yenileme tarihinizi ve e-postanızı gösterdiğini ve düğmelerinin çalıştığını.",
+          "steps": {
+            "0": "Hesap sekmesini açın ve Plan, Yenileme (ücretliyse) ve E-posta satırlarını kontrol edin.",
+            "1": "\"Pro'ya Yükselt\"e (Ücretsiz) veya \"Faturalandırmayı yönet\"e (Pro/Pro AI) tıklayın — sonrasında ne olacağı için yukarıdaki \"Pro'ya yükseltme\" bölümüne bakın.",
+            "2": "\"Oturumu kapat\"a tıklayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Pro'da Ayarlar, Hesap sekmesi: Plan Pro ({proMonthly}/ay), bir yenileme tarihi, e-posta, Faturalandırmayı yönet ve Oturumu kapat düğmeleri ve \"Parolanızı mı unuttunuz? Şifrelemeyi sıfırla\"",
+              "caption": "Bir Pro hesabındaki Hesap sekmesi. Alttaki sıfırlama bağlantısı bir sonraki öğedir. (Geliştirici sekmesi yalnızca dahili ekran görüntüsü sürümümüzde bulunur; siz görmezsiniz.)"
+            }
+          },
+          "good": {
+            "0": "Plan, gerçek aboneliğinizle eşleşen \"Ücretsiz\", \"Pro ({proMonthly}/ay)\" veya \"Pro AI ({proAiMonthly}/ay)\" gösterir.",
+            "1": "Yenileme yalnızca ücretli bir plan için görünür ve gerçek yenileme tarihini verir.",
+            "2": "E-posta, oturum açtığınız hesapla eşleşir.",
+            "3": "\"Faturalandırmayı yönet\" Stripe'ın faturalandırma portalını yeni bir sekmede açar; Ücretsiz'de bunun yerine fiyatlandırma sayfasını açan \"Pro'ya Yükselt\" bulunur.",
+            "4": "Oturumu kapat sizi oturum kapalı duruma döndürür."
+          }
+        },
+        "6": {
+          "heading": "Hesap sekmesi — Parolanızı mı unuttunuz? Şifrelemeyi sıfırla",
+          "checks": "Şifreleme kurulduktan sonra şifreleme sıfırlama bağlantısının Hesap sekmesinde göründüğünü.",
+          "steps": {
+            "0": "Bu bağlantı yalnızca şifreleme kurulumunu en az bir kez tamamladıysanız görünür (tam akış için aşağıdaki \"Uçtan uca şifreleme parolası\" bölümüne bakın — bunu burada tekrarlamayın, yalnızca bu sekmeden erişilebildiğini doğrulayın)."
+          },
+          "good": {
+            "0": "Bağlantı, şifreleme kurulduktan sonra Hesap sekmesinin altında görünür, öncesinde görünmez."
+          }
+        },
+        "7": {
+          "heading": "Veri sekmesi — Dışa aktar, İçe aktar, Tüm verileri temizle",
+          "checks": "Verilerinizi dışa aktarmanın, içe aktarmanın ve temizlemenin, herhangi bir şey değiştirilmeden veya silinmeden önce bir onayla çalıştığını.",
+          "steps": {
+            "0": "Veri sekmesini açın ve tüm grupları bir JSON dosyası olarak indirmek için \"Dışa aktar\"a tıklayın.",
+            "1": "\"İçe aktar\"a tıklayın ve aynı dosyayı (veya bir Yer İşaretleri HTML dışa aktarımını ya da bir OneTab .txt dışa aktarımını) seçin.",
+            "2": "\"Tüm verileri temizle\"ye tıklayın ve onaylayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Verileri dışa aktar ve Verileri içe aktar denetimlerini gösteren Ayarlar penceresinin Veri sekmesi",
+              "caption": "Ayarlar'ın Veri sekmesi."
+            }
+          },
+          "good": {
+            "0": "Dışa aktar, \"tabmerger-backup-2026-01-15.json\" gibi adlandırılmış bir dosya indirir ve bir \"başarıyla dışa aktarıldı\" bildirimi gösterir.",
+            "1": "İçe aktar, içe aktarmadan önce grup sayısını onaylamanızı ister, ardından \"başarıyla içe aktarıldı\" gösterir.",
+            "2": "Kendi dışa aktarımınızı yeniden içe aktarmak, her grubu aynı pencereler, sekmeler, sıra ve renklerle geri getirir.",
+            "3": "Üç dosya türünün tümü (TabMerger JSON, Yer İşaretleri HTML, OneTab .txt) kabul edilir ve dosya uzantısıyla algılanır.",
+            "4": "\"Tüm verileri temizle\" onayladıktan sonra grupları, oturumları ve ayarları siler — bunu yıkıcı kabul edin ve yalnızca atılabilir bir profilde deneyin."
+          },
+          "report": "Hatalı veya boş bir dosya, \"Geçersiz dosya biçimi\" veya \"Grup bulunamadı\" gibi bir hata bildirimi göstermek yerine sessizce hiçbir şey yapmıyor."
+        },
+        "8": {
+          "heading": "Kaydet ve Sıfırla ile \"Kaydedilmemiş değişiklikler\" göstergesi",
+          "checks": "Ayarların yalnızca Kaydet'e tıkladığınızda kaydedildiğini ve kaydedilmemiş değişiklikler konusunda sizi uyardığını.",
+          "steps": {
+            "0": "Genel sekmesinde Kaydet'e tıklamadan herhangi bir ayarı (ör. Tema) değiştirin.",
+            "1": "\"Kaydedilmemiş değişiklikler\" metnine ve \"Değişiklikleri kaydet\"in yalnızca bir şey kaydedilenden gerçekten farklıyken etkin olduğuna dikkat edin.",
+            "2": "Kaydet yerine \"Varsayılanları geri yükle\"ye tıklayın, ardından Ayarlar'ı kaydetmeden kapatın.",
+            "3": "Ayarlar'ı yeniden açın ve değişikliğinizin kalıp kalmadığını kontrol edin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Bir değişiklikten sonra Ayarlar, Genel sekmesi: etkin bir Değişiklikleri kaydet düğmesinin yanında \"Kaydedilmemiş değişiklikler\" ve solda Varsayılanları geri yükle",
+              "caption": "Bir ayarı değiştirdikten sonra: \"Kaydedilmemiş değişiklikler\" görünür ve Değişiklikleri kaydet etkinleşir. (Geliştirici sekmesi yalnızca dahili ekran görüntüsü sürümümüzde bulunur; siz görmezsiniz.)"
+            }
+          },
+          "good": {
+            "0": "Taslak son kaydedilen ayarlardan farklı olduğunda \"Değişiklikleri kaydet\"in yanında \"Kaydedilmemiş değişiklikler\" görünür.",
+            "1": "Kaydedilecek yeni bir şey olmadığında \"Değişiklikleri kaydet\" devre dışıdır.",
+            "2": "\"Varsayılanları geri yükle\" yalnızca devam eden taslağı varsayılanlara sıfırlar — kendi başına kaydetmez.",
+            "3": "Ayarlar'ı \"Değişiklikleri kaydet\"e tıklamadan kapatmak taslağı atar; yeniden açmak kaydedilmemiş düzenlemenizi değil, gerçekten son kaydedilen değerleri gösterir."
+          },
+          "report": "Hiçbir değişiklik yapılmadan \"Değişiklikleri kaydet\" etkin kalıyor veya değiştirip hiç kaydetmediğiniz bir ayar Ayarlar kapatılıp yeniden açıldıktan sonra yine de korunuyor."
+        },
+        "9": {
+          "heading": "Sürüm rozeti",
+          "checks": "Hata raporlarına yazılacak tam sürüm numarasının nerede bulunacağını.",
+          "steps": {
+            "0": "Ayarlar iletişim kutusunun başlık çubuğuna bakın."
+          },
+          "good": {
+            "0": "\"Ayarlar\" kelimesinin yanındaki küçük bir rozet, hata raporlarında bildirmeniz gereken gerçek semver'i gösterir (ör. \"v3.1.0-beta.5\") — bu, yukarıdaki \"Katıl ve yükle\" bölümünde daha ayrıntılı ele alınmıştır."
+          }
+        }
+      }
+    },
+    "sign-in-and-sync": {
+      "title": "Oturum açma ve cihazlar arası senkronizasyon",
+      "intro": "Beta sürümleri ana site üzerinden değil, preview.tabmerger.com adresindeki önizleme web uygulaması üzerinden senkronize olur — senkronize gruplarınızı, kontrol panelinizi ve paylaşımlarınızı görmek için orada oturum açın.",
+      "items": {
+        "0": {
+          "heading": "İki cihaz kurma",
+          "checks": "Aynı hesapta oturum açmış iki cihazın gruplarını paylaştığını.",
+          "steps": {
+            "0": "Beta uzantısının ikisinde de yüklü olduğu, aynı hesaba yönlendirilmiş iki cihazda veya iki tarayıcı profilinde oturum açın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Açılır pencerede uzantının \"TabMerger'da Oturum Aç\" iletişim kutusu: Google ile devam et, ardından E-posta ve Parola alanlarıyla Oturum Aç, Kaydol ve Sihirli Bağlantı sekmeleri",
+              "caption": "Uzantıdan oturum açma: hesap simgesi (sağ üst) → Oturum aç."
+            },
+            "1": {
+              "alt": "İş, Araştırma, Alışveriş ve Okuma Listesi gruplarıyla A cihazının açılır penceresi; alt bilgi 4 Grup, 4 Pencere, 17 Sekme gösteriyor",
+              "caption": "A cihazı."
+            },
+            "2": {
+              "alt": "Oturum açma, kilit açma ve senkronizasyondan sonra B cihazının açılır penceresi: aynı pencere ve sekme sayılarıyla aynı dört grup ve aynı 4 Grup, 4 Pencere, 17 Sekme alt bilgisi",
+              "caption": "Oturum açıp kilidi açtıktan sonra B cihazı: aynı gruplar ve sayılar, aynı sırada."
+            }
+          },
+          "good": {
+            "0": "Bir cihazda oluşturulan gruplar kısa süre içinde diğerinde görünür."
+          }
+        },
+        "1": {
+          "heading": "Yeniden adlandırmalar diğer cihaza ulaşır",
+          "checks": "Bir cihazdaki yeniden adlandırmanın diğerinde elle yenileme olmadan göründüğünü.",
+          "steps": {
+            "0": "A cihazında bir grup adını düzenleyin.",
+            "1": "B cihazında hiçbir şeye dokunmadan kontrol edin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Araştırma \"Araştırma makaleleri\" olarak yeniden adlandırıldıktan sonra A cihazının açılır penceresi, dört sekmesi gösteriliyor",
+              "caption": "A cihazı: \"Araştırma\", \"Araştırma makaleleri\" olarak yeniden adlandırıldı."
+            },
+            "1": {
+              "alt": "Yalnızca açılır pencere yeniden açıldıktan sonra grubu aynı dört sekmeyle \"Araştırma makaleleri\" olarak gösteren B cihazının açılır penceresi",
+              "caption": "B cihazı, yalnızca açılır pencere yeniden açıldıktan sonra: yeni ad orada."
+            }
+          },
+          "good": {
+            "0": "B cihazı, sizin elle yenileme tetiklemenize gerek kalmadan yeniden adlandırmayı alır."
+          }
+        },
+        "2": {
+          "heading": "Silmeler diğer cihaza ulaşır",
+          "checks": "Silinen bir grubun geri gelmek yerine her cihazda silinmiş kaldığını.",
+          "steps": {
+            "0": "A cihazında bir grubu silin.",
+            "1": "B cihazında da kaybolduğunu doğrulayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Alışveriş silindikten sonra A cihazının açılır penceresi: İş, Araştırma makaleleri ve Okuma Listesi kalıyor ve alt bilgi 3 Grup, 3 Pencere, 14 Sekme gösteriyor",
+              "caption": "A cihazı: \"Alışveriş\" silindi."
+            },
+            "1": {
+              "alt": "Yeniden açtıktan sonra B cihazının açılır penceresi: Alışveriş gitmiş ve alt bilgi 3 Grup, 3 Pencere, 14 Sekme gösteriyor",
+              "caption": "Açılır pencereyi yeniden açtıktan sonra B cihazı: \"Alışveriş\" orada da gitmiş."
+            }
+          },
+          "good": {
+            "0": "Silme işlemi yayılır; grup senkronizasyondan sonra yeniden ortaya çıkmaz (\"dirilmez\")."
+          },
+          "report": "Silinen bir grup daha sonraki bir senkronizasyondan sonra cihazlardan birinde geri geliyor."
+        },
+        "3": {
+          "heading": "Grupları yeniden sıralama senkronize olur",
+          "checks": "Gruplarınızın sırasının her cihazda ve kontrol panelinde aynı olduğunu.",
+          "steps": {
+            "0": "A cihazında kenar çubuğundaki bir grubu yeni bir konuma sürükleyin.",
+            "1": "Senkronizasyonun tamamlanmasını bekleyin, ardından B cihazının kenar çubuğuna ve web kontrol paneline bakın."
+          },
+          "good": {
+            "0": "B cihazı ve kontrol paneli grupları A cihazıyla aynı sırada gösterir.",
+            "1": "Bir senkronizasyon başka bir cihazdan değişiklik getirdikten hemen sonra bir cihazda Geri Al grileşebilir. Bu beklenen bir durumdur: değişiklikler başka bir yerden geldiğinde geri alma geçmişi temizlenir, böylece yanlışlıkla başka birinin düzenlemesinin üzerine geri alma yapamazsınız."
+          },
+          "report": "Senkronizasyon tamamlandıktan sonra sıra cihazlar arasında farklı veya bir yeniden sıralama eski sıraya geri dönüyor."
+        },
+        "4": {
+          "heading": "Çevrimdışı değişiklikler yeniden bağlandığınızda senkronize olur",
+          "checks": "Çevrimdışıyken yapılan değişikliklerin, yeniden çevrimiçi olduğunuzda yineleme veya kayıp olmadan senkronize olduğunu.",
+          "steps": {
+            "0": "Bir cihazda çevrimdışı olun (ağı devre dışı bırakın).",
+            "1": "Değişiklikler yapın.",
+            "2": "Yeniden bağlanın."
+          },
+          "good": {
+            "0": "Yeniden çevrimiçi olunca, çevrimdışıyken yapılan değişiklikler grupları çoğaltmadan veya sessizce kaybetmeden senkronize olur."
+          }
+        },
+        "5": {
+          "heading": "Çevrimdışıyken bir grubu silme",
+          "checks": "Çevrimdışıyken sildiğiniz bir grubun yeniden bağlandığınızda silinmiş kaldığını.",
+          "steps": {
+            "0": "A cihazında çevrimdışı olun (ağı devre dışı bırakın).",
+            "1": "A cihazında bir grubu silin.",
+            "2": "A cihazını yeniden bağlayın ve senkronize olmasını bekleyin, ardından B cihazını ve kontrol panelini kontrol edin."
+          },
+          "good": {
+            "0": "Grup bir sonraki senkronizasyonda sunucudan kaldırılır ve B cihazında ve kontrol panelinde kaybolur.",
+            "1": "Sonrasında hiçbir cihazda geri gelmez."
+          },
+          "report": "Çevrimdışıyken sildiğiniz bir grup bir senkronizasyondan sonra herhangi bir cihazda yeniden ortaya çıkıyor."
+        },
+        "6": {
+          "heading": "Aynı grup iki cihazda düzenlendi (çakışma kopyası)",
+          "checks": "Aynı grup, hiçbiri senkronize olmadan önce iki cihazda düzenlendiğinde hiçbir şeyin üzerine yazılmadığını ve elle birleştirmeniz için bir kopya aldığınızı.",
+          "steps": {
+            "0": "A cihazında çevrimdışı olun (ağı devre dışı bırakın). B cihazını çevrimiçi bırakın.",
+            "1": "A cihazında bir grubu düzenleyin (örneğin bir sekme ekleyin). B cihazında aynı grubu farklı şekilde düzenleyin (örneğin farklı bir sekme ekleyin).",
+            "2": "Önce B cihazının senkronize olmasını bekleyin, ardından A cihazını yeniden bağlayın ve senkronize olmasını bekleyin.",
+            "3": "Her iki cihazdaki kenar çubuğuna bakın."
+          },
+          "good": {
+            "0": "Sunucuya ilk ulaşan sürüm (B cihazı) grubun adını korur.",
+            "1": "A cihazının sürümü hemen altına \"Work{CONFLICT_COPY_SUFFIX}\" (grubunuzun adını kullanarak) adlı yeni bir grup olarak kaydedilir ve bir bildirim size bunu söyler.",
+            "2": "Her iki cihaz da sonunda her iki grubu gösterir. Sekmeleri elle birleştirebilir ve ardından kopyayı silebilirsiniz.",
+            "3": "Yalnızca bir cihazı düzenlemek veya her birinde farklı grupları düzenlemek asla kopya oluşturmaz."
+          },
+          "report": "Bir düzenleme kopya olmadan sessizce kayboluyor veya grubu yalnızca bir cihaz düzenlediğinde bir \"çakışma kopyası\" görünüyor."
+        }
+      }
+    },
+    "encryption": {
+      "title": "Uçtan uca şifreleme parolası",
+      "intro": "Şifreleme, oturum açmış her hesap için zorunludur, isteğe bağlı bir ayar değildir — kapatmak için bir anahtar yoktur. Senkronize gruplarınız, oturumlarınız ve \"Şu An Açık\" anlık görüntüleriniz yalnızca parolanızın açabileceği bir anahtarla şifrelenir; TabMerger'ın sunucuları parolayı veya açılmış anahtarı asla görmez.",
+      "items": {
+        "0": {
+          "heading": "İlk parola kurulumu",
+          "checks": "Senkronizasyonu açmanın, verilerinizden herhangi biri cihazınızdan ayrılmadan önce bir şifreleme parolası seçmenizi istediğini.",
+          "steps": {
+            "0": "Bulut senkronizasyonuyla yeni bir oturum açışta, \"Şifrelemeyi kur\" isteminin kendiliğinden görünmesini bekleyin (ilk senkronizasyon denemesiyle tetiklenir).",
+            "1": "İstem metnini okuyun, ardından yeni bir parola girin ve \"Parolayı onayla\"da tekrarlayın.",
+            "2": "\"Şifrelemeyi kur\"a tıklayın."
+          },
+          "examples": {
+            "0": {
+              "alt": "Parolanın kurtarılamayacağını açıklayan \"Şifrelemeyi kur\" iletişim kutusu, Yeni parola ve Parolayı onayla alanları ve bir Şifrelemeyi kur düğmesiyle",
+              "caption": "Pro'da oturum açtıktan hemen sonra kendiliğinden görünür."
+            }
+          },
+          "good": {
+            "0": "İstem şöyle der: \"Senkronize grup ve sekme verileriniz yalnızca sizin bildiğiniz bir parolayla uçtan uca şifrelenir. Şimdi bir tane seçin — unutursanız verilerinizi kurtarmanın hiçbir yolu yoktur, parola asla cihazınızdan ayrılmaz ve TabMerger onu sizin için sıfırlayamaz.\"",
+            "1": "Parola boşluksuz en az 8 karakter olmalı ve onayıyla eşleşmelidir — uyuşmazlıklar veya çok kısa bir parola sessizce başarısız olmak yerine açık bir satır içi hata gösterir (\"Parola en az 8 karakter olmalıdır\" / \"Parolalar eşleşmiyor\" / \"Parola boşluk içeremez\").",
+            "2": "Başarılı olduğunda bir \"Şifreleme kuruldu\" bildirimi görürsünüz.",
+            "3": "Daha önce senkronize ettiğiniz hiçbir şey kaybolmaz."
+          }
+        },
+        "1": {
+          "heading": "İkinci bir cihazda kilidi açma",
+          "checks": "İkinci bir cihazın senkronize verilerinizi okuyabilmesi için bir kez parolanıza ihtiyaç duyduğunu.",
+          "steps": {
+            "0": "İkinci bir cihazda veya tarayıcı profilinde aynı hesapla oturum açın.",
+            "1": "\"Şifrelemenin kilidini aç\" istemi göründüğünde parolanızı girin (bir kez, onay alanı yoktur) ve \"Kilidi aç\"a tıklayın veya Enter'a basın.",
+            "2": "Bir kez daha tekrarlayın, ancak bilerek yanlış parolayı yazın."
+          },
+          "examples": {
+            "0": {
+              "alt": "İkinci bir cihazda tek bir Parola alanı ve bir Kilidi aç düğmesiyle \"Şifrelemenin kilidini aç\" iletişim kutusu",
+              "caption": "İkinci bir cihazda uzantı mevcut parolanızı bir kez ister."
+            }
+          },
+          "good": {
+            "0": "Kilit açma istemi şöyle der: \"Bu cihazda senkronize verilerin kilidini açmak için şifreleme parolanızı girin. Bu, cihaz başına tek seferlik bir adımdır — oturumu kapatmadığınız sürece tekrar sorulmaz.\"",
+            "1": "Doğru parola kilidi açar ve bir \"Şifrelemenin kilidi açıldı\" bildirimi gösterir.",
+            "2": "Yanlış parola \"Yanlış parola\" gösterir ve başka hiçbir şeyi değiştirmez — bozulma yok, kilitlenme yok, yalnızca tekrar deneyebilirsiniz."
+          }
+        },
+        "2": {
+          "heading": "\"Kilitli\" nasıl görünür ve yeniden başlatmadan sonra kilidin açık kalması",
+          "checks": "Kilitli verilerin siz kilidi açana kadar okunamaz kaldığını ve bir cihazın tarayıcı yeniden başlatıldıktan sonra kilidi açık kaldığını.",
+          "steps": {
+            "0": "Bir cihaz kilitliyken (orada parolayı girmeden önce), bulut senkronizasyonu özelliklerini kullanmayı deneyin.",
+            "1": "Kilidi açın, ardından o cihazda tarayıcınızı (yalnızca açılır pencereyi değil) tamamen kapatıp yeniden açın."
+          },
+          "good": {
+            "0": "Kilitliyken, sessizce düz metin senkronize etmek veya veri kaybetmek yerine parola için yeniden istem alırsınız.",
+            "1": "Kilit açıldıktan sonra anahtar o cihazdaki tarayıcının yerel depolamasında kalır — tam bir tarayıcı yeniden başlatması sizden yeniden istemez; yalnızca oturumu kapatmak onu temizler."
+          }
+        },
+        "3": {
+          "heading": "Parolanızı mı unuttunuz — şifrelemeyi sıfırlama",
+          "checks": "Şifrelemeyi sıfırlamanın önce açıkça onaylandığını ve yeni bir parola belirlemenize izin verdiğini.",
+          "steps": {
+            "0": "Ayarlar → Hesap'ta \"Parolanızı mı unuttunuz? Şifrelemeyi sıfırla\"yı bulun (yalnızca kurulumu en az bir kez tamamladıktan sonra gösterilir).",
+            "1": "Bunu önem verdiğiniz veriler üzerinde KULLANMAYIN — mevcut parolanız altında şifrelenmiş her şeye erişimi kalıcı olarak ortadan kaldırır. Denemek istiyorsanız atılabilir bir test hesabı kullanın.",
+            "2": "Denerseniz sıfırlama iletişim kutusunu onaylayın, ardından kurulum istemi yeniden açıldığında yepyeni bir parola belirleyin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Mevcut parola altında şifrelenmiş her şeyin kalıcı olarak erişilemez hale geleceği uyarısını veren \"Şifreleme Parolasını Sıfırla\" onayı, İptal ve Parolayı Sıfırla düğmeleriyle",
+              "caption": "Sıfırlamadan önce aldığınız onay. İptal güvenlidir; Parolayı Sıfırla geri alınamaz."
+            }
+          },
+          "good": {
+            "0": "Onay iletişim kutusu herhangi bir şey olmadan önce açıktır.",
+            "1": "Onayladıktan sonra bir \"Şifreleme sıfırlandı — yeni bir parola belirleyin\" bildirimi görürsünüz ve kurulum istemi hemen yeniden açılır, böylece yeni bir tane seçip senkronizasyona devam edebilirsiniz."
+          }
+        },
+        "4": {
+          "heading": "Web kontrol panelinde doğrulama",
+          "checks": "Web sitesinin senkronize gruplarınızı göstermeden önce parolanızı istediğini.",
+          "steps": {
+            "0": "Şifrelemesi kurulmuş bir hesapla kontrol panelinde (preview.tabmerger.com) oturum açın.",
+            "1": "İstenirse, herhangi bir grup içeriği görünmeden önce satır içi kilit açma kartına parolanızı girin."
+          },
+          "examples": {
+            "0": {
+              "alt": "Web kontrol panelinin Sekme Grupları bölümü kilitli; bir asma kilit, \"Gruplarınız uçtan uca şifrelenmiştir. Onları burada görüntülemek için parolanızı girin.\", bir Parola alanı ve bir Kilidi aç düğmesi",
+              "caption": "Parolanızı girene kadar kontrol paneli gruplarınız yerine bunu gösterir."
+            }
+          },
+          "good": {
+            "0": "Kontrol paneli parolayı uzantıdan ayrı olarak ister — orada kilidi açmak, uzantının kilit açmasıyla paylaşılmayan, sekme başına tek seferlik kendi adımıdır. İstem şöyle der: \"Gruplarınız uçtan uca şifrelenmiştir. Onları burada görüntülemek için parolanızı girin.\"",
+            "1": "Yanlış bir parola sayfayı çökertmeden \"Yanlış parola.\" gösterir.",
+            "2": "Kilit açıldıktan sonra gerçek grup adlarınız ve sekmeleriniz normal şekilde görüntülenir.",
+            "3": "Uzantıda bir parola sıfırlamasından sonra kontrol paneli yeni parolayı ister: bir sonraki sayfa yüklemesinde veya zaten açık olan bir kontrol panelinde, senkronizasyon etiketindeki yenile düğmesine bastığınızda.",
+            "4": "Mevcut parolanın okuyamadığı bir grup veya oturum (bir sıfırlamadan önce kaydedilmiş ve henüz yeniden yüklenmemiş) herhangi bir içeriği sızdırmak yerine \"(kilitli)\" olarak görünür. Öğenin kendisi nedenini ve ne yapılacağını söyler ve yeniden okunabilir hale gelene kadar paylaşılamaz veya geri yüklenemez."
+          }
+        },
+        "5": {
+          "heading": "Verilerinizin gerçekten şifrelendiğini nasıl anlarsınız",
+          "checks": "Verilerinizin parolanız olmadan okunamaz olduğunu kendiniz nasıl görebileceğinizi.",
+          "steps": {
+            "0": "Arayüzde açık bir \"Şifrelendi ✓\" rozeti yoktur — görünür işaret dolaylıdır.",
+            "1": "Henüz kilidini açmadığınız bir cihazda (veya orada parolanızı girmeden önce kontrol panelinde), grup adlarının/içeriğinin siz kilidi açana kadar görüntülenmediğine dikkat edin."
+          },
+          "good": {
+            "0": "Kilit açılmadan önce okunabilir içeriğin yokluğu işarettir: hiçbir grup adı veya sekme gösterilmez ve kontrol panelinde mevcut parolanın okuyamadığı her şey \"(kilitli)\" olarak görüntülenir.",
+            "1": "Kontrol paneli gruplarınız yerine parola kartını gösterir. İçerik kilidi açmadan okunabilir olsaydı, bu gerçekten şifrelenmediği anlamına gelirdi — bunu görürseniz hemen bildirin."
+          }
+        }
+      }
+    }
+  },
+  "wantToHear": {
+    "0": "Herhangi bir veri kaybı — kaybolmaması gerekirken kaybolan bir grup, sekme veya oturum.",
+    "1": "Senkronizasyon çakışmaları — aynı grup, hiçbiri senkronize olmadan önce iki cihazda düzenlendiğinde bir \"{CONFLICT_COPY_SUFFIX}\" grubu beklenir. Bir düzenleme sessizce kaybolursa veya yalnızca bir cihaz düzenlediğinde bir kopya görünürse bize bildirin.",
+    "2": "Kafa karıştırıcı, belirsiz veya gerekenden fazla tıklama gerektiren her şey.",
+    "3": "Yavaş olan her şey — açılır pencerenin açılması, arama, sürükle bırak veya senkronizasyonun beklenenden belirgin şekilde uzun sürmesi."
+  },
+  "metaTitle": "Beta Programı",
+  "metaDescription": "TabMerger betasına katılın — özel beta sürümünü yükleyin, neyi test edeceğinizi öğrenin ve hataları doğrudan ekibe bildirin.",
+  "proBadge": {
+    "pro": "Pro",
+    "partlyPro": "Kısmen Pro",
+    "somePro": "Bazıları Pro",
+    "areaPartial": "Buradaki bazı öğeler bir Pro hesabı gerektirir",
+    "itemPartial": "Bu öğenin bir kısmı bir Pro hesabı gerektirir",
+    "areaAll": "Buradaki her öğe bir Pro hesabı gerektirir",
+    "itemAll": "Bir Pro hesabı gerektirir"
+  },
+  "eyebrow": "Beta programı",
+  "title": "TabMerger yayınlanmadan önce test etmemize yardım edin",
+  "lead": "TabMerger'ın bir sonraki sürümünü erkenden edinin ve neyin bozulduğunu bize söyleyin. Bu sayfa katılmayı, özel betayı yüklemeyi, neyi test edeceğinizi ve bulduklarınızı nasıl bildireceğinizi kapsar. AI özellikleri bu sürümde gizlidir (\"yakında\"), bu yüzden henüz testin bir parçası değildir.",
+  "join": "Betaya katıl",
+  "onThisPage": "Bu sayfada",
+  "install": {
+    "heading": "1. Katıl ve yükle",
+    "groupTitle": "Test kullanıcısı grubuna katılın.",
+    "groupBody": "<link>groups.google.com/g/tabmerger-beta-testers</link> adresini açın ve katılın. Katılım anında gerçekleşir, ancak <strong>Chrome'da oturum açtığınız Google hesabıyla</strong> katıldığınızdan emin olun — aksi takdirde özel listeleme sizin için görünür olmaz.",
+    "listingTitle": "Özel beta listelemesini açın.",
+    "listingLink": "TabMerger BETA listelemesini açın",
+    "listingPending": "Chrome Web Mağazası'ndaki \"TabMerger BETA\" listelemesi (bağlantı yakında — bu arada güncel URL için test kullanıcısı grubunu kontrol edin).",
+    "listingNotFound": "<strong>\"Öğe bulunamadı\"</strong> görüyorsanız muhtemelen yeni katıldınız — erişimin görünmesi biraz zaman alabilir. Bir sorun olduğunu varsaymadan önce biraz bekleyip tekrar deneyin.",
+    "installTitle": "Yükleyin.",
+    "installBody": "\"Chrome'a ekle\"ye tıklayın. Beta, kararlı \"TabMerger\" listelemesinden ayrı bir uzantı (\"TabMerger BETA\") olarak yüklenir — ikisini yan yana yüklü tutabilirsiniz ve verileri tamamen ayrıdır. Yanlışlıkla yanlış olanda işlem yapmamak için test ederken kararlı sürümü devre dışı bırakmanızı öneririz.",
+    "signInTitle": "Önizleme web uygulaması üzerinden oturum açın.",
+    "signInBody": "Beta sürümleri ana tabmerger sitesiyle değil, <link>preview.tabmerger.com</link> ile senkronize olur. Senkronize grupları ve oturumları görmek için orada (uzantıdan veya doğrudan kontrol panelinden) oturum açın.",
+    "browsersTitle": "Hangi tarayıcılarda test edebilirim?",
+    "browsersBody": "Chrome, Edge, Brave, Vivaldi, Arc ve Opera'nın hepsi aynı TabMerger BETA listelemesini ve aynı Google Grubu'nu kullanır — ayrı bir Edge betası yoktur, bu yüzden aramayın. Edge: istendiğinde \"Diğer mağazalardan uzantılara izin ver\"i kabul edin. Opera: önce Opera'nın \"Install Chrome Extensions\" eklentisini yükleyin, ardından yukarıdaki bağlantıyı kullanın. Edge Eklentileri mağazasından kararlı TabMerger'ı da yüklediyseniz betayı test ederken onu kapatın — bu uzantıdan ayrı bir uzantıdır. Safari desteklenmez.",
+    "firefoxTitle": "Firefox.",
+    "firefoxBody": "Firefox'un, yukarıdaki Chrome Web Mağazası listelemesi yerine doğrudan bir bağlantıdan yüklenen kendi beta sürümü vardır. <link>Firefox betasını yükleyin</link>. Firefox \"TabMerger BETA\"nın eklenip eklenmeyeceğini sorar: Ekle'yi seçin. Güncellemeleri kendi kendine yaklaşık günde bir kez kontrol eder; şimdi kontrol etmek için <code>about:addons</code> adresini açın, dişli simgesine tıklayın ve \"Güncellemeleri denetle\"yi seçin. Uzantının içinde bir kez oturum açın ve Firefox'un veri izni istemine izin verin (oturum açmayı ve senkronizasyonu kapsar); bundan sonra bu web sitesinde oturum açmak uzantıda da oturum açar. <strong>Yukarıdaki yükleme bağlantısına sahip herkes onu yükleyebilir</strong> — lütfen test kullanıcısı grubu dışında paylaşmayın.",
+    "firefoxSoon": "Firefox betası yakında geliyor; o zamana kadar Firefox kullanıcıları yukarıda listelenen desteklenen Chromium tarayıcılarından herhangi biriyle (Chrome, Edge, Brave, Vivaldi, Arc, Opera) betaya katılabilir.",
+    "versionTitle": "Sürümünüzü not edin.",
+    "versionBody": "TabMerger'ın Ayarlar'ını açın ve \"Ayarlar\" başlığının yanındaki sürüm rozetini kopyalayın (ör. <code>v3.1.0-beta.5</code>) veya <code>chrome://extensions</code> sayfasını kontrol edip \"TabMerger BETA\"yı bulun. Her iki durumda da o gerçek semver'i bildirin — Chrome Web Mağazası'nın dahili mağaza sürüm numarasını değil; o kaydırılmıştır ve sürümleri takip etmek için kullandığımızla eşleşmez."
+  },
+  "test": {
+    "heading": "2. Neler test edilmeli",
+    "intro": "TabMerger'ı normalde nasıl kullandığınıza uyan alanları deneyin. Aşağıdaki her öğenin numaralı adımları, nasıl görünmesi gerektiğine dair bir örneği ve çalışan bir sonucun neye benzediği vardır.",
+    "tickNote": "İlerledikçe her adımı işaretleyin. İşaretleriniz yalnızca bu tarayıcıda kaydedilir ve her alan ne kadar ilerlediğinizi gösterir.",
+    "needPro": "Pro'ya ihtiyacım var mı?",
+    "needProBody": "Alanlar Ücretsiz'den Pro'ya doğru listelenmiştir. İşaretlenmemiş her şey Ücretsiz'de, hesap olmadan çalışır. <full></full>: öğenin tamamı bir Pro hesabı gerektirir (senkronizasyon, şifreleme ve paylaşım bağlantıları oluşturma Pro'dur). <partial></partial>: öğenin çoğu Ücretsiz'de çalışır ve başlığının altındaki bir \"Pro:\" satırı hangi kısmın çalışmadığını söyler. Pro bu betada hiçbir şeye mal olmaz: bir test kartıyla ödersiniz (bkz. <link>Pro'ya yükseltme</link>).",
+    "show": "Göster",
+    "hide": "Gizle",
+    "proLine": "Pro: ",
+    "checksLine": "Bunun kontrol ettiği: ",
+    "steps": "Adımlar",
+    "reportLine": "Şu durumda bildirin: ",
+    "testCheckout": "⚠ Bu bir test ödemesidir.",
+    "testCheckoutBody": " Asla gerçek bir kart girmeyin. Gerçek para çekilmez ve gerçek bir kart burada zaten çalışmaz.",
+    "testCardsFooter": "Herhangi bir kartla: gelecekte bir son kullanma tarihi (ör. <code>12/34</code>), herhangi bir 3 haneli CVC (ör. <code>123</code>) ve ad, posta kodu ve diğer alanlar için herhangi bir şey. Daha fazla kart: <link>docs.stripe.com/testing</link>."
+  },
+  "wantToHearHeading": "Özellikle duymak istediklerimiz",
+  "knownIssues": {
+    "heading": "3. Bilinen sorunlar",
+    "intro": "Bunları zaten biliyoruz, bu yüzden bildirmenize gerek yok. Liste her beta sürümüyle güncellenir; buradaki bir şey sizin için düzeltildiyse veya açıklandığından farklı davranıyorsa, bunu bildirmeye değer.",
+    "meanwhile": "Bu arada:"
+  },
+  "report": {
+    "heading": "4. Hata bildir",
+    "discussions": "Hatalar ve fikirler herkese açık GitHub Discussions sayfamıza gider — <link>github.com/{repo}/discussions</link>. Önce oraya göz atın — biri aynı şeyi zaten bildirmiş olabilir.",
+    "public": "<strong>Tartışmalar herkese açıktır.</strong> Özel URL'leri, sekme başlıklarını veya kişisel bilgileri gösteren ekran görüntülerini yapıştırmayın — önce bulanıklaştırın veya kırpın. Gönderi yapmak için (ücretsiz) bir GitHub hesabına ihtiyacınız olacak.",
+    "bugButton": "GitHub'da hata bildir",
+    "ideaButton": "GitHub'da bir fikir paylaş",
+    "noGithub": "GitHub hesabınız yok mu? İletişim formunu kullanın.",
+    "template": "Her iki bağlantı da bu şablonu tartışma gövdesine önceden doldurur — göndermeden önce doldurun, bu bizi ek soru sorma turundan kurtarır:"
+  },
+  "faq": {
+    "heading": "SSS",
+    "notFoundQ": "\"Öğe bulunamadı\" görüyorum",
+    "notFoundA": "Google Grubu'na Chrome'da oturum açtığınız Google hesabıyla katıldığınızdan emin olun. Katıldıktan sonra erişimin görünmesi biraz zaman alabilir — bir şeyin bozuk olduğunu varsaymadan önce biraz bekleyip tekrar deneyin.",
+    "stableQ": "Kararlı sürümü yüklü tutabilir miyim?",
+    "stableA": "Evet — beta (\"TabMerger BETA\"), tamamen ayrı verilere sahip, kararlı sürümden (\"TabMerger\") ayrı bir uzantıdır. İkisini de çalıştırabilirsiniz, ancak hangisini kullandığınız konusunda kafanızın karışmaması için test ederken kararlı sürümü devre dışı bırakmanızı öneririz.",
+    "chargedQ": "Pro'ya yükseltirsem benden ücret alınacak mı?",
+    "chargedA": "Hayır — betada yükseltme Stripe'ın test modunu kullanır. Bir <link>Stripe test kartı</link> kullanın (yukarıdaki \"Pro'ya yükseltme\" bölümüne bakın) — burada hiçbir gerçek kart çalışmaz ve her durumda hiçbir gerçek para el değiştirmez.",
+    "syncQ": "Verilerim nereye senkronize olur?",
+    "syncA": "Beta sürümleri ana tabmerger sitesiyle değil, preview.tabmerger.com adresindeki önizleme web uygulamasıyla senkronize olur. Senkronize gruplarınızı, oturumlarınızı ve paylaşımlarınızı görmek için orada oturum açın.",
+    "issuesQ": "Bilinen sorunları nerede görebilirim?",
+    "issuesA": "Deponun <link>Discussions Soru-Cevap</link> bölümünü kontrol edin — beta hata raporları orada bulunur.",
+    "leaveQ": "Betadan nasıl ayrılırım?",
+    "leaveA": "<link>Google Grubu</link>'ndan ayrılın ve \"TabMerger BETA\" uzantısını kaldırın. Kararlı kurulumunuz, tuttuysanız, etkilenmez."
+  },
+  "interactive": {
+    "good": "İyi sonuç şöyle görünür",
+    "allDoneLabel": "Tüm kontroller tamamlandı",
+    "progressLabel": "{total} kontrolden {done} tanesi tamamlandı",
+    "allDone": "✓ Hepsi tamam",
+    "progress": "{done}/{total}",
+    "clear": "İşaretlerimi temizle ({count})",
+    "firefoxAutoStart": "Firefox betası kendiliğinden başlamalıdır: Firefox eklenip eklenmeyeceğini sorar, diğer tarayıcılar dosyayı indirir. Hiçbir şey olmazsa bu adımdaki \"Firefox betasını yükleyin\"i kullanın."
+  }
+}

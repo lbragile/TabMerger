@@ -925,7 +925,7 @@ describe('SettingsModal — Language', () => {
     fireEvent.click(screen.getByRole('combobox', { name: 'Language' }))
     const options = await screen.findAllByRole('option')
     expect(options.map((o) => o.textContent)).toEqual([
-      'Browser default', 'English', 'Deutsch', 'Español', 'Français', '日本語', 'Português (Brasil)', '简体中文',
+      'Browser default', 'English', 'Deutsch', 'Español', 'Français', 'Italiano', 'Русский', '한국어', 'Türkçe', 'Bahasa Indonesia', 'Polski', 'Tiếng Việt', 'हिन्दी', '日本語', 'Português (Brasil)', '简体中文',
     ])
     expect(screen.getByRole('option', { name: 'Deutsch' })).toHaveAttribute('lang', 'de')
   })
