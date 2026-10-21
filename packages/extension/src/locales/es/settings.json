@@ -128,6 +128,8 @@
     "noUpdate": "Tienes la última versión",
     "throttled": "Se comprobó demasiadas veces. Inténtalo de nuevo en unos minutos.",
     "unsupported": "Esta es una compilación de desarrollo, que el navegador no actualiza",
+    "autoUpdate": "Tu navegador actualiza TabMerger automáticamente",
+    "autoUpdateFirefox": "Firefox actualiza los complementos automáticamente. Para comprobarlo ahora, abre about:addons, haz clic en el icono del engranaje y luego en «Buscar actualizaciones».",
     "error": "No se pudo buscar actualizaciones"
   }
 }

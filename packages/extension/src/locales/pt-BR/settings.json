@@ -128,6 +128,8 @@
     "noUpdate": "Você tem a versão mais recente",
     "throttled": "Verificado vezes demais. Tente de novo em alguns minutos.",
     "unsupported": "Esta é uma versão de desenvolvimento, que o navegador não atualiza",
+    "autoUpdate": "Seu navegador atualiza o TabMerger automaticamente",
+    "autoUpdateFirefox": "O Firefox atualiza as extensões automaticamente. Para verificar agora, abra about:addons, clique no ícone de engrenagem e depois em “Verificar atualizações”.",
     "error": "Não foi possível verificar atualizações"
   }
 }

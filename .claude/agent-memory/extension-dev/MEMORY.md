@@ -3,123 +3,124 @@
 - [Manifest version display](learnings_manifest_version_display.md) — prefer version_name over version (beta build offsets version's major)
 - [Firefox BETA manifest: update_url + data_collection_permissions](learnings_firefox_beta_manifest.md) — WXT manifest() gets `browser` too
 - [Firefox runtime data consent (permissions.request)](learnings_firefox_data_consent.md) — browsingActivity not websiteContent; user-activation timing
-- [Preview-images opt-in + dead content-script removal](learnings_preview_images_opt_in.md) — TabPreview.tsx vs useTabPreview.ts are two separate paths
-- [dnd-kit rect access during dragOver](learnings_dndkit_rects.md) — Use e.active.rect.current.translated (not .initial) for live ghost position
-- [Keyboard nav — DOM focus sync](learnings_keyboard_nav.md) — useKeyboardNav is feature-complete; only gap was DOM focus not following activeGroupIndex
-- [TS strict — @tabmerger/shared resolution](learnings_ts_strict.md) — tsc can't find @tabmerger/shared unless a path alias points to ../shared/src/index.ts
-- [Windows header count investigation](learnings_windows_header_count.md) — Could not reproduce "N Windows · 1 Tab" undercount bug; header formula verified correct
+- [Preview-images opt-in + dead content-script removal](learnings_preview_images_opt_in.md) — TabPreview.tsx vs useTabPreview.ts are separate paths
+- [dnd-kit rect access during dragOver](learnings_dndkit_rects.md) — use active.rect.current.translated for the live ghost
+- [Keyboard nav — DOM focus sync](learnings_keyboard_nav.md) — DOM focus did not follow activeGroupIndex
+- [TS strict — @tabmerger/shared resolution](learnings_ts_strict.md) — tsc needs a path alias to ../shared/src/index.ts
+- [Windows header count investigation](learnings_windows_header_count.md) — "N Windows · 1 Tab" undercount not reproducible
 - [Settings reactivity fix](learnings_settings_reactivity.md) — appSettings needed a shared useQuery (no cross-component invalidation existed)
 - [Auth: magic link + Google OAuth](learnings_auth_magic_link_google_oauth.md) — web-app session bridge already exists via content.ts
 - [GA4 event wiring gotchas](learnings_ga4_event_wiring.md) — grep for existing trackEvent calls before assuming an event is new
-- [Sentry Replay + PostHog under MV3](learnings_sentry_replay_posthog_mv3.md) — Replay only viable in popup (has DOM), not background SW; posthog-js SDK blocked by CSP
+- [Sentry Replay + PostHog under MV3](learnings_sentry_replay_posthog_mv3.md) — Replay popup-only (needs DOM); posthog-js blocked by CSP
 - [URL Rules Settings entry point](learnings_url_rules_settings_entry.md) — feature was fully built but unreachable from UI
-- [URL Rules edit mode](learnings_url_rules_edit.md) — inline edit added; RTL multi-match placeholder gotcha; Save button goes rightmost after Cancel
-- [URL Rules draft+Save model](learnings_url_rules_draft_save.md) — replaced per-action mutations with local draft state + single useSaveUrlRules; nested Add modal
-- [URL Rules edit modal](learnings_url_rules_edit_modal.md) — inline edit row replaced with shared Add/Edit modal (initialRule prop) + dirty-check disable
+- [URL Rules edit mode](learnings_url_rules_edit.md) — RTL multi-match placeholder gotcha; Save rightmost after Cancel
+- [URL Rules draft+Save model](learnings_url_rules_draft_save.md) — local draft + single useSaveUrlRules; nested Add modal
+- [URL Rules edit modal](learnings_url_rules_edit_modal.md) — shared Add/Edit modal (initialRule) + dirty-check disable
 - [Server-side secret proxy pattern](learnings_server_side_secret_proxy.md) — GA4 api_secret moved from client-embedded to /api/track proxy
 - [DnD cursor + DragOverlay](learnings_dnd_cursor_dragoverlay.md) — active:cursor-grabbing never fires under DragOverlay
 - [Phantom "temp group" fix](learnings_phantom_temp_group_fix.md) — abandoned rename after Add Group now deletes the group
-- [Device sessions write path](learnings_device_sessions_write_path.md) — deviceSessions.ts debounce/gating pattern for "continue on other device"
-- [Other Devices Settings panel](learnings_other_devices_panel.md) — OtherDevices.tsx built; Radix ScrollArea breaks jsdom (ResizeObserver), use overflow-y-auto div
+- [Device sessions write path](learnings_device_sessions_write_path.md) — debounce/gating for "continue on other device"
+- [Other Devices Settings panel](learnings_other_devices_panel.md) — Radix ScrollArea breaks jsdom; use an overflow-y-auto div
 - [Types/settings/test-env patterns](learnings_types_settings_and_test_env_patterns.md) — local types.ts duplicates shared, not re-exported
-- [Device sessions wired](learnings_device_sessions_wired.md) — pushDeviceSession(state, tier) called in useCurrentTabs doSync after setQueryData; positional args not
-- [MSW + WXT popup dev mocking](learnings_msw_wxt_popup.md) — dev-only AI API mock setup; msw postinstall blocks pnpm install repo-wide unless allowBuilds is set
+- [Device sessions wired](learnings_device_sessions_wired.md) — pushDeviceSession(state, tier) in useCurrentTabs doSync
+- [MSW + WXT popup dev mocking](learnings_msw_wxt_popup.md) — dev-only AI mock; msw postinstall needs allowBuilds
 - [pendingSync audit](learnings_pendingsync_audit.md) — fixed useUpdateGroupInfo missing pendingSync; everything else correct
 - [AI auto-group apply fix](learnings_ai_auto_group_apply.md) — handleAIGroup was discarding useAutoGroup's result; added useApplyAIGroups
-- [Keyboard shortcuts for tab actions](learnings_keyboard_shortcuts_tab_actions.md) — F2 rename / N note wired via uiStore renameTarget(+tab kind)/noteTarget
-- [Dev AI usage real-backend sync](learnings_dev_ai_usage_real_sync.md) — Settings Dev tab Set/Reset now also POSTs to /api/ai/dev-usage; local mock counter untouched
+- [Keyboard shortcuts for tab actions](learnings_keyboard_shortcuts_tab_actions.md) — F2 rename / N note via uiStore renameTarget/noteTarget
+- [Dev AI usage real-backend sync](learnings_dev_ai_usage_real_sync.md) — Dev tab Set/Reset also POSTs /api/ai/dev-usage
 - [Review stale group modal + Archive all](learnings_review_stale_group_modal.md) — AI banner Review/Archive-all
-- [Extension share encryption fix](learnings_extension_share_encryption.md) — sharing.ts createSharedBundle was inserting plaintext groups_snapshot
-- [Delete resurrection race fix](learnings_delete_resurrection_race.md) — pending-delete id set in syncEngine.ts closes fire-and-forget deleteRemoteGroups vs
-- [Device sessions stale tier closure](learnings_device_sessions_stale_tier_closure.md) — useCurrentTabs mount-once effect closed over tier='free' forever
-- [Encryption migration self-heal](learnings_encryption_migration_self_heal.md) — one-time-setup fixes must self-heal accounts that already passed the trigger point
-- [Sessions + device_sessions encryption](learnings_sessions_device_sessions_encryption.md) — extended encryption to sessions.groups (web dashboard reads it back
-- [Encryption ciphertext-at-rest integration test](learnings_encryption_ciphertext_at_rest_test.md) — new test proves raw Supabase row is ciphertext
-- [URL rules orphan cleanup on group delete](learnings_url_rules_orphan_cleanup.md) — deleteRulesForGroupIds helper wired into single+bulk delete
-- [Locked-key silent sync gap fix](learnings_encryption_locked_sync_silent_gap.md) — MV3 popup teardown clears in-memory data key every session
-- [Encryption cross-account stale flag fix](learnings_encryption_cross_account_flag.md) — hasEncryptionKey() no longer reads unscoped local flag
+- [Extension share encryption fix](learnings_extension_share_encryption.md) — createSharedBundle inserted plaintext (fixed)
+- [Delete resurrection race fix](learnings_delete_resurrection_race.md) — pending-delete id set in syncEngine.ts
+- [Device sessions stale tier closure](learnings_device_sessions_stale_tier_closure.md) — mount-once effect kept tier='free'
+- [Encryption migration self-heal](learnings_encryption_migration_self_heal.md) — one-time fixes must self-heal past accounts
+- [Sessions + device_sessions encryption](learnings_sessions_device_sessions_encryption.md) — sessions.groups + device_sessions encrypted
+- [Encryption ciphertext-at-rest integration test](learnings_encryption_ciphertext_at_rest_test.md) — raw Supabase row is ciphertext
+- [URL rules orphan cleanup on group delete](learnings_url_rules_orphan_cleanup.md) — deleteRulesForGroupIds on single + bulk delete
+- [Locked-key silent sync gap fix](learnings_encryption_locked_sync_silent_gap.md) — popup teardown cleared the in-memory key
+- [Encryption cross-account stale flag fix](learnings_encryption_cross_account_flag.md) — hasEncryptionKey() ignores the unscoped flag
 - [Sessions encryption self-heal](learnings_sessions_encryption_self_heal.md) — separate migration flag from groups
-- [Sync-now web-to-extension bridge](learnings_sync_now_bridge.md) — performSync extracted from useSync's doSync so background.ts's SYNC_NOW handler can trigger a real
-- [AI daily throttle + kill switch](learnings_ai_daily_throttle.md) — aiThrottle.ts helper; throttle only auto-fired mutations (useSuggestSessions)
-- [Persistent unlock via chrome.storage.local](learnings_persistent_unlock_local_storage.md) — deliberate tradeoff: unwrapped data key now persists to disk forever
+- [Sync-now web-to-extension bridge](learnings_sync_now_bridge.md) — performSync shared by useSync and the SYNC_NOW handler
+- [AI daily throttle + kill switch](learnings_ai_daily_throttle.md) — aiThrottle.ts; only auto-fired mutations throttled
+- [Persistent unlock via chrome.storage.local](learnings_persistent_unlock_local_storage.md) — unwrapped data key persists in storage.local (tradeoff)
 - [Missing icon assets (ea8b0d5)](learnings_missing_icon_assets_ea8b0d5.md) — ea8b0d5 deleted all extension logos
-- [DnD unified layer](dnd-unified-layer.md) — model + pure move engine + one hoisted provider; spring-open dwell timer, legacy↔model selection-id mapping
-- [vitest + @dnd-kit mocks](vitest-dndkit-mocks.md) — vitest v4 throws on reading undefined named exports from factory mocks; bare-selector uiStore mocks have no .getState
+- [DnD unified layer](dnd-unified-layer.md) — model + pure move engine + hoisted provider; spring-open dwell
+- [vitest + @dnd-kit mocks](vitest-dndkit-mocks.md) — v4 throws on missing factory-mock exports; uiStore mocks lack .getState
 - [DnD reflow feedback loop](learnings_dnd_reflow_feedback_loop.md) — onDragOver live `overrideState` preview can infinite-loop
-- [MV3 popup DnD sensor](learnings_mv3_popup_dnd_sensor.md) — PointerSensor never activates in the real action popup (Chrome coalesces pointermove)
+- [MV3 popup DnD sensor](learnings_mv3_popup_dnd_sensor.md) — PointerSensor never activates in the real popup
 - [MV3 popup pointer capture](learnings_mv3_popup_pointer_capture.md) — DEAD END (kept inert)
-- [MV3 popup native HTML5 DnD](learnings_mv3_popup_native_html5_dnd.md) — SHIPPED fix, VERIFIED in the real toolbar popup (tab/window/group all commit). Two constraints:
+- [MV3 popup native HTML5 DnD](learnings_mv3_popup_native_html5_dnd.md) — SHIPPED + verified in the real toolbar popup
 - [seed:dev manual tool](learnings_seed_dev_manual_tool.md) — `pnpm seed:dev` headed-Chrome seeded-popup click-around tool; THREE dev builds
-- [setDragImage canvas-vs-img grey box](learnings_dragimage_canvas_vs_img.md) — detached canvas silently falls back to Chrome's native drag image
+- [setDragImage canvas-vs-img grey box](learnings_dragimage_canvas_vs_img.md) — detached canvas falls back to the native image
 - [DnD ghost clone fidelity](learnings_dnd_ghost_clone_fidelity.md) — replaced synthesized ghost card with `cloneNode(true)` of the real row
-- [Now Open DnD copy semantics (SUPERSEDED: drag-out is a MOVE again, see DnD finishing pass)](learnings_now_open_dnd_copy_semantics.md) — why a synchronous tabs.remove dismissed the popup; harness gotchas still valid
-- [Window "Copy to group" from Now Open](learnings_now_open_window_copy_to_group.md) — useMoveWindow copies when the source is permanent (no caller flag); copyLiveWindow exported from dndMove
-- [Now Open drag-out: own-window rule](learnings_now_open_close_own_window_rule.md) — only the active tab of the page's own window (windows.getCurrent) is deferred; fallback defers all actives; tsx probe recipe
-- [Collapse, instant drop, pointer probe](learnings_dnd_collapse_instant_drop_probe.md) — MEASURED: native-drag abort = mutation inside dragstart dispatch/microtask only
-- [DnD ghost prominence + cursor dead end](learnings_dnd_ghost_prominence_and_cursor.md) — switched source-hide from opacity dim to `visibility:hidden`
-- [Phase-1 cross-group + active group](learnings_phase1_cross_group_active_group.md) — useGroups staleTime:0 refetch-on-mount clobbered the optimistic DnD commit
-- [Multi-drag + commit rebase](learnings_multi_drag_and_commit_rebase.md) — cancelQueries removed (write-gen re-read); drop commits vs CURRENT cache via dndRebase
+- [Now Open DnD copy semantics (SUPERSEDED)](learnings_now_open_dnd_copy_semantics.md) — sync tabs.remove dismissed the popup; harness gotchas
+- [Window "Copy to group" from Now Open](learnings_now_open_window_copy_to_group.md) — useMoveWindow copies from a permanent source
+- [Now Open drag-out: own-window rule](learnings_now_open_close_own_window_rule.md) — defer only the own window's active tab; tsx probe
+- [Collapse, instant drop, pointer probe](learnings_dnd_collapse_instant_drop_probe.md) — native drag aborts on mutation inside dragstart
+- [DnD ghost prominence + cursor dead end](learnings_dnd_ghost_prominence_and_cursor.md) — source hidden via visibility:hidden
+- [Phase-1 cross-group + active group](learnings_phase1_cross_group_active_group.md) — staleTime:0 refetch clobbered the optimistic commit
+- [Multi-drag + commit rebase](learnings_multi_drag_and_commit_rebase.md) — drop commits vs CURRENT cache via dndRebase
 - [Keyboard DnD a11y + rank rebase](learnings_dnd_keyboard_a11y_rebase_rank.md) — aria-pressed pin DISPROVEN (removed)
-- [DnD follow-ups: commit safety + a11y](learnings_dnd_followups_commit_a11y.md) — cancelRefetch:false joins; rank context check only for duplicates
+- [DnD follow-ups: commit safety + a11y](learnings_dnd_followups_commit_a11y.md) — cancelRefetch:false joins; rank check for duplicates
 - [Group multi-drag, new-group zone, roving tabindex](learnings_group_multidrag_new_group_zone_roving.md) - C4-safe absolute-overlay drop zones
 - [DnD finishing pass](learnings_dnd_finishing_pass.md) — e2e IS runnable (build:dev first); click-away exited on its own entering click
-- [Zoned DnD ordering (spec §6.1)](learnings_dnd_zoned_ordering.md) — multi-group mis-order was the insertion layer using SINGLE-item arrayMove targets for a block
-- [Spring-open window→tab drop bug (C15)](learnings_dnd_spring_open_window_drop.md) — root cause was dnd-kit's OWN `over` state lagging the collision layer by a render
+- [Zoned DnD ordering (spec §6.1)](learnings_dnd_zoned_ordering.md) — block moves need block arrayMove targets
+- [Spring-open window→tab drop bug (C15)](learnings_dnd_spring_open_window_drop.md) — dnd-kit's own `over` lags collisions by a render
 - [Supabase env-missing import crash](learnings_supabase_env_import_crash.md) — createClient('') threw at module scope
-- [exhaustive-deps cascade](learnings_exhaustive_deps_cascade.md) — fixing a missing-dep warning by adding a useCallback can unmask a second
-- [Test mocks follow hook usage](test-mocks-follow-hook-usage.md) — adding a `useGroups` hook call to a component breaks every test that `vi.mock`s that module for it
-- [Archive-above + Now Open Add Window](learnings_archive_above_and_now_open_add_window.md) — archive keeps array position (only deleteGroup shifts indices)
+- [exhaustive-deps cascade](learnings_exhaustive_deps_cascade.md) — a useCallback fix can unmask a second warning
+- [Test mocks follow hook usage](test-mocks-follow-hook-usage.md) — a new hook call breaks every vi.mock of that module
+- [Archive-above + Now Open Add Window](learnings_archive_above_and_now_open_add_window.md) — archive keeps array position
 - [Now Open new-window dropzone (SUPERSEDES prior "left hidden" note)](learnings_now_open_new_window_dropzone.md) — enabled
 - [Context menu rebuild notification](learnings_context_menu_rebuild_notification.md) — buildMenus never re-ran on group changes
-- [AI coming-soon flag rollout](learnings_ai_coming_soon_flag.md) — AI_ENABLED already threaded through useEntitlements/useAI/useAiUsage/UpgradePrompt/main.tsx
-- [WXT NODE_ENV=mode gotcha](wxt-node-env-mode-gotcha.md) — non-"development"/"production" wxt modes (beta, demo) silently ship dev React unless NODE_ENV is force-set
-- [uiStore single modal slot](learnings_uistore_single_modal_slot.md) — opening a 2nd modal from inside a modal unmounts the 1st, losing its local state
+- [AI coming-soon flag rollout](learnings_ai_coming_soon_flag.md) — AI_ENABLED threaded through entitlements/useAI/UI
+- [WXT NODE_ENV=mode gotcha](wxt-node-env-mode-gotcha.md) — beta/demo modes ship dev React unless NODE_ENV forced
+- [uiStore single modal slot](learnings_uistore_single_modal_slot.md) — a 2nd modal unmounts the 1st (local state lost)
 - [TabPreview off-state placeholder](learnings_tabpreview_off_state_placeholder.md) — fetch-gating on showPreviewImages was already correct
-- [Sonner toast pointer-events + countdown bar](learnings_sonner_toast_pointer_events_and_countdown.md) — undismissable-toast bug was Radix Dialog's body
+- [Sonner toast pointer-events + countdown bar](learnings_sonner_toast_pointer_events_and_countdown.md) — Radix Dialog's body pointer-events
 - [Free-tier import + URL-rules gating](learnings_free_tier_import_and_urlrules_gating.md) — new tierLimits.ts helper; archived groups DO count
-- [Keyboard move list mode](learnings_keyboard_move_list_mode.md) — key map v3 (wrap, group-list mode, Ctrl+Space select), full-size popup screenshot trick
-- [DnD active data empty after spring-open](learnings_dnd_active_data_empty_after_spring_open.md) — args.active.data.current is {} once source unmounts
-- [Header/SidePanel grid alignment](learnings_header_grid_alignment.md) — matching 240px in both files isn't enough; grid `gap`/`px` on the header shifts the seam
-- [Mandatory encryption, default-on](learnings_mandatory_encryption_default_on.md) — no toggle; setup modal opened from doSync; locked = skip, never plaintext
-- [Modal flex/grid overflow](learnings_modal_flex_grid_overflow.md) — `overflow-hidden` on DialogContent + `min-w-0` down the whole flex/grid ancestor chain
-- [Session description field](learnings_session_description_field.md) — optional description in Save Session, encrypted together with name/groups
+- [Keyboard move list mode](learnings_keyboard_move_list_mode.md) — key map v3; full-size popup screenshot trick
+- [DnD active data empty after spring-open](learnings_dnd_active_data_empty_after_spring_open.md) — active.data.current is {} once unmounted
+- [Header/SidePanel grid alignment](learnings_header_grid_alignment.md) — header gap/px shifts the 240px seam
+- [Mandatory encryption, default-on](learnings_mandatory_encryption_default_on.md) — no toggle; locked = skip, never plaintext
+- [Modal flex/grid overflow](learnings_modal_flex_grid_overflow.md) — overflow-hidden + min-w-0 down the ancestor chain
+- [Session description field](learnings_session_description_field.md) — encrypted with name/groups
 - [Sync bugs: resetEncryption + batch abort](learnings_sync_bugs_resilience.md) — resetEncryption must re-arm the sessions self-heal flag
-- [Now Open browser-open pattern](learnings_now_open_browser_open.md) — Moving items to Now Open must open them in the browser via chrome.tabs/windows.create
-- [Device id cross-account scoping](learnings_device_id_cross_account_scoping.md) — getOrCreateDeviceId() now keys local setting by `deviceId:${userId}`
-- [AI coming-soon flag wiring](learnings_ai_coming_soon_flag_wiring.md) — how VITE_AI_ENABLED/AI_ENABLED gates entitlements, useAI, Header, UpgradePrompt
-- [Test mocking gotcha for AI_ENABLED](learnings_test_mocking_aiflag.md) — mocking useEntitlements alone isn't enough once a file imports AI_ENABLED directly
-- [Encryption key tri-state + upload gate](learnings_encryption_key_tristate.md) — getEncryptionKeyState (unknown is not absent), getContentUploadKey
-- [Groups RMW + cross-context lock](learnings_groups_rmw_lock.md) — updateGroupsState contract, Web Locks + globalThis fallback, queued wipe, TM_GROUPS_CHANGED refetch
-- [Group colour tints](learnings_group_colour_tints.md) — withAlpha lives in lib/color.ts; inline style over static primary fallback classes; flush band via -mx-1 -mt-1
-- [Write commit + e2e persistence](learnings_popup_write_commit_and_e2e_persistence.md) — explicit tx.commit(), where click-to-commit time goes, waitForStoredGroup
-- [Visual regression determinism](learnings_visual_regression_determinism.md) — frozen clock on extension pages, blocked network, theme seeding, seed under the groups write lock, production-build fixture option
-- [Saved copies + positional matching](learnings_saved_copies_and_positional_matching.md) — copyLiveTab/copyLiveWindow for every live-to-saved writer, closableTabIds for deletes, findDuplicateTabs positions with a URL check
-- [Selection click-away press rule](learnings_selection_click_away_press_rule.md) — background click = press began on background + no overlay open; a menu trigger's click targets the document root
-- [Keyboard move re-anchor](learnings_keyboard_move_reanchor.md) — picked-up item re-anchored by identity on each cache update; cache listener is pre-render; real-commit test pattern
-- [E2E CodeQL sanitizers](learnings_e2e_codeql_sanitizers.md) — escapeHtml / jsLiteral / startTitleServer in e2e/helpers.ts; unicode-escape authoring gotcha; how to type-check e2e/
-- [Import validation + stored-URL open guard](learnings_import_validation_and_open_guard.md) — parsers return { groups, skipped }; lib/safeOpen.ts before every stored-URL open; CRLF and NUL-byte editing gotchas
-- [Automatic backups](learnings_auto_backups.md) — sessions marked auto, worker alarm; never re-create a periodic alarm, due tolerance, listener order asserted by tests; server absence never deletes a local backup, in-transaction list updates, sender URL check
-- [Tour demo groups + drag steps](learnings_tour_demo_groups_and_drag_steps.md) — one flag/predicate, write-path and merge choke points, sealed canDrop sandbox, drags under the tour lock, Radix aria-hidden marker gotcha
-- [In-app confirm + backup file location](learnings_in_app_confirm_and_backup_file_location.md) — useConfirm alertdialog nested over Settings, focus return; downloads search/show facts, Firefox support; probe build via outDir override
-- [Guided tour](learnings_guided_tour.md) — tm_tour record lifecycle, inert root + window-capture key lock, hidden-card focus trap, every e2e launcher must dismissTour; interactive tasks, action ring, measured focus rules
-- [Tour tasks on practice data](learnings_tour_tasks_on_practice_data.md) — practice-only undo history, open guard, needsFresh vs available, menu items by visible text, search put aside
-- [Search highlight + hide/dim](learnings_search_highlight_hide_dim.md) — one contiguous matcher (textMatches + matchRanges + matchRank), render-only hiding keeps indices, grip-less reorder lock, sticky query fallout, marks split getByText
-- [Search a11y + sync numbering](learnings_search_a11y_and_sync_numbering.md) — useKeepFocusInList, overlay combobox, announcer outside inert root, reserved tour ids, practice-free positions
-- [Uninstall survey URL](learnings_uninstall_survey_url.md) — setUninstallURL on every worker start; channel = MODE beta; no e2e build flag (dev mode + empty CI URL); no getter
-- [Sonner owns toast ::after/::before](learnings_sonner_pseudo_elements.md) — countdown bar must out-specify sonner's hover gap filler on ::after; filler re-created on ::before
-- [Deferred focus drops keys](learnings_deferred_focus_drops_keys.md) — setTimeout(0) focus loses keys typed right after opening on busy CI; focus in the effect; timer-delay repro
-- [Radix nested dialog Escape race](learnings_radix_nested_dialog_escape_race.md) — lower dialog keeps its Escape listener for a few renders; ConfirmDialog answers Escape from a window-capture listener
-- [Radix arrow-key focus timer](learnings_radix_arrow_focus_timer.md) — Select + menus move arrow focus in setTimeout; e2e must wait for focus to move before Enter
-- [Undo: one step per mutation](learnings_undo_one_step_per_mutation.md) — savedDataChanged gate, push after write, live-tab reopen/close effects by id, stale-render rev trap
-- [Undo history in the write](learnings_undo_history_in_write.md) — afterWrite hook = history queue; cursor check not expectedRev; effect promises; restore keeps current base; mock gotchas
-- [Extra trusted web origins](learnings_extra_trusted_web_origins.md) — VITE_EXTRA_WEB_APP_URLS one parser for 3 consumers; Firefox MV3 never grants a content-script site added in an update
-- [Sync write scope + Now Open coalescing](learnings_sync_write_scope_and_now_open_coalescing.md) — stamp only changed groups (same ref otherwise); tab-event bursts throttled into one pass, flushed on in-app unmount
-- [Firefox popup permissions.request](learnings_firefox_popup_permission_request.md) — no doorhanger over a popup; ask from a Firefox-only tab; tabs.create leaves the popup open, window.close() it
-- [Firefox popup same-size resize](learnings_firefox_popup_same_size_resize.md) — Radix Select closed on open in Firefox popups; capture guard in SelectContent; real-popup BiDi repro
-- [Extension i18n (i18next)](learnings_i18n_i18next.md) — JSON catalogs per area, sync init order, no module-scope t(), data-dnd-grip selectors, dev-only pseudo-locale, lint + catalog guards
-- [i18n bundle size](learnings_i18n_bundle_size.md) — catalogs ship once per bundle (popup + worker); WXT forces esbuild ascii; worker catalog set + utf8 for HTML pages
-- [Language picker](learnings_language_picker.md) — localStorage + chrome.storage.local (storage wins), worker localeReady, lazy shared reads, Button svg size-4
-- [GA4 param names match dimensions](learnings_ga4_param_names_match_dimensions.md) — heartbeat uses extension_version + channel like extension_uninstalled; releaseChannel.ts shared
-- [Header logo website link](learnings_header_logo_website_link.md) — content-sized link (visual spec neutral point), first-child 240px cell, manifest oracle for the env URL in e2e
-- [Adding a locale](learnings_adding_a_locale.md) — catalog + shared/web registration, Intl plural forms (_many), tests that hard-code the locale list
-- [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST define (auto-true for dev-mode builds) gates analytics + Sentry; CI's production-mode builds set it in ci.yml
+- [Now Open browser-open pattern](learnings_now_open_browser_open.md) — moving to Now Open opens via tabs/windows.create
+- [Device id cross-account scoping](learnings_device_id_cross_account_scoping.md) — keyed by deviceId:${userId}
+- [AI coming-soon flag wiring](learnings_ai_coming_soon_flag_wiring.md) — how the flag gates entitlements, useAI, Header
+- [Test mocking gotcha for AI_ENABLED](learnings_test_mocking_aiflag.md) — files importing AI_ENABLED need it mocked too
+- [Encryption key tri-state + upload gate](learnings_encryption_key_tristate.md) — unknown is not absent; getContentUploadKey
+- [Groups RMW + cross-context lock](learnings_groups_rmw_lock.md) — updateGroupsState, Web Locks + fallback, TM_GROUPS_CHANGED
+- [Group colour tints](learnings_group_colour_tints.md) — withAlpha in lib/color.ts; inline style; -mx-1 -mt-1 band
+- [Write commit + e2e persistence](learnings_popup_write_commit_and_e2e_persistence.md) — explicit tx.commit(); waitForStoredGroup
+- [Visual regression determinism](learnings_visual_regression_determinism.md) — frozen clock, blocked network, theme + locked seeding
+- [Saved copies + positional matching](learnings_saved_copies_and_positional_matching.md) — copyLiveTab/Window, closableTabIds, positional dupes
+- [Selection click-away press rule](learnings_selection_click_away_press_rule.md) — press began on background + no overlay open
+- [Keyboard move re-anchor](learnings_keyboard_move_reanchor.md) — re-anchor by identity; pre-render cache listener
+- [E2E CodeQL sanitizers](learnings_e2e_codeql_sanitizers.md) — escapeHtml/jsLiteral/startTitleServer; type-check e2e/
+- [Import validation + stored-URL open guard](learnings_import_validation_and_open_guard.md) — { groups, skipped }; lib/safeOpen.ts; CRLF/NUL gotchas
+- [Automatic backups](learnings_auto_backups.md) — auto sessions + alarm; never re-create periodic alarms; sender check
+- [Tour demo groups + drag steps](learnings_tour_demo_groups_and_drag_steps.md) — one predicate, sealed canDrop sandbox, tour lock
+- [In-app confirm + backup file location](learnings_in_app_confirm_and_backup_file_location.md) — useConfirm over Settings; downloads facts; outDir probe build
+- [Guided tour](learnings_guided_tour.md) — tm_tour lifecycle, inert root + key lock; e2e must dismissTour
+- [Tour tasks on practice data](learnings_tour_tasks_on_practice_data.md) — practice-only undo, open guard, needsFresh vs available
+- [Search highlight + hide/dim](learnings_search_highlight_hide_dim.md) — one contiguous matcher; render-only hiding keeps indices
+- [Search a11y + sync numbering](learnings_search_a11y_and_sync_numbering.md) — useKeepFocusInList, overlay combobox, reserved tour ids
+- [Uninstall survey URL](learnings_uninstall_survey_url.md) — set on every worker start; channel from MODE beta
+- [Sonner owns toast ::after/::before](learnings_sonner_pseudo_elements.md) — countdown bar must out-specify sonner's ::after filler
+- [Deferred focus drops keys](learnings_deferred_focus_drops_keys.md) — setTimeout(0) focus loses keys on busy CI
+- [Radix nested dialog Escape race](learnings_radix_nested_dialog_escape_race.md) — ConfirmDialog handles Escape in window capture
+- [Radix arrow-key focus timer](learnings_radix_arrow_focus_timer.md) — e2e waits for focus to move before Enter
+- [Undo: one step per mutation](learnings_undo_one_step_per_mutation.md) — savedDataChanged gate, push after write, rev trap
+- [Undo history in the write](learnings_undo_history_in_write.md) — afterWrite = history queue; cursor check; mock gotchas
+- [Extra trusted web origins](learnings_extra_trusted_web_origins.md) — one parser, 3 consumers; Firefox never grants new CS sites
+- [Sync write scope + Now Open coalescing](learnings_sync_write_scope_and_now_open_coalescing.md) — stamp only changed groups; throttled tab bursts
+- [Firefox popup permissions.request](learnings_firefox_popup_permission_request.md) — ask from a Firefox-only tab, then window.close()
+- [Firefox popup same-size resize](learnings_firefox_popup_same_size_resize.md) — Radix Select closed on open; capture guard
+- [Extension i18n (i18next)](learnings_i18n_i18next.md) — catalogs per area, sync init, no module-scope t(), guards
+- [i18n bundle size](learnings_i18n_bundle_size.md) — catalogs once per bundle; esbuild ascii; worker set
+- [Language picker](learnings_language_picker.md) — storage.local wins; worker localeReady; lazy shared reads
+- [GA4 param names match dimensions](learnings_ga4_param_names_match_dimensions.md) — extension_version + channel; releaseChannel.ts
+- [Header logo website link](learnings_header_logo_website_link.md) — content-sized link, 240px cell, manifest oracle in e2e
+- [Adding a locale](learnings_adding_a_locale.md) — registration, Intl plural forms, hard-coded locale lists
+- [Firefox: no requestUpdateCheck](learnings_firefox_no_request_update_check.md) — no_api vs unsupported; isFirefoxBuild in lib/buildTarget.ts
+- [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST gates analytics + Sentry

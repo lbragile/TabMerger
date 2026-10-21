@@ -124,6 +124,8 @@
     "noUpdate": "En son sürümü kullanıyorsunuz",
     "throttled": "Çok sık denetlendi. Birkaç dakika sonra tekrar deneyin.",
     "unsupported": "Bu, tarayıcının güncellemediği bir geliştirme derlemesidir",
+    "autoUpdate": "Tarayıcınız TabMerger’ı otomatik olarak günceller",
+    "autoUpdateFirefox": "Firefox eklentileri otomatik olarak günceller. Şimdi denetlemek için about:addons sayfasını açın, dişli simgesine ve ardından “Güncellemeleri denetle” seçeneğine tıklayın.",
     "error": "Güncellemeler denetlenemedi"
   }
 }

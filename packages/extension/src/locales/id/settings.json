@@ -120,6 +120,8 @@
     "noUpdate": "Anda memiliki versi terbaru",
     "throttled": "Terlalu sering diperiksa. Coba lagi dalam beberapa menit.",
     "unsupported": "Ini adalah build pengembangan, yang tidak diperbarui oleh browser",
+    "autoUpdate": "Browser Anda memperbarui TabMerger secara otomatis",
+    "autoUpdateFirefox": "Firefox memperbarui pengaya secara otomatis. Untuk memeriksa sekarang, buka about:addons, klik ikon roda gigi, lalu klik “Periksa Pembaruan”.",
     "error": "Tidak dapat memeriksa pembaruan"
   }
 }

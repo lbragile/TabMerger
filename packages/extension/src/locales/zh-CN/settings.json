@@ -120,6 +120,8 @@
     "noUpdate": "已是最新版本",
     "throttled": "检查过于频繁。请几分钟后再试。",
     "unsupported": "这是开发版本，浏览器不会对其进行更新",
+    "autoUpdate": "浏览器会自动更新 TabMerger",
+    "autoUpdateFirefox": "Firefox 会自动更新附加组件。如需立即检查，请打开 about:addons，点击齿轮图标，然后点击“检查更新”。",
     "error": "无法检查更新"
   }
 }

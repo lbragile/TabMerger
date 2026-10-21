@@ -3,16 +3,24 @@ import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/lib/toast';
-import { checkForUpdate, type UpdateCheckResult } from '@/lib/extensionUpdate';
+import { checkForUpdate, hasUpdateCheckApi, type UpdateCheckResult } from '@/lib/extensionUpdate';
+import { isFirefoxBuild } from '@/lib/buildTarget';
 
 /**
  * Settings → General: "Check for updates". Asks the browser to look for a newer version now
  * (`runtime.requestUpdateCheck`) and says how it went in a toast. A found update is recorded, so
  * the popup's "Restart to update" banner appears as well.
+ *
+ * A browser without that API (Firefox) gets no button, only a line saying it updates add-ons by
+ * itself, and on Firefox where to check by hand (about:addons). Decided on render, before any click.
  */
 export function CheckForUpdates() {
   const { t } = useTranslation();
   const [checking, setChecking] = useState(false);
+  const [canCheck] = useState(hasUpdateCheckApi);
+
+  const autoUpdateText = () =>
+    isFirefoxBuild() ? t('settings.updates.autoUpdateFirefox') : t('settings.updates.autoUpdate');
 
   const announce = (result: UpdateCheckResult) => {
     switch (result.status) {
@@ -29,6 +37,9 @@ export function CheckForUpdates() {
       case 'unsupported':
         toast.info(t('settings.updates.unsupported'));
         return;
+      case 'no_api':
+        toast.info(autoUpdateText());
+        return;
       default:
         toast.error(t('settings.updates.error'));
     }
@@ -44,6 +55,15 @@ export function CheckForUpdates() {
       setChecking(false);
     }
   };
+
+  if (!canCheck) {
+    return (
+      <div className="min-w-0">
+        <Label className="text-sm">{t('settings.updates.label')}</Label>
+        <p className="text-xs text-muted-foreground">{autoUpdateText()}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-between gap-4">

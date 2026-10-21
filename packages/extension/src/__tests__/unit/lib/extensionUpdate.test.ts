@@ -7,6 +7,7 @@ import {
   dismissPendingUpdate,
   getPendingUpdate,
   getVisiblePendingUpdate,
+  hasUpdateCheckApi,
   isManifestVersion,
   isUpdatableInstall,
   normalizeUpdateCheck,
@@ -299,14 +300,55 @@ describe('checkForUpdate', () => {
     expect(store.get(UPDATE_AVAILABLE_STORAGE_KEY)).toEqual({ version: '3.7.0', detectedAt: 7 })
   })
 
-  it('development builds and browsers without the API are unsupported', async () => {
+  it('development builds and unpacked / temporary installs are unsupported, without calling the API', async () => {
     const requestUpdateCheck = vi.fn()
     stubChrome({}, { requestUpdateCheck })
     vi.stubEnv('MODE', 'development')
     expect(await checkForUpdate()).toEqual({ status: 'unsupported' })
-    expect(requestUpdateCheck).not.toHaveBeenCalled()
     vi.stubEnv('MODE', 'production')
-    stubChrome()
+    stubChrome(
+      { management: { getSelf: vi.fn().mockResolvedValue({ installType: 'development' }) } },
+      { requestUpdateCheck }
+    )
     expect(await checkForUpdate()).toEqual({ status: 'unsupported' })
+    expect(requestUpdateCheck).not.toHaveBeenCalled()
+  })
+
+  it('a store install on a browser without the API (Firefox) is no_api, not unsupported', async () => {
+    // Firefox: browser.runtime and chrome.runtime both exist, neither has requestUpdateCheck.
+    stubChrome({ management: { getSelf: vi.fn().mockResolvedValue({ installType: 'normal' }) } })
+    vi.stubGlobal('browser', { runtime: { reload: vi.fn() } })
+    expect(await checkForUpdate()).toEqual({ status: 'no_api' })
+    expect(store.has(UPDATE_AVAILABLE_STORAGE_KEY)).toBe(false)
+  })
+
+  it('no runtime at all is no_api', async () => {
+    vi.stubGlobal('chrome', {})
+    expect(await checkForUpdate()).toEqual({ status: 'no_api' })
+  })
+
+  it('a temporary Firefox install stays unsupported (dev check comes first)', async () => {
+    stubChrome({ management: { getSelf: vi.fn().mockResolvedValue({ installType: 'development' }) } })
+    expect(await checkForUpdate()).toEqual({ status: 'unsupported' })
+  })
+})
+
+describe('hasUpdateCheckApi', () => {
+  it('true when chrome.runtime has requestUpdateCheck (Chrome, Edge)', () => {
+    stubChrome({}, { requestUpdateCheck: vi.fn() })
+    expect(hasUpdateCheckApi()).toBe(true)
+  })
+
+  it('true when only browser.runtime has it', () => {
+    vi.stubGlobal('browser', { runtime: { requestUpdateCheck: vi.fn() } })
+    expect(hasUpdateCheckApi()).toBe(true)
+  })
+
+  it('false on Firefox (neither namespace has it) and with no runtime at all', () => {
+    vi.stubGlobal('browser', { runtime: { reload: vi.fn() } })
+    expect(hasUpdateCheckApi()).toBe(false)
+    vi.stubGlobal('browser', undefined)
+    vi.stubGlobal('chrome', undefined)
+    expect(hasUpdateCheckApi()).toBe(false)
   })
 })

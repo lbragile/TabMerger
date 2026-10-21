@@ -120,6 +120,8 @@
     "noUpdate": "Bạn đang có phiên bản mới nhất",
     "throttled": "Kiểm tra quá thường xuyên. Thử lại sau vài phút.",
     "unsupported": "Đây là bản dựng phát triển, trình duyệt sẽ không cập nhật nó",
+    "autoUpdate": "Trình duyệt của bạn tự động cập nhật TabMerger",
+    "autoUpdateFirefox": "Firefox tự động cập nhật tiện ích. Để kiểm tra ngay, hãy mở about:addons, nhấp vào biểu tượng bánh răng, rồi chọn “Kiểm tra cập nhật”.",
     "error": "Không thể kiểm tra cập nhật"
   }
 }
