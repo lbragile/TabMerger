@@ -1,3 +1,10 @@
+# [3.9.0](https://github.com/lbragile/TabMerger/compare/v3.8.0...v3.9.0) (2026-10-21)
+
+
+### Features
+
+* **i18n:** add Italian, Russian, Korean, Turkish, Indonesian, Polish, Vietnamese and Hindi ([#94](https://github.com/lbragile/TabMerger/issues/94)) ([f1023db](https://github.com/lbragile/TabMerger/commit/f1023db0e79caf6edbbade48e194eb1658696db0))
+
 # [3.8.0](https://github.com/lbragile/TabMerger/compare/v3.7.1...v3.8.0) (2026-10-21)
 
 
