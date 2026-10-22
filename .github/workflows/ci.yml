@@ -955,18 +955,19 @@ jobs:
       - name: Build extension (Chrome MV3)
         run: pnpm --filter @tabmerger/extension build
 
-      # Uncompressed size of the unpacked build. 3.5 MB, set with seven bundled UI languages
-      # (about 2.95 MB then); fifteen languages measure about 3.30 MB. The popup bundles every
-      # catalog once and the background worker only its own areas (src/locales/worker.ts); the
-      # catalogs are plain text, so the store zip grows far less. Each new language adds roughly
-      # 90-145 KB, so about three more fit before this needs revisiting (docs/I18N.md, "Bundle size").
+      # Uncompressed size of the unpacked build. 4.5 MB, set with eighteen bundled UI languages
+      # (about 3.88 MB then: Arabic, Hebrew and Persian take two bytes a letter, about 190 KB
+      # each). The popup bundles every catalog once and the background worker only its own areas
+      # (src/locales/worker.ts); the catalogs are plain text, so the store zip grows far less.
+      # A Latin-script language adds roughly 90-145 KB, so about three more fit before this
+      # needs revisiting (docs/I18N.md, "Bundle size").
       - name: Check bundle size budget
         run: |
           SIZE=$(du -sb packages/extension/.output/chrome-mv3 | cut -f1)
-          BUDGET=3670016
-          echo "Bundle size: ${SIZE} bytes (budget: ${BUDGET} bytes / 3.5 MB)"
+          BUDGET=4718592
+          echo "Bundle size: ${SIZE} bytes (budget: ${BUDGET} bytes / 4.5 MB)"
           if [ "$SIZE" -gt "$BUDGET" ]; then
-            echo "::error::Bundle too large: ${SIZE} bytes exceeds 3.5 MB budget (${BUDGET} bytes)"
+            echo "::error::Bundle too large: ${SIZE} bytes exceeds 4.5 MB budget (${BUDGET} bytes)"
             exit 1
           fi
           echo "Bundle OK"
