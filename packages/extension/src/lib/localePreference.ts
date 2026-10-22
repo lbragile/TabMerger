@@ -26,9 +26,30 @@ export const LOCALE_PREFERENCE_LOCAL_STORAGE_KEY = 'tabmerger-locale';
 /** Key in `chrome.storage.local`, for the background worker. */
 export const LOCALE_PREFERENCE_STORAGE_KEY = 'tm_locale';
 
-/** A stored value narrowed to a preference: a shipped locale, else `auto`. */
+/**
+ * Retired ISO 639 codes that browsers and Java-era platforms still report, and their current
+ * code: Chrome gives Hebrew as `iw` on some platforms, older Android Indonesian as `in`.
+ */
+const LEGACY_LANGUAGE_CODES: Readonly<Record<string, string>> = { iw: 'he', in: 'id' };
+
+/**
+ * A BCP 47 tag with `_` read as `-` and a retired language code replaced (`iw_IL` → `he-IL`,
+ * `iw` → `he`); the rest of the tag and its letter case are kept.
+ */
+export function canonicalLanguageTag(tag: string): string {
+  const [base, ...rest] = tag.replaceAll('_', '-').split('-');
+  return [LEGACY_LANGUAGE_CODES[base.toLowerCase()] ?? base, ...rest].join('-');
+}
+
+/**
+ * A stored value narrowed to a preference: a shipped locale, else `auto`. A retired code for a
+ * shipped language (`iw` once Hebrew ships) counts as that language.
+ */
 export function normalizeLocalePreference(value: unknown): LocalePreference {
-  return isSupportedLocale(value) ? value : LOCALE_PREFERENCE_AUTO;
+  if (isSupportedLocale(value)) return value;
+  if (typeof value !== 'string') return LOCALE_PREFERENCE_AUTO;
+  const canonical = canonicalLanguageTag(value);
+  return isSupportedLocale(canonical) ? canonical : LOCALE_PREFERENCE_AUTO;
 }
 
 /**

@@ -17,12 +17,19 @@ export const REVIEWS_CONTAINER_CLASS = 'container max-w-[960px]'
 export const REVIEWS_HEADING_CLASS =
   'font-semibold tracking-tight mb-8 sm:mb-11 text-[1.75rem] sm:text-[2.125rem] leading-tight text-center'
 
+/**
+ * A rating with its "/ 5" (and the loading placeholder for one) is a left-to-right isolate in
+ * every language: in a right-to-left paragraph the figure and "/ 5", separate runs, were laid
+ * out reversed ("5 / 4.28"). The box itself still sits on the mirrored side.
+ */
+export const RATING_DIR = 'ltr'
+
 /** The two headline figures. */
 export const STATS_GRID_CLASS = 'grid grid-cols-1 sm:grid-cols-2'
 /** The gap under the figures when the per-store tiles follow them. */
 export const STATS_WITH_BREAKDOWN_CLASS = 'mb-4'
 export const STAT_BLOCK_CLASS = 'py-6 px-4 flex flex-col items-center text-center'
-export const STAT_SECOND_BLOCK_CLASS = 'sm:border-l border-border'
+export const STAT_SECOND_BLOCK_CLASS = 'sm:border-s border-border'
 export const STAT_NUMBER_CLASS = 'font-extrabold text-[1.875rem]'
 export const STAT_LABEL_CLASS = 'text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-1'
 

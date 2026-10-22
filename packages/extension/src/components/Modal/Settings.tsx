@@ -326,7 +326,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           )}
         </TabsList>
 
-        <div className="mt-4 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden pr-1">
+        <div className="mt-4 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden pe-1">
         <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">

@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "همین حالا",
+    "minutesAgo": "{count} دقیقه پیش",
+    "hoursAgo": "{count} ساعت پیش",
+    "daysAgo": "{count} روز پیش",
+    "renameFailed": "تغییر نام دستگاه انجام نشد",
+    "renamed": "نام دستگاه تغییر کرد",
+    "removeFailed": "حذف دستگاه انجام نشد",
+    "removed": "دستگاه حذف شد",
+    "removeManyFailed": "حذف دستگاه‌ها انجام نشد",
+    "removedMany": "{count, plural, one {{count} دستگاه حذف شد} other {{count} دستگاه حذف شد}}",
+    "empty": "هنوز هیچ دستگاهی وجود ندارد.",
+    "selectAll": "انتخاب همهٔ دستگاه‌ها",
+    "selectedCount": "{count} مورد انتخاب شد",
+    "removeSelected": "{count, plural, one {حذف {count} دستگاه} other {حذف {count} دستگاه}}",
+    "selectDevice": "انتخاب {name}",
+    "active": "فعال {time}",
+    "snapshotCounts": " · {windows, plural, one {{windows} پنجره} other {{windows} پنجره}} · {tabs, plural, one {{tabs} زبانه} other {{tabs} زبانه}}",
+    "options": "گزینه‌های دستگاه",
+    "rename": "تغییر نام",
+    "remove": "حذف",
+    "removeTitle": "دستگاه حذف شود؟",
+    "removeBody": "«{name}» دیگر داده‌های زبانه را همگام نمی‌کند. این کار برگشت‌پذیر نیست.",
+    "removeManyTitle": "{count} دستگاه حذف شوند؟",
+    "removeManyBody": "این دستگاه‌ها دیگر داده‌های زبانه را همگام نمی‌کنند. این کار برگشت‌پذیر نیست.",
+    "cancel": "لغو"
+  },
+  "metaTitle": "حساب",
+  "title": "تنظیمات حساب",
+  "lead": "حساب و اشتراکتان را مدیریت کنید.",
+  "stats": {
+    "groups": "گروه‌های همگام‌شده",
+    "tabs": "زبانه‌های ذخیره‌شده",
+    "sessions": "نشست‌ها و پشتیبان‌ها",
+    "aiCredits": "اعتبار باقی‌ماندهٔ هوش مصنوعی"
+  },
+  "profile": {
+    "title": "نمایه",
+    "description": "اطلاعات حساب شما.",
+    "email": "ایمیل",
+    "memberSince": "عضو از"
+  },
+  "signOutAll": {
+    "title": "خروج از همهٔ دستگاه‌ها",
+    "description": "همهٔ ورودهای فعال لغو می‌شوند.",
+    "button": "خروج"
+  },
+  "subscription": {
+    "title": "اشتراک",
+    "description": "طرح و صورتحسابتان را مدیریت کنید.",
+    "manageBilling": "مدیریت صورتحساب",
+    "upgrade": "ارتقا",
+    "cancelNote": "هر وقت خواستید می‌توانید از طریق <strong>مدیریت صورتحساب</strong> لغو کنید. تا پایان دورهٔ صورتحساب فعلی دسترسی‌تان حفظ می‌شود."
+  },
+  "devicesCard": {
+    "title": "دستگاه‌ها",
+    "description": "دستگاه‌هایی که گروه‌ها و زبانه‌هایتان را همگام می‌کنند. فقط برای Pro و Pro AI."
+  },
+  "password": {
+    "tooShort": "گذرواژه باید دست‌کم ۸ نویسه باشد.",
+    "updated": "گذرواژه به‌روز شد",
+    "set": "گذرواژه تنظیم شد؛ اکنون می‌توانید با ایمیل و گذرواژه هم وارد شوید",
+    "change": "تغییر گذرواژه",
+    "setLabel": "تنظیم گذرواژه",
+    "placeholder": "••••••••••",
+    "save": "ذخیره"
+  },
+  "credits": {
+    "failed": "پرداخت آغاز نشد",
+    "getMore": "خرید بیشتر"
+  }
+}

@@ -116,7 +116,7 @@ export default async function UninstalledPage({ searchParams }: { searchParams: 
               <Info className="h-4 w-4 text-primary" aria-hidden="true" />
               {t('goodToKnow')}
             </h2>
-            <ul className="list-disc space-y-2 pl-5 text-text2">
+            <ul className="list-disc space-y-2 ps-5 text-text2">
               <li>
                 {t('dataNote')}
               </li>

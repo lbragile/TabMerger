@@ -1,0 +1,87 @@
+{
+  "instructions": "اضغط Space للالتقاط، ومفاتيح الأسهم لاختيار مكان (يبدّل اليسار واليمين بين النوافذ والمجموعات)، وSpace للإفلات، وEscape للإلغاء. يحدّد Shift+Space نطاقًا ويحدّد {{modifier}}+A الكل، لنقل عدة عناصر دفعة واحدة.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "علامة التبويب",
+    "window": "النافذة",
+    "group": "المجموعة",
+    "item": "العنصر"
+  },
+  "typeStart": {
+    "tab": "علامة التبويب",
+    "window": "النافذة",
+    "group": "المجموعة",
+    "item": "العنصر"
+  },
+  "untitledTab": "علامة تبويب بلا عنوان",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}، بدءًا من {{name}}،",
+  "position": {
+    "tab": "الموضع {{index}} من {{total}} في {{window}} من المجموعة {{group}}",
+    "window": "الموضع {{index}} من {{total}} في المجموعة {{group}}",
+    "group": "الموضع {{index}} من {{total}}"
+  },
+  "target": {
+    "newGroup": "مجموعة جديدة",
+    "newWindowAtEnd": "نافذة جديدة في نهاية المجموعة {{group}}",
+    "nowOpen": "المفتوحة الآن، ما يفتحها في نافذة متصفح جديدة",
+    "groupAsWindow": "المجموعة {{group}}، كنافذة جديدة"
+  },
+  "token": {
+    "dropped": "تم الإفلات.",
+    "cancelled": "تم الإلغاء."
+  },
+  "bail": {
+    "cancelled": "تم إلغاء النقل.",
+    "nothingMoved": "تم الإفلات؛ لم يُنقل شيء.",
+    "returnedMany": "عادت {{items}}",
+    "returnedOne": "عادت {{named}}",
+    "noop": "تم إفلات {{what}} مجددًا في {{position}}؛ لم يُنقل شيء.",
+    "stale": "تغيّرت المجموعات أثناء السحب، لذا لم يُنقل شيء. {{returned}} إلى {{position}}.",
+    "cancelledReturned": "تم إلغاء النقل. {{returned}} إلى {{position}}.",
+    "rejected": "لا يمكن الإفلات هناك. {{returned}} إلى {{position}}."
+  },
+  "removedElsewhere_zero": "أُزيل {{count}} منها في مكان آخر.",
+  "removedElsewhere_one": "أُزيل واحد منها في مكان آخر.",
+  "removedElsewhere_two": "أُزيل اثنان منها في مكان آخر.",
+  "removedElsewhere_few": "أُزيل {{count}} منها في مكان آخر.",
+  "removedElsewhere_many": "أُزيل {{count}} منها في مكان آخر.",
+  "removedElsewhere_other": "أُزيل {{count}} منها في مكان آخر.",
+  "stillSelected_zero": "لا تزال محددة.",
+  "stillSelected_one": "لا يزال محددًا.",
+  "stillSelected_two": "لا يزالان محددين.",
+  "stillSelected_few": "لا تزال محددة.",
+  "stillSelected_many": "لا تزال محددة.",
+  "stillSelected_other": "لا تزال محددة.",
+  "dropped": "تم الإفلات.",
+  "movedGroups": "تم نقل {{count}} من المجموعات إلى {{position}} ككتلة واحدة.",
+  "movedGroup": "تم نقل المجموعة {{name}} إلى {{position}}.",
+  "partial": "{{count}} من {{total}}",
+  "at": "الموضع {{index}} من {{total}}",
+  "startingAt": "بدءًا من الموضع {{index}} من {{total}}",
+  "whereTab": "{{window}} من المجموعة {{group}}، {{at}}",
+  "whereWindow": "المجموعة {{group}}، {{at}}",
+  "movedTo": "تم نقل {{items}} إلى {{where}}.",
+  "openTabsClosed": " أُغلقت علامات التبويب المفتوحة.",
+  "groupHidden": " المجموعة {{group}} غير معروضة.",
+  "openedNewWindow": "تم فتح {{items}} في نافذة متصفح جديدة.",
+  "openedNowOpen": "تم فتح {{items}} في المفتوحة الآن.",
+  "movedNewWindow": "تم نقل {{items}} إلى نافذة متصفح جديدة.",
+  "movedWithinNowOpen": "تم نقل {{items}} داخل المفتوحة الآن.",
+  "originalPosition": "فوق موضعه الأصلي.",
+  "pickedUpType": "تم التقاط {{type}}.",
+  "pickedUpMany": "تم التقاط {{what}}.",
+  "pickedUpOne": "تم التقاط {{type}} {{name}}، {{position}}.",
+  "groupShown": "المجموعة {{name}} معروضة الآن.",
+  "copyHint": "الإفلات في مجموعة محفوظة ينسخ؛ وتبقى علامات التبويب المفتوحة مفتوحة.",
+  "notOver": "ليس فوق هدف إفلات.",
+  "over": "فوق {{target}}.",
+  "cantDropOn": "لا يمكن الإفلات على {{target}}.",
+  "typeDropped": "تم إفلات {{type}}.",
+  "cancelledReturnedType": "تم إلغاء النقل؛ وعادت {{type}} إلى موضعها.",
+  "saveFailed": "تعذّر حفظ النقل؛ تمت الاستعادة."
+}

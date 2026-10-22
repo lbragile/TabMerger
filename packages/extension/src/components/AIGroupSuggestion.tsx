@@ -144,7 +144,7 @@ export function AIGroupSuggestion() {
         {t('banners.archive')}
       </button>
       <button
-        className="shrink-0 text-purple-500 hover:opacity-70 transition-opacity ml-1"
+        className="shrink-0 text-purple-500 hover:opacity-70 transition-opacity ms-1"
         onClick={dismiss}
         aria-label={t('banners.dismiss')}
       >

@@ -213,7 +213,7 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
               </Button>
             </div>
           )}
-          <div className="flex flex-col gap-3 max-h-80 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-3 max-h-80 overflow-y-auto pe-1">
           {devices.map((device) => (
             <div key={device.id} className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2">
               <input
@@ -223,7 +223,7 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
                 aria-label={t('selectDevice', { name: device.device_name })}
               />
               <Laptop className="h-4 w-4 shrink-0 text-primary" />
-              <div className="flex-1 min-w-0 -ml-1.5">
+              <div className="flex-1 min-w-0 -ms-1.5">
                 {editingId === device.id ? (
                   <Input
                     ref={editingInputRef}
@@ -237,7 +237,7 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
                     className="h-8 max-w-xs"
                   />
                 ) : (
-                  <p className="text-sm font-medium truncate">{device.device_name}</p>
+                  <p dir="auto" className="text-sm font-medium truncate text-start">{device.device_name}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
                   {t('active', { time: formatRelativeTime(device.last_active, t, locale) })}

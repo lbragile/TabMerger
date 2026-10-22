@@ -1,0 +1,59 @@
+{
+  "addGroup": {
+    "title": "ساخت گروه جدید",
+    "name": "نام",
+    "namePlaceholder": "نام گروه",
+    "color": "رنگ",
+    "cancel": "لغو",
+    "create": "ساختن"
+  },
+  "dedup": {
+    "title": "حذف موارد تکراری",
+    "description_one": "{{count}} زبانهٔ تکراری حذف می‌شود.",
+    "description_other": "{{count}} زبانهٔ تکراری حذف می‌شوند.",
+    "cancel": "لغو",
+    "confirm_one": "حذف {{count}} مورد تکراری",
+    "confirm_other": "حذف {{count}} مورد تکراری"
+  },
+  "staleGroups": {
+    "title": "بررسی گروه‌های قدیمی",
+    "description_one": "{{count}} گروه مدتی است دست نخورده است؛ برای پیش‌نمایش بازش کنید یا مستقیم بایگانی کنید.",
+    "description_other": "{{count}} گروه مدتی است دست نخورده‌اند؛ برای پیش‌نمایش بازشان کنید یا مستقیم بایگانی کنید.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "پنهان کردن",
+    "preview": "پیش‌نمایش",
+    "archive": "بایگانی",
+    "empty": "این گروه خالی است.",
+    "close": "بستن"
+  },
+  "staleTabs": {
+    "title": "زبانه‌های قدیمی",
+    "description_one": "{{count}} زبانه مدتی است دست نخورده است.",
+    "description_other": "{{count}} زبانه مدتی است دست نخورده‌اند.",
+    "close": "بستن",
+    "removeAll_one": "حذف {{count}} زبانه",
+    "removeAll_other": "حذف {{count}} زبانه"
+  },
+  "saveSession": {
+    "title": "ذخیرهٔ نشست",
+    "name": "نام نشست",
+    "namePlaceholder": "مثلاً پژوهش کاری، مطالعهٔ آخر هفته",
+    "nameRequired": "نام نشست الزامی است",
+    "description": "توضیح (اختیاری)",
+    "descriptionPlaceholder": "این نشست برای چیست؟",
+    "cancel": "لغو",
+    "save": "ذخیره"
+  },
+  "shortcutSave": {
+    "title_one": "ذخیرهٔ {{count}} زبانه",
+    "title_other": "ذخیرهٔ {{count}} زبانه",
+    "description": "انتخاب کنید زبانه‌هایی که با میان‌بر صفحه‌کلید گرفته شده‌اند کجا ذخیره شوند.",
+    "destination": "گروه مقصد",
+    "quickSave": "ذخیرهٔ سریع (گروه جدید)",
+    "cancel": "لغو",
+    "save": "ذخیره"
+  },
+  "confirmDialog": {
+    "cancel": "لغو"
+  }
+}

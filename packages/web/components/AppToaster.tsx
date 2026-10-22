@@ -3,6 +3,7 @@
 import type { CSSProperties } from 'react'
 import { Toaster } from 'sonner'
 import { useTheme } from '@/components/theme-provider'
+import { useDirection } from '@/components/DirectionProvider'
 
 // Mix a token into the page surface instead of using alpha: a toast floats over content, so a
 // translucent background would let the page show through it.
@@ -38,17 +39,23 @@ const TOKENS = {
   '--error-bg': tint('--destructive', 14),
   '--error-border': 'hsl(var(--destructive))',
   '--error-text': 'hsl(var(--foreground))',
-  // The dismiss button's position and look are in globals.css (inside the top-right corner).
+  // The dismiss button's position and look are in globals.css (inside the top end corner).
 } as CSSProperties
 
+/**
+ * Toasts stack in the bottom end corner: bottom-right, or bottom-left in a right-to-left language.
+ * The cookie card takes the other bottom corner (the start one), so the two never overlap.
+ */
 export function AppToaster() {
   const { theme } = useTheme()
+  const dir = useDirection()
   return (
     <Toaster
       theme={theme}
       richColors
       closeButton
-      position="bottom-right"
+      dir={dir}
+      position={dir === 'rtl' ? 'bottom-left' : 'bottom-right'}
       duration={TOAST_DURATION_MS}
       style={TOKENS}
     />

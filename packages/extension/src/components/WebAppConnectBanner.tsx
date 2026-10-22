@@ -99,7 +99,7 @@ export function WebAppConnectBanner() {
         </button>
       </div>
       {/* Always mounted, so screen readers announce the message when it appears. */}
-      <p role="alert" className={openFailed ? 'mt-1 pl-5.5 text-destructive' : undefined}>
+      <p role="alert" className={openFailed ? 'mt-1 ps-5.5 text-destructive' : undefined}>
         {openFailed ? openFailedMessage() : null}
       </p>
     </div>

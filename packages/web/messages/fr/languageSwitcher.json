@@ -1,4 +1,8 @@
 {
   "label": "Langue",
-  "trigger": "Langue : {language} ({code})"
+  "trigger": "Langue : {language} ({code})",
+  "searchPlaceholder": "Chercher une langue (ex. allemand, de)",
+  "searchLabel": "Rechercher des langues par nom ou code",
+  "noResults": "Aucune langue trouvée",
+  "rightToLeft": "De droite à gauche"
 }

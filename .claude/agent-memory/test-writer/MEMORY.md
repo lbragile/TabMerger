@@ -16,3 +16,5 @@
 - [Tour v2 tests](learnings_tour_v2_tests.md) — test layout, jsdom rect stubbing, Playwright inert gotcha, isolating the e2e build with TM_E2E_EXT_DIR
 - [Auto-backup test patterns](learnings_auto_backup_tests.md) — localDb commit mocks, abortSignal chain links, flag sentinels (true/false/0/""), in-request interleaving hooks
 - [In-app confirm + backup file tests](learnings_in_app_confirm_and_backup_file_tests.md) — alertdialog/jsdom pointer-events, focusManager, downloads mock, file-copy e2e recorder
+- [Web RTL/catalog tests](learnings_web_rtl_catalog_tests.md) — ICU plural-category check, allowlisting known catalog gaps, timeouts under load
+- [Language picker + RTL tests](learnings_language_picker_rtl_tests.md) — option names are one joined aria-label, Settings 'cancel' = Escape, toaster x-position attr

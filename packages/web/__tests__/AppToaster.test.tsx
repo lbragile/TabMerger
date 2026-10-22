@@ -35,4 +35,18 @@ describe('AppToaster', () => {
     expect(props.duration).toBe(TOAST_DURATION_MS)
     expect(props.style['--toast-duration']).toBe(`${TOAST_DURATION_MS}ms`)
   })
+
+  it('stacks toasts bottom-right, or bottom-left right to left, opposite the cookie card', async () => {
+    const { AppToaster } = await import('@/components/AppToaster')
+    const { DirectionProvider } = await import('@radix-ui/react-direction')
+    render(<AppToaster />)
+    expect(toasterProps.mock.lastCall![0]).toMatchObject({ position: 'bottom-right', dir: 'ltr' })
+
+    render(
+      <DirectionProvider dir="rtl">
+        <AppToaster />
+      </DirectionProvider>
+    )
+    expect(toasterProps.mock.lastCall![0]).toMatchObject({ position: 'bottom-left', dir: 'rtl' })
+  })
 })

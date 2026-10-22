@@ -19,6 +19,14 @@ describe('ReviewsStripSkeleton', () => {
     expect(loading.closest('[aria-hidden="true"]')).toBeNull()
   })
 
+  it('lays the "0.00 / 5" placeholders out left to right, like the ratings they stand for', () => {
+    render(<ReviewsStripSkeleton />)
+    const ratings = screen.getAllByText('0.00 / 5')
+    expect(ratings).toHaveLength(4) // the headline and one per store
+    for (const rating of ratings) expect(rating).toHaveAttribute('dir', 'ltr')
+    expect(screen.getByText('00')).not.toHaveAttribute('dir')
+  })
+
   it('hides every placeholder from assistive tech', () => {
     render(<ReviewsStripSkeleton />)
     const section = screen.getByTestId('reviews-skeleton')

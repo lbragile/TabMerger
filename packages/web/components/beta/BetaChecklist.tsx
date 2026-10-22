@@ -141,7 +141,7 @@ export function BetaAreaProgress({ areaId, items }: { areaId: string; items: { s
   const all = done === keys.length
   return (
     <span
-      className={cn('ml-auto mr-3 text-xs tabular-nums', all ? 'text-ok font-medium' : 'text-muted-foreground')}
+      className={cn('ms-auto me-3 text-xs tabular-nums', all ? 'text-ok font-medium' : 'text-muted-foreground')}
       aria-label={all ? t('allDoneLabel') : t('progressLabel', { done, total: keys.length })}
     >
       {all ? t('allDone') : t('progress', { done, total: keys.length })}

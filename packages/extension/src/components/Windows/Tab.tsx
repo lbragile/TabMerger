@@ -463,7 +463,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
         <DropdownMenuContent className="w-48 text-xs" align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="text-xs">
-              <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              <MoveRight className="h-3.5 w-3.5 me-2 text-muted-foreground rtl:-scale-x-100" />
               {isNowOpen ? t('tab.copyToGroup') : t('tab.moveToGroup')}
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="max-h-48 overflow-y-auto">
@@ -482,10 +482,10 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                   }
                 >
                   <span
-                    className="h-2 w-2 rounded-full shrink-0 mr-2"
+                    className="h-2 w-2 rounded-full shrink-0 me-2"
                     style={{ backgroundColor: group.color }}
                   />
-                  <span className="truncate">{group.name}</span>
+                  <span dir="auto" className="truncate text-ui-start">{group.name}</span>
                 </DropdownMenuItem>
               ))}
               {targetGroups.length === 0 && (
@@ -525,7 +525,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
                   })
                 }
               >
-                <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                <MoveRight className="h-3.5 w-3.5 me-2 text-muted-foreground rtl:-scale-x-100" />
                 <span><Trans i18nKey="tab.autoSaveTo" values={{ group: matchedGroup.name }} components={{ strong: <strong /> }} /></span>
               </DropdownMenuItem>
             ) : null;
@@ -535,14 +535,14 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             className="text-xs"
             onClick={() => setNoteOpen(true)}
           >
-            <StickyNote className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <StickyNote className="h-3.5 w-3.5 me-2 text-muted-foreground" />
             {tab.note ? t('tab.editNote') : t('tab.addNote')}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-xs"
             onClick={() => { setReminderOpen(true); setReminderNote(tab.reminder?.note ?? ''); }}
           >
-            <Clock className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <Clock className="h-3.5 w-3.5 me-2 text-muted-foreground" />
             {tab.reminder ? t('tab.editReminder') : t('tab.remindMe')}
           </DropdownMenuItem>
           {tab.reminder && (
@@ -550,7 +550,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               className="text-xs text-destructive focus:text-destructive"
               onClick={() => clearTabReminder({ groupIndex, windowIndex, tabIndex })}
             >
-              <Clock className="h-3.5 w-3.5 mr-2" />
+              <Clock className="h-3.5 w-3.5 me-2" />
               {t('tab.clearReminder')}
             </DropdownMenuItem>
           )}
@@ -559,7 +559,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             className="text-xs"
             onClick={() => { setTitleValue(getDisplayTitle(tab)); setEditingTitle(true); }}
           >
-            <Pencil className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <Pencil className="h-3.5 w-3.5 me-2 text-muted-foreground" />
             {t('tab.rename')}
           </DropdownMenuItem>
           {tab.customTitle && (
@@ -567,7 +567,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               className="text-xs"
               onClick={() => { void commitTitle(''); }}
             >
-              <Pencil className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              <Pencil className="h-3.5 w-3.5 me-2 text-muted-foreground" />
               {t('tab.resetTitle')}
             </DropdownMenuItem>
           )}
@@ -576,7 +576,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             className="text-xs text-destructive focus:text-destructive"
             onClick={() => deleteTab({ groupIndex, windowIndex, tabIndex })}
           >
-            <X className="h-3.5 w-3.5 mr-2" />
+            <X className="h-3.5 w-3.5 me-2" />
             {isNowOpen ? t('tab.close') : t('tab.remove')}
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -639,7 +639,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
         </span>
         {isStale && (
           <span
-            className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full ring-1 ring-background"
+            className="absolute -bottom-0.5 -inset-e-0.5 h-1.5 w-1.5 rounded-full ring-1 ring-background"
             style={{ backgroundColor: groupColor || DEFAULT_GROUP_COLOR }}
             aria-label={t('tab.stale')}
           />
@@ -649,12 +649,13 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
       {/* Title + hostname — two-column grid so the hostname column starts at a
           consistent x-offset across rows regardless of title length, instead
           of trailing directly after variable-width title text in a flex row. */}
-      <div className="grid grid-cols-[12.5rem_minmax(0,1fr)] items-center gap-x-1.5 min-w-0 flex-1 overflow-hidden mr-2">
+      <div className="grid grid-cols-[12.5rem_minmax(0,1fr)] items-center gap-x-1.5 min-w-0 flex-1 overflow-hidden me-2">
         {editingTitle ? (
           <div className="col-span-2 flex items-center gap-1 min-w-0">
             <input
               ref={titleInputRef}
-              className="min-w-0 flex-1 text-xs leading-5 bg-background border border-primary/50 pl-1 focus:outline-none focus:ring-1 focus:ring-primary"
+              dir={titleValue ? 'auto' : undefined}
+              className="min-w-0 flex-1 text-xs leading-5 bg-background border border-primary/50 ps-1 focus:outline-none focus:ring-1 focus:ring-primary"
               value={titleValue}
               onChange={(e) => setTitleValue(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { void commitTitle(titleValue); } }}
@@ -668,7 +669,8 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           <>
             <TabPreview tab={tab}>
               <span
-                className="block truncate min-w-0 text-xs leading-5 hover:underline"
+                dir="auto"
+                className="block truncate min-w-0 text-xs leading-5 text-ui-start hover:underline"
                 onClick={(e) => handleOpen(e)}
                 onMouseDown={(e) => e.stopPropagation()}
               >
@@ -677,11 +679,16 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
             </TabPreview>
 
             {urlMark || pageTitleMark ? (
-              <span className="truncate shrink min-w-0 max-w-full text-[10px] text-muted-foreground justify-self-start" data-search-fragment="">
+              <span
+                // A URL snippet is always left to right; a page title (renamed tab) is the page's own text
+                dir={urlMark ? 'ltr' : 'auto'}
+                className="truncate shrink min-w-0 max-w-full text-[10px] text-muted-foreground text-ui-start justify-self-start"
+                data-search-fragment=""
+              >
                 <Highlighted text={(urlMark ?? pageTitleMark)!.text} ranges={(urlMark ?? pageTitleMark)!.ranges} />
               </span>
             ) : getUrlDisplay(tab.url) ? (
-              <span className="truncate shrink min-w-0 max-w-full text-[10px] text-muted-foreground justify-self-start">
+              <span dir="ltr" className="truncate shrink min-w-0 max-w-full text-[10px] text-muted-foreground text-ui-start justify-self-start">
                 {getUrlDisplay(tab.url)}
               </span>
             ) : (
@@ -695,11 +702,12 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
           reminder, and delete/lock all live here so adding the hostname column
           above never shoves them around per-row. */}
       {!editingTitle && (
-        <div className="flex items-center gap-1 shrink-0 ml-auto">
+        <div className="flex items-center gap-1 shrink-0 ms-auto">
           {tab.chromeGroup && (
             isNowOpen ? (
               <button
                 type="button"
+                dir="auto"
                 className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0 hover:brightness-110 cursor-pointer focus-visible:ring-1 focus-visible:ring-ring"
                 style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
                 onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
@@ -710,6 +718,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               </button>
             ) : (
               <span
+                dir="auto"
                 className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0"
                 style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
                 onMouseDown={(e) => e.stopPropagation()}
@@ -766,7 +775,12 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
               </TooltipTrigger>
               <TooltipContent className="text-xs">
                 {t('tab.reminderAt', { when: formatDateTime(tab.reminder.fireAt) })}
-                {tab.reminder.note ? ` — ${tab.reminder.note}` : ''}
+                {tab.reminder.note && (
+                  <>
+                    {' — '}
+                    <bdi>{tab.reminder.note}</bdi>
+                  </>
+                )}
               </TooltipContent>
             </Tooltip>
           )}
@@ -841,6 +855,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
         />
         <input
           type="text"
+          dir={reminderNote ? 'auto' : undefined}
           maxLength={200}
           className="w-full border border-border bg-muted/50 px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
           placeholder={t('tab.reminderNotePlaceholder')}
@@ -877,6 +892,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
       >
         <textarea
           ref={textareaRef}
+          dir={noteValue ? 'auto' : undefined}
           rows={2}
           maxLength={500}
           className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"

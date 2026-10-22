@@ -54,7 +54,7 @@ export function AccountMenu({ email, initials }: { email: string; initials?: str
                 <DropdownMenuItem asChild className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                     <SignOutForm>
                         <button
-                            className="w-full text-left"
+                            className="w-full text-start"
                             type="submit"
                         >
                             {t("signOut")}

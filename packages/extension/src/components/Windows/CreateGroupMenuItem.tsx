@@ -38,7 +38,7 @@ export function CreateGroupMenuItem({ onCreated }: { onCreated: (groupIndex: num
     <>
       <DropdownMenuSeparator />
       <DropdownMenuItem className="text-xs" onClick={handleClick}>
-        <Plus className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+        <Plus className="h-3.5 w-3.5 me-2 text-muted-foreground" />
         {t('windows.createGroup')}
       </DropdownMenuItem>
     </>

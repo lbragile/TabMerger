@@ -25,6 +25,7 @@ import {
   TILE_RATING_CLASS,
   TILES_GRID_CLASS,
   TILES_THREE_COLUMNS_CLASS,
+  RATING_DIR,
 } from './reviewsLayout'
 
 /**
@@ -54,9 +55,9 @@ const pulse = 'motion-reduce:animate-none'
  * included, but not painted. The colour is set inline because the shared classes carry a
  * text colour of their own, and which of two colour classes wins is not ours to decide.
  */
-function TextBar({ className, children }: { className?: string; children: string }) {
+function TextBar({ className, children, dir }: { className?: string; children: string; dir?: string }) {
   return (
-    <Skeleton className={cn(pulse, 'select-none', className)} style={{ color: 'transparent' }}>
+    <Skeleton dir={dir} className={cn(pulse, 'select-none', className)} style={{ color: 'transparent' }}>
       {children}
     </Skeleton>
   )
@@ -66,8 +67,9 @@ export function ReviewsStripSkeleton() {
   const t = useTranslations('reviews')
   const common = useTranslations('common')
   const stats = [
-    { number: t('skeletonRating'), label: t('averageRating') },
-    { number: '00', label: t('ratingsAcross', { stores: listNames(STORE_IDS.map((id) => STORE_BROWSER[id]), common) }) },
+    // The rating placeholder reads left to right like the rating it stands for (ReviewsStrip).
+    { number: t('skeletonRating'), dir: RATING_DIR, label: t('averageRating') },
+    { number: '00', dir: undefined, label: t('ratingsAcross', { stores: listNames(STORE_IDS.map((id) => STORE_BROWSER[id]), common) }) },
   ]
 
   return (
@@ -83,7 +85,9 @@ export function ReviewsStripSkeleton() {
           <div className={`${STATS_GRID_CLASS} ${STATS_WITH_BREAKDOWN_CLASS}`}>
             {stats.map((stat, i) => (
               <div key={stat.label} className={`${STAT_BLOCK_CLASS} ${i === 1 ? STAT_SECOND_BLOCK_CLASS : ''}`}>
-                <TextBar className={STAT_NUMBER_CLASS}>{stat.number}</TextBar>
+                <TextBar className={STAT_NUMBER_CLASS} dir={stat.dir}>
+                  {stat.number}
+                </TextBar>
                 <TextBar className={STAT_LABEL_CLASS}>{stat.label}</TextBar>
               </div>
             ))}
@@ -101,7 +105,9 @@ export function ReviewsStripSkeleton() {
                     <TextBar className={`max-w-full truncate ${TILE_NAME_LINE_CLASS}`}>{STORE_LABEL[id]}</TextBar>
                     <TextBar className={TILE_COUNT_LINE_CLASS}>{t('skeletonRatingCount')}</TextBar>
                   </div>
-                  <TextBar className={`shrink-0 ${TILE_RATING_CLASS}`}>{t('skeletonRating')}</TextBar>
+                  <TextBar className={`shrink-0 ${TILE_RATING_CLASS}`} dir={RATING_DIR}>
+                    {t('skeletonRating')}
+                  </TextBar>
                 </div>
               ))}
             </div>

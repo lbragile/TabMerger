@@ -5,6 +5,7 @@ import {
   LOCALE_PREFERENCE_LOCAL_STORAGE_KEY,
   LOCALE_PREFERENCE_STORAGE_KEY,
   localePreferenceChoices,
+  canonicalLanguageTag,
   localePreferenceLabel,
   normalizeLocalePreference,
   onLocalePreferenceChanged,
@@ -56,9 +57,30 @@ afterEach(() => {
   localStorage.clear()
 })
 
+describe('canonicalLanguageTag', () => {
+  it('replaces the retired language subtag and keeps the rest', () => {
+    expect(canonicalLanguageTag('iw')).toBe('he')
+    expect(canonicalLanguageTag('IW-il')).toBe('he-il')
+    expect(canonicalLanguageTag('iw_IL')).toBe('he-IL')
+    expect(canonicalLanguageTag('in')).toBe('id')
+  })
+
+  it('leaves current codes alone, reading _ as -', () => {
+    expect(canonicalLanguageTag('he')).toBe('he')
+    expect(canonicalLanguageTag('pt_BR')).toBe('pt-BR')
+    expect(canonicalLanguageTag('de-IW')).toBe('de-IW')
+    expect(canonicalLanguageTag('')).toBe('')
+  })
+})
+
 describe('normalizeLocalePreference', () => {
   it('keeps a shipped locale', () => {
     for (const locale of SUPPORTED_LOCALES) expect(normalizeLocalePreference(locale)).toBe(locale)
+  })
+
+  it('reads a stored retired code as its current one (iw is Hebrew, in is Indonesian)', () => {
+    expect(normalizeLocalePreference('in')).toBe('id')
+    expect(normalizeLocalePreference('iw')).toBe('he')
   })
 
   it('falls back to auto for anything else (untrusted storage)', () => {

@@ -299,7 +299,7 @@ export function Header() {
                     aria-label={searchFilter ? t('search.openSearchWithQuery', { query: searchFilter }) : t('search.openSearch')}
                     data-tour={TOUR_ANCHORS.search}
                 >
-                    <span className="flex-1 text-left truncate">
+                    <span dir={searchFilter ? 'auto' : undefined} className="flex-1 text-ui-start truncate">
                         {searchFilter || t('header.searchPlaceholder')}
                     </span>
                     <kbd className="text-[10px] border border-border px-1 py-px font-mono shrink-0">{t("common.shortcutSearch")}</kbd>
@@ -312,7 +312,7 @@ export function Header() {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 shrink-0 rounded-none border border-l-0 border-border"
+                                className="h-7 w-7 shrink-0 rounded-none border border-s-0 border-border"
                                 onClick={handleClearSearch}
                                 aria-label={t("search.clearSearch")}
                                 data-testid="header-clear-search"
@@ -340,7 +340,7 @@ export function Header() {
             />}
 
             {/* Actions — pinned to the right */}
-            <div className="flex items-center gap-0.5 pr-3 py-2 shrink-0">
+            <div className="flex items-center gap-0.5 pe-3 py-2 shrink-0">
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button
@@ -352,7 +352,7 @@ export function Header() {
                             aria-label={t("header.undo")}
                             data-tour={TOUR_ANCHORS.undo}
                         >
-                            <Undo2 className="h-3.5 w-3.5 text-muted-foreground" />
+                            <Undo2 className="h-3.5 w-3.5 text-muted-foreground rtl:-scale-x-100" />
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">{t("header.undo")}</TooltipContent>
@@ -369,7 +369,7 @@ export function Header() {
                             aria-label={t("header.redo")}
                             data-tour={TOUR_ANCHORS.redo}
                         >
-                            <Redo2 className="h-3.5 w-3.5 text-muted-foreground" />
+                            <Redo2 className="h-3.5 w-3.5 text-muted-foreground rtl:-scale-x-100" />
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">{t("header.redo")}</TooltipContent>
@@ -542,7 +542,7 @@ export function Header() {
                                                 })
                                             }
                                         >
-                                            <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                            <Zap className="h-3.5 w-3.5 me-2 shrink-0" />
                                             {t("header.upgradeToPro")}
                                         </DropdownMenuItem>
                                     )}
@@ -555,7 +555,7 @@ export function Header() {
                                                 })
                                             }
                                         >
-                                            <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                            <Zap className="h-3.5 w-3.5 me-2 shrink-0" />
                                             {t("header.upgradeToProAi")}
                                         </DropdownMenuItem>
                                     )}
@@ -564,7 +564,7 @@ export function Header() {
                                         onClick={() => openModal("settings")}
                                         data-tour={TOUR_ANCHORS.menuSettings}
                                     >
-                                        <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                        <Settings className="h-3.5 w-3.5 me-2 shrink-0" />
                                         {t("header.settings")}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
@@ -586,7 +586,7 @@ export function Header() {
                                         onClick={() => openModal("settings")}
                                         data-tour={TOUR_ANCHORS.menuSettings}
                                     >
-                                        <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                        <Settings className="h-3.5 w-3.5 me-2 shrink-0" />
                                         {t("header.settings")}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
@@ -594,7 +594,7 @@ export function Header() {
                                         className="text-xs text-primary focus:text-primary font-medium"
                                         onClick={() => openModal("auth")}
                                     >
-                                        <UserCircle className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                        <UserCircle className="h-3.5 w-3.5 me-2 shrink-0" />
                                         {t("header.signIn")}
                                     </DropdownMenuItem>
                                 </>

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { getDefaultNormalizer, render, screen, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ReviewsStrip, buildMarqueeHalf, buildMarqueeTrack, listNames } from '@/components/marketing/ReviewsStrip'
 import { createTranslator } from 'next-intl'
@@ -79,6 +79,12 @@ function headlineRating(figure: string) {
   return { shown, spoken }
 }
 
+/**
+ * Matches text with the store names' first-strong isolates (U+2068 ... U+2069, from listNames)
+ * removed: they are in the DOM but invisible, and only matter to a right-to-left sentence.
+ */
+const withoutIsolates = { normalizer: (text: string) => getDefaultNormalizer()(text.replace(/[\u2068\u2069]/g, '')) }
+
 // This component used to render four invented testimonials ("TabMerger saved my
 // sanity" — "ALEX T. · Chrome Web Store", …) and these tests used to assert they
 // were always present. Everything rendered now must come from a live listing.
@@ -94,7 +100,7 @@ describe('ReviewsStrip', () => {
       expect(headlineRating('4.23').shown).toBe('4.23 / 5')
       expect(screen.getByText('47')).toBeInTheDocument()
       expect(screen.getByText('Average rating')).toBeInTheDocument()
-      expect(screen.getByText('Ratings across Chrome, Firefox and Edge')).toBeInTheDocument()
+      expect(screen.getByText('Ratings across Chrome, Firefox and Edge', withoutIsolates)).toBeInTheDocument()
     })
 
     it('reads the rating to a screen reader as "out of 5", not as a slash', async () => {
@@ -117,7 +123,7 @@ describe('ReviewsStrip', () => {
       // (3.9333 × 15 + 3 × 4) / 19 = 3.737
       expect(headlineRating('3.74').shown).toBe('3.74 / 5')
       expect(screen.getByText('19')).toBeInTheDocument()
-      expect(screen.getByText('Ratings across Firefox and Edge')).toBeInTheDocument()
+      expect(screen.getByText('Ratings across Firefox and Edge', withoutIsolates)).toBeInTheDocument()
       expect(container.textContent).not.toMatch(/chrome/i)
     })
 
@@ -125,7 +131,7 @@ describe('ReviewsStrip', () => {
       mockStores({ firefox, edge })
       vi.mocked(getChromeStoreStats).mockRejectedValue(new Error('store down'))
       await renderStrip()
-      expect(screen.getByText('Ratings across Firefox and Edge')).toBeInTheDocument()
+      expect(screen.getByText('Ratings across Firefox and Edge', withoutIsolates)).toBeInTheDocument()
     })
 
     it('shows a single store under its own name, with no breakdown', async () => {
@@ -161,6 +167,23 @@ describe('ReviewsStrip', () => {
       expect(within(chromeTile).getByText('Chrome Web Store')).toBeInTheDocument()
       expect(within(chromeTile).getByText('4.57')).toBeInTheDocument()
       expect(within(chromeTile).getByText('28 ratings')).toBeInTheDocument()
+    })
+
+    it('keeps every "4.57 / 5" in one left-to-right isolate, so a right-to-left page shows it in that order', async () => {
+      mockStores({ chrome, firefox, edge })
+      await renderStrip()
+      // The headline: the figure and "/ 5" (plus the spoken "out of 5") in one element.
+      const headline = screen.getByText('4.23')
+      expect(headline).toHaveAttribute('dir', 'ltr')
+      expect(headline).toHaveTextContent('/ 5')
+      // Each tile: the figure's wrapper holds the figure and its "/ 5".
+      for (const [tile, figure] of tiles().map((el, i) => [el, ['4.57', '3.93', '3.00'][i]] as const)) {
+        const rating = within(tile).getByText(figure).parentElement!
+        expect(rating).toHaveAttribute('dir', 'ltr')
+        expect(rating).toHaveTextContent(`${figure}/ 5`)
+      }
+      // The count is not a rating: it keeps the page's direction.
+      expect(screen.getByText('47')).not.toHaveAttribute('dir')
     })
 
     it('names a tile by its visible text, with no aria-label to replace it', async () => {
@@ -355,13 +378,21 @@ describe('ReviewsStrip', () => {
 })
 
 describe('listNames', () => {
+  const t = createTranslator({ locale: 'en', messages: en, namespace: 'common' })
+
   it.each([
     [['Chrome'], 'Chrome'],
     [['Chrome', 'Firefox'], 'Chrome and Firefox'],
     [['Chrome', 'Firefox', 'Edge'], 'Chrome, Firefox and Edge'],
   ])('joins %j as %j', (names, expected) => {
-    const t = createTranslator({ locale: 'en', messages: en, namespace: 'common' })
-    expect(listNames(names, t)).toBe(expected)
+    expect(listNames(names, t).replace(/[\u2068\u2069]/g, '')).toBe(expected)
+  })
+
+  it('wraps each name in a first-strong isolate, so a right-to-left sentence keeps their order', () => {
+    // A comma between two bare Latin names joins them into one left-to-right run, which Hebrew
+    // then showed as "Firefox, Chrome". Isolated, the separators follow the sentence.
+    expect(listNames(['Chrome', 'Firefox', 'Edge'], t)).toBe('\u2068Chrome\u2069, \u2068Firefox\u2069 and \u2068Edge\u2069')
+    expect(listNames(['Chrome'], t)).toBe('\u2068Chrome\u2069')
   })
 })
 

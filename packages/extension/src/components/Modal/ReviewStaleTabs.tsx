@@ -34,7 +34,7 @@ export function ReviewStaleTabsModal({ data, onClose }: ReviewStaleTabsModalProp
       <ScrollArea className="max-h-48 mt-3 border border-border">
         <ul className="p-2 space-y-1">
           {staleTabs.map((tab) => (
-            <li key={`${tab.id}-${tab.url}`} className="text-xs text-muted-foreground truncate px-1">
+            <li key={`${tab.id}-${tab.url}`} dir={tab.title ? 'auto' : 'ltr'} className="text-xs text-muted-foreground truncate text-ui-start px-1">
               {tab.title || tab.url}
             </li>
           ))}

@@ -137,6 +137,7 @@ export * from './localOnlySyncKeys';
 export * from './uninstallSurvey';
 export * from './search';
 export * from './locales';
+export * from './localeSearch';
 export * from './analyticsEvents';
 export * from './extensionLifecycle';
 

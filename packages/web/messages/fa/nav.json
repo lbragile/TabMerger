@@ -1,0 +1,21 @@
+{
+  "features": "ویژگی‌ها",
+  "pricing": "قیمت‌ها",
+  "changelog": "تغییرات",
+  "faq": "پرسش‌های متداول",
+  "dashboard": "داشبورد",
+  "account": "حساب",
+  "accountSettings": "تنظیمات حساب",
+  "signIn": "ورود",
+  "signUp": "ثبت‌نام",
+  "getStarted": "شروع کنید",
+  "signOut": "خروج",
+  "openMenu": "باز کردن منو",
+  "closeMenu": "بستن منو",
+  "accountMenu": "منوی حساب",
+  "home": "صفحهٔ اصلی TabMerger",
+  "github": "GitHub",
+  "githubRepo": "TabMerger در GitHub",
+  "githubRepoWithStars": "TabMerger در GitHub، {count, plural, one {# ستاره} other {# ستاره}}",
+  "toggleTheme": "تغییر پوسته"
+}

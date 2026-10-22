@@ -111,7 +111,7 @@ export default async function AppLayout({
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                 <form action="/api/auth/sign-out" method="POST">
-                  <button type="submit" className="w-full text-left cursor-pointer">
+                  <button type="submit" className="w-full text-start cursor-pointer">
                     {t('signOut')}
                   </button>
                 </form>

@@ -159,7 +159,7 @@ export default async function DashboardPage({
                       size="sm"
                       disabled={currentTier !== 'pro_ai'}
                     >
-                      <Sparkles className="h-4 w-4 mr-1.5" />
+                      <Sparkles className="h-4 w-4 me-1.5" />
                       {t('aiOrganise')}
                     </Button>
                   </span>

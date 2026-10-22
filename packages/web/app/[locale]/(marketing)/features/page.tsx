@@ -118,7 +118,7 @@ export default async function FeaturesPage() {
             <Button variant="outline" size="lg" className="gap-2" asChild>
               <Link href="/pricing">
                 {t('seePricing')}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
               </Link>
             </Button>
           </div>
@@ -159,7 +159,7 @@ export default async function FeaturesPage() {
                     {t(`badges.${section.key}`)}
                   </span>
                   {isAi && !AI_ENABLED && (
-                    <span className="ml-2 inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3 bg-muted text-muted-foreground">
+                    <span className="ms-2 inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3 bg-muted text-muted-foreground">
                       {common('comingSoon')}
                     </span>
                   )}

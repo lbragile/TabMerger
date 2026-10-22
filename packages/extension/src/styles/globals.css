@@ -116,6 +116,34 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* Right-to-left scripts. Inter (when installed) has no Arabic or Hebrew glyphs, and system-ui
+     does not always have them either (SF Pro on macOS, some Linux defaults), so each script
+     names the system fonts that do, before the generic fallback. Latin text in these UIs (tab
+     titles, URLs) still uses Inter / system-ui first. Nothing is bundled: these are all fonts
+     the OS ships. */
+  html:lang(ar),
+  html:lang(fa) {
+    font-family: Inter, "Segoe UI", "SF Arabic", "Geeza Pro", "Noto Sans Arabic", "Noto Naskh Arabic", Tahoma, system-ui, sans-serif;
+  }
+  html:lang(he) {
+    font-family: Inter, "Segoe UI", "SF Hebrew", "Arial Hebrew", "Noto Sans Hebrew", Arial, system-ui, sans-serif;
+  }
+}
+
+/* Text the user or a website supplied (`dir="auto"`, or `dir="ltr"` for a URL): it keeps its
+   own direction inside, but its line sits on the UI's start edge like the copy around it, so an
+   English tab title in the Hebrew UI lines up with the favicon on the right. `text-align: start`
+   would resolve against the element's own direction instead. A line too long to fit is still
+   start-aligned in its own direction, so the ellipsis lands at the end of the text.
+   The edge comes from `<html dir>` (the UI direction), never from the parent: `match-parent`
+   also copies a parent's `center` (a <button>'s default), which centred the header's search
+   placeholder. So in the English UI this is exactly `left`, like before right-to-left support. */
+@utility text-ui-start {
+  text-align: left;
+  &:where(:root[dir='rtl'] *) {
+    text-align: right;
+  }
 }
 
 /* Global clickable cursor — root-cause fix instead of per-element cursor-pointer classes.
@@ -201,6 +229,11 @@ body {
   transform-origin: left;
   animation: toast-countdown var(--toast-duration) linear forwards;
 }
+/* Right to left (sonner puts `dir` on the toaster): the bar drains towards the start edge, which
+   is the right one. */
+[data-sonner-toaster][dir='rtl'] [data-sonner-toast][style*='--toast-duration']::after {
+  transform-origin: right;
+}
 /* richColors tints toast text to the semantic color, so `currentColor` above already picks
    it up for success/error/warning/info toasts. Plain (no data-type) toasts have no semantic
    color to inherit, so they fall back to the brand primary instead of the neutral text color. */
@@ -248,6 +281,16 @@ body {
   [data-sonner-toaster] [data-sonner-toast]::after {
     animation: none !important;
     transform: scaleX(1);
+  }
+}
+
+/* A thin themed scrollbar for an inner list (the language pickers) in browsers without the
+   `::-webkit-scrollbar` rules below (Firefox). Chromium keeps those: setting the standard
+   properties there would switch them off for the element. */
+@utility scrollbar-themed {
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
   }
 }
 
@@ -445,7 +488,9 @@ html[data-tm-dnd-grabbing] * {
 /* The drop marker when the item goes into the GAP under a row (the end of a list, the place
    after a group), not onto the row: a solid bar along that edge instead of a box, so it never
    reads as "drop on this row". Text-color hairlines above and below carry the contrast; the
-   little wedge at its left end and the label's arrow carry the meaning without color. */
+   little wedge at its start end and the label's arrow carry the meaning without color. The wedge
+   and the label use logical sides, so in a right-to-left UI they swap ends like the rows do (the
+   marker box itself is placed by Tour.tsx in physical pixels, which is geometry). */
 [data-tour-drop^='line'] {
   border: 0;
   background: hsl(var(--secondary));
@@ -455,23 +500,23 @@ html[data-tm-dnd-grabbing] * {
 [data-tour-drop^='line']::before {
   content: '';
   position: absolute;
-  left: -0.0625rem;
+  inset-inline-start: -0.0625rem;
   top: 50%;
   transform: translateY(-50%);
   border: 0.3125rem solid transparent;
-  border-left-color: hsl(var(--foreground));
+  border-inline-start-color: hsl(var(--foreground));
 }
 
 /* Its label. Theme text colors for the words (white on the orange would be too faint), with
    the orange as a bar in front. */
 [data-tour-drop-label] {
   position: absolute;
-  right: -0.125rem;
+  inset-inline-end: -0.125rem;
   bottom: calc(100% + 0.125rem);
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  border-right: 0.25rem solid hsl(var(--secondary));
+  border-inline-end: 0.25rem solid hsl(var(--secondary));
   /* A background-color edge, so the label stands out on any surface (the list of groups is
      dark in both themes) */
   outline: 0.0625rem solid hsl(var(--background));
@@ -498,7 +543,7 @@ html[data-tm-dnd-grabbing] * {
 [data-tour-drop-label='inside'] {
   bottom: auto;
   top: 0;
-  right: 0;
+  inset-inline-end: 0;
 }
 [data-tour-drop-label='under'] {
   bottom: auto;
@@ -553,7 +598,7 @@ html[data-tm-dnd-grabbing] * {
     outline: 0.0625rem solid CanvasText;
   }
   [data-tour-drop^='line']::before {
-    border-left-color: CanvasText;
+    border-inline-start-color: CanvasText;
   }
   [data-tour-drop-label] {
     border: 0.0625rem solid CanvasText;

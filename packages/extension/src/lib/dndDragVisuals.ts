@@ -1,4 +1,5 @@
 import { DND_ROW_ID_ATTR } from './dndMultiDrag';
+import { isRtl } from './direction';
 
 /**
  * Sensor-agnostic drag VISUALS: the lifted ghost (a faithful row clone, optionally with a
@@ -208,6 +209,9 @@ export function buildDragGhost(row: HTMLElement, rect: DOMRect, opts: { count?: 
   const kind = dragRowKind(row);
   const count = Math.max(1, Math.floor(opts.count ?? 1));
   const multi = count > 1;
+  // The ghost hangs towards the line's end from the pointer (right, or left in a right-to-left
+  // UI, see `Html5DragSensor.startGhost`), so the stack and the badge sit on its START side.
+  const start = isRtl() ? 'right' : 'left';
 
   const wrapper = document.createElement('div');
   wrapper.setAttribute('data-testid', 'drag-ghost');
@@ -254,7 +258,7 @@ export function buildDragGhost(row: HTMLElement, rect: DOMRect, opts: { count?: 
       Object.assign(card.style, {
         position: 'absolute',
         top: `${offset}px`,
-        left: `${offset}px`,
+        [start]: `${offset}px`,
         width: '100%',
         height: '100%',
         boxShadow: STACK_SHADOW
@@ -292,7 +296,7 @@ export function buildDragGhost(row: HTMLElement, rect: DOMRect, opts: { count?: 
     Object.assign(badge.style, {
       position: 'absolute',
       top: '-9px',
-      left: '-9px',
+      [start]: '-9px',
       boxShadow: '0 2px 6px rgba(0,0,0,0.45)'
     } as Partial<CSSStyleDeclaration>);
     badge.textContent = `+${count - 1}`;

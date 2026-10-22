@@ -1,0 +1,15 @@
+{
+  "metaTitle": "تغییرات",
+  "metaDescription": "ویژگی‌های تازه، بهبودها و رفع اشکال‌ها در TabMerger.",
+  "title": "تغییرات",
+  "lead": "همهٔ آنچه منتشر کرده‌ایم، از جدیدترین.",
+  "githubRelease": "انتشار در GitHub",
+  "githubReleaseLabel": "انتشار {version} در GitHub",
+  "prLinkLabel": "درخواست ادغام #{number} در GitHub",
+  "majorRelease": "انتشار اصلی",
+  "types": {
+    "New": "جدید",
+    "Improved": "بهبودیافته",
+    "Fixed": "رفع‌شده"
+  }
+}

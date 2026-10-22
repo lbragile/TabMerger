@@ -26,6 +26,9 @@ const CATALOGS: Partial<Record<AppLocale, () => Promise<MessageTree>>> = {
   hi: async () => (await import('@/messages/hi')).default,
   'pt-BR': async () => (await import('@/messages/pt-BR')).default,
   'zh-CN': async () => (await import('@/messages/zh-CN')).default,
+  ar: async () => (await import('@/messages/ar')).default,
+  he: async () => (await import('@/messages/he')).default,
+  fa: async () => (await import('@/messages/fa')).default,
 }
 
 /** `fallback` with `override` laid over it, key by key: a missing translation shows English. */

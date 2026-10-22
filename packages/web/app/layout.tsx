@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { VercelInsights } from '@/components/VercelInsights'
-import { Geist, Geist_Mono } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -9,21 +8,14 @@ import { PostHogProvider } from '@/components/posthog-provider'
 import { DeferredOnLoad } from '@/components/DeferredOnLoad'
 import { CookieConsentBanner } from '@/components/consent/CookieConsentBanner'
 import { ConsentedGoogleAnalytics } from '@/components/consent/ConsentedGoogleAnalytics'
-import { getMetadataBase } from '@/lib/utils'
+import { cn, getMetadataBase } from '@/lib/utils'
 import { siteMetadata } from '@/lib/seo'
 import { clientMessages, type Messages } from '@/i18n/messages'
 import { DEFAULT_LOCALE, isAppLocale, localeDirection, type AppLocale } from '@/i18n/locales'
 import { noFlashThemeScript } from '@/lib/themeScript'
+import { geistMono, geistSans, scriptFontClass } from '@/lib/fonts'
+import { LocaleDirectionProvider } from '@/components/DirectionProvider'
 import './globals.css'
-
-const geistSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist-sans',
-})
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
-})
 
 /**
  * The request's locale: the `[locale]` segment for the translated site (the proxy passes it in a
@@ -46,7 +38,11 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-/** `lang` and `dir` follow the active locale; Client Components get their namespaces of its catalog. */
+/**
+ * `lang` and `dir` follow the active locale, and so do Radix's direction (DirectionProvider) and,
+ * for Arabic, Hebrew and Persian, the script font (lib/fonts.ts). Client Components get
+ * their namespaces of its catalog.
+ */
 export default async function RootLayout({
   children,
 }: {
@@ -60,14 +56,16 @@ export default async function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashThemeScript }} />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
+      <body className={cn(geistSans.variable, geistMono.variable, scriptFontClass(locale), 'font-sans')}>
         <NextIntlClientProvider locale={locale} messages={clientMessages(messages)}>
-          <ThemeProvider>
-            {children}
-            <AppToaster />
-            {/* Asks before Google Analytics and PostHog may use cookies (lib/consent.ts). */}
-            <CookieConsentBanner />
-          </ThemeProvider>
+          <LocaleDirectionProvider locale={locale}>
+            <ThemeProvider>
+              {children}
+              <AppToaster />
+              {/* Asks before Google Analytics and PostHog may use cookies (lib/consent.ts). */}
+              <CookieConsentBanner />
+            </ThemeProvider>
+          </LocaleDirectionProvider>
         </NextIntlClientProvider>
         {/* Measurement loads after the page has, never during it: it needs none of the first
             paint's bandwidth or main-thread time. Both follow the visitor's cookie choice. */}

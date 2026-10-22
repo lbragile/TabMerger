@@ -72,9 +72,9 @@ export function ErrorBoundaryView({ error, retry, reset, context, as = 'div', cl
       >
         {error.digest ? <ReferenceId digest={error.digest} /> : null}
         {process.env.NODE_ENV === 'development' && error.message ? (
-          <details className="mt-6 w-full max-w-full border border-dashed border-border2 bg-surface2 p-3 text-left text-xs">
+          <details className="mt-6 w-full max-w-full border border-dashed border-border2 bg-surface2 p-3 text-start text-xs">
             <summary className="cursor-pointer font-medium text-text2">{t('devDetails')}</summary>
-            <pre className="mt-2 whitespace-pre-wrap break-words font-mono text-text2">{error.message}</pre>
+            <pre dir="auto" className="mt-2 whitespace-pre-wrap break-words text-start font-mono text-text2">{error.message}</pre>
           </details>
         ) : null}
       </ErrorPageShell>

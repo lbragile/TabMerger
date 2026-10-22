@@ -80,14 +80,15 @@ export function ReviewCard({ review, hidden = false }: { review: StoreReview; hi
         <time dateTime={review.date} className="shrink-0 whitespace-nowrap">
           {formatMonth(review.date, locale)}
         </time>
-        <span className="ml-auto min-w-0 truncate">{storeLabel}</span>
+        <span className="ms-auto min-w-0 truncate">{storeLabel}</span>
       </div>
-      <p className="text-[0.84375rem] leading-relaxed line-clamp-5 whitespace-pre-line">&ldquo;{review.quote}&rdquo;</p>
+      {/* A store review keeps its own direction (most are English), not the page's. */}
+      <p dir="auto" className="text-[0.84375rem] leading-relaxed line-clamp-5 whitespace-pre-line text-start">&ldquo;{review.quote}&rdquo;</p>
       <p className="text-[0.75rem] text-text3 mt-auto pt-2 flex items-center gap-1.5 min-w-0">
         <span aria-hidden="true" className="shrink-0 [&>svg]:block [&>svg]:h-3.5 [&>svg]:w-3.5">
           <StoreIcon />
         </span>
-        <span className="min-w-0 truncate" title={review.author}>
+        <span dir="auto" className="min-w-0 truncate" title={review.author}>
           {review.author}
         </span>
         <a
@@ -95,7 +96,7 @@ export function ReviewCard({ review, hidden = false }: { review: StoreReview; hi
           target="_blank"
           rel="noopener noreferrer"
           tabIndex={hidden ? -1 : undefined}
-          className="ml-auto shrink-0 whitespace-nowrap pl-1.5 underline underline-offset-2 hover:text-foreground"
+          className="ms-auto shrink-0 whitespace-nowrap ps-1.5 underline underline-offset-2 hover:text-foreground"
         >
           {t('readFull')}
           <span className="sr-only">

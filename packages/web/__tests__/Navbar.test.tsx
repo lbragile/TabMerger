@@ -71,15 +71,31 @@ describe('Navbar', () => {
     expect(screen.getByRole('button', { name: 'Toggle theme' })).toBeInTheDocument()
   })
 
-  it('puts the language button just before the theme toggle, from md, icon-only below lg', async () => {
+  it('puts the language button just before the theme toggle at every width, icon-only below lg', async () => {
     await act(async () => {
       render(await Navbar())
     })
     const language = await screen.findByRole('button', { name: 'Language: English (EN)' })
     expect(language.nextElementSibling).toBe(screen.getByRole('button', { name: 'Toggle theme' }))
-    expect(language).toHaveClass('hidden', 'md:inline-flex')
+    // Shown on phones too: nothing hides it at any breakpoint.
+    expect(language.className).not.toMatch(/(^|\s)hidden(\s|$)/)
+    expect(language.className).not.toMatch(/md:inline-flex/)
+    // The same 2.25rem bordered box as the theme toggle once the code is hidden.
+    expect(language).toHaveClass('h-9', 'border-border2', 'px-[0.5625rem]')
     expect(language).toHaveTextContent('EN')
     expect(language.querySelector('span')).toHaveClass('hidden', 'lg:inline')
+  })
+
+  it('opens the 18-language menu from the header button (the phone picker too)', async () => {
+    const user = userEvent.setup()
+    await act(async () => {
+      render(await Navbar())
+    })
+    await user.click(await screen.findByRole('button', { name: 'Language: English (EN)' }))
+    expect(screen.getAllByRole('menuitemradio')).toHaveLength(18)
+    expect(screen.getByRole('searchbox')).toHaveFocus()
+    // Capped to the viewport on a phone.
+    expect(screen.getByRole('menu').className).toContain('max-w-[calc(100vw-2rem)]')
   })
 
   it('shows sign-in controls when logged out', async () => {

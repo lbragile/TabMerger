@@ -1,7 +1,10 @@
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronDown } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LOCALE_PREFERENCE_AUTO, localePreferenceChoices, localePreferenceLabel, type LocalePreference } from '@/lib/localePreference';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { LanguagePicker } from '@/components/LanguagePicker';
+import { LOCALE_PREFERENCE_AUTO, localePreferenceLabel, type LocalePreference } from '@/lib/localePreference';
 
 interface LanguageSettingProps {
   value: LocalePreference;
@@ -9,30 +12,53 @@ interface LanguageSettingProps {
 }
 
 /**
- * Settings → General: "Language". "Browser default" first, then every shipped language by its own
- * name (a reader finds theirs whatever the UI is shown in), each marked with its `lang` so screen
- * readers pronounce it right. Only changes the draft: Settings' "Save changes" applies it.
+ * Settings → General: "Language". A button showing the draft opens the same searchable list as
+ * the header's language menu (`LanguagePicker`): "Browser default" first, then every shipped
+ * language by its own name (a reader finds theirs whatever the UI is shown in), each marked with
+ * its `lang` so screen readers pronounce it right. Only changes the draft: Settings' "Save
+ * changes" applies it.
  */
 export function LanguageSetting({ value, onChange }: LanguageSettingProps) {
   const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const labelId = useId();
+  const valueId = useId();
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="min-w-0 flex-1">
-        <Label className="text-sm">{t('settings.general.languageLabel')}</Label>
+        <Label id={labelId} className="text-sm">{t('settings.general.languageLabel')}</Label>
         <p className="text-xs text-muted-foreground">{t('settings.general.languageDescription')}</p>
       </div>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-40 h-7 text-xs shrink-0" aria-label={t('settings.general.languageLabel')}>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {localePreferenceChoices().map((choice) => (
-            <SelectItem key={choice} value={choice} lang={choice === LOCALE_PREFERENCE_AUTO ? undefined : choice}>
-              {localePreferenceLabel(choice, t('settings.general.languageAuto'))}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            // "Language Deutsch": the row's label, then the value
+            aria-labelledby={`${labelId} ${valueId}`}
+            className="flex h-7 w-40 shrink-0 items-center justify-between gap-2 border border-input bg-transparent px-3 text-xs shadow-xs focus:outline-none focus:ring-1 focus:ring-ring"
+            data-testid="settings-language"
+          >
+            <span id={valueId} className="truncate" lang={value === LOCALE_PREFERENCE_AUTO ? undefined : value}>
+              {localePreferenceLabel(value, t('settings.general.languageAuto'))}
+            </span>
+            <ChevronDown className="h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          collisionPadding={8}
+          className="flex w-80 max-h-[min(20rem,var(--radix-popover-content-available-height))] flex-col p-0"
+          data-testid="settings-language-list"
+        >
+          <LanguagePicker
+            value={value}
+            onPick={(choice) => {
+              setOpen(false);
+              onChange(choice);
+            }}
+          />
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

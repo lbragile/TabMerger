@@ -81,7 +81,7 @@ export function SessionCard({
     // to min-width:auto and a hard-coded w-[280px] side panel that didn't fit at 3-up.
     <div className="min-w-0 border border-border rounded-lg overflow-hidden bg-surface p-4 transition-shadow duration-200 hover:shadow-sh2">
       <div className="flex items-start justify-between gap-2 mb-2">
-        <h3 className="font-bold truncate min-w-0" style={{ fontSize: '17px' }}>{locked ? t('lockedName') : name}</h3>
+        <h3 dir="auto" className="font-bold truncate min-w-0 text-start" style={{ fontSize: '17px' }}>{locked ? t('lockedName') : name}</h3>
         <div className="flex items-center gap-1 shrink-0">
           <TooltipProvider>
             {onRestore && (
@@ -152,7 +152,7 @@ export function SessionCard({
       )}
       <p className="text-[12px] text-text2 mb-3">{formatDateTime(createdAt, locale)}</p>
       {description && (
-        <p className="text-[12px] italic text-text2 mb-3 truncate">{description}</p>
+        <p dir="auto" className="text-[12px] italic text-text2 mb-3 truncate text-start">{description}</p>
       )}
 
       {/* Contents — collapsed by default, mirrors GroupGrid's "Show tabs" pattern instead
@@ -163,7 +163,7 @@ export function SessionCard({
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls={contentsId}
-            className="text-xs text-text2 hover:text-foreground px-2 py-1 -ml-2 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
+            className="text-xs text-text2 hover:text-foreground px-2 py-1 -ms-2 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
           >
             {open ? t('sessions.hideContents') : t('sessions.showContents', { count: groups!.length })}
           </button>
@@ -208,25 +208,29 @@ export function SessionGroupsPreview({
                 className="w-2 h-2 rounded-full shrink-0"
                 style={{ background: group.color ?? 'var(--color-divider)' }}
               />
-              <span className="font-bold text-[12px] truncate flex-1 min-w-0">{group.name ?? t('groupFallbackName', { number: i + 1 })}</span>
+              <span dir="auto" className="font-bold text-[12px] truncate flex-1 min-w-0 text-start">{group.name ?? t('groupFallbackName', { number: i + 1 })}</span>
               <span className="text-[11px] text-muted-foreground shrink-0">{t('groupTabs', { count: allTabs.length })}</span>
             </div>
             {allTabs.slice(0, maxTabs).map((tab, j) => {
               const href = linkTabs ? toHttpUrl(tab.url) : undefined
               return (
-                <p key={j} className="text-[11px] text-muted-foreground truncate pl-4">
-                  {href ? (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline hover:text-foreground">
-                      {tab.title || tab.url}
-                    </a>
-                  ) : (
-                    tab.title || tab.url
-                  )}
+                // The indent stays on the page's start side; the title inside keeps its own
+                // direction, and truncates from its own end, so `dir` goes on the clipping box.
+                <p key={j} className="text-[11px] text-muted-foreground ps-4">
+                  <span dir="auto" className="block truncate text-start">
+                    {href ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline hover:text-foreground">
+                        {tab.title || tab.url}
+                      </a>
+                    ) : (
+                      tab.title || tab.url
+                    )}
+                  </span>
                 </p>
               )
             })}
             {linkTabs && allTabs.length > maxTabs && (
-              <p className="text-[11px] text-muted-foreground pl-4">{t('moreTabs', { count: allTabs.length - maxTabs })}</p>
+              <p className="text-[11px] text-muted-foreground ps-4">{t('moreTabs', { count: allTabs.length - maxTabs })}</p>
             )}
           </div>
         )

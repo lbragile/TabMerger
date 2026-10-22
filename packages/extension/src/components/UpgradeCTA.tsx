@@ -56,7 +56,7 @@ export function UpgradeCTA() {
         {t('banners.upgrade')}
       </button>
       <button
-        className="ml-1 hover:opacity-70 shrink-0"
+        className="ms-1 hover:opacity-70 shrink-0"
         onClick={dismiss}
         aria-label={t('banners.dismiss')}
       >

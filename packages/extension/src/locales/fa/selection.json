@@ -1,0 +1,21 @@
+{
+  "copyToGroup": "کپی به گروه",
+  "moveToGroup": "انتقال به گروه",
+  "star": "ستاره‌دار کردن",
+  "unstar": "برداشتن ستاره",
+  "share": "هم‌رسانی",
+  "shareRequiresPro": "هم‌رسانی به Pro نیاز دارد",
+  "close": "بستن",
+  "delete": "حذف",
+  "cancel": "لغو انتخاب",
+  "linkCopied": "پیوند در بریده‌دان کپی شد",
+  "shareFailed": "هم‌رسانی انجام نشد",
+  "selected_tab_one": "{{count}} زبانه انتخاب شد",
+  "selected_tab_other": "{{count}} زبانه انتخاب شد",
+  "selected_window_one": "{{count}} پنجره انتخاب شد",
+  "selected_window_other": "{{count}} پنجره انتخاب شد",
+  "selected_group_one": "{{count}} گروه انتخاب شد",
+  "selected_group_other": "{{count}} گروه انتخاب شد",
+  "cleared": "انتخاب پاک شد.",
+  "sentence": "{{text}}."
+}

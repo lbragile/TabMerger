@@ -5,6 +5,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Input, type InputProps } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/components/DirectionProvider'
 
 interface PasswordInputProps extends InputProps {
   /** Controlled visibility — pass alongside `showToggle={false}` on a sibling field to mirror
@@ -19,8 +20,12 @@ interface PasswordInputProps extends InputProps {
 }
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ className, visible: visibleProp, onVisibleChange, showToggle = true, ...props }, ref) => {
+  ({ className, visible: visibleProp, onVisibleChange, showToggle = true, dir, ...props }, ref) => {
     const [visibleState, setVisibleState] = React.useState(false)
+    // The page's direction, shown or hidden: the reveal button sits at the page's end side, so
+    // the room kept for it (`pe-9`) must be on that side too. Revealed it is a text input, which
+    // would otherwise get `dir="auto"` and could move the padding to the other side.
+    const pageDir = useDirection()
     const t = useTranslations('common')
     const visible = visibleProp ?? visibleState
     const toggle = () => {
@@ -31,7 +36,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
       <div className="relative w-full">
         <Input
           type={visible ? 'text' : 'password'}
-          className={cn(showToggle ? 'pr-9' : '', className)}
+          dir={dir ?? pageDir}
+          className={cn(showToggle ? 'pe-9' : '', className)}
           ref={ref}
           {...props}
         />
@@ -40,7 +46,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             type="button"
             onClick={toggle}
             aria-label={visible ? t('hidePassphrase') : t('showPassphrase')}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
+            className="absolute inset-e-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
           >
             {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>

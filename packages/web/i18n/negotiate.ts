@@ -58,11 +58,27 @@ export function parseAcceptLanguage(header: string | null | undefined): string[]
 }
 
 /**
+ * A language tag with deprecated aliases replaced by their current form (`Intl.getCanonicalLocales`):
+ * old Hebrew `iw` → `he` (Android and older Java send it), `in` → `id`, `ji` → `yi`. Unchanged
+ * when the runtime rejects the tag. next-intl's own detection for the localized pages already
+ * canonicalizes `Accept-Language` this way (`@formatjs/intl-localematcher`); this keeps the
+ * unsegmented routes and the cookie in step. A no-op for a language that isn't in `locales`.
+ */
+export function canonicalTag(tag: string): string {
+  try {
+    return Intl.getCanonicalLocales(tag)[0] ?? tag
+  } catch {
+    return tag
+  }
+}
+
+/**
  * The supported locale for one language range: an exact match (case-insensitive), else the first
- * locale with the same primary language (`pt` or `pt-PT` → `pt-BR`, `zh-TW` → `zh-CN`).
+ * locale with the same primary language (`pt` or `pt-PT` → `pt-BR`, `zh-TW` → `zh-CN`). The range
+ * is canonicalized first, so `iw-IL` matches `he`.
  */
 function matchRange(range: string, locales: readonly string[]): string | undefined {
-  const lower = range.toLowerCase()
+  const lower = canonicalTag(range).toLowerCase()
   const exact = locales.find((l) => l.toLowerCase() === lower)
   if (exact) return exact
   const base = lower.split('-')[0]
@@ -75,7 +91,11 @@ export function negotiateLocale(
   locales: readonly string[],
   defaultLocale: string
 ): string {
-  if (cookieLocale && locales.includes(cookieLocale)) return cookieLocale
+  if (cookieLocale) {
+    if (locales.includes(cookieLocale)) return cookieLocale
+    const canonical = canonicalTag(cookieLocale)
+    if (locales.includes(canonical)) return canonical
+  }
   for (const range of parseAcceptLanguage(acceptLanguage)) {
     const match = matchRange(range, locales)
     if (match) return match

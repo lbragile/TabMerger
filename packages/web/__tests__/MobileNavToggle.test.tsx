@@ -75,20 +75,13 @@ describe('MobileNavToggle GitHub row', () => {
   })
 })
 
-describe('MobileNavToggle language row', () => {
-  it('sits after the GitHub row, opens the language menu, and is gone with the panel', async () => {
-    const user = await openPanel(Promise.resolve(10))
-    const row = await screen.findByRole('button', { name: 'Language: English (EN)' })
-    expect(row).toHaveTextContent('Language')
-    expect(row).toHaveTextContent('English')
-    expect(screen.getByRole('link', { name: 'TabMerger on GitHub, 10 stars' }).nextElementSibling).toBe(row)
-
-    await user.click(row)
-    expect(screen.getAllByRole('menuitemradio')).toHaveLength(15)
-    await user.keyboard('{Escape}')
-
-    await user.click(screen.getByRole('button', { name: 'Close menu' }))
-    expect(screen.queryByRole('button', { name: 'Language: English (EN)' })).not.toBeInTheDocument()
+describe('MobileNavToggle language', () => {
+  // The header's language button shows at every width, and the bar stays visible with the panel
+  // open: a row here would put two pickers on screen. Navbar.test.tsx covers the header button.
+  it('has no language picker of its own', async () => {
+    await openPanel(Promise.resolve(10))
+    await screen.findByRole('link', { name: 'TabMerger on GitHub, 10 stars' })
+    expect(screen.queryByRole('button', { name: /^Language/ })).not.toBeInTheDocument()
   })
 })
 

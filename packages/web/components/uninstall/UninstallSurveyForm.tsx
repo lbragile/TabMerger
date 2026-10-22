@@ -54,7 +54,7 @@ function WindowCard({ children }: { children: ReactNode }) {
   return (
     <div className="min-w-0 overflow-hidden border border-border bg-card shadow-sh3">
       <div aria-hidden="true" className="flex items-end gap-1 border-b border-border bg-surface2 px-2 pt-2">
-        <span className="mb-2.5 mr-1.5 flex gap-1">
+        <span className="mb-2.5 me-1.5 flex gap-1">
           <span className="h-2 w-2 rounded-full bg-border2" />
           <span className="h-2 w-2 rounded-full bg-border2" />
           <span className="h-2 w-2 rounded-full bg-border2" />
@@ -241,7 +241,7 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
             }}
             aria-describedby={cn(countId, answerError && answerErrorId)}
           />
-          <p id={countId} className="text-right text-xs tabular-nums text-text2">
+          <p id={countId} className="text-end text-xs tabular-nums text-text2">
             {t('characterCount', { count: details.length, max: UNINSTALL_SURVEY_LIMITS.details })}
           </p>
         </div>
@@ -280,7 +280,7 @@ export function UninstallSurveyForm({ version, browser, channel }: UninstallSurv
         </div>
 
         {/* Honeypot: hidden from people and screen readers; bots that fill every field give themselves away. */}
-        <div aria-hidden="true" inert className="absolute -left-[625rem] h-px w-px overflow-hidden">
+        <div aria-hidden="true" inert className="absolute -inset-s-[625rem] h-px w-px overflow-hidden">
           <label htmlFor={`${id}-website`}>{t('honeypot')}</label>
           <input
             id={`${id}-website`}

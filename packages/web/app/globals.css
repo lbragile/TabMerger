@@ -43,7 +43,9 @@
   --shadow-sh1: var(--sh1);
   --shadow-sh2: var(--sh2);
   --shadow-sh3: var(--sh3);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* --font-script: the right-to-left locales' script font, set on <body> for those locales only
+     (lib/fonts.ts). Geist has no Arabic or Hebrew letters, so they fall through to it. */
+  --font-sans: var(--font-geist-sans), var(--font-script, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 0.125rem);
@@ -124,15 +126,18 @@ button:disabled,
 
 /* Dismiss button: sonner draws a bordered circle hanging off the toast's corner, filled and
    outlined with the toast's own colours, so with our strong borders it read as a stray box.
-   Here it sits inside the top-right corner as a plain ✕, like the in-page banners' dismiss
-   button, with a faint square hover. `[data-sonner-theme]` out-ranks sonner's rich-colors and
-   dark-theme rules for this button. The toast gets room on the right so text can't run under it. */
+   Here it sits inside the top end corner (top-right, top-left right to left) as a plain ✕, like
+   the in-page banners' dismiss button, with a faint square hover. `[data-sonner-theme]` out-ranks
+   sonner's rich-colors and dark-theme rules for this button. The toast gets room on the end side
+   so text can't run under it. Logical properties: sonner sets `dir` on the toaster. */
 [data-sonner-toaster][data-sonner-theme] [data-sonner-toast][data-styled='true']:has([data-close-button]) {
-  padding-right: 2.5rem;
+  padding-inline-end: 2.5rem;
 }
 [data-sonner-toaster][data-sonner-theme] [data-sonner-toast][data-styled='true'] [data-close-button] {
   left: auto;
-  right: 0.5rem;
+  right: auto;
+  inset-inline-start: auto;
+  inset-inline-end: 0.5rem;
   top: 0.5rem;
   width: 1.5rem;
   height: 1.5rem;
@@ -289,6 +294,13 @@ button:disabled,
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Free-text fields are dir="auto" (components/ui/input.tsx, textarea.tsx), so what is typed
+     keeps its own direction. An empty one has no text to take a direction from, and browsers
+     then lay it out left to right: an Arabic or Hebrew placeholder sat at the left. While the
+     placeholder shows, the field follows the page instead. */
+  :where(input, textarea)[dir='auto']:placeholder-shown {
+    direction: inherit;
   }
 }
 

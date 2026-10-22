@@ -89,12 +89,12 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
                 {PLAN_NAME_KEYS[plan.id] ? t(PLAN_NAME_KEYS[plan.id]) : plan.name}
                 {plan.monthlyPrice > 0 && t('upgrade.planPrice', { price: formatNumber(plan.monthlyPrice, { style: 'currency', currency: 'USD' }) })}
                 {plan.id === 'pro_ai' && proAiComingSoon && (
-                  <span className="ml-1 text-muted-foreground font-normal">
+                  <span className="ms-1 text-muted-foreground font-normal">
                     {t('upgrade.comingSoonParen', { label: t('upgrade.comingSoon') })}
                   </span>
                 )}
               </div>
-              <ul className="text-muted-foreground space-y-0.5 ml-2">
+              <ul className="text-muted-foreground space-y-0.5 ms-2">
                 {(PLAN_FEATURE_KEYS[plan.id] ?? []).map((key) => (
                   <li key={key}>{t(key, FREE_TIER_LIMITS)}</li>
                 ))}

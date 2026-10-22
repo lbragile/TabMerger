@@ -1,0 +1,79 @@
+{
+  "instructions": "برای برداشتن Space را بزنید، با کلیدهای جهت‌نما جای مقصد را انتخاب کنید (چپ و راست بین پنجره‌ها و گروه‌ها جابه‌جا می‌شوند)، برای رها کردن Space و برای لغو Escape را بزنید. برای جابه‌جا کردن چند مورد با هم، Shift+Space یک بازه و {{modifier}}+A همه را انتخاب می‌کند.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "زبانه",
+    "window": "پنجره",
+    "group": "گروه",
+    "item": "مورد"
+  },
+  "typeStart": {
+    "tab": "زبانه",
+    "window": "پنجره",
+    "group": "گروه",
+    "item": "مورد"
+  },
+  "untitledTab": "زبانهٔ بی‌نام",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}، با شروع از {{name}}،",
+  "position": {
+    "tab": "جایگاه {{index}} از {{total}} در {{window}} از گروه {{group}}",
+    "window": "جایگاه {{index}} از {{total}} در گروه {{group}}",
+    "group": "جایگاه {{index}} از {{total}}"
+  },
+  "target": {
+    "newGroup": "یک گروه جدید",
+    "newWindowAtEnd": "یک پنجرهٔ جدید در انتهای گروه {{group}}",
+    "nowOpen": "هم‌اکنون باز، که آن‌ها را در یک پنجرهٔ جدید مرورگر باز می‌کند",
+    "groupAsWindow": "گروه {{group}}، به‌صورت یک پنجرهٔ جدید"
+  },
+  "token": {
+    "dropped": "رها شد.",
+    "cancelled": "لغو شد."
+  },
+  "bail": {
+    "cancelled": "جابه‌جایی لغو شد.",
+    "nothingMoved": "رها شد؛ چیزی جابه‌جا نشد.",
+    "returnedMany": "{{items}} برگشتند",
+    "returnedOne": "{{named}} برگشت",
+    "noop": "{{what}} دوباره در {{position}} رها شد؛ چیزی جابه‌جا نشد.",
+    "stale": "گروه‌ها در حین کشیدن تغییر کردند، پس چیزی جابه‌جا نشد. {{returned}} به {{position}}.",
+    "cancelledReturned": "جابه‌جایی لغو شد. {{returned}} به {{position}}.",
+    "rejected": "نمی‌توان آنجا رها کرد. {{returned}} به {{position}}."
+  },
+  "removedElsewhere_one": "{{count}} مورد در جای دیگری حذف شد.",
+  "removedElsewhere_other": "{{count}} مورد در جای دیگری حذف شدند.",
+  "stillSelected_one": "هنوز انتخاب‌شده است.",
+  "stillSelected_other": "هنوز انتخاب‌شده هستند.",
+  "dropped": "رها شد.",
+  "movedGroups": "{{count}} گروه به‌صورت یک دسته به {{position}} منتقل شدند.",
+  "movedGroup": "گروه {{name}} به {{position}} منتقل شد.",
+  "partial": "{{count}} از {{total}}",
+  "at": "جایگاه {{index}} از {{total}}",
+  "startingAt": "با شروع از جایگاه {{index}} از {{total}}",
+  "whereTab": "{{window}} از گروه {{group}}، {{at}}",
+  "whereWindow": "گروه {{group}}، {{at}}",
+  "movedTo": "{{items}} به {{where}} منتقل شد.",
+  "openTabsClosed": " زبانه‌های باز بسته شدند.",
+  "groupHidden": " گروه {{group}} نمایش داده نمی‌شود.",
+  "openedNewWindow": "{{items}} در یک پنجرهٔ جدید مرورگر باز شد.",
+  "openedNowOpen": "{{items}} در هم‌اکنون باز باز شد.",
+  "movedNewWindow": "{{items}} به یک پنجرهٔ جدید مرورگر منتقل شد.",
+  "movedWithinNowOpen": "{{items}} درون هم‌اکنون باز جابه‌جا شد.",
+  "originalPosition": "روی جایگاه اصلی‌اش.",
+  "pickedUpType": "{{type}} برداشته شد.",
+  "pickedUpMany": "{{what}} برداشته شد.",
+  "pickedUpOne": "{{type}} {{name}} برداشته شد، {{position}}.",
+  "groupShown": "گروه {{name}} اکنون نمایش داده می‌شود.",
+  "copyHint": "رها کردن در یک گروه ذخیره‌شده، کپی می‌کند؛ زبانه‌های باز همچنان باز می‌مانند.",
+  "notOver": "روی هیچ مقصدی نیست.",
+  "over": "روی {{target}}.",
+  "cantDropOn": "نمی‌توان روی {{target}} رها کرد.",
+  "typeDropped": "{{type}} رها شد.",
+  "cancelledReturnedType": "جابه‌جایی لغو شد؛ {{type}} به جای خود برگشت.",
+  "saveFailed": "جابه‌جایی ذخیره نشد؛ به حالت قبل برگشت."
+}

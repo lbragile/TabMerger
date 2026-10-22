@@ -1,0 +1,27 @@
+{
+  "title": "درون‌ریزی / برون‌بری",
+  "description": "داده‌های TabMerger خود را مدیریت کنید",
+  "tabExport": "برون‌بری",
+  "tabImport": "درون‌ریزی",
+  "exportIntro": "همهٔ گروه‌هایتان را به‌صورت یک فایل JSON برون‌بری کنید. بعداً می‌توانید این فایل را دوباره درون‌ریزی کنید.",
+  "downloadJson": "دانلود JSON",
+  "jsonHeading": "JSON مخصوص TabMerger",
+  "jsonIntro": "درون‌ریزی از یک فایل JSON که قبلاً برون‌بری شده است. جایگزین گروه‌های فعلی می‌شود.",
+  "chooseJson": "انتخاب فایل JSON",
+  "bookmarksHeading": "نشانک‌های Chrome",
+  "bookmarksIntro": "درون‌ریزی از فایل HTML برون‌بری‌شدهٔ نشانک‌های Chrome. هر پوشه به یک گروه تبدیل می‌شود.",
+  "chooseBookmarks": "انتخاب فایل HTML نشانک‌ها",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "درون‌ریزی از فایل متنی برون‌بری‌شدهٔ OneTab. هر بخش که با یک خط خالی جدا شده باشد به یک گروه تبدیل می‌شود.",
+  "chooseOneTab": "انتخاب فایل TXT از OneTab",
+  "toast": {
+    "exported": "گروه‌ها با موفقیت برون‌بری شدند",
+    "imported": "گروه‌ها با موفقیت درون‌ریزی شدند",
+    "imported_skipped": "گروه‌ها با موفقیت درون‌ریزی شدند، {{skipped}} مورد رد شد",
+    "importedCounts": "{{groups}}، {{tabs}} درون‌ریزی شد",
+    "importedCounts_skipped": "{{groups}}، {{tabs}} درون‌ریزی شد، {{skipped}} مورد رد شد",
+    "invalidJson": "فایل JSON نامعتبر است",
+    "noBookmarks": "هیچ نشانکی پیدا نشد",
+    "noTabs": "هیچ زبانه‌ای پیدا نشد"
+  }
+}

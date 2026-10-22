@@ -40,7 +40,7 @@ export function UpgradedBanner({ planName }: Props) {
       <Button
         variant="ghost"
         size="icon"
-        className="-my-1 -mr-1 h-6 w-6 shrink-0 text-ok hover:bg-ok/10 hover:text-ok"
+        className="-my-1 -me-1 h-6 w-6 shrink-0 text-ok hover:bg-ok/10 hover:text-ok"
         onClick={dismiss}
         aria-label={t('dismiss')}
       >

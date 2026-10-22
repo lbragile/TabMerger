@@ -322,7 +322,7 @@ function BackupRow({
             aria-expanded={open}
             aria-controls={contentsId}
             aria-describedby={titleId}
-            className="text-xs text-text2 hover:text-foreground px-2 py-1 -ml-2 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
+            className="text-xs text-text2 hover:text-foreground px-2 py-1 -ms-2 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
           >
             {open ? t('sessions.hideContents') : t('sessions.showContents', { count: groupCount })}
           </button>

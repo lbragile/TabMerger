@@ -21,7 +21,7 @@ interface UrlRulesModalProps {
 function GroupDot({ color }: { color: string }) {
   return (
     <span
-      className="inline-block w-2 h-2 rounded-full mr-1.5 align-middle shrink-0"
+      className="inline-block w-2 h-2 rounded-full me-1.5 align-middle shrink-0"
       style={{ background: color }}
     />
   );
@@ -104,7 +104,7 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
         </DialogDescription>
       </DialogHeader>
 
-      <div className="mt-4 space-y-2 max-h-52 overflow-y-auto pr-1">
+      <div className="mt-4 space-y-2 max-h-52 overflow-y-auto pe-1">
         {draft.length === 0 && (
           <p className="text-xs text-muted-foreground text-center py-4">{t('urlRules.empty')}</p>
         )}
@@ -114,7 +114,7 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
           return (
             <div key={rule.id} className="flex items-center gap-2 text-xs bg-muted/40 px-2 py-1.5">
               <Link className="h-3 w-3 shrink-0 text-muted-foreground" />
-              <span className="flex-1 min-w-0 font-mono truncate" title={rule.pattern}>{rule.pattern}</span>
+              <span dir="ltr" className="flex-1 min-w-0 font-mono truncate text-ui-start" title={rule.pattern}>{rule.pattern}</span>
               <span className="flex items-center shrink-0 max-w-[120px]">
                 {group && <GroupDot color={group.color} />}
                 <span className="truncate" title={group?.name}>{group?.name ?? t('urlRules.deletedGroup')}</span>
@@ -155,7 +155,7 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
           {tier === 'free' && <span className="text-muted-foreground">{t('urlRules.used', { used: draft.length, max: maxUrlRules })}</span>}
         </p>
         <Button size="sm" variant="outline" onClick={() => setAddOpen(true)} disabled={atLimit}>
-          <Plus className="h-3 w-3 mr-1" />{t('urlRules.addRule')}
+          <Plus className="h-3 w-3 me-1" />{t('urlRules.addRule')}
         </Button>
       </div>
 
@@ -225,6 +225,7 @@ function AddUrlRuleModal({ open, onClose, onSubmit, savedGroups, initialRule }: 
         </DialogHeader>
         <div className="space-y-2 mt-2">
           <Input
+            dir="ltr"
             placeholder={t('urlRules.patternPlaceholder')}
             value={pattern}
             onChange={(e) => setPattern(e.target.value)}
@@ -240,7 +241,7 @@ function AddUrlRuleModal({ open, onClose, onSubmit, savedGroups, initialRule }: 
               {savedGroups.map((g) => (
                 <SelectItem key={g.id} value={g.id} className="text-xs">
                   <GroupDot color={g.color} />
-                  {g.name}
+                  <bdi>{g.name}</bdi>
                 </SelectItem>
               ))}
             </SelectContent>

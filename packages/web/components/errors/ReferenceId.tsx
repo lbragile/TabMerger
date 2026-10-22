@@ -34,15 +34,15 @@ export function ReferenceId({ digest }: { digest: string }) {
   return (
     <div className="mt-6 flex w-full flex-col items-center gap-2">
       <div className="flex max-w-full items-center border border-border bg-surface2 text-[0.8125rem]">
-        <span className="shrink-0 border-r border-border px-2.5 py-1.5 text-text3">{t('referenceId')}</span>
-        <code className="min-w-0 truncate px-2.5 py-1.5 font-mono text-foreground" data-testid="error-reference-id">
+        <span className="shrink-0 border-e border-border px-2.5 py-1.5 text-text3">{t('referenceId')}</span>
+        <code dir="ltr" className="min-w-0 truncate px-2.5 py-1.5 font-mono text-foreground" data-testid="error-reference-id">
           {id}
         </code>
         <button
           type="button"
           onClick={handleCopy}
           aria-label={t('copyReferenceId')}
-          className="grid h-8 w-8 shrink-0 place-items-center border-l border-border text-text2 transition-colors hover:bg-surface3 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+          className="grid h-8 w-8 shrink-0 place-items-center border-s border-border text-text2 transition-colors hover:bg-surface3 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         >
           {state === 'copied' ? (
             <Check className="h-3.5 w-3.5 text-ok" aria-hidden="true" />

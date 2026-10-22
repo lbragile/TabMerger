@@ -1,0 +1,10 @@
+{
+  "comingSoon": "قريبًا",
+  "listTwo": "{first} و{second}",
+  "listMany": "{rest} و{last}",
+  "listSeparator": "، ",
+  "opensInNewTab": " (يفتح في علامة تبويب جديدة)",
+  "close": "إغلاق",
+  "showPassphrase": "إظهار عبارة المرور",
+  "hidePassphrase": "إخفاء عبارة المرور"
+}

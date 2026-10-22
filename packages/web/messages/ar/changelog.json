@@ -1,0 +1,15 @@
+{
+  "metaTitle": "سجل التغييرات",
+  "metaDescription": "الميزات الجديدة والتحسينات والإصلاحات في TabMerger.",
+  "title": "سجل التغييرات",
+  "lead": "كل ما أطلقناه، الأحدث أولًا.",
+  "githubRelease": "إصدار GitHub",
+  "githubReleaseLabel": "الإصدار {version} على GitHub",
+  "prLinkLabel": "طلب الدمج #{number} على GitHub",
+  "majorRelease": "إصدار رئيسي",
+  "types": {
+    "New": "جديد",
+    "Improved": "محسّن",
+    "Fixed": "مُصلَح"
+  }
+}

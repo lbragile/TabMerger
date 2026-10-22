@@ -1,4 +1,8 @@
 {
   "label": "Ngôn ngữ",
-  "trigger": "Ngôn ngữ: {language} ({code})"
+  "trigger": "Ngôn ngữ: {language} ({code})",
+  "searchPlaceholder": "Tìm ngôn ngữ (vd. tiếng Đức, de)",
+  "searchLabel": "Tìm ngôn ngữ theo tên hoặc mã",
+  "noResults": "Không tìm thấy ngôn ngữ",
+  "rightToLeft": "Từ phải sang trái"
 }

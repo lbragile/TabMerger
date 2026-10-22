@@ -27,6 +27,7 @@ import type { CatalogSet } from '@/locales';
 import type { Catalog } from '@/locales/en';
 import { PSEUDO_LOCALE, pseudoLocalizeCatalog } from '@/lib/pseudoLocale';
 import {
+    canonicalLanguageTag,
     onLocalePreferenceChanged,
     preferredLanguageTag,
     readLocalePreference,
@@ -51,7 +52,8 @@ function browserUiLanguage(): string | undefined {
 /** The shipped catalog for a BCP 47 tag: the exact tag, else its language ("pt-BR" -> "pt"), else English. */
 export function resolveLocale(tag: string | undefined): SupportedLocale {
     if (!tag) return DEFAULT_LOCALE;
-    const normalized = tag.replace('_', '-').toLowerCase();
+    // `iw` (Hebrew's retired code, which Chrome still reports on some platforms) reads as `he`
+    const normalized = canonicalLanguageTag(tag).toLowerCase();
     const shipped = SUPPORTED_LOCALES as readonly string[];
     const exact = shipped.find((l) => l.toLowerCase() === normalized);
     if (exact && isSupportedLocale(exact)) return exact;
@@ -211,14 +213,24 @@ export function formatTimeAgo(ms: number, { now = Date.now(), round = false }: {
     return t('common.time.daysAgo', { count: unit(DAY) });
 }
 
+/**
+ * In a right-to-left language, each list item wrapped in a first-strong isolate (U+2068…U+2069).
+ * Otherwise a comma between two Latin items ("example.com, tabmerger.com") joins them into one
+ * left-to-right run, and the list reads in the wrong order inside the Hebrew or Arabic sentence.
+ * Left-to-right languages get the items unchanged.
+ */
+function isolateItemsForRtl(items: readonly string[]): readonly string[] {
+    return i18n.dir(activeLocale()) === 'rtl' ? items.map((item) => `⁨${item}⁩`) : items;
+}
+
 /** A list joined with "and" the way the active locale writes it: "a and b" in English. */
 export function formatAndList(items: readonly string[]): string {
-    return new Intl.ListFormat(activeLocale(), { type: 'conjunction', style: 'long' }).format(items);
+    return new Intl.ListFormat(activeLocale(), { type: 'conjunction', style: 'long' }).format(isolateItemsForRtl(items));
 }
 
 /** A list joined the way the active locale writes one without "and": "a, b, c" in English. */
 export function formatList(items: readonly string[]): string {
-    return new Intl.ListFormat(activeLocale(), { type: 'unit', style: 'long' }).format(items);
+    return new Intl.ListFormat(activeLocale(), { type: 'unit', style: 'long' }).format(isolateItemsForRtl(items));
 }
 
 /**

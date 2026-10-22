@@ -171,7 +171,8 @@ describe('reference ID', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Copy reference ID' }))
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Reference ID copied'))
     expect(writeText).toHaveBeenCalledWith('2741596873')
-  })
+    // ~1 s alone: three accessible-name role queries (getByRole) are slow in jsdom, 5x slower under load.
+  }, 20_000)
 
   it('announces a failed copy', async () => {
     writeText.mockRejectedValue(new Error('denied'))

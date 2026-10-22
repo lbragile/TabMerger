@@ -149,7 +149,7 @@ export function SelectionActionBar() {
               className="h-7 px-2 text-xs gap-1"
               disabled={isPending}
             >
-              {isNowOpen ? <Copy className="h-3.5 w-3.5" /> : <MoveRight className="h-3.5 w-3.5" />}
+              {isNowOpen ? <Copy className="h-3.5 w-3.5" /> : <MoveRight className="h-3.5 w-3.5 rtl:-scale-x-100" />}
               {isNowOpen ? t('selection.copyToGroup') : t('selection.moveToGroup')}
             </Button>
           </DropdownMenuTrigger>
@@ -161,10 +161,10 @@ export function SelectionActionBar() {
                 onClick={() => bulkMove({ items: selectedItems, targetGroupIndex: index })}
               >
                 <span
-                  className="h-2 w-2 rounded-full shrink-0 mr-2"
+                  className="h-2 w-2 rounded-full shrink-0 me-2"
                   style={{ backgroundColor: group.color }}
                 />
-                <span className="truncate">{group.name}</span>
+                <span dir="auto" className="truncate text-ui-start">{group.name}</span>
               </DropdownMenuItem>
             ))}
             <CreateGroupMenuItem

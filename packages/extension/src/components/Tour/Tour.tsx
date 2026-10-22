@@ -63,6 +63,7 @@ import { trackEvent } from '@/lib/analytics';
 import type { Group, GroupsState } from '@/lib/types';
 import { TourCard, type TourTaskStatus } from './TourCard';
 import { t } from '@/lib/i18n';
+import { isRtl } from '@/lib/direction';
 
 // Sizes in rem, converted to pixels where the positioning maths needs them
 const SPOTLIGHT_PADDING_REM = 0.25;
@@ -611,7 +612,9 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
   const place = useCallback(() => {
     const card = cardRef.current;
     if (!card || !step) return;
-    const docked = { left: tourFrame().width - card.offsetWidth - tourRemToPx(FRAME_MARGIN_REM), top: tourFrame().height - card.offsetHeight - tourRemToPx(FRAME_MARGIN_REM) };
+    const rtl = isRtl();
+    // The bottom end corner: right, or left in a right-to-left UI (the list of groups is on the other side)
+    const docked = { left: rtl ? tourRemToPx(FRAME_MARGIN_REM) : tourFrame().width - card.offsetWidth - tourRemToPx(FRAME_MARGIN_REM), top: tourFrame().height - card.offsetHeight - tourRemToPx(FRAME_MARGIN_REM) };
     const beside = wideCard ? docked : computeCardPosition({
       anchor: spotlight,
       card: { width: card.offsetWidth, height: card.offsetHeight },
@@ -620,7 +623,8 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
       gap: tourRemToPx(CARD_GAP_REM),
       margin: tourRemToPx(FRAME_MARGIN_REM),
       // Beside a dialog there is no room: the corner furthest from its buttons
-      fallbackCorner: taskModalOpen ? 'bottom-left' : undefined
+      fallbackCorner: taskModalOpen ? 'bottom-left' : undefined,
+      direction: rtl ? 'rtl' : 'ltr'
     });
     // Never on top of the control the action ring is on (a dialog, a menu or a popover may put
     // that control where the card was going to sit)
@@ -725,9 +729,11 @@ function TourOverlay({ groups, removePracticeGroup }: TourOverlayProps) {
         // each other would otherwise count as "over" the moment the item is picked up. For a
         // "below" marker the middle is in the gap under the row instead (or on its lower half,
         // from where the item also lands under it).
-        // Across, the copy's LEFT end is what counts: it hangs to the right of the pointer and is
-        // as wide as the row it was taken from, so its middle can be far from where the pointer is.
-        const x = ghost ? ghost.left + Math.min(ghost.width / 2, tourRemToPx(1)) : 0;
+        // Across, the copy's START end is what counts: it hangs towards the line's end from the
+        // pointer (to the right, or to the left in a right-to-left UI) and is as wide as the row it
+        // was taken from, so its middle can be far from where the pointer is.
+        const lead = ghost ? Math.min(ghost.width / 2, tourRemToPx(1)) : 0;
+        const x = ghost ? (isRtl() ? ghost.right - lead : ghost.left + lead) : 0;
         const y = ghost ? ghost.top + ghost.height / 2 : 0;
         let over = false;
         if (box && ghost && ghost.width > 0) {

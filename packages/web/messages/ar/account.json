@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "الآن",
+    "minutesAgo": "منذ {count} د",
+    "hoursAgo": "منذ {count} س",
+    "daysAgo": "منذ {count} ي",
+    "renameFailed": "تعذّرت إعادة تسمية الجهاز",
+    "renamed": "تمت إعادة تسمية الجهاز",
+    "removeFailed": "تعذّرت إزالة الجهاز",
+    "removed": "تمت إزالة الجهاز",
+    "removeManyFailed": "تعذّرت إزالة الأجهزة",
+    "removedMany": "{count, plural, zero {تمت إزالة {count} جهاز} one {تمت إزالة جهاز واحد} two {تمت إزالة جهازين} few {تمت إزالة {count} أجهزة} many {تمت إزالة {count} جهازًا} other {تمت إزالة {count} جهاز}}",
+    "empty": "لا توجد أجهزة بعد.",
+    "selectAll": "تحديد كل الأجهزة",
+    "selectedCount": "تم تحديد {count}",
+    "removeSelected": "{count, plural, zero {إزالة {count} جهاز} one {إزالة جهاز واحد} two {إزالة جهازين} few {إزالة {count} أجهزة} many {إزالة {count} جهازًا} other {إزالة {count} جهاز}}",
+    "selectDevice": "تحديد {name}",
+    "active": "نشط {time}",
+    "snapshotCounts": " · {windows, plural, zero {{windows} نافذة} one {نافذة واحدة} two {نافذتان} few {{windows} نوافذ} many {{windows} نافذة} other {{windows} نافذة}} · {tabs, plural, zero {{tabs} علامة تبويب} one {علامة تبويب واحدة} two {علامتا تبويب} few {{tabs} علامات تبويب} many {{tabs} علامة تبويب} other {{tabs} علامة تبويب}}",
+    "options": "خيارات الجهاز",
+    "rename": "إعادة تسمية",
+    "remove": "إزالة",
+    "removeTitle": "إزالة الجهاز؟",
+    "removeBody": "لن يزامن «{name}» بيانات علامات التبويب بعد الآن. لا يمكن التراجع عن ذلك.",
+    "removeManyTitle": "إزالة {count} من الأجهزة؟",
+    "removeManyBody": "لن تزامن هذه الأجهزة بيانات علامات التبويب بعد الآن. لا يمكن التراجع عن ذلك.",
+    "cancel": "إلغاء"
+  },
+  "metaTitle": "الحساب",
+  "title": "إعدادات الحساب",
+  "lead": "أدِر حسابك واشتراكك.",
+  "stats": {
+    "groups": "المجموعات المتزامنة",
+    "tabs": "علامات التبويب المحفوظة",
+    "sessions": "الجلسات والنسخ الاحتياطية",
+    "aiCredits": "رصيد الذكاء الاصطناعي المتبقي"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "description": "معلومات حسابك.",
+    "email": "البريد الإلكتروني",
+    "memberSince": "عضو منذ"
+  },
+  "signOutAll": {
+    "title": "تسجيل الخروج من كل الأجهزة",
+    "description": "سيؤدي هذا إلى إلغاء كل الجلسات النشطة.",
+    "button": "تسجيل الخروج"
+  },
+  "subscription": {
+    "title": "الاشتراك",
+    "description": "أدِر خطتك والفوترة.",
+    "manageBilling": "إدارة الفوترة",
+    "upgrade": "ترقية",
+    "cancelNote": "يمكنك الإلغاء في أي وقت عبر <strong>إدارة الفوترة</strong>. يبقى وصولك متاحًا حتى نهاية فترة الفوترة الحالية."
+  },
+  "devicesCard": {
+    "title": "الأجهزة",
+    "description": "الأجهزة التي تزامن مجموعاتك وعلامات التبويب. لخطتَي Pro وPro AI فقط."
+  },
+  "password": {
+    "tooShort": "يجب أن تتكوّن كلمة المرور من 8 أحرف على الأقل.",
+    "updated": "تم تحديث كلمة المرور",
+    "set": "تم تعيين كلمة المرور — يمكنك الآن تسجيل الدخول بالبريد الإلكتروني وكلمة المرور أيضًا",
+    "change": "تغيير كلمة المرور",
+    "setLabel": "تعيين كلمة مرور",
+    "placeholder": "••••••••••",
+    "save": "حفظ"
+  },
+  "credits": {
+    "failed": "تعذّر بدء الدفع",
+    "getMore": "احصل على المزيد"
+  }
+}

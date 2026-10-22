@@ -1,6 +1,6 @@
 import { useLocale } from 'next-intl'
 import { pageMetadata } from '@/lib/seo'
-import { DEFAULT_LOCALE } from '@/i18n/locales'
+import { DEFAULT_LOCALE, localeDirection } from '@/i18n/locales'
 import { Link } from '@/i18n/navigation'
 import { LegalToc } from '@/components/legal-toc'
 import { BACKUP_FILE_COPY } from '@tabmerger/shared'
@@ -33,10 +33,13 @@ const TOC = [
 ]
 
 export default function PrivacyPage() {
-  // Marks the English text as English inside a page in another language (nothing on English pages).
-  const lang = useLocale() === DEFAULT_LOCALE ? undefined : DEFAULT_LOCALE
+  // Marks the English text as English inside a page in another language (nothing on English
+  // pages), and keeps it left to right inside a right-to-left page.
+  const locale = useLocale()
+  const lang = locale === DEFAULT_LOCALE ? undefined : DEFAULT_LOCALE
+  const dir = localeDirection(locale) === 'rtl' ? 'ltr' : undefined
   return (
-    <div className="container py-16 max-w-5xl" lang={lang}>
+    <div className="container py-16 max-w-5xl" lang={lang} dir={dir}>
       {/* Header — brand-soft callout, distinct from Terms' neutral treatment */}
       <div className="mb-11 rounded-none bg-accent border border-primary/20 px-8 py-7">
         <h1 className="text-[34px] font-semibold tracking-tight mb-2.5">Privacy, in plain English</h1>
@@ -98,7 +101,7 @@ export default function PrivacyPage() {
           <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <p>Page previews let you see a small image and description of a tab's page when you hover over it — in the extension's tab preview tooltip, or on a shared link's page. This feature is <strong>off by default</strong> and must be explicitly turned on, either in the extension's Settings or via the "Show page previews" switch on a shared link's page.</p>
             <p>When turned on, hovering a tab sends that tab's web address to TabMerger's preview service (a serverless function we run on Vercel). That service fetches the page's <code className="text-xs bg-muted px-1.5 py-0.5 rounded">og:image</code> and description on your behalf and returns them to you. The address you send:</p>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc ps-5 space-y-1">
               <li>is sent without your account or any other identifier attached. Like any web request it reaches our host, Vercel, from your IP address, but we don&apos;t record or associate the two. The page itself is fetched by our server, so the site you&apos;re previewing sees our server, not you,</li>
               <li>is not logged anywhere by us,</li>
               <li>is not cached or stored, even temporarily — every preview request fetches the page fresh.</li>
@@ -187,7 +190,7 @@ export default function PrivacyPage() {
           <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <div id="cookie-consent" className="scroll-mt-24 space-y-3">
               <p>What happens on your first visit depends on where you are, which our host works out from your IP address:</p>
-              <ul className="list-disc pl-5 space-y-1">
+              <ul className="list-disc ps-5 space-y-1">
                 <li id="consent-ask-first"><span className="font-medium text-foreground">Asked first</span> in the European Economic Area (the EU, Norway, Iceland and Liechtenstein), the United Kingdom (with the Channel Islands, the Isle of Man and Gibraltar), Switzerland and Quebec, and whenever we can&apos;t tell where you are. A small banner at the bottom of the page asks whether you accept analytics cookies, and nothing is loaded before you answer: Google Analytics and PostHog don&apos;t run, set no cookies and record nothing until you press Accept. <span className="font-medium text-foreground">Accept</span> and <span className="font-medium text-foreground">Reject</span> are equal choices, and the site works the same either way.</li>
                 <li id="consent-on-by-default"><span className="font-medium text-foreground">On by default</span> everywhere else. No banner appears; Google Analytics and PostHog (including session replay) run and set their cookies as described above. You can turn them off at any time with Reject in <span className="font-medium text-foreground">Cookie settings</span>.</li>
                 <li id="consent-gpc"><span className="font-medium text-foreground">Global Privacy Control.</span> If your browser sends a Global Privacy Control signal, we treat it as a Reject wherever you are: analytics stay off and no banner asks you. They come on only if you press Accept in Cookie settings yourself.</li>
@@ -195,7 +198,7 @@ export default function PrivacyPage() {
               <p>You can change your choice at any time with <span className="font-medium text-foreground">Cookie settings</span> at the bottom of every page, or here: <CookieSettingsButton label="Cookie settings" className="cursor-pointer font-medium text-foreground underline underline-offset-4 hover:text-primary" />. A change applies straight away: after Reject, Google Analytics stops sending, PostHog stops capturing and recording for the rest of your visit, and the analytics cookies set earlier are deleted.</p>
             </div>
             <p>The TabMerger website sets these cookies:</p>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc ps-5 space-y-1">
               <li id="cookie-sign-in"><span className="font-medium text-foreground">Sign-in</span> (Supabase Auth, names starting with <code className="text-xs bg-muted px-1.5 py-0.5 rounded">sb-</code>): keep you signed in to the web app. They are set only when you sign in and removed when you sign out.</li>
               <li id="cookie-language"><span className="font-medium text-foreground">Language</span> (<code className="text-xs bg-muted px-1.5 py-0.5 rounded">NEXT_LOCALE</code>): remembers the language you chose, or the one you last browsed the site in, so the site opens in that language next time. It holds only a language code such as <code className="text-xs bg-muted px-1.5 py-0.5 rounded">de</code> and lasts one year.</li>
               <li id="cookie-choice"><span className="font-medium text-foreground">Cookie choice</span> (<code className="text-xs bg-muted px-1.5 py-0.5 rounded">tm_consent</code>): remembers whether you accepted or rejected analytics cookies, so you aren&apos;t asked again on every visit. It is set only when you press Accept or Reject, holds only <code className="text-xs bg-muted px-1.5 py-0.5 rounded">granted</code> or <code className="text-xs bg-muted px-1.5 py-0.5 rounded">denied</code>, and lasts one year.</li>

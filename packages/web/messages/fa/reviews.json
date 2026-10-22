@@ -1,0 +1,23 @@
+{
+  "heading": "کاربران چه می‌گویند",
+  "byStore": "بر اساس فروشگاه",
+  "loading": "در حال بارگیری نظرها",
+  "averageRating": "میانگین امتیاز",
+  "averageRatingOn": "میانگین امتیاز در {store}",
+  "ratingsOn": "{count, plural, one {امتیاز} other {امتیازها}} در {store}",
+  "ratingsAcross": "امتیازها در {stores}",
+  "ratingCount": "{count, plural, one {# امتیاز} other {# امتیاز}}",
+  "outOfFiveVisual": "/ ۵",
+  "outOfFiveSpoken": " از ۵",
+  "spokenComma": "، ",
+  "skeletonRatingCount": "۰۰ امتیاز",
+  "stars": "{score} از ۵ ستاره",
+  "readFull": "خواندن کامل نظر",
+  "readFullBy": " از {author} در {store}",
+  "carousel": "اسلایدر",
+  "play": "پخش نظرها",
+  "pause": "توقف نظرها",
+  "previous": "نظر قبلی",
+  "next": "نظر بعدی",
+  "skeletonRating": "۰٫۰۰ / ۵"
+}

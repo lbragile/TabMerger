@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LOCALE_NATIVE_NAMES, SUPPORTED_LOCALES, isSupportedLocale } from '../constants/locales';
+import { LOCALE_NATIVE_NAMES, RTL_LOCALES, SUPPORTED_LOCALES, isRtlLocale, isSupportedLocale } from '../constants/locales';
 
 describe('LOCALE_NATIVE_NAMES', () => {
   it('names exactly the shipped locales, each in its own language', () => {
@@ -13,5 +13,21 @@ describe('LOCALE_NATIVE_NAMES', () => {
     expect(isSupportedLocale('pt-BR')).toBe(true);
     expect(isSupportedLocale('pt-PT')).toBe(false);
     expect(isSupportedLocale(undefined)).toBe(false);
+  });
+});
+
+describe('RTL_LOCALES / isRtlLocale', () => {
+  it('lists Arabic, Hebrew and Persian, all of them shipped', () => {
+    expect(RTL_LOCALES).toEqual(['ar', 'he', 'fa']);
+    for (const locale of RTL_LOCALES) expect(isSupportedLocale(locale)).toBe(true);
+  });
+
+  it('is true for RTL tags and their regional variants only', () => {
+    expect(isRtlLocale('he')).toBe(true);
+    expect(isRtlLocale('ar-EG')).toBe(true);
+    expect(isRtlLocale('FA-IR')).toBe(true);
+    expect(isRtlLocale('en')).toBe(false);
+    expect(isRtlLocale('zh-CN')).toBe(false);
+    expect(isRtlLocale('')).toBe(false);
   });
 });

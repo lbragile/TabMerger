@@ -73,7 +73,7 @@ export default async function SharePage({ params }: Props) {
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-14">
-      <div className="mb-6 rounded-2xl border border-dashed border-border2 p-5 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+      <div className="mb-6 rounded-2xl border border-dashed border-border2 p-5 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-start">
         <div className="flex-1">
           <p className="font-semibold text-[14.5px] mb-0.5">{t('ctaTitle')}</p>
           <p className="text-[13px] text-text2">{t('ctaBody')}</p>

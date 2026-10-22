@@ -2050,7 +2050,7 @@ export default function BetaPage() {
                                     <span className="font-medium">{t('test.testCheckout')}</span>
                                     {t('test.testCheckoutBody')}
                                   </div>
-                                  <table className="w-full border text-left text-[13px]">
+                                  <table className="w-full border text-start text-[13px]">
                                     <tbody>
                                       {STRIPE_TEST_CARDS.map((card) => (
                                         <tr key={card.number} className="border-t first:border-t-0">
@@ -2061,7 +2061,7 @@ export default function BetaPage() {
                                             )}
                                           </th>
                                           <td className="px-3 py-2">
-                                            <code className="select-all whitespace-nowrap bg-muted px-1.5 py-0.5 font-mono">
+                                            <code dir="ltr" className="select-all whitespace-nowrap bg-muted px-1.5 py-0.5 font-mono">
                                               {card.number}
                                             </code>
                                           </td>
@@ -2119,7 +2119,7 @@ export default function BetaPage() {
             <h2 id="want-to-hear-heading" className="text-xl font-semibold mb-4">
               {t('wantToHearHeading')}
             </h2>
-            <ul className="list-disc pl-5 space-y-2 text-muted-foreground text-sm leading-relaxed">
+            <ul className="list-disc ps-5 space-y-2 text-muted-foreground text-sm leading-relaxed">
               {WANT_TO_HEAR_ABOUT.map((item) => (
                 <li key={item.key}>{tr(item)}</li>
               ))}
@@ -2137,10 +2137,10 @@ export default function BetaPage() {
                 <li
                   key={issue.id}
                   id={`known-issue-${issue.id}`}
-                  className="border-l-2 border-border pl-4 scroll-mt-24"
+                  className="border-s-2 border-border ps-4 scroll-mt-24"
                 >
                   <p className="text-sm font-medium">
-                    <span className="mr-2 text-xs font-normal uppercase tracking-wide text-muted-foreground">
+                    <span className="me-2 text-xs font-normal uppercase tracking-wide text-muted-foreground">
                       {issue.area}
                     </span>
                     {issue.title}

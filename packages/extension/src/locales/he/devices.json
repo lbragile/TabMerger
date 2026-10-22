@@ -1,0 +1,22 @@
+{
+  "heading": "מכשירים",
+  "empty": "אין עדיין מכשירים.",
+  "selected": "{{count}} נבחרו",
+  "remove": "הסרה",
+  "removeTitle_one": "להסיר מכשיר אחד?",
+  "removeTitle_two": "להסיר שני מכשירים?",
+  "removeTitle_other": "להסיר {{count}} מכשירים?",
+  "removeDescription": "מכשירים שהוסרו מפסיקים להופיע ברשימה הזו. אם הדפדפן הזה עדיין פעיל, הוא עלול לרשום את עצמו מחדש בסנכרון הבא, כך שההסרה לא קבועה עבור מכשיר פעיל.",
+  "cancel": "ביטול",
+  "selectDevice": "בחירת {{name}}",
+  "nameInput": "השם של המכשיר הזה",
+  "save": "שמירה",
+  "thisDevice": "(המכשיר הזה)",
+  "counts": "{{windows}} · {{tabs}}",
+  "rename": "שינוי שם המכשיר הזה",
+  "noTabs": "אין כרטיסיות.",
+  "restoreTabs_one": "שחזור כרטיסייה אחת",
+  "restoreTabs_two": "שחזור שתי כרטיסיות",
+  "restoreTabs_other": "שחזור {{count}} כרטיסיות",
+  "open": "פתיחה"
+}

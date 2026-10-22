@@ -7,7 +7,10 @@ import {
   swipeTarget,
   revealTarget,
   nearestOnLoop,
+  trackPosition,
+  trackTransform,
 } from '@/components/marketing/ReviewsCarousel'
+import { DirectionProvider } from '@radix-ui/react-direction'
 import { CARD_STRIDE_PX } from '@/components/marketing/ReviewCard'
 
 const S = CARD_STRIDE_PX
@@ -161,8 +164,9 @@ describe('ReviewsCarousel', () => {
       // Direct children of the region: not wrapped in a row of their own.
       expect(arrow.parentElement).toBe(screen.getByRole('region'))
     }
-    expect(prev.className).toMatch(/\bleft-3\b/)
-    expect(next.className).toMatch(/\bright-3\b/)
+    // Logical sides: previous at the start edge, next at the end edge, in either direction.
+    expect(prev.className).toMatch(/\binset-s-3\b/)
+    expect(next.className).toMatch(/\binset-e-3\b/)
   })
 
   it('puts every control before the track in the DOM, so Tab reaches them before the review links', () => {
@@ -635,5 +639,101 @@ describe('ReviewsCarousel', () => {
       await nextFrame()
       expect(offset()).toBe(0)
     })
+  })
+
+  describe('right to left', () => {
+    const run = (ms: number) => act(() => { vi.advanceTimersByTime(ms) })
+    const renderRtl = () =>
+      render(
+        <DirectionProvider dir="rtl">
+          <div dir="rtl">
+            <h2 id="heading">What people are saying</h2>
+            <ReviewsCarousel labelledBy="heading">
+              <div data-testid="card">
+                <a href="https://example.test/review/1">Read full review</a>
+              </div>
+            </ReviewsCarousel>
+          </div>
+        </DirectionProvider>,
+      )
+    /** The track's x translation as written, sign included. */
+    const translateX = () => {
+      const match = /translate3d\((-?[\d.]+)px/.exec(screen.getByTestId('reviews-track').style.transform)
+      return match ? Number.parseFloat(match[1]) : Number.NaN
+    }
+
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'performance'] })
+      vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(S * 20)
+    })
+    afterEach(() => {
+      vi.restoreAllMocks()
+      vi.useRealTimers()
+    })
+
+    it('moves the track right, the way the cards run, as it scrolls on its own', () => {
+      renderRtl()
+      run(1000)
+      expect(translateX()).toBeGreaterThan(30)
+    })
+
+    it('moves on when a finger moves right, and back when it moves left', () => {
+      renderRtl()
+      fireEvent.click(pauseButton())
+      const [card] = screen.getAllByTestId('card') // the first half's card, not the loop's repeat
+      fireEvent.pointerDown(card, { pointerId: 1, clientX: 80, pointerType: 'touch' })
+      fireEvent.pointerMove(card, { pointerId: 1, clientX: 200, pointerType: 'touch' })
+      run(20)
+      expect(translateX()).toBe(120)
+      fireEvent.pointerMove(card, { pointerId: 1, clientX: 50, pointerType: 'touch' })
+      run(20)
+      // 30px back past the start: the loop wraps round to the far end, still a rightward shift.
+      expect(translateX()).toBe(S * 10 - 30)
+      fireEvent.pointerUp(card, { pointerId: 1, clientX: 50, pointerType: 'touch' })
+    })
+
+    it('steps the strip on with Next, in the reading direction', () => {
+      renderRtl()
+      fireEvent.click(pauseButton())
+      fireEvent.click(screen.getByRole('button', { name: 'Next review' }))
+      run(1000)
+      expect(translateX()).toBe(S)
+    })
+
+    it('mirrors the arrow chevrons, so previous points right from the right edge', () => {
+      renderRtl()
+      for (const name of ['Previous review', 'Next review']) {
+        expect(screen.getByRole('button', { name }).querySelector('svg')).toHaveClass('rtl:-scale-x-100')
+      }
+    })
+
+    it('reads a browser scroll of the viewport (negative right to left) as moving on', () => {
+      renderRtl()
+      fireEvent.click(pauseButton())
+      const viewport = screen.getByTestId('reviews-track').parentElement as HTMLElement
+      // jsdom has no scrolling: a settable scrollLeft stands in for the browser's.
+      let scrollLeft = 0
+      Object.defineProperty(viewport, 'scrollLeft', { get: () => scrollLeft, set: (v: number) => { scrollLeft = v }, configurable: true })
+      scrollLeft = -100
+      fireEvent.scroll(viewport)
+      run(20)
+      expect(scrollLeft).toBe(0)
+      expect(translateX()).toBe(100)
+    })
+  })
+})
+
+describe('trackTransform and trackPosition', () => {
+  it('translates left to right as a negative x, right to left as a positive one', () => {
+    expect(trackTransform(120, false)).toBe('translate3d(-120px,0,0)')
+    expect(trackTransform(120, true)).toBe('translate3d(120px,0,0)')
+  })
+
+  it("measures a card from the first card's start edge in both directions", () => {
+    const first = { offsetLeft: 1000, offsetWidth: 320 }
+    // Left to right the second card is right of the first; right to left, left of it.
+    expect(trackPosition({ offsetLeft: 1336, offsetWidth: 320 }, first, false)).toBe(336)
+    expect(trackPosition({ offsetLeft: 664, offsetWidth: 320 }, first, true)).toBe(336)
+    expect(trackPosition(first, first, true)).toBe(0)
   })
 })

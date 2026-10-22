@@ -111,7 +111,7 @@ export function SiteAccessPage() {
           aria-live="polite"
           className={status === 'refused' ? 'text-sm text-destructive' : 'text-sm text-foreground'}
         >
-          {status === 'granted' && <CheckCircle2 className="inline h-4 w-4 mr-2 text-primary align-text-bottom" aria-hidden="true" />}
+          {status === 'granted' && <CheckCircle2 className="inline h-4 w-4 me-2 text-primary align-text-bottom" aria-hidden="true" />}
           {message}
         </p>
       </div>

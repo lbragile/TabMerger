@@ -1,0 +1,23 @@
+{
+  "heading": "מה אומרים עלינו",
+  "byStore": "לפי חנות",
+  "loading": "הביקורות נטענות",
+  "averageRating": "דירוג ממוצע",
+  "averageRatingOn": "דירוג ממוצע ב-{store}",
+  "ratingsOn": "{count, plural, one {דירוג} two {דירוגים} other {דירוגים}} ב-{store}",
+  "ratingsAcross": "דירוגים ב-{stores}",
+  "ratingCount": "{count, plural, one {דירוג אחד} two {שני דירוגים} other {# דירוגים}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " מתוך 5",
+  "spokenComma": ", ",
+  "skeletonRatingCount": "00 דירוגים",
+  "stars": "{score} מתוך 5 כוכבים",
+  "readFull": "לקריאת הביקורת המלאה",
+  "readFullBy": " מאת {author} ב-{store}",
+  "carousel": "קרוסלה",
+  "play": "הפעלת הביקורות",
+  "pause": "השהיית הביקורות",
+  "previous": "הביקורת הקודמת",
+  "next": "הביקורת הבאה",
+  "skeletonRating": "0.00 / 5"
+}

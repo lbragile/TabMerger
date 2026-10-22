@@ -1,0 +1,23 @@
+{
+  "title": "قواعد URL",
+  "description": "عيّن علامات التبويب إلى المجموعات تلقائيًا حسب نمط URL. استخدم <code>*</code> كحرف بدل (مثل <code>github.com/*</code>). تُطبَّق أول قاعدة مطابقة.",
+  "empty": "لا توجد قواعد بعد.",
+  "deletedGroup": "(مجموعة محذوفة)",
+  "moveUp": "نقل القاعدة لأعلى",
+  "moveDown": "نقل القاعدة لأسفل",
+  "edit": "تعديل القاعدة",
+  "delete": "حذف القاعدة",
+  "used": "مستخدم {{used}}/{{max}}",
+  "addRule": "إضافة قاعدة",
+  "discard": "تجاهل التغييرات",
+  "cancel": "إلغاء",
+  "saveAll": "حفظ كل القواعد",
+  "save": "حفظ",
+  "editTitle": "تعديل قاعدة URL",
+  "addTitle": "إضافة قاعدة URL",
+  "patternPlaceholder": "النمط، مثل github.com/*",
+  "groupPlaceholder": "اختر المجموعة الهدف…",
+  "toast": {
+    "limit": "تسمح الخطة المجانية بما يصل إلى {{max}} من قواعد URL."
+  }
+}

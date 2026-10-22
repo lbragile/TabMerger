@@ -124,3 +124,5 @@
 - [Adding a locale](learnings_adding_a_locale.md) — registration, Intl plural forms, hard-coded locale lists
 - [Firefox: no requestUpdateCheck](learnings_firefox_no_request_update_check.md) — no_api vs unsupported; isFirefoxBuild in lib/buildTarget.ts
 - [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST gates analytics + Sentry
+- [Right-to-left layout](learnings_rtl_layout.md) — text-ui-start keys on html dir; empty dir=auto is LTR; Radix direction; probe screenshots
+- [Searchable language pickers](learnings_language_picker_search.md) — Popover+combobox, manual scroll-to-current, two-name rows, RTL mark

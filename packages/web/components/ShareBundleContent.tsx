@@ -133,8 +133,9 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
             onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON }}
           />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{tab.title}</p>
-            <p className="truncate text-xs text-muted-foreground">{tab.url}</p>
+            {/* Shared content keeps its own direction, not the page's (docs/I18N.md). */}
+            <p dir="auto" className="truncate text-start text-sm font-medium">{tab.title}</p>
+            <p dir="ltr" className="truncate text-start text-xs text-muted-foreground">{tab.url}</p>
             {loading ? (
               <Skeleton className="mt-2 h-24 w-full rounded" />
             ) : ogImage ? (
@@ -389,14 +390,14 @@ function ShareBundleBody({ bundle }: { bundle: Bundle | null }) {
               className="w-[7px] h-6 rounded-xs inline-block flex-shrink-0"
               style={{ backgroundColor: group.color }}
             />
-            <h2 className="font-semibold text-[15px]">{group.name}</h2>
+            <h2 dir="auto" className="min-w-0 truncate text-start font-semibold text-[15px]">{group.name}</h2>
             <span className="text-xs text-text3">
               {t('groupSummary', { windows: group.windows.length, tabs: groupTabs })}
             </span>
             <button
               type="button"
               aria-label={group.windows.length === 1 ? t('openWindow') : t('openAllWindows')}
-              className="ml-auto text-xs text-primary hover:underline disabled:opacity-50 disabled:no-underline"
+              className="ms-auto text-xs text-primary hover:underline disabled:opacity-50 disabled:no-underline"
               disabled={groupUrls(group).length === 0}
               onClick={() => groupUrls(group).forEach((url) => window.open(url, '_blank', 'noopener,noreferrer'))}
             >
@@ -414,7 +415,7 @@ function ShareBundleBody({ bundle }: { bundle: Bundle | null }) {
                 <button
                   type="button"
                   aria-label={windowUrls(win).length === 1 ? t('openTab') : t('openAllTabs')}
-                  className="ml-auto text-primary hover:underline disabled:opacity-50 disabled:no-underline"
+                  className="ms-auto text-primary hover:underline disabled:opacity-50 disabled:no-underline"
                   disabled={windowUrls(win).length === 0}
                   onClick={() => windowUrls(win).forEach((url) => window.open(url, '_blank', 'noopener,noreferrer'))}
                 >
@@ -437,11 +438,11 @@ function ShareBundleBody({ bundle }: { bundle: Bundle | null }) {
                       className="h-4 w-4 flex-shrink-0"
                       onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON }}
                     />
-                    <span className="flex-1 min-w-0 truncate">{tab.title ?? tab.url}</span>
+                    <span dir="auto" className="flex-1 min-w-0 truncate text-start">{tab.title ?? tab.url}</span>
                     {shortUrl && (
                       <span className="flex items-center gap-1.5 shrink-0 min-w-0">
                         <span aria-hidden="true" className="text-text3">&#9670;</span>
-                        <span className="font-mono text-[11.5px] text-text3" title={href}>{shortUrl}</span>
+                        <span dir="ltr" className="font-mono text-[11.5px] text-text3" title={href}>{shortUrl}</span>
                       </span>
                     )}
                   </>

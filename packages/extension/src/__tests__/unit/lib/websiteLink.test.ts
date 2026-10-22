@@ -26,7 +26,7 @@ describe('websiteHomeUrl', () => {
     expect(websiteHomeUrl('https://tabmerger.com', locale)).toBe(expected)
   })
 
-  it.each([[undefined], ['en-XA'], ['ar'], ['de-AT'], ['EN'], ['../admin']])(
+  it.each([[undefined], ['en-XA'], ['ur'], ['de-AT'], ['EN'], ['../admin']])(
     'links to the English home for %s (unknown or not shipped)',
     (locale) => {
       expect(websiteHomeUrl('https://tabmerger.com', locale)).toBe('https://tabmerger.com/en')

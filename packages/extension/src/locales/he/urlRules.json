@@ -1,0 +1,23 @@
+{
+  "title": "כללי URL",
+  "description": "שיוך אוטומטי של כרטיסיות לקבוצות לפי תבנית URL. אפשר להשתמש ב-<code>*</code> כתו כללי (למשל <code>github.com/*</code>). הכלל התואם הראשון קובע.",
+  "empty": "עדיין אין כללים.",
+  "deletedGroup": "(קבוצה שנמחקה)",
+  "moveUp": "הזזת הכלל למעלה",
+  "moveDown": "הזזת הכלל למטה",
+  "edit": "עריכת הכלל",
+  "delete": "מחיקת הכלל",
+  "used": "{{used}}/{{max}} בשימוש",
+  "addRule": "הוספת כלל",
+  "discard": "ביטול השינויים",
+  "cancel": "ביטול",
+  "saveAll": "שמירת כל הכללים",
+  "save": "שמירה",
+  "editTitle": "עריכת כלל URL",
+  "addTitle": "הוספת כלל URL",
+  "patternPlaceholder": "תבנית, למשל github.com/*",
+  "groupPlaceholder": "בחירת קבוצת יעד…",
+  "toast": {
+    "limit": "התוכנית החינמית מאפשרת עד {{max}} כללי URL."
+  }
+}

@@ -111,7 +111,7 @@ function NewWindowDropZone({
         keyboardOver && 'items-end pb-1'
       )}
     >
-      <Plus className="h-3.5 w-3.5 mr-1" />
+      <Plus className="h-3.5 w-3.5 me-1" />
       {t('windows.dropNewWindow')}
     </div>
   );
@@ -408,38 +408,38 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   deliberately absent — they stay context-menu-only. Do not reintroduce an
                   item here without adding its twin there, and vice versa for the shared set. */}
               <DropdownMenuItem onClick={() => setNoteOpen((o) => !o)}>
-                <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <StickyNote className="h-3.5 w-3.5 me-2 shrink-0" />
                 {group.note ? t('groupMenu.editNote') : t('groupMenu.addNote')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
-                <RefreshCw className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <RefreshCw className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div><div>{t('groupMenu.replaceWithCurrent')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.replaceWithCurrentHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => mergeWithCurrent(groupIndex)}>
-                <GitMerge className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <GitMerge className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div><div>{t('groupMenu.mergeWithCurrent')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.mergeWithCurrentHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
-                <Layers className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <Layers className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div><div>{t('groupMenu.uniteWindows')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.uniteWindowsHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => splitWindows(groupIndex)}>
-                <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <SplitSquareHorizontal className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div><div>{t('groupMenu.splitWindows')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.splitWindowsHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
-                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <SortAsc className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div><div>{t('groupMenu.sortByTitle')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.sortByTitleHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
-                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <SortAsc className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div><div>{t('groupMenu.sortByUrl')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.sortByUrlHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleDeduplicate} data-tour={TOUR_ANCHORS.groupDeduplicate}>
-                <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <Copy className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div><div>{t('groupMenu.deduplicate')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.deduplicateHint')}</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -447,7 +447,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                 className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
                 onClick={() => void handleDeleteAllWindows()}
               >
-                <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <Trash2 className="h-3.5 w-3.5 me-2 shrink-0" />
                 <div>
                   <div>{group.permanent ? t('groupMenu.closeAllWindows') : t('groupMenu.removeAllWindows')}</div>
                   <div className="text-[10px] font-normal opacity-60">
@@ -468,6 +468,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
         >
           <textarea
             ref={noteTextareaRef}
+            dir={noteValue ? 'auto' : undefined}
             rows={2}
             maxLength={500}
             className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
@@ -597,7 +598,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   onClick={() => { void chrome.windows.create({}); }}
                   disabled={selectionMode || dnd.isDragging}
                 >
-                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  <Plus className="h-3.5 w-3.5 me-1" />
                   {t('windows.addWindow')}
                 </Button>
               </div>
@@ -623,7 +624,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
                   onClick={() => addWindow({ groupIndex })}
                   disabled={selectionMode || dnd.isDragging}
                 >
-                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  <Plus className="h-3.5 w-3.5 me-1" />
                   {t('windows.addWindow')}
                 </Button>
               </div>

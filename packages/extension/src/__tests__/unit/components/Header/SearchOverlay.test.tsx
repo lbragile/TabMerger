@@ -231,3 +231,28 @@ describe('SearchOverlay — closing', () => {
     expect(onClose).toHaveBeenCalled()
   })
 })
+
+describe('SearchOverlay — text direction', () => {
+  it('the search box takes the direction of what is typed', () => {
+    setup('react')
+    expect(screen.getByRole('combobox').getAttribute('dir')).toBe('auto')
+  })
+
+  it('an empty search box follows the UI direction, so its placeholder is not laid out backwards', () => {
+    // Chromium treats an empty dir="auto" field as left to right
+    setup('')
+    expect(screen.getByRole('combobox').hasAttribute('dir')).toBe(false)
+  })
+
+  it('a tab title result keeps its own direction (dir="auto")', () => {
+    setup('react')
+    const row = textOf('React docs')
+    expect(row.closest('[dir]')?.getAttribute('dir')).toBe('auto')
+  })
+
+  it('a tab found by its address shows that piece of the URL left to right', () => {
+    setup('vuejs')
+    const meta = screen.getAllByText((_c, el) => !!el && el.getAttribute('dir') === 'ltr' && (el.textContent ?? '').includes('vuejs'))
+    expect(meta.length).toBeGreaterThan(0)
+  })
+})

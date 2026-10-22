@@ -79,7 +79,7 @@ export function CleanupSuggestionBanner() {
                 {t('banners.removeStale')}
             </button>
             <button
-                className="shrink-0 text-primary hover:opacity-70 transition-opacity ml-1"
+                className="shrink-0 text-primary hover:opacity-70 transition-opacity ms-1"
                 onClick={dismiss}
                 aria-label={t('banners.dismiss')}
             >

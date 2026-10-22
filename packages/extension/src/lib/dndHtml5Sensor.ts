@@ -20,6 +20,7 @@ import {
   type DndDragPath
 } from './dndPressTracker';
 import { dndGripSelector } from './dndGrip';
+import { isRtl } from './direction';
 
 /**
  * The popup's ONE drag sensor, with **two runtime paths chosen per press**
@@ -735,8 +736,12 @@ export class Html5DragSensor {
       const rect = row.getBoundingClientRect();
       // Anchor the ghost so the cursor sits where it grabbed the row (nice for
       // tabs) but never more than a small offset away.
+      // In a right-to-left UI the grip is at the row's right end: measure from that end, so the
+      // ghost hangs to the LEFT of the pointer instead of running off the popup's right edge.
+      const grab = isRtl() ? rect.right - this.coord.x : this.coord.x - rect.left;
+      const lead = Math.min(Math.max(grab, 8), 40);
       this.ghostOffset = {
-        x: Math.min(Math.max(this.coord.x - rect.left, 8), 40),
+        x: isRtl() ? rect.width - lead : lead,
         y: Math.min(Math.max(this.coord.y - rect.top, 6), 24)
       };
       // `getDndDragCount()` is already set: dnd-kit ran our `onDragStart` synchronously

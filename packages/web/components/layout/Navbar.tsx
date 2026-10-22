@@ -32,15 +32,15 @@ export async function Navbar() {
             <div className="container relative flex items-center">
                 {/* Width budget from md to lg: the container is capped at 768px there and, logged out,
                     holds the logo, four links, the GitHub mark, the language button, the theme toggle
-                    and two buttons. The tighter spacing below lg (mr-4 here and on the logo, px-2 on
+                    and two buttons. The tighter spacing below lg (me-4 here and on the logo, px-2 on
                     the links), the logo without its wordmark and the icon-only language button are
                     what make them fit: this block shrinks instead of overflowing, so when it is too wide
-                    the right-hand cluster slides over the last link rather than causing a scrollbar.
+                    the end cluster slides over the last link rather than causing a scrollbar.
                     min-w-0 here and on the nav is what lets it shrink: with longer (translated) link
                     labels the last links are cut off at the cluster instead of pushing the sign-in
                     buttons off the screen. English fits without it. */}
-                <div className="mr-4 flex min-w-0 items-center">
-                    <Link href="/" className="mr-4 flex shrink-0 items-center gap-[9px] lg:mr-8">
+                <div className="me-4 flex min-w-0 items-center">
+                    <Link href="/" className="me-4 flex shrink-0 items-center gap-[9px] lg:me-8">
                         <Image
                             src="/logo.png"
                             alt="TabMerger"
@@ -84,8 +84,9 @@ export async function Navbar() {
                         <Suspense fallback={<GithubStarsFallback />}>
                             <GithubStars starsPromise={starsPromise} />
                         </Suspense>
-                        {/* From md; below that it is a row in the mobile panel. */}
-                        <LanguageSwitcher className="hidden md:inline-flex" codeClassName="hidden lg:inline" />
+                        {/* At every width, beside the theme toggle: below lg just the icon, the same
+                            2.25rem bordered square as the toggle. */}
+                        <LanguageSwitcher codeClassName="hidden lg:inline" />
                         <ThemeToggle />
                         {/* Sign-in/account controls move into the mobile hamburger panel below md */}
                         <div className="hidden items-center gap-2.5 md:flex">

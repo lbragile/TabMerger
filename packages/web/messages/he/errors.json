@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "שגיאה 404 · הדף לא נמצא",
+    "title": "הכרטיסייה הזו הלכה לאיבוד",
+    "description": "חיפשנו בכל הקבוצות ולא מצאנו את הדף הזה. ייתכן שהוא הועבר, נסגר או שמעולם לא היה קיים. בואו נחזיר אתכם למסלול.",
+    "documentTitle": "הדף לא נמצא",
+    "tabLabel": "דף חסר"
+  },
+  "serverError": {
+    "eyebrow": "שגיאה 500 · משהו השתבש",
+    "title": "הכרטיסייה הזו קרסה",
+    "description": "משהו נשבר אצלנו בזמן טעינת הדף. הכרטיסיות והקבוצות שלך בתוסף לא הושפעו. אפשר לנסות שוב בעוד רגע.",
+    "documentTitle": "משהו השתבש",
+    "tabLabel": "לא מגיב"
+  },
+  "links": {
+    "features": "תכונות",
+    "pricing": "מחירים",
+    "faq": "שאלות נפוצות",
+    "dashboard": "לוח בקרה",
+    "account": "חשבון",
+    "contactSupport": "פנייה לתמיכה"
+  },
+  "helpfulLinks": "קישורים שימושיים",
+  "tryThese": "או לנסות אחד מאלה",
+  "illustrationTabResearch": "מחקר",
+  "illustrationTabDocs": "מסמכים",
+  "tryAgain": "לנסות שוב",
+  "backToHome": "חזרה לדף הבית",
+  "backToDashboard": "חזרה ללוח הבקרה",
+  "devDetails": "פרטי השגיאה (בסביבת פיתוח בלבד)",
+  "referenceId": "מזהה הפנייה",
+  "copyReferenceId": "העתקת מזהה הפנייה",
+  "referenceIdHint": "כדאי לציין את המזהה הזה בפנייה לתמיכה, כדי שנוכל למצוא מה השתבש.",
+  "referenceIdCopied": "מזהה הפנייה הועתק",
+  "referenceIdCopyFailed": "ההעתקה נכשלה. אפשר לסמן את המזהה כדי להעתיק אותו.",
+  "titleWithBrand": "{title} | TabMerger"
+}

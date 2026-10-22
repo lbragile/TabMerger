@@ -1,0 +1,73 @@
+{
+  "devices": {
+    "justNow": "הרגע",
+    "minutesAgo": "לפני {count} דק׳",
+    "hoursAgo": "{count, plural, one {לפני שעה} two {לפני שעתיים} other {לפני # שע׳}}",
+    "daysAgo": "{count, plural, one {לפני יום} two {לפני יומיים} other {לפני # ימים}}",
+    "renameFailed": "שינוי שם המכשיר נכשל",
+    "renamed": "שם המכשיר שונה",
+    "removeFailed": "הסרת המכשיר נכשלה",
+    "removed": "המכשיר הוסר",
+    "removeManyFailed": "הסרת המכשירים נכשלה",
+    "removedMany": "{count, plural, one {מכשיר אחד הוסר} two {שני מכשירים הוסרו} other {{count} מכשירים הוסרו}}",
+    "empty": "אין עדיין מכשירים.",
+    "selectAll": "בחירת כל המכשירים",
+    "selectedCount": "{count} נבחרו",
+    "removeSelected": "{count, plural, one {הסרת מכשיר אחד} two {הסרת שני מכשירים} other {הסרת {count} מכשירים}}",
+    "selectDevice": "בחירת {name}",
+    "active": "פעיל {time}",
+    "snapshotCounts": " · {windows, plural, one {חלון אחד} two {שני חלונות} other {{windows} חלונות}} · {tabs, plural, one {כרטיסייה אחת} two {שתי כרטיסיות} other {{tabs} כרטיסיות}}",
+    "options": "אפשרויות המכשיר",
+    "rename": "שינוי שם",
+    "remove": "הסרה",
+    "removeTitle": "להסיר את המכשיר?",
+    "removeBody": "\"{name}\" יפסיק לסנכרן נתוני כרטיסיות. אי אפשר לבטל את הפעולה.",
+    "removeManyTitle": "להסיר {count} מכשירים?",
+    "removeManyBody": "המכשירים האלה יפסיקו לסנכרן נתוני כרטיסיות. אי אפשר לבטל את הפעולה.",
+    "cancel": "ביטול"
+  },
+  "metaTitle": "חשבון",
+  "title": "הגדרות חשבון",
+  "lead": "ניהול החשבון והמנוי.",
+  "stats": {
+    "groups": "קבוצות מסונכרנות",
+    "tabs": "כרטיסיות שמורות",
+    "sessions": "סשנים וגיבויים",
+    "aiCredits": "קרדיטים של AI שנותרו"
+  },
+  "profile": {
+    "title": "פרופיל",
+    "description": "פרטי החשבון שלך.",
+    "email": "אימייל",
+    "memberSince": "חבר/ה מאז"
+  },
+  "signOutAll": {
+    "title": "התנתקות מכל המכשירים",
+    "description": "הפעולה תבטל את כל החיבורים הפעילים.",
+    "button": "התנתקות"
+  },
+  "subscription": {
+    "title": "מנוי",
+    "description": "ניהול התוכנית והחיובים.",
+    "manageBilling": "ניהול חיובים",
+    "upgrade": "שדרוג",
+    "cancelNote": "אפשר לבטל בכל עת דרך <strong>ניהול חיובים</strong>. הגישה נשמרת עד סוף תקופת החיוב הנוכחית."
+  },
+  "devicesCard": {
+    "title": "מכשירים",
+    "description": "מכשירים שמסנכרנים את הקבוצות והכרטיסיות שלך. ב-Pro וב-Pro AI בלבד."
+  },
+  "password": {
+    "tooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+    "updated": "הסיסמה עודכנה",
+    "set": "הסיסמה הוגדרה — עכשיו אפשר להתחבר גם עם אימייל וסיסמה",
+    "change": "שינוי סיסמה",
+    "setLabel": "הגדרת סיסמה",
+    "placeholder": "••••••••••",
+    "save": "שמירה"
+  },
+  "credits": {
+    "failed": "לא ניתן היה להתחיל את התשלום",
+    "getMore": "לקבלת עוד"
+  }
+}

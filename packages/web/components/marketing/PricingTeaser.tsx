@@ -53,7 +53,8 @@ export function PricingTeaser() {
             >
               {opt === 'monthly' ? p('monthly') : p('yearly')}
               {opt === 'yearly' && YEARLY_DISCOUNT_PERCENT > 0 && (
-                <span className="text-[11px] font-semibold text-primary">{p('discountBadge', { percent: YEARLY_DISCOUNT_PERCENT })}</span>
+                // Left-to-right isolate: keeps the minus sign before the number in RTL pages.
+                <span dir="ltr" className="text-[11px] font-semibold text-primary">{p('discountBadge', { percent: YEARLY_DISCOUNT_PERCENT })}</span>
               )}
             </button>
           ))}
@@ -95,7 +96,7 @@ export function PricingTeaser() {
                 </div>
                 <p className="text-3xl font-semibold tracking-tight">
                   {price}
-                  <span className="text-[13px] font-normal text-text3 ml-1">{period}</span>
+                  <span className="text-[13px] font-normal text-text3 ms-1">{period}</span>
                 </p>
                 <p className={SUB_LINE}>{t(row.blurb)}</p>
                 {/* Every card has a note line, so the three stay the same height when stacked. A
@@ -122,7 +123,8 @@ export function PricingTeaser() {
           className="inline-flex items-center gap-1.5 h-10 px-5 rounded-lg bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors mb-4"
         >
           {t('seeFull')}
-          <span aria-hidden="true">→</span>
+          {/* Points forward: mirrored right to left. */}
+          <span aria-hidden="true" className="inline-block rtl:-scale-x-100">→</span>
         </Link>
 
         <p className="text-[12.5px] text-text3">

@@ -45,6 +45,7 @@ import { createMoveGhost, type MoveGhost } from '@/lib/keyboardMoveGhost';
 import { anchorFor, clampToVisible, dockRectFor, markerElement, revealSpan, rowFor } from '@/lib/keyboardMoveDom';
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useUIStore } from '@/stores/uiStore';
+import { inlineArrow } from '@/lib/direction';
 import type { GroupsState } from '@/lib/types';
 
 const isRendered = (id: string) => rowFor(id) !== null;
@@ -342,12 +343,13 @@ export function useKeyboardMove(hostRef?: RefObject<HTMLElement | null>): void {
           next = stepMove(ms, dir);
           text = `${wouldWrap(ms, dir) ? `${describeWrap(dir)} ` : ''}${currentTarget(next)?.text ?? ''}`;
         }
-      } else if (e.code === 'ArrowLeft') {
-        // Main panel -> group list. Nothing for groups (they reorder in the sidebar) or inside the list.
+      } else if (inlineArrow(e.code) === 'start') {
+        // Towards the group list's side (ArrowLeft, or ArrowRight in a right-to-left UI, where
+        // the sidebar is on the right): main panel -> group list. Nothing for groups (they reorder in the sidebar) or inside the list.
         next = enterList(ms);
         if (next) text = describeListStop(latest, next.scope);
-      } else if (e.code === 'ArrowRight') {
-        // Group list -> into the highlighted group. Nothing in the main panel or on "new group".
+      } else if (inlineArrow(e.code) === 'end') {
+        // Away from it: group list -> into the highlighted group. Nothing in the main panel or on "new group".
         next = enterGroup(ms);
         if (next) text = describeGroupEntry(latest, next);
       } else return;

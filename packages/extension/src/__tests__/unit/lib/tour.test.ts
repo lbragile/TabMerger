@@ -342,3 +342,42 @@ describe('nextTrapIndex', () => {
     expect(nextTrapIndex(0, 0, false)).toBe(-1)
   })
 })
+
+describe('computeCardPosition — right-to-left UI (the layout is mirrored)', () => {
+  const frame = { width: 800, height: 600 }
+  const card = { width: 320, height: 160 }
+  const gap = 12
+  const margin = 8
+  const base = { card, frame, gap, margin, direction: 'rtl' as const }
+
+  it('a step written as `right` of the sidebar goes to its LEFT (the sidebar is on the right)', () => {
+    // The sidebar in the mirrored popup: x 560..800
+    const p = computeCardPosition({ ...base, anchor: { left: 560, top: 200, width: 240, height: 40 }, placement: 'right' })
+    expect(p).toEqual({ left: 560 - gap - card.width, top: 140, placement: 'left' })
+  })
+
+  it('a `left` step goes to the right', () => {
+    const p = computeCardPosition({ ...base, anchor: { left: 100, top: 200, width: 100, height: 40 }, placement: 'left' })
+    expect(p.placement).toBe('right')
+    expect(p.left).toBe(100 + 100 + gap)
+  })
+
+  it('top and bottom are not mirrored', () => {
+    const p = computeCardPosition({ ...base, anchor: { left: 300, top: 10, width: 100, height: 30 }, placement: 'bottom' })
+    expect(p).toEqual({ left: 190, top: 52, placement: 'bottom' })
+  })
+
+  it('the fallback corner beside a dialog is the bottom RIGHT', () => {
+    const p = computeCardPosition({ ...base, anchor: { left: 0, top: 0, width: 800, height: 600 }, placement: 'right', fallbackCorner: 'bottom-left' })
+    expect(p).toEqual({ left: frame.width - card.width - margin, top: frame.height - card.height - margin, placement: 'inside' })
+  })
+
+  it('with no room anywhere the card sits in the anchor’s bottom-left corner', () => {
+    const anchor = { left: 0, top: 0, width: 800, height: 600 }
+    const rtl = computeCardPosition({ ...base, anchor, placement: 'right' })
+    const ltr = computeCardPosition({ ...base, anchor, placement: 'right', direction: 'ltr' })
+    expect(rtl.left).toBe(gap)
+    expect(ltr.left).toBe(800 - card.width - gap)
+    expect(rtl.top).toBe(ltr.top)
+  })
+})

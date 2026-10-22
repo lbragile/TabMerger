@@ -1,0 +1,21 @@
+{
+  "features": "الميزات",
+  "pricing": "الأسعار",
+  "changelog": "سجل التغييرات",
+  "faq": "الأسئلة الشائعة",
+  "dashboard": "لوحة التحكم",
+  "account": "الحساب",
+  "accountSettings": "إعدادات الحساب",
+  "signIn": "تسجيل الدخول",
+  "signUp": "إنشاء حساب",
+  "getStarted": "ابدأ الآن",
+  "signOut": "تسجيل الخروج",
+  "openMenu": "فتح القائمة",
+  "closeMenu": "إغلاق القائمة",
+  "accountMenu": "قائمة الحساب",
+  "home": "الصفحة الرئيسية لـ TabMerger",
+  "github": "GitHub",
+  "githubRepo": "TabMerger على GitHub",
+  "githubRepoWithStars": "TabMerger على GitHub، {count, plural, zero {# نجمة} one {نجمة واحدة} two {نجمتان} few {# نجمات} many {# نجمة} other {# نجمة}}",
+  "toggleTheme": "تبديل السمة"
+}
