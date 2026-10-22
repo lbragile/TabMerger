@@ -118,7 +118,7 @@ export function Footer() {
                             <li>
                                 <CookieSettingsButton
                                     label={t("cookieSettings")}
-                                    className="cursor-pointer text-left hover:text-foreground transition-colors"
+                                    className="cursor-pointer text-start hover:text-foreground transition-colors"
                                 />
                             </li>
                         </ul>

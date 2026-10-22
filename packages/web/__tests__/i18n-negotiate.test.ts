@@ -5,6 +5,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
+  canonicalTag,
   LOCALE_COOKIE_ATTRIBUTES,
   localeCookieString,
   negotiateLocale,
@@ -62,6 +63,34 @@ describe('negotiateLocale', () => {
     expect(negotiateLocale(undefined, 'ko, de;q=0.5', LOCALES, 'en')).toBe('de')
     expect(negotiateLocale(undefined, 'ko, it', LOCALES, 'en')).toBe('en')
     expect(negotiateLocale(undefined, null, LOCALES, 'en')).toBe('en')
+  })
+
+  describe('deprecated language tags', () => {
+    const WITH_HEBREW = [...LOCALES, 'he', 'id']
+
+    it('reads the old Hebrew tag iw as he, in Accept-Language and in the cookie', () => {
+      expect(negotiateLocale(undefined, 'iw-IL,iw;q=0.9,en;q=0.5', WITH_HEBREW, 'en')).toBe('he')
+      expect(negotiateLocale(undefined, 'iw', WITH_HEBREW, 'en')).toBe('he')
+      expect(negotiateLocale('iw', 'de', WITH_HEBREW, 'en')).toBe('he')
+    })
+
+    it('reads in as id (Indonesian) the same way', () => {
+      expect(negotiateLocale(undefined, 'in-ID', WITH_HEBREW, 'en')).toBe('id')
+      expect(negotiateLocale(undefined, 'in', WITH_HEBREW, 'en')).toBe('id')
+      expect(negotiateLocale('in', 'de', WITH_HEBREW, 'en')).toBe('id')
+    })
+
+    it('changes nothing while he is not a supported locale', () => {
+      expect(negotiateLocale(undefined, 'iw-IL,de;q=0.5', LOCALES, 'en')).toBe('de')
+      expect(negotiateLocale('iw', 'fr', LOCALES, 'en')).toBe('fr')
+      expect(negotiateLocale(undefined, 'iw', LOCALES, 'en')).toBe('en')
+    })
+
+    it('leaves a tag the runtime rejects as it is', () => {
+      expect(canonicalTag('iw')).toBe('he')
+      expect(canonicalTag('../en')).toBe('../en')
+      expect(canonicalTag('pt-br')).toBe('pt-BR')
+    })
   })
 })
 

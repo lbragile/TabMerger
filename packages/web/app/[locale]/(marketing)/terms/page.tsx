@@ -1,6 +1,6 @@
 import { useLocale } from 'next-intl'
 import { pageMetadata } from '@/lib/seo'
-import { DEFAULT_LOCALE } from '@/i18n/locales'
+import { DEFAULT_LOCALE, localeDirection } from '@/i18n/locales'
 import { Link } from '@/i18n/navigation'
 import { LegalToc } from '@/components/legal-toc'
 
@@ -32,10 +32,13 @@ const TOC = [
 ]
 
 export default function TermsPage() {
-  // Marks the English text as English inside a page in another language (nothing on English pages).
-  const lang = useLocale() === DEFAULT_LOCALE ? undefined : DEFAULT_LOCALE
+  // Marks the English text as English inside a page in another language (nothing on English
+  // pages), and keeps it left to right inside a right-to-left page.
+  const locale = useLocale()
+  const lang = locale === DEFAULT_LOCALE ? undefined : DEFAULT_LOCALE
+  const dir = localeDirection(locale) === 'rtl' ? 'ltr' : undefined
   return (
-    <div className="container py-16 max-w-5xl" lang={lang}>
+    <div className="container py-16 max-w-5xl" lang={lang} dir={dir}>
       {/* Header — distinct neutral/surface treatment vs Privacy's brand-soft callout */}
       <div className="mb-11 rounded-none bg-surface2 border border-border px-8 py-7">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-text3 mb-2.5">Legal</p>

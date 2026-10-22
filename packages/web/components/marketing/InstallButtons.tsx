@@ -72,7 +72,7 @@ export function InstallButtons({ browser = 'chrome' }: InstallButtonsProps = {})
             >
               <Link href="/pricing">
                 {t('viewPricing')}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
               </Link>
             </Button>
           </div>

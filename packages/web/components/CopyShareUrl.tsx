@@ -35,7 +35,7 @@ export function CopyShareUrl({ url }: { url: string }) {
       className={cn(NO_CAPTURE_CLASS, 'flex items-center gap-2 max-w-full h-8 px-2.5 rounded-md bg-surface2 border border-border text-[12.5px] text-text2 hover:text-text hover:border-border2 transition-colors')}
       aria-label={t('copyLink')}
     >
-      <span className="truncate font-mono">{fullUrl}</span>
+      <span dir="ltr" className="truncate font-mono text-start">{fullUrl}</span>
       {copied ? <Check className="h-3.5 w-3.5 shrink-0 text-primary" /> : <Copy className="h-3.5 w-3.5 shrink-0" />}
     </button>
   )

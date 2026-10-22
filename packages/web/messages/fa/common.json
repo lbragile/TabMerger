@@ -1,0 +1,10 @@
+{
+  "comingSoon": "به‌زودی",
+  "listTwo": "{first} و {second}",
+  "listMany": "{rest} و {last}",
+  "listSeparator": "، ",
+  "opensInNewTab": " (در زبانهٔ جدید باز می‌شود)",
+  "close": "بستن",
+  "showPassphrase": "نمایش عبارت عبور",
+  "hidePassphrase": "پنهان کردن عبارت عبور"
+}

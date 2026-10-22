@@ -1,4 +1,8 @@
 {
   "label": "语言",
-  "trigger": "语言：{language}（{code}）"
+  "trigger": "语言：{language}（{code}）",
+  "searchPlaceholder": "搜索语言（例如 德语、de）",
+  "searchLabel": "按名称或代码搜索语言",
+  "noResults": "未找到语言",
+  "rightToLeft": "从右到左"
 }

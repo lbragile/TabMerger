@@ -1,4 +1,8 @@
 {
   "label": "言語",
-  "trigger": "言語：{language}（{code}）"
+  "trigger": "言語：{language}（{code}）",
+  "searchPlaceholder": "言語を検索（例: ドイツ語、de）",
+  "searchLabel": "名前またはコードで言語を検索",
+  "noResults": "言語が見つかりません",
+  "rightToLeft": "右から左"
 }

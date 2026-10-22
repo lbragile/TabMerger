@@ -1,0 +1,8 @@
+{
+  "label": "زبان",
+  "trigger": "زبان: {language} ({code})",
+  "searchPlaceholder": "جستجوی زبان (مثلاً آلمانی، ⁨de⁩)",
+  "searchLabel": "جستجوی زبان‌ها بر اساس نام یا کد",
+  "noResults": "زبانی پیدا نشد",
+  "rightToLeft": "راست به چپ"
+}

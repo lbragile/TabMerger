@@ -15,6 +15,7 @@ import {
   LOCALES,
   PSEUDO_LOCALE,
   PUBLIC_LOCALES,
+  RTL_LOCALES,
   isAppLocale,
   languageAlternates,
   localeDirection,
@@ -73,8 +74,18 @@ describe('locales', () => {
     expect(alternates).not.toHaveProperty(PSEUDO_LOCALE)
   })
 
-  it('is left-to-right for every shipped locale', () => {
-    for (const locale of LOCALES) expect(localeDirection(locale)).toBe('ltr')
+  it('is right-to-left exactly for the RTL_LOCALES, left-to-right for every other locale', () => {
+    for (const locale of LOCALES) {
+      expect(localeDirection(locale)).toBe(RTL_LOCALES.includes(locale) ? 'rtl' : 'ltr')
+    }
+  })
+
+  it('reads the direction from the language of a regional tag', () => {
+    expect(localeDirection('ar-EG')).toBe('rtl')
+    expect(localeDirection('he-IL')).toBe('rtl')
+    expect(localeDirection('fa-IR')).toBe('rtl')
+    expect(localeDirection('en-US')).toBe('ltr')
+    expect(localeDirection('pt-BR')).toBe('ltr')
   })
 })
 
@@ -118,7 +129,8 @@ describe('catalog loading', () => {
     for (const locale of SUPPORTED_LOCALES.filter((l) => l !== DEFAULT_LOCALE)) {
       expect((await loadMessages(locale)).nav.pricing, locale).not.toBe(en.nav.pricing)
     }
-  })
+    // Imports all 18 catalogs in one test; the default 5 s is too tight when the machine is loaded.
+  }, 20_000)
 
   it('sends the browser only the namespaces Client Components read', () => {
     const subset = clientMessages(en) as Record<string, Record<string, unknown>>

@@ -326,7 +326,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
   return (
     <div
       className={cn(
-        'hidden items-center gap-1.5 rounded-md border py-1 pl-2.5 pr-1 text-xs font-medium sm:flex',
+        'hidden items-center gap-1.5 rounded-md border py-1 ps-2.5 pe-1 text-xs font-medium sm:flex',
         failed
           ? 'border-red-600/30 bg-red-500/20 text-red-700 dark:text-red-400'
           : active

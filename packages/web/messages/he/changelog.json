@@ -1,0 +1,15 @@
+{
+  "metaTitle": "יומן שינויים",
+  "metaDescription": "תכונות חדשות, שיפורים ותיקונים ב-TabMerger.",
+  "title": "יומן שינויים",
+  "lead": "כל מה ששחררנו, מהחדש לישן.",
+  "githubRelease": "גרסה ב-GitHub",
+  "githubReleaseLabel": "גרסה {version} ב-GitHub",
+  "prLinkLabel": "בקשת משיכה #{number} ב-GitHub",
+  "majorRelease": "גרסה ראשית",
+  "types": {
+    "New": "חדש",
+    "Improved": "שופר",
+    "Fixed": "תוקן"
+  }
+}

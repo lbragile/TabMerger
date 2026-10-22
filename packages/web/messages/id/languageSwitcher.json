@@ -1,4 +1,8 @@
 {
   "label": "Bahasa",
-  "trigger": "Bahasa: {language} ({code})"
+  "trigger": "Bahasa: {language} ({code})",
+  "searchPlaceholder": "Cari bahasa (mis. Jerman, de)",
+  "searchLabel": "Cari bahasa berdasarkan nama atau kode",
+  "noResults": "Bahasa tidak ditemukan",
+  "rightToLeft": "Kanan ke kiri"
 }

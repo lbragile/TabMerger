@@ -94,7 +94,8 @@ export function Features() {
             className="inline-flex items-center gap-1.5 h-10 px-5 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors"
           >
             {t('seeAll')}
-            <span aria-hidden="true">→</span>
+            {/* Points forward: mirrored right to left. */}
+            <span aria-hidden="true" className="inline-block rtl:-scale-x-100">→</span>
           </Link>
         </div>
       </div>

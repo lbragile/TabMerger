@@ -26,7 +26,7 @@ function FAQItem({
   return (
     <div className="border-t border-line">
       <button
-        className="flex w-full items-center gap-4 py-[18px] text-left transition-colors hover:text-primary"
+        className="flex w-full items-center gap-4 py-[18px] text-start transition-colors hover:text-primary"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={id}

@@ -1,0 +1,21 @@
+{
+  "features": "תכונות",
+  "pricing": "מחירים",
+  "changelog": "יומן שינויים",
+  "faq": "שאלות נפוצות",
+  "dashboard": "לוח בקרה",
+  "account": "חשבון",
+  "accountSettings": "הגדרות חשבון",
+  "signIn": "התחברות",
+  "signUp": "הרשמה",
+  "getStarted": "מתחילים",
+  "signOut": "התנתקות",
+  "openMenu": "פתיחת התפריט",
+  "closeMenu": "סגירת התפריט",
+  "accountMenu": "תפריט החשבון",
+  "home": "דף הבית של TabMerger",
+  "github": "GitHub",
+  "githubRepo": "TabMerger ב-GitHub",
+  "githubRepoWithStars": "TabMerger ב-GitHub, {count, plural, one {כוכב אחד} two {שני כוכבים} other {# כוכבים}}",
+  "toggleTheme": "החלפת ערכת נושא"
+}

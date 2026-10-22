@@ -1,0 +1,8 @@
+{
+  "label": "שפה",
+  "trigger": "שפה: {language} ({code})",
+  "searchPlaceholder": "חיפוש שפה (למשל גרמנית, ⁨de⁩)",
+  "searchLabel": "חיפוש שפות לפי שם או קוד",
+  "noResults": "לא נמצאו שפות",
+  "rightToLeft": "מימין לשמאל"
+}

@@ -44,11 +44,22 @@ describe('GroupGrid', () => {
     expect(gridEl?.className).toMatch(/\b(sm|md|lg):grid-cols-/)
   })
 
-  it('applies the group color as an inline border-left style on the card', () => {
+  it('applies the group color as an inline border on the start edge of the card (left, or right in RTL)', () => {
     const { container } = render(<GroupGrid groups={groups} isPro={false} />)
-    const card = container.querySelector('[style*="border-left"]') as HTMLElement | null
+    const card = container.querySelector('[style*="border-inline-start"]') as HTMLElement | null
     expect(card).not.toBeNull()
-    expect(card?.style.borderLeft).toContain('rgb(0, 180, 204)')
+    expect(card?.style.borderInlineStart).toBe('4px solid rgba(0,180,204,1)')
+    // The tint fades from the same edge: the gradient's direction flips with `rtl:`.
+    expect(card?.style.background).toContain('var(--accent-to)')
+    expect(card?.className).toContain('[--accent-to:to_right]')
+    expect(card?.className).toContain('rtl:[--accent-to:to_left]')
+  })
+
+  it('renders group names and tab titles in their own direction, not the page direction', () => {
+    render(<GroupGrid groups={groups} isPro={false} />)
+    const name = screen.getAllByText('Work')[0]
+    expect(name).toHaveAttribute('dir', 'auto')
+    expect(name).toHaveClass('truncate', 'text-start')
   })
 
   it('keeps the tabs list mounted in the DOM when collapsed, toggling grid-rows classes instead of unmounting', () => {

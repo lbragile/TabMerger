@@ -1,0 +1,10 @@
+{
+  "comingSoon": "בקרוב",
+  "listTwo": "{first} ו-{second}",
+  "listMany": "{rest} ו-{last}",
+  "listSeparator": ", ",
+  "opensInNewTab": " (נפתח בכרטיסייה חדשה)",
+  "close": "סגירה",
+  "showPassphrase": "הצגת ביטוי הסיסמה",
+  "hidePassphrase": "הסתרת ביטוי הסיסמה"
+}

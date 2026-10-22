@@ -1,0 +1,38 @@
+{
+  "notFound": {
+    "eyebrow": "خطأ 404 · الصفحة غير موجودة",
+    "title": "علامة التبويب هذه تاهت",
+    "description": "بحثنا في كل المجموعات ولم نعثر على هذه الصفحة. ربما نُقلت أو أُغلقت أو لم تكن موجودة أصلًا. لنُعِدك إلى المسار الصحيح.",
+    "documentTitle": "الصفحة غير موجودة",
+    "tabLabel": "صفحة مفقودة"
+  },
+  "serverError": {
+    "eyebrow": "خطأ 500 · حدث خطأ ما",
+    "title": "علامة التبويب هذه تعطّلت",
+    "description": "حدث عطل من جهتنا أثناء تحميل هذه الصفحة. لم تتأثر علامات التبويب والمجموعات في الإضافة. حاول مرة أخرى بعد لحظات.",
+    "documentTitle": "حدث خطأ ما",
+    "tabLabel": "لا يستجيب"
+  },
+  "links": {
+    "features": "الميزات",
+    "pricing": "الأسعار",
+    "faq": "الأسئلة الشائعة",
+    "dashboard": "لوحة التحكم",
+    "account": "الحساب",
+    "contactSupport": "تواصل مع الدعم"
+  },
+  "helpfulLinks": "روابط مفيدة",
+  "tryThese": "أو جرّب أحد هذه الروابط",
+  "illustrationTabResearch": "بحث",
+  "illustrationTabDocs": "مستندات",
+  "tryAgain": "حاول مرة أخرى",
+  "backToHome": "العودة إلى الصفحة الرئيسية",
+  "backToDashboard": "العودة إلى لوحة التحكم",
+  "devDetails": "تفاصيل الخطأ (في بيئة التطوير فقط)",
+  "referenceId": "المعرّف المرجعي",
+  "copyReferenceId": "نسخ المعرّف المرجعي",
+  "referenceIdHint": "اذكر هذا المعرّف إذا تواصلت مع الدعم، لنعرف ما الذي حدث.",
+  "referenceIdCopied": "تم نسخ المعرّف المرجعي",
+  "referenceIdCopyFailed": "تعذّر النسخ. حدّد المعرّف لنسخه.",
+  "titleWithBrand": "{title} | TabMerger"
+}

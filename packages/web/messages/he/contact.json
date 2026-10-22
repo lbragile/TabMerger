@@ -1,0 +1,32 @@
+{
+  "metaTitle": "יצירת קשר",
+  "metaDescription": "יצירת קשר עם צוות TabMerger: דיווח על באג, שאלה על חיובים או על החשבון, או שיתוף משוב ורעיונות.",
+  "eyebrow": "תמיכה",
+  "title": "צרו קשר",
+  "lead": "יש שאלה, מצאתם באג או צריכים עזרה עם המנוי? בדרך כלל אנחנו עונים תוך יום עסקים אחד.",
+  "bugReport": "מדווחים על באג? <link>פתחו issue ב-GitHub</link> למעקב מהיר ושקוף יותר.",
+  "preferEmail": "מעדיפים מייל? כתבו אל <email>{address}</email>.",
+  "sentTitle": "ההודעה נשלחה",
+  "sentBody": "נחזור אליך בקרוב.",
+  "email": "אימייל",
+  "emailPlaceholder": "you@example.com",
+  "subject": "נושא",
+  "subjectPlaceholder": "בחירת סיבה…",
+  "subjects": {
+    "bug": "דיווח על באג",
+    "betaBug": "דיווח על באג בבטא",
+    "feedback": "משוב ורעיונות",
+    "billing": "שאלה על חיובים",
+    "feature": "בקשה לתכונה",
+    "account": "עזרה עם החשבון",
+    "other": "אחר"
+  },
+  "otherSubject": "נא לפרט",
+  "otherSubjectPlaceholder": "במה מדובר?",
+  "message": "הודעה",
+  "messagePlaceholder": "תארו את הבעיה או השאלה, עם כמה שיותר פרטים שיכולים לעזור.",
+  "rateLimited": "נשלחו יותר מדי הודעות — אפשר לנסות שוב מאוחר יותר.",
+  "failed": "משהו השתבש. אפשר לנסות שוב או לכתוב לנו אל <email>{address}</email>.",
+  "sending": "שולחים…",
+  "send": "שליחת ההודעה"
+}

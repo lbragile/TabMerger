@@ -212,16 +212,18 @@ function GroupCard({
 
   return (
     <div
-      className={`rounded-lg border border-border overflow-hidden relative transition-shadow duration-200 hover:shadow-sh2 ${selectable ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
+      // The colour accent is on the start edge, and its tint fades from there: CSS gradients have
+      // no logical direction, so `--accent-to` flips it right to left.
+      className={`rounded-lg border border-border overflow-hidden relative transition-shadow duration-200 hover:shadow-sh2 [--accent-to:to_right] rtl:[--accent-to:to_left] ${selectable ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
       style={{
-        borderLeft: `4px solid ${group.color}`,
-        background: `linear-gradient(to right, ${group.color}14, transparent 40%), hsl(var(--surface))`,
+        borderInlineStart: `4px solid ${group.color}`,
+        background: `linear-gradient(var(--accent-to), ${group.color}14, transparent 40%), hsl(var(--surface))`,
       }}
       onClick={selectable ? () => onToggle(group.id) : undefined}
     >
       {selecting && !readOnly && (
         <button
-          className="absolute top-2 right-2 z-10 text-muted-foreground hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-muted-foreground"
+          className="absolute top-2 inset-e-2 z-10 text-muted-foreground hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-muted-foreground"
           onClick={(e) => { e.stopPropagation(); onToggle(group.id) }}
           disabled={group.locked}
           aria-describedby={group.locked ? lockedNoteId : undefined}
@@ -234,7 +236,7 @@ function GroupCard({
       <div className="px-4 pt-3.5 pb-3">
         {/* Name + star */}
         <div className="flex items-center gap-1.5 mb-1">
-          <span className="font-bold text-[15px] truncate flex-1">{group.locked ? dashboard('lockedName') : group.name}</span>
+          <span dir="auto" className="font-bold text-[15px] truncate flex-1 text-start">{group.locked ? dashboard('lockedName') : group.name}</span>
           {group.starred && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />}
           {readOnly && <Archive className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
         </div>
@@ -274,11 +276,11 @@ function GroupCard({
                   <span className="w-4 h-4 shrink-0 rounded-sm bg-muted flex items-center justify-center text-[9px] font-bold uppercase">
                     {(tab.title ?? tab.url ?? '?').charAt(0)}
                   </span>
-                  <span className="truncate">{tab.title || tab.url}</span>
+                  <span dir="auto" className="truncate text-start">{tab.title || tab.url}</span>
                 </li>
               ))}
               {overflow > 0 && (
-                <li className="text-xs text-muted-foreground pl-6">{t('moreTabs', { count: overflow })}</li>
+                <li className="text-xs text-muted-foreground ps-6">{t('moreTabs', { count: overflow })}</li>
               )}
             </ul>
           </div>
@@ -306,7 +308,7 @@ function GroupCard({
                 {open ? t('hideTabs') : t('showTabs')}
               </button>
             )}
-            {isPro && !readOnly && <Cloud className="w-3 h-3 text-primary/60 ml-auto" />}
+            {isPro && !readOnly && <Cloud className="w-3 h-3 text-primary/60 ms-auto" />}
           </div>
         )}
       </div>
@@ -354,7 +356,7 @@ function GroupRow({
           </span>
         )}
         <span className="w-3 h-3 rounded-full shrink-0" style={{ background: group.color }} />
-        <span className="font-medium text-sm flex-1 truncate">{group.locked ? dashboard('lockedName') : group.name}</span>
+        <span dir="auto" className="font-medium text-sm flex-1 truncate text-start">{group.locked ? dashboard('lockedName') : group.name}</span>
         <div className="flex items-center gap-2 shrink-0 text-xs text-muted-foreground">
           {!group.locked && <span>{t('rowMeta', { windows: group.windows.length, tabs: tabs.length })}</span>}
           {readOnly && <Archive className="w-3 h-3" />}
@@ -386,7 +388,7 @@ function GroupRow({
                 ) : (
                   <span className="w-3 h-3 shrink-0 rounded-sm bg-muted" />
                 )}
-                <span className="truncate">{tab.title || tab.url}</span>
+                <span dir="auto" className="truncate text-start">{tab.title || tab.url}</span>
               </li>
             ))}
           </ul>
@@ -542,7 +544,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
             </Button>
           )}
           {/* Grid/List segmented toggle */}
-          <div className="flex rounded-sm border border-border overflow-hidden ml-1">
+          <div className="flex rounded-sm border border-border overflow-hidden ms-1">
             <button
               onClick={() => toggle('grid')}
               className={`p-1.5 ${view === 'grid' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
@@ -598,7 +600,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
             onClick={() => setArchivedOpen((v) => !v)}
             className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground uppercase tracking-wide mb-2"
           >
-            {archivedOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+            {archivedOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3 rtl:-scale-x-100" />}
             {t('archived', { count: archivedGroups.length })}
           </button>
           {archivedOpen && (
@@ -637,10 +639,12 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
 
       {/* ponytail: floating bar — only rendered when items are selected */}
       {selecting && shareableSelected.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-popover border shadow-lg rounded-none px-4 py-2 z-50">
+        // Centred with `inset-x-0 mx-auto w-fit` rather than `left-1/2 -translate-x-1/2`: the same
+        // in both directions, with nothing physical to flip.
+        <div className="fixed bottom-6 inset-x-0 mx-auto w-fit flex items-center gap-3 bg-popover border shadow-lg rounded-none px-4 py-2 z-50">
           <span className="text-sm font-medium">{t('selectedCount', { count: shareableSelected.length })}</span>
           <Button size="sm" className="rounded-none" onClick={shareBundle} disabled={sharing} loading={sharing}>
-            {!sharing && <Share2 className="w-4 h-4 mr-1" />}
+            {!sharing && <Share2 className="w-4 h-4 me-1" />}
             {t('shareSelected')}
           </Button>
           <button onClick={exitSelecting} className="text-muted-foreground hover:text-foreground cursor-pointer" aria-label={t('cancelSelection')}>

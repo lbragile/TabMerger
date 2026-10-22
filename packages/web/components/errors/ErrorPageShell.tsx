@@ -140,8 +140,10 @@ function BrowserIllustration({ kind }: { kind: ErrorKind }) {
   return (
     <div aria-hidden="true" className="relative w-full max-w-[22rem] select-none" data-testid="error-illustration">
       {/* The tab that left the strip. `rotate-*` is the CSS `rotate` property in Tailwind v4, so
-          it composes with the float animation's `transform` instead of being overwritten. */}
-      <div className="absolute -top-6 right-1 z-10 rotate-[7deg] motion-safe:animate-tab-float sm:-right-8">
+          it composes with the float animation's `transform` instead of being overwritten. It
+          hangs off the strip's end corner, so right to left it moves to the left and tilts the
+          other way. */}
+      <div className="absolute -top-6 inset-e-1 z-10 rotate-[7deg] rtl:-rotate-[7deg] motion-safe:animate-tab-float sm:-inset-e-8">
         <div
           className={cn(
             'flex h-8 items-center gap-1.5 border border-dashed bg-card px-2.5 text-[0.75rem] font-medium text-text2 shadow-sh2',
@@ -159,9 +161,9 @@ function BrowserIllustration({ kind }: { kind: ErrorKind }) {
         </div>
       </div>
 
-      <div className="overflow-hidden border border-border bg-card text-left shadow-sh3">
+      <div className="overflow-hidden border border-border bg-card text-start shadow-sh3">
         <div className="flex items-end gap-1 border-b border-border bg-surface2 px-2 pt-2">
-          <span className="mb-2.5 mr-1.5 flex gap-1">
+          <span className="mb-2.5 me-1.5 flex gap-1">
             <span className="h-2 w-2 rounded-full bg-border2" />
             <span className="h-2 w-2 rounded-full bg-border2" />
             <span className="h-2 w-2 rounded-full bg-border2" />
@@ -174,7 +176,8 @@ function BrowserIllustration({ kind }: { kind: ErrorKind }) {
         <div className="px-3 pt-3">
           <div className="flex h-7 items-center gap-2 bg-surface2 px-2.5 font-mono text-[0.6875rem] text-text3">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-text3/60" />
-            <span className="truncate">tabmerger.com/…</span>
+            {/* An address reads left to right in every language. */}
+            <span dir="ltr" className="truncate">tabmerger.com/…</span>
           </div>
         </div>
         <div className="grid place-items-center px-4 pb-8 pt-6">

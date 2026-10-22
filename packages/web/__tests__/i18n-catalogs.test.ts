@@ -117,3 +117,170 @@ describe('message catalogs', () => {
     }
   })
 })
+
+describe('language picker keys', () => {
+  const KEYS = ['searchPlaceholder', 'searchLabel', 'noResults', 'rightToLeft']
+  const shipped = SUPPORTED_LOCALES.filter((locale) => locale !== 'en')
+
+  it.each(['en', ...shipped])('%s has the four language-picker keys, non-empty', (locale) => {
+    const picker = (readCatalog(locale) as Record<string, Record<string, string>>).languageSwitcher
+    for (const key of KEYS) {
+      expect(typeof picker[key], `${locale} ${key}`).toBe('string')
+      expect(picker[key].trim().length, `${locale} ${key}`).toBeGreaterThan(0)
+    }
+  })
+
+  it.each(['ar', 'he', 'fa'])('%s isolates each Latin run of the search example on its own', (locale) => {
+    const text = (readCatalog(locale) as Record<string, Record<string, string>>).languageSwitcher.searchPlaceholder
+    // One first-strong isolate (U+2068 ... U+2069) per Latin run (the code "de"), and no Latin
+    // letter outside one, so the run keeps its place beside the RTL comma and parenthesis.
+    const isolates = [...text.matchAll(/\u2068([^\u2068\u2069]*)\u2069/g)].map((m) => m[1])
+    expect(isolates).toEqual(['de'])
+    expect(text.replace(/\u2068[^\u2068\u2069]*\u2069/g, '')).not.toMatch(/[A-Za-z]/)
+  })
+
+  it.each(['en', ...shipped])('%s search example names a language and gives its code', (locale) => {
+    const text = (readCatalog(locale) as Record<string, Record<string, string>>).languageSwitcher.searchPlaceholder
+    // "<name in the UI language>, <code>": German, except in German, where it is French. Two
+    // parts, not three (with the native name): three did not fit a 320px screen in nine locales.
+    if (locale === 'de') expect(text).toMatch(/Französisch, fr\)/)
+    else expect(text.replace(/[\u2068\u2069]/g, '')).toMatch(/[,،、] ?de[)）]/)
+  })
+})
+
+describe('right-to-left catalogs: Latin lists', () => {
+  // In Arabic, Hebrew or Persian prose a comma between two bare Latin words resolves left to
+  // right (it sits between two left-to-right runs), so "Chrome, Edge" became one run and showed
+  // Edge first. Each Latin item of such a list goes in its own first-strong isolate
+  // (U+2068 ... U+2069), which leaves the comma to the sentence. ICU syntax ("count, plural") is
+  // not prose and is skipped, as are placeholders and tags.
+  const LATIN = String.raw`[A-Za-z][A-Za-z0-9.+#'’-]*(?: [A-Za-z0-9][A-Za-z0-9.+#'’-]*)*`
+  const JOINED = new RegExp(String.raw`${LATIN}["”)\]]*\s*[,،]\s*["“(\[]*${LATIN}`)
+
+  /** The prose of a message: isolated runs, ICU headers, placeholders and tags blanked out. */
+  const prose = (message: string) =>
+    message
+      .replace(/⁨[^⁨⁩]*⁩/g, '\u0000')
+      .replace(/\{\s*\w+\s*,\s*(?:plural|select|selectordinal|number|date|time)\s*,?/g, '\u0000')
+      .replace(/\{\s*\w+\s*\}/g, '\u0000')
+      .replace(/<\/?\w+>/g, '\u0000')
+      .replace(/[{}]/g, '\u0000')
+
+  it('recognises a joined list and lets an isolated one through', () => {
+    expect(JOINED.test(prose('תומך ב-Chrome, Edge ו-Brave'))).toBe(true)
+    expect(JOINED.test(prose('"Free", "Pro"'))).toBe(true)
+    expect(JOINED.test(prose('Mac، Cmd+K'))).toBe(true)
+    expect(JOINED.test(prose('תומך ב-⁨Chrome⁩, ⁨Edge⁩'))).toBe(false)
+    expect(JOINED.test(prose('{count, plural, one {# דירוג} other {# דירוגים}}'))).toBe(false)
+  })
+
+  it.each(['ar', 'he', 'fa'])('%s isolates each Latin item of a list in its prose', (locale) => {
+    const joined = Object.entries(flatten(readCatalog(locale)))
+      .filter(([, message]) => JOINED.test(prose(message)))
+      .map(([key, message]) => `${key}: ${prose(message).match(JOINED)![0]}`)
+    expect(joined).toEqual([])
+  })
+})
+
+describe('he: one-letter prefixes', () => {
+  // Hebrew joins a one-letter prefix (ו ב ל מ ה כ ש) to a Latin word or a number with a hyphen:
+  // "ו-Edge", "ב-Chrome", "ל-2". A simple placeholder ({store}, {last}) is filled with one of
+  // those, so it gets the hyphen too. A plural or select block is left out: its branches decide
+  // ("בחלון אחד" for one, "ב-{windows} חלונות" for other).
+  const GLUED = /(?<![א-ת׳'])[ובלמהכש](?:[A-Za-z0-9⁨]|\{\s*\w+\s*\})/
+
+  it('recognises a glued prefix and lets a hyphenated one or a plural block through', () => {
+    expect(GLUED.test('ב-Chrome וEdge')).toBe(true)
+    expect(GLUED.test('ל2 חלונות')).toBe(true)
+    expect(GLUED.test('{first} ו{second}')).toBe(true)
+    expect(GLUED.test('ו⁨Edge⁩')).toBe(true)
+    expect(GLUED.test('ב-⁨Chrome⁩ ו-⁨Edge⁩')).toBe(false)
+    expect(GLUED.test('ב{windows, plural, one {חלון אחד} other {-{windows} חלונות}}')).toBe(false)
+    expect(GLUED.test('חלון Chrome')).toBe(false)
+  })
+
+  it('has no prefix glued to a Latin word, a number, an isolate or a placeholder', () => {
+    const glued = Object.entries(flatten(readCatalog('he')))
+      .filter(([, message]) => GLUED.test(message))
+      .map(([key, message]) => `${key}: ${message.match(GLUED)![0]}`)
+    expect(glued).toEqual([])
+  })
+})
+
+/** Top-level plural blocks in a message: the selectors of each `{name, plural, sel {…} …}`. */
+function pluralSelectors(message: string): string[][] {
+  const text = withoutQuoted(message)
+  const found: string[][] = []
+  const scan = (from: number, to: number) => {
+    for (let i = from; i < to; i++) {
+      if (text[i] !== '{') continue
+      // Match this argument's closing brace.
+      let depth = 0
+      let end = i
+      for (; end < to; end++) {
+        if (text[end] === '{') depth++
+        else if (text[end] === '}' && --depth === 0) break
+      }
+      const body = text.slice(i + 1, end)
+      const head = /^\s*[A-Za-z0-9_]+\s*,\s*plural\s*,/.exec(body)
+      if (head) {
+        const selectors: string[] = []
+        let d = 0
+        let word = ''
+        for (let j = head[0].length; j < body.length; j++) {
+          const ch = body[j]
+          if (ch === '{') {
+            if (d === 0) selectors.push(word.trim())
+            d++
+            word = ''
+          } else if (ch === '}') d--
+          else if (d === 0) word += ch
+        }
+        found.push(selectors)
+      }
+      scan(i + 1, end)
+      i = end
+    }
+  }
+  scan(0, text.length)
+  return found
+}
+
+describe('ICU plural forms', () => {
+  const pluralKeys = Object.entries(english).filter(([, message]) => pluralSelectors(message).length > 0)
+
+  it('finds the English plural messages (the check below is not vacuous)', () => {
+    expect(pluralKeys.length).toBeGreaterThan(0)
+  })
+
+  const catalogFor = (locale: string) => flatten(readCatalog(locale))
+
+  it('ar spells out every category Intl.PluralRules uses wherever it has an other form', () => {
+    const needed = new Intl.PluralRules('ar').resolvedOptions().pluralCategories
+    const ar = catalogFor('ar')
+    const missing: string[] = []
+    for (const [key] of pluralKeys) {
+      for (const selectors of pluralSelectors(ar[key])) {
+        if (!selectors.includes('other')) continue
+        const absent = needed.filter((category) => !selectors.includes(category))
+        if (absent.length) missing.push(`${key}: missing ${absent.join('/')}`)
+      }
+    }
+    expect(missing).toEqual([])
+  })
+
+  it('he has one and two wherever English has one', () => {
+    const he = catalogFor('he')
+    const missing: string[] = []
+    for (const [key, message] of pluralKeys) {
+      const englishHasOne = pluralSelectors(message).some((selectors) => selectors.includes('one'))
+      if (!englishHasOne) continue
+      for (const selectors of pluralSelectors(he[key])) {
+        for (const category of ['one', 'two']) {
+          if (!selectors.includes(category)) missing.push(`${key}: missing ${category}`)
+        }
+      }
+    }
+    expect(missing).toEqual([])
+  })
+})

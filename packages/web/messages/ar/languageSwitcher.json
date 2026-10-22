@@ -1,0 +1,8 @@
+{
+  "label": "اللغة",
+  "trigger": "اللغة: {language} ({code})",
+  "searchPlaceholder": "ابحث عن لغة (مثل الألمانية، ⁨de⁩)",
+  "searchLabel": "ابحث عن اللغات بالاسم أو الرمز",
+  "noResults": "لم يتم العثور على لغات",
+  "rightToLeft": "من اليمين إلى اليسار"
+}

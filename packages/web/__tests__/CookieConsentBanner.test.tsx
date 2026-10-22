@@ -158,9 +158,12 @@ describe('CookieConsentBanner', () => {
     render(<CookieConsentBanner />)
     const corner = banner()!.parentElement!
     expect(corner.className.split(/\s+/)).toContain('fixed')
-    expect(corner.className).toContain('sm:left-[max(1.5rem,env(safe-area-inset-left))]')
+    expect(corner.className).toContain('sm:ltr:left-[max(1.5rem,env(safe-area-inset-left))]')
     expect(corner.className).toContain('sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))]')
-    expect(corner.className).toContain('sm:right-auto')
+    expect(corner.className).toContain('sm:ltr:right-auto')
+    // Right to left the card takes the bottom-right corner, and the toasts move to the left.
+    expect(corner.className).toContain('sm:rtl:right-[max(1.5rem,env(safe-area-inset-right))]')
+    expect(corner.className).toContain('sm:rtl:left-auto')
     expect(corner.className).not.toMatch(/inset-x-0|right-0/)
     expect(banner()!.className).toContain('max-w-[22rem]')
     // The full card from the start: no chip, nothing to collapse.

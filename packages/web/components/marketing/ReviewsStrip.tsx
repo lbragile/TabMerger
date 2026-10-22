@@ -9,6 +9,7 @@ import { ReviewsCarousel } from './ReviewsCarousel'
 import {
   BREAKDOWN_CAPTION_CLASS,
   BREAKDOWN_CLASS,
+  RATING_DIR,
   STAT_SECOND_BLOCK_CLASS,
   STATS_WITH_BREAKDOWN_CLASS,
   MIN_CARD_STRIDE_PX,
@@ -135,6 +136,9 @@ function headlineStats(
 /**
  * "/ 5" for the eye, "out of 5" for a screen reader, which would otherwise read the figure
  * as "4.23 slash 5", or drop the slash and say "4.23 5".
+ *
+ * The figure and this part must sit together in one left-to-right isolate (`RATING_DIR`):
+ * as separate runs in a right-to-left paragraph they were laid out reversed, "5 / 4.28".
  */
 function OutOfFive({ leadingSpace = false }: { leadingSpace?: boolean }) {
   const t = useTranslations('reviews')
@@ -184,7 +188,7 @@ function StoreTile({ store }: { store: StoreRating }) {
       <span aria-hidden="true" className="shrink-0 [&>svg]:block [&>svg]:h-6 [&>svg]:w-6">
         <Icon />
       </span>
-      <span className="flex min-w-0 flex-1 flex-col text-left">
+      <span className="flex min-w-0 flex-1 flex-col text-start">
         <span className={`truncate ${TILE_NAME_LINE_CLASS} text-text2`}>
           {label}
           <SpokenComma />
@@ -194,7 +198,7 @@ function StoreTile({ store }: { store: StoreRating }) {
           <SpokenComma />
         </span>
       </span>
-      <span className="flex shrink-0 items-baseline gap-1">
+      <span dir={RATING_DIR} className="flex shrink-0 items-baseline gap-1">
         <span className={`${TILE_RATING_CLASS} text-foreground`}>{rating}</span>
         <span className="text-[0.75rem] text-text3">
           <OutOfFive />
@@ -225,7 +229,7 @@ export async function ReviewsStrip() {
         <div className={`${STATS_GRID_CLASS} ${showBreakdown ? STATS_WITH_BREAKDOWN_CLASS : BREAKDOWN_CLASS}`}>
           {headlineStats(stores, ratings.rating, ratings.ratingCount, { t, common, format }).map((stat, i) => (
             <div key={stat.label} className={`${STAT_BLOCK_CLASS} ${i === 1 ? STAT_SECOND_BLOCK_CLASS : ''}`}>
-              <span className={STAT_NUMBER_CLASS}>
+              <span className={STAT_NUMBER_CLASS} dir={stat.outOfFive ? RATING_DIR : undefined}>
                 {stat.value}
                 {stat.outOfFive && <OutOfFive leadingSpace />}
               </span>

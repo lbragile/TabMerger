@@ -136,12 +136,18 @@ export function CookieConsentBanner() {
     collapse()
   }
 
+  // The card sits in the bottom start corner: bottom-left, or bottom-right in a right-to-left
+  // language. Physical sides on purpose, each paired with its own `env(safe-area-inset-*)`
+  // (there is no logical safe-area inset): both sides on phones, where it spans the width, and
+  // from `sm` one side per direction through `ltr:`/`rtl:`.
   return (
     <div
       className={cn(
         'pointer-events-none fixed z-50 flex flex-col items-start',
         'bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] right-[max(0.75rem,env(safe-area-inset-right))]',
-        'sm:right-auto sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))] sm:left-[max(1.5rem,env(safe-area-inset-left))]'
+        'sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))]',
+        'sm:ltr:right-auto sm:ltr:left-[max(1.5rem,env(safe-area-inset-left))]',
+        'sm:rtl:left-auto sm:rtl:right-[max(1.5rem,env(safe-area-inset-right))]'
       )}
     >
       {!open && (
@@ -176,7 +182,7 @@ export function CookieConsentBanner() {
             size="icon"
             aria-label={t('collapse')}
             onClick={collapse}
-            className="absolute end-1.5 top-1.5 h-9 w-9 text-text2"
+            className="absolute inset-e-1.5 top-1.5 h-9 w-9 text-text2"
           >
             <ChevronDown aria-hidden="true" className="size-4" />
           </Button>

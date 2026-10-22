@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from 'vitest'
 vi.mock('next/font/google', () => ({
   Geist: () => ({ variable: 'x' }),
   Geist_Mono: () => ({ variable: 'y' }),
+  Noto_Sans_Arabic: () => ({ variable: 'z' }),
+  Noto_Sans_Hebrew: () => ({ variable: 'z' }),
 }))
 vi.mock('@vercel/analytics/next', () => ({ Analytics: () => null }))
 vi.mock('@vercel/speed-insights/next', () => ({ SpeedInsights: () => null }))

@@ -9,7 +9,6 @@ import { SignOutForm } from '@/components/auth/SignOutForm'
 import { GitHubMark } from '@/components/GitHubMark'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { useGithubRepoLabel, useStarCount } from '@/components/layout/githubLabels'
-import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
 import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
 
 const links = [
@@ -49,7 +48,7 @@ function GithubRow({ count, onNavigate }: { count?: number | null; onNavigate: (
             <GitHubMark className="size-4 shrink-0" />
             {t('github')}
             {typeof count === 'number' && (
-                <span className="ml-auto flex items-center gap-1 text-[13px] tabular-nums">
+                <span className="ms-auto flex items-center gap-1 text-[13px] tabular-nums">
                     <Star aria-hidden="true" className="size-3.5 shrink-0" />
                     {formatStars(count)}
                 </span>
@@ -106,8 +105,6 @@ export function MobileNavToggle({ email, initials, starsPromise }: MobileNavTogg
                     ) : (
                         <GithubRow onNavigate={() => setOpen(false)} />
                     )}
-                    {/* The bar shows the language button from md, when this panel is gone. */}
-                    <LanguageSwitcher variant="row" onSwitch={() => setOpen(false)} />
                     <div className="my-1 border-t border-border" />
                     {initials ? (
                         <>
@@ -130,7 +127,7 @@ export function MobileNavToggle({ email, initials, starsPromise }: MobileNavTogg
                                 <button
                                     type="submit"
                                     onClick={() => setOpen(false)}
-                                    className="flex h-10 w-full items-center rounded-lg px-3 text-left text-[14px] text-text2 transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive"
+                                    className="flex h-10 w-full items-center rounded-lg px-3 text-start text-[14px] text-text2 transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive"
                                 >
                                     {t('signOut')}
                                 </button>

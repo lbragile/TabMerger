@@ -1,0 +1,213 @@
+{
+  "metaTitle": "לוח בקרה",
+  "greeting": "בוקר טוב, {name}",
+  "tierBadge": {
+    "free": "Free",
+    "pro": "Pro",
+    "pro_ai": "Pro AI"
+  },
+  "aiOrganise": "ארגון עם AI",
+  "aiOrganiseUpgrade": "כדי להשתמש בארגון עם AI צריך לשדרג ל-Pro AI",
+  "aiOrganiseFromExtension": "אפשר להתחיל את זה מהחלון הקופץ של תוסף TabMerger",
+  "tabGroups": "קבוצות כרטיסיות",
+  "savedSessions": "סשנים שמורים",
+  "stats": {
+    "tabs": {
+      "label": "כרטיסיות שמורות",
+      "description": "כרטיסיות בכל הקבוצות המסונכרנות"
+    },
+    "groups": {
+      "label": "קבוצות מסונכרנות",
+      "description": "קבוצות שמסונכרנות בענן"
+    },
+    "sessions": {
+      "label": "סשנים שמורים",
+      "description": "סשני גלישה שמורים",
+      "lockedDescription": "סשנים וגיבויים (צריך לבטל את הנעילה כדי להבחין ביניהם)"
+    },
+    "memory": {
+      "label": "זיכרון שפונה",
+      "description": "הערכה, לא מדידה"
+    },
+    "memberSince": {
+      "label": "חבר/ה מאז",
+      "description": "החשבון נוצר"
+    },
+    "aiCredits": {
+      "label": "קרדיטים של AI החודש",
+      "description": "שימוש חודשי ב-Pro AI",
+      "value": "{used}/{limit}"
+    },
+    "loading": "טוען"
+  },
+  "subscription": {
+    "currentPlan": "התוכנית הנוכחית",
+    "renews": "יתחדש ב-{date}",
+    "upgrade": "שדרוג",
+    "statuses": {
+      "active": "פעיל",
+      "canceled": "בוטל",
+      "past_due": "באיחור בתשלום",
+      "trialing": "בתקופת ניסיון",
+      "incomplete": "לא הושלם"
+    }
+  },
+  "upgraded": {
+    "message": "ברוכים הבאים ל-{plan}! המנוי שלך פעיל עכשיו. תיהנו מהתכונות החדשות.",
+    "dismiss": "סגירה"
+  },
+  "locked": {
+    "item": "נשמר עם ביטוי סיסמה קודם. פתחו את התוסף במכשיר שיש בו את הביטוי ותנו לו להסתנכרן.",
+    "device": "הכרטיסיות הפתוחות שלו נשמרו עם ביטוי סיסמה קודם. פתחו את התוסף במכשיר הזה ותנו לו להסתנכרן.",
+    "unverified": "לא ניתן לקרוא את זה כרגע. טענו מחדש את הדף כדי לנסות שוב."
+  },
+  "passphrase": {
+    "defaultLabel": "הזינו את ביטוי הסיסמה להצפנה כדי לראות את התוכן הזה.",
+    "groupsLabel": "הקבוצות שלך מוצפנות מקצה לקצה. הזינו את ביטוי הסיסמה כדי לראות אותן כאן.",
+    "sessionsLabel": "הסשנים שלך מוצפנים מקצה לקצה. הזינו את ביטוי הסיסמה כדי לראות אותם כאן.",
+    "backupsLabel": "הגיבויים שלך מוצפנים מקצה לקצה. הזינו את ביטוי הסיסמה כדי לראות אותם כאן.",
+    "placeholder": "ביטוי סיסמה",
+    "inputLabel": "ביטוי הסיסמה להצפנה",
+    "unlock": "ביטול נעילה",
+    "incorrect": "ביטוי הסיסמה שגוי."
+  },
+  "onboarding": {
+    "title": "מתחילים עם TabMerger",
+    "progress": "{done} מתוך {total} הושלמו",
+    "dismiss": "סגירה",
+    "install": "התקנת תוסף TabMerger",
+    "group": "יצירת הקבוצה הראשונה בתוסף",
+    "signin": "התחברות כדי להפעיל סנכרון בענן",
+    "upgrade": "שדרוג ל-Pro לקבוצות ללא הגבלה"
+  },
+  "lockedName": "(נעול)",
+  "damagedNote": "התוכן שלו לא בפורמט ש-TabMerger יכול לקרוא, ולכן אי אפשר להציג אותו כאן.",
+  "counts": {
+    "groups": "{count, plural, one {קבוצה אחת} two {שתי קבוצות} other {{count} קבוצות}}",
+    "windows": "{count, plural, one {חלון אחד} two {שני חלונות} other {{count} חלונות}}",
+    "tabs": "{count, plural, one {כרטיסייה אחת} two {שתי כרטיסיות} other {{count} כרטיסיות}}"
+  },
+  "sessions": {
+    "cantRestore": "לא ניתן לקרוא את הסשן הזה, ולכן אי אפשר לשחזר אותו.",
+    "restored": "{count, plural, one {שוחזרה כרטיסייה אחת מ-\"{name}\"} two {שוחזרו שתי כרטיסיות מ-\"{name}\"} other {שוחזרו {count} כרטיסיות מ-\"{name}\"}}",
+    "deleted": "הסשן נמחק",
+    "deleteFailed": "מחיקת הסשן נכשלה",
+    "loadFailed": "לא ניתן היה לטעון את הסשנים שלך.",
+    "tryAgain": "לנסות שוב",
+    "loading": "הסשנים נטענים",
+    "empty": "אין עדיין סשנים שמורים.",
+    "readOnlyNote": "כדי לשמור סשנים חדשים בחשבון צריך Pro. עדיין אפשר לפתוח או למחוק את הסשנים הקיימים.",
+    "upgrade": "שדרוג ל-Pro",
+    "freeLimit": "תוכנית חינמית: עד {count} סשנים. <link>שדרוג ל-Pro</link> ללא הגבלה.",
+    "restore": "שחזור הסשן",
+    "cantRestoreTooltip": "לא ניתן לקרוא את הסשן הזה, ולכן אי אפשר לשחזר אותו",
+    "delete": "מחיקת הסשן",
+    "hideContents": "הסתרת התוכן",
+    "showContents": "הצגת התוכן ({count})",
+    "groupFallbackName": "קבוצה {number}",
+    "groupTabs": "{count, plural, one {כרטיסייה אחת} two {שתי כרטיסיות} other {{count} כרטיסיות}}",
+    "moreTabs": "{count, plural, other {ועוד {count} כרטיסיות}}",
+    "moreGroups": "{count, plural, other {ועוד {count} קבוצות}}"
+  },
+  "backups": {
+    "title": "גיבויים",
+    "upgradeDescription": "גיבויים אוטומטיים הם חלק מ-Pro: תמונת מצב מוצפנת של הקבוצות שלך, שנשמרת לפי לוח זמנים, ו-{count} החדשות ביותר נשמרות.",
+    "readOnlyNote": "גיבויים חדשים דורשים Pro. עדיין אפשר להוריד או למחוק את הגיבויים הקיימים.",
+    "upgrade": "שדרוג",
+    "intro": "תמונות מצב של הקבוצות שלך שתוסף TabMerger שמר בחשבון באופן אוטומטי, מהחדשה לישנה. {count} החדשות ביותר נשמרות. כדי לשחזר אחת מהן, פותחים את התוסף ועוברים אל {place}; השחזור לא מתבצע מהדף הזה. קובץ שמורידים כאן לא מוצפן.",
+    "extensionPlace": "הגדרות > נתונים",
+    "loadFailed": "לא ניתן היה לטעון את הגיבויים שלך.",
+    "tryAgain": "לנסות שוב",
+    "loading": "הגיבויים נטענים",
+    "unknownKind": "{count, plural, one {לא ניתן לקרוא פריט שמור אחד, ולכן לא ידוע אם הוא גיבוי. הוא מופיע תחת סשנים שמורים.} two {לא ניתן לקרוא שני פריטים שמורים, ולכן לא ידוע אם הם גיבויים. הם מופיעים תחת סשנים שמורים.} other {לא ניתן לקרוא {count} פריטים שמורים, ולכן לא ידוע אם הם גיבויים. הם מופיעים תחת סשנים שמורים.}}",
+    "emptyTitle": "אין עדיין גיבויים.",
+    "emptyBody": "התוסף שומר גיבוי בעצמו כשהדפדפן פתוח, אם הקבוצות השתנו מאז הגיבוי האחרון. לוח הזמנים הוא \"{interval}\" אלא אם משנים אותו: אפשר לבחור את התדירות, או לגבות מיד, בתוסף תחת {place}.",
+    "intervals": {
+      "60": "כל שעה",
+      "360": "כל 6 שעות",
+      "720": "כל 12 שעות",
+      "1440": "כל יום",
+      "10080": "כל שבוע"
+    },
+    "unknownDateInSentence": "תאריך לא ידוע",
+    "unknownDate": "תאריך לא ידוע",
+    "namePrefix": "גיבוי אוטומטי",
+    "downloading": "מורידים את הגיבוי מ-{when}.",
+    "deleted": "הגיבוי נמחק",
+    "deletedAnnouncement": "הגיבוי מ-{when} נמחק.",
+    "deleteFailed": "מחיקת הגיבוי נכשלה",
+    "deleteFailedAnnouncement": "לא ניתן היה למחוק את הגיבוי מ-{when}.",
+    "deleteTitle": "למחוק את הגיבוי הזה?",
+    "deleteBody": "הגיבוי מ-{when} יוסר מהחשבון שלך. דפדפן שכבר יש בו את הגיבוי הזה שומר עותק משלו.",
+    "deleteBodyWithCounts": "הגיבוי מ-{when} ({groups}, {tabs}) יוסר מהחשבון שלך. דפדפן שכבר יש בו את הגיבוי הזה שומר עותק משלו.",
+    "cancel": "ביטול",
+    "delete": "מחיקה",
+    "download": "הורדה",
+    "downloadLabel": "הורדת הגיבוי מ-{when}",
+    "deleteLabel": "מחיקת הגיבוי מ-{when}"
+  },
+  "groups": {
+    "cantShare": "לא ניתן לקרוא את הקבוצה הזו, ולכן אי אפשר לשתף אותה.",
+    "linkCopiedSnapshot": "הקישור הועתק — הוא משתף תמונת מצב של הקבוצה.",
+    "shareFailed": "לא ניתן היה ליצור קישור שיתוף. אפשר לנסות שוב.",
+    "shareGroup": "שיתוף הקבוצה",
+    "copied": "הועתק!",
+    "share": "שיתוף",
+    "cantShareTooltip": "לא ניתן לקרוא את הקבוצה הזו, ולכן אי אפשר לשתף אותה",
+    "shareTooltip": "מעתיק קישור לתמונת מצב של הקבוצה — שינויים מאוחרים יותר לא יעדכנו אותו",
+    "justNow": "הרגע",
+    "minutesAgo": "לפני {count} דק׳",
+    "hoursAgo": "{count, plural, one {לפני שעה} two {לפני שעתיים} other {לפני # שע׳}}",
+    "daysAgo": "{count, plural, one {לפני יום} two {לפני יומיים} other {לפני # ימים}}",
+    "lockedCantSelect": "אי אפשר לבחור קבוצה נעולה",
+    "deselect": "ביטול הבחירה",
+    "select": "בחירה",
+    "syncedAt": "סונכרן {time}",
+    "cardMeta": "{windows, plural, one {חלון אחד} two {שני חלונות} other {{windows} חלונות}} · {tabs, plural, one {כרטיסייה אחת} two {שתי כרטיסיות} other {{tabs} כרטיסיות}}",
+    "syncedSuffix": " · סונכרן {time}",
+    "timeSuffix": " · {time}",
+    "stale": "ייתכן שהכרטיסיות לא עדכניות — הסנכרון האחרון היה לפני יותר מ-30 יום",
+    "moreTabs": "ועוד {count}",
+    "openAllTitle": "פתיחת כל הכרטיסיות בקבוצה",
+    "openAll": "פתיחת הכול",
+    "hideTabs": "הסתרת הכרטיסיות",
+    "showTabs": "הצגת הכרטיסיות",
+    "rowMeta": "{windows} חל׳ · {tabs} כרט׳",
+    "linkCopiedLive": "הקישור הועתק! דף השיתוף זמין.",
+    "empty": "אין עדיין קבוצות מסונכרנות. פתחו את התוסף כדי ליצור קבוצות כרטיסיות.",
+    "title": "קבוצות",
+    "summary": "{count, plural, one {קבוצה אחת} two {שתי קבוצות} other {{count} קבוצות}} · {tabs, plural, one {כרטיסייה אחת} two {שתי כרטיסיות} other {{tabs} כרטיסיות}}",
+    "sort": "מיון",
+    "sortLabel": "מיון הקבוצות",
+    "sortRecent": "אחרונות",
+    "sortName": "שם",
+    "sortTabCount": "מספר כרטיסיות",
+    "cancel": "ביטול",
+    "gridView": "תצוגת רשת",
+    "listView": "תצוגת רשימה",
+    "archived": "בארכיון ({count})",
+    "selectedCount": "{count} נבחרו",
+    "shareSelected": "שיתוף הנבחרות",
+    "cancelSelection": "ביטול הבחירה"
+  },
+  "sync": {
+    "reasons": {
+      "locked": "כדי לסנכרן, פתחו את התוסף ובטלו את נעילת ההצפנה.",
+      "no-session": "כדי לסנכרן, התחברו בתוסף.",
+      "error": "הסנכרון נכשל. אפשר לנסות שוב מהתוסף."
+    },
+    "failedFallback": "הסנכרון נכשל.",
+    "syncing": "מסנכרנים...",
+    "busy": "סנכרון כבר מתבצע",
+    "failed": "הסנכרון נכשל",
+    "synced": "סונכרן",
+    "never": "עדיין לא בוצע סנכרון",
+    "reasonSeparator": ". ",
+    "refresh": "רענון מצב הסנכרון",
+    "resync": "סנכרון מחדש עכשיו",
+    "justNow": "הרגע",
+    "minutesAgo": "לפני {count} דק׳",
+    "hoursAgo": "{count, plural, one {לפני שעה} two {לפני שעתיים} other {לפני # שע׳}}",
+    "daysAgo": "{count, plural, one {לפני יום} two {לפני יומיים} other {לפני # ימים}}"
+  }
+}

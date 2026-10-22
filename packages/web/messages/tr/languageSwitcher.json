@@ -1,4 +1,8 @@
 {
   "label": "Dil",
-  "trigger": "Dil: {language} ({code})"
+  "trigger": "Dil: {language} ({code})",
+  "searchPlaceholder": "Dil ara (ör. Almanca, de)",
+  "searchLabel": "Dilleri ada veya koda göre ara",
+  "noResults": "Dil bulunamadı",
+  "rightToLeft": "Sağdan sola"
 }

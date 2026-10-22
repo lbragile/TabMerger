@@ -1,7 +1,9 @@
 import {
   DEFAULT_LOCALE,
   LOCALE_NATIVE_NAMES as PUBLIC_LOCALE_NATIVE_NAMES,
+  RTL_LOCALES,
   SUPPORTED_LOCALES,
+  isRtlLocale,
   type SupportedLocale,
 } from '@tabmerger/shared'
 
@@ -56,17 +58,24 @@ export const OG_LOCALES: Record<AppLocale, string> = {
   hi: 'hi_IN',
   'pt-BR': 'pt_BR',
   'zh-CN': 'zh_CN',
+  ar: 'ar_AR',
+  he: 'he_IL',
+  fa: 'fa_IR',
   [PSEUDO_LOCALE]: 'en_XA',
 }
 
 /**
- * Languages written right to left. None ships today; add e.g. 'ar', 'he', 'fa', 'ur' here when
- * one does (see docs/I18N.md for the layout work that needs).
+ * Languages written right to left (Arabic, Hebrew, Persian): `RTL_LOCALES` in `@tabmerger/shared`,
+ * the one list the web app and the extension share. The root layout sets `<html dir="rtl">` for
+ * these, which flips every logical utility (`ms-`, `ps-`, `inset-s-`, `text-start`, …), Radix
+ * primitives (DirectionProvider) and picks the script's font (lib/fonts.ts). See docs/I18N.md,
+ * "Right-to-left".
  */
-export const RTL_LOCALES: readonly string[] = []
+export { RTL_LOCALES }
 
+/** `rtl` for a right-to-left language (or a regional tag of one), else `ltr`. */
 export function localeDirection(locale: string): 'ltr' | 'rtl' {
-  return RTL_LOCALES.includes(locale) ? 'rtl' : 'ltr'
+  return isRtlLocale(locale) ? 'rtl' : 'ltr'
 }
 
 export function isAppLocale(value: unknown): value is AppLocale {

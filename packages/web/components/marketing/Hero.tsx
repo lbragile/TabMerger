@@ -32,9 +32,9 @@ export function Hero({ browser = 'chrome' }: HeroProps = {}) {
         {/* Two columns from `lg` only: at tablet widths half the row is too narrow for a
             16:9 video, so it stacks under the copy at full width instead. */}
         <div className="grid gap-10 items-center grid-cols-1 lg:grid-cols-[1fr_1fr]">
-          {/* Left col — capped width + ml-auto pulls the text block toward the
-              center gutter instead of hugging the far-left edge of the section. */}
-          <div className="flex flex-col lg:max-w-[34rem] lg:ml-auto">
+          {/* Start col — capped width + ms-auto pulls the text block toward the
+              center gutter instead of hugging the section's start edge. */}
+          <div className="flex flex-col lg:max-w-[34rem] lg:ms-auto">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
               {t('eyebrow')}
             </p>

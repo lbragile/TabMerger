@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { useDirection } from '@/components/DirectionProvider'
 import { CARD_STRIDE_PX, CAROUSEL_TRACK_CLASS, CAROUSEL_VIEWPORT_CLASS } from './reviewsLayout'
 
 /**
@@ -22,7 +23,7 @@ import { CARD_STRIDE_PX, CAROUSEL_TRACK_CLASS, CAROUSEL_VIEWPORT_CLASS } from '.
  * when the visitor says so:
  * - with the pause button. Content that moves on its own for more than five seconds needs
  *   a way to stop it that doesn't depend on a mouse. Decision: the button is not shown; it
- *   is the first control in the tab order and appears at the strip's top-left corner when
+ *   is the first control in the tab order and appears at the strip's top start corner when
  *   the keyboard reaches it, and screen readers find it there too;
  * - by tapping the strip on a touch screen (anywhere but a link), which starts it again too.
  *
@@ -41,6 +42,12 @@ import { CARD_STRIDE_PX, CAROUSEL_TRACK_CLASS, CAROUSEL_VIEWPORT_CLASS } from '.
  * The buttons come before the cards in the DOM, so Tab reaches them before the review
  * links. They are positioned over the strip, so that order changes nothing on screen.
  * Decision: the arrows are shown from `sm` up only; a phone moves the strip by swiping.
+ *
+ * Right to left (`useDirection()`, from the locale): the cards run from the right edge, so
+ * `offset` still counts px scrolled towards the end of the track, but the track moves right
+ * (a positive translate), a finger moving right moves it on, a card's place along the track is
+ * measured from its right edge, and the browser's own scroll of the viewport is negative.
+ * "Previous" sits at the start (right) edge and its chevron points right.
  */
 
 const AUTO_SPEED_PX_PER_S = 40
@@ -86,12 +93,33 @@ export function swipeTarget(startOffset: number, dragged: number, stride = CARD_
 }
 
 /**
+ * A card's place along the track: its distance from the first card's start edge. That is the
+ * left edge left to right, and the right edge right to left, where the first card is the
+ * rightmost. Layout positions (`offsetLeft`), so the track's transform doesn't change it.
+ */
+export function trackPosition(
+  card: { offsetLeft: number; offsetWidth: number },
+  first: { offsetLeft: number; offsetWidth: number },
+  rtl: boolean
+): number {
+  return rtl
+    ? first.offsetLeft + first.offsetWidth - (card.offsetLeft + card.offsetWidth)
+    : card.offsetLeft - first.offsetLeft
+}
+
+/** The track's transform for a wrapped offset: it moves left (LTR) or right (RTL) as `offset` grows. */
+export function trackTransform(offset: number, rtl: boolean): string {
+  return `translate3d(${rtl ? offset : -offset}px,0,0)`
+}
+
+/**
  * The offset that brings a card fully into view, or null when it already is.
  *
- * `cardLeft` is the card's position along the track, `offset` the wrapped offset (the track
- * position at the viewport's left edge). The card moves the shortest distance: to the left
- * edge when it is cut off there, to the right edge when it is cut off there. A card wider
- * than the viewport is aligned to the left edge.
+ * `cardLeft` is the card's position along the track (`trackPosition`), `offset` the wrapped
+ * offset (the track position at the viewport's start edge). The card moves the shortest
+ * distance: to the start edge when it is cut off there, to the end edge when it is cut off
+ * there. A card wider than the viewport is aligned to the start edge. The same in both
+ * directions, since both figures are measured from the start.
  */
 export function revealTarget(cardLeft: number, cardWidth: number, viewportWidth: number, offset: number): number | null {
   const fits = cardWidth <= viewportWidth
@@ -134,16 +162,17 @@ const arrowClass =
   'border border-border bg-background/90 backdrop-blur text-foreground shadow-sm transition-colors ' +
   `hover:bg-surface ${focusRing}`
 
-// Hidden until the keyboard focuses it, then a small button over the strip's top-left
+// Hidden until the keyboard focuses it, then a small button over the strip's top start
 // corner. It is positioned, so showing it moves nothing.
 const pauseClass =
-  'sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:left-3 focus-visible:top-3 focus-visible:z-20 ' +
+  'sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:inset-s-3 focus-visible:top-3 focus-visible:z-20 ' +
   'focus-visible:inline-flex focus-visible:h-8 focus-visible:items-center focus-visible:gap-1.5 focus-visible:rounded-full ' +
   'focus-visible:border focus-visible:border-border focus-visible:bg-background focus-visible:px-3 ' +
   `focus-visible:text-[0.75rem] focus-visible:font-medium focus-visible:text-foreground focus-visible:shadow-sm ${focusRing}`
 
 export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode; labelledBy: string }) {
   const t = useTranslations('reviews')
+  const rtl = useDirection() === 'rtl'
   const viewportRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const m = useRef({
@@ -180,7 +209,8 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
       const cards = Array.from(track.children).filter((el) => !el.hasAttribute(LOOP_COPY_ATTR))
       const first = cards[0] as HTMLElement | undefined
       const second = cards[1] as HTMLElement | undefined
-      const stride = first && second ? second.offsetLeft - first.offsetLeft : 0
+      // Negative right to left, where the second card is left of the first.
+      const stride = first && second ? Math.abs(second.offsetLeft - first.offsetLeft) : 0
       if (stride > 0) {
         s.stride = stride
         s.half = cards.length * stride
@@ -221,7 +251,7 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
       }
       // Keep the raw number bounded while nothing is animating toward a target.
       if (!s.tween && !s.drag?.active) s.offset = wrapOffset(s.offset, s.half)
-      track.style.transform = `translate3d(${-wrapOffset(s.offset, s.half)}px,0,0)`
+      track.style.transform = trackTransform(wrapOffset(s.offset, s.half), rtl)
       raf = requestAnimationFrame(frame)
     }
     raf = requestAnimationFrame(frame)
@@ -231,7 +261,7 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
       ro?.disconnect()
       mq?.removeEventListener?.('change', onMotion)
     }
-  }, [looped])
+  }, [looped, rtl])
 
   const goTo = (to: number) => {
     const s = m.current
@@ -277,7 +307,7 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
     if (card.parentElement !== track || !first) return
 
     const offset = wrapOffset(s.offset, s.half)
-    const target = revealTarget(card.offsetLeft - first.offsetLeft, card.offsetWidth, viewport.clientWidth, offset)
+    const target = revealTarget(trackPosition(card, first, rtl), card.offsetWidth, viewport.clientWidth, offset)
     if (target === null) return
     // Tween from the wrapped offset, so the distance is the short one nearestOnLoop picked.
     s.offset = offset
@@ -291,11 +321,12 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
    * cards, and blank space once it scrolls past the end of the track. It is put back to 0
    * here, before the frame is painted. When focus caused the scroll, onTrackFocus has
    * already moved the strip to the focused card; otherwise the distance scrolled is added
-   * to the offset, so what the browser meant to show is still what is shown.
+   * to the offset, so what the browser meant to show is still what is shown. Right to left,
+   * `scrollLeft` is 0 at the start and negative towards the end.
    */
   const onViewportScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const viewport = e.currentTarget
-    const dx = viewport.scrollLeft
+    const dx = rtl ? -viewport.scrollLeft : viewport.scrollLeft
     viewport.scrollTop = 0
     if (dx === 0) return
     viewport.scrollLeft = 0
@@ -314,10 +345,16 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
     s.drag = { pointerId: e.pointerId, startX: e.clientX, startOffset: s.offset, active: false }
   }
 
+  /**
+   * Pointer travel in the track's terms: negative moves it on. Right to left that is a finger
+   * moving right, so the sign flips.
+   */
+  const alongTrack = (dx: number) => (rtl ? -dx : dx)
+
   const onPointerMove = (e: React.PointerEvent) => {
     const d = m.current.drag
     if (!d || d.pointerId !== e.pointerId) return
-    const dx = e.clientX - d.startX
+    const dx = alongTrack(e.clientX - d.startX)
     if (!d.active) {
       if (Math.abs(dx) < DRAG_THRESHOLD_PX) return
       d.active = true
@@ -342,7 +379,7 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
     }
     // A drag that ends over a card's link must not also open it.
     s.suppressClick = true
-    goTo(swipeTarget(d.startOffset, e.clientX - d.startX, s.stride))
+    goTo(swipeTarget(d.startOffset, alongTrack(e.clientX - d.startX), s.stride))
   }
 
   const onClickCapture = (e: React.MouseEvent) => {
@@ -376,12 +413,13 @@ export function ReviewsCarousel({ children, labelledBy }: { children: ReactNode;
           {paused ? t('play') : t('pause')}
         </button>
       )}
-      {/* Arrows from sm up; on phones the strip is swiped instead. */}
-      <button type="button" aria-label={t('previous')} onClick={() => step(-1)} className={`${arrowClass} left-3`}>
-        <ChevronLeft className="h-5 w-5" aria-hidden />
+      {/* Arrows from sm up; on phones the strip is swiped instead. Previous is at the start
+          edge, so right to left it is on the right and its chevron is mirrored to point right. */}
+      <button type="button" aria-label={t('previous')} onClick={() => step(-1)} className={`${arrowClass} inset-s-3`}>
+        <ChevronLeft className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
       </button>
-      <button type="button" aria-label={t('next')} onClick={() => step(1)} className={`${arrowClass} right-3`}>
-        <ChevronRight className="h-5 w-5" aria-hidden />
+      <button type="button" aria-label={t('next')} onClick={() => step(1)} className={`${arrowClass} inset-e-3`}>
+        <ChevronRight className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
       </button>
 
       <div

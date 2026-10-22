@@ -44,7 +44,9 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
           >
             {opt === 'monthly' ? t('monthly') : t('yearly')}
             {opt === 'yearly' && YEARLY_DISCOUNT_PERCENT > 0 && (
-              <span className="text-[11px] font-semibold text-primary">{t('discountBadge', { percent: YEARLY_DISCOUNT_PERCENT })}</span>
+              // A left-to-right isolate: in a right-to-left page the leading minus sign would
+              // otherwise land after the number ("10%−").
+              <span dir="ltr" className="text-[11px] font-semibold text-primary">{t('discountBadge', { percent: YEARLY_DISCOUNT_PERCENT })}</span>
             )}
           </button>
         ))}

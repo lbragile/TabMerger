@@ -1,0 +1,23 @@
+{
+  "heading": "ماذا يقول المستخدمون",
+  "byStore": "حسب المتجر",
+  "loading": "جارٍ تحميل المراجعات",
+  "averageRating": "متوسط التقييم",
+  "averageRatingOn": "متوسط التقييم على {store}",
+  "ratingsOn": "{count, plural, zero {التقييمات} one {التقييم} two {التقييمان} few {التقييمات} many {التقييمات} other {التقييمات}} على {store}",
+  "ratingsAcross": "التقييمات على {stores}",
+  "ratingCount": "{count, plural, zero {# تقييم} one {تقييم واحد} two {تقييمان} few {# تقييمات} many {# تقييمًا} other {# تقييم}}",
+  "outOfFiveVisual": "/ 5",
+  "outOfFiveSpoken": " من 5",
+  "spokenComma": "، ",
+  "skeletonRatingCount": "00 تقييم",
+  "stars": "{score} من 5 نجوم",
+  "readFull": "قراءة المراجعة كاملة",
+  "readFullBy": " بقلم {author} على {store}",
+  "carousel": "عرض دوّار",
+  "play": "تشغيل المراجعات",
+  "pause": "إيقاف المراجعات مؤقتًا",
+  "previous": "المراجعة السابقة",
+  "next": "المراجعة التالية",
+  "skeletonRating": "0.00 / 5"
+}
