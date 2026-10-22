@@ -1,3 +1,10 @@
+# [3.10.0](https://github.com/lbragile/TabMerger/compare/v3.9.1...v3.10.0) (2026-10-22)
+
+
+### Features
+
+* **i18n:** add Arabic, Hebrew and Persian with right-to-left layouts ([#99](https://github.com/lbragile/TabMerger/issues/99)) ([41f4951](https://github.com/lbragile/TabMerger/commit/41f495132e7bb67f4ef0e348d2da5a08b3eeb9c1))
+
 ## [3.9.1](https://github.com/lbragile/TabMerger/compare/v3.9.0...v3.9.1) (2026-10-21)
 
 
