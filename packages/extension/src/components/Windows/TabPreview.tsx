@@ -115,8 +115,8 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
             onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON; }}
           />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{tab.title}</p>
-            <p className="truncate text-xs text-muted-foreground">{tab.url}</p>
+            <p dir="auto" className="truncate text-sm font-medium text-ui-start">{tab.title}</p>
+            <p dir="ltr" className="truncate text-xs text-muted-foreground text-ui-start">{tab.url}</p>
             {loading ? (
               <Skeleton className="mt-2 h-24 w-full rounded" />
             ) : ogImage ? (

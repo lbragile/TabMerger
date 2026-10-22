@@ -181,3 +181,21 @@ describe('dndMultiDrag registry', () => {
     expect(findSelectionRows(document)).toEqual([])
   })
 })
+
+describe('buildDragGhost — right-to-left UI', () => {
+  it('puts the +N badge and the stacked cards on the start side (right), next to the pointer', () => {
+    document.documentElement.dir = 'rtl'
+    try {
+      const ghost = buildDragGhost(tabRow('g::w0::t0'), rect(0, 24), { count: 3 })
+      const badge = ghost.querySelector('[data-testid="drag-ghost-count"]') as HTMLElement
+      expect(badge.style.right).toBe('-9px')
+      expect(badge.style.left).toBe('')
+      for (const card of ghost.querySelectorAll<HTMLElement>('[data-testid="drag-ghost-stack"]')) {
+        expect(card.style.right).not.toBe('')
+        expect(card.style.left).toBe('')
+      }
+    } finally {
+      document.documentElement.dir = ''
+    }
+  })
+})

@@ -670,3 +670,31 @@ describe('holdInstantFrames (exported: keyboard move mode uses it when it remoun
     await vi.waitFor(() => expect(attr()).toBe(false));
   });
 });
+
+describe('Html5DragSensor — ghost grab point in a right-to-left UI', () => {
+  // A 380px row at x 400..780, grabbed by its grip 10px from the row's right end (where the grip
+  // is in the mirrored layout), then dragged to x 500.
+  const rect = { left: 400, right: 780, width: 380, top: 0, bottom: 24, height: 24 };
+  const ghostX = async () => {
+    const ghost = document.querySelector('[data-testid="drag-ghost"]') as HTMLElement;
+    document.dispatchEvent(dragDomEvent('dragover', 500, 60));
+    await new Promise((r) => requestAnimationFrame(() => r(null)));
+    return Number(/translate3d\((-?\d+)px/.exec(ghost.style.transform)?.[1]);
+  };
+
+  it('left to right: the ghost hangs to the right of the pointer, at most 40px of it to the left', async () => {
+    construct(makeCallbacks(), makeDataTransfer(), { clientX: 770, clientY: 10 }, makeRow({ ariaLabel: 'Alpha', rect }));
+    expect(await ghostX()).toBe(500 - 40);
+  });
+
+  it('right to left: measured from the row’s right end, so the ghost hangs to the LEFT of the pointer', async () => {
+    document.documentElement.dir = 'rtl';
+    try {
+      construct(makeCallbacks(), makeDataTransfer(), { clientX: 770, clientY: 10 }, makeRow({ ariaLabel: 'Alpha', rect }));
+      // the pointer stays 10px in from the ghost's right edge: 500 - (380 - 10)
+      expect(await ghostX()).toBe(130);
+    } finally {
+      document.documentElement.dir = '';
+    }
+  });
+});

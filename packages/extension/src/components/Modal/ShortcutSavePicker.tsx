@@ -59,7 +59,7 @@ export function ShortcutSavePickerModal({ data, onClose }: ShortcutSavePickerMod
                     className="h-2 w-2 rounded-full shrink-0"
                     style={{ backgroundColor: g.color }}
                   />
-                  {g.name}
+                  <bdi>{g.name}</bdi>
                 </span>
               </SelectItem>
             ))}

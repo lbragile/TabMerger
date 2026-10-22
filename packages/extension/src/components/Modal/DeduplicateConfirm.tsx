@@ -44,7 +44,7 @@ export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmMod
       <ScrollArea className="max-h-48 mt-3 border border-border">
         <ul className="p-2 space-y-1">
           {duplicates.map(({ windowIndex, tabIndex, tab }) => (
-            <li key={`${windowIndex}-${tabIndex}`} className="text-xs text-muted-foreground truncate px-1">
+            <li key={`${windowIndex}-${tabIndex}`} dir={tab.title ? 'auto' : 'ltr'} className="text-xs text-muted-foreground truncate text-ui-start px-1">
               {tab.title || tab.url}
             </li>
           ))}

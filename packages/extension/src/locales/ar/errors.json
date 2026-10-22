@@ -1,0 +1,33 @@
+{
+  "syncPaused": "المزامنة متوقفة مؤقتًا: اسمح بها في Firefox",
+  "conflictCopy": "تم تغيير {{names}} أيضًا على جهاز آخر. حُفظت نسختك كنسخة منفصلة.",
+  "quotedName": "«{{name}}»",
+  "groupsChangedElsewhere": "تغيّرت مجموعة كنت تعمل عليها أو أُزيلت في مكان آخر، لذا لم يتغير شيء.",
+  "undoConflict": "تغيّرت مجموعاتك في مكان آخر، لذا لم يُتراجع عن شيء. حاول مرة أخرى.",
+  "freeLimit": {
+    "maxGroups": "تسمح الخطة المجانية بما يصل إلى {{max}} من المجموعات.",
+    "maxTabs": "تسمح الخطة المجانية بما يصل إلى {{max}} من علامات التبويب.",
+    "maxUrlRules": "تسمح الخطة المجانية بما يصل إلى {{max}} من قواعد URL."
+  },
+  "fileContains": "يحتوي هذا الملف على {{groups}} و{{tabs}}.",
+  "incognitoNotAllowed": "فُتحت كنافذة عادية لأن TabMerger غير مسموح به في وضع التصفح المتخفي. لتغيير ذلك، افتح «إدارة الإضافة» وفعّل «Allow in Incognito».",
+  "encryptionAlreadySetUp": "التشفير مُعدّ بالفعل لهذا الحساب. أدخل عبارة المرور الحالية لفتح قفله.",
+  "signInToEnableEncryption": "يجب تسجيل الدخول لتفعيل التشفير",
+  "signInToResetEncryption": "يجب تسجيل الدخول لإعادة تعيين التشفير",
+  "googleUnavailable": "تسجيل الدخول باستخدام Google غير متاح في هذه البيئة",
+  "googleNoUrl": "لم يُرجع تسجيل الدخول باستخدام Google عنوان URL للتفويض",
+  "googleCancelled": "أُلغي تسجيل الدخول باستخدام Google",
+  "googleNoSession": "لم يُرجع تسجيل الدخول باستخدام Google جلسة",
+  "googleFailed": "فشل تسجيل الدخول باستخدام Google",
+  "expectedArray": "كان المتوقع مصفوفة",
+  "invalidFormat": "تنسيق غير صالح",
+  "noGroupsFound": "لم يُعثر على مجموعات",
+  "noGroupsSelected": "لم تُحدَّد أي مجموعات",
+  "notAuthenticated": "لم تتم المصادقة",
+  "sharingRequiresPro": "تتطلب المشاركة الترقية إلى Pro — الاستحقاق غير متوفر",
+  "aiOncePerDay": "استُخدم اليوم بالفعل — هذا الإجراء بالذكاء الاصطناعي محدود بمرة واحدة يوميًا",
+  "proAiRequired": "يتطلب خطة Pro AI",
+  "nameGroupOff": "تسمية المجموعة متوقفة في الإعدادات",
+  "suggestSessionsOff": "اقتراح الجلسات متوقف في الإعدادات",
+  "organizeOff": "التنظيم متوقف في الإعدادات"
+}

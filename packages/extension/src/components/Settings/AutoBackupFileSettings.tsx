@@ -179,6 +179,8 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
             </Label>
             <Input
               id={folderId}
+              // A folder path: left to right, like a URL
+              dir="ltr"
               className="h-7 w-full min-w-0 text-xs rounded-none"
               value={folder}
               disabled={fieldsDisabled}
@@ -202,6 +204,7 @@ export function AutoBackupFileSettings({ file, disabled, onSave }: AutoBackupFil
             </Label>
             <Input
               id={patternId}
+              dir="ltr"
               className="h-7 w-full min-w-0 text-xs rounded-none"
               value={pattern}
               disabled={fieldsDisabled}

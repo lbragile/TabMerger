@@ -1,0 +1,29 @@
+{
+  "dropNewWindow": "برای پنجرهٔ جدید اینجا رها کنید",
+  "removeStale_one": "حذف {{count}} زبانهٔ قدیمی",
+  "removeStale_other": "حذف {{count}} زبانهٔ قدیمی",
+  "editGroupNote": "ویرایش یادداشت گروه",
+  "editNote": "ویرایش یادداشت",
+  "moreGroupOptions": "گزینه‌های بیشتر گروه",
+  "notePlaceholder": "افزودن یادداشت برای این گروه…",
+  "noteLength": "{{length}}/{{max}}",
+  "noWindows": "این گروه پنجره‌ای ندارد",
+  "addWindow": "افزودن پنجره",
+  "search": {
+    "elsewhere": "{{tabs}} در {{groups}}",
+    "matchingTabs_one": "{{count}} زبانهٔ منطبق",
+    "matchingTabs_other": "{{count}} زبانهٔ منطبق",
+    "otherGroups_one": "{{count}} گروه دیگر",
+    "otherGroups_other": "{{count}} گروه دیگر",
+    "noneInGroup": "هیچ زبانه‌ای در این گروه مطابقت ندارد",
+    "hidden_one": "{{count}} زبانه با جست‌وجو پنهان شد",
+    "hidden_other": "{{count}} زبانه با جست‌وجو پنهان شدند",
+    "allMatch_one": "هر {{count}} زبانه مطابقت دارد",
+    "allMatch_other": "هر {{count}} زبانه مطابقت دارند",
+    "someMatch_one": "{{matched}} از {{count}} زبانه مطابقت دارد",
+    "someMatch_other": "{{matched}} از {{count}} زبانه مطابقت دارند",
+    "statusElsewhere": "{{status}} · {{elsewhere}}",
+    "noneForQuery": "هیچ زبانه‌ای در این گروه با «{{query}}» مطابقت ندارد"
+  },
+  "createGroup": "ساخت گروه جدید…"
+}

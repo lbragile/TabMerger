@@ -156,7 +156,7 @@ export function OtherDevices() {
                 </Button>
               </div>
             )}
-            <div className="max-h-64 overflow-y-auto pr-1 space-y-1.5">
+            <div className="max-h-64 overflow-y-auto pe-1 space-y-1.5">
               {devices.map((device) => {
                 const isCurrentDevice = device.device_id === ownDeviceId;
                 return (
@@ -266,6 +266,7 @@ function DeviceRow({
             <Laptop className="h-3 w-3 shrink-0 text-primary" />
             <Input
               ref={editInputRef}
+              dir={editingName ? 'auto' : undefined}
               value={editingName}
               onChange={(e) => onEditingNameChange(e.target.value)}
               onKeyDown={(e) => {
@@ -298,12 +299,12 @@ function DeviceRow({
           <button
             type="button"
             onClick={onToggle}
-            className="flex-1 min-w-0 flex items-center gap-2 text-xs text-left"
+            className="flex-1 min-w-0 flex items-center gap-2 text-xs text-start"
           >
-            {isExpanded ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />}
+            {isExpanded ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0 rtl:-scale-x-100" />}
             <span className="flex-1 min-w-0 flex items-center gap-1">
               <Laptop className="h-3 w-3 shrink-0 text-primary" />
-              <span className="min-w-0 truncate font-medium">{device.device_name}</span>
+              <span dir="auto" className="min-w-0 truncate font-medium text-ui-start">{device.device_name}</span>
               {isCurrentDevice && (
                 <span className="shrink-0 text-muted-foreground font-normal">{t('devices.thisDevice')}</span>
               )}
@@ -346,7 +347,7 @@ function DeviceRow({
           )}
           {tabs.map((tab, i) => (
             <div key={i} className="flex min-w-0 items-center gap-2 text-xs">
-              <span className="flex-1 min-w-0 truncate" title={tab.title ?? tab.url}>
+              <span dir={tab.title ? 'auto' : 'ltr'} className="flex-1 min-w-0 truncate text-ui-start" title={tab.title ?? tab.url}>
                 {tab.title || tab.url}
               </span>
               <Button
@@ -356,7 +357,7 @@ function DeviceRow({
                 aria-label={t('devices.open')}
                 onClick={() => onOpenTab(tab)}
               >
-                <ExternalLink className="h-3 w-3 mr-1" />{t('devices.open')}
+                <ExternalLink className="h-3 w-3 me-1" />{t('devices.open')}
               </Button>
             </div>
           ))}

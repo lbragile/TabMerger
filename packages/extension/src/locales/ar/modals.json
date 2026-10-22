@@ -1,0 +1,83 @@
+{
+  "addGroup": {
+    "title": "إنشاء مجموعة جديدة",
+    "name": "الاسم",
+    "namePlaceholder": "اسم المجموعة",
+    "color": "اللون",
+    "cancel": "إلغاء",
+    "create": "إنشاء"
+  },
+  "dedup": {
+    "title": "إزالة التكرارات",
+    "description_zero": "ستُزال {{count}} علامة تبويب مكررة.",
+    "description_one": "ستُزال علامة تبويب مكررة واحدة.",
+    "description_two": "ستُزال علامتا تبويب مكررتان.",
+    "description_few": "ستُزال {{count}} علامات تبويب مكررة.",
+    "description_many": "ستُزال {{count}} علامة تبويب مكررة.",
+    "description_other": "ستُزال {{count}} علامة تبويب مكررة.",
+    "cancel": "إلغاء",
+    "confirm_zero": "إزالة {{count}} تكرار",
+    "confirm_one": "إزالة تكرار واحد",
+    "confirm_two": "إزالة تكرارين",
+    "confirm_few": "إزالة {{count}} تكرارات",
+    "confirm_many": "إزالة {{count}} تكرارًا",
+    "confirm_other": "إزالة {{count}} تكرار"
+  },
+  "staleGroups": {
+    "title": "مراجعة المجموعات القديمة",
+    "description_zero": "{{count}} مجموعة لم تُستخدم منذ فترة — وسّعها للمعاينة، أو أرشفها مباشرةً.",
+    "description_one": "مجموعة واحدة لم تُستخدم منذ فترة — وسّعها للمعاينة، أو أرشفها مباشرةً.",
+    "description_two": "مجموعتان لم تُستخدما منذ فترة — وسّعهما للمعاينة، أو أرشفهما مباشرةً.",
+    "description_few": "{{count}} مجموعات لم تُستخدم منذ فترة — وسّعها للمعاينة، أو أرشفها مباشرةً.",
+    "description_many": "{{count}} مجموعة لم تُستخدم منذ فترة — وسّعها للمعاينة، أو أرشفها مباشرةً.",
+    "description_other": "{{count}} مجموعة لم تُستخدم منذ فترة — وسّعها للمعاينة، أو أرشفها مباشرةً.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "إخفاء",
+    "preview": "معاينة",
+    "archive": "أرشفة",
+    "empty": "هذه المجموعة فارغة.",
+    "close": "إغلاق"
+  },
+  "staleTabs": {
+    "title": "علامات التبويب القديمة",
+    "description_zero": "{{count}} علامة تبويب لم تُستخدم منذ فترة.",
+    "description_one": "علامة تبويب واحدة لم تُستخدم منذ فترة.",
+    "description_two": "علامتا تبويب لم تُستخدما منذ فترة.",
+    "description_few": "{{count}} علامات تبويب لم تُستخدم منذ فترة.",
+    "description_many": "{{count}} علامة تبويب لم تُستخدم منذ فترة.",
+    "description_other": "{{count}} علامة تبويب لم تُستخدم منذ فترة.",
+    "close": "إغلاق",
+    "removeAll_zero": "إزالة {{count}} علامة تبويب",
+    "removeAll_one": "إزالة علامة تبويب واحدة",
+    "removeAll_two": "إزالة علامتي تبويب",
+    "removeAll_few": "إزالة {{count}} علامات تبويب",
+    "removeAll_many": "إزالة {{count}} علامة تبويب",
+    "removeAll_other": "إزالة {{count}} علامة تبويب"
+  },
+  "saveSession": {
+    "title": "حفظ الجلسة",
+    "name": "اسم الجلسة",
+    "namePlaceholder": "مثل: بحث العمل، قراءة عطلة نهاية الأسبوع",
+    "nameRequired": "اسم الجلسة مطلوب",
+    "description": "الوصف (اختياري)",
+    "descriptionPlaceholder": "ما الغرض من هذه الجلسة؟",
+    "cancel": "إلغاء",
+    "save": "حفظ"
+  },
+  "shortcutSave": {
+    "title_zero": "حفظ {{count}} علامة تبويب",
+    "title_one": "حفظ علامة تبويب واحدة",
+    "title_two": "حفظ علامتي تبويب",
+    "title_few": "حفظ {{count}} علامات تبويب",
+    "title_many": "حفظ {{count}} علامة تبويب",
+    "title_other": "حفظ {{count}} علامة تبويب",
+    "description": "اختر مكان حفظ علامات التبويب التي التقطها اختصار لوحة المفاتيح.",
+    "destination": "المجموعة الوجهة",
+    "quickSave": "حفظ سريع (مجموعة جديدة)",
+    "cancel": "إلغاء",
+    "save": "حفظ"
+  },
+  "confirmDialog": {
+    "cancel": "إلغاء"
+  }
+}

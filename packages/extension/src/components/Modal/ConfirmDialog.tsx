@@ -79,7 +79,7 @@ export function ConfirmDialog({ options, onResult, onClosed }: ConfirmDialogProp
           onInteractOutside={(e) => e.preventDefault()}
         >
           <DialogHeader className="min-w-0">
-            <DialogTitle className={cn('break-words pr-6', shown.destructive && 'text-destructive')}>{shown.title}</DialogTitle>
+            <DialogTitle className={cn('break-words pe-6', shown.destructive && 'text-destructive')}>{shown.title}</DialogTitle>
             <DialogDescription className="break-words">{shown.description}</DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4 gap-2 sm:space-x-0">

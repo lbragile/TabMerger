@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { inlineArrow } from '@/lib/direction';
 
 /**
  * Roving tabindex for a popup row (a11y M3).
@@ -30,6 +31,9 @@ import { isDndDragLive } from '@/lib/dndMultiDrag';
  *  - It never hijacks arrows inside a text field (the rename input, the note textarea).
  *  - It does not wrap around: ArrowLeft on the row itself, or ArrowRight on the last
  *    control, is left alone rather than silently jumping to the other end.
+ *
+ * Left and Right follow the reading direction: in a right-to-left UI the row's controls run
+ * from right to left, so ArrowLeft moves to the next one and ArrowRight back.
  */
 
 /**
@@ -103,7 +107,7 @@ export function useRovingRow<T extends HTMLElement>(): RovingRow<T> {
         ? 0
         : e.key === 'End'
           ? stops.length - 1
-          : e.key === 'ArrowRight'
+          : inlineArrow(e.key) === 'end'
             ? Math.min(current + 1, stops.length - 1)
             : Math.max(current - 1, 0);
     if (next === current) return;

@@ -7,6 +7,7 @@ import * as Sentry from '@sentry/browser';
 import type { Breadcrumb, ErrorEvent } from '@sentry/browser';
 import { queryClient } from '@/lib/queryClient';
 import { App } from './App';
+import { LocaleDirectionProvider } from '@/components/LocaleDirectionProvider';
 import { installDndPointerProbe } from '@/lib/dndPointerProbe';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import '@/styles/globals.css';
@@ -65,7 +66,9 @@ async function bootstrap() {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <LocaleDirectionProvider>
+          <App />
+        </LocaleDirectionProvider>
       </QueryClientProvider>
     </React.StrictMode>
   );

@@ -29,7 +29,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
       <div className="relative w-full">
         <Input
           type={visible ? 'text' : 'password'}
-          className={cn(showToggle ? 'pr-8' : '', className)}
+          className={cn(showToggle ? 'pe-8' : '', className)}
           ref={ref}
           {...props}
         />
@@ -38,7 +38,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             type="button"
             onClick={toggle}
             aria-label={visible ? t('common.hidePassphrase') : t('common.showPassphrase')}
-            className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
+            className="absolute inset-e-2 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
           >
             {visible ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
           </button>

@@ -11,6 +11,10 @@
 import type { SupportedLocale } from '@tabmerger/shared';
 import { en, type Catalog } from './en';
 import type { CatalogSet, TranslatedCatalog } from './index';
+import arBackground from './ar/background.json' with { type: 'json' };
+import arBackups from './ar/backups.json' with { type: 'json' };
+import arCommon from './ar/common.json' with { type: 'json' };
+import arErrors from './ar/errors.json' with { type: 'json' };
 import deBackground from './de/background.json' with { type: 'json' };
 import deBackups from './de/backups.json' with { type: 'json' };
 import deCommon from './de/common.json' with { type: 'json' };
@@ -19,10 +23,18 @@ import esBackground from './es/background.json' with { type: 'json' };
 import esBackups from './es/backups.json' with { type: 'json' };
 import esCommon from './es/common.json' with { type: 'json' };
 import esErrors from './es/errors.json' with { type: 'json' };
+import faBackground from './fa/background.json' with { type: 'json' };
+import faBackups from './fa/backups.json' with { type: 'json' };
+import faCommon from './fa/common.json' with { type: 'json' };
+import faErrors from './fa/errors.json' with { type: 'json' };
 import frBackground from './fr/background.json' with { type: 'json' };
 import frBackups from './fr/backups.json' with { type: 'json' };
 import frCommon from './fr/common.json' with { type: 'json' };
 import frErrors from './fr/errors.json' with { type: 'json' };
+import heBackground from './he/background.json' with { type: 'json' };
+import heBackups from './he/backups.json' with { type: 'json' };
+import heCommon from './he/common.json' with { type: 'json' };
+import heErrors from './he/errors.json' with { type: 'json' };
 import hiBackground from './hi/background.json' with { type: 'json' };
 import hiBackups from './hi/backups.json' with { type: 'json' };
 import hiCommon from './hi/common.json' with { type: 'json' };
@@ -75,9 +87,12 @@ type WorkerArea = (typeof WORKER_AREAS)[number];
 
 export const workerCatalogs: CatalogSet & Record<Exclude<SupportedLocale, 'en'>, Pick<TranslatedCatalog, WorkerArea>> = {
     en,
+    ar: { background: arBackground, backups: arBackups, common: arCommon, errors: arErrors },
     de: { background: deBackground, backups: deBackups, common: deCommon, errors: deErrors },
     es: { background: esBackground, backups: esBackups, common: esCommon, errors: esErrors },
+    fa: { background: faBackground, backups: faBackups, common: faCommon, errors: faErrors },
     fr: { background: frBackground, backups: frBackups, common: frCommon, errors: frErrors },
+    he: { background: heBackground, backups: heBackups, common: heCommon, errors: heErrors },
     hi: { background: hiBackground, backups: hiBackups, common: hiCommon, errors: hiErrors },
     id: { background: idBackground, backups: idBackups, common: idCommon, errors: idErrors },
     it: { background: itBackground, backups: itBackups, common: itCommon, errors: itErrors },

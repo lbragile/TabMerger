@@ -1,0 +1,65 @@
+{
+  "addGroup": {
+    "title": "יצירת קבוצה חדשה",
+    "name": "שם",
+    "namePlaceholder": "שם הקבוצה",
+    "color": "צבע",
+    "cancel": "ביטול",
+    "create": "יצירה"
+  },
+  "dedup": {
+    "title": "הסרת כפילויות",
+    "description_one": "כרטיסייה כפולה אחת תוסר.",
+    "description_two": "שתי כרטיסיות כפולות יוסרו.",
+    "description_other": "{{count}} כרטיסיות כפולות יוסרו.",
+    "cancel": "ביטול",
+    "confirm_one": "הסרת כפילות אחת",
+    "confirm_two": "הסרת שתי כפילויות",
+    "confirm_other": "הסרת {{count}} כפילויות"
+  },
+  "staleGroups": {
+    "title": "סקירת קבוצות ישנות",
+    "description_one": "קבוצה אחת לא נפתחה כבר זמן מה — אפשר להרחיב לתצוגה מקדימה, או להעביר ישר לארכיון.",
+    "description_two": "שתי קבוצות לא נפתחו כבר זמן מה — אפשר להרחיב לתצוגה מקדימה, או להעביר ישר לארכיון.",
+    "description_other": "{{count}} קבוצות לא נפתחו כבר זמן מה — אפשר להרחיב לתצוגה מקדימה, או להעביר ישר לארכיון.",
+    "counts": "{{windows}} · {{tabs}}",
+    "hide": "הסתרה",
+    "preview": "תצוגה מקדימה",
+    "archive": "העברה לארכיון",
+    "empty": "הקבוצה הזו ריקה.",
+    "close": "סגירה"
+  },
+  "staleTabs": {
+    "title": "כרטיסיות ישנות",
+    "description_one": "כרטיסייה אחת לא נפתחה כבר זמן מה.",
+    "description_two": "שתי כרטיסיות לא נפתחו כבר זמן מה.",
+    "description_other": "{{count}} כרטיסיות לא נפתחו כבר זמן מה.",
+    "close": "סגירה",
+    "removeAll_one": "הסרת כרטיסייה אחת",
+    "removeAll_two": "הסרת שתי כרטיסיות",
+    "removeAll_other": "הסרת {{count}} כרטיסיות"
+  },
+  "saveSession": {
+    "title": "שמירת סשן",
+    "name": "שם הסשן",
+    "namePlaceholder": "למשל מחקר לעבודה, קריאה לסוף השבוע",
+    "nameRequired": "חובה לתת שם לסשן",
+    "description": "תיאור (לא חובה)",
+    "descriptionPlaceholder": "בשביל מה הסשן הזה?",
+    "cancel": "ביטול",
+    "save": "שמירה"
+  },
+  "shortcutSave": {
+    "title_one": "שמירת כרטיסייה אחת",
+    "title_two": "שמירת שתי כרטיסיות",
+    "title_other": "שמירת {{count}} כרטיסיות",
+    "description": "בחרו איפה לשמור את הכרטיסיות שנאספו בקיצור המקלדת.",
+    "destination": "קבוצת היעד",
+    "quickSave": "שמירה מהירה (קבוצה חדשה)",
+    "cancel": "ביטול",
+    "save": "שמירה"
+  },
+  "confirmDialog": {
+    "cancel": "ביטול"
+  }
+}

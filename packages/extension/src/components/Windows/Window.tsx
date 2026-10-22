@@ -180,7 +180,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
   const style = {
     transform: isDragging && !keyboardDrag ? undefined : gapTransform !== null ? gapTransform : CSS.Transform.toString(transform),
     transition: 'transform 200ms ease',
-    ...(window.starred ? { borderLeftColor: groupColor ?? 'hsl(var(--primary))' } : {})
+    ...(window.starred ? { borderInlineStartColor: groupColor ?? 'hsl(var(--primary))' } : {})
   };
 
   const handleRename = () => {
@@ -247,7 +247,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         // No `isDragging` / `isBeingDragged` class toggle — mutating the dragged
         // window's className mid-drag aborts the native HTML5 drag in the MV3
         // popup. The ghost card is the drag affordance.
-        window.starred && 'border-l-2',
+        window.starred && 'border-s-2',
         window.incognito && 'bg-muted/30',
         isSelected && 'ring-2 ring-primary',
         // KEYBOARD drags only (C4 doesn't apply): lift the dragged window, mark selected companions.
@@ -322,7 +322,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
           <DropdownMenuContent className="w-48 text-xs" align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="text-xs">
-                <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                <MoveRight className="h-3.5 w-3.5 me-2 text-muted-foreground rtl:-scale-x-100" />
                 {isNowOpen ? t('window.copyToGroup') : t('window.moveToGroup')}
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="max-h-48 overflow-y-auto">
@@ -335,10 +335,10 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                     }
                   >
                     <span
-                      className="h-2 w-2 rounded-full shrink-0 mr-2"
+                      className="h-2 w-2 rounded-full shrink-0 me-2"
                       style={{ backgroundColor: group.color }}
                     />
-                    <span className="truncate">{group.name}</span>
+                    <span dir="auto" className="truncate text-ui-start">{group.name}</span>
                   </DropdownMenuItem>
                 ))}
                 {targetGroups.length === 0 && (
@@ -353,11 +353,11 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-xs" onClick={() => setNoteOpen(true)}>
-              <StickyNote className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              <StickyNote className="h-3.5 w-3.5 me-2 text-muted-foreground" />
               {window.note ? t('window.editNote') : t('window.addNote')}
             </DropdownMenuItem>
             <DropdownMenuItem className="text-xs" onClick={() => setIsEditing(true)}>
-              <Edit3 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              <Edit3 className="h-3.5 w-3.5 me-2 text-muted-foreground" />
               {t('window.rename')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -375,7 +375,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 }
               }}
             >
-              <Trash2 className="h-3.5 w-3.5 mr-2" />
+              <Trash2 className="h-3.5 w-3.5 me-2" />
               {isNowOpen ? t('window.close') : t('window.remove')}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -449,6 +449,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             <div className="flex items-center gap-1 w-full">
               <input
                 ref={renameInputRef}
+                dir={nameValue ? 'auto' : undefined}
                 size={1}
                 value={nameValue}
                 onChange={(e) => setNameValue(e.target.value)}
@@ -463,7 +464,8 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             <Tooltip>
               <TooltipTrigger asChild>
                 <span
-                  className="block truncate text-xs font-medium cursor-default"
+                  dir="auto"
+                  className="block truncate text-xs font-medium text-ui-start cursor-default"
                   onDoubleClick={() => setIsEditing(true)}
                 >
                   {search.filters.windowFilter && windowSearch?.visible !== false ? (
@@ -475,7 +477,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 </span>
               </TooltipTrigger>
               {shownName.length > 20 && (
-                <TooltipContent side="top">{shownName}</TooltipContent>
+                <TooltipContent side="top" dir="auto">{shownName}</TooltipContent>
               )}
             </Tooltip>
           )}
@@ -535,30 +537,30 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             </TooltipTrigger>
             <DropdownMenuContent align="end" className="w-48 text-xs" onCloseAutoFocus={(e) => e.preventDefault()}>
               <DropdownMenuItem className="text-xs" onClick={() => setIsEditing(true)}>
-                <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <Edit3 className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
                 {t('window.renameShort')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => toggleIncognito({ groupIndex, windowIndex })}>
                 {window.incognito ? (
-                  <><Shield className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />{t('window.removeIncognito')}</>
+                  <><Shield className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />{t('window.removeIncognito')}</>
                 ) : (
-                  <><ShieldOff className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />{t('window.markIncognito')}</>
+                  <><ShieldOff className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />{t('window.markIncognito')}</>
                 )}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" disabled={window.tabs.length === 0} onClick={() => void openWindow(window)} data-tour={TOUR_ANCHORS.windowOpen}>
-                <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <ExternalLink className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
                 {t('window.openInBrowser')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, windowIndex, by: 'title' })}>
-                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <SortAsc className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
                 {t('window.sortByTitle')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, windowIndex, by: 'url' })}>
-                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <SortAsc className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
                 {t('window.sortByUrl')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => setNoteOpen(true)}>
-                <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <StickyNote className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
                 {window.note ? t('window.editNote') : t('window.addNote')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -576,7 +578,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                   }
                 }}
               >
-                <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <Trash2 className="h-3.5 w-3.5 me-2 shrink-0" />
                 {isNowOpen ? t('window.close') : t('window.remove')}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -594,6 +596,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         >
           <textarea
             ref={noteTextareaRef}
+            dir={noteValue ? 'auto' : undefined}
             rows={2}
             maxLength={500}
             className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"

@@ -40,6 +40,7 @@ export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
         <Label htmlFor="session-name" className="mb-1.5 block">{t('modals.saveSession.name')}</Label>
         <Input
           id="session-name"
+          dir={name ? 'auto' : undefined}
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -55,6 +56,7 @@ export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
         <Label htmlFor="session-description" className="mb-1.5 block">{t('modals.saveSession.description')}</Label>
         <Textarea
           id="session-description"
+          dir={description ? 'auto' : undefined}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder={t('modals.saveSession.descriptionPlaceholder')}

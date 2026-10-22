@@ -1,0 +1,27 @@
+{
+  "title": "ייבוא / ייצוא",
+  "description": "ניהול הנתונים שלך ב-TabMerger",
+  "tabExport": "ייצוא",
+  "tabImport": "ייבוא",
+  "exportIntro": "ייצוא כל הקבוצות כקובץ JSON. אפשר לייבא את הקובץ הזה מחדש מאוחר יותר.",
+  "downloadJson": "הורדת JSON",
+  "jsonHeading": "JSON של TabMerger",
+  "jsonIntro": "ייבוא מקובץ JSON שיוצא בעבר. מחליף את הקבוצות הנוכחיות.",
+  "chooseJson": "בחירת קובץ JSON",
+  "bookmarksHeading": "סימניות Chrome",
+  "bookmarksIntro": "ייבוא מקובץ HTML של סימניות שיוצא מ-Chrome. כל תיקייה הופכת לקבוצה.",
+  "chooseBookmarks": "בחירת קובץ HTML של סימניות",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "ייבוא מייצוא טקסט של OneTab. כל גוש שמופרד בשורה ריקה הופך לקבוצה.",
+  "chooseOneTab": "בחירת קובץ TXT של OneTab",
+  "toast": {
+    "exported": "הקבוצות יוצאו בהצלחה",
+    "imported": "הקבוצות יובאו בהצלחה",
+    "imported_skipped": "הקבוצות יובאו בהצלחה, {{skipped}} דולגו",
+    "importedCounts": "יובאו {{groups}}, {{tabs}}",
+    "importedCounts_skipped": "יובאו {{groups}}, {{tabs}}, {{skipped}} דולגו",
+    "invalidJson": "קובץ JSON לא תקין",
+    "noBookmarks": "לא נמצאו סימניות",
+    "noTabs": "לא נמצאו כרטיסיות"
+  }
+}

@@ -267,7 +267,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             : isActive || contextMenuOpen
             ? 'rgba(255,255,255,0.12)'
             : undefined,
-        borderLeft: isActive ? `3px solid ${displayColor}` : '3px solid transparent',
+        borderInlineStart: isActive ? `3px solid ${displayColor}` : '3px solid transparent',
         // --sidebar-text-active: ≈14.5:1 (light) / 14:1 (dark) against the selected tint.
         // The old full-opacity rgba(0,180,204) outline was only ≈2.0:1 in the light theme.
         outline: isSelected ? '2px solid var(--sidebar-text-active)' : undefined,
@@ -396,6 +396,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             <div className="flex items-center gap-1 w-full" onClick={(e) => e.stopPropagation()}>
               <input
                 ref={inputRef}
+                dir={editValue ? 'auto' : undefined}
                 size={1}
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
@@ -414,7 +415,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
               <TooltipTrigger asChild>
                 <span
                   ref={nameRef}
-                  className="block truncate text-xs font-medium"
+                  dir="auto"
+                  className="block truncate text-xs font-medium text-ui-start"
                   style={{ color: isActive ? 'var(--sidebar-text-active)' : 'var(--sidebar-text-inactive)' }}
                   onDoubleClick={(e) => {
                     e.stopPropagation();
@@ -425,7 +427,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                   <Highlighted text={displayName} query={searchNameQuery} />
                 </span>
               </TooltipTrigger>
-              <TooltipContent side="top">{displayName}</TooltipContent>
+              <TooltipContent side="top" dir="auto">{displayName}</TooltipContent>
             </Tooltip>
           )}
         </div>

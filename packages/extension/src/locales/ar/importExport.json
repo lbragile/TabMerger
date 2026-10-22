@@ -1,0 +1,27 @@
+{
+  "title": "استيراد / تصدير",
+  "description": "إدارة بيانات TabMerger",
+  "tabExport": "تصدير",
+  "tabImport": "استيراد",
+  "exportIntro": "صدّر كل مجموعاتك كملف JSON. يمكنك إعادة استيراد هذا الملف لاحقًا.",
+  "downloadJson": "تنزيل JSON",
+  "jsonHeading": "TabMerger JSON",
+  "jsonIntro": "استيراد من ملف JSON صُدّر سابقًا. يستبدل المجموعات الحالية.",
+  "chooseJson": "اختيار ملف JSON",
+  "bookmarksHeading": "إشارات Chrome المرجعية",
+  "bookmarksIntro": "استيراد من ملف HTML مُصدَّر للإشارات المرجعية في Chrome. يصبح كل مجلد مجموعة.",
+  "chooseBookmarks": "اختيار ملف HTML للإشارات المرجعية",
+  "oneTabHeading": "OneTab",
+  "oneTabIntro": "استيراد من ملف نصي مُصدَّر من OneTab. تصبح كل كتلة مفصولة بسطر فارغ مجموعة.",
+  "chooseOneTab": "اختيار ملف TXT من OneTab",
+  "toast": {
+    "exported": "تم تصدير المجموعات بنجاح",
+    "imported": "تم استيراد المجموعات بنجاح",
+    "imported_skipped": "تم استيراد المجموعات بنجاح، وتُخطّي {{skipped}}",
+    "importedCounts": "تم استيراد {{groups}} و{{tabs}}",
+    "importedCounts_skipped": "تم استيراد {{groups}} و{{tabs}}، وتُخطّي {{skipped}}",
+    "invalidJson": "ملف JSON غير صالح",
+    "noBookmarks": "لم يُعثر على إشارات مرجعية",
+    "noTabs": "لم يُعثر على علامات تبويب"
+  }
+}

@@ -404,6 +404,12 @@ export interface CardPositionInput {
    * popup): that corner of the FRAME. Default: inside the anchor's bottom right corner.
    */
   fallbackCorner?: 'bottom-left' | 'top-left';
+  /**
+   * The UI's reading direction. Steps are written for the left-to-right layout (`right` of the
+   * sidebar, a `bottom-left` corner); in `rtl` the layout is mirrored, so are the requested
+   * side, the fallback corner and the inside corner. Default `ltr`.
+   */
+  direction?: 'ltr' | 'rtl';
 }
 
 export interface CardPosition {
@@ -428,7 +434,9 @@ const OPPOSITE: Record<Exclude<TourPlacement, 'center'>, Exclude<TourPlacement, 
  * centered on the anchor and clamped to the frame. When no side fits (an anchor that fills most
  * of the popup) the card goes in the anchor's bottom-right corner.
  */
-export function computeCardPosition({ anchor, card: measured, frame, placement, gap, margin, fallbackCorner }: CardPositionInput): CardPosition {
+export function computeCardPosition({ anchor, card: measured, frame, placement: requested, gap, margin, fallbackCorner, direction = 'ltr' }: CardPositionInput): CardPosition {
+  const rtl = direction === 'rtl';
+  const placement: TourPlacement = rtl && requested === 'left' ? 'right' : rtl && requested === 'right' ? 'left' : requested;
   // A card can never be drawn larger than the frame minus its margins (CSS caps it the same
   // way), so a taller or wider measurement is cut to that before any maths
   const card = {
@@ -470,18 +478,20 @@ export function computeCardPosition({ anchor, card: measured, frame, placement, 
     }
   };
 
-  const others = (['bottom', 'right', 'top', 'left'] as const).filter((p) => p !== placement && p !== OPPOSITE[placement]);
+  const others = ((rtl ? ['bottom', 'left', 'top', 'right'] : ['bottom', 'right', 'top', 'left']) as Exclude<TourPlacement, 'center'>[]).filter((p) => p !== placement && p !== OPPOSITE[placement]);
   for (const side of [placement, OPPOSITE[placement], ...others]) {
     const candidate = candidates[side];
     if (candidate.fits) return { left: candidate.left, top: candidate.top, placement: side };
   }
 
   if (fallbackCorner) {
-    return { left: margin, top: fallbackCorner === 'top-left' ? margin : Math.max(margin, maxTop), placement: 'inside' };
+    // The corner on the start side: left, or right in a right-to-left UI
+    return { left: rtl ? Math.max(margin, maxLeft) : margin, top: fallbackCorner === 'top-left' ? margin : Math.max(margin, maxTop), placement: 'inside' };
   }
 
   return {
-    left: clamp(anchor.left + anchor.width - card.width - gap, margin, maxLeft),
+    // The anchor's bottom end corner (bottom left in a right-to-left UI)
+    left: clamp(rtl ? anchor.left + gap : anchor.left + anchor.width - card.width - gap, margin, maxLeft),
     top: clamp(anchor.top + anchor.height - card.height - gap, margin, maxTop),
     placement: 'inside'
   };

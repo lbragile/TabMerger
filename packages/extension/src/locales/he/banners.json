@@ -1,0 +1,22 @@
+{
+  "review": "סקירה",
+  "archive": "העברה לארכיון",
+  "dismiss": "סגירה",
+  "getMore": "לקבלת עוד",
+  "removeStale": "הסרת הישנות",
+  "staleTabs": "{{count}} כרטיסיות נשמרו לפני יותר מ-{{days}} ימים.",
+  "staleRemoved_one": "הוסרה כרטיסייה ישנה אחת",
+  "staleRemoved_two": "הוסרו שתי כרטיסיות ישנות",
+  "staleRemoved_other": "הוסרו {{count}} כרטיסיות ישנות",
+  "upgrade": "שדרוג",
+  "paymentIssue": "בעיה בתשלום — עדכנו את הכרטיס",
+  "planEnds": "תוכנית ה-Pro שלך מסתיימת ב-{{date}}",
+  "approachingLimit": "מתקרבים למגבלה החינמית — שדרגו ל-Pro לקבוצות ולכרטיסיות ללא הגבלה",
+  "update": {
+    "label": "יש עדכון זמין",
+    "text": "גרסה {{version}} מוכנה. ההפעלה מחדש תסגור את החלון הקופץ.",
+    "restart": "הפעלה מחדש לעדכון",
+    "restartLabel": "הפעלה מחדש של TabMerger לעדכון לגרסה {{version}}. החלון הקופץ ייסגר.",
+    "dismissLabel": "סגירת ההודעה על העדכון לגרסה {{version}}"
+  }
+}

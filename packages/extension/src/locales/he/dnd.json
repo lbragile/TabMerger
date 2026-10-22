@@ -1,0 +1,81 @@
+{
+  "instructions": "Space כדי להרים, מקשי החצים כדי לבחור מקום (שמאלה וימינה עוברים בין חלונות לקבוצות), Space כדי לשחרר, Escape כדי לבטל. Shift+Space בוחר טווח ו-{{modifier}}+A בוחר הכול, כדי להזיז כמה פריטים יחד.",
+  "keys": {
+    "command": "Command",
+    "control": "Control"
+  },
+  "type": {
+    "tab": "כרטיסייה",
+    "window": "חלון",
+    "group": "קבוצה",
+    "item": "פריט"
+  },
+  "typeStart": {
+    "tab": "כרטיסייה",
+    "window": "חלון",
+    "group": "קבוצה",
+    "item": "פריט"
+  },
+  "untitledTab": "כרטיסייה ללא שם",
+  "named": "{{type}} {{name}}",
+  "namedStart": "{{type}} {{name}}",
+  "whatMany": "{{items}}, החל מ-{{name}},",
+  "position": {
+    "tab": "מקום {{index}} מתוך {{total}} ב{{window}} בקבוצה {{group}}",
+    "window": "מקום {{index}} מתוך {{total}} בקבוצה {{group}}",
+    "group": "מקום {{index}} מתוך {{total}}"
+  },
+  "target": {
+    "newGroup": "קבוצה חדשה",
+    "newWindowAtEnd": "חלון חדש בסוף הקבוצה {{group}}",
+    "nowOpen": "פתוח עכשיו, שפותח אותם בחלון דפדפן חדש",
+    "groupAsWindow": "הקבוצה {{group}}, כחלון חדש"
+  },
+  "token": {
+    "dropped": "שוחרר.",
+    "cancelled": "בוטל."
+  },
+  "bail": {
+    "cancelled": "ההזזה בוטלה.",
+    "nothingMoved": "שוחרר; שום דבר לא זז.",
+    "returnedMany": "{{items}} חזרו",
+    "returnedOne": "{{named}} חזר/ה",
+    "noop": "שוחרר בחזרה: {{what}} ב{{position}}; שום דבר לא זז.",
+    "stale": "הקבוצות השתנו במהלך הגרירה, ולכן שום דבר לא הוזז. {{returned}} ל{{position}}.",
+    "cancelledReturned": "ההזזה בוטלה. {{returned}} ל{{position}}.",
+    "rejected": "אי אפשר לשחרר שם. {{returned}} ל{{position}}."
+  },
+  "removedElsewhere_one": "פריט אחד הוסר במקום אחר.",
+  "removedElsewhere_two": "שני פריטים הוסרו במקום אחר.",
+  "removedElsewhere_other": "{{count}} פריטים הוסרו במקום אחר.",
+  "stillSelected_one": "הוא עדיין נבחר.",
+  "stillSelected_two": "הם עדיין נבחרים.",
+  "stillSelected_other": "הם עדיין נבחרים.",
+  "dropped": "שוחרר.",
+  "movedGroups": "{{count}} קבוצות הוזזו ל{{position}}, כגוש אחד.",
+  "movedGroup": "הקבוצה {{name}} הוזזה ל{{position}}.",
+  "partial": "{{count}} מתוך {{total}}",
+  "at": "מקום {{index}} מתוך {{total}}",
+  "startingAt": "החל ממקום {{index}} מתוך {{total}}",
+  "whereTab": "{{window}} בקבוצה {{group}}, {{at}}",
+  "whereWindow": "הקבוצה {{group}}, {{at}}",
+  "movedTo": "הוזזו {{items}} אל {{where}}.",
+  "openTabsClosed": " הכרטיסיות הפתוחות נסגרו.",
+  "groupHidden": " הקבוצה {{group}} לא מוצגת.",
+  "openedNewWindow": "נפתחו {{items}} בחלון דפדפן חדש.",
+  "openedNowOpen": "נפתחו {{items}} בפתוח עכשיו.",
+  "movedNewWindow": "הוזזו {{items}} לחלון דפדפן חדש.",
+  "movedWithinNowOpen": "הוזזו {{items}} בתוך פתוח עכשיו.",
+  "originalPosition": "מעל המקום המקורי.",
+  "pickedUpType": "הורם: {{type}}.",
+  "pickedUpMany": "הורמו: {{what}}.",
+  "pickedUpOne": "הורם: {{type}} {{name}}, {{position}}.",
+  "groupShown": "הקבוצה {{name}} מוצגת עכשיו.",
+  "copyHint": "שחרור לקבוצה שמורה מעתיק; הכרטיסיות הפתוחות נשארות פתוחות.",
+  "notOver": "לא מעל יעד שחרור.",
+  "over": "מעל {{target}}.",
+  "cantDropOn": "אי אפשר לשחרר על {{target}}.",
+  "typeDropped": "שוחרר: {{type}}.",
+  "cancelledReturnedType": "ההזזה בוטלה; ה{{type}} חזר/ה למקומו/ה.",
+  "saveFailed": "לא ניתן היה לשמור את ההזזה; המצב הקודם שוחזר."
+}

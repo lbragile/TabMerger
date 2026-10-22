@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type React from 'react';
 import { nextTrapIndex } from '@/lib/tour';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { inlineArrow } from '@/lib/direction';
 import {
   TOUR_APP_ROOT_ID,
   TOUR_TOAST_SELECTOR,
@@ -137,7 +138,8 @@ export function useTourKeys(cardRef: React.RefObject<HTMLElement | null>, handle
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
         e.preventDefault();
         if (e.repeat) return;
-        if (e.key === 'ArrowRight') latest.current.onNext('arrow');
+        // Along the reading direction: in a right-to-left UI, ArrowLeft is Next
+        if (inlineArrow(e.key) === 'end') latest.current.onNext('arrow');
         else latest.current.onBack();
         return;
       }

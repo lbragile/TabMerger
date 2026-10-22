@@ -28,6 +28,7 @@ import { WebAppConnectBanner } from '@/components/WebAppConnectBanner';
 import { UpdateAvailableBanner } from '@/components/UpdateAvailableBanner';
 import { UpgradeCTA } from '@/components/UpgradeCTA';
 import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
+import { useUiDirection } from '@/components/LocaleDirectionProvider';
 import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker';
 // Exiting selection mode unmounts every checkbox and the action bar; keep focus off <body>.
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
@@ -181,6 +182,7 @@ function AppContent() {
 
 export function App() {
   const { t } = useTranslation();
+  const dir = useUiDirection();
   return (
     <TooltipProvider delayDuration={400}>
       <AppContent />
@@ -188,7 +190,10 @@ export function App() {
       <SelectionAnnouncer />
       <ModalRoot />
       <Toaster
-        position="bottom-right"
+        // The end corner, mirrored in right-to-left (sonner's own `auto` reads <html dir>, which
+        // may not be updated yet when a language change re-renders this)
+        position={dir === 'rtl' ? 'bottom-left' : 'bottom-right'}
+        dir={dir}
         richColors
         closeButton
         containerAriaLabel={t('common.notifications')}

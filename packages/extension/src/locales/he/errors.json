@@ -1,0 +1,33 @@
+{
+  "syncPaused": "הסנכרון מושהה: יש לאשר ב-Firefox",
+  "conflictCopy": "{{names}} השתנה גם במכשיר אחר. הגרסה שלך נשמרה כעותק.",
+  "quotedName": "\"{{name}}\"",
+  "groupsChangedElsewhere": "קבוצה שעבדת עליה השתנתה או הוסרה במקום אחר, ולכן שום דבר לא שונה.",
+  "undoConflict": "הקבוצות שלך השתנו במקום אחר, ולכן שום דבר לא בוטל. אפשר לנסות שוב.",
+  "freeLimit": {
+    "maxGroups": "התוכנית החינמית מאפשרת עד {{max}} קבוצות.",
+    "maxTabs": "התוכנית החינמית מאפשרת עד {{max}} כרטיסיות.",
+    "maxUrlRules": "התוכנית החינמית מאפשרת עד {{max}} כללי URL."
+  },
+  "fileContains": "הקובץ הזה מכיל {{groups}}, {{tabs}}.",
+  "incognitoNotAllowed": "נפתח כחלון רגיל כי ל-TabMerger אין הרשאה בגלישה בסתר. כדי לשנות זאת, פתחו את ניהול התוסף והפעילו את \"Allow in Incognito\".",
+  "encryptionAlreadySetUp": "ההצפנה כבר הוגדרה בחשבון הזה. הזינו את ביטוי הסיסמה הקיים כדי לבטל את הנעילה.",
+  "signInToEnableEncryption": "צריך להתחבר כדי להפעיל הצפנה",
+  "signInToResetEncryption": "צריך להתחבר כדי לאפס את ההצפנה",
+  "googleUnavailable": "התחברות עם Google לא זמינה בסביבה הזו",
+  "googleNoUrl": "ההתחברות עם Google לא החזירה כתובת הרשאה",
+  "googleCancelled": "ההתחברות עם Google בוטלה",
+  "googleNoSession": "ההתחברות עם Google לא החזירה סשן",
+  "googleFailed": "ההתחברות עם Google נכשלה",
+  "expectedArray": "היה צפוי מערך",
+  "invalidFormat": "פורמט לא תקין",
+  "noGroupsFound": "לא נמצאו קבוצות",
+  "noGroupsSelected": "לא נבחרו קבוצות",
+  "notAuthenticated": "לא מחובר",
+  "sharingRequiresPro": "שיתוף דורש שדרוג ל-Pro — אין הרשאה",
+  "aiOncePerDay": "כבר נוצל היום — פעולת ה-AI הזו מוגבלת לפעם אחת ביום",
+  "proAiRequired": "נדרשת תוכנית Pro AI",
+  "nameGroupOff": "מתן שם לקבוצה כבוי בהגדרות",
+  "suggestSessionsOff": "הצעת סשנים כבויה בהגדרות",
+  "organizeOff": "הארגון כבוי בהגדרות"
+}

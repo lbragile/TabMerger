@@ -191,3 +191,26 @@ describe('useTourKeys', () => {
     window.removeEventListener('keydown', later)
   })
 })
+
+describe('useTourKeys — right-to-left UI', () => {
+  beforeEach(() => {
+    document.documentElement.dir = 'rtl'
+  })
+  afterEach(() => {
+    document.documentElement.dir = ''
+  })
+
+  it('ArrowLeft goes to the next step (the reading direction is right to left)', () => {
+    mount()
+    press('ArrowLeft')
+    expect(handlers.onNext).toHaveBeenCalledWith('arrow')
+    expect(handlers.onBack).not.toHaveBeenCalled()
+  })
+
+  it('ArrowRight goes back', () => {
+    mount()
+    press('ArrowRight')
+    expect(handlers.onBack).toHaveBeenCalledTimes(1)
+    expect(handlers.onNext).not.toHaveBeenCalled()
+  })
+})

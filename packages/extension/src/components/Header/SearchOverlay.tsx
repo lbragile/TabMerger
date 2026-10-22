@@ -309,7 +309,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
         <>
             <div className="fixed inset-0 z-40" onClick={onClose} />
             <div
-                className="fixed left-1/2 -translate-x-1/2 z-50 w-[440px] rounded-none border border-border bg-popover shadow-2xl overflow-hidden"
+                className="fixed inset-x-0 mx-auto z-50 w-[440px] rounded-none border border-border bg-popover shadow-2xl overflow-hidden"
                 data-tour={TOUR_ANCHORS.searchOverlay}
                 style={{ top: '8px' }}
             >
@@ -318,6 +318,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                     <Search className="h-4 w-4 text-muted-foreground shrink-0" />
                     <Input
                         ref={inputRef}
+                        dir={query ? 'auto' : undefined}
                         placeholder={t('search.inputPlaceholder')}
                         aria-label={t('search.searchInput')}
                         role="combobox"
@@ -362,7 +363,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                                     id={optionId(i)}
                                     aria-selected={cursor === i}
                                     tabIndex={-1}
-                                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-left transition-colors ${cursor === i ? 'bg-muted' : 'hover:bg-muted/60'}`}
+                                    className={`flex items-center gap-2.5 w-full px-3 py-2 text-start transition-colors ${cursor === i ? 'bg-muted' : 'hover:bg-muted/60'}`}
                                     onMouseEnter={() => setCursor(i)}
                                     onClick={() => completePick(item.name, item.index)}
                                 >
@@ -370,7 +371,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                                         ? <AppWindow className="h-3.5 w-3.5 shrink-0" style={{ color: item.color }} />
                                         : <Folder className="h-3.5 w-3.5 shrink-0" style={{ color: item.color, fill: item.color }} />
                                     }
-                                    <span className="text-[12px] font-medium truncate min-w-0"><Highlighted text={item.name} ranges={matchRanges(item.name, pickerCtx.typed)} /></span>
+                                    <span dir="auto" className="text-[12px] font-medium truncate min-w-0 text-ui-start"><Highlighted text={item.name} ranges={matchRanges(item.name, pickerCtx.typed)} /></span>
                                 </button>
                             ))}</div>}
                         </div>
@@ -418,7 +419,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                                             const urlMark = urlRanges.length > 0 && r.kind === 'tab' && r.url
                                                 ? snippetAroundMatch(r.url, urlRanges, { skip: urlPrefixLength(r.url), maxLead: 30, keep: 12 })
                                                 : undefined;
-                                            return <ResultRow key={`t${i}`} label={r.label} meta={urlMark?.text ?? ''}
+                                            return <ResultRow key={`t${i}`} label={r.label} meta={urlMark?.text ?? ''} metaIsUrl
                                                 labelRanges={labelRanges}
                                                 metaRanges={urlMark?.ranges}
                                                 groupQuery={parsed.groupFilter}
@@ -442,7 +443,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                             {EXAMPLES.map(({ query: ex, desc }, i) => (
                                 <button key={ex} type="button"
                                     role="option" id={optionId(i)} aria-selected={cursor === i} tabIndex={-1}
-                                    className={`flex items-start gap-3 w-full px-3 py-2 text-left transition-colors ${cursor === i ? 'bg-muted' : 'hover:bg-muted/60'}`}
+                                    className={`flex items-start gap-3 w-full px-3 py-2 text-start transition-colors ${cursor === i ? 'bg-muted' : 'hover:bg-muted/60'}`}
                                     onMouseEnter={() => setCursor(i)}
                                     onClick={() => { onQueryChange(ex); inputRef.current?.focus(); setCursor(-1); }}
                                 >
@@ -472,10 +473,12 @@ function shiftRanges(ranges: MatchRange[], by: number): MatchRange[] {
     return ranges.map(([from, to]) => [from + by, to + by]);
 }
 
-function ResultRow({ id, label, meta, labelRanges, metaRanges, groupQuery = '', tagQuery = '', folderColor, windowColor, groupName, chromeGroupName, chromeGroupColor, active, onMouseEnter, onClick }: {
+function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges, groupQuery = '', tagQuery = '', folderColor, windowColor, groupName, chromeGroupName, chromeGroupColor, active, onMouseEnter, onClick }: {
     /** Option id: the search box points at the active row with `aria-activedescendant`. */
     id: string;
     label: string; meta: string; folderColor?: string; windowColor?: string;
+    /** `meta` is a piece of a URL (a tab found by its address): always left to right. */
+    metaIsUrl?: boolean;
     /** Where the search matched in `label` / `meta` (already worked out by the list). */
     labelRanges?: MatchRange[]; metaRanges?: MatchRange[];
     /** The `group:` / `tag:` filter text to mark in the group and Chrome-group badges. */
@@ -485,22 +488,22 @@ function ResultRow({ id, label, meta, labelRanges, metaRanges, groupQuery = '', 
 }) {
     return (
         <button type="button" role="option" id={id} aria-selected={active} tabIndex={-1}
-            className={`flex items-center gap-2 w-full px-3 py-2 text-left transition-colors ${active ? 'bg-muted' : 'hover:bg-muted/60'}`}
+            className={`flex items-center gap-2 w-full px-3 py-2 text-start transition-colors ${active ? 'bg-muted' : 'hover:bg-muted/60'}`}
             onMouseEnter={onMouseEnter} onClick={onClick}
         >
             {!groupName && windowColor && <AppWindow className="h-3.5 w-3.5 shrink-0" style={{ color: windowColor }} />}
             {!groupName && !windowColor && <Folder className="h-3.5 w-3.5 shrink-0" style={{ color: folderColor ?? 'currentColor', fill: folderColor ?? 'currentColor' }} />}
             {groupName && (
-                <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: folderColor }}>
+                <span dir="auto" className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: folderColor }}>
                     <Highlighted text={groupName} ranges={matchRanges(groupName, groupQuery)} />
                 </span>
             )}
             <span className="flex-1 min-w-0">
-                <span className="block text-[12px] font-medium truncate"><Highlighted text={label} ranges={labelRanges ?? []} /></span>
-                {meta && <span className="block text-[10px] text-muted-foreground truncate"><Highlighted text={meta} ranges={metaRanges ?? []} /></span>}
+                <span dir="auto" className="block text-[12px] font-medium truncate text-ui-start"><Highlighted text={label} ranges={labelRanges ?? []} /></span>
+                {meta && <span dir={metaIsUrl ? 'ltr' : 'auto'} className="block text-[10px] text-muted-foreground truncate text-ui-start"><Highlighted text={meta} ranges={metaRanges ?? []} /></span>}
             </span>
             {chromeGroupName && (
-                <span className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: chromeGroupColor ?? '#888' }}>
+                <span dir="auto" className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: chromeGroupColor ?? '#888' }}>
                     <Highlighted text={chromeGroupName} ranges={matchRanges(chromeGroupName, tagQuery)} />
                 </span>
             )}

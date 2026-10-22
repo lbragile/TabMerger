@@ -667,3 +667,20 @@ describe('GroupItem', () => {
     })
   })
 })
+
+describe('GroupItem — the name keeps its own direction', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseGroups.mockReturnValue({ data: { available: [makeGroup(), makeGroup()], active: { id: '', index: 0 } } })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+  })
+
+  it('renders a user-typed name with dir="auto", aligned to the UI start and truncated', () => {
+    const group = makeGroup({ name: 'עבודה' })
+    wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+    const name = screen.getByText('עבודה')
+    expect(name.getAttribute('dir')).toBe('auto')
+    expect(name.className).toMatch(/text-ui-start/)
+    expect(name.className).toMatch(/truncate/)
+  })
+})

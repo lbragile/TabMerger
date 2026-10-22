@@ -46,10 +46,10 @@ export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalPr
                 <div className="flex items-center gap-2 px-2 py-1.5">
                   <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: group.color }} />
                   <button
-                    className="flex-1 min-w-0 text-left"
+                    className="flex-1 min-w-0 text-start"
                     onClick={() => setExpandedId(expanded ? null : group.id)}
                   >
-                    <p className="text-xs font-medium truncate">{group.name}</p>
+                    <p dir="auto" className="text-xs font-medium truncate text-ui-start">{group.name}</p>
                     <p className="text-[10px] text-muted-foreground">
                       {t('modals.staleGroups.counts', { windows: t('common.windowCount', { count: group.windows.length }), tabs: t('common.tabCount', { count: tabCount }) })}
                     </p>
@@ -77,7 +77,7 @@ export function ReviewStaleGroupModal({ data, onClose }: ReviewStaleGroupModalPr
                                 className="h-3.5 w-3.5 shrink-0 rounded-full"
                                 onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON }}
                               />
-                              <span className="truncate text-xs">{tab.title || tab.url}</span>
+                              <span dir={tab.title ? 'auto' : 'ltr'} className="truncate text-xs text-ui-start">{tab.title || tab.url}</span>
                             </li>
                           ))}
                         </ul>

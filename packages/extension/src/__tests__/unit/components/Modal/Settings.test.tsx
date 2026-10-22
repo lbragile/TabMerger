@@ -5,6 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { SettingsModal } from '@/components/Modal/Settings'
 
+/** An option by the language's own name (its accessible name goes on: ", German, Right-to-left"). */
+const native = (name: string) => new RegExp(`^${name}(,|$)`)
+
+
 async function goToTab(name: RegExp) {
   const user = userEvent.setup()
   await user.click(screen.getByRole('tab', { name }))
@@ -920,40 +924,110 @@ describe('SettingsModal — Language', () => {
     await i18n.changeLanguage('en')
   })
 
-  it('lists Browser default first, then every language by its own name', async () => {
+  /** The row's button: named by the row's label, then the draft ("Language Français"). */
+  const languageButton = () => screen.getByTestId('settings-language')
+
+  it('lists Browser default first, then every language by its own name, in a searchable list', async () => {
+    const { LOCALE_NATIVE_NAMES, SUPPORTED_LOCALES } = await import('@tabmerger/shared')
     renderModal()
-    fireEvent.click(screen.getByRole('combobox', { name: 'Language' }))
+    fireEvent.click(languageButton())
     const options = await screen.findAllByRole('option')
-    expect(options.map((o) => o.textContent)).toEqual([
-      'Browser default', 'English', 'Deutsch', 'Español', 'Français', 'Italiano', 'Русский', '한국어', 'Türkçe', 'Bahasa Indonesia', 'Polski', 'Tiếng Việt', 'हिन्दी', '日本語', 'Português (Brasil)', '简体中文',
-    ])
-    expect(screen.getByRole('option', { name: 'Deutsch' })).toHaveAttribute('lang', 'de')
+    expect(options.map((o) => o.querySelector('[data-native]')?.textContent)).toEqual(['Browser default', ...SUPPORTED_LOCALES.map((l) => LOCALE_NATIVE_NAMES[l])])
+    expect(screen.getByRole('option', { name: native('Deutsch') }).querySelector('[data-native]')).toHaveAttribute('lang', 'de')
+    // the search box has focus and narrows the list; Browser default always stays
+    const search = screen.getByRole('combobox', { name: 'Search languages by name or code' })
+    await waitFor(() => expect(search).toHaveFocus())
+    fireEvent.change(search, { target: { value: 'deu' } })
+    expect(screen.getAllByRole('option').map((o) => o.querySelector('[data-native]')?.textContent)).toEqual(['Browser default', 'Deutsch'])
   })
 
   it('applies a picked language on Save, not before, and stores it', async () => {
     const { i18n } = await import('@/lib/i18n')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    fireEvent.click(screen.getByRole('combobox', { name: 'Language' }))
-    fireEvent.click(await screen.findByRole('option', { name: 'Deutsch' }))
+    fireEvent.click(languageButton())
+    fireEvent.click(await screen.findByRole('option', { name: native('Deutsch') }))
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+    expect(languageButton()).toHaveAccessibleName('Language Deutsch')
     expect(i18n.language).toBe('en')
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
     await waitFor(() => expect(i18n.language).toBe('de'))
     expect(localStorage.getItem('tabmerger-locale')).toBe('de')
     expect(document.documentElement.lang).toBe('de')
     // the open modal re-renders in German
-    expect(await screen.findByRole('combobox', { name: 'Sprache' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Sprache Deutsch' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Änderungen speichern' })).toBeDisabled()
+  })
+
+  it('closing Settings without Save (Cancel) leaves the language, direction and stored choice unchanged', async () => {
+    const { i18n } = await import('@/lib/i18n')
+    const { unmount } = renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    fireEvent.click(languageButton())
+    fireEvent.click(await screen.findByRole('option', { name: native('Deutsch') }))
+    expect(languageButton()).toHaveAccessibleName('Language Deutsch')
+    unmount()
+    expect(i18n.language).toBe('en')
+    expect(localStorage.getItem('tabmerger-locale')).toBeNull()
+    // reopening starts from the stored choice again
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(languageButton()).toHaveTextContent('Browser default')
+  })
+
+  it('Save of Hebrew sets html lang and dir=rtl, and saving English again restores dir=ltr', async () => {
+    const { i18n } = await import('@/lib/i18n')
+    const { unmount } = renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    fireEvent.click(languageButton())
+    fireEvent.click(await screen.findByRole('option', { name: native('עברית') }))
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+    await waitFor(() => expect(i18n.language).toBe('he'))
+    expect(document.documentElement.lang).toBe('he')
+    expect(document.documentElement.dir).toBe('rtl')
+    unmount()
+
+    renderModal()
+    await waitFor(() => expect(languageButton()).toHaveTextContent('עברית'))
+    fireEvent.click(languageButton())
+    fireEvent.click(await screen.findByRole('option', { name: native('English') }))
+    fireEvent.click(screen.getByRole('button', { name: i18n.t('settings.general.saveChanges') }))
+    await waitFor(() => expect(i18n.language).toBe('en'))
+    expect(document.documentElement.lang).toBe('en')
+    expect(document.documentElement.dir).toBe('ltr')
+  })
+
+  it('Enter in the search box picks the first match into the draft', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    fireEvent.click(languageButton())
+    const search = await screen.findByRole('combobox', { name: 'Search languages by name or code' })
+    fireEvent.change(search, { target: { value: 'he' } })
+    fireEvent.keyDown(search, { key: 'Enter' })
+    expect(languageButton()).toHaveAccessibleName('Language עברית')
+    expect(screen.getByRole('button', { name: /save changes/i })).not.toBeDisabled()
+  })
+
+  it('marks exactly Arabic, Hebrew and Persian as right-to-left, with the accessible text', async () => {
+    renderModal()
+    fireEvent.click(languageButton())
+    const options = await screen.findAllByRole('option')
+    const marked = options
+      .filter((o) => o.querySelector('[data-rtl-mark]'))
+      .map((o) => o.querySelector('[data-native]')?.getAttribute('lang'))
+    expect(marked).toEqual(['ar', 'he', 'fa'])
+    expect(screen.getByRole('option', { name: 'العربية, Arabic, Right-to-left' })).toBeInTheDocument()
+    expect(languageButton().querySelector('[data-rtl-mark]')).toBeNull()
   })
 
   it('starts from the stored choice, and Restore defaults puts it back to Browser default', async () => {
     localStorage.setItem('tabmerger-locale', 'fr')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    expect(screen.getByRole('combobox', { name: 'Language' })).toHaveTextContent('Français')
+    expect(languageButton()).toHaveTextContent('Français')
     expect(screen.getByRole('button', { name: /save changes/i })).toBeDisabled()
     fireEvent.click(screen.getByRole('button', { name: /restore defaults/i }))
-    expect(screen.getByRole('combobox', { name: 'Language' })).toHaveTextContent('Browser default')
+    expect(languageButton()).toHaveTextContent('Browser default')
     expect(screen.getByRole('button', { name: /save changes/i })).not.toBeDisabled()
   })
 })

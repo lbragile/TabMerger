@@ -27,7 +27,7 @@ describe('resolveLocale', () => {
   it('falls back to English for no tag or a language without a catalog', () => {
     expect(resolveLocale(undefined)).toBe('en')
     expect(resolveLocale('')).toBe('en')
-    expect(resolveLocale('ar')).toBe('en')
+    expect(resolveLocale('ur')).toBe('en')
     expect(resolveLocale('xx-YY')).toBe('en')
   })
 
@@ -47,6 +47,20 @@ describe('resolveLocale', () => {
     expect(resolveLocale('zh-CN')).toBe('zh-CN')
     expect(resolveLocale('zh-SG')).toBe('zh-CN')
     expect(resolveLocale('zh')).toBe('zh-CN')
+  })
+
+  it('reads the retired codes browsers still report: iw as Hebrew, in as Indonesian', () => {
+    // Chrome gives Hebrew as `iw` on some platforms. Until `he` ships this resolves to English,
+    // like any language without a catalog, and to `he` from the day it does.
+    const hebrew = (SUPPORTED_LOCALES as readonly string[]).includes('he') ? 'he' : 'en'
+    expect(resolveLocale('iw')).toBe(hebrew)
+    expect(resolveLocale('iw-IL')).toBe(hebrew)
+    expect(resolveLocale('iw_IL')).toBe(hebrew)
+    // Indonesian ships, so this one proves the mapping end to end today
+    expect(resolveLocale('in')).toBe('id')
+    expect(resolveLocale('in-ID')).toBe('id')
+    // Only the language subtag is mapped: a region or script that spells "iw" is left alone
+    expect(resolveLocale('de-IW')).toBe('de')
   })
 
   it('keeps Traditional Chinese readers on English rather than Simplified', () => {
@@ -110,6 +124,18 @@ describe('locale-aware formatting', () => {
   it('joins lists', () => {
     expect(formatList(['a', 'b', 'c'])).toBe('a, b, c')
     expect(formatAndList(['a.com', 'b.com'])).toBe('a.com and b.com')
+  })
+
+  it('isolates each item in a right-to-left language, so Latin items keep their order', async () => {
+    await i18n.changeLanguage('he')
+    try {
+      const list = formatAndList(['chrome.com', 'firefox.com', 'edge.com'])
+      // every item sits in its own U+2068…U+2069, in the given order
+      expect([...list.matchAll(/⁨([^⁩]*)⁩/g)].map((m) => m[1])).toEqual(['chrome.com', 'firefox.com', 'edge.com'])
+      expect(formatList(['a', 'b'])).toMatch(/^⁨a⁩.*⁨b⁩$/)
+    } finally {
+      await i18n.changeLanguage('en')
+    }
   })
 
   it('says how long ago, rounded down unless asked to round', () => {

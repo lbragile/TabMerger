@@ -59,6 +59,7 @@ export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
           <Label htmlFor="group-name">{t('modals.addGroup.name')}</Label>
           <Input
             id="group-name"
+            dir={name ? 'auto' : undefined}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t('modals.addGroup.namePlaceholder')}

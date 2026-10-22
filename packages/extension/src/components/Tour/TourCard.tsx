@@ -158,7 +158,7 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
       style={{ left: position?.left ?? 0, top: position?.top ?? 0 }}
     >
       <div {...{ [TOUR_BODY_ATTR]: '' }} className="min-h-0 flex-1 overflow-y-auto">
-        <div data-tour-chapter="" className="border-l-2 border-foreground pl-2">
+        <div data-tour-chapter="" className="border-s-2 border-foreground ps-2">
           <div className="flex items-baseline justify-between gap-2 text-[0.6875rem] font-medium uppercase tracking-wide text-muted-foreground">
             <p className="min-w-0 truncate">
               {chapterLine}
@@ -217,11 +217,11 @@ export const TourCard = forwardRef<HTMLDivElement, TourCardProps>(function TourC
         <p className={cn('text-[0.8125rem]', wide ? 'mt-1 leading-snug' : 'mt-1.5 leading-relaxed')}>{body}</p>
         {showSubStepText && subStep && (
           <>
-            <p data-tour-substep-text="" className="mt-2 border-l-2 border-secondary pl-2 text-[0.8125rem] font-medium leading-snug">
+            <p data-tour-substep-text="" className="mt-2 border-s-2 border-secondary ps-2 text-[0.8125rem] font-medium leading-snug">
               {subStepText[subStep.current - 1] ?? subStepText[subStepText.length - 1]}
             </p>
             {subStepKeys[subStep.current - 1] && (
-              <p data-tour-substep-keys="" className="mt-1 pl-2.5 text-xs leading-snug text-muted-foreground">
+              <p data-tour-substep-keys="" className="mt-1 ps-2.5 text-xs leading-snug text-muted-foreground">
                 <span className="font-medium text-foreground">{t('tour.card.keyboard')}</span>
                 {subStepKeys[subStep.current - 1]}
               </p>

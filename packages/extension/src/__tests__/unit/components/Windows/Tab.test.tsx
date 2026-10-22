@@ -229,7 +229,8 @@ describe('TabItem — basic rendering and open', () => {
     const t = makeTab({ title: 'Example Tab' })
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
     const titleGrid = screen.getByText('Example Tab').closest('div.grid')
-    expect(titleGrid?.className).toMatch(/mr-2/)
+    // me-2 (margin-inline-end): the gap stays on the indicators' side in either direction
+    expect(titleGrid?.className).toMatch(/me-2/)
   })
 
   it('omits the hostname row when the tab has no URL', () => {
@@ -942,5 +943,46 @@ describe('TabItem — contiguous search dim parity (custom display title)', () =
   it('"jra" (spread across "Jira Board") dims the row', () => {
     renderWith('jra')
     expect(row()).toHaveClass('opacity-60')
+  })
+})
+
+describe('TabItem — user and website text keeps its own direction', () => {
+  // The UI direction comes from <html dir>; a page title or a URL must not inherit it
+  it('renders the title with dir="auto" so a Hebrew title reads right to left in the English UI', () => {
+    const t = makeTab({ title: 'שלום עולם' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const title = screen.getByText('שלום עולם')
+    expect(title.getAttribute('dir')).toBe('auto')
+    // still aligned to the UI's start edge and still truncated with an ellipsis
+    expect(title.className).toMatch(/text-ui-start/)
+    expect(title.className).toMatch(/truncate/)
+  })
+
+  it('renders the address left to right, even inside a right-to-left UI', () => {
+    document.documentElement.dir = 'rtl'
+    try {
+      const t = makeTab({ url: 'https://www.example.com/some/deep/path?query=1' })
+      render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+      const host = screen.getByText('example.com/some/deep/path')
+      expect(host.getAttribute('dir')).toBe('ltr')
+      expect(host.className).toMatch(/truncate/)
+    } finally {
+      document.documentElement.dir = ''
+    }
+  })
+
+  it('the rename input takes the direction of what is typed', async () => {
+    const t = makeTab({ title: 'Example Tab' })
+    mockUseGroupsData.mockReturnValue({
+      data: {
+        available: [{ ...makeGroup(), windows: [{ id: 1, name: 'W', tabs: [t], starred: false, incognito: false, focused: false }] }],
+        active: { id: '', index: 0 },
+      },
+    })
+    const user = userEvent.setup()
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    fireEvent.contextMenu(screen.getByRole('listitem'))
+    await user.click(screen.getByText(/rename tab/i))
+    expect((await screen.findByDisplayValue('Example Tab')).getAttribute('dir')).toBe('auto')
   })
 })

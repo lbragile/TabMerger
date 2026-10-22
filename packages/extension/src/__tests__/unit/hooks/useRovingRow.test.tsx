@@ -266,3 +266,45 @@ describe('useRovingRow — when it must stay out of the way', () => {
     expect(document.activeElement).toBe(row)
   })
 })
+
+describe('useRovingRow — right-to-left UI', () => {
+  // `<html dir>` is what applyDocumentLocale sets for Arabic, Hebrew and Persian
+  beforeEach(() => {
+    document.documentElement.dir = 'rtl'
+  })
+  afterEach(() => {
+    document.documentElement.dir = ''
+  })
+  const press = (el: Element, key: string) => fireEvent.keyDown(el, { key, bubbles: true })
+
+  it('ArrowLeft walks forward (the controls run right to left) and stops at the end', () => {
+    const { getByTestId } = render(React.createElement(Row))
+    const row = getByTestId('row')
+    row.focus()
+    press(row, 'ArrowLeft')
+    expect(document.activeElement).toBe(getByTestId('grip'))
+    press(getByTestId('grip'), 'ArrowLeft')
+    expect(document.activeElement).toBe(getByTestId('checkbox'))
+    press(getByTestId('checkbox'), 'ArrowLeft')
+    press(getByTestId('close'), 'ArrowLeft')
+    expect(document.activeElement).toBe(getByTestId('close')) // no wrap
+  })
+
+  it('ArrowRight walks back to the row', () => {
+    const { getByTestId } = render(React.createElement(Row))
+    getByTestId('checkbox').focus()
+    press(getByTestId('checkbox'), 'ArrowRight')
+    expect(document.activeElement).toBe(getByTestId('grip'))
+    press(getByTestId('grip'), 'ArrowRight')
+    expect(document.activeElement).toBe(getByTestId('row'))
+  })
+
+  it('Home and End are not flipped', () => {
+    const { getByTestId } = render(React.createElement(Row))
+    getByTestId('row').focus()
+    press(getByTestId('row'), 'End')
+    expect(document.activeElement).toBe(getByTestId('close'))
+    press(getByTestId('close'), 'Home')
+    expect(document.activeElement).toBe(getByTestId('row'))
+  })
+})

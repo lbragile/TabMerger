@@ -68,13 +68,13 @@ function SidebarSection({
   const { t } = useTranslation();
   return (
     <div className={className} data-tour={tourAnchor}>
-      <div className="flex items-center gap-1 pr-1">
+      <div className="flex items-center gap-1 pe-1">
         <button
           type="button"
           className="flex items-center gap-1 flex-1 min-w-0 px-2 py-0.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors select-none"
           onClick={onToggle}
         >
-          {open ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />}
+          {open ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0 rtl:-scale-x-100" />}
           <span className="truncate">{t('sidePanel.sectionLabel', { label, count })}</span>
         </button>
         {action}
@@ -131,14 +131,14 @@ function NewGroupDropZone({ active }: { active: boolean }) {
       data-testid="new-group-dropzone"
       aria-hidden={!active}
       className={cn(
-        'absolute inset-y-0 left-1.5 right-1.5 z-10 flex items-center justify-center border border-dashed text-[11px] font-medium transition-colors',
+        'absolute inset-y-0 inset-x-1.5 z-10 flex items-center justify-center border border-dashed text-[11px] font-medium transition-colors',
         active ? 'border-primary text-foreground bg-zone-sidebar' : 'invisible pointer-events-none border-transparent',
         isOver && active && 'bg-primary/10 border-primary text-foreground',
         // Keyboard target: the label drops to the bottom so the docked copy fits above it.
         keyboardOver && 'items-end pb-1'
       )}
     >
-      <Plus className="h-3.5 w-3.5 mr-1 shrink-0" />
+      <Plus className="h-3.5 w-3.5 me-1 shrink-0" />
       {t('sidePanel.dropNewGroup')}
     </div>
   );
@@ -283,7 +283,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   return (
     <div
       className="flex flex-col h-full shrink-0 bg-zone-sidebar"
-      style={{ width: 240, minWidth: 240, borderRight: '1px solid var(--zone-sidebar-border)' }}
+      style={{ width: 240, minWidth: 240, borderInlineEnd: '1px solid var(--zone-sidebar-border)' }}
     >
       {/* Groups list */}
       <ScrollArea className="flex-1">
@@ -331,7 +331,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                 onClick={handleNewGroup}
                 disabled={selectionMode || isDragging || moveKind !== null}
               >
-                <Plus className="h-3.5 w-3.5 mr-1" />
+                <Plus className="h-3.5 w-3.5 me-1" />
                 {t('sidePanel.addGroup')}
               </Button>
             </div>
@@ -360,12 +360,12 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             <div
               key={group.id}
               className="flex items-center gap-1.5 px-2 py-1.5 transition-colors"
-              style={{ borderLeft: `3px solid ${group.color}` }}
+              style={{ borderInlineStart: `3px solid ${group.color}` }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--sidebar-hover-bg)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = ''; }}
             >
               <div className="flex-1 min-w-0">
-                <span className="block truncate text-[11px] text-muted-foreground">{group.name}</span>
+                <span dir="auto" className="block truncate text-[11px] text-muted-foreground text-ui-start">{group.name}</span>
                 <span className="block text-[9px] text-muted-foreground/50">{formatTimeAgo(group.updatedAt)}</span>
               </div>
               <span
@@ -438,14 +438,14 @@ export function SidePanel({ groupsState }: SidePanelProps) {
               <div
                 key={session.id}
                 className="flex items-center gap-1.5 px-2 py-1.5 transition-colors"
-                style={{ borderLeft: `3px solid ${session.groups[0]?.color ?? 'var(--sidebar-text-muted)'}` }}
+                style={{ borderInlineStart: `3px solid ${session.groups[0]?.color ?? 'var(--sidebar-text-muted)'}` }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--sidebar-hover-bg)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = ''; }}
               >
                 <div className="flex-1 min-w-0">
-                  <span className="block truncate text-[11px] text-muted-foreground">{session.name}</span>
+                  <span dir="auto" className="block truncate text-[11px] text-muted-foreground text-ui-start">{session.name}</span>
                   {session.description && (
-                    <span className="block truncate text-[9px] text-muted-foreground/70 italic" title={session.description}>
+                    <span dir="auto" className="block truncate text-[9px] text-muted-foreground/70 italic text-ui-start" title={session.description}>
                       {session.description}
                     </span>
                   )}

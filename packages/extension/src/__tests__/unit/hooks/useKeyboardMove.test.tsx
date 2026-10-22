@@ -623,3 +623,31 @@ describe('useKeyboardMove — groups', () => {
     expect(over.after).toBe(true)
   })
 })
+
+describe('useKeyboardMove — right-to-left UI (the group list is on the right)', () => {
+  beforeEach(() => {
+    document.documentElement.dir = 'rtl'
+  })
+  afterEach(() => {
+    document.documentElement.dir = ''
+  })
+
+  it('Right puts the cursor in the group list; Left there enters the highlighted group', async () => {
+    const { rows } = await setup()
+    await begin(rows, 'tab', 'work::w0::t1')
+    key('ArrowRight')
+    expect(live()).toBe('Group list: Work')
+    expect(rows['work'].hasAttribute('data-tm-move-cursor')).toBe(true)
+    keys('ArrowDown', 'ArrowLeft')
+    expect(live()).toBe('Play: Bravo, last in Window 1')
+    expect(rows['play'].hasAttribute('data-tm-move-cursor')).toBe(false)
+  })
+
+  it('Left in the main panel does not go to the group list', async () => {
+    const { rows } = await setup()
+    await begin(rows, 'tab', 'work::w0::t1')
+    key('ArrowLeft')
+    expect(rows['work'].hasAttribute('data-tm-move-cursor')).toBe(false)
+    expect(useKeyboardMoveStore.getState().marker).not.toEqual(expect.objectContaining({ type: 'zone' }))
+  })
+})
