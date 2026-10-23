@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { isEntitledSubscriptionStatus } from '@tabmerger/shared'
+import { isEntitledSubscriptionStatus, type AiMode } from '@tabmerger/shared'
 import type { CheckoutInterval, CheckoutTier } from './checkoutAnalytics'
 
 /**
@@ -38,7 +38,7 @@ const LOCAL_CURRENCY_CHECKOUT = { adaptive_pricing: { enabled: true } } as const
 
 // Re-export client-safe tier constants from their own module so that
 // client components can import TIERS without pulling in the Stripe SDK.
-export { TIERS, getStripePriceId } from './tiers'
+export { TIERS, getStripePriceId, getPlanForPriceId, getPlanPriceIds } from './tiers'
 export type { TierKey, BillingInterval } from './tiers'
 
 export async function createCheckoutSession({
@@ -50,6 +50,7 @@ export async function createCheckoutSession({
   cancelUrl,
   tier,
   interval,
+  aiMode,
 }: {
   userId: string
   priceId: string
@@ -60,6 +61,8 @@ export async function createCheckoutSession({
   /** Plan and interval, already validated by the route; stamped on the session for analytics. */
   tier?: CheckoutTier
   interval?: CheckoutInterval
+  /** Pro AI's option (TabMerger's key or the customer's own), validated by the route; analytics only. */
+  aiMode?: AiMode
 }): Promise<string> {
   if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
 
@@ -86,13 +89,14 @@ export async function createCheckoutSession({
     success_url: successUrl,
     cancel_url: cancelUrl,
     // user_id on session metadata is a fallback readable from session object directly.
-    // tier/interval let the checkout.session.expired webhook report which plan was abandoned
-    // without another Stripe call. The webhook re-validates both; neither is ever trusted for
-    // billing.
+    // tier/interval/ai_mode let the checkout.session.expired webhook report which plan was
+    // abandoned without another Stripe call. The webhook re-validates them; none is ever trusted
+    // for billing (the subscription's tier and AI option come from its price).
     metadata: {
       user_id: userId,
       ...(tier ? { tier } : {}),
       ...(interval ? { interval } : {}),
+      ...(aiMode ? { ai_mode: aiMode } : {}),
     },
     // user_id on subscription_data metadata travels with the subscription object
     subscription_data: {
@@ -138,11 +142,12 @@ export async function createCreditPackCheckoutSession({
       : customerEmail
         ? { customer_email: customerEmail, customer_creation: 'always' }
         : {}),
-    // adjustable_quantity lets the customer change the call count on Stripe's own
-    // Checkout page, not just before landing there — mirrors the same 50-500 clamp
-    // the /api/checkout/credits route already enforces server-side on `quantity`.
-    // Minimum is 50 (not 1) since at $0.05/credit a smaller purchase risks Stripe's
-    // $0.50 minimum-charge floor and gets eaten by per-transaction processing fees.
+    // adjustable_quantity lets the customer change the pack size on Stripe's own Checkout
+    // page, not just before landing there — mirrors the same 50-500 clamp the
+    // /api/checkout/credits route already enforces server-side on `quantity`. One unit is
+    // $0.05, so the smallest pack is $2.50, clear of Stripe's $0.50 minimum charge. The
+    // credits granted are not the quantity: the webhook converts the USD amount actually paid
+    // with creditsForPayment() ($2.50 funds 820 credits).
     line_items: [{ price: priceId, quantity, adjustable_quantity: { enabled: true, minimum: 50, maximum: 500 } }],
     // Shows an opt-in "Save my payment method for future purchases" checkbox on
     // Checkout — the customer chooses, nothing is saved silently. Requires an
@@ -152,7 +157,8 @@ export async function createCreditPackCheckoutSession({
     // Same "Add promotion code" field as the subscription checkout; codes are created and
     // restricted in the Stripe Dashboard. A coupon that isn't limited to specific products
     // works here too, so limit subscription coupons to the plan's product. The webhook grants
-    // credits from the quantity bought, so a discount changes the price and never the credits.
+    // credits from the USD amount paid, so a discounted pack grants proportionally fewer
+    // credits and a free one grants none.
     allow_promotion_codes: true,
     success_url: successUrl,
     cancel_url: cancelUrl,
@@ -189,8 +195,8 @@ export async function createBillingPortalSession({
   return session.url
 }
 
-/** Why an interval switch couldn't start; the route maps each to a status code. */
-export class IntervalSwitchError extends Error {
+/** Why a plan switch couldn't start; the route maps each to a status code. */
+export class PlanSwitchError extends Error {
   constructor(readonly reason: 'no_subscription' | 'already_on_price' | 'already_scheduled') {
     super(reason)
   }
@@ -198,17 +204,18 @@ export class IntervalSwitchError extends Error {
 
 /**
  * Opens the Billing Portal straight on its "confirm plan change" page, moving the customer's
- * paid subscription (one whose price is in `planPriceIds`) to `targetPriceId`. The portal
- * configuration decides the timing: monthly→yearly applies now with a prorated charge, and
- * yearly→monthly (a shorter interval) waits for the end of the term. Either way Stripe fires
- * `customer.subscription.updated` when the price changes, which the webhook turns into the new
- * tier/interval, so nothing is written here.
+ * paid subscription (one whose price is in `planPriceIds`) to `targetPriceId`: another billing
+ * interval (monthly ↔ yearly) or, for Pro AI, the other AI option (TabMerger's key ↔ own key).
+ * The portal configuration decides the timing: monthly→yearly applies now with a prorated
+ * charge, and yearly→monthly (a shorter interval) waits for the end of the term. Either way
+ * Stripe fires `customer.subscription.updated` when the price changes, which the webhook turns
+ * into the new tier, interval, AI option and credit allowance, so nothing is written here.
  *
  * The portal configuration must list `targetPriceId` under subscription updates, or Stripe
  * rejects the session. `STRIPE_PORTAL_CONFIGURATION_ID` picks that configuration; without it,
  * the account's default configuration is used.
  */
-export async function createIntervalSwitchSession({
+export async function createPlanSwitchSession({
   customerId,
   targetPriceId,
   planPriceIds,
@@ -228,13 +235,13 @@ export async function createIntervalSwitchSession({
       s.items.data.length === 1 &&
       planPriceIds.includes(s.items.data[0].price.id)
   )
-  if (!subscription) throw new IntervalSwitchError('no_subscription')
+  if (!subscription) throw new PlanSwitchError('no_subscription')
 
   const item = subscription.items.data[0]
-  if (item.price.id === targetPriceId) throw new IntervalSwitchError('already_on_price')
+  if (item.price.id === targetPriceId) throw new PlanSwitchError('already_on_price')
   // The portal defers yearly→monthly to the end of the term by attaching a subscription schedule.
   // While that's pending, Stripe won't take another update, so say so instead of failing.
-  if (subscription.schedule) throw new IntervalSwitchError('already_scheduled')
+  if (subscription.schedule) throw new PlanSwitchError('already_scheduled')
 
   const session = await stripe.billingPortal.sessions.create({
     customer: customerId,

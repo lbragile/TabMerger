@@ -7,6 +7,9 @@ metadata:
 
 ## One-time AI credit pack purchases (mode: 'payment', not subscription)
 
+(Superseded in part: packs now grant `creditsForPayment(USD paid)`, not the quantity; see
+[[ai-allowance-and-credit-packs]].)
+
 - No script/dashboard-automation convention exists in this repo for creating Stripe
   products/prices (checked `scripts/` and grepped for `stripe.products.create` — nothing).
   Subscription prices are apparently created manually in the Stripe dashboard and referenced

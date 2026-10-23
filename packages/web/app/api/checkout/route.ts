@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { isAiEnabled, isEntitledSubscriptionStatus } from '@tabmerger/shared'
+import { isAiEnabled, isAiMode, isEntitledSubscriptionStatus, type AiMode } from '@tabmerger/shared'
 import { createClient } from '@/lib/supabase/server'
 import { createCheckoutSession, getStripePriceId } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
@@ -32,6 +32,9 @@ function requestLocale(request: NextRequest): string {
 
 /**
  * Creates a Stripe Checkout session for starting a Pro or Pro AI subscription.
+ * Body: `{ tier: 'pro' | 'proAi', interval: 'monthly' | 'yearly', aiMode?: 'managed' | 'byok' }`.
+ * `aiMode` picks Pro AI's option (TabMerger's key, the default, or the customer's own key, which
+ * is a different, cheaper Price); any other value, or `byok` with Pro, is a 400.
  * Called by the pricing page / upgrade flow (dashboard user, session-cookie auth).
  * Passes the existing stripe_customer_id if present so Stripe reuses the billing account on re-subscribe.
  * Returns a redirect URL; the client is responsible for navigating to it.
@@ -52,7 +55,7 @@ export async function POST(request: NextRequest) {
 
   // A body that is not JSON, or not a JSON object, is read as empty and gets the 400 below.
   const body = await request.json().catch(() => null)
-  const { tier, interval } = body && typeof body === 'object' ? body : {}
+  const { tier, interval, aiMode: rawAiMode } = body && typeof body === 'object' ? body : {}
 
   if (!['pro', 'proAi'].includes(tier)) {
     return NextResponse.json({ error: 'Invalid tier' }, { status: 400 })
@@ -60,6 +63,13 @@ export async function POST(request: NextRequest) {
 
   if (!['monthly', 'yearly'].includes(interval)) {
     return NextResponse.json({ error: 'Invalid interval' }, { status: 400 })
+  }
+
+  // Pro AI's option: TabMerger's key (`managed`, the default) or the customer's own (`byok`).
+  // Pro has no AI, so only a missing value or `managed` is accepted with it.
+  const aiMode: AiMode = rawAiMode === undefined ? 'managed' : rawAiMode
+  if (!isAiMode(aiMode) || (tier === 'pro' && aiMode !== 'managed')) {
+    return NextResponse.json({ error: 'Invalid aiMode' }, { status: 400 })
   }
 
   // AI features are behind a "coming soon" flag — reject pro_ai at every interval
@@ -91,7 +101,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: ALREADY_SUBSCRIBED_ERROR }, { status: 409 })
   }
 
-  const priceId = getStripePriceId(tier as 'pro' | 'proAi', interval)
+  const priceId = getStripePriceId(tier as 'pro' | 'proAi', interval, aiMode)
 
   if (!priceId) {
     return NextResponse.json(
@@ -114,9 +124,11 @@ export async function POST(request: NextRequest) {
       customerId: profile?.stripe_customer_id ?? undefined,
       successUrl: absoluteUrl('/dashboard?upgraded=1'),
       // The marker lets the pricing page count the cancel (checkout_canceled) once, then drop it.
-      cancelUrl: absoluteUrl(checkoutCancelPath(tier, interval, requestLocale(request))),
+      cancelUrl: absoluteUrl(checkoutCancelPath(tier, interval, requestLocale(request), aiMode)),
       tier,
       interval,
+      // Only Pro AI has the option; Pro sessions carry no ai_mode.
+      ...(tier === 'proAi' ? { aiMode } : {}),
     })
 
     return NextResponse.json({ url })

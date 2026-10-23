@@ -4,6 +4,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
+import { AI_ERROR_CODES } from '@tabmerger/shared'
 
 const mockCreateCreditPackCheckoutSession = vi.fn().mockResolvedValue('https://checkout.stripe.com/s1')
 
@@ -11,14 +12,28 @@ vi.mock('@/lib/stripe', () => ({
   createCreditPackCheckoutSession: mockCreateCreditPackCheckoutSession,
 }))
 
+/** subscriptions: `.select('tier, ai_mode').eq('user_id', …).maybeSingle()` */
+const mockSubscriptionRow = vi.fn()
+const mockFrom = vi.fn((table: string) => {
+  if (table === 'subscriptions') {
+    const chain = {
+      select: vi.fn(() => chain),
+      eq: vi.fn(() => chain),
+      maybeSingle: mockSubscriptionRow,
+    }
+    return chain
+  }
+  return {
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn().mockResolvedValue({ data: { stripe_customer_id: 'cus_1' } }),
+  }
+})
+
 vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn().mockResolvedValue({
     auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'user-1', email: 'a@example.com' } } }) },
-    from: vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: { stripe_customer_id: 'cus_1' } }),
-    }),
+    from: (table: string) => mockFrom(table),
   }),
 }))
 
@@ -33,6 +48,7 @@ describe('POST /api/checkout/credits', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    mockSubscriptionRow.mockResolvedValue({ data: { tier: 'pro_ai', ai_mode: 'managed' }, error: null })
   })
 
   it('defaults to quantity 50 when body is empty', async () => {
@@ -64,10 +80,8 @@ describe('POST /api/checkout/credits', () => {
   })
 
   // Credit packs are one-time purchases on top of a plan, so the one-subscription-per-account
-  // rule of /api/checkout does not apply here: a subscriber buys credits like anyone else.
-  it('starts a credit-pack checkout without consulting the subscriptions table', async () => {
-    const { createClient } = await import('@/lib/supabase/server')
-    const client = await createClient()
+  // rule of /api/checkout does not apply here: a managed Pro AI subscriber buys credits on top.
+  it('starts a credit-pack checkout for a managed Pro AI subscriber', async () => {
     const { POST } = await import('@/app/api/checkout/credits/route')
 
     const res = await POST(makeRequest({ quantity: 100 }))
@@ -75,8 +89,39 @@ describe('POST /api/checkout/credits', () => {
     expect(res.status).toBe(200)
     expect((await res.json()).url).toBe('https://checkout.stripe.com/s1')
     expect(mockCreateCreditPackCheckoutSession).toHaveBeenCalledTimes(1)
-    expect(client.from).toHaveBeenCalledWith('profiles')
-    expect(client.from).not.toHaveBeenCalledWith('subscriptions')
+    expect(mockFrom).toHaveBeenCalledWith('profiles')
+  })
+
+  // Own-key (BYOK) Pro AI spends no TabMerger credits, so a pack would buy nothing.
+  it('answers 409 credits_not_applicable to a Pro AI subscriber on their own key, before any Stripe call', async () => {
+    mockSubscriptionRow.mockResolvedValue({ data: { tier: 'pro_ai', ai_mode: 'byok' }, error: null })
+    const { POST } = await import('@/app/api/checkout/credits/route')
+
+    const res = await POST(makeRequest({ quantity: 100 }))
+
+    expect(res.status).toBe(409)
+    expect(await res.json()).toEqual({ error: AI_ERROR_CODES.creditsNotApplicable })
+    expect(mockCreateCreditPackCheckoutSession).not.toHaveBeenCalled()
+  })
+
+  it('does not refuse an account without a row, or a tier other than pro_ai', async () => {
+    const { POST } = await import('@/app/api/checkout/credits/route')
+    for (const data of [null, { tier: 'free', ai_mode: 'byok' }, { tier: 'pro', ai_mode: 'managed' }]) {
+      mockSubscriptionRow.mockResolvedValue({ data, error: null })
+      expect((await POST(makeRequest({}))).status).toBe(200)
+    }
+    expect(mockCreateCreditPackCheckoutSession).toHaveBeenCalledTimes(3)
+  })
+
+  it('answers 500 without a Stripe call when the plan cannot be read', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockSubscriptionRow.mockResolvedValue({ data: null, error: { code: '57014', message: 'timeout' } })
+    const { POST } = await import('@/app/api/checkout/credits/route')
+
+    const res = await POST(makeRequest({}))
+
+    expect(res.status).toBe(500)
+    expect(mockCreateCreditPackCheckoutSession).not.toHaveBeenCalled()
   })
 
   it('returns 503 ai_disabled when the AI flag is off, before any Stripe call', async () => {

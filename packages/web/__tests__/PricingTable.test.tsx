@@ -59,7 +59,8 @@ describe('PricingTable', () => {
 
   it('computes the toggle badge from the prices instead of a fixed number', () => {
     render(<PricingTable installHref="https://store.example/tabmerger" />)
-    expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−10%')
+    // The smallest saving of every paid option: Pro AI with your own key saves 9.6%.
+    expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−9%')
   })
 
   it('applies active pill styling (bg-background) to the selected toggle option', async () => {

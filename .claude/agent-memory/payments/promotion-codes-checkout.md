@@ -24,8 +24,10 @@ Checked against Stripe's docs on 2026-10-08:
   alone; `stripeWebhook.test.ts` covers both `paid` and `no_payment_required`.
 - **Subscription mode still collects a card at 100% off** (`payment_method_collection` defaults
   to `always`), so renewals charge normally when the coupon's duration ends.
-- **Entitlements never depend on money.** Tier comes from the subscription's price ID and status;
-  credits come from `listLineItems` quantity. Keep it that way: a discount changes the price only.
+- **The tier never depends on money; AI credits do.** Tier comes from the subscription's price ID
+  and status. Since the cost-based credits change (2026-10-22), the managed AI allowance and credit
+  packs follow the USD amount actually paid, so a discount lowers them and a free code funds none
+  (see [[ai-allowance-and-credit-packs]]).
 - **Idempotency vs. redemption limits are different things.** The unique
   `ai_credit_purchases.stripe_checkout_session_id` stops one session being credited twice. How
   often a code can be redeemed is only what the code's own Stripe settings say. Stripe has no

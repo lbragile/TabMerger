@@ -56,6 +56,25 @@ describe('lib/stripe', () => {
     expect(params.subscription_data.metadata).toEqual({ user_id: 'user-1' })
   })
 
+  it('createCheckoutSession stamps the Pro AI option as ai_mode on the session metadata only', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/s1' })
+    const { createCheckoutSession } = await import('@/lib/stripe')
+
+    await createCheckoutSession({
+      userId: 'user-1',
+      priceId: 'price_byok',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+      tier: 'proAi',
+      interval: 'monthly',
+      aiMode: 'byok',
+    })
+
+    const params = mockCheckoutCreate.mock.lastCall![0]
+    expect(params.metadata).toEqual({ user_id: 'user-1', tier: 'proAi', interval: 'monthly', ai_mode: 'byok' })
+    expect(params.subscription_data.metadata).toEqual({ user_id: 'user-1' })
+  })
+
   it('createCheckoutSession falls back to customerEmail when no customerId', async () => {
     mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/s2' })
     const { createCheckoutSession } = await import('@/lib/stripe')

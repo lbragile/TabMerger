@@ -144,6 +144,52 @@ describe('POST /api/checkout', () => {
     expect(args).toEqual(expect.objectContaining({ tier: 'pro', interval: 'yearly' }))
   })
 
+  describe('Pro AI option (aiMode)', () => {
+    it('defaults Pro AI to managed: the managed price, ai_mode on the session for analytics', async () => {
+      const { POST } = await import('@/app/api/checkout/route')
+
+      const res = await POST(makeRequest({ tier: 'proAi', interval: 'monthly' }))
+
+      expect(res.status).toBe(200)
+      expect(mockGetStripePriceId).toHaveBeenCalledWith('proAi', 'monthly', 'managed')
+      expect(mockCreateCheckoutSession.mock.calls[0][0]).toMatchObject({ tier: 'proAi', aiMode: 'managed' })
+    })
+
+    it('sells the own-key option at its own price, and marks it on the cancel_url', async () => {
+      mockGetStripePriceId.mockReturnValue('price_byok_yearly')
+      const { POST } = await import('@/app/api/checkout/route')
+
+      const res = await POST(makeRequest({ tier: 'proAi', interval: 'yearly', aiMode: 'byok' }))
+
+      expect(res.status).toBe(200)
+      expect(mockGetStripePriceId).toHaveBeenCalledWith('proAi', 'yearly', 'byok')
+      const args = mockCreateCheckoutSession.mock.calls[0][0]
+      expect(args).toMatchObject({ priceId: 'price_byok_yearly', tier: 'proAi', interval: 'yearly', aiMode: 'byok' })
+      expect(new URL(args.cancelUrl).searchParams.get('aiMode')).toBe('byok')
+    })
+
+    it('stamps no aiMode on a Pro session', async () => {
+      const { POST } = await import('@/app/api/checkout/route')
+      await POST(makeRequest({ tier: 'pro', interval: 'monthly', aiMode: 'managed' }))
+      expect(mockCreateCheckoutSession.mock.calls[0][0]).not.toHaveProperty('aiMode')
+    })
+
+    it.each([
+      ['an unknown value', { tier: 'proAi', interval: 'monthly', aiMode: 'free-ai' }],
+      ['a non-string', { tier: 'proAi', interval: 'monthly', aiMode: 1 }],
+      ['null', { tier: 'proAi', interval: 'monthly', aiMode: null }],
+      ['byok with Pro', { tier: 'pro', interval: 'monthly', aiMode: 'byok' }],
+    ])('rejects %s with 400 and no Stripe call', async (_label, body) => {
+      const { POST } = await import('@/app/api/checkout/route')
+
+      const res = await POST(makeRequest(body))
+
+      expect(res.status).toBe(400)
+      expect(await res.json()).toEqual({ error: 'Invalid aiMode' })
+      expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+    })
+  })
+
   describe('cancel_url locale', () => {
     async function cancelUrlFor(headers: Record<string, string>) {
       const { POST } = await import('@/app/api/checkout/route')

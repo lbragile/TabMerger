@@ -5,8 +5,10 @@ import { createServiceRoleClient } from '@/lib/supabase/server'
 import {
   ANALYTICS_EVENTS,
   STORED_SUBSCRIPTION_STATUSES,
-  getPricingTier,
+  creditsForPayment,
+  isAiMode,
   isEntitledSubscriptionStatus,
+  type AiMode,
   type SubscriptionStatus,
 } from '@tabmerger/shared'
 import { gaEnvironment, sendGa4Event, type Ga4Params } from '@/lib/ga4'
@@ -14,11 +16,14 @@ import {
   CHECKOUT_CURRENCY,
   CHECKOUT_INTERVALS,
   CHECKOUT_TIERS,
+  analyticsItem,
   analyticsTier,
   checkoutValue,
   type CheckoutInterval,
   type CheckoutTier,
 } from '@/lib/checkoutAnalytics'
+import { getPlanForPriceId, type PlanPrice } from '@/lib/tiers'
+import { SUBSCRIPTION_EXPAND, subscriptionAiColumns, type AiColumns } from '@/lib/aiAllowance'
 import type Stripe from 'stripe'
 
 /**
@@ -50,6 +55,12 @@ import type Stripe from 'stripe'
  *   the same row in whatever order they arrive.
  *
  * A row's status is always one the database stores: see toStoredState().
+ *
+ * Every subscription write also stores the Pro AI option (`ai_mode`, from the price) and the
+ * managed AI allowance (`ai_monthly_credits`, see subscriptionAiColumns() in lib/aiAllowance.ts):
+ * what the subscription actually pays, after discounts, turned into credits. Discount events
+ * (`customer.discount.*`) read the subscription again so the allowance follows a coupon that is
+ * added, changed or ends. A credit pack grants creditsForPayment() of the USD amount paid.
  */
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -166,30 +177,28 @@ export async function POST(request: NextRequest) {
         // The event says which subscription changed; what is written is that subscription's
         // current state at Stripe, never the copy embedded in the event.
         const subscriptionId = (event.data.object as Stripe.Subscription).id
-        const subscription = await retrieveCurrentSubscription(event.type, subscriptionId)
+        await syncSubscription(supabase, event.type, subscriptionId)
+        break
+      }
 
-        if (!subscription) {
-          logUnmatchedEvent(event.type, subscriptionId)
+      case 'customer.discount.created':
+      case 'customer.discount.updated':
+      case 'customer.discount.deleted': {
+        // A coupon was applied to, changed on, or removed from (including a repeating coupon
+        // that ended) a subscription or a customer. Only the managed AI allowance depends on it:
+        // the subscription is read again and written like an update. A discount on the customer
+        // (no subscription named) applies to the subscription the customer's account holds.
+        const discount = event.data.object as Stripe.Discount
+        const subscriptionId =
+          discount.subscription ??
+          (await storedSubscriptionIdForCustomer(supabase, event.type, discount.customer))
+
+        if (!subscriptionId) {
+          logUnmatchedEvent(event.type, null)
           break
         }
 
-        const owner = await resolveSubscriptionUserId(supabase, event.type, subscription)
-
-        if (!owner) {
-          logUnmatchedEvent(event.type, subscriptionId)
-          break
-        }
-
-        // The upsert rewrites the user's one row. A subscription that row does not track yet
-        // (the user was found through metadata or the profile, not the stored row) may take the
-        // row over only while it is entitled: a new plan can start this way, but an ended or
-        // unpaid subscription never replaces whatever the row holds now.
-        if (owner.via !== 'stored_row' && !isEntitledSubscriptionStatus(subscription.status)) {
-          logNotOnRecordEvent(event.type, subscriptionId, subscription.status)
-          break
-        }
-
-        await upsertSubscription(supabase, event.type, subscription, owner.userId)
+        await syncSubscription(supabase, event.type, subscriptionId)
         break
       }
 
@@ -295,13 +304,14 @@ const STRIPE_RESOURCE_MISSING = 'resource_missing'
 function stripeRetrieveError(
   eventType: string,
   subscriptionId: string,
-  error: unknown
+  error: unknown,
+  what: 'subscription' | 'coupon' = 'subscription'
 ): WebhookRetryError {
   const { type, statusCode } = (error ?? {}) as { type?: unknown; statusCode?: unknown }
   const kind = typeof type === 'string' && type ? type : 'unknown error'
   const status = typeof statusCode === 'number' ? `, status ${statusCode}` : ''
   return new WebhookRetryError(
-    `Stripe webhook: ${eventType} subscription retrieve failed (subscription ${subscriptionId}, ${kind}${status})`
+    `Stripe webhook: ${eventType} ${what} retrieve failed (subscription ${subscriptionId}, ${kind}${status})`
   )
 }
 
@@ -322,7 +332,10 @@ async function retrieveCurrentSubscription(
   let subscription: Stripe.Subscription
 
   try {
-    subscription = await stripe.subscriptions.retrieve(subscriptionId)
+    // Expanded with what subscriptionAiColumns() prices the managed AI allowance from.
+    subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+      expand: [...SUBSCRIPTION_EXPAND],
+    })
   } catch (err) {
     if ((err as { code?: unknown } | null)?.code === STRIPE_RESOURCE_MISSING) return null
     throw stripeRetrieveError(eventType, subscriptionId, err)
@@ -513,9 +526,16 @@ async function updateSubscriptionById(
 ) {
   const stored = toStoredState(eventType, subscriptionId, changes.status, changes.tier)
 
+  // An ended plan has no managed AI allowance; the AI option is left as it was.
   const { data: rows, error } = await supabase
     .from('subscriptions')
-    .update(stored.tier === undefined ? { status: stored.status } : stored)
+    .update(
+      stored.tier === undefined
+        ? { status: stored.status }
+        : stored.tier === 'free'
+          ? { ...stored, ai_monthly_credits: 0 }
+          : stored
+    )
     .eq('id', subscriptionId)
     .select('id')
 
@@ -544,10 +564,16 @@ function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
 }
 
 /**
- * Grants a one-time AI credit pack purchase. Idempotent on stripe_checkout_session_id
- * (unique constraint on ai_credit_purchases) — Stripe can redeliver checkout.session.completed,
- * and a duplicate insert must be a no-op, not a double credit. Any other insert error throws a
- * WebhookRetryError (500), so the event is delivered again and the pack is granted then.
+ * Grants a one-time AI credit pack purchase: creditsForPayment() of the USD amount actually paid
+ * for it (usdAmountPaid()), in the cost-based unit (1 credit = $0.001 of AI cost). The quantity
+ * bought only set the price; a discounted pack grants proportionally fewer credits and a free one
+ * none. When the session holds no USD amount, 0 credits are granted and a line is logged (better
+ * to under-grant than to fund AI with money that wasn't received).
+ *
+ * Idempotent on stripe_checkout_session_id (unique constraint on ai_credit_purchases) — Stripe can
+ * redeliver checkout.session.completed, and a duplicate insert must be a no-op, not a double
+ * credit. Any other insert error throws a WebhookRetryError (500), so the event is delivered
+ * again and the pack is granted then.
  */
 async function creditAiCreditPack(
   supabase: Awaited<ReturnType<typeof createServiceRoleClient>>,
@@ -561,16 +587,18 @@ async function creditAiCreditPack(
 
   const month = new Date().toISOString().slice(0, 7)
 
-  // session.line_items isn't populated unless expanded at creation time, so pull the
-  // actual purchased quantity back from Stripe rather than assuming a fixed amount.
-  // quantity is already a per-call count (not a pack multiplier) since the price is per-call.
-  const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 1 })
-  const quantity = lineItems.data[0]?.quantity ?? 1
+  const usdPaid = usdAmountPaid(session)
+  if (usdPaid === null) {
+    console.warn(
+      `Stripe webhook: checkout.session.completed credit pack has no USD amount; 0 credits granted (session ${session.id})`
+    )
+  }
+  const credits = usdPaid === null ? 0 : creditsForPayment(usdPaid)
 
   const { error } = await supabase.from('ai_credit_purchases').insert({
     user_id: userId,
     month,
-    credits: quantity,
+    credits,
     stripe_checkout_session_id: session.id,
   })
 
@@ -596,7 +624,7 @@ async function creditAiCreditPack(
  *
  * Derives the app tier from the price ID via env-var mapping; defaults to 'free' on unknown prices.
  * The status and tier then go through toStoredState(), so a status the database does not store
- * is written as canceled / free.
+ * is written as canceled / free. `ai_mode` and `ai_monthly_credits` come from aiColumns().
  *
  * A database error throws a WebhookRetryError (500, Stripe sends the event again). Running
  * twice for one event is safe: the conflict target is user_id, so the second run rewrites the
@@ -609,12 +637,14 @@ async function upsertSubscription(
   userId: string
 ) {
   const priceId = subscription.items.data[0]?.price.id
+  const plan = getPlanForPriceId(priceId)
   const { status, tier } = toStoredState(
     eventType,
     subscription.id,
     subscription.status,
-    getTierFromPriceId(priceId)
+    plan?.tier ?? 'free'
   )
+  const ai = await aiColumns(eventType, subscription, plan, tier)
 
   const { error } = await supabase.from('subscriptions').upsert(
     {
@@ -622,6 +652,8 @@ async function upsertSubscription(
       user_id: userId,
       tier,
       status,
+      ai_mode: ai.aiMode,
+      ai_monthly_credits: ai.monthlyCredits,
       stripe_price_id: priceId,
       cancel_at_period_end: subscription.cancel_at_period_end,
       // ponytail: Stripe v22 moved current_period_end from Subscription to SubscriptionItem
@@ -640,34 +672,105 @@ async function upsertSubscription(
 }
 
 /**
- * Maps a Stripe price ID to the internal tier name ('pro', 'pro_ai', or 'free').
- * Price IDs are read from env vars so they work across test and live Stripe environments.
+ * The `ai_mode` and `ai_monthly_credits` to write for a subscription: subscriptionAiColumns() from
+ * lib/aiAllowance.ts (the same function the re-sync script uses). A coupon that has to be read
+ * from Stripe and can't be (other than "no such coupon") throws a WebhookRetryError (500), so the
+ * event is delivered again rather than written with a guessed allowance.
  */
-function getTierFromPriceId(priceId: string | undefined): string {
-  return getTierAndBilling(priceId).tier
+function aiColumns(
+  eventType: string,
+  subscription: Stripe.Subscription,
+  plan: PlanPrice | null,
+  storedTier: string
+): Promise<AiColumns> {
+  return subscriptionAiColumns(subscription, plan, storedTier, {
+    retrieveCoupon: async (id) => {
+      try {
+        return await stripe.coupons.retrieve(id)
+      } catch (err) {
+        if ((err as { code?: unknown } | null)?.code === STRIPE_RESOURCE_MISSING) return null
+        throw stripeRetrieveError(eventType, subscription.id, err, 'coupon')
+      }
+    },
+    onUnpriceableDiscount: (reason) =>
+      console.warn(
+        `Stripe webhook: ${eventType} a discount can't be priced in USD (${reason}); managed AI credits are written as 0 (subscription ${subscription.id})`
+      ),
+  })
 }
 
 /**
- * Maps a Stripe price ID to both tier and billing period, from the same env-var mapping
- * used by getTierFromPriceId. Shared by upsertSubscription and the GA4 checkout_completed event
- * so tier/billing logic is never duplicated.
+ * Reads a subscription from Stripe and writes its current state to its user's row: what
+ * `customer.subscription.updated` does, and what a discount event does once it knows the
+ * subscription. Nothing is written when Stripe has no such subscription or no user matches it
+ * (logged, 200), or when the user's row tracks another subscription and this one isn't entitled.
  */
-function getTierAndBilling(priceId: string | undefined): {
-  tier: string
-  billing: 'monthly' | 'yearly' | null
-} {
-  if (!priceId) return { tier: 'free', billing: null }
+async function syncSubscription(
+  supabase: ServiceRoleClient,
+  eventType: string,
+  subscriptionId: string
+) {
+  const subscription = await retrieveCurrentSubscription(eventType, subscriptionId)
 
-  const proMonthly = process.env.STRIPE_PRO_MONTHLY_PRICE_ID
-  const proYearly = process.env.STRIPE_PRO_YEARLY_PRICE_ID
-  const proAiMonthly = process.env.STRIPE_PRO_AI_MONTHLY_PRICE_ID
-  const proAiYearly = process.env.STRIPE_PRO_AI_YEARLY_PRICE_ID
+  if (!subscription) {
+    logUnmatchedEvent(eventType, subscriptionId)
+    return
+  }
 
-  if (priceId === proMonthly) return { tier: 'pro', billing: 'monthly' }
-  if (priceId === proYearly) return { tier: 'pro', billing: 'yearly' }
-  if (priceId === proAiMonthly) return { tier: 'pro_ai', billing: 'monthly' }
-  if (priceId === proAiYearly) return { tier: 'pro_ai', billing: 'yearly' }
-  return { tier: 'free', billing: null }
+  const owner = await resolveSubscriptionUserId(supabase, eventType, subscription)
+
+  if (!owner) {
+    logUnmatchedEvent(eventType, subscriptionId)
+    return
+  }
+
+  // The upsert rewrites the user's one row. A subscription that row does not track yet
+  // (the user was found through metadata or the profile, not the stored row) may take the
+  // row over only while it is entitled: a new plan can start this way, but an ended or
+  // unpaid subscription never replaces whatever the row holds now.
+  if (owner.via !== 'stored_row' && !isEntitledSubscriptionStatus(subscription.status)) {
+    logNotOnRecordEvent(eventType, subscriptionId, subscription.status)
+    return
+  }
+
+  await upsertSubscription(supabase, eventType, subscription, owner.userId)
+}
+
+/** Prefix of the row the signup trigger creates (`free_<user id>`): it tracks no Stripe subscription. */
+const SIGNUP_ROW_PREFIX = 'free_'
+
+/**
+ * The Stripe subscription id stored on the row of the account whose profile holds this Stripe
+ * customer, for a discount on the customer rather than on a subscription. Null when no profile
+ * holds the customer or its row tracks no Stripe subscription. A failed lookup throws a
+ * WebhookRetryError (500).
+ */
+async function storedSubscriptionIdForCustomer(
+  supabase: ServiceRoleClient,
+  eventType: string,
+  customer: Stripe.Discount['customer']
+): Promise<string | null> {
+  const customerId = typeof customer === 'string' ? customer : customer?.id
+  if (!customerId) return null
+  const reference = `customer discount`
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
+    .maybeSingle()
+  if (profileError) throw databaseError(eventType, 'customer profile lookup', reference, profileError)
+  if (!profile?.id) return null
+
+  const { data: row, error: rowError } = await supabase
+    .from('subscriptions')
+    .select('id')
+    .eq('user_id', profile.id)
+    .maybeSingle()
+  if (rowError) throw databaseError(eventType, 'subscription lookup', reference, rowError)
+
+  const id = row?.id
+  return typeof id === 'string' && id && !id.startsWith(SIGNUP_ROW_PREFIX) ? id : null
 }
 
 /**
@@ -715,12 +818,17 @@ function analyticsSessionId(sessionId: string | undefined): string | null {
 }
 
 /**
- * What the buyer paid, in USD, for the GA4 `purchase` value: the session's total after any
- * promotion code. With Adaptive Pricing the buyer may pay in a local currency, and the USD total
- * is then `currency_conversion.amount_total`. Falls back to `listPrice` when neither total is in
- * USD, or the payload carries no total.
+ * What the buyer paid for a Checkout Session, in USD: its total after any promotion code (the
+ * GA4 `purchase` value, and what a credit pack's credits are worked out from). Null when the
+ * session holds no USD total.
+ *
+ * Adaptive Pricing lets the buyer pay in a local currency, and where the USD total sits depends
+ * on the API version of the webhook endpoint (the event payload follows it, not this client):
+ * older versions put the local amount in `amount_total`/`currency` and the USD one in
+ * `currency_conversion.amount_total` (`source_currency` 'usd'); current versions keep
+ * `amount_total`/`currency` in USD and the local amount in `presentment_details`. Both are read.
  */
-function usdAmountPaid(session: Stripe.Checkout.Session, listPrice: number): number {
+function usdAmountPaid(session: Stripe.Checkout.Session): number | null {
   const conversion = session.currency_conversion
   if (
     conversion?.source_currency?.toLowerCase() === 'usd' &&
@@ -731,7 +839,7 @@ function usdAmountPaid(session: Stripe.Checkout.Session, listPrice: number): num
   if (session.currency?.toLowerCase() === 'usd' && typeof session.amount_total === 'number') {
     return session.amount_total / 100
   }
-  return listPrice
+  return null
 }
 
 /**
@@ -755,8 +863,9 @@ async function trackCheckoutCompleted(
   session: Stripe.Checkout.Session
 ) {
   const item = subscription.items.data[0]
-  const { tier, billing } = getTierAndBilling(item?.price.id)
-  if (tier === 'free' || !billing) return
+  const plan = getPlanForPriceId(item?.price.id)
+  if (!plan) return
+  const { tier, interval: billing } = plan
 
   const transactionId = analyticsSessionId(session.id)
   if (!transactionId) return
@@ -774,20 +883,13 @@ async function trackCheckoutCompleted(
       name: ANALYTICS_EVENTS.purchase,
       params: {
         transaction_id: transactionId,
-        value: usdAmountPaid(session, listPrice),
+        value: usdAmountPaid(session) ?? listPrice,
         currency: CHECKOUT_CURRENCY,
         tier,
         billing_interval: billing,
         environment: gaEnvironment(),
-        items: [
-          {
-            item_id: tier,
-            item_name: getPricingTier(tier === 'pro_ai' ? 'pro_ai' : 'pro').name,
-            item_variant: billing,
-            price: listPrice,
-            quantity: 1,
-          },
-        ],
+        // item_name tells Pro AI's two options apart ("Pro AI" / "Pro AI (own key)").
+        items: [analyticsItem(plan.tierKey, billing, plan.aiMode ?? 'managed', listPrice)],
       },
     }),
   ])
@@ -803,6 +905,7 @@ async function trackCheckoutCompleted(
  * `metadata.user_id`, stamped by createCheckoutSession(). The user id only decides that; it is
  * never sent. Tier and interval come from metadata stamped from values the checkout route had
  * already validated; each is checked again here, and one that isn't a known value is left out.
+ * Pro AI's option (`metadata.ai_mode`) picks the price and item name, defaulting to managed.
  */
 async function trackCheckoutAbandoned(session: Stripe.Checkout.Session) {
   if (session.mode !== 'subscription') return
@@ -826,6 +929,9 @@ async function trackCheckoutAbandoned(session: Stripe.Checkout.Session) {
   const interval = (CHECKOUT_INTERVALS as readonly string[]).includes(rawInterval)
     ? (rawInterval as CheckoutInterval)
     : null
+  // Pro AI's option, stamped by the checkout route; anything else counts as TabMerger's key.
+  const rawAiMode = session.metadata?.ai_mode
+  const aiMode: AiMode = tier === 'proAi' && isAiMode(rawAiMode) ? rawAiMode : 'managed'
 
   const params: Ga4Params = {
     checkout_session_id: checkoutSessionId,
@@ -834,18 +940,10 @@ async function trackCheckoutAbandoned(session: Stripe.Checkout.Session) {
   if (tier) params.tier = analyticsTier(tier)
   if (interval) params.billing_interval = interval
   if (tier && interval) {
-    const value = checkoutValue(tier, interval)
+    const value = checkoutValue(tier, interval, aiMode)
     params.value = value
     params.currency = CHECKOUT_CURRENCY
-    params.items = [
-      {
-        item_id: analyticsTier(tier),
-        item_name: getPricingTier(analyticsTier(tier)).name,
-        item_variant: interval,
-        price: value,
-        quantity: 1,
-      },
-    ]
+    params.items = [analyticsItem(tier, interval, aiMode, value)]
   }
 
   await sendGa4Event('web', {

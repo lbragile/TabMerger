@@ -14,7 +14,11 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest'
 import { NextRequest } from 'next/server'
-import { STORED_SUBSCRIPTION_STATUSES, isEntitledSubscriptionStatus } from '@tabmerger/shared'
+import {
+  STORED_SUBSCRIPTION_STATUSES,
+  creditsForPayment,
+  isEntitledSubscriptionStatus,
+} from '@tabmerger/shared'
 
 // The route sends GA events with next/server's after(), which needs a live request scope. Collect
 // the callbacks instead and run them with flushAfter(), as Next does once the response is sent.
@@ -445,13 +449,17 @@ describe('POST /api/webhooks/stripe', () => {
     expect(didSetPastDue).toBe(true)
   })
 
-  it('checkout.session.completed (payment mode, ai_credit_pack) credits the purchased quantity directly', async () => {
+  // A pack grants creditsForPayment() of the USD amount paid (1 credit = $0.001 of AI cost, at
+  // most 40% of the payment after fees), not the quantity: $2.50 funds 820, $25 funds 9,280.
+  it.each([
+    ['the smallest pack ($2.50)', 250, 820],
+    ['the largest pack ($25)', 2500, 9280],
+  ])('checkout.session.completed (payment mode, ai_credit_pack) grants credits for %s', async (_label, cents, credits) => {
     const mockInsert = vi.fn().mockResolvedValue({ error: null })
     mockFrom.mockImplementation((table: string) => {
       if (table === 'ai_credit_purchases') return { insert: mockInsert }
       return { upsert: mockUpsert, update: mockUpdate }
     })
-    mockListLineItems.mockResolvedValue({ data: [{ quantity: 3 }] })
 
     const { POST } = await import('@/app/api/webhooks/stripe/route')
     mockConstructEvent.mockReturnValue({
@@ -462,16 +470,60 @@ describe('POST /api/webhooks/stripe', () => {
           mode: 'payment',
           customer: 'cus_test123',
           metadata: { user_id: 'user-uuid-1', type: 'ai_credit_pack' },
+          amount_total: cents,
+          currency: 'usd',
         },
       },
     })
 
     const res = await POST(makeRequest('{}'))
     expect(res.status).toBe(200)
-    expect(mockListLineItems).toHaveBeenCalledWith('cs_test123', { limit: 1 })
+    expect(mockListLineItems).not.toHaveBeenCalled()
     expect(mockInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ user_id: 'user-uuid-1', credits: 3, stripe_checkout_session_id: 'cs_test123' })
+      expect.objectContaining({ user_id: 'user-uuid-1', credits, stripe_checkout_session_id: 'cs_test123' })
     )
+    expect(creditsForPayment(cents / 100)).toBe(credits)
+  })
+
+  // Adaptive Pricing: the buyer paid in a local currency. Depending on the endpoint's API version
+  // the USD total is currency_conversion.amount_total (older) or amount_total itself (current).
+  it.each([
+    ['currency_conversion (older API versions)', { amount_total: 3500, currency: 'cad', currency_conversion: { amount_total: 2500, amount_subtotal: 2500, source_currency: 'usd', fx_rate: '1.4' } }, 9280],
+    ['amount_total in USD with presentment_details (current API versions)', { amount_total: 2500, currency: 'usd', presentment_details: { presentment_amount: 3500, presentment_currency: 'cad' } }, 9280],
+    ['no USD amount at all: 0 credits and a log line', { amount_total: 3500, currency: 'cad' }, 0],
+  ])('a credit pack paid in a local currency: %s', async (_label, amounts, credits) => {
+    const mockInsert = vi.fn().mockResolvedValue({ error: null })
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'ai_credit_purchases') return { insert: mockInsert }
+      return { upsert: mockUpsert, update: mockUpdate }
+    })
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_local',
+          mode: 'payment',
+          customer: 'cus_test123',
+          metadata: { user_id: 'user-uuid-1', type: 'ai_credit_pack' },
+          ...amounts,
+        },
+      },
+    })
+
+    const res = await POST(makeRequest('{}'))
+    expect(res.status).toBe(200)
+    expect(mockInsert.mock.calls[0][0]).toMatchObject({ credits, stripe_checkout_session_id: 'cs_local' })
+    if (credits === 0) {
+      expect(warn.mock.calls).toEqual([
+        ['Stripe webhook: checkout.session.completed credit pack has no USD amount; 0 credits granted (session cs_local)'],
+      ])
+    } else {
+      expect(warn).not.toHaveBeenCalled()
+    }
+    warn.mockRestore()
   })
 
   // Checkout accepts promotion codes, so a completed session can cost less than list price or
@@ -515,13 +567,13 @@ describe('POST /api/webhooks/stripe', () => {
     }
   )
 
-  // Credits follow the quantity on the line item, never the amount paid: a discount changes the
-  // price of the pack, not its size, and a free pack is still exactly the quantity bought.
+  // Credits follow the amount actually paid, never the quantity: a discount lowers the credits in
+  // proportion (AI spend stays within its share of revenue), and a free pack grants none.
   it.each([
-    ['half price', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 1250, payment_intent: 'pi_test123' }],
-    ['free (100% off)', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 0, payment_intent: null }],
-    ['free, reported as no_payment_required', { payment_status: 'no_payment_required', amount_subtotal: 2500, amount_total: 0, payment_intent: null }],
-  ])('a discounted credit pack (%s) grants the quantity bought, not an amount-based number', async (_label, amounts) => {
+    ['half price', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 1250, currency: 'usd', payment_intent: 'pi_test123' }, 4580],
+    ['free (100% off)', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 0, currency: 'usd', payment_intent: null }, 0],
+    ['free, reported as no_payment_required', { payment_status: 'no_payment_required', amount_subtotal: 2500, amount_total: 0, currency: 'usd', payment_intent: null }, 0],
+  ])('a discounted credit pack (%s) grants credits for the amount paid, not the quantity bought', async (_label, amounts, credits) => {
     const mockInsert = vi.fn().mockResolvedValue({ error: null })
     mockFrom.mockImplementation((table: string) => {
       if (table === 'ai_credit_purchases') return { insert: mockInsert }
@@ -545,15 +597,12 @@ describe('POST /api/webhooks/stripe', () => {
 
     const res = await POST(makeRequest('{}'))
     expect(res.status).toBe(200)
-    // The quantity is read back from Stripe for THIS session, not derived from the amounts.
-    expect(mockListLineItems).toHaveBeenCalledWith('cs_discounted', { limit: 1 })
     expect(mockInsert).toHaveBeenCalledTimes(1)
+    // Recorded even at 0 credits, so a redelivery is still recognised by the session id.
     expect(mockInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ user_id: 'user-uuid-1', credits: 500, stripe_checkout_session_id: 'cs_discounted' })
+      expect.objectContaining({ user_id: 'user-uuid-1', credits, stripe_checkout_session_id: 'cs_discounted' })
     )
-    // 500 is the line item's quantity; neither the amount paid nor the list price implies it.
-    expect(mockInsert.mock.calls[0][0].credits).not.toBe(Number(amounts.amount_total))
-    expect(mockInsert.mock.calls[0][0].credits).not.toBe(Number(amounts.amount_subtotal))
+    expect(credits).toBe(creditsForPayment(Number(amounts.amount_total) / 100))
   })
 
   // One redemption of a code is one Checkout Session, and a session can be credited once: the
@@ -795,7 +844,7 @@ describe('subscription events are matched by subscription id', () => {
       const res = await POST(makeRequest('{}'))
 
       expect(res.status).toBe(200)
-      expect(update).toHaveBeenCalledWith({ status: 'canceled', tier: 'free' })
+      expect(update).toHaveBeenCalledWith({ status: 'canceled', tier: 'free', ai_monthly_credits: 0 })
       expect(updateEq).toHaveBeenCalledWith('id', 'sub_test123')
       expect(profileEq).not.toHaveBeenCalled()
       expect(warnSpy).not.toHaveBeenCalled()
@@ -1082,7 +1131,7 @@ describe('subscription events are matched by subscription id', () => {
       await POST(makeRequest('{}'))
 
       expect(mockSubscriptionsRetrieve).toHaveBeenCalledTimes(1)
-      expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_test123')
+      expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_test123', expect.anything())
     })
 
     it('the event says active and Stripe says canceled: the row ends canceled on the free tier', async () => {
@@ -1165,7 +1214,7 @@ describe('subscription events are matched by subscription id', () => {
 
       expect(cancellation.status).toBe(200)
       expect(lateUpdate.status).toBe(200)
-      expect(update.mock.calls).toEqual([[{ status: 'canceled', tier: 'free' }]])
+      expect(update.mock.calls).toEqual([[{ status: 'canceled', tier: 'free', ai_monthly_credits: 0 }]])
       expect(mockUpsert).toHaveBeenCalledTimes(1)
       const { status, tier } = mockUpsert.mock.calls[0][0]
       expect({ status, tier }).toEqual({ status: 'canceled', tier: 'free' })
@@ -1249,8 +1298,8 @@ describe('subscription events are matched by subscription id', () => {
     it.each([
       ['still past_due', 'past_due', { status: 'past_due' }],
       ['paid since, and active again', 'active', { status: 'active' }],
-      ['canceled since', 'canceled', { status: 'canceled', tier: 'free' }],
-      ['unpaid since', 'unpaid', { status: 'canceled', tier: 'free' }],
+      ['canceled since', 'canceled', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
+      ['unpaid since', 'unpaid', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
     ])('invoice.payment_failed for a subscription that is %s writes that state', async (_label, status, expected) => {
       const { POST } = await import('@/app/api/webhooks/stripe/route')
       const { update, updateEq } = mockTables({ matchedRows: [{ id: 'sub_test123' }] })
@@ -1260,7 +1309,7 @@ describe('subscription events are matched by subscription id', () => {
       const res = await POST(makeRequest('{}'))
 
       expect(res.status).toBe(200)
-      expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_test123')
+      expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_test123', expect.anything())
       expect(update.mock.calls).toEqual([[expected]])
       expect(updateEq).toHaveBeenCalledWith('id', 'sub_test123')
       expect(mockUpsert).not.toHaveBeenCalled()
@@ -1310,7 +1359,7 @@ describe('subscription events are matched by subscription id', () => {
 
       expect(res.status).toBe(200)
       expect(mockSubscriptionsRetrieve).not.toHaveBeenCalled()
-      expect(update).toHaveBeenCalledWith({ status: 'canceled', tier: 'free' })
+      expect(update).toHaveBeenCalledWith({ status: 'canceled', tier: 'free', ai_monthly_credits: 0 })
     })
 
     it('checkout.session.completed answers 500 when its subscription cannot be read or is not found', async () => {
@@ -1581,10 +1630,10 @@ describe('subscription events are matched by subscription id', () => {
         subscriptionEvent('customer.subscription.updated', { status: 'unpaid' })
       )
       await POST(makeRequest('{}'))
-      const { status, tier } = mockUpsert.mock.calls[0][0]
+      const { status, tier, ai_monthly_credits } = mockUpsert.mock.calls[0][0]
 
-      expect(afterCancellation).toEqual({ status: 'canceled', tier: 'free' })
-      expect({ status, tier }).toEqual(afterCancellation)
+      expect(afterCancellation).toEqual({ status: 'canceled', tier: 'free', ai_monthly_credits: 0 })
+      expect({ status, tier, ai_monthly_credits }).toEqual(afterCancellation)
     })
 
     it('a later event with a stored status writes the plan back', async () => {
@@ -1618,7 +1667,7 @@ describe('subscription events are matched by subscription id', () => {
     })
 
     it.each([
-      ['customer.subscription.deleted', { status: 'canceled', tier: 'free' }],
+      ['customer.subscription.deleted', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
       ['invoice.payment_failed', { status: 'past_due' }],
     ])('%s writes a stored status', async (type, expected) => {
       const { POST } = await import('@/app/api/webhooks/stripe/route')
@@ -1641,7 +1690,7 @@ describe('subscription events are matched by subscription id', () => {
   // event again. An event that matches no row or user is still 200 (the tests above).
   describe('a database error answers 500', () => {
     it.each([
-      ['customer.subscription.deleted', { status: 'canceled', tier: 'free' }],
+      ['customer.subscription.deleted', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
       ['invoice.payment_failed', { status: 'past_due' }],
     ])('%s: the update by subscription id fails', async (type, changes) => {
       const { POST } = await import('@/app/api/webhooks/stripe/route')
@@ -1774,8 +1823,6 @@ describe('subscription events are matched by subscription id', () => {
         if (table === 'ai_credit_purchases') return { insert: mockInsert }
         return { upsert: mockUpsert }
       })
-      mockListLineItems.mockResolvedValue({ data: [{ quantity: 500 }] })
-
       const { POST } = await import('@/app/api/webhooks/stripe/route')
       mockConstructEvent.mockReturnValue({
         type: 'checkout.session.completed',
@@ -1785,6 +1832,8 @@ describe('subscription events are matched by subscription id', () => {
             mode: 'payment',
             customer: 'cus_test123',
             metadata: { user_id: USER_A, type: 'ai_credit_pack' },
+            amount_total: 2500,
+            currency: 'usd',
           },
         },
       })
@@ -1797,7 +1846,7 @@ describe('subscription events are matched by subscription id', () => {
       // Both deliveries insert the same grant under the same session id.
       expect(mockInsert).toHaveBeenCalledTimes(2)
       expect(mockInsert.mock.calls[1][0]).toEqual(mockInsert.mock.calls[0][0])
-      expect(mockInsert.mock.calls[0][0]).toMatchObject({ credits: 500, stripe_checkout_session_id: 'cs_pack' })
+      expect(mockInsert.mock.calls[0][0]).toMatchObject({ credits: 9280, stripe_checkout_session_id: 'cs_pack' })
       expect(errorSpy.mock.calls).toEqual([
         ['Stripe webhook: checkout.session.completed credit pack insert failed (session cs_pack, code 08006): connection failure'],
       ])
@@ -1853,7 +1902,7 @@ describe('subscription events are matched by subscription id', () => {
       const res = await POST(makeRequest('{}'))
 
       expect(res.status).toBe(200)
-      expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_invoice1')
+      expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_invoice1', expect.anything())
       expect(update).toHaveBeenCalledWith({ status: 'past_due' })
       expect(updateEq).toHaveBeenCalledWith('id', 'sub_invoice1')
       expect(updateEq).not.toHaveBeenCalledWith('user_id', expect.anything())

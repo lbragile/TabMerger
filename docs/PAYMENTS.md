@@ -6,7 +6,10 @@ Authoritative code:
 | Concern | File |
 | --- | --- |
 | Stripe client, checkout/portal session creation | `packages/web/lib/stripe.ts` |
-| Tier display prices + env-var price IDs | `packages/web/lib/tiers.ts` (`TIERS`, `getStripePriceId`, `getPriceInfo`) |
+| Tier display prices + env-var price IDs | `packages/web/lib/tiers.ts` (`TIERS`, `getStripePriceId`, `getPriceInfo`, `getPlanForPriceId`) |
+| Managed AI allowance from a subscription | `packages/web/lib/aiAllowance.ts` (`subscriptionAiColumns`) |
+| Plan switch (interval, Pro AI option) | `packages/web/lib/planSwitch.ts`, `app/api/billing/switch-interval`, `app/api/billing/switch-plan` |
+| One-off allowance re-sync | `packages/web/scripts/resync-ai-allowance.ts` (`lib/aiAllowanceResync.ts`) |
 | Subscription checkout | `packages/web/app/api/checkout/route.ts` |
 | AI credit-pack checkout | `packages/web/app/api/checkout/credits/route.ts` |
 | Billing portal (web, cookie auth) | `packages/web/app/api/billing-portal/route.ts` |
@@ -14,7 +17,7 @@ Authoritative code:
 | Webhook | `packages/web/app/api/webhooks/stripe/route.ts` |
 | Redirect base URL | `packages/web/lib/utils.ts` (`absoluteUrl`) |
 | Extension entitlements | `packages/extension/src/hooks/useEntitlements.ts`, `TIER_LIMITS` in `packages/extension/src/lib/types.ts` |
-| Schema | `supabase/migrations/001` (subscriptions + `handle_new_user()`), `005` (lifecycle columns), `012` (unique `user_id`), `014` (`ai_credit_purchases`) |
+| Schema | `supabase/migrations/001` (subscriptions + `handle_new_user()`), `005` (lifecycle columns), `012` (unique `user_id`), `014` (`ai_credit_purchases`), `022` (`ai_mode`, `ai_monthly_credits`, credit reserve/settle) |
 
 ---
 
@@ -24,7 +27,13 @@ Authoritative code:
 | --- | --- | --- | --- | --- |
 | Free | $0 | $0 | `free` | — |
 | Pro | $3.99 | $42.99 | `pro` | `pro` |
-| Pro AI | $7.99 | $85.99 | `pro_ai` | `proAi` |
+| Pro AI (TabMerger's key, `managed`) | $7.99 | $85.99 | `pro_ai` | `proAi` (+ `aiMode: 'managed'`, the default) |
+| Pro AI (own Anthropic key, `byok`) | $5.99 | $64.99 | `pro_ai` | `proAi` + `aiMode: 'byok'` |
+
+Pro AI's two options share the tier `pro_ai` (every entitlement check stays the same);
+`subscriptions.ai_mode` says which one, and only AI metering branches on it. The webhook derives
+both from the subscription's Price. The yearly toggle badge (`YEARLY_DISCOUNT_PERCENT`) is the
+smallest saving of every paid option, so the own-key yearly price (9.6% off) makes it 9%.
 
 Display prices live in **two** places that must match each other and the Stripe prices:
 `TIERS` in `packages/web/lib/tiers.ts` (what the pricing page renders) and `PRICING_TIERS` in
@@ -36,10 +45,21 @@ are display only. Run the `entitlements-auditor` agent after changing either.
 > send `pro_ai` to `/api/checkout` (400 `Invalid tier`) or write `proAi` to the DB (fails the
 > `tier` CHECK constraint).
 
-**AI credit packs** (one-time, `mode: 'payment'`): quantity 50–500 credits, clamped server-side
-and on Stripe's page (`adjustable_quantity`). Credits are month-scoped (no rollover).
-TODO (owner): confirm the credit-pack price — `packages/web/.env.example` says "$2.99 for +50 AI
-calls" while code comments assume $0.05/credit ($2.50 for 50); only the Stripe price is authoritative.
+**AI credit packs** (one-time, `mode: 'payment'`): quantity 50–500 units of a $0.05 Price
+($2.50–$25), clamped server-side and on Stripe's page (`adjustable_quantity`). The credits granted
+are not the quantity: the webhook converts the USD amount actually paid with `creditsForPayment()`
+from `@tabmerger/shared` (1 credit = $0.001 of AI cost, at most 40% of the payment after fees):
+$2.50 → 820 credits, $25 → 9,280. Credits are month-scoped (no rollover). Own-key (BYOK)
+subscribers can't buy packs (409 `credits_not_applicable`).
+
+**Managed AI allowance** (`subscriptions.ai_monthly_credits`): written by the webhook on every
+subscription write with `subscriptionAiColumns()` (`lib/aiAllowance.ts`): the smaller of
+`PRO_AI_MONTHLY_CREDITS` (2,600) and `creditsForPayment(what the subscription pays per period, months)`.
+"What it pays" is the Price's USD list price (PRICING_TIERS) less the discounts applying to its next
+invoices (item, then subscription, else the customer's; `percent_off`, or `amount_off` in USD; any
+other discount counts as 100% off and is logged), and never more than the latest invoice actually
+charged after discounts (a "once" coupon is gone from the subscription once the first invoice is
+finalized). 0 for BYOK, trials, and any tier other than `pro_ai`.
 
 ---
 
@@ -50,8 +70,9 @@ calls" while code comments assume $0.05/credit ($2.50 for 50); only the Stripe p
 | `STRIPE_SECRET_KEY` | API key. Missing → build still succeeds, but every Stripe operation throws `Stripe is not configured` (`isStripeConfigured`). |
 | `STRIPE_WEBHOOK_SECRET` | Signing secret of **this environment's** webhook endpoint. |
 | `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_YEARLY_PRICE_ID` | Pro recurring prices. |
-| `STRIPE_PRO_AI_MONTHLY_PRICE_ID`, `STRIPE_PRO_AI_YEARLY_PRICE_ID` | Pro AI recurring prices. |
-| `STRIPE_AI_CREDIT_PACK_PRICE_ID` | One-time per-credit price for credit packs. |
+| `STRIPE_PRO_AI_MONTHLY_PRICE_ID`, `STRIPE_PRO_AI_YEARLY_PRICE_ID` | Pro AI recurring prices (TabMerger's key). |
+| `STRIPE_PRO_AI_BYOK_MONTHLY_PRICE_ID`, `STRIPE_PRO_AI_BYOK_YEARLY_PRICE_ID` | Pro AI with the customer's own key ($5.99 / $64.99), on the same Pro AI product. |
+| `STRIPE_AI_CREDIT_PACK_PRICE_ID` | One-time $0.05-per-unit price for credit packs. |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Publishable key. |
 | `NEXT_PUBLIC_APP_URL` | Base for every Stripe redirect URL (see below). |
 | `NEXT_PUBLIC_AI_ENABLED` | AI coming-soon flag (see below). |
@@ -68,23 +89,26 @@ tier, so a price ID that isn't in these vars resolves to `free`.
 ## Checkout flow
 
 ```text
-PricingCard → POST /api/checkout { tier: 'pro' | 'proAi', interval: 'monthly' | 'yearly' }
+PricingCard → POST /api/checkout { tier: 'pro' | 'proAi', interval: 'monthly' | 'yearly', aiMode?: 'managed' | 'byok' }
   1. Supabase cookie session required            → 401 otherwise
-  2. tier / interval validated                    → 400
+  2. tier / interval / aiMode validated           → 400 (aiMode: missing = managed; byok only with proAi)
   3. tier === 'proAi' && AI flag off              → 503 { error: 'ai_disabled' }   (no Stripe call)
   4. caller's subscriptions row is on a paid tier
      with an entitled status                      → 409 { error: 'already_subscribed' } (no Stripe call)
-  5. price ID from env via getStripePriceId()     → 500 'Price ID not configured' if unset
+  5. price ID from env via getStripePriceId(tier, interval, aiMode) → 500 'Price ID not configured' if unset
   6. stripe.checkout.sessions.create(mode: 'subscription',
        customer = profiles.stripe_customer_id ?? customer_email,
        metadata.user_id AND subscription_data.metadata.user_id,
+       metadata.tier / interval / ai_mode (analytics only),
        allow_promotion_codes: true)
   → { url }  (client navigates to Stripe)
   success → /dashboard?upgraded=1   cancel → [/<locale>]/pricing?checkout=canceled&tier=…&interval=… (counted once as checkout_canceled, then stripped)
 ```
 
 Credit packs: `BuyCreditsButton` → `POST /api/checkout/credits { quantity? }` → auth (401) → AI
-flag off → 503 `ai_disabled` → session with `metadata: { user_id, type: 'ai_credit_pack' }`.
+flag off → 503 `ai_disabled` → the caller's row is `pro_ai` with `ai_mode = 'byok'` → 409
+`credits_not_applicable` (row unreadable → 500) → session with
+`metadata: { user_id, type: 'ai_credit_pack' }`.
 Success → `/dashboard?credits=1`, cancel → `/dashboard`.
 
 ### One subscription per account
@@ -118,8 +142,9 @@ plan, another interval, cancelling) is made on that subscription in the Billing 
 Both checkouts (subscription and credit pack) pass `allow_promotion_codes: true`, so Stripe's page
 shows an "Add promotion code" field. Codes exist only in Stripe, separately in test and live mode:
 the app doesn't know about them and the pricing page doesn't change. Stripe validates the code; the
-webhook grants the tier from the subscription's price and credits from the line-item quantity, so
-a discounted or free checkout grants exactly what a full-price one does.
+webhook grants the tier from the subscription's price, so a discounted or free checkout gets the
+same plan as a full-price one. AI credits follow the money: a discount lowers the managed monthly
+allowance and a credit pack's credits in proportion, and a 100%-off code funds none.
 
 To create a code (Dashboard → Products → Coupons → **+ New**, in the right mode):
 
@@ -183,10 +208,11 @@ Events handled (the `switch`):
 
 | Event | Effect |
 | --- | --- |
-| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` → insert `ai_credit_purchases` (quantity from `listLineItems`; idempotent on unique `stripe_checkout_session_id`: 23505 is answered 200, any other insert error 500). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` and `purchase` after the response (`after()`; random `client_id` per event; `transaction_id` = HMAC of the session id keyed with `STRIPE_WEBHOOK_SECRET`; no `user_id`; no-op without `GA_API_SECRET`). |
+| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` → insert `ai_credit_purchases` (credits = `creditsForPayment(USD paid)`: `currency_conversion.amount_total` when `source_currency` is usd, else `amount_total` when `currency` is usd, else 0 and a log line; idempotent on unique `stripe_checkout_session_id`: 23505 is answered 200, any other insert error 500). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` and `purchase` after the response (`after()`; random `client_id` per event; `transaction_id` = HMAC of the session id keyed with `STRIPE_WEBHOOK_SECRET`; no `user_id`; no-op without `GA_API_SECRET`). |
 | `checkout.session.expired` | Analytics only, after the response: `mode: 'subscription'` with a uuid `metadata.user_id` → GA4 `checkout_abandoned` (tier/interval from session metadata, re-validated; random `client_id`; no `user_id` sent). No database or Stripe call; always 200. See `docs/ANALYTICS.md`. |
 | `customer.subscription.updated` | Retrieve the subscription's current state from Stripe by the id in the event → resolve the user (order below) → upsert that state, unless the user's row does not track this subscription and it is not entitled (then nothing is written). The object embedded in the event is not written. |
-| `customer.subscription.deleted` | `status = 'canceled'`, `tier = 'free'` on the row whose `subscriptions.id` is the event's subscription id. No user or profile lookup, no retrieve. |
+| `customer.discount.created`, `.updated`, `.deleted` | A coupon was applied, changed or removed (including a repeating one ending). The discount's subscription (or, for a discount on the customer, the Stripe subscription stored on the row of the profile holding that customer) is handled exactly like `customer.subscription.updated`, which rewrites `ai_monthly_credits`. No subscription found → 200 + the "matched no subscription row or user" line. |
+| `customer.subscription.deleted` | `status = 'canceled'`, `tier = 'free'`, `ai_monthly_credits = 0` on the row whose `subscriptions.id` is the event's subscription id. No user or profile lookup, no retrieve. |
 | `invoice.payment_failed` | Retrieve the current state of the invoice's subscription from Stripe → write its status (`past_due` while Stripe retries the payment) on the row whose `subscriptions.id` is that id. No user or profile lookup; an invoice that bills no subscription changes nothing. |
 
 Anything else is ignored with 200. A database error, or a failed read from Stripe, while one of
@@ -249,8 +275,11 @@ version of the webhook endpoint, not of the SDK client.
 **Upsert uses `onConflict: 'user_id'`.** `handle_new_user()` pre-creates a `free_<uuid>` row for
 every signup and migration 012 makes `user_id` unique, so the first purchase must rewrite that row
 (its `id` becomes the Stripe subscription ID). Conflicting on `id` would 23505 and leave the user on
-free. Written columns: `id, user_id, tier, status, stripe_price_id, cancel_at_period_end,
-current_period_end` (from the subscription **item**), `updated_at`.
+free. Written columns: `id, user_id, tier, status, ai_mode, ai_monthly_credits, stripe_price_id,
+cancel_at_period_end, current_period_end` (from the subscription **item**), `updated_at`. The
+subscription is read with `expand: discounts, items.data.discounts, latest_invoice, customer` so the
+allowance can be priced; a coupon given only by id is read with `coupons.retrieve` (missing → counts
+as 100% off; any other failure → 500).
 
 ### Stored statuses
 
@@ -320,7 +349,8 @@ Each environment (production, preview, local) needs its **own** Stripe webhook d
    `https://preview.tabmerger.com/api/webhooks/stripe`. Endpoints already on the old
    `*.vercel.app` hosts can stay: those hosts serve the same deployment and keep `/api/*`.
 2. Subscribe it to `checkout.session.completed`, `checkout.session.expired`,
-   `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`.
+   `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`,
+   `customer.discount.created`, `customer.discount.updated`, `customer.discount.deleted`.
 3. Put that endpoint's signing secret in the environment's `STRIPE_WEBHOOK_SECRET` (Vercel env var
    for that environment), alongside the matching-mode `STRIPE_SECRET_KEY` and price IDs.
 4. Redeploy (`NEXT_PUBLIC_*` values are inlined at build time).
@@ -342,6 +372,11 @@ Test card `4242 4242 4242 4242`, any future expiry, any CVC. Useful triggers:
 TODO (owner): record which Stripe account/mode and endpoint IDs back production and preview.
 
 ### Switching between monthly and yearly
+
+(and between Pro AI's two options: `POST /api/billing/switch-plan { interval?, aiMode? }` does the
+same through `startPlanSwitch()` in `lib/planSwitch.ts`. A field left out keeps the current value;
+`aiMode` is 403 for Pro and 503 `ai_disabled` while AI is off. The interval switch keeps a Pro AI
+subscriber on their option. Both look the subscription up among all of the tier's Prices.)
 
 The current plan's card on `/pricing` offers "Switch to yearly/monthly billing". It calls
 `POST /api/billing/switch-interval`, which opens the Billing Portal directly on Stripe's "confirm
@@ -388,6 +423,13 @@ would let a Pro customer upgrade to it. Add it (both prices) when AI launches. T
 configuration was set up this way on 2026-09-28. `STRIPE_PORTAL_CONFIGURATION_ID` (optional) makes
 the switch use a different configuration than the account default.
 
+**Pro AI's two options.** Create the own-key Prices on the **same product** as managed Pro AI and
+list all four Prices in the portal configuration. Add the condition `decreasing_item_amount` to
+`schedule_at_period_end` (next to `shortening_interval`) so managed → own key waits for the end of
+the paid period: applied at once, the proration would refund unused managed time after the
+period's credits may already have been spent. A change between two products can't be deferred,
+which is why both options must be prices of one product.
+
 **When AI launches**, the portal is the only way from Pro to Pro AI (see [One subscription per
 account](#one-subscription-per-account)), so in each mode:
 
@@ -400,6 +442,28 @@ account](#one-subscription-per-account)), so in each mode:
    to the end of the period only between prices of the same product, and these are two products.
 4. Set `STRIPE_PRO_AI_MONTHLY_PRICE_ID` / `STRIPE_PRO_AI_YEARLY_PRICE_ID` in that environment, or
    the webhook maps the new price to `free`.
+
+### After deploying migration 022: re-sync existing allowances
+
+Migration 022 adds `ai_mode` / `ai_monthly_credits` with defaults (`managed`, 0) and no backfill, so
+an existing managed Pro AI subscriber has a 0 allowance until a Stripe event rewrites the row. Run
+the re-sync once per environment after the migration **and** this code are deployed (it uses the
+same `subscriptionAiColumns()` as the webhook and only writes rows whose values differ):
+
+```bash
+cd packages/web
+# Dry run: prints counts and Stripe subscription ids only (no emails or user ids).
+pnpm dlx tsx --env-file=<file with that environment's values> scripts/resync-ai-allowance.ts
+# Then write:
+pnpm dlx tsx --env-file=<same file> scripts/resync-ai-allowance.ts --apply
+```
+
+It needs `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY` (test mode for
+preview, live for production) and the Pro AI price ids including the two BYOK ones. Exit code 2
+lists rows that failed (Stripe or write errors): run it again.
+
+Credit-pack rows: 022 converts the existing `ai_credit_purchases.credits` to the new unit once;
+every pack granted by this webhook is already in the new unit.
 
 ---
 

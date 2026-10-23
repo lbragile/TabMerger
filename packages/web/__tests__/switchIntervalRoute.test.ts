@@ -29,12 +29,12 @@ vi.mock('@/lib/supabase/server', () => ({
 
 const mockCreateSession = vi.fn()
 vi.mock('@/lib/stripe', async () => {
-  class IntervalSwitchError extends Error {
+  class PlanSwitchError extends Error {
     constructor(readonly reason: string) {
       super(reason)
     }
   }
-  return { createIntervalSwitchSession: mockCreateSession, IntervalSwitchError }
+  return { createPlanSwitchSession: mockCreateSession, PlanSwitchError }
 })
 
 const request = (body: unknown) =>
@@ -126,18 +126,18 @@ describe('POST /api/billing/switch-interval', () => {
   })
 
   it('maps "already on that price" to 409 and "no subscription in Stripe" to 403', async () => {
-    const { IntervalSwitchError } = await import('@/lib/stripe')
-    mockCreateSession.mockRejectedValueOnce(new IntervalSwitchError('already_on_price'))
+    const { PlanSwitchError } = await import('@/lib/stripe')
+    mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('already_on_price'))
     expect((await post({ interval: 'yearly' })).status).toBe(409)
 
     const again = await import('@/lib/stripe')
-    mockCreateSession.mockRejectedValueOnce(new again.IntervalSwitchError('no_subscription'))
+    mockCreateSession.mockRejectedValueOnce(new again.PlanSwitchError('no_subscription'))
     expect((await post({ interval: 'yearly' })).status).toBe(403)
   })
 
   it('maps a pending scheduled switch to 409 with a message the page shows as-is', async () => {
-    const { IntervalSwitchError } = await import('@/lib/stripe')
-    mockCreateSession.mockRejectedValueOnce(new IntervalSwitchError('already_scheduled'))
+    const { PlanSwitchError } = await import('@/lib/stripe')
+    mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('already_scheduled'))
     const res = await post({ interval: 'monthly' })
     expect(res.status).toBe(409)
     expect((await res.json()).error).toMatch(/already scheduled for the end of this term/)

@@ -1,5 +1,5 @@
 /**
- * Tests for createIntervalSwitchSession in lib/stripe.ts: which subscription it moves and the
+ * Tests for createPlanSwitchSession in lib/stripe.ts: which subscription it moves and the
  * Billing Portal flow it opens. The Stripe SDK itself is mocked.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -27,7 +27,7 @@ const args = {
   returnUrl: 'https://tabmerger.app/account',
 }
 
-describe('createIntervalSwitchSession', () => {
+describe('createPlanSwitchSession', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.resetModules()
@@ -43,9 +43,9 @@ describe('createIntervalSwitchSession', () => {
     mockSubscriptionsList.mockResolvedValue({
       data: [sub('sub_old', 'canceled', 'price_pro_m'), sub('sub_live', 'active', 'price_pro_m')],
     })
-    const { createIntervalSwitchSession } = await import('@/lib/stripe')
+    const { createPlanSwitchSession } = await import('@/lib/stripe')
 
-    const url = await createIntervalSwitchSession(args)
+    const url = await createPlanSwitchSession(args)
 
     expect(url).toBe('https://billing.stripe.com/p/session/x')
     expect(mockSubscriptionsList).toHaveBeenCalledWith({ customer: 'cus_1', limit: 10 })
@@ -67,9 +67,9 @@ describe('createIntervalSwitchSession', () => {
   it('uses STRIPE_PORTAL_CONFIGURATION_ID when set', async () => {
     vi.stubEnv('STRIPE_PORTAL_CONFIGURATION_ID', 'bpc_switch')
     mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'past_due', 'price_pro_m')] })
-    const { createIntervalSwitchSession } = await import('@/lib/stripe')
+    const { createPlanSwitchSession } = await import('@/lib/stripe')
 
-    await createIntervalSwitchSession(args)
+    await createPlanSwitchSession(args)
 
     expect(mockPortalCreate).toHaveBeenCalledWith(expect.objectContaining({ configuration: 'bpc_switch' }))
   })
@@ -78,20 +78,20 @@ describe('createIntervalSwitchSession', () => {
     mockSubscriptionsList.mockResolvedValue({
       data: [sub('sub_legacy', 'active', 'price_legacy'), sub('sub_unpaid', 'unpaid', 'price_pro_m')],
     })
-    const { createIntervalSwitchSession, IntervalSwitchError } = await import('@/lib/stripe')
+    const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
 
-    const err = await createIntervalSwitchSession(args).catch((e: unknown) => e)
-    expect(err).toBeInstanceOf(IntervalSwitchError)
-    expect((err as InstanceType<typeof IntervalSwitchError>).reason).toBe('no_subscription')
+    const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
+    expect(err).toBeInstanceOf(PlanSwitchError)
+    expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('no_subscription')
     expect(mockPortalCreate).not.toHaveBeenCalled()
   })
 
   it('refuses a switch to the price the subscription is already on', async () => {
     mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', 'price_pro_y')] })
-    const { createIntervalSwitchSession, IntervalSwitchError } = await import('@/lib/stripe')
+    const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
 
-    const err = await createIntervalSwitchSession(args).catch((e: unknown) => e)
-    expect((err as InstanceType<typeof IntervalSwitchError>).reason).toBe('already_on_price')
+    const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
+    expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('already_on_price')
     expect(mockPortalCreate).not.toHaveBeenCalled()
   })
 
@@ -99,18 +99,18 @@ describe('createIntervalSwitchSession', () => {
     mockSubscriptionsList.mockResolvedValue({
       data: [{ ...sub('sub_1', 'active', 'price_pro_y'), schedule: 'sub_sched_1' }],
     })
-    const { createIntervalSwitchSession, IntervalSwitchError } = await import('@/lib/stripe')
+    const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
 
-    const err = await createIntervalSwitchSession({ ...args, targetPriceId: 'price_pro_m' }).catch((e: unknown) => e)
-    expect((err as InstanceType<typeof IntervalSwitchError>).reason).toBe('already_scheduled')
+    const err = await createPlanSwitchSession({ ...args, targetPriceId: 'price_pro_m' }).catch((e: unknown) => e)
+    expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('already_scheduled')
     expect(mockPortalCreate).not.toHaveBeenCalled()
   })
 
   it('throws a config error without calling Stripe when no secret key is set', async () => {
     vi.stubEnv('STRIPE_SECRET_KEY', '')
-    const { createIntervalSwitchSession } = await import('@/lib/stripe')
+    const { createPlanSwitchSession } = await import('@/lib/stripe')
 
-    await expect(createIntervalSwitchSession(args)).rejects.toThrow(/not configured/)
+    await expect(createPlanSwitchSession(args)).rejects.toThrow(/not configured/)
     expect(mockSubscriptionsList).not.toHaveBeenCalled()
   })
 })
