@@ -48,6 +48,7 @@ describe('POST /api/checkout/credits', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'false')
     mockSubscriptionRow.mockResolvedValue({ data: { tier: 'pro_ai', ai_mode: 'managed' }, error: null })
   })
 
@@ -121,6 +122,18 @@ describe('POST /api/checkout/credits', () => {
     const res = await POST(makeRequest({}))
 
     expect(res.status).toBe(500)
+    expect(mockCreateCreditPackCheckoutSession).not.toHaveBeenCalled()
+  })
+
+  // Packs are only spent by managed Pro AI, so launching the own-key option alone doesn't sell them.
+  it('returns 503 ai_disabled when only the own-key flag is on, before any Stripe call', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', '')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
+    const { POST } = await import('@/app/api/checkout/credits/route')
+
+    const res = await POST(makeRequest({ quantity: 100 }))
+    expect(res.status).toBe(503)
+    expect((await res.json()).error).toBe('ai_disabled')
     expect(mockCreateCreditPackCheckoutSession).not.toHaveBeenCalled()
   })
 

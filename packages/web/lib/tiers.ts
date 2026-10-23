@@ -23,7 +23,8 @@ export const TIERS = {
     stripeYearlyPriceId: process.env.STRIPE_PRO_AI_YEARLY_PRICE_ID,
     /**
      * The bring-your-own-key option of Pro AI: same tier (`pro_ai`), cheaper, AI billed to the
-     * customer's own Anthropic key. Stored as `subscriptions.ai_mode = 'byok'`.
+     * customer's own AI provider key (Anthropic, OpenAI or Google). Stored as
+     * `subscriptions.ai_mode = 'byok'`.
      */
     byok: {
       monthlyPrice: PRO_AI_BYOK.monthlyPrice,

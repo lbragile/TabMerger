@@ -57,6 +57,9 @@ describe('POST /api/billing/switch-interval', () => {
     vi.stubEnv('STRIPE_PRO_YEARLY_PRICE_ID', 'price_pro_y')
     vi.stubEnv('STRIPE_PRO_AI_MONTHLY_PRICE_ID', 'price_ai_m')
     vi.stubEnv('STRIPE_PRO_AI_YEARLY_PRICE_ID', 'price_ai_y')
+    // A Pro AI subscription switches interval only while its option is on sale.
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'false')
     mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } })
     mockSubscription.mockResolvedValue({ data: { tier: 'pro', status: 'active' } })
     mockProfile.mockResolvedValue({ data: { stripe_customer_id: 'cus_1' } })

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { isAiEnabled, isAiMode, type AiMode } from '@tabmerger/shared'
+import { aiAvailability, isAiMode, type AiMode } from '@tabmerger/shared'
 import { createPlanSwitchSession, PlanSwitchError } from '@/lib/stripe'
 import {
   getPlanPriceIds,
@@ -59,8 +59,9 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  *
  * Responds `{ url }`, or 401, 403 (no paid plan; an AI option for a plan without AI), 400 (no
  * billing account; the current interval is unknown and none was sent), 409 (already on that
- * price, or a change is already scheduled; `error` is shown to the user), 503 (AI is off and an
- * AI option was asked for, or the target price is not configured), 500.
+ * price, or a change is already scheduled; `error` is shown to the user), 503 (`ai_disabled`: the
+ * Pro AI option the subscription would be on isn't on sale per aiAvailability(); or the target
+ * price is not configured), 500.
  */
 export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextResponse> {
   const supabase = await createClient()
@@ -84,14 +85,8 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
 
   const tierKey: PaidTierKey = subscription!.tier === 'pro_ai' ? 'proAi' : 'pro'
 
-  if (target.aiMode !== undefined) {
-    if (tierKey !== 'proAi') {
-      return NextResponse.json({ error: 'Only Pro AI has this option' }, { status: 403 })
-    }
-    // The AI options are sold only while AI is on, like the Pro AI checkout.
-    if (!isAiEnabled(process.env.NEXT_PUBLIC_AI_ENABLED)) {
-      return NextResponse.json({ error: AI_DISABLED_ERROR }, { status: 503 })
-    }
+  if (target.aiMode !== undefined && tierKey !== 'proAi') {
+    return NextResponse.json({ error: 'Only Pro AI has this option' }, { status: 403 })
   }
 
   // What the subscription is on now. The price is the authority (the webhook derives the row's
@@ -104,6 +99,15 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
   const storedMode = (subscription as { ai_mode?: unknown }).ai_mode
   const aiMode: AiMode =
     target.aiMode ?? current?.aiMode ?? (isAiMode(storedMode) ? storedMode : 'managed')
+
+  // A Pro AI option is switched to (or kept, on an interval switch) only while it is on sale, like
+  // the Pro AI checkout: managed needs the managed flag, own key needs either flag.
+  if (
+    tierKey === 'proAi' &&
+    !aiAvailability(process.env.NEXT_PUBLIC_AI_ENABLED, process.env.NEXT_PUBLIC_AI_BYOK_ENABLED)[aiMode]
+  ) {
+    return NextResponse.json({ error: AI_DISABLED_ERROR }, { status: 503 })
+  }
 
   const targetPriceId = getStripePriceId(tierKey, interval, aiMode)
   if (!targetPriceId) {

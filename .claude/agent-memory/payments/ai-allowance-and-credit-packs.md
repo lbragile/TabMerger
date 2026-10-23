@@ -47,4 +47,10 @@ Testing: `__tests__/stripeWebhookAiAllowance.test.ts` has a small table mock key
 cases instead of the 2,000-line `stripeWebhook.test.ts`. Asserting `subscriptions.retrieve` calls now
 needs a second argument (`expect.anything()` or the expand list).
 
+**Flags per option.** Decision (2026-10-22): the own-key option can launch before managed AI.
+Payment routes gate with `aiAvailability(NEXT_PUBLIC_AI_ENABLED, NEXT_PUBLIC_AI_BYOK_ENABLED)` read on
+every call: Pro AI checkout and plan switches need the flag of the option bought or kept
+(`[aiMode]`, including an interval-only switch); credit packs need `managed`; Pro never depends on
+either. Tests must stub both env vars, or a shell value of the BYOK flag can flip 503 tests.
+
 Related: [[promotion-codes-checkout]], [[webhook-stored-statuses-and-retries]].

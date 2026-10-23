@@ -28,7 +28,7 @@ Authoritative code:
 | Free | $0 | $0 | `free` | — |
 | Pro | $3.99 | $42.99 | `pro` | `pro` |
 | Pro AI (TabMerger's key, `managed`) | $7.99 | $85.99 | `pro_ai` | `proAi` (+ `aiMode: 'managed'`, the default) |
-| Pro AI (own Anthropic key, `byok`) | $5.99 | $64.99 | `pro_ai` | `proAi` + `aiMode: 'byok'` |
+| Pro AI (own AI provider key: Anthropic, OpenAI or Google, `byok`) | $5.99 | $64.99 | `pro_ai` | `proAi` + `aiMode: 'byok'` |
 
 Pro AI's two options share the tier `pro_ai` (every entitlement check stays the same);
 `subscriptions.ai_mode` says which one, and only AI metering branches on it. The webhook derives
@@ -75,7 +75,8 @@ finalized). 0 for BYOK, trials, and any tier other than `pro_ai`.
 | `STRIPE_AI_CREDIT_PACK_PRICE_ID` | One-time $0.05-per-unit price for credit packs. |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Publishable key. |
 | `NEXT_PUBLIC_APP_URL` | Base for every Stripe redirect URL (see below). |
-| `NEXT_PUBLIC_AI_ENABLED` | AI coming-soon flag (see below). |
+| `NEXT_PUBLIC_AI_ENABLED` | Managed Pro AI flag (AI on TabMerger's key); also turns on the own-key option (see below). |
+| `NEXT_PUBLIC_AI_BYOK_ENABLED` | Own-key Pro AI flag: launches the own-key option alone, before managed AI (see below). |
 
 Price IDs are mode-specific: preview and local use **test-mode** keys and test-mode price IDs;
 production uses live ones. The price IDs are also the webhook's only way to map a subscription to a
@@ -467,12 +468,28 @@ every pack granted by this webhook is already in the new unit.
 
 ---
 
-## AI flag and payments
+## AI flags and payments
 
-While `NEXT_PUBLIC_AI_ENABLED` is anything other than the exact string `"true"` (unset = off):
+Two flags, each on only when it is the exact string `"true"` (unset = off), combined by
+`aiAvailability(NEXT_PUBLIC_AI_ENABLED, NEXT_PUBLIC_AI_BYOK_ENABLED)` from `@tabmerger/shared` and
+read on every request:
 
-- `/api/checkout` rejects `tier: 'proAi'` at **both** intervals, and `/api/checkout/credits` rejects
-  every request, with `503 { error: 'ai_disabled' }` — after the auth check, before any Stripe call.
+| | `managed` (TabMerger's key) | `byok` (own key) |
+| --- | --- | --- |
+| On when | `NEXT_PUBLIC_AI_ENABLED` | `NEXT_PUBLIC_AI_ENABLED` **or** `NEXT_PUBLIC_AI_BYOK_ENABLED` |
+| `/api/checkout` `proAi` with that `aiMode` | sold | sold |
+| `/api/checkout/credits` | sold (packs are managed-only) | — |
+| `/api/billing/switch-plan`, `/api/billing/switch-interval` for a Pro AI subscription | allowed when the option switched to (or kept) is on | same |
+
+So the own-key option can launch alone (`NEXT_PUBLIC_AI_BYOK_ENABLED=true`): own-key checkouts and
+switches work, managed checkouts, switches to managed and credit packs answer
+`503 { error: 'ai_disabled' }`. Every refusal comes after the auth check and before any Stripe call.
+Pro checkouts and Pro interval switches never depend on either flag.
+
+While neither option is on:
+
+- `/api/checkout` rejects `tier: 'proAi'` at **both** intervals and either `aiMode`, and
+  `/api/checkout/credits` rejects every request, with `503 { error: 'ai_disabled' }`.
 - The pricing UI still shows the Pro AI card and its price, but `PricingCard.tsx` disables the
   button and labels it "Coming soon" (`AI_COMING_SOON_LABEL`); the landing-page
   `PricingTeaser.tsx` shows a "Coming soon" badge on the Pro AI card.

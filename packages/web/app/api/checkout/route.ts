@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { isAiEnabled, isAiMode, isEntitledSubscriptionStatus, type AiMode } from '@tabmerger/shared'
+import { aiAvailability, isAiMode, isEntitledSubscriptionStatus, type AiMode } from '@tabmerger/shared'
 import { createClient } from '@/lib/supabase/server'
 import { createCheckoutSession, getStripePriceId } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
@@ -28,6 +28,11 @@ function requestLocale(request: NextRequest): string {
   }
   const cookie = request.cookies.get(LOCALE_COOKIE)?.value
   return isAppLocale(cookie) ? cookie : DEFAULT_LOCALE
+}
+
+/** Whether a Pro AI option is on sale, read from both AI flags on every call. */
+function proAiOptionAvailable(aiMode: AiMode): boolean {
+  return aiAvailability(process.env.NEXT_PUBLIC_AI_ENABLED, process.env.NEXT_PUBLIC_AI_BYOK_ENABLED)[aiMode]
 }
 
 /**
@@ -72,9 +77,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid aiMode' }, { status: 400 })
   }
 
-  // AI features are behind a "coming soon" flag — reject pro_ai at every interval
-  // before touching Stripe at all, regardless of what the client sends.
-  if (tier === 'proAi' && !isAiEnabled(process.env.NEXT_PUBLIC_AI_ENABLED)) {
+  // Each Pro AI option is sold only while its flag is on (aiAvailability(): the managed flag
+  // also turns on the own-key option, and the own-key flag can launch it alone). Rejected at
+  // every interval before touching Stripe at all, regardless of what the client sends.
+  if (tier === 'proAi' && !proAiOptionAvailable(aiMode)) {
     return NextResponse.json({ error: AI_DISABLED_ERROR }, { status: 503 })
   }
 

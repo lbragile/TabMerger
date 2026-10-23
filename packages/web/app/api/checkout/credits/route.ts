@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { AI_ERROR_CODES, isAiEnabled } from '@tabmerger/shared'
+import { AI_ERROR_CODES, aiAvailability } from '@tabmerger/shared'
 import { createClient } from '@/lib/supabase/server'
 import { createCreditPackCheckoutSession } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
@@ -15,7 +15,7 @@ const MAX_PACK_UNITS = 500
  * paid, not from the quantity: the webhook converts it with `creditsForPayment()` from
  * `@tabmerger/shared` (so a $2.50 pack is 820 credits and a discounted pack proportionally fewer).
  *
- * Only managed Pro AI spends credits. A Pro AI subscriber on their own Anthropic key (`ai_mode =
+ * Only managed Pro AI spends credits. A Pro AI subscriber on their own AI provider key (`ai_mode =
  * 'byok'`) gets 409 `{ error: 'credits_not_applicable' }` before any Stripe call. Other accounts
  * are not refused here: the AI routes are the enforcement point, and credits bought without a
  * managed Pro AI plan have nothing to be spent against.
@@ -30,9 +30,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // AI credit packs are only spendable by pro_ai, which is itself behind the "coming soon"
-  // flag — reject before any Stripe call while the flag is off.
-  if (!isAiEnabled(process.env.NEXT_PUBLIC_AI_ENABLED)) {
+  // Credit packs are only spent by managed Pro AI, so they are sold only while managed AI is on
+  // (the own-key flag alone doesn't sell them) — reject before any Stripe call otherwise.
+  if (!aiAvailability(process.env.NEXT_PUBLIC_AI_ENABLED, process.env.NEXT_PUBLIC_AI_BYOK_ENABLED).managed) {
     return NextResponse.json({ error: AI_DISABLED_ERROR }, { status: 503 })
   }
 

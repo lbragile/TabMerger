@@ -59,6 +59,7 @@ describe('POST /api/billing/switch-plan', () => {
     vi.clearAllMocks()
     vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger.app')
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'false')
     vi.stubEnv('STRIPE_PRO_MONTHLY_PRICE_ID', 'price_pro_m')
     vi.stubEnv('STRIPE_PRO_YEARLY_PRICE_ID', 'price_pro_y')
     vi.stubEnv('STRIPE_PRO_AI_MONTHLY_PRICE_ID', 'price_ai_m')
@@ -147,12 +148,55 @@ describe('POST /api/billing/switch-plan', () => {
     expect(mockCreateSession).not.toHaveBeenCalled()
   })
 
-  it('answers 503 ai_disabled to an AI option while AI is off, before any Stripe call', async () => {
+  it('answers 503 ai_disabled while neither AI option is on, before any Stripe call', async () => {
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
-    const res = await post('switch-plan', { aiMode: 'byok' })
-    expect(res.status).toBe(503)
-    expect(await res.json()).toEqual({ error: 'ai_disabled' })
+    for (const aiMode of ['byok', 'managed']) {
+      const res = await post('switch-plan', { aiMode })
+      expect(res.status).toBe(503)
+      expect(await res.json()).toEqual({ error: 'ai_disabled' })
+    }
     expect(mockCreateSession).not.toHaveBeenCalled()
+  })
+
+  describe('own key launched before managed AI (only NEXT_PUBLIC_AI_BYOK_ENABLED)', () => {
+    beforeEach(() => {
+      vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', '')
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
+    })
+
+    it('allows a switch to the own-key option', async () => {
+      expect((await post('switch-plan', { aiMode: 'byok' })).status).toBe(200)
+      expect(mockCreateSession).toHaveBeenCalledWith(expect.objectContaining({ targetPriceId: 'price_byok_m' }))
+    })
+
+    it('refuses a switch to managed with 503 ai_disabled', async () => {
+      mockSubscription.mockResolvedValue({
+        data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_byok_m', ai_mode: 'byok' },
+      })
+      const res = await post('switch-plan', { aiMode: 'managed' })
+      expect(res.status).toBe(503)
+      expect(await res.json()).toEqual({ error: 'ai_disabled' })
+      expect(mockCreateSession).not.toHaveBeenCalled()
+    })
+
+    it('an interval-only switch-plan keeps the current option and is gated by it', async () => {
+      // On managed now: staying on managed needs the managed flag.
+      expect((await post('switch-plan', { interval: 'yearly' })).status).toBe(503)
+
+      mockSubscription.mockResolvedValue({
+        data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_byok_m', ai_mode: 'byok' },
+      })
+      expect((await post('switch-plan', { interval: 'yearly' })).status).toBe(200)
+      expect(mockCreateSession).toHaveBeenCalledWith(expect.objectContaining({ targetPriceId: 'price_byok_y' }))
+    })
+
+    it('Pro interval switches never depend on the AI flags', async () => {
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', '')
+      mockSubscription.mockResolvedValue({
+        data: { tier: 'pro', status: 'active', stripe_price_id: 'price_pro_m', ai_mode: 'managed' },
+      })
+      expect((await post('switch-plan', { interval: 'yearly' })).status).toBe(200)
+    })
   })
 
   it('answers 503 when the own-key price is not configured', async () => {
@@ -194,6 +238,7 @@ describe('POST /api/billing/switch-interval keeps the Pro AI option', () => {
   })
 
   it('moves an own-key subscriber to the own-key price of the other interval, never to managed', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
     mockSubscription.mockResolvedValue({
       data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_byok_m', ai_mode: 'byok' },
     })
@@ -204,11 +249,24 @@ describe('POST /api/billing/switch-interval keeps the Pro AI option', () => {
     )
   })
 
-  it('is not gated by the AI flag (it changes no AI option)', async () => {
-    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+  it('is gated by the flag of the option the subscriber stays on', async () => {
     mockSubscription.mockResolvedValue({
       data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_ai_m', ai_mode: 'managed' },
     })
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     expect((await post('switch-interval', { interval: 'yearly' })).status).toBe(200)
+
+    // Only the own-key option is on: a managed subscriber can't switch interval, an own-key one can.
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
+    const refused = await post('switch-interval', { interval: 'yearly' })
+    expect(refused.status).toBe(503)
+    expect(await refused.json()).toEqual({ error: 'ai_disabled' })
+
+    mockSubscription.mockResolvedValue({
+      data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_byok_m', ai_mode: 'byok' },
+    })
+    expect((await post('switch-interval', { interval: 'yearly' })).status).toBe(200)
+    expect(mockCreateSession).toHaveBeenCalledTimes(2)
   })
 })

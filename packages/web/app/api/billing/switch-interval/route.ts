@@ -10,7 +10,8 @@ import { isBillingInterval, startPlanSwitch } from '@/lib/planSwitch'
  *
  * Body: `{ interval: 'monthly' | 'yearly' }`. Responds `{ url }`, or 400 (bad body / no billing
  * account), 401, 403 (no paid plan), 409 (already on that interval, or a switch is already
- * scheduled; `error` is shown to the user), 503 (price not configured). The work is shared with
+ * scheduled; `error` is shown to the user), 503 (price not configured, or `ai_disabled` when the
+ * subscriber's Pro AI option isn't on sale, see aiAvailability()). The work is shared with
  * `/api/billing/switch-plan` (startPlanSwitch() in lib/planSwitch.ts).
  */
 export async function POST(request: NextRequest) {

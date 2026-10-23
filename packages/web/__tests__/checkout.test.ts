@@ -38,6 +38,7 @@ describe('POST /api/checkout', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'false')
     mockCreateClient.mockResolvedValue({
       auth: { getUser: mockGetUser },
       from: vi.fn((table: string) => {
@@ -142,6 +143,45 @@ describe('POST /api/checkout', () => {
     expect(new URL(args.cancelUrl).pathname).toBe('/pricing')
     expect(new URL(args.cancelUrl).search).toBe('?checkout=canceled&tier=pro&interval=yearly')
     expect(args).toEqual(expect.objectContaining({ tier: 'pro', interval: 'yearly' }))
+  })
+
+  describe('own key launched before managed AI (only NEXT_PUBLIC_AI_BYOK_ENABLED)', () => {
+    beforeEach(() => {
+      vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', '')
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
+    })
+
+    it('sells the own-key option', async () => {
+      const { POST } = await import('@/app/api/checkout/route')
+      const res = await POST(makeRequest({ tier: 'proAi', interval: 'monthly', aiMode: 'byok' }))
+      expect(res.status).toBe(200)
+      expect(mockCreateCheckoutSession).toHaveBeenCalledTimes(1)
+    })
+
+    it.each([
+      ['managed explicitly', { tier: 'proAi', interval: 'yearly', aiMode: 'managed' }],
+      ['managed by default', { tier: 'proAi', interval: 'monthly' }],
+    ])('refuses Pro AI %s with 503 ai_disabled and no Stripe call', async (_label, body) => {
+      const { POST } = await import('@/app/api/checkout/route')
+      const res = await POST(makeRequest(body))
+      expect(res.status).toBe(503)
+      expect(await res.json()).toEqual({ error: 'ai_disabled' })
+      expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+    })
+
+    it('Pro is unaffected by the AI flags', async () => {
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', '')
+      const { POST } = await import('@/app/api/checkout/route')
+      expect((await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))).status).toBe(200)
+    })
+  })
+
+  it('refuses the own-key option too while neither AI flag is on', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    const { POST } = await import('@/app/api/checkout/route')
+    const res = await POST(makeRequest({ tier: 'proAi', interval: 'monthly', aiMode: 'byok' }))
+    expect(res.status).toBe(503)
+    expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
   })
 
   describe('Pro AI option (aiMode)', () => {
