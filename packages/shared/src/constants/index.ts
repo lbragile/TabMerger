@@ -70,6 +70,13 @@ export const PRESET_COLORS = [
   'rgba(15, 23, 42, 1)',    // slate dark
 ] as const;
 
+/**
+ * The yearly discount every paid option advertises. Each yearly price is set so its real saving
+ * over twelve monthly payments is at least this and under one point more, so the badge (rounded
+ * down) reads exactly this for every option. A test in `__tests__/ai.test.ts` holds prices to it.
+ */
+export const YEARLY_DISCOUNT_PERCENT = 10;
+
 export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'free',
@@ -121,14 +128,14 @@ export const PRICING_TIERS: PricingTier[] = [
     limits: UNLIMITED_TIER_LIMITS,
     byok: {
       monthlyPrice: 5.99,
-      yearlyPrice: 64.99,
+      yearlyPrice: 64.49,
       features: [
         'Everything in Pro',
         'AI auto-grouping of tabs',
         'AI group name suggestions',
         'Smart session suggestions',
         'Tab preview with AI summary',
-        'Use your own Anthropic API key: no credit limit, billed by Anthropic',
+        'Use your own Anthropic, OpenAI or Google API key: no credit limit, billed by them',
         'Choose your AI model',
       ],
     },

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { resumeHook } from 'workflow/api'
 import { AI_ERROR_CODES } from '@tabmerger/shared'
-import { aiDisabledResponse } from '@/lib/ai-guard'
+import { aiDisabledResponse, aiModeDisabledResponse } from '@/lib/ai-guard'
 import { parseApproveBody, readJsonBody } from '@/lib/ai-validation'
 import { aiError, authenticateAiRequest, invalidRequest, requireProAi } from '@/lib/ai-route'
 
@@ -23,6 +23,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // The plan check stays ahead of the body, so an unentitled caller gets 403 for any body.
   const sub = await requireProAi(auth.supabase, auth.user.id)
   if (sub instanceof NextResponse) return sub
+  // The caller's own option (managed or own key) must be live, like every other AI request.
+  const modeOff = aiModeDisabledResponse(sub.aiMode)
+  if (modeOff) return modeOff
 
   const input = parseApproveBody(await readJsonBody(request))
   if (!input.ok) return invalidRequest(input.error)

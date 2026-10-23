@@ -4,11 +4,14 @@ import {
   AI_BYOK_KEY_HEADER,
   AI_CREDITS_REMAINING_HEADER,
   AI_ERROR_CODES,
-  isAnthropicApiKey,
+  MANAGED_AI_PROVIDER,
+  byokKeyProvider,
   resolveAiModel,
   type AiAction,
   type AiErrorCode,
+  type AiProvider,
 } from '@tabmerger/shared'
+import { aiModeDisabledResponse } from '@/lib/ai-guard'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { AiRouteError, anthropicClient, describeErrorForLog, type AiCallContext } from '@/lib/ai'
 import { currentMonth, getAiSubscription, hasProAi, type AiSubscription } from '@/lib/ai-usage'
@@ -17,12 +20,15 @@ import { modelChoiceOf } from '@/lib/ai-validation'
 /**
  * The request steps every `/api/ai/*` route shares, in the order the spec fixes:
  *
- * 1. AI flag kill switch (`aiDisabledResponse`, called by the route itself, first).
+ * 1. AI flag kill switch (`aiDisabledResponse`, called by the route itself, first): 503 when
+ *    no AI option is live at all.
  * 2. {@link authenticateAiRequest}: the Supabase JWT from `Authorization: Bearer`.
  * 3. Body validation (the route's `parse*Body` helper), so a bad body never costs anything.
- * 4. {@link resolveAiContext}: plan check (`pro_ai` + entitled status), BYOK key header,
- *    model allowlist, and the Anthropic client and credit meter for the request.
- * 5. `runAiTask` (in `lib/ai.ts`): reserve, call, settle.
+ * 4. {@link resolveAiContext}: plan check (`pro_ai` + entitled status), the caller's own
+ *    option gate (managed needs the managed flag, own-key the own-key flag; 503 otherwise),
+ *    own-key header and its provider, model allowlist for that provider, and the client and
+ *    credit meter for the request.
+ * 5. `runAiTask` (in `lib/ai.ts`): reserve, call, settle (managed); one call (own key).
  *
  * Every failure is `{ error: <AI_ERROR_CODES value>, ...details }`.
  */
@@ -96,24 +102,43 @@ export async function requireProAi(
   return hasProAi(sub) ? sub : aiError(403, AI_ERROR_CODES.planRequired)
 }
 
+/** An own key read from {@link AI_BYOK_KEY_HEADER}, with the provider its shape belongs to. */
+export type ByokKey =
+  | { status: 'ok'; key: string; provider: AiProvider }
+  | { status: 'missing' }
+  | { status: 'unrecognised' }
+
 /**
- * The BYOK key from {@link AI_BYOK_KEY_HEADER} when it has the shape of an Anthropic key,
- * else `null`. Never logged or stored.
+ * The own key sent in {@link AI_BYOK_KEY_HEADER} and its provider (`byokKeyProvider`: Anthropic,
+ * OpenAI or Google, read from the key's shape). Never logged or stored.
  */
-export function byokKeyOf(request: NextRequest): string | null {
+export function byokKeyOf(request: NextRequest): ByokKey {
   const key = request.headers.get(AI_BYOK_KEY_HEADER)?.trim()
-  return isAnthropicApiKey(key) ? key : null
+  if (!key) return { status: 'missing' }
+  const provider = byokKeyProvider(key)
+  return provider ? { status: 'ok', key, provider } : { status: 'unrecognised' }
+}
+
+/** The 400 for an own-key header that is missing or not a key of a supported provider. */
+export function byokKeyErrorResponse(found: Exclude<ByokKey, { status: 'ok' }>): NextResponse {
+  return found.status === 'missing'
+    ? aiError(400, AI_ERROR_CODES.byokKeyMissing)
+    : aiError(400, AI_ERROR_CODES.byokKeyInvalid)
 }
 
 /**
- * Plan, key and model checks for a validated request, then the call context:
+ * Plan, option, key and model checks for a validated request, then the call context:
  * - not `pro_ai` or not entitled → 403 `ai_plan_required`
- * - BYOK without a well-formed key header → 400 `byok_key_missing`
- * - `body.model` not in the allowlist → 400 `ai_model_invalid`
+ * - the caller's option (managed or own key) is not live → 503 `ai_disabled`
+ * - own key: no key header → 400 `byok_key_missing`; a header that is not an Anthropic, OpenAI
+ *   or Google key → 400 `byok_key_invalid`
+ * - `body.model` unknown, or from another provider than the one the request goes to → 400
+ *   `ai_model_invalid`
  *
- * Managed mode ignores a sent key header and gets a meter for this month (fixed here, so the
- * reservation and the settlement hit the same `ai_usage` row even across midnight UTC at the
- * month's end). BYOK mode never uses TabMerger's key and is not metered.
+ * Managed mode always runs on Anthropic, ignores a sent key header and gets a meter for this
+ * month (fixed here, so the reservation and the settlement hit the same `ai_usage` row even
+ * across midnight UTC at the month's end). Own-key mode goes to the key's provider, never uses
+ * TabMerger's key and is not metered.
  */
 export async function resolveAiContext(
   request: NextRequest,
@@ -124,23 +149,41 @@ export async function resolveAiContext(
   const sub = await requireProAi(auth.supabase, auth.user.id)
   if (sub instanceof NextResponse) return sub
 
-  const byokKey = sub.aiMode === 'byok' ? byokKeyOf(request) : null
-  if (sub.aiMode === 'byok' && !byokKey) return aiError(400, AI_ERROR_CODES.byokKeyMissing)
+  const modeOff = aiModeDisabledResponse(sub.aiMode)
+  if (modeOff) return modeOff
 
-  const model = resolveAiModel(modelChoiceOf(body), action)
+  if (sub.aiMode === 'managed') {
+    const model = resolveAiModel(modelChoiceOf(body), action, MANAGED_AI_PROVIDER)
+    if (!model) return aiError(400, AI_ERROR_CODES.modelInvalid)
+    let client
+    try {
+      client = anthropicClient('managed', null)
+    } catch (err) {
+      return aiErrorResponse(err, action)
+    }
+    return {
+      provider: 'anthropic',
+      client,
+      model,
+      mode: 'managed',
+      meter: { supabase: auth.supabase, userId: auth.user.id, month: currentMonth() },
+    }
+  }
+
+  const found = byokKeyOf(request)
+  if (found.status !== 'ok') return byokKeyErrorResponse(found)
+
+  const model = resolveAiModel(modelChoiceOf(body), action, found.provider)
   if (!model) return aiError(400, AI_ERROR_CODES.modelInvalid)
 
+  if (found.provider !== 'anthropic') {
+    return { provider: found.provider, apiKey: found.key, model, mode: 'byok', meter: null }
+  }
   let client
   try {
-    client = anthropicClient(sub.aiMode, byokKey)
+    client = anthropicClient('byok', found.key)
   } catch (err) {
     return aiErrorResponse(err, action)
   }
-
-  return {
-    client,
-    model,
-    mode: sub.aiMode,
-    meter: sub.aiMode === 'managed' ? { supabase: auth.supabase, userId: auth.user.id, month: currentMonth() } : null,
-  }
+  return { provider: 'anthropic', client, model, mode: 'byok', meter: null }
 }

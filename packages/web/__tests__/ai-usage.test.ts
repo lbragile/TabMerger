@@ -37,7 +37,7 @@ function makeSupabase(sub: unknown, purchases: { credits: number }[] = [], rpc =
   return { supabase: { from, rpc } as unknown as SupabaseClient, from, rpc, eq }
 }
 
-const MANAGED = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2600 }
+const MANAGED = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2500 }
 
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] })
@@ -65,7 +65,7 @@ describe('getAiSubscription / hasProAi', () => {
       tier: 'pro_ai',
       status: 'active',
       aiMode: 'managed',
-      monthlyCredits: 2600,
+      monthlyCredits: 2500,
     })
   })
 
@@ -99,7 +99,7 @@ describe('getAiSubscription / hasProAi', () => {
 describe('getEffectiveCap', () => {
   it("is the subscription's monthly allowance when no packs were bought", async () => {
     const { supabase } = makeSupabase(MANAGED)
-    expect(await getEffectiveCap(supabase, 'u1')).toBe(2600)
+    expect(await getEffectiveCap(supabase, 'u1')).toBe(2500)
   })
 
   it('uses a discounted allowance as stored', async () => {
@@ -109,7 +109,7 @@ describe('getEffectiveCap', () => {
 
   it("adds the sum of the month's purchased credit packs", async () => {
     const { supabase } = makeSupabase(MANAGED, [{ credits: 820 }, { credits: 9280 }])
-    expect(await getEffectiveCap(supabase, 'u1')).toBe(2600 + 820 + 9280)
+    expect(await getEffectiveCap(supabase, 'u1')).toBe(2500 + 820 + 9280)
   })
 
   it.each([
@@ -131,16 +131,16 @@ describe('getEffectiveCap', () => {
 
 describe('reserveCredits', () => {
   it('calls ai_reserve_credits and reads the returned row', async () => {
-    const rpc = vi.fn(async () => ({ data: [{ allowed: true, remaining: 2590, cap: 2600 }], error: null }))
+    const rpc = vi.fn(async () => ({ data: [{ allowed: true, remaining: 2590, cap: 2500 }], error: null }))
     const { supabase } = makeSupabase(null, [], rpc)
-    expect(await reserveCredits(supabase, 'u1', '2026-03', 10)).toEqual({ allowed: true, remaining: 2590, cap: 2600 })
+    expect(await reserveCredits(supabase, 'u1', '2026-03', 10)).toEqual({ allowed: true, remaining: 2590, cap: 2500 })
     expect(rpc).toHaveBeenCalledWith('ai_reserve_credits', { p_user: 'u1', p_month: '2026-03', p_amount: 10 })
   })
 
   it('passes a refusal through', async () => {
-    const rpc = vi.fn(async () => ({ data: [{ allowed: false, remaining: 4, cap: 2600 }], error: null }))
+    const rpc = vi.fn(async () => ({ data: [{ allowed: false, remaining: 4, cap: 2500 }], error: null }))
     const { supabase } = makeSupabase(null, [], rpc)
-    expect(await reserveCredits(supabase, 'u1', '2026-03', 10)).toEqual({ allowed: false, remaining: 4, cap: 2600 })
+    expect(await reserveCredits(supabase, 'u1', '2026-03', 10)).toEqual({ allowed: false, remaining: 4, cap: 2500 })
   })
 
   it.each([

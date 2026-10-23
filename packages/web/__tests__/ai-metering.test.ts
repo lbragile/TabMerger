@@ -57,7 +57,7 @@ const USER_ID = 'user-uuid-1'
 const OUR_KEY = 'test-managed-key'
 const BYOK_KEY = `sk-ant-api03-${'b'.repeat(48)}`
 
-const MANAGED = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2600 }
+const MANAGED = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2500 }
 const BYOK = { tier: 'pro_ai', status: 'active', ai_mode: 'byok', ai_monthly_credits: 0 }
 
 const TABS = [{ id: 1, title: 'React docs', url: 'https://react.dev/learn' }]
@@ -126,7 +126,7 @@ beforeEach(() => {
   withSubscription(MANAGED)
   sdk.countTokens.mockResolvedValue({ input_tokens: 400 })
   sdk.create.mockResolvedValue(message({ name: 'React Learning' }))
-  stubRpc({ allowed: true, remaining: 2000, cap: 2600 })
+  stubRpc({ allowed: true, remaining: 2000, cap: 2500 })
 })
 
 afterEach(() => {
@@ -138,7 +138,7 @@ afterEach(() => {
 
 describe('managed metering', () => {
   it('reserves the worst case from count_tokens + max_tokens, then settles to the real usage', async () => {
-    stubRpc({ allowed: true, remaining: 2000, cap: 2600 }, 601)
+    stubRpc({ allowed: true, remaining: 2000, cap: 2500 }, 601)
     const res = await nameGroupPOST(nameReq())
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ name: 'React Learning' })
@@ -152,17 +152,17 @@ describe('managed metering', () => {
     const [settle] = rpcCalls('ai_settle_credits')
     expect(settle).toMatchObject({ p_user: USER_ID, p_month: reserve.p_month, p_delta: actual - reserved })
     // Remaining = cap - credits_used after the settlement.
-    expect(res.headers.get('X-AI-Credits-Remaining')).toBe(String(2600 - 601))
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe(String(2500 - 601))
   })
 
   it('uses TabMerger’s key and ignores a key header sent by a managed subscriber', async () => {
-    await nameGroupPOST(nameReq({ tabs: TABS, model: 'claude-opus-5-5' }, { 'X-Anthropic-Key': BYOK_KEY }))
+    await nameGroupPOST(nameReq({ tabs: TABS, model: 'claude-opus-5-5' }, { 'X-AI-Key': BYOK_KEY }))
     expect(sdk.keys).toEqual([OUR_KEY])
     expect(sdk.create).toHaveBeenCalledTimes(1)
   })
 
   it('429s ai_quota_exceeded with needed and remaining, and never calls the model', async () => {
-    stubRpc({ allowed: false, remaining: 3, cap: 2600 })
+    stubRpc({ allowed: false, remaining: 3, cap: 2500 })
     const res = await nameGroupPOST(nameReq())
     expect(res.status).toBe(429)
     const body = await res.json()
@@ -188,7 +188,7 @@ describe('managed metering', () => {
   })
 
   it('keeps the reservation when settling fails and still answers', async () => {
-    stubRpc({ allowed: true, remaining: 1990, cap: 2600 }, () => ({ data: null, error: { message: 'db down' } }))
+    stubRpc({ allowed: true, remaining: 1990, cap: 2500 }, () => ({ data: null, error: { message: 'db down' } }))
     const res = await nameGroupPOST(nameReq())
     expect(res.status).toBe(200)
     // The balance after the reservation stands: nothing was refunded.
@@ -196,10 +196,10 @@ describe('managed metering', () => {
   })
 
   it('treats a settle that finds no row as nothing to settle, not an error', async () => {
-    stubRpc({ allowed: true, remaining: 1990, cap: 2600 }, null)
+    stubRpc({ allowed: true, remaining: 1990, cap: 2500 }, null)
     const res = await nameGroupPOST(nameReq())
     expect(res.status).toBe(200)
-    expect(res.headers.get('X-AI-Credits-Remaining')).toBe('2600')
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe('2500')
   })
 
   it('settles in the month it reserved in, even when the call ends after midnight UTC', async () => {
@@ -261,7 +261,7 @@ describe('BYOK', () => {
   })
 
   it('calls Anthropic with the customer’s key only, unmetered and without a balance header', async () => {
-    const res = await nameGroupPOST(nameReq({ tabs: TABS }, { 'X-Anthropic-Key': BYOK_KEY }))
+    const res = await nameGroupPOST(nameReq({ tabs: TABS }, { 'X-AI-Key': BYOK_KEY }))
     expect(res.status).toBe(200)
     expect(sdk.keys).toEqual([BYOK_KEY])
     expect(sdk.countTokens).not.toHaveBeenCalled()
@@ -279,14 +279,14 @@ describe('BYOK', () => {
     ['an overload (529)', { status: 529 }, 503, 'ai_overloaded'],
   ])('maps %s to its own code, never 401 or 429', async (_label, error, status, code) => {
     sdk.create.mockRejectedValue(Object.assign(new Error('message' in error ? error.message : 'err'), error))
-    const res = await nameGroupPOST(nameReq({ tabs: TABS }, { 'X-Anthropic-Key': BYOK_KEY }))
+    const res = await nameGroupPOST(nameReq({ tabs: TABS }, { 'X-AI-Key': BYOK_KEY }))
     expect(res.status).toBe(status)
     expect(await res.json()).toEqual({ error: code })
   })
 
   it('never puts the key in a log line or an error body', async () => {
     sdk.create.mockRejectedValue(Object.assign(new Error(`bad key ${BYOK_KEY}`), { status: 500 }))
-    const res = await nameGroupPOST(nameReq({ tabs: TABS }, { 'X-Anthropic-Key': BYOK_KEY }))
+    const res = await nameGroupPOST(nameReq({ tabs: TABS }, { 'X-AI-Key': BYOK_KEY }))
     expect(await res.text()).not.toContain(BYOK_KEY)
     expect(consoleError).toHaveBeenCalled()
     const logged = JSON.stringify(consoleError.mock.calls)
@@ -298,7 +298,7 @@ describe('BYOK', () => {
     sdk.create.mockResolvedValue(message({ actions: [], rationale: 'Fine as is.' }))
     mockStart.mockResolvedValue({ runId: 'run-1' })
     const groups = [{ id: 'g1', name: 'Work', tabs: [{ title: 'A', url: 'https://a.example/' }] }]
-    const res = await organizePOST(req('http://localhost/api/ai/organize', { groups }, { 'X-Anthropic-Key': BYOK_KEY }))
+    const res = await organizePOST(req('http://localhost/api/ai/organize', { groups }, { 'X-AI-Key': BYOK_KEY }))
     expect(res.status).toBe(200)
     expect(sdk.keys).toEqual([BYOK_KEY])
     expect(JSON.stringify(mockStart.mock.calls)).not.toContain(BYOK_KEY)
@@ -382,7 +382,7 @@ describe('request sent to the model', () => {
 // ─── /api/ai/byok/verify ──────────────────────────────────────────────────────
 
 describe('POST /api/ai/byok/verify', () => {
-  const verifyReq = (headers: Record<string, string> = { 'X-Anthropic-Key': BYOK_KEY }, body: unknown = {}) =>
+  const verifyReq = (headers: Record<string, string> = { 'X-AI-Key': BYOK_KEY }, body: unknown = {}) =>
     req('http://localhost/api/ai/byok/verify', body, headers)
 
   beforeEach(() => withSubscription(BYOK))
@@ -390,7 +390,7 @@ describe('POST /api/ai/byok/verify', () => {
   it('returns ok after a free count_tokens call on the customer’s key', async () => {
     const res = await verifyPOST(verifyReq())
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    expect(await res.json()).toEqual({ ok: true, provider: 'anthropic' })
     expect(sdk.keys).toEqual([BYOK_KEY])
     expect(sdk.countTokens).toHaveBeenCalledTimes(1)
     expect(sdk.create).not.toHaveBeenCalled()
@@ -410,12 +410,12 @@ describe('POST /api/ai/byok/verify', () => {
   })
 
   it.each([
-    ['no key', {}],
-    ['a malformed key', { 'X-Anthropic-Key': 'sk-something' }],
-  ])('400s byok_key_missing for %s', async (_label, headers) => {
+    ['no key', {}, 'byok_key_missing'],
+    ['a key of no supported provider', { 'X-AI-Key': 'sk-something' }, 'byok_key_invalid'],
+  ])('400s for %s', async (_label, headers, code) => {
     const res = await verifyPOST(verifyReq(headers))
     expect(res.status).toBe(400)
-    expect(await res.json()).toEqual({ error: 'byok_key_missing' })
+    expect(await res.json()).toEqual({ error: code })
   })
 
   it('reports a rejected key as byok_key_invalid (400, never 401)', async () => {
@@ -433,7 +433,7 @@ describe('POST /api/ai/byok/verify', () => {
 
   it('401s without a sign-in token', async () => {
     const res = await verifyPOST(
-      new NextRequest('http://localhost/api/ai/byok/verify', { method: 'POST', headers: { 'X-Anthropic-Key': BYOK_KEY } })
+      new NextRequest('http://localhost/api/ai/byok/verify', { method: 'POST', headers: { 'X-AI-Key': BYOK_KEY } })
     )
     expect(res.status).toBe(401)
     expect(await res.json()).toEqual({ error: 'ai_unauthorized' })

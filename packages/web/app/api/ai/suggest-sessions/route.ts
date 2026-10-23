@@ -8,8 +8,8 @@ import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolve
  * Suggests how to consolidate saved groups, naming the groups the suggestion is about.
  * Called by the extension with its Supabase JWT as a Bearer token. Requires an entitled Pro AI
  * subscription; managed calls are metered in credits (the balance comes back in
- * `X-AI-Credits-Remaining`), BYOK calls use the key in `X-Anthropic-Key`. Optional body field
- * `model`: `'auto'` or a model id from `AI_MODEL_IDS`. Request flow: see `lib/ai-route.ts`.
+ * `X-AI-Credits-Remaining`); own-key calls send the key in `X-AI-Key` and go to that key's
+ * provider, unmetered. Optional body field `model`: `'auto'` or a model id of that provider. Request flow: see `lib/ai-route.ts`.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.

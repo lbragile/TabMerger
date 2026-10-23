@@ -5,7 +5,7 @@ metadata:
   type: project
 ---
 
-Every `/api/ai/*` handler (including organize GET and dev-usage) calls `aiDisabledResponse()` from `packages/web/lib/ai-guard.ts` as its first statement. The flag is on only when `NEXT_PUBLIC_AI_ENABLED` is exactly `"true"`, so it's off when unset. When off, the handler returns 503 `{ error: 'ai_disabled' }` and never reaches auth, `ai_usage`, workflow start, or Anthropic. Rolled out 2026-09-26 as "AI features: coming soon".
+Every `/api/ai/*` handler (including organize GET and dev-usage) calls `aiDisabledResponse()` from `packages/web/lib/ai-guard.ts` as its first statement. Since the own-key launch there are two flags (`NEXT_PUBLIC_AI_ENABLED` managed, `NEXT_PUBLIC_AI_BYOK_ENABLED` own key; managed implies own key, see `aiAvailability` in shared): the first guard 503s only when neither is on, and `aiModeDisabledResponse(mode)` gates the caller's own option after the subscription lookup. See [[own-key-providers]]. The flag is on only when `NEXT_PUBLIC_AI_ENABLED` is exactly `"true"`, so it's off when unset. When off, the handler returns 503 `{ error: 'ai_disabled' }` and never reaches auth, `ai_usage`, workflow start, or Anthropic. Rolled out 2026-09-26 as "AI features: coming soon".
 
 **Why:** AI features were launched as "Coming soon" and had to be dark across web, extension, and checkout without deleting the routes.
 

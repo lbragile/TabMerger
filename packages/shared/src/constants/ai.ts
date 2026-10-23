@@ -11,7 +11,8 @@
 
 /**
  * How a Pro AI subscription pays for AI: `managed` uses TabMerger's Anthropic key within a
- * monthly credit allowance; `byok` forwards the customer's own Anthropic key with each request.
+ * monthly credit allowance; `byok` forwards the customer's own Anthropic, OpenAI or Google key
+ * with each request.
  * Stored in `subscriptions.ai_mode`.
  */
 export const AI_MODES = ['managed', 'byok'] as const;
@@ -58,24 +59,59 @@ export function creditsForPayment(usd: number, months = 1): number {
 
 /**
  * The advertised monthly allowance of managed Pro AI at full price: the yearly plan's figure
- * (the lower of the two intervals) rounded down to a clean number. A subscription's actual
+ * (the lower of the two intervals) rounded down to a round 500. A subscription's actual
  * allowance is the smaller of this and {@link creditsForPayment} of what it really pays, so a
  * discount lowers it (see `subscriptions.ai_monthly_credits`).
  */
-export const PRO_AI_MONTHLY_CREDITS = 2600;
+export const PRO_AI_MONTHLY_CREDITS = 2500;
 
 /** Monthly managed allowance for a subscription paying `usd` every `months` months. */
 export function monthlyAllowanceForPayment(usd: number, months: number): number {
   return Math.min(PRO_AI_MONTHLY_CREDITS, creditsForPayment(usd, months));
 }
 
-// --- Models -------------------------------------------------------------------
+// --- Providers and models ---------------------------------------------------------
 
-export const AI_MODEL_IDS = ['claude-haiku-5-5', 'claude-sonnet-5-5', 'claude-opus-5-5'] as const;
+/**
+ * AI companies a Pro AI request can go to. Managed Pro AI only ever uses `anthropic` (TabMerger's
+ * key); an own-key subscriber uses whichever company issued their key.
+ */
+export const AI_PROVIDERS = ['anthropic', 'openai', 'google'] as const;
+
+export type AiProvider = (typeof AI_PROVIDERS)[number];
+
+/** The provider managed Pro AI runs on. */
+export const MANAGED_AI_PROVIDER: AiProvider = 'anthropic';
+
+/** Company names; not translated. */
+export const AI_PROVIDER_LABELS: Record<AiProvider, string> = {
+  anthropic: 'Anthropic',
+  openai: 'OpenAI',
+  google: 'Google',
+};
+
+/** Where a customer creates a key for each provider, linked from the extension's Settings. */
+export const AI_PROVIDER_KEY_URLS: Record<AiProvider, string> = {
+  anthropic: 'https://console.anthropic.com/settings/keys',
+  openai: 'https://platform.openai.com/api-keys',
+  google: 'https://aistudio.google.com/apikey',
+};
+
+export const AI_MODEL_IDS = [
+  'claude-haiku-5-5',
+  'claude-sonnet-5-5',
+  'claude-opus-5-5',
+  'gpt-6-luna',
+  'gpt-6.1-sol',
+  'gpt-6-astra',
+  'gemini-3.1-flash-lite',
+  'gemini-3.8-flash',
+  'gemini-4-argon',
+] as const;
 
 export type AiModelId = (typeof AI_MODEL_IDS)[number];
 
-/** Anthropic list prices, in US cents per million tokens. */
+/** List prices, in US cents per million tokens. */
 interface TokenPrices {
   inputCentsPerMTok: number;
   outputCentsPerMTok: number;
@@ -83,6 +119,7 @@ interface TokenPrices {
 
 export interface AiModelInfo extends TokenPrices {
   id: AiModelId;
+  provider: AiProvider;
   /** Product name; not translated. */
   label: string;
   /** Prices for the whole request once its input exceeds `thresholdTokens`. */
@@ -94,9 +131,15 @@ export interface AiModelInfo extends TokenPrices {
   typicalThinkingTokens: number;
 }
 
+/**
+ * Every model a request can name, with its list prices (checked 2026-10-22). OpenAI and Google
+ * models are own-key only, so their prices only feed the dollar estimates in Settings; where a
+ * price rise is already announced, the higher price is used so estimates don't read low.
+ */
 export const AI_MODELS: Record<AiModelId, AiModelInfo> = {
   'claude-haiku-5-5': {
     id: 'claude-haiku-5-5',
+    provider: 'anthropic',
     label: 'Claude Haiku 5.5',
     inputCentsPerMTok: 10,
     outputCentsPerMTok: 50,
@@ -105,6 +148,7 @@ export const AI_MODELS: Record<AiModelId, AiModelInfo> = {
   },
   'claude-sonnet-5-5': {
     id: 'claude-sonnet-5-5',
+    provider: 'anthropic',
     label: 'Claude Sonnet 5.5',
     inputCentsPerMTok: 200,
     outputCentsPerMTok: 1000,
@@ -112,16 +156,75 @@ export const AI_MODELS: Record<AiModelId, AiModelInfo> = {
   },
   'claude-opus-5-5': {
     id: 'claude-opus-5-5',
+    provider: 'anthropic',
     label: 'Claude Opus 5.5',
     inputCentsPerMTok: 400,
     outputCentsPerMTok: 2000,
     // Thinking can't be turned off on Opus 5.5; effort `low` keeps it short.
     typicalThinkingTokens: 300,
   },
+  'gpt-6-luna': {
+    id: 'gpt-6-luna',
+    provider: 'openai',
+    label: 'GPT-6 Luna',
+    inputCentsPerMTok: 10,
+    outputCentsPerMTok: 50,
+    longContext: { thresholdTokens: 272_000, inputCentsPerMTok: 20, outputCentsPerMTok: 75 },
+    typicalThinkingTokens: 0,
+  },
+  'gpt-6.1-sol': {
+    id: 'gpt-6.1-sol',
+    provider: 'openai',
+    label: 'GPT-6.1 Sol',
+    inputCentsPerMTok: 200,
+    outputCentsPerMTok: 1000,
+    longContext: { thresholdTokens: 272_000, inputCentsPerMTok: 400, outputCentsPerMTok: 1500 },
+    typicalThinkingTokens: 200,
+  },
+  'gpt-6-astra': {
+    id: 'gpt-6-astra',
+    provider: 'openai',
+    label: 'GPT-6 Astra',
+    inputCentsPerMTok: 1000,
+    outputCentsPerMTok: 5000,
+    longContext: { thresholdTokens: 272_000, inputCentsPerMTok: 2000, outputCentsPerMTok: 7500 },
+    typicalThinkingTokens: 300,
+  },
+  'gemini-3.1-flash-lite': {
+    id: 'gemini-3.1-flash-lite',
+    provider: 'google',
+    label: 'Gemini 3.1 Flash-Lite',
+    inputCentsPerMTok: 25,
+    outputCentsPerMTok: 150,
+    typicalThinkingTokens: 0,
+  },
+  'gemini-3.8-flash': {
+    id: 'gemini-3.8-flash',
+    provider: 'google',
+    label: 'Gemini 3.8 Flash',
+    // $0.75 / $3.75 until 2026-12-31; the announced 2027 price is used.
+    inputCentsPerMTok: 150,
+    outputCentsPerMTok: 750,
+    typicalThinkingTokens: 200,
+  },
+  'gemini-4-argon': {
+    id: 'gemini-4-argon',
+    provider: 'google',
+    label: 'Gemini 4 Argon',
+    // $2 / $10 until 2026-11-30; the announced December price is used.
+    inputCentsPerMTok: 400,
+    outputCentsPerMTok: 2000,
+    typicalThinkingTokens: 300,
+  },
 };
 
 export function isAiModelId(value: unknown): value is AiModelId {
   return typeof value === 'string' && (AI_MODEL_IDS as readonly string[]).includes(value);
+}
+
+/** One provider's models, cheapest first (the order of {@link AI_MODEL_IDS}). */
+export function aiModelsForProvider(provider: AiProvider): AiModelId[] {
+  return AI_MODEL_IDS.filter((id) => AI_MODELS[id].provider === provider);
 }
 
 /** What the user picks in Settings: a fixed model, or `auto` to let each feature use its default. */
@@ -135,7 +238,7 @@ export const AI_ACTIONS = ['nameGroup', 'tabSummary', 'groupTabs', 'suggestSessi
 
 export type AiAction = (typeof AI_ACTIONS)[number];
 
-/** The model `auto` uses for each feature: the cheapest one that does the job well. */
+/** The model `auto` uses for each feature on Anthropic: the cheapest one that does the job well. */
 export const AUTO_AI_MODEL: Record<AiAction, AiModelId> = {
   nameGroup: 'claude-haiku-5-5',
   tabSummary: 'claude-haiku-5-5',
@@ -144,14 +247,38 @@ export const AUTO_AI_MODEL: Record<AiAction, AiModelId> = {
   organize: 'claude-sonnet-5-5',
 };
 
+/** What `auto` uses for each feature, per provider (same rule: cheap model, mid model for organize). */
+export const AUTO_AI_MODELS: Record<AiProvider, Record<AiAction, AiModelId>> = {
+  anthropic: AUTO_AI_MODEL,
+  openai: {
+    nameGroup: 'gpt-6-luna',
+    tabSummary: 'gpt-6-luna',
+    groupTabs: 'gpt-6-luna',
+    suggestSessions: 'gpt-6-luna',
+    organize: 'gpt-6.1-sol',
+  },
+  google: {
+    nameGroup: 'gemini-3.1-flash-lite',
+    tabSummary: 'gemini-3.1-flash-lite',
+    groupTabs: 'gemini-3.1-flash-lite',
+    suggestSessions: 'gemini-3.1-flash-lite',
+    organize: 'gemini-3.8-flash',
+  },
+};
+
 /**
- * The model a request runs on. A missing choice (or `auto`) uses the feature's default; any
- * other value that isn't a known model returns `null`, which the server answers with
- * `ai_model_invalid`.
+ * The model a request runs on, for the provider it goes to (managed: always Anthropic; own key:
+ * the key's provider, see {@link byokKeyProvider}). A missing choice (or `auto`) uses the
+ * feature's default on that provider; a model that isn't known, or belongs to another provider,
+ * returns `null`, which the server answers with `ai_model_invalid`.
  */
-export function resolveAiModel(choice: unknown, action: AiAction): AiModelId | null {
-  if (choice === undefined || choice === null || choice === 'auto') return AUTO_AI_MODEL[action];
-  return isAiModelId(choice) ? choice : null;
+export function resolveAiModel(
+  choice: unknown,
+  action: AiAction,
+  provider: AiProvider = MANAGED_AI_PROVIDER,
+): AiModelId | null {
+  if (choice === undefined || choice === null || choice === 'auto') return AUTO_AI_MODELS[provider][action];
+  return isAiModelId(choice) && AI_MODELS[choice].provider === provider ? choice : null;
 }
 
 // --- Cost of a call -----------------------------------------------------------
@@ -181,7 +308,7 @@ export function aiCallCredits(model: AiModelId, inputTokens: number, outputToken
   return Math.max(1, Math.ceil(priceUnits(model, input, output) / PRICE_UNITS_PER_CREDIT));
 }
 
-/** The same cost in US dollars, for showing a BYOK user what Anthropic will bill them. */
+/** The same cost in US dollars, for showing a BYOK user what their provider will bill them. */
 export function aiCallCostUsd(model: AiModelId, inputTokens: number, outputTokens: number): number {
   return priceUnits(model, Math.max(0, inputTokens), Math.max(0, outputTokens)) / 1e8;
 }
@@ -221,7 +348,7 @@ export function estimateAiCredits(model: AiModelId, action: AiAction, tabs: numb
   return aiCallCredits(model, input, output);
 }
 
-/** Approximate Anthropic cost in US dollars of one action, for BYOK users. */
+/** Approximate provider cost in US dollars of one action, for BYOK users. */
 export function estimateAiCostUsd(model: AiModelId, action: AiAction, tabs: number): number {
   const { input, output } = estimatedTokens(model, action, tabs);
   return aiCallCostUsd(model, input, output);
@@ -239,19 +366,47 @@ export const AI_ESTIMATE_EXAMPLES: readonly { action: AiAction; tabs: number }[]
 
 // --- Bring your own key ---------------------------------------------------------
 
-/** Request header that carries a BYOK user's Anthropic key to `/api/ai/*`. Never stored server-side. */
-export const AI_BYOK_KEY_HEADER = 'X-Anthropic-Key';
+/**
+ * Request header that carries a BYOK user's key to `/api/ai/*`. Never stored server-side. The
+ * provider is read from the key's shape ({@link byokKeyProvider}), so no second header is needed.
+ */
+export const AI_BYOK_KEY_HEADER = 'X-AI-Key';
 
-/** The shape of an Anthropic API key. Checked before a key is saved and before it is forwarded. */
-export const ANTHROPIC_API_KEY_PATTERN = /^sk-ant-[A-Za-z0-9_-]{20,300}$/;
+/**
+ * The shape of each provider's API key, checked before a key is saved and before it is forwarded.
+ * OpenAI: project (`sk-proj-`), service-account (`sk-svcacct-`) and legacy user keys; admin keys
+ * (`sk-admin-`) can't run models and are rejected. Google: Gemini API keys (`AIza` + 35).
+ */
+export const AI_API_KEY_PATTERNS: Record<AiProvider, RegExp> = {
+  anthropic: /^sk-ant-[A-Za-z0-9_-]{20,300}$/,
+  openai: /^sk-(?!ant-|admin-)(?:proj-|svcacct-)?[A-Za-z0-9_-]{20,300}$/,
+  google: /^AIza[A-Za-z0-9_-]{35}$/,
+};
 
-export function isAnthropicApiKey(value: unknown): value is string {
-  return typeof value === 'string' && ANTHROPIC_API_KEY_PATTERN.test(value);
+/** @deprecated Use `AI_API_KEY_PATTERNS.anthropic`. */
+export const ANTHROPIC_API_KEY_PATTERN = AI_API_KEY_PATTERNS.anthropic;
+
+/** Which provider issued `value`, read from its shape, or `null` when it isn't a usable key. */
+export function byokKeyProvider(value: unknown): AiProvider | null {
+  if (typeof value !== 'string') return null;
+  return AI_PROVIDERS.find((provider) => AI_API_KEY_PATTERNS[provider].test(value)) ?? null;
 }
 
-/** A key as shown after it's saved: `sk-ant-…abcd`. */
+/** Whether `value` is a key from any supported provider. */
+export function isByokApiKey(value: unknown): value is string {
+  return byokKeyProvider(value) !== null;
+}
+
+export function isAnthropicApiKey(value: unknown): value is string {
+  return byokKeyProvider(value) === 'anthropic';
+}
+
+const KEY_MASK_PREFIX: Record<AiProvider, string> = { anthropic: 'sk-ant-', openai: 'sk-', google: 'AIza' };
+
+/** A key as shown after it's saved: `sk-ant-…abcd`, `sk-…abcd` or `AIza…abcd`. */
 export function maskApiKey(key: string): string {
-  return `sk-ant-…${key.slice(-4)}`;
+  const provider = byokKeyProvider(key) ?? 'anthropic';
+  return `${KEY_MASK_PREFIX[provider]}…${key.slice(-4)}`;
 }
 
 // --- Errors -----------------------------------------------------------------------

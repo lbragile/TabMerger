@@ -15,6 +15,13 @@ import {
   type AiMode,
   type AiModelId,
 } from '@tabmerger/shared'
+import {
+  ProviderHttpError,
+  callGoogle,
+  callOpenAi,
+  mapProviderError,
+  type ProviderReply,
+} from '@/lib/ai-providers'
 import { AI_MAX_GROUP_NAME_LENGTH, AI_MAX_RENAME_LENGTH } from '@/lib/ai-validation'
 import {
   SYSTEM_DATA_RULE,
@@ -26,7 +33,8 @@ import { reserveCredits, settleCredits } from '@/lib/ai-usage'
 import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
 
 /**
- * Every Claude call made by the `/api/ai/*` routes.
+ * Every model call made by the `/api/ai/*` routes: Claude (managed, or the customer's own
+ * Anthropic key), and OpenAI or Google models on the customer's own key (`lib/ai-providers.ts`).
  *
  * A feature is an {@link AiTask}: a system prompt (instructions only), the untrusted data that
  * goes into the user turn's `<tab_data>` block, a JSON schema for structured output, an answer
@@ -42,8 +50,10 @@ import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
  * 4. Refusals and truncated output are errors (their usage is still charged); otherwise the
  *    answer is parsed and cleaned.
  *
- * BYOK requests run the same task on a client built from the customer's key for that request
- * only, with no metering. The key is never logged, stored or put into an error message.
+ * BYOK requests run the same task on the key's provider, with a client or request built from the
+ * customer's key for that request only, and no metering (so no token counting). The prompt
+ * framing, structured-output schema and answer cleaning are the same for every provider. The
+ * key is never logged, stored or put into an error message.
  */
 
 // --- Clients ------------------------------------------------------------------------------
@@ -66,9 +76,13 @@ export function anthropicClient(mode: AiMode, byokKey: string | null): Anthropic
 // --- Per-model request settings -----------------------------------------------------------
 
 interface ModelRequestSettings {
-  /** `thinking` sent with every request; omitted when undefined. */
+  /** Anthropic `thinking` sent with every request; omitted when undefined. */
   thinking?: { type: 'disabled' } | { type: 'between_tools' }
-  effort: 'low'
+  /**
+   * The lowest reasoning setting the model accepts: Anthropic `output_config.effort`, OpenAI
+   * `reasoning.effort`, Gemini `thinkingConfig.thinkingLevel`.
+   */
+  effort: 'none' | 'minimal' | 'low'
   /** Extra `max_tokens` on top of the answer budget, for thinking the model always does. */
   thinkingHeadroomTokens: number
 }
@@ -81,6 +95,12 @@ interface ModelRequestSettings {
  * - Opus 5.5: thinking can't be turned off, so `thinking` is omitted (adaptive) and effort
  *   `low` keeps it short; `max_tokens` gets headroom so thinking can't crowd out the answer.
  *
+ * Own-key models on other providers (checked against their docs, 2026-10-22):
+ * - GPT-6 Luna: `reasoning.effort: none` (it accepts none … max). GPT-6.1 Sol and GPT-6 Astra
+ *   start at `low` (`none` is rejected); reasoning tokens count toward `max_output_tokens`.
+ * - Gemini 3.1 Flash-Lite: thinking level `minimal` (its default). Gemini 3.8 Flash and Gemini 4
+ *   Argon: `low` (their lowest). Thinking tokens count toward `maxOutputTokens`.
+ *
  * No sampling parameters (the 5.5 models reject non-default `temperature`/`top_p`) and no
  * refusal fallbacks: a refusal is returned as `ai_refused` and its usage settled.
  */
@@ -88,6 +108,12 @@ export const MODEL_REQUEST_SETTINGS: Record<AiModelId, ModelRequestSettings> = {
   'claude-haiku-5-5': { thinking: { type: 'disabled' }, effort: 'low', thinkingHeadroomTokens: 0 },
   'claude-sonnet-5-5': { thinking: { type: 'between_tools' }, effort: 'low', thinkingHeadroomTokens: 0 },
   'claude-opus-5-5': { effort: 'low', thinkingHeadroomTokens: 2048 },
+  'gpt-6-luna': { effort: 'none', thinkingHeadroomTokens: 0 },
+  'gpt-6.1-sol': { effort: 'low', thinkingHeadroomTokens: 2048 },
+  'gpt-6-astra': { effort: 'low', thinkingHeadroomTokens: 2048 },
+  'gemini-3.1-flash-lite': { effort: 'minimal', thinkingHeadroomTokens: 512 },
+  'gemini-3.8-flash': { effort: 'low', thinkingHeadroomTokens: 2048 },
+  'gemini-4-argon': { effort: 'low', thinkingHeadroomTokens: 2048 },
 }
 
 /** Upper bound for any answer budget; far below the models' 128K output limit. */
@@ -425,7 +451,7 @@ export function organizeTask(groups: OrganizePromptGroup[]): AiTask<OrganizeProp
               {
                 type: 'object',
                 properties: {
-                  type: { type: 'string', const: 'merge' },
+                  type: { type: 'string', enum: ['merge'] },
                   sourceGroupId: groupIdProperty,
                   targetGroupId: groupIdProperty,
                 },
@@ -435,7 +461,7 @@ export function organizeTask(groups: OrganizePromptGroup[]): AiTask<OrganizeProp
               {
                 type: 'object',
                 properties: {
-                  type: { type: 'string', const: 'rename' },
+                  type: { type: 'string', enum: ['rename'] },
                   groupId: groupIdProperty,
                   newName: { type: 'string' },
                 },
@@ -444,14 +470,14 @@ export function organizeTask(groups: OrganizePromptGroup[]): AiTask<OrganizeProp
               },
               {
                 type: 'object',
-                properties: { type: { type: 'string', const: 'delete' }, groupId: groupIdProperty },
+                properties: { type: { type: 'string', enum: ['delete'] }, groupId: groupIdProperty },
                 required: ['type', 'groupId'],
                 additionalProperties: false,
               },
               {
                 type: 'object',
                 properties: {
-                  type: { type: 'string', const: 'reorder' },
+                  type: { type: 'string', enum: ['reorder'] },
                   groupIds: { type: 'array', items: groupIdProperty },
                 },
                 required: ['type', 'groupIds'],
@@ -556,6 +582,7 @@ export function mapAnthropicError(err: unknown, mode: AiMode): AiRouteError {
  */
 export function describeErrorForLog(err: unknown): Record<string, unknown> {
   if (err instanceof AiRouteError) return { code: err.code, status: err.status }
+  if (err instanceof ProviderHttpError) return { provider: err.provider, status: err.status, code: err.code }
   const e: ApiErrorLike = isRecord(err) || err instanceof Error ? (err as ApiErrorLike) : {}
   return {
     name: typeof e.name === 'string' ? e.name : typeof err,
@@ -575,13 +602,21 @@ export interface AiMeter {
   month: string
 }
 
-export interface AiCallContext {
-  client: AnthropicClient
+interface AiCallBase {
   model: AiModelId
   mode: AiMode
-  /** Set in managed mode only. */
+  /** Set in managed mode only (which is always Anthropic). */
   meter: AiMeter | null
 }
+
+/**
+ * Everything one request's model call needs. Anthropic calls go through the SDK client (managed
+ * key or the customer's); OpenAI and Google calls carry the customer's key, used for this request
+ * only and never logged.
+ */
+export type AiCallContext =
+  | (AiCallBase & { provider: 'anthropic'; client: AnthropicClient })
+  | (AiCallBase & { provider: 'openai' | 'google'; apiKey: string; meter: null })
 
 export interface AiTaskResult<T> {
   result: T
@@ -589,20 +624,31 @@ export interface AiTaskResult<T> {
   remaining: number | null
 }
 
-/** The request for a task on a model: the count-tokens params and the create params. */
+/** The system prompt every provider gets: the task's instructions plus the untrusted-data rule. */
+export function systemPromptFor(task: AiTask<unknown>): string {
+  return `${task.system}\n\n${SYSTEM_DATA_RULE}`
+}
+
+/** `max_tokens` for a task on a model: the answer budget plus the model's thinking headroom. */
+export function maxOutputTokensFor(task: AiTask<unknown>, model: AiModelId): number {
+  return task.answerTokens + MODEL_REQUEST_SETTINGS[model].thinkingHeadroomTokens
+}
+
+/** The Anthropic request for a task on a model: the count-tokens params and the create params. */
 export function buildAiRequest(task: AiTask<unknown>, model: AiModelId) {
   const settings = MODEL_REQUEST_SETTINGS[model]
   const count: MessageCountTokensParams = {
     model,
-    system: `${task.system}\n\n${SYSTEM_DATA_RULE}`,
+    system: systemPromptFor(task),
     messages: [{ role: 'user', content: buildUntrustedDataTurn(task.data) }],
-    output_config: { effort: settings.effort, format: { type: 'json_schema', schema: task.schema } },
+    // Every Claude model's setting is `low` (see MODEL_REQUEST_SETTINGS).
+    output_config: { effort: settings.effort as 'low', format: { type: 'json_schema', schema: task.schema } },
     // `between_tools` is valid for Sonnet 5.5 but not yet in this SDK version's types.
     ...(settings.thinking ? { thinking: settings.thinking as unknown as ThinkingConfigParam } : {}),
   }
   const create: MessageCreateParamsNonStreaming = {
     ...count,
-    max_tokens: task.answerTokens + settings.thinkingHeadroomTokens,
+    max_tokens: maxOutputTokensFor(task, model),
   }
   return { count, create }
 }
@@ -626,6 +672,30 @@ async function settle(meter: AiMeter, delta: number): Promise<number | null | un
 
 /** Runs one task: meter (managed), call, settle, interpret. See the module comment. */
 export async function runAiTask<T>(task: AiTask<T>, ctx: AiCallContext): Promise<AiTaskResult<T>> {
+  const { text, outcome, remaining } =
+    ctx.provider === 'anthropic' ? await callAnthropic(task, ctx) : await callOwnKeyProvider(task, ctx)
+
+  if (outcome === 'refused') throw new AiRouteError(422, AI_ERROR_CODES.refused, {}, remaining)
+  if (outcome === 'truncated') throw new AiRouteError(502, AI_ERROR_CODES.failed, {}, remaining)
+
+  let output: unknown
+  try {
+    output = JSON.parse(text)
+  } catch {
+    throw new AiRouteError(502, AI_ERROR_CODES.failed, {}, remaining)
+  }
+
+  return { result: task.parse(output), remaining }
+}
+
+/** A model's answer text, how the turn ended, and the managed balance when metered. */
+type CallOutcome = ProviderReply & { remaining: number | null }
+
+/** Claude, managed or own key: count, reserve, call, settle (metering only when managed). */
+async function callAnthropic(
+  task: AiTask<unknown>,
+  ctx: Extract<AiCallContext, { provider: 'anthropic' }>
+): Promise<CallOutcome> {
   const { client, model, mode, meter } = ctx
   const request = buildAiRequest(task, model)
 
@@ -673,23 +743,40 @@ export async function runAiTask<T>(task: AiTask<T>, ctx: AiCallContext): Promise
     if (used !== undefined) remaining = used === null ? cap : Math.max(0, cap - used)
   }
 
-  if (message.stop_reason === 'refusal') {
-    throw new AiRouteError(422, AI_ERROR_CODES.refused, {}, remaining)
-  }
-  if (message.stop_reason === 'max_tokens') {
-    throw new AiRouteError(502, AI_ERROR_CODES.failed, {}, remaining)
-  }
-
   const text = message.content
     .filter((block): block is Extract<typeof block, { type: 'text' }> => block.type === 'text')
     .map((block) => block.text)
     .join('')
-  let output: unknown
-  try {
-    output = JSON.parse(text)
-  } catch {
-    throw new AiRouteError(502, AI_ERROR_CODES.failed, {}, remaining)
-  }
+  const outcome =
+    message.stop_reason === 'refusal' ? 'refused' : message.stop_reason === 'max_tokens' ? 'truncated' : 'complete'
+  return { text, outcome, remaining }
+}
 
-  return { result: task.parse(output), remaining }
+/** OpenAI or Google on the customer's key: one unmetered call (no token counting). */
+async function callOwnKeyProvider(
+  task: AiTask<unknown>,
+  ctx: Extract<AiCallContext, { provider: 'openai' | 'google' }>
+): Promise<CallOutcome> {
+  const prompt = {
+    model: ctx.model,
+    system: systemPromptFor(task),
+    user: buildUntrustedDataTurn(task.data),
+    schema: task.schema,
+    schemaName: `tabmerger_${task.action}`,
+    maxOutputTokens: maxOutputTokensFor(task, ctx.model),
+    effort: MODEL_REQUEST_SETTINGS[ctx.model].effort,
+  }
+  try {
+    const reply = ctx.provider === 'openai' ? await callOpenAi(ctx.apiKey, prompt) : await callGoogle(ctx.apiKey, prompt)
+    return { ...reply, remaining: null }
+  } catch (err) {
+    throw mapOwnKeyProviderError(err)
+  }
+}
+
+/** Maps an OpenAI or Google failure (see `mapProviderError`); anything unexpected is `ai_failed`. */
+export function mapOwnKeyProviderError(err: unknown): AiRouteError {
+  if (err instanceof AiRouteError) return err
+  if (err instanceof ProviderHttpError) return mapProviderError(err, (status, code) => new AiRouteError(status, code))
+  return new AiRouteError(500, AI_ERROR_CODES.failed)
 }

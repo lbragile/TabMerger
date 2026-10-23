@@ -4,22 +4,28 @@ import {
   AI_ESTIMATE_EXAMPLES,
   AI_MODEL_IDS,
   AI_MODELS,
+  AI_PROVIDERS,
   AUTO_AI_MODEL,
+  AUTO_AI_MODELS,
   CREDIT_MICRO_USD,
   PAYMENT_FEE_BPS,
   PAYMENT_FEE_FIXED_CENTS,
   PRO_AI_MONTHLY_CREDITS,
   aiCallCostUsd,
   aiCallCredits,
+  aiModelsForProvider,
+  byokKeyProvider,
   creditsForPayment,
+  estimateAiCostUsd,
   estimateAiCredits,
   isAiMode,
   isAnthropicApiKey,
+  isByokApiKey,
   maskApiKey,
   monthlyAllowanceForPayment,
   resolveAiModel,
 } from '../constants/ai';
-import { getPricingTier } from '../constants/index';
+import { PRICING_TIERS, YEARLY_DISCOUNT_PERCENT, getPricingTier } from '../constants/index';
 
 /** What a payment nets after the assumed fees, in dollars. */
 function net(usd: number): number {
@@ -77,9 +83,26 @@ describe('the 40% guarantee', () => {
   });
 
   it('prices the BYOK option between Pro and managed Pro AI', () => {
-    expect(proAi.byok).toEqual(expect.objectContaining({ monthlyPrice: 5.99, yearlyPrice: 64.99 }));
+    expect(proAi.byok).toEqual(expect.objectContaining({ monthlyPrice: 5.99, yearlyPrice: 64.49 }));
     expect(getPricingTier('pro').monthlyPrice).toBeLessThan(proAi.byok!.monthlyPrice);
     expect(proAi.byok!.monthlyPrice).toBeLessThan(proAi.monthlyPrice);
+  });
+});
+
+describe('yearly discount', () => {
+  const options = PRICING_TIERS.filter((tier) => tier.monthlyPrice > 0).flatMap((tier) => [
+    [tier.name, tier.monthlyPrice, tier.yearlyPrice] as const,
+    ...(tier.byok ? [[`${tier.name} (own key)`, tier.byok.monthlyPrice, tier.byok.yearlyPrice] as const] : []),
+  ]);
+
+  it.each(options)('%s saves the advertised yearly discount, rounded down', (_name, monthly, yearly) => {
+    const saving = ((monthly * 12 - yearly) / (monthly * 12)) * 100;
+    expect(saving).toBeGreaterThanOrEqual(YEARLY_DISCOUNT_PERCENT);
+    expect(saving).toBeLessThan(YEARLY_DISCOUNT_PERCENT + 1);
+  });
+
+  it('covers every paid option', () => {
+    expect(options).toHaveLength(3);
   });
 });
 
@@ -123,14 +146,36 @@ describe('resolveAiModel', () => {
     expect(resolveAiModel('claude-fable-5-1', 'nameGroup')).toBeNull();
     expect(resolveAiModel(42, 'nameGroup')).toBeNull();
   });
+
+  it('keeps managed requests on Anthropic models', () => {
+    expect(resolveAiModel('gpt-6-luna', 'nameGroup')).toBeNull();
+    expect(resolveAiModel('gemini-4-argon', 'organize', 'anthropic')).toBeNull();
+  });
+
+  it('resolves auto and fixed choices on the key\'s provider', () => {
+    expect(resolveAiModel('auto', 'nameGroup', 'openai')).toBe('gpt-6-luna');
+    expect(resolveAiModel(undefined, 'organize', 'google')).toBe('gemini-3.8-flash');
+    expect(resolveAiModel('gpt-6.1-sol', 'organize', 'openai')).toBe('gpt-6.1-sol');
+    expect(resolveAiModel('claude-haiku-5-5', 'nameGroup', 'openai')).toBeNull();
+  });
+
+  it('only defaults to models of the same provider', () => {
+    for (const provider of AI_PROVIDERS) {
+      for (const model of Object.values(AUTO_AI_MODELS[provider])) {
+        expect(AI_MODELS[model].provider).toBe(provider);
+      }
+    }
+  });
 });
 
 describe('estimates', () => {
-  it('ranks models by cost for every example', () => {
-    for (const { action, tabs } of AI_ESTIMATE_EXAMPLES) {
-      const [haiku, sonnet, opus] = AI_MODEL_IDS.map((m) => estimateAiCredits(m, action, tabs));
-      expect(haiku).toBeLessThanOrEqual(sonnet);
-      expect(sonnet).toBeLessThanOrEqual(opus);
+  it('ranks each provider\'s models by cost for every example', () => {
+    for (const provider of AI_PROVIDERS) {
+      for (const { action, tabs } of AI_ESTIMATE_EXAMPLES) {
+        const costs = aiModelsForProvider(provider).map((m) => estimateAiCostUsd(m, action, tabs));
+        expect(costs).toHaveLength(3);
+        expect(costs).toEqual([...costs].sort((a, b) => a - b));
+      }
     }
   });
 
@@ -149,8 +194,27 @@ describe('BYOK keys and modes', () => {
     expect(isAnthropicApiKey(undefined)).toBe(false);
   });
 
+  it('tells the provider from the key', () => {
+    expect(byokKeyProvider(`sk-ant-api03-${'a'.repeat(40)}`)).toBe('anthropic');
+    expect(byokKeyProvider(`sk-proj-${'A1_-'.repeat(20)}`)).toBe('openai');
+    expect(byokKeyProvider(`sk-svcacct-${'a'.repeat(40)}`)).toBe('openai');
+    expect(byokKeyProvider(`sk-${'a'.repeat(48)}`)).toBe('openai');
+    expect(byokKeyProvider(`AIza${'b'.repeat(35)}`)).toBe('google');
+  });
+
+  it('rejects keys no provider would accept', () => {
+    expect(byokKeyProvider(`sk-admin-${'a'.repeat(40)}`)).toBeNull();
+    expect(byokKeyProvider(`AIza${'b'.repeat(34)}`)).toBeNull();
+    expect(byokKeyProvider(`sk-proj-${'a'.repeat(40)} `)).toBeNull();
+    expect(byokKeyProvider(`AIza${'b'.repeat(35)}\n`)).toBeNull();
+    expect(byokKeyProvider(null)).toBeNull();
+    expect(isByokApiKey('hello')).toBe(false);
+  });
+
   it('masks a key down to its last four characters', () => {
     expect(maskApiKey(`sk-ant-api03-${'a'.repeat(36)}wxyz`)).toBe('sk-ant-…wxyz');
+    expect(maskApiKey(`sk-proj-${'a'.repeat(36)}wxyz`)).toBe('sk-…wxyz');
+    expect(maskApiKey(`AIza${'b'.repeat(31)}wxyz`)).toBe('AIza…wxyz');
   });
 
   it('accepts only the two AI modes', () => {

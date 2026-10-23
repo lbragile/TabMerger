@@ -268,7 +268,13 @@ describe('runAiTask response handling (unmetered)', () => {
       messages: { create: vi.fn(async () => response), countTokens: vi.fn() },
     } as unknown as AnthropicClient
   }
-  const ctx = (client: AnthropicClient) => ({ client, model: 'claude-haiku-5-5' as const, mode: 'byok' as const, meter: null })
+  const ctx = (client: AnthropicClient) => ({
+    provider: 'anthropic' as const,
+    client,
+    model: 'claude-haiku-5-5' as const,
+    mode: 'byok' as const,
+    meter: null,
+  })
   const usage = { input_tokens: 10, output_tokens: 5 }
 
   it('reads text blocks only, skipping thinking blocks', async () => {

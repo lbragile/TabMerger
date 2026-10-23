@@ -101,7 +101,7 @@ function builder(result: unknown) {
 const TABS = [{ id: 1, title: 'Docs', url: 'https://example.com/docs' }]
 
 /** An entitled managed Pro AI subscription row. */
-const PRO_AI = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2600 }
+const PRO_AI = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2500 }
 
 /** Serves each table's query result; tables not listed resolve to `{ data: null, error: null }`. */
 function setTables(tables: Record<string, unknown>) {
@@ -814,21 +814,42 @@ describe.each(simpleRoutes)('POST /api/ai/$name entitlement with a well-formed b
     beforeEach(() => setTables({ subscriptions: { data: BYOK_SUB, error: null } }))
 
     it.each([
-      ['no key header', null],
-      ['a key that is not an Anthropic key', 'not-a-key'],
-    ])('400s byok_key_missing with %s', async (_label, key) => {
+      ['no key header', null, 'byok_key_missing'],
+      ['a key of no supported provider', 'not-a-key', 'byok_key_invalid'],
+      ['an OpenAI admin key', `sk-admin-${'a'.repeat(40)}`, 'byok_key_invalid'],
+    ])('400s with %s', async (_label, key, code) => {
       const r = req(route.url, route.body)
-      if (key) r.headers.set('X-Anthropic-Key', key)
+      if (key) r.headers.set('X-AI-Key', key)
       const res = await route.handler(r)
       expect(res.status).toBe(400)
-      expect(await res.json()).toEqual({ error: 'byok_key_missing' })
+      expect(await res.json()).toEqual({ error: code })
       expect(mockRunAiTask).not.toHaveBeenCalled()
+    })
+
+    it.each([
+      ['an OpenAI key', `sk-proj-${'o'.repeat(40)}`, 'openai', 'gpt-6-luna', 'claude-haiku-5-5'],
+      ['a Google key', `AIza${'g'.repeat(35)}`, 'google', 'gemini-3.1-flash-lite', 'gpt-6-luna'],
+      ['an Anthropic key', BYOK_KEY, 'anthropic', 'claude-haiku-5-5', 'gemini-4-argon'],
+    ])('sends %s to its provider, rejecting a model of another provider', async (_label, key, provider, auto, foreign) => {
+      mockRunAiTask.mockResolvedValue({ result: route.aiValue, remaining: null })
+      const ok = req(route.url, route.body)
+      ok.headers.set('X-AI-Key', key)
+      expect((await route.handler(ok)).status).toBe(200)
+      const ctx = mockRunAiTask.mock.calls[0][1]
+      expect(ctx).toMatchObject({ provider, model: auto, mode: 'byok', meter: null })
+
+      const wrong = req(route.url, { ...route.body, model: foreign })
+      wrong.headers.set('X-AI-Key', key)
+      const res = await route.handler(wrong)
+      expect(res.status).toBe(400)
+      expect(await res.json()).toEqual({ error: 'ai_model_invalid' })
+      expect(mockRunAiTask).toHaveBeenCalledTimes(1)
     })
 
     it('runs unmetered in BYOK mode when the key is sent', async () => {
       mockRunAiTask.mockResolvedValue({ result: route.aiValue, remaining: null })
       const r = req(route.url, route.body)
-      r.headers.set('X-Anthropic-Key', BYOK_KEY)
+      r.headers.set('X-AI-Key', BYOK_KEY)
       const res = await route.handler(r)
       expect(res.status).toBe(200)
       const ctx = mockRunAiTask.mock.calls[0][1]
