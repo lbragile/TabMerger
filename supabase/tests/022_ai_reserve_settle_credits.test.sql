@@ -5,8 +5,11 @@
 --   pnpm exec supabase test db
 --
 -- What it proves:
---   - subscriptions.ai_mode / ai_monthly_credits exist with their defaults and checks, and a
---     signed-in user cannot change them on their own row.
+--   - subscriptions.ai_mode / ai_monthly_credits exist with their types, defaults and named
+--     checks, and a signed-in user cannot change them on their own row (policy layer; the
+--     023 test covers the privilege layer).
+--   - ai_usage has the integer credits_used counter and the unique (user_id, month) key the
+--     reservation's ON CONFLICT needs.
 --   - ai_reserve_credits / ai_settle_credits run as their owner with an empty search_path, and
 --     only the service role can call them (a signed-in user gets 42501).
 --   - The cap is ai_monthly_credits only for pro_ai + managed + an entitled status, plus that
@@ -21,7 +24,7 @@
 -- Everything runs in one transaction that is rolled back, so no test user is left behind.
 
 begin;
-select plan(47);
+select plan(53);
 
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-0000000000e1', 'ai-managed@example.test'),
@@ -33,6 +36,27 @@ select col_not_null('public', 'subscriptions', 'ai_mode', 'ai_mode is not null')
 select col_default_is('public', 'subscriptions', 'ai_mode', 'managed', 'ai_mode defaults to managed');
 select col_not_null('public', 'subscriptions', 'ai_monthly_credits', 'ai_monthly_credits is not null');
 select col_default_is('public', 'subscriptions', 'ai_monthly_credits', 0, 'ai_monthly_credits defaults to 0');
+select col_type_is('public', 'subscriptions', 'ai_mode', 'text', 'ai_mode is text');
+select col_type_is('public', 'subscriptions', 'ai_monthly_credits', 'integer', 'ai_monthly_credits is integer');
+
+select ok(
+  exists (select 1 from pg_catalog.pg_constraint
+           where conrelid = 'public.subscriptions'::regclass
+             and conname = 'subscriptions_ai_mode_check' and contype = 'c'),
+  'ai_mode has the named check constraint subscriptions_ai_mode_check'
+);
+
+select ok(
+  exists (select 1 from pg_catalog.pg_constraint
+           where conrelid = 'public.subscriptions'::regclass
+             and conname = 'subscriptions_ai_monthly_credits_check' and contype = 'c'),
+  'ai_monthly_credits has the named check constraint subscriptions_ai_monthly_credits_check'
+);
+
+-- What ai_reserve_credits relies on: the counter column and the ON CONFLICT target.
+select col_type_is('public', 'ai_usage', 'credits_used', 'integer', 'ai_usage.credits_used is integer');
+select col_is_unique('public', 'ai_usage', array['user_id', 'month'],
+  'ai_usage is unique on (user_id, month)');
 
 select is(
   (select ai_mode || ':' || ai_monthly_credits from public.subscriptions
@@ -115,6 +139,14 @@ select throws_ok(
   '42501', null,
   'a signed-in user cannot settle credits directly'
 );
+
+-- 023 revokes the API roles' write privileges, so this update fails with 42501 once 023 is
+-- applied (pinned by the 023 test). Grant the privilege back inside this rolled-back
+-- transaction to prove the policy layer alone still hides the row.
+reset role;
+grant update on public.subscriptions to authenticated;
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-0000000000e1';
 
 with x as (
   update public.subscriptions set ai_monthly_credits = 999999, ai_mode = 'managed'

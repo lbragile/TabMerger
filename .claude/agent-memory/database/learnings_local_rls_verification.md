@@ -5,10 +5,14 @@ metadata:
   type: reference
 ---
 
-- **A migration file is write-once.** The protect-migrations hook blocks any Write/Edit to a
-  `supabase/migrations/*.sql` path that already exists, including a file created minutes ago.
-  Draft the SQL in the scratchpad, `docker cp` it into `supabase_db_tabmerger`, and run it with
-  `\i` inside `begin; ... rollback;` (twice, for idempotency) before writing the real file.
+- **Treat a migration file as write-once.** The protect-migrations hook is meant to block any
+  Write/Edit to a `supabase/migrations/*.sql` path that already exists (even one created
+  minutes ago), so don't count on fixing a file after writing it. An edit is only legitimate
+  while the migration exists on the local stack alone, and the caller should say so. Draft the
+  SQL in the scratchpad, `docker cp` it into `supabase_db_tabmerger`, and run it with `\i`
+  inside `begin; ... rollback;` (twice, for idempotency) before writing the real file. After
+  editing a migration that is already applied locally, re-run it by hand with
+  `psql -1 -f` (it must be idempotent) instead of `db reset`, which wipes local data.
 - **Apply without wiping data:** `pnpm exec supabase migration up --local`. In
   `migration list --local` the "remote" column is the local database, not a hosted project.
 - **pgTAP runner is `postgres`**, which locally is not a superuser. It can `set local role` to

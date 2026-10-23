@@ -34,17 +34,35 @@
 --
 -- Re-running: the columns use `if not exists`, the functions `create or replace`, and the
 -- pack conversion runs only while the credits column does not yet carry the comment this
--- migration sets on it, so a second run by hand does not convert the packs twice.
+-- migration sets on it, so a second run by hand does not convert the packs twice. Because
+-- `if not exists` would silently keep a same-named column made by hand, the end-state check
+-- also asserts both columns' type, default, not-null and named check constraint.
 --
--- Rollback (pack credits come back exactly for every old pack of 7 or more units; smaller
--- packs were clamped to 0 and cannot be recovered):
+-- Rollback. Every old pack of 7 or more units comes back exactly. Packs of 1 to 6 units were
+-- clamped to 0 credits and come back as 7 units, an over-grant of at most 6 units (USD 0.30)
+-- per such pack. The pack update is guarded by the same column comment as the conversion, so
+-- running the rollback twice does not convert twice:
 --   drop function if exists public.ai_settle_credits(uuid, text, integer);
 --   drop function if exists public.ai_reserve_credits(uuid, text, integer);
 --   alter table public.subscriptions
 --     drop column if exists ai_monthly_credits,
 --     drop column if exists ai_mode;
---   update public.ai_credit_purchases set credits = ceil((credits + 120) / 18.8)::integer;
---   comment on column public.ai_credit_purchases.credits is null;
+--   do $$
+--   begin
+--     if pg_catalog.col_description(
+--          'public.ai_credit_purchases'::regclass,
+--          (select a.attnum from pg_catalog.pg_attribute a
+--            where a.attrelid = 'public.ai_credit_purchases'::regclass and a.attname = 'credits')
+--        ) = 'Credits granted by this purchase. Unit since migration 022: 1 credit = USD 0.001 of AI cost.' then
+--       update public.ai_credit_purchases set credits = ceil((credits + 120) / 18.8)::integer;
+--       comment on column public.ai_credit_purchases.credits is null;
+--     end if;
+--   end;
+--   $$;
+
+-- ADD COLUMN ... CHECK takes an ACCESS EXCLUSIVE lock on subscriptions, which has_cloud_sync()
+-- reads on every sync write. Fail fast instead of queueing every sync write behind this one.
+set local lock_timeout = '5s';
 
 -- 1. subscriptions: AI option and monthly allowance ----------------------------------------
 alter table public.subscriptions
@@ -59,6 +77,11 @@ comment on column public.subscriptions.ai_monthly_credits is
   'Managed Pro AI allowance per month in credits (1 credit = USD 0.001 of AI cost). 0 for byok and non-AI plans. Written by the Stripe webhook.';
 
 -- 2. ai_reserve_credits ---------------------------------------------------------------------
+-- SECURITY DEFINER although service_role bypasses RLS: the functions then keep working
+-- whatever table privileges service_role holds (they run as their owner), and it widens
+-- nothing because only service_role may EXECUTE them (revoked from public/anon/authenticated
+-- below, asserted in section 5).
+--
 -- Atomicity: the check and the increment are one INSERT ... ON CONFLICT DO UPDATE ... WHERE.
 -- On conflict Postgres locks the existing ai_usage row and evaluates the WHERE against its
 -- latest committed version, so a concurrent reservation for the same user and month waits
@@ -207,7 +230,76 @@ declare
   fn text;
   api_role text;
   extra_policy text;
+  col record;
 begin
+  -- The two subscriptions columns, as added in section 1 (`if not exists` keeps any
+  -- same-named column that was already there, so check its shape instead of trusting it).
+  for col in
+    select * from (values
+      ('ai_mode', 'text', '''managed''::text', 'subscriptions_ai_mode_check'),
+      ('ai_monthly_credits', 'integer', '0', 'subscriptions_ai_monthly_credits_check')
+    ) as v(name, type_name, default_expr, check_name)
+  loop
+    if not exists (
+      select 1
+      from pg_catalog.pg_attribute a
+      join pg_catalog.pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+      where a.attrelid = 'public.subscriptions'::regclass
+        and a.attname = col.name
+        and not a.attisdropped
+        and a.attnotnull
+        and pg_catalog.format_type(a.atttypid, a.atttypmod) = col.type_name
+        and pg_catalog.pg_get_expr(d.adbin, d.adrelid) = col.default_expr
+    ) then
+      raise exception 'public.subscriptions.%: expected % not null default %',
+        col.name, col.type_name, col.default_expr;
+    end if;
+
+    if not exists (
+      select 1
+      from pg_catalog.pg_constraint c
+      join pg_catalog.pg_attribute a
+        on a.attrelid = c.conrelid and a.attnum = any (c.conkey)
+      where c.conrelid = 'public.subscriptions'::regclass
+        and c.conname = col.check_name
+        and c.contype = 'c'
+        and c.convalidated
+        and a.attname = col.name
+        and pg_catalog.cardinality(c.conkey) = 1
+    ) then
+      raise exception 'public.subscriptions: check constraint % on % is missing',
+        col.check_name, col.name;
+    end if;
+  end loop;
+
+  -- ai_reserve_credits relies on ai_usage.credits_used and on a unique (user_id, month) index
+  -- for its ON CONFLICT; fail here rather than on the first AI call.
+  if not exists (
+    select 1 from pg_catalog.pg_attribute a
+    where a.attrelid = 'public.ai_usage'::regclass
+      and a.attname = 'credits_used'
+      and not a.attisdropped
+      and a.atttypid = 'integer'::regtype
+  ) then
+    raise exception 'public.ai_usage.credits_used (integer) is missing';
+  end if;
+
+  if not exists (
+    select 1 from pg_catalog.pg_index i
+    where i.indrelid = 'public.ai_usage'::regclass
+      and i.indisunique
+      and i.indisvalid
+      and i.indpred is null
+      and i.indexprs is null
+      and i.indnatts = 2
+      and (select array_agg(a.attname::text order by a.attname)
+             from pg_catalog.pg_attribute a
+            where a.attrelid = i.indrelid and a.attnum = any (i.indkey::int2[]))
+          = array['month', 'user_id']
+  ) then
+    raise exception 'public.ai_usage: unique index on (user_id, month) is missing';
+  end if;
+
   foreach fn in array array[
     'public.ai_reserve_credits(uuid, text, integer)',
     'public.ai_settle_credits(uuid, text, integer)'

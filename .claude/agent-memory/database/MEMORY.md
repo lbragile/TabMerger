@@ -7,3 +7,5 @@
 - [RLS refusal shapes per statement](learnings_rls_refusal_shapes.md) — insert/upsert raise 42501, update/delete are silent zero rows; pgTAP assertions for each; negative-control recipe
 - [Verifying RLS/grants on the local stack](learnings_local_rls_verification.md) — migration files are write-once (dry-run first); pgTAP runner limits; key-free HTTP check via the db container
 - [Atomic quota RPC (022)](learnings_atomic_quota_rpc.md) — one-statement reserve via insert..on conflict..where; revoke function EXECUTE from anon/authenticated by name; re-run-safe conversion
+- [CLI runs a migration as one transaction](learnings_cli_migration_transaction.md) — set local lock_timeout works; a raise records nothing; probe recipe via --workdir
+- [Testing a privilege revoke (023)](learnings_privilege_layer_tests.md) — which pgTAP asserts flip, TRUNCATE ignores RLS, column-privilege limits, keep older policy tests green
