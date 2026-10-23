@@ -1,5 +1,6 @@
 import type { PricingTier, SubscriptionStatus } from '../types/index.ts';
 import { AUTO_BACKUP_COPY } from './autoBackup';
+import { PRO_AI_MONTHLY_CREDITS } from './ai';
 
 export const DEFAULT_GROUP_COLOR = 'rgba(128, 128, 128, 1)';
 export const FIRST_GROUP_TITLE = 'Now Open';
@@ -114,8 +115,23 @@ export const PRICING_TIERS: PricingTier[] = [
       'AI group name suggestions',
       'Smart session suggestions',
       'Tab preview with AI summary',
+      `${PRO_AI_MONTHLY_CREDITS.toLocaleString('en-US')} AI credits a month`,
+      'Choose your AI model',
     ],
     limits: UNLIMITED_TIER_LIMITS,
+    byok: {
+      monthlyPrice: 5.99,
+      yearlyPrice: 64.99,
+      features: [
+        'Everything in Pro',
+        'AI auto-grouping of tabs',
+        'AI group name suggestions',
+        'Smart session suggestions',
+        'Tab preview with AI summary',
+        'Use your own Anthropic API key: no credit limit, billed by Anthropic',
+        'Choose your AI model',
+      ],
+    },
   },
 ];
 
@@ -140,6 +156,7 @@ export * from './locales';
 export * from './localeSearch';
 export * from './analyticsEvents';
 export * from './extensionLifecycle';
+export * from './ai';
 
 /** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
 export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

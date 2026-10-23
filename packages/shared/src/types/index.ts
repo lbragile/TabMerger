@@ -175,4 +175,6 @@ export interface PricingTier {
   features: string[];
   limits: { groups: number; tabs: number; urlRules: number; sessions: number };
   highlighted?: boolean;
+  /** Pro AI only: the bring-your-own-key option, same features with AI billed to the customer's key. */
+  byok?: { monthlyPrice: number; yearlyPrice: number; features: string[] };
 }
