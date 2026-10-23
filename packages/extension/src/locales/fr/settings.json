@@ -63,7 +63,7 @@
     "signOut": "Se déconnecter",
     "resetEncryption": "Phrase secrète oubliée ? Réinitialiser le chiffrement",
     "aiKeyLabel": "IA",
-    "aiOwnKey": "Votre propre clé Anthropic"
+    "aiOwnKey": "Votre propre clé API"
   },
   "data": {
     "intro": "TabMerger stocke toutes les données localement dans IndexedDB. La synchronisation cloud nécessite un compte Pro.",
@@ -99,34 +99,36 @@
     "throttleLabel": "Limiter les suggestions IA automatiques à une par jour",
     "throttleDescription": "La bannière de suggestion de sessions en arrière-plan s’affiche au plus une fois par jour pour protéger votre quota IA mensuel. Les actions IA que vous déclenchez vous-même (Regroupement auto, Nommer le groupe, Organiser) ne sont jamais limitées par ce réglage.",
     "plan": {
-      "managed": "Clé de TabMerger : {{remaining}} crédits restants sur {{cap}} ce mois-ci",
-      "managedUnknown": "Vous utilisez la clé de TabMerger",
-      "byok": "Vous utilisez votre propre clé Anthropic"
+      "managed": "TabMerger s’occupe de la configuration : {{remaining}} crédits restants sur {{cap}} ce mois-ci",
+      "managedUnknown": "TabMerger s’occupe de la configuration",
+      "byok": "Vous avez ajouté votre propre clé API {{provider}}",
+      "byokNoKey": "Vous ajoutez votre propre clé API : saisissez-la ci-dessous pour utiliser les fonctions IA"
     },
     "key": {
-      "label": "Votre clé API Anthropic",
+      "label": "Clé API de votre fournisseur d’IA",
       "save": "Enregistrer la clé",
       "checking": "Vérification…",
       "replace": "Remplacer",
       "remove": "Supprimer",
       "saved": "Clé API enregistrée",
       "removed": "Clé API supprimée",
-      "invalidFormat": "Cela ne ressemble pas à une clé API Anthropic. Les clés commencent par sk-ant-.",
+      "invalidFormat": "Cela ne ressemble pas à une clé API Anthropic, OpenAI ou Google.",
       "verifyFailed": "Impossible de vérifier la clé. Réessayez.",
-      "note": "Enregistrée uniquement sur cet appareil. Envoyée au serveur de TabMerger avec chaque requête IA et transmise directement à Anthropic ; jamais enregistrée sur nos serveurs.",
-      "consoleLink": "Créer une clé et fixer une limite de dépenses dans la console Anthropic"
+      "note": "Les clés Anthropic, OpenAI et Google fonctionnent. Enregistrée uniquement sur cet appareil. Envoyée au serveur de TabMerger avec chaque requête IA et transmise directement au fournisseur qui l’a émise ; jamais enregistrée sur nos serveurs.",
+      "getKey": "Créer une clé et fixer une limite de dépenses :",
+      "manageLink": "Gérer cette clé et sa limite de dépenses chez {{provider}}"
     },
     "model": {
       "label": "Modèle d’IA",
       "managedDescription": "Les modèles plus grands donnent de meilleurs résultats et consomment plus de crédits. Les chiffres sont des estimations.",
-      "byokDescription": "Les modèles plus grands donnent de meilleurs résultats et coûtent plus cher. Les chiffres sont des estimations ; Anthropic facture votre compte.",
+      "byokDescription": "Les modèles plus grands donnent de meilleurs résultats et coûtent plus cher sur la facture de votre fournisseur.",
       "auto": "Automatique",
       "recommended": "Recommandé",
-      "autoDescription": "Utilise le modèle le moins cher qui fait bien chaque tâche."
+      "autoDescription": "Utilise le modèle le moins cher qui fait bien chaque tâche.",
+      "addKeyFirst": "Ajoutez votre clé API ci-dessus pour choisir un modèle."
     },
     "estimate": {
       "item": "{{action}} : {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_one": "≈ {{formatted}} crédit",
       "credits_many": "≈ {{formatted}} de crédits",
       "credits_other": "≈ {{formatted}} crédits",
@@ -146,6 +148,11 @@
         "organize_many": "Organiser {{count}} d’onglets",
         "organize_other": "Organiser {{count}} onglets"
       }
+    },
+    "cost": {
+      "low": "Coût le plus bas",
+      "medium": "Coût moyen",
+      "high": "Coût le plus élevé"
     }
   },
   "dev": {

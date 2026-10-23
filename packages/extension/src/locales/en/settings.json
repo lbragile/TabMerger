@@ -62,7 +62,7 @@
     "signOut": "Sign out",
     "resetEncryption": "Forgot your passphrase? Reset encryption",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "Your own Anthropic key"
+    "aiOwnKey": "Your own API key"
   },
   "data": {
     "intro": "TabMerger stores all data locally in IndexedDB. Cloud sync requires a Pro account.",
@@ -95,36 +95,38 @@
     "throttleLabel": "Limit automatic AI suggestions to once a day",
     "throttleDescription": "The background suggest-sessions banner fires at most once per day to protect your monthly AI quota. AI actions you trigger manually (Auto-group, Name group, Organize) are never limited by this.",
     "plan": {
-      "managed": "Using TabMerger's key — {{remaining}} of {{cap}} credits left this month",
-      "managedUnknown": "Using TabMerger's key",
-      "byok": "Using your own Anthropic key"
+      "managed": "TabMerger handles setup — {{remaining}} of {{cap}} credits left this month",
+      "managedUnknown": "TabMerger handles setup",
+      "byok": "You added your own {{provider}} API key",
+      "byokNoKey": "You add your own API key: add it below to use AI features"
     },
     "key": {
-      "label": "Your Anthropic API key",
+      "label": "Your AI provider API key",
       "save": "Save key",
       "checking": "Checking…",
       "replace": "Replace",
       "remove": "Remove",
       "saved": "API key saved",
       "removed": "API key removed",
-      "invalidFormat": "That doesn't look like an Anthropic API key. Keys start with sk-ant-.",
+      "invalidFormat": "That doesn't look like an Anthropic, OpenAI or Google API key.",
       "verifyFailed": "Couldn't check the key. Try again.",
-      "note": "Stored only on this device. Sent to TabMerger's server with each AI request and passed straight to Anthropic; never saved on our servers.",
-      "consoleLink": "Create a key and set a spending limit in the Anthropic Console"
+      "note": "Anthropic, OpenAI and Google keys work. Stored only on this device. Sent to TabMerger's server with each AI request and passed straight to the provider that issued it; never saved on our servers.",
+      "getKey": "Create a key and set a spending limit:",
+      "manageLink": "Manage this key and its spending limit at {{provider}}"
     },
     "model": {
       "label": "AI model",
       "managedDescription": "Larger models give better results and use more credits. Estimates are approximate.",
-      "byokDescription": "Larger models give better results and cost more. Estimates are approximate; Anthropic bills your account.",
+      "byokDescription": "Larger models give better results and cost more on your provider’s bill.",
       "auto": "Auto",
       "recommended": "Recommended",
-      "autoDescription": "Uses the cheapest model that does each job well."
+      "autoDescription": "Uses the cheapest model that does each job well.",
+      "addKeyFirst": "Add your API key above to choose a model."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
       "credits_one": "≈ {{formatted}} credit",
       "credits_other": "≈ {{formatted}} credits",
-      "usd": "≈ {{amount}}",
       "perMonth_one": "≈ {{formatted}} organize a month with your credits",
       "perMonth_other": "≈ {{formatted}} organizes a month with your credits",
       "action": {
@@ -137,6 +139,11 @@
         "organize_one": "Organize {{count}} tab",
         "organize_other": "Organize {{count}} tabs"
       }
+    },
+    "cost": {
+      "low": "Lowest cost",
+      "medium": "Medium cost",
+      "high": "Highest cost"
     }
   },
   "dev": {

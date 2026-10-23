@@ -6,6 +6,7 @@ import type { Tab, Group } from '@/lib/types';
 import {
   AI_BYOK_KEY_HEADER,
   AI_ERROR_CODES,
+  MANAGED_AI_PROVIDER,
   estimateAiCredits,
   isTourDemoGroup,
   type AiAction,
@@ -20,10 +21,12 @@ import { wasCalledToday, markCalledToday } from '@/lib/aiThrottle';
 import { getEncryptionKeyState } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { getByokKey } from '@/lib/byokKey';
-import { modelFor, readAiModelChoice } from '@/lib/aiModel';
+import { choiceForProvider, modelFor } from '@/lib/aiModel';
 import { AiRequestError, QuotaExceededError, aiErrorMessage } from '@/lib/aiErrors';
 
-export { AiRequestError, QuotaExceededError } from '@/lib/aiErrors';
+// No `export { … } from '@/lib/aiErrors'` here: WXT auto-imports every export of src/hooks, so a
+// re-exported class gets auto-imported into the very file that declares it (a duplicate
+// declaration that blanks the dev popup). Import the error classes from '@/lib/aiErrors'.
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 
@@ -57,7 +60,7 @@ function parseErrorBody(text: string): Record<string, unknown> | null {
 }
 
 export interface AiPostOptions {
-  /** A BYOK user's Anthropic key, sent in the `X-Anthropic-Key` header. Never in the body or a URL. */
+  /** A BYOK user's own API key, sent in the `AI_BYOK_KEY_HEADER` header. Never in the body or a URL. */
   byokKey?: string;
 }
 
@@ -117,17 +120,19 @@ function useAiRequestContext() {
    * The model choice and (BYOK) key for a request about `tabs` tabs. Throws before anything is
    * sent when a BYOK user has no key saved on this device, or when a managed user's remaining
    * credits are known to be fewer than the request's estimate (the server would refuse it).
+   * A chosen model from another provider than the request goes to is sent as `auto`.
    */
   const prepare = async (action: AiAction, tabs: number): Promise<{ model: AiModelChoice; options: AiPostOptions }> => {
-    const model = readAiModelChoice(settings?.aiModel);
     if (aiMode === 'byok') {
-      const byokKey = await getByokKey(userId);
-      if (!byokKey) {
+      const saved = await getByokKey(userId);
+      if (!saved) {
         throw new AiRequestError(AI_ERROR_CODES.byokKeyMissing, 0, aiErrorMessage(AI_ERROR_CODES.byokKeyMissing));
       }
-      return { model, options: { byokKey } };
+      return { model: choiceForProvider(settings?.aiModel, saved.provider), options: { byokKey: saved.key } };
     }
-    // Managed (or the mode isn't known yet, and the server decides). Only a known balance is checked.
+    // Managed (or the mode isn't known yet, and the server decides): always Anthropic. Only a
+    // known balance is checked.
+    const model = choiceForProvider(settings?.aiModel, MANAGED_AI_PROVIDER);
     if (!usage.loading && usage.known) {
       const needed = estimateAiCredits(modelFor(model, action), action, tabs);
       if (needed > usage.remaining) {

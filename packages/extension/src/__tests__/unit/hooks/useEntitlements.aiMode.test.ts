@@ -12,7 +12,7 @@ const { mockMaybeSingle, mockSelect, mockFrom } = vi.hoisted(() => {
 })
 
 // Separate file: AI_ENABLED is a static per-file mock, and ai_mode is only read while AI is on.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
 vi.mock('@/lib/supabase', () => ({ supabase: { auth: {}, from: mockFrom } }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => ({ user: { id: 'user-1' }, loading: false, session: null }) }))
 

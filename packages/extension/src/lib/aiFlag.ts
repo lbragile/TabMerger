@@ -1,11 +1,23 @@
-import { isAiEnabled } from '@tabmerger/shared';
+import { aiAvailability } from '@tabmerger/shared';
 
 /**
- * Global "AI features: coming soon" kill switch, computed once at module load.
- * A single plain constant (not a hook) so it's importable from anywhere,
- * including outside the React tree (e.g. useAI's mutationFn bodies, useAiUsage's
- * queryFn). Default is OFF — unset or anything other than the exact string
- * "true" for `VITE_AI_ENABLED` means AI features stay hidden/disabled, even for
- * accounts that are actually entitled to the `pro_ai` tier in the DB.
+ * Which Pro AI options are live in this build, computed once at module load. Plain constants
+ * (not a hook) so they're importable from anywhere, including outside the React tree (e.g.
+ * useAI's mutationFn bodies, useAiUsage's queryFn). Both flags are OFF unless the env var is the
+ * exact string "true":
+ * - `VITE_AI_ENABLED`: AI on TabMerger's key (managed). Turning it on also turns on the own-key
+ *   option.
+ * - `VITE_AI_BYOK_ENABLED`: AI on the customer's own key only, so it can launch first.
+ * An option that is off stays hidden and sends no requests, even for accounts that are entitled
+ * to it in the database (the server refuses it too).
  */
-export const AI_ENABLED = isAiEnabled(import.meta.env.VITE_AI_ENABLED);
+const AVAILABILITY = aiAvailability(import.meta.env.VITE_AI_ENABLED, import.meta.env.VITE_AI_BYOK_ENABLED);
+
+/** Some Pro AI option is live, so AI surfaces that aren't specific to one option may show. */
+export const AI_ENABLED = AVAILABILITY.any;
+
+/** AI on TabMerger's key (credits) is live. */
+export const AI_MANAGED_ENABLED = AVAILABILITY.managed;
+
+/** AI on the customer's own key is live. */
+export const AI_BYOK_ENABLED = AVAILABILITY.byok;

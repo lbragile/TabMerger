@@ -46,5 +46,5 @@
   "maybeLater": "शायद बाद में",
   "signIn": "साइन इन करें",
   "upgradeNow": "अभी अपग्रेड करें",
-  "byokOption": "या अपनी Anthropic कुंजी के साथ {{price}}/माह"
+  "byokOption": "या {{price}}/माह: अपना AI प्रदाता इस्तेमाल करें (Anthropic, OpenAI या Google)"
 }

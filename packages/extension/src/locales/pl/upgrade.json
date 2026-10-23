@@ -46,5 +46,5 @@
   "maybeLater": "Może później",
   "signIn": "Zaloguj się",
   "upgradeNow": "Ulepsz teraz",
-  "byokOption": "Lub {{price}}/mies. z własnym kluczem Anthropic"
+  "byokOption": "Lub {{price}}/mies.: korzystaj z własnego dostawcy AI (Anthropic, OpenAI lub Google)"
 }

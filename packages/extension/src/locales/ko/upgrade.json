@@ -46,5 +46,5 @@
   "maybeLater": "나중에",
   "signIn": "로그인",
   "upgradeNow": "지금 업그레이드",
-  "byokOption": "또는 내 Anthropic 키로 월 {{price}}"
+  "byokOption": "또는 월 {{price}}: 내 AI 제공업체 사용(Anthropic, OpenAI, Google)"
 }

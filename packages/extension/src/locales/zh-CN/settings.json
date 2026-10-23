@@ -61,7 +61,7 @@
     "signOut": "退出登录",
     "resetEncryption": "忘记密码短语？重置加密",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "您自己的 Anthropic 密钥"
+    "aiOwnKey": "您自己的 API 密钥"
   },
   "data": {
     "intro": "TabMerger 将所有数据本地存储在 IndexedDB 中。云同步需要 Pro 账户。",
@@ -91,34 +91,36 @@
     "throttleLabel": "自动 AI 建议每天最多一次",
     "throttleDescription": "后台的建议会话横幅每天最多出现一次，以保护您的每月 AI 额度。您手动触发的 AI 操作（自动分组、为分组命名、整理）不受此限制。",
     "plan": {
-      "managed": "正在使用 TabMerger 的密钥 — 本月剩余 {{remaining}} / {{cap}} 点额度",
-      "managedUnknown": "正在使用 TabMerger 的密钥",
-      "byok": "正在使用您自己的 Anthropic 密钥"
+      "managed": "TabMerger 负责设置 — 本月剩余 {{remaining}} / {{cap}} 点额度",
+      "managedUnknown": "TabMerger 负责设置",
+      "byok": "您已添加自己的 {{provider}} API 密钥",
+      "byokNoKey": "由您添加自己的 API 密钥：请在下方填写以使用 AI 功能"
     },
     "key": {
-      "label": "您的 Anthropic API 密钥",
+      "label": "您的 AI 服务商 API 密钥",
       "save": "保存密钥",
       "checking": "正在检查…",
       "replace": "替换",
       "remove": "移除",
       "saved": "API 密钥已保存",
       "removed": "API 密钥已移除",
-      "invalidFormat": "这看起来不像 Anthropic API 密钥。密钥以 sk-ant- 开头。",
+      "invalidFormat": "这看起来不像 Anthropic、OpenAI 或 Google 的 API 密钥。",
       "verifyFailed": "无法检查该密钥，请重试。",
-      "note": "仅保存在此设备上。每次 AI 请求时随请求发送到 TabMerger 的服务器，并直接转交给 Anthropic；绝不会保存在我们的服务器上。",
-      "consoleLink": "在 Anthropic Console 中创建密钥并设置支出上限"
+      "note": "支持 Anthropic、OpenAI 和 Google 的密钥。仅保存在此设备上。每次 AI 请求时随请求发送到 TabMerger 的服务器，并直接转交给签发该密钥的服务商；绝不会保存在我们的服务器上。",
+      "getKey": "创建密钥并设置支出上限：",
+      "manageLink": "在 {{provider}} 管理此密钥及其支出上限"
     },
     "model": {
       "label": "AI 模型",
       "managedDescription": "模型越大，效果越好，消耗的额度也越多。数字均为估算。",
-      "byokDescription": "模型越大，效果越好，费用也越高。数字均为估算；费用由 Anthropic 向您的账户收取。",
+      "byokDescription": "模型越大，效果越好，服务商账单上的费用也越高。",
       "auto": "自动",
       "recommended": "推荐",
-      "autoDescription": "每项任务都使用能做好它的最便宜的模型。"
+      "autoDescription": "每项任务都使用能做好它的最便宜的模型。",
+      "addKeyFirst": "请先在上方添加 API 密钥，再选择模型。"
     },
     "estimate": {
       "item": "{{action}}：{{amount}}",
-      "usd": "约 {{amount}}",
       "credits_other": "约 {{formatted}} 点额度",
       "perMonth_other": "用您的额度每月约可整理 {{formatted}} 次",
       "action": {
@@ -128,6 +130,11 @@
         "suggestSessions": "建议会话",
         "organize_other": "整理 {{count}} 个标签页"
       }
+    },
+    "cost": {
+      "low": "成本最低",
+      "medium": "成本中等",
+      "high": "成本最高"
     }
   },
   "dev": {

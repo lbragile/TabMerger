@@ -46,5 +46,5 @@
   "maybeLater": "あとで",
   "signIn": "サインイン",
   "upgradeNow": "今すぐアップグレード",
-  "byokOption": "自分の Anthropic キーを使う場合は {{price}}/月"
+  "byokOption": "または {{price}}/月：自分の AI プロバイダーを使う（Anthropic、OpenAI、Google）"
 }

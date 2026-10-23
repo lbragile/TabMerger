@@ -26,7 +26,7 @@ describe('useEntitlements aiFeatures AND logic — DEMO_MODE branch', () => {
   it('demo build shows aiFeatures=false when AI_ENABLED is false, despite the pro_ai override', async () => {
     vi.resetModules()
     vi.stubEnv('VITE_DEMO_BUILD', 'true')
-    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
+    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: false, AI_MANAGED_ENABLED: false, AI_BYOK_ENABLED: false }))
     const { useEntitlements } = await import('@/hooks/useEntitlements')
     const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
     await waitFor(() => expect(result.current.loading).toBe(false))
@@ -39,7 +39,7 @@ describe('useEntitlements aiFeatures AND logic — DEMO_MODE branch', () => {
   it('demo build shows aiFeatures=true when AI_ENABLED is true', async () => {
     vi.resetModules()
     vi.stubEnv('VITE_DEMO_BUILD', 'true')
-    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
     const { useEntitlements } = await import('@/hooks/useEntitlements')
     const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
     await waitFor(() => expect(result.current.loading).toBe(false))

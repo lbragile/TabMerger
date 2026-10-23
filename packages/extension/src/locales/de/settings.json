@@ -62,7 +62,7 @@
     "signOut": "Abmelden",
     "resetEncryption": "Passphrase vergessen? Verschlüsselung zurücksetzen",
     "aiKeyLabel": "KI",
-    "aiOwnKey": "Eigener Anthropic-Schlüssel"
+    "aiOwnKey": "Eigener API-Schlüssel"
   },
   "data": {
     "intro": "TabMerger speichert alle Daten lokal in IndexedDB. Cloud-Sync erfordert ein Pro-Konto.",
@@ -95,34 +95,36 @@
     "throttleLabel": "Automatische KI-Vorschläge auf einmal täglich begrenzen",
     "throttleDescription": "Das Hintergrund-Banner „Sitzungen vorschlagen“ erscheint höchstens einmal pro Tag, um dein monatliches KI-Kontingent zu schonen. Manuell ausgelöste KI-Aktionen (Auto-Gruppieren, Gruppe benennen, Organisieren) werden dadurch nie begrenzt.",
     "plan": {
-      "managed": "Schlüssel von TabMerger – noch {{remaining}} von {{cap}} Credits in diesem Monat",
-      "managedUnknown": "Du nutzt den Schlüssel von TabMerger",
-      "byok": "Du nutzt deinen eigenen Anthropic-Schlüssel"
+      "managed": "TabMerger übernimmt die Einrichtung – noch {{remaining}} von {{cap}} Credits in diesem Monat",
+      "managedUnknown": "TabMerger übernimmt die Einrichtung",
+      "byok": "Du hast deinen eigenen {{provider}}-API-Schlüssel hinzugefügt",
+      "byokNoKey": "Du fügst deinen eigenen API-Schlüssel hinzu: Trage ihn unten ein, um KI-Funktionen zu nutzen"
     },
     "key": {
-      "label": "Dein Anthropic-API-Schlüssel",
+      "label": "API-Schlüssel deines KI-Anbieters",
       "save": "Schlüssel speichern",
       "checking": "Wird geprüft …",
       "replace": "Ersetzen",
       "remove": "Entfernen",
       "saved": "API-Schlüssel gespeichert",
       "removed": "API-Schlüssel entfernt",
-      "invalidFormat": "Das sieht nicht nach einem Anthropic-API-Schlüssel aus. Schlüssel beginnen mit sk-ant-.",
+      "invalidFormat": "Das sieht nicht nach einem API-Schlüssel von Anthropic, OpenAI oder Google aus.",
       "verifyFailed": "Der Schlüssel konnte nicht geprüft werden. Versuche es erneut.",
-      "note": "Nur auf diesem Gerät gespeichert. Wird mit jeder KI-Anfrage an den Server von TabMerger gesendet und direkt an Anthropic weitergereicht; nie auf unseren Servern gespeichert.",
-      "consoleLink": "In der Anthropic Console einen Schlüssel erstellen und ein Ausgabenlimit festlegen"
+      "note": "Schlüssel von Anthropic, OpenAI und Google funktionieren. Nur auf diesem Gerät gespeichert. Wird mit jeder KI-Anfrage an den Server von TabMerger gesendet und direkt an den Anbieter weitergereicht, der ihn ausgestellt hat; nie auf unseren Servern gespeichert.",
+      "getKey": "Schlüssel erstellen und Ausgabenlimit festlegen:",
+      "manageLink": "Diesen Schlüssel und sein Ausgabenlimit bei {{provider}} verwalten"
     },
     "model": {
       "label": "KI-Modell",
       "managedDescription": "Größere Modelle liefern bessere Ergebnisse und verbrauchen mehr Credits. Alle Angaben sind Schätzungen.",
-      "byokDescription": "Größere Modelle liefern bessere Ergebnisse und kosten mehr. Alle Angaben sind Schätzungen; Anthropic stellt sie deinem Konto in Rechnung.",
+      "byokDescription": "Größere Modelle liefern bessere Ergebnisse und kosten mehr auf der Rechnung deines Anbieters.",
       "auto": "Automatisch",
       "recommended": "Empfohlen",
-      "autoDescription": "Nutzt für jede Aufgabe das günstigste Modell, das sie gut erledigt."
+      "autoDescription": "Nutzt für jede Aufgabe das günstigste Modell, das sie gut erledigt.",
+      "addKeyFirst": "Füge oben deinen API-Schlüssel hinzu, um ein Modell zu wählen."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_one": "≈ {{formatted}} Credit",
       "credits_other": "≈ {{formatted}} Credits",
       "perMonth_one": "≈ {{formatted}}-mal Organisieren pro Monat mit deinen Credits",
@@ -137,6 +139,11 @@
         "organize_one": "{{count}} Tab organisieren",
         "organize_other": "{{count}} Tabs organisieren"
       }
+    },
+    "cost": {
+      "low": "Niedrigste Kosten",
+      "medium": "Mittlere Kosten",
+      "high": "Höchste Kosten"
     }
   },
   "dev": {

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { PRO_AI_MONTHLY_CREDITS } from '@tabmerger/shared';
 import { supabase } from '@/lib/supabase';
 import { getDevAiUsage } from '@/mocks/devAiUsage';
-import { AI_ENABLED } from '@/lib/aiFlag';
+import { AI_MANAGED_ENABLED } from '@/lib/aiFlag';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 
@@ -65,7 +65,8 @@ export function useAiUsage() {
       const [used, cap] = await Promise.all([fetchUsedCredits(user!.id), fetchEffectiveCap(user!.id)]);
       return { used, cap };
     },
-    enabled: AI_ENABLED && aiFeatures && aiMode !== 'byok' && (import.meta.env.DEV || !!user)
+    // Credits exist only on TabMerger's key, so only while that option is live
+    enabled: AI_MANAGED_ENABLED && aiFeatures && aiMode !== 'byok' && (import.meta.env.DEV || !!user)
   });
 
   const used = data?.used ?? 0;

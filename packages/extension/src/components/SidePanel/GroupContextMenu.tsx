@@ -42,8 +42,8 @@ import {
 import { useUIStore, type SelectedItem } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAppSettings } from '@/hooks/useAppSettings';
-import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
-import { isFixedInAiSettings } from '@/lib/aiErrors';
+import { useNameGroup } from '@/hooks/useAI';
+import { QuotaExceededError, isFixedInAiSettings } from '@/lib/aiErrors';
 import { getSetting } from '@/lib/localDb';
 import { findDuplicateTabs } from '@/lib/deduplication';
 import { toast } from '@/lib/toast';

@@ -33,7 +33,7 @@ import { LanguageMenu } from './LanguageMenu';
 import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
-import { useAutoGroup, useOrganizeTabs, QuotaExceededError } from "@/hooks/useAI";
+import { useAutoGroup, useOrganizeTabs } from "@/hooks/useAI";
 import { AI_ENABLED } from "@/lib/aiFlag";
 import { useAppSettings } from "@/hooks/useAppSettings";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
@@ -43,7 +43,7 @@ import { FreeLimitExceededError, countedGroups } from "@/lib/tierLimits";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
-import { AiRequestError, isFixedInAiSettings } from "@/lib/aiErrors";
+import { AiRequestError, QuotaExceededError, isFixedInAiSettings } from "@/lib/aiErrors";
 import { TOUR_ANCHORS } from "@/lib/tourSteps";
 import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
 import { motionScrollBehavior } from "@/lib/reducedMotion";
@@ -419,8 +419,10 @@ export function Header() {
                 </Tooltip>
 
                 {/* AI features: coming soon — this entry point is fully hidden (not just
-                    disabled) while the global flag is off, per product decision. */}
-                {AI_ENABLED && (
+                    disabled) while no AI option is live, per product decision, and for a Pro AI
+                    subscriber whose option (own key or TabMerger's key) isn't live yet: an
+                    upgrade prompt would be wrong for them. */}
+                {AI_ENABLED && !(tier === "pro_ai" && !aiFeatures) && (
                 <DropdownMenu>
                     <Tooltip>
                         <TooltipTrigger asChild>

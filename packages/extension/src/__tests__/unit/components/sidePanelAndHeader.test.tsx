@@ -58,7 +58,7 @@ const {
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 // This suite exercises Header's AI dropdown behavior directly, not the coming-soon
 // flag, so force it on regardless of the real VITE_AI_ENABLED default.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
 
 // ─── DnD stubs (shared) ───────────────────────────────────────────────────────
 
@@ -163,6 +163,9 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => mockUseAuth(),
 }))
 
+// The component imports the error class from '@/lib/aiErrors' (never re-exported by useAI: see
+// the WXT auto-import note there), so the stub class replaces it there too.
+vi.mock('@/lib/aiErrors', async (importOriginal) => ({ ...(await importOriginal<object>()), QuotaExceededError: MockQuotaExceededError }))
 vi.mock('@/hooks/useAI', () => ({
   useAutoGroup: () => ({ mutateAsync: mockAutoGroupMutateAsync, ...mockUseAutoGroupState() }),
   useOrganizeTabs: () => ({ mutateAsync: mockOrganizeTabsMutateAsync, ...mockUseOrganizeState() }),

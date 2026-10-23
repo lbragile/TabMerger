@@ -11,7 +11,7 @@ const { mockGetDevAiUsage, mockFrom } = vi.hoisted(() => ({
 
 // Separate file from useAiUsage.test.ts because `AI_ENABLED` is a static per-file
 // `vi.mock` factory — this file exercises the coming-soon-flag-off path specifically.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false, AI_MANAGED_ENABLED: false, AI_BYOK_ENABLED: false }))
 vi.mock('@/mocks/devAiUsage', () => ({ getDevAiUsage: mockGetDevAiUsage }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => ({ user: { id: 'user-1' }, loading: false, session: null }) }))
 // Fully entitled user — proves the global flag alone disables the query, not a missing entitlement.

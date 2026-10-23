@@ -46,5 +46,5 @@
   "maybeLater": "Talvez depois",
   "signIn": "Entrar",
   "upgradeNow": "Fazer upgrade agora",
-  "byokOption": "Ou {{price}}/mês com sua própria chave da Anthropic"
+  "byokOption": "Ou {{price}}/mês: use seu próprio provedor de IA (Anthropic, OpenAI ou Google)"
 }

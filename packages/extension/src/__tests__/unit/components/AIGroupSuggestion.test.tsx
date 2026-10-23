@@ -19,7 +19,10 @@ const MockQuotaExceededError = vi.hoisted(() => class extends Error {
 
 // This suite tests the suggestion banner's own behavior (dismiss/storage/quota), not
 // the coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
+// The component imports the error class from '@/lib/aiErrors' (never re-exported by useAI: see
+// the WXT auto-import note there), so the stub class replaces it there too.
+vi.mock('@/lib/aiErrors', async (importOriginal) => ({ ...(await importOriginal<object>()), QuotaExceededError: MockQuotaExceededError }))
 vi.mock('@/hooks/useAI', () => ({
   useSuggestSessions: () => ({ mutateAsync: mockSuggest }),
   QuotaExceededError: MockQuotaExceededError,

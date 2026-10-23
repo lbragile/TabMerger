@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Sparkles, X } from 'lucide-react';
-import { useSuggestSessions, QuotaExceededError } from '@/hooks/useAI';
+import { useSuggestSessions } from '@/hooks/useAI';
+import { QuotaExceededError } from '@/lib/aiErrors';
 import { useGroups, useArchiveGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';

@@ -61,7 +61,7 @@
     "signOut": "Đăng xuất",
     "resetEncryption": "Quên cụm mật khẩu? Đặt lại mã hóa",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "Khóa Anthropic của riêng bạn"
+    "aiOwnKey": "Khóa API của riêng bạn"
   },
   "data": {
     "intro": "TabMerger lưu trữ tất cả dữ liệu cục bộ trong IndexedDB. Đồng bộ đám mây yêu cầu tài khoản Pro.",
@@ -91,34 +91,36 @@
     "throttleLabel": "Giới hạn gợi ý AI tự động còn một lần mỗi ngày",
     "throttleDescription": "Biểu ngữ gợi ý phiên nền xuất hiện tối đa một lần mỗi ngày để bảo vệ hạn mức AI hàng tháng của bạn. Các hành động AI bạn tự kích hoạt thủ công (Tự động nhóm, Đặt tên nhóm, Sắp xếp) không bao giờ bị giới hạn bởi điều này.",
     "plan": {
-      "managed": "Khóa của TabMerger: còn {{remaining}}/{{cap}} tín dụng trong tháng này",
-      "managedUnknown": "Đang dùng khóa của TabMerger",
-      "byok": "Đang dùng khóa Anthropic của riêng bạn"
+      "managed": "TabMerger lo phần thiết lập: còn {{remaining}}/{{cap}} tín dụng trong tháng này",
+      "managedUnknown": "TabMerger lo phần thiết lập",
+      "byok": "Bạn đã thêm khóa API {{provider}} của riêng mình",
+      "byokNoKey": "Bạn tự thêm khóa API: hãy nhập bên dưới để dùng các tính năng AI"
     },
     "key": {
-      "label": "Khóa API Anthropic của bạn",
+      "label": "Khóa API của nhà cung cấp AI",
       "save": "Lưu khóa",
       "checking": "Đang kiểm tra…",
       "replace": "Thay thế",
       "remove": "Xóa",
       "saved": "Đã lưu khóa API",
       "removed": "Đã xóa khóa API",
-      "invalidFormat": "Đây không giống khóa API Anthropic. Khóa bắt đầu bằng sk-ant-.",
+      "invalidFormat": "Đây không giống khóa API của Anthropic, OpenAI hay Google.",
       "verifyFailed": "Không thể kiểm tra khóa. Hãy thử lại.",
-      "note": "Chỉ lưu trên thiết bị này. Được gửi đến máy chủ TabMerger cùng mỗi yêu cầu AI và chuyển thẳng đến Anthropic; không bao giờ được lưu trên máy chủ của chúng tôi.",
-      "consoleLink": "Tạo khóa và đặt giới hạn chi tiêu trong Anthropic Console"
+      "note": "Dùng được khóa của Anthropic, OpenAI và Google. Chỉ lưu trên thiết bị này. Được gửi đến máy chủ TabMerger cùng mỗi yêu cầu AI và chuyển thẳng đến nhà cung cấp đã cấp khóa; không bao giờ được lưu trên máy chủ của chúng tôi.",
+      "getKey": "Tạo khóa và đặt giới hạn chi tiêu:",
+      "manageLink": "Quản lý khóa này và giới hạn chi tiêu tại {{provider}}"
     },
     "model": {
       "label": "Mô hình AI",
       "managedDescription": "Mô hình lớn hơn cho kết quả tốt hơn và dùng nhiều tín dụng hơn. Các số liệu là ước tính.",
-      "byokDescription": "Mô hình lớn hơn cho kết quả tốt hơn và tốn kém hơn. Các số liệu là ước tính; Anthropic tính phí vào tài khoản của bạn.",
+      "byokDescription": "Mô hình lớn hơn cho kết quả tốt hơn và tốn kém hơn trên hóa đơn của nhà cung cấp.",
       "auto": "Tự động",
       "recommended": "Khuyên dùng",
-      "autoDescription": "Dùng mô hình rẻ nhất làm tốt từng việc."
+      "autoDescription": "Dùng mô hình rẻ nhất làm tốt từng việc.",
+      "addKeyFirst": "Hãy thêm khóa API ở trên để chọn mô hình."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_other": "≈ {{formatted}} tín dụng",
       "perMonth_other": "≈ {{formatted}} lần sắp xếp mỗi tháng với tín dụng của bạn",
       "action": {
@@ -128,6 +130,11 @@
         "suggestSessions": "Gợi ý phiên",
         "organize_other": "Sắp xếp {{count}} thẻ"
       }
+    },
+    "cost": {
+      "low": "Chi phí thấp nhất",
+      "medium": "Chi phí trung bình",
+      "high": "Chi phí cao nhất"
     }
   },
   "dev": {

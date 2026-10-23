@@ -11,7 +11,7 @@ const { mockTrackEvent, mockDeleteGroup, mockToast, app } = vi.hoisted(() => ({
 }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 vi.mock('@/lib/toast', () => ({ toast: mockToast }))
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false, AI_MANAGED_ENABLED: false, AI_BYOK_ENABLED: false }))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => ({ data: { available: app.groups } }),
   useDeleteGroup: () => ({ mutate: mockDeleteGroup }),

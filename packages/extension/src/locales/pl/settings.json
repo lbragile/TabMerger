@@ -64,7 +64,7 @@
     "signOut": "Wyloguj się",
     "resetEncryption": "Zapomniałeś hasła? Zresetuj szyfrowanie",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "Własny klucz Anthropic"
+    "aiOwnKey": "Własny klucz API"
   },
   "data": {
     "intro": "TabMerger przechowuje wszystkie dane lokalnie w IndexedDB. Synchronizacja w chmurze wymaga konta Pro.",
@@ -103,34 +103,36 @@
     "throttleLabel": "Ogranicz automatyczne sugestie AI do jednego razu dziennie",
     "throttleDescription": "Baner sugestii sesji w tle pojawia się co najwyżej raz dziennie, aby chronić Twój miesięczny limit AI. Akcje AI uruchamiane ręcznie (Automatyczne grupowanie, Nazwij grupę, Organizuj) nigdy nie są ograniczane przez to ustawienie.",
     "plan": {
-      "managed": "Klucz TabMerger – pozostałe kredyty w tym miesiącu: {{remaining}} z {{cap}}",
-      "managedUnknown": "Używasz klucza TabMerger",
-      "byok": "Używasz własnego klucza Anthropic"
+      "managed": "TabMerger zajmuje się konfiguracją – pozostałe kredyty w tym miesiącu: {{remaining}} z {{cap}}",
+      "managedUnknown": "TabMerger zajmuje się konfiguracją",
+      "byok": "Dodałeś własny klucz API {{provider}}",
+      "byokNoKey": "Dodajesz własny klucz API: wpisz go poniżej, aby korzystać z funkcji AI"
     },
     "key": {
-      "label": "Twój klucz API Anthropic",
+      "label": "Klucz API Twojego dostawcy AI",
       "save": "Zapisz klucz",
       "checking": "Sprawdzanie…",
       "replace": "Zmień",
       "remove": "Usuń",
       "saved": "Klucz API zapisany",
       "removed": "Klucz API usunięty",
-      "invalidFormat": "To nie wygląda na klucz API Anthropic. Klucze zaczynają się od sk-ant-.",
+      "invalidFormat": "To nie wygląda na klucz API Anthropic, OpenAI ani Google.",
       "verifyFailed": "Nie udało się sprawdzić klucza. Spróbuj ponownie.",
-      "note": "Przechowywany tylko na tym urządzeniu. Wysyłany do serwera TabMerger z każdym żądaniem AI i przekazywany prosto do Anthropic; nigdy nie jest zapisywany na naszych serwerach.",
-      "consoleLink": "Utwórz klucz i ustaw limit wydatków w konsoli Anthropic"
+      "note": "Działają klucze Anthropic, OpenAI i Google. Przechowywany tylko na tym urządzeniu. Wysyłany do serwera TabMerger z każdym żądaniem AI i przekazywany prosto do dostawcy, który go wydał; nigdy nie jest zapisywany na naszych serwerach.",
+      "getKey": "Utwórz klucz i ustaw limit wydatków:",
+      "manageLink": "Zarządzaj tym kluczem i jego limitem wydatków w {{provider}}"
     },
     "model": {
       "label": "Model AI",
       "managedDescription": "Większe modele dają lepsze wyniki i zużywają więcej kredytów. Wartości są szacunkowe.",
-      "byokDescription": "Większe modele dają lepsze wyniki i kosztują więcej. Wartości są szacunkowe; Anthropic obciąża Twoje konto.",
+      "byokDescription": "Większe modele dają lepsze wyniki i kosztują więcej na rachunku od Twojego dostawcy.",
       "auto": "Automatycznie",
       "recommended": "Zalecane",
-      "autoDescription": "Używa najtańszego modelu, który dobrze wykonuje dane zadanie."
+      "autoDescription": "Używa najtańszego modelu, który dobrze wykonuje dane zadanie.",
+      "addKeyFirst": "Dodaj powyżej swój klucz API, aby wybrać model."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_one": "≈ {{formatted}} kredyt",
       "credits_few": "≈ {{formatted}} kredyty",
       "credits_many": "≈ {{formatted}} kredytów",
@@ -155,6 +157,11 @@
         "organize_many": "Porządkowanie {{count}} kart",
         "organize_other": "Porządkowanie {{count}} karty"
       }
+    },
+    "cost": {
+      "low": "Najniższy koszt",
+      "medium": "Średni koszt",
+      "high": "Najwyższy koszt"
     }
   },
   "dev": {

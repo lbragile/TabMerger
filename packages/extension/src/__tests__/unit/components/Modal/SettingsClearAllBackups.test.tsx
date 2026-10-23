@@ -18,7 +18,7 @@ vi.mock('@/lib/encryptionKey', () => ({
   resetEncryption: vi.fn(),
 }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false, AI_MANAGED_ENABLED: false, AI_BYOK_ENABLED: false }))
 vi.mock('@/lib/demo', () => ({ enterDemoMode: vi.fn() }))
 vi.mock('@/lib/localDb', () => ({
   getSetting: vi.fn().mockResolvedValue({ theme: 'system', autoBackupEnabled: true, autoBackupIntervalMinutes: 1440 }),

@@ -46,5 +46,5 @@
   "maybeLater": "Plus tard",
   "signIn": "Se connecter",
   "upgradeNow": "Passer à Pro maintenant",
-  "byokOption": "Ou {{price}}/mois avec votre propre clé Anthropic"
+  "byokOption": "Ou {{price}}/mois : utilisez votre propre fournisseur d’IA (Anthropic, OpenAI ou Google)"
 }

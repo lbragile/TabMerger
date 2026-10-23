@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
-import { AI_ENABLED } from '@/lib/aiFlag';
+import { AI_BYOK_ENABLED, AI_ENABLED, AI_MANAGED_ENABLED } from '@/lib/aiFlag';
 import { FREE_TIER_LIMITS, PRICING_TIERS } from '@tabmerger/shared';
 
 /**
@@ -53,8 +53,10 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
   // and a disabled CTA. Only disable the primary CTA when the prompt was shown
   // specifically because the user wanted AI features — a maxGroups/maxTabs/cloudSync
   // upgrade must still work normally.
-  const proAiComingSoon = !AI_ENABLED;
-  const ctaDisabled = proAiComingSoon && reason === 'aiFeatures';
+  // The Pro AI row's price is TabMerger's-key Pro AI, "coming soon" until that option is live; the
+  // own-key option is offered on its own line once it is live (it can launch first).
+  const proAiComingSoon = !AI_MANAGED_ENABLED;
+  const ctaDisabled = !AI_ENABLED && reason === 'aiFeatures';
 
   const handleUpgrade = () => {
     if (ctaDisabled) return;
@@ -100,7 +102,7 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
                 ))}
               </ul>
               {/* The cheaper Pro AI option: the user's own Anthropic key, billed by Anthropic */}
-              {plan.byok && !proAiComingSoon && (
+              {plan.byok && AI_BYOK_ENABLED && (
                 <p className="ms-2 text-muted-foreground" data-testid="upgrade-byok-option">
                   {t('upgrade.byokOption', { price: formatNumber(plan.byok.monthlyPrice, { style: 'currency', currency: 'USD' }) })}
                 </p>

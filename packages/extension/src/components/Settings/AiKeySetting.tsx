@@ -1,43 +1,55 @@
-import { useId, useState } from 'react';
+import { Fragment, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { isAnthropicApiKey, maskApiKey } from '@tabmerger/shared';
+import { AI_PROVIDERS, AI_PROVIDER_KEY_URLS, AI_PROVIDER_LABELS, byokKeyProvider, type AiProvider } from '@tabmerger/shared';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
 import { useAuth } from '@/hooks/useAuth';
 import { aiPost } from '@/hooks/useAI';
+import type { SavedByokKeyInfo } from '@/hooks/useByokKey';
 import { AiRequestError } from '@/lib/aiErrors';
-import { clearByokKey, getByokKey, normalizeByokKey, saveByokKey } from '@/lib/byokKey';
+import { clearByokKey, normalizeByokKey, saveByokKey } from '@/lib/byokKey';
 import { toast } from '@/lib/toast';
 
-/** Where an Anthropic account creates API keys and sets its spending limit. */
-export const ANTHROPIC_CONSOLE_KEYS_URL = 'https://console.anthropic.com/settings/keys';
+/** How the supported keys start: formats, not text to translate. */
+const KEY_PLACEHOLDER = 'sk-ant-… / sk-… / AIza…';
 
-/** The start of every Anthropic key: a format, not text to translate. */
-const KEY_PLACEHOLDER = 'sk-ant-…';
+interface AiKeySettingProps {
+  /** The saved key, masked, from `useByokKey`; null when none is saved. */
+  saved: SavedByokKeyInfo | null;
+  /** Re-reads the saved key after a save or removal. */
+  refresh: () => Promise<unknown>;
+  /** A key was saved; its provider decides which models the picker offers. */
+  onSaved?: (provider: AiProvider) => void;
+}
 
-/** Query key of the saved key's masked form (the raw key never enters the query cache). */
-const maskedKeyQueryKey = (userId: string | undefined) => ['aiByokKeyMasked', userId] as const;
+/** Opens a provider's key page in a new tab (the popup can't follow a plain link). */
+function ProviderLink({ provider, children }: { provider: AiProvider; children: React.ReactNode }) {
+  const url = AI_PROVIDER_KEY_URLS[provider];
+  return (
+    <a
+      href={url}
+      className="underline"
+      onClick={(e) => {
+        e.preventDefault();
+        chrome.tabs.create({ url, active: true });
+      }}
+    >
+      {children}
+    </a>
+  );
+}
 
 /**
- * Settings → AI, own-key (BYOK) plans only: the Anthropic API key kept on this device
- * (lib/byokKey.ts). Save checks the key with the server first (`/api/ai/byok/verify`, a free
- * call) and stores it only when Anthropic accepts it; once saved only its masked form is shown.
+ * Settings → AI, own-key (BYOK) plans only: the API key kept on this device (lib/byokKey.ts), from
+ * Anthropic, OpenAI or Google, one at a time. The provider is read from the key's shape. Save
+ * checks the key with the server first (`/api/ai/byok/verify`, a free call) and stores it only
+ * when the provider accepts it; once saved only its masked form is shown.
  */
-export function AiKeySetting() {
+export function AiKeySetting({ saved, refresh, onSaved }: AiKeySettingProps) {
   const { t } = useTranslation();
   const { user, session } = useAuth();
   const userId = user?.id;
-  const queryClient = useQueryClient();
-  const { data: masked } = useQuery({
-    queryKey: maskedKeyQueryKey(userId),
-    queryFn: async () => {
-      const key = await getByokKey(userId);
-      return key ? maskApiKey(key) : null;
-    },
-    enabled: !!userId
-  });
   const [replacing, setReplacing] = useState(false);
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -46,12 +58,11 @@ export function AiKeySetting() {
   const errorId = useId();
   const noteId = useId();
 
-  const refresh = () => queryClient.invalidateQueries({ queryKey: maskedKeyQueryKey(userId) });
-
   const handleSave = async () => {
     setError(null);
     const key = normalizeByokKey(value);
-    if (!isAnthropicApiKey(key)) {
+    const provider = byokKeyProvider(key);
+    if (!provider) {
       setError(t('settings.ai.key.invalidFormat'));
       return;
     }
@@ -61,12 +72,16 @@ export function AiKeySetting() {
     }
     setChecking(true);
     try {
-      const result = await aiPost<{ ok?: unknown }>('/api/ai/byok/verify', {}, session.access_token, { byokKey: key });
-      if (result?.ok !== true) throw new AiRequestError(null, 200, t('settings.ai.key.verifyFailed'));
+      const result = await aiPost<{ ok?: unknown; provider?: unknown }>('/api/ai/byok/verify', {}, session.access_token, { byokKey: key });
+      // The server reads the provider from the key the same way; anything else is not a pass
+      if (result?.ok !== true || (result.provider !== undefined && result.provider !== provider)) {
+        throw new AiRequestError(null, 200, t('settings.ai.key.verifyFailed'));
+      }
       await saveByokKey(userId, key);
       setValue('');
       setReplacing(false);
       await refresh();
+      onSaved?.(provider);
       toast.success(t('settings.ai.key.saved'));
     } catch (e) {
       // A coded server error has a translated message; anything else (offline, 5xx) is generic
@@ -83,7 +98,7 @@ export function AiKeySetting() {
     toast.success(t('settings.ai.key.removed'));
   };
 
-  const showInput = !masked || replacing;
+  const showInput = !saved || replacing;
 
   return (
     <div className="space-y-2 min-w-0">
@@ -109,9 +124,10 @@ export function AiKeySetting() {
               placeholder={KEY_PLACEHOLDER}
               autoComplete="off"
               spellCheck={false}
+              dir="ltr"
               aria-invalid={error ? true : undefined}
               aria-describedby={`${error ? `${errorId} ` : ''}${noteId}`}
-              className="h-8 text-xs rounded-none"
+              className="h-8 text-xs"
               data-testid="ai-byok-key-input"
             />
           </div>
@@ -126,9 +142,12 @@ export function AiKeySetting() {
         </form>
       ) : (
         <div className="flex items-center justify-between gap-2 min-w-0">
-          <code className="min-w-0 truncate text-xs" data-testid="ai-byok-key-masked" dir="ltr">
-            {masked}
-          </code>
+          <span className="min-w-0 truncate text-xs">
+            <span className="me-1">{AI_PROVIDER_LABELS[saved.provider]}</span>
+            <code data-testid="ai-byok-key-masked" dir="ltr">
+              {saved.masked}
+            </code>
+          </span>
           <div className="flex shrink-0 items-center gap-1">
             <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setReplacing(true)}>
               {t('settings.ai.key.replace')}
@@ -146,16 +165,21 @@ export function AiKeySetting() {
       )}
       <p id={noteId} className="text-xs text-muted-foreground">
         {t('settings.ai.key.note')}{' '}
-        <a
-          href={ANTHROPIC_CONSOLE_KEYS_URL}
-          className="underline"
-          onClick={(e) => {
-            e.preventDefault();
-            chrome.tabs.create({ url: ANTHROPIC_CONSOLE_KEYS_URL, active: true });
-          }}
-        >
-          {t('settings.ai.key.consoleLink')}
-        </a>
+        {saved && !replacing ? (
+          <ProviderLink provider={saved.provider}>
+            {t('settings.ai.key.manageLink', { provider: AI_PROVIDER_LABELS[saved.provider] })}
+          </ProviderLink>
+        ) : (
+          <>
+            {t('settings.ai.key.getKey')}{' '}
+            {AI_PROVIDERS.map((provider, i) => (
+              <Fragment key={provider}>
+                {i > 0 && ' · '}
+                <ProviderLink provider={provider}>{AI_PROVIDER_LABELS[provider]}</ProviderLink>
+              </Fragment>
+            ))}
+          </>
+        )}
       </p>
     </div>
   );

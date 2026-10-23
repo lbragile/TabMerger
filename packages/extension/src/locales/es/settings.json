@@ -63,7 +63,7 @@
     "signOut": "Cerrar sesión",
     "resetEncryption": "¿Olvidaste tu frase de contraseña? Restablecer cifrado",
     "aiKeyLabel": "IA",
-    "aiOwnKey": "Tu propia clave de Anthropic"
+    "aiOwnKey": "Tu propia clave de API"
   },
   "data": {
     "intro": "TabMerger guarda todos los datos localmente en IndexedDB. La sincronización en la nube requiere una cuenta Pro.",
@@ -99,34 +99,36 @@
     "throttleLabel": "Limitar las sugerencias automáticas de IA a una al día",
     "throttleDescription": "El banner de sugerencia de sesiones en segundo plano aparece como máximo una vez al día para proteger tu cuota mensual de IA. Las acciones de IA que activas manualmente (Agrupar automáticamente, Nombrar grupo, Organizar) nunca se limitan por esto.",
     "plan": {
-      "managed": "Clave de TabMerger: te quedan {{remaining}} de {{cap}} créditos este mes",
-      "managedUnknown": "Usas la clave de TabMerger",
-      "byok": "Usas tu propia clave de Anthropic"
+      "managed": "TabMerger se encarga de la configuración: te quedan {{remaining}} de {{cap}} créditos este mes",
+      "managedUnknown": "TabMerger se encarga de la configuración",
+      "byok": "Añadiste tu propia clave de API de {{provider}}",
+      "byokNoKey": "Tú añades tu propia clave de API: escríbela abajo para usar las funciones de IA"
     },
     "key": {
-      "label": "Tu clave de API de Anthropic",
+      "label": "Clave de API de tu proveedor de IA",
       "save": "Guardar clave",
       "checking": "Comprobando…",
       "replace": "Reemplazar",
       "remove": "Quitar",
       "saved": "Clave de API guardada",
       "removed": "Clave de API quitada",
-      "invalidFormat": "Eso no parece una clave de API de Anthropic. Las claves empiezan por sk-ant-.",
+      "invalidFormat": "Eso no parece una clave de API de Anthropic, OpenAI o Google.",
       "verifyFailed": "No se pudo comprobar la clave. Inténtalo de nuevo.",
-      "note": "Se guarda solo en este dispositivo. Se envía al servidor de TabMerger con cada solicitud de IA y se pasa directamente a Anthropic; nunca se guarda en nuestros servidores.",
-      "consoleLink": "Crea una clave y fija un límite de gasto en la consola de Anthropic"
+      "note": "Funcionan claves de Anthropic, OpenAI y Google. Se guarda solo en este dispositivo. Se envía al servidor de TabMerger con cada solicitud de IA y se pasa directamente al proveedor que la emitió; nunca se guarda en nuestros servidores.",
+      "getKey": "Crea una clave y fija un límite de gasto:",
+      "manageLink": "Gestiona esta clave y su límite de gasto en {{provider}}"
     },
     "model": {
       "label": "Modelo de IA",
       "managedDescription": "Los modelos más grandes dan mejores resultados y gastan más créditos. Las cifras son aproximadas.",
-      "byokDescription": "Los modelos más grandes dan mejores resultados y cuestan más. Las cifras son aproximadas; Anthropic factura a tu cuenta.",
+      "byokDescription": "Los modelos más grandes dan mejores resultados y cuestan más en la factura de tu proveedor.",
       "auto": "Automático",
       "recommended": "Recomendado",
-      "autoDescription": "Usa el modelo más barato que hace bien cada tarea."
+      "autoDescription": "Usa el modelo más barato que hace bien cada tarea.",
+      "addKeyFirst": "Añade tu clave de API arriba para elegir un modelo."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_one": "≈ {{formatted}} crédito",
       "credits_many": "≈ {{formatted}} de créditos",
       "credits_other": "≈ {{formatted}} créditos",
@@ -146,6 +148,11 @@
         "organize_many": "Organizar {{count}} de pestañas",
         "organize_other": "Organizar {{count}} pestañas"
       }
+    },
+    "cost": {
+      "low": "Coste más bajo",
+      "medium": "Coste medio",
+      "high": "Coste más alto"
     }
   },
   "dev": {

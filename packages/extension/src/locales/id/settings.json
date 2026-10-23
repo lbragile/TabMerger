@@ -61,7 +61,7 @@
     "signOut": "Keluar",
     "resetEncryption": "Lupa frasa sandi? Atur ulang enkripsi",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "Kunci Anthropic milik Anda"
+    "aiOwnKey": "Kunci API milik Anda"
   },
   "data": {
     "intro": "TabMerger menyimpan semua data secara lokal di IndexedDB. Sinkronisasi cloud memerlukan akun Pro.",
@@ -91,34 +91,36 @@
     "throttleLabel": "Batasi saran AI otomatis menjadi sekali sehari",
     "throttleDescription": "Spanduk saran sesi latar belakang muncul paling banyak sekali per hari untuk melindungi kuota AI bulanan Anda. Tindakan AI yang Anda picu secara manual (Kelompokkan otomatis, Nama grup, Atur ulang) tidak pernah dibatasi oleh ini.",
     "plan": {
-      "managed": "Kunci TabMerger: sisa {{remaining}} dari {{cap}} kredit bulan ini",
-      "managedUnknown": "Menggunakan kunci TabMerger",
-      "byok": "Menggunakan kunci Anthropic milik Anda"
+      "managed": "TabMerger yang mengurus penyiapan: sisa {{remaining}} dari {{cap}} kredit bulan ini",
+      "managedUnknown": "TabMerger yang mengurus penyiapan",
+      "byok": "Anda menambahkan kunci API {{provider}} milik Anda",
+      "byokNoKey": "Anda menambahkan kunci API sendiri: masukkan di bawah untuk memakai fitur AI"
     },
     "key": {
-      "label": "Kunci API Anthropic Anda",
+      "label": "Kunci API penyedia AI Anda",
       "save": "Simpan kunci",
       "checking": "Memeriksa…",
       "replace": "Ganti",
       "remove": "Hapus",
       "saved": "Kunci API disimpan",
       "removed": "Kunci API dihapus",
-      "invalidFormat": "Itu tidak terlihat seperti kunci API Anthropic. Kunci diawali dengan sk-ant-.",
+      "invalidFormat": "Itu tidak terlihat seperti kunci API Anthropic, OpenAI, atau Google.",
       "verifyFailed": "Kunci tidak dapat diperiksa. Coba lagi.",
-      "note": "Hanya disimpan di perangkat ini. Dikirim ke server TabMerger bersama setiap permintaan AI dan langsung diteruskan ke Anthropic; tidak pernah disimpan di server kami.",
-      "consoleLink": "Buat kunci dan tetapkan batas pengeluaran di Anthropic Console"
+      "note": "Kunci Anthropic, OpenAI, dan Google dapat dipakai. Hanya disimpan di perangkat ini. Dikirim ke server TabMerger bersama setiap permintaan AI dan langsung diteruskan ke penyedia yang menerbitkannya; tidak pernah disimpan di server kami.",
+      "getKey": "Buat kunci dan tetapkan batas pengeluaran:",
+      "manageLink": "Kelola kunci ini dan batas pengeluarannya di {{provider}}"
     },
     "model": {
       "label": "Model AI",
       "managedDescription": "Model yang lebih besar memberi hasil lebih baik dan memakai lebih banyak kredit. Angkanya perkiraan.",
-      "byokDescription": "Model yang lebih besar memberi hasil lebih baik dan lebih mahal. Angkanya perkiraan; Anthropic menagih akun Anda.",
+      "byokDescription": "Model yang lebih besar memberi hasil lebih baik dan lebih mahal di tagihan penyedia Anda.",
       "auto": "Otomatis",
       "recommended": "Disarankan",
-      "autoDescription": "Memakai model termurah yang mengerjakan setiap tugas dengan baik."
+      "autoDescription": "Memakai model termurah yang mengerjakan setiap tugas dengan baik.",
+      "addKeyFirst": "Tambahkan kunci API Anda di atas untuk memilih model."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_other": "≈ {{formatted}} kredit",
       "perMonth_other": "≈ {{formatted}} kali atur ulang per bulan dengan kredit Anda",
       "action": {
@@ -128,6 +130,11 @@
         "suggestSessions": "Menyarankan sesi",
         "organize_other": "Mengatur ulang {{count}} tab"
       }
+    },
+    "cost": {
+      "low": "Biaya terendah",
+      "medium": "Biaya sedang",
+      "high": "Biaya tertinggi"
     }
   },
   "dev": {

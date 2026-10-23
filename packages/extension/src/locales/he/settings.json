@@ -63,7 +63,7 @@
     "signOut": "התנתקות",
     "resetEncryption": "שכחת את ביטוי הסיסמה? איפוס ההצפנה",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "מפתח Anthropic משלכם"
+    "aiOwnKey": "מפתח API משלכם"
   },
   "data": {
     "intro": "TabMerger שומר את כל הנתונים באופן מקומי ב-IndexedDB. סנכרון בענן דורש חשבון Pro.",
@@ -99,34 +99,36 @@
     "throttleLabel": "הגבלת הצעות AI אוטומטיות לפעם ביום",
     "throttleDescription": "באנר הצעת הסשנים ברקע מופיע לכל היותר פעם ביום כדי לשמור על מכסת ה-AI החודשית. פעולות AI שמפעילים ידנית (קיבוץ אוטומטי, מתן שם לקבוצה, ארגון) אף פעם לא מוגבלות על ידי זה.",
     "plan": {
-      "managed": "משתמשים במפתח של TabMerger — נותרו החודש {{remaining}} מתוך {{cap}} קרדיטים",
-      "managedUnknown": "משתמשים במפתח של TabMerger",
-      "byok": "משתמשים במפתח Anthropic משלכם"
+      "managed": "TabMerger מטפל בהגדרה — נותרו החודש {{remaining}} מתוך {{cap}} קרדיטים",
+      "managedUnknown": "TabMerger מטפל בהגדרה",
+      "byok": "הוספתם מפתח API משלכם של {{provider}}",
+      "byokNoKey": "אתם מוסיפים מפתח API משלכם: הזינו אותו למטה כדי להשתמש בתכונות AI"
     },
     "key": {
-      "label": "מפתח ה-API שלכם ב-Anthropic",
+      "label": "מפתח ה-API של ספק ה-AI שלכם",
       "save": "שמירת המפתח",
       "checking": "בודקים…",
       "replace": "החלפה",
       "remove": "הסרה",
       "saved": "מפתח ה-API נשמר",
       "removed": "מפתח ה-API הוסר",
-      "invalidFormat": "זה לא נראה כמו מפתח API של Anthropic. מפתחות מתחילים ב-sk-ant-.",
+      "invalidFormat": "זה לא נראה כמו מפתח API של Anthropic,‏ OpenAI או Google.",
       "verifyFailed": "לא הצלחנו לבדוק את המפתח. נסו שוב.",
-      "note": "נשמר רק במכשיר הזה. נשלח לשרת של TabMerger עם כל בקשת AI ומועבר ישירות ל-Anthropic; אף פעם לא נשמר בשרתים שלנו.",
-      "consoleLink": "יצירת מפתח והגדרת מגבלת הוצאות ב-Anthropic Console"
+      "note": "מפתחות של Anthropic,‏ OpenAI ו-Google עובדים. נשמר רק במכשיר הזה. נשלח לשרת של TabMerger עם כל בקשת AI ומועבר ישירות לספק שהנפיק אותו; אף פעם לא נשמר בשרתים שלנו.",
+      "getKey": "יצירת מפתח והגדרת מגבלת הוצאות:",
+      "manageLink": "ניהול המפתח הזה ומגבלת ההוצאות שלו ב-{{provider}}"
     },
     "model": {
       "label": "מודל AI",
       "managedDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ומשתמשים ביותר קרדיטים. המספרים הם הערכה.",
-      "byokDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ועולים יותר. המספרים הם הערכה; Anthropic מחייבת את החשבון שלכם.",
+      "byokDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ועולים יותר בחשבון מהספק שלכם.",
       "auto": "אוטומטי",
       "recommended": "מומלץ",
-      "autoDescription": "משתמש במודל הזול ביותר שעושה כל משימה היטב."
+      "autoDescription": "משתמש במודל הזול ביותר שעושה כל משימה היטב.",
+      "addKeyFirst": "הוסיפו מפתח API למעלה כדי לבחור מודל."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_one": "≈ קרדיט אחד",
       "credits_two": "≈ {{formatted}} קרדיטים",
       "credits_other": "≈ {{formatted}} קרדיטים",
@@ -146,6 +148,11 @@
         "organize_two": "ארגון שתי כרטיסיות",
         "organize_other": "ארגון {{count}} כרטיסיות"
       }
+    },
+    "cost": {
+      "low": "העלות הנמוכה ביותר",
+      "medium": "עלות בינונית",
+      "high": "העלות הגבוהה ביותר"
     }
   },
   "dev": {

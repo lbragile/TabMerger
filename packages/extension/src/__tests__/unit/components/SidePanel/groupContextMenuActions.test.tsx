@@ -91,6 +91,9 @@ vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => mockUseAppSetti
 const { QuotaExceededError } = vi.hoisted(() => ({
   QuotaExceededError: class QuotaExceededError extends Error {},
 }))
+// The component imports the error class from '@/lib/aiErrors' (never re-exported by useAI: see
+// the WXT auto-import note there), so the stub class replaces it there too.
+vi.mock('@/lib/aiErrors', async (importOriginal) => ({ ...(await importOriginal<object>()), QuotaExceededError: QuotaExceededError }))
 vi.mock('@/hooks/useAI', () => ({
   useNameGroup: () => ({ mutateAsync: mockNameGroup }),
   QuotaExceededError,

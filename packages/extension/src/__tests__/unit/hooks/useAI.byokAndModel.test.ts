@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AI_BYOK_KEY_HEADER, AI_ERROR_CODES, estimateAiCredits } from '@tabmerger/shared'
-import { useAutoGroup, useNameGroup, useOrganizeTabs, useTabSummary, aiPost, AiRequestError, QuotaExceededError } from '@/hooks/useAI'
-import { isFixedInAiSettings } from '@/lib/aiErrors'
+import { AI_BYOK_KEY_HEADER, AI_ERROR_CODES, PRO_AI_MONTHLY_CREDITS, estimateAiCredits } from '@tabmerger/shared'
+import { useAutoGroup, useNameGroup, useOrganizeTabs, useTabSummary, aiPost } from '@/hooks/useAI'
+import { AiRequestError, QuotaExceededError, isFixedInAiSettings } from '@/lib/aiErrors'
 import { AI_BYOK_KEY_STORAGE_KEY, clearByokKey, saveByokKey } from '@/lib/byokKey'
 import { t } from '@/lib/i18n'
 import type { Tab } from '@/lib/types'
@@ -16,7 +16,7 @@ const { mockUseAuth, mockUseEntitlements, mockUseAppSettings, mockUseAiUsage } =
   mockUseAiUsage: vi.fn()
 }))
 
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => mockUseAppSettings() }))
@@ -27,6 +27,9 @@ vi.mock('@/lib/encryptionKey', () => ({ getEncryptionKeyState: vi.fn().mockResol
 
 /** Shaped like an Anthropic key, but too short to look like a real one to the secret scanner. */
 const KEY = 'sk-ant-test-xxxxxxxxxxxxxxxx'
+/** Shaped like OpenAI and Google keys; built at run time so no key-shaped literal is in the source. */
+const OPENAI_KEY = 'sk-proj-' + 'y'.repeat(24)
+const GOOGLE_KEY = 'AIza' + 'z'.repeat(35)
 
 const tabs = (n: number): Tab[] => Array.from({ length: n }, (_, i) => ({ id: i, title: `T${i}`, url: `https://e.com/${i}` }) as Tab)
 
@@ -56,7 +59,7 @@ beforeEach(async () => {
   mockUseAuth.mockReturnValue({ session: { access_token: 'tok', user: { id: 'u1' } } })
   mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'managed' })
   mockUseAppSettings.mockReturnValue({ data: { aiModel: 'auto' } })
-  mockUseAiUsage.mockReturnValue({ remaining: 2600, used: 0, cap: 2600, loading: false, known: true })
+  mockUseAiUsage.mockReturnValue({ remaining: PRO_AI_MONTHLY_CREDITS, used: 0, cap: PRO_AI_MONTHLY_CREDITS, loading: false, known: true })
 })
 
 describe('model choice in the request body', () => {
@@ -69,6 +72,14 @@ describe('model choice in the request body', () => {
     const { headers, body } = lastRequest()
     expect(body.model).toBe('claude-opus-5-5')
     expect(headers[AI_BYOK_KEY_HEADER]).toBeUndefined()
+  })
+
+  it('a managed plan sends auto for a model of another provider (chosen while on an own key)', async () => {
+    mockUseAppSettings.mockReturnValue({ data: { aiModel: 'gpt-6.1-sol' } })
+    okJson({ name: 'Work' })
+    const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
+    await act(async () => { await result.current.mutateAsync(tabs(3)) })
+    expect(lastRequest().body.model).toBe('auto')
   })
 
   it('a stored model this build does not offer is sent as auto', async () => {
@@ -104,6 +115,29 @@ describe('own Anthropic key (BYOK)', () => {
     expect(headers.Authorization).toBe('Bearer tok')
     expect(JSON.stringify(body)).not.toContain(KEY)
     expect(body.model).toBe('auto')
+  })
+
+  it.each([
+    ['OpenAI', OPENAI_KEY, 'gpt-6-astra'],
+    ['Google', GOOGLE_KEY, 'gemini-4-argon']
+  ])('sends a saved %s key in the same header, with a model of that provider', async (_label, key, model) => {
+    await saveByokKey('u1', key)
+    mockUseAppSettings.mockReturnValue({ data: { aiModel: model } })
+    okJson({ name: 'x' })
+    const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
+    await act(async () => { await result.current.mutateAsync(tabs(1)) })
+    const { headers, body } = lastRequest()
+    expect(headers[AI_BYOK_KEY_HEADER]).toBe(key)
+    expect(body.model).toBe(model)
+  })
+
+  it("sends auto when the chosen model belongs to another provider than the saved key's", async () => {
+    await saveByokKey('u1', OPENAI_KEY)
+    mockUseAppSettings.mockReturnValue({ data: { aiModel: 'claude-opus-5-5' } })
+    okJson({ name: 'x' })
+    const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
+    await act(async () => { await result.current.mutateAsync(tabs(1)) })
+    expect(lastRequest().body.model).toBe('auto')
   })
 
   it('without a saved key, says to add one in Settings and never calls the network', async () => {
@@ -146,7 +180,7 @@ describe('managed credits: estimate check before sending', () => {
   it('refuses a request whose estimate is more than the credits left, without calling the network', async () => {
     mockUseAppSettings.mockReturnValue({ data: { aiModel: 'claude-opus-5-5' } })
     const needed = estimateAiCredits('claude-opus-5-5', 'groupTabs', 100)
-    mockUseAiUsage.mockReturnValue({ remaining: needed - 1, used: 0, cap: 2600, loading: false, known: true })
+    mockUseAiUsage.mockReturnValue({ remaining: needed - 1, used: 0, cap: PRO_AI_MONTHLY_CREDITS, loading: false, known: true })
     const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
     let caught: unknown
     await act(async () => {
@@ -159,7 +193,7 @@ describe('managed credits: estimate check before sending', () => {
 
   it('sends a request whose estimate fits, even with few credits left (a cheaper model)', async () => {
     const needed = estimateAiCredits('claude-haiku-5-5', 'groupTabs', 100)
-    mockUseAiUsage.mockReturnValue({ remaining: needed, used: 0, cap: 2600, loading: false, known: true })
+    mockUseAiUsage.mockReturnValue({ remaining: needed, used: 0, cap: PRO_AI_MONTHLY_CREDITS, loading: false, known: true })
     okJson({ groups: [] })
     const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
     await act(async () => { await result.current.mutateAsync(tabs(100)) })
@@ -167,7 +201,7 @@ describe('managed credits: estimate check before sending', () => {
   })
 
   it('does not refuse on a balance that is not known (still loading or the read failed)', async () => {
-    mockUseAiUsage.mockReturnValue({ remaining: 0, used: 0, cap: 2600, loading: false, known: false })
+    mockUseAiUsage.mockReturnValue({ remaining: 0, used: 0, cap: PRO_AI_MONTHLY_CREDITS, loading: false, known: false })
     okJson({ name: 'x' })
     const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
     await act(async () => { await result.current.mutateAsync(tabs(1)) })
@@ -226,7 +260,7 @@ describe('the key never lands in appSettings', () => {
   it('is stored under its own chrome.storage.local key', async () => {
     await saveByokKey('u1', KEY)
     const stored = await chrome.storage.local.get(AI_BYOK_KEY_STORAGE_KEY)
-    expect(stored[AI_BYOK_KEY_STORAGE_KEY]).toEqual({ userId: 'u1', key: KEY })
+    expect(stored[AI_BYOK_KEY_STORAGE_KEY]).toEqual({ userId: 'u1', key: KEY, provider: 'anthropic' })
     expect(AI_BYOK_KEY_STORAGE_KEY).not.toBe('appSettings')
   })
 })

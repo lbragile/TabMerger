@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import type { Entitlements, Tier } from '@/lib/types';
 import { TIER_LIMITS } from '@/lib/types';
-import { AI_ENABLED } from '@/lib/aiFlag';
+import { AI_BYOK_ENABLED, AI_ENABLED, AI_MANAGED_ENABLED } from '@/lib/aiFlag';
 import { resolveAiMode, resolveTier } from '@/lib/entitlementTier';
 import { useAuth } from './useAuth';
-import { HEARTBEAT_TIER_STORAGE_KEY, type HeartbeatTier } from '@tabmerger/shared';
+import { HEARTBEAT_TIER_STORAGE_KEY, type AiMode, type HeartbeatTier } from '@tabmerger/shared';
 
 type SubRow = {
   tier: string;
@@ -35,6 +35,13 @@ async function fetchSubscription(userId: string): Promise<SubRow | null> {
 
   if (error) return null;
   return data as SubRow | null;
+}
+
+/** Whether a Pro AI subscription's option is live in this build (see lib/aiFlag.ts). */
+export function isAiModeLive(aiMode: AiMode | null): boolean {
+  if (aiMode === 'byok') return AI_BYOK_ENABLED;
+  if (aiMode === 'managed') return AI_MANAGED_ENABLED;
+  return false;
 }
 
 export function isApproachingLimit(
@@ -97,27 +104,28 @@ export function useEntitlements(): Entitlements & { loading: boolean } {
   });
 
   if (DEMO_MODE) {
-    // ponytail: AI features: coming soon — the global kill switch overrides even the
-    // marketing-demo tier override below, so demo recordings never show AI UI while
-    // the flag is off. Flip VITE_AI_ENABLED for a demo build that needs to show it.
-    return { ...TIER_LIMITS.pro_ai, aiFeatures: AI_ENABLED, aiMode: 'managed', loading: false };
+    // ponytail: AI features: coming soon — the managed AI flag overrides even the
+    // marketing-demo tier override below (the demo plays a managed subscriber), so demo
+    // recordings never show AI UI while it is off. Flip VITE_AI_ENABLED for a demo build that needs it.
+    return { ...TIER_LIMITS.pro_ai, aiFeatures: AI_MANAGED_ENABLED, aiMode: 'managed', loading: false };
   }
 
   const effectiveTier: Tier = user ? resolveTier(sub ?? null) : 'free';
   const loading = authLoading || (!!user && isLoading);
   if (!loading) rememberTierForHeartbeat(user ? effectiveTier : 'signed_out');
 
+  const aiMode = user ? resolveAiMode(sub ?? null) : null;
   return {
     ...TIER_LIMITS[effectiveTier],
-    // ponytail: AI features: coming soon — global kill switch. This is intentionally
-    // ANDed in regardless of the resolved tier: a real pro_ai subscriber must not see
-    // AI UI while the flag is off, since this gates unreleased product surface, not
-    // per-user entitlement.
-    aiFeatures: TIER_LIMITS[effectiveTier].aiFeatures && AI_ENABLED,
+    // ponytail: AI features: coming soon — per-option kill switches. Intentionally ANDed in
+    // regardless of the resolved tier: a real pro_ai subscriber must not see AI UI while the
+    // flag for THEIR option (own key or TabMerger's key) is off, since this gates unreleased
+    // product surface, not per-user entitlement.
+    aiFeatures: TIER_LIMITS[effectiveTier].aiFeatures && isAiModeLive(aiMode),
     cancelAtPeriodEnd: sub?.cancel_at_period_end ?? false,
     currentPeriodEnd: sub?.current_period_end ?? null,
     subscriptionStatus: sub?.status ?? null,
-    aiMode: user ? resolveAiMode(sub ?? null) : null,
+    aiMode,
     /** !!user guard: query is disabled when logged out, so isLoading would be false — but the guard documents intent */
     loading
   };

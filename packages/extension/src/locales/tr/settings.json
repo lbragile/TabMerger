@@ -62,7 +62,7 @@
     "signOut": "Oturumu kapat",
     "resetEncryption": "Parolanızı mı unuttunuz? Şifrelemeyi sıfırlayın",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "Kendi Anthropic anahtarınız"
+    "aiOwnKey": "Kendi API anahtarınız"
   },
   "data": {
     "intro": "TabMerger tüm verileri yerel olarak IndexedDB'de saklar. Bulut eşitleme bir Pro hesabı gerektirir.",
@@ -95,34 +95,36 @@
     "throttleLabel": "Otomatik AI önerilerini günde bir kezle sınırla",
     "throttleDescription": "Arka plandaki oturum önerme bildirimi, aylık AI kotanızı korumak için günde en fazla bir kez çıkar. Elle başlattığınız AI işlemleri (Otomatik grupla, Grubu adlandır, Düzenle) bundan asla etkilenmez.",
     "plan": {
-      "managed": "TabMerger anahtarı: bu ay {{cap}} krediden {{remaining}} kaldı",
-      "managedUnknown": "TabMerger’ın anahtarı kullanılıyor",
-      "byok": "Kendi Anthropic anahtarınız kullanılıyor"
+      "managed": "Kurulumu TabMerger yapar: bu ay {{cap}} krediden {{remaining}} kaldı",
+      "managedUnknown": "Kurulumu TabMerger yapar",
+      "byok": "Kendi {{provider}} API anahtarınızı eklediniz",
+      "byokNoKey": "Kendi API anahtarınızı siz eklersiniz: AI özelliklerini kullanmak için aşağıya girin"
     },
     "key": {
-      "label": "Anthropic API anahtarınız",
+      "label": "AI sağlayıcınızın API anahtarı",
       "save": "Anahtarı kaydet",
       "checking": "Kontrol ediliyor…",
       "replace": "Değiştir",
       "remove": "Kaldır",
       "saved": "API anahtarı kaydedildi",
       "removed": "API anahtarı kaldırıldı",
-      "invalidFormat": "Bu bir Anthropic API anahtarına benzemiyor. Anahtarlar sk-ant- ile başlar.",
+      "invalidFormat": "Bu bir Anthropic, OpenAI veya Google API anahtarına benzemiyor.",
       "verifyFailed": "Anahtar kontrol edilemedi. Tekrar deneyin.",
-      "note": "Yalnızca bu cihazda saklanır. Her AI isteğiyle TabMerger sunucusuna gönderilir ve doğrudan Anthropic’e iletilir; sunucularımızda asla saklanmaz.",
-      "consoleLink": "Anthropic Console’da bir anahtar oluşturun ve harcama sınırı belirleyin"
+      "note": "Anthropic, OpenAI ve Google anahtarları çalışır. Yalnızca bu cihazda saklanır. Her AI isteğiyle TabMerger sunucusuna gönderilir ve doğrudan anahtarı veren sağlayıcıya iletilir; sunucularımızda asla saklanmaz.",
+      "getKey": "Anahtar oluşturun ve harcama sınırı belirleyin:",
+      "manageLink": "Bu anahtarı ve harcama sınırını {{provider}} üzerinden yönetin"
     },
     "model": {
       "label": "AI modeli",
       "managedDescription": "Daha büyük modeller daha iyi sonuç verir ve daha fazla kredi kullanır. Değerler tahminidir.",
-      "byokDescription": "Daha büyük modeller daha iyi sonuç verir ve daha pahalıdır. Değerler tahminidir; ücreti Anthropic hesabınıza yansıtır.",
+      "byokDescription": "Daha büyük modeller daha iyi sonuç verir ve sağlayıcınızın faturasında daha pahalıya gelir.",
       "auto": "Otomatik",
       "recommended": "Önerilen",
-      "autoDescription": "Her işi iyi yapan en ucuz modeli kullanır."
+      "autoDescription": "Her işi iyi yapan en ucuz modeli kullanır.",
+      "addKeyFirst": "Model seçmek için yukarıya API anahtarınızı ekleyin."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",
-      "usd": "≈ {{amount}}",
       "credits_one": "≈ {{formatted}} kredi",
       "credits_other": "≈ {{formatted}} kredi",
       "perMonth_one": "Kredilerinizle ayda ≈ {{formatted}} düzenleme",
@@ -137,6 +139,11 @@
         "organize_one": "{{count}} sekmeyi düzenleme",
         "organize_other": "{{count}} sekmeyi düzenleme"
       }
+    },
+    "cost": {
+      "low": "En düşük maliyet",
+      "medium": "Orta maliyet",
+      "high": "En yüksek maliyet"
     }
   },
   "dev": {

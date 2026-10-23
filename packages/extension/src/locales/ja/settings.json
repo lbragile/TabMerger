@@ -61,7 +61,7 @@
     "signOut": "サインアウト",
     "resetEncryption": "パスフレーズをお忘れですか？暗号化をリセット",
     "aiKeyLabel": "AI",
-    "aiOwnKey": "自分の Anthropic キー"
+    "aiOwnKey": "自分の API キー"
   },
   "data": {
     "intro": "TabMergerはすべてのデータをIndexedDBにローカル保存します。クラウド同期にはProアカウントが必要です。",
@@ -91,34 +91,36 @@
     "throttleLabel": "AIの自動提案を1日1回に制限",
     "throttleDescription": "バックグラウンドのセッション提案バナーは、月間AI利用枠を守るため、1日に最大1回だけ表示されます。手動で実行したAI操作（自動グループ化、グループに名前を付ける、整理）はこの制限を受けません。",
     "plan": {
-      "managed": "TabMerger のキーを使用中 — 今月の残り {{remaining}} / {{cap}} クレジット",
-      "managedUnknown": "TabMerger のキーを使用中",
-      "byok": "自分の Anthropic キーを使用中"
+      "managed": "セットアップは TabMerger が担当 — 今月の残り {{remaining}} / {{cap}} クレジット",
+      "managedUnknown": "セットアップは TabMerger が担当",
+      "byok": "自分の {{provider}} API キーを追加済み",
+      "byokNoKey": "自分の API キーを追加します：AI 機能を使うには下に入力してください"
     },
     "key": {
-      "label": "Anthropic API キー",
+      "label": "AI プロバイダーの API キー",
       "save": "キーを保存",
       "checking": "確認中…",
       "replace": "置き換える",
       "remove": "削除",
       "saved": "API キーを保存しました",
       "removed": "API キーを削除しました",
-      "invalidFormat": "Anthropic API キーの形式ではありません。キーは sk-ant- で始まります。",
+      "invalidFormat": "Anthropic、OpenAI、Google の API キーの形式ではありません。",
       "verifyFailed": "キーを確認できませんでした。もう一度お試しください。",
-      "note": "このデバイスにのみ保存されます。AI リクエストのたびに TabMerger のサーバーへ送信され、そのまま Anthropic に渡されます。当社のサーバーには保存されません。",
-      "consoleLink": "Anthropic Console でキーを作成し、利用上限を設定する"
+      "note": "Anthropic、OpenAI、Google のキーが使えます。このデバイスにのみ保存されます。AI リクエストのたびに TabMerger のサーバーへ送信され、キーを発行したプロバイダーにそのまま渡されます。当社のサーバーには保存されません。",
+      "getKey": "キーを作成し、利用上限を設定する：",
+      "manageLink": "{{provider}} でこのキーと利用上限を管理する"
     },
     "model": {
       "label": "AI モデル",
       "managedDescription": "大きいモデルほど結果が良くなり、クレジットを多く使います。数値は目安です。",
-      "byokDescription": "大きいモデルほど結果が良くなり、料金も高くなります。数値は目安で、Anthropic からあなたのアカウントに請求されます。",
+      "byokDescription": "大きいモデルほど結果が良くなり、プロバイダーからの請求も高くなります。",
       "auto": "自動",
       "recommended": "おすすめ",
-      "autoDescription": "作業ごとに、十分な品質で最も安いモデルを使います。"
+      "autoDescription": "作業ごとに、十分な品質で最も安いモデルを使います。",
+      "addKeyFirst": "モデルを選ぶには、上で API キーを追加してください。"
     },
     "estimate": {
       "item": "{{action}}：{{amount}}",
-      "usd": "約 {{amount}}",
       "credits_other": "約 {{formatted}} クレジット",
       "perMonth_other": "クレジットで整理できる回数：月に約 {{formatted}} 回",
       "action": {
@@ -128,6 +130,11 @@
         "suggestSessions": "セッションを提案する",
         "organize_other": "{{count}} 個のタブを整理する"
       }
+    },
+    "cost": {
+      "low": "最も低コスト",
+      "medium": "中程度のコスト",
+      "high": "最も高コスト"
     }
   },
   "dev": {
