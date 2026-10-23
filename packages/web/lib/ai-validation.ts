@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
+import { cleanUntrustedText, cleanUrl, sanitizePromptText } from '@/lib/ai-prompt-safety'
 
 /**
  * Request-body validation shared by every `/api/ai/*` route.
@@ -7,7 +8,12 @@ import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
  * Each `parse*Body` helper takes the already-JSON-parsed body (see {@link readJsonBody})
  * and returns either sanitized data or the 400 error message for that route. The
  * sanitized data holds only the fields the prompts use: unknown keys are dropped,
- * over-long text is truncated and control characters are flattened to spaces.
+ * over-long text is truncated, and every string that reaches a prompt is cleaned by
+ * `lib/ai-prompt-safety.ts` (invisible characters removed, control characters
+ * flattened, `<`/`>` neutralized, URLs reduced and stripped of secret parameters).
+ *
+ * The optional `model` field is read separately with {@link modelChoiceOf}; the route
+ * resolves it against the shared model allowlist after the plan check.
  *
  * Text is truncated rather than rejected, because titles and URLs come from web
  * pages and no client-side limit applies to them. Requests are rejected only for
@@ -59,35 +65,21 @@ export const AI_MAX_DEV_USAGE_COUNT = 1_000_000
 
 // --- Text sanitizing --------------------------------------------------------
 
-// `\p{Cc}` is the C0 controls (incl. tab, CR, LF), DEL and the C1 controls; the
-// Unicode line and paragraph separators are added because they also break lines.
-const CONTROL_CHARS = /[\p{Cc}\u2028\u2029]+/gu
+// Cleaning lives in `lib/ai-prompt-safety.ts`; re-exported here for existing importers.
+export { sanitizePromptText }
 
-/**
- * Makes request text safe to place on a single prompt line: runs of control
- * characters (including line breaks) become one space, the result is trimmed and
- * cut to `max` UTF-16 units without leaving half of a surrogate pair at the end.
- */
-export function sanitizePromptText(value: string, max: number): string {
-  // Pre-cut so a very long string is not scanned in full. Trimming and collapsing
-  // can only shorten it, so a generous window is enough to still fill `max`.
-  let text = value.slice(0, max * 4).replace(CONTROL_CHARS, ' ').trim()
-  if (text.length > max) {
-    text = text.slice(0, max)
-    const last = text.charCodeAt(text.length - 1)
-    if (last >= 0xd800 && last <= 0xdbff) text = text.slice(0, -1)
-  }
-  return text
-}
+/** An untrusted title or name, cleaned for a prompt (see `cleanUntrustedText`). */
+const promptText = (max: number) => z.string().transform((s) => cleanUntrustedText(s, max))
 
-const promptText = (max: number) => z.string().transform((s) => sanitizePromptText(s, max))
+/** An untrusted URL, reduced and cleaned for a prompt (see `cleanUrl`). */
+const promptUrl = (max: number) => z.string().transform((s) => cleanUrl(s, max))
 
 // --- Schemas ----------------------------------------------------------------
 
 /** The two tab fields the prompts read. `z.object` drops every other key. */
 const promptTabSchema = z.object({
   title: promptText(AI_MAX_TITLE_LENGTH),
-  url: promptText(AI_MAX_URL_LENGTH),
+  url: promptUrl(AI_MAX_URL_LENGTH),
 })
 
 /** A tab whose id the caller needs back (group-tabs returns tab ids). */
@@ -122,8 +114,8 @@ const groupTabListSchema = z
       if (!isRecord(tab) || typeof tab.url !== 'string') return []
       return [
         {
-          title: typeof tab.title === 'string' ? sanitizePromptText(tab.title, AI_MAX_TITLE_LENGTH) : '',
-          url: sanitizePromptText(tab.url, AI_MAX_URL_LENGTH),
+          title: typeof tab.title === 'string' ? cleanUntrustedText(tab.title, AI_MAX_TITLE_LENGTH) : '',
+          url: cleanUrl(tab.url, AI_MAX_URL_LENGTH),
         },
       ]
     })
@@ -201,6 +193,15 @@ export async function readJsonBody(request: Request): Promise<unknown> {
   } catch {
     return undefined
   }
+}
+
+/**
+ * The raw `model` field of a request body (`undefined` when absent). Every AI route accepts it;
+ * the route resolves it with `resolveAiModel` from `@tabmerger/shared`, which maps a missing
+ * value or `'auto'` to the feature's default and anything unknown to `null` (a 400).
+ */
+export function modelChoiceOf(body: unknown): unknown {
+  return isRecord(body) ? body.model : undefined
 }
 
 /** The `key` property when `body` is a JSON object holding an array there. */

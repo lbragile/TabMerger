@@ -1,62 +1,36 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase/server'
 import { aiDisabledResponse } from '@/lib/ai-guard'
-import { nameGroup } from '@/lib/ai'
-import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
+import { runAiTask, nameGroupTask } from '@/lib/ai'
 import { parseNameGroupBody, readJsonBody } from '@/lib/ai-validation'
+import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolveAiContext } from '@/lib/ai-route'
 
 /**
- * Suggests a display name for a tab group based on its tab titles/URLs.
- * Called by the extension via Bearer-token auth. Requires Pro AI entitlement;
- * responds with 429 when the monthly request quota is exhausted, 403 if not subscribed.
+ * Suggests a 2-4 word display name for a tab group from its tab titles and URLs.
+ * Called by the extension with its Supabase JWT as a Bearer token. Requires an entitled Pro AI
+ * subscription; managed calls are metered in credits (the balance comes back in
+ * `X-AI-Credits-Remaining`), BYOK calls use the key in `X-Anthropic-Key`. Optional body field
+ * `model`: `'auto'` or a model id from `AI_MODEL_IDS`. Request flow: see `lib/ai-route.ts`.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
   const aiDisabled = aiDisabledResponse()
   if (aiDisabled) return aiDisabled
 
-  const authHeader = request.headers.get('authorization')
-  const token = authHeader?.replace('Bearer ', '')
+  const auth = await authenticateAiRequest(request)
+  if (auth instanceof NextResponse) return auth
 
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  // Validated before the plan check and any reservation, so a rejected body never costs anything.
+  const body = await readJsonBody(request)
+  const input = parseNameGroupBody(body)
+  if (!input.ok) return invalidRequest(input.error)
 
-  const supabase = await createServiceRoleClient()
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser(token)
-
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Validated before the usage check, so a rejected body never spends a credit.
-  const input = parseNameGroupBody(await readJsonBody(request))
-  if (!input.ok) {
-    return NextResponse.json({ error: input.error }, { status: 400 })
-  }
-
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.nameGroup)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required or monthly limit reached' },
-      { status: remaining === 0 ? 429 : 403 }
-    )
-  }
+  const ctx = await resolveAiContext(request, auth, body, 'nameGroup')
+  if (ctx instanceof NextResponse) return ctx
 
   try {
-    const name = await nameGroup(input.data)
-    return NextResponse.json({ name }, {
-      headers: { 'X-AI-Requests-Remaining': String(remaining) },
-    })
+    const { result, remaining } = await runAiTask(nameGroupTask(input.data), ctx)
+    return aiJson({ name: result }, remaining)
   } catch (err) {
-    console.error('AI name-group error:', err)
-    return NextResponse.json(
-      { error: 'Failed to name group' },
-      { status: 500 }
-    )
+    return aiErrorResponse(err, 'name-group')
   }
 }

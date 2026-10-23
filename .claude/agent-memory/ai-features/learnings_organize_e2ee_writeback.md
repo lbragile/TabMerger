@@ -7,7 +7,8 @@ metadata:
 
 `/api/ai/organize` handles E2E encryption by **splitting reads from writes**, not by round-tripping ciphertext:
 
-- **Read:** the extension POSTs `{ groups: [{id, name, permanent, tabs}] }` (only when `hasEncryptionKey()`), mirroring `/api/ai/suggest-sessions`. `fetchUserData` uses it verbatim and skips the DB entirely. Only a request with no groups (missing, null or empty `groups`) falls back to the service-role DB read; groups that are present but structurally invalid get a 400, and the DB read itself ends the run if a row is an encrypted blob. See [[ai-request-validation]].
+- **Read:** the extension POSTs `{ groups: [{id, name, permanent, tabs}] }` (unless it confirmed there is no encryption key), mirroring `/api/ai/suggest-sessions`. The POST route itself loads the groups (`loadOrganizeGroups` in `lib/ai-organize.ts`), calls the model, and starts the workflow with only the sanitized proposal and the pinned (Now Open) ids. Workflow arguments are persisted in its event log, so no tab data and no BYOK key may ever be passed to it. Only a request with no groups falls back to the service-role DB read, which 400s before the model call if a row is not a plaintext array. See [[ai-request-validation]], [[ai-metering-flow]].
+- **Stream:** the workflow's `publishProposal` step writes one JSON array of actions and closes the stream (what `OrganizeProposal.tsx` parses). The approval hook is created before publishing, so an immediate approval always finds it.
 - **Write:** `applyChanges` never re-encrypts. It calls `isEncryptedBlob(group.windows)` and pushes any *content-bearing* action (`rename`, `merge`) onto `skipped` for the client to re-apply locally through the sync engine. Only `delete` and `reorder` (row-level / position-only) run server-side.
 - The web dashboard is **not** an E2EE client — `OrganizeProposal` takes an `encrypted` prop and renders a refusal card instead of streaming.
 

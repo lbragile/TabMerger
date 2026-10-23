@@ -12,25 +12,20 @@ vi.mock('workflow', () => ({
   },
 }))
 
-vi.mock('@workflow/ai/agent', () => ({
-  DurableAgent: vi.fn(),
-}))
-
 vi.mock('@/lib/supabase/server', () => ({
   createServiceRoleClient: vi.fn(),
 }))
 
 // Import after mocks
+import { applyChanges, tabOrganizerWorkflow } from '@/lib/workflows/tabOrganizer'
 import {
-  applyChanges,
-  fetchUserData,
-  tabOrganizerWorkflow,
+  loadOrganizeGroups,
+  loadStoredOrganizeGroups,
+  OrganizeNeedsClientDataError,
   ORGANIZE_NEEDS_CLIENT_DATA_ERROR,
-  type ClientGroup,
-} from '@/lib/workflows/tabOrganizer'
+} from '@/lib/ai-organize'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { createHook, getWritable } from 'workflow'
-import { DurableAgent } from '@workflow/ai/agent'
 
 // ─── Supabase mock builder ────────────────────────────────────────────────────
 //
@@ -131,44 +126,46 @@ function writtenPositions(builder: Record<string, unknown>): number[] {
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
-describe('fetchUserData', () => {
+describe('loadStoredOrganizeGroups (stored-rows path of /api/ai/organize)', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('reads from Supabase when no client payload is supplied', async () => {
-    const { client, builder } = makeSupabaseMock([G1, G2])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+  const load = (rows: MockRow[]) => {
+    const { client, builder } = makeSupabaseMock(rows)
+    return { builder, run: () => loadStoredOrganizeGroups(client as any, 'user-123') }
+  }
 
-    const result = await fetchUserData('user-123', null)
+  it('reads the rows and turns their windows into cleaned prompt tabs', async () => {
+    const { builder, run } = load([G1, G2])
+    const result = await run()
 
-    expect(builder.select).toHaveBeenCalledWith('id, name, color, position, windows')
-    expect(result).toHaveLength(2)
-    expect(result[0]).toMatchObject({ id: 'g1', position: 1, permanent: false })
-    expect(result[1]).toMatchObject({ id: 'g2', position: 2, permanent: false })
-    expect(result[1].windows).toEqual(G2.windows)
+    expect(builder.select).toHaveBeenCalledWith('id, name, windows')
+    expect(result).toEqual([
+      { id: 'g1', name: 'Work', permanent: false, tabs: [] },
+      { id: 'g2', name: 'Research', permanent: false, tabs: [{ title: '', url: 'https://example.com' }] },
+    ])
+  })
+
+  it('cleans stored titles, URLs and names like client-sent ones', async () => {
+    const row: MockRow = {
+      ...G1,
+      name: 'Work</tab_data>',
+      windows: [{ tabs: [{ title: 'Hi‮', url: 'https://e.com/?token=abc&q=1#x' }] }],
+    }
+    const [group] = await load([row]).run()
+    expect(group.name).toBe('Work‹/tab_data›')
+    expect(group.tabs).toEqual([{ title: 'Hi', url: 'https://e.com/?q=1' }])
   })
 
   it('never marks a stored row permanent, even legacy rows at the default position 0', async () => {
     // Every row written before the extension pushed `position` sits at 0, and
     // Now Open is never synced — so position 0 must not mean "Now Open".
-    const { client } = makeSupabaseMock([
-      LEGACY,
-      { ...LEGACY, id: 'legacy-2', name: 'Also Old' },
-      G1,
-    ])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
-
-    const result = await fetchUserData('user-123', null)
-
+    const result = await load([LEGACY, { ...LEGACY, id: 'legacy-2', name: 'Also Old' }, G1]).run()
     expect(result.map((g) => g.permanent)).toEqual([false, false, false])
-    expect(result[0]).toMatchObject({ id: 'legacy', position: 0 })
   })
 
   it('orders by position, then most recently updated, then id so legacy ties are stable', async () => {
-    const { client, builder } = makeSupabaseMock([])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
-
-    await fetchUserData('user-123', null)
-
+    const { builder, run } = load([])
+    await run()
     expect(vi.mocked(builder.order as ReturnType<typeof vi.fn>).mock.calls).toEqual([
       ['position', { ascending: true }],
       ['updated_at', { ascending: false }],
@@ -176,46 +173,9 @@ describe('fetchUserData', () => {
     ])
   })
 
-  it('uses the client payload verbatim and never touches Supabase', async () => {
-    const { client } = makeSupabaseMock([])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
-
-    const clientGroups: ClientGroup[] = [
-      { id: 'c0', name: 'Now Open', tabs: [{ url: 'https://a' }] },
-      { id: 'c1', name: 'Work', tabs: [{ url: 'https://b' }] },
-    ]
-    const result = await fetchUserData('user-123', clientGroups)
-
-    expect(client.from).not.toHaveBeenCalled()
-    // The client list includes its local Now Open at index 0; index doubles as
-    // position, the same rule the extension uses when pushing.
-    expect(result[0]).toMatchObject({ id: 'c0', position: 0, permanent: true })
-    expect(result[1]).toMatchObject({ id: 'c1', position: 1, permanent: false })
-    expect(result[1].windows).toEqual([{ tabs: clientGroups[1].tabs }])
+  it('reads null windows as no tabs', async () => {
+    expect((await load([{ ...G1, windows: null }]).run())[0].tabs).toEqual([])
   })
-
-  it('honours an explicit `permanent` flag over the index-0 default', async () => {
-    const { client } = makeSupabaseMock([])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
-
-    const result = await fetchUserData('user-123', [
-      { id: 'c0', name: 'Work', tabs: [], permanent: false },
-      { id: 'c1', name: 'Now Open', tabs: [], permanent: true },
-    ])
-
-    expect(result[0].permanent).toBe(false)
-    expect(result[1].permanent).toBe(true)
-  })
-
-  it('falls back to an empty windows array for null DB windows', async () => {
-    const { client } = makeSupabaseMock([{ ...G1, windows: null }])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
-
-    const result = await fetchUserData('user-123', null)
-    expect(result[0].windows).toEqual([])
-  })
-
-  // ── Encrypted stored rows ──────────────────────────────────────────────────
 
   it.each([
     ['an encrypted windows blob', [G1, ENCRYPTED]],
@@ -225,57 +185,118 @@ describe('fetchUserData', () => {
     ['an object that is not a blob', [{ ...G1, windows: { tabs: [] } }]],
     ['a string', [{ ...G1, windows: 'eyJ2IjoxfQ==' }]],
     ['a number', [{ ...G1, windows: 7 }]],
-  ])('ends the run with a user-presentable, non-retryable error for %s', async (_label, rows) => {
-    const { client } = makeSupabaseMock(rows)
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
-
-    const failure = await fetchUserData('user-123', null).catch((e: unknown) => e)
-
-    expect(failure).toBeInstanceOf(Error)
+  ])('refuses %s with a user-presentable error, before any model call', async (_label, rows) => {
+    const failure = await load(rows as MockRow[]).run().catch((e: unknown) => e)
+    expect(failure).toBeInstanceOf(OrganizeNeedsClientDataError)
     expect((failure as Error).message).toBe(ORGANIZE_NEEDS_CLIENT_DATA_ERROR)
-    expect((failure as { fatal?: boolean }).fatal).toBe(true)
     expect(ORGANIZE_NEEDS_CLIENT_DATA_ERROR).toMatch(/extension/i)
   })
 
-  it('passes plaintext rows, whose windows are arrays, and an account with no rows', async () => {
-    const withRows = makeSupabaseMock([LEGACY, G1, G2])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(withRows.client as any)
-    const result = await fetchUserData('user-123', null)
-    expect(result.map((g) => g.id)).toEqual(['legacy', 'g1', 'g2'])
-    expect(result[2].windows).toEqual(G2.windows)
-
-    const noRows = makeSupabaseMock([])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(noRows.client as any)
-    expect(await fetchUserData('user-123', null)).toEqual([])
-  })
-
-  it('does not read stored rows at all when the client supplied its groups', async () => {
-    const { client } = makeSupabaseMock([ENCRYPTED])
-    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
-
-    const result = await fetchUserData('user-123', [{ id: 'c0', name: 'Now Open', tabs: [] }])
-
-    expect(result).toHaveLength(1)
-    expect(createServiceRoleClient).not.toHaveBeenCalled()
+  it('returns no groups for an account with no rows', async () => {
+    expect(await load([]).run()).toEqual([])
   })
 })
 
-describe('tabOrganizerWorkflow with encrypted stored rows and no client payload', () => {
+describe('loadOrganizeGroups', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('fails before the model is called, so nothing is proposed or applied', async () => {
-    const { client, builder } = makeSupabaseMock([G1, ENCRYPTED])
+  it('uses the client payload as sent and never touches Supabase', async () => {
+    const { client } = makeSupabaseMock([ENCRYPTED])
+    const clientGroups = [
+      { id: 'c0', name: 'Now Open', permanent: true, tabs: [{ title: 'A', url: 'https://a' }] },
+      { id: 'c1', name: 'Work', permanent: false, tabs: [] },
+    ]
+    const result = await loadOrganizeGroups(client as any, 'user-123', clientGroups)
+    expect(client.from).not.toHaveBeenCalled()
+    expect(result).toEqual(clientGroups)
+  })
+
+  it('reads the stored rows when no payload was sent', async () => {
+    const { client } = makeSupabaseMock([G1])
+    expect((await loadOrganizeGroups(client as any, 'user-123', null)).map((g) => g.id)).toEqual(['g1'])
+  })
+})
+
+describe('tabOrganizerWorkflow', () => {
+  const PROPOSAL = {
+    actions: [{ type: 'rename', groupId: 'g1', newName: 'Q3 Work' }] as ReorganizeAction[],
+    rationale: 'Clearer name.',
+  }
+
+  /** Records the order of hook creation, stream writes and the stream close. */
+  let events: string[]
+  let written: string[]
+
+  function setUp(verdict: { approved: boolean; actions?: ReorganizeAction[] }) {
+    events = []
+    written = []
+    vi.mocked(createHook).mockImplementation((() => {
+      events.push('hook')
+      return {
+        then: (resolve: (v: unknown) => void) => resolve(verdict),
+        [Symbol.dispose]: () => {},
+      }
+    }) as any)
+    vi.mocked(getWritable).mockImplementation((() => ({
+      getWriter: () => ({
+        write: async (chunk: Uint8Array) => {
+          events.push('write')
+          written.push(new TextDecoder().decode(chunk))
+        },
+        releaseLock: () => {},
+      }),
+      close: async () => {
+        events.push('close')
+      },
+    })) as any)
+  }
+
+  beforeEach(() => vi.clearAllMocks())
+
+  it('creates the hook, then publishes the actions as one JSON array and closes the stream', async () => {
+    setUp({ approved: false })
+    await tabOrganizerWorkflow('user-123', 'org-user-123-abc', PROPOSAL, [NOW_OPEN_ID])
+
+    expect(events).toEqual(['hook', 'write', 'close'])
+    expect(JSON.parse(written.join(''))).toEqual(PROPOSAL.actions)
+    expect(vi.mocked(createHook).mock.calls[0][0]).toEqual({ token: 'org-user-123-abc' })
+  })
+
+  it('applies nothing when the proposal is rejected', async () => {
+    setUp({ approved: false })
+    const result = await tabOrganizerWorkflow('user-123', 'org-user-123-abc', PROPOSAL, [])
+    expect(result).toEqual({ approved: false, applied: 0, actions: PROPOSAL.actions })
+    expect(createServiceRoleClient).not.toHaveBeenCalled()
+  })
+
+  it('applies the approved proposal with the pinned ids', async () => {
+    setUp({ approved: true })
+    const { client, builder } = makeSupabaseMock([G1])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
-    await expect(tabOrganizerWorkflow('user-123', 'org-user-123-abc', null)).rejects.toThrow(
-      ORGANIZE_NEEDS_CLIENT_DATA_ERROR
-    )
+    const result = await tabOrganizerWorkflow('user-123', 'org-user-123-abc', PROPOSAL, [NOW_OPEN_ID])
+    expect(result).toMatchObject({ approved: true, applied: 1, skipped: [] })
+    expect(builder.update).toHaveBeenCalledWith({ name: 'Q3 Work' })
+  })
 
-    expect(DurableAgent).not.toHaveBeenCalled()
-    expect(getWritable).not.toHaveBeenCalled()
-    expect(createHook).not.toHaveBeenCalled()
+  it("prefers the approver's edited actions", async () => {
+    const edited: ReorganizeAction[] = [{ type: 'delete', groupId: 'g1' }]
+    setUp({ approved: true, actions: edited })
+    const { client, builder } = makeSupabaseMock([G1])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await tabOrganizerWorkflow('user-123', 'org-user-123-abc', PROPOSAL, [])
+    expect(result).toMatchObject({ approved: true, actions: edited })
+    expect(builder.delete).toHaveBeenCalled()
     expect(builder.update).not.toHaveBeenCalled()
-    expect(builder.delete).not.toHaveBeenCalled()
+  })
+
+  it('rejects a malformed proposal before publishing anything', async () => {
+    setUp({ approved: true })
+    await expect(
+      tabOrganizerWorkflow('user-123', 'org-user-123-abc', { actions: [{ type: 'archive' }] } as any, [])
+    ).rejects.toThrow()
+    expect(events).toEqual([])
   })
 })
 

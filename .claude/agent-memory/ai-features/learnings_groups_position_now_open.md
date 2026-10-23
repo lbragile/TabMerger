@@ -9,7 +9,7 @@ Now Open (the permanent group) is device-local: the extension never pushes it, s
 
 Rules the organize workflow (`lib/workflows/tabOrganizer.ts`) follows:
 - DB-loaded rows are always `permanent: false`. Order by `position`, then `updated_at desc`, then `id`, because legacy rows tie.
-- Only the client payload (`groupsState.available`, which includes Now Open at index 0, with `permanent` sent explicitly) can mark a group permanent. The workflow passes those ids to `applyChanges` as `pinnedIds`.
+- Only the client payload (`groupsState.available`, which includes Now Open at index 0, with `permanent` sent explicitly) can mark a group permanent. The organize route passes those ids to the workflow, which hands them to `applyChanges` as `pinnedIds`.
 - `applyChanges` skips any action naming a pinned id or an id with no stored row, so a no-op write is never counted as applied.
 - `reorder` follows the extension's push rule, position = index in the client list: pinned ids take no slot, every other id takes the next slot starting at 1 (an unsynced id keeps its slot but isn't written), and 0 is never written.
 

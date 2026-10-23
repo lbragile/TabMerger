@@ -1,12 +1,19 @@
-import { createHook, FatalError, getWritable } from "workflow";
-import { DurableAgent } from "@workflow/ai/agent";
+import { createHook, getWritable } from "workflow";
 import { z } from "zod";
 import { isEncryptedBlob } from "@tabmerger/shared";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 
 /**
- * Durable AI agent that proposes a reorganization of a user's tab groups,
- * pauses for human approval, then applies the approved changes to Supabase.
+ * Durable workflow that publishes a reorganization proposal for a user's tab
+ * groups, pauses for human approval, then applies the approved changes to
+ * Supabase.
+ *
+ * The proposal itself is made by `POST /api/ai/organize` before the workflow
+ * starts (a direct Anthropic call, metered or BYOK like every AI route), so the
+ * workflow never calls a model and never receives a customer's API key or tab
+ * data: its arguments are persisted in the workflow event log. It receives only
+ * the finished proposal (group ids, AI-written names, a rationale) and the ids
+ * of the client's permanent groups.
  *
  * Schema note: this codebase stores tabs nested inside a `windows` jsonb column
  * on each `groups` row (there is no separate tabs table).
@@ -15,9 +22,9 @@ import { createServiceRoleClient } from "@/lib/supabase/server";
  * so it is never a `groups` row. Rows are therefore never permanent, whatever
  * their `position`: legacy rows written before the extension pushed `position`
  * all hold the column default 0, so position 0 says nothing about Now Open. The
- * only way the workflow sees Now Open is in the client-supplied payload
- * ({@link ClientGroup}); {@link applyChanges} pins those ids and refuses any
- * action on an id that is not a stored row.
+ * only way the workflow learns of Now Open is the `pinnedIds` argument, taken
+ * from the client-supplied payload by the organize route; {@link applyChanges}
+ * pins those ids and refuses any action on an id that is not a stored row.
  *
  * `position` follows the extension's rule: a group's index in the client's list,
  * where Now Open is index 0 and never stored, so synced groups are >= 1.
@@ -46,12 +53,13 @@ const organizeActionSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("reorder"), groupIds: z.array(z.string()) }),
 ]);
 
-const analyzeGroupsInputSchema = z.object({
+/** The proposal shape: the organize route's structured output and the workflow input. */
+export const analyzeGroupsInputSchema = z.object({
   actions: z.array(organizeActionSchema),
   rationale: z.string().describe("One short sentence explaining the plan."),
 });
 
-// Serializable shape returned by fetchUserData / consumed by applyChanges.
+// A stored row as applyChanges reads it.
 interface SerializableGroup {
   id: string;
   name: string;
@@ -61,95 +69,7 @@ interface SerializableGroup {
   windows: unknown; // ExtWindow[] as stored jsonb — opaque here, passed through
 }
 
-/**
- * Plaintext group content supplied by the client in the POST body, mirroring
- * the payload `/api/ai/suggest-sessions` already accepts. Required for E2E-
- * encrypted users: `groups.windows` is ciphertext the server can never decrypt,
- * so the only source of plaintext for the prompt is the client's decrypted
- * in-memory state.
- */
-export interface ClientGroup {
-  id: string;
-  name: string;
-  tabs: unknown[];
-  /**
-   * Optional; defaults to `index === 0`, because the extension's list always starts
-   * with Now Open (current builds also send the flag explicitly).
-   */
-  permanent?: boolean;
-}
-
-/**
- * Message of the error that ends a run when the stored rows are end-to-end
- * encrypted and the request carried no tab data. Written to be shown to the user.
- */
-export const ORGANIZE_NEEDS_CLIENT_DATA_ERROR =
-  "Your groups are end-to-end encrypted, so they can only be organized from the " +
-  "TabMerger extension, which sends the tab data with the request. Start Organize " +
-  "from the extension.";
-
 // --- Steps ------------------------------------------------------------------
-
-export async function fetchUserData(
-  userId: string,
-  clientGroups: ClientGroup[] | null
-): Promise<SerializableGroup[]> {
-  "use step";
-
-  if (clientGroups) {
-    // Array order is the client's own group order (`groupsState.available`,
-    // which includes the local-only Now Open group), so the index doubles as
-    // `position` (the same rule the extension uses when pushing) and index 0
-    // is Now Open unless the client says otherwise.
-    return clientGroups.map((g, i) => ({
-      id: g.id,
-      name: g.name,
-      color: "",
-      position: i,
-      permanent: g.permanent ?? i === 0,
-      // The prompt only ever reads tab titles/URLs; one synthetic window is
-      // enough and avoids shipping the full window tree over the wire.
-      windows: [{ tabs: g.tabs }],
-    }));
-  }
-
-  const supabase = await createServiceRoleClient();
-  const { data, error } = await supabase
-    .from("groups")
-    .select("id, name, color, position, windows")
-    .eq("user_id", userId)
-    // Legacy rows all tie at position 0 (the column default), so add stable
-    // tie-breakers: most recently edited first, then id.
-    .order("position", { ascending: true })
-    .order("updated_at", { ascending: false })
-    .order("id", { ascending: true });
-
-  if (error) throw new Error(`fetchUserData: ${error.message}`);
-
-  // The server holds no decryption key, so an encrypted row is unreadable here and
-  // must never reach the prompt: a plan built from ciphertext would be meaningless,
-  // and approving it could act on real rows. End the run before the model is
-  // called. FatalError, because retrying the step cannot change the outcome.
-  //
-  // The check is on the readable shape, not on the blob format: plaintext `windows`
-  // is always an array, so anything else (an encrypted blob of any version, or any
-  // other object) stops the run. `null` is the one exception and is read as no
-  // windows below; the column is `not null`, so a stored row never holds it.
-  if ((data ?? []).some((g) => g.windows != null && !Array.isArray(g.windows))) {
-    throw new FatalError(ORGANIZE_NEEDS_CLIENT_DATA_ERROR);
-  }
-
-  return (data ?? []).map((g) => ({
-    id: g.id,
-    name: g.name,
-    color: g.color,
-    position: g.position,
-    // Now Open is never synced, so no stored row is permanent, not even a
-    // legacy row sitting at the default position 0.
-    permanent: false,
-    windows: g.windows ?? [],
-  }));
-}
 
 /**
  * Applies approved actions to the user's stored `groups` rows.
@@ -319,75 +239,57 @@ export interface ApprovalPayload {
   actions?: ReorganizeAction[];
 }
 
+export type OrganizeProposalInput = z.infer<typeof analyzeGroupsInputSchema>;
+
+/**
+ * Writes the proposed actions to the run's stream as one JSON array, then closes
+ * it. `OrganizeProposal.tsx` reads `GET /api/ai/organize?runId=…` until the
+ * stream ends and parses the whole body as `ReorganizeAction[]`.
+ */
+export async function publishProposal(actions: ReorganizeAction[]): Promise<void> {
+  "use step";
+  const writable = getWritable<Uint8Array>();
+  const writer = writable.getWriter();
+  await writer.write(new TextEncoder().encode(JSON.stringify(actions)));
+  writer.releaseLock();
+  await writable.close();
+}
+
+/**
+ * @param proposal the route's sanitized model output (actions only name groups
+ *   from the request and never a permanent group).
+ * @param pinnedIds ids of the client's permanent groups (Now Open); passed to
+ *   {@link applyChanges} so no action ever reaches them.
+ */
 export async function tabOrganizerWorkflow(
   userId: string,
   hookToken: string,
-  clientGroups: ClientGroup[] | null = null
+  proposal: OrganizeProposalInput,
+  pinnedIds: string[] = []
 ) {
   "use workflow";
 
-  const groups = await fetchUserData(userId, clientGroups);
+  const { actions: proposed } = analyzeGroupsInputSchema.parse(proposal);
 
-  const agent = new DurableAgent({
-    model: "anthropic/claude-sonnet-4-6",
-    instructions:
-      "You are a tab-organization assistant. Analyze the user's browser tab " +
-      "groups, find redundancies and near-duplicate groups, and propose a " +
-      "clean reorganization. Prefer merging small or overlapping groups, " +
-      "renaming vague groups to concise 2-4 word titles, and removing empty " +
-      "groups. Never propose deleting or merging away a group marked " +
-      '`"permanent": true` (the live "Now Open" group). When ready, call the ' +
-      "analyzeGroups tool exactly once with the full list of actions. Do not " +
-      "call any other tool and do not continue after calling it.",
-    tools: {
-      // No `execute`: the agent stops after calling this so we can capture the
-      // structured proposal from `toolCalls` and stream it for approval.
-      analyzeGroups: {
-        description:
-          "Submit the final reorganization plan as an array of actions.",
-        inputSchema: analyzeGroupsInputSchema,
-      },
-    },
-  });
+  // Created before the proposal is published, so an approval sent as soon as the
+  // proposal shows up always finds the hook.
+  using hook = createHook<ApprovalPayload>({ token: hookToken });
 
-  const writable = getWritable();
-
-  const result = await agent.stream({
-    writable,
-    messages: [
-      {
-        role: "user",
-        content:
-          "Here are my current tab groups (JSON). Propose a reorganization.\n" +
-          JSON.stringify(groups),
-      },
-    ],
-  });
-
-  // Extract the proposed actions from the (unexecuted) analyzeGroups call.
-  const call = result.toolCalls.find((c) => c.toolName === "analyzeGroups");
-  const proposal = call
-    ? analyzeGroupsInputSchema.parse(call.input)
-    : { actions: [] as ReorganizeAction[], rationale: "No changes proposed." };
+  await publishProposal(proposed);
 
   // Suspend until an external system resumes the hook with an approval verdict.
-  using hook = createHook<ApprovalPayload>({ token: hookToken });
   const verdict = await hook;
 
   // Approver's edited actions win over the AI proposal when supplied.
   const finalActions = verdict.actions
     ? z.array(organizeActionSchema).parse(verdict.actions)
-    : proposal.actions;
+    : proposed;
 
   if (!verdict.approved || finalActions.length === 0) {
     return { approved: false, applied: 0, actions: finalActions };
   }
 
-  const outcome = await applyChanges(
-    userId,
-    finalActions,
-    groups.filter((g) => g.permanent).map((g) => g.id)
-  );
+  const outcome = await applyChanges(userId, finalActions, pinnedIds);
   return {
     approved: true,
     applied: outcome.applied,

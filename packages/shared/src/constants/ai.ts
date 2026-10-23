@@ -272,6 +272,16 @@ export const AI_ERROR_CODES = {
   byokRateLimited: 'byok_rate_limited',
   byokBilling: 'byok_billing',
   creditsNotApplicable: 'credits_not_applicable',
+  /** The TabMerger sign-in token is missing or invalid (401). */
+  unauthorized: 'ai_unauthorized',
+  /** The request body is malformed or over a limit (400); `message` says what. */
+  invalidRequest: 'ai_invalid_request',
+  /** The model declined the request (`stop_reason: refusal`); its usage is still charged. */
+  refused: 'ai_refused',
+  /** Anything else went wrong (unreadable model output, a server or database error). */
+  failed: 'ai_failed',
+  /** The requested organize run does not exist or belongs to someone else (404). */
+  notFound: 'ai_not_found',
 } as const;
 
 export type AiErrorCode = (typeof AI_ERROR_CODES)[keyof typeof AI_ERROR_CODES];

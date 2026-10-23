@@ -15,6 +15,15 @@ describe('scrubEvent', () => {
     expect(result?.request?.headers).toEqual({})
   })
 
+  it('drops a BYOK Anthropic key sent in the X-Anthropic-Key request header', () => {
+    const key = `sk-ant-api03-${'k'.repeat(40)}`
+    const event = {
+      request: { url: 'https://tabmerger.com/api/ai/name-group', headers: { 'X-Anthropic-Key': key } },
+    } as unknown as ErrorEvent
+    const result = scrubEvent(event)
+    expect(JSON.stringify(result)).not.toContain(key)
+  })
+
   it('redacts breadcrumb data urls when present', () => {
     const event = {
       breadcrumbs: [{ data: { url: 'https://example.com/a', from: '/a', to: '/b' } }],

@@ -1,64 +1,38 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase/server'
 import { aiDisabledResponse } from '@/lib/ai-guard'
-import { suggestSessions } from '@/lib/ai'
-import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
+import { runAiTask, suggestSessionsTask } from '@/lib/ai'
 import { parseSuggestSessionsBody, readJsonBody } from '@/lib/ai-validation'
+import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolveAiContext } from '@/lib/ai-route'
 
 /**
- * Recommends a saved-session name and description based on the current tab groups.
- * Called by the extension via Bearer-token auth. Requires Pro AI entitlement;
- * responds with 429 when the monthly request quota is exhausted, 403 if not subscribed.
+ * Suggests how to consolidate saved groups, naming the groups the suggestion is about.
+ * Called by the extension with its Supabase JWT as a Bearer token. Requires an entitled Pro AI
+ * subscription; managed calls are metered in credits (the balance comes back in
+ * `X-AI-Credits-Remaining`), BYOK calls use the key in `X-Anthropic-Key`. Optional body field
+ * `model`: `'auto'` or a model id from `AI_MODEL_IDS`. Request flow: see `lib/ai-route.ts`.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
   const aiDisabled = aiDisabledResponse()
   if (aiDisabled) return aiDisabled
 
-  const authHeader = request.headers.get('authorization')
-  const token = authHeader?.replace('Bearer ', '')
+  const auth = await authenticateAiRequest(request)
+  if (auth instanceof NextResponse) return auth
 
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  // Validated before the plan check and any reservation, so a rejected body never costs anything.
+  const body = await readJsonBody(request)
+  const input = parseSuggestSessionsBody(body)
+  if (!input.ok) return invalidRequest(input.error)
 
-  const supabase = await createServiceRoleClient()
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser(token)
-
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Validated before the usage check, so a rejected body never spends a credit.
-  const input = parseSuggestSessionsBody(await readJsonBody(request))
-  if (!input.ok) {
-    return NextResponse.json({ error: input.error }, { status: 400 })
-  }
-
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.suggestSessions)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required or monthly limit reached' },
-      { status: remaining === 0 ? 429 : 403 }
-    )
-  }
+  const ctx = await resolveAiContext(request, auth, body, 'suggestSessions')
+  if (ctx instanceof NextResponse) return ctx
 
   try {
-    const { message, staleGroupIds } = await suggestSessions(input.data)
+    const { result, remaining } = await runAiTask(suggestSessionsTask(input.data), ctx)
     // `suggestion` is a deprecated alias for `message`, kept so the currently-shipped
     // extension banner (AIGroupSuggestion) keeps working against a newer server.
-    return NextResponse.json({ message, staleGroupIds, suggestion: message }, {
-      headers: { 'X-AI-Requests-Remaining': String(remaining) },
-    })
+    return aiJson({ ...result, suggestion: result.message }, remaining)
   } catch (err) {
-    console.error('AI suggest-sessions error:', err)
-    return NextResponse.json(
-      { error: 'Failed to suggest sessions' },
-      { status: 500 }
-    )
+    return aiErrorResponse(err, 'suggest-sessions')
   }
 }

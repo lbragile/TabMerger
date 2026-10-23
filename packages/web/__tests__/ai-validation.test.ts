@@ -130,19 +130,21 @@ describe('route parsers', () => {
   })
 
   it('organize and suggest-sessions keep a group when one of its tabs is unusual', () => {
-    const groups = [{ id: 'g1', name: 'Work', tabs: [{ title: null, url: 'u' }, { title: 'no url' }, null] }]
-    const data = [{ id: 'g1', name: 'Work', tabs: [{ title: '', url: 'u' }] }]
+    const groups = [{ id: 'g1', name: 'Work', tabs: [{ title: null, url: 'https://u.example/a' }, { title: 'no url' }, null] }]
+    const data = [{ id: 'g1', name: 'Work', tabs: [{ title: '', url: 'https://u.example/a' }] }]
     expect(parseOrganizeBody({ groups })).toStrictEqual({ ok: true, data: [{ ...data[0], permanent: true }] })
     expect(parseSuggestSessionsBody({ groups })).toStrictEqual({ ok: true, data })
   })
 
   it('organize truncates a long title inside a group', () => {
     const result = parseOrganizeBody({
-      groups: [{ id: 'g1', name: 'Work', tabs: [{ title: 'x'.repeat(AI_MAX_TITLE_LENGTH + 1), url: 'u' }] }],
+      groups: [{ id: 'g1', name: 'Work', tabs: [{ title: 'x'.repeat(AI_MAX_TITLE_LENGTH + 1), url: 'https://u.example/a' }] }],
     })
     expect(result).toStrictEqual({
       ok: true,
-      data: [{ id: 'g1', name: 'Work', tabs: [{ title: 'x'.repeat(AI_MAX_TITLE_LENGTH), url: 'u' }], permanent: true }],
+      data: [
+        { id: 'g1', name: 'Work', tabs: [{ title: 'x'.repeat(AI_MAX_TITLE_LENGTH), url: 'https://u.example/a' }], permanent: true },
+      ],
     })
   })
 

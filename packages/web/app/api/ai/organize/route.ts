@@ -1,128 +1,112 @@
 import { randomBytes } from 'crypto'
 import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase/server'
-import { aiDisabledResponse } from '@/lib/ai-guard'
 import { start, getRun } from 'workflow/api'
-import { tabOrganizerWorkflow, type ClientGroup } from '@/lib/workflows/tabOrganizer'
-import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
+import { AI_ERROR_CODES } from '@tabmerger/shared'
+import { aiDisabledResponse } from '@/lib/ai-guard'
+import { organizeTask, runAiTask, type OrganizePromptGroup, type OrganizeProposalResult } from '@/lib/ai'
+import { loadOrganizeGroups, OrganizeNeedsClientDataError } from '@/lib/ai-organize'
 import { parseOrganizeBody, readJsonBody } from '@/lib/ai-validation'
+import {
+  aiError,
+  aiErrorResponse,
+  aiJson,
+  authenticateAiRequest,
+  invalidRequest,
+  resolveAiContext,
+} from '@/lib/ai-route'
+import { tabOrganizerWorkflow } from '@/lib/workflows/tabOrganizer'
 
 /**
- * Extracts and validates the caller's identity from the Authorization header.
- * The extension passes its Supabase JWT as a Bearer token because it runs on a different origin
- * and cannot share cookies; the service role client is needed to verify an arbitrary JWT.
+ * Proposes a reorganization of the caller's tab groups and starts the approval workflow.
+ *
+ * The model call happens here, like every other AI route (metered in managed mode, on the
+ * customer's key in BYOK mode, with structured output in the `analyzeGroupsInputSchema`
+ * shape). The durable workflow then gets only the finished, sanitized proposal and the ids of
+ * the client's permanent groups: it publishes the proposal to its stream, waits for the
+ * approval hook and applies the approved actions. Workflow arguments are persisted in its
+ * event log, so neither a BYOK key nor any tab data is ever passed to it.
+ *
+ * Group data: end-to-end encrypted users must send their locally decrypted groups in the
+ * body, because `groups.windows` in Supabase is ciphertext the server can never read. Only a
+ * request that sends no groups (no JSON object, or `groups` missing, null or empty) reads the
+ * stored rows; sent groups are used or rejected with a 400, never replaced by the stored rows,
+ * and stored rows that turn out to be encrypted end the request with a 400 before the model is
+ * called.
+ *
+ * Returns `{ runId, token }`; the run id → user mapping is recorded so the GET handler can
+ * check ownership before streaming.
  */
-async function getAuthenticatedUser(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  const token = authHeader?.replace('Bearer ', '')
-
-  if (!token) return { token: null, user: null, supabase: null }
-
-  const supabase = await createServiceRoleClient()
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser(token)
-
-  if (error || !user) return { token, user: null, supabase }
-  return { token, user, supabase }
-}
-
-
-/**
- * Starts a durable tab-organizer workflow and returns a runId + hookToken.
- * Enforces Pro AI entitlement and records the runId → userId mapping so the GET handler
- * can verify ownership before streaming results back.
- */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
   const aiDisabled = aiDisabledResponse()
   if (aiDisabled) return aiDisabled
 
-  const { token, user, supabase } = await getAuthenticatedUser(request)
+  const auth = await authenticateAiRequest(request)
+  if (auth instanceof NextResponse) return auth
 
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-  if (!user || !supabase) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  // Read before the plan check and any reservation, so a rejected body never costs anything.
+  const body = await readJsonBody(request)
+  const input = parseOrganizeBody(body)
+  if (!input.ok) return invalidRequest(input.error)
 
-  // Optional client-supplied `groups` payload. E2E-encrypted users must send their
-  // locally-decrypted groups here, because `groups.windows` in Supabase is ciphertext
-  // the server can never read. Only a request that sends no groups (no JSON object,
-  // or `groups` missing, null or empty) is `null`, which sends the workflow down the
-  // server-side DB read (unencrypted users, older extension builds). Groups that are
-  // sent are used or rejected with a 400, never replaced by the DB read; the workflow
-  // itself ends the run if the rows it would read turn out to be encrypted.
-  // Read before the usage check so a rejected body never burns a quota unit.
-  const input = parseOrganizeBody(await readJsonBody(request))
-  if (!input.ok) {
-    return NextResponse.json({ error: input.error }, { status: 400 })
-  }
-  const clientGroups: ClientGroup[] | null = input.data
+  const ctx = await resolveAiContext(request, auth, body, 'organize')
+  if (ctx instanceof NextResponse) return ctx
 
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.groupTabs)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required or monthly limit reached' },
-      { status: remaining === 0 ? 429 : 403 }
-    )
+  let groups: OrganizePromptGroup[]
+  try {
+    groups = await loadOrganizeGroups(auth.supabase, auth.user.id, input.data)
+  } catch (err) {
+    if (err instanceof OrganizeNeedsClientDataError) return invalidRequest(err.message)
+    return aiErrorResponse(err, 'organize')
+  }
+  if (groups.length === 0) return invalidRequest('no groups to organize')
+
+  let proposal: OrganizeProposalResult
+  let remaining: number | null
+  try {
+    ;({ result: proposal, remaining } = await runAiTask(organizeTask(groups), ctx))
+  } catch (err) {
+    return aiErrorResponse(err, 'organize')
   }
 
   try {
-    const hookToken = `org-${user.id}-${randomBytes(16).toString('hex')}`
-    const run = await start(tabOrganizerWorkflow, [user.id, hookToken, clientGroups])
+    const hookToken = `org-${auth.user.id}-${randomBytes(16).toString('hex')}`
+    const pinnedIds = groups.filter((g) => g.permanent).map((g) => g.id)
+    const run = await start(tabOrganizerWorkflow, [auth.user.id, hookToken, proposal, pinnedIds])
 
-    // Store runId → userId so the GET stream can verify ownership (Issue 3)
-    await supabase.from('organize_runs').insert({ run_id: run.runId, user_id: user.id })
+    // Store runId → userId so the GET stream can verify ownership.
+    await auth.supabase.from('organize_runs').insert({ run_id: run.runId, user_id: auth.user.id })
 
-    return NextResponse.json({ runId: run.runId, token: hookToken }, {
-      headers: { 'X-AI-Requests-Remaining': String(remaining) },
-    })
+    return aiJson({ runId: run.runId, token: hookToken }, remaining)
   } catch (err) {
-    console.error('AI organize start error:', err)
-    return NextResponse.json(
-      { error: 'Failed to start workflow' },
-      { status: 500 }
-    )
+    console.error('AI organize start error:', err instanceof Error ? err.name : typeof err)
+    return aiError(500, AI_ERROR_CODES.failed, {}, remaining)
   }
 }
 
 /**
- * Streams NDJSON progress events for a running workflow identified by runId.
- * Verifies the runId belongs to the authenticated user before streaming to prevent IDOR.
+ * Streams the proposal of a workflow run identified by `runId` (one JSON array of actions,
+ * then the stream ends). Checks that the run belongs to the caller before streaming (IDOR).
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<Response> {
   // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
   const aiDisabled = aiDisabledResponse()
   if (aiDisabled) return aiDisabled
 
-  const { token, user, supabase } = await getAuthenticatedUser(request)
+  const auth = await authenticateAiRequest(request)
+  if (auth instanceof NextResponse) return auth
 
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-  if (!user || !supabase) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const runId = new URL(request.url).searchParams.get('runId')
+  if (!runId) return invalidRequest('runId required')
 
-  const { searchParams } = new URL(request.url)
-  const runId = searchParams.get('runId')
-
-  if (!runId) {
-    return NextResponse.json({ error: 'runId required' }, { status: 400 })
-  }
-
-  // Verify the runId belongs to the authenticated user (Issue 3 — IDOR fix)
-  const { data: runRecord } = await supabase
+  const { data: runRecord } = await auth.supabase
     .from('organize_runs')
     .select('user_id')
     .eq('run_id', runId)
     .single()
 
-  if (!runRecord || runRecord.user_id !== user.id) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  if (!runRecord || runRecord.user_id !== auth.user.id) {
+    return aiError(404, AI_ERROR_CODES.notFound)
   }
 
   try {
@@ -131,10 +115,7 @@ export async function GET(request: NextRequest) {
       headers: { 'Content-Type': 'application/x-ndjson' },
     })
   } catch (err) {
-    console.error('AI organize stream error:', err)
-    return NextResponse.json(
-      { error: 'Failed to stream workflow' },
-      { status: 500 }
-    )
+    console.error('AI organize stream error:', err instanceof Error ? err.name : typeof err)
+    return aiError(500, AI_ERROR_CODES.failed)
   }
 }

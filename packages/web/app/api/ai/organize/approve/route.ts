@@ -1,69 +1,43 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase/server'
-import { aiDisabledResponse } from '@/lib/ai-guard'
 import { resumeHook } from 'workflow/api'
+import { AI_ERROR_CODES } from '@tabmerger/shared'
+import { aiDisabledResponse } from '@/lib/ai-guard'
 import { parseApproveBody, readJsonBody } from '@/lib/ai-validation'
+import { aiError, authenticateAiRequest, invalidRequest, requireProAi } from '@/lib/ai-route'
 
 /**
  * Resumes a paused tab-organizer workflow after the user approves or rejects the proposal.
- * Called by the dashboard OrganizeProposal component via Bearer-token auth. Requires active Pro AI.
- * Validates the hookToken prefix against the authenticated user ID to prevent IDOR — a forged token
- * for another user's workflow would be rejected before reaching the workflow engine.
+ * Called by the dashboard OrganizeProposal component via Bearer-token auth. Requires an
+ * entitled Pro AI subscription (either option; no model is called, so no BYOK key is needed).
+ * Validates the hookToken prefix against the authenticated user ID to prevent IDOR — a forged
+ * token for another user's workflow is rejected before reaching the workflow engine.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
   const aiDisabled = aiDisabledResponse()
   if (aiDisabled) return aiDisabled
 
-  const authHeader = request.headers.get('authorization')
-  const token = authHeader?.replace('Bearer ', '')
+  const auth = await authenticateAiRequest(request)
+  if (auth instanceof NextResponse) return auth
 
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const supabase = await createServiceRoleClient()
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser(token)
-
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('tier, status')
-    .eq('user_id', user.id)
-    .single()
-
-  if (subscription?.tier !== 'pro_ai' || subscription?.status !== 'active') {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required' },
-      { status: 403 }
-    )
-  }
+  // The plan check stays ahead of the body, so an unentitled caller gets 403 for any body.
+  const sub = await requireProAi(auth.supabase, auth.user.id)
+  if (sub instanceof NextResponse) return sub
 
   const input = parseApproveBody(await readJsonBody(request))
-  if (!input.ok) {
-    return NextResponse.json({ error: input.error }, { status: 400 })
-  }
+  if (!input.ok) return invalidRequest(input.error)
   const body = input.data
 
-  // Verify token belongs to the authenticated user — token format is `org-${userId}-${random}` (Issue 2 — IDOR fix)
-  if (!body.token.startsWith(`org-${user.id}-`)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  // Token format is `org-${userId}-${random}`: a token for another user's run is refused.
+  if (!body.token.startsWith(`org-${auth.user.id}-`)) {
+    return aiError(403, AI_ERROR_CODES.notFound)
   }
 
   try {
     await resumeHook(body.token, { approved: body.approved, actions: body.actions })
     return NextResponse.json({ ok: true })
   } catch (err) {
-    console.error('AI organize approve error:', err)
-    return NextResponse.json(
-      { error: 'Failed to resume workflow' },
-      { status: 500 }
-    )
+    console.error('AI organize approve error:', err instanceof Error ? err.name : typeof err)
+    return aiError(500, AI_ERROR_CODES.failed)
   }
 }
