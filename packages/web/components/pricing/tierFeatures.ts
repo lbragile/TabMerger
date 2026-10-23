@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl'
-import { FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { FREE_TIER_LIMITS, PRO_AI_MONTHLY_CREDITS, type AiMode } from '@tabmerger/shared'
 import type { TierKey } from '@/lib/tiers'
 
 /** A key under `pricing.features` and the values its message needs. */
@@ -24,6 +24,9 @@ interface FeatureLine {
     | 'aiNames'
     | 'smartSessions'
     | 'tabPreview'
+    | 'aiCreditsMonthly'
+    | 'ownApiKey'
+    | 'chooseModel'
   count?: number
   /** "Everything in X": a capability the plan below already has (a check mark, not a +). */
   inherited?: boolean
@@ -59,19 +62,38 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'aiNames' },
     { key: 'smartSessions' },
     { key: 'tabPreview' },
+    { key: 'aiCreditsMonthly', count: PRO_AI_MONTHLY_CREDITS },
+    { key: 'chooseModel' },
   ],
 }
+
+/**
+ * Pro AI's own-key option (`PRICING_TIERS` pro_ai `.byok.features`), in the same order. Same
+ * parity test as {@link TIER_FEATURE_LINES}.
+ */
+export const PRO_AI_BYOK_FEATURE_LINES: readonly FeatureLine[] = [
+  { key: 'everythingInPro', inherited: true },
+  { key: 'aiGrouping' },
+  { key: 'aiNames' },
+  { key: 'smartSessions' },
+  { key: 'tabPreview' },
+  { key: 'ownApiKey' },
+  { key: 'chooseModel' },
+]
 
 export interface TierFeature {
   text: string
   inherited: boolean
 }
 
-/** A plan's feature lines in the active locale. */
-export function useTierFeatures(): (tier: TierKey) => TierFeature[] {
+/**
+ * A plan's feature lines in the active locale. `aiMode` picks Pro AI's option (`byok` is the
+ * own-key list); it's ignored for the other plans.
+ */
+export function useTierFeatures(): (tier: TierKey, aiMode?: AiMode) => TierFeature[] {
   const t = useTranslations('pricing.features')
-  return (tier) =>
-    TIER_FEATURE_LINES[tier].map(({ key, count, inherited = false }) => ({
+  return (tier, aiMode = 'managed') =>
+    (tier === 'proAi' && aiMode === 'byok' ? PRO_AI_BYOK_FEATURE_LINES : TIER_FEATURE_LINES[tier]).map(({ key, count, inherited = false }) => ({
       // Lines without a number have no placeholder; passing `count` to them is harmless.
       text: t(key as 'upToGroups', { count: count ?? 0 }),
       inherited,

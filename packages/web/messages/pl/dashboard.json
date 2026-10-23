@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "Kredyty AI w tym miesiącu",
-      "description": "Miesięczne zużycie Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Zostało {left, number}, około {organizes, number} porządkowań {tabs, number} kart"
     },
-    "loading": "Ładowanie"
+    "loading": "Ładowanie",
+    "aiOwnKey": {
+      "label": "Konfiguracja AI",
+      "value": "Ty",
+      "description": "Własny klucz API: dostawca AI rozlicza się bezpośrednio z Tobą, bez limitu kredytów"
+    }
   },
   "subscription": {
     "currentPlan": "Obecny plan",

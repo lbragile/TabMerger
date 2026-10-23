@@ -33,7 +33,9 @@
     "groups": "Nhóm đã đồng bộ",
     "tabs": "Tab đã lưu",
     "sessions": "Phiên và bản sao lưu",
-    "aiCredits": "Tín dụng AI còn lại"
+    "aiCredits": "Tín dụng AI còn lại",
+    "aiOwnKey": "Ai lo phần thiết lập AI",
+    "aiOwnKeyValue": "Bạn"
   },
   "profile": {
     "title": "Hồ sơ",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Không thể bắt đầu thanh toán",
     "getMore": "Mua thêm"
+  },
+  "aiPlan": {
+    "title": "Ai lo phần thiết lập AI",
+    "managed": "TabMerger: còn {left, number}/{limit, number} tín dụng AI trong tháng này.",
+    "byok": "Bạn: khóa API của riêng bạn, nhà cung cấp AI tính phí trực tiếp, không giới hạn tín dụng. Thêm hoặc đổi khóa trong phần Cài đặt của tiện ích."
   }
 }

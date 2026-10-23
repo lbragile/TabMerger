@@ -218,16 +218,13 @@ describe('PricingCard', () => {
     expect(card.className).toMatch(/border-primary\/40/)
   })
 
-  it('shows the AI monthly request quota as a feature line on the Pro AI card only (AI enabled)', async () => {
+  // The monthly credit allowance is one of Pro AI's feature lines (from PRICING_TIERS, see
+  // tierFeatures), so the card adds no credits line of its own.
+  it('adds no AI credits line of its own to the Pro AI card, only the features it is given', async () => {
     const PricingCard = await loadPricingCard(true)
     render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" />)
-    expect(screen.getByText(/AI credits \/ month/)).toBeInTheDocument()
-  })
-
-  it('does not show the AI quota line on the Pro card', async () => {
-    const PricingCard = await loadPricingCard(true)
-    render(<PricingCard {...baseProps} tier="pro" />)
-    expect(screen.queryByText(/AI credits \/ month/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/AI credits/)).not.toBeInTheDocument()
+    expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Feature A', 'Feature B'])
   })
 
   it('hides "Recommended" on the highlighted (Pro) card when the user is on a higher tier (Pro AI)', async () => {
@@ -266,16 +263,27 @@ describe('PricingCard', () => {
       return vi.mocked(global.fetch).mock.calls.map(([input]) => String(input))
     }
 
-    it('a Pro subscriber choosing Pro AI opens the billing portal and never calls checkout', async () => {
+    it('a Pro subscriber choosing Pro AI changes the plan through switch-plan (the portal confirms it) and never calls checkout', async () => {
       const PricingCard = await loadPricingCard(true)
-      mockEndpoints({ '/api/billing-portal': { status: 200, body: { url: 'https://billing.example.com/portal' } } })
+      mockEndpoints({ '/api/billing/switch-plan': { status: 200, body: { url: 'https://billing.example.com/portal' } } })
 
       const user = userEvent.setup()
       render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro" currentInterval="monthly" />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro AI' }))
 
-      expect(requestedPaths()).toEqual(['/api/billing-portal'])
+      expect(requestedPaths()).toEqual(['/api/billing/switch-plan'])
       expect(window.location.href).toBe('https://billing.example.com/portal')
+    })
+
+    it('without a known interval, a plan change still opens the billing portal', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/billing-portal': { status: 200, body: { url: 'https://billing.example.com/portal' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro" />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro AI' }))
+
+      expect(requestedPaths()).toEqual(['/api/billing-portal'])
     })
 
     it('a signed-in free user still starts checkout', async () => {
@@ -467,6 +475,9 @@ describe('PricingCard', () => {
       )
       render(<PricingCard {...baseProps} currentTier="pro" currentInterval="yearly" />)
       await user.click(screen.getByRole('button', { name: 'Switch to monthly billing' }))
+      // A shorter interval takes effect at the end of the term: confirmed before anything is sent.
+      expect(global.fetch).not.toHaveBeenCalled()
+      await user.click(await screen.findByRole('button', { name: 'Confirm' }))
       expect(await screen.findByRole('alert')).toHaveTextContent('already scheduled for the end of this term')
     })
 

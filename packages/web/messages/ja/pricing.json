@@ -35,7 +35,9 @@
     "aiNames": "AIによるグループ名の提案",
     "smartSessions": "スマートなセッションの提案",
     "tabPreview": "AI要約付きのタブプレビュー",
-    "aiCredits": "月{count}AIクレジット"
+    "aiCreditsMonthly": "月{count, number}AIクレジット",
+    "ownApiKey": "自分のAIプロバイダーを使用",
+    "chooseModel": "AIモデルを選択"
   },
   "current": "現在のプラン",
   "installFree": "無料でインストール",
@@ -55,5 +57,34 @@
     "title": "シンプルで明快な料金",
     "lead": "まずは無料で。もっと必要になったらアップグレードしてください。",
     "moreQuestions": "ほかにご質問はありますか？<link>よくある質問</link>をご覧ください。"
+  },
+  "aiOptions": {
+    "legend": "セットアップの担当",
+    "managed": "TabMerger",
+    "byok": "ご自身",
+    "managedHint": "クレジットはAIの使用量を表します。大きな処理や高性能なモデルほど多く消費します。",
+    "byokHint": "Anthropic、OpenAI、GoogleのAPIキーをご自身で追加します。使った分は各社から直接請求され、クレジット上限はありません。",
+    "switchToByok": "ご自身でセットアップする",
+    "switchToManaged": "セットアップをTabMergerに任せる"
+  },
+  "planChange": {
+    "title": "プラン変更の確認",
+    "confirmEndOfPeriod": "{date}にプランが{plan}に変わります。それまでは現在のプランをご利用いただけます。この期間の残りについて返金はありません。",
+    "confirmEndOfPeriodNoDate": "この請求期間の終わりにプランが{plan}に変わります。それまでは現在のプランをご利用いただけます。この期間の残りについて返金はありません。",
+    "confirmChargeNow": "プランが今すぐ{plan}に変わります。この期間の残りの料金が日割りで今すぐ請求されます。",
+    "confirm": "確定",
+    "cancel": "キャンセル",
+    "scheduled": "完了しました。{date}にプランが{plan}に変わります。",
+    "scheduledNoDetails": "完了しました。この請求期間の終わりにプランが変わります。",
+    "appliedNow": "完了しました。現在のプランは{plan}です。",
+    "appliedNowNoDetails": "完了しました。プランが変更されました。",
+    "aiDisabled": "そのPro AIのオプションはまだ利用できません。",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI（TabMergerがセットアップ）",
+      "proAiByok": "Pro AI（ご自身でセットアップ）"
+    },
+    "billedMonthly": "{plan}・月払い",
+    "billedYearly": "{plan}・年払い"
   }
 }

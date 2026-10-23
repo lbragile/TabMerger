@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react'
 import type { Metadata } from 'next'
-import { getLocale, getTranslations } from 'next-intl/server'
+import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { createBillingPortalSession } from '@/lib/stripe'
 import { Button } from '@/components/ui/button'
@@ -19,9 +19,12 @@ import { SetPasswordForm } from '@/components/account/SetPasswordForm'
 import { DevicesSection } from '@/components/account/DevicesSection'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
+import { isAiMode } from '@tabmerger/shared'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { getPriceInfo } from '@/lib/tiers'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('account')
@@ -30,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AccountPage() {
   const supabase = await createClient()
-  const [t, locale] = await Promise.all([getTranslations('account'), getLocale()])
+  const [t, locale, format] = await Promise.all([getTranslations('account'), getLocale(), getFormatter()])
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -107,8 +110,15 @@ export default async function AccountPage() {
     )
   }
 
+  // Pro AI's option: TabMerger's AI (monthly credits plus packs) or the subscriber's own key, which
+  // TabMerger doesn't meter (the server doesn't know the key's provider until a request either).
+  const isProAi = currentTier === 'pro_ai'
+  const aiMode = isAiMode(subscription?.ai_mode) ? subscription.ai_mode : 'managed'
+  const showAi = AI_AVAILABILITY.any
+  const isOwnKey = isProAi && aiMode === 'byok'
   let aiCreditsLeft = 0
-  if (AI_ENABLED && currentTier === 'pro_ai') {
+  let aiCreditsLimit = 0
+  if (showAi && isProAi && !isOwnKey) {
     const month = new Date().toISOString().slice(0, 7)
     const { data: usage } = await supabase
       .from('ai_usage')
@@ -116,8 +126,8 @@ export default async function AccountPage() {
       .eq('user_id', user.id)
       .eq('month', month)
       .maybeSingle()
-    const cap = await getEffectiveCap(supabase, user.id, month)
-    aiCreditsLeft = cap - (usage?.credits_used ?? 0)
+    aiCreditsLimit = await getEffectiveCap(supabase, user.id, month)
+    aiCreditsLeft = Math.max(0, aiCreditsLimit - (usage?.credits_used ?? 0))
   }
 
   let billingPortalUrl: string | null = null
@@ -144,7 +154,7 @@ export default async function AccountPage() {
       {/* Usage summary — real Supabase counts, not placeholder numbers. Sync-derived cards
           (Groups synced / Tabs saved / Sessions) only render for accounts that actually sync;
           AI credits card is hidden entirely while AI features are coming soon. */}
-      {(syncEnabled || AI_ENABLED) && (
+      {(syncEnabled || showAi) && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-1">
           {[
             ...(syncEnabled
@@ -155,9 +165,11 @@ export default async function AccountPage() {
                   { id: 'sessions', label: t('stats.sessions'), value: String(sessionCount) },
                 ]
               : []),
-            ...(AI_ENABLED
-              ? [{ id: 'aiCredits', label: t('stats.aiCredits'), value: currentTier === 'pro_ai' ? String(aiCreditsLeft) : '0', accent: currentTier === 'pro_ai' }]
-              : []),
+            ...(!showAi
+              ? []
+              : isOwnKey
+                ? [{ id: 'aiOwnKey', label: t('stats.aiOwnKey'), value: t('stats.aiOwnKeyValue'), accent: true }]
+                : [{ id: 'aiCredits', label: t('stats.aiCredits'), value: isProAi ? format.number(aiCreditsLeft) : '0', accent: isProAi }]),
           ].map((stat, i) => (
             <div
               key={i}
@@ -168,7 +180,8 @@ export default async function AccountPage() {
               </p>
               <p className="text-[12px] text-text2 mt-0.5 flex items-center gap-1.5 flex-wrap">
                 {stat.label}
-                {stat.id === 'aiCredits' && currentTier === 'pro_ai' && aiCreditsLeft <= 0 && (
+                {/* Credit packs exist only for TabMerger's AI, and only once it's on sale. */}
+                {stat.id === 'aiCredits' && isProAi && AI_AVAILABILITY.managed && aiCreditsLeft <= 0 && (
                   <BuyCreditsButton />
                 )}
               </p>
@@ -255,6 +268,27 @@ export default async function AccountPage() {
               ) : undefined
             }
           />
+
+          {/* Pro AI: which option the subscription is on, and the switch to the other one. */}
+          {showAi && isProAi && isPaid && (
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
+              <div className="min-w-0">
+                <p className="font-medium">{t('aiPlan.title')}</p>
+                <p className="text-muted-foreground">
+                  {isOwnKey
+                    ? t('aiPlan.byok')
+                    : t('aiPlan.managed', { left: aiCreditsLeft, limit: aiCreditsLimit })}
+                </p>
+              </div>
+              <SwitchAiModeButton
+                current={aiMode}
+                interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
+                periodEnd={subscription?.current_period_end}
+                returnPath="/account"
+                className="text-xs"
+              />
+            </div>
+          )}
 
           {isPaid && billingPortalUrl && (
             <p className="text-xs text-muted-foreground">

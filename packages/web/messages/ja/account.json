@@ -33,7 +33,9 @@
     "groups": "同期済みのグループ",
     "tabs": "保存済みのタブ",
     "sessions": "セッションとバックアップ",
-    "aiCredits": "AIクレジット残高"
+    "aiCredits": "AIクレジット残高",
+    "aiOwnKey": "AIのセットアップ担当",
+    "aiOwnKeyValue": "ご自身"
   },
   "profile": {
     "title": "プロフィール",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "チェックアウトを開始できませんでした",
     "getMore": "追加購入"
+  },
+  "aiPlan": {
+    "title": "AIのセットアップ担当",
+    "managed": "TabMerger：今月の残りは{limit, number}AIクレジット中{left, number}です。",
+    "byok": "ご自身：自分のAPIキーを使い、料金はAIプロバイダーから直接請求されます。クレジット上限はありません。キーは拡張機能の設定で追加・変更できます。"
   }
 }

@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "Tín dụng AI tháng này",
-      "description": "Mức sử dụng hàng tháng của Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Còn {left, number}, khoảng {organizes, number} lần sắp xếp {tabs, number} tab"
     },
-    "loading": "Đang tải"
+    "loading": "Đang tải",
+    "aiOwnKey": {
+      "label": "Thiết lập AI",
+      "value": "Bạn",
+      "description": "Khóa API của riêng bạn: nhà cung cấp AI tính phí trực tiếp với bạn, không giới hạn tín dụng"
+    }
   },
   "subscription": {
     "currentPlan": "Gói hiện tại",

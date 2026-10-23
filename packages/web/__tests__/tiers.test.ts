@@ -69,7 +69,7 @@ describe('getStripePriceId / getPriceInfo', () => {
       tier: 'pro_ai',
       interval: 'yearly',
       aiMode: 'byok',
-      amount: 64.99,
+      amount: 64.49,
     })
     expect(getPlanForPriceId('price_proai_monthly')).toMatchObject({ tier: 'pro_ai', aiMode: 'managed', amount: 7.99 })
     expect(getPlanForPriceId('price_pro_monthly')).toMatchObject({ tier: 'pro', aiMode: null, amount: 3.99 })
@@ -90,7 +90,7 @@ describe('getStripePriceId / getPriceInfo', () => {
   it('resolves the own-key Pro AI prices and reports aiMode byok', async () => {
     const { getPriceInfo } = await import('@/lib/tiers')
     expect(getPriceInfo('price_byok_monthly')).toEqual({ amount: 5.99, interval: 'monthly', aiMode: 'byok' })
-    expect(getPriceInfo('price_byok_yearly')).toEqual({ amount: 64.99, interval: 'yearly', aiMode: 'byok' })
+    expect(getPriceInfo('price_byok_yearly')).toEqual({ amount: 64.49, interval: 'yearly', aiMode: 'byok' })
   })
 
   it('returns null for an unknown/legacy price id', async () => {
@@ -128,14 +128,20 @@ describe('yearlySavings', () => {
 // The yearly line's wording: __tests__/i18n-infrastructure.test.tsx (useYearlySubtext).
 
 describe('YEARLY_DISCOUNT_PERCENT', () => {
-  it('is the smallest of every paid option’s savings, so the toggle badge is true for each', async () => {
+  it('is the shared advertised discount (10%), not a figure recomputed from the prices', async () => {
+    const { YEARLY_DISCOUNT_PERCENT } = await import('@/lib/tiers')
+    const shared = await import('@tabmerger/shared')
+    expect(YEARLY_DISCOUNT_PERCENT).toBe(shared.YEARLY_DISCOUNT_PERCENT)
+    expect(YEARLY_DISCOUNT_PERCENT).toBe(10)
+  })
+
+  it('is true for every paid option: each really saves at least that much a year', async () => {
     const { YEARLY_DISCOUNT_PERCENT, YEARLY_SAVINGS } = await import('@/lib/tiers')
-    expect(YEARLY_DISCOUNT_PERCENT).toBe(
-      Math.min(YEARLY_SAVINGS.pro.percent, YEARLY_SAVINGS.proAi.percent, YEARLY_SAVINGS.proAiByok.percent)
-    )
-    // $64.99 against 12 × $5.99 is 9.6% off, rounded down to 9: the own-key option sets the badge.
-    expect(YEARLY_SAVINGS.proAiByok.percent).toBe(9)
-    expect(YEARLY_DISCOUNT_PERCENT).toBe(9)
+    for (const savings of Object.values(YEARLY_SAVINGS)) {
+      expect(savings.percent).toBeGreaterThanOrEqual(YEARLY_DISCOUNT_PERCENT)
+    }
+    // $64.49 against 12 × $5.99 is 10.28% off.
+    expect(YEARLY_SAVINGS.proAiByok.percent).toBe(10)
   })
 })
 
@@ -150,7 +156,7 @@ describe('TIERS.proAi.byok', () => {
       features: byok.features,
     })
     expect(TIERS.proAi.byok.monthlyPrice).toBe(5.99)
-    expect(TIERS.proAi.byok.yearlyPrice).toBe(64.99)
+    expect(TIERS.proAi.byok.yearlyPrice).toBe(64.49)
   })
 })
 

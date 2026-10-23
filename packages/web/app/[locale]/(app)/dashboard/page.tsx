@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
@@ -16,9 +17,11 @@ import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
 import { Sparkles } from 'lucide-react'
 import { getEffectiveCap } from '@/lib/ai-usage'
-import { AUTO_BACKUP_DOWNLOAD_LIMITS, isEncryptedBlob } from '@tabmerger/shared'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AUTO_BACKUP_DOWNLOAD_LIMITS, isAiMode, isEncryptedBlob } from '@tabmerger/shared'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
+import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { getPriceInfo } from '@/lib/tiers'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
@@ -99,24 +102,40 @@ export default async function DashboardPage({
     0
   )
 
-  let aiUsage: { used: number; limit: number } | undefined
-  if (AI_ENABLED && currentTier === 'pro_ai') {
-    const month = new Date().toISOString().slice(0, 7)
-    const { data: usage } = await supabase
-      .from('ai_usage')
-      .select('credits_used')
-      .eq('user_id', user.id)
-      .eq('month', month)
-      .single()
-    aiUsage = {
-      used: usage?.credits_used ?? 0,
-      limit: await getEffectiveCap(supabase, user.id, month),
+  // Pro AI's option: TabMerger's AI (credits) or the subscriber's own key (no credits to show).
+  const aiMode = isAiMode(subscription?.ai_mode) ? subscription.ai_mode : 'managed'
+  const aiSwitch = (
+    <SwitchAiModeButton
+      current={aiMode}
+      interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
+      periodEnd={subscription?.current_period_end}
+      returnPath="/dashboard"
+    />
+  )
+  let aiUsage: ComponentProps<typeof StatsOverview>['aiUsage']
+  if (AI_AVAILABILITY.any && currentTier === 'pro_ai') {
+    if (aiMode === 'byok') {
+      aiUsage = { mode: 'byok', action: aiSwitch }
+    } else {
+      const month = new Date().toISOString().slice(0, 7)
+      const { data: usage } = await supabase
+        .from('ai_usage')
+        .select('credits_used')
+        .eq('user_id', user.id)
+        .eq('month', month)
+        .single()
+      aiUsage = {
+        mode: 'managed',
+        used: usage?.credits_used ?? 0,
+        limit: await getEffectiveCap(supabase, user.id, month),
+        action: aiSwitch,
+      }
     }
   }
 
   const { organizeRunId, organizeToken } = params
   let organizeSession: string | null = null
-  if (AI_ENABLED && organizeRunId && organizeToken) {
+  if (AI_AVAILABILITY.any && organizeRunId && organizeToken) {
     /** OrganizeProposal is a client component and can't read server cookies, so we pass the JWT down as a prop */
     const { data: { session } } = await supabase.auth.getSession()
     organizeSession = session?.access_token ?? null
@@ -149,7 +168,7 @@ export default async function DashboardPage({
               Disabled buttons don't fire hover events, so the tooltip trigger wraps the button in
               a span rather than relying on a native title attribute (which silently never fires).
               Hidden entirely while AI features are behind the coming-soon flag. */}
-          {AI_ENABLED && (
+          {AI_AVAILABILITY.any && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -192,7 +211,7 @@ export default async function DashboardPage({
         priceId={subscription?.stripe_price_id}
       />
 
-      {AI_ENABLED && organizeRunId && organizeToken && organizeSession && (
+      {AI_AVAILABILITY.any && organizeRunId && organizeToken && organizeSession && (
         <OrganizeProposal
           runId={organizeRunId}
           token={organizeToken}

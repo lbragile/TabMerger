@@ -35,7 +35,9 @@
     "aiNames": "Saran nama grup dari AI",
     "smartSessions": "Saran sesi cerdas",
     "tabPreview": "Pratinjau tab dengan ringkasan AI",
-    "aiCredits": "{count} kredit AI / bulan"
+    "aiCreditsMonthly": "{count, number} kredit AI per bulan",
+    "ownApiKey": "Gunakan penyedia AI Anda sendiri",
+    "chooseModel": "Pilih model AI Anda"
   },
   "current": "Saat ini",
   "installFree": "Pasang gratis",
@@ -55,5 +57,34 @@
     "title": "Harga sederhana dan transparan",
     "lead": "Mulai gratis. Tingkatkan saat Anda siap untuk lebih.",
     "moreQuestions": "Punya pertanyaan lain? Lihat <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Siapa yang mengurus penyiapan",
+    "managed": "TabMerger",
+    "byok": "Anda",
+    "managedHint": "Kredit mengukur penggunaan AI: tugas yang lebih besar dan model yang lebih kuat memakai lebih banyak.",
+    "byokHint": "Anda menambahkan kunci API dari Anthropic, OpenAI, atau Google. Penyedia menagih Anda langsung sesuai pemakaian, tanpa batas kredit.",
+    "switchToByok": "Urus penyiapan sendiri",
+    "switchToManaged": "Serahkan penyiapan ke TabMerger"
+  },
+  "planChange": {
+    "title": "Konfirmasi perubahan paket",
+    "confirmEndOfPeriod": "Paket Anda berubah menjadi {plan} pada {date}. Anda tetap memakai paket saat ini sampai saat itu. Tidak ada pengembalian dana untuk sisa periode ini.",
+    "confirmEndOfPeriodNoDate": "Paket Anda berubah menjadi {plan} di akhir periode tagihan ini. Anda tetap memakai paket saat ini sampai saat itu. Tidak ada pengembalian dana untuk sisa periode ini.",
+    "confirmChargeNow": "Paket Anda berubah menjadi {plan} sekarang. Sisa periode ini ditagih sekarang secara prorata.",
+    "confirm": "Konfirmasi",
+    "cancel": "Batal",
+    "scheduled": "Selesai. Paket Anda berubah menjadi {plan} pada {date}.",
+    "scheduledNoDetails": "Selesai. Paket Anda berubah di akhir periode tagihan ini.",
+    "appliedNow": "Selesai. Anda sekarang memakai {plan}.",
+    "appliedNowNoDetails": "Selesai. Paket Anda telah berubah.",
+    "aiDisabled": "Opsi Pro AI itu belum tersedia.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI dengan penyiapan oleh TabMerger",
+      "proAiByok": "Pro AI dengan penyiapan oleh Anda"
+    },
+    "billedMonthly": "{plan}, ditagih bulanan",
+    "billedYearly": "{plan}, ditagih tahunan"
   }
 }

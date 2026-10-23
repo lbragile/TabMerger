@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "Kredit AI bulan ini",
-      "description": "Penggunaan bulanan Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Sisa {left, number}, sekitar {organizes, number} kali merapikan {tabs, number} tab"
     },
-    "loading": "Memuat"
+    "loading": "Memuat",
+    "aiOwnKey": {
+      "label": "Penyiapan AI",
+      "value": "Anda",
+      "description": "Kunci API Anda sendiri: penyedia AI menagih Anda langsung, tanpa batas kredit"
+    }
   },
   "subscription": {
     "currentPlan": "Paket saat ini",

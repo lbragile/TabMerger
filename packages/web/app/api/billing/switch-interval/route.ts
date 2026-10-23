@@ -8,9 +8,13 @@ import { isBillingInterval, startPlanSwitch } from '@/lib/planSwitch'
  * user already pays for, so this can't be used to reach a different (or unreleased) plan. The
  * subscription row is written by the webhook once Stripe confirms, never by this route.
  *
+ * An own-key Pro AI subscriber's switch can't go through the portal (it can't list own-key
+ * prices): monthly → yearly is applied now with a prorated charge and yearly → monthly is
+ * scheduled for the end of the term, answering `{ applied, url }` instead (see startPlanSwitch()).
+ *
  * Body: `{ interval: 'monthly' | 'yearly' }`. Responds `{ url }`, or 400 (bad body / no billing
- * account), 401, 403 (no paid plan), 409 (already on that interval, or a switch is already
- * scheduled; `error` is shown to the user), 503 (price not configured, or `ai_disabled` when the
+ * account), 401, 403 (no paid plan), 409 (already on that interval, a switch is already
+ * scheduled, or the plan is set to end; `error` is shown to the user), 503 (price not configured, or `ai_disabled` when the
  * subscriber's Pro AI option isn't on sale, see aiAvailability()). The work is shared with
  * `/api/billing/switch-plan` (startPlanSwitch() in lib/planSwitch.ts).
  */

@@ -63,7 +63,7 @@ describe('POST /api/billing/switch-interval', () => {
     mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } })
     mockSubscription.mockResolvedValue({ data: { tier: 'pro', status: 'active' } })
     mockProfile.mockResolvedValue({ data: { stripe_customer_id: 'cus_1' } })
-    mockCreateSession.mockResolvedValue('https://billing.stripe.com/p/session/test')
+    mockCreateSession.mockResolvedValue({ kind: 'portal', url: 'https://billing.stripe.com/p/session/test' })
   })
 
   afterEach(() => {

@@ -15,7 +15,8 @@
   "ai": {
     "question": "AI chính xác làm gì?",
     "answer": "Gói Pro AI mở khóa ba tính năng AI: tự động nhóm (phân tích các tab đang mở và nhóm chúng một cách hợp lý), đặt tên thông minh (gợi ý tên cho các nhóm) và gợi ý phiên (đề xuất cách sắp xếp quy trình làm việc của bạn).",
-    "answerComingSoon": "Sắp ra mắt — gói Pro AI sẽ mở khóa ba tính năng AI: tự động nhóm (phân tích các tab đang mở và nhóm chúng một cách hợp lý), đặt tên thông minh (gợi ý tên cho các nhóm) và gợi ý phiên (đề xuất cách sắp xếp quy trình làm việc của bạn)."
+    "answerComingSoon": "Sắp ra mắt — gói Pro AI sẽ mở khóa ba tính năng AI: tự động nhóm (phân tích các tab đang mở và nhóm chúng một cách hợp lý), đặt tên thông minh (gợi ý tên cho các nhóm) và gợi ý phiên (đề xuất cách sắp xếp quy trình làm việc của bạn).",
+    "answerOwnKey": "Gói Pro AI mở khóa ba tính năng AI: tự động nhóm (phân tích các tab đang mở và nhóm chúng một cách hợp lý), đặt tên thông minh (gợi ý tên cho các nhóm) và gợi ý phiên (đề xuất cách sắp xếp quy trình làm việc của bạn). Hiện tại, bạn tự lo phần thiết lập: Pro AI chạy bằng khóa API của riêng bạn từ Anthropic, OpenAI hoặc Google, nhà cung cấp tính phí trực tiếp với bạn theo mức dùng. Tùy chọn để TabMerger lo phần thiết lập sắp ra mắt."
   },
   "cancel": {
     "question": "Tôi có thể hủy gói đăng ký không?",

@@ -35,7 +35,9 @@
     "aiNames": "KI-Vorschläge für Gruppennamen",
     "smartSessions": "Intelligente Sitzungsvorschläge",
     "tabPreview": "Tab-Vorschau mit KI-Zusammenfassung",
-    "aiCredits": "{count} KI-Credits / Monat"
+    "aiCreditsMonthly": "{count, number} KI-Credits pro Monat",
+    "ownApiKey": "Eigenen KI-Anbieter nutzen",
+    "chooseModel": "Wähle dein KI-Modell"
   },
   "current": "Aktuell",
   "installFree": "Kostenlos installieren",
@@ -55,5 +57,34 @@
     "title": "Einfache, transparente Preise",
     "lead": "Starte kostenlos. Upgrade, wenn du bereit für mehr bist.",
     "moreQuestions": "Weitere Fragen? Sieh dir die <link>FAQ</link> an."
+  },
+  "aiOptions": {
+    "legend": "Wer übernimmt die Einrichtung",
+    "managed": "TabMerger",
+    "byok": "Du",
+    "managedHint": "Credits messen die KI-Nutzung: größere Aufgaben und stärkere Modelle verbrauchen mehr.",
+    "byokHint": "Du fügst einen API-Schlüssel von Anthropic, OpenAI oder Google hinzu. Der Anbieter rechnet deine Nutzung direkt mit dir ab, ohne Credit-Limit.",
+    "switchToByok": "Einrichtung selbst übernehmen",
+    "switchToManaged": "Einrichtung TabMerger überlassen"
+  },
+  "planChange": {
+    "title": "Tarifwechsel bestätigen",
+    "confirmEndOfPeriod": "Dein Tarif wechselt am {date} zu {plan}. Bis dahin behältst du deinen aktuellen Tarif. Für den Rest dieses Zeitraums gibt es keine Erstattung.",
+    "confirmEndOfPeriodNoDate": "Dein Tarif wechselt zum Ende dieses Abrechnungszeitraums zu {plan}. Bis dahin behältst du deinen aktuellen Tarif. Für den Rest dieses Zeitraums gibt es keine Erstattung.",
+    "confirmChargeNow": "Dein Tarif wechselt jetzt zu {plan}. Der Rest dieses Zeitraums wird dir jetzt anteilig berechnet.",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "scheduled": "Erledigt. Dein Tarif wechselt am {date} zu {plan}.",
+    "scheduledNoDetails": "Erledigt. Dein Tarif wechselt zum Ende dieses Abrechnungszeitraums.",
+    "appliedNow": "Erledigt. Du hast jetzt {plan}.",
+    "appliedNowNoDetails": "Erledigt. Dein Tarif wurde geändert.",
+    "aiDisabled": "Diese Pro-AI-Option ist noch nicht verfügbar.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI, eingerichtet von TabMerger",
+      "proAiByok": "Pro AI, von dir eingerichtet"
+    },
+    "billedMonthly": "{plan}, monatliche Abrechnung",
+    "billedYearly": "{plan}, jährliche Abrechnung"
   }
 }

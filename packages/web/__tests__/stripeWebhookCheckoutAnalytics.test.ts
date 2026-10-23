@@ -559,8 +559,8 @@ describe('checkout_abandoned for Pro AI on your own key', () => {
 
     expect(gaBodies()[0].events[0].params).toMatchObject({
       tier: 'pro_ai',
-      value: 64.99,
-      items: [{ item_id: 'pro_ai', item_name: 'Pro AI (own key)', item_variant: 'yearly', price: 64.99, quantity: 1 }],
+      value: 64.49,
+      items: [{ item_id: 'pro_ai', item_name: 'Pro AI (own key)', item_variant: 'yearly', price: 64.49, quantity: 1 }],
     })
   })
 

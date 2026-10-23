@@ -33,7 +33,9 @@
     "groups": "Grupos sincronizados",
     "tabs": "Abas salvas",
     "sessions": "Sessões e backups",
-    "aiCredits": "Créditos de IA restantes"
+    "aiCredits": "Créditos de IA restantes",
+    "aiOwnKey": "Quem configura a IA",
+    "aiOwnKeyValue": "Você"
   },
   "profile": {
     "title": "Perfil",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Não foi possível iniciar o checkout",
     "getMore": "Obter mais"
+  },
+  "aiPlan": {
+    "title": "Quem configura a IA",
+    "managed": "TabMerger: restam {left, number} de {limit, number} créditos de IA neste mês.",
+    "byok": "Você: sua própria chave de API, cobrada diretamente pelo seu provedor de IA, sem limite de créditos. Adicione ou troque a chave nas Configurações da extensão."
   }
 }

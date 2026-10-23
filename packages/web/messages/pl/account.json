@@ -33,7 +33,9 @@
     "groups": "Zsynchronizowane grupy",
     "tabs": "Zapisane karty",
     "sessions": "Sesje i kopie zapasowe",
-    "aiCredits": "Pozostałe kredyty AI"
+    "aiCredits": "Pozostałe kredyty AI",
+    "aiOwnKey": "Kto konfiguruje AI",
+    "aiOwnKeyValue": "Ty"
   },
   "profile": {
     "title": "Profil",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Nie udało się rozpocząć płatności",
     "getMore": "Kup więcej"
+  },
+  "aiPlan": {
+    "title": "Kto konfiguruje AI",
+    "managed": "TabMerger: zostało {left, number} z {limit, number} kredytów AI w tym miesiącu.",
+    "byok": "Ty: własny klucz API, rozliczany bezpośrednio przez dostawcę AI, bez limitu kredytów. Klucz dodasz lub zmienisz w Ustawieniach rozszerzenia."
   }
 }

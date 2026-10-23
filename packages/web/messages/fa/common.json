@@ -6,5 +6,6 @@
   "opensInNewTab": " (در زبانهٔ جدید باز می‌شود)",
   "close": "بستن",
   "showPassphrase": "نمایش عبارت عبور",
-  "hidePassphrase": "پنهان کردن عبارت عبور"
+  "hidePassphrase": "پنهان کردن عبارت عبور",
+  "withYourOwnKey": "با کلید API خودتان"
 }

@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "اعتبار هوش مصنوعی این ماه",
-      "description": "مصرف ماهانهٔ Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "{left, number} باقی‌مانده، حدود {organizes, number} بار مرتب‌سازی {tabs, number} زبانه"
     },
-    "loading": "در حال بارگیری"
+    "loading": "در حال بارگیری",
+    "aiOwnKey": {
+      "label": "راه‌اندازی هوش مصنوعی",
+      "value": "خودتان",
+      "description": "کلید API خودتان: ارائه‌دهندهٔ هوش مصنوعی مستقیم از شما هزینه می‌گیرد، بدون سقف اعتبار"
+    }
   },
   "subscription": {
     "currentPlan": "طرح فعلی",

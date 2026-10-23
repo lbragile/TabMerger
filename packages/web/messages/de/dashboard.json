@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "KI-Credits diesen Monat",
-      "description": "Monatliche Pro-AI-Nutzung",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "{left, number} übrig, etwa {organizes, number}-mal Organisieren von {tabs, number} Tabs"
     },
-    "loading": "Wird geladen"
+    "loading": "Wird geladen",
+    "aiOwnKey": {
+      "label": "KI-Einrichtung",
+      "value": "Du",
+      "description": "Eigener API-Schlüssel: dein KI-Anbieter rechnet direkt mit dir ab, ohne Credit-Limit"
+    }
   },
   "subscription": {
     "currentPlan": "Aktueller Tarif",

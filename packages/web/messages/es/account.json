@@ -33,7 +33,9 @@
     "groups": "Grupos sincronizados",
     "tabs": "Pestañas guardadas",
     "sessions": "Sesiones y copias",
-    "aiCredits": "Créditos de IA restantes"
+    "aiCredits": "Créditos de IA restantes",
+    "aiOwnKey": "Quién configura la IA",
+    "aiOwnKeyValue": "Tú"
   },
   "profile": {
     "title": "Perfil",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "No se pudo iniciar el pago",
     "getMore": "Obtener más"
+  },
+  "aiPlan": {
+    "title": "Quién configura la IA",
+    "managed": "TabMerger: quedan {left, number} de {limit, number} créditos de IA este mes.",
+    "byok": "Tú: tu propia clave de API, que tu proveedor de IA te cobra directamente, sin límite de créditos. Añade o cambia la clave en los Ajustes de la extensión."
   }
 }

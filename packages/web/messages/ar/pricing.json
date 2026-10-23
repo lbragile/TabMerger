@@ -35,7 +35,9 @@
     "aiNames": "اقتراحات أسماء المجموعات بالذكاء الاصطناعي",
     "smartSessions": "اقتراحات ذكية للجلسات",
     "tabPreview": "معاينة علامة التبويب مع ملخص بالذكاء الاصطناعي",
-    "aiCredits": "{count} من رصيد الذكاء الاصطناعي / شهريًا"
+    "aiCreditsMonthly": "{count, number} من رصيد الذكاء الاصطناعي شهريًا",
+    "ownApiKey": "استخدم مزوّد الذكاء الاصطناعي الخاص بك",
+    "chooseModel": "اختر نموذج الذكاء الاصطناعي"
   },
   "current": "الحالية",
   "installFree": "ثبّته مجانًا",
@@ -55,5 +57,34 @@
     "title": "أسعار بسيطة وشفافة",
     "lead": "ابدأ مجانًا. ورقِّ خطتك عندما تكون مستعدًا للمزيد.",
     "moreQuestions": "لديك أسئلة أخرى؟ اطّلع على <link>الأسئلة الشائعة</link>."
+  },
+  "aiOptions": {
+    "legend": "من يتولى الإعداد",
+    "managed": "TabMerger",
+    "byok": "أنت",
+    "managedHint": "يقيس الرصيد استخدام الذكاء الاصطناعي: المهام الأكبر والنماذج الأقوى تستهلك أكثر.",
+    "byokHint": "تضيف أنت مفتاح API من ⁨Anthropic⁩ أو ⁨OpenAI⁩ أو ⁨Google⁩. يحاسبك المزوّد مباشرةً على ما تستخدمه، بلا حد للرصيد.",
+    "switchToByok": "تولَّ الإعداد بنفسك",
+    "switchToManaged": "اترك الإعداد لـ TabMerger"
+  },
+  "planChange": {
+    "title": "تأكيد تغيير الخطة",
+    "confirmEndOfPeriod": "ستتغير خطتك إلى {plan} في {date}. تحتفظ بخطتك الحالية حتى ذلك الحين. لا استرداد لبقية هذه الفترة.",
+    "confirmEndOfPeriodNoDate": "ستتغير خطتك إلى {plan} في نهاية فترة الفوترة هذه. تحتفظ بخطتك الحالية حتى ذلك الحين. لا استرداد لبقية هذه الفترة.",
+    "confirmChargeNow": "تتغير خطتك إلى {plan} الآن. ستُحاسَب الآن على بقية هذه الفترة بالتناسب.",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "scheduled": "تم. ستتغير خطتك إلى {plan} في {date}.",
+    "scheduledNoDetails": "تم. ستتغير خطتك في نهاية فترة الفوترة هذه.",
+    "appliedNow": "تم. أنت الآن على {plan}.",
+    "appliedNowNoDetails": "تم. تغيّرت خطتك.",
+    "aiDisabled": "خيار Pro AI هذا غير متاح بعد.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI بإعداد من TabMerger",
+      "proAiByok": "Pro AI بإعداد منك"
+    },
+    "billedMonthly": "{plan}، فوترة شهرية",
+    "billedYearly": "{plan}، فوترة سنوية"
   }
 }

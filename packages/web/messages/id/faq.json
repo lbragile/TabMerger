@@ -15,7 +15,8 @@
   "ai": {
     "question": "Apa sebenarnya yang dilakukan AI?",
     "answer": "Paket Pro AI membuka tiga fitur AI: pengelompokan otomatis (menganalisis tab yang terbuka dan mengelompokkannya secara logis), penamaan cerdas (menyarankan nama untuk grup Anda), dan saran sesi (merekomendasikan cara mengatur alur kerja Anda).",
-    "answerComingSoon": "Segera hadir — paket Pro AI akan membuka tiga fitur AI: pengelompokan otomatis (menganalisis tab yang terbuka dan mengelompokkannya secara logis), penamaan cerdas (menyarankan nama untuk grup Anda), dan saran sesi (merekomendasikan cara mengatur alur kerja Anda)."
+    "answerComingSoon": "Segera hadir — paket Pro AI akan membuka tiga fitur AI: pengelompokan otomatis (menganalisis tab yang terbuka dan mengelompokkannya secara logis), penamaan cerdas (menyarankan nama untuk grup Anda), dan saran sesi (merekomendasikan cara mengatur alur kerja Anda).",
+    "answerOwnKey": "Paket Pro AI membuka tiga fitur AI: pengelompokan otomatis (menganalisis tab yang terbuka dan mengelompokkannya secara logis), penamaan cerdas (menyarankan nama untuk grup Anda), dan saran sesi (merekomendasikan cara mengatur alur kerja Anda). Untuk saat ini, Anda yang mengurus penyiapan: Pro AI berjalan dengan kunci API Anda sendiri dari Anthropic, OpenAI, atau Google, yang menagih Anda langsung sesuai pemakaian. Penyiapan oleh TabMerger segera hadir."
   },
   "cancel": {
     "question": "Bisakah saya membatalkan langganan?",

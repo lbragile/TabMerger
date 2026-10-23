@@ -40,6 +40,15 @@ const LOCAL_CURRENCY_CHECKOUT = { adaptive_pricing: { enabled: true } } as const
 // client components can import TIERS without pulling in the Stripe SDK.
 export { TIERS, getStripePriceId, getPlanForPriceId, getPlanPriceIds } from './tiers'
 export type { TierKey, BillingInterval } from './tiers'
+import { getPlanForPriceId, type BillingInterval } from './tiers'
+import { planChangeTiming } from './planChangeTiming'
+
+/**
+ * Shown next to the pay button of the credit-pack checkout (`custom_text.submit`, at most 1,200
+ * characters). The terms page (section 3) says the same.
+ */
+export const CREDIT_PACK_REFUND_NOTICE =
+  'AI credit packs are non-refundable, including if you cancel your subscription. Credits are for the current month and are never exchanged for money.'
 
 export async function createCheckoutSession({
   userId,
@@ -163,6 +172,9 @@ export async function createCreditPackCheckoutSession({
     success_url: successUrl,
     cancel_url: cancelUrl,
     metadata: { user_id: userId, type: 'ai_credit_pack' },
+    // The refund policy, where the pack is bought: packs are never refunded (cancelling the
+    // subscription included) and unused credits don't turn into money.
+    custom_text: { submit: { message: CREDIT_PACK_REFUND_NOTICE } },
     ...LOCAL_CURRENCY_CHECKOUT,
   }, { apiVersion: CHECKOUT_API_VERSION })
 
@@ -197,23 +209,53 @@ export async function createBillingPortalSession({
 
 /** Why a plan switch couldn't start; the route maps each to a status code. */
 export class PlanSwitchError extends Error {
-  constructor(readonly reason: 'no_subscription' | 'already_on_price' | 'already_scheduled') {
+  constructor(
+    readonly reason: 'no_subscription' | 'already_on_price' | 'already_scheduled' | 'cancel_scheduled'
+  ) {
     super(reason)
   }
 }
 
 /**
- * Opens the Billing Portal straight on its "confirm plan change" page, moving the customer's
- * paid subscription (one whose price is in `planPriceIds`) to `targetPriceId`: another billing
- * interval (monthly ↔ yearly) or, for Pro AI, the other AI option (TabMerger's key ↔ own key).
- * The portal configuration decides the timing: monthly→yearly applies now with a prorated
- * charge, and yearly→monthly (a shorter interval) waits for the end of the term. Either way
- * Stripe fires `customer.subscription.updated` when the price changes, which the webhook turns
- * into the new tier, interval, AI option and credit allowance, so nothing is written here.
+ * What a plan switch did (see `classifyPlanChange()` in lib/tiers.ts):
+ * - `portal`: the customer confirms on Stripe's "confirm plan change" page at `url`;
+ * - `applied_now`: the subscription was moved now with a prorated charge. `url` is the invoice
+ *   to pay when the payment needs the customer (3-D Secure, a declined card), otherwise null; until
+ *   it is paid the change stays pending (`payment_behavior: 'pending_if_incomplete'`);
+ * - `scheduled`: the change takes effect at `effectiveAt` (unix seconds, the end of the paid
+ *   period), with no proration.
+ */
+export type PlanSwitchResult =
+  | { kind: 'portal'; url: string }
+  | { kind: 'applied_now'; url: string | null }
+  | { kind: 'scheduled'; effectiveAt: number }
+
+const idOf = (value: string | { id: string } | null | undefined): string | undefined =>
+  typeof value === 'string' ? value : value?.id
+
+/**
+ * Moves the customer's paid subscription (one whose price is in `planPriceIds`) to
+ * `targetPriceId`, following the refund policy (docs/PAYMENTS.md, "Refund policy"):
  *
- * The portal configuration must list `targetPriceId` under subscription updates, or Stripe
- * rejects the session. `STRIPE_PORTAL_CONFIGURATION_ID` picks that configuration; without it,
- * the account's default configuration is used.
+ * - **Upgrades** (nothing gets cheaper or shorter) apply now, charged prorated against the unused
+ *   time: through the Billing Portal's "confirm plan change" page when both prices are ones the
+ *   portal lists (Pro, TabMerger-managed Pro AI), otherwise by updating the subscription directly
+ *   with `always_invoice`. The portal can't list own-key prices: it allows one price per product
+ *   and interval, and they share the Pro AI product with the managed ones.
+ * - **Interval shortening** on the same plan (yearly → monthly) goes to the portal, whose
+ *   `shortening_interval` condition defers it to the end of the term; on an own-key price it is
+ *   scheduled here instead.
+ * - **Downgrades** (Pro AI → Pro, managed → own key, or shortening plus another change) are
+ *   scheduled here for the end of the paid period with no proration: a subscription schedule whose
+ *   current phase ends with the period and whose next phase is the new price. Nothing is refunded
+ *   or credited, and access to the current plan lasts until then.
+ *
+ * Stripe fires `customer.subscription.updated` when the price actually changes (now, or when the
+ * schedule's next phase starts), and the webhook records the new tier, interval, AI option and
+ * credit allowance, so nothing is written to the database here.
+ *
+ * Portal sessions use `STRIPE_PORTAL_CONFIGURATION_ID` when set (otherwise the account default),
+ * which must list the target price under subscription updates or Stripe rejects the session.
  */
 export async function createPlanSwitchSession({
   customerId,
@@ -225,7 +267,7 @@ export async function createPlanSwitchSession({
   targetPriceId: string
   planPriceIds: readonly string[]
   returnUrl: string
-}): Promise<string> {
+}): Promise<PlanSwitchResult> {
   if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
 
   const { data: subscriptions } = await stripe.subscriptions.list({ customer: customerId, limit: 10 })
@@ -239,9 +281,28 @@ export async function createPlanSwitchSession({
 
   const item = subscription.items.data[0]
   if (item.price.id === targetPriceId) throw new PlanSwitchError('already_on_price')
-  // The portal defers yearly→monthly to the end of the term by attaching a subscription schedule.
-  // While that's pending, Stripe won't take another update, so say so instead of failing.
+  // A deferred change (ours, or the portal's yearly→monthly) is a subscription schedule. While it
+  // is pending, Stripe won't take another update, so say so instead of failing.
   if (subscription.schedule) throw new PlanSwitchError('already_scheduled')
+  // A subscription set to end can't be given a schedule, and changing it would undo nothing the
+  // customer asked for. They renew it in the portal first.
+  if (subscription.cancel_at_period_end || subscription.cancel_at) {
+    throw new PlanSwitchError('cancel_scheduled')
+  }
+
+  // One rule for the server and the plan-change confirmation dialog (lib/planChangeTiming.ts),
+  // so what the dialog promises is what happens here.
+  const to = getPlanForPriceId(targetPriceId)
+  const timing = planChangeTiming(getPlanForPriceId(item.price.id), to)
+
+  if (timing === 'end_of_period') {
+    return scheduleChangeAtPeriodEnd(subscription.id, targetPriceId, to?.interval ?? null)
+  }
+  if (timing === 'now') {
+    return applyUpgradeNow(subscription.id, item.id, targetPriceId)
+  }
+  // 'portal' (an upgrade, charged prorated) or 'portal_end_of_period' (yearly → monthly, deferred
+  // by the configuration's shortening_interval condition).
 
   const session = await stripe.billingPortal.sessions.create({
     customer: customerId,
@@ -260,5 +321,97 @@ export async function createPlanSwitchSession({
     },
   })
 
-  return session.url
+  return { kind: 'portal', url: session.url }
+}
+
+/**
+ * An upgrade the portal can't offer, applied now: the item moves to the new price and Stripe
+ * invoices the prorated difference at once (`always_invoice`). With `pending_if_incomplete` the
+ * new price only takes effect once that invoice is paid; until then the subscription keeps its
+ * plan and `pending_update` is set, and the invoice's hosted page is where the customer pays.
+ */
+async function applyUpgradeNow(
+  subscriptionId: string,
+  itemId: string,
+  targetPriceId: string
+): Promise<PlanSwitchResult> {
+  const updated = await stripe.subscriptions.update(subscriptionId, {
+    items: [{ id: itemId, price: targetPriceId, quantity: 1 }],
+    proration_behavior: 'always_invoice',
+    payment_behavior: 'pending_if_incomplete',
+    expand: ['latest_invoice'],
+  })
+  const invoice = updated.latest_invoice
+  const url =
+    updated.pending_update && invoice && typeof invoice !== 'string'
+      ? invoice.hosted_invoice_url ?? null
+      : null
+  return { kind: 'applied_now', url }
+}
+
+/**
+ * Schedules a change for the end of the current paid period, with no proration (Stripe's
+ * documented "schedule a downgrade for an existing subscription": a schedule made from the
+ * subscription, then updated with the current phase kept as is and a next phase on the new
+ * price). `end_behavior: 'release'` leaves the subscription running on the new price afterwards.
+ * If the update fails, the half-made schedule is released so the subscription isn't left locked
+ * (a subscription with a schedule can't be changed or cancelled in the portal).
+ */
+async function scheduleChangeAtPeriodEnd(
+  subscriptionId: string,
+  targetPriceId: string,
+  targetInterval: BillingInterval | null
+): Promise<PlanSwitchResult> {
+  const schedule = await stripe.subscriptionSchedules.create({ from_subscription: subscriptionId })
+  try {
+    const current = schedule.phases[0]
+    if (!current) throw new Error('Subscription schedule has no current phase')
+
+    // Stripe unsets any phase field an update leaves out, so the current phase is passed back
+    // with its items, discounts, tax rates and metadata.
+    const discounts = current.discounts.flatMap((d): Stripe.SubscriptionScheduleUpdateParams.Phase.Discount[] => {
+      const discount = idOf(d.discount)
+      if (discount) return [{ discount }]
+      const coupon = idOf(d.coupon)
+      if (coupon) return [{ coupon }]
+      const promotionCode = idOf(d.promotion_code)
+      return promotionCode ? [{ promotion_code: promotionCode }] : []
+    })
+    const taxRates = (current.default_tax_rates ?? []).map((rate) => idOf(rate)).filter(Boolean) as string[]
+
+    await stripe.subscriptionSchedules.update(schedule.id, {
+      end_behavior: 'release',
+      proration_behavior: 'none',
+      phases: [
+        {
+          items: current.items.map((phaseItem) => ({
+            price: idOf(phaseItem.price)!,
+            quantity: phaseItem.quantity ?? 1,
+          })),
+          start_date: current.start_date,
+          end_date: current.end_date,
+          proration_behavior: 'none',
+          ...(discounts.length > 0 ? { discounts } : {}),
+          ...(taxRates.length > 0 ? { default_tax_rates: taxRates } : {}),
+          ...(current.metadata && Object.keys(current.metadata).length > 0
+            ? { metadata: current.metadata }
+            : {}),
+        },
+        {
+          items: [{ price: targetPriceId, quantity: 1 }],
+          // No credit for the period that just ended and no charge beyond the new price's own
+          // renewal: the change lands exactly on the period boundary.
+          proration_behavior: 'none',
+          duration: { interval: targetInterval === 'yearly' ? 'year' : 'month', interval_count: 1 },
+        },
+      ],
+    })
+
+    return { kind: 'scheduled', effectiveAt: current.end_date }
+  } catch (err) {
+    await stripe.subscriptionSchedules.release(schedule.id).catch((releaseErr: unknown) => {
+      console.error(`Plan switch: releasing unfinished schedule ${schedule.id} failed`, releaseErr)
+    })
+    throw err
+  }
 }

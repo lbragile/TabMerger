@@ -33,7 +33,9 @@
     "groups": "Groups synced",
     "tabs": "Tabs saved",
     "sessions": "Sessions and backups",
-    "aiCredits": "AI credits left"
+    "aiCredits": "AI credits left",
+    "aiOwnKey": "Who handles AI setup",
+    "aiOwnKeyValue": "You"
   },
   "profile": {
     "title": "Profile",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Could not start checkout",
     "getMore": "Get more"
+  },
+  "aiPlan": {
+    "title": "Who handles AI setup",
+    "managed": "TabMerger: {left, number} of {limit, number} AI credits left this month.",
+    "byok": "You: your own API key, billed directly by your AI provider, with no credit limit. Add or change the key in the extension's Settings."
   }
 }

@@ -57,10 +57,10 @@ describe('PricingTable', () => {
     expect(screen.getByRole('button', { name: 'Switch to yearly billing' })).toBeInTheDocument()
   })
 
-  it('computes the toggle badge from the prices instead of a fixed number', () => {
+  it('shows the shared advertised yearly discount on the toggle badge', () => {
     render(<PricingTable installHref="https://store.example/tabmerger" />)
-    // The smallest saving of every paid option: Pro AI with your own key saves 9.6%.
-    expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−9%')
+    // YEARLY_DISCOUNT_PERCENT from @tabmerger/shared: every yearly price saves 10% to 11%.
+    expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−10%')
   })
 
   it('applies active pill styling (bg-background) to the selected toggle option', async () => {

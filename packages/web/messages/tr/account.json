@@ -33,7 +33,9 @@
     "groups": "Eşitlenen gruplar",
     "tabs": "Kaydedilen sekmeler",
     "sessions": "Oturumlar ve yedekler",
-    "aiCredits": "Kalan yapay zekâ kredisi"
+    "aiCredits": "Kalan yapay zekâ kredisi",
+    "aiOwnKey": "Yapay zekâ kurulumunu kim yapar",
+    "aiOwnKeyValue": "Siz"
   },
   "profile": {
     "title": "Profil",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Ödeme başlatılamadı",
     "getMore": "Daha fazla al"
+  },
+  "aiPlan": {
+    "title": "Yapay zekâ kurulumunu kim yapar",
+    "managed": "TabMerger: bu ay {limit, number} yapay zekâ kredisinden {left, number} kaldı.",
+    "byok": "Siz: kendi API anahtarınız; ücreti doğrudan yapay zekâ sağlayıcınız alır, kredi sınırı yoktur. Anahtarı uzantının Ayarlar bölümünden ekleyin veya değiştirin."
   }
 }

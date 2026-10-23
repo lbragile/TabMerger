@@ -48,7 +48,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: October 18, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 22, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -81,7 +81,8 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">AI features <span className="normal-case font-normal">(Pro AI tier only)</span></h3>
-              <p>When you use AI features, the titles and URLs of your open tabs are sent to the Anthropic Claude API to generate a response over an encrypted connection. Anthropic does not use API request content to train its models and does not retain it beyond their standard API data handling terms. Tab content is not stored by us beyond what you have already saved in your groups.</p>
+              <p>When you use AI features, the titles and URLs of the tabs involved are sent through TabMerger&apos;s server to an AI provider to generate a response, over encrypted connections. When TabMerger handles setup, that provider is Anthropic (the Claude API). Anthropic does not use API request content to train its models and does not retain it beyond their standard API data handling terms. Tab content is not stored by us beyond what you have already saved in your groups.</p>
+              <p className="mt-3"><span className="font-medium text-foreground">Your own API key.</span> When you handle setup with your own API key, those titles and URLs go through our server to the provider that issued your key: Anthropic, OpenAI or Google. The provider&apos;s own terms and privacy policy then apply to that request, and it bills you directly. Your key is kept only in the extension on your device and is sent with each AI request; our server passes it straight to the provider and never stores or logs it.</p>
             </div>
             <div id="uninstall-survey" className="scroll-mt-24">
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">If you remove the extension</h3>
@@ -140,7 +141,9 @@ export default function PrivacyPage() {
               { name: 'Supabase', purpose: 'Database, authentication, and file storage', url: 'https://supabase.com/privacy' },
               { name: 'Stripe', purpose: 'Payment processing and subscription management', url: 'https://stripe.com/privacy' },
               { name: 'Sentry', purpose: 'Error monitoring on the website: stack traces and metadata, with page and request URLs removed from error reports. It also records a replay of a small share of visits and of visits where an error occurs, with all text masked and images blocked; the part of an address after # (the decryption key of a shared link) is removed from everything it records.', url: 'https://sentry.io/privacy/' },
-              { name: 'Anthropic', purpose: 'Claude API for AI features (Pro AI tier only)', url: 'https://www.anthropic.com/privacy' },
+              { name: 'Anthropic', purpose: 'Claude API for AI features (Pro AI tier only), when TabMerger handles setup or with your own Anthropic key', url: 'https://www.anthropic.com/privacy' },
+              { name: 'OpenAI', purpose: 'AI features, only for Pro AI subscribers who use their own OpenAI API key', url: 'https://openai.com/policies/privacy-policy/' },
+              { name: 'Google AI (Gemini API)', purpose: 'AI features, only for Pro AI subscribers who use their own Google API key', url: 'https://policies.google.com/privacy' },
               { name: 'Google Analytics', purpose: 'Anonymous aggregate analytics on the website. Asks first in the EEA, the UK, Switzerland and Quebec; on by default elsewhere until you reject', url: 'https://policies.google.com/privacy' },
               { name: 'Google favicon service', purpose: "Site icons for tabs whose icon your browser doesn't supply. Receives the site's domain only, directly from your browser.", url: 'https://policies.google.com/privacy' },
               { name: 'PostHog', purpose: 'Product analytics and session replay on the website, with every form input masked. Same rules as Google Analytics: asks first in the EEA, the UK, Switzerland and Quebec; on by default elsewhere until you reject', url: 'https://posthog.com/privacy' },

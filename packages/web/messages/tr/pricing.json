@@ -35,7 +35,9 @@
     "aiNames": "Yapay zekâ ile grup adı önerileri",
     "smartSessions": "Akıllı oturum önerileri",
     "tabPreview": "Yapay zekâ özetli sekme önizlemesi",
-    "aiCredits": "Ayda {count} yapay zekâ kredisi"
+    "aiCreditsMonthly": "Ayda {count, number} yapay zekâ kredisi",
+    "ownApiKey": "Kendi yapay zekâ sağlayıcınızı kullanın",
+    "chooseModel": "Yapay zekâ modelinizi seçin"
   },
   "current": "Mevcut",
   "installFree": "Ücretsiz yükle",
@@ -55,5 +57,34 @@
     "title": "Basit, şeffaf fiyatlandırma",
     "lead": "Ücretsiz başlayın. Daha fazlasına hazır olduğunuzda yükseltin.",
     "moreQuestions": "Başka sorularınız mı var? <link>SSS</link> sayfasına göz atın."
+  },
+  "aiOptions": {
+    "legend": "Kurulumu kim yapar",
+    "managed": "TabMerger",
+    "byok": "Siz",
+    "managedHint": "Krediler yapay zekâ kullanımını ölçer: büyük işler ve güçlü modeller daha fazla harcar.",
+    "byokHint": "Anthropic, OpenAI veya Google’dan bir API anahtarı eklersiniz. Sağlayıcı kullandığınız kadar ücreti doğrudan sizden alır, kredi sınırı yoktur.",
+    "switchToByok": "Kurulumu kendiniz yapın",
+    "switchToManaged": "Kurulumu TabMerger’a bırakın"
+  },
+  "planChange": {
+    "title": "Plan değişikliğini onaylayın",
+    "confirmEndOfPeriod": "Planınız {date} tarihinde {plan} olarak değişir. O zamana kadar mevcut planınızı kullanırsınız. Bu dönemin kalanı için iade yapılmaz.",
+    "confirmEndOfPeriodNoDate": "Planınız bu fatura döneminin sonunda {plan} olarak değişir. O zamana kadar mevcut planınızı kullanırsınız. Bu dönemin kalanı için iade yapılmaz.",
+    "confirmChargeNow": "Planınız şimdi {plan} olarak değişir. Bu dönemin kalanı için şimdi orantılı olarak ücret alınır.",
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "scheduled": "Tamamlandı. Planınız {date} tarihinde {plan} olarak değişir.",
+    "scheduledNoDetails": "Tamamlandı. Planınız bu fatura döneminin sonunda değişir.",
+    "appliedNow": "Tamamlandı. Artık {plan} kullanıyorsunuz.",
+    "appliedNowNoDetails": "Tamamlandı. Planınız değişti.",
+    "aiDisabled": "Bu Pro AI seçeneği henüz kullanılamıyor.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Kurulumu TabMerger’ın yaptığı Pro AI",
+      "proAiByok": "Kurulumu sizin yaptığınız Pro AI"
+    },
+    "billedMonthly": "{plan}, aylık faturalandırma",
+    "billedYearly": "{plan}, yıllık faturalandırma"
   }
 }

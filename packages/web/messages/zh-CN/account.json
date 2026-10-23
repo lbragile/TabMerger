@@ -33,7 +33,9 @@
     "groups": "已同步的分组",
     "tabs": "已保存的标签页",
     "sessions": "会话与备份",
-    "aiCredits": "剩余 AI 额度"
+    "aiCredits": "剩余 AI 额度",
+    "aiOwnKey": "由谁负责 AI 设置",
+    "aiOwnKeyValue": "您自己"
   },
   "profile": {
     "title": "个人资料",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "无法开始结账",
     "getMore": "获取更多"
+  },
+  "aiPlan": {
+    "title": "由谁负责 AI 设置",
+    "managed": "TabMerger：本月 {limit, number} AI 额度中还剩 {left, number}。",
+    "byok": "您自己：使用您自己的 API 密钥，由 AI 服务商直接计费，无额度上限。可在扩展程序的设置中添加或更改密钥。"
   }
 }

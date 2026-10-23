@@ -35,7 +35,9 @@
     "aiNames": "Sugerencias de nombres de grupo con IA",
     "smartSessions": "Sugerencias inteligentes de sesión",
     "tabPreview": "Vista previa de pestañas con resumen de IA",
-    "aiCredits": "{count} créditos de IA al mes"
+    "aiCreditsMonthly": "{count, number} créditos de IA al mes",
+    "ownApiKey": "Usa tu propio proveedor de IA",
+    "chooseModel": "Elige tu modelo de IA"
   },
   "current": "Actual",
   "installFree": "Instalar gratis",
@@ -55,5 +57,34 @@
     "title": "Precios simples y transparentes",
     "lead": "Empieza gratis. Mejora cuando necesites más.",
     "moreQuestions": "¿Tienes más preguntas? Consulta las <link>preguntas frecuentes</link>."
+  },
+  "aiOptions": {
+    "legend": "¿Quién se encarga de la configuración?",
+    "managed": "TabMerger",
+    "byok": "Tú",
+    "managedHint": "Los créditos miden el uso de IA: las tareas más grandes y los modelos más potentes gastan más.",
+    "byokHint": "Tú añades una clave de API de Anthropic, OpenAI o Google. El proveedor te cobra directamente lo que uses, sin límite de créditos.",
+    "switchToByok": "Encargarte tú de la configuración",
+    "switchToManaged": "Dejar la configuración a TabMerger"
+  },
+  "planChange": {
+    "title": "Confirmar el cambio de plan",
+    "confirmEndOfPeriod": "Tu plan cambia a {plan} el {date}. Conservas tu plan actual hasta entonces. No hay reembolso por el resto de este período.",
+    "confirmEndOfPeriodNoDate": "Tu plan cambia a {plan} al final de este período de facturación. Conservas tu plan actual hasta entonces. No hay reembolso por el resto de este período.",
+    "confirmChargeNow": "Tu plan cambia a {plan} ahora. Se te cobrará ahora el resto de este período, de forma prorrateada.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "scheduled": "Listo. Tu plan cambia a {plan} el {date}.",
+    "scheduledNoDetails": "Listo. Tu plan cambia al final de este período de facturación.",
+    "appliedNow": "Listo. Ahora tienes {plan}.",
+    "appliedNowNoDetails": "Listo. Tu plan ha cambiado.",
+    "aiDisabled": "Esa opción de Pro AI aún no está disponible.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI con TabMerger a cargo de la configuración",
+      "proAiByok": "Pro AI contigo a cargo de la configuración"
+    },
+    "billedMonthly": "{plan}, facturación mensual",
+    "billedYearly": "{plan}, facturación anual"
   }
 }

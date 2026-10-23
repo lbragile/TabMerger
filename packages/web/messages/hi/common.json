@@ -6,5 +6,6 @@
   "opensInNewTab": " (नए टैब में खुलता है)",
   "close": "बंद करें",
   "showPassphrase": "पासफ़्रेज़ दिखाएँ",
-  "hidePassphrase": "पासफ़्रेज़ छिपाएँ"
+  "hidePassphrase": "पासफ़्रेज़ छिपाएँ",
+  "withYourOwnKey": "अपनी API कुंजी के साथ"
 }

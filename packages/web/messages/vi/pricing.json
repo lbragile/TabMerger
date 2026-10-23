@@ -35,7 +35,9 @@
     "aiNames": "Gợi ý tên nhóm bằng AI",
     "smartSessions": "Gợi ý phiên thông minh",
     "tabPreview": "Xem trước tab kèm tóm tắt AI",
-    "aiCredits": "{count} tín dụng AI / tháng"
+    "aiCreditsMonthly": "{count, number} tín dụng AI mỗi tháng",
+    "ownApiKey": "Dùng nhà cung cấp AI của riêng bạn",
+    "chooseModel": "Chọn mô hình AI"
   },
   "current": "Hiện tại",
   "installFree": "Cài đặt miễn phí",
@@ -55,5 +57,34 @@
     "title": "Bảng giá đơn giản, minh bạch",
     "lead": "Bắt đầu miễn phí. Nâng cấp khi bạn sẵn sàng cho nhiều hơn.",
     "moreQuestions": "Còn câu hỏi khác? Xem <link>Câu hỏi thường gặp</link>."
+  },
+  "aiOptions": {
+    "legend": "Ai lo phần thiết lập",
+    "managed": "TabMerger",
+    "byok": "Bạn",
+    "managedHint": "Tín dụng đo mức dùng AI: việc lớn hơn và mô hình mạnh hơn dùng nhiều hơn.",
+    "byokHint": "Bạn thêm khóa API của Anthropic, OpenAI hoặc Google. Nhà cung cấp tính phí trực tiếp với bạn theo mức dùng, không giới hạn tín dụng.",
+    "switchToByok": "Tự lo phần thiết lập",
+    "switchToManaged": "Để TabMerger lo phần thiết lập"
+  },
+  "planChange": {
+    "title": "Xác nhận đổi gói",
+    "confirmEndOfPeriod": "Gói của bạn sẽ đổi sang {plan} vào {date}. Bạn vẫn dùng gói hiện tại đến lúc đó. Không hoàn tiền cho phần còn lại của kỳ này.",
+    "confirmEndOfPeriodNoDate": "Gói của bạn sẽ đổi sang {plan} vào cuối kỳ thanh toán này. Bạn vẫn dùng gói hiện tại đến lúc đó. Không hoàn tiền cho phần còn lại của kỳ này.",
+    "confirmChargeNow": "Gói của bạn đổi sang {plan} ngay bây giờ. Bạn sẽ bị tính phí ngay cho phần còn lại của kỳ này, theo tỷ lệ.",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "scheduled": "Xong. Gói của bạn sẽ đổi sang {plan} vào {date}.",
+    "scheduledNoDetails": "Xong. Gói của bạn sẽ đổi vào cuối kỳ thanh toán này.",
+    "appliedNow": "Xong. Bạn đang dùng {plan}.",
+    "appliedNowNoDetails": "Xong. Gói của bạn đã được đổi.",
+    "aiDisabled": "Tùy chọn Pro AI đó chưa có.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI do TabMerger thiết lập",
+      "proAiByok": "Pro AI do bạn tự thiết lập"
+    },
+    "billedMonthly": "{plan}, thanh toán hàng tháng",
+    "billedYearly": "{plan}, thanh toán hàng năm"
   }
 }

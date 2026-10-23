@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "इस महीने के AI क्रेडिट",
-      "description": "Pro AI मासिक उपयोग",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "{left, number} बचे, यानी {tabs, number} टैब को लगभग {organizes, number} बार व्यवस्थित करना"
     },
-    "loading": "लोड हो रहा है"
+    "loading": "लोड हो रहा है",
+    "aiOwnKey": {
+      "label": "AI सेटअप",
+      "value": "आप",
+      "description": "आपकी अपनी API कुंजी: बिल आपका AI प्रदाता सीधे आपको भेजता है, कोई क्रेडिट सीमा नहीं"
+    }
   },
   "subscription": {
     "currentPlan": "मौजूदा प्लान",

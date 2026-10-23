@@ -6,5 +6,6 @@
   "opensInNewTab": " (yeni sekmede açılır)",
   "close": "Kapat",
   "showPassphrase": "Parola ifadesini göster",
-  "hidePassphrase": "Parola ifadesini gizle"
+  "hidePassphrase": "Parola ifadesini gizle",
+  "withYourOwnKey": "Kendi API anahtarınızla"
 }

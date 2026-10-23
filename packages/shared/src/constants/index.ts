@@ -135,7 +135,7 @@ export const PRICING_TIERS: PricingTier[] = [
         'AI group name suggestions',
         'Smart session suggestions',
         'Tab preview with AI summary',
-        'Use your own Anthropic, OpenAI or Google API key: no credit limit, billed by them',
+        'Use your own AI provider',
         'Choose your AI model',
       ],
     },

@@ -15,7 +15,8 @@
   "ai": {
     "question": "Que fait exactement l’IA ?",
     "answer": "L’offre Pro AI débloque trois fonctionnalités IA : le regroupement automatique (analyse vos onglets ouverts et les regroupe de façon logique), le nommage intelligent (propose des noms pour vos groupes) et les suggestions de sessions (recommande comment organiser votre travail).",
-    "answerComingSoon": "Bientôt disponible : l’offre Pro AI débloquera trois fonctionnalités IA : le regroupement automatique (analyse vos onglets ouverts et les regroupe de façon logique), le nommage intelligent (propose des noms pour vos groupes) et les suggestions de sessions (recommande comment organiser votre travail)."
+    "answerComingSoon": "Bientôt disponible : l’offre Pro AI débloquera trois fonctionnalités IA : le regroupement automatique (analyse vos onglets ouverts et les regroupe de façon logique), le nommage intelligent (propose des noms pour vos groupes) et les suggestions de sessions (recommande comment organiser votre travail).",
+    "answerOwnKey": "L’offre Pro AI débloque trois fonctionnalités IA : le regroupement automatique (analyse vos onglets ouverts et les regroupe de façon logique), le nommage intelligent (propose des noms pour vos groupes) et les suggestions de sessions (recommande comment organiser votre travail). Pour l’instant, c’est vous qui vous occupez de la configuration : Pro AI fonctionne avec votre propre clé API Anthropic, OpenAI ou Google, qui vous facture directement votre usage. La configuration par TabMerger arrive bientôt."
   },
   "cancel": {
     "question": "Puis-je résilier mon abonnement ?",

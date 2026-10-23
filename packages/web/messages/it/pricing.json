@@ -35,7 +35,9 @@
     "aiNames": "Suggerimenti IA per i nomi dei gruppi",
     "smartSessions": "Suggerimenti di sessione intelligenti",
     "tabPreview": "Anteprima delle schede con riepilogo IA",
-    "aiCredits": "{count} crediti IA / mese"
+    "aiCreditsMonthly": "{count, number} crediti IA al mese",
+    "ownApiKey": "Usa il tuo fornitore di IA",
+    "chooseModel": "Scegli il tuo modello di IA"
   },
   "current": "Attuale",
   "installFree": "Installa gratis",
@@ -55,5 +57,34 @@
     "title": "Prezzi semplici e trasparenti",
     "lead": "Inizia gratis. Passa a un piano superiore quando sei pronto per qualcosa in più.",
     "moreQuestions": "Hai altre domande? Consulta le <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Chi si occupa della configurazione",
+    "managed": "TabMerger",
+    "byok": "Tu",
+    "managedHint": "I crediti misurano l’uso dell’IA: i lavori più grandi e i modelli più potenti ne consumano di più.",
+    "byokHint": "Aggiungi tu una chiave API di Anthropic, OpenAI o Google. Il fornitore ti addebita direttamente ciò che usi, senza limite di crediti.",
+    "switchToByok": "Occupati tu della configurazione",
+    "switchToManaged": "Lascia la configurazione a TabMerger"
+  },
+  "planChange": {
+    "title": "Conferma il cambio di piano",
+    "confirmEndOfPeriod": "Il tuo piano passa a {plan} il {date}. Fino ad allora mantieni il piano attuale. Nessun rimborso per il resto di questo periodo.",
+    "confirmEndOfPeriodNoDate": "Il tuo piano passa a {plan} alla fine di questo periodo di fatturazione. Fino ad allora mantieni il piano attuale. Nessun rimborso per il resto di questo periodo.",
+    "confirmChargeNow": "Il tuo piano passa a {plan} ora. Il resto di questo periodo ti viene addebitato ora, in proporzione.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "scheduled": "Fatto. Il tuo piano passa a {plan} il {date}.",
+    "scheduledNoDetails": "Fatto. Il tuo piano cambia alla fine di questo periodo di fatturazione.",
+    "appliedNow": "Fatto. Ora hai {plan}.",
+    "appliedNowNoDetails": "Fatto. Il tuo piano è cambiato.",
+    "aiDisabled": "Questa opzione di Pro AI non è ancora disponibile.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI configurato da TabMerger",
+      "proAiByok": "Pro AI configurato da te"
+    },
+    "billedMonthly": "{plan}, fatturazione mensile",
+    "billedYearly": "{plan}, fatturazione annuale"
   }
 }

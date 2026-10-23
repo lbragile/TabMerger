@@ -117,16 +117,14 @@ describe('PricingTeaser', () => {
     })
   })
 
-  // The badge is the smallest saving of every paid option: Pro AI with your own key saves 9.6%
-  // ($64.99 against 12 × $5.99), so it reads −9% while Pro and managed Pro AI save 10%.
-  it('shows the smallest yearly saving of every paid option on the Yearly toggle', async () => {
+  // The badge is the shared advertised discount; every paid option (Pro, and Pro AI either way
+  // it's set up) really saves at least that much, so it is true for each.
+  it('shows the shared yearly discount on the Yearly toggle', async () => {
     const { YEARLY_SAVINGS, YEARLY_DISCOUNT_PERCENT } = await import('@/lib/tiers')
     render(<PricingTeaser />)
-    expect(screen.getByRole('button', { name: /yearly/i })).toHaveTextContent('−9%')
-    expect(YEARLY_DISCOUNT_PERCENT).toBe(9)
-    expect(YEARLY_SAVINGS.pro.percent).toBe(10)
-    expect(YEARLY_SAVINGS.proAi.percent).toBe(10)
-    expect(YEARLY_SAVINGS.proAiByok.percent).toBe(9)
+    expect(screen.getByRole('button', { name: /yearly/i })).toHaveTextContent('−10%')
+    expect(YEARLY_DISCOUNT_PERCENT).toBe(10)
+    for (const savings of Object.values(YEARLY_SAVINGS)) expect(savings.percent).toBeGreaterThanOrEqual(10)
   })
 
   it('renders a one-sentence blurb summarizing who each tier is for', () => {

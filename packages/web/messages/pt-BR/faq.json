@@ -15,7 +15,8 @@
   "ai": {
     "question": "O que exatamente a IA faz?",
     "answer": "O plano Pro AI libera três recursos de IA: agrupamento automático (analisa suas abas abertas e as agrupa de forma lógica), nomes inteligentes (sugere nomes para seus grupos) e sugestões de sessões (recomenda como organizar seu fluxo de trabalho).",
-    "answerComingSoon": "Em breve — o plano Pro AI vai liberar três recursos de IA: agrupamento automático (analisa suas abas abertas e as agrupa de forma lógica), nomes inteligentes (sugere nomes para seus grupos) e sugestões de sessões (recomenda como organizar seu fluxo de trabalho)."
+    "answerComingSoon": "Em breve — o plano Pro AI vai liberar três recursos de IA: agrupamento automático (analisa suas abas abertas e as agrupa de forma lógica), nomes inteligentes (sugere nomes para seus grupos) e sugestões de sessões (recomenda como organizar seu fluxo de trabalho).",
+    "answerOwnKey": "O plano Pro AI libera três recursos de IA: agrupamento automático (analisa suas abas abertas e as agrupa de forma lógica), nomes inteligentes (sugere nomes para seus grupos) e sugestões de sessões (recomenda como organizar seu fluxo de trabalho). Por enquanto, a configuração fica com você: o Pro AI funciona com sua própria chave de API da Anthropic, OpenAI ou Google, que cobra diretamente pelo que você usar. A configuração feita pelo TabMerger chega em breve."
   },
   "cancel": {
     "question": "Posso cancelar minha assinatura?",

@@ -47,9 +47,16 @@ export type PaidTierKey = 'pro' | 'proAi'
 export { formatUsd, formatListPrice, PRICES_IN_USD_NOTE } from '@tabmerger/shared'
 
 /**
- * What a yearly plan works out to per month, and how much it saves against paying the monthly
- * price for twelve months. The percentage is rounded down so the site never overstates the
- * discount (10.2% shows as 10%).
+ * The yearly discount every paid option advertises (10%), on the Monthly/Yearly toggle's badge
+ * and in each card's "save N%" line. A shared test holds every yearly price to a real saving of
+ * at least this and under one point more, so the figure is true for each option.
+ */
+export { YEARLY_DISCOUNT_PERCENT } from '@tabmerger/shared'
+
+/**
+ * What a yearly plan works out to per month, and how much it really saves against paying the
+ * monthly price for twelve months (rounded down: 10.2% is 10). The listings show the advertised
+ * `YEARLY_DISCOUNT_PERCENT` rather than this figure; `percent` only says whether there is a saving.
  */
 export function yearlySavings(monthlyPrice: number, yearlyPrice: number) {
   const twelveMonths = monthlyPrice * 12
@@ -68,16 +75,6 @@ export const YEARLY_SAVINGS = {
   proAi: yearlySavings(TIERS.proAi.monthlyPrice, TIERS.proAi.yearlyPrice),
   proAiByok: yearlySavings(TIERS.proAi.byok.monthlyPrice, TIERS.proAi.byok.yearlyPrice),
 }
-
-/**
- * The percentage on the Monthly/Yearly toggle's badge: the smallest of every paid option's
- * discount (including Pro AI with your own key), so it's true for each of them.
- */
-export const YEARLY_DISCOUNT_PERCENT = Math.min(
-  YEARLY_SAVINGS.pro.percent,
-  YEARLY_SAVINGS.proAi.percent,
-  YEARLY_SAVINGS.proAiByok.percent
-)
 
 // "$3.58/mo billed yearly · save 10%" is written per locale by `useYearlySubtext`
 // (components/pricing/useYearlySubtext.ts).
@@ -147,6 +144,45 @@ export function getPlanPriceIds(tier: PaidTierKey, aiMode: AiMode | null = null)
 export function getPlanForPriceId(priceId: string | null | undefined): PlanPrice | null {
   if (!priceId) return null
   return PLAN_PRICES.find((p) => priceIdOf(p) === priceId) ?? null
+}
+
+/**
+ * How a plan change is applied under the refund policy (docs/PAYMENTS.md, "Refund policy"):
+ *
+ * - `upgrade`: nothing gets cheaper or shorter (Pro → Pro AI, own key → managed, monthly →
+ *   yearly, or several of these). Applied now through the Billing Portal, which charges the
+ *   difference prorated against the unused time (`always_invoice`).
+ * - `shorter_interval`: only the interval shortens (yearly → monthly) on the same plan and option.
+ *   Sent to the portal too, whose `shortening_interval` condition defers it to the end of the term.
+ * - `downgrade`: the tier or the AI option goes down (Pro AI → Pro, managed → own key), or the
+ *   interval shortens together with another change. The server schedules it for the end of the
+ *   paid period without proration, so unused time is never refunded or credited. The portal can't
+ *   do this: it defers only between prices of one product, and its `decreasing_item_amount`
+ *   condition would defer monthly → yearly as well.
+ *
+ * A price this environment doesn't know is treated as a `downgrade`: nothing is charged or
+ * credited now. The caller rejects a change to the same price before asking.
+ */
+export type PlanChangeKind = 'upgrade' | 'shorter_interval' | 'downgrade'
+
+const TIER_RANK: Record<PaidTierKey, number> = { pro: 0, proAi: 1 }
+const AI_MODE_RANK: Record<AiMode, number> = { byok: 0, managed: 1 }
+const INTERVAL_RANK: Record<BillingInterval, number> = { monthly: 0, yearly: 1 }
+
+export function classifyPlanChange(
+  from: Pick<PlanPrice, 'tierKey' | 'interval' | 'aiMode'> | null,
+  to: Pick<PlanPrice, 'tierKey' | 'interval' | 'aiMode'> | null
+): PlanChangeKind {
+  if (!from || !to) return 'downgrade'
+  const tier = TIER_RANK[to.tierKey] - TIER_RANK[from.tierKey]
+  // The AI option only compares within Pro AI; a tier change already decides the direction.
+  const aiMode =
+    tier === 0 && from.aiMode && to.aiMode ? AI_MODE_RANK[to.aiMode] - AI_MODE_RANK[from.aiMode] : 0
+  const interval = INTERVAL_RANK[to.interval] - INTERVAL_RANK[from.interval]
+
+  if (tier < 0 || aiMode < 0) return 'downgrade'
+  if (interval < 0) return tier === 0 && aiMode === 0 ? 'shorter_interval' : 'downgrade'
+  return 'upgrade'
 }
 
 /**

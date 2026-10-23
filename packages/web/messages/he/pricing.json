@@ -35,7 +35,9 @@
     "aiNames": "הצעות AI לשמות קבוצות",
     "smartSessions": "הצעות חכמות לסשנים",
     "tabPreview": "תצוגה מקדימה של כרטיסייה עם סיכום AI",
-    "aiCredits": "{count} קרדיטים של AI לחודש"
+    "aiCreditsMonthly": "{count, number} קרדיטים של AI לחודש",
+    "ownApiKey": "שימוש בספק AI משלך",
+    "chooseModel": "בחירת מודל ה-AI"
   },
   "current": "נוכחית",
   "installFree": "התקנה בחינם",
@@ -55,5 +57,34 @@
     "title": "מחירים פשוטים ושקופים",
     "lead": "מתחילים בחינם. משדרגים כשמוכנים ליותר.",
     "moreQuestions": "יש עוד שאלות? אפשר לעיין ב<link>שאלות הנפוצות</link>."
+  },
+  "aiOptions": {
+    "legend": "מי מטפל בהגדרה",
+    "managed": "TabMerger",
+    "byok": "בעצמך",
+    "managedHint": "קרדיטים מודדים שימוש ב-AI: משימות גדולות ומודלים חזקים יותר צורכים יותר.",
+    "byokHint": "מוסיפים מפתח API של ⁨Anthropic⁩, ⁨OpenAI⁩ או ⁨Google⁩. הספק מחייב אותך ישירות לפי השימוש, בלי מגבלת קרדיטים.",
+    "switchToByok": "לטפל בהגדרה בעצמך",
+    "switchToManaged": "להעביר את ההגדרה ל-TabMerger"
+  },
+  "planChange": {
+    "title": "אישור שינוי התוכנית",
+    "confirmEndOfPeriod": "התוכנית שלך תשתנה ל-{plan} בתאריך {date}. עד אז התוכנית הנוכחית נשארת. אין החזר על יתרת התקופה הזו.",
+    "confirmEndOfPeriodNoDate": "התוכנית שלך תשתנה ל-{plan} בסוף תקופת החיוב הזו. עד אז התוכנית הנוכחית נשארת. אין החזר על יתרת התקופה הזו.",
+    "confirmChargeNow": "התוכנית שלך משתנה ל-{plan} עכשיו. יתרת התקופה הזו תחויב עכשיו באופן יחסי.",
+    "confirm": "אישור",
+    "cancel": "ביטול",
+    "scheduled": "בוצע. התוכנית שלך תשתנה ל-{plan} בתאריך {date}.",
+    "scheduledNoDetails": "בוצע. התוכנית שלך תשתנה בסוף תקופת החיוב הזו.",
+    "appliedNow": "בוצע. עכשיו התוכנית שלך היא {plan}.",
+    "appliedNowNoDetails": "בוצע. התוכנית שלך השתנתה.",
+    "aiDisabled": "אפשרות ה-Pro AI הזו עדיין לא זמינה.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI עם הגדרה על ידי TabMerger",
+      "proAiByok": "Pro AI עם הגדרה עצמית"
+    },
+    "billedMonthly": "{plan}, חיוב חודשי",
+    "billedYearly": "{plan}, חיוב שנתי"
   }
 }

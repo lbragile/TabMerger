@@ -33,7 +33,9 @@
     "groups": "Grup disinkronkan",
     "tabs": "Tab disimpan",
     "sessions": "Sesi dan cadangan",
-    "aiCredits": "Sisa kredit AI"
+    "aiCredits": "Sisa kredit AI",
+    "aiOwnKey": "Siapa yang menyiapkan AI",
+    "aiOwnKeyValue": "Anda"
   },
   "profile": {
     "title": "Profil",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Tidak dapat memulai pembayaran",
     "getMore": "Beli lagi"
+  },
+  "aiPlan": {
+    "title": "Siapa yang menyiapkan AI",
+    "managed": "TabMerger: sisa {left, number} dari {limit, number} kredit AI bulan ini.",
+    "byok": "Anda: kunci API Anda sendiri, ditagih langsung oleh penyedia AI, tanpa batas kredit. Tambahkan atau ganti kunci di Setelan ekstensi."
   }
 }

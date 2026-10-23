@@ -15,7 +15,8 @@
   "ai": {
     "question": "Yapay zekâ tam olarak ne yapıyor?",
     "answer": "Pro AI planı üç yapay zekâ özelliğinin kilidini açar: otomatik gruplama (açık sekmelerinizi analiz edip mantıklı şekilde gruplar), akıllı adlandırma (gruplarınız için ad önerir) ve oturum önerileri (iş akışınızı nasıl düzenleyeceğinizi önerir).",
-    "answerComingSoon": "Çok yakında — Pro AI planı üç yapay zekâ özelliğinin kilidini açacak: otomatik gruplama (açık sekmelerinizi analiz edip mantıklı şekilde gruplar), akıllı adlandırma (gruplarınız için ad önerir) ve oturum önerileri (iş akışınızı nasıl düzenleyeceğinizi önerir)."
+    "answerComingSoon": "Çok yakında — Pro AI planı üç yapay zekâ özelliğinin kilidini açacak: otomatik gruplama (açık sekmelerinizi analiz edip mantıklı şekilde gruplar), akıllı adlandırma (gruplarınız için ad önerir) ve oturum önerileri (iş akışınızı nasıl düzenleyeceğinizi önerir).",
+    "answerOwnKey": "Pro AI planı üç yapay zekâ özelliğinin kilidini açar: otomatik gruplama (açık sekmelerinizi analiz edip mantıklı şekilde gruplar), akıllı adlandırma (gruplarınız için ad önerir) ve oturum önerileri (iş akışınızı nasıl düzenleyeceğinizi önerir). Şimdilik kurulumu siz yaparsınız: Pro AI, Anthropic, OpenAI veya Google’dan kendi API anahtarınızla çalışır ve ücreti doğrudan sağlayıcı alır. Kurulumu TabMerger’ın yaptığı seçenek çok yakında."
   },
   "cancel": {
     "question": "Aboneliğimi iptal edebilir miyim?",

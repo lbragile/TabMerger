@@ -71,7 +71,7 @@ describe('POST /api/billing/switch-plan', () => {
       data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_ai_m', ai_mode: 'managed' },
     })
     mockProfile.mockResolvedValue({ data: { stripe_customer_id: 'cus_1' } })
-    mockCreateSession.mockResolvedValue('https://billing.stripe.com/p/session/test')
+    mockCreateSession.mockResolvedValue({ kind: 'portal', url: 'https://billing.stripe.com/p/session/test' })
   })
 
   afterEach(() => {
@@ -217,6 +217,101 @@ describe('POST /api/billing/switch-plan', () => {
     mockGetUser.mockResolvedValue({ data: { user: null } })
     expect((await post('switch-plan', { aiMode: 'byok' })).status).toBe(401)
   })
+
+  describe('tier changes and the refund policy', () => {
+    it('moves Pro AI to Pro at the same interval, looking the subscription up among the Pro AI prices', async () => {
+      mockCreateSession.mockResolvedValue({ kind: 'scheduled', effectiveAt: 1_800_000_000 })
+      const res = await post('switch-plan', { tier: 'pro' })
+      expect(res.status).toBe(200)
+      expect(await res.json()).toEqual({
+        applied: 'end_of_period',
+        effectiveAt: new Date(1_800_000_000 * 1000).toISOString(),
+        url: 'https://tabmerger.app/account',
+      })
+      expect(mockCreateSession).toHaveBeenCalledWith({
+        customerId: 'cus_1',
+        targetPriceId: 'price_pro_m',
+        planPriceIds: ALL_PRO_AI_PRICES,
+        returnUrl: 'https://tabmerger.app/account',
+      })
+    })
+
+    it('a downgrade to Pro needs no AI flag', async () => {
+      vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+      mockCreateSession.mockResolvedValue({ kind: 'scheduled', effectiveAt: 1_800_000_000 })
+      expect((await post('switch-plan', { tier: 'pro' })).status).toBe(200)
+    })
+
+    it('moves Pro to managed Pro AI by default, among the Pro prices', async () => {
+      mockSubscription.mockResolvedValue({
+        data: { tier: 'pro', status: 'active', stripe_price_id: 'price_pro_y', ai_mode: 'managed' },
+      })
+      const res = await post('switch-plan', { tier: 'proAi' })
+      expect(res.status).toBe(200)
+      expect(await res.json()).toEqual({ url: 'https://billing.stripe.com/p/session/test' })
+      expect(mockCreateSession).toHaveBeenCalledWith(
+        expect.objectContaining({ targetPriceId: 'price_ai_y', planPriceIds: ['price_pro_m', 'price_pro_y'] })
+      )
+    })
+
+    it('refuses Pro → managed Pro AI with 503 ai_disabled while managed AI is off', async () => {
+      vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
+      mockSubscription.mockResolvedValue({
+        data: { tier: 'pro', status: 'active', stripe_price_id: 'price_pro_m', ai_mode: 'managed' },
+      })
+      const res = await post('switch-plan', { tier: 'proAi' })
+      expect(res.status).toBe(503)
+      expect(await res.json()).toEqual({ error: 'ai_disabled' })
+      expect(mockCreateSession).not.toHaveBeenCalled()
+    })
+
+    it('refuses an AI option together with tier Pro (403)', async () => {
+      expect((await post('switch-plan', { tier: 'pro', aiMode: 'byok' })).status).toBe(403)
+      expect(mockCreateSession).not.toHaveBeenCalled()
+    })
+
+    it.each([['the database spelling', { tier: 'pro_ai' }], ['free', { tier: 'free' }], ['a number', { tier: 1 }]])(
+      'rejects tier %s with 400',
+      async (_label, body) => {
+        expect((await post('switch-plan', body)).status).toBe(400)
+        expect(mockCreateSession).not.toHaveBeenCalled()
+      }
+    )
+
+    it('an upgrade applied now answers the invoice to pay, or the account page', async () => {
+      mockSubscription.mockResolvedValue({
+        data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_byok_m', ai_mode: 'byok' },
+      })
+      mockCreateSession.mockResolvedValueOnce({ kind: 'applied_now', url: 'https://invoice.stripe.com/i/x' })
+      expect(await (await post('switch-plan', { aiMode: 'managed' })).json()).toEqual({
+        applied: 'now',
+        url: 'https://invoice.stripe.com/i/x',
+      })
+
+      mockCreateSession.mockResolvedValueOnce({ kind: 'applied_now', url: null })
+      expect(await (await post('switch-plan', { aiMode: 'managed' })).json()).toEqual({
+        applied: 'now',
+        url: 'https://tabmerger.app/account',
+      })
+    })
+
+    it('answers 409 when a downgrade is already scheduled', async () => {
+      const { PlanSwitchError } = await import('@/lib/stripe')
+      mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('already_scheduled'))
+      const res = await post('switch-plan', { tier: 'pro' })
+      expect(res.status).toBe(409)
+      expect((await res.json()).error).toBe('A billing change is already scheduled for the end of this term.')
+    })
+
+    it('answers 409 when the plan is set to cancel', async () => {
+      const { PlanSwitchError } = await import('@/lib/stripe')
+      mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('cancel_scheduled'))
+      const res = await post('switch-plan', { tier: 'pro' })
+      expect(res.status).toBe(409)
+      expect((await res.json()).error).toMatch(/set to end/)
+    })
+  })
 })
 
 describe('POST /api/billing/switch-interval keeps the Pro AI option', () => {
@@ -230,7 +325,7 @@ describe('POST /api/billing/switch-interval keeps the Pro AI option', () => {
     vi.stubEnv('STRIPE_PRO_AI_BYOK_YEARLY_PRICE_ID', 'price_byok_y')
     mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } })
     mockProfile.mockResolvedValue({ data: { stripe_customer_id: 'cus_1' } })
-    mockCreateSession.mockResolvedValue('https://billing.stripe.com/p/session/test')
+    mockCreateSession.mockResolvedValue({ kind: 'portal', url: 'https://billing.stripe.com/p/session/test' })
   })
 
   afterEach(() => {

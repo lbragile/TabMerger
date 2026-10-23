@@ -35,7 +35,9 @@
     "aiNames": "Suggestions de noms de groupes par IA",
     "smartSessions": "Suggestions de sessions intelligentes",
     "tabPreview": "Aperçu d’onglet avec résumé IA",
-    "aiCredits": "{count} crédits IA / mois"
+    "aiCreditsMonthly": "{count, number} crédits IA par mois",
+    "ownApiKey": "Utilisez votre propre fournisseur d’IA",
+    "chooseModel": "Choisissez votre modèle d’IA"
   },
   "current": "Actuelle",
   "installFree": "Installer gratuitement",
@@ -55,5 +57,34 @@
     "title": "Des tarifs simples et transparents",
     "lead": "Commencez gratuitement. Passez à l’offre supérieure quand vous êtes prêt.",
     "moreQuestions": "D’autres questions ? Consultez la <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Qui s’occupe de la configuration",
+    "managed": "TabMerger",
+    "byok": "Vous",
+    "managedHint": "Les crédits mesurent l’usage de l’IA : les tâches plus lourdes et les modèles plus puissants en consomment davantage.",
+    "byokHint": "Vous ajoutez une clé API Anthropic, OpenAI ou Google. Le fournisseur vous facture directement votre usage, sans limite de crédits.",
+    "switchToByok": "Vous occuper de la configuration",
+    "switchToManaged": "Laisser TabMerger s’occuper de la configuration"
+  },
+  "planChange": {
+    "title": "Confirmer le changement d’offre",
+    "confirmEndOfPeriod": "Votre offre passe à {plan} le {date}. Vous gardez votre offre actuelle jusque-là. Aucun remboursement pour le reste de cette période.",
+    "confirmEndOfPeriodNoDate": "Votre offre passe à {plan} à la fin de cette période de facturation. Vous gardez votre offre actuelle jusque-là. Aucun remboursement pour le reste de cette période.",
+    "confirmChargeNow": "Votre offre passe à {plan} maintenant. Le reste de cette période vous sera facturé maintenant, au prorata.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "scheduled": "C’est fait. Votre offre passe à {plan} le {date}.",
+    "scheduledNoDetails": "C’est fait. Votre offre change à la fin de cette période de facturation.",
+    "appliedNow": "C’est fait. Vous avez maintenant {plan}.",
+    "appliedNowNoDetails": "C’est fait. Votre offre a changé.",
+    "aiDisabled": "Cette option de Pro AI n’est pas encore disponible.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI configuré par TabMerger",
+      "proAiByok": "Pro AI configuré par vous"
+    },
+    "billedMonthly": "{plan}, facturation mensuelle",
+    "billedYearly": "{plan}, facturation annuelle"
   }
 }

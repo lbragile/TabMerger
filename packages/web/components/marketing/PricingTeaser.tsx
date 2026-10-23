@@ -11,7 +11,9 @@ import {
 import { useYearlySubtext } from '@/components/pricing/useYearlySubtext'
 import { useListPrice, useZeroPrice } from '@/components/pricing/priceFormat'
 import { cn } from '@/lib/utils'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import type { AiMode } from '@tabmerger/shared'
+import { AiOptionSwitch } from '@/components/pricing/AiOptionSwitch'
+import { initialAiMode, isAiOptionAvailable } from '@/components/pricing/aiOptions'
 
 const tiers = [
   { key: 'free', highlighted: false, blurb: 'blurbFree' },
@@ -24,6 +26,8 @@ const SUB_LINE = 'text-[11.5px] text-text3 mt-1'
 
 export function PricingTeaser() {
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
+  // Pro AI's option on show: TabMerger's AI or your own key (opens on one that can be bought).
+  const [aiMode, setAiMode] = useState<AiMode>(() => initialAiMode())
   const t = useTranslations('home.pricing')
   const p = useTranslations('pricing')
   const common = useTranslations('common')
@@ -65,12 +69,16 @@ export function PricingTeaser() {
         <div className="grid grid-cols-1 auto-rows-fr sm:grid-cols-3 gap-4 mb-6">
           {tiers.map((row) => {
             const tier = TIERS[row.key]
-            const isComingSoon = row.key === 'proAi' && !AI_ENABLED
-            const rawPrice = interval === 'monthly' ? tier.monthlyPrice : tier.yearlyPrice
+            const isProAi = row.key === 'proAi'
+            const isOwnKey = isProAi && aiMode === 'byok'
+            const prices = isOwnKey ? TIERS.proAi.byok : tier
+            const isComingSoon = isProAi && !isAiOptionAvailable(aiMode)
+            const rawPrice = interval === 'monthly' ? prices.monthlyPrice : prices.yearlyPrice
             const price = rawPrice === 0 ? zeroPrice : listPrice(rawPrice)
             const period = rawPrice === 0 ? p('forever') : interval === 'monthly' ? p('perMonth') : p('perYear')
             // Same wording and numbers as the pricing page's yearly cards.
-            const monthlyEquivalent = row.key === 'free' ? null : yearlySubtext(YEARLY_SAVINGS[row.key])
+            const monthlyEquivalent =
+              row.key === 'free' ? null : yearlySubtext(isOwnKey ? YEARLY_SAVINGS.proAiByok : YEARLY_SAVINGS[row.key])
             return (
               <div
                 key={row.key}
@@ -94,6 +102,7 @@ export function PricingTeaser() {
                     <span />
                   )}
                 </div>
+                {isProAi && <AiOptionSwitch value={aiMode} onChange={setAiMode} className="mb-3" />}
                 <p className="text-3xl font-semibold tracking-tight">
                   {price}
                   <span className="text-[13px] font-normal text-text3 ms-1">{period}</span>

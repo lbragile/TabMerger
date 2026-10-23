@@ -15,7 +15,8 @@
   "ai": {
     "question": "¿Qué hace exactamente la IA?",
     "answer": "El plan Pro AI desbloquea tres funciones de IA: agrupación automática (analiza tus pestañas abiertas y las agrupa de forma lógica), nombres inteligentes (sugiere nombres para tus grupos) y sugerencias de sesión (recomienda cómo organizar tu flujo de trabajo).",
-    "answerComingSoon": "Próximamente: el plan Pro AI desbloqueará tres funciones de IA: agrupación automática (analiza tus pestañas abiertas y las agrupa de forma lógica), nombres inteligentes (sugiere nombres para tus grupos) y sugerencias de sesión (recomienda cómo organizar tu flujo de trabajo)."
+    "answerComingSoon": "Próximamente: el plan Pro AI desbloqueará tres funciones de IA: agrupación automática (analiza tus pestañas abiertas y las agrupa de forma lógica), nombres inteligentes (sugiere nombres para tus grupos) y sugerencias de sesión (recomienda cómo organizar tu flujo de trabajo).",
+    "answerOwnKey": "El plan Pro AI desbloquea tres funciones de IA: agrupación automática (analiza tus pestañas abiertas y las agrupa de forma lógica), nombres inteligentes (sugiere nombres para tus grupos) y sugerencias de sesión (recomienda cómo organizar tu flujo de trabajo). Por ahora, la configuración corre de tu cuenta: Pro AI funciona con tu propia clave de API de Anthropic, OpenAI o Google, que te cobra directamente lo que uses. La configuración a cargo de TabMerger llegará pronto."
   },
   "cancel": {
     "question": "¿Puedo cancelar mi suscripción?",

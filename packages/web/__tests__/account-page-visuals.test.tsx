@@ -20,7 +20,7 @@ function mockSupabase(tier: string, usedCount = 53, purchases: { credits: number
         builder.limit = chain
         builder.single = async () =>
           table === 'subscriptions'
-            ? { data: { tier, status: 'active', current_period_end: null, ai_mode: 'managed', ai_monthly_credits: tier === 'pro_ai' ? 2600 : 0 } }
+            ? { data: { tier, status: 'active', current_period_end: null, ai_mode: 'managed', ai_monthly_credits: tier === 'pro_ai' ? 2500 : 0 } }
             : { data: { created_at: '2024-01-01' } }
         builder.maybeSingle = async () => ({ data: { credits_used: usedCount } })
         // device_sessions + ai_credit_purchases queries are awaited directly (no .single()) —
@@ -65,8 +65,8 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
 
     const label = screen.getByText('AI credits left')
     const card = label.closest('div')
-    // 2,600 monthly credits - 53 used
-    expect(card?.textContent).toContain('2547')
+    // 2,500 monthly credits - 53 used
+    expect(card?.textContent).toContain('2,447')
     expect(card?.className).toMatch(/border-primary/)
   })
 
@@ -77,8 +77,8 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     render((await AccountPage()) as React.ReactElement)
 
-    // 2,600 monthly + 100 purchased - 100 used
-    expect(screen.getByText('AI credits left').closest('div')?.textContent).toContain('2600')
+    // 2,500 monthly + 100 purchased - 100 used
+    expect(screen.getByText('AI credits left').closest('div')?.textContent).toContain('2,500')
   })
 
   it('splices the "AI credits left" stat card out entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {

@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "Créditos de IA neste mês",
-      "description": "Uso mensal do Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Restam {left, number}, cerca de {organizes, number} organizações de {tabs, number} abas"
     },
-    "loading": "Carregando"
+    "loading": "Carregando",
+    "aiOwnKey": {
+      "label": "Configuração da IA",
+      "value": "Você",
+      "description": "Sua própria chave de API: seu provedor de IA cobra diretamente, sem limite de créditos"
+    }
   },
   "subscription": {
     "currentPlan": "Plano atual",

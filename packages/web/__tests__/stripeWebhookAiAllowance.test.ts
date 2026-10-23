@@ -141,7 +141,7 @@ describe('ai_mode and ai_monthly_credits on every subscription write', () => {
     const res = await postUpdate(subscription({ price }))
     expect(res.status).toBe(200)
     expect(written()).toEqual({ ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS })
-    expect(PRO_AI_MONTHLY_CREDITS).toBe(2600)
+    expect(PRO_AI_MONTHLY_CREDITS).toBe(2500)
   })
 
   it.each([
@@ -173,6 +173,47 @@ describe('ai_mode and ai_monthly_credits on every subscription write', () => {
   ])('%s gets no managed credits', async (_label, sub, expected) => {
     await postUpdate(sub)
     expect(mockUpsert.mock.calls[0][0]).toMatchObject(expected)
+  })
+})
+
+describe('a downgrade scheduled for the end of the period (lib/stripe.ts scheduleChangeAtPeriodEnd)', () => {
+  // Creating the schedule fires customer.subscription.updated (the subscription gains `schedule`);
+  // when the next phase starts at the period end, Stripe moves the subscription to the phase's
+  // price and fires customer.subscription.updated again. Both go through the ordinary handler.
+
+  it('while the schedule is pending, the row keeps the plan that was paid for', async () => {
+    const res = await postUpdate(subscription({ price: 'price_ai_y', schedule: 'sub_sched_1' }))
+    expect(res.status).toBe(200)
+    expect(mockUpsert.mock.calls[0][0]).toMatchObject({
+      tier: 'pro_ai',
+      ai_mode: 'managed',
+      ai_monthly_credits: PRO_AI_MONTHLY_CREDITS,
+      stripe_price_id: 'price_ai_y',
+    })
+  })
+
+  it('Pro AI → Pro: when the phase starts, the row moves to Pro with no AI credits', async () => {
+    const res = await postUpdate(subscription({ price: 'price_pro_y', schedule: 'sub_sched_1' }))
+    expect(res.status).toBe(200)
+    expect(mockUpsert.mock.calls[0][0]).toMatchObject({
+      id: 'sub_1',
+      user_id: USER,
+      tier: 'pro',
+      status: 'active',
+      ai_mode: 'managed',
+      ai_monthly_credits: 0,
+      stripe_price_id: 'price_pro_y',
+    })
+  })
+
+  it('managed → own key: when the phase starts, the row becomes own-key Pro AI with no credits', async () => {
+    await postUpdate(subscription({ price: 'price_byok_m', schedule: 'sub_sched_1' }))
+    expect(mockUpsert.mock.calls[0][0]).toMatchObject({
+      tier: 'pro_ai',
+      ai_mode: 'byok',
+      ai_monthly_credits: 0,
+      stripe_price_id: 'price_byok_m',
+    })
   })
 })
 
@@ -290,12 +331,12 @@ describe('discounts lower the managed allowance', () => {
 
     mockUpsert.mockClear()
     await postUpdate(subscription({ latest_invoice: { id: 'in_2', subtotal: 799, total_discount_amounts: [] } }))
-    expect(written().ai_monthly_credits).toBe(2600)
+    expect(written().ai_monthly_credits).toBe(PRO_AI_MONTHLY_CREDITS)
   })
 
   it('a latest invoice with no positive subtotal (a proration credit) does not lower the allowance', async () => {
     await postUpdate(subscription({ latest_invoice: { id: 'in_1', subtotal: -200, total_discount_amounts: null } }))
-    expect(written().ai_monthly_credits).toBe(2600)
+    expect(written().ai_monthly_credits).toBe(PRO_AI_MONTHLY_CREDITS)
   })
 })
 
@@ -326,7 +367,7 @@ describe('customer.discount.* events re-read the subscription', () => {
 
     expect((await POST(request())).status).toBe(200)
     expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_1', expect.anything())
-    expect(written()).toEqual({ ai_mode: 'managed', ai_monthly_credits: 2600 })
+    expect(written()).toEqual({ ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS })
   })
 
   it.each([

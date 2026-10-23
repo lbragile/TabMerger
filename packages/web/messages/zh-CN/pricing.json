@@ -35,7 +35,9 @@
     "aiNames": "AI 分组名称建议",
     "smartSessions": "智能会话建议",
     "tabPreview": "带 AI 摘要的标签页预览",
-    "aiCredits": "每月 {count} 个 AI 额度"
+    "aiCreditsMonthly": "每月 {count, number} 个 AI 额度",
+    "ownApiKey": "使用您自己的 AI 服务商",
+    "chooseModel": "选择您的 AI 模型"
   },
   "current": "当前",
   "installFree": "免费安装",
@@ -55,5 +57,34 @@
     "title": "简单透明的定价",
     "lead": "免费开始，需要更多时再升级。",
     "moreQuestions": "还有其他问题？请查看<link>常见问题</link>。"
+  },
+  "aiOptions": {
+    "legend": "由谁负责设置",
+    "managed": "TabMerger",
+    "byok": "您自己",
+    "managedHint": "额度用于衡量 AI 用量：任务越大、模型越强，消耗越多。",
+    "byokHint": "由您添加 Anthropic、OpenAI 或 Google 的 API 密钥，按实际用量由服务商直接向您计费，无额度上限。",
+    "switchToByok": "改为自行设置",
+    "switchToManaged": "改由 TabMerger 设置"
+  },
+  "planChange": {
+    "title": "确认更改套餐",
+    "confirmEndOfPeriod": "您的套餐将于 {date} 更改为 {plan}。在此之前您仍使用当前套餐。本期剩余部分不予退款。",
+    "confirmEndOfPeriodNoDate": "您的套餐将于本计费周期结束时更改为 {plan}。在此之前您仍使用当前套餐。本期剩余部分不予退款。",
+    "confirmChargeNow": "您的套餐将立即更改为 {plan}。本期剩余部分将按比例立即收费。",
+    "confirm": "确认",
+    "cancel": "取消",
+    "scheduled": "已完成。您的套餐将于 {date} 更改为 {plan}。",
+    "scheduledNoDetails": "已完成。您的套餐将于本计费周期结束时更改。",
+    "appliedNow": "已完成。您现在使用的是 {plan}。",
+    "appliedNowNoDetails": "已完成。您的套餐已更改。",
+    "aiDisabled": "该 Pro AI 选项尚未推出。",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "由 TabMerger 负责设置的 Pro AI",
+      "proAiByok": "由您自行设置的 Pro AI"
+    },
+    "billedMonthly": "{plan}，按月计费",
+    "billedYearly": "{plan}，按年计费"
   }
 }

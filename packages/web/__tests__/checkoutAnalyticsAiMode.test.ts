@@ -30,7 +30,7 @@ describe('Pro AI options in checkout analytics', () => {
   it('prices each option from PRICING_TIERS; aiMode is ignored for Pro', () => {
     expect(checkoutValue('proAi', 'monthly')).toBe(7.99)
     expect(checkoutValue('proAi', 'monthly', 'byok')).toBe(5.99)
-    expect(checkoutValue('proAi', 'yearly', 'byok')).toBe(64.99)
+    expect(checkoutValue('proAi', 'yearly', 'byok')).toBe(64.49)
     expect(checkoutValue('pro', 'yearly', 'byok')).toBe(42.99)
   })
 
@@ -42,7 +42,7 @@ describe('Pro AI options in checkout analytics', () => {
       item_id: 'pro_ai',
       item_name: 'Pro AI (own key)',
       item_variant: 'yearly',
-      price: 64.99,
+      price: 64.49,
       quantity: 1,
     })
   })
@@ -77,6 +77,6 @@ describe('Pro AI options in checkout analytics', () => {
     expect(begin[1]).toBe(ANALYTICS_EVENTS.beginCheckout)
     expect(begin[2]).toMatchObject({ value: 5.99, items: [expect.objectContaining({ item_name: 'Pro AI (own key)' })] })
     expect(canceled[1]).toBe(ANALYTICS_EVENTS.checkoutCanceled)
-    expect(canceled[2]).toMatchObject({ value: 64.99, items: [expect.objectContaining({ item_name: 'Pro AI (own key)' })] })
+    expect(canceled[2]).toMatchObject({ value: 64.49, items: [expect.objectContaining({ item_name: 'Pro AI (own key)' })] })
   })
 })

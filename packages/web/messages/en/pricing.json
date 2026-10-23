@@ -35,7 +35,9 @@
     "aiNames": "AI group name suggestions",
     "smartSessions": "Smart session suggestions",
     "tabPreview": "Tab preview with AI summary",
-    "aiCredits": "{count} AI credits / month"
+    "aiCreditsMonthly": "{count, number} AI credits a month",
+    "ownApiKey": "Use your own AI provider",
+    "chooseModel": "Choose your AI model"
   },
   "current": "Current",
   "installFree": "Install free",
@@ -55,5 +57,34 @@
     "title": "Simple, transparent pricing",
     "lead": "Start free. Upgrade when you're ready for more.",
     "moreQuestions": "Have more questions? See the <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Who handles setup",
+    "managed": "TabMerger",
+    "byok": "You",
+    "managedHint": "Credits measure AI use: bigger jobs and stronger models use more.",
+    "byokHint": "You add an API key from Anthropic, OpenAI or Google. They bill you directly for what you use, with no credit limit.",
+    "switchToByok": "Handle setup yourself",
+    "switchToManaged": "Let TabMerger handle setup"
+  },
+  "planChange": {
+    "title": "Confirm plan change",
+    "confirmEndOfPeriod": "Your plan changes to {plan} on {date}. You keep your current plan until then. No refund for the rest of this period.",
+    "confirmEndOfPeriodNoDate": "Your plan changes to {plan} at the end of this billing period. You keep your current plan until then. No refund for the rest of this period.",
+    "confirmChargeNow": "Your plan changes to {plan} now. You'll be charged now for the rest of this period, prorated.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "scheduled": "Done. Your plan changes to {plan} on {date}.",
+    "scheduledNoDetails": "Done. Your plan changes at the end of this billing period.",
+    "appliedNow": "Done. You're now on {plan}.",
+    "appliedNowNoDetails": "Done. Your plan has changed.",
+    "aiDisabled": "That Pro AI option isn't available yet.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI with TabMerger handling setup",
+      "proAiByok": "Pro AI with you handling setup"
+    },
+    "billedMonthly": "{plan}, billed monthly",
+    "billedYearly": "{plan}, billed yearly"
   }
 }

@@ -35,10 +35,15 @@
     },
     "aiCredits": {
       "label": "رصيد الذكاء الاصطناعي هذا الشهر",
-      "description": "الاستخدام الشهري لخطة Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "متبقٍ {left, number}، أي نحو {organizes, number} عملية تنظيم لـ {tabs, number} علامة تبويب"
     },
-    "loading": "جارٍ التحميل"
+    "loading": "جارٍ التحميل",
+    "aiOwnKey": {
+      "label": "إعداد الذكاء الاصطناعي",
+      "value": "أنت",
+      "description": "مفتاح API الخاص بك: يحاسبك مزوّد الذكاء الاصطناعي مباشرةً، بلا حد للرصيد"
+    }
   },
   "subscription": {
     "currentPlan": "الخطة الحالية",

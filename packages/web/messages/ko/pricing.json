@@ -35,7 +35,9 @@
     "aiNames": "AI 그룹 이름 제안",
     "smartSessions": "스마트 세션 제안",
     "tabPreview": "AI 요약이 포함된 탭 미리보기",
-    "aiCredits": "월 {count} AI 크레딧"
+    "aiCreditsMonthly": "월 {count, number} AI 크레딧",
+    "ownApiKey": "내 AI 제공업체 사용",
+    "chooseModel": "AI 모델 선택"
   },
   "current": "현재 요금제",
   "installFree": "무료 설치",
@@ -55,5 +57,34 @@
     "title": "단순하고 투명한 요금제",
     "lead": "무료로 시작하세요. 더 필요할 때 업그레이드하면 됩니다.",
     "moreQuestions": "더 궁금한 점이 있으신가요? <link>자주 묻는 질문</link>을 확인하세요."
+  },
+  "aiOptions": {
+    "legend": "설정 담당",
+    "managed": "TabMerger",
+    "byok": "직접",
+    "managedHint": "크레딧은 AI 사용량을 나타냅니다. 큰 작업이나 성능 높은 모델일수록 더 많이 씁니다.",
+    "byokHint": "Anthropic, OpenAI 또는 Google의 API 키를 직접 추가합니다. 사용한 만큼 해당 업체가 직접 청구하며 크레딧 한도는 없습니다.",
+    "switchToByok": "직접 설정하기",
+    "switchToManaged": "TabMerger에 설정 맡기기"
+  },
+  "planChange": {
+    "title": "요금제 변경 확인",
+    "confirmEndOfPeriod": "{date}에 요금제가 {plan}(으)로 바뀝니다. 그때까지는 현재 요금제를 그대로 사용합니다. 이번 기간의 남은 금액은 환불되지 않습니다.",
+    "confirmEndOfPeriodNoDate": "이번 결제 기간이 끝날 때 요금제가 {plan}(으)로 바뀝니다. 그때까지는 현재 요금제를 그대로 사용합니다. 이번 기간의 남은 금액은 환불되지 않습니다.",
+    "confirmChargeNow": "요금제가 지금 {plan}(으)로 바뀝니다. 이번 기간의 남은 금액이 일할 계산되어 지금 청구됩니다.",
+    "confirm": "확인",
+    "cancel": "취소",
+    "scheduled": "완료했습니다. {date}에 요금제가 {plan}(으)로 바뀝니다.",
+    "scheduledNoDetails": "완료했습니다. 이번 결제 기간이 끝날 때 요금제가 바뀝니다.",
+    "appliedNow": "완료했습니다. 이제 {plan}을(를) 사용합니다.",
+    "appliedNowNoDetails": "완료했습니다. 요금제가 변경되었습니다.",
+    "aiDisabled": "해당 Pro AI 옵션은 아직 사용할 수 없습니다.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "TabMerger가 설정하는 Pro AI",
+      "proAiByok": "직접 설정하는 Pro AI"
+    },
+    "billedMonthly": "{plan}, 월간 결제",
+    "billedYearly": "{plan}, 연간 결제"
   }
 }

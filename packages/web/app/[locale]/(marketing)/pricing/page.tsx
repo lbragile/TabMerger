@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import { isAiMode, type AiMode } from '@tabmerger/shared'
 import { pageMetadata } from '@/lib/seo'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
@@ -24,10 +25,12 @@ export default async function PricingPage() {
 
   let currentTier = 'free'
   let currentInterval: BillingInterval | undefined
+  let currentAiMode: AiMode | undefined
+  let currentPeriodEnd: string | null = null
   if (user) {
     const { data: subscription } = await supabase
       .from('subscriptions')
-      .select('tier, status, stripe_price_id')
+      .select('tier, status, stripe_price_id, ai_mode, current_period_end')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(1)
@@ -37,7 +40,14 @@ export default async function PricingPage() {
     if (subscription && hasCloudSync(subscription)) {
       currentTier = subscription.tier
       // Resolved here: the Stripe price IDs are server-only env vars, undefined in the browser.
-      currentInterval = getPriceInfo(subscription.stripe_price_id)?.interval
+      const priceInfo = getPriceInfo(subscription.stripe_price_id)
+      currentInterval = priceInfo?.interval
+      currentPeriodEnd = subscription.current_period_end ?? null
+      // Pro AI's option: the price says which it is; the stored column covers a price this
+      // deployment doesn't know.
+      if (subscription.tier === 'pro_ai') {
+        currentAiMode = priceInfo?.aiMode ?? (isAiMode(subscription.ai_mode) ? subscription.ai_mode : 'managed')
+      }
     }
   }
 
@@ -59,6 +69,8 @@ export default async function PricingPage() {
         <PricingTable
           currentTier={currentTier}
           currentInterval={currentInterval}
+          currentAiMode={currentAiMode}
+          currentPeriodEnd={currentPeriodEnd}
           installHref={getStoreLinks()[await getVisitorBrowser()]}
         />
       </div>

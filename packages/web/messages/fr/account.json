@@ -33,7 +33,9 @@
     "groups": "Groupes synchronisés",
     "tabs": "Onglets enregistrés",
     "sessions": "Sessions et sauvegardes",
-    "aiCredits": "Crédits IA restants"
+    "aiCredits": "Crédits IA restants",
+    "aiOwnKey": "Qui configure l’IA",
+    "aiOwnKeyValue": "Vous"
   },
   "profile": {
     "title": "Profil",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Impossible de lancer le paiement",
     "getMore": "En obtenir plus"
+  },
+  "aiPlan": {
+    "title": "Qui configure l’IA",
+    "managed": "TabMerger : {left, number} crédits IA restants sur {limit, number} ce mois-ci.",
+    "byok": "Vous : votre propre clé API, facturée directement par votre fournisseur d’IA, sans limite de crédits. Ajoutez ou changez la clé dans les Paramètres de l’extension."
   }
 }

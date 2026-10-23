@@ -4,7 +4,7 @@
  * Supabase are fakes: nothing here talks to a real project.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { creditsForPayment } from '@tabmerger/shared'
+import { PRO_AI_MONTHLY_CREDITS, creditsForPayment } from '@tabmerger/shared'
 import { resyncAiAllowances } from '@/lib/aiAllowanceResync'
 
 type Row = { id: string; ai_mode: string | null; ai_monthly_credits: number | null }
@@ -76,7 +76,7 @@ describe('resyncAiAllowances', () => {
   const rows: Row[] = [
     { id: 'sub_managed', ai_mode: 'managed', ai_monthly_credits: 0 },
     { id: 'sub_byok', ai_mode: 'managed', ai_monthly_credits: 0 },
-    { id: 'sub_ok', ai_mode: 'managed', ai_monthly_credits: 2600 },
+    { id: 'sub_ok', ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS },
     { id: 'sub_half', ai_mode: 'managed', ai_monthly_credits: 0 },
     { id: 'free_user', ai_mode: 'managed', ai_monthly_credits: 0 },
     { id: 'sub_gone', ai_mode: 'managed', ai_monthly_credits: 0 },
@@ -122,14 +122,14 @@ describe('resyncAiAllowances', () => {
 
     expect(result.changed).toEqual(['sub_managed', 'sub_byok', 'sub_half'])
     expect(updates).toEqual([
-      { id: 'sub_managed', values: { ai_mode: 'managed', ai_monthly_credits: 2600 } },
+      { id: 'sub_managed', values: { ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS } },
       { id: 'sub_byok', values: { ai_mode: 'byok', ai_monthly_credits: 0 } },
       { id: 'sub_half', values: { ai_mode: 'managed', ai_monthly_credits: creditsForPayment(3.99) } },
     ])
   })
 
   it('reads every page', async () => {
-    const many: Row[] = Array.from({ length: 5 }, (_, i) => ({ id: `sub_${i}`, ai_mode: 'managed', ai_monthly_credits: 2600 }))
+    const many: Row[] = Array.from({ length: 5 }, (_, i) => ({ id: `sub_${i}`, ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS }))
     const state = Object.fromEntries(many.map((r) => [r.id, sub(r.id, 'price_ai_m')]))
     const { supabase } = fakeSupabase(many)
 
@@ -151,7 +151,7 @@ describe('resyncAiAllowances', () => {
   })
 
   it('writes 0 credits for a canceled or unpaid subscription, like the webhook', async () => {
-    const { supabase, updates } = fakeSupabase([{ id: 'sub_c', ai_mode: 'managed', ai_monthly_credits: 2600 }])
+    const { supabase, updates } = fakeSupabase([{ id: 'sub_c', ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS }])
     const result = await resyncAiAllowances({
       stripe: fakeStripe({ sub_c: sub('sub_c', 'price_ai_m', { status: 'unpaid' }) }) as never,
       supabase: supabase as never,

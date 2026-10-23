@@ -3,7 +3,7 @@ import { pageMetadata } from '@/lib/seo'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { AUTO_BACKUP_RETENTION_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { STORE_ICON } from '@/components/marketing/BrowserIcons'
@@ -158,9 +158,15 @@ export default async function FeaturesPage() {
                   <span className={cn('inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.key])}>
                     {t(`badges.${section.key}`)}
                   </span>
-                  {isAi && !AI_ENABLED && (
+                  {isAi && !AI_AVAILABILITY.any && (
                     <span className="ms-2 inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3 bg-muted text-muted-foreground">
                       {common('comingSoon')}
+                    </span>
+                  )}
+                  {/* Only the own-key option is live yet: say so, so nobody expects AI included. */}
+                  {isAi && AI_AVAILABILITY.any && !AI_AVAILABILITY.managed && (
+                    <span className="ms-2 inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3 bg-primary/10 text-primary">
+                      {common('withYourOwnKey')}
                     </span>
                   )}
                   <h2 className="text-3xl font-bold tracking-tight">

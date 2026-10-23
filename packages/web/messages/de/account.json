@@ -33,7 +33,9 @@
     "groups": "Synchronisierte Gruppen",
     "tabs": "Gespeicherte Tabs",
     "sessions": "Sitzungen und Backups",
-    "aiCredits": "Verbleibende KI-Credits"
+    "aiCredits": "Verbleibende KI-Credits",
+    "aiOwnKey": "Wer die KI einrichtet",
+    "aiOwnKeyValue": "Du"
   },
   "profile": {
     "title": "Profil",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Checkout konnte nicht gestartet werden",
     "getMore": "Mehr holen"
+  },
+  "aiPlan": {
+    "title": "Wer die KI einrichtet",
+    "managed": "TabMerger: {left, number} von {limit, number} KI-Credits übrig in diesem Monat.",
+    "byok": "Du: eigener API-Schlüssel, direkt von deinem KI-Anbieter abgerechnet, ohne Credit-Limit. Den Schlüssel fügst du in den Einstellungen der Erweiterung hinzu oder änderst ihn dort."
   }
 }

@@ -193,7 +193,7 @@ describe('PrivacyPage', () => {
 
   it('shows the date of the latest revision', () => {
     render(<PrivacyPage />)
-    expect(screen.getByText('Last updated: October 18, 2026')).toBeInTheDocument()
+    expect(screen.getByText('Last updated: October 22, 2026')).toBeInTheDocument()
   })
 
   it('discloses the extension usage events: install, update, daily, random install id, Firefox opt-in', () => {

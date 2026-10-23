@@ -21,7 +21,7 @@ function mockDashboard(purchases: { credits: number }[]) {
         builder.order = chain
         builder.limit = chain
         builder.single = async () => {
-          if (table === 'subscriptions') return { data: { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2600 } }
+          if (table === 'subscriptions') return { data: { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2500 } }
           if (table === 'ai_usage') return { data: { credits_used: 100 } }
           return { data: { created_at: '2024-01-01' } }
         }
@@ -49,7 +49,7 @@ describe('DashboardPage — AI usage limit', () => {
     const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
-    expect(screen.getByText('100/2600')).toBeInTheDocument()
+    expect(screen.getByText('100/2,500')).toBeInTheDocument()
   })
 
   it('extends the displayed limit by purchased credit packs', async () => {
@@ -57,7 +57,7 @@ describe('DashboardPage — AI usage limit', () => {
     const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
-    expect(screen.getByText('100/4240')).toBeInTheDocument()
+    expect(screen.getByText('100/4,140')).toBeInTheDocument()
   })
 
   it('hides the AI usage card entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {

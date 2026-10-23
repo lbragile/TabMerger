@@ -124,6 +124,40 @@ describe('lib/stripe', () => {
     )
   })
 
+  it('createCreditPackCheckoutSession shows the non-refundable notice next to the pay button', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/c1' })
+    vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')
+    const { createCreditPackCheckoutSession, CREDIT_PACK_REFUND_NOTICE } = await import('@/lib/stripe')
+
+    await createCreditPackCheckoutSession({
+      userId: 'user-1',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+    })
+
+    expect(mockCheckoutCreate.mock.lastCall![0].custom_text).toEqual({
+      submit: { message: CREDIT_PACK_REFUND_NOTICE },
+    })
+    // Says the policy, and fits Stripe's 1,200-character limit for custom text.
+    expect(CREDIT_PACK_REFUND_NOTICE).toMatch(/non-refundable/)
+    expect(CREDIT_PACK_REFUND_NOTICE).toMatch(/cancel your subscription/)
+    expect(CREDIT_PACK_REFUND_NOTICE.length).toBeLessThanOrEqual(1200)
+  })
+
+  it('createCheckoutSession (subscriptions) carries no credit-pack notice', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/c1' })
+    const { createCheckoutSession } = await import('@/lib/stripe')
+
+    await createCheckoutSession({
+      userId: 'user-1',
+      priceId: 'price_pro_m',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+    })
+
+    expect(mockCheckoutCreate.mock.lastCall![0].custom_text).toBeUndefined()
+  })
+
   it('createCreditPackCheckoutSession passes a custom quantity through to the line item', async () => {
     mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/c2' })
     vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')

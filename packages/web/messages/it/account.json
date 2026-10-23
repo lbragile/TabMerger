@@ -33,7 +33,9 @@
     "groups": "Gruppi sincronizzati",
     "tabs": "Schede salvate",
     "sessions": "Sessioni e backup",
-    "aiCredits": "Crediti IA rimasti"
+    "aiCredits": "Crediti IA rimasti",
+    "aiOwnKey": "Chi configura l’IA",
+    "aiOwnKeyValue": "Tu"
   },
   "profile": {
     "title": "Profilo",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "Impossibile avviare il pagamento",
     "getMore": "Acquista altri"
+  },
+  "aiPlan": {
+    "title": "Chi configura l’IA",
+    "managed": "TabMerger: {left, number} crediti IA rimasti su {limit, number} questo mese.",
+    "byok": "Tu: la tua chiave API, addebitata direttamente dal tuo fornitore di IA, senza limite di crediti. Aggiungi o cambia la chiave nelle Impostazioni dell’estensione."
   }
 }

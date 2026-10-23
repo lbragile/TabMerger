@@ -35,7 +35,9 @@
     "aiNames": "Propozycje nazw grup od AI",
     "smartSessions": "Inteligentne sugestie sesji",
     "tabPreview": "Podgląd kart z podsumowaniem AI",
-    "aiCredits": "{count} kredytów AI / miesiąc"
+    "aiCreditsMonthly": "{count, number} kredytów AI miesięcznie",
+    "ownApiKey": "Używaj własnego dostawcy AI",
+    "chooseModel": "Wybierz model AI"
   },
   "current": "Obecny",
   "installFree": "Zainstaluj za darmo",
@@ -55,5 +57,34 @@
     "title": "Prosty, przejrzysty cennik",
     "lead": "Zacznij za darmo. Przejdź na wyższy plan, gdy będziesz gotowy na więcej.",
     "moreQuestions": "Masz więcej pytań? Zajrzyj do <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Kto zajmuje się konfiguracją",
+    "managed": "TabMerger",
+    "byok": "Ty",
+    "managedHint": "Kredyty mierzą użycie AI: większe zadania i mocniejsze modele zużywają ich więcej.",
+    "byokHint": "Dodajesz klucz API od Anthropic, OpenAI lub Google. Dostawca rozlicza użycie bezpośrednio z Tobą, bez limitu kredytów.",
+    "switchToByok": "Skonfiguruj samodzielnie",
+    "switchToManaged": "Powierz konfigurację TabMerger"
+  },
+  "planChange": {
+    "title": "Potwierdź zmianę planu",
+    "confirmEndOfPeriod": "Twój plan zmieni się na {plan} w dniu {date}. Do tego czasu zachowujesz obecny plan. Za resztę tego okresu nie ma zwrotu.",
+    "confirmEndOfPeriodNoDate": "Twój plan zmieni się na {plan} na koniec tego okresu rozliczeniowego. Do tego czasu zachowujesz obecny plan. Za resztę tego okresu nie ma zwrotu.",
+    "confirmChargeNow": "Twój plan zmienia się teraz na {plan}. Za resztę tego okresu zostanie teraz naliczona proporcjonalna opłata.",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "scheduled": "Gotowe. Twój plan zmieni się na {plan} w dniu {date}.",
+    "scheduledNoDetails": "Gotowe. Twój plan zmieni się na koniec tego okresu rozliczeniowego.",
+    "appliedNow": "Gotowe. Masz teraz {plan}.",
+    "appliedNowNoDetails": "Gotowe. Twój plan został zmieniony.",
+    "aiDisabled": "Ta opcja Pro AI nie jest jeszcze dostępna.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI konfigurowany przez TabMerger",
+      "proAiByok": "Pro AI konfigurowany przez Ciebie"
+    },
+    "billedMonthly": "{plan}, płatność miesięczna",
+    "billedYearly": "{plan}, płatność roczna"
   }
 }

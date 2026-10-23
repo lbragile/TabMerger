@@ -33,7 +33,9 @@
     "groups": "동기화된 그룹",
     "tabs": "저장된 탭",
     "sessions": "세션 및 백업",
-    "aiCredits": "남은 AI 크레딧"
+    "aiCredits": "남은 AI 크레딧",
+    "aiOwnKey": "AI 설정 담당",
+    "aiOwnKeyValue": "직접"
   },
   "profile": {
     "title": "프로필",
@@ -69,5 +71,10 @@
   "credits": {
     "failed": "결제를 시작할 수 없습니다",
     "getMore": "더 받기"
+  },
+  "aiPlan": {
+    "title": "AI 설정 담당",
+    "managed": "TabMerger: 이번 달 {limit, number} AI 크레딧 중 {left, number} 남음.",
+    "byok": "직접: 내 API 키를 사용하며 AI 제공업체가 직접 청구하고 크레딧 한도는 없습니다. 키는 확장 프로그램의 설정에서 추가하거나 변경하세요."
   }
 }

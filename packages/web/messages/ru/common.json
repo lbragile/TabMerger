@@ -6,5 +6,6 @@
   "opensInNewTab": " (откроется в новой вкладке)",
   "close": "Закрыть",
   "showPassphrase": "Показать парольную фразу",
-  "hidePassphrase": "Скрыть парольную фразу"
+  "hidePassphrase": "Скрыть парольную фразу",
+  "withYourOwnKey": "Со своим API-ключом"
 }

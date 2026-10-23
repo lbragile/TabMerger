@@ -15,7 +15,8 @@
   "ai": {
     "question": "Co dokładnie robi AI?",
     "answer": "Plan Pro AI odblokowuje trzy funkcje AI: automatyczne grupowanie (analizuje otwarte karty i logicznie je grupuje), inteligentne nazywanie (proponuje nazwy grup) oraz sugestie sesji (podpowiada, jak zorganizować pracę).",
-    "answerComingSoon": "Wkrótce — plan Pro AI odblokuje trzy funkcje AI: automatyczne grupowanie (analizuje otwarte karty i logicznie je grupuje), inteligentne nazywanie (proponuje nazwy grup) oraz sugestie sesji (podpowiada, jak zorganizować pracę)."
+    "answerComingSoon": "Wkrótce — plan Pro AI odblokuje trzy funkcje AI: automatyczne grupowanie (analizuje otwarte karty i logicznie je grupuje), inteligentne nazywanie (proponuje nazwy grup) oraz sugestie sesji (podpowiada, jak zorganizować pracę).",
+    "answerOwnKey": "Plan Pro AI odblokowuje trzy funkcje AI: automatyczne grupowanie (analizuje otwarte karty i logicznie je grupuje), inteligentne nazywanie (proponuje nazwy grup) oraz sugestie sesji (podpowiada, jak zorganizować pracę). Na razie konfigurację prowadzisz samodzielnie: Pro AI działa z własnym kluczem API od Anthropic, OpenAI lub Google, a dostawca rozlicza użycie bezpośrednio z Tobą. Konfiguracja przez TabMerger pojawi się wkrótce."
   },
   "cancel": {
     "question": "Czy mogę anulować subskrypcję?",
