@@ -1,5 +1,7 @@
 // Core extension types
 
+import type { AiMode } from '../constants/ai';
+
 export interface Tab {
   id: number;
   title: string;
@@ -79,6 +81,10 @@ export interface Subscription {
   userId: string;
   tier: SubscriptionTier;
   status: SubscriptionStatus;
+  /** Pro AI only: TabMerger's key (`managed`) or the customer's own (`byok`). `subscriptions.ai_mode`. */
+  aiMode: AiMode;
+  /** Managed AI credits granted each month, worked out from what the plan pays; 0 for BYOK. */
+  aiMonthlyCredits: number;
   currentPeriodEnd: string; // ISO datetime
   createdAt: string;
   updatedAt: string;

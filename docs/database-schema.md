@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`021`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`022`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -29,6 +29,7 @@ The migrations in `supabase/migrations/` (`001`–`021`) are the source of truth
 | 019 | `019_gate_cloud_sync_rls.sql` | Adds `public.has_cloud_sync(uid)` — tier in `pro`/`pro_ai` and status in `active`/`trialing`/`past_due` (kept in sync with the shared `ENTITLED_SUBSCRIPTION_STATUSES` constant used by `resolveTier()` in `packages/extension/src/lib/entitlementTier.ts`). Replaces the insert/update policies on `groups`, `sessions`, `device_sessions`, `shared_bundles` (insert only) and `encryption_keys` to also require it, closing a gap where any signed-in free user could write sync rows directly (RLS previously only checked `auth.uid() = user_id`). `sessions` is gated too (owner decision: free users sync 0 sessions, keeping up to 3 locally only — the extension's free-tier upload path was removed in the same change). select/delete are untouched everywhere so downgraded users keep read/export/delete access. |
 | 020 | `020_groups_position_keeps_updated_at.sql` | `groups_set_updated_at()` replaces `update_updated_at()` on `groups` only: a position-only or view_count-only update keeps `updated_at`, any other change stamps `now()`. |
 | 021 | `021_profiles_server_managed.sql` | `profiles` is written only by the server (signup trigger and billing webhook): select is its only policy, and `anon`/`authenticated` hold `SELECT` only on the table. No schema change. |
+| 022 | `022_ai_byok_and_cost_credits.sql` | `subscriptions.ai_mode` (`managed`/`byok`) and `ai_monthly_credits`. Service-role-only functions `ai_reserve_credits()` and `ai_settle_credits()` for atomic AI credit metering. Converts existing `ai_credit_purchases.credits` to the new unit (1 credit = USD 0.001 of AI cost). |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -76,10 +77,12 @@ There is **one row per user**, enforced by `subscriptions_user_id_key UNIQUE(use
 | `current_period_end` | `timestamptz` | nullable |
 | `cancel_at_period_end` | `boolean` | default `false` (005) |
 | `stripe_price_id` | `text` | nullable (005) |
+| `ai_mode` | `text` | not null, default `'managed'`, one of `managed`, `byok` (022). Which Pro AI option: TabMerger's key (metered) or the customer's own Anthropic key (not metered) |
+| `ai_monthly_credits` | `integer` | not null, default `0`, `>= 0` (022). Managed Pro AI allowance per month in credits; `0` for `byok` and non-AI plans |
 | `created_at` | `timestamptz` | not null, default `now()` |
 | `updated_at` | `timestamptz` | not null, default `now()`, bumped by trigger |
 
-**RLS:** `subscriptions_select_own` only. Writes go through the service role (webhook) and the trigger.
+**RLS:** `subscriptions_select_own` only. Writes go through the service role (webhook) and the trigger. A signed-in user reads `ai_mode` and `ai_monthly_credits` on their own row and cannot change them: there is no write policy (migration 022 fails if one exists).
 
 **Indexes:** `subscriptions_status_idx` and the unique index behind `subscriptions_user_id_key`.
 
@@ -203,7 +206,14 @@ Per-user, per-month AI credit counter. `credits_used` adds up a **weighted** cos
 | `credits_used` | `integer` | not null, default `0` (was `request_count` before 017) |
 | — | — | `unique(user_id, month)` |
 
-**RLS:** `"Users can read own usage"`, select only. The AI routes increment it through the service role. The effective cap is `AI_MONTHLY_CAP` (300) plus the sum of `ai_credit_purchases.credits` for that month (`getEffectiveCap`).
+**RLS:** `"Users can read own usage"`, select only. The AI routes increment it through the service role. Before 022 the effective cap was `AI_MONTHLY_CAP` (300) plus the sum of `ai_credit_purchases.credits` for that month (`getEffectiveCap` in `packages/web/lib/ai-usage.ts`). Rows written before 022 hold the old weighted units and were not converted.
+
+**Metering functions (022).** Both are `security definer` with an empty `search_path`, and only `service_role` can execute them (`anon`/`authenticated` get `42501`). Unit: 1 credit = USD 0.001 of AI cost.
+
+- `ai_reserve_credits(p_user uuid, p_month text, p_amount integer) returns table(allowed boolean, remaining integer, cap integer)`. Cap = `subscriptions.ai_monthly_credits` when tier is `pro_ai`, `ai_mode` is `managed` and status is `active`/`trialing`/`past_due` (same list as `has_cloud_sync()`, mirrors `ENTITLED_SUBSCRIPTION_STATUSES`), else 0, plus that month's `ai_credit_purchases.credits`. Adds `p_amount` to `credits_used` only if the result stays within the cap, in one `insert ... on conflict do update ... where` statement: the conflicting row is locked and the condition is re-checked against its latest version, so concurrent reservations cannot both use the same headroom. Refused calls change nothing and do not create a row; `remaining` is never negative. Raises `22023` for `p_amount <= 0` or a month that is not `YYYY-MM`.
+- `ai_settle_credits(p_user uuid, p_month text, p_delta integer) returns integer`: adds `p_delta` (usually negative, replacing a reservation with the real cost), clamped at 0. Returns the new `credits_used`, or `null` when the user has no row for that month (no row is created).
+
+Called through PostgREST as `rpc('ai_reserve_credits', ...)`, which returns a one-row array.
 
 ### `ai_credit_purchases`
 
@@ -214,8 +224,8 @@ One-time AI credit packs. They are month-scoped and don't roll over. There is on
 | `id` | `uuid` | PK, default `gen_random_uuid()` |
 | `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
 | `month` | `text` | not null, `'YYYY-MM'` |
-| `credits` | `integer` | not null |
-| `stripe_checkout_session_id` | `text` | not null, unique |
+| `credits` | `integer` | not null. Since 022: 1 credit = USD 0.001 of AI cost (older rows were converted with `floor(0.40 * (units * 0.05 * 0.94 - 0.30) / 0.001)`, min 0) |
+| `stripe_checkout_session_id` | `text` | not null, unique. A Stripe Checkout session id, or `grant_<uuid>` for a manual credit grant |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
 **RLS:** `"Users can read own credit purchases"`, select only. Only the Stripe webhook (service role) writes. **Index:** `ai_credit_purchases_user_month_idx (user_id, month)`.
@@ -250,6 +260,6 @@ erDiagram
 These types only partly mirror the schema:
 
 - `SupabaseGroup` is missing `public_slug`, `view_count`, `permanent`, `starred`, `archived` and `note`. It types `windows` as `ExtWindow[]` even though the value can be an `EncryptedBlob`.
-- `Subscription` doesn't model `cancel_at_period_end` or `stripe_price_id`. `useEntitlements` selects them with its own local row type.
+- `Subscription` doesn't model `cancel_at_period_end`, `stripe_price_id`, `ai_mode` or `ai_monthly_credits`. `useEntitlements` selects them with its own local row type.
 - `DeviceSession` covers `device_id`, `device_name`, `now_open_snapshot` and `last_active`.
 - There are no shared types for `shared_bundles`, `encryption_keys`, `organize_runs`, `ai_usage` or `ai_credit_purchases`.
