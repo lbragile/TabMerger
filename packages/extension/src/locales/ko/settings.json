@@ -59,7 +59,9 @@
     "openingPortal": "여는 중...",
     "manageBilling": "결제 관리",
     "signOut": "로그아웃",
-    "resetEncryption": "암호문구를 잊으셨나요? 암호화 재설정"
+    "resetEncryption": "암호문구를 잊으셨나요? 암호화 재설정",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "내 Anthropic 키"
   },
   "data": {
     "intro": "TabMerger는 모든 데이터를 IndexedDB에 로컬로 저장합니다. 클라우드 동기화에는 Pro 계정이 필요합니다.",
@@ -87,7 +89,46 @@
     "summariesLabel": "탭 미리 보기 요약",
     "summariesDescription": "탭에 마우스를 올린 미리 보기에 AI 요약 표시",
     "throttleLabel": "자동 AI 추천을 하루 한 번으로 제한",
-    "throttleDescription": "월간 AI 할당량을 보호하기 위해 백그라운드 세션 추천 배너는 하루에 최대 한 번만 표시됩니다. 직접 실행하는 AI 작업(자동 그룹화, 그룹 이름 짓기, 정리)은 이 설정으로 제한되지 않습니다."
+    "throttleDescription": "월간 AI 할당량을 보호하기 위해 백그라운드 세션 추천 배너는 하루에 최대 한 번만 표시됩니다. 직접 실행하는 AI 작업(자동 그룹화, 그룹 이름 짓기, 정리)은 이 설정으로 제한되지 않습니다.",
+    "plan": {
+      "managed": "TabMerger 키 사용 중 — 이번 달 남은 크레딧 {{remaining}}/{{cap}}",
+      "managedUnknown": "TabMerger 키 사용 중",
+      "byok": "내 Anthropic 키 사용 중"
+    },
+    "key": {
+      "label": "Anthropic API 키",
+      "save": "키 저장",
+      "checking": "확인 중…",
+      "replace": "바꾸기",
+      "remove": "삭제",
+      "saved": "API 키를 저장했습니다",
+      "removed": "API 키를 삭제했습니다",
+      "invalidFormat": "Anthropic API 키 형식이 아닙니다. 키는 sk-ant-로 시작합니다.",
+      "verifyFailed": "키를 확인하지 못했습니다. 다시 시도하세요.",
+      "note": "이 기기에만 저장됩니다. AI 요청마다 TabMerger 서버로 전송되어 Anthropic에 바로 전달되며, 저희 서버에는 저장되지 않습니다.",
+      "consoleLink": "Anthropic Console에서 키를 만들고 지출 한도를 설정하세요"
+    },
+    "model": {
+      "label": "AI 모델",
+      "managedDescription": "큰 모델일수록 결과가 좋고 크레딧을 더 씁니다. 수치는 추정치입니다.",
+      "byokDescription": "큰 모델일수록 결과가 좋고 비용이 더 듭니다. 수치는 추정치이며, Anthropic이 내 계정에 청구합니다.",
+      "auto": "자동",
+      "recommended": "권장",
+      "autoDescription": "작업마다 충분히 잘하는 가장 저렴한 모델을 씁니다."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "약 {{amount}}",
+      "credits_other": "약 {{formatted}}크레딧",
+      "perMonth_other": "내 크레딧으로 정리 가능 횟수: 월 약 {{formatted}}회",
+      "action": {
+        "nameGroup_other": "탭 {{count}}개 그룹 이름 짓기",
+        "tabSummary": "탭 1개 요약",
+        "groupTabs_other": "탭 {{count}}개 그룹화",
+        "suggestSessions": "세션 추천",
+        "organize_other": "탭 {{count}}개 정리"
+      }
+    }
   },
   "dev": {
     "demoLabel": "데모 모드",

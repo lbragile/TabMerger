@@ -27,6 +27,7 @@ import { OtherDevices } from '@/components/Settings/OtherDevices';
 import { AutoBackups } from '@/components/Settings/AutoBackups';
 import { CheckForUpdates } from '@/components/Settings/CheckForUpdates';
 import { LanguageSetting } from '@/components/Settings/LanguageSetting';
+import { AiSettings } from '@/components/Settings/AiSettings';
 import { useLanguageSetting } from '@/hooks/useLocalePreference';
 import { autoBackupDownloadQueryKey } from '@/lib/autoBackupQueryKeys';
 import type { BackupDownloadResult } from '@/lib/autoBackupDownload';
@@ -55,13 +56,20 @@ function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => (a[k] ?? DEFAULT_APP_SETTINGS[k]) === (b[k] ?? DEFAULT_APP_SETTINGS[k]));
 }
 
+/** The tabs a caller may open Settings on (`openModal('settings', { tab })`). */
+const SETTINGS_TABS = ['general', 'account', 'data', 'devices', 'ai', 'dev'] as const;
+
 interface SettingsModalProps {
   onClose: () => void;
+  /** The tab to open on, e.g. `ai` from an "Open Settings" action on an AI error. Unknown values open General. */
+  initialTab?: unknown;
 }
 
-export function SettingsModal({ onClose }: SettingsModalProps) {
+export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState<string>(() =>
+    (SETTINGS_TABS as readonly unknown[]).includes(initialTab) ? (initialTab as string) : 'general'
+  );
   const [devUsageInput, setDevUsageInput] = useState('0');
   const queryClient = useQueryClient();
   // `saved` is the query's current value (reactive — reflects saves made elsewhere,
@@ -71,7 +79,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const [draft, setDraft] = useState<AppSettings>(saved);
   // Per-device, not an AppSetting: saved and applied with the rest by "Save changes"
   const language = useLanguageSetting();
-  const { tier, cloudSync, currentPeriodEnd, aiFeatures, maxGroups, maxTabs } = useEntitlements();
+  const { tier, cloudSync, currentPeriodEnd, aiFeatures, aiMode, maxGroups, maxTabs } = useEntitlements();
   const { remaining: aiUsageRemaining, cap: aiUsageCap, loading: aiUsageLoading } = useAiUsage();
   const { user, session, signOut } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
@@ -532,12 +540,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 <span className="text-xs">{user.email}</span>
               </div>
             )}
-            {aiFeatures && (
+            {aiFeatures && aiMode !== 'byok' && (
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{t('settings.account.aiCreditsLeft')}</span>
                 <span className="text-xs font-medium">
                   {aiUsageLoading ? '…' : t('settings.account.aiCreditsValue', { remaining: aiUsageRemaining, cap: aiUsageCap })}
                 </span>
+              </div>
+            )}
+            {aiFeatures && aiMode === 'byok' && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">{t('settings.account.aiKeyLabel')}</span>
+                <span className="text-xs font-medium">{t('settings.account.aiOwnKey')}</span>
               </div>
             )}
           </div>
@@ -672,9 +686,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
         {aiFeatures && (
           <TabsContent value="ai" className="space-y-4">
-            <p className="text-xs text-muted-foreground">
-              {t('settings.ai.intro')}
-            </p>
+            <AiSettings model={draft.aiModel} onModelChange={(v) => patch('aiModel', v)} />
+            {aiMode !== 'byok' && (
+              <p className="text-xs text-muted-foreground">
+                {t('settings.ai.intro')}
+              </p>
+            )}
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
@@ -839,8 +856,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         </div>
       </Tabs>
 
-      {/* Footer — only shown for the General tab, which now owns the cloud sync toggle too */}
-      {activeTab === 'general' && (
+      {/* Footer — shown for the tabs whose controls edit the draft: General (which owns the cloud
+          sync toggle too) and AI (feature toggles and the model) */}
+      {(activeTab === 'general' || activeTab === 'ai') && (
         <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-2 min-w-0">
           <Button
             variant="ghost"

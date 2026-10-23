@@ -43,6 +43,7 @@ import { FreeLimitExceededError, countedGroups } from "@/lib/tierLimits";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
+import { AiRequestError, isFixedInAiSettings } from "@/lib/aiErrors";
 import { TOUR_ANCHORS } from "@/lib/tourSteps";
 import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
 import { motionScrollBehavior } from "@/lib/reducedMotion";
@@ -107,6 +108,15 @@ export function Header() {
     // that one carries stale sync stamps, a stale copy of Now Open and no tour practice groups.
     const { canUndo, canRedo, undo: handleUndo, redo: handleRedo } = useUndoRedo();
 
+    /** An AI error toast, with an "Open Settings" action when the fix is in Settings → AI (the own key, the model). */
+    const aiErrorToast = (message: string, err: unknown) => {
+        if (isFixedInAiSettings(err)) {
+            toast.error(message, { action: { label: t("common.openSettings"), onClick: () => openModal("settings", { tab: "ai" }) } });
+        } else {
+            toast.error(message);
+        }
+    };
+
     const handleAIGroup = async () => {
         if (!groupsState) return;
         const tabs =
@@ -153,7 +163,8 @@ export function Header() {
             // The backstop already showed the upgrade toast
             if (err instanceof FreeLimitExceededError) return;
             console.error("[TabMerger] AI grouping failed:", err);
-            toast.error(t("header.toast.aiGroupingFailed"));
+            // A coded server error (own key missing or rejected, model unavailable, ...) says what to do
+            aiErrorToast(err instanceof AiRequestError && err.code ? err.message : t("header.toast.aiGroupingFailed"), err);
         }
     };
 
@@ -172,7 +183,7 @@ export function Header() {
                 setAiQuotaExceeded(true);
                 return;
             }
-            toast.error(err instanceof Error ? err.message : t('header.toast.organizeFailed'));
+            aiErrorToast(err instanceof Error ? err.message : t('header.toast.organizeFailed'), err);
         }
     };
 

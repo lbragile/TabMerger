@@ -61,7 +61,9 @@
     "openingPortal": "Abrindo...",
     "manageBilling": "Gerenciar cobrança",
     "signOut": "Sair",
-    "resetEncryption": "Esqueceu a frase secreta? Redefinir criptografia"
+    "resetEncryption": "Esqueceu a frase secreta? Redefinir criptografia",
+    "aiKeyLabel": "IA",
+    "aiOwnKey": "Sua própria chave da Anthropic"
   },
   "data": {
     "intro": "O TabMerger armazena todos os dados localmente no IndexedDB. A sincronização na nuvem exige uma conta Pro.",
@@ -95,7 +97,56 @@
     "summariesLabel": "Resumos na prévia das abas",
     "summariesDescription": "Resumo de IA na prévia ao passar o mouse sobre a aba",
     "throttleLabel": "Limitar sugestões automáticas de IA a uma por dia",
-    "throttleDescription": "O banner de sugestão de sessões em segundo plano aparece no máximo uma vez por dia para proteger sua cota mensal de IA. As ações de IA que você aciona manualmente (Agrupar automaticamente, Nomear grupo, Organizar) nunca são limitadas por isto."
+    "throttleDescription": "O banner de sugestão de sessões em segundo plano aparece no máximo uma vez por dia para proteger sua cota mensal de IA. As ações de IA que você aciona manualmente (Agrupar automaticamente, Nomear grupo, Organizar) nunca são limitadas por isto.",
+    "plan": {
+      "managed": "Chave do TabMerger: restam {{remaining}} de {{cap}} créditos neste mês",
+      "managedUnknown": "Usando a chave do TabMerger",
+      "byok": "Usando sua própria chave da Anthropic"
+    },
+    "key": {
+      "label": "Sua chave de API da Anthropic",
+      "save": "Salvar chave",
+      "checking": "Verificando…",
+      "replace": "Substituir",
+      "remove": "Remover",
+      "saved": "Chave de API salva",
+      "removed": "Chave de API removida",
+      "invalidFormat": "Isso não parece uma chave de API da Anthropic. As chaves começam com sk-ant-.",
+      "verifyFailed": "Não foi possível verificar a chave. Tente novamente.",
+      "note": "Salva apenas neste dispositivo. Enviada ao servidor do TabMerger com cada solicitação de IA e repassada direto à Anthropic; nunca salva nos nossos servidores.",
+      "consoleLink": "Crie uma chave e defina um limite de gastos no console da Anthropic"
+    },
+    "model": {
+      "label": "Modelo de IA",
+      "managedDescription": "Modelos maiores dão resultados melhores e usam mais créditos. Os valores são estimativas.",
+      "byokDescription": "Modelos maiores dão resultados melhores e custam mais. Os valores são estimativas; a Anthropic cobra na sua conta.",
+      "auto": "Automático",
+      "recommended": "Recomendado",
+      "autoDescription": "Usa o modelo mais barato que faz bem cada tarefa."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "≈ {{amount}}",
+      "credits_one": "≈ {{formatted}} crédito",
+      "credits_many": "≈ {{formatted}} de créditos",
+      "credits_other": "≈ {{formatted}} créditos",
+      "perMonth_one": "≈ {{formatted}} organização por mês com seus créditos",
+      "perMonth_many": "≈ {{formatted}} de organizações por mês com seus créditos",
+      "perMonth_other": "≈ {{formatted}} organizações por mês com seus créditos",
+      "action": {
+        "nameGroup_one": "Nomear um grupo de {{count}} aba",
+        "nameGroup_many": "Nomear um grupo de {{count}} de abas",
+        "nameGroup_other": "Nomear um grupo de {{count}} abas",
+        "tabSummary": "Resumir uma aba",
+        "groupTabs_one": "Agrupar {{count}} aba",
+        "groupTabs_many": "Agrupar {{count}} de abas",
+        "groupTabs_other": "Agrupar {{count}} abas",
+        "suggestSessions": "Sugerir sessões",
+        "organize_one": "Organizar {{count}} aba",
+        "organize_many": "Organizar {{count}} de abas",
+        "organize_other": "Organizar {{count}} abas"
+      }
+    }
   },
   "dev": {
     "demoLabel": "Modo demo",

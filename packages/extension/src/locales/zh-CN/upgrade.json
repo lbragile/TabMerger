@@ -45,5 +45,6 @@
   },
   "maybeLater": "以后再说",
   "signIn": "登录",
-  "upgradeNow": "立即升级"
+  "upgradeNow": "立即升级",
+  "byokOption": "或使用您自己的 Anthropic 密钥，{{price}}/月"
 }

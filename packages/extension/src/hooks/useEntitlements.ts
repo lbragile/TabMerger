@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import type { Entitlements, Tier } from '@/lib/types';
 import { TIER_LIMITS } from '@/lib/types';
 import { AI_ENABLED } from '@/lib/aiFlag';
-import { resolveTier } from '@/lib/entitlementTier';
+import { resolveAiMode, resolveTier } from '@/lib/entitlementTier';
 import { useAuth } from './useAuth';
 import { HEARTBEAT_TIER_STORAGE_KEY, type HeartbeatTier } from '@tabmerger/shared';
 
@@ -13,12 +13,23 @@ type SubRow = {
   cancel_at_period_end: boolean | null;
   current_period_end: string | null;
   stripe_price_id: string | null;
+  /** 'managed' | 'byok' since migration 022; absent when the AI columns could not be read. */
+  ai_mode?: string | null;
 };
 
+const BASE_COLUMNS = 'tier, status, cancel_at_period_end, current_period_end, stripe_price_id';
+
 async function fetchSubscription(userId: string): Promise<SubRow | null> {
+  // `ai_mode` is only read while AI is on. If the column can't be read (a database without
+  // migration 022), the row is read again without it: a failed read here would otherwise turn
+  // every paying user into a free one, and a missing mode just means "managed".
+  if (AI_ENABLED) {
+    const withAi = await supabase.from('subscriptions').select(`${BASE_COLUMNS}, ai_mode`).eq('user_id', userId).maybeSingle();
+    if (!withAi.error) return withAi.data as SubRow | null;
+  }
   const { data, error } = await supabase
     .from('subscriptions')
-    .select('tier, status, cancel_at_period_end, current_period_end, stripe_price_id')
+    .select(BASE_COLUMNS)
     .eq('user_id', userId)
     .maybeSingle();
 
@@ -89,7 +100,7 @@ export function useEntitlements(): Entitlements & { loading: boolean } {
     // ponytail: AI features: coming soon — the global kill switch overrides even the
     // marketing-demo tier override below, so demo recordings never show AI UI while
     // the flag is off. Flip VITE_AI_ENABLED for a demo build that needs to show it.
-    return { ...TIER_LIMITS.pro_ai, aiFeatures: AI_ENABLED, loading: false };
+    return { ...TIER_LIMITS.pro_ai, aiFeatures: AI_ENABLED, aiMode: 'managed', loading: false };
   }
 
   const effectiveTier: Tier = user ? resolveTier(sub ?? null) : 'free';
@@ -106,6 +117,7 @@ export function useEntitlements(): Entitlements & { loading: boolean } {
     cancelAtPeriodEnd: sub?.cancel_at_period_end ?? false,
     currentPeriodEnd: sub?.current_period_end ?? null,
     subscriptionStatus: sub?.status ?? null,
+    aiMode: user ? resolveAiMode(sub ?? null) : null,
     /** !!user guard: query is disabled when logged out, so isLoading would be false — but the guard documents intent */
     loading
   };

@@ -45,5 +45,6 @@
   },
   "maybeLater": "あとで",
   "signIn": "サインイン",
-  "upgradeNow": "今すぐアップグレード"
+  "upgradeNow": "今すぐアップグレード",
+  "byokOption": "自分の Anthropic キーを使う場合は {{price}}/月"
 }

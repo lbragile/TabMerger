@@ -29,5 +29,19 @@
   "proAiRequired": "Offre Pro AI requise",
   "nameGroupOff": "Le nommage de groupe est désactivé dans les Paramètres",
   "suggestSessionsOff": "Les suggestions de sessions sont désactivées dans les Paramètres",
-  "organizeOff": "L’organisation est désactivée dans les Paramètres"
+  "organizeOff": "L’organisation est désactivée dans les Paramètres",
+  "ai": {
+    "disabled": "Les fonctions IA ne sont pas disponibles pour le moment.",
+    "modelInvalid": "Ce modèle d’IA n’est pas disponible. Choisissez-en un autre dans les Paramètres, onglet IA.",
+    "overloaded": "Le service d’IA est surchargé. Réessayez dans une minute.",
+    "byokKeyMissing": "Ajoutez votre clé API Anthropic dans les Paramètres, onglet IA, pour utiliser les fonctions IA.",
+    "byokKeyInvalid": "Anthropic a refusé votre clé API. Vérifiez-la ou remplacez-la dans les Paramètres, onglet IA.",
+    "byokRateLimited": "Votre clé Anthropic a atteint sa limite de requêtes. Patientez un instant puis réessayez.",
+    "byokBilling": "Votre compte Anthropic n’a plus de crédit ou a un problème de facturation. Vérifiez-le dans la console Anthropic.",
+    "creditsNotApplicable": "Les packs de crédits ne sont pas proposés avec votre propre clé Anthropic.",
+    "unauthorized": "Votre connexion a expiré. Reconnectez-vous et réessayez.",
+    "invalidRequest": "TabMerger n’a pas pu envoyer cette requête IA. Réessayez, et mettez à jour l’extension si le problème persiste.",
+    "refused": "L’IA a refusé cette requête.",
+    "failed": "La requête IA a échoué. Réessayez."
+  }
 }

@@ -45,7 +45,7 @@ export function ModalRoot() {
       case 'importExport':
         return <ImportExportModal mode={(modal.data?.mode as string) ?? 'export'} data={modal.data ?? {}} onClose={closeModal} />;
       case 'settings':
-        return <SettingsModal onClose={closeModal} />;
+        return <SettingsModal onClose={closeModal} initialTab={modal.data?.tab} />;
       case 'auth':
         return <AuthModal onClose={closeModal} />;
       case 'upgrade':

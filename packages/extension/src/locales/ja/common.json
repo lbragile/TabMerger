@@ -45,5 +45,6 @@
   "showPassphrase": "パスフレーズを表示",
   "hidePassphrase": "パスフレーズを非表示",
   "notifications": "通知",
-  "closeToast": "通知を閉じる"
+  "closeToast": "通知を閉じる",
+  "openSettings": "設定を開く"
 }

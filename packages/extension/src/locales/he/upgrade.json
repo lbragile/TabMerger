@@ -45,5 +45,6 @@
   },
   "maybeLater": "אולי אחר כך",
   "signIn": "התחברות",
-  "upgradeNow": "שדרוג עכשיו"
+  "upgradeNow": "שדרוג עכשיו",
+  "byokOption": "או {{price}} לחודש עם מפתח Anthropic משלכם"
 }

@@ -59,7 +59,9 @@
     "openingPortal": "開いています...",
     "manageBilling": "請求を管理",
     "signOut": "サインアウト",
-    "resetEncryption": "パスフレーズをお忘れですか？暗号化をリセット"
+    "resetEncryption": "パスフレーズをお忘れですか？暗号化をリセット",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "自分の Anthropic キー"
   },
   "data": {
     "intro": "TabMergerはすべてのデータをIndexedDBにローカル保存します。クラウド同期にはProアカウントが必要です。",
@@ -87,7 +89,46 @@
     "summariesLabel": "タブプレビューの要約",
     "summariesDescription": "タブのホバープレビューにAIの要約を表示します",
     "throttleLabel": "AIの自動提案を1日1回に制限",
-    "throttleDescription": "バックグラウンドのセッション提案バナーは、月間AI利用枠を守るため、1日に最大1回だけ表示されます。手動で実行したAI操作（自動グループ化、グループに名前を付ける、整理）はこの制限を受けません。"
+    "throttleDescription": "バックグラウンドのセッション提案バナーは、月間AI利用枠を守るため、1日に最大1回だけ表示されます。手動で実行したAI操作（自動グループ化、グループに名前を付ける、整理）はこの制限を受けません。",
+    "plan": {
+      "managed": "TabMerger のキーを使用中 — 今月の残り {{remaining}} / {{cap}} クレジット",
+      "managedUnknown": "TabMerger のキーを使用中",
+      "byok": "自分の Anthropic キーを使用中"
+    },
+    "key": {
+      "label": "Anthropic API キー",
+      "save": "キーを保存",
+      "checking": "確認中…",
+      "replace": "置き換える",
+      "remove": "削除",
+      "saved": "API キーを保存しました",
+      "removed": "API キーを削除しました",
+      "invalidFormat": "Anthropic API キーの形式ではありません。キーは sk-ant- で始まります。",
+      "verifyFailed": "キーを確認できませんでした。もう一度お試しください。",
+      "note": "このデバイスにのみ保存されます。AI リクエストのたびに TabMerger のサーバーへ送信され、そのまま Anthropic に渡されます。当社のサーバーには保存されません。",
+      "consoleLink": "Anthropic Console でキーを作成し、利用上限を設定する"
+    },
+    "model": {
+      "label": "AI モデル",
+      "managedDescription": "大きいモデルほど結果が良くなり、クレジットを多く使います。数値は目安です。",
+      "byokDescription": "大きいモデルほど結果が良くなり、料金も高くなります。数値は目安で、Anthropic からあなたのアカウントに請求されます。",
+      "auto": "自動",
+      "recommended": "おすすめ",
+      "autoDescription": "作業ごとに、十分な品質で最も安いモデルを使います。"
+    },
+    "estimate": {
+      "item": "{{action}}：{{amount}}",
+      "usd": "約 {{amount}}",
+      "credits_other": "約 {{formatted}} クレジット",
+      "perMonth_other": "クレジットで整理できる回数：月に約 {{formatted}} 回",
+      "action": {
+        "nameGroup_other": "{{count}} 個のタブのグループに名前を付ける",
+        "tabSummary": "タブを1つ要約する",
+        "groupTabs_other": "{{count}} 個のタブをグループ化する",
+        "suggestSessions": "セッションを提案する",
+        "organize_other": "{{count}} 個のタブを整理する"
+      }
+    }
   },
   "dev": {
     "demoLabel": "デモモード",

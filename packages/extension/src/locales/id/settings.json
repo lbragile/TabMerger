@@ -59,7 +59,9 @@
     "openingPortal": "Membuka...",
     "manageBilling": "Kelola penagihan",
     "signOut": "Keluar",
-    "resetEncryption": "Lupa frasa sandi? Atur ulang enkripsi"
+    "resetEncryption": "Lupa frasa sandi? Atur ulang enkripsi",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "Kunci Anthropic milik Anda"
   },
   "data": {
     "intro": "TabMerger menyimpan semua data secara lokal di IndexedDB. Sinkronisasi cloud memerlukan akun Pro.",
@@ -87,7 +89,46 @@
     "summariesLabel": "Ringkasan pratinjau tab",
     "summariesDescription": "Ringkasan AI saat pratinjau tab dengan arahkan kursor",
     "throttleLabel": "Batasi saran AI otomatis menjadi sekali sehari",
-    "throttleDescription": "Spanduk saran sesi latar belakang muncul paling banyak sekali per hari untuk melindungi kuota AI bulanan Anda. Tindakan AI yang Anda picu secara manual (Kelompokkan otomatis, Nama grup, Atur ulang) tidak pernah dibatasi oleh ini."
+    "throttleDescription": "Spanduk saran sesi latar belakang muncul paling banyak sekali per hari untuk melindungi kuota AI bulanan Anda. Tindakan AI yang Anda picu secara manual (Kelompokkan otomatis, Nama grup, Atur ulang) tidak pernah dibatasi oleh ini.",
+    "plan": {
+      "managed": "Kunci TabMerger: sisa {{remaining}} dari {{cap}} kredit bulan ini",
+      "managedUnknown": "Menggunakan kunci TabMerger",
+      "byok": "Menggunakan kunci Anthropic milik Anda"
+    },
+    "key": {
+      "label": "Kunci API Anthropic Anda",
+      "save": "Simpan kunci",
+      "checking": "Memeriksa…",
+      "replace": "Ganti",
+      "remove": "Hapus",
+      "saved": "Kunci API disimpan",
+      "removed": "Kunci API dihapus",
+      "invalidFormat": "Itu tidak terlihat seperti kunci API Anthropic. Kunci diawali dengan sk-ant-.",
+      "verifyFailed": "Kunci tidak dapat diperiksa. Coba lagi.",
+      "note": "Hanya disimpan di perangkat ini. Dikirim ke server TabMerger bersama setiap permintaan AI dan langsung diteruskan ke Anthropic; tidak pernah disimpan di server kami.",
+      "consoleLink": "Buat kunci dan tetapkan batas pengeluaran di Anthropic Console"
+    },
+    "model": {
+      "label": "Model AI",
+      "managedDescription": "Model yang lebih besar memberi hasil lebih baik dan memakai lebih banyak kredit. Angkanya perkiraan.",
+      "byokDescription": "Model yang lebih besar memberi hasil lebih baik dan lebih mahal. Angkanya perkiraan; Anthropic menagih akun Anda.",
+      "auto": "Otomatis",
+      "recommended": "Disarankan",
+      "autoDescription": "Memakai model termurah yang mengerjakan setiap tugas dengan baik."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "≈ {{amount}}",
+      "credits_other": "≈ {{formatted}} kredit",
+      "perMonth_other": "≈ {{formatted}} kali atur ulang per bulan dengan kredit Anda",
+      "action": {
+        "nameGroup_other": "Memberi nama grup berisi {{count}} tab",
+        "tabSummary": "Meringkas satu tab",
+        "groupTabs_other": "Mengelompokkan {{count}} tab",
+        "suggestSessions": "Menyarankan sesi",
+        "organize_other": "Mengatur ulang {{count}} tab"
+      }
+    }
   },
   "dev": {
     "demoLabel": "Mode Demo",

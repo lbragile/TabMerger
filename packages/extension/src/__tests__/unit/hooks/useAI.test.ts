@@ -48,7 +48,7 @@ beforeEach(() => {
   })
   ;(chrome.storage.local.get as ReturnType<typeof vi.fn>).mockResolvedValue({})
   ;(chrome.storage.local.set as ReturnType<typeof vi.fn>).mockResolvedValue(undefined)
-  mockUseAiUsage.mockReturnValue({ remaining: 100, used: 0, cap: 100, loading: false })
+  mockUseAiUsage.mockReturnValue({ remaining: 100, used: 0, cap: 100, loading: false, known: true })
   mockGetEncryptionKeyState.mockResolvedValue('absent')
 })
 
@@ -281,7 +281,7 @@ describe('useOrganizeTabs — encryption status that could not be checked', () =
 })
 
 describe('useOrganizeTabs', () => {
-  it('posts an empty body to /api/ai/organize (server derives user from token)', async () => {
+  it('posts only the model to /api/ai/organize (server derives user and groups from the token)', async () => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ runId: '1', token: 't' }) })
@@ -289,7 +289,7 @@ describe('useOrganizeTabs', () => {
     await act(async () => { await result.current.mutateAsync() })
     expect(globalThis.fetch).toHaveBeenCalledWith(
       expect.stringContaining('/api/ai/organize'),
-      expect.objectContaining({ body: JSON.stringify({}) })
+      expect.objectContaining({ body: JSON.stringify({ model: 'auto' }) })
     )
   })
 })
@@ -336,7 +336,7 @@ describe('proactive client-side quota throttle (remaining <= 0)', () => {
   beforeEach(() => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
-    mockUseAiUsage.mockReturnValue({ remaining: 0, used: 100, cap: 100, loading: false })
+    mockUseAiUsage.mockReturnValue({ remaining: 0, used: 100, cap: 100, loading: false, known: true })
   })
 
   it('useAutoGroup throws QuotaExceededError without calling fetch when remaining is 0', async () => {
@@ -371,7 +371,7 @@ describe('proactive client-side quota throttle (remaining <= 0)', () => {
   })
 
   it('runs normally (calls fetch) when remaining is positive', async () => {
-    mockUseAiUsage.mockReturnValue({ remaining: 5, used: 95, cap: 100, loading: false })
+    mockUseAiUsage.mockReturnValue({ remaining: 5, used: 95, cap: 100, loading: false, known: true })
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ groups: [] }) })
     const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
     await act(async () => { await result.current.mutateAsync([]) })

@@ -87,5 +87,6 @@
   "showPassphrase": "Pokaż hasło",
   "hidePassphrase": "Ukryj hasło",
   "notifications": "Powiadomienia",
-  "closeToast": "Zamknij powiadomienie"
+  "closeToast": "Zamknij powiadomienie",
+  "openSettings": "Otwórz Ustawienia"
 }

@@ -59,7 +59,8 @@ export function installDevFetchMock() {
       console.info(`[dev-mock] intercepted ${pathname}`);
       // fire-and-forget, mirrors server-side usage tracking; chain the real-DB sync
       // after the local increment resolves so it posts the up-to-date count
-      void incrementDevAiUsage().then(() => syncDevUsageToServer(realFetch));
+      // (checking an own key is free, so it doesn't count)
+      if (pathname !== '/api/ai/byok/verify') void incrementDevAiUsage().then(() => syncDevUsageToServer(realFetch));
       const body = typeof fixture === 'function' ? fixture(JSON.parse((init?.body as string) ?? '{}')) : fixture;
       return new Response(JSON.stringify(body), {
         status: 200,

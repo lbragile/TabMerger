@@ -29,5 +29,19 @@
   "proAiRequired": "需要 Pro AI 套餐",
   "nameGroupOff": "“为分组命名”已在设置中关闭",
   "suggestSessionsOff": "“建议会话”已在设置中关闭",
-  "organizeOff": "“整理”已在设置中关闭"
+  "organizeOff": "“整理”已在设置中关闭",
+  "ai": {
+    "disabled": "AI 功能目前不可用。",
+    "modelInvalid": "该 AI 模型不可用。请在“设置”的 AI 标签页中选择其他模型。",
+    "overloaded": "AI 服务当前繁忙，请一分钟后再试。",
+    "byokKeyMissing": "要使用 AI 功能，请在“设置”的 AI 标签页中添加您的 Anthropic API 密钥。",
+    "byokKeyInvalid": "Anthropic 未接受您的 API 密钥。请在“设置”的 AI 标签页中检查或替换它。",
+    "byokRateLimited": "您的 Anthropic 密钥已达到请求速率上限。请稍等片刻后重试。",
+    "byokBilling": "您的 Anthropic 账户余额不足或存在账单问题。请在 Anthropic Console 中查看。",
+    "creditsNotApplicable": "使用您自己的 Anthropic 密钥时，不提供额度包。",
+    "unauthorized": "您的登录已过期。请重新登录后再试一次。",
+    "invalidRequest": "TabMerger 无法发送此 AI 请求。请重试；如果问题持续出现，请更新扩展。",
+    "refused": "AI 拒绝了此请求。",
+    "failed": "AI 请求失败，请重试。"
+  }
 }

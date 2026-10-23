@@ -45,5 +45,6 @@
   },
   "maybeLater": "Mungkin nanti",
   "signIn": "Masuk",
-  "upgradeNow": "Tingkatkan sekarang"
+  "upgradeNow": "Tingkatkan sekarang",
+  "byokOption": "Atau {{price}}/bln dengan kunci Anthropic milik Anda"
 }

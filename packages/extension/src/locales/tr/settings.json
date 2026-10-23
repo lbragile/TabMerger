@@ -60,7 +60,9 @@
     "openingPortal": "Açılıyor...",
     "manageBilling": "Faturalandırmayı yönet",
     "signOut": "Oturumu kapat",
-    "resetEncryption": "Parolanızı mı unuttunuz? Şifrelemeyi sıfırlayın"
+    "resetEncryption": "Parolanızı mı unuttunuz? Şifrelemeyi sıfırlayın",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "Kendi Anthropic anahtarınız"
   },
   "data": {
     "intro": "TabMerger tüm verileri yerel olarak IndexedDB'de saklar. Bulut eşitleme bir Pro hesabı gerektirir.",
@@ -91,7 +93,51 @@
     "summariesLabel": "Sekme önizleme özetleri",
     "summariesDescription": "Sekme üzerine gelme önizlemesinde AI özeti",
     "throttleLabel": "Otomatik AI önerilerini günde bir kezle sınırla",
-    "throttleDescription": "Arka plandaki oturum önerme bildirimi, aylık AI kotanızı korumak için günde en fazla bir kez çıkar. Elle başlattığınız AI işlemleri (Otomatik grupla, Grubu adlandır, Düzenle) bundan asla etkilenmez."
+    "throttleDescription": "Arka plandaki oturum önerme bildirimi, aylık AI kotanızı korumak için günde en fazla bir kez çıkar. Elle başlattığınız AI işlemleri (Otomatik grupla, Grubu adlandır, Düzenle) bundan asla etkilenmez.",
+    "plan": {
+      "managed": "TabMerger anahtarı: bu ay {{cap}} krediden {{remaining}} kaldı",
+      "managedUnknown": "TabMerger’ın anahtarı kullanılıyor",
+      "byok": "Kendi Anthropic anahtarınız kullanılıyor"
+    },
+    "key": {
+      "label": "Anthropic API anahtarınız",
+      "save": "Anahtarı kaydet",
+      "checking": "Kontrol ediliyor…",
+      "replace": "Değiştir",
+      "remove": "Kaldır",
+      "saved": "API anahtarı kaydedildi",
+      "removed": "API anahtarı kaldırıldı",
+      "invalidFormat": "Bu bir Anthropic API anahtarına benzemiyor. Anahtarlar sk-ant- ile başlar.",
+      "verifyFailed": "Anahtar kontrol edilemedi. Tekrar deneyin.",
+      "note": "Yalnızca bu cihazda saklanır. Her AI isteğiyle TabMerger sunucusuna gönderilir ve doğrudan Anthropic’e iletilir; sunucularımızda asla saklanmaz.",
+      "consoleLink": "Anthropic Console’da bir anahtar oluşturun ve harcama sınırı belirleyin"
+    },
+    "model": {
+      "label": "AI modeli",
+      "managedDescription": "Daha büyük modeller daha iyi sonuç verir ve daha fazla kredi kullanır. Değerler tahminidir.",
+      "byokDescription": "Daha büyük modeller daha iyi sonuç verir ve daha pahalıdır. Değerler tahminidir; ücreti Anthropic hesabınıza yansıtır.",
+      "auto": "Otomatik",
+      "recommended": "Önerilen",
+      "autoDescription": "Her işi iyi yapan en ucuz modeli kullanır."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "≈ {{amount}}",
+      "credits_one": "≈ {{formatted}} kredi",
+      "credits_other": "≈ {{formatted}} kredi",
+      "perMonth_one": "Kredilerinizle ayda ≈ {{formatted}} düzenleme",
+      "perMonth_other": "Kredilerinizle ayda ≈ {{formatted}} düzenleme",
+      "action": {
+        "nameGroup_one": "{{count}} sekmelik grubu adlandırma",
+        "nameGroup_other": "{{count}} sekmelik grubu adlandırma",
+        "tabSummary": "Bir sekmeyi özetleme",
+        "groupTabs_one": "{{count}} sekmeyi gruplama",
+        "groupTabs_other": "{{count}} sekmeyi gruplama",
+        "suggestSessions": "Oturum önerme",
+        "organize_one": "{{count}} sekmeyi düzenleme",
+        "organize_other": "{{count}} sekmeyi düzenleme"
+      }
+    }
   },
   "dev": {
     "demoLabel": "Demo Modu",

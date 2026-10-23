@@ -99,6 +99,12 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
                   <li key={key}>{t(key, FREE_TIER_LIMITS)}</li>
                 ))}
               </ul>
+              {/* The cheaper Pro AI option: the user's own Anthropic key, billed by Anthropic */}
+              {plan.byok && !proAiComingSoon && (
+                <p className="ms-2 text-muted-foreground" data-testid="upgrade-byok-option">
+                  {t('upgrade.byokOption', { price: formatNumber(plan.byok.monthlyPrice, { style: 'currency', currency: 'USD' }) })}
+                </p>
+              )}
             </div>
           ))}
         </div>

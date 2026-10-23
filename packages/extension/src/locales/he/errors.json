@@ -29,5 +29,19 @@
   "proAiRequired": "נדרשת תוכנית Pro AI",
   "nameGroupOff": "מתן שם לקבוצה כבוי בהגדרות",
   "suggestSessionsOff": "הצעת סשנים כבויה בהגדרות",
-  "organizeOff": "הארגון כבוי בהגדרות"
+  "organizeOff": "הארגון כבוי בהגדרות",
+  "ai": {
+    "disabled": "תכונות ה-AI לא זמינות כרגע.",
+    "modelInvalid": "מודל ה-AI הזה לא זמין. בחרו מודל אחר בהגדרות, בלשונית AI.",
+    "overloaded": "שירות ה-AI עמוס כרגע. נסו שוב בעוד דקה.",
+    "byokKeyMissing": "כדי להשתמש בתכונות AI, הוסיפו את מפתח ה-API שלכם ב-Anthropic בהגדרות, בלשונית AI.",
+    "byokKeyInvalid": "Anthropic לא קיבלה את מפתח ה-API שלכם. בדקו או החליפו אותו בהגדרות, בלשונית AI.",
+    "byokRateLimited": "מפתח ה-Anthropic שלכם הגיע למגבלת הבקשות. המתינו רגע ונסו שוב.",
+    "byokBilling": "בחשבון ה-Anthropic שלכם נגמרה היתרה או שיש בעיית חיוב. בדקו זאת ב-Anthropic Console.",
+    "creditsNotApplicable": "חבילות קרדיטים לא זמינות כשמשתמשים במפתח Anthropic משלכם.",
+    "unauthorized": "תוקף ההתחברות שלכם פג. התחברו שוב ונסו פעם נוספת.",
+    "invalidRequest": "TabMerger לא הצליח לשלוח את בקשת ה-AI. נסו שוב, ועדכנו את התוסף אם זה חוזר.",
+    "refused": "ה-AI סירב לבקשה הזו.",
+    "failed": "בקשת ה-AI נכשלה. נסו שוב."
+  }
 }

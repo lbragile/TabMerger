@@ -18,5 +18,7 @@
     "restart": "Redémarrer pour mettre à jour",
     "restartLabel": "Redémarrer TabMerger pour passer à la version {{version}}. Cela ferme la fenêtre.",
     "dismissLabel": "Ignorer l’avis de mise à jour de la version {{version}}"
-  }
+  },
+  "aiQuotaPrompt": "Plus assez de crédits IA ce mois-ci. Choisissez un modèle moins cher ou achetez des crédits.",
+  "changeModel": "Changer de modèle"
 }

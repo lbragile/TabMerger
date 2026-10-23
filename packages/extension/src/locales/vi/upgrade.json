@@ -45,5 +45,6 @@
   },
   "maybeLater": "Để sau",
   "signIn": "Đăng nhập",
-  "upgradeNow": "Nâng cấp ngay"
+  "upgradeNow": "Nâng cấp ngay",
+  "byokOption": "Hoặc {{price}}/tháng với khóa Anthropic của riêng bạn"
 }

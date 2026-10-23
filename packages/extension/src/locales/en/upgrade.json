@@ -45,5 +45,6 @@
   },
   "maybeLater": "Maybe later",
   "signIn": "Sign in",
-  "upgradeNow": "Upgrade now"
+  "upgradeNow": "Upgrade now",
+  "byokOption": "Or {{price}}/mo with your own Anthropic key"
 }

@@ -16,5 +16,7 @@
     "restart": "再起動してアップデート",
     "restartLabel": "TabMergerを再起動してバージョン{{version}}にアップデートします。ポップアップは閉じます。",
     "dismissLabel": "バージョン{{version}}のアップデート通知を閉じる"
-  }
+  },
+  "aiQuotaPrompt": "今月の AI クレジットが足りません。安いモデルを選ぶか、クレジットを追加購入してください。",
+  "changeModel": "モデルを変更"
 }

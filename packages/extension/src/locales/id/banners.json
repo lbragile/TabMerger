@@ -16,5 +16,7 @@
     "restart": "Mulai ulang untuk memperbarui",
     "restartLabel": "Mulai ulang TabMerger untuk memperbarui ke versi {{version}}. Ini akan menutup popup.",
     "dismissLabel": "Tutup pemberitahuan pembaruan untuk versi {{version}}"
-  }
+  },
+  "aiQuotaPrompt": "Kredit AI bulan ini tidak cukup. Pilih model yang lebih murah atau beli kredit tambahan.",
+  "changeModel": "Ganti model"
 }

@@ -61,7 +61,9 @@
     "openingPortal": "פותחים...",
     "manageBilling": "ניהול חיובים",
     "signOut": "התנתקות",
-    "resetEncryption": "שכחת את ביטוי הסיסמה? איפוס ההצפנה"
+    "resetEncryption": "שכחת את ביטוי הסיסמה? איפוס ההצפנה",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "מפתח Anthropic משלכם"
   },
   "data": {
     "intro": "TabMerger שומר את כל הנתונים באופן מקומי ב-IndexedDB. סנכרון בענן דורש חשבון Pro.",
@@ -95,7 +97,56 @@
     "summariesLabel": "סיכומים בתצוגה המקדימה של כרטיסיות",
     "summariesDescription": "סיכום AI בתצוגה המקדימה בריחוף מעל כרטיסייה",
     "throttleLabel": "הגבלת הצעות AI אוטומטיות לפעם ביום",
-    "throttleDescription": "באנר הצעת הסשנים ברקע מופיע לכל היותר פעם ביום כדי לשמור על מכסת ה-AI החודשית. פעולות AI שמפעילים ידנית (קיבוץ אוטומטי, מתן שם לקבוצה, ארגון) אף פעם לא מוגבלות על ידי זה."
+    "throttleDescription": "באנר הצעת הסשנים ברקע מופיע לכל היותר פעם ביום כדי לשמור על מכסת ה-AI החודשית. פעולות AI שמפעילים ידנית (קיבוץ אוטומטי, מתן שם לקבוצה, ארגון) אף פעם לא מוגבלות על ידי זה.",
+    "plan": {
+      "managed": "משתמשים במפתח של TabMerger — נותרו החודש {{remaining}} מתוך {{cap}} קרדיטים",
+      "managedUnknown": "משתמשים במפתח של TabMerger",
+      "byok": "משתמשים במפתח Anthropic משלכם"
+    },
+    "key": {
+      "label": "מפתח ה-API שלכם ב-Anthropic",
+      "save": "שמירת המפתח",
+      "checking": "בודקים…",
+      "replace": "החלפה",
+      "remove": "הסרה",
+      "saved": "מפתח ה-API נשמר",
+      "removed": "מפתח ה-API הוסר",
+      "invalidFormat": "זה לא נראה כמו מפתח API של Anthropic. מפתחות מתחילים ב-sk-ant-.",
+      "verifyFailed": "לא הצלחנו לבדוק את המפתח. נסו שוב.",
+      "note": "נשמר רק במכשיר הזה. נשלח לשרת של TabMerger עם כל בקשת AI ומועבר ישירות ל-Anthropic; אף פעם לא נשמר בשרתים שלנו.",
+      "consoleLink": "יצירת מפתח והגדרת מגבלת הוצאות ב-Anthropic Console"
+    },
+    "model": {
+      "label": "מודל AI",
+      "managedDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ומשתמשים ביותר קרדיטים. המספרים הם הערכה.",
+      "byokDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ועולים יותר. המספרים הם הערכה; Anthropic מחייבת את החשבון שלכם.",
+      "auto": "אוטומטי",
+      "recommended": "מומלץ",
+      "autoDescription": "משתמש במודל הזול ביותר שעושה כל משימה היטב."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "≈ {{amount}}",
+      "credits_one": "≈ קרדיט אחד",
+      "credits_two": "≈ {{formatted}} קרדיטים",
+      "credits_other": "≈ {{formatted}} קרדיטים",
+      "perMonth_one": "ארגונים בחודש עם הקרדיטים שלכם: ≈ {{formatted}}",
+      "perMonth_two": "ארגונים בחודש עם הקרדיטים שלכם: ≈ {{formatted}}",
+      "perMonth_other": "ארגונים בחודש עם הקרדיטים שלכם: ≈ {{formatted}}",
+      "action": {
+        "nameGroup_one": "מתן שם לקבוצה של כרטיסייה אחת",
+        "nameGroup_two": "מתן שם לקבוצה של שתי כרטיסיות",
+        "nameGroup_other": "מתן שם לקבוצה של {{count}} כרטיסיות",
+        "tabSummary": "סיכום כרטיסייה",
+        "groupTabs_one": "קיבוץ כרטיסייה אחת",
+        "groupTabs_two": "קיבוץ שתי כרטיסיות",
+        "groupTabs_other": "קיבוץ {{count}} כרטיסיות",
+        "suggestSessions": "הצעת סשנים",
+        "organize_one": "ארגון כרטיסייה אחת",
+        "organize_two": "ארגון שתי כרטיסיות",
+        "organize_other": "ארגון {{count}} כרטיסיות"
+      }
+    }
   },
   "dev": {
     "demoLabel": "מצב הדגמה",

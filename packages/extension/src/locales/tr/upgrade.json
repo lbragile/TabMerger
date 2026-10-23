@@ -45,5 +45,6 @@
   },
   "maybeLater": "Belki sonra",
   "signIn": "Oturum aç",
-  "upgradeNow": "Şimdi yükselt"
+  "upgradeNow": "Şimdi yükselt",
+  "byokOption": "Ya da kendi Anthropic anahtarınızla {{price}}/ay"
 }

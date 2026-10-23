@@ -45,5 +45,6 @@
   },
   "maybeLater": "Quizá más tarde",
   "signIn": "Iniciar sesión",
-  "upgradeNow": "Mejorar ahora"
+  "upgradeNow": "Mejorar ahora",
+  "byokOption": "O {{price}}/mes con tu propia clave de Anthropic"
 }

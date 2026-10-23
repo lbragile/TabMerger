@@ -17,5 +17,6 @@ export const aiFixtures: Record<string, unknown | ((body: Record<string, unknown
     return { message, staleGroupIds: ids, suggestion: message };
   },
   '/api/ai/organize': { runId: 'mock-run-id', token: 'mock-hook-token' },
+  '/api/ai/byok/verify': { ok: true },
   '/api/ai/tab-summary': { summary: 'A mock summary of this page for local dev.' },
 };

@@ -59,7 +59,9 @@
     "openingPortal": "Đang mở...",
     "manageBilling": "Quản lý thanh toán",
     "signOut": "Đăng xuất",
-    "resetEncryption": "Quên cụm mật khẩu? Đặt lại mã hóa"
+    "resetEncryption": "Quên cụm mật khẩu? Đặt lại mã hóa",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "Khóa Anthropic của riêng bạn"
   },
   "data": {
     "intro": "TabMerger lưu trữ tất cả dữ liệu cục bộ trong IndexedDB. Đồng bộ đám mây yêu cầu tài khoản Pro.",
@@ -87,7 +89,46 @@
     "summariesLabel": "Tóm tắt xem trước thẻ",
     "summariesDescription": "Tóm tắt AI khi xem trước thẻ bằng cách di chuột",
     "throttleLabel": "Giới hạn gợi ý AI tự động còn một lần mỗi ngày",
-    "throttleDescription": "Biểu ngữ gợi ý phiên nền xuất hiện tối đa một lần mỗi ngày để bảo vệ hạn mức AI hàng tháng của bạn. Các hành động AI bạn tự kích hoạt thủ công (Tự động nhóm, Đặt tên nhóm, Sắp xếp) không bao giờ bị giới hạn bởi điều này."
+    "throttleDescription": "Biểu ngữ gợi ý phiên nền xuất hiện tối đa một lần mỗi ngày để bảo vệ hạn mức AI hàng tháng của bạn. Các hành động AI bạn tự kích hoạt thủ công (Tự động nhóm, Đặt tên nhóm, Sắp xếp) không bao giờ bị giới hạn bởi điều này.",
+    "plan": {
+      "managed": "Khóa của TabMerger: còn {{remaining}}/{{cap}} tín dụng trong tháng này",
+      "managedUnknown": "Đang dùng khóa của TabMerger",
+      "byok": "Đang dùng khóa Anthropic của riêng bạn"
+    },
+    "key": {
+      "label": "Khóa API Anthropic của bạn",
+      "save": "Lưu khóa",
+      "checking": "Đang kiểm tra…",
+      "replace": "Thay thế",
+      "remove": "Xóa",
+      "saved": "Đã lưu khóa API",
+      "removed": "Đã xóa khóa API",
+      "invalidFormat": "Đây không giống khóa API Anthropic. Khóa bắt đầu bằng sk-ant-.",
+      "verifyFailed": "Không thể kiểm tra khóa. Hãy thử lại.",
+      "note": "Chỉ lưu trên thiết bị này. Được gửi đến máy chủ TabMerger cùng mỗi yêu cầu AI và chuyển thẳng đến Anthropic; không bao giờ được lưu trên máy chủ của chúng tôi.",
+      "consoleLink": "Tạo khóa và đặt giới hạn chi tiêu trong Anthropic Console"
+    },
+    "model": {
+      "label": "Mô hình AI",
+      "managedDescription": "Mô hình lớn hơn cho kết quả tốt hơn và dùng nhiều tín dụng hơn. Các số liệu là ước tính.",
+      "byokDescription": "Mô hình lớn hơn cho kết quả tốt hơn và tốn kém hơn. Các số liệu là ước tính; Anthropic tính phí vào tài khoản của bạn.",
+      "auto": "Tự động",
+      "recommended": "Khuyên dùng",
+      "autoDescription": "Dùng mô hình rẻ nhất làm tốt từng việc."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "≈ {{amount}}",
+      "credits_other": "≈ {{formatted}} tín dụng",
+      "perMonth_other": "≈ {{formatted}} lần sắp xếp mỗi tháng với tín dụng của bạn",
+      "action": {
+        "nameGroup_other": "Đặt tên nhóm {{count}} thẻ",
+        "tabSummary": "Tóm tắt một thẻ",
+        "groupTabs_other": "Nhóm {{count}} thẻ",
+        "suggestSessions": "Gợi ý phiên",
+        "organize_other": "Sắp xếp {{count}} thẻ"
+      }
+    }
   },
   "dev": {
     "demoLabel": "Chế độ Demo",

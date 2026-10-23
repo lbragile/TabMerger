@@ -59,7 +59,9 @@
     "openingPortal": "正在打开…",
     "manageBilling": "管理账单",
     "signOut": "退出登录",
-    "resetEncryption": "忘记密码短语？重置加密"
+    "resetEncryption": "忘记密码短语？重置加密",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "您自己的 Anthropic 密钥"
   },
   "data": {
     "intro": "TabMerger 将所有数据本地存储在 IndexedDB 中。云同步需要 Pro 账户。",
@@ -87,7 +89,46 @@
     "summariesLabel": "标签页预览摘要",
     "summariesDescription": "在标签页悬停预览中显示 AI 摘要",
     "throttleLabel": "自动 AI 建议每天最多一次",
-    "throttleDescription": "后台的建议会话横幅每天最多出现一次，以保护您的每月 AI 额度。您手动触发的 AI 操作（自动分组、为分组命名、整理）不受此限制。"
+    "throttleDescription": "后台的建议会话横幅每天最多出现一次，以保护您的每月 AI 额度。您手动触发的 AI 操作（自动分组、为分组命名、整理）不受此限制。",
+    "plan": {
+      "managed": "正在使用 TabMerger 的密钥 — 本月剩余 {{remaining}} / {{cap}} 点额度",
+      "managedUnknown": "正在使用 TabMerger 的密钥",
+      "byok": "正在使用您自己的 Anthropic 密钥"
+    },
+    "key": {
+      "label": "您的 Anthropic API 密钥",
+      "save": "保存密钥",
+      "checking": "正在检查…",
+      "replace": "替换",
+      "remove": "移除",
+      "saved": "API 密钥已保存",
+      "removed": "API 密钥已移除",
+      "invalidFormat": "这看起来不像 Anthropic API 密钥。密钥以 sk-ant- 开头。",
+      "verifyFailed": "无法检查该密钥，请重试。",
+      "note": "仅保存在此设备上。每次 AI 请求时随请求发送到 TabMerger 的服务器，并直接转交给 Anthropic；绝不会保存在我们的服务器上。",
+      "consoleLink": "在 Anthropic Console 中创建密钥并设置支出上限"
+    },
+    "model": {
+      "label": "AI 模型",
+      "managedDescription": "模型越大，效果越好，消耗的额度也越多。数字均为估算。",
+      "byokDescription": "模型越大，效果越好，费用也越高。数字均为估算；费用由 Anthropic 向您的账户收取。",
+      "auto": "自动",
+      "recommended": "推荐",
+      "autoDescription": "每项任务都使用能做好它的最便宜的模型。"
+    },
+    "estimate": {
+      "item": "{{action}}：{{amount}}",
+      "usd": "约 {{amount}}",
+      "credits_other": "约 {{formatted}} 点额度",
+      "perMonth_other": "用您的额度每月约可整理 {{formatted}} 次",
+      "action": {
+        "nameGroup_other": "为含 {{count}} 个标签页的分组命名",
+        "tabSummary": "总结一个标签页",
+        "groupTabs_other": "分组 {{count}} 个标签页",
+        "suggestSessions": "建议会话",
+        "organize_other": "整理 {{count}} 个标签页"
+      }
+    }
   },
   "dev": {
     "demoLabel": "演示模式",

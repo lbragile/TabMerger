@@ -45,5 +45,6 @@
   },
   "maybeLater": "ربما لاحقًا",
   "signIn": "تسجيل الدخول",
-  "upgradeNow": "الترقية الآن"
+  "upgradeNow": "الترقية الآن",
+  "byokOption": "أو {{price}} شهريًا مع مفتاح Anthropic الخاص بك"
 }

@@ -16,5 +16,7 @@
     "restart": "重启以更新",
     "restartLabel": "重启 TabMerger 以更新到版本 {{version}}。这会关闭弹出窗口。",
     "dismissLabel": "忽略版本 {{version}} 的更新提示"
-  }
+  },
+  "aiQuotaPrompt": "本月剩余的 AI 额度不足。请选择更便宜的模型，或购买更多额度。",
+  "changeModel": "更换模型"
 }

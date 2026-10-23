@@ -29,5 +29,19 @@
   "proAiRequired": "Yêu cầu gói Pro AI",
   "nameGroupOff": "Đặt tên nhóm đang tắt trong Cài đặt",
   "suggestSessionsOff": "Gợi ý phiên đang tắt trong Cài đặt",
-  "organizeOff": "Sắp xếp đang tắt trong Cài đặt"
+  "organizeOff": "Sắp xếp đang tắt trong Cài đặt",
+  "ai": {
+    "disabled": "Các tính năng AI hiện không khả dụng.",
+    "modelInvalid": "Mô hình AI đó không khả dụng. Hãy chọn mô hình khác trong Cài đặt, tab AI.",
+    "overloaded": "Dịch vụ AI đang bận. Hãy thử lại sau một phút.",
+    "byokKeyMissing": "Hãy thêm khóa API Anthropic của bạn trong Cài đặt, tab AI, để dùng các tính năng AI.",
+    "byokKeyInvalid": "Anthropic không chấp nhận khóa API của bạn. Hãy kiểm tra hoặc thay khóa trong Cài đặt, tab AI.",
+    "byokRateLimited": "Khóa Anthropic của bạn đã chạm giới hạn yêu cầu. Hãy chờ một lát rồi thử lại.",
+    "byokBilling": "Tài khoản Anthropic của bạn đã hết tiền hoặc có vấn đề thanh toán. Hãy kiểm tra trong Anthropic Console.",
+    "creditsNotApplicable": "Gói tín dụng không áp dụng khi bạn dùng khóa Anthropic của riêng mình.",
+    "unauthorized": "Phiên đăng nhập của bạn đã hết hạn. Hãy đăng nhập lại và thử lần nữa.",
+    "invalidRequest": "TabMerger không gửi được yêu cầu AI đó. Hãy thử lại, và cập nhật tiện ích nếu lỗi vẫn xảy ra.",
+    "refused": "AI đã từ chối yêu cầu này.",
+    "failed": "Yêu cầu AI không thành công. Hãy thử lại."
+  }
 }

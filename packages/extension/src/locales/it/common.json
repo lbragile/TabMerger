@@ -73,5 +73,6 @@
   "showPassphrase": "Mostra passphrase",
   "hidePassphrase": "Nascondi passphrase",
   "notifications": "Notifiche",
-  "closeToast": "Chiudi notifica"
+  "closeToast": "Chiudi notifica",
+  "openSettings": "Apri Impostazioni"
 }

@@ -61,7 +61,9 @@
     "openingPortal": "Abriendo...",
     "manageBilling": "Gestionar facturación",
     "signOut": "Cerrar sesión",
-    "resetEncryption": "¿Olvidaste tu frase de contraseña? Restablecer cifrado"
+    "resetEncryption": "¿Olvidaste tu frase de contraseña? Restablecer cifrado",
+    "aiKeyLabel": "IA",
+    "aiOwnKey": "Tu propia clave de Anthropic"
   },
   "data": {
     "intro": "TabMerger guarda todos los datos localmente en IndexedDB. La sincronización en la nube requiere una cuenta Pro.",
@@ -95,7 +97,56 @@
     "summariesLabel": "Resúmenes en la vista previa de pestañas",
     "summariesDescription": "Resumen de IA al pasar el cursor sobre una pestaña",
     "throttleLabel": "Limitar las sugerencias automáticas de IA a una al día",
-    "throttleDescription": "El banner de sugerencia de sesiones en segundo plano aparece como máximo una vez al día para proteger tu cuota mensual de IA. Las acciones de IA que activas manualmente (Agrupar automáticamente, Nombrar grupo, Organizar) nunca se limitan por esto."
+    "throttleDescription": "El banner de sugerencia de sesiones en segundo plano aparece como máximo una vez al día para proteger tu cuota mensual de IA. Las acciones de IA que activas manualmente (Agrupar automáticamente, Nombrar grupo, Organizar) nunca se limitan por esto.",
+    "plan": {
+      "managed": "Clave de TabMerger: te quedan {{remaining}} de {{cap}} créditos este mes",
+      "managedUnknown": "Usas la clave de TabMerger",
+      "byok": "Usas tu propia clave de Anthropic"
+    },
+    "key": {
+      "label": "Tu clave de API de Anthropic",
+      "save": "Guardar clave",
+      "checking": "Comprobando…",
+      "replace": "Reemplazar",
+      "remove": "Quitar",
+      "saved": "Clave de API guardada",
+      "removed": "Clave de API quitada",
+      "invalidFormat": "Eso no parece una clave de API de Anthropic. Las claves empiezan por sk-ant-.",
+      "verifyFailed": "No se pudo comprobar la clave. Inténtalo de nuevo.",
+      "note": "Se guarda solo en este dispositivo. Se envía al servidor de TabMerger con cada solicitud de IA y se pasa directamente a Anthropic; nunca se guarda en nuestros servidores.",
+      "consoleLink": "Crea una clave y fija un límite de gasto en la consola de Anthropic"
+    },
+    "model": {
+      "label": "Modelo de IA",
+      "managedDescription": "Los modelos más grandes dan mejores resultados y gastan más créditos. Las cifras son aproximadas.",
+      "byokDescription": "Los modelos más grandes dan mejores resultados y cuestan más. Las cifras son aproximadas; Anthropic factura a tu cuenta.",
+      "auto": "Automático",
+      "recommended": "Recomendado",
+      "autoDescription": "Usa el modelo más barato que hace bien cada tarea."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "≈ {{amount}}",
+      "credits_one": "≈ {{formatted}} crédito",
+      "credits_many": "≈ {{formatted}} de créditos",
+      "credits_other": "≈ {{formatted}} créditos",
+      "perMonth_one": "≈ {{formatted}} organización al mes con tus créditos",
+      "perMonth_many": "≈ {{formatted}} de organizaciones al mes con tus créditos",
+      "perMonth_other": "≈ {{formatted}} organizaciones al mes con tus créditos",
+      "action": {
+        "nameGroup_one": "Nombrar un grupo de {{count}} pestaña",
+        "nameGroup_many": "Nombrar un grupo de {{count}} de pestañas",
+        "nameGroup_other": "Nombrar un grupo de {{count}} pestañas",
+        "tabSummary": "Resumir una pestaña",
+        "groupTabs_one": "Agrupar {{count}} pestaña",
+        "groupTabs_many": "Agrupar {{count}} de pestañas",
+        "groupTabs_other": "Agrupar {{count}} pestañas",
+        "suggestSessions": "Sugerir sesiones",
+        "organize_one": "Organizar {{count}} pestaña",
+        "organize_many": "Organizar {{count}} de pestañas",
+        "organize_other": "Organizar {{count}} pestañas"
+      }
+    }
   },
   "dev": {
     "demoLabel": "Modo demo",

@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-21
+> Last Updated: 2026-10-22
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -368,7 +368,8 @@ the first of each pair, `VITE_WEB_APP_URL`; the second site only adds where thos
 come from, so no data-use answer changes. AI features are off (`VITE_AI_ENABLED` is not `"true"`), so no tab
 titles or URLs are sent to Anthropic; the Pro AI row of the privacy policy only becomes true
 when AI ships, at which point re-check this table (AI would send open-tab titles and URLs, which
-is Web history).
+is Web history, and, for Pro AI "own key" users, their Anthropic API key, which is
+Authentication information; see the AI note under Technical privacy notes).
 
 **Analytics and error reporting: which builds are active.** `.github/workflows/publish.yml`
 sets only `VITE_WEB_APP_URL`, `VITE_EXTRA_WEB_APP_URLS` (a second trusted site, see "Which
@@ -462,7 +463,21 @@ All three certifications can be ticked, because they are true as built:
   account's local data); the path is read from the browser each time and shown as text.
 - AI features (Pro AI tier) are currently **disabled/coming soon** in both the extension and the
   web app (`VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` feature flags) — no tab content is sent to
-  Anthropic's Claude API while this flag is off. Update this note when AI ships.
+  Anthropic's Claude API while this flag is off. Update this note when AI ships. What they send
+  once on (built, behind the flag): for an AI action the user starts (or the once-a-day session
+  suggestion), the titles and URLs of the tabs involved go to TabMerger's own server
+  (`VITE_WEB_APP_URL/api/ai/*`), which passes them to Anthropic, together with the AI model
+  chosen in Settings → AI (a model name, stored in the extension's own settings). Pro AI has two
+  options: TabMerger's key (usage counted in monthly credits on the server) or the user's **own
+  Anthropic API key**. The own key is typed in Settings → AI, checked with the server once
+  (`/api/ai/byok/verify`), then stored **only on this device** in `chrome.storage.local`
+  (`aiByokKey`, tied to the signed-in account and removed on sign-out), never in the extension's
+  database, so exports, automatic backups and sync never contain it. It is sent in the
+  `X-Anthropic-Key` header of each AI request to TabMerger's server, which passes it straight to
+  Anthropic and never stores or logs it; it is never sent to analytics or error reports, and only
+  its last four characters are ever shown. No new permission and no new network destination:
+  the extension still talks only to TabMerger's website, and Anthropic is called by the server.
+  See `src/lib/byokKey.ts` and `src/hooks/useAI.ts`.
 - Imported files (JSON, bookmarks HTML, OneTab) are read and validated on the device, in the
   popup: each group, window and tab is rebuilt from known fields only, and addresses using a
   script-running scheme (`javascript:`, `data:`, `vbscript:`, `blob:`) are not saved. The same
@@ -598,6 +613,7 @@ with the real semver string carried in `version_name`.
 | Stable | `3.1.1` | — | `v3.1.1` | 2026-10-09 | Superseded |
 | Stable | `3.1.2` | — | `v3.1.2` | 2026-10-10 | Superseded |
 | Stable | `3.1.3` | — | `v3.1.3` | 2026-10-15 | Not submitted (publish run cancelled) |
+| Stable | — | — | unreleased | — | Draft, behind the AI flag (off, so nothing changes for users yet): Pro AI gets a choice of model (Auto, Claude Haiku 5.5, Sonnet 5.5, Opus 5.5) in Settings → AI, each shown with its approximate cost per action, and an "own Anthropic key" option whose key is kept on the device and sent only with AI requests to TabMerger's server. Credits now measure AI cost. No manifest change, no new permission. When the flag is turned on: update the long description, the Privacy section above (Authentication information and Web history rows) and the privacy policy's Pro AI row, and refresh the Settings screenshot |
 | Stable | `3.2.0` | — | `v3.2.0` | 2026-10-15 | Superseded |
 | Stable | `3.2.1` | — | `v3.2.1` | 2026-10-16 | Superseded |
 | Stable | `3.3.0` | — | `v3.3.0` | 2026-10-16 | Superseded |

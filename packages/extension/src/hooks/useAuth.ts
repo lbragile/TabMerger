@@ -2,6 +2,7 @@ import { t } from '@/lib/i18n';
 import { useEffect, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { clearByokKey } from '@/lib/byokKey';
 
 interface AuthState {
   session: Session | null;
@@ -75,6 +76,9 @@ export function useAuth(): AuthState & {
     // worker restart / popup reopen. A genuinely different account is handled separately
     // (see useSync's last-signed-in-user check), and resetEncryption() still explicitly
     // clears the persisted key for the "forgot my passphrase" flow.
+    // The Pro AI own Anthropic key (lib/byokKey.ts) IS removed: it is a credential that bills
+    // the person who saved it, and the next person on this device must not spend it.
+    await clearByokKey();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };

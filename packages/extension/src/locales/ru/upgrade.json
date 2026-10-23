@@ -45,5 +45,6 @@
   },
   "maybeLater": "Может, позже",
   "signIn": "Войти",
-  "upgradeNow": "Перейти сейчас"
+  "upgradeNow": "Перейти сейчас",
+  "byokOption": "Или {{price}}/мес. с собственным ключом Anthropic"
 }

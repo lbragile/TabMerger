@@ -73,5 +73,6 @@
   "showPassphrase": "הצגת ביטוי הסיסמה",
   "hidePassphrase": "הסתרת ביטוי הסיסמה",
   "notifications": "התראות",
-  "closeToast": "סגירת ההודעה"
+  "closeToast": "סגירת ההודעה",
+  "openSettings": "פתיחת ההגדרות"
 }

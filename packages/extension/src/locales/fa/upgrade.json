@@ -45,5 +45,6 @@
   },
   "maybeLater": "شاید بعداً",
   "signIn": "ورود",
-  "upgradeNow": "همین حالا ارتقا دهید"
+  "upgradeNow": "همین حالا ارتقا دهید",
+  "byokOption": "یا {{price}} در ماه با کلید Anthropic خودتان"
 }

@@ -29,5 +29,19 @@
   "proAiRequired": "Pro AI plan required",
   "nameGroupOff": "Name group is turned off in Settings",
   "suggestSessionsOff": "Suggest sessions is turned off in Settings",
-  "organizeOff": "Organize is turned off in Settings"
+  "organizeOff": "Organize is turned off in Settings",
+  "ai": {
+    "disabled": "AI features aren't available right now.",
+    "modelInvalid": "That AI model isn't available. Choose another one in Settings, on the AI tab.",
+    "overloaded": "The AI service is busy right now. Try again in a minute.",
+    "byokKeyMissing": "Add your Anthropic API key in Settings, on the AI tab, to use AI features.",
+    "byokKeyInvalid": "Anthropic didn't accept your API key. Check or replace it in Settings, on the AI tab.",
+    "byokRateLimited": "Your Anthropic key hit its rate limit. Wait a moment and try again.",
+    "byokBilling": "Your Anthropic account is out of credit or has a billing problem. Check it in the Anthropic Console.",
+    "creditsNotApplicable": "Credit packs aren't available when you use your own Anthropic key.",
+    "unauthorized": "Your sign-in has expired. Sign in again and try once more.",
+    "invalidRequest": "TabMerger couldn't send that AI request. Try again, and update the extension if it keeps happening.",
+    "refused": "The AI declined this request.",
+    "failed": "The AI request failed. Try again."
+  }
 }

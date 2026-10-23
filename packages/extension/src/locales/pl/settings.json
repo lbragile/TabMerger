@@ -62,7 +62,9 @@
     "openingPortal": "Otwieranie...",
     "manageBilling": "Zarządzaj rozliczeniami",
     "signOut": "Wyloguj się",
-    "resetEncryption": "Zapomniałeś hasła? Zresetuj szyfrowanie"
+    "resetEncryption": "Zapomniałeś hasła? Zresetuj szyfrowanie",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "Własny klucz Anthropic"
   },
   "data": {
     "intro": "TabMerger przechowuje wszystkie dane lokalnie w IndexedDB. Synchronizacja w chmurze wymaga konta Pro.",
@@ -99,7 +101,61 @@
     "summariesLabel": "Podsumowania podglądu kart",
     "summariesDescription": "Podsumowanie AI przy podglądzie karty po najechaniu",
     "throttleLabel": "Ogranicz automatyczne sugestie AI do jednego razu dziennie",
-    "throttleDescription": "Baner sugestii sesji w tle pojawia się co najwyżej raz dziennie, aby chronić Twój miesięczny limit AI. Akcje AI uruchamiane ręcznie (Automatyczne grupowanie, Nazwij grupę, Organizuj) nigdy nie są ograniczane przez to ustawienie."
+    "throttleDescription": "Baner sugestii sesji w tle pojawia się co najwyżej raz dziennie, aby chronić Twój miesięczny limit AI. Akcje AI uruchamiane ręcznie (Automatyczne grupowanie, Nazwij grupę, Organizuj) nigdy nie są ograniczane przez to ustawienie.",
+    "plan": {
+      "managed": "Klucz TabMerger – pozostałe kredyty w tym miesiącu: {{remaining}} z {{cap}}",
+      "managedUnknown": "Używasz klucza TabMerger",
+      "byok": "Używasz własnego klucza Anthropic"
+    },
+    "key": {
+      "label": "Twój klucz API Anthropic",
+      "save": "Zapisz klucz",
+      "checking": "Sprawdzanie…",
+      "replace": "Zmień",
+      "remove": "Usuń",
+      "saved": "Klucz API zapisany",
+      "removed": "Klucz API usunięty",
+      "invalidFormat": "To nie wygląda na klucz API Anthropic. Klucze zaczynają się od sk-ant-.",
+      "verifyFailed": "Nie udało się sprawdzić klucza. Spróbuj ponownie.",
+      "note": "Przechowywany tylko na tym urządzeniu. Wysyłany do serwera TabMerger z każdym żądaniem AI i przekazywany prosto do Anthropic; nigdy nie jest zapisywany na naszych serwerach.",
+      "consoleLink": "Utwórz klucz i ustaw limit wydatków w konsoli Anthropic"
+    },
+    "model": {
+      "label": "Model AI",
+      "managedDescription": "Większe modele dają lepsze wyniki i zużywają więcej kredytów. Wartości są szacunkowe.",
+      "byokDescription": "Większe modele dają lepsze wyniki i kosztują więcej. Wartości są szacunkowe; Anthropic obciąża Twoje konto.",
+      "auto": "Automatycznie",
+      "recommended": "Zalecane",
+      "autoDescription": "Używa najtańszego modelu, który dobrze wykonuje dane zadanie."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "usd": "≈ {{amount}}",
+      "credits_one": "≈ {{formatted}} kredyt",
+      "credits_few": "≈ {{formatted}} kredyty",
+      "credits_many": "≈ {{formatted}} kredytów",
+      "credits_other": "≈ {{formatted}} kredytu",
+      "perMonth_one": "Porządkowanie z Twoimi kredytami: ≈ {{formatted}} raz w miesiącu",
+      "perMonth_few": "Porządkowanie z Twoimi kredytami: ≈ {{formatted}} razy w miesiącu",
+      "perMonth_many": "Porządkowanie z Twoimi kredytami: ≈ {{formatted}} razy w miesiącu",
+      "perMonth_other": "Porządkowanie z Twoimi kredytami: ≈ {{formatted}} razy w miesiącu",
+      "action": {
+        "nameGroup_one": "Nazwanie grupy z {{count}} kartą",
+        "nameGroup_few": "Nazwanie grupy z {{count}} kartami",
+        "nameGroup_many": "Nazwanie grupy z {{count}} kartami",
+        "nameGroup_other": "Nazwanie grupy z {{count}} karty",
+        "tabSummary": "Podsumowanie karty",
+        "groupTabs_one": "Grupowanie {{count}} karty",
+        "groupTabs_few": "Grupowanie {{count}} kart",
+        "groupTabs_many": "Grupowanie {{count}} kart",
+        "groupTabs_other": "Grupowanie {{count}} karty",
+        "suggestSessions": "Sugerowanie sesji",
+        "organize_one": "Porządkowanie {{count}} karty",
+        "organize_few": "Porządkowanie {{count}} kart",
+        "organize_many": "Porządkowanie {{count}} kart",
+        "organize_other": "Porządkowanie {{count}} karty"
+      }
+    }
   },
   "dev": {
     "demoLabel": "Tryb Demo",

@@ -29,5 +29,19 @@
   "proAiRequired": "Paket Pro AI diperlukan",
   "nameGroupOff": "Nama grup dimatikan di Pengaturan",
   "suggestSessionsOff": "Saran sesi dimatikan di Pengaturan",
-  "organizeOff": "Pengaturan ulang dimatikan di Pengaturan"
+  "organizeOff": "Pengaturan ulang dimatikan di Pengaturan",
+  "ai": {
+    "disabled": "Fitur AI sedang tidak tersedia.",
+    "modelInvalid": "Model AI itu tidak tersedia. Pilih model lain di Pengaturan, tab AI.",
+    "overloaded": "Layanan AI sedang sibuk. Coba lagi sebentar lagi.",
+    "byokKeyMissing": "Tambahkan kunci API Anthropic Anda di Pengaturan, tab AI, untuk memakai fitur AI.",
+    "byokKeyInvalid": "Anthropic tidak menerima kunci API Anda. Periksa atau ganti di Pengaturan, tab AI.",
+    "byokRateLimited": "Kunci Anthropic Anda mencapai batas permintaan. Tunggu sebentar lalu coba lagi.",
+    "byokBilling": "Saldo akun Anthropic Anda habis atau ada masalah tagihan. Periksa di Anthropic Console.",
+    "creditsNotApplicable": "Paket kredit tidak tersedia saat Anda memakai kunci Anthropic sendiri.",
+    "unauthorized": "Sesi masuk Anda telah berakhir. Masuk lagi lalu coba sekali lagi.",
+    "invalidRequest": "TabMerger tidak dapat mengirim permintaan AI itu. Coba lagi, dan perbarui ekstensi jika terus terjadi.",
+    "refused": "AI menolak permintaan ini.",
+    "failed": "Permintaan AI gagal. Coba lagi."
+  }
 }

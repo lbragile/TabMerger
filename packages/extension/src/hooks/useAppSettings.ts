@@ -7,6 +7,8 @@ import {
   DEFAULT_BACKUP_FILE_FOLDER,
   DEFAULT_BACKUP_FILE_PATTERN,
   DEFAULT_SEARCH_NON_MATCHING,
+  DEFAULT_AI_MODEL_CHOICE,
+  type AiModelChoice,
   type AutoBackupIntervalMinutes,
   type SearchNonMatching
 } from '@tabmerger/shared';
@@ -28,6 +30,8 @@ export interface AppSettings {
   aiSuggestSessionsEnabled: boolean;
   aiOrganizeEnabled: boolean;
   aiTabSummaryEnabled: boolean;
+  /** Pro AI model choice. Stored values are validated: read through `readAiModelChoice` (lib/aiModel.ts). */
+  aiModel: AiModelChoice;
   /** Automatic backups (Pro). Stored objects saved before these existed lack them, and stored values are validated: read through `readAutoBackupSettings`. */
   autoBackupEnabled: boolean;
   autoBackupIntervalMinutes: AutoBackupIntervalMinutes;
@@ -52,6 +56,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   aiSuggestSessionsEnabled: true,
   aiOrganizeEnabled: true,
   aiTabSummaryEnabled: true,
+  aiModel: DEFAULT_AI_MODEL_CHOICE,
   autoBackupEnabled: DEFAULT_AUTO_BACKUP_ENABLED,
   autoBackupIntervalMinutes: DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES,
   autoBackupFileEnabled: DEFAULT_BACKUP_FILE_ENABLED,

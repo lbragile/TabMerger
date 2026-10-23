@@ -29,5 +29,19 @@
   "proAiRequired": "Wymagany plan Pro AI",
   "nameGroupOff": "Nazywanie grupy jest wyłączone w Ustawieniach",
   "suggestSessionsOff": "Sugerowanie sesji jest wyłączone w Ustawieniach",
-  "organizeOff": "Organizowanie jest wyłączone w Ustawieniach"
+  "organizeOff": "Organizowanie jest wyłączone w Ustawieniach",
+  "ai": {
+    "disabled": "Funkcje AI są teraz niedostępne.",
+    "modelInvalid": "Ten model AI jest niedostępny. Wybierz inny w Ustawieniach, na karcie AI.",
+    "overloaded": "Usługa AI jest teraz przeciążona. Spróbuj ponownie za minutę.",
+    "byokKeyMissing": "Dodaj swój klucz API Anthropic w Ustawieniach, na karcie AI, aby korzystać z funkcji AI.",
+    "byokKeyInvalid": "Anthropic nie przyjął Twojego klucza API. Sprawdź go lub zmień w Ustawieniach, na karcie AI.",
+    "byokRateLimited": "Twój klucz Anthropic osiągnął limit żądań. Odczekaj chwilę i spróbuj ponownie.",
+    "byokBilling": "Na Twoim koncie Anthropic skończyły się środki lub jest problem z płatnościami. Sprawdź to w konsoli Anthropic.",
+    "creditsNotApplicable": "Pakiety kredytów nie są dostępne, gdy używasz własnego klucza Anthropic.",
+    "unauthorized": "Twoje logowanie wygasło. Zaloguj się ponownie i spróbuj jeszcze raz.",
+    "invalidRequest": "TabMerger nie mógł wysłać tego żądania AI. Spróbuj ponownie i zaktualizuj rozszerzenie, jeśli to się powtarza.",
+    "refused": "AI odmówiła wykonania tego żądania.",
+    "failed": "Żądanie AI nie powiodło się. Spróbuj ponownie."
+  }
 }

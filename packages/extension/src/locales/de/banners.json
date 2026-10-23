@@ -17,5 +17,7 @@
     "restart": "Zum Aktualisieren neu starten",
     "restartLabel": "TabMerger neu starten, um auf Version {{version}} zu aktualisieren. Dadurch wird das Popup geschlossen.",
     "dismissLabel": "Hinweis auf das Update auf Version {{version}} ausblenden"
-  }
+  },
+  "aiQuotaPrompt": "Nicht mehr genug KI-Credits für diesen Monat. Wähle ein günstigeres Modell oder kaufe Credits nach.",
+  "changeModel": "Modell ändern"
 }
