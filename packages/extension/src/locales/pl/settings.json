@@ -108,19 +108,26 @@
       "byok": "Dodałeś własny klucz API {{provider}}",
       "byokNoKey": "Dodajesz własny klucz API: wpisz go poniżej, aby korzystać z funkcji AI"
     },
+    "provider": {
+      "label": "Dostawca AI",
+      "description": "Wybierz firmę, która wydała Twój klucz API."
+    },
     "key": {
-      "label": "Klucz API Twojego dostawcy AI",
+      "label": "Twój klucz API {{provider}}",
       "save": "Zapisz klucz",
       "checking": "Sprawdzanie…",
       "replace": "Zmień",
       "remove": "Usuń",
       "saved": "Klucz API zapisany",
       "removed": "Klucz API usunięty",
-      "invalidFormat": "To nie wygląda na klucz API Anthropic, OpenAI ani Google.",
+      "invalidFormat": "To nie wygląda na prawidłowy klucz API {{provider}}.",
       "verifyFailed": "Nie udało się sprawdzić klucza. Spróbuj ponownie.",
-      "note": "Działają klucze Anthropic, OpenAI i Google. Przechowywany tylko na tym urządzeniu. Wysyłany do serwera TabMerger z każdym żądaniem AI i przekazywany prosto do dostawcy, który go wydał; nigdy nie jest zapisywany na naszych serwerach.",
+      "note": "Przechowywany tylko na tym urządzeniu. Wysyłany do serwera TabMerger z każdym żądaniem AI i przekazywany prosto do dostawcy, który go wydał; nigdy nie jest zapisywany na naszych serwerach.",
       "getKey": "Utwórz klucz i ustaw limit wydatków:",
-      "manageLink": "Zarządzaj tym kluczem i jego limitem wydatków w {{provider}}"
+      "wrongProvider": "Ten klucz wygląda na klucz od {{detected}}. Wybierz {{detected}} powyżej albo wklej klucz od {{provider}}.",
+      "switching": "Zapisany klucz {{saved}} pozostaje w użyciu, dopóki nie zapiszesz klucza od {{provider}}.",
+      "guideLink": "Jak utworzyć klucz",
+      "keysLink": "Klucze API w {{provider}}"
     },
     "model": {
       "label": "Model AI",
@@ -128,8 +135,7 @@
       "byokDescription": "Większe modele dają lepsze wyniki i kosztują więcej na rachunku od Twojego dostawcy.",
       "auto": "Automatycznie",
       "recommended": "Zalecane",
-      "autoDescription": "Używa najtańszego modelu, który dobrze wykonuje dane zadanie.",
-      "addKeyFirst": "Dodaj powyżej swój klucz API, aby wybrać model."
+      "autoDescription": "Używa najtańszego modelu, który dobrze wykonuje dane zadanie."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

@@ -100,19 +100,26 @@
       "byok": "Kendi {{provider}} API anahtarınızı eklediniz",
       "byokNoKey": "Kendi API anahtarınızı siz eklersiniz: AI özelliklerini kullanmak için aşağıya girin"
     },
+    "provider": {
+      "label": "AI sağlayıcısı",
+      "description": "API anahtarınızı veren şirketi seçin."
+    },
     "key": {
-      "label": "AI sağlayıcınızın API anahtarı",
+      "label": "{{provider}} API anahtarınız",
       "save": "Anahtarı kaydet",
       "checking": "Kontrol ediliyor…",
       "replace": "Değiştir",
       "remove": "Kaldır",
       "saved": "API anahtarı kaydedildi",
       "removed": "API anahtarı kaldırıldı",
-      "invalidFormat": "Bu bir Anthropic, OpenAI veya Google API anahtarına benzemiyor.",
+      "invalidFormat": "Bu geçerli bir {{provider}} API anahtarına benzemiyor.",
       "verifyFailed": "Anahtar kontrol edilemedi. Tekrar deneyin.",
-      "note": "Anthropic, OpenAI ve Google anahtarları çalışır. Yalnızca bu cihazda saklanır. Her AI isteğiyle TabMerger sunucusuna gönderilir ve doğrudan anahtarı veren sağlayıcıya iletilir; sunucularımızda asla saklanmaz.",
+      "note": "Yalnızca bu cihazda saklanır. Her AI isteğiyle TabMerger sunucusuna gönderilir ve doğrudan anahtarı veren sağlayıcıya iletilir; sunucularımızda asla saklanmaz.",
       "getKey": "Anahtar oluşturun ve harcama sınırı belirleyin:",
-      "manageLink": "Bu anahtarı ve harcama sınırını {{provider}} üzerinden yönetin"
+      "wrongProvider": "Bu anahtar {{detected}} anahtarına benziyor. Yukarıdan {{detected}} seçin veya bir {{provider}} anahtarı yapıştırın.",
+      "switching": "Kayıtlı {{saved}} anahtarınız, bir {{provider}} anahtarı kaydedene kadar kullanılmaya devam eder.",
+      "guideLink": "Anahtar nasıl oluşturulur",
+      "keysLink": "{{provider}} API anahtarları"
     },
     "model": {
       "label": "AI modeli",
@@ -120,8 +127,7 @@
       "byokDescription": "Daha büyük modeller daha iyi sonuç verir ve sağlayıcınızın faturasında daha pahalıya gelir.",
       "auto": "Otomatik",
       "recommended": "Önerilen",
-      "autoDescription": "Her işi iyi yapan en ucuz modeli kullanır.",
-      "addKeyFirst": "Model seçmek için yukarıya API anahtarınızı ekleyin."
+      "autoDescription": "Her işi iyi yapan en ucuz modeli kullanır."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

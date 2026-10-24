@@ -70,3 +70,21 @@ Non-obvious points:
   through a non-raw Python string can land as a literal backspace (0x08) in a TS regex: grep for
   `$'\b'` after scripted edits.
 - **`.gitignore` ignores any folder named `build`**, including under `src/__tests__/` — a test placed in `__tests__/unit/build/` silently never gets committed. Check new paths with `git check-ignore -v`.
+
+- **Provider first (Settings → AI, own key).** `AiProviderPicker` (native radios) comes before
+  anything provider-specific. Shown provider = `useByokKey().picked ?? saved?.provider`; the
+  pick lives in `chrome.storage.local` `aiByokProvider` (`{ userId, provider }`), is forgotten
+  when it equals the saved key's provider or a key is saved, and `clearByokKey` removes it too
+  (Remove then re-picks the removed key's provider). `AiKeySetting` is keyed by provider, so a
+  switch resets its draft. Setup links come from shared `AI_PROVIDER_KEY_LINKS` (guide + keys).
+- **Focus after a query-driven view change needs a retry.** After `await refresh()` or
+  `setQueryData`, react-query's observer update can land a render later, so a one-shot
+  `useEffect` that focuses the new element finds `null` and focus falls to `<body>`. Keep the
+  "focus X" flag until the target exists (depend on the view flag / provider) and clear it only
+  after focusing.
+- **The unit-test `chrome.storage.local.remove` stub takes ONE key** (setup.ts Map delete); an
+  array silently removes nothing there. Use one call per key.
+- **Own-key e2e** (`e2e/tests/aiByokSettings.spec.ts`): `signInAsPro` then re-route
+  `**/rest/v1/subscriptions*` with `tier: 'pro_ai', ai_mode: 'byok'` (the later route wins) and
+  stub `**/api/ai/byok/verify*`. The test skips on builds without `VITE_AI_BYOK_ENABLED` (no AI
+  tab), which includes the production build CI tests; it runs against a local dev build.

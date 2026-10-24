@@ -104,19 +104,26 @@
       "byok": "הוספתם מפתח API משלכם של {{provider}}",
       "byokNoKey": "אתם מוסיפים מפתח API משלכם: הזינו אותו למטה כדי להשתמש בתכונות AI"
     },
+    "provider": {
+      "label": "ספק AI",
+      "description": "בחרו את החברה שהנפיקה את מפתח ה-API שלכם."
+    },
     "key": {
-      "label": "מפתח ה-API של ספק ה-AI שלכם",
+      "label": "מפתח ה-API שלכם מ-{{provider}}",
       "save": "שמירת המפתח",
       "checking": "בודקים…",
       "replace": "החלפה",
       "remove": "הסרה",
       "saved": "מפתח ה-API נשמר",
       "removed": "מפתח ה-API הוסר",
-      "invalidFormat": "זה לא נראה כמו מפתח API של Anthropic,‏ OpenAI או Google.",
+      "invalidFormat": "זה לא נראה כמו מפתח API תקין של {{provider}}.",
       "verifyFailed": "לא הצלחנו לבדוק את המפתח. נסו שוב.",
-      "note": "מפתחות של Anthropic,‏ OpenAI ו-Google עובדים. נשמר רק במכשיר הזה. נשלח לשרת של TabMerger עם כל בקשת AI ומועבר ישירות לספק שהנפיק אותו; אף פעם לא נשמר בשרתים שלנו.",
+      "note": "נשמר רק במכשיר הזה. נשלח לשרת של TabMerger עם כל בקשת AI ומועבר ישירות לספק שהנפיק אותו; אף פעם לא נשמר בשרתים שלנו.",
       "getKey": "יצירת מפתח והגדרת מגבלת הוצאות:",
-      "manageLink": "ניהול המפתח הזה ומגבלת ההוצאות שלו ב-{{provider}}"
+      "wrongProvider": "נראה שהמפתח הזה של {{detected}}. בחרו {{detected}} למעלה, או הדביקו מפתח של {{provider}}.",
+      "switching": "המפתח השמור של {{saved}} ימשיך לשמש עד שתשמרו מפתח של {{provider}}.",
+      "guideLink": "איך יוצרים מפתח",
+      "keysLink": "מפתחות API ב-{{provider}}"
     },
     "model": {
       "label": "מודל AI",
@@ -124,8 +131,7 @@
       "byokDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ועולים יותר בחשבון מהספק שלכם.",
       "auto": "אוטומטי",
       "recommended": "מומלץ",
-      "autoDescription": "משתמש במודל הזול ביותר שעושה כל משימה היטב.",
-      "addKeyFirst": "הוסיפו מפתח API למעלה כדי לבחור מודל."
+      "autoDescription": "משתמש במודל הזול ביותר שעושה כל משימה היטב."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

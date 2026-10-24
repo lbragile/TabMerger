@@ -96,19 +96,26 @@
       "byok": "Anda menambahkan kunci API {{provider}} milik Anda",
       "byokNoKey": "Anda menambahkan kunci API sendiri: masukkan di bawah untuk memakai fitur AI"
     },
+    "provider": {
+      "label": "Penyedia AI",
+      "description": "Pilih perusahaan yang menerbitkan kunci API Anda."
+    },
     "key": {
-      "label": "Kunci API penyedia AI Anda",
+      "label": "Kunci API {{provider}} Anda",
       "save": "Simpan kunci",
       "checking": "Memeriksa…",
       "replace": "Ganti",
       "remove": "Hapus",
       "saved": "Kunci API disimpan",
       "removed": "Kunci API dihapus",
-      "invalidFormat": "Itu tidak terlihat seperti kunci API Anthropic, OpenAI, atau Google.",
+      "invalidFormat": "Itu tidak terlihat seperti kunci API {{provider}} yang valid.",
       "verifyFailed": "Kunci tidak dapat diperiksa. Coba lagi.",
-      "note": "Kunci Anthropic, OpenAI, dan Google dapat dipakai. Hanya disimpan di perangkat ini. Dikirim ke server TabMerger bersama setiap permintaan AI dan langsung diteruskan ke penyedia yang menerbitkannya; tidak pernah disimpan di server kami.",
+      "note": "Hanya disimpan di perangkat ini. Dikirim ke server TabMerger bersama setiap permintaan AI dan langsung diteruskan ke penyedia yang menerbitkannya; tidak pernah disimpan di server kami.",
       "getKey": "Buat kunci dan tetapkan batas pengeluaran:",
-      "manageLink": "Kelola kunci ini dan batas pengeluarannya di {{provider}}"
+      "wrongProvider": "Kunci ini sepertinya dari {{detected}}. Pilih {{detected}} di atas, atau tempel kunci dari {{provider}}.",
+      "switching": "Kunci {{saved}} yang tersimpan tetap dipakai sampai Anda menyimpan kunci dari {{provider}}.",
+      "guideLink": "Cara membuat kunci",
+      "keysLink": "Kunci API {{provider}}"
     },
     "model": {
       "label": "Model AI",
@@ -116,8 +123,7 @@
       "byokDescription": "Model yang lebih besar memberi hasil lebih baik dan lebih mahal di tagihan penyedia Anda.",
       "auto": "Otomatis",
       "recommended": "Disarankan",
-      "autoDescription": "Memakai model termurah yang mengerjakan setiap tugas dengan baik.",
-      "addKeyFirst": "Tambahkan kunci API Anda di atas untuk memilih model."
+      "autoDescription": "Memakai model termurah yang mengerjakan setiap tugas dengan baik."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

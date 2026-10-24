@@ -96,19 +96,26 @@
       "byok": "自分の {{provider}} API キーを追加済み",
       "byokNoKey": "自分の API キーを追加します：AI 機能を使うには下に入力してください"
     },
+    "provider": {
+      "label": "AI プロバイダー",
+      "description": "API キーを発行した会社を選んでください。"
+    },
     "key": {
-      "label": "AI プロバイダーの API キー",
+      "label": "{{provider}} の API キー",
       "save": "キーを保存",
       "checking": "確認中…",
       "replace": "置き換える",
       "remove": "削除",
       "saved": "API キーを保存しました",
       "removed": "API キーを削除しました",
-      "invalidFormat": "Anthropic、OpenAI、Google の API キーの形式ではありません。",
+      "invalidFormat": "有効な {{provider}} の API キーの形式ではありません。",
       "verifyFailed": "キーを確認できませんでした。もう一度お試しください。",
-      "note": "Anthropic、OpenAI、Google のキーが使えます。このデバイスにのみ保存されます。AI リクエストのたびに TabMerger のサーバーへ送信され、キーを発行したプロバイダーにそのまま渡されます。当社のサーバーには保存されません。",
+      "note": "このデバイスにのみ保存されます。AI リクエストのたびに TabMerger のサーバーへ送信され、キーを発行したプロバイダーにそのまま渡されます。当社のサーバーには保存されません。",
       "getKey": "キーを作成し、利用上限を設定する：",
-      "manageLink": "{{provider}} でこのキーと利用上限を管理する"
+      "wrongProvider": "このキーは {{detected}} のもののようです。上で {{detected}} を選ぶか、{{provider}} のキーを貼り付けてください。",
+      "switching": "{{provider}} のキーを保存するまで、保存済みの {{saved}} のキーが引き続き使われます。",
+      "guideLink": "キーの作成方法",
+      "keysLink": "{{provider}} の API キー管理ページ"
     },
     "model": {
       "label": "AI モデル",
@@ -116,8 +123,7 @@
       "byokDescription": "大きいモデルほど結果が良くなり、プロバイダーからの請求も高くなります。",
       "auto": "自動",
       "recommended": "おすすめ",
-      "autoDescription": "作業ごとに、十分な品質で最も安いモデルを使います。",
-      "addKeyFirst": "モデルを選ぶには、上で API キーを追加してください。"
+      "autoDescription": "作業ごとに、十分な品質で最も安いモデルを使います。"
     },
     "estimate": {
       "item": "{{action}}：{{amount}}",

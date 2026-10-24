@@ -104,19 +104,26 @@
       "byok": "Hai aggiunto la tua chiave API {{provider}}",
       "byokNoKey": "Aggiungi tu la tua chiave API: inseriscila qui sotto per usare le funzioni AI"
     },
+    "provider": {
+      "label": "Fornitore AI",
+      "description": "Scegli l’azienda che ha emesso la tua chiave API."
+    },
     "key": {
-      "label": "Chiave API del tuo fornitore AI",
+      "label": "La tua chiave API {{provider}}",
       "save": "Salva chiave",
       "checking": "Verifica in corso…",
       "replace": "Sostituisci",
       "remove": "Rimuovi",
       "saved": "Chiave API salvata",
       "removed": "Chiave API rimossa",
-      "invalidFormat": "Non sembra una chiave API di Anthropic, OpenAI o Google.",
+      "invalidFormat": "Non sembra una chiave API {{provider}} valida.",
       "verifyFailed": "Impossibile verificare la chiave. Riprova.",
-      "note": "Funzionano le chiavi di Anthropic, OpenAI e Google. Salvata solo su questo dispositivo. Inviata al server di TabMerger con ogni richiesta AI e passata direttamente al fornitore che l’ha emessa; mai salvata sui nostri server.",
+      "note": "Salvata solo su questo dispositivo. Inviata al server di TabMerger con ogni richiesta AI e passata direttamente al fornitore che l’ha emessa; mai salvata sui nostri server.",
       "getKey": "Crea una chiave e imposta un limite di spesa:",
-      "manageLink": "Gestisci questa chiave e il suo limite di spesa su {{provider}}"
+      "wrongProvider": "Questa chiave sembra di {{detected}}. Scegli {{detected}} qui sopra o incolla una chiave di {{provider}}.",
+      "switching": "La chiave {{saved}} salvata resta in uso finché non salvi una chiave di {{provider}}.",
+      "guideLink": "Come creare una chiave",
+      "keysLink": "Chiavi API di {{provider}}"
     },
     "model": {
       "label": "Modello AI",
@@ -124,8 +131,7 @@
       "byokDescription": "I modelli più grandi danno risultati migliori e costano di più sulla fattura del tuo fornitore.",
       "auto": "Automatico",
       "recommended": "Consigliato",
-      "autoDescription": "Usa il modello più economico che svolge bene ogni compito.",
-      "addKeyFirst": "Aggiungi qui sopra la tua chiave API per scegliere un modello."
+      "autoDescription": "Usa il modello più economico che svolge bene ogni compito."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

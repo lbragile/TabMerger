@@ -96,19 +96,26 @@
       "byok": "Bạn đã thêm khóa API {{provider}} của riêng mình",
       "byokNoKey": "Bạn tự thêm khóa API: hãy nhập bên dưới để dùng các tính năng AI"
     },
+    "provider": {
+      "label": "Nhà cung cấp AI",
+      "description": "Chọn công ty đã cấp khóa API của bạn."
+    },
     "key": {
-      "label": "Khóa API của nhà cung cấp AI",
+      "label": "Khóa API {{provider}} của bạn",
       "save": "Lưu khóa",
       "checking": "Đang kiểm tra…",
       "replace": "Thay thế",
       "remove": "Xóa",
       "saved": "Đã lưu khóa API",
       "removed": "Đã xóa khóa API",
-      "invalidFormat": "Đây không giống khóa API của Anthropic, OpenAI hay Google.",
+      "invalidFormat": "Đây không giống khóa API {{provider}} hợp lệ.",
       "verifyFailed": "Không thể kiểm tra khóa. Hãy thử lại.",
-      "note": "Dùng được khóa của Anthropic, OpenAI và Google. Chỉ lưu trên thiết bị này. Được gửi đến máy chủ TabMerger cùng mỗi yêu cầu AI và chuyển thẳng đến nhà cung cấp đã cấp khóa; không bao giờ được lưu trên máy chủ của chúng tôi.",
+      "note": "Chỉ lưu trên thiết bị này. Được gửi đến máy chủ TabMerger cùng mỗi yêu cầu AI và chuyển thẳng đến nhà cung cấp đã cấp khóa; không bao giờ được lưu trên máy chủ của chúng tôi.",
       "getKey": "Tạo khóa và đặt giới hạn chi tiêu:",
-      "manageLink": "Quản lý khóa này và giới hạn chi tiêu tại {{provider}}"
+      "wrongProvider": "Khóa này có vẻ là của {{detected}}. Hãy chọn {{detected}} ở trên, hoặc dán khóa của {{provider}}.",
+      "switching": "Khóa {{saved}} đã lưu vẫn được dùng cho đến khi bạn lưu khóa của {{provider}}.",
+      "guideLink": "Cách tạo khóa",
+      "keysLink": "Trang khóa API của {{provider}}"
     },
     "model": {
       "label": "Mô hình AI",
@@ -116,8 +123,7 @@
       "byokDescription": "Mô hình lớn hơn cho kết quả tốt hơn và tốn kém hơn trên hóa đơn của nhà cung cấp.",
       "auto": "Tự động",
       "recommended": "Khuyên dùng",
-      "autoDescription": "Dùng mô hình rẻ nhất làm tốt từng việc.",
-      "addKeyFirst": "Hãy thêm khóa API ở trên để chọn mô hình."
+      "autoDescription": "Dùng mô hình rẻ nhất làm tốt từng việc."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

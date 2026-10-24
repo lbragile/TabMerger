@@ -100,19 +100,26 @@
       "byok": "You added your own {{provider}} API key",
       "byokNoKey": "You add your own API key: add it below to use AI features"
     },
+    "provider": {
+      "label": "AI provider",
+      "description": "Pick the company that issued your API key."
+    },
     "key": {
-      "label": "Your AI provider API key",
+      "label": "Your {{provider}} API key",
       "save": "Save key",
       "checking": "Checking…",
       "replace": "Replace",
       "remove": "Remove",
       "saved": "API key saved",
       "removed": "API key removed",
-      "invalidFormat": "That doesn't look like an Anthropic, OpenAI or Google API key.",
+      "invalidFormat": "That doesn't look like a valid {{provider}} API key.",
       "verifyFailed": "Couldn't check the key. Try again.",
-      "note": "Anthropic, OpenAI and Google keys work. Stored only on this device. Sent to TabMerger's server with each AI request and passed straight to the provider that issued it; never saved on our servers.",
+      "note": "Stored only on this device. Sent to TabMerger's server with each AI request and passed straight to the provider that issued it; never saved on our servers.",
       "getKey": "Create a key and set a spending limit:",
-      "manageLink": "Manage this key and its spending limit at {{provider}}"
+      "wrongProvider": "This key looks like it's from {{detected}}. Pick {{detected}} above, or paste a key from {{provider}}.",
+      "switching": "Your saved {{saved}} key stays in use until you save a key from {{provider}}.",
+      "guideLink": "How to create a key",
+      "keysLink": "{{provider}} API keys"
     },
     "model": {
       "label": "AI model",
@@ -120,8 +127,7 @@
       "byokDescription": "Larger models give better results and cost more on your provider’s bill.",
       "auto": "Auto",
       "recommended": "Recommended",
-      "autoDescription": "Uses the cheapest model that does each job well.",
-      "addKeyFirst": "Add your API key above to choose a model."
+      "autoDescription": "Uses the cheapest model that does each job well."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

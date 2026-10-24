@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-22
+> Last Updated: 2026-10-24
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -472,16 +472,20 @@ All three certifications can be ticked, because they are true as built:
   together with the AI model chosen in Settings → AI (a model name, stored in the extension's
   own settings). The server passes them to **one AI provider**: Anthropic when TabMerger
   handles setup (usage counted in monthly credits on the server), or, when the user adds their
-  **own API key** ("Use your own AI provider"), the company that issued that key: Anthropic, OpenAI or Google (read
-  from the key's format; one key at a time). The own key is typed in Settings → AI, checked with
-  the server once (`/api/ai/byok/verify`), then stored **only on this device** in
+  **own API key** ("Use your own AI provider"), the company that issued that key: Anthropic, OpenAI or Google (one
+  key at a time). In Settings → AI the user picks the provider first, then types that provider's
+  key; a key whose format belongs to another provider is refused in the popup before anything is
+  sent. A provider picked before its key is saved is remembered on the device
+  (`chrome.storage.local` `aiByokProvider`: the provider name and the account, no key). The key is
+  checked with the server once (`/api/ai/byok/verify`), then stored **only on this device** in
   `chrome.storage.local` (`aiByokKey`, with the account that saved it and its provider, removed
   on sign-out), never in the extension's database, so exports, automatic backups and sync never
   contain it. It is sent in the `X-AI-Key` header of each AI request to TabMerger's server,
   which passes it straight to that provider and never stores or logs it; it is never sent to
   analytics or error reports, and only its first and last characters are ever shown
-  (`sk-ant-…abcd`, `sk-…abcd`, `AIza…abcd`). Settings links to the provider's own key page so
-  the user can create a key and set a spending limit there. No new permission and no new network
+  (`sk-ant-…abcd`, `sk-…abcd`, `AIza…abcd`). Settings links to the picked provider's own pages
+  (how to create a key, and its API keys page) so the user can create a key and set a spending
+  limit there; the links are listed once in `AI_PROVIDER_KEY_LINKS` (`@tabmerger/shared`). No new permission and no new network
   destination: the extension still talks only to TabMerger's website, and the AI providers are
   called by the server. See `src/lib/byokKey.ts` and `src/hooks/useAI.ts`.
 - Imported files (JSON, bookmarks HTML, OneTab) are read and validated on the device, in the
@@ -619,7 +623,7 @@ with the real semver string carried in `version_name`.
 | Stable | `3.1.1` | — | `v3.1.1` | 2026-10-09 | Superseded |
 | Stable | `3.1.2` | — | `v3.1.2` | 2026-10-10 | Superseded |
 | Stable | `3.1.3` | — | `v3.1.3` | 2026-10-15 | Not submitted (publish run cancelled) |
-| Stable | — | — | unreleased | — | Draft, behind the AI flag (off, so nothing changes for users yet): Pro AI gets a choice of model in Settings → AI (Auto, Claude Haiku/Sonnet/Opus 5.5 when TabMerger handles setup, each with its approximate credits per action; with an own key, Auto plus that provider's three models, each with a relative cost level and no dollar figures), and a "Use your own AI provider" option where the user adds their own API key (Anthropic, OpenAI or Google, one at a time) whose key is kept on the device and sent only with AI requests to TabMerger's server, which forwards the request to that provider. The own-key option has its own flag (`VITE_AI_BYOK_ENABLED`) so it can launch before the option where TabMerger handles setup. Credits now measure AI cost. No manifest change, no new permission. When either flag is turned on: update the long description, the Privacy section above (Authentication information and Web history rows) and the privacy policy's Pro AI row, and refresh the Settings screenshot |
+| Stable | — | — | unreleased | — | Draft, behind the AI flag (off, so nothing changes for users yet): Pro AI gets a choice of model in Settings → AI (Auto, Claude Haiku/Sonnet/Opus 5.5 when TabMerger handles setup, each with its approximate credits per action; with an own key, Auto plus that provider's three models, each with a relative cost level and no dollar figures), and a "Use your own AI provider" option where the user adds their own API key (Anthropic, OpenAI or Google, one at a time) whose key is kept on the device and sent only with AI requests to TabMerger's server, which forwards the request to that provider. The own-key option has its own flag (`VITE_AI_BYOK_ENABLED`) so it can launch before the option where TabMerger handles setup. In Settings → AI the own-key user picks the provider first (Anthropic, OpenAI or Google); only then do that provider's key field, setup links ("How to create a key" and its API keys page) and models show, and a key of another provider is refused before it is sent. Switching provider keeps the saved key in use until a key for the new one is saved. Credits now measure AI cost. No manifest change, no new permission. When either flag is turned on: update the long description, the Privacy section above (Authentication information and Web history rows) and the privacy policy's Pro AI row, and refresh the Settings screenshot (the AI settings screen now opens on the provider picker; capture it with a provider picked so the key field, links and models show) |
 | Stable | `3.2.0` | — | `v3.2.0` | 2026-10-15 | Superseded |
 | Stable | `3.2.1` | — | `v3.2.1` | 2026-10-16 | Superseded |
 | Stable | `3.3.0` | — | `v3.3.0` | 2026-10-16 | Superseded |

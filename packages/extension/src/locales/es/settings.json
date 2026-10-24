@@ -104,19 +104,26 @@
       "byok": "Añadiste tu propia clave de API de {{provider}}",
       "byokNoKey": "Tú añades tu propia clave de API: escríbela abajo para usar las funciones de IA"
     },
+    "provider": {
+      "label": "Proveedor de IA",
+      "description": "Elige la empresa que emitió tu clave de API."
+    },
     "key": {
-      "label": "Clave de API de tu proveedor de IA",
+      "label": "Tu clave de API de {{provider}}",
       "save": "Guardar clave",
       "checking": "Comprobando…",
       "replace": "Reemplazar",
       "remove": "Quitar",
       "saved": "Clave de API guardada",
       "removed": "Clave de API quitada",
-      "invalidFormat": "Eso no parece una clave de API de Anthropic, OpenAI o Google.",
+      "invalidFormat": "Eso no parece una clave de API válida de {{provider}}.",
       "verifyFailed": "No se pudo comprobar la clave. Inténtalo de nuevo.",
-      "note": "Funcionan claves de Anthropic, OpenAI y Google. Se guarda solo en este dispositivo. Se envía al servidor de TabMerger con cada solicitud de IA y se pasa directamente al proveedor que la emitió; nunca se guarda en nuestros servidores.",
+      "note": "Se guarda solo en este dispositivo. Se envía al servidor de TabMerger con cada solicitud de IA y se pasa directamente al proveedor que la emitió; nunca se guarda en nuestros servidores.",
       "getKey": "Crea una clave y fija un límite de gasto:",
-      "manageLink": "Gestiona esta clave y su límite de gasto en {{provider}}"
+      "wrongProvider": "Esta clave parece ser de {{detected}}. Elige {{detected}} arriba o pega una clave de {{provider}}.",
+      "switching": "Tu clave guardada de {{saved}} se sigue usando hasta que guardes una clave de {{provider}}.",
+      "guideLink": "Cómo crear una clave",
+      "keysLink": "Claves de API de {{provider}}"
     },
     "model": {
       "label": "Modelo de IA",
@@ -124,8 +131,7 @@
       "byokDescription": "Los modelos más grandes dan mejores resultados y cuestan más en la factura de tu proveedor.",
       "auto": "Automático",
       "recommended": "Recomendado",
-      "autoDescription": "Usa el modelo más barato que hace bien cada tarea.",
-      "addKeyFirst": "Añade tu clave de API arriba para elegir un modelo."
+      "autoDescription": "Usa el modelo más barato que hace bien cada tarea."
     },
     "estimate": {
       "item": "{{action}}: {{amount}}",

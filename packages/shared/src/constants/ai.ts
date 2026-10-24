@@ -90,11 +90,25 @@ export const AI_PROVIDER_LABELS: Record<AiProvider, string> = {
   google: 'Google',
 };
 
-/** Where a customer creates a key for each provider, linked from the extension's Settings. */
-export const AI_PROVIDER_KEY_URLS: Record<AiProvider, string> = {
-  anthropic: 'https://console.anthropic.com/settings/keys',
-  openai: 'https://platform.openai.com/api-keys',
-  google: 'https://aistudio.google.com/apikey',
+/**
+ * Each provider's setup pages, linked from the extension's Settings → AI once the provider is
+ * picked: `guide` explains how to create an API key, `keys` is the page that lists the account's
+ * keys (create, revoke, set limits). Checked 2026-10-24; Anthropic's old
+ * `console.anthropic.com/settings/keys` now redirects to the `keys` URL here.
+ */
+export const AI_PROVIDER_KEY_LINKS: Record<AiProvider, { guide: string; keys: string }> = {
+  anthropic: {
+    guide: 'https://platform.claude.com/docs/en/get-api-key',
+    keys: 'https://platform.claude.com/settings/keys',
+  },
+  openai: {
+    guide: 'https://developers.openai.com/api/docs/quickstart',
+    keys: 'https://platform.openai.com/api-keys',
+  },
+  google: {
+    guide: 'https://ai.google.dev/gemini-api/docs/api-key',
+    keys: 'https://aistudio.google.com/apikey',
+  },
 };
 
 export const AI_MODEL_IDS = [

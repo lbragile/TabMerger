@@ -1,4 +1,4 @@
-import { byokKeyProvider, type AiProvider } from '@tabmerger/shared';
+import { AI_PROVIDERS, byokKeyProvider, type AiProvider } from '@tabmerger/shared';
 
 /**
  * A Pro AI "own key" (BYOK) user's API key — Anthropic, OpenAI or Google, one at a time — kept on
@@ -73,11 +73,46 @@ export async function saveByokKey(userId: string, key: string): Promise<ByokKey>
   return { key: normalized, provider };
 }
 
-/** Removes the saved key, whoever saved it. Best effort: never throws. */
+/**
+ * Removes the saved key, whoever saved it, and any provider picked in Settings without a key
+ * ({@link AI_BYOK_PROVIDER_STORAGE_KEY}). Best effort: never throws.
+ */
 export async function clearByokKey(): Promise<void> {
   try {
+    // One key per call: some storage shims (and the test stub) take a single key only
     await chrome.storage.local.remove(AI_BYOK_KEY_STORAGE_KEY);
+    await chrome.storage.local.remove(AI_BYOK_PROVIDER_STORAGE_KEY);
   } catch {
     // no extension storage (tests, a non-extension page): nothing to remove
+  }
+}
+
+/**
+ * The provider picked in Settings → AI whose key isn't saved yet (none saved, or switching away
+ * from the saved key's provider), kept on this device so reopening Settings shows the same
+ * choice. Not a secret: only a provider name and the account that picked it.
+ */
+export const AI_BYOK_PROVIDER_STORAGE_KEY = 'aiByokProvider';
+
+/** The provider `userId` picked on this device without saving a key for it, or null. Never throws. */
+export async function getPickedByokProvider(userId: string | null | undefined): Promise<AiProvider | null> {
+  if (!userId) return null;
+  try {
+    const stored = (await chrome.storage.local.get(AI_BYOK_PROVIDER_STORAGE_KEY))[AI_BYOK_PROVIDER_STORAGE_KEY] as unknown;
+    if (!stored || typeof stored !== 'object') return null;
+    const { userId: owner, provider } = stored as Record<string, unknown>;
+    return owner === userId && (AI_PROVIDERS as readonly unknown[]).includes(provider) ? (provider as AiProvider) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Records (or with null, forgets) the provider `userId` picked without a key. Best effort: never throws. */
+export async function setPickedByokProvider(userId: string, provider: AiProvider | null): Promise<void> {
+  try {
+    if (provider) await chrome.storage.local.set({ [AI_BYOK_PROVIDER_STORAGE_KEY]: { userId, provider } });
+    else await chrome.storage.local.remove(AI_BYOK_PROVIDER_STORAGE_KEY);
+  } catch {
+    // no extension storage: the pick lasts until Settings closes
   }
 }

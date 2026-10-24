@@ -104,19 +104,26 @@
       "byok": "Vous avez ajouté votre propre clé API {{provider}}",
       "byokNoKey": "Vous ajoutez votre propre clé API : saisissez-la ci-dessous pour utiliser les fonctions IA"
     },
+    "provider": {
+      "label": "Fournisseur d’IA",
+      "description": "Choisissez l’entreprise qui a émis votre clé API."
+    },
     "key": {
-      "label": "Clé API de votre fournisseur d’IA",
+      "label": "Votre clé API {{provider}}",
       "save": "Enregistrer la clé",
       "checking": "Vérification…",
       "replace": "Remplacer",
       "remove": "Supprimer",
       "saved": "Clé API enregistrée",
       "removed": "Clé API supprimée",
-      "invalidFormat": "Cela ne ressemble pas à une clé API Anthropic, OpenAI ou Google.",
+      "invalidFormat": "Cela ne ressemble pas à une clé API {{provider}} valide.",
       "verifyFailed": "Impossible de vérifier la clé. Réessayez.",
-      "note": "Les clés Anthropic, OpenAI et Google fonctionnent. Enregistrée uniquement sur cet appareil. Envoyée au serveur de TabMerger avec chaque requête IA et transmise directement au fournisseur qui l’a émise ; jamais enregistrée sur nos serveurs.",
+      "note": "Enregistrée uniquement sur cet appareil. Envoyée au serveur de TabMerger avec chaque requête IA et transmise directement au fournisseur qui l’a émise ; jamais enregistrée sur nos serveurs.",
       "getKey": "Créer une clé et fixer une limite de dépenses :",
-      "manageLink": "Gérer cette clé et sa limite de dépenses chez {{provider}}"
+      "wrongProvider": "Cette clé semble venir de {{detected}}. Choisissez {{detected}} ci-dessus ou collez une clé {{provider}}.",
+      "switching": "Votre clé {{saved}} enregistrée reste utilisée jusqu’à ce que vous enregistriez une clé {{provider}}.",
+      "guideLink": "Comment créer une clé",
+      "keysLink": "Clés API {{provider}}"
     },
     "model": {
       "label": "Modèle d’IA",
@@ -124,8 +131,7 @@
       "byokDescription": "Les modèles plus grands donnent de meilleurs résultats et coûtent plus cher sur la facture de votre fournisseur.",
       "auto": "Automatique",
       "recommended": "Recommandé",
-      "autoDescription": "Utilise le modèle le moins cher qui fait bien chaque tâche.",
-      "addKeyFirst": "Ajoutez votre clé API ci-dessus pour choisir un modèle."
+      "autoDescription": "Utilise le modèle le moins cher qui fait bien chaque tâche."
     },
     "estimate": {
       "item": "{{action}} : {{amount}}",

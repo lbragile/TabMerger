@@ -11,10 +11,10 @@ interface AiModelPickerProps {
   /** Credits for managed plans, a relative cost level (no dollar figures) for own-key plans. */
   aiMode: AiMode;
   /**
-   * Whose models to offer: Anthropic for managed plans, the saved key's provider for own-key
-   * plans, or null for an own-key plan with no key saved yet (nothing to choose from).
+   * Whose models to offer: Anthropic for managed plans, the provider picked in Settings for
+   * own-key plans (the parent renders no picker until one is picked).
    */
-  provider: AiProvider | null;
+  provider: AiProvider;
   /** This month's managed allowance, for "≈ N organizes a month". Ignored for own-key plans. */
   allowance: number;
 }
@@ -31,16 +31,6 @@ export function AiModelPicker({ value, onChange, aiMode, provider, allowance }: 
   const name = useId();
   const byok = aiMode === 'byok';
 
-  if (!provider) {
-    return (
-      <fieldset className="min-w-0 space-y-2">
-        <legend className="text-sm font-medium">{t('settings.ai.model.label')}</legend>
-        <p className="text-xs text-muted-foreground" data-testid="ai-model-add-key-first">
-          {t('settings.ai.model.addKeyFirst')}
-        </p>
-      </fieldset>
-    );
-  }
   const choices: AiModelChoice[] = ['auto', ...aiModelsForProvider(provider)];
   const checked = choiceForProvider(value, provider);
 

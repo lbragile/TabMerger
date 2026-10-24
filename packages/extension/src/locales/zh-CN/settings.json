@@ -96,19 +96,26 @@
       "byok": "您已添加自己的 {{provider}} API 密钥",
       "byokNoKey": "由您添加自己的 API 密钥：请在下方填写以使用 AI 功能"
     },
+    "provider": {
+      "label": "AI 服务商",
+      "description": "选择签发您 API 密钥的公司。"
+    },
     "key": {
-      "label": "您的 AI 服务商 API 密钥",
+      "label": "您的 {{provider}} API 密钥",
       "save": "保存密钥",
       "checking": "正在检查…",
       "replace": "替换",
       "remove": "移除",
       "saved": "API 密钥已保存",
       "removed": "API 密钥已移除",
-      "invalidFormat": "这看起来不像 Anthropic、OpenAI 或 Google 的 API 密钥。",
+      "invalidFormat": "这看起来不像有效的 {{provider}} API 密钥。",
       "verifyFailed": "无法检查该密钥，请重试。",
-      "note": "支持 Anthropic、OpenAI 和 Google 的密钥。仅保存在此设备上。每次 AI 请求时随请求发送到 TabMerger 的服务器，并直接转交给签发该密钥的服务商；绝不会保存在我们的服务器上。",
+      "note": "仅保存在此设备上。每次 AI 请求时随请求发送到 TabMerger 的服务器，并直接转交给签发该密钥的服务商；绝不会保存在我们的服务器上。",
       "getKey": "创建密钥并设置支出上限：",
-      "manageLink": "在 {{provider}} 管理此密钥及其支出上限"
+      "wrongProvider": "此密钥似乎来自 {{detected}}。请在上方选择 {{detected}}，或粘贴 {{provider}} 的密钥。",
+      "switching": "在您保存 {{provider}} 的密钥之前，将继续使用已保存的 {{saved}} 密钥。",
+      "guideLink": "如何创建密钥",
+      "keysLink": "{{provider}} API 密钥页面"
     },
     "model": {
       "label": "AI 模型",
@@ -116,8 +123,7 @@
       "byokDescription": "模型越大，效果越好，服务商账单上的费用也越高。",
       "auto": "自动",
       "recommended": "推荐",
-      "autoDescription": "每项任务都使用能做好它的最便宜的模型。",
-      "addKeyFirst": "请先在上方添加 API 密钥，再选择模型。"
+      "autoDescription": "每项任务都使用能做好它的最便宜的模型。"
     },
     "estimate": {
       "item": "{{action}}：{{amount}}",
