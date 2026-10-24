@@ -48,6 +48,8 @@
   "getPlan": "获取{name}",
   "switchFailed": "无法开始切换。请在账户页面使用“管理账单”。",
   "alreadySubscribed": "您已有套餐，正在打开账单页面以便您更改。",
+  "alreadySubscribedShown": "你已有套餐。此页面现在会显示它，你可以在这里更改。",
+  "checkoutFailed": "无法开始结账。请稍后再试。",
   "portalFailed": "无法打开账单页面。请在账户页面使用“管理账单”更改套餐。",
   "checkoutCanceled": "结账已取消，您未被扣款。",
   "cancelAnytime": "随时可在账户中取消，无捆绑，无需任何理由。",

@@ -264,12 +264,28 @@ describe('recovery: the plan had already ended at Stripe', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('says there is no paid plan and refreshes the page when the checkout cannot start', async () => {
+  it('says checkout could not start and refreshes the page when the checkout fails', async () => {
     respond(403, DRIFT)
     respond(500, { error: 'Failed to create checkout session' })
     await upgrade()
 
-    expect(await screen.findByRole('alert')).toHaveTextContent("You don't have a paid plan to change. Choose a plan to subscribe instead.")
+    expect(await screen.findByRole('alert')).toHaveTextContent("Couldn't start checkout. Please try again in a moment.")
+    expect(refresh).toHaveBeenCalled()
+    expect(window.location.href).toBe('')
+  })
+
+  it.each([
+    [409, { error: 'pay_or_resume' }, 'Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing'],
+    [409, { error: 'already_subscribed', recorded: true }, 'You already have a plan. This page now shows it, so you can change it here.'],
+    [409, { error: 'already_subscribed', recorded: false }, "Couldn't start the switch. Try Manage billing on your account page."],
+    [503, { error: 'billing_check_failed' }, "Couldn't start checkout. Please try again in a moment."],
+    [400, { error: 'Invalid tier' }, "You don't have a paid plan to change. Choose a plan to subscribe instead."],
+  ])('a checkout %i %j shows its message and refreshes the page', async (status, body, message) => {
+    respond(403, DRIFT)
+    respond(status, body)
+    await upgrade()
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(message)
     expect(refresh).toHaveBeenCalled()
     expect(window.location.href).toBe('')
   })

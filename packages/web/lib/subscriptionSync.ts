@@ -6,7 +6,8 @@ import {
 } from '@tabmerger/shared'
 import { stripe } from '@/lib/stripe'
 import type { createServiceRoleClient } from '@/lib/supabase/server'
-import { SUBSCRIPTION_EXPAND } from '@/lib/aiAllowance'
+import { SUBSCRIPTION_EXPAND, subscriptionAiColumns, type AiColumns } from '@/lib/aiAllowance'
+import { getPlanForPriceId, type PlanPrice } from '@/lib/tiers'
 
 /**
  * How a `subscriptions` row is brought in line with Stripe: read the subscription's current state
@@ -23,10 +24,14 @@ export type ServiceRoleClient = Awaited<ReturnType<typeof createServiceRoleClien
 
 /** The `source` of resyncEndedSubscription()'s calls. */
 const PLAN_SWITCH_RESYNC = 'plan switch resync'
+/** The `source` of recordLiveSubscription()'s calls. */
+const CHECKOUT_RESYNC = 'checkout resync'
 
-/** The start of a log line: the webhook's event type, or the plan switch's resync. */
+/** The start of a log line: the webhook's event type, the plan switch's or the checkout's resync. */
 function logLabel(source: string): string {
-  return source === PLAN_SWITCH_RESYNC ? 'Plan switch resync:' : `Stripe webhook: ${source}`
+  if (source === PLAN_SWITCH_RESYNC) return 'Plan switch resync:'
+  if (source === CHECKOUT_RESYNC) return 'Checkout resync:'
+  return `Stripe webhook: ${source}`
 }
 
 /**
@@ -268,4 +273,163 @@ export async function resyncEndedSubscription(
   })
   if (!written) return { corrected: false, reason: 'no_row' }
   return { corrected: true, status: written.status, tier: written.tier ?? 'free' }
+}
+
+/**
+ * Writes or updates a subscription row keyed on user_id (one row per user, enforced by the
+ * subscriptions_user_id_key UNIQUE constraint from migration 012).
+ *
+ * The conflict target is user_id, NOT id: every user already has a subscription row created by
+ * the handle_new_user() signup trigger with id = 'free_<uuid>'. On a first purchase the Stripe
+ * subscription id is brand new, so an onConflict:'id' upsert would attempt an INSERT that
+ * violates the user_id UNIQUE constraint (Postgres 23505). Conflicting on user_id instead rewrites
+ * that existing row in place: its id becomes the Stripe subscription id and tier/status/period are
+ * updated. It also still handles the genuine insert case (no row for the user) since upsert
+ * covers both.
+ *
+ * Derives the app tier from the price ID via env-var mapping; defaults to 'free' on unknown prices.
+ * The status and tier then go through toStoredState(), so a status the database does not store
+ * is written as canceled / free. `ai_mode` and `ai_monthly_credits` come from aiColumns().
+ *
+ * The write `checkout.session.completed` and `customer.subscription.updated` make; the checkout's
+ * Stripe check (recordLiveSubscription()) makes the same one.
+ *
+ * A database error throws a SubscriptionSyncError (500, Stripe sends the event again). Running
+ * twice for one event is safe: the conflict target is user_id, so the second run rewrites the
+ * same row with the same values.
+ */
+export async function upsertSubscription(
+  supabase: ServiceRoleClient,
+  eventType: string,
+  subscription: Stripe.Subscription,
+  userId: string
+): Promise<{ tier: string; status: SubscriptionStatus }> {
+  const priceId = subscription.items.data[0]?.price.id
+  const plan = getPlanForPriceId(priceId)
+  const { status, tier } = toStoredState(
+    eventType,
+    subscription.id,
+    subscription.status,
+    plan?.tier ?? 'free'
+  )
+  const ai = await aiColumns(eventType, subscription, plan, tier)
+
+  const { error } = await supabase.from('subscriptions').upsert(
+    {
+      id: subscription.id,
+      user_id: userId,
+      tier,
+      status,
+      ai_mode: ai.aiMode,
+      ai_monthly_credits: ai.monthlyCredits,
+      stripe_price_id: priceId,
+      cancel_at_period_end: subscription.cancel_at_period_end,
+      // ponytail: Stripe v22 moved current_period_end from Subscription to SubscriptionItem
+      current_period_end: subscription.items.data[0]?.current_period_end
+        ? new Date(subscription.items.data[0].current_period_end * 1000).toISOString()
+        : null,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id' }
+  )
+  if (error) {
+    throw databaseError(eventType, 'upsert', `subscription ${subscription.id}`, error, {
+      withMessage: true,
+    })
+  }
+  return { tier, status }
+}
+
+/**
+ * The `ai_mode` and `ai_monthly_credits` to write for a subscription: subscriptionAiColumns() from
+ * lib/aiAllowance.ts (the same function the re-sync script uses). A coupon that has to be read
+ * from Stripe and can't be (other than "no such coupon") throws a SubscriptionSyncError (500), so the
+ * event is delivered again rather than written with a guessed allowance.
+ */
+function aiColumns(
+  eventType: string,
+  subscription: Stripe.Subscription,
+  plan: PlanPrice | null,
+  storedTier: string
+): Promise<AiColumns> {
+  return subscriptionAiColumns(subscription, plan, storedTier, {
+    retrieveCoupon: async (id) => {
+      try {
+        return await stripe.coupons.retrieve(id)
+      } catch (err) {
+        if (isStripeResourceMissing(err)) return null
+        throw stripeRetrieveError(eventType, subscription.id, err, 'coupon')
+      }
+    },
+    onUnpriceableDiscount: (reason) =>
+      console.warn(
+        `${logLabel(eventType)} a discount can't be priced in USD (${reason}); managed AI credits are written as 0 (subscription ${subscription.id})`
+      ),
+  })
+}
+
+/** What recordLiveSubscription() did. */
+export type LiveSubscriptionRecord =
+  | { recorded: true; tier: string; status: SubscriptionStatus }
+  | {
+      recorded: false
+      /**
+       * - `not_found`: Stripe has no subscription with that id any more;
+       * - `other_customer`: it belongs to another Stripe customer;
+       * - `not_entitled`: it is no longer live at Stripe;
+       * - `unknown_price`: its price isn't one this deployment sells (or it has several items), so
+       *   no tier can be read from it;
+       * - `other_user`: its metadata names another account.
+       */
+      reason: 'not_found' | 'other_customer' | 'not_entitled' | 'unknown_price' | 'other_user'
+    }
+
+/**
+ * Writes a live subscription Stripe has for the account's customer to the account's row, when the
+ * row doesn't show it (a missed `checkout.session.completed` or `customer.subscription.updated`).
+ * Used by `/api/checkout`, which has just found the subscription in the customer's list and
+ * refuses the new checkout either way.
+ *
+ * The subscription is read again by id (retrieveCurrentSubscription(), with what the AI allowance
+ * is priced from) and written with upsertSubscription(), the webhook's own write, only when it
+ * belongs to `customerId`, is entitled, is on a single price this deployment knows, and its
+ * metadata names no other user. It is then read once more, and a plan that ended in between is
+ * written back down (free, by subscription id). A failed Stripe read or database write throws a
+ * SubscriptionSyncError.
+ */
+export async function recordLiveSubscription(
+  supabase: ServiceRoleClient,
+  subscriptionId: string,
+  customerId: string,
+  userId: string
+): Promise<LiveSubscriptionRecord> {
+  const subscription = await retrieveCurrentSubscription(CHECKOUT_RESYNC, subscriptionId)
+  if (!subscription) return { recorded: false, reason: 'not_found' }
+
+  const owner =
+    typeof subscription.customer === 'string' ? subscription.customer : subscription.customer?.id
+  if (owner !== customerId) return { recorded: false, reason: 'other_customer' }
+  if (!isEntitledSubscriptionStatus(subscription.status)) return { recorded: false, reason: 'not_entitled' }
+  const items = subscription.items?.data ?? []
+  if (items.length !== 1 || !getPlanForPriceId(items[0]?.price?.id)) {
+    return { recorded: false, reason: 'unknown_price' }
+  }
+  const metadataUserId = subscription.metadata?.user_id
+  if (metadataUserId && metadataUserId !== userId) return { recorded: false, reason: 'other_user' }
+
+  const written = await upsertSubscription(supabase, CHECKOUT_RESYNC, subscription, userId)
+
+  // A `customer.subscription.deleted` handled between the read above and the upsert matched no row
+  // (the row still had its old id), so the upsert may have brought back a plan that has ended.
+  // Read it once more: if it isn't live any more, end the row under this id, downward only, as
+  // resyncEndedSubscription() does (a subscription Stripe no longer has counts as ended).
+  const after = await retrieveCurrentSubscription(CHECKOUT_RESYNC, subscriptionId)
+  if (!after || !isEntitledSubscriptionStatus(after.status)) {
+    await updateSubscriptionById(supabase, CHECKOUT_RESYNC, subscriptionId, {
+      status: after?.status ?? 'canceled',
+      tier: 'free',
+    })
+    return { recorded: false, reason: 'not_entitled' }
+  }
+  return { recorded: true, ...written }
 }

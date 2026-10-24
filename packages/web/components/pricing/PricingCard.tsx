@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Check, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
+import { ALREADY_SUBSCRIBED_ERROR, PAY_OR_RESUME_ERROR } from '@/lib/checkoutErrors'
 import { CHECKOUT_TIERS, trackBeginCheckout, type CheckoutTier } from '@/lib/checkoutAnalytics'
 import { isExternalStoreLink } from '@/lib/storeLinks'
 import { useListPrice, useZeroPrice } from './priceFormat'
@@ -207,17 +207,33 @@ export function PricingCard({
 
       const data = await res.json().catch(() => ({}))
 
-      // The server found a paid plan this page didn't know about (e.g. the page was loaded
-      // before subscribing in another tab). Same destination as above: the billing portal.
+      // The server found a paid plan this page didn't know about (subscribed in another tab, or
+      // a webhook the server has just caught up on from Stripe). When the account's record now
+      // shows it, refreshing shows the real plan with its switch buttons; otherwise (a plan this
+      // site can't show) the billing portal is where it is changed.
       if (res.status === 409 && data.error === ALREADY_SUBSCRIBED_ERROR) {
+        if (data.recorded === true) {
+          toast.info(t('alreadySubscribedShown'))
+          router.refresh()
+          return
+        }
         toast.info(t('alreadySubscribed'))
         await openBillingPortal()
         return
       }
 
-      if (data.url) {
-        window.location.href = data.url
+      // A plan at Stripe that can still be paid or resumed: a new one would bill next to it.
+      if (res.status === 409 && data.error === PAY_OR_RESUME_ERROR) {
+        toast.error(t('planChange.errors.pay_or_resume'))
+        return
       }
+
+      if (typeof data.url === 'string') {
+        window.location.href = data.url
+        return
+      }
+
+      toast.error(t('checkoutFailed'))
     } finally {
       setLoading(false)
     }

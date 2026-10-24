@@ -4,8 +4,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import type { PricingCard as PricingCardType } from '@/components/pricing/PricingCard'
 
 const push = vi.fn()
+const refresh = vi.fn()
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push }),
+  useRouter: () => ({ push, refresh }),
 }))
 
 const toastInfo = vi.fn()
@@ -47,6 +48,7 @@ async function loadPricingCard(aiEnabled: boolean): Promise<typeof PricingCardTy
 describe('PricingCard', () => {
   beforeEach(() => {
     push.mockClear()
+    refresh.mockClear()
     toastInfo.mockClear()
     toastError.mockClear()
     global.fetch = vi.fn()
@@ -320,6 +322,53 @@ describe('PricingCard', () => {
       expect(toastInfo).toHaveBeenCalledWith(expect.stringMatching(/already have a plan/i))
       // Not a failure: no error is shown.
       expect(toastError).not.toHaveBeenCalled()
+    })
+
+    it('refreshes the page, with a short message, when the 409 says the account now shows the plan', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'already_subscribed', recorded: true } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      // The server recorded the plan Stripe has: the refreshed page shows it with its switches.
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      expect(refresh).toHaveBeenCalledTimes(1)
+      expect(toastInfo).toHaveBeenCalledWith('You already have a plan. This page now shows it, so you can change it here.')
+      expect(window.location.href).toBe('')
+      expect(toastError).not.toHaveBeenCalled()
+    })
+
+    it('says to pay or resume the open plan when checkout answers 409 pay_or_resume', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'pay_or_resume' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      expect(toastError).toHaveBeenCalledWith(
+        'Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing on your account page before changing it.'
+      )
+      expect(window.location.href).toBe('')
+    })
+
+    it.each([
+      [503, { error: 'billing_check_failed' }],
+      [500, { error: 'Failed to create checkout session' }],
+    ])('says checkout could not start on a %i', async (status, body) => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status, body } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(toastError).toHaveBeenCalledWith("Couldn't start checkout. Please try again in a moment.")
+      expect(window.location.href).toBe('')
+      expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).not.toBeDisabled()
     })
 
     it('says where to change the plan when the portal cannot be opened after a 409', async () => {

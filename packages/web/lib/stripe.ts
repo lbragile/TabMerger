@@ -1,6 +1,8 @@
 import Stripe from 'stripe'
 import { isEntitledSubscriptionStatus, type AiMode } from '@tabmerger/shared'
 import type { CheckoutInterval, CheckoutTier } from './checkoutAnalytics'
+import { describeStripeError } from './stripeErrors'
+import { CheckoutRaceLostError } from './checkoutErrors'
 
 /**
  * True when a real Stripe secret key was supplied. False in any environment missing
@@ -115,7 +117,104 @@ export async function createCheckoutSession({
   }, { apiVersion: CHECKOUT_API_VERSION })
 
   if (!session.url) throw new Error('Failed to create checkout session')
+
+  // Only the newest subscription checkout of a customer can be paid: one opened in another tab is
+  // expired, so two of them can't both complete into two subscriptions. Throws
+  // CheckoutRaceLostError (this session expired, no URL) when another one was paid meanwhile.
+  if (customerId) await expireOtherOpenSubscriptionCheckouts(customerId, session.id)
+
   return session.url
+}
+
+/**
+ * Expires the customer's other open subscription-mode Checkout Sessions (not credit-pack ones),
+ * keeping `keepSessionId`. At most one page (100) is read.
+ *
+ * Best effort, with one exception. A session that completes or expires just before its turn can't
+ * be expired any more (Stripe refuses). The failure is logged and that session is read again: if
+ * it has completed as a subscription, a plan went live during this checkout, so `keepSessionId` is
+ * expired too and CheckoutRaceLostError is thrown (the route answers 409 `already_subscribed`; the
+ * completed session's own webhook records the plan). Any other failure (the list, an expire for
+ * another reason, the re-read) is logged and the new checkout goes ahead.
+ */
+export async function expireOtherOpenSubscriptionCheckouts(
+  customerId: string,
+  keepSessionId: string
+): Promise<void> {
+  let open: Stripe.ApiList<Stripe.Checkout.Session>
+  try {
+    open = await stripe.checkout.sessions.list({ customer: customerId, status: 'open', limit: 100 })
+  } catch (err) {
+    console.error(`Checkout: listing open sessions to expire failed: ${describeStripeError(err)}`)
+    return
+  }
+  for (const session of open.data) {
+    if (session.id === keepSessionId || session.mode !== 'subscription') continue
+    try {
+      await stripe.checkout.sessions.expire(session.id)
+    } catch (err) {
+      console.warn(`Checkout: expiring open session ${session.id} failed: ${describeStripeError(err)}`)
+      if (await completedAsSubscription(session.id)) {
+        try {
+          await stripe.checkout.sessions.expire(keepSessionId)
+        } catch (expireErr) {
+          // Its URL is never handed out, so it can't be paid even if it stays open.
+          console.error(`Checkout: expiring new session ${keepSessionId} failed: ${describeStripeError(expireErr)}`)
+        }
+        console.warn(
+          `Checkout: session ${session.id} completed while a new checkout started; new session ${keepSessionId} withdrawn`
+        )
+        throw new CheckoutRaceLostError(session.id)
+      }
+    }
+  }
+}
+
+/** Whether a Checkout Session has completed in subscription mode. False when it can't be read. */
+async function completedAsSubscription(sessionId: string): Promise<boolean> {
+  try {
+    const current = await stripe.checkout.sessions.retrieve(sessionId)
+    return current.status === 'complete' && current.mode === 'subscription'
+  } catch (err) {
+    console.warn(`Checkout: reading session ${sessionId} after a failed expire failed: ${describeStripeError(err)}`)
+    return false
+  }
+}
+
+/** Pages read by listCustomerSubscriptions() (100 each) before it gives up. */
+const MAX_SUBSCRIPTION_PAGES = 5
+
+/**
+ * Every subscription of the customer that isn't canceled (Stripe's list without a status), all
+ * pages. A failure on the first page is thrown as Stripe threw it (`resource_missing` with param
+ * `customer` for an unknown customer). A failure on a later page is thrown as a plain Error with
+ * no Stripe code: the customer exists (page one was read), so it must never read as "no such
+ * customer" (a bad cursor is also `resource_missing`, with param `starting_after`). More than
+ * MAX_SUBSCRIPTION_PAGES pages is an Error too, so a caller deciding what may be sold fails closed
+ * instead of deciding on part of the list.
+ */
+export async function listCustomerSubscriptions(customerId: string): Promise<Stripe.Subscription[]> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+  const all: Stripe.Subscription[] = []
+  let startingAfter: string | undefined
+  for (let page = 0; page < MAX_SUBSCRIPTION_PAGES; page++) {
+    let listed: Stripe.ApiList<Stripe.Subscription>
+    try {
+      listed = await stripe.subscriptions.list({
+        customer: customerId,
+        limit: 100,
+        ...(startingAfter ? { starting_after: startingAfter } : {}),
+      })
+    } catch (err) {
+      if (page === 0) throw err
+      throw new Error(`Listing subscriptions page ${page + 1} failed: ${describeStripeError(err)}`)
+    }
+    all.push(...listed.data)
+    if (!listed.has_more) return all
+    startingAfter = listed.data.at(-1)?.id
+    if (!startingAfter) break
+  }
+  throw new Error(`More subscriptions than ${MAX_SUBSCRIPTION_PAGES} pages for one customer; not read`)
 }
 
 /**

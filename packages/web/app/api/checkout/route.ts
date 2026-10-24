@@ -4,9 +4,19 @@ import { createClient } from '@/lib/supabase/server'
 import { createCheckoutSession, getStripePriceId } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
 import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
-import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
+import {
+  ALREADY_SUBSCRIBED_ERROR,
+  BILLING_CHECK_FAILED_ERROR,
+  CheckoutRaceLostError,
+  PAY_OR_RESUME_ERROR,
+} from '@/lib/checkoutErrors'
+import { checkStripeBeforeCheckout } from '@/lib/checkoutGuard'
+import { describeStripeError } from '@/lib/stripeErrors'
 import { checkoutCancelPath } from '@/lib/checkoutAnalytics'
 import { DEFAULT_LOCALE, isAppLocale } from '@/i18n/locales'
+
+/** PostgREST's code for `.single()` finding no row: a miss, not a failure. */
+const NO_SINGLE_ROW = 'PGRST116'
 
 /** next-intl's locale cookie. */
 const LOCALE_COOKIE = 'NEXT_LOCALE'
@@ -44,9 +54,20 @@ function proAiOptionAvailable(aiMode: AiMode): boolean {
  * Passes the existing stripe_customer_id if present so Stripe reuses the billing account on re-subscribe.
  * Returns a redirect URL; the client is responsible for navigating to it.
  *
- * An account holds one subscription. A caller whose row is already on a paid tier with an
- * entitled status gets 409 `{ error: 'already_subscribed' }` and no Stripe call: changing plan
- * or interval is done in the Billing Portal, on the existing subscription.
+ * An account holds one subscription, checked in this order before anything is sold:
+ * 1. The account's row: a paid tier with an entitled status is 409 `{ error: 'already_subscribed',
+ *    recorded: true }`, with no Stripe call. Changing plan or interval is done on the existing
+ *    subscription (plan switch or Billing Portal).
+ * 2. Stripe, when the profile has a Stripe customer (checkStripeBeforeCheckout() in
+ *    lib/checkoutGuard.ts), for a row that is behind Stripe: a live subscription is 409
+ *    `already_subscribed` (`recorded` says whether the row was just written from Stripe); one that
+ *    can still be paid or resumed is 409 `pay_or_resume`; a list that can't be read is 503
+ *    `billing_check_failed` (fail closed). A customer Stripe doesn't have is dropped and Checkout
+ *    makes a new one.
+ * Creating the session expires the customer's other open subscription checkouts (two tabs), see
+ * createCheckoutSession() in lib/stripe.ts; if one of them was paid meanwhile, the new session is
+ * withdrawn too and the answer is 409 `already_subscribed`. A profile read that fails (not "no
+ * row") is 503 `billing_check_failed` before any Stripe call.
  */
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -104,7 +125,7 @@ export async function POST(request: NextRequest) {
     subscription.tier !== 'free' &&
     isEntitledSubscriptionStatus(subscription.status)
   ) {
-    return NextResponse.json({ error: ALREADY_SUBSCRIBED_ERROR }, { status: 409 })
+    return NextResponse.json({ error: ALREADY_SUBSCRIBED_ERROR, recorded: true }, { status: 409 })
   }
 
   const priceId = getStripePriceId(tier as 'pro' | 'proAi', interval, aiMode)
@@ -116,18 +137,42 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('stripe_customer_id')
     .eq('id', user.id)
     .single()
+
+  // A failed read must not look like "no Stripe customer yet": that would skip the Stripe check
+  // and sell on a new customer. Only "no row" (PGRST116) means there is no customer.
+  if (profileError && profileError.code !== NO_SINGLE_ROW) {
+    console.error('Checkout profile lookup error:', profileError.code)
+    return NextResponse.json({ error: BILLING_CHECK_FAILED_ERROR }, { status: 503 })
+  }
+
+  // The row can be behind Stripe (a missed webhook delivery): ask Stripe before selling a second
+  // subscription to a customer that may already have one. No customer yet means nothing to ask.
+  let customerId: string | undefined = profile?.stripe_customer_id ?? undefined
+  if (customerId) {
+    const guard = await checkStripeBeforeCheckout(user.id, customerId)
+    if (guard.kind === 'live') {
+      return NextResponse.json({ error: ALREADY_SUBSCRIBED_ERROR, recorded: guard.recorded }, { status: 409 })
+    }
+    if (guard.kind === 'open') {
+      return NextResponse.json({ error: PAY_OR_RESUME_ERROR }, { status: 409 })
+    }
+    if (guard.kind === 'check_failed') {
+      return NextResponse.json({ error: BILLING_CHECK_FAILED_ERROR }, { status: 503 })
+    }
+    if (guard.kind === 'customer_missing') customerId = undefined
+  }
 
   try {
     const url = await createCheckoutSession({
       userId: user.id,
       priceId,
       customerEmail: user.email,
-      customerId: profile?.stripe_customer_id ?? undefined,
+      customerId,
       successUrl: absoluteUrl('/dashboard?upgraded=1'),
       // The marker lets the pricing page count the cancel (checkout_canceled) once, then drop it.
       cancelUrl: absoluteUrl(checkoutCancelPath(tier, interval, requestLocale(request), aiMode)),
@@ -139,7 +184,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url })
   } catch (err) {
-    console.error('Checkout session error:', err)
+    // Another tab's checkout was paid while this one opened: that plan is live, this session is
+    // withdrawn (lib/stripe.ts logged it), and the completed session's webhook records the plan.
+    if (err instanceof CheckoutRaceLostError) {
+      return NextResponse.json({ error: ALREADY_SUBSCRIBED_ERROR, recorded: false }, { status: 409 })
+    }
+    // One line with the Stripe error's type, code and request id; never the error object.
+    console.error(`Checkout session error: ${describeStripeError(err)}`)
     return NextResponse.json(
       { error: 'Failed to create checkout session' },
       { status: 500 }

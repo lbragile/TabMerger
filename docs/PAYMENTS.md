@@ -171,17 +171,54 @@ plan, another interval, cancelling) is made on that subscription in the Billing 
 - **Server rule.** `/api/checkout` reads the caller's `subscriptions` row with the caller's own
   cookie-scoped client (RLS lets a user select only their own row). If `tier` is not `free` and
   `status` passes `isEntitledSubscriptionStatus` from `@tabmerger/shared` (active, trialing,
-  past_due), it answers `409 { error: 'already_subscribed' }` and creates no Checkout Session. If
-  the row can't be read it answers 500, also without a Stripe call. The code is
-  `ALREADY_SUBSCRIBED_ERROR` in `packages/web/lib/checkoutErrors.ts`, shared with the pricing card.
-  The AI-flag check comes first, so `proAi` is still 503 `ai_disabled` while AI is off.
+  past_due), it answers `409 { error: 'already_subscribed', recorded: true }` and creates no
+  Checkout Session. If the row can't be read it answers 500, also without a Stripe call. The codes
+  are in `packages/web/lib/checkoutErrors.ts`, shared with the pricing card. The AI-flag check
+  comes first, so `proAi` is still 503 `ai_disabled` while AI is off, before any Stripe call.
+- **Stripe is asked too** (`checkStripeBeforeCheckout()`, `lib/checkoutGuard.ts`), because the row
+  can be behind Stripe (a missed webhook delivery) and a row that says free must not sell a second
+  subscription. When the profile has a `stripe_customer_id`, all of that customer's subscriptions
+  that aren't canceled are listed (100 per page, at most 5 pages, more is a failure):
+  - any entitled one (active, trialing, past_due, on any price): 409 `already_subscribed`. On a
+    single price this deployment sells, it is read again by id and written to the row with the
+    webhook's own upsert (`recordLiveSubscription()`, `lib/subscriptionSync.ts`), only if it is this
+    customer's, still entitled, and its metadata names no other user; `recorded` says whether the
+    row now shows it. On any other price nothing is written and one line is logged.
+  - one that can come back (`unpaid`, `paused`, `incomplete`): 409 `pay_or_resume` (pay or resume it
+    in Manage billing; a new one would bill next to it once paid).
+  - the list can't be read: 503 `billing_check_failed`, logged with the Stripe error's type, code,
+    status and request id. Nothing is sold (fail closed).
+  - Stripe has no such customer (`resource_missing` with param `customer`, on the first page only):
+    the stale id is dropped and Checkout makes a new customer (the completed webhook links it to the
+    profile). No subscription can exist on a customer Stripe doesn't have, and profiles are
+    server-managed, so refusing would lock the account out of buying for good. The plan switch
+    treats the same answer the other way (400 `no_billing_account`, nothing written) because it can
+    only change or end plans: there a wrong key or mode, which makes every customer look missing,
+    must never end real plans, while checkout can only sell a new one. A `resource_missing` on a
+    later page or for any other param (a bad cursor) fails closed with 503.
+  - The profile read itself fails (anything but "no row"): 503 `billing_check_failed`, no Stripe
+    call. Reading it as "no customer" would skip this check and sell on a new customer.
+  - A live subscription written up to the row is read once more after the write; if it ended in
+    between (a `customer.subscription.deleted` that matched no row yet), the row is written back
+    down to free under that id.
+  - No customer yet: nothing to ask.
+- **Two tabs.** After a subscription Checkout Session is created for a customer, the customer's
+  other open subscription-mode sessions are expired (`checkout.sessions.list({ customer, status:
+  'open' })`, then `expire`), so only the newest can be paid. A session that can't be expired any
+  more (Stripe answers 400) is read again: if it completed as a subscription, a plan went live
+  during this checkout, so the new session is expired too and the answer is 409
+  `already_subscribed` with no URL (the completed session's webhook records the plan). Any other
+  failure is logged and the new checkout goes ahead. Credit-pack sessions are left alone. A first
+  purchase has no customer yet, so two first checkouts in two tabs are not covered by this.
 - **Pricing page.** `PricingCard` gets the user's plan from the page (`currentTier`, set only
   while the subscription is entitled). For a subscriber, every other paid card ("Upgrade to …" or
   "Downgrade to …") posts to `/api/billing-portal`, never `/api/checkout`; the current plan's card
   offers the interval switch (below). If checkout still answers 409 `already_subscribed` (a page
-  loaded before the purchase, a second tab), the card shows "You already have a plan. Opening
-  billing so you can change it." and opens the portal; if the portal can't be opened it points to
-  **Manage billing** on the account page.
+  loaded before the purchase, a second tab, a row the server just caught up from Stripe), the card
+  says "You already have a plan. This page now shows it, so you can change it here." and refreshes
+  the page when `recorded` is true; otherwise it shows "You already have a plan. Opening billing so
+  you can change it." and opens the portal (pointing to **Manage billing** if that fails). 409
+  `pay_or_resume` shows the pay-or-resume message; any other failure "Couldn't start checkout".
 - **Credit packs are not subscriptions.** `/api/checkout/credits` doesn't apply this rule: a
   subscriber buys credits on top of their plan.
 - A canceled subscription leaves the row on `free`, so the same account can check out again.

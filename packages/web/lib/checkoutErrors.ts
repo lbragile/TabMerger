@@ -7,11 +7,40 @@ import type { BillingInterval, PaidTierKey } from './tiers'
  */
 
 /**
- * 409: the account already has a paid plan. An account holds one subscription, so a plan change
- * goes through the Billing Portal (which changes that subscription) and no Checkout Session is
- * created.
+ * 409: the account already has a paid plan, in the database or at Stripe. An account holds one
+ * subscription, so no Checkout Session is created; a plan change goes through the plan switch or
+ * the Billing Portal. With `recorded: true` the account's row now shows that plan (it did already,
+ * or the server just wrote it from Stripe), so the page refreshes to show it; without it the plan
+ * can't be shown here (a price this deployment doesn't sell) and the page opens the portal.
  */
 export const ALREADY_SUBSCRIBED_ERROR = 'already_subscribed'
+
+/**
+ * Thrown by createCheckoutSession() (lib/stripe.ts) when another subscription checkout of the
+ * customer completed while the new one was being opened: the new session has been expired and no
+ * URL is handed out. The route answers 409 `already_subscribed` (`recorded: false`: the
+ * completed session's webhook records the plan). Lives here, with no server imports, so a route
+ * test that mocks lib/stripe.ts still has the class.
+ */
+export class CheckoutRaceLostError extends Error {
+  constructor(readonly completedSessionId: string) {
+    super(`Checkout session ${completedSessionId} completed while a new one was opened`)
+    this.name = 'CheckoutRaceLostError'
+  }
+}
+
+/**
+ * 409: no live plan, but one at Stripe that can still be paid or resumed (unpaid, paused,
+ * incomplete). Paying it would make it live next to a new one, so no checkout is sold; the
+ * customer pays or resumes it in Manage billing. Same code as the plan switch's.
+ */
+export const PAY_OR_RESUME_ERROR = 'pay_or_resume'
+
+/**
+ * 503: the customer's subscriptions couldn't be read from Stripe, so nothing is sold (fail closed).
+ * Logged on the server; the customer can try again.
+ */
+export const BILLING_CHECK_FAILED_ERROR = 'billing_check_failed'
 
 /**
  * Codes `POST /api/billing/switch-plan` and `/api/billing/switch-interval` return in `{ code }`
@@ -31,7 +60,7 @@ export const PLAN_SWITCH_ERROR_CODES = {
    * 409: no live plan, but one that can still be paid or resumed (unpaid, paused, incomplete). The
    * customer pays or resumes it in Manage billing; no checkout is offered (it would be a second plan).
    */
-  payOrResume: 'pay_or_resume',
+  payOrResume: PAY_OR_RESUME_ERROR,
   /** 409: the subscription is set to end; it is renewed in the portal first. */
   cancelScheduled: 'cancel_scheduled',
   /** 503: the target price isn't configured here, or Stripe has it archived. */

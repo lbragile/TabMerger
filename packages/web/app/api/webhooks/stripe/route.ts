@@ -20,17 +20,14 @@ import {
   type CheckoutInterval,
   type CheckoutTier,
 } from '@/lib/checkoutAnalytics'
-import { getPlanForPriceId, type PlanPrice } from '@/lib/tiers'
-import { subscriptionAiColumns, type AiColumns } from '@/lib/aiAllowance'
+import { getPlanForPriceId } from '@/lib/tiers'
 import {
   SubscriptionSyncError,
   databaseError,
-  isStripeResourceMissing,
   logUnmatchedEvent,
   retrieveCurrentSubscription,
-  stripeRetrieveError,
-  toStoredState,
   updateSubscriptionById,
+  upsertSubscription,
   type ServiceRoleClient,
 } from '@/lib/subscriptionSync'
 import type Stripe from 'stripe'
@@ -63,8 +60,9 @@ import type Stripe from 'stripe'
  *   again for the same event with the same result, and the events of one subscription leave
  *   the same row in whatever order they arrive.
  *
- * A row's status is always one the database stores: see toStoredState(). The retrieve, stored-state
- * and update-by-id steps live in lib/subscriptionSync.ts, shared with the plan switch's resync.
+ * A row's status is always one the database stores: see toStoredState(). The retrieve, stored-state,
+ * update-by-id and upsert steps live in lib/subscriptionSync.ts, shared with the plan switch's
+ * resync and the checkout's Stripe check.
  *
  * Every subscription write also stores the Pro AI option (`ai_mode`, from the price) and the
  * managed AI allowance (`ai_monthly_credits`, see subscriptionAiColumns() in lib/aiAllowance.ts):
@@ -438,95 +436,6 @@ async function creditAiCreditPack(
       withMessage: true,
     })
   }
-}
-
-/**
- * Writes or updates a subscription row keyed on user_id (one row per user, enforced by the
- * subscriptions_user_id_key UNIQUE constraint from migration 012).
- *
- * The conflict target is user_id, NOT id: every user already has a subscription row created by
- * the handle_new_user() signup trigger with id = 'free_<uuid>'. On a first purchase the Stripe
- * subscription id is brand new, so an onConflict:'id' upsert would attempt an INSERT that
- * violates the user_id UNIQUE constraint (Postgres 23505). Conflicting on user_id instead rewrites
- * that existing row in place: its id becomes the Stripe subscription id and tier/status/period are
- * updated. It also still handles the genuine insert case (no row for the user) since upsert
- * covers both.
- *
- * Derives the app tier from the price ID via env-var mapping; defaults to 'free' on unknown prices.
- * The status and tier then go through toStoredState(), so a status the database does not store
- * is written as canceled / free. `ai_mode` and `ai_monthly_credits` come from aiColumns().
- *
- * A database error throws a SubscriptionSyncError (500, Stripe sends the event again). Running
- * twice for one event is safe: the conflict target is user_id, so the second run rewrites the
- * same row with the same values.
- */
-async function upsertSubscription(
-  supabase: Awaited<ReturnType<typeof createServiceRoleClient>>,
-  eventType: string,
-  subscription: Stripe.Subscription,
-  userId: string
-) {
-  const priceId = subscription.items.data[0]?.price.id
-  const plan = getPlanForPriceId(priceId)
-  const { status, tier } = toStoredState(
-    eventType,
-    subscription.id,
-    subscription.status,
-    plan?.tier ?? 'free'
-  )
-  const ai = await aiColumns(eventType, subscription, plan, tier)
-
-  const { error } = await supabase.from('subscriptions').upsert(
-    {
-      id: subscription.id,
-      user_id: userId,
-      tier,
-      status,
-      ai_mode: ai.aiMode,
-      ai_monthly_credits: ai.monthlyCredits,
-      stripe_price_id: priceId,
-      cancel_at_period_end: subscription.cancel_at_period_end,
-      // ponytail: Stripe v22 moved current_period_end from Subscription to SubscriptionItem
-      current_period_end: subscription.items.data[0]?.current_period_end
-        ? new Date(subscription.items.data[0].current_period_end * 1000).toISOString()
-        : null,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: 'user_id' }
-  )
-  if (error) {
-    throw databaseError(eventType, 'upsert', `subscription ${subscription.id}`, error, {
-      withMessage: true,
-    })
-  }
-}
-
-/**
- * The `ai_mode` and `ai_monthly_credits` to write for a subscription: subscriptionAiColumns() from
- * lib/aiAllowance.ts (the same function the re-sync script uses). A coupon that has to be read
- * from Stripe and can't be (other than "no such coupon") throws a SubscriptionSyncError (500), so the
- * event is delivered again rather than written with a guessed allowance.
- */
-function aiColumns(
-  eventType: string,
-  subscription: Stripe.Subscription,
-  plan: PlanPrice | null,
-  storedTier: string
-): Promise<AiColumns> {
-  return subscriptionAiColumns(subscription, plan, storedTier, {
-    retrieveCoupon: async (id) => {
-      try {
-        return await stripe.coupons.retrieve(id)
-      } catch (err) {
-        if (isStripeResourceMissing(err)) return null
-        throw stripeRetrieveError(eventType, subscription.id, err, 'coupon')
-      }
-    },
-    onUnpriceableDiscount: (reason) =>
-      console.warn(
-        `Stripe webhook: ${eventType} a discount can't be priced in USD (${reason}); managed AI credits are written as 0 (subscription ${subscription.id})`
-      ),
-  })
 }
 
 /**

@@ -48,6 +48,8 @@
   "getPlan": "Get {name}",
   "switchFailed": "Couldn't start the switch. Try Manage billing on your account page.",
   "alreadySubscribed": "You already have a plan. Opening billing so you can change it.",
+  "alreadySubscribedShown": "You already have a plan. This page now shows it, so you can change it here.",
+  "checkoutFailed": "Couldn't start checkout. Please try again in a moment.",
   "portalFailed": "Couldn't open billing. Use Manage billing on your account page to change your plan.",
   "checkoutCanceled": "Checkout canceled. You weren't charged.",
   "cancelAnytime": "Cancel anytime from your account — no lock-in, no questions asked.",

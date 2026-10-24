@@ -26,6 +26,10 @@ vi.mock('@/lib/stripe', () => ({
   getStripePriceId: mockGetStripePriceId,
 }))
 
+/** The Stripe check for an existing customer (lib/checkoutGuard.ts, tested in checkoutStripeGuard.test.ts). */
+const mockCheckStripe = vi.fn()
+vi.mock('@/lib/checkoutGuard', () => ({ checkStripeBeforeCheckout: mockCheckStripe }))
+
 function makeRequest(body: unknown, headers: Record<string, string> = {}) {
   return new NextRequest('http://localhost/api/checkout', {
     method: 'POST',
@@ -66,6 +70,7 @@ describe('POST /api/checkout', () => {
     mockSubscription.mockResolvedValue({ data: { tier: 'free', status: 'active' }, error: null })
     mockGetStripePriceId.mockReturnValue('price_pro_monthly')
     mockCreateCheckoutSession.mockResolvedValue('https://checkout.stripe.com/session/test')
+    mockCheckStripe.mockResolvedValue({ kind: 'clear' })
   })
 
   it('returns 401 when unauthenticated', async () => {
@@ -268,8 +273,49 @@ describe('POST /api/checkout', () => {
     const { POST } = await import('@/app/api/checkout/route')
 
     await POST(makeRequest({ tier: 'pro', interval: 'yearly' }))
+    expect(mockCheckStripe).toHaveBeenCalledWith('user-1', 'cus_existing')
     expect(mockCreateCheckoutSession).toHaveBeenCalledWith(
       expect.objectContaining({ customerId: 'cus_existing' })
+    )
+  })
+
+  it('asks Stripe nothing when the profile has no Stripe customer yet', async () => {
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))
+
+    expect(res.status).toBe(200)
+    expect(mockCheckStripe).not.toHaveBeenCalled()
+    expect(mockCreateCheckoutSession).toHaveBeenCalledWith(expect.objectContaining({ customerId: undefined }))
+  })
+
+  it.each([
+    [{ kind: 'live', recorded: true }, 409, { error: 'already_subscribed', recorded: true }],
+    [{ kind: 'live', recorded: false }, 409, { error: 'already_subscribed', recorded: false }],
+    [{ kind: 'open' }, 409, { error: 'pay_or_resume' }],
+    [{ kind: 'check_failed' }, 503, { error: 'billing_check_failed' }],
+  ])('turns the Stripe check %j into %i and creates no session', async (guard, status, body) => {
+    mockSingle.mockResolvedValue({ data: { stripe_customer_id: 'cus_existing' } })
+    mockCheckStripe.mockResolvedValue(guard)
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))
+
+    expect(res.status).toBe(status)
+    expect(await res.json()).toEqual(body)
+    expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+  })
+
+  it('drops a customer Stripe does not have, so Checkout makes a new one', async () => {
+    mockSingle.mockResolvedValue({ data: { stripe_customer_id: 'cus_gone' } })
+    mockCheckStripe.mockResolvedValue({ kind: 'customer_missing' })
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))
+
+    expect(res.status).toBe(200)
+    expect(mockCreateCheckoutSession).toHaveBeenCalledWith(
+      expect.objectContaining({ customerId: undefined })
     )
   })
 
@@ -310,8 +356,10 @@ describe('POST /api/checkout', () => {
       expect(res.status).toBe(409)
       // The wire value the pricing card matches on.
       expect(ALREADY_SUBSCRIBED_ERROR).toBe('already_subscribed')
-      expect(await res.json()).toEqual({ error: 'already_subscribed' })
+      // `recorded`: the row already shows the plan, so the page refreshes to show it.
+      expect(await res.json()).toEqual({ error: 'already_subscribed', recorded: true })
       expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+      expect(mockCheckStripe).not.toHaveBeenCalled()
     })
 
     it('the entitled statuses are the shared list, so the rule cannot drift from the rest of the product', async () => {

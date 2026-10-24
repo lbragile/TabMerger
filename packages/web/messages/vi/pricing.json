@@ -48,6 +48,8 @@
   "getPlan": "Đăng ký {name}",
   "switchFailed": "Không thể bắt đầu chuyển đổi. Hãy thử Quản lý thanh toán trên trang tài khoản.",
   "alreadySubscribed": "Bạn đã có gói đăng ký. Đang mở trang thanh toán để bạn thay đổi.",
+  "alreadySubscribedShown": "Bạn đã có gói. Trang này giờ đã hiển thị gói đó, nên bạn có thể thay đổi ngay tại đây.",
+  "checkoutFailed": "Không thể bắt đầu thanh toán. Vui lòng thử lại sau giây lát.",
   "portalFailed": "Không thể mở trang thanh toán. Hãy dùng Quản lý thanh toán trên trang tài khoản để đổi gói.",
   "checkoutCanceled": "Đã hủy thanh toán. Bạn không bị tính phí.",
   "cancelAnytime": "Hủy bất cứ lúc nào từ tài khoản của bạn — không ràng buộc, không cần giải thích.",

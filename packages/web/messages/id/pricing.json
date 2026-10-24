@@ -48,6 +48,8 @@
   "getPlan": "Dapatkan {name}",
   "switchFailed": "Tidak dapat memulai peralihan. Coba Kelola tagihan di halaman akun Anda.",
   "alreadySubscribed": "Anda sudah memiliki paket. Membuka halaman tagihan agar Anda dapat mengubahnya.",
+  "alreadySubscribedShown": "Anda sudah memiliki paket. Halaman ini sekarang menampilkannya, jadi Anda dapat mengubahnya di sini.",
+  "checkoutFailed": "Tidak dapat memulai checkout. Silakan coba lagi sebentar lagi.",
   "portalFailed": "Tidak dapat membuka halaman tagihan. Gunakan Kelola tagihan di halaman akun Anda untuk mengubah paket.",
   "checkoutCanceled": "Pembayaran dibatalkan. Anda tidak dikenai biaya.",
   "cancelAnytime": "Batalkan kapan saja dari akun Anda — tanpa ikatan, tanpa banyak tanya.",

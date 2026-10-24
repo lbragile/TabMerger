@@ -81,7 +81,14 @@ vi.mock('stripe', () => ({
       configurations: { list: mockConfigList, create: mockConfigCreate },
     }
     subscriptionSchedules = { create: vi.fn(), update: vi.fn(), release: vi.fn() }
-    checkout = { sessions: { create: mockCheckoutCreate } }
+    checkout = {
+      sessions: {
+        create: mockCheckoutCreate,
+        // The new checkout expires the customer's other open ones (none here).
+        list: vi.fn(async () => ({ data: [], has_more: false })),
+        expire: vi.fn(),
+      },
+    }
   },
 }))
 
@@ -420,7 +427,7 @@ describe('no drift: Stripe has a live subscription the switch cannot use', () =>
     // The client can't reach a second subscription through checkout either.
     const second = await checkout({ tier: 'proAi', interval: 'monthly' })
     expect(second.status).toBe(409)
-    expect(await second.json()).toEqual({ error: 'already_subscribed' })
+    expect(await second.json()).toEqual({ error: 'already_subscribed', recorded: true })
     expect(mockCheckoutCreate).not.toHaveBeenCalled()
   })
 

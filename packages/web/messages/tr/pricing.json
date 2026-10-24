@@ -48,6 +48,8 @@
   "getPlan": "{name} planını al",
   "switchFailed": "Geçiş başlatılamadı. Hesap sayfanızdaki Faturalandırmayı yönet seçeneğini deneyin.",
   "alreadySubscribed": "Zaten bir planınız var. Değiştirebilmeniz için faturalandırma açılıyor.",
+  "alreadySubscribedShown": "Zaten bir planınız var. Bu sayfa artık onu gösteriyor, böylece burada değiştirebilirsiniz.",
+  "checkoutFailed": "Ödeme başlatılamadı. Lütfen birazdan tekrar deneyin.",
   "portalFailed": "Faturalandırma açılamadı. Planınızı değiştirmek için hesap sayfanızdaki Faturalandırmayı yönet seçeneğini kullanın.",
   "checkoutCanceled": "Ödeme iptal edildi. Sizden ücret alınmadı.",
   "cancelAnytime": "Hesabınızdan istediğiniz zaman iptal edin — taahhüt yok, soru sorulmaz.",

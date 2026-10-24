@@ -6,4 +6,5 @@
 - [Mocked gate return values](learnings_mocked_gate_return_values.md) — check mocked entitlement/usage results are ones the real gate can return; require a real-gate test per unpaid account type
 - [Sessions backup gate shape](learnings_sessions_backup_gate_shape.md) — backups gated by sessions RLS insert/update (has_cloud_sync), owner select/delete any tier; auto marker only in ciphertext so server can't count backups separately
 - [User-triggered resync review method](learnings_user_triggered_resync_review_method.md) — auditing a route that corrects a row from Stripe: key provenance, write-by-id, non-entitled only, revivable statuses
+- [Pre-checkout Stripe guard review method](learnings_pre_checkout_stripe_guard_review_method.md) — ask-Stripe-before-selling: input fail-closed, resource_missing scope, expire-pass races, upward-write gates
 - [Analytics vs privacy page](learnings_analytics_privacy_crosscheck.md) — cross-check GA4/PostHog identifiers sent from payments code against the privacy page wording

@@ -48,6 +48,8 @@
   "getPlan": "Choisir {name}",
   "switchFailed": "Impossible de lancer le changement. Essayez Gérer la facturation sur la page de votre compte.",
   "alreadySubscribed": "Vous avez déjà une offre. Ouverture de la facturation pour la modifier.",
+  "alreadySubscribedShown": "Vous avez déjà un forfait. Cette page l'affiche maintenant, vous pouvez donc le modifier ici.",
+  "checkoutFailed": "Impossible de lancer le paiement. Veuillez réessayer dans un instant.",
   "portalFailed": "Impossible d’ouvrir la facturation. Utilisez Gérer la facturation sur la page de votre compte pour changer d’offre.",
   "checkoutCanceled": "Paiement annulé. Vous n’avez pas été débité.",
   "cancelAnytime": "Résiliez à tout moment depuis votre compte, sans engagement ni justification.",

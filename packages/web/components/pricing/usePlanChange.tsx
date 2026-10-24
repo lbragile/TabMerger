@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dialog'
 import { planChangeTiming } from '@/lib/planChangeTiming'
 import {
+  ALREADY_SUBSCRIBED_ERROR,
+  PAY_OR_RESUME_ERROR,
   PLAN_SWITCH_ERROR_CODES,
   parsePlanSwitchCheckoutTarget,
   type PlanSwitchCheckoutTarget,
@@ -132,7 +134,9 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
    * Starts a checkout for `target` after the server found the current plan had ended at Stripe and
    * corrected the account. `/api/checkout` checks the account again, so this only works once the
    * server agrees there is no live plan. If it can't start, the page's data is refreshed (the plan
-   * shown as current is gone) and the "no paid plan" message says to choose a plan.
+   * shown as current is gone, or the plan Stripe has was just recorded) and a message says why:
+   * a live plan was found, one can still be paid or resumed, the check failed, or else "no paid
+   * plan" (choose a plan).
    */
   async function subscribeInstead(target: PlanSwitchCheckoutTarget) {
     trackBeginCheckout({ ...target, source: 'plan_change', component: 'plan_switch_recovery' })
@@ -150,11 +154,15 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
       window.location.href = data.url
       return
     }
-    setError(
-      res.status === 503 && data.error === AI_ERROR_CODES.disabled
-        ? t('aiDisabled')
-        : t(`errors.${PLAN_SWITCH_ERROR_CODES.noPaidPlan}`)
-    )
+    if (res.status === 503 && data.error === AI_ERROR_CODES.disabled) setError(t('aiDisabled'))
+    // A live plan at Stripe after all: shown after the refresh when the server recorded it,
+    // otherwise changed in Manage billing.
+    else if (res.status === 409 && data.error === ALREADY_SUBSCRIBED_ERROR) {
+      setError(data.recorded === true ? pricing('alreadySubscribedShown') : pricing('switchFailed'))
+    }
+    else if (res.status === 409 && data.error === PAY_OR_RESUME_ERROR) setError(t('errors.pay_or_resume'))
+    else if (res.status >= 500) setError(pricing('checkoutFailed'))
+    else setError(t(`errors.${PLAN_SWITCH_ERROR_CODES.noPaidPlan}`))
     router.refresh()
   }
 

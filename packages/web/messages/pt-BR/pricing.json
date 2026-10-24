@@ -48,6 +48,8 @@
   "getPlan": "Assinar o {name}",
   "switchFailed": "Não foi possível iniciar a mudança. Tente Gerenciar cobrança na página da sua conta.",
   "alreadySubscribed": "Você já tem um plano. Abrindo a cobrança para você poder alterá-lo.",
+  "alreadySubscribedShown": "Você já tem um plano. Esta página agora o mostra, então você pode alterá-lo aqui.",
+  "checkoutFailed": "Não foi possível iniciar o pagamento. Tente novamente em instantes.",
   "portalFailed": "Não foi possível abrir a cobrança. Use Gerenciar cobrança na página da sua conta para mudar de plano.",
   "checkoutCanceled": "Pagamento cancelado. Você não foi cobrado.",
   "cancelAnytime": "Cancele quando quiser pela sua conta — sem fidelidade, sem perguntas.",

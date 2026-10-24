@@ -48,6 +48,8 @@
   "getPlan": "Ottieni {name}",
   "switchFailed": "Impossibile avviare il cambio. Prova con Gestisci fatturazione nella pagina del tuo account.",
   "alreadySubscribed": "Hai già un piano. Apriamo la fatturazione così puoi modificarlo.",
+  "alreadySubscribedShown": "Hai già un piano. Questa pagina ora lo mostra, quindi puoi modificarlo qui.",
+  "checkoutFailed": "Impossibile avviare il pagamento. Riprova tra un momento.",
   "portalFailed": "Impossibile aprire la fatturazione. Usa Gestisci fatturazione nella pagina del tuo account per cambiare piano.",
   "checkoutCanceled": "Pagamento annullato. Non ti è stato addebitato nulla.",
   "cancelAnytime": "Annulla in qualsiasi momento dal tuo account: nessun vincolo, nessuna domanda.",

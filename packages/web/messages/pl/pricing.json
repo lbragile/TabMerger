@@ -48,6 +48,8 @@
   "getPlan": "Wybierz {name}",
   "switchFailed": "Nie udało się rozpocząć zmiany. Spróbuj opcji Zarządzaj płatnościami na stronie konta.",
   "alreadySubscribed": "Masz już plan. Otwieramy płatności, abyś mógł go zmienić.",
+  "alreadySubscribedShown": "Masz już plan. Ta strona teraz go pokazuje, więc możesz go zmienić tutaj.",
+  "checkoutFailed": "Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.",
   "portalFailed": "Nie udało się otworzyć płatności. Użyj opcji Zarządzaj płatnościami na stronie konta, aby zmienić plan.",
   "checkoutCanceled": "Płatność anulowana. Nie pobrano żadnej opłaty.",
   "cancelAnytime": "Zrezygnuj w dowolnej chwili na swoim koncie — bez zobowiązań i zbędnych pytań.",

@@ -48,6 +48,8 @@
   "getPlan": "Obtener {name}",
   "switchFailed": "No se pudo iniciar el cambio. Prueba Gestionar facturación en la página de tu cuenta.",
   "alreadySubscribed": "Ya tienes un plan. Abriendo la facturación para que puedas cambiarlo.",
+  "alreadySubscribedShown": "Ya tienes un plan. Esta página ahora lo muestra, así que puedes cambiarlo aquí.",
+  "checkoutFailed": "No se pudo iniciar el pago. Inténtalo de nuevo en un momento.",
   "portalFailed": "No se pudo abrir la facturación. Usa Gestionar facturación en la página de tu cuenta para cambiar de plan.",
   "checkoutCanceled": "Pago cancelado. No se te cobró nada.",
   "cancelAnytime": "Cancela cuando quieras desde tu cuenta: sin compromisos ni preguntas.",
