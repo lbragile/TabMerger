@@ -33,7 +33,7 @@
     "aiCreated_other": "ה-AI יצר {{count}} קבוצות",
     "aiSkipped": "עוד {{skipped}} הוצעו אבל דולגו — הגעת למגבלת התוכנית החינמית.",
     "aiGroupingFailed": "הקיבוץ עם AI נכשל",
-    "organizeStarted": "הארגון התחיל — אפשר לעיין בהצעה בלוח הבקרה",
-    "organizeFailed": "לא ניתן היה להתחיל את הארגון"
+    "organizeNothing": "הקבוצות שלך כבר מאורגנות",
+    "organizeFailed": "לא ניתן היה לארגן את הקבוצות"
   }
 }

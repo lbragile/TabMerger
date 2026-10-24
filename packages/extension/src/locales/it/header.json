@@ -33,7 +33,7 @@
     "aiCreated_many": "L'AI ha creato {{count}} gruppi",
     "aiSkipped": "Altri {{skipped}} suggeriti ma saltati: raggiunto il limite del piano gratuito.",
     "aiGroupingFailed": "Raggruppamento con AI non riuscito",
-    "organizeStarted": "Organizzazione avviata: rivedi la proposta nella tua dashboard",
-    "organizeFailed": "Impossibile avviare l'organizzazione"
+    "organizeNothing": "I tuoi gruppi sembrano già organizzati",
+    "organizeFailed": "Impossibile organizzare i tuoi gruppi"
   }
 }

@@ -49,5 +49,18 @@
   },
   "confirmDialog": {
     "cancel": "Batal"
+  },
+  "organize": {
+    "title": "Atur ulang grup",
+    "description_other": "AI menyarankan {{count}} perubahan. Hapus centang yang tidak Anda inginkan.",
+    "merge": "Gabungkan “<from>{{from}}</from>” ke “<to>{{to}}</to>”",
+    "rename": "Ganti nama “<from>{{from}}</from>” menjadi “<to>{{to}}</to>”",
+    "archive": "Arsipkan “<name>{{name}}</name>”",
+    "reorder": "Urutkan ulang grup",
+    "archiveNote": "Grup yang diarsipkan disembunyikan, bukan dihapus: pulihkan kapan saja dari Diarsipkan.",
+    "apply": "Terapkan yang dipilih",
+    "applied_other": "{{count}} perubahan diterapkan",
+    "nothingApplied": "Tidak ada yang diterapkan: grup tersebut berubah sementara itu",
+    "applyFailed": "Tidak dapat menerapkan perubahan"
   }
 }

@@ -34,7 +34,7 @@
     "aiCreated_other": "AI utworzyło {{count}} grupy",
     "aiSkipped": "Zasugerowano jeszcze {{skipped}}, ale pominięto — osiągnięto limit planu darmowego.",
     "aiGroupingFailed": "Grupowanie przez AI nie powiodło się",
-    "organizeStarted": "Rozpoczęto organizowanie — sprawdź propozycję w swoim panelu",
-    "organizeFailed": "Nie udało się rozpocząć organizowania"
+    "organizeNothing": "Twoje grupy wyglądają już na uporządkowane",
+    "organizeFailed": "Nie udało się uporządkować grup"
   }
 }

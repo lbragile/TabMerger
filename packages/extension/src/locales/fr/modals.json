@@ -61,5 +61,22 @@
   },
   "confirmDialog": {
     "cancel": "Annuler"
+  },
+  "organize": {
+    "title": "Organiser les groupes",
+    "description_one": "L’IA suggère {{count}} modification. Décochez celles que vous ne voulez pas.",
+    "description_many": "L’IA suggère {{count}} de modifications. Décochez celles que vous ne voulez pas.",
+    "description_other": "L’IA suggère {{count}} modifications. Décochez celles que vous ne voulez pas.",
+    "merge": "Fusionner « <from>{{from}}</from> » dans « <to>{{to}}</to> »",
+    "rename": "Renommer « <from>{{from}}</from> » en « <to>{{to}}</to> »",
+    "archive": "Archiver « <name>{{name}}</name> »",
+    "reorder": "Réordonner les groupes",
+    "archiveNote": "Les groupes archivés sont masqués, pas supprimés : restaurez-les à tout moment depuis Archivés.",
+    "apply": "Appliquer la sélection",
+    "applied_one": "{{count}} modification appliquée",
+    "applied_many": "{{count}} de modifications appliquées",
+    "applied_other": "{{count}} modifications appliquées",
+    "nothingApplied": "Rien à appliquer : ces groupes ont changé entre-temps",
+    "applyFailed": "Impossible d’appliquer les modifications"
   }
 }

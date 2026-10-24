@@ -852,17 +852,32 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     expect(mockToastError).not.toHaveBeenCalledWith('AI grouping failed')
   })
 
-  it('calls organizeTabs, shows a success toast, and opens the dashboard tab', async () => {
+  it('Organize with proposed changes opens the review modal in the popup (no web tab)', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
     mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
-    mockOrganizeTabsMutateAsync.mockResolvedValue(undefined)
+    const actions = [{ type: 'rename', groupId: 'g1', newName: 'Work' }]
+    mockOrganizeTabsMutateAsync.mockResolvedValue({ actions })
 
     wrap(React.createElement(Header))
     await clickAIMenuItem(/^organize$/i)
 
-    expect(mockOrganizeTabsMutateAsync).toHaveBeenCalled()
-    expect(mockToastSuccess).toHaveBeenCalledWith('Organize started — review the proposal in your dashboard')
-    expect(chrome.tabs.create).toHaveBeenCalledWith({ url: expect.stringContaining('/dashboard') })
+    await waitFor(() => expect(baseUIState.openModal).toHaveBeenCalledWith('organizeReview', { actions }))
+    expect(mockOrganizeTabsMutateAsync).toHaveBeenCalledTimes(1)
+    expect(chrome.tabs.create).not.toHaveBeenCalled()
+    expect(mockToastSuccess).not.toHaveBeenCalled()
+  })
+
+  it('Organize with nothing to change says the groups already look organized (no modal, no web tab)', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+    mockOrganizeTabsMutateAsync.mockResolvedValue({ actions: [] })
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^organize$/i)
+
+    await waitFor(() => expect(mockToastInfo).toHaveBeenCalledWith('Your groups already look organized'))
+    expect(baseUIState.openModal).not.toHaveBeenCalled()
+    expect(chrome.tabs.create).not.toHaveBeenCalled()
   })
 
   it('shows the AI quota-exceeded CTA (not a generic error toast) when organizeTabs rejects with QuotaExceededError', async () => {

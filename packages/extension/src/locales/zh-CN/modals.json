@@ -49,5 +49,18 @@
   },
   "confirmDialog": {
     "cancel": "取消"
+  },
+  "organize": {
+    "title": "整理分组",
+    "description_other": "AI 建议了 {{count}} 项更改。取消勾选您不需要的更改。",
+    "merge": "将“<from>{{from}}</from>”合并到“<to>{{to}}</to>”",
+    "rename": "将“<from>{{from}}</from>”重命名为“<to>{{to}}</to>”",
+    "archive": "归档“<name>{{name}}</name>”",
+    "reorder": "重新排列分组",
+    "archiveNote": "归档的分组只是隐藏，不会删除：可随时从“已归档”中恢复。",
+    "apply": "应用所选",
+    "applied_other": "已应用 {{count}} 项更改",
+    "nothingApplied": "没有可应用的更改：这些分组在此期间已有变动",
+    "applyFailed": "无法应用更改"
   }
 }

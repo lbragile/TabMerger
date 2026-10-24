@@ -32,7 +32,7 @@
     "aiCreated_other": "AI created {{count}} groups",
     "aiSkipped": "{{skipped}} more suggested but skipped — free plan limit reached.",
     "aiGroupingFailed": "AI grouping failed",
-    "organizeStarted": "Organize started — review the proposal in your dashboard",
-    "organizeFailed": "Could not start organize"
+    "organizeNothing": "Your groups already look organized",
+    "organizeFailed": "Could not organize your groups"
   }
 }

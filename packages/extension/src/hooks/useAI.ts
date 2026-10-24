@@ -23,6 +23,7 @@ import { AI_ENABLED } from '@/lib/aiFlag';
 import { getByokKey } from '@/lib/byokKey';
 import { choiceForProvider, modelFor } from '@/lib/aiModel';
 import { AiRequestError, QuotaExceededError, aiErrorMessage } from '@/lib/aiErrors';
+import { sanitizeOrganizeActions } from '@/lib/organizeActions';
 
 // No `export { … } from '@/lib/aiErrors'` here: WXT auto-imports every export of src/hooks, so a
 // re-exported class gets auto-imported into the very file that declares it (a duplicate
@@ -266,13 +267,16 @@ export function useOrganizeTabs() {
       // The estimate counts the local tabs either way: the server's rows hold the same groups
       const { model, options } = await prepare('organize', countTabs(localGroups ?? []));
 
-      return aiPost<{ runId: string; token: string }>(
+      const reply = await aiPost<unknown>(
         '/api/ai/organize',
         // ponytail: no groups for unencrypted users — the server reads the DB itself.
         groups?.length ? { groups, model } : { model },
         token,
         options
       );
+      // AI output through our server: untrusted. Only well-formed actions on this device's saved
+      // groups are kept (never Now Open or the tour's practice groups); the popup reviews them.
+      return { actions: sanitizeOrganizeActions(reply, groupsState?.available) };
     }
   }));
 }

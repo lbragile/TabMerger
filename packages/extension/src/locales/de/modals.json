@@ -55,5 +55,20 @@
   },
   "confirmDialog": {
     "cancel": "Abbrechen"
+  },
+  "organize": {
+    "title": "Gruppen organisieren",
+    "description_one": "Die KI schlägt {{count}} Änderung vor. Entferne das Häkchen bei allem, was du nicht willst.",
+    "description_other": "Die KI schlägt {{count}} Änderungen vor. Entferne das Häkchen bei allem, was du nicht willst.",
+    "merge": "„<from>{{from}}</from>“ in „<to>{{to}}</to>“ zusammenführen",
+    "rename": "„<from>{{from}}</from>“ in „<to>{{to}}</to>“ umbenennen",
+    "archive": "„<name>{{name}}</name>“ archivieren",
+    "reorder": "Gruppen neu anordnen",
+    "archiveNote": "Archivierte Gruppen werden nur ausgeblendet, nicht gelöscht: unter „Archiviert“ jederzeit wiederherstellbar.",
+    "apply": "Auswahl anwenden",
+    "applied_one": "{{count}} Änderung angewendet",
+    "applied_other": "{{count}} Änderungen angewendet",
+    "nothingApplied": "Nichts anzuwenden: Diese Gruppen haben sich inzwischen geändert",
+    "applyFailed": "Die Änderungen konnten nicht angewendet werden"
   }
 }

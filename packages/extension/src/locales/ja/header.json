@@ -31,7 +31,7 @@
     "aiCreated_other": "AIが{{count}}個のグループを作成しました",
     "aiSkipped": "ほか{{skipped}}件の提案がありましたが、無料プランの上限に達したためスキップしました。",
     "aiGroupingFailed": "AIによるグループ化に失敗しました",
-    "organizeStarted": "整理を開始しました。ダッシュボードで提案を確認してください",
-    "organizeFailed": "整理を開始できませんでした"
+    "organizeNothing": "グループはすでに整理されています",
+    "organizeFailed": "グループを整理できませんでした"
   }
 }

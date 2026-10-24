@@ -61,5 +61,22 @@
   },
   "confirmDialog": {
     "cancel": "Cancelar"
+  },
+  "organize": {
+    "title": "Organizar grupos",
+    "description_one": "A IA sugere {{count}} alteração. Desmarque as que você não quiser.",
+    "description_many": "A IA sugere {{count}} de alterações. Desmarque as que você não quiser.",
+    "description_other": "A IA sugere {{count}} alterações. Desmarque as que você não quiser.",
+    "merge": "Mesclar “<from>{{from}}</from>” em “<to>{{to}}</to>”",
+    "rename": "Renomear “<from>{{from}}</from>” para “<to>{{to}}</to>”",
+    "archive": "Arquivar “<name>{{name}}</name>”",
+    "reorder": "Reordenar grupos",
+    "archiveNote": "Grupos arquivados ficam ocultos, não são excluídos: restaure-os quando quiser em Arquivados.",
+    "apply": "Aplicar selecionadas",
+    "applied_one": "{{count}} alteração aplicada",
+    "applied_many": "{{count}} de alterações aplicadas",
+    "applied_other": "{{count}} alterações aplicadas",
+    "nothingApplied": "Nada a aplicar: esses grupos mudaram nesse meio-tempo",
+    "applyFailed": "Não foi possível aplicar as alterações"
   }
 }

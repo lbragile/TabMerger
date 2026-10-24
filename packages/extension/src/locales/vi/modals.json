@@ -49,5 +49,18 @@
   },
   "confirmDialog": {
     "cancel": "Hủy"
+  },
+  "organize": {
+    "title": "Sắp xếp nhóm",
+    "description_other": "AI đề xuất {{count}} thay đổi. Bỏ chọn những thay đổi bạn không muốn.",
+    "merge": "Gộp “<from>{{from}}</from>” vào “<to>{{to}}</to>”",
+    "rename": "Đổi tên “<from>{{from}}</from>” thành “<to>{{to}}</to>”",
+    "archive": "Lưu trữ “<name>{{name}}</name>”",
+    "reorder": "Sắp xếp lại các nhóm",
+    "archiveNote": "Nhóm đã lưu trữ chỉ bị ẩn, không bị xóa: khôi phục bất cứ lúc nào từ mục Đã lưu trữ.",
+    "apply": "Áp dụng mục đã chọn",
+    "applied_other": "Đã áp dụng {{count}} thay đổi",
+    "nothingApplied": "Không có gì để áp dụng: các nhóm đó đã thay đổi trong lúc này",
+    "applyFailed": "Không thể áp dụng các thay đổi"
   }
 }

@@ -32,7 +32,7 @@
     "aiCreated_other": "KI hat {{count}} Gruppen erstellt",
     "aiSkipped": "{{skipped}} weitere vorgeschlagen, aber übersprungen – Limit des kostenlosen Tarifs erreicht.",
     "aiGroupingFailed": "KI-Gruppierung fehlgeschlagen",
-    "organizeStarted": "Organisieren gestartet – prüfe den Vorschlag in deinem Dashboard",
-    "organizeFailed": "Organisieren konnte nicht gestartet werden"
+    "organizeNothing": "Deine Gruppen sind schon gut organisiert",
+    "organizeFailed": "Deine Gruppen konnten nicht organisiert werden"
   }
 }

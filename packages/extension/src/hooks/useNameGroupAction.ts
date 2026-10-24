@@ -4,6 +4,7 @@ import { useUpdateGroupName } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { QuotaExceededError, isFixedInAiSettings } from '@/lib/aiErrors';
 import { toast } from '@/lib/toast';
+import { cleanSuggestedName } from '@/lib/aiGroupName';
 import type { Group } from '@/lib/types';
 
 /**
@@ -12,20 +13,6 @@ import type { Group } from '@/lib/types';
  * it from.
  */
 export type NameGroupBlock = 'notSaved' | 'noTabs';
-
-/** Longest AI-suggested name kept; the prompt asks for 2-4 words, so this only stops runaway output. */
-const MAX_AI_GROUP_NAME_LENGTH = 100;
-
-/**
- * The model's suggestion as a group name: a string, whitespace runs (newlines, tabs) collapsed to
- * one space, trimmed and capped. `null` when nothing usable is left. The reply comes from an AI
- * provider, so it is untrusted input like any other.
- */
-function cleanSuggestedName(raw: unknown): string | null {
-  if (typeof raw !== 'string') return null;
-  const name = raw.replace(/\s+/g, ' ').trim().slice(0, MAX_AI_GROUP_NAME_LENGTH).trim();
-  return name || null;
-}
 
 /**
  * "Name group with AI" for one saved group, shared by the sidebar group menu and the header's AI

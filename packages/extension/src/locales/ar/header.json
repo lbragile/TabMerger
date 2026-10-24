@@ -36,7 +36,7 @@
     "aiCreated_other": "أنشأ الذكاء الاصطناعي {{count}} مجموعة",
     "aiSkipped": "اقتُرح {{skipped}} غيرها لكنها تُخطّيت — بلغت حد الخطة المجانية.",
     "aiGroupingFailed": "فشل التجميع بالذكاء الاصطناعي",
-    "organizeStarted": "بدأ التنظيم — راجع الاقتراح في لوحة التحكم",
-    "organizeFailed": "تعذّر بدء التنظيم"
+    "organizeNothing": "مجموعاتك منظمة بالفعل",
+    "organizeFailed": "تعذّر تنظيم مجموعاتك"
   }
 }

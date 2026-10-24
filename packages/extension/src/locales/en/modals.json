@@ -55,5 +55,20 @@
   },
   "confirmDialog": {
     "cancel": "Cancel"
+  },
+  "organize": {
+    "title": "Organize groups",
+    "description_one": "AI suggests {{count}} change. Uncheck any you don't want.",
+    "description_other": "AI suggests {{count}} changes. Uncheck any you don't want.",
+    "merge": "Merge “<from>{{from}}</from>” into “<to>{{to}}</to>”",
+    "rename": "Rename “<from>{{from}}</from>” to “<to>{{to}}</to>”",
+    "archive": "Archive “<name>{{name}}</name>”",
+    "reorder": "Reorder groups",
+    "archiveNote": "Archived groups are hidden, not deleted: restore them anytime from Archived.",
+    "apply": "Apply selected",
+    "applied_one": "Applied {{count}} change",
+    "applied_other": "Applied {{count}} changes",
+    "nothingApplied": "Nothing to apply: those groups changed in the meantime",
+    "applyFailed": "Could not apply the changes"
   }
 }

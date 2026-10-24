@@ -175,16 +175,18 @@ export function Header() {
         }
     };
 
-    // Kicks off the durable tab-organizer workflow server-side; the run itself streams
-    // progress and asks for approval in the web dashboard's OrganizeProposal component
-    // (packages/web/components/dashboard/OrganizeProposal.tsx), not here — the popup's
-    // job is just to start it and hand off.
+    // Asks the AI for changes (merge, rename, archive, reorder) and reviews them right here: the
+    // popup holds the decrypted groups, so it is the one place that can apply them for an
+    // encrypted account. Nothing changes until the user applies them in the review modal.
     const handleOrganize = async () => {
         setAiQuotaExceeded(false);
         try {
-            await organizeTabs();
-            toast.success(t('header.toast.organizeStarted'));
-            chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/dashboard` });
+            const { actions } = await organizeTabs();
+            if (actions.length === 0) {
+                toast.info(t('header.toast.organizeNothing'));
+                return;
+            }
+            openModal('organizeReview', { actions });
         } catch (err) {
             if (err instanceof QuotaExceededError) {
                 setAiQuotaExceeded(true);

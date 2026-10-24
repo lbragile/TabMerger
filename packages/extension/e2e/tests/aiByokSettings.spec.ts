@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { test, expect } from '../fixtures';
 import { E2E_USER_ID, openPopup, seedAndReload, signInAsPro, waitForStoredGroup } from '../helpers';
-import { NOW_OPEN, SAVED_GROUP } from '../seed';
+import { ANOTHER_GROUP, NOW_OPEN, SAVED_GROUP } from '../seed';
 
 /**
  * Settings → AI for a Pro AI subscriber on their own key (`ai_mode: 'byok'`): provider first, then
@@ -185,6 +185,79 @@ test.describe('Settings → AI, own key', () => {
     expect(nameRequests).toHaveLength(1);
     expect(nameRequests[0].tabs.map((t) => t.url)).toEqual(SAVED_GROUP.windows[0].tabs.map((t) => t.url));
     await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && g.name === 'Team tools', 'the AI name stored on the saved group');
+  });
+
+  test('header AI menu: "Organize" reviews the proposed changes in the popup and applies the checked ones', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, SAVED_GROUP, ANOTHER_GROUP]);
+    await signInAsProAiByok(page);
+    await page.evaluate(
+      ([userId, key]) => chrome.storage.local.set({ aiByokKey: { userId, key, provider: 'anthropic' } }),
+      [E2E_USER_ID, 'sk-ant-' + 'e'.repeat(24)]
+    );
+    const organizeRequests: { groups?: { id: string; permanent: boolean }[] }[] = [];
+    await page.route('**/api/ai/organize*', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
+      const body = route.request().postDataJSON() as { groups?: { id: string; permanent: boolean }[] };
+      organizeRequests.push(body);
+      // Now Open's id as the popup sent it (signing in re-creates Now Open under a new id)
+      const nowOpenId = body.groups?.find((g) => g.permanent)?.id ?? NOW_OPEN.id;
+      return route.fulfill({
+        headers: CORS,
+        json: {
+          actions: [
+            { type: 'merge', sourceGroupId: ANOTHER_GROUP.id, targetGroupId: SAVED_GROUP.id },
+            { type: 'rename', groupId: SAVED_GROUP.id, newName: 'Team hub' },
+            // Untrusted output the popup must drop: Now Open and an unknown group
+            { type: 'delete', groupId: nowOpenId },
+            { type: 'delete', groupId: 'not-a-group' }
+          ]
+        }
+      });
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+
+    const aiActions = page.getByRole('button', { name: 'AI actions' });
+    test.skip((await aiActions.count()) === 0, 'this build has own-key AI off (VITE_AI_BYOK_ENABLED)');
+    const pagesBefore = context.pages().length;
+
+    await aiActions.click();
+    await page.getByRole('menuitem', { name: /Organize/ }).click();
+
+    // The review lists the two valid changes in plain words, both checked; no web tab opened
+    const dialog = page.getByRole('dialog', { name: 'Organize groups' });
+    await expect(dialog).toBeVisible();
+    // (Chrome's accessible name pads the inline-block <bdi> names with spaces inside the quotes)
+    const merge = dialog.getByRole('checkbox', { name: new RegExp(`^Merge “\\s*${ANOTHER_GROUP.name}\\s*” into “\\s*${SAVED_GROUP.name}\\s*”$`) });
+    const rename = dialog.getByRole('checkbox', { name: new RegExp(`^Rename “\\s*${SAVED_GROUP.name}\\s*” to “\\s*Team hub\\s*”$`) });
+    await expect(merge).toBeChecked();
+    await expect(rename).toBeChecked();
+    await expect(dialog.getByRole('checkbox')).toHaveCount(2);
+    expect(context.pages().length).toBe(pagesBefore);
+    // The local, decrypted groups were sent (an encrypted account's rows are ciphertext to the server)
+    expect(organizeRequests).toHaveLength(1);
+    expect(organizeRequests[0].groups?.map((g) => g.permanent)).toEqual([true, false, false]);
+    expect(organizeRequests[0].groups?.slice(1).map((g) => g.id)).toEqual([SAVED_GROUP.id, ANOTHER_GROUP.id]);
+
+    await dialog.getByRole('button', { name: 'Apply selected' }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText('Applied 2 changes')).toBeVisible();
+
+    // The sidebar shows one merged, renamed group; the merged-away group is gone
+    await expect(page.locator('[data-sidebar-group-index="1"]')).toContainText('Team hub');
+    await expect(page.locator('[data-sidebar-group-index]')).toHaveCount(2);
+    await expect(page.getByText(ANOTHER_GROUP.name)).toHaveCount(0);
+    const mergedUrls = [...SAVED_GROUP.windows, ...ANOTHER_GROUP.windows].flatMap((w) => w.tabs.map((t) => t.url));
+    await waitForStoredGroup(
+      page,
+      (g) => g.id === SAVED_GROUP.id && g.name === 'Team hub' && g.windows.flatMap((w) => w.tabs.map((t) => t.url)).join() === mergedUrls.join(),
+      'the merged, renamed group stored'
+    );
+
+    // One undo step takes the whole Organize back
+    await page.getByRole('button', { name: 'Undo' }).click();
+    await expect(page.locator('[data-sidebar-group-index="2"]')).toContainText(ANOTHER_GROUP.name);
+    await expect(page.locator('[data-sidebar-group-index="1"]')).toContainText(SAVED_GROUP.name);
   });
 
   test('dev builds: "Use test key" saves the dummy key of the picked provider', async ({ context, extensionId }) => {

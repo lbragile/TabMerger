@@ -13,6 +13,7 @@ import { SaveSessionModal } from './SaveSession';
 import { ShortcutSavePickerModal } from './ShortcutSavePicker';
 import { ReviewStaleGroupModal } from './ReviewStaleGroup';
 import { EncryptionSetupModal } from './EncryptionSetup';
+import { OrganizeReviewModal } from './OrganizeReview';
 
 export function ModalRoot() {
   const modal = useUIStore((s) => s.modal);
@@ -62,6 +63,8 @@ export function ModalRoot() {
         return <ReviewStaleGroupModal data={modal.data ?? {}} onClose={closeModal} />;
       case 'encryptionSetup':
         return <EncryptionSetupModal onClose={closeModal} />;
+      case 'organizeReview':
+        return <OrganizeReviewModal data={modal.data ?? {}} onClose={closeModal} />;
       default:
         return null;
     }

@@ -55,5 +55,20 @@
   },
   "confirmDialog": {
     "cancel": "İptal"
+  },
+  "organize": {
+    "title": "Grupları düzenle",
+    "description_one": "AI {{count}} değişiklik öneriyor. İstemediklerinizin işaretini kaldırın.",
+    "description_other": "AI {{count}} değişiklik öneriyor. İstemediklerinizin işaretini kaldırın.",
+    "merge": "“<from>{{from}}</from>” grubunu “<to>{{to}}</to>” ile birleştir",
+    "rename": "“<from>{{from}}</from>” adını “<to>{{to}}</to>” olarak değiştir",
+    "archive": "“<name>{{name}}</name>” grubunu arşivle",
+    "reorder": "Grupları yeniden sırala",
+    "archiveNote": "Arşivlenen gruplar silinmez, gizlenir: istediğiniz zaman Arşiv bölümünden geri yükleyin.",
+    "apply": "Seçilenleri uygula",
+    "applied_one": "{{count}} değişiklik uygulandı",
+    "applied_other": "{{count}} değişiklik uygulandı",
+    "nothingApplied": "Uygulanacak bir şey yok: bu gruplar bu arada değişti",
+    "applyFailed": "Değişiklikler uygulanamadı"
   }
 }

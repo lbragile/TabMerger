@@ -280,6 +280,63 @@ describe('useOrganizeTabs — encryption status that could not be checked', () =
   })
 })
 
+describe('useOrganizeTabs — the reply is untrusted', () => {
+  function renderWithGroups() {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
+    const group = (id: string, extra: Record<string, unknown> = {}) => ({ id, name: id.toUpperCase(), color: 'rgba(0,0,0,1)', updatedAt: 1, windows: [], ...extra })
+    qc.setQueryData(GROUPS_QUERY_KEY, {
+      active: { id: 'now', index: 0 },
+      available: [group('now', { permanent: true }), group('a'), group('b'), group('demo', { tourDemo: true })]
+    })
+    const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client: qc }, children)
+    return renderHook(() => useOrganizeTabs(), { wrapper }).result
+  }
+
+  beforeEach(() => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+  })
+
+  it('returns only the well-formed actions on this device’s saved groups, names cleaned', async () => {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        actions: [
+          { type: 'merge', sourceGroupId: 'a', targetGroupId: 'b' },
+          { type: 'rename', groupId: 'b', newName: '  Deep\nWork ' },
+          { type: 'delete', groupId: 'now' },
+          { type: 'delete', groupId: 'demo' },
+          { type: 'delete', groupId: 'unknown' },
+          { type: 'wipe', groupId: 'a' },
+          'garbage'
+        ]
+      })
+    })
+    const result = renderWithGroups()
+    let reply: unknown
+    await act(async () => {
+      reply = await result.current.mutateAsync()
+    })
+    expect(reply).toEqual({
+      actions: [
+        { type: 'merge', sourceGroupId: 'a', targetGroupId: 'b' },
+        { type: 'rename', groupId: 'b', newName: 'Deep Work' }
+      ]
+    })
+    expect(mockTrackEvent).toHaveBeenCalledWith('ai_feature_used', { feature_name: 'organize' })
+  })
+
+  it('returns no actions for a reply without an actions list (an older server)', async () => {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ runId: '1', token: 't' }) })
+    const result = renderWithGroups()
+    let reply: unknown
+    await act(async () => {
+      reply = await result.current.mutateAsync()
+    })
+    expect(reply).toEqual({ actions: [] })
+  })
+})
+
 describe('useOrganizeTabs', () => {
   it('posts only the model to /api/ai/organize (server derives user and groups from the token)', async () => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })

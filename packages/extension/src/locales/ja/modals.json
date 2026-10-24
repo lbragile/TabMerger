@@ -49,5 +49,18 @@
   },
   "confirmDialog": {
     "cancel": "キャンセル"
+  },
+  "organize": {
+    "title": "グループを整理",
+    "description_other": "AIが{{count}}件の変更を提案しています。不要なものはチェックを外してください。",
+    "merge": "「<from>{{from}}</from>」を「<to>{{to}}</to>」に統合",
+    "rename": "「<from>{{from}}</from>」の名前を「<to>{{to}}</to>」に変更",
+    "archive": "「<name>{{name}}</name>」をアーカイブ",
+    "reorder": "グループを並べ替え",
+    "archiveNote": "アーカイブしたグループは非表示になるだけで、削除されません。「アーカイブ済み」からいつでも復元できます。",
+    "apply": "選択した変更を適用",
+    "applied_other": "{{count}}件の変更を適用しました",
+    "nothingApplied": "適用する変更はありません。その間にグループが変更されました",
+    "applyFailed": "変更を適用できませんでした"
   }
 }

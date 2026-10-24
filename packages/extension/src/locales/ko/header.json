@@ -31,7 +31,7 @@
     "aiCreated_other": "AI가 그룹 {{count}}개를 만들었습니다",
     "aiSkipped": "추천된 {{skipped}}개는 무료 요금제 한도에 도달해 건너뛰었습니다.",
     "aiGroupingFailed": "AI 그룹화에 실패했습니다",
-    "organizeStarted": "정리를 시작했습니다. 대시보드에서 제안을 검토하세요",
-    "organizeFailed": "정리를 시작할 수 없습니다"
+    "organizeNothing": "그룹이 이미 잘 정리되어 있습니다",
+    "organizeFailed": "그룹을 정리할 수 없습니다"
   }
 }

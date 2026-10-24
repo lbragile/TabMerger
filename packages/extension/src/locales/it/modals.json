@@ -61,5 +61,22 @@
   },
   "confirmDialog": {
     "cancel": "Annulla"
+  },
+  "organize": {
+    "title": "Organizza gruppi",
+    "description_one": "L'IA suggerisce {{count}} modifica. Togli la spunta a quelle che non vuoi.",
+    "description_many": "L'IA suggerisce {{count}} modifiche. Togli la spunta a quelle che non vuoi.",
+    "description_other": "L'IA suggerisce {{count}} modifiche. Togli la spunta a quelle che non vuoi.",
+    "merge": "Unisci «<from>{{from}}</from>» a «<to>{{to}}</to>»",
+    "rename": "Rinomina «<from>{{from}}</from>» in «<to>{{to}}</to>»",
+    "archive": "Archivia «<name>{{name}}</name>»",
+    "reorder": "Riordina i gruppi",
+    "archiveNote": "I gruppi archiviati vengono nascosti, non eliminati: ripristinali quando vuoi da Archiviati.",
+    "apply": "Applica selezionate",
+    "applied_one": "{{count}} modifica applicata",
+    "applied_many": "{{count}} modifiche applicate",
+    "applied_other": "{{count}} modifiche applicate",
+    "nothingApplied": "Niente da applicare: nel frattempo quei gruppi sono cambiati",
+    "applyFailed": "Impossibile applicare le modifiche"
   }
 }

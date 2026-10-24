@@ -31,7 +31,7 @@
     "aiCreated_other": "AI đã tạo {{count}} nhóm",
     "aiSkipped": "{{skipped}} gợi ý khác đã bị bỏ qua — đã đạt giới hạn gói miễn phí.",
     "aiGroupingFailed": "Nhóm bằng AI thất bại",
-    "organizeStarted": "Đã bắt đầu sắp xếp — xem lại đề xuất trong bảng điều khiển của bạn",
-    "organizeFailed": "Không thể bắt đầu sắp xếp"
+    "organizeNothing": "Các nhóm của bạn đã gọn gàng",
+    "organizeFailed": "Không thể sắp xếp các nhóm của bạn"
   }
 }

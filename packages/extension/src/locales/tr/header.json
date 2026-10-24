@@ -32,7 +32,7 @@
     "aiCreated_other": "AI {{count}} grup oluşturdu",
     "aiSkipped": "{{skipped}} öneri daha atlandı — ücretsiz plan sınırına ulaşıldı.",
     "aiGroupingFailed": "AI ile gruplama başarısız oldu",
-    "organizeStarted": "Düzenleme başladı — öneriyi kontrol panelinizde inceleyin",
-    "organizeFailed": "Düzenleme başlatılamadı"
+    "organizeNothing": "Gruplarınız zaten düzenli görünüyor",
+    "organizeFailed": "Gruplarınız düzenlenemedi"
   }
 }

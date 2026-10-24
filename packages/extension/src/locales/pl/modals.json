@@ -67,5 +67,24 @@
   },
   "confirmDialog": {
     "cancel": "Anuluj"
+  },
+  "organize": {
+    "title": "Uporządkuj grupy",
+    "description_one": "AI proponuje {{count}} zmianę. Odznacz te, których nie chcesz.",
+    "description_few": "AI proponuje {{count}} zmiany. Odznacz te, których nie chcesz.",
+    "description_many": "AI proponuje {{count}} zmian. Odznacz te, których nie chcesz.",
+    "description_other": "AI proponuje {{count}} zmiany. Odznacz te, których nie chcesz.",
+    "merge": "Dołącz „<from>{{from}}</from>” do „<to>{{to}}</to>”",
+    "rename": "Zmień nazwę „<from>{{from}}</from>” na „<to>{{to}}</to>”",
+    "archive": "Zarchiwizuj „<name>{{name}}</name>”",
+    "reorder": "Zmień kolejność grup",
+    "archiveNote": "Zarchiwizowane grupy są ukrywane, a nie usuwane: przywróć je w dowolnym momencie z sekcji Zarchiwizowane.",
+    "apply": "Zastosuj zaznaczone",
+    "applied_one": "Zastosowano {{count}} zmianę",
+    "applied_few": "Zastosowano {{count}} zmiany",
+    "applied_many": "Zastosowano {{count}} zmian",
+    "applied_other": "Zastosowano {{count}} zmiany",
+    "nothingApplied": "Nic do zastosowania: te grupy w międzyczasie się zmieniły",
+    "applyFailed": "Nie udało się zastosować zmian"
   }
 }

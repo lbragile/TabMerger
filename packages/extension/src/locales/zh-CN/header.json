@@ -31,7 +31,7 @@
     "aiCreated_other": "AI 创建了 {{count}} 个分组",
     "aiSkipped": "另有 {{skipped}} 个建议被跳过：已达到免费版上限。",
     "aiGroupingFailed": "AI 分组失败",
-    "organizeStarted": "已开始整理，请在控制台中查看方案",
-    "organizeFailed": "无法开始整理"
+    "organizeNothing": "您的分组看起来已经很整齐了",
+    "organizeFailed": "无法整理您的分组"
   }
 }

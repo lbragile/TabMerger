@@ -61,5 +61,22 @@
   },
   "confirmDialog": {
     "cancel": "ביטול"
+  },
+  "organize": {
+    "title": "ארגון קבוצות",
+    "description_one": "AI מציע שינוי אחד. אפשר לבטל את הסימון של מה שלא רוצים.",
+    "description_two": "AI מציע {{count}} שינויים. אפשר לבטל את הסימון של מה שלא רוצים.",
+    "description_other": "AI מציע {{count}} שינויים. אפשר לבטל את הסימון של מה שלא רוצים.",
+    "merge": "מיזוג „<from>{{from}}</from>” לתוך „<to>{{to}}</to>”",
+    "rename": "שינוי השם של „<from>{{from}}</from>” ל„<to>{{to}}</to>”",
+    "archive": "העברה לארכיון של „<name>{{name}}</name>”",
+    "reorder": "סידור מחדש של הקבוצות",
+    "archiveNote": "קבוצות בארכיון מוסתרות ולא נמחקות: אפשר לשחזר אותן בכל עת מהארכיון.",
+    "apply": "החלת הנבחרים",
+    "applied_one": "שינוי אחד הוחל",
+    "applied_two": "{{count}} שינויים הוחלו",
+    "applied_other": "{{count}} שינויים הוחלו",
+    "nothingApplied": "אין מה להחיל: הקבוצות האלה השתנו בינתיים",
+    "applyFailed": "לא ניתן היה להחיל את השינויים"
   }
 }
