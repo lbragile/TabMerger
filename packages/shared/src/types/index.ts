@@ -1,6 +1,6 @@
 // Core extension types
 
-import type { AiMode } from '../constants/ai';
+import type { AiMode, AiSuggestionKind } from '../constants/ai';
 
 export interface Tab {
   id: number;
@@ -158,8 +158,10 @@ export interface AISuggestSessionsRequest {
 export interface AISuggestSessionsResponse {
   /** Banner text, max ~100 chars. */
   message: string;
-  /** `Group.id` values the message refers to — lets the UI offer a per-group archive action. */
+  /** `Group.id` values the message refers to — lets the UI offer a per-group action. */
   staleGroupIds: string[];
+  /** What the banner offers for those groups. `merge` always comes with at least two ids. */
+  kind: AiSuggestionKind;
   /** @deprecated alias for `message`; remove once the extension banner migrates. */
   suggestion: string;
 }

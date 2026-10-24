@@ -140,9 +140,10 @@ describe('suggestSessionsTask', () => {
   })
 
   it('maps flagged group names back to their ids', () => {
-    expect(parse({ message: '  Archive these.  ', staleGroups: ['Shopping'] })).toEqual({
+    expect(parse({ message: '  Archive these.  ', kind: 'archive', staleGroups: ['Shopping'] })).toEqual({
       message: 'Archive these.',
       staleGroupIds: ['g2'],
+      kind: 'archive',
     })
   })
 
@@ -155,15 +156,52 @@ describe('suggestSessionsTask', () => {
   })
 
   it('tolerates a missing or invalid staleGroups field', () => {
-    expect(parse({ message: 'x' })).toEqual({ message: 'x', staleGroupIds: [] })
+    expect(parse({ message: 'x' })).toEqual({ message: 'x', staleGroupIds: [], kind: 'archive' })
   })
 
   it('returns an empty message when the model sends a non-string one', () => {
-    expect(parse({ message: { text: 'x' }, staleGroups: ['Dev'] })).toEqual({ message: '', staleGroupIds: ['g1'] })
+    expect(parse({ message: { text: 'x' }, staleGroups: ['Dev'] })).toEqual({ message: '', staleGroupIds: ['g1'], kind: 'archive' })
   })
 
   it('bounds the length of the message', () => {
     expect(parse({ message: 'm'.repeat(1000), staleGroups: [] }).message).toHaveLength(200)
+  })
+
+  describe('kind', () => {
+    it('keeps a merge that names at least two groups', () => {
+      expect(parse({ message: 'Merge.', kind: 'merge', staleGroups: ['Dev', 'Shopping'] })).toEqual({
+        message: 'Merge.',
+        kind: 'merge',
+        staleGroupIds: ['g1', 'g2'],
+      })
+    })
+
+    it('keeps an archive that names one group', () => {
+      const out = parse({ message: 'Archive.', kind: 'archive', staleGroups: ['Dev'] })
+      expect(out.kind).toBe('archive')
+      expect(out.staleGroupIds).toEqual(['g1'])
+    })
+
+    it('returns no ids for a merge that resolves to fewer than two groups', () => {
+      expect(parse({ message: 'Merge.', kind: 'merge', staleGroups: ['Dev'] }).staleGroupIds).toEqual([])
+      expect(parse({ message: 'Merge.', kind: 'merge', staleGroups: ['Dev', ' dev ', 'Nope'] }).staleGroupIds).toEqual([])
+      expect(parse({ message: 'Merge.', kind: 'merge', staleGroups: [] })).toMatchObject({ kind: 'merge', staleGroupIds: [] })
+    })
+
+    it.each([['split'], [''], [null], [7], [undefined]])('treats an unknown or missing kind (%j) as archive', (kind) => {
+      const out = parse({ message: 'x', kind, staleGroups: ['Dev'] })
+      expect(out.kind).toBe('archive')
+      expect(out.staleGroupIds).toEqual(['g1'])
+    })
+
+    it('requires kind in the output schema, limited to the known kinds', () => {
+      const schema = suggestSessionsTask(GROUPS).schema as {
+        required: string[]
+        properties: { kind: { enum: string[] } }
+      }
+      expect(schema.required).toContain('kind')
+      expect(schema.properties.kind.enum).toEqual(['merge', 'archive'])
+    })
   })
 })
 

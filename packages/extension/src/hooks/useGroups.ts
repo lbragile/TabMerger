@@ -7,7 +7,7 @@ import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { getGroupsState, saveGroupsState, updateGroupsState } from '@/lib/localDb';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { resolveIncognito } from '@/lib/incognito';
-import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
+import { deleteRulesForGroupIds, retargetRulesToGroup } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
@@ -1243,6 +1243,62 @@ export function useArchiveGroups() {
         const above = order.slice(0, Math.max(pos, 0)).reverse().find(({ group }) => !ids.has(group.id));
         const aboveIndex = above ? next.available.findIndex((g) => g.id === above.group.id) : 0;
         useUIStore.getState().setActiveGroupIndex(Math.max(aboveIndex, 0));
+        return next;
+      });
+    }
+  });
+}
+
+/**
+ * Merges saved groups, addressed by id, into the first of them as ONE write and one undo step
+ * (the AI suggestion's "Merge"). The first group keeps its name, color and windows and gains the
+ * others' windows after its own (starred windows stay first); the others are deleted, and their
+ * URL rules now point at it. Permanent, archived and missing groups are skipped; with fewer than
+ * two left nothing is written. A view on a merged-away group moves to the merged group.
+ */
+export function useMergeGroups() {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (groupIds: string[]) => {
+      const prevState = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const viewedId = prevState?.available[useUIStore.getState().activeGroupIndex]?.id;
+      let targetId = '';
+      let mergedIds: string[] = [];
+      return mutate((prev) => {
+        const groups = [...new Set(groupIds)]
+          .map((id) => prev.available.find((g) => g.id === id))
+          .filter((g): g is Group => !!g && !g.permanent && !g.archived);
+        if (groups.length < 2) return null;
+
+        const [target, ...sources] = groups;
+        const sourceIds = new Set(sources.map((g) => g.id));
+        const merged: Group = {
+          ...target,
+          windows: sortWindowsByStarred([...target.windows, ...sources.flatMap((g) => g.windows)]),
+          updatedAt: Date.now(),
+          pendingSync: true
+        };
+        merged.info = getGroupInfo(merged);
+        targetId = target.id;
+        mergedIds = [...sourceIds];
+
+        const available = prev.available.filter((g) => !sourceIds.has(g.id)).map((g) => (g.id === target.id ? merged : g));
+        const activeId = sourceIds.has(prev.active.id) ? target.id : prev.active.id;
+        const activeIndex = Math.max(available.findIndex((g) => g.id === activeId), 0);
+        return { active: { id: available[activeIndex]?.id ?? '', index: activeIndex }, available };
+      }, false, { align: false }).then((next) => {
+        if (mergedIds.length === 0) return next;
+        trackEvent('groups_merged', { count: mergedIds.length + 1 });
+        // Fire-and-forget: hard-delete from Supabase so sync doesn't resurrect them (as useDeleteGroup)
+        deleteRemoteGroups(mergedIds).catch(() => {});
+        retargetRulesToGroup(mergedIds, targetId).catch(() => {});
+        // Indexes shift as the merged groups leave: keep the same group in view, or the merged
+        // group when the viewed one was merged into it.
+        const wanted = viewedId && mergedIds.includes(viewedId) ? targetId : viewedId;
+        const index = next.available.findIndex((g) => g.id === wanted);
+        if (index >= 0 && index !== useUIStore.getState().activeGroupIndex) useUIStore.getState().setActiveGroupIndex(index);
         return next;
       });
     }

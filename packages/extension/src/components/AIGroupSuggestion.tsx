@@ -3,16 +3,18 @@ import { useTranslation } from 'react-i18next';
 import { Sparkles, X } from 'lucide-react';
 import { useSuggestSessions } from '@/hooks/useAI';
 import { QuotaExceededError } from '@/lib/aiErrors';
-import { useGroups, useArchiveGroups } from '@/hooks/useGroups';
+import { useGroups, useArchiveGroups, useMergeGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
 import { useUIStore } from '@/stores/uiStore';
 import { getSetting } from '@/lib/localDb';
 import { AI_ENABLED } from '@/lib/aiFlag';
+import { isAiSuggestionKind, type AiSuggestionKind } from '@tabmerger/shared';
 
 const STORAGE_KEY = 'tm_ai_suggestion';
 
-type Stored = { message: string; staleGroupIds: string[]; dismissed: boolean } | null;
+/** `kind` is missing only from a suggestion stored before the Merge action existed (see the mount read). */
+type Stored = { message: string; staleGroupIds: string[]; kind?: AiSuggestionKind; dismissed: boolean } | null;
 
 export function AIGroupSuggestion() {
   const { t } = useTranslation();
@@ -25,12 +27,18 @@ export function AIGroupSuggestion() {
   const { data: groupsState } = useGroups();
   const { mutateAsync: suggest } = useSuggestSessions();
   const { mutateAsync: archiveGroups } = useArchiveGroups();
+  const { mutateAsync: mergeGroups } = useMergeGroups();
   const openModal = useUIStore((s) => s.openModal);
 
   // Read persisted state once on mount
   useEffect(() => {
     chrome.storage.local.get(STORAGE_KEY, (result) => {
-      setStored((result[STORAGE_KEY] as Stored) ?? null);
+      const saved = (result[STORAGE_KEY] as Stored) ?? null;
+      // Saved before `kind` existed: its message may propose a merge ("Merge them?") that the
+      // banner would offer as Archive. Drop it so a fresh suggestion is fetched.
+      const legacy = Boolean(saved?.message) && !saved?.dismissed && !isAiSuggestionKind(saved?.kind);
+      if (legacy) chrome.storage.local.remove(STORAGE_KEY);
+      setStored(legacy ? null : saved);
       setStorageReady(true);
     });
   }, []);
@@ -44,7 +52,8 @@ export function AIGroupSuggestion() {
     suggest(recentGroups)
       .then((res) => {
         if (!res.message || res.staleGroupIds.length === 0) return;
-        const next: Stored = { message: res.message, staleGroupIds: res.staleGroupIds, dismissed: false };
+        const kind = isAiSuggestionKind(res.kind) ? res.kind : 'archive';
+        const next: Stored = { message: res.message, staleGroupIds: res.staleGroupIds, kind, dismissed: false };
         setStored(next);
         chrome.storage.local.set({ [STORAGE_KEY]: next });
       })
@@ -80,7 +89,7 @@ export function AIGroupSuggestion() {
       dismiss();
       return;
     }
-    const next: Stored = { message: stored?.message ?? '', staleGroupIds: remainingIds, dismissed: false };
+    const next: Stored = { message: stored?.message ?? '', staleGroupIds: remainingIds, kind: stored?.kind, dismissed: false };
     setStored(next);
     chrome.storage.local.set({ [STORAGE_KEY]: next });
   };
@@ -98,17 +107,26 @@ export function AIGroupSuggestion() {
     }
   };
 
+  /** Merges every listed group into the first one (one undo step), then retires the suggestion. */
+  const mergeAll = async () => {
+    await mergeGroups(staleGroups.map((g) => g.id));
+    dismiss();
+  };
+
   const staleGroups = (stored?.staleGroupIds ?? [])
     .map((id) => groupsState?.available.find((g) => g.id === id))
     .filter((g): g is NonNullable<typeof g> => Boolean(g));
+  const isMerge = stored?.kind === 'merge';
+  // A merge needs two groups; an archive needs one.
+  const actionable = staleGroups.length >= (isMerge ? 2 : 1);
 
-  // All stale groups were deleted since the suggestion was generated — nothing actionable left, auto-dismiss.
+  // The groups were deleted or archived since the suggestion was generated: nothing actionable left, auto-dismiss.
   useEffect(() => {
-    if (storageReady && stored?.message && !stored.dismissed && stored.staleGroupIds.length > 0 && staleGroups.length === 0) {
+    if (storageReady && stored?.message && !stored.dismissed && stored.staleGroupIds.length > 0 && !actionable) {
       dismiss();
     }
    
-  }, [storageReady, stored, staleGroups.length]);
+  }, [storageReady, stored, actionable]);
 
   // AI features: coming soon — fully hidden while the global flag is off.
   if (!AI_ENABLED || !storageReady || loading || !aiFeatures || stored?.dismissed) return null;
@@ -121,7 +139,7 @@ export function AIGroupSuggestion() {
     );
   }
 
-  if (!stored?.message || staleGroups.length === 0) return null;
+  if (!stored?.message || !actionable) return null;
 
   return (
     <div
@@ -140,9 +158,9 @@ export function AIGroupSuggestion() {
       </button>
       <button
         className="shrink-0 border border-purple-400 text-purple-700 dark:text-purple-300 px-2 py-0.5 text-xs hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
-        onClick={archiveAll}
+        onClick={isMerge ? mergeAll : archiveAll}
       >
-        {t('banners.archive')}
+        {isMerge ? t('banners.merge') : t('banners.archive')}
       </button>
       <button
         className="shrink-0 text-purple-500 hover:opacity-70 transition-opacity ms-1"

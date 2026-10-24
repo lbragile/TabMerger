@@ -252,6 +252,19 @@ export const AI_ACTIONS = ['nameGroup', 'tabSummary', 'groupTabs', 'suggestSessi
 
 export type AiAction = (typeof AI_ACTIONS)[number];
 
+/**
+ * What the suggest-sessions banner offers for the groups a suggestion names: `merge` folds them
+ * into the first one, `archive` archives them. A merge needs at least two groups.
+ */
+export const AI_SUGGESTION_KINDS = ['merge', 'archive'] as const;
+
+export type AiSuggestionKind = (typeof AI_SUGGESTION_KINDS)[number];
+
+/** Whether a value read from a model reply or stored suggestion is an {@link AiSuggestionKind}. */
+export function isAiSuggestionKind(value: unknown): value is AiSuggestionKind {
+  return typeof value === 'string' && (AI_SUGGESTION_KINDS as readonly string[]).includes(value);
+}
+
 /** The model `auto` uses for each feature on Anthropic: the cheapest one that does the job well. */
 export const AUTO_AI_MODEL: Record<AiAction, AiModelId> = {
   nameGroup: 'claude-haiku-5-5',

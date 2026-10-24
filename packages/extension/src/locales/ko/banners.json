@@ -1,6 +1,7 @@
 {
   "review": "검토",
   "archive": "보관",
+  "merge": "합치기",
   "dismiss": "닫기",
   "getMore": "더 받기",
   "removeStale": "오래된 탭 제거",

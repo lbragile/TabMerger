@@ -1,6 +1,7 @@
 {
   "review": "查看",
   "archive": "归档",
+  "merge": "合并",
   "dismiss": "忽略",
   "getMore": "获取更多",
   "removeStale": "移除过期",

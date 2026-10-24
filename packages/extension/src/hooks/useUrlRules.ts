@@ -66,6 +66,18 @@ export async function deleteRulesForGroupIds(groupIds: string[]): Promise<void> 
 }
 
 /**
+ * Points the URL rules of groups merged into another group at that group, so a merge keeps
+ * routing their URLs instead of dropping the rules. Not undo-aware, like `deleteRulesForGroupIds`.
+ */
+export async function retargetRulesToGroup(fromGroupIds: string[], toGroupId: string): Promise<void> {
+  if (fromGroupIds.length === 0) return;
+  const idSet = new Set(fromGroupIds);
+  const rules = await loadRules();
+  if (!rules.some((r) => idSet.has(r.groupId))) return;
+  await persistRules(rules.map((r) => (idSet.has(r.groupId) ? { ...r, groupId: toGroupId } : r)));
+}
+
+/**
  * Whole-string glob match where `*` is the only wildcard (any run of characters, including none).
  * The pattern is never compiled into a regular expression: its literal pieces are found left to
  * right with `indexOf`, so the time is bounded by pattern length × text length whatever the user

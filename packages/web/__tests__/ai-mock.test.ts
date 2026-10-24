@@ -276,6 +276,7 @@ describe('mock answers pass through each task’s real parser', () => {
     )
     expect(result.message).toBe('Code review and Open PRs are both mostly GitHub. Merge them?')
     expect(result.staleGroupIds).toEqual(['g1', 'g3'])
+    expect(result.kind).toBe('merge')
   })
 
   it('suggest-sessions: suggests a session from the two largest groups, at most 100 characters', () => {
@@ -292,10 +293,10 @@ describe('mock answers pass through each task’s real parser', () => {
 
   it('suggest-sessions: a single group is suggested as a session', () => {
     const result = parse(suggestSessionsTask([{ id: 'g1', name: 'Work', tabs: [TABS[0], TABS[1]] }]))
-    expect(result).toEqual({ message: 'Save Work as a session so you can reopen it later?', staleGroupIds: [] })
+    expect(result).toEqual({ message: 'Save Work as a session so you can reopen it later?', staleGroupIds: [], kind: 'archive' })
   })
 
-  it('suggest-sessions: small groups are suggested for merging or archiving', () => {
+  it('suggest-sessions: small groups are suggested for archiving only', () => {
     const result = parse(
       suggestSessionsTask([
         { id: 'g1', name: 'Work', tabs: [TABS[0], TABS[1]] },
@@ -303,6 +304,8 @@ describe('mock answers pass through each task’s real parser', () => {
       ])
     )
     expect(result.staleGroupIds).toEqual(['g2'])
+    expect(result.kind).toBe('archive')
+    expect(result.message).toBe('Stray has at most one tab. Archive it?')
   })
 
   it('organize: merges groups on the same site, renames the target, deletes empties, skips Now Open', () => {
@@ -398,7 +401,7 @@ describe('managed routes with the mock on', () => {
       'suggest-sessions',
       suggestPOST,
       { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] },
-      { message: expect.any(String), staleGroupIds: expect.any(Array), suggestion: expect.any(String) },
+      { message: expect.any(String), kind: 'archive', staleGroupIds: expect.any(Array), suggestion: expect.any(String) },
     ],
   ])('%s answers 200 with the mock header and is metered', async (path, POST, body, expected) => {
     const res = await POST(req(path, body))

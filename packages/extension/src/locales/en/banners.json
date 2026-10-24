@@ -1,6 +1,7 @@
 {
   "review": "Review",
   "archive": "Archive",
+  "merge": "Merge",
   "dismiss": "Dismiss",
   "getMore": "Get more",
   "removeStale": "Remove stale",

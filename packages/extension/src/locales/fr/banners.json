@@ -1,6 +1,7 @@
 {
   "review": "Examiner",
   "archive": "Archiver",
+  "merge": "Fusionner",
   "dismiss": "Ignorer",
   "getMore": "En obtenir plus",
   "removeStale": "Supprimer les périmés",

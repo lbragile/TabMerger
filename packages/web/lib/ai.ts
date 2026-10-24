@@ -8,12 +8,15 @@ import type {
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   AI_ERROR_CODES,
+  AI_SUGGESTION_KINDS,
   PRESET_COLORS,
   aiCallCredits,
+  isAiSuggestionKind,
   type AiAction,
   type AiErrorCode,
   type AiMode,
   type AiModelId,
+  type AiSuggestionKind,
 } from '@tabmerger/shared'
 import {
   ProviderHttpError,
@@ -313,13 +316,17 @@ export interface SessionSuggestion {
   message: string
   /** `Group.id` values the message is about, so the UI can offer a per-group action. */
   staleGroupIds: string[]
+  /** What the banner offers for those groups; `merge` always comes with at least two ids. */
+  kind: AiSuggestionKind
 }
 
 const SUGGEST_SESSIONS_SYSTEM = [
   "You look at a user's saved browser tab groups and suggest one specific, actionable way to",
-  'organize their browsing sessions, in one sentence of at most 100 characters.',
-  'Also list the groups the suggestion is about (ones that look stale, redundant, or worth',
-  'archiving or merging) by their exact `name` from the data; use an empty list if none apply.',
+  'organize them, in one sentence of at most 100 characters.',
+  'Set `kind` to "merge" to suggest merging two or more overlapping groups into one, or to',
+  '"archive" to suggest archiving stale or redundant groups; the message must propose exactly',
+  'that action. List the groups it is about by their exact `name` from the data, the group to',
+  'keep first when merging; use an empty list if none apply.',
 ].join(' ')
 
 /**
@@ -340,9 +347,10 @@ export function suggestSessionsTask(
       type: 'object',
       properties: {
         message: { type: 'string' },
+        kind: { type: 'string', enum: [...AI_SUGGESTION_KINDS] },
         staleGroups: { type: 'array', items: { type: 'string' } },
       },
-      required: ['message', 'staleGroups'],
+      required: ['message', 'kind', 'staleGroups'],
       additionalProperties: false,
     },
     answerTokens: answerBudget(200 + 40 * groups.length),
@@ -359,7 +367,11 @@ export function suggestSessionsTask(
             .filter((id): id is string => Boolean(id))
         ),
       ]
-      return { message: cleanModelText(text, MAX_SUGGESTION_LENGTH), staleGroupIds }
+      const kind: AiSuggestionKind = isAiSuggestionKind(parsed.kind) ? parsed.kind : 'archive'
+      // A merge names at least two groups. With fewer, the message proposes something the banner
+      // cannot do, so no ids are returned and the extension shows no banner.
+      const ids = kind === 'merge' && staleGroupIds.length < 2 ? [] : staleGroupIds
+      return { message: cleanModelText(text, MAX_SUGGESTION_LENGTH), staleGroupIds: ids, kind }
     },
   }
 }

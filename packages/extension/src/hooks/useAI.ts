@@ -10,7 +10,8 @@ import {
   estimateAiCredits,
   isTourDemoGroup,
   type AiAction,
-  type AiModelChoice
+  type AiModelChoice,
+  type AiSuggestionKind
 } from '@tabmerger/shared';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
@@ -226,7 +227,8 @@ export function useSuggestSessions() {
       await enforceDailyThrottle('suggest-sessions', settings?.aiDailyThrottle ?? true);
 
       // `suggestion` is a deprecated alias for `message` — drop it once AIGroupSuggestion migrates.
-      return aiPost<{ message: string; staleGroupIds: string[]; suggestion: string }>(
+      // `kind` is missing from a server older than the Merge action: the banner reads that as archive.
+      return aiPost<{ message: string; staleGroupIds: string[]; kind?: AiSuggestionKind; suggestion: string }>(
         '/api/ai/suggest-sessions',
         { groups, model },
         token,

@@ -3,7 +3,7 @@ import type {
   MessageCountTokensParams,
   MessageCreateParamsNonStreaming,
 } from '@anthropic-ai/sdk/resources/messages'
-import { PRESET_COLORS, type AiMode, type AiProvider } from '@tabmerger/shared'
+import { PRESET_COLORS, type AiMode, type AiProvider, type AiSuggestionKind } from '@tabmerger/shared'
 import { ProviderHttpError, type ProviderReply } from '@/lib/ai-providers'
 import type { AiTask } from '@/lib/ai'
 
@@ -458,15 +458,20 @@ function mockTabSummary(data: Record<string, unknown>) {
 
 /**
  * suggest-sessions: two groups on the same site → merge them; else groups with at most one tab
- * → merge or archive them; else the two largest groups → save them as a session.
+ * → archive them; else the two largest groups → save them as a session (no groups named, so the
+ * extension shows no banner for it).
  */
-function mockSuggestSessions(data: Record<string, unknown>): { message: string; staleGroups: string[] } {
+function mockSuggestSessions(data: Record<string, unknown>): { message: string; kind: AiSuggestionKind; staleGroups: string[] } {
   const groups = (Array.isArray(data.groups) ? data.groups : []).filter(isRecord).map((g) => ({
     name: typeof g.name === 'string' ? g.name : '',
     tabs: tabsOf(g.tabs),
   }))
   const short = (name: string) => cut(name.trim() || 'Untitled', 24)
-  const suggest = (message: string, staleGroups: string[] = []) => ({ message: cut(message, MAX_MOCK_SUGGESTION), staleGroups })
+  const suggest = (message: string, staleGroups: string[] = [], kind: AiSuggestionKind = 'archive') => ({
+    message: cut(message, MAX_MOCK_SUGGESTION),
+    kind,
+    staleGroups,
+  })
 
   const firstBySite = new Map<string, string>()
   for (const g of groups) {
@@ -474,14 +479,14 @@ function mockSuggestSessions(data: Record<string, unknown>): { message: string; 
     if (!site) continue
     const earlier = firstBySite.get(site.key)
     if (earlier !== undefined) {
-      return suggest(`${short(earlier)} and ${short(g.name)} are both mostly ${site.label}. Merge them?`, [earlier, g.name])
+      return suggest(`${short(earlier)} and ${short(g.name)} are both mostly ${site.label}. Merge them?`, [earlier, g.name], 'merge')
     }
     firstBySite.set(site.key, g.name)
   }
 
   const small = groups.filter((g) => g.tabs.length <= 1).slice(0, 3)
   if (small.length > 0) {
-    return suggest(`${short(small[0].name)} has at most one tab. Merge or archive it?`, small.map((g) => g.name))
+    return suggest(`${short(small[0].name)} has at most one tab. Archive it?`, small.map((g) => g.name))
   }
 
   const [a, b] = [...groups].sort((x, y) => y.tabs.length - x.tabs.length)
