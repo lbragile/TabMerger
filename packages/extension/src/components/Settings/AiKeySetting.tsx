@@ -12,6 +12,7 @@ import { clearByokKey, normalizeByokKey, saveByokKey } from '@/lib/byokKey';
 import { toast } from '@/lib/toast';
 import { AiProviderLinks } from './AiProviderLinks';
 import { AiSavedKey } from './AiSavedKey';
+import { AiTestKeyButton } from './AiTestKeyButton';
 
 /** How each provider's keys start: formats, not text to translate. */
 const KEY_PLACEHOLDERS: Record<AiProvider, string> = {
@@ -71,9 +72,9 @@ export function AiKeySetting({ provider, saved, refresh, onSaved, onRemoved, onC
     setFocusAfter(null);
   }, [focusAfter, showInput]);
 
-  const handleSave = async () => {
+  const handleSave = async (raw: string = value) => {
     setError(null);
-    const key = normalizeByokKey(value);
+    const key = normalizeByokKey(raw);
     const detected = byokKeyProvider(key);
     if (detected && detected !== provider) {
       setError(t('settings.ai.key.wrongProvider', { detected: AI_PROVIDER_LABELS[detected], provider: label }));
@@ -178,6 +179,17 @@ export function AiKeySetting({ provider, saved, refresh, onSaved, onRemoved, onC
         </form>
       ) : (
         <AiSavedKey ref={replaceRef} saved={saved} onReplace={() => setReplacing(true)} onRemove={() => void handleRemove()} />
+      )}
+      {/* Dev builds only (dropped from production bundles): a dummy key for the AI_MOCK web server */}
+      {import.meta.env.DEV && showInput && (
+        <AiTestKeyButton
+          provider={provider}
+          disabled={checking}
+          onUse={(key) => {
+            setValue(key);
+            void handleSave(key);
+          }}
+        />
       )}
       {error && (
         <p id={errorId} role="alert" className="text-xs text-destructive" data-testid="ai-byok-key-error">

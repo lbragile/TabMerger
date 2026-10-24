@@ -7,9 +7,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { setDevAiUsage } from '@/mocks/devAiUsage';
-import { aiPost } from '@/hooks/useAI';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { applyTheme } from '@/lib/theme';
@@ -36,7 +33,8 @@ import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 import { getEncryptionKeyState, resetEncryption } from '@/lib/encryptionKey';
-import { AI_ENABLED } from '@/lib/aiFlag';
+import { AI_ENABLED, AI_MANAGED_ENABLED } from '@/lib/aiFlag';
+import { DevAiCredits } from '@/components/Settings/DevAiCredits';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
 import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, SEARCH_NON_MATCHING, formatUsd, normalizeSearchNonMatching, toHttpUrl } from '@tabmerger/shared';
@@ -70,7 +68,12 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
   const [activeTab, setActiveTab] = useState<string>(() =>
     (SETTINGS_TABS as readonly unknown[]).includes(initialTab) ? (initialTab as string) : 'general'
   );
-  const [devUsageInput, setDevUsageInput] = useState('0');
+  // The requested tab until it has been shown. The AI and Devices tabs exist only once the
+  // account has loaded (useAuth reads the session after mount), and until then the dialog's
+  // open focus lands on the tab list, where Radix's focus activation selects General.
+  const requestedTab = useRef<string | null>(activeTab === 'general' ? null : activeTab);
+  const tabListRef = useRef<HTMLDivElement>(null);
+  const [focusActiveTab, setFocusActiveTab] = useState(false);
   const queryClient = useQueryClient();
   // `saved` is the query's current value (reactive — reflects saves made elsewhere,
   // e.g. another mount of this modal, and refetches after login via useSync's invalidate).
@@ -82,6 +85,23 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
   const { tier, cloudSync, currentPeriodEnd, aiFeatures, aiMode, maxGroups, maxTabs } = useEntitlements();
   const { remaining: aiUsageRemaining, cap: aiUsageCap, loading: aiUsageLoading } = useAiUsage();
   const { user, session, signOut } = useAuth();
+
+  // Shows the requested tab once it exists (see `requestedTab`), once: later picks are the user's
+  useEffect(() => {
+    const tab = requestedTab.current;
+    if (!tab) return;
+    if ((tab === 'ai' && !aiFeatures) || (tab === 'devices' && tier === 'free')) return;
+    requestedTab.current = null;
+    setActiveTab(tab);
+    // Focus follows only when it sits on the tab list (the dialog's open focus), never from elsewhere
+    if (tabListRef.current?.contains(document.activeElement)) setFocusActiveTab(true);
+  }, [aiFeatures, tier]);
+
+  useEffect(() => {
+    if (!focusActiveTab) return;
+    setFocusActiveTab(false);
+    tabListRef.current?.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.focus();
+  }, [focusActiveTab]);
   const [portalLoading, setPortalLoading] = useState(false);
   const { data: groupsState } = useGroups();
   const { mutate: importGroupsMutation } = useImportGroups();
@@ -115,25 +135,6 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
           .catch((e) => toast.error(e instanceof Error ? e.message : t('settings.toast.encryptionResetFailed')));
       }
     });
-  };
-
-  // Sets the dev-only local mock counter (still read by useAiUsage in DEV — see its
-  // own comment) AND writes the same count to the real Supabase ai_usage table via
-  // /api/ai/dev-usage, so real server-side quota enforcement can be exercised
-  // end-to-end for the signed-in account, not just the local mock UI state.
-  const handleSyncDevUsage = async (count: number) => {
-    await setDevAiUsage(count);
-    queryClient.invalidateQueries({ queryKey: ['aiUsage', user?.id] });
-    if (!session?.access_token) {
-      toast.error(t('settings.toast.signInForAiUsage'));
-      return;
-    }
-    try {
-      await aiPost<{ count: number }>('/api/ai/dev-usage', { count }, session.access_token);
-      toast.success(t('settings.toast.aiUsageSet', { count }));
-    } catch {
-      toast.error(t('settings.toast.aiUsageFailed'));
-    }
   };
 
   // Re-seed the draft whenever the underlying query value changes (initial load
@@ -307,7 +308,7 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
       </DialogHeader>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4 min-w-0">
-        <TabsList className="w-full">
+        <TabsList ref={tabListRef} className="w-full">
           <TabsTrigger value="general" className="flex-1 text-xs">
             {t('settings.tabs.general')}
           </TabsTrigger>
@@ -334,7 +335,9 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
           )}
         </TabsList>
 
-        <div className="mt-4 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden pe-1">
+        {/* -ms-1 ps-1: the scroll clip sits 0.25rem outside the content on the start side too (pe-1
+            on the end side), so a field flush with the content's edge keeps its focus ring there */}
+        <div className="mt-4 -ms-1 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden ps-1 pe-1">
         <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
@@ -796,42 +799,16 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
               </Button>
             </div>
 
-            {import.meta.env.DEV && AI_ENABLED && (
+            {/* Credits exist only on TabMerger's key, so only while that option is live */}
+            {import.meta.env.DEV && AI_MANAGED_ENABLED && (
               <>
                 <Separator />
-                <div className="flex items-center justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <Label className="text-sm">{t('settings.dev.usageLabel')}</Label>
-                    <p className="text-xs text-muted-foreground">
-                      {t('settings.dev.usageDescription', { cap: aiUsageCap })}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <Input
-                      type="number"
-                      min={0}
-                      value={devUsageInput}
-                      onChange={(e) => setDevUsageInput(e.target.value)}
-                      className="w-16 h-8 text-xs rounded-none"
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs rounded-none"
-                      onClick={() => void handleSyncDevUsage(Number(devUsageInput) || 0)}
-                    >
-                      {t('settings.dev.usageSet')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs rounded-none"
-                      onClick={() => void handleSyncDevUsage(0)}
-                    >
-                      {t('settings.dev.usageReset')}
-                    </Button>
-                  </div>
-                </div>
+                <DevAiCredits cap={aiUsageCap} />
+              </>
+            )}
+
+            {import.meta.env.DEV && AI_ENABLED && (
+              <>
                 <Separator />
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0 flex-1">

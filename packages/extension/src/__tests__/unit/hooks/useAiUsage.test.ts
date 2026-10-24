@@ -4,20 +4,16 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PRO_AI_MONTHLY_CREDITS } from '@tabmerger/shared'
 
-// ponytail: import.meta.env.DEV is true under Vitest, so useAiUsage always exercises
-// its dev-counter branch here — mirrors the real dev-mode behavior this hook now has.
-
-const { mockGetDevAiUsage, mockFrom, mockUseEntitlements } = vi.hoisted(() => ({
-  mockGetDevAiUsage: vi.fn(),
+const { mockFrom, mockUseEntitlements, mockUseAuth } = vi.hoisted(() => ({
   mockFrom: vi.fn(),
+  mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn()
 }))
 
-// This suite tests the AI-enabled Supabase/dev-counter usage path itself, not the
+// This suite tests the AI-enabled Supabase usage path itself, not the
 // coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
 vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
-vi.mock('@/mocks/devAiUsage', () => ({ getDevAiUsage: mockGetDevAiUsage }))
-vi.mock('@/hooks/useAuth', () => ({ useAuth: () => ({ user: { id: 'user-1' }, loading: false, session: null }) }))
+vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/lib/supabase', () => ({ supabase: { from: mockFrom } }))
 
@@ -48,32 +44,36 @@ function makeWrapper() {
 beforeEach(() => {
   vi.clearAllMocks()
   mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'managed' })
+  mockUseAuth.mockReturnValue({ user: { id: 'user-1' }, loading: false, session: null })
 })
 
-describe('useAiUsage — dev mode', () => {
-  it('reads the count from the dev-local counter instead of Supabase', async () => {
-    mockGetDevAiUsage.mockResolvedValue(42)
+describe('useAiUsage — dev builds', () => {
+  // import.meta.env.DEV is true under Vitest: dev builds read the same tables as any other build
+  // (the web dev server's AI_MOCK replies charge real credits).
+  it('reads the real ai_usage row and cap in a dev build', async () => {
+    expect(import.meta.env.DEV).toBe(true)
+    stubSupabase(42, [{ credits: 100 }])
 
     const { useAiUsage } = await import('@/hooks/useAiUsage')
     const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
+    await waitFor(() => expect(result.current.known).toBe(true))
 
     expect(result.current.used).toBe(42)
-    expect(result.current.remaining).toBe(PRO_AI_MONTHLY_CREDITS - 42)
-    expect(result.current.cap).toBe(PRO_AI_MONTHLY_CREDITS)
-    expect(result.current.known).toBe(true)
-    expect(mockGetDevAiUsage).toHaveBeenCalled()
+    expect(result.current.cap).toBe(2100)
+    expect(result.current.remaining).toBe(2058)
+    expect(mockFrom).toHaveBeenCalledWith('ai_usage')
   })
 
-  it('defaults to 0 used / full remaining when the dev counter is empty', async () => {
-    mockGetDevAiUsage.mockResolvedValue(0)
+  it('reads nothing while signed out, even in a dev build', async () => {
+    mockUseAuth.mockReturnValue({ user: null, loading: false, session: null })
+    stubSupabase(42, [])
 
     const { useAiUsage } = await import('@/hooks/useAiUsage')
     const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
-
     await waitFor(() => expect(result.current.loading).toBe(false))
 
+    expect(mockFrom).not.toHaveBeenCalled()
+    expect(result.current.known).toBe(false)
     expect(result.current.used).toBe(0)
     expect(result.current.remaining).toBe(PRO_AI_MONTHLY_CREDITS)
   })
@@ -98,7 +98,6 @@ describe('useAiUsage — real Supabase path', () => {
     expect(result.current.cap).toBe(2000)
     expect(result.current.remaining).toBe(1970)
     expect(mockFrom).toHaveBeenCalledWith('subscriptions')
-    expect(mockGetDevAiUsage).not.toHaveBeenCalled()
   })
 
   it('extends cap and remaining by the sum of purchased credit packs', async () => {
@@ -123,7 +122,6 @@ describe('useAiUsage — plan options and failures', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
 
     expect(mockFrom).not.toHaveBeenCalled()
-    expect(mockGetDevAiUsage).not.toHaveBeenCalled()
     expect(result.current.known).toBe(false)
   })
 

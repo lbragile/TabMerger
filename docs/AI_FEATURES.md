@@ -13,7 +13,7 @@ Authoritative code:
 | Tier check + credit metering | `packages/web/lib/ai-usage.ts` |
 | Kill switch | `packages/web/lib/ai-guard.ts`, `packages/web/lib/aiFlag.ts`, `packages/shared/src/utils/flags.ts` |
 | Extension callers | `packages/extension/src/hooks/useAI.ts`, `useAiUsage.ts`, `src/lib/aiFlag.ts` |
-| Dev usage counter (Settings → Dev) | `packages/extension/src/mocks/devAiUsage.ts` |
+| Dev "Credits used this month" control (Settings → Dev) | `packages/extension/src/components/Settings/DevAiCredits.tsx` |
 | Schema | `supabase/migrations/006_ai_usage.sql`, `014_ai_credit_purchases.sql`, `017_rename_ai_usage_credits.sql`, `004_create_organize_runs.sql` |
 
 ---
@@ -52,7 +52,7 @@ Request order in every metered route:
 | `POST /api/ai/organize` | `{ groups?: {id,name,tabs,permanent?}[] }` | `{ runId, token }` | 8 | `anthropic/claude-sonnet-4-6` via `@workflow/ai` `DurableAgent` | Header → AI actions → Organize (`useOrganizeTabs`) |
 | `GET /api/ai/organize?runId=` | — | NDJSON progress stream | 0 | — | Web dashboard `OrganizeProposal` |
 | `POST /api/ai/organize/approve` | `{ token, approved, actions? }` | `{ ok: true }` | 0 | — | Web dashboard `OrganizeProposal` |
-| `POST /api/ai/dev-usage` | `{ count }` | `{ count }` | — | — | Extension Settings → Dev usage Set/Reset only |
+| `POST /api/ai/dev-usage` | `{ count }` (credits) | `{ count }` | — | — | Extension Settings → Dev → "Credits used this month" Set/Reset only |
 
 Notes:
 
@@ -175,9 +175,13 @@ calls a model), so the proposal it hands to the workflow is the mock's.
   the two largest as a session), organize merges groups on the same site and deletes empty ones.
 - **Credits:** managed calls report token usage estimated from the prompt and answer sizes
   (about 4 characters per token), so `ai_usage` moves and the caps behave as usual. Own-key calls
-  bill no credits. Use `/api/ai/dev-usage` to set `credits_used` near the cap.
+  bill no credits. Use `/api/ai/dev-usage` (extension dev build: Settings → Dev → "Credits used
+  this month") to set `credits_used` near the cap. The extension's credits meter reads the real
+  `ai_usage` row in every build, dev included.
 - **Own keys:** verify accepts any key that passes the format check, with no network call, so a
-  dummy key such as `sk-ant-mock-000000000000000000000000` can be saved in the extension.
+  dummy key such as `sk-ant-mock-000000000000000000000000` can be saved in the extension. A
+  development build of the extension has a "Use test key" button in Settings → AI (once a provider
+  is picked) that saves that provider's dummy key (`AiTestKeyButton.tsx`); production builds drop it.
 - **Header:** mocked AI responses (success and errors) carry `x-tabmerger-ai-mock: 1`; check it in
   DevTools → Network.
 

@@ -868,6 +868,39 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     expect(await screen.findByTestId('ai-quota-exceeded-prompt')).toBeTruthy()
     expect(mockToastError).not.toHaveBeenCalled()
   })
+
+  it.each([
+    ['auto-group', /^auto-group$/i, () => mockAutoGroupMutateAsync],
+    ['organize', /^organize$/i, () => mockOrganizeTabsMutateAsync],
+  ] as const)('%s: an error fixed in Settings → AI offers "Open Settings", which opens Settings on the AI tab', async (_name, item, mutation) => {
+    const { AiRequestError } = await import('@/lib/aiErrors')
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })]) })
+    mutation().mockRejectedValue(new AiRequestError('byok_key_missing', 0, 'Add your key'))
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(item)
+
+    await waitFor(() => expect(mockToastError).toHaveBeenCalled())
+    const [message, options] = mockToastError.mock.calls[0] as [string, { action: { label: string; onClick: () => void } }]
+    expect(message).toBe('Add your key')
+    expect(options.action.label).toBe('Open Settings')
+    options.action.onClick()
+    expect(baseUIState.openModal).toHaveBeenCalledWith('settings', { tab: 'ai' })
+  })
+
+  it('an AI error not fixed in Settings has no "Open Settings" action', async () => {
+    const { AiRequestError } = await import('@/lib/aiErrors')
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+    mockOrganizeTabsMutateAsync.mockRejectedValue(new AiRequestError('ai_failed', 500, 'AI failed'))
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^organize$/i)
+
+    await waitFor(() => expect(mockToastError).toHaveBeenCalledWith('AI failed'))
+  })
 })
 
 // ─── SidePanel — save session (moved from the Header per P4, popup-ui-consolidation-spec.md) ──

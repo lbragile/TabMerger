@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { PRO_AI_MONTHLY_CREDITS } from '@tabmerger/shared';
 import { supabase } from '@/lib/supabase';
-import { getDevAiUsage } from '@/mocks/devAiUsage';
 import { AI_MANAGED_ENABLED } from '@/lib/aiFlag';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
@@ -55,18 +54,16 @@ export function useAiUsage() {
   const { user } = useAuth();
   const { aiFeatures, aiMode } = useEntitlements();
 
-  // ponytail: dev mode reads a local chrome.storage.local counter instead of Supabase —
-  // there's usually no real Supabase project configured locally, and this is also the
-  // hook for testing AIQuotaExceededPrompt without burning/waiting out a real cap.
+  // Dev builds read the real tables too: the web dev server's AI_MOCK replies charge real
+  // credits, and Settings > Dev sets `credits_used` through /api/ai/dev-usage.
   const { data, isLoading } = useQuery({
     queryKey: ['aiUsage', user?.id],
     queryFn: async () => {
-      if (import.meta.env.DEV) return { used: await getDevAiUsage(), cap: PRO_AI_MONTHLY_CREDITS };
       const [used, cap] = await Promise.all([fetchUsedCredits(user!.id), fetchEffectiveCap(user!.id)]);
       return { used, cap };
     },
     // Credits exist only on TabMerger's key, so only while that option is live
-    enabled: AI_MANAGED_ENABLED && aiFeatures && aiMode !== 'byok' && (import.meta.env.DEV || !!user)
+    enabled: AI_MANAGED_ENABLED && aiFeatures && aiMode !== 'byok' && !!user
   });
 
   const used = data?.used ?? 0;

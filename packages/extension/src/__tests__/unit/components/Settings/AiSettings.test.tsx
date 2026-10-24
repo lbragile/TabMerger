@@ -186,6 +186,16 @@ describe('AiSettings — own key: provider first', () => {
     expect(screen.queryByTestId('ai-provider-links')).toBeNull()
     expect(screen.queryByRole('link')).toBeNull()
     expect(screen.queryByRole('group', { name: t('settings.ai.model.label') })).toBeNull()
+    // The dev-only test key needs a provider: none yet, even in this dev build
+    expect(import.meta.env.DEV).toBe(true)
+    expect(screen.queryByTestId('ai-byok-test-key')).toBeNull()
+  })
+
+  it('offers the dev-only test key once a provider is picked (dev build)', async () => {
+    renderSettings()
+    await ready()
+    await pick('Google')
+    expect(screen.getByRole('button', { name: t('settings.ai.key.testKey') })).toBeTruthy()
   })
 
   it.each([

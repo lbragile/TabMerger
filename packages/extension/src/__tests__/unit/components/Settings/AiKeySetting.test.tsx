@@ -1,11 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import type { AiProvider } from '@tabmerger/shared'
+import { AI_PROVIDERS, byokKeyProvider, type AiProvider } from '@tabmerger/shared'
 import { AiKeySetting } from '@/components/Settings/AiKeySetting'
 import type { SavedByokKeyInfo } from '@/hooks/useByokKey'
-import { clearByokKey, getByokKey, saveByokKey } from '@/lib/byokKey'
+import { clearByokKey, getByokKey, normalizeByokKey, saveByokKey } from '@/lib/byokKey'
+import { AiRequestError } from '@/lib/aiErrors'
+import { DEV_TEST_KEYS } from '@/components/Settings/AiTestKeyButton'
 import { t } from '@/lib/i18n'
 
 const { mockAiPost, mockToast, mockAuth } = vi.hoisted(() => ({
@@ -46,6 +48,8 @@ beforeEach(async () => {
   await clearByokKey()
   mockAuth.mockReturnValue({ user: { id: 'u1' }, session: { access_token: 'tok' } })
 })
+
+afterEach(() => vi.unstubAllEnvs())
 
 describe('AiKeySetting', () => {
   it.each([
@@ -141,6 +145,8 @@ describe('AiKeySetting', () => {
   })
 
   it('focus order: key field, Save, Cancel, then the setup links', async () => {
+    // A production build: dev builds add "Use test key" after Cancel (see below)
+    vi.stubEnv('DEV', false)
     renderKey({ provider: 'google', saved: { masked: 'sk-…yyyy', provider: 'openai' } })
     await userEvent.type(screen.getByTestId('ai-byok-key-input'), 'a')
     const order = [
@@ -156,5 +162,58 @@ describe('AiKeySetting', () => {
       await userEvent.tab()
       expect(document.activeElement).toBe(next)
     }
+  })
+})
+
+describe('AiKeySetting — dev-only "Use test key"', () => {
+  const testKeyButton = () => screen.queryByRole('button', { name: t('settings.ai.key.testKey') })
+
+  it('shows in a dev build next to the key field, with a hint naming AI_MOCK', () => {
+    expect(import.meta.env.DEV).toBe(true)
+    renderKey()
+    const button = testKeyButton()
+    expect(button).toBeTruthy()
+    const hint = document.getElementById(button!.getAttribute('aria-describedby')!)
+    expect(hint?.textContent).toBe(t('settings.ai.key.testKeyHint'))
+    expect(hint?.textContent).toContain('AI_MOCK=true')
+  })
+
+  it('comes after Save and Cancel in focus order', async () => {
+    renderKey({ provider: 'google', saved: { masked: 'sk-…yyyy', provider: 'openai' } })
+    screen.getByRole('button', { name: t('common.cancel') }).focus()
+    await userEvent.tab()
+    expect(document.activeElement).toBe(testKeyButton())
+  })
+
+  it('is not shown in a non-dev build', () => {
+    vi.stubEnv('DEV', false)
+    renderKey()
+    expect(testKeyButton()).toBeNull()
+    expect(screen.getByTestId('ai-byok-key-input')).toBeTruthy()
+  })
+
+  it('is not shown while a saved key is displayed (no key field)', () => {
+    renderKey({ saved: { masked: 'sk-ant-…xxxx', provider: 'anthropic' } })
+    expect(testKeyButton()).toBeNull()
+  })
+
+  it.each(AI_PROVIDERS)('%s: the dummy key passes the format check and is saved through verify', async (provider) => {
+    const key = DEV_TEST_KEYS[provider]
+    expect(byokKeyProvider(normalizeByokKey(key))).toBe(provider)
+    mockAiPost.mockResolvedValue({ ok: true, provider })
+    const onSaved = vi.fn()
+    renderKey({ provider, onSaved })
+    await userEvent.click(testKeyButton()!)
+    await waitFor(() => expect(onSaved).toHaveBeenCalledWith(provider))
+    expect(mockAiPost).toHaveBeenCalledWith('/api/ai/byok/verify', {}, 'tok', { byokKey: key })
+    expect(await getByokKey('u1')).toEqual({ key, provider })
+  })
+
+  it('without the server mock, verify rejects it and the usual key error shows', async () => {
+    mockAiPost.mockRejectedValue(new AiRequestError('byok_key_invalid', 400, 'That key was rejected.'))
+    renderKey({ provider: 'openai' })
+    await userEvent.click(testKeyButton()!)
+    expect((await screen.findByRole('alert')).textContent).toBe('That key was rejected.')
+    expect(await getByokKey('u1')).toBeNull()
   })
 })

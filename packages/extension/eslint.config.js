@@ -45,10 +45,9 @@ export default [
     settings: { react: { version: 'detect' } },
   },
   {
-    // Every UI path. Not src/components/ui (unmodified shadcn primitives), the dev-only mocks,
-    // or the demo seed data (lib/demoData.ts: recorded marketing content, not app copy).
+    // Every UI path. Not src/components/ui (unmodified shadcn primitives) or the demo seed data (lib/demoData.ts: recorded marketing content, not app copy).
     files: ['src/components/**/*.tsx', 'src/entrypoints/**/*.{ts,tsx}', 'src/hooks/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}'],
-    ignores: ['src/components/ui/**', 'src/mocks/**', 'src/lib/demoData.ts'],
+    ignores: ['src/components/ui/**', 'src/lib/demoData.ts'],
     rules: {
       'react/jsx-no-literals': ['error', { noStrings: false, allowedStrings: COPY_SYMBOLS, ignoreProps: true }],
       'no-restricted-syntax': [

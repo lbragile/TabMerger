@@ -223,6 +223,21 @@ describe('GroupContextMenu — AI rename', () => {
     await vi.waitFor(() => expect(mockToastError).toHaveBeenCalledWith('boom'))
     expect(mockUpdateGroupName).not.toHaveBeenCalled()
   })
+
+  it('an error fixed in Settings → AI offers "Open Settings", which opens Settings on the AI tab', async () => {
+    const { AiRequestError } = await import('@/lib/aiErrors')
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    mockNameGroup.mockRejectedValue(new AiRequestError('byok_key_invalid', 400, 'Key rejected'))
+    const user = userEvent.setup()
+    renderGroup(groupWithTabs())
+    await user.click(screen.getByText('AI rename'))
+    await vi.waitFor(() => expect(mockToastError).toHaveBeenCalled())
+    const [message, options] = mockToastError.mock.calls[0] as [string, { action: { label: string; onClick: () => void } }]
+    expect(message).toBe('Key rejected')
+    expect(options.action.label).toBe('Open Settings')
+    options.action.onClick()
+    expect(mockOpenModal).toHaveBeenCalledWith('settings', { tab: 'ai' })
+  })
 })
 
 describe('GroupContextMenu — item actions', () => {
