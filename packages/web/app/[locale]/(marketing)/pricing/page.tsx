@@ -72,6 +72,7 @@ export default async function PricingPage() {
           currentAiMode={currentAiMode}
           currentPeriodEnd={currentPeriodEnd}
           installHref={getStoreLinks()[await getVisitorBrowser()]}
+          signedIn={!!user}
         />
       </div>
       <p className="text-center text-sm text-text2 mt-14">

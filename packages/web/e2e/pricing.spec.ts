@@ -37,7 +37,8 @@ test.describe('Pro AI card — "coming soon" kill switch', () => {
     await expect(proAiCard.getByText(/^\$\d/).first()).toBeVisible()
 
     if (aiEnabled) {
-      await expect(proAiCard.getByRole('button', { name: /Upgrade to Pro AI/i })).toBeEnabled()
+      // "Get Pro AI" signed out, "Upgrade to Pro AI" for a signed-in free account.
+      await expect(proAiCard.getByRole('button', { name: /^(Get|Upgrade to) Pro AI$/i })).toBeEnabled()
       await expect(proAiCard.getByText('Coming soon')).toHaveCount(0)
     } else {
       const cta = proAiCard.getByRole('button', { name: 'Coming soon' })

@@ -45,6 +45,7 @@
   "switchToMonthly": "월간 결제로 전환",
   "downgradeTo": "{name}(으)로 다운그레이드",
   "upgradeTo": "{name}(으)로 업그레이드",
+  "getPlan": "{name} 시작하기",
   "switchFailed": "전환을 시작할 수 없습니다. 계정 페이지의 결제 관리를 이용해 보세요.",
   "alreadySubscribed": "이미 요금제를 이용 중입니다. 변경할 수 있도록 결제 페이지를 엽니다.",
   "portalFailed": "결제 페이지를 열 수 없습니다. 계정 페이지의 결제 관리에서 요금제를 변경하세요.",

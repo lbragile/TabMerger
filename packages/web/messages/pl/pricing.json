@@ -45,6 +45,7 @@
   "switchToMonthly": "Przejdź na płatność miesięczną",
   "downgradeTo": "Przejdź na {name}",
   "upgradeTo": "Przejdź na {name}",
+  "getPlan": "Wybierz {name}",
   "switchFailed": "Nie udało się rozpocząć zmiany. Spróbuj opcji Zarządzaj płatnościami na stronie konta.",
   "alreadySubscribed": "Masz już plan. Otwieramy płatności, abyś mógł go zmienić.",
   "portalFailed": "Nie udało się otworzyć płatności. Użyj opcji Zarządzaj płatnościami na stronie konta, aby zmienić plan.",

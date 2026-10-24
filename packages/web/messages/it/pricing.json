@@ -45,6 +45,7 @@
   "switchToMonthly": "Passa alla fatturazione mensile",
   "downgradeTo": "Passa a {name}",
   "upgradeTo": "Passa a {name}",
+  "getPlan": "Ottieni {name}",
   "switchFailed": "Impossibile avviare il cambio. Prova con Gestisci fatturazione nella pagina del tuo account.",
   "alreadySubscribed": "Hai già un piano. Apriamo la fatturazione così puoi modificarlo.",
   "portalFailed": "Impossibile aprire la fatturazione. Usa Gestisci fatturazione nella pagina del tuo account per cambiare piano.",

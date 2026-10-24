@@ -45,6 +45,7 @@
   "switchToMonthly": "Zu monatlicher Abrechnung wechseln",
   "downgradeTo": "Auf {name} downgraden",
   "upgradeTo": "Auf {name} upgraden",
+  "getPlan": "{name} holen",
   "switchFailed": "Der Wechsel konnte nicht gestartet werden. Versuche „Abrechnung verwalten“ auf deiner Kontoseite.",
   "alreadySubscribed": "Du hast bereits einen Tarif. Die Abrechnung wird geöffnet, damit du ihn ändern kannst.",
   "portalFailed": "Die Abrechnung konnte nicht geöffnet werden. Nutze „Abrechnung verwalten“ auf deiner Kontoseite, um deinen Tarif zu ändern.",

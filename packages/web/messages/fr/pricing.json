@@ -45,6 +45,7 @@
   "switchToMonthly": "Passer à la facturation mensuelle",
   "downgradeTo": "Rétrograder vers {name}",
   "upgradeTo": "Passer à {name}",
+  "getPlan": "Choisir {name}",
   "switchFailed": "Impossible de lancer le changement. Essayez Gérer la facturation sur la page de votre compte.",
   "alreadySubscribed": "Vous avez déjà une offre. Ouverture de la facturation pour la modifier.",
   "portalFailed": "Impossible d’ouvrir la facturation. Utilisez Gérer la facturation sur la page de votre compte pour changer d’offre.",

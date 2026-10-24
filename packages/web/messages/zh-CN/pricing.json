@@ -45,6 +45,7 @@
   "switchToMonthly": "切换为按月计费",
   "downgradeTo": "降级为{name}",
   "upgradeTo": "升级为{name}",
+  "getPlan": "获取{name}",
   "switchFailed": "无法开始切换。请在账户页面使用“管理账单”。",
   "alreadySubscribed": "您已有套餐，正在打开账单页面以便您更改。",
   "portalFailed": "无法打开账单页面。请在账户页面使用“管理账单”更改套餐。",

@@ -100,7 +100,7 @@ describe('begin_checkout', () => {
   it('fires once with tier, interval, value, currency, items and source when the checkout request starts', async () => {
     let resolveFetch: (value: unknown) => void = () => {}
     global.fetch = vi.fn(() => new Promise((resolve) => (resolveFetch = resolve))) as typeof fetch
-    render(<PricingCard {...baseProps} currentTier="free" />)
+    render(<PricingCard {...baseProps} currentTier="free" signedIn />)
 
     await userEvent.click(screen.getByRole('button', { name: /upgrade to pro/i }))
 

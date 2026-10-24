@@ -45,6 +45,7 @@
   "switchToMonthly": "Beralih ke tagihan bulanan",
   "downgradeTo": "Turunkan ke {name}",
   "upgradeTo": "Tingkatkan ke {name}",
+  "getPlan": "Dapatkan {name}",
   "switchFailed": "Tidak dapat memulai peralihan. Coba Kelola tagihan di halaman akun Anda.",
   "alreadySubscribed": "Anda sudah memiliki paket. Membuka halaman tagihan agar Anda dapat mengubahnya.",
   "portalFailed": "Tidak dapat membuka halaman tagihan. Gunakan Kelola tagihan di halaman akun Anda untuk mengubah paket.",

@@ -45,6 +45,7 @@
   "switchToMonthly": "Chuyển sang thanh toán hàng tháng",
   "downgradeTo": "Hạ cấp xuống {name}",
   "upgradeTo": "Nâng cấp lên {name}",
+  "getPlan": "Đăng ký {name}",
   "switchFailed": "Không thể bắt đầu chuyển đổi. Hãy thử Quản lý thanh toán trên trang tài khoản.",
   "alreadySubscribed": "Bạn đã có gói đăng ký. Đang mở trang thanh toán để bạn thay đổi.",
   "portalFailed": "Không thể mở trang thanh toán. Hãy dùng Quản lý thanh toán trên trang tài khoản để đổi gói.",

@@ -45,6 +45,7 @@
   "switchToMonthly": "Aylık faturalandırmaya geç",
   "downgradeTo": "{name} planına düşür",
   "upgradeTo": "{name} planına yükselt",
+  "getPlan": "{name} planını al",
   "switchFailed": "Geçiş başlatılamadı. Hesap sayfanızdaki Faturalandırmayı yönet seçeneğini deneyin.",
   "alreadySubscribed": "Zaten bir planınız var. Değiştirebilmeniz için faturalandırma açılıyor.",
   "portalFailed": "Faturalandırma açılamadı. Planınızı değiştirmek için hesap sayfanızdaki Faturalandırmayı yönet seçeneğini kullanın.",

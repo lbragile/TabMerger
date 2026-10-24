@@ -67,6 +67,12 @@ interface PricingCardProps {
   currentAiMode?: AiMode
   /** When the current paid period ends: the date a scheduled plan change takes effect. */
   currentPeriodEnd?: string | null
+  /**
+   * Whether the visitor is signed in. The page passes `currentTier="free"` to guests and free
+   * accounts alike, so this is what tells them apart: a guest has nothing to upgrade from and is
+   * offered "Get …" instead of "Upgrade to …". A paid `currentTier` implies a signed-in account.
+   */
+  signedIn?: boolean
 }
 
 export function PricingCard({
@@ -80,6 +86,7 @@ export function PricingCard({
   aiOptions,
   currentAiMode,
   currentPeriodEnd,
+  signedIn = false,
   ...singleOption
 }: PricingCardProps) {
   const router = useRouter()
@@ -106,11 +113,13 @@ export function PricingCard({
   // A Pro AI subscriber looking at the other option can move to it on the same subscription.
   const aiModeSwitchTarget = isSameTier && isProAi && !isCurrentPlan ? aiMode : null
   const isFree = tier === 'free'
-  // A signed-out visitor has no currentTier — treat as free/below every paid card.
+  // A signed-out visitor comes in as 'free' (or with no currentTier): below every paid card.
   const isBelowCurrentTier =
     !!currentTier && TIER_RANK[normalizeTier(tier)] < TIER_RANK[normalizeTier(currentTier)]
   // The pricing page passes a paid currentTier only while that subscription is entitled.
   const hasPaidPlan = !!currentTier && normalizeTier(currentTier) !== 'free'
+  // Signed out: "Get Pro", not "Upgrade to Pro" (the click still signs in, then checks out).
+  const isGuest = !signedIn && !hasPaidPlan
   // A subscriber's changes (plan, interval, Pro AI option) go through one confirm-then-post flow.
   const change = usePlanChange(
     hasPaidPlan
@@ -372,7 +381,7 @@ export function PricingCard({
             disabled={loading || change.loading}
             loading={loading || change.loading}
           >
-            {t('upgradeTo', { name })}
+            {isGuest ? t('getPlan', { name }) : t('upgradeTo', { name })}
           </Button>
         )}
         {/* A plan change's outcome: done (with the date for a scheduled one) or why it failed. */}

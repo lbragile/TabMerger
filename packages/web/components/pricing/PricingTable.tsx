@@ -20,9 +20,18 @@ interface PricingTableProps {
   currentPeriodEnd?: string | null
   /** The Free card's install link, resolved on the server (`getStoreLinks()`) by the page. */
   installHref: string
+  /** Whether the visitor is signed in: guests see "Get …" on the paid cards, not "Upgrade to …". */
+  signedIn?: boolean
 }
 
-export function PricingTable({ currentTier, currentInterval, currentAiMode, currentPeriodEnd, installHref }: PricingTableProps) {
+export function PricingTable({
+  currentTier,
+  currentInterval,
+  currentAiMode,
+  currentPeriodEnd,
+  installHref,
+  signedIn = false,
+}: PricingTableProps) {
   // Always opens on Monthly, whatever the current plan is billed at.
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
   const t = useTranslations('pricing')
@@ -73,6 +82,7 @@ export function PricingTable({ currentTier, currentInterval, currentAiMode, curr
           currentInterval={currentInterval}
           currentPeriodEnd={currentPeriodEnd}
           installHref={installHref}
+          signedIn={signedIn}
           displayMonthly={zeroPrice}
           displayYearly={zeroPrice}
         />
@@ -91,6 +101,7 @@ export function PricingTable({ currentTier, currentInterval, currentAiMode, curr
             currentInterval={currentInterval}
             currentPeriodEnd={currentPeriodEnd}
             installHref={installHref}
+            signedIn={signedIn}
             displayMonthly={listPrice(TIERS.pro.monthlyPrice)}
             displayYearly={listPrice(TIERS.pro.yearlyPrice)}
             yearlySubtext={yearlySubtext(YEARLY_SAVINGS.pro)}
@@ -110,6 +121,7 @@ export function PricingTable({ currentTier, currentInterval, currentAiMode, curr
           currentPeriodEnd={currentPeriodEnd}
           currentAiMode={currentAiMode}
           installHref={installHref}
+          signedIn={signedIn}
           aiOptions={{
             managed: {
               monthlyPrice: TIERS.proAi.monthlyPrice,

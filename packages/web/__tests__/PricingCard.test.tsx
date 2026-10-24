@@ -119,7 +119,7 @@ describe('PricingCard', () => {
 
     const user = userEvent.setup()
     render(<PricingCard {...baseProps} />)
-    await user.click(screen.getByRole('button', { name: /Upgrade to Pro/ }))
+    await user.click(screen.getByRole('button', { name: 'Get Pro' }))
 
     expect(global.fetch).toHaveBeenCalledWith(
       '/api/checkout',
@@ -133,7 +133,7 @@ describe('PricingCard', () => {
     ;(global.fetch as any).mockResolvedValue({ status: 401, json: async () => ({}) })
     const user = userEvent.setup()
     render(<PricingCard {...baseProps} />)
-    await user.click(screen.getByRole('button', { name: /Upgrade to Pro/ }))
+    await user.click(screen.getByRole('button', { name: 'Get Pro' }))
     expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/pricing')
   })
 
@@ -194,10 +194,12 @@ describe('PricingCard', () => {
     expect(screen.getByText('Current')).toBeInTheDocument()
   })
 
-  it('signed-out visitor (no currentTier) sees default CTAs with no "Current"/"Downgrade" labels (AI enabled)', async () => {
+  it('signed-out visitor (no currentTier) sees "Get …" with no "Current"/"Downgrade" labels (AI enabled)', async () => {
     const PricingCard = await loadPricingCard(true)
     render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" />)
-    expect(screen.getByRole('button', { name: /Upgrade to Pro AI/ })).toBeInTheDocument()
+    // Nothing to upgrade from: "Get", not "Upgrade to".
+    expect(screen.getByRole('button', { name: 'Get Pro AI' })).toBeInTheDocument()
+    expect(screen.queryByText(/Upgrade to/)).not.toBeInTheDocument()
     expect(screen.queryByText('Current')).not.toBeInTheDocument()
     expect(screen.queryByText(/Downgrade/)).not.toBeInTheDocument()
   })
@@ -291,7 +293,7 @@ describe('PricingCard', () => {
       mockEndpoints({ '/api/checkout': { status: 200, body: { url: 'https://checkout.example.com' } } })
 
       const user = userEvent.setup()
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(requestedPaths()).toEqual(['/api/checkout'])
@@ -309,7 +311,7 @@ describe('PricingCard', () => {
 
       const user = userEvent.setup()
       // The page still shows the user as free (e.g. it was loaded before the purchase).
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(requestedPaths()).toEqual(['/api/checkout', '/api/billing-portal'])
@@ -328,7 +330,7 @@ describe('PricingCard', () => {
       })
 
       const user = userEvent.setup()
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(window.location.href).toBe('')
@@ -342,7 +344,7 @@ describe('PricingCard', () => {
       mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'something_else' } } })
 
       const user = userEvent.setup()
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(requestedPaths()).toEqual(['/api/checkout'])
@@ -397,7 +399,7 @@ describe('PricingCard', () => {
     it('leaves the Pro (non-AI) card CTA fully functional', async () => {
       const PricingCard = await loadPricingCard(false)
       render(<PricingCard {...baseProps} tier="pro" name="Pro" />)
-      const cta = screen.getByRole('button', { name: /Upgrade to Pro/ })
+      const cta = screen.getByRole('button', { name: 'Get Pro' })
       expect(cta).not.toBeDisabled()
     })
   })

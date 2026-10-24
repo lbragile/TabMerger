@@ -119,7 +119,7 @@ describe('Pro AI option switch on the pricing page', () => {
       expect(within(card).getByText(`$${OWN_KEY.monthlyPrice}`)).toBeInTheDocument()
       expect(within(card).queryByText('Coming soon')).not.toBeInTheDocument()
 
-      const buy = within(card).getByRole('button', { name: 'Upgrade to Pro AI' })
+      const buy = within(card).getByRole('button', { name: 'Get Pro AI' })
       expect(buy).toBeEnabled()
       await user.click(buy)
       expect(checkoutBody()).toEqual({ tier: 'proAi', interval: 'monthly', aiMode: 'byok' })
@@ -179,13 +179,13 @@ describe('Pro AI option switch on the pricing page', () => {
       render(<PricingTable installHref={INSTALL} />)
 
       expect(screen.getByRole('radio', { name: 'TabMerger' })).toBeChecked()
-      await user.click(within(proAiCard()).getByRole('button', { name: 'Upgrade to Pro AI' }))
+      await user.click(within(proAiCard()).getByRole('button', { name: 'Get Pro AI' }))
       expect(checkoutBody()).toEqual({ tier: 'proAi', interval: 'monthly', aiMode: 'managed' })
 
       vi.mocked(global.fetch).mockClear()
       mockCheckout()
       await user.click(screen.getByRole('radio', { name: 'You' }))
-      await user.click(within(proAiCard()).getByRole('button', { name: 'Upgrade to Pro AI' }))
+      await user.click(within(proAiCard()).getByRole('button', { name: 'Get Pro AI' }))
       expect(checkoutBody()).toEqual({ tier: 'proAi', interval: 'monthly', aiMode: 'byok' })
     })
 
