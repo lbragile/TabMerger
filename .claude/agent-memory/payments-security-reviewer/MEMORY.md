@@ -8,3 +8,4 @@
 - [User-triggered resync review method](learnings_user_triggered_resync_review_method.md) — auditing a route that corrects a row from Stripe: key provenance, write-by-id, non-entitled only, revivable statuses
 - [Pre-checkout Stripe guard review method](learnings_pre_checkout_stripe_guard_review_method.md) — ask-Stripe-before-selling: input fail-closed, resource_missing scope, expire-pass races, upward-write gates
 - [Analytics vs privacy page](learnings_analytics_privacy_crosscheck.md) — cross-check GA4/PostHog identifiers sent from payments code against the privacy page wording
+- [Refund after paid call](learnings_refund_after_paid_call_review_method.md) — credit refund audit (bounded? exact charge? once-flag?) + Workflow DevKit endpoint exposure, Vercel vs local world

@@ -13,6 +13,6 @@ Own-key requests go to the provider the key belongs to (`byokKeyProvider` in sha
 - Structured-output schemas use `enum: ['x']` instead of `const`, which OpenAI strict mode and Gemini don't document.
 - Provider error codes are logged, so only a short machine-code shape is kept (`ERROR_CODE_SHAPE`); free text from a provider body never reaches logs or responses (a provider could echo the key).
 - `/api/ai/byok/verify` costs nothing: Anthropic `count_tokens`, OpenAI `GET /v1/models/{model}`, Google `GET /v1beta/models/{model}`; returns `{ ok: true, provider }`.
-- Flags: `aiDisabledResponse()` (first statement) 503s only when no option is live; `aiModeDisabledResponse(mode)` runs right after the subscription lookup (in `resolveAiContext`, the approve route and verify), before any reservation or model call.
+- Flags: `aiDisabledResponse()` (first statement) 503s only when no option is live; `aiModeDisabledResponse(mode)` runs right after the subscription lookup (in `resolveAiContext` and verify), before any reservation or model call.
 
 Related: [[ai-metering-flow]], [[model-request-settings]], [[ai-kill-switch]]

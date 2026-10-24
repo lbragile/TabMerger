@@ -1,19 +1,20 @@
 ---
 name: organize-e2ee-writeback
-description: The organize workflow's E2EE approach — client sends plaintext groups in POST, server refuses content-bearing writebacks rather than re-encrypting
+description: How /api/ai/organize handles E2EE — synchronous route, client sends decrypted groups, server answers { actions } and never writes; why the old Workflow + dashboard approval path was removed
 metadata:
   type: project
 ---
 
-`/api/ai/organize` handles E2E encryption by **splitting reads from writes**, not by round-tripping ciphertext:
+`POST /api/ai/organize` is a plain synchronous AI route: one metered (or own-key) model call, answered as `{ actions: OrganizeAction[] }` (`OrganizeAction` / `OrganizeResponse` live in `packages/shared/src/types`). The extension reviews the proposal in the popup and applies the accepted actions to its local groups, which then sync re-encrypted through the normal path. The server stores nothing and writes nothing.
 
-- **Read:** the extension POSTs `{ groups: [{id, name, permanent, tabs}] }` (unless it confirmed there is no encryption key), mirroring `/api/ai/suggest-sessions`. The POST route itself loads the groups (`loadOrganizeGroups` in `lib/ai-organize.ts`), calls the model, and starts the workflow with only the sanitized proposal and the pinned (Now Open) ids. Workflow arguments are persisted in its event log, so no tab data and no BYOK key may ever be passed to it. Only a request with no groups falls back to the service-role DB read, which 400s before the model call if a row is not a plaintext array. See [[ai-request-validation]], [[ai-metering-flow]].
-- **Stream:** the workflow's `publishProposal` step writes one JSON array of actions and closes the stream (what `OrganizeProposal.tsx` parses). The approval hook is created before publishing, so an immediate approval always finds it.
-- **Write:** `applyChanges` never re-encrypts. It calls `isEncryptedBlob(group.windows)` and pushes any *content-bearing* action (`rename`, `merge`) onto `skipped` for the client to re-apply locally through the sync engine. Only `delete` and `reorder` (row-level / position-only) run server-side.
-- The web dashboard is **not** an E2EE client — `OrganizeProposal` takes an `encrypted` prop and renders a refusal card instead of streaming.
+- **Read:** the extension POSTs its decrypted `{ groups: [{id, name, permanent, tabs}] }` unless it confirmed there is no encryption key. Only a request with no groups reads the stored rows (`loadStoredOrganizeGroups` in `lib/ai-organize.ts`), which 400s before the model call if any row's `windows` is not a plaintext array.
+- **Answer:** `sanitizeOrganizeProposal` (lib/ai.ts) keeps only ids from the request, never names a permanent group in merge / rename / delete, and cleans and caps rename text at 30 chars. The rationale is dropped from the response.
+- **Write:** none on the server.
 
-**Why:** the server holds no data key by design. Decision: the approve request does not accept pre-encrypted blobs, because merging two `windows` trees requires plaintext, so the server could not produce a correct blob anyway.
+**Why:** every signed-in Pro account is E2E-encrypted and the server holds no key, so a server-side apply step can never merge or rename. The earlier design (Workflow DevKit run, `organize_runs`, GET stream, approve route, web-dashboard `OrganizeProposal`) could only skip those actions, needed `withWorkflow` + a proxy-matcher exclusion to run at all, and persisted proposals in Workflow storage. It was removed (2026-10-24). Leftovers: the `organize_runs` table (needs a drop migration) and the `workflow` / `@workflow/*` deps in packages/web/package.json (removal touches the lockfile).
 
-**How to apply:** any future AI route that *writes* user content must follow the same skip-and-report pattern. Never add a server-side re-encrypt path. If a route needs plaintext, take it from the client body; don't query `groups.windows`.
+**Decision:** no credit refund on any post-model failure. A refund would let a managed account repeat paid calls at no charge during an outage, putting provider spend outside the monthly cap. With the synchronous route there is no post-model server step left anyway.
 
-Related: [[suggest-sessions-shape]]
+**How to apply:** any future AI feature that changes user content returns a proposal for the client to apply; never add a server-side write or re-encrypt path for content columns.
+
+Related: [[ai-request-validation]], [[ai-metering-flow]], [[groups-position-now-open]]

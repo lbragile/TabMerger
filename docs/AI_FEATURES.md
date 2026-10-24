@@ -9,12 +9,13 @@ Authoritative code:
 | --- | --- |
 | Route handlers | `packages/web/app/api/ai/*/route.ts` |
 | Haiku prompts + model constant | `packages/web/lib/ai.ts` (`AI_MODEL`) |
-| Organize workflow (durable agent) | `packages/web/lib/workflows/tabOrganizer.ts` |
+| Organize: groups for the prompt, proposal cleaning | `packages/web/lib/ai-organize.ts`, `sanitizeOrganizeProposal` in `packages/web/lib/ai.ts` |
+| Shared organize types | `OrganizeAction`, `OrganizeResponse` in `packages/shared/src/types/index.ts` |
 | Tier check + credit metering | `packages/web/lib/ai-usage.ts` |
 | Kill switch | `packages/web/lib/ai-guard.ts`, `packages/web/lib/aiFlag.ts`, `packages/shared/src/utils/flags.ts` |
 | Extension callers | `packages/extension/src/hooks/useAI.ts`, `useAiUsage.ts`, `src/lib/aiFlag.ts` |
 | Dev "Credits used this month" control (Settings → Dev) | `packages/extension/src/components/Settings/DevAiCredits.tsx` |
-| Schema | `supabase/migrations/006_ai_usage.sql`, `014_ai_credit_purchases.sql`, `017_rename_ai_usage_credits.sql`, `004_create_organize_runs.sql` |
+| Schema | `supabase/migrations/006_ai_usage.sql`, `014_ai_credit_purchases.sql`, `017_rename_ai_usage_credits.sql` |
 
 ---
 
@@ -49,9 +50,7 @@ Request order in every metered route:
 | `POST /api/ai/name-group` | `{ tabs: {id,title,url}[] }` | `{ name }` | 1 | Haiku 4.5 | Group context menu → AI rename (`useNameGroup`) |
 | `POST /api/ai/tab-summary` | `{ tab: {id:number,title,url} }` | `{ summary }` | 1 | Haiku 4.5 | Tab hover preview (`useTabSummary`) — see gaps |
 | `POST /api/ai/suggest-sessions` | `{ groups: {id,name,tabs}[] }` | `{ message, staleGroupIds, suggestion }` | 5 | Haiku 4.5 | `AIGroupSuggestion` banner, automatic, once per day (`useSuggestSessions`) |
-| `POST /api/ai/organize` | `{ groups?: {id,name,tabs,permanent?}[] }` | `{ runId, token }` | 8 | `anthropic/claude-sonnet-4-6` via `@workflow/ai` `DurableAgent` | Header → AI actions → Organize (`useOrganizeTabs`) |
-| `GET /api/ai/organize?runId=` | — | NDJSON progress stream | 0 | — | Web dashboard `OrganizeProposal` |
-| `POST /api/ai/organize/approve` | `{ token, approved, actions? }` | `{ ok: true }` | 0 | — | Web dashboard `OrganizeProposal` |
+| `POST /api/ai/organize` | `{ groups?: {id,name,tabs,permanent?}[], model? }` | `{ actions: OrganizeAction[] }` | metered like the others | auto: the mid model | Header → AI actions → Organize (`useOrganizeTabs`), reviewed and applied in the popup |
 | `POST /api/ai/dev-usage` | `{ count }` (credits) | `{ count }` | — | — | Extension Settings → Dev → "Credits used this month" Set/Reset only |
 
 Notes:
@@ -60,11 +59,15 @@ Notes:
   `lib/ai.ts`; no temperature is set. Read the file rather than copying prompts here.
 - `suggestion` is a deprecated alias of `message`, kept for already-shipped extension builds.
   `suggestSessions` only lets the model see/return group **names**, then maps them back to IDs.
-- **Organize** is a durable workflow: POST starts it (recording `run_id → user_id` in
-  `organize_runs`); GET streams progress after an ownership check (404 for someone else's run);
-  the workflow suspends on a hook until `approve` resumes it. `approve` requires active `pro_ai`
-  and checks the hook token starts with `org-<userId>-`. The approver may send an edited
-  `actions` list. Applying never deletes or drains the permanent "Now Open" group (position 0).
+- **Organize** is a synchronous route like the others: one model call, answered as
+  `{ actions }` (merge / rename / delete / reorder; no changes needed is `{ actions: [] }`). The
+  extension shows the proposal in the popup for review and applies the accepted actions to its
+  local groups, which then sync (re-encrypted) through the normal path. The server stores nothing
+  and writes nothing. `sanitizeOrganizeProposal` keeps only ids from the request, never names a
+  permanent group (Now Open) in merge / rename / delete, and cleans and caps rename text at 30
+  characters; the extension still checks the ids against its own groups before applying. Organize
+  used to be a Workflow DevKit run with a web-dashboard approval page; that path is gone (see
+  [Known gaps](#known-gaps) for what is left of it).
 - **dev-usage** returns 404 unless `NODE_ENV === 'development'`. It sets `ai_usage.credits_used`
   for the current month; `count: 0` also deletes this month's `ai_credit_purchases` rows.
 
@@ -77,11 +80,11 @@ key. Any route that needs group **content** must receive it client-decrypted in 
 
 - `suggest-sessions` and `group-tabs`/`name-group`/`tab-summary` already take all content from the
   body.
-- `organize`: the extension sends decrypted `groups` when `hasEncryptionKey()` is true; with an
-  empty body the workflow falls back to reading `groups` from the DB (plaintext users only).
-- When applying an approved plan, `rename` and `merge` on ciphertext groups are **skipped** and
-  returned in `skipped` (the server can't write inside the blob); `delete` and `reorder` still
-  apply server-side.
+- `organize`: the extension sends its decrypted `groups` unless it has confirmed there is no
+  encryption key; with no groups in the body the route reads `groups` from the DB, and refuses
+  with a 400 before the model call if any stored row is not a plaintext array. The proposal is
+  applied by the extension, never by the server, so encrypted groups are merged and renamed like
+  any other.
 
 Run the `encrypted-column-auditor` agent before merging any new AI route.
 
@@ -119,12 +122,12 @@ Both go through `isAiEnabled()`: **on only for the exact string `"true"`** — u
 
 When off:
 
-- **Every `/api/ai/*` handler** (including organize GET/approve and dev-usage) returns
+- **Every `/api/ai/*` handler** (including dev-usage) returns
   `503 { error: 'ai_disabled' }` as its first statement — no auth lookup, no `ai_usage` read/write,
-  no workflow, no Anthropic call.
+  no model call.
 - **Checkout** rejects Pro AI and credit packs with the same 503 (see [PAYMENTS.md](PAYMENTS.md#ai-flag-and-payments)).
 - **Web UI** shows "Coming soon" (`AI_COMING_SOON_LABEL`) on the pricing card, features page, FAQ
-  and landing sections; dashboard/account hide AI usage and the organize panel.
+  and landing sections; dashboard/account hide AI usage.
 - **Extension** hides every AI entry point (Header AI actions menu, AI rename via `aiFeatures`,
   hover summary, suggestion banner, Settings AI section), `useEntitlements().aiFeatures` is forced
   false even for `pro_ai`, every AI mutation throws before `fetch`, and `useAiUsage` doesn't query.
@@ -134,9 +137,7 @@ When off:
 
 - **Web, per Vercel environment:** set `NEXT_PUBLIC_AI_ENABLED=true` for Preview and/or Production,
   then **redeploy** — `NEXT_PUBLIC_*` is inlined at build time, so a restart or env edit alone
-  does nothing to the client bundle. Also needs `ANTHROPIC_API_KEY` (and, for organize, working
-  model access for the workflow agent — TODO (owner): document which credentials the
-  `anthropic/claude-sonnet-4-6` workflow model uses in each environment).
+  does nothing to the client bundle. Also needs `ANTHROPIC_API_KEY` for managed calls.
 - **Extension, local dev:** add `VITE_AI_ENABLED=true` to `packages/extension/.env.local` and
   restart `pnpm dev:extension`. Dev builds call the web app at `VITE_WEB_APP_URL`
   like any other build (there is no client-side AI mock). The account still needs `pro_ai` for `aiFeatures`.
@@ -166,8 +167,7 @@ What's fake (`packages/web/lib/ai-mock.ts`): only the model call in `runAiTask` 
 Claude's `countTokens`/`create`, or the OpenAI/Google request for an own key, and the provider
 check in `/api/ai/byok/verify`. Everything else runs for real: the flags, auth, plan and option
 checks, body validation and prompt cleaning, credit reservation and settlement, and each task's own
-parser. Organize's model call goes through the same `runAiTask` in its route (the workflow never
-calls a model), so the proposal it hands to the workflow is the mock's.
+parser. Organize goes through the same `runAiTask`, so its `{ actions }` answer is the mock's.
 
 - **Answers** are built from the request, deterministically: group-tabs groups by site, name-group
   uses the main site or the commonest title words, tab-summary starts with `[Mock summary]`,
@@ -210,9 +210,10 @@ Thrown errors release the managed reservation, as a real failed call would. `nex
 - **403 is unreachable:** `checkAndIncrementAIUsage` returns `remaining: 0` both for "not Pro AI"
   and "over cap", so the routes answer **429** in both cases. The extension therefore shows the
   quota prompt to a non-`pro_ai` caller.
-- **Organize hand-off:** the extension opens `/dashboard` without the `organizeRunId` /
-  `organizeToken` search params that `dashboard/page.tsx` needs to render `OrganizeProposal`, so the
-  approval panel doesn't appear from that hand-off.
+- **Leftovers of the old organize workflow:** the `organize_runs` table (migration 004) is no longer
+  written or read; dropping it needs a new migration. The `workflow` and `@workflow/*` packages are
+  still listed in `packages/web/package.json` but nothing imports them; removing them changes the
+  lockfile.
 
 TODO (owner): cost estimates for current models (old figures were for earlier Haiku pricing and were
 removed).
@@ -228,7 +229,7 @@ Open the popup, right-click → Inspect → Network, then:
 | Auto-group | Header → AI actions → Auto-group | `POST /api/ai/group-tabs` 200, groups created |
 | AI rename | Group context menu → AI rename | `POST /api/ai/name-group` 200, title updates |
 | Suggestions | Automatic on popup open, once/day | `POST /api/ai/suggest-sessions` 200, banner |
-| Organize | Header → AI actions → Organize | `POST /api/ai/organize` 200 `{ runId, token }`, dashboard tab opens |
+| Organize | Header → AI actions → Organize | `POST /api/ai/organize` 200 `{ actions }`, proposal shown in the popup for review |
 | Tab summary | Hover a tab | `POST /api/ai/tab-summary` (currently 400, see gaps) |
 
 After each call, `ai_usage.credits_used` for the user rises by the route's cost and

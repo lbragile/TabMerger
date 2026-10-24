@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
 import { cleanUntrustedText, cleanUrl, sanitizePromptText } from '@/lib/ai-prompt-safety'
 
 /**
@@ -51,13 +50,7 @@ export const AI_MAX_GROUPS = 500
  */
 export const AI_MAX_TOTAL_TABS = 3000
 
-/** Longest accepted organize hook token. Tokens are `org-<uuid>-<32 hex>`, 73 characters. */
-export const AI_MAX_HOOK_TOKEN_LENGTH = 200
-
-/** Most actions accepted in an edited organize proposal. */
-export const AI_MAX_ACTIONS = 500
-
-/** Longest group name a rename action may set. Same limit as the workflow's own schema. */
+/** Longest group name an organize rename (or name-group answer) may set. */
 export const AI_MAX_RENAME_LENGTH = 30
 
 /** Highest count the dev-only usage route accepts. */
@@ -132,31 +125,11 @@ const suggestSessionsBodySchema = z.object({
 })
 
 const organizeGroupSchema = groupSchema.extend({
-  // A non-boolean flag is ignored, not an error: the workflow then infers it from the index.
+  // A non-boolean flag is ignored, not an error: it is then inferred from the index.
   permanent: z.boolean().optional().catch(undefined),
 })
 
 const organizeGroupsSchema = z.array(organizeGroupSchema).min(1).max(AI_MAX_GROUPS)
-
-const groupIdSchema = z.string().min(1).max(AI_MAX_ID_LENGTH)
-
-/** Mirrors `ReorganizeAction`; the `satisfies` below fails the type-check if the two drift. */
-const reorganizeActionSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('merge'), sourceGroupId: groupIdSchema, targetGroupId: groupIdSchema }),
-  z.object({
-    type: z.literal('rename'),
-    groupId: groupIdSchema,
-    newName: z.string().max(AI_MAX_RENAME_LENGTH),
-  }),
-  z.object({ type: z.literal('delete'), groupId: groupIdSchema }),
-  z.object({ type: z.literal('reorder'), groupIds: z.array(groupIdSchema).max(AI_MAX_GROUPS) }),
-]) satisfies z.ZodType<ReorganizeAction>
-
-const approveBodySchema = z.object({
-  token: z.string().min(1).max(AI_MAX_HOOK_TOKEN_LENGTH),
-  approved: z.boolean(),
-  actions: z.array(reorganizeActionSchema).max(AI_MAX_ACTIONS).optional(),
-})
 
 const devUsageBodySchema = z.object({
   count: z.number().int().min(0).max(AI_MAX_DEV_USAGE_COUNT),
@@ -168,7 +141,6 @@ export type PromptTab = z.infer<typeof promptTabSchema>
 export type IdentifiedTab = z.infer<typeof identifiedTabSchema>
 export type PromptGroup = z.infer<typeof groupSchema>
 export type OrganizeGroup = PromptGroup & { permanent: boolean }
-export type ApproveBody = z.infer<typeof approveBodySchema>
 
 /** Sanitized data, or the message for the route's `{ error }` 400 response. */
 export type ParseResult<T> = { ok: true; data: T } | { ok: false; error: string }
@@ -278,7 +250,7 @@ export function parseSuggestSessionsBody(body: unknown): ParseResult<PromptGroup
 /**
  * organize: an optional `{ groups: { id, name, permanent?, tabs }[] }`.
  *
- * `data` is `null`, which sends the workflow down its stored-rows path, only when
+ * `data` is `null`, which makes the route read the stored rows, only when
  * no groups were sent: the body is not a JSON object, or `groups` is missing, `null`
  * or an empty array. A payload that is present is never downgraded to `null`,
  * because for an end-to-end encrypted account the stored rows are ciphertext and the
@@ -288,8 +260,8 @@ export function parseSuggestSessionsBody(body: unknown): ParseResult<PromptGroup
  * empty or over-long id, or counts above a ceiling.
  *
  * A group that was sent with tabs and has none left after the tolerant read is left
- * out (see `withoutEmptiedGroups`): the workflow's instructions allow removing empty
- * groups, and an approved removal acts on the stored row. If that leaves no groups
+ * out (see `withoutEmptiedGroups`): the model's instructions allow removing empty
+ * groups, and the extension would apply that removal to the real group. If that leaves no groups
  * at all the request is rejected, again never downgraded to `null`. A left-out group
  * takes no slot in a later reorder, so positions after it can be one lower than the
  * client's index; the extension never sends such a group.
@@ -319,12 +291,6 @@ export function parseOrganizeBody(body: unknown): ParseResult<OrganizeGroup[] | 
 
   const usable = withoutEmptiedGroups(groups, resolved)
   return usable.length > 0 ? ok(usable) : fail('no readable tabs in groups')
-}
-
-/** organize/approve: `{ token, approved, actions? }`. */
-export function parseApproveBody(body: unknown): ParseResult<ApproveBody> {
-  const parsed = approveBodySchema.safeParse(body)
-  return parsed.success ? ok(parsed.data) : fail('token and approved are required')
 }
 
 /** dev-usage: `{ count }`. */

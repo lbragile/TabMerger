@@ -164,6 +164,22 @@ export interface AISuggestSessionsResponse {
   suggestion: string;
 }
 
+/**
+ * One change proposed by `POST /api/ai/organize`, applied by the extension after the user
+ * reviews it. Ids are `Group.id` values from the request; the server never names a permanent
+ * group (Now Open) in merge, rename or delete, and `newName` is cleaned and at most 30 chars.
+ */
+export type OrganizeAction =
+  | { type: 'merge'; sourceGroupId: string; targetGroupId: string }
+  | { type: 'rename'; groupId: string; newName: string }
+  | { type: 'delete'; groupId: string }
+  | { type: 'reorder'; groupIds: string[] };
+
+/** `POST /api/ai/organize` 200 body. No changes needed is `{ actions: [] }`. */
+export interface OrganizeResponse {
+  actions: OrganizeAction[];
+}
+
 // "Continue on other device" — device_sessions table (see supabase/migrations/013_create_device_sessions.sql)
 export interface DeviceSession {
   device_id: string;

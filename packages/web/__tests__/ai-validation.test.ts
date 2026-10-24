@@ -7,7 +7,6 @@ import { describe, it, expect } from 'vitest'
 import {
   AI_MAX_DEV_USAGE_COUNT,
   AI_MAX_TITLE_LENGTH,
-  parseApproveBody,
   parseDevUsageBody,
   parseGroupTabsBody,
   parseNameGroupBody,
@@ -145,13 +144,6 @@ describe('route parsers', () => {
       data: [
         { id: 'g1', name: 'Work', tabs: [{ title: 'x'.repeat(AI_MAX_TITLE_LENGTH), url: 'https://u.example/a' }], permanent: true },
       ],
-    })
-  })
-
-  it('approve leaves actions undefined when they are not sent', () => {
-    expect(parseApproveBody({ token: 'org-u-1', approved: false })).toStrictEqual({
-      ok: true,
-      data: { token: 'org-u-1', approved: false },
     })
   })
 

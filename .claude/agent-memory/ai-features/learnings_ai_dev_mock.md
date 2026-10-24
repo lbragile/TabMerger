@@ -7,7 +7,7 @@ metadata:
 
 `lib/ai-mock.ts` is the only dev AI mock (the extension's old client-side fetch mock was removed). It replaces only the provider calls, so flags, auth, plan checks, validation, metering and each task's `parse` run for real.
 
-- **Seams:** in `callAnthropic` both `client.messages.countTokens` and `.create` are swapped (managed metering calls count_tokens first, which is a network call too); in `callOwnKeyProvider` the `callOpenAi`/`callGoogle` call; in `/api/ai/byok/verify` the key check. Organize needs nothing extra: its model call is `runAiTask` in the route, and the durable workflow never calls a model.
+- **Seams:** in `callAnthropic` both `client.messages.countTokens` and `.create` are swapped (managed metering calls count_tokens first, which is a network call too); in `callOwnKeyProvider` the `callOpenAi`/`callGoogle` call; in `/api/ai/byok/verify` the key check. Organize needs nothing extra: its model call is `runAiTask` in the route like every other task.
 - The mock builds answers from `task.action` + `task.data` (already cleaned), never by parsing the prompt text back.
 - **Gate:** `AI_MOCK === 'true'` && `NODE_ENV === 'development'` && no `VERCEL_ENV`/`VERCEL`. Read per call so `vi.stubEnv('NODE_ENV', 'development')` works in tests.
 - **Errors are provider-shaped** (an `AiMockAnthropicError` with `status` + `error.error.type`, or a `ProviderHttpError`), so `mapAnthropicError`/`mapProviderError` produce the codes; thrown create errors release the reservation like real failures.

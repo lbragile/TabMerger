@@ -17,7 +17,6 @@ import share from './share.json'
 import uninstalled from './uninstalled.json'
 import dashboard from './dashboard.json'
 import account from './account.json'
-import organize from './organize.json'
 import beta from './beta.json'
 import auth from './auth.json'
 import consent from './consent.json'
@@ -41,7 +40,6 @@ const messages = {
   uninstalled,
   dashboard,
   account,
-  organize,
   beta,
   auth,
   consent,

@@ -2,7 +2,7 @@
  * The dev AI mock (`lib/ai-mock.ts`): its gate, its scenarios, each task's mock answer going
  * through the task's real parser, and the AI routes end to end with the mock on: real request
  * steps, real metering with the synthetic usage, the real error mapping, and no provider call.
- * Only the Anthropic SDK (which refuses to construct in jsdom), Supabase and the workflow are
+ * Only the Anthropic SDK (which refuses to construct in jsdom) and Supabase are
  * stubbed; any SDK or `fetch` call is a failure.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -28,13 +28,6 @@ vi.mock('@/lib/supabase/server', () => ({
   createServiceRoleClient: vi.fn(async () => mockSupabase),
 }))
 
-const mockStart = vi.fn()
-vi.mock('workflow/api', () => ({
-  start: (...a: unknown[]) => mockStart(...a),
-  getRun: vi.fn(),
-  resumeHook: vi.fn(),
-}))
-vi.mock('@/lib/workflows/tabOrganizer', () => ({ tabOrganizerWorkflow: 'wf' }))
 
 import { POST as nameGroupPOST } from '@/app/api/ai/name-group/route'
 import { POST as groupTabsPOST } from '@/app/api/ai/group-tabs/route'
@@ -143,7 +136,6 @@ beforeEach(() => {
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
   withSubscription(MANAGED)
   stubRpc()
-  mockStart.mockResolvedValue({ runId: 'run-1' })
 })
 
 afterEach(() => {
@@ -417,7 +409,7 @@ describe('managed routes with the mock on', () => {
     expect(sdk.create).not.toHaveBeenCalled()
   })
 
-  it('organize: the mock proposal reaches the workflow', async () => {
+  it('organize: answers the mock proposal as { actions }', async () => {
     const groups = [
       // Index 0 is Now Open (permanent by default): never merged, even though it shares a site.
       { id: 'now', name: 'Now Open', tabs: [TABS[0]] },
@@ -427,8 +419,7 @@ describe('managed routes with the mock on', () => {
     const res = await organizePOST(req('organize', { groups }))
     expect(res.status).toBe(200)
     expect(res.headers.get(AI_MOCK_HEADER)).toBe('1')
-    const proposal = mockStart.mock.calls[0][1][2]
-    expect(proposal.actions).toEqual([
+    expect((await res.json()).actions).toEqual([
       { type: 'merge', sourceGroupId: 'g2', targetGroupId: 'g1' },
       { type: 'rename', groupId: 'g1', newName: 'GitHub' },
     ])

@@ -20,7 +20,7 @@ This is the practical guide: stack, local development, migrations, sync and comm
 | `device_sessions` | extension `deviceSessions.ts` | Now Open snapshot is E2E-encrypted |
 | `shared_bundles` | extension `sharing.ts`, web `lib/sharing.ts` (both client-side, no API route) | Public read. Encrypted with a per-share key carried in the URL `#key=` |
 | `encryption_keys` | extension `encryptionKey.ts` | Wrapped data key only |
-| `organize_runs` | `POST /api/ai/organize` | Links a run to its owner |
+| `organize_runs` | nothing (unused) | Linked an old organize Workflow run to its owner; drop in a future migration |
 | `ai_usage`, `ai_credit_purchases` | AI routes / Stripe webhook (service role) | Credit metering |
 
 ## E2E encryption

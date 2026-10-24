@@ -43,33 +43,18 @@ function aiReturns(result: unknown) {
   mockRunAiTask.mockResolvedValue({ result, remaining: 42 })
 }
 
-const mockStart = vi.fn()
-const mockGetRun = vi.fn()
-const mockResumeHook = vi.fn()
-vi.mock('workflow/api', () => ({
-  start: (...a: unknown[]) => mockStart(...a),
-  getRun: (...a: unknown[]) => mockGetRun(...a),
-  resumeHook: (...a: unknown[]) => mockResumeHook(...a),
-}))
-
-vi.mock('@/lib/workflows/tabOrganizer', () => ({ tabOrganizerWorkflow: 'wf' }))
-
 // Imported after mocks are registered
 import { POST as groupTabsPOST } from '@/app/api/ai/group-tabs/route'
 import { POST as nameGroupPOST } from '@/app/api/ai/name-group/route'
 import { POST as tabSummaryPOST } from '@/app/api/ai/tab-summary/route'
 import { POST as suggestSessionsPOST } from '@/app/api/ai/suggest-sessions/route'
-import { POST as organizePOST, GET as organizeGET } from '@/app/api/ai/organize/route'
-import { POST as approvePOST } from '@/app/api/ai/organize/approve/route'
+import { POST as organizePOST } from '@/app/api/ai/organize/route'
 import { POST as byokVerifyPOST } from '@/app/api/ai/byok/verify/route'
 import { AiRouteError } from '@/lib/ai'
 import {
-  AI_MAX_ACTIONS,
   AI_MAX_GROUPS,
   AI_MAX_GROUP_NAME_LENGTH,
-  AI_MAX_HOOK_TOKEN_LENGTH,
   AI_MAX_ID_LENGTH,
-  AI_MAX_RENAME_LENGTH,
   AI_MAX_TABS_PER_LIST,
   AI_MAX_TITLE_LENGTH,
   AI_MAX_TOTAL_TABS,
@@ -274,35 +259,74 @@ describe('POST /api/ai/organize', () => {
 
   beforeEach(() => {
     aiReturns(PROPOSAL)
-    mockStart.mockResolvedValue({ runId: 'run-1' })
     setTables({
       subscriptions: { data: PRO_AI, error: null },
       groups: { data: [STORED_ROW], error: null },
     })
   })
 
-  it('calls the model, then starts the workflow with only the proposal and pinned ids', async () => {
-    const insert = vi.fn(() => builder({ data: null, error: null }))
-    mockFrom.mockImplementation((table: string) =>
-      table === 'organize_runs' ? { insert } : builder({ data: PRO_AI, error: null })
-    )
-
+  it('answers 200 with only the proposal actions and the balance, storing nothing', async () => {
     const groups = [
       { id: 'g0', name: 'Now Open', permanent: true, tabs: [{ title: 'A', url: 'https://a.example/' }] },
       { id: 'g1', name: 'Work', tabs: [{ title: 'B', url: 'https://b.example/' }] },
     ]
     const res = await organizePOST(req(url, { groups }))
     expect(res.status).toBe(200)
-    const json = await res.json()
-    expect(json.runId).toBe('run-1')
-    expect(json.token).toMatch(new RegExp(`^org-${USER_ID}-[0-9a-f]{32}$`))
+    // The rationale is not part of the response.
+    expect(await res.json()).toEqual({ actions: PROPOSAL.actions })
     expect(res.headers.get('X-AI-Credits-Remaining')).toBe('42')
 
     expect(mockRunAiTask).toHaveBeenCalledTimes(1)
     expect(mockRunAiTask.mock.calls[0][1].model).toBe('claude-sonnet-5-5')
-    // Workflow arguments are persisted: no tabs, no key, only the proposal and pinned ids.
-    expect(mockStart).toHaveBeenCalledWith('wf', [USER_ID, json.token, PROPOSAL, ['g0']])
-    expect(insert).toHaveBeenCalledWith({ run_id: 'run-1', user_id: USER_ID })
+    // Only the subscription is read: no stored groups, no run record.
+    expect(mockFrom.mock.calls.map(([table]) => table)).toEqual(['subscriptions'])
+  })
+
+  it('answers { actions: [] } when nothing needs changing', async () => {
+    aiReturns({ actions: [], rationale: 'Already tidy.' })
+    const res = await organizePOST(req(url, { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] }))
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ actions: [] })
+  })
+
+  it('returns the sanitized proposal: request ids only, never a permanent group, names cleaned and capped', async () => {
+    const actual = await vi.importActual<typeof import('@/lib/ai')>('@/lib/ai')
+    // The spy's stand-in type is a fake task; this one call runs the real builder.
+    mockOrganizeTask.mockImplementationOnce(
+      ((...a: unknown[]) => actual.organizeTask(...(a as Parameters<typeof actual.organizeTask>))) as never
+    )
+    // What the model answered, parsed by the real task as `runAiTask` does.
+    const modelOutput = {
+      actions: [
+        { type: 'merge', sourceGroupId: 'g1', targetGroupId: 'g2' },
+        { type: 'merge', sourceGroupId: 'g2', targetGroupId: 'g0' }, // into Now Open
+        { type: 'rename', groupId: 'g0', newName: 'Nope' }, // Now Open
+        { type: 'rename', groupId: 'g2', newName: `  Docs${' Very Long Name'.repeat(5)}  ` },
+        { type: 'delete', groupId: 'invented' },
+        { type: 'delete', groupId: 'g0' },
+        { type: 'archive', groupId: 'g1' },
+        { type: 'reorder', groupIds: ['g2', 'g0', 'invented', 'g2', 7] },
+      ],
+      rationale: 'Merge the docs.',
+    }
+    mockRunAiTask.mockImplementationOnce(async (task: { parse: (o: unknown) => unknown }) => ({
+      result: task.parse(modelOutput),
+      remaining: 42,
+    }))
+    const groups = [
+      { id: 'g0', name: 'Now Open', permanent: true, tabs: TABS },
+      { id: 'g1', name: 'Docs', tabs: TABS },
+      { id: 'g2', name: 'More docs', tabs: TABS },
+    ]
+    const res = await organizePOST(req(url, { groups }))
+    expect(res.status).toBe(200)
+    const { actions } = await res.json()
+    expect(actions).toHaveLength(3)
+    expect(actions[0]).toEqual({ type: 'merge', sourceGroupId: 'g1', targetGroupId: 'g2' })
+    expect(actions[1]).toMatchObject({ type: 'rename', groupId: 'g2' })
+    expect(actions[1].newName.length).toBeGreaterThan(0)
+    expect(actions[1].newName.length).toBeLessThanOrEqual(30)
+    expect(actions[2]).toEqual({ type: 'reorder', groupIds: ['g2', 'g0'] })
   })
 
   it('sends a client-supplied groups payload to the prompt (E2EE path)', async () => {
@@ -328,7 +352,6 @@ describe('POST /api/ai/organize', () => {
     expect(mockOrganizeTask.mock.calls[0][0]).toStrictEqual([
       { id: 'row-1', name: 'Stored', permanent: false, tabs: [{ title: 'Docs', url: 'https://example.com/docs' }] },
     ])
-    expect(mockStart.mock.calls[0][1][3]).toEqual([])
   })
 
   it('400s before the model when the stored rows are encrypted and no groups were sent', async () => {
@@ -340,7 +363,6 @@ describe('POST /api/ai/organize', () => {
     expect(res.status).toBe(400)
     expect((await res.json()).error).toBe('ai_invalid_request')
     expect(mockRunAiTask).not.toHaveBeenCalled()
-    expect(mockStart).not.toHaveBeenCalled()
   })
 
   it('400s when there are no groups to organize', async () => {
@@ -359,141 +381,19 @@ describe('POST /api/ai/organize', () => {
     expect((await organizePOST(req(url, {}))).status).toBe(401)
   })
 
-  it('429s when the allowance cannot cover the call and starts no workflow', async () => {
+  it('429s when the allowance cannot cover the call', async () => {
     mockRunAiTask.mockRejectedValue(new AiRouteError(429, 'ai_quota_exceeded', { needed: 50, remaining: 2 }, 2))
     const res = await organizePOST(req(url, {}))
     expect(res.status).toBe(429)
     expect(await res.json()).toEqual({ error: 'ai_quota_exceeded', needed: 50, remaining: 2 })
-    expect(mockStart).not.toHaveBeenCalled()
   })
 
-  it('500s ai_failed when the workflow fails to start, still reporting the balance', async () => {
-    mockStart.mockRejectedValue(new Error('boom'))
+  it('passes a model failure through as its AI error code and balance', async () => {
+    mockRunAiTask.mockRejectedValue(new AiRouteError(502, 'ai_failed', {}, 40))
     const res = await organizePOST(req(url, {}))
-    expect(res.status).toBe(500)
+    expect(res.status).toBe(502)
     expect(await res.json()).toEqual({ error: 'ai_failed' })
-    expect(res.headers.get('X-AI-Credits-Remaining')).toBe('42')
-  })
-})
-
-describe('GET /api/ai/organize', () => {
-  const url = (q = '') => `http://localhost/api/ai/organize${q}`
-
-  it('streams NDJSON for a run owned by the caller', async () => {
-    mockFrom.mockReturnValue(builder({ data: { user_id: USER_ID } }))
-    mockGetRun.mockReturnValue({
-      getReadable: async () => new ReadableStream({ start: (c) => c.close() }),
-    })
-    const res = await organizeGET(req(url('?runId=run-1')))
-    expect(res.status).toBe(200)
-    expect(res.headers.get('Content-Type')).toBe('application/x-ndjson')
-    expect(mockGetRun).toHaveBeenCalledWith('run-1')
-  })
-
-  it('401s without a token', async () => {
-    expect((await organizeGET(req(url('?runId=r'), undefined, null))).status).toBe(401)
-  })
-
-  it('401s on an invalid JWT', async () => {
-    mockGetUser.mockResolvedValue({ data: { user: null }, error: { message: 'nope' } })
-    expect((await organizeGET(req(url('?runId=r')))).status).toBe(401)
-  })
-
-  it('400s when runId is missing', async () => {
-    const res = await organizeGET(req(url()))
-    expect(res.status).toBe(400)
-    expect(await res.json()).toEqual({ error: 'ai_invalid_request', message: 'runId required' })
-  })
-
-  it('404s for a run belonging to another user (IDOR guard)', async () => {
-    mockFrom.mockReturnValue(builder({ data: { user_id: 'someone-else' } }))
-    expect((await organizeGET(req(url('?runId=run-1')))).status).toBe(404)
-  })
-
-  it('404s for an unknown run', async () => {
-    mockFrom.mockReturnValue(builder({ data: null }))
-    expect((await organizeGET(req(url('?runId=nope')))).status).toBe(404)
-  })
-
-  it('500s when the stream cannot be opened', async () => {
-    mockFrom.mockReturnValue(builder({ data: { user_id: USER_ID } }))
-    mockGetRun.mockReturnValue({
-      getReadable: async () => {
-        throw new Error('gone')
-      },
-    })
-    const res = await organizeGET(req(url('?runId=run-1')))
-    expect(res.status).toBe(500)
-  })
-})
-
-// ─── organize/approve ─────────────────────────────────────────────────────────
-
-describe('POST /api/ai/organize/approve', () => {
-  const url = 'http://localhost/api/ai/organize/approve'
-  const hookToken = `org-${USER_ID}-abc`
-
-  function withSubscription(sub: unknown) {
-    mockFrom.mockReturnValue(builder({ data: sub }))
-  }
-
-  beforeEach(() => withSubscription({ tier: 'pro_ai', status: 'active' }))
-
-  it('resumes the workflow for an approving pro_ai user', async () => {
-    const actions = [{ type: 'rename', groupId: 'g1', newName: 'Docs' }]
-    const res = await approvePOST(req(url, { token: hookToken, approved: true, actions }))
-    expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
-    expect(mockResumeHook).toHaveBeenCalledWith(hookToken, { approved: true, actions })
-  })
-
-  it('passes rejection through to the workflow', async () => {
-    await approvePOST(req(url, { token: hookToken, approved: false }))
-    expect(mockResumeHook).toHaveBeenCalledWith(hookToken, {
-      approved: false,
-      actions: undefined,
-    })
-  })
-
-  it('401s without a token', async () => {
-    expect((await approvePOST(req(url, { token: hookToken, approved: true }, null))).status).toBe(401)
-  })
-
-  it('401s on an invalid JWT', async () => {
-    mockGetUser.mockResolvedValue({ data: { user: null }, error: { message: 'nope' } })
-    expect((await approvePOST(req(url, { token: hookToken, approved: true }))).status).toBe(401)
-  })
-
-  it.each([
-    ['no subscription row', null],
-    ['wrong tier', { tier: 'pro', status: 'active' }],
-    ['inactive pro_ai', { tier: 'pro_ai', status: 'canceled' }],
-  ])('403s for %s', async (_label, sub) => {
-    withSubscription(sub)
-    const res = await approvePOST(req(url, { token: hookToken, approved: true }))
-    expect(res.status).toBe(403)
-    expect(await res.json()).toEqual({ error: 'ai_plan_required' })
-    expect(mockResumeHook).not.toHaveBeenCalled()
-  })
-
-  it.each(['trialing', 'past_due'])('accepts an entitled %s Pro AI subscription', async (status) => {
-    withSubscription({ tier: 'pro_ai', status })
-    const res = await approvePOST(req(url, { token: hookToken, approved: true }))
-    expect(res.status).toBe(200)
-  })
-
-  it("403s on another user's hook token (IDOR guard)", async () => {
-    const res = await approvePOST(req(url, { token: 'org-other-user-abc', approved: true }))
-    expect(res.status).toBe(403)
-    expect(await res.json()).toEqual({ error: 'ai_not_found' })
-    expect(mockResumeHook).not.toHaveBeenCalled()
-  })
-
-  it('500s when resumeHook throws', async () => {
-    mockResumeHook.mockRejectedValue(new Error('run finished'))
-    const res = await approvePOST(req(url, { token: hookToken, approved: true }))
-    expect(res.status).toBe(500)
-    expect(await res.json()).toEqual({ error: 'ai_failed' })
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe('40')
   })
 })
 
@@ -863,18 +763,15 @@ describe.each([
   ['a client-supplied groups payload', { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] }],
   ['no groups payload', {}],
 ])('POST /api/ai/organize entitlement with %s', (_bodyLabel, body) => {
-  it.each(UNENTITLED)('403s %s and never starts a workflow or reads groups', async (_label, sub) => {
+  it.each(UNENTITLED)('403s %s and never calls the model or reads groups', async (_label, sub) => {
     setTables({ subscriptions: { data: sub, error: null } })
-    mockStart.mockResolvedValue({ runId: 'run-never' })
 
     const res = await organizePOST(req('http://localhost/api/ai/organize', body))
 
     expect(res.status).toBe(403)
     expect(await res.json()).toEqual({ error: 'ai_plan_required' })
     expect(mockRunAiTask).not.toHaveBeenCalled()
-    expect(mockStart).not.toHaveBeenCalled()
     expect(mockFrom).not.toHaveBeenCalledWith('groups')
-    expect(mockFrom).not.toHaveBeenCalledWith('organize_runs')
   })
 
   it('400s byok_key_missing for a BYOK subscription without a key', async () => {
@@ -882,7 +779,7 @@ describe.each([
     const res = await organizePOST(req('http://localhost/api/ai/organize', body))
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ error: 'byok_key_missing' })
-    expect(mockStart).not.toHaveBeenCalled()
+    expect(mockRunAiTask).not.toHaveBeenCalled()
   })
 })
 
@@ -892,7 +789,6 @@ describe('POST /api/ai/organize request-body validation', () => {
   const url = 'http://localhost/api/ai/organize'
 
   beforeEach(() => {
-    mockStart.mockResolvedValue({ runId: 'run-v' })
     aiReturns(PROPOSAL)
     setTables({
       subscriptions: { data: PRO_AI, error: null },
@@ -907,12 +803,11 @@ describe('POST /api/ai/organize request-body validation', () => {
       'too many tabs in total',
       { groups: Array.from({ length: 4 }, (_, i) => ({ id: `g${i}`, name: 'x', tabs: manyTabs(AI_MAX_TOTAL_TABS / 4 + 1) })) },
     ],
-  ])('400s on %s without spending a credit or starting a workflow', async (_label, body) => {
+  ])('400s on %s without spending a credit', async (_label, body) => {
     const res = await organizePOST(req(url, body))
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ error: 'ai_invalid_request', message: 'too many groups or tabs' })
     expect(mockRunAiTask).not.toHaveBeenCalled()
-    expect(mockStart).not.toHaveBeenCalled()
   })
 
   it('forwards only the prompt fields, truncated, to the prompt', async () => {
@@ -1022,7 +917,7 @@ describe('POST /api/ai/organize request-body validation', () => {
     })
   })
 
-  it('400s when every group had tabs and none were readable, and starts no workflow', async () => {
+  it('400s when every group had tabs and none were readable, before the model', async () => {
     const groups = [
       { id: 'g1', name: 'Imported', tabs: [{ title: 'No url' }, null] },
       { id: 'g2', name: 'Also imported', tabs: ['tab'] },
@@ -1030,7 +925,6 @@ describe('POST /api/ai/organize request-body validation', () => {
     const res = await organizePOST(req(url, { groups }))
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ error: 'ai_invalid_request', message: 'no readable tabs in groups' })
-    expect(mockStart).not.toHaveBeenCalled()
     expect(mockRunAiTask).not.toHaveBeenCalled()
     expect(mockFrom).not.toHaveBeenCalled()
   })
@@ -1062,7 +956,6 @@ describe('POST /api/ai/organize request-body validation', () => {
       expect(res.status).toBe(400)
       expect(await res.json()).toEqual({ error: 'ai_invalid_request', message })
       // No model call and no read of the stored rows at all.
-      expect(mockStart).not.toHaveBeenCalled()
       expect(mockRunAiTask).not.toHaveBeenCalled()
       expect(mockFrom).not.toHaveBeenCalled()
     }
@@ -1078,93 +971,8 @@ describe('POST /api/ai/organize request-body validation', () => {
       await organizePOST(req(url, body))
     }
     expect(mockFrom).not.toHaveBeenCalledWith('groups')
-    // The two usable payloads did start a run, each with the client's groups.
+    // The two usable payloads each went to the model with the client's groups.
     expect(mockOrganizeTask).toHaveBeenCalledTimes(2)
-    expect(mockStart).toHaveBeenCalledTimes(2)
-  })
-})
-
-// ─── organize/approve: body validation ────────────────────────────────────────
-
-describe('POST /api/ai/organize/approve request-body validation', () => {
-  const url = 'http://localhost/api/ai/organize/approve'
-  const hookToken = `org-${USER_ID}-abc`
-
-  beforeEach(() => {
-    setTables({ subscriptions: { data: PRO_AI, error: null } })
-    // `clearAllMocks` keeps implementations, so undo the rejection an earlier test installs.
-    mockResumeHook.mockResolvedValue(undefined)
-  })
-
-  async function expectRejected(res: Response) {
-    expect(res.status).toBe(400)
-    expect(await res.json()).toEqual({ error: 'ai_invalid_request', message: 'token and approved are required' })
-    expect(mockResumeHook).not.toHaveBeenCalled()
-  }
-
-  it.each(['{"token": ', 'not json', ''])('400s on malformed JSON %j', async (raw) => {
-    await expectRejected(await approvePOST(rawReq(url, raw)))
-  })
-
-  it.each([
-    null,
-    [],
-    'text',
-    {},
-    { approved: true },
-    { token: 42, approved: true },
-    { token: '', approved: true },
-    { token: `org-${USER_ID}-${'a'.repeat(AI_MAX_HOOK_TOKEN_LENGTH)}`, approved: true },
-    { token: hookToken },
-    { token: hookToken, approved: 'yes' },
-    { token: hookToken, approved: 1 },
-    { token: hookToken, approved: true, actions: null },
-    { token: hookToken, approved: true, actions: 'all' },
-    { token: hookToken, approved: true, actions: [null] },
-    { token: hookToken, approved: true, actions: [{ type: 'archive', groupId: 'g1' }] },
-    { token: hookToken, approved: true, actions: [{ type: 'rename', groupId: 'g1', name: 'Docs' }] },
-    { token: hookToken, approved: true, actions: [{ type: 'rename', groupId: 'g1', newName: 'N'.repeat(AI_MAX_RENAME_LENGTH + 1) }] },
-    { token: hookToken, approved: true, actions: [{ type: 'delete', groupId: 7 }] },
-    { token: hookToken, approved: true, actions: [{ type: 'merge', sourceGroupId: 'g1' }] },
-    { token: hookToken, approved: true, actions: [{ type: 'reorder', groupIds: ['g1', 2] }] },
-    { token: hookToken, approved: true, actions: Array.from({ length: AI_MAX_ACTIONS + 1 }, () => ({ type: 'delete', groupId: 'g1' })) },
-  ] as unknown[])('400s on wrong-typed body %j', async (bad) => {
-    await expectRejected(await approvePOST(req(url, bad)))
-  })
-
-  it('accepts every action type and drops unknown keys before resuming', async () => {
-    const actions = [
-      { type: 'merge', sourceGroupId: 'g1', targetGroupId: 'g2', extra: 1 },
-      { type: 'rename', groupId: 'g2', newName: 'Docs', userId: 'someone-else' },
-      { type: 'delete', groupId: 'g3' },
-      { type: 'reorder', groupIds: ['g2', 'g4'] },
-    ]
-    const res = await approvePOST(req(url, { token: hookToken, approved: true, actions, userId: 'someone-else' }))
-    expect(res.status).toBe(200)
-    expect(mockResumeHook.mock.calls[0]).toStrictEqual([
-      hookToken,
-      {
-        approved: true,
-        actions: [
-          { type: 'merge', sourceGroupId: 'g1', targetGroupId: 'g2' },
-          { type: 'rename', groupId: 'g2', newName: 'Docs' },
-          { type: 'delete', groupId: 'g3' },
-          { type: 'reorder', groupIds: ['g2', 'g4'] },
-        ],
-      },
-    ])
-  })
-
-  it('checks the subscription before the body, so an unentitled caller gets 403 for any body', async () => {
-    mockFrom.mockReturnValue(builder({ data: { tier: 'free', status: 'active' } }))
-    expect((await approvePOST(req(url, { token: 42 }))).status).toBe(403)
-    expect(mockResumeHook).not.toHaveBeenCalled()
-  })
-
-  it("still 403s on a well-formed body carrying another user's token", async () => {
-    const res = await approvePOST(req(url, { token: 'org-other-user-abc', approved: false, actions: [] }))
-    expect(res.status).toBe(403)
-    expect(mockResumeHook).not.toHaveBeenCalled()
   })
 })
 
@@ -1186,15 +994,9 @@ const allHandlers = [
     call: () =>
       organizePOST(req('http://localhost/api/ai/organize', { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] })),
   },
-  { name: 'GET organize', call: () => organizeGET(req('http://localhost/api/ai/organize?runId=run-1')) },
   {
     name: 'POST byok/verify',
     call: () => byokVerifyPOST(req('http://localhost/api/ai/byok/verify', {})),
-  },
-  {
-    name: 'POST organize/approve',
-    call: () =>
-      approvePOST(req('http://localhost/api/ai/organize/approve', { token: `org-${USER_ID}-abc`, approved: true })),
   },
 ]
 
@@ -1209,7 +1011,6 @@ describe.each([
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', value)
     // Would succeed if reached — proves the guard, not a downstream failure, is what stops the call.
     aiReturns(PROPOSAL)
-    mockStart.mockResolvedValue({ runId: 'run-1' })
   })
 
   it.each(allHandlers)('$name returns 503 ai_disabled with no side effects', async ({ call }) => {
@@ -1217,13 +1018,10 @@ describe.each([
     expect(res.status).toBe(503)
     expect(await res.json()).toEqual({ error: 'ai_disabled' })
 
-    // Nothing past the guard ran: no auth lookup, no DB (incl. ai_usage), no workflow, no Anthropic.
+    // Nothing past the guard ran: no auth lookup, no DB (incl. ai_usage), no Anthropic.
     expect(mockGetUser).not.toHaveBeenCalled()
     expect(mockFrom).not.toHaveBeenCalled()
     expect(mockRunAiTask).not.toHaveBeenCalled()
-    expect(mockStart).not.toHaveBeenCalled()
-    expect(mockGetRun).not.toHaveBeenCalled()
-    expect(mockResumeHook).not.toHaveBeenCalled()
     for (const ai of [mockGroupTabs, mockNameGroup, mockSummarizeTab, mockSuggestSessions, mockOrganizeTask]) {
       expect(ai).not.toHaveBeenCalled()
     }

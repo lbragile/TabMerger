@@ -96,7 +96,7 @@ In CI there are no env files. `.github/workflows/publish.yml` sets each build's 
 | `checkout`, `checkout/credits` | Stripe Checkout (subscription / AI credit pack). Redirect URLs come from `absoluteUrl()` (`lib/utils.ts`), which uses only `NEXT_PUBLIC_APP_URL`. |
 | `billing-portal` (cookie auth), `portal` (Bearer, extension) | Stripe Billing Portal. |
 | `webhooks/stripe` | Reads the raw body with `request.text()` for signature verification. Upserts `subscriptions` with `onConflict: 'user_id'` and records `ai_credit_purchases`. |
-| `ai/{group-tabs,name-group,suggest-sessions,tab-summary,organize,organize/approve}` | AI features (Bearer JWT, `pro_ai` tier, weighted credits). `organize` runs a Vercel Workflow (`lib/workflows/tabOrganizer.ts`). `ai/dev-usage` is development-only. |
+| `ai/{group-tabs,name-group,suggest-sessions,tab-summary,organize}` | AI features (Bearer JWT, `pro_ai` tier, weighted credits). `organize` answers `{ actions }`, which the extension reviews and applies locally. `ai/dev-usage` is development-only. |
 | `groups/[id]/publish` | Sets/clears `groups.public_slug`. |
 | `sessions/[id]` | Deletes a saved session. |
 | `og-preview` | Server-side OG metadata fetch for tab previews and share pages. |

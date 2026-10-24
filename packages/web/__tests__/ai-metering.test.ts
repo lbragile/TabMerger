@@ -35,13 +35,6 @@ vi.mock('@/lib/supabase/server', () => ({
   createServiceRoleClient: vi.fn(async () => mockSupabase),
 }))
 
-const mockStart = vi.fn()
-vi.mock('workflow/api', () => ({
-  start: (...a: unknown[]) => mockStart(...a),
-  getRun: vi.fn(),
-  resumeHook: vi.fn(),
-}))
-vi.mock('@/lib/workflows/tabOrganizer', () => ({ tabOrganizerWorkflow: 'wf' }))
 
 import { POST as nameGroupPOST } from '@/app/api/ai/name-group/route'
 import { POST as groupTabsPOST } from '@/app/api/ai/group-tabs/route'
@@ -294,15 +287,15 @@ describe('BYOK', () => {
     expect(logged).not.toContain('bad key')
   })
 
-  it('organize: the key never reaches the workflow arguments', async () => {
+  it('organize: answers { actions } on the customer’s key, unmetered', async () => {
     sdk.create.mockResolvedValue(message({ actions: [], rationale: 'Fine as is.' }))
-    mockStart.mockResolvedValue({ runId: 'run-1' })
     const groups = [{ id: 'g1', name: 'Work', tabs: [{ title: 'A', url: 'https://a.example/' }] }]
     const res = await organizePOST(req('http://localhost/api/ai/organize', { groups }, { 'X-AI-Key': BYOK_KEY }))
     expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ actions: [] })
     expect(sdk.keys).toEqual([BYOK_KEY])
-    expect(JSON.stringify(mockStart.mock.calls)).not.toContain(BYOK_KEY)
-    expect(JSON.stringify(mockStart.mock.calls)).not.toContain('https://a.example')
+    expect(mockRpc).not.toHaveBeenCalled()
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBeNull()
   })
 })
 
@@ -437,5 +430,37 @@ describe('POST /api/ai/byok/verify', () => {
     )
     expect(res.status).toBe(401)
     expect(await res.json()).toEqual({ error: 'ai_unauthorized' })
+  })
+})
+
+// ─── Organize: metered like every other route ─────────────────────────────────
+
+describe('organize (managed)', () => {
+  it('answers 200 { actions }, reserves and settles once, and reports the balance', async () => {
+    sdk.create.mockResolvedValue(
+      message(
+        { actions: [{ type: 'delete', groupId: 'g1' }], rationale: 'Empty.' },
+        { input_tokens: 400, output_tokens: 300 }
+      )
+    )
+    stubRpc({ allowed: true, remaining: 2000, cap: 2500 }, 700)
+
+    const res = await organizePOST(
+      req('http://localhost/api/ai/organize', {
+        groups: [
+          { id: 'now', name: 'Now Open', permanent: true, tabs: [{ title: 'B', url: 'https://b.example/' }] },
+          { id: 'g1', name: 'Work', tabs: [{ title: 'A', url: 'https://a.example/' }] },
+        ],
+        model: 'claude-opus-5-5',
+      })
+    )
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ actions: [{ type: 'delete', groupId: 'g1' }] })
+
+    const [reserve] = rpcCalls('ai_reserve_credits')
+    const settles = rpcCalls('ai_settle_credits')
+    expect(settles).toHaveLength(1)
+    expect(settles[0]).toMatchObject({ p_delta: aiCallCredits('claude-opus-5-5', 400, 300) - reserve.p_amount })
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe(String(2500 - 700))
   })
 })

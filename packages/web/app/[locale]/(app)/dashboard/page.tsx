@@ -10,11 +10,10 @@ import { SavedSessionsProvider } from '@/components/dashboard/SavedSessionsProvi
 import { SessionsStatDescription, SessionsStatValue } from '@/components/dashboard/SessionsStat'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { Badge } from '@/components/ui/badge'
-import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
 import { getEffectiveCap } from '@/lib/ai-usage'
-import { AUTO_BACKUP_DOWNLOAD_LIMITS, isAiMode, isEncryptedBlob } from '@tabmerger/shared'
+import { AUTO_BACKUP_DOWNLOAD_LIMITS, isAiMode } from '@tabmerger/shared'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { hasCloudSync } from '@/lib/cloudSync'
@@ -37,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ upgraded?: string; organizeRunId?: string; organizeToken?: string }>
+  searchParams: Promise<{ upgraded?: string }>
 }) {
   const params = await searchParams
   const supabase = await createClient()
@@ -130,14 +129,6 @@ export default async function DashboardPage({
     }
   }
 
-  const { organizeRunId, organizeToken } = params
-  let organizeSession: string | null = null
-  if (AI_AVAILABILITY.any && organizeRunId && organizeToken) {
-    /** OrganizeProposal is a client component and can't read server cookies, so we pass the JWT down as a prop */
-    const { data: { session } } = await supabase.auth.getSession()
-    organizeSession = session?.access_token ?? null
-  }
-
   return (
     // One decrypt pass for everything below that lists or counts `sessions` rows: saved sessions
     // and automatic backups are the same table and can only be told apart after decrypting.
@@ -175,15 +166,6 @@ export default async function DashboardPage({
         currentPeriodEnd={subscription?.current_period_end}
         priceId={subscription?.stripe_price_id}
       />
-
-      {AI_AVAILABILITY.any && organizeRunId && organizeToken && organizeSession && (
-        <OrganizeProposal
-          runId={organizeRunId}
-          token={organizeToken}
-          supabaseToken={organizeSession}
-          encrypted={(groups ?? []).some((g: { windows?: unknown }) => isEncryptedBlob(g.windows))}
-        />
-      )}
 
       {syncEnabled && (
         <div>

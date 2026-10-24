@@ -37,7 +37,6 @@ vi.mock('@/components/dashboard/StatsOverview', () => ({ StatsOverview: () => <d
 vi.mock('@/components/dashboard/SubscriptionBadge', () => ({ SubscriptionBadge: () => <div>sub</div> }))
 vi.mock('@/components/dashboard/SessionList', () => ({ SessionList: () => <div>sessions</div> }))
 vi.mock('@/components/dashboard/GroupGrid', () => ({ GroupGrid: () => <div>groups</div> }))
-vi.mock('@/components/dashboard/OrganizeProposal', () => ({ OrganizeProposal: () => <div>organize</div> }))
 vi.mock('@/components/dashboard/OnboardingChecklist', () => ({
   OnboardingChecklist: ({ installHref }: { installHref: string }) => (
     <div data-testid="onboarding" data-install-href={installHref}>onboarding</div>

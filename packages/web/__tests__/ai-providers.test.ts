@@ -4,7 +4,7 @@
  *
  * Covers: the request each provider gets (structured output, reasoning setting, prompt framing,
  * where the key goes), answer parsing and cleaning, error mapping to the shared codes, the free
- * key check in /api/ai/byok/verify, and that a key never reaches logs, error bodies or workflow
+ * key check in /api/ai/byok/verify, and that a key never reaches logs or error bodies
  * arguments.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -28,16 +28,11 @@ const mockRpc = vi.fn()
 const mockSupabase = { auth: { getUser: mockGetUser }, from: mockFrom, rpc: mockRpc }
 vi.mock('@/lib/supabase/server', () => ({ createServiceRoleClient: vi.fn(async () => mockSupabase) }))
 
-const mockStart = vi.fn()
-const mockResumeHook = vi.fn()
-vi.mock('workflow/api', () => ({ start: (...a: unknown[]) => mockStart(...a), getRun: vi.fn(), resumeHook: (...a: unknown[]) => mockResumeHook(...a) }))
-vi.mock('@/lib/workflows/tabOrganizer', () => ({ tabOrganizerWorkflow: 'wf' }))
 
 import { POST as nameGroupPOST } from '@/app/api/ai/name-group/route'
 import { POST as groupTabsPOST } from '@/app/api/ai/group-tabs/route'
 import { POST as tabSummaryPOST } from '@/app/api/ai/tab-summary/route'
 import { POST as organizePOST } from '@/app/api/ai/organize/route'
-import { POST as approvePOST } from '@/app/api/ai/organize/approve/route'
 import { POST as verifyPOST } from '@/app/api/ai/byok/verify/route'
 import { UNTRUSTED_DATA_NOTICE } from '@/lib/ai-prompt-safety'
 
@@ -168,16 +163,16 @@ describe('own OpenAI key', () => {
     expect(call().body.max_output_tokens).toBeGreaterThan(2000)
   })
 
-  it('uses the mid model for organize on auto and starts the workflow without the key or tabs', async () => {
+  it('uses the mid model for organize on auto and answers the cleaned { actions }', async () => {
     fetchMock.mockResolvedValue(openAiReply({ actions: [{ type: 'delete', groupId: 'g1' }], rationale: 'Empty.' }))
-    mockStart.mockResolvedValue({ runId: 'run-1' })
-    const groups = [{ id: 'g1', name: 'Work', tabs: [{ title: 'A', url: 'https://a.example/' }] }]
+    const groups = [
+      { id: 'now', name: 'Now Open', permanent: true, tabs: [{ title: 'B', url: 'https://b.example/' }] },
+      { id: 'g1', name: 'Work', tabs: [{ title: 'A', url: 'https://a.example/' }] },
+    ]
     const res = await organizePOST(req('/api/ai/organize', { groups }, OPENAI_KEY))
     expect(res.status).toBe(200)
     expect(call().body.model).toBe('gpt-6.1-sol')
-    const args = JSON.stringify(mockStart.mock.calls)
-    expect(args).not.toContain(OPENAI_KEY)
-    expect(args).not.toContain('https://a.example')
+    expect(await res.json()).toEqual({ actions: [{ type: 'delete', groupId: 'g1' }] })
   })
 
   it('cleans the answer like any other provider (colour off the palette → default)', async () => {
@@ -318,14 +313,13 @@ describe.each([
     expect(JSON.stringify(consoleError.mock.calls)).not.toContain(key)
   })
 
-  it('never reaches the workflow arguments', async () => {
+  it('never reaches the organize response', async () => {
     const proposal = { actions: [], rationale: 'Fine.' }
     fetchMock.mockResolvedValue(key === GOOGLE_KEY ? googleReply(proposal) : openAiReply(proposal))
     sdk.create.mockResolvedValue({ content: [{ type: 'text', text: JSON.stringify(proposal) }], usage: { input_tokens: 1, output_tokens: 1 }, stop_reason: 'end_turn' })
-    mockStart.mockResolvedValue({ runId: 'run-1' })
     const res = await organizePOST(req('/api/ai/organize', { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] }, key))
     expect(res.status).toBe(200)
-    expect(JSON.stringify(mockStart.mock.calls)).not.toContain(key)
+    expect(await res.text()).not.toContain(key)
   })
 })
 
@@ -416,13 +410,6 @@ describe('per-option AI flags', () => {
     expect(sdk.create).not.toHaveBeenCalled()
     expect(mockRpc).not.toHaveBeenCalled()
     expect(mockFrom).not.toHaveBeenCalledWith('ai_usage')
-  })
-
-  it('own-key only: 503s a managed subscriber’s organize approval', async () => {
-    withSubscription(MANAGED)
-    const res = await approvePOST(req('/api/ai/organize/approve', { token: `org-${USER_ID}-abc`, approved: true }))
-    expect(res.status).toBe(503)
-    expect(mockResumeHook).not.toHaveBeenCalled()
   })
 
   it('managed on: serves both options (managed implies own key)', async () => {

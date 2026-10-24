@@ -185,7 +185,7 @@ One row per user: the E2E data key wrapped with a key derived from the user's pa
 
 ### `organize_runs`
 
-Maps an AI "organize" workflow run to its owner, so `GET /api/ai/organize` can check ownership before streaming. No result data is stored.
+Unused since organize became a synchronous route (it mapped a Workflow run to its owner for the old `GET /api/ai/organize` stream). Nothing reads or writes it; dropping it needs a new migration. No result data was ever stored.
 
 | Column | Type | Constraints |
 |---|---|---|

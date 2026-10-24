@@ -31,7 +31,7 @@ import {
   cleanModelText,
 } from '@/lib/ai-prompt-safety'
 import { reserveCredits, settleCredits } from '@/lib/ai-usage'
-import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
+import type { OrganizeAction } from '@tabmerger/shared'
 
 /**
  * Every model call made by the `/api/ai/*` routes: Claude (managed, or the customer's own
@@ -373,7 +373,7 @@ export interface OrganizePromptGroup {
 }
 
 export interface OrganizeProposalResult {
-  actions: ReorganizeAction[]
+  actions: OrganizeAction[]
   rationale: string
 }
 
@@ -394,8 +394,8 @@ const groupIdProperty = { type: 'string' }
 
 /**
  * Keeps only actions that name groups from the request, never touch a permanent group, and
- * are well formed. Rename text is cleaned and cut to the rename limit. The approve route and
- * `applyChanges` check again before anything is written.
+ * are well formed. Rename text is cleaned and cut to the rename limit. The extension applies
+ * the result locally after the user reviews it, and checks the ids against its own groups.
  */
 export function sanitizeOrganizeProposal(raw: unknown, groups: OrganizePromptGroup[]): OrganizeProposalResult {
   const known = new Set(groups.map((g) => g.id))
@@ -403,7 +403,7 @@ export function sanitizeOrganizeProposal(raw: unknown, groups: OrganizePromptGro
   const editable = (id: unknown): id is string => typeof id === 'string' && known.has(id) && !pinned.has(id)
 
   const parsed = isRecord(raw) ? raw : {}
-  const actions: ReorganizeAction[] = []
+  const actions: OrganizeAction[] = []
   for (const entry of Array.isArray(parsed.actions) ? parsed.actions : []) {
     if (!isRecord(entry)) continue
     switch (entry.type) {

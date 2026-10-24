@@ -23,7 +23,7 @@ function disabled(): NextResponse {
 
 /**
  * First-statement kill switch for every `/api/ai/*` handler: a 503 `{ error: 'ai_disabled' }`
- * when no AI option is live, before any auth lookup, `ai_usage` read or write, workflow start or
+ * when no AI option is live, before any auth lookup, `ai_usage` read or write or
  * model call. Returns `null` when at least one option is live; the handler then checks the
  * caller's own option with {@link aiModeDisabledResponse} once the subscription is known.
  */

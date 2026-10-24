@@ -67,8 +67,8 @@ function tabsOfWindows(windows: unknown[], budget: number): PromptTab[] {
  * Reads the user's stored groups for the prompt, ordered like the extension shows them.
  *
  * The server holds no decryption key, so an encrypted row is unreadable and must never reach
- * the prompt: a plan built from ciphertext would be meaningless, and approving it could act on
- * real rows. The check is on the readable shape, not the blob format: plaintext `windows` is
+ * the prompt: a plan built from ciphertext would be meaningless, and the extension would then
+ * apply it to real groups. The check is on the readable shape, not the blob format: plaintext `windows` is
  * always an array, so anything else (an encrypted blob of any version, or any other object)
  * throws {@link OrganizeNeedsClientDataError} before the model is called. `null` is read as no
  * windows; the column is `not null`, so a stored row never holds it.
