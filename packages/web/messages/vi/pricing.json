@@ -59,7 +59,7 @@
     "moreQuestions": "Còn câu hỏi khác? Xem <link>Câu hỏi thường gặp</link>."
   },
   "aiOptions": {
-    "legend": "Ai lo phần thiết lập",
+    "legend": "Ai lo phần thiết lập?",
     "managed": "TabMerger",
     "byok": "Bạn",
     "managedHint": "Tín dụng đo mức dùng AI: việc lớn hơn và mô hình mạnh hơn dùng nhiều hơn.",

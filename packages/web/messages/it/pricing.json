@@ -59,7 +59,7 @@
     "moreQuestions": "Hai altre domande? Consulta le <link>FAQ</link>."
   },
   "aiOptions": {
-    "legend": "Chi si occupa della configurazione",
+    "legend": "Chi si occupa della configurazione?",
     "managed": "TabMerger",
     "byok": "Tu",
     "managedHint": "I crediti misurano l’uso dell’IA: i lavori più grandi e i modelli più potenti ne consumano di più.",

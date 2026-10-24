@@ -16,6 +16,10 @@ metadata:
 - Both options' feature lists and notes sit in one grid cell (`grid` + `[grid-area:1/1]` on
   each), and the hidden one gets `invisible` + `aria-hidden`. The card is as tall as the longer
   option, so the CTA never moves on toggle (see [[equal-height-cards-reserved-line]]).
+- Equal-height plan cards: grid `items-stretch` plus card `h-full flex flex-col` plus CTA wrapper
+  `mt-auto`. The highlighted card may differ in horizontal padding only. Its old `p-7` put the
+  title row and the button 0.25rem off the other cards. Measure in a headless browser with
+  `getBoundingClientRect()` (title top, button bottom); jsdom has no layout.
 - Which option the card opens on depends on `AI_AVAILABILITY` (module constant). Tests stub
   both env vars, `vi.resetModules()`, and import the component fresh for each flag state.
 - Copy for prospective buyers: no per-use dollar estimates and no "N organizes a month" counts.

@@ -240,15 +240,19 @@ export function PricingCard({
 
   return (
     <div
+      // h-full fills the stretched grid cell, so the cards in a row are equally tall and the CTA
+      // (mt-auto) sits at the bottom of each. The highlighted card is roomier on the sides only:
+      // equal top and bottom padding keeps the title rows and the buttons on the same lines.
       className={cn(
-        'flex flex-col rounded-2xl p-6 border border-border bg-surface',
-        highlighted && 'shadow-sh3 border-primary/30 p-7',
+        'flex flex-col h-full rounded-2xl p-6 border border-border bg-surface',
+        highlighted && 'shadow-sh3 border-primary/30 px-7',
         isCurrentPlan && 'border-primary/40'
       )}
     >
       {/* Title row */}
       <div className="flex items-center justify-between gap-2 mb-2.5">
-        <h2 className="text-sm font-semibold">{name}</h2>
+        {/* The plan name leads the card: larger than the feature text, still smaller than the price. */}
+        <h2 className="text-xl font-semibold tracking-tight">{name}</h2>
         {isCurrentPlan && (
           <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary text-primary-foreground self-center">
             {t('current')}
@@ -272,7 +276,7 @@ export function PricingCard({
       {/* Price */}
       <div className="flex items-baseline gap-1.5 mb-5">
         <span
-          className={cn('font-semibold tracking-tight', highlighted ? 'text-[44px]' : 'text-4xl')}
+          className={cn('font-semibold tracking-tight', highlighted ? 'text-[2.75rem]' : 'text-4xl')}
         >
           {displayPrice}
         </span>

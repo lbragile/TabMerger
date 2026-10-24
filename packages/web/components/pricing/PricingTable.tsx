@@ -57,9 +57,10 @@ export function PricingTable({ currentTier, currentInterval, currentAiMode, curr
         ))}
       </div>
 
-      {/* Grid: 1fr 1.1fr 1fr */}
+      {/* Grid: 1fr 1.1fr 1fr. Items stretch, so side by side the three cards are as tall as the
+          tallest (Pro AI, sized for its longer setup option) and their buttons line up. */}
       <div
-        className="w-full max-w-5xl grid grid-cols-1 md:[grid-template-columns:1fr_1.1fr_1fr] gap-4 items-center"
+        className="w-full max-w-5xl grid grid-cols-1 md:[grid-template-columns:1fr_1.1fr_1fr] gap-4 items-stretch"
       >
         <PricingCard
           tier="free"

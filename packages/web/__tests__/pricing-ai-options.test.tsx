@@ -37,7 +37,7 @@ async function loadWithFlags({ managed, byok }: Flags) {
 
 /** The Pro AI card: the nearest card around the "Who handles setup" group. */
 function proAiCard() {
-  return screen.getByRole('group', { name: 'Who handles setup' }).closest('div.rounded-2xl') as HTMLElement
+  return screen.getByRole('group', { name: 'Who handles setup?' }).closest('div.rounded-2xl') as HTMLElement
 }
 
 // Skips an aria-hidden element itself (not its descendants: those are checked with closest()).
@@ -72,7 +72,7 @@ describe('Pro AI option switch on the pricing page', () => {
   it('asks "Who handles setup" with two radio options, TabMerger and You', async () => {
     const { PricingTable } = await loadWithFlags({ managed: true, byok: true })
     render(<PricingTable installHref={INSTALL} />)
-    const group = screen.getByRole('group', { name: 'Who handles setup' })
+    const group = screen.getByRole('group', { name: 'Who handles setup?' })
     const options = within(group).getAllByRole('radio')
     expect(options.map((o) => o.closest('label')?.textContent)).toEqual(['TabMerger', 'You'])
   })
@@ -80,7 +80,7 @@ describe('Pro AI option switch on the pricing page', () => {
   it('styles the switch with theme radius tokens only, never a hard-coded radius', async () => {
     const { PricingTable } = await loadWithFlags({ managed: true, byok: true })
     render(<PricingTable installHref={INSTALL} />)
-    const group = screen.getByRole('group', { name: 'Who handles setup' })
+    const group = screen.getByRole('group', { name: 'Who handles setup?' })
     const track = group.querySelector('div') as HTMLElement
     expect(track.className).toMatch(/\brounded-lg\b/)
     for (const label of group.querySelectorAll('label')) expect(label.className).toMatch(/\brounded-md\b/)
@@ -235,7 +235,7 @@ describe('Pro AI option switch on the pricing page', () => {
 })
 
 describe('Pro AI option switch on the landing page teaser', () => {
-  const card = () => screen.getByRole('group', { name: 'Who handles setup' }).closest('div.rounded-2xl') as HTMLElement
+  const card = () => screen.getByRole('group', { name: 'Who handles setup?' }).closest('div.rounded-2xl') as HTMLElement
 
   it('with only the own-key flag on, opens on "You" at the own-key price, not "Coming soon"', async () => {
     const { PricingTeaser } = await loadWithFlags({ managed: false, byok: true })

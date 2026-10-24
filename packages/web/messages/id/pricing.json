@@ -59,7 +59,7 @@
     "moreQuestions": "Punya pertanyaan lain? Lihat <link>FAQ</link>."
   },
   "aiOptions": {
-    "legend": "Siapa yang mengurus penyiapan",
+    "legend": "Siapa yang mengurus penyiapan?",
     "managed": "TabMerger",
     "byok": "Anda",
     "managedHint": "Kredit mengukur penggunaan AI: tugas yang lebih besar dan model yang lebih kuat memakai lebih banyak.",

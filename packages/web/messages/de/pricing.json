@@ -59,7 +59,7 @@
     "moreQuestions": "Weitere Fragen? Sieh dir die <link>FAQ</link> an."
   },
   "aiOptions": {
-    "legend": "Wer übernimmt die Einrichtung",
+    "legend": "Wer übernimmt die Einrichtung?",
     "managed": "TabMerger",
     "byok": "Du",
     "managedHint": "Credits messen die KI-Nutzung: größere Aufgaben und stärkere Modelle verbrauchen mehr.",

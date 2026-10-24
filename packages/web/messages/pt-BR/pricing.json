@@ -59,7 +59,7 @@
     "moreQuestions": "Tem mais dúvidas? Veja as <link>perguntas frequentes</link>."
   },
   "aiOptions": {
-    "legend": "Quem cuida da configuração",
+    "legend": "Quem cuida da configuração?",
     "managed": "TabMerger",
     "byok": "Você",
     "managedHint": "Os créditos medem o uso de IA: tarefas maiores e modelos mais potentes gastam mais.",

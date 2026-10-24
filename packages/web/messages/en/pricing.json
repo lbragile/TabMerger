@@ -59,7 +59,7 @@
     "moreQuestions": "Have more questions? See the <link>FAQ</link>."
   },
   "aiOptions": {
-    "legend": "Who handles setup",
+    "legend": "Who handles setup?",
     "managed": "TabMerger",
     "byok": "You",
     "managedHint": "Credits measure AI use: bigger jobs and stronger models use more.",

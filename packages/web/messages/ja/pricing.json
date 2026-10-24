@@ -59,7 +59,7 @@
     "moreQuestions": "ほかにご質問はありますか？<link>よくある質問</link>をご覧ください。"
   },
   "aiOptions": {
-    "legend": "セットアップの担当",
+    "legend": "セットアップは誰が行いますか？",
     "managed": "TabMerger",
     "byok": "ご自身",
     "managedHint": "クレジットはAIの使用量を表します。大きな処理や高性能なモデルほど多く消費します。",

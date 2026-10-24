@@ -59,7 +59,7 @@
     "moreQuestions": "더 궁금한 점이 있으신가요? <link>자주 묻는 질문</link>을 확인하세요."
   },
   "aiOptions": {
-    "legend": "설정 담당",
+    "legend": "설정은 누가 하나요?",
     "managed": "TabMerger",
     "byok": "직접",
     "managedHint": "크레딧은 AI 사용량을 나타냅니다. 큰 작업이나 성능 높은 모델일수록 더 많이 씁니다.",

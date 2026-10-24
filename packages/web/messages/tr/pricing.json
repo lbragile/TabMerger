@@ -59,7 +59,7 @@
     "moreQuestions": "Başka sorularınız mı var? <link>SSS</link> sayfasına göz atın."
   },
   "aiOptions": {
-    "legend": "Kurulumu kim yapar",
+    "legend": "Kurulumu kim yapar?",
     "managed": "TabMerger",
     "byok": "Siz",
     "managedHint": "Krediler yapay zekâ kullanımını ölçer: büyük işler ve güçlü modeller daha fazla harcar.",

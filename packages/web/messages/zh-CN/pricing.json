@@ -59,7 +59,7 @@
     "moreQuestions": "还有其他问题？请查看<link>常见问题</link>。"
   },
   "aiOptions": {
-    "legend": "由谁负责设置",
+    "legend": "由谁负责设置？",
     "managed": "TabMerger",
     "byok": "您自己",
     "managedHint": "额度用于衡量 AI 用量：任务越大、模型越强，消耗越多。",

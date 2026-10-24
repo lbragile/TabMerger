@@ -59,7 +59,7 @@
     "moreQuestions": "Masz więcej pytań? Zajrzyj do <link>FAQ</link>."
   },
   "aiOptions": {
-    "legend": "Kto zajmuje się konfiguracją",
+    "legend": "Kto zajmuje się konfiguracją?",
     "managed": "TabMerger",
     "byok": "Ty",
     "managedHint": "Kredyty mierzą użycie AI: większe zadania i mocniejsze modele zużywają ich więcej.",
