@@ -207,10 +207,22 @@ export async function createBillingPortalSession({
   return session.url
 }
 
-/** Why a plan switch couldn't start; the route maps each to a status code. */
+/**
+ * Why a plan switch couldn't start; the route maps each to a status code.
+ *
+ * - `no_customer`: Stripe has no such customer in this account and mode (`resource_missing`).
+ * - `no_entitled_subscription`: the customer has no entitled subscription at Stripe at all (every
+ *   one has ended, or there never was one), checked across all of them. The database row may still
+ *   show a plan when a webhook delivery was missed: lib/planSwitch.ts corrects it.
+ * - `no_subscription`: no entitled subscription on one of the plan's prices, while one that can't be
+ *   read as this plan may exist (a live subscription on a price this deployment doesn't know, with
+ *   several items, or more subscriptions than one page lists). Nothing is corrected for it.
+ */
 export class PlanSwitchError extends Error {
   constructor(
     readonly reason:
+      | 'no_customer'
+      | 'no_entitled_subscription'
       | 'no_subscription'
       | 'already_on_price'
       | 'already_scheduled'
@@ -268,14 +280,27 @@ export async function createPlanSwitchSession({
 }): Promise<PlanSwitchResult> {
   if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
 
-  const { data: subscriptions } = await stripe.subscriptions.list({ customer: customerId, limit: 10 })
-  const subscription = subscriptions.find(
-    (s) =>
-      isEntitledSubscriptionStatus(s.status) &&
-      s.items.data.length === 1 &&
-      planPriceIds.includes(s.items.data[0].price.id)
+  // Without a status filter Stripe lists every subscription that isn't canceled.
+  let listed: Stripe.ApiList<Stripe.Subscription>
+  try {
+    listed = await stripe.subscriptions.list({ customer: customerId, limit: 10 })
+  } catch (err) {
+    // A customer id from another account or mode, or one that was deleted. Stripe answers this
+    // list with code resource_missing and HTTP 400 (not 404), so only the code is checked.
+    if ((err as { code?: unknown } | null)?.code === 'resource_missing') throw new PlanSwitchError('no_customer')
+    throw err
+  }
+  const entitled = listed.data.filter((s) => isEntitledSubscriptionStatus(s.status))
+  const subscription = entitled.find(
+    (s) => s.items.data.length === 1 && planPriceIds.includes(s.items.data[0].price.id)
   )
-  if (!subscription) throw new PlanSwitchError('no_subscription')
+  if (!subscription) {
+    // "No plan at all" only when the whole list was seen; a live subscription on an unknown price
+    // (or one past the first page) must never read as an ended plan.
+    throw new PlanSwitchError(
+      entitled.length === 0 && listed.has_more !== true ? 'no_entitled_subscription' : 'no_subscription'
+    )
+  }
 
   const item = subscription.items.data[0]
   if (item.price.id === targetPriceId) throw new PlanSwitchError('already_on_price')

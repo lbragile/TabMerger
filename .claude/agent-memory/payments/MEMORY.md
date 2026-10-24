@@ -8,3 +8,4 @@
 - [AI allowance and credit packs](ai-allowance-and-credit-packs.md) — ai_monthly_credits from money paid; once coupons, customer discounts, source.coupon, Adaptive Pricing fields
 - [Checkout funnel analytics](checkout-funnel-analytics.md) — expired webhook analytics-only; no user_id, random client id, HMAC keyed by webhook secret; after() test mock
 - [Refund policy and plan changes](refund-policy-plan-changes.md) — scheduled downgrades, upgrades via per-target portal config; flow sessions can't be locked; archived prices rejected
+- [Plan switch: ended-plan resync](plan-switch-ended-plan-resync.md) — row says paid, Stripe says ended: id-keyed correction + checkout target; list hides canceled; resource_missing is 400 on list

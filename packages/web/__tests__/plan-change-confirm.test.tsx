@@ -235,3 +235,69 @@ describe('errors and the portal path', () => {
     expect(window.location.href).toBe('https://billing.stripe.com/p/session/y')
   })
 })
+
+describe('recovery: the plan had already ended at Stripe', () => {
+  const upgrade = async () => {
+    const { PricingCard } = await load()
+    const user = userEvent.setup()
+    render(<PricingCard {...cardProps} tier="proAi" name="Pro AI" currentTier="pro" currentInterval="monthly" currentPeriodEnd={PERIOD_END} />)
+    await user.click(screen.getByRole('button', { name: 'Upgrade to Pro AI' }))
+  }
+  const DRIFT = {
+    error: 'No paid plan to switch',
+    code: 'no_paid_plan',
+    checkout: { tier: 'proAi', interval: 'monthly', aiMode: 'managed' },
+  }
+
+  it('goes straight to a checkout for the plan the server names, with no dead-end message', async () => {
+    respond(403, DRIFT)
+    respond(200, { url: 'https://checkout.stripe.com/c/pay/new' })
+    await upgrade()
+
+    await waitFor(() => expect(window.location.href).toBe('https://checkout.stripe.com/c/pay/new'))
+    expect(vi.mocked(global.fetch).mock.calls.map(([path]) => String(path))).toEqual([
+      '/api/billing/switch-plan',
+      '/api/checkout',
+    ])
+    expect(lastRequest()).toEqual({ path: '/api/checkout', body: DRIFT.checkout })
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('says there is no paid plan and refreshes the page when the checkout cannot start', async () => {
+    respond(403, DRIFT)
+    respond(500, { error: 'Failed to create checkout session' })
+    await upgrade()
+
+    expect(await screen.findByRole('alert')).toHaveTextContent("You don't have a paid plan to change. Choose a plan to subscribe instead.")
+    expect(refresh).toHaveBeenCalled()
+    expect(window.location.href).toBe('')
+  })
+
+  it('says the option is not available when the checkout answers ai_disabled', async () => {
+    respond(403, DRIFT)
+    respond(503, { error: 'ai_disabled' })
+    await upgrade()
+
+    expect(await screen.findByRole('alert')).toHaveTextContent("That Pro AI option isn't available yet.")
+  })
+
+  it('sends a signed-out user to sign in', async () => {
+    respond(403, DRIFT)
+    respond(401, { error: 'Unauthorized' })
+    await upgrade()
+
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/pricing'))
+  })
+
+  it.each([
+    ['an unknown tier', { tier: 'enterprise', interval: 'monthly' }],
+    ['an AI option on Pro', { tier: 'pro', interval: 'monthly', aiMode: 'byok' }],
+    ['no interval', { tier: 'proAi' }],
+  ])('ignores a checkout target with %s and shows the message', async (_label, target) => {
+    respond(403, { ...DRIFT, checkout: target })
+    await upgrade()
+
+    expect(await screen.findByRole('alert')).toHaveTextContent("You don't have a paid plan to change.")
+    expect(global.fetch).toHaveBeenCalledTimes(1)
+  })
+})

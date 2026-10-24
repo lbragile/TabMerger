@@ -1,3 +1,6 @@
+import { isAiMode, type AiMode } from '@tabmerger/shared'
+import type { BillingInterval, PaidTierKey } from './tiers'
+
 /**
  * Error codes `POST /api/checkout` returns in `{ error }` that the pricing UI acts on.
  * Client-safe (no server imports): the route and `PricingCard` both read the code from here.
@@ -33,3 +36,28 @@ export const PLAN_SWITCH_ERROR_CODES = {
 } as const
 
 export type PlanSwitchErrorCode = (typeof PLAN_SWITCH_ERROR_CODES)[keyof typeof PLAN_SWITCH_ERROR_CODES]
+
+/**
+ * The plan to subscribe to instead, sent as `checkout` next to a 403 `no_paid_plan` from the
+ * plan-switch routes in one case only: the account's row still showed a paid plan, Stripe said
+ * that plan had ended (a missed webhook delivery), and the server has just corrected the row. The
+ * pricing page then starts a checkout for it (`POST /api/checkout`, which checks everything again)
+ * instead of showing a dead end. It is the plan the user asked to switch to, all fields filled in.
+ */
+export interface PlanSwitchCheckoutTarget {
+  tier: PaidTierKey
+  interval: BillingInterval
+  /** Pro AI only. */
+  aiMode?: AiMode
+}
+
+/** Reads a `checkout` value from a plan-switch response; null unless it is a valid target. */
+export function parsePlanSwitchCheckoutTarget(value: unknown): PlanSwitchCheckoutTarget | null {
+  if (!value || typeof value !== 'object') return null
+  const { tier, interval, aiMode } = value as Record<string, unknown>
+  if (tier !== 'pro' && tier !== 'proAi') return null
+  if (interval !== 'monthly' && interval !== 'yearly') return null
+  if (tier === 'pro') return aiMode === undefined ? { tier, interval } : null
+  if (aiMode === undefined) return { tier, interval }
+  return isAiMode(aiMode) ? { tier, interval, aiMode } : null
+}

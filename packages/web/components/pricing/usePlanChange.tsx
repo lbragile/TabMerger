@@ -14,7 +14,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { planChangeTiming } from '@/lib/planChangeTiming'
-import { PLAN_SWITCH_ERROR_CODES, type PlanSwitchErrorCode } from '@/lib/checkoutErrors'
+import {
+  PLAN_SWITCH_ERROR_CODES,
+  parsePlanSwitchCheckoutTarget,
+  type PlanSwitchCheckoutTarget,
+  type PlanSwitchErrorCode,
+} from '@/lib/checkoutErrors'
+import { trackBeginCheckout } from '@/lib/checkoutAnalytics'
 import type { BillingInterval, PaidTierKey } from '@/lib/tiers'
 
 /** The billing routes that move a paid subscription to another price. */
@@ -68,6 +74,10 @@ function isPlanSwitchErrorCode(value: unknown): value is PlanSwitchErrorCode {
  * `returnPath`; a 503 `ai_disabled` says the option isn't available; any other error with a known
  * `code` (PLAN_SWITCH_ERROR_CODES) gets its own message, and the rest the generic one.
  *
+ * A 403 `no_paid_plan` that carries `checkout` means the server found the plan had already ended at
+ * Stripe and corrected the account (a missed webhook): the user goes straight to a checkout for the
+ * plan they picked instead of a dead end (`subscribeInstead()`).
+ *
  * Returns `start(target)`, the state for the caller to show (`error` in a `role="alert"`,
  * `done` in a `role="status"`) and `dialog`, the confirmation, to render once.
  */
@@ -118,6 +128,36 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
     return plan.interval === 'yearly' ? t('billedYearly', { plan: name }) : t('billedMonthly', { plan: name })
   }
 
+  /**
+   * Starts a checkout for `target` after the server found the current plan had ended at Stripe and
+   * corrected the account. `/api/checkout` checks the account again, so this only works once the
+   * server agrees there is no live plan. If it can't start, the page's data is refreshed (the plan
+   * shown as current is gone) and the "no paid plan" message says to choose a plan.
+   */
+  async function subscribeInstead(target: PlanSwitchCheckoutTarget) {
+    trackBeginCheckout({ ...target, source: 'plan_change', component: 'plan_switch_recovery' })
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(target),
+    })
+    if (res.status === 401) {
+      router.push(`/auth/sign-in?redirectTo=${returnPath}`)
+      return
+    }
+    const data = await res.json().catch(() => ({}))
+    if (res.ok && typeof data.url === 'string') {
+      window.location.href = data.url
+      return
+    }
+    setError(
+      res.status === 503 && data.error === AI_ERROR_CODES.disabled
+        ? t('aiDisabled')
+        : t(`errors.${PLAN_SWITCH_ERROR_CODES.noPaidPlan}`)
+    )
+    router.refresh()
+  }
+
   async function send(target: PlanChangeTarget, plan: string | null) {
     setLoading(true)
     setError(null)
@@ -150,6 +190,11 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
         return
       }
       const code: unknown = data.code
+      const checkout = code === PLAN_SWITCH_ERROR_CODES.noPaidPlan ? parsePlanSwitchCheckoutTarget(data.checkout) : null
+      if (checkout) {
+        await subscribeInstead(checkout)
+        return
+      }
       if (res.status === 503 && data.error === AI_ERROR_CODES.disabled) setError(t('aiDisabled'))
       else if (isPlanSwitchErrorCode(code)) setError(t(`errors.${code}`))
       // A 409 without a code we know still carries a message written for the user.

@@ -441,7 +441,8 @@ Both look the Stripe subscription up among the current tier's Prices, then refus
 is already on the target price, when a change is already scheduled (`subscription.schedule` is set:
 "A billing change is already scheduled for the end of this term."), or when it is set to cancel
 ("Your plan is set to end at the end of this term…"). None of them writes the subscription row:
-`customer.subscription.updated` does, when the price actually changes.
+`customer.subscription.updated` does, when the price actually changes. The one exception is the
+ended-plan correction below, which only ever ends a row.
 
 `classifyPlanChange()` (`lib/tiers.ts`) compares the current and target Price on three ranks (tier
 Pro < Pro AI, option own key < managed, interval monthly < yearly). `planChangeTiming()`
@@ -482,6 +483,19 @@ code (`pricing.planChange.errors.*` in every locale): `no_billing_account` (400)
 price), `switch_failed` (500: logged as one line with the Stripe error's type, code, param, HTTP
 status, request id and message, never the error object). `503 { error: 'ai_disabled' }` keeps its
 own message. Anything else shows "Couldn't start the switch".
+
+**A row that still shows a plan Stripe has ended** (a missed or failed webhook delivery, e.g. a
+cancel while `stripe listen` wasn't running) is corrected by the switch itself. When the customer
+has no entitled subscription at Stripe at all (the whole list read: `subscriptions.list` without a
+status leaves out canceled ones), `resyncEndedSubscription()` (`lib/subscriptionSync.ts`, the
+webhook's retrieve, stored-state and update-by-id steps) writes the row's own subscription's state,
+keyed on its id, only if that subscription is this customer's and not entitled. It logs one line
+(`Plan switch: corrected a row whose plan had ended at Stripe (subscription …: pro/active ->
+free/canceled)`) and answers 403 `no_paid_plan` with `checkout: { tier, interval, aiMode? }`, the
+plan asked for; the pricing page posts that to `/api/checkout` (which checks the row again) and
+follows the URL. A live subscription on a price this deployment doesn't know is never treated as
+ended (plain 403, no write, and `/api/checkout` still answers 409). A customer id Stripe doesn't
+have (`resource_missing`, HTTP 400 on a list) is 400 `no_billing_account`, never a 500.
 
 When a schedule's next phase starts, Stripe updates the subscription to that phase's price and
 fires `customer.subscription.updated`; the webhook writes the new tier, `ai_mode` and

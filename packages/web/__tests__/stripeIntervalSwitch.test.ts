@@ -158,6 +158,37 @@ describe('createPlanSwitchSession', () => {
     expect(mockPortalCreate).not.toHaveBeenCalled()
   })
 
+  it.each([
+    ['no subscription at all', { data: [] }],
+    ['only subscriptions that are not entitled', { data: [sub('sub_unpaid', 'unpaid', 'price_pro_m')], has_more: false }],
+  ])('says no_entitled_subscription for %s', async (_label, listed) => {
+    mockSubscriptionsList.mockResolvedValue(listed)
+    const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
+
+    const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
+    expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('no_entitled_subscription')
+  })
+
+  it('says no_subscription, not no_entitled_subscription, when the list has more pages', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_unpaid', 'unpaid', 'price_pro_m')], has_more: true })
+    const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
+
+    const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
+    expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('no_subscription')
+  })
+
+  it('says no_customer when Stripe has no such customer (resource_missing), and rethrows anything else', async () => {
+    const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
+
+    mockSubscriptionsList.mockRejectedValueOnce(Object.assign(new Error('No such customer'), { code: 'resource_missing' }))
+    const missing = await createPlanSwitchSession(args).catch((e: unknown) => e)
+    expect((missing as InstanceType<typeof PlanSwitchError>).reason).toBe('no_customer')
+
+    const outage = Object.assign(new Error('Server error'), { type: 'StripeAPIError' })
+    mockSubscriptionsList.mockRejectedValueOnce(outage)
+    expect(await createPlanSwitchSession(args).catch((e: unknown) => e)).toBe(outage)
+  })
+
   it('refuses a switch to the price the subscription is already on', async () => {
     mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', 'price_pro_y')] })
     const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')

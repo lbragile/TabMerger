@@ -12,7 +12,15 @@ import { hasCloudSync } from '@/lib/cloudSync'
 import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { absoluteUrl } from '@/lib/utils'
-import { PLAN_SWITCH_ERROR_CODES as CODES } from '@/lib/checkoutErrors'
+import {
+  PLAN_SWITCH_ERROR_CODES as CODES,
+  type PlanSwitchCheckoutTarget,
+} from '@/lib/checkoutErrors'
+import {
+  SubscriptionSyncError,
+  resyncEndedSubscription,
+  type ServiceRoleClient,
+} from '@/lib/subscriptionSync'
 
 export const BILLING_INTERVALS: readonly BillingInterval[] = ['monthly', 'yearly']
 
@@ -82,12 +90,18 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  *   ISO date and `url` the account page;
  *
  * or an error `{ error, code? }` (`code` from PLAN_SWITCH_ERROR_CODES in lib/checkoutErrors.ts):
- * 401, 403 (`no_paid_plan`; an AI option for Pro), 400 (`no_billing_account`; a bad body; the
- * current interval is unknown and none was sent), 409 (`already_on_price`, `already_scheduled`,
- * `cancel_scheduled`), 503 (`ai_disabled` in `error`: the Pro AI option the subscription would be
+ * 401, 403 (`no_paid_plan`; an AI option for Pro), 400 (`no_billing_account`, also when Stripe
+ * has no such customer; a bad body; the current interval is unknown and none was sent), 409
+ * (`already_on_price`, `already_scheduled`, `cancel_scheduled`), 503 (`ai_disabled` in `error`: the Pro AI option the subscription would be
  * on isn't on sale per aiAvailability(); `price_unavailable`: the target price isn't configured
  * here or is archived in Stripe), 500 (`switch_failed`, logged with the Stripe error's type, code
  * and request id).
+ *
+ * The row can say "paid" when Stripe says the plan has ended: a webhook delivery that was missed
+ * or failed. When Stripe has no entitled subscription for the customer at all, the row is
+ * corrected from Stripe (correctEndedPlan()) and the 403 `no_paid_plan` also carries `checkout`,
+ * the plan asked for, so the page can start a checkout for it. Stripe stays the authority: this
+ * path only ever ends or lowers the row, never grants anything.
  */
 export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextResponse> {
   const supabase = await createClient()
@@ -100,14 +114,12 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
 
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('tier, status, stripe_price_id, ai_mode')
+    .select('id, tier, status, stripe_price_id, ai_mode')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(1)
     .maybeSingle()
-  if (!hasCloudSync(subscription)) {
-    return NextResponse.json({ error: 'No paid plan to switch', code: CODES.noPaidPlan }, { status: 403 })
-  }
+  if (!hasCloudSync(subscription)) return noPaidPlan()
 
   const currentTierKey: PaidTierKey = subscription!.tier === 'pro_ai' ? 'proAi' : 'pro'
   const tierKey: PaidTierKey = target.tier ?? currentTierKey
@@ -175,6 +187,19 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
     })
   } catch (err) {
     if (err instanceof PlanSwitchError) {
+      if (err.reason === 'no_customer') {
+        // Logged without the customer id: one line to find a profile pointing at the wrong account
+        // or mode (or a deleted customer).
+        console.warn('Plan switch: Stripe has no customer for this account (resource_missing)')
+        return NextResponse.json({ error: 'No billing account found', code: CODES.noBillingAccount }, { status: 400 })
+      }
+      if (err.reason === 'no_entitled_subscription') {
+        return correctEndedPlan(serviceClient, subscription!, profile.stripe_customer_id, {
+          tier: tierKey,
+          interval,
+          ...(tierKey === 'proAi' ? { aiMode } : {}),
+        })
+      }
       if (err.reason === 'already_on_price') {
         const message =
           target.aiMode === undefined && target.tier === undefined
@@ -202,11 +227,71 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
         console.error(`Plan switch: target price ${targetPriceId} is archived in Stripe`)
         return NextResponse.json({ error: 'Price not available', code: CODES.priceUnavailable }, { status: 503 })
       }
-      return NextResponse.json({ error: 'No paid plan to switch', code: CODES.noPaidPlan }, { status: 403 })
+      return noPaidPlan()
     }
     console.error(`Plan switch to ${targetPriceId} failed: ${describeStripeError(err)}`)
     return NextResponse.json({ error: 'Failed to start the plan change', code: CODES.failed }, { status: 500 })
   }
+}
+
+/** The 403 for an account with no paid plan to switch. */
+function noPaidPlan(checkout?: PlanSwitchCheckoutTarget): NextResponse {
+  return NextResponse.json(
+    { error: 'No paid plan to switch', code: CODES.noPaidPlan, ...(checkout ? { checkout } : {}) },
+    { status: 403 }
+  )
+}
+
+/** Prefix of the row the signup trigger creates (`free_<user id>`): it tracks no Stripe subscription. */
+const SIGNUP_ROW_PREFIX = 'free_'
+
+/**
+ * Stripe has no entitled subscription for the customer, yet the account's row shows a paid plan
+ * (a missed or failed webhook delivery). Brings the row in line with Stripe through the webhook's
+ * own steps (resyncEndedSubscription() in lib/subscriptionSync.ts), logs one line, and answers 403
+ * `no_paid_plan` with `checkout`: the plan the user asked for, so the page starts a checkout for it
+ * instead of a dead end. `/api/checkout` accepts the account once the row no longer shows an
+ * entitled plan, and still refuses anyone whose row does.
+ *
+ * Nothing is granted here: the row is written only when its own subscription, on this customer,
+ * is not entitled at Stripe. When it can't be corrected (no Stripe subscription id on the row,
+ * Stripe has no such subscription, it belongs to another customer, or the row moved on to a newer
+ * subscription meanwhile) the answer is the plain `no_paid_plan`, and one line says why. A failed
+ * Stripe read or database write is a 500 `switch_failed`.
+ */
+async function correctEndedPlan(
+  serviceClient: ServiceRoleClient,
+  row: { id?: unknown; tier?: unknown; status?: unknown },
+  customerId: string,
+  checkout: PlanSwitchCheckoutTarget
+): Promise<NextResponse> {
+  const subscriptionId = typeof row.id === 'string' ? row.id : ''
+  if (!subscriptionId || subscriptionId.startsWith(SIGNUP_ROW_PREFIX)) {
+    console.warn('Plan switch: Stripe has no entitled subscription, and the row names no Stripe subscription to correct')
+    return noPaidPlan()
+  }
+
+  let result
+  try {
+    result = await resyncEndedSubscription(serviceClient, subscriptionId, customerId)
+  } catch (err) {
+    console.error(
+      err instanceof SubscriptionSyncError ? err.message : `Plan switch resync failed: ${describeStripeError(err)}`
+    )
+    return NextResponse.json({ error: 'Failed to start the plan change', code: CODES.failed }, { status: 500 })
+  }
+
+  if (!result.corrected) {
+    console.warn(
+      `Plan switch: Stripe has no entitled subscription, but the row was not corrected (subscription ${subscriptionId}, ${result.reason})`
+    )
+    return noPaidPlan()
+  }
+
+  console.warn(
+    `Plan switch: corrected a row whose plan had ended at Stripe (subscription ${subscriptionId}: ${String(row.tier)}/${String(row.status)} -> ${result.tier}/${result.status})`
+  )
+  return noPaidPlan(checkout)
 }
 
 /**
