@@ -13,7 +13,7 @@ Authoritative code:
 | Tier check + credit metering | `packages/web/lib/ai-usage.ts` |
 | Kill switch | `packages/web/lib/ai-guard.ts`, `packages/web/lib/aiFlag.ts`, `packages/shared/src/utils/flags.ts` |
 | Extension callers | `packages/extension/src/hooks/useAI.ts`, `useAiUsage.ts`, `src/lib/aiFlag.ts` |
-| Dev fixtures | `packages/extension/src/mocks/` |
+| Dev usage counter (Settings → Dev) | `packages/extension/src/mocks/devAiUsage.ts` |
 | Schema | `supabase/migrations/006_ai_usage.sql`, `014_ai_credit_purchases.sql`, `017_rename_ai_usage_credits.sql`, `004_create_organize_runs.sql` |
 
 ---
@@ -52,7 +52,7 @@ Request order in every metered route:
 | `POST /api/ai/organize` | `{ groups?: {id,name,tabs,permanent?}[] }` | `{ runId, token }` | 8 | `anthropic/claude-sonnet-4-6` via `@workflow/ai` `DurableAgent` | Header → AI actions → Organize (`useOrganizeTabs`) |
 | `GET /api/ai/organize?runId=` | — | NDJSON progress stream | 0 | — | Web dashboard `OrganizeProposal` |
 | `POST /api/ai/organize/approve` | `{ token, approved, actions? }` | `{ ok: true }` | 0 | — | Web dashboard `OrganizeProposal` |
-| `POST /api/ai/dev-usage` | `{ count }` | `{ count }` | — | — | Dev fetch mock only |
+| `POST /api/ai/dev-usage` | `{ count }` | `{ count }` | — | — | Extension Settings → Dev usage Set/Reset only |
 
 Notes:
 
@@ -127,8 +127,8 @@ When off:
   and landing sections; dashboard/account hide AI usage and the organize panel.
 - **Extension** hides every AI entry point (Header AI actions menu, AI rename via `aiFeatures`,
   hover summary, suggestion banner, Settings AI section), `useEntitlements().aiFeatures` is forced
-  false even for `pro_ai`, every AI mutation throws before `fetch`, `useAiUsage` doesn't query, and
-  the dev fetch mock isn't installed. No AI requests leave the extension.
+  false even for `pro_ai`, every AI mutation throws before `fetch`, and `useAiUsage` doesn't query.
+  No AI requests leave the extension.
 
 ### Turning it on
 
@@ -138,9 +138,9 @@ When off:
   model access for the workflow agent — TODO (owner): document which credentials the
   `anthropic/claude-sonnet-4-6` workflow model uses in each environment).
 - **Extension, local dev:** add `VITE_AI_ENABLED=true` to `packages/extension/.env.local` and
-  restart `pnpm dev:extension`. In dev builds AI calls are answered by the local fetch mock
-  (`src/mocks/devFetchMock.ts`), not the web app; it also best-effort syncs its counter to
-  `/api/ai/dev-usage`. The account still needs `pro_ai` for `aiFeatures`.
+  restart `pnpm dev:extension`. Dev builds call the web app at `VITE_WEB_APP_URL`
+  like any other build (there is no client-side AI mock). The account still needs `pro_ai` for `aiFeatures`.
+  To answer those calls without a provider key, see [Mock AI in development](#mock-ai-in-development).
 - **Extension, store builds:** `.github/workflows/publish.yml` does not pass `VITE_AI_ENABLED`, and
   the extension's `.env.production` / `.env.beta` don't set it, so CI-built store zips ship with AI
   off. Turning it on for users requires adding it to the build and releasing a new version.
@@ -148,12 +148,59 @@ When off:
 - Web and extension flags are independent; turn the web one on first, or an enabled extension will
   get 503 `ai_disabled`.
 
+### Mock AI in development
+
+The only dev AI mock lives on the server, so the web app and the extension (whose dev build posts
+to the local web app) can use every AI feature without a provider key and without spending money.
+
+1. Add `AI_MOCK=true` to `packages/web/.env.local` (and optionally `AI_MOCK_SCENARIO`, below).
+   AI must also be on (`NEXT_PUBLIC_AI_ENABLED=true` or `NEXT_PUBLIC_AI_BYOK_ENABLED=true`).
+2. Restart `pnpm dev:web`. The first AI call logs `AI mock mode: responses are fake`.
+
+It's on only when `AI_MOCK` is exactly `true`, `NODE_ENV` is `development` (`next dev`) and
+`VERCEL_ENV`/`VERCEL` are unset. A production build inlines `NODE_ENV=production`, so it can never
+run in a deployed or `next start` build, and tests (`NODE_ENV=test`) ignore it. It's server-only:
+never use a `NEXT_PUBLIC_` name for it.
+
+What's fake (`packages/web/lib/ai-mock.ts`): only the model call in `runAiTask` (`lib/ai.ts`):
+Claude's `countTokens`/`create`, or the OpenAI/Google request for an own key, and the provider
+check in `/api/ai/byok/verify`. Everything else runs for real: the flags, auth, plan and option
+checks, body validation and prompt cleaning, credit reservation and settlement, and each task's own
+parser. Organize's model call goes through the same `runAiTask` in its route (the workflow never
+calls a model), so the proposal it hands to the workflow is the mock's.
+
+- **Answers** are built from the request, deterministically: group-tabs groups by site, name-group
+  uses the main site or the commonest title words, tab-summary starts with `[Mock summary]`,
+  suggest-sessions suggests merging groups on the same site (or archiving one-tab groups, or saving
+  the two largest as a session), organize merges groups on the same site and deletes empty ones.
+- **Credits:** managed calls report token usage estimated from the prompt and answer sizes
+  (about 4 characters per token), so `ai_usage` moves and the caps behave as usual. Own-key calls
+  bill no credits. Use `/api/ai/dev-usage` to set `credits_used` near the cap.
+- **Own keys:** verify accepts any key that passes the format check, with no network call, so a
+  dummy key such as `sk-ant-mock-000000000000000000000000` can be saved in the extension.
+- **Header:** mocked AI responses (success and errors) carry `x-tabmerger-ai-mock: 1`; check it in
+  DevTools → Network.
+
+`AI_MOCK_SCENARIO` (unknown values fall back to `ok` with a warning in the server log):
+
+| Value | Managed | Own key (and verify) |
+| --- | --- | --- |
+| `ok` (default) | 200 | 200 |
+| `slow` | 200 after about 1.5 s | 200 after about 1.5 s |
+| `error:rate_limited` | 503 `ai_overloaded` | 503 `byok_rate_limited` |
+| `error:provider_error` | 503 `ai_overloaded` | 503 `ai_overloaded` |
+| `error:invalid_key` | 500 `ai_failed` (TabMerger's key rejected) | 400 `byok_key_invalid` |
+| `error:over_quota` | 429 `ai_quota_exceeded` (the real reservation is refused; `needed` is huge, `remaining` is real) | 402 `byok_billing` |
+
+Thrown errors release the managed reservation, as a real failed call would. `next dev` reloads
+`.env.local` when it changes; restart it if a new value does not take effect.
+
 ---
 
 ## Known gaps
 
 - **tab-summary contract mismatch:** `useTabSummary` posts `{ url, title }`, but the route requires
-  `{ tab: { id: number, … } }`, so real calls return 400 (the dev mock hides this).
+  `{ tab: { id: number, … } }`, so real calls return 400.
 - **Credits charged before body validation** in group-tabs, name-group, tab-summary and
   suggest-sessions: a 400 still costs credits. `organize` parses its body first.
 - **403 is unreachable:** `checkAndIncrementAIUsage` returns `remaining: 0` both for "not Pro AI"

@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { AI_ERROR_CODES, resolveAiModel } from '@tabmerger/shared'
 import { aiDisabledResponse, aiModeDisabledResponse } from '@/lib/ai-guard'
 import { anthropicClient, mapAnthropicError, mapOwnKeyProviderError } from '@/lib/ai'
+import { aiMockEnabled, mockVerifyKey, withAiMockHeader } from '@/lib/ai-mock'
 import { verifyOpenAiOrGoogleKey } from '@/lib/ai-providers'
 import { modelChoiceOf, readJsonBody } from '@/lib/ai-validation'
 import {
@@ -29,6 +30,9 @@ import {
  * Returns `{ ok: true, provider }`, or a code: `byok_key_invalid` (400), `byok_billing` (402),
  * `byok_rate_limited` (503), `ai_model_invalid` (400), `ai_overloaded` (503). The key is used
  * for this one request and never logged or stored.
+ *
+ * Dev AI mock (`AI_MOCK=true` in local development, see `lib/ai-mock.ts`): no provider call; any
+ * key that passes the format check is accepted, unless an `AI_MOCK_SCENARIO` error is set.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   // AI feature flag kill switch — must stay first, before any auth/DB/provider work.
@@ -50,24 +54,29 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const model = resolveAiModel(modelChoiceOf(await readJsonBody(request)), 'nameGroup', found.provider)
   if (!model) return aiError(400, AI_ERROR_CODES.modelInvalid)
 
+  const mock = aiMockEnabled()
   try {
     if (found.provider === 'anthropic') {
       try {
-        await anthropicClient('byok', found.key).messages.countTokens({
-          model,
-          messages: [{ role: 'user', content: 'ping' }],
-        })
+        if (mock) await mockVerifyKey('anthropic')
+        else {
+          await anthropicClient('byok', found.key).messages.countTokens({
+            model,
+            messages: [{ role: 'user', content: 'ping' }],
+          })
+        }
       } catch (err) {
         throw mapAnthropicError(err, 'byok')
       }
     } else {
       try {
-        await verifyOpenAiOrGoogleKey(found.provider, found.key, model)
+        if (mock) await mockVerifyKey(found.provider)
+        else await verifyOpenAiOrGoogleKey(found.provider, found.key, model)
       } catch (err) {
         throw mapOwnKeyProviderError(err)
       }
     }
-    return NextResponse.json({ ok: true, provider: found.provider })
+    return withAiMockHeader(NextResponse.json({ ok: true, provider: found.provider }))
   } catch (err) {
     return aiErrorResponse(err, 'byok-verify')
   }

@@ -12,6 +12,7 @@ import {
   type AiProvider,
 } from '@tabmerger/shared'
 import { aiModeDisabledResponse } from '@/lib/ai-guard'
+import { withAiMockHeader } from '@/lib/ai-mock'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { AiRouteError, anthropicClient, describeErrorForLog, type AiCallContext } from '@/lib/ai'
 import { currentMonth, getAiSubscription, hasProAi, type AiSubscription } from '@/lib/ai-usage'
@@ -50,24 +51,30 @@ export function invalidRequest(message: string): NextResponse {
   return aiError(400, AI_ERROR_CODES.invalidRequest, { message })
 }
 
-/** A successful JSON response, with the managed credits left when known. */
+/**
+ * A successful JSON response, with the managed credits left when known (and the dev AI mock
+ * header while `AI_MOCK` is on, see `lib/ai-mock.ts`).
+ */
 export function aiJson(data: unknown, remaining: number | null): NextResponse {
-  return NextResponse.json(data, {
-    headers: remaining === null ? {} : { [AI_CREDITS_REMAINING_HEADER]: String(remaining) },
-  })
+  return withAiMockHeader(
+    NextResponse.json(data, {
+      headers: remaining === null ? {} : { [AI_CREDITS_REMAINING_HEADER]: String(remaining) },
+    })
+  )
 }
 
 /**
  * Turns anything thrown while handling an AI request into its response, logging only what
- * {@link describeErrorForLog} allows (never a BYOK key or request headers).
+ * {@link describeErrorForLog} allows (never a BYOK key or request headers). Carries the dev AI
+ * mock header while `AI_MOCK` is on, so a mocked error scenario is recognisable.
  */
 export function aiErrorResponse(err: unknown, label: string): NextResponse {
   if (err instanceof AiRouteError) {
     if (err.status >= 500) console.error(`AI ${label} error:`, describeErrorForLog(err))
-    return aiError(err.status, err.code, err.details, err.remaining)
+    return withAiMockHeader(aiError(err.status, err.code, err.details, err.remaining))
   }
   console.error(`AI ${label} error:`, describeErrorForLog(err))
-  return aiError(500, AI_ERROR_CODES.failed)
+  return withAiMockHeader(aiError(500, AI_ERROR_CODES.failed))
 }
 
 export interface AuthenticatedAiRequest {

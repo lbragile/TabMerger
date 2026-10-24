@@ -23,6 +23,7 @@ import {
   type ProviderReply,
 } from '@/lib/ai-providers'
 import { AI_MAX_GROUP_NAME_LENGTH, AI_MAX_RENAME_LENGTH } from '@/lib/ai-validation'
+import { aiMockEnabled, mockAnthropicMessage, mockCountTokens, mockProviderReply } from '@/lib/ai-mock'
 import {
   SYSTEM_DATA_RULE,
   buildUntrustedDataTurn,
@@ -54,6 +55,10 @@ import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
  * customer's key for that request only, and no metering (so no token counting). The prompt
  * framing, structured-output schema and answer cleaning are the same for every provider. The
  * key is never logged, stored or put into an error message.
+ *
+ * In local development with `AI_MOCK=true`, only the model call itself (Claude's count and
+ * create, or the OpenAI / Google request) is answered by `lib/ai-mock.ts`; everything else
+ * here, metering included, runs as usual.
  */
 
 // --- Clients ------------------------------------------------------------------------------
@@ -653,7 +658,10 @@ export function buildAiRequest(task: AiTask<unknown>, model: AiModelId) {
   return { count, create }
 }
 
-function usageCredits(model: AiModelId, message: Message): number {
+/** The parts of a model response that {@link callAnthropic} reads (a mock reply has only these). */
+type ModelMessage = Pick<Message, 'content' | 'stop_reason' | 'usage'>
+
+function usageCredits(model: AiModelId, message: ModelMessage): number {
   const u = message.usage
   const input = (u?.input_tokens ?? 0) + (u?.cache_creation_input_tokens ?? 0) + (u?.cache_read_input_tokens ?? 0)
   return aiCallCredits(model, input, u?.output_tokens ?? 0)
@@ -698,6 +706,8 @@ async function callAnthropic(
 ): Promise<CallOutcome> {
   const { client, model, mode, meter } = ctx
   const request = buildAiRequest(task, model)
+  // Dev-only provider seam: the count and create calls below are the only ones the mock replaces.
+  const mock = aiMockEnabled()
 
   let reserved = 0
   let cap = 0
@@ -706,7 +716,8 @@ async function callAnthropic(
   if (meter) {
     let inputTokens: number
     try {
-      inputTokens = (await client.messages.countTokens(request.count)).input_tokens
+      inputTokens = (await (mock ? mockCountTokens(request.count) : client.messages.countTokens(request.count)))
+        .input_tokens
     } catch (err) {
       throw mapAnthropicError(err, mode)
     }
@@ -724,9 +735,9 @@ async function callAnthropic(
     remaining = reservation.remaining
   }
 
-  let message: Message
+  let message: ModelMessage
   try {
-    message = await client.messages.create(request.create)
+    message = mock ? await mockAnthropicMessage(task, request.create, mode) : await client.messages.create(request.create)
   } catch (err) {
     // No usage came back, so nothing was spent: release the whole reservation.
     if (meter) {
@@ -767,7 +778,12 @@ async function callOwnKeyProvider(
     effort: MODEL_REQUEST_SETTINGS[ctx.model].effort,
   }
   try {
-    const reply = ctx.provider === 'openai' ? await callOpenAi(ctx.apiKey, prompt) : await callGoogle(ctx.apiKey, prompt)
+    // Dev-only provider seam (see lib/ai-mock.ts).
+    const reply = aiMockEnabled()
+      ? await mockProviderReply(task, ctx.provider)
+      : ctx.provider === 'openai'
+        ? await callOpenAi(ctx.apiKey, prompt)
+        : await callGoogle(ctx.apiKey, prompt)
     return { ...reply, remaining: null }
   } catch (err) {
     throw mapOwnKeyProviderError(err)

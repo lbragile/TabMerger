@@ -126,6 +126,7 @@ Things to know:
 | `NEXT_PUBLIC_APP_URL` | Base for every Stripe redirect URL (see below). |
 | `NEXT_PUBLIC_AI_ENABLED` | Managed Pro AI flag (AI on TabMerger's key); also turns on the own-key option (see below). |
 | `NEXT_PUBLIC_AI_BYOK_ENABLED` | Own-key Pro AI flag: launches the own-key option alone, before managed AI (see below). |
+| `AI_MOCK`, `AI_MOCK_SCENARIO` | Local development only (`packages/web/.env.local`): fake AI answers with real metering, no provider key needed. Ignored outside `next dev` and on Vercel; never set them in a Vercel environment. See [Mock AI in development](AI_FEATURES.md#mock-ai-in-development). |
 
 Price IDs are mode-specific: preview and local use **test-mode** keys and test-mode price IDs;
 production uses live ones. The price IDs are also the webhook's only way to map a subscription to a
