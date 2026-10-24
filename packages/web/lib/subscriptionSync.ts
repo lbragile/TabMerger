@@ -7,7 +7,6 @@ import {
 import { stripe } from '@/lib/stripe'
 import type { createServiceRoleClient } from '@/lib/supabase/server'
 import { SUBSCRIPTION_EXPAND } from '@/lib/aiAllowance'
-import { getPlanForPriceId } from '@/lib/tiers'
 
 /**
  * How a `subscriptions` row is brought in line with Stripe: read the subscription's current state
@@ -239,7 +238,10 @@ export type EndedSubscriptionResync =
  *
  * The same steps as the webhook: the subscription's current state is retrieved from Stripe, its
  * status goes through toStoredState() (canceled, or any status the database doesn't store, is
- * written as canceled / free) and is written with the price's tier by updateSubscriptionById().
+ * written as canceled) and is written by updateSubscriptionById(), always with tier `free` and no
+ * managed AI allowance: a status that isn't entitled gets nothing, whatever the price. (The
+ * webhook keeps the price's tier for a stored, non-entitled status such as `incomplete`; access
+ * is the same either way, as entitlement reads the status.)
  * The write is keyed on the subscription id rather than the user, so if a new checkout has just
  * replaced the row with a new subscription, nothing is written over it.
  *
@@ -260,10 +262,9 @@ export async function resyncEndedSubscription(
   if (owner !== customerId) return { corrected: false, reason: 'other_customer' }
   if (isEntitledSubscriptionStatus(subscription.status)) return { corrected: false, reason: 'entitled' }
 
-  const plan = getPlanForPriceId(subscription.items?.data?.[0]?.price?.id)
   const written = await updateSubscriptionById(supabase, PLAN_SWITCH_RESYNC, subscriptionId, {
     status: subscription.status,
-    tier: plan?.tier ?? 'free',
+    tier: 'free',
   })
   if (!written) return { corrected: false, reason: 'no_row' }
   return { corrected: true, status: written.status, tier: written.tier ?? 'free' }

@@ -27,6 +27,11 @@ export const PLAN_SWITCH_ERROR_CODES = {
   alreadyOnPrice: 'already_on_price',
   /** 409: a change is already scheduled for the end of the term (a subscription schedule). */
   alreadyScheduled: 'already_scheduled',
+  /**
+   * 409: no live plan, but one that can still be paid or resumed (unpaid, paused, incomplete). The
+   * customer pays or resumes it in Manage billing; no checkout is offered (it would be a second plan).
+   */
+  payOrResume: 'pay_or_resume',
   /** 409: the subscription is set to end; it is renewed in the portal first. */
   cancelScheduled: 'cancel_scheduled',
   /** 503: the target price isn't configured here, or Stripe has it archived. */

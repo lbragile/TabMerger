@@ -90,6 +90,7 @@
       "already_on_price": "Anda sudah menggunakan paket tersebut.",
       "already_scheduled": "Perubahan paket sudah dijadwalkan untuk akhir periode penagihan ini.",
       "cancel_scheduled": "Paket Anda akan berakhir pada akhir periode penagihan ini. Perpanjang di Kelola penagihan sebelum mengubahnya.",
+      "pay_or_resume": "Paket Anda menunggu pembayaran atau sedang dijeda. Bayar atau lanjutkan di Kelola penagihan pada halaman akun Anda sebelum mengubahnya.",
       "price_unavailable": "Saat ini Anda tidak dapat beralih ke paket tersebut. Silakan coba lagi nanti atau hubungi kami.",
       "switch_failed": "Stripe tidak dapat memulai perubahan. Silakan coba lagi, atau gunakan Kelola penagihan di halaman akun Anda."
     }

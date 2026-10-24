@@ -90,6 +90,7 @@
       "already_on_price": "Você já está nesse plano.",
       "already_scheduled": "Já existe uma mudança de plano agendada para o fim deste período de cobrança.",
       "cancel_scheduled": "Seu plano termina no fim deste período de cobrança. Renove-o em Gerenciar cobrança antes de alterá-lo.",
+      "pay_or_resume": "Seu plano está aguardando um pagamento ou está pausado. Pague ou retome-o em Gerenciar cobrança na página da sua conta antes de alterá-lo.",
       "price_unavailable": "No momento não é possível mudar para esse plano. Tente novamente mais tarde ou fale conosco.",
       "switch_failed": "O Stripe não conseguiu iniciar a mudança. Tente novamente ou use Gerenciar cobrança na página da sua conta."
     }

@@ -90,6 +90,7 @@
       "already_on_price": "Vous avez déjà ce forfait.",
       "already_scheduled": "Un changement de forfait est déjà prévu pour la fin de cette période de facturation.",
       "cancel_scheduled": "Votre forfait prendra fin à la fin de cette période de facturation. Renouvelez-le dans « Gérer la facturation » avant de le modifier.",
+      "pay_or_resume": "Votre forfait attend un paiement ou est en pause. Payez-le ou réactivez-le dans « Gérer la facturation » sur votre page de compte avant de le modifier.",
       "price_unavailable": "Il n'est pas possible de passer à ce forfait pour le moment. Réessayez plus tard ou contactez-nous.",
       "switch_failed": "Stripe n'a pas pu lancer le changement. Réessayez, ou utilisez « Gérer la facturation » sur votre page de compte."
     }

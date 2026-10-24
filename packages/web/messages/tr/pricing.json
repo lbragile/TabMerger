@@ -90,6 +90,7 @@
       "already_on_price": "Zaten bu plandasınız.",
       "already_scheduled": "Bu fatura döneminin sonu için zaten bir plan değişikliği planlandı.",
       "cancel_scheduled": "Planınız bu fatura döneminin sonunda sona erecek şekilde ayarlı. Değiştirmeden önce Faturalandırmayı yönet'ten yenileyin.",
+      "pay_or_resume": "Planınız bir ödeme bekliyor veya duraklatıldı. Değiştirmeden önce hesap sayfanızdaki Faturalandırmayı yönet'ten ödeyin veya devam ettirin.",
       "price_unavailable": "Şu anda bu plana geçilemiyor. Lütfen daha sonra tekrar deneyin veya bizimle iletişime geçin.",
       "switch_failed": "Stripe değişikliği başlatamadı. Lütfen tekrar deneyin veya hesap sayfanızdaki Faturalandırmayı yönet'i kullanın."
     }

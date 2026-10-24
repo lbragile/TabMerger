@@ -90,6 +90,7 @@
       "already_on_price": "You're already on that plan.",
       "already_scheduled": "A plan change is already scheduled for the end of this billing period.",
       "cancel_scheduled": "Your plan is set to end at the end of this billing period. Renew it in Manage billing before changing it.",
+      "pay_or_resume": "Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing on your account page before changing it.",
       "price_unavailable": "That plan isn't available to switch to right now. Please try again later or contact us.",
       "switch_failed": "Stripe couldn't start the change. Please try again, or use Manage billing on your account page."
     }

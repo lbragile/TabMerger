@@ -478,7 +478,7 @@ Why the server and not the portal decides downgrades:
 **Errors.** Every error answer carries a `code` next to the English `error`
 (`PLAN_SWITCH_ERROR_CODES` in `lib/checkoutErrors.ts`), and the pricing page shows a message per
 code (`pricing.planChange.errors.*` in every locale): `no_billing_account` (400), `no_paid_plan`
-(403), `already_on_price`, `already_scheduled`, `cancel_scheduled` (409), `price_unavailable`
+(403), `already_on_price`, `already_scheduled`, `cancel_scheduled`, `pay_or_resume` (409), `price_unavailable`
 (503: the Price isn't configured in this environment, or Stripe has it archived; logged with the
 price), `switch_failed` (500: logged as one line with the Stripe error's type, code, param, HTTP
 status, request id and message, never the error object). `503 { error: 'ai_disabled' }` keeps its
@@ -489,11 +489,16 @@ cancel while `stripe listen` wasn't running) is corrected by the switch itself. 
 has no entitled subscription at Stripe at all (the whole list read: `subscriptions.list` without a
 status leaves out canceled ones), `resyncEndedSubscription()` (`lib/subscriptionSync.ts`, the
 webhook's retrieve, stored-state and update-by-id steps) writes the row's own subscription's state,
-keyed on its id, only if that subscription is this customer's and not entitled. It logs one line
+keyed on its id, only if that subscription is this customer's and not entitled, always with tier
+`free`. It logs one line
 (`Plan switch: corrected a row whose plan had ended at Stripe (subscription …: pro/active ->
 free/canceled)`) and answers 403 `no_paid_plan` with `checkout: { tier, interval, aiMode? }`, the
 plan asked for; the pricing page posts that to `/api/checkout` (which checks the row again) and
-follows the URL. A live subscription on a price this deployment doesn't know is never treated as
+follows the URL. If one of the customer's subscriptions can still come back (`unpaid`, `paused`,
+`incomplete`: `OPEN_SUBSCRIPTION_STATUSES` in `lib/stripe.ts`), the row is corrected the same way
+but the answer is 409 `pay_or_resume` with no `checkout`: the customer pays or resumes it in Manage
+billing, since a new checkout would leave two subscriptions billing once the old invoice is paid.
+A live subscription on a price this deployment doesn't know is never treated as
 ended (plain 403, no write, and `/api/checkout` still answers 409). A customer id Stripe doesn't
 have (`resource_missing`, HTTP 400 on a list) is 400 `no_billing_account`, never a 500.
 

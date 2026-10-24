@@ -92,7 +92,7 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  * or an error `{ error, code? }` (`code` from PLAN_SWITCH_ERROR_CODES in lib/checkoutErrors.ts):
  * 401, 403 (`no_paid_plan`; an AI option for Pro), 400 (`no_billing_account`, also when Stripe
  * has no such customer; a bad body; the current interval is unknown and none was sent), 409
- * (`already_on_price`, `already_scheduled`, `cancel_scheduled`), 503 (`ai_disabled` in `error`: the Pro AI option the subscription would be
+ * (`already_on_price`, `already_scheduled`, `cancel_scheduled`, `pay_or_resume`), 503 (`ai_disabled` in `error`: the Pro AI option the subscription would be
  * on isn't on sale per aiAvailability(); `price_unavailable`: the target price isn't configured
  * here or is archived in Stripe), 500 (`switch_failed`, logged with the Stripe error's type, code
  * and request id).
@@ -100,8 +100,11 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  * The row can say "paid" when Stripe says the plan has ended: a webhook delivery that was missed
  * or failed. When Stripe has no entitled subscription for the customer at all, the row is
  * corrected from Stripe (correctEndedPlan()) and the 403 `no_paid_plan` also carries `checkout`,
- * the plan asked for, so the page can start a checkout for it. Stripe stays the authority: this
- * path only ever ends or lowers the row, never grants anything.
+ * the plan asked for, so the page can start a checkout for it. When one of the customer's plans
+ * can still be paid or resumed (unpaid, paused, incomplete), the row is corrected the same way but
+ * the answer is 409 `pay_or_resume` with no `checkout`: a new subscription would bill next to it
+ * once it is paid. Stripe stays the authority: this path only ever ends or lowers the row, never
+ * grants anything.
  */
 export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextResponse> {
   const supabase = await createClient()
@@ -200,6 +203,12 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
           ...(tierKey === 'proAi' ? { aiMode } : {}),
         })
       }
+      if (err.reason === 'open_subscription') {
+        // The row is still brought in line with Stripe (it shows no plan until the invoice is paid
+        // or the plan resumed), but no checkout is offered: paying the open plan would make it
+        // live again next to a new one.
+        return correctEndedPlan(serviceClient, subscription!, profile.stripe_customer_id, null)
+      }
       if (err.reason === 'already_on_price') {
         const message =
           target.aiMode === undefined && target.tier === undefined
@@ -248,10 +257,12 @@ const SIGNUP_ROW_PREFIX = 'free_'
 /**
  * Stripe has no entitled subscription for the customer, yet the account's row shows a paid plan
  * (a missed or failed webhook delivery). Brings the row in line with Stripe through the webhook's
- * own steps (resyncEndedSubscription() in lib/subscriptionSync.ts), logs one line, and answers 403
- * `no_paid_plan` with `checkout`: the plan the user asked for, so the page starts a checkout for it
- * instead of a dead end. `/api/checkout` accepts the account once the row no longer shows an
- * entitled plan, and still refuses anyone whose row does.
+ * own steps (resyncEndedSubscription() in lib/subscriptionSync.ts) and logs one line. With a
+ * `checkout` target (every plan has ended) it answers 403 `no_paid_plan` with `checkout`: the plan
+ * the user asked for, so the page starts a checkout for it instead of a dead end. `/api/checkout`
+ * accepts the account once the row no longer shows an entitled plan, and still refuses anyone whose
+ * row does. With `checkout` null (a plan can still be paid or resumed) it answers 409
+ * `pay_or_resume` whether or not the row was corrected, and never offers a checkout.
  *
  * Nothing is granted here: the row is written only when its own subscription, on this customer,
  * is not entitled at Stripe. When it can't be corrected (no Stripe subscription id on the row,
@@ -263,12 +274,15 @@ async function correctEndedPlan(
   serviceClient: ServiceRoleClient,
   row: { id?: unknown; tier?: unknown; status?: unknown },
   customerId: string,
-  checkout: PlanSwitchCheckoutTarget
+  checkout: PlanSwitchCheckoutTarget | null
 ): Promise<NextResponse> {
+  const answer = (corrected: boolean) =>
+    checkout === null ? payOrResume() : noPaidPlan(corrected ? checkout : undefined)
+
   const subscriptionId = typeof row.id === 'string' ? row.id : ''
   if (!subscriptionId || subscriptionId.startsWith(SIGNUP_ROW_PREFIX)) {
     console.warn('Plan switch: Stripe has no entitled subscription, and the row names no Stripe subscription to correct')
-    return noPaidPlan()
+    return answer(false)
   }
 
   let result
@@ -285,13 +299,24 @@ async function correctEndedPlan(
     console.warn(
       `Plan switch: Stripe has no entitled subscription, but the row was not corrected (subscription ${subscriptionId}, ${result.reason})`
     )
-    return noPaidPlan()
+    return answer(false)
   }
 
   console.warn(
     `Plan switch: corrected a row whose plan had ended at Stripe (subscription ${subscriptionId}: ${String(row.tier)}/${String(row.status)} -> ${result.tier}/${result.status})`
   )
-  return noPaidPlan(checkout)
+  return answer(true)
+}
+
+/** The 409 for a plan that isn't live but can still be paid or resumed in Manage billing. */
+function payOrResume(): NextResponse {
+  return NextResponse.json(
+    {
+      error: 'Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing before changing it.',
+      code: CODES.payOrResume,
+    },
+    { status: 409 }
+  )
 }
 
 /**

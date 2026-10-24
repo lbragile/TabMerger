@@ -190,6 +190,7 @@ describe('errors and the portal path', () => {
     [409, 'cancel_scheduled', 'Your plan is set to end at the end of this billing period. Renew it in Manage billing before changing it.'],
     [409, 'already_scheduled', 'A plan change is already scheduled for the end of this billing period.'],
     [409, 'already_on_price', "You're already on that plan."],
+    [409, 'pay_or_resume', 'Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing on your account page before changing it.'],
     [400, 'no_billing_account', "We couldn't find your billing account."],
     [403, 'no_paid_plan', "You don't have a paid plan to change."],
     [503, 'price_unavailable', "That plan isn't available to switch to right now."],

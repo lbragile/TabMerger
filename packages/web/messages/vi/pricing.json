@@ -90,6 +90,7 @@
       "already_on_price": "Bạn đang dùng gói đó rồi.",
       "already_scheduled": "Đã có một thay đổi gói được lên lịch vào cuối kỳ thanh toán này.",
       "cancel_scheduled": "Gói của bạn sẽ kết thúc vào cuối kỳ thanh toán này. Hãy gia hạn trong Quản lý thanh toán trước khi thay đổi.",
+      "pay_or_resume": "Gói của bạn đang chờ thanh toán hoặc đang tạm dừng. Hãy thanh toán hoặc tiếp tục gói trong Quản lý thanh toán trên trang tài khoản trước khi thay đổi.",
       "price_unavailable": "Hiện không thể chuyển sang gói đó. Vui lòng thử lại sau hoặc liên hệ với chúng tôi.",
       "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại hoặc dùng Quản lý thanh toán trên trang tài khoản."
     }

@@ -90,6 +90,7 @@
       "already_on_price": "Hai già quel piano.",
       "already_scheduled": "Una modifica del piano è già programmata per la fine di questo periodo di fatturazione.",
       "cancel_scheduled": "Il tuo piano terminerà alla fine di questo periodo di fatturazione. Rinnovalo in «Gestisci fatturazione» prima di modificarlo.",
+      "pay_or_resume": "Il tuo piano è in attesa di un pagamento o è in pausa. Pagalo o riattivalo in «Gestisci fatturazione» nella pagina del tuo account prima di modificarlo.",
       "price_unavailable": "Al momento non è possibile passare a quel piano. Riprova più tardi o contattaci.",
       "switch_failed": "Stripe non è riuscito ad avviare la modifica. Riprova oppure usa «Gestisci fatturazione» nella pagina del tuo account."
     }

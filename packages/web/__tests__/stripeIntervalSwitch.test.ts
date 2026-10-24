@@ -160,7 +160,7 @@ describe('createPlanSwitchSession', () => {
 
   it.each([
     ['no subscription at all', { data: [] }],
-    ['only subscriptions that are not entitled', { data: [sub('sub_unpaid', 'unpaid', 'price_pro_m')], has_more: false }],
+    ['only subscriptions that have ended for good', { data: [sub('sub_x', 'incomplete_expired', 'price_pro_m')], has_more: false }],
   ])('says no_entitled_subscription for %s', async (_label, listed) => {
     mockSubscriptionsList.mockResolvedValue(listed)
     const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
@@ -168,6 +168,21 @@ describe('createPlanSwitchSession', () => {
     const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
     expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('no_entitled_subscription')
   })
+
+  it.each(['unpaid', 'paused', 'incomplete'])(
+    'says open_subscription when a %s subscription can still be paid or resumed',
+    async (status) => {
+      mockSubscriptionsList.mockResolvedValue({
+        data: [sub('sub_x', 'incomplete_expired', 'price_pro_m'), sub('sub_open', status, 'price_legacy')],
+        has_more: false,
+      })
+      const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
+
+      const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
+      expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('open_subscription')
+      expect(mockPortalCreate).not.toHaveBeenCalled()
+    }
+  )
 
   it('says no_subscription, not no_entitled_subscription, when the list has more pages', async () => {
     mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_unpaid', 'unpaid', 'price_pro_m')], has_more: true })

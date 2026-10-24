@@ -7,11 +7,22 @@ metadata:
 
 Rules the code follows (docs/PAYMENTS.md "Plan changes and timing", the paragraph after "Errors"):
 
-- `createPlanSwitchSession()` (lib/stripe.ts) throws `PlanSwitchError` with three "can't find it"
+- `createPlanSwitchSession()` (lib/stripe.ts) throws `PlanSwitchError` with four "can't find it"
   reasons: `no_customer` (list threw `resource_missing`), `no_entitled_subscription` (no entitled
-  subscription in the list AND `has_more !== true`), `no_subscription` (an entitled one exists but
-  isn't on the plan's prices, has several items, or the list has more pages). Only the middle one
-  may correct anything: a live subscription on an unknown price must never read as "ended".
+  subscription in the list, `has_more !== true`, and none of them in `OPEN_SUBSCRIPTION_STATUSES`),
+  `open_subscription` (same, but an `unpaid`/`paused`/`incomplete` one is listed), `no_subscription`
+  (an entitled one exists but isn't on the plan's prices, has several items, or the list has more
+  pages). Only the two middle ones correct the row: a live subscription on an unknown price must
+  never read as "ended".
+- **An open subscription never gets a checkout target.** Paying its invoice or resuming it makes it
+  live again, so a new checkout would leave two subscriptions billing, overwriting each other's row.
+  `open_subscription` → row still corrected (Stripe's truth: unpaid/paused → canceled/free,
+  incomplete → incomplete/free) → 409 `pay_or_resume` ("pay or resume it in Manage billing"), even
+  when the row couldn't be corrected. `incomplete_expired` and `canceled` are final, so they still
+  get `checkout`.
+- The resync always writes tier `free` (no allowance) for any non-entitled status; the webhook keeps
+  the price's tier for a stored non-entitled status like `incomplete`. Access is the same (status
+  decides), so this is only tidier, not a behaviour difference.
 - `startPlanSwitch()` (lib/planSwitch.ts): `no_customer` → 400 `no_billing_account` (logged without
   the customer id); `no_entitled_subscription` → `correctEndedPlan()` → `resyncEndedSubscription()`
   (lib/subscriptionSync.ts). Corrected → one `console.warn` line + 403 `no_paid_plan` with
@@ -19,7 +30,11 @@ Rules the code follows (docs/PAYMENTS.md "Plan changes and timing", the paragrap
   lib/checkoutErrors.ts). Not corrected → plain 403. Failed read/write → 500 `switch_failed`.
 - Old clients still work: they see the 403 `no_paid_plan` message, which is true after the write.
 - `usePlanChange` posts `checkout` to `/api/checkout` (`subscribeInstead()`); on failure it shows
-  the `no_paid_plan` message (or `aiDisabled`) and calls `router.refresh()`. No new copy needed.
+  the `no_paid_plan` message (or `aiDisabled`) and calls `router.refresh()`.
+- Error copy is typed: ``t(`errors.${code}`)`` in the hook only compiles once every
+  `PLAN_SWITCH_ERROR_CODES` value has a key in the message catalog, so a new code needs its
+  `pricing.planChange.errors.<code>` in all 18 locales in the same change
+  (`__tests__/i18n-catalogs.test.ts` checks parity).
 
 Decisions and why:
 

@@ -214,6 +214,9 @@ export async function createBillingPortalSession({
  * - `no_entitled_subscription`: the customer has no entitled subscription at Stripe at all (every
  *   one has ended, or there never was one), checked across all of them. The database row may still
  *   show a plan when a webhook delivery was missed: lib/planSwitch.ts corrects it.
+ * - `open_subscription`: no entitled subscription either, but one that can still come back
+ *   (OPEN_SUBSCRIPTION_STATUSES: an unpaid invoice, paused, or a first payment not yet made).
+ *   Paying or resuming it makes it live again, so a new checkout would leave two plans billing.
  * - `no_subscription`: no entitled subscription on one of the plan's prices, while one that can't be
  *   read as this plan may exist (a live subscription on a price this deployment doesn't know, with
  *   several items, or more subscriptions than one page lists). Nothing is corrected for it.
@@ -223,6 +226,7 @@ export class PlanSwitchError extends Error {
     readonly reason:
       | 'no_customer'
       | 'no_entitled_subscription'
+      | 'open_subscription'
       | 'no_subscription'
       | 'already_on_price'
       | 'already_scheduled'
@@ -242,6 +246,13 @@ export class PlanSwitchError extends Error {
 export type PlanSwitchResult =
   | { kind: 'portal'; url: string }
   | { kind: 'scheduled'; effectiveAt: number }
+
+/**
+ * Statuses of a subscription that isn't entitled now but becomes live again once its invoice is
+ * paid or it is resumed (`incomplete` until it expires after about a day). `incomplete_expired` and
+ * `canceled` are final.
+ */
+export const OPEN_SUBSCRIPTION_STATUSES: readonly string[] = ['unpaid', 'paused', 'incomplete']
 
 const idOf = (value: string | { id: string } | null | undefined): string | undefined =>
   typeof value === 'string' ? value : value?.id
@@ -297,8 +308,13 @@ export async function createPlanSwitchSession({
   if (!subscription) {
     // "No plan at all" only when the whole list was seen; a live subscription on an unknown price
     // (or one past the first page) must never read as an ended plan.
+    if (entitled.length > 0 || listed.has_more === true) throw new PlanSwitchError('no_subscription')
+    // A plan that can still be paid or resumed is never treated as ended: that would send the
+    // customer to a second subscription.
     throw new PlanSwitchError(
-      entitled.length === 0 && listed.has_more !== true ? 'no_entitled_subscription' : 'no_subscription'
+      listed.data.some((s) => OPEN_SUBSCRIPTION_STATUSES.includes(s.status))
+        ? 'open_subscription'
+        : 'no_entitled_subscription'
     )
   }
 

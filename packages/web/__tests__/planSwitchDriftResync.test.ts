@@ -12,6 +12,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from 'vitest'
 import { NextRequest } from 'next/server'
+import { hasCloudSync } from '@/lib/cloudSync'
 
 type Row = {
   id: string
@@ -206,15 +207,32 @@ describe('drift: the row shows a plan that has ended at Stripe', () => {
     )
   })
 
-  it('writes a status the database does not store (unpaid) as canceled / free', async () => {
-    mockSubscriptionsList.mockResolvedValue({ data: [stripeSub('sub_old', 'unpaid', 'price_pro_m')], has_more: false })
-    mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', 'unpaid', 'price_pro_m'))
+  it('writes a final status the database does not store (incomplete_expired) as canceled / free, with checkout', async () => {
+    mockSubscriptionsList.mockResolvedValue({
+      data: [stripeSub('sub_old', 'incomplete_expired', 'price_pro_m')],
+      has_more: false,
+    })
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', 'incomplete_expired', 'price_pro_m'))
 
     const res = await switchPlan({ tier: 'proAi' })
 
     expect(res.status).toBe(403)
     expect((await res.json()).checkout).toEqual({ tier: 'proAi', interval: 'monthly', aiMode: 'managed' })
-    expect(row).toMatchObject({ tier: 'free', status: 'canceled' })
+    expect(row).toMatchObject({ tier: 'free', status: 'canceled', ai_monthly_credits: 0 })
+  })
+
+  it('writes a stored status that is not entitled with tier free (hasCloudSync false afterwards)', async () => {
+    // Stripe lists nothing open, but the row's own subscription reads as incomplete when it is
+    // retrieved: the status is stored as is, the tier is always free.
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', 'incomplete', 'price_pro_m'))
+
+    const res = await switchPlan({ tier: 'proAi' })
+
+    expect(res.status).toBe(403)
+    expect(subscriptionUpdates).toEqual([
+      { id: 'sub_old', changes: { status: 'incomplete', tier: 'free', ai_monthly_credits: 0 } },
+    ])
+    expect(hasCloudSync(row)).toBe(false)
   })
 
   it('an interval switch gets a checkout for the same plan at the new interval', async () => {
@@ -296,6 +314,91 @@ describe('drift: the row shows a plan that has ended at Stripe', () => {
     expect(error).toHaveBeenCalledWith(
       'Plan switch resync: subscription retrieve failed (subscription sub_old, StripeAPIError, status 500)'
     )
+  })
+})
+
+describe('a plan that can still be paid or resumed (unpaid, paused, incomplete)', () => {
+  it.each(['unpaid', 'paused'])(
+    'a %s subscription: the row is corrected, but the answer is 409 pay_or_resume with no checkout',
+    async (status) => {
+      mockSubscriptionsList.mockResolvedValue({ data: [stripeSub('sub_old', status, 'price_pro_m')], has_more: false })
+      mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', status, 'price_pro_m'))
+
+      const res = await switchPlan({ tier: 'proAi' })
+
+      expect(res.status).toBe(409)
+      const body = await res.json()
+      expect(body.code).toBe('pay_or_resume')
+      expect(body).not.toHaveProperty('checkout')
+      // Not a stored status: written the way the webhook writes it.
+      expect(row).toMatchObject({ id: 'sub_old', tier: 'free', status: 'canceled', ai_monthly_credits: 0 })
+      expect(hasCloudSync(row)).toBe(false)
+      expect(mockPortalCreate).not.toHaveBeenCalled()
+      expect(mockCheckoutCreate).not.toHaveBeenCalled()
+    }
+  )
+
+  it('an incomplete subscription on the row: written incomplete / free, hasCloudSync false, no checkout', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [stripeSub('sub_old', 'incomplete', 'price_pro_m')], has_more: false })
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', 'incomplete', 'price_pro_m'))
+
+    const res = await switchPlan({ tier: 'proAi' })
+
+    expect(res.status).toBe(409)
+    expect(await res.json()).toEqual({
+      error: 'Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing before changing it.',
+      code: 'pay_or_resume',
+    })
+    expect(subscriptionUpdates).toEqual([
+      { id: 'sub_old', changes: { status: 'incomplete', tier: 'free', ai_monthly_credits: 0 } },
+    ])
+    expect(hasCloudSync(row)).toBe(false)
+  })
+
+  it('an open subscription other than the row one: the ended row is corrected, still no checkout', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [stripeSub('sub_other', 'paused', 'price_pro_m')], has_more: false })
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', 'canceled', 'price_pro_m'))
+
+    const res = await switchPlan({ tier: 'proAi' })
+
+    expect(res.status).toBe(409)
+    expect(await res.json()).not.toHaveProperty('checkout')
+    expect(row).toMatchObject({ id: 'sub_old', tier: 'free', status: 'canceled' })
+  })
+
+  it('still answers pay_or_resume when the row cannot be corrected', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [stripeSub('sub_old', 'unpaid', 'price_pro_m')], has_more: false })
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', 'unpaid', 'price_pro_m', 'cus_other'))
+
+    const res = await switchPlan({ tier: 'proAi' })
+
+    expect(res.status).toBe(409)
+    expect((await res.json()).code).toBe('pay_or_resume')
+    expect(row).toEqual(PRO_ACTIVE)
+  })
+})
+
+describe('drift while the Pro AI option is not on sale', () => {
+  beforeEach(() => {
+    mockSubscriptionsList.mockResolvedValue({ data: [], has_more: false })
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSub('sub_old', 'canceled', 'price_pro_m'))
+  })
+
+  it.each([
+    ['managed, with the managed flag off', { tier: 'proAi' }, 'false', 'true'],
+    ['own key, with both flags off', { tier: 'proAi', aiMode: 'byok' }, 'false', 'false'],
+  ])('%s: 503 ai_disabled before Stripe is asked, nothing written', async (_label, body, managed, byok) => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', managed)
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', byok)
+
+    const res = await switchPlan(body)
+
+    expect(res.status).toBe(503)
+    expect(await res.json()).toEqual({ error: 'ai_disabled' })
+    expect(mockSubscriptionsList).not.toHaveBeenCalled()
+    expect(mockSubscriptionsRetrieve).not.toHaveBeenCalled()
+    expect(subscriptionUpdates).toEqual([])
+    expect(row).toEqual(PRO_ACTIVE)
   })
 })
 
