@@ -71,13 +71,10 @@
     "title": "Potwierdź zmianę planu",
     "confirmEndOfPeriod": "Twój plan zmieni się na {plan} w dniu {date}. Do tego czasu zachowujesz obecny plan. Za resztę tego okresu nie ma zwrotu.",
     "confirmEndOfPeriodNoDate": "Twój plan zmieni się na {plan} na koniec tego okresu rozliczeniowego. Do tego czasu zachowujesz obecny plan. Za resztę tego okresu nie ma zwrotu.",
-    "confirmChargeNow": "Twój plan zmienia się teraz na {plan}. Za resztę tego okresu zostanie teraz naliczona proporcjonalna opłata.",
     "confirm": "Potwierdź",
     "cancel": "Anuluj",
     "scheduled": "Gotowe. Twój plan zmieni się na {plan} w dniu {date}.",
     "scheduledNoDetails": "Gotowe. Twój plan zmieni się na koniec tego okresu rozliczeniowego.",
-    "appliedNow": "Gotowe. Masz teraz {plan}.",
-    "appliedNowNoDetails": "Gotowe. Twój plan został zmieniony.",
     "aiDisabled": "Ta opcja Pro AI nie jest jeszcze dostępna.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI konfigurowany przez Ciebie"
     },
     "billedMonthly": "{plan}, płatność miesięczna",
-    "billedYearly": "{plan}, płatność roczna"
+    "billedYearly": "{plan}, płatność roczna",
+    "errors": {
+      "no_billing_account": "Nie znaleźliśmy Twojego konta rozliczeniowego. Otwórz „Zarządzaj płatnościami” na stronie konta lub skontaktuj się z nami.",
+      "no_paid_plan": "Nie masz płatnego planu do zmiany. Zamiast tego wybierz plan do subskrypcji.",
+      "already_on_price": "Masz już ten plan.",
+      "already_scheduled": "Zmiana planu jest już zaplanowana na koniec tego okresu rozliczeniowego.",
+      "cancel_scheduled": "Twój plan wygaśnie z końcem tego okresu rozliczeniowego. Odnów go w „Zarządzaj płatnościami”, zanim go zmienisz.",
+      "price_unavailable": "Obecnie nie można przejść na ten plan. Spróbuj ponownie później lub skontaktuj się z nami.",
+      "switch_failed": "Stripe nie mógł rozpocząć zmiany. Spróbuj ponownie lub użyj „Zarządzaj płatnościami” na stronie konta."
+    }
   }
 }

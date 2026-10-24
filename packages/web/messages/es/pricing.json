@@ -71,13 +71,10 @@
     "title": "Confirmar el cambio de plan",
     "confirmEndOfPeriod": "Tu plan cambia a {plan} el {date}. Conservas tu plan actual hasta entonces. No hay reembolso por el resto de este período.",
     "confirmEndOfPeriodNoDate": "Tu plan cambia a {plan} al final de este período de facturación. Conservas tu plan actual hasta entonces. No hay reembolso por el resto de este período.",
-    "confirmChargeNow": "Tu plan cambia a {plan} ahora. Se te cobrará ahora el resto de este período, de forma prorrateada.",
     "confirm": "Confirmar",
     "cancel": "Cancelar",
     "scheduled": "Listo. Tu plan cambia a {plan} el {date}.",
     "scheduledNoDetails": "Listo. Tu plan cambia al final de este período de facturación.",
-    "appliedNow": "Listo. Ahora tienes {plan}.",
-    "appliedNowNoDetails": "Listo. Tu plan ha cambiado.",
     "aiDisabled": "Esa opción de Pro AI aún no está disponible.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI contigo a cargo de la configuración"
     },
     "billedMonthly": "{plan}, facturación mensual",
-    "billedYearly": "{plan}, facturación anual"
+    "billedYearly": "{plan}, facturación anual",
+    "errors": {
+      "no_billing_account": "No encontramos tu cuenta de facturación. Abre «Gestionar facturación» en la página de tu cuenta o contáctanos.",
+      "no_paid_plan": "No tienes un plan de pago que cambiar. Elige un plan para suscribirte.",
+      "already_on_price": "Ya tienes ese plan.",
+      "already_scheduled": "Ya hay un cambio de plan programado para el final de este período de facturación.",
+      "cancel_scheduled": "Tu plan terminará al final de este período de facturación. Renuévalo en «Gestionar facturación» antes de cambiarlo.",
+      "price_unavailable": "Ahora mismo no se puede cambiar a ese plan. Inténtalo más tarde o contáctanos.",
+      "switch_failed": "Stripe no pudo iniciar el cambio. Inténtalo de nuevo o usa «Gestionar facturación» en la página de tu cuenta."
+    }
   }
 }

@@ -71,13 +71,10 @@
     "title": "Tarifwechsel bestätigen",
     "confirmEndOfPeriod": "Dein Tarif wechselt am {date} zu {plan}. Bis dahin behältst du deinen aktuellen Tarif. Für den Rest dieses Zeitraums gibt es keine Erstattung.",
     "confirmEndOfPeriodNoDate": "Dein Tarif wechselt zum Ende dieses Abrechnungszeitraums zu {plan}. Bis dahin behältst du deinen aktuellen Tarif. Für den Rest dieses Zeitraums gibt es keine Erstattung.",
-    "confirmChargeNow": "Dein Tarif wechselt jetzt zu {plan}. Der Rest dieses Zeitraums wird dir jetzt anteilig berechnet.",
     "confirm": "Bestätigen",
     "cancel": "Abbrechen",
     "scheduled": "Erledigt. Dein Tarif wechselt am {date} zu {plan}.",
     "scheduledNoDetails": "Erledigt. Dein Tarif wechselt zum Ende dieses Abrechnungszeitraums.",
-    "appliedNow": "Erledigt. Du hast jetzt {plan}.",
-    "appliedNowNoDetails": "Erledigt. Dein Tarif wurde geändert.",
     "aiDisabled": "Diese Pro-AI-Option ist noch nicht verfügbar.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI, von dir eingerichtet"
     },
     "billedMonthly": "{plan}, monatliche Abrechnung",
-    "billedYearly": "{plan}, jährliche Abrechnung"
+    "billedYearly": "{plan}, jährliche Abrechnung",
+    "errors": {
+      "no_billing_account": "Wir konnten dein Abrechnungskonto nicht finden. Öffne „Abrechnung verwalten“ auf deiner Kontoseite oder kontaktiere uns.",
+      "no_paid_plan": "Du hast keinen bezahlten Plan, den du ändern kannst. Wähle stattdessen einen Plan zum Abonnieren.",
+      "already_on_price": "Du hast diesen Plan bereits.",
+      "already_scheduled": "Für das Ende dieses Abrechnungszeitraums ist bereits eine Planänderung geplant.",
+      "cancel_scheduled": "Dein Plan endet zum Ende dieses Abrechnungszeitraums. Verlängere ihn unter „Abrechnung verwalten“, bevor du ihn änderst.",
+      "price_unavailable": "Zu diesem Plan kann gerade nicht gewechselt werden. Bitte versuche es später erneut oder kontaktiere uns.",
+      "switch_failed": "Stripe konnte die Änderung nicht starten. Bitte versuche es erneut oder nutze „Abrechnung verwalten“ auf deiner Kontoseite."
+    }
   }
 }

@@ -71,13 +71,10 @@
     "title": "Confirmar a mudança de plano",
     "confirmEndOfPeriod": "Seu plano muda para {plan} em {date}. Você mantém seu plano atual até lá. Não há reembolso pelo restante deste período.",
     "confirmEndOfPeriodNoDate": "Seu plano muda para {plan} no fim deste período de cobrança. Você mantém seu plano atual até lá. Não há reembolso pelo restante deste período.",
-    "confirmChargeNow": "Seu plano muda para {plan} agora. O restante deste período será cobrado agora, de forma proporcional.",
     "confirm": "Confirmar",
     "cancel": "Cancelar",
     "scheduled": "Pronto. Seu plano muda para {plan} em {date}.",
     "scheduledNoDetails": "Pronto. Seu plano muda no fim deste período de cobrança.",
-    "appliedNow": "Pronto. Agora você tem {plan}.",
-    "appliedNowNoDetails": "Pronto. Seu plano mudou.",
     "aiDisabled": "Essa opção do Pro AI ainda não está disponível.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI com você cuidando da configuração"
     },
     "billedMonthly": "{plan}, cobrança mensal",
-    "billedYearly": "{plan}, cobrança anual"
+    "billedYearly": "{plan}, cobrança anual",
+    "errors": {
+      "no_billing_account": "Não encontramos sua conta de cobrança. Abra Gerenciar cobrança na página da sua conta ou fale conosco.",
+      "no_paid_plan": "Você não tem um plano pago para alterar. Escolha um plano para assinar.",
+      "already_on_price": "Você já está nesse plano.",
+      "already_scheduled": "Já existe uma mudança de plano agendada para o fim deste período de cobrança.",
+      "cancel_scheduled": "Seu plano termina no fim deste período de cobrança. Renove-o em Gerenciar cobrança antes de alterá-lo.",
+      "price_unavailable": "No momento não é possível mudar para esse plano. Tente novamente mais tarde ou fale conosco.",
+      "switch_failed": "O Stripe não conseguiu iniciar a mudança. Tente novamente ou use Gerenciar cobrança na página da sua conta."
+    }
   }
 }

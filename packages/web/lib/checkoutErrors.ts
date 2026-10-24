@@ -9,3 +9,27 @@
  * created.
  */
 export const ALREADY_SUBSCRIBED_ERROR = 'already_subscribed'
+
+/**
+ * Codes `POST /api/billing/switch-plan` and `/api/billing/switch-interval` return in `{ code }`
+ * (next to an English `error`), so the pricing page can say what went wrong in the user's
+ * language. Client-safe, shared by lib/planSwitch.ts and components/pricing/usePlanChange.tsx.
+ */
+export const PLAN_SWITCH_ERROR_CODES = {
+  /** 400: the account has no Stripe customer yet. */
+  noBillingAccount: 'no_billing_account',
+  /** 403: no entitled paid plan, in the database or at Stripe. */
+  noPaidPlan: 'no_paid_plan',
+  /** 409: the subscription is already on the target price. */
+  alreadyOnPrice: 'already_on_price',
+  /** 409: a change is already scheduled for the end of the term (a subscription schedule). */
+  alreadyScheduled: 'already_scheduled',
+  /** 409: the subscription is set to end; it is renewed in the portal first. */
+  cancelScheduled: 'cancel_scheduled',
+  /** 503: the target price isn't configured here, or Stripe has it archived. */
+  priceUnavailable: 'price_unavailable',
+  /** 500: Stripe refused or failed; the details are in the server log. */
+  failed: 'switch_failed',
+} as const
+
+export type PlanSwitchErrorCode = (typeof PLAN_SWITCH_ERROR_CODES)[keyof typeof PLAN_SWITCH_ERROR_CODES]

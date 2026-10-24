@@ -28,12 +28,12 @@ Authoritative code:
 | Free | $0 | $0 | `free` | — |
 | Pro | $3.99 | $42.99 | `pro` | `pro` |
 | Pro AI (TabMerger's key, `managed`) | $7.99 | $85.99 | `pro_ai` | `proAi` (+ `aiMode: 'managed'`, the default) |
-| Pro AI (own AI provider key: Anthropic, OpenAI or Google, `byok`) | $5.99 | $64.99 | `pro_ai` | `proAi` + `aiMode: 'byok'` |
+| Pro AI (own AI provider key: Anthropic, OpenAI or Google, `byok`) | $5.99 | $64.49 | `pro_ai` | `proAi` + `aiMode: 'byok'` |
 
 Pro AI's two options share the tier `pro_ai` (every entitlement check stays the same);
 `subscriptions.ai_mode` says which one, and only AI metering branches on it. The webhook derives
 both from the subscription's Price. The yearly toggle badge (`YEARLY_DISCOUNT_PERCENT`) is the
-smallest saving of every paid option, so the own-key yearly price (9.6% off) makes it 9%.
+smallest saving of every paid option: 10% (the own-key yearly $64.49 is 10.3% off twelve months).
 
 Display prices live in **two** places that must match each other and the Stripe prices:
 `TIERS` in `packages/web/lib/tiers.ts` (what the pricing page renders) and `PRICING_TIERS` in
@@ -73,7 +73,7 @@ for customers.
 | Event | When it takes effect | Money |
 | --- | --- | --- |
 | Cancel | End of the paid period (access continues until then) | No refund, no proration credit |
-| Upgrade or extension: monthly → yearly, Pro → Pro AI, own key → managed | Now | Prorated charge against the unused time (`always_invoice`) |
+| Upgrade or extension: monthly → yearly, Pro → Pro AI, own key → managed | Now, once the customer confirms on Stripe's portal page | Prorated charge against the unused time (`always_invoice`) |
 | Downgrade or shortening: yearly → monthly, Pro AI → Pro, managed → own key | End of the paid period | No refund, no credit for unused time |
 | AI credit pack | At purchase | Never refunded, including when the subscription is cancelled; unused credits are never paid out |
 
@@ -120,9 +120,8 @@ Things to know:
 | `STRIPE_WEBHOOK_SECRET` | Signing secret of **this environment's** webhook endpoint. |
 | `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_YEARLY_PRICE_ID` | Pro recurring prices. |
 | `STRIPE_PRO_AI_MONTHLY_PRICE_ID`, `STRIPE_PRO_AI_YEARLY_PRICE_ID` | Pro AI recurring prices (TabMerger's key). |
-| `STRIPE_PRO_AI_BYOK_MONTHLY_PRICE_ID`, `STRIPE_PRO_AI_BYOK_YEARLY_PRICE_ID` | Pro AI with the customer's own key ($5.99 / $64.99), on the same Pro AI product. |
+| `STRIPE_PRO_AI_BYOK_MONTHLY_PRICE_ID`, `STRIPE_PRO_AI_BYOK_YEARLY_PRICE_ID` | Pro AI with the customer's own key ($5.99 / $64.49), on its own product "TabMerger Pro AI (own key)" (see [Own-key Prices and live-mode setup](#own-key-prices-and-live-mode-setup)). Must be active Prices. |
 | `STRIPE_AI_CREDIT_PACK_PRICE_ID` | One-time $0.05-per-unit price for credit packs. |
-| `STRIPE_PORTAL_CONFIGURATION_ID` | The plan-change portal configuration (`bpc_…`) used by the switch routes' "confirm plan change" flows. Needed once the default configuration has plan switching off (see [Portal configuration](#portal-configuration)). |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Publishable key. |
 | `NEXT_PUBLIC_APP_URL` | Base for every Stripe redirect URL (see below). |
 | `NEXT_PUBLIC_AI_ENABLED` | Managed Pro AI flag (AI on TabMerger's key); also turns on the own-key option (see below). |
@@ -450,27 +449,39 @@ Pro < Pro AI, option own key < managed, interval monthly < yearly). `planChangeT
 `createPlanSwitchSession()` (`lib/stripe.ts`) and the pricing page's confirmation dialog use it, so
 what the dialog promises is what the server does:
 
-| Change | Kind | How | Route answers |
+| Change | Timing | How | Route answers |
 | --- | --- | --- | --- |
-| Nothing lower or shorter (monthly → yearly, Pro → Pro AI, own key → managed, or several), Pro and managed prices only | upgrade | Billing Portal "confirm plan change" flow; the configuration charges the prorated difference now (`always_invoice`) | `{ url }` (Stripe page) |
-| Same, but an own-key price on either side | upgrade | `subscriptions.update` with the new price, `proration_behavior: 'always_invoice'`, `payment_behavior: 'pending_if_incomplete'` | `{ applied: 'now', url }`: the hosted invoice when the payment needs the customer (3-D Secure, a declined card; the change stays pending until paid), else `/account` |
-| Only the interval shortens (yearly → monthly), Pro or managed | shorter interval | Portal flow; its `shortening_interval` condition defers it to the end of the term | `{ url }` |
-| Same, on an own-key price | shorter interval | Subscription schedule, as below | `{ applied: 'end_of_period', effectiveAt, url }` |
-| Tier or option goes down (Pro AI → Pro, managed → own key), or the interval shortens together with another change | downgrade | Subscription schedule: `subscriptionSchedules.create({ from_subscription })`, then `update` with `end_behavior: 'release'`, `proration_behavior: 'none'`, the current phase passed back unchanged (items, start/end, discounts, tax rates, metadata) and a next phase on the new price with `proration_behavior: 'none'` and `duration` of one interval. If the update fails, the schedule is released again. | `{ applied: 'end_of_period', effectiveAt (ISO), url: /account }` |
-| A price this environment doesn't know | downgrade | (fails closed: nothing is charged or credited now) | as above |
+| Nothing lower or shorter: monthly → yearly, Pro → Pro AI (either option), own key → managed, or several of these | `portal` | Billing Portal "confirm plan change" flow. The customer confirms on Stripe's page, which shows the amount and the card; the prorated difference is charged now (`always_invoice`). The pricing page shows no dialog of its own. | `{ url }` (Stripe page) |
+| Only the interval shortens (yearly → monthly) on the same plan and option | `portal_end_of_period` | Same flow; the configuration's `shortening_interval` condition defers it to the end of the term (all of a plan option's Prices are on one product) | `{ url }` |
+| The tier or option goes down (Pro AI → Pro, managed → own key), or the interval shortens together with another change | `end_of_period` | Subscription schedule: `subscriptionSchedules.create({ from_subscription })`, then `update` with `end_behavior: 'release'`, `proration_behavior: 'none'`, the current phase passed back unchanged (items, start/end, discounts, tax rates, metadata) and a next phase on the new price with `proration_behavior: 'none'` and a `duration` of one interval. If the update fails, the schedule is released again. | `{ applied: 'end_of_period', effectiveAt (ISO), url: /account }` |
+| A price this environment doesn't know | `end_of_period` | (fails closed: nothing is charged or credited now) | as above |
+
+The pricing page confirms only the `end_of_period` and `portal_end_of_period` changes in its own
+dialog ("changes on {date}, no refund"); an upgrade goes straight to Stripe's page. Before any of
+this, `createPlanSwitchSession()` retrieves the target Price and refuses an archived one
+(`price_unavailable`).
 
 Why the server and not the portal decides downgrades:
 
-- The portal defers a change only **between prices of one product**; Pro AI → Pro crosses products
-  and would apply at once with a proration credit.
+- The portal defers a change only **between prices of one product**. Each plan option is its own
+  product (Pro, Pro AI managed, Pro AI own key), so Pro AI → Pro and managed → own key cross
+  products and would apply at once with a proration credit.
 - Its `decreasing_item_amount` condition also fires when a subscription moves from a shorter to a
   longer interval that is cheaper in the long term (Stripe's documentation). Every yearly price here
   is cheaper than twelve months, so that condition would defer **monthly → yearly** too. Don't add
   it.
 - The portal **can't list two Prices of one product with the same interval** (Stripe's portal
-  limitations), so the managed and own-key Prices of the Pro AI product can't both be offered.
-  The portal lists the managed ones only, and every change that involves an own-key Price is made
-  by the server.
+  limitations). That is why the own-key Prices are on their own product (**TabMerger Pro AI (own
+  key)**), not on the managed Pro AI product.
+
+**Errors.** Every error answer carries a `code` next to the English `error`
+(`PLAN_SWITCH_ERROR_CODES` in `lib/checkoutErrors.ts`), and the pricing page shows a message per
+code (`pricing.planChange.errors.*` in every locale): `no_billing_account` (400), `no_paid_plan`
+(403), `already_on_price`, `already_scheduled`, `cancel_scheduled` (409), `price_unavailable`
+(503: the Price isn't configured in this environment, or Stripe has it archived; logged with the
+price), `switch_failed` (500: logged as one line with the Stripe error's type, code, param, HTTP
+status, request id and message, never the error object). `503 { error: 'ai_disabled' }` keeps its
+own message. Anything else shows "Couldn't start the switch".
 
 When a schedule's next phase starts, Stripe updates the subscription to that phase's price and
 fires `customer.subscription.updated`; the webhook writes the new tier, `ai_mode` and
@@ -482,14 +493,12 @@ policy](#refund-policy)).
 
 ### Portal configuration
 
-Two configurations per mode (test and live). Dashboard → Settings → Billing → Customer portal edits
-only the default; the second is made with the API or CLI.
-
 **1. Default configuration** (account page **Manage billing**, `/api/billing-portal`,
 `/api/portal`, the no-code login link): payment methods, invoices and cancellation, **no plan
 switching**. Decision: a configuration can't tell an upgrade from a downgrade across products, so
 any product it lists could be reached from any other, at once and with a proration credit; plan
-changes are made only through the routes above, where the server picks the timing.
+changes are made only through the routes above, where the server picks the timing. Set it in each
+mode (Dashboard → Settings → Billing → Customer portal, or the CLI):
 
 ```bash
 stripe billing_portal configurations update <default bpc_…> [--live] \
@@ -502,48 +511,57 @@ stripe billing_portal configurations update <default bpc_…> [--live] \
 In the Dashboard: Subscriptions → "Customers can switch plans" off; "Customers can cancel
 subscriptions" on, "Cancel at end of billing period", and no prorations on cancellation.
 
-**2. Plan-change configuration** (`STRIPE_PORTAL_CONFIGURATION_ID`; the portal flows of the routes
-above use it, and without it they fall back to the default, which no longer allows switching, so
-the switch answers 500). It lists **TabMerger Pro** (monthly and yearly) and, once managed AI is on
-sale, **TabMerger Pro AI** with its two **managed** Prices only. Never list own-key Prices here.
-No login page.
+**2. Plan-change configurations: made by the server, one per target Price.** Nothing to set up.
+`planChangePortalConfiguration()` in `lib/stripe.ts` finds (by metadata
+`tabmerger_plan_change: v1:<price id>`) or creates a configuration whose subscription updates list
+**only the target Price** (`always_invoice`, `shortening_interval`, promotion codes allowed, no
+quantity changes; cancellation at period end without proration), and caches its id in memory. They
+show up in the Dashboard as "TabMerger plan change to price_… (v1)"; leave them. Bumping
+`PLAN_CHANGE_CONFIGURATION_VERSION` makes new ones on the next switch.
 
-```bash
-stripe billing_portal configurations create [--live] \
-  -d "name=Plan changes (switch routes only)" \
-  -d "features[subscription_update][enabled]=true" \
-  -d "features[subscription_update][default_allowed_updates][0]=price" \
-  -d "features[subscription_update][default_allowed_updates][1]=promotion_code" \
-  -d "features[subscription_update][proration_behavior]=always_invoice" \
-  -d "features[subscription_update][schedule_at_period_end][conditions][0][type]=shortening_interval" \
-  -d "features[subscription_update][products][0][product]=<Pro product>" \
-  -d "features[subscription_update][products][0][prices][0]=<Pro monthly price>" \
-  -d "features[subscription_update][products][0][prices][1]=<Pro yearly price>" \
-  -d "features[subscription_update][products][0][adjustable_quantity][enabled]=false" \
-  -d "features[subscription_cancel][enabled]=true" \
-  -d "features[subscription_cancel][mode]=at_period_end" \
-  -d "features[subscription_cancel][proration_behavior]=none" \
-  -d "features[invoice_history][enabled]=true"
-# When managed AI goes on sale, add Pro AI (managed prices only):
-stripe billing_portal configurations update <plan-change bpc_…> [--live] \
-  -d "features[subscription_update][products][1][product]=<Pro AI product>" \
-  -d "features[subscription_update][products][1][prices][0]=<Pro AI managed monthly price>" \
-  -d "features[subscription_update][products][1][prices][1]=<Pro AI managed yearly price>" \
-  -d "features[subscription_update][products][1][adjustable_quantity][enabled]=false"
-```
+Why one per target (the flow-escape finding, checked against Stripe's documentation on
+2026-10-23):
 
-(An update that sets `products` replaces the list, so pass Pro again as `products[0]` in that
-second call.) Put the new `bpc_…` id in that environment's `STRIPE_PORTAL_CONFIGURATION_ID`.
+- A deep-linked session (`flow_data: subscription_update_confirm`) only **hides** the rest of the
+  portal: "Navigational components to access the rest of the customer portal are hidden". It is
+  still a portal session of its configuration (`after_completion` only chooses where the customer
+  goes after confirming: `redirect`, `hosted_confirmation` or `portal_homepage`), and sessions stay
+  usable for up to an hour after the last activity. Stripe documents no way to lock a session to
+  the confirm page.
+- So a configuration that lists several plans would let a customer who reaches the generic "update
+  plan" page pick a downgrade there, applied at once with a proration credit.
+- With only the target Price listed, the only change such a session can make is the one the
+  customer is confirming. After it, the subscription is on that Price and there is nothing left to
+  switch to.
+- Stripe doesn't need the subscription's **current** Price in the configuration for
+  `subscription_update_confirm`: checked in test mode on 2026-10-23 (a Pro subscription → the
+  own-key monthly Price, configuration listing only that Price: session created). An **archived**
+  Price can't be listed at all ("Only active, per unit licensed prices are supported").
 
-The `default_allowed_updates[1]=promotion_code` line is the API form of the Dashboard's **Use
-promotion codes** switch: with it, a customer can enter a promotion code when confirming a plan
-change. Leave it out to accept codes at checkout only. If the configuration doesn't list a target
-price, Stripe rejects the session ("configuration … does not include the price in its
-`features[subscription_update][products]`") and the button shows "Couldn't start the switch".
+`STRIPE_PORTAL_CONFIGURATION_ID` is no longer read.
 
-Own-key Prices can stay on the Pro AI product: the portal never offers them. Set
-`STRIPE_PRO_AI_*_PRICE_ID` and `STRIPE_PRO_AI_BYOK_*_PRICE_ID` in every environment, or the webhook
-maps those prices to `free` and the switch routes can't classify them.
+### Own-key Prices and live-mode setup
+
+The own-key option is its own product, **TabMerger Pro AI (own key)**, with a $5.99 monthly and a
+$64.49 yearly Price (matching `PRICING_TIERS`). In test mode it exists; the two own-key Prices that
+used to sit on the managed Pro AI product are archived. The env vars must name the new Prices: a
+switch to an archived Price is refused (`price_unavailable`), and before that refusal existed it
+failed as "Couldn't start the switch".
+
+Owner steps for **live mode** (and to re-check test mode):
+
+1. Stripe (live) → Products → **+ Add product** "TabMerger Pro AI (own key)", with two recurring
+   USD Prices: $5.99 / month and $64.49 / year (per unit, quantity 1).
+2. If live own-key Prices exist on the managed Pro AI product, archive them (Prices can't be moved
+   or deleted).
+3. Put the new ids in `STRIPE_PRO_AI_BYOK_MONTHLY_PRICE_ID` / `STRIPE_PRO_AI_BYOK_YEARLY_PRICE_ID`
+   for production (and the test-mode ids for preview and `packages/web/.env.local`), then redeploy.
+   A price id that isn't in these vars maps to `free` in the webhook.
+4. Default portal configuration: plan switching off, cancellation at period end with no proration
+   (command above).
+5. Optionally remove `STRIPE_PORTAL_CONFIGURATION_ID` from each environment (unused).
+6. In test mode, try Pro → Pro AI own key (Stripe's confirm page, charged prorated), own key →
+   managed, and Pro AI → Pro (scheduled; the price changes at the period end).
 
 ### After deploying migration 022: re-sync existing allowances
 

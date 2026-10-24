@@ -210,24 +210,25 @@ export async function createBillingPortalSession({
 /** Why a plan switch couldn't start; the route maps each to a status code. */
 export class PlanSwitchError extends Error {
   constructor(
-    readonly reason: 'no_subscription' | 'already_on_price' | 'already_scheduled' | 'cancel_scheduled'
+    readonly reason:
+      | 'no_subscription'
+      | 'already_on_price'
+      | 'already_scheduled'
+      | 'cancel_scheduled'
+      | 'price_unavailable'
   ) {
     super(reason)
   }
 }
 
 /**
- * What a plan switch did (see `classifyPlanChange()` in lib/tiers.ts):
+ * What a plan switch did (see `planChangeTiming()` in lib/planChangeTiming.ts):
  * - `portal`: the customer confirms on Stripe's "confirm plan change" page at `url`;
- * - `applied_now`: the subscription was moved now with a prorated charge. `url` is the invoice
- *   to pay when the payment needs the customer (3-D Secure, a declined card), otherwise null; until
- *   it is paid the change stays pending (`payment_behavior: 'pending_if_incomplete'`);
  * - `scheduled`: the change takes effect at `effectiveAt` (unix seconds, the end of the paid
  *   period), with no proration.
  */
 export type PlanSwitchResult =
   | { kind: 'portal'; url: string }
-  | { kind: 'applied_now'; url: string | null }
   | { kind: 'scheduled'; effectiveAt: number }
 
 const idOf = (value: string | { id: string } | null | undefined): string | undefined =>
@@ -237,14 +238,11 @@ const idOf = (value: string | { id: string } | null | undefined): string | undef
  * Moves the customer's paid subscription (one whose price is in `planPriceIds`) to
  * `targetPriceId`, following the refund policy (docs/PAYMENTS.md, "Refund policy"):
  *
- * - **Upgrades** (nothing gets cheaper or shorter) apply now, charged prorated against the unused
- *   time: through the Billing Portal's "confirm plan change" page when both prices are ones the
- *   portal lists (Pro, TabMerger-managed Pro AI), otherwise by updating the subscription directly
- *   with `always_invoice`. The portal can't list own-key prices: it allows one price per product
- *   and interval, and they share the Pro AI product with the managed ones.
- * - **Interval shortening** on the same plan (yearly → monthly) goes to the portal, whose
- *   `shortening_interval` condition defers it to the end of the term; on an own-key price it is
- *   scheduled here instead.
+ * - **Upgrades** (nothing gets cheaper or shorter) are confirmed by the customer on the Billing
+ *   Portal's "confirm plan change" page, which shows the amount and the card, and are charged now,
+ *   prorated against the unused time (`always_invoice`).
+ * - **Interval shortening** on the same plan and option (yearly → monthly) goes to the same page;
+ *   the configuration's `shortening_interval` condition defers it to the end of the term.
  * - **Downgrades** (Pro AI → Pro, managed → own key, or shortening plus another change) are
  *   scheduled here for the end of the paid period with no proration: a subscription schedule whose
  *   current phase ends with the period and whose next phase is the new price. Nothing is refunded
@@ -254,8 +252,8 @@ const idOf = (value: string | { id: string } | null | undefined): string | undef
  * schedule's next phase starts), and the webhook records the new tier, interval, AI option and
  * credit allowance, so nothing is written to the database here.
  *
- * Portal sessions use `STRIPE_PORTAL_CONFIGURATION_ID` when set (otherwise the account default),
- * which must list the target price under subscription updates or Stripe rejects the session.
+ * Each portal session uses a configuration that lists the target price and nothing else
+ * (`planChangePortalConfiguration()`), so the session can't be used for any other change.
  */
 export async function createPlanSwitchSession({
   customerId,
@@ -290,6 +288,11 @@ export async function createPlanSwitchSession({
     throw new PlanSwitchError('cancel_scheduled')
   }
 
+  // An archived Price can't be switched to (a portal configuration rejects it, and a schedule
+  // would fail at the period end). Say so instead of a generic failure.
+  const targetPrice = await stripe.prices.retrieve(targetPriceId)
+  if (!targetPrice.active) throw new PlanSwitchError('price_unavailable')
+
   // One rule for the server and the plan-change confirmation dialog (lib/planChangeTiming.ts),
   // so what the dialog promises is what happens here.
   const to = getPlanForPriceId(targetPriceId)
@@ -298,9 +301,6 @@ export async function createPlanSwitchSession({
   if (timing === 'end_of_period') {
     return scheduleChangeAtPeriodEnd(subscription.id, targetPriceId, to?.interval ?? null)
   }
-  if (timing === 'now') {
-    return applyUpgradeNow(subscription.id, item.id, targetPriceId)
-  }
   // 'portal' (an upgrade, charged prorated) or 'portal_end_of_period' (yearly → monthly, deferred
   // by the configuration's shortening_interval condition).
 
@@ -308,9 +308,7 @@ export async function createPlanSwitchSession({
     customer: customerId,
     return_url: returnUrl,
     locale: PORTAL_LOCALE,
-    ...(process.env.STRIPE_PORTAL_CONFIGURATION_ID
-      ? { configuration: process.env.STRIPE_PORTAL_CONFIGURATION_ID }
-      : {}),
+    configuration: await planChangePortalConfiguration(targetPriceId, idOf(targetPrice.product)),
     flow_data: {
       type: 'subscription_update_confirm',
       subscription_update_confirm: {
@@ -324,29 +322,69 @@ export async function createPlanSwitchSession({
   return { kind: 'portal', url: session.url }
 }
 
+/** Bump when the configuration below changes, so new sessions get a configuration made from it. */
+const PLAN_CHANGE_CONFIGURATION_VERSION = 'v1'
+const PLAN_CHANGE_METADATA_KEY = 'tabmerger_plan_change'
+/** Configuration id per target price, for this server instance's lifetime. */
+const planChangeConfigurations = new Map<string, string>()
+
 /**
- * An upgrade the portal can't offer, applied now: the item moves to the new price and Stripe
- * invoices the prorated difference at once (`always_invoice`). With `pending_if_incomplete` the
- * new price only takes effect once that invoice is paid; until then the subscription keeps its
- * plan and `pending_update` is set, and the invoice's hosted page is where the customer pays.
+ * The Billing Portal configuration a plan-change flow to `targetPriceId` uses: subscription
+ * updates to that one price only, charged prorated now (`always_invoice`) unless the interval
+ * shortens (`shortening_interval` defers it to the end of the term); cancellation at period end
+ * with no proration.
+ *
+ * Why one per target: a flow session (`flow_data`) only hides the rest of the portal, and Stripe
+ * offers no way to limit a session to its confirm page (`after_completion` only chooses where the
+ * customer goes after confirming). Its configuration is what a customer
+ * could use from the generic "update plan" page, so a configuration listing several plans would
+ * let them pick a downgrade there, applied at once with a proration credit. Listing only the
+ * target leaves nothing else to switch to. Stripe doesn't need the subscription's current price
+ * listed for `subscription_update_confirm` (checked in test mode, 2026-10-23).
+ *
+ * Made on first use and found again by metadata (`tabmerger_plan_change: v1:<price>`), so no
+ * per-environment setup is needed; the id is cached in memory. Stripe can't delete a portal
+ * configuration, so there is at most one per target price and version.
  */
-async function applyUpgradeNow(
-  subscriptionId: string,
-  itemId: string,
-  targetPriceId: string
-): Promise<PlanSwitchResult> {
-  const updated = await stripe.subscriptions.update(subscriptionId, {
-    items: [{ id: itemId, price: targetPriceId, quantity: 1 }],
-    proration_behavior: 'always_invoice',
-    payment_behavior: 'pending_if_incomplete',
-    expand: ['latest_invoice'],
+async function planChangePortalConfiguration(
+  targetPriceId: string,
+  product: string | undefined
+): Promise<string> {
+  const key = `${PLAN_CHANGE_CONFIGURATION_VERSION}:${targetPriceId}`
+  const cached = planChangeConfigurations.get(key)
+  if (cached) return cached
+
+  const { data: existing } = await stripe.billingPortal.configurations.list({
+    active: true,
+    is_default: false,
+    limit: 100,
   })
-  const invoice = updated.latest_invoice
-  const url =
-    updated.pending_update && invoice && typeof invoice !== 'string'
-      ? invoice.hosted_invoice_url ?? null
-      : null
-  return { kind: 'applied_now', url }
+  const found = existing.find((c) => c.metadata?.[PLAN_CHANGE_METADATA_KEY] === key)
+  if (found) {
+    planChangeConfigurations.set(key, found.id)
+    return found.id
+  }
+
+  if (!product) throw new Error(`Price ${targetPriceId} has no product`)
+
+  const created = await stripe.billingPortal.configurations.create({
+    name: `TabMerger plan change to ${targetPriceId} (${PLAN_CHANGE_CONFIGURATION_VERSION})`,
+    metadata: { [PLAN_CHANGE_METADATA_KEY]: key },
+    features: {
+      subscription_update: {
+        enabled: true,
+        default_allowed_updates: ['price', 'promotion_code'],
+        proration_behavior: 'always_invoice',
+        schedule_at_period_end: { conditions: [{ type: 'shortening_interval' }] },
+        products: [{ product, prices: [targetPriceId], adjustable_quantity: { enabled: false } }],
+      },
+      subscription_cancel: { enabled: true, mode: 'at_period_end', proration_behavior: 'none' },
+      payment_method_update: { enabled: true },
+      invoice_history: { enabled: true },
+    },
+  })
+  planChangeConfigurations.set(key, created.id)
+  return created.id
 }
 
 /**

@@ -71,13 +71,10 @@
     "title": "요금제 변경 확인",
     "confirmEndOfPeriod": "{date}에 요금제가 {plan}(으)로 바뀝니다. 그때까지는 현재 요금제를 그대로 사용합니다. 이번 기간의 남은 금액은 환불되지 않습니다.",
     "confirmEndOfPeriodNoDate": "이번 결제 기간이 끝날 때 요금제가 {plan}(으)로 바뀝니다. 그때까지는 현재 요금제를 그대로 사용합니다. 이번 기간의 남은 금액은 환불되지 않습니다.",
-    "confirmChargeNow": "요금제가 지금 {plan}(으)로 바뀝니다. 이번 기간의 남은 금액이 일할 계산되어 지금 청구됩니다.",
     "confirm": "확인",
     "cancel": "취소",
     "scheduled": "완료했습니다. {date}에 요금제가 {plan}(으)로 바뀝니다.",
     "scheduledNoDetails": "완료했습니다. 이번 결제 기간이 끝날 때 요금제가 바뀝니다.",
-    "appliedNow": "완료했습니다. 이제 {plan}을(를) 사용합니다.",
-    "appliedNowNoDetails": "완료했습니다. 요금제가 변경되었습니다.",
     "aiDisabled": "해당 Pro AI 옵션은 아직 사용할 수 없습니다.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "직접 설정하는 Pro AI"
     },
     "billedMonthly": "{plan}, 월간 결제",
-    "billedYearly": "{plan}, 연간 결제"
+    "billedYearly": "{plan}, 연간 결제",
+    "errors": {
+      "no_billing_account": "결제 계정을 찾을 수 없습니다. 계정 페이지에서 '결제 관리'를 열거나 문의해 주세요.",
+      "no_paid_plan": "변경할 유료 요금제가 없습니다. 대신 구독할 요금제를 선택하세요.",
+      "already_on_price": "이미 해당 요금제를 이용 중입니다.",
+      "already_scheduled": "이번 결제 기간이 끝날 때 적용될 요금제 변경이 이미 예약되어 있습니다.",
+      "cancel_scheduled": "요금제가 이번 결제 기간이 끝나면 종료되도록 설정되어 있습니다. 변경하기 전에 '결제 관리'에서 갱신하세요.",
+      "price_unavailable": "지금은 해당 요금제로 전환할 수 없습니다. 나중에 다시 시도하거나 문의해 주세요.",
+      "switch_failed": "Stripe에서 변경을 시작하지 못했습니다. 다시 시도하거나 계정 페이지의 '결제 관리'를 이용하세요."
+    }
   }
 }

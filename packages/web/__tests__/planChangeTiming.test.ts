@@ -21,19 +21,17 @@ const label = (p: PlanPoint) => `${p.tierKey}${p.aiMode ? `/${p.aiMode}` : ''}/$
 
 /** The refund policy (docs/PAYMENTS.md), stated plainly. */
 function expected(from: PlanPoint, to: PlanPoint): PlanChangeTiming {
-  const ownKeyInvolved = from.aiMode === 'byok' || to.aiMode === 'byok'
   const fewerFeatures =
     (from.tierKey === 'proAi' && to.tierKey === 'pro') ||
     (from.tierKey === 'proAi' && to.tierKey === 'proAi' && from.aiMode === 'managed' && to.aiMode === ('byok' as AiMode))
   const shorter = from.interval === 'yearly' && to.interval === 'monthly'
   const samePlanOtherwise = from.tierKey === to.tierKey && from.aiMode === to.aiMode
-  // Something gets cheaper: at the end of the paid period, no refund.
+  // Something gets cheaper: the server schedules it for the end of the paid period, no refund.
   if (fewerFeatures || (shorter && !samePlanOtherwise)) return 'end_of_period'
-  // Only the interval gets shorter: the portal defers it, unless the portal can't list the price.
-  if (shorter) return ownKeyInvolved ? 'end_of_period' : 'portal_end_of_period'
-  // An upgrade: through the portal's own confirmation, or applied now (charged, prorated) when an
-  // own-key price is involved, since the portal can't list those.
-  return ownKeyInvolved ? 'now' : 'portal'
+  // Only the interval gets shorter on the same plan and option (one product): the portal defers it.
+  if (shorter) return 'portal_end_of_period'
+  // An upgrade, own-key prices included: confirmed on Stripe's own page and charged, prorated.
+  return 'portal'
 }
 
 const PAIRS = PLANS.flatMap((from) => PLANS.map((to) => [label(from), label(to), from, to] as const))
@@ -45,6 +43,11 @@ describe('planChangeTiming', () => {
 
   it.each(PAIRS)('%s → %s follows the refund policy', (_from, _to, from, to) => {
     expect(planChangeTiming(from, to)).toBe(expected(from, to))
+  })
+
+  it('never answers an immediate change made by our server: upgrades always go through Stripe', () => {
+    const timings = new Set(PAIRS.map(([, , from, to]) => planChangeTiming(from, to)))
+    expect([...timings].sort()).toEqual(['end_of_period', 'portal', 'portal_end_of_period'])
   })
 
   it('treats an unknown price on either side as a downgrade, never an immediate charge', () => {

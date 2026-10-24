@@ -71,13 +71,10 @@
     "title": "Xác nhận đổi gói",
     "confirmEndOfPeriod": "Gói của bạn sẽ đổi sang {plan} vào {date}. Bạn vẫn dùng gói hiện tại đến lúc đó. Không hoàn tiền cho phần còn lại của kỳ này.",
     "confirmEndOfPeriodNoDate": "Gói của bạn sẽ đổi sang {plan} vào cuối kỳ thanh toán này. Bạn vẫn dùng gói hiện tại đến lúc đó. Không hoàn tiền cho phần còn lại của kỳ này.",
-    "confirmChargeNow": "Gói của bạn đổi sang {plan} ngay bây giờ. Bạn sẽ bị tính phí ngay cho phần còn lại của kỳ này, theo tỷ lệ.",
     "confirm": "Xác nhận",
     "cancel": "Hủy",
     "scheduled": "Xong. Gói của bạn sẽ đổi sang {plan} vào {date}.",
     "scheduledNoDetails": "Xong. Gói của bạn sẽ đổi vào cuối kỳ thanh toán này.",
-    "appliedNow": "Xong. Bạn đang dùng {plan}.",
-    "appliedNowNoDetails": "Xong. Gói của bạn đã được đổi.",
     "aiDisabled": "Tùy chọn Pro AI đó chưa có.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI do bạn tự thiết lập"
     },
     "billedMonthly": "{plan}, thanh toán hàng tháng",
-    "billedYearly": "{plan}, thanh toán hàng năm"
+    "billedYearly": "{plan}, thanh toán hàng năm",
+    "errors": {
+      "no_billing_account": "Chúng tôi không tìm thấy tài khoản thanh toán của bạn. Hãy mở Quản lý thanh toán trên trang tài khoản hoặc liên hệ với chúng tôi.",
+      "no_paid_plan": "Bạn không có gói trả phí nào để thay đổi. Hãy chọn một gói để đăng ký.",
+      "already_on_price": "Bạn đang dùng gói đó rồi.",
+      "already_scheduled": "Đã có một thay đổi gói được lên lịch vào cuối kỳ thanh toán này.",
+      "cancel_scheduled": "Gói của bạn sẽ kết thúc vào cuối kỳ thanh toán này. Hãy gia hạn trong Quản lý thanh toán trước khi thay đổi.",
+      "price_unavailable": "Hiện không thể chuyển sang gói đó. Vui lòng thử lại sau hoặc liên hệ với chúng tôi.",
+      "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại hoặc dùng Quản lý thanh toán trên trang tài khoản."
+    }
   }
 }

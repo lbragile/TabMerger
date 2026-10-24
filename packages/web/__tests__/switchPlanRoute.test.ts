@@ -279,21 +279,64 @@ describe('POST /api/billing/switch-plan', () => {
       }
     )
 
-    it('an upgrade applied now answers the invoice to pay, or the account page', async () => {
+    it('Pro → Pro AI on the own key (managed off, own key on sale) opens the portal confirm page', async () => {
+      vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
       mockSubscription.mockResolvedValue({
-        data: { tier: 'pro_ai', status: 'active', stripe_price_id: 'price_byok_m', ai_mode: 'byok' },
+        data: { tier: 'pro', status: 'active', stripe_price_id: 'price_pro_m', ai_mode: 'managed' },
       })
-      mockCreateSession.mockResolvedValueOnce({ kind: 'applied_now', url: 'https://invoice.stripe.com/i/x' })
-      expect(await (await post('switch-plan', { aiMode: 'managed' })).json()).toEqual({
-        applied: 'now',
-        url: 'https://invoice.stripe.com/i/x',
-      })
+      const res = await post('switch-plan', { tier: 'proAi', interval: 'monthly', aiMode: 'byok' })
+      expect(res.status).toBe(200)
+      expect(await res.json()).toEqual({ url: 'https://billing.stripe.com/p/session/test' })
+      expect(mockCreateSession).toHaveBeenCalledWith(
+        expect.objectContaining({ targetPriceId: 'price_byok_m', planPriceIds: ['price_pro_m', 'price_pro_y'] })
+      )
+    })
 
-      mockCreateSession.mockResolvedValueOnce({ kind: 'applied_now', url: null })
-      expect(await (await post('switch-plan', { aiMode: 'managed' })).json()).toEqual({
-        applied: 'now',
-        url: 'https://tabmerger.app/account',
+    it('answers 503 price_unavailable when the target price is not configured, and logs which', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.stubEnv('STRIPE_PRO_AI_BYOK_MONTHLY_PRICE_ID', '')
+      mockSubscription.mockResolvedValue({
+        data: { tier: 'pro', status: 'active', stripe_price_id: 'price_pro_m', ai_mode: 'managed' },
       })
+      const res = await post('switch-plan', { tier: 'proAi', aiMode: 'byok' })
+      expect(res.status).toBe(503)
+      expect(await res.json()).toEqual({ error: 'Price not configured', code: 'price_unavailable' })
+      expect(errorSpy).toHaveBeenCalledWith('Plan switch: no price configured for proAi monthly byok')
+      expect(mockCreateSession).not.toHaveBeenCalled()
+      errorSpy.mockRestore()
+    })
+
+    it('answers 503 price_unavailable when Stripe has the target price archived', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const { PlanSwitchError } = await import('@/lib/stripe')
+      mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('price_unavailable'))
+      const res = await post('switch-plan', { aiMode: 'byok' })
+      expect(res.status).toBe(503)
+      expect((await res.json()).code).toBe('price_unavailable')
+      errorSpy.mockRestore()
+    })
+
+    it('a Stripe failure is 500 switch_failed, logged as one line without the error object', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      mockCreateSession.mockRejectedValueOnce(
+        Object.assign(new Error('No such price'), {
+          type: 'StripeInvalidRequestError',
+          code: 'resource_missing',
+          param: 'price',
+          statusCode: 400,
+          requestId: 'req_123',
+          raw: { headers: { authorization: 'secret' } },
+        })
+      )
+      const res = await post('switch-plan', { aiMode: 'byok' })
+      expect(res.status).toBe(500)
+      expect(await res.json()).toEqual({ error: 'Failed to start the plan change', code: 'switch_failed' })
+      expect(errorSpy).toHaveBeenCalledTimes(1)
+      expect(errorSpy.mock.calls[0]).toEqual([
+        'Plan switch to price_byok_m failed: StripeInvalidRequestError, code resource_missing, param price, status 400, request req_123: No such price',
+      ])
+      errorSpy.mockRestore()
     })
 
     it('answers 409 when a downgrade is already scheduled', async () => {
@@ -301,7 +344,10 @@ describe('POST /api/billing/switch-plan', () => {
       mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('already_scheduled'))
       const res = await post('switch-plan', { tier: 'pro' })
       expect(res.status).toBe(409)
-      expect((await res.json()).error).toBe('A billing change is already scheduled for the end of this term.')
+      expect(await res.json()).toEqual({
+        error: 'A billing change is already scheduled for the end of this term.',
+        code: 'already_scheduled',
+      })
     })
 
     it('answers 409 when the plan is set to cancel', async () => {
@@ -309,7 +355,9 @@ describe('POST /api/billing/switch-plan', () => {
       mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('cancel_scheduled'))
       const res = await post('switch-plan', { tier: 'pro' })
       expect(res.status).toBe(409)
-      expect((await res.json()).error).toMatch(/set to end/)
+      const body = await res.json()
+      expect(body.error).toMatch(/set to end/)
+      expect(body.code).toBe('cancel_scheduled')
     })
   })
 })

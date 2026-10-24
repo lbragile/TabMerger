@@ -1,8 +1,8 @@
 /**
- * The plan-change confirmation (usePlanChange): /api/billing/switch-plan acts on the POST itself,
- * so a change the server applies (now, charged) or schedules (end of period, no refund) is
- * confirmed first, and nothing is sent on Cancel. Covers both confirm paths, cancel (button and
- * Escape, with focus back on the opener), the results, 409/503 messages and the portal path.
+ * The plan-change confirmation (usePlanChange): a change the server schedules for the end of the
+ * period (no refund) is confirmed here first, and nothing is sent on Cancel; every upgrade, own-key
+ * prices included, goes straight to Stripe's own confirm page. Covers the dialog, cancel (button
+ * and Escape, with focus back on the opener), the results, the error codes and the portal path.
  */
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -121,25 +121,20 @@ describe('downgrade: confirmed, then scheduled for the end of the period', () =>
   })
 })
 
-describe('own-key upgrade: confirmed, then applied now and charged, prorated', () => {
-  it('You → TabMerger says it is charged now for the rest of the period, prorated', async () => {
+describe('own-key upgrades: straight to Stripe, no dialog of ours', () => {
+  it('You → TabMerger posts at once and follows the portal confirm page', async () => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
     render(<SwitchAiModeButton current="byok" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
+    respond(200, { url: 'https://billing.stripe.com/p/session/m' })
     await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
 
-    expect(await screen.findByRole('dialog')).toHaveTextContent(
-      "Your plan changes to Pro AI with TabMerger handling setup, billed monthly now. You'll be charged now for the rest of this period, prorated."
-    )
-    respond(200, { applied: 'now', url: ACCOUNT_URL })
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'managed' } })
-    expect(await screen.findByRole('status')).toHaveTextContent("Done. You're now on Pro AI with TabMerger handling setup, billed monthly.")
-    expect(refresh).toHaveBeenCalled()
+    expect(window.location.href).toBe('https://billing.stripe.com/p/session/m')
   })
 
-  it('Pro → Pro AI on your own key from the pricing card, and an invoice that needs paying is opened', async () => {
+  it('Pro → Pro AI on your own key from the pricing card goes to the portal confirm page', async () => {
     const { PricingCard } = await load()
     const user = userEvent.setup()
     render(
@@ -151,13 +146,12 @@ describe('own-key upgrade: confirmed, then applied now and charged, prorated', (
       />
     )
     await user.click(screen.getByRole('radio', { name: 'You' }))
+    respond(200, { url: 'https://billing.stripe.com/p/session/b' })
     await user.click(screen.getByRole('button', { name: 'Upgrade to Pro AI' }))
-    expect(await screen.findByRole('dialog')).toHaveTextContent("You'll be charged now for the rest of this period, prorated.")
 
-    respond(200, { applied: 'now', url: 'https://invoice.stripe.com/i/abc' })
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { tier: 'proAi', interval: 'monthly', aiMode: 'byok' } })
-    expect(window.location.href).toBe('https://invoice.stripe.com/i/abc')
+    expect(window.location.href).toBe('https://billing.stripe.com/p/session/b')
   })
 })
 
@@ -179,8 +173,8 @@ describe('cancel', () => {
   it('Escape cancels too, from the keyboard alone', async () => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
-    render(<SwitchAiModeButton current="byok" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
-    const opener = screen.getByRole('button', { name: 'Let TabMerger handle setup' })
+    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
+    const opener = screen.getByRole('button', { name: 'Handle setup yourself' })
     opener.focus()
     await user.keyboard('{Enter}')
     await screen.findByRole('dialog')
@@ -192,24 +186,41 @@ describe('cancel', () => {
 })
 
 describe('errors and the portal path', () => {
-  it('shows the server’s 409 explanation (plan set to end)', async () => {
+  it.each([
+    [409, 'cancel_scheduled', 'Your plan is set to end at the end of this billing period. Renew it in Manage billing before changing it.'],
+    [409, 'already_scheduled', 'A plan change is already scheduled for the end of this billing period.'],
+    [409, 'already_on_price', "You're already on that plan."],
+    [400, 'no_billing_account', "We couldn't find your billing account."],
+    [403, 'no_paid_plan', "You don't have a paid plan to change."],
+    [503, 'price_unavailable', "That plan isn't available to switch to right now."],
+    [500, 'switch_failed', "Stripe couldn't start the change."],
+  ])('a %s with code %s gets its own message', async (status, code, message) => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
     render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
     await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-    respond(409, { error: 'Your plan is set to end at the end of this term. Renew it in Manage billing before changing it.' })
+    respond(status, { error: 'English text from the server', code })
     await user.click(await screen.findByRole('button', { name: 'Confirm' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent('Renew it in Manage billing before changing it.')
+    expect(await screen.findByRole('alert')).toHaveTextContent(message)
     expect(refresh).not.toHaveBeenCalled()
+  })
+
+  it('an error without a known code gets the generic message', async () => {
+    const { SwitchAiModeButton } = await load()
+    const user = userEvent.setup()
+    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
+    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+    respond(500, { error: 'Failed', code: 'something_new' })
+    await user.click(await screen.findByRole('button', { name: 'Confirm' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent("Couldn't start the switch. Try Manage billing on your account page.")
   })
 
   it('says the option is not available yet on a 503 ai_disabled', async () => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
     render(<SwitchAiModeButton current="byok" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
-    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
     respond(503, { error: 'ai_disabled' })
-    await user.click(await screen.findByRole('button', { name: 'Confirm' }))
+    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
     expect(await screen.findByRole('alert')).toHaveTextContent("That Pro AI option isn't available yet.")
   })
 

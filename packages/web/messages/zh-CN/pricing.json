@@ -71,13 +71,10 @@
     "title": "确认更改套餐",
     "confirmEndOfPeriod": "您的套餐将于 {date} 更改为 {plan}。在此之前您仍使用当前套餐。本期剩余部分不予退款。",
     "confirmEndOfPeriodNoDate": "您的套餐将于本计费周期结束时更改为 {plan}。在此之前您仍使用当前套餐。本期剩余部分不予退款。",
-    "confirmChargeNow": "您的套餐将立即更改为 {plan}。本期剩余部分将按比例立即收费。",
     "confirm": "确认",
     "cancel": "取消",
     "scheduled": "已完成。您的套餐将于 {date} 更改为 {plan}。",
     "scheduledNoDetails": "已完成。您的套餐将于本计费周期结束时更改。",
-    "appliedNow": "已完成。您现在使用的是 {plan}。",
-    "appliedNowNoDetails": "已完成。您的套餐已更改。",
     "aiDisabled": "该 Pro AI 选项尚未推出。",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "由您自行设置的 Pro AI"
     },
     "billedMonthly": "{plan}，按月计费",
-    "billedYearly": "{plan}，按年计费"
+    "billedYearly": "{plan}，按年计费",
+    "errors": {
+      "no_billing_account": "找不到你的账单账户。请在账户页面打开“管理账单”，或联系我们。",
+      "no_paid_plan": "你没有可更改的付费套餐。请改为选择一个套餐进行订阅。",
+      "already_on_price": "你已经在使用该套餐。",
+      "already_scheduled": "已安排在本计费周期结束时更改套餐。",
+      "cancel_scheduled": "你的套餐将在本计费周期结束时终止。请先在“管理账单”中续订，再进行更改。",
+      "price_unavailable": "目前无法切换到该套餐。请稍后重试或联系我们。",
+      "switch_failed": "Stripe 无法开始此更改。请重试，或使用账户页面中的“管理账单”。"
+    }
   }
 }

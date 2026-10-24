@@ -11,11 +11,18 @@ const mockSubscriptionsUpdate = vi.fn()
 const mockScheduleCreate = vi.fn()
 const mockScheduleUpdate = vi.fn()
 const mockScheduleRelease = vi.fn()
+const mockPriceRetrieve = vi.fn()
+const mockConfigList = vi.fn()
+const mockConfigCreate = vi.fn()
 
 vi.mock('stripe', () => ({
   default: class {
     subscriptions = { list: mockSubscriptionsList, update: mockSubscriptionsUpdate }
-    billingPortal = { sessions: { create: mockPortalCreate } }
+    billingPortal = {
+      sessions: { create: mockPortalCreate },
+      configurations: { list: mockConfigList, create: mockConfigCreate },
+    }
+    prices = { retrieve: mockPriceRetrieve }
     subscriptionSchedules = {
       create: mockScheduleCreate,
       update: mockScheduleUpdate,
@@ -49,6 +56,9 @@ describe('createPlanSwitchSession', () => {
     vi.stubEnv('STRIPE_PRO_AI_BYOK_MONTHLY_PRICE_ID', 'price_byok_m')
     vi.stubEnv('STRIPE_PRO_AI_BYOK_YEARLY_PRICE_ID', 'price_byok_y')
     mockPortalCreate.mockResolvedValue({ url: 'https://billing.stripe.com/p/session/x' })
+    mockPriceRetrieve.mockImplementation(async (id: string) => ({ id, active: true, product: `prod_of_${id}` }))
+    mockConfigList.mockResolvedValue({ data: [] })
+    mockConfigCreate.mockResolvedValue({ id: 'bpc_target' })
   })
 
   afterEach(() => {
@@ -69,6 +79,7 @@ describe('createPlanSwitchSession', () => {
       customer: 'cus_1',
       return_url: 'https://tabmerger.app/account',
       locale: 'en-CA',
+      configuration: 'bpc_target',
       flow_data: {
         type: 'subscription_update_confirm',
         subscription_update_confirm: {
@@ -80,14 +91,59 @@ describe('createPlanSwitchSession', () => {
     })
   })
 
-  it('uses STRIPE_PORTAL_CONFIGURATION_ID when set', async () => {
-    vi.stubEnv('STRIPE_PORTAL_CONFIGURATION_ID', 'bpc_switch')
+  it('makes a portal configuration that lists only the target price, so the session allows no other change', async () => {
     mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'past_due', 'price_pro_m')] })
     const { createPlanSwitchSession } = await import('@/lib/stripe')
 
     await createPlanSwitchSession(args)
 
-    expect(mockPortalCreate).toHaveBeenCalledWith(expect.objectContaining({ configuration: 'bpc_switch' }))
+    expect(mockConfigList).toHaveBeenCalledWith({ active: true, is_default: false, limit: 100 })
+    expect(mockConfigCreate).toHaveBeenCalledWith({
+      name: 'TabMerger plan change to price_pro_y (v1)',
+      metadata: { tabmerger_plan_change: 'v1:price_pro_y' },
+      features: {
+        subscription_update: {
+          enabled: true,
+          default_allowed_updates: ['price', 'promotion_code'],
+          proration_behavior: 'always_invoice',
+          schedule_at_period_end: { conditions: [{ type: 'shortening_interval' }] },
+          products: [{ product: 'prod_of_price_pro_y', prices: ['price_pro_y'], adjustable_quantity: { enabled: false } }],
+        },
+        subscription_cancel: { enabled: true, mode: 'at_period_end', proration_behavior: 'none' },
+        payment_method_update: { enabled: true },
+        invoice_history: { enabled: true },
+      },
+    })
+    expect(mockPortalCreate).toHaveBeenCalledWith(expect.objectContaining({ configuration: 'bpc_target' }))
+  })
+
+  it('reuses a configuration found by its metadata, then from memory', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', 'price_pro_m')] })
+    mockConfigList.mockResolvedValue({
+      data: [
+        { id: 'bpc_other', metadata: { tabmerger_plan_change: 'v1:price_ai_m' } },
+        { id: 'bpc_found', metadata: { tabmerger_plan_change: 'v1:price_pro_y' } },
+      ],
+    })
+    const { createPlanSwitchSession } = await import('@/lib/stripe')
+
+    await createPlanSwitchSession(args)
+    await createPlanSwitchSession(args)
+
+    expect(mockConfigCreate).not.toHaveBeenCalled()
+    expect(mockConfigList).toHaveBeenCalledTimes(1)
+    expect(mockPortalCreate).toHaveBeenLastCalledWith(expect.objectContaining({ configuration: 'bpc_found' }))
+  })
+
+  it('refuses an archived target price (price_unavailable) without opening the portal', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', 'price_pro_m')] })
+    mockPriceRetrieve.mockResolvedValue({ id: 'price_pro_y', active: false, product: 'prod_pro' })
+    const { createPlanSwitchSession, PlanSwitchError } = await import('@/lib/stripe')
+
+    const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
+    expect((err as InstanceType<typeof PlanSwitchError>).reason).toBe('price_unavailable')
+    expect(mockConfigCreate).not.toHaveBeenCalled()
+    expect(mockPortalCreate).not.toHaveBeenCalled()
   })
 
   it('ignores subscriptions on other prices or without a paid status', async () => {
@@ -212,16 +268,14 @@ describe('createPlanSwitchSession', () => {
       })
     })
 
-    it('schedules an own-key yearly → monthly switch (the portal cannot list own-key prices)', async () => {
+    it('an own-key yearly → monthly switch goes to the portal, which defers it (own product)', async () => {
       mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', 'price_byok_y')] })
-      mockScheduleCreate.mockResolvedValue(fromSubscriptionSchedule('price_byok_y'))
-      mockScheduleUpdate.mockResolvedValue({ id: 'sub_sched_new' })
       const { createPlanSwitchSession } = await import('@/lib/stripe')
 
       const result = await createPlanSwitchSession({ ...args, targetPriceId: 'price_byok_m', planPriceIds: PRO_AI })
 
-      expect(result).toEqual({ kind: 'scheduled', effectiveAt: PERIOD_END })
-      expect(mockPortalCreate).not.toHaveBeenCalled()
+      expect(result.kind).toBe('portal')
+      expect(mockScheduleCreate).not.toHaveBeenCalled()
     })
 
     it('a Pro yearly → monthly switch still goes to the portal, which defers it', async () => {
@@ -245,40 +299,22 @@ describe('createPlanSwitchSession', () => {
       expect(mockSubscriptionsUpdate).not.toHaveBeenCalled()
     })
 
-    it('own key → managed is applied now with a prorated charge (always_invoice), only once paid', async () => {
-      mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', 'price_byok_m')] })
-      mockSubscriptionsUpdate.mockResolvedValue({ id: 'sub_1', pending_update: null, latest_invoice: { hosted_invoice_url: 'https://invoice.stripe.com/i/x' } })
+    it.each([
+      ['own key → managed', 'price_byok_m', 'price_ai_m', PRO_AI],
+      ['own-key monthly → yearly', 'price_byok_m', 'price_byok_y', PRO_AI],
+      ['Pro → Pro AI on your own key', 'price_pro_m', 'price_byok_m', ['price_pro_m', 'price_pro_y']],
+    ])('%s is an upgrade confirmed on the portal page (charged there), never changed by our server', async (_l, from, to, plan) => {
+      mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', from)] })
       const { createPlanSwitchSession } = await import('@/lib/stripe')
 
-      const result = await createPlanSwitchSession({ ...args, targetPriceId: 'price_ai_m', planPriceIds: PRO_AI })
+      const result = await createPlanSwitchSession({ ...args, targetPriceId: to, planPriceIds: plan })
 
-      expect(result).toEqual({ kind: 'applied_now', url: null })
-      expect(mockSubscriptionsUpdate).toHaveBeenCalledWith('sub_1', {
-        items: [{ id: 'si_sub_1', price: 'price_ai_m', quantity: 1 }],
-        proration_behavior: 'always_invoice',
-        payment_behavior: 'pending_if_incomplete',
-        expand: ['latest_invoice'],
-      })
-      expect(mockPortalCreate).not.toHaveBeenCalled()
+      expect(result).toEqual({ kind: 'portal', url: 'https://billing.stripe.com/p/session/x' })
+      expect(mockConfigCreate.mock.calls[0][0].features.subscription_update.products).toEqual([
+        { product: `prod_of_${to}`, prices: [to], adjustable_quantity: { enabled: false } },
+      ])
+      expect(mockSubscriptionsUpdate).not.toHaveBeenCalled()
       expect(mockScheduleCreate).not.toHaveBeenCalled()
-    })
-
-    it('an own-key monthly → yearly switch is applied now; a pending payment returns the invoice page', async () => {
-      mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'active', 'price_byok_m')] })
-      mockSubscriptionsUpdate.mockResolvedValue({
-        id: 'sub_1',
-        pending_update: { expires_at: 1 },
-        latest_invoice: { hosted_invoice_url: 'https://invoice.stripe.com/i/x' },
-      })
-      const { createPlanSwitchSession } = await import('@/lib/stripe')
-
-      const result = await createPlanSwitchSession({ ...args, targetPriceId: 'price_byok_y', planPriceIds: PRO_AI })
-
-      expect(result).toEqual({ kind: 'applied_now', url: 'https://invoice.stripe.com/i/x' })
-      expect(mockSubscriptionsUpdate).toHaveBeenCalledWith(
-        'sub_1',
-        expect.objectContaining({ proration_behavior: 'always_invoice' })
-      )
     })
 
     it('refuses a downgrade with 409 already_scheduled while a schedule is pending, creating nothing', async () => {

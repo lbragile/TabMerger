@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { planChangeTiming } from '@/lib/planChangeTiming'
+import { PLAN_SWITCH_ERROR_CODES, type PlanSwitchErrorCode } from '@/lib/checkoutErrors'
 import type { BillingInterval, PaidTierKey } from '@/lib/tiers'
 
 /** The billing routes that move a paid subscription to another price. */
@@ -41,13 +42,15 @@ export interface PlanChangeTarget {
   aiMode?: AiMode
 }
 
-/** Which confirmation a change needs before the server acts on it. */
-type Confirmation = 'endOfPeriod' | 'chargeNow'
-
 interface PendingChange {
   target: PlanChangeTarget
-  confirmation: Confirmation
   plan: string
+}
+
+const PLAN_SWITCH_ERROR_CODE_VALUES: readonly string[] = Object.values(PLAN_SWITCH_ERROR_CODES)
+
+function isPlanSwitchErrorCode(value: unknown): value is PlanSwitchErrorCode {
+  return typeof value === 'string' && PLAN_SWITCH_ERROR_CODE_VALUES.includes(value)
 }
 
 /**
@@ -57,14 +60,13 @@ interface PendingChange {
  * the user confirms first, with what will happen as the server will do it (`planChangeTiming()`
  * in lib/planChangeTiming.ts, the rule `createPlanSwitchSession()` follows):
  * - a downgrade or a shorter interval takes effect at the end of the period, with no refund;
- * - an upgrade that involves the own-key option ("You" handle setup) is applied now and charged,
- *   prorated (the Billing Portal can't list own-key prices);
- * - any other upgrade goes straight to the Billing Portal, which has its own confirmation page.
+ * - an upgrade goes straight to the Billing Portal, whose own confirmation page shows the amount
+ *   and the card, and is charged now, prorated.
  *
- * Afterwards it reports the result (the date for a scheduled change), refreshes the page's server
- * data, or follows the URL the server returned (the portal, or an invoice that needs paying).
- * A 401 goes to sign-in and back to `returnPath`; a 409 shows the server's explanation; a 503
- * `ai_disabled` says the option isn't available.
+ * Afterwards it reports the result (the date for a scheduled change) and refreshes the page's
+ * server data, or follows the portal URL the server returned. A 401 goes to sign-in and back to
+ * `returnPath`; a 503 `ai_disabled` says the option isn't available; any other error with a known
+ * `code` (PLAN_SWITCH_ERROR_CODES) gets its own message, and the rest the generic one.
  *
  * Returns `start(target)`, the state for the caller to show (`error` in a `role="alert"`,
  * `done` in a `role="status"`) and `dialog`, the confirmation, to render once.
@@ -142,22 +144,15 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
         router.refresh()
         return
       }
-      if (ok && data.applied === 'now') {
-        // `url` is the account page, or an invoice to pay when the charge needs the customer.
-        if (typeof data.url === 'string' && !isAccountPage(data.url)) {
-          window.location.href = data.url
-          return
-        }
-        setDone(plan ? t('appliedNow', { plan }) : t('appliedNowNoDetails'))
-        router.refresh()
-        return
-      }
       if (ok && typeof data.url === 'string') {
         // The Billing Portal's own confirmation page.
         window.location.href = data.url
         return
       }
+      const code: unknown = data.code
       if (res.status === 503 && data.error === AI_ERROR_CODES.disabled) setError(t('aiDisabled'))
+      else if (isPlanSwitchErrorCode(code)) setError(t(`errors.${code}`))
+      // A 409 without a code we know still carries a message written for the user.
       else if (res.status === 409 && typeof data.error === 'string') setError(data.error)
       else setError(pricing('switchFailed'))
     } catch {
@@ -177,28 +172,21 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
       void send(target, null)
       return
     }
-    const timing = planChangeTiming(to.from, to)
-    const confirmation: Confirmation | null =
-      timing === 'end_of_period' || timing === 'portal_end_of_period'
-        ? 'endOfPeriod'
-        : timing === 'now'
-          ? 'chargeNow'
-          : null
-    if (!confirmation) {
+    // Only a change that waits for the end of the period is confirmed here; an upgrade is confirmed
+    // on Stripe's own page.
+    if (planChangeTiming(to.from, to) === 'portal') {
       void send(target, planLabel(to))
       return
     }
     openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    setPending({ target, confirmation, plan: planLabel(to) })
+    setPending({ target, plan: planLabel(to) })
   }
 
   const description = !pending
     ? ''
-    : pending.confirmation === 'chargeNow'
-      ? t('confirmChargeNow', { plan: pending.plan })
-      : current?.periodEnd
-        ? t('confirmEndOfPeriod', { plan: pending.plan, date: formatDate(current.periodEnd) })
-        : t('confirmEndOfPeriodNoDate', { plan: pending.plan })
+    : current?.periodEnd
+      ? t('confirmEndOfPeriod', { plan: pending.plan, date: formatDate(current.periodEnd) })
+      : t('confirmEndOfPeriodNoDate', { plan: pending.plan })
 
   const dialog = (
     <Dialog open={!!pending} onOpenChange={(open) => !open && !loading && setPending(null)}>
@@ -232,11 +220,3 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
   return { start, loading, error, done, dialog }
 }
 
-/** Whether a URL the server returned is the account page (any locale prefix), not a page to follow. */
-function isAccountPage(url: string): boolean {
-  try {
-    return /(^|\/)account\/?$/.test(new URL(url, 'http://localhost').pathname)
-  } catch {
-    return false
-  }
-}

@@ -71,13 +71,10 @@
     "title": "Confirmer le changement d’offre",
     "confirmEndOfPeriod": "Votre offre passe à {plan} le {date}. Vous gardez votre offre actuelle jusque-là. Aucun remboursement pour le reste de cette période.",
     "confirmEndOfPeriodNoDate": "Votre offre passe à {plan} à la fin de cette période de facturation. Vous gardez votre offre actuelle jusque-là. Aucun remboursement pour le reste de cette période.",
-    "confirmChargeNow": "Votre offre passe à {plan} maintenant. Le reste de cette période vous sera facturé maintenant, au prorata.",
     "confirm": "Confirmer",
     "cancel": "Annuler",
     "scheduled": "C’est fait. Votre offre passe à {plan} le {date}.",
     "scheduledNoDetails": "C’est fait. Votre offre change à la fin de cette période de facturation.",
-    "appliedNow": "C’est fait. Vous avez maintenant {plan}.",
-    "appliedNowNoDetails": "C’est fait. Votre offre a changé.",
     "aiDisabled": "Cette option de Pro AI n’est pas encore disponible.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI configuré par vous"
     },
     "billedMonthly": "{plan}, facturation mensuelle",
-    "billedYearly": "{plan}, facturation annuelle"
+    "billedYearly": "{plan}, facturation annuelle",
+    "errors": {
+      "no_billing_account": "Nous n'avons pas trouvé votre compte de facturation. Ouvrez « Gérer la facturation » sur votre page de compte, ou contactez-nous.",
+      "no_paid_plan": "Vous n'avez pas d'abonnement payant à modifier. Choisissez plutôt un forfait auquel vous abonner.",
+      "already_on_price": "Vous avez déjà ce forfait.",
+      "already_scheduled": "Un changement de forfait est déjà prévu pour la fin de cette période de facturation.",
+      "cancel_scheduled": "Votre forfait prendra fin à la fin de cette période de facturation. Renouvelez-le dans « Gérer la facturation » avant de le modifier.",
+      "price_unavailable": "Il n'est pas possible de passer à ce forfait pour le moment. Réessayez plus tard ou contactez-nous.",
+      "switch_failed": "Stripe n'a pas pu lancer le changement. Réessayez, ou utilisez « Gérer la facturation » sur votre page de compte."
+    }
   }
 }

@@ -71,13 +71,10 @@
     "title": "Confirm plan change",
     "confirmEndOfPeriod": "Your plan changes to {plan} on {date}. You keep your current plan until then. No refund for the rest of this period.",
     "confirmEndOfPeriodNoDate": "Your plan changes to {plan} at the end of this billing period. You keep your current plan until then. No refund for the rest of this period.",
-    "confirmChargeNow": "Your plan changes to {plan} now. You'll be charged now for the rest of this period, prorated.",
     "confirm": "Confirm",
     "cancel": "Cancel",
     "scheduled": "Done. Your plan changes to {plan} on {date}.",
     "scheduledNoDetails": "Done. Your plan changes at the end of this billing period.",
-    "appliedNow": "Done. You're now on {plan}.",
-    "appliedNowNoDetails": "Done. Your plan has changed.",
     "aiDisabled": "That Pro AI option isn't available yet.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI with you handling setup"
     },
     "billedMonthly": "{plan}, billed monthly",
-    "billedYearly": "{plan}, billed yearly"
+    "billedYearly": "{plan}, billed yearly",
+    "errors": {
+      "no_billing_account": "We couldn't find your billing account. Open Manage billing on your account page, or contact us.",
+      "no_paid_plan": "You don't have a paid plan to change. Choose a plan to subscribe instead.",
+      "already_on_price": "You're already on that plan.",
+      "already_scheduled": "A plan change is already scheduled for the end of this billing period.",
+      "cancel_scheduled": "Your plan is set to end at the end of this billing period. Renew it in Manage billing before changing it.",
+      "price_unavailable": "That plan isn't available to switch to right now. Please try again later or contact us.",
+      "switch_failed": "Stripe couldn't start the change. Please try again, or use Manage billing on your account page."
+    }
   }
 }

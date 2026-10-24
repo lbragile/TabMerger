@@ -71,13 +71,10 @@
     "title": "Plan değişikliğini onaylayın",
     "confirmEndOfPeriod": "Planınız {date} tarihinde {plan} olarak değişir. O zamana kadar mevcut planınızı kullanırsınız. Bu dönemin kalanı için iade yapılmaz.",
     "confirmEndOfPeriodNoDate": "Planınız bu fatura döneminin sonunda {plan} olarak değişir. O zamana kadar mevcut planınızı kullanırsınız. Bu dönemin kalanı için iade yapılmaz.",
-    "confirmChargeNow": "Planınız şimdi {plan} olarak değişir. Bu dönemin kalanı için şimdi orantılı olarak ücret alınır.",
     "confirm": "Onayla",
     "cancel": "İptal",
     "scheduled": "Tamamlandı. Planınız {date} tarihinde {plan} olarak değişir.",
     "scheduledNoDetails": "Tamamlandı. Planınız bu fatura döneminin sonunda değişir.",
-    "appliedNow": "Tamamlandı. Artık {plan} kullanıyorsunuz.",
-    "appliedNowNoDetails": "Tamamlandı. Planınız değişti.",
     "aiDisabled": "Bu Pro AI seçeneği henüz kullanılamıyor.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Kurulumu sizin yaptığınız Pro AI"
     },
     "billedMonthly": "{plan}, aylık faturalandırma",
-    "billedYearly": "{plan}, yıllık faturalandırma"
+    "billedYearly": "{plan}, yıllık faturalandırma",
+    "errors": {
+      "no_billing_account": "Fatura hesabınızı bulamadık. Hesap sayfanızda Faturalandırmayı yönet'i açın veya bizimle iletişime geçin.",
+      "no_paid_plan": "Değiştirebileceğiniz ücretli bir planınız yok. Bunun yerine abone olmak için bir plan seçin.",
+      "already_on_price": "Zaten bu plandasınız.",
+      "already_scheduled": "Bu fatura döneminin sonu için zaten bir plan değişikliği planlandı.",
+      "cancel_scheduled": "Planınız bu fatura döneminin sonunda sona erecek şekilde ayarlı. Değiştirmeden önce Faturalandırmayı yönet'ten yenileyin.",
+      "price_unavailable": "Şu anda bu plana geçilemiyor. Lütfen daha sonra tekrar deneyin veya bizimle iletişime geçin.",
+      "switch_failed": "Stripe değişikliği başlatamadı. Lütfen tekrar deneyin veya hesap sayfanızdaki Faturalandırmayı yönet'i kullanın."
+    }
   }
 }

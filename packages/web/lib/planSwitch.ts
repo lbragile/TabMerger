@@ -12,6 +12,7 @@ import { hasCloudSync } from '@/lib/cloudSync'
 import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { absoluteUrl } from '@/lib/utils'
+import { PLAN_SWITCH_ERROR_CODES as CODES } from '@/lib/checkoutErrors'
 
 export const BILLING_INTERVALS: readonly BillingInterval[] = ['monthly', 'yearly']
 
@@ -70,22 +71,23 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  * Moves the signed-in user's paid subscription to another Price: another billing interval
  * (monthly ↔ yearly), the other Pro AI option (TabMerger's key ↔ own key) and/or the other plan
  * (Pro ↔ Pro AI). The timing follows the refund policy (`createPlanSwitchSession()` in
- * lib/stripe.ts): upgrades apply now with a prorated charge, downgrades and shorter intervals at
- * the end of the paid period with no refund or credit. The subscription row is written by the
- * webhook once Stripe changes the price, never here.
+ * lib/stripe.ts): an upgrade is confirmed on Stripe's "confirm plan change" page and charged now,
+ * prorated; a downgrade or shorter interval takes effect at the end of the paid period with no
+ * refund or credit. The subscription row is written by the webhook once Stripe changes the price,
+ * never here.
  *
  * Responds with one of:
  * - `{ url }`: Stripe's "confirm plan change" page (the portal);
- * - `{ applied: 'now', url }`: changed now; `url` is the invoice to pay when the payment needs the
- *   customer, otherwise the account page;
- * - `{ applied: 'end_of_period', effectiveAt, url }`: scheduled; `effectiveAt` is an ISO date and
- *   `url` the account page;
+ * - `{ applied: 'end_of_period', effectiveAt, url }`: scheduled by the server; `effectiveAt` is an
+ *   ISO date and `url` the account page;
  *
- * or 401, 403 (no paid plan; an AI option for Pro), 400 (no billing account; the current interval
- * is unknown and none was sent), 409 (already on that price, a change is already scheduled, or the
- * plan is set to end; `error` is shown to the user), 503 (`ai_disabled`: the Pro AI option the
- * subscription would be on isn't on sale per aiAvailability(); or the target price is not
- * configured), 500.
+ * or an error `{ error, code? }` (`code` from PLAN_SWITCH_ERROR_CODES in lib/checkoutErrors.ts):
+ * 401, 403 (`no_paid_plan`; an AI option for Pro), 400 (`no_billing_account`; a bad body; the
+ * current interval is unknown and none was sent), 409 (`already_on_price`, `already_scheduled`,
+ * `cancel_scheduled`), 503 (`ai_disabled` in `error`: the Pro AI option the subscription would be
+ * on isn't on sale per aiAvailability(); `price_unavailable`: the target price isn't configured
+ * here or is archived in Stripe), 500 (`switch_failed`, logged with the Stripe error's type, code
+ * and request id).
  */
 export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextResponse> {
   const supabase = await createClient()
@@ -104,7 +106,7 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
     .limit(1)
     .maybeSingle()
   if (!hasCloudSync(subscription)) {
-    return NextResponse.json({ error: 'No paid plan to switch' }, { status: 403 })
+    return NextResponse.json({ error: 'No paid plan to switch', code: CODES.noPaidPlan }, { status: 403 })
   }
 
   const currentTierKey: PaidTierKey = subscription!.tier === 'pro_ai' ? 'proAi' : 'pro'
@@ -140,7 +142,9 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
 
   const targetPriceId = getStripePriceId(tierKey, interval, aiMode)
   if (!targetPriceId) {
-    return NextResponse.json({ error: 'Price not configured' }, { status: 503 })
+    // A missing price id in this environment (e.g. the own-key Prices before their env vars are set).
+    console.error(`Plan switch: no price configured for ${tierKey} ${interval} ${aiMode}`)
+    return NextResponse.json({ error: 'Price not configured', code: CODES.priceUnavailable }, { status: 503 })
   }
   // Every Price of the current tier, both options: the subscription is found whichever one it is on.
   const planPriceIds = getPlanPriceIds(currentTierKey)
@@ -152,7 +156,7 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
     .eq('id', user.id)
     .single()
   if (!profile?.stripe_customer_id) {
-    return NextResponse.json({ error: 'No billing account found' }, { status: 400 })
+    return NextResponse.json({ error: 'No billing account found', code: CODES.noBillingAccount }, { status: 400 })
   }
 
   try {
@@ -164,9 +168,6 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
       returnUrl,
     })
     if (result.kind === 'portal') return NextResponse.json({ url: result.url })
-    if (result.kind === 'applied_now') {
-      return NextResponse.json({ applied: 'now', url: result.url ?? returnUrl })
-    }
     return NextResponse.json({
       applied: 'end_of_period',
       effectiveAt: new Date(result.effectiveAt * 1000).toISOString(),
@@ -179,26 +180,57 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
           target.aiMode === undefined && target.tier === undefined
             ? `You're already billed ${interval}.`
             : "You're already on that plan."
-        return NextResponse.json({ error: message }, { status: 409 })
+        return NextResponse.json({ error: message, code: CODES.alreadyOnPrice }, { status: 409 })
       }
       if (err.reason === 'cancel_scheduled') {
         return NextResponse.json(
           {
             error:
               'Your plan is set to end at the end of this term. Renew it in Manage billing before changing it.',
+            code: CODES.cancelScheduled,
           },
           { status: 409 }
         )
       }
       if (err.reason === 'already_scheduled') {
         return NextResponse.json(
-          { error: 'A billing change is already scheduled for the end of this term.' },
+          { error: 'A billing change is already scheduled for the end of this term.', code: CODES.alreadyScheduled },
           { status: 409 }
         )
       }
-      return NextResponse.json({ error: 'No paid plan to switch' }, { status: 403 })
+      if (err.reason === 'price_unavailable') {
+        console.error(`Plan switch: target price ${targetPriceId} is archived in Stripe`)
+        return NextResponse.json({ error: 'Price not available', code: CODES.priceUnavailable }, { status: 503 })
+      }
+      return NextResponse.json({ error: 'No paid plan to switch', code: CODES.noPaidPlan }, { status: 403 })
     }
-    console.error('Plan switch error:', err)
-    return NextResponse.json({ error: 'Failed to start the plan change' }, { status: 500 })
+    console.error(`Plan switch to ${targetPriceId} failed: ${describeStripeError(err)}`)
+    return NextResponse.json({ error: 'Failed to start the plan change', code: CODES.failed }, { status: 500 })
   }
+}
+
+/**
+ * One log line for a failed Stripe call: the error's type, code, parameter, HTTP status, request id
+ * and message. Never the error object itself (its raw response and headers) or anything about the
+ * customer beyond what Stripe's message names (price, product or subscription ids).
+ */
+export function describeStripeError(err: unknown): string {
+  if (!err || typeof err !== 'object') return String(err)
+  const e = err as {
+    type?: unknown
+    code?: unknown
+    param?: unknown
+    statusCode?: unknown
+    requestId?: unknown
+    message?: unknown
+  }
+  const parts = [
+    typeof e.type === 'string' ? e.type : 'Error',
+    typeof e.code === 'string' ? `code ${e.code}` : null,
+    typeof e.param === 'string' ? `param ${e.param}` : null,
+    typeof e.statusCode === 'number' ? `status ${e.statusCode}` : null,
+    typeof e.requestId === 'string' ? `request ${e.requestId}` : null,
+  ].filter(Boolean)
+  const message = typeof e.message === 'string' ? e.message.slice(0, 300) : ''
+  return `${parts.join(', ')}${message ? `: ${message}` : ''}`
 }

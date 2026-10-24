@@ -4,7 +4,7 @@
  * credits; own-key subscribers see who handles setup and no credits or credit packs; the switch to
  * the other option appears only while that option is on sale.
  */
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -172,17 +172,16 @@ describe('SwitchAiModeButton', () => {
       json: async () => ({ error: 'A billing change is already scheduled for the end of this term.' }),
     } as Response)
     const user = userEvent.setup()
-    // Interval unknown (a price this deployment doesn't list): still confirmed, the plan named without it.
+    // Own key → TabMerger is an upgrade (interval unknown here): posted at once, with no dialog of
+    // ours, since Stripe's own page confirms it.
     render(<SwitchAiModeButton current="byok" returnPath="/account" />)
     await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
-    expect(await screen.findByRole('dialog')).toHaveTextContent('Your plan changes to Pro AI with TabMerger handling setup now.')
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(await screen.findByRole('alert')).toHaveTextContent('A billing change is already scheduled')
 
     vi.mocked(global.fetch).mockResolvedValueOnce({ status: 401, json: async () => ({}) } as Response)
     await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
-    await user.click(await screen.findByRole('button', { name: 'Confirm' }))
-    expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/account')
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/account'))
   })
 
   it('shows the generic failure when the request itself fails', async () => {

@@ -71,13 +71,10 @@
     "title": "Conferma il cambio di piano",
     "confirmEndOfPeriod": "Il tuo piano passa a {plan} il {date}. Fino ad allora mantieni il piano attuale. Nessun rimborso per il resto di questo periodo.",
     "confirmEndOfPeriodNoDate": "Il tuo piano passa a {plan} alla fine di questo periodo di fatturazione. Fino ad allora mantieni il piano attuale. Nessun rimborso per il resto di questo periodo.",
-    "confirmChargeNow": "Il tuo piano passa a {plan} ora. Il resto di questo periodo ti viene addebitato ora, in proporzione.",
     "confirm": "Conferma",
     "cancel": "Annulla",
     "scheduled": "Fatto. Il tuo piano passa a {plan} il {date}.",
     "scheduledNoDetails": "Fatto. Il tuo piano cambia alla fine di questo periodo di fatturazione.",
-    "appliedNow": "Fatto. Ora hai {plan}.",
-    "appliedNowNoDetails": "Fatto. Il tuo piano è cambiato.",
     "aiDisabled": "Questa opzione di Pro AI non è ancora disponibile.",
     "plans": {
       "pro": "Pro",
@@ -85,6 +82,15 @@
       "proAiByok": "Pro AI configurato da te"
     },
     "billedMonthly": "{plan}, fatturazione mensile",
-    "billedYearly": "{plan}, fatturazione annuale"
+    "billedYearly": "{plan}, fatturazione annuale",
+    "errors": {
+      "no_billing_account": "Non abbiamo trovato il tuo account di fatturazione. Apri «Gestisci fatturazione» nella pagina del tuo account oppure contattaci.",
+      "no_paid_plan": "Non hai un piano a pagamento da modificare. Scegli invece un piano a cui abbonarti.",
+      "already_on_price": "Hai già quel piano.",
+      "already_scheduled": "Una modifica del piano è già programmata per la fine di questo periodo di fatturazione.",
+      "cancel_scheduled": "Il tuo piano terminerà alla fine di questo periodo di fatturazione. Rinnovalo in «Gestisci fatturazione» prima di modificarlo.",
+      "price_unavailable": "Al momento non è possibile passare a quel piano. Riprova più tardi o contattaci.",
+      "switch_failed": "Stripe non è riuscito ad avviare la modifica. Riprova oppure usa «Gestisci fatturazione» nella pagina del tuo account."
+    }
   }
 }
