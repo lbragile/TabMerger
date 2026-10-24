@@ -5,6 +5,8 @@ metadata:
   type: project
 ---
 
+Update 2026-10-24: `devFetchMock.ts` is gone (AI mocking is server-side via `AI_MOCK=true` on the web dev server, which meters credits for real). `incrementDevAiUsage` was removed with it, so the local counter now changes only through the Settings dev tab, and the DEV branch of `useAiUsage` no longer tracks real calls. The text below describes the earlier design.
+
 `useAiUsage.ts` still reads the local `chrome.storage.local` counter (via `getDevAiUsage`)
 whenever `import.meta.env.DEV` is true — this was NOT changed, because `devFetchMock.ts`
 increments that same local counter on every mocked `/api/ai/*` call and switching the

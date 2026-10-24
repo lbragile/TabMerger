@@ -38,7 +38,7 @@ not just a "toast the wrong number" fix), and `Header` uses the returned count f
 with a distinct `toast.info("No matching tabs found for AI's suggestion")` on the
 zero-applied path instead of a false-positive success.
 
-**Dev-mode root cause**: `src/mocks/handlers.ts`'s `group-tabs` fixture was a static object
+**(Historical: the client fixtures were removed on 2026-10-24; dev mocking now lives server-side.)** **Dev-mode root cause**: `src/mocks/handlers.ts`'s `group-tabs` fixture was a static object
 with hardcoded `tabIds: [1, 2]`, which will essentially never match a real Now Open tab's
 Chrome tab id — so Auto-group silently no-op'd in dev mode 100% of the time. Fixed by making
 `aiFixtures[path]` optionally a function of the parsed request body; `group-tabs`'s fixture

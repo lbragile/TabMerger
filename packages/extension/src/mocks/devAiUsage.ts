@@ -18,11 +18,6 @@ export async function getDevAiUsage(): Promise<number> {
   return stored.count;
 }
 
-export async function incrementDevAiUsage(): Promise<void> {
-  const count = (await getDevAiUsage()) + 1;
-  await chrome.storage.local.set({ [STORAGE_KEY]: { month: currentMonth(), count } satisfies DevAiUsage });
-}
-
 export async function setDevAiUsage(count: number): Promise<void> {
   await chrome.storage.local.set({ [STORAGE_KEY]: { month: currentMonth(), count } satisfies DevAiUsage });
 }

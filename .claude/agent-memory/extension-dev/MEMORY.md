@@ -23,7 +23,7 @@
 - [Other Devices Settings panel](learnings_other_devices_panel.md) — Radix ScrollArea breaks jsdom; use an overflow-y-auto div
 - [Types/settings/test-env patterns](learnings_types_settings_and_test_env_patterns.md) — local types.ts duplicates shared, not re-exported
 - [Device sessions wired](learnings_device_sessions_wired.md) — pushDeviceSession(state, tier) in useCurrentTabs doSync
-- [MSW + WXT popup dev mocking](learnings_msw_wxt_popup.md) — dev-only AI mock; msw postinstall needs allowBuilds
+- [MSW + WXT popup dev mocking](learnings_msw_wxt_popup.md) — historical: client AI mock removed (now server-side AI_MOCK); MSW SW fails in popups
 - [pendingSync audit](learnings_pendingsync_audit.md) — fixed useUpdateGroupInfo missing pendingSync; everything else correct
 - [AI auto-group apply fix](learnings_ai_auto_group_apply.md) — handleAIGroup was discarding useAutoGroup's result; added useApplyAIGroups
 - [Keyboard shortcuts for tab actions](learnings_keyboard_shortcuts_tab_actions.md) — F2 rename / N note via uiStore renameTarget/noteTarget

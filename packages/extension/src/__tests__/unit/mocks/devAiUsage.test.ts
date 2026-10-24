@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { getDevAiUsage, incrementDevAiUsage, setDevAiUsage } from '@/mocks/devAiUsage'
+import { getDevAiUsage, setDevAiUsage } from '@/mocks/devAiUsage'
 
 const STORAGE_KEY = 'tm_dev_ai_usage_count'
 
@@ -23,11 +23,10 @@ describe('devAiUsage', () => {
     expect(await getDevAiUsage()).toBe(0)
   })
 
-  it('increments the count for the current month', async () => {
-    await incrementDevAiUsage()
-    await incrementDevAiUsage()
+  it('stores the count for the current month', async () => {
+    await setDevAiUsage(2)
     expect(await getDevAiUsage()).toBe(2)
-    expect(store[STORAGE_KEY]).toMatchObject({ count: 2 })
+    expect(store[STORAGE_KEY]).toMatchObject({ count: 2, month: new Date().toISOString().slice(0, 7) })
   })
 
   it('resets to 0 when the stored month does not match the current month', async () => {
