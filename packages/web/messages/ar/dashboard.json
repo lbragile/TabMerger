@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "التنظيم بالذكاء الاصطناعي",
-  "aiOrganiseUpgrade": "رقِّ خطتك إلى Pro AI لاستخدام التنظيم بالذكاء الاصطناعي",
-  "aiOrganiseFromExtension": "ابدأ هذا من النافذة المنبثقة لإضافة TabMerger",
   "tabGroups": "مجموعات علامات التبويب",
   "savedSessions": "الجلسات المحفوظة",
   "stats": {

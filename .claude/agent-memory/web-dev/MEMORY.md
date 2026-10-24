@@ -48,4 +48,5 @@
 - [RTL layout with Tailwind v4](learnings/rtl-layout-tailwind-v4.md) — inset-s/e, :where-specificity of rtl:/ltr:, no-logical-form cases, dir=auto on the truncating box, bidi isolates for "4.28 / 5" and "−10%", script fonts, guard test
 - [Radix direction + menu search](learnings/radix-direction-and-menu-search.md) — one react-direction copy, RTL carousel maths, search input in DropdownMenu (stable focus ref, typeahead block, letter redirect), sr-only trailing-space trap
 - [Guest vs free pricing CTA](learnings/pricing-guest-vs-free-cta.md) — page gives guests currentTier 'free' too; `signedIn` prop picks "Get Pro" vs "Upgrade to Pro"; teaser has no buy button
+- [Per-test hoisted mock state](learnings/vitest-hoisted-mock-state.md) — vary a hoisted vi.mock via a `vi.hoisted` object; `vi.doUnmock` drops the hoisted mock too
 - [Pro AI option switch + plan-change confirm](learnings/pro-ai-option-switch-and-plan-change-confirm.md) — fieldset/radio segmented control, stacked option panels, radius tokens (--radius 0), confirm-before-POST on shared planChangeTiming(), RTL ignore trap

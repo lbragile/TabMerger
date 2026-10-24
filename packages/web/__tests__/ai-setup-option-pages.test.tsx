@@ -87,8 +87,8 @@ describe('dashboard', () => {
     expect(screen.queryByText('AI credits this month')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Let TabMerger handle setup' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Get more' })).not.toBeInTheDocument()
-    // The AI organise entry point is shown once any AI option is live.
-    expect(screen.getByRole('button', { name: /AI organise/ })).toBeInTheDocument()
+    // Organize runs start from the extension, so the dashboard has no organize button even with AI live.
+    expect(screen.queryByRole('button', { name: /AI organise/ })).not.toBeInTheDocument()
   })
 
   it('own key, both flags on: offers the switch to TabMerger handling setup', async () => {

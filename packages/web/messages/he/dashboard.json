@@ -6,9 +6,6 @@
     "pro": "Pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "ארגון עם AI",
-  "aiOrganiseUpgrade": "כדי להשתמש בארגון עם AI צריך לשדרג ל-Pro AI",
-  "aiOrganiseFromExtension": "אפשר להתחיל את זה מהחלון הקופץ של תוסף TabMerger",
   "tabGroups": "קבוצות כרטיסיות",
   "savedSessions": "סשנים שמורים",
   "stats": {

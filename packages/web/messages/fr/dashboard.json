@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Organisation IA",
-  "aiOrganiseUpgrade": "Passez à Pro AI pour utiliser l’organisation IA",
-  "aiOrganiseFromExtension": "Lancez-la depuis la fenêtre de l’extension TabMerger",
   "tabGroups": "Groupes d’onglets",
   "savedSessions": "Sessions enregistrées",
   "stats": {

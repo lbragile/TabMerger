@@ -10,12 +10,9 @@ import { SavedSessionsProvider } from '@/components/dashboard/SavedSessionsProvi
 import { SessionsStatDescription, SessionsStatValue } from '@/components/dashboard/SessionsStat'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
-import { Sparkles } from 'lucide-react'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { AUTO_BACKUP_DOWNLOAD_LIMITS, isAiMode, isEncryptedBlob } from '@tabmerger/shared'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
@@ -150,46 +147,14 @@ export default async function DashboardPage({
         <UpgradedBanner planName={subscription?.tier === 'pro_ai' ? tierNames('proAi') : tierNames('pro')} />
       )}
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-2xl font-bold">{t('greeting', { name: firstNameFromEmail(user.email ?? '') })}</h1>
-            <Badge
-              variant={currentTier === 'pro' ? 'default' : 'secondary'}
-              className="capitalize rounded-md"
-            >
-              {t(`tierBadge.${currentTier}`)}
-            </Badge>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* ponytail: no web-initiated organize trigger exists yet — the extension starts the
-              workflow and deep-links back here with organizeRunId/organizeToken. Point users there.
-              Disabled buttons don't fire hover events, so the tooltip trigger wraps the button in
-              a span rather than relying on a native title attribute (which silently never fires).
-              Hidden entirely while AI features are behind the coming-soon flag. */}
-          {AI_AVAILABILITY.any && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span tabIndex={currentTier !== 'pro_ai' ? 0 : undefined}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={currentTier !== 'pro_ai'}
-                    >
-                      <Sparkles className="h-4 w-4 me-1.5" />
-                      {t('aiOrganise')}
-                    </Button>
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {currentTier !== 'pro_ai' ? t('aiOrganiseUpgrade') : t('aiOrganiseFromExtension')}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
+      <div className="flex items-center gap-2 flex-wrap">
+        <h1 className="text-2xl font-bold">{t('greeting', { name: firstNameFromEmail(user.email ?? '') })}</h1>
+        <Badge
+          variant={currentTier === 'pro' ? 'default' : 'secondary'}
+          className="capitalize rounded-md"
+        >
+          {t(`tierBadge.${currentTier}`)}
+        </Badge>
       </div>
 
       <OnboardingChecklist isSignedIn={!!user} isPro={isPro} installHref={getStoreLinks()[await getVisitorBrowser()]} />

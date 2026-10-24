@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Penataan AI",
-  "aiOrganiseUpgrade": "Tingkatkan ke Pro AI untuk menggunakan penataan AI",
-  "aiOrganiseFromExtension": "Mulai dari popup ekstensi TabMerger",
   "tabGroups": "Grup Tab",
   "savedSessions": "Sesi Tersimpan",
   "stats": {

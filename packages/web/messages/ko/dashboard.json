@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "AI 정리",
-  "aiOrganiseUpgrade": "AI 정리를 사용하려면 Pro AI로 업그레이드하세요",
-  "aiOrganiseFromExtension": "TabMerger 확장 프로그램 팝업에서 시작하세요",
   "tabGroups": "탭 그룹",
   "savedSessions": "저장된 세션",
   "stats": {

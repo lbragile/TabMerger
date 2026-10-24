@@ -6,9 +6,6 @@
     "pro": "Pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "AI 整理",
-  "aiOrganiseUpgrade": "升级到 Pro AI 即可使用 AI 整理",
-  "aiOrganiseFromExtension": "请从 TabMerger 扩展弹出窗口中开始",
   "tabGroups": "标签页分组",
   "savedSessions": "已保存的会话",
   "stats": {

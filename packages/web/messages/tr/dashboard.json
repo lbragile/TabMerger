@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Yapay zekâ ile düzenle",
-  "aiOrganiseUpgrade": "Yapay zekâ ile düzenlemeyi kullanmak için Pro AI'ya yükseltin",
-  "aiOrganiseFromExtension": "Bunu TabMerger uzantısının açılır penceresinden başlatın",
   "tabGroups": "Sekme Grupları",
   "savedSessions": "Kayıtlı Oturumlar",
   "stats": {

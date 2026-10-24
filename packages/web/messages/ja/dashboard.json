@@ -6,9 +6,6 @@
     "pro": "Pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "AIで整理",
-  "aiOrganiseUpgrade": "AIで整理するにはPro AIにアップグレードしてください",
-  "aiOrganiseFromExtension": "TabMergerの拡張機能のポップアップから開始してください",
   "tabGroups": "タブグループ",
   "savedSessions": "保存済みセッション",
   "stats": {

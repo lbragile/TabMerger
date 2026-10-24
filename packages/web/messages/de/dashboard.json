@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "KI-Organisation",
-  "aiOrganiseUpgrade": "Wechsle zu Pro AI, um die KI-Organisation zu nutzen",
-  "aiOrganiseFromExtension": "Starte dies im Popup der TabMerger-Erweiterung",
   "tabGroups": "Tab-Gruppen",
   "savedSessions": "Gespeicherte Sitzungen",
   "stats": {

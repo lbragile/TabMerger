@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Организация с ИИ",
-  "aiOrganiseUpgrade": "Перейдите на Pro AI, чтобы пользоваться организацией с ИИ",
-  "aiOrganiseFromExtension": "Запустите это из всплывающего окна расширения TabMerger",
   "tabGroups": "Группы вкладок",
   "savedSessions": "Сохранённые сеансы",
   "stats": {

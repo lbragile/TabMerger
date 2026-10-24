@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Organizar con IA",
-  "aiOrganiseUpgrade": "Mejora a Pro AI para organizar con IA",
-  "aiOrganiseFromExtension": "Inícialo desde el popup de la extensión TabMerger",
   "tabGroups": "Grupos de pestañas",
   "savedSessions": "Sesiones guardadas",
   "stats": {
