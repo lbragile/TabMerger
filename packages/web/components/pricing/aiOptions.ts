@@ -13,8 +13,18 @@ import { AI_AVAILABILITY } from '@/lib/aiFlag'
  * option can be live while TabMerger's AI is still "Coming soon".
  */
 
-/** The order the option switch lists them in. */
-export const AI_OPTION_ORDER: readonly AiMode[] = ['managed', 'byok']
+/**
+ * The order the option switch (and the card's per-option feature lists) shows them in: "You"
+ * (your own key) before "TabMerger". Display only: which option a card opens on comes from
+ * {@link AI_OPTION_DEFAULT_PREFERENCE}.
+ */
+export const AI_OPTION_ORDER: readonly AiMode[] = ['byok', 'managed']
+
+/**
+ * Which option a card prefers to open on, most preferred first: TabMerger's AI before your own
+ * key. Kept apart from {@link AI_OPTION_ORDER} so reordering the switch never changes the default.
+ */
+export const AI_OPTION_DEFAULT_PREFERENCE: readonly AiMode[] = ['managed', 'byok']
 
 /** Whether an option can be bought (or switched to) on this deployment. */
 export function isAiOptionAvailable(mode: AiMode): boolean {
@@ -27,12 +37,13 @@ export function otherAiMode(mode: AiMode): AiMode {
 }
 
 /**
- * Which option a card opens on: the subscriber's own option, else the first one that can be
- * bought (TabMerger's AI before your own key), else TabMerger's AI.
+ * Which option a card opens on: the subscriber's own option, else the first one in
+ * {@link AI_OPTION_DEFAULT_PREFERENCE} that can be bought (TabMerger's AI before your own key),
+ * else TabMerger's AI. Independent of the switch's display order ({@link AI_OPTION_ORDER}).
  */
 export function initialAiMode(current?: AiMode | null): AiMode {
   if (current) return current
-  return AI_OPTION_ORDER.find(isAiOptionAvailable) ?? 'managed'
+  return AI_OPTION_DEFAULT_PREFERENCE.find(isAiOptionAvailable) ?? 'managed'
 }
 
 /** The "organize N tabs" example the estimates use (the largest of the shared examples). */

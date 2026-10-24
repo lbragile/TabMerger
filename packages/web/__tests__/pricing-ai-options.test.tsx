@@ -69,12 +69,30 @@ function checkoutBody() {
 }
 
 describe('Pro AI option switch on the pricing page', () => {
-  it('asks "Who handles setup" with two radio options, TabMerger and You', async () => {
+  it('asks "Who handles setup" with two radio options, You and TabMerger', async () => {
     const { PricingTable } = await loadWithFlags({ managed: true, byok: true })
     render(<PricingTable installHref={INSTALL} />)
     const group = screen.getByRole('group', { name: 'Who handles setup?' })
     const options = within(group).getAllByRole('radio')
-    expect(options.map((o) => o.closest('label')?.textContent)).toEqual(['TabMerger', 'You'])
+    expect(options.map((o) => o.closest('label')?.textContent)).toEqual(['You', 'TabMerger'])
+  })
+
+  it('lists "You" first but still opens on TabMerger when both options are on sale', async () => {
+    const { PricingTable, PricingTeaser } = await loadWithFlags({ managed: true, byok: true })
+    for (const ui of [<PricingTable key="table" installHref={INSTALL} />, <PricingTeaser key="teaser" />]) {
+      const { unmount } = render(ui)
+      const options = within(screen.getByRole('group', { name: 'Who handles setup?' })).getAllByRole('radio')
+      expect(options[0]).toHaveAccessibleName('You')
+      expect(options[0]).not.toBeChecked()
+      expect(screen.getByRole('radio', { name: 'TabMerger' })).toBeChecked()
+      unmount()
+    }
+
+    // On the pricing page, the feature list on show is TabMerger's, though its list now comes second.
+    render(<PricingTable installHref={INSTALL} />)
+    const creditLines = within(proAiCard()).getAllByText(/AI credits a month/)
+    expect(creditLines.some((line) => line.closest('[aria-hidden="true"]') === null)).toBe(true)
+    expect(within(proAiCard()).getByText('Use your own AI provider').closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
   it('styles the switch with theme radius tokens only, never a hard-coded radius', async () => {
@@ -264,6 +282,9 @@ describe('Pro AI option switch on the landing page teaser', () => {
 describe('aiOptions helpers', () => {
   it('opens on the first option on sale, TabMerger before You, and on a subscriber’s own option', async () => {
     let mod = await loadWithFlags({ managed: true, byok: true })
+    // Display order and default preference are separate lists: "You" shows first, TabMerger is preferred.
+    expect(mod.AI_OPTION_ORDER).toEqual(['byok', 'managed'])
+    expect(mod.AI_OPTION_DEFAULT_PREFERENCE).toEqual(['managed', 'byok'])
     expect(mod.initialAiMode()).toBe('managed')
     expect(mod.initialAiMode('byok')).toBe('byok')
     mod = await loadWithFlags({ managed: false, byok: true })
