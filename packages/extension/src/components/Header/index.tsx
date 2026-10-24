@@ -34,6 +34,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAutoGroup, useOrganizeTabs } from "@/hooks/useAI";
+import { useNameGroupAction } from "@/hooks/useNameGroupAction";
 import { AI_ENABLED } from "@/lib/aiFlag";
 import { useAppSettings } from "@/hooks/useAppSettings";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
@@ -47,7 +48,7 @@ import { AiRequestError, QuotaExceededError, isFixedInAiSettings } from "@/lib/a
 import { TOUR_ANCHORS } from "@/lib/tourSteps";
 import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
 import { motionScrollBehavior } from "@/lib/reducedMotion";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { activeLocale } from "@/lib/i18n";
 import { openInNewTab, websiteHomeUrl } from "@/lib/websiteLink";
 import type { TFunction } from "i18next";
@@ -103,6 +104,12 @@ export function Header() {
     const { mutateAsync: organizeTabs, isPending: organizeLoading } = useOrganizeTabs();
     const { data: appSettings } = useAppSettings();
     const [aiQuotaExceeded, setAiQuotaExceeded] = useState(false);
+    // "Name group" acts on the group shown in the main panel; same action as the sidebar menu's
+    // "AI rename" (shared hook: same toasts, undo step and positional rename)
+    const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
+    const activeGroup = groupsState?.available[activeGroupIndex];
+    const { run: nameActiveGroup, isPending: nameLoading, block: nameBlock } = useNameGroupAction(activeGroup, activeGroupIndex);
+    const aiPending = aiLoading || organizeLoading || nameLoading;
 
     // Restores a snapshot as a NEW local change (see `useUndoRedo`), never the raw snapshot:
     // that one carries stale sync stamps, a stale copy of Now Open and no tour practice groups.
@@ -432,11 +439,11 @@ export function Header() {
                                     size="icon"
                                     className={cn(
                                         "h-7 w-7",
-                                        (aiLoading || organizeLoading) && "animate-pulse",
+                                        aiPending && "animate-pulse",
                                         !aiFeatures && "opacity-50 cursor-not-allowed",
                                     )}
                                     onClick={aiFeatures ? undefined : () => openModal('upgrade')}
-                                    disabled={aiLoading || organizeLoading}
+                                    disabled={aiPending}
                                     aria-disabled={!aiFeatures}
                                     aria-label={t("header.aiActions")}
                                     data-tour={TOUR_ANCHORS.aiActions}
@@ -460,6 +467,31 @@ export function Header() {
                                     <div>
                                         <div>{t("header.autoGroup")}</div>
                                         <div className="text-[10px] text-muted-foreground font-normal">{t("header.autoGroupHint")}</div>
+                                    </div>
+                                </DropdownMenuItem>
+                            )}
+                            {appSettings?.aiNameGroupEnabled !== false && (
+                                <DropdownMenuItem
+                                    disabled={nameBlock !== null}
+                                    onClick={() => void nameActiveGroup()}
+                                    data-testid="header-ai-name-group"
+                                >
+                                    <div className="min-w-0">
+                                        <div>{t("header.nameGroup")}</div>
+                                        <div className="text-[10px] text-muted-foreground font-normal">
+                                            {nameBlock === "notSaved"
+                                                ? t("header.nameGroupPickSaved")
+                                                : nameBlock === "noTabs"
+                                                  ? t("groupMenu.toast.noTabsToName")
+                                                  : (
+                                                    // The name is isolated (bdi) and cut with an ellipsis; the full name stays in the accessible name and title
+                                                    <Trans
+                                                        i18nKey="header.nameGroupHint"
+                                                        values={{ name: activeGroup?.name }}
+                                                        components={{ name: <bdi title={activeGroup?.name} className="inline-block max-w-[6.5rem] truncate align-bottom" /> }}
+                                                    />
+                                                )}
+                                        </div>
                                     </div>
                                 </DropdownMenuItem>
                             )}

@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload, signInAsPro } from '../helpers';
-import { NOW_OPEN } from '../seed';
+import { E2E_USER_ID, openPopup, seedAndReload, signInAsPro, waitForStoredGroup } from '../helpers';
+import { NOW_OPEN, SAVED_GROUP } from '../seed';
 
 /**
  * Settings → AI for a Pro AI subscriber on their own key (`ai_mode: 'byok'`): provider first, then
@@ -145,6 +145,46 @@ test.describe('Settings → AI, own key', () => {
     await expect(aiTab).toHaveAttribute('aria-selected', 'true');
     await expect(aiTab).toBeFocused();
     await expect(page.getByRole('group', { name: 'AI provider' })).toBeVisible();
+  });
+
+  test('header AI menu: "Name group" renames the active saved group, and is disabled on Now Open', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, SAVED_GROUP]);
+    await signInAsProAiByok(page);
+    // An own key saved on this device, so the request is sent (the key is built at run time)
+    await page.evaluate(
+      ([userId, key]) => chrome.storage.local.set({ aiByokKey: { userId, key, provider: 'anthropic' } }),
+      [E2E_USER_ID, 'sk-ant-' + 'e'.repeat(24)]
+    );
+    const nameRequests: { tabs: { url: string }[] }[] = [];
+    await page.route('**/api/ai/name-group*', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
+      nameRequests.push(route.request().postDataJSON() as { tabs: { url: string }[] });
+      return route.fulfill({ headers: CORS, json: { name: 'Team tools' } });
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+
+    const aiActions = page.getByRole('button', { name: 'AI actions' });
+    test.skip((await aiActions.count()) === 0, 'this build has own-key AI off (VITE_AI_BYOK_ENABLED)');
+    const nameItem = page.getByRole('menuitem', { name: /Name group/ });
+
+    // Now Open is shown first: the item is there but disabled, and says why
+    await aiActions.click();
+    await expect(nameItem).toHaveAttribute('aria-disabled', 'true');
+    await expect(nameItem).toContainText('Select a saved group first');
+    await page.keyboard.press('Escape');
+
+    // The saved group: the hint names it, and picking it renames that group
+    await page.locator('[data-sidebar-group-index="1"]').click();
+    await aiActions.click();
+    await expect(nameItem).not.toHaveAttribute('aria-disabled', 'true');
+    await expect(nameItem).toContainText(`Suggest a name for “${SAVED_GROUP.name}”`);
+    await nameItem.click();
+
+    await expect(page.locator('[data-sidebar-group-index="1"]')).toContainText('Team tools');
+    expect(nameRequests).toHaveLength(1);
+    expect(nameRequests[0].tabs.map((t) => t.url)).toEqual(SAVED_GROUP.windows[0].tabs.map((t) => t.url));
+    await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && g.name === 'Team tools', 'the AI name stored on the saved group');
   });
 
   test('dev builds: "Use test key" saves the dummy key of the picked provider', async ({ context, extensionId }) => {
