@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { Check } from 'lucide-react'
+import { TierBadge, TierFeatureIcon } from '@/components/pricing/TierBadge'
 import { Link } from '@/i18n/navigation'
 import {
   TIERS,
@@ -82,22 +82,32 @@ export function PricingTeaser() {
             const monthlyEquivalent =
               row.key === 'free' ? null : yearlySubtext(isOwnKey ? YEARLY_SAVINGS.proAiByok : YEARLY_SAVINGS[row.key])
             // Three short highlights per card, worded by the pricing page's own feature labels.
+            // `inherited` ("Everything in …") gets a check and the rest a +, as on /pricing.
+            const added = (text: string) => ({ text, inherited: false })
+            const inheritedLine = (text: string) => ({ text, inherited: true })
             const highlights =
               row.key === 'free'
                 ? [
-                    p('features.upToGroups', { count: TIERS.free.limits.groups }),
-                    p('features.upToTabs', { count: TIERS.free.limits.tabs }),
-                    p('features.importExport'),
-                    p('features.dragDrop'),
+                    added(p('features.upToGroups', { count: TIERS.free.limits.groups })),
+                    added(p('features.upToTabs', { count: TIERS.free.limits.tabs })),
+                    added(p('features.importExport')),
+                    added(p('features.dragDrop')),
                   ]
                 : row.key === 'pro'
-                  ? [p('features.everythingInFree'), p('features.unlimited'), p('features.cloudSync'), p('features.sessionsSynced')]
+                  ? [
+                      inheritedLine(p('features.everythingInFree')),
+                      added(p('features.unlimited')),
+                      added(p('features.cloudSync')),
+                      added(p('features.sessionsSynced')),
+                    ]
                   : [
-                      p('features.everythingInPro'),
-                      p('features.aiGrouping'),
-                      isOwnKey
-                        ? p('features.ownApiKey')
-                        : p('features.aiCreditsMonthly', { count: PRO_AI_MONTHLY_CREDITS }),
+                      inheritedLine(p('features.everythingInPro')),
+                      added(p('features.aiGrouping')),
+                      added(
+                        isOwnKey
+                          ? p('features.ownApiKey')
+                          : p('features.aiCreditsMonthly', { count: PRO_AI_MONTHLY_CREDITS })
+                      ),
                     ]
             const badge = row.highlighted ? p('recommended') : isComingSoon ? common('comingSoon') : null
             return (
@@ -111,19 +121,7 @@ export function PricingTeaser() {
                     : 'border-border bg-surface'
                 )}
               >
-                {badge && (
-                  // On the card's top edge, centered, so it never moves the name.
-                  <span
-                    className={cn(
-                      'absolute inset-x-0 mx-auto w-fit top-0 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-wider leading-none',
-                      row.highlighted
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground border border-border'
-                    )}
-                  >
-                    {badge}
-                  </span>
-                )}
+                {badge && <TierBadge tone={row.highlighted ? 'solid' : 'muted'}>{badge}</TierBadge>}
                 <div>
                   <p className="text-sm font-semibold">{tier.name}</p>
                   <p className="mt-2 text-4xl font-semibold tracking-tight">
@@ -148,9 +146,9 @@ export function PricingTeaser() {
                 {/* Pro AI's setup choice closes this row, below the highlights, so it never shifts a price. */}
                 <div className="mt-4 flex flex-col border-t border-border pt-4">
                   <ul className="space-y-2 text-sm">
-                    {highlights.map((text) => (
+                    {highlights.map(({ text, inherited }) => (
                       <li key={text} className="flex items-start gap-2">
-                        <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
+                        <TierFeatureIcon inherited={inherited} />
                         <span className="min-w-0">{text}</span>
                       </li>
                     ))}

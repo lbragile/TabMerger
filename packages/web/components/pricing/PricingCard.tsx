@@ -6,7 +6,7 @@ import { useRouter as useLocaleRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import type { AiMode } from '@tabmerger/shared'
 import { Button } from '@/components/ui/button'
-import { Check, Plus } from 'lucide-react'
+import { TierBadge, TierFeatureIcon } from './TierBadge'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { ALREADY_SUBSCRIBED_ERROR, PAY_OR_RESUME_ERROR } from '@/lib/checkoutErrors'
@@ -273,31 +273,23 @@ export function PricingCard({
       // (mt-auto) sits at the bottom of each. The highlighted card is roomier on the sides only:
       // equal top and bottom padding keeps the title rows and the buttons on the same lines.
       className={cn(
-        'flex flex-col h-full rounded-2xl p-6 border border-border bg-surface',
+        'relative flex flex-col h-full rounded-2xl p-6 border border-border bg-surface',
         highlighted && 'shadow-sh3 border-primary/30 px-7',
         isCurrentPlan && 'border-primary/40'
       )}
     >
+      {/* One pill on the top edge: Current wins (a current plan is never Recommended). */}
+      {isCurrentPlan ? (
+        <TierBadge>{t('current')}</TierBadge>
+      ) : showRecommended ? (
+        <TierBadge>{t('recommended')}</TierBadge>
+      ) : isComingSoon ? (
+        <TierBadge tone="muted">{common('comingSoon')}</TierBadge>
+      ) : null}
       {/* Title row */}
       <div className="flex items-center justify-between gap-2 mb-2.5">
         {/* The plan name leads the card: larger than the feature text, still smaller than the price. */}
         <h2 className="text-xl font-semibold tracking-tight">{name}</h2>
-        {isCurrentPlan && (
-          <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary text-primary-foreground self-center">
-            {t('current')}
-          </span>
-        )}
-        {showRecommended && (
-          <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary/15 text-primary self-center">
-            {t('recommended')}
-          </span>
-        )}
-        {isProAi && !isComingSoon && <span className="text-primary text-xs">✦</span>}
-        {isComingSoon && (
-          <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-muted text-muted-foreground self-center">
-            {common('comingSoon')}
-          </span>
-        )}
       </div>
 
       {aiOptions && <AiOptionSwitch value={aiMode} onChange={setAiMode} className="mb-4" />}
@@ -426,15 +418,8 @@ function FeatureList({ features, className }: { features: readonly TierFeature[]
   return (
     <ul className={cn('flex flex-col gap-2 text-[13.5px]', className)}>
       {features.map((feature) => (
-        <li key={feature.text} className="flex items-center gap-2 text-text2">
-          {/* ponytail: "Everything in X" line confirms an already-established capability →
-              checkmark. Every other line is new to this tier → +. Free has no "Everything in"
-              line, so all of its features are +. */}
-          {feature.inherited ? (
-            <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
-          ) : (
-            <Plus className="h-3.5 w-3.5 shrink-0 text-primary" />
-          )}
+        <li key={feature.text} className="flex items-start gap-2 text-text2">
+          <TierFeatureIcon inherited={feature.inherited} />
           <span>{feature.text}</span>
         </li>
       ))}

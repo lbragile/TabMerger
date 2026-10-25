@@ -222,6 +222,34 @@ describe('PricingCard', () => {
     expect(card.className).toMatch(/border-primary\/40/)
   })
 
+  it('shows "Current" as the same top-edge pill the home teaser uses, not beside the plan name', async () => {
+    const PricingCard = await loadPricingCard(true)
+    const { container } = render(<PricingCard {...baseProps} highlighted currentTier="pro" />)
+    const badge = screen.getByText('Current')
+    const card = container.firstChild as HTMLElement
+    expect(card.className).toMatch(/\brelative\b/)
+    expect(card).toContainElement(badge)
+    expect(badge.className).toMatch(/\babsolute\b/)
+    expect(badge.className).toMatch(/-translate-y-1\/2/)
+    expect(badge.className).toMatch(/rounded-full/)
+    expect(screen.getByRole('heading', { name: 'Pro' }).parentElement).not.toContainElement(badge)
+    // One pill at a time: Current wins, and the sparkle is gone.
+    expect(screen.queryByText('Recommended')).not.toBeInTheDocument()
+    expect(card).not.toHaveTextContent('✦')
+  })
+
+  it('uses a check for "Everything in" lines and a + for added ones', async () => {
+    const PricingCard = await loadPricingCard(true)
+    const features = [
+      { text: 'Everything in Free', inherited: true },
+      { text: 'Added thing', inherited: false },
+    ]
+    render(<PricingCard {...baseProps} features={features} />)
+    const [first, second] = screen.getAllByRole('listitem')
+    expect(first.querySelector('svg')?.getAttribute('class')).toMatch(/lucide-check/)
+    expect(second.querySelector('svg')?.getAttribute('class')).toMatch(/lucide-plus/)
+  })
+
   // The monthly credit allowance is one of Pro AI's feature lines (from PRICING_TIERS, see
   // tierFeatures), so the card adds no credits line of its own.
   it('adds no AI credits line of its own to the Pro AI card, only the features it is given', async () => {

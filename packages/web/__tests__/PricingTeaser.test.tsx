@@ -127,6 +127,18 @@ describe('PricingTeaser', () => {
       expect(price.compareDocumentPosition(groups[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     })
 
+    it('uses the pricing page icons: a check on "Everything in" lines, a + on the rest (Free: all +)', () => {
+      render(<PricingTeaser />)
+      const icon = (li: HTMLElement) => li.querySelector('svg')?.getAttribute('class') ?? ''
+      for (const li of within(cardOf('Free')).getAllByRole('listitem')) expect(icon(li)).toMatch(/lucide-plus/)
+      for (const name of ['Pro', 'Pro AI']) {
+        const [first, ...rest] = within(cardOf(name)).getAllByRole('listitem')
+        expect(first).toHaveTextContent(/^Everything in/)
+        expect(icon(first)).toMatch(/lucide-check/)
+        for (const li of rest) expect(icon(li)).toMatch(/lucide-plus/)
+      }
+    })
+
     it('lists highlights per card, with the Pro AI one following the chosen option', async () => {
       const user = userEvent.setup()
       render(<PricingTeaser />)
