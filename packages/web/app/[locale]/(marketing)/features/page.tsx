@@ -22,6 +22,7 @@ import {
   Shield,
   ArrowRight,
   History,
+  WandSparkles,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -71,6 +72,7 @@ const featureSections: { key: SectionKey; features: { key: string; icon: LucideI
       { key: 'names', icon: Layers },
       { key: 'summaries', icon: Search },
       { key: 'sessionSuggestions', icon: RefreshCw },
+      { key: 'organize', icon: WandSparkles },
     ],
   },
 ]

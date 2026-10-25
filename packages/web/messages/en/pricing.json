@@ -34,6 +34,7 @@
     "aiGrouping": "AI auto-grouping of tabs",
     "aiNames": "AI group name suggestions",
     "smartSessions": "Smart session suggestions",
+    "aiOrganize": "AI workspace cleanup: merge, rename, archive & reorder groups",
     "tabPreview": "Tab preview with AI summary",
     "aiCreditsMonthly": "{count, number} AI credits a month",
     "ownApiKey": "Use your own AI provider",

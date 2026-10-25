@@ -34,6 +34,7 @@
     "aiGrouping": "टैब की AI ऑटो-ग्रुपिंग",
     "aiNames": "AI ग्रुप नाम सुझाव",
     "smartSessions": "स्मार्ट सत्र सुझाव",
+    "aiOrganize": "AI वर्कस्पेस सफ़ाई: ग्रुप मिलाएँ, नाम बदलें, संग्रहित करें और क्रम बदलें",
     "tabPreview": "AI सारांश के साथ टैब पूर्वावलोकन",
     "aiCreditsMonthly": "हर महीने {count, number} AI क्रेडिट",
     "ownApiKey": "अपना AI प्रदाता इस्तेमाल करें",

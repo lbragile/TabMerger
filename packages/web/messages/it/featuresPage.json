@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Organizzazione basata sull'IA",
-    "description": "Lascia che Claude analizzi le tue schede e ti dia suggerimenti intelligenti, così puoi concentrarti sul pensare, non sull'archiviare.",
+    "description": "L'IA legge i titoli e gli URL delle tue schede e suggerisce come raggrupparle, dar loro un nome e metterle in ordine, così puoi concentrarti sul pensare, non sull'archiviare.",
     "autoGrouping": {
       "title": "Raggruppamento automatico",
       "description": "Apri un caos di schede e fai clic su un pulsante. L'IA le raggruppa in gruppi logici in base ad argomento, dominio e intento."
@@ -77,7 +77,11 @@
     },
     "sessionSuggestions": {
       "title": "Suggerimenti di sessione",
-      "description": "L'IA analizza le tue abitudini di navigazione e suggerisce come strutturare le sessioni per la massima produttività."
+      "description": "L'IA esamina i tuoi gruppi salvati e suggerisce di unire quelli che si sovrappongono o di archiviare quelli che non usi da tempo. Unisci o archivia con un clic."
+    },
+    "organize": {
+      "title": "Organizza il tuo spazio di lavoro",
+      "description": "L'IA esamina tutti i tuoi gruppi in una volta e propone unioni, nuovi nomi, archiviazioni e un nuovo ordine. Togli la spunta alle modifiche che non vuoi, poi applica le altre in un solo passaggio che puoi annullare."
     }
   }
 }

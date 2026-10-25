@@ -34,6 +34,7 @@
     "aiGrouping": "Agrupamento automático de abas por IA",
     "aiNames": "Sugestões de nomes de grupos por IA",
     "smartSessions": "Sugestões inteligentes de sessões",
+    "aiOrganize": "Arrumação do espaço de trabalho com IA: mesclar, renomear, arquivar e reordenar grupos",
     "tabPreview": "Prévia de abas com resumo de IA",
     "aiCreditsMonthly": "{count, number} créditos de IA por mês",
     "ownApiKey": "Use seu próprio provedor de IA",

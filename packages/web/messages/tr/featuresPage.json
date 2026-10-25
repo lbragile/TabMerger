@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Yapay zekâ destekli düzenleme",
-    "description": "Claude sekmelerinizi analiz edip akıllı öneriler sunsun; siz dosyalamaya değil, düşünmeye odaklanın.",
+    "description": "Yapay zekâ sekmelerinizin başlıklarını ve URL'lerini okur; onları nasıl gruplayacağınızı, adlandıracağınızı ve toparlayacağınızı önerir. Siz de dosyalamaya değil, düşünmeye odaklanırsınız.",
     "autoGrouping": {
       "title": "Otomatik gruplama",
       "description": "Bir yığın sekme açın, tek bir düğmeye tıklayın. Yapay zekâ bunları konuya, alan adına ve amaca göre mantıklı gruplara ayırır."
@@ -77,7 +77,11 @@
     },
     "sessionSuggestions": {
       "title": "Oturum önerileri",
-      "description": "Yapay zekâ tarama alışkanlıklarınızı analiz eder ve en yüksek verimlilik için oturumları nasıl yapılandıracağınızı önerir."
+      "description": "Yapay zekâ kayıtlı gruplarınızı gözden geçirir; çakışanları birleştirmeyi ya da bir süredir kullanmadıklarınızı arşivlemeyi önerir. Tek tıkla birleştirin veya arşivleyin."
+    },
+    "organize": {
+      "title": "Çalışma alanınızı düzenleyin",
+      "description": "Yapay zekâ tüm gruplarınızı tek seferde inceler; birleştirme, yeniden adlandırma, arşivleme ve yeni bir sıralama önerir. İstemediğiniz değişikliklerin işaretini kaldırın, kalanları geri alınabilen tek bir adımda uygulayın."
     }
   }
 }

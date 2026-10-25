@@ -34,6 +34,7 @@
     "aiGrouping": "Automatyczne grupowanie kart przez AI",
     "aiNames": "Propozycje nazw grup od AI",
     "smartSessions": "Inteligentne sugestie sesji",
+    "aiOrganize": "Porządkowanie obszaru roboczego przez AI: łączenie, zmiana nazw, archiwizacja i zmiana kolejności grup",
     "tabPreview": "Podgląd kart z podsumowaniem AI",
     "aiCreditsMonthly": "{count, number} kredytów AI miesięcznie",
     "ownApiKey": "Używaj własnego dostawcy AI",

@@ -51,3 +51,4 @@
 - [Per-test hoisted mock state](learnings/vitest-hoisted-mock-state.md) — vary a hoisted vi.mock via a `vi.hoisted` object; `vi.doUnmock` drops the hoisted mock too
 - [Pro AI option switch + plan-change confirm](learnings/pro-ai-option-switch-and-plan-change-confirm.md) — fieldset/radio segmented control, stacked option panels, radius tokens (--radius 0), confirm-before-POST on shared planChangeTiming(), RTL ignore trap
 - [Mobile horizontal overflow](learnings/mobile-horizontal-overflow.md) — overflow-x clip (not hidden) keeps sticky navbar; fixed left+right banner stretches as a symptom; grid-cols-N is minmax(0,1fr); probe past the clip
+- [Pricing feature-list touchpoints](learnings/pricing-feature-list-touchpoints.md) — every copy of a plan feature line (shared, tierFeatures, pricing/featuresPage/faq JSON, extension f1..f3, store listing) and the tests pinning them

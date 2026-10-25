@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "AI-powered organization",
-    "description": "Let Claude analyze your tabs and make smart suggestions so you can focus on thinking, not filing.",
+    "description": "AI reads your tab titles and URLs and suggests how to group, name and tidy them, so you can focus on thinking, not filing.",
     "autoGrouping": {
       "title": "Auto-grouping",
       "description": "Open a mess of tabs, click one button. AI clusters them into logical groups based on topic, domain, and intent."
@@ -77,7 +77,11 @@
     },
     "sessionSuggestions": {
       "title": "Session suggestions",
-      "description": "AI analyzes your browsing patterns and suggests how to structure sessions for maximum productivity."
+      "description": "AI looks over your saved groups and suggests merging ones that overlap or archiving ones you haven't used in a while. Merge or archive with one click."
+    },
+    "organize": {
+      "title": "Organize your workspace",
+      "description": "AI reviews all your groups at once and proposes merges, renames, archives and a new order. Uncheck any change you don't want, then apply the rest in one step you can undo."
     }
   }
 }

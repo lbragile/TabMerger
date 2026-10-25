@@ -56,7 +56,8 @@ describe.each([
     const { FAQ } = await import('@/components/marketing/FAQ')
     render(<FAQ />)
     await userEvent.setup().click(screen.getByRole('button', { name: 'What does the AI do exactly?' }))
-    const answer = screen.getByText(/three AI features/)
+    const answer = screen.getByText(/five AI features/)
+    expect(answer.textContent).toMatch(/tab summaries \(.*session suggestions \(.*and Organize \(/)
     if (state === 'off') expect(answer.textContent).toMatch(/^Coming soon/)
     else if (state === 'ownKeyOnly') {
       expect(answer.textContent).toContain('For now, you handle setup: Pro AI runs on your own API key from Anthropic, OpenAI or Google')

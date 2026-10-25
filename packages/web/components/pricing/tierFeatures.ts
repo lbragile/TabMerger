@@ -23,6 +23,7 @@ interface FeatureLine {
     | 'aiGrouping'
     | 'aiNames'
     | 'smartSessions'
+    | 'aiOrganize'
     | 'tabPreview'
     | 'aiCreditsMonthly'
     | 'ownApiKey'
@@ -61,6 +62,7 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'aiGrouping' },
     { key: 'aiNames' },
     { key: 'smartSessions' },
+    { key: 'aiOrganize' },
     { key: 'tabPreview' },
     { key: 'aiCreditsMonthly', count: PRO_AI_MONTHLY_CREDITS },
     { key: 'chooseModel' },
@@ -76,6 +78,7 @@ export const PRO_AI_BYOK_FEATURE_LINES: readonly FeatureLine[] = [
   { key: 'aiGrouping' },
   { key: 'aiNames' },
   { key: 'smartSessions' },
+  { key: 'aiOrganize' },
   { key: 'tabPreview' },
   { key: 'ownApiKey' },
   { key: 'chooseModel' },

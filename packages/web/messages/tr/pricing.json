@@ -34,6 +34,7 @@
     "aiGrouping": "Sekmelerin yapay zekâ ile otomatik gruplanması",
     "aiNames": "Yapay zekâ ile grup adı önerileri",
     "smartSessions": "Akıllı oturum önerileri",
+    "aiOrganize": "Yapay zekâ ile çalışma alanı düzenleme: grupları birleştirme, yeniden adlandırma, arşivleme ve yeniden sıralama",
     "tabPreview": "Yapay zekâ özetli sekme önizlemesi",
     "aiCreditsMonthly": "Ayda {count, number} yapay zekâ kredisi",
     "ownApiKey": "Kendi yapay zekâ sağlayıcınızı kullanın",

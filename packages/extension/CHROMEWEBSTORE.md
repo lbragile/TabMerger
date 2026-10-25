@@ -698,7 +698,8 @@ Paste into the dashboard's test-instructions field for the v2 to v3 update:
 
 ### Known Issues / Limitations
 
-- Pro AI (AI grouping, smart naming, tab previews) is marked "coming soon" and disabled behind
+- Pro AI (AI grouping, smart naming, tab summaries, session suggestions, and Organize, which
+  proposes merges, renames, archives and a new group order to review and apply) is marked "coming soon" and disabled behind
   feature flags as of this writing (one for Pro AI where TabMerger handles setup, one for the own-key option) —
   do not describe it as available in store copy while both are off. See `CLAUDE.md`'s AI feature flag notes.
 - `externally_connectable` is scoped to the web app's sites (`VITE_WEB_APP_URL` plus

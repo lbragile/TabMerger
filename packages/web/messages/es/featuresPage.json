@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Organización con IA",
-    "description": "Deja que Claude analice tus pestañas y haga sugerencias inteligentes para que te concentres en pensar, no en archivar.",
+    "description": "La IA lee los títulos y las URL de tus pestañas y sugiere cómo agruparlas, nombrarlas y ordenarlas, para que te concentres en pensar, no en archivar.",
     "autoGrouping": {
       "title": "Agrupación automática",
       "description": "Abre un montón de pestañas y haz clic en un botón. La IA las agrupa en grupos lógicos según tema, dominio e intención."
@@ -77,7 +77,11 @@
     },
     "sessionSuggestions": {
       "title": "Sugerencias de sesión",
-      "description": "La IA analiza tus patrones de navegación y sugiere cómo estructurar las sesiones para máxima productividad."
+      "description": "La IA revisa tus grupos guardados y sugiere fusionar los que se solapan o archivar los que llevas tiempo sin usar. Fusiona o archiva con un clic."
+    },
+    "organize": {
+      "title": "Organiza tu espacio de trabajo",
+      "description": "La IA revisa todos tus grupos a la vez y propone fusiones, cambios de nombre, archivados y un nuevo orden. Desmarca los cambios que no quieras y aplica el resto en un solo paso que puedes deshacer."
     }
   }
 }
