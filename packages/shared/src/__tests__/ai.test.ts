@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
+  AI_CACHE_WRITE_MULTIPLIER,
+  AI_RESERVE_INPUT_MARGIN_PERCENT,
   AI_COST_SHARE_PERCENT,
   AI_ESTIMATE_EXAMPLES,
   AI_MODEL_IDS,
@@ -14,6 +16,7 @@ import {
   aiCallCostUsd,
   aiCallCredits,
   aiModelsForProvider,
+  aiReservationCredits,
   byokKeyProvider,
   creditsForPayment,
   estimateAiCostUsd,
@@ -130,6 +133,154 @@ describe('aiCallCredits', () => {
       // 50K input tokens stays under every long-context threshold.
       expect(aiCallCostUsd(model, 50_000, 0)).toBeCloseTo(AI_MODELS[model].inputCentsPerMTok / 100 / 20, 6);
       expect(aiCallCostUsd(model, 50_000, 0)).toBeCloseTo((aiCallCredits(model, 50_000, 0) * CREDIT_MICRO_USD) / 1e6, 3);
+    }
+  });
+});
+
+describe('prompt-cache pricing', () => {
+  const claudeModels = AI_MODEL_IDS.filter((id) => AI_MODELS[id].provider === 'anthropic');
+
+  it('has a cache-read price below the input price for every Claude model', () => {
+    for (const model of claudeModels) {
+      const info = AI_MODELS[model];
+      expect(info.cacheReadCentsPerMTok).toBeDefined();
+      expect(info.cacheReadCentsPerMTok!).toBeLessThan(info.inputCentsPerMTok);
+      if (info.longContext) expect(info.longContext.cacheReadCentsPerMTok!).toBeLessThan(info.longContext.inputCentsPerMTok);
+    }
+  });
+
+  it('prices cache reads at each model read rate (Opus 5.5 $0.20, Sonnet 5.5 $0.10, Haiku 5.5 $0.01 per MTok)', () => {
+    const read = (model: (typeof AI_MODEL_IDS)[number]) =>
+      aiCallCredits(model, { inputTokens: 0, cacheReadTokens: 1_000_000, outputTokens: 0 });
+    expect(read('claude-opus-5-5')).toBe(200);
+    expect(read('claude-sonnet-5-5')).toBe(100);
+    // Haiku 5.5 is priced per tier, so stay under 100K: 100,000 reads x $0.01/MTok = $0.001.
+    expect(aiCallCostUsd('claude-haiku-5-5', { inputTokens: 0, cacheReadTokens: 100_000, outputTokens: 0 })).toBeCloseTo(0.001, 12);
+  });
+
+  it('prices 5-minute writes at 1.25x and 1-hour writes at 2x the base input price', () => {
+    expect(AI_CACHE_WRITE_MULTIPLIER).toEqual({ ephemeral5m: 1.25, ephemeral1h: 2 });
+    const write = (model: (typeof AI_MODEL_IDS)[number], ttl: '5m' | '1h') =>
+      aiCallCredits(model, {
+        inputTokens: 0,
+        [ttl === '5m' ? 'cacheWrite5mTokens' : 'cacheWrite1hTokens']: 1_000_000,
+        outputTokens: 0,
+      });
+    expect(write('claude-opus-5-5', '5m')).toBe(5_000); // $5
+    expect(write('claude-opus-5-5', '1h')).toBe(8_000); // $8
+    expect(write('claude-sonnet-5-5', '5m')).toBe(2_500); // $2.50
+    // Haiku 5.5 under its 100K tier: 100,000 tokens at $0.125 and $0.20 per MTok.
+    const haikuWrite = (key: 'cacheWrite5mTokens' | 'cacheWrite1hTokens') =>
+      aiCallCostUsd('claude-haiku-5-5', { inputTokens: 0, [key]: 100_000, outputTokens: 0 });
+    expect(haikuWrite('cacheWrite5mTokens')).toBeCloseTo(0.0125, 12);
+    expect(haikuWrite('cacheWrite1hTokens')).toBeCloseTo(0.02, 12);
+  });
+
+  it('adds up base, write, read and output tokens', () => {
+    // Opus 5.5: 1,000 x $4 + 2,000 x $5 + 10,000 x $0.20 + 500 x $20 (per MTok) = $0.026.
+    expect(
+      aiCallCredits('claude-opus-5-5', {
+        inputTokens: 1_000,
+        cacheWrite5mTokens: 2_000,
+        cacheReadTokens: 10_000,
+        outputTokens: 500,
+      })
+    ).toBe(26);
+    expect(
+      aiCallCostUsd('claude-opus-5-5', { inputTokens: 1_000, cacheWrite5mTokens: 2_000, cacheReadTokens: 10_000, outputTokens: 500 })
+    ).toBeCloseTo(0.026, 9);
+  });
+
+  it('matches the (input, output) form when nothing is cached', () => {
+    for (const model of AI_MODEL_IDS) {
+      expect(aiCallCredits(model, { inputTokens: 18_300, outputTokens: 1_500 })).toBe(aiCallCredits(model, 18_300, 1_500));
+      expect(aiCallCostUsd(model, { inputTokens: 18_300, outputTokens: 1_500 })).toBe(aiCallCostUsd(model, 18_300, 1_500));
+    }
+  });
+
+  it('picks the Haiku 5.5 long-context tier from the total input, cache tokens included', () => {
+    // 100,000 read tokens alone stay in the base tier: 100,000 x $0.01/MTok = $0.001.
+    expect(aiCallCredits('claude-haiku-5-5', { inputTokens: 0, cacheReadTokens: 100_000, outputTokens: 0 })).toBe(1);
+    // One more uncached token crosses 100K: 1 x $0.50 + 100,000 x $0.05 (per MTok) = $0.0050005.
+    expect(aiCallCredits('claude-haiku-5-5', { inputTokens: 1, cacheReadTokens: 100_000, outputTokens: 0 })).toBe(6);
+  });
+
+  it('prices reads at the input rate on own-key models without a cache-read price', () => {
+    expect(AI_MODELS['gpt-6-luna'].cacheReadCentsPerMTok).toBeUndefined();
+    // 100,000 tokens (under its 272K tier) at the $0.10/MTok input price.
+    expect(aiCallCostUsd('gpt-6-luna', { inputTokens: 0, cacheReadTokens: 100_000, outputTokens: 0 })).toBeCloseTo(0.01, 12);
+  });
+
+  it('clamps negative and rounds up fractional token counts', () => {
+    expect(aiCallCredits('claude-opus-5-5', { inputTokens: -5, cacheReadTokens: -1, outputTokens: 0 })).toBe(0);
+    expect(aiCallCredits('claude-opus-5-5', { inputTokens: 0, cacheReadTokens: 0.2, outputTokens: 0 })).toBe(1);
+  });
+});
+
+describe('aiReservationCredits', () => {
+  it('prices the counted input plus a 2% margin as 5-minute cache writes', () => {
+    expect(AI_RESERVE_INPUT_MARGIN_PERCENT).toBe(2);
+    // (10,000 + 200) x $5 + 1,000 x $20 (per MTok) on Opus 5.5 = $0.071.
+    expect(aiReservationCredits('claude-opus-5-5', 10_000, 1_000)).toBe(71);
+    expect(aiReservationCredits('claude-opus-5-5', 10_000, 1_000)).toBe(
+      aiCallCredits('claude-opus-5-5', { inputTokens: 0, cacheWrite5mTokens: 10_200, outputTokens: 1_000 })
+    );
+    expect(aiReservationCredits('claude-opus-5-5', 0, 0)).toBe(0);
+    expect(aiReservationCredits('claude-opus-5-5', Number.NaN, 100)).toBeNaN();
+  });
+
+  it('covers a real total just over a long-context threshold when the count is at or just under it', () => {
+    const tiered = AI_MODEL_IDS.filter((id) => AI_MODELS[id].longContext);
+    expect(tiered).toEqual(expect.arrayContaining(['claude-haiku-5-5', 'gpt-6-luna', 'gpt-6.1-sol', 'gpt-6-astra']));
+    const maxOutput = 2_048;
+    for (const model of tiered) {
+      const threshold = AI_MODELS[model].longContext!.thresholdTokens;
+      for (const counted of [threshold - 1, threshold]) {
+        const reserved = aiReservationCredits(model, counted, maxOutput);
+        const real = threshold + 1; // billed at the long-context prices
+        const splits = [
+          { inputTokens: real },
+          { inputTokens: 0, cacheWrite5mTokens: real },
+          { inputTokens: 1_000, cacheWrite5mTokens: real - 51_000, cacheReadTokens: 50_000 },
+        ];
+        for (const split of splits) {
+          for (const outputTokens of [0, maxOutput]) {
+            expect(aiCallCredits(model, { ...split, outputTokens })).toBeLessThanOrEqual(reserved);
+          }
+        }
+      }
+    }
+    // The reported case: Haiku 5.5 counted at 100,000, billed at 100,001.
+    expect(aiReservationCredits('claude-haiku-5-5', 100_000, 1_100)).toBeGreaterThanOrEqual(
+      aiCallCredits('claude-haiku-5-5', { inputTokens: 100_001, outputTokens: 1_100 })
+    );
+  });
+
+  it('covers a real total up to the margin above the count', () => {
+    for (const model of AI_MODEL_IDS) {
+      for (const counted of [50, 1_000, 97_000, 99_000, 266_000, 270_000]) {
+        const reserved = aiReservationCredits(model, counted, 500);
+        const real = Math.floor(counted * 1.02);
+        expect(aiCallCredits(model, { inputTokens: 0, cacheWrite5mTokens: real, outputTokens: 500 })).toBeLessThanOrEqual(reserved);
+      }
+    }
+  });
+
+  it('is never less than the settled cost, however the input splits into base, write and read tokens', () => {
+    const claudeModels = AI_MODEL_IDS.filter((id) => AI_MODELS[id].provider === 'anthropic');
+    for (const model of claudeModels) {
+      for (const counted of [1, 600, 4_321, 99_999, 100_000, 100_001, 250_000]) {
+        const reserved = aiReservationCredits(model, counted, 2_048);
+        const step = Math.max(1, Math.floor(counted / 7));
+        for (let written = 0; written <= counted; written += step) {
+          for (let read = 0; read <= counted - written; read += step) {
+            const usage = { inputTokens: counted - written - read, cacheWrite5mTokens: written, cacheReadTokens: read };
+            for (const outputTokens of [0, 1, 2_048]) {
+              expect(aiCallCredits(model, { ...usage, outputTokens })).toBeLessThanOrEqual(reserved);
+            }
+          }
+        }
+      }
     }
   });
 });

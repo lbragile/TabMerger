@@ -185,14 +185,56 @@ function textOf(value: unknown): string {
   return JSON.stringify(value)
 }
 
+/** The system prompt's text, whether it is a string or text blocks (cache markers left out). */
+function systemTextOf(system: MessageCountTokensParams['system']): string {
+  if (typeof system === 'string') return system
+  return (system ?? []).map((block) => block.text).join('\n')
+}
+
 /** The prompt's size in tokens: system prompt, messages and the structured-output schema. */
 function promptTokens(params: MessageCountTokensParams): number {
   const parts = [
-    textOf(params.system),
+    systemTextOf(params.system),
     ...params.messages.map((m) => textOf(m.content)),
     textOf(params.output_config?.format),
   ]
   return estimateMockTokens(parts.join('\n'))
+}
+
+// --- Synthetic prompt caching ---------------------------------------------------------------
+
+/** The smallest prefix Claude 5.x models cache; a shorter marked prefix is simply not cached. */
+export const AI_MOCK_CACHE_MIN_TOKENS = 512
+
+/** How long a mock cache entry lives (the 5-minute ephemeral cache). */
+const MOCK_CACHE_TTL_MS = 5 * 60_000
+
+/** Prefix key -> expiry time, like a workspace's prompt cache. */
+const mockPromptCache = new Map<string, number>()
+
+/** Empties the mock prompt cache (tests). */
+export function clearAiMockPromptCache(): void {
+  mockPromptCache.clear()
+}
+
+/**
+ * The prompt-cache part of a mock reply's usage. When the system prompt carries a
+ * `cache_control` breakpoint and the prefix up to it (the output format and the system text) is
+ * at least {@link AI_MOCK_CACHE_MIN_TOKENS}, the first request for that model and prefix writes
+ * it and later ones within 5 minutes read it, as the real API reports.
+ */
+function mockCacheUsage(params: MessageCountTokensParams, total: number): { write: number; read: number } {
+  const marked = Array.isArray(params.system) && params.system.some((block) => block.cache_control)
+  if (!marked) return { write: 0, read: 0 }
+  const prefixText = [textOf(params.output_config?.format), systemTextOf(params.system)].join('\n')
+  const prefix = Math.min(total, estimateMockTokens(prefixText))
+  if (prefix < AI_MOCK_CACHE_MIN_TOKENS) return { write: 0, read: 0 }
+
+  const key = `${params.model}\n${prefixText}`
+  const now = Date.now()
+  const hit = (mockPromptCache.get(key) ?? 0) > now
+  mockPromptCache.set(key, now + MOCK_CACHE_TTL_MS)
+  return hit ? { write: 0, read: prefix } : { write: prefix, read: 0 }
 }
 
 /**
@@ -220,8 +262,9 @@ async function applyScenario(makeError: (kind: AiMockErrorKind) => Error, skip?:
 
 /**
  * Mock `messages.create`: the task's mock answer as the text block, `end_turn`, and usage
- * estimated from the prompt and the answer (capped at `max_tokens`), so managed calls settle
- * to a realistic cost. Error scenarios throw Anthropic-shaped errors; managed `over_quota` is
+ * estimated from the prompt and the answer (capped at `max_tokens`), split into uncached input,
+ * cache writes and cache reads like the real API ({@link mockCacheUsage}), so managed calls
+ * settle to a realistic cost. Error scenarios throw Anthropic-shaped errors; managed `over_quota` is
  * handled at the count step, so a call that still got its reservation is answered normally.
  */
 export async function mockAnthropicMessage(
@@ -233,15 +276,17 @@ export async function mockAnthropicMessage(
   await applyScenario(anthropicMockError, mode === 'managed' ? 'over_quota' : undefined)
 
   const text = mockReplyText(task)
+  const total = promptTokens(request)
+  const cache = mockCacheUsage(request, total)
   return {
     content: [{ type: 'text', text, citations: null }],
     stop_reason: 'end_turn',
     usage: {
-      input_tokens: promptTokens(request),
+      input_tokens: total - cache.write - cache.read,
       output_tokens: Math.min(request.max_tokens, estimateMockTokens(text)),
-      cache_creation: null,
-      cache_creation_input_tokens: null,
-      cache_read_input_tokens: null,
+      cache_creation: { ephemeral_5m_input_tokens: cache.write, ephemeral_1h_input_tokens: 0 },
+      cache_creation_input_tokens: cache.write,
+      cache_read_input_tokens: cache.read,
       inference_geo: null,
       output_tokens_details: null,
       server_tool_use: null,

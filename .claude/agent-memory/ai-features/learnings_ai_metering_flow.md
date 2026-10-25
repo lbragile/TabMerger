@@ -7,7 +7,7 @@ metadata:
 
 Every `/api/ai/*` model call goes through `runAiTask` in `packages/web/lib/ai.ts`; the route-side steps (auth, plan, BYOK key, model allowlist, client + meter) are in `lib/ai-route.ts`.
 
-Managed flow: `messages.countTokens` with the exact create params minus `max_tokens` -> `reserveCredits` (RPC `ai_reserve_credits`, amount = `aiCallCredits(model, input, max_tokens)`) -> `messages.create` -> `settleCredits` (RPC `ai_settle_credits`, delta = actual − reserved, actual from `usage` input + cache tokens + output incl. thinking).
+Managed flow: `messages.countTokens` with the exact create params minus `max_tokens` -> `reserveCredits` (RPC `ai_reserve_credits`, amount = `aiReservationCredits(model, input, max_tokens)`, all input priced as a 5m cache write) -> `messages.create` -> `settleCredits` (RPC `ai_settle_credits`, delta = actual − reserved, actual = `usageCredits(model, usage)`: base input, cache writes and cache reads each at their own price, plus output incl. thinking). See [[prompt-caching]].
 - The month is fixed once per request in the meter (`currentMonth()` in `resolveAiContext`), so a call that crosses midnight UTC at a month's end settles the row it reserved in.
 - Thrown API error (no usage) -> settle `-reserved` (release). Refusal / `max_tokens` / unparseable output -> charged, then an error (`ai_refused` 422, `ai_failed` 502).
 - Settle throws -> logged, reservation kept. Settle returns `null` (no row) -> nothing to settle, not an error.

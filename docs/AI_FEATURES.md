@@ -110,6 +110,57 @@ Run the `encrypted-column-auditor` agent before merging any new AI route.
 
 ---
 
+## Prompt caching
+
+Every task sends its constant instructions as the system prompt and the request's tab data as one
+`<tab_data>` user turn (`lib/ai.ts`). Only the instructions are the same from one request to the
+next, so they are the only part worth caching. No request data ever goes into the system prompt.
+
+| Provider | What happens | Why |
+| --- | --- | --- |
+| Anthropic (managed and own key) | `buildAiRequest` puts an explicit `cache_control: { type: 'ephemeral' }` (5-minute) breakpoint on the system block, in both the `count_tokens` and the `create` params. The data turn has no breakpoint, and top-level automatic caching is not used. | The cached prefix (output format, thinking/effort settings, instructions) is identical for every request of a task on a model. Managed traffic shares one workspace, so it is reused across users. Own-key traffic is reused within the customer's own workspace, for example during bursts of tab-summary hovers. Automatic caching would mark the last block, the unique data turn, which costs the write premium and never gets a read. A prefix under the model's minimum (512 tokens on the Claude 5.x models) is just not cached: no error and no write charge. |
+| OpenAI (own key) | Caching is turned off: `prompt_cache_options: { mode: 'explicit' }` with no breakpoints. No `prompt_cache_key` is sent. | On the GPT-6 models a cache write costs 1.25x input. The default implicit breakpoint sits at the end of the last user message, so any request of 1,024+ tokens would pay a 1.25x write on its unique tab data. The instructions are far below OpenAI's 1,024-token minimum, and hidden content such as the schema doesn't count toward it. Revisit if a task's instructions ever pass 1,024 tokens: a breakpoint after them would then pay off. That needs the instructions moved into a developer message, because top-level `instructions` can't carry a breakpoint. |
+| Google (own key) | No request change. Gemini's implicit caching is on by default. Explicit `cachedContents` is not used. | Implicit caching needs no setup, and Google passes on the savings when a request hits the cache. Explicit caches need per-key cache resources and a storage fee. They also need a 4,096-token minimum on Gemini 3.8 Flash and 4 Argon, and Gemini 4 Argon doesn't support them at all. |
+
+Nobody has to configure anything for their own key. An Anthropic key gets the same breakpoint in
+the customer's own workspace, and OpenAI and Gemini keys need no setup.
+
+**How managed metering prices cache tokens.** `usageCredits` in `lib/ai.ts` reads `response.usage`:
+
+- `input_tokens` are charged at the base input price.
+- `cache_creation_input_tokens` are charged at the write price: 1.25x base for 5-minute writes, 2x for 1-hour writes. That field is the authoritative count of written tokens. `usage.cache_creation` only says how many of them were 1-hour writes (clamped to between 0 and the written count), and the rest are 5-minute writes. TabMerger only requests 5-minute writes, so a response reporting 1-hour writes is logged.
+- `cache_read_input_tokens` are charged at the model's cache-read price.
+- Output, thinking included, is charged at the output price.
+
+The cache-read prices are in `AI_MODELS` (`cacheReadCentsPerMTok`), and the write multipliers are in
+`AI_CACHE_WRITE_MULTIPLIER` (`@tabmerger/shared`). Cache-read prices:
+
+- Haiku 5.5: $0.01/MTok, or $0.05 for prompts over 100K tokens.
+- Sonnet 5.5: $0.10/MTok.
+- Opus 5.5: $0.20/MTok.
+
+Source: <https://platform.claude.com/docs/en/about-claude/pricing>, checked 2026-10-25.
+
+Haiku 5.5's long-context tier is still chosen from the total input, cache tokens included.
+
+The reservation (`aiReservationCredits`) takes the counted input plus a 2% margin
+(`AI_RESERVE_INPUT_MARGIN_PERCENT`, since `count_tokens` is an estimate) and prices all of it as
+5-minute writes, the dearest way input can be billed. It picks the price tier from that padded
+total, so a count within about 2% of a long-context threshold is already reserved at the
+long-context prices. This keeps the reservation an upper bound, and settling only refunds, as long
+as the real input stays within the margin.
+
+Settling has these safeguards:
+
+- A settle that charges more than the reservation still goes through, but is logged (model id only).
+- Usage that isn't a finite number is never settled: the reservation stays as the charge.
+- A count that isn't finite refuses the call (500 `ai_failed`) before anything is reserved.
+- A response whose `inference_geo` isn't `global`, or whose `service_tier` isn't `standard`, is logged as a warning, because the credit prices assume global standard inference. With
+`AI_MOCK=true`, the mock reports cache writes and reads the same way, but only for a marked prefix
+of at least 512 estimated tokens.
+
+---
+
 ## Coming-soon flag
 
 | Package | Variable | Read in |

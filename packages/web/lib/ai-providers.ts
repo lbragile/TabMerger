@@ -120,9 +120,30 @@ async function jsonOf(provider: AiProvider, res: Response): Promise<Record<strin
 // --- OpenAI (Responses API) ---------------------------------------------------------------
 
 /**
+ * OpenAI prompt caching is turned off for these requests.
+ *
+ * Why: on the GPT-6 models a cache write costs 1.25x input (reads 0.1x, 0.05x on GPT-6.1 Sol),
+ * and the default implicit breakpoint sits at the end of the last user message, which is our
+ * unique `<tab_data>` turn. Every request of 1,024+ tokens (large group-tabs and organize runs)
+ * would pay a 1.25x write on its tab data, which no later request reads. `mode: 'explicit'` with
+ * no breakpoints means no cache writes and no caching. `prompt_cache_key` is not sent: on these
+ * models it only separates cache accounting and doesn't affect routing.
+ *
+ * When to revisit: the only prefix shared between requests, the instructions, is far below
+ * OpenAI's 1,024-token minimum (hidden system content, such as the output schema, doesn't
+ * count). If a task's instructions ever pass 1,024 tokens, a breakpoint after them would pay
+ * off. Top-level `instructions` can't carry one, so they would move into a developer message
+ * whose `input_text` block has `prompt_cache_breakpoint: { mode: 'explicit' }`.
+ * Sources (checked 2026-10-25): https://developers.openai.com/api/docs/guides/prompt-caching and
+ * https://developers.openai.com/api/reference/resources/responses/methods/create
+ */
+export const OPENAI_PROMPT_CACHE_OPTIONS = { mode: 'explicit' } as const
+
+/**
  * One OpenAI Responses API call with Structured Outputs (`text.format` json_schema, strict),
- * `store: false` so OpenAI keeps no conversation state, and the lowest reasoning effort the
- * model accepts (`none` on GPT-6 Luna, `low` on GPT-6.1 Sol and GPT-6 Astra).
+ * `store: false` so OpenAI keeps no conversation state, the lowest reasoning effort the model
+ * accepts (`none` on GPT-6 Luna, `low` on GPT-6.1 Sol and GPT-6 Astra), and prompt caching off
+ * ({@link OPENAI_PROMPT_CACHE_OPTIONS}).
  */
 export async function callOpenAi(apiKey: string, prompt: ProviderPrompt): Promise<ProviderReply> {
   const res = await send(
@@ -139,6 +160,7 @@ export async function callOpenAi(apiKey: string, prompt: ProviderPrompt): Promis
         reasoning: { effort: prompt.effort },
         max_output_tokens: prompt.maxOutputTokens,
         store: false,
+        prompt_cache_options: OPENAI_PROMPT_CACHE_OPTIONS,
       }),
     },
     GENERATE_TIMEOUT_MS
@@ -182,6 +204,12 @@ const GOOGLE_BLOCKED_FINISH = new Set([
  * One Gemini `generateContent` call with structured output (`responseMimeType:
  * application/json` + `responseJsonSchema`) and the lowest thinking level the model accepts
  * (`minimal` on Flash-Lite, `low` on 3.8 Flash and 4 Argon). The key goes in `x-goog-api-key`.
+ *
+ * Gemini's implicit caching is on by default and needs no request change (Google passes on
+ * the savings when a request hits the cache); explicit `cachedContents` is not used, since it needs
+ * per-key cache resources, a storage fee, and a prefix of at least 4,096 tokens on 3.8 Flash and
+ * 4 Argon (and Gemini 4 Argon doesn't support it).
+ * Source: https://ai.google.dev/gemini-api/docs/generate-content/caching (checked 2026-10-25).
  */
 export async function callGoogle(apiKey: string, prompt: ProviderPrompt): Promise<ProviderReply> {
   const res = await send(

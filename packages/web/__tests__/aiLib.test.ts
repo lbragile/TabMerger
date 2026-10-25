@@ -5,9 +5,10 @@
  * `ai-metering.test.ts`.
  */
 import { describe, it, expect, vi } from 'vitest'
-import { DEFAULT_GROUP_COLOR, PRESET_COLORS } from '@tabmerger/shared'
+import { AI_MODELS, AI_MODEL_IDS, DEFAULT_GROUP_COLOR, PRESET_COLORS, aiCallCredits } from '@tabmerger/shared'
 import {
   AiRouteError,
+  buildAiRequest,
   groupTabsTask,
   mapAnthropicError,
   nameGroupTask,
@@ -16,6 +17,9 @@ import {
   sanitizeOrganizeProposal,
   suggestSessionsTask,
   tabSummaryTask,
+  systemPromptFor,
+  usageCredits,
+  type AiTask,
   type AnthropicClient,
   type OrganizePromptGroup,
 } from '@/lib/ai'
@@ -341,5 +345,157 @@ describe('runAiTask response handling (unmetered)', () => {
     const client = clientReturning({ stop_reason: 'end_turn', usage, content: [{ type: 'text', text: '{"name":"X"}' }] })
     await runAiTask(nameGroupTask(TABS), ctx(client))
     expect(client.messages.countTokens).not.toHaveBeenCalled()
+  })
+})
+
+describe('prompt caching in buildAiRequest', () => {
+  const claudeModels = AI_MODEL_IDS.filter((id) => AI_MODELS[id].provider === 'anthropic')
+  const otherTabs = [
+    { id: 7, title: 'Mail', url: 'https://mail.example/inbox' },
+    { id: 8, title: 'Calendar', url: 'https://cal.example/' },
+  ]
+  const groups = (tabs: typeof TABS): OrganizePromptGroup[] => [
+    { id: 'now', name: 'Now Open', permanent: true, tabs },
+    { id: 'g1', name: 'Work', permanent: false, tabs },
+  ]
+  /** Each task built over two different inputs. */
+  const taskPairs: [string, AiTask<unknown>, AiTask<unknown>][] = [
+    ['groupTabs', groupTabsTask(TABS), groupTabsTask(otherTabs)],
+    ['nameGroup', nameGroupTask(TABS), nameGroupTask(otherTabs)],
+    ['tabSummary', tabSummaryTask(TABS[0]), tabSummaryTask(otherTabs[0])],
+    [
+      'suggestSessions',
+      suggestSessionsTask([{ id: 'a', name: 'Docs', tabs: TABS }]),
+      suggestSessionsTask([{ id: 'b', name: 'Mail', tabs: otherTabs }, { id: 'c', name: 'Cal', tabs: otherTabs }]),
+    ],
+    ['organize', organizeTask(groups(TABS)), organizeTask(groups(otherTabs))],
+  ]
+
+  it.each(taskPairs)('%s: the system block carries the only cache breakpoint, in count and create', (_name, task) => {
+    for (const model of claudeModels) {
+      const { count, create } = buildAiRequest(task, model)
+      for (const params of [count, create]) {
+        expect(params.system).toEqual([{ type: 'text', text: systemPromptFor(task), cache_control: { type: 'ephemeral' } }])
+        // The per-request data turn is a plain string, so it can't carry a breakpoint.
+        expect(params.messages).toHaveLength(1)
+        expect(typeof params.messages[0].content).toBe('string')
+        expect(params).not.toHaveProperty('cache_control')
+      }
+    }
+  })
+
+  it.each(taskPairs)('%s: the cached prefix is the same whatever the request data', (_name, a, b) => {
+    for (const model of claudeModels) {
+      const first = buildAiRequest(a, model).count
+      const second = buildAiRequest(b, model).count
+      expect(first.system).toEqual(second.system)
+      expect(first.output_config).toEqual(second.output_config)
+      expect(first.thinking).toEqual(second.thinking)
+      expect(first.messages).not.toEqual(second.messages)
+    }
+  })
+})
+
+describe('usageCredits', () => {
+  it('prices base input, 5-minute and 1-hour writes, reads and output separately', () => {
+    const usage = {
+      input_tokens: 1_000,
+      cache_creation_input_tokens: 19_000,
+      cache_creation: { ephemeral_5m_input_tokens: 15_000, ephemeral_1h_input_tokens: 4_000 },
+      cache_read_input_tokens: 30_000,
+      output_tokens: 20,
+    }
+    const expected = aiCallCredits('claude-opus-5-5', {
+      inputTokens: 1_000,
+      cacheWrite5mTokens: 15_000,
+      cacheWrite1hTokens: 4_000,
+      cacheReadTokens: 30_000,
+      outputTokens: 20,
+    })
+    // 1,000 x $4 + 15,000 x $5 + 4,000 x $8 + 30,000 x $0.20 + 20 x $20 (per MTok) = $0.1174.
+    expect(expected).toBe(118)
+    expect(usageCredits('claude-opus-5-5', usage)).toBe(expected)
+  })
+
+  it('treats written tokens without a TTL split as 5-minute writes', () => {
+    const usage = { input_tokens: 10, cache_creation_input_tokens: 50_000, cache_read_input_tokens: 0, output_tokens: 0 }
+    expect(usageCredits('claude-sonnet-5-5', usage)).toBe(
+      aiCallCredits('claude-sonnet-5-5', { inputTokens: 10, cacheWrite5mTokens: 50_000, outputTokens: 0 })
+    )
+    // A null split (the SDK's shape when nothing was written) is the same.
+    expect(usageCredits('claude-sonnet-5-5', { ...usage, cache_creation: null })).toBe(usageCredits('claude-sonnet-5-5', usage))
+  })
+
+  it('never prices fewer write tokens than cache_creation_input_tokens reports', () => {
+    const usage = {
+      input_tokens: 0,
+      cache_creation_input_tokens: 40_000,
+      cache_creation: { ephemeral_5m_input_tokens: 10_000, ephemeral_1h_input_tokens: 0 },
+      cache_read_input_tokens: 0,
+      output_tokens: 0,
+    }
+    expect(usageCredits('claude-opus-5-5', usage)).toBe(
+      aiCallCredits('claude-opus-5-5', { inputTokens: 0, cacheWrite5mTokens: 40_000, outputTokens: 0 })
+    )
+  })
+
+  it('treats cache_creation_input_tokens as authoritative when the split adds up to more', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const usage = {
+      input_tokens: 0,
+      cache_creation_input_tokens: 100,
+      cache_creation: { ephemeral_5m_input_tokens: 100, ephemeral_1h_input_tokens: 100 },
+      cache_read_input_tokens: 0,
+      output_tokens: 0,
+    }
+    // Billed as 100 written tokens: 1h = min(100, 100), 5m = 100 - 100.
+    expect(usageCredits('claude-opus-5-5', usage)).toBe(
+      aiCallCredits('claude-opus-5-5', { inputTokens: 0, cacheWrite1hTokens: 100, outputTokens: 0 })
+    )
+    // With more written tokens, the rest of them are 5-minute writes.
+    expect(usageCredits('claude-opus-5-5', { ...usage, cache_creation_input_tokens: 1_000_000 })).toBe(
+      aiCallCredits('claude-opus-5-5', { inputTokens: 0, cacheWrite5mTokens: 999_900, cacheWrite1hTokens: 100, outputTokens: 0 })
+    )
+    // A negative 1h count is clamped to 0.
+    expect(
+      usageCredits('claude-opus-5-5', { ...usage, cache_creation: { ephemeral_5m_input_tokens: 0, ephemeral_1h_input_tokens: -5 } })
+    ).toBe(aiCallCredits('claude-opus-5-5', { inputTokens: 0, cacheWrite5mTokens: 100, outputTokens: 0 }))
+    error.mockRestore()
+  })
+
+  it('adds the split up when cache_creation_input_tokens is missing, and logs 1-hour writes', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const usage = {
+      input_tokens: 0,
+      cache_creation_input_tokens: null,
+      cache_creation: { ephemeral_5m_input_tokens: 30_000, ephemeral_1h_input_tokens: 10_000 },
+      cache_read_input_tokens: 0,
+      output_tokens: 0,
+    }
+    expect(usageCredits('claude-opus-5-5', usage)).toBe(
+      aiCallCredits('claude-opus-5-5', { inputTokens: 0, cacheWrite5mTokens: 30_000, cacheWrite1hTokens: 10_000, outputTokens: 0 })
+    )
+    expect(error).toHaveBeenCalledWith('AI usage reported 1-hour cache writes; reservations assume 5-minute writes:', {
+      model: 'claude-opus-5-5',
+    })
+    error.mockRestore()
+  })
+
+  it('is not finite for non-finite usage, so settling can refuse it', () => {
+    expect(usageCredits('claude-opus-5-5', { input_tokens: Number.NaN, output_tokens: 1 })).toBeNaN()
+    expect(Number.isFinite(usageCredits('claude-opus-5-5', { input_tokens: 1, output_tokens: Number.POSITIVE_INFINITY }))).toBe(
+      false
+    )
+  })
+
+  it('reads Haiku 5.5 cache hits at $0.01 and Sonnet 5.5 at $0.10 per MTok', () => {
+    const reads = { input_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 90_000, output_tokens: 0 }
+    expect(usageCredits('claude-sonnet-5-5', reads)).toBe(9) // $0.009
+    expect(usageCredits('claude-haiku-5-5', reads)).toBe(1) // $0.0009, rounded up to 1 credit
+  })
+
+  it('is 0 for missing usage', () => {
+    expect(usageCredits('claude-opus-5-5', undefined)).toBe(0)
+    expect(usageCredits('claude-opus-5-5', null)).toBe(0)
   })
 })

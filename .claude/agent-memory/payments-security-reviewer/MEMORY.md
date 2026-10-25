@@ -9,3 +9,4 @@
 - [Pre-checkout Stripe guard review method](learnings_pre_checkout_stripe_guard_review_method.md) — ask-Stripe-before-selling: input fail-closed, resource_missing scope, expire-pass races, upward-write gates
 - [Analytics vs privacy page](learnings_analytics_privacy_crosscheck.md) — cross-check GA4/PostHog identifiers sent from payments code against the privacy page wording
 - [Refund after paid call](learnings_refund_after_paid_call_review_method.md) — credit refund audit (bounded? exact charge? once-flag?) + Workflow DevKit endpoint exposure, Vercel vs local world
+- [Reserve/settle bound](learnings_reserve_settle_bound_review_method.md) — does the AI reservation bound settle? split vs total drift, tier thresholds, uncapped positive deltas, NaN path

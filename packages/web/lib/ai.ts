@@ -11,6 +11,7 @@ import {
   AI_SUGGESTION_KINDS,
   PRESET_COLORS,
   aiCallCredits,
+  aiReservationCredits,
   isAiSuggestionKind,
   type AiAction,
   type AiErrorCode,
@@ -45,14 +46,21 @@ import type { OrganizeAction } from '@tabmerger/shared'
  * budget, and a parser that cleans the model's answer. {@link runAiTask} runs one task:
  *
  * 1. Managed mode only: count the input tokens (`messages.countTokens`, free), reserve the
- *    worst-case cost (`aiCallCredits(model, input, max_tokens)`) atomically, or refuse with
- *    429 `ai_quota_exceeded` without calling the model.
+ *    worst-case cost (`aiReservationCredits(model, input, max_tokens)`: all input priced as a
+ *    cache write) atomically, or refuse with 429 `ai_quota_exceeded` without calling the model.
  * 2. Call the model with the per-model settings in {@link MODEL_REQUEST_SETTINGS}.
- * 3. Managed only: settle the reservation to the real cost from `response.usage` (input +
- *    output, thinking included). A call that failed without usage releases the reservation; a
- *    settle that fails keeps it (we may over-charge slightly, never under-charge).
+ * 3. Managed only: settle the reservation to the real cost from `response.usage` (base input,
+ *    cache writes and cache reads each at their own price, plus output with thinking). A call
+ *    that failed without usage releases the reservation; a settle that fails keeps it (we may
+ *    over-charge slightly, never under-charge).
  * 4. Refusals and truncated output are errors (their usage is still charged); otherwise the
  *    answer is parsed and cleaned.
+ *
+ * Prompt caching: the Claude request marks the system prompt (the task's constant instructions)
+ * with an ephemeral `cache_control` breakpoint, so requests for the same task and model can read
+ * it from the cache. The per-request `<tab_data>` turn is never marked. A prefix shorter than the
+ * model's minimum (512 tokens on the 5.x models) is simply not cached, at no extra cost. OpenAI
+ * requests turn caching off (see `callOpenAi`); Gemini's implicit caching needs no request change.
  *
  * BYOK requests run the same task on the key's provider, with a client or request built from the
  * customer's key for that request only, and no metering (so no token counting). The prompt
@@ -641,7 +649,12 @@ export interface AiTaskResult<T> {
   remaining: number | null
 }
 
-/** The system prompt every provider gets: the task's instructions plus the untrusted-data rule. */
+/**
+ * The system prompt every provider gets: the task's instructions plus the untrusted-data rule.
+ * Both are constants, so the prompt is identical for every request of a task (across users),
+ * which is what lets Claude cache it. Never interpolate request data (dates, ids, counts, names)
+ * here: it belongs in the `<tab_data>` turn.
+ */
 export function systemPromptFor(task: AiTask<unknown>): string {
   return `${task.system}\n\n${SYSTEM_DATA_RULE}`
 }
@@ -651,12 +664,21 @@ export function maxOutputTokensFor(task: AiTask<unknown>, model: AiModelId): num
   return task.answerTokens + MODEL_REQUEST_SETTINGS[model].thinkingHeadroomTokens
 }
 
-/** The Anthropic request for a task on a model: the count-tokens params and the create params. */
+/**
+ * The Anthropic request for a task on a model: the count-tokens params and the create params.
+ *
+ * The system prompt is one text block with an explicit 5-minute `cache_control` breakpoint, so
+ * the prefix up to it (the structured-output format, thinking and effort settings, and the
+ * instructions) is written once and read by later requests for the same task and model. The
+ * data turn carries no breakpoint: it is unique per request, and caching it would only add the
+ * write premium. (Top-level automatic caching is not used for that reason: it marks the last
+ * block, which is the data turn.)
+ */
 export function buildAiRequest(task: AiTask<unknown>, model: AiModelId) {
   const settings = MODEL_REQUEST_SETTINGS[model]
   const count: MessageCountTokensParams = {
     model,
-    system: systemPromptFor(task),
+    system: [{ type: 'text', text: systemPromptFor(task), cache_control: { type: 'ephemeral' } }],
     messages: [{ role: 'user', content: buildUntrustedDataTurn(task.data) }],
     // Every Claude model's setting is `low` (see MODEL_REQUEST_SETTINGS).
     output_config: { effort: settings.effort as 'low', format: { type: 'json_schema', schema: task.schema } },
@@ -673,14 +695,46 @@ export function buildAiRequest(task: AiTask<unknown>, model: AiModelId) {
 /** The parts of a model response that {@link callAnthropic} reads (a mock reply has only these). */
 type ModelMessage = Pick<Message, 'content' | 'stop_reason' | 'usage'>
 
-function usageCredits(model: AiModelId, message: ModelMessage): number {
-  const u = message.usage
-  const input = (u?.input_tokens ?? 0) + (u?.cache_creation_input_tokens ?? 0) + (u?.cache_read_input_tokens ?? 0)
-  return aiCallCredits(model, input, u?.output_tokens ?? 0)
+/**
+ * Credits a Claude response's usage costs: `input_tokens` at the base input price, cache writes
+ * at the write price, cache reads at the model's read price, and output (thinking included). The
+ * long-context tier is chosen from the total input.
+ *
+ * `cache_creation_input_tokens` is the authoritative number of written tokens. The
+ * `cache_creation` split only says how many of them were 1-hour writes (clamped to 0…written);
+ * the rest are 5-minute writes. TabMerger only asks for 5-minute writes and reserves for them, so
+ * any 1-hour write is logged (it can make the call cost more than its reservation).
+ * Non-finite usage gives `NaN`, which {@link settle} refuses.
+ */
+export function usageCredits(model: AiModelId, usage: Partial<ModelMessage['usage']> | null | undefined): number {
+  const split = usage?.cache_creation
+  const written = Math.max(
+    0,
+    usage?.cache_creation_input_tokens ?? (split?.ephemeral_5m_input_tokens ?? 0) + (split?.ephemeral_1h_input_tokens ?? 0)
+  )
+  const write1h = Math.min(Math.max(split?.ephemeral_1h_input_tokens ?? 0, 0), written)
+  const write5m = written - write1h
+  if (write1h > 0) {
+    console.error('AI usage reported 1-hour cache writes; reservations assume 5-minute writes:', { model })
+  }
+  return aiCallCredits(model, {
+    inputTokens: usage?.input_tokens ?? 0,
+    cacheWrite5mTokens: write5m,
+    cacheWrite1hTokens: write1h,
+    cacheReadTokens: usage?.cache_read_input_tokens ?? 0,
+    outputTokens: usage?.output_tokens ?? 0,
+  })
 }
 
-/** Settles a reservation; on failure logs and returns `undefined` so the reservation stays. */
+/**
+ * Settles a reservation; on failure logs and returns `undefined` so the reservation stays. A
+ * non-finite delta (unreadable usage) is never sent: the reservation stays as the charge.
+ */
 async function settle(meter: AiMeter, delta: number): Promise<number | null | undefined> {
+  if (!Number.isFinite(delta)) {
+    console.error('AI credit settle skipped: the usage was not a finite number; keeping the reservation')
+    return undefined
+  }
   if (delta === 0) return undefined
   try {
     return await settleCredits(meter.supabase, meter.userId, meter.month, delta)
@@ -708,6 +762,22 @@ export async function runAiTask<T>(task: AiTask<T>, ctx: AiCallContext): Promise
   return { result: task.parse(output), remaining }
 }
 
+/**
+ * Logs a managed response whose pricing differs from what the credit prices assume (global
+ * inference at the standard tier). Only the model and the two settings are logged.
+ */
+function warnOnUnpricedUsage(model: AiModelId, usage: Partial<ModelMessage['usage']> | null | undefined): void {
+  const geo = usage?.inference_geo ?? null
+  const tier = usage?.service_tier ?? null
+  if ((geo !== null && geo !== 'global') || (tier !== null && tier !== 'standard')) {
+    console.warn('AI usage is priced as global standard, but the response reports:', {
+      model,
+      inferenceGeo: geo,
+      serviceTier: tier,
+    })
+  }
+}
+
 /** A model's answer text, how the turn ended, and the managed balance when metered. */
 type CallOutcome = ProviderReply & { remaining: number | null }
 
@@ -733,7 +803,14 @@ async function callAnthropic(
     } catch (err) {
       throw mapAnthropicError(err, mode)
     }
-    reserved = aiCallCredits(model, inputTokens, request.create.max_tokens)
+    // Worst case: every counted token (plus a margin) billed as a cache write. Settling refunds
+    // the difference.
+    reserved = aiReservationCredits(model, inputTokens, request.create.max_tokens)
+    if (!Number.isFinite(reserved)) {
+      // An unreadable count must never reach the reservation: refuse without calling the model.
+      console.error('AI token count was not a finite number; refusing the call:', { model })
+      throw new AiRouteError(500, AI_ERROR_CODES.failed)
+    }
     const reservation = await reserveCredits(meter.supabase, meter.userId, meter.month, reserved)
     if (!reservation.allowed) {
       throw new AiRouteError(
@@ -762,7 +839,13 @@ async function callAnthropic(
   }
 
   if (meter) {
-    const used = await settle(meter, usageCredits(model, message) - reserved)
+    warnOnUnpricedUsage(model, message.usage)
+    const delta = usageCredits(model, message.usage) - reserved
+    if (delta > 0) {
+      // The reservation is meant to be an upper bound; charge the difference, but say so.
+      console.error('AI call cost more than its reservation; settling the difference:', { model })
+    }
+    const used = await settle(meter, delta)
     if (used !== undefined) remaining = used === null ? cap : Math.max(0, cap - used)
   }
 

@@ -147,6 +147,13 @@ describe('own OpenAI key', () => {
     expect(body.instructions).toContain('<tab_data>')
     expect(body.input[0].content.startsWith(UNTRUSTED_DATA_NOTICE)).toBe(true)
     expect(body).not.toHaveProperty('temperature')
+    // Prompt caching off: explicit mode with no breakpoints writes nothing (the default implicit
+    // breakpoint would add the 1.25x write premium on the unique data turn), and no cache key
+    // or extended retention is sent.
+    expect(body.prompt_cache_options).toEqual({ mode: 'explicit' })
+    expect(JSON.stringify(body)).not.toContain('prompt_cache_breakpoint')
+    expect(body).not.toHaveProperty('prompt_cache_key')
+    expect(body).not.toHaveProperty('prompt_cache_retention')
 
     // Never metered, never on Anthropic.
     expect(mockRpc).not.toHaveBeenCalled()
@@ -243,6 +250,8 @@ describe('own Google key', () => {
     })
     expect(body.generationConfig.responseJsonSchema.additionalProperties).toBe(false)
     expect(body.systemInstruction.parts[0].text).toContain('<tab_data>')
+    // Implicit caching only: no explicit cached content resource.
+    expect(body).not.toHaveProperty('cachedContent')
     expect(body.contents[0].parts[0].text.startsWith(UNTRUSTED_DATA_NOTICE)).toBe(true)
     expect(mockRpc).not.toHaveBeenCalled()
   })

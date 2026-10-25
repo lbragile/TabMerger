@@ -129,7 +129,20 @@ export type AiModelId = (typeof AI_MODEL_IDS)[number];
 interface TokenPrices {
   inputCentsPerMTok: number;
   outputCentsPerMTok: number;
+  /**
+   * Prompt-cache hits (and refreshes). Set on the Claude models, whose cache use is metered.
+   * Own-key models leave it out: their usage is never metered, and an estimate without it prices
+   * cached input at the full input rate (never lower than the real bill).
+   */
+  cacheReadCentsPerMTok?: number;
 }
+
+/**
+ * What a Claude prompt-cache write costs, as a multiple of the base input price: 1.25x for the
+ * default 5-minute cache, 2x for the 1-hour cache (TabMerger only writes 5-minute entries).
+ * Source: https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-10-25).
+ */
+export const AI_CACHE_WRITE_MULTIPLIER = { ephemeral5m: 1.25, ephemeral1h: 2 } as const;
 
 export interface AiModelInfo extends TokenPrices {
   id: AiModelId;
@@ -149,6 +162,12 @@ export interface AiModelInfo extends TokenPrices {
  * Every model a request can name, with its list prices (checked 2026-10-22). OpenAI and Google
  * models are own-key only, so their prices only feed the dollar estimates in Settings; where a
  * price rise is already announced, the higher price is used so estimates don't read low.
+ *
+ * Claude cache-read prices (checked 2026-10-25 against
+ * https://platform.claude.com/docs/en/about-claude/pricing): Haiku 5.5 $0.01/MTok ($0.05 over
+ * 100K prompt tokens, the same tier switch as its input price), Sonnet 5.5 $0.10 and Opus 5.5
+ * $0.20 (both 0.05x their base input). Cache writes are {@link AI_CACHE_WRITE_MULTIPLIER} times
+ * the base input price.
  */
 export const AI_MODELS: Record<AiModelId, AiModelInfo> = {
   'claude-haiku-5-5': {
@@ -157,7 +176,8 @@ export const AI_MODELS: Record<AiModelId, AiModelInfo> = {
     label: 'Claude Haiku 5.5',
     inputCentsPerMTok: 10,
     outputCentsPerMTok: 50,
-    longContext: { thresholdTokens: 100_000, inputCentsPerMTok: 50, outputCentsPerMTok: 250 },
+    cacheReadCentsPerMTok: 1,
+    longContext: { thresholdTokens: 100_000, inputCentsPerMTok: 50, outputCentsPerMTok: 250, cacheReadCentsPerMTok: 5 },
     typicalThinkingTokens: 0,
   },
   'claude-sonnet-5-5': {
@@ -166,6 +186,7 @@ export const AI_MODELS: Record<AiModelId, AiModelInfo> = {
     label: 'Claude Sonnet 5.5',
     inputCentsPerMTok: 200,
     outputCentsPerMTok: 1000,
+    cacheReadCentsPerMTok: 10,
     typicalThinkingTokens: 0,
   },
   'claude-opus-5-5': {
@@ -174,6 +195,7 @@ export const AI_MODELS: Record<AiModelId, AiModelInfo> = {
     label: 'Claude Opus 5.5',
     inputCentsPerMTok: 400,
     outputCentsPerMTok: 2000,
+    cacheReadCentsPerMTok: 20,
     // Thinking can't be turned off on Opus 5.5; effort `low` keeps it short.
     typicalThinkingTokens: 300,
   },
@@ -313,31 +335,125 @@ export function resolveAiModel(
 /** 1 cent per million tokens, per token, is 1e-8 dollars; a credit ($0.001) is 100,000 of those. */
 const PRICE_UNITS_PER_CREDIT = 100_000;
 
+/**
+ * A call's token usage, split the way Claude bills it (`response.usage`):
+ * - `inputTokens`: input processed normally, at the base input price (Anthropic `input_tokens`,
+ *   the part after the last cache breakpoint or the whole prompt when nothing was cached);
+ * - `cacheWrite5mTokens` / `cacheWrite1hTokens`: input written to the prompt cache, at
+ *   {@link AI_CACHE_WRITE_MULTIPLIER} times the base input price;
+ * - `cacheReadTokens`: input read from the cache, at the model's `cacheReadCentsPerMTok`;
+ * - `outputTokens`: the answer, thinking included.
+ * The long-context price tier is chosen by the total input (all four input fields).
+ */
+export interface AiTokenUsage {
+  inputTokens: number;
+  outputTokens: number;
+  cacheWrite5mTokens?: number;
+  cacheWrite1hTokens?: number;
+  cacheReadTokens?: number;
+}
+
+/** Token counts as non-negative whole numbers (fractions round up). */
+function wholeTokens(n: number | undefined): number {
+  return Math.max(0, Math.ceil(n ?? 0));
+}
+
+function normalizeUsage(usage: AiTokenUsage): Required<AiTokenUsage> {
+  return {
+    inputTokens: wholeTokens(usage.inputTokens),
+    outputTokens: wholeTokens(usage.outputTokens),
+    cacheWrite5mTokens: wholeTokens(usage.cacheWrite5mTokens),
+    cacheWrite1hTokens: wholeTokens(usage.cacheWrite1hTokens),
+    cacheReadTokens: wholeTokens(usage.cacheReadTokens),
+  };
+}
+
+function totalInputTokens(u: Required<AiTokenUsage>): number {
+  return u.inputTokens + u.cacheWrite5mTokens + u.cacheWrite1hTokens + u.cacheReadTokens;
+}
+
 function pricesFor(model: AiModelId, inputTokens: number): TokenPrices {
   const info = AI_MODELS[model];
   return info.longContext && inputTokens > info.longContext.thresholdTokens ? info.longContext : info;
 }
 
-function priceUnits(model: AiModelId, inputTokens: number, outputTokens: number): number {
-  const prices = pricesFor(model, inputTokens);
-  return inputTokens * prices.inputCentsPerMTok + outputTokens * prices.outputCentsPerMTok;
+function priceUnits(model: AiModelId, u: Required<AiTokenUsage>): number {
+  return priceUnitsAt(pricesFor(model, totalInputTokens(u)), u);
+}
+
+function priceUnitsAt(prices: TokenPrices, u: Required<AiTokenUsage>): number {
+  const input = prices.inputCentsPerMTok;
+  // No cache-read price (own-key models): price reads like normal input, never lower than the bill.
+  const read = prices.cacheReadCentsPerMTok ?? input;
+  return (
+    u.inputTokens * input +
+    u.cacheWrite5mTokens * input * AI_CACHE_WRITE_MULTIPLIER.ephemeral5m +
+    u.cacheWrite1hTokens * input * AI_CACHE_WRITE_MULTIPLIER.ephemeral1h +
+    u.cacheReadTokens * read +
+    u.outputTokens * prices.outputCentsPerMTok
+  );
+}
+
+function toUsage(usageOrInput: AiTokenUsage | number, outputTokens: number | undefined): AiTokenUsage {
+  return typeof usageOrInput === 'number' ? { inputTokens: usageOrInput, outputTokens: outputTokens ?? 0 } : usageOrInput;
 }
 
 /**
  * Credits a call costs: its list-price cost rounded up to whole credits, at least 1 when it used
- * any tokens and 0 when it used none. `outputTokens` includes thinking tokens. Used both for the
- * worst-case reservation (`max_tokens` as output) and for settling to the real usage.
+ * any tokens and 0 when it used none. Takes the full usage breakdown ({@link AiTokenUsage}), or
+ * `(inputTokens, outputTokens)` for a call with no prompt caching (all input at the base price).
+ * `outputTokens` includes thinking tokens. Settling a managed call uses the real usage; the
+ * worst-case reservation is {@link aiReservationCredits}.
  */
-export function aiCallCredits(model: AiModelId, inputTokens: number, outputTokens: number): number {
-  const input = Math.max(0, Math.ceil(inputTokens));
-  const output = Math.max(0, Math.ceil(outputTokens));
-  if (input + output === 0) return 0;
-  return Math.max(1, Math.ceil(priceUnits(model, input, output) / PRICE_UNITS_PER_CREDIT));
+export function aiCallCredits(model: AiModelId, usage: AiTokenUsage): number;
+export function aiCallCredits(model: AiModelId, inputTokens: number, outputTokens: number): number;
+export function aiCallCredits(model: AiModelId, usageOrInput: AiTokenUsage | number, outputTokens?: number): number {
+  const u = normalizeUsage(toUsage(usageOrInput, outputTokens));
+  if (totalInputTokens(u) + u.outputTokens === 0) return 0;
+  return Math.max(1, Math.ceil(priceUnits(model, u) / PRICE_UNITS_PER_CREDIT));
+}
+
+/**
+ * Extra input, in percent of the counted tokens, that a reservation covers: `count_tokens` is an
+ * estimate, and the billed total can come out a little higher.
+ */
+export const AI_RESERVE_INPUT_MARGIN_PERCENT = 2;
+
+/**
+ * The most a managed call can cost, reserved before the model is called: the counted input plus
+ * {@link AI_RESERVE_INPUT_MARGIN_PERCENT}, every token priced as a 5-minute cache write (the
+ * dearest way input can be billed, since TabMerger only writes 5-minute entries), and
+ * `maxOutputTokens` of output. The real usage splits its input into base, write and read
+ * tokens, each priced at or below the write rate, so settling only refunds as long as the real
+ * total input stays within the margin of the count.
+ *
+ * The price tier is chosen from the padded input, so a count within about 2% of a model's
+ * long-context threshold is already reserved at the long-context prices: a call whose real
+ * total lands just over the threshold (where settling uses those prices) is still covered.
+ * Non-finite input gives `NaN`; callers must not reserve it.
+ */
+export function aiReservationCredits(model: AiModelId, countedInputTokens: number, maxOutputTokens: number): number {
+  const counted = wholeTokens(countedInputTokens);
+  const padded = counted + Math.ceil((counted * AI_RESERVE_INPUT_MARGIN_PERCENT) / 100);
+  return aiCallCredits(model, { inputTokens: 0, cacheWrite5mTokens: padded, outputTokens: maxOutputTokens });
 }
 
 /** The same cost in US dollars, for showing a BYOK user what their provider will bill them. */
-export function aiCallCostUsd(model: AiModelId, inputTokens: number, outputTokens: number): number {
-  return priceUnits(model, Math.max(0, inputTokens), Math.max(0, outputTokens)) / 1e8;
+export function aiCallCostUsd(model: AiModelId, usage: AiTokenUsage): number;
+export function aiCallCostUsd(model: AiModelId, inputTokens: number, outputTokens: number): number;
+export function aiCallCostUsd(model: AiModelId, usageOrInput: AiTokenUsage | number, outputTokens?: number): number {
+  const usage = toUsage(usageOrInput, outputTokens);
+  // Fractions are kept here (estimates); only negatives are clamped.
+  const clamp = (n: number | undefined) => Math.max(0, n ?? 0);
+  return (
+    priceUnits(model, {
+      inputTokens: clamp(usage.inputTokens),
+      outputTokens: clamp(usage.outputTokens),
+      cacheWrite5mTokens: clamp(usage.cacheWrite5mTokens),
+      cacheWrite1hTokens: clamp(usage.cacheWrite1hTokens),
+      cacheReadTokens: clamp(usage.cacheReadTokens),
+    }) / 1e8
+  );
 }
 
 // --- Estimates for the Settings model picker ------------------------------------

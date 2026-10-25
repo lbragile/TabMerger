@@ -6,7 +6,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { aiCallCredits } from '@tabmerger/shared'
+import { aiCallCredits, aiReservationCredits } from '@tabmerger/shared'
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -85,7 +85,7 @@ const nameReq = (body: unknown = { tabs: TABS, model: 'claude-opus-5-5' }, heade
   req('http://localhost/api/ai/name-group', body, headers)
 
 /** A model response carrying `json` as its text, with the given usage. */
-function message(json: unknown, usage = { input_tokens: 400, output_tokens: 20 }, stop_reason = 'end_turn') {
+function message(json: unknown, usage: Record<string, unknown> = { input_tokens: 400, output_tokens: 20 }, stop_reason = 'end_turn') {
   return {
     content: [{ type: 'text', text: JSON.stringify(json) }],
     usage: { cache_creation_input_tokens: null, cache_read_input_tokens: null, ...usage },
@@ -137,7 +137,8 @@ describe('managed metering', () => {
     expect(await res.json()).toEqual({ name: 'React Learning' })
 
     const maxTokens = sdk.create.mock.calls[0][0].max_tokens
-    const reserved = aiCallCredits('claude-opus-5-5', 400, maxTokens)
+    // Worst case: all 400 counted tokens priced as 5-minute cache writes.
+    const reserved = aiReservationCredits('claude-opus-5-5', 400, maxTokens)
     const actual = aiCallCredits('claude-opus-5-5', 400, 20)
     expect(actual).toBeLessThan(reserved)
     const [reserve] = rpcCalls('ai_reserve_credits')
@@ -146,6 +147,176 @@ describe('managed metering', () => {
     expect(settle).toMatchObject({ p_user: USER_ID, p_month: reserve.p_month, p_delta: actual - reserved })
     // Remaining = cap - credits_used after the settlement.
     expect(res.headers.get('X-AI-Credits-Remaining')).toBe(String(2500 - 601))
+  })
+
+  it('settles cache reads at the model read rate, refunding the write-rate reservation', async () => {
+    sdk.countTokens.mockResolvedValue({ input_tokens: 20_000 })
+    sdk.create.mockResolvedValue(
+      message(
+        { name: 'React Learning' },
+        {
+          input_tokens: 1_000,
+          cache_creation_input_tokens: 0,
+          cache_creation: { ephemeral_5m_input_tokens: 0, ephemeral_1h_input_tokens: 0 },
+          cache_read_input_tokens: 19_000,
+          output_tokens: 20,
+        }
+      )
+    )
+    await nameGroupPOST(nameReq())
+
+    const maxTokens = sdk.create.mock.calls[0][0].max_tokens
+    const [reserve] = rpcCalls('ai_reserve_credits')
+    expect(reserve.p_amount).toBe(aiReservationCredits('claude-opus-5-5', 20_000, maxTokens))
+    // Opus 5.5: 1,000 x $4 + 19,000 x $0.20 + 20 x $20 (per MTok) = $0.0082 = 9 credits, not the
+    // 81 credits the same tokens would cost all at the base input price.
+    const actual = aiCallCredits('claude-opus-5-5', { inputTokens: 1_000, cacheReadTokens: 19_000, outputTokens: 20 })
+    expect(actual).toBe(9)
+    expect(aiCallCredits('claude-opus-5-5', 20_000, 20)).toBe(81)
+    expect(rpcCalls('ai_settle_credits')[0].p_delta).toBe(actual - reserve.p_amount)
+  })
+
+  it('settles cache writes at the write rate, by TTL when the usage splits them', async () => {
+    sdk.countTokens.mockResolvedValue({ input_tokens: 20_000 })
+    sdk.create.mockResolvedValue(
+      message(
+        { name: 'React Learning' },
+        {
+          input_tokens: 1_000,
+          cache_creation_input_tokens: 19_000,
+          cache_creation: { ephemeral_5m_input_tokens: 15_000, ephemeral_1h_input_tokens: 4_000 },
+          cache_read_input_tokens: 0,
+          output_tokens: 20,
+        }
+      )
+    )
+    await nameGroupPOST(nameReq())
+
+    const reserved = rpcCalls('ai_reserve_credits')[0].p_amount
+    const actual = aiCallCredits('claude-opus-5-5', {
+      inputTokens: 1_000,
+      cacheWrite5mTokens: 15_000,
+      cacheWrite1hTokens: 4_000,
+      outputTokens: 20,
+    })
+    // 1,000 x $4 + 15,000 x $5 + 4,000 x $8 + 20 x $20 (per MTok) = $0.1114.
+    expect(actual).toBe(112)
+    expect(rpcCalls('ai_settle_credits')[0].p_delta).toBe(actual - reserved)
+  })
+
+  it('prices cache writes without a TTL split as 5-minute writes', async () => {
+    sdk.countTokens.mockResolvedValue({ input_tokens: 20_000 })
+    sdk.create.mockResolvedValue(
+      message(
+        { name: 'React Learning' },
+        { input_tokens: 1_000, cache_creation_input_tokens: 19_000, cache_read_input_tokens: 0, output_tokens: 20 }
+      )
+    )
+    await nameGroupPOST(nameReq())
+
+    const reserved = rpcCalls('ai_reserve_credits')[0].p_amount
+    const actual = aiCallCredits('claude-opus-5-5', { inputTokens: 1_000, cacheWrite5mTokens: 19_000, outputTokens: 20 })
+    expect(rpcCalls('ai_settle_credits')[0].p_delta).toBe(actual - reserved)
+    // A first-time write of the whole counted prompt costs at most the reservation.
+    expect(actual).toBeLessThanOrEqual(reserved)
+  })
+
+  it('logs 1-hour cache writes and a settle above the reservation, without user data', async () => {
+    sdk.countTokens.mockResolvedValue({ input_tokens: 1_000 })
+    sdk.create.mockResolvedValue(
+      message(
+        { name: 'React Learning' },
+        {
+          input_tokens: 1_000,
+          cache_creation_input_tokens: 50_000,
+          cache_creation: { ephemeral_5m_input_tokens: 0, ephemeral_1h_input_tokens: 50_000 },
+          cache_read_input_tokens: 0,
+          output_tokens: 20,
+        }
+      )
+    )
+    expect((await nameGroupPOST(nameReq())).status).toBe(200)
+
+    const reserved = rpcCalls('ai_reserve_credits')[0].p_amount
+    const actual = aiCallCredits('claude-opus-5-5', { inputTokens: 1_000, cacheWrite1hTokens: 50_000, outputTokens: 20 })
+    expect(actual).toBeGreaterThan(reserved)
+    // The difference is still charged.
+    expect(rpcCalls('ai_settle_credits')[0].p_delta).toBe(actual - reserved)
+    const logged = consoleError.mock.calls.map(([msg]: unknown[]) => msg)
+    expect(logged).toContain('AI usage reported 1-hour cache writes; reservations assume 5-minute writes:')
+    expect(logged).toContain('AI call cost more than its reservation; settling the difference:')
+    const text = JSON.stringify(consoleError.mock.calls)
+    expect(text).not.toContain(USER_ID)
+    expect(text).not.toContain('50000')
+  })
+
+  it('logs a settle above the reservation when the real input outgrows the count', async () => {
+    sdk.countTokens.mockResolvedValue({ input_tokens: 400 })
+    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: 40_000, output_tokens: 20 }))
+    await nameGroupPOST(nameReq())
+    expect(rpcCalls('ai_settle_credits')[0].p_delta).toBeGreaterThan(0)
+    expect(consoleError).toHaveBeenCalledWith('AI call cost more than its reservation; settling the difference:', {
+      model: 'claude-opus-5-5',
+    })
+  })
+
+  it('does not log when the settle refunds', async () => {
+    await nameGroupPOST(nameReq())
+    expect(rpcCalls('ai_settle_credits')[0].p_delta).toBeLessThan(0)
+    expect(consoleError).not.toHaveBeenCalled()
+  })
+
+  it('keeps the reservation when the usage is not a finite number (through runAiTask)', async () => {
+    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: Number.NaN, output_tokens: 20 }))
+    const res = await nameGroupPOST(nameReq())
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ name: 'React Learning' })
+    expect(rpcCalls('ai_reserve_credits')).toHaveLength(1)
+    expect(rpcCalls('ai_settle_credits')).toEqual([])
+    expect(consoleError).toHaveBeenCalledWith(
+      'AI credit settle skipped: the usage was not a finite number; keeping the reservation'
+    )
+    // The balance is the one left after the reservation.
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe('2000')
+  })
+
+  it('refuses the call when count_tokens is not a finite number, without reserving', async () => {
+    sdk.countTokens.mockResolvedValue({ input_tokens: Number.POSITIVE_INFINITY })
+    const res = await nameGroupPOST(nameReq())
+    expect(res.status).toBe(500)
+    expect(await res.json()).toEqual({ error: 'ai_failed' })
+    expect(rpcCalls('ai_reserve_credits')).toEqual([])
+    expect(sdk.create).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['a regional inference_geo', { inference_geo: 'us' }, { inferenceGeo: 'us', serviceTier: null }],
+    ['a non-standard service_tier', { service_tier: 'priority' }, { inferenceGeo: null, serviceTier: 'priority' }],
+  ])('warns once when the response reports %s', async (_label, extra, logged) => {
+    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: 400, output_tokens: 20, ...extra }))
+    await nameGroupPOST(nameReq())
+    expect(consoleWarn).toHaveBeenCalledTimes(1)
+    expect(consoleWarn).toHaveBeenCalledWith('AI usage is priced as global standard, but the response reports:', {
+      model: 'claude-opus-5-5',
+      ...logged,
+    })
+    consoleWarn.mockRestore()
+  })
+
+  it('does not warn for global standard (or unreported) inference', async () => {
+    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    sdk.create.mockResolvedValue(
+      message(
+        { name: 'React Learning' },
+        { input_tokens: 400, output_tokens: 20, inference_geo: 'global', service_tier: 'standard' }
+      )
+    )
+    await nameGroupPOST(nameReq())
+    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: 400, output_tokens: 20, inference_geo: null }))
+    await nameGroupPOST(nameReq())
+    expect(consoleWarn).not.toHaveBeenCalled()
+    consoleWarn.mockRestore()
   })
 
   it('uses TabMerger’s key and ignores a key header sent by a managed subscriber', async () => {
@@ -331,8 +502,11 @@ describe('request sent to the model', () => {
   it('keeps instructions in system and page data in one tab_data block after the notice', async () => {
     await tabSummaryPOST(req('http://localhost/api/ai/tab-summary', { title: 'Docs', url: 'https://e.com/docs' }))
     const params = sdk.create.mock.calls[0][0]
-    expect(params.system).toContain(SYSTEM_DATA_RULE)
-    expect(params.system).not.toContain('https://e.com/docs')
+    const system = params.system as { type: string; text: string }[]
+    expect(system).toHaveLength(1)
+    expect(system[0].type).toBe('text')
+    expect(system[0].text).toContain(SYSTEM_DATA_RULE)
+    expect(system[0].text).not.toContain('https://e.com/docs')
     expect(params.messages).toHaveLength(1)
     const user = params.messages[0].content as string
     expect(user.startsWith(UNTRUSTED_DATA_NOTICE)).toBe(true)
@@ -342,6 +516,36 @@ describe('request sent to the model', () => {
     expect(data.match(/<\/tab_data>/g)).toHaveLength(1)
     expect(data.trim().endsWith('</tab_data>')).toBe(true)
     expect(user).toContain('https://e.com/docs')
+  })
+
+  it('marks the system block, and only it, as a cache breakpoint in both count_tokens and create', async () => {
+    await tabSummaryPOST(req('http://localhost/api/ai/tab-summary', { title: 'Docs', url: 'https://e.com/docs' }))
+    for (const params of [sdk.countTokens.mock.calls[0][0], sdk.create.mock.calls[0][0]]) {
+      expect(params.system).toEqual([expect.objectContaining({ type: 'text', cache_control: { type: 'ephemeral' } })])
+      // The data turn is a plain string: no block, so no breakpoint.
+      expect(typeof params.messages[0].content).toBe('string')
+      // No top-level automatic caching (it would mark the per-request data turn).
+      expect(params).not.toHaveProperty('cache_control')
+    }
+  })
+
+  it('marks the system block on an own Anthropic key too', async () => {
+    withSubscription(BYOK)
+    await tabSummaryPOST(
+      req('http://localhost/api/ai/tab-summary', { title: 'Docs', url: 'https://e.com/docs' }, { 'X-AI-Key': BYOK_KEY })
+    )
+    expect(sdk.countTokens).not.toHaveBeenCalled()
+    expect(sdk.create.mock.calls[0][0].system).toEqual([
+      expect.objectContaining({ type: 'text', cache_control: { type: 'ephemeral' } }),
+    ])
+  })
+
+  it('sends the same system prompt for every request of a task, whatever the data', async () => {
+    await tabSummaryPOST(req('http://localhost/api/ai/tab-summary', { title: 'Docs', url: 'https://e.com/docs' }))
+    await tabSummaryPOST(req('http://localhost/api/ai/tab-summary', { title: 'Mail', url: 'https://mail.example/inbox' }))
+    const [first, second] = sdk.create.mock.calls.map(([params]) => params)
+    expect(first.system).toEqual(second.system)
+    expect(first.messages).not.toEqual(second.messages)
   })
 
   it('cannot be closed early by a title that spoofs the delimiter', async () => {

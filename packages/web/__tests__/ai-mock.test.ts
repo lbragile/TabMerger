@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { AI_CREDITS_REMAINING_HEADER, PRESET_COLORS, aiCallCredits } from '@tabmerger/shared'
+import { AI_CREDITS_REMAINING_HEADER, PRESET_COLORS, aiCallCredits, aiReservationCredits } from '@tabmerger/shared'
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -46,12 +46,15 @@ import {
   type AiCallContext,
 } from '@/lib/ai'
 import {
+  AI_MOCK_CACHE_MIN_TOKENS,
   AI_MOCK_HEADER,
   AI_MOCK_OVER_QUOTA_INPUT_TOKENS,
   AI_MOCK_SLOW_DELAY_MS,
   aiMockEnabled,
   aiMockScenario,
+  clearAiMockPromptCache,
   estimateMockTokens,
+  mockAnthropicMessage,
   mockCountTokens,
   mockReplyText,
 } from '@/lib/ai-mock'
@@ -136,6 +139,7 @@ beforeEach(() => {
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
   withSubscription(MANAGED)
   stubRpc()
+  clearAiMockPromptCache()
 })
 
 afterEach(() => {
@@ -365,6 +369,91 @@ describe('runAiTask with the mock on', () => {
   })
 })
 
+// ─── Synthetic prompt caching ─────────────────────────────────────────────────
+
+describe('mock prompt-cache usage', () => {
+  /** name-group with instructions long enough to clear the 512-token minimum. */
+  const longTask = () => ({ ...nameGroupTask(TABS), system: 'Name the group of tabs carefully. '.repeat(80) })
+
+  it('counts the system text, not the block wrapper or its cache marker', async () => {
+    const request = buildAiRequest(nameGroupTask(TABS), 'claude-haiku-5-5')
+    const asString = { ...request.count, system: (request.count.system as { text: string }[])[0].text }
+    expect((await mockCountTokens(request.count)).input_tokens).toBe((await mockCountTokens(asString)).input_tokens)
+  })
+
+  it('reports no cache use when the marked prefix is under the minimum', async () => {
+    const task = nameGroupTask(TABS)
+    const request = buildAiRequest(task, 'claude-haiku-5-5')
+    const { usage } = await mockAnthropicMessage(task, request.create, 'managed')
+    expect(usage).toMatchObject({
+      input_tokens: (await mockCountTokens(request.count)).input_tokens,
+      cache_creation_input_tokens: 0,
+      cache_read_input_tokens: 0,
+      cache_creation: { ephemeral_5m_input_tokens: 0, ephemeral_1h_input_tokens: 0 },
+    })
+  })
+
+  it('writes a long marked prefix on the first request and reads it on the next', async () => {
+    const task = longTask()
+    const request = buildAiRequest(task, 'claude-sonnet-5-5')
+    const total = (await mockCountTokens(request.count)).input_tokens
+
+    const first = (await mockAnthropicMessage(task, request.create, 'managed')).usage
+    expect(first.cache_creation_input_tokens).toBeGreaterThanOrEqual(AI_MOCK_CACHE_MIN_TOKENS)
+    expect(first.cache_creation?.ephemeral_5m_input_tokens).toBe(first.cache_creation_input_tokens)
+    expect(first.cache_read_input_tokens).toBe(0)
+    expect(first.input_tokens + (first.cache_creation_input_tokens ?? 0)).toBe(total)
+
+    const second = (await mockAnthropicMessage(task, request.create, 'managed')).usage
+    expect(second.cache_creation_input_tokens).toBe(0)
+    expect(second.cache_read_input_tokens).toBe(first.cache_creation_input_tokens)
+    expect(second.input_tokens).toBe(first.input_tokens)
+
+    // Another model has its own cache.
+    const opus = buildAiRequest(task, 'claude-opus-5-5')
+    expect((await mockAnthropicMessage(task, opus.create, 'managed')).usage.cache_read_input_tokens).toBe(0)
+  })
+
+  it('writes again once the 5-minute entry has expired', async () => {
+    vi.useFakeTimers()
+    const task = longTask()
+    const request = buildAiRequest(task, 'claude-haiku-5-5')
+    await mockAnthropicMessage(task, request.create, 'managed')
+    vi.advanceTimersByTime(5 * 60_000 + 1)
+    const usage = (await mockAnthropicMessage(task, request.create, 'managed')).usage
+    expect(usage.cache_read_input_tokens).toBe(0)
+    expect(usage.cache_creation_input_tokens).toBeGreaterThan(0)
+  })
+
+  it('never caches a prompt without a breakpoint', async () => {
+    const task = longTask()
+    const request = buildAiRequest(task, 'claude-haiku-5-5')
+    const unmarked = { ...request.create, system: (request.create.system as { text: string }[])[0].text }
+    await mockAnthropicMessage(task, unmarked, 'managed')
+    const { usage } = await mockAnthropicMessage(task, unmarked, 'managed')
+    expect(usage.cache_creation_input_tokens).toBe(0)
+    expect(usage.cache_read_input_tokens).toBe(0)
+  })
+
+  it('settles a managed cache read below the reservation', async () => {
+    mockOn()
+    const task = longTask()
+    const meter = { supabase: mockSupabase, userId: USER_ID, month: '2026-10' } as never
+    const client = { messages: { create: vi.fn(), countTokens: vi.fn() } }
+    const ctx = { provider: 'anthropic', client, model: 'claude-opus-5-5', mode: 'managed', meter } as unknown as AiCallContext
+    await runAiTask(task, ctx) // writes
+    mockRpc.mockClear()
+    await runAiTask(task, ctx) // reads
+
+    const request = buildAiRequest(task, 'claude-opus-5-5')
+    const total = (await mockCountTokens(request.count)).input_tokens
+    const [reserve] = rpcCalls('ai_reserve_credits')
+    expect(reserve.p_amount).toBe(aiReservationCredits('claude-opus-5-5', total, request.create.max_tokens))
+    const [settle] = rpcCalls('ai_settle_credits')
+    expect(settle.p_delta).toBeLessThan(0)
+  })
+})
+
 // ─── Routes, managed (metered) ────────────────────────────────────────────────
 
 describe('managed routes with the mock on', () => {
@@ -386,7 +475,7 @@ describe('managed routes with the mock on', () => {
     const task = nameGroupTask(parsed.data)
     const request = buildAiRequest(task, model)
     const input = (await mockCountTokens(request.count)).input_tokens
-    const reserved = aiCallCredits(model, input, request.create.max_tokens)
+    const reserved = aiReservationCredits(model, input, request.create.max_tokens)
     const actual = aiCallCredits(model, input, estimateMockTokens(mockReplyText(task)))
 
     expect(rpcCalls('ai_reserve_credits')).toEqual([{ p_user: USER_ID, p_month: expect.any(String), p_amount: reserved }])
@@ -463,7 +552,7 @@ describe('managed routes with the mock on', () => {
     expect(res.status).toBe(429)
     const body = await res.json()
     expect(body).toEqual({ error: 'ai_quota_exceeded', needed: expect.any(Number), remaining: 2400 })
-    expect(body.needed).toBe(aiCallCredits('claude-haiku-5-5', AI_MOCK_OVER_QUOTA_INPUT_TOKENS, 100))
+    expect(body.needed).toBe(aiReservationCredits('claude-haiku-5-5', AI_MOCK_OVER_QUOTA_INPUT_TOKENS, 100))
     expect(res.headers.get(AI_CREDITS_REMAINING_HEADER)).toBe('2400')
     expect(rpcCalls('ai_settle_credits')).toEqual([])
   })
