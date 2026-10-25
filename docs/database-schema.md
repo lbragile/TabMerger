@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`023`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`024`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -11,7 +11,7 @@ The migrations in `supabase/migrations/` (`001`–`023`) are the source of truth
 | 001 | `001_initial_schema.sql` | `profiles`, `subscriptions`, `groups`, `sessions`. `handle_new_user()` trigger. `update_updated_at()` triggers on `groups` and `subscriptions` (`groups` uses `groups_set_updated_at()` since 020). |
 | 002 | `002_rls_policies.sql` | RLS and owner-only policies on the four initial tables. |
 | 003 | `003_indexes.sql` | Indexes on `groups`, `sessions`, `subscriptions`. |
-| 004 | `004_create_organize_runs.sql` | `organize_runs` table and RLS. |
+| 004 | `004_create_organize_runs.sql` | `organize_runs` table and RLS (dropped by 024). |
 | 005 | `005_subscription_lifecycle_columns.sql` | `subscriptions.cancel_at_period_end` and `stripe_price_id`. `current_period_end` was already there, so its `add column if not exists` is a no-op. |
 | 006 | `006_ai_usage.sql` | `ai_usage` table (monthly AI quota) and RLS. |
 | 007 | `007_public_group_sharing.sql` | `groups.public_slug` and `view_count`. `increment_group_view_count()` function. |
@@ -31,6 +31,7 @@ The migrations in `supabase/migrations/` (`001`–`023`) are the source of truth
 | 021 | `021_profiles_server_managed.sql` | `profiles` is written only by the server (signup trigger and billing webhook): select is its only policy, and `anon`/`authenticated` hold `SELECT` only on the table. No schema change. |
 | 022 | `022_ai_byok_and_cost_credits.sql` | `subscriptions.ai_mode` (`managed`/`byok`) and `ai_monthly_credits`. Service-role-only functions `ai_reserve_credits()` and `ai_settle_credits()` for atomic AI credit metering. Converts existing `ai_credit_purchases.credits` to the new unit (1 credit = USD 0.001 of AI cost). |
 | 023 | `023_revoke_client_writes_billing_tables.sql` | `subscriptions`, `ai_usage` and `ai_credit_purchases` are written only by the server: `anon`/`authenticated` lose `INSERT`/`UPDATE`/`DELETE`/`TRUNCATE` and keep `SELECT`. No schema change. |
+| 024 | `024_drop_organize_runs.sql` | Drops `organize_runs` (and its policy) after organize became a synchronous route. Fails instead if any function still names the table. Rollback: re-run 004's DDL; the rows only linked old workflow runs to owners. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -183,18 +184,6 @@ One row per user: the E2E data key wrapped with a key derived from the user's pa
 
 **RLS:** owner select, insert, update (015) and delete (018). Since 019, insert/update also require `public.has_cloud_sync(auth.uid())` — E2E encryption setup is only reachable from the Pro-gated sync flow (`EncryptionSetupModal` is triggered from `useSync`'s doSync gate).
 
-### `organize_runs`
-
-Unused since organize became a synchronous route (it mapped a Workflow run to its owner for the old `GET /api/ai/organize` stream). Nothing reads or writes it; dropping it needs a new migration. No result data was ever stored.
-
-| Column | Type | Constraints |
-|---|---|---|
-| `run_id` | `text` | PK |
-| `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
-| `created_at` | `timestamptz` | default `now()` |
-
-**RLS:** one `for all` policy, `"users see own runs"` (`auth.uid() = user_id`).
-
 ### `ai_usage`
 
 Per-user, per-month AI credit counter. `credits_used` adds up a **weighted** cost per call (`CREDIT_COSTS` in `packages/web/lib/ai-usage.ts`).
@@ -246,7 +235,6 @@ erDiagram
     auth_users ||--o| encryption_keys : "user_id (PK)"
     auth_users ||--o{ device_sessions : "user_id"
     auth_users ||--o{ shared_bundles : "user_id (nullable)"
-    auth_users ||--o{ organize_runs : "user_id"
     auth_users ||--o{ ai_usage : "user_id"
     auth_users ||--o{ ai_credit_purchases : "user_id"
 ```
@@ -254,7 +242,7 @@ erDiagram
 - `profiles`, `subscriptions`, `groups` and `sessions` reference `public.profiles`. Every later table references `auth.users` directly. The two are equivalent in practice, because `profiles.id` cascades 1:1 from `auth.users.id`.
 - `profiles` and `subscriptions` are managed by the trigger. Never INSERT into them from app code.
 - `sessions.groups` and `shared_bundles.groups_snapshot` are **copies**. Editing or deleting a group later does not change them.
-- Every FK is `on delete cascade`, so deleting an auth user removes their rows from all ten tables. `groups.archived` is a flag, not a soft-delete table.
+- Every FK is `on delete cascade`, so deleting an auth user removes their rows from all nine tables. `groups.archived` is a flag, not a soft-delete table.
 
 ## TypeScript mirrors (`packages/shared/src/types/index.ts`)
 
@@ -263,4 +251,4 @@ These types only partly mirror the schema:
 - `SupabaseGroup` is missing `public_slug`, `view_count`, `permanent`, `starred`, `archived` and `note`. It types `windows` as `ExtWindow[]` even though the value can be an `EncryptedBlob`.
 - `Subscription` doesn't model `cancel_at_period_end`, `stripe_price_id`, `ai_mode` or `ai_monthly_credits`. `useEntitlements` selects them with its own local row type.
 - `DeviceSession` covers `device_id`, `device_name`, `now_open_snapshot` and `last_active`.
-- There are no shared types for `shared_bundles`, `encryption_keys`, `organize_runs`, `ai_usage` or `ai_credit_purchases`.
+- There are no shared types for `shared_bundles`, `encryption_keys`, `ai_usage` or `ai_credit_purchases`.

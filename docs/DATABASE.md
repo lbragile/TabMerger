@@ -20,7 +20,6 @@ This is the practical guide: stack, local development, migrations, sync and comm
 | `device_sessions` | extension `deviceSessions.ts` | Now Open snapshot is E2E-encrypted |
 | `shared_bundles` | extension `sharing.ts`, web `lib/sharing.ts` (both client-side, no API route) | Public read. Encrypted with a per-share key carried in the URL `#key=` |
 | `encryption_keys` | extension `encryptionKey.ts` | Wrapped data key only |
-| `organize_runs` | nothing (unused) | Linked an old organize Workflow run to its owner; drop in a future migration |
 | `ai_usage`, `ai_credit_purchases` | AI routes / Stripe webhook (service role) | Credit metering |
 
 ## E2E encryption
@@ -45,7 +44,7 @@ Details are in [database-schema.md § E2E-encrypted columns](database-schema.md#
 
 RLS is enabled on every table.
 
-- Owner-only (`auth.uid() = user_id`): `groups`, `sessions`, `device_sessions` and `encryption_keys` (full CRUD), and `organize_runs` (`for all`).
+- Owner-only (`auth.uid() = user_id`): `groups`, `sessions`, `device_sessions` and `encryption_keys` (full CRUD).
 - Read-only for the owner, with writes through the service role: `profiles` (`auth.uid() = id`), `subscriptions`, `ai_usage`, `ai_credit_purchases`. On `profiles` the API roles (`anon`, `authenticated`) also hold `SELECT` only at the privilege level (migration 021); the signup trigger and the service role are its only writers.
 - `shared_bundles`: **public select** (`using (true)`), insert for `authenticated` users where `user_id = auth.uid()`, owner delete, and no update.
 
@@ -53,7 +52,7 @@ The **service role key** bypasses RLS. Use it only on the server: in the Stripe 
 
 ## Migrations
 
-Always add a new file and never edit an applied one; a hook (`.claude/hooks/protect-migrations.py`) blocks such edits. Name files `NNN_description.sql` with the next number (currently `022`). Before applying, run the `migration-reviewer` agent, and consider the `/new-migration` skill.
+Always add a new file and never edit an applied one; a hook (`.claude/hooks/protect-migrations.py`) blocks such edits. Name files `NNN_description.sql` with the next number (currently `025`). Before applying, run the `migration-reviewer` agent, and consider the `/new-migration` skill.
 
 ```bash
 supabase migration new <description>   # then rename to NNN_<description>.sql

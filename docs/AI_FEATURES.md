@@ -210,10 +210,6 @@ Thrown errors release the managed reservation, as a real failed call would. `nex
 - **403 is unreachable:** `checkAndIncrementAIUsage` returns `remaining: 0` both for "not Pro AI"
   and "over cap", so the routes answer **429** in both cases. The extension therefore shows the
   quota prompt to a non-`pro_ai` caller.
-- **Leftovers of the old organize workflow:** the `organize_runs` table (migration 004) is no longer
-  written or read; dropping it needs a new migration. The `workflow` and `@workflow/*` packages are
-  still listed in `packages/web/package.json` but nothing imports them; removing them changes the
-  lockfile.
 
 TODO (owner): cost estimates for current models (old figures were for earlier Haiku pricing and were
 removed).
