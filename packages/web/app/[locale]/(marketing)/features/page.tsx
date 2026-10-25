@@ -109,13 +109,15 @@ export default async function FeaturesPage() {
             {t('lead')}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="gap-2" asChild>
+            {/* Both wrap instead of running off a phone screen when a label is long (another
+                language); one line, at the usual 44px, whenever it fits. */}
+            <Button size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
               <StoreLink href={storeLinks[browser]}>
                 <BrowserIcon size={18} />
                 {t(ADD_TO_LABEL[browser])}
               </StoreLink>
             </Button>
-            <Button variant="outline" size="lg" className="gap-2" asChild>
+            <Button variant="outline" size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
               <Link href="/pricing">
                 {t('seePricing')}
                 <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />

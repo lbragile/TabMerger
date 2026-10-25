@@ -50,3 +50,4 @@
 - [Guest vs free pricing CTA](learnings/pricing-guest-vs-free-cta.md) — page gives guests currentTier 'free' too; `signedIn` prop picks "Get Pro" vs "Upgrade to Pro"; teaser has no buy button
 - [Per-test hoisted mock state](learnings/vitest-hoisted-mock-state.md) — vary a hoisted vi.mock via a `vi.hoisted` object; `vi.doUnmock` drops the hoisted mock too
 - [Pro AI option switch + plan-change confirm](learnings/pro-ai-option-switch-and-plan-change-confirm.md) — fieldset/radio segmented control, stacked option panels, radius tokens (--radius 0), confirm-before-POST on shared planChangeTiming(), RTL ignore trap
+- [Mobile horizontal overflow](learnings/mobile-horizontal-overflow.md) — overflow-x clip (not hidden) keeps sticky navbar; fixed left+right banner stretches as a symptom; grid-cols-N is minmax(0,1fr); probe past the clip

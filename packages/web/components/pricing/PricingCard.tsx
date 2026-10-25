@@ -19,6 +19,10 @@ import { AI_OPTION_ORDER, initialAiMode, isAiOptionAvailable } from './aiOptions
 import { usePlanChange } from './usePlanChange'
 import type { PaidTierKey } from '@/lib/tiers'
 
+/** The card's full-width CTA: wraps instead of overflowing the card when a translated label is
+ *  long, and keeps the usual 40px single-line height whenever it fits. */
+const CTA_CLASS = 'w-full rounded-lg h-auto min-h-10 whitespace-normal text-center'
+
 // ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
 // and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
 // so `currentTier` (always DB shape) compares correctly against this card's `tier` prop.
@@ -342,7 +346,7 @@ export function PricingCard({
         {isComingSoon ? (
           <Button
             variant="outline"
-            className="w-full rounded-lg cursor-not-allowed opacity-60"
+            className={cn(CTA_CLASS, 'cursor-not-allowed opacity-60')}
             disabled
             aria-disabled="true"
           >
@@ -351,7 +355,7 @@ export function PricingCard({
         ) : isFree ? (
           <Button
             variant="outline"
-            className="w-full rounded-lg"
+            className={CTA_CLASS}
             onClick={handleClick}
           >
             {t('installFree')}
@@ -360,7 +364,7 @@ export function PricingCard({
           <>
             <Button
               variant="default"
-              className="w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+              className={cn(CTA_CLASS, 'bg-primary text-primary-foreground hover:bg-primary/90')}
               onClick={switchTarget ? handleSwitchInterval : handleSwitchAiMode}
               disabled={change.loading}
               loading={change.loading}
@@ -379,7 +383,7 @@ export function PricingCard({
           // handleClick sends every subscriber to /api/billing-portal, never /api/checkout.
           <Button
             variant="secondary"
-            className="w-full rounded-lg"
+            className={CTA_CLASS}
             onClick={handleClick}
             disabled={loading || change.loading}
             loading={loading || change.loading}
@@ -389,7 +393,7 @@ export function PricingCard({
         ) : (
           <Button
             className={cn(
-              'w-full rounded-lg',
+              CTA_CLASS,
               highlighted && 'bg-primary text-primary-foreground hover:bg-primary/90'
             )}
             variant={highlighted ? 'default' : 'secondary'}

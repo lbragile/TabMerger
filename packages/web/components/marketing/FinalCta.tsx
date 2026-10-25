@@ -35,7 +35,9 @@ export function FinalCta({ browser = 'chrome' }: FinalCtaProps = {}) {
           {AI_AVAILABILITY.any ? t('leadAi') : t('leadNoAi')}
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button size="lg" className="gap-2" asChild>
+          {/* Wraps instead of running off a phone screen when the label is long (another
+              language); one line, at the usual 44px, whenever it fits. */}
+          <Button size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
             <StoreLink href={storeLinks[browser]}>
               <Icon size={18} />
               {t(INSTALL_LABEL[browser])}

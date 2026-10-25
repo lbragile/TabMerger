@@ -67,7 +67,8 @@ export function InstallButtons({ browser = 'chrome' }: InstallButtonsProps = {})
             <Button
               size="lg"
               variant="outline"
-              className="gap-2 bg-transparent text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/10"
+              // Wraps instead of running off a phone screen when the label is long (another language).
+              className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center bg-transparent text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/10"
               asChild
             >
               <Link href="/pricing">
