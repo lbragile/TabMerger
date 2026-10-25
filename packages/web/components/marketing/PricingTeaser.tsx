@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { Check } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import {
   TIERS,
@@ -11,7 +12,7 @@ import {
 import { useYearlySubtext } from '@/components/pricing/useYearlySubtext'
 import { useListPrice, useZeroPrice } from '@/components/pricing/priceFormat'
 import { cn } from '@/lib/utils'
-import type { AiMode } from '@tabmerger/shared'
+import { PRO_AI_MONTHLY_CREDITS, type AiMode } from '@tabmerger/shared'
 import { AiOptionSwitch } from '@/components/pricing/AiOptionSwitch'
 import { initialAiMode, isAiOptionAvailable } from '@/components/pricing/aiOptions'
 
@@ -21,8 +22,8 @@ const tiers = [
   { key: 'proAi', highlighted: false, blurb: 'blurbProAi' },
 ] as const
 
-/** The small muted lines under a card's price: the blurb, and the note below it. */
-const SUB_LINE = 'text-[11.5px] text-text3 mt-1'
+/** The small muted line under a card's price. */
+const SUB_LINE = 'text-xs text-text3 mt-1'
 
 export function PricingTeaser() {
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
@@ -36,20 +37,20 @@ export function PricingTeaser() {
   const zeroPrice = useZeroPrice()
 
   return (
-    <section className="py-16 sm:py-[72px] px-6 sm:px-11 border-b border-border">
-      <div className="container max-w-[960px] text-center">
-        <h2 className="font-semibold tracking-tight mb-6 text-[28px] sm:text-[34px] leading-tight">
+    <section className="py-16 sm:py-[4.5rem] px-6 sm:px-11 border-b border-border">
+      <div className="container max-w-[60rem] text-center">
+        <h2 className="font-semibold tracking-tight mb-6 text-[1.75rem] sm:text-[2.125rem] leading-tight">
           {t('title')}
         </h2>
 
         {/* Monthly/Yearly toggle — mirrors the full pricing page's pill toggle */}
-        <div className="inline-flex rounded-lg p-[3px] bg-surface3 border border-border text-sm mb-8">
+        <div className="inline-flex rounded-lg p-[0.1875rem] bg-surface3 border border-border text-sm mb-10">
           {(['monthly', 'yearly'] as const).map((opt) => (
             <button
               key={opt}
               onClick={() => setInterval(opt)}
               className={cn(
-                'h-[30px] px-4 rounded-lg font-medium transition-colors text-[13px] flex items-center gap-1.5',
+                'h-[1.875rem] px-4 rounded-lg font-medium transition-colors text-[0.8125rem] flex items-center gap-1.5',
                 interval === opt
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -58,15 +59,16 @@ export function PricingTeaser() {
               {opt === 'monthly' ? p('monthly') : p('yearly')}
               {opt === 'yearly' && YEARLY_DISCOUNT_PERCENT > 0 && (
                 // Left-to-right isolate: keeps the minus sign before the number in RTL pages.
-                <span dir="ltr" className="text-[11px] font-semibold text-primary">{p('discountBadge', { percent: YEARLY_DISCOUNT_PERCENT })}</span>
+                <span dir="ltr" className="text-[0.6875rem] font-semibold text-primary">{p('discountBadge', { percent: YEARLY_DISCOUNT_PERCENT })}</span>
               )}
             </button>
           ))}
         </div>
 
-        {/* auto-rows-fr: stacked on mobile, every card is as tall as the tallest one (a blurb
-            that wraps makes its card taller); side by side, the single row already does that. */}
-        <div className="grid grid-cols-1 auto-rows-fr sm:grid-cols-3 gap-4 mb-6">
+        {/* Stacked on phones, each card is as tall as its own content. Side by side, each card is a
+            subgrid over the same three rows (header, blurb, highlights and Pro AI's setup option), so names,
+            prices, blurbs and lists line up across cards even when a translation wraps. */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-[repeat(3,auto)] gap-x-4 gap-y-8 sm:gap-y-0 mb-8 pt-3 text-start">
           {tiers.map((row) => {
             const tier = TIERS[row.key]
             const isProAi = row.key === 'proAi'
@@ -79,49 +81,86 @@ export function PricingTeaser() {
             // Same wording and numbers as the pricing page's yearly cards.
             const monthlyEquivalent =
               row.key === 'free' ? null : yearlySubtext(isOwnKey ? YEARLY_SAVINGS.proAiByok : YEARLY_SAVINGS[row.key])
+            // Three short highlights per card, worded by the pricing page's own feature labels.
+            const highlights =
+              row.key === 'free'
+                ? [
+                    p('features.upToGroups', { count: TIERS.free.limits.groups }),
+                    p('features.upToTabs', { count: TIERS.free.limits.tabs }),
+                    p('features.importExport'),
+                    p('features.dragDrop'),
+                  ]
+                : row.key === 'pro'
+                  ? [p('features.everythingInFree'), p('features.unlimited'), p('features.cloudSync'), p('features.sessionsSynced')]
+                  : [
+                      p('features.everythingInPro'),
+                      p('features.aiGrouping'),
+                      isOwnKey
+                        ? p('features.ownApiKey')
+                        : p('features.aiCreditsMonthly', { count: PRO_AI_MONTHLY_CREDITS }),
+                    ]
+            const badge = row.highlighted ? p('recommended') : isComingSoon ? common('comingSoon') : null
             return (
               <div
                 key={row.key}
+                data-tier={row.key}
                 className={cn(
-                  'rounded-2xl border p-6 relative',
-                  row.highlighted ? 'bg-surface shadow-sh3 border-primary/30' : 'bg-surface border-border'
+                  'relative min-w-0 flex flex-col sm:grid sm:grid-rows-subgrid sm:row-span-3 rounded-2xl border p-6',
+                  row.highlighted
+                    ? 'border-primary ring-1 ring-primary bg-gradient-to-b from-primary/10 to-surface shadow-sh3'
+                    : 'border-border bg-surface'
                 )}
               >
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-2">
-                  <span />
+                {badge && (
+                  // On the card's top edge, centered, so it never moves the name.
+                  <span
+                    className={cn(
+                      'absolute inset-x-0 mx-auto w-fit top-0 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-wider leading-none',
+                      row.highlighted
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground border border-border'
+                    )}
+                  >
+                    {badge}
+                  </span>
+                )}
+                <div>
                   <p className="text-sm font-semibold">{tier.name}</p>
-                  {row.highlighted ? (
-                    <span className="inline-flex items-center justify-self-end self-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary/15 text-primary">
-                      {p('recommended')}
-                    </span>
-                  ) : isComingSoon ? (
-                    <span className="inline-flex items-center justify-self-end self-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-muted text-muted-foreground">
-                      {common('comingSoon')}
-                    </span>
+                  <p className="mt-2 text-4xl font-semibold tracking-tight">
+                    {price}
+                    <span className="text-[0.8125rem] font-normal text-text3 ms-1">{period}</span>
+                  </p>
+                  {/* Every card has a note line. A paid card's is the yearly price per month: on
+                      Monthly it stays in place, hidden from sight and from assistive tech, so its
+                      space is already reserved and nothing moves on toggling. */}
+                  {monthlyEquivalent === null ? (
+                    <p className={SUB_LINE}>{p('noCard')}</p>
                   ) : (
-                    <span />
+                    <p
+                      className={cn(SUB_LINE, interval === 'monthly' && 'invisible')}
+                      aria-hidden={interval === 'monthly' ? true : undefined}
+                    >
+                      {monthlyEquivalent}
+                    </p>
                   )}
                 </div>
-                {isProAi && <AiOptionSwitch value={aiMode} onChange={setAiMode} className="mb-3" />}
-                <p className="text-3xl font-semibold tracking-tight">
-                  {price}
-                  <span className="text-[13px] font-normal text-text3 ms-1">{period}</span>
-                </p>
-                <p className={SUB_LINE}>{t(row.blurb)}</p>
-                {/* Every card has a note line, so the three stay the same height when stacked. A
-                    paid card's line is the yearly price per month: on Monthly it stays in place,
-                    hidden from sight and from assistive tech, so its space (however it wraps) is
-                    already reserved and nothing moves on toggling. */}
-                {monthlyEquivalent === null ? (
-                  <p className={SUB_LINE}>{p('noCard')}</p>
-                ) : (
-                  <p
-                    className={cn(SUB_LINE, interval === 'monthly' && 'invisible')}
-                    aria-hidden={interval === 'monthly' ? true : undefined}
-                  >
-                    {monthlyEquivalent}
-                  </p>
-                )}
+                <p className="mt-4 text-sm text-muted-foreground">{t(row.blurb)}</p>
+                {/* Pro AI's setup choice closes this row, below the highlights, so it never shifts a price. */}
+                <div className="mt-4 flex flex-col border-t border-border pt-4">
+                  <ul className="space-y-2 text-sm">
+                    {highlights.map((text) => (
+                      <li key={text} className="flex items-start gap-2">
+                        <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
+                        <span className="min-w-0">{text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {isProAi && (
+                    <div className="mt-auto pt-4">
+                      <AiOptionSwitch value={aiMode} onChange={setAiMode} />
+                    </div>
+                  )}
+                </div>
               </div>
             )
           })}
@@ -129,14 +168,14 @@ export function PricingTeaser() {
 
         <Link
           href="/pricing"
-          className="inline-flex items-center gap-1.5 h-10 px-5 rounded-lg bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 h-11 px-6 rounded-lg bg-primary text-primary-foreground text-sm font-medium shadow-sm hover:bg-primary/90 transition-colors mb-4"
         >
           {t('seeFull')}
           {/* Points forward: mirrored right to left. */}
           <span aria-hidden="true" className="inline-block rtl:-scale-x-100">→</span>
         </Link>
 
-        <p className="text-[12.5px] text-text3">
+        <p className="text-[0.78125rem] text-text3">
           {t('cancelNote')}
         </p>
         <p className="text-xs text-text3 mt-1">{p('usdNote')}</p>
