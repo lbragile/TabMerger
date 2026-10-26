@@ -39,6 +39,7 @@ import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
 import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, SEARCH_NON_MATCHING, formatUsd, normalizeSearchNonMatching, toHttpUrl } from '@tabmerger/shared';
 import { formatDate } from '@/lib/i18n';
+import { SETTINGS_SELECT_WIDTH } from '@/components/Settings/settingsControls';
 
 /** The search setting's options, in the order the select lists them. */
 const SEARCH_NON_MATCHING_CHOICES = [
@@ -358,7 +359,7 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
               value={draft.theme}
               onValueChange={(v) => patch('theme', v as AppSettings['theme'])}
             >
-              <SelectTrigger className="w-28 h-7 text-xs shrink-0" aria-label={t('settings.general.themeLabel')} data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
+              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('settings.general.themeLabel')} data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -407,7 +408,7 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
               value={normalizeSearchNonMatching(draft.searchNonMatching)}
               onValueChange={(v) => patch('searchNonMatching', normalizeSearchNonMatching(v))}
             >
-              <SelectTrigger className="w-24 h-7 text-xs shrink-0" aria-label={t('search.settingLabel')}>
+              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('search.settingLabel')}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -488,7 +489,7 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
               value={String(draft.staleThresholdDays ?? 30)}
               onValueChange={(v) => patch('staleThresholdDays', Number(v) as AppSettings['staleThresholdDays'])}
             >
-              <SelectTrigger className="w-24 h-7 text-xs shrink-0">
+              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

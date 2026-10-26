@@ -1011,6 +1011,17 @@ describe('SettingsModal — Language', () => {
   /** The row's button: named by the row's label, then the draft ("Language Français"). */
   const languageButton = () => screen.getByTestId('settings-language')
 
+  it('gives every dropdown on the General tab the same width, the language picker included', async () => {
+    const { SETTINGS_SELECT_WIDTH } = await import('@/components/Settings/settingsControls')
+    renderModal()
+    const dropdowns = [languageButton(), ...screen.getAllByRole('combobox')]
+    expect(dropdowns.length).toBeGreaterThanOrEqual(4)
+    for (const dropdown of dropdowns) {
+      const widths = dropdown.className.split(/\s+/).filter((c) => /^w-/.test(c))
+      expect(widths).toEqual([SETTINGS_SELECT_WIDTH])
+    }
+  })
+
   it('lists Browser default first, then every language by its own name, in a searchable list', async () => {
     const { LOCALE_NATIVE_NAMES, SUPPORTED_LOCALES } = await import('@tabmerger/shared')
     renderModal()
