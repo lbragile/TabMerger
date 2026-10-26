@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "Wer übernimmt die Einrichtung?",
-    "managed": "TabMerger",
+    "managed": "Wir",
     "byok": "Du",
     "managedHint": "Credits messen die KI-Nutzung: größere Aufgaben und stärkere Modelle verbrauchen mehr.",
     "byokHint": "Du fügst einen API-Schlüssel von Anthropic, OpenAI oder Google hinzu. Der Anbieter rechnet deine Nutzung direkt mit dir ab, ohne Credit-Limit.",

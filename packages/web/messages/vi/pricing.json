@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "Ai lo phần thiết lập?",
-    "managed": "TabMerger",
+    "managed": "Chúng tôi",
     "byok": "Bạn",
     "managedHint": "Tín dụng đo mức dùng AI: việc lớn hơn và mô hình mạnh hơn dùng nhiều hơn.",
     "byokHint": "Bạn thêm khóa API của Anthropic, OpenAI hoặc Google. Nhà cung cấp tính phí trực tiếp với bạn theo mức dùng, không giới hạn tín dụng.",

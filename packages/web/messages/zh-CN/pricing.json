@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "由谁负责设置？",
-    "managed": "TabMerger",
+    "managed": "我们",
     "byok": "您自己",
     "managedHint": "额度用于衡量 AI 用量：任务越大、模型越强，消耗越多。",
     "byokHint": "由您添加 Anthropic、OpenAI 或 Google 的 API 密钥，按实际用量由服务商直接向您计费，无额度上限。",

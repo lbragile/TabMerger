@@ -14,7 +14,7 @@ interface AiOptionSwitchProps {
 
 /**
  * Pro AI's two options as a segmented control answering "Who handles setup": "You" (`byok`, your
- * own API key) or "TabMerger" (`managed`, AI on TabMerger's key), in `AI_OPTION_ORDER`; the
+ * own API key) or "Us" (`managed`, AI on TabMerger's key), in `AI_OPTION_ORDER`; the
  * selected one is `value` (the card's default comes from `initialAiMode`). Radii are theme tokens
  * only (the track like the card's buttons, the pill one step in), so it follows `--radius`. Built from
  * native radio buttons (visually hidden) so arrow keys, focus and the "1 of 2" announcement come

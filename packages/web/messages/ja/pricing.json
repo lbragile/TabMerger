@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "セットアップは誰が行いますか？",
-    "managed": "TabMerger",
+    "managed": "当社",
     "byok": "ご自身",
     "managedHint": "クレジットはAIの使用量を表します。大きな処理や高性能なモデルほど多く消費します。",
     "byokHint": "Anthropic、OpenAI、GoogleのAPIキーをご自身で追加します。使った分は各社から直接請求され、クレジット上限はありません。",

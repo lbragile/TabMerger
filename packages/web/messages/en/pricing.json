@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "Who handles setup?",
-    "managed": "TabMerger",
+    "managed": "Us",
     "byok": "You",
     "managedHint": "Credits measure AI use: bigger jobs and stronger models use more.",
     "byokHint": "You add an API key from Anthropic, OpenAI or Google. They bill you directly for what you use, with no credit limit.",

@@ -293,31 +293,18 @@ export function PricingCard({
       ) : isComingSoon ? (
         <TierBadge tone="muted">{common('comingSoon')}</TierBadge>
       ) : null}
-      {/* Title row */}
-      <div className="flex items-center justify-between gap-2 mb-2.5">
-        {/* The plan name leads the card: larger than the feature text, still smaller than the price. */}
-        <h2 className="text-2xl font-bold tracking-tight">{name}</h2>
-      </div>
-
-      {/* Price */}
+      {/* The plan name leads the card: larger than the feature text, still smaller than the price. */}
+      <h2 className="mb-2.5 text-2xl font-bold tracking-tight">{name}</h2>
       {/* One price size on every card, so the prices line up across the row. */}
-      <div className="flex items-baseline gap-1.5 mb-1">
+      <div className="flex flex-wrap items-baseline gap-x-1.5 mb-1">
         <span className="text-4xl font-semibold tracking-tight">{displayPrice}</span>
         <span className="text-[13px] text-text3">
           {rawPrice === 0 ? t('forever') : interval === 'monthly' ? t('perMonth') : t('perYear')}
         </span>
       </div>
-      {/* One note line under the price, kept even when empty so the feature lists start at the
-          same height. Pro AI drops an empty one: its setup switch follows the price there. */}
-      {(priceNote || !aiOptions) && (
-        <p className="mb-5 min-h-[1lh] text-[11.5px] text-text3">{priceNote}</p>
-      )}
-
-      {/* The Pro AI setup switch sits right under the price it changes. Below the price, not
-          above it, so every card's title and price still line up. */}
-      {aiOptions && (
-        <AiOptionSwitch value={aiMode} onChange={setAiMode} className={cn('mb-5', !priceNote && 'mt-3')} />
-      )}
+      {/* One note line under the price on every card, kept even when empty so the feature lists
+          start at the same height. */}
+      <p className="mb-5 min-h-[1lh] text-[11.5px] text-text3">{priceNote}</p>
 
       {/* Feature list. With both Pro AI options, both lists (and their notes) share one grid cell
           and the one not on show is hidden from sight and from assistive tech: the card is as tall
@@ -342,6 +329,9 @@ export function PricingCard({
       {/* CTA button — omitted for the current plan (badge already says so), except Free,
           which always offers the install link since "installed" isn't a Stripe state. */}
       <div className="mt-auto">
+        {/* The Pro AI setup switch sits with the button, not near the price, so every card's
+            title, price and feature list line up. */}
+        {aiOptions && <AiOptionSwitch value={aiMode} onChange={setAiMode} className="mb-4" />}
         {isComingSoon ? (
           <Button
             variant="outline"

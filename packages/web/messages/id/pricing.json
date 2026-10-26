@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "Siapa yang mengurus penyiapan?",
-    "managed": "TabMerger",
+    "managed": "Kami",
     "byok": "Anda",
     "managedHint": "Kredit mengukur penggunaan AI: tugas yang lebih besar dan model yang lebih kuat memakai lebih banyak.",
     "byokHint": "Anda menambahkan kunci API dari Anthropic, OpenAI, atau Google. Penyedia menagih Anda langsung sesuai pemakaian, tanpa batas kredit.",

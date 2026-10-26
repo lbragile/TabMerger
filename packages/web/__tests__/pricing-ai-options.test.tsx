@@ -69,12 +69,12 @@ function checkoutBody() {
 }
 
 describe('Pro AI option switch on the pricing page', () => {
-  it('asks "Who handles setup" with two radio options, You and TabMerger', async () => {
+  it('asks "Who handles setup" with two radio options, You and Us (TabMerger)', async () => {
     const { PricingTable } = await loadWithFlags({ managed: true, byok: true })
     render(<PricingTable installHref={INSTALL} />)
     const group = screen.getByRole('group', { name: 'Who handles setup?' })
     const options = within(group).getAllByRole('radio')
-    expect(options.map((o) => o.closest('label')?.textContent)).toEqual(['You', 'TabMerger'])
+    expect(options.map((o) => o.closest('label')?.textContent)).toEqual(['You', 'Us'])
   })
 
   it('lists "You" first but still opens on TabMerger when both options are on sale', async () => {
@@ -84,7 +84,7 @@ describe('Pro AI option switch on the pricing page', () => {
       const options = within(screen.getByRole('group', { name: 'Who handles setup?' })).getAllByRole('radio')
       expect(options[0]).toHaveAccessibleName('You')
       expect(options[0]).not.toBeChecked()
-      expect(screen.getByRole('radio', { name: 'TabMerger' })).toBeChecked()
+      expect(screen.getByRole('radio', { name: 'Us' })).toBeChecked()
       unmount()
     }
 
@@ -131,7 +131,7 @@ describe('Pro AI option switch on the pricing page', () => {
       const user = userEvent.setup()
       render(<PricingTable installHref={INSTALL} />)
 
-      await user.click(screen.getByRole('radio', { name: 'TabMerger' }))
+      await user.click(screen.getByRole('radio', { name: 'Us' }))
       const card = proAiCard()
       expect(within(card).getByText(`$${PRO_AI.monthlyPrice}`)).toBeInTheDocument()
       const cta = within(card).getByRole('button', { name: 'Coming soon' })
@@ -162,7 +162,7 @@ describe('Pro AI option switch on the pricing page', () => {
       const { PricingTable } = await loadWithFlags({ managed: false, byok: false })
       const user = userEvent.setup()
       render(<PricingTable installHref={INSTALL} />)
-      expect(screen.getByRole('radio', { name: 'TabMerger' })).toBeChecked()
+      expect(screen.getByRole('radio', { name: 'Us' })).toBeChecked()
       expect(within(proAiCard()).getByRole('button', { name: 'Coming soon' })).toBeDisabled()
       await user.click(screen.getByRole('radio', { name: 'You' }))
       expect(within(proAiCard()).getByRole('button', { name: 'Coming soon' })).toBeDisabled()
@@ -178,7 +178,7 @@ describe('Pro AI option switch on the pricing page', () => {
       const user = userEvent.setup()
       render(<PricingTable installHref={INSTALL} />)
 
-      expect(screen.getByRole('radio', { name: 'TabMerger' })).toBeChecked()
+      expect(screen.getByRole('radio', { name: 'Us' })).toBeChecked()
       await user.click(within(proAiCard()).getByRole('button', { name: 'Get Pro AI' }))
       expect(checkoutBody()).toEqual({ tier: 'proAi', interval: 'monthly', aiMode: 'managed' })
 
@@ -227,7 +227,7 @@ describe('Pro AI option switch on the pricing page', () => {
       const user = userEvent.setup()
       render(<PricingTable installHref={INSTALL} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" />)
 
-      expect(screen.getByRole('radio', { name: 'TabMerger' })).toBeChecked()
+      expect(screen.getByRole('radio', { name: 'Us' })).toBeChecked()
       expect(within(proAiCard()).getByText('Current')).toBeInTheDocument()
 
       await user.click(screen.getByRole('radio', { name: 'You' }))
@@ -263,7 +263,7 @@ describe('Pro AI option switch on the landing page teaser', () => {
     expect(within(card()).getByText(`$${OWN_KEY.monthlyPrice}`)).toBeInTheDocument()
     expect(within(card()).queryByText('Coming soon')).not.toBeInTheDocument()
 
-    await user.click(screen.getByRole('radio', { name: 'TabMerger' }))
+    await user.click(screen.getByRole('radio', { name: 'Us' }))
     expect(within(card()).getByText(`$${PRO_AI.monthlyPrice}`)).toBeInTheDocument()
     expect(within(card()).getByText('Coming soon')).toBeInTheDocument()
   })

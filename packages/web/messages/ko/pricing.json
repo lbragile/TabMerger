@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "설정은 누가 하나요?",
-    "managed": "TabMerger",
+    "managed": "저희",
     "byok": "직접",
     "managedHint": "크레딧은 AI 사용량을 나타냅니다. 큰 작업이나 성능 높은 모델일수록 더 많이 씁니다.",
     "byokHint": "Anthropic, OpenAI 또는 Google의 API 키를 직접 추가합니다. 사용한 만큼 해당 업체가 직접 청구하며 크레딧 한도는 없습니다.",

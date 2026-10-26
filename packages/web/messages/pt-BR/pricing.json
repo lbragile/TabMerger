@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "Quem cuida da configuração?",
-    "managed": "TabMerger",
+    "managed": "Nós",
     "byok": "Você",
     "managedHint": "Os créditos medem o uso de IA: tarefas maiores e modelos mais potentes gastam mais.",
     "byokHint": "Você adiciona uma chave de API da Anthropic, OpenAI ou Google. O provedor cobra diretamente pelo que você usar, sem limite de créditos.",

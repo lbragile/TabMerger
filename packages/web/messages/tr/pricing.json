@@ -64,7 +64,7 @@
   },
   "aiOptions": {
     "legend": "Kurulumu kim yapar?",
-    "managed": "TabMerger",
+    "managed": "Biz",
     "byok": "Siz",
     "managedHint": "Krediler yapay zekâ kullanımını ölçer: büyük işler ve güçlü modeller daha fazla harcar.",
     "byokHint": "Anthropic, OpenAI veya Google’dan bir API anahtarı eklersiniz. Sağlayıcı kullandığınız kadar ücreti doğrudan sizden alır, kredi sınırı yoktur.",

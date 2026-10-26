@@ -151,7 +151,7 @@ describe('PricingTeaser', () => {
       await user.click(proAi.getByLabelText('You'))
       expect(proAi.getByText('Use your own AI provider')).toBeInTheDocument()
       expect(proAi.queryByText(/AI credits a month/)).not.toBeInTheDocument()
-      await user.click(proAi.getByLabelText('TabMerger'))
+      await user.click(proAi.getByLabelText('Us'))
       expect(proAi.getByText(/AI credits a month/)).toBeInTheDocument()
       expect(proAi.queryByText('Use your own AI provider')).not.toBeInTheDocument()
     })
