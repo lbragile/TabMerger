@@ -5,7 +5,9 @@
   "selectItems": "Seleccionar elementos",
   "exitSelectionMode": "Salir del modo de selección",
   "aiActions": "Acciones de IA",
-  "aiProRequired": "Requiere Pro AI: haz clic para mejorar",
+  "aiActionsLocked": "Acciones de IA, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Incluido en Pro AI",
   "aiSection": {
     "openTabs": "Pestañas abiertas",
     "selectedGroup": "Grupo seleccionado",

@@ -5,6 +5,8 @@ metadata:
   type: reference
 ---
 
+- **Superseded in part:** the action no longer renames directly or takes a `groupIndex`; it opens the
+  "Name this group" picker. See [[learnings-name-picker-and-locked-ai-preview]].
 - **One action, two menus.** `hooks/useNameGroupAction.ts` (`useNameGroupAction(group, groupIndex)`
   → `{ run, isPending, block }`) backs the sidebar's "AI rename" and the header AI menu's "Name
   group" (active group = `groupsState.available[activeGroupIndex]`). `block` is `notSaved` (Now

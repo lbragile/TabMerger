@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Hỏi trước khi xóa nhóm hoặc cửa sổ đã lưu",
     "openOnClickLabel": "Mở thẻ khi nhấp chuột",
     "openOnClickDescription": "Nhấp một lần sẽ mở thẻ trong trình duyệt",
+    "showAiButtonLabel": "Hiện nút AI",
+    "showAiButtonDescription": "Nút ✨ ở đầu trang, với các hành động AI cho thẻ và nhóm của bạn",
     "dedupLabel": "Tự động loại bỏ trùng lặp khi hợp nhất",
     "dedupDescription": "Xóa các thẻ trùng lặp khi hợp nhất cửa sổ",
     "previewImagesLabel": "Hiện hình ảnh trang trong bản xem trước",

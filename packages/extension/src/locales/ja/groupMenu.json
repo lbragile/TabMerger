@@ -41,6 +41,7 @@
     "noDuplicates": "重複は見つかりませんでした",
     "noTabsToName": "名前を付けるタブがこのグループにありません",
     "aiRenameFailed": "AIによる名前の変更に失敗しました",
+    "nameAlreadyFits": "「{{name}}」はすでにこのグループに合っています",
     "noTabsToDescribe": "説明を書くタブがこのグループにありません",
     "aiDescribeFailed": "このグループの説明を書けませんでした",
     "noteAdded": "メモを追加しました",

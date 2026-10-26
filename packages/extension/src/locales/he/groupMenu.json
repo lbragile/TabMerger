@@ -41,6 +41,7 @@
     "noDuplicates": "לא נמצאו כפילויות",
     "noTabsToName": "אין בקבוצה כרטיסיות שאפשר לתת לפיהן שם",
     "aiRenameFailed": "שינוי השם עם AI נכשל",
+    "nameAlreadyFits": "השם „{{name}}” כבר מתאים לקבוצה הזו",
     "noTabsToDescribe": "אין בקבוצה כרטיסיות לתיאור",
     "aiDescribeFailed": "לא ניתן היה לתאר את הקבוצה",
     "noteAdded": "ההערה נוספה",

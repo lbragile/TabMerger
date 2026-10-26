@@ -41,6 +41,7 @@
     "noDuplicates": "Keine Duplikate gefunden",
     "noTabsToName": "Diese Gruppe enthält keine Tabs zum Benennen",
     "aiRenameFailed": "KI-Umbenennung fehlgeschlagen",
+    "nameAlreadyFits": "„{{name}}“ passt bereits zu dieser Gruppe",
     "noTabsToDescribe": "Diese Gruppe enthält keine Tabs zum Beschreiben",
     "aiDescribeFailed": "Gruppe konnte nicht beschrieben werden",
     "noteAdded": "Notiz hinzugefügt",

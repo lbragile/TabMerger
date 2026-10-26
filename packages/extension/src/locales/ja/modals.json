@@ -72,5 +72,14 @@
     "append": "下に追加",
     "tooLong": "メモの下に追加するには長すぎます（最大 {{max}} 文字）。代わりに置き換えてください。",
     "saveFailed": "メモを保存できませんでした"
+  },
+  "nameGroup": {
+    "title": "このグループに名前を付ける",
+    "current": "現在の名前: <name>{{name}}</name>",
+    "choices": "名前の候補",
+    "custom": "または自分で入力:",
+    "customInput": "自分で付ける名前",
+    "rename": "名前を変更",
+    "renameFailed": "グループの名前を変更できませんでした"
   }
 }

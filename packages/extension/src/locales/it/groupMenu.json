@@ -41,6 +41,7 @@
     "noDuplicates": "Nessun duplicato trovato",
     "noTabsToName": "Nessuna scheda in questo gruppo a cui dare un nome",
     "aiRenameFailed": "Rinomina con AI non riuscita",
+    "nameAlreadyFits": "«{{name}}» è già adatto a questo gruppo",
     "noTabsToDescribe": "Nessuna scheda da descrivere in questo gruppo",
     "aiDescribeFailed": "Impossibile descrivere questo gruppo",
     "noteAdded": "Nota aggiunta",

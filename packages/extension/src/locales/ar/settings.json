@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "السؤال قبل حذف المجموعات أو النوافذ المحفوظة",
     "openOnClickLabel": "فتح علامة التبويب بالنقر",
     "openOnClickDescription": "نقرة واحدة تفتح علامة التبويب في المتصفح",
+    "showAiButtonLabel": "إظهار زر الذكاء الاصطناعي",
+    "showAiButtonDescription": "زر ✨ في الشريط العلوي، مع إجراءات الذكاء الاصطناعي لعلامات التبويب والمجموعات",
     "dedupLabel": "إزالة التكرارات تلقائيًا عند الدمج",
     "dedupDescription": "إزالة علامات التبويب المكررة عند دمج النوافذ",
     "previewImagesLabel": "إظهار صور الصفحات في المعاينات",

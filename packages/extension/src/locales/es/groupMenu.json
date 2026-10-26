@@ -41,6 +41,7 @@
     "noDuplicates": "No se encontraron duplicadas",
     "noTabsToName": "No hay pestañas en este grupo para nombrar",
     "aiRenameFailed": "Falló el renombrado con IA",
+    "nameAlreadyFits": "«{{name}}» ya encaja con este grupo",
     "noTabsToDescribe": "No hay pestañas en este grupo para describir",
     "aiDescribeFailed": "No se pudo describir este grupo",
     "noteAdded": "Nota agregada",

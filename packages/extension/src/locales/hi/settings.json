@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "समूह या सहेजी गई विंडो हटाने से पहले पूछें",
     "openOnClickLabel": "क्लिक पर टैब खोलें",
     "openOnClickDescription": "एक क्लिक ब्राउज़र में टैब खोलता है",
+    "showAiButtonLabel": "AI बटन दिखाएं",
+    "showAiButtonDescription": "हेडर का ✨ बटन, जिसमें आपके टैब और समूहों के लिए AI क्रियाएं हैं",
     "dedupLabel": "विलय पर स्वतः-डुप्लिकेट हटाएं",
     "dedupDescription": "विंडो मर्ज करते समय डुप्लिकेट टैब हटाएं",
     "previewImagesLabel": "पूर्वावलोकन में पेज छवियां दिखाएं",

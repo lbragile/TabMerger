@@ -41,6 +41,7 @@
     "noDuplicates": "Nie znaleziono duplikatów",
     "noTabsToName": "Brak kart w tej grupie do nazwania",
     "aiRenameFailed": "Zmiana nazwy przez AI nie powiodła się",
+    "nameAlreadyFits": "„{{name}}” już pasuje do tej grupy",
     "noTabsToDescribe": "Brak kart w tej grupie do opisania",
     "aiDescribeFailed": "Nie udało się opisać tej grupy",
     "noteAdded": "Dodano notatkę",

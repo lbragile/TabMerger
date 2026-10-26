@@ -72,5 +72,14 @@
     "append": "아래에 추가",
     "tooLong": "메모 아래에 추가하기에는 너무 깁니다(최대 {{max}}자). 대신 메모를 바꾸세요.",
     "saveFailed": "메모를 저장하지 못했습니다"
+  },
+  "nameGroup": {
+    "title": "이 그룹 이름 짓기",
+    "current": "현재: <name>{{name}}</name>",
+    "choices": "추천 이름",
+    "custom": "또는 직접 입력:",
+    "customInput": "직접 입력한 이름",
+    "rename": "이름 바꾸기",
+    "renameFailed": "그룹 이름을 바꾸지 못했습니다"
   }
 }

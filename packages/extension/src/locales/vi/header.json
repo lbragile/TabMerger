@@ -5,7 +5,9 @@
   "selectItems": "Chọn mục",
   "exitSelectionMode": "Thoát chế độ chọn",
   "aiActions": "Hành động AI",
-  "aiProRequired": "Yêu cầu Pro AI — nhấp để nâng cấp",
+  "aiActionsLocked": "Hành động AI, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Có trong Pro AI",
   "aiSection": {
     "openTabs": "Thẻ đang mở",
     "selectedGroup": "Nhóm đã chọn",

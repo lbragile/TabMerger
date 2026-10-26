@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Спрашивать перед удалением групп или сохранённых окон",
     "openOnClickLabel": "Открывать вкладку по нажатию",
     "openOnClickDescription": "Одно нажатие открывает вкладку в браузере",
+    "showAiButtonLabel": "Показывать кнопку AI",
+    "showAiButtonDescription": "Кнопка ✨ в шапке с AI-действиями для вкладок и групп",
     "dedupLabel": "Удалять дубликаты при объединении",
     "dedupDescription": "Удалять повторяющиеся вкладки при объединении окон",
     "previewImagesLabel": "Показывать изображения страниц в предпросмотре",

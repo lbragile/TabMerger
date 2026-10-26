@@ -24,6 +24,8 @@ export interface AppSettings {
   showPreviewImages: boolean;
   /** Search: hide or dim what does not match. Objects saved before this existed lack it: read through `normalizeSearchNonMatching` (see `useSearchMode`). */
   searchNonMatching: SearchNonMatching;
+  /** The header's ✨ AI button, for every plan (free and Pro see a locked preview). Settings saved before it existed lack it: treat anything but `false` as on. */
+  showAiButton: boolean;
   aiDailyThrottle: boolean;
   aiAutoGroupEnabled: boolean;
   aiNameGroupEnabled: boolean;
@@ -52,6 +54,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   staleThresholdDays: 30,
   showPreviewImages: false,
   searchNonMatching: DEFAULT_SEARCH_NON_MATCHING,
+  showAiButton: true,
   aiDailyThrottle: true,
   aiAutoGroupEnabled: true,
   aiNameGroupEnabled: true,

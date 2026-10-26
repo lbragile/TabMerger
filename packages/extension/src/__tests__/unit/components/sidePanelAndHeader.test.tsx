@@ -249,10 +249,12 @@ function makeGroupsState(groups: Group[]): GroupsState {
   return { available: groups, active: { id: '', index: 0 } }
 }
 
-function wrap(ui: React.ReactElement) {
+/** Renders `ui` with a fresh query client; `groupsCache` seeds the groups query (read by id by the AI actions once a reply is in). */
+function wrap(ui: React.ReactElement, groupsCache?: GroupsState) {
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   })
+  if (groupsCache) qc.setQueryData(['groups'], groupsCache)
   return render(
     React.createElement(QueryClientProvider, { client: qc },
       React.createElement(TooltipProvider, null, ui)
@@ -695,7 +697,7 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     return user
   }
 
-  it('opens the upgrade modal instead of a menu when AI features are not entitled', async () => {
+  it('without AI features, Auto-group is a locked preview: clicking it runs nothing and opens nothing', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5 })
     const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [{ id: 1, title: 'T', url: 'https://a.com' }], starred: false, incognito: false, focused: false }] })])
     mockUseGroupsData.mockReturnValue({ data: groupsState })
@@ -703,10 +705,12 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     const user = userEvent.setup()
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /ai actions/i }))
+    await user.click(await screen.findByTestId('header-ai-auto-group'))
 
-    expect(baseUIState.openModal).toHaveBeenCalledWith('upgrade')
     expect(mockAutoGroupMutateAsync).not.toHaveBeenCalled()
-    expect(screen.queryByText(/auto-group/i)).toBeNull()
+    expect(baseUIState.openModal).not.toHaveBeenCalled()
+    // The menu stays open (the click was swallowed)
+    expect(screen.getByTestId('header-ai-menu')).toBeTruthy()
   })
 
   it('hides the Auto-group menu item when aiAutoGroupEnabled is off in Settings', async () => {
@@ -945,7 +949,7 @@ describe('Header — AI dropdown: Name group', () => {
     mockUseGroupsData.mockReturnValue({ data: makeGroupsState(groups) })
     mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector({ ...baseUIState, activeGroupIndex }))
     const user = userEvent.setup()
-    wrap(React.createElement(Header))
+    wrap(React.createElement(Header), makeGroupsState(groups))
     await user.click(screen.getByRole('button', { name: /ai actions/i }))
     return { user, item: await screen.findByTestId('header-ai-name-group') }
   }
@@ -983,12 +987,16 @@ describe('Header — AI dropdown: Name group', () => {
     expect(section.querySelector('bdi')?.textContent).toBe('<img src=x onerror=alert(1)>')
   })
 
-  it('sends the active group\'s tabs and renames that group by position', async () => {
-    mockNameGroupMutateAsync.mockResolvedValue({ name: 'Product research' })
-    const { user, item } = await openMenu([nowOpen(), makeGroup({ name: 'Other', windows: [] }), makeGroup({ name: 'Research', windows: [savedWindow] })], 2)
+  it('sends the active group\'s tabs and opens the name picker for that group (no rename yet)', async () => {
+    mockNameGroupMutateAsync.mockResolvedValue({ names: ['Product research', 'Specs'], name: 'Product research' })
+    const research = makeGroup({ name: 'Research', windows: [savedWindow] })
+    const { user, item } = await openMenu([nowOpen(), makeGroup({ name: 'Other', windows: [] }), research], 2)
     await user.click(item)
     expect(mockNameGroupMutateAsync).toHaveBeenCalledWith([tabA, tabB])
-    await waitFor(() => expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 2, name: 'Product research' }))
+    await waitFor(() =>
+      expect(baseUIState.openModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: research.id, suggestions: ['Product research', 'Specs'] })
+    )
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
   })
 
   it.each([
@@ -1173,19 +1181,112 @@ describe('Header — AI menu: sections, Describe group, footer', () => {
     expect(baseUIState.openModal).toHaveBeenCalledWith('settings', { tab: 'ai' })
   })
 
-  it.each([
+  describe.each([
     ['free', { tier: 'free', aiFeatures: false, maxGroups: 5 }],
     ['pro', { tier: 'pro', aiFeatures: false, maxGroups: Infinity }],
-  ])('a %s account never gets the menu (the button opens the upgrade prompt)', async (_name, ent) => {
-    mockUseEntitlements.mockReturnValue(ent)
+  ])('a %s account: the locked preview', (_name, ent) => {
+    beforeEach(() => {
+      mockUseEntitlements.mockReturnValue(ent)
+      // Switches left off from an earlier Pro AI period don't apply to the preview
+      mockUseAppSettings.mockReturnValue({ data: { aiAutoGroupEnabled: false, aiNameGroupEnabled: false, aiDescribeGroupEnabled: false, aiOrganizeEnabled: false } })
+    })
+
+    it('the button: full-colour sparkle, a "Pro AI" tag, named "AI actions, Pro AI", enabled', () => {
+      mockUseGroupsData.mockReturnValue({ data: makeGroupsState([nowOpen(), research()]) })
+      mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+      wrap(React.createElement(Header))
+      const button = screen.getByRole('button', { name: 'AI actions, Pro AI' })
+      expect(button).toBeEnabled()
+      expect(button).not.toHaveAttribute('aria-disabled')
+      expect(button.className.split(/\s+/)).not.toContain('opacity-50')
+      expect(button.querySelector('svg')?.getAttribute('class')).toContain('text-purple-500')
+      const tag = within(button).getByTestId('header-ai-pro-tag')
+      expect(tag).toHaveTextContent('Pro AI')
+      expect(tag.closest('[aria-hidden="true"]')).not.toBeNull()
+    })
+
+    it('the menu shows every action under its section, each locked (a lock, aria-disabled) and never run', async () => {
+      const { user, menu } = await openMenu()
+      expect(menu).toHaveAttribute('data-locked')
+      const groups = screen.getAllByRole('group')
+      expect(groups).toHaveLength(3)
+      expect(groups[0]).toHaveAccessibleName('Open tabs')
+      expect(groups[1]).toHaveAccessibleName('Selected group · Research')
+      expect(groups[2]).toHaveAccessibleName('All groups')
+      const ids = ['header-ai-auto-group', 'header-ai-name-group', 'header-ai-describe-group', 'header-ai-organize']
+      for (const id of ids) {
+        const item = screen.getByTestId(id)
+        expect(item).toHaveAttribute('role', 'menuitem')
+        expect(item).toHaveAttribute('aria-disabled', 'true')
+        expect(item).not.toHaveAttribute('data-disabled')
+        expect(within(item).getByTestId('header-ai-lock')).toBeTruthy()
+        await user.click(item)
+      }
+      expect(mockAutoGroupMutateAsync).not.toHaveBeenCalled()
+      expect(mockNameGroupMutateAsync).not.toHaveBeenCalled()
+      expect(mockDescribeGroupMutateAsync).not.toHaveBeenCalled()
+      expect(baseUIState.openModal).not.toHaveBeenCalled()
+      // Hints describe the action, not why it is blocked
+      expect(screen.getByTestId('header-ai-name-group')).toHaveTextContent('Suggest a name')
+    })
+
+    it('no credits footer and no "AI settings": an "Upgrade to Pro AI" item that opens the upgrade modal', async () => {
+      const { user } = await openMenu()
+      expect(screen.queryByTestId('header-ai-settings')).toBeNull()
+      expect(screen.queryByTestId('header-ai-plan')).toBeNull()
+      const upgrade = screen.getByRole('menuitem', { name: 'Upgrade to Pro AI' })
+      expect(upgrade).not.toHaveAttribute('aria-disabled')
+      await user.click(upgrade)
+      expect(baseUIState.openModal).toHaveBeenCalledWith('upgrade', { reason: 'aiFeatures' })
+    })
+
+    it('the arrow keys reach the locked items and the upgrade item', async () => {
+      mockUseGroupsData.mockReturnValue({ data: makeGroupsState([nowOpen(), research()]) })
+      mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector({ ...baseUIState, activeGroupIndex: 1 }))
+      const user = userEvent.setup()
+      wrap(React.createElement(Header))
+      screen.getByRole('button', { name: 'AI actions, Pro AI' }).focus()
+      await user.keyboard('{Enter}')
+      await waitFor(() => expect(screen.getByTestId('header-ai-auto-group')).toHaveFocus())
+      for (const id of ['header-ai-name-group', 'header-ai-describe-group', 'header-ai-organize', 'header-ai-upgrade']) {
+        await user.keyboard('{ArrowDown}')
+        await waitFor(() => expect(screen.getByTestId(id)).toHaveFocus())
+      }
+      await user.keyboard('{Enter}')
+      expect(baseUIState.openModal).toHaveBeenCalledWith('upgrade', { reason: 'aiFeatures' })
+    })
+
+    it('is hidden when "Show AI button" is off', () => {
+      mockUseAppSettings.mockReturnValue({ data: { showAiButton: false } })
+      mockUseGroupsData.mockReturnValue({ data: makeGroupsState([nowOpen(), research()]) })
+      mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+      wrap(React.createElement(Header))
+      expect(screen.queryByRole('button', { name: /ai actions/i })).toBeNull()
+    })
+  })
+
+  it('Pro AI is unchanged: no tag, no locks, the credits footer, items run', async () => {
+    const { menu } = await openMenu()
+    // (hidden: the open menu hides the rest of the page from the accessibility tree)
+    expect(screen.getByRole('button', { name: 'AI actions', hidden: true })).toBeTruthy()
+    expect(screen.queryByTestId('header-ai-pro-tag')).toBeNull()
+    expect(menu).not.toHaveAttribute('data-locked')
+    expect(screen.queryByTestId('header-ai-lock')).toBeNull()
+    expect(screen.queryByTestId('header-ai-upgrade')).toBeNull()
+    expect(screen.getByTestId('header-ai-plan')).toHaveTextContent('1,820 credits left')
+    expect(screen.getByTestId('header-ai-auto-group')).not.toHaveAttribute('aria-disabled')
+  })
+
+  it.each([
+    ['explicitly on', { showAiButton: true }, true],
+    ['missing (settings saved before it existed)', {}, true],
+    ['off', { showAiButton: false }, false],
+  ])('Pro AI with "Show AI button" %s', (_name, extra, shown) => {
+    mockUseAppSettings.mockReturnValue({ data: { ...ALL_ON, ...extra } })
     mockUseGroupsData.mockReturnValue({ data: makeGroupsState([nowOpen(), research()]) })
-    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector({ ...baseUIState, activeGroupIndex: 1 }))
-    const user = userEvent.setup()
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai actions/i }))
-    expect(baseUIState.openModal).toHaveBeenCalledWith('upgrade')
-    expect(screen.queryByTestId('header-ai-menu')).toBeNull()
-    expect(screen.queryByTestId('header-ai-describe-group')).toBeNull()
+    expect(screen.queryByRole('button', { name: 'AI actions' }) !== null).toBe(shown)
   })
 
   it('a Pro AI account whose AI option is not live has no AI button at all', () => {

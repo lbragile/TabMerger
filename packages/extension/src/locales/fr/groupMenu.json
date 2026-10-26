@@ -41,6 +41,7 @@
     "noDuplicates": "Aucun doublon trouvé",
     "noTabsToName": "Aucun onglet à nommer dans ce groupe",
     "aiRenameFailed": "Échec du renommage par IA",
+    "nameAlreadyFits": "« {{name}} » convient déjà à ce groupe",
     "noTabsToDescribe": "Aucun onglet à décrire dans ce groupe",
     "aiDescribeFailed": "Impossible de décrire ce groupe",
     "noteAdded": "Note ajoutée",

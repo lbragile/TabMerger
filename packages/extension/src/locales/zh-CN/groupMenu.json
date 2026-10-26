@@ -41,6 +41,7 @@
     "noDuplicates": "未发现重复项",
     "noTabsToName": "此分组中没有可用于命名的标签页",
     "aiRenameFailed": "AI 重命名失败",
+    "nameAlreadyFits": "“{{name}}”已经很适合这个分组",
     "noTabsToDescribe": "此分组中没有可描述的标签页",
     "aiDescribeFailed": "无法描述此分组",
     "noteAdded": "已添加备注",

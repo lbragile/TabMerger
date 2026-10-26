@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Demander confirmation avant de supprimer des groupes ou fenêtres enregistrées",
     "openOnClickLabel": "Ouvrir l’onglet au clic",
     "openOnClickDescription": "Un simple clic ouvre l’onglet dans le navigateur",
+    "showAiButtonLabel": "Afficher le bouton IA",
+    "showAiButtonDescription": "Le bouton ✨ de l’en-tête, avec les actions IA pour vos onglets et groupes",
     "dedupLabel": "Dédupliquer automatiquement à la fusion",
     "dedupDescription": "Supprimer les onglets en double lors de la fusion de fenêtres",
     "previewImagesLabel": "Afficher les images de pages dans les aperçus",

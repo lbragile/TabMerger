@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Grupları veya kayıtlı pencereleri silmeden önce sor",
     "openOnClickLabel": "Tıklayınca sekmeyi aç",
     "openOnClickDescription": "Tek tıklama sekmeyi tarayıcıda açar",
+    "showAiButtonLabel": "AI düğmesini göster",
+    "showAiButtonDescription": "Üst bilgideki ✨ düğmesi; sekmeleriniz ve gruplarınız için AI işlemleri sunar",
     "dedupLabel": "Birleştirirken yinelenenleri otomatik kaldır",
     "dedupDescription": "Pencereleri birleştirirken yinelenen sekmeleri kaldır",
     "previewImagesLabel": "Önizlemelerde sayfa görsellerini göster",

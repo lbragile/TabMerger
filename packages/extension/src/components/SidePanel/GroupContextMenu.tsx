@@ -118,7 +118,7 @@ export function GroupContextMenu({
   const { aiFeatures } = useEntitlements();
   const { data: appSettings } = useAppSettings();
   // Same action as the header's AI menu "Name group" (shared hook, same toasts and undo)
-  const { run: handleAIRename } = useNameGroupAction(group, groupIndex);
+  const { run: handleAIRename } = useNameGroupAction(group);
   // Same action as the header's AI menu "Describe group" (shared hook: same note write, review and toasts)
   const { run: handleAIDescribe } = useDescribeGroupAction(group);
   const openModal = useUIStore((s) => s.openModal);

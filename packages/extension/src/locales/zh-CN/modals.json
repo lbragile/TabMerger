@@ -72,5 +72,14 @@
     "append": "添加到下方",
     "tooLong": "太长，无法添加到备注下方（最多 {{max}} 个字符）。请改为替换。",
     "saveFailed": "无法保存备注"
+  },
+  "nameGroup": {
+    "title": "为此分组命名",
+    "current": "当前：<name>{{name}}</name>",
+    "choices": "建议的名称",
+    "custom": "或自己输入：",
+    "customInput": "自定义名称",
+    "rename": "重命名",
+    "renameFailed": "无法重命名分组"
   }
 }

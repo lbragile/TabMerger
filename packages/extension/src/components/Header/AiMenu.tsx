@@ -32,6 +32,7 @@ import { trackEvent } from "@/lib/analytics";
 import { formatNumber } from "@/lib/i18n";
 import { AiRequestError, QuotaExceededError, isFixedInAiSettings } from "@/lib/aiErrors";
 import { TOUR_ANCHORS } from "@/lib/tourSteps";
+import { LockedMark, LockedUpgradeFooter, ProAiTag } from "./AiMenuLocked";
 
 const ICON = "h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground";
 const HINT = "text-[10px] text-muted-foreground font-normal";
@@ -73,8 +74,13 @@ function ItemText({ title, hint }: { title: ReactNode; hint: ReactNode }) {
  * footer shows the credits left this month (managed plans) or "Your own key", and opens Settings
  * on the AI tab.
  *
- * Hidden entirely while no AI option is live, and for a Pro AI subscriber whose option isn't live
- * yet; without AI features the button opens the upgrade prompt instead of a menu.
+ * Free and Pro users get a locked preview: the sparkle in full colour with a "Pro AI" tag, and the
+ * same sections with every action shown but locked (a lock, `aria-disabled`, never runs; the
+ * per-feature switches don't apply) above an "Upgrade to Pro AI" item that opens the upgrade
+ * modal. This is UX only: the server rejects AI requests without Pro AI.
+ *
+ * Hidden entirely while no AI option is live, for a Pro AI subscriber whose option isn't live yet,
+ * and when "Show AI button" (Settings → General) is off.
  */
 export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
     const { t } = useTranslation();
@@ -90,11 +96,19 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
     // The selected-group actions work on the group shown in the main panel; the same actions as
     // the sidebar group menu's (shared hooks: same toasts, undo step and note review)
     const activeGroup = groupsState?.available[activeGroupIndex];
-    const { run: nameActiveGroup, isPending: nameLoading, block } = useNameGroupAction(activeGroup, activeGroupIndex);
+    const { run: nameActiveGroup, isPending: nameLoading, block } = useNameGroupAction(activeGroup);
     const { run: describeActiveGroup, isPending: describeLoading } = useDescribeGroupAction(activeGroup);
     const aiPending = aiLoading || organizeLoading || nameLoading || describeLoading;
 
-    if (!AI_ENABLED || (tier === "pro_ai" && !aiFeatures)) return null;
+    if (!AI_ENABLED || (tier === "pro_ai" && !aiFeatures) || appSettings?.showAiButton === false) return null;
+
+    // Free and Pro: the preview, with every action locked
+    const locked = !aiFeatures;
+    /** A menu item's behaviour: runs `run` (unless `disabled`), or, locked, stays shown and focusable but does nothing (the menu stays open). */
+    const itemProps = (run: () => void, disabled = false) =>
+        locked
+            ? { "aria-disabled": true as const, "data-locked": "", className: "cursor-default text-muted-foreground", onSelect: (e: Event) => e.preventDefault() }
+            : { disabled, onClick: run };
 
     /** Settings on its AI tab (the own key, the model, the per-feature switches). */
     const openAiSettings = () => openModal("settings", { tab: "ai" });
@@ -180,13 +194,14 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
         }
     };
 
-    const showAutoGroup = appSettings?.aiAutoGroupEnabled !== false;
-    const showName = appSettings?.aiNameGroupEnabled !== false;
-    const showDescribe = appSettings?.aiDescribeGroupEnabled !== false;
-    const showOrganize = appSettings?.aiOrganizeEnabled !== false;
+    // The per-feature switches live in Settings → AI (Pro AI); the locked preview shows everything
+    const showAutoGroup = locked || appSettings?.aiAutoGroupEnabled !== false;
+    const showName = locked || appSettings?.aiNameGroupEnabled !== false;
+    const showDescribe = locked || appSettings?.aiDescribeGroupEnabled !== false;
+    const showOrganize = locked || appSettings?.aiOrganizeEnabled !== false;
     // Why the selected-group actions can't run: no saved group (Now Open, none) or no tabs
     const blockedHint = (noTabsKey: "groupMenu.toast.noTabsToName" | "groupMenu.toast.noTabsToDescribe") =>
-        block === "notSaved" ? t("header.nameGroupPickSaved") : block === "noTabs" ? t(noTabsKey) : null;
+        locked ? null : block === "notSaved" ? t("header.nameGroupPickSaved") : block === "noTabs" ? t(noTabsKey) : null;
 
     const sections: { key: string; node: ReactNode }[] = [];
     if (showAutoGroup) {
@@ -194,9 +209,10 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
             key: "openTabs",
             node: (
                 <Section label={t("header.aiSection.openTabs")}>
-                    <DropdownMenuItem onClick={() => void handleAIGroup()} data-testid="header-ai-auto-group">
+                    <DropdownMenuItem {...itemProps(() => void handleAIGroup())} data-testid="header-ai-auto-group">
                         <LayoutGrid className={ICON} />
                         <ItemText title={t("header.autoGroup")} hint={t("header.autoGroupHint")} />
+                        {locked && <LockedMark />}
                     </DropdownMenuItem>
                 </Section>
             ),
@@ -221,15 +237,17 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
                     }
                 >
                     {showName && (
-                        <DropdownMenuItem disabled={block !== null} onClick={() => void nameActiveGroup()} data-testid="header-ai-name-group">
+                        <DropdownMenuItem {...itemProps(() => void nameActiveGroup(), block !== null)} data-testid="header-ai-name-group">
                             <PenLine className={ICON} />
                             <ItemText title={t("header.nameGroup")} hint={blockedHint("groupMenu.toast.noTabsToName") ?? t("header.nameGroupHint")} />
+                            {locked && <LockedMark />}
                         </DropdownMenuItem>
                     )}
                     {showDescribe && (
-                        <DropdownMenuItem disabled={block !== null} onClick={() => void describeActiveGroup()} data-testid="header-ai-describe-group">
+                        <DropdownMenuItem {...itemProps(() => void describeActiveGroup(), block !== null)} data-testid="header-ai-describe-group">
                             <NotebookPen className={ICON} />
                             <ItemText title={t("header.describeGroup")} hint={blockedHint("groupMenu.toast.noTabsToDescribe") ?? t("header.describeGroupHint")} />
+                            {locked && <LockedMark />}
                         </DropdownMenuItem>
                     )}
                 </Section>
@@ -241,9 +259,10 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
             key: "allGroups",
             node: (
                 <Section label={t("header.aiSection.allGroups")}>
-                    <DropdownMenuItem onClick={() => void handleOrganize()} data-testid="header-ai-organize">
+                    <DropdownMenuItem {...itemProps(() => void handleOrganize())} data-testid="header-ai-organize">
                         <WandSparkles className={ICON} />
                         <ItemText title={t("header.organize")} hint={t("header.organizeHint")} />
+                        {locked && <LockedMark />}
                     </DropdownMenuItem>
                 </Section>
             ),
@@ -266,46 +285,41 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={cn(
-                                "h-7 w-7",
-                                aiPending && "animate-pulse",
-                                !aiFeatures && "opacity-50 cursor-not-allowed",
-                            )}
-                            onClick={aiFeatures ? undefined : () => openModal('upgrade')}
+                            className={cn("relative h-7 w-7", aiPending && "animate-pulse")}
                             disabled={aiPending}
-                            aria-disabled={!aiFeatures}
-                            aria-label={t("header.aiActions")}
+                            aria-label={locked ? t("header.aiActionsLocked") : t("header.aiActions")}
                             data-tour={TOUR_ANCHORS.aiActions}
                         >
-                            <Sparkles className={cn(
-                                "h-3.5 w-3.5",
-                                aiFeatures ? "text-purple-500" : "text-muted-foreground",
-                            )} />
+                            <Sparkles className="h-3.5 w-3.5 text-purple-500" />
+                            {locked && <ProAiTag />}
                         </Button>
                     </DropdownMenuTrigger>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                    {aiFeatures ? t('header.aiActions') : t('header.aiProRequired')}
+                    {locked ? t("header.aiActionsLocked") : t("header.aiActions")}
                 </TooltipContent>
             </Tooltip>
 
-            {aiFeatures && (
-                <DropdownMenuContent align="end" className="w-64 text-xs" data-testid="header-ai-menu">
-                    <DropdownMenuLabel className="flex items-center gap-1.5 text-xs font-semibold">
-                        <Sparkles className="h-3.5 w-3.5 shrink-0 text-purple-500" />
-                        {t("header.aiActions")}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {sections.map(({ key, node }, i) => (
-                        <Fragment key={key}>
-                            {i > 0 && <DropdownMenuSeparator />}
-                            {node}
-                        </Fragment>
-                    ))}
-                    <DropdownMenuSeparator />
+            <DropdownMenuContent align="end" className="w-64 text-xs" data-testid="header-ai-menu" data-locked={locked ? "" : undefined}>
+                <DropdownMenuLabel className="flex items-center gap-1.5 text-xs font-semibold">
+                    <Sparkles className="h-3.5 w-3.5 shrink-0 text-purple-500" />
+                    {t("header.aiActions")}
+                    {locked && <span className="ms-auto text-[0.625rem] font-normal text-muted-foreground">{t("header.aiLockedNote")}</span>}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {sections.map(({ key, node }, i) => (
+                    <Fragment key={key}>
+                        {i > 0 && <DropdownMenuSeparator />}
+                        {node}
+                    </Fragment>
+                ))}
+                <DropdownMenuSeparator />
+                {locked ? (
+                    <LockedUpgradeFooter onUpgrade={() => openModal("upgrade", { reason: "aiFeatures" })} />
+                ) : (
                     <AiMenuFooter planLine={planLine} onOpenSettings={openAiSettings} />
-                </DropdownMenuContent>
-            )}
+                )}
+            </DropdownMenuContent>
         </DropdownMenu>
     );
 }

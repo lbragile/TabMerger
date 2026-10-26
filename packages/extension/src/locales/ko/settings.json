@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "그룹이나 저장된 창을 삭제하기 전에 묻기",
     "openOnClickLabel": "클릭하면 탭 열기",
     "openOnClickDescription": "한 번 클릭하면 브라우저에서 탭이 열립니다",
+    "showAiButtonLabel": "AI 버튼 표시",
+    "showAiButtonDescription": "탭과 그룹에 쓸 AI 작업이 들어 있는 헤더의 ✨ 버튼",
     "dedupLabel": "합칠 때 자동으로 중복 제거",
     "dedupDescription": "창을 합칠 때 중복 탭 제거",
     "previewImagesLabel": "미리 보기에 페이지 이미지 표시",

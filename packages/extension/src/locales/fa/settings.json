@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "پیش از حذف گروه‌ها یا پنجره‌های ذخیره‌شده بپرسد",
     "openOnClickLabel": "باز کردن زبانه با کلیک",
     "openOnClickDescription": "یک کلیک زبانه را در مرورگر باز می‌کند",
+    "showAiButtonLabel": "نمایش دکمه هوش مصنوعی",
+    "showAiButtonDescription": "دکمه ✨ در بالای صفحه، با کارهای هوش مصنوعی برای زبانه‌ها و گروه‌های شما",
     "dedupLabel": "حذف خودکار موارد تکراری هنگام ادغام",
     "dedupDescription": "هنگام ادغام پنجره‌ها، زبانه‌های تکراری حذف شوند",
     "previewImagesLabel": "نمایش تصویر صفحه در پیش‌نمایش‌ها",

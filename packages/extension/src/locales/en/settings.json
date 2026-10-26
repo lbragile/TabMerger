@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Ask before deleting groups or saved windows",
     "openOnClickLabel": "Open tab on click",
     "openOnClickDescription": "Single click opens tab in browser",
+    "showAiButtonLabel": "Show AI button",
+    "showAiButtonDescription": "The ✨ button in the header, with AI actions for your tabs and groups",
     "dedupLabel": "Auto-deduplicate on merge",
     "dedupDescription": "Remove duplicate tabs when merging windows",
     "previewImagesLabel": "Show page images in previews",

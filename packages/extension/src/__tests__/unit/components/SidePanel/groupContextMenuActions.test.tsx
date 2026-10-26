@@ -141,8 +141,10 @@ function makeGroup(overrides: Partial<Group> = {}): Group {
   }
 }
 
-function renderGroup(group: Group, groupIndex = 1) {
+/** Renders the menu for `group`; `groupsCache` seeds the groups query (the AI actions re-read the group by id from it). */
+function renderGroup(group: Group, groupIndex = 1, groupsCache?: Group[]) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
+  if (groupsCache) qc.setQueryData(['groups'], { active: { id: '', index: 0 }, available: groupsCache })
   return render(
     React.createElement(QueryClientProvider, { client: qc },
       React.createElement(TooltipProvider, null,
@@ -197,14 +199,16 @@ describe('GroupContextMenu — AI rename', () => {
     expect(screen.getByText('AI rename')).toBeTruthy()
   })
 
-  it('calls nameGroup then updateGroupName with the returned name', async () => {
+  it('calls nameGroup, then opens the name picker with the suggestions (no rename until a pick)', async () => {
     mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
-    mockNameGroup.mockResolvedValue({ name: 'Suggested Name' })
+    mockNameGroup.mockResolvedValue({ names: ['Suggested Name', 'Another'], name: 'Suggested Name' })
     const user = userEvent.setup()
-    renderGroup(groupWithTabs())
+    const group = groupWithTabs()
+    renderGroup(group, 1, [makeGroup({ id: 'now', permanent: true }), group])
     await user.click(screen.getByText('AI rename'))
     expect(mockNameGroup).toHaveBeenCalledWith([{ id: 1, title: 'A', url: 'https://a.com' }])
-    expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 1, name: 'Suggested Name' })
+    await waitFor(() => expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: group.id, suggestions: ['Suggested Name', 'Another'] }))
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
   })
 
   it('shows a quota toast (not a generic error) on QuotaExceededError', async () => {

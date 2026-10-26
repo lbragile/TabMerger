@@ -5,7 +5,9 @@
   "selectItems": "Elemente auswählen",
   "exitSelectionMode": "Auswahlmodus beenden",
   "aiActions": "KI-Aktionen",
-  "aiProRequired": "Pro AI erforderlich – zum Upgraden klicken",
+  "aiActionsLocked": "KI-Aktionen, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "In Pro AI enthalten",
   "aiSection": {
     "openTabs": "Offene Tabs",
     "selectedGroup": "Ausgewählte Gruppe",

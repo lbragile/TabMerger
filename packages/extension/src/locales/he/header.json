@@ -5,7 +5,9 @@
   "selectItems": "בחירת פריטים",
   "exitSelectionMode": "יציאה ממצב בחירה",
   "aiActions": "פעולות AI",
-  "aiProRequired": "נדרש Pro AI — לחצו כדי לשדרג",
+  "aiActionsLocked": "פעולות AI, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "כלול ב-Pro AI",
   "aiSection": {
     "openTabs": "כרטיסיות פתוחות",
     "selectedGroup": "הקבוצה שנבחרה",

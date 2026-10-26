@@ -5,7 +5,9 @@
   "selectItems": "选择项目",
   "exitSelectionMode": "退出选择模式",
   "aiActions": "AI 操作",
-  "aiProRequired": "需要 Pro AI，点击升级",
+  "aiActionsLocked": "AI 操作，Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Pro AI 包含此功能",
   "aiSection": {
     "openTabs": "打开的标签页",
     "selectedGroup": "所选分组",

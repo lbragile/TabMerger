@@ -80,5 +80,14 @@
     "append": "Altına ekle",
     "tooLong": "Notun altına eklemek için çok uzun (en fazla {{max}} karakter). Bunun yerine notu değiştirin.",
     "saveFailed": "Not kaydedilemedi"
+  },
+  "nameGroup": {
+    "title": "Bu grubu adlandır",
+    "current": "Şu anki ad: <name>{{name}}</name>",
+    "choices": "Önerilen adlar",
+    "custom": "Ya da kendi adınızı yazın:",
+    "customInput": "Kendi adınız",
+    "rename": "Yeniden adlandır",
+    "renameFailed": "Grup yeniden adlandırılamadı"
   }
 }

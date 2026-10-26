@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "删除分组或已保存的窗口前先询问",
     "openOnClickLabel": "点击打开标签页",
     "openOnClickDescription": "单击即在浏览器中打开标签页",
+    "showAiButtonLabel": "显示 AI 按钮",
+    "showAiButtonDescription": "页眉中的 ✨ 按钮，提供针对标签页和分组的 AI 操作",
     "dedupLabel": "合并时自动去重",
     "dedupDescription": "合并窗口时移除重复的标签页",
     "previewImagesLabel": "在预览中显示页面图片",

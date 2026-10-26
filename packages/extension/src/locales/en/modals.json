@@ -80,5 +80,14 @@
     "append": "Add below",
     "tooLong": "Too long to add below the note (at most {{max}} characters). Replace it instead.",
     "saveFailed": "Could not save the note"
+  },
+  "nameGroup": {
+    "title": "Name this group",
+    "current": "Currently: <name>{{name}}</name>",
+    "choices": "Suggested names",
+    "custom": "Or type your own:",
+    "customInput": "Your own name",
+    "rename": "Rename",
+    "renameFailed": "Could not rename the group"
   }
 }

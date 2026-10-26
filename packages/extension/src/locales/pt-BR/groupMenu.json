@@ -41,6 +41,7 @@
     "noDuplicates": "Nenhuma duplicata encontrada",
     "noTabsToName": "Não há abas neste grupo para nomear",
     "aiRenameFailed": "Falha ao renomear com IA",
+    "nameAlreadyFits": "“{{name}}” já combina com este grupo",
     "noTabsToDescribe": "Não há abas neste grupo para descrever",
     "aiDescribeFailed": "Não foi possível descrever este grupo",
     "noteAdded": "Nota adicionada",

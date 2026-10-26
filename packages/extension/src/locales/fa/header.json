@@ -5,7 +5,9 @@
   "selectItems": "انتخاب موارد",
   "exitSelectionMode": "خروج از حالت انتخاب",
   "aiActions": "کارهای هوش مصنوعی",
-  "aiProRequired": "به Pro AI نیاز است؛ برای ارتقا کلیک کنید",
+  "aiActionsLocked": "کارهای هوش مصنوعی، Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "در Pro AI موجود است",
   "aiSection": {
     "openTabs": "زبانه‌های باز",
     "selectedGroup": "گروه انتخاب‌شده",

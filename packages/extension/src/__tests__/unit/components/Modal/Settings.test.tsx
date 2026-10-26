@@ -67,7 +67,13 @@ vi.mock('@/lib/encryptionKey', () => ({
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 // This suite tests the Dev tab's AI credits debug tool itself, not the
 // coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
+// A getter, so a test can switch AI off (the "Show AI button" switch is only offered while AI is on).
+const aiFlag = vi.hoisted(() => ({ enabled: true }))
+vi.mock('@/lib/aiFlag', () => ({
+  get AI_ENABLED() { return aiFlag.enabled },
+  AI_MANAGED_ENABLED: true,
+  AI_BYOK_ENABLED: true,
+}))
 
 vi.mock('@/lib/demo', () => ({ enterDemoMode: mockEnterDemoMode }))
 
@@ -138,6 +144,7 @@ function renderModal(onClose = vi.fn()) {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  aiFlag.enabled = true
   mockGetSetting.mockResolvedValue(DEFAULT_SETTINGS)
   mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false })
   mockUseAiUsage.mockReturnValue({ used: 0, remaining: 100, cap: 100, loading: false })
@@ -440,6 +447,47 @@ describe('SettingsModal — General tab URL rules entry point', () => {
     expect(screen.getByText('URL rules')).toBeTruthy()
     await user.click(screen.getByRole('button', { name: 'Manage' }))
     expect(mockOpenModal).toHaveBeenCalledWith('urlRules')
+  })
+})
+
+describe('SettingsModal — Show AI button (General)', () => {
+  const aiSwitch = () => screen.getByRole('switch', { name: 'Show AI button' })
+
+  it.each([['free', { tier: 'free', cloudSync: false }], ['pro', { tier: 'pro', cloudSync: true }], ['pro_ai', { tier: 'pro_ai', cloudSync: true, aiFeatures: true }]])(
+    'a %s user finds it on the General tab, on by default (settings saved before it existed lack it)',
+    async (_tier, ent) => {
+      mockUseEntitlements.mockReturnValue(ent)
+      renderModal()
+      await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+      expect(screen.getByRole('tab', { name: 'General' })).toHaveAttribute('aria-selected', 'true')
+      expect(aiSwitch()).toBeChecked()
+      expect(screen.getByText('The ✨ button in the header, with AI actions for your tabs and groups')).toBeTruthy()
+    }
+  )
+
+  it('turning it off saves showAiButton: false', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    fireEvent.click(aiSwitch())
+    expect(aiSwitch()).not.toBeChecked()
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+    await waitFor(() => expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ showAiButton: false })))
+  })
+
+  it('shows a saved "off" and turns back on', async () => {
+    mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, showAiButton: false })
+    renderModal()
+    await waitFor(() => expect(aiSwitch()).not.toBeChecked())
+    fireEvent.click(aiSwitch())
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+    await waitFor(() => expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ showAiButton: true })))
+  })
+
+  it('is not offered while AI features are off (coming soon): there is no button to show', async () => {
+    aiFlag.enabled = false
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.queryByRole('switch', { name: 'Show AI button' })).toBeNull()
   })
 })
 

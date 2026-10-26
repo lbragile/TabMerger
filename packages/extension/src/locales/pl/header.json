@@ -5,7 +5,9 @@
   "selectItems": "Zaznacz elementy",
   "exitSelectionMode": "Wyjdź z trybu zaznaczania",
   "aiActions": "Działania AI",
-  "aiProRequired": "Wymagany Pro AI — kliknij, aby ulepszyć",
+  "aiActionsLocked": "Działania AI, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "W planie Pro AI",
   "aiSection": {
     "openTabs": "Otwarte karty",
     "selectedGroup": "Wybrana grupa",

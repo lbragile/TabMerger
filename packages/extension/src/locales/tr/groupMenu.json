@@ -41,6 +41,7 @@
     "noDuplicates": "Yinelenen bulunamadı",
     "noTabsToName": "Bu grupta adlandırılacak sekme yok",
     "aiRenameFailed": "AI ile adlandırma başarısız oldu",
+    "nameAlreadyFits": "“{{name}}” bu gruba zaten uyuyor",
     "noTabsToDescribe": "Bu grupta açıklanacak sekme yok",
     "aiDescribeFailed": "Bu grup açıklanamadı",
     "noteAdded": "Not eklendi",

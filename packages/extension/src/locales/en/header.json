@@ -5,7 +5,9 @@
   "selectItems": "Select items",
   "exitSelectionMode": "Exit selection mode",
   "aiActions": "AI actions",
-  "aiProRequired": "Pro AI required — click to upgrade",
+  "aiActionsLocked": "AI actions, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Included in Pro AI",
   "aiSection": {
     "openTabs": "Open tabs",
     "selectedGroup": "Selected group",

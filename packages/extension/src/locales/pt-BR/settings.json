@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Perguntar antes de excluir grupos ou janelas salvas",
     "openOnClickLabel": "Abrir aba ao clicar",
     "openOnClickDescription": "Um clique abre a aba no navegador",
+    "showAiButtonLabel": "Mostrar botão de IA",
+    "showAiButtonDescription": "O botão ✨ no cabeçalho, com ações de IA para suas abas e grupos",
     "dedupLabel": "Remover duplicatas ao mesclar",
     "dedupDescription": "Remove abas duplicadas ao mesclar janelas",
     "previewImagesLabel": "Mostrar imagens das páginas nas prévias",

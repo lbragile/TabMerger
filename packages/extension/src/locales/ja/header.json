@@ -5,7 +5,9 @@
   "selectItems": "項目を選択",
   "exitSelectionMode": "選択モードを終了",
   "aiActions": "AI操作",
-  "aiProRequired": "Pro AIが必要です。クリックしてアップグレード",
+  "aiActionsLocked": "AI操作、Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Pro AIに含まれます",
   "aiSection": {
     "openTabs": "開いているタブ",
     "selectedGroup": "選択中のグループ",

@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Tanya sebelum menghapus grup atau jendela tersimpan",
     "openOnClickLabel": "Buka tab saat diklik",
     "openOnClickDescription": "Klik tunggal membuka tab di browser",
+    "showAiButtonLabel": "Tampilkan tombol AI",
+    "showAiButtonDescription": "Tombol ✨ di header, berisi tindakan AI untuk tab dan grup Anda",
     "dedupLabel": "Hapus duplikat otomatis saat menggabungkan",
     "dedupDescription": "Hapus tab duplikat saat menggabungkan jendela",
     "previewImagesLabel": "Tampilkan gambar halaman di pratinjau",

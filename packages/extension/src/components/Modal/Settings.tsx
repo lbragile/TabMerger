@@ -517,6 +517,24 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
           </div>
 
           <CheckForUpdates />
+
+          {/* For every plan (Settings → AI is Pro AI only): free and Pro see the button as a locked preview */}
+          {AI_ENABLED && (
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <Label className="text-sm">{t('settings.general.showAiButtonLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.general.showAiButtonDescription')}</p>
+              </div>
+              <Switch
+                className="shrink-0"
+                aria-label={t('settings.general.showAiButtonLabel')}
+                // Settings saved before this existed lack it: on
+                checked={draft.showAiButton !== false}
+                onCheckedChange={(v) => patch('showAiButton', v)}
+                data-testid="settings-show-ai-button"
+              />
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="account" className="space-y-4">

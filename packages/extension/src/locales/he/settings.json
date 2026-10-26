@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "לבקש אישור לפני מחיקה של קבוצות או חלונות שמורים",
     "openOnClickLabel": "פתיחת כרטיסייה בלחיצה",
     "openOnClickDescription": "לחיצה אחת פותחת את הכרטיסייה בדפדפן",
+    "showAiButtonLabel": "הצגת כפתור AI",
+    "showAiButtonDescription": "כפתור ✨ בכותרת, עם פעולות AI לכרטיסיות ולקבוצות שלך",
     "dedupLabel": "הסרת כפילויות אוטומטית במיזוג",
     "dedupDescription": "הסרת כרטיסיות כפולות במיזוג חלונות",
     "previewImagesLabel": "הצגת תמונות של דפים בתצוגות מקדימות",

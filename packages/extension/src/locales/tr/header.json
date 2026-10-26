@@ -5,7 +5,9 @@
   "selectItems": "Öğeleri seç",
   "exitSelectionMode": "Seçim modundan çık",
   "aiActions": "AI işlemleri",
-  "aiProRequired": "Pro AI gerekli — yükseltmek için tıklayın",
+  "aiActionsLocked": "AI işlemleri, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Pro AI'a dahil",
   "aiSection": {
     "openTabs": "Açık sekmeler",
     "selectedGroup": "Seçili grup",

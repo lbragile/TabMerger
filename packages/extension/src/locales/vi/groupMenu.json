@@ -41,6 +41,7 @@
     "noDuplicates": "Không tìm thấy bản trùng lặp nào",
     "noTabsToName": "Không có thẻ nào trong nhóm này để đặt tên",
     "aiRenameFailed": "Đổi tên bằng AI thất bại",
+    "nameAlreadyFits": "“{{name}}” đã phù hợp với nhóm này",
     "noTabsToDescribe": "Không có thẻ nào trong nhóm này để mô tả",
     "aiDescribeFailed": "Không thể mô tả nhóm này",
     "noteAdded": "Đã thêm ghi chú",

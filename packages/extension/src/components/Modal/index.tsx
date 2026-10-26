@@ -15,6 +15,7 @@ import { ReviewStaleGroupModal } from './ReviewStaleGroup';
 import { EncryptionSetupModal } from './EncryptionSetup';
 import { OrganizeReviewModal } from './OrganizeReview';
 import { DescribeGroupReviewModal } from './DescribeGroupReview';
+import { NameGroupPickerModal } from './NameGroupPicker';
 
 export function ModalRoot() {
   const modal = useUIStore((s) => s.modal);
@@ -68,6 +69,8 @@ export function ModalRoot() {
         return <OrganizeReviewModal data={modal.data ?? {}} onClose={closeModal} />;
       case 'describeGroupReview':
         return <DescribeGroupReviewModal data={modal.data ?? {}} onClose={closeModal} />;
+      case 'nameGroupPicker':
+        return <NameGroupPickerModal data={modal.data ?? {}} onClose={closeModal} />;
       default:
         return null;
     }

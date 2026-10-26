@@ -5,7 +5,9 @@
   "selectItems": "आइटम चुनें",
   "exitSelectionMode": "चयन मोड से बाहर निकलें",
   "aiActions": "AI क्रियाएं",
-  "aiProRequired": "Pro AI आवश्यक है — अपग्रेड करने के लिए क्लिक करें",
+  "aiActionsLocked": "AI क्रियाएं, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Pro AI में शामिल",
   "aiSection": {
     "openTabs": "खुले टैब",
     "selectedGroup": "चुना गया समूह",

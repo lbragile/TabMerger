@@ -72,5 +72,14 @@
     "append": "Tambahkan di bawah",
     "tooLong": "Terlalu panjang untuk ditambahkan di bawah catatan (maksimal {{max}} karakter). Ganti catatannya saja.",
     "saveFailed": "Tidak dapat menyimpan catatan"
+  },
+  "nameGroup": {
+    "title": "Beri nama grup ini",
+    "current": "Saat ini: <name>{{name}}</name>",
+    "choices": "Nama yang disarankan",
+    "custom": "Atau ketik nama sendiri:",
+    "customInput": "Nama Anda sendiri",
+    "rename": "Ganti nama",
+    "renameFailed": "Tidak dapat mengganti nama grup"
   }
 }

@@ -10,6 +10,7 @@ import {
   estimateAiCredits,
   isTourDemoGroup,
   type AIDescribeGroupRequest,
+  type AINameGroupResponse,
   type AiAction,
   type AiModelChoice,
   type AiSuggestionKind
@@ -204,7 +205,9 @@ export function useNameGroup() {
       const token = requireToken(session);
       const { model, options } = await prepare('nameGroup', tabs.length);
 
-      return aiPost<{ name: string }>('/api/ai/name-group', { tabs, model }, token, options);
+      // Typed loosely on purpose: an older server sends only `name`, and the reply is provider output
+      // either way. `suggestedGroupNames` (lib/aiGroupName.ts) reads and cleans it.
+      return aiPost<Partial<AINameGroupResponse>>('/api/ai/name-group', { tabs, model }, token, options);
     }
   }));
 }

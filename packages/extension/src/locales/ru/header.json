@@ -5,7 +5,9 @@
   "selectItems": "Выбрать элементы",
   "exitSelectionMode": "Выйти из режима выбора",
   "aiActions": "AI-действия",
-  "aiProRequired": "Нужен Pro AI — нажмите, чтобы перейти",
+  "aiActionsLocked": "AI-действия, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Входит в Pro AI",
   "aiSection": {
     "openTabs": "Открытые вкладки",
     "selectedGroup": "Выбранная группа",

@@ -41,6 +41,7 @@
     "noDuplicates": "Tidak ada duplikat ditemukan",
     "noTabsToName": "Tidak ada tab di grup ini untuk diberi nama",
     "aiRenameFailed": "Ganti nama dengan AI gagal",
+    "nameAlreadyFits": "“{{name}}” sudah cocok untuk grup ini",
     "noTabsToDescribe": "Tidak ada tab di grup ini untuk dideskripsikan",
     "aiDescribeFailed": "Tidak dapat mendeskripsikan grup ini",
     "noteAdded": "Catatan ditambahkan",

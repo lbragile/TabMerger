@@ -147,7 +147,7 @@ test.describe('Settings → AI, own key', () => {
     await expect(page.getByRole('group', { name: 'AI provider' })).toBeVisible();
   });
 
-  test('header AI menu: "Name group" renames the active saved group, and is disabled on Now Open', async ({ context, extensionId }) => {
+  test('header AI menu: "Name group" offers suggestions to pick from for the active saved group, and is disabled on Now Open', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP]);
     await signInAsProAiByok(page);
@@ -160,7 +160,7 @@ test.describe('Settings → AI, own key', () => {
     await page.route('**/api/ai/name-group*', (route) => {
       if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
       nameRequests.push(route.request().postDataJSON() as { tabs: { url: string }[] });
-      return route.fulfill({ headers: CORS, json: { name: 'Team tools' } });
+      return route.fulfill({ headers: CORS, json: { names: ['Team tools', 'Work dashboards', 'Project hub'], name: 'Team tools' } });
     });
     await page.reload({ waitUntil: 'networkidle' });
 
@@ -183,10 +183,43 @@ test.describe('Settings → AI, own key', () => {
     await expect(page.getByRole('group', { name: new RegExp(`^Selected group · \\s*${SAVED_GROUP.name}\\s*$`) })).toBeVisible();
     await nameItem.click();
 
-    await expect(page.locator('[data-sidebar-group-index="1"]')).toContainText('Team tools');
+    // The picker: the current name, the suggestions as radios (the first picked and focused), "your own"
+    const picker = page.getByRole('dialog', { name: 'Name this group' });
+    await expect(picker).toBeVisible();
+    await expect(picker).toContainText(`Currently: ${SAVED_GROUP.name}`);
+    const choices = picker.getByRole('radiogroup', { name: 'Suggested names' });
+    await expect(choices.getByRole('radio')).toHaveCount(4);
+    const first = choices.getByRole('radio', { name: 'Team tools' });
+    await expect(first).toBeChecked();
+    // Nothing is renamed until a pick
+    await expect(page.locator('[data-sidebar-group-index="1"]')).toContainText(SAVED_GROUP.name);
     expect(nameRequests).toHaveLength(1);
     expect(nameRequests[0].tabs.map((t) => t.url)).toEqual(SAVED_GROUP.windows[0].tabs.map((t) => t.url));
-    await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && g.name === 'Team tools', 'the AI name stored on the saved group');
+
+    // Keyboard: wait for the dialog's focus to land before the keys (focus moves on a timer)
+    await expect(first).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    const second = choices.getByRole('radio', { name: 'Work dashboards' });
+    await expect(second).toBeChecked();
+    await expect(second).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(picker).toBeHidden();
+
+    await expect(page.locator('[data-sidebar-group-index="1"]')).toContainText('Work dashboards');
+    await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && g.name === 'Work dashboards', 'the picked AI name stored on the saved group');
+
+    // A name of your own: typing selects "your own", Rename applies it
+    await aiActions.click();
+    await nameItem.click();
+    await expect(picker).toBeVisible();
+    await expect(picker).toContainText('Currently: Work dashboards');
+    // The current name is not offered again
+    await expect(choices.getByRole('radio', { name: 'Work dashboards' })).toHaveCount(0);
+    await picker.getByRole('textbox', { name: 'Your own name' }).fill('  My team  ');
+    await expect(choices.getByRole('radio', { name: 'Or type your own:' })).toBeChecked();
+    await picker.getByRole('button', { name: 'Rename' }).click();
+    await expect(picker).toBeHidden();
+    await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && g.name === 'My team', 'the typed name stored, trimmed');
   });
 
   test('header AI menu: sections by scope; "Describe group" writes the note (Undo in the toast), and reviews an existing note', async ({ context, extensionId }) => {

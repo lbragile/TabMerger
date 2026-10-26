@@ -80,5 +80,14 @@
     "append": "Darunter einfügen",
     "tooLong": "Zu lang, um es unter der Notiz einzufügen (höchstens {{max}} Zeichen). Ersetze sie stattdessen.",
     "saveFailed": "Notiz konnte nicht gespeichert werden"
+  },
+  "nameGroup": {
+    "title": "Diese Gruppe benennen",
+    "current": "Aktuell: <name>{{name}}</name>",
+    "choices": "Vorgeschlagene Namen",
+    "custom": "Oder eigenen Namen eingeben:",
+    "customInput": "Eigener Name",
+    "rename": "Umbenennen",
+    "renameFailed": "Die Gruppe konnte nicht umbenannt werden"
   }
 }

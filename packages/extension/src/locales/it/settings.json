@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Chiedi conferma prima di eliminare gruppi o finestre salvate",
     "openOnClickLabel": "Apri scheda al clic",
     "openOnClickDescription": "Un solo clic apre la scheda nel browser",
+    "showAiButtonLabel": "Mostra il pulsante AI",
+    "showAiButtonDescription": "Il pulsante ✨ nell’intestazione, con le azioni AI per schede e gruppi",
     "dedupLabel": "Rimuovi duplicati durante l'unione",
     "dedupDescription": "Rimuovi le schede duplicate quando unisci finestre",
     "previewImagesLabel": "Mostra immagini delle pagine nelle anteprime",

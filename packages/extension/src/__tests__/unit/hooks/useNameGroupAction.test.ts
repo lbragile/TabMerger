@@ -1,29 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { createElement, type ReactNode } from 'react'
 import { renderHook, act } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useNameGroupAction } from '@/hooks/useNameGroupAction'
 import { AiRequestError, QuotaExceededError } from '@/lib/aiErrors'
-import type { Group } from '@/lib/types'
+import type { Group, GroupsState } from '@/lib/types'
 
 /**
  * The shared "name a group with AI" action behind the sidebar menu's "AI rename" and the header
- * AI menu's "Name group": what can be named, the positional rename, the reply cleanup, and the
- * error toasts.
+ * AI menu's "Name group": what can be named, the reply cleanup (`names`, and the older `name`-only
+ * reply), the current-name filter, the re-lookup by id, the picker it opens, and the error toasts.
  */
 
-const { mockNameGroup, nameGroupState, mockUpdateGroupName, mockOpenModal, mockToastError } = vi.hoisted(() => ({
+const { mockNameGroup, nameGroupState, mockOpenModal, mockToastError, mockToastInfo } = vi.hoisted(() => ({
   mockNameGroup: vi.fn(),
   nameGroupState: { isPending: false },
-  mockUpdateGroupName: vi.fn(),
   mockOpenModal: vi.fn(),
   mockToastError: vi.fn(),
+  mockToastInfo: vi.fn(),
 }))
 
 vi.mock('@/hooks/useAI', () => ({ useNameGroup: () => ({ mutateAsync: mockNameGroup, ...nameGroupState }) }))
-vi.mock('@/hooks/useGroups', () => ({ useUpdateGroupName: () => ({ mutate: mockUpdateGroupName }) }))
+vi.mock('@/hooks/useGroups', () => ({ GROUPS_QUERY_KEY: ['groups'] }))
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: (selector: (s: object) => unknown) => selector({ openModal: mockOpenModal }),
 }))
-vi.mock('@/lib/toast', () => ({ toast: { error: mockToastError } }))
+vi.mock('@/lib/toast', () => ({ toast: { error: mockToastError, info: mockToastInfo } }))
 
 globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
 
@@ -43,8 +45,14 @@ function group(overrides: Partial<Group> = {}): Group {
   }
 }
 
-async function run(g: Group | undefined, groupIndex = 2) {
-  const { result } = renderHook(() => useNameGroupAction(g, groupIndex))
+let qc: QueryClient
+
+const wrapper = ({ children }: { children: ReactNode }) => createElement(QueryClientProvider, { client: qc }, children)
+
+/** Runs the action for `g`; `cached` are the groups in the query cache when the reply arrives (default: `g` alone). */
+async function run(g: Group | undefined, cached: Group[] = g ? [g] : []) {
+  qc.setQueryData<GroupsState>(['groups'], { available: cached } as unknown as GroupsState)
+  const { result } = renderHook(() => useNameGroupAction(g), { wrapper })
   await act(() => result.current.run())
   return result.current
 }
@@ -52,6 +60,7 @@ async function run(g: Group | undefined, groupIndex = 2) {
 beforeEach(() => {
   vi.clearAllMocks()
   nameGroupState.isPending = false
+  qc = new QueryClient()
 })
 
 describe('useNameGroupAction — what can be named', () => {
@@ -61,13 +70,13 @@ describe('useNameGroupAction — what can be named', () => {
     ['a saved group without tabs', group({ windows: [{ id: 1, tabs: [], starred: false, incognito: false, focused: false }] }), 'noTabs'],
     ['a saved group with tabs', group(), null],
   ] as const)('%s → block %s', (_name, g, block) => {
-    const { result } = renderHook(() => useNameGroupAction(g, 1))
+    const { result } = renderHook(() => useNameGroupAction(g), { wrapper })
     expect(result.current.block).toBe(block)
   })
 
   it('passes the request\'s pending state through', () => {
     nameGroupState.isPending = true
-    const { result } = renderHook(() => useNameGroupAction(group(), 1))
+    const { result } = renderHook(() => useNameGroupAction(group()), { wrapper })
     expect(result.current.isPending).toBe(true)
   })
 
@@ -85,33 +94,74 @@ describe('useNameGroupAction — what can be named', () => {
   })
 })
 
-describe('useNameGroupAction — renaming', () => {
-  it('sends every tab of the group and renames it by position', async () => {
-    mockNameGroup.mockResolvedValue({ name: 'Letters' })
-    await run(group(), 4)
+describe('useNameGroupAction — suggestions', () => {
+  it('sends every tab of the group and opens the picker with the suggestions, best first', async () => {
+    mockNameGroup.mockResolvedValue({ names: ['Letters', 'Alphabet', 'ABC'], name: 'Letters' })
+    await run(group())
     expect(mockNameGroup).toHaveBeenCalledWith([tab('A'), tab('B'), tab('C')])
-    expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 4, name: 'Letters' })
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: 'g1', suggestions: ['Letters', 'Alphabet', 'ABC'] })
     expect(mockToastError).not.toHaveBeenCalled()
   })
 
-  it('collapses whitespace runs and trims the suggestion', async () => {
-    mockNameGroup.mockResolvedValue({ name: '  Product\n\tresearch  ' })
+  it('an older server that sends only `name` still opens the picker with that one name', async () => {
+    mockNameGroup.mockResolvedValue({ name: 'Letters' })
     await run(group())
-    expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 2, name: 'Product research' })
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: 'g1', suggestions: ['Letters'] })
   })
 
-  it('caps a runaway suggestion at 100 characters', async () => {
-    mockNameGroup.mockResolvedValue({ name: 'x'.repeat(250) })
+  it.each([['an empty array', []], ['not an array', 'Letters'], ['null', null]])('`names` as %s falls back to `name`', async (_label, names) => {
+    mockNameGroup.mockResolvedValue({ names, name: 'Letters' })
     await run(group())
-    expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 2, name: 'x'.repeat(100) })
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: 'g1', suggestions: ['Letters'] })
   })
 
-  it.each([['blank', '   \n '], ['not a string', 42], ['missing', undefined]])('a %s suggestion is a failure, never a rename', async (_name, name) => {
-    mockNameGroup.mockResolvedValue({ name })
+  it('cleans every suggestion, drops unusable ones and repeats (ignoring case), and keeps at most 3', async () => {
+    mockNameGroup.mockResolvedValue({
+      names: ['  Product\n\tresearch  ', 42, '   ', 'product RESEARCH', 'x'.repeat(250), 'Docs', 'Fourth'],
+      name: 'Product research',
+    })
     await run(group())
-    expect(mockUpdateGroupName).not.toHaveBeenCalled()
-    expect(mockToastError).toHaveBeenCalledWith('AI rename failed')
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: 'g1', suggestions: ['Product research', 'x'.repeat(100), 'Docs'] })
   })
+
+  it('drops a suggestion equal to the current name (ignoring case)', async () => {
+    mockNameGroup.mockResolvedValue({ names: ['research', 'Studies'], name: 'research' })
+    await run(group({ name: 'Research' }))
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: 'g1', suggestions: ['Studies'] })
+  })
+
+  it('when the current name is all that is left, toasts that it already fits and opens nothing', async () => {
+    mockNameGroup.mockResolvedValue({ names: ['Research', 'RESEARCH'], name: 'Research' })
+    await run(group({ name: 'Research' }))
+    expect(mockOpenModal).not.toHaveBeenCalled()
+    expect(mockToastInfo).toHaveBeenCalledWith('“Research” already fits this group')
+    expect(mockToastError).not.toHaveBeenCalled()
+  })
+
+  it('compares against the name the group has when the reply arrives, found by id', async () => {
+    // Renamed and moved while the request ran: the prop still says "Research"
+    mockNameGroup.mockResolvedValue({ names: ['Research', 'Letters'], name: 'Research' })
+    const other: Group = { ...group(), id: 'g0', name: 'Other' }
+    await run(group(), [other, group({ name: 'Letters' })])
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', { groupId: 'g1', suggestions: ['Research'] })
+  })
+
+  it('a group deleted while the request ran: an info toast, no picker', async () => {
+    mockNameGroup.mockResolvedValue({ names: ['Letters'], name: 'Letters' })
+    await run(group(), [])
+    expect(mockOpenModal).not.toHaveBeenCalled()
+    expect(mockToastInfo).toHaveBeenCalledWith(expect.any(String), { id: 'groups-changed-elsewhere' })
+  })
+
+  it.each([['blank', { name: '   \n ' }], ['not a string', { name: 42 }], ['missing', {}], ['not an object', null]])(
+    'a %s suggestion is a failure, never a picker',
+    async (_label, reply) => {
+      mockNameGroup.mockResolvedValue(reply)
+      await run(group())
+      expect(mockOpenModal).not.toHaveBeenCalled()
+      expect(mockToastError).toHaveBeenCalledWith('AI rename failed')
+    }
+  )
 })
 
 describe('useNameGroupAction — errors', () => {
@@ -123,7 +173,7 @@ describe('useNameGroupAction — errors', () => {
     expect(options.action.label).toBe('Buy more')
     options.action.onClick()
     expect(chrome.tabs.create).toHaveBeenCalledWith({ url: expect.stringMatching(/\/pricing$/) })
-    expect(mockUpdateGroupName).not.toHaveBeenCalled()
+    expect(mockOpenModal).not.toHaveBeenCalled()
   })
 
   it('an error fixed in Settings → AI offers "Open Settings" on the AI tab', async () => {

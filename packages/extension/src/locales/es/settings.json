@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Pregunta antes de eliminar grupos o ventanas guardadas",
     "openOnClickLabel": "Abrir pestaña al hacer clic",
     "openOnClickDescription": "Un solo clic abre la pestaña en el navegador",
+    "showAiButtonLabel": "Mostrar el botón de IA",
+    "showAiButtonDescription": "El botón ✨ del encabezado, con acciones de IA para tus pestañas y grupos",
     "dedupLabel": "Quitar duplicadas al combinar",
     "dedupDescription": "Quita las pestañas duplicadas al combinar ventanas",
     "previewImagesLabel": "Mostrar imágenes de páginas en las vistas previas",

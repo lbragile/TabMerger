@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Vor dem Löschen von Gruppen oder gespeicherten Fenstern nachfragen",
     "openOnClickLabel": "Tab per Klick öffnen",
     "openOnClickDescription": "Ein einzelner Klick öffnet den Tab im Browser",
+    "showAiButtonLabel": "KI-Schaltfläche anzeigen",
+    "showAiButtonDescription": "Die ✨-Schaltfläche in der Kopfzeile, mit KI-Aktionen für deine Tabs und Gruppen",
     "dedupLabel": "Beim Zusammenführen automatisch deduplizieren",
     "dedupDescription": "Doppelte Tabs beim Zusammenführen von Fenstern entfernen",
     "previewImagesLabel": "Seitenbilder in Vorschauen zeigen",

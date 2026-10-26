@@ -41,6 +41,7 @@
     "noDuplicates": "No duplicates found",
     "noTabsToName": "No tabs in this group to name",
     "aiRenameFailed": "AI rename failed",
+    "nameAlreadyFits": "“{{name}}” already fits this group",
     "noTabsToDescribe": "No tabs in this group to describe",
     "aiDescribeFailed": "Could not describe this group",
     "noteAdded": "Note added",

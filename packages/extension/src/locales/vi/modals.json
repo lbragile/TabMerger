@@ -72,5 +72,14 @@
     "append": "Thêm bên dưới",
     "tooLong": "Quá dài để thêm bên dưới ghi chú (tối đa {{max}} ký tự). Hãy thay ghi chú.",
     "saveFailed": "Không thể lưu ghi chú"
+  },
+  "nameGroup": {
+    "title": "Đặt tên cho nhóm này",
+    "current": "Hiện tại: <name>{{name}}</name>",
+    "choices": "Tên gợi ý",
+    "custom": "Hoặc tự nhập tên:",
+    "customInput": "Tên của bạn",
+    "rename": "Đổi tên",
+    "renameFailed": "Không thể đổi tên nhóm"
   }
 }

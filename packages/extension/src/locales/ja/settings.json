@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "グループや保存済みウィンドウを削除する前に確認します",
     "openOnClickLabel": "クリックでタブを開く",
     "openOnClickDescription": "1回クリックするとブラウザでタブが開きます",
+    "showAiButtonLabel": "AIボタンを表示",
+    "showAiButtonDescription": "ヘッダーの✨ボタン。タブとグループのAI操作を使えます",
     "dedupLabel": "統合時に自動で重複排除",
     "dedupDescription": "ウィンドウを統合するときに重複するタブを削除します",
     "previewImagesLabel": "プレビューにページ画像を表示",

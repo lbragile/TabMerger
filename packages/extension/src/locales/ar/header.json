@@ -5,7 +5,9 @@
   "selectItems": "تحديد عناصر",
   "exitSelectionMode": "الخروج من وضع التحديد",
   "aiActions": "إجراءات الذكاء الاصطناعي",
-  "aiProRequired": "يتطلب Pro AI — انقر للترقية",
+  "aiActionsLocked": "إجراءات الذكاء الاصطناعي، Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "متاح في Pro AI",
   "aiSection": {
     "openTabs": "علامات التبويب المفتوحة",
     "selectedGroup": "المجموعة المحددة",

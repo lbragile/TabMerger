@@ -5,7 +5,9 @@
   "selectItems": "Pilih item",
   "exitSelectionMode": "Keluar dari mode pemilihan",
   "aiActions": "Tindakan AI",
-  "aiProRequired": "Pro AI diperlukan — klik untuk meningkatkan",
+  "aiActionsLocked": "Tindakan AI, Pro AI",
+  "aiProTag": "Pro AI",
+  "aiLockedNote": "Termasuk di Pro AI",
   "aiSection": {
     "openTabs": "Tab terbuka",
     "selectedGroup": "Grup terpilih",

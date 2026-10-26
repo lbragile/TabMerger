@@ -41,6 +41,7 @@
     "noDuplicates": "중복 항목이 없습니다",
     "noTabsToName": "이 그룹에는 이름을 지을 탭이 없습니다",
     "aiRenameFailed": "AI로 이름을 바꾸지 못했습니다",
+    "nameAlreadyFits": "“{{name}}”은(는) 이미 이 그룹에 잘 맞습니다",
     "noTabsToDescribe": "이 그룹에는 설명할 탭이 없습니다",
     "aiDescribeFailed": "이 그룹의 설명을 쓰지 못했습니다",
     "noteAdded": "메모를 추가했습니다",

@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Pytaj przed usunięciem grup lub zapisanych okien",
     "openOnClickLabel": "Otwórz kartę po kliknięciu",
     "openOnClickDescription": "Pojedyncze kliknięcie otwiera kartę w przeglądarce",
+    "showAiButtonLabel": "Pokaż przycisk AI",
+    "showAiButtonDescription": "Przycisk ✨ w nagłówku z działaniami AI dla kart i grup",
     "dedupLabel": "Automatyczne usuwanie duplikatów przy scalaniu",
     "dedupDescription": "Usuwaj zduplikowane karty podczas scalania okien",
     "previewImagesLabel": "Pokazuj obrazy stron w podglądach",

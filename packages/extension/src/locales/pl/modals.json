@@ -96,5 +96,14 @@
     "append": "Dodaj pod spodem",
     "tooLong": "Za długie, by dodać pod notatką (maksymalnie {{max}} znaków). Zamiast tego ją zastąp.",
     "saveFailed": "Nie udało się zapisać notatki"
+  },
+  "nameGroup": {
+    "title": "Nazwij tę grupę",
+    "current": "Obecnie: <name>{{name}}</name>",
+    "choices": "Proponowane nazwy",
+    "custom": "Albo wpisz własną:",
+    "customInput": "Własna nazwa",
+    "rename": "Zmień nazwę",
+    "renameFailed": "Nie udało się zmienić nazwy grupy"
   }
 }

@@ -88,5 +88,14 @@
     "append": "Adicionar abaixo",
     "tooLong": "Longo demais para adicionar abaixo da nota (no máximo {{max}} caracteres). Substitua-a.",
     "saveFailed": "Não foi possível salvar a nota"
+  },
+  "nameGroup": {
+    "title": "Nomear este grupo",
+    "current": "Atual: <name>{{name}}</name>",
+    "choices": "Nomes sugeridos",
+    "custom": "Ou digite o seu:",
+    "customInput": "Seu próprio nome",
+    "rename": "Renomear",
+    "renameFailed": "Não foi possível renomear o grupo"
   }
 }
