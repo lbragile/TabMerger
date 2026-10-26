@@ -275,12 +275,13 @@ export function PricingCard({
       className={cn(
         'relative flex flex-col h-full rounded-2xl p-6 border border-border bg-surface',
         highlighted && 'shadow-sh3 border-primary/30 px-7',
-        isCurrentPlan && 'border-primary/40'
+        isCurrentPlan && 'border-foreground/30'
       )}
     >
-      {/* One pill on the top edge: Current wins (a current plan is never Recommended). */}
+      {/* One pill on the top edge: Current wins (a current plan is never Recommended). Current is
+          neutral so the brand color stays on Recommended. */}
       {isCurrentPlan ? (
-        <TierBadge>{t('current')}</TierBadge>
+        <TierBadge tone="neutral">{t('current')}</TierBadge>
       ) : showRecommended ? (
         <TierBadge>{t('recommended')}</TierBadge>
       ) : isComingSoon ? (
@@ -289,28 +290,26 @@ export function PricingCard({
       {/* Title row */}
       <div className="flex items-center justify-between gap-2 mb-2.5">
         {/* The plan name leads the card: larger than the feature text, still smaller than the price. */}
-        <h2 className="text-xl font-semibold tracking-tight">{name}</h2>
+        <h2 className="text-2xl font-bold tracking-tight">{name}</h2>
       </div>
 
-      {aiOptions && <AiOptionSwitch value={aiMode} onChange={setAiMode} className="mb-4" />}
-
       {/* Price */}
-      <div className="flex items-baseline gap-1.5 mb-5">
-        <span
-          className={cn('font-semibold tracking-tight', highlighted ? 'text-[2.75rem]' : 'text-4xl')}
-        >
-          {displayPrice}
-        </span>
+      {/* One price size on every card, so the prices line up across the row. */}
+      <div className="flex items-baseline gap-1.5 mb-1">
+        <span className="text-4xl font-semibold tracking-tight">{displayPrice}</span>
         <span className="text-[13px] text-text3">
           {rawPrice === 0 ? t('forever') : interval === 'monthly' ? t('perMonth') : t('perYear')}
         </span>
       </div>
-      {interval === 'yearly' && rawPrice > 0 && yearlySubtext && (
-        <p className="-mt-4 mb-5 text-[11.5px] text-text3">
-          {yearlySubtext}
-        </p>
-      )}
-      {isFree && <p className="-mt-4 mb-5 text-[11.5px] text-text3">{t('noCard')}</p>}
+      {/* Every card keeps one note line under the price (empty when there is no note), so the
+          feature lists start at the same height. */}
+      <p className="mb-5 min-h-[1lh] text-[11.5px] text-text3">
+        {isFree
+          ? t('noCard')
+          : interval === 'yearly' && rawPrice > 0 && yearlySubtext
+            ? yearlySubtext
+            : null}
+      </p>
 
       {/* Feature list. With both Pro AI options, both lists (and their notes) share one grid cell
           and the one not on show is hidden from sight and from assistive tech: the card is as tall
@@ -335,6 +334,9 @@ export function PricingCard({
       {/* CTA button — omitted for the current plan (badge already says so), except Free,
           which always offers the install link since "installed" isn't a Stripe state. */}
       <div className="mt-auto">
+        {/* The Pro AI setup switch sits with the button, not above the price, so every card's
+            title and price line up. */}
+        {aiOptions && <AiOptionSwitch value={aiMode} onChange={setAiMode} className="mb-4" />}
         {isComingSoon ? (
           <Button
             variant="outline"

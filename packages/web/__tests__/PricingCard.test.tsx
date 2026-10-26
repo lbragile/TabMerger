@@ -212,14 +212,16 @@ describe('PricingCard', () => {
     expect(screen.queryByText('Recommended')).not.toBeInTheDocument()
   })
 
-  it('shows a solid, high-contrast primary-branded "Current" badge on the card matching currentTier', async () => {
+  it('shows a neutral, high-contrast "Current" badge (the brand color stays on Recommended)', async () => {
     const PricingCard = await loadPricingCard(true)
     const { container } = render(<PricingCard {...baseProps} currentTier="pro" />)
     const badge = screen.getByText('Current')
-    expect(badge.className).toMatch(/bg-primary\b/)
-    expect(badge.className).toMatch(/text-primary-foreground/)
+    expect(badge.className).toMatch(/bg-foreground\b/)
+    expect(badge.className).toMatch(/text-background\b/)
+    expect(badge.className).not.toMatch(/bg-primary\b/)
     const card = container.firstChild as HTMLElement
-    expect(card.className).toMatch(/border-primary\/40/)
+    expect(card.className).toMatch(/border-foreground\/30/)
+    expect(card.className).not.toMatch(/border-primary\/40/)
   })
 
   it('shows "Current" as the same top-edge pill the home teaser uses, not beside the plan name', async () => {
@@ -231,7 +233,7 @@ describe('PricingCard', () => {
     expect(card).toContainElement(badge)
     expect(badge.className).toMatch(/\babsolute\b/)
     expect(badge.className).toMatch(/-translate-y-1\/2/)
-    expect(badge.className).toMatch(/rounded-full/)
+    expect(badge.className).toMatch(/rounded-none/)
     expect(screen.getByRole('heading', { name: 'Pro' }).parentElement).not.toContainElement(badge)
     // One pill at a time: Current wins, and the sparkle is gone.
     expect(screen.queryByText('Recommended')).not.toBeInTheDocument()

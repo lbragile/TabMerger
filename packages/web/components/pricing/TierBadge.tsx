@@ -4,8 +4,9 @@ import { cn } from '@/lib/utils'
 interface TierBadgeProps {
   /** Already translated ("Recommended", "Current", "Coming soon"). */
   children: React.ReactNode
-  /** `solid`: Recommended and Current. `muted`: Coming soon. */
-  tone?: 'solid' | 'muted'
+  /** `solid`: Recommended (brand color). `neutral`: Current, a status rather than a pitch.
+   *  `muted`: Coming soon. */
+  tone?: 'solid' | 'neutral' | 'muted'
 }
 
 /**
@@ -18,10 +19,10 @@ export function TierBadge({ children, tone = 'solid' }: TierBadgeProps) {
     <span
       className={cn(
         // Centered with inset-x + mx-auto (symmetric, so it needs no right-to-left variant).
-        'absolute inset-x-0 mx-auto w-fit top-0 -translate-y-1/2 whitespace-nowrap rounded-full px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-wider leading-none',
-        tone === 'solid'
-          ? 'bg-primary text-primary-foreground'
-          : 'bg-muted text-muted-foreground border border-border'
+        'absolute inset-x-0 mx-auto w-fit top-0 -translate-y-1/2 whitespace-nowrap rounded-none px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-wider leading-none',
+        tone === 'solid' && 'bg-primary text-primary-foreground',
+        tone === 'neutral' && 'bg-foreground text-background',
+        tone === 'muted' && 'bg-muted text-muted-foreground border border-border'
       )}
     >
       {children}

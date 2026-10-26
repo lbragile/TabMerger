@@ -104,12 +104,14 @@ describe('PricingTable', () => {
     const titles = screen.getAllByRole('heading', { level: 2 })
     expect(titles.map((h) => h.textContent)).toEqual(['Free', 'Pro', 'Pro AI'])
     for (const title of titles) {
-      expect(title.className).toMatch(/\btext-xl\b/)
-      expect(title.className).toMatch(/\bfont-semibold\b/)
+      expect(title.className).toMatch(/\btext-2xl\b/)
+      expect(title.className).toMatch(/\bfont-bold\b/)
     }
-    // The price figures stay larger (text-4xl, or 2.75rem on the highlighted card).
-    expect(screen.getByText('$3.99').className).toMatch(/text-\[2\.75rem\]/)
-    expect(screen.getByText('$0').className).toMatch(/\btext-4xl\b/)
+    // The price figures stay larger, and are one size on every card so they line up.
+    for (const price of ['$0', '$3.99']) {
+      expect(screen.getByText(price).className).toMatch(/\btext-4xl\b/)
+      expect(screen.getByText(price).className).not.toMatch(/text-\[2\.75rem\]/)
+    }
   })
 
   it('uses a responsive 1-col-mobile / 3-col-desktop grid, not an unconditional 3-column layout', () => {

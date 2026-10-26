@@ -113,8 +113,9 @@ describe('PricingTeaser', () => {
       for (const name of ['Free', 'Pro', 'Pro AI']) {
         // Side by side every card spans the same rows, so prices and blurbs line up.
         expect(cardOf(name).className).toMatch(/sm:grid-rows-subgrid/)
-        // The name, the price, one note line and the blurb.
-        expect(cardOf(name).querySelectorAll('p')).toHaveLength(4)
+        // The name is the card's heading; then the price, one note line and the blurb.
+        expect(cardOf(name).querySelector('h3')).toHaveTextContent(name)
+        expect(cardOf(name).querySelectorAll('p')).toHaveLength(3)
       }
     })
 

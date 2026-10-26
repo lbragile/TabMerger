@@ -123,7 +123,7 @@ export function PricingTeaser() {
               >
                 {badge && <TierBadge tone={row.highlighted ? 'solid' : 'muted'}>{badge}</TierBadge>}
                 <div>
-                  <p className="text-sm font-semibold">{tier.name}</p>
+                  <h3 className="text-xl sm:text-2xl font-bold tracking-tight">{tier.name}</h3>
                   <p className="mt-2 text-4xl font-semibold tracking-tight">
                     {price}
                     <span className="text-[0.8125rem] font-normal text-text3 ms-1">{period}</span>
