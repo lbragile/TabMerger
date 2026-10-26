@@ -37,6 +37,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useUpdateGroupName: () => ({ mutate: vi.fn() }),
   useGroups: () => mockUseGroups(),
   GROUPS_QUERY_KEY: ['groups'],
+  useUpdateGroupNote: () => ({ mutate: vi.fn(), mutateAsync: vi.fn() }),
 }))
 
 vi.mock('@/stores/uiStore', () => ({
@@ -53,7 +54,7 @@ vi.mock('@/hooks/useEntitlements', () => ({
 }))
 
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => ({ data: {} }) }))
-vi.mock('@/hooks/useAI', () => ({ useNameGroup: () => ({ mutateAsync: vi.fn() }), QuotaExceededError: class extends Error {} }))
+vi.mock('@/hooks/useAI', () => ({ useNameGroup: () => ({ mutateAsync: vi.fn() }), useDescribeGroup: () => ({ mutateAsync: vi.fn() }), QuotaExceededError: class extends Error {} }))
 
 vi.mock('@/lib/toast', () => ({
   toast: { error: mockToastError },

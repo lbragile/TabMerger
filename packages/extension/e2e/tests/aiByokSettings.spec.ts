@@ -174,17 +174,80 @@ test.describe('Settings → AI, own key', () => {
     await expect(nameItem).toContainText('Select a saved group first');
     await page.keyboard.press('Escape');
 
-    // The saved group: the hint names it, and picking it renames that group
+    // The saved group: its section label names it, and picking the item renames that group
     await page.locator('[data-sidebar-group-index="1"]').click();
     await aiActions.click();
     await expect(nameItem).not.toHaveAttribute('aria-disabled', 'true');
-    await expect(nameItem).toContainText(`Suggest a name for “${SAVED_GROUP.name}”`);
+    await expect(nameItem).toContainText('Suggest a name');
+    // (Chrome's accessible name pads the inline-block <bdi> name with spaces)
+    await expect(page.getByRole('group', { name: new RegExp(`^Selected group · \\s*${SAVED_GROUP.name}\\s*$`) })).toBeVisible();
     await nameItem.click();
 
     await expect(page.locator('[data-sidebar-group-index="1"]')).toContainText('Team tools');
     expect(nameRequests).toHaveLength(1);
     expect(nameRequests[0].tabs.map((t) => t.url)).toEqual(SAVED_GROUP.windows[0].tabs.map((t) => t.url));
     await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && g.name === 'Team tools', 'the AI name stored on the saved group');
+  });
+
+  test('header AI menu: sections by scope; "Describe group" writes the note (Undo in the toast), and reviews an existing note', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, SAVED_GROUP, { ...ANOTHER_GROUP, note: 'My reading notes' }]);
+    await signInAsProAiByok(page);
+    await page.evaluate(
+      ([userId, key]) => chrome.storage.local.set({ aiByokKey: { userId, key, provider: 'anthropic' } }),
+      [E2E_USER_ID, 'sk-ant-' + 'e'.repeat(24)]
+    );
+    const describeRequests: { groupName: string; tabs: Record<string, unknown>[] }[] = [];
+    await page.route('**/api/ai/describe-group*', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
+      describeRequests.push(route.request().postDataJSON() as { groupName: string; tabs: Record<string, unknown>[] });
+      // Untrusted output: a newline and a bidi override the popup must clean up
+      return route.fulfill({ headers: CORS, json: { description: 'Team tracker\nand docs.‮' } });
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+
+    const aiActions = page.getByRole('button', { name: 'AI actions' });
+    test.skip((await aiActions.count()) === 0, 'this build has own-key AI off (VITE_AI_BYOK_ENABLED)');
+    const describeItem = page.getByRole('menuitem', { name: /Describe group/ });
+
+    // Now Open: the sections are there, the selected-group items disabled with the reason
+    await aiActions.click();
+    await expect(page.getByRole('group', { name: 'Open tabs' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Selected group' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'All groups' })).toBeVisible();
+    await expect(describeItem).toHaveAttribute('aria-disabled', 'true');
+    await expect(describeItem).toContainText('Select a saved group first');
+    await expect(page.getByTestId('header-ai-plan')).toHaveText('Your own key');
+    await page.keyboard.press('Escape');
+
+    // A saved group with no note: the description becomes its note, one Undo away
+    await page.locator('[data-sidebar-group-index="1"]').click();
+    await aiActions.click();
+    await describeItem.click();
+    await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && g.note === 'Team tracker and docs.', 'the cleaned description stored as the note');
+    expect(describeRequests).toHaveLength(1);
+    expect(describeRequests[0].groupName).toBe(SAVED_GROUP.name);
+    // Only each tab's title and URL are sent
+    expect(describeRequests[0].tabs).toEqual(SAVED_GROUP.windows[0].tabs.map((t) => ({ title: t.title, url: t.url })));
+    const toast = page.locator('[data-sonner-toast]').filter({ hasText: 'Note added' });
+    await toast.getByRole('button', { name: 'Undo' }).click();
+    await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && !g.note, 'the note taken back by the toast Undo');
+
+    // A group that has a note: the review offers Replace / Add below / Cancel; Add below keeps it above
+    await page.locator('[data-sidebar-group-index="2"]').click();
+    await aiActions.click();
+    await describeItem.click();
+    const dialog = page.getByRole('dialog', { name: 'Use the AI description?' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByTestId('describe-group-current-note')).toHaveText('My reading notes');
+    await expect(dialog.getByTestId('describe-group-suggestion')).toHaveText('Team tracker and docs.');
+    await dialog.getByRole('button', { name: 'Add below' }).click();
+    await expect(dialog).toHaveCount(0);
+    await waitForStoredGroup(
+      page,
+      (g) => g.id === ANOTHER_GROUP.id && g.note === 'My reading notes\n\nTeam tracker and docs.',
+      'the description added below the existing note'
+    );
   });
 
   test('header AI menu: "Organize" reviews the proposed changes in the popup and applies the checked ones', async ({ context, extensionId }) => {

@@ -3,6 +3,8 @@
   "renameHint": "이 그룹의 새 이름 정하기",
   "aiRename": "AI로 이름 바꾸기",
   "aiRenameHint": "AI로 이 그룹의 이름 추천받기",
+  "aiDescribe": "AI로 설명 쓰기",
+  "aiDescribeHint": "AI로 이 그룹의 탭에 대한 짧은 메모 작성",
   "addNote": "메모 추가",
   "addNoteHint": "이 그룹에 메모 첨부",
   "editNote": "메모 편집",
@@ -38,6 +40,11 @@
   "toast": {
     "noDuplicates": "중복 항목이 없습니다",
     "noTabsToName": "이 그룹에는 이름을 지을 탭이 없습니다",
-    "aiRenameFailed": "AI로 이름을 바꾸지 못했습니다"
+    "aiRenameFailed": "AI로 이름을 바꾸지 못했습니다",
+    "noTabsToDescribe": "이 그룹에는 설명할 탭이 없습니다",
+    "aiDescribeFailed": "이 그룹의 설명을 쓰지 못했습니다",
+    "noteAdded": "메모를 추가했습니다",
+    "noteReplaced": "메모를 바꿨습니다",
+    "undoNoteLater": "이후에 다른 변경 사항이 있습니다. 대신 상단의 실행 취소를 사용하세요."
   }
 }

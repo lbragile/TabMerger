@@ -28,6 +28,7 @@
   "aiOncePerDay": "Heute bereits genutzt – diese KI-Aktion ist auf einmal pro Tag begrenzt",
   "proAiRequired": "Pro-AI-Tarif erforderlich",
   "nameGroupOff": "„Gruppe benennen“ ist in den Einstellungen deaktiviert",
+  "describeGroupOff": "„Gruppe beschreiben“ ist in den Einstellungen deaktiviert",
   "suggestSessionsOff": "„Sitzungen vorschlagen“ ist in den Einstellungen deaktiviert",
   "organizeOff": "„Organisieren“ ist in den Einstellungen deaktiviert",
   "ai": {

@@ -27,6 +27,8 @@ export interface AppSettings {
   aiDailyThrottle: boolean;
   aiAutoGroupEnabled: boolean;
   aiNameGroupEnabled: boolean;
+  /** "Describe group". Settings saved before it existed lack it: treat anything but `false` as on. */
+  aiDescribeGroupEnabled: boolean;
   aiSuggestSessionsEnabled: boolean;
   aiOrganizeEnabled: boolean;
   aiTabSummaryEnabled: boolean;
@@ -53,6 +55,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   aiDailyThrottle: true,
   aiAutoGroupEnabled: true,
   aiNameGroupEnabled: true,
+  aiDescribeGroupEnabled: true,
   aiSuggestSessionsEnabled: true,
   aiOrganizeEnabled: true,
   aiTabSummaryEnabled: true,

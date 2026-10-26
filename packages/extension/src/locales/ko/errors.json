@@ -28,6 +28,7 @@
   "aiOncePerDay": "오늘 이미 사용했습니다. 이 AI 작업은 하루에 한 번만 할 수 있습니다",
   "proAiRequired": "Pro AI 요금제가 필요합니다",
   "nameGroupOff": "그룹 이름 짓기가 설정에서 꺼져 있습니다",
+  "describeGroupOff": "그룹 설명 쓰기가 설정에서 꺼져 있습니다",
   "suggestSessionsOff": "세션 추천이 설정에서 꺼져 있습니다",
   "organizeOff": "정리가 설정에서 꺼져 있습니다",
   "ai": {

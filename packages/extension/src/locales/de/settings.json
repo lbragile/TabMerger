@@ -86,6 +86,8 @@
     "autoGroupDescription": "Geöffnete Tabs mit KI gruppieren",
     "nameGroupLabel": "Gruppe benennen",
     "nameGroupDescription": "Mit KI einen Namen für eine Gruppe vorschlagen",
+    "describeGroupLabel": "Gruppe beschreiben",
+    "describeGroupDescription": "Mit KI eine kurze Notiz zu den Tabs einer Gruppe schreiben",
     "suggestSessionsLabel": "Sitzungen vorschlagen",
     "suggestSessionsDescription": "Hintergrund-Banner, das vorschlägt, wann eine Sitzung gespeichert werden sollte",
     "organizeLabel": "Organisieren",
@@ -145,7 +147,9 @@
         "groupTabs_other": "{{count}} Tabs gruppieren",
         "suggestSessions": "Sitzungen vorschlagen",
         "organize_one": "{{count}} Tab organisieren",
-        "organize_other": "{{count}} Tabs organisieren"
+        "organize_other": "{{count}} Tabs organisieren",
+        "describeGroup_one": "Gruppe mit {{count}} Tab beschreiben",
+        "describeGroup_other": "Gruppe mit {{count}} Tabs beschreiben"
       }
     },
     "cost": {

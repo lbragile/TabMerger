@@ -90,6 +90,8 @@
     "autoGroupDescription": "Regrouper les onglets ouverts avec l’IA",
     "nameGroupLabel": "Nommer le groupe",
     "nameGroupDescription": "Suggérer un nom de groupe avec l’IA",
+    "describeGroupLabel": "Décrire le groupe",
+    "describeGroupDescription": "Écrire avec l’IA une courte note sur les onglets d’un groupe",
     "suggestSessionsLabel": "Suggérer des sessions",
     "suggestSessionsDescription": "Bannière en arrière-plan suggérant quand enregistrer une session",
     "organizeLabel": "Organiser",
@@ -154,7 +156,10 @@
         "suggestSessions": "Suggérer des sessions",
         "organize_one": "Organiser {{count}} onglet",
         "organize_many": "Organiser {{count}} d’onglets",
-        "organize_other": "Organiser {{count}} onglets"
+        "organize_other": "Organiser {{count}} onglets",
+        "describeGroup_one": "Décrire un groupe de {{count}} onglet",
+        "describeGroup_many": "Décrire un groupe de {{count}} d’onglets",
+        "describeGroup_other": "Décrire un groupe de {{count}} onglets"
       }
     },
     "cost": {

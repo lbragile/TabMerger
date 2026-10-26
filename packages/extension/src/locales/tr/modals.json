@@ -70,5 +70,15 @@
     "applied_other": "{{count}} değişiklik uygulandı",
     "nothingApplied": "Uygulanacak bir şey yok: bu gruplar bu arada değişti",
     "applyFailed": "Değişiklikler uygulanamadı"
+  },
+  "describeGroup": {
+    "title": "AI açıklaması kullanılsın mı?",
+    "description": "Bu grubun zaten bir notu var. Notu değiştirin veya öneriyi altına ekleyin.",
+    "current": "Mevcut not",
+    "suggestion": "Öneri",
+    "replace": "Notu değiştir",
+    "append": "Altına ekle",
+    "tooLong": "Notun altına eklemek için çok uzun (en fazla {{max}} karakter). Bunun yerine notu değiştirin.",
+    "saveFailed": "Not kaydedilemedi"
   }
 }

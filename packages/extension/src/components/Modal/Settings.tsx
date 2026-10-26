@@ -724,6 +724,20 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
+                <Label className="text-sm">{t('settings.ai.describeGroupLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.ai.describeGroupDescription')}</p>
+              </div>
+              <Switch
+                className="shrink-0"
+                aria-label={t('settings.ai.describeGroupLabel')}
+                // Settings saved before this toggle existed lack it: on
+                checked={draft.aiDescribeGroupEnabled !== false}
+                onCheckedChange={(v) => patch('aiDescribeGroupEnabled', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">{t('settings.ai.suggestSessionsLabel')}</Label>
                 <p className="text-xs text-muted-foreground">{t('settings.ai.suggestSessionsDescription')}</p>
               </div>

@@ -62,5 +62,15 @@
     "applied_other": "변경 {{count}}개를 적용했습니다",
     "nothingApplied": "적용할 항목이 없습니다. 그사이 그룹이 변경되었습니다",
     "applyFailed": "변경 사항을 적용할 수 없습니다"
+  },
+  "describeGroup": {
+    "title": "AI 설명을 사용할까요?",
+    "description": "이 그룹에는 이미 메모가 있습니다. 메모를 바꾸거나 제안을 아래에 추가하세요.",
+    "current": "현재 메모",
+    "suggestion": "제안",
+    "replace": "메모 바꾸기",
+    "append": "아래에 추가",
+    "tooLong": "메모 아래에 추가하기에는 너무 깁니다(최대 {{max}}자). 대신 메모를 바꾸세요.",
+    "saveFailed": "메모를 저장하지 못했습니다"
   }
 }

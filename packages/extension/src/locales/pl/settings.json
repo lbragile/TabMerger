@@ -94,6 +94,8 @@
     "autoGroupDescription": "Pogrupuj otwarte karty za pomocą AI",
     "nameGroupLabel": "Nazwij grupę",
     "nameGroupDescription": "Zasugeruj nazwę dla grupy za pomocą AI",
+    "describeGroupLabel": "Opisz grupę",
+    "describeGroupDescription": "Napisz za pomocą AI krótką notatkę o kartach grupy",
     "suggestSessionsLabel": "Sugeruj sesje",
     "suggestSessionsDescription": "Baner w tle sugerujący, kiedy zapisać sesję",
     "organizeLabel": "Organizuj",
@@ -163,7 +165,11 @@
         "organize_one": "Porządkowanie {{count}} karty",
         "organize_few": "Porządkowanie {{count}} kart",
         "organize_many": "Porządkowanie {{count}} kart",
-        "organize_other": "Porządkowanie {{count}} karty"
+        "organize_other": "Porządkowanie {{count}} karty",
+        "describeGroup_one": "Opisanie grupy z {{count}} kartą",
+        "describeGroup_few": "Opisanie grupy z {{count}} kartami",
+        "describeGroup_many": "Opisanie grupy z {{count}} kartami",
+        "describeGroup_other": "Opisanie grupy z {{count}} karty"
       }
     },
     "cost": {

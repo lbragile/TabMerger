@@ -90,6 +90,8 @@
     "autoGroupDescription": "Agrupa las pestañas abiertas con IA",
     "nameGroupLabel": "Nombrar grupo",
     "nameGroupDescription": "Sugiere un nombre para un grupo con IA",
+    "describeGroupLabel": "Describir grupo",
+    "describeGroupDescription": "Escribe con IA una nota breve sobre las pestañas de un grupo",
     "suggestSessionsLabel": "Sugerir sesiones",
     "suggestSessionsDescription": "Banner en segundo plano que sugiere cuándo guardar una sesión",
     "organizeLabel": "Organizar",
@@ -154,7 +156,10 @@
         "suggestSessions": "Sugerir sesiones",
         "organize_one": "Organizar {{count}} pestaña",
         "organize_many": "Organizar {{count}} de pestañas",
-        "organize_other": "Organizar {{count}} pestañas"
+        "organize_other": "Organizar {{count}} pestañas",
+        "describeGroup_one": "Describir un grupo de {{count}} pestaña",
+        "describeGroup_many": "Describir un grupo de {{count}} de pestañas",
+        "describeGroup_other": "Describir un grupo de {{count}} pestañas"
       }
     },
     "cost": {

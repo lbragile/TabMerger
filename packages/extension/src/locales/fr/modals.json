@@ -78,5 +78,15 @@
     "applied_other": "{{count}} modifications appliquées",
     "nothingApplied": "Rien à appliquer : ces groupes ont changé entre-temps",
     "applyFailed": "Impossible d’appliquer les modifications"
+  },
+  "describeGroup": {
+    "title": "Utiliser la description de l’IA ?",
+    "description": "Ce groupe a déjà une note. Remplacez-la ou ajoutez la suggestion en dessous.",
+    "current": "Note actuelle",
+    "suggestion": "Suggestion",
+    "replace": "Remplacer la note",
+    "append": "Ajouter en dessous",
+    "tooLong": "Trop long pour être ajouté sous la note ({{max}} caractères au maximum). Remplacez-la plutôt.",
+    "saveFailed": "Impossible d’enregistrer la note"
   }
 }

@@ -28,6 +28,7 @@
   "aiOncePerDay": "Already used today — this AI action is limited to once per day",
   "proAiRequired": "Pro AI plan required",
   "nameGroupOff": "Name group is turned off in Settings",
+  "describeGroupOff": "Describe group is turned off in Settings",
   "suggestSessionsOff": "Suggest sessions is turned off in Settings",
   "organizeOff": "Organize is turned off in Settings",
   "ai": {

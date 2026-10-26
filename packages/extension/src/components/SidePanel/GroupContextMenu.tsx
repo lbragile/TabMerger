@@ -22,7 +22,8 @@ import {
   SortAsc,
   ExternalLink,
   Archive,
-  Sparkles
+  Sparkles,
+  NotebookPen
 } from 'lucide-react';
 import {
   useDeleteGroup,
@@ -42,6 +43,7 @@ import { useUIStore, type SelectedItem } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { useNameGroupAction } from '@/hooks/useNameGroupAction';
+import { useDescribeGroupAction } from '@/hooks/useDescribeGroupAction';
 import { getSetting } from '@/lib/localDb';
 import { findDuplicateTabs } from '@/lib/deduplication';
 import { toast } from '@/lib/toast';
@@ -117,6 +119,8 @@ export function GroupContextMenu({
   const { data: appSettings } = useAppSettings();
   // Same action as the header's AI menu "Name group" (shared hook, same toasts and undo)
   const { run: handleAIRename } = useNameGroupAction(group, groupIndex);
+  // Same action as the header's AI menu "Describe group" (shared hook: same note write, review and toasts)
+  const { run: handleAIDescribe } = useDescribeGroupAction(group);
   const openModal = useUIStore((s) => s.openModal);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
@@ -191,6 +195,13 @@ export function GroupContextMenu({
             <DropdownMenuItem onClick={() => void handleAIRename()}>
               <Sparkles className="h-3.5 w-3.5 me-2 shrink-0" />
               <div><div>{t('groupMenu.aiRename')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.aiRenameHint')}</div></div>
+            </DropdownMenuItem>
+          )}
+
+          {!group.permanent && aiFeatures && appSettings?.aiDescribeGroupEnabled !== false && (
+            <DropdownMenuItem onClick={() => void handleAIDescribe()} data-testid="group-menu-ai-describe">
+              <NotebookPen className="h-3.5 w-3.5 me-2 shrink-0" />
+              <div><div>{t('groupMenu.aiDescribe')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.aiDescribeHint')}</div></div>
             </DropdownMenuItem>
           )}
 

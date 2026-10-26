@@ -62,5 +62,15 @@
     "applied_other": "{{count}} perubahan diterapkan",
     "nothingApplied": "Tidak ada yang diterapkan: grup tersebut berubah sementara itu",
     "applyFailed": "Tidak dapat menerapkan perubahan"
+  },
+  "describeGroup": {
+    "title": "Gunakan deskripsi AI?",
+    "description": "Grup ini sudah punya catatan. Ganti catatan itu atau tambahkan saran di bawahnya.",
+    "current": "Catatan saat ini",
+    "suggestion": "Saran",
+    "replace": "Ganti catatan",
+    "append": "Tambahkan di bawah",
+    "tooLong": "Terlalu panjang untuk ditambahkan di bawah catatan (maksimal {{max}} karakter). Ganti catatannya saja.",
+    "saveFailed": "Tidak dapat menyimpan catatan"
   }
 }

@@ -129,4 +129,5 @@
 - [Pro AI own key + model picker](learnings_ai_byok_model_choice.md) — WXT auto-import `class extends` trap; two AI flags; provider-first picker; focus retry; cost levels not $
 - [Header AI "Name group"](learnings_header_ai_name_group.md) — shared useNameGroupAction; Trans+bdi user name in hint; fa ZWNJ; e2e own-key seed
 - [AI Organize in the popup](learnings_ai_organize_in_popup.md) — sanitize + pure apply + own RMW hook; bdi a11y-name spaces; Now Open id changes on sign-in
+- [AI menu sections + Describe group](learnings_ai_menu_sections_describe_group.md) — AiMenu.tsx groups/labels; targeted toast Undo (undoHistoryEntry); `//` args mangled by Git Bash
 - [Settings initial tab + focus-ring clip](learnings_settings_initial_tab_and_focus_ring_clip.md) — useAuth first render + Radix focus picks General; -ms-1 ps-1

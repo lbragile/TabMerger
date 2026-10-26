@@ -28,6 +28,7 @@
   "aiOncePerDay": "Đã sử dụng hôm nay — hành động AI này bị giới hạn một lần mỗi ngày",
   "proAiRequired": "Yêu cầu gói Pro AI",
   "nameGroupOff": "Đặt tên nhóm đang tắt trong Cài đặt",
+  "describeGroupOff": "Mô tả nhóm đang tắt trong Cài đặt",
   "suggestSessionsOff": "Gợi ý phiên đang tắt trong Cài đặt",
   "organizeOff": "Sắp xếp đang tắt trong Cài đặt",
   "ai": {

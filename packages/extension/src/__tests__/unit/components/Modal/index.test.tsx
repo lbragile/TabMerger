@@ -23,6 +23,10 @@ vi.mock('@/components/Modal/OrganizeReview', () => ({
   OrganizeReviewModal: ({ data }: { data: { actions?: unknown[] } }) => <div data-testid="organizeReview">{data.actions?.length}</div>
 }))
 
+vi.mock('@/components/Modal/DescribeGroupReview', () => ({
+  DescribeGroupReviewModal: ({ data }: { data: { description?: string } }) => <div data-testid="describeGroupReview">{data.description}</div>
+}))
+
 function mockState(modal: { type: string | null; data?: Record<string, unknown> }) {
   const closeModal = vi.fn()
   mockUseUIStore.mockImplementation((selector: (s: { modal: typeof modal; closeModal: typeof closeModal }) => unknown) =>
@@ -64,6 +68,18 @@ describe('ModalRoot — routing', () => {
     mockState({ type: 'organizeReview' })
     render(<ModalRoot />)
     expect(screen.getByTestId('organizeReview')).toHaveTextContent('')
+  })
+
+  it('routes describeGroupReview to the Describe group review with its data', () => {
+    mockState({ type: 'describeGroupReview', data: { groupId: 'g1', description: 'About docs.' } })
+    render(<ModalRoot />)
+    expect(screen.getByTestId('describeGroupReview')).toHaveTextContent('About docs.')
+  })
+
+  it('gives the Describe group review empty data when none was passed', () => {
+    mockState({ type: 'describeGroupReview' })
+    render(<ModalRoot />)
+    expect(screen.getByTestId('describeGroupReview')).toHaveTextContent('')
   })
 
   it.each(['deleteGroup', 'deleteWindow', 'deleteTab', 'deleteSelection', 'removeAllWindows', 'clearAllData'])(

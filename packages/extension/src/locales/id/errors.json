@@ -28,6 +28,7 @@
   "aiOncePerDay": "Sudah digunakan hari ini — tindakan AI ini dibatasi sekali sehari",
   "proAiRequired": "Paket Pro AI diperlukan",
   "nameGroupOff": "Nama grup dimatikan di Pengaturan",
+  "describeGroupOff": "Deskripsi grup dimatikan di Pengaturan",
   "suggestSessionsOff": "Saran sesi dimatikan di Pengaturan",
   "organizeOff": "Pengaturan ulang dimatikan di Pengaturan",
   "ai": {

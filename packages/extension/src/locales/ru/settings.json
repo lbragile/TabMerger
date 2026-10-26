@@ -94,6 +94,8 @@
     "autoGroupDescription": "Сгруппировать открытые вкладки с помощью AI",
     "nameGroupLabel": "Название группы",
     "nameGroupDescription": "Предлагать название группы с помощью AI",
+    "describeGroupLabel": "Описание группы",
+    "describeGroupDescription": "Писать с помощью AI короткую заметку о вкладках группы",
     "suggestSessionsLabel": "Предлагать сеансы",
     "suggestSessionsDescription": "Фоновый баннер, подсказывающий, когда сохранить сеанс",
     "organizeLabel": "Упорядочить",
@@ -163,7 +165,11 @@
         "organize_one": "Упорядочивание {{count}} вкладки",
         "organize_few": "Упорядочивание {{count}} вкладок",
         "organize_many": "Упорядочивание {{count}} вкладок",
-        "organize_other": "Упорядочивание {{count}} вкладки"
+        "organize_other": "Упорядочивание {{count}} вкладки",
+        "describeGroup_one": "Описание группы из {{count}} вкладки",
+        "describeGroup_few": "Описание группы из {{count}} вкладок",
+        "describeGroup_many": "Описание группы из {{count}} вкладок",
+        "describeGroup_other": "Описание группы из {{count}} вкладки"
       }
     },
     "cost": {

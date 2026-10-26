@@ -102,6 +102,8 @@
     "autoGroupDescription": "تجميع علامات التبويب المفتوحة بالذكاء الاصطناعي",
     "nameGroupLabel": "تسمية المجموعة",
     "nameGroupDescription": "اقتراح اسم لمجموعة بالذكاء الاصطناعي",
+    "describeGroupLabel": "وصف المجموعة",
+    "describeGroupDescription": "كتابة ملاحظة قصيرة عن علامات التبويب في مجموعة بالذكاء الاصطناعي",
     "suggestSessionsLabel": "اقتراح الجلسات",
     "suggestSessionsDescription": "شريط في الخلفية يقترح متى تحفظ جلسة",
     "organizeLabel": "تنظيم",
@@ -181,7 +183,13 @@
         "organize_two": "تنظيم علامتَي تبويب",
         "organize_few": "تنظيم {{count}} علامات تبويب",
         "organize_many": "تنظيم {{count}} علامة تبويب",
-        "organize_other": "تنظيم {{count}} علامة تبويب"
+        "organize_other": "تنظيم {{count}} علامة تبويب",
+        "describeGroup_zero": "وصف مجموعة من {{count}} علامة تبويب",
+        "describeGroup_one": "وصف مجموعة من علامة تبويب واحدة",
+        "describeGroup_two": "وصف مجموعة من علامتَي تبويب",
+        "describeGroup_few": "وصف مجموعة من {{count}} علامات تبويب",
+        "describeGroup_many": "وصف مجموعة من {{count}} علامة تبويب",
+        "describeGroup_other": "وصف مجموعة من {{count}} علامة تبويب"
       }
     },
     "cost": {

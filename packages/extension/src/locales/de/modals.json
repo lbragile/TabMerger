@@ -70,5 +70,15 @@
     "applied_other": "{{count}} Änderungen angewendet",
     "nothingApplied": "Nichts anzuwenden: Diese Gruppen haben sich inzwischen geändert",
     "applyFailed": "Die Änderungen konnten nicht angewendet werden"
+  },
+  "describeGroup": {
+    "title": "KI-Beschreibung übernehmen?",
+    "description": "Diese Gruppe hat bereits eine Notiz. Ersetze sie oder füge den Vorschlag darunter ein.",
+    "current": "Aktuelle Notiz",
+    "suggestion": "Vorschlag",
+    "replace": "Notiz ersetzen",
+    "append": "Darunter einfügen",
+    "tooLong": "Zu lang, um es unter der Notiz einzufügen (höchstens {{max}} Zeichen). Ersetze sie stattdessen.",
+    "saveFailed": "Notiz konnte nicht gespeichert werden"
   }
 }

@@ -62,5 +62,15 @@
     "applied_other": "已应用 {{count}} 项更改",
     "nothingApplied": "没有可应用的更改：这些分组在此期间已有变动",
     "applyFailed": "无法应用更改"
+  },
+  "describeGroup": {
+    "title": "使用 AI 生成的描述？",
+    "description": "此分组已有备注。可以替换它，或将建议添加到其下方。",
+    "current": "当前备注",
+    "suggestion": "建议",
+    "replace": "替换备注",
+    "append": "添加到下方",
+    "tooLong": "太长，无法添加到备注下方（最多 {{max}} 个字符）。请改为替换。",
+    "saveFailed": "无法保存备注"
   }
 }

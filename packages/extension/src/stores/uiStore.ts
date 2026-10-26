@@ -26,6 +26,7 @@ export type ModalType =
   | 'encryptionSetup'
   | 'resetEncryption'
   | 'organizeReview'
+  | 'describeGroupReview'
   | null;
 
 /** How many snapshots Undo and Redo each keep. */

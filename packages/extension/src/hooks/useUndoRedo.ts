@@ -41,8 +41,11 @@ function removedSavedGroupIds(before: GroupsState, after: GroupsState): string[]
  * Then, outside the lock: remote deletes for the groups the restore removed, and the entry's
  * live-tabs effect (waiting for one still being collected). The counterpart is tagged with the
  * PROMISE of the inverse effect when it is pushed, so a Redo clicked right after waits for it.
+ *
+ * `only`: move only when that entry is still the top of the stack (see `undoHistoryEntry`).
+ * Resolves `true` when the cursor moved.
  */
-async function moveHistoryCursor(qc: QueryClient, direction: 'undo' | 'redo', signal: string): Promise<void> {
+async function moveHistoryCursor(qc: QueryClient, direction: 'undo' | 'redo', signal: string, only?: GroupsState): Promise<boolean> {
   let entry: GroupsState | undefined;
   let base: GroupsState | undefined;
   let conflict = false;
@@ -58,6 +61,7 @@ async function moveHistoryCursor(qc: QueryClient, direction: 'undo' | 'redo', si
         const history = useUIStore.getState();
         const top = (direction === 'undo' ? history.undoStack : history.redoStack)[0];
         if (!top) return null; // nothing (left) to undo: no write
+        if (only && top !== only) return null; // another step went on top of it: not this one
         // During the guided tour's practice chapters the history holds practice data only, and a
         // practice restore never touches the user's groups, so their changes cannot refuse it
         tourPractice = history.tourHistory !== null;
@@ -92,11 +96,11 @@ async function moveHistoryCursor(qc: QueryClient, direction: 'undo' | 'redo', si
   if (conflict) {
     resolveInverse(null);
     toast.info(t('errors.undoConflict'), { id: 'undo-conflict' });
-    return;
+    return false;
   }
   if (!entry || !base) {
     resolveInverse(null);
-    return;
+    return false;
   }
   qc.setQueryData(GROUPS_QUERY_KEY, stored);
   // Groups this restore removed (Redo of a delete or a replace, Undo of an add or an import) are
@@ -114,6 +118,16 @@ async function moveHistoryCursor(qc: QueryClient, direction: 'undo' | 'redo', si
   } catch {
     resolveInverse(null); // best effort: the saved data is restored either way
   }
+  return true;
+}
+
+/**
+ * Undo exactly `entry`, the step an action pushed (a toast's "Undo" for that action): nothing
+ * happens when another step went on the stack after it, so the toast never undoes a later change.
+ * Resolves `true` when it was undone.
+ */
+export function undoHistoryEntry(qc: QueryClient, entry: GroupsState): Promise<boolean> {
+  return moveHistoryCursor(qc, 'undo', TOUR_SIGNALS.undo, entry);
 }
 
 export function useUndoRedo() {
@@ -126,8 +140,12 @@ export function useUndoRedo() {
   const canUndo = undoStack.length > 0;
   const canRedo = redoStack.length > 0;
 
-  const undo = () => moveHistoryCursor(qc, 'undo', TOUR_SIGNALS.undo);
-  const redo = () => moveHistoryCursor(qc, 'redo', TOUR_SIGNALS.redo);
+  const undo = async (): Promise<void> => {
+    await moveHistoryCursor(qc, 'undo', TOUR_SIGNALS.undo);
+  };
+  const redo = async (): Promise<void> => {
+    await moveHistoryCursor(qc, 'redo', TOUR_SIGNALS.redo);
+  };
 
   return { canUndo, canRedo, undo, redo, undoStack, redoStack };
 }

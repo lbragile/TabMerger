@@ -3,6 +3,8 @@
   "renameHint": "הגדרת שם חדש לקבוצה",
   "aiRename": "שינוי שם עם AI",
   "aiRenameHint": "הצעת שם לקבוצה בעזרת AI",
+  "aiDescribe": "תיאור עם AI",
+  "aiDescribeHint": "כתיבת הערה קצרה על הכרטיסיות בקבוצה בעזרת AI",
   "addNote": "הוספת הערה",
   "addNoteHint": "צירוף הערה לקבוצה",
   "editNote": "עריכת הערה",
@@ -38,6 +40,11 @@
   "toast": {
     "noDuplicates": "לא נמצאו כפילויות",
     "noTabsToName": "אין בקבוצה כרטיסיות שאפשר לתת לפיהן שם",
-    "aiRenameFailed": "שינוי השם עם AI נכשל"
+    "aiRenameFailed": "שינוי השם עם AI נכשל",
+    "noTabsToDescribe": "אין בקבוצה כרטיסיות לתיאור",
+    "aiDescribeFailed": "לא ניתן היה לתאר את הקבוצה",
+    "noteAdded": "ההערה נוספה",
+    "noteReplaced": "ההערה הוחלפה",
+    "undoNoteLater": "אחרי השינוי הזה בוצעו שינויים נוספים. אפשר להשתמש ב„ביטול פעולה” שלמעלה במקום."
   }
 }

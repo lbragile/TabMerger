@@ -82,6 +82,8 @@
     "autoGroupDescription": "AI로 열린 탭 그룹화",
     "nameGroupLabel": "그룹 이름 짓기",
     "nameGroupDescription": "AI로 그룹 이름 추천받기",
+    "describeGroupLabel": "그룹 설명 쓰기",
+    "describeGroupDescription": "AI로 그룹의 탭에 대한 짧은 메모 작성",
     "suggestSessionsLabel": "세션 추천",
     "suggestSessionsDescription": "세션을 저장할 때를 알려 주는 백그라운드 배너",
     "organizeLabel": "정리",
@@ -136,7 +138,8 @@
         "tabSummary": "탭 1개 요약",
         "groupTabs_other": "탭 {{count}}개 그룹화",
         "suggestSessions": "세션 추천",
-        "organize_other": "탭 {{count}}개 정리"
+        "organize_other": "탭 {{count}}개 정리",
+        "describeGroup_other": "탭 {{count}}개 그룹 설명 쓰기"
       }
     },
     "cost": {

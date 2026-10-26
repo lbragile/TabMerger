@@ -28,6 +28,7 @@
   "aiOncePerDay": "Ya se usó hoy: esta acción de IA está limitada a una vez al día",
   "proAiRequired": "Se requiere el plan Pro AI",
   "nameGroupOff": "Nombrar grupo está desactivado en Ajustes",
+  "describeGroupOff": "Describir grupo está desactivado en Ajustes",
   "suggestSessionsOff": "Sugerir sesiones está desactivado en Ajustes",
   "organizeOff": "Organizar está desactivado en Ajustes",
   "ai": {

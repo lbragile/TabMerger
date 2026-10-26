@@ -217,6 +217,18 @@ describe('SettingsModal — AI tab', () => {
     const switches = screen.getAllByRole('switch')
     switches.forEach((s) => expect(s).toBeChecked())
   })
+
+  it('has a "Describe group" switch, on for settings saved before it existed, that turns off', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    renderModal()
+    await goToTab(/^ai$/i)
+    expect(screen.getByText('Write a short note about a group\'s tabs with AI')).toBeInTheDocument()
+    const toggle = screen.getByRole('switch', { name: 'Describe group' })
+    expect(toggle).toBeChecked()
+    fireEvent.click(toggle)
+    expect(toggle).not.toBeChecked()
+    expect(screen.getByRole('switch', { name: 'Name group' })).toBeChecked()
+  })
 })
 
 describe('SettingsModal — opening on a requested tab', () => {

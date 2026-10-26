@@ -86,6 +86,8 @@
     "autoGroupDescription": "Açık sekmeleri AI ile gruplayın",
     "nameGroupLabel": "Grubu adlandır",
     "nameGroupDescription": "AI ile bir grup için ad önerin",
+    "describeGroupLabel": "Grubu açıkla",
+    "describeGroupDescription": "AI ile bir gruptaki sekmeler hakkında kısa bir not yazın",
     "suggestSessionsLabel": "Oturum öner",
     "suggestSessionsDescription": "Ne zaman oturum kaydedileceğini öneren arka plan bildirimi",
     "organizeLabel": "Düzenle",
@@ -145,7 +147,9 @@
         "groupTabs_other": "{{count}} sekmeyi gruplama",
         "suggestSessions": "Oturum önerme",
         "organize_one": "{{count}} sekmeyi düzenleme",
-        "organize_other": "{{count}} sekmeyi düzenleme"
+        "organize_other": "{{count}} sekmeyi düzenleme",
+        "describeGroup_one": "{{count}} sekmelik grubu açıklama",
+        "describeGroup_other": "{{count}} sekmelik grubu açıklama"
       }
     },
     "cost": {

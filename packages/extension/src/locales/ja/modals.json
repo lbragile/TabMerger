@@ -62,5 +62,15 @@
     "applied_other": "{{count}}件の変更を適用しました",
     "nothingApplied": "適用する変更はありません。その間にグループが変更されました",
     "applyFailed": "変更を適用できませんでした"
+  },
+  "describeGroup": {
+    "title": "AIの説明を使いますか？",
+    "description": "このグループにはすでにメモがあります。置き換えるか、提案を下に追加してください。",
+    "current": "現在のメモ",
+    "suggestion": "提案",
+    "replace": "メモを置き換える",
+    "append": "下に追加",
+    "tooLong": "メモの下に追加するには長すぎます（最大 {{max}} 文字）。代わりに置き換えてください。",
+    "saveFailed": "メモを保存できませんでした"
   }
 }

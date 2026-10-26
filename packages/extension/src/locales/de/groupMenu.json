@@ -3,6 +3,8 @@
   "renameHint": "Neuen Namen für diese Gruppe festlegen",
   "aiRename": "KI-Umbenennung",
   "aiRenameHint": "Mit KI einen Namen für diese Gruppe vorschlagen",
+  "aiDescribe": "Mit KI beschreiben",
+  "aiDescribeHint": "Mit KI eine kurze Notiz zu den Tabs dieser Gruppe schreiben",
   "addNote": "Notiz hinzufügen",
   "addNoteHint": "Eine Notiz an diese Gruppe anhängen",
   "editNote": "Notiz bearbeiten",
@@ -38,6 +40,11 @@
   "toast": {
     "noDuplicates": "Keine Duplikate gefunden",
     "noTabsToName": "Diese Gruppe enthält keine Tabs zum Benennen",
-    "aiRenameFailed": "KI-Umbenennung fehlgeschlagen"
+    "aiRenameFailed": "KI-Umbenennung fehlgeschlagen",
+    "noTabsToDescribe": "Diese Gruppe enthält keine Tabs zum Beschreiben",
+    "aiDescribeFailed": "Gruppe konnte nicht beschrieben werden",
+    "noteAdded": "Notiz hinzugefügt",
+    "noteReplaced": "Notiz ersetzt",
+    "undoNoteLater": "Danach gab es weitere Änderungen. Nutze stattdessen „Rückgängig“ oben."
   }
 }

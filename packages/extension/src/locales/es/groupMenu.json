@@ -3,6 +3,8 @@
   "renameHint": "Define un nombre nuevo para este grupo",
   "aiRename": "Renombrar con IA",
   "aiRenameHint": "Sugiere un nombre para este grupo con IA",
+  "aiDescribe": "Describir con IA",
+  "aiDescribeHint": "Escribe con IA una nota breve sobre las pestañas de este grupo",
   "addNote": "Agregar nota",
   "addNoteHint": "Adjunta una nota a este grupo",
   "editNote": "Editar nota",
@@ -38,6 +40,11 @@
   "toast": {
     "noDuplicates": "No se encontraron duplicadas",
     "noTabsToName": "No hay pestañas en este grupo para nombrar",
-    "aiRenameFailed": "Falló el renombrado con IA"
+    "aiRenameFailed": "Falló el renombrado con IA",
+    "noTabsToDescribe": "No hay pestañas en este grupo para describir",
+    "aiDescribeFailed": "No se pudo describir este grupo",
+    "noteAdded": "Nota agregada",
+    "noteReplaced": "Nota reemplazada",
+    "undoNoteLater": "Hubo otros cambios después de este. Usa Deshacer en la parte superior."
   }
 }

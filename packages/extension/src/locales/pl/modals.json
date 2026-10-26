@@ -86,5 +86,15 @@
     "applied_other": "Zastosowano {{count}} zmiany",
     "nothingApplied": "Nic do zastosowania: te grupy w międzyczasie się zmieniły",
     "applyFailed": "Nie udało się zastosować zmian"
+  },
+  "describeGroup": {
+    "title": "Użyć opisu AI?",
+    "description": "Ta grupa ma już notatkę. Zastąp ją lub dodaj sugestię pod nią.",
+    "current": "Obecna notatka",
+    "suggestion": "Sugestia",
+    "replace": "Zastąp notatkę",
+    "append": "Dodaj pod spodem",
+    "tooLong": "Za długie, by dodać pod notatką (maksymalnie {{max}} znaków). Zamiast tego ją zastąp.",
+    "saveFailed": "Nie udało się zapisać notatki"
   }
 }

@@ -28,6 +28,7 @@
   "aiOncePerDay": "Bugün zaten kullanıldı — bu AI işlemi günde bir kezle sınırlıdır",
   "proAiRequired": "Pro AI planı gerekli",
   "nameGroupOff": "Grup adlandırma Ayarlar'da kapalı",
+  "describeGroupOff": "Grup açıklama Ayarlar'da kapalı",
   "suggestSessionsOff": "Oturum önerme Ayarlar'da kapalı",
   "organizeOff": "Düzenleme Ayarlar'da kapalı",
   "ai": {

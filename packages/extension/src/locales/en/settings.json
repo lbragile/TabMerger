@@ -86,6 +86,8 @@
     "autoGroupDescription": "Group open tabs with AI",
     "nameGroupLabel": "Name group",
     "nameGroupDescription": "Suggest a name for a group with AI",
+    "describeGroupLabel": "Describe group",
+    "describeGroupDescription": "Write a short note about a group's tabs with AI",
     "suggestSessionsLabel": "Suggest sessions",
     "suggestSessionsDescription": "Background banner suggesting when to save a session",
     "organizeLabel": "Organize",
@@ -145,7 +147,9 @@
         "groupTabs_other": "Group {{count}} tabs",
         "suggestSessions": "Suggest sessions",
         "organize_one": "Organize {{count}} tab",
-        "organize_other": "Organize {{count}} tabs"
+        "organize_other": "Organize {{count}} tabs",
+        "describeGroup_one": "Describe a group of {{count}} tab",
+        "describeGroup_other": "Describe a group of {{count}} tabs"
       }
     },
     "cost": {

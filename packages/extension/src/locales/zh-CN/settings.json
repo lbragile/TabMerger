@@ -82,6 +82,8 @@
     "autoGroupDescription": "用 AI 为打开的标签页分组",
     "nameGroupLabel": "为分组命名",
     "nameGroupDescription": "用 AI 为分组推荐名称",
+    "describeGroupLabel": "描述分组",
+    "describeGroupDescription": "用 AI 为分组中的标签页写一段简短备注",
     "suggestSessionsLabel": "建议会话",
     "suggestSessionsDescription": "后台横幅，建议何时保存会话",
     "organizeLabel": "整理",
@@ -136,7 +138,8 @@
         "tabSummary": "总结一个标签页",
         "groupTabs_other": "分组 {{count}} 个标签页",
         "suggestSessions": "建议会话",
-        "organize_other": "整理 {{count}} 个标签页"
+        "organize_other": "整理 {{count}} 个标签页",
+        "describeGroup_other": "描述含 {{count}} 个标签页的分组"
       }
     },
     "cost": {

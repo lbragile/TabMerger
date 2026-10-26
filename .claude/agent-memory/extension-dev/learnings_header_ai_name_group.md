@@ -15,6 +15,9 @@ metadata:
 - **Mocks follow hook usage** ([[test-mocks-follow-hook-usage]]): rendering `Header` now needs
   `useNameGroup` in every `vi.mock('@/hooks/useAI')` and `useUpdateGroupName` in every
   `vi.mock('@/hooks/useGroups')` (sidePanelAndHeader.test.tsx).
+- (The header item's hint is now plain "Suggest a name"; the group name moved to the menu's
+  "Selected group · <name>" section label, same Trans + bdi pattern: see
+  [[learnings-ai-menu-sections-describe-group]].)
 - **User text inside a translated hint:** `"Suggest a name for “<name>{{name}}</name>”"` with
   `<Trans components={{ name: <bdi title={name} className="inline-block max-w-[6.5rem] truncate align-bottom" /> }} />`
   isolates RTL/LTR mixing, cuts only the name with an ellipsis (the closing quote stays), keeps the

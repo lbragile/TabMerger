@@ -3,6 +3,8 @@
   "renameHint": "Set a new name for this group",
   "aiRename": "AI rename",
   "aiRenameHint": "Suggest a name for this group with AI",
+  "aiDescribe": "Describe with AI",
+  "aiDescribeHint": "Write a short note about this group's tabs",
   "addNote": "Add note",
   "addNoteHint": "Attach a note to this group",
   "editNote": "Edit note",
@@ -38,6 +40,11 @@
   "toast": {
     "noDuplicates": "No duplicates found",
     "noTabsToName": "No tabs in this group to name",
-    "aiRenameFailed": "AI rename failed"
+    "aiRenameFailed": "AI rename failed",
+    "noTabsToDescribe": "No tabs in this group to describe",
+    "aiDescribeFailed": "Could not describe this group",
+    "noteAdded": "Note added",
+    "noteReplaced": "Note replaced",
+    "undoNoteLater": "Other changes came after this one. Use Undo at the top instead."
   }
 }

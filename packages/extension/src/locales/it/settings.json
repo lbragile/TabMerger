@@ -90,6 +90,8 @@
     "autoGroupDescription": "Raggruppa le schede aperte con l'AI",
     "nameGroupLabel": "Assegna nome al gruppo",
     "nameGroupDescription": "Suggerisci un nome per un gruppo con l'AI",
+    "describeGroupLabel": "Descrivi gruppo",
+    "describeGroupDescription": "Scrivi con l'AI una breve nota sulle schede di un gruppo",
     "suggestSessionsLabel": "Suggerisci sessioni",
     "suggestSessionsDescription": "Banner in background che suggerisce quando salvare una sessione",
     "organizeLabel": "Organizza",
@@ -154,7 +156,10 @@
         "suggestSessions": "Suggerire sessioni",
         "organize_one": "Organizzare {{count}} scheda",
         "organize_many": "Organizzare {{count}} di schede",
-        "organize_other": "Organizzare {{count}} schede"
+        "organize_other": "Organizzare {{count}} schede",
+        "describeGroup_one": "Descrivere un gruppo di {{count}} scheda",
+        "describeGroup_many": "Descrivere un gruppo di {{count}} di schede",
+        "describeGroup_other": "Descrivere un gruppo di {{count}} schede"
       }
     },
     "cost": {

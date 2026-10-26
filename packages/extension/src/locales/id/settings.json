@@ -82,6 +82,8 @@
     "autoGroupDescription": "Kelompokkan tab yang terbuka dengan AI",
     "nameGroupLabel": "Nama grup",
     "nameGroupDescription": "Sarankan nama untuk grup dengan AI",
+    "describeGroupLabel": "Deskripsikan grup",
+    "describeGroupDescription": "Tulis catatan singkat tentang tab dalam grup dengan AI",
     "suggestSessionsLabel": "Sarankan sesi",
     "suggestSessionsDescription": "Spanduk latar belakang yang menyarankan kapan harus menyimpan sesi",
     "organizeLabel": "Atur ulang",
@@ -136,7 +138,8 @@
         "tabSummary": "Meringkas satu tab",
         "groupTabs_other": "Mengelompokkan {{count}} tab",
         "suggestSessions": "Menyarankan sesi",
-        "organize_other": "Mengatur ulang {{count}} tab"
+        "organize_other": "Mengatur ulang {{count}} tab",
+        "describeGroup_other": "Mendeskripsikan grup berisi {{count}} tab"
       }
     },
     "cost": {

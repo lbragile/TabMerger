@@ -37,6 +37,8 @@ const {
   mockUseEntitlements,
   mockUseAppSettings,
   mockNameGroup,
+  mockDescribeGroup,
+  mockUpdateGroupNote,
   mockToggleSelection,
   mockEnterSelectionMode,
 } = vi.hoisted(() => ({
@@ -63,6 +65,8 @@ const {
   mockUseEntitlements: vi.fn(() => ({ maxGroups: 2, aiFeatures: false })),
   mockUseAppSettings: vi.fn(() => ({ data: { aiNameGroupEnabled: true } })),
   mockNameGroup: vi.fn(),
+  mockDescribeGroup: vi.fn(),
+  mockUpdateGroupNote: vi.fn().mockResolvedValue(undefined),
   mockToggleSelection: vi.fn(),
   mockEnterSelectionMode: vi.fn(),
 }))
@@ -81,7 +85,9 @@ vi.mock('@/hooks/useGroups', () => ({
   useArchiveGroup: () => ({ mutate: mockArchiveGroup }),
   useRestoreGroup: () => ({ mutate: mockRestoreGroup }),
   useUpdateGroupName: () => ({ mutate: mockUpdateGroupName }),
+  useUpdateGroupNote: () => ({ mutateAsync: mockUpdateGroupNote }),
   useGroups: () => ({ data: mockUseGroupsData() }),
+  GROUPS_QUERY_KEY: ['groups'],
 }))
 
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
@@ -96,6 +102,7 @@ const { QuotaExceededError } = vi.hoisted(() => ({
 vi.mock('@/lib/aiErrors', async (importOriginal) => ({ ...(await importOriginal<object>()), QuotaExceededError: QuotaExceededError }))
 vi.mock('@/hooks/useAI', () => ({
   useNameGroup: () => ({ mutateAsync: mockNameGroup }),
+  useDescribeGroup: () => ({ mutateAsync: mockDescribeGroup }),
   QuotaExceededError,
 }))
 
@@ -237,6 +244,63 @@ describe('GroupContextMenu — AI rename', () => {
     expect(options.action.label).toBe('Open Settings')
     options.action.onClick()
     expect(mockOpenModal).toHaveBeenCalledWith('settings', { tab: 'ai' })
+  })
+})
+
+describe('GroupContextMenu — Describe with AI', () => {
+  const groupWithTabs = () =>
+    makeGroup({
+      windows: [{ id: 1, tabs: [{ id: 1, title: 'A', url: 'https://a.com' }], starred: false, incognito: false, focused: false }],
+    })
+
+  // useEntitlements resolves aiFeatures to false for Free, Pro, and a Pro AI plan whose AI option
+  // (own key or managed) isn't live: the item is never offered to any of them.
+  it.each([
+    ['free', { tier: 'free', aiFeatures: false }],
+    ['pro', { tier: 'pro', aiFeatures: false }],
+    ['pro_ai, mode not live', { tier: 'pro_ai', aiFeatures: false, aiMode: 'byok' }],
+  ])('hidden for a %s account', (_name, ent) => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, ...ent })
+    renderGroup(groupWithTabs())
+    expect(screen.queryByTestId('group-menu-ai-describe')).toBeNull()
+  })
+
+  it('hidden when aiDescribeGroupEnabled is off in Settings', () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    mockUseAppSettings.mockReturnValue({ data: { aiNameGroupEnabled: true, aiDescribeGroupEnabled: false } as never })
+    renderGroup(groupWithTabs())
+    expect(screen.queryByTestId('group-menu-ai-describe')).toBeNull()
+    expect(screen.getByText('AI rename')).toBeTruthy()
+  })
+
+  it('hidden for Now Open', () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    renderGroup(makeGroup({ ...groupWithTabs(), permanent: true }))
+    expect(screen.queryByTestId('group-menu-ai-describe')).toBeNull()
+  })
+
+  it('shown for a saved group with AI features (settings saved before the toggle existed count as on)', () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    renderGroup(groupWithTabs())
+    expect(screen.getByTestId('group-menu-ai-describe').textContent).toContain('Describe with AI')
+  })
+
+  it('sends the group name and tabs, then writes the description as the note of an empty-note group', async () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    mockDescribeGroup.mockResolvedValue({ description: 'One page.' })
+    const user = userEvent.setup()
+    renderGroup(groupWithTabs())
+    await user.click(screen.getByTestId('group-menu-ai-describe'))
+    expect(mockDescribeGroup).toHaveBeenCalledWith({ groupName: 'Test Group', tabs: [{ id: 1, title: 'A', url: 'https://a.com' }] })
+  })
+
+  it('toasts instead of calling the API when the group has no tabs', async () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    const user = userEvent.setup()
+    renderGroup(makeGroup())
+    await user.click(screen.getByTestId('group-menu-ai-describe'))
+    expect(mockDescribeGroup).not.toHaveBeenCalled()
+    expect(mockToastError).toHaveBeenCalledWith('No tabs in this group to describe')
   })
 })
 

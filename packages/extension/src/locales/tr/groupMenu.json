@@ -3,6 +3,8 @@
   "renameHint": "Bu grup için yeni bir ad belirleyin",
   "aiRename": "AI ile adlandır",
   "aiRenameHint": "AI ile bu grup için bir ad önerin",
+  "aiDescribe": "AI ile açıkla",
+  "aiDescribeHint": "AI ile bu gruptaki sekmeler hakkında kısa bir not yazın",
   "addNote": "Not ekle",
   "addNoteHint": "Bu gruba bir not ekleyin",
   "editNote": "Notu düzenle",
@@ -38,6 +40,11 @@
   "toast": {
     "noDuplicates": "Yinelenen bulunamadı",
     "noTabsToName": "Bu grupta adlandırılacak sekme yok",
-    "aiRenameFailed": "AI ile adlandırma başarısız oldu"
+    "aiRenameFailed": "AI ile adlandırma başarısız oldu",
+    "noTabsToDescribe": "Bu grupta açıklanacak sekme yok",
+    "aiDescribeFailed": "Bu grup açıklanamadı",
+    "noteAdded": "Not eklendi",
+    "noteReplaced": "Not değiştirildi",
+    "undoNoteLater": "Bundan sonra başka değişiklikler yapıldı. Bunun yerine üstteki Geri al'ı kullanın."
   }
 }

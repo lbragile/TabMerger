@@ -28,6 +28,7 @@
   "aiOncePerDay": "Déjà utilisé aujourd’hui : cette action IA est limitée à une fois par jour",
   "proAiRequired": "Offre Pro AI requise",
   "nameGroupOff": "Le nommage de groupe est désactivé dans les Paramètres",
+  "describeGroupOff": "La description de groupe est désactivée dans les Paramètres",
   "suggestSessionsOff": "Les suggestions de sessions sont désactivées dans les Paramètres",
   "organizeOff": "L’organisation est désactivée dans les Paramètres",
   "ai": {

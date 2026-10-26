@@ -86,6 +86,8 @@
     "autoGroupDescription": "AI के साथ खुले टैब समूहित करें",
     "nameGroupLabel": "समूह का नाम दें",
     "nameGroupDescription": "AI के साथ एक समूह के लिए नाम सुझाएं",
+    "describeGroupLabel": "समूह का विवरण दें",
+    "describeGroupDescription": "AI के साथ किसी समूह के टैब के बारे में छोटा नोट लिखें",
     "suggestSessionsLabel": "सत्र सुझाएं",
     "suggestSessionsDescription": "सत्र कब सहेजें यह सुझाने वाला पृष्ठभूमि बैनर",
     "organizeLabel": "व्यवस्थित करें",
@@ -145,7 +147,9 @@
         "groupTabs_other": "{{count}} टैब को समूहों में बाँटना",
         "suggestSessions": "सत्र सुझाना",
         "organize_one": "{{count}} टैब व्यवस्थित करना",
-        "organize_other": "{{count}} टैब व्यवस्थित करना"
+        "organize_other": "{{count}} टैब व्यवस्थित करना",
+        "describeGroup_one": "{{count}} टैब वाले समूह का विवरण देना",
+        "describeGroup_other": "{{count}} टैब वाले समूह का विवरण देना"
       }
     },
     "cost": {

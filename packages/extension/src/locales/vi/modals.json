@@ -62,5 +62,15 @@
     "applied_other": "Đã áp dụng {{count}} thay đổi",
     "nothingApplied": "Không có gì để áp dụng: các nhóm đó đã thay đổi trong lúc này",
     "applyFailed": "Không thể áp dụng các thay đổi"
+  },
+  "describeGroup": {
+    "title": "Dùng mô tả của AI?",
+    "description": "Nhóm này đã có ghi chú. Hãy thay ghi chú đó hoặc thêm gợi ý vào bên dưới.",
+    "current": "Ghi chú hiện tại",
+    "suggestion": "Gợi ý",
+    "replace": "Thay ghi chú",
+    "append": "Thêm bên dưới",
+    "tooLong": "Quá dài để thêm bên dưới ghi chú (tối đa {{max}} ký tự). Hãy thay ghi chú.",
+    "saveFailed": "Không thể lưu ghi chú"
   }
 }

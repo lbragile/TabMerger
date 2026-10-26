@@ -86,6 +86,8 @@
     "autoGroupDescription": "گروه‌بندی زبانه‌های باز با هوش مصنوعی",
     "nameGroupLabel": "نام‌گذاری گروه",
     "nameGroupDescription": "پیشنهاد نام برای یک گروه با هوش مصنوعی",
+    "describeGroupLabel": "توصیف گروه",
+    "describeGroupDescription": "نوشتن یادداشتی کوتاه دربارهٔ زبانه‌های یک گروه با هوش مصنوعی",
     "suggestSessionsLabel": "پیشنهاد نشست",
     "suggestSessionsDescription": "بنری در پس‌زمینه که پیشنهاد می‌دهد کی یک نشست را ذخیره کنید",
     "organizeLabel": "سازمان‌دهی",
@@ -145,7 +147,9 @@
         "groupTabs_other": "گروه‌بندی {{count}} زبانه",
         "suggestSessions": "پیشنهاد نشست",
         "organize_one": "سازمان‌دهی {{count}} زبانه",
-        "organize_other": "سازمان‌دهی {{count}} زبانه"
+        "organize_other": "سازمان‌دهی {{count}} زبانه",
+        "describeGroup_one": "توصیف گروهی با {{count}} زبانه",
+        "describeGroup_other": "توصیف گروهی با {{count}} زبانه"
       }
     },
     "cost": {

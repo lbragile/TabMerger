@@ -28,6 +28,7 @@
   "aiOncePerDay": "今天已使用过：此 AI 操作每天限用一次",
   "proAiRequired": "需要 Pro AI 套餐",
   "nameGroupOff": "“为分组命名”已在设置中关闭",
+  "describeGroupOff": "“描述分组”已在设置中关闭",
   "suggestSessionsOff": "“建议会话”已在设置中关闭",
   "organizeOff": "“整理”已在设置中关闭",
   "ai": {

@@ -9,6 +9,7 @@ import {
   MANAGED_AI_PROVIDER,
   estimateAiCredits,
   isTourDemoGroup,
+  type AIDescribeGroupRequest,
   type AiAction,
   type AiModelChoice,
   type AiSuggestionKind
@@ -25,6 +26,7 @@ import { getByokKey } from '@/lib/byokKey';
 import { choiceForProvider, modelFor } from '@/lib/aiModel';
 import { AiRequestError, QuotaExceededError, aiErrorMessage } from '@/lib/aiErrors';
 import { sanitizeOrganizeActions } from '@/lib/organizeActions';
+import { cleanGroupDescription } from '@/lib/groupDescription';
 
 // No `export { … } from '@/lib/aiErrors'` here: WXT auto-imports every export of src/hooks, so a
 // re-exported class gets auto-imported into the very file that declares it (a duplicate
@@ -203,6 +205,34 @@ export function useNameGroup() {
       const { model, options } = await prepare('nameGroup', tabs.length);
 
       return aiPost<{ name: string }>('/api/ai/name-group', { tabs, model }, token, options);
+    }
+  }));
+}
+
+/**
+ * "Describe group": asks `/api/ai/describe-group` for 1-3 sentences about a group's tabs. The group
+ * name and tabs come from the popup's decrypted local state (the server can't read stored groups of
+ * an encrypted account), and only each tab's title and URL are sent. The reply is untrusted: it is
+ * cleaned to plain text (`cleanGroupDescription`), `null` when nothing usable is left.
+ */
+export function useDescribeGroup() {
+  const { session, aiFeatures, settings, prepare, refreshUsage } = useAiRequestContext();
+
+  return withQuotaFlag(useMutation({
+    onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'describe' }); },
+    onSettled: refreshUsage,
+    // ponytail: no daily throttle — manual, always run it.
+    mutationFn: async ({ groupName, tabs }: { groupName: string; tabs: Tab[] }) => {
+      if (!AI_ENABLED) throw new Error('AI features are coming soon');
+      if (!aiFeatures) throw new Error(t('errors.proAiRequired'));
+      if (settings?.aiDescribeGroupEnabled === false) throw new Error(t('errors.describeGroupOff'));
+      const token = requireToken(session);
+      const { model, options } = await prepare('describeGroup', tabs.length);
+
+      const body: AIDescribeGroupRequest = { groupName, tabs: tabs.map((tab) => ({ title: tab.title, url: tab.url })), model };
+      const reply = await aiPost<unknown>('/api/ai/describe-group', body, token, options);
+      const description = reply && typeof reply === 'object' ? (reply as { description?: unknown }).description : undefined;
+      return { description: cleanGroupDescription(description) };
     }
   }));
 }

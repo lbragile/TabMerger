@@ -82,6 +82,8 @@
     "autoGroupDescription": "Nhóm các thẻ đang mở bằng AI",
     "nameGroupLabel": "Đặt tên nhóm",
     "nameGroupDescription": "Gợi ý tên cho một nhóm bằng AI",
+    "describeGroupLabel": "Mô tả nhóm",
+    "describeGroupDescription": "Viết ghi chú ngắn về các thẻ trong một nhóm bằng AI",
     "suggestSessionsLabel": "Gợi ý phiên",
     "suggestSessionsDescription": "Biểu ngữ nền gợi ý khi nào nên lưu một phiên",
     "organizeLabel": "Sắp xếp",
@@ -136,7 +138,8 @@
         "tabSummary": "Tóm tắt một thẻ",
         "groupTabs_other": "Nhóm {{count}} thẻ",
         "suggestSessions": "Gợi ý phiên",
-        "organize_other": "Sắp xếp {{count}} thẻ"
+        "organize_other": "Sắp xếp {{count}} thẻ",
+        "describeGroup_other": "Mô tả nhóm {{count}} thẻ"
       }
     },
     "cost": {

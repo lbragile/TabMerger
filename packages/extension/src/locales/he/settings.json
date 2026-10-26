@@ -90,6 +90,8 @@
     "autoGroupDescription": "קיבוץ הכרטיסיות הפתוחות בעזרת AI",
     "nameGroupLabel": "מתן שם לקבוצה",
     "nameGroupDescription": "הצעת שם לקבוצה בעזרת AI",
+    "describeGroupLabel": "תיאור הקבוצה",
+    "describeGroupDescription": "כתיבת הערה קצרה על הכרטיסיות בקבוצה בעזרת AI",
     "suggestSessionsLabel": "הצעת סשנים",
     "suggestSessionsDescription": "באנר ברקע שמציע מתי לשמור סשן",
     "organizeLabel": "ארגון",
@@ -154,7 +156,10 @@
         "suggestSessions": "הצעת סשנים",
         "organize_one": "ארגון כרטיסייה אחת",
         "organize_two": "ארגון שתי כרטיסיות",
-        "organize_other": "ארגון {{count}} כרטיסיות"
+        "organize_other": "ארגון {{count}} כרטיסיות",
+        "describeGroup_one": "תיאור קבוצה של כרטיסייה אחת",
+        "describeGroup_two": "תיאור קבוצה של שתי כרטיסיות",
+        "describeGroup_other": "תיאור קבוצה של {{count}} כרטיסיות"
       }
     },
     "cost": {

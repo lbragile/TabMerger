@@ -4,7 +4,6 @@ import {
     Redo2,
     Settings,
     UserCircle,
-    Sparkles,
     CheckSquare,
     Square,
     Zap,
@@ -30,25 +29,20 @@ import {
 import { useUIStore } from "@/stores/uiStore";
 import { SearchOverlay } from './SearchOverlay';
 import { LanguageMenu } from './LanguageMenu';
+import { AiMenu } from './AiMenu';
 import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
-import { useAutoGroup, useOrganizeTabs } from "@/hooks/useAI";
-import { useNameGroupAction } from "@/hooks/useNameGroupAction";
 import { AI_ENABLED } from "@/lib/aiFlag";
-import { useAppSettings } from "@/hooks/useAppSettings";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
-import { useGroups, useApplyAIGroups } from "@/hooks/useGroups";
-import { toast } from "@/lib/toast";
-import { FreeLimitExceededError, countedGroups } from "@/lib/tierLimits";
+import { useGroups } from "@/hooks/useGroups";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
-import { AiRequestError, QuotaExceededError, isFixedInAiSettings } from "@/lib/aiErrors";
 import { TOUR_ANCHORS } from "@/lib/tourSteps";
 import { useCloseOnOverlayDismiss } from "@/hooks/useCloseOnOverlayDismiss";
 import { motionScrollBehavior } from "@/lib/reducedMotion";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { activeLocale } from "@/lib/i18n";
 import { openInNewTab, websiteHomeUrl } from "@/lib/websiteLink";
 import type { TFunction } from "i18next";
@@ -97,104 +91,13 @@ export function Header() {
         setSearchFilter(q);
     };
     const { user, signOut } = useAuth();
-    const { aiFeatures, tier, maxGroups, maxTabs } = useEntitlements();
+    const { tier } = useEntitlements();
     const { data: groupsState } = useGroups();
-    const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
-    const { mutateAsync: applyAIGroups } = useApplyAIGroups({ maxGroups, maxTabs });
-    const { mutateAsync: organizeTabs, isPending: organizeLoading } = useOrganizeTabs();
-    const { data: appSettings } = useAppSettings();
     const [aiQuotaExceeded, setAiQuotaExceeded] = useState(false);
-    // "Name group" acts on the group shown in the main panel; same action as the sidebar menu's
-    // "AI rename" (shared hook: same toasts, undo step and positional rename)
-    const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
-    const activeGroup = groupsState?.available[activeGroupIndex];
-    const { run: nameActiveGroup, isPending: nameLoading, block: nameBlock } = useNameGroupAction(activeGroup, activeGroupIndex);
-    const aiPending = aiLoading || organizeLoading || nameLoading;
 
     // Restores a snapshot as a NEW local change (see `useUndoRedo`), never the raw snapshot:
     // that one carries stale sync stamps, a stale copy of Now Open and no tour practice groups.
     const { canUndo, canRedo, undo: handleUndo, redo: handleRedo } = useUndoRedo();
-
-    /** An AI error toast, with an "Open Settings" action when the fix is in Settings → AI (the own key, the model). */
-    const aiErrorToast = (message: string, err: unknown) => {
-        if (isFixedInAiSettings(err)) {
-            toast.error(message, { action: { label: t("common.openSettings"), onClick: () => openModal("settings", { tab: "ai" }) } });
-        } else {
-            toast.error(message);
-        }
-    };
-
-    const handleAIGroup = async () => {
-        if (!groupsState) return;
-        const tabs =
-            groupsState.available[0]?.windows.flatMap((w) => w.tabs) ?? [];
-        if (tabs.length === 0) {
-            toast.error(t("header.toast.noTabsToGroup"));
-            return;
-        }
-        setAiQuotaExceeded(false);
-        try {
-            const result = await autoGroup(tabs);
-            if (result.groups.length === 0) {
-                toast.info(t("header.toast.aiNoGroups"));
-                return;
-            }
-
-            // Cap to remaining free-tier group slots, same limit manual "New group" enforces
-            const activeCount = countedGroups(groupsState.available).length;
-            const remaining = isFinite(maxGroups) ? Math.max(0, maxGroups - activeCount) : result.groups.length;
-            const suggestions = result.groups.slice(0, remaining);
-            if (suggestions.length === 0) {
-                trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
-                toast.error(t('common.freeGroupLimit', { max: maxGroups }), {
-                    action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
-                });
-                return;
-            }
-
-            const { appliedGroups } = await applyAIGroups(suggestions);
-            if (appliedGroups === 0) {
-                toast.info(t("header.toast.aiNoMatchingTabs"));
-                return;
-            }
-            toast.success(t('header.toast.aiCreated', { count: appliedGroups }), {
-                ...(suggestions.length < result.groups.length
-                    ? { description: t('header.toast.aiSkipped', { skipped: result.groups.length - suggestions.length }) }
-                    : {})
-            });
-        } catch (err) {
-            if (err instanceof QuotaExceededError) {
-                setAiQuotaExceeded(true);
-                return;
-            }
-            // The backstop already showed the upgrade toast
-            if (err instanceof FreeLimitExceededError) return;
-            console.error("[TabMerger] AI grouping failed:", err);
-            // A coded server error (own key missing or rejected, model unavailable, ...) says what to do
-            aiErrorToast(err instanceof AiRequestError && err.code ? err.message : t("header.toast.aiGroupingFailed"), err);
-        }
-    };
-
-    // Asks the AI for changes (merge, rename, archive, reorder) and reviews them right here: the
-    // popup holds the decrypted groups, so it is the one place that can apply them for an
-    // encrypted account. Nothing changes until the user applies them in the review modal.
-    const handleOrganize = async () => {
-        setAiQuotaExceeded(false);
-        try {
-            const { actions } = await organizeTabs();
-            if (actions.length === 0) {
-                toast.info(t('header.toast.organizeNothing'));
-                return;
-            }
-            openModal('organizeReview', { actions });
-        } catch (err) {
-            if (err instanceof QuotaExceededError) {
-                setAiQuotaExceeded(true);
-                return;
-            }
-            aiErrorToast(err instanceof Error ? err.message : t('header.toast.organizeFailed'), err);
-        }
-    };
 
     const searchRef = useRef<HTMLInputElement>(null);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -427,88 +330,8 @@ export function Header() {
                     </TooltipContent>
                 </Tooltip>
 
-                {/* AI features: coming soon — this entry point is fully hidden (not just
-                    disabled) while no AI option is live, per product decision, and for a Pro AI
-                    subscriber whose option (own key or TabMerger's key) isn't live yet: an
-                    upgrade prompt would be wrong for them. */}
-                {AI_ENABLED && !(tier === "pro_ai" && !aiFeatures) && (
-                <DropdownMenu>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className={cn(
-                                        "h-7 w-7",
-                                        aiPending && "animate-pulse",
-                                        !aiFeatures && "opacity-50 cursor-not-allowed",
-                                    )}
-                                    onClick={aiFeatures ? undefined : () => openModal('upgrade')}
-                                    disabled={aiPending}
-                                    aria-disabled={!aiFeatures}
-                                    aria-label={t("header.aiActions")}
-                                    data-tour={TOUR_ANCHORS.aiActions}
-                                >
-                                    <Sparkles className={cn(
-                                        "h-3.5 w-3.5",
-                                        aiFeatures ? "text-purple-500" : "text-muted-foreground",
-                                    )} />
-                                </Button>
-                            </DropdownMenuTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                            {aiFeatures ? t('header.aiActions') : t('header.aiProRequired')}
-                        </TooltipContent>
-                    </Tooltip>
-
-                    {aiFeatures && (
-                        <DropdownMenuContent align="end" className="w-52 text-xs">
-                            {appSettings?.aiAutoGroupEnabled !== false && (
-                                <DropdownMenuItem onClick={() => void handleAIGroup()}>
-                                    <div>
-                                        <div>{t("header.autoGroup")}</div>
-                                        <div className="text-[10px] text-muted-foreground font-normal">{t("header.autoGroupHint")}</div>
-                                    </div>
-                                </DropdownMenuItem>
-                            )}
-                            {appSettings?.aiNameGroupEnabled !== false && (
-                                <DropdownMenuItem
-                                    disabled={nameBlock !== null}
-                                    onClick={() => void nameActiveGroup()}
-                                    data-testid="header-ai-name-group"
-                                >
-                                    <div className="min-w-0">
-                                        <div>{t("header.nameGroup")}</div>
-                                        <div className="text-[10px] text-muted-foreground font-normal">
-                                            {nameBlock === "notSaved"
-                                                ? t("header.nameGroupPickSaved")
-                                                : nameBlock === "noTabs"
-                                                  ? t("groupMenu.toast.noTabsToName")
-                                                  : (
-                                                    // The name is isolated (bdi) and cut with an ellipsis; the full name stays in the accessible name and title
-                                                    <Trans
-                                                        i18nKey="header.nameGroupHint"
-                                                        values={{ name: activeGroup?.name }}
-                                                        components={{ name: <bdi title={activeGroup?.name} className="inline-block max-w-[6.5rem] truncate align-bottom" /> }}
-                                                    />
-                                                )}
-                                        </div>
-                                    </div>
-                                </DropdownMenuItem>
-                            )}
-                            {appSettings?.aiOrganizeEnabled !== false && (
-                                <DropdownMenuItem onClick={() => void handleOrganize()}>
-                                    <div>
-                                        <div>{t("header.organize")}</div>
-                                        <div className="text-[10px] text-muted-foreground font-normal">{t("header.organizeHint")}</div>
-                                    </div>
-                                </DropdownMenuItem>
-                            )}
-                        </DropdownMenuContent>
-                    )}
-                </DropdownMenu>
-                )}
+                {/* ✨ AI actions, sorted by scope (open tabs, selected group, all groups) */}
+                <AiMenu onQuotaExceeded={setAiQuotaExceeded} />
 
                 {/* Language: applies at once (Settings → General has the same choice) */}
                 <LanguageMenu />

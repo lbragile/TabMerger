@@ -3,6 +3,8 @@
   "renameHint": "Définir un nouveau nom pour ce groupe",
   "aiRename": "Renommer par IA",
   "aiRenameHint": "Suggérer un nom pour ce groupe avec l’IA",
+  "aiDescribe": "Décrire avec l’IA",
+  "aiDescribeHint": "Écrire avec l’IA une courte note sur les onglets de ce groupe",
   "addNote": "Ajouter une note",
   "addNoteHint": "Joindre une note à ce groupe",
   "editNote": "Modifier la note",
@@ -38,6 +40,11 @@
   "toast": {
     "noDuplicates": "Aucun doublon trouvé",
     "noTabsToName": "Aucun onglet à nommer dans ce groupe",
-    "aiRenameFailed": "Échec du renommage par IA"
+    "aiRenameFailed": "Échec du renommage par IA",
+    "noTabsToDescribe": "Aucun onglet à décrire dans ce groupe",
+    "aiDescribeFailed": "Impossible de décrire ce groupe",
+    "noteAdded": "Note ajoutée",
+    "noteReplaced": "Note remplacée",
+    "undoNoteLater": "D’autres modifications ont suivi celle-ci. Utilisez plutôt Annuler en haut."
   }
 }

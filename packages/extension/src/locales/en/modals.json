@@ -70,5 +70,15 @@
     "applied_other": "Applied {{count}} changes",
     "nothingApplied": "Nothing to apply: those groups changed in the meantime",
     "applyFailed": "Could not apply the changes"
+  },
+  "describeGroup": {
+    "title": "Use the AI description?",
+    "description": "This group already has a note. Replace it, or add the suggestion below it.",
+    "current": "Current note",
+    "suggestion": "Suggestion",
+    "replace": "Replace note",
+    "append": "Add below",
+    "tooLong": "Too long to add below the note (at most {{max}} characters). Replace it instead.",
+    "saveFailed": "Could not save the note"
   }
 }
