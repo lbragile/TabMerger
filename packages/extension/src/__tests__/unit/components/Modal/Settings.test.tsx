@@ -1011,6 +1011,15 @@ describe('SettingsModal — Language', () => {
   /** The row's button: named by the row's label, then the draft ("Language Français"). */
   const languageButton = () => screen.getByTestId('settings-language')
 
+  it('opens the language list as a modal popover, so the Settings dialog scroll lock does not swallow the mouse wheel', async () => {
+    renderModal()
+    fireEvent.click(languageButton())
+    await screen.findAllByRole('option')
+    // A modal Radix popover hides everything outside it from assistive tech (and takes the scroll
+    // lock); a non-modal one leaves the rest of Settings, like the Theme row, exposed.
+    expect(screen.getByText('Theme').closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
   it('gives every dropdown on the General tab the same width, the language picker included', async () => {
     const { SETTINGS_SELECT_WIDTH } = await import('@/components/Settings/settingsControls')
     renderModal()

@@ -30,7 +30,9 @@ export function LanguageSetting({ value, onChange }: LanguageSettingProps) {
         <Label id={labelId} className="text-sm">{t('settings.general.languageLabel')}</Label>
         <p className="text-xs text-muted-foreground">{t('settings.general.languageDescription')}</p>
       </div>
-      <Popover open={open} onOpenChange={setOpen}>
+      {/* modal: the list is portaled outside the Settings dialog, whose scroll lock otherwise
+          swallows mouse-wheel events there; a modal popover takes the lock and scrolls itself */}
+      <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>
           <button
             type="button"
