@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useDescribeGroupAction, useSaveGroupNote } from '@/hooks/useDescribeGroupAction'
+import { useDescribeAction, useDescribeGroupAction, useSaveNote } from '@/hooks/useDescribeGroupAction'
+import { windowSubject, windowTabsKey } from '@/lib/aiTarget'
 import { AiRequestError, QuotaExceededError } from '@/lib/aiErrors'
 import type { Group, GroupsState } from '@/lib/types'
 
@@ -16,6 +17,7 @@ const h = vi.hoisted(() => ({
   describe: vi.fn(),
   describeState: { isPending: false },
   updateGroupNote: vi.fn(),
+  updateWindowNote: vi.fn(),
   openModal: vi.fn(),
   undoHistoryEntry: vi.fn(),
   store: { undoStack: [] as object[] },
@@ -23,7 +25,11 @@ const h = vi.hoisted(() => ({
 }))
 
 vi.mock('@/hooks/useAI', () => ({ useDescribeGroup: () => ({ mutateAsync: h.describe, ...h.describeState }) }))
-vi.mock('@/hooks/useGroups', () => ({ GROUPS_QUERY_KEY: ['groups'], useUpdateGroupNote: () => ({ mutateAsync: h.updateGroupNote }) }))
+vi.mock('@/hooks/useGroups', () => ({
+  GROUPS_QUERY_KEY: ['groups'],
+  useUpdateGroupNote: () => ({ mutateAsync: h.updateGroupNote }),
+  useUpdateWindowNote: () => ({ mutateAsync: h.updateWindowNote }),
+}))
 vi.mock('@/hooks/useUndoRedo', () => ({ undoHistoryEntry: h.undoHistoryEntry }))
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: Object.assign((selector: (s: object) => unknown) => selector({ openModal: h.openModal }), { getState: () => h.store }),
@@ -72,6 +78,7 @@ beforeEach(() => {
   h.describeState.isPending = false
   h.store.undoStack = [{ older: true }]
   h.updateGroupNote.mockResolvedValue(undefined)
+  h.updateWindowNote.mockResolvedValue(undefined)
 })
 
 describe('useDescribeGroupAction — what can be described', () => {
@@ -219,13 +226,117 @@ describe('useDescribeGroupAction — errors', () => {
   })
 })
 
-describe('useSaveGroupNote', () => {
+describe('useSaveNote', () => {
   it('resolves false and writes nothing when the group is not in the list', async () => {
     setGroups([])
-    const { result } = renderHook(() => useSaveGroupNote(), { wrapper })
+    const { result } = renderHook(() => useSaveNote(), { wrapper })
     let ok: boolean | undefined
-    await act(async () => { ok = await result.current('g1', 'x', 'Note added') })
+    await act(async () => { ok = await result.current({ kind: 'group', groupId: 'g1' }, 'x', 'Note added') })
     expect(ok).toBe(false)
     expect(h.updateGroupNote).not.toHaveBeenCalled()
+  })
+
+  it('a window target writes through the window note path at its current position', async () => {
+    const w = { id: 0, tabs: [tab('A')], incognito: false, focused: false }
+    setGroups([group({ windows: [{ id: 0, tabs: [tab('Z')], incognito: false, focused: false }, w] })])
+    const { result } = renderHook(() => useSaveNote(), { wrapper })
+    let ok: boolean | undefined
+    await act(async () => {
+      ok = await result.current({ kind: 'window', groupId: 'g1', windowIndex: 0, tabsKey: windowTabsKey(w) }, 'x', 'Note added')
+    })
+    // Not at index 0 any more (that window holds other tabs): found at 1 by its tabs
+    expect(ok).toBe(true)
+    expect(h.updateWindowNote).toHaveBeenCalledWith({ groupIndex: 0, windowIndex: 1, note: 'x' })
+    expect(h.updateGroupNote).not.toHaveBeenCalled()
+  })
+})
+
+describe('useDescribeAction — a window', () => {
+  const win = (overrides: Partial<Group['windows'][number]> = {}) => ({
+    id: 0, tabs: [tab('C'), tab('D')], incognito: false, focused: false, name: 'Reading', ...overrides,
+  })
+  async function runWindow(g: Group | undefined, wi: number) {
+    const { result } = renderHook(() => useDescribeAction(), { wrapper })
+    await act(() => result.current.run(windowSubject(g, wi, g?.windows[wi])))
+  }
+
+  it('sends the window name and ONLY its tabs; an empty note is written to the window as one undo step with an Undo toast', async () => {
+    const g = group({ windows: [win({ tabs: [tab('A')] }), win()] })
+    setGroups([g])
+    h.describe.mockResolvedValue({ description: 'Reading list.' })
+    const step = { step: true }
+    h.updateWindowNote.mockImplementation(async () => { h.store.undoStack = [step, ...h.store.undoStack] })
+
+    await runWindow(g, 1)
+
+    expect(h.describe).toHaveBeenCalledWith({ groupName: 'Reading', tabs: [tab('C'), tab('D')] })
+    expect(h.updateWindowNote).toHaveBeenCalledWith({ groupIndex: 0, windowIndex: 1, note: 'Reading list.' })
+    expect(h.updateGroupNote).not.toHaveBeenCalled()
+    const [message, options] = h.toast.success.mock.calls[0] as [string, { action: { onClick: () => void } }]
+    expect(message).toBe('Note added')
+    options.action.onClick()
+    expect(h.undoHistoryEntry).toHaveBeenCalledWith(qc, step)
+  })
+
+  it('an unnamed window is sent with an empty name', async () => {
+    const g = group({ windows: [win({ name: undefined })] })
+    setGroups([g])
+    h.describe.mockResolvedValue({ description: 'D.' })
+    await runWindow(g, 0)
+    expect(h.describe).toHaveBeenCalledWith({ groupName: '', tabs: [tab('C'), tab('D')] })
+  })
+
+  it('a window note with text opens the review for that window', async () => {
+    const g = group({ windows: [win({ note: 'Mine' })] })
+    setGroups([g])
+    h.describe.mockResolvedValue({ description: 'Suggestion.' })
+    await runWindow(g, 0)
+    expect(h.openModal).toHaveBeenCalledWith('describeGroupReview', {
+      groupId: 'g1', window: { index: 0, tabsKey: windowTabsKey(win()) }, description: 'Suggestion.',
+    })
+    expect(h.updateWindowNote).not.toHaveBeenCalled()
+  })
+
+  it('the window moved while the request ran: written where it is now', async () => {
+    const g = group({ windows: [win()] })
+    setGroups([group({ windows: [win({ tabs: [tab('New')], starred: true }), win()] })])
+    h.describe.mockResolvedValue({ description: 'D.' })
+    await runWindow(g, 0)
+    expect(h.updateWindowNote).toHaveBeenCalledWith({ groupIndex: 0, windowIndex: 1, note: 'D.' })
+  })
+
+  it.each([
+    ['deleted', () => group({ windows: [] })],
+    ['its tabs changed', () => group({ windows: [win({ tabs: [tab('C')] })] })],
+    ['its group is gone', () => group({ id: 'other', windows: [win()] })],
+  ])('the window vanished mid-request (%s): "changed elsewhere", nothing written', async (_name, now) => {
+    const g = group({ windows: [win()] })
+    setGroups([now()])
+    h.describe.mockResolvedValue({ description: 'D.' })
+    await runWindow(g, 0)
+    expect(h.updateWindowNote).not.toHaveBeenCalled()
+    expect(h.openModal).not.toHaveBeenCalled()
+    expect(h.toast.info).toHaveBeenCalledWith('A group you were working on changed or was removed elsewhere, so nothing was changed.', expect.anything())
+  })
+
+  it('a window without tabs toasts instead of calling the API', async () => {
+    const g = group({ windows: [win({ tabs: [] })] })
+    await runWindow(g, 0)
+    expect(h.describe).not.toHaveBeenCalled()
+    expect(h.toast.error).toHaveBeenCalledWith('No tabs in this window to describe')
+  })
+
+  it('a Now Open window does nothing', async () => {
+    const g = group({ permanent: true, windows: [win()] })
+    await runWindow(g, 0)
+    expect(h.describe).not.toHaveBeenCalled()
+    expect(h.toast.error).not.toHaveBeenCalled()
+  })
+
+  it('a reply with nothing usable says the WINDOW could not be described', async () => {
+    const g = group({ windows: [win()] })
+    h.describe.mockResolvedValue({ description: null })
+    await runWindow(g, 0)
+    expect(h.toast.error).toHaveBeenCalledWith('Could not describe this window')
   })
 })

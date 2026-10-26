@@ -283,6 +283,70 @@ test.describe('Settings → AI, own key', () => {
     );
   });
 
+  test('window ⋯ menu: "Describe with AI" writes the window note (Undo in the toast) and "AI rename" names the window from the picker', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, SAVED_GROUP]);
+    await signInAsProAiByok(page);
+    await page.evaluate(
+      ([userId, key]) => chrome.storage.local.set({ aiByokKey: { userId, key, provider: 'anthropic' } }),
+      [E2E_USER_ID, 'sk-ant-' + 'e'.repeat(24)]
+    );
+    const describeRequests: { groupName: string; tabs: Record<string, unknown>[] }[] = [];
+    await page.route('**/api/ai/describe-group*', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
+      describeRequests.push(route.request().postDataJSON() as { groupName: string; tabs: Record<string, unknown>[] });
+      return route.fulfill({ headers: CORS, json: { description: 'Team tracker and docs.' } });
+    });
+    const nameRequests: { tabs: { url: string }[] }[] = [];
+    await page.route('**/api/ai/name-group*', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
+      nameRequests.push(route.request().postDataJSON() as { tabs: { url: string }[] });
+      return route.fulfill({ headers: CORS, json: { names: ['Team tools', 'Work dashboards'] } });
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    test.skip((await page.getByRole('button', { name: 'AI actions' }).count()) === 0, 'this build has own-key AI off (VITE_AI_BYOK_ENABLED)');
+
+    // Now Open's windows have no AI items (their names and notes are rebuilt from the browser)
+    const moreOptions = page.getByRole('button', { name: 'More window options' }).first();
+    await moreOptions.click();
+    await expect(page.getByRole('menuitem', { name: 'Rename' })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Describe with AI' })).toHaveCount(0);
+    await expect(page.getByRole('menuitem', { name: 'AI rename' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
+    // The saved group's (unnamed) window: the description becomes the WINDOW's note, one Undo away
+    await page.locator('[data-sidebar-group-index="1"]').click();
+    await moreOptions.click();
+    await page.getByRole('menuitem', { name: 'Describe with AI' }).click();
+    await waitForStoredGroup(
+      page,
+      (g) => g.id === SAVED_GROUP.id && g.windows[0].note === 'Team tracker and docs.' && !g.note,
+      'the description stored as the window note (the group note untouched)'
+    );
+    expect(describeRequests).toHaveLength(1);
+    // An unnamed window is sent with an empty name, plus only its tabs' titles and URLs
+    expect(describeRequests[0].groupName).toBe('');
+    expect(describeRequests[0].tabs).toEqual(SAVED_GROUP.windows[0].tabs.map((t) => ({ title: t.title, url: t.url })));
+    const toast = page.locator('[data-sonner-toast]').filter({ hasText: 'Note added' });
+    await toast.getByRole('button', { name: 'Undo' }).click();
+    await waitForStoredGroup(page, (g) => g.id === SAVED_GROUP.id && !g.windows[0].note, 'the window note taken back by the toast Undo');
+
+    // "AI rename": the "Name this window" picker; Rename names the window, not the group
+    await moreOptions.click();
+    await page.getByRole('menuitem', { name: 'AI rename' }).click();
+    const picker = page.getByRole('dialog', { name: 'Name this window' });
+    await expect(picker).toBeVisible();
+    expect(nameRequests[0].tabs.map((t) => t.url)).toEqual(SAVED_GROUP.windows[0].tabs.map((t) => t.url));
+    await picker.getByRole('radio', { name: 'Work dashboards' }).click();
+    await picker.getByRole('button', { name: 'Rename' }).click();
+    await expect(picker).toBeHidden();
+    await waitForStoredGroup(
+      page,
+      (g) => g.id === SAVED_GROUP.id && g.windows[0].name === 'Work dashboards' && g.name === SAVED_GROUP.name,
+      'the picked AI name stored on the window'
+    );
+  });
+
   test('header AI menu: "Organize" reviews the proposed changes in the popup and applies the checked ones', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP, ANOTHER_GROUP]);

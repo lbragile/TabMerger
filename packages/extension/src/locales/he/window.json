@@ -27,6 +27,12 @@
   "sortByUrl": "מיון החלון הזה לפי URL",
   "notePlaceholder": "הוספת הערה…",
   "empty": "חלון ריק",
+  "toast": {
+    "noTabsToName": "אין בחלון כרטיסיות שאפשר לתת לפיהן שם",
+    "nameAlreadyFits": "השם „{{name}}” כבר מתאים לחלון הזה",
+    "noTabsToDescribe": "אין בחלון כרטיסיות לתיאור",
+    "aiDescribeFailed": "לא ניתן היה לתאר את החלון"
+  },
   "someOfTabs_one": "{{matched}} מתוך כרטיסייה אחת",
   "someOfTabs_two": "{{matched}} מתוך 2 כרטיסיות",
   "someOfTabs_other": "{{matched}} מתוך {{count}} כרטיסיות"

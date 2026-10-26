@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createElement, type ReactNode } from 'react'
 import { renderHook, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useNameGroupAction } from '@/hooks/useNameGroupAction'
+import { useNameAction, useNameGroupAction } from '@/hooks/useNameGroupAction'
+import { windowSubject, windowTabsKey } from '@/lib/aiTarget'
 import { AiRequestError, QuotaExceededError } from '@/lib/aiErrors'
 import type { Group, GroupsState } from '@/lib/types'
 
@@ -197,5 +198,72 @@ describe('useNameGroupAction — errors', () => {
     mockNameGroup.mockRejectedValue('nope')
     await run(group())
     expect(mockToastError).toHaveBeenCalledWith('AI rename failed')
+  })
+})
+
+describe('useNameAction — a window', () => {
+  const win = (overrides: Partial<Group['windows'][number]> = {}) => ({
+    id: 0, tabs: [tab('B'), tab('C')], starred: false, incognito: false, focused: false, name: 'Reading', ...overrides,
+  })
+  /** Runs "AI rename" for window `wi` of `g`; `cached` are the groups when the reply arrives. */
+  async function runWindow(g: Group, wi: number, cached: Group[] = [g]) {
+    qc.setQueryData<GroupsState>(['groups'], { available: cached } as unknown as GroupsState)
+    const { result } = renderHook(() => useNameAction(), { wrapper })
+    await act(() => result.current.run(windowSubject(g, wi, g.windows[wi])))
+  }
+
+  it('sends ONLY that window\'s tabs and opens the picker for that window', async () => {
+    const g = group({ windows: [win({ tabs: [tab('A')] }), win()] })
+    mockNameGroup.mockResolvedValue({ names: ['Letters', 'Alphabet'] })
+    await runWindow(g, 1)
+    expect(mockNameGroup).toHaveBeenCalledWith([tab('B'), tab('C')])
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', {
+      groupId: 'g1', window: { index: 1, tabsKey: windowTabsKey(win()) }, suggestions: ['Letters', 'Alphabet'],
+    })
+  })
+
+  it('drops a suggestion equal to the window\'s CURRENT name (ignoring case), not the group\'s', async () => {
+    const g = group({ name: 'Letters', windows: [win()] })
+    mockNameGroup.mockResolvedValue({ names: ['reading', 'Letters'] })
+    await runWindow(g, 0)
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', expect.objectContaining({ suggestions: ['Letters'] }))
+  })
+
+  it('when the window\'s name is all that is left, toasts that it already fits this window', async () => {
+    const g = group({ windows: [win()] })
+    mockNameGroup.mockResolvedValue({ names: ['READING'] })
+    await runWindow(g, 0)
+    expect(mockOpenModal).not.toHaveBeenCalled()
+    expect(mockToastInfo).toHaveBeenCalledWith('“Reading” already fits this window')
+  })
+
+  it('an unnamed window keeps every suggestion', async () => {
+    const g = group({ windows: [win({ name: undefined })] })
+    mockNameGroup.mockResolvedValue({ names: ['Window', 'Reading'] })
+    await runWindow(g, 0)
+    expect(mockOpenModal).toHaveBeenCalledWith('nameGroupPicker', expect.objectContaining({ suggestions: ['Window', 'Reading'] }))
+  })
+
+  it.each([
+    ['deleted', () => [group({ windows: [] })]],
+    ['its tabs changed', () => [group({ windows: [win({ tabs: [tab('B')] })] })]],
+  ])('the window vanished mid-request (%s): "changed elsewhere", no picker', async (_name, cached) => {
+    const g = group({ windows: [win()] })
+    mockNameGroup.mockResolvedValue({ names: ['Letters'] })
+    await runWindow(g, 0, cached())
+    expect(mockOpenModal).not.toHaveBeenCalled()
+    expect(mockToastInfo).toHaveBeenCalledWith(expect.stringMatching(/changed/i), { id: 'groups-changed-elsewhere' })
+  })
+
+  it('a window without tabs toasts instead of calling the API', async () => {
+    await runWindow(group({ windows: [win({ tabs: [] })] }), 0)
+    expect(mockNameGroup).not.toHaveBeenCalled()
+    expect(mockToastError).toHaveBeenCalledWith('No tabs in this window to name')
+  })
+
+  it('a Now Open window does nothing', async () => {
+    await runWindow(group({ permanent: true, windows: [win()] }), 0)
+    expect(mockNameGroup).not.toHaveBeenCalled()
+    expect(mockToastError).not.toHaveBeenCalled()
   })
 })

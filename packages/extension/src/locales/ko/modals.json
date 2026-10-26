@@ -66,6 +66,7 @@
   "describeGroup": {
     "title": "AI 설명을 사용할까요?",
     "description": "이 그룹에는 이미 메모가 있습니다. 메모를 바꾸거나 제안을 아래에 추가하세요.",
+    "descriptionWindow": "이 창에는 이미 메모가 있습니다. 메모를 바꾸거나 제안을 아래에 추가하세요.",
     "current": "현재 메모",
     "suggestion": "제안",
     "replace": "메모 바꾸기",
@@ -75,11 +76,13 @@
   },
   "nameGroup": {
     "title": "이 그룹 이름 짓기",
+    "titleWindow": "이 창 이름 짓기",
     "current": "현재: <name>{{name}}</name>",
     "choices": "추천 이름",
     "custom": "또는 직접 입력:",
     "customInput": "직접 입력한 이름",
     "rename": "이름 바꾸기",
+    "renameFailedWindow": "창 이름을 바꾸지 못했습니다",
     "renameFailed": "그룹 이름을 바꾸지 못했습니다"
   }
 }

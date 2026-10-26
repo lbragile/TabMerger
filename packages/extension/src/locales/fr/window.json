@@ -27,6 +27,12 @@
   "sortByUrl": "Trier cette fenêtre par URL",
   "notePlaceholder": "Ajouter une note…",
   "empty": "Fenêtre vide",
+  "toast": {
+    "noTabsToName": "Aucun onglet à nommer dans cette fenêtre",
+    "nameAlreadyFits": "« {{name}} » convient déjà à cette fenêtre",
+    "noTabsToDescribe": "Aucun onglet à décrire dans cette fenêtre",
+    "aiDescribeFailed": "Impossible de décrire cette fenêtre"
+  },
   "someOfTabs_one": "{{matched}} sur {{count}} onglet",
   "someOfTabs_many": "{{matched}} sur {{count}} d’onglets",
   "someOfTabs_other": "{{matched}} sur {{count}} onglets"

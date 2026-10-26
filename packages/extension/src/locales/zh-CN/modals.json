@@ -66,6 +66,7 @@
   "describeGroup": {
     "title": "使用 AI 生成的描述？",
     "description": "此分组已有备注。可以替换它，或将建议添加到其下方。",
+    "descriptionWindow": "此窗口已有备注。可以替换它，或将建议添加到其下方。",
     "current": "当前备注",
     "suggestion": "建议",
     "replace": "替换备注",
@@ -75,11 +76,13 @@
   },
   "nameGroup": {
     "title": "为此分组命名",
+    "titleWindow": "为此窗口命名",
     "current": "当前：<name>{{name}}</name>",
     "choices": "建议的名称",
     "custom": "或自己输入：",
     "customInput": "自定义名称",
     "rename": "重命名",
+    "renameFailedWindow": "无法重命名窗口",
     "renameFailed": "无法重命名分组"
   }
 }

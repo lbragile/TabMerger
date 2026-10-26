@@ -6,7 +6,7 @@ import { getGroupsState, saveGroupsState } from '@/lib/localDb'
 import { createGroup, createNowOpenGroup, createWindow, createTab } from '@/lib/utils'
 import { forgetHistoryCursor } from '@/lib/undoHistory'
 import { useGroups, useUpdateGroupName } from '@/hooks/useGroups'
-import { useDescribeGroupAction, useSaveGroupNote } from '@/hooks/useDescribeGroupAction'
+import { useDescribeGroupAction, useSaveNote } from '@/hooks/useDescribeGroupAction'
 import { useUIStore } from '@/stores/uiStore'
 import { toast } from '@/lib/toast'
 import type { Group } from '@/lib/types'
@@ -44,7 +44,7 @@ async function mount() {
       return {
         groups,
         action: useDescribeGroupAction(groups.data?.available[1]),
-        saveNote: useSaveGroupNote(),
+        saveNote: useSaveNote(),
         rename: useUpdateGroupName()
       }
     },
@@ -115,7 +115,7 @@ describe('Describe group note — real IndexedDB + undo', () => {
     expect((await research()).note).toBe('Mine')
 
     // What the review's "Add below" does
-    await act(async () => { await result.current.saveNote('research', 'Mine\n\nDocumentation pages.', 'Note added') })
+    await act(async () => { await result.current.saveNote({ kind: 'group', groupId: 'research' }, 'Mine\n\nDocumentation pages.', 'Note added') })
     expect((await research()).note).toBe('Mine\n\nDocumentation pages.')
     expect(useUIStore.getState().undoStack).toHaveLength(1)
 

@@ -74,6 +74,7 @@
   "describeGroup": {
     "title": "Use the AI description?",
     "description": "This group already has a note. Replace it, or add the suggestion below it.",
+    "descriptionWindow": "This window already has a note. Replace it, or add the suggestion below it.",
     "current": "Current note",
     "suggestion": "Suggestion",
     "replace": "Replace note",
@@ -83,11 +84,13 @@
   },
   "nameGroup": {
     "title": "Name this group",
+    "titleWindow": "Name this window",
     "current": "Currently: <name>{{name}}</name>",
     "choices": "Suggested names",
     "custom": "Or type your own:",
     "customInput": "Your own name",
     "rename": "Rename",
+    "renameFailedWindow": "Could not rename the window",
     "renameFailed": "Could not rename the group"
   }
 }

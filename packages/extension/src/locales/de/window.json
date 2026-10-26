@@ -27,6 +27,12 @@
   "sortByUrl": "Dieses Fenster nach URL sortieren",
   "notePlaceholder": "Notiz hinzufügen …",
   "empty": "Leeres Fenster",
+  "toast": {
+    "noTabsToName": "Dieses Fenster enthält keine Tabs zum Benennen",
+    "nameAlreadyFits": "„{{name}}“ passt bereits zu diesem Fenster",
+    "noTabsToDescribe": "Dieses Fenster enthält keine Tabs zum Beschreiben",
+    "aiDescribeFailed": "Fenster konnte nicht beschrieben werden"
+  },
   "someOfTabs_one": "{{matched}} von {{count}} Tab",
   "someOfTabs_other": "{{matched}} von {{count}} Tabs"
 }

@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useGroups } from '@/hooks/useGroups';
-import { useSaveGroupNote } from '@/hooks/useDescribeGroupAction';
-import { GROUP_NOTE_MAX_LENGTH, appendDescription, canAppendDescription } from '@/lib/groupDescription';
+import { useSaveNote } from '@/hooks/useDescribeGroupAction';
+import { GROUP_NOTE_MAX_LENGTH, WINDOW_NOTE_MAX_LENGTH, appendDescription, canAppendDescription } from '@/lib/groupDescription';
+import { readAiTarget, resolveAiTarget } from '@/lib/aiTarget';
 import { toast } from '@/lib/toast';
 
 interface DescribeGroupReviewModalProps {
@@ -13,28 +14,33 @@ interface DescribeGroupReviewModalProps {
 }
 
 /**
- * "Describe group" for a group that already has a note (opened by `useDescribeGroupAction`): shows
+ * "Describe" for a group or window that already has a note (opened by `useDescribeAction`): shows
  * the current note and the AI's suggestion, and offers Replace note, Add below (the note, a blank
- * line, the suggestion; offered only while the result fits the note limit) and Cancel. Either
- * choice is one undo step through the normal group note write, so the note syncs (encrypted) like
- * any edit. The group is read live by id: the note shown is the one a choice would change.
+ * line, the suggestion; offered only while the result fits that note editor's limit) and Cancel.
+ * Either choice is one undo step through the normal group or window note write, so the note syncs
+ * (encrypted) like any edit. The target is read live (`resolveAiTarget`: a group by id, a window by
+ * position and its tabs): the note shown is the one a choice would change, and a window that is
+ * gone or changed disables both writes.
  */
 export function DescribeGroupReviewModal({ data, onClose }: DescribeGroupReviewModalProps) {
   const { t } = useTranslation();
-  const groupId = typeof data.groupId === 'string' ? data.groupId : '';
+  const [target] = useState(() => readAiTarget(data));
   const description = typeof data.description === 'string' ? data.description : '';
   const { data: groupsState } = useGroups();
-  const saveNote = useSaveGroupNote();
+  const saveNote = useSaveNote();
   const [saving, setSaving] = useState(false);
 
-  const group = groupsState?.available.find((g) => g.id === groupId);
-  const note = group?.note ?? '';
-  const canAppend = canAppendDescription(note, description);
+  const found = resolveAiTarget(groupsState, target);
+  const isWindow = target?.kind === 'window';
+  const note = found?.note ?? '';
+  const max = isWindow ? WINDOW_NOTE_MAX_LENGTH : GROUP_NOTE_MAX_LENGTH;
+  const canAppend = canAppendDescription(note, description, max);
 
   const choose = async (next: string, message: string) => {
+    if (!target) return;
     setSaving(true);
     try {
-      await saveNote(groupId, next, message);
+      await saveNote(target, next, message);
       onClose();
     } catch (err) {
       console.error('[TabMerger] Describe group note write failed:', err);
@@ -47,7 +53,7 @@ export function DescribeGroupReviewModal({ data, onClose }: DescribeGroupReviewM
     <div className="flex min-w-0 flex-col gap-3">
       <DialogHeader className="min-w-0">
         <DialogTitle>{t('modals.describeGroup.title')}</DialogTitle>
-        <DialogDescription>{t('modals.describeGroup.description')}</DialogDescription>
+        <DialogDescription>{isWindow ? t('modals.describeGroup.descriptionWindow') : t('modals.describeGroup.description')}</DialogDescription>
       </DialogHeader>
 
       {/* Long text wraps and only these boxes scroll (fixed 800x600 popup, no outer scrollbars) */}
@@ -74,7 +80,7 @@ export function DescribeGroupReviewModal({ data, onClose }: DescribeGroupReviewM
       </section>
 
       {!canAppend && (
-        <p className="text-[0.625rem] text-muted-foreground">{t('modals.describeGroup.tooLong', { max: GROUP_NOTE_MAX_LENGTH })}</p>
+        <p className="text-[0.625rem] text-muted-foreground">{t('modals.describeGroup.tooLong', { max })}</p>
       )}
 
       <div className="flex min-w-0 flex-wrap gap-2">
@@ -86,7 +92,7 @@ export function DescribeGroupReviewModal({ data, onClose }: DescribeGroupReviewM
           size="sm"
           className="flex-1 text-xs"
           onClick={() => void choose(appendDescription(note, description), t('groupMenu.toast.noteAdded'))}
-          disabled={saving || !group || !canAppend}
+          disabled={saving || !found || !canAppend}
         >
           {t('modals.describeGroup.append')}
         </Button>
@@ -94,7 +100,7 @@ export function DescribeGroupReviewModal({ data, onClose }: DescribeGroupReviewM
           size="sm"
           className="flex-1 text-xs"
           onClick={() => void choose(description, t('groupMenu.toast.noteReplaced'))}
-          disabled={saving || !group || !description}
+          disabled={saving || !found || !description}
         >
           {t('modals.describeGroup.replace')}
         </Button>

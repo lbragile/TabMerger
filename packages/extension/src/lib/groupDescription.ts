@@ -3,6 +3,9 @@ import { AI_MAX_GROUP_DESCRIPTION_LENGTH } from '@tabmerger/shared';
 /** Longest group note the note editor accepts (the textarea in Windows/index.tsx). */
 export const GROUP_NOTE_MAX_LENGTH = 500;
 
+/** Longest window note the window note editor accepts (the textarea in Windows/Window.tsx). */
+export const WINDOW_NOTE_MAX_LENGTH = 500;
+
 /**
  * Control characters (C0, DEL, C1) and the bidi embedding/override/isolate controls. A note is
  * plain text: none of these belong in it, and the bidi ones could reorder the text around them.
@@ -31,7 +34,10 @@ export function appendDescription(note: string, description: string): string {
   return `${note.trimEnd()}\n\n${description}`;
 }
 
-/** Whether "Add below" still fits the note editor's limit (else only Replace is offered). */
-export function canAppendDescription(note: string, description: string): boolean {
-  return appendDescription(note, description).length <= GROUP_NOTE_MAX_LENGTH;
+/**
+ * Whether "Add below" still fits the note editor's limit, `max` (the group note's by default, else
+ * the window note's): when it doesn't, only Replace is offered.
+ */
+export function canAppendDescription(note: string, description: string, max: number = GROUP_NOTE_MAX_LENGTH): boolean {
+  return appendDescription(note, description).length <= max;
 }

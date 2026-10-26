@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { NameGroupPickerModal } from '@/components/Modal/NameGroupPicker'
+import { windowTabsKey } from '@/lib/aiTarget'
 import type { Group } from '@/lib/types'
 
 /**
@@ -15,6 +16,7 @@ import type { Group } from '@/lib/types'
 const h = vi.hoisted(() => ({
   groups: [] as Group[],
   updateGroupName: vi.fn(),
+  updateWindowName: vi.fn(),
   toastError: vi.fn(),
   toastInfo: vi.fn(),
 }))
@@ -22,6 +24,7 @@ const h = vi.hoisted(() => ({
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => ({ data: { active: { id: '', index: 0 }, available: h.groups } }),
   useUpdateGroupName: () => ({ mutateAsync: h.updateGroupName }),
+  useUpdateWindowName: () => ({ mutateAsync: h.updateWindowName }),
 }))
 vi.mock('@/lib/toast', () => ({ toast: { error: h.toastError, info: h.toastInfo } }))
 
@@ -253,5 +256,81 @@ describe('NameGroupPickerModal — keyboard', () => {
     await user.keyboard('{Escape}')
     expect(onClose).toHaveBeenCalled()
     expect(h.updateGroupName).not.toHaveBeenCalled()
+  })
+})
+
+describe('NameGroupPickerModal — a window', () => {
+  const tab = (title: string) => ({ id: 0, title, url: `https://${title.toLowerCase()}.example.com` })
+  const win = (name: string | undefined, tabs = [tab('A'), tab('B')]) => ({ id: 0, tabs, incognito: false, focused: false, name })
+  const target = { index: 1, tabsKey: windowTabsKey(win('x')) }
+
+  beforeEach(() => {
+    h.groups = [{ ...group('g1', 'Google'), windows: [win('Other', [tab('Z')]), win('Reading')] }]
+    h.updateWindowName.mockResolvedValue(undefined)
+  })
+
+  it('is titled for a window and shows the WINDOW name as the current one', () => {
+    renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    expect(screen.getByRole('dialog', { name: 'Name this window' })).toHaveTextContent('Currently: Reading')
+  })
+
+  it('an unnamed window shows the generic window label', () => {
+    h.groups = [{ ...group('g1', 'Google'), windows: [win('Other', [tab('Z')]), win(undefined)] }]
+    renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    expect(screen.getByRole('dialog', { name: 'Name this window' })).toHaveTextContent('Currently: Window')
+  })
+
+  it('Rename renames the window through the window rename, at its current position, once', async () => {
+    const { user, onClose } = renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    await user.click(radio('Local News'))
+    await user.click(renameButton())
+    expect(h.updateWindowName).toHaveBeenCalledTimes(1)
+    expect(h.updateWindowName).toHaveBeenCalledWith({ groupIndex: 0, windowIndex: 1, name: 'Local News' })
+    expect(h.updateGroupName).not.toHaveBeenCalled()
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('a typed name is validated like a manual window rename (trimmed, not blank)', async () => {
+    const { user } = renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    await user.type(customBox(), '   ')
+    expect(renameButton()).toBeDisabled()
+    await user.type(customBox(), ' Mine  ')
+    await user.click(renameButton())
+    expect(h.updateWindowName).toHaveBeenCalledWith({ groupIndex: 0, windowIndex: 1, name: 'Mine' })
+  })
+
+  it('the window moved (starred above the other): renamed where it is now', async () => {
+    h.groups = [{ ...group('g1', 'Google'), windows: [win('Reading'), win('Other', [tab('Z')])] }]
+    const { user } = renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    await user.click(renameButton())
+    expect(h.updateWindowName).toHaveBeenCalledWith({ groupIndex: 0, windowIndex: 0, name: 'BC Election Coverage' })
+  })
+
+  it('a window that vanished: Rename disabled; Enter toasts "changed elsewhere" and closes without writing', async () => {
+    h.groups = [{ ...group('g1', 'Google'), windows: [win('Other', [tab('Z')])] }]
+    const { user, onClose } = renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    expect(renameButton()).toBeDisabled()
+    await waitFor(() => expect(radio('BC Election Coverage')).toHaveFocus())
+    await user.keyboard('{Enter}')
+    expect(h.toastInfo).toHaveBeenCalledWith(expect.stringMatching(/changed/i), { id: 'groups-changed-elsewhere' })
+    expect(onClose).toHaveBeenCalled()
+    expect(h.updateWindowName).not.toHaveBeenCalled()
+  })
+
+  it('a failed window rename says the WINDOW could not be renamed', async () => {
+    h.updateWindowName.mockRejectedValue(new Error('idb'))
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { user, onClose } = renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    await user.click(renameButton())
+    expect(h.toastError).toHaveBeenCalledWith('Could not rename the window')
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('typing the window\'s current name closes without a write', async () => {
+    const { user, onClose } = renderModal({ groupId: 'g1', window: target, suggestions: SUGGESTIONS })
+    await user.type(customBox(), 'Reading')
+    await user.click(renameButton())
+    expect(onClose).toHaveBeenCalled()
+    expect(h.updateWindowName).not.toHaveBeenCalled()
   })
 })

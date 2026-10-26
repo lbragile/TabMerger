@@ -133,3 +133,4 @@
 - [Settings initial tab + focus-ring clip](learnings_settings_initial_tab_and_focus_ring_clip.md) — useAuth first render + Radix focus picks General; -ms-1 ps-1
 - [Name picker + locked AI preview](learnings_name_picker_and_locked_ai_preview.md) — radios + textbox outside radiogroup; aria-disabled focusable items; seed the query cache
 - [Scratchpad scripts are shared](learnings_scratchpad_script_names.md) — unique script names; Write's "not read yet" error means a stale file of that name exists
+- [Window AI actions](learnings_window_ai_actions.md) — AiTarget (group id + position + tabs key), one gated WindowAiScope host, generalized modals

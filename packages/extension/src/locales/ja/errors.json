@@ -27,8 +27,8 @@
   "sharingRequiresPro": "共有にはProへのアップグレードが必要です。利用資格を満たしていません",
   "aiOncePerDay": "本日はすでに使用済みです。このAI機能は1日1回までです",
   "proAiRequired": "Pro AIプランが必要です",
-  "nameGroupOff": "「グループ名を付ける」は設定でオフになっています",
-  "describeGroupOff": "「グループの説明を書く」は設定でオフになっています",
+  "nameGroupOff": "「グループとウィンドウに名前を付ける」は設定でオフになっています",
+  "describeGroupOff": "「グループとウィンドウの説明を書く」は設定でオフになっています",
   "suggestSessionsOff": "「セッションを提案」は設定でオフになっています",
   "organizeOff": "「整理」は設定でオフになっています",
   "ai": {

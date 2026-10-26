@@ -1,39 +1,60 @@
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { useDescribeGroup } from '@/hooks/useAI';
-import { GROUPS_QUERY_KEY, useUpdateGroupNote } from '@/hooks/useGroups';
+import { GROUPS_QUERY_KEY, useUpdateGroupNote, useUpdateWindowNote } from '@/hooks/useGroups';
 import { undoHistoryEntry } from '@/hooks/useUndoRedo';
-import type { NameGroupBlock } from '@/hooks/useNameGroupAction';
 import { useUIStore } from '@/stores/uiStore';
 import { QuotaExceededError, isFixedInAiSettings } from '@/lib/aiErrors';
 import { toast } from '@/lib/toast';
+import type { MessageKey } from '@/lib/i18n';
+import {
+  aiTargetModalData,
+  groupSubject,
+  resolveAiTarget,
+  subjectBlock,
+  type AiSubject,
+  type AiSubjectBlock,
+  type AiTarget
+} from '@/lib/aiTarget';
 import type { Group, GroupsState } from '@/lib/types';
 
-/** Why a group can't be described right now: the same reasons as "Name group" (`NameGroupBlock`). */
-export type DescribeGroupBlock = NameGroupBlock;
+/** Why a group can't be described right now: the same reasons as "Name group" (`AiSubjectBlock`). */
+export type DescribeGroupBlock = AiSubjectBlock;
+
+/** The toasts that name what is described ("this group" / "this window"). */
+const DESCRIBE_COPY: Record<AiTarget['kind'], { noTabs: MessageKey; failed: MessageKey }> = {
+  group: { noTabs: 'groupMenu.toast.noTabsToDescribe', failed: 'groupMenu.toast.aiDescribeFailed' },
+  window: { noTabs: 'window.toast.noTabsToDescribe', failed: 'window.toast.aiDescribeFailed' }
+};
 
 /**
- * Writes `note` as the note of the group with id `groupId`, as one undo step, and toasts `message`
- * with an "Undo" that takes back exactly that step. The group is found by id in the current list
- * (an AI request takes a while: the groups may have been reordered meanwhile). Used by "Describe
- * group" for an empty note and by the review modal's Replace / Add below.
+ * Writes `note` as the note of `target` (a group by id, or a window found again by
+ * `resolveAiTarget`), as one undo step, and toasts `message` with an "Undo" that takes back exactly
+ * that step. The target is found in the CURRENT list (an AI request takes a while: the groups or
+ * windows may have moved meanwhile); a target that is gone or changed toasts "changed elsewhere".
+ * Used by "Describe" for an empty note and by the review modal's Replace / Add below.
  *
- * @returns `save(groupId, note, message)`, resolving `false` when the group is gone.
+ * @returns `save(target, note, message)`, resolving `false` when the target is gone.
  */
-export function useSaveGroupNote() {
+export function useSaveNote() {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const { mutateAsync: updateGroupNote } = useUpdateGroupNote();
+  const { mutateAsync: updateWindowNote } = useUpdateWindowNote();
 
-  return async (groupId: string, note: string, message: string): Promise<boolean> => {
-    const groupIndex = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available.findIndex((g) => g.id === groupId) ?? -1;
-    if (groupIndex < 0) {
+  return async (target: AiTarget, note: string, message: string): Promise<boolean> => {
+    const found = resolveAiTarget(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY), target);
+    if (!found) {
       toast.info(t('errors.groupsChangedElsewhere'), { id: 'groups-changed-elsewhere' });
       return false;
     }
     const before = useUIStore.getState().undoStack[0];
-    await updateGroupNote({ groupIndex, note });
-    // The step this write pushed (none when it changed nothing, or the group was gone by then)
+    if (found.windowIndex === null) {
+      await updateGroupNote({ groupIndex: found.groupIndex, note });
+    } else {
+      await updateWindowNote({ groupIndex: found.groupIndex, windowIndex: found.windowIndex, note });
+    }
+    // The step this write pushed (none when it changed nothing, or the target was gone by then)
     const entry = useUIStore.getState().undoStack[0];
     const step = entry && entry !== before ? entry : undefined;
     toast.success(
@@ -58,47 +79,48 @@ export function useSaveGroupNote() {
 }
 
 /**
- * "Describe group with AI" for one saved group, shared by the header's AI menu (active group) and
- * the sidebar group menu: sends the group's decrypted name and tabs to `/api/ai/describe-group` and
- * puts the cleaned reply in the group's note. An empty note gets it directly (one undo step, a
- * "Note added" toast with Undo); a note with text opens the `describeGroupReview` modal (Replace
- * note, Add below, Cancel). The note is read again once the reply is in, by group id.
+ * "Describe with AI" for any saved group or window (`AiSubject`): sends its decrypted name ("" for
+ * an unnamed window) and tabs to `/api/ai/describe-group` and puts the cleaned reply in its note.
+ * An empty note gets it directly (one undo step, a "Note added" toast with Undo); a note with text
+ * opens the `describeGroupReview` modal (Replace note, Add below, Cancel). The target is found
+ * again once the reply is in (`resolveAiTarget`: a window must still hold the tabs that were sent);
+ * gone or changed toasts "changed elsewhere" and writes nothing.
  *
- * Errors are toasts, as for "Name group": out of credits offers "Buy more"; an error fixed in
+ * Errors are toasts, as for "Name": out of credits offers "Buy more"; an error fixed in
  * Settings → AI offers "Open Settings" on the AI tab; anything else shows its message.
  *
- * @returns `run`, `isPending` while the request runs, and `block` (null when it can run). `run`
- *   does nothing for "Now Open" and toasts when the group has no tabs.
+ * @returns `run(subject)`, which does nothing for Now Open and toasts when there are no tabs, and
+ *   `isPending` while a request runs.
  */
-export function useDescribeGroupAction(group: Group | undefined) {
+export function useDescribeAction() {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const { mutateAsync: describeGroup, isPending } = useDescribeGroup();
-  const saveNote = useSaveGroupNote();
+  const saveNote = useSaveNote();
   const openModal = useUIStore((s) => s.openModal);
 
-  const tabs = group?.windows.flatMap((w) => w.tabs) ?? [];
-  const block: DescribeGroupBlock | null = !group || group.permanent ? 'notSaved' : tabs.length === 0 ? 'noTabs' : null;
-
-  const run = async () => {
-    if (!group || block === 'notSaved') return;
+  const run = async (subject: AiSubject | undefined) => {
+    const block = subjectBlock(subject);
+    if (!subject || block === 'notSaved') return;
+    const copy = DESCRIBE_COPY[subject.target.kind];
     if (block === 'noTabs') {
-      toast.error(t('groupMenu.toast.noTabsToDescribe'));
+      toast.error(t(copy.noTabs));
       return;
     }
-    const groupId = group.id;
+    const { target } = subject;
     try {
-      const { description } = await describeGroup({ groupName: group.name, tabs });
+      const { description } = await describeGroup({ groupName: subject.name, tabs: subject.tabs });
       if (!description) {
-        toast.error(t('groupMenu.toast.aiDescribeFailed'));
+        toast.error(t(copy.failed));
         return;
       }
-      const current = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available.find((g) => g.id === groupId);
-      if (current?.note?.trim()) {
-        openModal('describeGroupReview', { groupId, description });
+      const current = resolveAiTarget(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY), target);
+      if (current?.note.trim()) {
+        openModal('describeGroupReview', aiTargetModalData(target, { description }));
         return;
       }
-      await saveNote(groupId, description, t('groupMenu.toast.noteAdded'));
+      // Gone or changed: `saveNote` finds that again and says so
+      await saveNote(target, description, t('groupMenu.toast.noteAdded'));
     } catch (err) {
       if (err instanceof QuotaExceededError) {
         toast.error(t('common.aiQuotaUsed'), {
@@ -106,7 +128,7 @@ export function useDescribeGroupAction(group: Group | undefined) {
         });
         return;
       }
-      const message = err instanceof Error ? err.message : t('groupMenu.toast.aiDescribeFailed');
+      const message = err instanceof Error ? err.message : t(copy.failed);
       // The own key is missing or rejected, or the model is unavailable: fixed in Settings → AI
       if (isFixedInAiSettings(err)) {
         toast.error(message, { action: { label: t('common.openSettings'), onClick: () => openModal('settings', { tab: 'ai' }) } });
@@ -116,5 +138,18 @@ export function useDescribeGroupAction(group: Group | undefined) {
     }
   };
 
-  return { run, isPending, block };
+  return { run, isPending };
+}
+
+/**
+ * "Describe group with AI" for one saved group, shared by the header's AI menu (active group) and
+ * the sidebar group menu: `useDescribeAction` for that group.
+ *
+ * @returns `run`, `isPending` while the request runs, and `block` (null when it can run). `run`
+ *   does nothing for "Now Open" and toasts when the group has no tabs.
+ */
+export function useDescribeGroupAction(group: Group | undefined) {
+  const { run, isPending } = useDescribeAction();
+  const subject = groupSubject(group);
+  return { run: () => run(subject), isPending, block: subjectBlock(subject) as DescribeGroupBlock | null };
 }

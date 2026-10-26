@@ -82,6 +82,7 @@
   "describeGroup": {
     "title": "Usar a descrição da IA?",
     "description": "Este grupo já tem uma nota. Substitua-a ou adicione a sugestão abaixo dela.",
+    "descriptionWindow": "Esta janela já tem uma nota. Substitua-a ou adicione a sugestão abaixo dela.",
     "current": "Nota atual",
     "suggestion": "Sugestão",
     "replace": "Substituir nota",
@@ -91,11 +92,13 @@
   },
   "nameGroup": {
     "title": "Nomear este grupo",
+    "titleWindow": "Nomear esta janela",
     "current": "Atual: <name>{{name}}</name>",
     "choices": "Nomes sugeridos",
     "custom": "Ou digite o seu:",
     "customInput": "Seu próprio nome",
     "rename": "Renomear",
+    "renameFailedWindow": "Não foi possível renomear a janela",
     "renameFailed": "Não foi possível renomear o grupo"
   }
 }

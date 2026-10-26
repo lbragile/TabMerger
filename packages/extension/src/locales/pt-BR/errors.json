@@ -27,8 +27,8 @@
   "sharingRequiresPro": "O compartilhamento exige upgrade para o Pro — direito não atendido",
   "aiOncePerDay": "Já usado hoje — esta ação de IA é limitada a uma vez por dia",
   "proAiRequired": "Plano Pro AI necessário",
-  "nameGroupOff": "Nomear grupo está desativado nas Configurações",
-  "describeGroupOff": "Descrever grupo está desativado nas Configurações",
+  "nameGroupOff": "Nomear grupos e janelas está desativado nas Configurações",
+  "describeGroupOff": "Descrever grupos e janelas está desativado nas Configurações",
   "suggestSessionsOff": "Sugerir sessões está desativado nas Configurações",
   "organizeOff": "Organizar está desativado nas Configurações",
   "ai": {

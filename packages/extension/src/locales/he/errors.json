@@ -27,8 +27,8 @@
   "sharingRequiresPro": "שיתוף דורש שדרוג ל-Pro — אין הרשאה",
   "aiOncePerDay": "כבר נוצל היום — פעולת ה-AI הזו מוגבלת לפעם אחת ביום",
   "proAiRequired": "נדרשת תוכנית Pro AI",
-  "nameGroupOff": "מתן שם לקבוצה כבוי בהגדרות",
-  "describeGroupOff": "תיאור הקבוצה כבוי בהגדרות",
+  "nameGroupOff": "מתן שם לקבוצות ולחלונות כבוי בהגדרות",
+  "describeGroupOff": "תיאור קבוצות וחלונות כבוי בהגדרות",
   "suggestSessionsOff": "הצעת סשנים כבויה בהגדרות",
   "organizeOff": "הארגון כבוי בהגדרות",
   "ai": {

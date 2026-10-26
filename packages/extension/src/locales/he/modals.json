@@ -82,6 +82,7 @@
   "describeGroup": {
     "title": "להשתמש בתיאור של ה-AI?",
     "description": "לקבוצה כבר יש הערה. אפשר להחליף אותה או להוסיף את ההצעה מתחתיה.",
+    "descriptionWindow": "לחלון כבר יש הערה. אפשר להחליף אותה או להוסיף את ההצעה מתחתיה.",
     "current": "ההערה הנוכחית",
     "suggestion": "הצעה",
     "replace": "החלפת ההערה",
@@ -91,11 +92,13 @@
   },
   "nameGroup": {
     "title": "מתן שם לקבוצה הזו",
+    "titleWindow": "מתן שם לחלון הזה",
     "current": "כרגע: <name>{{name}}</name>",
     "choices": "שמות מוצעים",
     "custom": "או הקלידו שם משלכם:",
     "customInput": "שם משלכם",
     "rename": "שינוי שם",
+    "renameFailedWindow": "לא ניתן היה לשנות את שם החלון",
     "renameFailed": "לא ניתן היה לשנות את שם הקבוצה"
   }
 }

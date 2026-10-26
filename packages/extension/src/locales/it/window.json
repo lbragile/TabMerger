@@ -27,6 +27,12 @@
   "sortByUrl": "Ordina questa finestra per URL",
   "notePlaceholder": "Aggiungi una nota…",
   "empty": "Finestra vuota",
+  "toast": {
+    "noTabsToName": "Nessuna scheda in questa finestra a cui dare un nome",
+    "nameAlreadyFits": "«{{name}}» è già adatto a questa finestra",
+    "noTabsToDescribe": "Nessuna scheda da descrivere in questa finestra",
+    "aiDescribeFailed": "Impossibile descrivere questa finestra"
+  },
   "someOfTabs_one": "{{matched}} di {{count}} scheda",
   "someOfTabs_other": "{{matched}} di {{count}} schede",
   "someOfTabs_many": "{{matched}} di {{count}} schede"

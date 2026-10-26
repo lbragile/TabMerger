@@ -27,8 +27,8 @@
   "sharingRequiresPro": "Udostępnianie wymaga przejścia na Pro — brak uprawnień",
   "aiOncePerDay": "Już użyto dzisiaj — ta akcja AI jest ograniczona do jednego razu dziennie",
   "proAiRequired": "Wymagany plan Pro AI",
-  "nameGroupOff": "Nazywanie grupy jest wyłączone w Ustawieniach",
-  "describeGroupOff": "Opisywanie grupy jest wyłączone w Ustawieniach",
+  "nameGroupOff": "Nazywanie grup i okien jest wyłączone w Ustawieniach",
+  "describeGroupOff": "Opisywanie grup i okien jest wyłączone w Ustawieniach",
   "suggestSessionsOff": "Sugerowanie sesji jest wyłączone w Ustawieniach",
   "organizeOff": "Organizowanie jest wyłączone w Ustawieniach",
   "ai": {

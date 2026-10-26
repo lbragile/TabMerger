@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { WindowItem } from './Window';
+import { WindowAiScope } from './WindowAiScope';
 import type { Group } from '@/lib/types';
 import {
   useAddWindow,
@@ -519,6 +520,8 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
               (see `gapGrowthFor`). Always mounted — never toggled mid-drag. */}
           <div data-tm-dnd-list={group.id} style={dndListStyle(gapGrowthFor(dnd.gap, group.id), '0px')}>
           <PanelSearchContext.Provider value={searchView}>
+          {/* The windows' ⋯ menu AI items: one set of AI hooks for the panel, none without AI */}
+          <WindowAiScope>
           <SortableContext items={windowIds} strategy={verticalListSortingStrategy}>
             {group.windows.reduce<{ els: React.ReactNode[]; offset: number }>(
               ({ els, offset }, window, windowIndex) => ({
@@ -553,6 +556,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
               { els: [], offset: 0 }
             ).els}
           </SortableContext>
+          </WindowAiScope>
           </PanelSearchContext.Provider>
           </div>
 

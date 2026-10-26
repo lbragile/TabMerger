@@ -225,16 +225,18 @@ describe('SettingsModal — AI tab', () => {
     switches.forEach((s) => expect(s).toBeChecked())
   })
 
-  it('has a "Describe group" switch, on for settings saved before it existed, that turns off', async () => {
+  it('has a "Describe groups and windows" switch, on for settings saved before it existed, that turns off', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
     renderModal()
     await goToTab(/^ai$/i)
-    expect(screen.getByText('Write a short note about a group\'s tabs with AI')).toBeInTheDocument()
-    const toggle = screen.getByRole('switch', { name: 'Describe group' })
+    expect(screen.getByText('Write a short note about the tabs of a group or window with AI')).toBeInTheDocument()
+    const toggle = screen.getByRole('switch', { name: 'Describe groups and windows' })
     expect(toggle).toBeChecked()
     fireEvent.click(toggle)
     expect(toggle).not.toBeChecked()
-    expect(screen.getByRole('switch', { name: 'Name group' })).toBeChecked()
+    expect(screen.getByRole('switch', { name: 'Name groups and windows' })).toBeChecked()
+    // The same switches gate the window ⋯ menu items, so their copy names both
+    expect(screen.getByText('Suggest a name for a group or window with AI')).toBeInTheDocument()
   })
 })
 

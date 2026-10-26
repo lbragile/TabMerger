@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { AI_MAX_GROUP_DESCRIPTION_LENGTH } from '@tabmerger/shared'
-import { GROUP_NOTE_MAX_LENGTH, appendDescription, canAppendDescription, cleanGroupDescription } from '@/lib/groupDescription'
+import { GROUP_NOTE_MAX_LENGTH, WINDOW_NOTE_MAX_LENGTH, appendDescription, canAppendDescription, cleanGroupDescription } from '@/lib/groupDescription'
 
 describe('cleanGroupDescription (untrusted AI reply → plain note text)', () => {
   it('keeps ordinary text as is', () => {
@@ -38,5 +38,11 @@ describe('appendDescription / canAppendDescription', () => {
     const note = 'n'.repeat(GROUP_NOTE_MAX_LENGTH - 2 - 10)
     expect(canAppendDescription(note, 'd'.repeat(10))).toBe(true)
     expect(canAppendDescription(note, 'd'.repeat(11))).toBe(false)
+  })
+
+  it('takes another limit (a window note) when given one', () => {
+    expect(WINDOW_NOTE_MAX_LENGTH).toBe(500)
+    expect(canAppendDescription('n'.repeat(20), 'd'.repeat(10), 31)).toBe(false)
+    expect(canAppendDescription('n'.repeat(20), 'd'.repeat(10), 32)).toBe(true)
   })
 })

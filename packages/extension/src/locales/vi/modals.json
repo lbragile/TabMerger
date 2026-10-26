@@ -66,6 +66,7 @@
   "describeGroup": {
     "title": "Dùng mô tả của AI?",
     "description": "Nhóm này đã có ghi chú. Hãy thay ghi chú đó hoặc thêm gợi ý vào bên dưới.",
+    "descriptionWindow": "Cửa sổ này đã có ghi chú. Hãy thay ghi chú đó hoặc thêm gợi ý vào bên dưới.",
     "current": "Ghi chú hiện tại",
     "suggestion": "Gợi ý",
     "replace": "Thay ghi chú",
@@ -75,11 +76,13 @@
   },
   "nameGroup": {
     "title": "Đặt tên cho nhóm này",
+    "titleWindow": "Đặt tên cho cửa sổ này",
     "current": "Hiện tại: <name>{{name}}</name>",
     "choices": "Tên gợi ý",
     "custom": "Hoặc tự nhập tên:",
     "customInput": "Tên của bạn",
     "rename": "Đổi tên",
+    "renameFailedWindow": "Không thể đổi tên cửa sổ",
     "renameFailed": "Không thể đổi tên nhóm"
   }
 }

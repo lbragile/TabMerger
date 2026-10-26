@@ -5,7 +5,17 @@ import { GROUPS_QUERY_KEY } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { QuotaExceededError, isFixedInAiSettings } from '@/lib/aiErrors';
 import { toast } from '@/lib/toast';
+import type { MessageKey } from '@/lib/i18n';
 import { isSameGroupName, suggestedGroupNames } from '@/lib/aiGroupName';
+import {
+  aiTargetModalData,
+  groupSubject,
+  resolveAiTarget,
+  subjectBlock,
+  type AiSubject,
+  type AiSubjectBlock,
+  type AiTarget
+} from '@/lib/aiTarget';
 import type { Group, GroupsState } from '@/lib/types';
 
 /**
@@ -13,59 +23,64 @@ import type { Group, GroupsState } from '@/lib/types';
  * browser and is never renamed) or no group at all, `noTabs` when the group has nothing to name
  * it from.
  */
-export type NameGroupBlock = 'notSaved' | 'noTabs';
+export type NameGroupBlock = AiSubjectBlock;
+
+/** The toasts that name what is named ("this group" / "this window"). */
+const NAME_COPY: Record<AiTarget['kind'], { noTabs: MessageKey; fits: MessageKey }> = {
+  group: { noTabs: 'groupMenu.toast.noTabsToName', fits: 'groupMenu.toast.nameAlreadyFits' },
+  window: { noTabs: 'window.toast.noTabsToName', fits: 'window.toast.nameAlreadyFits' }
+};
 
 /**
- * "Name group with AI" for one saved group, shared by the sidebar group menu and the header's AI
- * menu (which targets the active group) so both behave the same: it sends the group's tabs to
+ * "Name with AI" for any saved group or window (`AiSubject`): sends its tabs to
  * `/api/ai/name-group` and opens the `nameGroupPicker` modal with the suggestions (1 to 3, best
  * first; an older server's single `name` works too), where the user picks one or types their own.
  *
  * The suggestions are cleaned and deduped (`suggestedGroupNames`), and the ones equal to the
- * group's current name are dropped. The group is looked up again BY ID once the reply is in (the
- * request takes seconds: the group may have moved, been renamed or deleted meanwhile). When the
- * current name is all that is left, a toast says it already fits and nothing opens.
+ * CURRENT name are dropped. The target is looked up again once the reply is in
+ * (`resolveAiTarget`: a group by id, a window by position and the tabs that were sent): gone or
+ * changed toasts "changed elsewhere". When the current name is all that is left, a toast says it
+ * already fits and nothing opens.
  *
  * Errors are toasts: out of credits offers "Buy more"; an error fixed in Settings → AI (the own
  * key, the model) offers "Open Settings" on the AI tab; anything else shows its message.
  *
- * @returns `run` to start it, `isPending` while the request runs, and `block`, why the group
- *   can't be named (null when it can). `run` re-checks: it does nothing for "Now Open" and toasts
- *   when the group has no tabs.
+ * @returns `run(subject)`, which does nothing for Now Open and toasts when there are no tabs, and
+ *   `isPending` while a request runs.
  */
-export function useNameGroupAction(group: Group | undefined) {
+export function useNameAction() {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const { mutateAsync: nameGroup, isPending } = useNameGroup();
   const openModal = useUIStore((s) => s.openModal);
 
-  const tabs = group?.windows.flatMap((w) => w.tabs) ?? [];
-  const block: NameGroupBlock | null = !group || group.permanent ? 'notSaved' : tabs.length === 0 ? 'noTabs' : null;
-
-  const run = async () => {
-    if (!group || block === 'notSaved') return;
+  const run = async (subject: AiSubject | undefined) => {
+    const block = subjectBlock(subject);
+    if (!subject || block === 'notSaved') return;
+    const copy = NAME_COPY[subject.target.kind];
     if (block === 'noTabs') {
-      toast.error(t('groupMenu.toast.noTabsToName'));
+      toast.error(t(copy.noTabs));
       return;
     }
-    const groupId = group.id;
+    const { target } = subject;
     try {
-      const suggestions = suggestedGroupNames(await nameGroup(tabs));
+      const suggestions = suggestedGroupNames(await nameGroup(subject.tabs));
       if (suggestions.length === 0) {
         toast.error(t('groupMenu.toast.aiRenameFailed'));
         return;
       }
-      const current = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available.find((g) => g.id === groupId);
+      const current = resolveAiTarget(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY), target);
       if (!current) {
         toast.info(t('errors.groupsChangedElsewhere'), { id: 'groups-changed-elsewhere' });
         return;
       }
-      const offered = suggestions.filter((name) => !isSameGroupName(name, current.name.trim()));
+      const currentName = current.name.trim();
+      const offered = suggestions.filter((name) => !isSameGroupName(name, currentName));
       if (offered.length === 0) {
-        toast.info(t('groupMenu.toast.nameAlreadyFits', { name: current.name }));
+        toast.info(t(copy.fits, { name: current.name }));
         return;
       }
-      openModal('nameGroupPicker', { groupId, suggestions: offered });
+      openModal('nameGroupPicker', aiTargetModalData(target, { suggestions: offered }));
     } catch (err) {
       if (err instanceof QuotaExceededError) {
         toast.error(t('common.aiQuotaUsed'), {
@@ -83,5 +98,19 @@ export function useNameGroupAction(group: Group | undefined) {
     }
   };
 
-  return { run, isPending, block };
+  return { run, isPending };
+}
+
+/**
+ * "Name group with AI" for one saved group, shared by the sidebar group menu and the header's AI
+ * menu (which targets the active group) so both behave the same: `useNameAction` for that group.
+ *
+ * @returns `run` to start it, `isPending` while the request runs, and `block`, why the group
+ *   can't be named (null when it can). `run` re-checks: it does nothing for "Now Open" and toasts
+ *   when the group has no tabs.
+ */
+export function useNameGroupAction(group: Group | undefined) {
+  const { run, isPending } = useNameAction();
+  const subject = groupSubject(group);
+  return { run: () => run(subject), isPending, block: subjectBlock(subject) as NameGroupBlock | null };
 }

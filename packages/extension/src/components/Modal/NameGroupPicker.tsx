@@ -3,8 +3,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useGroups, useUpdateGroupName } from '@/hooks/useGroups';
+import { useGroups, useUpdateGroupName, useUpdateWindowName } from '@/hooks/useGroups';
 import { cleanSuggestedName } from '@/lib/aiGroupName';
+import { readAiTarget, resolveAiTarget } from '@/lib/aiTarget';
 import { typedGroupName } from '@/lib/groupName';
 import { toast } from '@/lib/toast';
 
@@ -23,22 +24,24 @@ function readSuggestions(raw: unknown): string[] {
 }
 
 /**
- * "Name this group" (opened by `useNameGroupAction` from the ✨ menu or the group's context menu):
- * the AI's suggestions as radio options, the first preselected, and a "type your own" box that
- * selects its own option as soon as the user types. Rename writes the chosen name through
- * `useUpdateGroupName` (one undo step, marked for sync) at the group's CURRENT position, found by
- * id: the group may have moved since the request. A typed name is checked like the sidebar's
- * inline rename (`typedGroupName`).
+ * "Name this group" / "Name this window" (opened by `useNameAction` from the ✨ menu, the group's
+ * context menu or a window's ⋯ menu): the AI's suggestions as radio options, the first preselected,
+ * and a "type your own" box that selects its own option as soon as the user types. Rename writes the
+ * chosen name through `useUpdateGroupName` or `useUpdateWindowName` (one undo step, marked for sync)
+ * at the target's CURRENT position (`resolveAiTarget`: a group by id, a window by position and the
+ * tabs it held): it may have moved since the request. A typed name is checked like the inline
+ * renames (`typedGroupName`: trimmed, not empty, the same rule for groups and windows).
  *
  * Keyboard: the arrow keys move between the options (and into the box for "your own", whose up
  * and down arrows move back out); Enter renames; Escape closes (the dialog's own handling).
  */
 export function NameGroupPickerModal({ data, onClose }: NameGroupPickerModalProps) {
   const { t } = useTranslation();
-  const groupId = typeof data.groupId === 'string' ? data.groupId : '';
+  const [target] = useState(() => readAiTarget(data));
   const [suggestions] = useState(() => readSuggestions(data.suggestions));
   const { data: groupsState } = useGroups();
   const { mutateAsync: updateGroupName } = useUpdateGroupName();
+  const { mutateAsync: updateWindowName } = useUpdateWindowName();
   const [choice, setChoice] = useState<Choice>(suggestions.length > 0 ? 0 : 'custom');
   const [custom, setCustom] = useState('');
   const [saving, setSaving] = useState(false);
@@ -47,28 +50,34 @@ export function NameGroupPickerModal({ data, onClose }: NameGroupPickerModalProp
   const radios = useRef<(HTMLInputElement | null)[]>([]);
   const customInput = useRef<HTMLInputElement>(null);
 
-  const group = groupsState?.available.find((g) => g.id === groupId);
+  const found = resolveAiTarget(groupsState, target);
+  const isWindow = target?.kind === 'window';
+  // An unnamed window shows the generic label it has in the list
+  const currentName = isWindow ? (found?.window?.name ?? t('common.window')) : (found?.name ?? '');
   const chosenName = choice === 'custom' ? typedGroupName(custom) : (suggestions[choice] ?? null);
 
   const submit = async () => {
     if (saving || !chosenName) return;
-    const groupIndex = groupsState?.available.findIndex((g) => g.id === groupId) ?? -1;
-    if (groupIndex < 0) {
+    if (!found) {
       toast.info(t('errors.groupsChangedElsewhere'), { id: 'groups-changed-elsewhere' });
       onClose();
       return;
     }
-    if (groupsState?.available[groupIndex].name === chosenName) {
+    if ((isWindow ? found.window?.name : found.name) === chosenName) {
       onClose();
       return;
     }
     setSaving(true);
     try {
-      await updateGroupName({ groupIndex, name: chosenName });
+      if (found.windowIndex === null) {
+        await updateGroupName({ groupIndex: found.groupIndex, name: chosenName });
+      } else {
+        await updateWindowName({ groupIndex: found.groupIndex, windowIndex: found.windowIndex, name: chosenName });
+      }
       onClose();
     } catch (err) {
-      console.error('[TabMerger] Name group rename failed:', err);
-      toast.error(t('modals.nameGroup.renameFailed'));
+      console.error('[TabMerger] AI rename failed:', err);
+      toast.error(isWindow ? t('modals.nameGroup.renameFailedWindow') : t('modals.nameGroup.renameFailed'));
       setSaving(false);
     }
   };
@@ -120,11 +129,11 @@ export function NameGroupPickerModal({ data, onClose }: NameGroupPickerModalProp
   return (
     <form className="flex min-w-0 flex-col gap-3" onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <DialogHeader className="min-w-0">
-        <DialogTitle>{t('modals.nameGroup.title')}</DialogTitle>
+        <DialogTitle>{isWindow ? t('modals.nameGroup.titleWindow') : t('modals.nameGroup.title')}</DialogTitle>
         <DialogDescription className="min-w-0 break-words">
           <Trans
             i18nKey="modals.nameGroup.current"
-            values={{ name: group?.name ?? '' }}
+            values={{ name: currentName }}
             components={{ name: <bdi className="font-medium text-foreground" /> }}
           />
         </DialogDescription>
@@ -176,7 +185,7 @@ export function NameGroupPickerModal({ data, onClose }: NameGroupPickerModalProp
         <Button type="button" variant="outline" size="sm" className="text-xs" onClick={onClose} disabled={saving}>
           {t('common.cancel')}
         </Button>
-        <Button type="submit" size="sm" className="text-xs" disabled={saving || !chosenName || !group} data-testid="name-group-rename">
+        <Button type="submit" size="sm" className="text-xs" disabled={saving || !chosenName || !found} data-testid="name-group-rename">
           {t('modals.nameGroup.rename')}
         </Button>
       </div>

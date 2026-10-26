@@ -82,6 +82,7 @@
   "describeGroup": {
     "title": "Usare la descrizione dell'AI?",
     "description": "Questo gruppo ha già una nota. Sostituiscila o aggiungi il suggerimento sotto.",
+    "descriptionWindow": "Questa finestra ha già una nota. Sostituiscila o aggiungi il suggerimento sotto.",
     "current": "Nota attuale",
     "suggestion": "Suggerimento",
     "replace": "Sostituisci nota",
@@ -91,11 +92,13 @@
   },
   "nameGroup": {
     "title": "Dai un nome a questo gruppo",
+    "titleWindow": "Dai un nome a questa finestra",
     "current": "Attuale: <name>{{name}}</name>",
     "choices": "Nomi suggeriti",
     "custom": "Oppure scrivine uno tuo:",
     "customInput": "Il tuo nome",
     "rename": "Rinomina",
+    "renameFailedWindow": "Impossibile rinominare la finestra",
     "renameFailed": "Impossibile rinominare il gruppo"
   }
 }

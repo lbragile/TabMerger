@@ -27,8 +27,8 @@
   "sharingRequiresPro": "La condivisione richiede Pro: requisito del piano non soddisfatto",
   "aiOncePerDay": "Già usata oggi: questa azione AI è limitata a una volta al giorno",
   "proAiRequired": "È richiesto il piano Pro AI",
-  "nameGroupOff": "Assegna nome al gruppo è disattivato nelle Impostazioni",
-  "describeGroupOff": "Descrivi gruppo è disattivato nelle Impostazioni",
+  "nameGroupOff": "Assegna nome a gruppi e finestre è disattivato nelle Impostazioni",
+  "describeGroupOff": "Descrivi gruppi e finestre è disattivato nelle Impostazioni",
   "suggestSessionsOff": "Suggerisci sessioni è disattivato nelle Impostazioni",
   "organizeOff": "Organizza è disattivato nelle Impostazioni",
   "ai": {

@@ -28,6 +28,12 @@
   "notePlaceholder": "أضف ملاحظة…",
   "empty": "نافذة فارغة",
   "someOfTabs_zero": "{{matched}} من {{count}} علامة تبويب",
+  "toast": {
+    "noTabsToName": "لا توجد علامات تبويب في هذه النافذة لتسميتها",
+    "nameAlreadyFits": "الاسم «{{name}}» يناسب هذه النافذة بالفعل",
+    "noTabsToDescribe": "لا توجد علامات تبويب في هذه النافذة لوصفها",
+    "aiDescribeFailed": "تعذّر وصف هذه النافذة"
+  },
   "someOfTabs_one": "{{matched}} من علامة تبويب واحدة",
   "someOfTabs_two": "{{matched}} من علامتي تبويب",
   "someOfTabs_few": "{{matched}} من {{count}} علامات تبويب",

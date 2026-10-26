@@ -176,7 +176,7 @@ describe('per-feature enable/disable toggles', () => {
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     mockUseAppSettings.mockReturnValue({ data: { aiNameGroupEnabled: false } })
     const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
-    await expect(act(async () => { await result.current.mutateAsync([]) })).rejects.toThrow('Name group is turned off')
+    await expect(act(async () => { await result.current.mutateAsync([]) })).rejects.toThrow('“Name groups and windows” is turned off')
     expect(globalThis.fetch).not.toHaveBeenCalled()
   })
 

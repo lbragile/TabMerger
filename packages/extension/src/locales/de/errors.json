@@ -27,8 +27,8 @@
   "sharingRequiresPro": "Teilen erfordert ein Pro-Upgrade – Berechtigung fehlt",
   "aiOncePerDay": "Heute bereits genutzt – diese KI-Aktion ist auf einmal pro Tag begrenzt",
   "proAiRequired": "Pro-AI-Tarif erforderlich",
-  "nameGroupOff": "„Gruppe benennen“ ist in den Einstellungen deaktiviert",
-  "describeGroupOff": "„Gruppe beschreiben“ ist in den Einstellungen deaktiviert",
+  "nameGroupOff": "„Gruppen und Fenster benennen“ ist in den Einstellungen deaktiviert",
+  "describeGroupOff": "„Gruppen und Fenster beschreiben“ ist in den Einstellungen deaktiviert",
   "suggestSessionsOff": "„Sitzungen vorschlagen“ ist in den Einstellungen deaktiviert",
   "organizeOff": "„Organisieren“ ist in den Einstellungen deaktiviert",
   "ai": {

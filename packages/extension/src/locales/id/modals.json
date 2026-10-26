@@ -66,6 +66,7 @@
   "describeGroup": {
     "title": "Gunakan deskripsi AI?",
     "description": "Grup ini sudah punya catatan. Ganti catatan itu atau tambahkan saran di bawahnya.",
+    "descriptionWindow": "Jendela ini sudah punya catatan. Ganti catatan itu atau tambahkan saran di bawahnya.",
     "current": "Catatan saat ini",
     "suggestion": "Saran",
     "replace": "Ganti catatan",
@@ -75,11 +76,13 @@
   },
   "nameGroup": {
     "title": "Beri nama grup ini",
+    "titleWindow": "Beri nama jendela ini",
     "current": "Saat ini: <name>{{name}}</name>",
     "choices": "Nama yang disarankan",
     "custom": "Atau ketik nama sendiri:",
     "customInput": "Nama Anda sendiri",
     "rename": "Ganti nama",
+    "renameFailedWindow": "Tidak dapat mengganti nama jendela",
     "renameFailed": "Tidak dapat mengganti nama grup"
   }
 }

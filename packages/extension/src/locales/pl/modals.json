@@ -90,6 +90,7 @@
   "describeGroup": {
     "title": "Użyć opisu AI?",
     "description": "Ta grupa ma już notatkę. Zastąp ją lub dodaj sugestię pod nią.",
+    "descriptionWindow": "To okno ma już notatkę. Zastąp ją lub dodaj sugestię pod nią.",
     "current": "Obecna notatka",
     "suggestion": "Sugestia",
     "replace": "Zastąp notatkę",
@@ -99,11 +100,13 @@
   },
   "nameGroup": {
     "title": "Nazwij tę grupę",
+    "titleWindow": "Nazwij to okno",
     "current": "Obecnie: <name>{{name}}</name>",
     "choices": "Proponowane nazwy",
     "custom": "Albo wpisz własną:",
     "customInput": "Własna nazwa",
     "rename": "Zmień nazwę",
+    "renameFailedWindow": "Nie udało się zmienić nazwy okna",
     "renameFailed": "Nie udało się zmienić nazwy grupy"
   }
 }

@@ -74,6 +74,7 @@
   "describeGroup": {
     "title": "AI açıklaması kullanılsın mı?",
     "description": "Bu grubun zaten bir notu var. Notu değiştirin veya öneriyi altına ekleyin.",
+    "descriptionWindow": "Bu pencerenin zaten bir notu var. Notu değiştirin veya öneriyi altına ekleyin.",
     "current": "Mevcut not",
     "suggestion": "Öneri",
     "replace": "Notu değiştir",
@@ -83,11 +84,13 @@
   },
   "nameGroup": {
     "title": "Bu grubu adlandır",
+    "titleWindow": "Bu pencereyi adlandır",
     "current": "Şu anki ad: <name>{{name}}</name>",
     "choices": "Önerilen adlar",
     "custom": "Ya da kendi adınızı yazın:",
     "customInput": "Kendi adınız",
     "rename": "Yeniden adlandır",
+    "renameFailedWindow": "Pencere yeniden adlandırılamadı",
     "renameFailed": "Grup yeniden adlandırılamadı"
   }
 }

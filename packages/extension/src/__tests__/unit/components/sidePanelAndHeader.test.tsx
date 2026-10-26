@@ -146,6 +146,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useSortTabs: () => ({ mutate: vi.fn() }),
   useDeleteAllWindows: () => ({ mutate: vi.fn() }),
   useUpdateGroupNote: () => ({ mutate: vi.fn(), mutateAsync: vi.fn().mockResolvedValue(undefined) }),
+  useUpdateWindowNote: () => ({ mutate: vi.fn(), mutateAsync: vi.fn() }),
   useRemoveStaleTabs: () => ({ mutate: vi.fn() }),
   useRestoreGroup: () => ({ mutate: vi.fn() }),
   useDeleteGroup: () => ({ mutate: vi.fn() }),

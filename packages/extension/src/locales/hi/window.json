@@ -27,6 +27,12 @@
   "sortByUrl": "इस विंडो को URL के अनुसार क्रमबद्ध करें",
   "notePlaceholder": "नोट जोड़ें…",
   "empty": "खाली विंडो",
+  "toast": {
+    "noTabsToName": "इस विंडो में नाम देने के लिए कोई टैब नहीं",
+    "nameAlreadyFits": "“{{name}}” इस विंडो के लिए पहले से सही है",
+    "noTabsToDescribe": "इस विंडो में विवरण देने के लिए कोई टैब नहीं",
+    "aiDescribeFailed": "इस विंडो का विवरण नहीं दिया जा सका"
+  },
   "someOfTabs_one": "{{count}} में से {{matched}} टैब",
   "someOfTabs_other": "{{count}} में से {{matched}} टैब"
 }

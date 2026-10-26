@@ -38,6 +38,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
   GROUPS_QUERY_KEY: ['groups'],
   useUpdateGroupNote: () => ({ mutate: vi.fn(), mutateAsync: vi.fn() }),
+  useUpdateWindowNote: () => ({ mutate: vi.fn(), mutateAsync: vi.fn() }),
 }))
 
 vi.mock('@/stores/uiStore', () => ({

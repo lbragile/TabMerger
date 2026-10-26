@@ -85,7 +85,8 @@ vi.mock('@/hooks/useGroups', () => ({
   useArchiveGroup: () => ({ mutate: mockArchiveGroup }),
   useRestoreGroup: () => ({ mutate: mockRestoreGroup }),
   useUpdateGroupName: () => ({ mutate: mockUpdateGroupName }),
-  useUpdateGroupNote: () => ({ mutateAsync: mockUpdateGroupNote }),
+  useUpdateGroupNote: () => ({ mutateAsync: mockUpdateGroupNote }),
+  useUpdateWindowNote: () => ({ mutate: vi.fn(), mutateAsync: vi.fn() }),
   useGroups: () => ({ data: mockUseGroupsData() }),
   GROUPS_QUERY_KEY: ['groups'],
 }))

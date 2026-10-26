@@ -66,6 +66,7 @@
   "describeGroup": {
     "title": "AIの説明を使いますか？",
     "description": "このグループにはすでにメモがあります。置き換えるか、提案を下に追加してください。",
+    "descriptionWindow": "このウィンドウにはすでにメモがあります。置き換えるか、提案を下に追加してください。",
     "current": "現在のメモ",
     "suggestion": "提案",
     "replace": "メモを置き換える",
@@ -75,11 +76,13 @@
   },
   "nameGroup": {
     "title": "このグループに名前を付ける",
+    "titleWindow": "このウィンドウに名前を付ける",
     "current": "現在の名前: <name>{{name}}</name>",
     "choices": "名前の候補",
     "custom": "または自分で入力:",
     "customInput": "自分で付ける名前",
     "rename": "名前を変更",
+    "renameFailedWindow": "ウィンドウの名前を変更できませんでした",
     "renameFailed": "グループの名前を変更できませんでした"
   }
 }

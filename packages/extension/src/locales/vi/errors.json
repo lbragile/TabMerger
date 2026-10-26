@@ -27,8 +27,8 @@
   "sharingRequiresPro": "Chia sẻ yêu cầu nâng cấp lên Pro — chưa đủ quyền",
   "aiOncePerDay": "Đã sử dụng hôm nay — hành động AI này bị giới hạn một lần mỗi ngày",
   "proAiRequired": "Yêu cầu gói Pro AI",
-  "nameGroupOff": "Đặt tên nhóm đang tắt trong Cài đặt",
-  "describeGroupOff": "Mô tả nhóm đang tắt trong Cài đặt",
+  "nameGroupOff": "Đặt tên nhóm và cửa sổ đang tắt trong Cài đặt",
+  "describeGroupOff": "Mô tả nhóm và cửa sổ đang tắt trong Cài đặt",
   "suggestSessionsOff": "Gợi ý phiên đang tắt trong Cài đặt",
   "organizeOff": "Sắp xếp đang tắt trong Cài đặt",
   "ai": {

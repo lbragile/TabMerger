@@ -74,6 +74,7 @@
   "describeGroup": {
     "title": "KI-Beschreibung übernehmen?",
     "description": "Diese Gruppe hat bereits eine Notiz. Ersetze sie oder füge den Vorschlag darunter ein.",
+    "descriptionWindow": "Dieses Fenster hat bereits eine Notiz. Ersetze sie oder füge den Vorschlag darunter ein.",
     "current": "Aktuelle Notiz",
     "suggestion": "Vorschlag",
     "replace": "Notiz ersetzen",
@@ -83,11 +84,13 @@
   },
   "nameGroup": {
     "title": "Diese Gruppe benennen",
+    "titleWindow": "Dieses Fenster benennen",
     "current": "Aktuell: <name>{{name}}</name>",
     "choices": "Vorgeschlagene Namen",
     "custom": "Oder eigenen Namen eingeben:",
     "customInput": "Eigener Name",
     "rename": "Umbenennen",
+    "renameFailedWindow": "Das Fenster konnte nicht umbenannt werden",
     "renameFailed": "Die Gruppe konnte nicht umbenannt werden"
   }
 }

@@ -145,7 +145,7 @@ describe('useDescribeGroup — refused before anything is sent', () => {
   it('when "Describe group" is turned off in Settings', async () => {
     mockUseAppSettings.mockReturnValue({ data: { aiDescribeGroupEnabled: false } })
     const err = await describeGroupError()
-    expect((err as Error).message).toBe('Describe group is turned off in Settings')
+    expect((err as Error).message).toBe('“Describe groups and windows” is turned off in Settings')
     expect(fetchMock()).not.toHaveBeenCalled()
   })
 
