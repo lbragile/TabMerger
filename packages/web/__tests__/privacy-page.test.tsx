@@ -88,6 +88,17 @@ describe('PrivacyPage', () => {
     const link = screen.getByRole('link', { name: 'Vercel' })
     expect(link).toHaveAttribute('href', 'https://vercel.com/legal/privacy-policy')
   })
+
+  // The extension names the own-key provider "Gemini", so the policy shows that name next to the
+  // company (Google) that receives the request.
+  it('names Gemini, with Google as the company, wherever an own key can go to Google', () => {
+    render(<PrivacyPage />)
+    expect(document.body.textContent).toContain('the provider that issued your key: Anthropic, OpenAI or Google (Gemini).')
+    const table = document.getElementById('third-party')?.textContent ?? ''
+    expect(table).toContain('Google AI (Gemini API)')
+    expect(table).toContain('who use their own Gemini API key')
+  })
+
   it('discloses the uninstall survey: what opening it sends, what the form sends, and where it goes', () => {
     render(<PrivacyPage />)
     const block = document.getElementById('uninstall-survey')

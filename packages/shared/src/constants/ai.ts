@@ -83,11 +83,14 @@ export type AiProvider = (typeof AI_PROVIDERS)[number];
 /** The provider managed Pro AI runs on. */
 export const MANAGED_AI_PROVIDER: AiProvider = 'anthropic';
 
-/** Company names; not translated. */
+/**
+ * The provider names users know, shown wherever an own-key provider is named; not translated.
+ * Gemini is Google's AI product (its keys are Gemini API keys); the id stays `google`.
+ */
 export const AI_PROVIDER_LABELS: Record<AiProvider, string> = {
   anthropic: 'Anthropic',
   openai: 'OpenAI',
-  google: 'Google',
+  google: 'Gemini',
 };
 
 /**

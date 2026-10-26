@@ -46,5 +46,5 @@
   "maybeLater": "Mungkin nanti",
   "signIn": "Masuk",
   "upgradeNow": "Tingkatkan sekarang",
-  "byokOption": "Atau {{price}}/bln: pakai penyedia AI Anda sendiri (Anthropic, OpenAI, atau Google)"
+  "byokOption": "Atau {{price}}/bln: pakai penyedia AI Anda sendiri (Anthropic, OpenAI, atau Gemini)"
 }

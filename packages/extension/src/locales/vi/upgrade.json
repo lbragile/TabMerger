@@ -46,5 +46,5 @@
   "maybeLater": "Để sau",
   "signIn": "Đăng nhập",
   "upgradeNow": "Nâng cấp ngay",
-  "byokOption": "Hoặc {{price}}/tháng: dùng nhà cung cấp AI của riêng bạn (Anthropic, OpenAI hoặc Google)"
+  "byokOption": "Hoặc {{price}}/tháng: dùng nhà cung cấp AI của riêng bạn (Anthropic, OpenAI hoặc Gemini)"
 }

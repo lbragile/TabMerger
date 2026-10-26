@@ -82,8 +82,8 @@ test.describe('Settings → AI, own key', () => {
     await expect(page.getByTestId('ai-provider-links')).toHaveCount(0);
     await expect(models).toHaveCount(0);
 
-    // Pick Google: its key field, links and models only
-    await pickProvider(page, 'Google');
+    // Pick Gemini: its key field, links and models only
+    await pickProvider(page, 'Gemini');
     await expect(keyInput).toHaveAttribute('placeholder', 'AIza…');
     await expect(page.getByTestId('ai-provider-guide-link')).toHaveAttribute('href', 'https://ai.google.dev/gemini-api/docs/api-key');
     await expect(page.getByTestId('ai-provider-keys-link')).toHaveAttribute('href', 'https://aistudio.google.com/apikey');
@@ -92,16 +92,16 @@ test.describe('Settings → AI, own key', () => {
     await expect(models.getByTestId('ai-model-gpt-6-astra')).toHaveCount(0);
     await expect(models.getByTestId('ai-model-claude-opus-5-5')).toHaveCount(0);
 
-    // An OpenAI key under Google: inline error tied to the field, nothing sent
+    // An OpenAI key under Gemini: inline error tied to the field, nothing sent
     await keyInput.fill(OPENAI_KEY);
     await page.getByRole('button', { name: 'Save key' }).click();
     const error = page.getByTestId('ai-byok-key-error');
-    await expect(error).toHaveText("This key looks like it's from OpenAI. Pick OpenAI above, or paste a key from Google.");
+    await expect(error).toHaveText("This key looks like it's from OpenAI. Pick OpenAI above, or paste a key from Gemini.");
     const errorId = await error.getAttribute('id');
     expect((await keyInput.getAttribute('aria-describedby'))?.split(' ')).toContain(errorId);
     expect(verifyCalls()).toBe(0);
 
-    // A Google key saves after the check and shows masked
+    // A Gemini key saves after the check and shows masked
     await keyInput.fill(GOOGLE_KEY);
     await page.getByRole('button', { name: 'Save key' }).click();
     await expect(page.getByTestId('ai-byok-key-masked')).toHaveText('AIza…zzzz');
@@ -109,12 +109,12 @@ test.describe('Settings → AI, own key', () => {
 
     // Switch to OpenAI: the saved key stays in use until a new one is saved; Cancel goes back
     await pickProvider(page, 'OpenAI');
-    await expect(page.getByTestId('ai-byok-switch-note')).toHaveText('Your saved Google key stays in use until you save a key from OpenAI.');
+    await expect(page.getByTestId('ai-byok-switch-note')).toHaveText('Your saved Gemini key stays in use until you save a key from OpenAI.');
     await expect(keyInput).toHaveAttribute('placeholder', 'sk-proj-…');
     await expect(models.getByTestId('ai-model-gpt-6-astra')).toBeVisible();
     await page.getByTestId('ai-byok-cancel').click();
-    await expect(providers.getByRole('radio', { name: 'Google' })).toBeChecked();
-    await expect(providers.getByRole('radio', { name: 'Google' })).toBeFocused();
+    await expect(providers.getByRole('radio', { name: 'Gemini' })).toBeChecked();
+    await expect(providers.getByRole('radio', { name: 'Gemini' })).toBeFocused();
     await expect(page.getByTestId('ai-byok-key-masked')).toHaveText('AIza…zzzz');
 
     // A pick without a key survives closing and reopening Settings
@@ -124,7 +124,7 @@ test.describe('Settings → AI, own key', () => {
     await expect(providers).toHaveCount(0);
     expect(await openAiSettings(page)).toBe(true);
     await expect(providers.getByRole('radio', { name: 'Anthropic' })).toBeChecked();
-    await expect(page.getByTestId('ai-byok-switch-note')).toHaveText('Your saved Google key stays in use until you save a key from Anthropic.');
+    await expect(page.getByTestId('ai-byok-switch-note')).toHaveText('Your saved Gemini key stays in use until you save a key from Anthropic.');
   });
 
   test('an AI error fixed in Settings opens Settings on the AI tab', async ({ context, extensionId }) => {

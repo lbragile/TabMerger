@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Décrivez un groupe",
-      "description": "L’IA rédige une courte note sur le sujet des onglets d’un groupe, pour que vous vous rappeliez pourquoi vous les avez enregistrés. Modifiez-la comme n’importe quelle note."
+      "description": "L’IA rédige une courte note sur le sujet des onglets d’un groupe ou d’une fenêtre, pour que vous vous rappeliez pourquoi vous les avez enregistrés. Modifiez-la comme n’importe quelle note."
     },
     "summaries": {
       "title": "Résumés d’onglets",

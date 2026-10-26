@@ -46,5 +46,5 @@
   "maybeLater": "Может, позже",
   "signIn": "Войти",
   "upgradeNow": "Перейти сейчас",
-  "byokOption": "Или {{price}}/мес.: используйте своего AI-провайдера (Anthropic, OpenAI или Google)"
+  "byokOption": "Или {{price}}/мес.: используйте своего AI-провайдера (Anthropic, OpenAI или Gemini)"
 }

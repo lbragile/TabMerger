@@ -27,7 +27,7 @@ describe('AiProviderPicker', () => {
   it('checks the given provider and reports a new pick', async () => {
     const { onChange } = renderPicker('openai')
     expect((screen.getByRole('radio', { name: 'OpenAI' }) as HTMLInputElement).checked).toBe(true)
-    await userEvent.click(screen.getByRole('radio', { name: 'Google' }))
+    await userEvent.click(screen.getByRole('radio', { name: 'Gemini' }))
     expect(onChange).toHaveBeenCalledWith('google')
   })
 

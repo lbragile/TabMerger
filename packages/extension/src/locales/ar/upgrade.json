@@ -46,5 +46,5 @@
   "maybeLater": "ربما لاحقًا",
   "signIn": "تسجيل الدخول",
   "upgradeNow": "الترقية الآن",
-  "byokOption": "أو {{price}} شهريًا: استخدم مزوّد الذكاء الاصطناعي الخاص بك (Anthropic أو OpenAI أو Google)"
+  "byokOption": "أو {{price}} شهريًا: استخدم مزوّد الذكاء الاصطناعي الخاص بك (Anthropic أو OpenAI أو Gemini)"
 }

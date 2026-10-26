@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Descreva um grupo",
-      "description": "A IA escreve uma nota curta sobre o assunto das abas de um grupo, para você lembrar por que as salvou. Edite como qualquer outra nota."
+      "description": "A IA escreve uma nota curta sobre o assunto das abas de um grupo ou janela, para você lembrar por que as salvou. Edite como qualquer outra nota."
     },
     "summaries": {
       "title": "Resumos de abas",

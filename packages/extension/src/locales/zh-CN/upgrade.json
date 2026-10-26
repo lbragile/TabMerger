@@ -46,5 +46,5 @@
   "maybeLater": "以后再说",
   "signIn": "登录",
   "upgradeNow": "立即升级",
-  "byokOption": "或 {{price}}/月：使用您自己的 AI 服务商（Anthropic、OpenAI 或 Google）"
+  "byokOption": "或 {{price}}/月：使用您自己的 AI 服务商（Anthropic、OpenAI 或 Gemini）"
 }

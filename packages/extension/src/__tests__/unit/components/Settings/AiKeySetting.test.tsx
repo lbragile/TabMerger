@@ -55,7 +55,7 @@ describe('AiKeySetting', () => {
   it.each([
     ['anthropic', 'Anthropic', 'sk-ant-…'],
     ['openai', 'OpenAI', 'sk-proj-…'],
-    ['google', 'Google', 'AIza…']
+    ['google', 'Gemini', 'AIza…']
   ] as const)('%s: labels the field with the provider and shows only its key format', (provider, label, placeholder) => {
     renderKey({ provider })
     const input = screen.getByLabelText(t('settings.ai.key.label', { provider: label })) as HTMLInputElement
@@ -134,7 +134,7 @@ describe('AiKeySetting', () => {
     const onCancelSwitch = vi.fn()
     renderKey({ provider: 'google', saved: { masked: 'sk-…yyyy', provider: 'openai' }, onCancelSwitch })
     const note = screen.getByTestId('ai-byok-switch-note')
-    expect(note.textContent).toBe(t('settings.ai.key.switching', { saved: 'OpenAI', provider: 'Google' }))
+    expect(note.textContent).toBe(t('settings.ai.key.switching', { saved: 'OpenAI', provider: 'Gemini' }))
     expect(screen.queryByTestId('ai-byok-key-masked')).toBeNull()
     expect(screen.queryByRole('button', { name: t('settings.ai.key.remove') })).toBeNull()
     const input = screen.getByTestId('ai-byok-key-input')
@@ -155,7 +155,7 @@ describe('AiKeySetting', () => {
       screen.getByRole('button', { name: t('settings.ai.key.save') }),
       screen.getByRole('button', { name: t('common.cancel') }),
       screen.getByRole('link', { name: t('settings.ai.key.guideLink') }),
-      screen.getByRole('link', { name: t('settings.ai.key.keysLink', { provider: 'Google' }) })
+      screen.getByRole('link', { name: t('settings.ai.key.keysLink', { provider: 'Gemini' }) })
     ]
     order[0].focus()
     for (const next of order.slice(1)) {

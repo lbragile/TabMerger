@@ -46,5 +46,5 @@
   "maybeLater": "Vielleicht später",
   "signIn": "Anmelden",
   "upgradeNow": "Jetzt upgraden",
-  "byokOption": "Oder {{price}}/Monat: Nutze deinen eigenen KI-Anbieter (Anthropic, OpenAI oder Google)"
+  "byokOption": "Oder {{price}}/Monat: Nutze deinen eigenen KI-Anbieter (Anthropic, OpenAI oder Gemini)"
 }

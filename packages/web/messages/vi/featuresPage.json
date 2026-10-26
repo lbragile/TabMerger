@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Mô tả nhóm",
-      "description": "AI viết một ghi chú ngắn về nội dung các tab trong nhóm để bạn nhớ vì sao đã lưu chúng. Bạn có thể sửa ghi chú này như mọi ghi chú khác."
+      "description": "AI viết một ghi chú ngắn về nội dung các tab trong nhóm hoặc cửa sổ để bạn nhớ vì sao đã lưu chúng. Bạn có thể sửa ghi chú này như mọi ghi chú khác."
     },
     "summaries": {
       "title": "Tóm tắt tab",

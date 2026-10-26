@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Descrivi un gruppo",
-      "description": "L'IA scrive una breve nota sull'argomento delle schede di un gruppo, così ricordi perché le hai salvate. Modificala come qualsiasi altra nota."
+      "description": "L'IA scrive una breve nota sull'argomento delle schede di un gruppo o di una finestra, così ricordi perché le hai salvate. Modificala come qualsiasi altra nota."
     },
     "summaries": {
       "title": "Riepiloghi delle schede",

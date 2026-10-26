@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getPricingTier } from '../constants';
 
 const ORGANIZE_LINE = 'AI workspace cleanup';
-const DESCRIBE_LINE = 'AI group descriptions';
+const DESCRIBE_LINE = 'AI group & window descriptions';
 
 /**
  * What Pro AI sells, in both options (TabMerger handles setup, or the user's own key). The web
@@ -34,7 +34,7 @@ describe('Pro AI feature lists', () => {
     }
   });
 
-  // An own key can be OpenAI, Anthropic or Google, so no line may name one AI provider or model.
+  // An own key can be OpenAI, Anthropic or Gemini, so no line may name one AI provider or model.
   it.each(Object.entries(lists))('%s: names no AI provider or model', (_option, features) => {
     for (const line of features) {
       expect(line).not.toMatch(/claude|anthropic|openai|gpt|gemini|google/i);

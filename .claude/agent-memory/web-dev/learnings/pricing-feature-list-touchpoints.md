@@ -1,6 +1,6 @@
 ---
 name: pricing-feature-list-touchpoints
-description: Every place a PRICING_TIERS feature line (or the Pro AI feature set) is repeated, and which tests pin each copy, so a new or renamed line lands everywhere in one change
+description: Every place a PRICING_TIERS feature line (or the Pro AI feature set, or the own-key provider names) is repeated, and which tests pin each copy, so a new or renamed line lands everywhere in one change
 metadata:
   type: reference
 ---
@@ -30,9 +30,18 @@ Adding or renaming a plan feature line touches more than `PRICING_TIERS`:
   `packages/extension/CHROMEWEBSTORE.md` "Known Issues". Grep all of them for an old feature
   count ("three AI features") when the set changes.
 
-Pro AI copy stays provider-neutral (own-key users pick OpenAI, Anthropic or Google; TabMerger
+Pro AI copy stays provider-neutral (own-key users pick Anthropic, OpenAI or Gemini; TabMerger
 handles setup on Claude), and the AI requests carry tab titles, URLs and, for naming, suggestions
 and Organize, group names; never page content.
+
+**Own-key provider names.** The Google provider is shown as "Gemini" (`AI_PROVIDER_LABELS.google`);
+its id stays `'google'` in types, routing and stored keys. The provider list is also written out
+by hand in: extension `upgrade.json` `byokOption` (18), web `faq.json` `ai.answerOwnKey` tail (18;
+Turkish needs the suffix changed with it, "Gemini'den"), the privacy page's "Your own API key"
+paragraph and processor row (legal text keeps the company: "Google (Gemini)", "Google AI (Gemini
+API)"), and `CHROMEWEBSTORE.md`. Tests pin the label through `getByRole('radio', { name })` and
+`t(..., { provider })`; when grepping for them, don't filter out `name: 'Google'` lines as group
+fixtures, because `AiProviderPicker.test.tsx` uses exactly that shape for the radio.
 
 Bulk edits to the 18 message files: `json.dumps(data, ensure_ascii=False, indent=2) + '\n'`
 round-trips them byte-for-byte (check that before writing), so a Python script that loads,

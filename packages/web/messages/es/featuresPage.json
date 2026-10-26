@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Describe un grupo",
-      "description": "La IA escribe una breve nota sobre de qué tratan las pestañas de un grupo, para que recuerdes por qué las guardaste. Edítala como cualquier otra nota."
+      "description": "La IA escribe una breve nota sobre de qué tratan las pestañas de un grupo o una ventana, para que recuerdes por qué las guardaste. Edítala como cualquier otra nota."
     },
     "summaries": {
       "title": "Resúmenes de pestañas",

@@ -67,7 +67,7 @@ describe('FeaturesPage', () => {
 
     const describeRow = within(aiSection).getByRole('heading', { name: 'Describe a group' }).closest('div.grid') as HTMLElement
     expect(describeRow.textContent).toContain('03')
-    expect(describeRow.textContent).toMatch(/writes a short note about what a group's tabs are about/)
+    expect(describeRow.textContent).toMatch(/writes a short note about what a group's or window's tabs are about/)
     expect(describeRow.textContent).toMatch(/Edit it like any note/)
 
     const organizeRow = within(aiSection).getByRole('heading', { name: 'Organize your workspace' }).closest('div.grid') as HTMLElement
@@ -76,7 +76,7 @@ describe('FeaturesPage', () => {
     expect(organizeRow.textContent).toMatch(/in one step you can undo/)
   })
 
-  // Own-key users can pick OpenAI, Anthropic or Google, so the Pro AI copy names no provider, and
+  // Own-key users can pick OpenAI, Anthropic or Gemini, so the Pro AI copy names no provider, and
   // session suggestions describe what they do (merge or archive saved groups), not browsing habits.
   it('keeps the Pro AI copy provider-neutral and accurate', async () => {
     render(await FeaturesPage())

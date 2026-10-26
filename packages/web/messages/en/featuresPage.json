@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Describe a group",
-      "description": "AI writes a short note about what a group's tabs are about, so you remember why you saved them. Edit it like any note."
+      "description": "AI writes a short note about what a group's or window's tabs are about, so you remember why you saved them. Edit it like any note."
     },
     "summaries": {
       "title": "Tab summaries",

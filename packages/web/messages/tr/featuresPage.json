@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Grubu açıklayın",
-      "description": "Yapay zekâ, bir gruptaki sekmelerin ne hakkında olduğunu anlatan kısa bir not yazar; böylece onları neden kaydettiğinizi hatırlarsınız. Notu diğer notlar gibi düzenleyebilirsiniz."
+      "description": "Yapay zekâ, bir gruptaki ya da penceredeki sekmelerin ne hakkında olduğunu anlatan kısa bir not yazar; böylece onları neden kaydettiğinizi hatırlarsınız. Notu diğer notlar gibi düzenleyebilirsiniz."
     },
     "summaries": {
       "title": "Sekme özetleri",

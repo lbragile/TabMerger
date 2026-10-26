@@ -57,10 +57,10 @@ describe.each([
     render(<FAQ />)
     await userEvent.setup().click(screen.getByRole('button', { name: 'What does the AI do exactly?' }))
     const answer = screen.getByText(/six AI features/)
-    expect(answer.textContent).toMatch(/smart naming \(.*group descriptions \(.*tab summaries \(.*session suggestions \(.*and Organize \(/)
+    expect(answer.textContent).toMatch(/smart naming \(.*group and window descriptions \(.*tab summaries \(.*session suggestions \(.*and Organize \(/)
     if (state === 'off') expect(answer.textContent).toMatch(/^Coming soon/)
     else if (state === 'ownKeyOnly') {
-      expect(answer.textContent).toContain('For now, you handle setup: Pro AI runs on your own API key from Anthropic, OpenAI or Google')
+      expect(answer.textContent).toContain('For now, you handle setup: Pro AI runs on your own API key from Anthropic, OpenAI or Gemini')
       expect(answer.textContent).toContain('Setup handled by TabMerger is coming soon.')
     } else expect(answer.textContent).not.toMatch(/coming soon|your own API key/i)
   })

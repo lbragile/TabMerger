@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Deskripsikan grup",
-      "description": "AI menulis catatan singkat tentang isi tab dalam sebuah grup, agar Anda ingat alasan menyimpannya. Edit seperti catatan lainnya."
+      "description": "AI menulis catatan singkat tentang isi tab dalam sebuah grup atau jendela, agar Anda ingat alasan menyimpannya. Edit seperti catatan lainnya."
     },
     "summaries": {
       "title": "Ringkasan tab",

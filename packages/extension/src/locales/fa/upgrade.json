@@ -46,5 +46,5 @@
   "maybeLater": "شاید بعداً",
   "signIn": "ورود",
   "upgradeNow": "همین حالا ارتقا دهید",
-  "byokOption": "یا {{price}} در ماه: از ارائه‌دهندهٔ هوش مصنوعی خودتان استفاده کنید (Anthropic، OpenAI یا Google)"
+  "byokOption": "یا {{price}} در ماه: از ارائه‌دهندهٔ هوش مصنوعی خودتان استفاده کنید (Anthropic، OpenAI یا Gemini)"
 }

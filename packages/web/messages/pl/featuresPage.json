@@ -73,7 +73,7 @@
     },
     "describe": {
       "title": "Opisz grupę",
-      "description": "AI pisze krótką notatkę o tym, czego dotyczą karty w grupie, żeby łatwo było przypomnieć sobie, po co zostały zapisane. Edytuj ją jak każdą inną notatkę."
+      "description": "AI pisze krótką notatkę o tym, czego dotyczą karty w grupie lub oknie, żeby łatwo było przypomnieć sobie, po co zostały zapisane. Edytuj ją jak każdą inną notatkę."
     },
     "summaries": {
       "title": "Podsumowania kart",

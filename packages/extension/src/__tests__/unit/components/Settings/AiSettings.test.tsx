@@ -64,7 +64,7 @@ const providerRadio = (name: string) => screen.getByRole('radio', { name }) as H
 const modelGroup = () => screen.getByRole('group', { name: t('settings.ai.model.label') })
 const modelValues = () => within(modelGroup()).getAllByRole('radio').map((r) => (r as HTMLInputElement).value)
 
-async function pick(label: 'Anthropic' | 'OpenAI' | 'Google') {
+async function pick(label: 'Anthropic' | 'OpenAI' | 'Gemini') {
   await userEvent.click(providerRadio(label))
   await screen.findByTestId('ai-byok-key-setting')
 }
@@ -194,14 +194,14 @@ describe('AiSettings — own key: provider first', () => {
   it('offers the dev-only test key once a provider is picked (dev build)', async () => {
     renderSettings()
     await ready()
-    await pick('Google')
+    await pick('Gemini')
     expect(screen.getByRole('button', { name: t('settings.ai.key.testKey') })).toBeTruthy()
   })
 
   it.each([
     ['Anthropic', 'anthropic', 'sk-ant-…'],
     ['OpenAI', 'openai', 'sk-proj-…'],
-    ['Google', 'google', 'AIza…']
+    ['Gemini', 'google', 'AIza…']
   ] as const)('picking %s shows its key field, its setup links and only its models', async (label, provider, placeholder) => {
     renderSettings()
     await ready()
@@ -228,14 +228,14 @@ describe('AiSettings — own key: provider first', () => {
   it('setup links open in a new tab, without an opener or referrer', async () => {
     renderSettings()
     await ready()
-    await pick('Google')
+    await pick('Gemini')
     for (const link of within(screen.getByTestId('ai-provider-links')).getAllByRole('link')) {
       expect(link.getAttribute('target')).toBe('_blank')
       expect(link.getAttribute('rel')).toBe('noopener noreferrer')
     }
     await userEvent.click(screen.getByRole('link', { name: t('settings.ai.key.guideLink') }))
     expect(tabsCreate).toHaveBeenLastCalledWith({ url: AI_PROVIDER_KEY_LINKS.google.guide, active: true })
-    await userEvent.click(screen.getByRole('link', { name: t('settings.ai.key.keysLink', { provider: 'Google' }) }))
+    await userEvent.click(screen.getByRole('link', { name: t('settings.ai.key.keysLink', { provider: 'Gemini' }) }))
     expect(tabsCreate).toHaveBeenLastCalledWith({ url: AI_PROVIDER_KEY_LINKS.google.keys, active: true })
   })
 
@@ -257,7 +257,7 @@ describe('AiSettings — own key: provider first', () => {
     await saveByokKey('u1', GOOGLE_KEY)
     renderSettings()
     await ready()
-    expect(providerRadio('Google').checked).toBe(true)
+    expect(providerRadio('Gemini').checked).toBe(true)
     expect(screen.getByTestId('ai-byok-key-masked').textContent).toBe('AIza…zzzz')
     expect(screen.getByRole('button', { name: t('settings.ai.key.replace') })).toBeTruthy()
     expect(screen.getByRole('button', { name: t('settings.ai.key.remove') })).toBeTruthy()
@@ -313,8 +313,8 @@ describe('AiSettings — own key: key checks and save', () => {
 
   it.each([
     ['Anthropic', OPENAI_KEY, 'OpenAI'],
-    ['OpenAI', GOOGLE_KEY, 'Google'],
-    ['Google', KEY, 'Anthropic']
+    ['OpenAI', GOOGLE_KEY, 'Gemini'],
+    ['Gemini', KEY, 'Anthropic']
   ] as const)('with %s picked, a key of another provider gets an inline error and is neither sent nor saved', async (picked, key, detected) => {
     renderSettings()
     await ready()
@@ -368,7 +368,7 @@ describe('AiSettings — own key: key checks and save', () => {
 
   it.each([
     ['OpenAI', OPENAI_KEY, 'openai', 'sk-…yyyy'],
-    ['Google', GOOGLE_KEY, 'google', 'AIza…zzzz']
+    ['Gemini', GOOGLE_KEY, 'google', 'AIza…zzzz']
   ] as const)('saves a %s key with its provider and masks it the way that provider writes keys', async (label, key, provider, masked) => {
     mockAiPost.mockResolvedValue({ ok: true, provider })
     renderSettings()
@@ -442,10 +442,10 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
   it('says the saved key stays in use, offers the new provider’s key field and models, and Cancel goes back', async () => {
     renderSettings()
     await ready()
-    await pick('Google')
+    await pick('Gemini')
 
     const note = screen.getByTestId('ai-byok-switch-note')
-    expect(note.textContent).toBe(t('settings.ai.key.switching', { saved: 'OpenAI', provider: 'Google' }))
+    expect(note.textContent).toBe(t('settings.ai.key.switching', { saved: 'OpenAI', provider: 'Gemini' }))
     const input = screen.getByTestId('ai-byok-key-input')
     expect(input.getAttribute('aria-describedby')?.split(' ')).toContain(note.id)
     expect((input as HTMLInputElement).placeholder).toBe('AIza…')
@@ -475,7 +475,7 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
   it('picking the saved key’s provider again ends the switch and forgets the pick', async () => {
     renderSettings()
     await ready()
-    await pick('Google')
+    await pick('Gemini')
     await waitFor(async () => expect(await getPickedByokProvider('u1')).toBe('google'))
     await pick('OpenAI')
     expect(screen.queryByTestId('ai-byok-switch-note')).toBeNull()
@@ -486,7 +486,7 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
     mockAiPost.mockResolvedValue({ ok: true, provider: 'google' })
     const onChange = renderSettings('gpt-6-astra')
     await ready()
-    await pick('Google')
+    await pick('Gemini')
     await typeAndSave(GOOGLE_KEY)
     await waitFor(() => expect(screen.getByTestId('ai-byok-key-masked').textContent).toBe('AIza…zzzz'))
     expect(onChange).toHaveBeenCalledWith('auto')
@@ -499,7 +499,7 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
     mockAiPost.mockResolvedValue({ ok: true, provider: 'google' })
     const onChange = renderSettings('gemini-4-argon')
     await ready()
-    await pick('Google')
+    await pick('Gemini')
     await typeAndSave(GOOGLE_KEY)
     await screen.findByText('AIza…zzzz')
     expect(onChange).not.toHaveBeenCalled()
@@ -508,9 +508,9 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
   it('a key of the old provider pasted while switching is refused as a mismatch', async () => {
     renderSettings()
     await ready()
-    await pick('Google')
+    await pick('Gemini')
     await typeAndSave(OPENAI_KEY)
-    expect((await screen.findByRole('alert')).textContent).toBe(t('settings.ai.key.wrongProvider', { detected: 'OpenAI', provider: 'Google' }))
+    expect((await screen.findByRole('alert')).textContent).toBe(t('settings.ai.key.wrongProvider', { detected: 'OpenAI', provider: 'Gemini' }))
     expect(mockAiPost).not.toHaveBeenCalled()
   })
 

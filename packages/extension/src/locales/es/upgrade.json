@@ -46,5 +46,5 @@
   "maybeLater": "Quizá más tarde",
   "signIn": "Iniciar sesión",
   "upgradeNow": "Mejorar ahora",
-  "byokOption": "O {{price}}/mes: usa tu propio proveedor de IA (Anthropic, OpenAI o Google)"
+  "byokOption": "O {{price}}/mes: usa tu propio proveedor de IA (Anthropic, OpenAI o Gemini)"
 }

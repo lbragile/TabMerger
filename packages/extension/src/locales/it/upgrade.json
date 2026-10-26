@@ -46,5 +46,5 @@
   "maybeLater": "Forse più tardi",
   "signIn": "Accedi",
   "upgradeNow": "Passa a Pro ora",
-  "byokOption": "Oppure {{price}}/mese: usa il tuo fornitore AI (Anthropic, OpenAI o Google)"
+  "byokOption": "Oppure {{price}}/mese: usa il tuo fornitore AI (Anthropic, OpenAI o Gemini)"
 }

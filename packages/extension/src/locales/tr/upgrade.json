@@ -46,5 +46,5 @@
   "maybeLater": "Belki sonra",
   "signIn": "Oturum aç",
   "upgradeNow": "Şimdi yükselt",
-  "byokOption": "Ya da {{price}}/ay: kendi AI sağlayıcınızı kullanın (Anthropic, OpenAI veya Google)"
+  "byokOption": "Ya da {{price}}/ay: kendi AI sağlayıcınızı kullanın (Anthropic, OpenAI veya Gemini)"
 }
