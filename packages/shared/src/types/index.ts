@@ -138,7 +138,13 @@ export interface AINameGroupRequest {
   tabs: Pick<Tab, 'title' | 'url'>[];
 }
 
+/**
+ * `POST /api/ai/name-group` answer.
+ */
 export interface AINameGroupResponse {
+  /** 1 to 3 distinct suggestions (case-insensitively, after cleaning), best first. */
+  names: string[];
+  /** Always `names[0]`. Kept so older extension builds that read only `name` still work. */
   name: string;
 }
 

@@ -131,8 +131,8 @@ const simpleRoutes = [
     body: { tabs: TABS },
     bad: [{}, { tabs: [] }] as Record<string, unknown>[],
     aiMock: () => mockNameGroup,
-    aiValue: 'Dev Tools',
-    expected: { name: 'Dev Tools' },
+    aiValue: ['Dev Tools', 'Docs', 'Reading List'],
+    expected: { names: ['Dev Tools', 'Docs', 'Reading List'], name: 'Dev Tools' },
     badMessage: 'tabs array required',
   },
   {
@@ -466,7 +466,7 @@ const validation = [
     handler: nameGroupPOST,
     url: 'http://localhost/api/ai/name-group',
     aiMock: () => mockNameGroup,
-    aiValue: 'Name' as unknown,
+    aiValue: ['Name'] as unknown,
     badMessage: 'tabs array required',
     wrongTyped: [
       null,
@@ -704,6 +704,31 @@ describe('POST /api/ai/describe-group', () => {
   it('passes the empty-answer error through with the balance', async () => {
     mockRunAiTask.mockRejectedValue(new AiRouteError(502, 'ai_failed', {}, 40))
     const res = await describeGroupPOST(req(url, { groupName: 'Work', tabs: TABS }))
+    expect(res.status).toBe(502)
+    expect(await res.json()).toEqual({ error: 'ai_failed' })
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe('40')
+  })
+})
+
+describe('POST /api/ai/name-group', () => {
+  const url = 'http://localhost/api/ai/name-group'
+
+  it.each([
+    [['Dev Tools', 'Docs', 'Reading List']],
+    [['Dev Tools', 'Docs']],
+    [['Only One']],
+  ])('answers { names, name } with name === names[0] for %j', async (names) => {
+    aiReturns(names)
+    const res = await nameGroupPOST(req(url, { tabs: TABS }))
+    expect(res.status).toBe(200)
+    const body = await res.json()
+    expect(body).toStrictEqual({ names, name: names[0] })
+    expect(body.name).toBe(body.names[0])
+  })
+
+  it('passes the no-usable-name error through with the balance', async () => {
+    mockRunAiTask.mockRejectedValue(new AiRouteError(502, 'ai_failed', {}, 40))
+    const res = await nameGroupPOST(req(url, { tabs: TABS }))
     expect(res.status).toBe(502)
     expect(await res.json()).toEqual({ error: 'ai_failed' })
     expect(res.headers.get('X-AI-Credits-Remaining')).toBe('40')

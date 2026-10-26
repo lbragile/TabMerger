@@ -8,6 +8,7 @@ import { describe, it, expect, vi } from 'vitest'
 import {
   AI_MAX_GROUP_DESCRIPTION_LENGTH,
   AI_MODELS,
+  AI_NAME_GROUP_SUGGESTIONS,
   AI_MODEL_IDS,
   DEFAULT_GROUP_COLOR,
   PRESET_COLORS,
@@ -112,24 +113,89 @@ describe('groupTabsTask', () => {
 })
 
 describe('nameGroupTask', () => {
-  const parse = (name: unknown) => nameGroupTask(TABS).parse({ name })
+  const parse = (names: unknown) => nameGroupTask(TABS).parse({ names })
+  const parseError = (names: unknown) => {
+    try {
+      parse(names)
+    } catch (err) {
+      return err
+    }
+    return null
+  }
 
-  it('returns the cleaned name', () => {
-    expect(parse('  Research Tabs  ')).toBe('Research Tabs')
+  it('sends the tabs as data and asks for a strict { names: string[] } object', () => {
+    const task = nameGroupTask(TABS)
+    expect(task.action).toBe('nameGroup')
+    expect(task.data).toStrictEqual({ tabs: [{ title: 'React docs', url: 'https://react.dev' }] })
+    expect(task.schema).toStrictEqual({
+      type: 'object',
+      properties: {
+        names: { type: 'array', description: 'Exactly 3 different names, best first.', items: { type: 'string' } },
+      },
+      required: ['names'],
+      additionalProperties: false,
+    })
+    // Claude's structured outputs reject maxItems and minItems above 1.
+    expect(JSON.stringify(task.schema)).not.toMatch(/maxItems|minItems/)
+    expect(task.answerTokens).toBe(150)
   })
 
-  it('flattens a multi-line answer and cuts it to 30 characters', () => {
-    const result = parse(`Research\nTabs ${'x'.repeat(500)}`)
+  it('asks for 3 names that differ in angle, with a constant system prompt', () => {
+    const { system } = nameGroupTask(TABS)
+    expect(system).toContain(`Suggest ${AI_NAME_GROUP_SUGGESTIONS} different names, best first`)
+    expect(system).toContain('differ in angle')
+    expect(system).toContain('2 to 4 words in Title Case, at most 30 characters, without quotes')
+    expect(nameGroupTask([{ title: 'Mail', url: 'https://mail.example/' }]).system).toBe(system)
+    expect(system).not.toContain('React docs')
+  })
+
+  it('returns the cleaned names in the order the model gave them', () => {
+    expect(parse(['  Research Tabs  ', 'React Docs', 'Learning'])).toEqual(['Research Tabs', 'React Docs', 'Learning'])
+  })
+
+  it('flattens a multi-line answer and cuts each name to 30 characters', () => {
+    const [result] = parse([`Research${String.fromCharCode(10)}Tabs ${'x'.repeat(500)}`])
     expect(result.startsWith('Research Tabs x')).toBe(true)
     expect(result.length).toBeLessThanOrEqual(AI_MAX_RENAME_LENGTH)
   })
 
   it('strips surrounding quotes', () => {
-    expect(parse('"Dev Tools"')).toBe('Dev Tools')
+    expect(parse(['"Dev Tools"', `${String.fromCharCode(0x201c)}Reading List${String.fromCharCode(0x201d)}`, "'Docs'"])).toEqual(['Dev Tools', 'Reading List', 'Docs'])
   })
 
-  it('returns an empty name for a malformed answer', () => {
-    expect(parse(42)).toBe('')
+  it('drops case-insensitive duplicates after cleaning, keeping the first', () => {
+    expect(parse(['Dev Tools', 'dev tools', '"DEV TOOLS"', ' Dev  Tools ', 'Docs'])).toEqual(['Dev Tools', 'Docs'])
+  })
+
+  it('drops empty names and non-strings', () => {
+    expect(parse(['', '   ', '""', 42, null, { name: 'X' }, 'Docs'])).toEqual(['Docs'])
+  })
+
+  it('keeps at most 3 names', () => {
+    expect(parse(['One', 'Two', 'Three', 'Four', 'Five'])).toEqual(['One', 'Two', 'Three'])
+    expect(AI_NAME_GROUP_SUGGESTIONS).toBe(3)
+  })
+
+  it('counts only kept names toward the 3, so a duplicate does not crowd out a later name', () => {
+    expect(parse(['One', 'one', '', 'Two', 'Three', 'Four'])).toEqual(['One', 'Two', 'Three'])
+  })
+
+  it('accepts fewer than 3 names', () => {
+    expect(parse(['Only One'])).toEqual(['Only One'])
+  })
+
+  it.each([
+    ['all empty', ['', '  ', '""']],
+    ['an empty list', []],
+    ['not a list', 'Dev Tools'],
+    ['no strings', [1, null]],
+  ])('fails with ai_failed on %s', (_label, names) => {
+    expect(parseError(names)).toMatchObject({ status: 502, code: 'ai_failed' })
+    expect(parseError(names)).toBeInstanceOf(AiRouteError)
+  })
+
+  it('fails with ai_failed when the answer is not an object', () => {
+    expect(() => nameGroupTask(TABS).parse(null)).toThrow(AiRouteError)
   })
 })
 
@@ -419,10 +485,18 @@ describe('runAiTask response handling (unmetered)', () => {
       usage,
       content: [
         { type: 'thinking', thinking: '' },
-        { type: 'text', text: '{"name":"Dev Tools"}' },
+        { type: 'text', text: '{"names":["Dev Tools","React Docs","Learning"]}' },
       ],
     })
-    expect(await runAiTask(nameGroupTask(TABS), ctx(client))).toEqual({ result: 'Dev Tools', remaining: null })
+    expect(await runAiTask(nameGroupTask(TABS), ctx(client))).toEqual({
+      result: ['Dev Tools', 'React Docs', 'Learning'],
+      remaining: null,
+    })
+  })
+
+  it('fails with ai_failed when name-group gets only empty names', async () => {
+    const client = clientReturning({ stop_reason: 'end_turn', usage, content: [{ type: 'text', text: '{"names":["","  "]}' }] })
+    await expect(runAiTask(nameGroupTask(TABS), ctx(client))).rejects.toMatchObject({ status: 502, code: 'ai_failed', remaining: null })
   })
 
   it('fails with ai_failed on output that is not JSON', async () => {
@@ -445,7 +519,7 @@ describe('runAiTask response handling (unmetered)', () => {
     const client = clientReturning({ stop_reason: 'end_turn', usage, content: [{ type: 'text', text: '{}' }] })
     const task = {
       ...nameGroupTask(TABS),
-      parse: (): string => {
+      parse: (): string[] => {
         throw new TypeError('bad')
       },
     }
@@ -463,7 +537,7 @@ describe('runAiTask response handling (unmetered)', () => {
   })
 
   it('does not count tokens or meter in BYOK mode', async () => {
-    const client = clientReturning({ stop_reason: 'end_turn', usage, content: [{ type: 'text', text: '{"name":"X"}' }] })
+    const client = clientReturning({ stop_reason: 'end_turn', usage, content: [{ type: 'text', text: '{"names":["X"]}' }] })
     await runAiTask(nameGroupTask(TABS), ctx(client))
     expect(client.messages.countTokens).not.toHaveBeenCalled()
   })

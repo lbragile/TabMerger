@@ -9,6 +9,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   AI_ERROR_CODES,
   AI_MAX_GROUP_DESCRIPTION_LENGTH,
+  AI_NAME_GROUP_SUGGESTIONS,
   AI_SUGGESTION_KINDS,
   PRESET_COLORS,
   aiCallCredits,
@@ -265,9 +266,11 @@ export function groupTabsTask(tabs: Tab[]): AiTask<TabGroup[]> {
 
 const NAME_GROUP_SYSTEM = [
   'You name a group of browser tabs.',
-  'Reply with a name of 2 to 4 words in Title Case, at most 30 characters, without quotes, that',
-  'says what the tabs have in common. Examples: "Shopping", "Dev Tools", "Research",',
-  '"Trip To Japan".',
+  `Suggest ${AI_NAME_GROUP_SUGGESTIONS} different names, best first. Make them differ in angle, not`,
+  'just in wording: for example one about the topic, one about what the tabs are for, and one',
+  'about the main site.',
+  'Each name has 2 to 4 words in Title Case, at most 30 characters, without quotes, and says what',
+  'the tabs have in common. Examples: "Shopping", "Dev Tools", "Research", "Trip To Japan".',
 ].join(' ')
 
 /** Strips the quotes a model sometimes wraps a name in. */
@@ -275,22 +278,59 @@ function unquote(text: string): string {
   return text.replace(/^["'“‘]+|["'”’]+$/g, '').trim()
 }
 
-/** name-group: a 2–4 word name of at most 30 characters. */
-export function nameGroupTask(tabs: PromptTab[]): AiTask<string> {
+/**
+ * The model's name suggestions, cleaned: each one unquoted, cleaned of invisible and control
+ * characters and cut to {@link AI_MAX_RENAME_LENGTH}. Non-strings, empty names and names equal
+ * to an earlier one (ignoring case and runs of spaces) are dropped, and at most
+ * {@link AI_NAME_GROUP_SUGGESTIONS} are kept, in the model's order.
+ */
+export function cleanGroupNames(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return []
+  const names: string[] = []
+  const seen = new Set<string>()
+  for (const entry of raw) {
+    if (names.length >= AI_NAME_GROUP_SUGGESTIONS) break
+    if (typeof entry !== 'string') continue
+    const name = cleanModelText(unquote(cleanModelText(entry, AI_MAX_GROUP_NAME_LENGTH)), AI_MAX_RENAME_LENGTH)
+    // Case and runs of spaces don't make a name different.
+    const key = name.toLowerCase().replace(/\s+/g, ' ')
+    if (!name || seen.has(key)) continue
+    seen.add(key)
+    names.push(name)
+  }
+  return names
+}
+
+/**
+ * name-group: {@link AI_NAME_GROUP_SUGGESTIONS} different 2–4 word names of at most 30 characters,
+ * best first. The answer keeps 1 to 3 distinct names ({@link cleanGroupNames}); with none left it
+ * is an error (`ai_failed`), charged like any other unusable answer.
+ */
+export function nameGroupTask(tabs: PromptTab[]): AiTask<string[]> {
   return {
     action: 'nameGroup',
     system: NAME_GROUP_SYSTEM,
     data: { tabs: tabs.map((t) => ({ title: t.title, url: t.url })) },
+    // The count lives in the prompt and the description: Claude's structured outputs reject
+    // `maxItems` and any `minItems` above 1, and the schema is the same for every provider.
     schema: {
       type: 'object',
-      properties: { name: { type: 'string' } },
-      required: ['name'],
+      properties: {
+        names: {
+          type: 'array',
+          description: `Exactly ${AI_NAME_GROUP_SUGGESTIONS} different names, best first.`,
+          items: { type: 'string' },
+        },
+      },
+      required: ['names'],
       additionalProperties: false,
     },
-    answerTokens: 100,
+    // Three names of about 8 tokens each plus the JSON; room for a model that writes more.
+    answerTokens: 150,
     parse: (output) => {
-      const name = isRecord(output) && typeof output.name === 'string' ? output.name : ''
-      return cleanModelText(unquote(cleanModelText(name, AI_MAX_GROUP_NAME_LENGTH)), AI_MAX_RENAME_LENGTH)
+      const names = cleanGroupNames(isRecord(output) ? output.names : undefined)
+      if (names.length === 0) throw new AiRouteError(502, AI_ERROR_CODES.failed)
+      return names
     },
   }
 }

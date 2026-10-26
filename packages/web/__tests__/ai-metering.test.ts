@@ -85,6 +85,10 @@ function req(url: string, body: unknown, headers: Record<string, string> = {}) {
 const nameReq = (body: unknown = { tabs: TABS, model: 'claude-opus-5-5' }, headers: Record<string, string> = {}) =>
   req('http://localhost/api/ai/name-group', body, headers)
 
+/** The model's name-group answer, and the route's response to it (`name` is `names[0]`). */
+const NAME_ANSWER = { names: ['React Learning', 'React Docs', 'Frontend Reading'] }
+const NAME_RESPONSE = { ...NAME_ANSWER, name: 'React Learning' }
+
 /** A model response carrying `json` as its text, with the given usage. */
 function message(json: unknown, usage: Record<string, unknown> = { input_tokens: 400, output_tokens: 20 }, stop_reason = 'end_turn') {
   return {
@@ -119,7 +123,7 @@ beforeEach(() => {
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
   withSubscription(MANAGED)
   sdk.countTokens.mockResolvedValue({ input_tokens: 400 })
-  sdk.create.mockResolvedValue(message({ name: 'React Learning' }))
+  sdk.create.mockResolvedValue(message(NAME_ANSWER))
   stubRpc({ allowed: true, remaining: 2000, cap: 2500 })
 })
 
@@ -135,7 +139,7 @@ describe('managed metering', () => {
     stubRpc({ allowed: true, remaining: 2000, cap: 2500 }, 601)
     const res = await nameGroupPOST(nameReq())
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ name: 'React Learning' })
+    expect(await res.json()).toEqual(NAME_RESPONSE)
 
     const maxTokens = sdk.create.mock.calls[0][0].max_tokens
     // Worst case: all 400 counted tokens priced as 5-minute cache writes.
@@ -154,7 +158,7 @@ describe('managed metering', () => {
     sdk.countTokens.mockResolvedValue({ input_tokens: 20_000 })
     sdk.create.mockResolvedValue(
       message(
-        { name: 'React Learning' },
+        NAME_ANSWER,
         {
           input_tokens: 1_000,
           cache_creation_input_tokens: 0,
@@ -181,7 +185,7 @@ describe('managed metering', () => {
     sdk.countTokens.mockResolvedValue({ input_tokens: 20_000 })
     sdk.create.mockResolvedValue(
       message(
-        { name: 'React Learning' },
+        NAME_ANSWER,
         {
           input_tokens: 1_000,
           cache_creation_input_tokens: 19_000,
@@ -209,7 +213,7 @@ describe('managed metering', () => {
     sdk.countTokens.mockResolvedValue({ input_tokens: 20_000 })
     sdk.create.mockResolvedValue(
       message(
-        { name: 'React Learning' },
+        NAME_ANSWER,
         { input_tokens: 1_000, cache_creation_input_tokens: 19_000, cache_read_input_tokens: 0, output_tokens: 20 }
       )
     )
@@ -226,7 +230,7 @@ describe('managed metering', () => {
     sdk.countTokens.mockResolvedValue({ input_tokens: 1_000 })
     sdk.create.mockResolvedValue(
       message(
-        { name: 'React Learning' },
+        NAME_ANSWER,
         {
           input_tokens: 1_000,
           cache_creation_input_tokens: 50_000,
@@ -253,7 +257,7 @@ describe('managed metering', () => {
 
   it('logs a settle above the reservation when the real input outgrows the count', async () => {
     sdk.countTokens.mockResolvedValue({ input_tokens: 400 })
-    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: 40_000, output_tokens: 20 }))
+    sdk.create.mockResolvedValue(message(NAME_ANSWER, { input_tokens: 40_000, output_tokens: 20 }))
     await nameGroupPOST(nameReq())
     expect(rpcCalls('ai_settle_credits')[0].p_delta).toBeGreaterThan(0)
     expect(consoleError).toHaveBeenCalledWith('AI call cost more than its reservation; settling the difference:', {
@@ -268,10 +272,10 @@ describe('managed metering', () => {
   })
 
   it('keeps the reservation when the usage is not a finite number (through runAiTask)', async () => {
-    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: Number.NaN, output_tokens: 20 }))
+    sdk.create.mockResolvedValue(message(NAME_ANSWER, { input_tokens: Number.NaN, output_tokens: 20 }))
     const res = await nameGroupPOST(nameReq())
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ name: 'React Learning' })
+    expect(await res.json()).toEqual(NAME_RESPONSE)
     expect(rpcCalls('ai_reserve_credits')).toHaveLength(1)
     expect(rpcCalls('ai_settle_credits')).toEqual([])
     expect(consoleError).toHaveBeenCalledWith(
@@ -295,7 +299,7 @@ describe('managed metering', () => {
     ['a non-standard service_tier', { service_tier: 'priority' }, { inferenceGeo: null, serviceTier: 'priority' }],
   ])('warns once when the response reports %s', async (_label, extra, logged) => {
     const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: 400, output_tokens: 20, ...extra }))
+    sdk.create.mockResolvedValue(message(NAME_ANSWER, { input_tokens: 400, output_tokens: 20, ...extra }))
     await nameGroupPOST(nameReq())
     expect(consoleWarn).toHaveBeenCalledTimes(1)
     expect(consoleWarn).toHaveBeenCalledWith('AI usage is priced as global standard, but the response reports:', {
@@ -309,12 +313,12 @@ describe('managed metering', () => {
     const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     sdk.create.mockResolvedValue(
       message(
-        { name: 'React Learning' },
+        NAME_ANSWER,
         { input_tokens: 400, output_tokens: 20, inference_geo: 'global', service_tier: 'standard' }
       )
     )
     await nameGroupPOST(nameReq())
-    sdk.create.mockResolvedValue(message({ name: 'React Learning' }, { input_tokens: 400, output_tokens: 20, inference_geo: null }))
+    sdk.create.mockResolvedValue(message(NAME_ANSWER, { input_tokens: 400, output_tokens: 20, inference_geo: null }))
     await nameGroupPOST(nameReq())
     expect(consoleWarn).not.toHaveBeenCalled()
     consoleWarn.mockRestore()
@@ -372,7 +376,7 @@ describe('managed metering', () => {
     vi.setSystemTime(new Date('2026-10-31T23:59:59.900Z'))
     sdk.create.mockImplementation(async () => {
       vi.setSystemTime(new Date('2026-11-01T00:00:02.000Z'))
-      return message({ name: 'React Learning' })
+      return message(NAME_ANSWER)
     })
 
     expect((await nameGroupPOST(nameReq())).status).toBe(200)

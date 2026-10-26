@@ -47,7 +47,7 @@ Request order in every metered route:
 | Route | Body | Response | Credits | Model | Extension caller |
 | --- | --- | --- | --- | --- | --- |
 | `POST /api/ai/group-tabs` | `{ tabs: {id,title,url}[] }` | `{ groups: {name,color,tabIds}[] }` | 8 | Haiku 4.5 | Header → AI actions → Auto-group (`useAutoGroup`) |
-| `POST /api/ai/name-group` | `{ tabs: {id,title,url}[] }` | `{ name }` | 1 | Haiku 4.5 | Group context menu → AI rename (`useNameGroup`) |
+| `POST /api/ai/name-group` | `{ tabs: {id,title,url}[] }` | `{ names, name }` (`AINameGroupResponse`) | 1 | Haiku 4.5 | Group context menu → AI rename (`useNameGroup`) |
 | `POST /api/ai/tab-summary` | `{ tab: {id:number,title,url} }` | `{ summary }` | 1 | Haiku 4.5 | Tab hover preview (`useTabSummary`) — see gaps |
 | `POST /api/ai/suggest-sessions` | `{ groups: {id,name,tabs}[] }` | `{ message, staleGroupIds, suggestion }` | 5 | Haiku 4.5 | `AIGroupSuggestion` banner, automatic, once per day (`useSuggestSessions`) |
 | `POST /api/ai/organize` | `{ groups?: {id,name,tabs,permanent?}[], model? }` | `{ actions: OrganizeAction[] }` | metered like the others | auto: the mid model | Header → AI actions → Organize (`useOrganizeTabs`), reviewed and applied in the popup |
@@ -69,6 +69,15 @@ Notes:
   characters; the extension still checks the ids against its own groups before applying. Organize
   used to be a Workflow DevKit run with a web-dashboard approval page; that path is gone (see
   [Known gaps](#known-gaps) for what is left of it).
+- **Name group** answers `{ names, name }`. `names` holds 1 to `AI_NAME_GROUP_SUGGESTIONS` (3)
+  distinct suggestions, best first; `name` is always `names[0]`, kept for extension builds that
+  read only `name`. The prompt asks for 3 names that differ in angle (topic, purpose, site), each
+  2-4 words in Title Case, at most 30 characters, without quotes. The schema is `{ names: string[] }`
+  with the count in the prompt and the field description only, because Claude's structured
+  outputs reject `maxItems` and any `minItems` above 1. `cleanGroupNames` unquotes and cleans
+  each name, drops empties and case-insensitive duplicates, and keeps at most 3; with none left
+  the answer is 502 `ai_failed` (still charged). The credit estimate assumes about 40 output
+  tokens.
 - **Describe group** writes 1-3 plain sentences about what a saved group holds (topic, purpose,
   notable sites), at most `AI_MAX_GROUP_DESCRIPTION_LENGTH` (300) characters, which the extension
   puts in the group's note. The body is validated by `parseDescribeGroupBody` (`groupName` cleaned
@@ -233,7 +242,8 @@ checks, body validation and prompt cleaning, credit reservation and settlement, 
 parser. Organize goes through the same `runAiTask`, so its `{ actions }` answer is the mock's.
 
 - **Answers** are built from the request, deterministically: group-tabs groups by site, name-group
-  uses the main site or the commonest title words, tab-summary starts with `[Mock summary]`,
+  gives 3 distinct names (the main site plus the top title word, the top title words, and
+  "<Site> Research"), tab-summary starts with `[Mock summary]`,
   describe-group starts with `[Mock description]` and names the main site, the commonest title
   words and how many other sites there are,
   suggest-sessions suggests merging groups on the same site (or archiving one-tab groups, or saving
@@ -288,7 +298,7 @@ Open the popup, right-click → Inspect → Network, then:
 | Feature | Trigger | Expect |
 | --- | --- | --- |
 | Auto-group | Header → AI actions → Auto-group | `POST /api/ai/group-tabs` 200, groups created |
-| AI rename | Group context menu → AI rename | `POST /api/ai/name-group` 200, title updates |
+| AI rename | Group context menu → AI rename | `POST /api/ai/name-group` 200 `{ names, name }`, up to 3 suggestions |
 | Suggestions | Automatic on popup open, once/day | `POST /api/ai/suggest-sessions` 200, banner |
 | Organize | Header → AI actions → Organize | `POST /api/ai/organize` 200 `{ actions }`, proposal shown in the popup for review |
 | Describe group | Describe group action on a saved group | `POST /api/ai/describe-group` 200 `{ description }`, the group's note is filled |

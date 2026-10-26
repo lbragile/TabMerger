@@ -281,6 +281,12 @@ export type AiAction = (typeof AI_ACTIONS)[number];
 export const AI_MAX_GROUP_DESCRIPTION_LENGTH = 300;
 
 /**
+ * How many names `POST /api/ai/name-group` asks the model for. The answer's `names` holds 1 to
+ * this many distinct suggestions, best first (fewer when some were empty or duplicates).
+ */
+export const AI_NAME_GROUP_SUGGESTIONS = 3;
+
+/**
  * What the suggest-sessions banner offers for the groups a suggestion names: `merge` folds them
  * into the first one, `archive` archives them. A merge needs at least two groups.
  */
@@ -474,7 +480,8 @@ const ESTIMATE_PROMPT_OVERHEAD_TOKENS = 300;
 function estimatedOutputTokens(action: AiAction, tabs: number): number {
   switch (action) {
     case 'nameGroup':
-      return 15;
+      // AI_NAME_GROUP_SUGGESTIONS (3) names of up to 30 characters, about 8 tokens each, plus the JSON.
+      return 40;
     case 'tabSummary':
       return 40;
     case 'groupTabs':

@@ -129,11 +129,11 @@ afterEach(() => {
 
 describe('own OpenAI key', () => {
   it('calls the Responses API with strict structured output, the lowest effort and the key in the header', async () => {
-    fetchMock.mockResolvedValue(openAiReply({ name: 'React Learning' }))
+    fetchMock.mockResolvedValue(openAiReply({ names: ['React Learning', 'React Docs', 'Frontend Reading'] }))
     const res = await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS }, OPENAI_KEY))
 
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ name: 'React Learning' })
+    expect(await res.json()).toEqual({ names: ['React Learning', 'React Docs', 'Frontend Reading'], name: 'React Learning' })
     expect(res.headers.get('X-AI-Credits-Remaining')).toBeNull()
 
     const { url, headers, body } = call()
@@ -164,7 +164,7 @@ describe('own OpenAI key', () => {
     ['gpt-6.1-sol', 'low'],
     ['gpt-6-astra', 'low'],
   ])('%s runs at reasoning effort %s with thinking headroom', async (model, effort) => {
-    fetchMock.mockResolvedValue(openAiReply({ name: 'X' }))
+    fetchMock.mockResolvedValue(openAiReply({ names: ['X'] }))
     await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS, model }, OPENAI_KEY))
     expect(call().body.reasoning).toEqual({ effort })
     expect(call().body.max_output_tokens).toBeGreaterThan(2000)
@@ -257,7 +257,7 @@ describe('own Google key', () => {
   })
 
   it.each(['gemini-3.8-flash', 'gemini-4-argon'])('%s runs at thinking level low', async (model) => {
-    fetchMock.mockResolvedValue(googleReply({ name: 'X' }))
+    fetchMock.mockResolvedValue(googleReply({ names: ['X'] }))
     await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS, model }, GOOGLE_KEY))
     expect(call().body.generationConfig.thinkingConfig).toEqual({ thinkingLevel: 'low' })
   })
@@ -406,7 +406,7 @@ describe('per-option AI flags', () => {
   })
 
   it('own-key only: serves an own-key subscriber', async () => {
-    fetchMock.mockResolvedValue(openAiReply({ name: 'X' }))
+    fetchMock.mockResolvedValue(openAiReply({ names: ['X'] }))
     expect((await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS }, OPENAI_KEY))).status).toBe(200)
   })
 
@@ -424,7 +424,7 @@ describe('per-option AI flags', () => {
   it('managed on: serves both options (managed implies own key)', async () => {
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'false')
-    fetchMock.mockResolvedValue(openAiReply({ name: 'X' }))
+    fetchMock.mockResolvedValue(openAiReply({ names: ['X'] }))
     expect((await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS }, OPENAI_KEY))).status).toBe(200)
 
     withSubscription(MANAGED)
@@ -432,7 +432,7 @@ describe('per-option AI flags', () => {
     mockRpc.mockImplementation(async (fn: string) =>
       fn === 'ai_reserve_credits' ? { data: [{ allowed: true, remaining: 2000, cap: 2500 }], error: null } : { data: 600, error: null }
     )
-    sdk.create.mockResolvedValue({ content: [{ type: 'text', text: '{"name":"Y"}' }], usage: { input_tokens: 10, output_tokens: 2 }, stop_reason: 'end_turn' })
+    sdk.create.mockResolvedValue({ content: [{ type: 'text', text: '{"names":["Y"]}' }], usage: { input_tokens: 10, output_tokens: 2 }, stop_reason: 'end_turn' })
     const res = await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS }, OPENAI_KEY))
     expect(res.status).toBe(200)
     // Managed always runs on TabMerger's Anthropic key; a sent key is ignored.

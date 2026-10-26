@@ -85,6 +85,9 @@ const TABS = [
   { id: 4, title: 'Hooks pull request review', url: 'https://github.com/facebook/react/pull/1' },
 ]
 
+/** The route's mock answer over {@link TABS}. */
+const MOCK_NAMES_RESPONSE = { names: ['GitHub Pull', 'Pull Tabmerger', 'GitHub Research'], name: 'GitHub Pull' }
+
 function builder(result: unknown) {
   const b: Record<string, unknown> = {}
   for (const m of ['select', 'eq', 'insert', 'order']) b[m] = () => b
@@ -255,21 +258,36 @@ describe('mock answers pass through each task’s real parser', () => {
     expect(groups.map((g) => g.name)).toEqual(['Browser', 'Local Dev', 'Other'])
   })
 
-  it('name-group: the dominant site plus the top title word, at most 30 characters', () => {
-    const name = parse(nameGroupTask(TABS))
-    expect(name).toBe('GitHub Pull')
-    expect(name.length).toBeLessThanOrEqual(30)
+  it('name-group: 3 distinct names from the site, the title words and "<Site> Research"', () => {
+    const names = parse(nameGroupTask(TABS))
+    expect(names).toEqual(['GitHub Pull', 'Pull Tabmerger', 'GitHub Research'])
+    for (const name of names) expect(name.length).toBeLessThanOrEqual(30)
   })
 
-  it('name-group: the top title words when no site dominates', () => {
-    const name = parse(
+  it('name-group: the top title words first when no site dominates, gaps filled', () => {
+    const names = parse(
       nameGroupTask([
         { title: 'Flights to Tokyo', url: 'https://a.example/' },
         { title: 'Tokyo hotels', url: 'https://b.example/' },
         { title: 'Hotels near Shibuya', url: 'https://c.example/' },
       ])
     )
-    expect(name).toBe('Tokyo Hotels')
+    expect(names).toEqual(['Tokyo Hotels', 'Tokyo Research', 'Reading List'])
+  })
+
+  it('name-group: always 3 names, distinct case-insensitively, and the same for the same tabs', () => {
+    const fixtures = [
+      TABS,
+      [{ title: '', url: 'https://github.com/' }],
+      [{ title: 'Docs', url: 'about:blank' }],
+      [{ title: 'Research research', url: 'https://research.example/' }],
+    ]
+    for (const tabs of fixtures) {
+      const names = parse(nameGroupTask(tabs))
+      expect(names).toHaveLength(3)
+      expect(new Set(names.map((n) => n.toLowerCase())).size).toBe(3)
+      expect(parse(nameGroupTask(tabs))).toEqual(names)
+    }
   })
 
   it('describe-group: the main site, its top title words and how many other sites', () => {
@@ -395,7 +413,7 @@ describe('runAiTask with the mock on', () => {
     const client = { messages: { create: vi.fn(), countTokens: vi.fn() } }
     const ctx = { provider: 'anthropic', client, model: 'claude-haiku-5-5', mode: 'byok', meter: null } as unknown as AiCallContext
     const { result, remaining } = await runAiTask(nameGroupTask(TABS), ctx)
-    expect(result).toBe('GitHub Pull')
+    expect(result).toEqual(['GitHub Pull', 'Pull Tabmerger', 'GitHub Research'])
     expect(remaining).toBeNull()
     expect(client.messages.create).not.toHaveBeenCalled()
     expect(client.messages.countTokens).not.toHaveBeenCalled()
@@ -404,7 +422,7 @@ describe('runAiTask with the mock on', () => {
   it('never applies when AI_MOCK is off: the real client is called', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     const create = vi.fn().mockResolvedValue({
-      content: [{ type: 'text', text: '{"name":"Real Name"}' }],
+      content: [{ type: 'text', text: '{"names":["Real Name"]}' }],
       usage: { input_tokens: 1, output_tokens: 1 },
       stop_reason: 'end_turn',
     })
@@ -416,7 +434,7 @@ describe('runAiTask with the mock on', () => {
       meter: null,
     } as unknown as AiCallContext
     const { result } = await runAiTask(nameGroupTask(TABS), ctx)
-    expect(result).toBe('Real Name')
+    expect(result).toEqual(['Real Name'])
     expect(create).toHaveBeenCalledTimes(1)
   })
 })
@@ -515,7 +533,7 @@ describe('managed routes with the mock on', () => {
     const model = 'claude-opus-5-5'
     const res = await nameGroupPOST(req('name-group', { tabs: TABS, model }))
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ name: 'GitHub Pull' })
+    expect(await res.json()).toEqual(MOCK_NAMES_RESPONSE)
     expect(res.headers.get(AI_MOCK_HEADER)).toBe('1')
     expect(res.headers.get(AI_CREDITS_REMAINING_HEADER)).toBe('2400')
     expect(sdk.create).not.toHaveBeenCalled()
@@ -625,7 +643,7 @@ describe('own-key routes with the mock on', () => {
   ])('%s key: mock answer, no credits, no provider call', async (_label, key) => {
     const res = await nameGroupPOST(req('name-group', { tabs: TABS }, { 'X-AI-Key': key }))
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ name: 'GitHub Pull' })
+    expect(await res.json()).toEqual(MOCK_NAMES_RESPONSE)
     expect(res.headers.get(AI_MOCK_HEADER)).toBe('1')
     expect(res.headers.get(AI_CREDITS_REMAINING_HEADER)).toBeNull()
     expect(mockRpc).not.toHaveBeenCalled()
@@ -716,13 +734,13 @@ describe('mock off', () => {
     for (const [name, value] of Object.entries(env)) vi.stubEnv(name, value)
     sdk.countTokens.mockReset().mockResolvedValue({ input_tokens: 400 })
     sdk.create.mockReset().mockResolvedValue({
-      content: [{ type: 'text', text: '{"name":"Real Name"}' }],
+      content: [{ type: 'text', text: '{"names":["Real Name"]}' }],
       usage: { input_tokens: 400, output_tokens: 5, cache_creation_input_tokens: null, cache_read_input_tokens: null },
       stop_reason: 'end_turn',
     })
     const res = await nameGroupPOST(req('name-group', { tabs: TABS }))
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ name: 'Real Name' })
+    expect(await res.json()).toEqual({ names: ['Real Name'], name: 'Real Name' })
     expect(sdk.countTokens).toHaveBeenCalledTimes(1)
     expect(sdk.create).toHaveBeenCalledTimes(1)
     expect(res.headers.get(AI_MOCK_HEADER)).toBeNull()

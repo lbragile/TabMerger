@@ -3,7 +3,13 @@ import type {
   MessageCountTokensParams,
   MessageCreateParamsNonStreaming,
 } from '@anthropic-ai/sdk/resources/messages'
-import { PRESET_COLORS, type AiMode, type AiProvider, type AiSuggestionKind } from '@tabmerger/shared'
+import {
+  AI_NAME_GROUP_SUGGESTIONS,
+  PRESET_COLORS,
+  type AiMode,
+  type AiProvider,
+  type AiSuggestionKind,
+} from '@tabmerger/shared'
 import { ProviderHttpError, type ProviderReply } from '@/lib/ai-providers'
 import type { AiTask } from '@/lib/ai'
 
@@ -479,23 +485,43 @@ const MOCK_NAME_MAX = 30
 const MAX_MOCK_SUGGESTION = 100
 
 /**
- * name-group: the site most tabs are on when it holds at least half of them, plus the top title
- * word ("GitHub Pull"); otherwise the two top title words ("React Hooks").
+ * name-group: {@link AI_NAME_GROUP_SUGGESTIONS} distinct names, from different angles:
+ * 1. the site most tabs are on when it holds at least half of them, plus the top title word
+ *    ("GitHub Pull"); otherwise the two top title words ("Tokyo Hotels");
+ * 2. the two top title words without the site ("Pull Tabmerger");
+ * 3. "<Site> Research" (or "<Top Word> Research" when no site holds half the tabs).
+ * Duplicates are skipped and "Reading List" / "Saved Tabs" / "Mixed Tabs" fill any gap.
  */
 function mockNameGroup(data: Record<string, unknown>) {
   const tabs = tabsOf(data.tabs)
   const site = dominantSite(tabs)
   const siteCount = site ? tabs.filter((t) => mockSiteOf(t.url).key === site.key).length : 0
+  const mainSite = site && site.key !== OTHER_SITE.key && siteCount * 2 >= tabs.length ? site : null
 
-  let name: string
-  if (site && site.key !== OTHER_SITE.key && siteCount * 2 >= tabs.length) {
-    const [word] = topTitleWords(tabs, site.label.toLowerCase())
-    name = `${site.label} ${word ? titleCase(word) : 'Tabs'}`
+  const allWords = topTitleWords(tabs, '').slice(0, 2)
+  const byWords =
+    allWords.length === 2 ? titleCase(allWords.join(' ')) : allWords.length === 1 ? `${titleCase(allWords[0])} Tabs` : 'Mixed Tabs'
+
+  const candidates: string[] = []
+  if (mainSite) {
+    const siteWords = topTitleWords(tabs, mainSite.label.toLowerCase()).slice(0, 2)
+    candidates.push(`${mainSite.label} ${siteWords[0] ? titleCase(siteWords[0]) : 'Tabs'}`)
+    if (siteWords.length === 2) candidates.push(titleCase(siteWords.join(' ')))
+    candidates.push(`${mainSite.label} Research`, mainSite.label)
   } else {
-    const words = topTitleWords(tabs, '').slice(0, 2)
-    name = words.length === 2 ? titleCase(words.join(' ')) : words.length === 1 ? `${titleCase(words[0])} Tabs` : 'Mixed Tabs'
+    candidates.push(byWords)
+    if (allWords[0]) candidates.push(`${titleCase(allWords[0])} Research`)
   }
-  return { name: fitName(name, MOCK_NAME_MAX) }
+  candidates.push('Reading List', 'Saved Tabs', 'Mixed Tabs')
+
+  const names: string[] = []
+  for (const candidate of candidates) {
+    const name = fitName(candidate, MOCK_NAME_MAX)
+    if (names.some((n) => n.toLowerCase() === name.toLowerCase())) continue
+    names.push(name)
+    if (names.length === AI_NAME_GROUP_SUGGESTIONS) break
+  }
+  return { names }
 }
 
 function cut(text: string, max: number): string {

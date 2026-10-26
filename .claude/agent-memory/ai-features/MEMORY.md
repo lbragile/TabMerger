@@ -11,3 +11,4 @@
 - [Prompt caching](learnings_prompt_caching.md) — Claude system-block breakpoint, OpenAI caching off (1.25x write on data turn), Gemini implicit; cache pricing in metering
 - [Describe group route](learnings_describe_group.md) — contract, parser errors in runAiTask stay charged, word-boundary cap, new AiAction needs extension i18n key
 - [Dev AI mock](learnings_ai_dev_mock.md) — AI_MOCK=true seams (count+create, own-key fetch, verify), gate, over_quota via inflated count, test gotchas
+- [Name-group suggestions](learnings_name_group_suggestions.md) — `{ names, name }`; no maxItems in schema; cleanGroupNames dedupe; estimate 40; mock names

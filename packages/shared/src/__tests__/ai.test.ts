@@ -8,6 +8,7 @@ import {
   AI_ESTIMATE_EXAMPLES,
   AI_MODEL_IDS,
   AI_MODELS,
+  AI_NAME_GROUP_SUGGESTIONS,
   AI_PROVIDERS,
   AUTO_AI_MODEL,
   AUTO_AI_MODELS,
@@ -357,6 +358,18 @@ describe('estimates for every action', () => {
       expect(estimateAiCostUsd(model, 'describeGroup', 10)).toBeGreaterThan(estimateAiCostUsd(model, 'nameGroup', 10));
       expect(estimateAiCostUsd(model, 'describeGroup', 10)).toBeLessThan(estimateAiCostUsd(model, 'organize', 10));
     }
+  });
+
+  it('estimates name-group for 3 suggestions: about 40 output tokens, below describe-group', () => {
+    expect(AI_NAME_GROUP_SUGGESTIONS).toBe(3);
+    for (const model of AI_MODEL_IDS) {
+      // 10 tabs: 300 prompt tokens + 60 per tab in, 40 answer tokens (plus typical thinking) out.
+      const output = 40 + AI_MODELS[model].typicalThinkingTokens;
+      expect(estimateAiCostUsd(model, 'nameGroup', 10)).toBeCloseTo(aiCallCostUsd(model, 900, output), 12);
+      expect(estimateAiCredits(model, 'nameGroup', 10)).toBe(aiCallCredits(model, 900, output));
+      expect(estimateAiCostUsd(model, 'nameGroup', 10)).toBeLessThan(estimateAiCostUsd(model, 'describeGroup', 10));
+    }
+    expect(estimateAiCredits('claude-haiku-5-5', 'nameGroup', 10)).toBe(1);
   });
 
   it('grows the describe-group estimate with the tab count', () => {
