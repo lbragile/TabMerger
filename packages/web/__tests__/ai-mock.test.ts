@@ -330,6 +330,20 @@ describe('mock answers pass through each task’s real parser', () => {
     expect(result.rationale).toBe('Mock proposal: merges groups that share a site (GitHub) and removes 1 empty group.')
   })
 
+  it('organize: leaves mixed groups alone, even when their most common site matches (no majority)', () => {
+    const news = { id: 5, title: 'Election results', url: 'https://globalnews.ca/news/1' }
+    const chat = { id: 6, title: 'WhatsApp', url: 'https://web.whatsapp.com/' }
+    const result = parse(
+      organizeTask([
+        // Each mixed group's most common site is GitHub by a 1-tab tie, never more than half.
+        { id: 'g1', name: 'Mixed A', permanent: false, tabs: [TABS[0], TABS[2]] },
+        { id: 'g2', name: 'Mixed B', permanent: false, tabs: [TABS[3], news, chat] },
+      ])
+    )
+    expect(result.actions).toEqual([])
+    expect(result.rationale).toBe('Mock proposal: each group already holds one site, so nothing changes.')
+  })
+
   it('organize: proposes nothing when every group holds its own site', () => {
     const result = parse(organizeTask([{ id: 'g1', name: 'Docs', permanent: false, tabs: [TABS[2]] }]))
     expect(result.actions).toEqual([])

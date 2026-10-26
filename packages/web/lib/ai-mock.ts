@@ -412,6 +412,18 @@ function dominantSite(tabs: DataTab[]): Site | null {
   return best?.site ?? null
 }
 
+/**
+ * The site that holds more than half of `tabs`, or `null`. Organize merges by this, not by
+ * {@link dominantSite}: in a mixed group the most common site can be a single tab (or a tie won by
+ * the first), and merging on that would pile unrelated groups into one.
+ */
+function majoritySite(tabs: DataTab[]): Site | null {
+  const best = dominantSite(tabs)
+  if (!best) return null
+  const count = bySite(tabs).find((b) => b.site.key === best.key)?.tabs.length ?? 0
+  return count * 2 > tabs.length ? best : null
+}
+
 /** Cuts a name to `max` characters on a word boundary. */
 function fitName(name: string, max: number): string {
   const words = name.split(' ')
@@ -541,8 +553,9 @@ function mockSuggestSessions(data: Record<string, unknown>): { message: string; 
 }
 
 /**
- * organize: merges groups whose tabs are mostly on the same site into the first of them (renamed
- * after the site), and deletes empty groups. Permanent groups are never touched.
+ * organize: merges groups whose tabs are mostly (more than half) on the same site into the first of
+ * them (renamed after the site), and deletes empty groups. Mixed groups and permanent groups are
+ * never touched.
  */
 function mockOrganize(data: Record<string, unknown>) {
   const groups = (Array.isArray(data.groups) ? data.groups : [])
@@ -556,12 +569,13 @@ function mockOrganize(data: Record<string, unknown>) {
   let deleted = 0
 
   for (const g of groups) {
-    const site = dominantSite(g.tabs)
-    if (!site) {
+    if (g.tabs.length === 0) {
       actions.push({ type: 'delete', groupId: g.id })
       deleted++
       continue
     }
+    const site = majoritySite(g.tabs)
+    if (!site) continue
     const target = targets.get(site.key)
     if (!target) {
       targets.set(site.key, g)
