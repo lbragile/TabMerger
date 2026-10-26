@@ -47,6 +47,12 @@
     "aiCreated_other": "L'AI ha creato {{count}} gruppi",
     "aiCreated_many": "L'AI ha creato {{count}} gruppi",
     "aiSkipped": "Altri {{skipped}} suggeriti ma saltati: raggiunto il limite del piano gratuito.",
+    "aiAddedTo_one": "L'AI ha aggiunto schede a {{count}} gruppo esistente",
+    "aiAddedTo_many": "L'AI ha aggiunto schede a {{count}} gruppi esistenti",
+    "aiAddedTo_other": "L'AI ha aggiunto schede a {{count}} gruppi esistenti",
+    "aiAlsoAdded_one": "Aggiunte anche schede a {{count}} gruppo esistente.",
+    "aiAlsoAdded_many": "Aggiunte anche schede a {{count}} gruppi esistenti.",
+    "aiAlsoAdded_other": "Aggiunte anche schede a {{count}} gruppi esistenti.",
     "aiGroupingFailed": "Raggruppamento con AI non riuscito",
     "organizeNothing": "I tuoi gruppi sembrano già organizzati",
     "organizeFailed": "Impossibile organizzare i tuoi gruppi"

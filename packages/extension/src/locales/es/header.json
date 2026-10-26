@@ -47,6 +47,12 @@
     "aiCreated_many": "La IA creó {{count}} de grupos",
     "aiCreated_other": "La IA creó {{count}} grupos",
     "aiSkipped": "Se sugirieron {{skipped}} más pero se omitieron: se alcanzó el límite del plan gratuito.",
+    "aiAddedTo_one": "La IA añadió pestañas a {{count}} grupo existente",
+    "aiAddedTo_many": "La IA añadió pestañas a {{count}} de grupos existentes",
+    "aiAddedTo_other": "La IA añadió pestañas a {{count}} grupos existentes",
+    "aiAlsoAdded_one": "También añadió pestañas a {{count}} grupo existente.",
+    "aiAlsoAdded_many": "También añadió pestañas a {{count}} de grupos existentes.",
+    "aiAlsoAdded_other": "También añadió pestañas a {{count}} grupos existentes.",
     "aiGroupingFailed": "Falló la agrupación con IA",
     "organizeNothing": "Tus grupos ya parecen organizados",
     "organizeFailed": "No se pudieron organizar tus grupos"

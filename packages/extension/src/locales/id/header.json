@@ -43,6 +43,8 @@
     "aiNoMatchingTabs": "Tidak ditemukan tab yang cocok untuk saran AI",
     "aiCreated_other": "AI membuat {{count}} grup",
     "aiSkipped": "{{skipped}} lagi disarankan tetapi dilewati — batas paket gratis tercapai.",
+    "aiAddedTo_other": "AI menambahkan tab ke {{count}} grup yang sudah ada",
+    "aiAlsoAdded_other": "Juga menambahkan tab ke {{count}} grup yang sudah ada.",
     "aiGroupingFailed": "Pengelompokan AI gagal",
     "organizeNothing": "Grup Anda sudah terlihat rapi",
     "organizeFailed": "Tidak dapat mengatur ulang grup Anda"

@@ -52,6 +52,26 @@ describe('suggestedGroupNames', () => {
     expect(suggestedGroupNames(reply)).toEqual(['Solo'])
   })
 
+  it('reads the list from `name` when a stale server sends it there without `names`', () => {
+    expect(suggestedGroupNames({ name: ['Elections Future', 'Elections Research', 'Reading List'] })).toEqual([
+      'Elections Future',
+      'Elections Research',
+      'Reading List',
+    ])
+  })
+
+  it('a `name` array is cleaned, deduped and capped like `names`', () => {
+    expect(suggestedGroupNames({ names: [], name: [' A ', 'a', null, 'B', 'C', 'D'] })).toEqual(['A', 'B', 'C'])
+  })
+
+  it('prefers a non-empty `names` over a `name` array', () => {
+    expect(suggestedGroupNames({ names: ['X'], name: ['Y', 'Z'] })).toEqual(['X'])
+  })
+
+  it('an empty `name` array gives nothing', () => {
+    expect(suggestedGroupNames({ name: [] })).toEqual([])
+  })
+
   it('a `names` array of only unusable entries gives nothing (no fallback to `name`)', () => {
     expect(suggestedGroupNames({ names: ['', 7], name: 'Solo' })).toEqual([])
   })

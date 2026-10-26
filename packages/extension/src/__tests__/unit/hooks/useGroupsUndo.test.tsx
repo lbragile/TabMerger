@@ -166,7 +166,10 @@ const cases: Array<[string, () => unknown, Run, (() => void)?]> = [
   ['import (append)', () => G.useImportGroups(), (a: ReturnType<typeof G.useImportGroups>) => a.mutateAsync([group('imp', [win([tab('i1')])])])],
   ['import / restore (replace)', () => G.useReplaceSavedGroups(), (a: ReturnType<typeof G.useReplaceSavedGroups>) => a.mutateAsync([group('imp', [win([tab('i1')])])])],
   ['quick save (shortcut)', () => G.useSaveShortcutTabs(), (a: ReturnType<typeof G.useSaveShortcutTabs>) => a.mutateAsync({ tabs: [tab('q1')], groupId: 'play' })],
-  ['AI apply', () => G.useApplyAIGroups(), (a: ReturnType<typeof G.useApplyAIGroups>) => a.mutateAsync([{ name: 'AI', color: 'rgba(0,0,0,1)', tabIds: [41] }])]
+  ['AI apply', () => G.useApplyAIGroups(), (a: ReturnType<typeof G.useApplyAIGroups>) => a.mutateAsync([{ name: 'AI', color: 'rgba(0,0,0,1)', tabIds: [41] }])],
+  ['AI apply into a same-named saved group', () => G.useApplyAIGroups(), (a: ReturnType<typeof G.useApplyAIGroups>) => a.mutateAsync([{ name: ' WORK ', color: 'rgba(0,0,0,1)', tabIds: [41] }])],
+  ['AI apply: a new group and an existing one at once', () => G.useApplyAIGroups(), (a: ReturnType<typeof G.useApplyAIGroups>) =>
+    a.mutateAsync([{ name: 'AI', color: 'rgba(0,0,0,1)', tabIds: [41] }, { name: 'Play', color: 'rgba(0,0,0,1)', tabIds: [42] }])]
 ]
 
 describe('every useGroups mutation is exactly one undo step, and Undo/Redo round-trips it', () => {

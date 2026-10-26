@@ -45,6 +45,10 @@
     "aiCreated_one": "KI hat {{count}} Gruppe erstellt",
     "aiCreated_other": "KI hat {{count}} Gruppen erstellt",
     "aiSkipped": "{{skipped}} weitere vorgeschlagen, aber übersprungen – Limit des kostenlosen Tarifs erreicht.",
+    "aiAddedTo_one": "KI hat Tabs zu {{count}} vorhandenen Gruppe hinzugefügt",
+    "aiAddedTo_other": "KI hat Tabs zu {{count}} vorhandenen Gruppen hinzugefügt",
+    "aiAlsoAdded_one": "Außerdem wurden Tabs zu {{count}} vorhandenen Gruppe hinzugefügt.",
+    "aiAlsoAdded_other": "Außerdem wurden Tabs zu {{count}} vorhandenen Gruppen hinzugefügt.",
     "aiGroupingFailed": "KI-Gruppierung fehlgeschlagen",
     "organizeNothing": "Deine Gruppen sind schon gut organisiert",
     "organizeFailed": "Deine Gruppen konnten nicht organisiert werden"

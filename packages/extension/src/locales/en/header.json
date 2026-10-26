@@ -45,6 +45,10 @@
     "aiCreated_one": "AI created {{count}} group",
     "aiCreated_other": "AI created {{count}} groups",
     "aiSkipped": "{{skipped}} more suggested but skipped — free plan limit reached.",
+    "aiAddedTo_one": "AI added tabs to {{count}} existing group",
+    "aiAddedTo_other": "AI added tabs to {{count}} existing groups",
+    "aiAlsoAdded_one": "Also added tabs to {{count}} existing group.",
+    "aiAlsoAdded_other": "Also added tabs to {{count}} existing groups.",
     "aiGroupingFailed": "AI grouping failed",
     "organizeNothing": "Your groups already look organized",
     "organizeFailed": "Could not organize your groups"

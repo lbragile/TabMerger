@@ -47,6 +47,12 @@
     "aiCreated_many": "L’IA a créé {{count}} de groupes",
     "aiCreated_other": "L’IA a créé {{count}} groupes",
     "aiSkipped": "{{skipped}} autres suggérés mais ignorés : limite de l’offre gratuite atteinte.",
+    "aiAddedTo_one": "L’IA a ajouté des onglets à {{count}} groupe existant",
+    "aiAddedTo_many": "L’IA a ajouté des onglets à {{count}} de groupes existants",
+    "aiAddedTo_other": "L’IA a ajouté des onglets à {{count}} groupes existants",
+    "aiAlsoAdded_one": "Des onglets ont aussi été ajoutés à {{count}} groupe existant.",
+    "aiAlsoAdded_many": "Des onglets ont aussi été ajoutés à {{count}} de groupes existants.",
+    "aiAlsoAdded_other": "Des onglets ont aussi été ajoutés à {{count}} groupes existants.",
     "aiGroupingFailed": "Échec du regroupement par IA",
     "organizeNothing": "Vos groupes semblent déjà organisés",
     "organizeFailed": "Impossible d’organiser vos groupes"

@@ -45,6 +45,10 @@
     "aiCreated_one": "AI {{count}} grup oluşturdu",
     "aiCreated_other": "AI {{count}} grup oluşturdu",
     "aiSkipped": "{{skipped}} öneri daha atlandı — ücretsiz plan sınırına ulaşıldı.",
+    "aiAddedTo_one": "AI, mevcut {{count}} gruba sekme ekledi",
+    "aiAddedTo_other": "AI, mevcut {{count}} gruba sekme ekledi",
+    "aiAlsoAdded_one": "Mevcut {{count}} gruba da sekme eklendi.",
+    "aiAlsoAdded_other": "Mevcut {{count}} gruba da sekme eklendi.",
     "aiGroupingFailed": "AI ile gruplama başarısız oldu",
     "organizeNothing": "Gruplarınız zaten düzenli görünüyor",
     "organizeFailed": "Gruplarınız düzenlenemedi"

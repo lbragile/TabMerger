@@ -45,6 +45,10 @@
     "aiCreated_one": "AI ने {{count}} समूह बनाया",
     "aiCreated_other": "AI ने {{count}} समूह बनाए",
     "aiSkipped": "{{skipped}} और सुझाए गए लेकिन छोड़ दिए गए — निःशुल्क योजना की सीमा पूरी हो गई।",
+    "aiAddedTo_one": "AI ने {{count}} मौजूदा समूह में टैब जोड़े",
+    "aiAddedTo_other": "AI ने {{count}} मौजूदा समूहों में टैब जोड़े",
+    "aiAlsoAdded_one": "{{count}} मौजूदा समूह में भी टैब जोड़े गए।",
+    "aiAlsoAdded_other": "{{count}} मौजूदा समूहों में भी टैब जोड़े गए।",
     "aiGroupingFailed": "AI समूहीकरण विफल रहा",
     "organizeNothing": "आपके समूह पहले से व्यवस्थित दिखते हैं",
     "organizeFailed": "आपके समूह व्यवस्थित नहीं किए जा सके"

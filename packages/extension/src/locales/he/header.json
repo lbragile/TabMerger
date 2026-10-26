@@ -47,6 +47,12 @@
     "aiCreated_two": "ה-AI יצר שתי קבוצות",
     "aiCreated_other": "ה-AI יצר {{count}} קבוצות",
     "aiSkipped": "עוד {{skipped}} הוצעו אבל דולגו — הגעת למגבלת התוכנית החינמית.",
+    "aiAddedTo_one": "ה-AI הוסיף כרטיסיות לקבוצה קיימת אחת",
+    "aiAddedTo_two": "ה-AI הוסיף כרטיסיות לשתי קבוצות קיימות",
+    "aiAddedTo_other": "ה-AI הוסיף כרטיסיות ל-{{count}} קבוצות קיימות",
+    "aiAlsoAdded_one": "נוספו גם כרטיסיות לקבוצה קיימת אחת.",
+    "aiAlsoAdded_two": "נוספו גם כרטיסיות לשתי קבוצות קיימות.",
+    "aiAlsoAdded_other": "נוספו גם כרטיסיות ל-{{count}} קבוצות קיימות.",
     "aiGroupingFailed": "הקיבוץ עם AI נכשל",
     "organizeNothing": "הקבוצות שלך כבר מאורגנות",
     "organizeFailed": "לא ניתן היה לארגן את הקבוצות"

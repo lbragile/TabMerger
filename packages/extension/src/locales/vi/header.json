@@ -43,6 +43,8 @@
     "aiNoMatchingTabs": "Không tìm thấy thẻ phù hợp với gợi ý của AI",
     "aiCreated_other": "AI đã tạo {{count}} nhóm",
     "aiSkipped": "{{skipped}} gợi ý khác đã bị bỏ qua — đã đạt giới hạn gói miễn phí.",
+    "aiAddedTo_other": "AI đã thêm thẻ vào {{count}} nhóm hiện có",
+    "aiAlsoAdded_other": "Cũng đã thêm thẻ vào {{count}} nhóm hiện có.",
     "aiGroupingFailed": "Nhóm bằng AI thất bại",
     "organizeNothing": "Các nhóm của bạn đã gọn gàng",
     "organizeFailed": "Không thể sắp xếp các nhóm của bạn"

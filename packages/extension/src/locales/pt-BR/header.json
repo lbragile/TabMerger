@@ -47,6 +47,12 @@
     "aiCreated_other": "A IA criou {{count}} grupos",
     "aiCreated_many": "A IA criou {{count}} grupos",
     "aiSkipped": "Mais {{skipped}} sugeridos, mas ignorados — limite do plano gratuito atingido.",
+    "aiAddedTo_one": "A IA adicionou abas a {{count}} grupo existente",
+    "aiAddedTo_many": "A IA adicionou abas a {{count}} grupos existentes",
+    "aiAddedTo_other": "A IA adicionou abas a {{count}} grupos existentes",
+    "aiAlsoAdded_one": "Também adicionou abas a {{count}} grupo existente.",
+    "aiAlsoAdded_many": "Também adicionou abas a {{count}} grupos existentes.",
+    "aiAlsoAdded_other": "Também adicionou abas a {{count}} grupos existentes.",
     "aiGroupingFailed": "Falha no agrupamento por IA",
     "organizeNothing": "Seus grupos já parecem organizados",
     "organizeFailed": "Não foi possível organizar seus grupos"

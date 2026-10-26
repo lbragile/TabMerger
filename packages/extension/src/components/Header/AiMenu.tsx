@@ -27,6 +27,7 @@ import { useGroups, useApplyAIGroups } from "@/hooks/useGroups";
 import { AI_ENABLED } from "@/lib/aiFlag";
 import { toast } from "@/lib/toast";
 import { FreeLimitExceededError, countedGroups } from "@/lib/tierLimits";
+import { clampAiSuggestionsToSlots } from "@/lib/aiAutoGroup";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { formatNumber } from "@/lib/i18n";
@@ -138,10 +139,11 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
                 return;
             }
 
-            // Cap to remaining free-tier group slots, same limit manual "New group" enforces
+            // Cap the NEW groups to the remaining free-tier group slots (the limit manual "New group"
+            // enforces); a suggestion that goes into an existing same-named group needs no slot
             const activeCount = countedGroups(groupsState.available).length;
-            const remaining = isFinite(maxGroups) ? Math.max(0, maxGroups - activeCount) : result.groups.length;
-            const suggestions = result.groups.slice(0, remaining);
+            const remaining = isFinite(maxGroups) ? Math.max(0, maxGroups - activeCount) : Infinity;
+            const { kept: suggestions, skipped } = clampAiSuggestionsToSlots(groupsState.available, result.groups, remaining);
             if (suggestions.length === 0) {
                 trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
                 toast.error(t('common.freeGroupLimit', { max: maxGroups }), {
@@ -150,16 +152,20 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
                 return;
             }
 
-            const { appliedGroups } = await applyAIGroups(suggestions);
-            if (appliedGroups === 0) {
+            const { createdGroups, mergedGroups } = await applyAIGroups(suggestions);
+            if (createdGroups + mergedGroups === 0) {
                 toast.info(t("header.toast.aiNoMatchingTabs"));
                 return;
             }
-            toast.success(t('header.toast.aiCreated', { count: appliedGroups }), {
-                ...(suggestions.length < result.groups.length
-                    ? { description: t('header.toast.aiSkipped', { skipped: result.groups.length - suggestions.length }) }
-                    : {})
-            });
+            // "AI created 2 groups" + "Also added tabs to 3 existing groups.", or "AI added tabs to 3 existing groups"
+            const description = [
+                createdGroups > 0 && mergedGroups > 0 ? t('header.toast.aiAlsoAdded', { count: mergedGroups }) : null,
+                skipped > 0 ? t('header.toast.aiSkipped', { skipped }) : null,
+            ].filter(Boolean).join(' ');
+            toast.success(
+                createdGroups > 0 ? t('header.toast.aiCreated', { count: createdGroups }) : t('header.toast.aiAddedTo', { count: mergedGroups }),
+                description ? { description } : {}
+            );
         } catch (err) {
             if (err instanceof QuotaExceededError) {
                 onQuotaExceeded(true);

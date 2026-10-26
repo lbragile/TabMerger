@@ -25,7 +25,7 @@
 - [Device sessions wired](learnings_device_sessions_wired.md) — pushDeviceSession(state, tier) in useCurrentTabs doSync
 - [MSW + WXT popup dev mocking](learnings_msw_wxt_popup.md) — historical: client AI mock removed (now server-side AI_MOCK); MSW SW fails in popups
 - [pendingSync audit](learnings_pendingsync_audit.md) — fixed useUpdateGroupInfo missing pendingSync; everything else correct
-- [AI auto-group apply fix](learnings_ai_auto_group_apply.md) — handleAIGroup was discarding useAutoGroup's result; added useApplyAIGroups
+- [AI auto-group apply](learnings_ai_auto_group_apply.md) — useApplyAIGroups; lib/aiAutoGroup merges same-named groups; only NEW groups use Free slots
 - [Keyboard shortcuts for tab actions](learnings_keyboard_shortcuts_tab_actions.md) — F2 rename / N note via uiStore renameTarget/noteTarget
 - [Dev AI credits control](learnings_dev_ai_usage_real_sync.md) — no local counter; DevAiCredits posts credits to /api/ai/dev-usage
 - [Review stale group modal + Archive all](learnings_review_stale_group_modal.md) — AI banner Review/Archive-all
@@ -132,3 +132,4 @@
 - [AI menu sections + Describe group](learnings_ai_menu_sections_describe_group.md) — AiMenu.tsx groups/labels; targeted toast Undo (undoHistoryEntry); `//` args mangled by Git Bash
 - [Settings initial tab + focus-ring clip](learnings_settings_initial_tab_and_focus_ring_clip.md) — useAuth first render + Radix focus picks General; -ms-1 ps-1
 - [Name picker + locked AI preview](learnings_name_picker_and_locked_ai_preview.md) — radios + textbox outside radiogroup; aria-disabled focusable items; seed the query cache
+- [Scratchpad scripts are shared](learnings_scratchpad_script_names.md) — unique script names; Write's "not read yet" error means a stale file of that name exists

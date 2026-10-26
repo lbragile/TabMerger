@@ -43,6 +43,8 @@
     "aiNoMatchingTabs": "AIの提案に一致するタブが見つかりませんでした",
     "aiCreated_other": "AIが{{count}}個のグループを作成しました",
     "aiSkipped": "ほか{{skipped}}件の提案がありましたが、無料プランの上限に達したためスキップしました。",
+    "aiAddedTo_other": "AIが既存の{{count}}個のグループにタブを追加しました",
+    "aiAlsoAdded_other": "既存の{{count}}個のグループにもタブを追加しました。",
     "aiGroupingFailed": "AIによるグループ化に失敗しました",
     "organizeNothing": "グループはすでに整理されています",
     "organizeFailed": "グループを整理できませんでした"

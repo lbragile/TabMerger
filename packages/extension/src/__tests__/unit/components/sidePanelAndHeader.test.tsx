@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, act, within } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -758,7 +758,7 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     mockUseGroupsData.mockReturnValue({ data: groupsState })
     const suggestions = [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }, { name: 'Other', color: 'rgba(0,0,0,1)', tabIds: [2] }]
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: suggestions })
-    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 2, appliedTabs: 2 })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ createdGroups: 2, mergedGroups: 0, appliedTabs: 2 })
 
     wrap(React.createElement(Header))
     await clickAIMenuItem(/^auto-group$/i)
@@ -774,7 +774,7 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
     mockUseGroupsData.mockReturnValue({ data: groupsState })
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }] })
-    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 1, appliedTabs: 1 })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ createdGroups: 1, mergedGroups: 0, appliedTabs: 1 })
 
     wrap(React.createElement(Header))
     await clickAIMenuItem(/^auto-group$/i)
@@ -788,7 +788,7 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
     mockUseGroupsData.mockReturnValue({ data: groupsState })
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Ghost', color: 'rgba(0,0,0,1)', tabIds: [999] }] })
-    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 0, appliedTabs: 0 })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ createdGroups: 0, mergedGroups: 0, appliedTabs: 0 })
 
     wrap(React.createElement(Header))
     await clickAIMenuItem(/^auto-group$/i)
@@ -806,13 +806,52 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     mockUseGroupsData.mockReturnValue({ data: groupsState })
     const suggestions = [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }, { name: 'Other', color: 'rgba(0,0,0,1)', tabIds: [2] }]
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: suggestions })
-    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 1, appliedTabs: 1 })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ createdGroups: 1, mergedGroups: 0, appliedTabs: 1 })
 
     wrap(React.createElement(Header))
     await clickAIMenuItem(/^auto-group$/i)
 
     expect(mockApplyAIGroupsMutateAsync).toHaveBeenCalledWith([suggestions[0]])
     expect(mockToastSuccess).toHaveBeenCalledWith('AI created 1 group', expect.objectContaining({ description: expect.stringContaining('1 more suggested') }))
+  })
+
+  it('says how many existing groups received tabs: alone in the title, or as a description next to new groups', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
+    mockUseGroupsData.mockReturnValue({ data: groupsState })
+    mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }] })
+
+    mockApplyAIGroupsMutateAsync.mockResolvedValueOnce({ createdGroups: 0, mergedGroups: 3, appliedTabs: 3 })
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^auto-group$/i)
+    expect(mockToastSuccess).toHaveBeenLastCalledWith('AI added tabs to 3 existing groups', {})
+
+    cleanup()
+    mockApplyAIGroupsMutateAsync.mockResolvedValueOnce({ createdGroups: 2, mergedGroups: 1, appliedTabs: 4 })
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^auto-group$/i)
+    expect(mockToastSuccess).toHaveBeenLastCalledWith('AI created 2 groups', { description: 'Also added tabs to 1 existing group.' })
+  })
+
+  it('at the free-tier group limit, still applies suggestions that go into existing same-named groups', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: true, maxGroups: 1 })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    const groupsState = makeGroupsState([
+      makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] }),
+      makeGroup({ name: 'YouTube' }),
+    ])
+    mockUseGroupsData.mockReturnValue({ data: groupsState })
+    const suggestions = [{ name: 'New one', color: 'rgba(0,0,0,1)', tabIds: [2] }, { name: 'youtube', color: 'rgba(0,0,0,1)', tabIds: [1] }]
+    mockAutoGroupMutateAsync.mockResolvedValue({ groups: suggestions })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ createdGroups: 0, mergedGroups: 1, appliedTabs: 1 })
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^auto-group$/i)
+
+    expect(mockApplyAIGroupsMutateAsync).toHaveBeenCalledWith([suggestions[1]])
+    expect(mockToastError).not.toHaveBeenCalled()
+    expect(mockToastSuccess).toHaveBeenCalledWith('AI added tabs to 1 existing group', { description: expect.stringContaining('1 more suggested') })
   })
 
   it('logs an error without throwing when autoGroup rejects', async () => {

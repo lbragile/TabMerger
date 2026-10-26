@@ -43,6 +43,8 @@
     "aiNoMatchingTabs": "AI 추천과 일치하는 탭이 없습니다",
     "aiCreated_other": "AI가 그룹 {{count}}개를 만들었습니다",
     "aiSkipped": "추천된 {{skipped}}개는 무료 요금제 한도에 도달해 건너뛰었습니다.",
+    "aiAddedTo_other": "AI가 기존 그룹 {{count}}개에 탭을 추가했습니다",
+    "aiAlsoAdded_other": "기존 그룹 {{count}}개에도 탭을 추가했습니다.",
     "aiGroupingFailed": "AI 그룹화에 실패했습니다",
     "organizeNothing": "그룹이 이미 잘 정리되어 있습니다",
     "organizeFailed": "그룹을 정리할 수 없습니다"
