@@ -70,6 +70,13 @@ export function monthlyAllowanceForPayment(usd: number, months: number): number 
   return Math.min(PRO_AI_MONTHLY_CREDITS, creditsForPayment(usd, months));
 }
 
+/**
+ * The element id of the AI credits section on the web app's account page, where a managed Pro AI
+ * subscriber buys a credit pack. The extension links to `/account#` + this id, so both packages
+ * read the one value.
+ */
+export const ACCOUNT_AI_CREDITS_ANCHOR = 'ai-credits';
+
 // --- Providers and models ---------------------------------------------------------
 
 /**

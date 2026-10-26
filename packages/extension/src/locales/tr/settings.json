@@ -98,6 +98,8 @@
     "summariesDescription": "Sekme üzerine gelme önizlemesinde AI özeti",
     "throttleLabel": "Otomatik AI önerilerini günde bir kezle sınırla",
     "throttleDescription": "Arka plandaki oturum önerme bildirimi, aylık AI kotanızı korumak için günde en fazla bir kez çıkar. Elle başlattığınız AI işlemleri (Otomatik grupla, Grubu adlandır, Düzenle) bundan asla etkilenmez.",
+    "buyCredits": "Daha fazla kredi satın al",
+    "buyCreditsLabel": "Daha fazla kredi satın al (yeni sekme)",
     "plan": {
       "managed": "Kurulumu TabMerger yapar: bu ay {{cap}} krediden {{remaining}} kaldı",
       "managedUnknown": "Kurulumu TabMerger yapar",

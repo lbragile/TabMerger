@@ -8,6 +8,7 @@ import {
   AI_ESTIMATE_EXAMPLES,
   AI_MODELS,
   AI_PROVIDER_KEY_LINKS,
+  ACCOUNT_AI_CREDITS_ANCHOR,
   PRO_AI_MONTHLY_CREDITS,
   aiModelsForProvider,
   estimateAiCredits
@@ -24,6 +25,7 @@ import {
   saveByokKey,
   setPickedByokProvider
 } from '@/lib/byokKey'
+import { buyCreditsUrl } from '@/lib/buyCredits'
 import { formatNumber, t } from '@/lib/i18n'
 
 const { mockUseEntitlements, mockUseAiUsage, mockAiPost, mockToast } = vi.hoisted(() => ({
@@ -38,6 +40,19 @@ vi.mock('@/hooks/useAiUsage', () => ({ useAiUsage: () => mockUseAiUsage() }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => ({ user: { id: 'u1' }, session: { access_token: 'tok' } }) }))
 vi.mock('@/hooks/useAI', () => ({ aiPost: mockAiPost }))
 vi.mock('@/lib/toast', () => ({ toast: mockToast }))
+// This suite tests the AI settings' own logic with AI on; getters let a test turn an option off
+const flags = vi.hoisted(() => ({ managed: true, byok: true }))
+vi.mock('@/lib/aiFlag', () => ({
+  get AI_ENABLED() {
+    return flags.managed || flags.byok
+  },
+  get AI_MANAGED_ENABLED() {
+    return flags.managed
+  },
+  get AI_BYOK_ENABLED() {
+    return flags.byok
+  }
+}))
 
 /** Shaped like an Anthropic key, but too short to look like a real one to the secret scanner. */
 const KEY = 'sk-ant-test-xxxxxxxxxxxxxxxx'
@@ -76,6 +91,8 @@ async function typeAndSave(key: string) {
 
 beforeEach(async () => {
   vi.clearAllMocks()
+  flags.managed = true
+  flags.byok = true
   await clearByokKey()
   mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'managed' })
   mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true })
@@ -522,5 +539,94 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
       expect((await chrome.storage.local.get(AI_BYOK_PROVIDER_STORAGE_KEY))[AI_BYOK_PROVIDER_STORAGE_KEY]).toEqual({ userId: 'u1', provider: 'anthropic' })
     )
     expect((await chrome.storage.local.get(AI_BYOK_KEY_STORAGE_KEY))[AI_BYOK_KEY_STORAGE_KEY]).toEqual({ userId: 'u1', key: OPENAI_KEY, provider: 'openai' })
+  })
+})
+
+describe('AiSettings — Buy more credits', () => {
+  const buy = () => screen.queryByRole('link', { name: t('settings.ai.buyCreditsLabel') })
+  const usage = (remaining: number, cap: number, known = true) =>
+    mockUseAiUsage.mockReturnValue({ used: Math.max(0, cap - remaining), remaining, cap, loading: !known, known })
+
+  it('managed Pro AI: a link next to the credits line, to the account page credits section in a new tab', () => {
+    renderSettings()
+    const link = buy()!
+    expect(link).toBeTruthy()
+    expect(link.textContent).toBe(t('settings.ai.buyCredits'))
+    // the accessible name keeps the visible words and says a new tab opens
+    expect(t('settings.ai.buyCreditsLabel').startsWith(t('settings.ai.buyCredits'))).toBe(true)
+    expect(link.getAttribute('href')).toBe(buyCreditsUrl())
+    expect(link.getAttribute('href')).toBe(`${import.meta.env.VITE_WEB_APP_URL}/account#${ACCOUNT_AI_CREDITS_ANCHOR}`)
+    expect(link.getAttribute('target')).toBe('_blank')
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer')
+    expect(screen.getByTestId('ai-plan-line').parentElement!.contains(link)).toBe(true)
+  })
+
+  it('clicking it opens the buy-credits page through the tabs API', async () => {
+    renderSettings()
+    await userEvent.click(buy()!)
+    expect(tabsCreate).toHaveBeenCalledTimes(1)
+    expect(tabsCreate).toHaveBeenCalledWith({ url: buyCreditsUrl(), active: true })
+  })
+
+  it('own key (BYOK): hidden', async () => {
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'byok' })
+    renderSettings()
+    await ready()
+    expect(buy()).toBeNull()
+    expect(screen.queryByTestId('ai-buy-credits')).toBeNull()
+  })
+
+  it('without Pro AI: hidden', () => {
+    mockUseEntitlements.mockReturnValue({ aiFeatures: false, aiMode: 'managed' })
+    renderSettings()
+    expect(screen.getByTestId('ai-plan-line')).toBeTruthy()
+    expect(screen.queryByTestId('ai-buy-credits')).toBeNull()
+  })
+
+  it("hidden while TabMerger's AI is off, even if the plan says managed", () => {
+    flags.managed = false
+    renderSettings()
+    expect(screen.queryByTestId('ai-buy-credits')).toBeNull()
+  })
+
+  it('hidden while every AI option is off', () => {
+    flags.managed = false
+    flags.byok = false
+    renderSettings()
+    expect(screen.queryByTestId('ai-buy-credits')).toBeNull()
+  })
+
+  it.each([
+    [251, 'normal'],
+    [250, 'normal'],
+    [249, 'low']
+  ] as const)('%i of 2,500 left (10%% = 250): %s emphasis', (remaining, emphasis) => {
+    usage(remaining, 2500)
+    renderSettings()
+    const link = screen.getByTestId('ai-buy-credits')
+    expect(link.getAttribute('data-emphasis')).toBe(emphasis)
+    // a button look below the threshold, a plain link above it; a link with the same name either way
+    expect(link.className.includes('bg-primary')).toBe(emphasis === 'low')
+    expect(link.className.includes('hover:underline')).toBe(emphasis === 'normal')
+    expect(buy()).toBe(link)
+  })
+
+  it('takes the share of the total with packs bought this month', () => {
+    usage(299, 3000)
+    renderSettings()
+    expect(screen.getByTestId('ai-buy-credits').getAttribute('data-emphasis')).toBe('low')
+  })
+
+  it('no emphasis while the balance is unknown', () => {
+    usage(0, CAP, false)
+    renderSettings()
+    expect(screen.getByTestId('ai-plan-line').textContent).toBe(t('settings.ai.plan.managedUnknown'))
+    expect(screen.getByTestId('ai-buy-credits').getAttribute('data-emphasis')).toBe('normal')
+  })
+
+  it('a total of 0 renders, emphasised: nothing is left', () => {
+    usage(0, 0)
+    renderSettings()
+    expect(screen.getByTestId('ai-buy-credits').getAttribute('data-emphasis')).toBe('low')
   })
 })

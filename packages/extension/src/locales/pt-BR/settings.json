@@ -102,6 +102,8 @@
     "summariesDescription": "Resumo de IA na prévia ao passar o mouse sobre a aba",
     "throttleLabel": "Limitar sugestões automáticas de IA a uma por dia",
     "throttleDescription": "O banner de sugestão de sessões em segundo plano aparece no máximo uma vez por dia para proteger sua cota mensal de IA. As ações de IA que você aciona manualmente (Agrupar automaticamente, Nomear grupo, Organizar) nunca são limitadas por isto.",
+    "buyCredits": "Comprar mais créditos",
+    "buyCreditsLabel": "Comprar mais créditos (nova aba)",
     "plan": {
       "managed": "O TabMerger cuida da configuração: restam {{remaining}} de {{cap}} créditos neste mês",
       "managedUnknown": "O TabMerger cuida da configuração",

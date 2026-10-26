@@ -94,6 +94,8 @@
     "summariesDescription": "在标签页悬停预览中显示 AI 摘要",
     "throttleLabel": "自动 AI 建议每天最多一次",
     "throttleDescription": "后台的建议会话横幅每天最多出现一次，以保护您的每月 AI 额度。您手动触发的 AI 操作（自动分组、为分组命名、整理）不受此限制。",
+    "buyCredits": "购买更多额度",
+    "buyCreditsLabel": "购买更多额度（新标签页）",
     "plan": {
       "managed": "TabMerger 负责设置 — 本月剩余 {{remaining}} / {{cap}} 点额度",
       "managedUnknown": "TabMerger 负责设置",

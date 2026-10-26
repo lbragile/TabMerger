@@ -102,6 +102,8 @@
     "summariesDescription": "Résumé IA dans l’aperçu au survol d’un onglet",
     "throttleLabel": "Limiter les suggestions IA automatiques à une par jour",
     "throttleDescription": "La bannière de suggestion de sessions en arrière-plan s’affiche au plus une fois par jour pour protéger votre quota IA mensuel. Les actions IA que vous déclenchez vous-même (Regroupement auto, Nommer le groupe, Organiser) ne sont jamais limitées par ce réglage.",
+    "buyCredits": "Acheter des crédits",
+    "buyCreditsLabel": "Acheter des crédits (nouvel onglet)",
     "plan": {
       "managed": "TabMerger s’occupe de la configuration : {{remaining}} crédits restants sur {{cap}} ce mois-ci",
       "managedUnknown": "TabMerger s’occupe de la configuration",

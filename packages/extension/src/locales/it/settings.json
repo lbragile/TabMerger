@@ -102,6 +102,8 @@
     "summariesDescription": "Riepilogo AI nell'anteprima al passaggio del mouse",
     "throttleLabel": "Limita i suggerimenti AI automatici a uno al giorno",
     "throttleDescription": "Il banner in background dei suggerimenti di sessione compare al massimo una volta al giorno per proteggere la tua quota AI mensile. Le azioni AI che avvii manualmente (Raggruppa automaticamente, Assegna nome al gruppo, Organizza) non sono mai limitate da questa opzione.",
+    "buyCredits": "Acquista altri crediti",
+    "buyCreditsLabel": "Acquista altri crediti (nuova scheda)",
     "plan": {
       "managed": "TabMerger si occupa della configurazione: restano {{remaining}} crediti su {{cap}} questo mese",
       "managedUnknown": "TabMerger si occupa della configurazione",

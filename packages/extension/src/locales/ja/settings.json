@@ -94,6 +94,8 @@
     "summariesDescription": "タブのホバープレビューにAIの要約を表示します",
     "throttleLabel": "AIの自動提案を1日1回に制限",
     "throttleDescription": "バックグラウンドのセッション提案バナーは、月間AI利用枠を守るため、1日に最大1回だけ表示されます。手動で実行したAI操作（自動グループ化、グループに名前を付ける、整理）はこの制限を受けません。",
+    "buyCredits": "クレジットを追加購入",
+    "buyCreditsLabel": "クレジットを追加購入（新しいタブ）",
     "plan": {
       "managed": "セットアップは TabMerger が担当 — 今月の残り {{remaining}} / {{cap}} クレジット",
       "managedUnknown": "セットアップは TabMerger が担当",

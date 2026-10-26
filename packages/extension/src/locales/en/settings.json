@@ -98,6 +98,8 @@
     "summariesDescription": "AI summary on tab hover preview",
     "throttleLabel": "Limit automatic AI suggestions to once a day",
     "throttleDescription": "The background suggest-sessions banner fires at most once per day to protect your monthly AI quota. AI actions you trigger manually (Auto-group, Name group, Organize) are never limited by this.",
+    "buyCredits": "Buy more credits",
+    "buyCreditsLabel": "Buy more credits (new tab)",
     "plan": {
       "managed": "TabMerger handles setup — {{remaining}} of {{cap}} credits left this month",
       "managedUnknown": "TabMerger handles setup",
