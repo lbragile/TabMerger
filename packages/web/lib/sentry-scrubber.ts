@@ -5,7 +5,10 @@ import { stripFragmentsDeep, stripUrlFragment, stripUrlOrPathFragment } from '@/
 // ponytail: Sentry v10 changed breadcrumbs from {values: Breadcrumb[]} to Breadcrumb[] directly
 export function scrubEvent(event: ErrorEvent, _hint?: EventHint): ErrorEvent | null {
   if (event.request) {
-    event.request = { ...event.request, url: '[redacted]', headers: {} }
+    // Only the method survives. The body (`data`) is dropped too: the server SDK attaches incoming
+    // request bodies, and an AI route's body is the user's decrypted group names, tab titles and
+    // URLs, which must never leave the request. Query strings and cookies go for the same reason.
+    event.request = { method: event.request.method, url: '[redacted]', headers: {} }
   }
   if (event.breadcrumbs) {
     event.breadcrumbs = (event.breadcrumbs as Breadcrumb[]).map((b) => ({
