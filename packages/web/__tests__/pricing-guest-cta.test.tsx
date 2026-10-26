@@ -64,7 +64,7 @@ describe('PricingTable: paid-plan button for a signed-out visitor', () => {
     const user = userEvent.setup()
     render(<PricingTable installHref={INSTALL} currentTier="free" />)
 
-    for (const option of ['TabMerger', 'You']) {
+    for (const option of ['Us', 'You']) {
       await user.click(screen.getByRole('radio', { name: option }))
       expect(within(card('Pro AI')).getByRole('button', { name: 'Get Pro AI' })).toBeEnabled()
     }
@@ -106,7 +106,7 @@ describe('PricingTable: paid-plan button for a signed-in account', () => {
     if (interval === 'Yearly') await user.click(screen.getByRole('button', { name: /Yearly/ }))
 
     expect(within(card('Pro')).getByRole('button', { name: 'Upgrade to Pro' })).toBeInTheDocument()
-    for (const option of ['TabMerger', 'You']) {
+    for (const option of ['Us', 'You']) {
       await user.click(screen.getByRole('radio', { name: option }))
       expect(within(card('Pro AI')).getByRole('button', { name: 'Upgrade to Pro AI' })).toBeInTheDocument()
     }
@@ -155,7 +155,7 @@ describe('PricingTeaser (home page): no per-plan buy button for anyone', () => {
 
     for (const interval of ['Monthly', 'Yearly']) {
       await user.click(screen.getByRole('button', { name: new RegExp(interval) }))
-      for (const option of ['TabMerger', 'You']) {
+      for (const option of ['Us', 'You']) {
         await user.click(screen.getByRole('radio', { name: option }))
         expect(screen.queryByText(/Upgrade to/)).not.toBeInTheDocument()
         expect(screen.queryByRole('button', { name: /^Get / })).not.toBeInTheDocument()

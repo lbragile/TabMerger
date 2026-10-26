@@ -234,7 +234,9 @@ describe('PricingCard', () => {
     expect(badge.className).toMatch(/\babsolute\b/)
     expect(badge.className).toMatch(/-translate-y-1\/2/)
     expect(badge.className).toMatch(/rounded-none/)
-    expect(screen.getByRole('heading', { name: 'Pro' }).parentElement).not.toContainElement(badge)
+    // On the card's own edge, not inside the plan name's heading.
+    expect(badge.parentElement).toBe(card)
+    expect(screen.getByRole('heading', { name: 'Pro' })).not.toContainElement(badge)
     // One pill at a time: Current wins, and the sparkle is gone.
     expect(screen.queryByText('Recommended')).not.toBeInTheDocument()
     expect(card).not.toHaveTextContent('✦')
