@@ -152,7 +152,7 @@ describe('Pro AI option switch on the pricing page', () => {
       for (const line of within(card).getAllByText(/AI credits a month/)) {
         expect(line.closest('[aria-hidden="true"]')).not.toBeNull()
       }
-      const note = within(card).getByText(/You add an API key from Anthropic, OpenAI or Google/, shown)
+      const note = within(card).getByText('You add an API key from a provider. They bill you directly based on your usage.', shown)
       expect(note.textContent).not.toMatch(/\$/)
     })
   })

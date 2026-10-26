@@ -149,7 +149,7 @@ export function PricingTeaser() {
                     {highlights.map(({ text, inherited }) => (
                       <li key={text} className="flex items-start gap-2">
                         <TierFeatureIcon inherited={inherited} />
-                        <span className="min-w-0">{text}</span>
+                        <span className="min-w-0 text-balance">{text}</span>
                       </li>
                     ))}
                   </ul>

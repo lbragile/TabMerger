@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { getPricingTier } from '../constants';
 
-const ORGANIZE_LINE = 'AI workspace cleanup: merge, rename, archive & reorder groups';
-const DESCRIBE_LINE = "AI group descriptions in the group's note";
+const ORGANIZE_LINE = 'AI workspace cleanup';
+const DESCRIBE_LINE = 'AI group descriptions';
 
 /**
  * What Pro AI sells, in both options (TabMerger handles setup, or the user's own key). The web

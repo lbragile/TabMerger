@@ -417,7 +417,7 @@ function FeatureList({ features, className }: { features: readonly TierFeature[]
       {features.map((feature) => (
         <li key={feature.text} className="flex items-start gap-2 text-text2">
           <TierFeatureIcon inherited={feature.inherited} />
-          <span>{feature.text}</span>
+          <span className="text-balance">{feature.text}</span>
         </li>
       ))}
     </ul>
@@ -433,7 +433,7 @@ function FeatureList({ features, className }: { features: readonly TierFeature[]
 function AiOptionNote({ mode }: { mode: AiMode }) {
   const t = useTranslations('pricing.aiOptions')
   return (
-    <p className="mt-3 text-[11.5px] leading-relaxed text-text3">
+    <p className="mt-3 text-pretty text-[11.5px] leading-relaxed text-text3">
       {mode === 'managed' ? t('managedHint') : t('byokHint')}
     </p>
   )

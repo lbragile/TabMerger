@@ -12,11 +12,16 @@ Adding or renaming a plan feature line touches more than `PRICING_TIERS`:
 - `packages/web/components/pricing/tierFeatures.ts`: the `FeatureLine['key']` union plus
   `TIER_FEATURE_LINES` and `PRO_AI_BYOK_FEATURE_LINES`, in the same order as the shared lists.
   `__tests__/i18n-infrastructure.test.tsx` renders them in English and requires an exact match.
-- `packages/web/messages/<locale>/pricing.json` `features.<key>` (18 locales).
+- `packages/web/messages/<locale>/pricing.json` `features.<key>` (18 locales). The backups line
+  is `AUTO_BACKUP_COPY.pricingFeature` in `constants/autoBackup.ts`, pinned by `autoBackup.test.ts`
+  and `backup-file-copy.test.tsx`; the own-key note `aiOptions.byokHint` is pinned by
+  `pricing-ai-options.test.tsx`.
 - The extension upgrade prompt (`UpgradePrompt.tsx`, `upgrade.plans.<tier>.f1..f3`) shows only the
   **first three** lines of each plan; `sharedCopyParity.test.ts` checks those against
   `features.slice(0, 3)`. Inserting a line at position 4 or later leaves the 18 extension
   catalogs alone; inserting earlier means extension-dev must update them.
+  Rewording an existing early line counts too: Pro's `unlimited` is Pro line 2, so it is
+  `upgrade.plans.pro.f2` in all 18 extension catalogs.
 - The Pro AI feature set is also written out in prose in places that no parity test links to
   the constants: `featuresPage.json` `proAi.*` (one row per key in `featureSections` in
   `app/[locale]/(marketing)/features/page.tsx`, numbered rows, not a grid, so any count lays out
