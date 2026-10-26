@@ -36,8 +36,8 @@ export const AI_MAX_GROUP_NAME_LENGTH = 100
 export const AI_MAX_ID_LENGTH = 64
 
 /**
- * Most tabs accepted in one list (a group-tabs or name-group request, or one group
- * of a suggest-sessions or organize request).
+ * Most tabs accepted in one list (a group-tabs, name-group or describe-group request, or
+ * one group of a suggest-sessions or organize request).
  */
 export const AI_MAX_TABS_PER_LIST = 1000
 
@@ -85,6 +85,12 @@ const groupTabsBodySchema = z.object({
 })
 
 const nameGroupBodySchema = z.object({ tabs: tabListSchema.min(1) })
+
+// The group name is cleaned like every other group name; an unnamed group sends `''`.
+const describeGroupBodySchema = z.object({
+  groupName: promptText(AI_MAX_GROUP_NAME_LENGTH),
+  tabs: tabListSchema.min(1),
+})
 
 // The extension sends `{ url, title }`; `{ tab: { id, title, url } }` is the
 // route's original shape and stays accepted.
@@ -138,6 +144,7 @@ const devUsageBodySchema = z.object({
 // --- Types ------------------------------------------------------------------
 
 export type PromptTab = z.infer<typeof promptTabSchema>
+export type DescribeGroupInput = z.infer<typeof describeGroupBodySchema>
 export type IdentifiedTab = z.infer<typeof identifiedTabSchema>
 export type PromptGroup = z.infer<typeof groupSchema>
 export type OrganizeGroup = PromptGroup & { permanent: boolean }
@@ -210,6 +217,19 @@ export function parseNameGroupBody(body: unknown): ParseResult<PromptTab[]> {
   if ((arrayAt(body, 'tabs')?.length ?? 0) > AI_MAX_TABS_PER_LIST) return fail('too many tabs')
   const parsed = nameGroupBodySchema.safeParse(body)
   return parsed.success ? ok(parsed.data.tabs) : fail('tabs array required')
+}
+
+/**
+ * describe-group: `{ groupName, tabs: { title, url }[] }`, both decrypted by the client (the
+ * group's stored row is ciphertext). Tabs are read strictly, like name-group: each needs a
+ * string `title` and `url`.
+ */
+export function parseDescribeGroupBody(body: unknown): ParseResult<DescribeGroupInput> {
+  if ((arrayAt(body, 'tabs')?.length ?? 0) > AI_MAX_TABS_PER_LIST) return fail('too many tabs')
+  const parsed = describeGroupBodySchema.safeParse(body)
+  return parsed.success
+    ? ok({ groupName: parsed.data.groupName, tabs: parsed.data.tabs })
+    : fail('groupName string and tabs array required')
 }
 
 /** tab-summary: `{ url, title }`, or `{ tab: { id, title, url } }`. */

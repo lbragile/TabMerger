@@ -51,6 +51,7 @@ Request order in every metered route:
 | `POST /api/ai/tab-summary` | `{ tab: {id:number,title,url} }` | `{ summary }` | 1 | Haiku 4.5 | Tab hover preview (`useTabSummary`) — see gaps |
 | `POST /api/ai/suggest-sessions` | `{ groups: {id,name,tabs}[] }` | `{ message, staleGroupIds, suggestion }` | 5 | Haiku 4.5 | `AIGroupSuggestion` banner, automatic, once per day (`useSuggestSessions`) |
 | `POST /api/ai/organize` | `{ groups?: {id,name,tabs,permanent?}[], model? }` | `{ actions: OrganizeAction[] }` | metered like the others | auto: the mid model | Header → AI actions → Organize (`useOrganizeTabs`), reviewed and applied in the popup |
+| `POST /api/ai/describe-group` | `{ groupName, tabs: {title,url}[], model? }` (`AIDescribeGroupRequest`) | `{ description }` (`AIDescribeGroupResponse`) | metered like the others | auto: the cheapest model (Haiku 5.5 / GPT-6 Luna / Gemini 3.1 Flash-Lite) | Describe group, written into the group's note |
 | `POST /api/ai/dev-usage` | `{ count }` (credits) | `{ count }` | — | — | Extension Settings → Dev → "Credits used this month" Set/Reset only |
 
 Notes:
@@ -68,6 +69,14 @@ Notes:
   characters; the extension still checks the ids against its own groups before applying. Organize
   used to be a Workflow DevKit run with a web-dashboard approval page; that path is gone (see
   [Known gaps](#known-gaps) for what is left of it).
+- **Describe group** writes 1-3 plain sentences about what a saved group holds (topic, purpose,
+  notable sites), at most `AI_MAX_GROUP_DESCRIPTION_LENGTH` (300) characters, which the extension
+  puts in the group's note. The body is validated by `parseDescribeGroupBody` (`groupName` cleaned
+  and cut to 100 characters, an unnamed group sends `''`; 1 to 1,000 tabs, each with a string
+  `title` and `url`). The task is `describeGroupTask`: constant instructions, the group name and
+  tabs only in the `<tab_data>` turn, a strict `{ description }` schema. An answer longer than the
+  cap is cut back to a word boundary; an empty answer is 502 `ai_failed` (still charged, like any
+  unusable answer).
 - **dev-usage** returns 404 unless `NODE_ENV === 'development'`. It sets `ai_usage.credits_used`
   for the current month; `count: 0` also deletes this month's `ai_credit_purchases` rows.
 
@@ -78,8 +87,8 @@ Notes:
 For signed-in Pro users `groups.windows` / `name` are ciphertext in Supabase and the server has no
 key. Any route that needs group **content** must receive it client-decrypted in the request body:
 
-- `suggest-sessions` and `group-tabs`/`name-group`/`tab-summary` already take all content from the
-  body.
+- `suggest-sessions`, `describe-group` and `group-tabs`/`name-group`/`tab-summary` take all
+  content from the body and never read group rows.
 - `organize`: the extension sends its decrypted `groups` unless it has confirmed there is no
   encryption key; with no groups in the body the route reads `groups` from the DB, and refuses
   with a 400 before the model call if any stored row is not a plaintext array. The proposal is
@@ -104,6 +113,9 @@ Run the `encrypted-column-auditor` agent before merging any new AI route.
 - Extension: `useAiUsage()` reads the same tables (it duplicates `AI_MONTHLY_CAP = 300` — keep in
   sync). Each AI hook pre-checks `remaining > 0` and throws `QuotaExceededError`; a server 429 does
   the same. Components then render `AIQuotaExceededPrompt`.
+- Describe group is metered like every other managed call (count, reserve, call, settle; see
+  [Prompt caching](#prompt-caching) for how cache tokens are priced) and unmetered on an own key.
+  Its estimate (`estimateAiCredits(model, 'describeGroup', tabs)`) assumes about 90 output tokens.
 - Per-feature toggles in extension Settings (`aiAutoGroupEnabled`, `aiNameGroupEnabled`,
   `aiSuggestSessionsEnabled`, `aiOrganizeEnabled`, `aiTabSummaryEnabled`) and a daily throttle
   (`aiDailyThrottle`, applies only to the automatic suggest-sessions call).
@@ -222,6 +234,8 @@ parser. Organize goes through the same `runAiTask`, so its `{ actions }` answer 
 
 - **Answers** are built from the request, deterministically: group-tabs groups by site, name-group
   uses the main site or the commonest title words, tab-summary starts with `[Mock summary]`,
+  describe-group starts with `[Mock description]` and names the main site, the commonest title
+  words and how many other sites there are,
   suggest-sessions suggests merging groups on the same site (or archiving one-tab groups, or saving
   the two largest as a session), organize merges groups on the same site and deletes empty ones.
 - **Credits:** managed calls report token usage estimated from the prompt and answer sizes
@@ -277,6 +291,7 @@ Open the popup, right-click → Inspect → Network, then:
 | AI rename | Group context menu → AI rename | `POST /api/ai/name-group` 200, title updates |
 | Suggestions | Automatic on popup open, once/day | `POST /api/ai/suggest-sessions` 200, banner |
 | Organize | Header → AI actions → Organize | `POST /api/ai/organize` 200 `{ actions }`, proposal shown in the popup for review |
+| Describe group | Describe group action on a saved group | `POST /api/ai/describe-group` 200 `{ description }`, the group's note is filled |
 | Tab summary | Hover a tab | `POST /api/ai/tab-summary` (currently 400, see gaps) |
 
 After each call, `ai_usage.credits_used` for the user rises by the route's cost and

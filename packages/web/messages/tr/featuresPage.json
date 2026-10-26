@@ -71,6 +71,10 @@
       "title": "Akıllı grup adları",
       "description": "Yapay zekâ gruplarınız için kısa ve açıklayıcı adlar önerir. Kabul etmek için tek tıklayın ya da kendi adınızı yazın."
     },
+    "describe": {
+      "title": "Grubu açıklayın",
+      "description": "Yapay zekâ, bir gruptaki sekmelerin ne hakkında olduğunu anlatan kısa bir not yazar; böylece onları neden kaydettiğinizi hatırlarsınız. Notu diğer notlar gibi düzenleyebilirsiniz."
+    },
     "summaries": {
       "title": "Sekme özetleri",
       "description": "Sayfayı açmadan, ne hakkında olduğunu tek cümlelik bir yapay zekâ özetiyle görmek için herhangi bir sekmenin üzerine gelin."

@@ -22,6 +22,7 @@ interface FeatureLine {
     | 'everythingInPro'
     | 'aiGrouping'
     | 'aiNames'
+    | 'aiDescribe'
     | 'smartSessions'
     | 'aiOrganize'
     | 'tabPreview'
@@ -61,6 +62,7 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'everythingInPro', inherited: true },
     { key: 'aiGrouping' },
     { key: 'aiNames' },
+    { key: 'aiDescribe' },
     { key: 'smartSessions' },
     { key: 'aiOrganize' },
     { key: 'tabPreview' },
@@ -77,6 +79,7 @@ export const PRO_AI_BYOK_FEATURE_LINES: readonly FeatureLine[] = [
   { key: 'everythingInPro', inherited: true },
   { key: 'aiGrouping' },
   { key: 'aiNames' },
+  { key: 'aiDescribe' },
   { key: 'smartSessions' },
   { key: 'aiOrganize' },
   { key: 'tabPreview' },

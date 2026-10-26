@@ -35,6 +35,7 @@ test.describe('AI feature flag off — kill switch', () => {
     ['POST', '/api/ai/organize', {}],
     ['POST', '/api/ai/group-tabs', { tabs: [] }],
     ['POST', '/api/ai/name-group', { tabs: [] }],
+    ['POST', '/api/ai/describe-group', { groupName: '', tabs: [] }],
     ['POST', '/api/ai/tab-summary', { tab: {} }],
     ['POST', '/api/ai/suggest-sessions', { groups: [] }],
     ['POST', '/api/ai/dev-usage', { count: 0 }],

@@ -270,9 +270,15 @@ export const AI_MODEL_CHOICES: readonly AiModelChoice[] = ['auto', ...AI_MODEL_I
 
 export const DEFAULT_AI_MODEL_CHOICE: AiModelChoice = 'auto';
 
-export const AI_ACTIONS = ['nameGroup', 'tabSummary', 'groupTabs', 'suggestSessions', 'organize'] as const;
+export const AI_ACTIONS = ['nameGroup', 'tabSummary', 'groupTabs', 'suggestSessions', 'organize', 'describeGroup'] as const;
 
 export type AiAction = (typeof AI_ACTIONS)[number];
+
+/**
+ * The longest description `POST /api/ai/describe-group` returns (characters, after cleaning). The
+ * extension writes it into the group's note, so it is short enough to read at a glance.
+ */
+export const AI_MAX_GROUP_DESCRIPTION_LENGTH = 300;
 
 /**
  * What the suggest-sessions banner offers for the groups a suggestion names: `merge` folds them
@@ -294,6 +300,7 @@ export const AUTO_AI_MODEL: Record<AiAction, AiModelId> = {
   groupTabs: 'claude-haiku-5-5',
   suggestSessions: 'claude-haiku-5-5',
   organize: 'claude-sonnet-5-5',
+  describeGroup: 'claude-haiku-5-5',
 };
 
 /** What `auto` uses for each feature, per provider (same rule: cheap model, mid model for organize). */
@@ -305,6 +312,7 @@ export const AUTO_AI_MODELS: Record<AiProvider, Record<AiAction, AiModelId>> = {
     groupTabs: 'gpt-6-luna',
     suggestSessions: 'gpt-6-luna',
     organize: 'gpt-6.1-sol',
+    describeGroup: 'gpt-6-luna',
   },
   google: {
     nameGroup: 'gemini-3.1-flash-lite',
@@ -312,6 +320,7 @@ export const AUTO_AI_MODELS: Record<AiProvider, Record<AiAction, AiModelId>> = {
     groupTabs: 'gemini-3.1-flash-lite',
     suggestSessions: 'gemini-3.1-flash-lite',
     organize: 'gemini-3.8-flash',
+    describeGroup: 'gemini-3.1-flash-lite',
   },
 };
 
@@ -474,6 +483,9 @@ function estimatedOutputTokens(action: AiAction, tabs: number): number {
       return 100;
     case 'organize':
       return 300 + 4 * tabs;
+    case 'describeGroup':
+      // At most AI_MAX_GROUP_DESCRIPTION_LENGTH (300) characters, about 75 tokens, plus the JSON.
+      return 90;
   }
 }
 

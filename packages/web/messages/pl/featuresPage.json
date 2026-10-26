@@ -71,6 +71,10 @@
       "title": "Inteligentne nazwy grup",
       "description": "AI proponuje zwięzłe, opisowe nazwy grup. Zaakceptuj jednym kliknięciem lub wpisz własną."
     },
+    "describe": {
+      "title": "Opisz grupę",
+      "description": "AI pisze krótką notatkę o tym, czego dotyczą karty w grupie, żeby łatwo było przypomnieć sobie, po co zostały zapisane. Edytuj ją jak każdą inną notatkę."
+    },
     "summaries": {
       "title": "Podsumowania kart",
       "description": "Najedź na dowolną kartę, aby zobaczyć jednozdaniowe podsumowanie AI tego, o czym jest strona — bez jej otwierania."

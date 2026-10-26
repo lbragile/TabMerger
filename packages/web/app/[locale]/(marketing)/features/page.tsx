@@ -22,6 +22,7 @@ import {
   Shield,
   ArrowRight,
   History,
+  NotebookPen,
   WandSparkles,
   type LucideIcon,
 } from 'lucide-react'
@@ -70,6 +71,7 @@ const featureSections: { key: SectionKey; features: { key: string; icon: LucideI
     features: [
       { key: 'autoGrouping', icon: Brain },
       { key: 'names', icon: Layers },
+      { key: 'describe', icon: NotebookPen },
       { key: 'summaries', icon: Search },
       { key: 'sessionSuggestions', icon: RefreshCw },
       { key: 'organize', icon: WandSparkles },

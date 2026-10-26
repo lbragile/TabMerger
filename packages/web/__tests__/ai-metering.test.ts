@@ -40,6 +40,7 @@ import { POST as nameGroupPOST } from '@/app/api/ai/name-group/route'
 import { POST as groupTabsPOST } from '@/app/api/ai/group-tabs/route'
 import { POST as tabSummaryPOST } from '@/app/api/ai/tab-summary/route'
 import { POST as organizePOST } from '@/app/api/ai/organize/route'
+import { POST as describeGroupPOST } from '@/app/api/ai/describe-group/route'
 import { POST as verifyPOST } from '@/app/api/ai/byok/verify/route'
 import { MODEL_REQUEST_SETTINGS } from '@/lib/ai'
 import { SYSTEM_DATA_RULE, UNTRUSTED_DATA_NOTICE } from '@/lib/ai-prompt-safety'
@@ -666,5 +667,104 @@ describe('organize (managed)', () => {
     expect(settles).toHaveLength(1)
     expect(settles[0]).toMatchObject({ p_delta: aiCallCredits('claude-opus-5-5', 400, 300) - reserve.p_amount })
     expect(res.headers.get('X-AI-Credits-Remaining')).toBe(String(2500 - 700))
+  })
+})
+
+// ─── Describe group: metered like every other route ───────────────────────────
+
+describe('describe-group', () => {
+  const url = 'http://localhost/api/ai/describe-group'
+  const body = (extra: Record<string, unknown> = {}) => ({ groupName: 'Work', tabs: TABS, ...extra })
+  const DESCRIPTION = 'React learning pages on react.dev, kept for working through the docs.'
+
+  it('managed: reserves and settles once, answers { description } and reports the balance', async () => {
+    sdk.create.mockResolvedValue(message({ description: DESCRIPTION }, { input_tokens: 400, output_tokens: 40 }))
+    stubRpc({ allowed: true, remaining: 2000, cap: 2500 }, 700)
+
+    const res = await describeGroupPOST(req(url, body({ model: 'claude-opus-5-5' })))
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ description: DESCRIPTION })
+    expect(sdk.keys).toEqual([OUR_KEY])
+
+    const [reserve] = rpcCalls('ai_reserve_credits')
+    const maxTokens = sdk.create.mock.calls[0][0].max_tokens
+    expect(reserve).toMatchObject({ p_user: USER_ID, p_amount: aiReservationCredits('claude-opus-5-5', 400, maxTokens) })
+    const settles = rpcCalls('ai_settle_credits')
+    expect(settles).toHaveLength(1)
+    expect(settles[0]).toMatchObject({ p_delta: aiCallCredits('claude-opus-5-5', 400, 40) - reserve.p_amount })
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe(String(2500 - 700))
+  })
+
+  it('managed auto runs on Haiku 5.5 with a 256-token answer budget', async () => {
+    sdk.create.mockResolvedValue(message({ description: DESCRIPTION }))
+    await describeGroupPOST(req(url, body()))
+    const create = sdk.create.mock.calls[0][0]
+    expect(create.model).toBe('claude-haiku-5-5')
+    expect(create.max_tokens).toBe(256)
+    expect(create.output_config.format.schema).toMatchObject({ required: ['description'], additionalProperties: false })
+  })
+
+  it('charges an empty answer and answers 502 ai_failed with the balance', async () => {
+    sdk.create.mockResolvedValue(message({ description: '   ' }, { input_tokens: 400, output_tokens: 5 }))
+    stubRpc({ allowed: true, remaining: 2000, cap: 2500 }, 650)
+    const res = await describeGroupPOST(req(url, body({ model: 'claude-opus-5-5' })))
+    expect(res.status).toBe(502)
+    expect(await res.json()).toEqual({ error: 'ai_failed' })
+    const reserved = rpcCalls('ai_reserve_credits')[0].p_amount
+    expect(rpcCalls('ai_settle_credits')[0].p_delta).toBe(aiCallCredits('claude-opus-5-5', 400, 5) - reserved)
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBe(String(2500 - 650))
+  })
+
+  it('400s a bad body before counting, reserving or calling the model', async () => {
+    const res = await describeGroupPOST(req(url, { groupName: 'Work', tabs: [] }))
+    expect(res.status).toBe(400)
+    expect(sdk.countTokens).not.toHaveBeenCalled()
+    expect(mockRpc).not.toHaveBeenCalled()
+    expect(sdk.create).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['free', { tier: 'free', status: 'active' }],
+    ['pro', { tier: 'pro', status: 'active' }],
+    ['canceled Pro AI', { ...MANAGED, status: 'canceled' }],
+    ['no subscription', null],
+  ])('403s ai_plan_required for %s without touching the model or the meter', async (_label, sub) => {
+    withSubscription(sub)
+    const res = await describeGroupPOST(req(url, body()))
+    expect(res.status).toBe(403)
+    expect(await res.json()).toEqual({ error: 'ai_plan_required' })
+    expect(sdk.keys).toEqual([])
+    expect(sdk.countTokens).not.toHaveBeenCalled()
+    expect(sdk.create).not.toHaveBeenCalled()
+    expect(mockRpc).not.toHaveBeenCalled()
+  })
+
+  it('BYOK: calls Anthropic with the X-AI-Key key only, unmetered', async () => {
+    withSubscription(BYOK)
+    sdk.create.mockResolvedValue(message({ description: DESCRIPTION }))
+    const res = await describeGroupPOST(req(url, body(), { 'X-AI-Key': BYOK_KEY }))
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ description: DESCRIPTION })
+    expect(sdk.keys).toEqual([BYOK_KEY])
+    expect(sdk.countTokens).not.toHaveBeenCalled()
+    expect(mockRpc).not.toHaveBeenCalled()
+    expect(res.headers.get('X-AI-Credits-Remaining')).toBeNull()
+  })
+
+  it('BYOK: 400s byok_key_missing without the key header', async () => {
+    withSubscription(BYOK)
+    const res = await describeGroupPOST(req(url, body()))
+    expect(res.status).toBe(400)
+    expect(await res.json()).toEqual({ error: 'byok_key_missing' })
+    expect(sdk.keys).toEqual([])
+  })
+
+  it('never reads group rows: the name and tabs come from the body', async () => {
+    sdk.create.mockResolvedValue(message({ description: DESCRIPTION }))
+    await describeGroupPOST(req(url, body()))
+    expect(mockFrom).not.toHaveBeenCalledWith('groups')
+    const turn = sdk.create.mock.calls[0][0].messages[0].content as string
+    expect(turn).toContain('"name":"Work"')
+    expect(turn).toContain('"title":"React docs"')
   })
 })

@@ -33,6 +33,7 @@
     "everythingInPro": "包含 Pro 的全部功能",
     "aiGrouping": "AI 标签页自动分组",
     "aiNames": "AI 分组名称建议",
+    "aiDescribe": "AI 分组描述，写入分组备注",
     "smartSessions": "智能会话建议",
     "aiOrganize": "AI 工作区整理：合并、重命名、归档和重新排列分组",
     "tabPreview": "带 AI 摘要的标签页预览",

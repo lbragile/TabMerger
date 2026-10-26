@@ -71,6 +71,10 @@
       "title": "Nomes de grupos inteligentes",
       "description": "A IA sugere nomes concisos e descritivos para seus grupos. Um clique para aceitar, ou digite o seu."
     },
+    "describe": {
+      "title": "Descreva um grupo",
+      "description": "A IA escreve uma nota curta sobre o assunto das abas de um grupo, para você lembrar por que as salvou. Edite como qualquer outra nota."
+    },
     "summaries": {
       "title": "Resumos de abas",
       "description": "Passe o mouse sobre qualquer aba para ver um resumo de uma frase feito pela IA sobre o que a página trata — sem abri-la."

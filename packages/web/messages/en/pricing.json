@@ -33,6 +33,7 @@
     "everythingInPro": "Everything in Pro",
     "aiGrouping": "AI auto-grouping of tabs",
     "aiNames": "AI group name suggestions",
+    "aiDescribe": "AI group descriptions in the group's note",
     "smartSessions": "Smart session suggestions",
     "aiOrganize": "AI workspace cleanup: merge, rename, archive & reorder groups",
     "tabPreview": "Tab preview with AI summary",

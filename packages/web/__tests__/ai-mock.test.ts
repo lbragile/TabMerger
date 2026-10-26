@@ -7,7 +7,13 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { AI_CREDITS_REMAINING_HEADER, PRESET_COLORS, aiCallCredits, aiReservationCredits } from '@tabmerger/shared'
+import {
+  AI_CREDITS_REMAINING_HEADER,
+  AI_MAX_GROUP_DESCRIPTION_LENGTH,
+  PRESET_COLORS,
+  aiCallCredits,
+  aiReservationCredits,
+} from '@tabmerger/shared'
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -34,9 +40,11 @@ import { POST as groupTabsPOST } from '@/app/api/ai/group-tabs/route'
 import { POST as tabSummaryPOST } from '@/app/api/ai/tab-summary/route'
 import { POST as suggestPOST } from '@/app/api/ai/suggest-sessions/route'
 import { POST as organizePOST } from '@/app/api/ai/organize/route'
+import { POST as describeGroupPOST } from '@/app/api/ai/describe-group/route'
 import { POST as verifyPOST } from '@/app/api/ai/byok/verify/route'
 import {
   buildAiRequest,
+  describeGroupTask,
   groupTabsTask,
   nameGroupTask,
   organizeTask,
@@ -262,6 +270,36 @@ describe('mock answers pass through each task’s real parser', () => {
       ])
     )
     expect(name).toBe('Tokyo Hotels')
+  })
+
+  it('describe-group: the main site, its top title words and how many other sites', () => {
+    const description = parse(describeGroupTask({ groupName: 'Work', tabs: TABS }))
+    expect(description).toBe('[Mock description] Mostly GitHub tabs about pull and tabmerger, plus 1 other site.')
+    expect(description.length).toBeLessThanOrEqual(AI_MAX_GROUP_DESCRIPTION_LENGTH)
+  })
+
+  it('describe-group: a single-site group names no other sites', () => {
+    const description = parse(describeGroupTask({ groupName: '', tabs: [TABS[0], TABS[1]] }))
+    expect(description).toBe('[Mock description] GitHub tabs about tabmerger and pull.')
+  })
+
+  it('describe-group: a mixed group lists its first two sites', () => {
+    const description = parse(
+      describeGroupTask({
+        groupName: 'Trip',
+        tabs: [
+          { title: 'Flights to Tokyo', url: 'https://a.example/' },
+          { title: 'Tokyo hotels', url: 'https://b.example/' },
+          { title: 'Hotels near Shibuya', url: 'https://c.example/' },
+        ],
+      })
+    )
+    expect(description).toBe('[Mock description] 3 tabs across 3 sites (including A and B), mostly about tokyo and hotels.')
+  })
+
+  it('describe-group: is deterministic', () => {
+    const task = describeGroupTask({ groupName: 'Work', tabs: TABS })
+    expect(mockReplyText(task)).toBe(mockReplyText(describeGroupTask({ groupName: 'Work', tabs: TABS })))
   })
 
   it('tab-summary: built from the title and URL and marked as a mock', () => {
@@ -689,5 +727,38 @@ describe('mock off', () => {
     expect(sdk.create).toHaveBeenCalledTimes(1)
     expect(res.headers.get(AI_MOCK_HEADER)).toBeNull()
     expect(consoleWarn).not.toHaveBeenCalledWith('AI mock mode: responses are fake')
+  })
+})
+
+// ─── Describe group with the mock on ──────────────────────────────────────────
+
+describe('describe-group with the mock on', () => {
+  beforeEach(() => mockOn())
+
+  it('managed: answers the mock description, reserves and settles real credits', async () => {
+    const res = await describeGroupPOST(req('describe-group', { groupName: 'Work', tabs: TABS }))
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({
+      description: '[Mock description] Mostly GitHub tabs about pull and tabmerger, plus 1 other site.',
+    })
+    expect(res.headers.get(AI_MOCK_HEADER)).toBe('1')
+    expect(rpcCalls('ai_reserve_credits')).toHaveLength(1)
+    expect(res.headers.get(AI_CREDITS_REMAINING_HEADER)).not.toBeNull()
+    expect(sdk.create).not.toHaveBeenCalled()
+    expect(sdk.countTokens).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['Anthropic', ANTHROPIC_MOCK_KEY],
+    ['OpenAI', OPENAI_KEY],
+    ['Google', GOOGLE_KEY],
+  ])('own %s key: mock answer, no credits, no provider call', async (_label, key) => {
+    withSubscription(BYOK)
+    const res = await describeGroupPOST(req('describe-group', { groupName: 'Work', tabs: TABS }, { 'X-AI-Key': key }))
+    expect(res.status).toBe(200)
+    expect((await res.json()).description).toMatch(/^\[Mock description\] /)
+    expect(res.headers.get(AI_CREDITS_REMAINING_HEADER)).toBeNull()
+    expect(mockRpc).not.toHaveBeenCalled()
+    expect(fetchSpy).not.toHaveBeenCalled()
   })
 })

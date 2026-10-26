@@ -31,4 +31,11 @@ and Organize, group names; never page content.
 
 Bulk edits to the 18 message files: `json.dumps(data, ensure_ascii=False, indent=2) + '\n'`
 round-trips them byte-for-byte (check that before writing), so a Python script that loads,
-inserts keys in order and dumps gives a minimal diff.
+inserts keys in order and dumps gives a minimal diff. On a Windows checkout with
+`core.autocrlf=true` the working-tree files are CRLF (index LF), so the round-trip check fails
+until you normalise `\r\n` to `\n` on read and write the file's own newline style back.
+For the FAQ prose, insert the new clause by anchoring on the preceding feature's parenthetical
+and assert exactly one hit per variant (`answer`, `answerComingSoon`, `answerOwnKey`): the
+count word ("five" to "six") is spelled differently per language ("năm" also means "year" in
+Vietnamese, so match "năm tính năng"), and a dry run with these asserts catches a drifted
+translation before anything is written.

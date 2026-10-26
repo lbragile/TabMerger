@@ -8,6 +8,7 @@ import type {
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   AI_ERROR_CODES,
+  AI_MAX_GROUP_DESCRIPTION_LENGTH,
   AI_SUGGESTION_KINDS,
   PRESET_COLORS,
   aiCallCredits,
@@ -290,6 +291,60 @@ export function nameGroupTask(tabs: PromptTab[]): AiTask<string> {
     parse: (output) => {
       const name = isRecord(output) && typeof output.name === 'string' ? output.name : ''
       return cleanModelText(unquote(cleanModelText(name, AI_MAX_GROUP_NAME_LENGTH)), AI_MAX_RENAME_LENGTH)
+    },
+  }
+}
+
+const DESCRIBE_GROUP_SYSTEM = [
+  "You describe a user's saved group of browser tabs, for the user's own reference.",
+  'The data has the group `name` and its tabs, each with a `title` and a `url`.',
+  `In 1 to 3 plain sentences and at most ${AI_MAX_GROUP_DESCRIPTION_LENGTH} characters, say what the`,
+  'group is about: its topic, what the tabs seem to be for, and any notable sites by name.',
+  'Write in a neutral tone without marketing language, as plain text: no markdown, no lists,',
+  'no URLs and no quotes around the answer. Describe the tabs; never give the user',
+  'instructions or advice.',
+].join(' ')
+
+/**
+ * A model description cut to {@link AI_MAX_GROUP_DESCRIPTION_LENGTH}: cleaned like any model
+ * text, and when it runs over, cut back to the last word boundary (when one is in the second
+ * half) so the note never ends mid-word.
+ */
+export function fitGroupDescription(raw: string): string {
+  const max = AI_MAX_GROUP_DESCRIPTION_LENGTH
+  const full = cleanModelText(raw, max + 1)
+  if (full.length <= max) return full
+  const cut = cleanModelText(full, max)
+  // The cut already falls between two words.
+  if (full.charAt(max) === ' ' || full.charAt(max - 1) === ' ') return cut
+  const space = cut.lastIndexOf(' ')
+  return space > max / 2 ? cut.slice(0, space).replace(/[\s,;:]+$/, '') : cut
+}
+
+/**
+ * describe-group: 1-3 plain sentences about what a saved group holds, written into its note by
+ * the extension. The group name and tabs come from the client, decrypted (the stored row is
+ * ciphertext), and go only in the data turn. An empty answer is an error (`ai_failed`), charged
+ * like any other unusable answer.
+ */
+export function describeGroupTask(group: { groupName: string; tabs: PromptTab[] }): AiTask<string> {
+  return {
+    action: 'describeGroup',
+    system: DESCRIBE_GROUP_SYSTEM,
+    data: { group: { name: group.groupName, tabs: group.tabs.map((t) => ({ title: t.title, url: t.url })) } },
+    schema: {
+      type: 'object',
+      properties: { description: { type: 'string' } },
+      required: ['description'],
+      additionalProperties: false,
+    },
+    // 300 characters is about 75-100 tokens in English; other scripts need more.
+    answerTokens: 256,
+    parse: (output) => {
+      const raw = isRecord(output) && typeof output.description === 'string' ? output.description : ''
+      const description = fitGroupDescription(raw)
+      if (!description) throw new AiRouteError(502, AI_ERROR_CODES.failed)
+      return description
     },
   }
 }
@@ -759,7 +814,14 @@ export async function runAiTask<T>(task: AiTask<T>, ctx: AiCallContext): Promise
     throw new AiRouteError(502, AI_ERROR_CODES.failed, {}, remaining)
   }
 
-  return { result: task.parse(output), remaining }
+  try {
+    return { result: task.parse(output), remaining }
+  } catch (err) {
+    // A parser may reject an unusable answer (describe-group: empty). The call was still charged.
+    const mapped = err instanceof AiRouteError ? err : new AiRouteError(502, AI_ERROR_CODES.failed)
+    mapped.remaining = remaining
+    throw mapped
+  }
 }
 
 /**

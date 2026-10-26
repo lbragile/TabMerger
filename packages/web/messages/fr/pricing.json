@@ -33,6 +33,7 @@
     "everythingInPro": "Tout ce qui est dans Pro",
     "aiGrouping": "Regroupement automatique des onglets par IA",
     "aiNames": "Suggestions de noms de groupes par IA",
+    "aiDescribe": "Descriptions de groupes par IA dans la note du groupe",
     "smartSessions": "Suggestions de sessions intelligentes",
     "aiOrganize": "Rangement de l’espace de travail par IA : fusionner, renommer, archiver et réordonner les groupes",
     "tabPreview": "Aperçu d’onglet avec résumé IA",

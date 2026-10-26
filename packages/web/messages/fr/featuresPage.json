@@ -71,6 +71,10 @@
       "title": "Noms de groupes intelligents",
       "description": "L’IA propose des noms concis et descriptifs pour vos groupes. Un clic pour accepter, ou saisissez le vôtre."
     },
+    "describe": {
+      "title": "Décrivez un groupe",
+      "description": "L’IA rédige une courte note sur le sujet des onglets d’un groupe, pour que vous vous rappeliez pourquoi vous les avez enregistrés. Modifiez-la comme n’importe quelle note."
+    },
     "summaries": {
       "title": "Résumés d’onglets",
       "description": "Survolez un onglet pour voir un résumé IA d’une phrase de la page, sans l’ouvrir."

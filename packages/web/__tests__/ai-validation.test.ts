@@ -6,7 +6,10 @@
 import { describe, it, expect } from 'vitest'
 import {
   AI_MAX_DEV_USAGE_COUNT,
+  AI_MAX_GROUP_NAME_LENGTH,
+  AI_MAX_TABS_PER_LIST,
   AI_MAX_TITLE_LENGTH,
+  parseDescribeGroupBody,
   parseDevUsageBody,
   parseGroupTabsBody,
   parseNameGroupBody,
@@ -83,6 +86,60 @@ describe('route parsers', () => {
     expect(parseNameGroupBody({ tabs: [tab] })).toStrictEqual({
       ok: true,
       data: [{ title: 'Docs', url: 'https://example.com' }],
+    })
+  })
+
+  it('describe-group keeps the group name and each tab\'s title and url only', () => {
+    expect(parseDescribeGroupBody({ groupName: 'Work', tabs: [tab], groupId: 'g1', note: 'n', model: 'auto' })).toStrictEqual({
+      ok: true,
+      data: { groupName: 'Work', tabs: [{ title: 'Docs', url: 'https://example.com' }] },
+    })
+  })
+
+  it('describe-group accepts an unnamed group', () => {
+    expect(parseDescribeGroupBody({ groupName: '', tabs: [tab] })).toMatchObject({ ok: true, data: { groupName: '' } })
+  })
+
+  it('describe-group cleans and cuts the group name like other group names', () => {
+    const nl = String.fromCharCode(10)
+    const result = parseDescribeGroupBody({ groupName: `  Work${nl}<b>${'N'.repeat(200)}`, tabs: [tab] })
+    expect(result.ok).toBe(true)
+    const name = result.ok ? result.data.groupName : ''
+    expect(name.length).toBe(AI_MAX_GROUP_NAME_LENGTH)
+    expect(name.startsWith(`Work ${String.fromCharCode(0x2039)}b${String.fromCharCode(0x203a)}`)).toBe(true)
+  })
+
+  it('describe-group cleans titles and URLs like name-group', () => {
+    const result = parseDescribeGroupBody({
+      groupName: 'Work',
+      // Credentials in the URL (joined so the secret scanner doesn't read it as an email address).
+      tabs: [{ title: 'T'.repeat(AI_MAX_TITLE_LENGTH + 20), url: ['https://user:pw', 'example.com/a?token=s#frag'].join('@') }],
+    })
+    expect(result).toStrictEqual({
+      ok: true,
+      data: { groupName: 'Work', tabs: [{ title: 'T'.repeat(AI_MAX_TITLE_LENGTH), url: 'https://example.com/a' }] },
+    })
+  })
+
+  it.each([
+    ['no body', undefined],
+    ['an array', []],
+    ['a missing group name', { tabs: [{ title: 'a', url: 'https://a.example' }] }],
+    ['a non-string group name', { groupName: 7, tabs: [{ title: 'a', url: 'https://a.example' }] }],
+    ['no tabs', { groupName: 'x' }],
+    ['an empty tab list', { groupName: 'x', tabs: [] }],
+    ['a tab without a title', { groupName: 'x', tabs: [{ url: 'https://a.example' }] }],
+    ['a tab with a non-string url', { groupName: 'x', tabs: [{ title: 'a', url: 1 }] }],
+  ])('describe-group rejects %s', (_label, body) => {
+    expect(parseDescribeGroupBody(body)).toStrictEqual({ ok: false, error: 'groupName string and tabs array required' })
+  })
+
+  it('describe-group accepts the tab ceiling and rejects one more', () => {
+    const tabs = (n: number) => Array.from({ length: n }, () => ({ title: 't', url: 'https://e.com' }))
+    expect(parseDescribeGroupBody({ groupName: 'x', tabs: tabs(AI_MAX_TABS_PER_LIST) }).ok).toBe(true)
+    expect(parseDescribeGroupBody({ groupName: 'x', tabs: tabs(AI_MAX_TABS_PER_LIST + 1) })).toStrictEqual({
+      ok: false,
+      error: 'too many tabs',
     })
   })
 

@@ -71,6 +71,10 @@
       "title": "Intelligente Gruppennamen",
       "description": "Die KI schlägt prägnante, aussagekräftige Namen für deine Gruppen vor. Ein Klick zum Übernehmen, oder tippe einen eigenen."
     },
+    "describe": {
+      "title": "Gruppe beschreiben",
+      "description": "Die KI schreibt eine kurze Notiz dazu, worum es in den Tabs einer Gruppe geht, damit du noch weißt, warum du sie gespeichert hast. Bearbeite sie wie jede andere Notiz."
+    },
     "summaries": {
       "title": "Tab-Zusammenfassungen",
       "description": "Fahre über einen Tab und sieh eine einsätzige KI-Zusammenfassung, worum es auf der Seite geht – ohne sie zu öffnen."

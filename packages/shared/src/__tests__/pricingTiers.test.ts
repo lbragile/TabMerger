@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getPricingTier } from '../constants';
 
 const ORGANIZE_LINE = 'AI workspace cleanup: merge, rename, archive & reorder groups';
+const DESCRIBE_LINE = "AI group descriptions in the group's note";
 
 /**
  * What Pro AI sells, in both options (TabMerger handles setup, or the user's own key). The web
@@ -12,17 +13,19 @@ describe('Pro AI feature lists', () => {
   const proAi = getPricingTier('pro_ai');
   const lists = { managed: proAi.features, byok: proAi.byok!.features };
 
-  it.each(Object.entries(lists))('%s: lists all five AI features, Organize after session suggestions', (_option, features) => {
-    for (const line of [
+  it.each(Object.entries(lists))('%s: lists all six AI features in order, Describe group after naming', (_option, features) => {
+    const aiLines = [
       'AI auto-grouping of tabs',
       'AI group name suggestions',
+      DESCRIBE_LINE,
       'Smart session suggestions',
       ORGANIZE_LINE,
       'Tab preview with AI summary',
-    ]) {
-      expect(features).toContain(line);
-    }
-    expect(features.indexOf(ORGANIZE_LINE)).toBe(features.indexOf('Smart session suggestions') + 1);
+    ];
+    // The six AI lines follow "Everything in Pro" in this order; the rest (credits or own key,
+    // model choice) come after them.
+    expect(features.slice(1, 1 + aiLines.length)).toEqual(aiLines);
+    expect(features.indexOf(DESCRIBE_LINE)).toBe(features.indexOf('AI group name suggestions') + 1);
   });
 
   it('keeps the first three lines (the extension upgrade prompt shows only those) unchanged', () => {

@@ -71,6 +71,10 @@
       "title": "Nama grup cerdas",
       "description": "AI menyarankan nama yang ringkas dan deskriptif untuk grup Anda. Terima dengan sekali klik, atau ketik nama sendiri."
     },
+    "describe": {
+      "title": "Deskripsikan grup",
+      "description": "AI menulis catatan singkat tentang isi tab dalam sebuah grup, agar Anda ingat alasan menyimpannya. Edit seperti catatan lainnya."
+    },
     "summaries": {
       "title": "Ringkasan tab",
       "description": "Arahkan kursor ke tab mana pun untuk melihat ringkasan AI satu kalimat tentang isi halaman — tanpa membukanya."

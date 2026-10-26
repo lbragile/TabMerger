@@ -33,6 +33,7 @@
     "everythingInPro": "Pro'daki her şey",
     "aiGrouping": "Sekmelerin yapay zekâ ile otomatik gruplanması",
     "aiNames": "Yapay zekâ ile grup adı önerileri",
+    "aiDescribe": "Yapay zekâ ile grup açıklamaları (grup notuna yazılır)",
     "smartSessions": "Akıllı oturum önerileri",
     "aiOrganize": "Yapay zekâ ile çalışma alanı düzenleme: grupları birleştirme, yeniden adlandırma, arşivleme ve yeniden sıralama",
     "tabPreview": "Yapay zekâ özetli sekme önizlemesi",

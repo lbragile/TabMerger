@@ -33,6 +33,7 @@
     "everythingInPro": "Proのすべての機能",
     "aiGrouping": "AIによるタブの自動グループ化",
     "aiNames": "AIによるグループ名の提案",
+    "aiDescribe": "AIによるグループの説明（グループのメモに記入）",
     "smartSessions": "スマートなセッションの提案",
     "aiOrganize": "AIでワークスペースを整理：グループの統合、名前変更、アーカイブ、並べ替え",
     "tabPreview": "AI要約付きのタブプレビュー",

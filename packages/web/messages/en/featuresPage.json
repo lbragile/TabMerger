@@ -71,6 +71,10 @@
       "title": "Smart group names",
       "description": "AI suggests concise, descriptive names for your groups. One click to accept, or type your own."
     },
+    "describe": {
+      "title": "Describe a group",
+      "description": "AI writes a short note about what a group's tabs are about, so you remember why you saved them. Edit it like any note."
+    },
     "summaries": {
       "title": "Tab summaries",
       "description": "Hover any tab to see a one-sentence AI summary of what the page is about — without opening it."

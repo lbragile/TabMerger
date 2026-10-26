@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
+  AI_ACTIONS,
   AI_CACHE_WRITE_MULTIPLIER,
+  AI_MAX_GROUP_DESCRIPTION_LENGTH,
   AI_RESERVE_INPUT_MARGIN_PERCENT,
   AI_COST_SHARE_PERCENT,
   AI_ESTIMATE_EXAMPLES,
@@ -333,6 +335,61 @@ describe('estimates', () => {
   it('matches the spec\'s organize example on Haiku and Sonnet', () => {
     expect(estimateAiCredits('claude-haiku-5-5', 'organize', 300)).toBe(3);
     expect(estimateAiCredits('claude-sonnet-5-5', 'organize', 300)).toBe(52);
+  });
+});
+
+describe('estimates for every action', () => {
+  it('gives every action a positive, finite estimate on every model', () => {
+    for (const action of AI_ACTIONS) {
+      for (const model of AI_MODEL_IDS) {
+        expect(estimateAiCredits(model, action, 10)).toBeGreaterThan(0);
+        const usd = estimateAiCostUsd(model, action, 10);
+        expect(Number.isFinite(usd) && usd > 0).toBe(true);
+      }
+    }
+  });
+
+  it('estimates describe-group as a short answer: above name-group, far below organize', () => {
+    expect(estimateAiCredits('claude-haiku-5-5', 'describeGroup', 10)).toBe(1);
+    expect(estimateAiCredits('claude-sonnet-5-5', 'describeGroup', 10)).toBe(3);
+    expect(estimateAiCredits('claude-opus-5-5', 'describeGroup', 10)).toBe(12);
+    for (const model of AI_MODEL_IDS) {
+      expect(estimateAiCostUsd(model, 'describeGroup', 10)).toBeGreaterThan(estimateAiCostUsd(model, 'nameGroup', 10));
+      expect(estimateAiCostUsd(model, 'describeGroup', 10)).toBeLessThan(estimateAiCostUsd(model, 'organize', 10));
+    }
+  });
+
+  it('grows the describe-group estimate with the tab count', () => {
+    expect(estimateAiCostUsd('claude-haiku-5-5', 'describeGroup', 100)).toBeGreaterThan(
+      estimateAiCostUsd('claude-haiku-5-5', 'describeGroup', 10),
+    );
+  });
+});
+
+describe('describe group', () => {
+  it('is an AI action', () => {
+    expect(AI_ACTIONS).toContain('describeGroup');
+  });
+
+  it('runs on each provider\'s cheapest model under auto, like name-group', () => {
+    for (const provider of AI_PROVIDERS) {
+      expect(AUTO_AI_MODELS[provider].describeGroup).toBe(aiModelsForProvider(provider)[0]);
+      expect(AUTO_AI_MODELS[provider].describeGroup).toBe(AUTO_AI_MODELS[provider].nameGroup);
+      expect(resolveAiModel('auto', 'describeGroup', provider)).toBe(aiModelsForProvider(provider)[0]);
+    }
+    expect(AUTO_AI_MODEL.describeGroup).toBe('claude-haiku-5-5');
+  });
+
+  it('caps the description at 300 characters', () => {
+    expect(AI_MAX_GROUP_DESCRIPTION_LENGTH).toBe(300);
+  });
+});
+
+describe('auto models', () => {
+  it('cover every action on every provider', () => {
+    for (const provider of AI_PROVIDERS) {
+      expect(Object.keys(AUTO_AI_MODELS[provider]).sort()).toEqual([...AI_ACTIONS].sort());
+    }
   });
 });
 

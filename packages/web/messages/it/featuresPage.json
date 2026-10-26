@@ -71,6 +71,10 @@
       "title": "Nomi dei gruppi intelligenti",
       "description": "L'IA suggerisce nomi concisi e descrittivi per i tuoi gruppi. Un clic per accettare, oppure scrivi il tuo."
     },
+    "describe": {
+      "title": "Descrivi un gruppo",
+      "description": "L'IA scrive una breve nota sull'argomento delle schede di un gruppo, così ricordi perché le hai salvate. Modificala come qualsiasi altra nota."
+    },
     "summaries": {
       "title": "Riepiloghi delle schede",
       "description": "Passa il mouse su una scheda per vedere un riepilogo IA di una frase sul contenuto della pagina, senza aprirla."

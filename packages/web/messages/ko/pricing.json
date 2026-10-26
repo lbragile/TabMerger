@@ -33,6 +33,7 @@
     "everythingInPro": "Pro의 모든 기능",
     "aiGrouping": "AI 탭 자동 그룹화",
     "aiNames": "AI 그룹 이름 제안",
+    "aiDescribe": "AI 그룹 설명(그룹 메모에 작성)",
     "smartSessions": "스마트 세션 제안",
     "aiOrganize": "AI 작업 공간 정리: 그룹 병합, 이름 변경, 보관, 순서 변경",
     "tabPreview": "AI 요약이 포함된 탭 미리보기",

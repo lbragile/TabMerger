@@ -56,17 +56,22 @@ describe('FeaturesPage', () => {
     expect(coreSecond.closest('div.grid')?.textContent).toContain('02')
   })
 
-  it('lists all five Pro AI features, with Organize last as row "05"', async () => {
+  it('lists all six Pro AI features, with Describe a group after naming and Organize last as row "06"', async () => {
     render(await FeaturesPage())
 
     const aiSection = screen.getByRole('heading', { name: 'AI-powered organization' }).closest('div')?.parentElement as HTMLElement
     const rowTitles = within(aiSection)
       .getAllByRole('heading', { level: 3 })
       .map((h) => h.textContent)
-    expect(rowTitles).toEqual(['Auto-grouping', 'Smart group names', 'Tab summaries', 'Session suggestions', 'Organize your workspace'])
+    expect(rowTitles).toEqual(['Auto-grouping', 'Smart group names', 'Describe a group', 'Tab summaries', 'Session suggestions', 'Organize your workspace'])
+
+    const describeRow = within(aiSection).getByRole('heading', { name: 'Describe a group' }).closest('div.grid') as HTMLElement
+    expect(describeRow.textContent).toContain('03')
+    expect(describeRow.textContent).toMatch(/writes a short note about what a group's tabs are about/)
+    expect(describeRow.textContent).toMatch(/Edit it like any note/)
 
     const organizeRow = within(aiSection).getByRole('heading', { name: 'Organize your workspace' }).closest('div.grid') as HTMLElement
-    expect(organizeRow.textContent).toContain('05')
+    expect(organizeRow.textContent).toContain('06')
     expect(organizeRow.textContent).toMatch(/proposes merges, renames, archives and a new order/)
     expect(organizeRow.textContent).toMatch(/in one step you can undo/)
   })

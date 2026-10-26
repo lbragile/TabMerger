@@ -142,6 +142,22 @@ export interface AINameGroupResponse {
   name: string;
 }
 
+/**
+ * `POST /api/ai/describe-group` body: a saved group's name and tabs, decrypted by the client (the
+ * server never reads group content from Supabase, it is end-to-end encrypted).
+ */
+export interface AIDescribeGroupRequest {
+  groupName: string;
+  tabs: Pick<Tab, 'title' | 'url'>[];
+  /** An `AiModelChoice`; missing or `auto` uses the feature's default model. */
+  model?: string;
+}
+
+/** `POST /api/ai/describe-group` 200 body: 1-3 plain sentences, at most `AI_MAX_GROUP_DESCRIPTION_LENGTH` characters. */
+export interface AIDescribeGroupResponse {
+  description: string;
+}
+
 export interface AITabSummaryRequest {
   url: string;
   title: string;

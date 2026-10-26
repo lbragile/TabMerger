@@ -513,6 +513,40 @@ function mockTabSummary(data: Record<string, unknown>) {
   return { summary: `[Mock summary] A page ${where} titled ${title}.${path}` }
 }
 
+/** "1 other site" / "3 other sites". */
+function sitesPhrase(count: number, other: boolean): string {
+  return `${count} ${other ? 'other ' : ''}site${count === 1 ? '' : 's'}`
+}
+
+/**
+ * describe-group: the site that holds most of the tabs (when it holds at least half) and the top
+ * title words, plus how many other sites there are. For example "[Mock description] Mostly
+ * GitHub tabs about pull and issues, plus 2 other sites." Mixed groups list their first two sites.
+ */
+function mockDescribeGroup(data: Record<string, unknown>) {
+  const group = isRecord(data.group) ? data.group : {}
+  const tabs = tabsOf(group.tabs)
+  const sites = bySite(tabs)
+  const site = dominantSite(tabs)
+  const siteCount = site ? tabs.filter((t) => mockSiteOf(t.url).key === site.key).length : 0
+  const tabWord = tabs.length === 1 ? 'tab' : 'tabs'
+
+  let description: string
+  if (site && site.key !== OTHER_SITE.key && siteCount * 2 >= tabs.length) {
+    const words = topTitleWords(tabs, site.label.toLowerCase()).slice(0, 2)
+    const about = words.length > 0 ? ` about ${words.join(' and ')}` : ''
+    const others = sites.length - 1
+    const rest = others > 0 ? `, plus ${sitesPhrase(others, true)}` : ''
+    description = `${siteCount * 2 > tabs.length && others > 0 ? 'Mostly ' : ''}${site.label} ${tabWord}${about}${rest}.`
+  } else {
+    const words = topTitleWords(tabs, '').slice(0, 2)
+    const about = words.length > 0 ? `, mostly about ${words.join(' and ')}` : ''
+    const named = sites.slice(0, 2).map((b) => b.site.label).join(' and ')
+    description = `${tabs.length} ${tabWord} across ${sitesPhrase(sites.length, false)} (including ${named})${about}.`
+  }
+  return { description: `[Mock description] ${description.charAt(0).toUpperCase()}${description.slice(1)}` }
+}
+
 /**
  * suggest-sessions: two groups on the same site → merge them; else groups with at most one tab
  * → archive them; else the two largest groups → save them as a session (no groups named, so the
@@ -618,5 +652,7 @@ export function mockReplyText(task: AiTask<unknown>): string {
       return JSON.stringify(mockSuggestSessions(data))
     case 'organize':
       return JSON.stringify(mockOrganize(data))
+    case 'describeGroup':
+      return JSON.stringify(mockDescribeGroup(data))
   }
 }

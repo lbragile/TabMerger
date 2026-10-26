@@ -71,6 +71,10 @@
       "title": "Nombres de grupo inteligentes",
       "description": "La IA sugiere nombres breves y descriptivos para tus grupos. Un clic para aceptar, o escribe el tuyo."
     },
+    "describe": {
+      "title": "Describe un grupo",
+      "description": "La IA escribe una breve nota sobre de qué tratan las pestañas de un grupo, para que recuerdes por qué las guardaste. Edítala como cualquier otra nota."
+    },
     "summaries": {
       "title": "Resúmenes de pestañas",
       "description": "Pasa el cursor sobre cualquier pestaña para ver un resumen de una frase, generado por IA, de qué trata la página, sin abrirla."
