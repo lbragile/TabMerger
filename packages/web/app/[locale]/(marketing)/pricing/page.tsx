@@ -1,13 +1,10 @@
 import { Suspense } from 'react'
-import { isAiMode, type AiMode } from '@tabmerger/shared'
 import { pageMetadata } from '@/lib/seo'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { createClient } from '@/lib/supabase/server'
 import { PricingTable } from '@/components/pricing/PricingTable'
 import { CheckoutCanceledTracker } from '@/components/pricing/CheckoutCanceledTracker'
-import { getPriceInfo, type BillingInterval } from '@/lib/tiers'
-import { hasCloudSync } from '@/lib/cloudSync'
+import { getCurrentPlan } from '@/lib/currentPlan'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
@@ -17,39 +14,9 @@ export async function generateMetadata() {
 }
 
 export default async function PricingPage() {
-  const supabase = await createClient()
   const t = await getTranslations('pricing.page')
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  let currentTier = 'free'
-  let currentInterval: BillingInterval | undefined
-  let currentAiMode: AiMode | undefined
-  let currentPeriodEnd: string | null = null
-  if (user) {
-    const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('tier, status, stripe_price_id, ai_mode, current_period_end')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
-
-    // Same paid-plan rule as the rest of the product (active/trialing/past_due), not just 'active'.
-    if (subscription && hasCloudSync(subscription)) {
-      currentTier = subscription.tier
-      // Resolved here: the Stripe price IDs are server-only env vars, undefined in the browser.
-      const priceInfo = getPriceInfo(subscription.stripe_price_id)
-      currentInterval = priceInfo?.interval
-      currentPeriodEnd = subscription.current_period_end ?? null
-      // Pro AI's option: the price says which it is; the stored column covers a price this
-      // deployment doesn't know.
-      if (subscription.tier === 'pro_ai') {
-        currentAiMode = priceInfo?.aiMode ?? (isAiMode(subscription.ai_mode) ? subscription.ai_mode : 'managed')
-      }
-    }
-  }
+  // Guests and free accounts both come back as 'free'; `signedIn` tells them apart.
+  const plan = await getCurrentPlan()
 
   return (
     <div className="py-16">
@@ -67,12 +34,12 @@ export default async function PricingPage() {
           </p>
         </div>
         <PricingTable
-          currentTier={currentTier}
-          currentInterval={currentInterval}
-          currentAiMode={currentAiMode}
-          currentPeriodEnd={currentPeriodEnd}
+          currentTier={plan.tier}
+          currentInterval={plan.interval}
+          currentAiMode={plan.aiMode}
+          currentPeriodEnd={plan.periodEnd}
           installHref={getStoreLinks()[await getVisitorBrowser()]}
-          signedIn={!!user}
+          signedIn={plan.signedIn}
         />
       </div>
       <p className="text-center text-sm text-text2 mt-14">

@@ -21,7 +21,8 @@ their "Upgrade to"/"Switch to"/"Downgrade to" wording.
   tests meant as a signed-in free account must pass `currentTier="free" signedIn`.
 - Do not "fix" this by passing `currentTier={undefined}` for guests: it also removes the Free
   card's "Current" badge and border for guests, a visible change.
-- The home page's `PricingTeaser` has no per-plan buy button (only "See full pricing") and does not
-  read the session, so it needs no guest wording. `__tests__/pricing-guest-cta.test.tsx` guards that.
+- The home page's `PricingTeaser` has no per-plan buy button (only "See full pricing"), so it needs
+  no guest wording. `__tests__/pricing-guest-cta.test.tsx` guards that. It does read the plan (for
+  Current/Recommended only), see [[plan-aware-listings]].
 - `e2e/pricing.spec.ts` can run under the signed-out and the `authenticated` Playwright projects,
   so its Pro AI CTA matcher accepts both labels (see [[playwright-authenticated-project-leak]]).

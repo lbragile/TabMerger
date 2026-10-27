@@ -3,7 +3,8 @@ import { Hero } from '@/components/marketing/Hero'
 import { ReviewsStrip } from '@/components/marketing/ReviewsStrip'
 import { ReviewsStripSkeleton } from '@/components/marketing/ReviewsStripSkeleton'
 import { Features } from '@/components/marketing/Features'
-import { PricingTeaser } from '@/components/marketing/PricingTeaser'
+import { PricingTeaserForVisitor } from '@/components/marketing/PricingTeaser'
+import { getCurrentPlan, GUEST_PLAN } from '@/lib/currentPlan'
 import { FinalCta } from '@/components/marketing/FinalCta'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { useTranslations } from 'next-intl'
@@ -26,6 +27,9 @@ function HomeJsonLd() {
 export default async function HomePage() {
   // Server side, so the first HTML already leads with the visitor's browser (no reorder flash).
   const browser = await getVisitorBrowser()
+  // Started, not awaited: the page is sent straight away and the pricing teaser's badge follows
+  // the signed-in plan when it arrives. A failed lookup shows the teaser as for a guest.
+  const planPromise = getCurrentPlan().catch(() => GUEST_PLAN)
 
   return (
     <>
@@ -38,7 +42,7 @@ export default async function HomePage() {
         <ReviewsStrip />
       </Suspense>
       <Features />
-      <PricingTeaser />
+      <PricingTeaserForVisitor planPromise={planPromise} />
       <FinalCta browser={browser} />
     </>
   )

@@ -12,24 +12,18 @@ import { cn } from '@/lib/utils'
 import { ALREADY_SUBSCRIBED_ERROR, PAY_OR_RESUME_ERROR } from '@/lib/checkoutErrors'
 import { CHECKOUT_TIERS, trackBeginCheckout, type CheckoutTier } from '@/lib/checkoutAnalytics'
 import { isExternalStoreLink } from '@/lib/storeLinks'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 import { useListPrice, useZeroPrice } from './priceFormat'
 import type { TierFeature } from './tierFeatures'
 import { AiOptionSwitch } from './AiOptionSwitch'
 import { AI_OPTION_ORDER, initialAiMode, isAiOptionAvailable } from './aiOptions'
 import { usePlanChange } from './usePlanChange'
+import { normalizeTier, planCardStatus } from './planStatus'
 import type { PaidTierKey } from '@/lib/tiers'
 
 /** The card's full-width CTA: wraps instead of overflowing the card when a translated label is
  *  long, and keeps the usual 40px single-line height whenever it fits. */
 const CTA_CLASS = 'w-full rounded-lg h-auto min-h-10 whitespace-normal text-center'
-
-// ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
-// and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
-// so `currentTier` (always DB shape) compares correctly against this card's `tier` prop.
-const TIER_RANK: Record<string, number> = { free: 0, pro: 1, proAi: 2, pro_ai: 2 }
-function normalizeTier(tier: string) {
-  return tier === 'proAi' ? 'pro_ai' : tier
-}
 
 /** One Pro AI option's prices and features, as the card shows them. */
 export interface AiOptionDisplay {
@@ -109,17 +103,19 @@ export function PricingCard({
     aiOptions?.[aiMode] ?? singleOption
 
   const rawPrice = interval === 'monthly' ? monthlyPrice : yearlyPrice
-  const isSameTier = !!currentTier && normalizeTier(currentTier) === normalizeTier(tier)
-  // A Pro AI subscriber's plan is one option: the other option's card is a switch, not "Current".
-  const isCurrentPlan = isSameTier && (!isProAi || (currentAiMode ?? 'managed') === aiMode)
+  // Current plan, downgrade and Recommended: the one rule the home page's teaser uses too.
+  const { isSameTier, isCurrentPlan, isBelowCurrentTier, showRecommended } = planCardStatus({
+    tier,
+    currentTier,
+    aiMode,
+    currentAiMode,
+    highlighted,
+  })
   // An option that isn't on sale yet, unless it's the one this account already has.
   const isComingSoon = isProAi && !isAiOptionAvailable(aiMode) && !isCurrentPlan
   // A Pro AI subscriber looking at the other option can move to it on the same subscription.
   const aiModeSwitchTarget = isSameTier && isProAi && !isCurrentPlan ? aiMode : null
   const isFree = tier === 'free'
-  // A signed-out visitor comes in as 'free' (or with no currentTier): below every paid card.
-  const isBelowCurrentTier =
-    !!currentTier && TIER_RANK[normalizeTier(tier)] < TIER_RANK[normalizeTier(currentTier)]
   // The pricing page passes a paid currentTier only while that subscription is entitled.
   const hasPaidPlan = !!currentTier && normalizeTier(currentTier) !== 'free'
   // Signed out: "Get Pro", not "Upgrade to Pro" (the click still signs in, then checks out).
@@ -136,8 +132,6 @@ export function PricingCard({
       : null,
     '/pricing'
   )
-  // Never recommend a tier the user already has or has surpassed.
-  const showRecommended = highlighted && !isCurrentPlan && !isBelowCurrentTier
   // A paid current plan can move to the other billing interval (same plan, new price).
   const switchTarget =
     isCurrentPlan && !isFree && currentInterval
@@ -234,7 +228,7 @@ export function PricingCard({
 
       // A plan at Stripe that can still be paid or resumed: a new one would bill next to it.
       if (res.status === 409 && data.error === PAY_OR_RESUME_ERROR) {
-        toast.error(t('planChange.errors.pay_or_resume'))
+        toast.error(t('planChange.errors.pay_or_resume', { email: SUPPORT_EMAIL }))
         return
       }
 
@@ -270,17 +264,20 @@ export function PricingCard({
       return
     }
 
-    toast.error(t('portalFailed'))
+    toast.error(t('portalFailed', { email: SUPPORT_EMAIL }))
   }
 
   return (
     <div
       // h-full fills the stretched grid cell, so the cards in a row are equally tall and the CTA
       // (mt-auto) sits at the bottom of each. The highlighted card is roomier on the sides only:
-      // equal top and bottom padding keeps the title rows and the buttons on the same lines.
+      // equal top and bottom padding keeps the title rows and the buttons on the same lines. That
+      // padding stays whoever is looking, so the card's content width never changes; the brand
+      // emphasis (shadow, border) goes with Recommended only, never on a plan the visitor has or is above.
       className={cn(
         'relative flex flex-col h-full rounded-2xl p-6 border border-border bg-surface',
-        highlighted && 'shadow-sh3 border-primary/30 px-7',
+        highlighted && 'px-7',
+        showRecommended && 'shadow-sh3 border-primary/30',
         isCurrentPlan && 'border-foreground/30'
       )}
     >
@@ -367,7 +364,12 @@ export function PricingCard({
                     : t('aiOptions.switchToManaged')}
             </Button>
           </>
-        ) : isCurrentPlan ? null : isBelowCurrentTier ? (
+        ) : isCurrentPlan ? (
+          // No button on the current plan (the badge says Current), but the row keeps a single-line
+          // button's height, so this card's bottom block (and Pro AI's setup switch above it) lines
+          // up with the neighbours' buttons instead of dropping to the bottom with dead space below.
+          <div aria-hidden="true" data-testid="cta-placeholder" className="min-h-10" />
+        ) : isBelowCurrentTier ? (
           // A plan change is a price change on the *existing* subscription, not a new one:
           // handleClick sends every subscriber to /api/billing-portal, never /api/checkout.
           <Button

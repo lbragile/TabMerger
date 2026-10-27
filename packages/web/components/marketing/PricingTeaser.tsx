@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, use, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { TierBadge, TierFeatureIcon } from '@/components/pricing/TierBadge'
 import { Link } from '@/i18n/navigation'
@@ -15,6 +15,8 @@ import { cn } from '@/lib/utils'
 import { PRO_AI_MONTHLY_CREDITS, type AiMode } from '@tabmerger/shared'
 import { AiOptionSwitch } from '@/components/pricing/AiOptionSwitch'
 import { initialAiMode, isAiOptionAvailable } from '@/components/pricing/aiOptions'
+import { planCardStatus } from '@/components/pricing/planStatus'
+import type { CurrentPlan } from '@/lib/currentPlan'
 
 const tiers = [
   { key: 'free', highlighted: false, blurb: 'blurbFree' },
@@ -25,10 +27,45 @@ const tiers = [
 /** The small muted line under a card's price. */
 const SUB_LINE = 'text-xs text-text3 mt-1'
 
-export function PricingTeaser() {
+interface PricingTeaserProps {
+  /**
+   * The visitor's paid plan (`pro` or `pro_ai`, database shape) while it is entitled. Leave it
+   * undefined for guests and free accounts: the teaser then looks as it always has, with no
+   * "Current" on Free.
+   */
+  currentTier?: string
+  /** A Pro AI subscriber's option; the Pro AI card opens on it. */
+  currentAiMode?: AiMode
+}
+
+/**
+ * The home page's teaser for the signed-in visitor's plan. The plan is read on the server and
+ * handed down unresolved, so the page is sent at once; until it arrives (and for everyone it
+ * resolves to free) the teaser shows the default listing. Only the badge and the card styling
+ * change when it does: the badge sits on the card's edge, so nothing moves.
+ */
+export function PricingTeaserForVisitor({ planPromise }: { planPromise: Promise<CurrentPlan> }) {
+  return (
+    <Suspense fallback={<PricingTeaser />}>
+      <ResolvedPricingTeaser planPromise={planPromise} />
+    </Suspense>
+  )
+}
+
+function ResolvedPricingTeaser({ planPromise }: { planPromise: Promise<CurrentPlan> }) {
+  const plan = use(planPromise)
+  return plan.tier === 'free' ? (
+    <PricingTeaser />
+  ) : (
+    <PricingTeaser currentTier={plan.tier} currentAiMode={plan.aiMode} />
+  )
+}
+
+export function PricingTeaser({ currentTier, currentAiMode }: PricingTeaserProps = {}) {
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
-  // Pro AI's option on show: TabMerger's AI or your own key (opens on one that can be bought).
-  const [aiMode, setAiMode] = useState<AiMode>(() => initialAiMode())
+  // Pro AI's option on show: the subscriber's own, else TabMerger's AI or your own key (opens on
+  // one that can be bought).
+  const [aiMode, setAiMode] = useState<AiMode>(() => initialAiMode(currentTier === 'pro_ai' ? currentAiMode : undefined))
   const t = useTranslations('home.pricing')
   const p = useTranslations('pricing')
   const common = useTranslations('common')
@@ -74,7 +111,17 @@ export function PricingTeaser() {
             const isProAi = row.key === 'proAi'
             const isOwnKey = isProAi && aiMode === 'byok'
             const prices = isOwnKey ? TIERS.proAi.byok : tier
-            const isComingSoon = isProAi && !isAiOptionAvailable(aiMode)
+            // The pricing page's rule: Current on the visitor's plan, and no Recommended on it or
+            // on a plan below it.
+            const { isCurrentPlan, showRecommended } = planCardStatus({
+              tier: row.key,
+              currentTier,
+              aiMode,
+              currentAiMode,
+              highlighted: row.highlighted,
+            })
+            // An option not on sale yet, unless it's the one this account already has.
+            const isComingSoon = isProAi && !isAiOptionAvailable(aiMode) && !isCurrentPlan
             const rawPrice = interval === 'monthly' ? prices.monthlyPrice : prices.yearlyPrice
             const price = rawPrice === 0 ? zeroPrice : listPrice(rawPrice)
             const period = rawPrice === 0 ? p('forever') : interval === 'monthly' ? p('perMonth') : p('perYear')
@@ -109,19 +156,29 @@ export function PricingTeaser() {
                           : p('features.aiCreditsMonthly', { count: PRO_AI_MONTHLY_CREDITS })
                       ),
                     ]
-            const badge = row.highlighted ? p('recommended') : isComingSoon ? common('comingSoon') : null
+            // One pill, as on the pricing page: Current (neutral) wins over Recommended (brand).
+            const badge = isCurrentPlan
+              ? { text: p('current'), tone: 'neutral' as const }
+              : showRecommended
+                ? { text: p('recommended'), tone: 'solid' as const }
+                : isComingSoon
+                  ? { text: common('comingSoon'), tone: 'muted' as const }
+                  : null
             return (
               <div
                 key={row.key}
                 data-tier={row.key}
                 className={cn(
                   'relative min-w-0 flex flex-col sm:grid sm:grid-rows-subgrid sm:row-span-3 rounded-2xl border p-6',
-                  row.highlighted
+                  // The brand emphasis goes with Recommended only.
+                  showRecommended
                     ? 'border-primary ring-1 ring-primary bg-gradient-to-b from-primary/10 to-surface shadow-sh3'
-                    : 'border-border bg-surface'
+                    : isCurrentPlan
+                      ? 'border-foreground/30 bg-surface'
+                      : 'border-border bg-surface'
                 )}
               >
-                {badge && <TierBadge tone={row.highlighted ? 'solid' : 'muted'}>{badge}</TierBadge>}
+                {badge && <TierBadge tone={badge.tone}>{badge.text}</TierBadge>}
                 <div>
                   <h3 className="text-xl sm:text-2xl font-bold tracking-tight">{tier.name}</h3>
                   <p className="mt-2 text-4xl font-semibold tracking-tight">
