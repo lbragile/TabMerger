@@ -99,5 +99,9 @@
       "price_unavailable": "Il n'est pas possible de passer à ce forfait pour le moment. Réessayez plus tard ou contactez-nous.",
       "switch_failed": "Stripe n’a pas pu lancer le changement. Réessayez, utilisez « Gérer la facturation » sur votre page de compte, ou écrivez à {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Débute le {date}",
+    "note": "Un changement est prévu le {date}. <link>Gérez-le sur la page de votre compte.</link>"
   }
 }

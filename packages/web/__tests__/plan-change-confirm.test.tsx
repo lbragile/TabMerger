@@ -1,10 +1,12 @@
 /**
- * The plan-change confirmation (usePlanChange): a change that takes effect at the end of the
- * period (no refund, no credit), whether the server schedules it or Stripe's confirm page defers
- * it, is confirmed here first, and nothing is sent on Cancel. TabMerger → own key on Pro AI is one
- * of these. Every upgrade, own-key prices and own key → TabMerger included, goes straight to
- * Stripe's own confirm page. Covers the dialog, cancel (button and Escape, with focus back on the
- * opener), the results, the error codes and the portal path.
+ * The plan-change confirmation (usePlanChange): only an `end_of_period` change, which the server
+ * schedules on the POST itself with no Stripe page after it (the interval shortens together with
+ * another change, or the current price is one this deployment doesn't sell), is confirmed in our
+ * dialog first, and nothing is sent on Cancel. Every change the Billing Portal handles goes straight
+ * to Stripe's own confirm page with no dialog of ours: a `portal_end_of_period` downgrade or shorter
+ * interval (Stripe's page says "Updates on {date}"; TabMerger → own key on Pro AI is one of these)
+ * and every upgrade. Covers the dialog, cancel (button and Escape, with focus back on the opener),
+ * the results, the error codes and the portal path.
  */
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -61,103 +63,76 @@ afterEach(() => {
   ;(window as unknown as { location: Location }).location = originalLocation
 })
 
-describe('downgrade: confirmed, then scheduled for the end of the period', () => {
-  it('Pro AI → Pro says when, that the current plan stays until then, and that nothing is refunded', async () => {
+const proAiCard = {
+  ...cardProps,
+  tier: 'proAi',
+  name: 'Pro AI',
+  aiOptions: {
+    managed: { monthlyPrice: 7.99, yearlyPrice: 85.99, features: [] },
+    byok: { monthlyPrice: 5.99, yearlyPrice: 64.49, features: [] },
+  },
+}
+
+type PricingCardComponent = Awaited<ReturnType<typeof load>>['PricingCard']
+
+/** Pro yearly → Pro AI monthly: the interval shortens with another change, so the server schedules it. */
+function renderShorterAndUpgrade(PricingCard: PricingCardComponent, periodEnd: string | null = PERIOD_END) {
+  render(<PricingCard {...proAiCard} currentTier="pro" currentInterval="yearly" currentPeriodEnd={periodEnd} />)
+  return screen.getByRole('button', { name: 'Upgrade to Pro AI' })
+}
+
+describe('end_of_period: confirmed in our dialog, then scheduled by the server', () => {
+  it('Pro yearly → Pro AI monthly says when, that the current plan stays until then, and that nothing is refunded', async () => {
     const { PricingCard } = await load()
     const user = userEvent.setup()
-    render(
-      <PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />
-    )
-    await user.click(screen.getByRole('button', { name: 'Downgrade to Pro' }))
+    await user.click(renderShorterAndUpgrade(PricingCard))
 
     const dialog = await screen.findByRole('dialog', { name: 'Confirm plan change' })
     expect(dialog).toHaveTextContent(
-      'Your plan changes to Pro, billed monthly on November 30, 2026. You keep your current plan until then. No refund for the rest of this period.'
+      'Your plan changes to Pro AI with TabMerger handling setup, billed monthly on November 30, 2026. You keep your current plan until then. No refund for the rest of this period.'
     )
+    expect(dialog).not.toHaveTextContent(/credit/i)
     expect(global.fetch).not.toHaveBeenCalled()
 
     respond(200, { applied: 'end_of_period', effectiveAt: PERIOD_END, url: ACCOUNT_URL })
     await user.click(screen.getByRole('button', { name: 'Confirm' }))
 
-    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { tier: 'pro', interval: 'monthly' } })
-    expect(await screen.findByRole('status')).toHaveTextContent('Done. Your plan changes to Pro, billed monthly on November 30, 2026.')
+    expect(lastRequest()).toEqual({
+      path: '/api/billing/switch-plan',
+      body: { tier: 'proAi', interval: 'monthly', aiMode: 'managed' },
+    })
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Done. Your plan changes to Pro AI with TabMerger handling setup, billed monthly on November 30, 2026.'
+    )
     expect(refresh).toHaveBeenCalled()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(window.location.href).toBe('')
   })
 
-  it('a shorter interval is confirmed as an end-of-period change, then follows the portal URL', async () => {
+  it('Pro AI yearly → Pro monthly is confirmed the same way', async () => {
     const { PricingCard } = await load()
     const user = userEvent.setup()
-    render(<PricingCard {...cardProps} currentTier="pro" currentInterval="yearly" currentPeriodEnd={PERIOD_END} />)
-    await user.click(screen.getByRole('button', { name: 'Switch to monthly billing' }))
+    render(
+      <PricingCard {...cardProps} currentTier="pro_ai" currentInterval="yearly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />
+    )
+    await user.click(screen.getByRole('button', { name: 'Downgrade to Pro' }))
     expect(await screen.findByRole('dialog')).toHaveTextContent('Your plan changes to Pro, billed monthly on November 30, 2026.')
-    respond(200, { url: 'https://billing.stripe.com/p/session/x' })
+    expect(global.fetch).not.toHaveBeenCalled()
+    respond(200, { applied: 'end_of_period', effectiveAt: PERIOD_END, url: ACCOUNT_URL })
     await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    expect(lastRequest()).toEqual({ path: '/api/billing/switch-interval', body: { interval: 'monthly' } })
-    expect(window.location.href).toBe('https://billing.stripe.com/p/session/x')
+    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { tier: 'pro', interval: 'monthly' } })
   })
 
   it('says "at the end of this billing period" when the period end is unknown', async () => {
     const { PricingCard } = await load()
     const user = userEvent.setup()
-    render(<PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" />)
-    await user.click(screen.getByRole('button', { name: 'Downgrade to Pro' }))
+    await user.click(renderShorterAndUpgrade(PricingCard, null))
     expect(await screen.findByRole('dialog')).toHaveTextContent(
-      'Your plan changes to Pro, billed monthly at the end of this billing period.'
+      'Your plan changes to Pro AI with TabMerger handling setup, billed monthly at the end of this billing period.'
     )
   })
-})
 
-describe('TabMerger → own key: confirmed as a change on the period end date, then Stripe defers it', () => {
-  const proAiCard = {
-    ...cardProps,
-    tier: 'proAi',
-    name: 'Pro AI',
-    aiOptions: {
-      managed: { monthlyPrice: 7.99, yearlyPrice: 85.99, features: [] },
-      byok: { monthlyPrice: 5.99, yearlyPrice: 64.49, features: [] },
-    },
-  }
-
-  it('from the account page: says it changes on the date with no refund, then follows the portal confirm page', async () => {
-    const { SwitchAiModeButton } = await load()
-    const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="yearly" periodEnd={PERIOD_END} returnPath="/account" />)
-    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-
-    const dialog = await screen.findByRole('dialog', { name: 'Confirm plan change' })
-    expect(dialog).toHaveTextContent(
-      'Your plan changes to Pro AI with you handling setup, billed yearly on November 30, 2026. You keep your current plan until then. No refund for the rest of this period.'
-    )
-    expect(dialog).not.toHaveTextContent(/credit/i)
-    expect(global.fetch).not.toHaveBeenCalled()
-
-    respond(200, { url: 'https://billing.stripe.com/p/session/own' })
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'byok' } })
-    expect(window.location.href).toBe('https://billing.stripe.com/p/session/own')
-  })
-
-  it('from the pricing card: confirmed the same way', async () => {
-    const { PricingCard } = await load()
-    const user = userEvent.setup()
-    render(
-      <PricingCard {...proAiCard} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />
-    )
-    await user.click(screen.getByRole('radio', { name: 'You' }))
-    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-
-    expect(await screen.findByRole('dialog')).toHaveTextContent(
-      'Your plan changes to Pro AI with you handling setup, billed monthly on November 30, 2026.'
-    )
-    respond(200, { url: 'https://billing.stripe.com/p/session/own' })
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'byok' } })
-    expect(window.location.href).toBe('https://billing.stripe.com/p/session/own')
-  })
-
-  it('says "at the end of this billing period" when the interval and period end are unknown', async () => {
+  it('a current price this deployment does not sell (interval unknown) is confirmed, as the server schedules it', async () => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
     render(<SwitchAiModeButton current="managed" returnPath="/account" />)
@@ -169,15 +144,70 @@ describe('TabMerger → own key: confirmed as a change on the period end date, t
     expect(global.fetch).not.toHaveBeenCalled()
   })
 
-  it('Cancel sends nothing', async () => {
+  it('an upgrade from an unknown current price is confirmed too (the server schedules it as well)', async () => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
-    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-    await screen.findByRole('dialog')
-    await user.click(screen.getByRole('button', { name: 'Cancel' }))
-    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+    render(<SwitchAiModeButton current="byok" periodEnd={PERIOD_END} returnPath="/account" />)
+    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
+    expect(await screen.findByRole('dialog')).toHaveTextContent(
+      'Your plan changes to Pro AI with TabMerger handling setup on November 30, 2026.'
+    )
     expect(global.fetch).not.toHaveBeenCalled()
+  })
+})
+
+describe('portal_end_of_period: straight to Stripe, whose confirm page defers it', () => {
+  it('Pro AI → Pro posts at once, with no dialog of ours, and follows the portal confirm page', async () => {
+    const { PricingCard } = await load()
+    const user = userEvent.setup()
+    render(
+      <PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />
+    )
+    respond(200, { url: 'https://billing.stripe.com/p/session/down' })
+    await user.click(screen.getByRole('button', { name: 'Downgrade to Pro' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { tier: 'pro', interval: 'monthly' } })
+    await waitFor(() => expect(window.location.href).toBe('https://billing.stripe.com/p/session/down'))
+  })
+
+  it('a shorter interval on the same plan posts at once to switch-interval', async () => {
+    const { PricingCard } = await load()
+    const user = userEvent.setup()
+    render(<PricingCard {...cardProps} currentTier="pro" currentInterval="yearly" currentPeriodEnd={PERIOD_END} />)
+    respond(200, { url: 'https://billing.stripe.com/p/session/x' })
+    await user.click(screen.getByRole('button', { name: 'Switch to monthly billing' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(lastRequest()).toEqual({ path: '/api/billing/switch-interval', body: { interval: 'monthly' } })
+    await waitFor(() => expect(window.location.href).toBe('https://billing.stripe.com/p/session/x'))
+  })
+
+  it('TabMerger → own key from the account page posts at once and follows the portal confirm page', async () => {
+    const { SwitchAiModeButton } = await load()
+    const user = userEvent.setup()
+    render(<SwitchAiModeButton current="managed" interval="yearly" periodEnd={PERIOD_END} returnPath="/account" />)
+    respond(200, { url: 'https://billing.stripe.com/p/session/own' })
+    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'byok' } })
+    await waitFor(() => expect(window.location.href).toBe('https://billing.stripe.com/p/session/own'))
+  })
+
+  it('TabMerger → own key from the pricing card: the same', async () => {
+    const { PricingCard } = await load()
+    const user = userEvent.setup()
+    render(
+      <PricingCard {...proAiCard} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />
+    )
+    await user.click(screen.getByRole('radio', { name: 'You' }))
+    respond(200, { url: 'https://billing.stripe.com/p/session/own' })
+    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'byok' } })
+    await waitFor(() => expect(window.location.href).toBe('https://billing.stripe.com/p/session/own'))
   })
 })
 
@@ -219,8 +249,7 @@ describe('cancel', () => {
   it('Cancel sends nothing, closes the dialog and returns focus to the button that opened it', async () => {
     const { PricingCard } = await load()
     const user = userEvent.setup()
-    render(<PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />)
-    const opener = screen.getByRole('button', { name: 'Downgrade to Pro' })
+    const opener = renderShorterAndUpgrade(PricingCard)
     await user.click(opener)
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
@@ -233,8 +262,7 @@ describe('cancel', () => {
   it('Escape cancels too, from the keyboard alone', async () => {
     const { PricingCard } = await load()
     const user = userEvent.setup()
-    render(<PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />)
-    const opener = screen.getByRole('button', { name: 'Downgrade to Pro' })
+    const opener = renderShorterAndUpgrade(PricingCard)
     opener.focus()
     await user.keyboard('{Enter}')
     await screen.findByRole('dialog')

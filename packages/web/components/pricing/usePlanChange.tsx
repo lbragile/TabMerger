@@ -71,15 +71,16 @@ function isPlanSwitchErrorCode(value: unknown): value is PlanSwitchErrorCode {
 /**
  * Starts a plan change on the existing subscription and walks the user through it.
  *
- * `/api/billing/switch-plan` (and `switch-interval`) act on the POST itself for most changes, so
- * the user confirms first, with what will happen as the server will do it (`planChangeTiming()`
- * in lib/planChangeTiming.ts, the rule `createPlanSwitchSession()` follows):
- * - a downgrade or a shorter interval (`end_of_period`, `portal_end_of_period`) takes effect at
- *   the end of the period, with no refund or credit: this dialog says so ("changes on {date}"),
- *   then the server schedules it or sends the customer to Stripe's confirm page, which defers it;
- *   TabMerger → own key on Pro AI is one of these;
- * - an upgrade (`portal`, own key → TabMerger included) goes straight to the Billing Portal, whose
- *   own confirmation page shows the amount and the card, and is charged now, prorated.
+ * Which step confirms the change follows `planChangeTiming()` (lib/planChangeTiming.ts, the rule
+ * `createPlanSwitchSession()` follows), so what the user is told is what the server does:
+ * - `end_of_period` (the interval shortens together with another change, e.g. Pro yearly → Pro AI
+ *   monthly): `/api/billing/switch-plan` schedules it on the POST itself and no Stripe page
+ *   follows, so this hook's dialog confirms it first ("changes on {date}", no refund or credit);
+ * - `portal_end_of_period` (a downgrade or a shorter interval the portal defers, TabMerger → own
+ *   key on Pro AI included) and `portal` (an upgrade, own key → TabMerger included): the POST only
+ *   makes a Billing Portal session, and Stripe's own confirm page is the confirmation step (it
+ *   shows "Updates on {date}" for a deferred change, the amount and the card for an upgrade,
+ *   charged now, prorated), so the request goes straight away with no dialog here.
  *
  * Afterwards it reports the result (the date for a scheduled change) and refreshes the page's
  * server data, or follows the portal URL the server returned. A 401 goes to sign-in and back to
@@ -115,28 +116,29 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
   }
 
   /**
-   * The plan a change ends on, all fields filled in. When the current interval is unknown (a
-   * price this deployment doesn't list) and the change keeps it, both sides use the same stand-in
-   * interval, which only the interval comparison reads; a change of interval then can't be
-   * classified and returns null.
+   * The plan a change ends on, all fields filled in, and `from`, the current plan. When the current
+   * interval is unknown (a price this deployment doesn't list), `from` is null, as the server's
+   * `getPlanForPriceId()` makes it, so `planChangeTiming()` gives `end_of_period` here too: the
+   * server schedules such a change on the POST itself. A change that keeps the unknown interval
+   * then fills in a stand-in interval, which the label leaves out.
    */
   function resolve(target: PlanChangeTarget) {
     if (!current) return null
-    if (!current.interval && target.interval) return null
     const interval = target.interval ?? current.interval ?? 'monthly'
     const tierKey = target.tier ?? current.tierKey
     const aiMode =
       tierKey === 'proAi'
         ? (target.aiMode ?? (current.tierKey === 'proAi' ? (current.aiMode ?? 'managed') : 'managed'))
         : null
-    return { tierKey, interval, aiMode, from: currentPoint(current.interval ?? interval) }
+    const intervalKnown = !!(target.interval ?? current.interval)
+    return { tierKey, interval, aiMode, intervalKnown, from: current.interval ? currentPoint(current.interval) : null }
   }
 
   /** "Pro AI with you handling setup, billed yearly" (no interval when it isn't known). */
   function planLabel(plan: NonNullable<ReturnType<typeof resolve>>) {
     const name =
       plan.tierKey === 'pro' ? t('plans.pro') : plan.aiMode === 'byok' ? t('plans.proAiByok') : t('plans.proAiManaged')
-    if (!current?.interval) return name
+    if (!plan.intervalKnown) return name
     return plan.interval === 'yearly' ? t('billedYearly', { plan: name }) : t('billedMonthly', { plan: name })
   }
 
@@ -226,18 +228,19 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
     }
   }
 
-  /** Asks for confirmation when the server will act on the request, else sends it straight away. */
+  /**
+   * Asks for confirmation when the server will schedule the change on the request itself
+   * (`end_of_period`), else sends it straight away: a portal change is confirmed on Stripe's page.
+   */
   function start(target: PlanChangeTarget) {
     setError(null)
     setDone(null)
     const to = resolve(target)
-    if (!to?.from) {
+    if (!to) {
       void send(target, null)
       return
     }
-    // Only a change that waits for the end of the period is confirmed here; an upgrade is
-    // confirmed on Stripe's own page.
-    if (planChangeTiming(to.from, to) === 'portal') {
+    if (planChangeTiming(to.from, to) !== 'end_of_period') {
       void send(target, planLabel(to))
       return
     }

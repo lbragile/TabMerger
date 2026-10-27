@@ -99,5 +99,9 @@
       "price_unavailable": "Obecnie nie można przejść na ten plan. Spróbuj ponownie później lub skontaktuj się z nami.",
       "switch_failed": "Stripe nie mógł rozpocząć zmiany. Spróbuj ponownie, użyj „Zarządzaj płatnościami” na stronie konta lub napisz na {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Od {date}",
+    "note": "Masz zaplanowaną zmianę na {date}. <link>Zarządzaj nią na stronie konta.</link>"
   }
 }

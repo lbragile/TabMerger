@@ -627,8 +627,9 @@ export async function createPlanSwitchSession({
   const targetPrice = await stripe.prices.retrieve(targetPriceId)
   if (!targetPrice.active) throw new PlanSwitchError('price_unavailable')
 
-  // One rule for the server and the plan-change confirmation dialog (lib/planChangeTiming.ts),
-  // so what the dialog promises is what happens here.
+  // One rule for the server and the client's confirmation step (lib/planChangeTiming.ts):
+  // usePlanChange shows its own dialog only for `end_of_period`, scheduled here with no Stripe page
+  // after it, and sends the portal changes straight to Stripe's confirm page.
   const to = getPlanForPriceId(targetPriceId)
   const timing = planChangeTiming(getPlanForPriceId(item.price.id), to)
 

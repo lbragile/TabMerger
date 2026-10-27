@@ -99,5 +99,9 @@
       "price_unavailable": "Şu anda bu plana geçilemiyor. Lütfen daha sonra tekrar deneyin veya bizimle iletişime geçin.",
       "switch_failed": "Stripe değişikliği başlatamadı. Lütfen tekrar deneyin, hesap sayfanızdaki Faturalandırmayı yönet seçeneğini kullanın veya {email} adresine yazın."
     }
+  },
+  "scheduledChange": {
+    "starts": "{date} tarihinde başlar",
+    "note": "{date} tarihi için planlanmış bir değişikliğiniz var. <link>Hesap sayfanızdan yönetin.</link>"
   }
 }

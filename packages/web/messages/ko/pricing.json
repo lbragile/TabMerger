@@ -99,5 +99,9 @@
       "price_unavailable": "지금은 해당 요금제로 전환할 수 없습니다. 나중에 다시 시도하거나 문의해 주세요.",
       "switch_failed": "Stripe에서 변경을 시작하지 못했습니다. 다시 시도하거나, 계정 페이지의 결제 관리를 이용하거나, {email}로 이메일을 보내 주세요."
     }
+  },
+  "scheduledChange": {
+    "starts": "{date}부터 시작",
+    "note": "{date}에 예정된 변경이 있습니다. <link>계정 페이지에서 관리하세요.</link>"
   }
 }

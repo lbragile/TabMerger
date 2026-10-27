@@ -99,5 +99,9 @@
       "price_unavailable": "Al momento non è possibile passare a quel piano. Riprova più tardi o contattaci.",
       "switch_failed": "Stripe non è riuscito ad avviare la modifica. Riprova, usa «Gestisci fatturazione» nella pagina del tuo account oppure scrivi a {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Dal {date}",
+    "note": "Hai una modifica programmata per il {date}. <link>Gestiscila nella pagina del tuo account.</link>"
   }
 }

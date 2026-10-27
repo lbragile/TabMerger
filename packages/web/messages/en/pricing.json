@@ -99,5 +99,9 @@
       "price_unavailable": "That plan isn't available to switch to right now. Please try again later or contact us.",
       "switch_failed": "Stripe couldn't start the change. Please try again, use Manage billing on your account page, or email {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Starts {date}",
+    "note": "You have a change scheduled for {date}. <link>Manage it on your account page.</link>"
   }
 }

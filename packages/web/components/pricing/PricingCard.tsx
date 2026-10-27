@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useRouter as useLocaleRouter } from '@/i18n/navigation'
+import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import type { AiMode } from '@tabmerger/shared'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,7 @@ import { AI_OPTION_ORDER, initialAiMode, isAiOptionAvailable } from './aiOptions
 import { usePlanChange } from './usePlanChange'
 import { normalizeTier, planCardStatus } from './planStatus'
 import type { PaidTierKey } from '@/lib/tiers'
+import type { PendingPlanChangeInfo } from '@/lib/currentPlan'
 
 /** The card's full-width CTA: wraps instead of overflowing the card when a translated label is
  *  long, and keeps the usual 40px single-line height whenever it fits. */
@@ -33,6 +34,14 @@ export interface AiOptionDisplay {
   displayYearly?: string
   yearlySubtext?: string
   features: readonly TierFeature[]
+}
+
+/** A plan change already scheduled for the end of the paid period, as the pricing page passes it. */
+export interface ScheduledPlanChange {
+  /** The plan it moves to; null for a price this deployment doesn't sell. */
+  plan: PendingPlanChangeInfo['plan']
+  /** When it takes effect, formatted on the server for the page's locale (as the account page does). */
+  date: string
 }
 
 interface PricingCardProps {
@@ -71,6 +80,13 @@ interface PricingCardProps {
    * offered "Get …" instead of "Upgrade to …". A paid `currentTier` implies a signed-in account.
    */
   signedIn?: boolean
+  /**
+   * A subscriber's plan change already scheduled (`getCurrentPlan({ withPendingChange })`). The
+   * card it moves to says "Starts {date}"; every other change on the card is replaced by a note
+   * pointing to the account page, where the change shows and can be managed: the server would
+   * refuse a second change (409 `already_scheduled`).
+   */
+  scheduledChange?: ScheduledPlanChange | null
 }
 
 export function PricingCard({
@@ -85,6 +101,7 @@ export function PricingCard({
   currentAiMode,
   currentPeriodEnd,
   signedIn = false,
+  scheduledChange,
   ...singleOption
 }: PricingCardProps) {
   const router = useRouter()
@@ -120,7 +137,16 @@ export function PricingCard({
   const hasPaidPlan = !!currentTier && normalizeTier(currentTier) !== 'free'
   // Signed out: "Get Pro", not "Upgrade to Pro" (the click still signs in, then checks out).
   const isGuest = !signedIn && !hasPaidPlan
-  // A subscriber's changes (plan, interval, Pro AI option) go through one confirm-then-post flow.
+  // A scheduled change counts only for a subscriber. This card is its target when it shows that plan:
+  // the tier, the interval on show and, for Pro AI, the option on show.
+  const scheduled = hasPaidPlan ? (scheduledChange ?? null) : null
+  const isScheduledTarget =
+    !!scheduled?.plan &&
+    scheduled.plan.tierKey === tier &&
+    scheduled.plan.interval === interval &&
+    (!isProAi || scheduled.plan.aiMode === aiMode)
+  // A subscriber's changes (plan, interval, Pro AI option) go through one flow: our dialog only for
+  // a change the server schedules itself, otherwise straight to Stripe's confirm page.
   const change = usePlanChange(
     hasPaidPlan
       ? {
@@ -138,12 +164,12 @@ export function PricingCard({
       ? currentInterval === 'monthly' ? 'yearly' : 'monthly'
       : null
 
-  /** The same plan on the other interval (confirmed first when the server acts on it). */
+  /** The same plan on the other interval (confirmed first only when the server schedules it itself). */
   function handleSwitchInterval() {
     if (switchTarget) change.start({ interval: switchTarget })
   }
 
-  /** Pro AI's other setup option, same interval (confirmed first when the server acts on it). */
+  /** Pro AI's other setup option, same interval (confirmed first only when the server schedules it itself). */
   function handleSwitchAiMode() {
     if (aiModeSwitchTarget) change.start({ aiMode: aiModeSwitchTarget })
   }
@@ -173,7 +199,7 @@ export function PricingCard({
     // An account holds one subscription, so a subscriber moving to another paid plan (up or down)
     // changes that subscription; checkout only starts a first one. With the current interval known,
     // the change goes to the plan this card shows (its interval and, for Pro AI, its setup option)
-    // through the confirm-then-post flow; otherwise the billing portal, where the user picks.
+    // through usePlanChange; otherwise the billing portal, where the user picks.
     if (hasPaidPlan && currentInterval) {
       change.start({ tier: tier as PaidTierKey, interval, ...(isProAi ? { aiMode } : {}) })
       return
@@ -269,6 +295,7 @@ export function PricingCard({
 
   return (
     <div
+      data-tier={tier}
       // h-full fills the stretched grid cell, so the cards in a row are equally tall and the CTA
       // (mt-auto) sits at the bottom of each. The highlighted card is roomier on the sides only:
       // equal top and bottom padding keeps the title rows and the buttons on the same lines. That
@@ -346,6 +373,25 @@ export function PricingCard({
           >
             {t('installFree')}
           </Button>
+        ) : scheduled && isScheduledTarget ? (
+          // The plan the scheduled change moves to: when it starts, in place of a button, at a
+          // button's height so the cards' bottom blocks stay lined up (like the current plan's).
+          <p data-testid="cta-scheduled" className="min-h-10 flex items-center justify-center text-center text-sm font-medium text-text2">
+            {t('scheduledChange.starts', { date: scheduled.date })}
+          </p>
+        ) : scheduled && !(isCurrentPlan && !switchTarget) ? (
+          // Any other change while one is scheduled: the server would refuse it, so the card says
+          // why and where to manage the scheduled one instead of offering a button.
+          <p data-testid="cta-scheduled-note" className="min-h-10 text-center text-[11.5px] text-text2">
+            {t.rich('scheduledChange.note', {
+              date: scheduled.date,
+              link: (chunks) => (
+                <Link href="/account" className="text-primary underline underline-offset-2">
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
         ) : switchTarget || aiModeSwitchTarget ? (
           <>
             <Button

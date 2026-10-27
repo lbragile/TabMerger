@@ -27,9 +27,10 @@ export type PlanPoint = Pick<PlanPrice, 'tierKey' | 'interval' | 'aiMode'>
  *   applied such a change at once with a balance credit in test mode (Pro yearly → Pro AI monthly:
  *   -$35.00), so the server schedules it for the end of the paid period itself, with no proration.
  *
- * The single rule for both sides: `createPlanSwitchSession()` (lib/stripe.ts) acts on it, and the
- * plan-change confirmation (components/pricing/usePlanChange.tsx) describes it before the POST,
- * so what the dialog promises is what the server does. Pure and client-safe.
+ * The single rule for both sides: `createPlanSwitchSession()` (lib/stripe.ts) acts on it, and
+ * `usePlanChange` (components/pricing/usePlanChange.tsx) picks the confirmation step from it: its
+ * own dialog ("changes on {date}") before the POST for `end_of_period`, which no Stripe page
+ * follows, and Stripe's confirm page for both portal timings. Pure and client-safe.
  */
 export type PlanChangeTiming = 'end_of_period' | 'portal_end_of_period' | 'portal'
 

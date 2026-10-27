@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import type { AiMode } from '@tabmerger/shared'
-import { PricingCard } from './PricingCard'
+import { PricingCard, type ScheduledPlanChange } from './PricingCard'
 import { TIERS, YEARLY_DISCOUNT_PERCENT, YEARLY_SAVINGS } from '@/lib/tiers'
 import { useListPrice, useZeroPrice } from './priceFormat'
 import { useTierFeatures, useTierName } from './tierFeatures'
@@ -22,6 +22,8 @@ interface PricingTableProps {
   installHref: string
   /** Whether the visitor is signed in: guests see "Get …" on the paid cards, not "Upgrade to …". */
   signedIn?: boolean
+  /** A subscriber's plan change already scheduled for the period end (see `PricingCard`). */
+  scheduledChange?: ScheduledPlanChange | null
 }
 
 export function PricingTable({
@@ -31,6 +33,7 @@ export function PricingTable({
   currentPeriodEnd,
   installHref,
   signedIn = false,
+  scheduledChange = null,
 }: PricingTableProps) {
   // Always opens on Monthly, whatever the current plan is billed at.
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
@@ -102,6 +105,7 @@ export function PricingTable({
             currentPeriodEnd={currentPeriodEnd}
             installHref={installHref}
             signedIn={signedIn}
+            scheduledChange={scheduledChange}
             displayMonthly={listPrice(TIERS.pro.monthlyPrice)}
             displayYearly={listPrice(TIERS.pro.yearlyPrice)}
             yearlySubtext={yearlySubtext(YEARLY_SAVINGS.pro)}
@@ -122,6 +126,7 @@ export function PricingTable({
           currentAiMode={currentAiMode}
           installHref={installHref}
           signedIn={signedIn}
+          scheduledChange={scheduledChange}
           aiOptions={{
             managed: {
               monthlyPrice: TIERS.proAi.monthlyPrice,

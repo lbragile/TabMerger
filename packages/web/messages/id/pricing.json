@@ -99,5 +99,9 @@
       "price_unavailable": "Saat ini Anda tidak dapat beralih ke paket tersebut. Silakan coba lagi nanti atau hubungi kami.",
       "switch_failed": "Stripe tidak dapat memulai perubahan. Silakan coba lagi, gunakan Kelola penagihan di halaman akun Anda, atau kirim email ke {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Mulai {date}",
+    "note": "Anda punya perubahan terjadwal pada {date}. <link>Kelola di halaman akun Anda.</link>"
   }
 }

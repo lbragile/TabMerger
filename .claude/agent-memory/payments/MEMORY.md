@@ -13,3 +13,4 @@
 - [Portal deferral matrix](portal-deferral-matrix.md) — measured: when the confirm page defers (same vs cross product), the 1-second schedule, discounts kept, cancel lock vs cancel flow, events, what customers see
 - [Cancel with a pending schedule](cancel-with-pending-schedule.md) — subscription_cancel flow releases + cancels; own config, ownership, i18n client namespace
 - [Plan-change alarm](plan-change-alarm.md) — webhook PLAN_CHANGE_ALARM (log + Sentry, try/catch): event-object schedule vs retrieved invoice, blind spots
+- [Plan-change client confirmation](plan-change-client-confirmation.md) — dialog only for end_of_period; unknown current price = from null; pricing page shows a scheduled change

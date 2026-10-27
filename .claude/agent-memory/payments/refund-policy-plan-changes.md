@@ -12,7 +12,7 @@ portal page; anything lower or shorter waits for the end of the paid period; cre
 refunded.
 
 Code: `classifyPlanChange()` (lib/tiers.ts, says what a change is) → `planChangeTiming()` (lib/planChangeTiming.ts, says when and who defers it,
-client-safe, shared with the pricing page's confirm dialog: `portal` = upgrade; `portal_end_of_period`
+client-safe, shared with `usePlanChange`, see [[plan-change-client-confirmation]]: `portal` = upgrade; `portal_end_of_period`
 = yearly→monthly on one plan, or a downgrade whose interval doesn't shorten (the confirm page
 defers it); `end_of_period` = shorter interval + another change, or an unknown price (server
 schedule)) → `createPlanSwitchSession()` (lib/stripe.ts): `end_of_period` = subscription schedule,

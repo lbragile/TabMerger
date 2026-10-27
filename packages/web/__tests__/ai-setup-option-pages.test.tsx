@@ -235,9 +235,9 @@ describe('SwitchAiModeButton', () => {
       json: async () => ({ error: 'A billing change is already scheduled for the end of this term.' }),
     } as Response)
     const user = userEvent.setup()
-    // Own key → TabMerger is an upgrade (interval unknown here): posted at once, with no dialog of
-    // ours, since Stripe's own page confirms it.
-    render(<SwitchAiModeButton current="byok" returnPath="/account" />)
+    // Own key → TabMerger is an upgrade: posted at once, with no dialog of ours, since Stripe's own
+    // page confirms it.
+    render(<SwitchAiModeButton current="byok" interval="monthly" returnPath="/account" />)
     await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(await screen.findByRole('alert')).toHaveTextContent('A billing change is already scheduled')

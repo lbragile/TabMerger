@@ -99,5 +99,9 @@
       "price_unavailable": "No momento não é possível mudar para esse plano. Tente novamente mais tarde ou fale conosco.",
       "switch_failed": "O Stripe não conseguiu iniciar a mudança. Tente novamente, use Gerenciar cobrança na página da sua conta ou escreva para {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Começa em {date}",
+    "note": "Você tem uma mudança agendada para {date}. <link>Gerencie na página da sua conta.</link>"
   }
 }

@@ -1,10 +1,11 @@
 import { Suspense } from 'react'
 import { pageMetadata } from '@/lib/seo'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { PricingTable } from '@/components/pricing/PricingTable'
 import { CheckoutCanceledTracker } from '@/components/pricing/CheckoutCanceledTracker'
 import { getCurrentPlan } from '@/lib/currentPlan'
+import { formatDate } from '@/lib/utils'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
@@ -15,8 +16,13 @@ export async function generateMetadata() {
 
 export default async function PricingPage() {
   const t = await getTranslations('pricing.page')
-  // Guests and free accounts both come back as 'free'; `signedIn` tells them apart.
-  const plan = await getCurrentPlan()
+  // Guests and free accounts both come back as 'free'; `signedIn` tells them apart. A plan change
+  // already scheduled is read too, so the cards show it instead of offering changes the server
+  // would refuse; its date is formatted here, as the account page does.
+  const [plan, locale] = await Promise.all([getCurrentPlan({ withPendingChange: true }), getLocale()])
+  const scheduledChange = plan.pendingChange
+    ? { plan: plan.pendingChange.plan, date: formatDate(plan.pendingChange.effectiveAt, locale) }
+    : null
 
   return (
     <div className="py-16">
@@ -40,6 +46,7 @@ export default async function PricingPage() {
           currentPeriodEnd={plan.periodEnd}
           installHref={getStoreLinks()[await getVisitorBrowser()]}
           signedIn={plan.signedIn}
+          scheduledChange={scheduledChange}
         />
       </div>
       <p className="text-center text-sm text-text2 mt-14">

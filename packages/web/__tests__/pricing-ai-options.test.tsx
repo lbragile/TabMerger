@@ -4,7 +4,7 @@
  * NEXT_PUBLIC_AI_ENABLED / NEXT_PUBLIC_AI_BYOK_ENABLED, so every case stubs the env, resets the
  * module registry and imports the components fresh.
  */
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
@@ -222,7 +222,7 @@ describe('Pro AI option switch on the pricing page', () => {
       vi.mocked(global.fetch).mockResolvedValue({
         status: 200,
         ok: true,
-        json: async () => ({ applied: 'end_of_period', effectiveAt: '2026-11-30T12:00:00.000Z', url: 'https://x.example/account' }),
+        json: async () => ({ url: 'https://billing.stripe.com/p/session/own' }),
       } as Response)
       const user = userEvent.setup()
       render(<PricingTable installHref={INSTALL} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" />)
@@ -233,16 +233,13 @@ describe('Pro AI option switch on the pricing page', () => {
       await user.click(screen.getByRole('radio', { name: 'You' }))
       expect(within(proAiCard()).queryByText('Current')).not.toBeInTheDocument()
       await user.click(within(proAiCard()).getByRole('button', { name: 'Handle setup yourself' }))
-      // TabMerger → own key waits for the end of the period: confirmed in our dialog first (see
-      // plan-change-confirm.test.tsx), then sent; the result line gives the date.
-      expect(await screen.findByRole('dialog', { name: 'Confirm plan change' })).toBeInTheDocument()
-      expect(global.fetch).not.toHaveBeenCalled()
-      await user.click(screen.getByRole('button', { name: 'Confirm' }))
-
+      // TabMerger → own key waits for the end of the period, which Stripe's confirm page defers
+      // ("Updates on {date}"): posted at once, with no dialog of ours (see plan-change-confirm.test.tsx).
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       const [input, init] = vi.mocked(global.fetch).mock.calls[0]
       expect(String(input)).toBe('/api/billing/switch-plan')
       expect(JSON.parse(String((init as RequestInit).body))).toEqual({ aiMode: 'byok' })
-      expect(await within(proAiCard()).findByText(/^Done\. Your plan changes to Pro AI with you handling setup/)).toBeInTheDocument()
+      await waitFor(() => expect(window.location.href).toBe('https://billing.stripe.com/p/session/own'))
     })
 
     it('opens a subscriber on their own option', async () => {

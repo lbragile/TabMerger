@@ -99,5 +99,9 @@
       "price_unavailable": "Zu diesem Plan kann gerade nicht gewechselt werden. Bitte versuche es später erneut oder kontaktiere uns.",
       "switch_failed": "Stripe konnte die Änderung nicht starten. Bitte versuche es erneut, nutze „Abrechnung verwalten“ auf deiner Kontoseite oder schreib an {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Ab {date}",
+    "note": "Für den {date} ist eine Änderung geplant. <link>Verwalte sie auf deiner Kontoseite.</link>"
   }
 }

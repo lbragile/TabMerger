@@ -637,9 +637,8 @@ describe('PricingCard', () => {
       )
       render(<PricingCard {...baseProps} currentTier="pro" currentInterval="yearly" />)
       await user.click(screen.getByRole('button', { name: 'Switch to monthly billing' }))
-      // A shorter interval takes effect at the end of the term: confirmed before anything is sent.
-      expect(global.fetch).not.toHaveBeenCalled()
-      await user.click(await screen.findByRole('button', { name: 'Confirm' }))
+      // A shorter interval is deferred by Stripe's own confirm page: posted at once, no dialog of ours.
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       expect(await screen.findByRole('alert')).toHaveTextContent('already scheduled for the end of this term')
     })
 

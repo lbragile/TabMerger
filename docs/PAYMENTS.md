@@ -582,8 +582,8 @@ ended-plan correction below, which only ever ends a row.
 `classifyPlanChange()` (`lib/tiers.ts`) compares the current and target Price on three ranks (tier
 Pro < Pro AI, option own key < managed, interval monthly < yearly). `planChangeTiming()`
 (`lib/planChangeTiming.ts`, pure and client-safe) turns that into the timing, and both
-`createPlanSwitchSession()` (`lib/stripe.ts`) and the pricing page's confirmation dialog use it, so
-what the dialog promises is what the server does:
+`createPlanSwitchSession()` (`lib/stripe.ts`) and the client's plan-change flow (`usePlanChange`)
+use it, so the step that confirms a change matches what the server does:
 
 | Change | Timing | How | Route answers |
 | --- | --- | --- | --- |
@@ -593,12 +593,25 @@ what the dialog promises is what the server does:
 | The interval shortens together with another change (e.g. Pro yearly → Pro AI monthly, Pro AI yearly → Pro monthly) | `end_of_period` | Subscription schedule: `subscriptionSchedules.create({ from_subscription })`, then `update` with `end_behavior: 'release'`, `proration_behavior: 'none'`, the current phase passed back unchanged (items, start/end, discounts, tax rates, metadata) and a next phase on the new price with `proration_behavior: 'none'` that ends one second after it starts (`end_date` = period end + 1), as the portal's own deferred changes do, so the schedule releases the subscription right after the price changes. That phase carries the subscription's own discounts whose coupon applies to the target product (no `applies_to`, or one listing it); a coupon restricted to other products is dropped. If the update fails, the schedule is released again. | `{ applied: 'end_of_period', effectiveAt (ISO), url: /account }` |
 | A price this environment doesn't know | `end_of_period` | (fails closed: nothing is charged or credited now) | as above |
 
-The pricing page, the account page and the dashboard confirm the `end_of_period` and
-`portal_end_of_period` changes in their own dialog ("changes on {date}, no refund"), managed →
-own key included; an upgrade (own key → managed included) goes straight to Stripe's page, which
-shows the prorated amount. Before any of
-this, `createPlanSwitchSession()` retrieves the target Price and refuses an archived one
-(`price_unavailable`).
+The pricing page, the account page and the dashboard (all through `usePlanChange`) confirm only
+the `end_of_period` changes in their own dialog ("changes on {date}, no refund"): the server
+schedules those on the POST and no Stripe page follows. A change on a price this environment
+doesn't sell is one of these (the client, like the server, can't classify it). Both portal timings
+go straight to Stripe's confirm page, which is the confirmation step: it shows "Updates on {date}"
+for a `portal_end_of_period` change (managed → own key included) and the prorated amount and the
+card for an upgrade (own key → managed included). Before any of this, `createPlanSwitchSession()`
+retrieves the target Price and refuses an archived one (`price_unavailable`).
+
+While a change is already scheduled, the switch routes answer 409 `already_scheduled`, so the
+pricing page doesn't offer one: it reads the pending change on the server
+(`getCurrentPlan({ withPendingChange: true })` in `lib/currentPlan.ts`, which reuses
+`getPendingPlanChange()` with the user's own `profiles.stripe_customer_id` and subscription; a
+failed read counts as none). The card the change moves to (its plan, the interval on show and, for
+Pro AI, the option on show) says "Starts {date}" in place of its button; every other change button
+on the paid cards (other plans, "Switch to … billing", the Pro AI option switch) is replaced by a
+note that points to the account page, where the change shows with **Cancel subscription**. A target
+price this environment doesn't sell gets the note on every card. The home page's teaser makes no
+Stripe call (the option is off by default).
 
 Which changes the portal defers and which the server schedules. Measured in test mode on
 2026-10-26 (API 2025-06-30.basil): a per-target configuration with `always_invoice` and the
@@ -710,8 +723,8 @@ invoice that a later update replaced before the event was handled.
    to the server schedule: in `planChangeTiming()` (`lib/planChangeTiming.ts`), make the
    cross-product downgrade branch (`if (from && to && !(… yearly → monthly …))`) return
    `end_of_period` instead of `portal_end_of_period`, update `planChangeTiming.test.ts`, and
-   deploy. The confirmation dialogs read the same function, so they say "changes on {date}" at
-   once, and `createPlanSwitchSession()` schedules those changes itself. Same-product yearly →
+   deploy. `usePlanChange` reads the same function, so those changes get its "changes on {date}"
+   dialog at once, and `createPlanSwitchSession()` schedules those changes itself. Same-product yearly →
    monthly (documented portal behaviour) can stay on the portal.
 
 **Errors.** Every error answer carries a `code` next to the English `error`

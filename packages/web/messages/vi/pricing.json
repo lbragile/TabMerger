@@ -99,5 +99,9 @@
       "price_unavailable": "Hiện không thể chuyển sang gói đó. Vui lòng thử lại sau hoặc liên hệ với chúng tôi.",
       "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại, dùng Quản lý thanh toán trên trang tài khoản, hoặc gửi email tới {email}."
     }
+  },
+  "scheduledChange": {
+    "starts": "Bắt đầu vào {date}",
+    "note": "Bạn có một thay đổi đã lên lịch vào {date}. <link>Quản lý trên trang tài khoản của bạn.</link>"
   }
 }

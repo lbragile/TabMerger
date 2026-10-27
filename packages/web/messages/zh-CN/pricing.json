@@ -99,5 +99,9 @@
       "price_unavailable": "目前无法切换到该套餐。请稍后重试或联系我们。",
       "switch_failed": "Stripe 无法开始此更改。请重试、使用账户页面中的“管理账单”，或发送邮件至 {email}。"
     }
+  },
+  "scheduledChange": {
+    "starts": "{date} 起生效",
+    "note": "你已安排在 {date} 进行一项更改。<link>在账户页面管理。</link>"
   }
 }
