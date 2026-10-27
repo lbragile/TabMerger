@@ -53,7 +53,20 @@
     "description": "Kelola paket dan tagihan Anda.",
     "manageBilling": "Kelola tagihan",
     "upgrade": "Tingkatkan",
-    "cancelNote": "Anda dapat membatalkan kapan saja melalui <strong>Kelola tagihan</strong>. Akses tetap tersedia hingga akhir periode tagihan saat ini."
+    "cancelNote": "Anda dapat membatalkan kapan saja melalui <strong>Kelola tagihan</strong>. Akses tetap tersedia hingga akhir periode tagihan saat ini.",
+    "scheduledChange": "Berubah ke {plan} pada {date}.",
+    "scheduledChangeUnknownPlan": "Paket Anda berubah pada {date}.",
+    "scheduledCancelNote": "Membatalkan akan mempertahankan paket Anda saat ini hingga akhir periode penagihan ini dan menghapus perubahan terjadwal. Tanpa pengembalian dana. Jika Anda memperpanjang nanti, Anda tetap di paket saat ini."
+  },
+  "cancelSubscription": {
+    "button": "Batalkan langganan",
+    "errors": {
+      "no_billing_account": "Paket ini tidak terhubung ke akun penagihan. Kirim email ke {email} dan kami akan membatalkannya untuk Anda.",
+      "no_subscription": "Kami tidak menemukan langganan untuk dibatalkan. Muat ulang halaman, atau kirim email ke {email}.",
+      "not_entitled": "Tidak ada paket aktif untuk dibatalkan.",
+      "already_canceling": "Paket Anda sudah diatur untuk berakhir pada akhir periode penagihan ini.",
+      "cancel_failed": "Halaman pembatalan tidak dapat dibuka. Silakan coba lagi, atau kirim email ke {email}."
+    }
   },
   "devicesCard": {
     "title": "Perangkat",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "Tidak dapat memulai pembayaran",
-    "getMore": "Beli lagi"
+    "getMore": "Beli lagi",
+    "notAvailable": "Paket kredit hanya untuk paket Pro AI aktif dengan pengaturan AI yang ditangani TabMerger."
   },
   "aiPlan": {
     "title": "Siapa yang menyiapkan AI",

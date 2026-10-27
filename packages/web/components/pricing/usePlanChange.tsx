@@ -23,6 +23,7 @@ import {
   type PlanSwitchErrorCode,
 } from '@/lib/checkoutErrors'
 import { trackBeginCheckout } from '@/lib/checkoutAnalytics'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 import type { BillingInterval, PaidTierKey } from '@/lib/tiers'
 
 /** The billing routes that move a paid subscription to another price. */
@@ -55,6 +56,12 @@ interface PendingChange {
   plan: string
 }
 
+/**
+ * The support address some error messages offer (`{email}`): for a plan with no billing account, or
+ * a payment to settle, Manage billing isn't on the account page, so support is the way forward.
+ */
+const SUPPORT = { email: SUPPORT_EMAIL }
+
 const PLAN_SWITCH_ERROR_CODE_VALUES: readonly string[] = Object.values(PLAN_SWITCH_ERROR_CODES)
 
 function isPlanSwitchErrorCode(value: unknown): value is PlanSwitchErrorCode {
@@ -67,9 +74,12 @@ function isPlanSwitchErrorCode(value: unknown): value is PlanSwitchErrorCode {
  * `/api/billing/switch-plan` (and `switch-interval`) act on the POST itself for most changes, so
  * the user confirms first, with what will happen as the server will do it (`planChangeTiming()`
  * in lib/planChangeTiming.ts, the rule `createPlanSwitchSession()` follows):
- * - a downgrade or a shorter interval takes effect at the end of the period, with no refund;
- * - an upgrade goes straight to the Billing Portal, whose own confirmation page shows the amount
- *   and the card, and is charged now, prorated.
+ * - a downgrade or a shorter interval (`end_of_period`, `portal_end_of_period`) takes effect at
+ *   the end of the period, with no refund or credit: this dialog says so ("changes on {date}"),
+ *   then the server schedules it or sends the customer to Stripe's confirm page, which defers it;
+ *   TabMerger → own key on Pro AI is one of these;
+ * - an upgrade (`portal`, own key → TabMerger included) goes straight to the Billing Portal, whose
+ *   own confirmation page shows the amount and the card, and is charged now, prorated.
  *
  * Afterwards it reports the result (the date for a scheduled change) and refreshes the page's
  * server data, or follows the portal URL the server returned. A 401 goes to sign-in and back to
@@ -158,9 +168,9 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
     // A live plan at Stripe after all: shown after the refresh when the server recorded it,
     // otherwise changed in Manage billing.
     else if (res.status === 409 && data.error === ALREADY_SUBSCRIBED_ERROR) {
-      setError(data.recorded === true ? pricing('alreadySubscribedShown') : pricing('switchFailed'))
+      setError(data.recorded === true ? pricing('alreadySubscribedShown') : pricing('switchFailed', SUPPORT))
     }
-    else if (res.status === 409 && data.error === PAY_OR_RESUME_ERROR) setError(t('errors.pay_or_resume'))
+    else if (res.status === 409 && data.error === PAY_OR_RESUME_ERROR) setError(t('errors.pay_or_resume', SUPPORT))
     else if (res.status >= 500) setError(pricing('checkoutFailed'))
     else setError(t(`errors.${PLAN_SWITCH_ERROR_CODES.noPaidPlan}`))
     router.refresh()
@@ -204,12 +214,12 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
         return
       }
       if (res.status === 503 && data.error === AI_ERROR_CODES.disabled) setError(t('aiDisabled'))
-      else if (isPlanSwitchErrorCode(code)) setError(t(`errors.${code}`))
+      else if (isPlanSwitchErrorCode(code)) setError(t(`errors.${code}`, SUPPORT))
       // A 409 without a code we know still carries a message written for the user.
       else if (res.status === 409 && typeof data.error === 'string') setError(data.error)
-      else setError(pricing('switchFailed'))
+      else setError(pricing('switchFailed', SUPPORT))
     } catch {
-      setError(pricing('switchFailed'))
+      setError(pricing('switchFailed', SUPPORT))
     } finally {
       setLoading(false)
       setPending(null)
@@ -225,8 +235,8 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
       void send(target, null)
       return
     }
-    // Only a change that waits for the end of the period is confirmed here; an upgrade is confirmed
-    // on Stripe's own page.
+    // Only a change that waits for the end of the period is confirmed here; an upgrade is
+    // confirmed on Stripe's own page.
     if (planChangeTiming(to.from, to) === 'portal') {
       void send(target, planLabel(to))
       return

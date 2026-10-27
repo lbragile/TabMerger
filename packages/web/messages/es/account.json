@@ -53,7 +53,20 @@
     "description": "Gestiona tu plan y la facturación.",
     "manageBilling": "Gestionar facturación",
     "upgrade": "Mejorar plan",
-    "cancelNote": "Puedes cancelar en cualquier momento desde <strong>Gestionar facturación</strong>. Conservas el acceso hasta el final del periodo de facturación actual."
+    "cancelNote": "Puedes cancelar en cualquier momento desde <strong>Gestionar facturación</strong>. Conservas el acceso hasta el final del periodo de facturación actual.",
+    "scheduledChange": "Cambia a {plan} el {date}.",
+    "scheduledChangeUnknownPlan": "Tu plan cambia el {date}.",
+    "scheduledCancelNote": "Si cancelas, conservas tu plan actual hasta el final de este periodo de facturación y se anula el cambio programado. Sin reembolso. Si renuevas más adelante, sigues con tu plan actual."
+  },
+  "cancelSubscription": {
+    "button": "Cancelar suscripción",
+    "errors": {
+      "no_billing_account": "Este plan no está vinculado a una cuenta de facturación. Escribe a {email} y lo cancelaremos por ti.",
+      "no_subscription": "No encontramos una suscripción que cancelar. Recarga la página o escribe a {email}.",
+      "not_entitled": "No hay ningún plan activo que cancelar.",
+      "already_canceling": "Tu plan ya está configurado para terminar al final de este periodo de facturación.",
+      "cancel_failed": "No se pudo abrir la página de cancelación. Inténtalo de nuevo o escribe a {email}."
+    }
   },
   "devicesCard": {
     "title": "Dispositivos",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "No se pudo iniciar el pago",
-    "getMore": "Obtener más"
+    "getMore": "Obtener más",
+    "notAvailable": "Los paquetes de créditos requieren un plan Pro AI activo en el que TabMerger se encarga de configurar la IA."
   },
   "aiPlan": {
     "title": "Quién configura la IA",

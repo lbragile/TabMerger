@@ -53,7 +53,20 @@
     "description": "Planınızı ve faturalandırmanızı yönetin.",
     "manageBilling": "Faturalandırmayı yönet",
     "upgrade": "Yükselt",
-    "cancelNote": "<strong>Faturalandırmayı yönet</strong> üzerinden istediğiniz zaman iptal edebilirsiniz. Erişiminiz mevcut fatura döneminin sonuna kadar devam eder."
+    "cancelNote": "<strong>Faturalandırmayı yönet</strong> üzerinden istediğiniz zaman iptal edebilirsiniz. Erişiminiz mevcut fatura döneminin sonuna kadar devam eder.",
+    "scheduledChange": "{date} tarihinde {plan} planına geçer.",
+    "scheduledChangeUnknownPlan": "Planınız {date} tarihinde değişir.",
+    "scheduledCancelNote": "İptal ederseniz mevcut planınız bu fatura döneminin sonuna kadar devam eder ve planlanan değişiklik kaldırılır. Para iadesi yapılmaz. Daha sonra yenilerseniz mevcut planınızda kalırsınız."
+  },
+  "cancelSubscription": {
+    "button": "Aboneliği iptal et",
+    "errors": {
+      "no_billing_account": "Bu plan bir faturalandırma hesabına bağlı değil. {email} adresine yazın, sizin için iptal edelim.",
+      "no_subscription": "İptal edilecek bir abonelik bulamadık. Sayfayı yenileyin veya {email} adresine yazın.",
+      "not_entitled": "İptal edilecek etkin bir plan yok.",
+      "already_canceling": "Planınız zaten bu fatura döneminin sonunda bitecek şekilde ayarlı.",
+      "cancel_failed": "İptal sayfası açılamadı. Lütfen tekrar deneyin veya {email} adresine yazın."
+    }
   },
   "devicesCard": {
     "title": "Cihazlar",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "Ödeme başlatılamadı",
-    "getMore": "Daha fazla al"
+    "getMore": "Daha fazla al",
+    "notAvailable": "Kredi paketleri yalnızca yapay zekâ kurulumunu TabMerger'ın üstlendiği etkin bir Pro AI planıyla kullanılabilir."
   },
   "aiPlan": {
     "title": "Yapay zekâ kurulumunu kim yapar",

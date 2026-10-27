@@ -81,7 +81,8 @@ describe('dashboard AI card', () => {
   })
 
   it('managed and out of credits: credit packs are offered only while TabMerger setup is on sale', async () => {
-    const usage = { mode: 'managed' as const, used: 2500, limit: 2500 }
+    // A paid-up plan (canBuyCredits): only the sale flag decides here.
+    const usage = { mode: 'managed' as const, used: 2500, limit: 2500, canBuyCredits: true }
     stub('ownKeyOnly')
     let { StatsOverview } = await import('@/components/dashboard/StatsOverview')
     const { unmount } = render(<StatsOverview tabCount={1} groupCount={1} sessionCount={1} memberSince="2024-01-01" aiUsage={usage} />)

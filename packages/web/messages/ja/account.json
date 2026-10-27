@@ -53,7 +53,20 @@
     "description": "プランと請求を管理します。",
     "manageBilling": "請求を管理",
     "upgrade": "アップグレード",
-    "cancelNote": "<strong>請求を管理</strong>からいつでも解約できます。現在の請求期間の終了まではご利用いただけます。"
+    "cancelNote": "<strong>請求を管理</strong>からいつでも解約できます。現在の請求期間の終了まではご利用いただけます。",
+    "scheduledChange": "{date} に {plan} に変更されます。",
+    "scheduledChangeUnknownPlan": "{date} にプランが変更されます。",
+    "scheduledCancelNote": "解約すると、この請求期間の終わりまで現在のプランを利用でき、予定されている変更は取り消されます。返金はありません。後で更新した場合も、現在のプランのままです。"
+  },
+  "cancelSubscription": {
+    "button": "サブスクリプションを解約",
+    "errors": {
+      "no_billing_account": "このプランは請求アカウントに紐づいていません。{email} までメールでご連絡いただければ、こちらで解約いたします。",
+      "no_subscription": "解約するサブスクリプションが見つかりませんでした。ページを再読み込みするか、{email} までメールでご連絡ください。",
+      "not_entitled": "解約できる有効なプランはありません。",
+      "already_canceling": "プランはすでにこの請求期間の終わりに終了するよう設定されています。",
+      "cancel_failed": "解約ページを開けませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。"
+    }
   },
   "devicesCard": {
     "title": "デバイス",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "チェックアウトを開始できませんでした",
-    "getMore": "追加購入"
+    "getMore": "追加購入",
+    "notAvailable": "クレジットパックは、TabMergerがAIのセットアップを担当する有効なPro AIプランでのみ購入できます。"
   },
   "aiPlan": {
     "title": "AIのセットアップ担当",

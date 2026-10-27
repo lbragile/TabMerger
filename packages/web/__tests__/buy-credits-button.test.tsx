@@ -55,4 +55,33 @@ describe('BuyCreditsButton', () => {
 
     expect(toastError).toHaveBeenCalledWith('Could not start checkout')
   })
+
+  // The server sells packs only to a paid-up managed Pro AI plan; a page opened before the plan
+  // ended (or on another plan) says who packs are for instead of a generic failure.
+  it('says who credit packs are for on a 403 credits_not_available, and re-enables the button', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({
+      ok: false,
+      status: 403,
+      json: async () => ({ error: 'credits_not_available' }),
+    })))
+    const user = userEvent.setup()
+    render(<BuyCreditsButton />)
+    await user.click(screen.getByRole('button', { name: /get more/i }))
+
+    expect(toastError).toHaveBeenCalledWith('Credit packs need an active Pro AI plan with TabMerger handling AI setup.')
+    expect(screen.getByRole('button', { name: /get more/i })).toBeEnabled()
+  })
+
+  it('keeps the generic message for the 409 own-key answer', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({
+      ok: false,
+      status: 409,
+      json: async () => ({ error: 'credits_not_applicable' }),
+    })))
+    const user = userEvent.setup()
+    render(<BuyCreditsButton />)
+    await user.click(screen.getByRole('button', { name: /get more/i }))
+
+    expect(toastError).toHaveBeenCalledWith('Could not start checkout')
+  })
 })

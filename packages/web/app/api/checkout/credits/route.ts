@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { createCreditPackCheckoutSession } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
 import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
+import { hasProAi, toAiSubscription } from '@/lib/ai-usage'
+import { CREDITS_NOT_AVAILABLE_ERROR } from '@/lib/checkoutErrors'
 
 /** Smallest and largest pack, in Price units ($0.05 each): $2.50 to $25. */
 const MIN_PACK_UNITS = 50
@@ -15,10 +17,13 @@ const MAX_PACK_UNITS = 500
  * paid, not from the quantity: the webhook converts it with `creditsForPayment()` from
  * `@tabmerger/shared` (so a $2.50 pack is 820 credits and a discounted pack proportionally fewer).
  *
- * Only managed Pro AI spends credits. A Pro AI subscriber on their own AI provider key (`ai_mode =
- * 'byok'`) gets 409 `{ error: 'credits_not_applicable' }` before any Stripe call. Other accounts
- * are not refused here: the AI routes are the enforcement point, and credits bought without a
- * managed Pro AI plan have nothing to be spent against.
+ * Sold only to an account that can spend them, the rule the AI routes enforce: tier `pro_ai` on an
+ * entitled status (`hasProAi()`: active, trialing or past_due) with `ai_mode = 'managed'`. Checked
+ * before any Stripe call:
+ * - no such plan (free, Pro, no row, or Pro AI incomplete/canceled/unpaid/paused): 403
+ *   `{ error: 'credits_not_available' }` (`CREDITS_NOT_AVAILABLE_ERROR`);
+ * - an entitled Pro AI subscriber on their own AI provider key (`ai_mode = 'byok'`): 409
+ *   `{ error: 'credits_not_applicable' }` (`AI_ERROR_CODES.creditsNotApplicable`).
  */
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -40,7 +45,7 @@ export async function POST(request: NextRequest) {
   // failed read stops the request rather than selling a pack that may not be usable.
   const { data: subscription, error: subscriptionError } = await supabase
     .from('subscriptions')
-    .select('tier, ai_mode')
+    .select('tier, status, ai_mode')
     .eq('user_id', user.id)
     .maybeSingle()
 
@@ -49,7 +54,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to check the current plan' }, { status: 500 })
   }
 
-  if (subscription?.tier === 'pro_ai' && subscription.ai_mode === 'byok') {
+  // The spend side's own test (lib/ai-usage.ts), so a pack is never sold to an account whose AI
+  // calls would be refused. A missing ai_mode reads as managed, the column default, as it does there.
+  const aiSubscription = toAiSubscription(subscription)
+  if (!hasProAi(aiSubscription)) {
+    return NextResponse.json({ error: CREDITS_NOT_AVAILABLE_ERROR }, { status: 403 })
+  }
+  if (aiSubscription.aiMode !== 'managed') {
     return NextResponse.json({ error: AI_ERROR_CODES.creditsNotApplicable }, { status: 409 })
   }
 

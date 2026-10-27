@@ -53,7 +53,20 @@
     "description": "Gestisci il tuo piano e la fatturazione.",
     "manageBilling": "Gestisci fatturazione",
     "upgrade": "Passa a un piano superiore",
-    "cancelNote": "Puoi annullare in qualsiasi momento da <strong>Gestisci fatturazione</strong>. Mantieni l'accesso fino alla fine del periodo di fatturazione in corso."
+    "cancelNote": "Puoi annullare in qualsiasi momento da <strong>Gestisci fatturazione</strong>. Mantieni l'accesso fino alla fine del periodo di fatturazione in corso.",
+    "scheduledChange": "Passa a {plan} il {date}.",
+    "scheduledChangeUnknownPlan": "Il tuo piano cambia il {date}.",
+    "scheduledCancelNote": "Se annulli, mantieni il piano attuale fino alla fine di questo periodo di fatturazione e la modifica programmata viene eliminata. Nessun rimborso. Se rinnovi in seguito, mantieni il piano attuale."
+  },
+  "cancelSubscription": {
+    "button": "Annulla abbonamento",
+    "errors": {
+      "no_billing_account": "Questo piano non è collegato a un account di fatturazione. Scrivi a {email} e lo annulleremo per te.",
+      "no_subscription": "Non abbiamo trovato un abbonamento da annullare. Ricarica la pagina oppure scrivi a {email}.",
+      "not_entitled": "Non c’è nessun piano attivo da annullare.",
+      "already_canceling": "Il tuo piano è già impostato per terminare alla fine di questo periodo di fatturazione.",
+      "cancel_failed": "Impossibile aprire la pagina di annullamento. Riprova oppure scrivi a {email}."
+    }
   },
   "devicesCard": {
     "title": "Dispositivi",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "Impossibile avviare il pagamento",
-    "getMore": "Acquista altri"
+    "getMore": "Acquista altri",
+    "notAvailable": "I pacchetti di crediti richiedono un piano Pro AI attivo in cui è TabMerger a configurare l'IA."
   },
   "aiPlan": {
     "title": "Chi configura l’IA",

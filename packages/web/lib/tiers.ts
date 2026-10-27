@@ -97,7 +97,7 @@ export interface PlanPrice {
   envVar: string
 }
 
-const PLAN_PRICES: readonly PlanPrice[] = [
+export const PLAN_PRICES: readonly PlanPrice[] = [
   { tierKey: 'pro', tier: 'pro', interval: 'monthly', aiMode: null, amount: TIERS.pro.monthlyPrice, envVar: 'STRIPE_PRO_MONTHLY_PRICE_ID' },
   { tierKey: 'pro', tier: 'pro', interval: 'yearly', aiMode: null, amount: TIERS.pro.yearlyPrice, envVar: 'STRIPE_PRO_YEARLY_PRICE_ID' },
   { tierKey: 'proAi', tier: 'pro_ai', interval: 'monthly', aiMode: 'managed', amount: TIERS.proAi.monthlyPrice, envVar: 'STRIPE_PRO_AI_MONTHLY_PRICE_ID' },
@@ -153,12 +153,14 @@ export function getPlanForPriceId(priceId: string | null | undefined): PlanPrice
  *   yearly, or several of these). Applied now through the Billing Portal, which charges the
  *   difference prorated against the unused time (`always_invoice`).
  * - `shorter_interval`: only the interval shortens (yearly → monthly) on the same plan and option.
- *   Sent to the portal too, whose `shortening_interval` condition defers it to the end of the term.
+ *   Takes effect at the end of the term.
  * - `downgrade`: the tier or the AI option goes down (Pro AI → Pro, managed → own key), or the
- *   interval shortens together with another change. The server schedules it for the end of the
- *   paid period without proration, so unused time is never refunded or credited. The portal can't
- *   do this: it defers only between prices of one product, and its `decreasing_item_amount`
- *   condition would defer monthly → yearly as well.
+ *   interval shortens together with another change. Takes effect at the end of the paid period
+ *   without proration, so unused time is never refunded or credited.
+ *
+ * This says what a change is, not when or by whom it is applied: `planChangeTiming()`
+ * (lib/planChangeTiming.ts) decides whether Stripe's confirm page defers it or the server
+ * schedules it.
  *
  * A price this environment doesn't know is treated as a `downgrade`: nothing is charged or
  * credited now. The caller rejects a change to the same price before asking.

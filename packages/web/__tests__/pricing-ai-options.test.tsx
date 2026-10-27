@@ -233,9 +233,11 @@ describe('Pro AI option switch on the pricing page', () => {
       await user.click(screen.getByRole('radio', { name: 'You' }))
       expect(within(proAiCard()).queryByText('Current')).not.toBeInTheDocument()
       await user.click(within(proAiCard()).getByRole('button', { name: 'Handle setup yourself' }))
-      // A downgrade, scheduled for the end of the period: confirmed first (see plan-change-confirm.test.tsx).
+      // TabMerger → own key waits for the end of the period: confirmed in our dialog first (see
+      // plan-change-confirm.test.tsx), then sent; the result line gives the date.
+      expect(await screen.findByRole('dialog', { name: 'Confirm plan change' })).toBeInTheDocument()
       expect(global.fetch).not.toHaveBeenCalled()
-      await user.click(await screen.findByRole('button', { name: 'Confirm' }))
+      await user.click(screen.getByRole('button', { name: 'Confirm' }))
 
       const [input, init] = vi.mocked(global.fetch).mock.calls[0]
       expect(String(input)).toBe('/api/billing/switch-plan')

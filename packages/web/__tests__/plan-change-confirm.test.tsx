@@ -1,8 +1,10 @@
 /**
- * The plan-change confirmation (usePlanChange): a change the server schedules for the end of the
- * period (no refund) is confirmed here first, and nothing is sent on Cancel; every upgrade, own-key
- * prices included, goes straight to Stripe's own confirm page. Covers the dialog, cancel (button
- * and Escape, with focus back on the opener), the results, the error codes and the portal path.
+ * The plan-change confirmation (usePlanChange): a change that takes effect at the end of the
+ * period (no refund, no credit), whether the server schedules it or Stripe's confirm page defers
+ * it, is confirmed here first, and nothing is sent on Cancel. TabMerger → own key on Pro AI is one
+ * of these. Every upgrade, own-key prices and own key → TabMerger included, goes straight to
+ * Stripe's own confirm page. Covers the dialog, cancel (button and Escape, with focus back on the
+ * opener), the results, the error codes and the portal path.
  */
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -84,20 +86,6 @@ describe('downgrade: confirmed, then scheduled for the end of the period', () =>
     expect(window.location.href).toBe('')
   })
 
-  it('TabMerger → You (own key) from the account page is a downgrade too', async () => {
-    const { SwitchAiModeButton } = await load()
-    const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="yearly" periodEnd={PERIOD_END} returnPath="/account" />)
-    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-    expect(await screen.findByRole('dialog')).toHaveTextContent(
-      'Your plan changes to Pro AI with you handling setup, billed yearly on November 30, 2026.'
-    )
-    respond(200, { applied: 'end_of_period', effectiveAt: PERIOD_END, url: ACCOUNT_URL })
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'byok' } })
-    expect(await screen.findByRole('status')).toHaveTextContent('Done. Your plan changes to Pro AI with you handling setup, billed yearly')
-  })
-
   it('a shorter interval is confirmed as an end-of-period change, then follows the portal URL', async () => {
     const { PricingCard } = await load()
     const user = userEvent.setup()
@@ -111,13 +99,85 @@ describe('downgrade: confirmed, then scheduled for the end of the period', () =>
   })
 
   it('says "at the end of this billing period" when the period end is unknown', async () => {
+    const { PricingCard } = await load()
+    const user = userEvent.setup()
+    render(<PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" />)
+    await user.click(screen.getByRole('button', { name: 'Downgrade to Pro' }))
+    expect(await screen.findByRole('dialog')).toHaveTextContent(
+      'Your plan changes to Pro, billed monthly at the end of this billing period.'
+    )
+  })
+})
+
+describe('TabMerger → own key: confirmed as a change on the period end date, then Stripe defers it', () => {
+  const proAiCard = {
+    ...cardProps,
+    tier: 'proAi',
+    name: 'Pro AI',
+    aiOptions: {
+      managed: { monthlyPrice: 7.99, yearlyPrice: 85.99, features: [] },
+      byok: { monthlyPrice: 5.99, yearlyPrice: 64.49, features: [] },
+    },
+  }
+
+  it('from the account page: says it changes on the date with no refund, then follows the portal confirm page', async () => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="monthly" returnPath="/account" />)
+    render(<SwitchAiModeButton current="managed" interval="yearly" periodEnd={PERIOD_END} returnPath="/account" />)
     await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-    expect(await screen.findByRole('dialog')).toHaveTextContent(
-      'Your plan changes to Pro AI with you handling setup, billed monthly at the end of this billing period.'
+
+    const dialog = await screen.findByRole('dialog', { name: 'Confirm plan change' })
+    expect(dialog).toHaveTextContent(
+      'Your plan changes to Pro AI with you handling setup, billed yearly on November 30, 2026. You keep your current plan until then. No refund for the rest of this period.'
     )
+    expect(dialog).not.toHaveTextContent(/credit/i)
+    expect(global.fetch).not.toHaveBeenCalled()
+
+    respond(200, { url: 'https://billing.stripe.com/p/session/own' })
+    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'byok' } })
+    expect(window.location.href).toBe('https://billing.stripe.com/p/session/own')
+  })
+
+  it('from the pricing card: confirmed the same way', async () => {
+    const { PricingCard } = await load()
+    const user = userEvent.setup()
+    render(
+      <PricingCard {...proAiCard} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />
+    )
+    await user.click(screen.getByRole('radio', { name: 'You' }))
+    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+
+    expect(await screen.findByRole('dialog')).toHaveTextContent(
+      'Your plan changes to Pro AI with you handling setup, billed monthly on November 30, 2026.'
+    )
+    respond(200, { url: 'https://billing.stripe.com/p/session/own' })
+    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(lastRequest()).toEqual({ path: '/api/billing/switch-plan', body: { aiMode: 'byok' } })
+    expect(window.location.href).toBe('https://billing.stripe.com/p/session/own')
+  })
+
+  it('says "at the end of this billing period" when the interval and period end are unknown', async () => {
+    const { SwitchAiModeButton } = await load()
+    const user = userEvent.setup()
+    render(<SwitchAiModeButton current="managed" returnPath="/account" />)
+    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+
+    expect(await screen.findByRole('dialog')).toHaveTextContent(
+      'Your plan changes to Pro AI with you handling setup at the end of this billing period.'
+    )
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  it('Cancel sends nothing', async () => {
+    const { SwitchAiModeButton } = await load()
+    const user = userEvent.setup()
+    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
+    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+    await screen.findByRole('dialog')
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+    expect(global.fetch).not.toHaveBeenCalled()
   })
 })
 
@@ -157,10 +217,10 @@ describe('own-key upgrades: straight to Stripe, no dialog of ours', () => {
 
 describe('cancel', () => {
   it('Cancel sends nothing, closes the dialog and returns focus to the button that opened it', async () => {
-    const { SwitchAiModeButton } = await load()
+    const { PricingCard } = await load()
     const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
-    const opener = screen.getByRole('button', { name: 'Handle setup yourself' })
+    render(<PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />)
+    const opener = screen.getByRole('button', { name: 'Downgrade to Pro' })
     await user.click(opener)
     await screen.findByRole('dialog')
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
@@ -171,10 +231,10 @@ describe('cancel', () => {
   })
 
   it('Escape cancels too, from the keyboard alone', async () => {
-    const { SwitchAiModeButton } = await load()
+    const { PricingCard } = await load()
     const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
-    const opener = screen.getByRole('button', { name: 'Handle setup yourself' })
+    render(<PricingCard {...cardProps} currentTier="pro_ai" currentInterval="monthly" currentAiMode="managed" currentPeriodEnd={PERIOD_END} />)
+    const opener = screen.getByRole('button', { name: 'Downgrade to Pro' })
     opener.focus()
     await user.keyboard('{Enter}')
     await screen.findByRole('dialog')
@@ -190,30 +250,56 @@ describe('errors and the portal path', () => {
     [409, 'cancel_scheduled', 'Your plan is set to end at the end of this billing period. Renew it in Manage billing before changing it.'],
     [409, 'already_scheduled', 'A plan change is already scheduled for the end of this billing period.'],
     [409, 'already_on_price', "You're already on that plan."],
-    [409, 'pay_or_resume', 'Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing on your account page before changing it.'],
-    [400, 'no_billing_account', "We couldn't find your billing account."],
+    [409, 'pay_or_resume', "Your plan is waiting for a payment or is paused, so it can't be changed yet. Email support@tabmerger.com and we'll help you sort it out."],
+    [400, 'no_billing_account', "This plan isn't linked to a billing account, so it can't be changed here. Email support@tabmerger.com and we'll change it for you."],
     [403, 'no_paid_plan', "You don't have a paid plan to change."],
     [503, 'price_unavailable', "That plan isn't available to switch to right now."],
-    [500, 'switch_failed', "Stripe couldn't start the change."],
+    [500, 'switch_failed', "Stripe couldn't start the change. Please try again, use Manage billing on your account page, or email support@tabmerger.com."],
   ])('a %s with code %s gets its own message', async (status, code, message) => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
-    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+    render(<SwitchAiModeButton current="byok" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
     respond(status, { error: 'English text from the server', code })
-    await user.click(await screen.findByRole('button', { name: 'Confirm' }))
+    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
     expect(await screen.findByRole('alert')).toHaveTextContent(message)
     expect(refresh).not.toHaveBeenCalled()
+  })
+
+  // A plan with no Stripe customer (granted by hand or by migration) has no Manage billing on the
+  // account page, so these never send the user there.
+  it.each([
+    [400, 'no_billing_account'],
+    [409, 'pay_or_resume'],
+    [500, 'something_new'],
+  ])('a %s %s offers the support address, not Manage billing', async (status, code) => {
+    const { SwitchAiModeButton } = await load()
+    const user = userEvent.setup()
+    render(<SwitchAiModeButton current="byok" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
+    respond(status, { error: 'English text from the server', code })
+    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
+    const alert = await screen.findByRole('alert')
+    expect(alert).toHaveTextContent('support@tabmerger.com')
+    expect(alert).not.toHaveTextContent(/Manage billing/)
   })
 
   it('an error without a known code gets the generic message', async () => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
-    render(<SwitchAiModeButton current="managed" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
-    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
+    render(<SwitchAiModeButton current="byok" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
     respond(500, { error: 'Failed', code: 'something_new' })
-    await user.click(await screen.findByRole('button', { name: 'Confirm' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent("Couldn't start the switch. Try Manage billing on your account page.")
+    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      "Couldn't start the switch. Please try again, or email support@tabmerger.com if it keeps happening."
+    )
+  })
+
+  it('a network failure gets the generic message too', async () => {
+    const { SwitchAiModeButton } = await load()
+    const user = userEvent.setup()
+    render(<SwitchAiModeButton current="byok" interval="monthly" periodEnd={PERIOD_END} returnPath="/account" />)
+    vi.mocked(global.fetch).mockRejectedValueOnce(new TypeError('Failed to fetch'))
+    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent("Couldn't start the switch. Please try again")
   })
 
   it('says the option is not available yet on a 503 ai_disabled', async () => {
@@ -275,9 +361,9 @@ describe('recovery: the plan had already ended at Stripe', () => {
   })
 
   it.each([
-    [409, { error: 'pay_or_resume' }, 'Your plan is waiting for a payment or is paused. Pay or resume it in Manage billing'],
+    [409, { error: 'pay_or_resume' }, "Your plan is waiting for a payment or is paused, so it can't be changed yet. Email support@tabmerger.com"],
     [409, { error: 'already_subscribed', recorded: true }, 'You already have a plan. This page now shows it, so you can change it here.'],
-    [409, { error: 'already_subscribed', recorded: false }, "Couldn't start the switch. Try Manage billing on your account page."],
+    [409, { error: 'already_subscribed', recorded: false }, "Couldn't start the switch. Please try again, or email support@tabmerger.com if it keeps happening."],
     [503, { error: 'billing_check_failed' }, "Couldn't start checkout. Please try again in a moment."],
     [400, { error: 'Invalid tier' }, "You don't have a paid plan to change. Choose a plan to subscribe instead."],
   ])('a checkout %i %j shows its message and refreshes the page', async (status, body, message) => {

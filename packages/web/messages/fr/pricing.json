@@ -48,11 +48,11 @@
   "downgradeTo": "Rétrograder vers {name}",
   "upgradeTo": "Passer à {name}",
   "getPlan": "Choisir {name}",
-  "switchFailed": "Impossible de lancer le changement. Essayez Gérer la facturation sur la page de votre compte.",
+  "switchFailed": "Impossible de lancer le changement. Réessayez, ou écrivez à {email} si le problème persiste.",
   "alreadySubscribed": "Vous avez déjà une offre. Ouverture de la facturation pour la modifier.",
   "alreadySubscribedShown": "Vous avez déjà un forfait. Cette page l'affiche maintenant, vous pouvez donc le modifier ici.",
   "checkoutFailed": "Impossible de lancer le paiement. Veuillez réessayer dans un instant.",
-  "portalFailed": "Impossible d’ouvrir la facturation. Utilisez Gérer la facturation sur la page de votre compte pour changer d’offre.",
+  "portalFailed": "Impossible d’ouvrir la facturation. Réessayez, ou écrivez à {email} pour changer d’offre.",
   "checkoutCanceled": "Paiement annulé. Vous n’avez pas été débité.",
   "cancelAnytime": "Résiliez à tout moment depuis votre compte, sans engagement ni justification.",
   "keepAccess": "Vous gardez l’accès jusqu’à la fin de votre période de facturation.",
@@ -89,14 +89,15 @@
     "billedMonthly": "{plan}, facturation mensuelle",
     "billedYearly": "{plan}, facturation annuelle",
     "errors": {
-      "no_billing_account": "Nous n'avons pas trouvé votre compte de facturation. Ouvrez « Gérer la facturation » sur votre page de compte, ou contactez-nous.",
+      "no_billing_account": "Cette offre n’est liée à aucun compte de facturation et ne peut donc pas être modifiée ici. Écrivez à {email} et nous la modifierons pour vous.",
       "no_paid_plan": "Vous n'avez pas d'abonnement payant à modifier. Choisissez plutôt un forfait auquel vous abonner.",
       "already_on_price": "Vous avez déjà ce forfait.",
       "already_scheduled": "Un changement de forfait est déjà prévu pour la fin de cette période de facturation.",
       "cancel_scheduled": "Votre forfait prendra fin à la fin de cette période de facturation. Renouvelez-le dans « Gérer la facturation » avant de le modifier.",
-      "pay_or_resume": "Votre forfait attend un paiement ou est en pause. Payez-le ou réactivez-le dans « Gérer la facturation » sur votre page de compte avant de le modifier.",
+      "pay_or_resume": "Votre forfait attend un paiement ou est en pause et ne peut donc pas encore être modifié. Écrivez à {email} et nous vous aiderons à régler cela.",
+      "switch_needs_support": "Ce changement de forfait ne peut pas être effectué pour le moment. Écrivez à {email} et nous ferons le changement pour vous.",
       "price_unavailable": "Il n'est pas possible de passer à ce forfait pour le moment. Réessayez plus tard ou contactez-nous.",
-      "switch_failed": "Stripe n'a pas pu lancer le changement. Réessayez, ou utilisez « Gérer la facturation » sur votre page de compte."
+      "switch_failed": "Stripe n’a pas pu lancer le changement. Réessayez, utilisez « Gérer la facturation » sur votre page de compte, ou écrivez à {email}."
     }
   }
 }

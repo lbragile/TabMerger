@@ -42,7 +42,7 @@ const LOCAL_CURRENCY_CHECKOUT = { adaptive_pricing: { enabled: true } } as const
 // client components can import TIERS without pulling in the Stripe SDK.
 export { TIERS, getStripePriceId, getPlanForPriceId, getPlanPriceIds } from './tiers'
 export type { TierKey, BillingInterval } from './tiers'
-import { getPlanForPriceId, type BillingInterval } from './tiers'
+import { getPlanForPriceId } from './tiers'
 import { planChangeTiming } from './planChangeTiming'
 
 /**
@@ -307,6 +307,190 @@ export async function createBillingPortalSession({
 }
 
 /**
+ * A plan change waiting in the subscription's schedule: the price the next phase moves to and when
+ * (unix seconds). Made by Stripe's confirm page (a deferred downgrade) or by our server
+ * (`scheduleChangeAtPeriodEnd()`).
+ */
+export interface PendingPlanChange {
+  priceId: string
+  effectiveAt: number
+}
+
+/**
+ * The plan change pending on `subscriptionId`, read from Stripe, or null when there is none (no
+ * schedule, a schedule that has ended or been released, or a next phase on the same price). Only
+ * the caller's own subscription is read: one on another customer is treated as none.
+ */
+export async function getPendingPlanChange({
+  customerId,
+  subscriptionId,
+}: {
+  customerId: string
+  subscriptionId: string
+}): Promise<PendingPlanChange | null> {
+  if (!isStripeConfigured) return null
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId, { expand: ['schedule'] })
+  if (idOf(subscription.customer) !== customerId) return null
+  const schedule = subscription.schedule
+  if (!schedule || typeof schedule === 'string') return null
+  if (schedule.status !== 'active' && schedule.status !== 'not_started') return null
+  const currentPriceId = subscription.items.data[0]?.price.id
+  const currentEnd = schedule.current_phase?.end_date ?? subscription.items.data[0]?.current_period_end
+  const next = schedule.phases.find((phase) => phase.start_date >= currentEnd)
+  const priceId = idOf(next?.items[0]?.price)
+  if (!next || !priceId || priceId === currentPriceId) return null
+  return { priceId, effectiveAt: next.start_date }
+}
+
+/**
+ * Why a cancellation flow couldn't start; the route maps each to a status code.
+ *
+ * - `not_found`: the subscription doesn't exist at Stripe or isn't this customer's.
+ * - `not_entitled`: it has ended, or isn't paid up (nothing to cancel at the period end).
+ * - `already_canceling`: it is already set to end.
+ */
+export class CancelSubscriptionError extends Error {
+  constructor(readonly reason: 'not_found' | 'not_entitled' | 'already_canceling') {
+    super(reason)
+  }
+}
+
+/**
+ * Every active Billing Portal configuration other than the account's default, read page by page
+ * to the end of the list. Each one's `features.subscription_update.products` is expanded: Stripe
+ * leaves it out of a list otherwise (checked in test mode, 2026-10-26), and the lookups below check
+ * it. The list has no metadata filter, so callers match in code.
+ */
+async function listActivePortalConfigurations(): Promise<Stripe.BillingPortal.Configuration[]> {
+  const all: Stripe.BillingPortal.Configuration[] = []
+  let startingAfter: string | undefined
+  for (;;) {
+    const page = await stripe.billingPortal.configurations.list({
+      active: true,
+      is_default: false,
+      limit: 100,
+      expand: ['data.features.subscription_update.products'],
+      ...(startingAfter ? { starting_after: startingAfter } : {}),
+    })
+    all.push(...page.data)
+    if (!page.has_more || page.data.length === 0) return all
+    startingAfter = page.data[page.data.length - 1].id
+  }
+}
+
+/**
+ * True when a configuration's cancellation can't refund or credit: at the end of the period, with
+ * no proration. Both of our configurations allow cancelling, so both check this.
+ */
+function cancelsAtPeriodEndWithoutProration(config: Stripe.BillingPortal.Configuration): boolean {
+  const cancel = config.features?.subscription_cancel
+  return cancel?.enabled === true && cancel.mode === 'at_period_end' && cancel.proration_behavior === 'none'
+}
+
+/**
+ * Logs a configuration found by our metadata whose features no longer match what this code makes
+ * (edited in the Dashboard, or made by an older build). It isn't used; a new one is made instead.
+ */
+function logMismatchedPortalConfiguration(kind: string, config: Stripe.BillingPortal.Configuration): void {
+  console.warn(
+    `Billing portal: configuration ${config.id} (${kind}) has the expected metadata but different features, so it is not used and a new one is made`
+  )
+}
+
+/** Bump when the configuration below changes. */
+const CANCEL_CONFIGURATION_VERSION = 'v1'
+const CANCEL_METADATA_KEY = 'tabmerger_cancel'
+let cancelConfigurationId: string | undefined
+
+/** True when `config` is the cancellation configuration cancelPortalConfiguration() makes. */
+function isCancelConfiguration(config: Stripe.BillingPortal.Configuration): boolean {
+  return cancelsAtPeriodEndWithoutProration(config) && config.features?.subscription_update?.enabled === false
+}
+
+/**
+ * The Billing Portal configuration the cancellation flow uses: cancellation at the end of the
+ * period with no proration (no refund, no credit), payment methods and invoices, and no plan
+ * switching. Passed explicitly rather than relying on the account's default configuration, which
+ * is edited in the Dashboard. Found by metadata (`tabmerger_cancel: v1`) among the active
+ * configurations, and used only when its features still say the above (one edited in the
+ * Dashboard is skipped and a new one made); then cached for the server instance's lifetime, like
+ * the plan-change configurations.
+ */
+async function cancelPortalConfiguration(): Promise<string> {
+  if (cancelConfigurationId) return cancelConfigurationId
+  const tagged = (await listActivePortalConfigurations()).filter(
+    (c) => c.metadata?.[CANCEL_METADATA_KEY] === CANCEL_CONFIGURATION_VERSION
+  )
+  const found = tagged.find(isCancelConfiguration)
+  if (found) {
+    cancelConfigurationId = found.id
+    return found.id
+  }
+  for (const config of tagged) logMismatchedPortalConfiguration('cancellation', config)
+  const created = await stripe.billingPortal.configurations.create({
+    name: `TabMerger cancellation (${CANCEL_CONFIGURATION_VERSION})`,
+    metadata: { [CANCEL_METADATA_KEY]: CANCEL_CONFIGURATION_VERSION },
+    features: {
+      subscription_cancel: { enabled: true, mode: 'at_period_end', proration_behavior: 'none' },
+      subscription_update: { enabled: false },
+      payment_method_update: { enabled: true },
+      invoice_history: { enabled: true },
+    },
+  })
+  cancelConfigurationId = created.id
+  return created.id
+}
+
+/**
+ * Opens Stripe's own "cancel plan" page for the customer's subscription
+ * (`flow_data.type: subscription_cancel`): the customer confirms there, the plan ends at the end of
+ * the paid period, and nothing is refunded or credited. Works while a plan change is scheduled,
+ * which the portal's home page doesn't offer: confirming releases the schedule (the subscription
+ * keeps its current price) and sets `cancel_at_period_end` (verified in test mode, 2026-10-26).
+ * Our server changes nothing itself; the webhook records the result.
+ *
+ * Ownership is checked here, at Stripe: the subscription must belong to `customerId` (the caller's
+ * own customer, from their profile), or it is `not_found`.
+ */
+export async function createCancelSubscriptionSession({
+  customerId,
+  subscriptionId,
+  returnUrl,
+}: {
+  customerId: string
+  subscriptionId: string
+  returnUrl: string
+}): Promise<string> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+
+  let subscription: Stripe.Subscription
+  try {
+    subscription = await stripe.subscriptions.retrieve(subscriptionId)
+  } catch (err) {
+    if ((err as { code?: unknown } | null)?.code === 'resource_missing') throw new CancelSubscriptionError('not_found')
+    throw err
+  }
+  if (idOf(subscription.customer) !== customerId) throw new CancelSubscriptionError('not_found')
+  if (!isEntitledSubscriptionStatus(subscription.status)) throw new CancelSubscriptionError('not_entitled')
+  if (subscription.cancel_at_period_end || subscription.cancel_at) {
+    throw new CancelSubscriptionError('already_canceling')
+  }
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    return_url: returnUrl,
+    locale: PORTAL_LOCALE,
+    configuration: await cancelPortalConfiguration(),
+    flow_data: {
+      type: 'subscription_cancel',
+      subscription_cancel: { subscription: subscription.id },
+      after_completion: { type: 'redirect', redirect: { return_url: returnUrl } },
+    },
+  })
+  return session.url
+}
+
+/**
  * Why a plan switch couldn't start; the route maps each to a status code.
  *
  * - `no_customer`: Stripe has no such customer in this account and mode (`resource_missing`).
@@ -319,6 +503,9 @@ export async function createBillingPortalSession({
  * - `no_subscription`: no entitled subscription on one of the plan's prices, while one that can't be
  *   read as this plan may exist (a live subscription on a price this deployment doesn't know, with
  *   several items, or more subscriptions than one page lists). Nothing is corrected for it.
+ * - `would_credit`: an upgrade whose invoice, previewed at Stripe, comes out below zero (a coupon on
+ *   the subscription that discounts the new price more than the old one). Applying it would leave
+ *   the customer a balance credit, which no plan change may do, so it isn't offered.
  */
 export class PlanSwitchError extends Error {
   constructor(
@@ -331,6 +518,7 @@ export class PlanSwitchError extends Error {
       | 'already_scheduled'
       | 'cancel_scheduled'
       | 'price_unavailable'
+      | 'would_credit'
   ) {
     super(reason)
   }
@@ -360,14 +548,20 @@ const idOf = (value: string | { id: string } | null | undefined): string | undef
  * Moves the customer's paid subscription (one whose price is in `planPriceIds`) to
  * `targetPriceId`, following the refund policy (docs/PAYMENTS.md, "Refund policy"):
  *
- * - **Upgrades** (nothing gets cheaper or shorter) are confirmed by the customer on the Billing
- *   Portal's "confirm plan change" page, which shows the amount and the card, and are charged now,
- *   prorated against the unused time (`always_invoice`).
- * - **Interval shortening** on the same plan and option (yearly → monthly) goes to the same page;
- *   the configuration's `shortening_interval` condition defers it to the end of the term.
- * - **Downgrades** (Pro AI → Pro, managed → own key, or shortening plus another change) are
+ * - **Upgrades** (nothing gets cheaper or shorter, own key → managed included) are confirmed by
+ *   the customer on the Billing Portal's "confirm plan change" page, which shows the amount and the
+ *   card, and are charged now, prorated against the unused time (`always_invoice`). Their invoice
+ *   is previewed first: one that would come out below zero (a coupon) is refused (`would_credit`).
+ * - **Changes the portal defers** (`portal_end_of_period`: yearly → monthly on the same plan and
+ *   option, and downgrades whose interval doesn't shorten: Pro AI → Pro, managed → own key, own
+ *   key → Pro) go to the same page, and the configuration's `decreasing_item_amount` /
+ *   `shortening_interval` conditions make Stripe schedule them for the end of the period, with no
+ *   credit. Across products that is undocumented Stripe behaviour (see lib/planChangeTiming.ts);
+ *   the webhook's plan-change alarm reports it if it ever applies at once.
+ * - **Downgrades with a shorter interval** (yearly → monthly together with another change) are
  *   scheduled here for the end of the paid period with no proration: a subscription schedule whose
- *   current phase ends with the period and whose next phase is the new price. Nothing is refunded
+ *   current phase ends with the period and whose next phase, on the new price, lasts one second
+ *   before the schedule releases the subscription. Nothing is refunded
  *   or credited, and access to the current plan lasts until then.
  *
  * Stripe fires `customer.subscription.updated` when the price actually changes (now, or when the
@@ -439,10 +633,12 @@ export async function createPlanSwitchSession({
   const timing = planChangeTiming(getPlanForPriceId(item.price.id), to)
 
   if (timing === 'end_of_period') {
-    return scheduleChangeAtPeriodEnd(subscription.id, targetPriceId, to?.interval ?? null)
+    return scheduleChangeAtPeriodEnd(subscription, targetPriceId, idOf(targetPrice.product))
   }
-  // 'portal' (an upgrade, charged prorated) or 'portal_end_of_period' (yearly → monthly, deferred
-  // by the configuration's shortening_interval condition).
+  // 'portal' (an upgrade: charged now, prorated) or 'portal_end_of_period' (a change the confirm
+  // page defers to the period end through the configuration's conditions). The target price may be
+  // on another product (each option is its own): the confirm flow accepts that.
+  if (timing === 'portal') await refuseUpgradeThatCredits(customerId, subscription.id, item.id, targetPriceId)
 
   const session = await stripe.billingPortal.sessions.create({
     customer: customerId,
@@ -462,17 +658,65 @@ export async function createPlanSwitchSession({
   return { kind: 'portal', url: session.url }
 }
 
+/**
+ * Previews, at Stripe, the invoice the confirm page would make for an upgrade (`always_invoice`:
+ * the new price prorated, minus the unused time of the old one, with the subscription's and the
+ * customer's discounts applied) and refuses the switch (`would_credit`) when its total is below
+ * zero. At list prices an upgrade always costs more than the time it replaces
+ * (__tests__/refundPolicy.test.ts), but a coupon that discounts only the new price (or only the
+ * old one less) can turn it into a balance credit, and no plan change may leave one. Fails closed:
+ * when the preview itself fails, the error is logged and rethrown, so the route answers
+ * `switch_failed` and no portal session is made.
+ */
+async function refuseUpgradeThatCredits(
+  customerId: string,
+  subscriptionId: string,
+  itemId: string,
+  targetPriceId: string
+): Promise<void> {
+  let preview: Stripe.Invoice
+  try {
+    preview = await stripe.invoices.createPreview({
+      customer: customerId,
+      subscription: subscriptionId,
+      subscription_details: {
+        items: [{ id: itemId, price: targetPriceId, quantity: 1 }],
+        proration_behavior: 'always_invoice',
+      },
+    })
+  } catch (err) {
+    console.error(
+      `Plan switch: previewing the upgrade invoice of subscription ${subscriptionId} failed, so the switch is refused: ${describeStripeError(err)}`
+    )
+    throw err
+  }
+  if (preview.total < 0) {
+    console.warn(
+      `Plan switch: refused an upgrade of subscription ${subscriptionId} to ${targetPriceId}: the previewed invoice total is ${preview.total} (a credit)`
+    )
+    throw new PlanSwitchError('would_credit')
+  }
+}
+
 /** Bump when the configuration below changes, so new sessions get a configuration made from it. */
-const PLAN_CHANGE_CONFIGURATION_VERSION = 'v1'
+const PLAN_CHANGE_CONFIGURATION_VERSION = 'v3'
 const PLAN_CHANGE_METADATA_KEY = 'tabmerger_plan_change'
 /** Configuration id per target price, for this server instance's lifetime. */
 const planChangeConfigurations = new Map<string, string>()
 
 /**
  * The Billing Portal configuration a plan-change flow to `targetPriceId` uses: subscription
- * updates to that one price only, charged prorated now (`always_invoice`) unless the interval
- * shortens (`shortening_interval` defers it to the end of the term); cancellation at period end
- * with no proration.
+ * updates to that one price only, charged now and prorated (`always_invoice`) unless the change
+ * lowers the price or shortens the interval: `decreasing_item_amount` and `shortening_interval`
+ * make the confirm page schedule those for the end of the period instead (no proration, no
+ * credit); cancellation at period end with no proration. Version history: v1 had
+ * `shortening_interval` only, which applied every cheaper cross-product switch at once with a
+ * balance credit; v2 (2026-10-26) adds `decreasing_item_amount`. In test mode it never deferred
+ * monthly → yearly within one product, and across products it deferred only when the yearly
+ * price is cheaper per month (a downgrade); upgrades stayed immediate. v3 (2026-10-26) turns off
+ * promotion codes (`default_allowed_updates: ['price']`): a code entered on the confirm page could
+ * discount the new price below the unused time it is netted against and leave a credit, and no
+ * plan change may leave one.
  *
  * Why one per target: a flow session (`flow_data`) only hides the rest of the portal, and Stripe
  * offers no way to limit a session to its confirm page (`after_completion` only chooses where the
@@ -482,9 +726,12 @@ const planChangeConfigurations = new Map<string, string>()
  * target leaves nothing else to switch to. Stripe doesn't need the subscription's current price
  * listed for `subscription_update_confirm` (checked in test mode, 2026-10-23).
  *
- * Made on first use and found again by metadata (`tabmerger_plan_change: v1:<price>`), so no
- * per-environment setup is needed; the id is cached in memory. Stripe can't delete a portal
- * configuration, so there is at most one per target price and version.
+ * Made on first use and found again by metadata (`tabmerger_plan_change: v3:<price>`) among the
+ * active configurations (deactivated ones are never reused), so no per-environment setup is
+ * needed; the id is cached in memory. A configuration found that way is used only when its
+ * features still match what this code makes (isPlanChangeConfiguration()); one edited in the
+ * Dashboard is skipped and a new one made. Stripe can't delete a portal configuration; older
+ * versions are no longer looked up and are deactivated by hand (docs/PAYMENTS.md runbook).
  */
 async function planChangePortalConfiguration(
   targetPriceId: string,
@@ -494,16 +741,13 @@ async function planChangePortalConfiguration(
   const cached = planChangeConfigurations.get(key)
   if (cached) return cached
 
-  const { data: existing } = await stripe.billingPortal.configurations.list({
-    active: true,
-    is_default: false,
-    limit: 100,
-  })
-  const found = existing.find((c) => c.metadata?.[PLAN_CHANGE_METADATA_KEY] === key)
+  const tagged = (await listActivePortalConfigurations()).filter((c) => c.metadata?.[PLAN_CHANGE_METADATA_KEY] === key)
+  const found = tagged.find((c) => isPlanChangeConfiguration(c, targetPriceId, product))
   if (found) {
     planChangeConfigurations.set(key, found.id)
     return found.id
   }
+  for (const config of tagged) logMismatchedPortalConfiguration('plan change', config)
 
   if (!product) throw new Error(`Price ${targetPriceId} has no product`)
 
@@ -513,9 +757,11 @@ async function planChangePortalConfiguration(
     features: {
       subscription_update: {
         enabled: true,
-        default_allowed_updates: ['price', 'promotion_code'],
+        default_allowed_updates: ['price'],
         proration_behavior: 'always_invoice',
-        schedule_at_period_end: { conditions: [{ type: 'shortening_interval' }] },
+        schedule_at_period_end: {
+          conditions: [{ type: 'decreasing_item_amount' }, { type: 'shortening_interval' }],
+        },
         products: [{ product, prices: [targetPriceId], adjustable_quantity: { enabled: false } }],
       },
       subscription_cancel: { enabled: true, mode: 'at_period_end', proration_behavior: 'none' },
@@ -527,20 +773,83 @@ async function planChangePortalConfiguration(
   return created.id
 }
 
+/** The conditions planChangePortalConfiguration() sets, in any order. */
+const PLAN_CHANGE_CONDITIONS = ['decreasing_item_amount', 'shortening_interval']
+
+/**
+ * True when `config` still has the features planChangePortalConfiguration() makes for
+ * `targetPriceId`: subscription updates on, prices only (no promotion codes, no quantities),
+ * `always_invoice`, both deferral conditions, one product entry listing the target price and
+ * nothing else (on `product`, when known), and cancellation at period end with no proration.
+ */
+function isPlanChangeConfiguration(
+  config: Stripe.BillingPortal.Configuration,
+  targetPriceId: string,
+  product: string | undefined
+): boolean {
+  const update = config.features?.subscription_update
+  if (!update?.enabled || update.proration_behavior !== 'always_invoice') return false
+  const allowed = update.default_allowed_updates ?? []
+  if (allowed.length !== 1 || allowed[0] !== 'price') return false
+  const conditions = (update.schedule_at_period_end?.conditions ?? []).map((c) => c.type as string).sort()
+  if (conditions.join() !== [...PLAN_CHANGE_CONDITIONS].sort().join()) return false
+  const products = update.products ?? []
+  if (products.length !== 1) return false
+  const [entry] = products
+  if (entry.prices.length !== 1 || entry.prices[0] !== targetPriceId) return false
+  if (product && entry.product !== product) return false
+  if (entry.adjustable_quantity?.enabled) return false
+  return cancelsAtPeriodEndWithoutProration(config)
+}
+
+/**
+ * The subscription's own discounts (subscription-level, not the customer's) whose coupon also
+ * applies to `targetProduct`: no `applies_to` restriction, or one that lists the product. A
+ * schedule phase that leaves `discounts` out drops the subscription's discounts (only the
+ * customer's discount is inherited), so the target phase passes these back by id. A coupon
+ * restricted to other products is left behind: it wouldn't discount the new price anyway.
+ * Throws when a discount or coupon can't be read (the caller releases the schedule).
+ */
+async function discountsForTarget(
+  subscription: Stripe.Subscription,
+  targetProduct: string | undefined
+): Promise<string[]> {
+  if (!subscription.discounts || subscription.discounts.length === 0) return []
+  const { discounts } = await stripe.subscriptions.retrieve(subscription.id, { expand: ['discounts'] })
+  const carried: string[] = []
+  for (const discount of discounts) {
+    if (typeof discount === 'string') throw new Error(`Discount ${discount} was not expanded`)
+    // `source.coupon` on current API versions, a top-level `coupon` on older ones; id or object.
+    const legacy = discount as unknown as { coupon?: string | Stripe.Coupon | null }
+    const couponId = idOf(discount.source?.coupon ?? legacy.coupon ?? null)
+    if (!couponId) continue
+    // `applies_to` is only returned when expanded.
+    const coupon = await stripe.coupons.retrieve(couponId, { expand: ['applies_to'] })
+    const products = coupon.applies_to?.products
+    if (!products || (targetProduct !== undefined && products.includes(targetProduct))) carried.push(discount.id)
+  }
+  return carried
+}
+
 /**
  * Schedules a change for the end of the current paid period, with no proration (Stripe's
  * documented "schedule a downgrade for an existing subscription": a schedule made from the
  * subscription, then updated with the current phase kept as is and a next phase on the new
- * price). `end_behavior: 'release'` leaves the subscription running on the new price afterwards.
- * If the update fails, the half-made schedule is released so the subscription isn't left locked
- * (a subscription with a schedule can't be changed or cancelled in the portal).
+ * price). The next phase lasts one second, as the Billing Portal's own deferred changes do:
+ * Stripe changes the price at the period boundary, then the schedule ends and
+ * `end_behavior: 'release'` leaves the subscription running on the new price, with no schedule
+ * attached. A longer phase would keep the subscription locked (a subscription with a schedule
+ * can't be changed or cancelled in the portal) for a whole period after the change. The
+ * subscription's discounts that apply to the new price are carried into that phase, so they stay
+ * on the subscription after the release. If the update fails, the half-made schedule is released
+ * so the subscription isn't left locked.
  */
 async function scheduleChangeAtPeriodEnd(
-  subscriptionId: string,
+  subscription: Stripe.Subscription,
   targetPriceId: string,
-  targetInterval: BillingInterval | null
+  targetProduct: string | undefined
 ): Promise<PlanSwitchResult> {
-  const schedule = await stripe.subscriptionSchedules.create({ from_subscription: subscriptionId })
+  const schedule = await stripe.subscriptionSchedules.create({ from_subscription: subscription.id })
   try {
     const current = schedule.phases[0]
     if (!current) throw new Error('Subscription schedule has no current phase')
@@ -556,6 +865,7 @@ async function scheduleChangeAtPeriodEnd(
       return promotionCode ? [{ promotion_code: promotionCode }] : []
     })
     const taxRates = (current.default_tax_rates ?? []).map((rate) => idOf(rate)).filter(Boolean) as string[]
+    const targetDiscounts = await discountsForTarget(subscription, targetProduct)
 
     await stripe.subscriptionSchedules.update(schedule.id, {
       end_behavior: 'release',
@@ -578,9 +888,12 @@ async function scheduleChangeAtPeriodEnd(
         {
           items: [{ price: targetPriceId, quantity: 1 }],
           // No credit for the period that just ended and no charge beyond the new price's own
-          // renewal: the change lands exactly on the period boundary.
+          // renewal: the change lands exactly on the period boundary, and the schedule is released
+          // one second later.
           proration_behavior: 'none',
-          duration: { interval: targetInterval === 'yearly' ? 'year' : 'month', interval_count: 1 },
+          end_date: current.end_date + 1,
+          ...(targetDiscounts.length > 0 ? { discounts: targetDiscounts.map((discount) => ({ discount })) } : {}),
+          ...(taxRates.length > 0 ? { default_tax_rates: taxRates } : {}),
         },
       ],
     })

@@ -53,7 +53,20 @@
     "description": "管理您的套餐和账单。",
     "manageBilling": "管理账单",
     "upgrade": "升级",
-    "cancelNote": "您可以随时通过<strong>管理账单</strong>取消订阅。当前计费周期结束前，您仍可继续使用。"
+    "cancelNote": "您可以随时通过<strong>管理账单</strong>取消订阅。当前计费周期结束前，您仍可继续使用。",
+    "scheduledChange": "将于 {date} 更改为 {plan}。",
+    "scheduledChangeUnknownPlan": "你的套餐将于 {date} 更改。",
+    "scheduledCancelNote": "取消后，你的当前套餐会保留到本计费周期结束，已安排的更改将被取消。不予退款。之后续订时，仍保留你的当前套餐。"
+  },
+  "cancelSubscription": {
+    "button": "取消订阅",
+    "errors": {
+      "no_billing_account": "此套餐未关联账单账户。请发送邮件至 {email}，我们会为你取消。",
+      "no_subscription": "未找到可取消的订阅。请刷新页面，或发送邮件至 {email}。",
+      "not_entitled": "没有可取消的有效套餐。",
+      "already_canceling": "你的套餐已设置为在本计费周期结束时终止。",
+      "cancel_failed": "无法打开取消页面。请重试，或发送邮件至 {email}。"
+    }
   },
   "devicesCard": {
     "title": "设备",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "无法开始结账",
-    "getMore": "获取更多"
+    "getMore": "获取更多",
+    "notAvailable": "额度包仅适用于由 TabMerger 负责 AI 设置的有效 Pro AI 方案。"
   },
   "aiPlan": {
     "title": "由谁负责 AI 设置",

@@ -23,6 +23,16 @@ import type { PlanPrice } from './tiers'
  *      its subtotal, so the invoice's currency doesn't matter). This catches a "once" coupon, which
  *      Stripe removes from the subscription as soon as the first invoice is finalized: a 100%-off
  *      first month funds no credits, the full-price second month funds the full allowance.
+ * - A mid-period upgrade into managed (own key → managed, Pro → Pro AI, charged now and prorated)
+ *   gets, until the next renewal, the allowance scaled by the part of a month its proration
+ *   charged for: the proration line of the new price on that upgrade's invoice covers the rest of
+ *   the period, and that span, in months and capped at one, is the share (half a month left:
+ *   about half the allowance; one day left: about 1/30). It is read from the latest invoice and
+ *   the current period, never from the clock, so a redelivered event or a later update in the same
+ *   period writes the same figure; the renewal's invoice (a `subscription_cycle`) brings the full
+ *   allowance back. Credit packs are separate grants and aren't touched. While that upgrade's
+ *   invoice isn't paid, the share is 0. Step 2 measures an upgrade's invoice on the new price's
+ *   line alone, not on the subtotal that nets it against the old price's unused time.
  */
 
 /**
@@ -115,19 +125,115 @@ function applyCoupon(cents: number, coupon: CouponPricing): number | null {
   return null
 }
 
+/** A line of an expanded invoice, in either shape the pinned API version may return. */
+type InvoiceLine = Stripe.InvoiceLineItem & {
+  /** Older API versions. */
+  proration?: boolean
+  price?: { id?: string } | string | null
+}
+
+const sumAmounts = (amounts: ReadonlyArray<{ amount?: unknown }> | null | undefined): number =>
+  (amounts ?? []).reduce((sum, d) => sum + (typeof d.amount === 'number' ? d.amount : 0), 0)
+
+/** The share (0..1) of `amount` left after `discounted`; 1 when `amount` isn't positive. */
+const shareAfter = (amount: unknown, discounted: number): number =>
+  typeof amount !== 'number' || amount <= 0 ? 1 : Math.min(1, Math.max(0, (amount - discounted) / amount))
+
 /**
- * The share (0..1) of its subtotal the latest invoice charged after its discounts. 1 when there is
- * no expanded invoice or its subtotal isn't positive (a proration credit, a $0 trial invoice).
+ * The share (0..1) of its charge the latest invoice kept after its discounts. 1 when there is no
+ * expanded invoice or nothing positive to measure (a proration credit, a $0 trial invoice).
+ *
+ * An upgrade's invoice (`subscription_update`, see upgradeLine()) is measured on the line of the
+ * current price alone: its subtotal nets that charge against the credit for the old price's unused
+ * time, and a coupon that discounts only the new price (a managed-only coupon) would otherwise
+ * read as a much larger share of that small net figure and under-grant. Any other invoice is
+ * measured on its subtotal and `total_discount_amounts`. On the pinned API version Stripe applies
+ * the discount inside a proration line's `amount` and reports `discount_amounts` of 0 there (test
+ * mode, 2026-10-26), so for those lines the subscription's discounts (step 1) do the pricing.
  */
-function latestInvoiceChargedShare(invoice: Stripe.Subscription['latest_invoice']): number {
+function latestInvoiceChargedShare(subscription: Stripe.Subscription): number {
+  const invoice = subscription.latest_invoice
   if (!invoice || typeof invoice === 'string') return 1
-  const subtotal = invoice.subtotal
-  if (typeof subtotal !== 'number' || subtotal <= 0) return 1
-  const discounted = (invoice.total_discount_amounts ?? []).reduce(
-    (sum, d) => sum + (typeof d.amount === 'number' ? d.amount : 0),
-    0
-  )
-  return Math.min(1, Math.max(0, (subtotal - discounted) / subtotal))
+  const line = upgradeLine(subscription)?.line
+  if (line) return shareAfter(line.amount, sumAmounts(line.discount_amounts))
+  return shareAfter(invoice.subtotal, sumAmounts(invoice.total_discount_amounts))
+}
+
+function isProrationLine(line: InvoiceLine): boolean {
+  const parent = line.parent as
+    | { subscription_item_details?: { proration?: boolean } | null; invoice_item_details?: { proration?: boolean } | null }
+    | null
+    | undefined
+  return Boolean(parent?.subscription_item_details?.proration ?? parent?.invoice_item_details?.proration ?? line.proration)
+}
+
+function linePriceId(line: InvoiceLine): string | undefined {
+  const details = (line.pricing as { price_details?: { price?: string | { id?: string } } } | null | undefined)?.price_details
+  const price = details?.price ?? line.price
+  return typeof price === 'string' ? price : price?.id
+}
+
+const lineSpan = (line: InvoiceLine): number => (line.period?.end ?? 0) - (line.period?.start ?? 0)
+
+/**
+ * The line that charged for the subscription's current price on its latest invoice, when that
+ * invoice is a plan change's own (`billing_reason: subscription_update`): the positive proration
+ * line of the current price with the longest span (a mid-period upgrade, charged for the rest of
+ * the period), else its positive full-price line (an upgrade that restarts the period, monthly →
+ * yearly, or a deferred change landing at the renewal). Undefined when the invoice charged nothing
+ * for the current price: a portal upgrade whose payment failed is a pending update (the old price
+ * stays and the invoice lists the new one, test mode 2026-10-26), so its invoice never names the
+ * current price with a positive amount.
+ */
+function upgradeLine(subscription: Stripe.Subscription): { line: InvoiceLine; proration: boolean } | undefined {
+  const invoice = subscription.latest_invoice
+  if (!invoice || typeof invoice === 'string' || invoice.billing_reason !== 'subscription_update') return undefined
+  const priceId = subscription.items?.data?.[0]?.price?.id
+  if (!priceId) return undefined
+
+  let proration: InvoiceLine | undefined
+  let full: InvoiceLine | undefined
+  for (const line of (invoice.lines?.data ?? []) as InvoiceLine[]) {
+    if (!(line.amount > 0) || linePriceId(line) !== priceId) continue
+    if (isProrationLine(line)) {
+      if (!proration || lineSpan(line) > lineSpan(proration)) proration = line
+    } else if (!full) {
+      full = line
+    }
+  }
+  if (proration) return { line: proration, proration: true }
+  if (full) return { line: full, proration: false }
+  return undefined
+}
+
+/**
+ * The share (0..1) of a month's allowance the current period earns after a plan change into it.
+ *
+ * - 0 while a mid-period upgrade's invoice (a positive proration line for the current price) isn't
+ *   `paid`: the price was changed without its payment, which only a Dashboard or API update can do
+ *   (the portal's confirm page keeps the old price until the payment succeeds, test mode
+ *   2026-10-26). The row is written again when the subscription next changes (its status on a
+ *   failed or retried payment, the renewal, a later update), which re-reads the invoice.
+ * - Otherwise the span of that proration line (the time from the upgrade to the period end), in
+ *   months of this price's period, capped at 1.
+ * - 1 when the latest invoice has no such line: no plan change, or one that charged the whole
+ *   period (monthly → yearly restarts it, a deferred change lands at the renewal). Those follow the
+ *   renewal's rule: the allowance stands while Stripe collects, and a failed payment changes the
+ *   subscription's status. See the module comment.
+ */
+function upgradePeriodShare(subscription: Stripe.Subscription, months: number): number {
+  const upgrade = upgradeLine(subscription)
+  if (!upgrade?.proration) return 1
+  if ((subscription.latest_invoice as Stripe.Invoice).status !== 'paid') return 0
+
+  const item = subscription.items?.data?.[0] as (Stripe.SubscriptionItem & { current_period_start?: number }) | undefined
+  const start = item?.current_period_start
+  const end = item?.current_period_end
+  if (typeof start !== 'number' || typeof end !== 'number' || end <= start) return 1
+  const covered = lineSpan(upgrade.line)
+  if (covered <= 0) return 1
+  const monthSeconds = (end - start) / months
+  return Math.min(1, covered / monthSeconds)
 }
 
 /**
@@ -166,8 +272,9 @@ export async function subscriptionAiColumns(
     cents = priced
   }
 
-  cents = Math.min(cents, Math.floor(listCents * latestInvoiceChargedShare(subscription.latest_invoice)))
+  cents = Math.min(cents, Math.floor(listCents * latestInvoiceChargedShare(subscription)))
 
   const months = plan.interval === 'yearly' ? 12 : 1
-  return { aiMode, monthlyCredits: monthlyAllowanceForPayment(cents / 100, months) }
+  const full = monthlyAllowanceForPayment(cents / 100, months)
+  return { aiMode, monthlyCredits: Math.floor(full * upgradePeriodShare(subscription, months)) }
 }

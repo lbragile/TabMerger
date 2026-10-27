@@ -53,7 +53,20 @@
     "description": "Zarządzaj planem i płatnościami.",
     "manageBilling": "Zarządzaj płatnościami",
     "upgrade": "Ulepsz",
-    "cancelNote": "Możesz zrezygnować w dowolnym momencie w sekcji <strong>Zarządzaj płatnościami</strong>. Dostęp zachowasz do końca bieżącego okresu rozliczeniowego."
+    "cancelNote": "Możesz zrezygnować w dowolnym momencie w sekcji <strong>Zarządzaj płatnościami</strong>. Dostęp zachowasz do końca bieżącego okresu rozliczeniowego.",
+    "scheduledChange": "Zmieni się na {plan} dnia {date}.",
+    "scheduledChangeUnknownPlan": "Twój plan zmieni się dnia {date}.",
+    "scheduledCancelNote": "Anulowanie zachowuje obecny plan do końca tego okresu rozliczeniowego i usuwa zaplanowaną zmianę. Bez zwrotu pieniędzy. Odnowienie później zachowuje obecny plan."
+  },
+  "cancelSubscription": {
+    "button": "Anuluj subskrypcję",
+    "errors": {
+      "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym. Napisz na {email}, a anulujemy go za Ciebie.",
+      "no_subscription": "Nie znaleźliśmy subskrypcji do anulowania. Odśwież stronę lub napisz na {email}.",
+      "not_entitled": "Nie ma aktywnego planu do anulowania.",
+      "already_canceling": "Twój plan jest już ustawiony tak, aby zakończyć się z końcem tego okresu rozliczeniowego.",
+      "cancel_failed": "Nie udało się otworzyć strony anulowania. Spróbuj ponownie lub napisz na {email}."
+    }
   },
   "devicesCard": {
     "title": "Urządzenia",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "Nie udało się rozpocząć płatności",
-    "getMore": "Kup więcej"
+    "getMore": "Kup więcej",
+    "notAvailable": "Pakiety kredytów wymagają aktywnego planu Pro AI, w którym konfiguracją AI zajmuje się TabMerger."
   },
   "aiPlan": {
     "title": "Kto konfiguruje AI",

@@ -278,6 +278,101 @@ describe('POST /api/webhooks/stripe', () => {
     )
   })
 
+  describe('plan-change alarm (log only)', () => {
+    const lowered = () =>
+      makeSubscription({
+        items: { data: [{ price: { id: 'price_pro_monthly' }, current_period_end: 1800000000 }] },
+        schedule: null,
+        latest_invoice: 'in_change',
+      })
+
+    it('logs a downgrade applied at once with a credit, and still writes the row and answers 200', async () => {
+      errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const { POST } = await import('@/app/api/webhooks/stripe/route')
+      mockSubscriptionsRetrieve.mockResolvedValue({
+        ...lowered(),
+        latest_invoice: { id: 'in_change', billing_reason: 'subscription_update', total: -400, starting_balance: 0, ending_balance: -400 },
+      })
+      mockConstructEvent.mockReturnValue({
+        type: 'customer.subscription.updated',
+        data: {
+          object: lowered(),
+          previous_attributes: {
+            items: { data: [{ price: { id: 'price_pro_ai_monthly' } }] },
+            latest_invoice: 'in_earlier',
+          },
+        },
+      })
+
+      const res = await POST(makeRequest('{}'))
+
+      expect(res.status).toBe(200)
+      expect(mockUpsert).toHaveBeenCalledTimes(1)
+      expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({ tier: 'pro', stripe_price_id: 'price_pro_monthly' }), expect.anything())
+      const alarms = errorSpy.mock.calls.map((call: unknown[]) => String(call[0])).filter((line: string) => line.includes('PLAN_CHANGE_ALARM'))
+      expect(alarms).toEqual([
+        expect.stringContaining('lowered_at_once on customer.subscription.updated (subscription sub_test123, proAi/managed/monthly -> pro/monthly'),
+        expect.stringContaining('credit on customer.subscription.updated (subscription sub_test123, invoice in_change total -400, balance change -400)'),
+      ])
+      // Nothing from the customer or the payload in the line.
+      expect(alarms.join(' ')).not.toMatch(/cus_test123|user-uuid-1/)
+      // Sentry gets the same lines; its queue is flushed after the response.
+      expect(afterTasks).toHaveLength(1)
+      await flushAfter()
+    })
+
+    it('a failure inside the alarm check is logged as one line and the event still gets 200', async () => {
+      errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const { POST } = await import('@/app/api/webhooks/stripe/route')
+      mockSubscriptionsRetrieve.mockResolvedValue(lowered())
+      // previous_attributes that throw when read: the check fails, the write already happened.
+      const previous = {}
+      Object.defineProperty(previous, 'items', {
+        enumerable: true,
+        get() {
+          throw new Error('unreadable previous_attributes')
+        },
+      })
+      mockConstructEvent.mockReturnValue({
+        type: 'customer.subscription.updated',
+        data: { object: lowered(), previous_attributes: previous },
+      })
+
+      const res = await POST(makeRequest('{}'))
+
+      expect(res.status).toBe(200)
+      expect(mockUpsert).toHaveBeenCalledTimes(1)
+      expect(errorSpy).toHaveBeenCalledTimes(1)
+      expect(errorSpy.mock.calls[0]).toEqual([
+        'Stripe webhook: plan-change alarm check failed on customer.subscription.updated (subscription sub_test123): unreadable previous_attributes',
+      ])
+      expect(afterTasks).toHaveLength(0)
+    })
+
+    it('stays quiet when a deferred downgrade lands through its schedule', async () => {
+      errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const { POST } = await import('@/app/api/webhooks/stripe/route')
+      const landed = { ...lowered(), schedule: 'sub_sched_1' }
+      mockSubscriptionsRetrieve.mockResolvedValue({
+        ...landed,
+        latest_invoice: { id: 'in_change', billing_reason: 'subscription_cycle', total: 399, starting_balance: 0, ending_balance: 0 },
+      })
+      mockConstructEvent.mockReturnValue({
+        type: 'customer.subscription.updated',
+        data: {
+          object: landed,
+          previous_attributes: { items: { data: [{ price: { id: 'price_pro_ai_monthly' } }] }, latest_invoice: 'in_earlier' },
+        },
+      })
+
+      const res = await POST(makeRequest('{}'))
+
+      expect(res.status).toBe(200)
+      expect(mockUpsert).toHaveBeenCalledTimes(1)
+      expect(errorSpy).not.toHaveBeenCalled()
+    })
+  })
+
   it('customer.subscription.deleted sets status to canceled', async () => {
     const { POST } = await import('@/app/api/webhooks/stripe/route')
     const subscription = makeSubscription({ status: 'canceled' })

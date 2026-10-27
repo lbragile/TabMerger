@@ -43,6 +43,16 @@ export const PAY_OR_RESUME_ERROR = 'pay_or_resume'
 export const BILLING_CHECK_FAILED_ERROR = 'billing_check_failed'
 
 /**
+ * 403 from `POST /api/checkout/credits`: the account has no plan that spends credit packs. Packs are
+ * spent only by managed Pro AI on an entitled status (`hasProAi()` in lib/ai-usage.ts, the rule the
+ * AI routes enforce), so a free, Pro or ended/unpaid Pro AI account is refused before any Stripe
+ * call. A Pro AI subscriber on their own key gets 409 `credits_not_applicable`
+ * (`AI_ERROR_CODES.creditsNotApplicable`) instead. Kept here rather than in `AI_ERROR_CODES`
+ * because only the web app's credits checkout returns it (the extension never calls that route).
+ */
+export const CREDITS_NOT_AVAILABLE_ERROR = 'credits_not_available'
+
+/**
  * Codes `POST /api/billing/switch-plan` and `/api/billing/switch-interval` return in `{ code }`
  * (next to an English `error`), so the pricing page can say what went wrong in the user's
  * language. Client-safe, shared by lib/planSwitch.ts and components/pricing/usePlanChange.tsx.
@@ -63,6 +73,12 @@ export const PLAN_SWITCH_ERROR_CODES = {
   payOrResume: PAY_OR_RESUME_ERROR,
   /** 409: the subscription is set to end; it is renewed in the portal first. */
   cancelScheduled: 'cancel_scheduled',
+  /**
+   * 409: an upgrade whose invoice, previewed at Stripe, would come out below zero (a coupon on the
+   * subscription discounts the new price more than the unused time is worth). Applying it would
+   * leave a balance credit, which no plan change may do, so support makes the change by hand.
+   */
+  needsSupport: 'switch_needs_support',
   /** 503: the target price isn't configured here, or Stripe has it archived. */
   priceUnavailable: 'price_unavailable',
   /** 500: Stripe refused or failed; the details are in the server log. */
@@ -95,3 +111,23 @@ export function parsePlanSwitchCheckoutTarget(value: unknown): PlanSwitchCheckou
   if (aiMode === undefined) return { tier, interval }
   return isAiMode(aiMode) ? { tier, interval, aiMode } : null
 }
+
+/**
+ * Codes `POST /api/billing/cancel-subscription` returns in `{ code }` (next to an English
+ * `error`), so the account page can say what went wrong in the user's language. Client-safe.
+ */
+export const CANCEL_SUBSCRIPTION_ERROR_CODES = {
+  /** 400: the account has no Stripe customer. */
+  noBillingAccount: 'no_billing_account',
+  /** 404: no subscription of this account to cancel (none stored, unknown at Stripe, or not its own). */
+  noSubscription: 'no_subscription',
+  /** 409: the subscription has ended or isn't paid up, so there is nothing to cancel at period end. */
+  notEntitled: 'not_entitled',
+  /** 409: the subscription is already set to end. */
+  alreadyCanceling: 'already_canceling',
+  /** 500: Stripe refused or failed; the details are in the server log. */
+  failed: 'cancel_failed',
+} as const
+
+export type CancelSubscriptionErrorCode =
+  (typeof CANCEL_SUBSCRIPTION_ERROR_CODES)[keyof typeof CANCEL_SUBSCRIPTION_ERROR_CODES]

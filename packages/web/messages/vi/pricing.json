@@ -48,11 +48,11 @@
   "downgradeTo": "Hạ cấp xuống {name}",
   "upgradeTo": "Nâng cấp lên {name}",
   "getPlan": "Đăng ký {name}",
-  "switchFailed": "Không thể bắt đầu chuyển đổi. Hãy thử Quản lý thanh toán trên trang tài khoản.",
+  "switchFailed": "Không thể bắt đầu chuyển đổi. Vui lòng thử lại, hoặc gửi email tới {email} nếu lỗi vẫn tiếp diễn.",
   "alreadySubscribed": "Bạn đã có gói đăng ký. Đang mở trang thanh toán để bạn thay đổi.",
   "alreadySubscribedShown": "Bạn đã có gói. Trang này giờ đã hiển thị gói đó, nên bạn có thể thay đổi ngay tại đây.",
   "checkoutFailed": "Không thể bắt đầu thanh toán. Vui lòng thử lại sau giây lát.",
-  "portalFailed": "Không thể mở trang thanh toán. Hãy dùng Quản lý thanh toán trên trang tài khoản để đổi gói.",
+  "portalFailed": "Không thể mở trang thanh toán. Vui lòng thử lại, hoặc gửi email tới {email} để đổi gói.",
   "checkoutCanceled": "Đã hủy thanh toán. Bạn không bị tính phí.",
   "cancelAnytime": "Hủy bất cứ lúc nào từ tài khoản của bạn — không ràng buộc, không cần giải thích.",
   "keepAccess": "Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán.",
@@ -89,14 +89,15 @@
     "billedMonthly": "{plan}, thanh toán hàng tháng",
     "billedYearly": "{plan}, thanh toán hàng năm",
     "errors": {
-      "no_billing_account": "Chúng tôi không tìm thấy tài khoản thanh toán của bạn. Hãy mở Quản lý thanh toán trên trang tài khoản hoặc liên hệ với chúng tôi.",
+      "no_billing_account": "Gói này không được liên kết với tài khoản thanh toán nên không thể thay đổi tại đây. Hãy gửi email tới {email} và chúng tôi sẽ thay đổi giúp bạn.",
       "no_paid_plan": "Bạn không có gói trả phí nào để thay đổi. Hãy chọn một gói để đăng ký.",
       "already_on_price": "Bạn đang dùng gói đó rồi.",
       "already_scheduled": "Đã có một thay đổi gói được lên lịch vào cuối kỳ thanh toán này.",
       "cancel_scheduled": "Gói của bạn sẽ kết thúc vào cuối kỳ thanh toán này. Hãy gia hạn trong Quản lý thanh toán trước khi thay đổi.",
-      "pay_or_resume": "Gói của bạn đang chờ thanh toán hoặc đang tạm dừng. Hãy thanh toán hoặc tiếp tục gói trong Quản lý thanh toán trên trang tài khoản trước khi thay đổi.",
+      "pay_or_resume": "Gói của bạn đang chờ thanh toán hoặc đang tạm dừng nên chưa thể thay đổi. Hãy gửi email tới {email} và chúng tôi sẽ giúp bạn xử lý.",
+      "switch_needs_support": "Hiện chưa thể thực hiện thay đổi gói này. Hãy gửi email tới {email} và chúng tôi sẽ thay đổi giúp bạn.",
       "price_unavailable": "Hiện không thể chuyển sang gói đó. Vui lòng thử lại sau hoặc liên hệ với chúng tôi.",
-      "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại hoặc dùng Quản lý thanh toán trên trang tài khoản."
+      "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại, dùng Quản lý thanh toán trên trang tài khoản, hoặc gửi email tới {email}."
     }
   }
 }

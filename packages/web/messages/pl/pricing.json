@@ -48,11 +48,11 @@
   "downgradeTo": "Przejdź na {name}",
   "upgradeTo": "Przejdź na {name}",
   "getPlan": "Wybierz {name}",
-  "switchFailed": "Nie udało się rozpocząć zmiany. Spróbuj opcji Zarządzaj płatnościami na stronie konta.",
+  "switchFailed": "Nie udało się rozpocząć zmiany. Spróbuj ponownie lub napisz na {email}, jeśli problem się powtarza.",
   "alreadySubscribed": "Masz już plan. Otwieramy płatności, abyś mógł go zmienić.",
   "alreadySubscribedShown": "Masz już plan. Ta strona teraz go pokazuje, więc możesz go zmienić tutaj.",
   "checkoutFailed": "Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.",
-  "portalFailed": "Nie udało się otworzyć płatności. Użyj opcji Zarządzaj płatnościami na stronie konta, aby zmienić plan.",
+  "portalFailed": "Nie udało się otworzyć płatności. Spróbuj ponownie lub napisz na {email}, aby zmienić plan.",
   "checkoutCanceled": "Płatność anulowana. Nie pobrano żadnej opłaty.",
   "cancelAnytime": "Zrezygnuj w dowolnej chwili na swoim koncie — bez zobowiązań i zbędnych pytań.",
   "keepAccess": "Dostęp zachowasz do końca okresu rozliczeniowego.",
@@ -89,14 +89,15 @@
     "billedMonthly": "{plan}, płatność miesięczna",
     "billedYearly": "{plan}, płatność roczna",
     "errors": {
-      "no_billing_account": "Nie znaleźliśmy Twojego konta rozliczeniowego. Otwórz „Zarządzaj płatnościami” na stronie konta lub skontaktuj się z nami.",
+      "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym, więc nie można go tu zmienić. Napisz na {email}, a zmienimy go za Ciebie.",
       "no_paid_plan": "Nie masz płatnego planu do zmiany. Zamiast tego wybierz plan do subskrypcji.",
       "already_on_price": "Masz już ten plan.",
       "already_scheduled": "Zmiana planu jest już zaplanowana na koniec tego okresu rozliczeniowego.",
       "cancel_scheduled": "Twój plan wygaśnie z końcem tego okresu rozliczeniowego. Odnów go w „Zarządzaj płatnościami”, zanim go zmienisz.",
-      "pay_or_resume": "Twój plan czeka na płatność lub jest wstrzymany. Opłać go lub wznów w „Zarządzaj płatnościami” na stronie konta, zanim go zmienisz.",
+      "pay_or_resume": "Twój plan czeka na płatność lub jest wstrzymany, więc nie można go jeszcze zmienić. Napisz na {email}, a pomożemy Ci to załatwić.",
+      "switch_needs_support": "Tej zmiany planu nie można teraz wprowadzić. Napisz na {email}, a wprowadzimy ją za Ciebie.",
       "price_unavailable": "Obecnie nie można przejść na ten plan. Spróbuj ponownie później lub skontaktuj się z nami.",
-      "switch_failed": "Stripe nie mógł rozpocząć zmiany. Spróbuj ponownie lub użyj „Zarządzaj płatnościami” na stronie konta."
+      "switch_failed": "Stripe nie mógł rozpocząć zmiany. Spróbuj ponownie, użyj „Zarządzaj płatnościami” na stronie konta lub napisz na {email}."
     }
   }
 }

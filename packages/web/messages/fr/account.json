@@ -53,7 +53,20 @@
     "description": "Gérez votre offre et votre facturation.",
     "manageBilling": "Gérer la facturation",
     "upgrade": "Passer à l’offre supérieure",
-    "cancelNote": "Vous pouvez résilier à tout moment via <strong>Gérer la facturation</strong>. Vous gardez l’accès jusqu’à la fin de la période de facturation en cours."
+    "cancelNote": "Vous pouvez résilier à tout moment via <strong>Gérer la facturation</strong>. Vous gardez l’accès jusqu’à la fin de la période de facturation en cours.",
+    "scheduledChange": "Passe à {plan} le {date}.",
+    "scheduledChangeUnknownPlan": "Votre forfait change le {date}.",
+    "scheduledCancelNote": "En résiliant, vous gardez votre forfait actuel jusqu’à la fin de cette période de facturation et le changement prévu est annulé. Aucun remboursement. Si vous renouvelez plus tard, vous gardez votre forfait actuel."
+  },
+  "cancelSubscription": {
+    "button": "Résilier l’abonnement",
+    "errors": {
+      "no_billing_account": "Ce forfait n’est lié à aucun compte de facturation. Écrivez à {email} et nous le résilierons pour vous.",
+      "no_subscription": "Nous n’avons trouvé aucun abonnement à résilier. Rechargez la page ou écrivez à {email}.",
+      "not_entitled": "Aucun forfait actif à résilier.",
+      "already_canceling": "Votre forfait est déjà prévu pour se terminer à la fin de cette période de facturation.",
+      "cancel_failed": "Impossible d’ouvrir la page de résiliation. Réessayez ou écrivez à {email}."
+    }
   },
   "devicesCard": {
     "title": "Appareils",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "Impossible de lancer le paiement",
-    "getMore": "En obtenir plus"
+    "getMore": "En obtenir plus",
+    "notAvailable": "Les packs de crédits nécessitent un forfait Pro AI actif dont la configuration de l'IA est gérée par TabMerger."
   },
   "aiPlan": {
     "title": "Qui configure l’IA",

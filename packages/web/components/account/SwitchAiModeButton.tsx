@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 interface SwitchAiModeButtonProps {
   /** The Pro AI subscription's setup option now. The button offers the other one. */
   current: AiMode
-  /** How the subscription is billed (from its price); unknown leaves the confirmation out. */
+  /** How the subscription is billed (from its price); unknown leaves "billed monthly/yearly" out of the result message. */
   interval?: BillingInterval
   /** `subscriptions.current_period_end`, the date a scheduled change takes effect. */
   periodEnd?: string | null
@@ -22,10 +22,11 @@ interface SwitchAiModeButtonProps {
 
 /**
  * "Handle setup yourself" / "Let TabMerger handle setup" for a Pro AI subscriber: the same
- * subscription and interval, the other option's price, through `/api/billing/switch-plan`. The
- * user confirms first (moving to "You" is a downgrade, taking effect at the end of the period;
- * moving to "TabMerger" is charged now, prorated), see `usePlanChange`. Renders nothing while the
- * other option isn't on sale.
+ * subscription and interval, the other option's price, through `/api/billing/switch-plan` (see
+ * `usePlanChange`). Moving to "TabMerger" is an upgrade: Stripe's own "confirm plan change" page,
+ * charged now, prorated. Moving to "You" is a downgrade: our dialog says it changes on the
+ * period's end date, then Stripe's confirm page schedules it for then, with no credit; managed AI
+ * lasts until that date. Renders nothing while the other option isn't on sale.
  */
 export function SwitchAiModeButton({ current, interval, periodEnd, returnPath, className }: SwitchAiModeButtonProps) {
   const t = useTranslations('pricing.aiOptions')

@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react'
 import type { Metadata } from 'next'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
-import { createBillingPortalSession } from '@/lib/stripe'
+import { createBillingPortalSession, getPendingPlanChange, type PendingPlanChange } from '@/lib/stripe'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -20,11 +20,12 @@ import { DevicesSection } from '@/components/account/DevicesSection'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
+import { CancelSubscriptionButton } from '@/components/account/CancelSubscriptionButton'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { isAiMode } from '@tabmerger/shared'
+import { ACCOUNT_AI_CREDITS_ANCHOR, isAiMode } from '@tabmerger/shared'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 import { hasCloudSync } from '@/lib/cloudSync'
-import { getPriceInfo } from '@/lib/tiers'
+import { getPlanForPriceId, getPriceInfo } from '@/lib/tiers'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('account')
@@ -33,7 +34,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AccountPage() {
   const supabase = await createClient()
-  const [t, locale, format] = await Promise.all([getTranslations('account'), getLocale(), getFormatter()])
+  const [t, tPlan, locale, format] = await Promise.all([
+    getTranslations('account'),
+    getTranslations('pricing.planChange'),
+    getLocale(),
+    getFormatter(),
+  ])
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -116,6 +122,10 @@ export default async function AccountPage() {
   const aiMode = isAiMode(subscription?.ai_mode) ? subscription.ai_mode : 'managed'
   const showAi = AI_AVAILABILITY.any
   const isOwnKey = isProAi && aiMode === 'byok'
+  // Credit packs: managed Pro AI on an entitled plan, any time (not only once the month's credits
+  // run out), while TabMerger's AI is on sale. The own-key option spends no credits (the checkout
+  // answers 409 for it), and an ended plan has nothing to spend them against.
+  const canBuyCredits = isPaid && isProAi && aiMode === 'managed' && AI_AVAILABILITY.managed
   let aiCreditsLeft = 0
   let aiCreditsLimit = 0
   if (showAi && isProAi && !isOwnKey) {
@@ -131,15 +141,31 @@ export default async function AccountPage() {
   }
 
   let billingPortalUrl: string | null = null
+  // A plan change waiting for the period end (a deferred downgrade). The portal's home page offers
+  // no cancellation while one is pending, so the page shows it with its own Cancel button, which
+  // opens Stripe's cancel page for this subscription.
+  let pendingChange: PendingPlanChange | null = null
   if (isPaid && profile?.stripe_customer_id) {
-    try {
-      billingPortalUrl = await createBillingPortalSession({
-        customerId: profile.stripe_customer_id,
-        returnUrl: absoluteUrl('/account'),
-      })
-    } catch {
-      // non-fatal — portal link just won't show
-    }
+    const customerId = profile.stripe_customer_id
+    const [portal, pending] = await Promise.allSettled([
+      (async () => createBillingPortalSession({ customerId, returnUrl: absoluteUrl('/account') }))(),
+      (async () => (subscription?.id ? getPendingPlanChange({ customerId, subscriptionId: subscription.id }) : null))(),
+    ])
+    // Non-fatal: without them the portal link or the scheduled change just won't show.
+    if (portal.status === 'fulfilled') billingPortalUrl = portal.value
+    if (pending.status === 'fulfilled') pendingChange = pending.value
+  }
+  const pendingPlan = pendingChange ? getPlanForPriceId(pendingChange.priceId) : null
+  // "Pro, billed monthly": the pricing page's plan-change wording.
+  let pendingPlanName: string | null = null
+  if (pendingPlan) {
+    const name =
+      pendingPlan.tierKey === 'pro'
+        ? tPlan('plans.pro')
+        : pendingPlan.aiMode === 'byok'
+          ? tPlan('plans.proAiByok')
+          : tPlan('plans.proAiManaged')
+    pendingPlanName = pendingPlan.interval === 'yearly' ? tPlan('billedYearly', { plan: name }) : tPlan('billedMonthly', { plan: name })
   }
 
   return (
@@ -173,7 +199,10 @@ export default async function AccountPage() {
           ].map((stat, i) => (
             <div
               key={i}
-              className={`rounded-lg border p-4 ${stat.accent ? 'bg-accent border-primary/20' : 'bg-surface border-border'}`}
+              // The AI card is the extension's "Buy more credits" target (/account#ai-credits); the
+              // scroll margin keeps it clear of the sticky 4rem header.
+              id={stat.id === 'aiCredits' || stat.id === 'aiOwnKey' ? ACCOUNT_AI_CREDITS_ANCHOR : undefined}
+              className={`scroll-mt-20 rounded-lg border p-4 ${stat.accent ? 'bg-accent border-primary/20' : 'bg-surface border-border'}`}
             >
               <p className={`font-semibold tracking-tight ${stat.accent ? 'text-primary' : ''}`} style={{ fontSize: '26px' }}>
                 {stat.value}
@@ -181,9 +210,7 @@ export default async function AccountPage() {
               <p className="text-[12px] text-text2 mt-0.5 flex items-center gap-1.5 flex-wrap">
                 {stat.label}
                 {/* Credit packs exist only for TabMerger's AI, and only once it's on sale. */}
-                {stat.id === 'aiCredits' && isProAi && AI_AVAILABILITY.managed && aiCreditsLeft <= 0 && (
-                  <BuyCreditsButton />
-                )}
+                {stat.id === 'aiCredits' && canBuyCredits && <BuyCreditsButton />}
               </p>
             </div>
           ))}
@@ -290,7 +317,26 @@ export default async function AccountPage() {
             </div>
           )}
 
-          {isPaid && billingPortalUrl && (
+          {isPaid && pendingChange && (
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
+              <div className="min-w-0">
+                <p className="font-medium">
+                  {pendingPlanName
+                    ? t('subscription.scheduledChange', {
+                        plan: pendingPlanName,
+                        date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
+                      })
+                    : t('subscription.scheduledChangeUnknownPlan', {
+                        date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
+                      })}
+                </p>
+                <p className="text-xs text-muted-foreground">{t('subscription.scheduledCancelNote')}</p>
+              </div>
+              <CancelSubscriptionButton />
+            </div>
+          )}
+
+          {isPaid && billingPortalUrl && !pendingChange && (
             <p className="text-xs text-muted-foreground">
               {t.rich('subscription.cancelNote', { strong: (chunks) => <strong>{chunks}</strong> })}
             </p>

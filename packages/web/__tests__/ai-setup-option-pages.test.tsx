@@ -129,7 +129,7 @@ describe('account page', () => {
     expect(screen.queryByRole('button', { name: 'Let TabMerger handle setup' })).not.toBeInTheDocument()
   })
 
-  it('managed: credits left of the limit, and a confirmed switch to the own key', async () => {
+  it('managed: credits left of the limit, and a switch to the own key confirmed for the period end', async () => {
     stubFlags({ managed: true, byok: true })
     mockSupabase(MANAGED, 100)
     vi.mocked(global.fetch).mockResolvedValue({
@@ -145,7 +145,10 @@ describe('account page', () => {
       expect(screen.getByText('TabMerger: 2,400 of 2,500 AI credits left this month.')).toBeInTheDocument()
       const user = userEvent.setup()
       await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-      await user.click(await screen.findByRole('button', { name: 'Confirm' }))
+      // TabMerger → own key waits for the period end: our dialog first, then the request.
+      expect(await screen.findByRole('dialog', { name: 'Confirm plan change' })).toBeInTheDocument()
+      expect(global.fetch).not.toHaveBeenCalled()
+      await user.click(screen.getByRole('button', { name: 'Confirm' }))
       const [input, init] = vi.mocked(global.fetch).mock.calls[0]
       expect(String(input)).toBe('/api/billing/switch-plan')
       expect(JSON.parse(String((init as RequestInit).body))).toEqual({ aiMode: 'byok' })
@@ -160,6 +163,66 @@ describe('account page', () => {
     mockSupabase(MANAGED, 2500)
     await renderAccount()
     expect(screen.queryByRole('button', { name: 'Get more' })).not.toBeInTheDocument()
+  })
+})
+
+// Credit packs can be bought before the month's credits run out: the extension's "Buy more
+// credits" link opens /account#ai-credits, which must land on a way to buy.
+describe('credit packs any time for managed Pro AI', () => {
+  const getMore = () => screen.queryByRole('button', { name: 'Get more' })
+
+  it('account page: offered with credits left, on the AI card the shared anchor names', async () => {
+    const { ACCOUNT_AI_CREDITS_ANCHOR } = await import('@tabmerger/shared')
+    expect(ACCOUNT_AI_CREDITS_ANCHOR).toBe('ai-credits')
+    stubFlags({ managed: true, byok: true })
+    mockSupabase(MANAGED, 100)
+    await renderAccount()
+    expect(screen.getByText('2,400')).toBeInTheDocument()
+    const card = document.getElementById(ACCOUNT_AI_CREDITS_ANCHOR) as HTMLElement
+    expect(card).not.toBeNull()
+    expect(within(card).getByRole('button', { name: 'Get more' })).toBeInTheDocument()
+    // Clear of the sticky 4rem header when the browser scrolls to the anchor.
+    expect(card.className).toMatch(/\bscroll-mt-20\b/)
+  })
+
+  it.each([
+    ['an own-key Pro AI plan', OWN_KEY, { managed: true, byok: true }],
+    ['a Pro plan', { tier: 'pro', status: 'active', ai_mode: null }, { managed: true, byok: true }],
+    ['a free account', { tier: 'free', status: 'active', ai_mode: null }, { managed: true, byok: true }],
+    ['a canceled managed Pro AI plan', { ...MANAGED, status: 'canceled' }, { managed: true, byok: true }],
+    ['managed Pro AI while TabMerger setup is not on sale', MANAGED, { managed: false, byok: true }],
+    ['managed Pro AI with AI off', MANAGED, { managed: false, byok: false }],
+  ])('account page: not offered for %s', async (_label, subscription, flags) => {
+    stubFlags(flags)
+    mockSupabase(subscription, 100)
+    await renderAccount()
+    expect(getMore()).not.toBeInTheDocument()
+  })
+
+  it('account page: the own-key AI card carries the anchor too, so the link still lands on AI', async () => {
+    const { ACCOUNT_AI_CREDITS_ANCHOR } = await import('@tabmerger/shared')
+    stubFlags({ managed: true, byok: true })
+    mockSupabase(OWN_KEY)
+    await renderAccount()
+    expect(document.getElementById(ACCOUNT_AI_CREDITS_ANCHOR)).toHaveTextContent('AI setup')
+  })
+
+  it('dashboard: offered with credits left for managed Pro AI', async () => {
+    stubFlags({ managed: true, byok: true })
+    mockSupabase(MANAGED, 100)
+    await renderDashboard()
+    expect(screen.getByText('100/2,500')).toBeInTheDocument()
+    expect(getMore()).toBeInTheDocument()
+  })
+
+  it.each([
+    ['an own-key plan', OWN_KEY, { managed: true, byok: true }],
+    ['TabMerger setup not on sale', MANAGED, { managed: false, byok: true }],
+  ])('dashboard: not offered for %s', async (_label, subscription, flags) => {
+    stubFlags(flags)
+    mockSupabase(subscription, 100)
+    await renderDashboard()
+    expect(getMore()).not.toBeInTheDocument()
   })
 })
 
@@ -188,10 +251,10 @@ describe('SwitchAiModeButton', () => {
     stubFlags({ managed: true, byok: true })
     const { SwitchAiModeButton } = await import('@/components/account/SwitchAiModeButton')
     vi.mocked(global.fetch).mockRejectedValueOnce(new Error('offline'))
-    render(<SwitchAiModeButton current="managed" interval="monthly" returnPath="/dashboard" />)
+    render(<SwitchAiModeButton current="byok" interval="monthly" returnPath="/dashboard" />)
     const user = userEvent.setup()
-    await user.click(screen.getByRole('button', { name: 'Handle setup yourself' }))
-    await user.click(await screen.findByRole('button', { name: 'Confirm' }))
+    // An upgrade (own key → TabMerger) posts at once, with no dialog of ours.
+    await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
     expect(await screen.findByRole('alert')).toHaveTextContent("Couldn't start the switch")
   })
 

@@ -121,6 +121,38 @@ describe('POST /api/billing/switch-plan', () => {
     expect(mockCreateSession).not.toHaveBeenCalled()
   })
 
+  // A plan granted by hand or by migration: a paid row with no Stripe customer and no Stripe price.
+  // The answer is the specific no_billing_account (the page then offers support), not the 400
+  // about the interval, which the page could only answer with its generic message.
+  it('answers 400 no_billing_account for a paid row with no Stripe customer, even with no known price', async () => {
+    mockSubscription.mockResolvedValue({
+      data: { tier: 'pro_ai', status: 'active', stripe_price_id: null, ai_mode: 'managed' },
+    })
+    mockProfile.mockResolvedValue({ data: { stripe_customer_id: null } })
+    const res = await post('switch-plan', { aiMode: 'byok' })
+    expect(res.status).toBe(400)
+    expect(await res.json()).toEqual({ error: 'No billing account found', code: 'no_billing_account' })
+    expect(mockCreateSession).not.toHaveBeenCalled()
+  })
+
+  it('answers no_billing_account on the interval route too', async () => {
+    mockSubscription.mockResolvedValue({
+      data: { tier: 'pro', status: 'active', stripe_price_id: null, ai_mode: null },
+    })
+    mockProfile.mockResolvedValue({ data: null })
+    const res = await post('switch-interval', { interval: 'yearly' })
+    expect(res.status).toBe(400)
+    expect((await res.json()).code).toBe('no_billing_account')
+  })
+
+  it('still answers 403 no_paid_plan before looking for a billing account', async () => {
+    mockSubscription.mockResolvedValue({ data: { tier: 'free', status: 'active', stripe_price_id: null } })
+    mockProfile.mockResolvedValue({ data: { stripe_customer_id: null } })
+    const res = await post('switch-plan', { aiMode: 'byok' })
+    expect(res.status).toBe(403)
+    expect((await res.json()).code).toBe('no_paid_plan')
+  })
+
   it.each([
     ['an empty body', {}],
     ['not JSON', 'not json'],
@@ -358,6 +390,16 @@ describe('POST /api/billing/switch-plan', () => {
       const body = await res.json()
       expect(body.error).toMatch(/set to end/)
       expect(body.code).toBe('cancel_scheduled')
+    })
+
+    it('answers 409 switch_needs_support when the upgrade would leave a credit', async () => {
+      const { PlanSwitchError } = await import('@/lib/stripe')
+      mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('would_credit'))
+      const res = await post('switch-plan', { aiMode: 'managed' })
+      expect(res.status).toBe(409)
+      const body = await res.json()
+      expect(body.code).toBe('switch_needs_support')
+      expect(body.error).toMatch(/can't be made right now/)
     })
   })
 })

@@ -99,8 +99,11 @@ export default async function DashboardPage({
   )
 
   // Pro AI's option: TabMerger's AI (credits) or the subscriber's own key (no credits to show).
+  // The card shows for any Pro AI row (as on the account page), but buying credits and switching the
+  // option need a paid-up plan (`syncEnabled`: active, trialing or past_due), the rule
+  // `/api/checkout/credits` and `/api/billing/switch-plan` enforce.
   const aiMode = isAiMode(subscription?.ai_mode) ? subscription.ai_mode : 'managed'
-  const aiSwitch = (
+  const aiSwitch = syncEnabled && (
     <SwitchAiModeButton
       current={aiMode}
       interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
@@ -124,6 +127,7 @@ export default async function DashboardPage({
         mode: 'managed',
         used: usage?.credits_used ?? 0,
         limit: await getEffectiveCap(supabase, user.id, month),
+        canBuyCredits: syncEnabled,
         action: aiSwitch,
       }
     }

@@ -82,8 +82,8 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  * (Pro ↔ Pro AI). The timing follows the refund policy (`createPlanSwitchSession()` in
  * lib/stripe.ts): an upgrade is confirmed on Stripe's "confirm plan change" page and charged now,
  * prorated; a downgrade or shorter interval takes effect at the end of the paid period with no
- * refund or credit. The subscription row is written by the webhook once Stripe changes the price,
- * never here.
+ * refund or credit, deferred by that page or scheduled by the server (see `planChangeTiming()`).
+ * The subscription row is written by the webhook once Stripe changes the price, never here.
  *
  * Responds with one of:
  * - `{ url }`: Stripe's "confirm plan change" page (the portal);
@@ -93,10 +93,12 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  * or an error `{ error, code? }` (`code` from PLAN_SWITCH_ERROR_CODES in lib/checkoutErrors.ts):
  * 401, 403 (`no_paid_plan`; an AI option for Pro), 400 (`no_billing_account`, also when Stripe
  * has no such customer; a bad body; the current interval is unknown and none was sent), 409
- * (`already_on_price`, `already_scheduled`, `cancel_scheduled`, `pay_or_resume`), 503 (`ai_disabled` in `error`: the Pro AI option the subscription would be
- * on isn't on sale per aiAvailability(); `price_unavailable`: the target price isn't configured
- * here or is archived in Stripe), 500 (`switch_failed`, logged with the Stripe error's type, code
- * and request id).
+ * (`already_on_price`, `already_scheduled`, `cancel_scheduled`, `pay_or_resume`,
+ * `switch_needs_support`: an upgrade whose previewed invoice would be a credit), 503 (`ai_disabled`
+ * in `error`: the Pro AI option the subscription would be on isn't on sale per aiAvailability();
+ * `price_unavailable`: the target price isn't configured here or is archived in Stripe), 500
+ * (`switch_failed`, logged with the Stripe error's type, code and request id; also when the
+ * upgrade's invoice preview fails).
  *
  * The row can say "paid" when Stripe says the plan has ended: a webhook delivery that was missed
  * or failed. When Stripe has no entitled subscription for the customer at all, the row is
@@ -132,6 +134,19 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
     return NextResponse.json({ error: 'Only Pro AI has this option' }, { status: 403 })
   }
 
+  // Checked before anything that depends on the price: a paid row with no Stripe customer (a plan
+  // granted by hand or by migration, with no Stripe price either) can't be switched at all, and
+  // says so with its own code rather than a 400 about the interval the client can't act on.
+  const serviceClient = await createServiceRoleClient()
+  const { data: profile } = await serviceClient
+    .from('profiles')
+    .select('stripe_customer_id')
+    .eq('id', user.id)
+    .single()
+  if (!profile?.stripe_customer_id) {
+    return NextResponse.json({ error: 'No billing account found', code: CODES.noBillingAccount }, { status: 400 })
+  }
+
   // What the subscription is on now. The price is the authority (the webhook derives the row's
   // ai_mode from it); the stored ai_mode covers a price this environment doesn't know.
   const current = getPriceInfo(subscription!.stripe_price_id)
@@ -164,16 +179,6 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
   }
   // Every Price of the current tier, both options: the subscription is found whichever one it is on.
   const planPriceIds = getPlanPriceIds(currentTierKey)
-
-  const serviceClient = await createServiceRoleClient()
-  const { data: profile } = await serviceClient
-    .from('profiles')
-    .select('stripe_customer_id')
-    .eq('id', user.id)
-    .single()
-  if (!profile?.stripe_customer_id) {
-    return NextResponse.json({ error: 'No billing account found', code: CODES.noBillingAccount }, { status: 400 })
-  }
 
   try {
     const returnUrl = absoluteUrl('/account')
@@ -230,6 +235,16 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
       if (err.reason === 'already_scheduled') {
         return NextResponse.json(
           { error: 'A billing change is already scheduled for the end of this term.', code: CODES.alreadyScheduled },
+          { status: 409 }
+        )
+      }
+      if (err.reason === 'would_credit') {
+        // Logged in createPlanSwitchSession() with the previewed total.
+        return NextResponse.json(
+          {
+            error: "This plan change can't be made right now. Contact support and we'll change it for you.",
+            code: CODES.needsSupport,
+          },
           { status: 409 }
         )
       }

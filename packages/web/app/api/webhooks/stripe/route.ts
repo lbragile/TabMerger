@@ -21,6 +21,7 @@ import {
   type CheckoutTier,
 } from '@/lib/checkoutAnalytics'
 import { getPlanForPriceId } from '@/lib/tiers'
+import { flushPlanChangeAlarms, logPlanChangeAlarm, planChangeAlarms } from '@/lib/planChangeAlarm'
 import {
   SubscriptionSyncError,
   databaseError,
@@ -184,8 +185,21 @@ export async function POST(request: NextRequest) {
       case 'customer.subscription.updated': {
         // The event says which subscription changed; what is written is that subscription's
         // current state at Stripe, never the copy embedded in the event.
-        const subscriptionId = (event.data.object as Stripe.Subscription).id
-        await syncSubscription(supabase, event.type, subscriptionId)
+        const subscriptionId = event.data.object.id
+        const current = await syncSubscription(supabase, event.type, subscriptionId)
+        // Report-only check of the refund policy (lib/planChangeAlarm.ts): a plan change that
+        // lowered the plan at once or left a credit, logged and sent to Sentry. Runs after the
+        // write, so a redelivery after a 500 doesn't report it twice, and can't change what is
+        // written or answered: a failure in the check itself is logged and the event still gets 200.
+        try {
+          const alarms = planChangeAlarms(event.data, current)
+          for (const alarm of alarms) logPlanChangeAlarm(event.type, alarm)
+          if (alarms.length > 0) after(flushPlanChangeAlarms)
+        } catch (alarmErr) {
+          console.error(
+            `Stripe webhook: plan-change alarm check failed on ${event.type} (subscription ${subscriptionId}): ${alarmErr instanceof Error ? alarmErr.message.slice(0, 200) : 'unknown error'}`
+          )
+        }
         break
       }
 
@@ -443,24 +457,25 @@ async function creditAiCreditPack(
  * `customer.subscription.updated` does, and what a discount event does once it knows the
  * subscription. Nothing is written when Stripe has no such subscription or no user matches it
  * (logged, 200), or when the user's row tracks another subscription and this one isn't entitled.
+ * Returns the subscription as read from Stripe (null when Stripe has no such subscription).
  */
 async function syncSubscription(
   supabase: ServiceRoleClient,
   eventType: string,
   subscriptionId: string
-) {
+): Promise<Stripe.Subscription | null> {
   const subscription = await retrieveCurrentSubscription(eventType, subscriptionId)
 
   if (!subscription) {
     logUnmatchedEvent(eventType, subscriptionId)
-    return
+    return null
   }
 
   const owner = await resolveSubscriptionUserId(supabase, eventType, subscription)
 
   if (!owner) {
     logUnmatchedEvent(eventType, subscriptionId)
-    return
+    return subscription
   }
 
   // The upsert rewrites the user's one row. A subscription that row does not track yet
@@ -469,10 +484,11 @@ async function syncSubscription(
   // unpaid subscription never replaces whatever the row holds now.
   if (owner.via !== 'stored_row' && !isEntitledSubscriptionStatus(subscription.status)) {
     logNotOnRecordEvent(eventType, subscriptionId, subscription.status)
-    return
+    return subscription
   }
 
   await upsertSubscription(supabase, eventType, subscription, owner.userId)
+  return subscription
 }
 
 /** Prefix of the row the signup trigger creates (`free_<user id>`): it tracks no Stripe subscription. */

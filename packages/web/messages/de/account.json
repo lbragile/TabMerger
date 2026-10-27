@@ -53,7 +53,20 @@
     "description": "Verwalte deinen Tarif und die Abrechnung.",
     "manageBilling": "Abrechnung verwalten",
     "upgrade": "Upgrade",
-    "cancelNote": "Du kannst jederzeit über <strong>Abrechnung verwalten</strong> kündigen. Du behältst den Zugriff bis zum Ende des aktuellen Abrechnungszeitraums."
+    "cancelNote": "Du kannst jederzeit über <strong>Abrechnung verwalten</strong> kündigen. Du behältst den Zugriff bis zum Ende des aktuellen Abrechnungszeitraums.",
+    "scheduledChange": "Wechselt am {date} zu {plan}.",
+    "scheduledChangeUnknownPlan": "Dein Plan ändert sich am {date}.",
+    "scheduledCancelNote": "Wenn du kündigst, behältst du deinen aktuellen Plan bis zum Ende dieses Abrechnungszeitraums, und die geplante Änderung entfällt. Keine Erstattung. Wenn du später verlängerst, bleibst du bei deinem aktuellen Plan."
+  },
+  "cancelSubscription": {
+    "button": "Abo kündigen",
+    "errors": {
+      "no_billing_account": "Dieser Plan ist mit keinem Abrechnungskonto verknüpft. Schreib an {email}, dann kündigen wir ihn für dich.",
+      "no_subscription": "Wir haben kein Abo zum Kündigen gefunden. Lade die Seite neu oder schreib an {email}.",
+      "not_entitled": "Es gibt keinen aktiven Plan zum Kündigen.",
+      "already_canceling": "Dein Plan endet bereits am Ende dieses Abrechnungszeitraums.",
+      "cancel_failed": "Die Kündigungsseite konnte nicht geöffnet werden. Bitte versuche es erneut oder schreib an {email}."
+    }
   },
   "devicesCard": {
     "title": "Geräte",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "Checkout konnte nicht gestartet werden",
-    "getMore": "Mehr holen"
+    "getMore": "Mehr holen",
+    "notAvailable": "Credit-Pakete gibt es nur mit einem aktiven Pro-AI-Plan, bei dem TabMerger die KI einrichtet."
   },
   "aiPlan": {
     "title": "Wer die KI einrichtet",

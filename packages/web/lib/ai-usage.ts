@@ -44,7 +44,8 @@ interface SubscriptionRow {
   ai_monthly_credits?: unknown
 }
 
-function toAiSubscription(row: SubscriptionRow | null | undefined): AiSubscription | null {
+/** Reads a `subscriptions` row (any of tier, status, ai_mode, ai_monthly_credits) as an {@link AiSubscription}. */
+export function toAiSubscription(row: SubscriptionRow | null | undefined): AiSubscription | null {
   if (!row) return null
   const credits = row.ai_monthly_credits
   return {

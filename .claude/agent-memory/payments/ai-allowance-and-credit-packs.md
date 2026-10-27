@@ -47,6 +47,33 @@ Testing: `__tests__/stripeWebhookAiAllowance.test.ts` has a small table mock key
 cases instead of the 2,000-line `stripeWebhook.test.ts`. Asserting `subscriptions.retrieve` calls now
 needs a second argument (`expect.anything()` or the expand list).
 
+**Upgrade into managed mid-period** (2026-10-26): allowance x share, share = span of the positive
+proration line for the current price on a `subscription_update` latest invoice, in months of the
+price's period, capped at 1 (`upgradePeriodShare()`). Basil invoice lines: proration is
+`line.parent.subscription_item_details.proration`, price is `line.pricing.price_details.price`
+(older: `line.proration`, `line.price`). Deterministic from invoice + period, so redeliveries and
+later updates in the period keep it; the `subscription_cycle` renewal restores the full figure.
+Test clock (31-day period): 15 days left → 1,209, 1 day → 80. Scaling the money instead
+(`creditsForPayment` of the remaining-time line) fails for short spans: the $0.30 fixed fee eats it.
+
+**Failed upgrade payment through the portal = pending update** (test clock + `pm_card_chargeCustomerFail`,
+2026-10-26): the confirm page shows "We couldn't process your payment" and the subscription keeps
+the OLD price, stays `active`, gets `pending_update` (expires ~23 h); latest_invoice is the open
+`subscription_update` invoice whose positive line is the NEW price. Paying it fires
+`customer.subscription.pending_update_applied` + `customer.subscription.updated` (invoice paid);
+unpaid it expires and the invoice goes `void` (still latest_invoice). So never zero the allowance
+just because the latest `subscription_update` invoice is unpaid: a paid managed monthly sub with a
+failed monthly → yearly attempt would lose its allowance. `upgradePeriodShare()` returns 0 only when
+the unpaid invoice has a positive *proration* line for the *current* price (price moved without
+payment: Dashboard/API only). Full-price lines (landings, monthly → yearly) follow the renewal rule.
+
+**Discounts on proration lines (basil)**: Stripe bakes the coupon into the proration line's
+`amount` (15-day managed line 387 → 310 with 20% off) and reports `discount_amounts: [{amount: 0}]`
+and `total_discount_amounts: [0]`; a product-restricted coupon simply isn't applied to the other
+product's credit line. Non-proration lines keep `amount` pre-discount with the discount in
+`discount_amounts`. `latestInvoiceChargedShare()` reads an upgrade invoice's current-price line,
+not the net subtotal.
+
 **Flags per option.** Decision (2026-10-22): the own-key option can launch before managed AI.
 Payment routes gate with `aiAvailability(NEXT_PUBLIC_AI_ENABLED, NEXT_PUBLIC_AI_BYOK_ENABLED)` read on
 every call: Pro AI checkout and plan switches need the flag of the option bought or kept

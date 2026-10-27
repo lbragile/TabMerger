@@ -10,3 +10,6 @@
 - [Analytics vs privacy page](learnings_analytics_privacy_crosscheck.md) — cross-check GA4/PostHog identifiers sent from payments code against the privacy page wording
 - [Refund after paid call](learnings_refund_after_paid_call_review_method.md) — credit refund audit (bounded? exact charge? once-flag?) + Workflow DevKit endpoint exposure, Vercel vs local world
 - [Reserve/settle bound](learnings_reserve_settle_bound_review_method.md) — does the AI reservation bound settle? split vs total drift, tier thresholds, uncapped positive deltas, NaN path
+- [Buy-button visibility](learnings_buy_button_visibility_review_method.md) — CTA show/hide changes: buy gate vs spend gate, what the old condition really covered, per-page flag drift
+- [Prorated option switch](learnings_prorated_option_switch_review_method.md) — immediate two-way proration + allowance: round-trip math, usage month vs period, once-coupon credits, invoice-scaled allowance
+- [Amount-driven portal deferral](learnings_amount_driven_portal_deferral_review_method.md) — schedule_at_period_end conditions: pair-by-pair per-month check, stale sessions, restricted coupons, schedule locks, alarm shape

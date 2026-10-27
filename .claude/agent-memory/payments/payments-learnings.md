@@ -163,3 +163,13 @@ metadata:
 - Latent footgun (payments-security-reviewer): the checkout wire tier is camelCase `'proAi'`
   while the DB/Stripe tier is snake_case `'pro_ai'`. Safe today (strict `===` everywhere), but
   a future refactor could mix them — worth a single `PRO_AI_TIER` constant.
+
+## Credit-pack checkout error codes live in the web package
+
+- `AI_ERROR_CODES` (`@tabmerger/shared`) is mapped exhaustively in the extension
+  (`Record<keyof typeof AI_ERROR_CODES, MessageKey>` in `src/lib/aiErrors.ts`), so adding a key
+  there breaks the extension's type-check until the extension maps it too. A code only the web app
+  returns (the credits checkout's 403 `credits_not_available`, `CREDITS_NOT_AVAILABLE_ERROR`) goes
+  in `packages/web/lib/checkoutErrors.ts` instead. The credits route checks
+  `hasProAi(toAiSubscription(row))` from `lib/ai-usage.ts`, the AI routes' own rule, before the
+  own-key 409.

@@ -18,10 +18,12 @@ interface StatsOverviewProps {
   /**
    * Pro AI. `managed`: this month's credits (`used` of `limit`, allowance plus packs). `byok`: the
    * subscriber's own key, which has no TabMerger credits to show. `action` (the switch to the other
-   * option) follows the card's description.
+   * option) follows the card's description. `canBuyCredits` shows "Get more": only for a paid-up
+   * plan (`hasCloudSync`), the same rule `/api/checkout/credits` enforces, so an ended or unpaid
+   * plan still sees its credits but isn't offered a pack it couldn't spend.
    */
   aiUsage?:
-    | { mode: 'managed'; used: number; limit: number; action?: React.ReactNode }
+    | { mode: 'managed'; used: number; limit: number; canBuyCredits?: boolean; action?: React.ReactNode }
     | { mode: 'byok'; action?: React.ReactNode }
   /**
    * Whether to show the stats that depend on synced data (tabs/groups/sessions/memory).
@@ -149,11 +151,13 @@ export function StatsOverview({
               <div className="text-2xl font-bold">{stat.value}</div>
               <p className="text-xs text-muted-foreground">
                 {stat.description}
-                {/* Credit packs exist only for TabMerger's AI, and only once it's on sale. */}
+                {/* Credit packs exist only for TabMerger's AI, only once it's on sale, and only on a
+                    paid-up plan. Offered any time, not only once the month's credits run out (as on
+                    the account page). */}
                 {stat.id === 'aiCredits' &&
                   aiUsage?.mode === 'managed' &&
-                  AI_AVAILABILITY.managed &&
-                  aiUsage.used >= aiUsage.limit && (
+                  aiUsage.canBuyCredits === true &&
+                  AI_AVAILABILITY.managed && (
                     <>
                       {' · '}
                       <BuyCreditsButton />

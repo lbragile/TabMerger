@@ -53,7 +53,20 @@
     "description": "Manage your plan and billing.",
     "manageBilling": "Manage billing",
     "upgrade": "Upgrade",
-    "cancelNote": "You can cancel anytime via <strong>Manage billing</strong>. You keep access until the end of your current billing period."
+    "cancelNote": "You can cancel anytime via <strong>Manage billing</strong>. You keep access until the end of your current billing period.",
+    "scheduledChange": "Changes to {plan} on {date}.",
+    "scheduledChangeUnknownPlan": "Your plan changes on {date}.",
+    "scheduledCancelNote": "Cancelling keeps your current plan until the end of this billing period and drops the scheduled change. No refund. Renewing later keeps your current plan."
+  },
+  "cancelSubscription": {
+    "button": "Cancel subscription",
+    "errors": {
+      "no_billing_account": "This plan isn't linked to a billing account. Email {email} and we'll cancel it for you.",
+      "no_subscription": "We couldn't find a subscription to cancel. Reload the page, or email {email}.",
+      "not_entitled": "There's no active plan to cancel.",
+      "already_canceling": "Your plan is already set to end at the end of this billing period.",
+      "cancel_failed": "Couldn't open the cancellation page. Please try again, or email {email}."
+    }
   },
   "devicesCard": {
     "title": "Devices",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "Could not start checkout",
-    "getMore": "Get more"
+    "getMore": "Get more",
+    "notAvailable": "Credit packs need an active Pro AI plan with TabMerger handling AI setup."
   },
   "aiPlan": {
     "title": "Who handles AI setup",

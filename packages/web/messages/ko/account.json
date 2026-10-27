@@ -53,7 +53,20 @@
     "description": "요금제와 결제를 관리하세요.",
     "manageBilling": "결제 관리",
     "upgrade": "업그레이드",
-    "cancelNote": "<strong>결제 관리</strong>에서 언제든지 해지할 수 있습니다. 현재 결제 기간이 끝날 때까지는 계속 이용할 수 있습니다."
+    "cancelNote": "<strong>결제 관리</strong>에서 언제든지 해지할 수 있습니다. 현재 결제 기간이 끝날 때까지는 계속 이용할 수 있습니다.",
+    "scheduledChange": "{date}에 {plan}(으)로 변경됩니다.",
+    "scheduledChangeUnknownPlan": "{date}에 요금제가 변경됩니다.",
+    "scheduledCancelNote": "해지하면 이번 결제 기간이 끝날 때까지 현재 요금제를 유지하고 예약된 변경은 취소됩니다. 환불은 없습니다. 나중에 갱신하면 현재 요금제가 유지됩니다."
+  },
+  "cancelSubscription": {
+    "button": "구독 해지",
+    "errors": {
+      "no_billing_account": "이 요금제는 결제 계정에 연결되어 있지 않습니다. {email}로 이메일을 보내 주시면 대신 해지해 드립니다.",
+      "no_subscription": "해지할 구독을 찾지 못했습니다. 페이지를 새로고침하거나 {email}로 이메일을 보내 주세요.",
+      "not_entitled": "해지할 활성 요금제가 없습니다.",
+      "already_canceling": "요금제가 이미 이번 결제 기간이 끝날 때 종료되도록 설정되어 있습니다.",
+      "cancel_failed": "해지 페이지를 열 수 없습니다. 다시 시도하거나 {email}로 이메일을 보내 주세요."
+    }
   },
   "devicesCard": {
     "title": "기기",
@@ -70,7 +83,8 @@
   },
   "credits": {
     "failed": "결제를 시작할 수 없습니다",
-    "getMore": "더 받기"
+    "getMore": "더 받기",
+    "notAvailable": "크레딧 팩은 TabMerger가 AI 설정을 맡는 활성 Pro AI 플랜에서만 구매할 수 있습니다."
   },
   "aiPlan": {
     "title": "AI 설정 담당",

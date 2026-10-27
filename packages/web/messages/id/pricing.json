@@ -48,11 +48,11 @@
   "downgradeTo": "Turunkan ke {name}",
   "upgradeTo": "Tingkatkan ke {name}",
   "getPlan": "Dapatkan {name}",
-  "switchFailed": "Tidak dapat memulai peralihan. Coba Kelola tagihan di halaman akun Anda.",
+  "switchFailed": "Tidak dapat memulai peralihan. Silakan coba lagi, atau kirim email ke {email} jika masalah berlanjut.",
   "alreadySubscribed": "Anda sudah memiliki paket. Membuka halaman tagihan agar Anda dapat mengubahnya.",
   "alreadySubscribedShown": "Anda sudah memiliki paket. Halaman ini sekarang menampilkannya, jadi Anda dapat mengubahnya di sini.",
   "checkoutFailed": "Tidak dapat memulai checkout. Silakan coba lagi sebentar lagi.",
-  "portalFailed": "Tidak dapat membuka halaman tagihan. Gunakan Kelola tagihan di halaman akun Anda untuk mengubah paket.",
+  "portalFailed": "Tidak dapat membuka halaman tagihan. Silakan coba lagi, atau kirim email ke {email} untuk mengubah paket.",
   "checkoutCanceled": "Pembayaran dibatalkan. Anda tidak dikenai biaya.",
   "cancelAnytime": "Batalkan kapan saja dari akun Anda — tanpa ikatan, tanpa banyak tanya.",
   "keepAccess": "Akses tetap tersedia hingga akhir periode tagihan Anda.",
@@ -89,14 +89,15 @@
     "billedMonthly": "{plan}, ditagih bulanan",
     "billedYearly": "{plan}, ditagih tahunan",
     "errors": {
-      "no_billing_account": "Kami tidak dapat menemukan akun penagihan Anda. Buka Kelola penagihan di halaman akun Anda, atau hubungi kami.",
+      "no_billing_account": "Paket ini tidak terhubung ke akun penagihan, jadi tidak dapat diubah di sini. Kirim email ke {email} dan kami akan mengubahnya untuk Anda.",
       "no_paid_plan": "Anda tidak memiliki paket berbayar untuk diubah. Pilih paket untuk berlangganan.",
       "already_on_price": "Anda sudah menggunakan paket tersebut.",
       "already_scheduled": "Perubahan paket sudah dijadwalkan untuk akhir periode penagihan ini.",
       "cancel_scheduled": "Paket Anda akan berakhir pada akhir periode penagihan ini. Perpanjang di Kelola penagihan sebelum mengubahnya.",
-      "pay_or_resume": "Paket Anda menunggu pembayaran atau sedang dijeda. Bayar atau lanjutkan di Kelola penagihan pada halaman akun Anda sebelum mengubahnya.",
+      "pay_or_resume": "Paket Anda menunggu pembayaran atau sedang dijeda, jadi belum dapat diubah. Kirim email ke {email} dan kami akan membantu Anda menyelesaikannya.",
+      "switch_needs_support": "Perubahan paket ini tidak dapat dilakukan sekarang. Kirim email ke {email} dan kami akan melakukan perubahannya untuk Anda.",
       "price_unavailable": "Saat ini Anda tidak dapat beralih ke paket tersebut. Silakan coba lagi nanti atau hubungi kami.",
-      "switch_failed": "Stripe tidak dapat memulai perubahan. Silakan coba lagi, atau gunakan Kelola penagihan di halaman akun Anda."
+      "switch_failed": "Stripe tidak dapat memulai perubahan. Silakan coba lagi, gunakan Kelola penagihan di halaman akun Anda, atau kirim email ke {email}."
     }
   }
 }
