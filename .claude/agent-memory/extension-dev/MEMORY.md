@@ -127,7 +127,7 @@
 - [Right-to-left layout](learnings_rtl_layout.md) — text-ui-start keys on html dir; empty dir=auto is LTR; Radix direction; probe screenshots
 - [Searchable language pickers](learnings_language_picker_search.md) — Popover+combobox, manual scroll-to-current, two-name rows, RTL mark
 - [Pro AI own key + model picker](learnings_ai_byok_model_choice.md) — WXT auto-import `class extends` trap; two AI flags; provider-first picker; focus retry; cost levels not $
-- [Settings → AI dropdowns](learnings_ai_settings_dropdowns.md) — two-line Select options, name-only trigger (SelectValue children + textValue), '' placeholder, popper caps
+- [Settings → AI dropdowns](learnings_ai_settings_dropdowns.md) — two-line Select options, name-only trigger, '' placeholder, fixed 12rem + ellipsis (line-clamp-none)
 - [Header AI "Name group"](learnings_header_ai_name_group.md) — (now opens a picker, see name-picker note) shared useNameGroupAction; Trans+bdi user name in hint; fa ZWNJ; e2e own-key seed
 - [AI Organize in the popup](learnings_ai_organize_in_popup.md) — sanitize + pure apply + own RMW hook; bdi a11y-name spaces; Now Open id changes on sign-in
 - [AI menu sections + Describe group](learnings_ai_menu_sections_describe_group.md) — AiMenu.tsx groups/labels; targeted toast Undo (undoHistoryEntry); `//` args mangled by Git Bash

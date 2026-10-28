@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { AI_MODELS, AI_PROVIDERS, PRO_AI_MONTHLY_CREDITS, aiModelsForProvider, type AiMode, type AiModelChoice, type AiProvider } from '@tabmerger/shared'
 import { AiModelPicker } from '@/components/Settings/AiModelPicker'
-import { AI_SELECT_TRIGGER_CLASS } from '@/components/Settings/settingsControls'
+import { AI_SELECT_TRIGGER_CLASS, AI_SELECT_WIDTH } from '@/components/Settings/settingsControls'
 import { costLevel, organizesFor } from '@/lib/aiModel'
 import { formatNumber, t } from '@/lib/i18n'
 
@@ -57,10 +57,22 @@ describe('AiModelPicker', () => {
     expect((await open()).length).toBeGreaterThan(1)
   })
 
-  it('the trigger shows only the chosen model’s name; its info stays visible under the row', () => {
+  it('the trigger shows only the chosen model’s name (also its title); its info stays visible under the row', () => {
     renderPicker('openai', 'byok', 'gpt-6-astra')
     expect(trigger().textContent).toBe(AI_MODELS['gpt-6-astra'].label)
+    expect(trigger().getAttribute('title')).toBe(AI_MODELS['gpt-6-astra'].label)
     expect(selectedInfo().textContent).toBe(t(`settings.ai.cost.${costLevel('gpt-6-astra')}`))
+  })
+
+  it('keeps one fixed width (12rem, as the provider dropdown) whichever model is chosen', () => {
+    const widths = (['auto', 'gemini-3.1-flash-lite', 'gemini-4-argon'] as const).map((choice) => {
+      const view = render(React.createElement(AiModelPicker, { value: choice, onChange: vi.fn(), aiMode: 'byok', provider: 'google', allowance: PRO_AI_MONTHLY_CREDITS }))
+      const classes = trigger().className.split(/\s+/).filter((c) => /^(min-|max-)?w-/.test(c))
+      expect(trigger().getAttribute('title')).toBe(choice === 'auto' ? t('settings.ai.model.auto') : AI_MODELS[choice].label)
+      view.unmount()
+      return classes
+    })
+    for (const classes of widths) expect(classes).toEqual([AI_SELECT_WIDTH])
   })
 
   it('each option names its model and carries its cost level on a muted second line', async () => {

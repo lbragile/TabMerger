@@ -61,6 +61,23 @@ async function pickProvider(page: Page, name: string): Promise<void> {
 }
 
 /**
+ * A dropdown trigger's rendered width, and whether its value is cut: the value span's overflow and
+ * its `text-overflow` and `display` (an ellipsis needs `truncate` on a block, not the shared
+ * trigger's `-webkit-box` line clamp).
+ */
+async function triggerFit(trigger: ReturnType<Page['getByTestId']>): Promise<{ width: number; cut: number; textOverflow: string; display: string }> {
+  return trigger.evaluate((el) => {
+    const value = el.querySelector(':scope > span')!;
+    return {
+      width: el.getBoundingClientRect().width,
+      cut: value.scrollWidth - value.clientWidth,
+      textOverflow: getComputedStyle(value).textOverflow,
+      display: getComputedStyle(value).display
+    };
+  });
+}
+
+/**
  * Opens the model dropdown, checks which models it offers (and that each option carries its
  * secondary line), then closes it with Escape, which closes only the list, not Settings.
  */
@@ -99,6 +116,10 @@ test.describe('Settings → AI, own key', () => {
     // Nothing provider-specific before a pick: only the provider dropdown, with its placeholder
     await expect(providers).toBeVisible();
     await expect(providers).toHaveText('Choose a provider');
+    const placeholderFit = await triggerFit(providerSelect(page));
+    expect(placeholderFit.cut).toBeLessThanOrEqual(0);
+    expect(placeholderFit.textOverflow).toBe('ellipsis');
+    expect(placeholderFit.display).toBe('block');
     await expect(keyInput).toHaveCount(0);
     await expect(page.getByTestId('ai-provider-links')).toHaveCount(0);
     await expect(models).toHaveCount(0);
@@ -132,6 +153,20 @@ test.describe('Settings → AI, own key', () => {
       return box.scrollWidth - box.clientWidth;
     });
     expect(overflow).toBeLessThanOrEqual(0);
+
+    // Both triggers have one fixed width (12rem), whatever they show; the longest model name fits
+    // without being cut, and the trigger's title holds the full name
+    const argonFit = await triggerFit(modelSelect(page));
+    await modelSelect(page).click();
+    await page.getByTestId('ai-model-gemini-3.1-flash-lite').click();
+    await expect(models).toHaveText('Gemini 3.1 Flash-Lite');
+    await expect(models).toHaveAttribute('title', 'Gemini 3.1 Flash-Lite');
+    const liteFit = await triggerFit(modelSelect(page));
+    const providerFit = await triggerFit(providerSelect(page));
+    const rem = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
+    for (const fit of [placeholderFit, providerFit, argonFit, liteFit]) expect(fit.width).toBeCloseTo(12 * rem, 0);
+    expect(liteFit.cut).toBeLessThanOrEqual(0);
+    expect(liteFit.textOverflow).toBe('ellipsis');
 
     // An OpenAI key under Gemini: inline error tied to the field, nothing sent
     await keyInput.fill(OPENAI_KEY);

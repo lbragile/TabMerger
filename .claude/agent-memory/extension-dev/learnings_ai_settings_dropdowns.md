@@ -7,8 +7,21 @@ metadata:
 
 `AiProviderPicker` and `AiModelPicker` are shared-`Select` rows laid out like the General rows
 (heading + hint left, trigger right), trigger `aria-labelledby` the heading `Label`. Shared
-classes: `AI_SELECT_TRIGGER_CLASS` / `AI_SELECT_CONTENT_CLASS` in `settingsControls.ts`
-(content-sized `w-auto min-w-32 max-w-[60%]`; `min-w-32` equals the General `w-32`).
+classes: `AI_SELECT_WIDTH` / `AI_SELECT_TRIGGER_CLASS` / `AI_SELECT_CONTENT_CLASS` in
+`settingsControls.ts`. Decision: one fixed width for both triggers (`w-48`, 12rem), not
+content-sized (a width that changed with the choice was rejected). Sized from measurements of
+every locale's "Auto" and provider placeholder plus all model names at `text-xs` in the popup font;
+the trigger's own padding + gap + chevron + border is 50px. Recompute when a model or translation
+gets longer.
+
+- **Ellipsis on a shared trigger:** `SelectTrigger` has `[&>span]:line-clamp-1` (display
+  `-webkit-box`), which does not draw a `text-overflow` ellipsis on one nowrap line. Add
+  `[&>span]:line-clamp-none [&>span]:truncate`: tailwind-merge drops `line-clamp-1` (same group),
+  `line-clamp-none` makes the span `display: block` and `truncate` then ellipsizes (checked in a
+  real build). Put a `title` with the full text on the trigger.
+- **Measuring label widths in the real font:** a temporary `e2e/repro/*.repro.ts` that opens the
+  popup and measures `span.text-xs` (with `lang`) per string, or writes each string into the real
+  trigger's value span and reads `scrollWidth - clientWidth`. Delete the probe afterwards.
 
 Non-obvious points:
 - **Options with a second line, trigger with the name only.** shadcn `SelectItem` wraps ALL its

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { AI_PROVIDERS, AI_PROVIDER_LABELS, type AiProvider } from '@tabmerger/shared'
 import { AiProviderPicker } from '@/components/Settings/AiProviderPicker'
-import { AI_SELECT_TRIGGER_CLASS } from '@/components/Settings/settingsControls'
+import { AI_SELECT_TRIGGER_CLASS, AI_SELECT_WIDTH } from '@/components/Settings/settingsControls'
 import { t } from '@/lib/i18n'
 
 beforeAll(() => {
@@ -39,11 +39,23 @@ describe('AiProviderPicker', () => {
     expect(select.className).toContain('data-[placeholder]:text-muted-foreground')
   })
 
-  it('sizes to its value like the other Settings → AI dropdown, never under the 8rem General width', () => {
-    renderPicker('anthropic')
-    for (const c of AI_SELECT_TRIGGER_CLASS.split(' ')) expect(trigger().className.split(/\s+/)).toContain(c)
-    expect(trigger().className).toMatch(/\bmin-w-32\b/)
-    expect(trigger().className).toMatch(/\bw-auto\b/)
+  it('has the one fixed Settings → AI width (12rem), whatever it shows, and cuts a long value with an ellipsis', () => {
+    renderPicker(null)
+    const placeholderClasses = trigger().className
+    for (const c of AI_SELECT_TRIGGER_CLASS.split(' ')) expect(placeholderClasses.split(/\s+/)).toContain(c)
+    expect(placeholderClasses.split(/\s+/).filter((c) => /^(min-|max-)?w-/.test(c))).toEqual([AI_SELECT_WIDTH])
+    expect(AI_SELECT_WIDTH).toBe('w-48')
+    // the shared trigger's line clamp gives way to truncate, which draws the ellipsis
+    expect(placeholderClasses).toContain('[&>span]:truncate')
+    expect(placeholderClasses).not.toContain('[&>span]:line-clamp-1')
+  })
+
+  it('keeps the full text in the trigger’s title: the placeholder, then the picked provider', () => {
+    const { unmount } = render(React.createElement(AiProviderPicker, { value: null, onChange: vi.fn() }))
+    expect(trigger().getAttribute('title')).toBe(t('settings.ai.provider.placeholder'))
+    unmount()
+    renderPicker('google')
+    expect(trigger().getAttribute('title')).toBe('Gemini')
   })
 
   it('lists every provider in order and shows the given one', async () => {

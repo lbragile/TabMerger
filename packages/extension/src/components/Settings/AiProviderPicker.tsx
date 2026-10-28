@@ -20,8 +20,8 @@ const isAiProvider = (value: string): value is AiProvider => (AI_PROVIDERS as re
  * Settings → AI, own-key plans: which company's API key the user brings (Anthropic, OpenAI or
  * Google), as a dropdown in a Settings row. Picked first: the key field, setup links and model
  * picker only show once a provider is picked; until then the dropdown shows "Choose a provider".
- * The trigger is named by the row's heading and described by its hint. The ref is the trigger,
- * so a caller can move focus back to it.
+ * The trigger, the same fixed width as the model dropdown's, is named by the row's heading and
+ * described by its hint. The ref is the trigger, so a caller can move focus back to it.
  */
 export const AiProviderPicker = forwardRef<HTMLButtonElement, AiProviderPickerProps>(function AiProviderPicker({ value, onChange }, ref) {
   const { t } = useTranslation();
@@ -43,6 +43,8 @@ export const AiProviderPicker = forwardRef<HTMLButtonElement, AiProviderPickerPr
           className={AI_SELECT_TRIGGER_CLASS}
           aria-labelledby={labelId}
           aria-describedby={descriptionId}
+          // The full text when a long value is cut with an ellipsis
+          title={value ? AI_PROVIDER_LABELS[value] : t('settings.ai.provider.placeholder')}
           data-testid="ai-provider-select"
         >
           <SelectValue placeholder={t('settings.ai.provider.placeholder')} />

@@ -6,14 +6,24 @@
 export const SETTINGS_SELECT_WIDTH = 'w-32';
 
 /**
- * The Settings → AI dropdowns (provider, model): the row look of the General dropdowns, but sized
- * to their value, since model names ("Gemini 3.1 Flash-Lite") and some translated placeholders
- * don't fit {@link SETTINGS_SELECT_WIDTH}. Never narrower than it (`min-w-32` is the same 8rem),
- * never wider than most of the row, so the heading beside it keeps room. The placeholder ("Choose
- * a provider") is muted like an empty field.
+ * The one width of both Settings → AI dropdowns (provider, model), so they line up and never
+ * change width with the choice: 12rem. {@link SETTINGS_SELECT_WIDTH} (8rem) is too narrow for model
+ * names and translated placeholders. Measured at the triggers' `text-xs` in the popup font, the
+ * longest value is the French placeholder "Choisissez un fournisseur" (≈ 133px), then Persian
+ * (≈ 127px), Russian (≈ 124px) and the longest model name "Gemini 3.1 Flash-Lite" (≈ 110px); with
+ * the trigger's padding, gap, chevron and border (50px) that is ≈ 183px of the 192px. A longer
+ * value (a new model or translation) is cut with an ellipsis, and the trigger's `title` holds the
+ * full text.
  */
-export const AI_SELECT_TRIGGER_CLASS =
-  'h-7 w-auto min-w-32 max-w-[60%] shrink-0 gap-2 text-xs data-[placeholder]:text-muted-foreground [&>span]:min-w-0';
+export const AI_SELECT_WIDTH = 'w-48';
+
+/**
+ * The Settings → AI dropdown triggers: the row look of the General dropdowns at
+ * {@link AI_SELECT_WIDTH}. The value is one line cut with an ellipsis (the shared trigger's
+ * line clamp swapped for `truncate`, which an ellipsis needs). The placeholder ("Choose a
+ * provider") is muted like an empty field.
+ */
+export const AI_SELECT_TRIGGER_CLASS = `h-7 ${AI_SELECT_WIDTH} shrink-0 gap-2 text-xs data-[placeholder]:text-muted-foreground [&>span]:min-w-0 [&>span]:line-clamp-none [&>span]:truncate`;
 
 /**
  * The open list of a Settings → AI dropdown. It is portaled out of the Settings dialog (so the

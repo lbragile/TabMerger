@@ -29,7 +29,8 @@ const isAiModelChoice = (value: string): value is AiModelChoice => (AI_MODEL_CHO
  * the provider's models. Each option shows its "burn rate" as concrete examples
  * (`AI_ESTIMATE_EXAMPLES`, worked out by the shared estimate functions) on a muted second line:
  * credits per use and organizes a month for managed plans, or, for own-key plans, a cost level
- * relative to the provider's other models (never dollars). The chosen option's line stays under
+ * relative to the provider's other models (never dollars). The trigger has the same fixed width as
+ * the provider dropdown's, whatever the choice. The chosen option's line stays under
  * the row once the list closes, and describes the trigger. Only changes the Settings draft. A
  * stored model of another provider shows as `auto`.
  */
@@ -90,6 +91,8 @@ export function AiModelPicker({ value, onChange, aiMode, provider, allowance }: 
             className={AI_SELECT_TRIGGER_CLASS}
             aria-labelledby={labelId}
             aria-describedby={`${descriptionId} ${infoId}`}
+            // The full name when a long one is cut with an ellipsis
+            title={nameOf(selected)}
             data-testid="ai-model-select"
           >
             {/* Only the name: the options' second lines would not fit the trigger */}
