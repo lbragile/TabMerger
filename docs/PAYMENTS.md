@@ -185,6 +185,11 @@ Things to know:
   while a change is scheduled (see [Billing portal](#billing-portal)). By hand, the same is done in
   the Dashboard: release the schedule (Subscriptions → the subscription → the schedule → Release),
   which keeps the current plan, then cancel at period end.
+- **Undoing a scheduled change** ("Keep my current plan" on the account page,
+  `POST /api/billing/keep-current-plan`) releases the schedule and does nothing else: the
+  subscription keeps its current price, period and discounts, and nothing is prorated, invoiced,
+  charged or credited (verified on test clocks, see [Billing portal](#billing-portal)). Releasing
+  unlocks the portal again, so its home page offers cancellation and plan changes as usual.
 
 ---
 
@@ -358,6 +363,7 @@ All success/cancel/portal-return URLs come from `absoluteUrl()` in `packages/web
 | Pricing page, a subscriber choosing another plan (upgrade or downgrade) | `POST /api/billing-portal` | cookie | `/dashboard` |
 | Extension Settings | `POST /api/portal` | Bearer JWT | `/dashboard` |
 | Account page "Cancel subscription" (only while a plan change is scheduled) | `POST /api/billing/cancel-subscription` → `createCancelSubscriptionSession()` | cookie | `/account` |
+| Account page "Keep my current plan" (only while a plan change is scheduled; no portal page) | `POST /api/billing/keep-current-plan` → `keepCurrentPlan()` | cookie | none (`router.refresh()`) |
 
 **Cancelling while a plan change is scheduled.** The portal's home page shows no cancel control for
 a subscription with a pending schedule. The account page reads the pending change from Stripe
@@ -378,6 +384,37 @@ portal-made one (managed M → own key M): confirming released the schedule, kep
 and set `cancel_at_period_end`; at the period end the subscription was `canceled` with no renewal
 invoice, a customer balance of 0 and no credit notes. A second request answered
 `already_canceling`; another customer's id was refused (`not_found`).
+
+**Undoing a scheduled change ("Keep my current plan").** Next to **Cancel subscription** the account
+page offers **Keep my current plan**, which cancels the scheduled change without a Stripe page (the
+portal has no control for it either). `POST /api/billing/keep-current-plan` takes no input: like
+the cancel route it uses the caller's newest `subscriptions` row and `profiles.stripe_customer_id`.
+`keepCurrentPlan()` (`lib/stripe.ts`) retrieves the subscription again with `expand: ['schedule']`,
+requires `subscription.customer` to be the caller's customer (else 404 `no_subscription`), reads
+the pending change exactly as the notice does (`pendingChangeOf()`, shared with
+`getPendingPlanChange()`), requires the schedule to name that subscription and customer, and then
+calls `subscriptionSchedules.release(schedule.id)`, the only write. No id from the client is used.
+Answers: `{ ok: true }`; 401; 400 `no_billing_account`; 404 `no_subscription`; 409
+`no_scheduled_change` (nothing scheduled, already undone, already landed, or a schedule that isn't
+this subscription's); 500 `keep_plan_failed` (a failed database read, logged with its code, or a
+Stripe failure). A release that fails because the schedule was released meanwhile (a second tab:
+Stripe answers 400 `invalid_request_error` with no `code`, "You cannot release a subscription
+schedule that is currently in the `released` status") is detected by reading the subscription
+again and answered 409. The button then refreshes the page: the notice is replaced by "Your plan
+stays {plan}." (`ScheduledChangeNotice` stays mounted across the refresh), and the usual cancel
+note returns because the portal home offers cancellation again. The webhook records the
+`customer.subscription.updated` Stripe sends (`previous_attributes: schedule`; no price change, so
+the plan-change alarm stays quiet).
+
+Releasing changes nothing about money. Verified on test clocks on 2026-10-27 with a 10% `forever`
+coupon on each subscription, for a portal-made deferral (Pro AI managed M → Pro M, confirmed on
+Stripe's page; phases on `create_prorations`) and a server-made schedule (Pro AI Y → Pro M; phases
+on `none`): after the release the schedule was `released` with `released_subscription` set, the
+subscription had `schedule: null`, the same price, period and discount, no new invoice, no pending
+invoice items and a customer balance of 0; the next-invoice preview was the current price
+(Pro AI M $7.19, Pro AI Y $77.39 after the coupon). Past the period end each renewed with one
+`subscription_cycle` invoice on the current price (same totals), balance 0. A second call answered
+`no_scheduled_change`; another customer's subscription was refused (`not_found`).
 
 Both routes need `profiles.stripe_customer_id` (400 / 404 respectively when absent). These
 sessions use the account's **default** portal configuration, which offers no plan switching (see
@@ -609,7 +646,8 @@ pricing page doesn't offer one: it reads the pending change on the server
 failed read counts as none). The card the change moves to (its plan, the interval on show and, for
 Pro AI, the option on show) says "Starts {date}" in place of its button; every other change button
 on the paid cards (other plans, "Switch to … billing", the Pro AI option switch) is replaced by a
-note that points to the account page, where the change shows with **Cancel subscription**. A target
+note that points to the account page, where the change shows with **Keep my current plan** (undoes
+it) and **Cancel subscription**. A target
 price this environment doesn't sell gets the note on every card. The home page's teaser makes no
 Stripe call (the option is off by default).
 

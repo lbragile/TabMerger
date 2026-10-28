@@ -68,6 +68,17 @@
       "cancel_failed": "İptal sayfası açılamadı. Lütfen tekrar deneyin veya {email} adresine yazın."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Mevcut planımı koru",
+    "success": "Planınız {plan} olarak kalıyor.",
+    "successUnknownPlan": "Mevcut planınız değişmeden kalıyor.",
+    "errors": {
+      "no_billing_account": "Bu plan bir faturalandırma hesabına bağlı değil. {email} adresine yazın, sizin için halledelim.",
+      "no_subscription": "Aboneliğinizi bulamadık. Sayfayı yenileyin veya {email} adresine yazın.",
+      "no_scheduled_change": "Artık planlanmış bir plan değişikliği yok. Planınızı görmek için sayfayı yenileyin.",
+      "keep_plan_failed": "Mevcut planınız korunamadı. Lütfen tekrar deneyin veya {email} adresine yazın."
+    }
+  },
   "devicesCard": {
     "title": "Cihazlar",
     "description": "Gruplarınızı ve sekmelerinizi eşitleyen cihazlar. Yalnızca Pro ve Pro AI."

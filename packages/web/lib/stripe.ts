@@ -331,6 +331,19 @@ export async function getPendingPlanChange({
   if (!isStripeConfigured) return null
   const subscription = await stripe.subscriptions.retrieve(subscriptionId, { expand: ['schedule'] })
   if (idOf(subscription.customer) !== customerId) return null
+  const pending = pendingChangeOf(subscription)
+  return pending ? { priceId: pending.priceId, effectiveAt: pending.effectiveAt } : null
+}
+
+/**
+ * The plan change pending in a subscription retrieved with `expand: ['schedule']`, with the
+ * schedule that holds it, or null: no schedule, one that has ended or been released, or a next
+ * phase on the current price. Shared by the account page's notice (getPendingPlanChange()) and
+ * keepCurrentPlan(), so the change released is the one the page showed.
+ */
+function pendingChangeOf(
+  subscription: Stripe.Subscription
+): (PendingPlanChange & { schedule: Stripe.SubscriptionSchedule }) | null {
   const schedule = subscription.schedule
   if (!schedule || typeof schedule === 'string') return null
   if (schedule.status !== 'active' && schedule.status !== 'not_started') return null
@@ -339,7 +352,75 @@ export async function getPendingPlanChange({
   const next = schedule.phases.find((phase) => phase.start_date >= currentEnd)
   const priceId = idOf(next?.items[0]?.price)
   if (!next || !priceId || priceId === currentPriceId) return null
-  return { priceId, effectiveAt: next.start_date }
+  return { priceId, effectiveAt: next.start_date, schedule }
+}
+
+/**
+ * Why a scheduled plan change couldn't be undone; the route maps each to a status code.
+ *
+ * - `not_found`: the subscription doesn't exist at Stripe or isn't this customer's.
+ * - `no_scheduled_change`: nothing is scheduled on it (never was, already undone by an earlier
+ *   click, already landed, or a schedule that isn't this subscription's own).
+ */
+export class KeepCurrentPlanError extends Error {
+  constructor(readonly reason: 'not_found' | 'no_scheduled_change') {
+    super(reason)
+  }
+}
+
+/**
+ * Undoes the plan change scheduled on the customer's subscription (a downgrade the Billing Portal
+ * deferred, or one our server scheduled), so the subscription renews on its current price. The
+ * only write is `subscriptionSchedules.release()`: it detaches the schedule and leaves the
+ * subscription exactly as it is (price, period, discounts), so nothing is prorated, invoiced,
+ * charged or credited (verified on test clocks, 2026-10-27: no invoice, no invoice items, balance
+ * unchanged, renewal on the current price). The webhook records the update Stripe sends.
+ *
+ * The subscription is read from Stripe again here, never taken from the client. Ownership: it must
+ * belong to `customerId` (the caller's own customer, from their profile), else `not_found`; and the
+ * schedule released must be the one attached to that subscription, for that customer, and still
+ * hold a pending change (the same reading as the account page's notice), else
+ * `no_scheduled_change`. A release that fails because the schedule was released meanwhile (a
+ * second click) is `no_scheduled_change` too; any other failure is rethrown.
+ */
+export async function keepCurrentPlan({
+  customerId,
+  subscriptionId,
+}: {
+  customerId: string
+  subscriptionId: string
+}): Promise<void> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+
+  const read = async () => {
+    try {
+      return await stripe.subscriptions.retrieve(subscriptionId, { expand: ['schedule'] })
+    } catch (err) {
+      if ((err as { code?: unknown } | null)?.code === 'resource_missing') throw new KeepCurrentPlanError('not_found')
+      throw err
+    }
+  }
+
+  const subscription = await read()
+  if (idOf(subscription.customer) !== customerId) throw new KeepCurrentPlanError('not_found')
+  const pending = pendingChangeOf(subscription)
+  if (!pending) throw new KeepCurrentPlanError('no_scheduled_change')
+  const { schedule } = pending
+  if (idOf(schedule.subscription) !== subscription.id || idOf(schedule.customer) !== customerId) {
+    console.warn(
+      `Keep current plan: schedule ${schedule.id} on subscription ${subscription.id} names another subscription or customer, so it is not released`
+    )
+    throw new KeepCurrentPlanError('no_scheduled_change')
+  }
+
+  try {
+    await stripe.subscriptionSchedules.release(schedule.id)
+  } catch (err) {
+    // A double click, or Stripe releasing it as the change landed: it is gone either way.
+    const again = await read().catch(() => null)
+    if (again && !pendingChangeOf(again)) throw new KeepCurrentPlanError('no_scheduled_change')
+    throw err
+  }
 }
 
 /**

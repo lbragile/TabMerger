@@ -68,6 +68,17 @@
       "cancel_failed": "解約ページを開けませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。"
     }
   },
+  "keepCurrentPlan": {
+    "button": "現在のプランを継続",
+    "success": "プランは {plan} のままです。",
+    "successUnknownPlan": "現在のプランのままです。",
+    "errors": {
+      "no_billing_account": "このプランは請求アカウントに紐づいていません。{email} までメールでご連絡いただければ、こちらで対応いたします。",
+      "no_subscription": "サブスクリプションが見つかりませんでした。ページを再読み込みするか、{email} までメールでご連絡ください。",
+      "no_scheduled_change": "予定されているプラン変更はもうありません。ページを再読み込みしてプランをご確認ください。",
+      "keep_plan_failed": "現在のプランを継続できませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。"
+    }
+  },
   "devicesCard": {
     "title": "デバイス",
     "description": "グループとタブを同期しているデバイスです。ProとPro AIのみ。"

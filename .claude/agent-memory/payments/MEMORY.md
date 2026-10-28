@@ -14,3 +14,4 @@
 - [Cancel with a pending schedule](cancel-with-pending-schedule.md) — subscription_cancel flow releases + cancels; own config, ownership, i18n client namespace
 - [Plan-change alarm](plan-change-alarm.md) — webhook PLAN_CHANGE_ALARM (log + Sentry, try/catch): event-object schedule vs retrieved invoice, blind spots
 - [Plan-change client confirmation](plan-change-client-confirmation.md) — dialog only for end_of_period; unknown current price = from null; pricing page shows a scheduled change
+- [Keep current plan (release)](keep-current-plan-release.md) — releasing a schedule moves no money (measured); 2nd release = 400 with no code; stay-mounted success message

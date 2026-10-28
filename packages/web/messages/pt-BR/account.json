@@ -68,6 +68,17 @@
       "cancel_failed": "Não foi possível abrir a página de cancelamento. Tente novamente ou escreva para {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Manter meu plano atual",
+    "success": "Seu plano continua {plan}.",
+    "successUnknownPlan": "Seu plano atual continua.",
+    "errors": {
+      "no_billing_account": "Este plano não está vinculado a uma conta de cobrança. Escreva para {email} e resolveremos para você.",
+      "no_subscription": "Não encontramos sua assinatura. Recarregue a página ou escreva para {email}.",
+      "no_scheduled_change": "Não há mais nenhuma mudança de plano agendada. Recarregue a página para ver seu plano.",
+      "keep_plan_failed": "Não foi possível manter seu plano atual. Tente novamente ou escreva para {email}."
+    }
+  },
   "devicesCard": {
     "title": "Dispositivos",
     "description": "Dispositivos que sincronizam seus grupos e abas. Apenas Pro e Pro AI."

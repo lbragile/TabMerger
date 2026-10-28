@@ -68,6 +68,17 @@
       "cancel_failed": "해지 페이지를 열 수 없습니다. 다시 시도하거나 {email}로 이메일을 보내 주세요."
     }
   },
+  "keepCurrentPlan": {
+    "button": "현재 요금제 유지",
+    "success": "요금제가 {plan}(으)로 유지됩니다.",
+    "successUnknownPlan": "현재 요금제가 유지됩니다.",
+    "errors": {
+      "no_billing_account": "이 요금제는 결제 계정에 연결되어 있지 않습니다. {email}로 이메일을 보내 주시면 대신 처리해 드립니다.",
+      "no_subscription": "구독을 찾지 못했습니다. 페이지를 새로고침하거나 {email}로 이메일을 보내 주세요.",
+      "no_scheduled_change": "더 이상 예정된 요금제 변경이 없습니다. 페이지를 새로고침하여 요금제를 확인하세요.",
+      "keep_plan_failed": "현재 요금제를 유지하지 못했습니다. 다시 시도하거나 {email}로 이메일을 보내 주세요."
+    }
+  },
   "devicesCard": {
     "title": "기기",
     "description": "그룹과 탭을 동기화하는 기기입니다. Pro 및 Pro AI 전용입니다."

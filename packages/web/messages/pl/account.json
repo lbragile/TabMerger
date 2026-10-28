@@ -68,6 +68,17 @@
       "cancel_failed": "Nie udało się otworzyć strony anulowania. Spróbuj ponownie lub napisz na {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Zachowaj mój obecny plan",
+    "success": "Twój plan pozostaje bez zmian: {plan}.",
+    "successUnknownPlan": "Twój obecny plan pozostaje bez zmian.",
+    "errors": {
+      "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym. Napisz na {email}, a zajmiemy się tym za Ciebie.",
+      "no_subscription": "Nie znaleźliśmy Twojej subskrypcji. Odśwież stronę lub napisz na {email}.",
+      "no_scheduled_change": "Nie ma już zaplanowanej zmiany planu. Odśwież stronę, aby zobaczyć swój plan.",
+      "keep_plan_failed": "Nie udało się zachować obecnego planu. Spróbuj ponownie lub napisz na {email}."
+    }
+  },
   "devicesCard": {
     "title": "Urządzenia",
     "description": "Urządzenia synchronizujące Twoje grupy i karty. Tylko Pro i Pro AI."

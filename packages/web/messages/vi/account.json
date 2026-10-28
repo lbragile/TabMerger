@@ -68,6 +68,17 @@
       "cancel_failed": "Không thể mở trang hủy. Vui lòng thử lại, hoặc gửi email tới {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Giữ gói hiện tại của tôi",
+    "success": "Gói của bạn vẫn là {plan}.",
+    "successUnknownPlan": "Gói hiện tại của bạn được giữ nguyên.",
+    "errors": {
+      "no_billing_account": "Gói này chưa được liên kết với tài khoản thanh toán. Hãy gửi email tới {email} và chúng tôi sẽ xử lý giúp bạn.",
+      "no_subscription": "Chúng tôi không tìm thấy gói đăng ký của bạn. Hãy tải lại trang, hoặc gửi email tới {email}.",
+      "no_scheduled_change": "Không còn thay đổi gói nào được lên lịch. Hãy tải lại trang để xem gói của bạn.",
+      "keep_plan_failed": "Không thể giữ gói hiện tại của bạn. Vui lòng thử lại, hoặc gửi email tới {email}."
+    }
+  },
   "devicesCard": {
     "title": "Thiết bị",
     "description": "Các thiết bị đang đồng bộ nhóm và tab của bạn. Chỉ dành cho Pro và Pro AI."

@@ -68,6 +68,17 @@
       "cancel_failed": "Impossible d’ouvrir la page de résiliation. Réessayez ou écrivez à {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Garder mon forfait actuel",
+    "success": "Votre forfait reste {plan}.",
+    "successUnknownPlan": "Votre forfait actuel est conservé.",
+    "errors": {
+      "no_billing_account": "Ce forfait n’est lié à aucun compte de facturation. Écrivez à {email} et nous nous en occuperons.",
+      "no_subscription": "Nous n’avons pas trouvé votre abonnement. Rechargez la page ou écrivez à {email}.",
+      "no_scheduled_change": "Aucun changement de forfait n’est plus prévu. Rechargez la page pour voir votre forfait.",
+      "keep_plan_failed": "Impossible de garder votre forfait actuel. Réessayez ou écrivez à {email}."
+    }
+  },
   "devicesCard": {
     "title": "Appareils",
     "description": "Les appareils qui synchronisent vos groupes et onglets. Pro et Pro AI uniquement."

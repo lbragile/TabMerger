@@ -68,6 +68,17 @@
       "cancel_failed": "无法打开取消页面。请重试，或发送邮件至 {email}。"
     }
   },
+  "keepCurrentPlan": {
+    "button": "保留当前套餐",
+    "success": "你的套餐保持为 {plan}。",
+    "successUnknownPlan": "你的当前套餐保持不变。",
+    "errors": {
+      "no_billing_account": "此套餐未关联账单账户。请发送邮件至 {email}，我们会为你处理。",
+      "no_subscription": "未找到你的订阅。请刷新页面，或发送邮件至 {email}。",
+      "no_scheduled_change": "已没有待生效的套餐变更。请刷新页面查看你的套餐。",
+      "keep_plan_failed": "无法保留你的当前套餐。请重试，或发送邮件至 {email}。"
+    }
+  },
   "devicesCard": {
     "title": "设备",
     "description": "正在同步您的分组和标签页的设备。仅限 Pro 和 Pro AI。"

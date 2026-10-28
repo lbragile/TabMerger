@@ -1,10 +1,12 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 
 /**
  * The account page while a plan change is scheduled: it says what changes and when, and offers
- * "Cancel subscription" (Stripe's cancel page, through /api/billing/cancel-subscription), because
- * the Billing Portal's home page has no cancel control then. Without a pending change the usual
+ * "Keep my current plan" (undoes the change, through /api/billing/keep-current-plan) and "Cancel
+ * subscription" (Stripe's cancel page, through /api/billing/cancel-subscription), because the
+ * Billing Portal's home page has no cancel control then. Without a pending change the usual
  * "cancel via Manage billing" note stays.
  */
 vi.mock('@/lib/supabase/client', () => ({
@@ -67,12 +69,13 @@ describe('AccountPage — scheduled plan change', () => {
   })
   afterEach(() => vi.unstubAllEnvs())
 
-  it('says what is scheduled and offers Cancel subscription instead of the Manage-billing cancel note', async () => {
+  it('says what is scheduled and offers Keep my current plan and Cancel subscription instead of the Manage-billing cancel note', async () => {
     const lookup = mockServer({ priceId: 'price_pro_m', effectiveAt: END })
     await renderPage()
 
     expect(lookup).toHaveBeenCalledWith({ customerId: 'cus_1', subscriptionId: 'sub_1' })
     expect(screen.getByText(/^Changes to Pro, billed monthly on .*2026\.$/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Keep my current plan' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Cancel subscription' })).toBeInTheDocument()
     expect(screen.queryByText(/You can cancel anytime via/)).not.toBeInTheDocument()
     // What cancelling does to the scheduled change, and that renewing later doesn't bring it back.
@@ -85,6 +88,22 @@ describe('AccountPage — scheduled plan change', () => {
     expect(screen.getByRole('link', { name: 'Manage billing' })).toHaveAttribute('href', 'https://billing.example.com')
   })
 
+  it('Keep my current plan undoes the change here and names the plan that stays', async () => {
+    mockServer({ priceId: 'price_pro_m', effectiveAt: END })
+    const fetchMock = vi.fn(async () => ({ ok: true, json: async () => ({ ok: true }) }))
+    vi.stubGlobal('fetch', fetchMock)
+    await renderPage()
+
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Keep my current plan' }))
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/billing/keep-current-plan', { method: 'POST' })
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Your plan stays Pro AI with TabMerger handling setup, billed monthly.'
+    )
+    expect(screen.queryByText(/^Changes to Pro, billed monthly/)).not.toBeInTheDocument()
+    vi.unstubAllGlobals()
+  })
+
   it('names the date alone when the scheduled price is not one this deployment sells', async () => {
     mockServer({ priceId: 'price_legacy', effectiveAt: END })
     await renderPage()
@@ -95,6 +114,7 @@ describe('AccountPage — scheduled plan change', () => {
     mockServer(null)
     await renderPage()
     expect(screen.queryByRole('button', { name: 'Cancel subscription' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Keep my current plan' })).not.toBeInTheDocument()
     expect(screen.getByText(/You can cancel anytime via/)).toBeInTheDocument()
     expect(screen.queryByText(/Renewing later keeps your current plan/)).not.toBeInTheDocument()
   })

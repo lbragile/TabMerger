@@ -68,6 +68,17 @@
       "cancel_failed": "No se pudo abrir la página de cancelación. Inténtalo de nuevo o escribe a {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Mantener mi plan actual",
+    "success": "Tu plan sigue siendo {plan}.",
+    "successUnknownPlan": "Tu plan actual se mantiene.",
+    "errors": {
+      "no_billing_account": "Este plan no está vinculado a una cuenta de facturación. Escribe a {email} y lo resolveremos por ti.",
+      "no_subscription": "No encontramos tu suscripción. Recarga la página o escribe a {email}.",
+      "no_scheduled_change": "Ya no hay ningún cambio de plan programado. Recarga la página para ver tu plan.",
+      "keep_plan_failed": "No se pudo mantener tu plan actual. Inténtalo de nuevo o escribe a {email}."
+    }
+  },
   "devicesCard": {
     "title": "Dispositivos",
     "description": "Dispositivos que sincronizan tus grupos y pestañas. Solo Pro y Pro AI."

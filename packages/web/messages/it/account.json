@@ -68,6 +68,17 @@
       "cancel_failed": "Impossibile aprire la pagina di annullamento. Riprova oppure scrivi a {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Mantieni il mio piano attuale",
+    "success": "Il tuo piano resta {plan}.",
+    "successUnknownPlan": "Il tuo piano attuale resta invariato.",
+    "errors": {
+      "no_billing_account": "Questo piano non è collegato a un account di fatturazione. Scrivi a {email} e ce ne occuperemo noi.",
+      "no_subscription": "Non abbiamo trovato il tuo abbonamento. Ricarica la pagina oppure scrivi a {email}.",
+      "no_scheduled_change": "Non c’è più nessun cambio di piano programmato. Ricarica la pagina per vedere il tuo piano.",
+      "keep_plan_failed": "Impossibile mantenere il tuo piano attuale. Riprova oppure scrivi a {email}."
+    }
+  },
   "devicesCard": {
     "title": "Dispositivi",
     "description": "Dispositivi che sincronizzano i tuoi gruppi e le tue schede. Solo Pro e Pro AI."

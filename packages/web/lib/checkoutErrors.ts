@@ -131,3 +131,22 @@ export const CANCEL_SUBSCRIPTION_ERROR_CODES = {
 
 export type CancelSubscriptionErrorCode =
   (typeof CANCEL_SUBSCRIPTION_ERROR_CODES)[keyof typeof CANCEL_SUBSCRIPTION_ERROR_CODES]
+
+/**
+ * Error codes from POST /api/billing/keep-current-plan (the account page's "Keep my current plan",
+ * which undoes a scheduled plan change). The button maps each to
+ * `account.keepCurrentPlan.errors.<code>`.
+ */
+export const KEEP_CURRENT_PLAN_ERROR_CODES = {
+  /** 400: the account has no Stripe customer. */
+  noBillingAccount: 'no_billing_account',
+  /** 404: no subscription of this account (none stored, unknown at Stripe, or not its own). */
+  noSubscription: 'no_subscription',
+  /** 409: nothing is scheduled (never was, already undone, or already landed). */
+  noScheduledChange: 'no_scheduled_change',
+  /** 500: a failed database read, or Stripe refused or failed; the details are in the server log. */
+  failed: 'keep_plan_failed',
+} as const
+
+export type KeepCurrentPlanErrorCode =
+  (typeof KEEP_CURRENT_PLAN_ERROR_CODES)[keyof typeof KEEP_CURRENT_PLAN_ERROR_CODES]

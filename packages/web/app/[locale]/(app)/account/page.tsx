@@ -20,7 +20,7 @@ import { DevicesSection } from '@/components/account/DevicesSection'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
-import { CancelSubscriptionButton } from '@/components/account/CancelSubscriptionButton'
+import { ScheduledChangeNotice } from '@/components/account/ScheduledChangeNotice'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { ACCOUNT_AI_CREDITS_ANCHOR, isAiMode } from '@tabmerger/shared'
 import { SignOutForm } from '@/components/auth/SignOutForm'
@@ -141,9 +141,10 @@ export default async function AccountPage() {
   }
 
   let billingPortalUrl: string | null = null
-  // A plan change waiting for the period end (a deferred downgrade). The portal's home page offers
-  // no cancellation while one is pending, so the page shows it with its own Cancel button, which
-  // opens Stripe's cancel page for this subscription.
+  // A plan change waiting for the period end (a deferred downgrade). The page shows it with "Keep my
+  // current plan" (undoes it, /api/billing/keep-current-plan) and its own Cancel button (Stripe's
+  // cancel page for this subscription), because the portal's home page offers no cancellation
+  // while one is pending.
   let pendingChange: PendingPlanChange | null = null
   if (isPaid && profile?.stripe_customer_id) {
     const customerId = profile.stripe_customer_id
@@ -155,18 +156,19 @@ export default async function AccountPage() {
     if (portal.status === 'fulfilled') billingPortalUrl = portal.value
     if (pending.status === 'fulfilled') pendingChange = pending.value
   }
-  const pendingPlan = pendingChange ? getPlanForPriceId(pendingChange.priceId) : null
-  // "Pro, billed monthly": the pricing page's plan-change wording.
-  let pendingPlanName: string | null = null
-  if (pendingPlan) {
+  // "Pro, billed monthly": the pricing page's plan-change wording; null for a price this deployment
+  // doesn't sell.
+  const planName = (plan: ReturnType<typeof getPlanForPriceId>): string | null => {
+    if (!plan) return null
     const name =
-      pendingPlan.tierKey === 'pro'
+      plan.tierKey === 'pro'
         ? tPlan('plans.pro')
-        : pendingPlan.aiMode === 'byok'
+        : plan.aiMode === 'byok'
           ? tPlan('plans.proAiByok')
           : tPlan('plans.proAiManaged')
-    pendingPlanName = pendingPlan.interval === 'yearly' ? tPlan('billedYearly', { plan: name }) : tPlan('billedMonthly', { plan: name })
+    return plan.interval === 'yearly' ? tPlan('billedYearly', { plan: name }) : tPlan('billedMonthly', { plan: name })
   }
+  const pendingPlanName = pendingChange ? planName(getPlanForPriceId(pendingChange.priceId)) : null
 
   return (
     <div className="max-w-2xl flex flex-col gap-6">
@@ -317,23 +319,27 @@ export default async function AccountPage() {
             </div>
           )}
 
-          {isPaid && pendingChange && (
-            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
-              <div className="min-w-0">
-                <p className="font-medium">
-                  {pendingPlanName
-                    ? t('subscription.scheduledChange', {
-                        plan: pendingPlanName,
-                        date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
-                      })
-                    : t('subscription.scheduledChangeUnknownPlan', {
-                        date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
-                      })}
-                </p>
-                <p className="text-xs text-muted-foreground">{t('subscription.scheduledCancelNote')}</p>
-              </div>
-              <CancelSubscriptionButton />
-            </div>
+          {/* Rendered for every paid account (notice null when nothing is scheduled) so it stays
+              mounted across the refresh after "Keep my current plan" and can say the plan stays. */}
+          {isPaid && (
+            <ScheduledChangeNotice
+              notice={
+                pendingChange
+                  ? {
+                      message: pendingPlanName
+                        ? t('subscription.scheduledChange', {
+                            plan: pendingPlanName,
+                            date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
+                          })
+                        : t('subscription.scheduledChangeUnknownPlan', {
+                            date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
+                          }),
+                      note: t('subscription.scheduledCancelNote'),
+                    }
+                  : null
+              }
+              currentPlan={planName(getPlanForPriceId(subscription?.stripe_price_id))}
+            />
           )}
 
           {isPaid && billingPortalUrl && !pendingChange && (

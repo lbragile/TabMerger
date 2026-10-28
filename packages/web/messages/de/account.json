@@ -68,6 +68,17 @@
       "cancel_failed": "Die Kündigungsseite konnte nicht geöffnet werden. Bitte versuche es erneut oder schreib an {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Aktuellen Plan behalten",
+    "success": "Dein Plan bleibt {plan}.",
+    "successUnknownPlan": "Dein aktueller Plan bleibt.",
+    "errors": {
+      "no_billing_account": "Dieser Plan ist mit keinem Abrechnungskonto verknüpft. Schreib an {email}, dann kümmern wir uns darum.",
+      "no_subscription": "Wir haben dein Abo nicht gefunden. Lade die Seite neu oder schreib an {email}.",
+      "no_scheduled_change": "Es ist kein Planwechsel mehr geplant. Lade die Seite neu, um deinen Plan zu sehen.",
+      "keep_plan_failed": "Dein aktueller Plan konnte nicht beibehalten werden. Bitte versuche es erneut oder schreib an {email}."
+    }
+  },
   "devicesCard": {
     "title": "Geräte",
     "description": "Geräte, die deine Gruppen und Tabs synchronisieren. Nur Pro und Pro AI."

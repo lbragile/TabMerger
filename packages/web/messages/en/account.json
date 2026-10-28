@@ -68,6 +68,17 @@
       "cancel_failed": "Couldn't open the cancellation page. Please try again, or email {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Keep my current plan",
+    "success": "Your plan stays {plan}.",
+    "successUnknownPlan": "Your current plan stays.",
+    "errors": {
+      "no_billing_account": "This plan isn't linked to a billing account. Email {email} and we'll sort it out for you.",
+      "no_subscription": "We couldn't find your subscription. Reload the page, or email {email}.",
+      "no_scheduled_change": "No plan change is scheduled anymore. Reload the page to see your plan.",
+      "keep_plan_failed": "Couldn't keep your current plan. Please try again, or email {email}."
+    }
+  },
   "devicesCard": {
     "title": "Devices",
     "description": "Devices syncing your groups and tabs. Pro and Pro AI only."

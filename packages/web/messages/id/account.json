@@ -68,6 +68,17 @@
       "cancel_failed": "Halaman pembatalan tidak dapat dibuka. Silakan coba lagi, atau kirim email ke {email}."
     }
   },
+  "keepCurrentPlan": {
+    "button": "Pertahankan paket saya saat ini",
+    "success": "Paket Anda tetap {plan}.",
+    "successUnknownPlan": "Paket Anda saat ini tetap berlaku.",
+    "errors": {
+      "no_billing_account": "Paket ini tidak terhubung ke akun penagihan. Kirim email ke {email} dan kami akan mengurusnya untuk Anda.",
+      "no_subscription": "Kami tidak menemukan langganan Anda. Muat ulang halaman, atau kirim email ke {email}.",
+      "no_scheduled_change": "Tidak ada lagi perubahan paket yang dijadwalkan. Muat ulang halaman untuk melihat paket Anda.",
+      "keep_plan_failed": "Paket Anda saat ini tidak dapat dipertahankan. Silakan coba lagi, atau kirim email ke {email}."
+    }
+  },
   "devicesCard": {
     "title": "Perangkat",
     "description": "Perangkat yang menyinkronkan grup dan tab Anda. Khusus Pro dan Pro AI."
