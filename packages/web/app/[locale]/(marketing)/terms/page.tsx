@@ -47,7 +47,7 @@ export default function TermsPage() {
           The agreement between you and TabMerger. By installing the extension, creating an
           account, or using any part of the service, you agree to these Terms.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: October 26, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 27, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -81,6 +81,7 @@ export default function TermsPage() {
             <p>Upgrades take effect right away. Moving to a higher plan, from your own AI key to AI provided by TabMerger, or from monthly to annual billing is charged now, prorated against the unused part of your current billing period.</p>
             <p>Downgrades take effect at the end of the period you have already paid for. Moving to a lower plan, from AI provided by TabMerger to your own AI key, or from annual to monthly billing does not refund or credit the rest of the current period.</p>
             <p>A change that moves to a higher plan and to a shorter billing period at the same time takes effect at the end of the period you have already paid for.</p>
+            <p>When you move to AI provided by TabMerger partway through a billing period, your AI credits until your next renewal are in proportion to the time left in that period. Discounts reduce AI credits in the same proportion.</p>
             <p>If a plan change creates a credit on your account by mistake, for example because of an error in our systems or our payment processor's, the credit is not owed to you, and we may remove it.</p>
             <p>AI credit packs are one-time purchases for use in the month you buy them. Purchased credits are not refunded or exchanged for money, including when you cancel your subscription.</p>
             <p>Nothing in these Terms limits a refund right that the law where you live gives you and that cannot be waived.</p>
