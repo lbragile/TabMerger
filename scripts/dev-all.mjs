@@ -17,7 +17,7 @@
 
 import { spawn, spawnSync } from 'node:child_process'
 import { createInterface } from 'node:readline'
-import { join } from 'node:path'
+import { win32 } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 const IS_WINDOWS = process.platform === 'win32'
@@ -53,7 +53,11 @@ export const PROCESSES = [
  */
 export function dockerDesktopLauncher(platform, env) {
   if (platform === 'win32') {
-    return { command: join(env.ProgramFiles ?? 'C:\\Program Files', 'Docker', 'Docker', 'Docker Desktop.exe'), args: [] }
+    // win32.join, not join: it's a Windows path whatever OS runs this (CI tests it on Linux).
+    return {
+      command: win32.join(env.ProgramFiles ?? 'C:\\Program Files', 'Docker', 'Docker', 'Docker Desktop.exe'),
+      args: [],
+    }
   }
   if (platform === 'darwin') return { command: 'open', args: ['-a', 'Docker'] }
   return null
