@@ -103,16 +103,21 @@ let stopping = false
 
 /**
  * Starts a process with its stdout and stderr labelled line by line. Resolves with its exit code and
- * everything it printed. stdin is closed, so a `.cmd` wrapper's "Terminate batch job?" prompt can't
- * hang on Ctrl+C.
+ * everything it printed. Any exit before Ctrl+C is reported, a clean one too, unless `quietOnSuccess`
+ * (a command that is meant to finish, like `supabase start`).
+ *
+ * stdin is an open pipe that is never written to, not closed: `wxt` dev exits quietly (code 0)
+ * about a minute after its stdin closes, which took the dev extension down while the rest kept
+ * running. Stopping kills the whole tree, so a `.cmd` wrapper's "Terminate batch job?" prompt
+ * waiting on that pipe can't hang the shutdown.
  *
  * @returns {Promise<{ code: number, output: string }>}
  */
-function run(name, command, args) {
+function run(name, command, args, { quietOnSuccess = false } = {}) {
   return new Promise((resolve) => {
     const lines = []
     const child = spawn(...spawnArgs(command, args, IS_WINDOWS), {
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: ['pipe', 'pipe', 'pipe'],
       shell: IS_WINDOWS,
       // Its own process group, so stopping it also stops what it started (POSIX).
       detached: !IS_WINDOWS,
@@ -128,7 +133,7 @@ function run(name, command, args) {
     child.on('error', (err) => log(name, `failed to start: ${err.message}`))
     child.on('close', (code) => {
       running.delete(child)
-      if (!stopping && code !== 0) log(name, `exited with code ${code}`)
+      if (!stopping && (code !== 0 || !quietOnSuccess)) log(name, `exited with code ${code}`)
       resolve({ code: code ?? 1, output: lines.join('\n') })
     })
   })
@@ -148,7 +153,7 @@ export function isSupabaseStillStarting(output) {
 
 async function startSupabase() {
   for (let attempt = 1; ; attempt++) {
-    const { code, output } = await run('db', 'pnpm', ['exec', 'supabase', 'start'])
+    const { code, output } = await run('db', 'pnpm', ['exec', 'supabase', 'start'], { quietOnSuccess: true })
     if (code === 0 || stopping) return code
     if (attempt >= SUPABASE_ATTEMPTS || !isSupabaseStillStarting(output)) return code
     log('db', `containers are still starting, retrying in ${SUPABASE_RETRY_MS / 1000}s (${attempt}/${SUPABASE_ATTEMPTS - 1})`)
