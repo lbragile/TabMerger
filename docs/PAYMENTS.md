@@ -591,6 +591,9 @@ Stripe → Webhooks → the endpoint's delivery log after a test checkout.
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
+`pnpm dev:all` runs this for you alongside the database, web app and extension. The signing secret
+stays the same for your Stripe CLI login, so the one in `.env.local` keeps working.
+
 Test card `4242 4242 4242 4242`, any future expiry, any CVC. Useful triggers:
 `stripe subscriptions cancel sub_…`, or the Billing Portal.
 
