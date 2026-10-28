@@ -447,6 +447,19 @@ describe('PricingCard', () => {
       expect(toastError).not.toHaveBeenCalled()
     })
 
+    it('asks to wait a few minutes when checkout answers 429 rate_limited', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 429, body: { error: 'rate_limited', code: 'rate_limited' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      expect(toastError).toHaveBeenCalledWith('Too many billing requests in a short time. Please wait a few minutes and try again.')
+      expect(window.location.href).toBe('')
+    })
+
     it('says to pay or resume the open plan when checkout answers 409 pay_or_resume', async () => {
       const PricingCard = await loadPricingCard(true)
       mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'pay_or_resume' } } })

@@ -13,6 +13,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from 'vitest'
 import { NextRequest } from 'next/server'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 type Row = {
   id: string
@@ -110,17 +117,17 @@ function resourceMissing(): Error {
 
 async function switchPlan(body: unknown) {
   const { POST } = await import('@/app/api/billing/switch-plan/route')
-  return POST(new NextRequest('http://localhost/api/billing/switch-plan', { method: 'POST', body: JSON.stringify(body) }))
+  return POST(new NextRequest('http://localhost/api/billing/switch-plan', { method: 'POST', headers: SAME_ORIGIN_HEADERS, body: JSON.stringify(body) }))
 }
 
 async function switchInterval(body: unknown) {
   const { POST } = await import('@/app/api/billing/switch-interval/route')
-  return POST(new NextRequest('http://localhost/api/billing/switch-interval', { method: 'POST', body: JSON.stringify(body) }))
+  return POST(new NextRequest('http://localhost/api/billing/switch-interval', { method: 'POST', headers: SAME_ORIGIN_HEADERS, body: JSON.stringify(body) }))
 }
 
 async function checkout(body: unknown) {
   const { POST } = await import('@/app/api/checkout/route')
-  return POST(new NextRequest('http://localhost/api/checkout', { method: 'POST', body: JSON.stringify(body) }))
+  return POST(new NextRequest('http://localhost/api/checkout', { method: 'POST', headers: SAME_ORIGIN_HEADERS, body: JSON.stringify(body) }))
 }
 
 const PRO_ACTIVE: Row = {

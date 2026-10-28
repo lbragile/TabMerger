@@ -65,18 +65,24 @@
       "no_subscription": "Não encontramos uma assinatura para cancelar. Recarregue a página ou escreva para {email}.",
       "not_entitled": "Não há nenhum plano ativo para cancelar.",
       "already_canceling": "Seu plano já está configurado para terminar no fim deste período de cobrança.",
-      "cancel_failed": "Não foi possível abrir a página de cancelamento. Tente novamente ou escreva para {email}."
+      "cancel_failed": "Não foi possível abrir a página de cancelamento. Tente novamente ou escreva para {email}.",
+      "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
     }
   },
   "keepCurrentPlan": {
     "button": "Manter meu plano atual",
     "success": "Seu plano continua {plan}.",
     "successUnknownPlan": "Seu plano atual continua.",
+    "successRenews": "Seu plano continua {plan}. Ele será renovado em {date} por {amount}.",
+    "successRenewsOn": "Seu plano continua {plan}. Ele será renovado em {date}.",
+    "successUnknownPlanRenews": "Seu plano atual continua. Ele será renovado em {date} por {amount}.",
+    "successUnknownPlanRenewsOn": "Seu plano atual continua. Ele será renovado em {date}.",
     "errors": {
       "no_billing_account": "Este plano não está vinculado a uma conta de cobrança. Escreva para {email} e resolveremos para você.",
       "no_subscription": "Não encontramos sua assinatura. Recarregue a página ou escreva para {email}.",
       "no_scheduled_change": "Não há mais nenhuma mudança de plano agendada. Recarregue a página para ver seu plano.",
-      "keep_plan_failed": "Não foi possível manter seu plano atual. Tente novamente ou escreva para {email}."
+      "keep_plan_failed": "Não foi possível manter seu plano atual. Tente novamente ou escreva para {email}.",
+      "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
     }
   },
   "devicesCard": {
@@ -95,7 +101,8 @@
   "credits": {
     "failed": "Não foi possível iniciar o checkout",
     "getMore": "Obter mais",
-    "notAvailable": "Os pacotes de créditos exigem um plano Pro AI ativo em que o TabMerger cuida da configuração da IA."
+    "notAvailable": "Os pacotes de créditos exigem um plano Pro AI ativo em que o TabMerger cuida da configuração da IA.",
+    "rateLimited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
   },
   "aiPlan": {
     "title": "Quem configura a IA",

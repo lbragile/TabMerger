@@ -12,4 +12,6 @@
 - [Reserve/settle bound](learnings_reserve_settle_bound_review_method.md) — does the AI reservation bound settle? split vs total drift, tier thresholds, uncapped positive deltas, NaN path
 - [Buy-button visibility](learnings_buy_button_visibility_review_method.md) — CTA show/hide changes: buy gate vs spend gate, what the old condition really covered, per-page flag drift
 - [Prorated option switch](learnings_prorated_option_switch_review_method.md) — immediate two-way proration + allowance: round-trip math, usage month vs period, once-coupon credits, invoice-scaled allowance
+- [Schedule release](learnings_schedule_release_review_method.md) — user-triggered schedule release: ownership chain, which schedules are releasable, cancel-then-renew path, landing race
+- [Usage bucket vs billing period](learnings_usage_bucket_vs_billing_period.md) — calendar-month counter vs paid period: buckets per payment, dunning, upgrade shares, free pre-check calls
 - [Amount-driven portal deferral](learnings_amount_driven_portal_deferral_review_method.md) — schedule_at_period_end conditions: pair-by-pair per-month check, stale sessions, restricted coupons, schedule locks, alarm shape

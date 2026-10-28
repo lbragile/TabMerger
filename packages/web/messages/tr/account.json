@@ -65,18 +65,24 @@
       "no_subscription": "İptal edilecek bir abonelik bulamadık. Sayfayı yenileyin veya {email} adresine yazın.",
       "not_entitled": "İptal edilecek etkin bir plan yok.",
       "already_canceling": "Planınız zaten bu fatura döneminin sonunda bitecek şekilde ayarlı.",
-      "cancel_failed": "İptal sayfası açılamadı. Lütfen tekrar deneyin veya {email} adresine yazın."
+      "cancel_failed": "İptal sayfası açılamadı. Lütfen tekrar deneyin veya {email} adresine yazın.",
+      "rate_limited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
     }
   },
   "keepCurrentPlan": {
     "button": "Mevcut planımı koru",
     "success": "Planınız {plan} olarak kalıyor.",
     "successUnknownPlan": "Mevcut planınız değişmeden kalıyor.",
+    "successRenews": "Planınız {plan} olarak kalıyor. {date} tarihinde {amount} karşılığında yenilenir.",
+    "successRenewsOn": "Planınız {plan} olarak kalıyor. {date} tarihinde yenilenir.",
+    "successUnknownPlanRenews": "Mevcut planınız değişmeden kalıyor. {date} tarihinde {amount} karşılığında yenilenir.",
+    "successUnknownPlanRenewsOn": "Mevcut planınız değişmeden kalıyor. {date} tarihinde yenilenir.",
     "errors": {
       "no_billing_account": "Bu plan bir faturalandırma hesabına bağlı değil. {email} adresine yazın, sizin için halledelim.",
       "no_subscription": "Aboneliğinizi bulamadık. Sayfayı yenileyin veya {email} adresine yazın.",
       "no_scheduled_change": "Artık planlanmış bir plan değişikliği yok. Planınızı görmek için sayfayı yenileyin.",
-      "keep_plan_failed": "Mevcut planınız korunamadı. Lütfen tekrar deneyin veya {email} adresine yazın."
+      "keep_plan_failed": "Mevcut planınız korunamadı. Lütfen tekrar deneyin veya {email} adresine yazın.",
+      "rate_limited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
     }
   },
   "devicesCard": {
@@ -95,7 +101,8 @@
   "credits": {
     "failed": "Ödeme başlatılamadı",
     "getMore": "Daha fazla al",
-    "notAvailable": "Kredi paketleri yalnızca yapay zekâ kurulumunu TabMerger'ın üstlendiği etkin bir Pro AI planıyla kullanılabilir."
+    "notAvailable": "Kredi paketleri yalnızca yapay zekâ kurulumunu TabMerger'ın üstlendiği etkin bir Pro AI planıyla kullanılabilir.",
+    "rateLimited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
   },
   "aiPlan": {
     "title": "Yapay zekâ kurulumunu kim yapar",

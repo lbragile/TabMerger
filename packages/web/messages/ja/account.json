@@ -65,18 +65,24 @@
       "no_subscription": "解約するサブスクリプションが見つかりませんでした。ページを再読み込みするか、{email} までメールでご連絡ください。",
       "not_entitled": "解約できる有効なプランはありません。",
       "already_canceling": "プランはすでにこの請求期間の終わりに終了するよう設定されています。",
-      "cancel_failed": "解約ページを開けませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。"
+      "cancel_failed": "解約ページを開けませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。",
+      "rate_limited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。"
     }
   },
   "keepCurrentPlan": {
     "button": "現在のプランを継続",
     "success": "プランは {plan} のままです。",
     "successUnknownPlan": "現在のプランのままです。",
+    "successRenews": "プランは {plan} のままです。{date} に {amount} で更新されます。",
+    "successRenewsOn": "プランは {plan} のままです。{date} に更新されます。",
+    "successUnknownPlanRenews": "現在のプランのままです。{date} に {amount} で更新されます。",
+    "successUnknownPlanRenewsOn": "現在のプランのままです。{date} に更新されます。",
     "errors": {
       "no_billing_account": "このプランは請求アカウントに紐づいていません。{email} までメールでご連絡いただければ、こちらで対応いたします。",
       "no_subscription": "サブスクリプションが見つかりませんでした。ページを再読み込みするか、{email} までメールでご連絡ください。",
       "no_scheduled_change": "予定されているプラン変更はもうありません。ページを再読み込みしてプランをご確認ください。",
-      "keep_plan_failed": "現在のプランを継続できませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。"
+      "keep_plan_failed": "現在のプランを継続できませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。",
+      "rate_limited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。"
     }
   },
   "devicesCard": {
@@ -95,7 +101,8 @@
   "credits": {
     "failed": "チェックアウトを開始できませんでした",
     "getMore": "追加購入",
-    "notAvailable": "クレジットパックは、TabMergerがAIのセットアップを担当する有効なPro AIプランでのみ購入できます。"
+    "notAvailable": "クレジットパックは、TabMergerがAIのセットアップを担当する有効なPro AIプランでのみ購入できます。",
+    "rateLimited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。"
   },
   "aiPlan": {
     "title": "AIのセットアップ担当",

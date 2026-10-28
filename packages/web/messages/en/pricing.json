@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "You already have a plan. This page now shows it, so you can change it here.",
   "checkoutFailed": "Couldn't start checkout. Please try again in a moment.",
   "portalFailed": "Couldn't open billing. Please try again, or email {email} to change your plan.",
+  "rateLimited": "Too many billing requests in a short time. Please wait a few minutes and try again.",
   "checkoutCanceled": "Checkout canceled. You weren't charged.",
   "cancelAnytime": "Cancel anytime from your account — no lock-in, no questions asked.",
   "keepAccess": "You keep access until the end of your billing period.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Your plan is waiting for a payment or is paused, so it can't be changed yet. Email {email} and we'll help you sort it out.",
       "switch_needs_support": "This plan change can't be made right now. Email {email} and we'll make the change for you.",
       "price_unavailable": "That plan isn't available to switch to right now. Please try again later or contact us.",
-      "switch_failed": "Stripe couldn't start the change. Please try again, use Manage billing on your account page, or email {email}."
+      "switch_failed": "Stripe couldn't start the change. Please try again, use Manage billing on your account page, or email {email}.",
+      "rate_limited": "Too many billing requests in a short time. Please wait a few minutes and try again."
     }
   },
   "scheduledChange": {

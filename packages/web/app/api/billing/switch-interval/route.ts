@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { isBillingInterval, startPlanSwitch } from '@/lib/planSwitch'
+import { rejectCrossOriginPost } from '@/lib/billingRequestGuard'
 
 /**
  * Moves the signed-in user's paid plan to the other billing interval (monthly ↔ yearly) by
@@ -18,8 +19,15 @@ import { isBillingInterval, startPlanSwitch } from '@/lib/planSwitch'
  * previewed invoice would leave a credit; `error` is shown to the user), 503 (price not configured, or `ai_disabled` when the
  * subscriber's Pro AI option isn't on sale, see aiAvailability()). The work is shared with
  * `/api/billing/switch-plan` (startPlanSwitch() in lib/planSwitch.ts).
+ *
+ * 403 `forbidden_origin` unless posted from a page of this origin (rejectCrossOriginPost() in
+ * lib/billingRequestGuard.ts), checked before the body is read; 429 `rate_limited` past the
+ * per-user billing limit (in startPlanSwitch()).
  */
 export async function POST(request: NextRequest) {
+  const crossOrigin = rejectCrossOriginPost(request)
+  if (crossOrigin) return crossOrigin
+
   const body = (await request.json().catch(() => null)) as { interval?: unknown } | null
   const interval = body?.interval
   if (!isBillingInterval(interval)) {

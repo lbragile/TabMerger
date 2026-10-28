@@ -222,7 +222,9 @@ tier, so a price ID that isn't in these vars resolves to `free`.
 
 ```text
 PricingCard → POST /api/checkout { tier: 'pro' | 'proAi', interval: 'monthly' | 'yearly', aiMode?: 'managed' | 'byok' }
+  0. posted from a page of this origin           → 403 { error: 'forbidden_origin' } otherwise
   1. Supabase cookie session required            → 401 otherwise
+  1b. per-user billing rate limit                → 429 { error: 'rate_limited' } + Retry-After
   2. tier / interval / aiMode validated           → 400 (aiMode: missing = managed; byok only with proAi)
   3. tier === 'proAi' && AI flag off              → 503 { error: 'ai_disabled' }   (no Stripe call)
   4. caller's subscriptions row is on a paid tier
@@ -394,14 +396,24 @@ requires `subscription.customer` to be the caller's customer (else 404 `no_subsc
 the pending change exactly as the notice does (`pendingChangeOf()`, shared with
 `getPendingPlanChange()`), requires the schedule to name that subscription and customer, and then
 calls `subscriptionSchedules.release(schedule.id)`, the only write. No id from the client is used.
-Answers: `{ ok: true }`; 401; 400 `no_billing_account`; 404 `no_subscription`; 409
+Answers: `{ ok: true, renewal? }`; 401; 403 `forbidden_origin`; 429 `rate_limited`; 400
+`no_billing_account`; 404 `no_subscription`; 409
 `no_scheduled_change` (nothing scheduled, already undone, already landed, or a schedule that isn't
 this subscription's); 500 `keep_plan_failed` (a failed database read, logged with its code, or a
 Stripe failure). A release that fails because the schedule was released meanwhile (a second tab:
 Stripe answers 400 `invalid_request_error` with no `code`, "You cannot release a subscription
 schedule that is currently in the `released` status") is detected by reading the subscription
-again and answered 409. The button then refreshes the page: the notice is replaced by "Your plan
-stays {plan}." (`ScheduledChangeNotice` stays mounted across the refresh), and the usual cancel
+again and answered 409. After the release the route previews the next invoice
+(`invoices.createPreview({ customer, subscription })`, so discounts, tax and any account credit are
+in it) and returns `renewal: { at, amount, currency }`: `at` the current period's end (ISO),
+`amount` the preview's `amount_due` in major units (`fromStripeAmount()`: Stripe's zero- and
+three-decimal currencies handled) and `currency` upper case. A failed preview is logged and leaves
+`amount`/`currency` out; it never fails the request, since the plan has already been kept. No
+`renewal` when the subscription is set to end. The button then refreshes the page: the notice is
+replaced by "Your plan stays {plan}. It renews on {date} for {amount}." (date and amount
+formatted for the page's locale in the browser; without an amount, "It renews on {date}."; without
+a renewal, only "Your plan stays {plan}.") (`ScheduledChangeNotice` stays mounted across the
+refresh), and the usual cancel
 note returns because the portal home offers cancellation again. The webhook records the
 `customer.subscription.updated` Stripe sends (`previous_attributes: schedule`; no price change, so
 the plan-change alarm stays quiet).
@@ -416,10 +428,58 @@ invoice items and a customer balance of 0; the next-invoice preview was the curr
 `subscription_cycle` invoice on the current price (same totals), balance 0. A second call answered
 `no_scheduled_change`; another customer's subscription was refused (`not_found`).
 
+**Known limitation: releasing a schedule that raises the price.** `keepCurrentPlan()` and the
+cancel flow (Stripe's `subscription_cancel` releases the schedule, and the customer can renew in
+the default portal afterwards) release *any* active schedule whose next phase is on a different
+price, including a price this deployment doesn't know. Today that is safe because only downgrades
+and shorter intervals are ever scheduled (our `scheduleChangeAtPeriodEnd()` and the portal's
+`schedule_at_period_end` deferrals), so releasing one only keeps the customer on the dearer plan
+they already pay for. If price increases are ever scheduled (a price migration, an introductory
+price that steps up, a schedule made by hand in the Dashboard), the customer could release it and
+keep the old, cheaper price. Before scheduling any increase, change both paths first: release (and
+open the cancel flow) only when the next phase's price is a known plan (`getPriceInfo()`) that is
+cheaper than the current one, or when the schedule carries our own metadata tag; otherwise answer
+with a support message instead.
+
 Both routes need `profiles.stripe_customer_id` (400 / 404 respectively when absent). These
 sessions use the account's **default** portal configuration, which offers no plan switching (see
 [Portal configuration](#portal-configuration)): a subscriber changing plan from the pricing page
 should call `/api/billing/switch-plan { tier }` instead of `/api/billing-portal`.
+
+### Request guards (every billing POST)
+
+All billing POST routes that act on Stripe (`/api/checkout`, `/api/checkout/credits`,
+`/api/billing/switch-plan`, `/api/billing/switch-interval`, `/api/billing/keep-current-plan`,
+`/api/billing/cancel-subscription`, `/api/billing-portal`, and the extension's `/api/portal`) share
+two guards from `lib/billingRequestGuard.ts`:
+
+- **Same origin** (`rejectCrossOriginPost()`, cookie routes only, checked before anything else):
+  `Sec-Fetch-Site` must be `same-origin`; when a browser doesn't send it, `Origin` must equal the
+  request's own origin; anything else is 403 `{ error: 'forbidden_origin', code:
+  'forbidden_origin' }`. `same-site` is refused too: the session cookie is SameSite=Lax, which lets
+  another subdomain of the same site (a preview deployment) post with it. Not applied to the
+  Stripe webhook (signed), Bearer-token routes (`/api/portal`, `/api/ai/*`) or GET routes.
+- **Per-user rate limit** (`limitBillingRequest()`, after authentication, before any Stripe call):
+  10 requests a minute and 60 an hour per user, across all of these routes together; over it,
+  429 `{ error: 'rate_limited', code: 'rate_limited', retryAfterSeconds }` with a `Retry-After`
+  header (seconds until the full window ends). The pages show "Too many billing requests in a short
+  time. Please wait a few minutes and try again." Stripe's API rate limit is per account, so
+  without this one user's script could slow everyone's checkout.
+
+The limiter (`takeRateLimit()` in `lib/rateLimit.ts`) is generic: a bucket (name, up to five
+fixed windows, and what a limiter failure means) and a key (a user id, an IP, ...). Its counters
+are in Postgres (`public.rate_limit_counters`, migration 025), taken by `public.rate_limit_take()`
+(security definer, service role only, one row per bucket, key and window, serialized per key by
+an advisory lock); a refused request counts in no window. In-memory counters would limit nothing,
+since Vercel runs many instances. Windows are aligned to the clock, so a burst across a boundary
+can reach twice a limit.
+
+Decision: the billing bucket **fails open**. If the limiter's database call fails, the request
+goes ahead and one line is logged (`Rate limit (billing): ...`). Every billing route still
+authenticates, checks ownership at Stripe and creates nothing a click couldn't, so an unlimited
+minute costs little, while failing closed would stop customers from subscribing, cancelling or
+reaching their invoices whenever the limiter is unreachable. A bucket guarding something that costs
+money per call (AI) can set `onError: 'deny'` instead and answer 503.
 
 ---
 
@@ -831,7 +891,10 @@ subscriptions" on, "Cancel at end of billing period", and no prorations on cance
 whose subscription updates list **only the target Price** (`always_invoice`,
 `schedule_at_period_end` conditions `decreasing_item_amount` and `shortening_interval`,
 `default_allowed_updates: ['price']` so no promotion codes, no quantity changes; cancellation at
-period end without proration), and caches its id in memory. They show up in the Dashboard as
+period end without proration), and caches its id in memory for 10 minutes
+(`PORTAL_CONFIGURATION_TTL_MS`, shared with the cancellation configuration), after which the next
+request looks it up and checks its features again; concurrent requests on one instance share a
+single lookup, so they don't create duplicates. They show up in the Dashboard as
 "TabMerger plan change to price_… (v3)"; leave
 them. Bumping `PLAN_CHANGE_CONFIGURATION_VERSION` makes new ones on the next switch.
 

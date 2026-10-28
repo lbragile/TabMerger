@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "Bạn đã có gói. Trang này giờ đã hiển thị gói đó, nên bạn có thể thay đổi ngay tại đây.",
   "checkoutFailed": "Không thể bắt đầu thanh toán. Vui lòng thử lại sau giây lát.",
   "portalFailed": "Không thể mở trang thanh toán. Vui lòng thử lại, hoặc gửi email tới {email} để đổi gói.",
+  "rateLimited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại.",
   "checkoutCanceled": "Đã hủy thanh toán. Bạn không bị tính phí.",
   "cancelAnytime": "Hủy bất cứ lúc nào từ tài khoản của bạn — không ràng buộc, không cần giải thích.",
   "keepAccess": "Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Gói của bạn đang chờ thanh toán hoặc đang tạm dừng nên chưa thể thay đổi. Hãy gửi email tới {email} và chúng tôi sẽ giúp bạn xử lý.",
       "switch_needs_support": "Hiện chưa thể thực hiện thay đổi gói này. Hãy gửi email tới {email} và chúng tôi sẽ thay đổi giúp bạn.",
       "price_unavailable": "Hiện không thể chuyển sang gói đó. Vui lòng thử lại sau hoặc liên hệ với chúng tôi.",
-      "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại, dùng Quản lý thanh toán trên trang tài khoản, hoặc gửi email tới {email}."
+      "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại, dùng Quản lý thanh toán trên trang tài khoản, hoặc gửi email tới {email}.",
+      "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
     }
   },
   "scheduledChange": {

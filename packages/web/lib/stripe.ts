@@ -382,6 +382,9 @@ export class KeepCurrentPlanError extends Error {
  * hold a pending change (the same reading as the account page's notice), else
  * `no_scheduled_change`. A release that fails because the schedule was released meanwhile (a
  * second click) is `no_scheduled_change` too; any other failure is rethrown.
+ *
+ * Returns the kept plan's renewal (date, and the amount from Stripe's preview of the next invoice
+ * when that preview works), or null when the subscription is set to end. See renewalAfterRelease().
  */
 export async function keepCurrentPlan({
   customerId,
@@ -389,7 +392,7 @@ export async function keepCurrentPlan({
 }: {
   customerId: string
   subscriptionId: string
-}): Promise<void> {
+}): Promise<KeptPlanRenewal | null> {
   if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
 
   const read = async () => {
@@ -420,6 +423,67 @@ export async function keepCurrentPlan({
     const again = await read().catch(() => null)
     if (again && !pendingChangeOf(again)) throw new KeepCurrentPlanError('no_scheduled_change')
     throw err
+  }
+
+  return renewalAfterRelease(customerId, subscription)
+}
+
+/**
+ * When the kept plan renews and what that renewal will charge, for the account page's "Your plan
+ * stays ..." message. `at` is the end of the current period (unix seconds). `amount` (in the
+ * currency's major unit, e.g. 42.99) and `currency` (ISO 4217, upper case) come from Stripe's
+ * preview of the next invoice, so discounts, tax and any account credit are included; both are
+ * absent when the preview fails.
+ */
+export interface KeptPlanRenewal {
+  at: number
+  amount?: number
+  currency?: string
+}
+
+/**
+ * Stripe's zero- and three-decimal currencies (docs.stripe.com/currencies): their API amounts are in
+ * 1 and 1/1000 of the unit. Every other currency's are in 1/100, including ISK and UGX, which Stripe
+ * still represents with two decimals.
+ */
+const ZERO_DECIMAL_CURRENCIES = new Set([
+  'bif', 'clp', 'djf', 'gnf', 'jpy', 'kmf', 'krw', 'mga', 'pyg', 'rwf', 'vnd', 'vuv', 'xaf', 'xof', 'xpf',
+])
+const THREE_DECIMAL_CURRENCIES = new Set(['bhd', 'jod', 'kwd', 'omr', 'tnd'])
+
+/** A Stripe amount (minor units) in the currency's major unit: 4299 USD -> 42.99, 500 JPY -> 500. */
+export function fromStripeAmount(amount: number, currency: string): number {
+  const code = currency.toLowerCase()
+  if (ZERO_DECIMAL_CURRENCIES.has(code)) return amount
+  return amount / (THREE_DECIMAL_CURRENCIES.has(code) ? 1000 : 100)
+}
+
+/**
+ * The renewal of `subscription` (as read before the release) once its schedule is released, or
+ * null when it won't renew (set to end). The amount is previewed after the release, so it is the
+ * current price's; a failed preview is logged and leaves the amount out, never failing the caller,
+ * since the plan has already been kept.
+ */
+async function renewalAfterRelease(
+  customerId: string,
+  subscription: Stripe.Subscription
+): Promise<KeptPlanRenewal | null> {
+  if (subscription.cancel_at_period_end || subscription.cancel_at) return null
+  const at = subscription.items.data[0]?.current_period_end
+  if (typeof at !== 'number') return null
+  try {
+    const preview = await stripe.invoices.createPreview({ customer: customerId, subscription: subscription.id })
+    if (typeof preview.amount_due !== 'number' || typeof preview.currency !== 'string') return { at }
+    return {
+      at,
+      amount: fromStripeAmount(preview.amount_due, preview.currency),
+      currency: preview.currency.toUpperCase(),
+    }
+  } catch (err) {
+    console.warn(
+      `Keep current plan: previewing the renewal invoice of subscription ${subscription.id} failed, so only its date is shown: ${describeStripeError(err)}`
+    )
+    return { at }
   }
 }
 
@@ -478,10 +542,44 @@ function logMismatchedPortalConfiguration(kind: string, config: Stripe.BillingPo
   )
 }
 
+/**
+ * How long a portal configuration id found or made below is reused before it is looked up again.
+ * The lookup re-checks the configuration's features (one edited in the Dashboard is skipped and a
+ * new one made), so an edit is caught within this time rather than only on a cold start.
+ */
+export const PORTAL_CONFIGURATION_TTL_MS = 10 * 60 * 1000
+
+/** Configuration ids per cache key, with when each must be looked up again (per server instance). */
+const portalConfigurationCache = new Map<string, { id: string; expiresAt: number }>()
+/** Lookups in progress per cache key, shared by concurrent callers on this instance. */
+const portalConfigurationLookups = new Map<string, Promise<string>>()
+
+/**
+ * The configuration id cached under `key`, or the result of `lookUp()` (then cached for
+ * PORTAL_CONFIGURATION_TTL_MS). Concurrent callers on one instance share a single lookup, so a
+ * burst of first requests can't make several identical configurations. A failed lookup caches
+ * nothing and is retried by the next call. Separate instances still look up independently; two
+ * cold starts at the same moment can each make one (harmless: both are correct, and later lookups
+ * use the first one listed).
+ */
+async function cachedPortalConfiguration(key: string, lookUp: () => Promise<string>): Promise<string> {
+  const cached = portalConfigurationCache.get(key)
+  if (cached && cached.expiresAt > Date.now()) return cached.id
+  const inFlight = portalConfigurationLookups.get(key)
+  if (inFlight) return inFlight
+  const lookup = lookUp()
+    .then((id) => {
+      portalConfigurationCache.set(key, { id, expiresAt: Date.now() + PORTAL_CONFIGURATION_TTL_MS })
+      return id
+    })
+    .finally(() => portalConfigurationLookups.delete(key))
+  portalConfigurationLookups.set(key, lookup)
+  return lookup
+}
+
 /** Bump when the configuration below changes. */
 const CANCEL_CONFIGURATION_VERSION = 'v1'
 const CANCEL_METADATA_KEY = 'tabmerger_cancel'
-let cancelConfigurationId: string | undefined
 
 /** True when `config` is the cancellation configuration cancelPortalConfiguration() makes. */
 function isCancelConfiguration(config: Stripe.BillingPortal.Configuration): boolean {
@@ -494,19 +592,19 @@ function isCancelConfiguration(config: Stripe.BillingPortal.Configuration): bool
  * switching. Passed explicitly rather than relying on the account's default configuration, which
  * is edited in the Dashboard. Found by metadata (`tabmerger_cancel: v1`) among the active
  * configurations, and used only when its features still say the above (one edited in the
- * Dashboard is skipped and a new one made); then cached for the server instance's lifetime, like
- * the plan-change configurations.
+ * Dashboard is skipped and a new one made); then cached for PORTAL_CONFIGURATION_TTL_MS, like the
+ * plan-change configurations (cachedPortalConfiguration()).
  */
-async function cancelPortalConfiguration(): Promise<string> {
-  if (cancelConfigurationId) return cancelConfigurationId
+function cancelPortalConfiguration(): Promise<string> {
+  return cachedPortalConfiguration(`cancel:${CANCEL_CONFIGURATION_VERSION}`, lookUpCancelPortalConfiguration)
+}
+
+async function lookUpCancelPortalConfiguration(): Promise<string> {
   const tagged = (await listActivePortalConfigurations()).filter(
     (c) => c.metadata?.[CANCEL_METADATA_KEY] === CANCEL_CONFIGURATION_VERSION
   )
   const found = tagged.find(isCancelConfiguration)
-  if (found) {
-    cancelConfigurationId = found.id
-    return found.id
-  }
+  if (found) return found.id
   for (const config of tagged) logMismatchedPortalConfiguration('cancellation', config)
   const created = await stripe.billingPortal.configurations.create({
     name: `TabMerger cancellation (${CANCEL_CONFIGURATION_VERSION})`,
@@ -518,7 +616,6 @@ async function cancelPortalConfiguration(): Promise<string> {
       invoice_history: { enabled: true },
     },
   })
-  cancelConfigurationId = created.id
   return created.id
 }
 
@@ -783,8 +880,6 @@ async function refuseUpgradeThatCredits(
 /** Bump when the configuration below changes, so new sessions get a configuration made from it. */
 const PLAN_CHANGE_CONFIGURATION_VERSION = 'v3'
 const PLAN_CHANGE_METADATA_KEY = 'tabmerger_plan_change'
-/** Configuration id per target price, for this server instance's lifetime. */
-const planChangeConfigurations = new Map<string, string>()
 
 /**
  * The Billing Portal configuration a plan-change flow to `targetPriceId` uses: subscription
@@ -810,25 +905,25 @@ const planChangeConfigurations = new Map<string, string>()
  *
  * Made on first use and found again by metadata (`tabmerger_plan_change: v3:<price>`) among the
  * active configurations (deactivated ones are never reused), so no per-environment setup is
- * needed; the id is cached in memory. A configuration found that way is used only when its
+ * needed; the id is cached in memory for PORTAL_CONFIGURATION_TTL_MS (cachedPortalConfiguration()), so
+ * the features are re-checked that often. A configuration found that way is used only when its
  * features still match what this code makes (isPlanChangeConfiguration()); one edited in the
  * Dashboard is skipped and a new one made. Stripe can't delete a portal configuration; older
  * versions are no longer looked up and are deactivated by hand (docs/PAYMENTS.md runbook).
  */
-async function planChangePortalConfiguration(
+function planChangePortalConfiguration(targetPriceId: string, product: string | undefined): Promise<string> {
+  const key = `${PLAN_CHANGE_CONFIGURATION_VERSION}:${targetPriceId}`
+  return cachedPortalConfiguration(`plan_change:${key}`, () => lookUpPlanChangePortalConfiguration(key, targetPriceId, product))
+}
+
+async function lookUpPlanChangePortalConfiguration(
+  key: string,
   targetPriceId: string,
   product: string | undefined
 ): Promise<string> {
-  const key = `${PLAN_CHANGE_CONFIGURATION_VERSION}:${targetPriceId}`
-  const cached = planChangeConfigurations.get(key)
-  if (cached) return cached
-
   const tagged = (await listActivePortalConfigurations()).filter((c) => c.metadata?.[PLAN_CHANGE_METADATA_KEY] === key)
   const found = tagged.find((c) => isPlanChangeConfiguration(c, targetPriceId, product))
-  if (found) {
-    planChangeConfigurations.set(key, found.id)
-    return found.id
-  }
+  if (found) return found.id
   for (const config of tagged) logMismatchedPortalConfiguration('plan change', config)
 
   if (!product) throw new Error(`Price ${targetPriceId} has no product`)
@@ -851,7 +946,6 @@ async function planChangePortalConfiguration(
       invoice_history: { enabled: true },
     },
   })
-  planChangeConfigurations.set(key, created.id)
   return created.id
 }
 

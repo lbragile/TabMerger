@@ -65,18 +65,24 @@
       "no_subscription": "Wir haben kein Abo zum Kündigen gefunden. Lade die Seite neu oder schreib an {email}.",
       "not_entitled": "Es gibt keinen aktiven Plan zum Kündigen.",
       "already_canceling": "Dein Plan endet bereits am Ende dieses Abrechnungszeitraums.",
-      "cancel_failed": "Die Kündigungsseite konnte nicht geöffnet werden. Bitte versuche es erneut oder schreib an {email}."
+      "cancel_failed": "Die Kündigungsseite konnte nicht geöffnet werden. Bitte versuche es erneut oder schreib an {email}.",
+      "rate_limited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
     }
   },
   "keepCurrentPlan": {
     "button": "Aktuellen Plan behalten",
     "success": "Dein Plan bleibt {plan}.",
     "successUnknownPlan": "Dein aktueller Plan bleibt.",
+    "successRenews": "Dein Plan bleibt {plan}. Er verlängert sich am {date} für {amount}.",
+    "successRenewsOn": "Dein Plan bleibt {plan}. Er verlängert sich am {date}.",
+    "successUnknownPlanRenews": "Dein aktueller Plan bleibt. Er verlängert sich am {date} für {amount}.",
+    "successUnknownPlanRenewsOn": "Dein aktueller Plan bleibt. Er verlängert sich am {date}.",
     "errors": {
       "no_billing_account": "Dieser Plan ist mit keinem Abrechnungskonto verknüpft. Schreib an {email}, dann kümmern wir uns darum.",
       "no_subscription": "Wir haben dein Abo nicht gefunden. Lade die Seite neu oder schreib an {email}.",
       "no_scheduled_change": "Es ist kein Planwechsel mehr geplant. Lade die Seite neu, um deinen Plan zu sehen.",
-      "keep_plan_failed": "Dein aktueller Plan konnte nicht beibehalten werden. Bitte versuche es erneut oder schreib an {email}."
+      "keep_plan_failed": "Dein aktueller Plan konnte nicht beibehalten werden. Bitte versuche es erneut oder schreib an {email}.",
+      "rate_limited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
     }
   },
   "devicesCard": {
@@ -95,7 +101,8 @@
   "credits": {
     "failed": "Checkout konnte nicht gestartet werden",
     "getMore": "Mehr holen",
-    "notAvailable": "Credit-Pakete gibt es nur mit einem aktiven Pro-AI-Plan, bei dem TabMerger die KI einrichtet."
+    "notAvailable": "Credit-Pakete gibt es nur mit einem aktiven Pro-AI-Plan, bei dem TabMerger die KI einrichtet.",
+    "rateLimited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
   },
   "aiPlan": {
     "title": "Wer die KI einrichtet",

@@ -13,6 +13,7 @@ import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { absoluteUrl } from '@/lib/utils'
 import { describeStripeError } from '@/lib/stripeErrors'
+import { limitBillingRequest } from '@/lib/billingRequestGuard'
 import {
   PLAN_SWITCH_ERROR_CODES as CODES,
   type PlanSwitchCheckoutTarget,
@@ -91,7 +92,8 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  *   ISO date and `url` the account page;
  *
  * or an error `{ error, code? }` (`code` from PLAN_SWITCH_ERROR_CODES in lib/checkoutErrors.ts):
- * 401, 403 (`no_paid_plan`; an AI option for Pro), 400 (`no_billing_account`, also when Stripe
+ * 401, 429 (`rate_limited`, BILLING_RATE_LIMIT in lib/billingRequestGuard.ts), 403 (`no_paid_plan`; an AI
+ * option for Pro), 400 (`no_billing_account`, also when Stripe
  * has no such customer; a bad body; the current interval is unknown and none was sent), 409
  * (`already_on_price`, `already_scheduled`, `cancel_scheduled`, `pay_or_resume`,
  * `switch_needs_support`: an upgrade whose previewed invoice would be a credit), 503 (`ai_disabled`
@@ -117,6 +119,9 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const limited = await limitBillingRequest(user.id)
+  if (limited) return limited
 
   const { data: subscription } = await supabase
     .from('subscriptions')

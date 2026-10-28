@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "Ya tienes un plan. Esta página ahora lo muestra, así que puedes cambiarlo aquí.",
   "checkoutFailed": "No se pudo iniciar el pago. Inténtalo de nuevo en un momento.",
   "portalFailed": "No se pudo abrir la facturación. Inténtalo de nuevo o escribe a {email} para cambiar de plan.",
+  "rateLimited": "Demasiadas solicitudes de facturación en poco tiempo. Espera unos minutos e inténtalo de nuevo.",
   "checkoutCanceled": "Pago cancelado. No se te cobró nada.",
   "cancelAnytime": "Cancela cuando quieras desde tu cuenta: sin compromisos ni preguntas.",
   "keepAccess": "Conservas el acceso hasta el final de tu periodo de facturación.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Tu plan tiene un pago pendiente o está en pausa, así que aún no se puede cambiar. Escribe a {email} y te ayudaremos a resolverlo.",
       "switch_needs_support": "Este cambio de plan no se puede hacer ahora. Escribe a {email} y haremos el cambio por ti.",
       "price_unavailable": "Ahora mismo no se puede cambiar a ese plan. Inténtalo más tarde o contáctanos.",
-      "switch_failed": "Stripe no pudo iniciar el cambio. Inténtalo de nuevo, usa «Gestionar facturación» en la página de tu cuenta o escribe a {email}."
+      "switch_failed": "Stripe no pudo iniciar el cambio. Inténtalo de nuevo, usa «Gestionar facturación» en la página de tu cuenta o escribe a {email}.",
+      "rate_limited": "Demasiadas solicitudes de facturación en poco tiempo. Espera unos minutos e inténtalo de nuevo."
     }
   },
   "scheduledChange": {

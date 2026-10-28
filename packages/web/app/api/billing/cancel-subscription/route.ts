@@ -3,6 +3,7 @@ import { CancelSubscriptionError, createCancelSubscriptionSession } from '@/lib/
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { CANCEL_SUBSCRIPTION_ERROR_CODES as CODES } from '@/lib/checkoutErrors'
 import { describeStripeError } from '@/lib/stripeErrors'
+import { limitBillingRequest, rejectCrossOriginPost } from '@/lib/billingRequestGuard'
 import { absoluteUrl } from '@/lib/utils'
 
 /**
@@ -18,17 +19,25 @@ import { absoluteUrl } from '@/lib/utils'
  * caller's own customer (`profiles.stripe_customer_id`), so no other account's subscription can be
  * reached.
  *
- * Responds `{ url }`, or 401, 400 `no_billing_account`, 404 `no_subscription` (none stored, unknown
+ * Responds `{ url }`, or 401, 403 `forbidden_origin` (not posted from a page of this origin,
+ * rejectCrossOriginPost()), 429 `rate_limited` (with `Retry-After`, limitBillingRequest()), 400
+ * `no_billing_account`, 404 `no_subscription` (none stored, unknown
  * at Stripe, or not this customer's), 409 `not_entitled` / `already_canceling`, 500 `cancel_failed`
  * (a failed database read, logged with its error code; or a Stripe failure, logged with the Stripe
  * error's type, code and request id).
  */
-export async function POST(_request: NextRequest) {
+export async function POST(request: NextRequest) {
+  const crossOrigin = rejectCrossOriginPost(request)
+  if (crossOrigin) return crossOrigin
+
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const limited = await limitBillingRequest(user.id)
+  if (limited) return limited
 
   const serviceClient = await createServiceRoleClient()
   const failed = (what: string, code: unknown) => {

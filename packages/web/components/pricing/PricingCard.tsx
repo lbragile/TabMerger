@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { TierBadge, TierFeatureIcon } from './TierBadge'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { ALREADY_SUBSCRIBED_ERROR, PAY_OR_RESUME_ERROR } from '@/lib/checkoutErrors'
+import { ALREADY_SUBSCRIBED_ERROR, PAY_OR_RESUME_ERROR, RATE_LIMITED_ERROR } from '@/lib/checkoutErrors'
 import { CHECKOUT_TIERS, trackBeginCheckout, type CheckoutTier } from '@/lib/checkoutAnalytics'
 import { isExternalStoreLink } from '@/lib/storeLinks'
 import { SUPPORT_EMAIL } from '@/lib/supportInbox'
@@ -252,6 +252,12 @@ export function PricingCard({
         return
       }
 
+      // Too many billing requests from this account in a short time (per-user server limit).
+      if (res.status === 429 && data.error === RATE_LIMITED_ERROR) {
+        toast.error(t('rateLimited'))
+        return
+      }
+
       // A plan at Stripe that can still be paid or resumed: a new one would bill next to it.
       if (res.status === 409 && data.error === PAY_OR_RESUME_ERROR) {
         toast.error(t('planChange.errors.pay_or_resume', { email: SUPPORT_EMAIL }))
@@ -290,7 +296,7 @@ export function PricingCard({
       return
     }
 
-    toast.error(t('portalFailed', { email: SUPPORT_EMAIL }))
+    toast.error(res.status === 429 && data.error === RATE_LIMITED_ERROR ? t('rateLimited') : t('portalFailed', { email: SUPPORT_EMAIL }))
   }
 
   return (

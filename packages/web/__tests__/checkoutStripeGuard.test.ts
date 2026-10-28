@@ -6,6 +6,13 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from 'vitest'
 import { NextRequest } from 'next/server'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 type Row = { id: string; user_id: string; tier: string; status: string; [column: string]: unknown }
 
@@ -98,7 +105,7 @@ const FREE_ROW: Row = { id: 'free_user-1', user_id: 'user-1', tier: 'free', stat
 
 async function checkout(body: unknown = { tier: 'pro', interval: 'monthly' }) {
   const { POST } = await import('@/app/api/checkout/route')
-  return POST(new NextRequest('http://localhost/api/checkout', { method: 'POST', body: JSON.stringify(body) }))
+  return POST(new NextRequest('http://localhost/api/checkout', { method: 'POST', headers: SAME_ORIGIN_HEADERS, body: JSON.stringify(body) }))
 }
 
 let warn: MockInstance<typeof console.warn>

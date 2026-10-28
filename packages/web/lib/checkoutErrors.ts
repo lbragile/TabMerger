@@ -43,6 +43,21 @@ export const PAY_OR_RESUME_ERROR = 'pay_or_resume'
 export const BILLING_CHECK_FAILED_ERROR = 'billing_check_failed'
 
 /**
+ * 429 from every billing POST route (checkout, credit packs, plan switch, keep current plan, cancel,
+ * Billing Portal): the user made too many billing requests in a short time
+ * (`BILLING_RATE_LIMIT` in lib/billingRequestGuard.ts). Sent in both `error` and `code`, with a
+ * `Retry-After` header. The pages say to wait a few minutes and try again.
+ */
+export const RATE_LIMITED_ERROR = 'rate_limited'
+
+/**
+ * 403 from the cookie-authenticated billing POST routes when the request didn't come from a page
+ * of the same origin (`rejectCrossOriginPost()` in lib/billingRequestGuard.ts). Our own pages never
+ * get it, so the pages show their generic failure message for it.
+ */
+export const FORBIDDEN_ORIGIN_ERROR = 'forbidden_origin'
+
+/**
  * 403 from `POST /api/checkout/credits`: the account has no plan that spends credit packs. Packs are
  * spent only by managed Pro AI on an entitled status (`hasProAi()` in lib/ai-usage.ts, the rule the
  * AI routes enforce), so a free, Pro or ended/unpaid Pro AI account is refused before any Stripe
@@ -81,6 +96,8 @@ export const PLAN_SWITCH_ERROR_CODES = {
   needsSupport: 'switch_needs_support',
   /** 503: the target price isn't configured here, or Stripe has it archived. */
   priceUnavailable: 'price_unavailable',
+  /** 429: too many billing requests; try again in a few minutes. */
+  rateLimited: RATE_LIMITED_ERROR,
   /** 500: Stripe refused or failed; the details are in the server log. */
   failed: 'switch_failed',
 } as const
@@ -125,6 +142,8 @@ export const CANCEL_SUBSCRIPTION_ERROR_CODES = {
   notEntitled: 'not_entitled',
   /** 409: the subscription is already set to end. */
   alreadyCanceling: 'already_canceling',
+  /** 429: too many billing requests; try again in a few minutes. */
+  rateLimited: RATE_LIMITED_ERROR,
   /** 500: Stripe refused or failed; the details are in the server log. */
   failed: 'cancel_failed',
 } as const
@@ -144,6 +163,8 @@ export const KEEP_CURRENT_PLAN_ERROR_CODES = {
   noSubscription: 'no_subscription',
   /** 409: nothing is scheduled (never was, already undone, or already landed). */
   noScheduledChange: 'no_scheduled_change',
+  /** 429: too many billing requests; try again in a few minutes. */
+  rateLimited: RATE_LIMITED_ERROR,
   /** 500: a failed database read, or Stripe refused or failed; the details are in the server log. */
   failed: 'keep_plan_failed',
 } as const

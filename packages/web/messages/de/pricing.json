@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "Du hast bereits einen Plan. Diese Seite zeigt ihn jetzt an, sodass du ihn hier ändern kannst.",
   "checkoutFailed": "Der Checkout konnte nicht gestartet werden. Bitte versuche es gleich noch einmal.",
   "portalFailed": "Die Abrechnung konnte nicht geöffnet werden. Bitte versuche es erneut oder schreib an {email}, um deinen Tarif zu ändern.",
+  "rateLimited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut.",
   "checkoutCanceled": "Checkout abgebrochen. Dir wurde nichts berechnet.",
   "cancelAnytime": "Jederzeit über dein Konto kündbar – ohne Bindung, ohne Rückfragen.",
   "keepAccess": "Du behältst den Zugriff bis zum Ende deines Abrechnungszeitraums.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Dein Plan wartet auf eine Zahlung oder ist pausiert und kann deshalb noch nicht geändert werden. Schreib an {email}, dann helfen wir dir weiter.",
       "switch_needs_support": "Diese Planänderung ist gerade nicht möglich. Schreib an {email}, dann nehmen wir die Änderung für dich vor.",
       "price_unavailable": "Zu diesem Plan kann gerade nicht gewechselt werden. Bitte versuche es später erneut oder kontaktiere uns.",
-      "switch_failed": "Stripe konnte die Änderung nicht starten. Bitte versuche es erneut, nutze „Abrechnung verwalten“ auf deiner Kontoseite oder schreib an {email}."
+      "switch_failed": "Stripe konnte die Änderung nicht starten. Bitte versuche es erneut, nutze „Abrechnung verwalten“ auf deiner Kontoseite oder schreib an {email}.",
+      "rate_limited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
     }
   },
   "scheduledChange": {

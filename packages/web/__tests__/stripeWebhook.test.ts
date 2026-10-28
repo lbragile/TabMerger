@@ -19,6 +19,13 @@ import {
   creditsForPayment,
   isEntitledSubscriptionStatus,
 } from '@tabmerger/shared'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 // The route sends GA events with next/server's after(), which needs a live request scope. Collect
 // the callbacks instead and run them with flushAfter(), as Next does once the response is sent.
@@ -2066,7 +2073,7 @@ describe('POST /api/portal', () => {
     const { POST } = await import('@/app/api/billing-portal/route')
     mockPortalSessionCreate.mockResolvedValue({ url: 'https://billing.stripe.com/session/test' })
 
-    const req = new NextRequest('http://localhost/api/billing-portal', { method: 'POST' })
+    const req = new NextRequest('http://localhost/api/billing-portal', { method: 'POST', headers: SAME_ORIGIN_HEADERS })
 
     const res = await POST(req)
     expect(res.status).toBe(200)
@@ -2085,7 +2092,7 @@ describe('POST /api/portal', () => {
     })
 
     const { POST } = await import('@/app/api/billing-portal/route')
-    const req = new NextRequest('http://localhost/api/billing-portal', { method: 'POST' })
+    const req = new NextRequest('http://localhost/api/billing-portal', { method: 'POST', headers: SAME_ORIGIN_HEADERS })
 
     const res = await POST(req)
     expect(res.status).toBe(400)

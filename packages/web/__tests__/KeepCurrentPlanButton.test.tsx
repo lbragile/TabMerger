@@ -1,13 +1,17 @@
+import React from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { NextIntlClientProvider } from 'next-intl'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { SUPPORT_EMAIL } from '@/lib/supportInbox'
+import { loadMessages } from '@/i18n/messages'
 
 /**
  * "Keep my current plan" on the account page (KeepCurrentPlanButton) and the scheduled-change
  * notice around it (ScheduledChangeNotice): the button asks the server to undo the scheduled
  * change, refreshes the page on success, is disabled while it waits and shows an error per code;
- * the notice stays mounted across that refresh and says the plan stays.
+ * the notice stays mounted across that refresh and says the plan stays, with the renewal date and
+ * amount the route returned (formatted for the page's locale), or the date alone without an amount.
  */
 const refresh = vi.fn()
 vi.mock('next/navigation', () => ({
@@ -16,7 +20,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }))
 
-const { KeepCurrentPlanButton } = await import('@/components/account/KeepCurrentPlanButton')
+const { KeepCurrentPlanButton, parseKeptPlanRenewal } = await import('@/components/account/KeepCurrentPlanButton')
 const { ScheduledChangeNotice } = await import('@/components/account/ScheduledChangeNotice')
 
 const answer = (ok: boolean, body: unknown) => vi.fn(async () => ({ ok, json: async () => body }))
@@ -36,7 +40,7 @@ describe('KeepCurrentPlanButton', () => {
     await user.click(screen.getByRole('button', { name: 'Keep my current plan' }))
 
     expect(globalThis.fetch).toHaveBeenCalledWith('/api/billing/keep-current-plan', { method: 'POST' })
-    expect(onKept).toHaveBeenCalledTimes(1)
+    expect(onKept.mock.calls).toEqual([[null]])
     expect(refresh).toHaveBeenCalledTimes(1)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
@@ -64,6 +68,7 @@ describe('KeepCurrentPlanButton', () => {
     ['no_subscription', `We couldn't find your subscription. Reload the page, or email ${SUPPORT_EMAIL}.`],
     ['no_scheduled_change', 'No plan change is scheduled anymore. Reload the page to see your plan.'],
     ['keep_plan_failed', `Couldn't keep your current plan. Please try again, or email ${SUPPORT_EMAIL}.`],
+    ['rate_limited', 'Too many billing requests in a short time. Please wait a few minutes and try again.'],
   ])('shows the message for %s and stays on the page without refreshing', async (code, message) => {
     vi.stubGlobal('fetch', answer(false, { code, error: 'x' }))
     const onKept = vi.fn()
@@ -91,6 +96,34 @@ describe('KeepCurrentPlanButton', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent(`Couldn't keep your current plan. Please try again, or email ${SUPPORT_EMAIL}.`)
     expect(refresh).not.toHaveBeenCalled()
+  })
+})
+
+describe('parseKeptPlanRenewal', () => {
+  const at = '2026-11-26T12:00:00.000Z'
+  it.each([
+    ['a date, amount and currency', { at, amount: 7.19, currency: 'USD' }, { at, amount: 7.19, currency: 'USD' }],
+    ['a date alone', { at }, { at }],
+    ['a zero amount (an account credit covers it)', { at, amount: 0, currency: 'EUR' }, { at, amount: 0, currency: 'EUR' }],
+    ['an amount without a currency (dropped)', { at, amount: 7.19 }, { at }],
+    ['a currency that is not an ISO code (dropped)', { at, amount: 7.19, currency: 'usd' }, { at }],
+    ['a negative amount (dropped)', { at, amount: -1, currency: 'USD' }, { at }],
+    ['an amount that is a string (dropped)', { at, amount: '7.19', currency: 'USD' }, { at }],
+    ['no date', { amount: 7.19, currency: 'USD' }, null],
+    ['a date that does not parse', { at: 'soon' }, null],
+    ['nothing', undefined, null],
+  ])('reads %s', (_label, value, expected) => {
+    expect(parseKeptPlanRenewal(value)).toEqual(expected)
+  })
+
+  it('passes the renewal to onKept', async () => {
+    vi.stubGlobal('fetch', answer(true, { ok: true, renewal: { at, amount: 7.19, currency: 'USD' } }))
+    const onKept = vi.fn()
+    const user = userEvent.setup()
+    render(<KeepCurrentPlanButton onKept={onKept} />)
+    await user.click(screen.getByRole('button', { name: 'Keep my current plan' }))
+    expect(onKept.mock.calls).toEqual([[{ at, amount: 7.19, currency: 'USD' }]])
+    vi.unstubAllGlobals()
   })
 })
 
@@ -131,6 +164,55 @@ describe('ScheduledChangeNotice', () => {
     // What the refreshed page sends: nothing scheduled any more.
     rerender(<ScheduledChangeNotice notice={null} currentPlan="Pro AI, billed monthly" />)
     expect(screen.getByRole('status')).toHaveTextContent('Your plan stays Pro AI, billed monthly.')
+  })
+
+  // Noon UTC, so the date is the same day in any time zone the tests run in.
+  const at = '2026-11-26T12:00:00.000Z'
+
+  it('adds the renewal date and the amount Stripe previewed', async () => {
+    vi.stubGlobal('fetch', answer(true, { ok: true, renewal: { at, amount: 7.19, currency: 'USD' } }))
+    const user = userEvent.setup()
+    render(<ScheduledChangeNotice notice={notice} currentPlan="Pro AI, billed monthly" />)
+    await user.click(screen.getByRole('button', { name: 'Keep my current plan' }))
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Your plan stays Pro AI, billed monthly. It renews on November 26, 2026 for $7.19.'
+    )
+  })
+
+  it('gives the date alone when the route had no amount (the preview failed)', async () => {
+    vi.stubGlobal('fetch', answer(true, { ok: true, renewal: { at } }))
+    const user = userEvent.setup()
+    render(<ScheduledChangeNotice notice={notice} currentPlan="Pro AI, billed monthly" />)
+    await user.click(screen.getByRole('button', { name: 'Keep my current plan' }))
+    const status = await screen.findByRole('status')
+    expect(status).toHaveTextContent('Your plan stays Pro AI, billed monthly. It renews on November 26, 2026.')
+    expect(status).not.toHaveTextContent('$')
+  })
+
+  it('names no plan but still gives the renewal for a price this deployment does not sell', async () => {
+    vi.stubGlobal('fetch', answer(true, { ok: true, renewal: { at, amount: 77.39, currency: 'USD' } }))
+    const user = userEvent.setup()
+    render(<ScheduledChangeNotice notice={notice} currentPlan={null} />)
+    await user.click(screen.getByRole('button', { name: 'Keep my current plan' }))
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Your current plan stays. It renews on November 26, 2026 for $77.39.'
+    )
+  })
+
+  it("formats the date and amount for the page's locale", async () => {
+    const de = await loadMessages('de')
+    const German = ({ children }: { children: React.ReactNode }) => (
+      <NextIntlClientProvider locale="de" messages={de}>
+        {children}
+      </NextIntlClientProvider>
+    )
+    vi.stubGlobal('fetch', answer(true, { ok: true, renewal: { at, amount: 1234.5, currency: 'EUR' } }))
+    const user = userEvent.setup()
+    render(<ScheduledChangeNotice notice={notice} currentPlan="Pro AI" />, { wrapper: German })
+    await user.click(screen.getByRole('button', { name: de.account.keepCurrentPlan.button }))
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Dein Plan bleibt Pro AI. Er verlängert sich am 26. November 2026 für 1.234,50 €.'
+    )
   })
 
   it("names no plan when the current price isn't one this deployment sells", async () => {

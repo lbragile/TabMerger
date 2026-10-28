@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "你已有套餐。此页面现在会显示它，你可以在这里更改。",
   "checkoutFailed": "无法开始结账。请稍后再试。",
   "portalFailed": "无法打开账单页面。请重试，或发送邮件至 {email} 更改套餐。",
+  "rateLimited": "短时间内的账单请求过多。请等待几分钟后再试。",
   "checkoutCanceled": "结账已取消，您未被扣款。",
   "cancelAnytime": "随时可在账户中取消，无捆绑，无需任何理由。",
   "keepAccess": "计费周期结束前您仍可继续使用。",
@@ -97,7 +98,8 @@
       "pay_or_resume": "你的套餐正在等待付款或已暂停，因此暂时无法更改。请发送邮件至 {email}，我们会帮你处理。",
       "switch_needs_support": "目前无法进行此套餐更改。请发送邮件至 {email}，我们会为你完成更改。",
       "price_unavailable": "目前无法切换到该套餐。请稍后重试或联系我们。",
-      "switch_failed": "Stripe 无法开始此更改。请重试、使用账户页面中的“管理账单”，或发送邮件至 {email}。"
+      "switch_failed": "Stripe 无法开始此更改。请重试、使用账户页面中的“管理账单”，或发送邮件至 {email}。",
+      "rate_limited": "短时间内的账单请求过多。请等待几分钟后再试。"
     }
   },
   "scheduledChange": {

@@ -65,18 +65,24 @@
       "no_subscription": "Nie znaleźliśmy subskrypcji do anulowania. Odśwież stronę lub napisz na {email}.",
       "not_entitled": "Nie ma aktywnego planu do anulowania.",
       "already_canceling": "Twój plan jest już ustawiony tak, aby zakończyć się z końcem tego okresu rozliczeniowego.",
-      "cancel_failed": "Nie udało się otworzyć strony anulowania. Spróbuj ponownie lub napisz na {email}."
+      "cancel_failed": "Nie udało się otworzyć strony anulowania. Spróbuj ponownie lub napisz na {email}.",
+      "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
     }
   },
   "keepCurrentPlan": {
     "button": "Zachowaj mój obecny plan",
     "success": "Twój plan pozostaje bez zmian: {plan}.",
     "successUnknownPlan": "Twój obecny plan pozostaje bez zmian.",
+    "successRenews": "Twój plan pozostaje bez zmian: {plan}. Odnowi się {date} za {amount}.",
+    "successRenewsOn": "Twój plan pozostaje bez zmian: {plan}. Odnowi się {date}.",
+    "successUnknownPlanRenews": "Twój obecny plan pozostaje bez zmian. Odnowi się {date} za {amount}.",
+    "successUnknownPlanRenewsOn": "Twój obecny plan pozostaje bez zmian. Odnowi się {date}.",
     "errors": {
       "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym. Napisz na {email}, a zajmiemy się tym za Ciebie.",
       "no_subscription": "Nie znaleźliśmy Twojej subskrypcji. Odśwież stronę lub napisz na {email}.",
       "no_scheduled_change": "Nie ma już zaplanowanej zmiany planu. Odśwież stronę, aby zobaczyć swój plan.",
-      "keep_plan_failed": "Nie udało się zachować obecnego planu. Spróbuj ponownie lub napisz na {email}."
+      "keep_plan_failed": "Nie udało się zachować obecnego planu. Spróbuj ponownie lub napisz na {email}.",
+      "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
     }
   },
   "devicesCard": {
@@ -95,7 +101,8 @@
   "credits": {
     "failed": "Nie udało się rozpocząć płatności",
     "getMore": "Kup więcej",
-    "notAvailable": "Pakiety kredytów wymagają aktywnego planu Pro AI, w którym konfiguracją AI zajmuje się TabMerger."
+    "notAvailable": "Pakiety kredytów wymagają aktywnego planu Pro AI, w którym konfiguracją AI zajmuje się TabMerger.",
+    "rateLimited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
   },
   "aiPlan": {
     "title": "Kto konfiguruje AI",

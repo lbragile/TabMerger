@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "Masz już plan. Ta strona teraz go pokazuje, więc możesz go zmienić tutaj.",
   "checkoutFailed": "Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.",
   "portalFailed": "Nie udało się otworzyć płatności. Spróbuj ponownie lub napisz na {email}, aby zmienić plan.",
+  "rateLimited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie.",
   "checkoutCanceled": "Płatność anulowana. Nie pobrano żadnej opłaty.",
   "cancelAnytime": "Zrezygnuj w dowolnej chwili na swoim koncie — bez zobowiązań i zbędnych pytań.",
   "keepAccess": "Dostęp zachowasz do końca okresu rozliczeniowego.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Twój plan czeka na płatność lub jest wstrzymany, więc nie można go jeszcze zmienić. Napisz na {email}, a pomożemy Ci to załatwić.",
       "switch_needs_support": "Tej zmiany planu nie można teraz wprowadzić. Napisz na {email}, a wprowadzimy ją za Ciebie.",
       "price_unavailable": "Obecnie nie można przejść na ten plan. Spróbuj ponownie później lub skontaktuj się z nami.",
-      "switch_failed": "Stripe nie mógł rozpocząć zmiany. Spróbuj ponownie, użyj „Zarządzaj płatnościami” na stronie konta lub napisz na {email}."
+      "switch_failed": "Stripe nie mógł rozpocząć zmiany. Spróbuj ponownie, użyj „Zarządzaj płatnościami” na stronie konta lub napisz na {email}.",
+      "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
     }
   },
   "scheduledChange": {

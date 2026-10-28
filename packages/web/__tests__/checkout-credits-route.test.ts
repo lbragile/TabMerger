@@ -6,6 +6,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 import { AI_ERROR_CODES } from '@tabmerger/shared'
 import { CREDITS_NOT_AVAILABLE_ERROR } from '@/lib/checkoutErrors'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 const mockCreateCreditPackCheckoutSession = vi.fn().mockResolvedValue('https://checkout.stripe.com/s1')
 
@@ -41,6 +48,7 @@ vi.mock('@/lib/supabase/server', () => ({
 function makeRequest(body: unknown) {
   return new NextRequest('http://localhost/api/checkout/credits', {
     method: 'POST',
+    headers: SAME_ORIGIN_HEADERS,
     body: JSON.stringify(body),
   })
 }

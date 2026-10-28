@@ -46,6 +46,20 @@ describe('CancelSubscriptionButton', () => {
     expect(screen.getByRole('button', { name: 'Cancel subscription' })).toBeEnabled()
   })
 
+  it('asks to wait a few minutes on a 429 rate_limited', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: false, status: 429, json: async () => ({ code: 'rate_limited', error: 'rate_limited' }) }))
+    )
+    const user = userEvent.setup()
+    render(<CancelSubscriptionButton />)
+
+    await user.click(screen.getByRole('button', { name: 'Cancel subscription' }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Too many billing requests in a short time. Please wait a few minutes and try again.')
+    expect(location.href).toBe('')
+  })
+
   it('shows the generic message with the support address for an unknown answer or a network error', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => {
       throw new Error('offline')

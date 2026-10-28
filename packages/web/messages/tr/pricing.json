@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "Zaten bir planınız var. Bu sayfa artık onu gösteriyor, böylece burada değiştirebilirsiniz.",
   "checkoutFailed": "Ödeme başlatılamadı. Lütfen birazdan tekrar deneyin.",
   "portalFailed": "Faturalandırma açılamadı. Lütfen tekrar deneyin veya planınızı değiştirmek için {email} adresine yazın.",
+  "rateLimited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin.",
   "checkoutCanceled": "Ödeme iptal edildi. Sizden ücret alınmadı.",
   "cancelAnytime": "Hesabınızdan istediğiniz zaman iptal edin — taahhüt yok, soru sorulmaz.",
   "keepAccess": "Erişiminiz fatura döneminizin sonuna kadar devam eder.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Planınız bir ödeme bekliyor veya duraklatıldı, bu yüzden henüz değiştirilemez. {email} adresine yazın, çözmenize yardımcı olalım.",
       "switch_needs_support": "Bu plan değişikliği şu anda yapılamıyor. {email} adresine yazın, değişikliği sizin için yapalım.",
       "price_unavailable": "Şu anda bu plana geçilemiyor. Lütfen daha sonra tekrar deneyin veya bizimle iletişime geçin.",
-      "switch_failed": "Stripe değişikliği başlatamadı. Lütfen tekrar deneyin, hesap sayfanızdaki Faturalandırmayı yönet seçeneğini kullanın veya {email} adresine yazın."
+      "switch_failed": "Stripe değişikliği başlatamadı. Lütfen tekrar deneyin, hesap sayfanızdaki Faturalandırmayı yönet seçeneğini kullanın veya {email} adresine yazın.",
+      "rate_limited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
     }
   },
   "scheduledChange": {

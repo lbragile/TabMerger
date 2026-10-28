@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "Anda sudah memiliki paket. Halaman ini sekarang menampilkannya, jadi Anda dapat mengubahnya di sini.",
   "checkoutFailed": "Tidak dapat memulai checkout. Silakan coba lagi sebentar lagi.",
   "portalFailed": "Tidak dapat membuka halaman tagihan. Silakan coba lagi, atau kirim email ke {email} untuk mengubah paket.",
+  "rateLimited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi.",
   "checkoutCanceled": "Pembayaran dibatalkan. Anda tidak dikenai biaya.",
   "cancelAnytime": "Batalkan kapan saja dari akun Anda — tanpa ikatan, tanpa banyak tanya.",
   "keepAccess": "Akses tetap tersedia hingga akhir periode tagihan Anda.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Paket Anda menunggu pembayaran atau sedang dijeda, jadi belum dapat diubah. Kirim email ke {email} dan kami akan membantu Anda menyelesaikannya.",
       "switch_needs_support": "Perubahan paket ini tidak dapat dilakukan sekarang. Kirim email ke {email} dan kami akan melakukan perubahannya untuk Anda.",
       "price_unavailable": "Saat ini Anda tidak dapat beralih ke paket tersebut. Silakan coba lagi nanti atau hubungi kami.",
-      "switch_failed": "Stripe tidak dapat memulai perubahan. Silakan coba lagi, gunakan Kelola penagihan di halaman akun Anda, atau kirim email ke {email}."
+      "switch_failed": "Stripe tidak dapat memulai perubahan. Silakan coba lagi, gunakan Kelola penagihan di halaman akun Anda, atau kirim email ke {email}.",
+      "rate_limited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
     }
   },
   "scheduledChange": {

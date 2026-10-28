@@ -11,6 +11,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
 const push = vi.fn()
 const refresh = vi.fn()
@@ -278,11 +279,12 @@ describe('errors and the portal path', () => {
     [409, 'cancel_scheduled', 'Your plan is set to end at the end of this billing period. Renew it in Manage billing before changing it.'],
     [409, 'already_scheduled', 'A plan change is already scheduled for the end of this billing period.'],
     [409, 'already_on_price', "You're already on that plan."],
-    [409, 'pay_or_resume', "Your plan is waiting for a payment or is paused, so it can't be changed yet. Email support@tabmerger.com and we'll help you sort it out."],
-    [400, 'no_billing_account', "This plan isn't linked to a billing account, so it can't be changed here. Email support@tabmerger.com and we'll change it for you."],
+    [409, 'pay_or_resume', `Your plan is waiting for a payment or is paused, so it can't be changed yet. Email ${SUPPORT_EMAIL} and we'll help you sort it out.`],
+    [400, 'no_billing_account', `This plan isn't linked to a billing account, so it can't be changed here. Email ${SUPPORT_EMAIL} and we'll change it for you.`],
     [403, 'no_paid_plan', "You don't have a paid plan to change."],
     [503, 'price_unavailable', "That plan isn't available to switch to right now."],
-    [500, 'switch_failed', "Stripe couldn't start the change. Please try again, use Manage billing on your account page, or email support@tabmerger.com."],
+    [500, 'switch_failed', `Stripe couldn't start the change. Please try again, use Manage billing on your account page, or email ${SUPPORT_EMAIL}.`],
+    [429, 'rate_limited', 'Too many billing requests in a short time. Please wait a few minutes and try again.'],
   ])('a %s with code %s gets its own message', async (status, code, message) => {
     const { SwitchAiModeButton } = await load()
     const user = userEvent.setup()
@@ -306,7 +308,7 @@ describe('errors and the portal path', () => {
     respond(status, { error: 'English text from the server', code })
     await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent('support@tabmerger.com')
+    expect(alert).toHaveTextContent(`${SUPPORT_EMAIL}`)
     expect(alert).not.toHaveTextContent(/Manage billing/)
   })
 
@@ -317,7 +319,7 @@ describe('errors and the portal path', () => {
     respond(500, { error: 'Failed', code: 'something_new' })
     await user.click(screen.getByRole('button', { name: 'Let TabMerger handle setup' }))
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      "Couldn't start the switch. Please try again, or email support@tabmerger.com if it keeps happening."
+      `Couldn't start the switch. Please try again, or email ${SUPPORT_EMAIL} if it keeps happening.`
     )
   })
 
@@ -389,10 +391,11 @@ describe('recovery: the plan had already ended at Stripe', () => {
   })
 
   it.each([
-    [409, { error: 'pay_or_resume' }, "Your plan is waiting for a payment or is paused, so it can't be changed yet. Email support@tabmerger.com"],
+    [409, { error: 'pay_or_resume' }, `Your plan is waiting for a payment or is paused, so it can't be changed yet. Email ${SUPPORT_EMAIL}`],
     [409, { error: 'already_subscribed', recorded: true }, 'You already have a plan. This page now shows it, so you can change it here.'],
-    [409, { error: 'already_subscribed', recorded: false }, "Couldn't start the switch. Please try again, or email support@tabmerger.com if it keeps happening."],
+    [409, { error: 'already_subscribed', recorded: false }, `Couldn't start the switch. Please try again, or email ${SUPPORT_EMAIL} if it keeps happening.`],
     [503, { error: 'billing_check_failed' }, "Couldn't start checkout. Please try again in a moment."],
+    [429, { error: 'rate_limited', code: 'rate_limited' }, 'Too many billing requests in a short time. Please wait a few minutes and try again.'],
     [400, { error: 'Invalid tier' }, "You don't have a paid plan to change. Choose a plan to subscribe instead."],
   ])('a checkout %i %j shows its message and refreshes the page', async (status, body, message) => {
     respond(403, DRIFT)

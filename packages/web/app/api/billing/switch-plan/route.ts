@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { parsePlanSwitchBody, startPlanSwitch } from '@/lib/planSwitch'
+import { rejectCrossOriginPost } from '@/lib/billingRequestGuard'
 
 /**
  * Moves the signed-in user's paid plan to another price: the plan (Pro ↔ Pro AI), the billing
@@ -20,8 +21,15 @@ import { parsePlanSwitchBody, startPlanSwitch } from '@/lib/planSwitch'
  * or `switch_needs_support`: an upgrade whose previewed invoice would leave a credit), 503 (`ai_disabled` when the Pro AI option switched
  * to isn't on sale: managed needs NEXT_PUBLIC_AI_ENABLED, own key either that or
  * NEXT_PUBLIC_AI_BYOK_ENABLED; or the price is not configured), 500.
+ *
+ * 403 `forbidden_origin` unless posted from a page of this origin (rejectCrossOriginPost() in
+ * lib/billingRequestGuard.ts), checked before the body is read; 429 `rate_limited` past the
+ * per-user billing limit (in startPlanSwitch()).
  */
 export async function POST(request: NextRequest) {
+  const crossOrigin = rejectCrossOriginPost(request)
+  if (crossOrigin) return crossOrigin
+
   const body = await request.json().catch(() => null)
   const target = parsePlanSwitchBody(body)
   if ('error' in target) {

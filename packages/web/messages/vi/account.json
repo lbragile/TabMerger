@@ -65,18 +65,24 @@
       "no_subscription": "Chúng tôi không tìm thấy gói đăng ký nào để hủy. Hãy tải lại trang, hoặc gửi email tới {email}.",
       "not_entitled": "Không có gói nào đang hoạt động để hủy.",
       "already_canceling": "Gói của bạn đã được đặt để kết thúc vào cuối kỳ thanh toán này.",
-      "cancel_failed": "Không thể mở trang hủy. Vui lòng thử lại, hoặc gửi email tới {email}."
+      "cancel_failed": "Không thể mở trang hủy. Vui lòng thử lại, hoặc gửi email tới {email}.",
+      "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
     }
   },
   "keepCurrentPlan": {
     "button": "Giữ gói hiện tại của tôi",
     "success": "Gói của bạn vẫn là {plan}.",
     "successUnknownPlan": "Gói hiện tại của bạn được giữ nguyên.",
+    "successRenews": "Gói của bạn vẫn là {plan}. Gói sẽ được gia hạn vào {date} với giá {amount}.",
+    "successRenewsOn": "Gói của bạn vẫn là {plan}. Gói sẽ được gia hạn vào {date}.",
+    "successUnknownPlanRenews": "Gói hiện tại của bạn được giữ nguyên. Gói sẽ được gia hạn vào {date} với giá {amount}.",
+    "successUnknownPlanRenewsOn": "Gói hiện tại của bạn được giữ nguyên. Gói sẽ được gia hạn vào {date}.",
     "errors": {
       "no_billing_account": "Gói này chưa được liên kết với tài khoản thanh toán. Hãy gửi email tới {email} và chúng tôi sẽ xử lý giúp bạn.",
       "no_subscription": "Chúng tôi không tìm thấy gói đăng ký của bạn. Hãy tải lại trang, hoặc gửi email tới {email}.",
       "no_scheduled_change": "Không còn thay đổi gói nào được lên lịch. Hãy tải lại trang để xem gói của bạn.",
-      "keep_plan_failed": "Không thể giữ gói hiện tại của bạn. Vui lòng thử lại, hoặc gửi email tới {email}."
+      "keep_plan_failed": "Không thể giữ gói hiện tại của bạn. Vui lòng thử lại, hoặc gửi email tới {email}.",
+      "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
     }
   },
   "devicesCard": {
@@ -95,7 +101,8 @@
   "credits": {
     "failed": "Không thể bắt đầu thanh toán",
     "getMore": "Mua thêm",
-    "notAvailable": "Gói tín dụng chỉ dành cho gói Pro AI đang hoạt động do TabMerger lo phần thiết lập AI."
+    "notAvailable": "Gói tín dụng chỉ dành cho gói Pro AI đang hoạt động do TabMerger lo phần thiết lập AI.",
+    "rateLimited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
   },
   "aiPlan": {
     "title": "Ai lo phần thiết lập AI",

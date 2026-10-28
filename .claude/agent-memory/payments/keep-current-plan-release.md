@@ -1,6 +1,6 @@
 ---
 name: keep-current-plan-release
-description: Undoing a scheduled plan change by releasing its subscription schedule (route /api/billing/keep-current-plan, keepCurrentPlan() in lib/stripe.ts) - measured money effects, Stripe's error for a second release, ownership checks, and the stay-mounted pattern for a success message that must survive router.refresh()
+description: Undoing a scheduled plan change by releasing its subscription schedule (route /api/billing/keep-current-plan, keepCurrentPlan() in lib/stripe.ts) - measured money effects, Stripe's error for a second release, ownership checks, the stay-mounted success message with renewal date/amount (currency minor units), and the portal config cache TTL
 metadata:
   type: reference
 ---
@@ -29,5 +29,18 @@ message rendered inside it. `ScheduledChangeNotice` (client) is rendered for eve
 a stable position with `notice: null` when nothing is scheduled; it keeps `kept` state and shows
 "Your plan stays {plan}." (focused, `role="status"`) across the refresh. The success message's plan
 name comes from the row's `stripe_price_id` via the page's `planName()` helper.
+
+Renewal in the success message: after the release the route previews the next invoice
+(`invoices.createPreview({ customer, subscription })`) and returns `renewal: { at, amount,
+currency }` (`at` = item `current_period_end`, `amount` = `amount_due` in major units). Stripe's
+minor units aren't always 1/100: zero-decimal (JPY, KRW, ...) are whole units, BHD/JOD/KWD/OMR/TND
+are 1/1000, and ISK/UGX are still sent with two decimals (`fromStripeAmount()`). A failed preview
+drops the amount only; a subscription set to end gets no renewal (no preview call). The client
+formats with `formatDate`/`formatCurrency(amount, currency, locale)`; full sentences per case in
+the catalogs (`successRenews`, `successRenewsOn`, ...) rather than concatenated fragments.
+
+Portal configuration ids (cancel and plan change) are cached for 10 min
+(`PORTAL_CONFIGURATION_TTL_MS`) with one shared in-flight lookup per key per instance, so a
+Dashboard edit is caught by the feature check within 10 min. See [[billing-request-guards]].
 
 Related: [[cancel-with-pending-schedule]], [[portal-deferral-matrix]], [[refund-policy-plan-changes]].

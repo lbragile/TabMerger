@@ -258,3 +258,20 @@ describe('lib/stripe', () => {
     })
   })
 })
+
+describe('fromStripeAmount', () => {
+  it.each([
+    [4299, 'usd', 42.99],
+    [4299, 'EUR', 42.99],
+    [500, 'jpy', 500],
+    [1200, 'krw', 1200],
+    // Stripe still represents ISK and UGX with two decimals.
+    [50000, 'isk', 500],
+    [50000, 'ugx', 500],
+    [12340, 'kwd', 12.34],
+    [0, 'usd', 0],
+  ])('%i %s is %d in major units', async (amount, currency, expected) => {
+    const { fromStripeAmount } = await import('@/lib/stripe')
+    expect(fromStripeAmount(amount, currency)).toBe(expected)
+  })
+})

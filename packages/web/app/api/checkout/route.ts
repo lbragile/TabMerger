@@ -14,6 +14,7 @@ import { checkStripeBeforeCheckout } from '@/lib/checkoutGuard'
 import { describeStripeError } from '@/lib/stripeErrors'
 import { checkoutCancelPath } from '@/lib/checkoutAnalytics'
 import { DEFAULT_LOCALE, isAppLocale } from '@/i18n/locales'
+import { limitBillingRequest, rejectCrossOriginPost } from '@/lib/billingRequestGuard'
 
 /** PostgREST's code for `.single()` finding no row: a miss, not a failure. */
 const NO_SINGLE_ROW = 'PGRST116'
@@ -68,8 +69,15 @@ function proAiOptionAvailable(aiMode: AiMode): boolean {
  * createCheckoutSession() in lib/stripe.ts; if one of them was paid meanwhile, the new session is
  * withdrawn too and the answer is 409 `already_subscribed`. A profile read that fails (not "no
  * row") is 503 `billing_check_failed` before any Stripe call.
+ *
+ * Guards before anything else (lib/billingRequestGuard.ts): 403 `forbidden_origin` unless posted
+ * from a page of this origin, then 429 `rate_limited` (with `Retry-After`) past the per-user billing
+ * limit, counted after authentication.
  */
 export async function POST(request: NextRequest) {
+  const crossOrigin = rejectCrossOriginPost(request)
+  if (crossOrigin) return crossOrigin
+
   const supabase = await createClient()
   const {
     data: { user },
@@ -78,6 +86,9 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const limited = await limitBillingRequest(user.id)
+  if (limited) return limited
 
   // A body that is not JSON, or not a JSON object, is read as empty and gets the 400 below.
   const body = await request.json().catch(() => null)

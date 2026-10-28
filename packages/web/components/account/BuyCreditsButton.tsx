@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
-import { CREDITS_NOT_AVAILABLE_ERROR } from '@/lib/checkoutErrors'
+import { CREDITS_NOT_AVAILABLE_ERROR, RATE_LIMITED_ERROR } from '@/lib/checkoutErrors'
 
 /**
  * Plain "Get more" CTA — starts a Stripe Checkout session at the default
@@ -14,7 +14,8 @@ import { CREDITS_NOT_AVAILABLE_ERROR } from '@/lib/checkoutErrors'
  * maintaining our own quantity picker here.
  *
  * A 403 `credits_not_available` (no paid-up managed Pro AI plan, e.g. a page opened before the plan
- * ended) says who packs are for; any other failure says checkout couldn't start.
+ * ended) says who packs are for; a 429 `rate_limited` asks to wait a few minutes; any other failure
+ * says checkout couldn't start.
  */
 export function BuyCreditsButton() {
   const [loading, setLoading] = useState(false)
@@ -27,6 +28,11 @@ export function BuyCreditsButton() {
       const data = await res.json()
       if (res.status === 403 && data?.error === CREDITS_NOT_AVAILABLE_ERROR) {
         toast.error(t('notAvailable'))
+        setLoading(false)
+        return
+      }
+      if (res.status === 429 && data?.error === RATE_LIMITED_ERROR) {
+        toast.error(t('rateLimited'))
         setLoading(false)
         return
       }

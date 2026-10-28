@@ -6,6 +6,7 @@ import { absoluteUrl } from '@/lib/utils'
 import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
 import { hasProAi, toAiSubscription } from '@/lib/ai-usage'
 import { CREDITS_NOT_AVAILABLE_ERROR } from '@/lib/checkoutErrors'
+import { limitBillingRequest, rejectCrossOriginPost } from '@/lib/billingRequestGuard'
 
 /** Smallest and largest pack, in Price units ($0.05 each): $2.50 to $25. */
 const MIN_PACK_UNITS = 50
@@ -24,8 +25,15 @@ const MAX_PACK_UNITS = 500
  *   `{ error: 'credits_not_available' }` (`CREDITS_NOT_AVAILABLE_ERROR`);
  * - an entitled Pro AI subscriber on their own AI provider key (`ai_mode = 'byok'`): 409
  *   `{ error: 'credits_not_applicable' }` (`AI_ERROR_CODES.creditsNotApplicable`).
+ *
+ * Guards before anything else (lib/billingRequestGuard.ts): 403 `forbidden_origin` unless posted
+ * from a page of this origin, then 429 `rate_limited` (with `Retry-After`) past the per-user billing
+ * limit, counted after authentication.
  */
 export async function POST(request: NextRequest) {
+  const crossOrigin = rejectCrossOriginPost(request)
+  if (crossOrigin) return crossOrigin
+
   const supabase = await createClient()
   const {
     data: { user },
@@ -34,6 +42,9 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const limited = await limitBillingRequest(user.id)
+  if (limited) return limited
 
   // Credit packs are only spent by managed Pro AI, so they are sold only while managed AI is on
   // (the own-key flag alone doesn't sell them) — reject before any Stripe call otherwise.

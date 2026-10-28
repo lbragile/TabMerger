@@ -5,6 +5,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 import { ENTITLED_SUBSCRIPTION_STATUSES } from '@tabmerger/shared'
 import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 const mockGetUser = vi.fn()
 /** profiles: `.select('stripe_customer_id').eq('id', …).single()` */
@@ -33,7 +40,7 @@ vi.mock('@/lib/checkoutGuard', () => ({ checkStripeBeforeCheckout: mockCheckStri
 function makeRequest(body: unknown, headers: Record<string, string> = {}) {
   return new NextRequest('http://localhost/api/checkout', {
     method: 'POST',
-    headers,
+    headers: { ...SAME_ORIGIN_HEADERS, ...headers },
     body: JSON.stringify(body),
   })
 }
@@ -93,7 +100,7 @@ describe('POST /api/checkout', () => {
     const { POST } = await import('@/app/api/checkout/route')
 
     const res = await POST(
-      new NextRequest('http://localhost/api/checkout', { method: 'POST', body: '{"tier": "pro"' })
+      new NextRequest('http://localhost/api/checkout', { method: 'POST', headers: SAME_ORIGIN_HEADERS, body: '{"tier": "pro"' })
     )
     expect(res.status).toBe(400)
     expect(mockCreateCheckoutSession).not.toHaveBeenCalled()

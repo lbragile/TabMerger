@@ -53,6 +53,7 @@
   "alreadySubscribedShown": "Você já tem um plano. Esta página agora o mostra, então você pode alterá-lo aqui.",
   "checkoutFailed": "Não foi possível iniciar o pagamento. Tente novamente em instantes.",
   "portalFailed": "Não foi possível abrir a cobrança. Tente novamente ou escreva para {email} para mudar de plano.",
+  "rateLimited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente.",
   "checkoutCanceled": "Pagamento cancelado. Você não foi cobrado.",
   "cancelAnytime": "Cancele quando quiser pela sua conta — sem fidelidade, sem perguntas.",
   "keepAccess": "Você mantém o acesso até o fim do período de cobrança.",
@@ -97,7 +98,8 @@
       "pay_or_resume": "Seu plano está aguardando um pagamento ou está pausado, por isso ainda não pode ser alterado. Escreva para {email} e ajudaremos você a resolver isso.",
       "switch_needs_support": "Esta mudança de plano não pode ser feita agora. Escreva para {email} e faremos a mudança para você.",
       "price_unavailable": "No momento não é possível mudar para esse plano. Tente novamente mais tarde ou fale conosco.",
-      "switch_failed": "O Stripe não conseguiu iniciar a mudança. Tente novamente, use Gerenciar cobrança na página da sua conta ou escreva para {email}."
+      "switch_failed": "O Stripe não conseguiu iniciar a mudança. Tente novamente, use Gerenciar cobrança na página da sua conta ou escreva para {email}.",
+      "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
     }
   },
   "scheduledChange": {

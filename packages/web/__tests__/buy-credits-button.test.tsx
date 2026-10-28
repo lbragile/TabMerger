@@ -72,6 +72,20 @@ describe('BuyCreditsButton', () => {
     expect(screen.getByRole('button', { name: /get more/i })).toBeEnabled()
   })
 
+  it('asks to wait a few minutes on a 429 rate_limited, and re-enables the button', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({
+      ok: false,
+      status: 429,
+      json: async () => ({ error: 'rate_limited', code: 'rate_limited' }),
+    })))
+    const user = userEvent.setup()
+    render(<BuyCreditsButton />)
+    await user.click(screen.getByRole('button', { name: /get more/i }))
+
+    expect(toastError).toHaveBeenCalledWith('Too many billing requests in a short time. Please wait a few minutes and try again.')
+    expect(screen.getByRole('button', { name: /get more/i })).toBeEnabled()
+  })
+
   it('keeps the generic message for the 409 own-key answer', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({
       ok: false,

@@ -9,6 +9,13 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 const mockGetUser = vi.fn()
 const mockProfile = vi.fn()
@@ -42,6 +49,8 @@ vi.mock('@/lib/supabase/server', () => ({
 
 const mockSubscriptionsRetrieve = vi.fn()
 const mockScheduleRelease = vi.fn()
+// A read: the next invoice, previewed after the release for the success message's amount.
+const mockInvoicePreview = vi.fn()
 // Every other write Stripe offers on the objects involved: none may be called.
 const otherWrites = {
   subscriptionsUpdate: vi.fn(),
@@ -70,7 +79,7 @@ vi.mock('stripe', () => ({
       cancel: otherWrites.scheduleCancel,
       create: otherWrites.scheduleCreate,
     }
-    invoices = { create: otherWrites.invoicesCreate }
+    invoices = { create: otherWrites.invoicesCreate, createPreview: mockInvoicePreview }
     invoiceItems = { create: otherWrites.invoiceItemsCreate }
     customers = { createBalanceTransaction: otherWrites.balanceTransaction }
     creditNotes = { create: otherWrites.creditNotesCreate }
@@ -109,6 +118,7 @@ const stripeSubscription = (overrides: Record<string, unknown> = {}) => ({
 const request = (body?: unknown) =>
   new NextRequest('http://localhost/api/billing/keep-current-plan', {
     method: 'POST',
+    headers: SAME_ORIGIN_HEADERS,
     ...(body ? { body: JSON.stringify(body) } : {}),
   })
 
@@ -135,6 +145,8 @@ describe('POST /api/billing/keep-current-plan', () => {
     mockRow.mockResolvedValue({ data: { id: 'sub_mine' } })
     mockSubscriptionsRetrieve.mockResolvedValue(stripeSubscription())
     mockScheduleRelease.mockResolvedValue({ id: 'sub_sched_mine', status: 'released' })
+    // Pro AI monthly with a 10% coupon: $7.19 due at renewal.
+    mockInvoicePreview.mockResolvedValue({ amount_due: 719, total: 719, currency: 'usd' })
   })
 
   afterEach(() => {
@@ -155,7 +167,10 @@ describe('POST /api/billing/keep-current-plan', () => {
     const res = await post()
 
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true })
+    expect(await res.json()).toEqual({
+      ok: true,
+      renewal: { at: new Date(END * 1000).toISOString(), amount: 7.19, currency: 'USD' },
+    })
     // The profile and the row are both read for the signed-in user only.
     expect(eqCalls).toEqual(
       expect.arrayContaining([
@@ -167,6 +182,69 @@ describe('POST /api/billing/keep-current-plan', () => {
     // No parameters: Stripe's default keeps the subscription exactly as it is.
     expect(mockScheduleRelease.mock.calls).toEqual([['sub_sched_mine']])
     expectNoOtherWrites()
+  })
+
+  it('previews the renewal invoice after the release, for this customer and subscription only', async () => {
+    await post()
+    expect(mockInvoicePreview.mock.calls).toEqual([[{ customer: 'cus_mine', subscription: 'sub_mine' }]])
+    expect(mockInvoicePreview.mock.invocationCallOrder[0]).toBeGreaterThan(mockScheduleRelease.mock.invocationCallOrder[0])
+  })
+
+  it('gives the amount in major units for a zero-decimal currency', async () => {
+    mockInvoicePreview.mockResolvedValue({ amount_due: 1200, total: 1200, currency: 'jpy' })
+    const body = await (await post()).json()
+    expect(body.renewal).toEqual({ at: new Date(END * 1000).toISOString(), amount: 1200, currency: 'JPY' })
+  })
+
+  it('still keeps the plan when the preview fails: the date only, and one warning', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockInvoicePreview.mockRejectedValue(Object.assign(new Error('Server error'), { type: 'StripeAPIError', requestId: 'req_9' }))
+
+    const res = await post()
+
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ ok: true, renewal: { at: new Date(END * 1000).toISOString() } })
+    expect(mockScheduleRelease).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls).toEqual([
+      [
+        'Keep current plan: previewing the renewal invoice of subscription sub_mine failed, so only its date is shown: StripeAPIError, request req_9: Server error',
+      ],
+    ])
+  })
+
+  it('returns no renewal (and previews nothing) when the subscription is set to end', async () => {
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSubscription({ cancel_at_period_end: true }))
+    const res = await post()
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ ok: true })
+    expect(mockInvoicePreview).not.toHaveBeenCalled()
+  })
+
+  it('403 forbidden_origin for a post from another site or subdomain, before reading the session', async () => {
+    const { POST } = await import('@/app/api/billing/keep-current-plan/route')
+    const cases: Array<Record<string, string>> = [{ 'sec-fetch-site': 'cross-site' }, { 'sec-fetch-site': 'same-site' }, {}]
+    for (const headers of cases) {
+      const res = await POST(new NextRequest('http://localhost/api/billing/keep-current-plan', { method: 'POST', headers }))
+      expect(res.status).toBe(403)
+      expect(await res.json()).toEqual({ error: 'forbidden_origin', code: 'forbidden_origin' })
+    }
+    expect(mockGetUser).not.toHaveBeenCalled()
+    expect(mockScheduleRelease).not.toHaveBeenCalled()
+  })
+
+  it('429 rate_limited with Retry-After past the billing limit, before any read or Stripe call', async () => {
+    const { takeRateLimit } = await import('@/lib/rateLimit')
+    vi.mocked(takeRateLimit).mockResolvedValueOnce({ kind: 'limited', retryAfterSeconds: 42 })
+
+    const res = await post()
+
+    expect(res.status).toBe(429)
+    expect(res.headers.get('Retry-After')).toBe('42')
+    expect(await res.json()).toEqual({ error: 'rate_limited', code: 'rate_limited', retryAfterSeconds: 42 })
+    expect(vi.mocked(takeRateLimit).mock.calls[0][1]).toBe('user-1')
+    expect(mockProfile).not.toHaveBeenCalled()
+    expect(mockSubscriptionsRetrieve).not.toHaveBeenCalled()
+    expect(mockScheduleRelease).not.toHaveBeenCalled()
   })
 
   it('releases a server-made schedule too (a not_started one is still pending)', async () => {

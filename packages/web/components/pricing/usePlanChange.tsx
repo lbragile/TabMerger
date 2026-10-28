@@ -173,6 +173,7 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
       setError(data.recorded === true ? pricing('alreadySubscribedShown') : pricing('switchFailed', SUPPORT))
     }
     else if (res.status === 409 && data.error === PAY_OR_RESUME_ERROR) setError(t('errors.pay_or_resume', SUPPORT))
+    else if (res.status === 429 && data.error === PLAN_SWITCH_ERROR_CODES.rateLimited) setError(t('errors.rate_limited'))
     else if (res.status >= 500) setError(pricing('checkoutFailed'))
     else setError(t(`errors.${PLAN_SWITCH_ERROR_CODES.noPaidPlan}`))
     router.refresh()
