@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`024`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`026`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -32,6 +32,8 @@ The migrations in `supabase/migrations/` (`001`–`024`) are the source of truth
 | 022 | `022_ai_byok_and_cost_credits.sql` | `subscriptions.ai_mode` (`managed`/`byok`) and `ai_monthly_credits`. Service-role-only functions `ai_reserve_credits()` and `ai_settle_credits()` for atomic AI credit metering. Converts existing `ai_credit_purchases.credits` to the new unit (1 credit = USD 0.001 of AI cost). |
 | 023 | `023_revoke_client_writes_billing_tables.sql` | `subscriptions`, `ai_usage` and `ai_credit_purchases` are written only by the server: `anon`/`authenticated` lose `INSERT`/`UPDATE`/`DELETE`/`TRUNCATE` and keep `SELECT`. No schema change. |
 | 024 | `024_drop_organize_runs.sql` | Drops `organize_runs` (and its policy) after organize became a synchronous route. Fails instead if any function still names the table. Rollback: re-run 004's DDL; the rows only linked old workflow runs to owners. |
+| 025 | `025_rate_limits.sql` | `rate_limit_counters` table and the service-role-only `rate_limit_take()`: fixed-window, per-key request limits shared by every server instance (first used by the billing routes). See the `rate_limit_counters` section below. |
+| 026 | `026_rate_limit_fixes.sql` | `rate_limit_take()` reads the clock after its advisory lock, never moves a newer window back, runs with `lock_timeout = 1s`, refuses duplicate window lengths and no longer deletes rows itself. Adds the service-role-only `rate_limit_purge(p_limit)` and the pg_cron job `rate-limit-purge` (enables `pg_cron`). `rate_limit_counters` gets fillfactor 70 and autovacuum scale factor 0.05. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -220,6 +222,26 @@ One-time AI credit packs. They are month-scoped and don't roll over. There is on
 
 **RLS:** `"Users can read own credit purchases"`, select only; since 023 `anon`/`authenticated` hold `SELECT` only on the table. Only the service role writes (Stripe webhook, manual grants, the dev-only usage reset). **Index:** `ai_credit_purchases_user_month_idx (user_id, month)`.
 
+### `rate_limit_counters`
+
+Fixed-window request counters (025, fixed in 026), shared by every web server instance. Not linked to any user: `key` is whatever the route counts by (a user id, a client IP; key an IPv6 client by its /64 prefix).
+
+| Column | Type | Constraints |
+|---|---|---|
+| `bucket` | `text` | not null; the route's limit set, 1-64 of `[a-z0-9_:-]` (checked by `rate_limit_take()`) |
+| `key` | `text` | not null; 1-200 characters (checked by `rate_limit_take()`) |
+| `window_seconds` | `integer` | not null, `check (window_seconds between 1 and 86400)` |
+| `window_start` | `timestamptz` | not null; start of the current window, aligned to the Unix epoch |
+| `hits` | `integer` | not null, `check (hits >= 0)` |
+| — | — | PK `(bucket, key, window_seconds)` |
+
+**RLS:** on, with no policy, and `anon`/`authenticated`/PUBLIC hold no privileges: only the two functions below (and the service role) touch it. **Index:** `rate_limit_counters_window_start_idx (window_start)`, for the purge. **Storage (026):** `fillfactor = 70`, `autovacuum_vacuum_scale_factor = 0.05`, since every hit rewrites a row.
+
+Both functions are `security definer` with an empty `search_path`, and only `service_role` can execute them (`anon`/`authenticated` get `42501`).
+
+- `rate_limit_take(p_bucket text, p_key text, p_windows integer[], p_maxes integer[]) returns table(allowed boolean, retry_after_seconds integer)`. Counts one hit in every window (at most `p_maxes[i]` hits per `p_windows[i]` seconds) only when all have room; a refused call counts nothing and `retry_after_seconds` runs to the end of the latest full window (at least 1). Calls for one `(bucket, key)` are serialized by a transaction-scoped advisory lock, waited on for at most `lock_timeout = 1s` (then `55P03`), and the clock is read after the lock. A window is only ever reset forward: a call whose clock is behind a stored window is refused until that window starts, and leaves it unchanged. Raises `22023` for a bad bucket or key, arrays that are not one-dimensional with the same 1-5 elements, a window outside 1-86400 seconds or listed twice, or a max below 1. `packages/web/lib/rateLimit.ts` calls it and answers any error per the bucket's `onError`.
+- `rate_limit_purge(p_limit integer default 1000) returns integer`: deletes up to `p_limit` (1-100000) rows whose window ended more than two days ago, oldest first, skipping rows another transaction has locked, and returns how many it deleted. Run by the pg_cron job `rate-limit-purge` every 10 minutes with `p_limit = 5000`.
+
 ## Grants (migration 010)
 
 Local CLI stacks don't get the schema-level grants to `anon`/`authenticated` that Supabase Cloud provisions implicitly. Without them, Postgres rejects a query before RLS is even evaluated. Migration 010 grants `select, insert, update, delete` on all public tables, and on future ones via `alter default privileges`. RLS remains the access control. Server-written tables are narrower, so a client write is refused by the privilege check (`42501`) even if a write policy were ever added: migration 021 leaves the API roles with `select` only on `profiles`, and migration 023 does the same for `subscriptions`, `ai_usage` and `ai_credit_purchases`.
@@ -243,6 +265,7 @@ erDiagram
 - `profiles` and `subscriptions` are managed by the trigger. Never INSERT into them from app code.
 - `sessions.groups` and `shared_bundles.groups_snapshot` are **copies**. Editing or deleting a group later does not change them.
 - Every FK is `on delete cascade`, so deleting an auth user removes their rows from all nine tables. `groups.archived` is a flag, not a soft-delete table.
+- `rate_limit_counters` has no FK and is not in the diagram: a row keyed by a deleted user's id stays until `rate_limit_purge()` removes it, two days after its window ends, so at most about three days after the key's last hit (windows are at most one day; the purge runs every 10 minutes).
 
 ## TypeScript mirrors (`packages/shared/src/types/index.ts`)
 

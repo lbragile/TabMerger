@@ -1,4 +1,5 @@
 - [CLI migration atomicity](learnings_cli_migration_atomicity.md) — one implicit transaction per file incl. history row; CONCURRENTLY/VACUUM break it; no lock_timeout
 - [Unit-conversion rewrites](learnings_unit_conversion_rewrites.md) — rerun guard incl. rollback; old code writing old unit after apply; inverse exact only where unclamped
 - [DROP TABLE review](learnings_drop_table_review.md) — FK parent (auth.users) gets ACCESS EXCLUSIVE; SET LOCAL in CLI batch; guard regex; deploy order
+- [Counter/rate-limit function review](learnings_counter_function_review.md) — clock after lock; in-path cleanup deadlocks; array-arg shapes; timeouts
 - [Privilege-revoke review checklist](learnings_privilege_revoke_review.md) — has_table_privilege blind to column grants; grantor rule; views/definer paths; pgTAP 42501 ambiguity

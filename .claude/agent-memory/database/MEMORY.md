@@ -10,3 +10,5 @@
 - [CLI runs a migration as one transaction](learnings_cli_migration_transaction.md) — set local lock_timeout works; a raise records nothing; probe recipe via --workdir
 - [Dropping a table safely (024)](learnings_drop_table_dependency_check.md) — RESTRICT misses function bodies; pg_depend pre-check; prosrc guard
 - [Testing a privilege revoke (023)](learnings_privilege_layer_tests.md) — which pgTAP asserts flip, TRUNCATE ignores RLS, column-privilege limits, keep older policy tests green
+- [Forward-only fixed windows (026)](learnings_fixed_window_forward_only.md) — clock after lock; stale caller refused; guarded upsert + row_count raise; lock_timeout bounds advisory waits
+- [pg_cron from a migration (026)](learnings_pg_cron_in_migrations.md) — preloaded hosted+local; cron.schedule by name is idempotent; job runs as postgres; skip-locked purge recipe
