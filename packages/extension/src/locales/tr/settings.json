@@ -108,7 +108,8 @@
     },
     "provider": {
       "label": "AI sağlayıcısı",
-      "description": "API anahtarınızı veren şirketi seçin."
+      "description": "API anahtarınızı veren şirketi seçin.",
+      "placeholder": "Bir sağlayıcı seçin"
     },
     "key": {
       "label": "{{provider}} API anahtarınız",

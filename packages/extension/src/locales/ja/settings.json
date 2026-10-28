@@ -104,7 +104,8 @@
     },
     "provider": {
       "label": "AI プロバイダー",
-      "description": "API キーを発行した会社を選んでください。"
+      "description": "API キーを発行した会社を選んでください。",
+      "placeholder": "プロバイダーを選択"
     },
     "key": {
       "label": "{{provider}} の API キー",

@@ -75,12 +75,42 @@ const CAP = PRO_AI_MONTHLY_CREDITS
 
 /** The own-key settings once loaded (they render nothing while the saved key is read). */
 const ready = () => screen.findByTestId('ai-plan-line')
-const providerRadio = (name: string) => screen.getByRole('radio', { name }) as HTMLInputElement
-const modelGroup = () => screen.getByRole('group', { name: t('settings.ai.model.label') })
-const modelValues = () => within(modelGroup()).getAllByRole('radio').map((r) => (r as HTMLInputElement).value)
+const user = () => userEvent.setup({ pointerEventsCheck: 0 })
+/** The provider dropdown's trigger, named by its "AI provider" heading. */
+const providerSelect = () => screen.getByRole('combobox', { name: t('settings.ai.provider.label') })
+/** The model dropdown's trigger, named by its "AI model" heading. */
+const modelSelect = () => screen.getByRole('combobox', { name: t('settings.ai.model.label') })
+const optionValue = (option: HTMLElement, prefix: string) => option.getAttribute('data-testid')!.slice(prefix.length)
+
+/** Opens a dropdown and returns its options; `close()` it again before touching the rest. */
+async function openSelect(trigger: HTMLElement) {
+  await user().click(trigger)
+  return screen.findAllByRole('option')
+}
+
+async function closeSelect() {
+  await user().keyboard('{Escape}')
+  await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull())
+}
+
+/** The model dropdown's choices, in order (opens and closes it). */
+async function modelValues() {
+  const options = await openSelect(modelSelect())
+  const values = options.map((o) => optionValue(o, 'ai-model-'))
+  await closeSelect()
+  return values
+}
+
+/** Opens the model dropdown and returns one option (left open). */
+async function modelOption(choice: string) {
+  await openSelect(modelSelect())
+  return screen.getByTestId(`ai-model-${choice}`)
+}
 
 async function pick(label: 'Anthropic' | 'OpenAI' | 'Gemini') {
-  await userEvent.click(providerRadio(label))
+  await openSelect(providerSelect())
+  await user().click(screen.getByRole('option', { name: label }))
+  await waitFor(() => expect(providerSelect().textContent).toBe(label))
   await screen.findByTestId('ai-byok-key-setting')
 }
 
@@ -90,6 +120,10 @@ async function typeAndSave(key: string) {
 }
 
 beforeEach(async () => {
+  // Radix Select needs these in jsdom
+  Element.prototype.scrollIntoView = vi.fn()
+  Element.prototype.hasPointerCapture = vi.fn(() => false)
+  Element.prototype.releasePointerCapture = vi.fn()
   vi.clearAllMocks()
   flags.managed = true
   flags.byok = true
@@ -133,40 +167,42 @@ describe('AiSettings — plan line', () => {
 })
 
 describe('AiSettings — managed plans are unchanged', () => {
-  it('no provider picker and no key field: Anthropic models, with the stored choice checked', () => {
+  it('no provider picker and no key field: Anthropic models, with the stored choice shown', async () => {
     renderSettings('claude-sonnet-5-5')
     expect(screen.queryByTestId('ai-provider-picker')).toBeNull()
-    expect(screen.queryByRole('group', { name: t('settings.ai.provider.label') })).toBeNull()
+    expect(screen.queryByRole('combobox', { name: t('settings.ai.provider.label') })).toBeNull()
     expect(screen.queryByTestId('ai-byok-key-input')).toBeNull()
     expect(screen.queryByTestId('ai-provider-links')).toBeNull()
-    const radios = screen.getAllByRole('radio') as HTMLInputElement[]
-    expect(radios.map((r) => r.value)).toEqual(['auto', ...aiModelsForProvider('anthropic')])
-    expect(radios.find((r) => r.checked)?.value).toBe('claude-sonnet-5-5')
-    for (const id of aiModelsForProvider('anthropic')) expect(screen.getByText(AI_MODELS[id].label)).toBeTruthy()
+    expect(modelSelect().textContent).toBe(AI_MODELS['claude-sonnet-5-5'].label)
+    const options = await openSelect(modelSelect())
+    expect(options.map((o) => optionValue(o, 'ai-model-'))).toEqual(['auto', ...aiModelsForProvider('anthropic')])
+    expect(options.find((o) => o.getAttribute('aria-selected') === 'true')?.getAttribute('data-testid')).toBe('ai-model-claude-sonnet-5-5')
+    for (const id of aiModelsForProvider('anthropic')) expect(screen.getByRole('option', { name: new RegExp(`^${AI_MODELS[id].label}`) })).toBeTruthy()
     expect(screen.queryByText(AI_MODELS['gpt-6-luna'].label)).toBeNull()
   })
 
   it('ignores a provider picked for an own key on this device', async () => {
     await setPickedByokProvider('u1', 'google')
     renderSettings()
+    await waitFor(async () => expect(await getPickedByokProvider('u1')).toBe('google'))
     // the Anthropic list stays, whatever an own-key pick says
-    await waitFor(() => expect(screen.getAllByRole('radio').map((r) => (r as HTMLInputElement).value)).toEqual(['auto', ...aiModelsForProvider('anthropic')]))
+    expect(await modelValues()).toEqual(['auto', ...aiModelsForProvider('anthropic')])
   })
 
-  it('an unknown stored choice shows Auto checked', () => {
+  it('an unknown stored choice shows Auto', () => {
     renderSettings('gpt-9')
-    expect((screen.getByRole('radio', { name: /auto/i }) as HTMLInputElement).checked).toBe(true)
+    expect(modelSelect().textContent).toBe(t('settings.ai.model.auto'))
   })
 
   it('choosing a model updates the draft', async () => {
     const onChange = renderSettings('auto')
-    await userEvent.click(screen.getByTestId('ai-model-claude-haiku-5-5'))
+    await user().click(await modelOption('claude-haiku-5-5'))
     expect(onChange).toHaveBeenCalledWith('claude-haiku-5-5')
   })
 
-  it('shows credits per example from the shared estimate, and organizes a month', () => {
+  it('shows credits per example from the shared estimate, and organizes a month', async () => {
     renderSettings()
-    const opus = screen.getByTestId('ai-model-claude-opus-5-5')
+    const opus = await modelOption('claude-opus-5-5')
     for (const { action, tabs } of AI_ESTIMATE_EXAMPLES) {
       const credits = estimateAiCredits('claude-opus-5-5', action, tabs)
       expect(opus.textContent).toContain(t('settings.ai.estimate.credits', { count: credits, formatted: formatNumber(credits) }))
@@ -191,18 +227,21 @@ describe('AiSettings — own key: provider first', () => {
     mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'byok' })
   })
 
-  it('with nothing picked, shows only the labelled provider picker: no key field, links or models', async () => {
+  it('with nothing picked, shows only the labelled provider dropdown with its placeholder: no key field, links or models', async () => {
     renderSettings()
     await ready()
-    const picker = screen.getByRole('group', { name: t('settings.ai.provider.label') })
-    const radios = within(picker).getAllByRole('radio') as HTMLInputElement[]
-    expect(radios.map((r) => r.value)).toEqual(['anthropic', 'openai', 'google'])
-    expect(radios.some((r) => r.checked)).toBe(false)
+    const picker = providerSelect()
+    expect(picker.textContent).toBe(t('settings.ai.provider.placeholder'))
     expect(picker.getAttribute('aria-describedby')).toBeTruthy()
     expect(screen.queryByTestId('ai-byok-key-input')).toBeNull()
     expect(screen.queryByTestId('ai-provider-links')).toBeNull()
     expect(screen.queryByRole('link')).toBeNull()
-    expect(screen.queryByRole('group', { name: t('settings.ai.model.label') })).toBeNull()
+    expect(screen.queryByRole('combobox', { name: t('settings.ai.model.label') })).toBeNull()
+    expect(screen.queryByTestId('ai-model-picker')).toBeNull()
+    const options = await openSelect(picker)
+    expect(options.map((o) => optionValue(o, 'ai-provider-'))).toEqual(['anthropic', 'openai', 'google'])
+    expect(options.some((o) => o.getAttribute('aria-selected') === 'true')).toBe(false)
+    await closeSelect()
     // The dev-only test key needs a provider: none yet, even in this dev build
     expect(import.meta.env.DEV).toBe(true)
     expect(screen.queryByTestId('ai-byok-test-key')).toBeNull()
@@ -230,7 +269,7 @@ describe('AiSettings — own key: provider first', () => {
       AI_PROVIDER_KEY_LINKS[provider].keys
     )
     // models show before any key is saved, and only this provider's
-    expect(modelValues()).toEqual(['auto', ...aiModelsForProvider(provider)])
+    expect(await modelValues()).toEqual(['auto', ...aiModelsForProvider(provider)])
     expect(screen.queryByTestId('ai-byok-key-masked')).toBeNull()
   })
 
@@ -265,34 +304,38 @@ describe('AiSettings — own key: provider first', () => {
 
     renderSettings()
     await ready()
-    await waitFor(() => expect(providerRadio('OpenAI').checked).toBe(true))
+    await waitFor(() => expect(providerSelect().textContent).toBe('OpenAI'))
     expect(screen.getByTestId('ai-byok-key-input')).toBeTruthy()
-    expect(modelValues()).toEqual(['auto', ...aiModelsForProvider('openai')])
+    expect(await modelValues()).toEqual(['auto', ...aiModelsForProvider('openai')])
   })
 
   it('preselects the saved key’s provider and shows the key masked with Replace and Remove', async () => {
     await saveByokKey('u1', GOOGLE_KEY)
     renderSettings()
     await ready()
-    expect(providerRadio('Gemini').checked).toBe(true)
+    expect(providerSelect().textContent).toBe('Gemini')
     expect(screen.getByTestId('ai-byok-key-masked').textContent).toBe('AIza…zzzz')
     expect(screen.getByRole('button', { name: t('settings.ai.key.replace') })).toBeTruthy()
     expect(screen.getByRole('button', { name: t('settings.ai.key.remove') })).toBeTruthy()
-    expect(modelValues()).toEqual(['auto', ...aiModelsForProvider('google')])
+    expect(await modelValues()).toEqual(['auto', ...aiModelsForProvider('google')])
     expect(screen.queryByTestId('ai-byok-switch-note')).toBeNull()
   })
 
   it("own key: each model has a cost level and no figures", async () => {
     await saveByokKey('u1', GOOGLE_KEY)
-    renderSettings()
+    renderSettings('gemini-4-argon')
     await ready()
+    const picker = screen.getByTestId('ai-model-picker')
+    expect(screen.getByTestId('ai-model-selected-info').textContent).toBe(t('settings.ai.cost.high'))
+    await openSelect(modelSelect())
     expect(screen.getByTestId('ai-model-gemini-3.1-flash-lite').textContent).toContain(t('settings.ai.cost.low'))
     expect(screen.getByTestId('ai-model-gemini-3.8-flash').textContent).toContain(t('settings.ai.cost.medium'))
     expect(screen.getByTestId('ai-model-gemini-4-argon').textContent).toContain(t('settings.ai.cost.high'))
-    const picker = modelGroup()
-    expect(picker.textContent).not.toMatch(/[$€£]|US\$|credit/i)
-    for (const el of picker.querySelectorAll('[aria-label],[title]')) {
-      expect(`${el.getAttribute('aria-label') ?? ''}${el.getAttribute('title') ?? ''}`).not.toMatch(/[$]/)
+    for (const scope of [picker, screen.getByRole('listbox')]) {
+      expect(scope.textContent).not.toMatch(/[$€£]|US\$|credit/i)
+      for (const el of scope.querySelectorAll('[aria-label],[title]')) {
+        expect(`${el.getAttribute('aria-label') ?? ''}${el.getAttribute('title') ?? ''}`).not.toMatch(/[$]/)
+      }
     }
     expect(screen.getByText(t('settings.ai.model.byokDescription'))).toBeTruthy()
   })
@@ -300,25 +343,32 @@ describe('AiSettings — own key: provider first', () => {
   it('own key, Auto: names the cost level of the model it uses for each example', async () => {
     await saveByokKey('u1', OPENAI_KEY)
     renderSettings()
-    const auto = await screen.findByTestId('ai-model-auto')
-    for (const e of estimatesFor('auto', 'openai')) {
+    await ready()
+    await waitFor(() => expect(providerSelect().textContent).toBe('OpenAI'))
+    const expected = estimatesFor('auto', 'openai').map((e) => {
       const action = t(`settings.ai.estimate.action.${e.action}`, { count: e.tabs })
-      expect(auto.textContent).toContain(t('settings.ai.estimate.item', { action, amount: t(`settings.ai.cost.${costLevel(e.model)}`) }))
-    }
+      return t('settings.ai.estimate.item', { action, amount: t(`settings.ai.cost.${costLevel(e.model)}`) })
+    })
+    // under the row while Auto is chosen, and in the Auto option
+    for (const item of expected) expect(screen.getByTestId('ai-model-selected-info').textContent).toContain(item)
+    const auto = await modelOption('auto')
+    for (const item of expected) expect(auto.textContent).toContain(item)
   })
 
   it('a stored model of another provider shows as Auto', async () => {
     await saveByokKey('u1', OPENAI_KEY)
     renderSettings('claude-opus-5-5')
     await ready()
-    await waitFor(() => expect((within(modelGroup()).getByRole('radio', { name: /auto/i }) as HTMLInputElement).checked).toBe(true))
+    await waitFor(() => expect(providerSelect().textContent).toBe('OpenAI'))
+    expect(modelSelect().textContent).toBe(t('settings.ai.model.auto'))
+    expect((await modelOption('auto')).getAttribute('aria-selected')).toBe('true')
   })
 
   it('choosing a model of a picked provider before saving a key updates the draft', async () => {
     const onChange = renderSettings()
     await ready()
     await pick('OpenAI')
-    await userEvent.click(screen.getByTestId('ai-model-gpt-6-astra'))
+    await user().click(await modelOption('gpt-6-astra'))
     expect(onChange).toHaveBeenCalledWith('gpt-6-astra')
   })
 })
@@ -378,7 +428,7 @@ describe('AiSettings — own key: key checks and save', () => {
     expect(mockAiPost).toHaveBeenCalledWith('/api/ai/byok/verify', {}, 'tok', { byokKey: KEY })
     expect(await getByokKey('u1')).toEqual({ key: KEY, provider: 'anthropic' })
     await waitFor(async () => expect(await getPickedByokProvider('u1')).toBeNull())
-    expect(providerRadio('Anthropic').checked).toBe(true)
+    expect(providerSelect().textContent).toBe('Anthropic')
     // only the masked form is on screen
     expect(document.body.textContent).not.toContain(KEY)
   })
@@ -433,9 +483,9 @@ describe('AiSettings — own key: key checks and save', () => {
     await userEvent.click(screen.getByRole('button', { name: t('settings.ai.key.remove') }))
     await waitFor(() => expect(document.activeElement).toBe(screen.getByTestId('ai-byok-key-input')))
     expect(await getByokKey('u1')).toBeNull()
-    expect(providerRadio('Anthropic').checked).toBe(true)
+    expect(providerSelect().textContent).toBe('Anthropic')
     expect(await getPickedByokProvider('u1')).toBe('anthropic')
-    expect(modelValues()).toEqual(['auto', ...aiModelsForProvider('anthropic')])
+    expect(await modelValues()).toEqual(['auto', ...aiModelsForProvider('anthropic')])
   })
 
   it('Replace then Cancel returns to the masked key and puts focus back on Replace', async () => {
@@ -467,17 +517,17 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
     expect(input.getAttribute('aria-describedby')?.split(' ')).toContain(note.id)
     expect((input as HTMLInputElement).placeholder).toBe('AIza…')
     expect(screen.queryByTestId('ai-byok-key-masked')).toBeNull()
-    expect(modelValues()).toEqual(['auto', ...aiModelsForProvider('google')])
+    expect(await modelValues()).toEqual(['auto', ...aiModelsForProvider('google')])
     // the saved key is untouched, and the plan line still names it
     expect(await getByokKey('u1')).toEqual({ key: OPENAI_KEY, provider: 'openai' })
     expect(screen.getByTestId('ai-plan-line').textContent).toBe(t('settings.ai.plan.byok', { provider: 'OpenAI' }))
 
     await userEvent.click(screen.getByTestId('ai-byok-cancel'))
-    await waitFor(() => expect(providerRadio('OpenAI').checked).toBe(true))
-    expect(document.activeElement).toBe(providerRadio('OpenAI'))
+    await waitFor(() => expect(providerSelect().textContent).toBe('OpenAI'))
+    await waitFor(() => expect(document.activeElement).toBe(providerSelect()))
     expect(screen.getByTestId('ai-byok-key-masked').textContent).toBe('sk-…yyyy')
     expect(screen.queryByTestId('ai-byok-switch-note')).toBeNull()
-    expect(modelValues()).toEqual(['auto', ...aiModelsForProvider('openai')])
+    expect(await modelValues()).toEqual(['auto', ...aiModelsForProvider('openai')])
     await waitFor(async () => expect(await getPickedByokProvider('u1')).toBeNull())
   })
 
@@ -485,7 +535,7 @@ describe('AiSettings — own key: switching provider with a key saved', () => {
     await setPickedByokProvider('u1', 'anthropic')
     renderSettings()
     await ready()
-    expect(providerRadio('Anthropic').checked).toBe(true)
+    expect(providerSelect().textContent).toBe('Anthropic')
     expect(screen.getByTestId('ai-byok-switch-note').textContent).toBe(t('settings.ai.key.switching', { saved: 'OpenAI', provider: 'Anthropic' }))
   })
 

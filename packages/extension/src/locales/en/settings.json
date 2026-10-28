@@ -108,7 +108,8 @@
     },
     "provider": {
       "label": "AI provider",
-      "description": "Pick the company that issued your API key."
+      "description": "Pick the company that issued your API key.",
+      "placeholder": "Choose a provider"
     },
     "key": {
       "label": "Your {{provider}} API key",

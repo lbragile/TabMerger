@@ -71,7 +71,8 @@ Non-obvious points:
   `$'\b'` after scripted edits.
 - **`.gitignore` ignores any folder named `build`**, including under `src/__tests__/` — a test placed in `__tests__/unit/build/` silently never gets committed. Check new paths with `git check-ignore -v`.
 
-- **Provider first (Settings → AI, own key).** `AiProviderPicker` (native radios) comes before
+- **Provider first (Settings → AI, own key).** `AiProviderPicker` (a Select dropdown since the
+  radios were replaced, see [[learnings-ai-settings-dropdowns]]) comes before
   anything provider-specific. Shown provider = `useByokKey().picked ?? saved?.provider`; the
   pick lives in `chrome.storage.local` `aiByokProvider` (`{ userId, provider }`), is forgotten
   when it equals the saved key's provider or a key is saved, and `clearByokKey` removes it too

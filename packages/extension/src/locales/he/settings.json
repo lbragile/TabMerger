@@ -112,7 +112,8 @@
     },
     "provider": {
       "label": "ספק AI",
-      "description": "בחרו את החברה שהנפיקה את מפתח ה-API שלכם."
+      "description": "בחרו את החברה שהנפיקה את מפתח ה-API שלכם.",
+      "placeholder": "בחרו ספק"
     },
     "key": {
       "label": "מפתח ה-API שלכם מ-{{provider}}",

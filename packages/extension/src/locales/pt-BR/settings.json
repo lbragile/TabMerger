@@ -112,7 +112,8 @@
     },
     "provider": {
       "label": "Provedor de IA",
-      "description": "Escolha a empresa que emitiu sua chave de API."
+      "description": "Escolha a empresa que emitiu sua chave de API.",
+      "placeholder": "Escolha um provedor"
     },
     "key": {
       "label": "Sua chave de API de {{provider}}",

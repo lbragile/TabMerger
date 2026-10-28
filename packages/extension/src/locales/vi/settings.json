@@ -104,7 +104,8 @@
     },
     "provider": {
       "label": "Nhà cung cấp AI",
-      "description": "Chọn công ty đã cấp khóa API của bạn."
+      "description": "Chọn công ty đã cấp khóa API của bạn.",
+      "placeholder": "Chọn nhà cung cấp"
     },
     "key": {
       "label": "Khóa API {{provider}} của bạn",

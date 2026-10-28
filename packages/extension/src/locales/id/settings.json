@@ -104,7 +104,8 @@
     },
     "provider": {
       "label": "Penyedia AI",
-      "description": "Pilih perusahaan yang menerbitkan kunci API Anda."
+      "description": "Pilih perusahaan yang menerbitkan kunci API Anda.",
+      "placeholder": "Pilih penyedia"
     },
     "key": {
       "label": "Kunci API {{provider}} Anda",

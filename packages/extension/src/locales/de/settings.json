@@ -108,7 +108,8 @@
     },
     "provider": {
       "label": "KI-Anbieter",
-      "description": "Wähle das Unternehmen, das deinen API-Schlüssel ausgestellt hat."
+      "description": "Wähle das Unternehmen, das deinen API-Schlüssel ausgestellt hat.",
+      "placeholder": "Anbieter wählen"
     },
     "key": {
       "label": "Dein {{provider}}-API-Schlüssel",

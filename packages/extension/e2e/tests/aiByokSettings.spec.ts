@@ -4,8 +4,8 @@ import { E2E_USER_ID, openPopup, seedAndReload, signInAsPro, waitForStoredGroup 
 import { ANOTHER_GROUP, NOW_OPEN, SAVED_GROUP } from '../seed';
 
 /**
- * Settings → AI for a Pro AI subscriber on their own key (`ai_mode: 'byok'`): provider first, then
- * that provider's key field, setup links and models; a key of another provider is refused before
+ * Settings → AI for a Pro AI subscriber on their own key (`ai_mode: 'byok'`): provider first (a dropdown), then
+ * that provider's key field, setup links and models (a dropdown); a key of another provider is refused before
  * any request; switching provider keeps the saved key until Cancel or a new save.
  *
  * Needs a build with own-key AI on (`VITE_AI_BYOK_ENABLED=true`, as in a local `.env.local`
@@ -44,13 +44,32 @@ async function signInAsProAiByok(page: Page): Promise<{ verifyCalls: () => numbe
 }
 
 /**
- * Picks a provider. Not `check()`: the radio is controlled by a query whose update reaches React a
- * tick after the click, so `check()` can read the old state and fail; wait for the new one instead.
+ * The provider dropdown's trigger. By test id: while a Radix Select list is open, everything else
+ * (its own trigger included) is aria-hidden, so a role query would not find it.
+ */
+const providerSelect = (page: Page) => page.getByTestId('ai-provider-select');
+const modelSelect = (page: Page) => page.getByTestId('ai-model-select');
+
+/**
+ * Picks a provider from the dropdown. The trigger shows a query's value, whose update reaches
+ * React a tick after the pick, so wait for it to show the new provider.
  */
 async function pickProvider(page: Page, name: string): Promise<void> {
-  const radio = page.getByRole('group', { name: 'AI provider' }).getByRole('radio', { name });
-  await radio.click();
-  await expect(radio).toBeChecked();
+  await providerSelect(page).click();
+  await page.getByRole('option', { name, exact: true }).click();
+  await expect(providerSelect(page)).toHaveText(name);
+}
+
+/**
+ * Opens the model dropdown, checks which models it offers (and that each option carries its
+ * secondary line), then closes it with Escape, which closes only the list, not Settings.
+ */
+async function expectModels(page: Page, offered: string[], absent: string[]): Promise<void> {
+  await modelSelect(page).click();
+  for (const id of offered) await expect(page.getByTestId(`ai-model-${id}`)).toBeVisible();
+  for (const id of absent) await expect(page.getByTestId(`ai-model-${id}`)).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('listbox')).toHaveCount(0);
 }
 
 async function openAiSettings(page: Page): Promise<boolean> {
@@ -72,12 +91,14 @@ test.describe('Settings → AI, own key', () => {
 
     test.skip(!(await openAiSettings(page)), 'this build has own-key AI off (VITE_AI_BYOK_ENABLED), so there is no AI tab');
 
-    const providers = page.getByRole('group', { name: 'AI provider' });
-    const models = page.getByRole('group', { name: 'AI model' });
+    // Dropdowns named by their row headings
+    const providers = page.getByRole('combobox', { name: 'AI provider' });
+    const models = page.getByRole('combobox', { name: 'AI model' });
     const keyInput = page.getByTestId('ai-byok-key-input');
 
-    // Nothing provider-specific before a pick
+    // Nothing provider-specific before a pick: only the provider dropdown, with its placeholder
     await expect(providers).toBeVisible();
+    await expect(providers).toHaveText('Choose a provider');
     await expect(keyInput).toHaveCount(0);
     await expect(page.getByTestId('ai-provider-links')).toHaveCount(0);
     await expect(models).toHaveCount(0);
@@ -88,9 +109,29 @@ test.describe('Settings → AI, own key', () => {
     await expect(page.getByTestId('ai-provider-guide-link')).toHaveAttribute('href', 'https://ai.google.dev/gemini-api/docs/api-key');
     await expect(page.getByTestId('ai-provider-keys-link')).toHaveAttribute('href', 'https://aistudio.google.com/apikey');
     await expect(page.getByTestId('ai-provider-keys-link')).toHaveAttribute('rel', 'noopener noreferrer');
-    await expect(models.getByTestId('ai-model-gemini-4-argon')).toBeVisible();
-    await expect(models.getByTestId('ai-model-gpt-6-astra')).toHaveCount(0);
-    await expect(models.getByTestId('ai-model-claude-opus-5-5')).toHaveCount(0);
+    await expect(models).toHaveText('Auto');
+    await expectModels(page, ['auto', 'gemini-3.1-flash-lite', 'gemini-4-argon'], ['gpt-6-astra', 'claude-opus-5-5']);
+
+    // The open model list is portaled out of the dialog and stays inside the 800×600 popup; each
+    // option has its cost level, and the picked model's stays under the row once the list closes
+    await modelSelect(page).click();
+    const list = page.getByRole('listbox');
+    const box = (await list.boundingBox())!;
+    const viewport = page.viewportSize()!;
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.y).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
+    expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
+    await expect(page.getByTestId('ai-model-gemini-4-argon')).toContainText('Highest cost');
+    await page.getByTestId('ai-model-gemini-4-argon').click();
+    await expect(models).toHaveText('Gemini 4 Argon');
+    await expect(page.getByTestId('ai-model-selected-info')).toHaveText('Highest cost');
+    // No sideways overflow in the Settings tab panel's scroll box
+    const overflow = await page.getByTestId('ai-model-picker').evaluate((el) => {
+      const box = el.closest('.overflow-y-auto')!;
+      return box.scrollWidth - box.clientWidth;
+    });
+    expect(overflow).toBeLessThanOrEqual(0);
 
     // An OpenAI key under Gemini: inline error tied to the field, nothing sent
     await keyInput.fill(OPENAI_KEY);
@@ -111,10 +152,10 @@ test.describe('Settings → AI, own key', () => {
     await pickProvider(page, 'OpenAI');
     await expect(page.getByTestId('ai-byok-switch-note')).toHaveText('Your saved Gemini key stays in use until you save a key from OpenAI.');
     await expect(keyInput).toHaveAttribute('placeholder', 'sk-proj-…');
-    await expect(models.getByTestId('ai-model-gpt-6-astra')).toBeVisible();
+    await expectModels(page, ['gpt-6-astra'], ['gemini-4-argon']);
     await page.getByTestId('ai-byok-cancel').click();
-    await expect(providers.getByRole('radio', { name: 'Gemini' })).toBeChecked();
-    await expect(providers.getByRole('radio', { name: 'Gemini' })).toBeFocused();
+    await expect(providers).toHaveText('Gemini');
+    await expect(providers).toBeFocused();
     await expect(page.getByTestId('ai-byok-key-masked')).toHaveText('AIza…zzzz');
 
     // A pick without a key survives closing and reopening Settings
@@ -123,7 +164,7 @@ test.describe('Settings → AI, own key', () => {
     await page.keyboard.press('Escape');
     await expect(providers).toHaveCount(0);
     expect(await openAiSettings(page)).toBe(true);
-    await expect(providers.getByRole('radio', { name: 'Anthropic' })).toBeChecked();
+    await expect(providers).toHaveText('Anthropic');
     await expect(page.getByTestId('ai-byok-switch-note')).toHaveText('Your saved Gemini key stays in use until you save a key from Anthropic.');
   });
 
@@ -144,7 +185,7 @@ test.describe('Settings → AI, own key', () => {
     const aiTab = page.getByRole('tab', { name: /^ai$/i });
     await expect(aiTab).toHaveAttribute('aria-selected', 'true');
     await expect(aiTab).toBeFocused();
-    await expect(page.getByRole('group', { name: 'AI provider' })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'AI provider' })).toBeVisible();
   });
 
   test('header AI menu: "Name group" offers suggestions to pick from for the active saved group, and is disabled on Now Open', async ({ context, extensionId }) => {

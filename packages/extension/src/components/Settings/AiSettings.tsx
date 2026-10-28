@@ -33,7 +33,7 @@ export function AiSettings({ model, onModelChange }: AiSettingsProps) {
   const { aiFeatures, aiMode } = useEntitlements();
   const usage = useAiUsage();
   const byokKey = useByokKey();
-  const pickerRef = useRef<HTMLFieldSetElement>(null);
+  const pickerRef = useRef<HTMLButtonElement>(null);
   const [focusPicker, setFocusPicker] = useState(false);
   const byok = aiMode === 'byok';
   // Credits exist only on TabMerger's key: managed Pro AI, while that option is live
@@ -41,11 +41,11 @@ export function AiSettings({ model, onModelChange }: AiSettingsProps) {
   const saved = byokKey.saved;
   const provider: AiProvider | null = byok ? (byokKey.picked ?? saved?.provider ?? null) : MANAGED_AI_PROVIDER;
 
-  // After Cancel on a provider switch, focus returns to the saved key's provider once it is
-  // checked again (the pick's query cache update can land a render after the click)
+  // After Cancel on a provider switch, focus returns to the provider dropdown once it shows the
+  // saved key's provider again (the pick's query cache update can land a render after the click)
   useEffect(() => {
-    if (!focusPicker || !saved || provider !== saved.provider) return;
-    pickerRef.current?.querySelector<HTMLInputElement>('input:checked')?.focus();
+    if (!focusPicker || !saved || provider !== saved.provider || !pickerRef.current) return;
+    pickerRef.current.focus();
     setFocusPicker(false);
   }, [focusPicker, provider, saved]);
 

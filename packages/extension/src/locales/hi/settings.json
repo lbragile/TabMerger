@@ -108,7 +108,8 @@
     },
     "provider": {
       "label": "AI प्रदाता",
-      "description": "वह कंपनी चुनें जिसने आपकी API कुंजी जारी की है।"
+      "description": "वह कंपनी चुनें जिसने आपकी API कुंजी जारी की है।",
+      "placeholder": "प्रदाता चुनें"
     },
     "key": {
       "label": "आपकी {{provider}} API कुंजी",

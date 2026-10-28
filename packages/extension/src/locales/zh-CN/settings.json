@@ -104,7 +104,8 @@
     },
     "provider": {
       "label": "AI 服务商",
-      "description": "选择签发您 API 密钥的公司。"
+      "description": "选择签发您 API 密钥的公司。",
+      "placeholder": "选择服务商"
     },
     "key": {
       "label": "您的 {{provider}} API 密钥",
