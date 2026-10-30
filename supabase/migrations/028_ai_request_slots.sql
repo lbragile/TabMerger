@@ -59,13 +59,21 @@
 --      whenever a call is counted.
 --   7. Checks the end state and fails the migration if it is not the one described above.
 --
+-- Transaction: the file opens its own (`begin;` ... `commit;`). The Supabase CLI (db push,
+-- migration up) sends a file's statements as one batch that is not a transaction block, so
+-- without it `set local lock_timeout` warns and can't be relied on. Inside the block every
+-- statement, the pg_cron schedule and the end-state check included, commits or rolls back
+-- together; on any error the CLI stops before it records the version.
+--
 -- Re-running: the table and indexes use `if not exists`, the functions `create or replace`,
 -- grants are idempotent, cron.schedule() with a job name updates the existing job, and the job
 -- is set active again.
 --
 -- Rollback, in this order (deploy the web change that stops calling these first: the web app
--- refuses AI requests with 503 while the slot functions are missing):
---   set lock_timeout = '5s';
+-- refuses AI requests with 503 while the slot functions are missing), in one explicit
+-- transaction (`set local` needs a transaction block):
+--   begin;
+--   set local lock_timeout = '5s';
 --   select cron.unschedule(jobid) from cron.job where jobname = 'ai-slot-purge';
 --   drop function if exists public.rate_limit_peek(text, text, integer[], integer[]);
 --   drop function if exists public.ai_credits_exhausted(uuid, text);
@@ -73,6 +81,10 @@
 --   drop function if exists public.ai_slot_release(uuid, uuid);
 --   drop function if exists public.ai_slot_acquire(uuid, integer, integer);
 --   drop table if exists public.ai_request_slots;
+--   commit;
+
+-- One transaction for the whole file (see "Transaction" above); `commit;` is the last line.
+begin;
 
 -- The foreign key below locks auth.users; never wait long for it.
 set local lock_timeout = '5s';
@@ -479,3 +491,5 @@ begin
   end if;
 end;
 $$;
+
+commit;

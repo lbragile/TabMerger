@@ -1,23 +1,23 @@
 ---
 name: cli-migration-transaction
-description: The Supabase CLI applies each migration file as one transaction, so SET LOCAL (e.g. lock_timeout) in a migration works and a failing statement records nothing; how to probe CLI behaviour without touching the real migration history
+description: The Supabase CLI applies a migration file as one atomic batch (a failing statement records nothing) that is NOT a transaction block, so LOCK TABLE / SET LOCAL need the file's own begin/commit; how to probe CLI behaviour without touching the real migration history
 metadata:
   type: reference
 ---
 
-**One file = one transaction.** `supabase migration up` sends a migration file's statements
-(plus the `schema_migrations` insert) as one batch, which Postgres runs as one transaction.
-Verified on CLI v2.118 with a probe migration: `set local lock_timeout = '5s'` was still `5s`
-in a later statement of the same file, and when the last statement raised, a table created
-earlier in the file did not exist afterwards and no version was recorded.
+**One file = one atomic batch, not a transaction block.** `supabase migration up` and
+`supabase db push` send a migration file's statements (plus the `schema_migrations` insert) as
+one batch. Postgres runs it atomically: when the last statement raised, a table created earlier
+in the file did not exist afterwards and no version was recorded (CLI v2.118). But it is not a
+transaction block, so `lock table` fails with 25P01 and `set local` warns and can't be relied
+on. A file that needs either must open its own `begin;` ... `commit;`; see
+[[cli-batch-needs-begin-commit]].
 
 Consequences:
-- `set local lock_timeout = '5s';` at the top of a migration is the right way to make an
-  ACCESS EXCLUSIVE `alter table` (e.g. `add column ... check`) fail fast instead of queueing
-  every reader of a hot table (`subscriptions`, read by `has_cloud_sync()` on every sync write)
-  behind it. 022 does this.
+- `set local lock_timeout = '5s';` right after the file's own `begin;` is the right way to make
+  an ACCESS EXCLUSIVE `alter table` fail fast instead of queueing every reader of a hot table
+  (`subscriptions`, read by `has_cloud_sync()` on every sync write) behind it.
 - An end-state `do` block that raises undoes the whole migration, so it is a real guard.
-- Don't put `begin;`/`commit;` in migration files; the CLI already wraps them.
 
 **Probe recipe (no trace left):** copy `supabase/config.toml` and `supabase/migrations/*.sql`
 into `<scratchpad>/wd/supabase/`, add `<next>_probe.sql` whose last statement is

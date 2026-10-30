@@ -12,7 +12,9 @@ file defines. Example (027): 022's `ai_reserve_credits` reads `subscriptions` an
 `ai_credit_purchases`, then upserts `ai_usage`. A migration that ALTERs `ai_usage` first and
 `ai_credit_purchases` second deadlocks with a reservation caught between its read and its upsert.
 
-**Fix: one `lock table` block right after `set local lock_timeout`,** in the live order:
+**Fix: one `lock table` block right after `set local lock_timeout`,** in the live order, all
+inside the file's own `begin;` ... `commit;` (the CLI batch is not a transaction block, so
+`lock table` fails with 25P01 without it; see [[cli-batch-needs-begin-commit]]):
 ```sql
 lock table public.subscriptions in share row exclusive mode;            -- what CREATE TRIGGER needs
 lock table public.ai_credit_purchases, public.ai_usage in access exclusive mode;  -- the ALTERs
@@ -35,6 +37,7 @@ B: `begin; \i <migration>; rollback;`. Print `clock_timestamp()` in each step. R
 the lock block and once with it stripped (negative control): the stripped one gives
 `ERROR: deadlock detected` in A, the fixed one shows B finishing right after A's rollback. Do
 this while the old function is live (after running the migration's rollback by hand), then
-re-apply with `psql -1 -f`.
+re-apply through the CLI (`supabase migration up --local` after deleting the version row), not
+only `psql -1 -f`, which hides a missing `begin;`.
 
 See [[cli-migration-transaction]], [[local-rls-verification]].

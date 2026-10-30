@@ -49,6 +49,12 @@
 -- value (a coupon added mid-period) caps the month at the new figure even when more of the old
 -- one was already used; nothing over-grants, the user just gets less this month.
 --
+-- Transaction: the file opens its own (`begin;` ... `commit;`). The Supabase CLI (db push,
+-- migration up) sends a file's statements as one batch that is not a transaction block, so
+-- without it LOCK TABLE fails (25P01) and `set local` warns and can't be relied on. Inside the
+-- block every statement, the end-state check included, commits or rolls back together; on any
+-- error the CLI stops before it records the version.
+--
 -- Locks while this runs: the live ai_reserve_credits is still 022's until this commits, and it
 -- reads subscriptions and ai_credit_purchases, then upserts ai_usage. An account deletion
 -- cascades from auth.users through profiles to subscriptions before ai_usage and
@@ -75,9 +81,10 @@
 --   3. Export the revoked packs, which count again once the column is gone:
 --        copy (select id, user_id, month, credits, stripe_checkout_session_id, revoked_at
 --                from public.ai_credit_purchases where revoked_at is not null) to stdout csv header;
---   4. In one transaction (LOCK TABLE needs one; the locks follow the order above, and DROP
---      TRIGGER needs ACCESS EXCLUSIVE on subscriptions, so fail fast rather than queue every
---      sync write behind it):
+--   4. In one explicit transaction, run as written in psql or the SQL editor (LOCK TABLE and
+--      `set local` need a transaction block, which a bare multi-statement batch is not; the
+--      locks follow the order above, and DROP TRIGGER needs ACCESS EXCLUSIVE on subscriptions,
+--      so fail fast rather than queue every sync write behind it):
 --        begin;
 --        set local lock_timeout = '5s';
 --        lock table public.subscriptions, public.ai_credit_purchases, public.ai_usage
@@ -91,6 +98,9 @@
 --        alter table public.ai_usage drop column if exists allowance_spent;
 --        alter table public.ai_credit_purchases drop column if exists revoked_at;
 --        commit;
+
+-- One transaction for the whole file (see "Transaction" above); `commit;` is the last line.
+begin;
 
 set local lock_timeout = '5s';
 
@@ -364,3 +374,5 @@ begin
   end if;
 end;
 $$;
+
+commit;

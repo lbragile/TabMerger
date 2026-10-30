@@ -39,6 +39,8 @@ The migrations in `supabase/migrations/` (`001`–`028`) are the source of truth
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
+> **The CLI does not open a transaction block.** `supabase db push` and `supabase migration up` send a file's statements as one batch that is not a transaction block. `set local` (e.g. `lock_timeout`) then only warns and can't be relied on, and `lock table` fails with `25P01`. A migration that needs either opens its own `begin;` … `commit;` around everything after the header comments, end-state checks included (027 and 028 do); on an error the whole file rolls back and the CLI records no version. Applying a file with `psql -1 -f` hides the problem, so check a new migration with `supabase migration up --local`.
+
 ## E2E-encrypted columns
 
 For every signed-in Pro account, content is written as an `EncryptedBlob` `{v:1, iv, ct}`: AES-256-GCM, base64, from `packages/shared/src/crypto`. The server never holds the key. Readers call `isEncryptedBlob()` and still accept legacy plaintext rows, because older rows were never backfilled.
