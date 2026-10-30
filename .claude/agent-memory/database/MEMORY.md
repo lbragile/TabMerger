@@ -12,3 +12,4 @@
 - [Testing a privilege revoke (023)](learnings_privilege_layer_tests.md) — which pgTAP asserts flip, TRUNCATE ignores RLS, column-privilege limits, keep older policy tests green
 - [Forward-only fixed windows (026)](learnings_fixed_window_forward_only.md) — clock after lock; stale caller refused; guarded upsert + row_count raise; lock_timeout bounds advisory waits
 - [pg_cron from a migration (026)](learnings_pg_cron_in_migrations.md) — preloaded hosted+local; cron.schedule by name is idempotent; job runs as postgres; skip-locked purge recipe
+- [Deploy-time lock order (027)](learnings_deploy_time_lock_order.md) — lock tables up front in the OLD live function's order; CREATE TRIGGER = SHARE ROW EXCLUSIVE; two-session deadlock recipe

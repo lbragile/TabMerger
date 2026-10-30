@@ -245,13 +245,15 @@ select is(
   'settling a month without a usage row creates none'
 );
 
--- Statuses: mirrors ENTITLED_SUBSCRIPTION_STATUSES -----------------------------------------
+-- Statuses: since 027 only `active` counts the monthly credits (no new managed credits while
+-- trialing or past_due); see 027_ai_credit_revocation_and_past_due_allowance.test.sql.
+-- The webhook writes 0 for those statuses anyway; these rows keep 100 to prove the filter.
 reset role;
 update public.subscriptions set status = 'trialing' where user_id = '00000000-0000-0000-0000-0000000000e1';
 set local role service_role;
 select is(
   (select cap from public.ai_reserve_credits('00000000-0000-0000-0000-0000000000e1', '2026-12', 1)),
-  100, 'trialing counts the monthly credits'
+  0, 'trialing does not count the monthly credits (027: active only)'
 );
 
 reset role;
@@ -259,7 +261,7 @@ update public.subscriptions set status = 'past_due' where user_id = '00000000-00
 set local role service_role;
 select is(
   (select cap from public.ai_reserve_credits('00000000-0000-0000-0000-0000000000e1', '2026-12', 1)),
-  100, 'past_due counts the monthly credits'
+  0, 'past_due does not count the monthly credits (027: active only)'
 );
 
 reset role;
