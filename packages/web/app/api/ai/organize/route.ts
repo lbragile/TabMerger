@@ -1,10 +1,17 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { type NextRequest, type NextResponse } from 'next/server'
 import type { OrganizeResponse } from '@tabmerger/shared'
-import { aiDisabledResponse } from '@/lib/ai-guard'
-import { organizeTask, runAiTask, type OrganizePromptGroup } from '@/lib/ai'
+import { organizeTask, runAiTask } from '@/lib/ai'
 import { loadOrganizeGroups, OrganizeNeedsClientDataError } from '@/lib/ai-organize'
-import { parseOrganizeBody, readJsonBody } from '@/lib/ai-validation'
-import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolveAiContext } from '@/lib/ai-route'
+import { AI_MAX_BODY_BYTES_GROUPS, parseOrganizeBody } from '@/lib/ai-validation'
+import { aiJson, handleAiRoute, invalidRequest } from '@/lib/ai-route'
+
+/**
+ * Seconds Vercel lets this function run (a literal: Next reads it statically). Organize-sized
+ * work over thousands of tabs on the largest model can take minutes; 300 is the Hobby plan's
+ * maximum with fluid compute. The model call's own deadline is 20 s earlier (`aiDeadline`), so a
+ * slow call times out in our code and releases its credit reservation and concurrency slot.
+ */
+export const maxDuration = 300
 
 /**
  * Proposes a reorganization of the caller's tab groups: `{ actions }` (merge / rename / delete /
@@ -24,35 +31,25 @@ import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolve
  * called.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
-  const aiDisabled = aiDisabledResponse()
-  if (aiDisabled) return aiDisabled
+  return handleAiRoute(request, {
+    action: 'organize',
+    label: 'organize',
+    maxDurationSeconds: maxDuration,
+    maxBodyBytes: AI_MAX_BODY_BYTES_GROUPS,
+    parse: parseOrganizeBody,
+    run: async (input, ctx, auth) => {
+      let groups
+      try {
+        groups = await loadOrganizeGroups(auth.supabase, auth.user.id, input)
+      } catch (err) {
+        if (err instanceof OrganizeNeedsClientDataError) return invalidRequest(err.message)
+        throw err
+      }
+      if (groups.length === 0) return invalidRequest('no groups to organize')
 
-  const auth = await authenticateAiRequest(request)
-  if (auth instanceof NextResponse) return auth
-
-  // Read before the plan check and any reservation, so a rejected body never costs anything.
-  const body = await readJsonBody(request)
-  const input = parseOrganizeBody(body)
-  if (!input.ok) return invalidRequest(input.error)
-
-  const ctx = await resolveAiContext(request, auth, body, 'organize')
-  if (ctx instanceof NextResponse) return ctx
-
-  let groups: OrganizePromptGroup[]
-  try {
-    groups = await loadOrganizeGroups(auth.supabase, auth.user.id, input.data)
-  } catch (err) {
-    if (err instanceof OrganizeNeedsClientDataError) return invalidRequest(err.message)
-    return aiErrorResponse(err, 'organize')
-  }
-  if (groups.length === 0) return invalidRequest('no groups to organize')
-
-  try {
-    const { result, remaining } = await runAiTask(organizeTask(groups), ctx)
-    const response: OrganizeResponse = { actions: result.actions }
-    return aiJson(response, remaining)
-  } catch (err) {
-    return aiErrorResponse(err, 'organize')
-  }
+      const { result, remaining } = await runAiTask(organizeTask(groups), ctx)
+      const response: OrganizeResponse = { actions: result.actions }
+      return aiJson(response, remaining)
+    },
+  })
 }

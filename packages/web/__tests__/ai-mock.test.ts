@@ -67,6 +67,7 @@ import {
   mockReplyText,
 } from '@/lib/ai-mock'
 import { parseNameGroupBody } from '@/lib/ai-validation'
+import { aiLimitRpc, meterRpcCalls } from './helpers/aiLimits'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -113,6 +114,8 @@ function req(path: string, body: unknown, headers: Record<string, string> = {}) 
 /** Reservations up to `cap` are allowed; settle returns `used`. */
 function stubRpc(cap = 2500, used = 100) {
   mockRpc.mockImplementation(async (fn: string, args: { p_amount?: number }) => {
+    const limits = aiLimitRpc(fn)
+    if (limits) return limits
     if (fn === 'ai_reserve_credits') {
       const amount = args.p_amount ?? 0
       return { data: [{ allowed: amount <= cap - used, remaining: cap - used, cap }], error: null }
@@ -646,7 +649,7 @@ describe('own-key routes with the mock on', () => {
     expect(await res.json()).toEqual(MOCK_NAMES_RESPONSE)
     expect(res.headers.get(AI_MOCK_HEADER)).toBe('1')
     expect(res.headers.get(AI_CREDITS_REMAINING_HEADER)).toBeNull()
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(fetchSpy).not.toHaveBeenCalled()
     expect(sdk.create).not.toHaveBeenCalled()
   })
@@ -776,7 +779,7 @@ describe('describe-group with the mock on', () => {
     expect(res.status).toBe(200)
     expect((await res.json()).description).toMatch(/^\[Mock description\] /)
     expect(res.headers.get(AI_CREDITS_REMAINING_HEADER)).toBeNull()
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(fetchSpy).not.toHaveBeenCalled()
   })
 })

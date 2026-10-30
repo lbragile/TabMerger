@@ -18,23 +18,37 @@ import {
 } from '@/lib/ai-usage'
 
 /**
- * Minimal Supabase stub: `subscriptions` resolves via .single(), `ai_credit_purchases` is
- * awaited directly like a real multi-row select, and `rpc` is a spy.
+ * Minimal Supabase stub: `subscriptions` and `ai_usage` resolve via .single() (`sub`, `usage`)
+ * (`usage`), `ai_credit_purchases` is awaited directly like a real multi-row select and honours
+ * `.is('revoked_at', null)` against each pack's `revoked_at`, and `rpc` is a spy.
  */
-function makeSupabase(sub: unknown, purchases: { credits: number }[] = [], rpc = vi.fn()) {
+function makeSupabase(
+  sub: unknown,
+  purchases: { credits: number; revoked_at?: string | null }[] = [],
+  rpc = vi.fn(),
+  usage: Record<string, unknown> | null = null
+) {
   const eq = vi.fn()
+  const is = vi.fn()
   const from = vi.fn((table: string) => {
+    let onlyUnrevoked = false
     const b: Record<string, unknown> = {}
     b.select = () => b
     b.eq = (...args: unknown[]) => {
       eq(table, ...args)
       return b
     }
-    b.single = async () => ({ data: sub })
-    b.then = (resolve: (v: { data: unknown }) => void) => resolve({ data: purchases })
+    b.is = (column: string, value: unknown) => {
+      is(table, column, value)
+      if (column === 'revoked_at' && value === null) onlyUnrevoked = true
+      return b
+    }
+    b.single = async () => ({ data: table === 'ai_usage' ? usage : sub })
+    b.then = (resolve: (v: { data: unknown }) => void) =>
+      resolve({ data: purchases.filter((p) => !onlyUnrevoked || p.revoked_at == null) })
     return b
   })
-  return { supabase: { from, rpc } as unknown as SupabaseClient, from, rpc, eq }
+  return { supabase: { from, rpc } as unknown as SupabaseClient, from, rpc, eq, is }
 }
 
 const MANAGED = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_monthly_credits: 2500 }
@@ -126,6 +140,90 @@ describe('getEffectiveCap', () => {
     const { supabase, eq } = makeSupabase(MANAGED)
     await getEffectiveCap(supabase, 'u1', '2025-01')
     expect(eq).toHaveBeenCalledWith('ai_credit_purchases', 'month', '2025-01')
+  })
+
+  it('ignores revoked packs (disputed or refunded), like ai_reserve_credits since 027', async () => {
+    const { supabase, is } = makeSupabase(MANAGED, [
+      { credits: 820, revoked_at: null },
+      { credits: 9280, revoked_at: '2026-03-10T00:00:00Z' },
+    ])
+    expect(await getEffectiveCap(supabase, 'u1')).toBe(2500 + 820)
+    expect(is).toHaveBeenCalledWith('ai_credit_purchases', 'revoked_at', null)
+  })
+
+  it('shows a past_due month frozen at allowance_spent, plus unrevoked packs', async () => {
+    const pastDue = { ...MANAGED, status: 'past_due', ai_monthly_credits: 0 }
+    const { supabase, eq } = makeSupabase(pastDue, [{ credits: 820 }], vi.fn(), { allowance_spent: 1700 })
+    expect(await getEffectiveCap(supabase, 'u1', '2026-03')).toBe(1700 + 820)
+    expect(eq).toHaveBeenCalledWith('ai_usage', 'month', '2026-03')
+  })
+
+  it.each(['past_due', 'trialing'])(
+    'counts no allowance while %s: only allowance_spent and unrevoked packs',
+    async (status) => {
+      const sub = { ...MANAGED, status, ai_monthly_credits: 2500 }
+      const purchases = [{ credits: 820 }, { credits: 9280, revoked_at: '2026-03-10T00:00:00Z' }]
+      expect(await getEffectiveCap(makeSupabase(sub, purchases, vi.fn(), { allowance_spent: 1700 }).supabase, 'u1')).toBe(1700 + 820)
+      expect(await getEffectiveCap(makeSupabase(sub, purchases).supabase, 'u1')).toBe(820)
+    }
+  )
+
+  it('takes the larger of the allowance and allowance_spent', async () => {
+    const small = { ...MANAGED, ai_monthly_credits: 1300 }
+    expect(await getEffectiveCap(makeSupabase(small, [], vi.fn(), { allowance_spent: 2000 }).supabase, 'u1')).toBe(2000)
+    expect(await getEffectiveCap(makeSupabase(MANAGED, [], vi.fn(), { allowance_spent: 2000 }).supabase, 'u1')).toBe(2500)
+  })
+
+  it.each([null, -5, 'x', Number.NaN])('treats an allowance_spent of %j as nothing', async (value) => {
+    const pastDue = { ...MANAGED, status: 'past_due', ai_monthly_credits: 0 }
+    expect(await getEffectiveCap(makeSupabase(pastDue, [], vi.fn(), { allowance_spent: value }).supabase, 'u1')).toBe(0)
+  })
+
+  describe('read failures (never shown as 0 credits)', () => {
+    /**
+     * Like makeSupabase, but `ai_usage` / `ai_credit_purchases` (and optionally `subscriptions`)
+     * answer with the given errors.
+     */
+    function failing(usageError: unknown, purchasesError: unknown, subError: unknown = null) {
+      const from = vi.fn((table: string) => {
+        const b: Record<string, unknown> = {}
+        for (const m of ['select', 'eq', 'is']) b[m] = () => b
+        b.single = async () =>
+          table === 'subscriptions'
+            ? { data: subError ? null : MANAGED, error: subError }
+            : { data: null, error: usageError }
+        b.then = (resolve: (v: unknown) => void) => resolve({ data: [{ credits: 820 }], error: purchasesError })
+        return b
+      })
+      return { from } as unknown as SupabaseClient
+    }
+
+    it('throws when the subscription read fails, instead of showing only the packs', async () => {
+      await expect(getEffectiveCap(failing(null, null, { code: '57014' }), 'u1')).rejects.toThrow(
+        'subscriptions read failed (57014)'
+      )
+      await expect(getEffectiveCap(failing(null, null, {}), 'u1')).rejects.toThrow('subscriptions read failed (unknown)')
+    })
+
+    it('treats "no subscription row" (PGRST116) as no allowance, not a failure', async () => {
+      expect(await getEffectiveCap(failing(null, null, { code: 'PGRST116' }), 'u1')).toBe(820)
+    })
+
+    it('getAiSubscription still answers null on a failed read (the routes refuse it with 403)', async () => {
+      expect(await getAiSubscription(failing(null, null, { code: '57014' }), 'u1')).toBeNull()
+    })
+
+    it('throws when the usage read fails', async () => {
+      await expect(getEffectiveCap(failing({ code: '57014' }, null), 'u1')).rejects.toThrow('ai_usage read failed (57014)')
+    })
+
+    it('throws when the pack read fails', async () => {
+      await expect(getEffectiveCap(failing(null, { code: '08006' }), 'u1')).rejects.toThrow('ai_credit_purchases read failed (08006)')
+    })
+
+    it('treats "no usage row this month" (PGRST116) as no allowance_spent, not a failure', async () => {
+      expect(await getEffectiveCap(failing({ code: 'PGRST116' }, null), 'u1')).toBe(2500 + 820)
+    })
   })
 })
 

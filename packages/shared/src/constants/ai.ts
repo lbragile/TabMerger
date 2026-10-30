@@ -291,6 +291,23 @@ export type AiAction = (typeof AI_ACTIONS)[number];
 export const AI_MAX_GROUP_DESCRIPTION_LENGTH = 300;
 
 /**
+ * Tab titles longer than this are truncated by the `/api/ai/*` routes (the prompts only need the
+ * gist of a title). The extension cuts them to this length before sending, so a request body
+ * stays within the routes' size caps.
+ */
+export const AI_MAX_TITLE_LENGTH = 300;
+
+/**
+ * URLs longer than this are truncated by the `/api/ai/*` routes (host, path and the leading query
+ * carry the topic). The extension cuts them to this length before sending: a `data:` URL can run
+ * to megabytes and would otherwise get the whole request refused as too large.
+ */
+export const AI_MAX_URL_LENGTH = 500;
+
+/** Group names longer than this are truncated by the `/api/ai/*` routes, and by the extension before sending. */
+export const AI_MAX_GROUP_NAME_LENGTH = 100;
+
+/**
  * How many names `POST /api/ai/name-group` asks the model for. The answer's `names` holds 1 to
  * this many distinct suggestions, best first (fewer when some were empty or duplicates).
  */
@@ -586,7 +603,8 @@ export function maskApiKey(key: string): string {
 /**
  * The `error` field of every failed `/api/ai/*` response (and the credit-pack checkout), so the
  * extension and web app can say what to do. BYOK errors never use 401 (that means TabMerger's
- * own sign-in failed) or 429 (that means TabMerger credits ran out).
+ * own sign-in failed) or 429 (that means TabMerger credits ran out, or `rate_limited`: too many
+ * requests).
  */
 export const AI_ERROR_CODES = {
   disabled: 'ai_disabled',
@@ -609,6 +627,12 @@ export const AI_ERROR_CODES = {
   failed: 'ai_failed',
   /** The requested organize run does not exist or belongs to someone else (404). */
   notFound: 'ai_not_found',
+  /**
+   * Too many requests (429): over a per-user or per-address rate limit, or too many already
+   * running. The body carries `retryAfterSeconds` (also the `Retry-After` header). Not a credits
+   * problem: a 429 without this code is the out-of-credits one.
+   */
+  rateLimited: 'rate_limited',
 } as const;
 
 export type AiErrorCode = (typeof AI_ERROR_CODES)[keyof typeof AI_ERROR_CODES];

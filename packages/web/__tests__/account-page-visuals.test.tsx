@@ -16,6 +16,7 @@ function mockSupabase(tier: string, usedCount = 53, purchases: { credits: number
         const chain = () => builder
         builder.select = chain
         builder.eq = chain
+        builder.is = chain
         builder.order = chain
         builder.limit = chain
         builder.single = async () =>
@@ -110,6 +111,7 @@ describe('AccountPage — buy more AI calls', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () => {
@@ -196,6 +198,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () =>
@@ -232,6 +235,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () =>

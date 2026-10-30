@@ -26,6 +26,7 @@ import {
   callGoogle,
   callOpenAi,
   mapProviderError,
+  type ProviderPrompt,
   type ProviderReply,
 } from '@/lib/ai-providers'
 import { AI_MAX_GROUP_NAME_LENGTH, AI_MAX_RENAME_LENGTH } from '@/lib/ai-validation'
@@ -53,8 +54,10 @@ import type { OrganizeAction } from '@tabmerger/shared'
  * 2. Call the model with the per-model settings in {@link MODEL_REQUEST_SETTINGS}.
  * 3. Managed only: settle the reservation to the real cost from `response.usage` (base input,
  *    cache writes and cache reads each at their own price, plus output with thinking). A call
- *    that failed without usage releases the reservation; a settle that fails keeps it (we may
- *    over-charge slightly, never under-charge).
+ *    that was never sent, or that Anthropic answered with an error status, releases the
+ *    reservation. A call cut off after it was sent (our deadline, a timeout, a dropped
+ *    connection) keeps it, since Anthropic may still bill it; a settle that fails keeps it too
+ *    (we may over-charge slightly, never under-charge).
  * 4. Refusals and truncated output are errors (their usage is still charged); otherwise the
  *    answer is parsed and cleaned.
  *
@@ -80,15 +83,40 @@ import type { OrganizeAction } from '@tabmerger/shared'
 export type AnthropicClient = Pick<Anthropic, 'messages'>
 
 /**
+ * Client defaults, for a call made without a request deadline: one attempt may take a minute and
+ * is retried once (the SDK default is 10 minutes and 2 retries, far past any route's
+ * `maxDuration`). Route calls override both with the time left before their deadline
+ * ({@link deadlineOptions}), so our code gives up first and releases the reservation instead of
+ * Vercel ending the function mid-call with the whole reservation still charged. The metered
+ * (managed) `messages.create` overrides the retry to 0 (see `callAnthropic`); `countTokens` and
+ * own-key calls keep it.
+ */
+export const ANTHROPIC_CLIENT_TIMEOUT_MS = 60_000
+export const ANTHROPIC_MAX_RETRIES = 1
+
+/**
  * The client for a request: TabMerger's key in managed mode, the customer's key in BYOK mode.
  * Built per request so a BYOK key never outlives it.
  */
 export function anthropicClient(mode: AiMode, byokKey: string | null): AnthropicClient {
+  const limits = { timeout: ANTHROPIC_CLIENT_TIMEOUT_MS, maxRetries: ANTHROPIC_MAX_RETRIES }
   if (mode === 'byok') {
     if (!byokKey) throw new Error('BYOK client requested without a key')
-    return new Anthropic({ apiKey: byokKey })
+    return new Anthropic({ apiKey: byokKey, ...limits })
   }
-  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, ...limits })
+}
+
+/**
+ * Request options that end a call at `deadline` (epoch ms): the SDK's per-attempt `timeout` and an
+ * abort `signal` for the whole call, retries included. Throws `ai_overloaded` (503) when the
+ * deadline has already passed, so nothing is sent. Without a deadline, the client defaults apply.
+ */
+export function deadlineOptions(deadline: number | undefined): { timeout?: number; signal?: AbortSignal } {
+  if (deadline === undefined) return {}
+  const left = Math.floor(deadline - Date.now())
+  if (left <= 0) throw new AiRouteError(503, AI_ERROR_CODES.overloaded)
+  return { timeout: left, signal: AbortSignal.timeout(left) }
 }
 
 // --- Per-model request settings -----------------------------------------------------------
@@ -681,7 +709,8 @@ export function mapAnthropicError(err: unknown, mode: AiMode): AiRouteError {
     }
   }
 
-  const connectionError = status === undefined && typeof e.name === 'string' && /Connection|Timeout/.test(e.name)
+  // A dropped connection, an SDK timeout, or our own deadline aborting the call (APIUserAbortError).
+  const connectionError = status === undefined && typeof e.name === 'string' && /Connection|Timeout|Abort/.test(e.name)
   if (
     status === 429 ||
     status === 529 ||
@@ -727,6 +756,11 @@ interface AiCallBase {
   mode: AiMode
   /** Set in managed mode only (which is always Anthropic). */
   meter: AiMeter | null
+  /**
+   * When the model call must be over (epoch ms): the route's `maxDuration` minus a margin for
+   * settling and releasing (see `lib/ai-request-limits.ts`). Unset: the client defaults apply.
+   */
+  deadline?: number
 }
 
 /**
@@ -839,6 +873,17 @@ async function settle(meter: AiMeter, delta: number): Promise<number | null | un
   }
 }
 
+/**
+ * Whether a failed call got an HTTP error answer from the provider (an SDK `APIError` with a
+ * status, or the dev mock's equivalent). Such a call returned no usage and is not billed. A
+ * failure without a status (abort, timeout, dropped connection) may have been billed.
+ */
+export function providerAnswered(err: unknown): boolean {
+  if (err instanceof AiRouteError) return false
+  const status = isRecord(err) || err instanceof Error ? (err as ApiErrorLike).status : undefined
+  return typeof status === 'number'
+}
+
 /** Runs one task: meter (managed), call, settle, interpret. See the module comment. */
 export async function runAiTask<T>(task: AiTask<T>, ctx: AiCallContext): Promise<AiTaskResult<T>> {
   const { text, outcome, remaining } =
@@ -900,8 +945,11 @@ async function callAnthropic(
   if (meter) {
     let inputTokens: number
     try {
-      inputTokens = (await (mock ? mockCountTokens(request.count) : client.messages.countTokens(request.count)))
-        .input_tokens
+      inputTokens = (
+        await (mock
+          ? mockCountTokens(request.count)
+          : client.messages.countTokens(request.count, deadlineOptions(ctx.deadline)))
+      ).input_tokens
     } catch (err) {
       throw mapAnthropicError(err, mode)
     }
@@ -927,13 +975,30 @@ async function callAnthropic(
   }
 
   let message: ModelMessage
+  let sent = false
   try {
-    message = mock ? await mockAnthropicMessage(task, request.create, mode) : await client.messages.create(request.create)
+    // deadlineOptions is inside the try: a deadline that passed while reserving releases too.
+    // A metered call is never retried, so "sent" means exactly one request: an SDK retry after a
+    // dropped first attempt (which Anthropic may bill) would let the retry's status release the
+    // reservation, or its success settle only the retry's usage. Own-key calls keep the retry.
+    const options = meter ? { ...deadlineOptions(ctx.deadline), maxRetries: 0 } : deadlineOptions(ctx.deadline)
+    sent = true
+    message = mock
+      ? await mockAnthropicMessage(task, request.create, mode)
+      : await client.messages.create(request.create, options)
   } catch (err) {
-    // No usage came back, so nothing was spent: release the whole reservation.
     if (meter) {
-      const used = await settle(meter, -reserved)
-      if (used !== undefined) remaining = used === null ? cap : Math.max(0, cap - used)
+      if (!sent || providerAnswered(err)) {
+        // Nothing was sent, or Anthropic answered with an error status (no usage, not billed):
+        // release the whole reservation.
+        const used = await settle(meter, -reserved)
+        if (used !== undefined) remaining = used === null ? cap : Math.max(0, cap - used)
+      } else {
+        // Sent, then cut off with no answer (our deadline, a timeout, a dropped connection).
+        // Anthropic may still run and bill it, so the reservation stays as the charge: we may
+        // over-charge, never under-charge.
+        console.error('AI call was cut off after it was sent; keeping its reservation:', describeErrorForLog(err))
+      }
     }
     const mapped = mapAnthropicError(err, mode)
     mapped.remaining = remaining
@@ -965,7 +1030,7 @@ async function callOwnKeyProvider(
   task: AiTask<unknown>,
   ctx: Extract<AiCallContext, { provider: 'openai' | 'google' }>
 ): Promise<CallOutcome> {
-  const prompt = {
+  const prompt: ProviderPrompt = {
     model: ctx.model,
     system: systemPromptFor(task),
     user: buildUntrustedDataTurn(task.data),
@@ -975,6 +1040,7 @@ async function callOwnKeyProvider(
     effort: MODEL_REQUEST_SETTINGS[ctx.model].effort,
   }
   try {
+    if (ctx.deadline !== undefined) prompt.timeoutMs = deadlineOptions(ctx.deadline).timeout
     // Dev-only provider seam (see lib/ai-mock.ts).
     const reply = aiMockEnabled()
       ? await mockProviderReply(task, ctx.provider)

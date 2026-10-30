@@ -56,17 +56,28 @@ export function toAiSubscription(row: SubscriptionRow | null | undefined): AiSub
   }
 }
 
-/** Reads the user's subscription row (tier, status, AI option and allowance), or `null`. */
-export async function getAiSubscription(
+/** The subscription read with its error, for callers that must tell "no row" from "read failed". */
+async function readAiSubscription(
   supabase: SupabaseClient,
   userId: string
-): Promise<AiSubscription | null> {
-  const { data } = await supabase
+): Promise<{ sub: AiSubscription | null; error: { code?: string } | null }> {
+  const { data, error } = await supabase
     .from('subscriptions')
     .select('tier, status, ai_mode, ai_monthly_credits')
     .eq('user_id', userId)
     .single()
-  return toAiSubscription(data as SubscriptionRow | null)
+  return { sub: toAiSubscription(data as SubscriptionRow | null), error: error ?? null }
+}
+
+/**
+ * Reads the user's subscription row (tier, status, AI option and allowance), or `null`. A failed
+ * read is `null` too, so the AI routes refuse it with 403 (fail closed).
+ */
+export async function getAiSubscription(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<AiSubscription | null> {
+  return (await readAiSubscription(supabase, userId)).sub
 }
 
 /**
@@ -78,26 +89,46 @@ export function hasProAi(sub: AiSubscription | null): sub is AiSubscription {
 }
 
 /**
- * Effective monthly credit cap = the subscription's managed allowance
- * (`subscriptions.ai_monthly_credits`, counted only for an entitled managed `pro_ai`
- * subscription, as `ai_reserve_credits` does) + any credit packs bought for `month`.
+ * Effective monthly credit cap, the same rule as `ai_reserve_credits` (migration 027):
+ * greatest(managed allowance, `ai_usage.allowance_spent` for `month`) + the month's credit packs
+ * that are not revoked. The allowance is `subscriptions.ai_monthly_credits`, counted only for a
+ * managed `pro_ai` subscription whose status is `active` (not trialing or past_due). `allowance_spent` is what the allowance already paid
+ * for when it was frozen (it dropped to 0, e.g. past_due), so a frozen month shows that much
+ * instead of 0. A revoked pack (`revoked_at` set: disputed or refunded) counts for nothing.
  * Shared by the dashboard and account usage displays so they show what the server enforces.
+ * Throws when the subscription, usage or pack read fails, so the page shows its error state
+ * instead of a cap that leaves out the allowance (or shows 0).
  */
 export async function getEffectiveCap(
   supabase: SupabaseClient,
   userId: string,
   month: string = currentMonth()
 ): Promise<number> {
-  const sub = await getAiSubscription(supabase, userId)
-  const base = hasProAi(sub) && sub.aiMode === 'managed' ? sub.monthlyCredits : 0
+  const { sub, error: subError } = await readAiSubscription(supabase, userId)
+  // `.single()` finding no subscription row (PGRST116) is a free account, not a failure.
+  if (subError && subError.code !== 'PGRST116') throw new Error(`subscriptions read failed (${subError.code ?? 'unknown'})`)
+  // Only an active subscription's allowance counts; trialing and past_due keep what it already
+  // paid for (allowance_spent) and their unrevoked packs.
+  const allowance = hasProAi(sub) && sub.aiMode === 'managed' && sub.status === 'active' ? sub.monthlyCredits : 0
 
-  const { data: purchases } = await supabase
-    .from('ai_credit_purchases')
-    .select('credits')
-    .eq('user_id', userId)
-    .eq('month', month)
+  const [{ data: usage, error: usageError }, { data: purchases, error: purchasesError }] = await Promise.all([
+    supabase.from('ai_usage').select('allowance_spent').eq('user_id', userId).eq('month', month).single(),
+    supabase
+      .from('ai_credit_purchases')
+      .select('credits')
+      .eq('user_id', userId)
+      .eq('month', month)
+      .is('revoked_at', null),
+  ])
+  // A failed read must not show as "0 credits": throw, and the page's error boundary offers a
+  // retry. `.single()` finding no usage row this month (PGRST116) is not a failure.
+  if (usageError && usageError.code !== 'PGRST116') throw new Error(`ai_usage read failed (${usageError.code ?? 'unknown'})`)
+  if (purchasesError) throw new Error(`ai_credit_purchases read failed (${purchasesError.code ?? 'unknown'})`)
 
-  return base + ((purchases as { credits: number }[] | null) ?? []).reduce((sum, p) => sum + p.credits, 0)
+  const frozen = (usage as { allowance_spent?: unknown } | null)?.allowance_spent
+  const spent = typeof frozen === 'number' && Number.isFinite(frozen) && frozen > 0 ? Math.floor(frozen) : 0
+  const packs = ((purchases as { credits: number }[] | null) ?? []).reduce((sum, p) => sum + p.credits, 0)
+  return Math.max(0, Math.max(allowance, spent) + packs)
 }
 
 /** Result of {@link reserveCredits}. `remaining` is after the reservation when allowed. */

@@ -13,7 +13,8 @@ import { NextRequest } from 'next/server'
 
 const mockGetUser = vi.fn()
 const mockFrom = vi.fn()
-const mockSupabase = { auth: { getUser: mockGetUser }, from: mockFrom }
+const mockRpc = vi.fn()
+const mockSupabase = { auth: { getUser: mockGetUser }, from: mockFrom, rpc: mockRpc }
 
 vi.mock('@/lib/supabase/server', () => ({
   createServiceRoleClient: vi.fn(async () => mockSupabase),
@@ -40,6 +41,9 @@ vi.mock('@/lib/ai', async (importActual) => ({
   describeGroupTask: (...a: unknown[]) => mockDescribeGroup(...a),
 }))
 
+/** The names of the RPCs called so far, in order. */
+const rpcNames = () => mockRpc.mock.calls.map(([fn]) => fn as string)
+
 /** Makes `runAiTask` resolve with `result` and 42 credits left. */
 function aiReturns(result: unknown) {
   mockRunAiTask.mockResolvedValue({ result, remaining: 42 })
@@ -63,6 +67,7 @@ import {
   AI_MAX_TOTAL_TABS,
   AI_MAX_URL_LENGTH,
 } from '@/lib/ai-validation'
+import { aiLimitRpc } from './helpers/aiLimits'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -103,6 +108,8 @@ beforeEach(() => {
   vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
   vi.spyOn(console, 'error').mockImplementation(() => {})
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
+  mockRpc.mockReset()
+  mockRpc.mockImplementation(async (fn: string) => aiLimitRpc(fn) ?? { data: null, error: null })
   mockRunAiTask.mockReset()
   aiReturns(null)
   setTables({ subscriptions: { data: PRO_AI, error: null } })
@@ -583,11 +590,13 @@ const validation = [
 ]
 
 describe.each(validation)('POST /api/ai/$name request-body validation', (route) => {
-  /** A rejected body is answered before the usage check and the model call. */
+  /** A rejected body is answered after the plan check, before the credit check, slot and model. */
   async function expectRejected(res: Response, message: string) {
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ error: 'ai_invalid_request', message })
-    expect(mockFrom).not.toHaveBeenCalledWith('subscriptions')
+    expect(mockFrom).toHaveBeenCalledWith('subscriptions')
+    expect(rpcNames()).not.toContain('ai_credits_exhausted')
+    expect(rpcNames()).not.toContain('ai_slot_acquire')
     expect(mockRunAiTask).not.toHaveBeenCalled()
     expect(route.aiMock()).not.toHaveBeenCalled()
   }
@@ -693,11 +702,11 @@ describe('POST /api/ai/describe-group', () => {
     )
   })
 
-  it('400s before the plan check for a free account with a bad body', async () => {
+  it('403s a free account before reading its body', async () => {
     setTables({ subscriptions: { data: { tier: 'free', status: 'active' }, error: null } })
     const res = await describeGroupPOST(req(url, { groupName: 'Work', tabs: [] }))
-    expect(res.status).toBe(400)
-    expect(mockFrom).not.toHaveBeenCalled()
+    expect(res.status).toBe(403)
+    expect(await res.json()).toEqual({ error: 'ai_plan_required' })
     expect(mockRunAiTask).not.toHaveBeenCalled()
   })
 
@@ -1040,7 +1049,7 @@ describe('POST /api/ai/organize request-body validation', () => {
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ error: 'ai_invalid_request', message: 'no readable tabs in groups' })
     expect(mockRunAiTask).not.toHaveBeenCalled()
-    expect(mockFrom).not.toHaveBeenCalled()
+    expect(mockFrom).not.toHaveBeenCalledWith('groups')
   })
 
   /** Payloads that carry groups but whose structure is invalid, with the expected message. */
@@ -1069,9 +1078,9 @@ describe('POST /api/ai/organize request-body validation', () => {
       const res = await organizePOST(req(url, body))
       expect(res.status).toBe(400)
       expect(await res.json()).toEqual({ error: 'ai_invalid_request', message })
-      // No model call and no read of the stored rows at all.
+      // No model call and no read of the stored rows at all (only the plan check's subscription read).
       expect(mockRunAiTask).not.toHaveBeenCalled()
-      expect(mockFrom).not.toHaveBeenCalled()
+      expect(mockFrom).not.toHaveBeenCalledWith('groups')
     }
   )
 

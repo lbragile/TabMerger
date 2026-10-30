@@ -35,6 +35,7 @@ import { POST as tabSummaryPOST } from '@/app/api/ai/tab-summary/route'
 import { POST as organizePOST } from '@/app/api/ai/organize/route'
 import { POST as verifyPOST } from '@/app/api/ai/byok/verify/route'
 import { UNTRUSTED_DATA_NOTICE } from '@/lib/ai-prompt-safety'
+import { aiLimitRpc, meterRpcCalls } from './helpers/aiLimits'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -117,6 +118,8 @@ beforeEach(() => {
   vi.stubEnv('ANTHROPIC_API_KEY', 'test-managed-key')
   consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
+  // The abuse-limit RPCs (rate limits, slot, credit pre-check) allow; nothing else is called here.
+  mockRpc.mockImplementation(async (fn: string) => aiLimitRpc(fn) ?? { data: null, error: null })
   withSubscription(BYOK)
 })
 
@@ -156,7 +159,7 @@ describe('own OpenAI key', () => {
     expect(body).not.toHaveProperty('prompt_cache_retention')
 
     // Never metered, never on Anthropic.
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(sdk.keys).toEqual([])
   })
 
@@ -253,7 +256,7 @@ describe('own Google key', () => {
     // Implicit caching only: no explicit cached content resource.
     expect(body).not.toHaveProperty('cachedContent')
     expect(body.contents[0].parts[0].text.startsWith(UNTRUSTED_DATA_NOTICE)).toBe(true)
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
   })
 
   it.each(['gemini-3.8-flash', 'gemini-4-argon'])('%s runs at thinking level low', async (model) => {
@@ -417,7 +420,7 @@ describe('per-option AI flags', () => {
     expect(await res.json()).toEqual({ error: 'ai_disabled' })
     expect(sdk.countTokens).not.toHaveBeenCalled()
     expect(sdk.create).not.toHaveBeenCalled()
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(mockFrom).not.toHaveBeenCalledWith('ai_usage')
   })
 
@@ -430,7 +433,8 @@ describe('per-option AI flags', () => {
     withSubscription(MANAGED)
     sdk.countTokens.mockResolvedValue({ input_tokens: 10 })
     mockRpc.mockImplementation(async (fn: string) =>
-      fn === 'ai_reserve_credits' ? { data: [{ allowed: true, remaining: 2000, cap: 2500 }], error: null } : { data: 600, error: null }
+      aiLimitRpc(fn) ??
+      (fn === 'ai_reserve_credits' ? { data: [{ allowed: true, remaining: 2000, cap: 2500 }], error: null } : { data: 600, error: null })
     )
     sdk.create.mockResolvedValue({ content: [{ type: 'text', text: '{"names":["Y"]}' }], usage: { input_tokens: 10, output_tokens: 2 }, stop_reason: 'end_turn' })
     const res = await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS }, OPENAI_KEY))
@@ -446,6 +450,6 @@ describe('per-option AI flags', () => {
     const res = await nameGroupPOST(req('/api/ai/name-group', { tabs: TABS, model: 'gpt-6-luna' }))
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ error: 'ai_model_invalid' })
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
   })
 })

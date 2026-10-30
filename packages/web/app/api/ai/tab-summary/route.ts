@@ -1,8 +1,15 @@
-import { NextResponse, type NextRequest } from 'next/server'
-import { aiDisabledResponse } from '@/lib/ai-guard'
+import { type NextRequest, type NextResponse } from 'next/server'
 import { runAiTask, tabSummaryTask } from '@/lib/ai'
-import { parseTabSummaryBody, readJsonBody } from '@/lib/ai-validation'
-import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolveAiContext } from '@/lib/ai-route'
+import { AI_MAX_BODY_BYTES_ONE_TAB, parseTabSummaryBody } from '@/lib/ai-validation'
+import { aiJson, handleAiRoute } from '@/lib/ai-route'
+
+/**
+ * Seconds Vercel lets this function run (a literal: Next reads it statically). A short answer,
+ * even on the largest model with its thinking headroom, takes well under a minute; the model
+ * call's own deadline is 20 s earlier (`aiDeadline`), so a slow call times out in our code and
+ * releases its credit reservation and concurrency slot.
+ */
+export const maxDuration = 120
 
 /**
  * Summarizes one tab in 1-2 sentences from its title and URL, for the hover preview.
@@ -12,25 +19,15 @@ import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolve
  * provider, unmetered. Optional body field `model`: `'auto'` or a model id of that provider. Request flow: see `lib/ai-route.ts`.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
-  const aiDisabled = aiDisabledResponse()
-  if (aiDisabled) return aiDisabled
-
-  const auth = await authenticateAiRequest(request)
-  if (auth instanceof NextResponse) return auth
-
-  // Validated before the plan check and any reservation, so a rejected body never costs anything.
-  const body = await readJsonBody(request)
-  const input = parseTabSummaryBody(body)
-  if (!input.ok) return invalidRequest(input.error)
-
-  const ctx = await resolveAiContext(request, auth, body, 'tabSummary')
-  if (ctx instanceof NextResponse) return ctx
-
-  try {
-    const { result, remaining } = await runAiTask(tabSummaryTask(input.data), ctx)
-    return aiJson({ summary: result }, remaining)
-  } catch (err) {
-    return aiErrorResponse(err, 'tab-summary')
-  }
+  return handleAiRoute(request, {
+    action: 'tabSummary',
+    label: 'tab-summary',
+    maxDurationSeconds: maxDuration,
+    maxBodyBytes: AI_MAX_BODY_BYTES_ONE_TAB,
+    parse: parseTabSummaryBody,
+    run: async (tab, ctx) => {
+      const { result, remaining } = await runAiTask(tabSummaryTask(tab), ctx)
+      return aiJson({ summary: result }, remaining)
+    },
+  })
 }

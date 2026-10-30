@@ -5,11 +5,15 @@ metadata:
   type: reference
 ---
 
-The shared AI request path (`authenticateAiRequest` -> `parse*Body` -> `resolveAiContext` -> `runAiTask`) touches only non-content data:
+The shared AI request path (routes call `handleAiRoute` in `lib/ai-route.ts`, which wraps authenticate -> rate limit -> size-capped body read -> `spec.parse` -> credit/slot checks -> `spec.run`) touches only non-content data:
 
 - `subscriptions` (`tier, status, ai_mode, ai_monthly_credits`) via `getAiSubscription` in `lib/ai-usage.ts`
 - `ai_credit_purchases` (`credits`) in `lib/ai-usage.ts`
-- RPCs `ai_reserve_credits` / `ai_settle_credits` (managed mode only)
+- RPCs `ai_reserve_credits` / `ai_settle_credits` (managed mode only), and `ai_slot_acquire` / `ai_slot_release` / `ai_credits_exhausted` in `lib/ai-request-limits.ts`
+
+`auth.supabase` is a service-role client (RLS bypassed), so any content read added to a route's `run` callback relies solely on its own `user_id` filter and encryption guard.
+
+The Stripe webhook path (`webhooks/stripe/route.ts`, `lib/creditPacks.ts`, `lib/paymentReversals.ts`, `lib/subscriptionSync.ts`) touches only `profiles`, `subscriptions` and `ai_credit_purchases`.
 
 The one AI helper that reads a content column is `loadStoredOrganizeGroups` in `lib/ai-organize.ts` (`groups.id, name, windows`), used only by `organize` when no groups are sent; it throws `OrganizeNeedsClientDataError` on any non-array `windows`. So for a new AI route, grep the route file for `ai-organize` imports and `.from(` before tracing further: if neither appears, its DB access is limited to the list above.
 

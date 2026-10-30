@@ -44,6 +44,7 @@ import { POST as describeGroupPOST } from '@/app/api/ai/describe-group/route'
 import { POST as verifyPOST } from '@/app/api/ai/byok/verify/route'
 import { MODEL_REQUEST_SETTINGS } from '@/lib/ai'
 import { SYSTEM_DATA_RULE, UNTRUSTED_DATA_NOTICE } from '@/lib/ai-prompt-safety'
+import { aiLimitRpc, meterRpcCalls } from './helpers/aiLimits'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -101,6 +102,8 @@ function message(json: unknown, usage: Record<string, unknown> = { input_tokens:
 /** Stubs both RPCs: the reservation result and what settle returns (new credits_used). */
 function stubRpc(reservation: { allowed: boolean; remaining: number; cap: number }, settled: unknown = 100) {
   mockRpc.mockImplementation(async (fn: string) => {
+    const limits = aiLimitRpc(fn)
+    if (limits) return limits
     if (fn === 'ai_reserve_credits') return { data: [reservation], error: null }
     if (fn === 'ai_settle_credits') return typeof settled === 'function' ? settled() : { data: settled, error: null }
     throw new Error(`unexpected rpc ${fn}`)
@@ -402,7 +405,7 @@ describe('managed metering', () => {
   })
 
   it('refuses the request when the reservation itself fails, without calling the model', async () => {
-    mockRpc.mockResolvedValue({ data: null, error: { message: 'db down' } })
+    mockRpc.mockImplementation(async (fn: string) => aiLimitRpc(fn) ?? { data: null, error: { message: 'db down' } })
     const res = await nameGroupPOST(nameReq())
     expect(res.status).toBe(500)
     expect(await res.json()).toEqual({ error: 'ai_failed' })
@@ -434,7 +437,7 @@ describe('BYOK', () => {
     expect(res.status).toBe(200)
     expect(sdk.keys).toEqual([BYOK_KEY])
     expect(sdk.countTokens).not.toHaveBeenCalled()
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(res.headers.get('X-AI-Credits-Remaining')).toBeNull()
   })
 
@@ -470,7 +473,7 @@ describe('BYOK', () => {
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ actions: [] })
     expect(sdk.keys).toEqual([BYOK_KEY])
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(res.headers.get('X-AI-Credits-Remaining')).toBeNull()
   })
 })
@@ -723,7 +726,7 @@ describe('describe-group', () => {
     const res = await describeGroupPOST(req(url, { groupName: 'Work', tabs: [] }))
     expect(res.status).toBe(400)
     expect(sdk.countTokens).not.toHaveBeenCalled()
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(sdk.create).not.toHaveBeenCalled()
   })
 
@@ -740,7 +743,7 @@ describe('describe-group', () => {
     expect(sdk.keys).toEqual([])
     expect(sdk.countTokens).not.toHaveBeenCalled()
     expect(sdk.create).not.toHaveBeenCalled()
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
   })
 
   it('BYOK: calls Anthropic with the X-AI-Key key only, unmetered', async () => {
@@ -751,7 +754,7 @@ describe('describe-group', () => {
     expect(await res.json()).toEqual({ description: DESCRIPTION })
     expect(sdk.keys).toEqual([BYOK_KEY])
     expect(sdk.countTokens).not.toHaveBeenCalled()
-    expect(mockRpc).not.toHaveBeenCalled()
+    expect(meterRpcCalls(mockRpc)).toEqual([])
     expect(res.headers.get('X-AI-Credits-Remaining')).toBeNull()
   })
 

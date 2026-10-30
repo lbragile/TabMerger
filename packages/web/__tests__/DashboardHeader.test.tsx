@@ -24,6 +24,7 @@ vi.mock('@/lib/supabase/server', () => ({
       const chain = () => builder
       builder.select = chain
       builder.eq = chain
+      builder.is = chain
       builder.order = chain
       builder.limit = chain
       builder.single = async () => ({ data: { ...subscriptionRow } })
@@ -144,6 +145,7 @@ describe('DashboardPage — free account (no cloud sync)', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () => ({
@@ -199,6 +201,7 @@ describe('DashboardPage — free account (no cloud sync)', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () => ({

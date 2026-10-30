@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { AI_MAX_GROUP_NAME_LENGTH, AI_MAX_TITLE_LENGTH, AI_MAX_URL_LENGTH } from '@tabmerger/shared'
 import { cleanUntrustedText, cleanUrl, sanitizePromptText } from '@/lib/ai-prompt-safety'
 
 /**
@@ -20,17 +21,11 @@ import { cleanUntrustedText, cleanUrl, sanitizePromptText } from '@/lib/ai-promp
  */
 
 // --- Limits -----------------------------------------------------------------
-// These are candidates for `@tabmerger/shared` constants so the extension can
-// show the same ceilings before sending a request.
+// The text lengths live in `@tabmerger/shared`, because the extension cuts titles,
+// URLs and group names to the same lengths before sending. Re-exported here for
+// existing importers.
 
-/** Tab titles longer than this are truncated. The prompts only need the gist of a title. */
-export const AI_MAX_TITLE_LENGTH = 300
-
-/** URLs longer than this are truncated. Host, path and the leading query carry the topic. */
-export const AI_MAX_URL_LENGTH = 500
-
-/** Group names longer than this are truncated. */
-export const AI_MAX_GROUP_NAME_LENGTH = 100
+export { AI_MAX_TITLE_LENGTH, AI_MAX_URL_LENGTH, AI_MAX_GROUP_NAME_LENGTH }
 
 /** Longest accepted group id. Ids are nanoid(10) locally and UUIDs (36) for stored rows. */
 export const AI_MAX_ID_LENGTH = 64
@@ -171,6 +166,95 @@ export async function readJsonBody(request: Request): Promise<unknown> {
     return await request.json()
   } catch {
     return undefined
+  }
+}
+
+// --- Body size ----------------------------------------------------------------
+// Caps on the raw request body, checked before it is parsed (Vercel alone would accept 4.5 MB).
+// Each is about the route's ceiling count times the most one entry carries after the server's
+// truncation (title 300 + URL 500 + JSON punctuation, about 850 bytes), rounded up. Titles and
+// URLs are sent untruncated, so a very long one counts here in full.
+
+/** One tab (tab-summary). */
+export const AI_MAX_BODY_BYTES_ONE_TAB = 64 * 1024
+/** One tab list of up to {@link AI_MAX_TABS_PER_LIST} tabs (group-tabs, name-group, describe-group). */
+export const AI_MAX_BODY_BYTES_TAB_LIST = 1024 * 1024
+/** Groups holding up to {@link AI_MAX_TOTAL_TABS} tabs (suggest-sessions, organize). */
+export const AI_MAX_BODY_BYTES_GROUPS = 2 * 1024 * 1024
+/** A body with no tab data (`byok/verify`: an optional model; `dev-usage`: a count). */
+export const AI_MAX_BODY_BYTES_SMALL = 4 * 1024
+
+/**
+ * Longest a request body may take to arrive. A real body (at most a few MB from the extension)
+ * arrives in well under a second; a client sending it slowly would otherwise hold the function
+ * open until `maxDuration`.
+ */
+export const AI_BODY_READ_TIMEOUT_MS = 10_000
+
+/**
+ * A body read with a size cap and a time limit: parsed like {@link readJsonBody}, or refused
+ * because it was over the cap (`too_large`) or took too long to arrive (`timeout`).
+ */
+export type BoundedJsonBody = { ok: true; body: unknown } | { ok: false; reason: 'too_large' | 'timeout' }
+
+/**
+ * Reads the body as JSON, refusing it once it is over `maxBytes`: at once when `content-length`
+ * says so, otherwise while reading, so a missing or wrong `content-length` never makes the server
+ * buffer more than `maxBytes` (plus one chunk). A body still arriving after `timeoutMs` is
+ * refused too, and its reader cancelled. Within both limits the body is parsed like
+ * {@link readJsonBody}: `undefined` for an empty, unreadable or malformed body.
+ */
+export async function readJsonBodyWithin(
+  request: Request,
+  maxBytes: number,
+  timeoutMs: number = AI_BODY_READ_TIMEOUT_MS
+): Promise<BoundedJsonBody> {
+  const declared = request.headers.get('content-length')
+  if (declared !== null && /^\d+$/.test(declared.trim()) && Number(declared) > maxBytes) {
+    return { ok: false, reason: 'too_large' }
+  }
+  if (!request.body) return { ok: true, body: undefined }
+
+  const reader = request.body.getReader()
+  const chunks: Uint8Array[] = []
+  let total = 0
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const timedOut = new Promise<'timeout'>((resolve) => {
+    timer = setTimeout(() => resolve('timeout'), timeoutMs)
+  })
+  try {
+    for (;;) {
+      const next = await Promise.race([reader.read(), timedOut])
+      if (next === 'timeout') {
+        // Not awaited: a stalled stream may not settle its cancel either.
+        reader.cancel().catch(() => {})
+        return { ok: false, reason: 'timeout' }
+      }
+      const { done, value } = next
+      if (done) break
+      total += value.byteLength
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => {})
+        return { ok: false, reason: 'too_large' }
+      }
+      chunks.push(value)
+    }
+  } catch {
+    return { ok: true, body: undefined }
+  } finally {
+    clearTimeout(timer)
+  }
+
+  const bytes = new Uint8Array(total)
+  let offset = 0
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset)
+    offset += chunk.byteLength
+  }
+  try {
+    return { ok: true, body: JSON.parse(new TextDecoder().decode(bytes)) }
+  } catch {
+    return { ok: true, body: undefined }
   }
 }
 

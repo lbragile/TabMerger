@@ -18,6 +18,7 @@ function mockDashboard(purchases: { credits: number }[], status = 'active') {
         const chain = () => builder
         builder.select = chain
         builder.eq = chain
+        builder.is = chain
         builder.order = chain
         builder.limit = chain
         builder.single = async () => {

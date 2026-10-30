@@ -1,9 +1,16 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { type NextRequest, type NextResponse } from 'next/server'
 import type { AINameGroupResponse } from '@tabmerger/shared'
-import { aiDisabledResponse } from '@/lib/ai-guard'
 import { runAiTask, nameGroupTask } from '@/lib/ai'
-import { parseNameGroupBody, readJsonBody } from '@/lib/ai-validation'
-import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolveAiContext } from '@/lib/ai-route'
+import { AI_MAX_BODY_BYTES_TAB_LIST, parseNameGroupBody } from '@/lib/ai-validation'
+import { aiJson, handleAiRoute } from '@/lib/ai-route'
+
+/**
+ * Seconds Vercel lets this function run (a literal: Next reads it statically). A short answer,
+ * even on the largest model with its thinking headroom, takes well under a minute; the model
+ * call's own deadline is 20 s earlier (`aiDeadline`), so a slow call times out in our code and
+ * releases its credit reservation and concurrency slot.
+ */
+export const maxDuration = 120
 
 /**
  * Suggests up to 3 different 2-4 word display names for a tab group from its tab titles and URLs.
@@ -15,26 +22,16 @@ import { aiErrorResponse, aiJson, authenticateAiRequest, invalidRequest, resolve
  * provider, unmetered. Optional body field `model`: `'auto'` or a model id of that provider. Request flow: see `lib/ai-route.ts`.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
-  const aiDisabled = aiDisabledResponse()
-  if (aiDisabled) return aiDisabled
-
-  const auth = await authenticateAiRequest(request)
-  if (auth instanceof NextResponse) return auth
-
-  // Validated before the plan check and any reservation, so a rejected body never costs anything.
-  const body = await readJsonBody(request)
-  const input = parseNameGroupBody(body)
-  if (!input.ok) return invalidRequest(input.error)
-
-  const ctx = await resolveAiContext(request, auth, body, 'nameGroup')
-  if (ctx instanceof NextResponse) return ctx
-
-  try {
-    const { result: names, remaining } = await runAiTask(nameGroupTask(input.data), ctx)
-    const answer: AINameGroupResponse = { names, name: names[0] }
-    return aiJson(answer, remaining)
-  } catch (err) {
-    return aiErrorResponse(err, 'name-group')
-  }
+  return handleAiRoute(request, {
+    action: 'nameGroup',
+    label: 'name-group',
+    maxDurationSeconds: maxDuration,
+    maxBodyBytes: AI_MAX_BODY_BYTES_TAB_LIST,
+    parse: parseNameGroupBody,
+    run: async (tabs, ctx) => {
+      const { result: names, remaining } = await runAiTask(nameGroupTask(tabs), ctx)
+      const answer: AINameGroupResponse = { names, name: names[0] }
+      return aiJson(answer, remaining)
+    },
+  })
 }

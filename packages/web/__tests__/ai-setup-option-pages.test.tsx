@@ -35,7 +35,7 @@ function mockSupabase(subscription: Record<string, unknown>, creditsUsed = 100) 
       from: (table: string) => {
         const builder: Record<string, unknown> = {}
         const chain = () => builder
-        for (const m of ['select', 'eq', 'order', 'limit']) builder[m] = chain
+        for (const m of ['select', 'eq', 'is', 'order', 'limit']) builder[m] = chain
         builder.single = async () => {
           if (table === 'subscriptions') return { data: subscription }
           if (table === 'ai_usage') return { data: { credits_used: creditsUsed } }

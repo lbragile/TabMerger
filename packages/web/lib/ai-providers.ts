@@ -20,7 +20,10 @@ import type { AiRouteError } from '@/lib/ai'
 const OPENAI_BASE = 'https://api.openai.com/v1'
 const GOOGLE_BASE = 'https://generativelanguage.googleapis.com/v1beta'
 
-/** A model call: generous, since organize over thousands of tabs can take a while. */
+/**
+ * A model call without a request deadline (the routes always pass one, see `timeoutMs`):
+ * generous, since organize over thousands of tabs can take a while.
+ */
 const GENERATE_TIMEOUT_MS = 120_000
 /** A key check. */
 const VERIFY_TIMEOUT_MS = 15_000
@@ -39,6 +42,12 @@ export interface ProviderPrompt {
   maxOutputTokens: number
   /** Reasoning setting for the model (see `MODEL_REQUEST_SETTINGS`). */
   effort: 'none' | 'minimal' | 'low'
+  /**
+   * How long the call may take, from the route's deadline (its `maxDuration` minus a margin), so
+   * the request fails here, cleanly, before Vercel ends the function. Defaults to
+   * {@link GENERATE_TIMEOUT_MS}.
+   */
+  timeoutMs?: number
 }
 
 /** What came back: the answer text and how the turn ended. */
@@ -92,6 +101,12 @@ async function errorCodeOf(res: Response): Promise<string | undefined> {
   } catch {
     return undefined
   }
+}
+
+/** The time a model call may take: the route's remaining budget, else {@link GENERATE_TIMEOUT_MS}. */
+function generateTimeout(prompt: ProviderPrompt): number {
+  const ms = prompt.timeoutMs
+  return typeof ms === 'number' && Number.isFinite(ms) ? Math.max(1, Math.floor(ms)) : GENERATE_TIMEOUT_MS
 }
 
 /** `fetch` with a timeout; network failures and timeouts become a status-less {@link ProviderHttpError}. */
@@ -163,7 +178,7 @@ export async function callOpenAi(apiKey: string, prompt: ProviderPrompt): Promis
         prompt_cache_options: OPENAI_PROMPT_CACHE_OPTIONS,
       }),
     },
-    GENERATE_TIMEOUT_MS
+    generateTimeout(prompt)
   )
   const body = await jsonOf('openai', res)
 
@@ -229,7 +244,7 @@ export async function callGoogle(apiKey: string, prompt: ProviderPrompt): Promis
         },
       }),
     },
-    GENERATE_TIMEOUT_MS
+    generateTimeout(prompt)
   )
   const body = await jsonOf('google', res)
 

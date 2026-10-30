@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { AI_ERROR_CODES } from '@tabmerger/shared'
 import { aiDisabledResponse } from '@/lib/ai-guard'
 import { currentMonth } from '@/lib/ai-usage'
-import { parseDevUsageBody, readJsonBody } from '@/lib/ai-validation'
-import { aiError, authenticateAiRequest, invalidRequest } from '@/lib/ai-route'
+import { AI_MAX_BODY_BYTES_SMALL, parseDevUsageBody, readJsonBodyWithin } from '@/lib/ai-validation'
+import { aiError, authenticateAiRequest, bodyRefused, invalidRequest } from '@/lib/ai-route'
 
 /**
  * Dev-only: sets the authenticated user's `ai_usage.credits_used` for the
@@ -28,7 +28,9 @@ export async function POST(request: NextRequest) {
   if (auth instanceof NextResponse) return auth
   const { user, supabase } = auth
 
-  const input = parseDevUsageBody(await readJsonBody(request))
+  const read = await readJsonBodyWithin(request, AI_MAX_BODY_BYTES_SMALL)
+  if (!read.ok) return bodyRefused(read.reason)
+  const input = parseDevUsageBody(read.body)
   if (!input.ok) return invalidRequest(input.error)
   const count = input.data
 
