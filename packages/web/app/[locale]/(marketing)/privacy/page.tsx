@@ -48,7 +48,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: October 22, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 29, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -83,6 +83,7 @@ export default function PrivacyPage() {
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">AI features <span className="normal-case font-normal">(Pro AI tier only)</span></h3>
               <p>When you use AI features, the titles and URLs of the tabs involved are sent through TabMerger&apos;s server to an AI provider to generate a response, over encrypted connections. When TabMerger handles setup, that provider is Anthropic (the Claude API). Anthropic does not use API request content to train its models and does not retain it beyond their standard API data handling terms. Tab content is not stored by us beyond what you have already saved in your groups.</p>
               <p className="mt-3"><span className="font-medium text-foreground">Your own API key.</span> When you handle setup with your own API key, those titles and URLs go through our server to the provider that issued your key: Anthropic, OpenAI or Google (Gemini). The provider&apos;s own terms and privacy policy then apply to that request, and it bills you directly. Your key is kept only in the extension on your device and is sent with each AI request; our server passes it straight to the provider and never stores or logs it.</p>
+              <p className="mt-3"><span className="font-medium text-foreground">Abuse limits.</span> To keep AI features from being overused or abused, our server counts how many AI requests come from each account and from each IP address over the last few minutes, hours and day. We never store your IP address itself: we keep only a one-way code made from it with a secret key, which can&apos;t be turned back into the address (for IPv6, the code is made from the part of the address that identifies your network, not your device). These counts are used only to enforce the limits and are deleted automatically within about three days.</p>
             </div>
             <div id="uninstall-survey" className="scroll-mt-24">
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">If you remove the extension</h3>
@@ -163,6 +164,7 @@ export default function PrivacyPage() {
           <h2 className="text-xl font-semibold mb-4">5. Data Retention</h2>
           <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <p>We retain your account data for as long as your account is active. If you delete your account, all associated data stored in Supabase — including your profile, groups, and sessions — is permanently deleted.</p>
+            <p>AI request counts used for abuse limits (see &quot;AI features&quot; above) are deleted automatically within about three days.</p>
             <p>Local IndexedDB data remains in your browser until you clear it via browser settings or the TabMerger extension.</p>
             <p>Stripe may retain billing records for tax and compliance purposes in accordance with their own policies.</p>
           </div>

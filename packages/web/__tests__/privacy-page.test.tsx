@@ -204,7 +204,16 @@ describe('PrivacyPage', () => {
 
   it('shows the date of the latest revision', () => {
     render(<PrivacyPage />)
-    expect(screen.getByText('Last updated: October 22, 2026')).toBeInTheDocument()
+    expect(screen.getByText('Last updated: October 29, 2026')).toBeInTheDocument()
+  })
+
+  it('discloses the AI abuse limits: per account and IP, IP never stored as is, deleted within days', () => {
+    render(<PrivacyPage />)
+    const collect = document.getElementById('what-we-collect')?.textContent ?? ''
+    expect(collect).toMatch(/Abuse limits\. .*from each account and from each IP address/)
+    expect(collect).toMatch(/We never store your IP address itself: we keep only a one-way code made from it with a secret key/)
+    expect(collect).toMatch(/deleted automatically within about three days/)
+    expect(document.getElementById('retention')?.textContent).toMatch(/AI request counts used for abuse limits .* are deleted automatically within about three days/)
   })
 
   it('discloses the extension usage events: install, update, daily, random install id, Firefox opt-in', () => {
