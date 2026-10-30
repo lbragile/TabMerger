@@ -10,8 +10,8 @@
  *
  * Covers the classification every plan switch goes through (classifyPlanChange in lib/tiers.ts)
  * and a scan of the server code for any call that could hand money back: there must be none, so a
- * cancellation (done only in the Billing Portal, at period end) or a credit pack can't be refunded
- * by our code. How each kind is applied is tested in stripeIntervalSwitch.test.ts.
+ * cancellation (done in the Billing Portal at period end, or by the webhook, with no proration, when
+ * a payment becomes a chargeback) or a credit pack can't be refunded by our code. How each kind is applied is tested in stripeIntervalSwitch.test.ts.
  */
 import { describe, it, expect } from 'vitest'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
@@ -119,11 +119,20 @@ describe('no server code hands money back', () => {
     ['a refund', /\.refunds\./],
     ['a credit note', /creditNotes/],
     ['a customer balance adjustment', /createBalanceTransaction|balanceTransactions/],
-    ['a cancellation', /subscriptions\.(cancel|del)\(|subscriptionSchedules\.cancel\(/],
     ['an immediate prorated cancellation', /invoice_now|prorate\s*:/],
     ['prorations that create a credit', /create_prorations/],
   ])('nothing issues %s', (_label, pattern) => {
     expect(sources.filter((s) => pattern.test(s.text)).map((s) => s.path)).toEqual([])
+  })
+
+  // The one cancellation our code makes: a subscription whose payment became a chargeback
+  // (lib/paymentReversals.ts). It uses Stripe's cancel defaults (no proration, no final invoice,
+  // nothing refunded): the prorate/invoice_now scan above keeps it that way.
+  it('nothing issues a cancellation except the chargeback cancel in lib/paymentReversals.ts', () => {
+    const cancelling = /subscriptions\.(cancel|del)\(|subscriptionSchedules\.cancel\(/
+    expect(sources.filter((s) => cancelling.test(s.text)).map((s) => s.path)).toEqual(['lib/paymentReversals.ts'])
+    const reversal = sources.find((s) => s.path === 'lib/paymentReversals.ts')?.text ?? ''
+    expect(reversal.match(/subscriptions\.cancel\(/g)).toHaveLength(1)
   })
 
   it('only the upgrade path in lib/stripe.ts charges a proration (always_invoice)', () => {

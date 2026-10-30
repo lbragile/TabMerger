@@ -572,6 +572,7 @@ describe('POST /api/webhooks/stripe', () => {
           mode: 'payment',
           customer: 'cus_test123',
           metadata: { user_id: 'user-uuid-1', type: 'ai_credit_pack' },
+          payment_status: 'paid',
           amount_total: cents,
           currency: 'usd',
         },
@@ -610,6 +611,7 @@ describe('POST /api/webhooks/stripe', () => {
           mode: 'payment',
           customer: 'cus_test123',
           metadata: { user_id: 'user-uuid-1', type: 'ai_credit_pack' },
+          payment_status: 'paid',
           ...amounts,
         },
       },
@@ -674,7 +676,6 @@ describe('POST /api/webhooks/stripe', () => {
   it.each([
     ['half price', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 1250, currency: 'usd', payment_intent: 'pi_test123' }, 4580],
     ['free (100% off)', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 0, currency: 'usd', payment_intent: null }, 0],
-    ['free, reported as no_payment_required', { payment_status: 'no_payment_required', amount_subtotal: 2500, amount_total: 0, currency: 'usd', payment_intent: null }, 0],
   ])('a discounted credit pack (%s) grants credits for the amount paid, not the quantity bought', async (_label, amounts, credits) => {
     const mockInsert = vi.fn().mockResolvedValue({ error: null })
     mockFrom.mockImplementation((table: string) => {
@@ -1398,7 +1399,7 @@ describe('subscription events are matched by subscription id', () => {
     })
 
     it.each([
-      ['still past_due', 'past_due', { status: 'past_due' }],
+      ['still past_due', 'past_due', { status: 'past_due', ai_monthly_credits: 0 }],
       ['paid since, and active again', 'active', { status: 'active' }],
       ['canceled since', 'canceled', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
       ['unpaid since', 'unpaid', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
@@ -1770,7 +1771,7 @@ describe('subscription events are matched by subscription id', () => {
 
     it.each([
       ['customer.subscription.deleted', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
-      ['invoice.payment_failed', { status: 'past_due' }],
+      ['invoice.payment_failed', { status: 'past_due', ai_monthly_credits: 0 }],
     ])('%s writes a stored status', async (type, expected) => {
       const { POST } = await import('@/app/api/webhooks/stripe/route')
       const { update } = mockTables({ matchedRows: [{ id: 'sub_test123' }] })
@@ -1793,7 +1794,7 @@ describe('subscription events are matched by subscription id', () => {
   describe('a database error answers 500', () => {
     it.each([
       ['customer.subscription.deleted', { status: 'canceled', tier: 'free', ai_monthly_credits: 0 }],
-      ['invoice.payment_failed', { status: 'past_due' }],
+      ['invoice.payment_failed', { status: 'past_due', ai_monthly_credits: 0 }],
     ])('%s: the update by subscription id fails', async (type, changes) => {
       const { POST } = await import('@/app/api/webhooks/stripe/route')
       const { update, updateEq } = mockTables({
@@ -1934,6 +1935,7 @@ describe('subscription events are matched by subscription id', () => {
             mode: 'payment',
             customer: 'cus_test123',
             metadata: { user_id: USER_A, type: 'ai_credit_pack' },
+            payment_status: 'paid',
             amount_total: 2500,
             currency: 'usd',
           },
@@ -1976,6 +1978,7 @@ describe('subscription events are matched by subscription id', () => {
             mode: 'payment',
             customer: 'cus_test123',
             metadata: { user_id: USER_A, type: 'ai_credit_pack' },
+            payment_status: 'paid',
           },
         },
       })
@@ -2005,7 +2008,7 @@ describe('subscription events are matched by subscription id', () => {
 
       expect(res.status).toBe(200)
       expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_invoice1', expect.anything())
-      expect(update).toHaveBeenCalledWith({ status: 'past_due' })
+      expect(update).toHaveBeenCalledWith({ status: 'past_due', ai_monthly_credits: 0 })
       expect(updateEq).toHaveBeenCalledWith('id', 'sub_invoice1')
       expect(updateEq).not.toHaveBeenCalledWith('user_id', expect.anything())
       expect(profileEq).not.toHaveBeenCalled()

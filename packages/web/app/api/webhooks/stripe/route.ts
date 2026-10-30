@@ -4,7 +4,6 @@ import { stripe } from '@/lib/stripe'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import {
   ANALYTICS_EVENTS,
-  creditsForPayment,
   isAiMode,
   isEntitledSubscriptionStatus,
   type AiMode,
@@ -25,12 +24,15 @@ import { flushPlanChangeAlarms, logPlanChangeAlarm, planChangeAlarms } from '@/l
 import {
   SubscriptionSyncError,
   databaseError,
+  getInvoiceSubscriptionId,
   logUnmatchedEvent,
   retrieveCurrentSubscription,
   updateSubscriptionById,
   upsertSubscription,
   type ServiceRoleClient,
 } from '@/lib/subscriptionSync'
+import { grantCreditPack, isCreditPackSession, usdAmountPaid } from '@/lib/creditPacks'
+import { handleChargeReversal, reversalChargeId } from '@/lib/paymentReversals'
 import type Stripe from 'stripe'
 
 /**
@@ -69,7 +71,15 @@ import type Stripe from 'stripe'
  * managed AI allowance (`ai_monthly_credits`, see subscriptionAiColumns() in lib/aiAllowance.ts):
  * what the subscription actually pays, after discounts, turned into credits. Discount events
  * (`customer.discount.*`) read the subscription again so the allowance follows a coupon that is
- * added, changed or ends. A credit pack grants creditsForPayment() of the USD amount paid.
+ * added, changed or ends. A credit pack grants creditsForPayment() of the USD amount paid, once
+ * its session is paid (lib/creditPacks.ts). Only an `active` subscription has managed credits:
+ * `past_due` keeps Pro but no new allowance while Stripe retries the renewal.
+ *
+ * Disputes and refunds (`charge.dispute.created/updated/closed/funds_withdrawn/funds_reinstated`,
+ * `charge.refunded`) read the charge's current state from
+ * Stripe (lib/paymentReversals.ts): a credit pack is revoked while its charge is contested or
+ * fully refunded and restored if the dispute is won; a subscription whose payment becomes a
+ * chargeback is cancelled at Stripe at once and written as ended.
  */
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -104,8 +114,10 @@ export async function POST(request: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session
 
         if (session.mode === 'payment') {
-          if (session.metadata?.type === 'ai_credit_pack') {
-            await creditAiCreditPack(supabase, session)
+          // Granted only once paid (grantCreditPack() checks `payment_status`); a delayed
+          // payment method is granted by `checkout.session.async_payment_succeeded`.
+          if (isCreditPackSession(session)) {
+            await grantCreditPack(supabase, event.type, session)
           }
           break
         }
@@ -179,6 +191,35 @@ export async function POST(request: NextRequest) {
         // After the response: GA's latency or an outage never delays Stripe's 200.
         after(() => trackCheckoutCompleted(subscription, session))
 
+        break
+      }
+
+      case 'checkout.session.async_payment_succeeded': {
+        // A delayed payment method (none is enabled today: checkout is card-only) has now paid.
+        // A credit pack is granted here; a subscription follows its own
+        // `customer.subscription.updated` when its invoice is paid.
+        const session = event.data.object as Stripe.Checkout.Session
+        if (isCreditPackSession(session)) {
+          await grantCreditPack(supabase, event.type, session)
+        }
+        break
+      }
+
+      case 'charge.dispute.created':
+      case 'charge.dispute.updated':
+      case 'charge.dispute.closed':
+      case 'charge.dispute.funds_withdrawn':
+      case 'charge.dispute.funds_reinstated':
+      case 'charge.refunded': {
+        // A dispute or refund: the charge's current state at Stripe decides (lib/paymentReversals.ts):
+        // a credit pack is revoked while contested or refunded and restored when a dispute is won;
+        // a subscription with a chargeback is cancelled at once.
+        const chargeId = reversalChargeId(event)
+        if (!chargeId) {
+          console.warn(`Stripe webhook: ${event.type} names no charge; nothing to do`)
+          break
+        }
+        await handleChargeReversal(supabase, event.type, chargeId)
         break
       }
 
@@ -257,6 +298,8 @@ export async function POST(request: NextRequest) {
           break
         }
 
+        // Any status but `active` also writes ai_monthly_credits = 0 (updateSubscriptionById()):
+        // no managed AI credits while the renewal payment is failing.
         await updateSubscriptionById(supabase, event.type, subscriptionId, {
           status: subscription.status,
         })
@@ -296,9 +339,6 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 
 /** PostgREST's code for `.single()` finding no row (or more than one): a miss, not a failure. */
 const NO_SINGLE_ROW = 'PGRST116'
-
-/** Postgres unique violation. */
-const UNIQUE_VIOLATION = '23505'
 
 /**
  * One line for an event about a subscription that is not the one on the user's row and that is
@@ -388,68 +428,6 @@ async function resolveSubscriptionUserId(
   }
 
   return null
-}
-
-/**
- * The id of the subscription an invoice bills, or null for an invoice that bills none.
- * The event payload follows the API version of the webhook endpoint, not of this SDK client:
- * current versions carry it under `parent.subscription_details`, earlier ones as a top-level
- * `subscription`. Both are read so the handler works whichever version the endpoint was made on.
- */
-function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
-  const legacy = (invoice as unknown as { subscription?: string | { id: string } | null })
-    .subscription
-  const reference = invoice.parent?.subscription_details?.subscription ?? legacy
-
-  if (!reference) return null
-  return typeof reference === 'string' ? reference : reference.id
-}
-
-/**
- * Grants a one-time AI credit pack purchase: creditsForPayment() of the USD amount actually paid
- * for it (usdAmountPaid()), in the cost-based unit (1 credit = $0.001 of AI cost). The quantity
- * bought only set the price; a discounted pack grants proportionally fewer credits and a free one
- * none. When the session holds no USD amount, 0 credits are granted and a line is logged (better
- * to under-grant than to fund AI with money that wasn't received).
- *
- * Idempotent on stripe_checkout_session_id (unique constraint on ai_credit_purchases) — Stripe can
- * redeliver checkout.session.completed, and a duplicate insert must be a no-op, not a double
- * credit. Any other insert error throws a SubscriptionSyncError (500), so the event is delivered
- * again and the pack is granted then.
- */
-async function creditAiCreditPack(
-  supabase: Awaited<ReturnType<typeof createServiceRoleClient>>,
-  session: Stripe.Checkout.Session
-) {
-  const userId = session.metadata?.user_id
-  if (!userId) {
-    console.error('ai_credit_pack checkout.session.completed missing user_id metadata', session.id)
-    return
-  }
-
-  const month = new Date().toISOString().slice(0, 7)
-
-  const usdPaid = usdAmountPaid(session)
-  if (usdPaid === null) {
-    console.warn(
-      `Stripe webhook: checkout.session.completed credit pack has no USD amount; 0 credits granted (session ${session.id})`
-    )
-  }
-  const credits = usdPaid === null ? 0 : creditsForPayment(usdPaid)
-
-  const { error } = await supabase.from('ai_credit_purchases').insert({
-    user_id: userId,
-    month,
-    credits,
-    stripe_checkout_session_id: session.id,
-  })
-
-  // Unique violation on stripe_checkout_session_id = already credited this event, not an error.
-  if (error && error.code !== UNIQUE_VIOLATION) {
-    throw databaseError('checkout.session.completed', 'credit pack insert', `session ${session.id}`, error, {
-      withMessage: true,
-    })
-  }
 }
 
 /**
@@ -570,31 +548,6 @@ function analyticsSessionId(sessionId: string | undefined): string | null {
   const secret = process.env.STRIPE_WEBHOOK_SECRET
   if (!secret || typeof sessionId !== 'string' || !sessionId) return null
   return createHmac('sha256', sessionIdKey(secret)).update(sessionId).digest('hex')
-}
-
-/**
- * What the buyer paid for a Checkout Session, in USD: its total after any promotion code (the
- * GA4 `purchase` value, and what a credit pack's credits are worked out from). Null when the
- * session holds no USD total.
- *
- * Adaptive Pricing lets the buyer pay in a local currency, and where the USD total sits depends
- * on the API version of the webhook endpoint (the event payload follows it, not this client):
- * older versions put the local amount in `amount_total`/`currency` and the USD one in
- * `currency_conversion.amount_total` (`source_currency` 'usd'); current versions keep
- * `amount_total`/`currency` in USD and the local amount in `presentment_details`. Both are read.
- */
-function usdAmountPaid(session: Stripe.Checkout.Session): number | null {
-  const conversion = session.currency_conversion
-  if (
-    conversion?.source_currency?.toLowerCase() === 'usd' &&
-    typeof conversion.amount_total === 'number'
-  ) {
-    return conversion.amount_total / 100
-  }
-  if (session.currency?.toLowerCase() === 'usd' && typeof session.amount_total === 'number') {
-    return session.amount_total / 100
-  }
-  return null
 }
 
 /**

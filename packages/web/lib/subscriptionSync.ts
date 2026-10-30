@@ -181,7 +181,8 @@ export function logUnmatchedEvent(source: string, subscriptionId: string | null)
 /**
  * Applies `changes` to the row stored under a Stripe subscription id, and to no other row.
  * Used by the events that end or flag a plan, which need no user lookup at all: the subscription
- * id is the key. The status goes through toStoredState() like every other write.
+ * id is the key. The status goes through toStoredState() like every other write, and any stored
+ * status other than `active` also writes `ai_monthly_credits = 0`.
  *
  * Returns what was written, or null when no row is stored under that id (logged; the webhook
  * answers 200). A database error throws a SubscriptionSyncError (500): the same update runs again
@@ -195,16 +196,14 @@ export async function updateSubscriptionById(
 ): Promise<{ status: SubscriptionStatus; tier: string | undefined } | null> {
   const stored = toStoredState(source, subscriptionId, changes.status, changes.tier)
 
-  // An ended plan has no managed AI allowance; the AI option is left as it was.
+  // Only an `active` subscription earns managed AI credits (subscriptionAiColumns()): an ended
+  // plan, and a `past_due` one whose renewal payment is failing, are written with none. The AI
+  // option is left as it was. An `active` status leaves the allowance alone: the update that
+  // made it active writes it.
+  const columns = stored.tier === undefined ? { status: stored.status } : stored
   const { data: rows, error } = await supabase
     .from('subscriptions')
-    .update(
-      stored.tier === undefined
-        ? { status: stored.status }
-        : stored.tier === 'free'
-          ? { ...stored, ai_monthly_credits: 0 }
-          : stored
-    )
+    .update(stored.status === 'active' ? columns : { ...columns, ai_monthly_credits: 0 })
     .eq('id', subscriptionId)
     .select('id')
 
@@ -432,4 +431,19 @@ export async function recordLiveSubscription(
     return { recorded: false, reason: 'not_entitled' }
   }
   return { recorded: true, ...written }
+}
+
+/**
+ * The id of the subscription an invoice bills, or null for an invoice that bills none.
+ * The event payload follows the API version of the webhook endpoint, not of this SDK client:
+ * current versions carry it under `parent.subscription_details`, earlier ones as a top-level
+ * `subscription`. Both are read so the handler works whichever version the endpoint was made on.
+ */
+export function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
+  const legacy = (invoice as unknown as { subscription?: string | { id: string } | null })
+    .subscription
+  const reference = invoice.parent?.subscription_details?.subscription ?? legacy
+
+  if (!reference) return null
+  return typeof reference === 'string' ? reference : reference.id
 }

@@ -170,6 +170,11 @@ describe('ai_mode and ai_monthly_credits on every subscription write', () => {
     ['a canceled Pro AI subscription', subscription({ status: 'canceled' }), { tier: 'free', ai_monthly_credits: 0 }],
     ['an unpaid Pro AI subscription', subscription({ status: 'unpaid' }), { tier: 'free', ai_monthly_credits: 0 }],
     ['a trial (nothing paid yet)', subscription({ status: 'trialing' }), { tier: 'pro_ai', ai_monthly_credits: 0 }],
+    // A renewal payment is failing: Pro (sync) stays, but no managed credits until it is paid, so a
+    // new UTC month during dunning brings no fresh allowance. Migration 027 keeps what the
+    // allowance already paid for this month (ai_usage.allowance_spent), so packs stay spendable.
+    ['a past_due subscription (renewal payment failing)', subscription({ status: 'past_due' }), { tier: 'pro_ai', status: 'past_due', ai_monthly_credits: 0 }],
+    ['an incomplete first payment', subscription({ status: 'incomplete' }), { tier: 'pro_ai', status: 'incomplete', ai_monthly_credits: 0 }],
   ])('%s gets no managed credits', async (_label, sub, expected) => {
     await postUpdate(sub)
     expect(mockUpsert.mock.calls[0][0]).toMatchObject(expected)
@@ -730,6 +735,37 @@ describe('mid-period upgrade into managed: allowance in proportion to the time c
         })
       )
       expect(written().ai_monthly_credits).toBe(creditsForPayment(3.99))
+    })
+  })
+
+  // Dunning: Stripe retries a failed renewal while the subscription is past_due (no credits, see
+  // the first describe). When a retry succeeds it is active again and the allowance is worked
+  // out as usual from its latest invoice.
+  describe('a failed renewal that recovers', () => {
+    const renewal = (status: string) => ({
+      billing_reason: 'subscription_cycle',
+      status,
+      subtotal: 799,
+      lines: [fullLine('price_ai_m', 799, MONTH_END, MONTH_END + 30 * DAY)],
+    })
+
+    it('past_due with the renewal invoice open: 0; paid and active again: the full allowance', async () => {
+      await postUpdate({ ...upgraded(renewal('open')), status: 'past_due' })
+      expect(written().ai_monthly_credits).toBe(0)
+
+      mockUpsert.mockClear()
+      await postUpdate(upgraded(renewal('paid')))
+      expect(written().ai_monthly_credits).toBe(PRO_AI_MONTHLY_CREDITS)
+    })
+
+    it('recovering while the latest invoice is still a mid-period upgrade keeps that upgrade’s share', async () => {
+      const sub = upgraded({ lines: [prorationLine('price_ai_m', 400, MONTH_END - 15 * DAY, MONTH_END)] })
+      await postUpdate({ ...sub, status: 'past_due' })
+      expect(written().ai_monthly_credits).toBe(0)
+
+      mockUpsert.mockClear()
+      await postUpdate(sub)
+      expect(written().ai_monthly_credits).toBe(1250)
     })
   })
 })

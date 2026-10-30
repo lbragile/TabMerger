@@ -14,4 +14,6 @@
 - [Prorated option switch](learnings_prorated_option_switch_review_method.md) — immediate two-way proration + allowance: round-trip math, usage month vs period, once-coupon credits, invoice-scaled allowance
 - [Schedule release](learnings_schedule_release_review_method.md) — user-triggered schedule release: ownership chain, which schedules are releasable, cancel-then-renew path, landing race
 - [Usage bucket vs billing period](learnings_usage_bucket_vs_billing_period.md) — calendar-month counter vs paid period: buckets per payment, dunning, upgrade shares, free pre-check calls
+- [Payment reversal review](learnings_payment_reversal_review_method.md) — dispute/refund handlers: insert-on-missing races, unlocked read-then-write, event coverage, trigger-frozen allowance
+- [AI abuse limits](learnings_ai_abuse_limit_review_method.md) — rate limits/slots/deadlines: abort refund direction, sibling-route oracles, pre-slot work, IP keys, peek-then-count overshoot, SDK retries
 - [Amount-driven portal deferral](learnings_amount_driven_portal_deferral_review_method.md) — schedule_at_period_end conditions: pair-by-pair per-month check, stale sessions, restricted coupons, schedule locks, alarm shape

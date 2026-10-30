@@ -13,7 +13,13 @@ import type { PlanPrice } from './tiers'
  * subscription actually pays per period, never from the list price alone:
  *
  * - BYOK, and any tier other than `pro_ai`: 0 (TabMerger pays for no AI).
- * - `trialing`: 0 (nothing has been paid yet).
+ * - Any status other than `active`: 0. `trialing` has paid nothing yet; `past_due` (a renewal
+ *   payment is failing, Stripe is retrying) keeps sync and the rest of Pro but earns no managed
+ *   credits until the payment succeeds, so a new UTC month during dunning brings no fresh
+ *   allowance. What the allowance had already paid for this month stays paid for: when the
+ *   column drops to 0, migration 027's trigger records it (`ai_usage.allowance_spent`) and
+ *   `ai_reserve_credits` keeps that much, so credit packs stay spendable. Once the payment
+ *   recovers the subscription is `active` again and the rules below apply as usual.
  * - Otherwise the USD list price of the subscription's Price (PRICING_TIERS, via `plan`), less:
  *   1. the discounts that apply to its next invoices: the item's, then the subscription's, or the
  *      customer's when the subscription has none of its own. `percent_off` is applied;
@@ -251,7 +257,7 @@ export async function subscriptionAiColumns(
   if (!plan || storedTier !== 'pro_ai' || plan.tier !== 'pro_ai' || aiMode !== 'managed') {
     return { aiMode, monthlyCredits: 0 }
   }
-  if (subscription.status === 'trialing') return { aiMode, monthlyCredits: 0 }
+  if (subscription.status !== 'active') return { aiMode, monthlyCredits: 0 }
 
   const listCents = Math.round(plan.amount * 100)
   let cents = listCents

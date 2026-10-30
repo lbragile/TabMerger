@@ -63,7 +63,8 @@ subscription write with `subscriptionAiColumns()` (`lib/aiAllowance.ts`): the sm
 invoices (item, then subscription, else the customer's; `percent_off`, or `amount_off` in USD; any
 other discount counts as 100% off and is logged), and never more than the latest invoice actually
 charged after discounts (a "once" coupon is gone from the subscription once the first invoice is
-finalized). 0 for BYOK, trials, and any tier other than `pro_ai`.
+finalized). 0 for BYOK, any tier other than `pro_ai`, and any status other than `active`
+(trials, `incomplete`, and `past_due`; see [Failed renewals](#failed-renewals-past_due)).
 
 A mid-period upgrade into managed (own key → managed, Pro → Pro AI managed, charged now with
 proration) earns, until the next renewal, that allowance scaled by the time its invoice charged
@@ -76,6 +77,15 @@ Measured on test clocks on 2026-10-26 (a 31-day period): 15 days left → 1,209 
 redelivered event or a later update in the same period writes the same figure. An upgrade that
 restarts the period (monthly → yearly: a full charge, no proration line for the new price) gets the
 full allowance. Credit packs are separate grants (`ai_credit_purchases`) and are unaffected.
+
+**How a managed AI call is charged** (`runAiTask` in `packages/web/lib/ai.ts`): the request counts
+its input tokens, reserves its worst-case cost in credits (`ai_reserve_credits`), calls Claude, and
+settles to the real cost from the response's usage (`ai_settle_credits`). A call that was never
+sent, or that Anthropic answered with an error status (no usage, not billed), releases the whole
+reservation. A call cut off after it was sent (the route's deadline, a timeout, a dropped
+connection) is charged at its reservation: Anthropic may still run and bill it, and charging the
+reservation over-charges at most, never under-charges. A user with no credits left is refused
+before the token count (`ai_credits_exhausted`, migration 028).
 
 On an upgrade's invoice the discount share ("never more than the latest invoice charged") is read
 from the current price's own line (`discount_amounts` against its `amount`), not from the invoice's
@@ -493,12 +503,14 @@ Events handled (the `switch`):
 
 | Event | Effect |
 | --- | --- |
-| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` → insert `ai_credit_purchases` (credits = `creditsForPayment(USD paid)`: `currency_conversion.amount_total` when `source_currency` is usd, else `amount_total` when `currency` is usd, else 0 and a log line; idempotent on unique `stripe_checkout_session_id`: 23505 is answered 200, any other insert error 500). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` and `purchase` after the response (`after()`; random `client_id` per event; `transaction_id` = HMAC of the session id keyed with `STRIPE_WEBHOOK_SECRET`; no `user_id`; no-op without `GA_API_SECRET`). |
+| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` + `payment_status === 'paid'` (anything else grants nothing and logs `credit pack not paid`) → insert `ai_credit_purchases` (credits = `creditsForPayment(USD paid)`: `currency_conversion.amount_total` when `source_currency` is usd, else `amount_total` when `currency` is usd, else 0 and a log line; idempotent on unique `stripe_checkout_session_id`: 23505 is answered 200, any other insert error 500). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` and `purchase` after the response (`after()`; random `client_id` per event; `transaction_id` = HMAC of the session id keyed with `STRIPE_WEBHOOK_SECRET`; no `user_id`; no-op without `GA_API_SECRET`). |
 | `checkout.session.expired` | Analytics only, after the response: `mode: 'subscription'` with a uuid `metadata.user_id` → GA4 `checkout_abandoned` (tier/interval from session metadata, re-validated; random `client_id`; no `user_id` sent). No database or Stripe call; always 200. See `docs/ANALYTICS.md`. |
 | `customer.subscription.updated` | Retrieve the subscription's current state from Stripe by the id in the event → resolve the user (order below) → upsert that state, unless the user's row does not track this subscription and it is not entitled (then nothing is written). The object embedded in the event is not written. Then the log-only [plan-change alarm](#plan-change-alarm). |
 | `customer.discount.created`, `.updated`, `.deleted` | A coupon was applied, changed or removed (including a repeating one ending). The discount's subscription (or, for a discount on the customer, the Stripe subscription stored on the row of the profile holding that customer) is handled exactly like `customer.subscription.updated`, which rewrites `ai_monthly_credits`. No subscription found → 200 + the "matched no subscription row or user" line. |
 | `customer.subscription.deleted` | `status = 'canceled'`, `tier = 'free'`, `ai_monthly_credits = 0` on the row whose `subscriptions.id` is the event's subscription id. No user or profile lookup, no retrieve. |
-| `invoice.payment_failed` | Retrieve the current state of the invoice's subscription from Stripe → write its status (`past_due` while Stripe retries the payment) on the row whose `subscriptions.id` is that id. No user or profile lookup; an invoice that bills no subscription changes nothing. |
+| `invoice.payment_failed` | Retrieve the current state of the invoice's subscription from Stripe → write its status (`past_due` while Stripe retries the payment) on the row whose `subscriptions.id` is that id, with `ai_monthly_credits = 0` for any status but `active`. No user or profile lookup; an invoice that bills no subscription changes nothing. |
+| `checkout.session.async_payment_succeeded` | A delayed payment method has paid: a credit pack session is granted like a paid `checkout.session.completed` (same idempotent insert). A subscription session writes nothing here (its `customer.subscription.updated` does). Checkout is card-only today, so this is for completeness. |
+| `charge.dispute.created`, `.updated`, `.closed`, `.funds_withdrawn`, `.funds_reinstated`, `charge.refunded` | See [Disputes and refunds](#disputes-and-refunds): read the charge and every dispute on it from Stripe; a credit pack's row gets `revoked_at` set or cleared; a subscription whose payment is a chargeback is cancelled at Stripe at once and its row ended. |
 
 Anything else is ignored with 200. A database error, or a failed read from Stripe, while one of
 these is being recorded is answered with 500, so Stripe sends the event again (see "What the
@@ -623,6 +635,88 @@ When a customer paid but didn't upgrade, check the Vercel function logs for thes
 with a "matched no subscription row or user" line or an unknown price shows green in Stripe's
 dashboard; a 500 shows there as a failed delivery, which can also be resent by hand.
 
+### Failed renewals (`past_due`)
+
+When a renewal payment fails, Stripe marks the subscription `past_due` and retries it. While it is
+`past_due`:
+
+- it stays entitled for sync and everything else in Pro (`ENTITLED_SUBSCRIPTION_STATUSES`,
+  `has_cloud_sync()`), and the AI routes still accept it (`hasProAi()`);
+- `ai_monthly_credits` is written as 0 (`subscriptionAiColumns()` and `updateSubscriptionById()`):
+  no new managed credits, also when a new UTC month starts during the retries;
+- what the allowance had already paid for this month stays paid for. `ai_usage.credits_used` is
+  one counter for the allowance and the month's credit packs (the allowance is spent first), so
+  when `ai_monthly_credits` drops from a positive value to 0 the trigger
+  `subscriptions_freeze_ai_allowance` (migration 027) records
+  `ai_usage.allowance_spent = least(old allowance, credits_used)` for the current UTC month (never
+  lowering a value already recorded that month), and `ai_reserve_credits` caps at
+  `greatest(allowance if active, allowance_spent) + unrevoked packs`. The trigger fires only for a
+  row that was `pro_ai` + managed + entitled: a row that could never spend its allowance (e.g.
+  `incomplete` with a stale figure) gets nothing back. `past_due` is in that list because before 027
+  a past_due row did spend its allowance, and the re-sync that zeroes it must freeze that spending.
+  Credit packs therefore keep exactly their unspent part, and with no packs every reservation is
+  refused. A settlement that lowers `credits_used` pulls `allowance_spent` down with it
+  (`ai_usage_clamp_allowance_spent`), so `allowance_spent <= credits_used` always holds;
+- when a retry succeeds the subscription is `active` again and the allowance is worked out as
+  usual from its latest invoice (the paid renewal: full; a still-current mid-period upgrade: its
+  share). Verified with a test clock: active 2,500 → past_due 0 → invoice paid, active 2,500.
+
+**Dashboard setting the code assumes** (Billing → Revenue recovery → Retries, the subscription
+status after all retries fail): **cancel the subscription** or **mark it as unpaid**. Either ends
+the plan here (`canceled` is written as is, `unpaid` as `canceled`/`free`). "Leave the subscription
+past-due" would keep Pro (sync) entitled indefinitely without payment; managed AI would still get
+no new credits. Check this setting in both modes.
+
+Existing rows: a `past_due` row written before this change keeps its allowance until its next
+webhook write. `scripts/resync-ai-allowance.ts` (dry run, then `--apply`) rewrites it with the
+same function.
+
+**Known limitation:** the freeze fires only on a drop to 0. An allowance lowered to a positive
+figure (a coupon added mid-period, a smaller upgrade share) caps the month at the new figure even
+when more of the old one was already used: nothing is over-granted, the customer just gets less
+that month (and a credit pack bought that month can look partly used).
+
+### Disputes and refunds
+
+`charge.dispute.created`, `.updated`, `.closed`, `.funds_withdrawn`, `.funds_reinstated` and
+`charge.refunded` only say which charge
+changed (`lib/paymentReversals.ts`). The handler reads the charge (`refunded`: fully refunded) and
+every dispute on it (`disputes.list({ charge })`; a charge can have more than one) and acts on that
+current state, so redeliveries and any order of events end the same:
+
+- **Credit pack** (found by `checkout.sessions.list({ payment_intent })`, a payment session with
+  `metadata.type === 'ai_credit_pack'`): `ai_credit_purchases.revoked_at` is set while the charge
+  is contested (a dispute or inquiry in `warning_needs_response`, `warning_under_review`,
+  `needs_response`, `under_review` or `lost`) or fully refunded, and cleared when that no longer
+  holds (`won`, a late win, `warning_closed`, `prevented`). `ai_reserve_credits` ignores revoked
+  packs. Credits already spent can't be taken back; the unspent rest stops working. A partial
+  refund leaves the pack alone (refunds are only issued by hand). A dispute handled before the
+  pack's grant inserts the row already revoked; the grant then hits the unique session id and
+  leaves it revoked.
+- **Subscription invoice** (found by `invoicePayments.list({ payment: { type: 'payment_intent' } })`
+  → the invoice's subscription): with a chargeback (`needs_response`, `under_review`, `lost`) the
+  subscription is cancelled at Stripe at once with Stripe's cancel defaults (no proration, no final
+  invoice, nothing refunded; verified in test mode: no credit note, customer balance 0) and the
+  note "Cancelled automatically: a payment for this subscription was disputed." in
+  `cancellation_details.comment`; its row is written `canceled`/`free`. A subscription with a
+  schedule attached (a downgrade waiting for the period end) is cancelled the same way: measured in
+  test mode, `subscriptions.cancel` succeeds and Stripe sets the schedule to `canceled`, so no
+  release is needed. Decision: the customer has
+  asked their bank for the money and Stripe has already taken it, and cancelling stops the next
+  renewal from being charged and disputed again. A won dispute does not restore it (a cancellation
+  is final at Stripe; the customer can subscribe again). An inquiry (`warning_*`, no money moved)
+  changes nothing until it escalates, which Stripe reports as `charge.dispute.updated`. A refund
+  of a subscription invoice changes nothing.
+- Anything else (no pack session, no subscription invoice) is logged and answered 200. A failed
+  Stripe read, cancel or database write answers 500.
+- Two events for one charge handled at the same moment could write in the opposite order of
+  their reads. After writing a pack's state the handler reads the charge again and writes once
+  more if the answer changed (up to three writes, then 500 so Stripe redelivers), so the row ends
+  on Stripe's latest state. A subscription only ever moves one way (cancelled) and needs no re-check.
+
+This is the only cancellation the server makes (`__tests__/refundPolicy.test.ts` pins it to
+`lib/paymentReversals.ts`).
+
 ---
 
 ## Per-environment setup
@@ -634,8 +728,18 @@ Each environment (production, preview, local) needs its **own** Stripe webhook d
    `https://preview.tabmerger.com/api/webhooks/stripe`. Endpoints already on the old
    `*.vercel.app` hosts can stay: those hosts serve the same deployment and keep `/api/*`.
 2. Subscribe it to `checkout.session.completed`, `checkout.session.expired`,
-   `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`,
-   `customer.discount.created`, `customer.discount.updated`, `customer.discount.deleted`.
+   `checkout.session.async_payment_succeeded`, `customer.subscription.updated`,
+   `customer.subscription.deleted`, `invoice.payment_failed`, `customer.discount.created`,
+   `customer.discount.updated`, `customer.discount.deleted`, `charge.dispute.created`,
+   `charge.dispute.updated`, `charge.dispute.closed`, `charge.dispute.funds_withdrawn`,
+   `charge.dispute.funds_reinstated`, `charge.refunded`.
+
+   **Added with migration 027**, to be added by hand to each existing endpoint (test mode for
+   preview, live mode for production): `checkout.session.async_payment_succeeded`,
+   `charge.dispute.created`, `charge.dispute.updated`, `charge.dispute.closed`,
+   `charge.dispute.funds_withdrawn`, `charge.dispute.funds_reinstated`, `charge.refunded`. Without them a disputed or refunded credit pack keeps its credits and a
+   disputed subscription stays paid. `stripe listen` without `--events` forwards every event, so
+   local dev needs nothing.
 3. Put that endpoint's signing secret in the environment's `STRIPE_WEBHOOK_SECRET` (Vercel env var
    for that environment), alongside the matching-mode `STRIPE_SECRET_KEY` and price IDs.
 4. Redeploy (`NEXT_PUBLIC_*` values are inlined at build time).
@@ -1052,8 +1156,13 @@ current_period_end, stripe_price_id`) for the signed-in user, polling every 30 s
   `UNLIMITED_TIER_LIMITS` from `packages/shared/src/constants/index.ts`, the single source for
   enforcement and pricing copy.
 
-**Server (AI routes)** — `checkAndIncrementAIUsage` in `packages/web/lib/ai-usage.ts` requires
-`tier === 'pro_ai'` **and** `status === 'active'`. `trialing` and `past_due` do **not** get AI.
+**Server (AI routes)** — `hasProAi()` in `packages/web/lib/ai-usage.ts` requires `tier ===
+'pro_ai'` with an entitled status (`active`, `trialing`, `past_due`). Managed calls are metered
+by `ai_reserve_credits` (migration 027), which counts `ai_monthly_credits` only when the status is
+`active` (and the webhook writes 0 for any other status), plus unrevoked credit packs and this
+month's `ai_usage.allowance_spent` whatever the status. So `trialing` and `past_due` can spend
+credit packs and nothing new from the allowance (see [Failed renewals](#failed-renewals-past_due)).
+`getEffectiveCap` (the usage displays) follows the same rule.
 
 ---
 
