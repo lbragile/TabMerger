@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Организация с ИИ",
-  "aiOrganiseUpgrade": "Перейдите на Pro AI, чтобы пользоваться организацией с ИИ",
-  "aiOrganiseFromExtension": "Запустите это из всплывающего окна расширения TabMerger",
   "tabGroups": "Группы вкладок",
   "savedSessions": "Сохранённые сеансы",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "ИИ-кредиты в этом месяце",
-      "description": "Использование Pro AI за месяц",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Осталось {left, number}, примерно {organizes, number} упорядочиваний по {tabs, number} вкладок"
     },
-    "loading": "Загрузка"
+    "loading": "Загрузка",
+    "aiOwnKey": {
+      "label": "Настройка ИИ",
+      "value": "Вы",
+      "description": "Свой API-ключ: провайдер ИИ выставляет счёт напрямую вам, без лимита кредитов"
+    }
   },
   "subscription": {
     "currentPlan": "Текущий тариф",

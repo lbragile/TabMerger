@@ -2,6 +2,8 @@ import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Layers, Globe, Clock, FileStack, Sparkles } from 'lucide-react'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
+import { ORGANIZE_EXAMPLE_TABS, organizesFor } from '@/components/pricing/aiOptions'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 
 interface StatsOverviewProps {
   tabCount: number
@@ -13,7 +15,16 @@ interface StatsOverviewProps {
    */
   sessionStat?: { value: React.ReactNode; description: React.ReactNode }
   memberSince: string
-  aiUsage?: { used: number; limit: number }
+  /**
+   * Pro AI. `managed`: this month's credits (`used` of `limit`, allowance plus packs). `byok`: the
+   * subscriber's own key, which has no TabMerger credits to show. `action` (the switch to the other
+   * option) follows the card's description. `canBuyCredits` shows "Get more": only for a paid-up
+   * plan (`hasCloudSync`), the same rule `/api/checkout/credits` enforces, so an ended or unpaid
+   * plan still sees its credits but isn't offered a pack it couldn't spend.
+   */
+  aiUsage?:
+    | { mode: 'managed'; used: number; limit: number; canBuyCredits?: boolean; action?: React.ReactNode }
+    | { mode: 'byok'; action?: React.ReactNode }
   /**
    * Whether to show the stats that depend on synced data (tabs/groups/sessions/memory).
    * Free (and non-entitled paid-tier) accounts never sync, so groupCount/sessionCount/tabCount
@@ -92,17 +103,31 @@ export function StatsOverview({
       icon: Globe,
       description: t('memberSince.description'),
     },
-    ...(aiUsage
+    ...(aiUsage?.mode === 'managed'
       ? [
           {
             id: 'aiCredits',
             label: t('aiCredits.label'),
             value: t('aiCredits.value', { used: aiUsage.used, limit: aiUsage.limit }),
             icon: Sparkles,
-            description: t('aiCredits.description'),
+            description: t('aiCredits.left', {
+              left: Math.max(0, aiUsage.limit - aiUsage.used),
+              organizes: organizesFor(Math.max(0, aiUsage.limit - aiUsage.used)),
+              tabs: ORGANIZE_EXAMPLE_TABS,
+            }),
           },
         ]
-      : []),
+      : aiUsage?.mode === 'byok'
+        ? [
+            {
+              id: 'aiOwnKey',
+              label: t('aiOwnKey.label'),
+              value: t('aiOwnKey.value'),
+              icon: Sparkles,
+              description: t('aiOwnKey.description'),
+            },
+          ]
+        : []),
   ]
 
   // Free accounts only ever have 1-2 cards (Member Since, optionally AI usage — though AI
@@ -126,11 +151,20 @@ export function StatsOverview({
               <div className="text-2xl font-bold">{stat.value}</div>
               <p className="text-xs text-muted-foreground">
                 {stat.description}
-                {stat.id === 'aiCredits' && aiUsage && aiUsage.used >= aiUsage.limit && (
-                  <>
-                    {' · '}
-                    <BuyCreditsButton />
-                  </>
+                {/* Credit packs exist only for TabMerger's AI, only once it's on sale, and only on a
+                    paid-up plan. Offered any time, not only once the month's credits run out (as on
+                    the account page). */}
+                {stat.id === 'aiCredits' &&
+                  aiUsage?.mode === 'managed' &&
+                  aiUsage.canBuyCredits === true &&
+                  AI_AVAILABILITY.managed && (
+                    <>
+                      {' · '}
+                      <BuyCreditsButton />
+                    </>
+                  )}
+                {(stat.id === 'aiCredits' || stat.id === 'aiOwnKey') && aiUsage?.action && (
+                  <span className="block mt-1">{aiUsage.action}</span>
                 )}
               </p>
             </CardContent>

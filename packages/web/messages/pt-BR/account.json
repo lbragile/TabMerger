@@ -33,7 +33,9 @@
     "groups": "Grupos sincronizados",
     "tabs": "Abas salvas",
     "sessions": "Sessões e backups",
-    "aiCredits": "Créditos de IA restantes"
+    "aiCredits": "Créditos de IA restantes",
+    "aiOwnKey": "Quem configura a IA",
+    "aiOwnKeyValue": "Você"
   },
   "profile": {
     "title": "Perfil",
@@ -51,7 +53,37 @@
     "description": "Gerencie seu plano e a cobrança.",
     "manageBilling": "Gerenciar cobrança",
     "upgrade": "Fazer upgrade",
-    "cancelNote": "Você pode cancelar quando quiser em <strong>Gerenciar cobrança</strong>. O acesso continua até o fim do período de cobrança atual."
+    "cancelNote": "Você pode cancelar quando quiser em <strong>Gerenciar cobrança</strong>. O acesso continua até o fim do período de cobrança atual.",
+    "scheduledChange": "Muda para {plan} em {date}.",
+    "scheduledChangeUnknownPlan": "Seu plano muda em {date}.",
+    "scheduledCancelNote": "Ao cancelar, você mantém seu plano atual até o fim deste período de cobrança e a mudança agendada é descartada. Sem reembolso. Se você renovar depois, continua no seu plano atual."
+  },
+  "cancelSubscription": {
+    "button": "Cancelar assinatura",
+    "errors": {
+      "no_billing_account": "Este plano não está vinculado a uma conta de cobrança. Escreva para {email} e cancelaremos para você.",
+      "no_subscription": "Não encontramos uma assinatura para cancelar. Recarregue a página ou escreva para {email}.",
+      "not_entitled": "Não há nenhum plano ativo para cancelar.",
+      "already_canceling": "Seu plano já está configurado para terminar no fim deste período de cobrança.",
+      "cancel_failed": "Não foi possível abrir a página de cancelamento. Tente novamente ou escreva para {email}.",
+      "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "Manter meu plano atual",
+    "success": "Seu plano continua {plan}.",
+    "successUnknownPlan": "Seu plano atual continua.",
+    "successRenews": "Seu plano continua {plan}. Ele será renovado em {date} por {amount}.",
+    "successRenewsOn": "Seu plano continua {plan}. Ele será renovado em {date}.",
+    "successUnknownPlanRenews": "Seu plano atual continua. Ele será renovado em {date} por {amount}.",
+    "successUnknownPlanRenewsOn": "Seu plano atual continua. Ele será renovado em {date}.",
+    "errors": {
+      "no_billing_account": "Este plano não está vinculado a uma conta de cobrança. Escreva para {email} e resolveremos para você.",
+      "no_subscription": "Não encontramos sua assinatura. Recarregue a página ou escreva para {email}.",
+      "no_scheduled_change": "Não há mais nenhuma mudança de plano agendada. Recarregue a página para ver seu plano.",
+      "keep_plan_failed": "Não foi possível manter seu plano atual. Tente novamente ou escreva para {email}.",
+      "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
+    }
   },
   "devicesCard": {
     "title": "Dispositivos",
@@ -68,6 +100,13 @@
   },
   "credits": {
     "failed": "Não foi possível iniciar o checkout",
-    "getMore": "Obter mais"
+    "getMore": "Obter mais",
+    "notAvailable": "Os pacotes de créditos exigem um plano Pro AI ativo em que o TabMerger cuida da configuração da IA.",
+    "rateLimited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
+  },
+  "aiPlan": {
+    "title": "Quem configura a IA",
+    "managed": "TabMerger: restam {left, number} de {limit, number} créditos de IA neste mês.",
+    "byok": "Você: sua própria chave de API, cobrada diretamente pelo seu provedor de IA, sem limite de créditos. Adicione ou troque a chave nas Configurações da extensão."
   }
 }

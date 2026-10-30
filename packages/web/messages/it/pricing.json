@@ -25,17 +25,21 @@
     "dragDrop": "Trascina e rilascia",
     "shortcuts": "Scorciatoie da tastiera",
     "everythingInFree": "Tutto ciò che è incluso in Free",
-    "unlimited": "Gruppi, schede, regole URL e sessioni illimitati",
+    "unlimited": "Gruppi, schede, regole e sessioni illimitati",
     "cloudSync": "Sincronizzazione cloud tra dispositivi",
     "sessionsSynced": "Sessioni sincronizzate tra dispositivi",
-    "autoBackups": "Backup crittografati automatici dei tuoi gruppi, con una copia facoltativa in un file sul tuo computer",
+    "autoBackups": "Backup crittografati automatici",
     "prioritySupport": "Assistenza prioritaria",
     "everythingInPro": "Tutto ciò che è incluso in Pro",
     "aiGrouping": "Raggruppamento automatico delle schede con IA",
     "aiNames": "Suggerimenti IA per i nomi dei gruppi",
+    "aiDescribe": "Descrizioni IA di gruppi e finestre",
     "smartSessions": "Suggerimenti di sessione intelligenti",
+    "aiOrganize": "Riordino dello spazio di lavoro con IA",
     "tabPreview": "Anteprima delle schede con riepilogo IA",
-    "aiCredits": "{count} crediti IA / mese"
+    "aiCreditsMonthly": "{count, number} crediti IA al mese",
+    "ownApiKey": "Usa il tuo fornitore di IA",
+    "chooseModel": "Scegli il tuo modello di IA"
   },
   "current": "Attuale",
   "installFree": "Installa gratis",
@@ -43,9 +47,13 @@
   "switchToMonthly": "Passa alla fatturazione mensile",
   "downgradeTo": "Passa a {name}",
   "upgradeTo": "Passa a {name}",
-  "switchFailed": "Impossibile avviare il cambio. Prova con Gestisci fatturazione nella pagina del tuo account.",
+  "getPlan": "Ottieni {name}",
+  "switchFailed": "Impossibile avviare il cambio. Riprova oppure scrivi a {email} se il problema persiste.",
   "alreadySubscribed": "Hai già un piano. Apriamo la fatturazione così puoi modificarlo.",
-  "portalFailed": "Impossibile aprire la fatturazione. Usa Gestisci fatturazione nella pagina del tuo account per cambiare piano.",
+  "alreadySubscribedShown": "Hai già un piano. Questa pagina ora lo mostra, quindi puoi modificarlo qui.",
+  "checkoutFailed": "Impossibile avviare il pagamento. Riprova tra un momento.",
+  "portalFailed": "Impossibile aprire la fatturazione. Riprova oppure scrivi a {email} per cambiare piano.",
+  "rateLimited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova.",
   "checkoutCanceled": "Pagamento annullato. Non ti è stato addebitato nulla.",
   "cancelAnytime": "Annulla in qualsiasi momento dal tuo account: nessun vincolo, nessuna domanda.",
   "keepAccess": "Mantieni l'accesso fino alla fine del periodo di fatturazione.",
@@ -55,5 +63,47 @@
     "title": "Prezzi semplici e trasparenti",
     "lead": "Inizia gratis. Passa a un piano superiore quando sei pronto per qualcosa in più.",
     "moreQuestions": "Hai altre domande? Consulta le <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Chi si occupa della configurazione?",
+    "managed": "Noi",
+    "byok": "Tu",
+    "managedHint": "I crediti misurano l’uso dell’IA: i lavori più grandi e i modelli più potenti ne consumano di più.",
+    "byokHint": "Aggiungi tu una chiave API di un fornitore. Ti addebita direttamente in base all’uso.",
+    "switchToByok": "Occupati tu della configurazione",
+    "switchToManaged": "Lascia la configurazione a TabMerger"
+  },
+  "planChange": {
+    "title": "Conferma il cambio di piano",
+    "confirmEndOfPeriod": "Il tuo piano passa a {plan} il {date}. Fino ad allora mantieni il piano attuale. Nessun rimborso per il resto di questo periodo.",
+    "confirmEndOfPeriodNoDate": "Il tuo piano passa a {plan} alla fine di questo periodo di fatturazione. Fino ad allora mantieni il piano attuale. Nessun rimborso per il resto di questo periodo.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "scheduled": "Fatto. Il tuo piano passa a {plan} il {date}.",
+    "scheduledNoDetails": "Fatto. Il tuo piano cambia alla fine di questo periodo di fatturazione.",
+    "aiDisabled": "Questa opzione di Pro AI non è ancora disponibile.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI configurato da TabMerger",
+      "proAiByok": "Pro AI configurato da te"
+    },
+    "billedMonthly": "{plan}, fatturazione mensile",
+    "billedYearly": "{plan}, fatturazione annuale",
+    "errors": {
+      "no_billing_account": "Questo piano non è collegato a un account di fatturazione, quindi non può essere modificato qui. Scrivi a {email} e lo modificheremo noi per te.",
+      "no_paid_plan": "Non hai un piano a pagamento da modificare. Scegli invece un piano a cui abbonarti.",
+      "already_on_price": "Hai già quel piano.",
+      "already_scheduled": "Una modifica del piano è già programmata per la fine di questo periodo di fatturazione.",
+      "cancel_scheduled": "Il tuo piano terminerà alla fine di questo periodo di fatturazione. Rinnovalo in «Gestisci fatturazione» prima di modificarlo.",
+      "pay_or_resume": "Il tuo piano è in attesa di un pagamento o è in pausa, quindi non può ancora essere modificato. Scrivi a {email} e ti aiuteremo a sistemarlo.",
+      "switch_needs_support": "Questa modifica del piano non può essere effettuata ora. Scrivi a {email} e faremo noi la modifica per te.",
+      "price_unavailable": "Al momento non è possibile passare a quel piano. Riprova più tardi o contattaci.",
+      "switch_failed": "Stripe non è riuscito ad avviare la modifica. Riprova, usa «Gestisci fatturazione» nella pagina del tuo account oppure scrivi a {email}.",
+      "rate_limited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova."
+    }
+  },
+  "scheduledChange": {
+    "starts": "Dal {date}",
+    "note": "Hai una modifica programmata per il {date}. <link>Gestiscila nella pagina del tuo account.</link>"
   }
 }

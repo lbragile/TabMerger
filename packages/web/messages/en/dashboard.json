@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "AI organise",
-  "aiOrganiseUpgrade": "Upgrade to Pro AI to use AI organise",
-  "aiOrganiseFromExtension": "Start this from the TabMerger extension popup",
   "tabGroups": "Tab Groups",
   "savedSessions": "Saved Sessions",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "AI credits this month",
-      "description": "Pro AI monthly usage",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "{left, number} left, about {organizes, number} organizes of {tabs, number} tabs"
     },
-    "loading": "Loading"
+    "loading": "Loading",
+    "aiOwnKey": {
+      "label": "AI setup",
+      "value": "You",
+      "description": "Your own API key: your AI provider bills you directly, with no credit limit"
+    }
   },
   "subscription": {
     "currentPlan": "Current plan",

@@ -33,7 +33,9 @@
     "groups": "Groupes synchronisés",
     "tabs": "Onglets enregistrés",
     "sessions": "Sessions et sauvegardes",
-    "aiCredits": "Crédits IA restants"
+    "aiCredits": "Crédits IA restants",
+    "aiOwnKey": "Qui configure l’IA",
+    "aiOwnKeyValue": "Vous"
   },
   "profile": {
     "title": "Profil",
@@ -51,7 +53,37 @@
     "description": "Gérez votre offre et votre facturation.",
     "manageBilling": "Gérer la facturation",
     "upgrade": "Passer à l’offre supérieure",
-    "cancelNote": "Vous pouvez résilier à tout moment via <strong>Gérer la facturation</strong>. Vous gardez l’accès jusqu’à la fin de la période de facturation en cours."
+    "cancelNote": "Vous pouvez résilier à tout moment via <strong>Gérer la facturation</strong>. Vous gardez l’accès jusqu’à la fin de la période de facturation en cours.",
+    "scheduledChange": "Passe à {plan} le {date}.",
+    "scheduledChangeUnknownPlan": "Votre forfait change le {date}.",
+    "scheduledCancelNote": "En résiliant, vous gardez votre forfait actuel jusqu’à la fin de cette période de facturation et le changement prévu est annulé. Aucun remboursement. Si vous renouvelez plus tard, vous gardez votre forfait actuel."
+  },
+  "cancelSubscription": {
+    "button": "Résilier l’abonnement",
+    "errors": {
+      "no_billing_account": "Ce forfait n’est lié à aucun compte de facturation. Écrivez à {email} et nous le résilierons pour vous.",
+      "no_subscription": "Nous n’avons trouvé aucun abonnement à résilier. Rechargez la page ou écrivez à {email}.",
+      "not_entitled": "Aucun forfait actif à résilier.",
+      "already_canceling": "Votre forfait est déjà prévu pour se terminer à la fin de cette période de facturation.",
+      "cancel_failed": "Impossible d’ouvrir la page de résiliation. Réessayez ou écrivez à {email}.",
+      "rate_limited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer."
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "Garder mon forfait actuel",
+    "success": "Votre forfait reste {plan}.",
+    "successUnknownPlan": "Votre forfait actuel est conservé.",
+    "successRenews": "Votre forfait reste {plan}. Il sera renouvelé le {date} pour {amount}.",
+    "successRenewsOn": "Votre forfait reste {plan}. Il sera renouvelé le {date}.",
+    "successUnknownPlanRenews": "Votre forfait actuel est conservé. Il sera renouvelé le {date} pour {amount}.",
+    "successUnknownPlanRenewsOn": "Votre forfait actuel est conservé. Il sera renouvelé le {date}.",
+    "errors": {
+      "no_billing_account": "Ce forfait n’est lié à aucun compte de facturation. Écrivez à {email} et nous nous en occuperons.",
+      "no_subscription": "Nous n’avons pas trouvé votre abonnement. Rechargez la page ou écrivez à {email}.",
+      "no_scheduled_change": "Aucun changement de forfait n’est plus prévu. Rechargez la page pour voir votre forfait.",
+      "keep_plan_failed": "Impossible de garder votre forfait actuel. Réessayez ou écrivez à {email}.",
+      "rate_limited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer."
+    }
   },
   "devicesCard": {
     "title": "Appareils",
@@ -68,6 +100,13 @@
   },
   "credits": {
     "failed": "Impossible de lancer le paiement",
-    "getMore": "En obtenir plus"
+    "getMore": "En obtenir plus",
+    "notAvailable": "Les packs de crédits nécessitent un forfait Pro AI actif dont la configuration de l'IA est gérée par TabMerger.",
+    "rateLimited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer."
+  },
+  "aiPlan": {
+    "title": "Qui configure l’IA",
+    "managed": "TabMerger : {left, number} crédits IA restants sur {limit, number} ce mois-ci.",
+    "byok": "Vous : votre propre clé API, facturée directement par votre fournisseur d’IA, sans limite de crédits. Ajoutez ou changez la clé dans les Paramètres de l’extension."
   }
 }

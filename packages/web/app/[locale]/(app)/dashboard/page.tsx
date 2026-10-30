@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
@@ -9,16 +10,14 @@ import { SavedSessionsProvider } from '@/components/dashboard/SavedSessionsProvi
 import { SessionsStatDescription, SessionsStatValue } from '@/components/dashboard/SessionsStat'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
-import { Sparkles } from 'lucide-react'
 import { getEffectiveCap } from '@/lib/ai-usage'
-import { AUTO_BACKUP_DOWNLOAD_LIMITS, isEncryptedBlob } from '@tabmerger/shared'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AUTO_BACKUP_DOWNLOAD_LIMITS, isAiMode } from '@tabmerger/shared'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
+import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { getPriceInfo } from '@/lib/tiers'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
@@ -37,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ upgraded?: string; organizeRunId?: string; organizeToken?: string }>
+  searchParams: Promise<{ upgraded?: string }>
 }) {
   const params = await searchParams
   const supabase = await createClient()
@@ -99,27 +98,39 @@ export default async function DashboardPage({
     0
   )
 
-  let aiUsage: { used: number; limit: number } | undefined
-  if (AI_ENABLED && currentTier === 'pro_ai') {
-    const month = new Date().toISOString().slice(0, 7)
-    const { data: usage } = await supabase
-      .from('ai_usage')
-      .select('credits_used')
-      .eq('user_id', user.id)
-      .eq('month', month)
-      .single()
-    aiUsage = {
-      used: usage?.credits_used ?? 0,
-      limit: await getEffectiveCap(supabase, user.id, month),
+  // Pro AI's option: TabMerger's AI (credits) or the subscriber's own key (no credits to show).
+  // The card shows for any Pro AI row (as on the account page), but buying credits and switching the
+  // option need a paid-up plan (`syncEnabled`: active, trialing or past_due), the rule
+  // `/api/checkout/credits` and `/api/billing/switch-plan` enforce.
+  const aiMode = isAiMode(subscription?.ai_mode) ? subscription.ai_mode : 'managed'
+  const aiSwitch = syncEnabled && (
+    <SwitchAiModeButton
+      current={aiMode}
+      interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
+      periodEnd={subscription?.current_period_end}
+      returnPath="/dashboard"
+    />
+  )
+  let aiUsage: ComponentProps<typeof StatsOverview>['aiUsage']
+  if (AI_AVAILABILITY.any && currentTier === 'pro_ai') {
+    if (aiMode === 'byok') {
+      aiUsage = { mode: 'byok', action: aiSwitch }
+    } else {
+      const month = new Date().toISOString().slice(0, 7)
+      const { data: usage } = await supabase
+        .from('ai_usage')
+        .select('credits_used')
+        .eq('user_id', user.id)
+        .eq('month', month)
+        .single()
+      aiUsage = {
+        mode: 'managed',
+        used: usage?.credits_used ?? 0,
+        limit: await getEffectiveCap(supabase, user.id, month),
+        canBuyCredits: syncEnabled,
+        action: aiSwitch,
+      }
     }
-  }
-
-  const { organizeRunId, organizeToken } = params
-  let organizeSession: string | null = null
-  if (AI_ENABLED && organizeRunId && organizeToken) {
-    /** OrganizeProposal is a client component and can't read server cookies, so we pass the JWT down as a prop */
-    const { data: { session } } = await supabase.auth.getSession()
-    organizeSession = session?.access_token ?? null
   }
 
   return (
@@ -131,46 +142,14 @@ export default async function DashboardPage({
         <UpgradedBanner planName={subscription?.tier === 'pro_ai' ? tierNames('proAi') : tierNames('pro')} />
       )}
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-2xl font-bold">{t('greeting', { name: firstNameFromEmail(user.email ?? '') })}</h1>
-            <Badge
-              variant={currentTier === 'pro' ? 'default' : 'secondary'}
-              className="capitalize rounded-md"
-            >
-              {t(`tierBadge.${currentTier}`)}
-            </Badge>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* ponytail: no web-initiated organize trigger exists yet — the extension starts the
-              workflow and deep-links back here with organizeRunId/organizeToken. Point users there.
-              Disabled buttons don't fire hover events, so the tooltip trigger wraps the button in
-              a span rather than relying on a native title attribute (which silently never fires).
-              Hidden entirely while AI features are behind the coming-soon flag. */}
-          {AI_ENABLED && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span tabIndex={currentTier !== 'pro_ai' ? 0 : undefined}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={currentTier !== 'pro_ai'}
-                    >
-                      <Sparkles className="h-4 w-4 me-1.5" />
-                      {t('aiOrganise')}
-                    </Button>
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {currentTier !== 'pro_ai' ? t('aiOrganiseUpgrade') : t('aiOrganiseFromExtension')}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
+      <div className="flex items-center gap-2 flex-wrap">
+        <h1 className="text-2xl font-bold">{t('greeting', { name: firstNameFromEmail(user.email ?? '') })}</h1>
+        <Badge
+          variant={currentTier === 'pro' ? 'default' : 'secondary'}
+          className="capitalize rounded-md"
+        >
+          {t(`tierBadge.${currentTier}`)}
+        </Badge>
       </div>
 
       <OnboardingChecklist isSignedIn={!!user} isPro={isPro} installHref={getStoreLinks()[await getVisitorBrowser()]} />
@@ -191,15 +170,6 @@ export default async function DashboardPage({
         currentPeriodEnd={subscription?.current_period_end}
         priceId={subscription?.stripe_price_id}
       />
-
-      {AI_ENABLED && organizeRunId && organizeToken && organizeSession && (
-        <OrganizeProposal
-          runId={organizeRunId}
-          token={organizeToken}
-          supabaseToken={organizeSession}
-          encrypted={(groups ?? []).some((g: { windows?: unknown }) => isEncryptedBlob(g.windows))}
-        />
-      )}
 
       {syncEnabled && (
         <div>

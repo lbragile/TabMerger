@@ -4,11 +4,12 @@ import React from 'react'
 import { AIGroupSuggestion } from '@/components/AIGroupSuggestion'
 import type { GroupsState } from '@/lib/types'
 
-const { mockSuggest, mockUseEntitlements, mockUseGroups, mockArchiveGroup, mockOpenModal, mockGetSetting } = vi.hoisted(() => ({
+const { mockSuggest, mockUseEntitlements, mockUseGroups, mockArchiveGroup, mockMergeGroups, mockOpenModal, mockGetSetting } = vi.hoisted(() => ({
   mockSuggest: vi.fn().mockResolvedValue({ message: '', staleGroupIds: [] }),
   mockUseEntitlements: vi.fn(),
   mockUseGroups: vi.fn(),
   mockArchiveGroup: vi.fn().mockResolvedValue(undefined),
+  mockMergeGroups: vi.fn().mockResolvedValue(undefined),
   mockOpenModal: vi.fn(),
   mockGetSetting: vi.fn().mockResolvedValue({ confirmOnDelete: false }),
 }))
@@ -19,7 +20,10 @@ const MockQuotaExceededError = vi.hoisted(() => class extends Error {
 
 // This suite tests the suggestion banner's own behavior (dismiss/storage/quota), not
 // the coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
+// The component imports the error class from '@/lib/aiErrors' (never re-exported by useAI: see
+// the WXT auto-import note there), so the stub class replaces it there too.
+vi.mock('@/lib/aiErrors', async (importOriginal) => ({ ...(await importOriginal<object>()), QuotaExceededError: MockQuotaExceededError }))
 vi.mock('@/hooks/useAI', () => ({
   useSuggestSessions: () => ({ mutateAsync: mockSuggest }),
   QuotaExceededError: MockQuotaExceededError,
@@ -28,6 +32,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
   // one write (and one undo step) for every group archived at once
   useArchiveGroups: () => ({ mutateAsync: mockArchiveGroup }),
+  useMergeGroups: () => ({ mutateAsync: mockMergeGroups }),
 }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/components/AIQuotaExceededPrompt', () => ({
@@ -38,14 +43,21 @@ vi.mock('@/stores/uiStore', () => ({
 }))
 vi.mock('@/lib/localDb', () => ({ getSetting: (...args: unknown[]) => mockGetSetting(...args) }))
 
-function mockStorage(stored: unknown) {
+/**
+ * A live stored suggestion without a `kind` is treated as an archive one here, the shape every
+ * suggestion is saved with now. `legacy: true` stores it as is, as saved before `kind` existed.
+ */
+function mockStorage(stored: unknown, { legacy = false } = {}) {
+  const live = stored && typeof stored === 'object' && !('kind' in stored) && !(stored as { dismissed?: boolean }).dismissed
+  const value = live && !legacy ? { ...stored, kind: 'archive' } : stored
   globalThis.chrome = {
     storage: {
       local: {
         get: vi.fn((_key: string, cb: (result: Record<string, unknown>) => void) => {
-          cb({ tm_ai_suggestion: stored })
+          cb({ tm_ai_suggestion: value })
         }),
         set: vi.fn(),
+        remove: vi.fn(),
       },
     },
   } as unknown as typeof chrome
@@ -64,6 +76,7 @@ describe('AIGroupSuggestion', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockArchiveGroup.mockResolvedValue(undefined)
+    mockMergeGroups.mockResolvedValue(undefined)
     mockUseGroups.mockReturnValue({ data: twoGroups })
     mockGetSetting.mockResolvedValue({ confirmOnDelete: false })
   })
@@ -111,7 +124,7 @@ describe('AIGroupSuggestion', () => {
     await onArchive('g1')
     expect(mockArchiveGroup).toHaveBeenCalledWith(['g1'])
     await waitFor(() => expect(globalThis.chrome.storage.local.set).toHaveBeenCalledWith({
-      tm_ai_suggestion: { message: 'You have 2 groups untouched for 2 weeks.', staleGroupIds: ['g2'], dismissed: false },
+      tm_ai_suggestion: { message: 'You have 2 groups untouched for 2 weeks.', staleGroupIds: ['g2'], kind: 'archive', dismissed: false },
     }))
   })
 
@@ -241,5 +254,130 @@ describe('AIGroupSuggestion', () => {
     render(React.createElement(AIGroupSuggestion))
     await waitFor(() => expect(mockSuggest).toHaveBeenCalledTimes(1))
     expect(await screen.findByText('New AI idea')).toBeTruthy()
+  })
+
+  describe('merge suggestions', () => {
+    const MSG = 'Shopping and Research are both mostly GitHub. Merge them?'
+    const stored = (over: Record<string, unknown> = {}) => ({ message: MSG, staleGroupIds: ['g1', 'g2'], kind: 'merge', dismissed: false, ...over })
+
+    it('shows Merge instead of Archive for a merge suggestion', async () => {
+      mockStorage(stored())
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      render(React.createElement(AIGroupSuggestion))
+      await screen.findByText(MSG)
+      expect(screen.getByRole('button', { name: 'Merge' })).toBeTruthy()
+      expect(screen.queryByRole('button', { name: 'Archive' })).toBeNull()
+      expect(screen.getByRole('button', { name: 'Review' })).toBeTruthy()
+    })
+
+    it('Merge merges the listed groups in order in one call and dismisses the banner', async () => {
+      mockStorage(stored())
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      render(React.createElement(AIGroupSuggestion))
+      await screen.findByText(MSG)
+      fireEvent.click(screen.getByRole('button', { name: 'Merge' }))
+      await waitFor(() => expect(mockMergeGroups).toHaveBeenCalledWith(['g1', 'g2']))
+      expect(mockMergeGroups).toHaveBeenCalledTimes(1)
+      expect(mockArchiveGroup).not.toHaveBeenCalled()
+      await waitFor(() => expect(screen.queryByText(MSG)).toBeNull())
+      expect(globalThis.chrome.storage.local.set).toHaveBeenLastCalledWith({
+        tm_ai_suggestion: { message: '', staleGroupIds: [], dismissed: true },
+      })
+    })
+
+    it('Merge skips the delete confirm even when confirmOnDelete is on (nothing is deleted, one undo step)', async () => {
+      mockStorage(stored())
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      mockGetSetting.mockResolvedValue({ confirmOnDelete: true })
+      render(React.createElement(AIGroupSuggestion))
+      await screen.findByText(MSG)
+      fireEvent.click(screen.getByRole('button', { name: 'Merge' }))
+      await waitFor(() => expect(mockMergeGroups).toHaveBeenCalledWith(['g1', 'g2']))
+      expect(mockOpenModal).not.toHaveBeenCalled()
+    })
+
+    it('hides and auto-dismisses when fewer than two of the groups are left', async () => {
+      mockStorage(stored({ staleGroupIds: ['g1', 'deleted-id'] }))
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      const { container } = render(React.createElement(AIGroupSuggestion))
+      await waitFor(() =>
+        expect(globalThis.chrome.storage.local.set).toHaveBeenCalledWith({
+          tm_ai_suggestion: { message: '', staleGroupIds: [], dismissed: true },
+        })
+      )
+      expect(container.firstChild).toBeNull()
+      expect(mockMergeGroups).not.toHaveBeenCalled()
+    })
+
+    it('merges only the groups that still exist when one of three is gone', async () => {
+      mockUseGroups.mockReturnValue({
+        data: { ...twoGroups, available: [...twoGroups.available, makeGroup('g3', 'Misc')] },
+      })
+      mockStorage(stored({ staleGroupIds: ['g1', 'gone', 'g3'] }))
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      render(React.createElement(AIGroupSuggestion))
+      await screen.findByText(MSG)
+      fireEvent.click(screen.getByRole('button', { name: 'Merge' }))
+      await waitFor(() => expect(mockMergeGroups).toHaveBeenCalledWith(['g1', 'g3']))
+    })
+
+    it('keeps the kind on the stored suggestion after a group is archived from Review', async () => {
+      mockStorage(stored())
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      render(React.createElement(AIGroupSuggestion))
+      await screen.findByText(MSG)
+      fireEvent.click(screen.getByRole('button', { name: 'Review' }))
+      const { onArchive } = mockOpenModal.mock.calls[0][1] as { onArchive: (groupId: string) => Promise<void> }
+      await onArchive('g1')
+      await waitFor(() =>
+        expect(globalThis.chrome.storage.local.set).toHaveBeenCalledWith({
+          tm_ai_suggestion: { message: MSG, staleGroupIds: ['g2'], kind: 'merge', dismissed: false },
+        })
+      )
+    })
+
+    it('drops a stored suggestion saved before kind existed and fetches a fresh one', async () => {
+      mockStorage({ message: MSG, staleGroupIds: ['g1', 'g2'], dismissed: false }, { legacy: true })
+      mockSuggest.mockResolvedValue({ message: 'Fresh idea', staleGroupIds: ['g1', 'g2'], kind: 'merge' })
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      render(React.createElement(AIGroupSuggestion))
+      expect(await screen.findByText('Fresh idea')).toBeTruthy()
+      expect(screen.queryByText(MSG)).toBeNull()
+      expect(globalThis.chrome.storage.local.remove).toHaveBeenCalledWith('tm_ai_suggestion')
+      expect(mockSuggest).toHaveBeenCalledTimes(1)
+      expect(screen.getByRole('button', { name: 'Merge' })).toBeTruthy()
+    })
+
+    it('keeps a dismissed suggestion saved before kind existed dismissed', async () => {
+      mockStorage({ message: '', staleGroupIds: [], dismissed: true }, { legacy: true })
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      const { container } = render(React.createElement(AIGroupSuggestion))
+      await waitFor(() => expect(globalThis.chrome.storage.local.get).toHaveBeenCalled())
+      expect(container.firstChild).toBeNull()
+      expect(globalThis.chrome.storage.local.remove).not.toHaveBeenCalled()
+      expect(mockSuggest).not.toHaveBeenCalled()
+    })
+
+    it('stores the kind of a freshly fetched merge suggestion', async () => {
+      mockStorage(null)
+      mockSuggest.mockResolvedValue({ message: MSG, staleGroupIds: ['g1', 'g2'], kind: 'merge' })
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      render(React.createElement(AIGroupSuggestion))
+      expect(await screen.findByRole('button', { name: 'Merge' })).toBeTruthy()
+      expect(globalThis.chrome.storage.local.set).toHaveBeenCalledWith({
+        tm_ai_suggestion: { message: MSG, staleGroupIds: ['g1', 'g2'], kind: 'merge', dismissed: false },
+      })
+    })
+
+    it.each([[undefined], ['split'], [3]])('a fetched suggestion with kind %j falls back to archive', async (kind) => {
+      mockStorage(null)
+      mockSuggest.mockResolvedValue({ message: 'Old idea', staleGroupIds: ['g1'], kind })
+      mockUseEntitlements.mockReturnValue({ aiFeatures: true, loading: false })
+      render(React.createElement(AIGroupSuggestion))
+      expect(await screen.findByRole('button', { name: 'Archive' })).toBeTruthy()
+      expect(globalThis.chrome.storage.local.set).toHaveBeenCalledWith({
+        tm_ai_suggestion: { message: 'Old idea', staleGroupIds: ['g1'], kind: 'archive', dismissed: false },
+      })
+    })
   })
 })

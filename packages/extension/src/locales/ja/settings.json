@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "グループや保存済みウィンドウを削除する前に確認します",
     "openOnClickLabel": "クリックでタブを開く",
     "openOnClickDescription": "1回クリックするとブラウザでタブが開きます",
+    "showAiButtonLabel": "AIボタンを表示",
+    "showAiButtonDescription": "ヘッダーの✨ボタン。タブとグループのAI操作を使えます",
     "dedupLabel": "統合時に自動で重複排除",
     "dedupDescription": "ウィンドウを統合するときに重複するタブを削除します",
     "previewImagesLabel": "プレビューにページ画像を表示",
@@ -59,7 +61,9 @@
     "openingPortal": "開いています...",
     "manageBilling": "請求を管理",
     "signOut": "サインアウト",
-    "resetEncryption": "パスフレーズをお忘れですか？暗号化をリセット"
+    "resetEncryption": "パスフレーズをお忘れですか？暗号化をリセット",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "自分の API キー"
   },
   "data": {
     "intro": "TabMergerはすべてのデータをIndexedDBにローカル保存します。クラウド同期にはProアカウントが必要です。",
@@ -78,8 +82,10 @@
     "intro": "以下のAI操作はすべて、同じ月間AI利用枠から消費されます（アカウントタブを参照）。使わない機能はオフにして、利用枠を節約してください。",
     "autoGroupLabel": "自動グループ化",
     "autoGroupDescription": "開いているタブをAIでグループ化します",
-    "nameGroupLabel": "グループに名前を付ける",
-    "nameGroupDescription": "AIでグループ名を提案します",
+    "nameGroupLabel": "グループとウィンドウに名前を付ける",
+    "nameGroupDescription": "AIでグループやウィンドウの名前を提案します",
+    "describeGroupLabel": "グループとウィンドウの説明を書く",
+    "describeGroupDescription": "AIでグループやウィンドウのタブについて短いメモを書きます",
     "suggestSessionsLabel": "セッションを提案",
     "suggestSessionsDescription": "セッションの保存タイミングをバックグラウンドのバナーで提案します",
     "organizeLabel": "整理",
@@ -87,14 +93,72 @@
     "summariesLabel": "タブプレビューの要約",
     "summariesDescription": "タブのホバープレビューにAIの要約を表示します",
     "throttleLabel": "AIの自動提案を1日1回に制限",
-    "throttleDescription": "バックグラウンドのセッション提案バナーは、月間AI利用枠を守るため、1日に最大1回だけ表示されます。手動で実行したAI操作（自動グループ化、グループに名前を付ける、整理）はこの制限を受けません。"
+    "throttleDescription": "バックグラウンドのセッション提案バナーは、月間AI利用枠を守るため、1日に最大1回だけ表示されます。手動で実行したAI操作（自動グループ化、グループに名前を付ける、整理）はこの制限を受けません。",
+    "buyCredits": "クレジットを追加購入",
+    "buyCreditsLabel": "クレジットを追加購入（新しいタブ）",
+    "plan": {
+      "managed": "セットアップは TabMerger が担当 — 今月の残り {{remaining}} / {{cap}} クレジット",
+      "managedUnknown": "セットアップは TabMerger が担当",
+      "byok": "自分の {{provider}} API キーを追加済み",
+      "byokNoKey": "自分の API キーを追加します：AI 機能を使うには下に入力してください"
+    },
+    "provider": {
+      "label": "AI プロバイダー",
+      "description": "API キーを発行した会社を選んでください。",
+      "placeholder": "プロバイダーを選択"
+    },
+    "key": {
+      "label": "{{provider}} の API キー",
+      "save": "キーを保存",
+      "checking": "確認中…",
+      "replace": "置き換える",
+      "remove": "削除",
+      "saved": "API キーを保存しました",
+      "removed": "API キーを削除しました",
+      "invalidFormat": "有効な {{provider}} の API キーの形式ではありません。",
+      "verifyFailed": "キーを確認できませんでした。もう一度お試しください。",
+      "testKey": "テストキーを使用",
+      "testKeyHint": "開発ビルドのみ：ダミーのキーを保存します。Web開発サーバーが AI_MOCK=true で動作している間だけ使えます。",
+      "note": "このデバイスにのみ保存されます。AI リクエストのたびに TabMerger のサーバーへ送信され、キーを発行したプロバイダーにそのまま渡されます。当社のサーバーには保存されません。",
+      "getKey": "キーを作成し、利用上限を設定する：",
+      "wrongProvider": "このキーは {{detected}} のもののようです。上で {{detected}} を選ぶか、{{provider}} のキーを貼り付けてください。",
+      "switching": "{{provider}} のキーを保存するまで、保存済みの {{saved}} のキーが引き続き使われます。",
+      "guideLink": "キーの作成方法",
+      "keysLink": "{{provider}} の API キー管理ページ"
+    },
+    "model": {
+      "label": "AI モデル",
+      "managedDescription": "大きいモデルほど結果が良くなり、クレジットを多く使います。数値は目安です。",
+      "byokDescription": "大きいモデルほど結果が良くなり、プロバイダーからの請求も高くなります。",
+      "auto": "自動",
+      "recommended": "おすすめ",
+      "autoDescription": "作業ごとに、十分な品質で最も安いモデルを使います。"
+    },
+    "estimate": {
+      "item": "{{action}}：{{amount}}",
+      "credits_other": "約 {{formatted}} クレジット",
+      "perMonth_other": "クレジットで整理できる回数：月に約 {{formatted}} 回",
+      "action": {
+        "nameGroup_other": "{{count}} 個のタブのグループに名前を付ける",
+        "tabSummary": "タブを1つ要約する",
+        "groupTabs_other": "{{count}} 個のタブをグループ化する",
+        "suggestSessions": "セッションを提案する",
+        "organize_other": "{{count}} 個のタブを整理する",
+        "describeGroup_other": "{{count}} 個のタブのグループの説明を書く"
+      }
+    },
+    "cost": {
+      "low": "最も低コスト",
+      "medium": "中程度のコスト",
+      "high": "最も高コスト"
+    }
   },
   "dev": {
     "demoLabel": "デモモード",
     "demoDescription": "マーケティング用デモのパイプライン向けにサンプルデータを投入します",
     "demoButton": "開始",
-    "usageLabel": "AI使用回数のモック",
-    "usageDescription": "AIクレジットのカウンター（上限{{cap}}）をローカルに設定し、実際のSupabaseアカウントにも同期します。サーバー側の利用枠の適用をエンドツーエンドでテストできます。",
+    "usageLabel": "今月の使用済みクレジット",
+    "usageDescription": "Web開発サーバー経由で、アカウントの今月の使用済みAIクレジット（上限{{cap}}）を設定します。リセットすると今月のクレジットパックも削除されます。",
     "usageSet": "設定",
     "usageReset": "リセット",
     "sentryLabel": "Sentry",
@@ -104,9 +168,9 @@
   "toast": {
     "encryptionReset": "暗号化をリセットしました。新しいパスフレーズを設定してください",
     "encryptionResetFailed": "暗号化をリセットできませんでした",
-    "signInForAiUsage": "サーバーにAI使用量を同期するには、サインインしてください",
-    "aiUsageSet": "サーバーのAI使用量を{{count}}に設定しました",
-    "aiUsageFailed": "AI使用量をサーバーに同期できませんでした",
+    "signInForAiUsage": "使用済みAIクレジットを設定するには、サインインしてください",
+    "aiUsageSet": "使用済みAIクレジットを{{credits}}に設定しました",
+    "aiUsageFailed": "使用済みAIクレジットを設定できませんでした",
     "previewImagesDenied": "ページ画像の取得にFirefoxの権限が必要です。これをオンにするには、ブラウザのプロンプトで許可してください。",
     "saved": "設定を保存しました",
     "cleared": "すべてのデータを消去しました",

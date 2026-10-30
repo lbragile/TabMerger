@@ -5,10 +5,14 @@ metadata:
   type: reference
 ---
 
-- **A migration file is write-once.** The protect-migrations hook blocks any Write/Edit to a
-  `supabase/migrations/*.sql` path that already exists, including a file created minutes ago.
-  Draft the SQL in the scratchpad, `docker cp` it into `supabase_db_tabmerger`, and run it with
-  `\i` inside `begin; ... rollback;` (twice, for idempotency) before writing the real file.
+- **Treat a migration file as write-once.** The protect-migrations hook is meant to block any
+  Write/Edit to a `supabase/migrations/*.sql` path that already exists (even one created
+  minutes ago), so don't count on fixing a file after writing it. An edit is only legitimate
+  while the migration exists on the local stack alone, and the caller should say so. Draft the
+  SQL in the scratchpad, `docker cp` it into `supabase_db_tabmerger`, and run it with `\i`
+  inside `begin; ... rollback;` (twice, for idempotency) before writing the real file. After
+  editing a migration that is already applied locally, re-run it by hand with
+  `psql -1 -f` (it must be idempotent) instead of `db reset`, which wipes local data.
 - **Apply without wiping data:** `pnpm exec supabase migration up --local`. In
   `migration list --local` the "remote" column is the local database, not a hosted project.
 - **pgTAP runner is `postgres`**, which locally is not a superuser. It can `set local role` to
@@ -31,3 +35,8 @@ metadata:
   `MSYS_NO_PATHCONV=1` for container paths and `cygpath -w` for the host side of `docker cp`.
 - **Advisors run locally:** `pnpm exec supabase db advisors --local --type all --level info`
   (JSON after the first line) and `pnpm exec supabase db lint --local`.
+- **Dry-running a pgTAP file by hand:** `pgtap` is only installed while `supabase test db` runs,
+  so a `psql -f` of a test file fails with `function plan(integer) does not exist`. Wrap it:
+  `begin; create extension if not exists pgtap with schema extensions; \i <migration> \i <test>`
+  and let psql end (the session's open transaction rolls back). The test's own `begin;` only
+  warns. This proves the draft migration and its tests together before the migration is written.

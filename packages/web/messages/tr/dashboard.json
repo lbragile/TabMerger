@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Yapay zekâ ile düzenle",
-  "aiOrganiseUpgrade": "Yapay zekâ ile düzenlemeyi kullanmak için Pro AI'ya yükseltin",
-  "aiOrganiseFromExtension": "Bunu TabMerger uzantısının açılır penceresinden başlatın",
   "tabGroups": "Sekme Grupları",
   "savedSessions": "Kayıtlı Oturumlar",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "Bu ayki yapay zekâ kredileri",
-      "description": "Pro AI aylık kullanımı",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "{left, number} kaldı, yaklaşık {organizes, number} kez {tabs, number} sekme düzenleme"
     },
-    "loading": "Yükleniyor"
+    "loading": "Yükleniyor",
+    "aiOwnKey": {
+      "label": "Yapay zekâ kurulumu",
+      "value": "Siz",
+      "description": "Kendi API anahtarınız: yapay zekâ sağlayıcınız ücreti doğrudan sizden alır, kredi sınırı yok"
+    }
   },
   "subscription": {
     "currentPlan": "Mevcut plan",

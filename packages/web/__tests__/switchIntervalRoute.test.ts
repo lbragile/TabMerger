@@ -4,6 +4,13 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 const mockGetUser = vi.fn()
 const mockSubscription = vi.fn()
@@ -29,17 +36,18 @@ vi.mock('@/lib/supabase/server', () => ({
 
 const mockCreateSession = vi.fn()
 vi.mock('@/lib/stripe', async () => {
-  class IntervalSwitchError extends Error {
+  class PlanSwitchError extends Error {
     constructor(readonly reason: string) {
       super(reason)
     }
   }
-  return { createIntervalSwitchSession: mockCreateSession, IntervalSwitchError }
+  return { createPlanSwitchSession: mockCreateSession, PlanSwitchError }
 })
 
 const request = (body: unknown) =>
   new NextRequest('http://localhost/api/billing/switch-interval', {
     method: 'POST',
+    headers: SAME_ORIGIN_HEADERS,
     body: typeof body === 'string' ? body : JSON.stringify(body),
   })
 
@@ -57,10 +65,13 @@ describe('POST /api/billing/switch-interval', () => {
     vi.stubEnv('STRIPE_PRO_YEARLY_PRICE_ID', 'price_pro_y')
     vi.stubEnv('STRIPE_PRO_AI_MONTHLY_PRICE_ID', 'price_ai_m')
     vi.stubEnv('STRIPE_PRO_AI_YEARLY_PRICE_ID', 'price_ai_y')
+    // A Pro AI subscription switches interval only while its option is on sale.
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'false')
     mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } })
     mockSubscription.mockResolvedValue({ data: { tier: 'pro', status: 'active' } })
     mockProfile.mockResolvedValue({ data: { stripe_customer_id: 'cus_1' } })
-    mockCreateSession.mockResolvedValue('https://billing.stripe.com/p/session/test')
+    mockCreateSession.mockResolvedValue({ kind: 'portal', url: 'https://billing.stripe.com/p/session/test' })
   })
 
   afterEach(() => {
@@ -126,18 +137,18 @@ describe('POST /api/billing/switch-interval', () => {
   })
 
   it('maps "already on that price" to 409 and "no subscription in Stripe" to 403', async () => {
-    const { IntervalSwitchError } = await import('@/lib/stripe')
-    mockCreateSession.mockRejectedValueOnce(new IntervalSwitchError('already_on_price'))
+    const { PlanSwitchError } = await import('@/lib/stripe')
+    mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('already_on_price'))
     expect((await post({ interval: 'yearly' })).status).toBe(409)
 
     const again = await import('@/lib/stripe')
-    mockCreateSession.mockRejectedValueOnce(new again.IntervalSwitchError('no_subscription'))
+    mockCreateSession.mockRejectedValueOnce(new again.PlanSwitchError('no_subscription'))
     expect((await post({ interval: 'yearly' })).status).toBe(403)
   })
 
   it('maps a pending scheduled switch to 409 with a message the page shows as-is', async () => {
-    const { IntervalSwitchError } = await import('@/lib/stripe')
-    mockCreateSession.mockRejectedValueOnce(new IntervalSwitchError('already_scheduled'))
+    const { PlanSwitchError } = await import('@/lib/stripe')
+    mockCreateSession.mockRejectedValueOnce(new PlanSwitchError('already_scheduled'))
     const res = await post({ interval: 'monthly' })
     expect(res.status).toBe(409)
     expect((await res.json()).error).toMatch(/already scheduled for the end of this term/)

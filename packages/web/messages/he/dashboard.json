@@ -6,9 +6,6 @@
     "pro": "Pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "ארגון עם AI",
-  "aiOrganiseUpgrade": "כדי להשתמש בארגון עם AI צריך לשדרג ל-Pro AI",
-  "aiOrganiseFromExtension": "אפשר להתחיל את זה מהחלון הקופץ של תוסף TabMerger",
   "tabGroups": "קבוצות כרטיסיות",
   "savedSessions": "סשנים שמורים",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "קרדיטים של AI החודש",
-      "description": "שימוש חודשי ב-Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "נותרו {left, number}, בערך {organizes, number} סידורים של {tabs, number} כרטיסיות"
     },
-    "loading": "טוען"
+    "loading": "טוען",
+    "aiOwnKey": {
+      "label": "הגדרת AI",
+      "value": "בעצמך",
+      "description": "מפתח API משלך: ספק ה-AI מחייב אותך ישירות, בלי מגבלת קרדיטים"
+    }
   },
   "subscription": {
     "currentPlan": "התוכנית הנוכחית",

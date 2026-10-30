@@ -1,6 +1,7 @@
 {
   "review": "Review",
   "archive": "Archive",
+  "merge": "Merge",
   "dismiss": "Dismiss",
   "getMore": "Get more",
   "removeStale": "Remove stale",
@@ -17,5 +18,7 @@
     "restart": "Restart to update",
     "restartLabel": "Restart TabMerger to update to version {{version}}. This closes the popup.",
     "dismissLabel": "Dismiss the update notice for version {{version}}"
-  }
+  },
+  "aiQuotaPrompt": "Not enough AI credits left this month. Choose a cheaper model or buy more credits.",
+  "changeModel": "Change model"
 }

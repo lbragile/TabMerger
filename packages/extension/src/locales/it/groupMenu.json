@@ -3,6 +3,8 @@
   "renameHint": "Imposta un nuovo nome per questo gruppo",
   "aiRename": "Rinomina con AI",
   "aiRenameHint": "Suggerisci un nome per questo gruppo con l'AI",
+  "aiDescribe": "Descrivi con AI",
+  "aiDescribeHint": "Scrivi con l'AI una breve nota sulle schede di questo gruppo",
   "addNote": "Aggiungi nota",
   "addNoteHint": "Allega una nota a questo gruppo",
   "editNote": "Modifica nota",
@@ -38,6 +40,12 @@
   "toast": {
     "noDuplicates": "Nessun duplicato trovato",
     "noTabsToName": "Nessuna scheda in questo gruppo a cui dare un nome",
-    "aiRenameFailed": "Rinomina con AI non riuscita"
+    "aiRenameFailed": "Rinomina con AI non riuscita",
+    "nameAlreadyFits": "«{{name}}» è già adatto a questo gruppo",
+    "noTabsToDescribe": "Nessuna scheda da descrivere in questo gruppo",
+    "aiDescribeFailed": "Impossibile descrivere questo gruppo",
+    "noteAdded": "Nota aggiunta",
+    "noteReplaced": "Nota sostituita",
+    "undoNoteLater": "Dopo questa modifica ce ne sono state altre. Usa invece Annulla in alto."
   }
 }

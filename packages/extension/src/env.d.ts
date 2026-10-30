@@ -16,7 +16,10 @@ interface ImportMetaEnv {
   readonly VITE_EXTRA_WEB_APP_URLS?: string;
   readonly VITE_STRIPE_PUBLISHABLE_KEY: string;
   readonly VITE_DEMO_BUILD?: string;
+  /** Managed Pro AI (TabMerger's key); also turns on the own-key option. See src/lib/aiFlag.ts. */
   readonly VITE_AI_ENABLED?: string;
+  /** Own-key Pro AI only, so it can launch before managed AI. See src/lib/aiFlag.ts. */
+  readonly VITE_AI_BYOK_ENABLED?: string;
   /** "1" in a development build shows the pseudo-locale (src/lib/pseudoLocale.ts); ignored elsewhere. */
   readonly VITE_PSEUDO_LOCALE?: string;
   readonly VITE_POSTHOG_API_KEY?: string;

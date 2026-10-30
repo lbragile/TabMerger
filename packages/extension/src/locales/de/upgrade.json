@@ -33,7 +33,7 @@
     "pro": {
       "name": "Pro",
       "f1": "Alles aus Kostenlos",
-      "f2": "Unbegrenzte Gruppen, Tabs, URL-Regeln und Sitzungen",
+      "f2": "Unbegrenzte Gruppen, Tabs, Regeln und Sitzungen",
       "f3": "Cloud-Sync zwischen Geräten"
     },
     "pro_ai": {
@@ -45,5 +45,6 @@
   },
   "maybeLater": "Vielleicht später",
   "signIn": "Anmelden",
-  "upgradeNow": "Jetzt upgraden"
+  "upgradeNow": "Jetzt upgraden",
+  "byokOption": "Oder {{price}}/Monat: Nutze deinen eigenen KI-Anbieter (Anthropic, OpenAI oder Gemini)"
 }

@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "سازمان‌دهی با هوش مصنوعی",
-  "aiOrganiseUpgrade": "برای استفاده از سازمان‌دهی با هوش مصنوعی به Pro AI ارتقا دهید",
-  "aiOrganiseFromExtension": "این کار را از پاپ‌آپ افزونهٔ TabMerger شروع کنید",
   "tabGroups": "گروه‌های زبانه",
   "savedSessions": "نشست‌های ذخیره‌شده",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "اعتبار هوش مصنوعی این ماه",
-      "description": "مصرف ماهانهٔ Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "{left, number} باقی‌مانده، حدود {organizes, number} بار مرتب‌سازی {tabs, number} زبانه"
     },
-    "loading": "در حال بارگیری"
+    "loading": "در حال بارگیری",
+    "aiOwnKey": {
+      "label": "راه‌اندازی هوش مصنوعی",
+      "value": "خودتان",
+      "description": "کلید API خودتان: ارائه‌دهندهٔ هوش مصنوعی مستقیم از شما هزینه می‌گیرد، بدون سقف اعتبار"
+    }
   },
   "subscription": {
     "currentPlan": "طرح فعلی",

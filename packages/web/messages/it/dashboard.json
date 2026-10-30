@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Organizza con IA",
-  "aiOrganiseUpgrade": "Passa a Pro AI per usare l'organizzazione IA",
-  "aiOrganiseFromExtension": "Avvialo dal popup dell'estensione TabMerger",
   "tabGroups": "Gruppi di schede",
   "savedSessions": "Sessioni salvate",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "Crediti IA questo mese",
-      "description": "Utilizzo mensile Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Ne restano {left, number}, circa {organizes, number} riorganizzazioni di {tabs, number} schede"
     },
-    "loading": "Caricamento"
+    "loading": "Caricamento",
+    "aiOwnKey": {
+      "label": "Configurazione IA",
+      "value": "Tu",
+      "description": "La tua chiave API: il tuo fornitore di IA ti addebita direttamente, senza limite di crediti"
+    }
   },
   "subscription": {
     "currentPlan": "Piano attuale",

@@ -27,6 +27,12 @@
   "sortByUrl": "Sort this window by URL",
   "notePlaceholder": "Add a note…",
   "empty": "Empty window",
+  "toast": {
+    "noTabsToName": "No tabs in this window to name",
+    "nameAlreadyFits": "“{{name}}” already fits this window",
+    "noTabsToDescribe": "No tabs in this window to describe",
+    "aiDescribeFailed": "Could not describe this window"
+  },
   "someOfTabs_one": "{{matched}} of {{count}} tab",
   "someOfTabs_other": "{{matched}} of {{count}} tabs"
 }

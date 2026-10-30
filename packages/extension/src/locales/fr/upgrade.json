@@ -33,7 +33,7 @@
     "pro": {
       "name": "Pro",
       "f1": "Tout ce qui est dans Gratuit",
-      "f2": "Groupes, onglets, règles d’URL et sessions illimités",
+      "f2": "Groupes, onglets, règles et sessions illimités",
       "f3": "Synchronisation cloud entre appareils"
     },
     "pro_ai": {
@@ -45,5 +45,6 @@
   },
   "maybeLater": "Plus tard",
   "signIn": "Se connecter",
-  "upgradeNow": "Passer à Pro maintenant"
+  "upgradeNow": "Passer à Pro maintenant",
+  "byokOption": "Ou {{price}}/mois : utilisez votre propre fournisseur d’IA (Anthropic, OpenAI ou Gemini)"
 }

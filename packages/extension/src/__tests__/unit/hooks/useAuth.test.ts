@@ -245,6 +245,18 @@ describe('useAuth — signIn/signUp/signOut', () => {
     // indirectly via encryptionKey.test.ts covering clearCachedDataKey's own contract,
     // and here by confirming signOut's only side effect is the Supabase call itself.
   })
+
+  it("signOut removes the Pro AI own Anthropic key, so the next person on this device can't spend it", async () => {
+    const { saveByokKey, getByokKey, AI_BYOK_KEY_STORAGE_KEY } = await import('@/lib/byokKey')
+    await saveByokKey('u1', 'sk-ant-test-xxxxxxxxxxxxxxxx')
+    mockSignOut.mockResolvedValue({ error: null })
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+    await act(async () => {
+      await result.current.signOut()
+    })
+    expect(await getByokKey('u1')).toBeNull()
+    expect((await chrome.storage.local.get(AI_BYOK_KEY_STORAGE_KEY))[AI_BYOK_KEY_STORAGE_KEY]).toBeUndefined()
+  })
 })
 
 describe('useAuth — auth state change + storage sync', () => {

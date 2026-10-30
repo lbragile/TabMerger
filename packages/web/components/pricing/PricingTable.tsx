@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { PricingCard } from './PricingCard'
+import type { AiMode } from '@tabmerger/shared'
+import { PricingCard, type ScheduledPlanChange } from './PricingCard'
 import { TIERS, YEARLY_DISCOUNT_PERCENT, YEARLY_SAVINGS } from '@/lib/tiers'
 import { useListPrice, useZeroPrice } from './priceFormat'
 import { useTierFeatures, useTierName } from './tierFeatures'
@@ -13,11 +14,27 @@ interface PricingTableProps {
   currentTier?: string
   /** How the current paid plan is billed; unknown (or free) leaves it undefined. */
   currentInterval?: 'monthly' | 'yearly'
+  /** A Pro AI subscriber's option (TabMerger's AI or their own key). */
+  currentAiMode?: AiMode
+  /** When the current paid period ends: the date a scheduled plan change takes effect. */
+  currentPeriodEnd?: string | null
   /** The Free card's install link, resolved on the server (`getStoreLinks()`) by the page. */
   installHref: string
+  /** Whether the visitor is signed in: guests see "Get …" on the paid cards, not "Upgrade to …". */
+  signedIn?: boolean
+  /** A subscriber's plan change already scheduled for the period end (see `PricingCard`). */
+  scheduledChange?: ScheduledPlanChange | null
 }
 
-export function PricingTable({ currentTier, currentInterval, installHref }: PricingTableProps) {
+export function PricingTable({
+  currentTier,
+  currentInterval,
+  currentAiMode,
+  currentPeriodEnd,
+  installHref,
+  signedIn = false,
+  scheduledChange = null,
+}: PricingTableProps) {
   // Always opens on Monthly, whatever the current plan is billed at.
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
   const t = useTranslations('pricing')
@@ -52,9 +69,10 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
         ))}
       </div>
 
-      {/* Grid: 1fr 1.1fr 1fr */}
+      {/* Grid: 1fr 1.1fr 1fr. Items stretch, so side by side the three cards are as tall as the
+          tallest (Pro AI, sized for its longer setup option) and their buttons line up. */}
       <div
-        className="w-full max-w-5xl grid grid-cols-1 md:[grid-template-columns:1fr_1.1fr_1fr] gap-4 items-center"
+        className="w-full max-w-5xl grid grid-cols-1 md:[grid-template-columns:1fr_1.1fr_1fr] gap-4 items-stretch"
       >
         <PricingCard
           tier="free"
@@ -65,7 +83,9 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
           interval={interval}
           currentTier={currentTier}
           currentInterval={currentInterval}
+          currentPeriodEnd={currentPeriodEnd}
           installHref={installHref}
+          signedIn={signedIn}
           displayMonthly={zeroPrice}
           displayYearly={zeroPrice}
         />
@@ -82,13 +102,17 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
             highlighted
             currentTier={currentTier}
             currentInterval={currentInterval}
+            currentPeriodEnd={currentPeriodEnd}
             installHref={installHref}
+            signedIn={signedIn}
+            scheduledChange={scheduledChange}
             displayMonthly={listPrice(TIERS.pro.monthlyPrice)}
             displayYearly={listPrice(TIERS.pro.yearlyPrice)}
             yearlySubtext={yearlySubtext(YEARLY_SAVINGS.pro)}
           />
         </div>
 
+        {/* Pro AI: both options, TabMerger's AI and your own key, behind a switch on the card. */}
         <PricingCard
           tier="proAi"
           name={tierName('proAi')}
@@ -98,10 +122,29 @@ export function PricingTable({ currentTier, currentInterval, installHref }: Pric
           interval={interval}
           currentTier={currentTier}
           currentInterval={currentInterval}
+          currentPeriodEnd={currentPeriodEnd}
+          currentAiMode={currentAiMode}
           installHref={installHref}
-          displayMonthly={listPrice(TIERS.proAi.monthlyPrice)}
-          displayYearly={listPrice(TIERS.proAi.yearlyPrice)}
-          yearlySubtext={yearlySubtext(YEARLY_SAVINGS.proAi)}
+          signedIn={signedIn}
+          scheduledChange={scheduledChange}
+          aiOptions={{
+            managed: {
+              monthlyPrice: TIERS.proAi.monthlyPrice,
+              yearlyPrice: TIERS.proAi.yearlyPrice,
+              displayMonthly: listPrice(TIERS.proAi.monthlyPrice),
+              displayYearly: listPrice(TIERS.proAi.yearlyPrice),
+              yearlySubtext: yearlySubtext(YEARLY_SAVINGS.proAi),
+              features: tierFeatures('proAi', 'managed'),
+            },
+            byok: {
+              monthlyPrice: TIERS.proAi.byok.monthlyPrice,
+              yearlyPrice: TIERS.proAi.byok.yearlyPrice,
+              displayMonthly: listPrice(TIERS.proAi.byok.monthlyPrice),
+              displayYearly: listPrice(TIERS.proAi.byok.yearlyPrice),
+              yearlySubtext: yearlySubtext(YEARLY_SAVINGS.proAiByok),
+              features: tierFeatures('proAi', 'byok'),
+            },
+          }}
         />
       </div>
 

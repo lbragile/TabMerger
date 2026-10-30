@@ -6,9 +6,6 @@
     "pro": "Pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "AIで整理",
-  "aiOrganiseUpgrade": "AIで整理するにはPro AIにアップグレードしてください",
-  "aiOrganiseFromExtension": "TabMergerの拡張機能のポップアップから開始してください",
   "tabGroups": "タブグループ",
   "savedSessions": "保存済みセッション",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "今月のAIクレジット",
-      "description": "Pro AIの月間使用量",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "残り{left, number}（{tabs, number}タブの整理 約{organizes, number}回分）"
     },
-    "loading": "読み込み中"
+    "loading": "読み込み中",
+    "aiOwnKey": {
+      "label": "AIのセットアップ",
+      "value": "ご自身",
+      "description": "自分のAPIキー：使った分はAIプロバイダーから直接請求され、クレジット上限はありません"
+    }
   },
   "subscription": {
     "currentPlan": "現在のプラン",

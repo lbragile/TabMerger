@@ -1,64 +1,33 @@
-import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase/server'
-import { aiDisabledResponse } from '@/lib/ai-guard'
-import { groupTabs } from '@/lib/ai'
-import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
-import { parseGroupTabsBody, readJsonBody } from '@/lib/ai-validation'
+import { type NextRequest, type NextResponse } from 'next/server'
+import { runAiTask, groupTabsTask } from '@/lib/ai'
+import { AI_MAX_BODY_BYTES_TAB_LIST, parseGroupTabsBody } from '@/lib/ai-validation'
+import { aiJson, handleAiRoute } from '@/lib/ai-route'
 
 /**
- * Groups an array of tabs into labelled clusters using the AI model.
- * Validates the caller's Supabase JWT from the Authorization header — the extension uses Bearer tokens
- * because it runs on a different origin and cannot share cookies with the web app.
- * Enforces Pro AI entitlement via checkAndIncrementAIUsage before calling the model.
+ * Seconds Vercel lets this function run (a literal: Next reads it statically). Organize-sized
+ * work over thousands of tabs on the largest model can take minutes; 300 is the Hobby plan's
+ * maximum with fluid compute. The model call's own deadline is 20 s earlier (`aiDeadline`), so a
+ * slow call times out in our code and releases its credit reservation and concurrency slot.
  */
-export async function POST(request: NextRequest) {
-  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
-  const aiDisabled = aiDisabledResponse()
-  if (aiDisabled) return aiDisabled
+export const maxDuration = 300
 
-  const authHeader = request.headers.get('authorization')
-  const token = authHeader?.replace('Bearer ', '')
-
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Service role needed to validate an arbitrary JWT; anon client can only inspect its own session cookie
-  const supabase = await createServiceRoleClient()
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser(token)
-
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Validated before the usage check, so a rejected body never spends a credit.
-  const input = parseGroupTabsBody(await readJsonBody(request))
-  if (!input.ok) {
-    return NextResponse.json({ error: input.error }, { status: 400 })
-  }
-
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.groupTabs)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required or monthly limit reached' },
-      { status: remaining === 0 ? 429 : 403 }
-    )
-  }
-
-  try {
-    const groups = await groupTabs(input.data)
-    return NextResponse.json({ groups }, {
-      headers: { 'X-AI-Requests-Remaining': String(remaining) },
-    })
-  } catch (err) {
-    console.error('AI group-tabs error:', err)
-    return NextResponse.json(
-      { error: 'Failed to group tabs' },
-      { status: 500 }
-    )
-  }
+/**
+ * Groups the caller's tabs into 2-6 named, coloured clusters.
+ * Called by the extension with its Supabase JWT as a Bearer token. Requires an entitled Pro AI
+ * subscription; managed calls are metered in credits (the balance comes back in
+ * `X-AI-Credits-Remaining`); own-key calls send the key in `X-AI-Key` and go to that key's
+ * provider, unmetered. Optional body field `model`: `'auto'` or a model id of that provider. Request flow: see `lib/ai-route.ts`.
+ */
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  return handleAiRoute(request, {
+    action: 'groupTabs',
+    label: 'group-tabs',
+    maxDurationSeconds: maxDuration,
+    maxBodyBytes: AI_MAX_BODY_BYTES_TAB_LIST,
+    parse: parseGroupTabsBody,
+    run: async (tabs, ctx) => {
+      const { result, remaining } = await runAiTask(groupTabsTask(tabs), ctx)
+      return aiJson({ groups: result }, remaining)
+    },
+  })
 }

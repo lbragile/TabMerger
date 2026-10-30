@@ -25,17 +25,21 @@
     "dragDrop": "Glisser-déposer",
     "shortcuts": "Raccourcis clavier",
     "everythingInFree": "Tout ce qui est dans Gratuit",
-    "unlimited": "Groupes, onglets, règles d’URL et sessions illimités",
+    "unlimited": "Groupes, onglets, règles et sessions illimités",
     "cloudSync": "Synchronisation cloud entre appareils",
     "sessionsSynced": "Sessions synchronisées entre appareils",
-    "autoBackups": "Sauvegardes automatiques chiffrées de vos groupes, avec copie en fichier optionnelle sur votre ordinateur",
+    "autoBackups": "Sauvegardes chiffrées automatiques",
     "prioritySupport": "Assistance prioritaire",
     "everythingInPro": "Tout ce qui est dans Pro",
     "aiGrouping": "Regroupement automatique des onglets par IA",
     "aiNames": "Suggestions de noms de groupes par IA",
+    "aiDescribe": "Descriptions de groupes et fenêtres par IA",
     "smartSessions": "Suggestions de sessions intelligentes",
+    "aiOrganize": "Rangement de l’espace de travail par IA",
     "tabPreview": "Aperçu d’onglet avec résumé IA",
-    "aiCredits": "{count} crédits IA / mois"
+    "aiCreditsMonthly": "{count, number} crédits IA par mois",
+    "ownApiKey": "Utilisez votre propre fournisseur d’IA",
+    "chooseModel": "Choisissez votre modèle d’IA"
   },
   "current": "Actuelle",
   "installFree": "Installer gratuitement",
@@ -43,9 +47,13 @@
   "switchToMonthly": "Passer à la facturation mensuelle",
   "downgradeTo": "Rétrograder vers {name}",
   "upgradeTo": "Passer à {name}",
-  "switchFailed": "Impossible de lancer le changement. Essayez Gérer la facturation sur la page de votre compte.",
+  "getPlan": "Choisir {name}",
+  "switchFailed": "Impossible de lancer le changement. Réessayez, ou écrivez à {email} si le problème persiste.",
   "alreadySubscribed": "Vous avez déjà une offre. Ouverture de la facturation pour la modifier.",
-  "portalFailed": "Impossible d’ouvrir la facturation. Utilisez Gérer la facturation sur la page de votre compte pour changer d’offre.",
+  "alreadySubscribedShown": "Vous avez déjà un forfait. Cette page l'affiche maintenant, vous pouvez donc le modifier ici.",
+  "checkoutFailed": "Impossible de lancer le paiement. Veuillez réessayer dans un instant.",
+  "portalFailed": "Impossible d’ouvrir la facturation. Réessayez, ou écrivez à {email} pour changer d’offre.",
+  "rateLimited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer.",
   "checkoutCanceled": "Paiement annulé. Vous n’avez pas été débité.",
   "cancelAnytime": "Résiliez à tout moment depuis votre compte, sans engagement ni justification.",
   "keepAccess": "Vous gardez l’accès jusqu’à la fin de votre période de facturation.",
@@ -55,5 +63,47 @@
     "title": "Des tarifs simples et transparents",
     "lead": "Commencez gratuitement. Passez à l’offre supérieure quand vous êtes prêt.",
     "moreQuestions": "D’autres questions ? Consultez la <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Qui s’occupe de la configuration ?",
+    "managed": "Nous",
+    "byok": "Vous",
+    "managedHint": "Les crédits mesurent l’usage de l’IA : les tâches plus lourdes et les modèles plus puissants en consomment davantage.",
+    "byokHint": "Vous ajoutez une clé API d’un fournisseur. Il vous facture directement selon votre usage.",
+    "switchToByok": "Vous occuper de la configuration",
+    "switchToManaged": "Laisser TabMerger s’occuper de la configuration"
+  },
+  "planChange": {
+    "title": "Confirmer le changement d’offre",
+    "confirmEndOfPeriod": "Votre offre passe à {plan} le {date}. Vous gardez votre offre actuelle jusque-là. Aucun remboursement pour le reste de cette période.",
+    "confirmEndOfPeriodNoDate": "Votre offre passe à {plan} à la fin de cette période de facturation. Vous gardez votre offre actuelle jusque-là. Aucun remboursement pour le reste de cette période.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "scheduled": "C’est fait. Votre offre passe à {plan} le {date}.",
+    "scheduledNoDetails": "C’est fait. Votre offre change à la fin de cette période de facturation.",
+    "aiDisabled": "Cette option de Pro AI n’est pas encore disponible.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI configuré par TabMerger",
+      "proAiByok": "Pro AI configuré par vous"
+    },
+    "billedMonthly": "{plan}, facturation mensuelle",
+    "billedYearly": "{plan}, facturation annuelle",
+    "errors": {
+      "no_billing_account": "Cette offre n’est liée à aucun compte de facturation et ne peut donc pas être modifiée ici. Écrivez à {email} et nous la modifierons pour vous.",
+      "no_paid_plan": "Vous n'avez pas d'abonnement payant à modifier. Choisissez plutôt un forfait auquel vous abonner.",
+      "already_on_price": "Vous avez déjà ce forfait.",
+      "already_scheduled": "Un changement de forfait est déjà prévu pour la fin de cette période de facturation.",
+      "cancel_scheduled": "Votre forfait prendra fin à la fin de cette période de facturation. Renouvelez-le dans « Gérer la facturation » avant de le modifier.",
+      "pay_or_resume": "Votre forfait attend un paiement ou est en pause et ne peut donc pas encore être modifié. Écrivez à {email} et nous vous aiderons à régler cela.",
+      "switch_needs_support": "Ce changement de forfait ne peut pas être effectué pour le moment. Écrivez à {email} et nous ferons le changement pour vous.",
+      "price_unavailable": "Il n'est pas possible de passer à ce forfait pour le moment. Réessayez plus tard ou contactez-nous.",
+      "switch_failed": "Stripe n’a pas pu lancer le changement. Réessayez, utilisez « Gérer la facturation » sur votre page de compte, ou écrivez à {email}.",
+      "rate_limited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer."
+    }
+  },
+  "scheduledChange": {
+    "starts": "Débute le {date}",
+    "note": "Un changement est prévu le {date}. <link>Gérez-le sur la page de votre compte.</link>"
   }
 }

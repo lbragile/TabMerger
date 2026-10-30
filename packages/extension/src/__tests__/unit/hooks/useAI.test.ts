@@ -2,8 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAutoGroup, useNameGroup, useSuggestSessions, useOrganizeTabs, useTabSummary } from '@/hooks/useAI'
+import { AI_ERROR_CODES } from '@tabmerger/shared'
+import { aiPost, useAutoGroup, useNameGroup, useSuggestSessions, useOrganizeTabs, useTabSummary } from '@/hooks/useAI'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
+import { AiRequestError, QuotaExceededError, aiErrorMessage } from '@/lib/aiErrors'
+import { t } from '@/lib/i18n'
 
 const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings, mockUseAiUsage, mockGetEncryptionKeyState } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
@@ -17,7 +20,7 @@ const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings, mo
 // This suite exercises the AI-enabled behavior of these mutations directly (they're
 // unit tests for the mutation logic itself, not for the coming-soon flag), so force
 // the global kill switch on here regardless of the real VITE_AI_ENABLED default.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -48,7 +51,7 @@ beforeEach(() => {
   })
   ;(chrome.storage.local.get as ReturnType<typeof vi.fn>).mockResolvedValue({})
   ;(chrome.storage.local.set as ReturnType<typeof vi.fn>).mockResolvedValue(undefined)
-  mockUseAiUsage.mockReturnValue({ remaining: 100, used: 0, cap: 100, loading: false })
+  mockUseAiUsage.mockReturnValue({ remaining: 100, used: 0, cap: 100, loading: false, known: true })
   mockGetEncryptionKeyState.mockResolvedValue('absent')
 })
 
@@ -135,8 +138,9 @@ describe('useSuggestSessions', () => {
     const { result } = renderHook(() => useSuggestSessions(), { wrapper: makeWrapper() })
     await act(async () => { await result.current.mutateAsync(groups) })
     const body = JSON.parse((globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body)
+    // Tabs carry only the title and URL the route reads (see useAI.payload.test.ts)
     expect(body.groups).toEqual([
-      { id: 'g1', name: 'Dev', tabs: [{ id: 0, title: 'T', url: 'https://a.com' }] }
+      { id: 'g1', name: 'Dev', tabs: [{ title: 'T', url: 'https://a.com' }] }
     ])
   })
 
@@ -176,7 +180,7 @@ describe('per-feature enable/disable toggles', () => {
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     mockUseAppSettings.mockReturnValue({ data: { aiNameGroupEnabled: false } })
     const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
-    await expect(act(async () => { await result.current.mutateAsync([]) })).rejects.toThrow('Name group is turned off')
+    await expect(act(async () => { await result.current.mutateAsync([]) })).rejects.toThrow('“Name groups and windows” is turned off')
     expect(globalThis.fetch).not.toHaveBeenCalled()
   })
 
@@ -280,8 +284,65 @@ describe('useOrganizeTabs — encryption status that could not be checked', () =
   })
 })
 
+describe('useOrganizeTabs — the reply is untrusted', () => {
+  function renderWithGroups() {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
+    const group = (id: string, extra: Record<string, unknown> = {}) => ({ id, name: id.toUpperCase(), color: 'rgba(0,0,0,1)', updatedAt: 1, windows: [], ...extra })
+    qc.setQueryData(GROUPS_QUERY_KEY, {
+      active: { id: 'now', index: 0 },
+      available: [group('now', { permanent: true }), group('a'), group('b'), group('demo', { tourDemo: true })]
+    })
+    const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client: qc }, children)
+    return renderHook(() => useOrganizeTabs(), { wrapper }).result
+  }
+
+  beforeEach(() => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+  })
+
+  it('returns only the well-formed actions on this device’s saved groups, names cleaned', async () => {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        actions: [
+          { type: 'merge', sourceGroupId: 'a', targetGroupId: 'b' },
+          { type: 'rename', groupId: 'b', newName: '  Deep\nWork ' },
+          { type: 'delete', groupId: 'now' },
+          { type: 'delete', groupId: 'demo' },
+          { type: 'delete', groupId: 'unknown' },
+          { type: 'wipe', groupId: 'a' },
+          'garbage'
+        ]
+      })
+    })
+    const result = renderWithGroups()
+    let reply: unknown
+    await act(async () => {
+      reply = await result.current.mutateAsync()
+    })
+    expect(reply).toEqual({
+      actions: [
+        { type: 'merge', sourceGroupId: 'a', targetGroupId: 'b' },
+        { type: 'rename', groupId: 'b', newName: 'Deep Work' }
+      ]
+    })
+    expect(mockTrackEvent).toHaveBeenCalledWith('ai_feature_used', { feature_name: 'organize' })
+  })
+
+  it('returns no actions for a reply without an actions list (an older server)', async () => {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ runId: '1', token: 't' }) })
+    const result = renderWithGroups()
+    let reply: unknown
+    await act(async () => {
+      reply = await result.current.mutateAsync()
+    })
+    expect(reply).toEqual({ actions: [] })
+  })
+})
+
 describe('useOrganizeTabs', () => {
-  it('posts an empty body to /api/ai/organize (server derives user from token)', async () => {
+  it('posts only the model to /api/ai/organize (server derives user and groups from the token)', async () => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ runId: '1', token: 't' }) })
@@ -289,21 +350,91 @@ describe('useOrganizeTabs', () => {
     await act(async () => { await result.current.mutateAsync() })
     expect(globalThis.fetch).toHaveBeenCalledWith(
       expect.stringContaining('/api/ai/organize'),
-      expect.objectContaining({ body: JSON.stringify({}) })
+      expect.objectContaining({ body: JSON.stringify({ model: 'auto' }) })
     )
   })
 })
 
-// NOT YET IMPLEMENTED: a 429 (quota exceeded) response should be distinguishable
-// from a generic failure so the UI can show a "buy more AI calls" prompt instead
-// of a generic error toast. These fail until aiPost/the hooks expose that.
-describe('quota-exceeded (429) handling — not yet implemented', () => {
-  it('useAutoGroup surfaces a distinct isQuotaExceeded flag instead of a generic error on 429', async () => {
+/** A failed response: `body` is sent as-is when it's a string, else as JSON; `headers` are its response headers. */
+function failWith(status: number, body: unknown, headers: Record<string, string> = {}) {
+  ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+    ok: false,
+    status,
+    headers: new Headers(headers),
+    text: async () => (typeof body === 'string' ? body : JSON.stringify(body)),
+  })
+}
+
+/** What aiPost rejects with for the response set up by {@link failWith}. */
+function aiPostError(): Promise<unknown> {
+  return aiPost('/api/ai/name-group', {}, 'tok').catch((e: unknown) => e)
+}
+
+// A 429 is "out of credits" (the "buy more credits" prompt) only when the server says so with
+// ai_quota_exceeded. Any other 429, including one with no code at all (the hosting platform's
+// firewall answering in plain text or HTML), is "too many requests".
+describe('429 handling: out of credits vs too many requests', () => {
+  it('429 ai_quota_exceeded is a QuotaExceededError', async () => {
+    failWith(429, { error: AI_ERROR_CODES.quotaExceeded, needed: 4, remaining: 1 })
+    const err = await aiPostError()
+    expect(err).toBeInstanceOf(QuotaExceededError)
+    expect(err).toMatchObject({ isQuotaExceeded: true, needed: 4, remaining: 1 })
+  })
+
+  it('429 rate_limited is a rate_limited AiRequestError, not out of credits', async () => {
+    failWith(429, { error: AI_ERROR_CODES.rateLimited }, { 'Retry-After': '30' })
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toBeInstanceOf(AiRequestError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, status: 429, retryAfterSeconds: 30 })
+    expect((err as Error).message).toBe('Too many AI requests right now. Try again in 30 seconds.')
+  })
+
+  it.each([
+    ['a plain-text body', 'Too Many Requests'],
+    ['an HTML body', '<!DOCTYPE html><html><body><h1>429 Too Many Requests</h1></body></html>'],
+    ['an empty body', ''],
+    ['a JSON body with no code', { message: 'slow down' }],
+  ])('a codeless 429 with %s is rate_limited, not out of credits, naming the Retry-After wait', async (_label, body) => {
+    failWith(429, body, { 'Retry-After': '120' })
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toBeInstanceOf(AiRequestError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, status: 429, retryAfterSeconds: 120 })
+    expect((err as Error).message).toBe(aiErrorMessage(AI_ERROR_CODES.rateLimited, { retryAfterSeconds: 120 }))
+    // The platform's raw reply (maybe a whole HTML page) never reaches the user.
+    expect((err as Error).message).not.toContain('<')
+  })
+
+  it.each([
+    ['no Retry-After header', {}],
+    ['an unparseable Retry-After header', { 'Retry-After': 'soon' }],
+    ['a zero Retry-After header', { 'Retry-After': '0' }],
+  ])('a codeless 429 with %s is rate_limited without a wait', async (_label, headers) => {
+    failWith(429, '<html><body>Too Many Requests</body></html>', headers)
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, status: 429, retryAfterSeconds: undefined })
+    expect((err as Error).message).toBe(t('errors.ai.rateLimited'))
+  })
+
+  it('a codeless 429 on a response with no headers object is still rate_limited', async () => {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: false, status: 429, text: async () => 'quota exceeded' })
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, retryAfterSeconds: undefined })
+  })
+
+  it('a codeless 500 keeps the raw status and text', async () => {
+    failWith(500, 'boom')
+    const err = await aiPostError()
+    expect(err).toMatchObject({ code: null, status: 500, message: 'AI request failed: 500 boom' })
+  })
+
+  it('useAutoGroup flags isQuotaExceeded on a 429 ai_quota_exceeded', async () => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
-    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      ok: false, status: 429, text: async () => 'quota exceeded',
-    })
+    failWith(429, { error: AI_ERROR_CODES.quotaExceeded })
     const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
     act(() => { result.current.mutateAsync([]).catch(() => {}) })
     // ponytail: react-query's mutation observer notifies subscribers on a
@@ -313,12 +444,20 @@ describe('quota-exceeded (429) handling — not yet implemented', () => {
     await waitFor(() => expect(result.current.isQuotaExceeded).toBe(true))
   })
 
-  it('a 429 error thrown by the shared fetch helper is tagged isQuotaExceeded, unlike a 500', async () => {
+  it('useAutoGroup does not flag isQuotaExceeded on a codeless (platform) 429', async () => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
-    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      ok: false, status: 429, text: async () => 'quota exceeded',
-    })
+    failWith(429, '<html><body>Too Many Requests</body></html>')
+    const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
+    act(() => { result.current.mutateAsync([]).catch(() => {}) })
+    await waitFor(() => expect(result.current.error).toBeInstanceOf(AiRequestError))
+    expect(result.current.isQuotaExceeded).toBe(false)
+  })
+
+  it('useNameGroup rejects with an error tagged isQuotaExceeded on a 429 ai_quota_exceeded', async () => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    failWith(429, { error: AI_ERROR_CODES.quotaExceeded })
     const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
     let caught: unknown
     await act(async () => {
@@ -336,7 +475,7 @@ describe('proactive client-side quota throttle (remaining <= 0)', () => {
   beforeEach(() => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
-    mockUseAiUsage.mockReturnValue({ remaining: 0, used: 100, cap: 100, loading: false })
+    mockUseAiUsage.mockReturnValue({ remaining: 0, used: 100, cap: 100, loading: false, known: true })
   })
 
   it('useAutoGroup throws QuotaExceededError without calling fetch when remaining is 0', async () => {
@@ -371,7 +510,7 @@ describe('proactive client-side quota throttle (remaining <= 0)', () => {
   })
 
   it('runs normally (calls fetch) when remaining is positive', async () => {
-    mockUseAiUsage.mockReturnValue({ remaining: 5, used: 95, cap: 100, loading: false })
+    mockUseAiUsage.mockReturnValue({ remaining: 5, used: 95, cap: 100, loading: false, known: true })
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ groups: [] }) })
     const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
     await act(async () => { await result.current.mutateAsync([]) })

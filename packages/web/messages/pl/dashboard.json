@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Organizuj z AI",
-  "aiOrganiseUpgrade": "Przejdź na Pro AI, aby organizować z AI",
-  "aiOrganiseFromExtension": "Uruchom to z okienka rozszerzenia TabMerger",
   "tabGroups": "Grupy kart",
   "savedSessions": "Zapisane sesje",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "Kredyty AI w tym miesiącu",
-      "description": "Miesięczne zużycie Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Zostało {left, number}, około {organizes, number} porządkowań {tabs, number} kart"
     },
-    "loading": "Ładowanie"
+    "loading": "Ładowanie",
+    "aiOwnKey": {
+      "label": "Konfiguracja AI",
+      "value": "Ty",
+      "description": "Własny klucz API: dostawca AI rozlicza się bezpośrednio z Tobą, bez limitu kredytów"
+    }
   },
   "subscription": {
     "currentPlan": "Obecny plan",

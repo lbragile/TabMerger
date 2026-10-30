@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "לבקש אישור לפני מחיקה של קבוצות או חלונות שמורים",
     "openOnClickLabel": "פתיחת כרטיסייה בלחיצה",
     "openOnClickDescription": "לחיצה אחת פותחת את הכרטיסייה בדפדפן",
+    "showAiButtonLabel": "הצגת כפתור AI",
+    "showAiButtonDescription": "כפתור ✨ בכותרת, עם פעולות AI לכרטיסיות ולקבוצות שלך",
     "dedupLabel": "הסרת כפילויות אוטומטית במיזוג",
     "dedupDescription": "הסרת כרטיסיות כפולות במיזוג חלונות",
     "previewImagesLabel": "הצגת תמונות של דפים בתצוגות מקדימות",
@@ -61,7 +63,9 @@
     "openingPortal": "פותחים...",
     "manageBilling": "ניהול חיובים",
     "signOut": "התנתקות",
-    "resetEncryption": "שכחת את ביטוי הסיסמה? איפוס ההצפנה"
+    "resetEncryption": "שכחת את ביטוי הסיסמה? איפוס ההצפנה",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "מפתח API משלכם"
   },
   "data": {
     "intro": "TabMerger שומר את כל הנתונים באופן מקומי ב-IndexedDB. סנכרון בענן דורש חשבון Pro.",
@@ -86,8 +90,10 @@
     "intro": "כל פעולות ה-AI שלמטה משתמשות באותה מכסת AI חודשית (ראו בלשונית \"חשבון\"). כבו תכונות שאתם לא משתמשים בהן כדי לחסוך מכסה לאלה שכן.",
     "autoGroupLabel": "קיבוץ אוטומטי",
     "autoGroupDescription": "קיבוץ הכרטיסיות הפתוחות בעזרת AI",
-    "nameGroupLabel": "מתן שם לקבוצה",
-    "nameGroupDescription": "הצעת שם לקבוצה בעזרת AI",
+    "nameGroupLabel": "מתן שם לקבוצות ולחלונות",
+    "nameGroupDescription": "הצעת שם לקבוצה או לחלון בעזרת AI",
+    "describeGroupLabel": "תיאור קבוצות וחלונות",
+    "describeGroupDescription": "כתיבת הערה קצרה על הכרטיסיות בקבוצה או בחלון בעזרת AI",
     "suggestSessionsLabel": "הצעת סשנים",
     "suggestSessionsDescription": "באנר ברקע שמציע מתי לשמור סשן",
     "organizeLabel": "ארגון",
@@ -95,14 +101,84 @@
     "summariesLabel": "סיכומים בתצוגה המקדימה של כרטיסיות",
     "summariesDescription": "סיכום AI בתצוגה המקדימה בריחוף מעל כרטיסייה",
     "throttleLabel": "הגבלת הצעות AI אוטומטיות לפעם ביום",
-    "throttleDescription": "באנר הצעת הסשנים ברקע מופיע לכל היותר פעם ביום כדי לשמור על מכסת ה-AI החודשית. פעולות AI שמפעילים ידנית (קיבוץ אוטומטי, מתן שם לקבוצה, ארגון) אף פעם לא מוגבלות על ידי זה."
+    "throttleDescription": "באנר הצעת הסשנים ברקע מופיע לכל היותר פעם ביום כדי לשמור על מכסת ה-AI החודשית. פעולות AI שמפעילים ידנית (קיבוץ אוטומטי, מתן שם לקבוצה, ארגון) אף פעם לא מוגבלות על ידי זה.",
+    "buyCredits": "קנו עוד קרדיטים",
+    "buyCreditsLabel": "קנו עוד קרדיטים (כרטיסייה חדשה)",
+    "plan": {
+      "managed": "TabMerger מטפל בהגדרה — נותרו החודש {{remaining}} מתוך {{cap}} קרדיטים",
+      "managedUnknown": "TabMerger מטפל בהגדרה",
+      "byok": "הוספתם מפתח API משלכם של {{provider}}",
+      "byokNoKey": "אתם מוסיפים מפתח API משלכם: הזינו אותו למטה כדי להשתמש בתכונות AI"
+    },
+    "provider": {
+      "label": "ספק AI",
+      "description": "בחרו את החברה שהנפיקה את מפתח ה-API שלכם.",
+      "placeholder": "בחרו ספק"
+    },
+    "key": {
+      "label": "מפתח ה-API שלכם מ-{{provider}}",
+      "save": "שמירת המפתח",
+      "checking": "בודקים…",
+      "replace": "החלפה",
+      "remove": "הסרה",
+      "saved": "מפתח ה-API נשמר",
+      "removed": "מפתח ה-API הוסר",
+      "invalidFormat": "זה לא נראה כמו מפתח API תקין של {{provider}}.",
+      "verifyFailed": "לא הצלחנו לבדוק את המפתח. נסו שוב.",
+      "testKey": "שימוש במפתח בדיקה",
+      "testKeyHint": "בגרסאות פיתוח בלבד: שומר מפתח דמה. הוא עובד רק כששרת הפיתוח של האתר רץ עם AI_MOCK=true.",
+      "note": "נשמר רק במכשיר הזה. נשלח לשרת של TabMerger עם כל בקשת AI ומועבר ישירות לספק שהנפיק אותו; אף פעם לא נשמר בשרתים שלנו.",
+      "getKey": "יצירת מפתח והגדרת מגבלת הוצאות:",
+      "wrongProvider": "נראה שהמפתח הזה של {{detected}}. בחרו {{detected}} למעלה, או הדביקו מפתח של {{provider}}.",
+      "switching": "המפתח השמור של {{saved}} ימשיך לשמש עד שתשמרו מפתח של {{provider}}.",
+      "guideLink": "איך יוצרים מפתח",
+      "keysLink": "מפתחות API ב-{{provider}}"
+    },
+    "model": {
+      "label": "מודל AI",
+      "managedDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ומשתמשים ביותר קרדיטים. המספרים הם הערכה.",
+      "byokDescription": "מודלים גדולים יותר נותנים תוצאות טובות יותר ועולים יותר בחשבון מהספק שלכם.",
+      "auto": "אוטומטי",
+      "recommended": "מומלץ",
+      "autoDescription": "משתמש במודל הזול ביותר שעושה כל משימה היטב."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_one": "≈ קרדיט אחד",
+      "credits_two": "≈ {{formatted}} קרדיטים",
+      "credits_other": "≈ {{formatted}} קרדיטים",
+      "perMonth_one": "ארגונים בחודש עם הקרדיטים שלכם: ≈ {{formatted}}",
+      "perMonth_two": "ארגונים בחודש עם הקרדיטים שלכם: ≈ {{formatted}}",
+      "perMonth_other": "ארגונים בחודש עם הקרדיטים שלכם: ≈ {{formatted}}",
+      "action": {
+        "nameGroup_one": "מתן שם לקבוצה של כרטיסייה אחת",
+        "nameGroup_two": "מתן שם לקבוצה של שתי כרטיסיות",
+        "nameGroup_other": "מתן שם לקבוצה של {{count}} כרטיסיות",
+        "tabSummary": "סיכום כרטיסייה",
+        "groupTabs_one": "קיבוץ כרטיסייה אחת",
+        "groupTabs_two": "קיבוץ שתי כרטיסיות",
+        "groupTabs_other": "קיבוץ {{count}} כרטיסיות",
+        "suggestSessions": "הצעת סשנים",
+        "organize_one": "ארגון כרטיסייה אחת",
+        "organize_two": "ארגון שתי כרטיסיות",
+        "organize_other": "ארגון {{count}} כרטיסיות",
+        "describeGroup_one": "תיאור קבוצה של כרטיסייה אחת",
+        "describeGroup_two": "תיאור קבוצה של שתי כרטיסיות",
+        "describeGroup_other": "תיאור קבוצה של {{count}} כרטיסיות"
+      }
+    },
+    "cost": {
+      "low": "העלות הנמוכה ביותר",
+      "medium": "עלות בינונית",
+      "high": "העלות הגבוהה ביותר"
+    }
   },
   "dev": {
     "demoLabel": "מצב הדגמה",
     "demoDescription": "יצירת נתוני דוגמה לתהליך ההדגמה השיווקית",
     "demoButton": "כניסה",
-    "usageLabel": "מונה שימוש מדומה ב-AI",
-    "usageDescription": "מגדיר את מונה הקרדיטים של AI (מתוך {{cap}}) באופן מקומי ומסנכרן אותו לחשבון ה-Supabase האמיתי שלך, כדי שאפשר יהיה לבדוק את אכיפת המכסה בצד השרת מקצה לקצה.",
+    "usageLabel": "קרדיטים שנוצלו החודש",
+    "usageDescription": "מגדיר את קרדיטי ה-AI שנוצלו החודש (מתוך {{cap}}) בחשבון שלך דרך שרת הפיתוח של האתר. איפוס מסיר גם את חבילות הקרדיטים של החודש.",
     "usageSet": "הגדרה",
     "usageReset": "איפוס",
     "sentryLabel": "Sentry",
@@ -112,9 +188,9 @@
   "toast": {
     "encryptionReset": "ההצפנה אופסה — הגדירו ביטוי סיסמה חדש",
     "encryptionResetFailed": "איפוס ההצפנה נכשל",
-    "signInForAiUsage": "צריך להתחבר כדי לסנכרן את השימוש ב-AI לשרת",
-    "aiUsageSet": "השימוש ב-AI בשרת הוגדר ל-{{count}}",
-    "aiUsageFailed": "סנכרון השימוש ב-AI לשרת נכשל",
+    "signInForAiUsage": "צריך להתחבר כדי להגדיר את קרדיטי ה-AI שנוצלו",
+    "aiUsageSet": "קרדיטי ה-AI שנוצלו הוגדרו ל-{{credits}}",
+    "aiUsageFailed": "לא ניתן להגדיר את קרדיטי ה-AI שנוצלו",
     "previewImagesDenied": "Firefox צריך הרשאה כדי להביא תמונות של דפים. כדי להפעיל את זה, יש לאשר אותה בבקשה של הדפדפן.",
     "saved": "ההגדרות נשמרו",
     "cleared": "כל הנתונים נמחקו",

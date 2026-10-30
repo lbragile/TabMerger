@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Sắp xếp bằng AI",
-    "description": "Để Claude phân tích tab của bạn và đưa ra gợi ý thông minh, để bạn tập trung suy nghĩ thay vì sắp xếp.",
+    "description": "AI đọc tiêu đề và URL của các tab rồi gợi ý cách nhóm, đặt tên và dọn dẹp chúng, để bạn tập trung suy nghĩ thay vì sắp xếp.",
     "autoGrouping": {
       "title": "Tự động nhóm",
       "description": "Mở một mớ tab lộn xộn, nhấp một nút. AI gom chúng thành các nhóm hợp lý dựa trên chủ đề, tên miền và mục đích."
@@ -71,13 +71,21 @@
       "title": "Tên nhóm thông minh",
       "description": "AI gợi ý tên ngắn gọn, mô tả rõ ràng cho các nhóm. Một cú nhấp để chấp nhận, hoặc tự nhập tên của bạn."
     },
+    "describe": {
+      "title": "Mô tả nhóm",
+      "description": "AI viết một ghi chú ngắn về nội dung các tab trong nhóm hoặc cửa sổ để bạn nhớ vì sao đã lưu chúng. Bạn có thể sửa ghi chú này như mọi ghi chú khác."
+    },
     "summaries": {
       "title": "Tóm tắt tab",
       "description": "Di chuột lên bất kỳ tab nào để xem bản tóm tắt AI một câu về nội dung trang — mà không cần mở nó."
     },
     "sessionSuggestions": {
       "title": "Gợi ý phiên",
-      "description": "AI phân tích thói quen duyệt web của bạn và gợi ý cách tổ chức phiên để đạt năng suất tối đa."
+      "description": "AI xem qua các nhóm đã lưu và gợi ý gộp những nhóm trùng lặp hoặc lưu trữ những nhóm bạn đã lâu không dùng. Gộp hoặc lưu trữ chỉ với một cú nhấp."
+    },
+    "organize": {
+      "title": "Sắp xếp không gian làm việc",
+      "description": "AI xem xét tất cả các nhóm cùng lúc và đề xuất gộp, đổi tên, lưu trữ và thứ tự mới. Bỏ chọn những thay đổi bạn không muốn, rồi áp dụng phần còn lại trong một bước có thể hoàn tác."
     }
   }
 }

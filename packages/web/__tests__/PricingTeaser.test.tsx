@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
 import { PricingTeaser } from '@/components/marketing/PricingTeaser'
@@ -46,7 +46,7 @@ describe('PricingTeaser', () => {
     const PRO_AI = '$7.17/mo billed yearly · save 10%'
     // What a reader gets: the Monthly placeholder is aria-hidden, so it is left out.
     const shown = { ignore: '[aria-hidden="true"]' }
-    const cardOf = (name: string) => screen.getByText(name).closest('div.rounded-2xl') as HTMLElement
+    const cardOf = (name: string) => screen.getByText(name).closest('[data-tier]') as HTMLElement
 
     it('shows it on Yearly under Pro and Pro AI, as text that is read out', async () => {
       const user = userEvent.setup()
@@ -106,48 +106,91 @@ describe('PricingTeaser', () => {
       expect(screen.queryByText(/billed yearly/, shown)).not.toBeInTheDocument()
     })
 
-    it('keeps the cards the same height: the same lines in each, equal rows when stacked', () => {
+    it('keeps the cards aligned: shared subgrid rows side by side, no stretched empty space when stacked', () => {
       const { container } = render(<PricingTeaser />)
-      // Equal row heights when the cards stack, whichever card's text wraps.
-      expect(container.querySelector('.grid.grid-cols-1')?.className).toMatch(/\bauto-rows-fr\b/)
+      // Stacked cards size to their own content (no equal-height stretch).
+      expect(container.querySelector('.grid.grid-cols-1')?.className).not.toMatch(/auto-rows-fr/)
       for (const name of ['Free', 'Pro', 'Pro AI']) {
-        // Title row's name, the price, the blurb and one note line.
-        expect(cardOf(name).querySelectorAll('p')).toHaveLength(4)
+        // Side by side every card spans the same rows, so prices and blurbs line up.
+        expect(cardOf(name).className).toMatch(/sm:grid-rows-subgrid/)
+        // The name is the card's heading; then the price, one note line and the blurb.
+        expect(cardOf(name).querySelector('h3')).toHaveTextContent(name)
+        expect(cardOf(name).querySelectorAll('p')).toHaveLength(3)
       }
+    })
+
+    it('puts the Pro AI setup switch after the price and blurb, so it cannot push the price down', () => {
+      render(<PricingTeaser />)
+      const groups = screen.getAllByRole('group', { name: /who handles setup/i })
+      expect(groups).toHaveLength(1)
+      expect(cardOf('Pro AI')).toContainElement(groups[0])
+      const price = screen.getByText('$7.99')
+      expect(price.compareDocumentPosition(groups[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    })
+
+    it('uses the pricing page icons: a check on "Everything in" lines, a + on the rest (Free: all +)', () => {
+      render(<PricingTeaser />)
+      const icon = (li: HTMLElement) => li.querySelector('svg')?.getAttribute('class') ?? ''
+      for (const li of within(cardOf('Free')).getAllByRole('listitem')) expect(icon(li)).toMatch(/lucide-plus/)
+      for (const name of ['Pro', 'Pro AI']) {
+        const [first, ...rest] = within(cardOf(name)).getAllByRole('listitem')
+        expect(first).toHaveTextContent(/^Everything in/)
+        expect(icon(first)).toMatch(/lucide-check/)
+        for (const li of rest) expect(icon(li)).toMatch(/lucide-plus/)
+      }
+    })
+
+    it('lists highlights per card, with the Pro AI one following the chosen option', async () => {
+      const user = userEvent.setup()
+      render(<PricingTeaser />)
+      expect(within(cardOf('Free')).getAllByRole('listitem')).toHaveLength(4)
+      expect(within(cardOf('Free')).getByText('Up to 5 groups')).toBeInTheDocument()
+      expect(within(cardOf('Pro')).getByText('Cloud sync across devices')).toBeInTheDocument()
+      const proAi = within(cardOf('Pro AI'))
+      expect(proAi.getAllByRole('listitem')).toHaveLength(3)
+      await user.click(proAi.getByLabelText('You'))
+      expect(proAi.getByText('Use your own AI provider')).toBeInTheDocument()
+      expect(proAi.queryByText(/AI credits a month/)).not.toBeInTheDocument()
+      await user.click(proAi.getByLabelText('Us'))
+      expect(proAi.getByText(/AI credits a month/)).toBeInTheDocument()
+      expect(proAi.queryByText('Use your own AI provider')).not.toBeInTheDocument()
     })
   })
 
-  it('keeps the −10% badge on the Yearly toggle, matching what each paid plan saves', async () => {
+  // The badge is the shared advertised discount; every paid option (Pro, and Pro AI either way
+  // it's set up) really saves at least that much, so it is true for each.
+  it('shows the shared yearly discount on the Yearly toggle', async () => {
     const { YEARLY_SAVINGS, YEARLY_DISCOUNT_PERCENT } = await import('@/lib/tiers')
     render(<PricingTeaser />)
     expect(screen.getByRole('button', { name: /yearly/i })).toHaveTextContent('−10%')
     expect(YEARLY_DISCOUNT_PERCENT).toBe(10)
-    expect(YEARLY_SAVINGS.pro.percent).toBe(10)
-    expect(YEARLY_SAVINGS.proAi.percent).toBe(10)
+    for (const savings of Object.values(YEARLY_SAVINGS)) expect(savings.percent).toBeGreaterThanOrEqual(10)
   })
 
-  it('renders a one-sentence blurb summarizing who each tier is for', () => {
+  it('renders a one-line blurb saying what each tier gives', () => {
     render(<PricingTeaser />)
-    expect(screen.getByText('For casual users trying it out')).toBeInTheDocument()
-    expect(screen.getByText('For users who want extra premium features')).toBeInTheDocument()
-    expect(screen.getByText('For power users who want AI related features')).toBeInTheDocument()
+    expect(screen.getByText('Tidy your tabs on one device. No account needed.')).toBeInTheDocument()
+    expect(screen.getByText('Your tabs without limits, synced and backed up.')).toBeInTheDocument()
+    expect(screen.getByText('Let AI sort your tabs into named groups.')).toBeInTheDocument()
   })
 
   it('renders "No credit card required" once, under the Free tier card only', () => {
     render(<PricingTeaser />)
     const notes = screen.getAllByText('No credit card required')
     expect(notes).toHaveLength(1)
-    const freeCard = screen.getByText('Free').closest('div.rounded-2xl')
+    const freeCard = screen.getByText('Free').closest('[data-tier]')
     expect(freeCard).toContainElement(notes[0])
   })
 
-  it('keeps the title centered while the Recommended badge sits to the right', () => {
+  it('sits the Recommended badge on the top edge of the Pro card, so it never shifts the title', () => {
     render(<PricingTeaser />)
     const badge = screen.getByText('Recommended')
-    // 3-column grid (spacer / centered title / badge) instead of a 2-up justify-between row,
-    // so the title stays visually centered regardless of the badge's presence.
-    expect(badge.parentElement?.className).toMatch(/grid-cols-\[1fr_auto_1fr\]/)
-    expect(badge.className).toMatch(/justify-self-end/)
+    const pro = screen.getByText('Pro').closest('[data-tier]')
+    expect(pro).toContainElement(badge)
+    // Out of flow, centered on the edge: the title's block has no badge beside it.
+    expect(badge.className).toMatch(/\babsolute\b/)
+    expect(badge.className).toMatch(/-translate-y-1\/2/)
+    expect(screen.getByText('Pro').parentElement).not.toContainElement(badge)
   })
 
   it('renders the cancellation note text', () => {

@@ -6,5 +6,6 @@
   "opensInNewTab": " (يفتح في علامة تبويب جديدة)",
   "close": "إغلاق",
   "showPassphrase": "إظهار عبارة المرور",
-  "hidePassphrase": "إخفاء عبارة المرور"
+  "hidePassphrase": "إخفاء عبارة المرور",
+  "withYourOwnKey": "بمفتاح API الخاص بك"
 }

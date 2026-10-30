@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Organisation par IA",
-    "description": "Laissez Claude analyser vos onglets et faire des suggestions pertinentes pour que vous vous concentriez sur la réflexion, pas le rangement.",
+    "description": "L’IA lit les titres et les URL de vos onglets et suggère comment les regrouper, les nommer et les trier, pour que vous vous concentriez sur la réflexion, pas le rangement.",
     "autoGrouping": {
       "title": "Regroupement automatique",
       "description": "Ouvrez un tas d’onglets, cliquez sur un bouton. L’IA les regroupe logiquement selon le sujet, le domaine et l’intention."
@@ -71,13 +71,21 @@
       "title": "Noms de groupes intelligents",
       "description": "L’IA propose des noms concis et descriptifs pour vos groupes. Un clic pour accepter, ou saisissez le vôtre."
     },
+    "describe": {
+      "title": "Décrivez un groupe",
+      "description": "L’IA rédige une courte note sur le sujet des onglets d’un groupe ou d’une fenêtre, pour que vous vous rappeliez pourquoi vous les avez enregistrés. Modifiez-la comme n’importe quelle note."
+    },
     "summaries": {
       "title": "Résumés d’onglets",
       "description": "Survolez un onglet pour voir un résumé IA d’une phrase de la page, sans l’ouvrir."
     },
     "sessionSuggestions": {
       "title": "Suggestions de sessions",
-      "description": "L’IA analyse vos habitudes de navigation et suggère comment structurer vos sessions pour une productivité maximale."
+      "description": "L’IA passe en revue vos groupes enregistrés et suggère de fusionner ceux qui se recoupent ou d’archiver ceux que vous n’utilisez plus depuis un moment. Fusionnez ou archivez en un clic."
+    },
+    "organize": {
+      "title": "Organisez votre espace de travail",
+      "description": "L’IA examine tous vos groupes d’un coup et propose des fusions, des renommages, des archivages et un nouvel ordre. Décochez les modifications que vous ne voulez pas, puis appliquez le reste en une seule étape que vous pouvez annuler."
     }
   }
 }

@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Vor dem Löschen von Gruppen oder gespeicherten Fenstern nachfragen",
     "openOnClickLabel": "Tab per Klick öffnen",
     "openOnClickDescription": "Ein einzelner Klick öffnet den Tab im Browser",
+    "showAiButtonLabel": "KI-Schaltfläche anzeigen",
+    "showAiButtonDescription": "Die ✨-Schaltfläche in der Kopfzeile, mit KI-Aktionen für deine Tabs und Gruppen",
     "dedupLabel": "Beim Zusammenführen automatisch deduplizieren",
     "dedupDescription": "Doppelte Tabs beim Zusammenführen von Fenstern entfernen",
     "previewImagesLabel": "Seitenbilder in Vorschauen zeigen",
@@ -60,7 +62,9 @@
     "openingPortal": "Öffne ...",
     "manageBilling": "Abrechnung verwalten",
     "signOut": "Abmelden",
-    "resetEncryption": "Passphrase vergessen? Verschlüsselung zurücksetzen"
+    "resetEncryption": "Passphrase vergessen? Verschlüsselung zurücksetzen",
+    "aiKeyLabel": "KI",
+    "aiOwnKey": "Eigener API-Schlüssel"
   },
   "data": {
     "intro": "TabMerger speichert alle Daten lokal in IndexedDB. Cloud-Sync erfordert ein Pro-Konto.",
@@ -82,8 +86,10 @@
     "intro": "Jede KI-Aktion unten zehrt vom selben monatlichen KI-Kontingent (siehe Tab „Konto“). Deaktiviere nicht genutzte Funktionen, um Kontingent für die anderen zu sparen.",
     "autoGroupLabel": "Auto-Gruppieren",
     "autoGroupDescription": "Geöffnete Tabs mit KI gruppieren",
-    "nameGroupLabel": "Gruppe benennen",
-    "nameGroupDescription": "Mit KI einen Namen für eine Gruppe vorschlagen",
+    "nameGroupLabel": "Gruppen und Fenster benennen",
+    "nameGroupDescription": "Mit KI einen Namen für eine Gruppe oder ein Fenster vorschlagen",
+    "describeGroupLabel": "Gruppen und Fenster beschreiben",
+    "describeGroupDescription": "Mit KI eine kurze Notiz zu den Tabs einer Gruppe oder eines Fensters schreiben",
     "suggestSessionsLabel": "Sitzungen vorschlagen",
     "suggestSessionsDescription": "Hintergrund-Banner, das vorschlägt, wann eine Sitzung gespeichert werden sollte",
     "organizeLabel": "Organisieren",
@@ -91,14 +97,78 @@
     "summariesLabel": "Zusammenfassungen in Tab-Vorschauen",
     "summariesDescription": "KI-Zusammenfassung in der Hover-Vorschau eines Tabs",
     "throttleLabel": "Automatische KI-Vorschläge auf einmal täglich begrenzen",
-    "throttleDescription": "Das Hintergrund-Banner „Sitzungen vorschlagen“ erscheint höchstens einmal pro Tag, um dein monatliches KI-Kontingent zu schonen. Manuell ausgelöste KI-Aktionen (Auto-Gruppieren, Gruppe benennen, Organisieren) werden dadurch nie begrenzt."
+    "throttleDescription": "Das Hintergrund-Banner „Sitzungen vorschlagen“ erscheint höchstens einmal pro Tag, um dein monatliches KI-Kontingent zu schonen. Manuell ausgelöste KI-Aktionen (Auto-Gruppieren, Gruppe benennen, Organisieren) werden dadurch nie begrenzt.",
+    "buyCredits": "Credits nachkaufen",
+    "buyCreditsLabel": "Credits nachkaufen (neuer Tab)",
+    "plan": {
+      "managed": "TabMerger übernimmt die Einrichtung – noch {{remaining}} von {{cap}} Credits in diesem Monat",
+      "managedUnknown": "TabMerger übernimmt die Einrichtung",
+      "byok": "Du hast deinen eigenen {{provider}}-API-Schlüssel hinzugefügt",
+      "byokNoKey": "Du fügst deinen eigenen API-Schlüssel hinzu: Trage ihn unten ein, um KI-Funktionen zu nutzen"
+    },
+    "provider": {
+      "label": "KI-Anbieter",
+      "description": "Wähle das Unternehmen, das deinen API-Schlüssel ausgestellt hat.",
+      "placeholder": "Anbieter wählen"
+    },
+    "key": {
+      "label": "Dein {{provider}}-API-Schlüssel",
+      "save": "Schlüssel speichern",
+      "checking": "Wird geprüft …",
+      "replace": "Ersetzen",
+      "remove": "Entfernen",
+      "saved": "API-Schlüssel gespeichert",
+      "removed": "API-Schlüssel entfernt",
+      "invalidFormat": "Das sieht nicht nach einem gültigen {{provider}}-API-Schlüssel aus.",
+      "verifyFailed": "Der Schlüssel konnte nicht geprüft werden. Versuche es erneut.",
+      "testKey": "Testschlüssel verwenden",
+      "testKeyHint": "Nur in Entwicklungs-Builds: speichert einen Platzhalterschlüssel. Er funktioniert nur, solange der Web-Entwicklungsserver mit AI_MOCK=true läuft.",
+      "note": "Nur auf diesem Gerät gespeichert. Wird mit jeder KI-Anfrage an den Server von TabMerger gesendet und direkt an den Anbieter weitergereicht, der ihn ausgestellt hat; nie auf unseren Servern gespeichert.",
+      "getKey": "Schlüssel erstellen und Ausgabenlimit festlegen:",
+      "wrongProvider": "Dieser Schlüssel scheint von {{detected}} zu sein. Wähle oben {{detected}} oder füge einen Schlüssel von {{provider}} ein.",
+      "switching": "Dein gespeicherter {{saved}}-Schlüssel bleibt in Gebrauch, bis du einen Schlüssel von {{provider}} speicherst.",
+      "guideLink": "So erstellst du einen Schlüssel",
+      "keysLink": "API-Schlüssel bei {{provider}}"
+    },
+    "model": {
+      "label": "KI-Modell",
+      "managedDescription": "Größere Modelle liefern bessere Ergebnisse und verbrauchen mehr Credits. Alle Angaben sind Schätzungen.",
+      "byokDescription": "Größere Modelle liefern bessere Ergebnisse und kosten mehr auf der Rechnung deines Anbieters.",
+      "auto": "Automatisch",
+      "recommended": "Empfohlen",
+      "autoDescription": "Nutzt für jede Aufgabe das günstigste Modell, das sie gut erledigt."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_one": "≈ {{formatted}} Credit",
+      "credits_other": "≈ {{formatted}} Credits",
+      "perMonth_one": "≈ {{formatted}}-mal Organisieren pro Monat mit deinen Credits",
+      "perMonth_other": "≈ {{formatted}}-mal Organisieren pro Monat mit deinen Credits",
+      "action": {
+        "nameGroup_one": "Gruppe mit {{count}} Tab benennen",
+        "nameGroup_other": "Gruppe mit {{count}} Tabs benennen",
+        "tabSummary": "Einen Tab zusammenfassen",
+        "groupTabs_one": "{{count}} Tab gruppieren",
+        "groupTabs_other": "{{count}} Tabs gruppieren",
+        "suggestSessions": "Sitzungen vorschlagen",
+        "organize_one": "{{count}} Tab organisieren",
+        "organize_other": "{{count}} Tabs organisieren",
+        "describeGroup_one": "Gruppe mit {{count}} Tab beschreiben",
+        "describeGroup_other": "Gruppe mit {{count}} Tabs beschreiben"
+      }
+    },
+    "cost": {
+      "low": "Niedrigste Kosten",
+      "medium": "Mittlere Kosten",
+      "high": "Höchste Kosten"
+    }
   },
   "dev": {
     "demoLabel": "Demo-Modus",
     "demoDescription": "Beispieldaten für die Marketing-Demo erzeugen",
     "demoButton": "Starten",
-    "usageLabel": "Simulierter KI-Verbrauch",
-    "usageDescription": "Setzt den KI-Credit-Zähler (von {{cap}}) lokal und synchronisiert ihn mit deinem echten Supabase-Konto, damit die serverseitige Kontingentprüfung Ende-zu-Ende getestet werden kann.",
+    "usageLabel": "Diesen Monat verbrauchte Credits",
+    "usageDescription": "Setzt die diesen Monat verbrauchten KI-Credits (von {{cap}}) in deinem Konto über den Web-Entwicklungsserver. Zurücksetzen entfernt auch die Credit-Pakete dieses Monats.",
     "usageSet": "Setzen",
     "usageReset": "Zurücksetzen",
     "sentryLabel": "Sentry",
@@ -108,9 +178,9 @@
   "toast": {
     "encryptionReset": "Verschlüsselung zurückgesetzt – richte eine neue Passphrase ein",
     "encryptionResetFailed": "Verschlüsselung konnte nicht zurückgesetzt werden",
-    "signInForAiUsage": "Melde dich an, um den KI-Verbrauch mit dem Server zu synchronisieren",
-    "aiUsageSet": "Server-KI-Verbrauch auf {{count}} gesetzt",
-    "aiUsageFailed": "KI-Verbrauch konnte nicht mit dem Server synchronisiert werden",
+    "signInForAiUsage": "Melde dich an, um die verbrauchten KI-Credits zu setzen",
+    "aiUsageSet": "Verbrauchte KI-Credits auf {{credits}} gesetzt",
+    "aiUsageFailed": "Verbrauchte KI-Credits konnten nicht gesetzt werden",
     "previewImagesDenied": "Firefox braucht die Berechtigung, Seitenbilder abzurufen. Erlaube sie in der Abfrage des Browsers, um dies zu aktivieren.",
     "saved": "Einstellungen gespeichert",
     "cleared": "Alle Daten gelöscht",

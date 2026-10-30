@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Tanya sebelum menghapus grup atau jendela tersimpan",
     "openOnClickLabel": "Buka tab saat diklik",
     "openOnClickDescription": "Klik tunggal membuka tab di browser",
+    "showAiButtonLabel": "Tampilkan tombol AI",
+    "showAiButtonDescription": "Tombol ✨ di header, berisi tindakan AI untuk tab dan grup Anda",
     "dedupLabel": "Hapus duplikat otomatis saat menggabungkan",
     "dedupDescription": "Hapus tab duplikat saat menggabungkan jendela",
     "previewImagesLabel": "Tampilkan gambar halaman di pratinjau",
@@ -59,7 +61,9 @@
     "openingPortal": "Membuka...",
     "manageBilling": "Kelola penagihan",
     "signOut": "Keluar",
-    "resetEncryption": "Lupa frasa sandi? Atur ulang enkripsi"
+    "resetEncryption": "Lupa frasa sandi? Atur ulang enkripsi",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "Kunci API milik Anda"
   },
   "data": {
     "intro": "TabMerger menyimpan semua data secara lokal di IndexedDB. Sinkronisasi cloud memerlukan akun Pro.",
@@ -78,8 +82,10 @@
     "intro": "Setiap tindakan AI di bawah menggunakan kuota AI bulanan yang sama (lihat tab Akun). Matikan fitur yang tidak Anda gunakan untuk menghemat kuota untuk yang Anda pakai.",
     "autoGroupLabel": "Kelompokkan otomatis",
     "autoGroupDescription": "Kelompokkan tab yang terbuka dengan AI",
-    "nameGroupLabel": "Nama grup",
-    "nameGroupDescription": "Sarankan nama untuk grup dengan AI",
+    "nameGroupLabel": "Beri nama grup dan jendela",
+    "nameGroupDescription": "Sarankan nama untuk grup atau jendela dengan AI",
+    "describeGroupLabel": "Deskripsikan grup dan jendela",
+    "describeGroupDescription": "Tulis catatan singkat tentang tab dalam grup atau jendela dengan AI",
     "suggestSessionsLabel": "Sarankan sesi",
     "suggestSessionsDescription": "Spanduk latar belakang yang menyarankan kapan harus menyimpan sesi",
     "organizeLabel": "Atur ulang",
@@ -87,14 +93,72 @@
     "summariesLabel": "Ringkasan pratinjau tab",
     "summariesDescription": "Ringkasan AI saat pratinjau tab dengan arahkan kursor",
     "throttleLabel": "Batasi saran AI otomatis menjadi sekali sehari",
-    "throttleDescription": "Spanduk saran sesi latar belakang muncul paling banyak sekali per hari untuk melindungi kuota AI bulanan Anda. Tindakan AI yang Anda picu secara manual (Kelompokkan otomatis, Nama grup, Atur ulang) tidak pernah dibatasi oleh ini."
+    "throttleDescription": "Spanduk saran sesi latar belakang muncul paling banyak sekali per hari untuk melindungi kuota AI bulanan Anda. Tindakan AI yang Anda picu secara manual (Kelompokkan otomatis, Nama grup, Atur ulang) tidak pernah dibatasi oleh ini.",
+    "buyCredits": "Beli kredit tambahan",
+    "buyCreditsLabel": "Beli kredit tambahan (tab baru)",
+    "plan": {
+      "managed": "TabMerger yang mengurus penyiapan: sisa {{remaining}} dari {{cap}} kredit bulan ini",
+      "managedUnknown": "TabMerger yang mengurus penyiapan",
+      "byok": "Anda menambahkan kunci API {{provider}} milik Anda",
+      "byokNoKey": "Anda menambahkan kunci API sendiri: masukkan di bawah untuk memakai fitur AI"
+    },
+    "provider": {
+      "label": "Penyedia AI",
+      "description": "Pilih perusahaan yang menerbitkan kunci API Anda.",
+      "placeholder": "Pilih penyedia"
+    },
+    "key": {
+      "label": "Kunci API {{provider}} Anda",
+      "save": "Simpan kunci",
+      "checking": "Memeriksa…",
+      "replace": "Ganti",
+      "remove": "Hapus",
+      "saved": "Kunci API disimpan",
+      "removed": "Kunci API dihapus",
+      "invalidFormat": "Itu tidak terlihat seperti kunci API {{provider}} yang valid.",
+      "verifyFailed": "Kunci tidak dapat diperiksa. Coba lagi.",
+      "testKey": "Gunakan kunci uji",
+      "testKeyHint": "Khusus build pengembangan: menyimpan kunci tiruan. Hanya berfungsi saat server pengembangan web berjalan dengan AI_MOCK=true.",
+      "note": "Hanya disimpan di perangkat ini. Dikirim ke server TabMerger bersama setiap permintaan AI dan langsung diteruskan ke penyedia yang menerbitkannya; tidak pernah disimpan di server kami.",
+      "getKey": "Buat kunci dan tetapkan batas pengeluaran:",
+      "wrongProvider": "Kunci ini sepertinya dari {{detected}}. Pilih {{detected}} di atas, atau tempel kunci dari {{provider}}.",
+      "switching": "Kunci {{saved}} yang tersimpan tetap dipakai sampai Anda menyimpan kunci dari {{provider}}.",
+      "guideLink": "Cara membuat kunci",
+      "keysLink": "Kunci API {{provider}}"
+    },
+    "model": {
+      "label": "Model AI",
+      "managedDescription": "Model yang lebih besar memberi hasil lebih baik dan memakai lebih banyak kredit. Angkanya perkiraan.",
+      "byokDescription": "Model yang lebih besar memberi hasil lebih baik dan lebih mahal di tagihan penyedia Anda.",
+      "auto": "Otomatis",
+      "recommended": "Disarankan",
+      "autoDescription": "Memakai model termurah yang mengerjakan setiap tugas dengan baik."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_other": "≈ {{formatted}} kredit",
+      "perMonth_other": "≈ {{formatted}} kali atur ulang per bulan dengan kredit Anda",
+      "action": {
+        "nameGroup_other": "Memberi nama grup berisi {{count}} tab",
+        "tabSummary": "Meringkas satu tab",
+        "groupTabs_other": "Mengelompokkan {{count}} tab",
+        "suggestSessions": "Menyarankan sesi",
+        "organize_other": "Mengatur ulang {{count}} tab",
+        "describeGroup_other": "Mendeskripsikan grup berisi {{count}} tab"
+      }
+    },
+    "cost": {
+      "low": "Biaya terendah",
+      "medium": "Biaya sedang",
+      "high": "Biaya tertinggi"
+    }
   },
   "dev": {
     "demoLabel": "Mode Demo",
     "demoDescription": "Isi data contoh untuk pipeline demo pemasaran",
     "demoButton": "Masuk",
-    "usageLabel": "Jumlah penggunaan AI tiruan",
-    "usageDescription": "Mengatur penghitung kredit AI (dari {{cap}}) secara lokal dan menyinkronkannya ke akun Supabase nyata Anda, sehingga penegakan kuota sisi server dapat diuji secara menyeluruh.",
+    "usageLabel": "Kredit terpakai bulan ini",
+    "usageDescription": "Mengatur kredit AI yang terpakai bulan ini (dari {{cap}}) di akun Anda melalui server pengembangan web. Atur ulang juga menghapus paket kredit bulan ini.",
     "usageSet": "Atur",
     "usageReset": "Atur ulang",
     "sentryLabel": "Sentry",
@@ -104,9 +168,9 @@
   "toast": {
     "encryptionReset": "Enkripsi diatur ulang — atur frasa sandi baru",
     "encryptionResetFailed": "Gagal mengatur ulang enkripsi",
-    "signInForAiUsage": "Masuk untuk menyinkronkan penggunaan AI ke server",
-    "aiUsageSet": "Penggunaan AI server diatur ke {{count}}",
-    "aiUsageFailed": "Gagal menyinkronkan penggunaan AI ke server",
+    "signInForAiUsage": "Masuk untuk mengatur kredit AI yang terpakai",
+    "aiUsageSet": "Kredit AI terpakai diatur ke {{credits}}",
+    "aiUsageFailed": "Gagal mengatur kredit AI yang terpakai",
     "previewImagesDenied": "Firefox memerlukan izin untuk mengambil gambar halaman. Izinkan di permintaan browser untuk mengaktifkan ini.",
     "saved": "Pengaturan disimpan",
     "cleared": "Semua data dihapus",

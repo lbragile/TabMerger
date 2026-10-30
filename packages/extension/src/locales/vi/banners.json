@@ -1,6 +1,7 @@
 {
   "review": "Xem lại",
   "archive": "Lưu trữ",
+  "merge": "Hợp nhất",
   "dismiss": "Bỏ qua",
   "getMore": "Lấy thêm",
   "removeStale": "Xóa thẻ cũ",
@@ -16,5 +17,7 @@
     "restart": "Khởi động lại để cập nhật",
     "restartLabel": "Khởi động lại TabMerger để cập nhật lên phiên bản {{version}}. Việc này sẽ đóng popup.",
     "dismissLabel": "Bỏ qua thông báo cập nhật cho phiên bản {{version}}"
-  }
+  },
+  "aiQuotaPrompt": "Tháng này không còn đủ tín dụng AI. Hãy chọn mô hình rẻ hơn hoặc mua thêm tín dụng.",
+  "changeModel": "Đổi mô hình"
 }

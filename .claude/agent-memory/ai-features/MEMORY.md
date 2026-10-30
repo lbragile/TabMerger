@@ -1,7 +1,15 @@
 # AI Features Agent Memory
 
-- [organize E2EE writeback](learnings_organize_e2ee_writeback.md) — client sends plaintext groups in POST; server skips content-bearing writes instead of re-encrypting
-- [AI kill switch](learnings_ai_kill_switch.md) — NEXT_PUBLIC_AI_ENABLED guard in lib/ai-guard.ts runs before auth on all /api/ai/*; tests must stub it on
+- [organize E2EE design](learnings_organize_e2ee_writeback.md) — sync route answers { actions }; client applies; server never writes; no refunds
+- [AI kill switch](learnings_ai_kill_switch.md) — lib/ai-guard.ts: any-option guard first, per-option gate after the plan lookup; tests must stub the flags
 - [suggest-sessions response shape](learnings_suggest_sessions_shape.md) — `{ message, staleGroupIds, suggestion }`; `suggestion` is a deprecated alias to delete after the banner migration
-- [AI request validation](learnings_ai_request_validation.md) — all /api/ai/* bodies parsed by lib/ai-validation.ts after auth, before the usage check; limits, shapes, tooling gotchas
+- [AI request validation](learnings_ai_request_validation.md) — bodies read with a byte cap after the plan check, parsed by lib/ai-validation.ts; prompt-safety cleaning; limits
 - [groups.position is not Now Open](learnings_groups_position_now_open.md) — Now Open is never a groups row; legacy rows default to position 0; reorder slots start at 1
+- [AI metering flow](learnings_ai_metering_flow.md) — count_tokens -> reserve -> call -> settle; month fixed per request; BYOK unmetered; test gotchas (Haiku rounds to 1, SDK in jsdom)
+- [5.5 model request settings](learnings_model_request_settings.md) — thinking/effort per model, no temperature, structured-output schema rules, SDK 0.112.3 between_tools cast
+- [Own-key providers](learnings_own_key_providers.md) — BYOK to Anthropic/OpenAI/Google by key shape; fetch adapters, error mapping, per-option flags, key hygiene
+- [Prompt caching](learnings_prompt_caching.md) — Claude system-block breakpoint, OpenAI caching off (1.25x write on data turn), Gemini implicit; cache pricing in metering
+- [Describe group route](learnings_describe_group.md) — contract, parser errors in runAiTask stay charged, word-boundary cap, new AiAction needs extension i18n key
+- [Dev AI mock](learnings_ai_dev_mock.md) — AI_MOCK=true seams (count+create, own-key fetch, verify), gate, over_quota via inflated count, test gotchas
+- [Name-group suggestions](learnings_name_group_suggestions.md) — `{ names, name }`; no maxItems in schema; cleanGroupNames dedupe; estimate 40; mock names
+- [AI abuse limits](learnings_ai_abuse_limits.md) — handleAiRoute order, IP/user/verify buckets, slots (028), pre-check never stricter than reserve, deadlines, test stubs

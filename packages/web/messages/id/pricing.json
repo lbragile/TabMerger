@@ -25,17 +25,21 @@
     "dragDrop": "Seret & lepas",
     "shortcuts": "Pintasan keyboard",
     "everythingInFree": "Semua fitur Gratis",
-    "unlimited": "Grup, tab, aturan URL & sesi tanpa batas",
+    "unlimited": "Grup, tab, aturan & sesi tanpa batas",
     "cloudSync": "Sinkronisasi cloud antarperangkat",
     "sessionsSynced": "Sesi tersinkron antarperangkat",
-    "autoBackups": "Cadangan terenkripsi otomatis untuk grup Anda, dengan salinan file opsional di komputer Anda",
+    "autoBackups": "Cadangan terenkripsi otomatis",
     "prioritySupport": "Dukungan prioritas",
     "everythingInPro": "Semua fitur Pro",
     "aiGrouping": "Pengelompokan tab otomatis dengan AI",
     "aiNames": "Saran nama grup dari AI",
+    "aiDescribe": "Deskripsi grup & jendela dari AI",
     "smartSessions": "Saran sesi cerdas",
+    "aiOrganize": "Rapikan ruang kerja dengan AI",
     "tabPreview": "Pratinjau tab dengan ringkasan AI",
-    "aiCredits": "{count} kredit AI / bulan"
+    "aiCreditsMonthly": "{count, number} kredit AI per bulan",
+    "ownApiKey": "Gunakan penyedia AI Anda sendiri",
+    "chooseModel": "Pilih model AI Anda"
   },
   "current": "Saat ini",
   "installFree": "Pasang gratis",
@@ -43,9 +47,13 @@
   "switchToMonthly": "Beralih ke tagihan bulanan",
   "downgradeTo": "Turunkan ke {name}",
   "upgradeTo": "Tingkatkan ke {name}",
-  "switchFailed": "Tidak dapat memulai peralihan. Coba Kelola tagihan di halaman akun Anda.",
+  "getPlan": "Dapatkan {name}",
+  "switchFailed": "Tidak dapat memulai peralihan. Silakan coba lagi, atau kirim email ke {email} jika masalah berlanjut.",
   "alreadySubscribed": "Anda sudah memiliki paket. Membuka halaman tagihan agar Anda dapat mengubahnya.",
-  "portalFailed": "Tidak dapat membuka halaman tagihan. Gunakan Kelola tagihan di halaman akun Anda untuk mengubah paket.",
+  "alreadySubscribedShown": "Anda sudah memiliki paket. Halaman ini sekarang menampilkannya, jadi Anda dapat mengubahnya di sini.",
+  "checkoutFailed": "Tidak dapat memulai checkout. Silakan coba lagi sebentar lagi.",
+  "portalFailed": "Tidak dapat membuka halaman tagihan. Silakan coba lagi, atau kirim email ke {email} untuk mengubah paket.",
+  "rateLimited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi.",
   "checkoutCanceled": "Pembayaran dibatalkan. Anda tidak dikenai biaya.",
   "cancelAnytime": "Batalkan kapan saja dari akun Anda — tanpa ikatan, tanpa banyak tanya.",
   "keepAccess": "Akses tetap tersedia hingga akhir periode tagihan Anda.",
@@ -55,5 +63,47 @@
     "title": "Harga sederhana dan transparan",
     "lead": "Mulai gratis. Tingkatkan saat Anda siap untuk lebih.",
     "moreQuestions": "Punya pertanyaan lain? Lihat <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Siapa yang mengurus penyiapan?",
+    "managed": "Kami",
+    "byok": "Anda",
+    "managedHint": "Kredit mengukur penggunaan AI: tugas yang lebih besar dan model yang lebih kuat memakai lebih banyak.",
+    "byokHint": "Anda menambahkan kunci API dari penyedia. Penyedia menagih Anda langsung sesuai pemakaian.",
+    "switchToByok": "Urus penyiapan sendiri",
+    "switchToManaged": "Serahkan penyiapan ke TabMerger"
+  },
+  "planChange": {
+    "title": "Konfirmasi perubahan paket",
+    "confirmEndOfPeriod": "Paket Anda berubah menjadi {plan} pada {date}. Anda tetap memakai paket saat ini sampai saat itu. Tidak ada pengembalian dana untuk sisa periode ini.",
+    "confirmEndOfPeriodNoDate": "Paket Anda berubah menjadi {plan} di akhir periode tagihan ini. Anda tetap memakai paket saat ini sampai saat itu. Tidak ada pengembalian dana untuk sisa periode ini.",
+    "confirm": "Konfirmasi",
+    "cancel": "Batal",
+    "scheduled": "Selesai. Paket Anda berubah menjadi {plan} pada {date}.",
+    "scheduledNoDetails": "Selesai. Paket Anda berubah di akhir periode tagihan ini.",
+    "aiDisabled": "Opsi Pro AI itu belum tersedia.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI dengan penyiapan oleh TabMerger",
+      "proAiByok": "Pro AI dengan penyiapan oleh Anda"
+    },
+    "billedMonthly": "{plan}, ditagih bulanan",
+    "billedYearly": "{plan}, ditagih tahunan",
+    "errors": {
+      "no_billing_account": "Paket ini tidak terhubung ke akun penagihan, jadi tidak dapat diubah di sini. Kirim email ke {email} dan kami akan mengubahnya untuk Anda.",
+      "no_paid_plan": "Anda tidak memiliki paket berbayar untuk diubah. Pilih paket untuk berlangganan.",
+      "already_on_price": "Anda sudah menggunakan paket tersebut.",
+      "already_scheduled": "Perubahan paket sudah dijadwalkan untuk akhir periode penagihan ini.",
+      "cancel_scheduled": "Paket Anda akan berakhir pada akhir periode penagihan ini. Perpanjang di Kelola penagihan sebelum mengubahnya.",
+      "pay_or_resume": "Paket Anda menunggu pembayaran atau sedang dijeda, jadi belum dapat diubah. Kirim email ke {email} dan kami akan membantu Anda menyelesaikannya.",
+      "switch_needs_support": "Perubahan paket ini tidak dapat dilakukan sekarang. Kirim email ke {email} dan kami akan melakukan perubahannya untuk Anda.",
+      "price_unavailable": "Saat ini Anda tidak dapat beralih ke paket tersebut. Silakan coba lagi nanti atau hubungi kami.",
+      "switch_failed": "Stripe tidak dapat memulai perubahan. Silakan coba lagi, gunakan Kelola penagihan di halaman akun Anda, atau kirim email ke {email}.",
+      "rate_limited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
+    }
+  },
+  "scheduledChange": {
+    "starts": "Mulai {date}",
+    "note": "Anda punya perubahan terjadwal pada {date}. <link>Kelola di halaman akun Anda.</link>"
   }
 }

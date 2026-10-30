@@ -3,6 +3,8 @@
   "renameHint": "このグループの新しい名前を設定します",
   "aiRename": "AIで名前を付ける",
   "aiRenameHint": "AIでこのグループの名前を提案します",
+  "aiDescribe": "AIで説明を書く",
+  "aiDescribeHint": "このグループのタブについてAIで短いメモを書きます",
   "addNote": "メモを追加",
   "addNoteHint": "このグループにメモを付けます",
   "editNote": "メモを編集",
@@ -38,6 +40,12 @@
   "toast": {
     "noDuplicates": "重複は見つかりませんでした",
     "noTabsToName": "名前を付けるタブがこのグループにありません",
-    "aiRenameFailed": "AIによる名前の変更に失敗しました"
+    "aiRenameFailed": "AIによる名前の変更に失敗しました",
+    "nameAlreadyFits": "「{{name}}」はすでにこのグループに合っています",
+    "noTabsToDescribe": "説明を書くタブがこのグループにありません",
+    "aiDescribeFailed": "このグループの説明を書けませんでした",
+    "noteAdded": "メモを追加しました",
+    "noteReplaced": "メモを置き換えました",
+    "undoNoteLater": "この後に別の変更があります。代わりに上部の「元に戻す」を使ってください。"
   }
 }

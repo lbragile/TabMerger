@@ -23,11 +23,11 @@
 - [Other Devices Settings panel](learnings_other_devices_panel.md) — Radix ScrollArea breaks jsdom; use an overflow-y-auto div
 - [Types/settings/test-env patterns](learnings_types_settings_and_test_env_patterns.md) — local types.ts duplicates shared, not re-exported
 - [Device sessions wired](learnings_device_sessions_wired.md) — pushDeviceSession(state, tier) in useCurrentTabs doSync
-- [MSW + WXT popup dev mocking](learnings_msw_wxt_popup.md) — dev-only AI mock; msw postinstall needs allowBuilds
+- [MSW + WXT popup dev mocking](learnings_msw_wxt_popup.md) — historical: client AI mock removed (now server-side AI_MOCK); MSW SW fails in popups
 - [pendingSync audit](learnings_pendingsync_audit.md) — fixed useUpdateGroupInfo missing pendingSync; everything else correct
-- [AI auto-group apply fix](learnings_ai_auto_group_apply.md) — handleAIGroup was discarding useAutoGroup's result; added useApplyAIGroups
+- [AI auto-group apply](learnings_ai_auto_group_apply.md) — useApplyAIGroups; lib/aiAutoGroup merges same-named groups; only NEW groups use Free slots
 - [Keyboard shortcuts for tab actions](learnings_keyboard_shortcuts_tab_actions.md) — F2 rename / N note via uiStore renameTarget/noteTarget
-- [Dev AI usage real-backend sync](learnings_dev_ai_usage_real_sync.md) — Dev tab Set/Reset also POSTs /api/ai/dev-usage
+- [Dev AI credits control](learnings_dev_ai_usage_real_sync.md) — no local counter; DevAiCredits posts credits to /api/ai/dev-usage
 - [Review stale group modal + Archive all](learnings_review_stale_group_modal.md) — AI banner Review/Archive-all
 - [Extension share encryption fix](learnings_extension_share_encryption.md) — createSharedBundle inserted plaintext (fixed)
 - [Delete resurrection race fix](learnings_delete_resurrection_race.md) — pending-delete id set in syncEngine.ts
@@ -87,7 +87,7 @@
 - [Now Open browser-open pattern](learnings_now_open_browser_open.md) — moving to Now Open opens via tabs/windows.create
 - [Device id cross-account scoping](learnings_device_id_cross_account_scoping.md) — keyed by deviceId:${userId}
 - [AI coming-soon flag wiring](learnings_ai_coming_soon_flag_wiring.md) — how the flag gates entitlements, useAI, Header
-- [Test mocking gotcha for AI_ENABLED](learnings_test_mocking_aiflag.md) — files importing AI_ENABLED need it mocked too
+- [Test mocking gotcha for AI_ENABLED](learnings_test_mocking_aiflag.md) — mock aiFlag both ways (.env.local leaks in); getter mocks
 - [Encryption key tri-state + upload gate](learnings_encryption_key_tristate.md) — unknown is not absent; getContentUploadKey
 - [Groups RMW + cross-context lock](learnings_groups_rmw_lock.md) — updateGroupsState, Web Locks + fallback, TM_GROUPS_CHANGED
 - [Group colour tints](learnings_group_colour_tints.md) — withAlpha in lib/color.ts; inline style; -mx-1 -mt-1 band
@@ -126,3 +126,14 @@
 - [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST gates analytics + Sentry
 - [Right-to-left layout](learnings_rtl_layout.md) — text-ui-start keys on html dir; empty dir=auto is LTR; Radix direction; probe screenshots
 - [Searchable language pickers](learnings_language_picker_search.md) — Popover+combobox, manual scroll-to-current, two-name rows, RTL mark
+- [Pro AI own key + model picker](learnings_ai_byok_model_choice.md) — WXT auto-import `class extends` trap; two AI flags; provider-first picker; focus retry; cost levels not $
+- [Settings → AI dropdowns](learnings_ai_settings_dropdowns.md) — two-line Select options, name-only trigger, '' placeholder, fixed 12rem + ellipsis (line-clamp-none)
+- [Header AI "Name group"](learnings_header_ai_name_group.md) — (now opens a picker, see name-picker note) shared useNameGroupAction; Trans+bdi user name in hint; fa ZWNJ; e2e own-key seed
+- [AI Organize in the popup](learnings_ai_organize_in_popup.md) — sanitize + pure apply + own RMW hook; bdi a11y-name spaces; Now Open id changes on sign-in
+- [AI menu sections + Describe group](learnings_ai_menu_sections_describe_group.md) — AiMenu.tsx groups/labels; targeted toast Undo (undoHistoryEntry); `//` args mangled by Git Bash
+- [Settings initial tab + focus-ring clip](learnings_settings_initial_tab_and_focus_ring_clip.md) — useAuth first render + Radix focus picks General; -ms-1 ps-1
+- [Name picker + locked AI preview](learnings_name_picker_and_locked_ai_preview.md) — radios + textbox outside radiogroup; aria-disabled focusable items; seed the query cache
+- [Scratchpad scripts are shared](learnings_scratchpad_script_names.md) — unique script names; Write's "not read yet" error means a stale file of that name exists
+- [Window AI actions](learnings_window_ai_actions.md) — AiTarget (group id + position + tabs key), one gated WindowAiScope host, generalized modals
+- [Buy more credits in Settings → AI](learnings_buy_credits_entry.md) — lib/buyCredits.ts shared URL + 10% rule; e2e records tabs.create; Python write_text CRLF trap
+- [AI rate_limited, trimmed payloads, cap rule](learnings_ai_rate_limit_payload_cap.md) — two 429s, codeless 429 = platform → rate_limited; Intl wait copy; aiPayload + web-parser contract test (alias before `@`); allowance_spent cap

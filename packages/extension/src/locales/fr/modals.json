@@ -61,5 +61,44 @@
   },
   "confirmDialog": {
     "cancel": "Annuler"
+  },
+  "organize": {
+    "title": "Organiser les groupes",
+    "description_one": "L’IA suggère {{count}} modification. Décochez celles que vous ne voulez pas.",
+    "description_many": "L’IA suggère {{count}} de modifications. Décochez celles que vous ne voulez pas.",
+    "description_other": "L’IA suggère {{count}} modifications. Décochez celles que vous ne voulez pas.",
+    "merge": "Fusionner « <from>{{from}}</from> » dans « <to>{{to}}</to> »",
+    "rename": "Renommer « <from>{{from}}</from> » en « <to>{{to}}</to> »",
+    "archive": "Archiver « <name>{{name}}</name> »",
+    "reorder": "Réordonner les groupes",
+    "archiveNote": "Les groupes archivés sont masqués, pas supprimés : restaurez-les à tout moment depuis Archivés.",
+    "apply": "Appliquer la sélection",
+    "applied_one": "{{count}} modification appliquée",
+    "applied_many": "{{count}} de modifications appliquées",
+    "applied_other": "{{count}} modifications appliquées",
+    "nothingApplied": "Rien à appliquer : ces groupes ont changé entre-temps",
+    "applyFailed": "Impossible d’appliquer les modifications"
+  },
+  "describeGroup": {
+    "title": "Utiliser la description de l’IA ?",
+    "description": "Ce groupe a déjà une note. Remplacez-la ou ajoutez la suggestion en dessous.",
+    "descriptionWindow": "Cette fenêtre a déjà une note. Remplacez-la ou ajoutez la suggestion en dessous.",
+    "current": "Note actuelle",
+    "suggestion": "Suggestion",
+    "replace": "Remplacer la note",
+    "append": "Ajouter en dessous",
+    "tooLong": "Trop long pour être ajouté sous la note ({{max}} caractères au maximum). Remplacez-la plutôt.",
+    "saveFailed": "Impossible d’enregistrer la note"
+  },
+  "nameGroup": {
+    "title": "Nommer ce groupe",
+    "titleWindow": "Nommer cette fenêtre",
+    "current": "Nom actuel : <name>{{name}}</name>",
+    "choices": "Noms suggérés",
+    "custom": "Ou saisissez le vôtre :",
+    "customInput": "Votre propre nom",
+    "rename": "Renommer",
+    "renameFailedWindow": "Impossible de renommer la fenêtre",
+    "renameFailed": "Impossible de renommer le groupe"
   }
 }

@@ -8,7 +8,39 @@ const TooltipProvider = TooltipPrimitive.Provider
 
 const Tooltip = TooltipPrimitive.Root
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+/**
+ * True unless the element is known not to match `:focus-visible`. An environment that
+ * cannot evaluate the selector counts as focus-visible, so keyboard tooltips never break.
+ */
+function isFocusVisible(el: Element): boolean {
+  try {
+    return el.matches(':focus-visible')
+  } catch {
+    return true
+  }
+}
+
+/**
+ * Radix opens the tooltip on any focus that did not start with a pointer press. An overlay
+ * (Popover, DropdownMenu, Dialog) restoring focus to its trigger on close looks exactly like
+ * that, so the tooltip opened with the pointer already elsewhere and stayed until blur.
+ * Focus that is not `:focus-visible` (programmatic, after a press) is therefore ignored;
+ * keyboard focus still opens it.
+ */
+const TooltipTrigger = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>
+>(({ onFocus, ...props }, ref) => (
+  <TooltipPrimitive.Trigger
+    ref={ref}
+    {...props}
+    onFocus={(event) => {
+      onFocus?.(event)
+      if (!isFocusVisible(event.currentTarget)) event.preventDefault()
+    }}
+  />
+))
+TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName
 
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,

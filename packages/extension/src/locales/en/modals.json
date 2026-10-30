@@ -55,5 +55,42 @@
   },
   "confirmDialog": {
     "cancel": "Cancel"
+  },
+  "organize": {
+    "title": "Organize groups",
+    "description_one": "AI suggests {{count}} change. Uncheck any you don't want.",
+    "description_other": "AI suggests {{count}} changes. Uncheck any you don't want.",
+    "merge": "Merge “<from>{{from}}</from>” into “<to>{{to}}</to>”",
+    "rename": "Rename “<from>{{from}}</from>” to “<to>{{to}}</to>”",
+    "archive": "Archive “<name>{{name}}</name>”",
+    "reorder": "Reorder groups",
+    "archiveNote": "Archived groups are hidden, not deleted: restore them anytime from Archived.",
+    "apply": "Apply selected",
+    "applied_one": "Applied {{count}} change",
+    "applied_other": "Applied {{count}} changes",
+    "nothingApplied": "Nothing to apply: those groups changed in the meantime",
+    "applyFailed": "Could not apply the changes"
+  },
+  "describeGroup": {
+    "title": "Use the AI description?",
+    "description": "This group already has a note. Replace it, or add the suggestion below it.",
+    "descriptionWindow": "This window already has a note. Replace it, or add the suggestion below it.",
+    "current": "Current note",
+    "suggestion": "Suggestion",
+    "replace": "Replace note",
+    "append": "Add below",
+    "tooLong": "Too long to add below the note (at most {{max}} characters). Replace it instead.",
+    "saveFailed": "Could not save the note"
+  },
+  "nameGroup": {
+    "title": "Name this group",
+    "titleWindow": "Name this window",
+    "current": "Currently: <name>{{name}}</name>",
+    "choices": "Suggested names",
+    "custom": "Or type your own:",
+    "customInput": "Your own name",
+    "rename": "Rename",
+    "renameFailedWindow": "Could not rename the window",
+    "renameFailed": "Could not rename the group"
   }
 }

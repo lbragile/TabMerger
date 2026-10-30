@@ -3,7 +3,7 @@ import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { STORE_ICON } from './BrowserIcons'
 import { StoreLink } from '@/components/StoreLink'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { getStoreLinks } from '@/lib/storeLinks'
 import type { InstallBrowser } from '@/lib/visitorBrowser'
 
@@ -32,10 +32,12 @@ export function FinalCta({ browser = 'chrome' }: FinalCtaProps = {}) {
           {t('title')}
         </h2>
         <p className="text-text2 mb-7 text-[15.5px]">
-          {AI_ENABLED ? t('leadAi') : t('leadNoAi')}
+          {AI_AVAILABILITY.any ? t('leadAi') : t('leadNoAi')}
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button size="lg" className="gap-2" asChild>
+          {/* Wraps instead of running off a phone screen when the label is long (another
+              language); one line, at the usual 44px, whenever it fits. */}
+          <Button size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
             <StoreLink href={storeLinks[browser]}>
               <Icon size={18} />
               {t(INSTALL_LABEL[browser])}

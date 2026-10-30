@@ -2,10 +2,12 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import type { PricingCard as PricingCardType } from '@/components/pricing/PricingCard'
+import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
 const push = vi.fn()
+const refresh = vi.fn()
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push }),
+  useRouter: () => ({ push, refresh }),
 }))
 
 const toastInfo = vi.fn()
@@ -47,6 +49,7 @@ async function loadPricingCard(aiEnabled: boolean): Promise<typeof PricingCardTy
 describe('PricingCard', () => {
   beforeEach(() => {
     push.mockClear()
+    refresh.mockClear()
     toastInfo.mockClear()
     toastError.mockClear()
     global.fetch = vi.fn()
@@ -119,7 +122,7 @@ describe('PricingCard', () => {
 
     const user = userEvent.setup()
     render(<PricingCard {...baseProps} />)
-    await user.click(screen.getByRole('button', { name: /Upgrade to Pro/ }))
+    await user.click(screen.getByRole('button', { name: 'Get Pro' }))
 
     expect(global.fetch).toHaveBeenCalledWith(
       '/api/checkout',
@@ -133,7 +136,7 @@ describe('PricingCard', () => {
     ;(global.fetch as any).mockResolvedValue({ status: 401, json: async () => ({}) })
     const user = userEvent.setup()
     render(<PricingCard {...baseProps} />)
-    await user.click(screen.getByRole('button', { name: /Upgrade to Pro/ }))
+    await user.click(screen.getByRole('button', { name: 'Get Pro' }))
     expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/pricing')
   })
 
@@ -194,10 +197,12 @@ describe('PricingCard', () => {
     expect(screen.getByText('Current')).toBeInTheDocument()
   })
 
-  it('signed-out visitor (no currentTier) sees default CTAs with no "Current"/"Downgrade" labels (AI enabled)', async () => {
+  it('signed-out visitor (no currentTier) sees "Get …" with no "Current"/"Downgrade" labels (AI enabled)', async () => {
     const PricingCard = await loadPricingCard(true)
     render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" />)
-    expect(screen.getByRole('button', { name: /Upgrade to Pro AI/ })).toBeInTheDocument()
+    // Nothing to upgrade from: "Get", not "Upgrade to".
+    expect(screen.getByRole('button', { name: 'Get Pro AI' })).toBeInTheDocument()
+    expect(screen.queryByText(/Upgrade to/)).not.toBeInTheDocument()
     expect(screen.queryByText('Current')).not.toBeInTheDocument()
     expect(screen.queryByText(/Downgrade/)).not.toBeInTheDocument()
   })
@@ -208,26 +213,55 @@ describe('PricingCard', () => {
     expect(screen.queryByText('Recommended')).not.toBeInTheDocument()
   })
 
-  it('shows a solid, high-contrast primary-branded "Current" badge on the card matching currentTier', async () => {
+  it('shows a neutral, high-contrast "Current" badge (the brand color stays on Recommended)', async () => {
     const PricingCard = await loadPricingCard(true)
     const { container } = render(<PricingCard {...baseProps} currentTier="pro" />)
     const badge = screen.getByText('Current')
-    expect(badge.className).toMatch(/bg-primary\b/)
-    expect(badge.className).toMatch(/text-primary-foreground/)
+    expect(badge.className).toMatch(/bg-foreground\b/)
+    expect(badge.className).toMatch(/text-background\b/)
+    expect(badge.className).not.toMatch(/bg-primary\b/)
     const card = container.firstChild as HTMLElement
-    expect(card.className).toMatch(/border-primary\/40/)
+    expect(card.className).toMatch(/border-foreground\/30/)
+    expect(card.className).not.toMatch(/border-primary\/40/)
   })
 
-  it('shows the AI monthly request quota as a feature line on the Pro AI card only (AI enabled)', async () => {
+  it('shows "Current" as the same top-edge pill the home teaser uses, not beside the plan name', async () => {
+    const PricingCard = await loadPricingCard(true)
+    const { container } = render(<PricingCard {...baseProps} highlighted currentTier="pro" />)
+    const badge = screen.getByText('Current')
+    const card = container.firstChild as HTMLElement
+    expect(card.className).toMatch(/\brelative\b/)
+    expect(card).toContainElement(badge)
+    expect(badge.className).toMatch(/\babsolute\b/)
+    expect(badge.className).toMatch(/-translate-y-1\/2/)
+    expect(badge.className).toMatch(/rounded-none/)
+    // On the card's own edge, not inside the plan name's heading.
+    expect(badge.parentElement).toBe(card)
+    expect(screen.getByRole('heading', { name: 'Pro' })).not.toContainElement(badge)
+    // One pill at a time: Current wins, and the sparkle is gone.
+    expect(screen.queryByText('Recommended')).not.toBeInTheDocument()
+    expect(card).not.toHaveTextContent('✦')
+  })
+
+  it('uses a check for "Everything in" lines and a + for added ones', async () => {
+    const PricingCard = await loadPricingCard(true)
+    const features = [
+      { text: 'Everything in Free', inherited: true },
+      { text: 'Added thing', inherited: false },
+    ]
+    render(<PricingCard {...baseProps} features={features} />)
+    const [first, second] = screen.getAllByRole('listitem')
+    expect(first.querySelector('svg')?.getAttribute('class')).toMatch(/lucide-check/)
+    expect(second.querySelector('svg')?.getAttribute('class')).toMatch(/lucide-plus/)
+  })
+
+  // The monthly credit allowance is one of Pro AI's feature lines (from PRICING_TIERS, see
+  // tierFeatures), so the card adds no credits line of its own.
+  it('adds no AI credits line of its own to the Pro AI card, only the features it is given', async () => {
     const PricingCard = await loadPricingCard(true)
     render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" />)
-    expect(screen.getByText(/AI credits \/ month/)).toBeInTheDocument()
-  })
-
-  it('does not show the AI quota line on the Pro card', async () => {
-    const PricingCard = await loadPricingCard(true)
-    render(<PricingCard {...baseProps} tier="pro" />)
-    expect(screen.queryByText(/AI credits \/ month/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/AI credits/)).not.toBeInTheDocument()
+    expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Feature A', 'Feature B'])
   })
 
   it('hides "Recommended" on the highlighted (Pro) card when the user is on a higher tier (Pro AI)', async () => {
@@ -248,6 +282,80 @@ describe('PricingCard', () => {
     expect(screen.getByText('Recommended')).toBeInTheDocument()
   })
 
+  // The brand emphasis goes with the Recommended badge: not on the plan the visitor has, nor on one
+  // below it. The roomier side padding stays, so the card's content width never changes.
+  describe('emphasis on the highlighted (Pro) card', () => {
+    const emphasis = /shadow-sh3|border-primary\/30/
+
+    it.each([
+      ['a signed-out visitor', undefined],
+      ['a free account', 'free'],
+    ])('is emphasised for %s', async (_label, currentTier) => {
+      const PricingCard = await loadPricingCard(true)
+      const { container } = render(<PricingCard {...baseProps} highlighted currentTier={currentTier} />)
+      const card = container.firstChild as HTMLElement
+      expect(card.className).toMatch(emphasis)
+      expect(card.className).toMatch(/\bpx-7\b/)
+    })
+
+    it.each([
+      ['Pro (its current plan)', 'pro'],
+      ['Pro AI (a plan above it)', 'pro_ai'],
+    ])('is not emphasised for a subscriber on %s, and keeps its padding', async (_label, currentTier) => {
+      const PricingCard = await loadPricingCard(true)
+      const { container } = render(
+        <PricingCard {...baseProps} highlighted currentTier={currentTier} currentInterval="monthly" signedIn />
+      )
+      const card = container.firstChild as HTMLElement
+      expect(card.className).not.toMatch(emphasis)
+      expect(card.className).toMatch(/\bpx-7\b/)
+    })
+  })
+
+  // A current plan has no button (the badge says Current), but its button row keeps a button's
+  // height so the card's bottom block lines up with its neighbours'.
+  describe('button row on the current plan', () => {
+    it('keeps a hidden placeholder the height of a single-line button where the CTA would be', async () => {
+      const PricingCard = await loadPricingCard(true)
+      render(<PricingCard {...baseProps} currentTier="pro" />)
+      const placeholder = screen.getByTestId('cta-placeholder')
+      expect(placeholder).toHaveAttribute('aria-hidden', 'true')
+      expect(placeholder.className).toMatch(/\bmin-h-10\b/)
+      expect(placeholder).toBeEmptyDOMElement()
+      expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    })
+
+    it('puts the Pro AI setup switch above the placeholder, as it sits above a button', async () => {
+      const PricingCard = await loadPricingCard(true)
+      render(
+        <PricingCard
+          {...baseProps}
+          tier="proAi"
+          name="Pro AI"
+          currentTier="pro_ai"
+          currentAiMode="managed"
+          aiOptions={{
+            managed: { monthlyPrice: 7.99, yearlyPrice: 85.99, features: [] },
+            byok: { monthlyPrice: 5.99, yearlyPrice: 64.49, features: [] },
+          }}
+        />
+      )
+      const placeholder = screen.getByTestId('cta-placeholder')
+      const setupSwitch = screen.getByRole('group', { name: /who handles setup/i })
+      // Same bottom block (mt-auto) as a card with a button: switch first, then the button's row.
+      expect(placeholder.parentElement).toBe(setupSwitch.parentElement)
+      expect(placeholder.parentElement?.className).toMatch(/\bmt-auto\b/)
+      expect(setupSwitch.compareDocumentPosition(placeholder) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    })
+
+    it('has no placeholder on a card with a button', async () => {
+      const PricingCard = await loadPricingCard(true)
+      render(<PricingCard {...baseProps} tier="pro" currentTier="pro_ai" />)
+      expect(screen.getByRole('button', { name: 'Downgrade to Pro' })).toBeInTheDocument()
+      expect(screen.queryByTestId('cta-placeholder')).not.toBeInTheDocument()
+    })
+  })
+
   // An account holds one subscription: checkout starts the first one, and every later plan
   // change happens in the billing portal.
   describe('plan changes for an existing subscriber go to the billing portal', () => {
@@ -266,16 +374,27 @@ describe('PricingCard', () => {
       return vi.mocked(global.fetch).mock.calls.map(([input]) => String(input))
     }
 
-    it('a Pro subscriber choosing Pro AI opens the billing portal and never calls checkout', async () => {
+    it('a Pro subscriber choosing Pro AI changes the plan through switch-plan (the portal confirms it) and never calls checkout', async () => {
       const PricingCard = await loadPricingCard(true)
-      mockEndpoints({ '/api/billing-portal': { status: 200, body: { url: 'https://billing.example.com/portal' } } })
+      mockEndpoints({ '/api/billing/switch-plan': { status: 200, body: { url: 'https://billing.example.com/portal' } } })
 
       const user = userEvent.setup()
       render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro" currentInterval="monthly" />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro AI' }))
 
-      expect(requestedPaths()).toEqual(['/api/billing-portal'])
+      expect(requestedPaths()).toEqual(['/api/billing/switch-plan'])
       expect(window.location.href).toBe('https://billing.example.com/portal')
+    })
+
+    it('without a known interval, a plan change still opens the billing portal', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/billing-portal': { status: 200, body: { url: 'https://billing.example.com/portal' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro" />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro AI' }))
+
+      expect(requestedPaths()).toEqual(['/api/billing-portal'])
     })
 
     it('a signed-in free user still starts checkout', async () => {
@@ -283,7 +402,7 @@ describe('PricingCard', () => {
       mockEndpoints({ '/api/checkout': { status: 200, body: { url: 'https://checkout.example.com' } } })
 
       const user = userEvent.setup()
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(requestedPaths()).toEqual(['/api/checkout'])
@@ -301,7 +420,7 @@ describe('PricingCard', () => {
 
       const user = userEvent.setup()
       // The page still shows the user as free (e.g. it was loaded before the purchase).
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(requestedPaths()).toEqual(['/api/checkout', '/api/billing-portal'])
@@ -312,6 +431,67 @@ describe('PricingCard', () => {
       expect(toastError).not.toHaveBeenCalled()
     })
 
+    it('refreshes the page, with a short message, when the 409 says the account now shows the plan', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'already_subscribed', recorded: true } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      // The server recorded the plan Stripe has: the refreshed page shows it with its switches.
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      expect(refresh).toHaveBeenCalledTimes(1)
+      expect(toastInfo).toHaveBeenCalledWith('You already have a plan. This page now shows it, so you can change it here.')
+      expect(window.location.href).toBe('')
+      expect(toastError).not.toHaveBeenCalled()
+    })
+
+    it('asks to wait a few minutes when checkout answers 429 rate_limited', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 429, body: { error: 'rate_limited', code: 'rate_limited' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      expect(toastError).toHaveBeenCalledWith('Too many billing requests in a short time. Please wait a few minutes and try again.')
+      expect(window.location.href).toBe('')
+    })
+
+    it('says to pay or resume the open plan when checkout answers 409 pay_or_resume', async () => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'pay_or_resume' } } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(requestedPaths()).toEqual(['/api/checkout'])
+      // No live plan, so the account page has no Manage billing: support is the way forward.
+      expect(toastError).toHaveBeenCalledWith(
+        `Your plan is waiting for a payment or is paused, so it can't be changed yet. Email ${SUPPORT_EMAIL} and we'll help you sort it out.`
+      )
+      expect(window.location.href).toBe('')
+    })
+
+    it.each([
+      [503, { error: 'billing_check_failed' }],
+      [500, { error: 'Failed to create checkout session' }],
+    ])('says checkout could not start on a %i', async (status, body) => {
+      const PricingCard = await loadPricingCard(true)
+      mockEndpoints({ '/api/checkout': { status, body } })
+
+      const user = userEvent.setup()
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
+      await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
+
+      expect(toastError).toHaveBeenCalledWith("Couldn't start checkout. Please try again in a moment.")
+      expect(window.location.href).toBe('')
+      expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).not.toBeDisabled()
+    })
+
     it('says where to change the plan when the portal cannot be opened after a 409', async () => {
       const PricingCard = await loadPricingCard(true)
       mockEndpoints({
@@ -320,11 +500,14 @@ describe('PricingCard', () => {
       })
 
       const user = userEvent.setup()
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(window.location.href).toBe('')
-      expect(toastError).toHaveBeenCalledWith(expect.stringMatching(/Manage billing on your account page/))
+      // The portal failing usually means the account page can't show Manage billing either.
+      expect(toastError).toHaveBeenCalledWith(
+        `Couldn't open billing. Please try again, or email ${SUPPORT_EMAIL} to change your plan.`
+      )
       // The button is usable again.
       expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).not.toBeDisabled()
     })
@@ -334,7 +517,7 @@ describe('PricingCard', () => {
       mockEndpoints({ '/api/checkout': { status: 409, body: { error: 'something_else' } } })
 
       const user = userEvent.setup()
-      render(<PricingCard {...baseProps} currentTier="free" />)
+      render(<PricingCard {...baseProps} currentTier="free" signedIn />)
       await user.click(screen.getByRole('button', { name: 'Upgrade to Pro' }))
 
       expect(requestedPaths()).toEqual(['/api/checkout'])
@@ -389,7 +572,7 @@ describe('PricingCard', () => {
     it('leaves the Pro (non-AI) card CTA fully functional', async () => {
       const PricingCard = await loadPricingCard(false)
       render(<PricingCard {...baseProps} tier="pro" name="Pro" />)
-      const cta = screen.getByRole('button', { name: /Upgrade to Pro/ })
+      const cta = screen.getByRole('button', { name: 'Get Pro' })
       expect(cta).not.toBeDisabled()
     })
   })
@@ -467,6 +650,8 @@ describe('PricingCard', () => {
       )
       render(<PricingCard {...baseProps} currentTier="pro" currentInterval="yearly" />)
       await user.click(screen.getByRole('button', { name: 'Switch to monthly billing' }))
+      // A shorter interval is deferred by Stripe's own confirm page: posted at once, no dialog of ours.
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       expect(await screen.findByRole('alert')).toHaveTextContent('already scheduled for the end of this term')
     })
 

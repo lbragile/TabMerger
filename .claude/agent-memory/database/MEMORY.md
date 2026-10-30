@@ -6,3 +6,10 @@
 - [Server-managed table pattern (021)](learnings_server_managed_table_pattern.md) — profiles: select-only policy + API roles SELECT only; revoke list from relacl, end-state do-block check
 - [RLS refusal shapes per statement](learnings_rls_refusal_shapes.md) — insert/upsert raise 42501, update/delete are silent zero rows; pgTAP assertions for each; negative-control recipe
 - [Verifying RLS/grants on the local stack](learnings_local_rls_verification.md) — migration files are write-once (dry-run first); pgTAP runner limits; key-free HTTP check via the db container
+- [Atomic quota RPC (022)](learnings_atomic_quota_rpc.md) — one-statement reserve via insert..on conflict..where; revoke function EXECUTE from anon/authenticated by name; re-run-safe conversion
+- [CLI runs a migration as one transaction](learnings_cli_migration_transaction.md) — set local lock_timeout works; a raise records nothing; probe recipe via --workdir
+- [Dropping a table safely (024)](learnings_drop_table_dependency_check.md) — RESTRICT misses function bodies; pg_depend pre-check; prosrc guard
+- [Testing a privilege revoke (023)](learnings_privilege_layer_tests.md) — which pgTAP asserts flip, TRUNCATE ignores RLS, column-privilege limits, keep older policy tests green
+- [Forward-only fixed windows (026)](learnings_fixed_window_forward_only.md) — clock after lock; stale caller refused; guarded upsert + row_count raise; lock_timeout bounds advisory waits
+- [pg_cron from a migration (026)](learnings_pg_cron_in_migrations.md) — preloaded hosted+local; cron.schedule by name is idempotent; job runs as postgres; skip-locked purge recipe
+- [Deploy-time lock order (027)](learnings_deploy_time_lock_order.md) — lock tables up front in the OLD live function's order; CREATE TRIGGER = SHARE ROW EXCLUSIVE; two-session deadlock recipe

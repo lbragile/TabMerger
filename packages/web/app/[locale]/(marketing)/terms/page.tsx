@@ -47,7 +47,7 @@ export default function TermsPage() {
           The agreement between you and TabMerger. By installing the extension, creating an
           account, or using any part of the service, you agree to these Terms.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: July 16, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 27, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -76,7 +76,15 @@ export default function TermsPage() {
           <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <p>Paid subscriptions are billed in advance on a monthly or annual cycle through Stripe. Your subscription renews automatically at the end of each billing period unless you cancel before the renewal date.</p>
             <p>Prices are listed in USD and are subject to change with at least 30 days' notice. Continued use after a price change takes effect constitutes agreement to the new price.</p>
-            <p>We do not issue refunds for partial billing periods. If you cancel, you retain access to paid features until the end of your current billing period, after which your account reverts to the Free tier. No data is deleted on downgrade — data exceeding free tier limits remains accessible in read-only form.</p>
+            <p><strong className="font-semibold text-foreground">All purchases are non-refundable.</strong> This applies to subscriptions (monthly and annual) and to AI credit packs, including any unused time or credits.</p>
+            <p>You can cancel at any time. You keep your paid features until the end of the period you have already paid for, and are not refunded for any part of it. After that, your account moves to the Free tier. No data is deleted on downgrade — data exceeding free tier limits remains accessible in read-only form.</p>
+            <p>Upgrades take effect right away. Moving to a higher plan, from your own AI key to AI provided by TabMerger, or from monthly to annual billing is charged now, prorated against the unused part of your current billing period.</p>
+            <p>Downgrades take effect at the end of the period you have already paid for. Moving to a lower plan, from AI provided by TabMerger to your own AI key, or from annual to monthly billing does not refund or credit the rest of the current period.</p>
+            <p>A change that moves to a higher plan and to a shorter billing period at the same time takes effect at the end of the period you have already paid for.</p>
+            <p>When you move to AI provided by TabMerger partway through a billing period, your AI credits until your next renewal are in proportion to the time left in that period. Discounts reduce AI credits in the same proportion.</p>
+            <p>If a plan change creates a credit on your account by mistake, for example because of an error in our systems or our payment processor's, the credit is not owed to you, and we may remove it.</p>
+            <p>AI credit packs are one-time purchases for use in the month you buy them. Purchased credits are not refunded or exchanged for money, including when you cancel your subscription.</p>
+            <p>Nothing in these Terms limits a refund right that the law where you live gives you and that cannot be waived.</p>
             <p>All payment processing is handled by Stripe. We do not store your card number or payment credentials. By subscribing, you agree to <a href="https://stripe.com/legal" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground transition-colors">Stripe's Terms of Service</a>.</p>
           </div>
         </section>

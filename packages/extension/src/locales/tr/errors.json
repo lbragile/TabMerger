@@ -27,7 +27,24 @@
   "sharingRequiresPro": "Paylaşım Pro yükseltmesi gerektirir — yetki karşılanmadı",
   "aiOncePerDay": "Bugün zaten kullanıldı — bu AI işlemi günde bir kezle sınırlıdır",
   "proAiRequired": "Pro AI planı gerekli",
-  "nameGroupOff": "Grup adlandırma Ayarlar'da kapalı",
+  "nameGroupOff": "Grup ve pencere adlandırma Ayarlar'da kapalı",
+  "describeGroupOff": "Grup ve pencere açıklama Ayarlar'da kapalı",
   "suggestSessionsOff": "Oturum önerme Ayarlar'da kapalı",
-  "organizeOff": "Düzenleme Ayarlar'da kapalı"
+  "organizeOff": "Düzenleme Ayarlar'da kapalı",
+  "ai": {
+    "disabled": "AI özellikleri şu anda kullanılamıyor.",
+    "modelInvalid": "Bu AI modeli kullanılamıyor. Ayarlar’daki AI sekmesinden başka bir model seçin.",
+    "overloaded": "AI hizmeti şu anda yoğun. Bir dakika sonra tekrar deneyin.",
+    "byokKeyMissing": "AI özelliklerini kullanmak için Ayarlar’daki AI sekmesinden AI sağlayıcınızın API anahtarını ekleyin.",
+    "byokKeyInvalid": "AI sağlayıcınız API anahtarınızı kabul etmedi. Ayarlar’daki AI sekmesinden kontrol edin veya değiştirin.",
+    "byokRateLimited": "API anahtarınız sağlayıcısının istek sınırına ulaştı. Biraz bekleyip tekrar deneyin.",
+    "byokBilling": "AI sağlayıcınızdaki hesabınızın bakiyesi bitti veya bir faturalama sorunu var. Faturalamayı sağlayıcınızla kontrol edin.",
+    "creditsNotApplicable": "Kendi API anahtarınızı kullanırken kredi paketleri sunulmaz.",
+    "unauthorized": "Oturumunuzun süresi doldu. Tekrar giriş yapıp yeniden deneyin.",
+    "invalidRequest": "TabMerger bu AI isteğini gönderemedi. Tekrar deneyin; sorun sürerse uzantıyı güncelleyin.",
+    "refused": "AI bu isteği reddetti.",
+    "failed": "AI isteği başarısız oldu. Tekrar deneyin.",
+    "rateLimited": "Şu anda çok fazla AI isteği var. Bir dakika sonra tekrar deneyin.",
+    "rateLimitedRetry": "Şu anda çok fazla AI isteği var. {{when}} tekrar deneyin."
+  }
 }

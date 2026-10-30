@@ -6,5 +6,6 @@
   "opensInNewTab": " (נפתח בכרטיסייה חדשה)",
   "close": "סגירה",
   "showPassphrase": "הצגת ביטוי הסיסמה",
-  "hidePassphrase": "הסתרת ביטוי הסיסמה"
+  "hidePassphrase": "הסתרת ביטוי הסיסמה",
+  "withYourOwnKey": "עם מפתח API משלך"
 }

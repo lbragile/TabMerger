@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Chiedi conferma prima di eliminare gruppi o finestre salvate",
     "openOnClickLabel": "Apri scheda al clic",
     "openOnClickDescription": "Un solo clic apre la scheda nel browser",
+    "showAiButtonLabel": "Mostra il pulsante AI",
+    "showAiButtonDescription": "Il pulsante ✨ nell’intestazione, con le azioni AI per schede e gruppi",
     "dedupLabel": "Rimuovi duplicati durante l'unione",
     "dedupDescription": "Rimuovi le schede duplicate quando unisci finestre",
     "previewImagesLabel": "Mostra immagini delle pagine nelle anteprime",
@@ -61,7 +63,9 @@
     "openingPortal": "Apertura...",
     "manageBilling": "Gestisci fatturazione",
     "signOut": "Esci",
-    "resetEncryption": "Hai dimenticato la passphrase? Reimposta la crittografia"
+    "resetEncryption": "Hai dimenticato la passphrase? Reimposta la crittografia",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "La tua chiave API"
   },
   "data": {
     "intro": "TabMerger salva tutti i dati localmente in IndexedDB. La sincronizzazione cloud richiede un account Pro.",
@@ -86,8 +90,10 @@
     "intro": "Ogni azione AI qui sotto usa la stessa quota AI mensile (vedi la scheda Account). Disattiva le funzioni che non usi per risparmiare quota per quelle che usi.",
     "autoGroupLabel": "Raggruppa automaticamente",
     "autoGroupDescription": "Raggruppa le schede aperte con l'AI",
-    "nameGroupLabel": "Assegna nome al gruppo",
-    "nameGroupDescription": "Suggerisci un nome per un gruppo con l'AI",
+    "nameGroupLabel": "Assegna nome a gruppi e finestre",
+    "nameGroupDescription": "Suggerisci un nome per un gruppo o una finestra con l'AI",
+    "describeGroupLabel": "Descrivi gruppi e finestre",
+    "describeGroupDescription": "Scrivi con l'AI una breve nota sulle schede di un gruppo o di una finestra",
     "suggestSessionsLabel": "Suggerisci sessioni",
     "suggestSessionsDescription": "Banner in background che suggerisce quando salvare una sessione",
     "organizeLabel": "Organizza",
@@ -95,14 +101,84 @@
     "summariesLabel": "Riepiloghi nelle anteprime delle schede",
     "summariesDescription": "Riepilogo AI nell'anteprima al passaggio del mouse",
     "throttleLabel": "Limita i suggerimenti AI automatici a uno al giorno",
-    "throttleDescription": "Il banner in background dei suggerimenti di sessione compare al massimo una volta al giorno per proteggere la tua quota AI mensile. Le azioni AI che avvii manualmente (Raggruppa automaticamente, Assegna nome al gruppo, Organizza) non sono mai limitate da questa opzione."
+    "throttleDescription": "Il banner in background dei suggerimenti di sessione compare al massimo una volta al giorno per proteggere la tua quota AI mensile. Le azioni AI che avvii manualmente (Raggruppa automaticamente, Assegna nome al gruppo, Organizza) non sono mai limitate da questa opzione.",
+    "buyCredits": "Acquista altri crediti",
+    "buyCreditsLabel": "Acquista altri crediti (nuova scheda)",
+    "plan": {
+      "managed": "TabMerger si occupa della configurazione: restano {{remaining}} crediti su {{cap}} questo mese",
+      "managedUnknown": "TabMerger si occupa della configurazione",
+      "byok": "Hai aggiunto la tua chiave API {{provider}}",
+      "byokNoKey": "Aggiungi tu la tua chiave API: inseriscila qui sotto per usare le funzioni AI"
+    },
+    "provider": {
+      "label": "Fornitore AI",
+      "description": "Scegli l’azienda che ha emesso la tua chiave API.",
+      "placeholder": "Scegli un fornitore"
+    },
+    "key": {
+      "label": "La tua chiave API {{provider}}",
+      "save": "Salva chiave",
+      "checking": "Verifica in corso…",
+      "replace": "Sostituisci",
+      "remove": "Rimuovi",
+      "saved": "Chiave API salvata",
+      "removed": "Chiave API rimossa",
+      "invalidFormat": "Non sembra una chiave API {{provider}} valida.",
+      "verifyFailed": "Impossibile verificare la chiave. Riprova.",
+      "testKey": "Usa chiave di prova",
+      "testKeyHint": "Solo nelle build di sviluppo: salva una chiave fittizia. Funziona solo mentre il server di sviluppo web è avviato con AI_MOCK=true.",
+      "note": "Salvata solo su questo dispositivo. Inviata al server di TabMerger con ogni richiesta AI e passata direttamente al fornitore che l’ha emessa; mai salvata sui nostri server.",
+      "getKey": "Crea una chiave e imposta un limite di spesa:",
+      "wrongProvider": "Questa chiave sembra di {{detected}}. Scegli {{detected}} qui sopra o incolla una chiave di {{provider}}.",
+      "switching": "La chiave {{saved}} salvata resta in uso finché non salvi una chiave di {{provider}}.",
+      "guideLink": "Come creare una chiave",
+      "keysLink": "Chiavi API di {{provider}}"
+    },
+    "model": {
+      "label": "Modello AI",
+      "managedDescription": "I modelli più grandi danno risultati migliori e usano più crediti. I valori sono stime.",
+      "byokDescription": "I modelli più grandi danno risultati migliori e costano di più sulla fattura del tuo fornitore.",
+      "auto": "Automatico",
+      "recommended": "Consigliato",
+      "autoDescription": "Usa il modello più economico che svolge bene ogni compito."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_one": "≈ {{formatted}} credito",
+      "credits_many": "≈ {{formatted}} di crediti",
+      "credits_other": "≈ {{formatted}} crediti",
+      "perMonth_one": "≈ {{formatted}} riorganizzazione al mese con i tuoi crediti",
+      "perMonth_many": "≈ {{formatted}} di riorganizzazioni al mese con i tuoi crediti",
+      "perMonth_other": "≈ {{formatted}} riorganizzazioni al mese con i tuoi crediti",
+      "action": {
+        "nameGroup_one": "Dare un nome a un gruppo di {{count}} scheda",
+        "nameGroup_many": "Dare un nome a un gruppo di {{count}} di schede",
+        "nameGroup_other": "Dare un nome a un gruppo di {{count}} schede",
+        "tabSummary": "Riassumere una scheda",
+        "groupTabs_one": "Raggruppare {{count}} scheda",
+        "groupTabs_many": "Raggruppare {{count}} di schede",
+        "groupTabs_other": "Raggruppare {{count}} schede",
+        "suggestSessions": "Suggerire sessioni",
+        "organize_one": "Organizzare {{count}} scheda",
+        "organize_many": "Organizzare {{count}} di schede",
+        "organize_other": "Organizzare {{count}} schede",
+        "describeGroup_one": "Descrivere un gruppo di {{count}} scheda",
+        "describeGroup_many": "Descrivere un gruppo di {{count}} di schede",
+        "describeGroup_other": "Descrivere un gruppo di {{count}} schede"
+      }
+    },
+    "cost": {
+      "low": "Costo più basso",
+      "medium": "Costo medio",
+      "high": "Costo più alto"
+    }
   },
   "dev": {
     "demoLabel": "Modalità demo",
     "demoDescription": "Inserisci dati di esempio per la pipeline della demo di marketing",
     "demoButton": "Entra",
-    "usageLabel": "Conteggio di utilizzo AI simulato",
-    "usageDescription": "Imposta localmente il contatore dei crediti AI (su {{cap}}) e lo sincronizza con il tuo account Supabase reale, così da poter testare end-to-end l'applicazione della quota lato server.",
+    "usageLabel": "Crediti usati questo mese",
+    "usageDescription": "Imposta i crediti AI usati questo mese (su {{cap}}) nel tuo account tramite il server di sviluppo web. Il ripristino rimuove anche i pacchetti di crediti di questo mese.",
     "usageSet": "Imposta",
     "usageReset": "Azzera",
     "sentryLabel": "Sentry",
@@ -112,9 +188,9 @@
   "toast": {
     "encryptionReset": "Crittografia reimpostata: configura una nuova passphrase",
     "encryptionResetFailed": "Reimpostazione della crittografia non riuscita",
-    "signInForAiUsage": "Accedi per sincronizzare l'utilizzo AI con il server",
-    "aiUsageSet": "Utilizzo AI sul server impostato a {{count}}",
-    "aiUsageFailed": "Sincronizzazione dell'utilizzo AI con il server non riuscita",
+    "signInForAiUsage": "Accedi per impostare i crediti AI usati",
+    "aiUsageSet": "Crediti AI usati impostati a {{credits}}",
+    "aiUsageFailed": "Impossibile impostare i crediti AI usati",
     "previewImagesDenied": "Firefox ha bisogno dell'autorizzazione per recuperare le immagini delle pagine. Consentila nella richiesta del browser per attivare questa opzione.",
     "saved": "Impostazioni salvate",
     "cleared": "Tutti i dati cancellati",

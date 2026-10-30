@@ -27,6 +27,12 @@
   "sortByUrl": "Сортировать окно по URL",
   "notePlaceholder": "Добавьте заметку…",
   "empty": "Пустое окно",
+  "toast": {
+    "noTabsToName": "В окне нет вкладок для подбора названия",
+    "nameAlreadyFits": "«{{name}}» уже подходит этому окну",
+    "noTabsToDescribe": "В окне нет вкладок для описания",
+    "aiDescribeFailed": "Не удалось описать это окно"
+  },
   "someOfTabs_one": "{{matched}} из {{count}} вкладки",
   "someOfTabs_few": "{{matched}} из {{count}} вкладок",
   "someOfTabs_many": "{{matched}} из {{count}} вкладок",

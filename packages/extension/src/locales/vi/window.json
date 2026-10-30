@@ -27,5 +27,11 @@
   "sortByUrl": "Sắp xếp cửa sổ này theo URL",
   "notePlaceholder": "Thêm ghi chú…",
   "empty": "Cửa sổ trống",
+  "toast": {
+    "noTabsToName": "Không có thẻ nào trong cửa sổ này để đặt tên",
+    "nameAlreadyFits": "“{{name}}” đã phù hợp với cửa sổ này",
+    "noTabsToDescribe": "Không có thẻ nào trong cửa sổ này để mô tả",
+    "aiDescribeFailed": "Không thể mô tả cửa sổ này"
+  },
   "someOfTabs_other": "{{matched}} trong {{count}} thẻ"
 }

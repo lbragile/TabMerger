@@ -56,6 +56,25 @@ describe('lib/stripe', () => {
     expect(params.subscription_data.metadata).toEqual({ user_id: 'user-1' })
   })
 
+  it('createCheckoutSession stamps the Pro AI option as ai_mode on the session metadata only', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/s1' })
+    const { createCheckoutSession } = await import('@/lib/stripe')
+
+    await createCheckoutSession({
+      userId: 'user-1',
+      priceId: 'price_byok',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+      tier: 'proAi',
+      interval: 'monthly',
+      aiMode: 'byok',
+    })
+
+    const params = mockCheckoutCreate.mock.lastCall![0]
+    expect(params.metadata).toEqual({ user_id: 'user-1', tier: 'proAi', interval: 'monthly', ai_mode: 'byok' })
+    expect(params.subscription_data.metadata).toEqual({ user_id: 'user-1' })
+  })
+
   it('createCheckoutSession falls back to customerEmail when no customerId', async () => {
     mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/s2' })
     const { createCheckoutSession } = await import('@/lib/stripe')
@@ -103,6 +122,40 @@ describe('lib/stripe', () => {
         line_items: [{ price: 'price_credit_pack', quantity: 50, adjustable_quantity: { enabled: true, minimum: 50, maximum: 500 } }]
       })
     )
+  })
+
+  it('createCreditPackCheckoutSession shows the non-refundable notice next to the pay button', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/c1' })
+    vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')
+    const { createCreditPackCheckoutSession, CREDIT_PACK_REFUND_NOTICE } = await import('@/lib/stripe')
+
+    await createCreditPackCheckoutSession({
+      userId: 'user-1',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+    })
+
+    expect(mockCheckoutCreate.mock.lastCall![0].custom_text).toEqual({
+      submit: { message: CREDIT_PACK_REFUND_NOTICE },
+    })
+    // Says the policy, and fits Stripe's 1,200-character limit for custom text.
+    expect(CREDIT_PACK_REFUND_NOTICE).toMatch(/non-refundable/)
+    expect(CREDIT_PACK_REFUND_NOTICE).toMatch(/cancel your subscription/)
+    expect(CREDIT_PACK_REFUND_NOTICE.length).toBeLessThanOrEqual(1200)
+  })
+
+  it('createCheckoutSession (subscriptions) carries no credit-pack notice', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/c1' })
+    const { createCheckoutSession } = await import('@/lib/stripe')
+
+    await createCheckoutSession({
+      userId: 'user-1',
+      priceId: 'price_pro_m',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+    })
+
+    expect(mockCheckoutCreate.mock.lastCall![0].custom_text).toBeUndefined()
   })
 
   it('createCreditPackCheckoutSession passes a custom quantity through to the line item', async () => {
@@ -203,5 +256,22 @@ describe('lib/stripe', () => {
       // "US$" on every price, never a bare "$" a Canadian would read as CAD.
       locale: 'en-CA',
     })
+  })
+})
+
+describe('fromStripeAmount', () => {
+  it.each([
+    [4299, 'usd', 42.99],
+    [4299, 'EUR', 42.99],
+    [500, 'jpy', 500],
+    [1200, 'krw', 1200],
+    // Stripe still represents ISK and UGX with two decimals.
+    [50000, 'isk', 500],
+    [50000, 'ugx', 500],
+    [12340, 'kwd', 12.34],
+    [0, 'usd', 0],
+  ])('%i %s is %d in major units', async (amount, currency, expected) => {
+    const { fromStripeAmount } = await import('@/lib/stripe')
+    expect(fromStripeAmount(amount, currency)).toBe(expected)
   })
 })

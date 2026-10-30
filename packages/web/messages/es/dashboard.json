@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "Organizar con IA",
-  "aiOrganiseUpgrade": "Mejora a Pro AI para organizar con IA",
-  "aiOrganiseFromExtension": "Inícialo desde el popup de la extensión TabMerger",
   "tabGroups": "Grupos de pestañas",
   "savedSessions": "Sesiones guardadas",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "Créditos de IA este mes",
-      "description": "Uso mensual de Pro AI",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "Quedan {left, number}, unas {organizes, number} organizaciones de {tabs, number} pestañas"
     },
-    "loading": "Cargando"
+    "loading": "Cargando",
+    "aiOwnKey": {
+      "label": "Configuración de IA",
+      "value": "Tú",
+      "description": "Tu propia clave de API: tu proveedor de IA te cobra directamente, sin límite de créditos"
+    }
   },
   "subscription": {
     "currentPlan": "Plan actual",

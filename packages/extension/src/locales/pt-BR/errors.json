@@ -27,7 +27,24 @@
   "sharingRequiresPro": "O compartilhamento exige upgrade para o Pro — direito não atendido",
   "aiOncePerDay": "Já usado hoje — esta ação de IA é limitada a uma vez por dia",
   "proAiRequired": "Plano Pro AI necessário",
-  "nameGroupOff": "Nomear grupo está desativado nas Configurações",
+  "nameGroupOff": "Nomear grupos e janelas está desativado nas Configurações",
+  "describeGroupOff": "Descrever grupos e janelas está desativado nas Configurações",
   "suggestSessionsOff": "Sugerir sessões está desativado nas Configurações",
-  "organizeOff": "Organizar está desativado nas Configurações"
+  "organizeOff": "Organizar está desativado nas Configurações",
+  "ai": {
+    "disabled": "Os recursos de IA não estão disponíveis no momento.",
+    "modelInvalid": "Esse modelo de IA não está disponível. Escolha outro em Configurações, na aba IA.",
+    "overloaded": "O serviço de IA está sobrecarregado. Tente novamente em um minuto.",
+    "byokKeyMissing": "Adicione a chave de API do seu provedor de IA em Configurações, na aba IA, para usar os recursos de IA.",
+    "byokKeyInvalid": "Seu provedor de IA não aceitou sua chave de API. Verifique ou substitua em Configurações, na aba IA.",
+    "byokRateLimited": "Sua chave de API atingiu o limite de solicitações do provedor. Aguarde um momento e tente novamente.",
+    "byokBilling": "Sua conta no provedor de IA está sem crédito ou tem um problema de cobrança. Verifique a cobrança com seu provedor.",
+    "creditsNotApplicable": "Pacotes de créditos não estão disponíveis quando você usa sua própria chave de API.",
+    "unauthorized": "Seu login expirou. Entre novamente e tente outra vez.",
+    "invalidRequest": "O TabMerger não conseguiu enviar essa solicitação de IA. Tente novamente e atualize a extensão se continuar acontecendo.",
+    "refused": "A IA recusou esta solicitação.",
+    "failed": "A solicitação de IA falhou. Tente novamente.",
+    "rateLimited": "Muitas solicitações de IA no momento. Tente novamente em um minuto.",
+    "rateLimitedRetry": "Muitas solicitações de IA no momento. Tente novamente {{when}}."
+  }
 }

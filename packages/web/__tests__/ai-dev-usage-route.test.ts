@@ -148,7 +148,7 @@ describe('POST /api/ai/dev-usage', () => {
       new NextRequest(URL, { method: 'POST', headers: { authorization: 'Bearer jwt-token' }, body: raw })
     )
     expect(res.status).toBe(400)
-    expect(await res.json()).toEqual({ error: 'count must be a non-negative integer' })
+    expect(await res.json()).toEqual({ error: 'ai_invalid_request', message: 'count must be a non-negative integer' })
     expect(mockUpsert).not.toHaveBeenCalled()
     expect(mockDelete).not.toHaveBeenCalled()
   })

@@ -33,7 +33,9 @@
     "groups": "Grup disinkronkan",
     "tabs": "Tab disimpan",
     "sessions": "Sesi dan cadangan",
-    "aiCredits": "Sisa kredit AI"
+    "aiCredits": "Sisa kredit AI",
+    "aiOwnKey": "Siapa yang menyiapkan AI",
+    "aiOwnKeyValue": "Anda"
   },
   "profile": {
     "title": "Profil",
@@ -51,7 +53,37 @@
     "description": "Kelola paket dan tagihan Anda.",
     "manageBilling": "Kelola tagihan",
     "upgrade": "Tingkatkan",
-    "cancelNote": "Anda dapat membatalkan kapan saja melalui <strong>Kelola tagihan</strong>. Akses tetap tersedia hingga akhir periode tagihan saat ini."
+    "cancelNote": "Anda dapat membatalkan kapan saja melalui <strong>Kelola tagihan</strong>. Akses tetap tersedia hingga akhir periode tagihan saat ini.",
+    "scheduledChange": "Berubah ke {plan} pada {date}.",
+    "scheduledChangeUnknownPlan": "Paket Anda berubah pada {date}.",
+    "scheduledCancelNote": "Membatalkan akan mempertahankan paket Anda saat ini hingga akhir periode penagihan ini dan menghapus perubahan terjadwal. Tanpa pengembalian dana. Jika Anda memperpanjang nanti, Anda tetap di paket saat ini."
+  },
+  "cancelSubscription": {
+    "button": "Batalkan langganan",
+    "errors": {
+      "no_billing_account": "Paket ini tidak terhubung ke akun penagihan. Kirim email ke {email} dan kami akan membatalkannya untuk Anda.",
+      "no_subscription": "Kami tidak menemukan langganan untuk dibatalkan. Muat ulang halaman, atau kirim email ke {email}.",
+      "not_entitled": "Tidak ada paket aktif untuk dibatalkan.",
+      "already_canceling": "Paket Anda sudah diatur untuk berakhir pada akhir periode penagihan ini.",
+      "cancel_failed": "Halaman pembatalan tidak dapat dibuka. Silakan coba lagi, atau kirim email ke {email}.",
+      "rate_limited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "Pertahankan paket saya saat ini",
+    "success": "Paket Anda tetap {plan}.",
+    "successUnknownPlan": "Paket Anda saat ini tetap berlaku.",
+    "successRenews": "Paket Anda tetap {plan}. Paket diperpanjang pada {date} sebesar {amount}.",
+    "successRenewsOn": "Paket Anda tetap {plan}. Paket diperpanjang pada {date}.",
+    "successUnknownPlanRenews": "Paket Anda saat ini tetap berlaku. Paket diperpanjang pada {date} sebesar {amount}.",
+    "successUnknownPlanRenewsOn": "Paket Anda saat ini tetap berlaku. Paket diperpanjang pada {date}.",
+    "errors": {
+      "no_billing_account": "Paket ini tidak terhubung ke akun penagihan. Kirim email ke {email} dan kami akan mengurusnya untuk Anda.",
+      "no_subscription": "Kami tidak menemukan langganan Anda. Muat ulang halaman, atau kirim email ke {email}.",
+      "no_scheduled_change": "Tidak ada lagi perubahan paket yang dijadwalkan. Muat ulang halaman untuk melihat paket Anda.",
+      "keep_plan_failed": "Paket Anda saat ini tidak dapat dipertahankan. Silakan coba lagi, atau kirim email ke {email}.",
+      "rate_limited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
+    }
   },
   "devicesCard": {
     "title": "Perangkat",
@@ -68,6 +100,13 @@
   },
   "credits": {
     "failed": "Tidak dapat memulai pembayaran",
-    "getMore": "Beli lagi"
+    "getMore": "Beli lagi",
+    "notAvailable": "Paket kredit hanya untuk paket Pro AI aktif dengan pengaturan AI yang ditangani TabMerger.",
+    "rateLimited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
+  },
+  "aiPlan": {
+    "title": "Siapa yang menyiapkan AI",
+    "managed": "TabMerger: sisa {left, number} dari {limit, number} kredit AI bulan ini.",
+    "byok": "Anda: kunci API Anda sendiri, ditagih langsung oleh penyedia AI, tanpa batas kredit. Tambahkan atau ganti kunci di Setelan ekstensi."
   }
 }

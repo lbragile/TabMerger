@@ -38,8 +38,8 @@ describe('features page: automatic backups', () => {
 })
 
 describe('pricing: the Pro backups line', () => {
-  it('is the shared line, with the optional file copy, and is rendered once', () => {
-    expect(AUTO_BACKUP_COPY.pricingFeature).toMatch(/optional file copy on your computer/)
+  it('is the shared line and is rendered once', () => {
+    expect(AUTO_BACKUP_COPY.pricingFeature).toBe('Automatic encrypted backups')
     render(<PricingTable installHref="https://store.example/tabmerger" />)
     expect(screen.getAllByText(AUTO_BACKUP_COPY.pricingFeature)).toHaveLength(1)
   })

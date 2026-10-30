@@ -57,8 +57,9 @@ describe('PricingTable', () => {
     expect(screen.getByRole('button', { name: 'Switch to yearly billing' })).toBeInTheDocument()
   })
 
-  it('computes the toggle badge from the prices instead of a fixed number', () => {
+  it('shows the shared advertised yearly discount on the toggle badge', () => {
     render(<PricingTable installHref="https://store.example/tabmerger" />)
+    // YEARLY_DISCOUNT_PERCENT from @tabmerger/shared: every yearly price saves 10% to 11%.
     expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−10%')
   })
 
@@ -73,6 +74,44 @@ describe('PricingTable', () => {
     const yearlyBtn = screen.getByRole('button', { name: /Yearly/ })
     expect(yearlyBtn.className).toMatch(/bg-background/)
     expect(monthlyBtn.className).not.toMatch(/bg-background/)
+  })
+
+  // Side by side the cards are as tall as the tallest and every CTA sits on the same line (checked
+  // in a browser: jsdom has no layout, so this pins the classes that make it so).
+  it('stretches the cards to one height with each button pinned to the bottom', () => {
+    const { container } = render(<PricingTable installHref="https://store.example/tabmerger" />)
+    const grid = container.querySelector('.grid') as HTMLElement
+    expect(grid.className).toMatch(/\bitems-stretch\b/)
+    expect(grid.className).not.toMatch(/\bitems-center\b/)
+
+    const cards = [...grid.querySelectorAll<HTMLElement>('div.rounded-2xl')]
+    expect(cards).toHaveLength(3)
+    for (const card of cards) {
+      expect(card.className).toMatch(/\bflex\b/)
+      expect(card.className).toMatch(/\bflex-col\b/)
+      expect(card.className).toMatch(/\bh-full\b/)
+      // The CTA's wrapper takes the free space above it.
+      expect(card.lastElementChild?.className).toMatch(/\bmt-auto\b/)
+      // Equal top and bottom padding: the highlighted card is roomier on the sides only, so the
+      // title rows and the buttons line up.
+      expect(card.className).toMatch(/\bp-6\b/)
+      expect(card.className).not.toMatch(/\b(p|pt|pb|py)-7\b/)
+    }
+  })
+
+  it('gives every plan name the same larger title size, smaller than its price', () => {
+    render(<PricingTable installHref="https://store.example/tabmerger" />)
+    const titles = screen.getAllByRole('heading', { level: 2 })
+    expect(titles.map((h) => h.textContent)).toEqual(['Free', 'Pro', 'Pro AI'])
+    for (const title of titles) {
+      expect(title.className).toMatch(/\btext-2xl\b/)
+      expect(title.className).toMatch(/\bfont-bold\b/)
+    }
+    // The price figures stay larger, and are one size on every card so they line up.
+    for (const price of ['$0', '$3.99']) {
+      expect(screen.getByText(price).className).toMatch(/\btext-4xl\b/)
+      expect(screen.getByText(price).className).not.toMatch(/text-\[2\.75rem\]/)
+    }
   })
 
   it('uses a responsive 1-col-mobile / 3-col-desktop grid, not an unconditional 3-column layout', () => {

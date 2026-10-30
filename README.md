@@ -87,6 +87,12 @@ Opens at `http://localhost:3000`.
 pnpm dev
 ```
 
+**Everything (database, web, extension, Stripe webhooks):**
+```bash
+pnpm dev:all
+```
+Starts Docker Desktop if needed, then local Supabase, then the web app and extension (both with HMR) and `stripe listen` forwarding to the local webhook. Every line is labelled `[db]`, `[web]`, `[ext]` or `[stripe]`. Ctrl+C stops everything except Supabase (`pnpm exec supabase stop` stops it). Without the [Stripe CLI](https://docs.stripe.com/stripe-cli) it runs the rest and says so.
+
 ### Build for production
 
 ```bash

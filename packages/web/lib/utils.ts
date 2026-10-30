@@ -14,8 +14,9 @@ export function formatDate(date: string | Date, locale: string = 'en-US'): strin
   }).format(new Date(date))
 }
 
-export function formatCurrency(amount: number, currency = 'USD'): string {
-  return new Intl.NumberFormat('en-US', {
+/** `amount` in the currency's major unit (42.99), formatted for `locale` (US English by default). */
+export function formatCurrency(amount: number, currency = 'USD', locale: string = 'en-US'): string {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
   }).format(amount)

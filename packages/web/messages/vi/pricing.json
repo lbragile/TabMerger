@@ -25,17 +25,21 @@
     "dragDrop": "Kéo và thả",
     "shortcuts": "Phím tắt",
     "everythingInFree": "Mọi tính năng của gói Miễn phí",
-    "unlimited": "Không giới hạn nhóm, tab, quy tắc URL và phiên",
+    "unlimited": "Không giới hạn nhóm, tab, quy tắc và phiên",
     "cloudSync": "Đồng bộ đám mây trên mọi thiết bị",
     "sessionsSynced": "Phiên được đồng bộ trên mọi thiết bị",
-    "autoBackups": "Tự động sao lưu được mã hóa cho các nhóm, kèm tùy chọn lưu bản sao thành tệp trên máy tính",
+    "autoBackups": "Sao lưu mã hóa tự động",
     "prioritySupport": "Hỗ trợ ưu tiên",
     "everythingInPro": "Mọi tính năng của gói Pro",
     "aiGrouping": "Tự động nhóm tab bằng AI",
     "aiNames": "Gợi ý tên nhóm bằng AI",
+    "aiDescribe": "Mô tả nhóm và cửa sổ bằng AI",
     "smartSessions": "Gợi ý phiên thông minh",
+    "aiOrganize": "Dọn dẹp không gian làm việc bằng AI",
     "tabPreview": "Xem trước tab kèm tóm tắt AI",
-    "aiCredits": "{count} tín dụng AI / tháng"
+    "aiCreditsMonthly": "{count, number} tín dụng AI mỗi tháng",
+    "ownApiKey": "Dùng nhà cung cấp AI của riêng bạn",
+    "chooseModel": "Chọn mô hình AI"
   },
   "current": "Hiện tại",
   "installFree": "Cài đặt miễn phí",
@@ -43,9 +47,13 @@
   "switchToMonthly": "Chuyển sang thanh toán hàng tháng",
   "downgradeTo": "Hạ cấp xuống {name}",
   "upgradeTo": "Nâng cấp lên {name}",
-  "switchFailed": "Không thể bắt đầu chuyển đổi. Hãy thử Quản lý thanh toán trên trang tài khoản.",
+  "getPlan": "Đăng ký {name}",
+  "switchFailed": "Không thể bắt đầu chuyển đổi. Vui lòng thử lại, hoặc gửi email tới {email} nếu lỗi vẫn tiếp diễn.",
   "alreadySubscribed": "Bạn đã có gói đăng ký. Đang mở trang thanh toán để bạn thay đổi.",
-  "portalFailed": "Không thể mở trang thanh toán. Hãy dùng Quản lý thanh toán trên trang tài khoản để đổi gói.",
+  "alreadySubscribedShown": "Bạn đã có gói. Trang này giờ đã hiển thị gói đó, nên bạn có thể thay đổi ngay tại đây.",
+  "checkoutFailed": "Không thể bắt đầu thanh toán. Vui lòng thử lại sau giây lát.",
+  "portalFailed": "Không thể mở trang thanh toán. Vui lòng thử lại, hoặc gửi email tới {email} để đổi gói.",
+  "rateLimited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại.",
   "checkoutCanceled": "Đã hủy thanh toán. Bạn không bị tính phí.",
   "cancelAnytime": "Hủy bất cứ lúc nào từ tài khoản của bạn — không ràng buộc, không cần giải thích.",
   "keepAccess": "Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán.",
@@ -55,5 +63,47 @@
     "title": "Bảng giá đơn giản, minh bạch",
     "lead": "Bắt đầu miễn phí. Nâng cấp khi bạn sẵn sàng cho nhiều hơn.",
     "moreQuestions": "Còn câu hỏi khác? Xem <link>Câu hỏi thường gặp</link>."
+  },
+  "aiOptions": {
+    "legend": "Ai lo phần thiết lập?",
+    "managed": "Chúng tôi",
+    "byok": "Bạn",
+    "managedHint": "Tín dụng đo mức dùng AI: việc lớn hơn và mô hình mạnh hơn dùng nhiều hơn.",
+    "byokHint": "Bạn thêm khóa API của một nhà cung cấp. Họ tính phí trực tiếp với bạn theo mức dùng.",
+    "switchToByok": "Tự lo phần thiết lập",
+    "switchToManaged": "Để TabMerger lo phần thiết lập"
+  },
+  "planChange": {
+    "title": "Xác nhận đổi gói",
+    "confirmEndOfPeriod": "Gói của bạn sẽ đổi sang {plan} vào {date}. Bạn vẫn dùng gói hiện tại đến lúc đó. Không hoàn tiền cho phần còn lại của kỳ này.",
+    "confirmEndOfPeriodNoDate": "Gói của bạn sẽ đổi sang {plan} vào cuối kỳ thanh toán này. Bạn vẫn dùng gói hiện tại đến lúc đó. Không hoàn tiền cho phần còn lại của kỳ này.",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "scheduled": "Xong. Gói của bạn sẽ đổi sang {plan} vào {date}.",
+    "scheduledNoDetails": "Xong. Gói của bạn sẽ đổi vào cuối kỳ thanh toán này.",
+    "aiDisabled": "Tùy chọn Pro AI đó chưa có.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI do TabMerger thiết lập",
+      "proAiByok": "Pro AI do bạn tự thiết lập"
+    },
+    "billedMonthly": "{plan}, thanh toán hàng tháng",
+    "billedYearly": "{plan}, thanh toán hàng năm",
+    "errors": {
+      "no_billing_account": "Gói này không được liên kết với tài khoản thanh toán nên không thể thay đổi tại đây. Hãy gửi email tới {email} và chúng tôi sẽ thay đổi giúp bạn.",
+      "no_paid_plan": "Bạn không có gói trả phí nào để thay đổi. Hãy chọn một gói để đăng ký.",
+      "already_on_price": "Bạn đang dùng gói đó rồi.",
+      "already_scheduled": "Đã có một thay đổi gói được lên lịch vào cuối kỳ thanh toán này.",
+      "cancel_scheduled": "Gói của bạn sẽ kết thúc vào cuối kỳ thanh toán này. Hãy gia hạn trong Quản lý thanh toán trước khi thay đổi.",
+      "pay_or_resume": "Gói của bạn đang chờ thanh toán hoặc đang tạm dừng nên chưa thể thay đổi. Hãy gửi email tới {email} và chúng tôi sẽ giúp bạn xử lý.",
+      "switch_needs_support": "Hiện chưa thể thực hiện thay đổi gói này. Hãy gửi email tới {email} và chúng tôi sẽ thay đổi giúp bạn.",
+      "price_unavailable": "Hiện không thể chuyển sang gói đó. Vui lòng thử lại sau hoặc liên hệ với chúng tôi.",
+      "switch_failed": "Stripe không thể bắt đầu thay đổi. Vui lòng thử lại, dùng Quản lý thanh toán trên trang tài khoản, hoặc gửi email tới {email}.",
+      "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
+    }
+  },
+  "scheduledChange": {
+    "starts": "Bắt đầu vào {date}",
+    "note": "Bạn có một thay đổi đã lên lịch vào {date}. <link>Quản lý trên trang tài khoản của bạn.</link>"
   }
 }

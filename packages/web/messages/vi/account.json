@@ -33,7 +33,9 @@
     "groups": "Nhóm đã đồng bộ",
     "tabs": "Tab đã lưu",
     "sessions": "Phiên và bản sao lưu",
-    "aiCredits": "Tín dụng AI còn lại"
+    "aiCredits": "Tín dụng AI còn lại",
+    "aiOwnKey": "Ai lo phần thiết lập AI",
+    "aiOwnKeyValue": "Bạn"
   },
   "profile": {
     "title": "Hồ sơ",
@@ -51,7 +53,37 @@
     "description": "Quản lý gói và thanh toán của bạn.",
     "manageBilling": "Quản lý thanh toán",
     "upgrade": "Nâng cấp",
-    "cancelNote": "Bạn có thể hủy bất cứ lúc nào qua <strong>Quản lý thanh toán</strong>. Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán hiện tại."
+    "cancelNote": "Bạn có thể hủy bất cứ lúc nào qua <strong>Quản lý thanh toán</strong>. Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán hiện tại.",
+    "scheduledChange": "Chuyển sang {plan} vào {date}.",
+    "scheduledChangeUnknownPlan": "Gói của bạn thay đổi vào {date}.",
+    "scheduledCancelNote": "Khi hủy, bạn giữ gói hiện tại đến hết kỳ thanh toán này và thay đổi đã lên lịch sẽ bị bỏ. Không hoàn tiền. Nếu gia hạn sau đó, bạn vẫn giữ gói hiện tại."
+  },
+  "cancelSubscription": {
+    "button": "Hủy gói đăng ký",
+    "errors": {
+      "no_billing_account": "Gói này chưa được liên kết với tài khoản thanh toán. Hãy gửi email tới {email} và chúng tôi sẽ hủy giúp bạn.",
+      "no_subscription": "Chúng tôi không tìm thấy gói đăng ký nào để hủy. Hãy tải lại trang, hoặc gửi email tới {email}.",
+      "not_entitled": "Không có gói nào đang hoạt động để hủy.",
+      "already_canceling": "Gói của bạn đã được đặt để kết thúc vào cuối kỳ thanh toán này.",
+      "cancel_failed": "Không thể mở trang hủy. Vui lòng thử lại, hoặc gửi email tới {email}.",
+      "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "Giữ gói hiện tại của tôi",
+    "success": "Gói của bạn vẫn là {plan}.",
+    "successUnknownPlan": "Gói hiện tại của bạn được giữ nguyên.",
+    "successRenews": "Gói của bạn vẫn là {plan}. Gói sẽ được gia hạn vào {date} với giá {amount}.",
+    "successRenewsOn": "Gói của bạn vẫn là {plan}. Gói sẽ được gia hạn vào {date}.",
+    "successUnknownPlanRenews": "Gói hiện tại của bạn được giữ nguyên. Gói sẽ được gia hạn vào {date} với giá {amount}.",
+    "successUnknownPlanRenewsOn": "Gói hiện tại của bạn được giữ nguyên. Gói sẽ được gia hạn vào {date}.",
+    "errors": {
+      "no_billing_account": "Gói này chưa được liên kết với tài khoản thanh toán. Hãy gửi email tới {email} và chúng tôi sẽ xử lý giúp bạn.",
+      "no_subscription": "Chúng tôi không tìm thấy gói đăng ký của bạn. Hãy tải lại trang, hoặc gửi email tới {email}.",
+      "no_scheduled_change": "Không còn thay đổi gói nào được lên lịch. Hãy tải lại trang để xem gói của bạn.",
+      "keep_plan_failed": "Không thể giữ gói hiện tại của bạn. Vui lòng thử lại, hoặc gửi email tới {email}.",
+      "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
+    }
   },
   "devicesCard": {
     "title": "Thiết bị",
@@ -68,6 +100,13 @@
   },
   "credits": {
     "failed": "Không thể bắt đầu thanh toán",
-    "getMore": "Mua thêm"
+    "getMore": "Mua thêm",
+    "notAvailable": "Gói tín dụng chỉ dành cho gói Pro AI đang hoạt động do TabMerger lo phần thiết lập AI.",
+    "rateLimited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
+  },
+  "aiPlan": {
+    "title": "Ai lo phần thiết lập AI",
+    "managed": "TabMerger: còn {left, number}/{limit, number} tín dụng AI trong tháng này.",
+    "byok": "Bạn: khóa API của riêng bạn, nhà cung cấp AI tính phí trực tiếp, không giới hạn tín dụng. Thêm hoặc đổi khóa trong phần Cài đặt của tiện ích."
   }
 }

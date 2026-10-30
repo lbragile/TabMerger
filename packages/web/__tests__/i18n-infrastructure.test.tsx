@@ -236,6 +236,15 @@ describe('English copy matches @tabmerger/shared', () => {
     }
   })
 
+  it('renders the Pro AI own-key ("You" handle setup) feature lines exactly as PRICING_TIERS lists them', () => {
+    const { result } = renderHook(() => useTierFeatures())
+    const ownKey = PRICING_TIERS.find((t) => t.id === 'pro_ai')!.byok!
+    expect(result.current('proAi', 'byok').map((f) => f.text)).toEqual(ownKey.features)
+    expect(result.current('proAi', 'byok').map((f) => f.inherited)).toEqual(ownKey.features.map((f) => f.startsWith('Everything in ')))
+    // The option is ignored for the plans that have none.
+    expect(result.current('pro', 'byok')).toEqual(result.current('pro'))
+  })
+
   it('names the plans as PRICING_TIERS does', () => {
     const { result } = renderHook(() => useTierName())
     expect([result.current('free'), result.current('pro'), result.current('proAi')]).toEqual(PRICING_TIERS.map((t) => t.name))

@@ -59,5 +59,6 @@
   "showPassphrase": "نمایش عبارت عبور",
   "hidePassphrase": "پنهان کردن عبارت عبور",
   "notifications": "اعلان‌ها",
-  "closeToast": "بستن اعلان"
+  "closeToast": "بستن اعلان",
+  "openSettings": "باز کردن تنظیمات"
 }

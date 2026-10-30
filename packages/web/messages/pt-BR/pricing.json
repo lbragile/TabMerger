@@ -25,17 +25,21 @@
     "dragDrop": "Arrastar e soltar",
     "shortcuts": "Atalhos de teclado",
     "everythingInFree": "Tudo do plano Gratuito",
-    "unlimited": "Grupos, abas, regras de URL e sessões ilimitados",
+    "unlimited": "Grupos, abas, regras e sessões ilimitados",
     "cloudSync": "Sincronização na nuvem entre dispositivos",
     "sessionsSynced": "Sessões sincronizadas entre dispositivos",
-    "autoBackups": "Backups automáticos criptografados dos seus grupos, com cópia opcional em arquivo no seu computador",
+    "autoBackups": "Backups automáticos criptografados",
     "prioritySupport": "Suporte prioritário",
     "everythingInPro": "Tudo do Pro",
     "aiGrouping": "Agrupamento automático de abas por IA",
     "aiNames": "Sugestões de nomes de grupos por IA",
+    "aiDescribe": "Descrições de grupos e janelas por IA",
     "smartSessions": "Sugestões inteligentes de sessões",
+    "aiOrganize": "Arrumação do espaço de trabalho com IA",
     "tabPreview": "Prévia de abas com resumo de IA",
-    "aiCredits": "{count} créditos de IA / mês"
+    "aiCreditsMonthly": "{count, number} créditos de IA por mês",
+    "ownApiKey": "Use seu próprio provedor de IA",
+    "chooseModel": "Escolha seu modelo de IA"
   },
   "current": "Atual",
   "installFree": "Instalar grátis",
@@ -43,9 +47,13 @@
   "switchToMonthly": "Mudar para cobrança mensal",
   "downgradeTo": "Fazer downgrade para o {name}",
   "upgradeTo": "Fazer upgrade para o {name}",
-  "switchFailed": "Não foi possível iniciar a mudança. Tente Gerenciar cobrança na página da sua conta.",
+  "getPlan": "Assinar o {name}",
+  "switchFailed": "Não foi possível iniciar a mudança. Tente novamente ou escreva para {email} se o problema continuar.",
   "alreadySubscribed": "Você já tem um plano. Abrindo a cobrança para você poder alterá-lo.",
-  "portalFailed": "Não foi possível abrir a cobrança. Use Gerenciar cobrança na página da sua conta para mudar de plano.",
+  "alreadySubscribedShown": "Você já tem um plano. Esta página agora o mostra, então você pode alterá-lo aqui.",
+  "checkoutFailed": "Não foi possível iniciar o pagamento. Tente novamente em instantes.",
+  "portalFailed": "Não foi possível abrir a cobrança. Tente novamente ou escreva para {email} para mudar de plano.",
+  "rateLimited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente.",
   "checkoutCanceled": "Pagamento cancelado. Você não foi cobrado.",
   "cancelAnytime": "Cancele quando quiser pela sua conta — sem fidelidade, sem perguntas.",
   "keepAccess": "Você mantém o acesso até o fim do período de cobrança.",
@@ -55,5 +63,47 @@
     "title": "Preços simples e transparentes",
     "lead": "Comece de graça. Faça upgrade quando estiver pronto para mais.",
     "moreQuestions": "Tem mais dúvidas? Veja as <link>perguntas frequentes</link>."
+  },
+  "aiOptions": {
+    "legend": "Quem cuida da configuração?",
+    "managed": "Nós",
+    "byok": "Você",
+    "managedHint": "Os créditos medem o uso de IA: tarefas maiores e modelos mais potentes gastam mais.",
+    "byokHint": "Você adiciona uma chave de API de um provedor. Ele cobra diretamente de você conforme o uso.",
+    "switchToByok": "Cuidar você mesmo da configuração",
+    "switchToManaged": "Deixar a configuração com o TabMerger"
+  },
+  "planChange": {
+    "title": "Confirmar a mudança de plano",
+    "confirmEndOfPeriod": "Seu plano muda para {plan} em {date}. Você mantém seu plano atual até lá. Não há reembolso pelo restante deste período.",
+    "confirmEndOfPeriodNoDate": "Seu plano muda para {plan} no fim deste período de cobrança. Você mantém seu plano atual até lá. Não há reembolso pelo restante deste período.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "scheduled": "Pronto. Seu plano muda para {plan} em {date}.",
+    "scheduledNoDetails": "Pronto. Seu plano muda no fim deste período de cobrança.",
+    "aiDisabled": "Essa opção do Pro AI ainda não está disponível.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI com o TabMerger cuidando da configuração",
+      "proAiByok": "Pro AI com você cuidando da configuração"
+    },
+    "billedMonthly": "{plan}, cobrança mensal",
+    "billedYearly": "{plan}, cobrança anual",
+    "errors": {
+      "no_billing_account": "Este plano não está vinculado a uma conta de cobrança, por isso não pode ser alterado aqui. Escreva para {email} e nós o alteramos para você.",
+      "no_paid_plan": "Você não tem um plano pago para alterar. Escolha um plano para assinar.",
+      "already_on_price": "Você já está nesse plano.",
+      "already_scheduled": "Já existe uma mudança de plano agendada para o fim deste período de cobrança.",
+      "cancel_scheduled": "Seu plano termina no fim deste período de cobrança. Renove-o em Gerenciar cobrança antes de alterá-lo.",
+      "pay_or_resume": "Seu plano está aguardando um pagamento ou está pausado, por isso ainda não pode ser alterado. Escreva para {email} e ajudaremos você a resolver isso.",
+      "switch_needs_support": "Esta mudança de plano não pode ser feita agora. Escreva para {email} e faremos a mudança para você.",
+      "price_unavailable": "No momento não é possível mudar para esse plano. Tente novamente mais tarde ou fale conosco.",
+      "switch_failed": "O Stripe não conseguiu iniciar a mudança. Tente novamente, use Gerenciar cobrança na página da sua conta ou escreva para {email}.",
+      "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
+    }
+  },
+  "scheduledChange": {
+    "starts": "Começa em {date}",
+    "note": "Você tem uma mudança agendada para {date}. <link>Gerencie na página da sua conta.</link>"
   }
 }

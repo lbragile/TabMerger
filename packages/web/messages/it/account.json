@@ -33,7 +33,9 @@
     "groups": "Gruppi sincronizzati",
     "tabs": "Schede salvate",
     "sessions": "Sessioni e backup",
-    "aiCredits": "Crediti IA rimasti"
+    "aiCredits": "Crediti IA rimasti",
+    "aiOwnKey": "Chi configura l’IA",
+    "aiOwnKeyValue": "Tu"
   },
   "profile": {
     "title": "Profilo",
@@ -51,7 +53,37 @@
     "description": "Gestisci il tuo piano e la fatturazione.",
     "manageBilling": "Gestisci fatturazione",
     "upgrade": "Passa a un piano superiore",
-    "cancelNote": "Puoi annullare in qualsiasi momento da <strong>Gestisci fatturazione</strong>. Mantieni l'accesso fino alla fine del periodo di fatturazione in corso."
+    "cancelNote": "Puoi annullare in qualsiasi momento da <strong>Gestisci fatturazione</strong>. Mantieni l'accesso fino alla fine del periodo di fatturazione in corso.",
+    "scheduledChange": "Passa a {plan} il {date}.",
+    "scheduledChangeUnknownPlan": "Il tuo piano cambia il {date}.",
+    "scheduledCancelNote": "Se annulli, mantieni il piano attuale fino alla fine di questo periodo di fatturazione e la modifica programmata viene eliminata. Nessun rimborso. Se rinnovi in seguito, mantieni il piano attuale."
+  },
+  "cancelSubscription": {
+    "button": "Annulla abbonamento",
+    "errors": {
+      "no_billing_account": "Questo piano non è collegato a un account di fatturazione. Scrivi a {email} e lo annulleremo per te.",
+      "no_subscription": "Non abbiamo trovato un abbonamento da annullare. Ricarica la pagina oppure scrivi a {email}.",
+      "not_entitled": "Non c’è nessun piano attivo da annullare.",
+      "already_canceling": "Il tuo piano è già impostato per terminare alla fine di questo periodo di fatturazione.",
+      "cancel_failed": "Impossibile aprire la pagina di annullamento. Riprova oppure scrivi a {email}.",
+      "rate_limited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova."
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "Mantieni il mio piano attuale",
+    "success": "Il tuo piano resta {plan}.",
+    "successUnknownPlan": "Il tuo piano attuale resta invariato.",
+    "successRenews": "Il tuo piano resta {plan}. Si rinnova il {date} per {amount}.",
+    "successRenewsOn": "Il tuo piano resta {plan}. Si rinnova il {date}.",
+    "successUnknownPlanRenews": "Il tuo piano attuale resta invariato. Si rinnova il {date} per {amount}.",
+    "successUnknownPlanRenewsOn": "Il tuo piano attuale resta invariato. Si rinnova il {date}.",
+    "errors": {
+      "no_billing_account": "Questo piano non è collegato a un account di fatturazione. Scrivi a {email} e ce ne occuperemo noi.",
+      "no_subscription": "Non abbiamo trovato il tuo abbonamento. Ricarica la pagina oppure scrivi a {email}.",
+      "no_scheduled_change": "Non c’è più nessun cambio di piano programmato. Ricarica la pagina per vedere il tuo piano.",
+      "keep_plan_failed": "Impossibile mantenere il tuo piano attuale. Riprova oppure scrivi a {email}.",
+      "rate_limited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova."
+    }
   },
   "devicesCard": {
     "title": "Dispositivi",
@@ -68,6 +100,13 @@
   },
   "credits": {
     "failed": "Impossibile avviare il pagamento",
-    "getMore": "Acquista altri"
+    "getMore": "Acquista altri",
+    "notAvailable": "I pacchetti di crediti richiedono un piano Pro AI attivo in cui è TabMerger a configurare l'IA.",
+    "rateLimited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova."
+  },
+  "aiPlan": {
+    "title": "Chi configura l’IA",
+    "managed": "TabMerger: {left, number} crediti IA rimasti su {limit, number} questo mese.",
+    "byok": "Tu: la tua chiave API, addebitata direttamente dal tuo fornitore di IA, senza limite di crediti. Aggiungi o cambia la chiave nelle Impostazioni dell’estensione."
   }
 }

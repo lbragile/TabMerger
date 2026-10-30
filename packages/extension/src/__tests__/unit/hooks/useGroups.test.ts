@@ -49,6 +49,7 @@ import {
   closableTabIds,
 } from '@/hooks/useGroups'
 import { createGroup, createNowOpenGroup, formatGroupCounts } from '@/lib/utils'
+import type { AiApplyCounts } from '@/hooks/useGroups'
 import { useUIStore } from '@/stores/uiStore'
 import type { GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
@@ -2006,7 +2007,7 @@ describe('useApplyAIGroups', () => {
     qc.setQueryData(GROUPS_QUERY_KEY, state)
     const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
 
-    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    let outcome: AiApplyCounts | undefined
     await act(async () => {
       outcome = await result.current.mutateAsync([
         { name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] },
@@ -2014,7 +2015,7 @@ describe('useApplyAIGroups', () => {
       ])
     })
 
-    expect(outcome).toEqual({ appliedGroups: 2, appliedTabs: 2 })
+    expect(outcome).toEqual({ createdGroups: 2, mergedGroups: 0, appliedTabs: 2 })
     const saved = lastSaved()
     expect(saved.available).toHaveLength(3)
     expect(saved.available[1].name).toBe('Work')
@@ -2037,13 +2038,42 @@ describe('useApplyAIGroups', () => {
     qc.setQueryData(GROUPS_QUERY_KEY, state)
     const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
 
-    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    let outcome: AiApplyCounts | undefined
     await act(async () => {
       outcome = await result.current.mutateAsync([{ name: 'Ghost', color: 'rgba(1,1,1,1)', tabIds: [999] }])
     })
 
-    expect(outcome).toEqual({ appliedGroups: 0, appliedTabs: 0 })
+    expect(outcome).toEqual({ createdGroups: 0, mergedGroups: 0, appliedTabs: 0 })
     expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('adds tabs to an existing group with the same name (any case) instead of creating a duplicate group', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://youtube.com/new', 'New'), tab(12, 'https://youtube.com/old', 'Old'), tab(13, 'https://reddit.com')])]
+    const youtube = createGroup('yt', 'YouTube')
+    youtube.windows = [win([{ ...tab(0, 'https://youtube.com/old', 'Old'), savedAt: 1 }])]
+    const state = makeState([nowOpen, youtube])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
+
+    let outcome: AiApplyCounts | undefined
+    await act(async () => {
+      outcome = await result.current.mutateAsync([
+        { name: 'youtube ', color: 'rgba(1,1,1,1)', tabIds: [11, 12] },
+        { name: 'Reddit', color: 'rgba(2,2,2,1)', tabIds: [13] },
+      ])
+    })
+
+    // The duplicate URL left Now Open but was not stored again
+    expect(outcome).toEqual({ createdGroups: 1, mergedGroups: 1, appliedTabs: 2 })
+    const saved = lastSaved()
+    expect(saved.available.map((g) => g.name)).toEqual([nowOpen.name, 'YouTube', 'Reddit'])
+    expect(saved.available[1].windows).toHaveLength(2)
+    expect(saved.available[1].windows[1].tabs.map((t) => t.url)).toEqual(['https://youtube.com/new'])
+    expect(saved.available[1]).toMatchObject({ pendingSync: true, info: formatGroupCounts(2, 2) })
+    expect(saved.available[0].windows[0].tabs).toHaveLength(0)
   })
 
   it('leaves Now Open with an empty window rather than zero windows when every tab is grouped away', async () => {
@@ -2076,11 +2106,11 @@ describe('useApplyAIGroups — Free-tier caps backstop', () => {
     qc.setQueryData(GROUPS_QUERY_KEY, state)
     const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
 
-    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    let outcome: AiApplyCounts | undefined
     await act(async () => {
       outcome = await result.current.mutateAsync([{ name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] }])
     })
-    expect(outcome).toEqual({ appliedGroups: 1, appliedTabs: 1 })
+    expect(outcome).toEqual({ createdGroups: 1, mergedGroups: 0, appliedTabs: 1 })
   })
 
   it('blocks growth past maxGroups and writes nothing', async () => {
@@ -2118,6 +2148,46 @@ describe('useApplyAIGroups — Free-tier caps backstop', () => {
     expect(saveGroupsState).not.toHaveBeenCalled()
   })
 
+  it('a suggestion that goes into an existing same-named group uses no group slot', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://youtube.com/a', 'A')])]
+    const existing = Array.from({ length: 4 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const youtube = createGroup('yt', 'YouTube')
+    const state = makeState([nowOpen, ...existing, youtube])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    // Already at the Free limit of 5 groups
+    const { result } = renderHook(() => useApplyAIGroups({ maxGroups: 5, maxTabs: 50 }), { wrapper })
+
+    let outcome: AiApplyCounts | undefined
+    await act(async () => {
+      outcome = await result.current.mutateAsync([{ name: 'youtube', color: 'rgba(1,1,1,1)', tabIds: [11] }])
+    })
+    expect(outcome).toEqual({ createdGroups: 0, mergedGroups: 1, appliedTabs: 1 })
+    const saved = lastSaved()
+    expect(saved.available).toHaveLength(6)
+    expect(saved.available[5].windows[0].tabs[0]).toMatchObject({ id: 0, url: 'https://youtube.com/a' })
+  })
+
+  it('still blocks a NEW group past maxGroups when the same reply also merges into an existing one', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://youtube.com/a'), tab(12, 'https://news.com')])]
+    const existing = Array.from({ length: 4 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing, createGroup('yt', 'YouTube')])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups({ maxGroups: 5, maxTabs: 50 }), { wrapper })
+
+    await expect(
+      result.current.mutateAsync([
+        { name: 'YouTube', color: 'rgba(1,1,1,1)', tabIds: [11] },
+        { name: 'News', color: 'rgba(2,2,2,1)', tabIds: [12] },
+      ])
+    ).rejects.toThrow()
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
   it('Pro caps (Infinity) always pass', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = [win([tab(11, 'https://work.com', 'Work')])]
@@ -2128,11 +2198,11 @@ describe('useApplyAIGroups — Free-tier caps backstop', () => {
     qc.setQueryData(GROUPS_QUERY_KEY, state)
     const { result } = renderHook(() => useApplyAIGroups({ maxGroups: Infinity, maxTabs: Infinity }), { wrapper })
 
-    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    let outcome: AiApplyCounts | undefined
     await act(async () => {
       outcome = await result.current.mutateAsync([{ name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] }])
     })
-    expect(outcome).toEqual({ appliedGroups: 1, appliedTabs: 1 })
+    expect(outcome).toEqual({ createdGroups: 1, mergedGroups: 0, appliedTabs: 1 })
   })
 })
 

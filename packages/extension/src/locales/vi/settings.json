@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Hỏi trước khi xóa nhóm hoặc cửa sổ đã lưu",
     "openOnClickLabel": "Mở thẻ khi nhấp chuột",
     "openOnClickDescription": "Nhấp một lần sẽ mở thẻ trong trình duyệt",
+    "showAiButtonLabel": "Hiện nút AI",
+    "showAiButtonDescription": "Nút ✨ ở đầu trang, với các hành động AI cho thẻ và nhóm của bạn",
     "dedupLabel": "Tự động loại bỏ trùng lặp khi hợp nhất",
     "dedupDescription": "Xóa các thẻ trùng lặp khi hợp nhất cửa sổ",
     "previewImagesLabel": "Hiện hình ảnh trang trong bản xem trước",
@@ -59,7 +61,9 @@
     "openingPortal": "Đang mở...",
     "manageBilling": "Quản lý thanh toán",
     "signOut": "Đăng xuất",
-    "resetEncryption": "Quên cụm mật khẩu? Đặt lại mã hóa"
+    "resetEncryption": "Quên cụm mật khẩu? Đặt lại mã hóa",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "Khóa API của riêng bạn"
   },
   "data": {
     "intro": "TabMerger lưu trữ tất cả dữ liệu cục bộ trong IndexedDB. Đồng bộ đám mây yêu cầu tài khoản Pro.",
@@ -78,8 +82,10 @@
     "intro": "Mỗi hành động AI dưới đây sử dụng cùng một hạn mức AI hàng tháng (xem tab Tài khoản). Tắt các tính năng bạn không dùng để tiết kiệm hạn mức cho các tính năng bạn dùng.",
     "autoGroupLabel": "Tự động nhóm",
     "autoGroupDescription": "Nhóm các thẻ đang mở bằng AI",
-    "nameGroupLabel": "Đặt tên nhóm",
-    "nameGroupDescription": "Gợi ý tên cho một nhóm bằng AI",
+    "nameGroupLabel": "Đặt tên nhóm và cửa sổ",
+    "nameGroupDescription": "Gợi ý tên cho một nhóm hoặc cửa sổ bằng AI",
+    "describeGroupLabel": "Mô tả nhóm và cửa sổ",
+    "describeGroupDescription": "Viết ghi chú ngắn về các thẻ trong một nhóm hoặc cửa sổ bằng AI",
     "suggestSessionsLabel": "Gợi ý phiên",
     "suggestSessionsDescription": "Biểu ngữ nền gợi ý khi nào nên lưu một phiên",
     "organizeLabel": "Sắp xếp",
@@ -87,14 +93,72 @@
     "summariesLabel": "Tóm tắt xem trước thẻ",
     "summariesDescription": "Tóm tắt AI khi xem trước thẻ bằng cách di chuột",
     "throttleLabel": "Giới hạn gợi ý AI tự động còn một lần mỗi ngày",
-    "throttleDescription": "Biểu ngữ gợi ý phiên nền xuất hiện tối đa một lần mỗi ngày để bảo vệ hạn mức AI hàng tháng của bạn. Các hành động AI bạn tự kích hoạt thủ công (Tự động nhóm, Đặt tên nhóm, Sắp xếp) không bao giờ bị giới hạn bởi điều này."
+    "throttleDescription": "Biểu ngữ gợi ý phiên nền xuất hiện tối đa một lần mỗi ngày để bảo vệ hạn mức AI hàng tháng của bạn. Các hành động AI bạn tự kích hoạt thủ công (Tự động nhóm, Đặt tên nhóm, Sắp xếp) không bao giờ bị giới hạn bởi điều này.",
+    "buyCredits": "Mua thêm tín dụng",
+    "buyCreditsLabel": "Mua thêm tín dụng (thẻ mới)",
+    "plan": {
+      "managed": "TabMerger lo phần thiết lập: còn {{remaining}}/{{cap}} tín dụng trong tháng này",
+      "managedUnknown": "TabMerger lo phần thiết lập",
+      "byok": "Bạn đã thêm khóa API {{provider}} của riêng mình",
+      "byokNoKey": "Bạn tự thêm khóa API: hãy nhập bên dưới để dùng các tính năng AI"
+    },
+    "provider": {
+      "label": "Nhà cung cấp AI",
+      "description": "Chọn công ty đã cấp khóa API của bạn.",
+      "placeholder": "Chọn nhà cung cấp"
+    },
+    "key": {
+      "label": "Khóa API {{provider}} của bạn",
+      "save": "Lưu khóa",
+      "checking": "Đang kiểm tra…",
+      "replace": "Thay thế",
+      "remove": "Xóa",
+      "saved": "Đã lưu khóa API",
+      "removed": "Đã xóa khóa API",
+      "invalidFormat": "Đây không giống khóa API {{provider}} hợp lệ.",
+      "verifyFailed": "Không thể kiểm tra khóa. Hãy thử lại.",
+      "testKey": "Dùng khóa thử nghiệm",
+      "testKeyHint": "Chỉ trong bản dựng phát triển: lưu một khóa giả. Khóa chỉ hoạt động khi máy chủ phát triển web chạy với AI_MOCK=true.",
+      "note": "Chỉ lưu trên thiết bị này. Được gửi đến máy chủ TabMerger cùng mỗi yêu cầu AI và chuyển thẳng đến nhà cung cấp đã cấp khóa; không bao giờ được lưu trên máy chủ của chúng tôi.",
+      "getKey": "Tạo khóa và đặt giới hạn chi tiêu:",
+      "wrongProvider": "Khóa này có vẻ là của {{detected}}. Hãy chọn {{detected}} ở trên, hoặc dán khóa của {{provider}}.",
+      "switching": "Khóa {{saved}} đã lưu vẫn được dùng cho đến khi bạn lưu khóa của {{provider}}.",
+      "guideLink": "Cách tạo khóa",
+      "keysLink": "Trang khóa API của {{provider}}"
+    },
+    "model": {
+      "label": "Mô hình AI",
+      "managedDescription": "Mô hình lớn hơn cho kết quả tốt hơn và dùng nhiều tín dụng hơn. Các số liệu là ước tính.",
+      "byokDescription": "Mô hình lớn hơn cho kết quả tốt hơn và tốn kém hơn trên hóa đơn của nhà cung cấp.",
+      "auto": "Tự động",
+      "recommended": "Khuyên dùng",
+      "autoDescription": "Dùng mô hình rẻ nhất làm tốt từng việc."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_other": "≈ {{formatted}} tín dụng",
+      "perMonth_other": "≈ {{formatted}} lần sắp xếp mỗi tháng với tín dụng của bạn",
+      "action": {
+        "nameGroup_other": "Đặt tên nhóm {{count}} thẻ",
+        "tabSummary": "Tóm tắt một thẻ",
+        "groupTabs_other": "Nhóm {{count}} thẻ",
+        "suggestSessions": "Gợi ý phiên",
+        "organize_other": "Sắp xếp {{count}} thẻ",
+        "describeGroup_other": "Mô tả nhóm {{count}} thẻ"
+      }
+    },
+    "cost": {
+      "low": "Chi phí thấp nhất",
+      "medium": "Chi phí trung bình",
+      "high": "Chi phí cao nhất"
+    }
   },
   "dev": {
     "demoLabel": "Chế độ Demo",
     "demoDescription": "Nạp dữ liệu mẫu cho quy trình demo tiếp thị",
     "demoButton": "Vào",
-    "usageLabel": "Số lượng sử dụng AI giả lập",
-    "usageDescription": "Đặt bộ đếm tín dụng AI (trên tổng {{cap}}) cục bộ và đồng bộ nó với tài khoản Supabase thực của bạn, để việc thực thi hạn mức phía máy chủ có thể được kiểm tra toàn diện.",
+    "usageLabel": "Tín dụng đã dùng tháng này",
+    "usageDescription": "Đặt số tín dụng AI đã dùng trong tháng này (trên tổng {{cap}}) cho tài khoản của bạn qua máy chủ phát triển web. Đặt lại cũng xóa các gói tín dụng của tháng này.",
     "usageSet": "Đặt",
     "usageReset": "Đặt lại",
     "sentryLabel": "Sentry",
@@ -104,9 +168,9 @@
   "toast": {
     "encryptionReset": "Đã đặt lại mã hóa — thiết lập cụm mật khẩu mới",
     "encryptionResetFailed": "Đặt lại mã hóa thất bại",
-    "signInForAiUsage": "Đăng nhập để đồng bộ việc sử dụng AI lên máy chủ",
-    "aiUsageSet": "Đã đặt việc sử dụng AI trên máy chủ thành {{count}}",
-    "aiUsageFailed": "Đồng bộ việc sử dụng AI lên máy chủ thất bại",
+    "signInForAiUsage": "Đăng nhập để đặt số tín dụng AI đã dùng",
+    "aiUsageSet": "Đã đặt số tín dụng AI đã dùng thành {{credits}}",
+    "aiUsageFailed": "Không thể đặt số tín dụng AI đã dùng",
     "previewImagesDenied": "Firefox cần quyền để lấy hình ảnh trang. Hãy cho phép trong hộp thoại của trình duyệt để bật tính năng này.",
     "saved": "Đã lưu cài đặt",
     "cleared": "Đã xóa tất cả dữ liệu",

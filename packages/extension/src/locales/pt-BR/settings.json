@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Perguntar antes de excluir grupos ou janelas salvas",
     "openOnClickLabel": "Abrir aba ao clicar",
     "openOnClickDescription": "Um clique abre a aba no navegador",
+    "showAiButtonLabel": "Mostrar botão de IA",
+    "showAiButtonDescription": "O botão ✨ no cabeçalho, com ações de IA para suas abas e grupos",
     "dedupLabel": "Remover duplicatas ao mesclar",
     "dedupDescription": "Remove abas duplicadas ao mesclar janelas",
     "previewImagesLabel": "Mostrar imagens das páginas nas prévias",
@@ -61,7 +63,9 @@
     "openingPortal": "Abrindo...",
     "manageBilling": "Gerenciar cobrança",
     "signOut": "Sair",
-    "resetEncryption": "Esqueceu a frase secreta? Redefinir criptografia"
+    "resetEncryption": "Esqueceu a frase secreta? Redefinir criptografia",
+    "aiKeyLabel": "IA",
+    "aiOwnKey": "Sua própria chave de API"
   },
   "data": {
     "intro": "O TabMerger armazena todos os dados localmente no IndexedDB. A sincronização na nuvem exige uma conta Pro.",
@@ -86,8 +90,10 @@
     "intro": "Toda ação de IA abaixo usa a mesma cota mensal de IA (veja a aba Conta). Desative os recursos que você não usa para economizar cota para os que usa.",
     "autoGroupLabel": "Agrupar automaticamente",
     "autoGroupDescription": "Agrupar abas abertas com IA",
-    "nameGroupLabel": "Nomear grupo",
-    "nameGroupDescription": "Sugerir um nome para um grupo com IA",
+    "nameGroupLabel": "Nomear grupos e janelas",
+    "nameGroupDescription": "Sugerir um nome para um grupo ou uma janela com IA",
+    "describeGroupLabel": "Descrever grupos e janelas",
+    "describeGroupDescription": "Escrever com IA uma nota curta sobre as abas de um grupo ou de uma janela",
     "suggestSessionsLabel": "Sugerir sessões",
     "suggestSessionsDescription": "Banner em segundo plano que sugere quando salvar uma sessão",
     "organizeLabel": "Organizar",
@@ -95,14 +101,84 @@
     "summariesLabel": "Resumos na prévia das abas",
     "summariesDescription": "Resumo de IA na prévia ao passar o mouse sobre a aba",
     "throttleLabel": "Limitar sugestões automáticas de IA a uma por dia",
-    "throttleDescription": "O banner de sugestão de sessões em segundo plano aparece no máximo uma vez por dia para proteger sua cota mensal de IA. As ações de IA que você aciona manualmente (Agrupar automaticamente, Nomear grupo, Organizar) nunca são limitadas por isto."
+    "throttleDescription": "O banner de sugestão de sessões em segundo plano aparece no máximo uma vez por dia para proteger sua cota mensal de IA. As ações de IA que você aciona manualmente (Agrupar automaticamente, Nomear grupo, Organizar) nunca são limitadas por isto.",
+    "buyCredits": "Comprar mais créditos",
+    "buyCreditsLabel": "Comprar mais créditos (nova aba)",
+    "plan": {
+      "managed": "O TabMerger cuida da configuração: restam {{remaining}} de {{cap}} créditos neste mês",
+      "managedUnknown": "O TabMerger cuida da configuração",
+      "byok": "Você adicionou sua própria chave de API da {{provider}}",
+      "byokNoKey": "Você adiciona sua própria chave de API: insira-a abaixo para usar os recursos de IA"
+    },
+    "provider": {
+      "label": "Provedor de IA",
+      "description": "Escolha a empresa que emitiu sua chave de API.",
+      "placeholder": "Escolha um provedor"
+    },
+    "key": {
+      "label": "Sua chave de API de {{provider}}",
+      "save": "Salvar chave",
+      "checking": "Verificando…",
+      "replace": "Substituir",
+      "remove": "Remover",
+      "saved": "Chave de API salva",
+      "removed": "Chave de API removida",
+      "invalidFormat": "Isso não parece uma chave de API válida de {{provider}}.",
+      "verifyFailed": "Não foi possível verificar a chave. Tente novamente.",
+      "testKey": "Usar chave de teste",
+      "testKeyHint": "Somente em builds de desenvolvimento: salva uma chave fictícia. Ela só funciona enquanto o servidor de desenvolvimento web roda com AI_MOCK=true.",
+      "note": "Salva apenas neste dispositivo. Enviada ao servidor do TabMerger com cada solicitação de IA e repassada direto ao provedor que a emitiu; nunca salva nos nossos servidores.",
+      "getKey": "Crie uma chave e defina um limite de gastos:",
+      "wrongProvider": "Esta chave parece ser de {{detected}}. Escolha {{detected}} acima ou cole uma chave de {{provider}}.",
+      "switching": "Sua chave salva de {{saved}} continua em uso até você salvar uma chave de {{provider}}.",
+      "guideLink": "Como criar uma chave",
+      "keysLink": "Chaves de API de {{provider}}"
+    },
+    "model": {
+      "label": "Modelo de IA",
+      "managedDescription": "Modelos maiores dão resultados melhores e usam mais créditos. Os valores são estimativas.",
+      "byokDescription": "Modelos maiores dão resultados melhores e custam mais na fatura do seu provedor.",
+      "auto": "Automático",
+      "recommended": "Recomendado",
+      "autoDescription": "Usa o modelo mais barato que faz bem cada tarefa."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_one": "≈ {{formatted}} crédito",
+      "credits_many": "≈ {{formatted}} de créditos",
+      "credits_other": "≈ {{formatted}} créditos",
+      "perMonth_one": "≈ {{formatted}} organização por mês com seus créditos",
+      "perMonth_many": "≈ {{formatted}} de organizações por mês com seus créditos",
+      "perMonth_other": "≈ {{formatted}} organizações por mês com seus créditos",
+      "action": {
+        "nameGroup_one": "Nomear um grupo de {{count}} aba",
+        "nameGroup_many": "Nomear um grupo de {{count}} de abas",
+        "nameGroup_other": "Nomear um grupo de {{count}} abas",
+        "tabSummary": "Resumir uma aba",
+        "groupTabs_one": "Agrupar {{count}} aba",
+        "groupTabs_many": "Agrupar {{count}} de abas",
+        "groupTabs_other": "Agrupar {{count}} abas",
+        "suggestSessions": "Sugerir sessões",
+        "organize_one": "Organizar {{count}} aba",
+        "organize_many": "Organizar {{count}} de abas",
+        "organize_other": "Organizar {{count}} abas",
+        "describeGroup_one": "Descrever um grupo de {{count}} aba",
+        "describeGroup_many": "Descrever um grupo de {{count}} de abas",
+        "describeGroup_other": "Descrever um grupo de {{count}} abas"
+      }
+    },
+    "cost": {
+      "low": "Menor custo",
+      "medium": "Custo médio",
+      "high": "Maior custo"
+    }
   },
   "dev": {
     "demoLabel": "Modo demo",
     "demoDescription": "Gera dados de exemplo para o pipeline de demonstração de marketing",
     "demoButton": "Entrar",
-    "usageLabel": "Contagem simulada de uso de IA",
-    "usageDescription": "Define o contador de créditos de IA (de {{cap}}) localmente e o sincroniza com sua conta real do Supabase, para testar de ponta a ponta a aplicação da cota no servidor.",
+    "usageLabel": "Créditos usados neste mês",
+    "usageDescription": "Define os créditos de IA usados neste mês (de {{cap}}) na sua conta pelo servidor de desenvolvimento web. Redefinir também remove os pacotes de créditos deste mês.",
     "usageSet": "Definir",
     "usageReset": "Redefinir",
     "sentryLabel": "Sentry",
@@ -112,9 +188,9 @@
   "toast": {
     "encryptionReset": "Criptografia redefinida — configure uma nova frase secreta",
     "encryptionResetFailed": "Falha ao redefinir a criptografia",
-    "signInForAiUsage": "Entre para sincronizar o uso de IA com o servidor",
-    "aiUsageSet": "Uso de IA no servidor definido como {{count}}",
-    "aiUsageFailed": "Falha ao sincronizar o uso de IA com o servidor",
+    "signInForAiUsage": "Entre para definir os créditos de IA usados",
+    "aiUsageSet": "Créditos de IA usados definidos como {{credits}}",
+    "aiUsageFailed": "Não foi possível definir os créditos de IA usados",
     "previewImagesDenied": "O Firefox precisa de permissão para buscar imagens das páginas. Permita no aviso do navegador para ativar isto.",
     "saved": "Configurações salvas",
     "cleared": "Todos os dados apagados",

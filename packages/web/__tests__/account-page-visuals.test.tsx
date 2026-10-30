@@ -16,11 +16,12 @@ function mockSupabase(tier: string, usedCount = 53, purchases: { credits: number
         const chain = () => builder
         builder.select = chain
         builder.eq = chain
+        builder.is = chain
         builder.order = chain
         builder.limit = chain
         builder.single = async () =>
           table === 'subscriptions'
-            ? { data: { tier, status: 'active', current_period_end: null } }
+            ? { data: { tier, status: 'active', current_period_end: null, ai_mode: 'managed', ai_monthly_credits: tier === 'pro_ai' ? 2500 : 0 } }
             : { data: { created_at: '2024-01-01' } }
         builder.maybeSingle = async () => ({ data: { credits_used: usedCount } })
         // device_sessions + ai_credit_purchases queries are awaited directly (no .single()) —
@@ -55,7 +56,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     expect(card?.className).not.toMatch(/border-primary/)
   })
 
-  it('shows 47 AI calls left with accent styling for a pro_ai-tier user', async () => {
+  it('shows the credits left with accent styling for a pro_ai-tier user', async () => {
     vi.resetModules()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockSupabase('pro_ai')
@@ -65,7 +66,8 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
 
     const label = screen.getByText('AI credits left')
     const card = label.closest('div')
-    expect(card?.textContent).toContain('247')
+    // 2,500 monthly credits - 53 used
+    expect(card?.textContent).toContain('2,447')
     expect(card?.className).toMatch(/border-primary/)
   })
 
@@ -76,8 +78,8 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     const { default: AccountPage } = await import('@/app/[locale]/(app)/account/page')
     render((await AccountPage()) as React.ReactElement)
 
-    // 300 base + 100 purchased - 100 used
-    expect(screen.getByText('AI credits left').closest('div')?.textContent).toContain('300')
+    // 2,500 monthly + 100 purchased - 100 used
+    expect(screen.getByText('AI credits left').closest('div')?.textContent).toContain('2,500')
   })
 
   it('splices the "AI credits left" stat card out entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {
@@ -109,6 +111,7 @@ describe('AccountPage — buy more AI calls', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () => {
@@ -195,6 +198,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () =>
@@ -231,6 +235,7 @@ describe('AccountPage — free vs Pro sync UI', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () =>

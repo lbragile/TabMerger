@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Pregunta antes de eliminar grupos o ventanas guardadas",
     "openOnClickLabel": "Abrir pestaña al hacer clic",
     "openOnClickDescription": "Un solo clic abre la pestaña en el navegador",
+    "showAiButtonLabel": "Mostrar el botón de IA",
+    "showAiButtonDescription": "El botón ✨ del encabezado, con acciones de IA para tus pestañas y grupos",
     "dedupLabel": "Quitar duplicadas al combinar",
     "dedupDescription": "Quita las pestañas duplicadas al combinar ventanas",
     "previewImagesLabel": "Mostrar imágenes de páginas en las vistas previas",
@@ -61,7 +63,9 @@
     "openingPortal": "Abriendo...",
     "manageBilling": "Gestionar facturación",
     "signOut": "Cerrar sesión",
-    "resetEncryption": "¿Olvidaste tu frase de contraseña? Restablecer cifrado"
+    "resetEncryption": "¿Olvidaste tu frase de contraseña? Restablecer cifrado",
+    "aiKeyLabel": "IA",
+    "aiOwnKey": "Tu propia clave de API"
   },
   "data": {
     "intro": "TabMerger guarda todos los datos localmente en IndexedDB. La sincronización en la nube requiere una cuenta Pro.",
@@ -86,8 +90,10 @@
     "intro": "Todas las acciones de IA de abajo consumen la misma cuota mensual de IA (consulta la pestaña Cuenta). Desactiva las funciones que no uses para reservar cuota para las que sí.",
     "autoGroupLabel": "Agrupar automáticamente",
     "autoGroupDescription": "Agrupa las pestañas abiertas con IA",
-    "nameGroupLabel": "Nombrar grupo",
-    "nameGroupDescription": "Sugiere un nombre para un grupo con IA",
+    "nameGroupLabel": "Nombrar grupos y ventanas",
+    "nameGroupDescription": "Sugiere un nombre para un grupo o una ventana con IA",
+    "describeGroupLabel": "Describir grupos y ventanas",
+    "describeGroupDescription": "Escribe con IA una nota breve sobre las pestañas de un grupo o una ventana",
     "suggestSessionsLabel": "Sugerir sesiones",
     "suggestSessionsDescription": "Banner en segundo plano que sugiere cuándo guardar una sesión",
     "organizeLabel": "Organizar",
@@ -95,14 +101,84 @@
     "summariesLabel": "Resúmenes en la vista previa de pestañas",
     "summariesDescription": "Resumen de IA al pasar el cursor sobre una pestaña",
     "throttleLabel": "Limitar las sugerencias automáticas de IA a una al día",
-    "throttleDescription": "El banner de sugerencia de sesiones en segundo plano aparece como máximo una vez al día para proteger tu cuota mensual de IA. Las acciones de IA que activas manualmente (Agrupar automáticamente, Nombrar grupo, Organizar) nunca se limitan por esto."
+    "throttleDescription": "El banner de sugerencia de sesiones en segundo plano aparece como máximo una vez al día para proteger tu cuota mensual de IA. Las acciones de IA que activas manualmente (Agrupar automáticamente, Nombrar grupo, Organizar) nunca se limitan por esto.",
+    "buyCredits": "Comprar más créditos",
+    "buyCreditsLabel": "Comprar más créditos (pestaña nueva)",
+    "plan": {
+      "managed": "TabMerger se encarga de la configuración: te quedan {{remaining}} de {{cap}} créditos este mes",
+      "managedUnknown": "TabMerger se encarga de la configuración",
+      "byok": "Añadiste tu propia clave de API de {{provider}}",
+      "byokNoKey": "Tú añades tu propia clave de API: escríbela abajo para usar las funciones de IA"
+    },
+    "provider": {
+      "label": "Proveedor de IA",
+      "description": "Elige la empresa que emitió tu clave de API.",
+      "placeholder": "Elige un proveedor"
+    },
+    "key": {
+      "label": "Tu clave de API de {{provider}}",
+      "save": "Guardar clave",
+      "checking": "Comprobando…",
+      "replace": "Reemplazar",
+      "remove": "Quitar",
+      "saved": "Clave de API guardada",
+      "removed": "Clave de API quitada",
+      "invalidFormat": "Eso no parece una clave de API válida de {{provider}}.",
+      "verifyFailed": "No se pudo comprobar la clave. Inténtalo de nuevo.",
+      "testKey": "Usar clave de prueba",
+      "testKeyHint": "Solo en compilaciones de desarrollo: guarda una clave ficticia. Solo funciona mientras el servidor de desarrollo web se ejecuta con AI_MOCK=true.",
+      "note": "Se guarda solo en este dispositivo. Se envía al servidor de TabMerger con cada solicitud de IA y se pasa directamente al proveedor que la emitió; nunca se guarda en nuestros servidores.",
+      "getKey": "Crea una clave y fija un límite de gasto:",
+      "wrongProvider": "Esta clave parece ser de {{detected}}. Elige {{detected}} arriba o pega una clave de {{provider}}.",
+      "switching": "Tu clave guardada de {{saved}} se sigue usando hasta que guardes una clave de {{provider}}.",
+      "guideLink": "Cómo crear una clave",
+      "keysLink": "Claves de API de {{provider}}"
+    },
+    "model": {
+      "label": "Modelo de IA",
+      "managedDescription": "Los modelos más grandes dan mejores resultados y gastan más créditos. Las cifras son aproximadas.",
+      "byokDescription": "Los modelos más grandes dan mejores resultados y cuestan más en la factura de tu proveedor.",
+      "auto": "Automático",
+      "recommended": "Recomendado",
+      "autoDescription": "Usa el modelo más barato que hace bien cada tarea."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_one": "≈ {{formatted}} crédito",
+      "credits_many": "≈ {{formatted}} de créditos",
+      "credits_other": "≈ {{formatted}} créditos",
+      "perMonth_one": "≈ {{formatted}} organización al mes con tus créditos",
+      "perMonth_many": "≈ {{formatted}} de organizaciones al mes con tus créditos",
+      "perMonth_other": "≈ {{formatted}} organizaciones al mes con tus créditos",
+      "action": {
+        "nameGroup_one": "Nombrar un grupo de {{count}} pestaña",
+        "nameGroup_many": "Nombrar un grupo de {{count}} de pestañas",
+        "nameGroup_other": "Nombrar un grupo de {{count}} pestañas",
+        "tabSummary": "Resumir una pestaña",
+        "groupTabs_one": "Agrupar {{count}} pestaña",
+        "groupTabs_many": "Agrupar {{count}} de pestañas",
+        "groupTabs_other": "Agrupar {{count}} pestañas",
+        "suggestSessions": "Sugerir sesiones",
+        "organize_one": "Organizar {{count}} pestaña",
+        "organize_many": "Organizar {{count}} de pestañas",
+        "organize_other": "Organizar {{count}} pestañas",
+        "describeGroup_one": "Describir un grupo de {{count}} pestaña",
+        "describeGroup_many": "Describir un grupo de {{count}} de pestañas",
+        "describeGroup_other": "Describir un grupo de {{count}} pestañas"
+      }
+    },
+    "cost": {
+      "low": "Coste más bajo",
+      "medium": "Coste medio",
+      "high": "Coste más alto"
+    }
   },
   "dev": {
     "demoLabel": "Modo demo",
     "demoDescription": "Carga datos de ejemplo para el pipeline de demo de marketing",
     "demoButton": "Entrar",
-    "usageLabel": "Contador de uso de IA simulado",
-    "usageDescription": "Establece localmente el contador de créditos de IA (de {{cap}}) y lo sincroniza con tu cuenta real de Supabase, para poder probar de extremo a extremo la aplicación de cuotas en el servidor.",
+    "usageLabel": "Créditos usados este mes",
+    "usageDescription": "Establece los créditos de IA usados este mes (de {{cap}}) en tu cuenta a través del servidor de desarrollo web. Restablecer también elimina los paquetes de créditos de este mes.",
     "usageSet": "Establecer",
     "usageReset": "Restablecer",
     "sentryLabel": "Sentry",
@@ -112,9 +188,9 @@
   "toast": {
     "encryptionReset": "Cifrado restablecido: configura una frase de contraseña nueva",
     "encryptionResetFailed": "No se pudo restablecer el cifrado",
-    "signInForAiUsage": "Inicia sesión para sincronizar el uso de IA con el servidor",
-    "aiUsageSet": "Uso de IA del servidor establecido en {{count}}",
-    "aiUsageFailed": "No se pudo sincronizar el uso de IA con el servidor",
+    "signInForAiUsage": "Inicia sesión para establecer los créditos de IA usados",
+    "aiUsageSet": "Créditos de IA usados establecidos en {{credits}}",
+    "aiUsageFailed": "No se pudieron establecer los créditos de IA usados",
     "previewImagesDenied": "Firefox necesita permiso para obtener imágenes de páginas. Permítelo en el aviso del navegador para activar esto.",
     "saved": "Ajustes guardados",
     "cleared": "Todos los datos borrados",

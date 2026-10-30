@@ -59,5 +59,6 @@
   "showPassphrase": "पासफ़्रेज़ दिखाएं",
   "hidePassphrase": "पासफ़्रेज़ छिपाएं",
   "notifications": "सूचनाएं",
-  "closeToast": "सूचना बंद करें"
+  "closeToast": "सूचना बंद करें",
+  "openSettings": "सेटिंग्स खोलें"
 }

@@ -7,6 +7,7 @@ This file provides guidance to Claude Code when working in this repository.
 ```bash
 # Development (with hot reload)
 pnpm dev                    # Extension + web in parallel
+pnpm dev:all                # Docker + local Supabase, then web + extension + `stripe listen`, labelled output (scripts/dev-all.mjs)
 pnpm dev:extension          # Chrome extension only (WXT HMR)
 pnpm dev:extension:firefox  # Firefox extension
 pnpm dev:web                # Next.js web app at localhost:3000

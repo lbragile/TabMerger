@@ -6,5 +6,6 @@
   "opensInNewTab": "（新しいタブで開きます）",
   "close": "閉じる",
   "showPassphrase": "パスフレーズを表示",
-  "hidePassphrase": "パスフレーズを非表示"
+  "hidePassphrase": "パスフレーズを非表示",
+  "withYourOwnKey": "自分のAPIキーで利用"
 }

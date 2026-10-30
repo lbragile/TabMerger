@@ -6,9 +6,6 @@
     "pro": "Pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "AI 整理",
-  "aiOrganiseUpgrade": "升级到 Pro AI 即可使用 AI 整理",
-  "aiOrganiseFromExtension": "请从 TabMerger 扩展弹出窗口中开始",
   "tabGroups": "标签页分组",
   "savedSessions": "已保存的会话",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "本月 AI 额度",
-      "description": "Pro AI 每月用量",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "剩余 {left, number}，约可整理 {organizes, number} 次（每次 {tabs, number} 个标签页）"
     },
-    "loading": "加载中"
+    "loading": "加载中",
+    "aiOwnKey": {
+      "label": "AI 设置",
+      "value": "您自己",
+      "description": "您自己的 API 密钥：由 AI 服务商直接向您计费，无额度上限"
+    }
   },
   "subscription": {
     "currentPlan": "当前套餐",

@@ -7,6 +7,7 @@
   "packageManager": "pnpm@12.3.4",
   "scripts": {
     "dev": "pnpm --parallel --filter @tabmerger/extension --filter @tabmerger/web dev",
+    "dev:all": "node scripts/dev-all.mjs",
     "dev:extension": "pnpm --filter @tabmerger/extension dev",
     "dev:extension:firefox": "pnpm --filter @tabmerger/extension dev:firefox",
     "dev:web": "pnpm --filter @tabmerger/web dev",

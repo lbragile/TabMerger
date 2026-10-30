@@ -30,6 +30,8 @@
     "confirmDeleteDescription": "Grupları veya kayıtlı pencereleri silmeden önce sor",
     "openOnClickLabel": "Tıklayınca sekmeyi aç",
     "openOnClickDescription": "Tek tıklama sekmeyi tarayıcıda açar",
+    "showAiButtonLabel": "AI düğmesini göster",
+    "showAiButtonDescription": "Üst bilgideki ✨ düğmesi; sekmeleriniz ve gruplarınız için AI işlemleri sunar",
     "dedupLabel": "Birleştirirken yinelenenleri otomatik kaldır",
     "dedupDescription": "Pencereleri birleştirirken yinelenen sekmeleri kaldır",
     "previewImagesLabel": "Önizlemelerde sayfa görsellerini göster",
@@ -60,7 +62,9 @@
     "openingPortal": "Açılıyor...",
     "manageBilling": "Faturalandırmayı yönet",
     "signOut": "Oturumu kapat",
-    "resetEncryption": "Parolanızı mı unuttunuz? Şifrelemeyi sıfırlayın"
+    "resetEncryption": "Parolanızı mı unuttunuz? Şifrelemeyi sıfırlayın",
+    "aiKeyLabel": "AI",
+    "aiOwnKey": "Kendi API anahtarınız"
   },
   "data": {
     "intro": "TabMerger tüm verileri yerel olarak IndexedDB'de saklar. Bulut eşitleme bir Pro hesabı gerektirir.",
@@ -82,8 +86,10 @@
     "intro": "Aşağıdaki her AI işlemi aynı aylık AI kotasından düşer (Hesap sekmesine bakın). Kotayı kullandıklarınıza saklamak için kullanmadığınız özellikleri kapatın.",
     "autoGroupLabel": "Otomatik grupla",
     "autoGroupDescription": "Açık sekmeleri AI ile gruplayın",
-    "nameGroupLabel": "Grubu adlandır",
-    "nameGroupDescription": "AI ile bir grup için ad önerin",
+    "nameGroupLabel": "Grupları ve pencereleri adlandır",
+    "nameGroupDescription": "AI ile bir grup veya pencere için ad önerin",
+    "describeGroupLabel": "Grupları ve pencereleri açıkla",
+    "describeGroupDescription": "AI ile bir gruptaki veya penceredeki sekmeler hakkında kısa bir not yazın",
     "suggestSessionsLabel": "Oturum öner",
     "suggestSessionsDescription": "Ne zaman oturum kaydedileceğini öneren arka plan bildirimi",
     "organizeLabel": "Düzenle",
@@ -91,14 +97,78 @@
     "summariesLabel": "Sekme önizleme özetleri",
     "summariesDescription": "Sekme üzerine gelme önizlemesinde AI özeti",
     "throttleLabel": "Otomatik AI önerilerini günde bir kezle sınırla",
-    "throttleDescription": "Arka plandaki oturum önerme bildirimi, aylık AI kotanızı korumak için günde en fazla bir kez çıkar. Elle başlattığınız AI işlemleri (Otomatik grupla, Grubu adlandır, Düzenle) bundan asla etkilenmez."
+    "throttleDescription": "Arka plandaki oturum önerme bildirimi, aylık AI kotanızı korumak için günde en fazla bir kez çıkar. Elle başlattığınız AI işlemleri (Otomatik grupla, Grubu adlandır, Düzenle) bundan asla etkilenmez.",
+    "buyCredits": "Daha fazla kredi satın al",
+    "buyCreditsLabel": "Daha fazla kredi satın al (yeni sekme)",
+    "plan": {
+      "managed": "Kurulumu TabMerger yapar: bu ay {{cap}} krediden {{remaining}} kaldı",
+      "managedUnknown": "Kurulumu TabMerger yapar",
+      "byok": "Kendi {{provider}} API anahtarınızı eklediniz",
+      "byokNoKey": "Kendi API anahtarınızı siz eklersiniz: AI özelliklerini kullanmak için aşağıya girin"
+    },
+    "provider": {
+      "label": "AI sağlayıcısı",
+      "description": "API anahtarınızı veren şirketi seçin.",
+      "placeholder": "Bir sağlayıcı seçin"
+    },
+    "key": {
+      "label": "{{provider}} API anahtarınız",
+      "save": "Anahtarı kaydet",
+      "checking": "Kontrol ediliyor…",
+      "replace": "Değiştir",
+      "remove": "Kaldır",
+      "saved": "API anahtarı kaydedildi",
+      "removed": "API anahtarı kaldırıldı",
+      "invalidFormat": "Bu geçerli bir {{provider}} API anahtarına benzemiyor.",
+      "verifyFailed": "Anahtar kontrol edilemedi. Tekrar deneyin.",
+      "testKey": "Test anahtarı kullan",
+      "testKeyHint": "Yalnızca geliştirme sürümlerinde: sahte bir anahtar kaydeder. Yalnızca web geliştirme sunucusu AI_MOCK=true ile çalışırken işe yarar.",
+      "note": "Yalnızca bu cihazda saklanır. Her AI isteğiyle TabMerger sunucusuna gönderilir ve doğrudan anahtarı veren sağlayıcıya iletilir; sunucularımızda asla saklanmaz.",
+      "getKey": "Anahtar oluşturun ve harcama sınırı belirleyin:",
+      "wrongProvider": "Bu anahtar {{detected}} anahtarına benziyor. Yukarıdan {{detected}} seçin veya bir {{provider}} anahtarı yapıştırın.",
+      "switching": "Kayıtlı {{saved}} anahtarınız, bir {{provider}} anahtarı kaydedene kadar kullanılmaya devam eder.",
+      "guideLink": "Anahtar nasıl oluşturulur",
+      "keysLink": "{{provider}} API anahtarları"
+    },
+    "model": {
+      "label": "AI modeli",
+      "managedDescription": "Daha büyük modeller daha iyi sonuç verir ve daha fazla kredi kullanır. Değerler tahminidir.",
+      "byokDescription": "Daha büyük modeller daha iyi sonuç verir ve sağlayıcınızın faturasında daha pahalıya gelir.",
+      "auto": "Otomatik",
+      "recommended": "Önerilen",
+      "autoDescription": "Her işi iyi yapan en ucuz modeli kullanır."
+    },
+    "estimate": {
+      "item": "{{action}}: {{amount}}",
+      "credits_one": "≈ {{formatted}} kredi",
+      "credits_other": "≈ {{formatted}} kredi",
+      "perMonth_one": "Kredilerinizle ayda ≈ {{formatted}} düzenleme",
+      "perMonth_other": "Kredilerinizle ayda ≈ {{formatted}} düzenleme",
+      "action": {
+        "nameGroup_one": "{{count}} sekmelik grubu adlandırma",
+        "nameGroup_other": "{{count}} sekmelik grubu adlandırma",
+        "tabSummary": "Bir sekmeyi özetleme",
+        "groupTabs_one": "{{count}} sekmeyi gruplama",
+        "groupTabs_other": "{{count}} sekmeyi gruplama",
+        "suggestSessions": "Oturum önerme",
+        "organize_one": "{{count}} sekmeyi düzenleme",
+        "organize_other": "{{count}} sekmeyi düzenleme",
+        "describeGroup_one": "{{count}} sekmelik grubu açıklama",
+        "describeGroup_other": "{{count}} sekmelik grubu açıklama"
+      }
+    },
+    "cost": {
+      "low": "En düşük maliyet",
+      "medium": "Orta maliyet",
+      "high": "En yüksek maliyet"
+    }
   },
   "dev": {
     "demoLabel": "Demo Modu",
     "demoDescription": "Pazarlama demo hattı için örnek veri ekleyin",
     "demoButton": "Gir",
-    "usageLabel": "Taklit AI kullanım sayısı",
-    "usageDescription": "AI kredi sayacını ({{cap}} üzerinden) yerel olarak ayarlar ve gerçek Supabase hesabınızla eşitler; böylece sunucu tarafı kota uygulaması uçtan uca test edilebilir.",
+    "usageLabel": "Bu ay kullanılan krediler",
+    "usageDescription": "Bu ay kullanılan AI kredilerini ({{cap}} üzerinden) web geliştirme sunucusu aracılığıyla hesabınızda ayarlar. Sıfırlama bu ayın kredi paketlerini de kaldırır.",
     "usageSet": "Ayarla",
     "usageReset": "Sıfırla",
     "sentryLabel": "Sentry",
@@ -108,9 +178,9 @@
   "toast": {
     "encryptionReset": "Şifreleme sıfırlandı — yeni bir parola belirleyin",
     "encryptionResetFailed": "Şifreleme sıfırlanamadı",
-    "signInForAiUsage": "AI kullanımını sunucuyla eşitlemek için oturum açın",
-    "aiUsageSet": "Sunucu AI kullanımı {{count}} olarak ayarlandı",
-    "aiUsageFailed": "AI kullanımı sunucuyla eşitlenemedi",
+    "signInForAiUsage": "Kullanılan AI kredilerini ayarlamak için oturum açın",
+    "aiUsageSet": "Kullanılan AI kredileri {{credits}} olarak ayarlandı",
+    "aiUsageFailed": "Kullanılan AI kredileri ayarlanamadı",
     "previewImagesDenied": "Firefox'un sayfa görsellerini almak için izne ihtiyacı var. Bunu açmak için tarayıcının isteminde izin verin.",
     "saved": "Ayarlar kaydedildi",
     "cleared": "Tüm veriler temizlendi",

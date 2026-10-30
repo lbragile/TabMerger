@@ -25,17 +25,21 @@
     "dragDrop": "Sürükle-bırak",
     "shortcuts": "Klavye kısayolları",
     "everythingInFree": "Ücretsiz plandaki her şey",
-    "unlimited": "Sınırsız grup, sekme, URL kuralı ve oturum",
+    "unlimited": "Sınırsız grup, sekme, kural ve oturum",
     "cloudSync": "Cihazlar arasında bulut eşitleme",
     "sessionsSynced": "Cihazlar arasında eşitlenen oturumlar",
-    "autoBackups": "Gruplarınızın otomatik şifreli yedekleri, isteğe bağlı olarak bilgisayarınıza dosya kopyasıyla",
+    "autoBackups": "Otomatik şifreli yedekler",
     "prioritySupport": "Öncelikli destek",
     "everythingInPro": "Pro'daki her şey",
     "aiGrouping": "Sekmelerin yapay zekâ ile otomatik gruplanması",
     "aiNames": "Yapay zekâ ile grup adı önerileri",
+    "aiDescribe": "Yapay zekâ ile grup ve pencere açıklamaları",
     "smartSessions": "Akıllı oturum önerileri",
+    "aiOrganize": "Yapay zekâ ile çalışma alanı düzenleme",
     "tabPreview": "Yapay zekâ özetli sekme önizlemesi",
-    "aiCredits": "Ayda {count} yapay zekâ kredisi"
+    "aiCreditsMonthly": "Ayda {count, number} yapay zekâ kredisi",
+    "ownApiKey": "Kendi yapay zekâ sağlayıcınızı kullanın",
+    "chooseModel": "Yapay zekâ modelinizi seçin"
   },
   "current": "Mevcut",
   "installFree": "Ücretsiz yükle",
@@ -43,9 +47,13 @@
   "switchToMonthly": "Aylık faturalandırmaya geç",
   "downgradeTo": "{name} planına düşür",
   "upgradeTo": "{name} planına yükselt",
-  "switchFailed": "Geçiş başlatılamadı. Hesap sayfanızdaki Faturalandırmayı yönet seçeneğini deneyin.",
+  "getPlan": "{name} planını al",
+  "switchFailed": "Geçiş başlatılamadı. Lütfen tekrar deneyin; sorun sürerse {email} adresine yazın.",
   "alreadySubscribed": "Zaten bir planınız var. Değiştirebilmeniz için faturalandırma açılıyor.",
-  "portalFailed": "Faturalandırma açılamadı. Planınızı değiştirmek için hesap sayfanızdaki Faturalandırmayı yönet seçeneğini kullanın.",
+  "alreadySubscribedShown": "Zaten bir planınız var. Bu sayfa artık onu gösteriyor, böylece burada değiştirebilirsiniz.",
+  "checkoutFailed": "Ödeme başlatılamadı. Lütfen birazdan tekrar deneyin.",
+  "portalFailed": "Faturalandırma açılamadı. Lütfen tekrar deneyin veya planınızı değiştirmek için {email} adresine yazın.",
+  "rateLimited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin.",
   "checkoutCanceled": "Ödeme iptal edildi. Sizden ücret alınmadı.",
   "cancelAnytime": "Hesabınızdan istediğiniz zaman iptal edin — taahhüt yok, soru sorulmaz.",
   "keepAccess": "Erişiminiz fatura döneminizin sonuna kadar devam eder.",
@@ -55,5 +63,47 @@
     "title": "Basit, şeffaf fiyatlandırma",
     "lead": "Ücretsiz başlayın. Daha fazlasına hazır olduğunuzda yükseltin.",
     "moreQuestions": "Başka sorularınız mı var? <link>SSS</link> sayfasına göz atın."
+  },
+  "aiOptions": {
+    "legend": "Kurulumu kim yapar?",
+    "managed": "Biz",
+    "byok": "Siz",
+    "managedHint": "Krediler yapay zekâ kullanımını ölçer: büyük işler ve güçlü modeller daha fazla harcar.",
+    "byokHint": "Bir sağlayıcıdan API anahtarı eklersiniz. Sağlayıcı kullanımınıza göre ücreti doğrudan sizden alır.",
+    "switchToByok": "Kurulumu kendiniz yapın",
+    "switchToManaged": "Kurulumu TabMerger’a bırakın"
+  },
+  "planChange": {
+    "title": "Plan değişikliğini onaylayın",
+    "confirmEndOfPeriod": "Planınız {date} tarihinde {plan} olarak değişir. O zamana kadar mevcut planınızı kullanırsınız. Bu dönemin kalanı için iade yapılmaz.",
+    "confirmEndOfPeriodNoDate": "Planınız bu fatura döneminin sonunda {plan} olarak değişir. O zamana kadar mevcut planınızı kullanırsınız. Bu dönemin kalanı için iade yapılmaz.",
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "scheduled": "Tamamlandı. Planınız {date} tarihinde {plan} olarak değişir.",
+    "scheduledNoDetails": "Tamamlandı. Planınız bu fatura döneminin sonunda değişir.",
+    "aiDisabled": "Bu Pro AI seçeneği henüz kullanılamıyor.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Kurulumu TabMerger’ın yaptığı Pro AI",
+      "proAiByok": "Kurulumu sizin yaptığınız Pro AI"
+    },
+    "billedMonthly": "{plan}, aylık faturalandırma",
+    "billedYearly": "{plan}, yıllık faturalandırma",
+    "errors": {
+      "no_billing_account": "Bu plan bir fatura hesabına bağlı değil, bu yüzden burada değiştirilemez. {email} adresine yazın, sizin için değiştirelim.",
+      "no_paid_plan": "Değiştirebileceğiniz ücretli bir planınız yok. Bunun yerine abone olmak için bir plan seçin.",
+      "already_on_price": "Zaten bu plandasınız.",
+      "already_scheduled": "Bu fatura döneminin sonu için zaten bir plan değişikliği planlandı.",
+      "cancel_scheduled": "Planınız bu fatura döneminin sonunda sona erecek şekilde ayarlı. Değiştirmeden önce Faturalandırmayı yönet'ten yenileyin.",
+      "pay_or_resume": "Planınız bir ödeme bekliyor veya duraklatıldı, bu yüzden henüz değiştirilemez. {email} adresine yazın, çözmenize yardımcı olalım.",
+      "switch_needs_support": "Bu plan değişikliği şu anda yapılamıyor. {email} adresine yazın, değişikliği sizin için yapalım.",
+      "price_unavailable": "Şu anda bu plana geçilemiyor. Lütfen daha sonra tekrar deneyin veya bizimle iletişime geçin.",
+      "switch_failed": "Stripe değişikliği başlatamadı. Lütfen tekrar deneyin, hesap sayfanızdaki Faturalandırmayı yönet seçeneğini kullanın veya {email} adresine yazın.",
+      "rate_limited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
+    }
+  },
+  "scheduledChange": {
+    "starts": "{date} tarihinde başlar",
+    "note": "{date} tarihi için planlanmış bir değişikliğiniz var. <link>Hesap sayfanızdan yönetin.</link>"
   }
 }

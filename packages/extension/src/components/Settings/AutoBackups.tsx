@@ -26,6 +26,7 @@ import { cn, getGroupTabCount, relativeTimeStr } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { toast } from '@/lib/toast';
 import type { Session } from '@/lib/types';
+import { SETTINGS_SELECT_WIDTH } from '@/components/Settings/settingsControls';
 
 type BackupSettingsPatch = Partial<Pick<AppSettings, 'autoBackupEnabled' | 'autoBackupIntervalMinutes'>> & BackupFilePatch;
 
@@ -288,7 +289,7 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
               disabled={!enabled || settingsLoading}
               onValueChange={(v) => void save({ autoBackupIntervalMinutes: normalizeAutoBackupInterval(Number(v)) })}
             >
-              <SelectTrigger className="w-32 h-7 text-xs shrink-0" aria-label={t('backups.intervalAria')}>
+              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('backups.intervalAria')}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

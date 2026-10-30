@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
+import { AI_MAX_GROUP_NAME_LENGTH, AI_MAX_TITLE_LENGTH, AI_MAX_URL_LENGTH } from '@tabmerger/shared'
+import { cleanUntrustedText, cleanUrl, sanitizePromptText } from '@/lib/ai-prompt-safety'
 
 /**
  * Request-body validation shared by every `/api/ai/*` route.
@@ -7,7 +8,12 @@ import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
  * Each `parse*Body` helper takes the already-JSON-parsed body (see {@link readJsonBody})
  * and returns either sanitized data or the 400 error message for that route. The
  * sanitized data holds only the fields the prompts use: unknown keys are dropped,
- * over-long text is truncated and control characters are flattened to spaces.
+ * over-long text is truncated, and every string that reaches a prompt is cleaned by
+ * `lib/ai-prompt-safety.ts` (invisible characters removed, control characters
+ * flattened, `<`/`>` neutralized, URLs reduced and stripped of secret parameters).
+ *
+ * The optional `model` field is read separately with {@link modelChoiceOf}; the route
+ * resolves it against the shared model allowlist after the plan check.
  *
  * Text is truncated rather than rejected, because titles and URLs come from web
  * pages and no client-side limit applies to them. Requests are rejected only for
@@ -15,24 +21,18 @@ import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
  */
 
 // --- Limits -----------------------------------------------------------------
-// These are candidates for `@tabmerger/shared` constants so the extension can
-// show the same ceilings before sending a request.
+// The text lengths live in `@tabmerger/shared`, because the extension cuts titles,
+// URLs and group names to the same lengths before sending. Re-exported here for
+// existing importers.
 
-/** Tab titles longer than this are truncated. The prompts only need the gist of a title. */
-export const AI_MAX_TITLE_LENGTH = 300
-
-/** URLs longer than this are truncated. Host, path and the leading query carry the topic. */
-export const AI_MAX_URL_LENGTH = 500
-
-/** Group names longer than this are truncated. */
-export const AI_MAX_GROUP_NAME_LENGTH = 100
+export { AI_MAX_TITLE_LENGTH, AI_MAX_URL_LENGTH, AI_MAX_GROUP_NAME_LENGTH }
 
 /** Longest accepted group id. Ids are nanoid(10) locally and UUIDs (36) for stored rows. */
 export const AI_MAX_ID_LENGTH = 64
 
 /**
- * Most tabs accepted in one list (a group-tabs or name-group request, or one group
- * of a suggest-sessions or organize request).
+ * Most tabs accepted in one list (a group-tabs, name-group or describe-group request, or
+ * one group of a suggest-sessions or organize request).
  */
 export const AI_MAX_TABS_PER_LIST = 1000
 
@@ -45,13 +45,7 @@ export const AI_MAX_GROUPS = 500
  */
 export const AI_MAX_TOTAL_TABS = 3000
 
-/** Longest accepted organize hook token. Tokens are `org-<uuid>-<32 hex>`, 73 characters. */
-export const AI_MAX_HOOK_TOKEN_LENGTH = 200
-
-/** Most actions accepted in an edited organize proposal. */
-export const AI_MAX_ACTIONS = 500
-
-/** Longest group name a rename action may set. Same limit as the workflow's own schema. */
+/** Longest group name an organize rename (or name-group answer) may set. */
 export const AI_MAX_RENAME_LENGTH = 30
 
 /** Highest count the dev-only usage route accepts. */
@@ -59,35 +53,21 @@ export const AI_MAX_DEV_USAGE_COUNT = 1_000_000
 
 // --- Text sanitizing --------------------------------------------------------
 
-// `\p{Cc}` is the C0 controls (incl. tab, CR, LF), DEL and the C1 controls; the
-// Unicode line and paragraph separators are added because they also break lines.
-const CONTROL_CHARS = /[\p{Cc}\u2028\u2029]+/gu
+// Cleaning lives in `lib/ai-prompt-safety.ts`; re-exported here for existing importers.
+export { sanitizePromptText }
 
-/**
- * Makes request text safe to place on a single prompt line: runs of control
- * characters (including line breaks) become one space, the result is trimmed and
- * cut to `max` UTF-16 units without leaving half of a surrogate pair at the end.
- */
-export function sanitizePromptText(value: string, max: number): string {
-  // Pre-cut so a very long string is not scanned in full. Trimming and collapsing
-  // can only shorten it, so a generous window is enough to still fill `max`.
-  let text = value.slice(0, max * 4).replace(CONTROL_CHARS, ' ').trim()
-  if (text.length > max) {
-    text = text.slice(0, max)
-    const last = text.charCodeAt(text.length - 1)
-    if (last >= 0xd800 && last <= 0xdbff) text = text.slice(0, -1)
-  }
-  return text
-}
+/** An untrusted title or name, cleaned for a prompt (see `cleanUntrustedText`). */
+const promptText = (max: number) => z.string().transform((s) => cleanUntrustedText(s, max))
 
-const promptText = (max: number) => z.string().transform((s) => sanitizePromptText(s, max))
+/** An untrusted URL, reduced and cleaned for a prompt (see `cleanUrl`). */
+const promptUrl = (max: number) => z.string().transform((s) => cleanUrl(s, max))
 
 // --- Schemas ----------------------------------------------------------------
 
 /** The two tab fields the prompts read. `z.object` drops every other key. */
 const promptTabSchema = z.object({
   title: promptText(AI_MAX_TITLE_LENGTH),
-  url: promptText(AI_MAX_URL_LENGTH),
+  url: promptUrl(AI_MAX_URL_LENGTH),
 })
 
 /** A tab whose id the caller needs back (group-tabs returns tab ids). */
@@ -100,6 +80,12 @@ const groupTabsBodySchema = z.object({
 })
 
 const nameGroupBodySchema = z.object({ tabs: tabListSchema.min(1) })
+
+// The group name is cleaned like every other group name; an unnamed group sends `''`.
+const describeGroupBodySchema = z.object({
+  groupName: promptText(AI_MAX_GROUP_NAME_LENGTH),
+  tabs: tabListSchema.min(1),
+})
 
 // The extension sends `{ url, title }`; `{ tab: { id, title, url } }` is the
 // route's original shape and stays accepted.
@@ -122,8 +108,8 @@ const groupTabListSchema = z
       if (!isRecord(tab) || typeof tab.url !== 'string') return []
       return [
         {
-          title: typeof tab.title === 'string' ? sanitizePromptText(tab.title, AI_MAX_TITLE_LENGTH) : '',
-          url: sanitizePromptText(tab.url, AI_MAX_URL_LENGTH),
+          title: typeof tab.title === 'string' ? cleanUntrustedText(tab.title, AI_MAX_TITLE_LENGTH) : '',
+          url: cleanUrl(tab.url, AI_MAX_URL_LENGTH),
         },
       ]
     })
@@ -140,31 +126,11 @@ const suggestSessionsBodySchema = z.object({
 })
 
 const organizeGroupSchema = groupSchema.extend({
-  // A non-boolean flag is ignored, not an error: the workflow then infers it from the index.
+  // A non-boolean flag is ignored, not an error: it is then inferred from the index.
   permanent: z.boolean().optional().catch(undefined),
 })
 
 const organizeGroupsSchema = z.array(organizeGroupSchema).min(1).max(AI_MAX_GROUPS)
-
-const groupIdSchema = z.string().min(1).max(AI_MAX_ID_LENGTH)
-
-/** Mirrors `ReorganizeAction`; the `satisfies` below fails the type-check if the two drift. */
-const reorganizeActionSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('merge'), sourceGroupId: groupIdSchema, targetGroupId: groupIdSchema }),
-  z.object({
-    type: z.literal('rename'),
-    groupId: groupIdSchema,
-    newName: z.string().max(AI_MAX_RENAME_LENGTH),
-  }),
-  z.object({ type: z.literal('delete'), groupId: groupIdSchema }),
-  z.object({ type: z.literal('reorder'), groupIds: z.array(groupIdSchema).max(AI_MAX_GROUPS) }),
-]) satisfies z.ZodType<ReorganizeAction>
-
-const approveBodySchema = z.object({
-  token: z.string().min(1).max(AI_MAX_HOOK_TOKEN_LENGTH),
-  approved: z.boolean(),
-  actions: z.array(reorganizeActionSchema).max(AI_MAX_ACTIONS).optional(),
-})
 
 const devUsageBodySchema = z.object({
   count: z.number().int().min(0).max(AI_MAX_DEV_USAGE_COUNT),
@@ -173,10 +139,10 @@ const devUsageBodySchema = z.object({
 // --- Types ------------------------------------------------------------------
 
 export type PromptTab = z.infer<typeof promptTabSchema>
+export type DescribeGroupInput = z.infer<typeof describeGroupBodySchema>
 export type IdentifiedTab = z.infer<typeof identifiedTabSchema>
 export type PromptGroup = z.infer<typeof groupSchema>
 export type OrganizeGroup = PromptGroup & { permanent: boolean }
-export type ApproveBody = z.infer<typeof approveBodySchema>
 
 /** Sanitized data, or the message for the route's `{ error }` 400 response. */
 export type ParseResult<T> = { ok: true; data: T } | { ok: false; error: string }
@@ -201,6 +167,104 @@ export async function readJsonBody(request: Request): Promise<unknown> {
   } catch {
     return undefined
   }
+}
+
+// --- Body size ----------------------------------------------------------------
+// Caps on the raw request body, checked before it is parsed (Vercel alone would accept 4.5 MB).
+// Each is about the route's ceiling count times the most one entry carries after the server's
+// truncation (title 300 + URL 500 + JSON punctuation, about 850 bytes), rounded up. Titles and
+// URLs are sent untruncated, so a very long one counts here in full.
+
+/** One tab (tab-summary). */
+export const AI_MAX_BODY_BYTES_ONE_TAB = 64 * 1024
+/** One tab list of up to {@link AI_MAX_TABS_PER_LIST} tabs (group-tabs, name-group, describe-group). */
+export const AI_MAX_BODY_BYTES_TAB_LIST = 1024 * 1024
+/** Groups holding up to {@link AI_MAX_TOTAL_TABS} tabs (suggest-sessions, organize). */
+export const AI_MAX_BODY_BYTES_GROUPS = 2 * 1024 * 1024
+/** A body with no tab data (`byok/verify`: an optional model; `dev-usage`: a count). */
+export const AI_MAX_BODY_BYTES_SMALL = 4 * 1024
+
+/**
+ * Longest a request body may take to arrive. A real body (at most a few MB from the extension)
+ * arrives in well under a second; a client sending it slowly would otherwise hold the function
+ * open until `maxDuration`.
+ */
+export const AI_BODY_READ_TIMEOUT_MS = 10_000
+
+/**
+ * A body read with a size cap and a time limit: parsed like {@link readJsonBody}, or refused
+ * because it was over the cap (`too_large`) or took too long to arrive (`timeout`).
+ */
+export type BoundedJsonBody = { ok: true; body: unknown } | { ok: false; reason: 'too_large' | 'timeout' }
+
+/**
+ * Reads the body as JSON, refusing it once it is over `maxBytes`: at once when `content-length`
+ * says so, otherwise while reading, so a missing or wrong `content-length` never makes the server
+ * buffer more than `maxBytes` (plus one chunk). A body still arriving after `timeoutMs` is
+ * refused too, and its reader cancelled. Within both limits the body is parsed like
+ * {@link readJsonBody}: `undefined` for an empty, unreadable or malformed body.
+ */
+export async function readJsonBodyWithin(
+  request: Request,
+  maxBytes: number,
+  timeoutMs: number = AI_BODY_READ_TIMEOUT_MS
+): Promise<BoundedJsonBody> {
+  const declared = request.headers.get('content-length')
+  if (declared !== null && /^\d+$/.test(declared.trim()) && Number(declared) > maxBytes) {
+    return { ok: false, reason: 'too_large' }
+  }
+  if (!request.body) return { ok: true, body: undefined }
+
+  const reader = request.body.getReader()
+  const chunks: Uint8Array[] = []
+  let total = 0
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const timedOut = new Promise<'timeout'>((resolve) => {
+    timer = setTimeout(() => resolve('timeout'), timeoutMs)
+  })
+  try {
+    for (;;) {
+      const next = await Promise.race([reader.read(), timedOut])
+      if (next === 'timeout') {
+        // Not awaited: a stalled stream may not settle its cancel either.
+        reader.cancel().catch(() => {})
+        return { ok: false, reason: 'timeout' }
+      }
+      const { done, value } = next
+      if (done) break
+      total += value.byteLength
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => {})
+        return { ok: false, reason: 'too_large' }
+      }
+      chunks.push(value)
+    }
+  } catch {
+    return { ok: true, body: undefined }
+  } finally {
+    clearTimeout(timer)
+  }
+
+  const bytes = new Uint8Array(total)
+  let offset = 0
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset)
+    offset += chunk.byteLength
+  }
+  try {
+    return { ok: true, body: JSON.parse(new TextDecoder().decode(bytes)) }
+  } catch {
+    return { ok: true, body: undefined }
+  }
+}
+
+/**
+ * The raw `model` field of a request body (`undefined` when absent). Every AI route accepts it;
+ * the route resolves it with `resolveAiModel` from `@tabmerger/shared`, which maps a missing
+ * value or `'auto'` to the feature's default and anything unknown to `null` (a 400).
+ */
+export function modelChoiceOf(body: unknown): unknown {
+  return isRecord(body) ? body.model : undefined
 }
 
 /** The `key` property when `body` is a JSON object holding an array there. */
@@ -237,6 +301,19 @@ export function parseNameGroupBody(body: unknown): ParseResult<PromptTab[]> {
   if ((arrayAt(body, 'tabs')?.length ?? 0) > AI_MAX_TABS_PER_LIST) return fail('too many tabs')
   const parsed = nameGroupBodySchema.safeParse(body)
   return parsed.success ? ok(parsed.data.tabs) : fail('tabs array required')
+}
+
+/**
+ * describe-group: `{ groupName, tabs: { title, url }[] }`, both decrypted by the client (the
+ * group's stored row is ciphertext). Tabs are read strictly, like name-group: each needs a
+ * string `title` and `url`.
+ */
+export function parseDescribeGroupBody(body: unknown): ParseResult<DescribeGroupInput> {
+  if ((arrayAt(body, 'tabs')?.length ?? 0) > AI_MAX_TABS_PER_LIST) return fail('too many tabs')
+  const parsed = describeGroupBodySchema.safeParse(body)
+  return parsed.success
+    ? ok({ groupName: parsed.data.groupName, tabs: parsed.data.tabs })
+    : fail('groupName string and tabs array required')
 }
 
 /** tab-summary: `{ url, title }`, or `{ tab: { id, title, url } }`. */
@@ -277,7 +354,7 @@ export function parseSuggestSessionsBody(body: unknown): ParseResult<PromptGroup
 /**
  * organize: an optional `{ groups: { id, name, permanent?, tabs }[] }`.
  *
- * `data` is `null`, which sends the workflow down its stored-rows path, only when
+ * `data` is `null`, which makes the route read the stored rows, only when
  * no groups were sent: the body is not a JSON object, or `groups` is missing, `null`
  * or an empty array. A payload that is present is never downgraded to `null`,
  * because for an end-to-end encrypted account the stored rows are ciphertext and the
@@ -287,8 +364,8 @@ export function parseSuggestSessionsBody(body: unknown): ParseResult<PromptGroup
  * empty or over-long id, or counts above a ceiling.
  *
  * A group that was sent with tabs and has none left after the tolerant read is left
- * out (see `withoutEmptiedGroups`): the workflow's instructions allow removing empty
- * groups, and an approved removal acts on the stored row. If that leaves no groups
+ * out (see `withoutEmptiedGroups`): the model's instructions allow removing empty
+ * groups, and the extension would apply that removal to the real group. If that leaves no groups
  * at all the request is rejected, again never downgraded to `null`. A left-out group
  * takes no slot in a later reorder, so positions after it can be one lower than the
  * client's index; the extension never sends such a group.
@@ -318,12 +395,6 @@ export function parseOrganizeBody(body: unknown): ParseResult<OrganizeGroup[] | 
 
   const usable = withoutEmptiedGroups(groups, resolved)
   return usable.length > 0 ? ok(usable) : fail('no readable tabs in groups')
-}
-
-/** organize/approve: `{ token, approved, actions? }`. */
-export function parseApproveBody(body: unknown): ParseResult<ApproveBody> {
-  const parsed = approveBodySchema.safeParse(body)
-  return parsed.success ? ok(parsed.data) : fail('token and approved are required')
 }
 
 /** dev-usage: `{ count }`. */

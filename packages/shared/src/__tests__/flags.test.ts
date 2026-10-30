@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isAiEnabled } from '../utils/flags';
+import { aiAvailability, isAiByokEnabled, isAiEnabled } from '../utils/flags';
 
 describe('isAiEnabled', () => {
   it('returns true only for the exact string "true"', () => {
@@ -32,5 +32,28 @@ describe('isAiEnabled', () => {
 
   it('returns false for " true" with leading whitespace', () => {
     expect(isAiEnabled(' true')).toBe(false);
+  });
+});
+
+describe('isAiByokEnabled', () => {
+  it('is on only for the exact string "true"', () => {
+    expect(isAiByokEnabled('true')).toBe(true);
+    expect(isAiByokEnabled('TRUE')).toBe(false);
+    expect(isAiByokEnabled('1')).toBe(false);
+    expect(isAiByokEnabled(undefined)).toBe(false);
+  });
+});
+
+describe('aiAvailability', () => {
+  it('keeps both options off by default', () => {
+    expect(aiAvailability(undefined, undefined)).toEqual({ managed: false, byok: false, any: false });
+  });
+
+  it('can launch the own-key option alone', () => {
+    expect(aiAvailability(undefined, 'true')).toEqual({ managed: false, byok: true, any: true });
+  });
+
+  it('turns on the own-key option with managed AI', () => {
+    expect(aiAvailability('true', undefined)).toEqual({ managed: true, byok: true, any: true });
   });
 });

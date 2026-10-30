@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Organizacja wspierana przez AI",
-    "description": "Pozwól Claude przeanalizować Twoje karty i podsunąć trafne sugestie, abyś mógł skupić się na myśleniu, a nie segregowaniu.",
+    "description": "AI czyta tytuły i adresy URL Twoich kart i podpowiada, jak je pogrupować, nazwać i uporządkować, abyś mógł skupić się na myśleniu, a nie segregowaniu.",
     "autoGrouping": {
       "title": "Automatyczne grupowanie",
       "description": "Otwórz bałagan kart i kliknij jeden przycisk. AI pogrupuje je logicznie według tematu, domeny i celu."
@@ -71,13 +71,21 @@
       "title": "Inteligentne nazwy grup",
       "description": "AI proponuje zwięzłe, opisowe nazwy grup. Zaakceptuj jednym kliknięciem lub wpisz własną."
     },
+    "describe": {
+      "title": "Opisz grupę",
+      "description": "AI pisze krótką notatkę o tym, czego dotyczą karty w grupie lub oknie, żeby łatwo było przypomnieć sobie, po co zostały zapisane. Edytuj ją jak każdą inną notatkę."
+    },
     "summaries": {
       "title": "Podsumowania kart",
       "description": "Najedź na dowolną kartę, aby zobaczyć jednozdaniowe podsumowanie AI tego, o czym jest strona — bez jej otwierania."
     },
     "sessionSuggestions": {
       "title": "Sugestie sesji",
-      "description": "AI analizuje Twoje nawyki przeglądania i podpowiada, jak układać sesje, by pracować jak najwydajniej."
+      "description": "AI przegląda Twoje zapisane grupy i proponuje połączenie tych, które się pokrywają, lub zarchiwizowanie tych, których dawno nie używasz. Połącz lub zarchiwizuj jednym kliknięciem."
+    },
+    "organize": {
+      "title": "Uporządkuj obszar roboczy",
+      "description": "AI przegląda wszystkie Twoje grupy naraz i proponuje połączenia, zmiany nazw, archiwizację i nową kolejność. Odznacz zmiany, których nie chcesz, a resztę zastosuj w jednym kroku, który możesz cofnąć."
     }
   }
 }

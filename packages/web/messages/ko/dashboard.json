@@ -6,9 +6,6 @@
     "pro": "pro",
     "pro_ai": "Pro AI"
   },
-  "aiOrganise": "AI 정리",
-  "aiOrganiseUpgrade": "AI 정리를 사용하려면 Pro AI로 업그레이드하세요",
-  "aiOrganiseFromExtension": "TabMerger 확장 프로그램 팝업에서 시작하세요",
   "tabGroups": "탭 그룹",
   "savedSessions": "저장된 세션",
   "stats": {
@@ -35,10 +32,15 @@
     },
     "aiCredits": {
       "label": "이번 달 AI 크레딧",
-      "description": "Pro AI 월간 사용량",
-      "value": "{used}/{limit}"
+      "value": "{used, number}/{limit, number}",
+      "left": "{left, number} 남음, 탭 {tabs, number}개 정리 약 {organizes, number}번"
     },
-    "loading": "불러오는 중"
+    "loading": "불러오는 중",
+    "aiOwnKey": {
+      "label": "AI 설정",
+      "value": "직접",
+      "description": "내 API 키: AI 제공업체가 직접 청구하며 크레딧 한도 없음"
+    }
   },
   "subscription": {
     "currentPlan": "현재 요금제",

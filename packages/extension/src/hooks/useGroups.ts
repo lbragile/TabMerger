@@ -7,9 +7,13 @@ import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { getGroupsState, saveGroupsState, updateGroupsState } from '@/lib/localDb';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { resolveIncognito } from '@/lib/incognito';
-import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
+import { deleteRulesForGroupIds, retargetRulesToGroup } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
+import { type AiApplyResult, type AiGroupSuggestion, applyAiSuggestionsToState } from '@/lib/aiAutoGroup';
+
+/** What `useApplyAIGroups` reports back: `AiApplyResult` without the state. */
+export type AiApplyCounts = Omit<AiApplyResult, 'nextAvailable'>;
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { asNewGroup } from '@/lib/syncDirty';
 import { carryHistoryCursor, recordStep } from '@/lib/undoHistory';
@@ -1249,6 +1253,62 @@ export function useArchiveGroups() {
   });
 }
 
+/**
+ * Merges saved groups, addressed by id, into the first of them as ONE write and one undo step
+ * (the AI suggestion's "Merge"). The first group keeps its name, color and windows and gains the
+ * others' windows after its own (starred windows stay first); the others are deleted, and their
+ * URL rules now point at it. Permanent, archived and missing groups are skipped; with fewer than
+ * two left nothing is written. A view on a merged-away group moves to the merged group.
+ */
+export function useMergeGroups() {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (groupIds: string[]) => {
+      const prevState = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const viewedId = prevState?.available[useUIStore.getState().activeGroupIndex]?.id;
+      let targetId = '';
+      let mergedIds: string[] = [];
+      return mutate((prev) => {
+        const groups = [...new Set(groupIds)]
+          .map((id) => prev.available.find((g) => g.id === id))
+          .filter((g): g is Group => !!g && !g.permanent && !g.archived);
+        if (groups.length < 2) return null;
+
+        const [target, ...sources] = groups;
+        const sourceIds = new Set(sources.map((g) => g.id));
+        const merged: Group = {
+          ...target,
+          windows: sortWindowsByStarred([...target.windows, ...sources.flatMap((g) => g.windows)]),
+          updatedAt: Date.now(),
+          pendingSync: true
+        };
+        merged.info = getGroupInfo(merged);
+        targetId = target.id;
+        mergedIds = [...sourceIds];
+
+        const available = prev.available.filter((g) => !sourceIds.has(g.id)).map((g) => (g.id === target.id ? merged : g));
+        const activeId = sourceIds.has(prev.active.id) ? target.id : prev.active.id;
+        const activeIndex = Math.max(available.findIndex((g) => g.id === activeId), 0);
+        return { active: { id: available[activeIndex]?.id ?? '', index: activeIndex }, available };
+      }, false, { align: false }).then((next) => {
+        if (mergedIds.length === 0) return next;
+        trackEvent('groups_merged', { count: mergedIds.length + 1 });
+        // Fire-and-forget: hard-delete from Supabase so sync doesn't resurrect them (as useDeleteGroup)
+        deleteRemoteGroups(mergedIds).catch(() => {});
+        retargetRulesToGroup(mergedIds, targetId).catch(() => {});
+        // Indexes shift as the merged groups leave: keep the same group in view, or the merged
+        // group when the viewed one was merged into it.
+        const wanted = viewedId && mergedIds.includes(viewedId) ? targetId : viewedId;
+        const index = next.available.findIndex((g) => g.id === wanted);
+        if (index >= 0 && index !== useUIStore.getState().activeGroupIndex) useUIStore.getState().setActiveGroupIndex(index);
+        return next;
+      });
+    }
+  });
+}
+
 export function useRestoreGroup() {
   const mutate = useGroupsMutation();
 
@@ -1349,58 +1409,17 @@ export function useClearTabReminder() {
 }
 
 /**
- * Pure transform shared by `useApplyAIGroups`'s free-limit precheck (run against the cached
- * state, no side effects) and its actual `mutate()` transform (run against fresh IDB state)
- * — kept as one function so the two never drift apart.
- */
-function applyAiSuggestionsToState(
-  prev: GroupsState,
-  suggestions: { name: string; color: string; tabIds: number[] }[]
-): { nextAvailable: Group[]; appliedGroups: number; appliedTabs: number } {
-  const available = [...prev.available];
-  const nowOpen = { ...available[0] };
-  let windows = nowOpen.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
-  const newGroups: Group[] = [];
-  let appliedGroups = 0;
-  let appliedTabs = 0;
-
-  for (const suggestion of suggestions) {
-    const idSet = new Set(suggestion.tabIds);
-    const movedTabs: Tab[] = [];
-    windows = windows.map((w) => {
-      const [keep, taken] = [w.tabs.filter((t) => !idSet.has(t.id)), w.tabs.filter((t) => idSet.has(t.id))];
-      movedTabs.push(...taken.map((t) => copyLiveTab(t)));
-      return { ...w, tabs: keep };
-    });
-    if (movedTabs.length === 0) continue;
-
-    const group = createGroup(nanoid(10), suggestion.name, suggestion.color);
-    group.windows = [createWindow(movedTabs)];
-    group.info = getGroupInfo(group);
-    newGroups.push(group);
-    appliedGroups++;
-    appliedTabs += movedTabs.length;
-  }
-
-  // Drop emptied windows, but never let Now Open end up with zero windows
-  const finalWindows = windows.filter((w) => w.tabs.length > 0);
-  nowOpen.windows = finalWindows.length > 0 ? finalWindows : windows.slice(0, 1);
-  available[0] = nowOpen;
-
-  return { nextAvailable: [...available, ...newGroups], appliedGroups, appliedTabs };
-}
-
-/**
- * Applies AI auto-group suggestions: for each `{ name, color, tabIds }`, creates a new
- * saved group containing the matching live tabs (matched by real Chrome tab id, since
- * Now Open's tabs — unlike saved-tab copies — carry real ids, not the `id:0` sentinel)
- * and removes them from the Now Open snapshot. The browser tabs themselves are left open —
- * `useCurrentTabs` will re-sync them into Now Open on the next tick, same as any other
- * Now Open → saved move (see `useMoveTab`).
+ * Applies AI auto-group suggestions (see `applyAiSuggestionsToState`, lib/aiAutoGroup.ts): each
+ * suggestion's live Now Open tabs (matched by real Chrome tab id, since Now Open's tabs, unlike
+ * saved-tab copies, carry real ids, not the `id:0` sentinel) leave the Now Open snapshot and go into
+ * the saved group with that name, or a new group when there is none. The browser tabs themselves
+ * are left open: `useCurrentTabs` re-syncs them into Now Open on the next tick, same as any other
+ * Now Open -> saved move (see `useMoveTab`). The whole apply is one write, so one undo step.
  *
- * `caps` (default `{}` = ungated) is the Free-tier backstop — see `assertWithinFreeLimits`.
- * `Header.tsx`'s AI-group flow already pre-clamps suggestions to the remaining group slots
- * before calling this, so the backstop here mainly guards the tab count (which isn't
+ * `caps` (default `{}` = ungated) is the Free-tier backstop: see `assertWithinFreeLimits`. Only NEW
+ * groups count against `maxGroups`; a suggestion that goes into an existing group uses no slot.
+ * `AiMenu`'s Auto-group flow already pre-clamps suggestions to the remaining group slots
+ * (`clampAiSuggestionsToSlots`), so the backstop here mainly guards the tab count (which isn't
  * pre-clamped) and any other future caller.
  */
 export function useApplyAIGroups(caps: TierCaps = {}) {
@@ -1408,36 +1427,32 @@ export function useApplyAIGroups(caps: TierCaps = {}) {
   const mutate = useGroupsMutation();
 
   return useMutation({
-    // Returns how many groups/tabs were actually created — a suggestion whose tabIds
-    // don't match any live Now Open tab (e.g. a stale AI response) is silently skipped
-    // by the loop below, so the caller can't infer success from suggestions.length alone.
-    mutationFn: async (suggestions: { name: string; color: string; tabIds: number[] }[]) => {
+    // Returns how many groups were created, how many existing groups received tabs, and how many
+    // tabs were stored. A suggestion whose tabIds don't match any live Now Open tab (e.g. a stale
+    // AI response) is silently skipped, so the caller can't infer success from suggestions.length.
+    mutationFn: async (suggestions: AiGroupSuggestion[]): Promise<AiApplyCounts> => {
       const cached = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const none: AiApplyCounts = { createdGroups: 0, mergedGroups: 0, appliedTabs: 0 };
 
       // Bail before touching mutate() (no undo snapshot, no IDB write) if nothing will match
       const nowOpenIds = new Set(
         (cached?.available[0]?.windows ?? []).flatMap((w) => w.tabs.map((t) => t.id))
       );
-      if (!suggestions.some((s) => s.tabIds.some((id) => nowOpenIds.has(id)))) {
-        return { appliedGroups: 0, appliedTabs: 0 };
-      }
+      if (!suggestions.some((s) => s.tabIds.some((id) => nowOpenIds.has(id)))) return none;
 
       if (cached) {
         const preview = applyAiSuggestionsToState(cached, suggestions);
-        assertWithinFreeLimits(cached, caps, preview.appliedGroups, preview.appliedTabs);
+        assertWithinFreeLimits(cached, caps, preview.createdGroups, preview.appliedTabs);
       }
 
-      let appliedGroups = 0;
-      let appliedTabs = 0;
-
+      let counts = none;
       await mutate((prev) => {
-        const result = applyAiSuggestionsToState(prev, suggestions);
-        appliedGroups = result.appliedGroups;
-        appliedTabs = result.appliedTabs;
-        return { ...prev, available: result.nextAvailable };
+        const { nextAvailable, ...result } = applyAiSuggestionsToState(prev, suggestions);
+        counts = result;
+        return { ...prev, available: nextAvailable };
       }, false, { align: false });
 
-      return { appliedGroups, appliedTabs };
+      return counts;
     }
   });
 }

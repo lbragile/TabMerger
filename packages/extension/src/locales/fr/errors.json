@@ -27,7 +27,24 @@
   "sharingRequiresPro": "Le partage nécessite Pro : droit non satisfait",
   "aiOncePerDay": "Déjà utilisé aujourd’hui : cette action IA est limitée à une fois par jour",
   "proAiRequired": "Offre Pro AI requise",
-  "nameGroupOff": "Le nommage de groupe est désactivé dans les Paramètres",
+  "nameGroupOff": "Le nommage des groupes et des fenêtres est désactivé dans les Paramètres",
+  "describeGroupOff": "La description des groupes et des fenêtres est désactivée dans les Paramètres",
   "suggestSessionsOff": "Les suggestions de sessions sont désactivées dans les Paramètres",
-  "organizeOff": "L’organisation est désactivée dans les Paramètres"
+  "organizeOff": "L’organisation est désactivée dans les Paramètres",
+  "ai": {
+    "disabled": "Les fonctions IA ne sont pas disponibles pour le moment.",
+    "modelInvalid": "Ce modèle d’IA n’est pas disponible. Choisissez-en un autre dans les Paramètres, onglet IA.",
+    "overloaded": "Le service d’IA est surchargé. Réessayez dans une minute.",
+    "byokKeyMissing": "Ajoutez la clé API de votre fournisseur d’IA dans les Paramètres, onglet IA, pour utiliser les fonctions IA.",
+    "byokKeyInvalid": "Votre fournisseur d’IA a refusé votre clé API. Vérifiez-la ou remplacez-la dans les Paramètres, onglet IA.",
+    "byokRateLimited": "Votre clé API a atteint la limite de requêtes de son fournisseur. Patientez un instant puis réessayez.",
+    "byokBilling": "Votre compte chez le fournisseur d’IA n’a plus de crédit ou a un problème de facturation. Vérifiez la facturation chez votre fournisseur.",
+    "creditsNotApplicable": "Les packs de crédits ne sont pas proposés avec votre propre clé API.",
+    "unauthorized": "Votre connexion a expiré. Reconnectez-vous et réessayez.",
+    "invalidRequest": "TabMerger n’a pas pu envoyer cette requête IA. Réessayez, et mettez à jour l’extension si le problème persiste.",
+    "refused": "L’IA a refusé cette requête.",
+    "failed": "La requête IA a échoué. Réessayez.",
+    "rateLimited": "Trop de requêtes d’IA pour le moment. Réessayez dans une minute.",
+    "rateLimitedRetry": "Trop de requêtes d’IA pour le moment. Réessayez {{when}}."
+  }
 }

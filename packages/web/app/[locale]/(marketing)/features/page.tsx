@@ -3,7 +3,7 @@ import { pageMetadata } from '@/lib/seo'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { AUTO_BACKUP_RETENTION_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { STORE_ICON } from '@/components/marketing/BrowserIcons'
@@ -22,6 +22,8 @@ import {
   Shield,
   ArrowRight,
   History,
+  NotebookPen,
+  WandSparkles,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -69,8 +71,10 @@ const featureSections: { key: SectionKey; features: { key: string; icon: LucideI
     features: [
       { key: 'autoGrouping', icon: Brain },
       { key: 'names', icon: Layers },
+      { key: 'describe', icon: NotebookPen },
       { key: 'summaries', icon: Search },
       { key: 'sessionSuggestions', icon: RefreshCw },
+      { key: 'organize', icon: WandSparkles },
     ],
   },
 ]
@@ -109,13 +113,15 @@ export default async function FeaturesPage() {
             {t('lead')}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="gap-2" asChild>
+            {/* Both wrap instead of running off a phone screen when a label is long (another
+                language); one line, at the usual 44px, whenever it fits. */}
+            <Button size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
               <StoreLink href={storeLinks[browser]}>
                 <BrowserIcon size={18} />
                 {t(ADD_TO_LABEL[browser])}
               </StoreLink>
             </Button>
-            <Button variant="outline" size="lg" className="gap-2" asChild>
+            <Button variant="outline" size="lg" className="gap-2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-center" asChild>
               <Link href="/pricing">
                 {t('seePricing')}
                 <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
@@ -158,9 +164,15 @@ export default async function FeaturesPage() {
                   <span className={cn('inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.key])}>
                     {t(`badges.${section.key}`)}
                   </span>
-                  {isAi && !AI_ENABLED && (
+                  {isAi && !AI_AVAILABILITY.any && (
                     <span className="ms-2 inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3 bg-muted text-muted-foreground">
                       {common('comingSoon')}
+                    </span>
+                  )}
+                  {/* Only the own-key option is live yet: say so, so nobody expects AI included. */}
+                  {isAi && AI_AVAILABILITY.any && !AI_AVAILABILITY.managed && (
+                    <span className="ms-2 inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3 bg-primary/10 text-primary">
+                      {common('withYourOwnKey')}
                     </span>
                   )}
                   <h2 className="text-3xl font-bold tracking-tight">

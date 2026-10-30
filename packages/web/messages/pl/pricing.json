@@ -25,17 +25,21 @@
     "dragDrop": "Przeciąganie i upuszczanie",
     "shortcuts": "Skróty klawiszowe",
     "everythingInFree": "Wszystko z planu Darmowy",
-    "unlimited": "Nielimitowane grupy, karty, reguły URL i sesje",
+    "unlimited": "Nielimitowane grupy, karty, reguły i sesje",
     "cloudSync": "Synchronizacja w chmurze między urządzeniami",
     "sessionsSynced": "Sesje synchronizowane między urządzeniami",
-    "autoBackups": "Automatyczne szyfrowane kopie zapasowe grup, z opcjonalną kopią w pliku na komputerze",
+    "autoBackups": "Automatyczne szyfrowane kopie zapasowe",
     "prioritySupport": "Priorytetowa pomoc",
     "everythingInPro": "Wszystko z planu Pro",
     "aiGrouping": "Automatyczne grupowanie kart przez AI",
     "aiNames": "Propozycje nazw grup od AI",
+    "aiDescribe": "Opisy grup i okien od AI",
     "smartSessions": "Inteligentne sugestie sesji",
+    "aiOrganize": "Porządkowanie obszaru roboczego przez AI",
     "tabPreview": "Podgląd kart z podsumowaniem AI",
-    "aiCredits": "{count} kredytów AI / miesiąc"
+    "aiCreditsMonthly": "{count, number} kredytów AI miesięcznie",
+    "ownApiKey": "Używaj własnego dostawcy AI",
+    "chooseModel": "Wybierz model AI"
   },
   "current": "Obecny",
   "installFree": "Zainstaluj za darmo",
@@ -43,9 +47,13 @@
   "switchToMonthly": "Przejdź na płatność miesięczną",
   "downgradeTo": "Przejdź na {name}",
   "upgradeTo": "Przejdź na {name}",
-  "switchFailed": "Nie udało się rozpocząć zmiany. Spróbuj opcji Zarządzaj płatnościami na stronie konta.",
+  "getPlan": "Wybierz {name}",
+  "switchFailed": "Nie udało się rozpocząć zmiany. Spróbuj ponownie lub napisz na {email}, jeśli problem się powtarza.",
   "alreadySubscribed": "Masz już plan. Otwieramy płatności, abyś mógł go zmienić.",
-  "portalFailed": "Nie udało się otworzyć płatności. Użyj opcji Zarządzaj płatnościami na stronie konta, aby zmienić plan.",
+  "alreadySubscribedShown": "Masz już plan. Ta strona teraz go pokazuje, więc możesz go zmienić tutaj.",
+  "checkoutFailed": "Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.",
+  "portalFailed": "Nie udało się otworzyć płatności. Spróbuj ponownie lub napisz na {email}, aby zmienić plan.",
+  "rateLimited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie.",
   "checkoutCanceled": "Płatność anulowana. Nie pobrano żadnej opłaty.",
   "cancelAnytime": "Zrezygnuj w dowolnej chwili na swoim koncie — bez zobowiązań i zbędnych pytań.",
   "keepAccess": "Dostęp zachowasz do końca okresu rozliczeniowego.",
@@ -55,5 +63,47 @@
     "title": "Prosty, przejrzysty cennik",
     "lead": "Zacznij za darmo. Przejdź na wyższy plan, gdy będziesz gotowy na więcej.",
     "moreQuestions": "Masz więcej pytań? Zajrzyj do <link>FAQ</link>."
+  },
+  "aiOptions": {
+    "legend": "Kto zajmuje się konfiguracją?",
+    "managed": "My",
+    "byok": "Ty",
+    "managedHint": "Kredyty mierzą użycie AI: większe zadania i mocniejsze modele zużywają ich więcej.",
+    "byokHint": "Dodajesz klucz API od dostawcy. Rozlicza on użycie bezpośrednio z Tobą.",
+    "switchToByok": "Skonfiguruj samodzielnie",
+    "switchToManaged": "Powierz konfigurację TabMerger"
+  },
+  "planChange": {
+    "title": "Potwierdź zmianę planu",
+    "confirmEndOfPeriod": "Twój plan zmieni się na {plan} w dniu {date}. Do tego czasu zachowujesz obecny plan. Za resztę tego okresu nie ma zwrotu.",
+    "confirmEndOfPeriodNoDate": "Twój plan zmieni się na {plan} na koniec tego okresu rozliczeniowego. Do tego czasu zachowujesz obecny plan. Za resztę tego okresu nie ma zwrotu.",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "scheduled": "Gotowe. Twój plan zmieni się na {plan} w dniu {date}.",
+    "scheduledNoDetails": "Gotowe. Twój plan zmieni się na koniec tego okresu rozliczeniowego.",
+    "aiDisabled": "Ta opcja Pro AI nie jest jeszcze dostępna.",
+    "plans": {
+      "pro": "Pro",
+      "proAiManaged": "Pro AI konfigurowany przez TabMerger",
+      "proAiByok": "Pro AI konfigurowany przez Ciebie"
+    },
+    "billedMonthly": "{plan}, płatność miesięczna",
+    "billedYearly": "{plan}, płatność roczna",
+    "errors": {
+      "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym, więc nie można go tu zmienić. Napisz na {email}, a zmienimy go za Ciebie.",
+      "no_paid_plan": "Nie masz płatnego planu do zmiany. Zamiast tego wybierz plan do subskrypcji.",
+      "already_on_price": "Masz już ten plan.",
+      "already_scheduled": "Zmiana planu jest już zaplanowana na koniec tego okresu rozliczeniowego.",
+      "cancel_scheduled": "Twój plan wygaśnie z końcem tego okresu rozliczeniowego. Odnów go w „Zarządzaj płatnościami”, zanim go zmienisz.",
+      "pay_or_resume": "Twój plan czeka na płatność lub jest wstrzymany, więc nie można go jeszcze zmienić. Napisz na {email}, a pomożemy Ci to załatwić.",
+      "switch_needs_support": "Tej zmiany planu nie można teraz wprowadzić. Napisz na {email}, a wprowadzimy ją za Ciebie.",
+      "price_unavailable": "Obecnie nie można przejść na ten plan. Spróbuj ponownie później lub skontaktuj się z nami.",
+      "switch_failed": "Stripe nie mógł rozpocząć zmiany. Spróbuj ponownie, użyj „Zarządzaj płatnościami” na stronie konta lub napisz na {email}.",
+      "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
+    }
+  },
+  "scheduledChange": {
+    "starts": "Od {date}",
+    "note": "Masz zaplanowaną zmianę na {date}. <link>Zarządzaj nią na stronie konta.</link>"
   }
 }

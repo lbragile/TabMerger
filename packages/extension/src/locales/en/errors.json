@@ -27,7 +27,24 @@
   "sharingRequiresPro": "Sharing requires a Pro upgrade — entitlement not met",
   "aiOncePerDay": "Already used today — this AI action is limited to once per day",
   "proAiRequired": "Pro AI plan required",
-  "nameGroupOff": "Name group is turned off in Settings",
+  "nameGroupOff": "“Name groups and windows” is turned off in Settings",
+  "describeGroupOff": "“Describe groups and windows” is turned off in Settings",
   "suggestSessionsOff": "Suggest sessions is turned off in Settings",
-  "organizeOff": "Organize is turned off in Settings"
+  "organizeOff": "Organize is turned off in Settings",
+  "ai": {
+    "disabled": "AI features aren't available right now.",
+    "modelInvalid": "That AI model isn't available. Choose another one in Settings, on the AI tab.",
+    "overloaded": "The AI service is busy right now. Try again in a minute.",
+    "byokKeyMissing": "Add your AI provider's API key in Settings, on the AI tab, to use AI features.",
+    "byokKeyInvalid": "Your AI provider didn't accept your API key. Check or replace it in Settings, on the AI tab.",
+    "byokRateLimited": "Your API key hit its provider's rate limit. Wait a moment and try again.",
+    "byokBilling": "Your AI provider account is out of credit or has a billing problem. Check billing with your provider.",
+    "creditsNotApplicable": "Credit packs aren't available when you use your own API key.",
+    "unauthorized": "Your sign-in has expired. Sign in again and try once more.",
+    "invalidRequest": "TabMerger couldn't send that AI request. Try again, and update the extension if it keeps happening.",
+    "refused": "The AI declined this request.",
+    "failed": "The AI request failed. Try again.",
+    "rateLimited": "Too many AI requests right now. Try again in a minute.",
+    "rateLimitedRetry": "Too many AI requests right now. Try again {{when}}."
+  }
 }

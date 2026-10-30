@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 
 type FeaturesT = ReturnType<typeof useTranslations<'home.features'>>
 
@@ -75,9 +75,15 @@ export function Features() {
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <h3 className="font-semibold text-[19px] tracking-tight">{t(`${f.key}.title`)}</h3>
-                  {f.isAi && !AI_ENABLED && (
+                  {f.isAi && !AI_AVAILABILITY.any && (
                     <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-muted text-muted-foreground">
                       {common('comingSoon')}
+                    </span>
+                  )}
+                  {/* Only the own-key option is live yet: say so, so nobody expects AI included. */}
+                  {f.isAi && AI_AVAILABILITY.any && !AI_AVAILABILITY.managed && (
+                    <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-primary/10 text-primary">
+                      {common('withYourOwnKey')}
                     </span>
                   )}
                 </div>

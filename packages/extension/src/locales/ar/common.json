@@ -115,5 +115,6 @@
   "showPassphrase": "إظهار عبارة المرور",
   "hidePassphrase": "إخفاء عبارة المرور",
   "notifications": "الإشعارات",
-  "closeToast": "إغلاق الإشعار"
+  "closeToast": "إغلاق الإشعار",
+  "openSettings": "فتح الإعدادات"
 }

@@ -3,6 +3,8 @@
   "renameHint": "Ustaw nową nazwę dla tej grupy",
   "aiRename": "Zmień nazwę przez AI",
   "aiRenameHint": "Zasugeruj nazwę dla tej grupy przez AI",
+  "aiDescribe": "Opisz przez AI",
+  "aiDescribeHint": "Napisz przez AI krótką notatkę o kartach tej grupy",
   "addNote": "Dodaj notatkę",
   "addNoteHint": "Dołącz notatkę do tej grupy",
   "editNote": "Edytuj notatkę",
@@ -38,6 +40,12 @@
   "toast": {
     "noDuplicates": "Nie znaleziono duplikatów",
     "noTabsToName": "Brak kart w tej grupie do nazwania",
-    "aiRenameFailed": "Zmiana nazwy przez AI nie powiodła się"
+    "aiRenameFailed": "Zmiana nazwy przez AI nie powiodła się",
+    "nameAlreadyFits": "„{{name}}” już pasuje do tej grupy",
+    "noTabsToDescribe": "Brak kart w tej grupie do opisania",
+    "aiDescribeFailed": "Nie udało się opisać tej grupy",
+    "noteAdded": "Dodano notatkę",
+    "noteReplaced": "Zastąpiono notatkę",
+    "undoNoteLater": "Po tej zmianie wprowadzono inne. Zamiast tego użyj przycisku Cofnij u góry."
   }
 }

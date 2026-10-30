@@ -15,13 +15,13 @@ describe('UpgradedBanner', () => {
   })
 
   it('hides on dismiss and drops only `upgraded` from the URL', async () => {
-    window.history.replaceState(null, '', '/dashboard?upgraded=1&organizeRunId=r1')
+    window.history.replaceState(null, '', '/dashboard?upgraded=1&tab=groups')
     render(<UpgradedBanner planName="Pro" />)
 
     await userEvent.click(screen.getByRole('button', { name: 'Dismiss' }))
 
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
     expect(window.location.pathname).toBe('/dashboard')
-    expect(window.location.search).toBe('?organizeRunId=r1')
+    expect(window.location.search).toBe('?tab=groups')
   })
 })

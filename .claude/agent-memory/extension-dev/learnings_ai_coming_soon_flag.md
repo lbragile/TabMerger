@@ -9,7 +9,7 @@ The "AI features: coming soon" global kill switch (`packages/extension/src/lib/a
 - `useEntitlements.ts` ANDs `TIER_LIMITS[tier].aiFeatures && AI_ENABLED` (and the DEMO_MODE branch too) — so every downstream component gating on `aiFeatures` from `useEntitlements()` is automatically correct without needing its own `AI_ENABLED` check (GroupContextMenu's "AI rename" item, TabPreview's summary UI, Settings' AI tab/usage row all rely on this transitively).
 - `useAI.ts` mutations throw `'AI features are coming soon'` before any fetch when `!AI_ENABLED`; `useAiUsage.ts` guards the query with `enabled: AI_ENABLED && ...`.
 - `UpgradePrompt.tsx` implements the FINAL pricing decision correctly: real price shown, only the Pro AI CTA swaps to `AI_COMING_SOON_LABEL` + `aria-disabled`.
-- `main.tsx` skips installing the dev fetch mock entirely when `!AI_ENABLED` (since every AI mutation throws before fetching anyway).
+- (The `main.tsx` dev fetch mock this note once covered was removed on 2026-10-24.)
 
 The one real gap: `Settings.tsx`'s Dev-tab "Mocked AI usage count" control was gated only on `import.meta.env.DEV`, not on `AI_ENABLED` — it calls `aiPost` for a real network round-trip to `/api/ai/dev-usage` regardless of the flag. Fixed by adding `&& AI_ENABLED` to that block's condition.
 

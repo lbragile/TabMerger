@@ -33,7 +33,7 @@
     "pro": {
       "name": "Pro",
       "f1": "Semua yang ada di Gratis",
-      "f2": "Grup, tab, aturan URL & sesi tanpa batas",
+      "f2": "Grup, tab, aturan & sesi tanpa batas",
       "f3": "Sinkronisasi cloud di semua perangkat"
     },
     "pro_ai": {
@@ -45,5 +45,6 @@
   },
   "maybeLater": "Mungkin nanti",
   "signIn": "Masuk",
-  "upgradeNow": "Tingkatkan sekarang"
+  "upgradeNow": "Tingkatkan sekarang",
+  "byokOption": "Atau {{price}}/bln: pakai penyedia AI Anda sendiri (Anthropic, OpenAI, atau Gemini)"
 }

@@ -1,6 +1,7 @@
 {
   "review": "Przejrzyj",
   "archive": "Archiwizuj",
+  "merge": "Scal",
   "dismiss": "Odrzuć",
   "getMore": "Zdobądź więcej",
   "removeStale": "Usuń nieaktywne",
@@ -19,5 +20,7 @@
     "restart": "Uruchom ponownie, aby zaktualizować",
     "restartLabel": "Uruchom ponownie TabMerger, aby zaktualizować do wersji {{version}}. To zamknie popup.",
     "dismissLabel": "Odrzuć powiadomienie o aktualizacji dla wersji {{version}}"
-  }
+  },
+  "aiQuotaPrompt": "Za mało kredytów AI w tym miesiącu. Wybierz tańszy model lub kup więcej kredytów.",
+  "changeModel": "Zmień model"
 }
