@@ -43,6 +43,8 @@
     "unauthorized": "您的登录已过期。请重新登录后再试一次。",
     "invalidRequest": "TabMerger 无法发送此 AI 请求。请重试；如果问题持续出现，请更新扩展。",
     "refused": "AI 拒绝了此请求。",
-    "failed": "AI 请求失败，请重试。"
+    "failed": "AI 请求失败，请重试。",
+    "rateLimited": "AI 请求过多，请一分钟后再试。",
+    "rateLimitedRetry": "AI 请求过多，请{{when}}再试。"
   }
 }

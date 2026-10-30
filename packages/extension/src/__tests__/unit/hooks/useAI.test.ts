@@ -2,8 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAutoGroup, useNameGroup, useSuggestSessions, useOrganizeTabs, useTabSummary } from '@/hooks/useAI'
+import { AI_ERROR_CODES } from '@tabmerger/shared'
+import { aiPost, useAutoGroup, useNameGroup, useSuggestSessions, useOrganizeTabs, useTabSummary } from '@/hooks/useAI'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
+import { AiRequestError, QuotaExceededError, aiErrorMessage } from '@/lib/aiErrors'
+import { t } from '@/lib/i18n'
 
 const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings, mockUseAiUsage, mockGetEncryptionKeyState } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
@@ -135,8 +138,9 @@ describe('useSuggestSessions', () => {
     const { result } = renderHook(() => useSuggestSessions(), { wrapper: makeWrapper() })
     await act(async () => { await result.current.mutateAsync(groups) })
     const body = JSON.parse((globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body)
+    // Tabs carry only the title and URL the route reads (see useAI.payload.test.ts)
     expect(body.groups).toEqual([
-      { id: 'g1', name: 'Dev', tabs: [{ id: 0, title: 'T', url: 'https://a.com' }] }
+      { id: 'g1', name: 'Dev', tabs: [{ title: 'T', url: 'https://a.com' }] }
     ])
   })
 
@@ -351,16 +355,86 @@ describe('useOrganizeTabs', () => {
   })
 })
 
-// NOT YET IMPLEMENTED: a 429 (quota exceeded) response should be distinguishable
-// from a generic failure so the UI can show a "buy more AI calls" prompt instead
-// of a generic error toast. These fail until aiPost/the hooks expose that.
-describe('quota-exceeded (429) handling — not yet implemented', () => {
-  it('useAutoGroup surfaces a distinct isQuotaExceeded flag instead of a generic error on 429', async () => {
+/** A failed response: `body` is sent as-is when it's a string, else as JSON; `headers` are its response headers. */
+function failWith(status: number, body: unknown, headers: Record<string, string> = {}) {
+  ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+    ok: false,
+    status,
+    headers: new Headers(headers),
+    text: async () => (typeof body === 'string' ? body : JSON.stringify(body)),
+  })
+}
+
+/** What aiPost rejects with for the response set up by {@link failWith}. */
+function aiPostError(): Promise<unknown> {
+  return aiPost('/api/ai/name-group', {}, 'tok').catch((e: unknown) => e)
+}
+
+// A 429 is "out of credits" (the "buy more credits" prompt) only when the server says so with
+// ai_quota_exceeded. Any other 429, including one with no code at all (the hosting platform's
+// firewall answering in plain text or HTML), is "too many requests".
+describe('429 handling: out of credits vs too many requests', () => {
+  it('429 ai_quota_exceeded is a QuotaExceededError', async () => {
+    failWith(429, { error: AI_ERROR_CODES.quotaExceeded, needed: 4, remaining: 1 })
+    const err = await aiPostError()
+    expect(err).toBeInstanceOf(QuotaExceededError)
+    expect(err).toMatchObject({ isQuotaExceeded: true, needed: 4, remaining: 1 })
+  })
+
+  it('429 rate_limited is a rate_limited AiRequestError, not out of credits', async () => {
+    failWith(429, { error: AI_ERROR_CODES.rateLimited }, { 'Retry-After': '30' })
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toBeInstanceOf(AiRequestError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, status: 429, retryAfterSeconds: 30 })
+    expect((err as Error).message).toBe('Too many AI requests right now. Try again in 30 seconds.')
+  })
+
+  it.each([
+    ['a plain-text body', 'Too Many Requests'],
+    ['an HTML body', '<!DOCTYPE html><html><body><h1>429 Too Many Requests</h1></body></html>'],
+    ['an empty body', ''],
+    ['a JSON body with no code', { message: 'slow down' }],
+  ])('a codeless 429 with %s is rate_limited, not out of credits, naming the Retry-After wait', async (_label, body) => {
+    failWith(429, body, { 'Retry-After': '120' })
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toBeInstanceOf(AiRequestError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, status: 429, retryAfterSeconds: 120 })
+    expect((err as Error).message).toBe(aiErrorMessage(AI_ERROR_CODES.rateLimited, { retryAfterSeconds: 120 }))
+    // The platform's raw reply (maybe a whole HTML page) never reaches the user.
+    expect((err as Error).message).not.toContain('<')
+  })
+
+  it.each([
+    ['no Retry-After header', {}],
+    ['an unparseable Retry-After header', { 'Retry-After': 'soon' }],
+    ['a zero Retry-After header', { 'Retry-After': '0' }],
+  ])('a codeless 429 with %s is rate_limited without a wait', async (_label, headers) => {
+    failWith(429, '<html><body>Too Many Requests</body></html>', headers)
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, status: 429, retryAfterSeconds: undefined })
+    expect((err as Error).message).toBe(t('errors.ai.rateLimited'))
+  })
+
+  it('a codeless 429 on a response with no headers object is still rate_limited', async () => {
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: false, status: 429, text: async () => 'quota exceeded' })
+    const err = await aiPostError()
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, retryAfterSeconds: undefined })
+  })
+
+  it('a codeless 500 keeps the raw status and text', async () => {
+    failWith(500, 'boom')
+    const err = await aiPostError()
+    expect(err).toMatchObject({ code: null, status: 500, message: 'AI request failed: 500 boom' })
+  })
+
+  it('useAutoGroup flags isQuotaExceeded on a 429 ai_quota_exceeded', async () => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
-    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      ok: false, status: 429, text: async () => 'quota exceeded',
-    })
+    failWith(429, { error: AI_ERROR_CODES.quotaExceeded })
     const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
     act(() => { result.current.mutateAsync([]).catch(() => {}) })
     // ponytail: react-query's mutation observer notifies subscribers on a
@@ -370,12 +444,20 @@ describe('quota-exceeded (429) handling — not yet implemented', () => {
     await waitFor(() => expect(result.current.isQuotaExceeded).toBe(true))
   })
 
-  it('a 429 error thrown by the shared fetch helper is tagged isQuotaExceeded, unlike a 500', async () => {
+  it('useAutoGroup does not flag isQuotaExceeded on a codeless (platform) 429', async () => {
     mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
-    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      ok: false, status: 429, text: async () => 'quota exceeded',
-    })
+    failWith(429, '<html><body>Too Many Requests</body></html>')
+    const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
+    act(() => { result.current.mutateAsync([]).catch(() => {}) })
+    await waitFor(() => expect(result.current.error).toBeInstanceOf(AiRequestError))
+    expect(result.current.isQuotaExceeded).toBe(false)
+  })
+
+  it('useNameGroup rejects with an error tagged isQuotaExceeded on a 429 ai_quota_exceeded', async () => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    failWith(429, { error: AI_ERROR_CODES.quotaExceeded })
     const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
     let caught: unknown
     await act(async () => {

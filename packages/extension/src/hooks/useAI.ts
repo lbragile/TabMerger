@@ -25,7 +25,8 @@ import { getEncryptionKeyState } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { getByokKey } from '@/lib/byokKey';
 import { choiceForProvider, modelFor } from '@/lib/aiModel';
-import { AiRequestError, QuotaExceededError, aiErrorMessage } from '@/lib/aiErrors';
+import { AiRequestError, QuotaExceededError, aiErrorMessage, retryAfterSecondsOf } from '@/lib/aiErrors';
+import { aiGroupListTab, aiIdentifiedTab, aiPromptGroupName, aiPromptTab } from '@/lib/aiPayload';
 import { sanitizeOrganizeActions } from '@/lib/organizeActions';
 import { cleanGroupDescription } from '@/lib/groupDescription';
 
@@ -54,7 +55,7 @@ async function enforceDailyThrottle(action: string, throttleEnabled: boolean) {
   await markCalledToday(action);
 }
 
-/** The JSON error body of a failed AI request (`{ error, needed?, remaining? }`), when it has one. */
+/** The JSON error body of a failed AI request (`{ error, needed?, remaining?, retryAfterSeconds? }`), when it has one. */
 function parseErrorBody(text: string): Record<string, unknown> | null {
   try {
     const body: unknown = JSON.parse(text);
@@ -74,9 +75,15 @@ export interface AiPostOptions {
  * Sends a `Bearer` token because the extension runs on a different origin and
  * cannot use session cookies. The web app's API routes verify this JWT server-side.
  *
- * A failure throws {@link QuotaExceededError} for a 429 (out of TabMerger credits; BYOK errors
- * never use 429), else {@link AiRequestError} with the server's `AI_ERROR_CODES` code and a
- * translated message, or the raw status and text when the response carries no code.
+ * A failure throws {@link QuotaExceededError} only for a 429 `ai_quota_exceeded` (out of
+ * TabMerger credits; BYOK errors never use 429), else {@link AiRequestError} with the server's
+ * `AI_ERROR_CODES` code and a translated message, or the raw status and text when a non-429
+ * response carries no code. A 429 `rate_limited` (too many requests), and a 429 with no code at
+ * all (the hosting platform's firewall, not our routes), is an {@link AiRequestError} with code
+ * `rate_limited`, never out of credits; its wait comes from the body's `retryAfterSeconds`, else
+ * the `Retry-After` header, else the message says to try again in a minute.
+ *
+ * Callers send tab data through `lib/aiPayload.ts`, cut to the server's lengths.
  */
 export async function aiPost<T>(path: string, body: unknown, token: string, options: AiPostOptions = {}): Promise<T> {
   const headers: Record<string, string> = {
@@ -94,14 +101,26 @@ export async function aiPost<T>(path: string, body: unknown, token: string, opti
   if (!res.ok) {
     const text = await res.text();
     const parsed = parseErrorBody(text);
-    const code = typeof parsed?.error === 'string' ? parsed.error : null;
-    if (res.status === 429 && (code === null || code === AI_ERROR_CODES.quotaExceeded)) {
+    const sentCode = typeof parsed?.error === 'string' ? parsed.error : null;
+    // Every 429 our routes send names its code. One without a code came from the platform in
+    // front of them (a firewall's plain-text or HTML reply): too many requests, never out of credits.
+    const code = sentCode ?? (res.status === 429 ? AI_ERROR_CODES.rateLimited : null);
+    if (res.status === 429 && code === AI_ERROR_CODES.quotaExceeded) {
       const err = new QuotaExceededError(`AI request failed: ${res.status} ${text}`);
       if (typeof parsed?.needed === 'number') err.needed = parsed.needed;
       if (typeof parsed?.remaining === 'number') err.remaining = parsed.remaining;
       throw err;
     }
-    throw new AiRequestError(code, res.status, code ? aiErrorMessage(code) : `AI request failed: ${res.status} ${text}`);
+    const retryAfterSeconds =
+      code === AI_ERROR_CODES.rateLimited
+        ? (retryAfterSecondsOf(parsed?.retryAfterSeconds) ?? retryAfterSecondsOf(res.headers?.get?.('Retry-After')))
+        : undefined;
+    throw new AiRequestError(
+      code,
+      res.status,
+      code ? aiErrorMessage(code, { retryAfterSeconds }) : `AI request failed: ${res.status} ${text}`,
+      retryAfterSeconds
+    );
   }
 
   return res.json() as Promise<T>;
@@ -183,7 +202,7 @@ export function useAutoGroup() {
 
       return aiPost<{ groups: { name: string; color: string; tabIds: number[] }[] }>(
         '/api/ai/group-tabs',
-        { tabs, model },
+        { tabs: tabs.map(aiIdentifiedTab), model },
         token,
         options
       );
@@ -207,7 +226,7 @@ export function useNameGroup() {
 
       // Typed loosely on purpose: an older server sends only `name`, and the reply is provider output
       // either way. `suggestedGroupNames` (lib/aiGroupName.ts) reads and cleans it.
-      return aiPost<Partial<AINameGroupResponse>>('/api/ai/name-group', { tabs, model }, token, options);
+      return aiPost<Partial<AINameGroupResponse>>('/api/ai/name-group', { tabs: tabs.map(aiPromptTab), model }, token, options);
     }
   }));
 }
@@ -232,7 +251,7 @@ export function useDescribeGroup() {
       const token = requireToken(session);
       const { model, options } = await prepare('describeGroup', tabs.length);
 
-      const body: AIDescribeGroupRequest = { groupName, tabs: tabs.map((tab) => ({ title: tab.title, url: tab.url })), model };
+      const body: AIDescribeGroupRequest = { groupName: aiPromptGroupName(groupName), tabs: tabs.map(aiPromptTab), model };
       const reply = await aiPost<unknown>('/api/ai/describe-group', body, token, options);
       const description = reply && typeof reply === 'object' ? (reply as { description?: unknown }).description : undefined;
       return { description: cleanGroupDescription(description) };
@@ -255,7 +274,11 @@ export function useSuggestSessions() {
       if (settings?.aiSuggestSessionsEnabled === false) throw new Error(t('errors.suggestSessionsOff'));
       const token = requireToken(session);
       // `id` is sent so the server can return staleGroupIds the UI can act on per group.
-      const groups = recentGroups.map((g) => ({ id: g.id, name: g.name, tabs: g.windows.flatMap((w) => w.tabs) }));
+      const groups = recentGroups.map((g) => ({
+        id: g.id,
+        name: aiPromptGroupName(g.name),
+        tabs: g.windows.flatMap((w) => w.tabs.map(aiGroupListTab))
+      }));
       const { model, options } = await prepare('suggestSessions', countTabs(groups));
       await enforceDailyThrottle('suggest-sessions', settings?.aiDailyThrottle ?? true);
 
@@ -294,9 +317,9 @@ export function useOrganizeTabs() {
       // account may be encrypted, and the server would then be reading ciphertext.
       const localGroups = groupsState?.available.filter((g) => !isTourDemoGroup(g)).map((g) => ({
         id: g.id,
-        name: g.name,
+        name: aiPromptGroupName(g.name),
         permanent: g.permanent ?? false,
-        tabs: g.windows.flatMap((w) => w.tabs)
+        tabs: g.windows.flatMap((w) => w.tabs.map(aiGroupListTab))
       }));
       const groups = (await getEncryptionKeyState()) !== 'absent' ? localGroups : undefined;
       // The estimate counts the local tabs either way: the server's rows hold the same groups
@@ -335,7 +358,7 @@ export function useTabSummary() {
 
       return aiPost<{ summary: string }>(
         '/api/ai/tab-summary',
-        { url, title, model },
+        { ...aiPromptTab({ url, title }), model },
         session.access_token,
         options
       );

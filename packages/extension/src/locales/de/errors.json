@@ -43,6 +43,8 @@
     "unauthorized": "Deine Anmeldung ist abgelaufen. Melde dich erneut an und versuche es noch einmal.",
     "invalidRequest": "TabMerger konnte diese KI-Anfrage nicht senden. Versuche es erneut und aktualisiere die Erweiterung, falls es wieder passiert.",
     "refused": "Die KI hat diese Anfrage abgelehnt.",
-    "failed": "Die KI-Anfrage ist fehlgeschlagen. Versuche es erneut."
+    "failed": "Die KI-Anfrage ist fehlgeschlagen. Versuche es erneut.",
+    "rateLimited": "Gerade zu viele KI-Anfragen. Versuche es in einer Minute erneut.",
+    "rateLimitedRetry": "Gerade zu viele KI-Anfragen. Versuche es {{when}} erneut."
   }
 }

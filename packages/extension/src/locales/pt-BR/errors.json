@@ -43,6 +43,8 @@
     "unauthorized": "Seu login expirou. Entre novamente e tente outra vez.",
     "invalidRequest": "O TabMerger não conseguiu enviar essa solicitação de IA. Tente novamente e atualize a extensão se continuar acontecendo.",
     "refused": "A IA recusou esta solicitação.",
-    "failed": "A solicitação de IA falhou. Tente novamente."
+    "failed": "A solicitação de IA falhou. Tente novamente.",
+    "rateLimited": "Muitas solicitações de IA no momento. Tente novamente em um minuto.",
+    "rateLimitedRetry": "Muitas solicitações de IA no momento. Tente novamente {{when}}."
   }
 }

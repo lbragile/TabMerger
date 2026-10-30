@@ -43,6 +43,8 @@
     "unauthorized": "Sesi masuk Anda telah berakhir. Masuk lagi lalu coba sekali lagi.",
     "invalidRequest": "TabMerger tidak dapat mengirim permintaan AI itu. Coba lagi, dan perbarui ekstensi jika terus terjadi.",
     "refused": "AI menolak permintaan ini.",
-    "failed": "Permintaan AI gagal. Coba lagi."
+    "failed": "Permintaan AI gagal. Coba lagi.",
+    "rateLimited": "Terlalu banyak permintaan AI saat ini. Coba lagi dalam satu menit.",
+    "rateLimitedRetry": "Terlalu banyak permintaan AI saat ini. Coba lagi {{when}}."
   }
 }

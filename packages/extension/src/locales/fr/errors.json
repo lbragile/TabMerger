@@ -43,6 +43,8 @@
     "unauthorized": "Votre connexion a expiré. Reconnectez-vous et réessayez.",
     "invalidRequest": "TabMerger n’a pas pu envoyer cette requête IA. Réessayez, et mettez à jour l’extension si le problème persiste.",
     "refused": "L’IA a refusé cette requête.",
-    "failed": "La requête IA a échoué. Réessayez."
+    "failed": "La requête IA a échoué. Réessayez.",
+    "rateLimited": "Trop de requêtes d’IA pour le moment. Réessayez dans une minute.",
+    "rateLimitedRetry": "Trop de requêtes d’IA pour le moment. Réessayez {{when}}."
   }
 }

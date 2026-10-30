@@ -43,6 +43,8 @@
     "unauthorized": "Twoje logowanie wygasło. Zaloguj się ponownie i spróbuj jeszcze raz.",
     "invalidRequest": "TabMerger nie mógł wysłać tego żądania AI. Spróbuj ponownie i zaktualizuj rozszerzenie, jeśli to się powtarza.",
     "refused": "AI odmówiła wykonania tego żądania.",
-    "failed": "Żądanie AI nie powiodło się. Spróbuj ponownie."
+    "failed": "Żądanie AI nie powiodło się. Spróbuj ponownie.",
+    "rateLimited": "Zbyt wiele zapytań AI w tej chwili. Spróbuj ponownie za minutę.",
+    "rateLimitedRetry": "Zbyt wiele zapytań AI w tej chwili. Spróbuj ponownie {{when}}."
   }
 }

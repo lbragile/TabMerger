@@ -136,3 +136,4 @@
 - [Scratchpad scripts are shared](learnings_scratchpad_script_names.md) — unique script names; Write's "not read yet" error means a stale file of that name exists
 - [Window AI actions](learnings_window_ai_actions.md) — AiTarget (group id + position + tabs key), one gated WindowAiScope host, generalized modals
 - [Buy more credits in Settings → AI](learnings_buy_credits_entry.md) — lib/buyCredits.ts shared URL + 10% rule; e2e records tabs.create; Python write_text CRLF trap
+- [AI rate_limited, trimmed payloads, cap rule](learnings_ai_rate_limit_payload_cap.md) — two 429s, codeless 429 = platform → rate_limited; Intl wait copy; aiPayload + web-parser contract test (alias before `@`); allowance_spent cap

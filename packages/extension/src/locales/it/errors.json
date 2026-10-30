@@ -43,6 +43,8 @@
     "unauthorized": "Il tuo accesso è scaduto. Accedi di nuovo e riprova.",
     "invalidRequest": "TabMerger non è riuscito a inviare questa richiesta AI. Riprova e aggiorna l’estensione se succede ancora.",
     "refused": "L’AI ha rifiutato questa richiesta.",
-    "failed": "La richiesta AI non è riuscita. Riprova."
+    "failed": "La richiesta AI non è riuscita. Riprova.",
+    "rateLimited": "Troppe richieste AI in questo momento. Riprova tra un minuto.",
+    "rateLimitedRetry": "Troppe richieste AI in questo momento. Riprova {{when}}."
   }
 }

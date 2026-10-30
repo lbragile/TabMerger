@@ -43,6 +43,8 @@
     "unauthorized": "Phiên đăng nhập của bạn đã hết hạn. Hãy đăng nhập lại và thử lần nữa.",
     "invalidRequest": "TabMerger không gửi được yêu cầu AI đó. Hãy thử lại, và cập nhật tiện ích nếu lỗi vẫn xảy ra.",
     "refused": "AI đã từ chối yêu cầu này.",
-    "failed": "Yêu cầu AI không thành công. Hãy thử lại."
+    "failed": "Yêu cầu AI không thành công. Hãy thử lại.",
+    "rateLimited": "Hiện có quá nhiều yêu cầu AI. Hãy thử lại sau một phút.",
+    "rateLimitedRetry": "Hiện có quá nhiều yêu cầu AI. Hãy thử lại {{when}}."
   }
 }

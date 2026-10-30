@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AI_BYOK_KEY_HEADER, AI_ERROR_CODES, PRO_AI_MONTHLY_CREDITS, estimateAiCredits } from '@tabmerger/shared'
@@ -239,6 +239,45 @@ describe('aiPost error codes', () => {
     const err = await aiPost('/api/ai/group-tabs', {}, 'tok').catch((e: unknown) => e)
     expect(err).not.toBeInstanceOf(QuotaExceededError)
     expect(isFixedInAiSettings(err)).toBe(false)
+  })
+
+  it('429 rate_limited is an AiRequestError naming the wait, never out of credits', async () => {
+    failWith(429, { error: AI_ERROR_CODES.rateLimited, code: AI_ERROR_CODES.rateLimited, retryAfterSeconds: 30 })
+    const err = await aiPost('/api/ai/tab-summary', {}, 'tok').catch((e: unknown) => e)
+    expect(err).toBeInstanceOf(AiRequestError)
+    expect(err).not.toBeInstanceOf(QuotaExceededError)
+    expect((err as { isQuotaExceeded?: boolean }).isQuotaExceeded).toBeUndefined()
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, status: 429, retryAfterSeconds: 30 })
+    expect((err as Error).message).toBe('Too many AI requests right now. Try again in 30 seconds.')
+    expect(isFixedInAiSettings(err)).toBe(false)
+  })
+
+  it('429 rate_limited without a body wait reads the Retry-After header', async () => {
+    fetchMock().mockResolvedValue({
+      ok: false,
+      status: 429,
+      headers: new Headers({ 'Retry-After': '120' }),
+      text: async () => JSON.stringify({ error: AI_ERROR_CODES.rateLimited })
+    })
+    const err = await aiPost('/api/ai/name-group', {}, 'tok').catch((e: unknown) => e)
+    expect(err).toMatchObject({ retryAfterSeconds: 120 })
+    expect((err as Error).message).toBe('Too many AI requests right now. Try again in 2 minutes.')
+  })
+
+  it('429 rate_limited with no usable wait says to try again in a minute', async () => {
+    failWith(429, { error: AI_ERROR_CODES.rateLimited, retryAfterSeconds: 'soon' })
+    const err = await aiPost('/api/ai/name-group', {}, 'tok').catch((e: unknown) => e)
+    expect(err).toMatchObject({ code: AI_ERROR_CODES.rateLimited, retryAfterSeconds: undefined })
+    expect((err as Error).message).toBe(t('errors.ai.rateLimited'))
+  })
+
+  it('a mutation refused with rate_limited does not show the buy-credits prompt', async () => {
+    failWith(429, { error: AI_ERROR_CODES.rateLimited, retryAfterSeconds: 2 })
+    const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
+    await act(async () => { await result.current.mutateAsync(tabs(1)).catch(() => {}) })
+    // The mutation observer can notify a tick after mutateAsync settles, so wait for the error.
+    await waitFor(() => expect(result.current.error).toBeInstanceOf(AiRequestError))
+    expect(result.current.isQuotaExceeded).toBe(false)
   })
 
   it('an invalid own key points to Settings', async () => {

@@ -17,19 +17,43 @@ vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/lib/supabase', () => ({ supabase: { from: mockFrom } }))
 
+interface StubOptions {
+  /** The subscription row's fields other than `ai_monthly_credits` (an active managed Pro AI plan by default). */
+  subscription?: Record<string, unknown> | null
+  /** `ai_usage.allowance_spent` (absent by default: the allowance was never frozen). */
+  allowanceSpent?: unknown
+}
+
+/** Every call made on the query builders, e.g. `['ai_credit_purchases', 'is', 'revoked_at', null]`. */
+const calls: unknown[][] = []
+
 /**
  * Stubs `ai_usage` and `subscriptions` (terminal .maybeSingle) and `ai_credit_purchases`
- * (thenable multi-row).
+ * (thenable multi-row, whose `.is('revoked_at', null)` filter is recorded but not applied: the
+ * rows passed are the ones the server would return).
  */
-function stubSupabase(creditsUsed: number, purchases: { credits: number }[], monthlyCredits: unknown = 2000) {
+function stubSupabase(
+  creditsUsed: number,
+  purchases: { credits: number }[],
+  monthlyCredits: unknown = 2000,
+  { subscription = { tier: 'pro_ai', status: 'active', ai_mode: 'managed' }, allowanceSpent }: StubOptions = {}
+) {
   mockFrom.mockImplementation((table: string) => {
     const b: Record<string, unknown> = {}
-    b.select = () => b
-    b.eq = () => b
+    const record = (method: string) => (...args: unknown[]) => {
+      calls.push([table, method, ...args])
+      return b
+    }
+    b.select = record('select')
+    b.eq = record('eq')
+    b.is = record('is')
     b.maybeSingle = async () =>
       table === 'subscriptions'
-        ? { data: { ai_monthly_credits: monthlyCredits }, error: null }
-        : { data: { credits_used: creditsUsed }, error: null }
+        ? { data: subscription === null ? null : { ...subscription, ai_monthly_credits: monthlyCredits }, error: null }
+        : {
+            data: { credits_used: creditsUsed, ...(allowanceSpent === undefined ? {} : { allowance_spent: allowanceSpent }) },
+            error: null
+          }
     b.then = (resolve: (v: unknown) => void) => resolve({ data: purchases, error: null })
     return b
   })
@@ -43,6 +67,7 @@ function makeWrapper() {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  calls.length = 0
   mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'managed' })
   mockUseAuth.mockReturnValue({ user: { id: 'user-1' }, loading: false, session: null })
 })
@@ -153,5 +178,91 @@ describe('useAiUsage — plan options and failures', () => {
     expect(result.current.known).toBe(false)
     // Display-only fallback while unknown
     expect(result.current.cap).toBe(PRO_AI_MONTHLY_CREDITS)
+  })
+})
+
+describe("useAiUsage — the server's cap rule (migration 027, getEffectiveCap)", () => {
+  afterEach(() => vi.unstubAllEnvs())
+
+  async function renderKnown() {
+    vi.stubEnv('DEV', false)
+    const { useAiUsage } = await import('@/hooks/useAiUsage')
+    const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.known).toBe(true))
+    return result.current
+  }
+
+  it('counts only unrevoked credit packs (filters revoked_at is null)', async () => {
+    stubSupabase(0, [{ credits: 820 }])
+    const usage = await renderKnown()
+
+    expect(usage.cap).toBe(2820)
+    expect(calls).toContainEqual(['ai_credit_purchases', 'is', 'revoked_at', null])
+    expect(calls).toContainEqual(['ai_usage', 'select', 'credits_used, allowance_spent'])
+  })
+
+  it('a past_due plan keeps what its frozen allowance already paid for, plus its packs', async () => {
+    // The server zeroes ai_monthly_credits on past_due and records allowance_spent
+    stubSupabase(1500, [{ credits: 820 }], 0, {
+      subscription: { tier: 'pro_ai', status: 'past_due', ai_mode: 'managed' },
+      allowanceSpent: 1500
+    })
+    const usage = await renderKnown()
+
+    expect(usage.cap).toBe(2320)
+    expect(usage.remaining).toBe(820)
+  })
+
+  it.each(['past_due', 'trialing', 'canceled'])("a %s plan's allowance does not count, even when the column still holds one", async (status) => {
+    stubSupabase(0, [{ credits: 100 }], 2500, { subscription: { tier: 'pro_ai', status, ai_mode: 'managed' } })
+    const usage = await renderKnown()
+
+    expect(usage.cap).toBe(100)
+  })
+
+  it('an active allowance above allowance_spent wins (the payment recovered)', async () => {
+    stubSupabase(1500, [], 2500, { allowanceSpent: 1500 })
+    const usage = await renderKnown()
+
+    expect(usage.cap).toBe(2500)
+    expect(usage.remaining).toBe(1000)
+  })
+
+  it('allowance_spent above the active allowance wins (greatest of the two)', async () => {
+    stubSupabase(900, [{ credits: 50 }], 500, { allowanceSpent: 900 })
+    const usage = await renderKnown()
+
+    expect(usage.cap).toBe(950)
+  })
+
+  it('a non-Pro-AI tier has no allowance', async () => {
+    stubSupabase(0, [{ credits: 10 }], 2500, { subscription: { tier: 'pro', status: 'active', ai_mode: 'managed' } })
+    expect((await renderKnown()).cap).toBe(10)
+  })
+
+  it('an own-key ai_mode row has no allowance', async () => {
+    stubSupabase(0, [], 2500, { subscription: { tier: 'pro_ai', status: 'active', ai_mode: 'byok' } })
+    expect((await renderKnown()).cap).toBe(0)
+  })
+
+  it('an unset or unknown ai_mode reads as managed, like the server', async () => {
+    stubSupabase(0, [], 2500, { subscription: { tier: 'pro_ai', status: 'active', ai_mode: null } })
+    expect((await renderKnown()).cap).toBe(2500)
+  })
+
+  it('no subscription row, a malformed allowance_spent and malformed packs count as 0', async () => {
+    stubSupabase(5, [{ credits: 100 }, { credits: 'x' as unknown as number }, { credits: -20 }], 2500, {
+      subscription: null,
+      allowanceSpent: 'lots'
+    })
+    const usage = await renderKnown()
+
+    expect(usage.cap).toBe(100)
+    expect(usage.remaining).toBe(95)
+  })
+
+  it('a fractional allowance or allowance_spent is rounded down', async () => {
+    stubSupabase(0, [], 1000.9, { allowanceSpent: 1200.7 })
+    expect((await renderKnown()).cap).toBe(1200)
   })
 })

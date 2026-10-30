@@ -43,6 +43,8 @@
     "unauthorized": "로그인이 만료되었습니다. 다시 로그인한 뒤 시도하세요.",
     "invalidRequest": "TabMerger가 이 AI 요청을 보내지 못했습니다. 다시 시도하고, 계속되면 확장 프로그램을 업데이트하세요.",
     "refused": "AI가 이 요청을 거절했습니다.",
-    "failed": "AI 요청이 실패했습니다. 다시 시도하세요."
+    "failed": "AI 요청이 실패했습니다. 다시 시도하세요.",
+    "rateLimited": "지금은 AI 요청이 너무 많습니다. 1분 후에 다시 시도하세요.",
+    "rateLimitedRetry": "지금은 AI 요청이 너무 많습니다. {{when}}에 다시 시도하세요."
   }
 }

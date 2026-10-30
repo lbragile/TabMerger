@@ -43,6 +43,8 @@
     "unauthorized": "Oturumunuzun süresi doldu. Tekrar giriş yapıp yeniden deneyin.",
     "invalidRequest": "TabMerger bu AI isteğini gönderemedi. Tekrar deneyin; sorun sürerse uzantıyı güncelleyin.",
     "refused": "AI bu isteği reddetti.",
-    "failed": "AI isteği başarısız oldu. Tekrar deneyin."
+    "failed": "AI isteği başarısız oldu. Tekrar deneyin.",
+    "rateLimited": "Şu anda çok fazla AI isteği var. Bir dakika sonra tekrar deneyin.",
+    "rateLimitedRetry": "Şu anda çok fazla AI isteği var. {{when}} tekrar deneyin."
   }
 }

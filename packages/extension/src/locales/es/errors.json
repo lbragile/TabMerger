@@ -43,6 +43,8 @@
     "unauthorized": "Tu sesión ha caducado. Vuelve a iniciar sesión e inténtalo otra vez.",
     "invalidRequest": "TabMerger no pudo enviar esa solicitud de IA. Inténtalo de nuevo y actualiza la extensión si sigue pasando.",
     "refused": "La IA rechazó esta solicitud.",
-    "failed": "La solicitud de IA falló. Inténtalo de nuevo."
+    "failed": "La solicitud de IA falló. Inténtalo de nuevo.",
+    "rateLimited": "Demasiadas solicitudes de IA en este momento. Inténtalo de nuevo en un minuto.",
+    "rateLimitedRetry": "Demasiadas solicitudes de IA en este momento. Inténtalo de nuevo {{when}}."
   }
 }

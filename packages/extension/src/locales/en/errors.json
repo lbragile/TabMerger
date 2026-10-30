@@ -43,6 +43,8 @@
     "unauthorized": "Your sign-in has expired. Sign in again and try once more.",
     "invalidRequest": "TabMerger couldn't send that AI request. Try again, and update the extension if it keeps happening.",
     "refused": "The AI declined this request.",
-    "failed": "The AI request failed. Try again."
+    "failed": "The AI request failed. Try again.",
+    "rateLimited": "Too many AI requests right now. Try again in a minute.",
+    "rateLimitedRetry": "Too many AI requests right now. Try again {{when}}."
   }
 }
