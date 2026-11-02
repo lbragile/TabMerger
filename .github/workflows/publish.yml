@@ -47,6 +47,16 @@ env:
   # Chrome Web Store item IDs (public: they're in the listing URLs, see docs/PUBLISHING.md).
   CHROME_EXTENSION_ID: inmiajapbpafmhjleiebcamfhkfnlgoc
   CHROME_BETA_EXTENSION_ID: nboljhidpjakiohfdkdjkcljdehcapcd
+  # AI feature flags compiled into each channel's build (public values, not secrets). On only
+  # for the exact string "true" (isAiEnabled / isAiByokEnabled in @tabmerger/shared). _AI_ENABLED
+  # is managed AI and implies own-key; _AI_BYOK_ENABLED is own-key only. The web app's matching
+  # flags must be on first, or the extension gets 503 ai_disabled from /api/ai/*.
+  # Beta is own-key only: its site uses Stripe test mode, so a test card must not unlock AI on
+  # TabMerger's Anthropic key.
+  BETA_AI_ENABLED: 'false'
+  BETA_AI_BYOK_ENABLED: 'true'
+  PROD_AI_ENABLED: 'true'
+  PROD_AI_BYOK_ENABLED: 'true'
 
 jobs:
   build:
@@ -112,6 +122,8 @@ jobs:
           # ships. Beta builds use the BETA_* project (see the top-level env).
           VITE_SUPABASE_URL: ${{ env.BETA_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.BETA_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_AI_ENABLED: ${{ env.BETA_AI_ENABLED }}
+          VITE_AI_BYOK_ENABLED: ${{ env.BETA_AI_BYOK_ENABLED }}
         run: pnpm wxt zip -b chrome --mode beta
 
       - name: Upload Chrome BETA artifact
@@ -150,6 +162,8 @@ jobs:
           VITE_EXTRA_WEB_APP_URLS: ${{ env.BETA_EXTRA_WEB_APP_URLS }}
           VITE_SUPABASE_URL: ${{ env.BETA_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.BETA_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_AI_ENABLED: ${{ env.BETA_AI_ENABLED }}
+          VITE_AI_BYOK_ENABLED: ${{ env.BETA_AI_BYOK_ENABLED }}
         run: pnpm wxt zip -b firefox --mode beta
 
       - name: Upload Firefox BETA artifact
@@ -175,6 +189,8 @@ jobs:
           # Supabase and degrades silently to local-only. Stable uses the PROD_* project.
           VITE_SUPABASE_URL: ${{ env.PROD_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.PROD_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_AI_ENABLED: ${{ env.PROD_AI_ENABLED }}
+          VITE_AI_BYOK_ENABLED: ${{ env.PROD_AI_BYOK_ENABLED }}
         run: pnpm wxt zip
 
       # Firefox and Edge ship the SAME app and need the same backend wiring. Leaving
@@ -187,6 +203,8 @@ jobs:
           VITE_EXTRA_WEB_APP_URLS: ${{ env.PROD_EXTRA_WEB_APP_URLS }}
           VITE_SUPABASE_URL: ${{ env.PROD_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.PROD_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_AI_ENABLED: ${{ env.PROD_AI_ENABLED }}
+          VITE_AI_BYOK_ENABLED: ${{ env.PROD_AI_BYOK_ENABLED }}
         run: pnpm wxt zip -b firefox
 
       - name: Build and zip Edge
@@ -198,6 +216,8 @@ jobs:
           CHROME_EXTENSION_ID: ${{ env.CHROME_EXTENSION_ID }}
           VITE_SUPABASE_URL: ${{ env.PROD_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.PROD_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_AI_ENABLED: ${{ env.PROD_AI_ENABLED }}
+          VITE_AI_BYOK_ENABLED: ${{ env.PROD_AI_BYOK_ENABLED }}
         run: pnpm wxt zip -b edge
 
       - name: Upload Chrome artifact

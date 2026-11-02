@@ -45,7 +45,8 @@ unrelated add-on. This was restored to the live listing's real GUID in `wxt.conf
   Extension Shortcuts"); restoring saved browser tab groups depends on the browser exposing the
   tab-groups API, so drop that bullet if reviewers on Firefox see no effect; private windows
   reopen as private only when "Run in Private Windows" is allowed for the add-on. AI features
-  stay out of the copy (off in every build).
+  stay out of the copy written while they were off; review it for the first release built with the
+  AI flags on (see the AI bullet under the review notes below).
 - **Privacy policy URL:** https://tabmerger.com/privacy. **Support site:**
   https://tabmerger.com/contact. **Homepage:** https://tabmerger.com (moved from the
   `tabmerger.vercel.app` addresses on 2026-10-16).
@@ -330,8 +331,11 @@ TabMerger's Settings (the true semver).
   as every other build.
 - Pro users who enable sync: data is end-to-end encrypted client-side before it reaches Supabase;
   see `CHROMEWEBSTORE.md`'s "Notes for the review team" and `src/lib/encryptionKey.ts`.
-- AI features are currently disabled/"coming soon" behind `VITE_AI_ENABLED` in every build,
-  Firefox included.
+- AI features are on from the first release built with `VITE_AI_ENABLED` and
+  `VITE_AI_BYOK_ENABLED` set to `"true"` in `publish.yml`, Firefox included (earlier releases had
+  them off). Unlisted BETA builds have only the own-key flag on. Before submitting that release, update AMO's data-collection answers: open-tab titles
+  and URLs go to TabMerger's server and on to an AI provider, and the own-key option sends the
+  user's own API key with each request (see `CHROMEWEBSTORE.md`).
 - Uninstall survey: on removal Firefox opens `<web app>/uninstalled?v=<version>&b=firefox&c=<stable|beta>`
   (`src/lib/uninstallSurvey.ts`). No identifier of any kind is in that address and the add-on sends
   nothing itself, so no data-collection category is declared for it.
