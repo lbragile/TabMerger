@@ -9,7 +9,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { PRO_AI_MONTHLY_CREDITS } from '@tabmerger/shared'
 import {
   AI_MONTHLY_CAP,
-  currentMonth,
+  aiUsageMonth,
   getAiSubscription,
   getEffectiveCap,
   hasProAi,
@@ -65,10 +65,16 @@ describe('AI_MONTHLY_CAP (deprecated alias)', () => {
   })
 })
 
-describe('currentMonth', () => {
-  it('is the UTC month', () => {
+describe('aiUsageMonth', () => {
+  it('is the UTC calendar month with no stored period or no subscription', () => {
     vi.setSystemTime(new Date('2026-03-31T23:30:00-05:00'))
-    expect(currentMonth()).toBe('2026-04')
+    expect(aiUsageMonth(null)).toBe('2026-04')
+    expect(aiUsageMonth({ periodStart: null, periodEnd: null })).toBe('2026-04')
+  })
+
+  it("is the billing period's key once one is stored", () => {
+    vi.setSystemTime(new Date('2026-11-01T00:30:00Z'))
+    expect(aiUsageMonth({ periodStart: '2026-10-31T10:00:00+00:00', periodEnd: '2026-11-30T10:00:00+00:00' })).toBe('2026-10')
   })
 })
 
@@ -80,12 +86,22 @@ describe('getAiSubscription / hasProAi', () => {
       status: 'active',
       aiMode: 'managed',
       monthlyCredits: 2500,
+      periodStart: null,
+      periodEnd: null,
+    })
+  })
+
+  it('reads the stored AI period', async () => {
+    const { supabase } = makeSupabase({ ...MANAGED, ai_period_start: '2026-10-31T10:00:00+00:00', ai_period_end: '2026-11-30T10:00:00+00:00' })
+    expect(await getAiSubscription(supabase, 'u1')).toMatchObject({
+      periodStart: '2026-10-31T10:00:00+00:00',
+      periodEnd: '2026-11-30T10:00:00+00:00',
     })
   })
 
   it('defaults a missing or unknown AI option to managed and a bad allowance to 0', async () => {
     const { supabase } = makeSupabase({ tier: 'pro_ai', status: 'active', ai_mode: 'other', ai_monthly_credits: -5 })
-    expect(await getAiSubscription(supabase, 'u1')).toMatchObject({ aiMode: 'managed', monthlyCredits: 0 })
+    expect(await getAiSubscription(supabase, 'u1')).toMatchObject({ aiMode: 'managed', monthlyCredits: 0, periodStart: null, periodEnd: null })
   })
 
   it('returns null without a row', async () => {
@@ -101,16 +117,24 @@ describe('getAiSubscription / hasProAi', () => {
     ['incomplete', false],
     ['unpaid', false],
   ])('pro_ai with status %s → %s', (status, expected) => {
-    expect(hasProAi({ tier: 'pro_ai', status, aiMode: 'managed', monthlyCredits: 0 })).toBe(expected)
+    expect(hasProAi({ tier: 'pro_ai', status, aiMode: 'managed', monthlyCredits: 0, periodStart: null, periodEnd: null })).toBe(expected)
   })
 
   it.each(['free', 'pro'])('never entitles tier %s', (tier) => {
-    expect(hasProAi({ tier, status: 'active', aiMode: 'managed', monthlyCredits: 0 })).toBe(false)
+    expect(hasProAi({ tier, status: 'active', aiMode: 'managed', monthlyCredits: 0, periodStart: null, periodEnd: null })).toBe(false)
     expect(hasProAi(null)).toBe(false)
   })
 })
 
 describe('getEffectiveCap', () => {
+  it("reads the usage and packs of the subscription's billing-period key when no month is passed", async () => {
+    vi.setSystemTime(new Date('2026-11-01T00:30:00Z'))
+    const { supabase, eq } = makeSupabase({ ...MANAGED, ai_period_start: '2026-10-31T10:00:00Z', ai_period_end: '2026-11-30T10:00:00Z' })
+    await getEffectiveCap(supabase, 'u1')
+    expect(eq).toHaveBeenCalledWith('ai_usage', 'month', '2026-10')
+    expect(eq).toHaveBeenCalledWith('ai_credit_purchases', 'month', '2026-10')
+  })
+
   it("is the subscription's monthly allowance when no packs were bought", async () => {
     const { supabase } = makeSupabase(MANAGED)
     expect(await getEffectiveCap(supabase, 'u1')).toBe(2500)

@@ -82,6 +82,7 @@ const mockCheckoutCreate = vi.fn()
 vi.mock('stripe', () => ({
   default: class {
     subscriptions = { list: mockSubscriptionsList, retrieve: mockSubscriptionsRetrieve }
+    invoices = { list: async () => ({ data: [] }) }
     prices = { retrieve: mockPriceRetrieve }
     billingPortal = {
       sessions: { create: mockPortalCreate },
@@ -328,6 +329,36 @@ describe('drift: the row shows a plan that has ended at Stripe', () => {
     expect(error).toHaveBeenCalledWith(
       'Plan switch resync: subscription retrieve failed (subscription sub_old, StripeAPIError, status 500)'
     )
+  })
+})
+
+describe('a live plan whose renewal is not paid', () => {
+  const live = () => ({
+    ...stripeSub('sub_old', 'past_due', 'price_pro_m'),
+    latest_invoice: { id: 'in_cycle', billing_reason: 'subscription_cycle', status: 'open', amount_due: 399, period_start: 1, period_end: 2 },
+  })
+
+  it('answers 409 pay_or_resume, opens nothing and leaves the row alone', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [stripeSub('sub_old', 'past_due', 'price_pro_m')], has_more: false })
+    mockSubscriptionsRetrieve.mockResolvedValue(live())
+
+    const res = await switchPlan({ tier: 'proAi' })
+
+    expect(res.status).toBe(409)
+    expect((await res.json()).code).toBe('pay_or_resume')
+    expect(mockPortalCreate).not.toHaveBeenCalled()
+    expect(row).toEqual(PRO_ACTIVE)
+  })
+
+  it('answers 500 switch_failed when the subscription cannot be read', async () => {
+    mockSubscriptionsList.mockResolvedValue({ data: [stripeSub('sub_old', 'active', 'price_pro_m')], has_more: false })
+    mockSubscriptionsRetrieve.mockRejectedValue(Object.assign(new Error('down'), { type: 'StripeAPIError' }))
+
+    const res = await switchPlan({ tier: 'proAi' })
+
+    expect(res.status).toBe(500)
+    expect((await res.json()).code).toBe('switch_failed')
+    expect(mockPortalCreate).not.toHaveBeenCalled()
   })
 })
 

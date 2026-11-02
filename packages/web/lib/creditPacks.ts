@@ -42,12 +42,6 @@ export function usdAmountPaid(session: Stripe.Checkout.Session): number | null {
   return null
 }
 
-/** The UTC month ('YYYY-MM') of a Unix time in seconds, or of now. */
-function utcMonth(unixSeconds?: number): string {
-  const date = typeof unixSeconds === 'number' ? new Date(unixSeconds * 1000) : new Date()
-  return date.toISOString().slice(0, 7)
-}
-
 /**
  * Grants a one-time AI credit pack purchase: creditsForPayment() of the USD amount actually paid
  * for it (usdAmountPaid()), in the cost-based unit (1 credit = $0.001 of AI cost). The quantity
@@ -62,8 +56,8 @@ function utcMonth(unixSeconds?: number): string {
  *
  * Idempotent on stripe_checkout_session_id (unique constraint on ai_credit_purchases) — Stripe can
  * redeliver the event, and a duplicate insert must be a no-op, not a double credit. A pack whose
- * row was already written as revoked (its dispute was handled first) stays revoked. Any other
- * insert error throws a SubscriptionSyncError (500), so the event is delivered again.
+ * row was already written as revoked (its dispute was handled first) stays revoked. A failed call
+ * throws a SubscriptionSyncError (500), so the event is delivered again.
  */
 export async function grantCreditPack(
   supabase: ServiceRoleClient,
@@ -76,19 +70,27 @@ export async function grantCreditPack(
     )
     return
   }
-  await insertCreditPack(supabase, eventType, session, { month: utcMonth(), revoked: false })
+  await insertCreditPack(supabase, eventType, session, { revoked: false })
 }
 
 /**
- * Inserts a credit pack's row. Returns false when a row for the session already exists (23505),
- * and when the session has no `metadata.user_id` (logged); throws a SubscriptionSyncError for any
- * other database error.
+ * Inserts a credit pack's row through `ai_grant_credit_pack` (migration 030), which reads the buyer's
+ * month key and inserts under a FOR SHARE lock on their subscription row, so a period advancing at the
+ * same moment can't leave the pack on a key it just stopped using. The key is the one the buyer is
+ * metered on: while a renewal awaits payment that is the old key, so the pack is spendable at once, and
+ * the database carries its unspent part when the period advances. With no subscription row or no stored
+ * period it is the UTC calendar month, never behind the key the row later gets: at worst visible a
+ * little later, never lost.
+ *
+ * Returns false when a row for the session already exists (it stays as it is, revoked or not), and when
+ * the session has no `metadata.user_id` (logged); throws a SubscriptionSyncError for a failed call (500,
+ * the event is delivered again).
  */
 async function insertCreditPack(
   supabase: ServiceRoleClient,
   eventType: string,
   session: Stripe.Checkout.Session,
-  { month, revoked }: { month: string; revoked: boolean }
+  { revoked }: { revoked: boolean }
 ): Promise<boolean> {
   const userId = session.metadata?.user_id
   if (!userId) {
@@ -104,21 +106,19 @@ async function insertCreditPack(
   }
   const credits = usdPaid === null ? 0 : creditsForPayment(usdPaid)
 
-  const { error } = await supabase.from('ai_credit_purchases').insert({
-    user_id: userId,
-    month,
-    credits,
-    stripe_checkout_session_id: session.id,
-    ...(revoked ? { revoked_at: new Date().toISOString() } : {}),
+  const { data, error } = await supabase.rpc('ai_grant_credit_pack', {
+    p_user: userId,
+    p_session: session.id,
+    p_credits: credits,
+    p_revoked: revoked,
   })
 
-  if (error?.code === UNIQUE_VIOLATION) return false
   if (error) {
     throw databaseError(eventType, 'credit pack insert', `session ${session.id}`, error, {
       withMessage: true,
     })
   }
-  return true
+  return data === true
 }
 
 /**
@@ -129,8 +129,8 @@ async function insertCreditPack(
  * in doesn't matter.
  *
  * A pack being revoked before its grant was recorded (the completed checkout is still being
- * retried) gets its row inserted already revoked, from the session (month of the session's
- * creation); the grant's insert then finds it and leaves it revoked. A pack being restored with
+ * retried) gets its row inserted already revoked, in the buyer's current month key; the grant's
+ * insert then finds it and leaves it revoked. A pack being restored with
  * no row is left to the grant.
  */
 export async function setCreditPackRevoked(
@@ -142,13 +142,10 @@ export async function setCreditPackRevoked(
   if (await updateRevokedAt(supabase, eventType, session.id, revoked)) return revoked ? 'revoked' : 'restored'
   if (!revoked) return 'unchanged'
 
-  const inserted = await insertCreditPack(supabase, eventType, session, {
-    month: utcMonth(session.created),
-    revoked: true,
-  })
+  const inserted = await insertCreditPack(supabase, eventType, session, { revoked: true })
   if (inserted) return 'revoked'
 
-  // The insert met an existing row (23505): the grant inserted it between the update above and
+  // The insert met an existing row: the grant inserted it between the update above and
   // this insert, unrevoked. Revoke it now; a row that is already revoked stays as it is.
   return (await updateRevokedAt(supabase, eventType, session.id, true)) ? 'revoked' : 'unchanged'
 }

@@ -374,7 +374,43 @@ describe('managed metering', () => {
     expect(res.headers.get('X-AI-Credits-Remaining')).toBe('2500')
   })
 
-  it('settles in the month it reserved in, even when the call ends after midnight UTC', async () => {
+  it("meters on the subscription's billing period, not the calendar month: Nov 1 stays on an Oct 31 period", async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-01T00:30:00.000Z'))
+    withSubscription({ ...MANAGED, ai_period_start: '2026-10-31T10:00:00+00:00', ai_period_end: '2026-11-30T10:00:00+00:00' })
+    sdk.create.mockResolvedValue(message(NAME_ANSWER))
+
+    expect((await nameGroupPOST(nameReq())).status).toBe(200)
+    expect(rpcCalls('ai_reserve_credits')[0].p_month).toBe('2026-10')
+    expect(rpcCalls('ai_settle_credits')[0].p_month).toBe('2026-10')
+  })
+
+  it('ignores a month sent by the client: the key comes from the row', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-01T00:30:00.000Z'))
+    withSubscription({ ...MANAGED, ai_period_start: '2026-10-31T10:00:00+00:00', ai_period_end: '2026-11-30T10:00:00+00:00' })
+    sdk.create.mockResolvedValue(message(NAME_ANSWER))
+
+    await nameGroupPOST(nameReq({ tabs: TABS, model: 'claude-opus-5-5', month: '2030-01', p_month: '2030-01' }, { 'x-month': '2030-01' }))
+    expect(rpcCalls('ai_reserve_credits')[0].p_month).toBe('2026-10')
+  })
+
+  it('a period that rolls over mid-call: reservation and settlement stay on one row', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-30T09:59:59.900Z'))
+    withSubscription({ ...MANAGED, ai_period_start: '2026-10-31T10:00:00+00:00', ai_period_end: '2026-11-30T10:00:00+00:00' })
+    sdk.create.mockImplementation(async () => {
+      vi.setSystemTime(new Date('2026-11-30T10:00:02.000Z'))
+      withSubscription({ ...MANAGED, ai_period_start: '2026-11-30T10:00:00+00:00', ai_period_end: '2026-12-31T10:00:00+00:00' })
+      return message(NAME_ANSWER)
+    })
+
+    expect((await nameGroupPOST(nameReq())).status).toBe(200)
+    expect(rpcCalls('ai_reserve_credits')[0].p_month).toBe('2026-10')
+    expect(rpcCalls('ai_settle_credits')[0].p_month).toBe('2026-10')
+  })
+
+  it('with no stored period, settles in the month it reserved in, even when the call ends after midnight UTC', async () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date('2026-10-31T23:59:59.900Z'))
     sdk.create.mockImplementation(async () => {

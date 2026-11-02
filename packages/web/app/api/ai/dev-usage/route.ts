@@ -1,13 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { AI_ERROR_CODES } from '@tabmerger/shared'
 import { aiDisabledResponse } from '@/lib/ai-guard'
-import { currentMonth } from '@/lib/ai-usage'
+import { aiUsageMonth, getAiSubscription } from '@/lib/ai-usage'
 import { AI_MAX_BODY_BYTES_SMALL, parseDevUsageBody, readJsonBodyWithin } from '@/lib/ai-validation'
 import { aiError, authenticateAiRequest, bodyRefused, invalidRequest } from '@/lib/ai-route'
 
 /**
- * Dev-only: sets the authenticated user's `ai_usage.credits_used` for the
- * current UTC month to an exact value (in credits, 1 credit = $0.001 of AI
+ * Dev-only: sets the authenticated user's `ai_usage.credits_used` for their
+ * current usage month to an exact value (in credits, 1 credit = $0.001 of AI
  * cost), so the real reserve/settle path (`ai_reserve_credits`) can be
  * exercised end-to-end (near-cap, reset-to-0).
  *
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   const count = input.data
 
   // user_id comes only from the verified token — never from the request body.
-  const month = currentMonth()
+  const month = aiUsageMonth(await getAiSubscription(supabase, user.id))
   const { error } = await supabase
     .from('ai_usage')
     .upsert({ user_id: user.id, month, credits_used: count }, { onConflict: 'user_id,month' })

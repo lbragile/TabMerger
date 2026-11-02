@@ -1,13 +1,19 @@
 /**
- * Tests for lib/aiAllowanceResync.ts, the one-off re-sync of `ai_mode` / `ai_monthly_credits`
- * for existing pro_ai rows (run by scripts/resync-ai-allowance.ts after migration 022). Stripe and
+ * Tests for lib/aiAllowanceResync.ts, the one-off re-sync of `ai_mode` / `ai_monthly_credits` / the
+ * AI period for existing pro_ai rows (run by scripts/resync-ai-allowance.ts after migrations 022 and 030). Stripe and
  * Supabase are fakes: nothing here talks to a real project.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { PRO_AI_MONTHLY_CREDITS, creditsForPayment } from '@tabmerger/shared'
 import { resyncAiAllowances } from '@/lib/aiAllowanceResync'
 
-type Row = { id: string; ai_mode: string | null; ai_monthly_credits: number | null }
+type Row = {
+  id: string
+  ai_mode: string | null
+  ai_monthly_credits: number | null
+  ai_period_start?: string | null
+  ai_period_end?: string | null
+}
 
 function fakeSupabase(rows: Row[], { readError = null as unknown, updateError = null as unknown } = {}) {
   const updates: Array<{ id: string; values: unknown }> = []
@@ -58,6 +64,7 @@ function fakeStripe(subscriptions: Record<string, unknown>) {
       }),
     },
     coupons: { retrieve: vi.fn(async () => ({ id: 'co_1', percent_off: 50 })) },
+    invoices: { list: vi.fn(async ({ status }: { status: string }) => ({ data: status === 'paid' ? [{ period_end: 1_793_000_000 }] : [] })) },
   }
 }
 
@@ -104,6 +111,8 @@ describe('resyncAiAllowances', () => {
       scanned: 7,
       unchanged: 1,
       changed: ['sub_managed', 'sub_byok', 'sub_half'],
+      heldOnUnpaid: [],
+      behindPaidRenewal: [],
       skipped: ['free_user', 'sub_gone'],
       failed: ['sub_error'],
     })
@@ -115,6 +124,125 @@ describe('resyncAiAllowances', () => {
     expect(lines.join('\n')).not.toMatch(/@|cus_/)
   })
 
+  describe('the AI period (migration 030)', () => {
+    const START = 1_793_000_000
+    const END = 1_795_600_000
+    const withPeriod = sub('sub_p', 'price_ai_m', {
+      items: { data: [{ price: { id: 'price_ai_m' }, discounts: [], current_period_start: START, current_period_end: END }] },
+    })
+    const base = { id: 'sub_p', ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS }
+    const iso = (s: number) => new Date(s * 1000).toISOString()
+
+    it('dry run: an otherwise matching row with no stored period is reported, nothing is written', async () => {
+      const { supabase, updates } = fakeSupabase([base])
+      const result = await resyncAiAllowances({ stripe: fakeStripe({ sub_p: withPeriod }) as never, supabase: supabase as never, apply: false })
+      expect(result.changed).toEqual(['sub_p'])
+      expect(updates).toEqual([])
+    })
+
+    it('--apply backfills the period', async () => {
+      const { supabase, updates } = fakeSupabase([base])
+      await resyncAiAllowances({ stripe: fakeStripe({ sub_p: withPeriod }) as never, supabase: supabase as never, apply: true })
+      expect(updates).toEqual([
+        {
+          id: 'sub_p',
+          values: { ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS, ai_period_start: iso(START), ai_period_end: iso(END) },
+        },
+      ])
+    })
+
+    it('a row already holding the period, in the database\'s +00:00 form, is unchanged', async () => {
+      const stored = {
+        ...base,
+        ai_period_start: iso(START).replace('.000Z', '+00:00'),
+        ai_period_end: iso(END).replace('.000Z', '+00:00'),
+      }
+      const { supabase, updates } = fakeSupabase([stored])
+      const result = await resyncAiAllowances({ stripe: fakeStripe({ sub_p: withPeriod }) as never, supabase: supabase as never, apply: true })
+      expect(result).toMatchObject({ unchanged: 1, changed: [] })
+      expect(updates).toEqual([])
+    })
+
+    describe('a renewal and its invoice', () => {
+      const NEXT = END + 2_592_000
+      const renewed = (status: string, invoice: Record<string, unknown>) =>
+        sub('sub_p', 'price_ai_m', {
+          status,
+          latest_invoice: { billing_reason: 'subscription_cycle', amount_due: 799, subtotal: 799, period_start: START, period_end: END, ...invoice },
+          items: { data: [{ price: { id: 'price_ai_m' }, discounts: [], current_period_start: END, current_period_end: NEXT }] },
+        })
+      const stored = { ...base, ai_period_start: iso(START), ai_period_end: iso(END) }
+
+      it('a renewal not paid yet: no new period is stored, the row is reported as held', async () => {
+        const stripe = fakeStripe({ sub_p: renewed('active', { status: 'draft' }) })
+        stripe.invoices.list = vi.fn(async () => ({ data: [{ period_end: START }] })) as never
+        const { supabase, updates } = fakeSupabase([stored])
+        const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+        expect(result).toMatchObject({ unchanged: 1, heldOnUnpaid: ['sub_p'], behindPaidRenewal: [], changed: [] })
+        expect(updates).toEqual([])
+      })
+
+      it('held with a different allowance on the row: the allowance waits for the payment too', async () => {
+        const { supabase, updates } = fakeSupabase([{ ...stored, ai_monthly_credits: 100 }])
+        await resyncAiAllowances({ stripe: fakeStripe({ sub_p: renewed('active', { status: 'open' }) }) as never, supabase: supabase as never, apply: true })
+        expect(updates).toEqual([])
+      })
+
+      it('a paid upgrade hiding an open renewal: held, and reported', async () => {
+        const stripe = fakeStripe({
+          sub_p: renewed('active', { status: 'paid', billing_reason: 'subscription_update', period_start: END + 30, period_end: END + 30 }),
+        })
+        stripe.invoices.list = vi.fn(async ({ status }: { status: string }) => ({
+          data: status === 'open' ? [{ billing_reason: 'subscription_cycle', status: 'open', amount_due: 799, period_start: START, period_end: END }] : [{ period_end: START }],
+        })) as never
+        const { supabase, updates } = fakeSupabase([stored])
+        const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+        expect(result).toMatchObject({ heldOnUnpaid: ['sub_p'], behindPaidRenewal: [], unchanged: 1 })
+        expect(updates).toEqual([])
+      })
+
+      it('a failed invoice read is a failure for that row only: nothing is written', async () => {
+        const stripe = fakeStripe({ sub_p: renewed('active', { status: 'draft' }) })
+        stripe.invoices.list = vi.fn(async () => {
+          throw Object.assign(new Error('down'), { type: 'StripeAPIError' })
+        }) as never
+        const { supabase, updates } = fakeSupabase([stored])
+        const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+        expect(result.failed).toEqual(['sub_p'])
+        expect(updates).toEqual([])
+      })
+
+      it('a row behind a paid renewal (a missed invoice.paid) advances and is listed', async () => {
+        const { supabase, updates } = fakeSupabase([stored])
+        const result = await resyncAiAllowances({ stripe: fakeStripe({ sub_p: renewed('active', { status: 'paid' }) }) as never, supabase: supabase as never, apply: true })
+        expect(result).toMatchObject({ changed: ['sub_p'], behindPaidRenewal: ['sub_p'], heldOnUnpaid: [] })
+        expect(updates[0].values).toMatchObject({ ai_period_start: iso(END), ai_period_end: iso(NEXT) })
+      })
+
+      it('dry run lists a row behind a paid renewal and writes nothing', async () => {
+        const { supabase, updates } = fakeSupabase([stored])
+        const result = await resyncAiAllowances({ stripe: fakeStripe({ sub_p: renewed('active', { status: 'paid' }) }) as never, supabase: supabase as never, apply: false })
+        expect(result.behindPaidRenewal).toEqual(['sub_p'])
+        expect(updates).toEqual([])
+      })
+
+      it('a first backfill during a hold stores the period just ended', async () => {
+        const stripe = fakeStripe({ sub_p: renewed('active', { status: 'draft' }) })
+        stripe.invoices.list = vi.fn(async () => ({ data: [{ period_end: START }] })) as never
+        const { supabase, updates } = fakeSupabase([base])
+        await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+        expect(updates).toEqual([{ id: 'sub_p', values: { ai_mode: 'managed', ai_period_start: iso(START), ai_period_end: iso(END) } }])
+      })
+    })
+
+    it('a stored period that differs is written', async () => {
+      const stored = { ...base, ai_period_start: iso(START - 2_592_000), ai_period_end: iso(START) }
+      const { supabase, updates } = fakeSupabase([stored])
+      await resyncAiAllowances({ stripe: fakeStripe({ sub_p: withPeriod }) as never, supabase: supabase as never, apply: true })
+      expect(updates[0].values).toMatchObject({ ai_period_start: iso(START), ai_period_end: iso(END) })
+    })
+  })
+
   it('--apply writes the same values the webhook would, to those rows only', async () => {
     const { supabase, updates } = fakeSupabase(rows)
 
@@ -122,9 +250,9 @@ describe('resyncAiAllowances', () => {
 
     expect(result.changed).toEqual(['sub_managed', 'sub_byok', 'sub_half'])
     expect(updates).toEqual([
-      { id: 'sub_managed', values: { ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS } },
-      { id: 'sub_byok', values: { ai_mode: 'byok', ai_monthly_credits: 0 } },
-      { id: 'sub_half', values: { ai_mode: 'managed', ai_monthly_credits: creditsForPayment(3.99) } },
+      { id: 'sub_managed', values: { ai_mode: 'managed', ai_monthly_credits: PRO_AI_MONTHLY_CREDITS, ai_period_start: null, ai_period_end: null } },
+      { id: 'sub_byok', values: { ai_mode: 'byok', ai_monthly_credits: 0, ai_period_start: null, ai_period_end: null } },
+      { id: 'sub_half', values: { ai_mode: 'managed', ai_monthly_credits: creditsForPayment(3.99), ai_period_start: null, ai_period_end: null } },
     ])
   })
 
@@ -158,7 +286,7 @@ describe('resyncAiAllowances', () => {
       apply: true,
     })
     expect(result.changed).toEqual(['sub_c'])
-    expect(updates[0].values).toEqual({ ai_mode: 'managed', ai_monthly_credits: 0 })
+    expect(updates[0].values).toEqual({ ai_mode: 'managed', ai_monthly_credits: 0, ai_period_start: null, ai_period_end: null })
   })
 
   it('a coupon that cannot be read is a failure for that row only', async () => {

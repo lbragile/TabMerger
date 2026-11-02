@@ -44,6 +44,7 @@ export { TIERS, getStripePriceId, getPlanForPriceId, getPlanPriceIds } from './t
 export type { TierKey, BillingInterval } from './tiers'
 import { getPlanForPriceId } from './tiers'
 import { planChangeTiming } from './planChangeTiming'
+import { findUnpaidRenewal } from './aiAllowance'
 
 /**
  * Shown next to the pay button of the credit-pack checkout (`custom_text.submit`, at most 1,200
@@ -681,6 +682,9 @@ export async function createCancelSubscriptionSession({
  * - `no_subscription`: no entitled subscription on one of the plan's prices, while one that can't be
  *   read as this plan may exist (a live subscription on a price this deployment doesn't know, with
  *   several items, or more subscriptions than one page lists). Nothing is corrected for it.
+ * - `unpaid_renewal`: the subscription's renewal hasn't been paid (findUnpaidRenewal()). A paid upgrade
+ *   would make a `past_due` subscription `active` with the renewal still open, so the renewal is
+ *   settled first. Also refused in the renewal's draft hour, before Stripe has charged it.
  * - `would_credit`: an upgrade whose invoice, previewed at Stripe, comes out below zero (a coupon on
  *   the subscription that discounts the new price more than the old one). Applying it would leave
  *   the customer a balance credit, which no plan change may do, so it isn't offered.
@@ -689,6 +693,7 @@ export class PlanSwitchError extends Error {
   constructor(
     readonly reason:
       | 'no_customer'
+      | 'unpaid_renewal'
       | 'no_entitled_subscription'
       | 'open_subscription'
       | 'no_subscription'
@@ -799,6 +804,12 @@ export async function createPlanSwitchSession({
   if (subscription.cancel_at_period_end || subscription.cancel_at) {
     throw new PlanSwitchError('cancel_scheduled')
   }
+
+  // A renewal that isn't paid comes first. Stripe lets a paid upgrade through and marks the
+  // subscription `active` with the renewal still open (test clock, 2026-11-01). A failed read goes
+  // up to the route's 500: no session and no schedule is made without knowing.
+  const current = await stripe.subscriptions.retrieve(subscription.id, { expand: ['latest_invoice'] })
+  if (await findUnpaidRenewal(current, stripe.invoices)) throw new PlanSwitchError('unpaid_renewal')
 
   // An archived Price can't be switched to (a portal configuration rejects it, and a schedule
   // would fail at the period end). Say so instead of a generic failure.

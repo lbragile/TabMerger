@@ -107,11 +107,91 @@ invoice paid); unpaid, the update expires after about 23 hours and the invoice g
 that invoice charges nothing for the current price, it doesn't lower the allowance of the plan
 already paid for.
 
-The allowance is counted against usage per **UTC calendar month** (`ai_usage`), not per billing
-period. So a share granted after a mid-period upgrade applies again as the cap of the next calendar
-month when the renewal falls after that month starts (an upgrade on the 20th with renewal on the
-10th: the share caps the rest of this month and again the 1st to the 10th). Bounded at about twice
-the share before the renewal restores the full figure; accepted.
+### When credits reset
+
+Credits reset when a paid billing period starts, not on the 1st (migration 030). `ai_usage` and
+`ai_credit_purchases` are keyed by a `'YYYY-MM'` text that holds the UTC calendar month in which the
+current allowance month **started**, computed from `subscriptions.ai_period_start` and
+`ai_period_end` (Stripe's item period, written with every subscription write):
+
+| Stored period | Key |
+|---|---|
+| Monthly (at most 32 days) | The month of its start. Stripe keeps one start per calendar month (anchor 31: Jan 31, Feb 28, Mar 31), so each period has its own key. |
+| Longer (yearly: the Price pays for 12 monthly allowances) | The month of the latest monthly anniversary of the start that has passed and lies before the end, clamped to the month's end and counted from the start (Oct 31, Nov 30, Dec 31). |
+| None (own key, free, not yet re-synced) | The UTC calendar month. |
+
+The rule is `aiAllowanceMonth()` in `packages/shared/src/utils/aiAllowanceMonth.ts` and
+`ai_allowance_month()` in SQL. The case table in `supabase/tests/030_ai_billing_period_credits.test.sql`
+is what both are tested against, so they can't drift apart unnoticed. The AI routes compute the key
+once per request from the row they read (reservation and settlement hit the same row); a client
+never supplies it, and the extension's own computation is a display only.
+
+- **A renewal's credits open on payment, not at the period's start.** Stripe moves the item's period
+  about an hour before it charges the renewal (test clock: active with a `draft`
+  `subscription_cycle` invoice 30 seconds after the period end). While a subscription is `active` or
+  `past_due` and a `subscription_cycle` invoice for this period start isn't `paid` and has something
+  to pay (`findUnpaidRenewal()`: the latest invoice, and when that is a plan change's, the `draft`,
+  `open`, `uncollectible` and `void` invoices too, up to 100 of each, because a paid upgrade makes a
+  `past_due` subscription `active` while its renewal stays open; a list with more pages and no match
+  holds as well), the stored period doesn't advance and an `active` row's allowance isn't
+  rewritten. A failed read of those invoices fails the event. `invoice.paid` writes them, and so does any later write that finds the
+  invoice paid. So a card that fails never gets a new bucket, and a successful renewal's reset comes
+  a little after the period's start.
+- **What doesn't hold by itself:** a first invoice (`subscription_create`) never does, nor does an
+  invoice with nothing to pay (a 100% coupon, a $0 price) or a yearly plan's monthly anniversaries (not
+  invoices). A plan change's invoice (`subscription_update`) doesn't hold for its own sake, but an
+  unpaid renewal behind it still does. `send_invoice` would hold until paid; checkout never creates one.
+- **A written-off renewal** (`void` or `uncollectible`) stays held until a later renewal is paid, which
+  moves the period start. A customer who pays a later renewal isn't kept back by an old one.
+- **No plan change while a renewal is unpaid.** `createPlanSwitchSession()` refuses with `pay_or_resume`
+  (a failed read is `switch_failed`), including in the renewal's draft hour, about an hour a period.
+  Without this a paid upgrade makes the subscription `active` with the renewal still open.
+- **Known limits.** A plan-change page opened before the renewal and confirmed during it isn't refused:
+  Stripe applies it and the hold still applies. A plan-change invoice with no renewal behind it that
+  lands with a new anchor (portal-made monthly to yearly, measured as `subscription_update` in
+  2026-10) opens its new period before it is paid. The generic Manage billing portal isn't gated, because
+  that is where a customer pays; it must not offer plan changes (see "Portal configuration"
+  below). A pack restored after a won dispute stays on its old key. A yearly upgrade with a
+  month or two left gets a full allowance for each monthly reset.
+- **If `invoice.paid` is missing on an endpoint**, credits reset one period late, not never: while
+  holding, the row is written with the unpaid invoice's own `period_start`/`period_end` (the period
+  just ended) when a paid invoice covers that period, so the next renewal catches it up to the last
+  paid period. A `void` or `uncollectible` renewal (for example `pause_collection`) never does. Any other subscription
+  write after the invoice is paid advances it fully, and the re-sync repairs and lists such rows
+  (`behindPaidRenewal`, and `heldOnUnpaid` for renewals not paid yet).
+- **No fresh bucket without a new period.** A period that has ended with nothing stored keeps its
+  key. Only the write of a new period moves it, and for the same subscription id the start can't
+  move backwards (trigger `subscriptions_keep_ai_period`), so a handler that read before a renewal
+  and wrote after it does no harm.
+- **Why this closes the double spend.** Subscribe on Oct 31, spend the allowance, and Nov 1 is on
+  the same key with nothing left. Before, one payment could fund two allowances (about 69% of the
+  payment on AI cost, against the 40% target).
+- **A mid-period upgrade's share** caps one bucket: the period start exists from the earlier plan, so
+  a monthly plan's key doesn't change until the renewal restores the full figure. A yearly plan with
+  more than a month left earns a full allowance per anniversary (the share is capped at 1), so an
+  upgrade with, say, six weeks left gets two allowances for six weeks' payment.
+- **Monthly to yearly** restarts the period. In the same calendar month as the old start the key is
+  unchanged and the usage carries over; in a later one the yearly payment brings a fresh bucket.
+- **Cancelling and resubscribing in the same calendar month** gives the same key, so usage carries
+  over. Conservative, and accepted.
+- **A renewal into `past_due`** keeps the old key with an allowance of 0: the freeze keeps what the
+  allowance paid for and unspent packs stay spendable, nothing new is granted. When a retry succeeds
+  the subscription is `active`, the invoice `paid`, and the period and allowance advance together.
+- **Credit packs** belong to the key the buyer is metered on at grant time, read from their row when
+  the event is handled, and end at the next reset, as the allowance does. A pack bought during a hold
+  (`created_at` at or after the stored period's end) is spendable at once on the old key, and when
+  the period advances the unspent part of it moves to the new key (trigger
+  `subscriptions_carry_ai_packs`; its `credits` drop to the unspent part, so nothing spent comes
+  back, and `carried_from_month` marks the row). When the old period is cut short (monthly to yearly on
+  the same id, or a new subscription taking over the row) every pack on the old key carries the same
+  way, because it was bought for time that period no longer has. The grant reads the key and inserts
+  in one database call (`ai_grant_credit_pack`, under a lock on the subscription row), so it can't
+  land on the old key after the carry ran. With no row or no stored period it goes to the calendar
+  month, which is never behind the key the row later gets: it may become visible later, but isn't lost.
+- **A pack restored by a won dispute** stays on its key. After a reset that bucket is gone, so a win
+  restores nothing usable. Existing behaviour, accepted.
+- **Display.** Copy that says "this month" means this allowance month. The dashboard and account
+  pages and the extension all read the same key as the meter.
 
 ---
 
@@ -509,6 +589,7 @@ Events handled (the `switch`):
 | `customer.discount.created`, `.updated`, `.deleted` | A coupon was applied, changed or removed (including a repeating one ending). The discount's subscription (or, for a discount on the customer, the Stripe subscription stored on the row of the profile holding that customer) is handled exactly like `customer.subscription.updated`, which rewrites `ai_monthly_credits`. No subscription found → 200 + the "matched no subscription row or user" line. |
 | `customer.subscription.deleted` | `status = 'canceled'`, `tier = 'free'`, `ai_monthly_credits = 0` on the row whose `subscriptions.id` is the event's subscription id. No user or profile lookup, no retrieve. |
 | `invoice.payment_failed` | Retrieve the current state of the invoice's subscription from Stripe → write its status (`past_due` while Stripe retries the payment) on the row whose `subscriptions.id` is that id, with `ai_monthly_credits = 0` for any status but `active`. No user or profile lookup; an invoice that bills no subscription changes nothing. |
+| `invoice.paid` | Retrieve the current state of the invoice's subscription from Stripe → write it to the row whose `subscriptions.id` is that id (tier, status, AI option, allowance, period, price), including a renewal's period and allowance, which wait for this event (see [When credits reset](#when-credits-reset)). Never inserts or takes over a row; no subscription on the invoice, or no row under that id, changes nothing. Running it again, or for an older invoice, writes the same current state, and the period can't move back. If this invoice is the latest and Stripe doesn't read it as paid yet, answers 500 so Stripe sends it again. |
 | `checkout.session.async_payment_succeeded` | A delayed payment method has paid: a credit pack session is granted like a paid `checkout.session.completed` (same idempotent insert). A subscription session writes nothing here (its `customer.subscription.updated` does). Checkout is card-only today, so this is for completeness. |
 | `charge.dispute.created`, `.updated`, `.closed`, `.funds_withdrawn`, `.funds_reinstated`, `charge.refunded` | See [Disputes and refunds](#disputes-and-refunds): read the charge and every dispute on it from Stripe; a credit pack's row gets `revoked_at` set or cleared; a subscription whose payment is a chargeback is cancelled at Stripe at once and its row ended. |
 
@@ -643,13 +724,14 @@ When a renewal payment fails, Stripe marks the subscription `past_due` and retri
 - it stays entitled for sync and everything else in Pro (`ENTITLED_SUBSCRIPTION_STATUSES`,
   `has_cloud_sync()`), and the AI routes still accept it (`hasProAi()`);
 - `ai_monthly_credits` is written as 0 (`subscriptionAiColumns()` and `updateSubscriptionById()`):
-  no new managed credits, also when a new UTC month starts during the retries;
-- what the allowance had already paid for this month stays paid for. `ai_usage.credits_used` is
-  one counter for the allowance and the month's credit packs (the allowance is spent first), so
+  no new managed credits, also when a new period starts during the retries;
+- what the allowance had already paid for in its allowance month stays paid for. `ai_usage.credits_used`
+  is one counter for the allowance and the month's credit packs (the allowance is spent first), so
   when `ai_monthly_credits` drops from a positive value to 0 the trigger
   `subscriptions_freeze_ai_allowance` (migration 027) records
-  `ai_usage.allowance_spent = least(old allowance, credits_used)` for the current UTC month (never
-  lowering a value already recorded that month), and `ai_reserve_credits` caps at
+  `ai_usage.allowance_spent = least(old allowance, credits_used)` on the row of the key the
+  subscription held before this write (`ai_allowance_month()` of its old period, migration 030, also
+  when the same write stores a new period), never lowering a value already recorded there, and `ai_reserve_credits` caps at
   `greatest(allowance if active, allowance_spent) + unrevoked packs`. The trigger fires only for a
   row that was `pro_ai` + managed + entitled: a row that could never spend its allowance (e.g.
   `incomplete` with a stale figure) gets nothing back. `past_due` is in that list because before 027
@@ -729,10 +811,15 @@ Each environment (production, preview, local) needs its **own** Stripe webhook d
    `*.vercel.app` hosts can stay: those hosts serve the same deployment and keep `/api/*`.
 2. Subscribe it to `checkout.session.completed`, `checkout.session.expired`,
    `checkout.session.async_payment_succeeded`, `customer.subscription.updated`,
-   `customer.subscription.deleted`, `invoice.payment_failed`, `customer.discount.created`,
+   `customer.subscription.deleted`, `invoice.payment_failed`, `invoice.paid`, `customer.discount.created`,
    `customer.discount.updated`, `customer.discount.deleted`, `charge.dispute.created`,
    `charge.dispute.updated`, `charge.dispute.closed`, `charge.dispute.funds_withdrawn`,
    `charge.dispute.funds_reinstated`, `charge.refunded`.
+
+   **Added with migration 030**, to be added by hand to each existing endpoint (test mode for
+   preview, live mode for production): `invoice.paid`. Without it a renewal's credits open one
+   period late (see [When credits reset](#when-credits-reset)). `stripe listen` without `--events`
+   forwards it, so local dev needs nothing.
 
    **Added with migration 027**, to be added by hand to each existing endpoint (test mode for
    preview, live mode for production): `checkout.session.async_payment_succeeded`,
@@ -1078,6 +1165,35 @@ Owner steps for **live mode** (and to re-check test mode):
 5. Optionally remove `STRIPE_PORTAL_CONFIGURATION_ID` from each environment (unused).
 6. In test mode, try Pro → Pro AI own key (Stripe's confirm page, charged prorated), own key →
    managed, and Pro AI → Pro (scheduled; the price changes at the period end).
+
+### After deploying migrations 029 and 030: backfill the AI period
+
+Migration 030 adds `subscriptions.ai_period_start` / `ai_period_end` empty, and a row with no stored
+period stays on the UTC calendar month. Order for each environment:
+
+1. Add `invoice.paid` to the Stripe endpoint for that environment, before the deploy: the handler
+   answers 200 to any event it doesn't know, so this is safe at any time, and the renewal hold starts
+   with the deploy. Without it credits reset one period late.
+2. Apply 029, then 030. The web code selects the new columns on every AI request and fails closed (403)
+   without them, so the migration comes first. Code that doesn't know them works with it in place.
+3. Deploy the web app.
+4. Run the same re-sync as below, dry run then `--apply`. It writes the period (and only rows whose
+   values differ), skips the new period of a renewal that isn't paid, and lists it.
+
+Rows keep their months, and a subscriber's key moves once, when their period is first stored. For
+someone part-way through a period that move goes either way, per user. If the key lands on an older
+row or one already holding usage, that usage counts against them for one period. If it lands on a month
+whose calendar row holds little or nothing, what they spent on another calendar row no longer counts, so
+they can get up to one extra allowance, once. Packs bought under a calendar key become spendable once
+their period reaches that month.
+
+Release a store build of the extension only after 030 is on production: it selects the columns too. If
+the new web code ran before them, every subscription write would fail with 500 (PostgREST refuses an
+unknown column, `PGRST204`) and every AI request with 403, so the migrations strictly come first. A rollback is
+web code first, then the SQL in 030's header; dropping the columns is a later, separate step, once no
+deployed code or store build reads them (until then an installed extension can show stale usage). It leaves data the header lists: carried packs keep
+their lowered `credits` (find them by `carried_from_month`) and can be stranded, and calendar keys can
+land on a month with no usage row, so a fresh allowance is possible.
 
 ### After deploying migration 022: re-sync existing allowances
 

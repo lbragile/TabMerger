@@ -1,7 +1,7 @@
 /**
- * One-off: recompute `subscriptions.ai_mode` and `ai_monthly_credits` for every `pro_ai` row from
+ * One-off: recompute `subscriptions.ai_mode`, `ai_monthly_credits` and the AI period for every `pro_ai` row from
  * Stripe, with the same function the webhook uses (lib/aiAllowance.ts). Run once per environment
- * after migration 022 and the code that writes these columns are deployed; running it again is
+ * after migration 022 or 030 and the code that writes these columns are deployed; running it again is
  * harmless (only rows whose values differ are written).
  *
  * Dry run by default; `--apply` writes. Prints counts and Stripe subscription ids only.
@@ -48,6 +48,8 @@ async function main() {
   console.log(
     `pro_ai rows: ${result.scanned}; unchanged: ${result.unchanged}; ${apply ? 'written' : 'would change'}: ${result.changed.length}; skipped: ${result.skipped.length}; failed: ${result.failed.length}`
   )
+  if (result.heldOnUnpaid.length) console.log(`Renewal not paid yet, period held: ${result.heldOnUnpaid.join(', ')}`)
+  if (result.behindPaidRenewal.length) console.log(`Behind a paid renewal (was an invoice.paid missed?): ${result.behindPaidRenewal.join(', ')}`)
   if (result.skipped.length) console.log(`Skipped (no Stripe subscription): ${result.skipped.join(', ')}`)
   if (result.failed.length) {
     console.log(`Failed (run again): ${result.failed.join(', ')}`)

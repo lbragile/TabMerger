@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   PRO_AI_MONTHLY_CREDITS,
+  aiAllowanceMonth,
   isAiMode,
   isEntitledSubscriptionStatus,
   type AiMode,
@@ -22,11 +23,6 @@ import {
  */
 export const AI_MONTHLY_CAP = PRO_AI_MONTHLY_CREDITS
 
-/** Returns the current month as 'YYYY-MM' in UTC, the bucket `ai_usage` rows are keyed by. */
-export function currentMonth(): string {
-  return new Date().toISOString().slice(0, 7)
-}
-
 /** The subscription fields AI routes branch on. */
 export interface AiSubscription {
   tier: string | null
@@ -35,6 +31,9 @@ export interface AiSubscription {
   aiMode: AiMode
   /** Managed monthly allowance in credits; 0 when unset. */
   monthlyCredits: number
+  /** `ai_period_start` and `ai_period_end`, what {@link aiUsageMonth} is computed from. */
+  periodStart: string | null
+  periodEnd: string | null
 }
 
 interface SubscriptionRow {
@@ -42,9 +41,21 @@ interface SubscriptionRow {
   status?: string | null
   ai_mode?: unknown
   ai_monthly_credits?: unknown
+  ai_period_start?: string | null
+  ai_period_end?: string | null
 }
 
-/** Reads a `subscriptions` row (any of tier, status, ai_mode, ai_monthly_credits) as an {@link AiSubscription}. */
+/**
+ * The month key of the user's `ai_usage` and `ai_credit_purchases` rows right now: when credits
+ * last reset (`aiAllowanceMonth()` in `@tabmerger/shared`), the UTC calendar month with no stored
+ * period or no subscription. Always computed from the row read on the server, never taken from a
+ * client.
+ */
+export function aiUsageMonth(sub: Pick<AiSubscription, 'periodStart' | 'periodEnd'> | null): string {
+  return aiAllowanceMonth(sub?.periodStart, sub?.periodEnd)
+}
+
+/** Reads a `subscriptions` row (any of tier, status, ai_mode, ai_monthly_credits, the AI period) as an {@link AiSubscription}. */
 export function toAiSubscription(row: SubscriptionRow | null | undefined): AiSubscription | null {
   if (!row) return null
   const credits = row.ai_monthly_credits
@@ -53,6 +64,8 @@ export function toAiSubscription(row: SubscriptionRow | null | undefined): AiSub
     status: row.status ?? null,
     aiMode: isAiMode(row.ai_mode) ? row.ai_mode : 'managed',
     monthlyCredits: typeof credits === 'number' && Number.isFinite(credits) && credits > 0 ? Math.floor(credits) : 0,
+    periodStart: row.ai_period_start ?? null,
+    periodEnd: row.ai_period_end ?? null,
   }
 }
 
@@ -63,7 +76,7 @@ async function readAiSubscription(
 ): Promise<{ sub: AiSubscription | null; error: { code?: string } | null }> {
   const { data, error } = await supabase
     .from('subscriptions')
-    .select('tier, status, ai_mode, ai_monthly_credits')
+    .select('tier, status, ai_mode, ai_monthly_credits, ai_period_start, ai_period_end')
     .eq('user_id', userId)
     .single()
   return { sub: toAiSubscription(data as SubscriptionRow | null), error: error ?? null }
@@ -89,7 +102,7 @@ export function hasProAi(sub: AiSubscription | null): sub is AiSubscription {
 }
 
 /**
- * Effective monthly credit cap, the same rule as `ai_reserve_credits` (migration 027):
+ * Effective monthly credit cap, the same rule as `ai_credit_cap` (migrations 027 and 030):
  * greatest(managed allowance, `ai_usage.allowance_spent` for `month`) + the month's credit packs
  * that are not revoked. The allowance is `subscriptions.ai_monthly_credits`, counted only for a
  * managed `pro_ai` subscription whose status is `active` (not trialing or past_due). `allowance_spent` is what the allowance already paid
@@ -97,16 +110,18 @@ export function hasProAi(sub: AiSubscription | null): sub is AiSubscription {
  * instead of 0. A revoked pack (`revoked_at` set: disputed or refunded) counts for nothing.
  * Shared by the dashboard and account usage displays so they show what the server enforces.
  * Throws when the subscription, usage or pack read fails, so the page shows its error state
- * instead of a cap that leaves out the allowance (or shows 0).
+ * instead of a cap that leaves out the allowance (or shows 0). `requestedMonth` defaults to the key
+ * of the subscription it reads ({@link aiUsageMonth}).
  */
 export async function getEffectiveCap(
   supabase: SupabaseClient,
   userId: string,
-  month: string = currentMonth()
+  requestedMonth?: string
 ): Promise<number> {
   const { sub, error: subError } = await readAiSubscription(supabase, userId)
   // `.single()` finding no subscription row (PGRST116) is a free account, not a failure.
   if (subError && subError.code !== 'PGRST116') throw new Error(`subscriptions read failed (${subError.code ?? 'unknown'})`)
+  const month = requestedMonth ?? aiUsageMonth(sub)
   // Only an active subscription's allowance counts; trialing and past_due keep what it already
   // paid for (allowance_spent) and their unrevoked packs.
   const allowance = hasProAi(sub) && sub.aiMode === 'managed' && sub.status === 'active' ? sub.monthlyCredits : 0
@@ -167,8 +182,9 @@ export async function reserveCredits(
 }
 
 /**
- * Adds `delta` (usually negative: actual cost minus the reservation) to this month's usage
- * through `ai_settle_credits`, never below 0. Returns the new `credits_used`, or `null` when
+ * Adds `delta` (usually negative: actual cost minus the reservation) to the usage of `month`
+ * through `ai_settle_credits`: never below 0, and a positive delta never past the cap (migration
+ * 030). Returns the new `credits_used`, or `null` when
  * there was no row. Throws when the database call fails; callers keep the reservation then.
  */
 export async function settleCredits(

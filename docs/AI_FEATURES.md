@@ -110,7 +110,11 @@ Run the `encrypted-column-auditor` agent before merging any new AI route.
 
 ## Usage metering and credits
 
-- Monthly pool: `AI_MONTHLY_CAP = 300` credits per user per UTC month (`'YYYY-MM'`).
+- Monthly pool: `AI_MONTHLY_CAP = 300` credits per user per allowance month. The `'YYYY-MM'` key is the
+  UTC month in which the current allowance month started: credits reset once a billing period's
+  renewal is paid (`invoice.paid`), not at the period's start; a yearly plan on each monthly anniversary, and with no stored period on the 1st UTC
+  (`aiAllowanceMonth()` in `@tabmerger/shared`, `ai_allowance_month()` in SQL; see "When credits reset"
+  in `docs/PAYMENTS.md`). The route computes it from the subscription row, never from the client.
   Per-call cost: `CREDIT_COSTS` in `lib/ai-usage.ts` (table above).
 - `ai_usage(user_id, month, credits_used)` — `credits_used` was `request_count` before migration 017.
   Users can read their own row (RLS); only the service role writes.
@@ -214,10 +218,13 @@ When off:
   restart `pnpm dev:extension`. Dev builds call the web app at `VITE_WEB_APP_URL`
   like any other build (there is no client-side AI mock). The account still needs `pro_ai` for `aiFeatures`.
   To answer those calls without a provider key, see [Mock AI in development](#mock-ai-in-development).
-- **Extension, store builds:** `.github/workflows/publish.yml` does not pass `VITE_AI_ENABLED`, and
-  the extension's `.env.production` / `.env.beta` don't set it, so CI-built store zips ship with AI
-  off. Turning it on for users requires adding it to the build and releasing a new version.
-  TODO (owner): decide where the production value will live (workflow env vs. `.env.production`).
+- **Extension, store builds:** the values live in `.github/workflows/publish.yml`'s top-level `env:`,
+  per channel (`BETA_AI_ENABLED`, `BETA_AI_BYOK_ENABLED`, `PROD_AI_ENABLED`, `PROD_AI_BYOK_ENABLED`),
+  and each build step passes them as `VITE_AI_ENABLED` / `VITE_AI_BYOK_ENABLED`. They are public
+  values, on only for the exact string `"true"`. They are compiled into the zip, so changing one
+  takes effect only in a new release. Beta builds are own-key only (`BETA_AI_ENABLED` is `'false'`):
+  this only hides managed AI in the extension, so the preview site's `NEXT_PUBLIC_AI_ENABLED` is what
+  stops its routes serving managed calls.
 - Web and extension flags are independent; turn the web one on first, or an enabled extension will
   get 503 `ai_disabled`.
 

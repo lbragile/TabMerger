@@ -51,24 +51,12 @@ let packUpdateError: { code: string; message: string } | null = null
 /** Simulates the grant inserting the row (unrevoked) between a revoke's update and its insert. */
 let grantRacesRevokeInsert = false
 const subscriptionUpdates: Array<{ values: Record<string, unknown>; id: string }> = []
+let grantCalls: Array<Record<string, unknown>> = []
 
 /** A tiny PostgREST stand-in: ai_credit_purchases insert/update and subscriptions update by id. */
 function from(table: string) {
   if (table === 'ai_credit_purchases') {
     return {
-      insert: vi.fn(async (row: Omit<PackRow, 'revoked_at'> & { revoked_at?: string }) => {
-        if (packInsertError) return { error: packInsertError }
-        if (grantRacesRevokeInsert && row.revoked_at) {
-          grantRacesRevokeInsert = false
-          packs.push({ ...row, revoked_at: null })
-          return { error: { code: '23505', message: 'duplicate key value' } }
-        }
-        if (packs.some((p) => p.stripe_checkout_session_id === row.stripe_checkout_session_id)) {
-          return { error: { code: '23505', message: 'duplicate key value' } }
-        }
-        packs.push({ revoked_at: null, ...row })
-        return { error: null }
-      }),
       update: (values: { revoked_at: string | null }) => {
         const filters: Array<(p: PackRow) => boolean> = []
         const chain = {
@@ -110,8 +98,24 @@ function from(table: string) {
   throw new Error(`unexpected table ${table}`)
 }
 
+/** ai_grant_credit_pack: false when the session already has a row, as the database answers. */
+async function rpc(fn: string, args: { p_user: string; p_session: string; p_credits: number; p_revoked: boolean }) {
+  if (fn !== 'ai_grant_credit_pack') throw new Error(`unexpected rpc ${fn}`)
+  grantCalls.push(args)
+  if (packInsertError) return { data: null, error: packInsertError }
+  const row = { user_id: args.p_user, month: '2027-01', credits: args.p_credits, stripe_checkout_session_id: args.p_session }
+  if (grantRacesRevokeInsert && args.p_revoked) {
+    grantRacesRevokeInsert = false
+    packs.push({ ...row, revoked_at: null })
+    return { data: false, error: null }
+  }
+  if (packs.some((p) => p.stripe_checkout_session_id === args.p_session)) return { data: false, error: null }
+  packs.push({ ...row, revoked_at: args.p_revoked ? new Date().toISOString() : null })
+  return { data: true, error: null }
+}
+
 vi.mock('@/lib/supabase/server', () => ({
-  createServiceRoleClient: vi.fn(async () => ({ from })),
+  createServiceRoleClient: vi.fn(async () => ({ from, rpc })),
 }))
 
 function request() {
@@ -195,6 +199,21 @@ describe('a credit pack is granted only once paid', () => {
     const res = await post({ type: 'checkout.session.completed', data: { object: packSession() } })
     expect(res.status).toBe(200)
     expect(packs).toEqual([expect.objectContaining({ user_id: USER, credits: PACK_CREDITS, stripe_checkout_session_id: 'cs_pack', revoked_at: null })])
+  })
+
+  it('a grant goes through ai_grant_credit_pack, which reads the key under the lock: the web app sends no month', async () => {
+    grantCalls = []
+    await post({ type: 'checkout.session.completed', data: { object: packSession() } })
+    expect(grantCalls).toEqual([{ p_user: USER, p_session: 'cs_pack', p_credits: PACK_CREDITS, p_revoked: false }])
+  })
+
+  it('answers 500 and grants nothing when the call fails: Stripe delivers it again', async () => {
+    packInsertError = { code: '08006', message: 'connection failure' }
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    expect((await post({ type: 'checkout.session.completed', data: { object: packSession() } })).status).toBe(500)
+    expect(packs).toEqual([])
+    expect(errorSpy.mock.calls.flat().join(' ')).toContain('credit pack insert failed (session cs_pack, code 08006)')
+    errorSpy.mockRestore()
   })
 
   it.each(['unpaid', 'no_payment_required'])('a completed session whose payment_status is %s grants nothing', async (status) => {

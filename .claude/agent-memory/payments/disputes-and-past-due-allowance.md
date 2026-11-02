@@ -12,7 +12,7 @@ the allowance alone makes a user who already used allowance lose their packs too
 usage still counts allowance). Fix: trigger `subscriptions_freeze_ai_allowance` (AFTER UPDATE OF
 ai_monthly_credits, old > 0 and new = 0, WHEN also old tier pro_ai + managed + entitled status, else
 an incomplete row with a stale figure got credits back) sets `ai_usage.allowance_spent =
-greatest(previous, least(old allowance, credits_used))` for the current UTC month; reserve locks
+greatest(previous, least(old allowance, credits_used))` for the key the row held (since 030, the old period; see [[ai-credit-month-key]]); reserve locks
 the subscriptions row `for share` first, then cap = `greatest(allowance if status active,
 allowance_spent) + unrevoked packs`. A clamp trigger plus CHECK keep `allowance_spent <=
 credits_used` (a settle can lower usage below a figure taken while a reservation was in flight),

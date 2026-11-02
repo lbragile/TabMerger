@@ -21,6 +21,7 @@ vi.mock('@/lib/stripe', () => ({
   stripe: {
     webhooks: { constructEvent: mockConstructEvent },
     subscriptions: { retrieve: mockSubscriptionsRetrieve },
+    invoices: { list: async () => ({ data: [] }) },
     coupons: { retrieve: mockCouponsRetrieve },
     checkout: { sessions: { listLineItems: vi.fn() } },
   },

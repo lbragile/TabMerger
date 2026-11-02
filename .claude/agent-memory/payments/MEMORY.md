@@ -17,3 +17,4 @@
 - [Keep current plan (release)](keep-current-plan-release.md) — releasing a schedule moves no money (measured); 2nd release = 400 with no code; renewal preview + minor units; config TTL
 - [Billing request guards](billing-request-guards.md) — Sec-Fetch-Site/Origin 403, Postgres per-user limit (025), fail-open decision, test headers + limiter mock
 - [Disputes and past_due allowance](disputes-and-past-due-allowance.md) — 027 allowance_spent freeze (one counter!), charge-state reversals, paid-only packs, test cards
+- [AI credit month key](ai-credit-month-key.md) — 030: key = when the allowance month started; hold until paid (invoice.paid), packs during it; span tells monthly from yearly; Stripe facts

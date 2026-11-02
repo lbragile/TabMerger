@@ -15,7 +15,7 @@ import type { PlanPrice } from './tiers'
  * - BYOK, and any tier other than `pro_ai`: 0 (TabMerger pays for no AI).
  * - Any status other than `active`: 0. `trialing` has paid nothing yet; `past_due` (a renewal
  *   payment is failing, Stripe is retrying) keeps sync and the rest of Pro but earns no managed
- *   credits until the payment succeeds, so a new UTC month during dunning brings no fresh
+ *   credits until the payment succeeds, so a period that starts during dunning brings no fresh
  *   allowance. What the allowance had already paid for this month stays paid for: when the
  *   column drops to 0, migration 027's trigger records it (`ai_usage.allowance_spent`) and
  *   `ai_reserve_credits` keeps that much, so credit packs stay spendable. Once the payment
@@ -36,7 +36,8 @@ import type { PlanPrice } from './tiers'
  *   about half the allowance; one day left: about 1/30). It is read from the latest invoice and
  *   the current period, never from the clock, so a redelivered event or a later update in the same
  *   period writes the same figure; the renewal's invoice (a `subscription_cycle`) brings the full
- *   allowance back. Credit packs are separate grants and aren't touched. While that upgrade's
+ *   allowance back, in the same step as the new usage month (aiWriteColumns(), when that renewal is
+ *   paid), so on a monthly plan the share caps one bucket and never applies twice. Credit packs are separate grants and aren't touched. While that upgrade's
  *   invoice isn't paid, the share is 0. Step 2 measures an upgrade's invoice on the new price's
  *   line alone, not on the subtotal that nets it against the old price's unused time.
  */
@@ -240,6 +241,158 @@ function upgradePeriodShare(subscription: Stripe.Subscription, months: number): 
   if (covered <= 0) return 1
   const monthSeconds = (end - start) / months
   return Math.min(1, covered / monthSeconds)
+}
+
+/** The invoice list {@link findUnpaidRenewal} reads. */
+export type InvoiceLister = { list(params: Stripe.InvoiceListParams): PromiseLike<{ data: Stripe.Invoice[]; has_more?: boolean }> }
+
+/** A renewal that hasn't been paid, and whether the period it follows was paid for. */
+export interface UnpaidRenewal {
+  /** Null when the listing was too long to tell which invoice it is: held all the same. */
+  invoice: Stripe.Invoice | null
+  /** The period just ended (the invoice's own period) was paid for, so a row behind it can catch up. */
+  priorPeriodPaid: boolean
+}
+
+/** The statuses of an invoice that hasn't been paid. */
+const UNPAID_INVOICE_STATUSES = ['draft', 'open', 'uncollectible', 'void'] as const
+
+/** Stripe's largest page. */
+const INVOICE_PAGE = 100
+
+/** An unpaid renewal with something to pay: `subscription_cycle`, not `paid`, `amount_due` not 0. */
+function isUnpaidCycleInvoice(invoice: Stripe.Invoice): boolean {
+  return invoice.billing_reason === 'subscription_cycle' && invoice.status !== 'paid' && invoice.amount_due !== 0
+}
+
+/**
+ * The renewal a subscription is waiting on, or null. Stripe moves the item's period as soon as it
+ * drafts the renewal invoice, about an hour before it charges it (test clock, 2026-11-01: 30 seconds
+ * after the period end the period had moved, status `active`, invoice `draft`), so storing that period
+ * would open a new credit bucket for a card that may then fail.
+ *
+ * Only an `active` or `past_due` subscription can hold, on a renewal invoice:
+ * - The latest invoice normally tells. A renewal that isn't paid holds, unless it has nothing to pay (a
+ *   100% coupon, a $0 price, a balance that covers it), which can't fail. A paid one doesn't.
+ * - A newer invoice can hide it. A plan change paid while the renewal is open makes the subscription
+ *   `active` with that invoice as the latest (test clock, 2026-11-01: `past_due` + open renewal, then a
+ *   paid upgrade: `active`, latest `subscription_update`, renewal still open; and an upgrade paid in
+ *   the draft hour stayed `active` after the renewal's charge failed). So when the latest invoice isn't
+ *   a renewal, the subscription's unpaid invoices (`draft`, `open`, `uncollectible`, `void`) are read
+ *   too, and one for this period start (`period_end === current_period_start`) holds: a written-off
+ *   renewal paid for nothing, so it stays held until a later renewal is paid, which moves the period
+ *   start and stops it matching. A list that has more pages and no match holds as well, because the
+ *   renewal may be on one of them. Nothing else is listed: a first invoice (`subscription_create`) can
+ *   have no renewal behind it, and a subscription with no expanded invoice isn't read this way.
+ * - A yearly plan's monthly anniversaries aren't invoices, so they never hold.
+ * - `collection_method: send_invoice` holds the same way until paid. Checkout never creates one.
+ *
+ * Any failed read throws (the caller retries): a hold must never be skipped because Stripe was down.
+ */
+export async function findUnpaidRenewal(
+  subscription: Stripe.Subscription,
+  invoices: InvoiceLister
+): Promise<UnpaidRenewal | null> {
+  if (subscription.status !== 'active' && subscription.status !== 'past_due') return null
+  const latest = subscription.latest_invoice
+  if (!latest || typeof latest === 'string' || latest.billing_reason === 'subscription_create') return null
+
+  let renewal: Stripe.Invoice | undefined
+  if (latest.billing_reason === 'subscription_cycle') {
+    if (isUnpaidCycleInvoice(latest)) renewal = latest
+  } else {
+    const start = (subscription.items?.data?.[0] as (Stripe.SubscriptionItem & { current_period_start?: number }) | undefined)?.current_period_start
+    let cutOff = false
+    for (const status of UNPAID_INVOICE_STATUSES) {
+      const page = await invoices.list({ subscription: subscription.id, status, limit: INVOICE_PAGE })
+      renewal = page.data.find((invoice) => isUnpaidCycleInvoice(invoice) && invoice.period_end === start)
+      if (renewal) break
+      cutOff ||= page.has_more === true
+    }
+    if (!renewal && cutOff) return { invoice: null, priorPeriodPaid: false }
+  }
+  if (!renewal) return null
+
+  return { invoice: renewal, priorPeriodPaid: await priorPeriodPaid(subscription.id, renewal, invoices) }
+}
+
+/**
+ * Whether the period a renewal invoice follows was paid for, by a paid invoice ending where that
+ * period starts. Only then may a row catch up to it. `void` and `uncollectible` renewals (for example
+ * `pause_collection`) say nothing about it, and answer false without a read: a run of voided renewals
+ * must not walk the row forward through periods nobody paid for.
+ */
+async function priorPeriodPaid(
+  subscriptionId: string,
+  renewal: Stripe.Invoice,
+  invoices: InvoiceLister
+): Promise<boolean> {
+  if (renewal.status === 'void' || renewal.status === 'uncollectible') return false
+  const { data } = await invoices.list({ subscription: subscriptionId, status: 'paid', limit: INVOICE_PAGE })
+  return data.some((invoice) => invoice.period_end === renewal.period_start)
+}
+
+/** Stripe seconds as the ISO string a `timestamptz` column is written with. */
+const toIso = (seconds: number): string => new Date(seconds * 1000).toISOString()
+
+/**
+ * The billing period to store (`ai_period_start`, `ai_period_end`, migration 030), which the month
+ * key of the AI credits is computed from (`aiAllowanceMonth()` in `@tabmerger/shared`).
+ *
+ * Normally the item's current period. Both or neither: a subscription without both is written with
+ * no stored period, and for a row already tracking this subscription the database keeps the stored
+ * one (trigger subscriptions_keep_ai_period).
+ *
+ * While a renewal awaits payment the new period isn't stored. If the period that invoice follows (its
+ * own `period_start` and `period_end`, the period just ended) was paid for, it is written: a row that
+ * is up to date already holds it, so nothing changes, and a row left behind because the `invoice.paid`
+ * of an earlier renewal never arrived catches up, so a missing endpoint event costs one period's delay
+ * rather than credits that never reset again. Otherwise (nobody paid for it, or the invoice doesn't
+ * line up with the item's period) no period is written at all.
+ */
+function aiPeriodColumns(
+  subscription: Stripe.Subscription,
+  unpaid: UnpaidRenewal | null
+): {
+  ai_period_start?: string | null
+  ai_period_end?: string | null
+} {
+  const item = subscription.items?.data?.[0] as (Stripe.SubscriptionItem & { current_period_start?: number }) | undefined
+  const start = item?.current_period_start
+  const end = item?.current_period_end
+
+  if (unpaid) {
+    const { invoice, priorPeriodPaid: paid } = unpaid
+    if (paid && invoice && invoice.period_end === start && typeof invoice.period_start === 'number' && invoice.period_start < invoice.period_end) {
+      return { ai_period_start: toIso(invoice.period_start), ai_period_end: toIso(invoice.period_end) }
+    }
+    return {}
+  }
+
+  if (typeof start !== 'number' || typeof end !== 'number') return { ai_period_start: null, ai_period_end: null }
+  return { ai_period_start: toIso(start), ai_period_end: toIso(end) }
+}
+
+/**
+ * The credit columns of a subscription write, from what subscriptionAiColumns() worked out and
+ * findUnpaidRenewal() found: the AI option, the allowance and the billing period. One function for the
+ * webhook and the re-sync, so both apply the same hold. While a renewal of an `active` subscription
+ * awaits payment the allowance is left out too (the row keeps what it has): a plan change landing at
+ * that renewal, such as Pro to managed Pro AI, would otherwise bring credits on the old key before
+ * anything was paid. `past_due` writes its 0 as usual, which is what freezes the allowance.
+ * `invoice.paid`, or any later write that finds the invoice paid, writes the real figures.
+ */
+export function aiWriteColumns(
+  subscription: Stripe.Subscription,
+  ai: AiColumns,
+  unpaid: UnpaidRenewal | null
+): { ai_mode: AiMode; ai_monthly_credits?: number; ai_period_start?: string | null; ai_period_end?: string | null } {
+  const held = subscription.status === 'active' && unpaid !== null
+  return {
+    ai_mode: ai.aiMode,
+    ...(held ? {} : { ai_monthly_credits: ai.monthlyCredits }),
+    ...aiPeriodColumns(subscription, unpaid),
+  }
 }
 
 /**

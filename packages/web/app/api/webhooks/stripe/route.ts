@@ -28,6 +28,7 @@ import {
   logUnmatchedEvent,
   retrieveCurrentSubscription,
   updateSubscriptionById,
+  writeStoredSubscription,
   upsertSubscription,
   type ServiceRoleClient,
 } from '@/lib/subscriptionSync'
@@ -73,7 +74,8 @@ import type Stripe from 'stripe'
  * (`customer.discount.*`) read the subscription again so the allowance follows a coupon that is
  * added, changed or ends. A credit pack grants creditsForPayment() of the USD amount paid, once
  * its session is paid (lib/creditPacks.ts). Only an `active` subscription has managed credits:
- * `past_due` keeps Pro but no new allowance while Stripe retries the renewal.
+ * `past_due` keeps Pro but no new allowance while Stripe retries the renewal. A renewal's period and
+ * allowance are stored once it is paid (`invoice.paid`, or any later write that finds it paid).
  *
  * Disputes and refunds (`charge.dispute.created/updated/closed/funds_withdrawn/funds_reinstated`,
  * `charge.refunded`) read the charge's current state from
@@ -303,6 +305,50 @@ export async function POST(request: NextRequest) {
         await updateSubscriptionById(supabase, event.type, subscriptionId, {
           status: subscription.status,
         })
+        break
+      }
+
+      case 'invoice.paid': {
+        // A paid renewal opens the new period's AI credits: Stripe moves the period before it
+        // charges, and the row waits for this (findUnpaidRenewal() in lib/aiAllowance.ts). The
+        // subscription's current state is written to the row stored under its id, so a redelivered
+        // or out-of-order event writes the same thing, an older invoice's event can't move anything
+        // back, and an invoice with no subscription (or for a subscription no row tracks) changes
+        // nothing.
+        const invoice = event.data.object as Stripe.Invoice
+        const subscriptionId = getInvoiceSubscriptionId(invoice)
+
+        if (!subscriptionId) {
+          logUnmatchedEvent(event.type, null)
+          break
+        }
+
+        const subscription = await retrieveCurrentSubscription(event.type, subscriptionId)
+
+        if (!subscription) {
+          logUnmatchedEvent(event.type, subscriptionId)
+          break
+        }
+
+        // This invoice is the latest one and Stripe doesn't yet read it as paid: a stale read, and the
+        // hold would keep the period back with no later event to release it. Ask for the event again.
+        // (A newer unpaid invoice is different: its own payment brings its own event.)
+        const latest = subscription.latest_invoice
+        if (latest && typeof latest !== 'string' && latest.id === invoice.id && latest.status !== 'paid') {
+          throw new SubscriptionSyncError(
+            `Stripe webhook: ${event.type} the invoice doesn't read as paid yet (subscription ${subscriptionId}, invoice status ${latest.status ?? 'unknown'})`
+          )
+        }
+
+        // The same stale read behind a newer invoice: Stripe's list still has this invoice as the
+        // unpaid renewal, so the write above it was held. Ask again. A paid invoice doesn't go back to
+        // unpaid, so this ends as soon as the list catches up.
+        const written = await writeStoredSubscription(supabase, event.type, subscription)
+        if (written?.unpaidRenewalId === invoice.id) {
+          throw new SubscriptionSyncError(
+            `Stripe webhook: ${event.type} the renewal still lists as unpaid (subscription ${subscriptionId})`
+          )
+        }
         break
       }
 

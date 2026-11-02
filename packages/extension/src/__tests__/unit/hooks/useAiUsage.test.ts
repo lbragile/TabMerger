@@ -72,6 +72,53 @@ beforeEach(() => {
   mockUseAuth.mockReturnValue({ user: { id: 'user-1' }, loading: false, session: null })
 })
 
+describe('useAiUsage — the month key', () => {
+  const monthFilters = (table: string) => calls.filter((c) => c[0] === table && c[1] === 'eq' && c[2] === 'month').map((c) => c[3])
+
+  it("reads usage and packs on the subscription's billing-period key, not the calendar month", async () => {
+    stubSupabase(42, [{ credits: 100 }], 2000, {
+      subscription: {
+        tier: 'pro_ai',
+        status: 'active',
+        ai_mode: 'managed',
+        // A monthly period in the past keeps its key, so this holds on any test date.
+        ai_period_start: '2020-01-31T10:00:00+00:00',
+        ai_period_end: '2020-02-29T10:00:00+00:00'
+      }
+    })
+
+    const { useAiUsage } = await import('@/hooks/useAiUsage')
+    const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.known).toBe(true))
+
+    expect(monthFilters('ai_usage')).toEqual(['2020-01'])
+    expect(monthFilters('ai_credit_purchases')).toEqual(['2020-01'])
+    expect(result.current.cap).toBe(2100)
+  })
+
+  it('falls back to the UTC calendar month with no stored period', async () => {
+    stubSupabase(1, [])
+
+    const { useAiUsage } = await import('@/hooks/useAiUsage')
+    const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.known).toBe(true))
+
+    const month = new Date().toISOString().slice(0, 7)
+    expect(monthFilters('ai_usage')).toEqual([month])
+    expect(monthFilters('ai_credit_purchases')).toEqual([month])
+  })
+
+  it('falls back to the UTC calendar month with no subscription row', async () => {
+    stubSupabase(1, [], 2000, { subscription: null })
+
+    const { useAiUsage } = await import('@/hooks/useAiUsage')
+    const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.known).toBe(true))
+
+    expect(monthFilters('ai_usage')).toEqual([new Date().toISOString().slice(0, 7)])
+  })
+})
+
 describe('useAiUsage — dev builds', () => {
   // import.meta.env.DEV is true under Vitest: dev builds read the same tables as any other build
   // (the web dev server's AI_MOCK replies charge real credits).

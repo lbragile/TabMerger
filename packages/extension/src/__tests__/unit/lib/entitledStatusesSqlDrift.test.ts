@@ -78,18 +78,27 @@ function migrationFiles(): string[] {
 }
 
 /**
- * The managed Pro AI allowance in `ai_reserve_credits()` (latest migration that defines it) is
- * narrower than entitlement since 027: only an `active` subscription earns new managed credits,
- * while `trialing`/`past_due` stay entitled for sync and may still spend credit packs. So its
- * allowance filter must be exactly `s.status = 'active'`, and it must not carry an entitled list
- * (or any broader `<>` check) that could put the allowance back for other statuses.
+ * The managed Pro AI allowance in `ai_credit_cap()` (latest migration that defines it; since 030
+ * `ai_reserve_credits()` and `ai_settle_credits()` take their cap from it) is narrower than
+ * entitlement since 027: only an `active` subscription earns new managed credits, while
+ * `trialing`/`past_due` stay entitled for sync and may still spend credit packs. So its allowance
+ * filter must be exactly `s.status = 'active'`, and it must not carry an entitled list (or any
+ * broader `<>` check) that could put the allowance back for other statuses.
  */
-describe('ai_reserve_credits() managed allowance: active only', () => {
-  const file = [...migrationFiles()].reverse().find((f) => functionBody(readFileSync(resolve(MIGRATIONS_DIR, f), 'utf-8'), 'ai_reserve_credits') !== null);
-  const body = file ? functionBody(readFileSync(resolve(MIGRATIONS_DIR, file), 'utf-8'), 'ai_reserve_credits') ?? '' : '';
+describe('ai_credit_cap() managed allowance: active only', () => {
+  const latestBody = (name: string): { file: string | undefined; body: string } => {
+    const file = [...migrationFiles()].reverse().find((f) => functionBody(readFileSync(resolve(MIGRATIONS_DIR, f), 'utf-8'), name) !== null);
+    return { file, body: file ? functionBody(readFileSync(resolve(MIGRATIONS_DIR, file), 'utf-8'), name) ?? '' : '' };
+  };
+  const { file, body } = latestBody('ai_credit_cap');
 
-  it('a migration defines public.ai_reserve_credits()', () => {
+  it('a migration defines public.ai_credit_cap()', () => {
     expect(file).toBeDefined();
+  });
+
+  it('ai_reserve_credits() and ai_settle_credits() take their cap from it', () => {
+    expect(latestBody('ai_reserve_credits').body).toMatch(/public\.ai_credit_cap\(/);
+    expect(latestBody('ai_settle_credits').body).toMatch(/public\.ai_credit_cap\(/);
   });
 
   it('counts the allowance only for pro_ai + managed + status active', () => {

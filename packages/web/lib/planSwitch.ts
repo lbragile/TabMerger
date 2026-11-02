@@ -108,8 +108,9 @@ export function parsePlanSwitchBody(body: unknown): PlanSwitchTarget | { error: 
  * the plan asked for, so the page can start a checkout for it. When one of the customer's plans
  * can still be paid or resumed (unpaid, paused, incomplete), the row is corrected the same way but
  * the answer is 409 `pay_or_resume` with no `checkout`: a new subscription would bill next to it
- * once it is paid. Stripe stays the authority: this path only ever ends or lowers the row, never
- * grants anything.
+ * once it is paid. A live plan whose renewal hasn't been paid gets the same 409 (`findUnpaidRenewal()`
+ * in lib/aiAllowance.ts): a paid upgrade would leave that renewal open behind it. Stripe stays the
+ * authority: this path only ever ends or lowers the row, never grants anything.
  */
 export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextResponse> {
   const supabase = await createClient()
@@ -220,6 +221,7 @@ export async function startPlanSwitch(target: PlanSwitchTarget): Promise<NextRes
         // live again next to a new one.
         return correctEndedPlan(serviceClient, subscription!, profile.stripe_customer_id, null)
       }
+      if (err.reason === 'unpaid_renewal') return payOrResume()
       if (err.reason === 'already_on_price') {
         const message =
           target.aiMode === undefined && target.tier === undefined

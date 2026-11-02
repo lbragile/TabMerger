@@ -36,6 +36,8 @@ The migrations in `supabase/migrations/` (`001`–`028`) are the source of truth
 | 026 | `026_rate_limit_fixes.sql` | `rate_limit_take()` reads the clock after its advisory lock, never moves a newer window back, runs with `lock_timeout = 1s`, refuses duplicate window lengths and no longer deletes rows itself. Adds the service-role-only `rate_limit_purge(p_limit)` and the pg_cron job `rate-limit-purge` (enables `pg_cron`). `rate_limit_counters` gets fillfactor 70 and autovacuum scale factor 0.05. |
 | 027 | `027_ai_credit_revocation_and_past_due_allowance.sql` | `ai_usage.allowance_spent` (check `0 <= allowance_spent <= credits_used`, clamp trigger `ai_usage_clamp_allowance_spent`) and the freeze trigger `subscriptions_freeze_ai_allowance` on `subscriptions`; `ai_credit_purchases.revoked_at`. `ai_reserve_credits()` locks the subscriptions row `for share`, counts the managed allowance for `active` only, keeps `allowance_spent`, and ignores revoked packs. Takes its table locks up front in the live 022 reservation's order (`subscriptions`, then `ai_credit_purchases`, then `ai_usage`) so the deploy waits instead of deadlocking. Rollback: roll back 028 (at least the web code calling `ai_credits_exhausted()`) first, since that check relies on 027's allowance rule and check constraint. See the `ai_usage` section below. |
 | 028 | `028_ai_request_slots.sql` | `ai_request_slots` table (per-user concurrent AI request leases) with the service-role-only `ai_slot_acquire()`, `ai_slot_release()` and `ai_slot_purge()` and the pg_cron job `ai-slot-purge`; the read-only `ai_credits_exhausted()` credit pre-check (never stricter than `ai_reserve_credits()`); and `rate_limit_peek()`, a look at a `rate_limit_counters` bucket that counts nothing. See the `ai_request_slots` section below. |
+| 029 | `029_ai_credit_purchases_carried_from_month.sql` | `ai_credit_purchases.carried_from_month` (which packs were carried with lowered credits); its own file so each transaction takes one ACCESS EXCLUSIVE lock |
+| 030 | `030_ai_billing_period_credits.sql` | Credits reset per paid billing period: `subscriptions.ai_period_start`/`ai_period_end`, `ai_allowance_month()`, `ai_credit_cap()`, `ai_grant_credit_pack()`, triggers `subscriptions_keep_ai_period` and `subscriptions_carry_ai_packs`; the freeze uses the old period; `ai_settle_credits` stops at the cap |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -87,6 +89,7 @@ There is **one row per user**, enforced by `subscriptions_user_id_key UNIQUE(use
 | `stripe_price_id` | `text` | nullable (005) |
 | `ai_mode` | `text` | not null, default `'managed'`, one of `managed`, `byok` (022). Which Pro AI option: TabMerger's key (metered) or the customer's own Anthropic key (not metered) |
 | `ai_monthly_credits` | `integer` | not null, default `0`, `>= 0` (022). Managed Pro AI allowance per month in credits; `0` for `byok` and non-AI plans |
+| `ai_period_start`, `ai_period_end` | `timestamptz` | nullable (030), both or neither (`subscriptions_ai_period_pair_check`). The Stripe period that has been paid for: the item's current period, written by the webhook and the re-sync script, except that a renewal's new period waits for its invoice to be paid (`invoice.paid`). Read by the `month` key below. Null = no stored period: the UTC calendar month |
 | `created_at` | `timestamptz` | not null, default `now()` |
 | `updated_at` | `timestamptz` | not null, default `now()`, bumped by trigger |
 
@@ -94,7 +97,11 @@ There is **one row per user**, enforced by `subscriptions_user_id_key UNIQUE(use
 
 **Indexes:** `subscriptions_status_idx` and the unique index behind `subscriptions_user_id_key`.
 
-**Trigger (027):** `subscriptions_freeze_ai_allowance`, AFTER UPDATE OF `ai_monthly_credits`, when it drops from above 0 to 0 on a row that was `pro_ai` + `managed` + an entitled status (`active`/`trialing`/`past_due`, mirrors `ENTITLED_SUBSCRIPTION_STATUSES`): it writes `ai_usage.allowance_spent` on the user's row for the current UTC month (`freeze_ai_allowance()`, runs as the writer, empty `search_path`). So a webhook write that zeroes the allowance (past_due, a cancellation, a downgrade) also writes `ai_usage`.
+**Trigger (027):** `subscriptions_freeze_ai_allowance`, AFTER UPDATE OF `ai_monthly_credits`, when it drops from above 0 to 0 on a row that was `pro_ai` + `managed` + an entitled status (`active`/`trialing`/`past_due`, mirrors `ENTITLED_SUBSCRIPTION_STATUSES`): it writes `ai_usage.allowance_spent` on the user's row of the key the subscription held before this write (`ai_allowance_month()` of its old `ai_period_start`/`ai_period_end`, since 030; the calendar month with none) (`freeze_ai_allowance()`, runs as the writer, empty `search_path`). So a webhook write that zeroes the allowance (past_due, a cancellation, a downgrade) also writes `ai_usage`.
+
+**Trigger (030):** `subscriptions_keep_ai_period`, BEFORE UPDATE OF `ai_period_start`, `ai_period_end`: for the same `id`, a start older than the stored one (or none) leaves both as they are, so a stale write can't reopen an old allowance month. A different `id` (a new subscription taking over the row) brings its own period.
+
+**Trigger (030):** `subscriptions_carry_ai_packs`, AFTER UPDATE OF `ai_period_start`, when it moves forward (any subscription id) and the key changes: unrevoked packs on the old key with `created_at` at or after the old period's end (bought while the renewal awaited payment), or all of them when the new start is before the old end (the period was cut short), move to the new key with `credits` lowered to their unspent part (what is left under the old key's cap, newest pack first) and `carried_from_month` set, so nothing spent comes back. A pack bought before a full period ended stays and ends with it.
 
 > Anything that INSERTs a second row for a user fails with `23505` on `subscriptions_user_id_key`, because the trigger has already created one. `supabase/seed.sql` still does this (not yet fixed).
 
@@ -200,7 +207,7 @@ Per-user, per-month AI credit counter. `credits_used` adds up a **weighted** cos
 |---|---|---|
 | `id` | `uuid` | PK, default `gen_random_uuid()` |
 | `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
-| `month` | `text` | not null, `'YYYY-MM'` |
+| `month` | `text` | not null, `'YYYY-MM'`: the key described under "The month key", not the calendar month (030) |
 | `credits_used` | `integer` | not null, default `0` (was `request_count` before 017) |
 | `allowance_spent` | `integer` | nullable (027); check `ai_usage_allowance_spent_check`: `allowance_spent >= 0 and allowance_spent <= credits_used`. How much of the month's usage the managed allowance paid for, recorded by the `subscriptions_freeze_ai_allowance` trigger when the allowance dropped to 0 (`greatest(previous value, least(old allowance, credits_used))`, so a second freeze in a month never lowers it). The BEFORE UPDATE trigger `ai_usage_clamp_allowance_spent` lowers it with `credits_used` when a settlement lowers that |
 | — | — | `unique(user_id, month)` |
@@ -209,8 +216,14 @@ Per-user, per-month AI credit counter. `credits_used` adds up a **weighted** cos
 
 **Metering functions (022).** Both are `security definer` with an empty `search_path`, and only `service_role` can execute them (`anon`/`authenticated` get `42501`). Unit: 1 credit = USD 0.001 of AI cost.
 
-- `ai_reserve_credits(p_user uuid, p_month text, p_amount integer) returns table(allowed boolean, remaining integer, cap integer)`. Since 027 it first locks the user's `subscriptions` row `for share` (so it never reads an allowance a concurrent freeze is replacing; lock order subscriptions, then ai_usage, like the webhook). Cap = `greatest(A, allowance_spent of p_month)` + that month's `ai_credit_purchases.credits` where `revoked_at is null`, with A = `subscriptions.ai_monthly_credits` when tier is `pro_ai`, `ai_mode` is `managed` and status is `active`, else 0 (022 counted it for every entitled status). Because `allowance_spent <= credits_used`, with no unrevoked packs it allows exactly what A alone would. Adds `p_amount` to `credits_used` only if the result stays within the cap, in one `insert ... on conflict do update ... where` statement: the conflicting row is locked and the condition is re-checked against its latest version, so concurrent reservations cannot both use the same headroom. Refused calls change nothing and do not create a row; `remaining` is never negative. Raises `22023` for `p_amount <= 0` or a month that is not `YYYY-MM`.
-- `ai_settle_credits(p_user uuid, p_month text, p_delta integer) returns integer`: adds `p_delta` (usually negative, replacing a reservation with the real cost), clamped at 0. Returns the new `credits_used`, or `null` when the user has no row for that month (no row is created).
+**The `month` key (030).** `ai_usage.month` and `ai_credit_purchases.month` are `'YYYY-MM'` text holding the UTC month in which the current allowance month started, not the calendar month: `ai_allowance_month(p_start timestamptz, p_end timestamptz, p_now timestamptz default now()) returns text` (monthly period up to 32 days: the month of its start, whatever the clock; longer: the latest monthly anniversary of the start that has passed and lies before the end, clamped to month end; a null bound: the UTC calendar month). The same rule as `aiAllowanceMonth()` in `@tabmerger/shared`. `service_role` only. Rows written before 030 hold calendar months and were not rewritten.
+
+`ai_credit_cap(p_user uuid, p_month text) returns integer` (030, stable, `service_role` only): the cap both functions below use.
+
+`ai_grant_credit_pack(p_user uuid, p_session text, p_credits integer, p_revoked boolean) returns boolean` (030, `security definer`, `service_role` only): locks the user's `subscriptions` row `for share`, then inserts the pack on their current key (the calendar month with no row or no stored period). `false`, changing nothing, when the session already has a row.
+
+- `ai_reserve_credits(p_user uuid, p_month text, p_amount integer) returns table(allowed boolean, remaining integer, cap integer)`. Since 027 it first locks the user's `subscriptions` row `for share` (so it never reads an allowance a concurrent freeze is replacing; lock order subscriptions, then ai_usage, like the webhook). Cap (`ai_credit_cap`) = `greatest(A, allowance_spent of p_month)` + that month's `ai_credit_purchases.credits` where `revoked_at is null`, with A = `subscriptions.ai_monthly_credits` when tier is `pro_ai`, `ai_mode` is `managed` and status is `active`, else 0 (022 counted it for every entitled status). Because `allowance_spent <= credits_used`, with no unrevoked packs it allows exactly what A alone would. Adds `p_amount` to `credits_used` only if the result stays within the cap, in one `insert ... on conflict do update ... where` statement: the conflicting row is locked and the condition is re-checked against its latest version, so concurrent reservations cannot both use the same headroom. Refused calls change nothing and do not create a row; `remaining` is never negative. Raises `22023` for `p_amount <= 0` or a month that is not `YYYY-MM`.
+- `ai_settle_credits(p_user uuid, p_month text, p_delta integer) returns integer`: adds `p_delta` (usually negative, replacing a reservation with the real cost), clamped at 0. Since 030 a positive delta first locks the `subscriptions` row `for share` (subscriptions, then ai_usage, as in the reservation), raises `credits_used` no further than `ai_credit_cap`, and never lowers a value already over it. Returns the new `credits_used`, or `null` when the user has no row for that month (no row is created).
 
 Called through PostgREST as `rpc('ai_reserve_credits', ...)`, which returns a one-row array.
 
@@ -222,10 +235,11 @@ One-time AI credit packs. They are month-scoped and don't roll over. There is on
 |---|---|---|
 | `id` | `uuid` | PK, default `gen_random_uuid()` |
 | `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
-| `month` | `text` | not null, `'YYYY-MM'` |
+| `month` | `text` | not null, `'YYYY-MM'`: the key described under "The month key", not the calendar month (030) |
 | `credits` | `integer` | not null. Since 022: 1 credit = USD 0.001 of AI cost (older rows were converted with `floor(0.40 * (units * 0.05 * 0.94 - 0.30) / 0.001)`, min 0) |
 | `stripe_checkout_session_id` | `text` | not null, unique. A Stripe Checkout session id, or `grant_<uuid>` for a manual credit grant |
 | `revoked_at` | `timestamptz` | nullable (027). Set by the Stripe webhook while the pack's payment is disputed (open or lost) or fully refunded, cleared when the dispute is won; `ai_reserve_credits` ignores rows where it is set |
+| `carried_from_month` | `text` | nullable (029). The key this row was first carried from when a period moved on, with `credits` lowered to its unspent part (`subscriptions_carry_ai_packs`). Null = never carried |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
 **RLS:** `"Users can read own credit purchases"`, select only; since 023 `anon`/`authenticated` hold `SELECT` only on the table. Only the service role writes (Stripe webhook, manual grants, the dev-only usage reset). **Index:** `ai_credit_purchases_user_month_idx (user_id, month)`.

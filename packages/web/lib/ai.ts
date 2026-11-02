@@ -747,7 +747,7 @@ export function describeErrorForLog(err: unknown): Record<string, unknown> {
 export interface AiMeter {
   supabase: SupabaseClient
   userId: string
-  /** 'YYYY-MM' (UTC) fixed at the start of the request, so reserve and settle hit one row. */
+  /** The month key (aiAllowanceMonth(), the subscription's billing period) fixed at the start of the request, so reserve and settle hit one row. */
   month: string
 }
 

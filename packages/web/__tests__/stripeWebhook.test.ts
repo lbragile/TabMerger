@@ -50,6 +50,7 @@ vi.mock('@/lib/stripe', () => ({
   stripe: {
     webhooks: { constructEvent: mockConstructEvent },
     subscriptions: { retrieve: mockSubscriptionsRetrieve },
+    invoices: { list: async () => ({ data: [] }) },
     billingPortal: { sessions: { create: mockPortalSessionCreate } },
     checkout: { sessions: { listLineItems: mockListLineItems } },
   },
@@ -72,11 +73,27 @@ const mockUpdate = vi.fn().mockReturnValue({
   }),
 })
 const mockFrom = vi.fn()
+/**
+ * ai_grant_credit_pack as the webhook sees it, in front of each test's `ai_credit_purchases` insert
+ * mock, so these tests keep asserting the row. What the function does in the database (the month key,
+ * the lock) is covered by supabase/tests/030_ai_billing_period_credits.test.sql. A duplicate session
+ * answers false there rather than an error.
+ */
+const mockRpc = vi.fn(async (_fn: string, args: { p_user: string; p_session: string; p_credits: number; p_revoked: boolean }) => {
+  const { error } = await mockFrom('ai_credit_purchases').insert({
+    user_id: args.p_user,
+    credits: args.p_credits,
+    stripe_checkout_session_id: args.p_session,
+  })
+  if (error?.code === '23505') return { data: false, error: null }
+  return error ? { data: null, error } : { data: true, error: null }
+})
 const mockCreateClient = vi.fn()
 
 vi.mock('@/lib/supabase/server', () => ({
   createServiceRoleClient: vi.fn().mockResolvedValue({
     from: mockFrom,
+    rpc: mockRpc,
   }),
   createClient: mockCreateClient,
 }))
@@ -281,6 +298,40 @@ describe('POST /api/webhooks/stripe', () => {
         cancel_at_period_end: true,
         current_period_end: new Date(1900000000 * 1000).toISOString(),
       }),
+      expect.anything()
+    )
+  })
+
+  it("writes the AI period from the subscription's current state at Stripe, never from the event's older copy", async () => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const period = (start: number, end: number) =>
+      makeSubscription({ items: { data: [{ price: { id: 'price_pro_monthly' }, current_period_start: start, current_period_end: end }] } })
+    // A renewal's event delivered late: its embedded object still shows the period before it.
+    mockSubscriptionsRetrieve.mockResolvedValue(period(1802592000, 1805184000))
+    mockConstructEvent.mockReturnValue({
+      type: 'customer.subscription.updated',
+      data: { object: period(1800000000, 1802592000) },
+    })
+
+    expect((await POST(makeRequest('{}'))).status).toBe(200)
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ai_period_start: new Date(1802592000 * 1000).toISOString(),
+        ai_period_end: new Date(1805184000 * 1000).toISOString(),
+      }),
+      expect.anything()
+    )
+  })
+
+  it('writes no AI period when Stripe gives only part of it (the database keeps a stored one for the same id)', async () => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const subscription = makeSubscription()
+    mockSubscriptionsRetrieve.mockResolvedValue(subscription)
+    mockConstructEvent.mockReturnValue({ type: 'customer.subscription.updated', data: { object: subscription } })
+
+    expect((await POST(makeRequest('{}'))).status).toBe(200)
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ ai_period_start: null, ai_period_end: null }),
       expect.anything()
     )
   })
@@ -925,7 +976,7 @@ describe('subscription events are matched by subscription id', () => {
     process.env.STRIPE_PRO_YEARLY_PRICE_ID = 'price_pro_yearly'
 
     const { createServiceRoleClient } = await import('@/lib/supabase/server')
-    ;(createServiceRoleClient as Mock).mockResolvedValue({ from: mockFrom })
+    ;(createServiceRoleClient as Mock).mockResolvedValue({ from: mockFrom, rpc: mockRpc })
 
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -2110,7 +2161,7 @@ describe('PAY-001 edge cases', () => {
 
     // Re-anchor createServiceRoleClient to mockFrom (portal beforeEach may have changed it)
     const { createServiceRoleClient } = await import('@/lib/supabase/server')
-    ;(createServiceRoleClient as Mock).mockResolvedValue({ from: mockFrom })
+    ;(createServiceRoleClient as Mock).mockResolvedValue({ from: mockFrom, rpc: mockRpc })
 
     mockFrom.mockImplementation((table: string) => {
       if (table === 'profiles') {

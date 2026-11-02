@@ -6,7 +6,7 @@ import {
 } from '@tabmerger/shared'
 import { stripe } from '@/lib/stripe'
 import type { createServiceRoleClient } from '@/lib/supabase/server'
-import { SUBSCRIPTION_EXPAND, subscriptionAiColumns, type AiColumns } from '@/lib/aiAllowance'
+import { SUBSCRIPTION_EXPAND, aiWriteColumns, findUnpaidRenewal, subscriptionAiColumns, type AiColumns, type UnpaidRenewal } from '@/lib/aiAllowance'
 import { getPlanForPriceId, type PlanPrice } from '@/lib/tiers'
 
 /**
@@ -64,7 +64,7 @@ export function stripeRetrieveError(
   source: string,
   subscriptionId: string,
   error: unknown,
-  what: 'subscription' | 'coupon' = 'subscription'
+  what: 'subscription' | 'coupon' | 'invoice list' = 'subscription'
 ): SubscriptionSyncError {
   const { type, statusCode } = (error ?? {}) as { type?: unknown; statusCode?: unknown }
   const kind = typeof type === 'string' && type ? type : 'unknown error'
@@ -288,7 +288,7 @@ export async function resyncEndedSubscription(
  *
  * Derives the app tier from the price ID via env-var mapping; defaults to 'free' on unknown prices.
  * The status and tier then go through toStoredState(), so a status the database does not store
- * is written as canceled / free. `ai_mode` and `ai_monthly_credits` come from aiColumns().
+ * is written as canceled / free. See subscriptionRowColumns() for the rest.
  *
  * The write `checkout.session.completed` and `customer.subscription.updated` make; the checkout's
  * Stripe check (recordLiveSubscription()) makes the same one.
@@ -303,6 +303,28 @@ export async function upsertSubscription(
   subscription: Stripe.Subscription,
   userId: string
 ): Promise<{ tier: string; status: SubscriptionStatus }> {
+  const { columns, tier, status } = await subscriptionRowColumns(eventType, subscription)
+
+  const { error } = await supabase
+    .from('subscriptions')
+    .upsert({ id: subscription.id, user_id: userId, ...columns }, { onConflict: 'user_id' })
+  if (error) {
+    throw databaseError(eventType, 'upsert', `subscription ${subscription.id}`, error, {
+      withMessage: true,
+    })
+  }
+  return { tier, status }
+}
+
+/**
+ * The columns a subscription write sets, from its state at Stripe: tier and status (toStoredState()),
+ * the price, the renewal date, and the AI columns from aiWriteColumns(). `ai_mode` and the allowance
+ * come from aiColumns(), and the period the AI credit month is keyed on stays where it is until a
+ * renewal is paid. The subscription passed in is what Stripe has now, so the order events arrive in
+ * doesn't matter; a handler that read before a renewal and writes after it can't move the period
+ * backwards (trigger subscriptions_keep_ai_period, 030).
+ */
+async function subscriptionRowColumns(eventType: string, subscription: Stripe.Subscription) {
   const priceId = subscription.items.data[0]?.price.id
   const plan = getPlanForPriceId(priceId)
   const { status, tier } = toStoredState(
@@ -312,15 +334,16 @@ export async function upsertSubscription(
     plan?.tier ?? 'free'
   )
   const ai = await aiColumns(eventType, subscription, plan, tier)
+  const unpaid = await unpaidRenewal(eventType, subscription)
 
-  const { error } = await supabase.from('subscriptions').upsert(
-    {
-      id: subscription.id,
-      user_id: userId,
+  return {
+    tier,
+    status,
+    unpaid,
+    columns: {
       tier,
       status,
-      ai_mode: ai.aiMode,
-      ai_monthly_credits: ai.monthlyCredits,
+      ...aiWriteColumns(subscription, ai, unpaid),
       stripe_price_id: priceId,
       cancel_at_period_end: subscription.cancel_at_period_end,
       // ponytail: Stripe v22 moved current_period_end from Subscription to SubscriptionItem
@@ -329,14 +352,52 @@ export async function upsertSubscription(
         : null,
       updated_at: new Date().toISOString(),
     },
-    { onConflict: 'user_id' }
-  )
+  }
+}
+
+/**
+ * findUnpaidRenewal() with a failed read as a SubscriptionSyncError (500, the event is delivered
+ * again): a write made without knowing could open a period nobody paid for.
+ */
+async function unpaidRenewal(eventType: string, subscription: Stripe.Subscription): Promise<UnpaidRenewal | null> {
+  try {
+    return await findUnpaidRenewal(subscription, stripe.invoices)
+  } catch (err) {
+    throw stripeRetrieveError(eventType, subscription.id, err, 'invoice list')
+  }
+}
+
+/**
+ * Writes a subscription's state at Stripe to the row stored under its id, and to no other row: what
+ * `invoice.paid` does, because a renewal's period and allowance wait for the payment
+ * (findUnpaidRenewal()). Never inserts, and never takes over a row tracking something else: no
+ * row under that id changes nothing (logged, null; the webhook answers 200). Running it again writes
+ * the same values. A database error throws a SubscriptionSyncError (500). `unpaidRenewalId` is the
+ * renewal still holding the period, if Stripe's lists name one.
+ */
+export async function writeStoredSubscription(
+  supabase: ServiceRoleClient,
+  eventType: string,
+  subscription: Stripe.Subscription
+): Promise<{ tier: string; status: SubscriptionStatus; unpaidRenewalId: string | null } | null> {
+  const { columns, tier, status, unpaid } = await subscriptionRowColumns(eventType, subscription)
+
+  const { data: rows, error } = await supabase
+    .from('subscriptions')
+    .update(columns)
+    .eq('id', subscription.id)
+    .select('id')
+
   if (error) {
-    throw databaseError(eventType, 'upsert', `subscription ${subscription.id}`, error, {
+    throw databaseError(eventType, 'update', `subscription ${subscription.id}`, error, {
       withMessage: true,
     })
   }
-  return { tier, status }
+  if (!rows?.length) {
+    logUnmatchedEvent(eventType, subscription.id)
+    return null
+  }
+  return { tier, status, unpaidRenewalId: unpaid?.invoice?.id ?? null }
 }
 
 /**

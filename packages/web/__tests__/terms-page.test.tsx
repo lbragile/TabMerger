@@ -18,6 +18,17 @@ const SECTION_IDS = [
 ]
 
 describe('TermsPage', () => {
+  it('states when purchased AI credits end, the current way credits reset', () => {
+    render(<TermsPage />)
+    const text = document.body.textContent ?? ''
+    expect(text).toContain(
+      "AI credit packs are one-time purchases. You can use purchased credits until your AI credits next reset, which happens when your next billing month starts and its payment has gone through (on annual plans, on the monthly anniversary of your billing date). Unused credits don't carry over."
+    )
+    expect(text).not.toContain('for use in the month you buy them')
+    expect(text).toContain("On an annual plan with more than a month left, that means a full month's credits for each monthly reset left")
+    expect(screen.getByText('Last updated: November 1, 2026')).toBeInTheDocument()
+  })
+
   it('renders all 12 sections with matching ids', () => {
     render(<TermsPage />)
     SECTION_IDS.forEach((id) => {

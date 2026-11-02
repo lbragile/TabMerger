@@ -17,11 +17,12 @@ const mockConfigCreate = vi.fn()
 const mockInvoicePreview = vi.fn()
 const mockSubscriptionsRetrieve = vi.fn()
 const mockCouponRetrieve = vi.fn()
+const mockInvoicesList = vi.fn()
 
 vi.mock('stripe', () => ({
   default: class {
     subscriptions = { list: mockSubscriptionsList, update: mockSubscriptionsUpdate, retrieve: mockSubscriptionsRetrieve }
-    invoices = { createPreview: mockInvoicePreview }
+    invoices = { createPreview: mockInvoicePreview, list: mockInvoicesList }
     coupons = { retrieve: mockCouponRetrieve }
     billingPortal = {
       sessions: { create: mockPortalCreate },
@@ -79,6 +80,11 @@ describe('createPlanSwitchSession', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.resetModules()
+    // The renewal check: the subscription as retrieved, with no unpaid renewal unless a test says so.
+    mockSubscriptionsRetrieve.mockReset()
+    mockSubscriptionsRetrieve.mockResolvedValue({ id: 'sub_1', status: 'active', latest_invoice: null, discounts: [] })
+    mockInvoicesList.mockReset()
+    mockInvoicesList.mockResolvedValue({ data: [] })
     vi.stubEnv('STRIPE_SECRET_KEY', 'sk_test_dummy')
     vi.stubEnv('STRIPE_PRO_MONTHLY_PRICE_ID', 'price_pro_m')
     vi.stubEnv('STRIPE_PRO_YEARLY_PRICE_ID', 'price_pro_y')
@@ -251,6 +257,68 @@ describe('createPlanSwitchSession', () => {
 
     expect(mockConfigCreate).not.toHaveBeenCalled()
     expect(mockPortalCreate).toHaveBeenCalledWith(expect.objectContaining({ configuration: 'bpc_made_after' }))
+  })
+
+  describe('an unpaid renewal comes first (a paid upgrade would leave it open behind an active subscription)', () => {
+    const START = 1_800_000_000
+    const live = (status: string, latest: Record<string, unknown>) => ({
+      id: 'sub_1',
+      status,
+      latest_invoice: latest,
+      items: { data: [{ id: 'si_sub_1', price: { id: 'price_pro_m' }, current_period_start: START }] },
+    })
+    const renewal = (status: string) => ({ id: 'in_cycle', billing_reason: 'subscription_cycle', status, amount_due: 399, period_start: START - 2_592_000, period_end: START })
+    const refused = async () => {
+      const { createPlanSwitchSession } = await import('@/lib/stripe')
+      const err = await createPlanSwitchSession(args).catch((e: unknown) => e)
+      expect(mockPortalCreate).not.toHaveBeenCalled()
+      expect(mockScheduleCreate).not.toHaveBeenCalled()
+      return err as { reason?: string; message?: string }
+    }
+
+    beforeEach(() => {
+      mockSubscriptionsList.mockResolvedValue({ data: [sub('sub_1', 'past_due', 'price_pro_m')] })
+      mockPriceRetrieve.mockResolvedValue({ id: 'price_pro_y', active: true, product: 'prod_pro' })
+    })
+
+    it('reads the subscription with its latest invoice expanded: the check finds nothing without it', async () => {
+      mockSubscriptionsRetrieve.mockResolvedValue(live('past_due', renewal('open')))
+      await refused()
+      expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_1', { expand: ['latest_invoice'] })
+    })
+
+    it.each([
+      ['past_due with an open renewal', 'past_due', 'open'],
+      ['the renewal draft hour', 'active', 'draft'],
+    ])('%s: refused as unpaid_renewal', async (_label, status, invoiceStatus) => {
+      mockSubscriptionsRetrieve.mockResolvedValue(live(status, renewal(invoiceStatus)))
+      expect((await refused()).reason).toBe('unpaid_renewal')
+    })
+
+    it('a renewal hidden behind an earlier paid upgrade: refused too', async () => {
+      mockSubscriptionsRetrieve.mockResolvedValue(live('active', { id: 'in_up', billing_reason: 'subscription_update', status: 'paid' }))
+      mockInvoicesList.mockImplementation(async ({ status }: { status: string }) => ({ data: status === 'open' ? [renewal('open')] : [] }))
+      expect((await refused()).reason).toBe('unpaid_renewal')
+    })
+
+    it('fails closed: a failed read of the subscription or the invoices opens nothing', async () => {
+      mockSubscriptionsRetrieve.mockRejectedValue(new Error('stripe down'))
+      expect((await refused()).message).toBe('stripe down')
+
+      mockSubscriptionsRetrieve.mockResolvedValue(live('active', { id: 'in_up', billing_reason: 'subscription_update', status: 'paid' }))
+      mockInvoicesList.mockRejectedValue(new Error('list down'))
+      expect((await refused()).message).toBe('list down')
+    })
+
+    it('a paid renewal lets the switch through', async () => {
+      mockSubscriptionsRetrieve.mockResolvedValue(live('active', renewal('paid')))
+      mockConfigList.mockResolvedValue({ data: [], has_more: false })
+      mockConfigCreate.mockResolvedValue({ id: 'bpc_1' })
+      mockInvoicePreview.mockResolvedValue({ total: 100 })
+      mockPortalCreate.mockResolvedValue({ url: 'https://portal.example/confirm' })
+      const { createPlanSwitchSession } = await import('@/lib/stripe')
+      expect((await createPlanSwitchSession(args)).kind).toBe('portal')
+    })
   })
 
   it('refuses an archived target price (price_unavailable) without opening the portal', async () => {
@@ -609,7 +677,7 @@ describe('createPlanSwitchSession', () => {
 
       await createPlanSwitchSession({ ...args, targetPriceId: 'price_pro_m', planPriceIds: PRO_AI })
 
-      expect(mockSubscriptionsRetrieve).not.toHaveBeenCalled()
+      expect(mockSubscriptionsRetrieve).not.toHaveBeenCalledWith('sub_1', { expand: ['discounts'] })
       expect(mockScheduleUpdate.mock.calls[0][1].phases[1]).not.toHaveProperty('discounts')
     })
 

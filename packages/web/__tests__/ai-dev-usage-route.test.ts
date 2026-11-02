@@ -20,6 +20,8 @@ import { POST } from '@/app/api/ai/dev-usage/route'
 import { AI_MAX_DEV_USAGE_COUNT } from '@/lib/ai-validation'
 
 const USER_ID = 'user-uuid-1'
+/** The user's subscription row: its stored AI period decides the month key. */
+let subscriptionRow: Record<string, unknown> | null = null
 const URL = 'http://localhost/api/ai/dev-usage'
 
 function req(body?: unknown, auth: string | null = 'Bearer jwt-token') {
@@ -39,13 +41,31 @@ beforeEach(() => {
   // .delete().eq('user_id', ...).eq('month', ...) — the final .eq resolves.
   mockDeleteEq.mockReturnValue({ eq: mockDeleteEq, error: null })
   mockDelete.mockReturnValue({ eq: mockDeleteEq })
-  mockFrom.mockReturnValue({ upsert: mockUpsert, delete: mockDelete })
+  subscriptionRow = null
+  mockFrom.mockImplementation((table: string) =>
+    table === 'subscriptions'
+      ? { select: () => ({ eq: () => ({ single: async () => ({ data: subscriptionRow, error: null }) }) }) }
+      : { upsert: mockUpsert, delete: mockDelete }
+  )
 })
 
 afterEach(() => vi.unstubAllEnvs())
 
 describe('POST /api/ai/dev-usage', () => {
-  it('sets the count for the current UTC month', async () => {
+  it("uses the subscription's billing-period key once a period is stored", async () => {
+    subscriptionRow = {
+      tier: 'pro_ai',
+      status: 'active',
+      ai_period_start: '2020-01-31T10:00:00+00:00',
+      ai_period_end: '2020-02-29T10:00:00+00:00',
+    }
+    const res = await POST(req({ count: 0 }))
+    expect(res.status).toBe(200)
+    expect(mockUpsert.mock.calls[0][0]).toMatchObject({ month: '2020-01' })
+    expect(mockDeleteEq).toHaveBeenCalledWith('month', '2020-01')
+  })
+
+  it('sets the count for the current UTC month when no period is stored', async () => {
     const res = await POST(req({ count: 98 }))
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ count: 98 })

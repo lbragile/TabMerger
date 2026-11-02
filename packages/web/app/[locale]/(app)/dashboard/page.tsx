@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
 import { getEffectiveCap } from '@/lib/ai-usage'
-import { AUTO_BACKUP_DOWNLOAD_LIMITS, isAiMode } from '@tabmerger/shared'
+import { AUTO_BACKUP_DOWNLOAD_LIMITS, aiAllowanceMonth, isAiMode } from '@tabmerger/shared'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { hasCloudSync } from '@/lib/cloudSync'
@@ -116,7 +116,7 @@ export default async function DashboardPage({
     if (aiMode === 'byok') {
       aiUsage = { mode: 'byok', action: aiSwitch }
     } else {
-      const month = new Date().toISOString().slice(0, 7)
+      const month = aiAllowanceMonth(subscription?.ai_period_start, subscription?.ai_period_end)
       const { data: usage } = await supabase
         .from('ai_usage')
         .select('credits_used')

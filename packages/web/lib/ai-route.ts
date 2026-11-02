@@ -15,7 +15,7 @@ import { aiDisabledResponse, aiModeDisabledResponse } from '@/lib/ai-guard'
 import { withAiMockHeader } from '@/lib/ai-mock'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { AiRouteError, anthropicClient, describeErrorForLog, type AiCallContext } from '@/lib/ai'
-import { currentMonth, getAiSubscription, hasProAi, type AiSubscription } from '@/lib/ai-usage'
+import { aiUsageMonth, getAiSubscription, hasProAi, type AiSubscription } from '@/lib/ai-usage'
 import { modelChoiceOf, readJsonBodyWithin, type ParseResult } from '@/lib/ai-validation'
 import {
   AI_DEADLINE_MARGIN_MS,
@@ -188,9 +188,10 @@ export async function requireAiOption(auth: AuthenticatedAiRequest): Promise<AiS
  * - `body.model` unknown, or from another provider than the one the request goes to → 400
  *   `ai_model_invalid`
  *
- * Managed mode always runs on Anthropic, ignores a sent key header and gets a meter for this
- * month (fixed here, so the reservation and the settlement hit the same `ai_usage` row even
- * across midnight UTC at the month's end). Own-key mode goes to the key's provider, never uses
+ * Managed mode always runs on Anthropic, ignores a sent key header and gets a meter for the
+ * subscription's current usage month (fixed here from the row just read, never from the client, so
+ * the reservation and the settlement hit the same `ai_usage` row even if the period rolls over
+ * during the call). Own-key mode goes to the key's provider, never uses
  * TabMerger's key and is not metered. `deadline` (epoch ms) is when the model call must be over.
  */
 export function aiCallContext(
@@ -215,7 +216,7 @@ export function aiCallContext(
       client,
       model,
       mode: 'managed',
-      meter: { supabase: auth.supabase, userId: auth.user.id, month: currentMonth() },
+      meter: { supabase: auth.supabase, userId: auth.user.id, month: aiUsageMonth(sub) },
       deadline,
     }
   }

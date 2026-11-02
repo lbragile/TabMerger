@@ -22,7 +22,7 @@ import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { ScheduledChangeNotice } from '@/components/account/ScheduledChangeNotice'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { ACCOUNT_AI_CREDITS_ANCHOR, isAiMode } from '@tabmerger/shared'
+import { ACCOUNT_AI_CREDITS_ANCHOR, aiAllowanceMonth, isAiMode } from '@tabmerger/shared'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getPlanForPriceId, getPriceInfo } from '@/lib/tiers'
@@ -129,7 +129,7 @@ export default async function AccountPage() {
   let aiCreditsLeft = 0
   let aiCreditsLimit = 0
   if (showAi && isProAi && !isOwnKey) {
-    const month = new Date().toISOString().slice(0, 7)
+    const month = aiAllowanceMonth(subscription?.ai_period_start, subscription?.ai_period_end)
     const { data: usage } = await supabase
       .from('ai_usage')
       .select('credits_used')
