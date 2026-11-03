@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "Mevcut plan",
     "renews": "Yenilenme: {date}",
+    "ends": "Bitiş: {date}",
     "upgrade": "Yükselt",
     "statuses": {
       "active": "etkin",

@@ -105,5 +105,9 @@
   "scheduledChange": {
     "starts": "Débute le {date}",
     "note": "Un changement est prévu le {date}. <link>Gérez-le sur la page de votre compte.</link>"
+  },
+  "planEnds": {
+    "note": "Votre forfait prend fin le {date}. <link>Gardez votre forfait</link> pour le modifier.",
+    "noteNoDate": "Votre forfait va prendre fin. <link>Gardez votre forfait</link> pour le modifier."
   }
 }

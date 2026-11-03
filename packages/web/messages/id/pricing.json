@@ -105,5 +105,9 @@
   "scheduledChange": {
     "starts": "Mulai {date}",
     "note": "Anda punya perubahan terjadwal pada {date}. <link>Kelola di halaman akun Anda.</link>"
+  },
+  "planEnds": {
+    "note": "Paket Anda berakhir pada {date}. <link>Pertahankan paket Anda</link> untuk mengubahnya.",
+    "noteNoDate": "Paket Anda dijadwalkan berakhir. <link>Pertahankan paket Anda</link> untuk mengubahnya."
   }
 }

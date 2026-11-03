@@ -8,6 +8,7 @@ import { stripe } from '@/lib/stripe'
 import type { createServiceRoleClient } from '@/lib/supabase/server'
 import { SUBSCRIPTION_EXPAND, aiWriteColumns, findUnpaidRenewal, subscriptionAiColumns, type AiColumns, type UnpaidRenewal } from '@/lib/aiAllowance'
 import { getPlanForPriceId, type PlanPrice } from '@/lib/tiers'
+import { isSetToEndAtPeriodEnd } from '@/lib/subscriptionEnd'
 
 /**
  * How a `subscriptions` row is brought in line with Stripe: read the subscription's current state
@@ -345,7 +346,9 @@ async function subscriptionRowColumns(eventType: string, subscription: Stripe.Su
       status,
       ...aiWriteColumns(subscription, ai, unpaid),
       stripe_price_id: priceId,
-      cancel_at_period_end: subscription.cancel_at_period_end,
+      // Stripe's flag, or a `cancel_at` at the period end (the portal's cancel on flexible billing
+      // mode leaves the flag false): see isSetToEndAtPeriodEnd().
+      cancel_at_period_end: isSetToEndAtPeriodEnd(subscription),
       // ponytail: Stripe v22 moved current_period_end from Subscription to SubscriptionItem
       current_period_end: subscription.items.data[0]?.current_period_end
         ? new Date(subscription.items.data[0].current_period_end * 1000).toISOString()

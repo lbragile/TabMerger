@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "Gói hiện tại",
     "renews": "Gia hạn vào {date}",
+    "ends": "Kết thúc vào {date}",
     "upgrade": "Nâng cấp",
     "statuses": {
       "active": "đang hoạt động",

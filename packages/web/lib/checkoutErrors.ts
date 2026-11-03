@@ -171,3 +171,28 @@ export const KEEP_CURRENT_PLAN_ERROR_CODES = {
 
 export type KeepCurrentPlanErrorCode =
   (typeof KEEP_CURRENT_PLAN_ERROR_CODES)[keyof typeof KEEP_CURRENT_PLAN_ERROR_CODES]
+
+/**
+ * Error codes from POST /api/billing/resume-subscription (the account page's "Keep my plan", which
+ * undoes a cancellation at the end of the period). The button maps each to
+ * `account.resumeSubscription.errors.<code>`.
+ */
+export const RESUME_SUBSCRIPTION_ERROR_CODES = {
+  /** 400: the account has no Stripe customer. */
+  noBillingAccount: 'no_billing_account',
+  /** 404: no subscription of this account (none stored, unknown at Stripe, or not its own). */
+  noSubscription: 'no_subscription',
+  /** 409: the plan has ended or isn't paid up; a new plan is bought on the pricing page. */
+  notEntitled: 'not_entitled',
+  /** 409: the plan isn't set to end (already kept, e.g. by an earlier click). */
+  notCanceling: 'not_canceling',
+  /** 409: set to end before its paid period would (a date support set); only support changes it. */
+  endsEarly: 'ends_early',
+  /** 429: too many billing requests; try again in a few minutes. */
+  rateLimited: RATE_LIMITED_ERROR,
+  /** 500: a failed database read, or Stripe refused or failed; the details are in the server log. */
+  failed: 'resume_failed',
+} as const
+
+export type ResumeSubscriptionErrorCode =
+  (typeof RESUME_SUBSCRIPTION_ERROR_CODES)[keyof typeof RESUME_SUBSCRIPTION_ERROR_CODES]

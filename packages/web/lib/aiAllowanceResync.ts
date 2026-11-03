@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { STORED_SUBSCRIPTION_STATUSES } from '@tabmerger/shared'
 import { SUBSCRIPTION_EXPAND, aiWriteColumns, findUnpaidRenewal, subscriptionAiColumns, type CouponPricing, type UnpaidRenewal } from './aiAllowance'
 import { getPlanForPriceId } from './tiers'
+import { isSetToEndAtPeriodEnd } from './subscriptionEnd'
 
 /**
  * One-off re-sync of `subscriptions.ai_mode` / `ai_monthly_credits` / `ai_period_start` /
@@ -14,13 +15,18 @@ import { getPlanForPriceId } from './tiers'
  * calendar month. Safe to run again: it only writes rows whose values differ. It also repairs a row
  * left behind by a missed `invoice.paid`, and reports it, and leaves a renewal that isn't paid alone.
  *
+ * It also rewrites `cancel_at_period_end` on every `pro` and `pro_ai` row with
+ * isSetToEndAtPeriodEnd(), the webhook's reading: rows written before it stored only Stripe's flag,
+ * so a plan cancelled in the portal on flexible billing mode (`cancel_at` at the period end, flag
+ * false) read as renewing. `pro` rows get that column only.
+ *
  * Only these columns are written; tier, status and the rest stay the webhook's. Output is
  * counts and Stripe subscription ids only (no emails, user ids or payloads).
  * Run by scripts/resync-ai-allowance.ts (see docs/PAYMENTS.md).
  */
 
 export interface ResyncResult {
-  /** `pro_ai` rows read. */
+  /** `pro` and `pro_ai` rows read. */
   scanned: number
   /** Rows whose stored values already match. */
   unchanged: number
@@ -51,6 +57,8 @@ export interface ResyncOptions {
 
 type Row = {
   id: string
+  tier: string
+  cancel_at_period_end: boolean | null
   ai_mode: string | null
   ai_monthly_credits: number | null
   ai_period_start: string | null
@@ -88,11 +96,18 @@ export async function resyncAiAllowances({
 }: ResyncOptions): Promise<ResyncResult> {
   const result: ResyncResult = { scanned: 0, unchanged: 0, changed: [], heldOnUnpaid: [], behindPaidRenewal: [], skipped: [], failed: [] }
 
+  /** Writes `values` to the row; a failed write is listed as failed and returns false. */
+  const written = async (id: string, values: Record<string, unknown>): Promise<boolean> => {
+    const { error: updateError } = await supabase.from('subscriptions').update(values).eq('id', id)
+    if (updateError) result.failed.push(id)
+    return !updateError
+  }
+
   for (let from = 0; ; from += pageSize) {
     const { data, error } = await supabase
       .from('subscriptions')
-      .select('id, ai_mode, ai_monthly_credits, ai_period_start, ai_period_end')
-      .eq('tier', 'pro_ai')
+      .select('id, tier, cancel_at_period_end, ai_mode, ai_monthly_credits, ai_period_start, ai_period_end')
+      .in('tier', ['pro', 'pro_ai'])
       .order('id', { ascending: true })
       .range(from, from + pageSize - 1)
     if (error) throw new Error(`Reading subscriptions failed (code ${error.code ?? 'unknown'})`)
@@ -113,6 +128,20 @@ export async function resyncAiAllowances({
       } catch (err) {
         if (stripeErrorCode(err) === 'resource_missing') result.skipped.push(row.id)
         else result.failed.push(row.id)
+        continue
+      }
+
+      const setToEnd = isSetToEndAtPeriodEnd(subscription)
+      const cancelFlag = (row.cancel_at_period_end ?? false) === setToEnd ? {} : { cancel_at_period_end: setToEnd }
+
+      if (row.tier !== 'pro_ai') {
+        if (!('cancel_at_period_end' in cancelFlag)) {
+          result.unchanged++
+          continue
+        }
+        log(`${row.id}: cancel_at_period_end ${row.cancel_at_period_end ?? false} -> ${setToEnd}`)
+        if (apply && !(await written(row.id, cancelFlag))) continue
+        result.changed.push(row.id)
         continue
       }
 
@@ -156,6 +185,7 @@ export async function resyncAiAllowances({
         log(`${row.id}: renewal not paid yet; its period is not stored`)
       }
       if (
+        !('cancel_at_period_end' in cancelFlag) &&
         row.ai_mode === write.ai_mode &&
         (write.ai_monthly_credits === undefined || row.ai_monthly_credits === write.ai_monthly_credits) &&
         (write.ai_period_start === undefined || sameInstant(row.ai_period_start ?? null, write.ai_period_start)) &&
@@ -176,18 +206,9 @@ export async function resyncAiAllowances({
       }
 
       log(
-        `${row.id}: ai_mode ${row.ai_mode} -> ${write.ai_mode}, ai_monthly_credits ${row.ai_monthly_credits} -> ${write.ai_monthly_credits ?? 'held'}, ai_period_start ${row.ai_period_start ?? null} -> ${write.ai_period_start === undefined ? 'held' : write.ai_period_start}`
+        `${row.id}: ai_mode ${row.ai_mode} -> ${write.ai_mode}, ai_monthly_credits ${row.ai_monthly_credits} -> ${write.ai_monthly_credits ?? 'held'}, ai_period_start ${row.ai_period_start ?? null} -> ${write.ai_period_start === undefined ? 'held' : write.ai_period_start}${'cancel_at_period_end' in cancelFlag ? `, cancel_at_period_end ${row.cancel_at_period_end ?? false} -> ${setToEnd}` : ''}`
       )
-      if (apply) {
-        const { error: updateError } = await supabase
-          .from('subscriptions')
-          .update(write)
-          .eq('id', row.id)
-        if (updateError) {
-          result.failed.push(row.id)
-          continue
-        }
-      }
+      if (apply && !(await written(row.id, { ...write, ...cancelFlag }))) continue
       result.changed.push(row.id)
     }
 

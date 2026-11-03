@@ -56,7 +56,10 @@
     "cancelNote": "Você pode cancelar quando quiser em <strong>Gerenciar cobrança</strong>. O acesso continua até o fim do período de cobrança atual.",
     "scheduledChange": "Muda para {plan} em {date}.",
     "scheduledChangeUnknownPlan": "Seu plano muda em {date}.",
-    "scheduledCancelNote": "Ao cancelar, você mantém seu plano atual até o fim deste período de cobrança e a mudança agendada é descartada. Sem reembolso. Se você renovar depois, continua no seu plano atual."
+    "scheduledCancelNote": "Ao cancelar, você mantém seu plano atual até o fim deste período de cobrança e a mudança agendada é descartada. Sem reembolso. Se você renovar depois, continua no seu plano atual.",
+    "endsOn": "Seu plano termina em {date}.",
+    "endsUnknownDate": "Seu plano está programado para terminar.",
+    "endsNote": "Ele não será renovado. Mantenha-o para renovar como antes e para trocar de plano; nada é cobrado agora."
   },
   "cancelSubscription": {
     "button": "Cancelar assinatura",
@@ -82,6 +85,21 @@
       "no_subscription": "Não encontramos sua assinatura. Recarregue a página ou escreva para {email}.",
       "no_scheduled_change": "Não há mais nenhuma mudança de plano agendada. Recarregue a página para ver seu plano.",
       "keep_plan_failed": "Não foi possível manter seu plano atual. Tente novamente ou escreva para {email}.",
+      "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Manter meu plano",
+    "success": "Seu plano será renovado.",
+    "successRenewsOn": "Seu plano será renovado em {date}.",
+    "successRenews": "Seu plano será renovado em {date} por {amount}.",
+    "errors": {
+      "no_billing_account": "Este plano não está vinculado a uma conta de cobrança. Escreva para {email} e resolveremos para você.",
+      "no_subscription": "Não encontramos sua assinatura. Recarregue a página ou escreva para {email}.",
+      "not_entitled": "Este plano já terminou. Escolha um plano na página de preços.",
+      "not_canceling": "Seu plano não está mais programado para terminar. Recarregue a página para ver seu plano.",
+      "ends_early": "A data de término deste plano foi definida pela nossa equipe de suporte. Escreva para {email} para mantê-lo.",
+      "resume_failed": "Não foi possível manter seu plano. Tente novamente ou escreva para {email}.",
       "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
     }
   },

@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "الخطة الحالية",
     "renews": "تتجدد في {date}",
+    "ends": "تنتهي في {date}",
     "upgrade": "ترقية",
     "statuses": {
       "active": "نشط",

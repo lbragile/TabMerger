@@ -470,6 +470,19 @@ async function renewalAfterRelease(
   subscription: Stripe.Subscription
 ): Promise<KeptPlanRenewal | null> {
   if (subscription.cancel_at_period_end || subscription.cancel_at) return null
+  return previewRenewal('Keep current plan', customerId, subscription)
+}
+
+/**
+ * The next renewal of `subscription`: its date (the item's current period end) and, from Stripe's
+ * preview of the next invoice, the amount. A failed preview is logged under `label` and leaves the
+ * amount out; null when the subscription has no period end.
+ */
+async function previewRenewal(
+  label: string,
+  customerId: string,
+  subscription: Stripe.Subscription
+): Promise<KeptPlanRenewal | null> {
   const at = subscription.items.data[0]?.current_period_end
   if (typeof at !== 'number') return null
   try {
@@ -482,7 +495,7 @@ async function renewalAfterRelease(
     }
   } catch (err) {
     console.warn(
-      `Keep current plan: previewing the renewal invoice of subscription ${subscription.id} failed, so only its date is shown: ${describeStripeError(err)}`
+      `${label}: previewing the renewal invoice of subscription ${subscription.id} failed, so only its date is shown: ${describeStripeError(err)}`
     )
     return { at }
   }
@@ -625,8 +638,13 @@ async function lookUpCancelPortalConfiguration(): Promise<string> {
  * (`flow_data.type: subscription_cancel`): the customer confirms there, the plan ends at the end of
  * the paid period, and nothing is refunded or credited. Works while a plan change is scheduled,
  * which the portal's home page doesn't offer: confirming releases the schedule (the subscription
- * keeps its current price) and sets `cancel_at_period_end` (verified in test mode, 2026-10-26).
- * Our server changes nothing itself; the webhook records the result.
+ * keeps its current price) and sets the subscription to end at the period end (verified in test
+ * mode, 2026-10-26). How Stripe records that depends on the subscription's billing mode: classic sets
+ * `cancel_at_period_end` (and `cancel_at` to the period end), flexible, which every Checkout on
+ * CHECKOUT_API_VERSION makes, sets only `cancel_at` to the period end and leaves
+ * `cancel_at_period_end` false (test mode, 2026-11-02). Both are read as set to end here and by the
+ * webhook's stored flag (isSetToEndAtPeriodEnd()). Our server changes nothing itself; the webhook
+ * records the result. resumeSubscription() undoes it.
  *
  * Ownership is checked here, at Stripe: the subscription must belong to `customerId` (the caller's
  * own customer, from their profile), or it is `not_found`.
@@ -667,6 +685,125 @@ export async function createCancelSubscriptionSession({
     },
   })
   return session.url
+}
+
+/**
+ * Why a cancellation couldn't be undone; the route maps each to a status code.
+ *
+ * - `not_found`: the subscription doesn't exist at Stripe or isn't this customer's.
+ * - `not_entitled`: it has ended (a canceled subscription can't be changed), or isn't paid up.
+ * - `not_canceling`: it isn't set to end (never was, or an earlier click already undid it).
+ * - `ends_early`: it is set to end before its paid period would have (a date set from the Stripe
+ *   Dashboard shortens the period). Clearing that date would give back the cut time unpaid, so it
+ *   is left to support.
+ */
+export class ResumeSubscriptionError extends Error {
+  constructor(readonly reason: 'not_found' | 'not_entitled' | 'not_canceling' | 'ends_early') {
+    super(reason)
+  }
+}
+
+/**
+ * The end of a billing period that starts at `start` (unix seconds), counted the way Stripe does:
+ * calendar months and years in UTC, the day clamped to the month's length (Jan 31 + 1 month =
+ * Feb 28). Stripe counts from the billing anchor's day, which is never earlier in the month than
+ * the period start's (a clamped day only moves back), so this is at or before Stripe's own end:
+ * a period it calls shortened really is.
+ */
+function naturalPeriodEnd(start: number, interval: Stripe.Price.Recurring.Interval, count: number): number {
+  if (interval === 'day' || interval === 'week') return start + count * (interval === 'day' ? 1 : 7) * 86_400
+  const date = new Date(start * 1000)
+  const year = date.getUTCFullYear()
+  const month = date.getUTCMonth() + (interval === 'year' ? 12 * count : count)
+  const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
+  const end = Date.UTC(
+    year,
+    month,
+    Math.min(date.getUTCDate(), lastDay),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
+  )
+  return end / 1000
+}
+
+/**
+ * True when `subscription` is set to end before its current period would naturally end: a
+ * `cancel_at` inside the period moves `current_period_end` to it, so the period is shorter than its
+ * price's interval. The portal's cancel never does this (it ends at the period end).
+ */
+function endsBeforePeriodEnd(subscription: Stripe.Subscription): boolean {
+  const cancelAt = subscription.cancel_at
+  const item = subscription.items.data[0]
+  const recurring = item?.price?.recurring
+  if (typeof cancelAt !== 'number' || typeof item?.current_period_start !== 'number' || !recurring) return false
+  return cancelAt < naturalPeriodEnd(item.current_period_start, recurring.interval, recurring.interval_count ?? 1)
+}
+
+/**
+ * Undoes the customer's cancellation ("Keep my plan" on the account page): the subscription renews
+ * at the end of the period as if it had never been set to end. The only write is
+ * `subscriptions.update({ cancel_at: '', proration_behavior: 'none' })`. An empty `cancel_at` clears
+ * both ways Stripe records a cancellation at period end: `cancel_at` (flexible billing mode, what
+ * the portal sets) and `cancel_at_period_end` (classic); nothing else changes. Stripe refuses
+ * `cancel_at` and `cancel_at_period_end` in one request (400 "Received both cancel_at_period_end
+ * and cancel_at parameters. Please pass in only one."). Verified on test clocks, 2026-11-02, in
+ * classic and flexible billing mode: no new invoice, no pending invoice items, balance 0, no credit
+ * notes, same period end and billing anchor, the next-invoice preview at the full price, and the
+ * renewal (`subscription_cycle`) charged the full price. `proration_behavior: 'none'` is there in
+ * case `cancel_at` had moved the period end; `ends_early` refuses that case before any write.
+ *
+ * Ownership is checked here, at Stripe: the subscription must belong to `customerId` (the caller's
+ * own customer, from their profile), else `not_found`. Stripe accepts the same update on a
+ * subscription that isn't set to end and changes nothing, so two clicks racing are harmless; a
+ * later click reads it first and gets `not_canceling`. A canceled subscription refuses any update
+ * (400 `invalid_canceled_subscription_fields`): a plan that ends between the read and the update is
+ * read again and answered `not_entitled`.
+ *
+ * Returns the renewal (date, and the amount from Stripe's preview of the next invoice when that
+ * preview works). Nothing is written to the database here: the webhook records the update.
+ */
+export async function resumeSubscription({
+  customerId,
+  subscriptionId,
+}: {
+  customerId: string
+  subscriptionId: string
+}): Promise<KeptPlanRenewal | null> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+
+  const read = async () => {
+    try {
+      return await stripe.subscriptions.retrieve(subscriptionId)
+    } catch (err) {
+      if ((err as { code?: unknown } | null)?.code === 'resource_missing') throw new ResumeSubscriptionError('not_found')
+      throw err
+    }
+  }
+
+  const subscription = await read()
+  if (idOf(subscription.customer) !== customerId) throw new ResumeSubscriptionError('not_found')
+  if (!isEntitledSubscriptionStatus(subscription.status)) throw new ResumeSubscriptionError('not_entitled')
+  if (!subscription.cancel_at_period_end && !subscription.cancel_at) throw new ResumeSubscriptionError('not_canceling')
+  if (endsBeforePeriodEnd(subscription)) {
+    console.warn(
+      `Resume subscription: subscription ${subscription.id} is set to end before its period would, so it is not resumed`
+    )
+    throw new ResumeSubscriptionError('ends_early')
+  }
+
+  let resumed: Stripe.Subscription
+  try {
+    resumed = await stripe.subscriptions.update(subscription.id, { cancel_at: '', proration_behavior: 'none' })
+  } catch (err) {
+    // The plan ended, or was resumed, between the read and the update.
+    const again = await read().catch(() => null)
+    if (again && !isEntitledSubscriptionStatus(again.status)) throw new ResumeSubscriptionError('not_entitled')
+    if (again && !again.cancel_at_period_end && !again.cancel_at) throw new ResumeSubscriptionError('not_canceling')
+    throw err
+  }
+
+  return previewRenewal('Resume subscription', customerId, resumed)
 }
 
 /**
@@ -799,8 +936,9 @@ export async function createPlanSwitchSession({
   // A deferred change (ours, or the portal's yearly→monthly) is a subscription schedule. While it
   // is pending, Stripe won't take another update, so say so instead of failing.
   if (subscription.schedule) throw new PlanSwitchError('already_scheduled')
-  // A subscription set to end can't be given a schedule, and changing it would undo nothing the
-  // customer asked for. They renew it in the portal first.
+  // A subscription set to end (`cancel_at_period_end`, or `cancel_at` as the portal sets it on
+  // flexible billing mode) can't be given a schedule, and changing it would undo nothing the
+  // customer asked for. They keep the plan first (resumeSubscription(), or the portal's Renew).
   if (subscription.cancel_at_period_end || subscription.cancel_at) {
     throw new PlanSwitchError('cancel_scheduled')
   }

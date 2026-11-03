@@ -59,7 +59,8 @@ landing. A from_subscription schedule's phase 0 lists the same discounts as `cou
 **Cancel while a schedule is pending (portal-made and server-made, 2026-10-26):** the portal home
 (default config, cancel on) shows "Plan updates on {date}" + next amount and no cancel control. A
 session with `flow_data.type: subscription_cancel` is accepted and its "Cancel plan" click releases
-the schedule (status `released`, current price kept) and sets `cancel_at_period_end`.
+the schedule (status `released`, current price kept) and sets `cancel_at_period_end` (on these
+classic-mode test subscriptions; a flexible one gets only `cancel_at`, [[cancel-at-period-end-flexible-mode]]).
 
 Test clocks advance at most two intervals of the shortest price at a time (yearly → monthly
 needs ~6 steps of 58 days). Deleting a clock deletes its customers. Deactivate probing configs

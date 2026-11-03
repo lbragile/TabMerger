@@ -22,6 +22,7 @@ import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
 import { CreditsResetNote } from '@/components/account/CreditsResetNote'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { ScheduledChangeNotice } from '@/components/account/ScheduledChangeNotice'
+import { ResumeSubscriptionNotice } from '@/components/account/ResumeSubscriptionNotice'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { scheduledChangeOf } from '@/lib/aiCreditsDate'
 import { ACCOUNT_AI_CREDITS_ANCHOR, aiAllowanceMonth, isAiMode, managedAiCreditsDate } from '@tabmerger/shared'
@@ -69,6 +70,10 @@ export default async function AccountPage() {
   // accounts never sync, so there's nothing of theirs to show either way.
   const syncEnabled = hasCloudSync(subscription)
   const isPaid = syncEnabled
+  // Cancelled at the period end (`cancel_at_period_end`, which the webhook also sets for Stripe's
+  // `cancel_at` at the period end): the page says when it ends and offers "Keep my plan" instead of
+  // plan changes, which the server refuses until then (409 `cancel_scheduled`).
+  const setToEnd = isPaid && subscription?.cancel_at_period_end === true
 
   // Same row type the Devices list expects, so a mismatch fails here rather than at runtime.
   let deviceRows: ComponentProps<typeof DevicesSection>['initialDevices'] = []
@@ -292,6 +297,7 @@ export default async function AccountPage() {
             status={subscription?.status}
             currentPeriodEnd={isPaid ? subscription?.current_period_end : undefined}
             priceId={subscription?.stripe_price_id}
+            setToEnd={setToEnd}
             action={
               isPaid && billingPortalUrl ? (
                 <Button variant="outline" size="sm" className="w-32" asChild>
@@ -305,7 +311,25 @@ export default async function AccountPage() {
             }
           />
 
-          {/* Pro AI: which option the subscription is on, and the switch to the other one. */}
+          {/* Rendered for every paid account (notice null unless the plan is set to end) so it stays
+              mounted across the refresh after "Keep my plan" and can say when the plan renews. */}
+          {isPaid && (
+            <ResumeSubscriptionNotice
+              notice={
+                setToEnd
+                  ? {
+                      message: subscription?.current_period_end
+                        ? t('subscription.endsOn', { date: formatDate(subscription.current_period_end, locale) })
+                        : t('subscription.endsUnknownDate'),
+                      note: t('subscription.endsNote'),
+                    }
+                  : null
+              }
+            />
+          )}
+
+          {/* Pro AI: which option the subscription is on, and the switch to the other one (none while
+              the plan is set to end: keeping it comes first). */}
           {showAi && isProAi && isPaid && (
             <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
               <div className="min-w-0">
@@ -316,13 +340,15 @@ export default async function AccountPage() {
                     : t('aiPlan.managed', { left: aiCreditsLeft, limit: aiCreditsLimit })}
                 </p>
               </div>
-              <SwitchAiModeButton
-                current={aiMode}
-                interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
-                periodEnd={subscription?.current_period_end}
-                returnPath="/account"
-                className="text-xs"
-              />
+              {!setToEnd && (
+                <SwitchAiModeButton
+                  current={aiMode}
+                  interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
+                  periodEnd={subscription?.current_period_end}
+                  returnPath="/account"
+                  className="text-xs"
+                />
+              )}
             </div>
           )}
 
@@ -349,7 +375,7 @@ export default async function AccountPage() {
             />
           )}
 
-          {isPaid && billingPortalUrl && !pendingChange && (
+          {isPaid && billingPortalUrl && !pendingChange && !setToEnd && (
             <p className="text-xs text-muted-foreground">
               {t.rich('subscription.cancelNote', { strong: (chunks) => <strong>{chunks}</strong> })}
             </p>

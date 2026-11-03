@@ -9,6 +9,8 @@ import { resyncAiAllowances } from '@/lib/aiAllowanceResync'
 
 type Row = {
   id: string
+  tier?: string
+  cancel_at_period_end?: boolean | null
   ai_mode: string | null
   ai_monthly_credits: number | null
   ai_period_start?: string | null
@@ -26,9 +28,15 @@ function fakeSupabase(rows: Row[], { readError = null as unknown, updateError = 
           filters.push([column, value])
           return q
         }),
+        in: vi.fn((column: string, value: unknown) => {
+          filters.push([column, value])
+          return q
+        }),
         order: vi.fn(() => q),
         range: vi.fn(async (from: number, to: number) =>
-          readError ? { data: null, error: readError } : { data: rows.slice(from, to + 1), error: null }
+          readError
+            ? { data: null, error: readError }
+            : { data: rows.slice(from, to + 1).map((row) => ({ tier: 'pro_ai', cancel_at_period_end: false, ...row })), error: null }
         ),
         update: vi.fn((values: unknown) => ({
           eq: vi.fn(async (_c: string, id: string) => {
@@ -106,7 +114,7 @@ describe('resyncAiAllowances', () => {
 
     const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: false, log: (l) => lines.push(l) })
 
-    expect(filters).toContainEqual(['tier', 'pro_ai'])
+    expect(filters).toContainEqual(['tier', ['pro', 'pro_ai']])
     expect(result).toEqual({
       scanned: 7,
       unchanged: 1,
@@ -298,5 +306,91 @@ describe('resyncAiAllowances', () => {
 
     expect(result.failed).toEqual(['sub_half'])
     expect(result.unchanged).toBe(1)
+  })
+})
+
+describe('resyncAiAllowances: cancel_at_period_end', () => {
+  const PERIOD_END = 1_795_000_000
+  const ending = (id: string, price: string, extra: Record<string, unknown>) =>
+    sub(id, price, {
+      ...extra,
+      items: { data: [{ price: { id: price }, discounts: [], current_period_end: PERIOD_END }] },
+    })
+
+  beforeEach(() => {
+    vi.stubEnv('STRIPE_PRO_MONTHLY_PRICE_ID', 'price_pro_m')
+  })
+
+  it('a pro row cancelled through cancel_at at the period end: writes only the flag', async () => {
+    const { supabase, updates } = fakeSupabase([
+      { id: 'sub_pro', tier: 'pro', cancel_at_period_end: false, ai_mode: 'managed', ai_monthly_credits: 0 },
+    ])
+    const stripe = fakeStripe({ sub_pro: ending('sub_pro', 'price_pro_m', { cancel_at: PERIOD_END, cancel_at_period_end: false }) })
+
+    const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+
+    expect(result.changed).toEqual(['sub_pro'])
+    expect(updates).toEqual([{ id: 'sub_pro', values: { cancel_at_period_end: true } }])
+    // A pro row needs no AI pricing: no coupon or invoice reads.
+    expect(stripe.invoices.list).not.toHaveBeenCalled()
+  })
+
+  it('a pro row that already matches is unchanged; a renewed one is set back to false', async () => {
+    const { supabase, updates } = fakeSupabase([
+      { id: 'sub_same', tier: 'pro', cancel_at_period_end: true, ai_mode: 'managed', ai_monthly_credits: 0 },
+      { id: 'sub_renewed', tier: 'pro', cancel_at_period_end: true, ai_mode: 'managed', ai_monthly_credits: 0 },
+    ])
+    const stripe = fakeStripe({
+      sub_same: ending('sub_same', 'price_pro_m', { cancel_at: PERIOD_END, cancel_at_period_end: true }),
+      sub_renewed: ending('sub_renewed', 'price_pro_m', { cancel_at: null, cancel_at_period_end: false }),
+    })
+
+    const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+
+    expect(result.unchanged).toBe(1)
+    expect(updates).toEqual([{ id: 'sub_renewed', values: { cancel_at_period_end: false } }])
+  })
+
+  it('a pro_ai row whose AI columns match but whose flag differs is written with the flag', async () => {
+    const { supabase, updates } = fakeSupabase([
+      {
+        id: 'sub_ai',
+        tier: 'pro_ai',
+        cancel_at_period_end: false,
+        ai_mode: 'managed',
+        ai_monthly_credits: PRO_AI_MONTHLY_CREDITS,
+      },
+    ])
+    const stripe = fakeStripe({ sub_ai: ending('sub_ai', 'price_ai_m', { cancel_at: PERIOD_END, cancel_at_period_end: false }) })
+
+    const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: false })
+
+    expect(result.changed).toEqual(['sub_ai'])
+    expect(updates).toEqual([])
+  })
+
+  it('a cancel_at after the period end still renews once: the flag stays false', async () => {
+    const { supabase, updates } = fakeSupabase([
+      { id: 'sub_later', tier: 'pro', cancel_at_period_end: false, ai_mode: 'managed', ai_monthly_credits: 0 },
+    ])
+    const stripe = fakeStripe({ sub_later: ending('sub_later', 'price_pro_m', { cancel_at: PERIOD_END + 86_400 }) })
+
+    const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+
+    expect(result.unchanged).toBe(1)
+    expect(updates).toEqual([])
+  })
+
+  it('a failed flag write on a pro row is a failure for that row', async () => {
+    const { supabase } = fakeSupabase(
+      [{ id: 'sub_pro', tier: 'pro', cancel_at_period_end: false, ai_mode: 'managed', ai_monthly_credits: 0 }],
+      { updateError: { code: '500' } }
+    )
+    const stripe = fakeStripe({ sub_pro: ending('sub_pro', 'price_pro_m', { cancel_at_period_end: true }) })
+
+    const result = await resyncAiAllowances({ stripe: stripe as never, supabase: supabase as never, apply: true })
+
+    expect(result.failed).toEqual(['sub_pro'])
+    expect(result.changed).toEqual([])
   })
 })

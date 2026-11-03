@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "現在のプラン",
     "renews": "{date}に更新",
+    "ends": "{date}に終了",
     "upgrade": "アップグレード",
     "statuses": {
       "active": "有効",

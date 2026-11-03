@@ -302,6 +302,27 @@ describe('POST /api/webhooks/stripe', () => {
     )
   })
 
+  // Stripe's portal cancel on a flexible billing-mode subscription sets `cancel_at` to the period
+  // end and leaves `cancel_at_period_end` false (test mode, 2026-11-02): the row must still say
+  // the plan is set to end, or every page offers plan changes and no way to keep the plan.
+  it.each([
+    ['cancel_at at the period end', { cancel_at: 1900000000, cancel_at_period_end: false }, true],
+    ['cancel_at before the period end', { cancel_at: 1899990000, cancel_at_period_end: false }, true],
+    ['cancel_at after the period end (renews once more)', { cancel_at: 1900086400, cancel_at_period_end: false }, false],
+    ["Stripe's cancel_at_period_end", { cancel_at: 1900000000, cancel_at_period_end: true }, true],
+    ['neither', { cancel_at: null, cancel_at_period_end: false }, false],
+  ])('customer.subscription.updated stores cancel_at_period_end for %s', async (_case, fields, stored) => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const subscription = makeSubscription({ ...fields, current_period_end: 1900000000 })
+    mockSubscriptionsRetrieve.mockResolvedValue(subscription)
+    mockConstructEvent.mockReturnValue({ type: 'customer.subscription.updated', data: { object: subscription } })
+
+    const res = await POST(makeRequest('{}'))
+
+    expect(res.status).toBe(200)
+    expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({ cancel_at_period_end: stored }), expect.anything())
+  })
+
   it("writes the AI period from the subscription's current state at Stripe, never from the event's older copy", async () => {
     const { POST } = await import('@/app/api/webhooks/stripe/route')
     const period = (start: number, end: number) =>

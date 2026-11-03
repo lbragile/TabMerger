@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "मौजूदा प्लान",
     "renews": "{date} को नवीनीकरण",
+    "ends": "{date} को समाप्त",
     "upgrade": "अपग्रेड करें",
     "statuses": {
       "active": "सक्रिय",

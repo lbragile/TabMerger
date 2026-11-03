@@ -23,6 +23,8 @@ export default async function PricingPage() {
   const scheduledChange = plan.pendingChange
     ? { plan: plan.pendingChange.plan, date: formatDate(plan.pendingChange.effectiveAt, locale) }
     : null
+  // A plan set to end (cancelled at the period end) is offered no change until it is kept.
+  const planEnds = plan.setToEnd ? { date: plan.periodEnd ? formatDate(plan.periodEnd, locale) : null } : null
 
   return (
     <div className="py-16">
@@ -47,6 +49,7 @@ export default async function PricingPage() {
           installHref={getStoreLinks()[await getVisitorBrowser()]}
           signedIn={plan.signedIn}
           scheduledChange={scheduledChange}
+          planEnds={planEnds}
         />
       </div>
       <p className="text-center text-sm text-text2 mt-14">

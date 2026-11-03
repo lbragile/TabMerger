@@ -105,5 +105,9 @@
   "scheduledChange": {
     "starts": "Bắt đầu vào {date}",
     "note": "Bạn có một thay đổi đã lên lịch vào {date}. <link>Quản lý trên trang tài khoản của bạn.</link>"
+  },
+  "planEnds": {
+    "note": "Gói của bạn kết thúc vào {date}. <link>Giữ gói của bạn</link> để thay đổi gói.",
+    "noteNoDate": "Gói của bạn đã được đặt để kết thúc. <link>Giữ gói của bạn</link> để thay đổi gói."
   }
 }

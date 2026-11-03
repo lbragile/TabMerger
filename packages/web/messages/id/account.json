@@ -56,7 +56,10 @@
     "cancelNote": "Anda dapat membatalkan kapan saja melalui <strong>Kelola tagihan</strong>. Akses tetap tersedia hingga akhir periode tagihan saat ini.",
     "scheduledChange": "Berubah ke {plan} pada {date}.",
     "scheduledChangeUnknownPlan": "Paket Anda berubah pada {date}.",
-    "scheduledCancelNote": "Membatalkan akan mempertahankan paket Anda saat ini hingga akhir periode penagihan ini dan menghapus perubahan terjadwal. Tanpa pengembalian dana. Jika Anda memperpanjang nanti, Anda tetap di paket saat ini."
+    "scheduledCancelNote": "Membatalkan akan mempertahankan paket Anda saat ini hingga akhir periode penagihan ini dan menghapus perubahan terjadwal. Tanpa pengembalian dana. Jika Anda memperpanjang nanti, Anda tetap di paket saat ini.",
+    "endsOn": "Paket Anda berakhir pada {date}.",
+    "endsUnknownDate": "Paket Anda dijadwalkan berakhir.",
+    "endsNote": "Paket tidak akan diperpanjang. Pertahankan agar diperpanjang seperti biasa dan untuk mengganti paket; tidak ada biaya sekarang."
   },
   "cancelSubscription": {
     "button": "Batalkan langganan",
@@ -82,6 +85,21 @@
       "no_subscription": "Kami tidak menemukan langganan Anda. Muat ulang halaman, atau kirim email ke {email}.",
       "no_scheduled_change": "Tidak ada lagi perubahan paket yang dijadwalkan. Muat ulang halaman untuk melihat paket Anda.",
       "keep_plan_failed": "Paket Anda saat ini tidak dapat dipertahankan. Silakan coba lagi, atau kirim email ke {email}.",
+      "rate_limited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Pertahankan paket saya",
+    "success": "Paket Anda akan diperpanjang.",
+    "successRenewsOn": "Paket Anda akan diperpanjang pada {date}.",
+    "successRenews": "Paket Anda akan diperpanjang pada {date} sebesar {amount}.",
+    "errors": {
+      "no_billing_account": "Paket ini tidak terhubung ke akun penagihan. Kirim email ke {email} dan kami akan mengurusnya untuk Anda.",
+      "no_subscription": "Kami tidak menemukan langganan Anda. Muat ulang halaman, atau kirim email ke {email}.",
+      "not_entitled": "Paket ini sudah berakhir. Pilih paket di halaman harga.",
+      "not_canceling": "Paket Anda tidak lagi dijadwalkan berakhir. Muat ulang halaman untuk melihat paket Anda.",
+      "ends_early": "Tanggal berakhir paket ini ditetapkan oleh tim dukungan kami. Kirim email ke {email} untuk mempertahankannya.",
+      "resume_failed": "Tidak dapat mempertahankan paket Anda. Silakan coba lagi, atau kirim email ke {email}.",
       "rate_limited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
     }
   },

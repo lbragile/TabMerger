@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "Plano atual",
     "renews": "Renova em {date}",
+    "ends": "Termina em {date}",
     "upgrade": "Upgrade",
     "statuses": {
       "active": "ativa",

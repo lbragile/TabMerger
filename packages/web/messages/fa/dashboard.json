@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "طرح فعلی",
     "renews": "تمدید در {date}",
+    "ends": "پایان در {date}",
     "upgrade": "ارتقا",
     "statuses": {
       "active": "فعال",

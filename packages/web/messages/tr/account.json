@@ -56,7 +56,10 @@
     "cancelNote": "<strong>Faturalandırmayı yönet</strong> üzerinden istediğiniz zaman iptal edebilirsiniz. Erişiminiz mevcut fatura döneminin sonuna kadar devam eder.",
     "scheduledChange": "{date} tarihinde {plan} planına geçer.",
     "scheduledChangeUnknownPlan": "Planınız {date} tarihinde değişir.",
-    "scheduledCancelNote": "İptal ederseniz mevcut planınız bu fatura döneminin sonuna kadar devam eder ve planlanan değişiklik kaldırılır. Para iadesi yapılmaz. Daha sonra yenilerseniz mevcut planınızda kalırsınız."
+    "scheduledCancelNote": "İptal ederseniz mevcut planınız bu fatura döneminin sonuna kadar devam eder ve planlanan değişiklik kaldırılır. Para iadesi yapılmaz. Daha sonra yenilerseniz mevcut planınızda kalırsınız.",
+    "endsOn": "Planınız {date} tarihinde sona eriyor.",
+    "endsUnknownDate": "Planınız sona erecek şekilde ayarlandı.",
+    "endsNote": "Yenilenmeyecek. Eskisi gibi yenilenmesi ve plan değiştirebilmek için planınızı koruyun; şu anda hiçbir ücret alınmaz."
   },
   "cancelSubscription": {
     "button": "Aboneliği iptal et",
@@ -82,6 +85,21 @@
       "no_subscription": "Aboneliğinizi bulamadık. Sayfayı yenileyin veya {email} adresine yazın.",
       "no_scheduled_change": "Artık planlanmış bir plan değişikliği yok. Planınızı görmek için sayfayı yenileyin.",
       "keep_plan_failed": "Mevcut planınız korunamadı. Lütfen tekrar deneyin veya {email} adresine yazın.",
+      "rate_limited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Planımı koru",
+    "success": "Planınız yenilenecek.",
+    "successRenewsOn": "Planınız {date} tarihinde yenilenecek.",
+    "successRenews": "Planınız {date} tarihinde {amount} karşılığında yenilenecek.",
+    "errors": {
+      "no_billing_account": "Bu plan bir faturalandırma hesabına bağlı değil. {email} adresine yazın, sizin için halledelim.",
+      "no_subscription": "Aboneliğinizi bulamadık. Sayfayı yenileyin veya {email} adresine yazın.",
+      "not_entitled": "Bu plan zaten sona erdi. Fiyatlandırma sayfasından bir plan seçin.",
+      "not_canceling": "Planınız artık sona erecek şekilde ayarlı değil. Planınızı görmek için sayfayı yenileyin.",
+      "ends_early": "Bu planın bitiş tarihi destek ekibimiz tarafından belirlendi. Planı korumak için {email} adresine yazın.",
+      "resume_failed": "Planınız korunamadı. Lütfen tekrar deneyin veya {email} adresine yazın.",
       "rate_limited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
     }
   },

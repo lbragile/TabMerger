@@ -8,7 +8,8 @@ metadata:
 The portal home hides cancel while a subscription has a schedule (portal-made or server-made). A
 session with `flow_data: { type: 'subscription_cancel', subscription_cancel: { subscription } }`
 is accepted anyway, and confirming its "Cancel plan" page **releases the schedule** (current price
-kept) and sets `cancel_at_period_end`. Verified on test clocks 2026-10-26: at period end the sub is
+kept) and sets the subscription to end: `cancel_at_period_end` on classic billing mode, only
+`cancel_at` on flexible (Checkout-made) ones; see [[cancel-at-period-end-flexible-mode]]. Verified on test clocks 2026-10-26: at period end the sub is
 `canceled`, no renewal invoice, balance 0, no credit notes.
 
 Decision: use Stripe's flow, not a hand-rolled release + update (Stripe's pages for billing

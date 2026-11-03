@@ -105,5 +105,9 @@
   "scheduledChange": {
     "starts": "{date} 起生效",
     "note": "你已安排在 {date} 进行一项更改。<link>在账户页面管理。</link>"
+  },
+  "planEnds": {
+    "note": "你的套餐将于 {date} 结束。<link>保留套餐</link>后即可更改。",
+    "noteNoDate": "你的套餐已设置为结束。<link>保留套餐</link>后即可更改。"
   }
 }

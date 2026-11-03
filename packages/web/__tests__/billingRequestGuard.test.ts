@@ -81,6 +81,7 @@ const COOKIE_ROUTES: Route[] = [
   { name: 'switch interval', path: '/api/billing/switch-interval', load: () => import('@/app/api/billing/switch-interval/route'), body: { interval: 'yearly' } },
   { name: 'keep current plan', path: '/api/billing/keep-current-plan', load: () => import('@/app/api/billing/keep-current-plan/route') },
   { name: 'cancel subscription', path: '/api/billing/cancel-subscription', load: () => import('@/app/api/billing/cancel-subscription/route') },
+  { name: 'resume subscription', path: '/api/billing/resume-subscription', load: () => import('@/app/api/billing/resume-subscription/route') },
   { name: 'billing portal', path: '/api/billing-portal', load: () => import('@/app/api/billing-portal/route') },
 ]
 

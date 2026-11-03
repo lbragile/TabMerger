@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react'
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
@@ -19,6 +19,7 @@ import { readScheduledChange } from '@/lib/aiCreditsDate'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getPriceInfo } from '@/lib/tiers'
+import { formatDate } from '@/lib/utils'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
@@ -41,7 +42,7 @@ export default async function DashboardPage({
 }) {
   const params = await searchParams
   const supabase = await createClient()
-  const [t, tierNames] = await Promise.all([getTranslations('dashboard'), getTranslations('pricing.tierNames')])
+  const [t, tierNames, locale] = await Promise.all([getTranslations('dashboard'), getTranslations('pricing.tierNames'), getLocale()])
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -104,12 +105,19 @@ export default async function DashboardPage({
   // option need a paid-up plan (`syncEnabled`: active, trialing or past_due), the rule
   // `/api/checkout/credits` and `/api/billing/switch-plan` enforce.
   const aiMode = isAiMode(subscription?.ai_mode) ? subscription.ai_mode : 'managed'
+  // Cancelled at the period end: no switch (the server refuses it until the plan is kept on the
+  // account page), a note saying when the plan ends instead. The date is formatted here, on the server.
+  const setToEnd = syncEnabled && subscription?.cancel_at_period_end === true
+  const planEnds = setToEnd
+    ? { date: subscription?.current_period_end ? formatDate(subscription.current_period_end, locale) : null }
+    : null
   const aiSwitch = syncEnabled && (
     <SwitchAiModeButton
       current={aiMode}
       interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
       periodEnd={subscription?.current_period_end}
       returnPath="/dashboard"
+      planEnds={planEnds}
     />
   )
   let aiUsage: ComponentProps<typeof StatsOverview>['aiUsage']
@@ -178,6 +186,7 @@ export default async function DashboardPage({
         status={subscription?.status}
         currentPeriodEnd={subscription?.current_period_end}
         priceId={subscription?.stripe_price_id}
+        setToEnd={setToEnd}
       />
 
       {syncEnabled && (

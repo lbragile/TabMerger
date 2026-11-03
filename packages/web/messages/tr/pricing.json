@@ -105,5 +105,9 @@
   "scheduledChange": {
     "starts": "{date} tarihinde başlar",
     "note": "{date} tarihi için planlanmış bir değişikliğiniz var. <link>Hesap sayfanızdan yönetin.</link>"
+  },
+  "planEnds": {
+    "note": "Planınız {date} tarihinde sona eriyor. Değiştirmek için <link>planınızı koruyun</link>.",
+    "noteNoDate": "Planınız sona erecek şekilde ayarlandı. Değiştirmek için <link>planınızı koruyun</link>."
   }
 }

@@ -105,5 +105,9 @@
   "scheduledChange": {
     "starts": "{date}부터 시작",
     "note": "{date}에 예정된 변경이 있습니다. <link>계정 페이지에서 관리하세요.</link>"
+  },
+  "planEnds": {
+    "note": "요금제가 {date}에 종료됩니다. 변경하려면 <link>요금제를 유지</link>하세요.",
+    "noteNoDate": "요금제가 종료될 예정입니다. 변경하려면 <link>요금제를 유지</link>하세요."
   }
 }

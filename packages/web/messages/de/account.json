@@ -56,7 +56,10 @@
     "cancelNote": "Du kannst jederzeit über <strong>Abrechnung verwalten</strong> kündigen. Du behältst den Zugriff bis zum Ende des aktuellen Abrechnungszeitraums.",
     "scheduledChange": "Wechselt am {date} zu {plan}.",
     "scheduledChangeUnknownPlan": "Dein Plan ändert sich am {date}.",
-    "scheduledCancelNote": "Wenn du kündigst, behältst du deinen aktuellen Plan bis zum Ende dieses Abrechnungszeitraums, und die geplante Änderung entfällt. Keine Erstattung. Wenn du später verlängerst, bleibst du bei deinem aktuellen Plan."
+    "scheduledCancelNote": "Wenn du kündigst, behältst du deinen aktuellen Plan bis zum Ende dieses Abrechnungszeitraums, und die geplante Änderung entfällt. Keine Erstattung. Wenn du später verlängerst, bleibst du bei deinem aktuellen Plan.",
+    "endsOn": "Dein Plan endet am {date}.",
+    "endsUnknownDate": "Dein Plan ist gekündigt.",
+    "endsNote": "Er verlängert sich nicht. Behalte ihn, damit er sich wie bisher verlängert und du den Plan ändern kannst; jetzt wird nichts berechnet."
   },
   "cancelSubscription": {
     "button": "Abo kündigen",
@@ -82,6 +85,21 @@
       "no_subscription": "Wir haben dein Abo nicht gefunden. Lade die Seite neu oder schreib an {email}.",
       "no_scheduled_change": "Es ist kein Planwechsel mehr geplant. Lade die Seite neu, um deinen Plan zu sehen.",
       "keep_plan_failed": "Dein aktueller Plan konnte nicht beibehalten werden. Bitte versuche es erneut oder schreib an {email}.",
+      "rate_limited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Plan behalten",
+    "success": "Dein Plan wird verlängert.",
+    "successRenewsOn": "Dein Plan verlängert sich am {date}.",
+    "successRenews": "Dein Plan verlängert sich am {date} für {amount}.",
+    "errors": {
+      "no_billing_account": "Dieser Plan ist mit keinem Abrechnungskonto verknüpft. Schreib an {email}, dann kümmern wir uns darum.",
+      "no_subscription": "Wir haben dein Abo nicht gefunden. Lade die Seite neu oder schreib an {email}.",
+      "not_entitled": "Dieser Plan ist bereits beendet. Wähle auf der Preisseite einen Plan.",
+      "not_canceling": "Dein Plan ist nicht mehr gekündigt. Lade die Seite neu, um deinen Plan zu sehen.",
+      "ends_early": "Das Enddatum dieses Plans hat unser Support festgelegt. Schreib an {email}, um ihn zu behalten.",
+      "resume_failed": "Dein Plan konnte nicht behalten werden. Bitte versuche es erneut oder schreib an {email}.",
       "rate_limited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
     }
   },

@@ -56,7 +56,10 @@
     "cancelNote": "Vous pouvez résilier à tout moment via <strong>Gérer la facturation</strong>. Vous gardez l’accès jusqu’à la fin de la période de facturation en cours.",
     "scheduledChange": "Passe à {plan} le {date}.",
     "scheduledChangeUnknownPlan": "Votre forfait change le {date}.",
-    "scheduledCancelNote": "En résiliant, vous gardez votre forfait actuel jusqu’à la fin de cette période de facturation et le changement prévu est annulé. Aucun remboursement. Si vous renouvelez plus tard, vous gardez votre forfait actuel."
+    "scheduledCancelNote": "En résiliant, vous gardez votre forfait actuel jusqu’à la fin de cette période de facturation et le changement prévu est annulé. Aucun remboursement. Si vous renouvelez plus tard, vous gardez votre forfait actuel.",
+    "endsOn": "Votre forfait prend fin le {date}.",
+    "endsUnknownDate": "Votre forfait va prendre fin.",
+    "endsNote": "Il ne sera pas renouvelé. Gardez-le pour qu’il se renouvelle comme avant et pour changer de forfait ; rien n’est facturé maintenant."
   },
   "cancelSubscription": {
     "button": "Résilier l’abonnement",
@@ -82,6 +85,21 @@
       "no_subscription": "Nous n’avons pas trouvé votre abonnement. Rechargez la page ou écrivez à {email}.",
       "no_scheduled_change": "Aucun changement de forfait n’est plus prévu. Rechargez la page pour voir votre forfait.",
       "keep_plan_failed": "Impossible de garder votre forfait actuel. Réessayez ou écrivez à {email}.",
+      "rate_limited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Garder mon forfait",
+    "success": "Votre forfait sera renouvelé.",
+    "successRenewsOn": "Votre forfait sera renouvelé le {date}.",
+    "successRenews": "Votre forfait sera renouvelé le {date} pour {amount}.",
+    "errors": {
+      "no_billing_account": "Ce forfait n’est lié à aucun compte de facturation. Écrivez à {email} et nous nous en occuperons.",
+      "no_subscription": "Nous n’avons pas trouvé votre abonnement. Rechargez la page ou écrivez à {email}.",
+      "not_entitled": "Ce forfait a déjà pris fin. Choisissez un forfait sur la page des tarifs.",
+      "not_canceling": "Votre forfait ne va plus prendre fin. Rechargez la page pour voir votre forfait.",
+      "ends_early": "La date de fin de ce forfait a été fixée par notre équipe d’assistance. Écrivez à {email} pour le garder.",
+      "resume_failed": "Impossible de garder votre forfait. Réessayez ou écrivez à {email}.",
       "rate_limited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer."
     }
   },

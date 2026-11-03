@@ -18,3 +18,4 @@
 - [Billing request guards](billing-request-guards.md) — Sec-Fetch-Site/Origin 403, Postgres per-user limit (025), fail-open decision, test headers + limiter mock
 - [Disputes and past_due allowance](disputes-and-past-due-allowance.md) — 027 allowance_spent freeze (one counter!), charge-state reversals, paid-only packs, test cards
 - [AI credit month key](ai-credit-month-key.md) — 030: key = when the allowance month started; hold until paid (invoice.paid), packs during it; span tells monthly from yearly; Stripe facts
+- [Cancel at period end, flexible mode](cancel-at-period-end-flexible-mode.md) — portal sets only cancel_at on flexible; stored-flag reading; undo with cancel_at '' (measured)

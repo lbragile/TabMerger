@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "当前套餐",
     "renews": "{date}续订",
+    "ends": "{date}结束",
     "upgrade": "升级",
     "statuses": {
       "active": "有效",

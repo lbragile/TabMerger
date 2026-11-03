@@ -1,8 +1,10 @@
 /**
  * One-off: recompute `subscriptions.ai_mode`, `ai_monthly_credits` and the AI period for every `pro_ai` row from
- * Stripe, with the same function the webhook uses (lib/aiAllowance.ts). Run once per environment
- * after migration 022 or 030 and the code that writes these columns are deployed; running it again is
- * harmless (only rows whose values differ are written).
+ * Stripe, with the same function the webhook uses (lib/aiAllowance.ts), and `cancel_at_period_end` for
+ * every `pro` and `pro_ai` row (lib/subscriptionEnd.ts). Run once per environment after migration 022
+ * or 030, or the change that reads Stripe's `cancel_at` into `cancel_at_period_end`, and the code that
+ * writes these columns are deployed; running it again is harmless (only rows whose values differ are
+ * written).
  *
  * Dry run by default; `--apply` writes. Prints counts and Stripe subscription ids only.
  *
@@ -46,7 +48,7 @@ async function main() {
   const result = await resyncAiAllowances({ stripe, supabase, apply, log: (line) => console.log(line) })
 
   console.log(
-    `pro_ai rows: ${result.scanned}; unchanged: ${result.unchanged}; ${apply ? 'written' : 'would change'}: ${result.changed.length}; skipped: ${result.skipped.length}; failed: ${result.failed.length}`
+    `pro and pro_ai rows: ${result.scanned}; unchanged: ${result.unchanged}; ${apply ? 'written' : 'would change'}: ${result.changed.length}; skipped: ${result.skipped.length}; failed: ${result.failed.length}`
   )
   if (result.heldOnUnpaid.length) console.log(`Renewal not paid yet, period held: ${result.heldOnUnpaid.join(', ')}`)
   if (result.behindPaidRenewal.length) console.log(`Behind a paid renewal (was an invoice.paid missed?): ${result.behindPaidRenewal.join(', ')}`)

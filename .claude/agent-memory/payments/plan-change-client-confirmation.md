@@ -30,3 +30,8 @@ Pricing page with a change already scheduled (switch routes would answer 409 `al
   note linking to /account (`cta-scheduled-note`). The "Who handles setup" radio stays enabled (a
   view toggle, not a change), so the target option's "Starts" stays reachable.
 - PricingCard's root carries `data-tier` for tests (the teaser uses the same attribute).
+
+Plan set to end (stored `cancel_at_period_end`): every change button on paid cards becomes
+`PlanEndsNote` (`cta-plan-ends-note`, checked before the scheduled-change branches), the dashboard's
+SwitchAiModeButton takes `planEnds` and renders the same note, the account page hides the switch
+next to "Keep my plan", and `usePlanChange` refuses `setToEnd`. Dates formatted on the server.

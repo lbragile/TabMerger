@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "Текущий тариф",
     "renews": "Продление {date}",
+    "ends": "Заканчивается {date}",
     "upgrade": "Улучшить тариф",
     "statuses": {
       "active": "активна",

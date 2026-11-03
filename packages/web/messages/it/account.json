@@ -56,7 +56,10 @@
     "cancelNote": "Puoi annullare in qualsiasi momento da <strong>Gestisci fatturazione</strong>. Mantieni l'accesso fino alla fine del periodo di fatturazione in corso.",
     "scheduledChange": "Passa a {plan} il {date}.",
     "scheduledChangeUnknownPlan": "Il tuo piano cambia il {date}.",
-    "scheduledCancelNote": "Se annulli, mantieni il piano attuale fino alla fine di questo periodo di fatturazione e la modifica programmata viene eliminata. Nessun rimborso. Se rinnovi in seguito, mantieni il piano attuale."
+    "scheduledCancelNote": "Se annulli, mantieni il piano attuale fino alla fine di questo periodo di fatturazione e la modifica programmata viene eliminata. Nessun rimborso. Se rinnovi in seguito, mantieni il piano attuale.",
+    "endsOn": "Il tuo piano termina il {date}.",
+    "endsUnknownDate": "Il tuo piano è impostato per terminare.",
+    "endsNote": "Non verrà rinnovato. Mantienilo per rinnovarlo come prima e per cambiare piano; ora non viene addebitato nulla."
   },
   "cancelSubscription": {
     "button": "Annulla abbonamento",
@@ -82,6 +85,21 @@
       "no_subscription": "Non abbiamo trovato il tuo abbonamento. Ricarica la pagina oppure scrivi a {email}.",
       "no_scheduled_change": "Non c’è più nessun cambio di piano programmato. Ricarica la pagina per vedere il tuo piano.",
       "keep_plan_failed": "Impossibile mantenere il tuo piano attuale. Riprova oppure scrivi a {email}.",
+      "rate_limited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Mantieni il mio piano",
+    "success": "Il tuo piano verrà rinnovato.",
+    "successRenewsOn": "Il tuo piano si rinnoverà il {date}.",
+    "successRenews": "Il tuo piano si rinnoverà il {date} per {amount}.",
+    "errors": {
+      "no_billing_account": "Questo piano non è collegato a un account di fatturazione. Scrivi a {email} e ce ne occuperemo noi.",
+      "no_subscription": "Non abbiamo trovato il tuo abbonamento. Ricarica la pagina oppure scrivi a {email}.",
+      "not_entitled": "Questo piano è già terminato. Scegli un piano nella pagina dei prezzi.",
+      "not_canceling": "Il tuo piano non è più impostato per terminare. Ricarica la pagina per vedere il tuo piano.",
+      "ends_early": "La data di fine di questo piano è stata impostata dal nostro supporto. Scrivi a {email} per mantenerlo.",
+      "resume_failed": "Impossibile mantenere il tuo piano. Riprova oppure scrivi a {email}.",
       "rate_limited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova."
     }
   },

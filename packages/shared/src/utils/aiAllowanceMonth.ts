@@ -140,7 +140,11 @@ function instant(value: Date | string | null | undefined): number | null {
 
 /** What is known about the plan after the credits date, beyond the `subscriptions` row. */
 export interface AiCreditsNextPeriod {
-  /** Stripe's `cancel_at` (not stored on the row; only a caller that read Stripe has it). */
+  /**
+   * Stripe's `cancel_at` (not stored on the row; only a caller that read Stripe has it). The row's
+   * `cancel_at_period_end` already covers a `cancel_at` at or before the period end: the webhook
+   * stores it as true then.
+   */
   cancelAt?: Date | string | null;
   /**
    * A plan change scheduled for later (read from Stripe on the web server; not on the row): when it

@@ -56,7 +56,10 @@
     "cancelNote": "Bạn có thể hủy bất cứ lúc nào qua <strong>Quản lý thanh toán</strong>. Bạn vẫn giữ quyền truy cập đến hết chu kỳ thanh toán hiện tại.",
     "scheduledChange": "Chuyển sang {plan} vào {date}.",
     "scheduledChangeUnknownPlan": "Gói của bạn thay đổi vào {date}.",
-    "scheduledCancelNote": "Khi hủy, bạn giữ gói hiện tại đến hết kỳ thanh toán này và thay đổi đã lên lịch sẽ bị bỏ. Không hoàn tiền. Nếu gia hạn sau đó, bạn vẫn giữ gói hiện tại."
+    "scheduledCancelNote": "Khi hủy, bạn giữ gói hiện tại đến hết kỳ thanh toán này và thay đổi đã lên lịch sẽ bị bỏ. Không hoàn tiền. Nếu gia hạn sau đó, bạn vẫn giữ gói hiện tại.",
+    "endsOn": "Gói của bạn kết thúc vào {date}.",
+    "endsUnknownDate": "Gói của bạn đã được đặt để kết thúc.",
+    "endsNote": "Gói sẽ không được gia hạn. Hãy giữ gói để gia hạn như trước và để đổi gói; hiện không bị tính phí."
   },
   "cancelSubscription": {
     "button": "Hủy gói đăng ký",
@@ -82,6 +85,21 @@
       "no_subscription": "Chúng tôi không tìm thấy gói đăng ký của bạn. Hãy tải lại trang, hoặc gửi email tới {email}.",
       "no_scheduled_change": "Không còn thay đổi gói nào được lên lịch. Hãy tải lại trang để xem gói của bạn.",
       "keep_plan_failed": "Không thể giữ gói hiện tại của bạn. Vui lòng thử lại, hoặc gửi email tới {email}.",
+      "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Giữ gói của tôi",
+    "success": "Gói của bạn sẽ được gia hạn.",
+    "successRenewsOn": "Gói của bạn sẽ được gia hạn vào {date}.",
+    "successRenews": "Gói của bạn sẽ được gia hạn vào {date} với giá {amount}.",
+    "errors": {
+      "no_billing_account": "Gói này chưa được liên kết với tài khoản thanh toán. Hãy gửi email tới {email} và chúng tôi sẽ xử lý giúp bạn.",
+      "no_subscription": "Chúng tôi không tìm thấy gói đăng ký của bạn. Hãy tải lại trang, hoặc gửi email tới {email}.",
+      "not_entitled": "Gói này đã kết thúc. Hãy chọn một gói trên trang giá.",
+      "not_canceling": "Gói của bạn không còn được đặt để kết thúc. Tải lại trang để xem gói của bạn.",
+      "ends_early": "Ngày kết thúc của gói này do đội hỗ trợ của chúng tôi đặt. Gửi email đến {email} để giữ gói.",
+      "resume_failed": "Không thể giữ gói của bạn. Vui lòng thử lại, hoặc gửi email đến {email}.",
       "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
     }
   },

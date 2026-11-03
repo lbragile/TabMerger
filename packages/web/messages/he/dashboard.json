@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "התוכנית הנוכחית",
     "renews": "יתחדש ב-{date}",
+    "ends": "מסתיים ב-{date}",
     "upgrade": "שדרוג",
     "statuses": {
       "active": "פעיל",

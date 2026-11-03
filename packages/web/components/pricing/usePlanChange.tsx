@@ -42,6 +42,12 @@ export interface CurrentPlan {
   aiMode?: AiMode | null
   /** `subscriptions.current_period_end`: when a scheduled change takes effect. */
   periodEnd?: string | null
+  /**
+   * The plan is set to end (`subscriptions.cancel_at_period_end`). Callers show no change button
+   * then; should `start()` still be called, it says why instead of sending a request the server
+   * would refuse (409 `cancel_scheduled`).
+   */
+  setToEnd?: boolean
 }
 
 /** What to change; a field left out keeps the current value. */
@@ -236,6 +242,10 @@ export function usePlanChange(current: CurrentPlan | null, returnPath: string) {
   function start(target: PlanChangeTarget) {
     setError(null)
     setDone(null)
+    if (current?.setToEnd) {
+      setError(t(`errors.${PLAN_SWITCH_ERROR_CODES.cancelScheduled}`, SUPPORT))
+      return
+    }
     const to = resolve(target)
     if (!to) {
       void send(target, null)

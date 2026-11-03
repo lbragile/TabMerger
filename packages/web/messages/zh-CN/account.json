@@ -56,7 +56,10 @@
     "cancelNote": "您可以随时通过<strong>管理账单</strong>取消订阅。当前计费周期结束前，您仍可继续使用。",
     "scheduledChange": "将于 {date} 更改为 {plan}。",
     "scheduledChangeUnknownPlan": "你的套餐将于 {date} 更改。",
-    "scheduledCancelNote": "取消后，你的当前套餐会保留到本计费周期结束，已安排的更改将被取消。不予退款。之后续订时，仍保留你的当前套餐。"
+    "scheduledCancelNote": "取消后，你的当前套餐会保留到本计费周期结束，已安排的更改将被取消。不予退款。之后续订时，仍保留你的当前套餐。",
+    "endsOn": "你的套餐将于 {date} 结束。",
+    "endsUnknownDate": "你的套餐已设置为结束。",
+    "endsNote": "套餐不会续订。保留套餐即可像以前一样续订并更改套餐；现在不会收费。"
   },
   "cancelSubscription": {
     "button": "取消订阅",
@@ -82,6 +85,21 @@
       "no_subscription": "未找到你的订阅。请刷新页面，或发送邮件至 {email}。",
       "no_scheduled_change": "已没有待生效的套餐变更。请刷新页面查看你的套餐。",
       "keep_plan_failed": "无法保留你的当前套餐。请重试，或发送邮件至 {email}。",
+      "rate_limited": "短时间内的账单请求过多。请等待几分钟后再试。"
+    }
+  },
+  "resumeSubscription": {
+    "button": "保留我的套餐",
+    "success": "你的套餐将会续订。",
+    "successRenewsOn": "你的套餐将于 {date} 续订。",
+    "successRenews": "你的套餐将于 {date} 续订，费用为 {amount}。",
+    "errors": {
+      "no_billing_account": "此套餐未关联账单账户。请发送邮件至 {email}，我们会为你处理。",
+      "no_subscription": "未找到你的订阅。请刷新页面，或发送邮件至 {email}。",
+      "not_entitled": "此套餐已结束。请在价格页面选择套餐。",
+      "not_canceling": "你的套餐已不再设置为结束。请刷新页面查看你的套餐。",
+      "ends_early": "此套餐的结束日期由我们的支持团队设置。如需保留，请发送邮件至 {email}。",
+      "resume_failed": "无法保留你的套餐。请重试，或发送邮件至 {email}。",
       "rate_limited": "短时间内的账单请求过多。请等待几分钟后再试。"
     }
   },

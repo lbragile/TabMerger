@@ -21,6 +21,7 @@ import { usePlanChange } from './usePlanChange'
 import { normalizeTier, planCardStatus } from './planStatus'
 import type { PaidTierKey } from '@/lib/tiers'
 import type { PendingPlanChangeInfo } from '@/lib/currentPlan'
+import { PlanEndsNote, type PlanEnds } from './PlanEndsNote'
 
 /** The card's full-width CTA: wraps instead of overflowing the card when a translated label is
  *  long, and keeps the usual 40px single-line height whenever it fits. */
@@ -87,6 +88,13 @@ interface PricingCardProps {
    * refuse a second change (409 `already_scheduled`).
    */
   scheduledChange?: ScheduledPlanChange | null
+  /**
+   * The subscriber's plan is set to end (cancelled at the period end). Every change on the card
+   * (another plan, the other interval, the other Pro AI option) is replaced by a note pointing to
+   * the account page, where the plan can be kept: the server refuses changes until then (409
+   * `cancel_scheduled`).
+   */
+  planEnds?: PlanEnds | null
 }
 
 export function PricingCard({
@@ -102,6 +110,7 @@ export function PricingCard({
   currentPeriodEnd,
   signedIn = false,
   scheduledChange,
+  planEnds,
   ...singleOption
 }: PricingCardProps) {
   const router = useRouter()
@@ -140,6 +149,8 @@ export function PricingCard({
   // A scheduled change counts only for a subscriber. This card is its target when it shows that plan:
   // the tier, the interval on show and, for Pro AI, the option on show.
   const scheduled = hasPaidPlan ? (scheduledChange ?? null) : null
+  // A plan set to end counts only for a subscriber, like a scheduled change.
+  const ends = hasPaidPlan ? (planEnds ?? null) : null
   const isScheduledTarget =
     !!scheduled?.plan &&
     scheduled.plan.tierKey === tier &&
@@ -154,6 +165,7 @@ export function PricingCard({
           interval: currentInterval,
           aiMode: currentAiMode ?? 'managed',
           periodEnd: currentPeriodEnd,
+          setToEnd: !!ends,
         }
       : null,
     '/pricing'
@@ -379,6 +391,10 @@ export function PricingCard({
           >
             {t('installFree')}
           </Button>
+        ) : ends && !(isCurrentPlan && !switchTarget) ? (
+          // Any change while the plan is set to end: the server would refuse it, so the card says
+          // when the plan ends and where to keep it instead of offering a button.
+          <PlanEndsNote ends={ends} testId="cta-plan-ends-note" className="min-h-10 text-center text-[11.5px] text-text2" />
         ) : scheduled && isScheduledTarget ? (
           // The plan the scheduled change moves to: when it starts, in place of a button, at a
           // button's height so the cards' bottom blocks stay lined up (like the current plan's).

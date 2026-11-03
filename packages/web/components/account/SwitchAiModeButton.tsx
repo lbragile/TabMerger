@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import type { AiMode } from '@tabmerger/shared'
 import { isAiOptionAvailable, otherAiMode } from '@/components/pricing/aiOptions'
 import { usePlanChange } from '@/components/pricing/usePlanChange'
+import { PlanEndsNote, type PlanEnds } from '@/components/pricing/PlanEndsNote'
 import type { BillingInterval } from '@/lib/tiers'
 import { cn } from '@/lib/utils'
 
@@ -17,6 +18,12 @@ interface SwitchAiModeButtonProps {
   periodEnd?: string | null
   /** Where sign-in returns to if the session has expired. */
   returnPath: string
+  /**
+   * The plan is set to end (cancelled at the period end): a note saying when, linking to the
+   * account page where it can be kept, replaces the button. The server refuses the switch until
+   * then (409 `cancel_scheduled`).
+   */
+  planEnds?: PlanEnds | null
   className?: string
 }
 
@@ -28,13 +35,15 @@ interface SwitchAiModeButtonProps {
  * downgrade: Stripe's page shows "Updates on {date}" and schedules it for the period's end, with
  * no credit; managed AI lasts until that date. Only when the subscription's price isn't one this
  * deployment sells (interval unknown) does the server schedule the change itself, so our dialog
- * confirms it first. Renders nothing while the other option isn't on sale.
+ * confirms it first. Renders nothing while the other option isn't on sale, and a note instead of
+ * the button while the plan is set to end (`planEnds`).
  */
-export function SwitchAiModeButton({ current, interval, periodEnd, returnPath, className }: SwitchAiModeButtonProps) {
+export function SwitchAiModeButton({ current, interval, periodEnd, returnPath, planEnds, className }: SwitchAiModeButtonProps) {
   const t = useTranslations('pricing.aiOptions')
   const target = otherAiMode(current)
-  const change = usePlanChange({ tierKey: 'proAi', interval, aiMode: current, periodEnd }, returnPath)
+  const change = usePlanChange({ tierKey: 'proAi', interval, aiMode: current, periodEnd, setToEnd: !!planEnds }, returnPath)
   if (!isAiOptionAvailable(target)) return null
+  if (planEnds) return <PlanEndsNote ends={planEnds} testId="switch-ai-mode-plan-ends" className={cn('text-text2', className)} />
 
   return (
     <span className={cn('inline-flex flex-col items-start gap-1', className)}>

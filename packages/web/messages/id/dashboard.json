@@ -45,6 +45,7 @@
   "subscription": {
     "currentPlan": "Paket saat ini",
     "renews": "Diperpanjang {date}",
+    "ends": "Berakhir {date}",
     "upgrade": "Tingkatkan",
     "statuses": {
       "active": "aktif",

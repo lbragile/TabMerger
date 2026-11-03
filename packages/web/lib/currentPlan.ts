@@ -26,6 +26,12 @@ export interface CurrentPlan {
   aiMode?: AiMode
   /** When the paid period ends (the date a scheduled plan change takes effect). */
   periodEnd: string | null
+  /**
+   * The paid plan is set to end at `periodEnd` (`subscriptions.cancel_at_period_end`, which the
+   * webhook also sets for a `cancel_at` at the period end). No plan change is offered then: the
+   * server refuses one (409 `cancel_scheduled`) until the plan is kept.
+   */
+  setToEnd?: boolean
   /** The scheduled plan change, when read (`withPendingChange`) and there is one. */
   pendingChange?: PendingPlanChangeInfo | null
 }
@@ -56,7 +62,7 @@ export async function getCurrentPlan({ withPendingChange = false }: { withPendin
 
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('id, tier, status, stripe_price_id, ai_mode, current_period_end')
+    .select('id, tier, status, stripe_price_id, ai_mode, current_period_end, cancel_at_period_end')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(1)
@@ -71,6 +77,7 @@ export async function getCurrentPlan({ withPendingChange = false }: { withPendin
     tier,
     interval: priceInfo?.interval,
     periodEnd: subscription.current_period_end ?? null,
+    setToEnd: subscription.cancel_at_period_end === true,
     // Pro AI's option: the price says which it is; the stored column covers a price this
     // deployment doesn't know.
     aiMode:

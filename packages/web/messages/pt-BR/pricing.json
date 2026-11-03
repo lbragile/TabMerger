@@ -105,5 +105,9 @@
   "scheduledChange": {
     "starts": "Começa em {date}",
     "note": "Você tem uma mudança agendada para {date}. <link>Gerencie na página da sua conta.</link>"
+  },
+  "planEnds": {
+    "note": "Seu plano termina em {date}. <link>Mantenha seu plano</link> para alterá-lo.",
+    "noteNoDate": "Seu plano está programado para terminar. <link>Mantenha seu plano</link> para alterá-lo."
   }
 }

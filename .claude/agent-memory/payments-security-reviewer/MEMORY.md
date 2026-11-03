@@ -16,4 +16,5 @@
 - [Usage bucket vs billing period](learnings_usage_bucket_vs_billing_period.md) — calendar-month counter vs paid period: buckets per payment, dunning, upgrade shares, free pre-check calls
 - [Payment reversal review](learnings_payment_reversal_review_method.md) — dispute/refund handlers: insert-on-missing races, unlocked read-then-write, event coverage, trigger-frozen allowance
 - [AI abuse limits](learnings_ai_abuse_limit_review_method.md) — rate limits/slots/deadlines: abort refund direction, sibling-route oracles, pre-slot work, IP keys, peek-then-count overshoot, SDK retries
+- [Cancel resume](learnings_cancel_resume_review_method.md) — clearing cancel_at: id provenance, flexible vs classic mode, independent natural period end, dispute/past_due, flag display-only
 - [Amount-driven portal deferral](learnings_amount_driven_portal_deferral_review_method.md) — schedule_at_period_end conditions: pair-by-pair per-month check, stale sessions, restricted coupons, schedule locks, alarm shape

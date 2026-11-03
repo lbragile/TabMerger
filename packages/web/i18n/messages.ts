@@ -80,6 +80,7 @@ export const CLIENT_NAMESPACES = [
   'account.credits',
   'account.cancelSubscription',
   'account.keepCurrentPlan',
+  'account.resumeSubscription',
   'beta.interactive',
   'auth',
   'consent',

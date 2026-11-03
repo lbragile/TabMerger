@@ -126,7 +126,7 @@ is what both are tested against, so they can't drift apart unnoticed. The AI rou
 once per request from the row they read (reservation and settlement hit the same row); a client
 never supplies it, and the extension's own computation is a display only.
 
-**Where the date shows.** "Credits reset on {date}" (in UTC, in the viewer's locale) sits beside the credit balance and "Get more" on the account page and the dashboard, and under the credits line in the extension's Settings → AI. It comes from `managedAiCreditsDate()` next to `aiAllowanceMonth()` (its `aiCreditsResetAt()`: a monthly period's end, or a yearly plan's next anniversary, never past the end), shows only for an `active` managed Pro AI plan, and is hidden while the date is unknown (no stored period, or the end has passed and the renewal is held until paid). It reads "Credits end on {date}" when no managed Pro AI period follows: `cancel_at_period_end` and the date is the period end, Stripe's `cancel_at` at or before it, or a change scheduled by then to Pro, Free, an own key or an unknown price (a change that stays managed, such as yearly to monthly, still resets). Scheduled changes and `cancel_at` are not stored on the row: the account page and the dashboard read the scheduled change from Stripe (`getPendingPlanChange()`; the dashboard only when the date shows, falling back to the row on a failure or after 3 seconds), and neither reads `cancel_at`. Known limit: the extension reads only the row, so it says "reset" for a scheduled downgrade or switch to an own key until that change takes effect.
+**Where the date shows.** "Credits reset on {date}" (in UTC, in the viewer's locale) sits beside the credit balance and "Get more" on the account page and the dashboard, and under the credits line in the extension's Settings → AI. It comes from `managedAiCreditsDate()` next to `aiAllowanceMonth()` (its `aiCreditsResetAt()`: a monthly period's end, or a yearly plan's next anniversary, never past the end), shows only for an `active` managed Pro AI plan, and is hidden while the date is unknown (no stored period, or the end has passed and the renewal is held until paid). It reads "Credits end on {date}" when no managed Pro AI period follows: `cancel_at_period_end` and the date is the period end, Stripe's `cancel_at` at or before it, or a change scheduled by then to Pro, Free, an own key or an unknown price (a change that stays managed, such as yearly to monthly, still resets). The row's `cancel_at_period_end` covers Stripe's `cancel_at` too: the webhook stores it as true for a `cancel_at` at or before the period end (`isSetToEndAtPeriodEnd()`, see [Cancellation at period end](#cancellation-at-period-end-the-stored-flag)), so the pages and the extension say "end" for a plan cancelled in the portal without reading `cancel_at`. Scheduled changes are not stored on the row: the account page and the dashboard read the scheduled change from Stripe (`getPendingPlanChange()`; the dashboard only when the date shows, falling back to the row on a failure or after 3 seconds). Known limit: the extension reads only the row, so it says "reset" for a scheduled downgrade or switch to an own key until that change takes effect.
 
 - **A renewal's credits open on payment, not at the period's start.** Stripe moves the item's period
   about an hour before it charges the renewal (test clock: active with a `draft`
@@ -272,8 +272,9 @@ Things to know:
   server-made schedule: the home page (default configuration, cancellation on) lists the plan with
   "Plan updates on {date}" and the next amount, and shows no cancel control. A portal session
   created with `flow_data.type = subscription_cancel` for that subscription did work: its "Cancel
-  plan" page released the schedule (status `released`, the current price kept) and set
-  `cancel_at_period_end`. The account page opens that flow with its **Cancel subscription** button
+  plan" page released the schedule (status `released`, the current price kept) and set the
+  subscription to end at the period end (`cancel_at_period_end` on classic billing mode, `cancel_at`
+  on flexible; see [Cancellation at period end](#cancellation-at-period-end-the-stored-flag)). The account page opens that flow with its **Cancel subscription** button
   while a change is scheduled (see [Billing portal](#billing-portal)). By hand, the same is done in
   the Dashboard: release the schedule (Subscriptions → the subscription → the schedule → Release),
   which keeps the current plan, then cancel at period end.
@@ -458,6 +459,48 @@ All success/cancel/portal-return URLs come from `absoluteUrl()` in `packages/web
 | Extension Settings | `POST /api/portal` | Bearer JWT | `/dashboard` |
 | Account page "Cancel subscription" (only while a plan change is scheduled) | `POST /api/billing/cancel-subscription` → `createCancelSubscriptionSession()` | cookie | `/account` |
 | Account page "Keep my current plan" (only while a plan change is scheduled; no portal page) | `POST /api/billing/keep-current-plan` → `keepCurrentPlan()` | cookie | none (`router.refresh()`) |
+| Account page "Keep my plan" (only while the plan is set to end; no portal page) | `POST /api/billing/resume-subscription` → `resumeSubscription()` | cookie | none (`router.refresh()`) |
+
+#### Cancellation at period end: the stored flag
+
+How Stripe records "ends at the period end" depends on the subscription's **billing mode**, not on
+us. Classic sets `cancel_at_period_end: true` (and fills `cancel_at` with the period end). Flexible,
+which every Checkout made on `2026-03-25.dahlia` creates (`CHECKOUT_API_VERSION`), gets only
+`cancel_at` set to the period end from the portal's cancel page, with `cancel_at_period_end` left
+false (seen in test mode on 2026-11-02: the `customer.subscription.updated` event's
+`previous_attributes` were `cancel_at`, `canceled_at` and `cancellation_details`). The webhook
+stores `subscriptions.cancel_at_period_end` with `isSetToEndAtPeriodEnd()`
+(`lib/subscriptionEnd.ts`): true when Stripe's flag is true or `cancel_at` is at or before the
+item's `current_period_end`; a `cancel_at` after it still renews at least once, so false. No column
+for `cancel_at` itself: every reader only needs "ends with this period". Server checks
+(`createCancelSubscriptionSession()`, `createPlanSwitchSession()`, `renewalAfterRelease()`) read
+Stripe directly and treat `cancel_at_period_end || cancel_at` as set to end. Rows written before
+this reading are fixed by the re-sync script (see
+[After deploying the cancel_at reading](#after-deploying-the-cancel_at-reading-re-sync-the-stored-flag)).
+
+**Undoing a cancellation ("Keep my plan").** While the stored flag is true the account page says
+"Your plan ends on {date}." (the badge reads "Ends {date}") with **Keep my plan** beside it, hides
+the Pro AI option switch and the "cancel anytime" note. `POST /api/billing/resume-subscription`
+takes no input: the caller's newest `subscriptions` row and `profiles.stripe_customer_id`, as the
+other account routes. `resumeSubscription()` (`lib/stripe.ts`) re-reads the subscription, requires
+`subscription.customer` to be the caller's customer (else 404 `no_subscription`), an entitled status
+(else 409 `not_entitled`), `cancel_at_period_end` or `cancel_at` set (else 409 `not_canceling`), and
+refuses (409 `ends_early`) a `cancel_at` that cut the period short (a date set in the Dashboard
+moves `current_period_end` to it; clearing it would hand the cut time back unpaid; the period is
+compared with its price's interval counted from `current_period_start`). The only write is
+`subscriptions.update(id, { cancel_at: '', proration_behavior: 'none' })`: an empty `cancel_at`
+clears both `cancel_at` and `cancel_at_period_end`, in classic and flexible mode. Stripe refuses both
+parameters in one request (400 "Received both cancel_at_period_end and cancel_at parameters. Please
+pass in only one."). Verified on test clocks on 2026-11-02 (Pro monthly, both billing modes, by
+running `resumeSubscription()` itself): no new invoice, no pending invoice items, balance 0, no credit
+notes, the same period end and billing anchor, the next-invoice preview at the full price, and at the
+period end a `subscription_cycle` invoice at the full price. Repeating the update on a subscription
+that isn't set to end is accepted and changes nothing, so two racing clicks are harmless; a later
+click reads first and gets `not_canceling`. A canceled subscription refuses any update (400
+`invalid_canceled_subscription_fields`), re-read and answered `not_entitled`. Answers
+`{ ok: true, renewal? }` (date and the previewed amount, as "Keep my current plan" does); 401; 403
+`forbidden_origin`; 429 `rate_limited`; 400 `no_billing_account`; 500 `resume_failed`. The webhook
+records the result. The portal's own "Renew" does the same for a customer who goes there instead.
 
 **Cancelling while a plan change is scheduled.** The portal's home page shows no cancel control for
 a subscription with a pending schedule. The account page reads the pending change from Stripe
@@ -542,7 +585,8 @@ should call `/api/billing/switch-plan { tier }` instead of `/api/billing-portal`
 
 All billing POST routes that act on Stripe (`/api/checkout`, `/api/checkout/credits`,
 `/api/billing/switch-plan`, `/api/billing/switch-interval`, `/api/billing/keep-current-plan`,
-`/api/billing/cancel-subscription`, `/api/billing-portal`, and the extension's `/api/portal`) share
+`/api/billing/resume-subscription`, `/api/billing/cancel-subscription`, `/api/billing-portal`, and
+the extension's `/api/portal`) share
 two guards from `lib/billingRequestGuard.ts`:
 
 - **Same origin** (`rejectCrossOriginPost()`, cookie routes only, checked before anything else):
@@ -656,7 +700,9 @@ version of the webhook endpoint, not of the SDK client.
 every signup and migration 012 makes `user_id` unique, so the first purchase must rewrite that row
 (its `id` becomes the Stripe subscription ID). Conflicting on `id` would 23505 and leave the user on
 free. Written columns: `id, user_id, tier, status, ai_mode, ai_monthly_credits, stripe_price_id,
-cancel_at_period_end, current_period_end` (from the subscription **item**), `updated_at`. The
+cancel_at_period_end` (Stripe's flag or a `cancel_at` at or before the period end, see
+[the stored flag](#cancellation-at-period-end-the-stored-flag)), `current_period_end` (from the
+subscription **item**), `updated_at`. The
 subscription is read with `expand: discounts, items.data.discounts, latest_invoice, customer` so the
 allowance can be priced; a coupon given only by id is read with `coupons.retrieve` (missing → counts
 as 100% off; any other failure → 500).
@@ -906,6 +952,14 @@ note that points to the account page, where the change shows with **Keep my curr
 it) and **Cancel subscription**. A target
 price this environment doesn't sell gets the note on every card. The home page's teaser makes no
 Stripe call (the option is off by default).
+
+While the plan is set to end, the switch routes answer 409 `cancel_scheduled` (the real
+enforcement), so no entry point offers a change: `getCurrentPlan()` reads the stored
+`cancel_at_period_end` (`setToEnd`), and every change button on the paid pricing cards becomes
+"Your plan ends on {date}. Keep your plan to change it." linking to the account page
+(`PlanEndsNote`, `data-testid="cta-plan-ends-note"`); the dashboard's Pro AI option switch gets the
+same note, and the account page hides it next to **Keep my plan**. `usePlanChange` refuses to send a
+change for a plan set to end. The date is formatted on the server.
 
 Which changes the portal defers and which the server schedules. Measured in test mode on
 2026-10-26 (API 2025-06-30.basil): a per-target configuration with `always_invoice` and the
@@ -1197,6 +1251,17 @@ deployed code or store build reads them (until then an installed extension can s
 their lowered `credits` (find them by `carried_from_month`) and can be stranded, and calendar keys can
 land on a month with no usage row, so a fresh allowance is possible.
 
+### After deploying the cancel_at reading: re-sync the stored flag
+
+Rows written before the webhook read `cancel_at` (see
+[the stored flag](#cancellation-at-period-end-the-stored-flag)) can say `cancel_at_period_end =
+false` for a plan cancelled in the portal, so the pages and the extension show it as renewing and
+offer plan changes the server refuses. After deploying the web app, run the re-sync below (dry run,
+then `--apply`) in each environment: it now also reads every `pro` and `pro_ai` row and rewrites
+`cancel_at_period_end` with the webhook's `isSetToEndAtPeriodEnd()` when it differs (`pro` rows get
+that column only). No migration is involved. A later Stripe event on a subscription fixes its row
+anyway, so only rows with no event since are stale.
+
 ### After deploying migration 022: re-sync existing allowances
 
 Migration 022 adds `ai_mode` / `ai_monthly_credits` with defaults (`managed`, 0) and no backfill, so
@@ -1213,7 +1278,8 @@ pnpm dlx tsx --env-file=<same file> scripts/resync-ai-allowance.ts --apply
 ```
 
 It needs `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY` (test mode for
-preview, live for production) and the Pro AI price ids including the two BYOK ones. Exit code 2
+preview, live for production) and the Pro AI price ids including the two BYOK ones (the
+`cancel_at_period_end` check needs no price id). Exit code 2
 lists rows that failed (Stripe or write errors): run it again.
 
 Credit-pack rows: 022 converts the existing `ai_credit_purchases.credits` to the new unit once;
