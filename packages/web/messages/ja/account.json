@@ -103,7 +103,8 @@
     "getMore": "追加購入",
     "notAvailable": "クレジットパックは、TabMergerがAIのセットアップを担当する有効なPro AIプランでのみ購入できます。",
     "rateLimited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。",
-    "resetsOn": "クレジットのリセット日：{date}"
+    "resetsOn": "クレジットのリセット日：{date}",
+    "endsOn": "クレジットの終了日：{date}"
   },
   "aiPlan": {
     "title": "AIのセットアップ担当",

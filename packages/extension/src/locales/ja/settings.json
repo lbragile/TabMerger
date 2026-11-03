@@ -97,6 +97,7 @@
     "buyCredits": "クレジットを追加購入",
     "buyCreditsLabel": "クレジットを追加購入（新しいタブ）",
     "creditsResetsOn": "クレジットのリセット日：{{date}}",
+    "creditsEndsOn": "クレジットの終了日：{{date}}",
     "plan": {
       "managed": "セットアップは TabMerger が担当 — 今月の残り {{remaining}} / {{cap}} クレジット",
       "managedUnknown": "セットアップは TabMerger が担当",

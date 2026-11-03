@@ -105,6 +105,7 @@
     "buyCredits": "קנו עוד קרדיטים",
     "buyCreditsLabel": "קנו עוד קרדיטים (כרטיסייה חדשה)",
     "creditsResetsOn": "הקרדיטים יתאפסו בתאריך {{date}}",
+    "creditsEndsOn": "הקרדיטים יפוגו בתאריך {{date}}",
     "plan": {
       "managed": "TabMerger מטפל בהגדרה — נותרו החודש {{remaining}} מתוך {{cap}} קרדיטים",
       "managedUnknown": "TabMerger מטפל בהגדרה",

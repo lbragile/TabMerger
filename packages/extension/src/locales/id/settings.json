@@ -97,6 +97,7 @@
     "buyCredits": "Beli kredit tambahan",
     "buyCreditsLabel": "Beli kredit tambahan (tab baru)",
     "creditsResetsOn": "Kredit direset pada {{date}}",
+    "creditsEndsOn": "Kredit berakhir pada {{date}}",
     "plan": {
       "managed": "TabMerger yang mengurus penyiapan: sisa {{remaining}} dari {{cap}} kredit bulan ini",
       "managedUnknown": "TabMerger yang mengurus penyiapan",

@@ -103,7 +103,8 @@
     "getMore": "Obter mais",
     "notAvailable": "Os pacotes de créditos exigem um plano Pro AI ativo em que o TabMerger cuida da configuração da IA.",
     "rateLimited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente.",
-    "resetsOn": "Os créditos são redefinidos em {date}"
+    "resetsOn": "Os créditos são redefinidos em {date}",
+    "endsOn": "Os créditos expiram em {date}"
   },
   "aiPlan": {
     "title": "Quem configura a IA",

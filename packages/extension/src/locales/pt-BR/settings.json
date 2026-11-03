@@ -105,6 +105,7 @@
     "buyCredits": "Comprar mais créditos",
     "buyCreditsLabel": "Comprar mais créditos (nova aba)",
     "creditsResetsOn": "Os créditos são redefinidos em {{date}}",
+    "creditsEndsOn": "Os créditos expiram em {{date}}",
     "plan": {
       "managed": "O TabMerger cuida da configuração: restam {{remaining}} de {{cap}} créditos neste mês",
       "managedUnknown": "O TabMerger cuida da configuração",

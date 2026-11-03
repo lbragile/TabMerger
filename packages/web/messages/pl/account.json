@@ -103,7 +103,8 @@
     "getMore": "Kup więcej",
     "notAvailable": "Pakiety kredytów wymagają aktywnego planu Pro AI, w którym konfiguracją AI zajmuje się TabMerger.",
     "rateLimited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie.",
-    "resetsOn": "Kredyty zostaną zresetowane {date}"
+    "resetsOn": "Kredyty zostaną zresetowane {date}",
+    "endsOn": "Kredyty wygasną {date}"
   },
   "aiPlan": {
     "title": "Kto konfiguruje AI",

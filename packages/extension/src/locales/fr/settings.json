@@ -105,6 +105,7 @@
     "buyCredits": "Acheter des crédits",
     "buyCreditsLabel": "Acheter des crédits (nouvel onglet)",
     "creditsResetsOn": "Les crédits sont réinitialisés le {{date}}",
+    "creditsEndsOn": "Les crédits expirent le {{date}}",
     "plan": {
       "managed": "TabMerger s’occupe de la configuration : {{remaining}} crédits restants sur {{cap}} ce mois-ci",
       "managedUnknown": "TabMerger s’occupe de la configuration",

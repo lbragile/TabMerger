@@ -101,6 +101,7 @@
     "buyCredits": "Buy more credits",
     "buyCreditsLabel": "Buy more credits (new tab)",
     "creditsResetsOn": "Credits reset on {{date}}",
+    "creditsEndsOn": "Credits end on {{date}}",
     "plan": {
       "managed": "TabMerger handles setup — {{remaining}} of {{cap}} credits left this month",
       "managedUnknown": "TabMerger handles setup",

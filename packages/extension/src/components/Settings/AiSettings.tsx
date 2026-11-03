@@ -75,10 +75,12 @@ export function AiSettings({ model, onModelChange }: AiSettingsProps) {
               : t('settings.ai.plan.managedUnknown')}
         </p>
         {canBuyCredits && <BuyCreditsLink remaining={usage.remaining} total={usage.cap} known={usage.known} />}
-        {/* Before a pack is bought: one bought just ahead of a reset is mostly lost. No date is shown when it's unknown. */}
-        {canBuyCredits && usage.resetsAt && (
-          <p className="min-w-0 basis-full text-xs text-muted-foreground" data-testid="ai-credits-reset">
-            {t('settings.ai.creditsResetsOn', { date: formatDate(usage.resetsAt, AI_CREDITS_RESET_DATE_FORMAT) })}
+        {/* Before a pack is bought: one bought just ahead of a reset (or the end) is mostly lost. No date is shown when it's unknown. */}
+        {canBuyCredits && usage.creditsDate && (
+          <p className="min-w-0 basis-full text-xs text-muted-foreground" data-testid="ai-credits-reset" data-kind={usage.creditsDate.kind}>
+            {t(usage.creditsDate.kind === 'end' ? 'settings.ai.creditsEndsOn' : 'settings.ai.creditsResetsOn', {
+              date: formatDate(usage.creditsDate.at, AI_CREDITS_RESET_DATE_FORMAT)
+            })}
           </p>
         )}
       </div>

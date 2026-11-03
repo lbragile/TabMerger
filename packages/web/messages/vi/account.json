@@ -103,7 +103,8 @@
     "getMore": "Mua thêm",
     "notAvailable": "Gói tín dụng chỉ dành cho gói Pro AI đang hoạt động do TabMerger lo phần thiết lập AI.",
     "rateLimited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại.",
-    "resetsOn": "Tín dụng được đặt lại vào {date}"
+    "resetsOn": "Tín dụng được đặt lại vào {date}",
+    "endsOn": "Tín dụng hết hạn vào {date}"
   },
   "aiPlan": {
     "title": "Ai lo phần thiết lập AI",

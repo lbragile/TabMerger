@@ -23,4 +23,14 @@ then from `packages/extension`: `VITE_AI_ENABLED=true npx wxt build --mode devel
 (`--mode` must stay on the command line: the config reads it from argv). Run the specs with
 `TM_E2E_EXT_DIR=<scratch>/ext-e2e/chrome-mv3-dev npx playwright test ...` from `e2e/`.
 
-Related: [[deployment-dependent-links]], [[i18n-next-intl]].
+**`vi.doMock` outlives `vi.resetModules()`.** A test that imports a module (say a lib constant)
+before calling its own `vi.doMock` gets that module wired to the PREVIOUS test's mock: the doMock
+registry is not cleared by resetModules. Register the test's mocks first, then import.
+
+**Optional Stripe reads in a page.** When a page adds a Stripe read only to word something (the
+dashboard's scheduled change for "Credits end on"), race it against a short timer and catch, so a
+slow or failing read degrades to the stored row instead of holding the render (the SDK's own
+timeout is long). Test the timeout with fake `setTimeout` and a never-settling mock, advancing by
+the exported limit.
+
+Related: [[deployment-dependent-links]], [[i18n-next-intl]], [[vitest-hoisted-mock-state]].

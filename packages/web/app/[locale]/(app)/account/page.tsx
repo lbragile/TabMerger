@@ -23,7 +23,8 @@ import { CreditsResetNote } from '@/components/account/CreditsResetNote'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { ScheduledChangeNotice } from '@/components/account/ScheduledChangeNotice'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { ACCOUNT_AI_CREDITS_ANCHOR, aiAllowanceMonth, isAiMode, managedAiCreditsResetAt } from '@tabmerger/shared'
+import { scheduledChangeOf } from '@/lib/aiCreditsDate'
+import { ACCOUNT_AI_CREDITS_ANCHOR, aiAllowanceMonth, isAiMode, managedAiCreditsDate } from '@tabmerger/shared'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getPlanForPriceId, getPriceInfo } from '@/lib/tiers'
@@ -170,6 +171,10 @@ export default async function AccountPage() {
     return plan.interval === 'yearly' ? tPlan('billedYearly', { plan: name }) : tPlan('billedMonthly', { plan: name })
   }
   const pendingPlanName = pendingChange ? planName(getPlanForPriceId(pendingChange.priceId)) : null
+  // Beside the credits: when they reset, or end (cancelling, or a scheduled change off managed Pro AI)
+  const creditsDate = AI_AVAILABILITY.managed
+    ? managedAiCreditsDate(subscription, { scheduledChange: scheduledChangeOf(pendingChange) })
+    : null
 
   return (
     <div className="max-w-2xl flex flex-col gap-6">
@@ -215,9 +220,7 @@ export default async function AccountPage() {
                 {/* Credit packs exist only for TabMerger's AI, and only once it's on sale. */}
                 {stat.id === 'aiCredits' && canBuyCredits && <BuyCreditsButton />}
               </p>
-              {stat.id === 'aiCredits' && AI_AVAILABILITY.managed && (
-                <CreditsResetNote resetsAt={managedAiCreditsResetAt(subscription)} className="text-xs text-text2" />
-              )}
+              {stat.id === 'aiCredits' && <CreditsResetNote credits={creditsDate} className="text-xs text-text2" />}
             </div>
           ))}
         </div>

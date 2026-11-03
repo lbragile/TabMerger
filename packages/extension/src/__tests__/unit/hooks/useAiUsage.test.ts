@@ -320,24 +320,34 @@ describe('useAiUsage — when credits reset', () => {
     ai_period_end: new Date(Date.now() + 25 * 86_400_000).toISOString()
   })
 
-  async function resetsAt(subscription: Record<string, unknown> | null) {
+  async function creditsDate(subscription: Record<string, unknown> | null) {
     stubSupabase(0, [], 2000, { subscription })
     const { useAiUsage } = await import('@/hooks/useAiUsage')
     const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
     await waitFor(() => expect(result.current.known).toBe(true))
-    return result.current.resetsAt
+    return result.current.creditsDate
   }
 
   it("an active managed plan: its monthly period's end", async () => {
     const period = live()
-    expect((await resetsAt({ tier: 'pro_ai', status: 'active', ai_mode: 'managed', ...period }))?.toISOString()).toBe(period.ai_period_end)
+    expect(await creditsDate({ tier: 'pro_ai', status: 'active', ai_mode: 'managed', ...period })).toEqual({ at: new Date(period.ai_period_end), kind: 'reset' })
+  })
+
+  it('a plan set to cancel at period end: the credits end then, read from the row', async () => {
+    const period = live()
+    expect(await creditsDate({ tier: 'pro_ai', status: 'active', ai_mode: 'managed', cancel_at_period_end: true, ...period })).toEqual({
+      at: new Date(period.ai_period_end),
+      kind: 'end'
+    })
+    const selects = calls.filter((c) => c[0] === 'subscriptions' && c[1] === 'select').map((c) => String(c[2]))
+    expect(selects.every((cols) => cols.includes('cancel_at_period_end'))).toBe(true)
   })
 
   it('null while the period has ended (a renewal held until paid), without a period, or not active', async () => {
-    expect(await resetsAt({ tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_period_start: '2020-01-31T10:00:00+00:00', ai_period_end: '2020-02-29T10:00:00+00:00' })).toBeNull()
-    expect(await resetsAt({ tier: 'pro_ai', status: 'active', ai_mode: 'managed' })).toBeNull()
-    expect(await resetsAt({ tier: 'pro_ai', status: 'past_due', ai_mode: 'managed', ...live() })).toBeNull()
-    expect(await resetsAt(null)).toBeNull()
+    expect(await creditsDate({ tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_period_start: '2020-01-31T10:00:00+00:00', ai_period_end: '2020-02-29T10:00:00+00:00' })).toBeNull()
+    expect(await creditsDate({ tier: 'pro_ai', status: 'active', ai_mode: 'managed' })).toBeNull()
+    expect(await creditsDate({ tier: 'pro_ai', status: 'past_due', ai_mode: 'managed', ...live() })).toBeNull()
+    expect(await creditsDate(null)).toBeNull()
   })
 
   it('null before the numbers are read, and for an own key (nothing is read)', async () => {
@@ -345,7 +355,7 @@ describe('useAiUsage — when credits reset', () => {
     stubSupabase(0, [], 2000, { subscription: { tier: 'pro_ai', status: 'active', ai_mode: 'byok', ...live() } })
     const { useAiUsage } = await import('@/hooks/useAiUsage')
     const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
-    expect(result.current.resetsAt).toBeNull()
+    expect(result.current.creditsDate).toBeNull()
     expect(mockFrom).not.toHaveBeenCalled()
   })
 })

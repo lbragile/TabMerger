@@ -103,7 +103,8 @@
     "getMore": "Get more",
     "notAvailable": "Credit packs need an active Pro AI plan with TabMerger handling AI setup.",
     "rateLimited": "Too many billing requests in a short time. Please wait a few minutes and try again.",
-    "resetsOn": "Credits reset on {date}"
+    "resetsOn": "Credits reset on {date}",
+    "endsOn": "Credits end on {date}"
   },
   "aiPlan": {
     "title": "Who handles AI setup",

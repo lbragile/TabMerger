@@ -13,8 +13,9 @@ import { Badge } from '@/components/ui/badge'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
 import { getEffectiveCap } from '@/lib/ai-usage'
-import { AUTO_BACKUP_DOWNLOAD_LIMITS, aiAllowanceMonth, isAiMode, managedAiCreditsResetAt } from '@tabmerger/shared'
+import { AUTO_BACKUP_DOWNLOAD_LIMITS, aiAllowanceMonth, isAiMode, managedAiCreditsDate, managedAiCreditsResetAt } from '@tabmerger/shared'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
+import { readScheduledChange } from '@/lib/aiCreditsDate'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getPriceInfo } from '@/lib/tiers'
@@ -117,6 +118,13 @@ export default async function DashboardPage({
       aiUsage = { mode: 'byok', action: aiSwitch }
     } else {
       const month = aiAllowanceMonth(subscription?.ai_period_start, subscription?.ai_period_end)
+      // The date beside the credits, and whether they reset or end then: a scheduled change off
+      // managed Pro AI is only known to Stripe, so it is read (as the account page does) only when
+      // the date shows, and never blocks the card (null on failure: the row's cancel flag alone).
+      const showDate = AI_AVAILABILITY.managed && managedAiCreditsResetAt(subscription) !== null
+      const scheduledChange = showDate
+        ? readScheduledChange({ customerId: profile?.stripe_customer_id, subscriptionId: subscription?.id })
+        : null
       const { data: usage } = await supabase
         .from('ai_usage')
         .select('credits_used')
@@ -128,7 +136,7 @@ export default async function DashboardPage({
         used: usage?.credits_used ?? 0,
         limit: await getEffectiveCap(supabase, user.id, month),
         canBuyCredits: syncEnabled,
-        creditsResetAt: AI_AVAILABILITY.managed ? managedAiCreditsResetAt(subscription) : null,
+        creditsDate: showDate ? managedAiCreditsDate(subscription, { scheduledChange: await scheduledChange }) : null,
         action: aiSwitch,
       }
     }

@@ -109,6 +109,7 @@
     "buyCredits": "Kup więcej kredytów",
     "buyCreditsLabel": "Kup więcej kredytów (nowa karta)",
     "creditsResetsOn": "Kredyty zostaną zresetowane {{date}}",
+    "creditsEndsOn": "Kredyty wygasną {{date}}",
     "plan": {
       "managed": "TabMerger zajmuje się konfiguracją – pozostałe kredyty w tym miesiącu: {{remaining}} z {{cap}}",
       "managedUnknown": "TabMerger zajmuje się konfiguracją",

@@ -101,6 +101,7 @@
     "buyCredits": "Daha fazla kredi satın al",
     "buyCreditsLabel": "Daha fazla kredi satın al (yeni sekme)",
     "creditsResetsOn": "Krediler {{date}} tarihinde sıfırlanır",
+    "creditsEndsOn": "Krediler {{date}} tarihinde sona erer",
     "plan": {
       "managed": "Kurulumu TabMerger yapar: bu ay {{cap}} krediden {{remaining}} kaldı",
       "managedUnknown": "Kurulumu TabMerger yapar",

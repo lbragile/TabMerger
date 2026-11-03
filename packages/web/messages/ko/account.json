@@ -103,7 +103,8 @@
     "getMore": "더 받기",
     "notAvailable": "크레딧 팩은 TabMerger가 AI 설정을 맡는 활성 Pro AI 플랜에서만 구매할 수 있습니다.",
     "rateLimited": "짧은 시간에 결제 요청이 너무 많습니다. 몇 분 후에 다시 시도해 주세요.",
-    "resetsOn": "크레딧 초기화일: {date}"
+    "resetsOn": "크레딧 초기화일: {date}",
+    "endsOn": "크레딧 종료일: {date}"
   },
   "aiPlan": {
     "title": "AI 설정 담당",

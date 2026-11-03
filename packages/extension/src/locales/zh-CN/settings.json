@@ -97,6 +97,7 @@
     "buyCredits": "购买更多额度",
     "buyCreditsLabel": "购买更多额度（新标签页）",
     "creditsResetsOn": "额度将于 {{date}} 重置",
+    "creditsEndsOn": "额度将于 {{date}} 到期",
     "plan": {
       "managed": "TabMerger 负责设置 — 本月剩余 {{remaining}} / {{cap}} 点额度",
       "managedUnknown": "TabMerger 负责设置",

@@ -684,7 +684,7 @@ describe('AiSettings — Buy more credits', () => {
 describe('AiSettings — when credits reset', () => {
   const RESETS_AT = new Date('2026-11-30T23:30:00Z')
   const resetLine = () => screen.queryByTestId('ai-credits-reset')
-  const withDate = () => mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true, resetsAt: RESETS_AT })
+  const withDate = () => mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true, creditsDate: { at: RESETS_AT, kind: 'reset' } })
 
   afterEach(() => i18n.changeLanguage('en'))
 
@@ -695,6 +695,14 @@ describe('AiSettings — when credits reset', () => {
     expect(resetLine()!.textContent).toBe('Credits reset on Nov 30, 2026')
     expect(resetLine()!.parentElement).toBe(screen.getByTestId('ai-plan-line').parentElement)
     expect(resetLine()!.parentElement!.contains(screen.getByTestId('ai-buy-credits'))).toBe(true)
+  })
+
+  it('a plan set to cancel then: the credits end on that date', () => {
+    mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true, creditsDate: { at: RESETS_AT, kind: 'end' } })
+    renderSettings()
+    expect(resetLine()!.textContent).toBe('Credits end on Nov 30, 2026')
+    expect(resetLine()!.textContent).toBe(t('settings.ai.creditsEndsOn', { date: 'Nov 30, 2026' }))
+    expect(resetLine()!.getAttribute('data-kind')).toBe('end')
   })
 
   it('wraps to its own line and can shrink, so a long translation stays inside the popup', () => {
@@ -711,7 +719,7 @@ describe('AiSettings — when credits reset', () => {
   })
 
   it('no date when it is unknown (a renewal held until paid, or no stored period): nothing is guessed', () => {
-    mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true, resetsAt: null })
+    mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true, creditsDate: null })
     renderSettings()
     expect(screen.getByTestId('ai-buy-credits')).toBeTruthy()
     expect(resetLine()).toBeNull()

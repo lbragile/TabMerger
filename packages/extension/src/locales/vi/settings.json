@@ -97,6 +97,7 @@
     "buyCredits": "Mua thêm tín dụng",
     "buyCreditsLabel": "Mua thêm tín dụng (thẻ mới)",
     "creditsResetsOn": "Tín dụng được đặt lại vào {{date}}",
+    "creditsEndsOn": "Tín dụng hết hạn vào {{date}}",
     "plan": {
       "managed": "TabMerger lo phần thiết lập: còn {{remaining}}/{{cap}} tín dụng trong tháng này",
       "managedUnknown": "TabMerger lo phần thiết lập",

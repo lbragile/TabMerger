@@ -97,6 +97,7 @@
     "buyCredits": "크레딧 추가 구매",
     "buyCreditsLabel": "크레딧 추가 구매(새 탭)",
     "creditsResetsOn": "크레딧 초기화일: {{date}}",
+    "creditsEndsOn": "크레딧 종료일: {{date}}",
     "plan": {
       "managed": "설정은 TabMerger가 처리 — 이번 달 남은 크레딧 {{remaining}}/{{cap}}",
       "managedUnknown": "설정은 TabMerger가 처리",

@@ -103,7 +103,8 @@
     "getMore": "Beli lagi",
     "notAvailable": "Paket kredit hanya untuk paket Pro AI aktif dengan pengaturan AI yang ditangani TabMerger.",
     "rateLimited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi.",
-    "resetsOn": "Kredit direset pada {date}"
+    "resetsOn": "Kredit direset pada {date}",
+    "endsOn": "Kredit berakhir pada {date}"
   },
   "aiPlan": {
     "title": "Siapa yang menyiapkan AI",

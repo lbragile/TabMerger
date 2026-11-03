@@ -117,6 +117,7 @@
     "buyCredits": "اشترِ رصيدًا إضافيًا",
     "buyCreditsLabel": "اشترِ رصيدًا إضافيًا (علامة تبويب جديدة)",
     "creditsResetsOn": "يُعاد ضبط الرصيد في {{date}}",
+    "creditsEndsOn": "ينتهي الرصيد في {{date}}",
     "plan": {
       "managed": "يتولى TabMerger الإعداد — الرصيد المتبقي هذا الشهر: {{remaining}} من {{cap}}",
       "managedUnknown": "يتولى TabMerger الإعداد",

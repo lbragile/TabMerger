@@ -103,7 +103,8 @@
     "getMore": "En obtenir plus",
     "notAvailable": "Les packs de crédits nécessitent un forfait Pro AI actif dont la configuration de l'IA est gérée par TabMerger.",
     "rateLimited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer.",
-    "resetsOn": "Les crédits sont réinitialisés le {date}"
+    "resetsOn": "Les crédits sont réinitialisés le {date}",
+    "endsOn": "Les crédits expirent le {date}"
   },
   "aiPlan": {
     "title": "Qui configure l’IA",

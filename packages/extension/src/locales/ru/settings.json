@@ -109,6 +109,7 @@
     "buyCredits": "Купить ещё кредитов",
     "buyCreditsLabel": "Купить ещё кредитов (новая вкладка)",
     "creditsResetsOn": "Кредиты будут сброшены {{date}}",
+    "creditsEndsOn": "Срок действия кредитов истекает {{date}}",
     "plan": {
       "managed": "Настройкой занимается TabMerger — осталось кредитов в этом месяце: {{remaining}} из {{cap}}",
       "managedUnknown": "Настройкой занимается TabMerger",

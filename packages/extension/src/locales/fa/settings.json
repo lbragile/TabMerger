@@ -101,6 +101,7 @@
     "buyCredits": "خرید اعتبار بیشتر",
     "buyCreditsLabel": "خرید اعتبار بیشتر (زبانهٔ جدید)",
     "creditsResetsOn": "اعتبار در تاریخ {{date}} بازنشانی می‌شود",
+    "creditsEndsOn": "اعتبار در تاریخ {{date}} به پایان می‌رسد",
     "plan": {
       "managed": "راه‌اندازی با TabMerger است — اعتبار باقی‌ماندهٔ این ماه: {{remaining}} از {{cap}}",
       "managedUnknown": "راه‌اندازی با TabMerger است",

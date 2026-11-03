@@ -116,6 +116,8 @@ export interface AiCreditsResetRow {
   ai_mode?: unknown;
   ai_period_start?: string | null;
   ai_period_end?: string | null;
+  /** Stripe's flag, stored by the webhook: the plan ends when the current period does. */
+  cancel_at_period_end?: boolean | null;
 }
 
 /**
@@ -127,4 +129,57 @@ export function managedAiCreditsResetAt(row: AiCreditsResetRow | null | undefine
   if (row?.tier !== 'pro_ai' || row.status !== 'active') return null;
   if (isAiMode(row.ai_mode) && row.ai_mode !== 'managed') return null;
   return aiCreditsResetAt(row.ai_period_start, row.ai_period_end, now);
+}
+
+/** A moment as an ISO string or a Date, in ms; null when missing or unreadable. */
+function instant(value: Date | string | null | undefined): number | null {
+  if (!value) return null;
+  const ms = new Date(value).getTime();
+  return Number.isNaN(ms) ? null : ms;
+}
+
+/** What is known about the plan after the credits date, beyond the `subscriptions` row. */
+export interface AiCreditsNextPeriod {
+  /** Stripe's `cancel_at` (not stored on the row; only a caller that read Stripe has it). */
+  cancelAt?: Date | string | null;
+  /**
+   * A plan change scheduled for later (read from Stripe on the web server; not on the row): when it
+   * takes effect, and the plan it moves to. `tier` null: a price this deployment doesn't sell.
+   */
+  scheduledChange?: { effectiveAt: Date | string; tier: 'free' | 'pro' | 'pro_ai' | null; aiMode?: unknown } | null;
+}
+
+/** The date next to a managed balance: `reset` brings a fresh allowance, `end` doesn't. */
+export interface AiCreditsDate {
+  at: Date;
+  kind: 'reset' | 'end';
+}
+
+/**
+ * {@link managedAiCreditsResetAt}, and whether the credits reset then or end. They end when the
+ * next period is known not to be a managed Pro AI plan (TabMerger's key): the subscription is set
+ * to cancel when the period ends (`cancel_at_period_end`, and the date is the period's end), Stripe's
+ * `cancel_at` is at or before the date, or a change scheduled at or before the date moves to Pro,
+ * Free, an own key or a price this deployment doesn't sell. A change that stays on managed Pro AI
+ * (yearly to monthly) still resets, and so do a yearly plan's anniversaries before a cancellation
+ * or a change. For display only; null when {@link managedAiCreditsResetAt} is.
+ */
+export function managedAiCreditsDate(
+  row: AiCreditsResetRow | null | undefined,
+  next: AiCreditsNextPeriod = {},
+  now: Date = new Date()
+): AiCreditsDate | null {
+  const at = managedAiCreditsResetAt(row, now);
+  if (!at) return null;
+  const when = at.getTime();
+  const periodEnd = instant(row?.ai_period_end);
+  const cancelAt = instant(next.cancelAt);
+  const change = next.scheduledChange;
+  const changeAt = instant(change?.effectiveAt);
+  const staysManaged = change?.tier === 'pro_ai' && (!isAiMode(change.aiMode) || change.aiMode === 'managed');
+  const ends =
+    (row?.cancel_at_period_end === true && periodEnd !== null && when >= periodEnd) ||
+    (cancelAt !== null && cancelAt <= when) ||
+    (changeAt !== null && changeAt <= when && !staysManaged);
+  return { at, kind: ends ? 'end' : 'reset' };
 }

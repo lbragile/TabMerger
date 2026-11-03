@@ -4,6 +4,7 @@ import {
   aiAllowanceMonth,
   aiCreditsResetAt,
   AI_MONTHLY_PERIOD_MAX_DAYS,
+  managedAiCreditsDate,
   managedAiCreditsResetAt
 } from '../utils/aiAllowanceMonth';
 
@@ -198,5 +199,71 @@ describe('aiAllowanceMonth', () => {
 
   it('accepts the +00:00 form the database returns', () => {
     expect(aiAllowanceMonth('2026-10-31T10:00:00+00:00', '2026-11-30T10:00:00+00:00', new Date('2026-11-15T00:00:00Z'))).toBe('2026-10');
+  });
+});
+
+describe('managedAiCreditsDate', () => {
+  const now = new Date('2026-11-15T00:00:00Z');
+  const END = '2026-11-30T10:00:00Z';
+  const monthly = { tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_period_start: '2026-10-31T10:00:00Z', ai_period_end: END };
+  const yearly = { ...monthly, ai_period_end: '2027-10-31T10:00:00Z' };
+  const kind = (row: Record<string, unknown>, next = {}) => managedAiCreditsDate(row, next, now)?.kind;
+  const change = (tier: 'free' | 'pro' | 'pro_ai' | null, aiMode: unknown = null, effectiveAt = END) => ({
+    scheduledChange: { effectiveAt, tier, aiMode }
+  });
+
+  it('no change: the credits reset, on the date managedAiCreditsResetAt() gives', () => {
+    expect(managedAiCreditsDate(monthly, {}, now)).toEqual({ at: new Date(END), kind: 'reset' });
+    expect(kind({ ...monthly, cancel_at_period_end: false }, { scheduledChange: null, cancelAt: null })).toBe('reset');
+  });
+
+  it('set to cancel at period end: the credits end', () => {
+    expect(managedAiCreditsDate({ ...monthly, cancel_at_period_end: true }, {}, now)).toEqual({ at: new Date(END), kind: 'end' });
+  });
+
+  it("Stripe's cancel_at at or before the date ends them; a later or unreadable one doesn't", () => {
+    expect(kind(monthly, { cancelAt: END })).toBe('end');
+    expect(kind(monthly, { cancelAt: new Date('2026-11-20T00:00:00Z') })).toBe('end');
+    expect(kind(monthly, { cancelAt: '2026-12-30T10:00:00Z' })).toBe('reset');
+    expect(kind(monthly, { cancelAt: 'not a date' })).toBe('reset');
+  });
+
+  it('a downgrade to Pro, or to Free, at the date ends them', () => {
+    expect(kind(monthly, change('pro'))).toBe('end');
+    expect(kind(monthly, change('free'))).toBe('end');
+  });
+
+  it('a switch to an own key at the date ends them', () => {
+    expect(kind(monthly, change('pro_ai', 'byok'))).toBe('end');
+  });
+
+  it('a change to a price this deployment does not sell ends them: it is not known to stay managed', () => {
+    expect(kind(monthly, change(null))).toBe('end');
+  });
+
+  it('a change that stays on managed Pro AI (yearly to monthly) still resets', () => {
+    expect(kind(monthly, change('pro_ai', 'managed'))).toBe('reset');
+    expect(kind(monthly, change('pro_ai', undefined))).toBe('reset');
+  });
+
+  it("a yearly plan's anniversaries before a cancellation or a downgrade still reset; the last one ends", () => {
+    const canceling = { ...yearly, cancel_at_period_end: true };
+    expect(managedAiCreditsDate(canceling, change('pro', null, '2027-10-31T10:00:00Z'), now)).toEqual({ at: new Date(END), kind: 'reset' });
+    expect(managedAiCreditsDate(canceling, {}, new Date('2027-10-15T00:00:00Z'))).toEqual({
+      at: new Date('2027-10-31T10:00:00Z'),
+      kind: 'end'
+    });
+  });
+
+  it('null whenever there is no date to show', () => {
+    expect(managedAiCreditsDate({ ...monthly, ai_mode: 'byok', cancel_at_period_end: true }, {}, now)).toBeNull();
+    expect(managedAiCreditsDate({ ...monthly, status: 'past_due' }, change('pro'), now)).toBeNull();
+    expect(managedAiCreditsDate(null, {}, now)).toBeNull();
+  });
+
+  it('reads now from the clock by default', () => {
+    const end = new Date(Date.now() + 86_400_000);
+    const live = { ...monthly, ai_period_start: new Date(Date.now() - 86_400_000).toISOString(), ai_period_end: end.toISOString() };
+    expect(managedAiCreditsDate(live)).toEqual({ at: end, kind: 'reset' });
   });
 });

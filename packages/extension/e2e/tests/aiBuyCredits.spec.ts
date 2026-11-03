@@ -21,7 +21,7 @@ const PERIOD_END = new Date(Date.now() + 25 * DAY_MS);
 const PERIOD = { ai_period_start: new Date(PERIOD_END.getTime() - 30 * DAY_MS).toISOString(), ai_period_end: PERIOD_END.toISOString() };
 
 /** A signed-in managed Pro AI account with `used` of {@link ALLOWANCE} credits spent this month. */
-async function signInAsProAiManaged(page: Page, used: number): Promise<void> {
+async function signInAsProAiManaged(page: Page, used: number, cancelAtPeriodEnd = false): Promise<void> {
   await signInAsPro(page);
   // Registered after signInAsPro's stubs, so these win for their tables
   await page.route('**/rest/v1/subscriptions*', (route) =>
@@ -30,7 +30,7 @@ async function signInAsProAiManaged(page: Page, used: number): Promise<void> {
         {
           tier: 'pro_ai',
           status: 'active',
-          cancel_at_period_end: false,
+          cancel_at_period_end: cancelAtPeriodEnd,
           current_period_end: null,
           stripe_price_id: null,
           ai_mode: 'managed',
@@ -53,10 +53,10 @@ async function openAiSettings(page: Page): Promise<boolean> {
   return true;
 }
 
-async function setUp(context: BrowserContext, extensionId: string, used: number): Promise<Page> {
+async function setUp(context: BrowserContext, extensionId: string, used: number, cancelAtPeriodEnd = false): Promise<Page> {
   const page = await openPopup(context, extensionId);
   await seedAndReload(page, [NOW_OPEN]);
-  await signInAsProAiManaged(page, used);
+  await signInAsProAiManaged(page, used, cancelAtPeriodEnd);
   await page.reload({ waitUntil: 'networkidle' });
   return page;
 }
@@ -122,5 +122,13 @@ test.describe('Settings → AI, buy more credits', () => {
     expect(overflow).toBeLessThanOrEqual(0);
     const pageOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(pageOverflow).toBeLessThanOrEqual(0);
+  });
+
+  test('a plan set to cancel at period end says the credits end on that date', async ({ context, extensionId }) => {
+    const page = await setUp(context, extensionId, 2, true);
+    test.skip(!(await openAiSettings(page)), "this build has TabMerger's AI off (VITE_AI_ENABLED), so there is no AI tab");
+
+    const date = new Intl.DateTimeFormat('en', AI_CREDITS_RESET_DATE_FORMAT).format(PERIOD_END);
+    await expect(page.getByTestId('ai-credits-reset')).toHaveText(`Credits end on ${date}`);
   });
 });
