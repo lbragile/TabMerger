@@ -14,6 +14,9 @@ test.describe('AI button, locked preview', () => {
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP]);
 
     const aiButton = page.getByRole('button', { name: 'AI actions, Pro AI' });
+    // count() does not wait: the header must be drawn first, or a slow popup skips the test
+    const accountMenu = page.locator('header').getByRole('button').last();
+    await expect(accountMenu).toBeVisible();
     test.skip((await aiButton.count()) === 0, 'this build has AI off (VITE_AI_ENABLED)');
     await expect(aiButton).toBeEnabled();
     await expect(aiButton.getByTestId('header-ai-pro-tag')).toHaveText('Pro AI');
@@ -39,16 +42,26 @@ test.describe('AI button, locked preview', () => {
     await expect(upgrade).toBeHidden();
 
     // Settings → General: "Show AI button" off hides it (saved, so it stays hidden after a reload)
-    await page.locator('header').getByRole('button').last().click();
+    await accountMenu.click();
     await page.getByRole('menuitem', { name: 'Settings' }).click();
     const settings = page.getByRole('dialog', { name: /Settings/ });
     const showAi = settings.getByRole('switch', { name: 'Show AI button' });
     await expect(showAi).toBeChecked();
     await showAi.click();
     await expect(showAi).not.toBeChecked();
-    await settings.getByRole('button', { name: /save changes/i }).click();
-    await expect(aiButton).toHaveCount(0);
+    const save = settings.getByRole('button', { name: /save changes/i });
+    await save.click();
+    // The save is async: Save turns disabled only once the settings are written to IndexedDB.
+    // A reload before that can drop the write (in CI it started 5 ms after the click and lost it).
+    await expect(save).toBeDisabled();
+    // Checked with Settings closed: an open dialog hides the header from the accessibility
+    // tree, so the button would count 0 whether the switch worked or not
+    await page.keyboard.press('Escape');
+    await expect(settings).toBeHidden();
+    await expect(page.getByRole('button', { name: 'AI actions' })).toHaveCount(0);
+    await expect(page.getByTestId('header-ai-pro-tag')).toHaveCount(0);
     await page.reload({ waitUntil: 'networkidle' });
+    await expect(accountMenu).toBeVisible(); // drawn, so a count of 0 below means hidden
     await expect(page.getByRole('button', { name: 'AI actions' })).toHaveCount(0);
   });
 });

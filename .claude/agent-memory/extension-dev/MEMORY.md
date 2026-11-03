@@ -123,7 +123,7 @@
 - [Header logo website link](learnings_header_logo_website_link.md) — content-sized link, 240px cell, manifest oracle in e2e
 - [Adding a locale](learnings_adding_a_locale.md) — registration, Intl plural forms, hard-coded locale lists
 - [Firefox: no requestUpdateCheck](learnings_firefox_no_request_update_check.md) — no_api vs unsupported; isFirefoxBuild in lib/buildTarget.ts
-- [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST gates analytics + Sentry
+- [Analytics e2e test guard](learnings_analytics_e2e_test_guard.md) — VITE_E2E_TEST gates analytics + Sentry; define must be the STRING "true"
 - [Right-to-left layout](learnings_rtl_layout.md) — text-ui-start keys on html dir; empty dir=auto is LTR; Radix direction; probe screenshots
 - [Searchable language pickers](learnings_language_picker_search.md) — Popover+combobox, manual scroll-to-current, two-name rows, RTL mark
 - [Pro AI own key + model picker](learnings_ai_byok_model_choice.md) — WXT auto-import `class extends` trap; two AI flags; provider-first picker; focus retry; cost levels not $
@@ -137,3 +137,4 @@
 - [Window AI actions](learnings_window_ai_actions.md) — AiTarget (group id + position + tabs key), one gated WindowAiScope host, generalized modals
 - [Buy more credits in Settings → AI](learnings_buy_credits_entry.md) — lib/buyCredits.ts shared URL + 10% rule; e2e records tabs.create; Python write_text CRLF trap
 - [AI rate_limited, trimmed payloads, cap rule](learnings_ai_rate_limit_payload_cap.md) — two 429s, codeless 429 = platform → rate_limited; Intl wait copy; aiPayload + web-parser contract test (alias before `@`); allowance_spent cap
+- [E2E CI repro + vacuous hidden checks](learnings_e2e_ci_repro_and_vacuous_hidden_checks.md) — open dialog aria-hides header; wait for Save to disable; CI-identical build via defines
