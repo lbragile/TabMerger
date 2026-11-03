@@ -108,6 +108,7 @@
     "throttleDescription": "Baner sugestii sesji w tle pojawia się co najwyżej raz dziennie, aby chronić Twój miesięczny limit AI. Akcje AI uruchamiane ręcznie (Automatyczne grupowanie, Nazwij grupę, Organizuj) nigdy nie są ograniczane przez to ustawienie.",
     "buyCredits": "Kup więcej kredytów",
     "buyCreditsLabel": "Kup więcej kredytów (nowa karta)",
+    "creditsResetsOn": "Kredyty zostaną zresetowane {{date}}",
     "plan": {
       "managed": "TabMerger zajmuje się konfiguracją – pozostałe kredyty w tym miesiącu: {{remaining}} z {{cap}}",
       "managedUnknown": "TabMerger zajmuje się konfiguracją",

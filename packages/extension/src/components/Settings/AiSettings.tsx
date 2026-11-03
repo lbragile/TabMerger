@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AI_PROVIDER_LABELS, MANAGED_AI_PROVIDER, type AiModelChoice, type AiProvider } from '@tabmerger/shared';
+import { AI_CREDITS_RESET_DATE_FORMAT, AI_PROVIDER_LABELS, MANAGED_AI_PROVIDER, type AiModelChoice, type AiProvider } from '@tabmerger/shared';
 import { Separator } from '@/components/ui/separator';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAiUsage } from '@/hooks/useAiUsage';
 import { useByokKey } from '@/hooks/useByokKey';
 import { AI_MANAGED_ENABLED } from '@/lib/aiFlag';
-import { formatNumber } from '@/lib/i18n';
+import { formatDate, formatNumber } from '@/lib/i18n';
 import { choiceForProvider, readAiModelChoice } from '@/lib/aiModel';
 import { AiKeySetting } from './AiKeySetting';
 import { AiModelPicker } from './AiModelPicker';
@@ -24,8 +24,8 @@ interface AiSettingsProps {
  * left this month" or "Using your own OpenAI key") and the model picker for the provider requests
  * go to. Own-key (BYOK) plans pick their provider first: its key field, setup links and models
  * show only once one is picked (the saved key's provider, or a pick remembered on this device).
- * Managed plans have no provider choice: Anthropic, and get "Buy more credits" next to the
- * credits line (only while TabMerger's AI is on sale). Rendered only for users with AI features;
+ * Managed plans have no provider choice: Anthropic, and get "Buy more credits" and the reset date
+ * (when known) next to the credits line (only while TabMerger's AI is on sale). Rendered only for users with AI features;
  * nothing until the plan's AI mode is known.
  */
 export function AiSettings({ model, onModelChange }: AiSettingsProps) {
@@ -75,6 +75,12 @@ export function AiSettings({ model, onModelChange }: AiSettingsProps) {
               : t('settings.ai.plan.managedUnknown')}
         </p>
         {canBuyCredits && <BuyCreditsLink remaining={usage.remaining} total={usage.cap} known={usage.known} />}
+        {/* Before a pack is bought: one bought just ahead of a reset is mostly lost. No date is shown when it's unknown. */}
+        {canBuyCredits && usage.resetsAt && (
+          <p className="min-w-0 basis-full text-xs text-muted-foreground" data-testid="ai-credits-reset">
+            {t('settings.ai.creditsResetsOn', { date: formatDate(usage.resetsAt, AI_CREDITS_RESET_DATE_FORMAT) })}
+          </p>
+        )}
       </div>
       {byok && <AiProviderPicker ref={pickerRef} value={provider} onChange={handlePick} />}
       {byok && provider && (

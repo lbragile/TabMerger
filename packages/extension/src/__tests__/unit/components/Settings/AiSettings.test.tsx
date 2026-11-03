@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
@@ -26,7 +26,7 @@ import {
   setPickedByokProvider
 } from '@/lib/byokKey'
 import { buyCreditsUrl } from '@/lib/buyCredits'
-import { formatNumber, t } from '@/lib/i18n'
+import { formatNumber, i18n, t } from '@/lib/i18n'
 
 const { mockUseEntitlements, mockUseAiUsage, mockAiPost, mockToast } = vi.hoisted(() => ({
   mockUseEntitlements: vi.fn(),
@@ -678,5 +678,64 @@ describe('AiSettings — Buy more credits', () => {
     usage(0, 0)
     renderSettings()
     expect(screen.getByTestId('ai-buy-credits').getAttribute('data-emphasis')).toBe('low')
+  })
+})
+
+describe('AiSettings — when credits reset', () => {
+  const RESETS_AT = new Date('2026-11-30T23:30:00Z')
+  const resetLine = () => screen.queryByTestId('ai-credits-reset')
+  const withDate = () => mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true, resetsAt: RESETS_AT })
+
+  afterEach(() => i18n.changeLanguage('en'))
+
+  it('managed: the date beside the credits line and Buy more credits, read in UTC', () => {
+    withDate()
+    renderSettings()
+    expect(resetLine()!.textContent).toBe(t('settings.ai.creditsResetsOn', { date: 'Nov 30, 2026' }))
+    expect(resetLine()!.textContent).toBe('Credits reset on Nov 30, 2026')
+    expect(resetLine()!.parentElement).toBe(screen.getByTestId('ai-plan-line').parentElement)
+    expect(resetLine()!.parentElement!.contains(screen.getByTestId('ai-buy-credits'))).toBe(true)
+  })
+
+  it('wraps to its own line and can shrink, so a long translation stays inside the popup', () => {
+    withDate()
+    renderSettings()
+    expect(resetLine()!.className.split(' ')).toEqual(expect.arrayContaining(['min-w-0', 'basis-full']))
+  })
+
+  it('writes the date and the sentence in the active language', async () => {
+    withDate()
+    await i18n.changeLanguage('de')
+    renderSettings()
+    expect(resetLine()!.textContent).toBe('Credits werden am 30.11.2026 zurückgesetzt')
+  })
+
+  it('no date when it is unknown (a renewal held until paid, or no stored period): nothing is guessed', () => {
+    mockUseAiUsage.mockReturnValue({ used: 760, remaining: CAP - 760, cap: CAP, loading: false, known: true, resetsAt: null })
+    renderSettings()
+    expect(screen.getByTestId('ai-buy-credits')).toBeTruthy()
+    expect(resetLine()).toBeNull()
+  })
+
+  it('own key: no date', async () => {
+    withDate()
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'byok' })
+    renderSettings()
+    await ready()
+    expect(resetLine()).toBeNull()
+  })
+
+  it('without Pro AI: no date', () => {
+    withDate()
+    mockUseEntitlements.mockReturnValue({ aiFeatures: false, aiMode: 'managed' })
+    renderSettings()
+    expect(resetLine()).toBeNull()
+  })
+
+  it("no date while TabMerger's AI is off", () => {
+    withDate()
+    flags.managed = false
+    renderSettings()
+    expect(resetLine()).toBeNull()
   })
 })

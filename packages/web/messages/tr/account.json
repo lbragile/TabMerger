@@ -102,7 +102,8 @@
     "failed": "Ödeme başlatılamadı",
     "getMore": "Daha fazla al",
     "notAvailable": "Kredi paketleri yalnızca yapay zekâ kurulumunu TabMerger'ın üstlendiği etkin bir Pro AI planıyla kullanılabilir.",
-    "rateLimited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
+    "rateLimited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin.",
+    "resetsOn": "Krediler {date} tarihinde sıfırlanır"
   },
   "aiPlan": {
     "title": "Yapay zekâ kurulumunu kim yapar",

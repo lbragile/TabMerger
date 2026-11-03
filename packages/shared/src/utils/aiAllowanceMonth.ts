@@ -21,6 +21,8 @@
  * never supplies it. The extension uses this for its display only.
  */
 
+import { isAiMode } from '../constants/ai';
+
 /** Longest period that counts as one allowance month. Stripe's monthly periods are at most 31 days. */
 export const AI_MONTHLY_PERIOD_MAX_DAYS = 32;
 
@@ -79,4 +81,50 @@ export function aiAllowanceMonth(periodStart: PeriodBound, periodEnd: PeriodBoun
   const passed = latestAnniversary(start, now, (at) => at <= now.getTime());
   const beforeEnd = latestAnniversary(start, end, (at) => at < end.getTime());
   return monthKey(start.getUTCFullYear(), start.getUTCMonth() + Math.max(0, Math.min(passed, beforeEnd)));
+}
+
+/**
+ * How a reset date is written, in the viewer's locale: UTC, the zone the month key is computed in,
+ * so the server's render and the browser's agree and the web app and the extension show one date.
+ */
+export const AI_CREDITS_RESET_DATE_FORMAT = { dateStyle: 'medium', timeZone: 'UTC' } as const satisfies Intl.DateTimeFormatOptions;
+
+/**
+ * The instant the next allowance month starts, the moment {@link aiAllowanceMonth} moves on (once
+ * paid): a monthly period's end, or a longer period's next anniversary of the start, never past
+ * its end. Null when there's no stored period, or its end has passed: the next period is stored
+ * once its renewal is paid, so the date isn't known, and it must not be guessed. For display only.
+ */
+export function aiCreditsResetAt(periodStart: PeriodBound, periodEnd: PeriodBound, now: Date = new Date()): Date | null {
+  const period = parsePeriod(periodStart, periodEnd);
+  if (!period || period.end.getTime() <= now.getTime()) return null;
+
+  const { start, end } = period;
+  if (end.getTime() - start.getTime() <= AI_MONTHLY_PERIOD_MAX_DAYS * DAY_MS) return end;
+
+  // An anniversary exactly at `now` has already happened, as in aiAllowanceMonth()
+  const months = Math.max(1, monthsBetween(start, now));
+  const candidate = anniversary(start, months);
+  const next = candidate > now.getTime() ? candidate : anniversary(start, months + 1);
+  return new Date(Math.min(next, end.getTime()));
+}
+
+/** The columns of a `subscriptions` row that say whether, and when, its credits reset. */
+export interface AiCreditsResetRow {
+  tier?: unknown;
+  status?: unknown;
+  ai_mode?: unknown;
+  ai_period_start?: string | null;
+  ai_period_end?: string | null;
+}
+
+/**
+ * {@link aiCreditsResetAt} of a subscription whose monthly credits reset: an `active` Pro AI plan
+ * on TabMerger's key (`ai_mode` managed, or unset). Null for any other row: an own key has no
+ * credits, a free plan has none to reset, and a plan that isn't `active` is waiting on a payment.
+ */
+export function managedAiCreditsResetAt(row: AiCreditsResetRow | null | undefined, now: Date = new Date()): Date | null {
+  if (row?.tier !== 'pro_ai' || row.status !== 'active') return null;
+  if (isAiMode(row.ai_mode) && row.ai_mode !== 'managed') return null;
+  return aiCreditsResetAt(row.ai_period_start, row.ai_period_end, now);
 }

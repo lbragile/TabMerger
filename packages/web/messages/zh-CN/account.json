@@ -102,7 +102,8 @@
     "failed": "无法开始结账",
     "getMore": "获取更多",
     "notAvailable": "额度包仅适用于由 TabMerger 负责 AI 设置的有效 Pro AI 方案。",
-    "rateLimited": "短时间内的账单请求过多。请等待几分钟后再试。"
+    "rateLimited": "短时间内的账单请求过多。请等待几分钟后再试。",
+    "resetsOn": "额度将于 {date} 重置"
   },
   "aiPlan": {
     "title": "由谁负责 AI 设置",

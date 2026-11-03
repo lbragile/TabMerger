@@ -96,6 +96,7 @@
     "throttleDescription": "Spanduk saran sesi latar belakang muncul paling banyak sekali per hari untuk melindungi kuota AI bulanan Anda. Tindakan AI yang Anda picu secara manual (Kelompokkan otomatis, Nama grup, Atur ulang) tidak pernah dibatasi oleh ini.",
     "buyCredits": "Beli kredit tambahan",
     "buyCreditsLabel": "Beli kredit tambahan (tab baru)",
+    "creditsResetsOn": "Kredit direset pada {{date}}",
     "plan": {
       "managed": "TabMerger yang mengurus penyiapan: sisa {{remaining}} dari {{cap}} kredit bulan ini",
       "managedUnknown": "TabMerger yang mengurus penyiapan",

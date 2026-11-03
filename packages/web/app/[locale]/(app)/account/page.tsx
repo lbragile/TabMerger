@@ -19,10 +19,11 @@ import { SetPasswordForm } from '@/components/account/SetPasswordForm'
 import { DevicesSection } from '@/components/account/DevicesSection'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
+import { CreditsResetNote } from '@/components/account/CreditsResetNote'
 import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
 import { ScheduledChangeNotice } from '@/components/account/ScheduledChangeNotice'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { ACCOUNT_AI_CREDITS_ANCHOR, aiAllowanceMonth, isAiMode } from '@tabmerger/shared'
+import { ACCOUNT_AI_CREDITS_ANCHOR, aiAllowanceMonth, isAiMode, managedAiCreditsResetAt } from '@tabmerger/shared'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 import { hasCloudSync } from '@/lib/cloudSync'
 import { getPlanForPriceId, getPriceInfo } from '@/lib/tiers'
@@ -214,6 +215,9 @@ export default async function AccountPage() {
                 {/* Credit packs exist only for TabMerger's AI, and only once it's on sale. */}
                 {stat.id === 'aiCredits' && canBuyCredits && <BuyCreditsButton />}
               </p>
+              {stat.id === 'aiCredits' && AI_AVAILABILITY.managed && (
+                <CreditsResetNote resetsAt={managedAiCreditsResetAt(subscription)} className="text-xs text-text2" />
+              )}
             </div>
           ))}
         </div>

@@ -100,6 +100,7 @@
     "throttleDescription": "Das Hintergrund-Banner „Sitzungen vorschlagen“ erscheint höchstens einmal pro Tag, um dein monatliches KI-Kontingent zu schonen. Manuell ausgelöste KI-Aktionen (Auto-Gruppieren, Gruppe benennen, Organisieren) werden dadurch nie begrenzt.",
     "buyCredits": "Credits nachkaufen",
     "buyCreditsLabel": "Credits nachkaufen (neuer Tab)",
+    "creditsResetsOn": "Credits werden am {{date}} zurückgesetzt",
     "plan": {
       "managed": "TabMerger übernimmt die Einrichtung – noch {{remaining}} von {{cap}} Credits in diesem Monat",
       "managedUnknown": "TabMerger übernimmt die Einrichtung",

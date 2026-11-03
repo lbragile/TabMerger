@@ -54,3 +54,4 @@
 - [Mobile horizontal overflow](learnings/mobile-horizontal-overflow.md) — overflow-x clip (not hidden) keeps sticky navbar; fixed left+right banner stretches as a symptom; grid-cols-N is minmax(0,1fr); probe past the clip
 - [Pricing feature-list touchpoints](learnings/pricing-feature-list-touchpoints.md) — every copy of a plan feature line (shared, tierFeatures, pricing/featuresPage/faq JSON, extension f1..f3, store listing), own-key provider names (Gemini), and the tests pinning them
 - [Orphan words: pretty vs balance](learnings/orphan-words-pretty-vs-balance.md) — Chromium pretty keeps a lone long last word; balance on list lines; headless last-line measuring; repairing a race-corrupted dev manifest
+- [Shared date format + scratch extension build](learnings/shared-date-format-and-scratch-extension-build.md) — `as const satisfies` for Intl options passed to next-intl `format.dateTime`; UTC test instants; wxt `-c` wrapper config to build e2e outside .output/

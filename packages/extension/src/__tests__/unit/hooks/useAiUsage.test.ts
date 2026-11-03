@@ -313,3 +313,39 @@ describe("useAiUsage — the server's cap rule (migration 027, getEffectiveCap)"
     expect((await renderKnown()).cap).toBe(1200)
   })
 })
+
+describe('useAiUsage — when credits reset', () => {
+  const live = () => ({
+    ai_period_start: new Date(Date.now() - 5 * 86_400_000).toISOString(),
+    ai_period_end: new Date(Date.now() + 25 * 86_400_000).toISOString()
+  })
+
+  async function resetsAt(subscription: Record<string, unknown> | null) {
+    stubSupabase(0, [], 2000, { subscription })
+    const { useAiUsage } = await import('@/hooks/useAiUsage')
+    const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.known).toBe(true))
+    return result.current.resetsAt
+  }
+
+  it("an active managed plan: its monthly period's end", async () => {
+    const period = live()
+    expect((await resetsAt({ tier: 'pro_ai', status: 'active', ai_mode: 'managed', ...period }))?.toISOString()).toBe(period.ai_period_end)
+  })
+
+  it('null while the period has ended (a renewal held until paid), without a period, or not active', async () => {
+    expect(await resetsAt({ tier: 'pro_ai', status: 'active', ai_mode: 'managed', ai_period_start: '2020-01-31T10:00:00+00:00', ai_period_end: '2020-02-29T10:00:00+00:00' })).toBeNull()
+    expect(await resetsAt({ tier: 'pro_ai', status: 'active', ai_mode: 'managed' })).toBeNull()
+    expect(await resetsAt({ tier: 'pro_ai', status: 'past_due', ai_mode: 'managed', ...live() })).toBeNull()
+    expect(await resetsAt(null)).toBeNull()
+  })
+
+  it('null before the numbers are read, and for an own key (nothing is read)', async () => {
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true, aiMode: 'byok' })
+    stubSupabase(0, [], 2000, { subscription: { tier: 'pro_ai', status: 'active', ai_mode: 'byok', ...live() } })
+    const { useAiUsage } = await import('@/hooks/useAiUsage')
+    const { result } = renderHook(() => useAiUsage(), { wrapper: makeWrapper() })
+    expect(result.current.resetsAt).toBeNull()
+    expect(mockFrom).not.toHaveBeenCalled()
+  })
+})

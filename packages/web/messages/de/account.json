@@ -102,7 +102,8 @@
     "failed": "Checkout konnte nicht gestartet werden",
     "getMore": "Mehr holen",
     "notAvailable": "Credit-Pakete gibt es nur mit einem aktiven Pro-AI-Plan, bei dem TabMerger die KI einrichtet.",
-    "rateLimited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
+    "rateLimited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut.",
+    "resetsOn": "Credits werden am {date} zurückgesetzt"
   },
   "aiPlan": {
     "title": "Wer die KI einrichtet",

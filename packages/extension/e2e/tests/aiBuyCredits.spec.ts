@@ -1,5 +1,5 @@
 import type { BrowserContext, Page } from '@playwright/test';
-import { ACCOUNT_AI_CREDITS_ANCHOR } from '@tabmerger/shared';
+import { ACCOUNT_AI_CREDITS_ANCHOR, AI_CREDITS_RESET_DATE_FORMAT } from '@tabmerger/shared';
 import { test, expect } from '../fixtures';
 import { openPopup, seedAndReload, signInAsPro } from '../helpers';
 import { NOW_OPEN } from '../seed';
@@ -8,13 +8,17 @@ import { NOW_OPEN } from '../seed';
  * Settings → AI "Buy more credits" for a Pro AI subscriber on TabMerger's key (`ai_mode:
  * 'managed'`): a link next to the credits line that opens the web app's account page at its AI
  * credits section in a new tab, shown as a button once less than 10% of the month's credits are
- * left.
+ * left. Beside it, the date the credits reset (the end of the stored monthly period).
  *
  * Needs a build with TabMerger's AI on (`VITE_AI_ENABLED=true`, as in a local `.env.local` dev
  * build); a build without it has no AI tab for this plan, and the test skips.
  */
 
 const ALLOWANCE = 2500;
+const DAY_MS = 86_400_000;
+/** A monthly period that started 5 days ago, so it ends (and the credits reset) in 25 days. */
+const PERIOD_END = new Date(Date.now() + 25 * DAY_MS);
+const PERIOD = { ai_period_start: new Date(PERIOD_END.getTime() - 30 * DAY_MS).toISOString(), ai_period_end: PERIOD_END.toISOString() };
 
 /** A signed-in managed Pro AI account with `used` of {@link ALLOWANCE} credits spent this month. */
 async function signInAsProAiManaged(page: Page, used: number): Promise<void> {
@@ -30,7 +34,8 @@ async function signInAsProAiManaged(page: Page, used: number): Promise<void> {
           current_period_end: null,
           stripe_price_id: null,
           ai_mode: 'managed',
-          ai_monthly_credits: ALLOWANCE
+          ai_monthly_credits: ALLOWANCE,
+          ...PERIOD
         }
       ]
     })
@@ -98,5 +103,24 @@ test.describe('Settings → AI, buy more credits', () => {
     // fits the fixed-width popup: the Settings dialog does not scroll sideways
     const overflow = await page.getByRole('dialog').evaluate((el) => el.scrollWidth - el.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
+  });
+
+  test('the date the credits reset shows beside the credits line, in UTC, without widening the popup', async ({ context, extensionId }) => {
+    const page = await setUp(context, extensionId, 2300);
+    test.skip(!(await openAiSettings(page)), "this build has TabMerger's AI off (VITE_AI_ENABLED), so there is no AI tab");
+
+    const date = new Intl.DateTimeFormat('en', AI_CREDITS_RESET_DATE_FORMAT).format(PERIOD_END);
+    const reset = page.getByTestId('ai-credits-reset');
+    await expect(reset).toHaveText(`Credits reset on ${date}`);
+    // in the same row as the credits line and the (low-balance) button, wrapped to a line of its own
+    const row = page.getByTestId('ai-plan-line').locator('..');
+    await expect(row.getByTestId('ai-credits-reset')).toBeVisible();
+    await expect(row.getByTestId('ai-buy-credits')).toHaveAttribute('data-emphasis', 'low');
+    const [line, note] = await Promise.all([page.getByTestId('ai-plan-line').boundingBox(), reset.boundingBox()]);
+    expect(note!.y).toBeGreaterThanOrEqual(line!.y + line!.height - 1);
+    const overflow = await page.getByRole('dialog').evaluate((el) => el.scrollWidth - el.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+    const pageOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(pageOverflow).toBeLessThanOrEqual(0);
   });
 });

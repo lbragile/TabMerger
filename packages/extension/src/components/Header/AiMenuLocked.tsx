@@ -12,7 +12,7 @@ export function ProAiTag() {
         // Centred under the sparkle (symmetric insets, so the same in both reading directions)
         <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 -bottom-0.5 flex justify-center">
             <span
-                className="whitespace-nowrap bg-purple-500 px-0.5 text-[0.4375rem] font-bold leading-[0.5625rem] text-white"
+                className="whitespace-nowrap bg-purple-600 px-0.5 text-[0.4375rem] font-bold leading-[0.5625rem] text-white"
                 data-testid="header-ai-pro-tag"
             >
                 {t("header.aiProTag")}

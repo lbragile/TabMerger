@@ -126,6 +126,8 @@ is what both are tested against, so they can't drift apart unnoticed. The AI rou
 once per request from the row they read (reservation and settlement hit the same row); a client
 never supplies it, and the extension's own computation is a display only.
 
+**Where the date shows.** "Credits reset on {date}" (in UTC, in the viewer's locale) sits beside the credit balance and "Get more" on the account page and the dashboard, and under the credits line in the extension's Settings → AI. It comes from `managedAiCreditsResetAt()` next to `aiAllowanceMonth()` (its `aiCreditsResetAt()`: a monthly period's end, or a yearly plan's next anniversary, never past the end), shows only for an `active` managed Pro AI plan, and is hidden while the date is unknown (no stored period, or the end has passed and the renewal is held until paid).
+
 - **A renewal's credits open on payment, not at the period's start.** Stripe moves the item's period
   about an hour before it charges the renewal (test clock: active with a `draft`
   `subscription_cycle` invoice 30 seconds after the period end). While a subscription is `active` or

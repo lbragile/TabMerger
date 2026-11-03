@@ -96,6 +96,7 @@
     "throttleDescription": "월간 AI 할당량을 보호하기 위해 백그라운드 세션 추천 배너는 하루에 최대 한 번만 표시됩니다. 직접 실행하는 AI 작업(자동 그룹화, 그룹 이름 짓기, 정리)은 이 설정으로 제한되지 않습니다.",
     "buyCredits": "크레딧 추가 구매",
     "buyCreditsLabel": "크레딧 추가 구매(새 탭)",
+    "creditsResetsOn": "크레딧 초기화일: {{date}}",
     "plan": {
       "managed": "설정은 TabMerger가 처리 — 이번 달 남은 크레딧 {{remaining}}/{{cap}}",
       "managedUnknown": "설정은 TabMerger가 처리",

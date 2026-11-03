@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { PRO_AI_MONTHLY_CREDITS, aiAllowanceMonth, isAiMode } from '@tabmerger/shared';
+import { PRO_AI_MONTHLY_CREDITS, aiAllowanceMonth, isAiMode, managedAiCreditsResetAt } from '@tabmerger/shared';
 import { supabase } from '@/lib/supabase';
 import { AI_MANAGED_ENABLED } from '@/lib/aiFlag';
 import { useAuth } from './useAuth';
@@ -36,8 +36,9 @@ async function fetchUsageRow(userId: string, month: string): Promise<{ used: num
  *   through `allowance_spent`.
  * - `month`, the key of the usage rows to show (`aiAllowanceMonth()`, the rule the server meters
  *   with). For display only: the server computes its own and takes none from a client.
+ * - `resetsAt`, when those credits reset (`managedAiCreditsResetAt()`), or null when it isn't known.
  */
-async function fetchSubscription(userId: string): Promise<{ allowance: number; month: string }> {
+async function fetchSubscription(userId: string): Promise<{ allowance: number; month: string; resetsAt: Date | null }> {
   const { data, error } = await supabase
     .from('subscriptions')
     .select('tier, status, ai_mode, ai_monthly_credits, ai_period_start, ai_period_end')
@@ -56,7 +57,8 @@ async function fetchSubscription(userId: string): Promise<{ allowance: number; m
   const managed = !isAiMode(sub?.ai_mode) || sub?.ai_mode === 'managed';
   return {
     allowance: sub?.tier === 'pro_ai' && sub.status === 'active' && managed ? credits(sub.ai_monthly_credits) : 0,
-    month: aiAllowanceMonth(sub?.ai_period_start, sub?.ai_period_end)
+    month: aiAllowanceMonth(sub?.ai_period_start, sub?.ai_period_end),
+    resetsAt: managedAiCreditsResetAt(sub)
   };
 }
 
@@ -79,10 +81,10 @@ async function fetchPackCredits(userId: string, month: string): Promise<number> 
  * the frozen allowance already paid for plus their packs, not 0. Throws when any read fails: an
  * unknown cap is not a number to show or to check requests against.
  */
-async function fetchUsage(userId: string): Promise<{ used: number; cap: number }> {
-  const { allowance, month } = await fetchSubscription(userId);
+async function fetchUsage(userId: string): Promise<{ used: number; cap: number; resetsAt: Date | null }> {
+  const { allowance, month, resetsAt } = await fetchSubscription(userId);
   const [usage, packs] = await Promise.all([fetchUsageRow(userId, month), fetchPackCredits(userId, month)]);
-  return { used: usage.used, cap: Math.max(0, Math.max(allowance, usage.allowanceSpent) + packs) };
+  return { used: usage.used, cap: Math.max(0, Math.max(allowance, usage.allowanceSpent) + packs), resetsAt };
 }
 
 /**
@@ -93,7 +95,7 @@ async function fetchUsage(userId: string): Promise<{ used: number; cap: number }
  *
  * `known` is false until the numbers have been read (and when the read failed): the counts then
  * fall back to a full advertised allowance, for display only, and callers must not refuse a
- * request on them.
+ * request on them. `resetsAt` is when the credits reset; null means unknown, so show no date.
  */
 export function useAiUsage() {
   const { user } = useAuth();
@@ -116,6 +118,7 @@ export function useAiUsage() {
     remaining: Math.max(0, cap - used),
     cap,
     loading: isLoading,
-    known: !!data
+    known: !!data,
+    resetsAt: data?.resetsAt ?? null
   };
 }

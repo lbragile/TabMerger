@@ -96,6 +96,7 @@
     "throttleDescription": "Biểu ngữ gợi ý phiên nền xuất hiện tối đa một lần mỗi ngày để bảo vệ hạn mức AI hàng tháng của bạn. Các hành động AI bạn tự kích hoạt thủ công (Tự động nhóm, Đặt tên nhóm, Sắp xếp) không bao giờ bị giới hạn bởi điều này.",
     "buyCredits": "Mua thêm tín dụng",
     "buyCreditsLabel": "Mua thêm tín dụng (thẻ mới)",
+    "creditsResetsOn": "Tín dụng được đặt lại vào {{date}}",
     "plan": {
       "managed": "TabMerger lo phần thiết lập: còn {{remaining}}/{{cap}} tín dụng trong tháng này",
       "managedUnknown": "TabMerger lo phần thiết lập",

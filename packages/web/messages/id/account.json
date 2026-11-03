@@ -102,7 +102,8 @@
     "failed": "Tidak dapat memulai pembayaran",
     "getMore": "Beli lagi",
     "notAvailable": "Paket kredit hanya untuk paket Pro AI aktif dengan pengaturan AI yang ditangani TabMerger.",
-    "rateLimited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
+    "rateLimited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi.",
+    "resetsOn": "Kredit direset pada {date}"
   },
   "aiPlan": {
     "title": "Siapa yang menyiapkan AI",

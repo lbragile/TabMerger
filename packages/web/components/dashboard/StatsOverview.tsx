@@ -2,6 +2,7 @@ import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Layers, Globe, Clock, FileStack, Sparkles } from 'lucide-react'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
+import { CreditsResetNote } from '@/components/account/CreditsResetNote'
 import { ORGANIZE_EXAMPLE_TABS, organizesFor } from '@/components/pricing/aiOptions'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
 
@@ -20,10 +21,11 @@ interface StatsOverviewProps {
    * subscriber's own key, which has no TabMerger credits to show. `action` (the switch to the other
    * option) follows the card's description. `canBuyCredits` shows "Get more": only for a paid-up
    * plan (`hasCloudSync`), the same rule `/api/checkout/credits` enforces, so an ended or unpaid
-   * plan still sees its credits but isn't offered a pack it couldn't spend.
+   * plan still sees its credits but isn't offered a pack it couldn't spend. `creditsResetAt` is when
+   * they reset, when that's known (`managedAiCreditsResetAt()`).
    */
   aiUsage?:
-    | { mode: 'managed'; used: number; limit: number; canBuyCredits?: boolean; action?: React.ReactNode }
+    | { mode: 'managed'; used: number; limit: number; canBuyCredits?: boolean; creditsResetAt?: Date | null; action?: React.ReactNode }
     | { mode: 'byok'; action?: React.ReactNode }
   /**
    * Whether to show the stats that depend on synced data (tabs/groups/sessions/memory).
@@ -163,6 +165,7 @@ export function StatsOverview({
                       <BuyCreditsButton />
                     </>
                   )}
+                {stat.id === 'aiCredits' && aiUsage?.mode === 'managed' && <CreditsResetNote resetsAt={aiUsage.creditsResetAt} />}
                 {(stat.id === 'aiCredits' || stat.id === 'aiOwnKey') && aiUsage?.action && (
                   <span className="block mt-1">{aiUsage.action}</span>
                 )}
