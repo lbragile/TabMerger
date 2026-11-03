@@ -429,6 +429,10 @@ jobs:
           # themselves on a build with AI off, so without these they would never run in CI.
           VITE_AI_ENABLED: 'true'
           VITE_AI_BYOK_ENABLED: 'true'
+          # .env.production is git-ignored, so CI has no web app URL and links such as
+          # buy credits would come out relative (chrome-extension://…/account). Store
+          # builds set the real one in publish.yml; this is the local dev site.
+          VITE_WEB_APP_URL: 'http://localhost:3000'
       # No `--` before --shard: pnpm appends args after the script name as-is, and a
       # literal `--` would make Playwright read --shard as a file filter.
       - run: pnpm --filter @tabmerger/extension test:e2e --shard=${{ matrix.shard }}/${{ strategy.job-total }}
