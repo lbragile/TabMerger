@@ -99,6 +99,7 @@
       "not_entitled": "This plan has already ended. Choose a plan on the pricing page.",
       "not_canceling": "Your plan isn't set to end anymore. Reload the page to see your plan.",
       "ends_early": "This plan's end date was set by our support team. Email {email} to keep it.",
+      "schedule_attached": "This plan has changes set up by our support team. Email {email} to keep it.",
       "resume_failed": "Couldn't keep your plan. Please try again, or email {email}.",
       "rate_limited": "Too many billing requests in a short time. Please wait a few minutes and try again."
     }

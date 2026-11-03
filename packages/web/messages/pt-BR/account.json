@@ -99,6 +99,7 @@
       "not_entitled": "Este plano já terminou. Escolha um plano na página de preços.",
       "not_canceling": "Seu plano não está mais programado para terminar. Recarregue a página para ver seu plano.",
       "ends_early": "A data de término deste plano foi definida pela nossa equipe de suporte. Escreva para {email} para mantê-lo.",
+      "schedule_attached": "Nossa equipe de suporte configurou mudanças neste plano. Escreva para {email} para mantê-lo.",
       "resume_failed": "Não foi possível manter seu plano. Tente novamente ou escreva para {email}.",
       "rate_limited": "Muitas solicitações de cobrança em pouco tempo. Aguarde alguns minutos e tente novamente."
     }

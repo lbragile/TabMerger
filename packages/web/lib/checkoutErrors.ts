@@ -188,6 +188,8 @@ export const RESUME_SUBSCRIPTION_ERROR_CODES = {
   notCanceling: 'not_canceling',
   /** 409: set to end before its paid period would (a date support set); only support changes it. */
   endsEarly: 'ends_early',
+  /** 409: a subscription schedule set up in the Dashboard is attached; only support changes it. */
+  scheduleAttached: 'schedule_attached',
   /** 429: too many billing requests; try again in a few minutes. */
   rateLimited: RATE_LIMITED_ERROR,
   /** 500: a failed database read, or Stripe refused or failed; the details are in the server log. */

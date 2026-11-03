@@ -91,6 +91,7 @@ const stripeSubscription = (overrides: Record<string, unknown> = {}) => ({
   customer: 'cus_mine',
   status: 'active',
   schedule: null,
+  billing_cycle_anchor: START,
   cancel_at: END,
   cancel_at_period_end: false,
   items: {
@@ -324,21 +325,103 @@ describe('POST /api/billing/resume-subscription', () => {
     expect(mockSubscriptionsUpdate).not.toHaveBeenCalled()
   })
 
+  // Stripe counts each period from the billing anchor's day of the month, clamped to the month's
+  // length: an anchor on the 31st gives Jan 31 -> Feb 28 -> Mar 31. `cancel_at` = the natural period
+  // end is a full period (the portal's cancel); a day earlier is a Dashboard cut (`ends_early`),
+  // which Stripe shows by moving current_period_end to it and leaving the anchor alone.
+  const utc = (y: number, m: number, d: number) => Date.UTC(y, m - 1, d, 5, 27, 17) / 1000
+  const periodOf = (
+    anchor: number | null,
+    start: number,
+    end: number,
+    interval: 'month' | 'year' = 'month',
+    extra: Record<string, unknown> = {}
+  ) =>
+    stripeSubscription({
+      billing_cycle_anchor: anchor,
+      cancel_at: end,
+      items: {
+        data: [{ id: 'si_1', price: { id: 'p', recurring: { interval, interval_count: 1 } }, current_period_start: start, current_period_end: end }],
+      },
+      ...extra,
+    })
+
   it.each([
-    ['a month ending on a shorter month (Jan 31 to Feb 28)', Date.UTC(2027, 0, 31) / 1000, Date.UTC(2027, 1, 28) / 1000, 'month'],
-    ['a month starting on a clamped day (Feb 28 to Mar 31, anchor on the 31st)', Date.UTC(2027, 1, 28) / 1000, Date.UTC(2027, 2, 31) / 1000, 'month'],
-    ['a leap-day year (2028-02-29 to 2029-02-28)', Date.UTC(2028, 1, 29) / 1000, Date.UTC(2029, 1, 28) / 1000, 'year'],
-  ])('a cancellation at the end of %s is a full period, not ends_early', async (_label, start, end, interval) => {
-    mockSubscriptionsRetrieve.mockResolvedValue(
-      stripeSubscription({
-        cancel_at: end,
-        items: {
-          data: [{ id: 'si_1', price: { id: 'p', recurring: { interval, interval_count: 1 } }, current_period_start: start, current_period_end: end }],
-        },
-      })
-    )
+    ['anchor on the 31st, into a shorter month (Jan 31 to Feb 28)', utc(2027, 1, 31), utc(2027, 1, 31), utc(2027, 2, 28), 'month'],
+    ['anchor on the 31st, across February (Feb 28 to Mar 31)', utc(2027, 1, 31), utc(2027, 2, 28), utc(2027, 3, 31), 'month'],
+    ['anchor on the 30th, across February (Feb 28 to Mar 30)', utc(2027, 1, 30), utc(2027, 2, 28), utc(2027, 3, 30), 'month'],
+    ['anchor on the 29th, in a leap February (Feb 29 to Mar 29, 2028)', utc(2028, 1, 29), utc(2028, 2, 29), utc(2028, 3, 29), 'month'],
+    ['anchor on the 29th, across a common February (Feb 28 to Mar 29, 2027)', utc(2027, 1, 29), utc(2027, 2, 28), utc(2027, 3, 29), 'month'],
+    ['a yearly anchor on Feb 29, into a leap year (2031-02-28 to 2032-02-29)', utc(2028, 2, 29), utc(2031, 2, 28), utc(2032, 2, 29), 'year'],
+    ['a mid-month anchor (Mar 15 to Apr 15)', utc(2027, 1, 15), utc(2027, 3, 15), utc(2027, 4, 15), 'month'],
+  ] as const)('%s: a cancellation at the period end is a full period and is resumed', async (_label, anchor, start, end, interval) => {
+    mockSubscriptionsRetrieve.mockResolvedValue(periodOf(anchor, start, end, interval))
     const res = await post()
     expect(res.status).toBe(200)
+    expect(mockSubscriptionsUpdate).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([
+    // Counting from the start's own clamped day (the 28th) gave Mar 28 and missed these.
+    ['anchor on the 31st: cut to Mar 30', utc(2027, 1, 31), utc(2027, 2, 28), utc(2027, 3, 30), 'month'],
+    ['anchor on the 31st: cut to Mar 29', utc(2027, 1, 31), utc(2027, 2, 28), utc(2027, 3, 29), 'month'],
+    ['anchor on the 30th: cut to Mar 29', utc(2027, 1, 30), utc(2027, 2, 28), utc(2027, 3, 29), 'month'],
+    ['anchor on the 29th, common February: cut to Mar 28', utc(2027, 1, 29), utc(2027, 2, 28), utc(2027, 3, 28), 'month'],
+    ['anchor on the 29th, leap February: cut to Mar 28', utc(2028, 1, 29), utc(2028, 2, 29), utc(2028, 3, 28), 'month'],
+    ['a yearly anchor on Feb 29: cut to 2032-02-28', utc(2028, 2, 29), utc(2031, 2, 28), utc(2032, 2, 28), 'year'],
+    ['a mid-month anchor: cut to Apr 5', utc(2027, 1, 15), utc(2027, 3, 15), utc(2027, 4, 5), 'month'],
+    ['a mid-month anchor: cut by one day', utc(2027, 1, 15), utc(2027, 3, 15), utc(2027, 4, 14), 'month'],
+  ] as const)('%s: 409 ends_early, nothing is updated', async (_label, anchor, start, end, interval) => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockSubscriptionsRetrieve.mockResolvedValue(periodOf(anchor, start, end, interval))
+    const res = await post()
+    expect(res.status).toBe(409)
+    expect((await res.json()).code).toBe('ends_early')
+    expect(mockSubscriptionsUpdate).not.toHaveBeenCalled()
+  })
+
+  it("an anchor after the period start is not one Stripe counts this period from: the start's own day is used", async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    // A first period up to a later custom anchor (never set by our Checkout) ending on the anchor:
+    // counted from the start, the period looks cut, so it is left to support rather than resumed.
+    const start = utc(2027, 3, 3)
+    const anchor = utc(2027, 3, 20)
+    mockSubscriptionsRetrieve.mockResolvedValue(periodOf(anchor, start, anchor))
+    let res = await post()
+    expect((await res.json()).code).toBe('ends_early')
+
+    // A full month from the start is resumed whatever the later anchor's day.
+    mockSubscriptionsRetrieve.mockResolvedValue(periodOf(utc(2027, 3, 31), start, utc(2027, 4, 3)))
+    res = await post()
+    expect(res.status).toBe(200)
+  })
+
+  it('without an anchor the period is counted from its start', async () => {
+    mockSubscriptionsRetrieve.mockResolvedValue(periodOf(null, utc(2027, 3, 15), utc(2027, 4, 15)))
+    expect((await post()).status).toBe(200)
+  })
+
+  it('409 schedule_attached when a subscription schedule is attached (a Dashboard-made one): nothing is updated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSubscription({ schedule: 'sub_sched_dashboard' }))
+
+    const res = await post()
+
+    expect(res.status).toBe(409)
+    expect(await res.json()).toEqual({
+      error: 'This plan has changes set up by support. Contact us to keep it.',
+      code: 'schedule_attached',
+    })
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(mockSubscriptionsUpdate).not.toHaveBeenCalled()
+    expectNoOtherWrites()
+  })
+
+  it('an expanded schedule object counts too', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockSubscriptionsRetrieve.mockResolvedValue(stripeSubscription({ schedule: { id: 'sub_sched_dashboard', status: 'active' } }))
+    const res = await post()
+    expect((await res.json()).code).toBe('schedule_attached')
   })
 
   it('409 not_canceling when the update fails because an earlier click already kept the plan', async () => {

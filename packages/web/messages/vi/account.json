@@ -99,6 +99,7 @@
       "not_entitled": "Gói này đã kết thúc. Hãy chọn một gói trên trang giá.",
       "not_canceling": "Gói của bạn không còn được đặt để kết thúc. Tải lại trang để xem gói của bạn.",
       "ends_early": "Ngày kết thúc của gói này do đội hỗ trợ của chúng tôi đặt. Gửi email đến {email} để giữ gói.",
+      "schedule_attached": "Gói này có các thay đổi do đội hỗ trợ của chúng tôi thiết lập. Gửi email đến {email} để giữ gói.",
       "resume_failed": "Không thể giữ gói của bạn. Vui lòng thử lại, hoặc gửi email đến {email}.",
       "rate_limited": "Quá nhiều yêu cầu thanh toán trong thời gian ngắn. Vui lòng đợi vài phút rồi thử lại."
     }

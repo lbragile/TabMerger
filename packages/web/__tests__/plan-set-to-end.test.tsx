@@ -173,6 +173,7 @@ describe('ResumeSubscriptionNotice', () => {
     ['not_canceling', "Your plan isn't set to end anymore. Reload the page to see your plan.", true],
     ['not_entitled', 'This plan has already ended. Choose a plan on the pricing page.', true],
     ['ends_early', /^This plan's end date was set by our support team\. Email .+ to keep it\.$/, false],
+    ['schedule_attached', /^This plan has changes set up by our support team\. Email .+ to keep it\.$/, false],
     ['rate_limited', 'Too many billing requests in a short time. Please wait a few minutes and try again.', false],
     ['no_subscription', /^We couldn't find your subscription\./, false],
     ['something_else', /^Couldn't keep your plan\. Please try again, or email .+\.$/, false],

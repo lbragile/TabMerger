@@ -99,6 +99,7 @@
       "not_entitled": "Ce forfait a déjà pris fin. Choisissez un forfait sur la page des tarifs.",
       "not_canceling": "Votre forfait ne va plus prendre fin. Rechargez la page pour voir votre forfait.",
       "ends_early": "La date de fin de ce forfait a été fixée par notre équipe d’assistance. Écrivez à {email} pour le garder.",
+      "schedule_attached": "Notre équipe d’assistance a programmé des changements sur ce forfait. Écrivez à {email} pour le garder.",
       "resume_failed": "Impossible de garder votre forfait. Réessayez ou écrivez à {email}.",
       "rate_limited": "Trop de demandes de facturation en peu de temps. Veuillez patienter quelques minutes, puis réessayer."
     }

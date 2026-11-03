@@ -99,6 +99,7 @@
       "not_entitled": "Bu plan zaten sona erdi. Fiyatlandırma sayfasından bir plan seçin.",
       "not_canceling": "Planınız artık sona erecek şekilde ayarlı değil. Planınızı görmek için sayfayı yenileyin.",
       "ends_early": "Bu planın bitiş tarihi destek ekibimiz tarafından belirlendi. Planı korumak için {email} adresine yazın.",
+      "schedule_attached": "Bu planda destek ekibimizin ayarladığı değişiklikler var. Planı korumak için {email} adresine yazın.",
       "resume_failed": "Planınız korunamadı. Lütfen tekrar deneyin veya {email} adresine yazın.",
       "rate_limited": "Kısa sürede çok fazla faturalandırma isteği gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin."
     }

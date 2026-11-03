@@ -99,6 +99,7 @@
       "not_entitled": "Dieser Plan ist bereits beendet. Wähle auf der Preisseite einen Plan.",
       "not_canceling": "Dein Plan ist nicht mehr gekündigt. Lade die Seite neu, um deinen Plan zu sehen.",
       "ends_early": "Das Enddatum dieses Plans hat unser Support festgelegt. Schreib an {email}, um ihn zu behalten.",
+      "schedule_attached": "Für diesen Plan hat unser Support Änderungen eingerichtet. Schreib an {email}, um ihn zu behalten.",
       "resume_failed": "Dein Plan konnte nicht behalten werden. Bitte versuche es erneut oder schreib an {email}.",
       "rate_limited": "Zu viele Abrechnungsanfragen in kurzer Zeit. Bitte warte ein paar Minuten und versuche es dann erneut."
     }

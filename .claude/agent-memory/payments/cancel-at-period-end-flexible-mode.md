@@ -31,10 +31,14 @@ rewrites the flag on `pro` and `pro_ai` rows. Server checks read Stripe and use
   double click can't be detected by error; read first.
 - Any update on a canceled subscription: 400 `invalid_canceled_subscription_fields`.
 - A `cancel_at` 10 days before the period end (Dashboard-style cut) moved `current_period_end` to
-  it but left `billing_cycle_anchor` unchanged on flexible (the docs say the anchor moves). So
-  `ends_early` compares the period with its price's interval from `current_period_start` (UTC
-  calendar months, day clamped), not the anchor. Clearing such a date would hand the cut time back
-  unpaid, so the route refuses it.
+  it but left `billing_cycle_anchor` unchanged, in both modes (the docs say the anchor moves). So
+  `ends_early` counts the natural end from `current_period_start` on the anchor's day of month,
+  clamped (anchor 31st: Feb 28 → Mar 31, measured on a test clock in both modes); counting from the
+  start's own clamped day missed up to 3 cut days. An anchor after the start is ignored. Clearing
+  such a date would hand the cut time back unpaid, so the route refuses it.
+- A subscription with a schedule attached is refused (`schedule_attached`): the portal's cancel
+  releases schedules, so only a Dashboard-made one can be there, and with `end_behavior: cancel`
+  it manages `cancel_at` itself.
 
 Related: [[cancel-with-pending-schedule]], [[keep-current-plan-release]], [[billing-request-guards]],
 [[plan-change-client-confirmation]].

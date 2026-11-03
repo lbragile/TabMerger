@@ -24,7 +24,8 @@ import { limitBillingRequest, rejectCrossOriginPost } from '@/lib/billingRequest
  * `Retry-After`), 400 `no_billing_account`, 404 `no_subscription` (none stored, unknown at Stripe,
  * or not this customer's), 409 `not_entitled` (the plan has ended or isn't paid up), 409
  * `not_canceling` (not set to end, or already kept by an earlier click), 409 `ends_early` (set to
- * end before its paid period would; support only), 500 `resume_failed` (a failed database read,
+ * end before its paid period would; support only), 409 `schedule_attached` (a subscription
+ * schedule set up in the Dashboard is attached; support only), 500 `resume_failed` (a failed database read,
  * logged with its error code; or a Stripe failure, logged with the Stripe error's type, code and
  * request id).
  */
@@ -107,6 +108,11 @@ export async function POST(request: NextRequest) {
         case 'ends_early':
           return NextResponse.json(
             { error: 'This plan ends on a date set by support. Contact us to keep it.', code: CODES.endsEarly },
+            { status: 409 }
+          )
+        case 'schedule_attached':
+          return NextResponse.json(
+            { error: 'This plan has changes set up by support. Contact us to keep it.', code: CODES.scheduleAttached },
             { status: 409 }
           )
       }

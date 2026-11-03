@@ -696,48 +696,77 @@ export async function createCancelSubscriptionSession({
  * - `ends_early`: it is set to end before its paid period would have (a date set from the Stripe
  *   Dashboard shortens the period). Clearing that date would give back the cut time unpaid, so it
  *   is left to support.
+ * - `schedule_attached`: a subscription schedule is attached. The portal's cancel releases any
+ *   schedule, so this is one made in the Dashboard; with `end_behavior: cancel` the schedule itself
+ *   manages `cancel_at`, and clearing it here would fight the schedule. Left to support too.
  */
 export class ResumeSubscriptionError extends Error {
-  constructor(readonly reason: 'not_found' | 'not_entitled' | 'not_canceling' | 'ends_early') {
+  constructor(readonly reason: 'not_found' | 'not_entitled' | 'not_canceling' | 'ends_early' | 'schedule_attached') {
     super(reason)
   }
 }
 
 /**
- * The end of a billing period that starts at `start` (unix seconds), counted the way Stripe does:
- * calendar months and years in UTC, the day clamped to the month's length (Jan 31 + 1 month =
- * Feb 28). Stripe counts from the billing anchor's day, which is never earlier in the month than
- * the period start's (a clamped day only moves back), so this is at or before Stripe's own end:
- * a period it calls shortened really is.
+ * `start` (unix seconds) moved `months` calendar months on in UTC, on day `day` of that month,
+ * clamped to its length (day 31 in February is the 28th or 29th), at `start`'s time of day.
  */
-function naturalPeriodEnd(start: number, interval: Stripe.Price.Recurring.Interval, count: number): number {
-  if (interval === 'day' || interval === 'week') return start + count * (interval === 'day' ? 1 : 7) * 86_400
+function addMonthsOnDay(start: number, months: number, day: number): number {
   const date = new Date(start * 1000)
   const year = date.getUTCFullYear()
-  const month = date.getUTCMonth() + (interval === 'year' ? 12 * count : count)
+  const month = date.getUTCMonth() + months
   const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
-  const end = Date.UTC(
-    year,
-    month,
-    Math.min(date.getUTCDate(), lastDay),
-    date.getUTCHours(),
-    date.getUTCMinutes(),
-    date.getUTCSeconds()
+  return (
+    Date.UTC(year, month, Math.min(day, lastDay), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()) / 1000
   )
-  return end / 1000
+}
+
+/**
+ * The end of a billing period that starts at `start` (unix seconds), counted the way Stripe does:
+ * calendar months and years in UTC from the billing anchor's day of the month, clamped to the
+ * month's length. An anchor on the 31st gives Jan 31 → Feb 28 → Mar 31, so the period that starts
+ * Feb 28 ends Mar 31, not Mar 28: counting from the start's own (clamped) day would miss up to 3
+ * cut days.
+ *
+ * The anchor is used only when it is at or before the start: a later anchor isn't one Stripe counts
+ * this period from (a first period up to a custom anchor, which our Checkout never sets), and the
+ * start's own day is used alone then. Both counts are taken and the later wins: the start's day is
+ * never later in the month than the anchor's (a clamped day only moves back), so it can't push the
+ * end past Stripe's. Measured in test mode (2026-11-02): a `cancel_at` that cuts the period short
+ * moves `current_period_end` and leaves `billing_cycle_anchor` alone, in both billing modes.
+ */
+function naturalPeriodEnd(
+  start: number,
+  anchor: number | null | undefined,
+  interval: Stripe.Price.Recurring.Interval,
+  count: number
+): number {
+  if (interval === 'day' || interval === 'week') return start + count * (interval === 'day' ? 1 : 7) * 86_400
+  const months = interval === 'year' ? 12 * count : count
+  const fromStart = addMonthsOnDay(start, months, new Date(start * 1000).getUTCDate())
+  if (typeof anchor !== 'number' || anchor > start) return fromStart
+  return Math.max(fromStart, addMonthsOnDay(start, months, new Date(anchor * 1000).getUTCDate()))
 }
 
 /**
  * True when `subscription` is set to end before its current period would naturally end: a
  * `cancel_at` inside the period moves `current_period_end` to it, so the period is shorter than its
- * price's interval. The portal's cancel never does this (it ends at the period end).
+ * price's interval counted from the billing anchor's day. The portal's cancel never does this (it
+ * ends at the period end).
  */
 function endsBeforePeriodEnd(subscription: Stripe.Subscription): boolean {
   const cancelAt = subscription.cancel_at
   const item = subscription.items.data[0]
   const recurring = item?.price?.recurring
   if (typeof cancelAt !== 'number' || typeof item?.current_period_start !== 'number' || !recurring) return false
-  return cancelAt < naturalPeriodEnd(item.current_period_start, recurring.interval, recurring.interval_count ?? 1)
+  return (
+    cancelAt <
+    naturalPeriodEnd(
+      item.current_period_start,
+      subscription.billing_cycle_anchor,
+      recurring.interval,
+      recurring.interval_count ?? 1
+    )
+  )
 }
 
 /**
@@ -751,7 +780,9 @@ function endsBeforePeriodEnd(subscription: Stripe.Subscription): boolean {
  * classic and flexible billing mode: no new invoice, no pending invoice items, balance 0, no credit
  * notes, same period end and billing anchor, the next-invoice preview at the full price, and the
  * renewal (`subscription_cycle`) charged the full price. `proration_behavior: 'none'` is there in
- * case `cancel_at` had moved the period end; `ends_early` refuses that case before any write.
+ * case `cancel_at` had moved the period end; `ends_early` refuses that case before any write, and
+ * `schedule_attached` a subscription with a schedule (a Dashboard-made one: the portal's cancel
+ * releases schedules), whose `cancel_at` the schedule may manage.
  *
  * Ownership is checked here, at Stripe: the subscription must belong to `customerId` (the caller's
  * own customer, from their profile), else `not_found`. Stripe accepts the same update on a
@@ -785,6 +816,10 @@ export async function resumeSubscription({
   if (idOf(subscription.customer) !== customerId) throw new ResumeSubscriptionError('not_found')
   if (!isEntitledSubscriptionStatus(subscription.status)) throw new ResumeSubscriptionError('not_entitled')
   if (!subscription.cancel_at_period_end && !subscription.cancel_at) throw new ResumeSubscriptionError('not_canceling')
+  if (subscription.schedule) {
+    console.warn(`Resume subscription: subscription ${subscription.id} has a schedule attached, so it is not resumed`)
+    throw new ResumeSubscriptionError('schedule_attached')
+  }
   if (endsBeforePeriodEnd(subscription)) {
     console.warn(
       `Resume subscription: subscription ${subscription.id} is set to end before its period would, so it is not resumed`

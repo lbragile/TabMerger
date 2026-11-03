@@ -99,6 +99,7 @@
       "not_entitled": "Questo piano è già terminato. Scegli un piano nella pagina dei prezzi.",
       "not_canceling": "Il tuo piano non è più impostato per terminare. Ricarica la pagina per vedere il tuo piano.",
       "ends_early": "La data di fine di questo piano è stata impostata dal nostro supporto. Scrivi a {email} per mantenerlo.",
+      "schedule_attached": "Il nostro supporto ha impostato delle modifiche su questo piano. Scrivi a {email} per mantenerlo.",
       "resume_failed": "Impossibile mantenere il tuo piano. Riprova oppure scrivi a {email}.",
       "rate_limited": "Troppe richieste di fatturazione in poco tempo. Attendi qualche minuto e riprova."
     }

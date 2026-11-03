@@ -485,9 +485,16 @@ takes no input: the caller's newest `subscriptions` row and `profiles.stripe_cus
 other account routes. `resumeSubscription()` (`lib/stripe.ts`) re-reads the subscription, requires
 `subscription.customer` to be the caller's customer (else 404 `no_subscription`), an entitled status
 (else 409 `not_entitled`), `cancel_at_period_end` or `cancel_at` set (else 409 `not_canceling`), and
+refuses (409 `schedule_attached`) a subscription with a schedule attached (the portal's cancel
+releases schedules, so this is a Dashboard-made one, which may manage `cancel_at` itself), and
 refuses (409 `ends_early`) a `cancel_at` that cut the period short (a date set in the Dashboard
-moves `current_period_end` to it; clearing it would hand the cut time back unpaid; the period is
-compared with its price's interval counted from `current_period_start`). The only write is
+moves `current_period_end` to it; clearing it would hand the cut time back unpaid). The natural
+period end is counted the way Stripe counts it: calendar months or years from
+`current_period_start`, on the day of month of `billing_cycle_anchor`, clamped to the month's length
+(an anchor on the 31st: Feb 28 → Mar 31). Verified on test clocks on 2026-11-02 in both billing
+modes: that period, a `cancel_at` at Mar 31 resumed, a cut to Mar 30 refused, and the cut left
+`billing_cycle_anchor` unchanged. An anchor later than the period start (a custom first period,
+which our Checkout never sets) is ignored and the start's own day used, which can only refuse more. The only write is
 `subscriptions.update(id, { cancel_at: '', proration_behavior: 'none' })`: an empty `cancel_at`
 clears both `cancel_at` and `cancel_at_period_end`, in classic and flexible mode. Stripe refuses both
 parameters in one request (400 "Received both cancel_at_period_end and cancel_at parameters. Please
@@ -501,6 +508,15 @@ click reads first and gets `not_canceling`. A canceled subscription refuses any 
 `{ ok: true, renewal? }` (date and the previewed amount, as "Keep my current plan" does); 401; 403
 `forbidden_origin`; 429 `rate_limited`; 400 `no_billing_account`; 500 `resume_failed`. The webhook
 records the result. The portal's own "Renew" does the same for a customer who goes there instead.
+
+Known limits, by design:
+- A `cancel_at` after the current period end (set in the Dashboard; the portal never does) is stored
+  as `cancel_at_period_end = false`, since the plan renews at least once. The pages then show the
+  plan as renewing and offer plan changes, which the switch routes still refuse with 409
+  `cancel_scheduled` (the server reads `cancel_at` from Stripe).
+- After a `not_canceling` answer (the plan was kept elsewhere, such as the portal or another tab)
+  the page refreshes, but the row only changes when the webhook delivers that update, so the
+  "Your plan ends on" notice can show until then.
 
 **Cancelling while a plan change is scheduled.** The portal's home page shows no cancel control for
 a subscription with a pending schedule. The account page reads the pending change from Stripe

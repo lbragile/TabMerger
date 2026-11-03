@@ -99,6 +99,7 @@
       "not_entitled": "Ten plan już się zakończył. Wybierz plan na stronie cennika.",
       "not_canceling": "Twój plan nie jest już ustawiony do zakończenia. Odśwież stronę, aby zobaczyć swój plan.",
       "ends_early": "Datę zakończenia tego planu ustalił nasz zespół wsparcia. Napisz na {email}, aby go zachować.",
+      "schedule_attached": "Nasz zespół wsparcia ustawił zmiany w tym planie. Napisz na {email}, aby go zachować.",
       "resume_failed": "Nie udało się zachować planu. Spróbuj ponownie lub napisz na {email}.",
       "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
     }

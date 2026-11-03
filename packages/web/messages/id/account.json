@@ -99,6 +99,7 @@
       "not_entitled": "Paket ini sudah berakhir. Pilih paket di halaman harga.",
       "not_canceling": "Paket Anda tidak lagi dijadwalkan berakhir. Muat ulang halaman untuk melihat paket Anda.",
       "ends_early": "Tanggal berakhir paket ini ditetapkan oleh tim dukungan kami. Kirim email ke {email} untuk mempertahankannya.",
+      "schedule_attached": "Paket ini memiliki perubahan yang diatur oleh tim dukungan kami. Kirim email ke {email} untuk mempertahankannya.",
       "resume_failed": "Tidak dapat mempertahankan paket Anda. Silakan coba lagi, atau kirim email ke {email}.",
       "rate_limited": "Terlalu banyak permintaan penagihan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi."
     }
