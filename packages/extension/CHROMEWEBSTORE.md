@@ -1,15 +1,16 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-26
+> Last Updated: 2026-11-04
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
 > pulled from `wxt.config.ts`; keep this file in sync with that file, not the other way around.
 >
 > **State of the stable item:** v3 has been live since `3.1.0` (2026-10-07); the live build is
-> `3.7.0` and `3.9.0` is waiting for approval in the publish workflow. Each stable release from
-> `main` goes to the store only when its `store-stable` jobs are approved, so not every tag is
-> uploaded (see [Version History](#version-history)). The BETA item is still on `3.3.2-beta.1`.
+> `3.10.0`, and `3.11.0` (the first release with AI on) was submitted on 2026-11-04 and is in
+> review. Each stable release from `main` goes to the store only when its `store-stable` jobs are
+> approved, so not every tag is uploaded (see [Version History](#version-history)). The BETA item
+> is still on `3.3.2-beta.1`.
 
 ## Owner to confirm in the dashboard
 
@@ -17,7 +18,8 @@ Everything else in this file was derived from the repository. These items cannot
 
 - [ ] **Publisher / developer display name** and the **public contact email** shown on the listing
       (the email is verified in the dashboard; do not commit it here).
-- [x] **Live version** on the stable item: `3.7.0` (confirmed 2026-10-21).
+- [x] **Live version** on the stable item: `3.10.0` (read from the public listing 2026-11-04;
+      `3.11.0` in review).
 - [ ] **Regions** (stable and BETA) as currently set.
 - [ ] **Screenshots and tiles:** upload the five screenshots and the two promo tiles listed under
       [Graphics & Assets](#graphics--assets) (regenerated 2026-10-06).
@@ -67,7 +69,7 @@ TabMerger
 <!-- The dashboard summary is read from the manifest `description`, so change it there, not only
      here. BETA builds use their own description string and are unaffected. -->
 
-**Detailed Description** [REQUIRED] (about 3,100 characters, limit 16,000)
+**Detailed Description** [REQUIRED] (about 4,300 characters, limit 16,000)
 
 TabMerger saves the tabs you have open into named, color-coded groups, so you can close them,
 clear your browser, and bring them back later: a single tab, one window, or a whole group.
@@ -108,7 +110,7 @@ WHAT YOU CAN DO
   Imported files are checked entry by entry: links that run script instead of opening a page
   (bookmarklets, for example) are left out, and the import tells you how many were skipped.
 
-FREE AND PRO
+FREE, PRO AND PRO AI
 TabMerger works fully without an account. The free plan keeps everything in your browser and
 allows up to 5 groups, 50 saved tabs, 3 URL rules and 3 saved sessions.
 
@@ -121,6 +123,19 @@ encryption; you can also have each backup saved as a file in your Downloads fold
 Pro features need a
 signed-in account; prices and plans are on the website.
 
+Pro AI is a paid plan that includes everything in Pro and adds AI help for organizing your tabs:
+- Auto-group: sort loose tabs into suggested groups.
+- Name suggestions for groups and windows.
+- Describe a group or window in a short note.
+- Session suggestions: proposes sessions worth saving from your groups.
+- Workspace cleanup: suggests merges, renames, archives and a new order, which you review before
+  anything changes.
+- Tab previews with a short AI summary.
+You choose the AI model in Settings. You can also choose who handles setup: TabMerger (2,500 AI
+credits a month, with more available on the website) or you, with your own API key from
+Anthropic, OpenAI or Google Gemini, which bills you directly for what you use. Your own key is
+kept only in the extension on your device.
+
 PRIVACY
 - Your saved tabs stay in your browser's local storage unless you sign in to a Pro account and
   turn on sync.
@@ -131,6 +146,10 @@ PRIVACY
   website.
 - Page images in tab previews are off by default. When you turn them on, hovering a tab sends
   that tab's address to TabMerger's preview service to fetch an image.
+- AI features (Pro AI only): when you use one, and once a day for session suggestions (which you
+  can turn off in Settings), the titles and addresses of the tabs involved are sent through
+  TabMerger's server to the AI provider (Anthropic when TabMerger handles setup, or the provider
+  of your own key). Page content is never sent. See the privacy policy for details.
 - The extension sends a small number of anonymous usage events (for example "group created",
   without any URLs or titles) to help us understand which features are used. See the privacy
   policy for the full list of what is collected and why.
@@ -142,8 +161,10 @@ Questions or feedback? Use the support links on this listing.
 
 <!-- Verified against the code on 2026-10-06: shortcuts and context menu in background.ts and
      wxt.config.ts `commands`; limits from FREE_TIER_LIMITS; sync/sessions/share gating from
-     useEntitlements + migration 019; AI is not mentioned in the copy below: it was written while the AI flags were off. AI is on from
-     the first release built with the flags in publish.yml, so review this copy then. -->
+     useEntitlements + migration 019. The Pro AI paragraph and the AI privacy bullet were added
+     on 2026-11-04 for 3.11.0, the first release with the AI flags on in publish.yml; features
+     match the pricing card, and the once-a-day session suggestion is the only AI request the
+     user does not start. This text was pasted into the stable listing on 2026-11-04. -->
 
 **Category** [REQUIRED]
 Productivity
@@ -341,7 +362,7 @@ mapping of the same facts, verified against that page and the extension's own co
 
 **Does the extension collect user data?** Yes
 
-Derived from the code on 2026-10-06. This is exactly what to tick on the dashboard's
+Derived from the code on 2026-10-06; the AI parts added for 3.11.0 on 2026-11-04. This is exactly what to tick on the dashboard's
 **Privacy practices** tab. Fresh install with no account sends nothing except the anonymous
 usage events and the favicon lookups listed below.
 
@@ -350,10 +371,10 @@ usage events and the favicon lookups listed below.
 | Personally identifiable information | **Yes** | Email address, only when the user signs in (account, linking a subscription). Sent to Supabase Auth. | `src/hooks/useAuth.ts`, `src/components/Modal/Auth.tsx`, `src/lib/supabase.ts` |
 | Health information | No | Never read or sent. | — |
 | Financial and payment information | No | Payment happens on the website through Stripe; the extension never sees card or billing details. It only reads the user's own plan and status (`tier`, `status`) from Supabase to unlock Pro. | `src/hooks/useEntitlements.ts` |
-| Authentication information | **Yes** | Supabase session tokens (sign-in with email and password, magic link or Google). Also an encryption-key record: the data key wrapped (encrypted) by the user's passphrase, plus a salt. The passphrase itself is never sent. | `src/hooks/useAuth.ts`, `src/lib/googleOAuthFlow.ts`, `src/lib/encryptionKey.ts` |
+| Authentication information | **Yes** | Supabase session tokens (sign-in with email and password, magic link or Google). Also an encryption-key record: the data key wrapped (encrypted) by the user's passphrase, plus a salt. The passphrase itself is never sent. Pro AI users who use their own AI key: that Anthropic, OpenAI or Gemini API key, sent with each AI request to TabMerger's server, which passes it to that provider and never stores or logs it (the key itself is kept only in `chrome.storage.local`). | `src/hooks/useAuth.ts`, `src/lib/googleOAuthFlow.ts`, `src/lib/encryptionKey.ts`, `src/lib/byokKey.ts` |
 | Personal communications | No | Never read or sent. | — |
 | Location | No | Never read or sent. | — |
-| Web history | **Yes** | Not browsing history: only tabs the user saves, plus the open-tab list that stays on the device. What leaves the device: (a) Pro users who turn on sync upload saved tab URLs and titles, end-to-end encrypted before upload; (b) the site's origin (for example `https://example.com`, no path) goes to Google's favicon service to fetch an icon when the browser did not supply one; (c) only if the user turns on "Show page images in previews" (off by default), the hovered tab's address goes to TabMerger's preview service, not linked to an account, not logged, not stored. | `src/lib/syncEngine.ts`, `src/lib/utils.ts` (`getFaviconUrl`), `src/hooks/useCurrentTabs.ts`, `src/lib/tabAccess.ts`, `src/components/Windows/TabPreview.tsx` |
+| Web history | **Yes** | Not browsing history: only tabs the user saves, plus the open-tab list that stays on the device. What leaves the device: (a) Pro users who turn on sync upload saved tab URLs and titles, end-to-end encrypted before upload; (b) the site's origin (for example `https://example.com`, no path) goes to Google's favicon service to fetch an icon when the browser did not supply one; (c) only if the user turns on "Show page images in previews" (off by default), the hovered tab's address goes to TabMerger's preview service, not linked to an account, not logged, not stored; (d) Pro AI only (from 3.11.0): for an AI action the user starts, and the once-a-day session suggestion, the titles and URLs of the tabs involved go to TabMerger's server (`/api/ai/*`), which passes them to one AI provider (Anthropic when TabMerger handles setup, or the provider of the user's own key). | `src/lib/syncEngine.ts`, `src/lib/utils.ts` (`getFaviconUrl`), `src/hooks/useCurrentTabs.ts`, `src/lib/tabAccess.ts`, `src/components/Windows/TabPreview.tsx`, `src/hooks/useAI.ts` |
 | User activity | **Yes** | Anonymous product-usage events (names such as `group_created`, `tab_saved`, `search_used`, `upgrade_clicked`, with counts and labels like `source` or `limit`; never URLs, titles or names) tagged with a random install ID kept in `chrome.storage.local`, not the account. Sent to TabMerger's own server (`/api/track`), which forwards to Google Analytics 4 when the production server has its analytics keys set (server-side setting, not visible in this repo). | `src/lib/analytics.ts` (`trackEvent`), `packages/web/app/api/track/route.ts` |
 | Website content | No | The extension never reads page text, images, media or links from any page. (The opt-in preview image is fetched by TabMerger's server and returned; its input is the address, covered under Web history.) | `src/lib/tabAccess.ts` |
 
@@ -366,14 +387,15 @@ sign-in handoff, sync request) only from the TabMerger website: `tabmerger.verce
 `preview.tabmerger.com` for the BETA build, while the site moves to its own domain. Everything
 the extension itself sends (API calls, `/api/track`, links, the sign-in redirect) still goes to
 the first of each pair, `VITE_WEB_APP_URL`; the second site only adds where those messages may
-come from, so no data-use answer changes. AI features are on from the first release built with
-`VITE_AI_ENABLED` and `VITE_AI_BYOK_ENABLED` set to `"true"` (the `*_AI_ENABLED` and
-`*_AI_BYOK_ENABLED` values in `publish.yml`'s top-level `env:`). **Before submitting that
-release, change the Dashboard's data-use answers:** the extension then sends open-tab titles and
-URLs to TabMerger's server, which passes them to an AI provider (Web history), and, for users of
-the own-key option, their own Anthropic, OpenAI or Gemini API key (Authentication information).
-See the AI note under Technical privacy notes. Releases shipped before that had AI off and sent
-nothing to any AI provider.
+come from, so no data-use answer changes. AI features are on from `3.11.0` (2026-11-04), the
+first release built with `VITE_AI_ENABLED` and `VITE_AI_BYOK_ENABLED` set to `"true"` (the
+`*_AI_ENABLED` and `*_AI_BYOK_ENABLED` values in `publish.yml`'s top-level `env:`). The
+extension then sends open-tab titles and URLs to TabMerger's server, which passes them to an AI
+provider (Web history, item d), and, for users of the own-key option, their own Anthropic,
+OpenAI or Gemini API key (Authentication information). Both categories were already ticked, so
+the Dashboard's checkboxes did not change; the listing description gained the AI paragraph and
+privacy bullet. See the AI note under Technical privacy notes. Releases before `3.11.0` had AI
+off and sent nothing to any AI provider.
 
 **Analytics and error reporting: which builds are active.** `.github/workflows/publish.yml`
 sets only `VITE_WEB_APP_URL`, `VITE_EXTRA_WEB_APP_URLS` (a second trusted site, see "Which
@@ -396,11 +418,12 @@ every store build:
 All three certifications can be ticked, because they are true as built:
 
 - [x] I do not sell or transfer user data to third parties, outside of the approved use cases.
-      (Supabase, Stripe's website checkout and the analytics provider act as processors for
-      TabMerger; nothing is sold.)
+      (Supabase, Stripe's website checkout, the analytics provider and, for Pro AI, the AI
+      provider (Anthropic, or the provider of the user's own key) act as processors for the
+      feature the user uses; nothing is sold.)
 - [x] I do not use or transfer user data for purposes that are unrelated to my item's single
-      purpose. (Data is used only to save, sync and restore tabs, to run accounts and
-      subscriptions, and for anonymous usage statistics.)
+      purpose. (Data is used only to save, sync, restore and, with Pro AI, organize tabs, to run
+      accounts and subscriptions, and for anonymous usage statistics.)
 - [x] I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
 **Other dashboard questions:** "Remote code": No. "Data encrypted in transit": yes (HTTPS only).
@@ -465,15 +488,15 @@ All three certifications can be ticked, because they are true as built:
   deleted), and has a "Show in folder" button that opens the system file manager there. Only the
   download id and time of that last file are kept, on the device (never synced, removed with the
   account's local data); the path is read from the browser each time and shown as text.
-- AI features (Pro AI tier) are **on** from the first release built with the flags in
-  `publish.yml` (earlier releases had them off and sent nothing to any AI provider). Two flags
+- AI features (Pro AI tier) are **on** from `3.11.0` (2026-11-04), the first release built with
+  the flags in `publish.yml` (earlier releases had them off and sent nothing to any AI provider). Two flags
   in the extension and the web app: `VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` (Pro AI where
   TabMerger handles setup; also turns on the own-key option) and
   `VITE_AI_BYOK_ENABLED`/`NEXT_PUBLIC_AI_BYOK_ENABLED` (the own-key option only). The stable
   listing builds have both on; the BETA listing builds have only the own-key flag on. The web app's
-  flags must be on first, or the extension gets 503 `ai_disabled`. The Dashboard's data-use
-  answers must be changed before submitting that release (open-tab titles and URLs = Web
-  history; the own-key API key = Authentication information). What they send: for an AI action the user starts (or the once-a-day session suggestion), the titles
+  flags must be on first, or the extension gets 503 `ai_disabled`. Data-use answers: open-tab
+  titles and URLs = Web history; the own-key API key = Authentication information (both already
+  ticked before `3.11.0`). What they send: for an AI action the user starts (or the once-a-day session suggestion), the titles
   and URLs of the tabs involved (for Describe group, also the group's name; for Describe window,
   also the window's name; the reply becomes that group's or window's note, which syncs encrypted
   like any note; Name window sends that window's tabs) go to TabMerger's own server (`VITE_WEB_APP_URL/api/ai/*`),
@@ -631,7 +654,7 @@ with the real semver string carried in `version_name`.
 | Stable | `3.1.1` | — | `v3.1.1` | 2026-10-09 | Superseded |
 | Stable | `3.1.2` | — | `v3.1.2` | 2026-10-10 | Superseded |
 | Stable | `3.1.3` | — | `v3.1.3` | 2026-10-15 | Not submitted (publish run cancelled) |
-| Stable | — | — | unreleased | — | Draft, behind the AI flag (off, so nothing changes for users yet): Pro AI gets a choice of model in Settings → AI (Auto, Claude Haiku/Sonnet/Opus 5.5 when TabMerger handles setup, each with its approximate credits per action; with an own key, Auto plus that provider's three models, each with a relative cost level and no dollar figures), and a "Use your own AI provider" option where the user adds their own API key (Anthropic, OpenAI or Gemini, one at a time) whose key is kept on the device and sent only with AI requests to TabMerger's server, which forwards the request to that provider. The own-key option has its own flag (`VITE_AI_BYOK_ENABLED`) so it can launch before the option where TabMerger handles setup. In Settings → AI the own-key user picks the provider first (Anthropic, OpenAI or Gemini); only then do that provider's key field, setup links ("How to create a key" and its API keys page) and models show, and a key of another provider is refused before it is sent. Switching provider keeps the saved key in use until a key for the new one is saved. Credits now measure AI cost. The header's AI menu is grouped by what each action works on (open tabs: Auto-group; the selected group, named in its label: Name group and the new Describe group; all groups: Organize), with the credits left this month (or "Your own key") and an "AI settings" link at the bottom. New Describe group (header AI menu and the group's right-click menu, switchable in Settings → AI): sends the selected group's name and its tabs' titles and URLs to TabMerger's server, like Name group, and writes the 1-3 sentence reply as the group's note (an existing note is never overwritten without asking: Replace note, Add below or Cancel). The note syncs end-to-end encrypted like any note edit. Name group now offers up to three suggested names to pick from ("Name this group": the current name, the suggestions with the first preselected, or a name typed by the user; Rename applies it as one undo step), from both the header AI menu and the group's right-click menu; the same tab titles and URLs are sent as before. New window AI actions in a saved window's ⋯ menu (Pro AI only, like the group's right-click menu, and not on Now Open windows): "AI rename" sends that window's tabs' titles and URLs and opens the same picker, titled "Name this window" (Rename is one undo step), and "Describe with AI" sends the window's name and its tabs' titles and URLs and writes the reply as the window's note (an existing note gets the same Replace note / Add below / Cancel review). Both follow the existing Settings → AI switches, now labelled "Name groups and windows" and "Describe groups and windows". Free and Pro users see the AI button as a preview: the sparkle in full colour with a small "Pro AI" tag, opening the same menu with every action locked and an "Upgrade to Pro AI" button at the bottom (it opens the existing upgrade prompt; nothing is sent to an AI provider). A new local setting, "Show AI button" in Settings, General (on by default, every plan), hides the button. When TabMerger handles setup, Settings → AI has a "Buy more credits" link next to the credits left this month; it opens the account page on the website at its AI credits section in a new tab (buying happens there) and shows as a button once less than 10% of the month's credits are left. The out-of-credits prompt's "Get more" opens the same section. No manifest change, no new permission. When either flag is turned on: refresh any screenshot that shows the popup header (the AI button now shows for every plan, tagged "Pro AI" for free and Pro) and update the long description, the Privacy section above (Authentication information and Web history rows) and the privacy policy's Pro AI row, and refresh the Settings screenshot (the AI settings screen now opens on the provider picker; capture it with a provider picked so the key field, links and models show) |
+| Stable | `3.11.0` | — | `v3.11.0` | 2026-11-04 | Submitted (Chrome and Edge in review; live on Firefox AMO). The first release with both AI flags on: Pro AI gets a choice of model in Settings → AI (Auto, Claude Haiku/Sonnet/Opus 5.5 when TabMerger handles setup, each with its approximate credits per action; with an own key, Auto plus that provider's three models, each with a relative cost level and no dollar figures), and a "Use your own AI provider" option where the user adds their own API key (Anthropic, OpenAI or Gemini, one at a time) whose key is kept on the device and sent only with AI requests to TabMerger's server, which forwards the request to that provider. The own-key option has its own flag (`VITE_AI_BYOK_ENABLED`) so it can launch before the option where TabMerger handles setup. In Settings → AI the own-key user picks the provider first (Anthropic, OpenAI or Gemini); only then do that provider's key field, setup links ("How to create a key" and its API keys page) and models show, and a key of another provider is refused before it is sent. Switching provider keeps the saved key in use until a key for the new one is saved. Credits now measure AI cost. The header's AI menu is grouped by what each action works on (open tabs: Auto-group; the selected group, named in its label: Name group and the new Describe group; all groups: Organize), with the credits left this month (or "Your own key") and an "AI settings" link at the bottom. New Describe group (header AI menu and the group's right-click menu, switchable in Settings → AI): sends the selected group's name and its tabs' titles and URLs to TabMerger's server, like Name group, and writes the 1-3 sentence reply as the group's note (an existing note is never overwritten without asking: Replace note, Add below or Cancel). The note syncs end-to-end encrypted like any note edit. Name group now offers up to three suggested names to pick from ("Name this group": the current name, the suggestions with the first preselected, or a name typed by the user; Rename applies it as one undo step), from both the header AI menu and the group's right-click menu; the same tab titles and URLs are sent as before. New window AI actions in a saved window's ⋯ menu (Pro AI only, like the group's right-click menu, and not on Now Open windows): "AI rename" sends that window's tabs' titles and URLs and opens the same picker, titled "Name this window" (Rename is one undo step), and "Describe with AI" sends the window's name and its tabs' titles and URLs and writes the reply as the window's note (an existing note gets the same Replace note / Add below / Cancel review). Both follow the existing Settings → AI switches, now labelled "Name groups and windows" and "Describe groups and windows". Free and Pro users see the AI button as a preview: the sparkle in full colour with a small "Pro AI" tag, opening the same menu with every action locked and an "Upgrade to Pro AI" button at the bottom (it opens the existing upgrade prompt; nothing is sent to an AI provider). A new local setting, "Show AI button" in Settings, General (on by default, every plan), hides the button. When TabMerger handles setup, Settings → AI has a "Buy more credits" link next to the credits left this month; it opens the account page on the website at its AI credits section in a new tab (buying happens there) and shows as a button once less than 10% of the month's credits are left. The out-of-credits prompt's "Get more" opens the same section. No manifest change, no new permission. Done with this release (2026-11-04): the long description (Pro AI paragraph and AI privacy bullet), the Privacy section above (Authentication information and Web history rows; both categories were already ticked) and the privacy policy's Pro AI row. Still to do: refresh any screenshot that shows the popup header (the AI button now shows for every plan, tagged "Pro AI" for free and Pro) and the Settings screenshot (the AI settings screen now opens on the provider picker; capture it with a provider picked so the key field, links and models show) |
 | Stable | `3.2.0` | — | `v3.2.0` | 2026-10-15 | Superseded |
 | Stable | `3.2.1` | — | `v3.2.1` | 2026-10-16 | Superseded |
 | Stable | `3.3.0` | — | `v3.3.0` | 2026-10-16 | Superseded |
@@ -639,9 +662,10 @@ with the real semver string carried in `version_name`.
 | Stable | `3.3.2` | — | `v3.3.2` | 2026-10-16 | Superseded |
 | Stable | `3.3.3` | — | `v3.3.3` | 2026-10-17 | Superseded |
 | Stable | `3.4.0`–`3.6.0` | — | `v3.4.0`, `v3.5.0`, `v3.6.0` | 2026-10-18 | Not submitted (publish runs cancelled); their changes reached the store in `3.7.0` |
-| Stable | `3.7.0` | — | `v3.7.0` | 2026-10-18 | **Published: the live stable build** (Chrome and Firefox; Edge still in review) |
+| Stable | `3.7.0` | — | `v3.7.0` | 2026-10-18 | Superseded |
 | Stable | `3.7.1`, `3.8.0` | — | `v3.7.1`, `v3.8.0` | 2026-10-21 | Not submitted (no user-facing change; superseded by `3.9.0`) |
-| Stable | `3.9.0` | — | `v3.9.0` | 2026-10-21 | Awaiting approval in the publish workflow (`store-stable`) |
+| Stable | `3.9.0`, `3.9.1` | — | `v3.9.0`, `v3.9.1` | 2026-10-21 | Superseded (submitted to Chrome and Firefox; the Edge upload failed both times) |
+| Stable | `3.10.0` | — | `v3.10.0` | 2026-10-22 | **Published: the live stable build** on Chrome and Edge (read from the public listings 2026-11-04); superseded by `3.11.0` on Firefox AMO |
 | BETA | `3.1.0.1` | `3.1.0-beta.1` | `v3.1.0-beta.1` | 2026-09-20 | Superseded |
 | BETA | `3.1.0.2` | `3.1.0-beta.2` | `v3.1.0-beta.2` | 2026-09-21 | Superseded |
 | BETA | `3.1.0.3` | `3.1.0-beta.3` | `v3.1.0-beta.3` | 2026-09-23 | Superseded |
@@ -670,8 +694,8 @@ with the real semver string carried in `version_name`.
 | Stable | `3.7.0` | — | `v3.6.0` | 2026-10-18 | Published in stable `3.7.0` (first in `3.6.0`, which wasn't submitted). Stable only so far: "update available" prompt. When the browser has downloaded an update it cannot apply while TabMerger runs (`runtime.onUpdateAvailable`), the popup shows a dismissible banner, "Version X is ready", with "Restart to update" (`runtime.reload()`, which closes the popup). Settings → General gains "Check for updates" (`runtime.requestUpdateCheck()`). No manifest change, no new permission, no data sent anywhere: the pending version is kept in `chrome.storage.local`. Same draft: a daily anonymous `extension_heartbeat` event (on the existing `alarms` permission; justification above updated). Screenshots: none show the banner; optional new one |
 | Stable | `3.7.0` | — | `v3.4.0` | 2026-10-18 | Published in stable `3.7.0` (first in `3.4.0`, which wasn't submitted). Stable only so far: the popup, the extension pages, the right-click menu and notifications are translated into German, Spanish, French, Japanese, Brazilian Portuguese and Simplified Chinese, following the browser's UI language (`chrome.i18n.getUILanguage()`, English otherwise) unless a language is picked in the header's language menu or Settings, General (stored on the device only, never synced). No manifest change and no new permission, so no re-approval prompt; the manifest name and description and this listing stay English. No new data leaves the device. Screenshots: the popup header gained a language button (globe icon and a two-letter code) next to the "?" button, so the ones showing the header need refreshing; localized store listings and screenshots are optional |
 | Stable | `3.7.0` | — | `v3.7.0` | 2026-10-18 | Published in stable `3.7.0`. Stable only so far: the TabMerger logo in the popup header is now a link to the TabMerger website (`tabmerger.com` stable, `preview.tabmerger.com` BETA), opened in a new tab in the popup's language (`/en`, `/de`, `/fr`, …). No manifest change, no new permission, no data sent (a plain link with no tracking parameters). Privacy tab: no new tick. Screenshots: no visual change except a focus ring and tooltip on hover/focus; none need refreshing |
-| Stable | `3.9.0` | — | `v3.9.0` | 2026-10-21 | Awaiting approval: eight more languages in the popup, the extension pages, the right-click menu and notifications (Italian, Russian, Korean, Turkish, Indonesian, Polish, Vietnamese, Hindi; fifteen in all), the same language rules as above. The package stays under its size budget because the background worker now bundles only the strings it uses. Same release: the anonymous install and update events also carry the extension version, the release channel and the browser name (already covered by "User activity"; no new tick), and test builds no longer send analytics or error reports. No manifest change, no new permission. The manifest name and description and this listing stay English. Screenshots: none affected |
-| Stable | — | — | next release | — | Draft: three more languages, Arabic, Hebrew and Persian (eighteen in all), with right-to-left layouts: in those languages the popup and the extension pages mirror (sidebar on the right, menus, tour card, toasts, Left/Right arrow keys), while tab titles, group names and URLs keep their own direction. The language menu in the header and Settings, General → Language now have a search field (by name or code such as "de"), a scrolling list, each language's name in the current language, and a ¶← mark on right-to-left languages. The old Hebrew code `iw` stored by an earlier choice is read as `he`. No manifest change, no new permission, no new data leaves the device. The manifest name and description and this listing stay English; the long description's language bullet is updated. Screenshots: the English popup is pixel-identical, so none need refreshing; a right-to-left screenshot is optional |
+| Stable | `3.10.0` | — | `v3.9.0` | 2026-10-21 | Published in stable `3.10.0` (Chrome and Firefox also received `3.9.0`): eight more languages in the popup, the extension pages, the right-click menu and notifications (Italian, Russian, Korean, Turkish, Indonesian, Polish, Vietnamese, Hindi; fifteen in all), the same language rules as above. The package stays under its size budget because the background worker now bundles only the strings it uses. Same release: the anonymous install and update events also carry the extension version, the release channel and the browser name (already covered by "User activity"; no new tick), and test builds no longer send analytics or error reports. No manifest change, no new permission. The manifest name and description and this listing stay English. Screenshots: none affected |
+| Stable | `3.10.0` | — | `v3.10.0` | 2026-10-22 | Published in stable `3.10.0`: three more languages, Arabic, Hebrew and Persian (eighteen in all), with right-to-left layouts: in those languages the popup and the extension pages mirror (sidebar on the right, menus, tour card, toasts, Left/Right arrow keys), while tab titles, group names and URLs keep their own direction. The language menu in the header and Settings, General → Language now have a search field (by name or code such as "de"), a scrolling list, each language's name in the current language, and a ¶← mark on right-to-left languages. The old Hebrew code `iw` stored by an earlier choice is read as `he`. No manifest change, no new permission, no new data leaves the device. The manifest name and description and this listing stay English; the long description's language bullet is updated. Screenshots: the English popup is pixel-identical, so none need refreshing; a right-to-left screenshot is optional |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
 Betas 1–3 predate the store-version offset, so their manifest version is the plain
