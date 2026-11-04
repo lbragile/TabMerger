@@ -89,7 +89,7 @@
     "@typescript-eslint/parser": "^8.64.0",
     "@vercel/blob": "^2.8.0",
     "@vitejs/plugin-react": "^5.2.0",
-    "@vitest/coverage-v8": "4.1.10",
+    "@vitest/coverage-v8": "4.1.12",
     "@wxt-dev/module-react": "^1.2.2",
     "eslint": "^9.39.5",
     "eslint-plugin-react": "^7.37.5",
@@ -100,7 +100,7 @@
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.10",
+    "vitest": "^4.1.12",
     "wxt": "^0.20.27"
   },
   "msw": {
