@@ -1,3 +1,10 @@
+# [3.11.0](https://github.com/lbragile/TabMerger/compare/v3.10.0...v3.11.0) (2026-11-04)
+
+
+### Features
+
+* meter ai by credits, sell own-key pro ai and defer plan downgrades ([#101](https://github.com/lbragile/TabMerger/issues/101)) ([feebdab](https://github.com/lbragile/TabMerger/commit/feebdab085d96aa8728eebd7417b2d0df2c192a1))
+
 # [3.10.0](https://github.com/lbragile/TabMerger/compare/v3.9.1...v3.10.0) (2026-10-22)
 
 
