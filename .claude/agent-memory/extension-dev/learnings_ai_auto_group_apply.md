@@ -38,7 +38,7 @@ not just a "toast the wrong number" fix), and `Header` uses the returned count f
 with a distinct `toast.info("No matching tabs found for AI's suggestion")` on the
 zero-applied path instead of a false-positive success.
 
-**Dev-mode root cause**: `src/mocks/handlers.ts`'s `group-tabs` fixture was a static object
+**(Historical: the client fixtures were removed on 2026-10-24; dev mocking now lives server-side.)** **Dev-mode root cause**: `src/mocks/handlers.ts`'s `group-tabs` fixture was a static object
 with hardcoded `tabIds: [1, 2]`, which will essentially never match a real Now Open tab's
 Chrome tab id — so Auto-group silently no-op'd in dev mode 100% of the time. Fixed by making
 `aiFixtures[path]` optionally a function of the parsed request body; `group-tabs`'s fixture
@@ -46,3 +46,14 @@ now echoes back up to 2 real ids from `body.tabs`. `devFetchMock.ts` checks
 `typeof fixture === 'function'` and parses `init.body` before calling it. If you add more
 route-shaped mocks that need to reference request data, follow this same function-fixture
 pattern rather than hardcoding ids/values that must line up with caller state.
+
+**Update 2026-10-25 (merge into same-named groups):** the transform moved to `src/lib/aiAutoGroup.ts`
+(`applyAiSuggestionsToState`, `findAiMergeTarget`, `clampAiSuggestionsToSlots`). A suggestion whose
+name matches a visible saved group (trimmed, case-insensitive via `isSameGroupName`; not permanent,
+archived or tour-demo; first in `getSidebarDisplayOrder` wins) adds its tabs to that group as ONE new
+window, skipping URLs the group already holds; same-named suggestions in one reply share one target.
+`useApplyAIGroups` now returns `{ createdGroups, mergedGroups, appliedTabs }` (no `appliedGroups`).
+Only `createdGroups` feeds `assertWithinFreeLimits` and AiMenu's slot clamp, so a merge never uses a
+Free-tier slot. Keep the clamp and the apply on the same matcher, or the clamp drops merges the apply
+would have accepted. Toast keys: `aiCreated` + description `aiAlsoAdded`, or `aiAddedTo` alone.
+The model is not told the existing group names (that would be a server change to group-tabs).

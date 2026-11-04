@@ -29,10 +29,13 @@ export function Footer() {
                         {t("tagline")}
                     </p>
                 </div>
+                {/* grid-cols-2 columns are minmax(0, 1fr), about 120px each on a 320px phone: the link
+                    lists hyphenate so long translated labels ("Datenschutzerklärung") stay inside
+                    their column instead of spilling past it. */}
                 <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
                     <div className="flex flex-col gap-2">
                         <h2 className="text-sm font-semibold">{t("product")}</h2>
-                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground hyphens-auto">
                             <li>
                                 <Link
                                     href="/features"
@@ -69,7 +72,7 @@ export function Footer() {
                     </div>
                     <div className="flex flex-col gap-2">
                         <h2 className="text-sm font-semibold">{t("account")}</h2>
-                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground hyphens-auto">
                             <li>
                                 <NextLink
                                     href="/auth/sign-in"
@@ -90,7 +93,7 @@ export function Footer() {
                     </div>
                     <div className="flex flex-col gap-2">
                         <h2 className="text-sm font-semibold">{t("legal")}</h2>
-                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground hyphens-auto">
                             <li>
                                 <Link
                                     href="/privacy"
@@ -125,7 +128,7 @@ export function Footer() {
                     </div>
                     <div className="flex flex-col gap-2">
                         <h2 className="text-sm font-semibold">{t("public")}</h2>
-                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground hyphens-auto">
                             <li>
                                 <Link
                                     href="/share/demo"

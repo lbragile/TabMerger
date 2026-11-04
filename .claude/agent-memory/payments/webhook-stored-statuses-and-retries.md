@@ -31,8 +31,8 @@ Rules the code follows (see `docs/PAYMENTS.md`: "What is written is Stripe's cur
   `incomplete_expired`, a future one) is written as `canceled` / `free`. A later event that finds
   a stored status writes the plan back.
 - **200 means "recorded, or nothing to record"; 500 means "could not be recorded this time".**
-  Failed database calls and failed Stripe reads throw a `WebhookRetryError` to the handler's outer
-  catch, whose message is the whole log line. An event that matches no row or user, an unknown
+  Failed database calls and failed Stripe reads throw a `SubscriptionSyncError` (was
+  `WebhookRetryError`) to the handler's outer catch, whose message is the whole log line. An event that matches no row or user, an unknown
   price, and a duplicate credit pack (23505) stay 200.
 - Decision: adding a status to the CHECK list is a migration plus one entry in the shared list;
   the entitled list (`ENTITLED_SUBSCRIPTION_STATUSES`) is separate and is not touched by that.
@@ -50,8 +50,12 @@ Things that are easy to get wrong:
 - **Log a database error's `code` and `message`, never the object.** Its `details` can quote the
   failing row ("Failing row contains (...)") and key values. The log line format is
   `Stripe webhook: <event type> <step> failed (subscription <id>, code <code>)`.
-- **A Next.js `route.ts` may only export route handlers and config**, so helpers like
-  `toStoredState()` stay private and are tested through `POST`.
+- **A Next.js `route.ts` may only export route handlers and config.** The shared steps
+  (`retrieveCurrentSubscription`, `toStoredState`, `updateSubscriptionById`, `databaseError`,
+  `stripeRetrieveError`, `logUnmatchedEvent`) live in `lib/subscriptionSync.ts` since 2026-10-24,
+  so the plan switch can reuse them; the rest of the handler stays private in the route and is
+  tested through `POST`. Their log lines start with `Stripe webhook: <event type>` (tests assert
+  that text) unless the source is the plan switch's resync (`Plan switch resync:`).
 - **"Idempotent" here means the same event delivered twice.** Order independence is a separate
   property and comes from writing the retrieved state.
 - **Tests** (`__tests__/stripeWebhook.test.ts`). `subscriptionEvent()` also sets what

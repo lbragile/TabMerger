@@ -49,5 +49,40 @@
   },
   "confirmDialog": {
     "cancel": "キャンセル"
+  },
+  "organize": {
+    "title": "グループを整理",
+    "description_other": "AIが{{count}}件の変更を提案しています。不要なものはチェックを外してください。",
+    "merge": "「<from>{{from}}</from>」を「<to>{{to}}</to>」に統合",
+    "rename": "「<from>{{from}}</from>」の名前を「<to>{{to}}</to>」に変更",
+    "archive": "「<name>{{name}}</name>」をアーカイブ",
+    "reorder": "グループを並べ替え",
+    "archiveNote": "アーカイブしたグループは非表示になるだけで、削除されません。「アーカイブ済み」からいつでも復元できます。",
+    "apply": "選択した変更を適用",
+    "applied_other": "{{count}}件の変更を適用しました",
+    "nothingApplied": "適用する変更はありません。その間にグループが変更されました",
+    "applyFailed": "変更を適用できませんでした"
+  },
+  "describeGroup": {
+    "title": "AIの説明を使いますか？",
+    "description": "このグループにはすでにメモがあります。置き換えるか、提案を下に追加してください。",
+    "descriptionWindow": "このウィンドウにはすでにメモがあります。置き換えるか、提案を下に追加してください。",
+    "current": "現在のメモ",
+    "suggestion": "提案",
+    "replace": "メモを置き換える",
+    "append": "下に追加",
+    "tooLong": "メモの下に追加するには長すぎます（最大 {{max}} 文字）。代わりに置き換えてください。",
+    "saveFailed": "メモを保存できませんでした"
+  },
+  "nameGroup": {
+    "title": "このグループに名前を付ける",
+    "titleWindow": "このウィンドウに名前を付ける",
+    "current": "現在の名前: <name>{{name}}</name>",
+    "choices": "名前の候補",
+    "custom": "または自分で入力:",
+    "customInput": "自分で付ける名前",
+    "rename": "名前を変更",
+    "renameFailedWindow": "ウィンドウの名前を変更できませんでした",
+    "renameFailed": "グループの名前を変更できませんでした"
   }
 }

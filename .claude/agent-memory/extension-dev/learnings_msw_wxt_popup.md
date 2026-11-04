@@ -5,6 +5,8 @@ metadata:
   type: project
 ---
 
+**Superseded (2026-10-24):** the extension no longer mocks AI at all. `devFetchMock.ts` and `handlers.ts` were removed; dev builds post to `VITE_WEB_APP_URL` like any build, and the local web app fakes only the provider call when run with `AI_MOCK=true` (auth, tier, credits, sanitising and parsing stay real). The MSW-in-popup lesson below still holds if a client mock is ever reconsidered.
+
 Set up MSW (`msw/browser`, `setupWorker`) to intercept `${VITE_WEB_APP_URL}/api/ai/*` in dev only, at `packages/extension/src/mocks/{handlers,browser}.ts`, started from `popup/main.tsx` behind `import.meta.env.DEV` (Vite/WXT statically replaces and dead-code-eliminates this in prod builds — safe to gate at the entrypoint, no need for a separate WXT config flag).
 
 Key mechanics:

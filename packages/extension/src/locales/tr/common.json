@@ -59,5 +59,6 @@
   "showPassphrase": "Parolayı göster",
   "hidePassphrase": "Parolayı gizle",
   "notifications": "Bildirimler",
-  "closeToast": "Bildirimi kapat"
+  "closeToast": "Bildirimi kapat",
+  "openSettings": "Ayarları aç"
 }

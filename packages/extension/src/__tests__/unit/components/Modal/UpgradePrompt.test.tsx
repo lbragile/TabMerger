@@ -6,10 +6,18 @@ import { UpgradePromptModal } from '@/components/Modal/UpgradePrompt'
 const mockUseAuth = vi.fn()
 const mockOpenModal = vi.fn()
 const mockTrackEvent = vi.hoisted(() => vi.fn())
+/** The AI flags this suite runs with: both off by default, whatever the local .env sets. */
+const aiFlags = vi.hoisted(() => ({ managed: false, byok: false }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
+// Getters, so a test can turn a flag on before rendering (the component reads them at render)
+vi.mock('@/lib/aiFlag', () => ({
+  get AI_ENABLED() { return aiFlags.managed || aiFlags.byok },
+  get AI_MANAGED_ENABLED() { return aiFlags.managed },
+  get AI_BYOK_ENABLED() { return aiFlags.managed || aiFlags.byok },
+}))
 
 function renderModal(ui: React.ReactElement) {
   return render(<Dialog open><DialogContent>{ui}</DialogContent></Dialog>)
@@ -17,6 +25,8 @@ function renderModal(ui: React.ReactElement) {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  aiFlags.managed = false
+  aiFlags.byok = false
   mockUseAuth.mockReturnValue({ user: null })
   globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
 })
@@ -94,6 +104,28 @@ describe('UpgradePromptModal — Pro AI coming-soon CTA', () => {
   it('does not disable the CTA for a non-aiFeatures reason even when AI is disabled', () => {
     renderModal(<UpgradePromptModal reason="maxGroups" onClose={vi.fn()} />)
     expect(screen.getByRole('button', { name: /upgrade now/i })).not.toBeDisabled()
+  })
+
+  it('shows "Coming soon" next to the Pro AI price when AI is disabled', () => {
+    renderModal(<UpgradePromptModal reason="aiFeatures" onClose={vi.fn()} />)
+    expect(screen.getByText(/\$7\.99\/mo/).textContent).toMatch(/coming soon/i)
+  })
+})
+
+describe('UpgradePromptModal — Pro AI with AI on', () => {
+  beforeEach(() => {
+    aiFlags.managed = true
+  })
+
+  it('enables "Upgrade now" for aiFeatures and drops "Coming soon"', () => {
+    const onClose = vi.fn()
+    renderModal(<UpgradePromptModal reason="aiFeatures" onClose={onClose} />)
+    expect(screen.queryByText(/coming soon/i)).toBeNull()
+    const cta = screen.getByRole('button', { name: /upgrade now/i })
+    expect(cta).not.toBeDisabled()
+    fireEvent.click(cta)
+    expect(chrome.tabs.create).toHaveBeenCalledWith(expect.objectContaining({ url: expect.stringContaining('/pricing') }))
+    expect(onClose).toHaveBeenCalled()
   })
 })
 

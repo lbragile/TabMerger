@@ -13,6 +13,9 @@ import { SaveSessionModal } from './SaveSession';
 import { ShortcutSavePickerModal } from './ShortcutSavePicker';
 import { ReviewStaleGroupModal } from './ReviewStaleGroup';
 import { EncryptionSetupModal } from './EncryptionSetup';
+import { OrganizeReviewModal } from './OrganizeReview';
+import { DescribeGroupReviewModal } from './DescribeGroupReview';
+import { NameGroupPickerModal } from './NameGroupPicker';
 
 export function ModalRoot() {
   const modal = useUIStore((s) => s.modal);
@@ -45,7 +48,7 @@ export function ModalRoot() {
       case 'importExport':
         return <ImportExportModal mode={(modal.data?.mode as string) ?? 'export'} data={modal.data ?? {}} onClose={closeModal} />;
       case 'settings':
-        return <SettingsModal onClose={closeModal} />;
+        return <SettingsModal onClose={closeModal} initialTab={modal.data?.tab} />;
       case 'auth':
         return <AuthModal onClose={closeModal} />;
       case 'upgrade':
@@ -62,6 +65,12 @@ export function ModalRoot() {
         return <ReviewStaleGroupModal data={modal.data ?? {}} onClose={closeModal} />;
       case 'encryptionSetup':
         return <EncryptionSetupModal onClose={closeModal} />;
+      case 'organizeReview':
+        return <OrganizeReviewModal data={modal.data ?? {}} onClose={closeModal} />;
+      case 'describeGroupReview':
+        return <DescribeGroupReviewModal data={modal.data ?? {}} onClose={closeModal} />;
+      case 'nameGroupPicker':
+        return <NameGroupPickerModal data={modal.data ?? {}} onClose={closeModal} />;
       default:
         return null;
     }

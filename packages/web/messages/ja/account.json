@@ -33,7 +33,9 @@
     "groups": "同期済みのグループ",
     "tabs": "保存済みのタブ",
     "sessions": "セッションとバックアップ",
-    "aiCredits": "AIクレジット残高"
+    "aiCredits": "AIクレジット残高",
+    "aiOwnKey": "AIのセットアップ担当",
+    "aiOwnKeyValue": "ご自身"
   },
   "profile": {
     "title": "プロフィール",
@@ -51,7 +53,56 @@
     "description": "プランと請求を管理します。",
     "manageBilling": "請求を管理",
     "upgrade": "アップグレード",
-    "cancelNote": "<strong>請求を管理</strong>からいつでも解約できます。現在の請求期間の終了まではご利用いただけます。"
+    "cancelNote": "<strong>請求を管理</strong>からいつでも解約できます。現在の請求期間の終了まではご利用いただけます。",
+    "scheduledChange": "{date} に {plan} に変更されます。",
+    "scheduledChangeUnknownPlan": "{date} にプランが変更されます。",
+    "scheduledCancelNote": "解約すると、この請求期間の終わりまで現在のプランを利用でき、予定されている変更は取り消されます。返金はありません。後で更新した場合も、現在のプランのままです。",
+    "endsOn": "プランは {date} に終了します。",
+    "endsUnknownDate": "プランは終了する予定です。",
+    "endsNote": "更新されません。これまでどおり更新してプランを変更できるようにするには、プランを継続してください。今は請求されません。"
+  },
+  "cancelSubscription": {
+    "button": "サブスクリプションを解約",
+    "errors": {
+      "no_billing_account": "このプランは請求アカウントに紐づいていません。{email} までメールでご連絡いただければ、こちらで解約いたします。",
+      "no_subscription": "解約するサブスクリプションが見つかりませんでした。ページを再読み込みするか、{email} までメールでご連絡ください。",
+      "not_entitled": "解約できる有効なプランはありません。",
+      "already_canceling": "プランはすでにこの請求期間の終わりに終了するよう設定されています。",
+      "cancel_failed": "解約ページを開けませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。",
+      "rate_limited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。"
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "現在のプランを継続",
+    "success": "プランは {plan} のままです。",
+    "successUnknownPlan": "現在のプランのままです。",
+    "successRenews": "プランは {plan} のままです。{date} に {amount} で更新されます。",
+    "successRenewsOn": "プランは {plan} のままです。{date} に更新されます。",
+    "successUnknownPlanRenews": "現在のプランのままです。{date} に {amount} で更新されます。",
+    "successUnknownPlanRenewsOn": "現在のプランのままです。{date} に更新されます。",
+    "errors": {
+      "no_billing_account": "このプランは請求アカウントに紐づいていません。{email} までメールでご連絡いただければ、こちらで対応いたします。",
+      "no_subscription": "サブスクリプションが見つかりませんでした。ページを再読み込みするか、{email} までメールでご連絡ください。",
+      "no_scheduled_change": "予定されているプラン変更はもうありません。ページを再読み込みしてプランをご確認ください。",
+      "keep_plan_failed": "現在のプランを継続できませんでした。もう一度お試しいただくか、{email} までメールでご連絡ください。",
+      "rate_limited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。"
+    }
+  },
+  "resumeSubscription": {
+    "button": "プランを継続",
+    "success": "プランは更新されます。",
+    "successRenewsOn": "プランは {date} に更新されます。",
+    "successRenews": "プランは {date} に {amount} で更新されます。",
+    "errors": {
+      "no_billing_account": "このプランは請求アカウントに紐づいていません。{email} までメールでご連絡いただければ、こちらで対応いたします。",
+      "no_subscription": "サブスクリプションが見つかりませんでした。ページを再読み込みするか、{email} までメールでご連絡ください。",
+      "not_entitled": "このプランはすでに終了しています。料金ページでプランを選んでください。",
+      "not_canceling": "プランは終了予定ではなくなりました。ページを再読み込みしてプランを確認してください。",
+      "ends_early": "このプランの終了日はサポートチームが設定しました。継続するには {email} までご連絡ください。",
+      "schedule_attached": "このプランにはサポートチームが設定した変更があります。継続するには {email} までご連絡ください。",
+      "resume_failed": "プランを継続できませんでした。もう一度お試しいただくか、{email} までご連絡ください。",
+      "rate_limited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。"
+    }
   },
   "devicesCard": {
     "title": "デバイス",
@@ -68,6 +119,15 @@
   },
   "credits": {
     "failed": "チェックアウトを開始できませんでした",
-    "getMore": "追加購入"
+    "getMore": "追加購入",
+    "notAvailable": "クレジットパックは、TabMergerがAIのセットアップを担当する有効なPro AIプランでのみ購入できます。",
+    "rateLimited": "短時間に請求関連のリクエストが多すぎます。数分待ってからもう一度お試しください。",
+    "resetsOn": "クレジットのリセット日：{date}",
+    "endsOn": "クレジットの終了日：{date}"
+  },
+  "aiPlan": {
+    "title": "AIのセットアップ担当",
+    "managed": "TabMerger：今月の残りは{limit, number}AIクレジット中{left, number}です。",
+    "byok": "ご自身：自分のAPIキーを使い、料金はAIプロバイダーから直接請求されます。クレジット上限はありません。キーは拡張機能の設定で追加・変更できます。"
   }
 }

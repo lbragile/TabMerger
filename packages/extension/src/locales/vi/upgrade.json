@@ -33,7 +33,7 @@
     "pro": {
       "name": "Pro",
       "f1": "Tất cả những gì có trong Miễn phí",
-      "f2": "Nhóm, thẻ, quy tắc URL & phiên không giới hạn",
+      "f2": "Không giới hạn nhóm, tab, quy tắc và phiên",
       "f3": "Đồng bộ đám mây trên các thiết bị"
     },
     "pro_ai": {
@@ -45,5 +45,6 @@
   },
   "maybeLater": "Để sau",
   "signIn": "Đăng nhập",
-  "upgradeNow": "Nâng cấp ngay"
+  "upgradeNow": "Nâng cấp ngay",
+  "byokOption": "Hoặc {{price}}/tháng: dùng nhà cung cấp AI của riêng bạn (Anthropic, OpenAI hoặc Gemini)"
 }

@@ -1,4 +1,4 @@
-import { isEntitledSubscriptionStatus } from '@tabmerger/shared';
+import { isAiMode, isEntitledSubscriptionStatus, type AiMode } from '@tabmerger/shared';
 import { supabase } from '@/lib/supabase';
 import type { Tier } from '@/lib/types';
 
@@ -23,6 +23,19 @@ export function resolveTier(data: SubscriptionTierRow | null | undefined): Tier 
   if (data.tier === 'pro_ai') return 'pro_ai';
   if (data.tier === 'pro') return 'pro';
   return 'free';
+}
+
+/**
+ * How a Pro AI subscription pays for AI: `byok` (the user's own Anthropic key) or `managed`
+ * (TabMerger's key within the monthly credits). `null` for every plan without AI. A missing or
+ * unknown `ai_mode` (a row read before migration 022, or a value this build doesn't know) is
+ * `managed`, the column's default. The server enforces the mode; this only picks what to show
+ * and whether to send the key.
+ */
+export function resolveAiMode(data: (SubscriptionTierRow & { ai_mode?: unknown }) | null | undefined): AiMode | null {
+  if (resolveTier(data) !== 'pro_ai') return null;
+  const mode = data?.ai_mode;
+  return isAiMode(mode) ? mode : 'managed';
 }
 
 /**

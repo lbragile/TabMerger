@@ -33,7 +33,7 @@
     "pro": {
       "name": "Pro",
       "f1": "包含免费版的全部功能",
-      "f2": "不限数量的分组、标签页、网址规则和会话",
+      "f2": "不限数量的分组、标签页、规则和会话",
       "f3": "跨设备云同步"
     },
     "pro_ai": {
@@ -45,5 +45,6 @@
   },
   "maybeLater": "以后再说",
   "signIn": "登录",
-  "upgradeNow": "立即升级"
+  "upgradeNow": "立即升级",
+  "byokOption": "或 {{price}}/月：使用您自己的 AI 服务商（Anthropic、OpenAI 或 Gemini）"
 }

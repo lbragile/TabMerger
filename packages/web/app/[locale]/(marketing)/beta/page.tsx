@@ -1878,7 +1878,8 @@ export default function BetaPage() {
         <p className="max-w-2xl text-[15.5px] text-text2 leading-relaxed mb-5">
           {t('lead')}
         </p>
-        <Button asChild size="lg">
+        {/* Wraps instead of running off a phone screen when the label is long (another language). */}
+        <Button asChild size="lg" className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-center">
           <a href={BETA_GOOGLE_GROUP_URL} target="_blank" rel="noreferrer">
             {t('join')}
           </a>
@@ -2061,7 +2062,8 @@ export default function BetaPage() {
                                             )}
                                           </th>
                                           <td className="px-3 py-2">
-                                            <code dir="ltr" className="select-all whitespace-nowrap bg-muted px-1.5 py-0.5 font-mono">
+                                            {/* No nowrap: the 4-digit groups wrap at their spaces so the table fits a 320px phone. */}
+                                            <code dir="ltr" className="select-all bg-muted px-1.5 py-0.5 font-mono">
                                               {card.number}
                                             </code>
                                           </td>

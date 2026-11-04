@@ -26,7 +26,7 @@ describe('StatsOverview 5-card expansion', () => {
         groupCount={3}
         sessionCount={2}
         memberSince="2024-01-01"
-        aiUsage={{ used: 7, limit: 50 }}
+        aiUsage={{ mode: 'managed', used: 7, limit: 50 }}
       />
     )
     expect(screen.getByText('AI credits this month')).toBeInTheDocument()
@@ -78,7 +78,7 @@ describe('StatsOverview — showSyncStats=false (free accounts)', () => {
         sessionCount={0}
         memberSince="2024-01-01"
         showSyncStats={false}
-        aiUsage={{ used: 1, limit: 10 }}
+        aiUsage={{ mode: 'managed', used: 1, limit: 10 }}
       />
     )
     expect(screen.getByText('Member Since')).toBeInTheDocument()

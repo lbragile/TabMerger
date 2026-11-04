@@ -6,5 +6,6 @@
   "opensInNewTab": "（在新标签页中打开）",
   "close": "关闭",
   "showPassphrase": "显示密码短语",
-  "hidePassphrase": "隐藏密码短语"
+  "hidePassphrase": "隐藏密码短语",
+  "withYourOwnKey": "使用您自己的 API 密钥"
 }

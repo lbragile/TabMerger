@@ -3,6 +3,8 @@
   "renameHint": "为此分组设置新名称",
   "aiRename": "AI 重命名",
   "aiRenameHint": "用 AI 为此分组推荐名称",
+  "aiDescribe": "用 AI 描述",
+  "aiDescribeHint": "用 AI 为此分组中的标签页写一段简短备注",
   "addNote": "添加备注",
   "addNoteHint": "为此分组添加备注",
   "editNote": "编辑备注",
@@ -38,6 +40,12 @@
   "toast": {
     "noDuplicates": "未发现重复项",
     "noTabsToName": "此分组中没有可用于命名的标签页",
-    "aiRenameFailed": "AI 重命名失败"
+    "aiRenameFailed": "AI 重命名失败",
+    "nameAlreadyFits": "“{{name}}”已经很适合这个分组",
+    "noTabsToDescribe": "此分组中没有可描述的标签页",
+    "aiDescribeFailed": "无法描述此分组",
+    "noteAdded": "已添加备注",
+    "noteReplaced": "已替换备注",
+    "undoNoteLater": "此后还有其他更改。请改用顶部的“撤销”。"
   }
 }

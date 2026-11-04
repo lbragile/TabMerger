@@ -3,6 +3,8 @@
   "renameHint": "Đặt tên mới cho nhóm này",
   "aiRename": "Đổi tên bằng AI",
   "aiRenameHint": "Gợi ý tên cho nhóm này bằng AI",
+  "aiDescribe": "Mô tả bằng AI",
+  "aiDescribeHint": "Viết ghi chú ngắn về các thẻ trong nhóm này bằng AI",
   "addNote": "Thêm ghi chú",
   "addNoteHint": "Đính kèm ghi chú vào nhóm này",
   "editNote": "Sửa ghi chú",
@@ -38,6 +40,12 @@
   "toast": {
     "noDuplicates": "Không tìm thấy bản trùng lặp nào",
     "noTabsToName": "Không có thẻ nào trong nhóm này để đặt tên",
-    "aiRenameFailed": "Đổi tên bằng AI thất bại"
+    "aiRenameFailed": "Đổi tên bằng AI thất bại",
+    "nameAlreadyFits": "“{{name}}” đã phù hợp với nhóm này",
+    "noTabsToDescribe": "Không có thẻ nào trong nhóm này để mô tả",
+    "aiDescribeFailed": "Không thể mô tả nhóm này",
+    "noteAdded": "Đã thêm ghi chú",
+    "noteReplaced": "Đã thay ghi chú",
+    "undoNoteLater": "Đã có thay đổi khác sau thay đổi này. Hãy dùng Hoàn tác ở phía trên."
   }
 }

@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-10-21
+> Last Updated: 2026-10-26
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -142,7 +142,8 @@ Questions or feedback? Use the support links on this listing.
 
 <!-- Verified against the code on 2026-10-06: shortcuts and context menu in background.ts and
      wxt.config.ts `commands`; limits from FREE_TIER_LIMITS; sync/sessions/share gating from
-     useEntitlements + migration 019; AI is not mentioned because VITE_AI_ENABLED is off. -->
+     useEntitlements + migration 019; AI is not mentioned in the copy below: it was written while the AI flags were off. AI is on from
+     the first release built with the flags in publish.yml, so review this copy then. -->
 
 **Category** [REQUIRED]
 Productivity
@@ -365,10 +366,14 @@ sign-in handoff, sync request) only from the TabMerger website: `tabmerger.verce
 `preview.tabmerger.com` for the BETA build, while the site moves to its own domain. Everything
 the extension itself sends (API calls, `/api/track`, links, the sign-in redirect) still goes to
 the first of each pair, `VITE_WEB_APP_URL`; the second site only adds where those messages may
-come from, so no data-use answer changes. AI features are off (`VITE_AI_ENABLED` is not `"true"`), so no tab
-titles or URLs are sent to Anthropic; the Pro AI row of the privacy policy only becomes true
-when AI ships, at which point re-check this table (AI would send open-tab titles and URLs, which
-is Web history).
+come from, so no data-use answer changes. AI features are on from the first release built with
+`VITE_AI_ENABLED` and `VITE_AI_BYOK_ENABLED` set to `"true"` (the `*_AI_ENABLED` and
+`*_AI_BYOK_ENABLED` values in `publish.yml`'s top-level `env:`). **Before submitting that
+release, change the Dashboard's data-use answers:** the extension then sends open-tab titles and
+URLs to TabMerger's server, which passes them to an AI provider (Web history), and, for users of
+the own-key option, their own Anthropic, OpenAI or Gemini API key (Authentication information).
+See the AI note under Technical privacy notes. Releases shipped before that had AI off and sent
+nothing to any AI provider.
 
 **Analytics and error reporting: which builds are active.** `.github/workflows/publish.yml`
 sets only `VITE_WEB_APP_URL`, `VITE_EXTRA_WEB_APP_URLS` (a second trusted site, see "Which
@@ -460,9 +465,37 @@ All three certifications can be ticked, because they are true as built:
   deleted), and has a "Show in folder" button that opens the system file manager there. Only the
   download id and time of that last file are kept, on the device (never synced, removed with the
   account's local data); the path is read from the browser each time and shown as text.
-- AI features (Pro AI tier) are currently **disabled/coming soon** in both the extension and the
-  web app (`VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` feature flags) — no tab content is sent to
-  Anthropic's Claude API while this flag is off. Update this note when AI ships.
+- AI features (Pro AI tier) are **on** from the first release built with the flags in
+  `publish.yml` (earlier releases had them off and sent nothing to any AI provider). Two flags
+  in the extension and the web app: `VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` (Pro AI where
+  TabMerger handles setup; also turns on the own-key option) and
+  `VITE_AI_BYOK_ENABLED`/`NEXT_PUBLIC_AI_BYOK_ENABLED` (the own-key option only). The stable
+  listing builds have both on; the BETA listing builds have only the own-key flag on. The web app's
+  flags must be on first, or the extension gets 503 `ai_disabled`. The Dashboard's data-use
+  answers must be changed before submitting that release (open-tab titles and URLs = Web
+  history; the own-key API key = Authentication information). What they send: for an AI action the user starts (or the once-a-day session suggestion), the titles
+  and URLs of the tabs involved (for Describe group, also the group's name; for Describe window,
+  also the window's name; the reply becomes that group's or window's note, which syncs encrypted
+  like any note; Name window sends that window's tabs) go to TabMerger's own server (`VITE_WEB_APP_URL/api/ai/*`),
+  together with the AI model chosen in Settings → AI (a model name, stored in the extension's
+  own settings). The server passes them to **one AI provider**: Anthropic when TabMerger
+  handles setup (usage counted in monthly credits on the server), or, when the user adds their
+  **own API key** ("Use your own AI provider"), the company that issued that key: Anthropic, OpenAI or Google (for
+  Gemini), one key at a time. In Settings → AI the user picks the provider first, then types that provider's
+  key; a key whose format belongs to another provider is refused in the popup before anything is
+  sent. A provider picked before its key is saved is remembered on the device
+  (`chrome.storage.local` `aiByokProvider`: the provider name and the account, no key). The key is
+  checked with the server once (`/api/ai/byok/verify`), then stored **only on this device** in
+  `chrome.storage.local` (`aiByokKey`, with the account that saved it and its provider, removed
+  on sign-out), never in the extension's database, so exports, automatic backups and sync never
+  contain it. It is sent in the `X-AI-Key` header of each AI request to TabMerger's server,
+  which passes it straight to that provider and never stores or logs it; it is never sent to
+  analytics or error reports, and only its first and last characters are ever shown
+  (`sk-ant-…abcd`, `sk-…abcd`, `AIza…abcd`). Settings links to the picked provider's own pages
+  (how to create a key, and its API keys page) so the user can create a key and set a spending
+  limit there; the links are listed once in `AI_PROVIDER_KEY_LINKS` (`@tabmerger/shared`). No new permission and no new network
+  destination: the extension still talks only to TabMerger's website, and the AI providers are
+  called by the server. See `src/lib/byokKey.ts` and `src/hooks/useAI.ts`.
 - Imported files (JSON, bookmarks HTML, OneTab) are read and validated on the device, in the
   popup: each group, window and tab is rebuilt from known fields only, and addresses using a
   script-running scheme (`javascript:`, `data:`, `vbscript:`, `blob:`) are not saved. The same
@@ -486,7 +519,7 @@ All three certifications can be ticked, because they are true as built:
   `/api/og-preview` when enabled, `/api/portal` for the billing link), Supabase, Google's favicon
   service, and the Google sign-in window. PostHog's capture endpoint and Sentry are in the code
   but are not called by store builds (no key or DSN is set there). Anthropic is only ever called
-  from the website's server routes, and not at all while AI is off.
+  from the website's server routes (and the other providers likewise, for own-key users).
 
 ---
 
@@ -598,6 +631,7 @@ with the real semver string carried in `version_name`.
 | Stable | `3.1.1` | — | `v3.1.1` | 2026-10-09 | Superseded |
 | Stable | `3.1.2` | — | `v3.1.2` | 2026-10-10 | Superseded |
 | Stable | `3.1.3` | — | `v3.1.3` | 2026-10-15 | Not submitted (publish run cancelled) |
+| Stable | — | — | unreleased | — | Draft, behind the AI flag (off, so nothing changes for users yet): Pro AI gets a choice of model in Settings → AI (Auto, Claude Haiku/Sonnet/Opus 5.5 when TabMerger handles setup, each with its approximate credits per action; with an own key, Auto plus that provider's three models, each with a relative cost level and no dollar figures), and a "Use your own AI provider" option where the user adds their own API key (Anthropic, OpenAI or Gemini, one at a time) whose key is kept on the device and sent only with AI requests to TabMerger's server, which forwards the request to that provider. The own-key option has its own flag (`VITE_AI_BYOK_ENABLED`) so it can launch before the option where TabMerger handles setup. In Settings → AI the own-key user picks the provider first (Anthropic, OpenAI or Gemini); only then do that provider's key field, setup links ("How to create a key" and its API keys page) and models show, and a key of another provider is refused before it is sent. Switching provider keeps the saved key in use until a key for the new one is saved. Credits now measure AI cost. The header's AI menu is grouped by what each action works on (open tabs: Auto-group; the selected group, named in its label: Name group and the new Describe group; all groups: Organize), with the credits left this month (or "Your own key") and an "AI settings" link at the bottom. New Describe group (header AI menu and the group's right-click menu, switchable in Settings → AI): sends the selected group's name and its tabs' titles and URLs to TabMerger's server, like Name group, and writes the 1-3 sentence reply as the group's note (an existing note is never overwritten without asking: Replace note, Add below or Cancel). The note syncs end-to-end encrypted like any note edit. Name group now offers up to three suggested names to pick from ("Name this group": the current name, the suggestions with the first preselected, or a name typed by the user; Rename applies it as one undo step), from both the header AI menu and the group's right-click menu; the same tab titles and URLs are sent as before. New window AI actions in a saved window's ⋯ menu (Pro AI only, like the group's right-click menu, and not on Now Open windows): "AI rename" sends that window's tabs' titles and URLs and opens the same picker, titled "Name this window" (Rename is one undo step), and "Describe with AI" sends the window's name and its tabs' titles and URLs and writes the reply as the window's note (an existing note gets the same Replace note / Add below / Cancel review). Both follow the existing Settings → AI switches, now labelled "Name groups and windows" and "Describe groups and windows". Free and Pro users see the AI button as a preview: the sparkle in full colour with a small "Pro AI" tag, opening the same menu with every action locked and an "Upgrade to Pro AI" button at the bottom (it opens the existing upgrade prompt; nothing is sent to an AI provider). A new local setting, "Show AI button" in Settings, General (on by default, every plan), hides the button. When TabMerger handles setup, Settings → AI has a "Buy more credits" link next to the credits left this month; it opens the account page on the website at its AI credits section in a new tab (buying happens there) and shows as a button once less than 10% of the month's credits are left. The out-of-credits prompt's "Get more" opens the same section. No manifest change, no new permission. When either flag is turned on: refresh any screenshot that shows the popup header (the AI button now shows for every plan, tagged "Pro AI" for free and Pro) and update the long description, the Privacy section above (Authentication information and Web history rows) and the privacy policy's Pro AI row, and refresh the Settings screenshot (the AI settings screen now opens on the provider picker; capture it with a provider picked so the key field, links and models show) |
 | Stable | `3.2.0` | — | `v3.2.0` | 2026-10-15 | Superseded |
 | Stable | `3.2.1` | — | `v3.2.1` | 2026-10-16 | Superseded |
 | Stable | `3.3.0` | — | `v3.3.0` | 2026-10-16 | Superseded |
@@ -670,11 +704,18 @@ Paste into the dashboard's test-instructions field for the v2 to v3 update:
 > Uninstalling opens an optional survey on the TabMerger website (runtime.setUninstallURL, no
 > permission); its URL holds only version, browser, channel and an analytics on/off flag.
 
+(That text records the v2 to v3 update, which shipped with AI off. For the first release with AI
+on, replace "AI is off" with: AI actions are optional and user-started; they send open-tab titles
+and URLs to TabMerger's server, which forwards them to an AI provider, and the own-key option
+keeps the user's key only on the device.)
+
 ### Known Issues / Limitations
 
-- Pro AI (AI grouping, smart naming, tab previews) is marked "coming soon" and disabled behind
-  a feature flag as of this writing — do not describe it as available in store copy while that
-  flag is off. See `CLAUDE.md`'s AI feature flag notes.
+- Pro AI (AI grouping, smart naming, group descriptions written into the group's note, tab summaries, session suggestions, and Organize, which
+  proposes merges, renames, archives and a new group order to review and apply) is on in builds made with the flags
+  in `publish.yml` (one for Pro AI where TabMerger handles setup, one for the own-key option). Releases before the first
+  such build had it off. If a build is made with both flags off again, do not describe it as available in store copy.
+  See `CLAUDE.md`'s AI feature flag notes.
 - `externally_connectable` is scoped to the web app's sites (`VITE_WEB_APP_URL` plus
   `VITE_EXTRA_WEB_APP_URLS`, each checked to be a bare https origin when the extension builds)
   plus one extra ID,

@@ -6,5 +6,6 @@
   "opensInNewTab": " (se abre en una pestaña nueva)",
   "close": "Cerrar",
   "showPassphrase": "Mostrar frase de contraseña",
-  "hidePassphrase": "Ocultar frase de contraseña"
+  "hidePassphrase": "Ocultar frase de contraseña",
+  "withYourOwnKey": "Con tu propia clave de API"
 }

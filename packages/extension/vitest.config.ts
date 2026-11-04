@@ -5,10 +5,14 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@tabmerger/shared': path.resolve(__dirname, '../shared/src/index.ts'),
-    },
+    alias: [
+      // The AI payload contract test (src/__tests__/unit/hooks/useAI.payload.test.ts) loads the web
+      // app's request parsers, whose one `@/` import is this web file. No extension file has this
+      // path, so the entry only applies there; it comes first because `@` would match it too.
+      { find: /^@\/lib\/ai-prompt-safety$/, replacement: path.resolve(__dirname, '../web/lib/ai-prompt-safety.ts') },
+      { find: '@', replacement: path.resolve(__dirname, 'src') },
+      { find: '@tabmerger/shared', replacement: path.resolve(__dirname, '../shared/src/index.ts') },
+    ],
   },
   // Mirrors wxt.config.ts's `vite().define` — see src/env.d.ts. Fixed test value so specs can
   // assert against it without threading version resolution through the test harness.

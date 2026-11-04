@@ -25,6 +25,9 @@ export type ModalType =
   | 'archiveStaleGroups'
   | 'encryptionSetup'
   | 'resetEncryption'
+  | 'organizeReview'
+  | 'describeGroupReview'
+  | 'nameGroupPicker'
   | null;
 
 /** How many snapshots Undo and Redo each keep. */

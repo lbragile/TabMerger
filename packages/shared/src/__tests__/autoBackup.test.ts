@@ -136,7 +136,7 @@ describe('Pro pricing feature line', () => {
   })
 
   it('has the expected copy', () => {
-    expect(AUTO_BACKUP_COPY.pricingFeature).toBe('Automatic encrypted backups of your groups, with an optional file copy on your computer')
+    expect(AUTO_BACKUP_COPY.pricingFeature).toBe('Automatic encrypted backups')
   })
 })
 

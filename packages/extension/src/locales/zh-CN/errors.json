@@ -27,7 +27,24 @@
   "sharingRequiresPro": "分享需要升级到 Pro，当前权限不足",
   "aiOncePerDay": "今天已使用过：此 AI 操作每天限用一次",
   "proAiRequired": "需要 Pro AI 套餐",
-  "nameGroupOff": "“为分组命名”已在设置中关闭",
+  "nameGroupOff": "“为分组和窗口命名”已在设置中关闭",
+  "describeGroupOff": "“描述分组和窗口”已在设置中关闭",
   "suggestSessionsOff": "“建议会话”已在设置中关闭",
-  "organizeOff": "“整理”已在设置中关闭"
+  "organizeOff": "“整理”已在设置中关闭",
+  "ai": {
+    "disabled": "AI 功能目前不可用。",
+    "modelInvalid": "该 AI 模型不可用。请在“设置”的 AI 标签页中选择其他模型。",
+    "overloaded": "AI 服务当前繁忙，请一分钟后再试。",
+    "byokKeyMissing": "要使用 AI 功能，请在“设置”的 AI 标签页中添加您的 AI 服务商 API 密钥。",
+    "byokKeyInvalid": "您的 AI 服务商未接受您的 API 密钥。请在“设置”的 AI 标签页中检查或替换它。",
+    "byokRateLimited": "您的 API 密钥已达到服务商的请求速率上限。请稍等片刻后重试。",
+    "byokBilling": "您在 AI 服务商的账户余额不足或存在账单问题。请在服务商处查看账单。",
+    "creditsNotApplicable": "使用您自己的 API 密钥时，不提供额度包。",
+    "unauthorized": "您的登录已过期。请重新登录后再试一次。",
+    "invalidRequest": "TabMerger 无法发送此 AI 请求。请重试；如果问题持续出现，请更新扩展。",
+    "refused": "AI 拒绝了此请求。",
+    "failed": "AI 请求失败，请重试。",
+    "rateLimited": "AI 请求过多，请一分钟后再试。",
+    "rateLimitedRetry": "AI 请求过多，请{{when}}再试。"
+  }
 }

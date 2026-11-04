@@ -5,6 +5,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 import { ENTITLED_SUBSCRIPTION_STATUSES } from '@tabmerger/shared'
 import { ALREADY_SUBSCRIBED_ERROR } from '@/lib/checkoutErrors'
+import { SAME_ORIGIN_HEADERS } from './helpers/billingRequest'
+// The per-user billing limit is tested in rateLimit.test.ts and billingRequestGuard.test.ts; here
+// it always allows, so these tests need no limiter RPC on their Supabase mock.
+vi.mock('@/lib/rateLimit', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rateLimit')>()),
+  takeRateLimit: vi.fn(async () => ({ kind: 'allowed' })),
+}))
 
 const mockGetUser = vi.fn()
 /** profiles: `.select('stripe_customer_id').eq('id', …).single()` */
@@ -26,10 +33,14 @@ vi.mock('@/lib/stripe', () => ({
   getStripePriceId: mockGetStripePriceId,
 }))
 
+/** The Stripe check for an existing customer (lib/checkoutGuard.ts, tested in checkoutStripeGuard.test.ts). */
+const mockCheckStripe = vi.fn()
+vi.mock('@/lib/checkoutGuard', () => ({ checkStripeBeforeCheckout: mockCheckStripe }))
+
 function makeRequest(body: unknown, headers: Record<string, string> = {}) {
   return new NextRequest('http://localhost/api/checkout', {
     method: 'POST',
-    headers,
+    headers: { ...SAME_ORIGIN_HEADERS, ...headers },
     body: JSON.stringify(body),
   })
 }
@@ -38,6 +49,7 @@ describe('POST /api/checkout', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'false')
     mockCreateClient.mockResolvedValue({
       auth: { getUser: mockGetUser },
       from: vi.fn((table: string) => {
@@ -65,6 +77,7 @@ describe('POST /api/checkout', () => {
     mockSubscription.mockResolvedValue({ data: { tier: 'free', status: 'active' }, error: null })
     mockGetStripePriceId.mockReturnValue('price_pro_monthly')
     mockCreateCheckoutSession.mockResolvedValue('https://checkout.stripe.com/session/test')
+    mockCheckStripe.mockResolvedValue({ kind: 'clear' })
   })
 
   it('returns 401 when unauthenticated', async () => {
@@ -87,7 +100,7 @@ describe('POST /api/checkout', () => {
     const { POST } = await import('@/app/api/checkout/route')
 
     const res = await POST(
-      new NextRequest('http://localhost/api/checkout', { method: 'POST', body: '{"tier": "pro"' })
+      new NextRequest('http://localhost/api/checkout', { method: 'POST', headers: SAME_ORIGIN_HEADERS, body: '{"tier": "pro"' })
     )
     expect(res.status).toBe(400)
     expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
@@ -144,6 +157,91 @@ describe('POST /api/checkout', () => {
     expect(args).toEqual(expect.objectContaining({ tier: 'pro', interval: 'yearly' }))
   })
 
+  describe('own key launched before managed AI (only NEXT_PUBLIC_AI_BYOK_ENABLED)', () => {
+    beforeEach(() => {
+      vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', '')
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', 'true')
+    })
+
+    it('sells the own-key option', async () => {
+      const { POST } = await import('@/app/api/checkout/route')
+      const res = await POST(makeRequest({ tier: 'proAi', interval: 'monthly', aiMode: 'byok' }))
+      expect(res.status).toBe(200)
+      expect(mockCreateCheckoutSession).toHaveBeenCalledTimes(1)
+    })
+
+    it.each([
+      ['managed explicitly', { tier: 'proAi', interval: 'yearly', aiMode: 'managed' }],
+      ['managed by default', { tier: 'proAi', interval: 'monthly' }],
+    ])('refuses Pro AI %s with 503 ai_disabled and no Stripe call', async (_label, body) => {
+      const { POST } = await import('@/app/api/checkout/route')
+      const res = await POST(makeRequest(body))
+      expect(res.status).toBe(503)
+      expect(await res.json()).toEqual({ error: 'ai_disabled' })
+      expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+    })
+
+    it('Pro is unaffected by the AI flags', async () => {
+      vi.stubEnv('NEXT_PUBLIC_AI_BYOK_ENABLED', '')
+      const { POST } = await import('@/app/api/checkout/route')
+      expect((await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))).status).toBe(200)
+    })
+  })
+
+  it('refuses the own-key option too while neither AI flag is on', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    const { POST } = await import('@/app/api/checkout/route')
+    const res = await POST(makeRequest({ tier: 'proAi', interval: 'monthly', aiMode: 'byok' }))
+    expect(res.status).toBe(503)
+    expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+  })
+
+  describe('Pro AI option (aiMode)', () => {
+    it('defaults Pro AI to managed: the managed price, ai_mode on the session for analytics', async () => {
+      const { POST } = await import('@/app/api/checkout/route')
+
+      const res = await POST(makeRequest({ tier: 'proAi', interval: 'monthly' }))
+
+      expect(res.status).toBe(200)
+      expect(mockGetStripePriceId).toHaveBeenCalledWith('proAi', 'monthly', 'managed')
+      expect(mockCreateCheckoutSession.mock.calls[0][0]).toMatchObject({ tier: 'proAi', aiMode: 'managed' })
+    })
+
+    it('sells the own-key option at its own price, and marks it on the cancel_url', async () => {
+      mockGetStripePriceId.mockReturnValue('price_byok_yearly')
+      const { POST } = await import('@/app/api/checkout/route')
+
+      const res = await POST(makeRequest({ tier: 'proAi', interval: 'yearly', aiMode: 'byok' }))
+
+      expect(res.status).toBe(200)
+      expect(mockGetStripePriceId).toHaveBeenCalledWith('proAi', 'yearly', 'byok')
+      const args = mockCreateCheckoutSession.mock.calls[0][0]
+      expect(args).toMatchObject({ priceId: 'price_byok_yearly', tier: 'proAi', interval: 'yearly', aiMode: 'byok' })
+      expect(new URL(args.cancelUrl).searchParams.get('aiMode')).toBe('byok')
+    })
+
+    it('stamps no aiMode on a Pro session', async () => {
+      const { POST } = await import('@/app/api/checkout/route')
+      await POST(makeRequest({ tier: 'pro', interval: 'monthly', aiMode: 'managed' }))
+      expect(mockCreateCheckoutSession.mock.calls[0][0]).not.toHaveProperty('aiMode')
+    })
+
+    it.each([
+      ['an unknown value', { tier: 'proAi', interval: 'monthly', aiMode: 'free-ai' }],
+      ['a non-string', { tier: 'proAi', interval: 'monthly', aiMode: 1 }],
+      ['null', { tier: 'proAi', interval: 'monthly', aiMode: null }],
+      ['byok with Pro', { tier: 'pro', interval: 'monthly', aiMode: 'byok' }],
+    ])('rejects %s with 400 and no Stripe call', async (_label, body) => {
+      const { POST } = await import('@/app/api/checkout/route')
+
+      const res = await POST(makeRequest(body))
+
+      expect(res.status).toBe(400)
+      expect(await res.json()).toEqual({ error: 'Invalid aiMode' })
+      expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+    })
+  })
+
   describe('cancel_url locale', () => {
     async function cancelUrlFor(headers: Record<string, string>) {
       const { POST } = await import('@/app/api/checkout/route')
@@ -182,8 +280,49 @@ describe('POST /api/checkout', () => {
     const { POST } = await import('@/app/api/checkout/route')
 
     await POST(makeRequest({ tier: 'pro', interval: 'yearly' }))
+    expect(mockCheckStripe).toHaveBeenCalledWith('user-1', 'cus_existing')
     expect(mockCreateCheckoutSession).toHaveBeenCalledWith(
       expect.objectContaining({ customerId: 'cus_existing' })
+    )
+  })
+
+  it('asks Stripe nothing when the profile has no Stripe customer yet', async () => {
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))
+
+    expect(res.status).toBe(200)
+    expect(mockCheckStripe).not.toHaveBeenCalled()
+    expect(mockCreateCheckoutSession).toHaveBeenCalledWith(expect.objectContaining({ customerId: undefined }))
+  })
+
+  it.each([
+    [{ kind: 'live', recorded: true }, 409, { error: 'already_subscribed', recorded: true }],
+    [{ kind: 'live', recorded: false }, 409, { error: 'already_subscribed', recorded: false }],
+    [{ kind: 'open' }, 409, { error: 'pay_or_resume' }],
+    [{ kind: 'check_failed' }, 503, { error: 'billing_check_failed' }],
+  ])('turns the Stripe check %j into %i and creates no session', async (guard, status, body) => {
+    mockSingle.mockResolvedValue({ data: { stripe_customer_id: 'cus_existing' } })
+    mockCheckStripe.mockResolvedValue(guard)
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))
+
+    expect(res.status).toBe(status)
+    expect(await res.json()).toEqual(body)
+    expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+  })
+
+  it('drops a customer Stripe does not have, so Checkout makes a new one', async () => {
+    mockSingle.mockResolvedValue({ data: { stripe_customer_id: 'cus_gone' } })
+    mockCheckStripe.mockResolvedValue({ kind: 'customer_missing' })
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))
+
+    expect(res.status).toBe(200)
+    expect(mockCreateCheckoutSession).toHaveBeenCalledWith(
+      expect.objectContaining({ customerId: undefined })
     )
   })
 
@@ -224,8 +363,10 @@ describe('POST /api/checkout', () => {
       expect(res.status).toBe(409)
       // The wire value the pricing card matches on.
       expect(ALREADY_SUBSCRIBED_ERROR).toBe('already_subscribed')
-      expect(await res.json()).toEqual({ error: 'already_subscribed' })
+      // `recorded`: the row already shows the plan, so the page refreshes to show it.
+      expect(await res.json()).toEqual({ error: 'already_subscribed', recorded: true })
       expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
+      expect(mockCheckStripe).not.toHaveBeenCalled()
     })
 
     it('the entitled statuses are the shared list, so the rule cannot drift from the rest of the product', async () => {

@@ -46,7 +46,7 @@ beforeEach(() => {
 
 describe('useEntitlements aiFeatures AND logic — normal (non-demo) branch', () => {
   it('a pro_ai subscriber sees aiFeatures=false when AI_ENABLED is false', async () => {
-    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
+    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: false, AI_MANAGED_ENABLED: false, AI_BYOK_ENABLED: false }))
     vi.resetModules()
     const { useEntitlements } = await import('@/hooks/useEntitlements')
     const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
@@ -57,7 +57,7 @@ describe('useEntitlements aiFeatures AND logic — normal (non-demo) branch', ()
   })
 
   it('a pro_ai subscriber sees aiFeatures=true when AI_ENABLED is true', async () => {
-    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
     vi.resetModules()
     const { useEntitlements } = await import('@/hooks/useEntitlements')
     const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
@@ -69,13 +69,37 @@ describe('useEntitlements aiFeatures AND logic — normal (non-demo) branch', ()
 
   it('a free-tier user sees aiFeatures=false even when AI_ENABLED is true (no entitlement)', async () => {
     mockMaybeSingle.mockResolvedValue({ data: null, error: null })
-    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+    vi.doMock('@/lib/aiFlag', () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: true, AI_BYOK_ENABLED: true }))
     vi.resetModules()
     const { useEntitlements } = await import('@/hooks/useEntitlements')
     const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
     await waitFor(() => expect(result.current.loading).toBe(false))
 
     expect(result.current.tier).toBe('free')
+    expect(result.current.aiFeatures).toBe(false)
+  })
+})
+
+describe('useEntitlements aiFeatures — own-key option launched before managed AI', () => {
+  const ownKeyOnly = () => ({ AI_ENABLED: true, AI_MANAGED_ENABLED: false, AI_BYOK_ENABLED: true })
+
+  it('an own-key (byok) subscriber gets AI features while only the own-key flag is on', async () => {
+    mockMaybeSingle.mockResolvedValue({ data: { tier: 'pro_ai', status: 'active', ai_mode: 'byok' }, error: null })
+    vi.doMock('@/lib/aiFlag', ownKeyOnly)
+    vi.resetModules()
+    const { useEntitlements } = await import('@/hooks/useEntitlements')
+    const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.aiMode).toBe('byok'))
+    expect(result.current.aiFeatures).toBe(true)
+  })
+
+  it("a managed subscriber doesn't, until the managed flag is on too", async () => {
+    mockMaybeSingle.mockResolvedValue({ data: { tier: 'pro_ai', status: 'active', ai_mode: 'managed' }, error: null })
+    vi.doMock('@/lib/aiFlag', ownKeyOnly)
+    vi.resetModules()
+    const { useEntitlements } = await import('@/hooks/useEntitlements')
+    const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.aiMode).toBe('managed'))
     expect(result.current.aiFeatures).toBe(false)
   })
 })

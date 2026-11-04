@@ -87,5 +87,6 @@
   "showPassphrase": "Показать парольную фразу",
   "hidePassphrase": "Скрыть парольную фразу",
   "notifications": "Уведомления",
-  "closeToast": "Закрыть уведомление"
+  "closeToast": "Закрыть уведомление",
+  "openSettings": "Открыть настройки"
 }

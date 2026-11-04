@@ -55,5 +55,42 @@
   },
   "confirmDialog": {
     "cancel": "İptal"
+  },
+  "organize": {
+    "title": "Grupları düzenle",
+    "description_one": "AI {{count}} değişiklik öneriyor. İstemediklerinizin işaretini kaldırın.",
+    "description_other": "AI {{count}} değişiklik öneriyor. İstemediklerinizin işaretini kaldırın.",
+    "merge": "“<from>{{from}}</from>” grubunu “<to>{{to}}</to>” ile birleştir",
+    "rename": "“<from>{{from}}</from>” adını “<to>{{to}}</to>” olarak değiştir",
+    "archive": "“<name>{{name}}</name>” grubunu arşivle",
+    "reorder": "Grupları yeniden sırala",
+    "archiveNote": "Arşivlenen gruplar silinmez, gizlenir: istediğiniz zaman Arşiv bölümünden geri yükleyin.",
+    "apply": "Seçilenleri uygula",
+    "applied_one": "{{count}} değişiklik uygulandı",
+    "applied_other": "{{count}} değişiklik uygulandı",
+    "nothingApplied": "Uygulanacak bir şey yok: bu gruplar bu arada değişti",
+    "applyFailed": "Değişiklikler uygulanamadı"
+  },
+  "describeGroup": {
+    "title": "AI açıklaması kullanılsın mı?",
+    "description": "Bu grubun zaten bir notu var. Notu değiştirin veya öneriyi altına ekleyin.",
+    "descriptionWindow": "Bu pencerenin zaten bir notu var. Notu değiştirin veya öneriyi altına ekleyin.",
+    "current": "Mevcut not",
+    "suggestion": "Öneri",
+    "replace": "Notu değiştir",
+    "append": "Altına ekle",
+    "tooLong": "Notun altına eklemek için çok uzun (en fazla {{max}} karakter). Bunun yerine notu değiştirin.",
+    "saveFailed": "Not kaydedilemedi"
+  },
+  "nameGroup": {
+    "title": "Bu grubu adlandır",
+    "titleWindow": "Bu pencereyi adlandır",
+    "current": "Şu anki ad: <name>{{name}}</name>",
+    "choices": "Önerilen adlar",
+    "custom": "Ya da kendi adınızı yazın:",
+    "customInput": "Kendi adınız",
+    "rename": "Yeniden adlandır",
+    "renameFailedWindow": "Pencere yeniden adlandırılamadı",
+    "renameFailed": "Grup yeniden adlandırılamadı"
   }
 }

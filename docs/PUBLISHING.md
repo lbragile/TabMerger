@@ -271,6 +271,7 @@ into every build anyone can install), so they are plain values in `publish.yml`'
 | --- | --- |
 | `BETA_WEB_APP_URL`, `BETA_SUPABASE_URL`, `BETA_SUPABASE_PUBLISHABLE_KEY` | Chrome and Firefox BETA builds: the preview site and preview Supabase project (`xmofzeqcuyenmxgxjtrv`) |
 | `PROD_WEB_APP_URL`, `PROD_SUPABASE_URL`, `PROD_SUPABASE_PUBLISHABLE_KEY` | Stable Chrome, Firefox and Edge builds: the production site and project (`jzgzdaileqxtsudbaouj`) |
+| `BETA_AI_ENABLED`, `BETA_AI_BYOK_ENABLED`, `PROD_AI_ENABLED`, `PROD_AI_BYOK_ENABLED` | The `VITE_AI_ENABLED` (managed AI, implies own-key) and `VITE_AI_BYOK_ENABLED` (own-key) flags compiled into the BETA and stable builds; on only for the exact string `'true'`. BETA builds are own-key only. The web app's matching flags must be on first, or the extension gets 503 `ai_disabled` |
 | `CHROME_EXTENSION_ID`, `CHROME_BETA_EXTENSION_ID` | The store uploads, and each build's `externally_connectable` |
 
 Beta and stable must use different projects: while both read one shared secret, the stable path

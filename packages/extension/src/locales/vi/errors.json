@@ -27,7 +27,24 @@
   "sharingRequiresPro": "Chia sẻ yêu cầu nâng cấp lên Pro — chưa đủ quyền",
   "aiOncePerDay": "Đã sử dụng hôm nay — hành động AI này bị giới hạn một lần mỗi ngày",
   "proAiRequired": "Yêu cầu gói Pro AI",
-  "nameGroupOff": "Đặt tên nhóm đang tắt trong Cài đặt",
+  "nameGroupOff": "Đặt tên nhóm và cửa sổ đang tắt trong Cài đặt",
+  "describeGroupOff": "Mô tả nhóm và cửa sổ đang tắt trong Cài đặt",
   "suggestSessionsOff": "Gợi ý phiên đang tắt trong Cài đặt",
-  "organizeOff": "Sắp xếp đang tắt trong Cài đặt"
+  "organizeOff": "Sắp xếp đang tắt trong Cài đặt",
+  "ai": {
+    "disabled": "Các tính năng AI hiện không khả dụng.",
+    "modelInvalid": "Mô hình AI đó không khả dụng. Hãy chọn mô hình khác trong Cài đặt, tab AI.",
+    "overloaded": "Dịch vụ AI đang bận. Hãy thử lại sau một phút.",
+    "byokKeyMissing": "Hãy thêm khóa API của nhà cung cấp AI trong Cài đặt, tab AI, để dùng các tính năng AI.",
+    "byokKeyInvalid": "Nhà cung cấp AI không chấp nhận khóa API của bạn. Hãy kiểm tra hoặc thay khóa trong Cài đặt, tab AI.",
+    "byokRateLimited": "Khóa API của bạn đã chạm giới hạn yêu cầu của nhà cung cấp. Hãy chờ một lát rồi thử lại.",
+    "byokBilling": "Tài khoản của bạn tại nhà cung cấp AI đã hết tiền hoặc có vấn đề thanh toán. Hãy kiểm tra thanh toán với nhà cung cấp.",
+    "creditsNotApplicable": "Gói tín dụng không áp dụng khi bạn dùng khóa API của riêng mình.",
+    "unauthorized": "Phiên đăng nhập của bạn đã hết hạn. Hãy đăng nhập lại và thử lần nữa.",
+    "invalidRequest": "TabMerger không gửi được yêu cầu AI đó. Hãy thử lại, và cập nhật tiện ích nếu lỗi vẫn xảy ra.",
+    "refused": "AI đã từ chối yêu cầu này.",
+    "failed": "Yêu cầu AI không thành công. Hãy thử lại.",
+    "rateLimited": "Hiện có quá nhiều yêu cầu AI. Hãy thử lại sau một phút.",
+    "rateLimitedRetry": "Hiện có quá nhiều yêu cầu AI. Hãy thử lại {{when}}."
+  }
 }

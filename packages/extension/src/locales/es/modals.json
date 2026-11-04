@@ -61,5 +61,44 @@
   },
   "confirmDialog": {
     "cancel": "Cancelar"
+  },
+  "organize": {
+    "title": "Organizar grupos",
+    "description_one": "La IA sugiere {{count}} cambio. Desmarca los que no quieras.",
+    "description_many": "La IA sugiere {{count}} de cambios. Desmarca los que no quieras.",
+    "description_other": "La IA sugiere {{count}} cambios. Desmarca los que no quieras.",
+    "merge": "Fusionar «<from>{{from}}</from>» en «<to>{{to}}</to>»",
+    "rename": "Renombrar «<from>{{from}}</from>» como «<to>{{to}}</to>»",
+    "archive": "Archivar «<name>{{name}}</name>»",
+    "reorder": "Reordenar grupos",
+    "archiveNote": "Los grupos archivados se ocultan, no se eliminan: restáuralos cuando quieras desde Archivados.",
+    "apply": "Aplicar selección",
+    "applied_one": "Se aplicó {{count}} cambio",
+    "applied_many": "Se aplicaron {{count}} de cambios",
+    "applied_other": "Se aplicaron {{count}} cambios",
+    "nothingApplied": "Nada que aplicar: esos grupos cambiaron mientras tanto",
+    "applyFailed": "No se pudieron aplicar los cambios"
+  },
+  "describeGroup": {
+    "title": "¿Usar la descripción de IA?",
+    "description": "Este grupo ya tiene una nota. Reemplázala o agrega la sugerencia debajo.",
+    "descriptionWindow": "Esta ventana ya tiene una nota. Reemplázala o agrega la sugerencia debajo.",
+    "current": "Nota actual",
+    "suggestion": "Sugerencia",
+    "replace": "Reemplazar nota",
+    "append": "Agregar debajo",
+    "tooLong": "Es demasiado largo para agregarlo debajo de la nota (máximo {{max}} caracteres). Reemplázala en su lugar.",
+    "saveFailed": "No se pudo guardar la nota"
+  },
+  "nameGroup": {
+    "title": "Nombrar este grupo",
+    "titleWindow": "Nombrar esta ventana",
+    "current": "Actual: <name>{{name}}</name>",
+    "choices": "Nombres sugeridos",
+    "custom": "O escribe el tuyo:",
+    "customInput": "Tu propio nombre",
+    "rename": "Renombrar",
+    "renameFailedWindow": "No se pudo renombrar la ventana",
+    "renameFailed": "No se pudo renombrar el grupo"
   }
 }

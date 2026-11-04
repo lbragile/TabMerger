@@ -27,6 +27,12 @@
   "sortByUrl": "Sortuj to okno według URL",
   "notePlaceholder": "Dodaj notatkę…",
   "empty": "Puste okno",
+  "toast": {
+    "noTabsToName": "Brak kart w tym oknie do nazwania",
+    "nameAlreadyFits": "„{{name}}” już pasuje do tego okna",
+    "noTabsToDescribe": "Brak kart w tym oknie do opisania",
+    "aiDescribeFailed": "Nie udało się opisać tego okna"
+  },
   "someOfTabs_one": "{{matched}} z {{count}} karty",
   "someOfTabs_few": "{{matched}} z {{count}} kart",
   "someOfTabs_many": "{{matched}} z {{count}} kart",

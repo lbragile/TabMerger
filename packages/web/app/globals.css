@@ -292,8 +292,28 @@ button:disabled,
   * {
     @apply border-border;
   }
+  /* Safety net: the page never pans sideways on a phone, even if a future element is too wide.
+     On body only: while html stays overflow visible, body's overflow propagates to the viewport
+     (applied there as hidden), exactly as if it were set on html. html must stay visible:
+     setting it stops that propagation, so when a Radix scroll lock (dropdowns, dialogs, the
+     account menu) sets body { overflow: hidden }, body becomes its own scroll container and the
+     navbar's sticky top-0 sticks to body instead of the viewport, jumping off screen with its
+     menu. clip, not hidden, so body itself is never a scroll container either. */
+  body {
+    overflow-x: clip;
+  }
   body {
     @apply bg-background text-foreground;
+    /* A word longer than its column (German compounds such as "Änderungsprotokoll" on a 320px
+       phone) breaks instead of widening the page. Only words that can't fit break, so text that
+       already fits, and every English layout, is unchanged. */
+    overflow-wrap: break-word;
+  }
+  /* Outside English, headings hyphenate, so a long compound breaks as "Änderungs-protokoll"
+     rather than mid-letter. English headings are left alone: Blink would hyphenate words there
+     that already wrap fine at spaces. <html lang> is set per locale (app/layout.tsx). */
+  :root:not(:lang(en)) :where(h1, h2, h3) {
+    hyphens: auto;
   }
   /* Free-text fields are dir="auto" (components/ui/input.tsx, textarea.tsx), so what is typed
      keeps its own direction. An empty one has no text to take a direction from, and browsers

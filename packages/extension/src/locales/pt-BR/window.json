@@ -27,6 +27,12 @@
   "sortByUrl": "Ordenar esta janela por URL",
   "notePlaceholder": "Adicionar uma nota…",
   "empty": "Janela vazia",
+  "toast": {
+    "noTabsToName": "Não há abas nesta janela para nomear",
+    "nameAlreadyFits": "“{{name}}” já combina com esta janela",
+    "noTabsToDescribe": "Não há abas nesta janela para descrever",
+    "aiDescribeFailed": "Não foi possível descrever esta janela"
+  },
   "someOfTabs_one": "{{matched}} de {{count}} aba",
   "someOfTabs_other": "{{matched}} de {{count}} abas",
   "someOfTabs_many": "{{matched}} de {{count}} abas"

@@ -27,5 +27,11 @@
   "sortByUrl": "按网址排序此窗口",
   "notePlaceholder": "添加备注…",
   "empty": "空窗口",
+  "toast": {
+    "noTabsToName": "此窗口中没有可用于命名的标签页",
+    "nameAlreadyFits": "“{{name}}”已经很适合这个窗口",
+    "noTabsToDescribe": "此窗口中没有可描述的标签页",
+    "aiDescribeFailed": "无法描述此窗口"
+  },
   "someOfTabs_other": "{{count}} 个标签页中有 {{matched}} 个"
 }

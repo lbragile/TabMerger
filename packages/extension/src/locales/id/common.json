@@ -45,5 +45,6 @@
   "showPassphrase": "Tampilkan frasa sandi",
   "hidePassphrase": "Sembunyikan frasa sandi",
   "notifications": "Notifikasi",
-  "closeToast": "Tutup notifikasi"
+  "closeToast": "Tutup notifikasi",
+  "openSettings": "Buka Pengaturan"
 }

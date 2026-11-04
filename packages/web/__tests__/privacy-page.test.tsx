@@ -88,6 +88,17 @@ describe('PrivacyPage', () => {
     const link = screen.getByRole('link', { name: 'Vercel' })
     expect(link).toHaveAttribute('href', 'https://vercel.com/legal/privacy-policy')
   })
+
+  // The extension names the own-key provider "Gemini", so the policy shows that name next to the
+  // company (Google) that receives the request.
+  it('names Gemini, with Google as the company, wherever an own key can go to Google', () => {
+    render(<PrivacyPage />)
+    expect(document.body.textContent).toContain('the provider that issued your key: Anthropic, OpenAI or Google (Gemini).')
+    const table = document.getElementById('third-party')?.textContent ?? ''
+    expect(table).toContain('Google AI (Gemini API)')
+    expect(table).toContain('who use their own Gemini API key')
+  })
+
   it('discloses the uninstall survey: what opening it sends, what the form sends, and where it goes', () => {
     render(<PrivacyPage />)
     const block = document.getElementById('uninstall-survey')
@@ -193,7 +204,16 @@ describe('PrivacyPage', () => {
 
   it('shows the date of the latest revision', () => {
     render(<PrivacyPage />)
-    expect(screen.getByText('Last updated: October 18, 2026')).toBeInTheDocument()
+    expect(screen.getByText('Last updated: October 29, 2026')).toBeInTheDocument()
+  })
+
+  it('discloses the AI abuse limits: per account and IP, IP never stored as is, deleted within days', () => {
+    render(<PrivacyPage />)
+    const collect = document.getElementById('what-we-collect')?.textContent ?? ''
+    expect(collect).toMatch(/Abuse limits\. .*from each account and from each IP address/)
+    expect(collect).toMatch(/We never store your IP address itself: we keep only a one-way code made from it with a secret key/)
+    expect(collect).toMatch(/deleted automatically within about three days/)
+    expect(document.getElementById('retention')?.textContent).toMatch(/AI request counts used for abuse limits .* are deleted automatically within about three days/)
   })
 
   it('discloses the extension usage events: install, update, daily, random install id, Firefox opt-in', () => {

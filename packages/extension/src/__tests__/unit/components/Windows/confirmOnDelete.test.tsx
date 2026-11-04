@@ -70,12 +70,13 @@ vi.mock('@/hooks/useGroups', () => ({
     },
   }),
   GROUPS_QUERY_KEY: ['groups'],
+  useUpdateGroupNote: () => ({ mutate: vi.fn(), mutateAsync: vi.fn() }),
 }))
 
 vi.mock('@/hooks/useOpenWindow', () => ({ useOpenWindow: () => vi.fn() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ maxGroups: 5, tier: 'pro', aiFeatures: false }) }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => ({ data: {} }) }))
-vi.mock('@/hooks/useAI', () => ({ useNameGroup: () => ({ mutateAsync: vi.fn() }), QuotaExceededError: class extends Error {} }))
+vi.mock('@/hooks/useAI', () => ({ useNameGroup: () => ({ mutateAsync: vi.fn() }), useDescribeGroup: () => ({ mutateAsync: vi.fn() }), QuotaExceededError: class extends Error {} }))
 
 // ─── localDb ─────────────────────────────────────────────────────────────────
 

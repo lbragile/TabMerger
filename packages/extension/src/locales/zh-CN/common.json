@@ -45,5 +45,6 @@
   "showPassphrase": "显示密码短语",
   "hidePassphrase": "隐藏密码短语",
   "notifications": "通知",
-  "closeToast": "关闭提示"
+  "closeToast": "关闭提示",
+  "openSettings": "打开设置"
 }

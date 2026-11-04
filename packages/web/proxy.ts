@@ -3,6 +3,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import createIntlMiddleware from 'next-intl/middleware'
 import { routing } from '@/i18n/routing'
 import { LOCALES } from '@/i18n/locales'
+import { AI_BYOK_KEY_HEADER, AI_CREDITS_REMAINING_HEADER } from '@tabmerger/shared'
 import { isProductionDeployment } from '@/lib/deployment'
 import {
   CONSENT_REGION_COOKIE,
@@ -42,11 +43,17 @@ export function extensionCorsHeaders(request: NextRequest): Record<string, strin
   if (!request.nextUrl.pathname.startsWith('/api/')) return null
   const origin = request.headers.get('origin')
   if (!origin || !EXTENSION_ORIGIN.test(origin)) return null
+  // AI routes also take a BYOK user's Anthropic key in its own header, and send the managed
+  // credit balance back in another, which a cross-origin caller can only read once exposed.
+  const isAiRoute = request.nextUrl.pathname.startsWith('/api/ai/')
   return {
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     // `*` would NOT cover Authorization — it must be named explicitly.
-    'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+    'Access-Control-Allow-Headers': isAiRoute
+      ? `Authorization, Content-Type, ${AI_BYOK_KEY_HEADER}`
+      : 'Authorization, Content-Type',
+    ...(isAiRoute ? { 'Access-Control-Expose-Headers': AI_CREDITS_REMAINING_HEADER } : {}),
     'Access-Control-Max-Age': '86400',
     // The allowed origin is reflected per request, so caches must key on it.
     Vary: 'Origin',

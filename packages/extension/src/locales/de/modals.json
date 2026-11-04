@@ -55,5 +55,42 @@
   },
   "confirmDialog": {
     "cancel": "Abbrechen"
+  },
+  "organize": {
+    "title": "Gruppen organisieren",
+    "description_one": "Die KI schlägt {{count}} Änderung vor. Entferne das Häkchen bei allem, was du nicht willst.",
+    "description_other": "Die KI schlägt {{count}} Änderungen vor. Entferne das Häkchen bei allem, was du nicht willst.",
+    "merge": "„<from>{{from}}</from>“ in „<to>{{to}}</to>“ zusammenführen",
+    "rename": "„<from>{{from}}</from>“ in „<to>{{to}}</to>“ umbenennen",
+    "archive": "„<name>{{name}}</name>“ archivieren",
+    "reorder": "Gruppen neu anordnen",
+    "archiveNote": "Archivierte Gruppen werden nur ausgeblendet, nicht gelöscht: unter „Archiviert“ jederzeit wiederherstellbar.",
+    "apply": "Auswahl anwenden",
+    "applied_one": "{{count}} Änderung angewendet",
+    "applied_other": "{{count}} Änderungen angewendet",
+    "nothingApplied": "Nichts anzuwenden: Diese Gruppen haben sich inzwischen geändert",
+    "applyFailed": "Die Änderungen konnten nicht angewendet werden"
+  },
+  "describeGroup": {
+    "title": "KI-Beschreibung übernehmen?",
+    "description": "Diese Gruppe hat bereits eine Notiz. Ersetze sie oder füge den Vorschlag darunter ein.",
+    "descriptionWindow": "Dieses Fenster hat bereits eine Notiz. Ersetze sie oder füge den Vorschlag darunter ein.",
+    "current": "Aktuelle Notiz",
+    "suggestion": "Vorschlag",
+    "replace": "Notiz ersetzen",
+    "append": "Darunter einfügen",
+    "tooLong": "Zu lang, um es unter der Notiz einzufügen (höchstens {{max}} Zeichen). Ersetze sie stattdessen.",
+    "saveFailed": "Notiz konnte nicht gespeichert werden"
+  },
+  "nameGroup": {
+    "title": "Diese Gruppe benennen",
+    "titleWindow": "Dieses Fenster benennen",
+    "current": "Aktuell: <name>{{name}}</name>",
+    "choices": "Vorgeschlagene Namen",
+    "custom": "Oder eigenen Namen eingeben:",
+    "customInput": "Eigener Name",
+    "rename": "Umbenennen",
+    "renameFailedWindow": "Das Fenster konnte nicht umbenannt werden",
+    "renameFailed": "Die Gruppe konnte nicht umbenannt werden"
   }
 }

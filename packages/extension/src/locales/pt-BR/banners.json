@@ -1,6 +1,7 @@
 {
   "review": "Revisar",
   "archive": "Arquivar",
+  "merge": "Mesclar",
   "dismiss": "Dispensar",
   "getMore": "Obter mais",
   "removeStale": "Remover inativas",
@@ -18,5 +19,7 @@
     "restart": "Reiniciar para atualizar",
     "restartLabel": "Reinicie o TabMerger para atualizar para a versão {{version}}. Isso fecha o popup.",
     "dismissLabel": "Dispensar o aviso de atualização da versão {{version}}"
-  }
+  },
+  "aiQuotaPrompt": "Não há créditos de IA suficientes neste mês. Escolha um modelo mais barato ou compre mais créditos.",
+  "changeModel": "Trocar modelo"
 }

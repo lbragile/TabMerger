@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { GroupContextMenu } from './GroupContextMenu';
 import { ColorPicker } from '@/components/ColorPicker';
 import type { Group } from '@/lib/types';
+import { typedGroupName } from '@/lib/groupName';
 import { useUpdateGroupName, useUpdateGroupColor, useToggleGroupStar, useGroups, useDeleteGroup } from '@/hooks/useGroups';
 import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
 import { useDndContext } from '@/components/dnd/DndProvider';
@@ -154,9 +155,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
 
   const handleRename = () => {
     if (group.permanent) { setRenameTarget(null); return; }
-    if (editValue.trim()) {
-      updateGroupName({ groupIndex, name: editValue.trim() });
-    }
+    const name = typedGroupName(editValue);
+    if (name) updateGroupName({ groupIndex, name });
     setRenameTarget(null);
   };
 

@@ -15,7 +15,7 @@ const { mockUseAuth, mockUseEntitlements, mockUseAppSettings, mockUseAiUsage, mo
 // Separate file (rather than a describe block) because `AI_ENABLED` is mocked via a
 // module-level `vi.mock` factory that is static per test file — useAI.test.ts already
 // forces it `true` for its mutation-logic suite, so the off-state gets its own file.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false }))
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: false, AI_MANAGED_ENABLED: false, AI_BYOK_ENABLED: false }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))

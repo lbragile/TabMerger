@@ -27,7 +27,24 @@
   "sharingRequiresPro": "Udostępnianie wymaga przejścia na Pro — brak uprawnień",
   "aiOncePerDay": "Już użyto dzisiaj — ta akcja AI jest ograniczona do jednego razu dziennie",
   "proAiRequired": "Wymagany plan Pro AI",
-  "nameGroupOff": "Nazywanie grupy jest wyłączone w Ustawieniach",
+  "nameGroupOff": "Nazywanie grup i okien jest wyłączone w Ustawieniach",
+  "describeGroupOff": "Opisywanie grup i okien jest wyłączone w Ustawieniach",
   "suggestSessionsOff": "Sugerowanie sesji jest wyłączone w Ustawieniach",
-  "organizeOff": "Organizowanie jest wyłączone w Ustawieniach"
+  "organizeOff": "Organizowanie jest wyłączone w Ustawieniach",
+  "ai": {
+    "disabled": "Funkcje AI są teraz niedostępne.",
+    "modelInvalid": "Ten model AI jest niedostępny. Wybierz inny w Ustawieniach, na karcie AI.",
+    "overloaded": "Usługa AI jest teraz przeciążona. Spróbuj ponownie za minutę.",
+    "byokKeyMissing": "Dodaj klucz API swojego dostawcy AI w Ustawieniach, na karcie AI, aby korzystać z funkcji AI.",
+    "byokKeyInvalid": "Twój dostawca AI nie przyjął Twojego klucza API. Sprawdź go lub zmień w Ustawieniach, na karcie AI.",
+    "byokRateLimited": "Twój klucz API osiągnął limit żądań u swojego dostawcy. Odczekaj chwilę i spróbuj ponownie.",
+    "byokBilling": "Na Twoim koncie u dostawcy AI skończyły się środki lub jest problem z płatnościami. Sprawdź płatności u swojego dostawcy.",
+    "creditsNotApplicable": "Pakiety kredytów nie są dostępne, gdy używasz własnego klucza API.",
+    "unauthorized": "Twoje logowanie wygasło. Zaloguj się ponownie i spróbuj jeszcze raz.",
+    "invalidRequest": "TabMerger nie mógł wysłać tego żądania AI. Spróbuj ponownie i zaktualizuj rozszerzenie, jeśli to się powtarza.",
+    "refused": "AI odmówiła wykonania tego żądania.",
+    "failed": "Żądanie AI nie powiodło się. Spróbuj ponownie.",
+    "rateLimited": "Zbyt wiele zapytań AI w tej chwili. Spróbuj ponownie za minutę.",
+    "rateLimitedRetry": "Zbyt wiele zapytań AI w tej chwili. Spróbuj ponownie {{when}}."
+  }
 }

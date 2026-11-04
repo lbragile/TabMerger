@@ -19,7 +19,9 @@ import {
   SortAsc,
   StickyNote,
   Check,
-  X
+  X,
+  Sparkles,
+  NotebookPen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -49,6 +51,8 @@ import {
   useSortTabs
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
+import { useWindowAiMenu } from './WindowAiScope';
+import { WINDOW_NOTE_MAX_LENGTH } from '@/lib/groupDescription';
 import { cn } from '@/lib/utils';
 import { withAlpha } from '@/lib/color';
 import { getSetting } from '@/lib/localDb';
@@ -159,6 +163,10 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
   const { mutate: sortTabs } = useSortTabs();
   const { data: groupsState } = useGroups();
   const isNowOpen = groupsState?.available[groupIndex]?.permanent ?? false;
+  // AI rename / describe (Pro AI with a live option, per-feature switch on). Now Open is rebuilt
+  // from the browser, so a name or note there would not last: no AI items, as for its group.
+  const windowAi = useWindowAiMenu();
+  const ai = isNowOpen ? null : windowAi;
 
   const openModal = useUIStore((s) => s.openModal);
   const selectionMode = useUIStore((s) => s.selectionMode);
@@ -540,6 +548,12 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 <Edit3 className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
                 {t('window.renameShort')}
               </DropdownMenuItem>
+              {ai?.showName && (
+                <DropdownMenuItem className="text-xs" onClick={() => ai.name(groupsState?.available[groupIndex], windowIndex, window)} data-testid="window-menu-ai-rename">
+                  <Sparkles className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
+                  {t('groupMenu.aiRename')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem className="text-xs" onClick={() => toggleIncognito({ groupIndex, windowIndex })}>
                 {window.incognito ? (
                   <><Shield className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />{t('window.removeIncognito')}</>
@@ -563,6 +577,12 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 <StickyNote className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
                 {window.note ? t('window.editNote') : t('window.addNote')}
               </DropdownMenuItem>
+              {ai?.showDescribe && (
+                <DropdownMenuItem className="text-xs" onClick={() => ai.describe(groupsState?.available[groupIndex], windowIndex, window)} data-testid="window-menu-ai-describe">
+                  <NotebookPen className="h-3.5 w-3.5 me-2 shrink-0 text-muted-foreground" />
+                  {t('groupMenu.aiDescribe')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-xs text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
@@ -598,7 +618,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             ref={noteTextareaRef}
             dir={noteValue ? 'auto' : undefined}
             rows={2}
-            maxLength={500}
+            maxLength={WINDOW_NOTE_MAX_LENGTH}
             className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder={t('window.notePlaceholder')}
             value={noteValue}
@@ -610,7 +630,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
             onBlur={handleWindowNoteBlur}
           />
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">{t('windows.noteLength', { length: noteValue.length, max: 500 })}</span>
+            <span className="text-[10px] text-muted-foreground">{t('windows.noteLength', { length: noteValue.length, max: WINDOW_NOTE_MAX_LENGTH })}</span>
             <div className="flex gap-1">
               <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)} onMouseDown={(e) => e.stopPropagation()}>{t('common.cancel')}</Button>
               <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitWindowNote} onMouseDown={(e) => e.stopPropagation()}>{t('common.save')}</Button>

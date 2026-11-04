@@ -49,5 +49,40 @@
   },
   "confirmDialog": {
     "cancel": "Batal"
+  },
+  "organize": {
+    "title": "Atur ulang grup",
+    "description_other": "AI menyarankan {{count}} perubahan. Hapus centang yang tidak Anda inginkan.",
+    "merge": "Gabungkan “<from>{{from}}</from>” ke “<to>{{to}}</to>”",
+    "rename": "Ganti nama “<from>{{from}}</from>” menjadi “<to>{{to}}</to>”",
+    "archive": "Arsipkan “<name>{{name}}</name>”",
+    "reorder": "Urutkan ulang grup",
+    "archiveNote": "Grup yang diarsipkan disembunyikan, bukan dihapus: pulihkan kapan saja dari Diarsipkan.",
+    "apply": "Terapkan yang dipilih",
+    "applied_other": "{{count}} perubahan diterapkan",
+    "nothingApplied": "Tidak ada yang diterapkan: grup tersebut berubah sementara itu",
+    "applyFailed": "Tidak dapat menerapkan perubahan"
+  },
+  "describeGroup": {
+    "title": "Gunakan deskripsi AI?",
+    "description": "Grup ini sudah punya catatan. Ganti catatan itu atau tambahkan saran di bawahnya.",
+    "descriptionWindow": "Jendela ini sudah punya catatan. Ganti catatan itu atau tambahkan saran di bawahnya.",
+    "current": "Catatan saat ini",
+    "suggestion": "Saran",
+    "replace": "Ganti catatan",
+    "append": "Tambahkan di bawah",
+    "tooLong": "Terlalu panjang untuk ditambahkan di bawah catatan (maksimal {{max}} karakter). Ganti catatannya saja.",
+    "saveFailed": "Tidak dapat menyimpan catatan"
+  },
+  "nameGroup": {
+    "title": "Beri nama grup ini",
+    "titleWindow": "Beri nama jendela ini",
+    "current": "Saat ini: <name>{{name}}</name>",
+    "choices": "Nama yang disarankan",
+    "custom": "Atau ketik nama sendiri:",
+    "customInput": "Nama Anda sendiri",
+    "rename": "Ganti nama",
+    "renameFailedWindow": "Tidak dapat mengganti nama jendela",
+    "renameFailed": "Tidak dapat mengganti nama grup"
   }
 }

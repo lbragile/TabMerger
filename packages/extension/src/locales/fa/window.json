@@ -27,6 +27,12 @@
   "sortByUrl": "مرتب‌سازی این پنجره بر اساس URL",
   "notePlaceholder": "افزودن یادداشت…",
   "empty": "پنجرهٔ خالی",
+  "toast": {
+    "noTabsToName": "این پنجره زبانه‌ای برای نام‌گذاری ندارد",
+    "nameAlreadyFits": "نام «{{name}}» همین حالا برای این پنجره مناسب است",
+    "noTabsToDescribe": "این پنجره زبانه‌ای برای توصیف ندارد",
+    "aiDescribeFailed": "توصیف این پنجره انجام نشد"
+  },
   "someOfTabs_one": "{{matched}} از {{count}} زبانه",
   "someOfTabs_other": "{{matched}} از {{count}} زبانه"
 }

@@ -4,7 +4,6 @@ import {
     Redo2,
     Settings,
     UserCircle,
-    Sparkles,
     CheckSquare,
     Square,
     Zap,
@@ -30,16 +29,13 @@ import {
 import { useUIStore } from "@/stores/uiStore";
 import { SearchOverlay } from './SearchOverlay';
 import { LanguageMenu } from './LanguageMenu';
+import { AiMenu } from './AiMenu';
 import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
-import { useAutoGroup, useOrganizeTabs, QuotaExceededError } from "@/hooks/useAI";
 import { AI_ENABLED } from "@/lib/aiFlag";
-import { useAppSettings } from "@/hooks/useAppSettings";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
-import { useGroups, useApplyAIGroups } from "@/hooks/useGroups";
-import { toast } from "@/lib/toast";
-import { FreeLimitExceededError, countedGroups } from "@/lib/tierLimits";
+import { useGroups } from "@/hooks/useGroups";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
@@ -95,86 +91,13 @@ export function Header() {
         setSearchFilter(q);
     };
     const { user, signOut } = useAuth();
-    const { aiFeatures, tier, maxGroups, maxTabs } = useEntitlements();
+    const { tier } = useEntitlements();
     const { data: groupsState } = useGroups();
-    const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
-    const { mutateAsync: applyAIGroups } = useApplyAIGroups({ maxGroups, maxTabs });
-    const { mutateAsync: organizeTabs, isPending: organizeLoading } = useOrganizeTabs();
-    const { data: appSettings } = useAppSettings();
     const [aiQuotaExceeded, setAiQuotaExceeded] = useState(false);
 
     // Restores a snapshot as a NEW local change (see `useUndoRedo`), never the raw snapshot:
     // that one carries stale sync stamps, a stale copy of Now Open and no tour practice groups.
     const { canUndo, canRedo, undo: handleUndo, redo: handleRedo } = useUndoRedo();
-
-    const handleAIGroup = async () => {
-        if (!groupsState) return;
-        const tabs =
-            groupsState.available[0]?.windows.flatMap((w) => w.tabs) ?? [];
-        if (tabs.length === 0) {
-            toast.error(t("header.toast.noTabsToGroup"));
-            return;
-        }
-        setAiQuotaExceeded(false);
-        try {
-            const result = await autoGroup(tabs);
-            if (result.groups.length === 0) {
-                toast.info(t("header.toast.aiNoGroups"));
-                return;
-            }
-
-            // Cap to remaining free-tier group slots, same limit manual "New group" enforces
-            const activeCount = countedGroups(groupsState.available).length;
-            const remaining = isFinite(maxGroups) ? Math.max(0, maxGroups - activeCount) : result.groups.length;
-            const suggestions = result.groups.slice(0, remaining);
-            if (suggestions.length === 0) {
-                trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
-                toast.error(t('common.freeGroupLimit', { max: maxGroups }), {
-                    action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
-                });
-                return;
-            }
-
-            const { appliedGroups } = await applyAIGroups(suggestions);
-            if (appliedGroups === 0) {
-                toast.info(t("header.toast.aiNoMatchingTabs"));
-                return;
-            }
-            toast.success(t('header.toast.aiCreated', { count: appliedGroups }), {
-                ...(suggestions.length < result.groups.length
-                    ? { description: t('header.toast.aiSkipped', { skipped: result.groups.length - suggestions.length }) }
-                    : {})
-            });
-        } catch (err) {
-            if (err instanceof QuotaExceededError) {
-                setAiQuotaExceeded(true);
-                return;
-            }
-            // The backstop already showed the upgrade toast
-            if (err instanceof FreeLimitExceededError) return;
-            console.error("[TabMerger] AI grouping failed:", err);
-            toast.error(t("header.toast.aiGroupingFailed"));
-        }
-    };
-
-    // Kicks off the durable tab-organizer workflow server-side; the run itself streams
-    // progress and asks for approval in the web dashboard's OrganizeProposal component
-    // (packages/web/components/dashboard/OrganizeProposal.tsx), not here — the popup's
-    // job is just to start it and hand off.
-    const handleOrganize = async () => {
-        setAiQuotaExceeded(false);
-        try {
-            await organizeTabs();
-            toast.success(t('header.toast.organizeStarted'));
-            chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/dashboard` });
-        } catch (err) {
-            if (err instanceof QuotaExceededError) {
-                setAiQuotaExceeded(true);
-                return;
-            }
-            toast.error(err instanceof Error ? err.message : t('header.toast.organizeFailed'));
-        }
-    };
 
     const searchRef = useRef<HTMLInputElement>(null);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -407,61 +330,8 @@ export function Header() {
                     </TooltipContent>
                 </Tooltip>
 
-                {/* AI features: coming soon — this entry point is fully hidden (not just
-                    disabled) while the global flag is off, per product decision. */}
-                {AI_ENABLED && (
-                <DropdownMenu>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className={cn(
-                                        "h-7 w-7",
-                                        (aiLoading || organizeLoading) && "animate-pulse",
-                                        !aiFeatures && "opacity-50 cursor-not-allowed",
-                                    )}
-                                    onClick={aiFeatures ? undefined : () => openModal('upgrade')}
-                                    disabled={aiLoading || organizeLoading}
-                                    aria-disabled={!aiFeatures}
-                                    aria-label={t("header.aiActions")}
-                                    data-tour={TOUR_ANCHORS.aiActions}
-                                >
-                                    <Sparkles className={cn(
-                                        "h-3.5 w-3.5",
-                                        aiFeatures ? "text-purple-500" : "text-muted-foreground",
-                                    )} />
-                                </Button>
-                            </DropdownMenuTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                            {aiFeatures ? t('header.aiActions') : t('header.aiProRequired')}
-                        </TooltipContent>
-                    </Tooltip>
-
-                    {aiFeatures && (
-                        <DropdownMenuContent align="end" className="w-52 text-xs">
-                            {appSettings?.aiAutoGroupEnabled !== false && (
-                                <DropdownMenuItem onClick={() => void handleAIGroup()}>
-                                    <div>
-                                        <div>{t("header.autoGroup")}</div>
-                                        <div className="text-[10px] text-muted-foreground font-normal">{t("header.autoGroupHint")}</div>
-                                    </div>
-                                </DropdownMenuItem>
-                            )}
-                            {appSettings?.aiOrganizeEnabled !== false && (
-                                <DropdownMenuItem onClick={() => void handleOrganize()}>
-                                    <div>
-                                        <div>{t("header.organize")}</div>
-                                        <div className="text-[10px] text-muted-foreground font-normal">{t("header.organizeHint")}</div>
-                                    </div>
-                                </DropdownMenuItem>
-                            )}
-                        </DropdownMenuContent>
-                    )}
-                </DropdownMenu>
-                )}
+                {/* ✨ AI actions, sorted by scope (open tabs, selected group, all groups) */}
+                <AiMenu onQuotaExceeded={setAiQuotaExceeded} />
 
                 {/* Language: applies at once (Settings → General has the same choice) */}
                 <LanguageMenu />

@@ -27,5 +27,11 @@
   "sortByUrl": "이 창을 URL순 정렬",
   "notePlaceholder": "메모 추가…",
   "empty": "빈 창",
+  "toast": {
+    "noTabsToName": "이 창에는 이름을 지을 탭이 없습니다",
+    "nameAlreadyFits": "“{{name}}”은(는) 이미 이 창에 잘 맞습니다",
+    "noTabsToDescribe": "이 창에는 설명할 탭이 없습니다",
+    "aiDescribeFailed": "이 창의 설명을 쓰지 못했습니다"
+  },
   "someOfTabs_other": "탭 {{count}}개 중 {{matched}}개"
 }

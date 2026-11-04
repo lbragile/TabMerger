@@ -27,6 +27,12 @@
   "sortByUrl": "Ordenar esta ventana por URL",
   "notePlaceholder": "Agrega una nota…",
   "empty": "Ventana vacía",
+  "toast": {
+    "noTabsToName": "No hay pestañas en esta ventana para nombrar",
+    "nameAlreadyFits": "«{{name}}» ya encaja con esta ventana",
+    "noTabsToDescribe": "No hay pestañas en esta ventana para describir",
+    "aiDescribeFailed": "No se pudo describir esta ventana"
+  },
   "someOfTabs_one": "{{matched}} de {{count}} pestaña",
   "someOfTabs_many": "{{matched}} de {{count}} de pestañas",
   "someOfTabs_other": "{{matched}} de {{count}} pestañas"

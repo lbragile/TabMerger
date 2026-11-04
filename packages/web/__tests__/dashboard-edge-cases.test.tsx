@@ -27,7 +27,7 @@ describe('StatsOverview edge cases', () => {
         groupCount={1}
         sessionCount={1}
         memberSince="2024-01-01"
-        aiUsage={{ used: 50, limit: 50 }}
+        aiUsage={{ mode: 'managed', used: 50, limit: 50 }}
       />
     )
     expect(screen.getByText('50/50')).toBeInTheDocument()

@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Penataan berbasis AI",
-    "description": "Biarkan Claude menganalisis tab Anda dan memberi saran cerdas agar Anda bisa fokus berpikir, bukan memilah.",
+    "description": "AI membaca judul dan URL tab Anda lalu menyarankan cara mengelompokkan, menamai, dan merapikannya, agar Anda bisa fokus berpikir, bukan memilah.",
     "autoGrouping": {
       "title": "Pengelompokan otomatis",
       "description": "Buka setumpuk tab, klik satu tombol. AI mengelompokkannya ke dalam grup yang logis berdasarkan topik, domain, dan tujuan."
@@ -71,13 +71,21 @@
       "title": "Nama grup cerdas",
       "description": "AI menyarankan nama yang ringkas dan deskriptif untuk grup Anda. Terima dengan sekali klik, atau ketik nama sendiri."
     },
+    "describe": {
+      "title": "Deskripsikan grup",
+      "description": "AI menulis catatan singkat tentang isi tab dalam sebuah grup atau jendela, agar Anda ingat alasan menyimpannya. Edit seperti catatan lainnya."
+    },
     "summaries": {
       "title": "Ringkasan tab",
       "description": "Arahkan kursor ke tab mana pun untuk melihat ringkasan AI satu kalimat tentang isi halaman — tanpa membukanya."
     },
     "sessionSuggestions": {
       "title": "Saran sesi",
-      "description": "AI menganalisis pola penjelajahan Anda dan menyarankan cara menyusun sesi untuk produktivitas maksimal."
+      "description": "AI meninjau grup tersimpan Anda dan menyarankan untuk menggabungkan grup yang tumpang tindih atau mengarsipkan grup yang sudah lama tidak dipakai. Gabungkan atau arsipkan dengan sekali klik."
+    },
+    "organize": {
+      "title": "Rapikan ruang kerja Anda",
+      "description": "AI meninjau semua grup Anda sekaligus dan mengusulkan penggabungan, penggantian nama, pengarsipan, serta urutan baru. Hapus centang perubahan yang tidak Anda inginkan, lalu terapkan sisanya dalam satu langkah yang bisa dibatalkan."
     }
   }
 }

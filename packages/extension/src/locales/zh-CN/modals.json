@@ -49,5 +49,40 @@
   },
   "confirmDialog": {
     "cancel": "取消"
+  },
+  "organize": {
+    "title": "整理分组",
+    "description_other": "AI 建议了 {{count}} 项更改。取消勾选您不需要的更改。",
+    "merge": "将“<from>{{from}}</from>”合并到“<to>{{to}}</to>”",
+    "rename": "将“<from>{{from}}</from>”重命名为“<to>{{to}}</to>”",
+    "archive": "归档“<name>{{name}}</name>”",
+    "reorder": "重新排列分组",
+    "archiveNote": "归档的分组只是隐藏，不会删除：可随时从“已归档”中恢复。",
+    "apply": "应用所选",
+    "applied_other": "已应用 {{count}} 项更改",
+    "nothingApplied": "没有可应用的更改：这些分组在此期间已有变动",
+    "applyFailed": "无法应用更改"
+  },
+  "describeGroup": {
+    "title": "使用 AI 生成的描述？",
+    "description": "此分组已有备注。可以替换它，或将建议添加到其下方。",
+    "descriptionWindow": "此窗口已有备注。可以替换它，或将建议添加到其下方。",
+    "current": "当前备注",
+    "suggestion": "建议",
+    "replace": "替换备注",
+    "append": "添加到下方",
+    "tooLong": "太长，无法添加到备注下方（最多 {{max}} 个字符）。请改为替换。",
+    "saveFailed": "无法保存备注"
+  },
+  "nameGroup": {
+    "title": "为此分组命名",
+    "titleWindow": "为此窗口命名",
+    "current": "当前：<name>{{name}}</name>",
+    "choices": "建议的名称",
+    "custom": "或自己输入：",
+    "customInput": "自定义名称",
+    "rename": "重命名",
+    "renameFailedWindow": "无法重命名窗口",
+    "renameFailed": "无法重命名分组"
   }
 }

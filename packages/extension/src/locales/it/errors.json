@@ -27,7 +27,24 @@
   "sharingRequiresPro": "La condivisione richiede Pro: requisito del piano non soddisfatto",
   "aiOncePerDay": "Già usata oggi: questa azione AI è limitata a una volta al giorno",
   "proAiRequired": "È richiesto il piano Pro AI",
-  "nameGroupOff": "Assegna nome al gruppo è disattivato nelle Impostazioni",
+  "nameGroupOff": "Assegna nome a gruppi e finestre è disattivato nelle Impostazioni",
+  "describeGroupOff": "Descrivi gruppi e finestre è disattivato nelle Impostazioni",
   "suggestSessionsOff": "Suggerisci sessioni è disattivato nelle Impostazioni",
-  "organizeOff": "Organizza è disattivato nelle Impostazioni"
+  "organizeOff": "Organizza è disattivato nelle Impostazioni",
+  "ai": {
+    "disabled": "Le funzioni AI non sono disponibili al momento.",
+    "modelInvalid": "Questo modello AI non è disponibile. Scegline un altro in Impostazioni, scheda AI.",
+    "overloaded": "Il servizio AI è sovraccarico. Riprova tra un minuto.",
+    "byokKeyMissing": "Aggiungi la chiave API del tuo fornitore AI in Impostazioni, scheda AI, per usare le funzioni AI.",
+    "byokKeyInvalid": "Il tuo fornitore AI non ha accettato la tua chiave API. Controllala o sostituiscila in Impostazioni, scheda AI.",
+    "byokRateLimited": "La tua chiave API ha raggiunto il limite di richieste del suo fornitore. Attendi un momento e riprova.",
+    "byokBilling": "Il tuo account presso il fornitore AI ha esaurito il credito o ha un problema di fatturazione. Controlla la fatturazione con il tuo fornitore.",
+    "creditsNotApplicable": "I pacchetti di crediti non sono disponibili se usi la tua chiave API.",
+    "unauthorized": "Il tuo accesso è scaduto. Accedi di nuovo e riprova.",
+    "invalidRequest": "TabMerger non è riuscito a inviare questa richiesta AI. Riprova e aggiorna l’estensione se succede ancora.",
+    "refused": "L’AI ha rifiutato questa richiesta.",
+    "failed": "La richiesta AI non è riuscita. Riprova.",
+    "rateLimited": "Troppe richieste AI in questo momento. Riprova tra un minuto.",
+    "rateLimitedRetry": "Troppe richieste AI in questo momento. Riprova {{when}}."
+  }
 }

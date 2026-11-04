@@ -59,5 +59,6 @@
   "showPassphrase": "Show passphrase",
   "hidePassphrase": "Hide passphrase",
   "notifications": "Notifications",
-  "closeToast": "Close toast"
+  "closeToast": "Close toast",
+  "openSettings": "Open Settings"
 }

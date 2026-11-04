@@ -1,5 +1,6 @@
 import type { PricingTier, SubscriptionStatus } from '../types/index.ts';
 import { AUTO_BACKUP_COPY } from './autoBackup';
+import { PRO_AI_MONTHLY_CREDITS } from './ai';
 
 export const DEFAULT_GROUP_COLOR = 'rgba(128, 128, 128, 1)';
 export const FIRST_GROUP_TITLE = 'Now Open';
@@ -69,6 +70,13 @@ export const PRESET_COLORS = [
   'rgba(15, 23, 42, 1)',    // slate dark
 ] as const;
 
+/**
+ * The yearly discount every paid option advertises. Each yearly price is set so its real saving
+ * over twelve monthly payments is at least this and under one point more, so the badge (rounded
+ * down) reads exactly this for every option. A test in `__tests__/ai.test.ts` holds prices to it.
+ */
+export const YEARLY_DISCOUNT_PERCENT = 10;
+
 export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'free',
@@ -94,7 +102,7 @@ export const PRICING_TIERS: PricingTier[] = [
     yearlyPrice: 42.99,
     features: [
       'Everything in Free',
-      'Unlimited groups, tabs, URL rules & sessions',
+      'Unlimited groups, tabs, rules & sessions',
       'Cloud sync across devices',
       'Sessions synced across devices',
       AUTO_BACKUP_COPY.pricingFeature,
@@ -112,10 +120,29 @@ export const PRICING_TIERS: PricingTier[] = [
       'Everything in Pro',
       'AI auto-grouping of tabs',
       'AI group name suggestions',
+      'AI group & window descriptions',
       'Smart session suggestions',
+      'AI workspace cleanup',
       'Tab preview with AI summary',
+      `${PRO_AI_MONTHLY_CREDITS.toLocaleString('en-US')} AI credits a month`,
+      'Choose your AI model',
     ],
     limits: UNLIMITED_TIER_LIMITS,
+    byok: {
+      monthlyPrice: 5.99,
+      yearlyPrice: 64.49,
+      features: [
+        'Everything in Pro',
+        'AI auto-grouping of tabs',
+        'AI group name suggestions',
+        'AI group & window descriptions',
+        'Smart session suggestions',
+        'AI workspace cleanup',
+        'Tab preview with AI summary',
+        'Use your own AI provider',
+        'Choose your AI model',
+      ],
+    },
   },
 ];
 
@@ -140,6 +167,7 @@ export * from './locales';
 export * from './localeSearch';
 export * from './analyticsEvents';
 export * from './extensionLifecycle';
+export * from './ai';
 
 /** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
 export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

@@ -33,7 +33,7 @@
     "pro": {
       "name": "Pro",
       "f1": "무료의 모든 기능",
-      "f2": "그룹, 탭, URL 규칙, 세션 무제한",
+      "f2": "그룹, 탭, 규칙, 세션 무제한",
       "f3": "기기 간 클라우드 동기화"
     },
     "pro_ai": {
@@ -45,5 +45,6 @@
   },
   "maybeLater": "나중에",
   "signIn": "로그인",
-  "upgradeNow": "지금 업그레이드"
+  "upgradeNow": "지금 업그레이드",
+  "byokOption": "또는 월 {{price}}: 내 AI 제공업체 사용(Anthropic, OpenAI, Gemini)"
 }

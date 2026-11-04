@@ -59,5 +59,6 @@
   "showPassphrase": "Passphrase anzeigen",
   "hidePassphrase": "Passphrase verbergen",
   "notifications": "Benachrichtigungen",
-  "closeToast": "Hinweis schließen"
+  "closeToast": "Hinweis schließen",
+  "openSettings": "Einstellungen öffnen"
 }

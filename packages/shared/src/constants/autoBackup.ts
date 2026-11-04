@@ -76,7 +76,7 @@ export const AUTO_BACKUP_COPY = {
   title: 'Automatic backups',
   description: `Saves an encrypted snapshot of your groups on the schedule below while your browser is open. The newest ${AUTO_BACKUP_RETENTION_COUNT} are kept.`,
   /** Line shown in the Pro plan's feature list. */
-  pricingFeature: 'Automatic encrypted backups of your groups, with an optional file copy on your computer',
+  pricingFeature: 'Automatic encrypted backups',
   upgradeDescription: `Automatic backups are part of Pro: an encrypted snapshot of your groups, saved on a schedule, with the newest ${AUTO_BACKUP_RETENTION_COUNT} kept.`,
   /** Shown next to backups kept in the account of a plan without cloud sync (free, or a paid plan that is not active). */
   readOnlyNote: 'New backups need Pro. Your existing backups can still be downloaded or deleted.',

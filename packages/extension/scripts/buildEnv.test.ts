@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  resolveE2eTestDefine,
   getCliModeFlag,
   isServeCommand,
   resolveNodeEnv,
@@ -110,5 +111,34 @@ describe("resolveNodeEnv(resolveWxtModeFromArgv(...)) end-to-end mapping", () =>
   it("a default production build (no flags) stays NODE_ENV=production", () => {
     const mode = resolveWxtModeFromArgv(["wxt", "build"]);
     expect(resolveNodeEnv(mode)).toBe("production");
+  });
+});
+
+describe("resolveE2eTestDefine", () => {
+  /** What the bundle ends up with: Vite's define pastes the returned source text in place. */
+  const evaluate = (source: string): unknown => (source === "undefined" ? undefined : JSON.parse(source));
+
+  it("is the string 'true' for a development-mode build", () => {
+    expect(evaluate(resolveE2eTestDefine("development", undefined))).toBe("true");
+  });
+
+  it("is the string 'true' for a production build that exports VITE_E2E_TEST=true (CI's e2e build)", () => {
+    expect(evaluate(resolveE2eTestDefine("production", "true"))).toBe("true");
+  });
+
+  it("is never a boolean, which analytics.ts's `=== 'true'` check never matched (regression)", () => {
+    expect(typeof evaluate(resolveE2eTestDefine("production", "true"))).toBe("string");
+  });
+
+  it("is absent for a store build (production, beta, demo) without the variable", () => {
+    for (const mode of ["production", "beta", "demo"]) {
+      expect(evaluate(resolveE2eTestDefine(mode, undefined))).toBeUndefined();
+    }
+  });
+
+  it("is absent for any value other than exactly 'true' (never the truthy string 'false')", () => {
+    for (const value of ["false", "1", "TRUE", ""]) {
+      expect(evaluate(resolveE2eTestDefine("production", value))).toBeUndefined();
+    }
   });
 });

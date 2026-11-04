@@ -1,64 +1,35 @@
-import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase/server'
-import { aiDisabledResponse } from '@/lib/ai-guard'
-import { suggestSessions } from '@/lib/ai'
-import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
-import { parseSuggestSessionsBody, readJsonBody } from '@/lib/ai-validation'
+import { type NextRequest, type NextResponse } from 'next/server'
+import { runAiTask, suggestSessionsTask } from '@/lib/ai'
+import { AI_MAX_BODY_BYTES_GROUPS, parseSuggestSessionsBody } from '@/lib/ai-validation'
+import { aiJson, handleAiRoute } from '@/lib/ai-route'
 
 /**
- * Recommends a saved-session name and description based on the current tab groups.
- * Called by the extension via Bearer-token auth. Requires Pro AI entitlement;
- * responds with 429 when the monthly request quota is exhausted, 403 if not subscribed.
+ * Seconds Vercel lets this function run (a literal: Next reads it statically). Organize-sized
+ * work over thousands of tabs on the largest model can take minutes; 300 is the Hobby plan's
+ * maximum with fluid compute. The model call's own deadline is 20 s earlier (`aiDeadline`), so a
+ * slow call times out in our code and releases its credit reservation and concurrency slot.
  */
-export async function POST(request: NextRequest) {
-  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
-  const aiDisabled = aiDisabledResponse()
-  if (aiDisabled) return aiDisabled
+export const maxDuration = 300
 
-  const authHeader = request.headers.get('authorization')
-  const token = authHeader?.replace('Bearer ', '')
-
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const supabase = await createServiceRoleClient()
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser(token)
-
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Validated before the usage check, so a rejected body never spends a credit.
-  const input = parseSuggestSessionsBody(await readJsonBody(request))
-  if (!input.ok) {
-    return NextResponse.json({ error: input.error }, { status: 400 })
-  }
-
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.suggestSessions)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required or monthly limit reached' },
-      { status: remaining === 0 ? 429 : 403 }
-    )
-  }
-
-  try {
-    const { message, staleGroupIds } = await suggestSessions(input.data)
-    // `suggestion` is a deprecated alias for `message`, kept so the currently-shipped
-    // extension banner (AIGroupSuggestion) keeps working against a newer server.
-    return NextResponse.json({ message, staleGroupIds, suggestion: message }, {
-      headers: { 'X-AI-Requests-Remaining': String(remaining) },
-    })
-  } catch (err) {
-    console.error('AI suggest-sessions error:', err)
-    return NextResponse.json(
-      { error: 'Failed to suggest sessions' },
-      { status: 500 }
-    )
-  }
+/**
+ * Suggests how to consolidate saved groups, naming the groups the suggestion is about.
+ * Called by the extension with its Supabase JWT as a Bearer token. Requires an entitled Pro AI
+ * subscription; managed calls are metered in credits (the balance comes back in
+ * `X-AI-Credits-Remaining`); own-key calls send the key in `X-AI-Key` and go to that key's
+ * provider, unmetered. Optional body field `model`: `'auto'` or a model id of that provider. Request flow: see `lib/ai-route.ts`.
+ */
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  return handleAiRoute(request, {
+    action: 'suggestSessions',
+    label: 'suggest-sessions',
+    maxDurationSeconds: maxDuration,
+    maxBodyBytes: AI_MAX_BODY_BYTES_GROUPS,
+    parse: parseSuggestSessionsBody,
+    run: async (groups, ctx) => {
+      const { result, remaining } = await runAiTask(suggestSessionsTask(groups), ctx)
+      // `suggestion` is a deprecated alias for `message`, kept so the currently-shipped
+      // extension banner (AIGroupSuggestion) keeps working against a newer server.
+      return aiJson({ ...result, suggestion: result.message }, remaining)
+    },
+  })
 }

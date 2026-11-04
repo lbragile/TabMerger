@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { FREE_TIER_LIMITS } from '@tabmerger/shared'
 
 /** Each question is a key under `faq` (its `question` and `answer`), in display order. */
@@ -65,7 +65,11 @@ export function FAQ() {
         urlRules: FREE_TIER_LIMITS.urlRules,
       })
     }
-    if (key === 'ai') return AI_ENABLED ? t('ai.answer') : t('ai.answerComingSoon')
+    if (key === 'ai') {
+      if (AI_AVAILABILITY.managed) return t('ai.answer')
+      // Only the own-key option is live yet.
+      return AI_AVAILABILITY.byok ? t('ai.answerOwnKey') : t('ai.answerComingSoon')
+    }
     return t(`${key}.answer`)
   }
   return (

@@ -33,7 +33,9 @@
     "groups": "Zsynchronizowane grupy",
     "tabs": "Zapisane karty",
     "sessions": "Sesje i kopie zapasowe",
-    "aiCredits": "Pozostałe kredyty AI"
+    "aiCredits": "Pozostałe kredyty AI",
+    "aiOwnKey": "Kto konfiguruje AI",
+    "aiOwnKeyValue": "Ty"
   },
   "profile": {
     "title": "Profil",
@@ -51,7 +53,56 @@
     "description": "Zarządzaj planem i płatnościami.",
     "manageBilling": "Zarządzaj płatnościami",
     "upgrade": "Ulepsz",
-    "cancelNote": "Możesz zrezygnować w dowolnym momencie w sekcji <strong>Zarządzaj płatnościami</strong>. Dostęp zachowasz do końca bieżącego okresu rozliczeniowego."
+    "cancelNote": "Możesz zrezygnować w dowolnym momencie w sekcji <strong>Zarządzaj płatnościami</strong>. Dostęp zachowasz do końca bieżącego okresu rozliczeniowego.",
+    "scheduledChange": "Zmieni się na {plan} dnia {date}.",
+    "scheduledChangeUnknownPlan": "Twój plan zmieni się dnia {date}.",
+    "scheduledCancelNote": "Anulowanie zachowuje obecny plan do końca tego okresu rozliczeniowego i usuwa zaplanowaną zmianę. Bez zwrotu pieniędzy. Odnowienie później zachowuje obecny plan.",
+    "endsOn": "Twój plan kończy się {date}.",
+    "endsUnknownDate": "Twój plan zostanie zakończony.",
+    "endsNote": "Nie odnowi się. Zachowaj go, aby odnawiał się jak dotąd i aby zmienić plan; teraz nic nie zostanie pobrane."
+  },
+  "cancelSubscription": {
+    "button": "Anuluj subskrypcję",
+    "errors": {
+      "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym. Napisz na {email}, a anulujemy go za Ciebie.",
+      "no_subscription": "Nie znaleźliśmy subskrypcji do anulowania. Odśwież stronę lub napisz na {email}.",
+      "not_entitled": "Nie ma aktywnego planu do anulowania.",
+      "already_canceling": "Twój plan jest już ustawiony tak, aby zakończyć się z końcem tego okresu rozliczeniowego.",
+      "cancel_failed": "Nie udało się otworzyć strony anulowania. Spróbuj ponownie lub napisz na {email}.",
+      "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "Zachowaj mój obecny plan",
+    "success": "Twój plan pozostaje bez zmian: {plan}.",
+    "successUnknownPlan": "Twój obecny plan pozostaje bez zmian.",
+    "successRenews": "Twój plan pozostaje bez zmian: {plan}. Odnowi się {date} za {amount}.",
+    "successRenewsOn": "Twój plan pozostaje bez zmian: {plan}. Odnowi się {date}.",
+    "successUnknownPlanRenews": "Twój obecny plan pozostaje bez zmian. Odnowi się {date} za {amount}.",
+    "successUnknownPlanRenewsOn": "Twój obecny plan pozostaje bez zmian. Odnowi się {date}.",
+    "errors": {
+      "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym. Napisz na {email}, a zajmiemy się tym za Ciebie.",
+      "no_subscription": "Nie znaleźliśmy Twojej subskrypcji. Odśwież stronę lub napisz na {email}.",
+      "no_scheduled_change": "Nie ma już zaplanowanej zmiany planu. Odśwież stronę, aby zobaczyć swój plan.",
+      "keep_plan_failed": "Nie udało się zachować obecnego planu. Spróbuj ponownie lub napisz na {email}.",
+      "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
+    }
+  },
+  "resumeSubscription": {
+    "button": "Zachowaj mój plan",
+    "success": "Twój plan zostanie odnowiony.",
+    "successRenewsOn": "Twój plan odnowi się {date}.",
+    "successRenews": "Twój plan odnowi się {date} za {amount}.",
+    "errors": {
+      "no_billing_account": "Ten plan nie jest powiązany z kontem rozliczeniowym. Napisz na {email}, a zajmiemy się tym za Ciebie.",
+      "no_subscription": "Nie znaleźliśmy Twojej subskrypcji. Odśwież stronę lub napisz na {email}.",
+      "not_entitled": "Ten plan już się zakończył. Wybierz plan na stronie cennika.",
+      "not_canceling": "Twój plan nie jest już ustawiony do zakończenia. Odśwież stronę, aby zobaczyć swój plan.",
+      "ends_early": "Datę zakończenia tego planu ustalił nasz zespół wsparcia. Napisz na {email}, aby go zachować.",
+      "schedule_attached": "Nasz zespół wsparcia ustawił zmiany w tym planie. Napisz na {email}, aby go zachować.",
+      "resume_failed": "Nie udało się zachować planu. Spróbuj ponownie lub napisz na {email}.",
+      "rate_limited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie."
+    }
   },
   "devicesCard": {
     "title": "Urządzenia",
@@ -68,6 +119,15 @@
   },
   "credits": {
     "failed": "Nie udało się rozpocząć płatności",
-    "getMore": "Kup więcej"
+    "getMore": "Kup więcej",
+    "notAvailable": "Pakiety kredytów wymagają aktywnego planu Pro AI, w którym konfiguracją AI zajmuje się TabMerger.",
+    "rateLimited": "Zbyt wiele żądań dotyczących płatności w krótkim czasie. Odczekaj kilka minut i spróbuj ponownie.",
+    "resetsOn": "Kredyty zostaną zresetowane {date}",
+    "endsOn": "Kredyty wygasną {date}"
+  },
+  "aiPlan": {
+    "title": "Kto konfiguruje AI",
+    "managed": "TabMerger: zostało {left, number} z {limit, number} kredytów AI w tym miesiącu.",
+    "byok": "Ty: własny klucz API, rozliczany bezpośrednio przez dostawcę AI, bez limitu kredytów. Klucz dodasz lub zmienisz w Ustawieniach rozszerzenia."
   }
 }

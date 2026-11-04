@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { WindowItem } from './Window';
+import { WindowAiScope } from './WindowAiScope';
 import type { Group } from '@/lib/types';
 import {
   useAddWindow,
@@ -29,6 +30,7 @@ import {
 import { DndProvider, useDndContext } from '@/components/dnd/DndProvider';
 import { dndListStyle, gapGrowthFor } from '@/lib/dndInsertion';
 import { motionScrollBehavior } from '@/lib/reducedMotion';
+import { GROUP_NOTE_MAX_LENGTH } from '@/lib/groupDescription';
 import { useUIStore } from '@/stores/uiStore';
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
@@ -470,7 +472,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
             ref={noteTextareaRef}
             dir={noteValue ? 'auto' : undefined}
             rows={2}
-            maxLength={500}
+            maxLength={GROUP_NOTE_MAX_LENGTH}
             className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder={t('windows.notePlaceholder')}
             value={noteValue}
@@ -481,7 +483,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
             }}
           />
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-muted-foreground">{t('windows.noteLength', { length: noteValue.length, max: 500 })}</span>
+            <span className="text-[10px] text-muted-foreground">{t('windows.noteLength', { length: noteValue.length, max: GROUP_NOTE_MAX_LENGTH })}</span>
             <div className="flex gap-1">
               <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)}>{t('common.cancel')}</Button>
               <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitGroupNote}>{t('common.save')}</Button>
@@ -518,6 +520,8 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
               (see `gapGrowthFor`). Always mounted — never toggled mid-drag. */}
           <div data-tm-dnd-list={group.id} style={dndListStyle(gapGrowthFor(dnd.gap, group.id), '0px')}>
           <PanelSearchContext.Provider value={searchView}>
+          {/* The windows' ⋯ menu AI items: one set of AI hooks for the panel, none without AI */}
+          <WindowAiScope>
           <SortableContext items={windowIds} strategy={verticalListSortingStrategy}>
             {group.windows.reduce<{ els: React.ReactNode[]; offset: number }>(
               ({ els, offset }, window, windowIndex) => ({
@@ -552,6 +556,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
               { els: [], offset: 0 }
             ).els}
           </SortableContext>
+          </WindowAiScope>
           </PanelSearchContext.Provider>
           </div>
 

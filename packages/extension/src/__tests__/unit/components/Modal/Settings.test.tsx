@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
+import { act, render, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -30,7 +30,6 @@ const {
   mockEnterDemoMode,
   mockTrackEvent,
   mockUseAiUsage,
-  mockSetDevAiUsage,
   mockGetEncryptionKeyState,
   mockGetDataKey,
   mockResetEncryption,
@@ -52,7 +51,6 @@ const {
   mockEnterDemoMode: vi.fn().mockResolvedValue(undefined),
   mockTrackEvent: vi.fn(),
   mockUseAiUsage: vi.fn(),
-  mockSetDevAiUsage: vi.fn().mockResolvedValue(undefined),
   mockGetEncryptionKeyState: vi.fn().mockResolvedValue('absent'),
   mockGetDataKey: vi.fn().mockResolvedValue(null),
   mockResetEncryption: vi.fn().mockResolvedValue(undefined),
@@ -67,9 +65,15 @@ vi.mock('@/lib/encryptionKey', () => ({
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
-// This suite tests the Dev tab's mocked-AI-usage debug tool itself, not the
+// This suite tests the Dev tab's AI credits debug tool itself, not the
 // coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
-vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
+// A getter, so a test can switch AI off (the "Show AI button" switch is only offered while AI is on).
+const aiFlag = vi.hoisted(() => ({ enabled: true }))
+vi.mock('@/lib/aiFlag', () => ({
+  get AI_ENABLED() { return aiFlag.enabled },
+  AI_MANAGED_ENABLED: true,
+  AI_BYOK_ENABLED: true,
+}))
 
 vi.mock('@/lib/demo', () => ({ enterDemoMode: mockEnterDemoMode }))
 
@@ -84,7 +88,6 @@ vi.mock('@/lib/theme', () => ({ applyTheme: mockApplyTheme }))
 
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/hooks/useAiUsage', () => ({ useAiUsage: () => mockUseAiUsage() }))
-vi.mock('@/mocks/devAiUsage', () => ({ setDevAiUsage: mockSetDevAiUsage }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
@@ -141,6 +144,7 @@ function renderModal(onClose = vi.fn()) {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  aiFlag.enabled = true
   mockGetSetting.mockResolvedValue(DEFAULT_SETTINGS)
   mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false })
   mockUseAiUsage.mockReturnValue({ used: 0, remaining: 100, cap: 100, loading: false })
@@ -219,6 +223,93 @@ describe('SettingsModal — AI tab', () => {
     expect(screen.queryByText(/ai features enabled/i)).not.toBeInTheDocument()
     const switches = screen.getAllByRole('switch')
     switches.forEach((s) => expect(s).toBeChecked())
+  })
+
+  it('has a "Describe groups and windows" switch, on for settings saved before it existed, that turns off', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    renderModal()
+    await goToTab(/^ai$/i)
+    expect(screen.getByText('Write a short note about the tabs of a group or window with AI')).toBeInTheDocument()
+    const toggle = screen.getByRole('switch', { name: 'Describe groups and windows' })
+    expect(toggle).toBeChecked()
+    fireEvent.click(toggle)
+    expect(toggle).not.toBeChecked()
+    expect(screen.getByRole('switch', { name: 'Name groups and windows' })).toBeChecked()
+    // The same switches gate the window ⋯ menu items, so their copy names both
+    expect(screen.getByText('Suggest a name for a group or window with AI')).toBeInTheDocument()
+  })
+})
+
+describe('SettingsModal — opening on a requested tab', () => {
+  function renderOn(initialTab: unknown) {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    const ui = () => (
+      <QueryClientProvider client={qc}>
+        <Dialog open><DialogContent><SettingsModal onClose={vi.fn()} initialTab={initialTab} /></DialogContent></Dialog>
+      </QueryClientProvider>
+    )
+    const view = render(ui())
+    return { rerender: () => view.rerender(ui()) }
+  }
+  const selectedTab = () => screen.getAllByRole('tab').find((tab) => tab.getAttribute('aria-selected') === 'true')
+
+  it('opens on the AI tab when the account is already loaded', () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    renderOn('ai')
+    expect(selectedTab()?.textContent).toBe('AI')
+  })
+
+  it('shows the AI tab once the account loads, even after the open focus selected General', async () => {
+    // Signed-in state is read after mount: no AI tab on the first render
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, aiFeatures: false })
+    const { rerender } = renderOn('ai')
+    const general = screen.getByRole('tab', { name: /^general$/i })
+    act(() => general.focus()) // the dialog's open focus; Radix selects a tab on focus
+    expect(selectedTab()).toBe(general)
+
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    rerender()
+    const ai = screen.getByRole('tab', { name: /^ai$/i })
+    await waitFor(() => expect(selectedTab()).toBe(ai))
+    expect(document.activeElement).toBe(ai)
+  })
+
+  it('applies the request once: a tab the user picks afterwards stays picked', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, aiFeatures: false })
+    const { rerender } = renderOn('ai')
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    rerender()
+    await waitFor(() => expect(selectedTab()?.textContent).toBe('AI'))
+
+    await goToTab(/^data$/i)
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true, maxGroups: 99 })
+    rerender()
+    expect(selectedTab()?.textContent).toBe('Data')
+  })
+
+  it('does not move focus when it is outside the tab list', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, aiFeatures: false })
+    const { rerender } = renderOn('ai')
+    const close = screen.getByRole('button', { name: /close/i })
+    act(() => close.focus())
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    rerender()
+    await waitFor(() => expect(selectedTab()?.textContent).toBe('AI'))
+    expect(document.activeElement).toBe(close)
+  })
+
+  it('a requested tab the account lacks is not added (no Devices tab on Free)', () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, aiFeatures: false })
+    const { rerender } = renderOn('devices')
+    rerender()
+    expect(screen.queryByRole('tab', { name: /^devices$/i })).toBeNull()
+    expect(screen.getByRole('tabpanel')).toBeTruthy()
+  })
+
+  it('an unknown tab opens General', () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    renderOn('nope')
+    expect(selectedTab()?.textContent).toBe('General')
   })
 })
 
@@ -358,6 +449,47 @@ describe('SettingsModal — General tab URL rules entry point', () => {
     expect(screen.getByText('URL rules')).toBeTruthy()
     await user.click(screen.getByRole('button', { name: 'Manage' }))
     expect(mockOpenModal).toHaveBeenCalledWith('urlRules')
+  })
+})
+
+describe('SettingsModal — Show AI button (General)', () => {
+  const aiSwitch = () => screen.getByRole('switch', { name: 'Show AI button' })
+
+  it.each([['free', { tier: 'free', cloudSync: false }], ['pro', { tier: 'pro', cloudSync: true }], ['pro_ai', { tier: 'pro_ai', cloudSync: true, aiFeatures: true }]])(
+    'a %s user finds it on the General tab, on by default (settings saved before it existed lack it)',
+    async (_tier, ent) => {
+      mockUseEntitlements.mockReturnValue(ent)
+      renderModal()
+      await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+      expect(screen.getByRole('tab', { name: 'General' })).toHaveAttribute('aria-selected', 'true')
+      expect(aiSwitch()).toBeChecked()
+      expect(screen.getByText('The ✨ button in the header, with AI actions for your tabs and groups')).toBeTruthy()
+    }
+  )
+
+  it('turning it off saves showAiButton: false', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    fireEvent.click(aiSwitch())
+    expect(aiSwitch()).not.toBeChecked()
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+    await waitFor(() => expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ showAiButton: false })))
+  })
+
+  it('shows a saved "off" and turns back on', async () => {
+    mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, showAiButton: false })
+    renderModal()
+    await waitFor(() => expect(aiSwitch()).not.toBeChecked())
+    fireEvent.click(aiSwitch())
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+    await waitFor(() => expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ showAiButton: true })))
+  })
+
+  it('is not offered while AI features are off (coming soon): there is no button to show', async () => {
+    aiFlag.enabled = false
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.queryByRole('switch', { name: 'Show AI button' })).toBeNull()
   })
 })
 
@@ -659,69 +791,21 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
     expect(screen.getByRole('button', { name: 'Throw error' })).toBeInTheDocument()
   })
 
-  it('writes the entered value via setDevAiUsage and invalidates aiUsage on Set', async () => {
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/^dev$/i)
-    const input = screen.getByDisplayValue('0')
-    fireEvent.change(input, { target: { value: '95' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Set' }))
-    await waitFor(() => expect(mockSetDevAiUsage).toHaveBeenCalledWith(95))
-  })
-
-  it('resets the mocked AI usage count to 0 on Reset', async () => {
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/^dev$/i)
-    fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
-    await waitFor(() => expect(mockSetDevAiUsage).toHaveBeenCalledWith(0))
-  })
-
-  it('syncs the dev usage count to the real backend when signed in', async () => {
+  // The control's own behavior is covered in components/Settings/DevAiCredits.test.tsx
+  it('shows the "Credits used this month" control in the Dev tab and posts what is set', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ count: 95 }) })
-    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^dev$/i)
-    const input = screen.getByDisplayValue('0')
-    fireEvent.change(input, { target: { value: '95' } })
+    fireEvent.change(screen.getByLabelText('Credits used this month'), { target: { value: '95' } })
     fireEvent.click(screen.getByRole('button', { name: 'Set' }))
-    await waitFor(() => expect(mockSetDevAiUsage).toHaveBeenCalledWith(95))
     await waitFor(() =>
       expect(globalThis.fetch).toHaveBeenCalledWith(
         expect.stringContaining('/api/ai/dev-usage'),
-        expect.objectContaining({
-          method: 'POST',
-          headers: expect.objectContaining({ Authorization: 'Bearer tok' }),
-          body: JSON.stringify({ count: 95 }),
-        }),
+        expect.objectContaining({ body: JSON.stringify({ count: 95 }) }),
       ),
     )
-    await waitFor(() => expect(toast.success).toHaveBeenCalled())
-  })
-
-  it('shows an error toast when the real-backend sync fails', async () => {
-    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
-    globalThis.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500, text: async () => 'boom' })
-    const { toast } = await import('@/lib/toast')
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/^dev$/i)
-    fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Failed to sync AI usage to server'))
-  })
-
-  it('shows an error toast when not signed in, without calling fetch', async () => {
-    mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
-    globalThis.fetch = vi.fn()
-    const { toast } = await import('@/lib/toast')
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/^dev$/i)
-    fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Sign in to sync AI usage to the server'))
-    expect(globalThis.fetch).not.toHaveBeenCalled()
   })
 })
 
@@ -926,6 +1010,26 @@ describe('SettingsModal — Language', () => {
 
   /** The row's button: named by the row's label, then the draft ("Language Français"). */
   const languageButton = () => screen.getByTestId('settings-language')
+
+  it('opens the language list as a modal popover, so the Settings dialog scroll lock does not swallow the mouse wheel', async () => {
+    renderModal()
+    fireEvent.click(languageButton())
+    await screen.findAllByRole('option')
+    // A modal Radix popover hides everything outside it from assistive tech (and takes the scroll
+    // lock); a non-modal one leaves the rest of Settings, like the Theme row, exposed.
+    expect(screen.getByText('Theme').closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it('gives every dropdown on the General tab the same width, the language picker included', async () => {
+    const { SETTINGS_SELECT_WIDTH } = await import('@/components/Settings/settingsControls')
+    renderModal()
+    const dropdowns = [languageButton(), ...screen.getAllByRole('combobox')]
+    expect(dropdowns.length).toBeGreaterThanOrEqual(4)
+    for (const dropdown of dropdowns) {
+      const widths = dropdown.className.split(/\s+/).filter((c) => /^w-/.test(c))
+      expect(widths).toEqual([SETTINGS_SELECT_WIDTH])
+    }
+  })
 
   it('lists Browser default first, then every language by its own name, in a searchable list', async () => {
     const { LOCALE_NATIVE_NAMES, SUPPORTED_LOCALES } = await import('@tabmerger/shared')

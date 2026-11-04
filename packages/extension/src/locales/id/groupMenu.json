@@ -3,6 +3,8 @@
   "renameHint": "Atur nama baru untuk grup ini",
   "aiRename": "Ganti nama dengan AI",
   "aiRenameHint": "Sarankan nama untuk grup ini dengan AI",
+  "aiDescribe": "Deskripsikan dengan AI",
+  "aiDescribeHint": "Tulis catatan singkat tentang tab di grup ini dengan AI",
   "addNote": "Tambah catatan",
   "addNoteHint": "Lampirkan catatan ke grup ini",
   "editNote": "Edit catatan",
@@ -38,6 +40,12 @@
   "toast": {
     "noDuplicates": "Tidak ada duplikat ditemukan",
     "noTabsToName": "Tidak ada tab di grup ini untuk diberi nama",
-    "aiRenameFailed": "Ganti nama dengan AI gagal"
+    "aiRenameFailed": "Ganti nama dengan AI gagal",
+    "nameAlreadyFits": "“{{name}}” sudah cocok untuk grup ini",
+    "noTabsToDescribe": "Tidak ada tab di grup ini untuk dideskripsikan",
+    "aiDescribeFailed": "Tidak dapat mendeskripsikan grup ini",
+    "noteAdded": "Catatan ditambahkan",
+    "noteReplaced": "Catatan diganti",
+    "undoNoteLater": "Ada perubahan lain setelah ini. Gunakan Batalkan di bagian atas."
   }
 }

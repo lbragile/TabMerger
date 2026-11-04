@@ -13,6 +13,11 @@ interface SubscriptionBadgeProps {
   priceId?: string | null
   /** Overrides the default free-tier "Upgrade" button (e.g. account page's "Manage billing" link). */
   action?: React.ReactNode
+  /**
+   * The plan is set to end at `currentPeriodEnd` (`subscriptions.cancel_at_period_end`): the date
+   * reads "Ends {date}" instead of "Renews {date}".
+   */
+  setToEnd?: boolean
 }
 
 const tierConfig = {
@@ -29,6 +34,7 @@ export function SubscriptionBadge({
   currentPeriodEnd,
   priceId,
   action,
+  setToEnd = false,
 }: SubscriptionBadgeProps) {
   const config = tierConfig[tier] ?? tierConfig.free
   const t = useTranslations('dashboard.subscription')
@@ -63,7 +69,7 @@ export function SubscriptionBadge({
             {currentPeriodEnd && (
               <>
                 <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
-                {t('renews', {
+                {t(setToEnd ? 'ends' : 'renews', {
                   date: new Date(currentPeriodEnd).toLocaleDateString(locale, {
                     month: 'short',
                     day: 'numeric',

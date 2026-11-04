@@ -45,5 +45,6 @@
   "showPassphrase": "암호문구 표시",
   "hidePassphrase": "암호문구 숨기기",
   "notifications": "알림",
-  "closeToast": "알림 닫기"
+  "closeToast": "알림 닫기",
+  "openSettings": "설정 열기"
 }

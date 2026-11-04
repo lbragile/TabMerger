@@ -4,6 +4,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 // Dashboard page is an async server component — mock its data dependencies and heavy
 // child components so we can `await` it and render just the header markup under test.
 
+// The subscription row the default mock returns; tests may change it, beforeEach resets it.
+const subscriptionRow = vi.hoisted(() => ({
+  tier: 'pro',
+  status: 'active' as string | null,
+  created_at: '2024-01-01',
+}))
+
 vi.mock('@/lib/supabase/server', () => ({
   createClient: async () => ({
     auth: {
@@ -17,11 +24,10 @@ vi.mock('@/lib/supabase/server', () => ({
       const chain = () => builder
       builder.select = chain
       builder.eq = chain
+      builder.is = chain
       builder.order = chain
       builder.limit = chain
-      builder.single = async () => ({
-        data: { tier: 'pro', status: 'active', created_at: '2024-01-01' },
-      })
+      builder.single = async () => ({ data: { ...subscriptionRow } })
       builder.then = (resolve: (v: unknown) => void) => resolve({ data: [] })
       return builder
     },
@@ -32,7 +38,6 @@ vi.mock('@/components/dashboard/StatsOverview', () => ({ StatsOverview: () => <d
 vi.mock('@/components/dashboard/SubscriptionBadge', () => ({ SubscriptionBadge: () => <div>sub</div> }))
 vi.mock('@/components/dashboard/SessionList', () => ({ SessionList: () => <div>sessions</div> }))
 vi.mock('@/components/dashboard/GroupGrid', () => ({ GroupGrid: () => <div>groups</div> }))
-vi.mock('@/components/dashboard/OrganizeProposal', () => ({ OrganizeProposal: () => <div>organize</div> }))
 vi.mock('@/components/dashboard/OnboardingChecklist', () => ({
   OnboardingChecklist: ({ installHref }: { installHref: string }) => (
     <div data-testid="onboarding" data-install-href={installHref}>onboarding</div>
@@ -43,6 +48,8 @@ describe('DashboardPage header restyle', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    subscriptionRow.tier = 'pro'
+    subscriptionRow.status = 'active'
   })
 
   afterEach(() => {
@@ -59,12 +66,18 @@ describe('DashboardPage header restyle', () => {
     expect(screen.queryByText(/Welcome back,/)).not.toBeInTheDocument()
   })
 
-  it('renders an "AI organise" button with an accessible name', async () => {
+  // Organize runs start from the extension popup; the dashboard only shows the deep-linked
+  // progress panel, so the header has no organize button for any plan.
+  it.each(['pro_ai', 'pro', 'free'])('renders no "AI organise" button for a %s account', async (tier) => {
+    subscriptionRow.tier = tier
+    subscriptionRow.status = tier === 'free' ? null : 'active'
     const { default: DashboardPage } = await import('@/app/[locale]/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
-    expect(screen.getByRole('button', { name: /AI organise/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Good morning, Jane.doe' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /organi[sz]e/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/Start this from the TabMerger extension popup/)).not.toBeInTheDocument()
   })
 
   it('has no "New group" button: groups are created in the extension only', async () => {
@@ -132,6 +145,7 @@ describe('DashboardPage — free account (no cloud sync)', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () => ({
@@ -187,6 +201,7 @@ describe('DashboardPage — free account (no cloud sync)', () => {
           const chain = () => builder
           builder.select = chain
           builder.eq = chain
+          builder.is = chain
           builder.order = chain
           builder.limit = chain
           builder.single = async () => ({

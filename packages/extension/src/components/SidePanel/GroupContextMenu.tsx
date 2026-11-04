@@ -22,7 +22,8 @@ import {
   SortAsc,
   ExternalLink,
   Archive,
-  Sparkles
+  Sparkles,
+  NotebookPen
 } from 'lucide-react';
 import {
   useDeleteGroup,
@@ -36,13 +37,13 @@ import {
   useDeleteAllWindows,
   useGroups,
   useArchiveGroup,
-  useRestoreGroup,
-  useUpdateGroupName
+  useRestoreGroup
 } from '@/hooks/useGroups';
 import { useUIStore, type SelectedItem } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAppSettings } from '@/hooks/useAppSettings';
-import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
+import { useNameGroupAction } from '@/hooks/useNameGroupAction';
+import { useDescribeGroupAction } from '@/hooks/useDescribeGroupAction';
 import { getSetting } from '@/lib/localDb';
 import { findDuplicateTabs } from '@/lib/deduplication';
 import { toast } from '@/lib/toast';
@@ -114,10 +115,12 @@ export function GroupContextMenu({
   const { mutate: splitWindows } = useSplitWindows();
   const { mutate: sortTabs } = useSortTabs();
   const { mutate: deleteAllWindows } = useDeleteAllWindows();
-  const { mutate: updateGroupName } = useUpdateGroupName();
   const { aiFeatures } = useEntitlements();
   const { data: appSettings } = useAppSettings();
-  const { mutateAsync: nameGroup } = useNameGroup();
+  // Same action as the header's AI menu "Name group" (shared hook, same toasts and undo)
+  const { run: handleAIRename } = useNameGroupAction(group);
+  // Same action as the header's AI menu "Describe group" (shared hook: same note write, review and toasts)
+  const { run: handleAIDescribe } = useDescribeGroupAction(group);
   const openModal = useUIStore((s) => s.openModal);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
@@ -139,26 +142,6 @@ export function GroupContextMenu({
   const handleOpenNote = () => {
     setActiveGroupIndex(groupIndex);
     setPendingNoteGroupIndex(groupIndex);
-  };
-
-  const handleAIRename = async () => {
-    const tabs = group.windows.flatMap((w) => w.tabs);
-    if (tabs.length === 0) {
-      toast.error(t('groupMenu.toast.noTabsToName'));
-      return;
-    }
-    try {
-      const { name } = await nameGroup(tabs);
-      updateGroupName({ groupIndex, name });
-    } catch (err) {
-      if (err instanceof QuotaExceededError) {
-        toast.error(t('common.aiQuotaUsed'), {
-          action: { label: t('common.buyMore'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
-        });
-        return;
-      }
-      toast.error(err instanceof Error ? err.message : t('groupMenu.toast.aiRenameFailed'));
-    }
   };
 
   return (
@@ -209,9 +192,16 @@ export function GroupContextMenu({
           )}
 
           {!group.permanent && aiFeatures && appSettings?.aiNameGroupEnabled !== false && (
-            <DropdownMenuItem onClick={handleAIRename}>
+            <DropdownMenuItem onClick={() => void handleAIRename()}>
               <Sparkles className="h-3.5 w-3.5 me-2 shrink-0" />
               <div><div>{t('groupMenu.aiRename')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.aiRenameHint')}</div></div>
+            </DropdownMenuItem>
+          )}
+
+          {!group.permanent && aiFeatures && appSettings?.aiDescribeGroupEnabled !== false && (
+            <DropdownMenuItem onClick={() => void handleAIDescribe()} data-testid="group-menu-ai-describe">
+              <NotebookPen className="h-3.5 w-3.5 me-2 shrink-0" />
+              <div><div>{t('groupMenu.aiDescribe')}</div><div className="text-[10px] text-muted-foreground font-normal">{t('groupMenu.aiDescribeHint')}</div></div>
             </DropdownMenuItem>
           )}
 

@@ -1,25 +1,25 @@
 ---
 name: learnings-dev-ai-usage-real-sync
-description: Settings > Dev "Mocked AI usage" Set/Reset now also writes to real Supabase ai_usage via /api/ai/dev-usage, kept alongside the untouched local chrome.storage mock
+description: Settings > Dev "Credits used this month" (DevAiCredits.tsx) sets the real ai_usage row via /api/ai/dev-usage; no local dev counter exists any more, useAiUsage reads real tables in every build
 metadata:
-  type: project
+  type: reference
 ---
 
-`useAiUsage.ts` still reads the local `chrome.storage.local` counter (via `getDevAiUsage`)
-whenever `import.meta.env.DEV` is true — this was NOT changed, because `devFetchMock.ts`
-increments that same local counter on every mocked `/api/ai/*` call and switching the
-read source to real Supabase would silently stop reflecting mocked-AI-call usage in the
-displayed quota.
+Current design (2026-10-24):
 
-Instead, Settings.tsx's dev-tab Set/Reset buttons now do both writes on click:
-1. `setDevAiUsage(count)` — local mock counter (unchanged, still what the UI displays in DEV)
-2. `aiPost('/api/ai/dev-usage', { count }, token)` — real Supabase `ai_usage` row for the
-   signed-in user, so real server-side quota enforcement (hitting real, non-mocked
-   `/api/ai/*` routes) can be tested end-to-end.
+- `useAiUsage` has no DEV branch. Dev builds read `ai_usage` / `subscriptions` / `ai_credit_purchases`
+  like any build, because the web dev server's `AI_MOCK=true` replies meter real credits. The query
+  is enabled only with a signed-in user.
+- `src/mocks/devAiUsage.ts` (a `chrome.storage.local` counter) and its test were deleted, and the
+  `src/mocks/**` eslint ignore with them.
+- Settings > Dev "Credits used this month" lives in `components/Settings/DevAiCredits.tsx`, shown
+  for `import.meta.env.DEV && AI_MANAGED_ENABLED` (credits exist only on TabMerger's key). Set/Reset
+  POST `{ count }` to `/api/ai/dev-usage`; `count` is credits (the route upserts
+  `ai_usage.credits_used`, and `count: 0` also deletes this month's `ai_credit_purchases`). On
+  success it invalidates `['aiUsage']` (prefix, so every user id) so the meter re-reads.
+  `parseDevCreditsUsed` clamps the typed value to a whole number in 0..1,000,000 (the route's
+  `AI_MAX_DEV_USAGE_COUNT`, a web-only constant).
+- The toast interpolates `{{credits}}`, not `{{count}}`: `count` makes i18next look for plural
+  variants.
 
-`aiPost` (the Bearer-token fetch helper in `useAI.ts`) was exported for reuse here rather
-than re-implementing fetch-with-Bearer-token a third time — grep for `aiPost` before adding
-a new authenticated fetch helper anywhere in the extension.
-
-If not signed in, the sync step is skipped with a `toast.error('Sign in to sync AI usage to
-the server')` and no fetch call — local mock still updates either way.
+`aiPost` (useAI.ts) is the shared Bearer-token fetch helper; grep for it before writing another.

@@ -27,5 +27,11 @@
   "sortByUrl": "Urutkan jendela ini berdasarkan URL",
   "notePlaceholder": "Tambah catatan…",
   "empty": "Jendela kosong",
+  "toast": {
+    "noTabsToName": "Tidak ada tab di jendela ini untuk diberi nama",
+    "nameAlreadyFits": "“{{name}}” sudah cocok untuk jendela ini",
+    "noTabsToDescribe": "Tidak ada tab di jendela ini untuk dideskripsikan",
+    "aiDescribeFailed": "Tidak dapat mendeskripsikan jendela ini"
+  },
   "someOfTabs_other": "{{matched}} dari {{count}} tab"
 }

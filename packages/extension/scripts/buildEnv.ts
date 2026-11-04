@@ -24,6 +24,18 @@
  * NODE_ENV/isProduction, never WXT's `mode`.
  */
 
+/**
+ * The Vite `define` value for `import.meta.env.VITE_E2E_TEST`: the source string `'"true"'` for a
+ * `development`-mode build or when `VITE_E2E_TEST=true` is exported for the build, otherwise
+ * `'undefined'` (the variable is absent). It must be the STRING "true": src/lib/analytics.ts
+ * compares against `'true'`, and a boolean `true` (what `JSON.stringify(true)` defines) never
+ * matched, so analytics fired from every automated-test build. Never define the string "false":
+ * the Sentry checks read the variable for truthiness.
+ */
+export function resolveE2eTestDefine(mode: string, envValue: string | undefined): string {
+  return mode === 'development' || envValue === 'true' ? JSON.stringify('true') : 'undefined';
+}
+
 /** wxt's own fallback map (`dist/core/resolve-config.mjs`'s `COMMAND_MODES`) for when no `--mode`/`-m` flag is given. */
 const COMMAND_MODE_FALLBACK = {
   serve: 'development',

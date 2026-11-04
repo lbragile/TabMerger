@@ -6,5 +6,6 @@
   "opensInNewTab": " (terbuka di tab baru)",
   "close": "Tutup",
   "showPassphrase": "Tampilkan frasa sandi",
-  "hidePassphrase": "Sembunyikan frasa sandi"
+  "hidePassphrase": "Sembunyikan frasa sandi",
+  "withYourOwnKey": "Dengan kunci API Anda sendiri"
 }

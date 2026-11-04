@@ -9,7 +9,6 @@ import { queryClient } from '@/lib/queryClient';
 import { App } from './App';
 import { LocaleDirectionProvider } from '@/components/LocaleDirectionProvider';
 import { installDndPointerProbe } from '@/lib/dndPointerProbe';
-import { AI_ENABLED } from '@/lib/aiFlag';
 import '@/styles/globals.css';
 
 
@@ -45,19 +44,9 @@ if (import.meta.env.VITE_SENTRY_DSN && !import.meta.env.VITE_E2E_TEST) {
 }
 
 
-async function bootstrap() {
-  // ponytail: dev-only fetch intercept for /api/ai/* so iterating on AI UI
-  // doesn't burn real Anthropic cost or require a running web app + Supabase
-  // session. Never bundled into production — import.meta.env.DEV is
-  // statically replaced and dead-code-eliminated by Vite/WXT at build time.
-  // See src/mocks/devFetchMock.ts for why this isn't MSW's setupWorker.
-  // AI features: coming soon — every AI mutation now throws before it ever calls
-  // fetch when the global flag is off, so this mock would never see a matching
-  // request anyway; skip installing it to avoid patching window.fetch for nothing.
-  if (import.meta.env.DEV && AI_ENABLED) {
-    const { installDevFetchMock } = await import('@/mocks/devFetchMock');
-    installDevFetchMock();
-  }
+function bootstrap() {
+  // AI calls always go to the web app (VITE_WEB_APP_URL). To skip the real provider in local dev,
+  // run the web app with AI_MOCK=true: it fakes only the model call, everything else runs for real.
 
   // Diagnostic-only pointer-stream probe; a no-op (no listeners) unless
   // localStorage.tm_dnd_pointer_probe === '1'. See @/lib/dndPointerProbe.

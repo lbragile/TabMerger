@@ -3,6 +3,8 @@
   "renameHint": "Defina um novo nome para este grupo",
   "aiRename": "Renomear com IA",
   "aiRenameHint": "Sugerir um nome para este grupo com IA",
+  "aiDescribe": "Descrever com IA",
+  "aiDescribeHint": "Escrever com IA uma nota curta sobre as abas deste grupo",
   "addNote": "Adicionar nota",
   "addNoteHint": "Anexar uma nota a este grupo",
   "editNote": "Editar nota",
@@ -38,6 +40,12 @@
   "toast": {
     "noDuplicates": "Nenhuma duplicata encontrada",
     "noTabsToName": "Não há abas neste grupo para nomear",
-    "aiRenameFailed": "Falha ao renomear com IA"
+    "aiRenameFailed": "Falha ao renomear com IA",
+    "nameAlreadyFits": "“{{name}}” já combina com este grupo",
+    "noTabsToDescribe": "Não há abas neste grupo para descrever",
+    "aiDescribeFailed": "Não foi possível descrever este grupo",
+    "noteAdded": "Nota adicionada",
+    "noteReplaced": "Nota substituída",
+    "undoNoteLater": "Houve outras alterações depois desta. Use Desfazer no topo."
   }
 }

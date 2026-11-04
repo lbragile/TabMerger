@@ -520,4 +520,65 @@ describe('checkout.session.completed → purchase', () => {
     const purchases = gaBodies().filter((b) => b.events[0].name === 'purchase')
     expect(purchases.map((b) => b.events[0].params.transaction_id)).toEqual([hmac('cs_test_paid_1'), hmac('cs_test_paid_1')])
   })
+
+  it('Pro AI on your own key: the purchase item is named "Pro AI (own key)", checkout_completed is unchanged', async () => {
+    vi.stubEnv('STRIPE_PRO_AI_BYOK_MONTHLY_PRICE_ID', 'price_pro_ai_byok_monthly')
+    mockSubscriptionsRetrieve.mockResolvedValue({
+      id: 'sub_test123',
+      customer: 'cus_test123',
+      status: 'active',
+      cancel_at_period_end: false,
+      metadata: { user_id: USER_ID },
+      items: {
+        data: [{ price: { id: 'price_pro_ai_byok_monthly', unit_amount: 599 }, current_period_end: 1800000000 }],
+      },
+    })
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockReturnValue(completedEvent({ amount_total: 599, currency: 'usd' }))
+
+    await POST(makeRequest())
+    await flushAfter()
+
+    const bodies = gaBodies()
+    expect(bodies[0].events[0].params).toEqual({ tier: 'pro_ai', value: 5.99, currency: 'usd', billing: 'monthly' })
+    expect(bodies[1].events[0].params.items).toEqual([
+      { item_id: 'pro_ai', item_name: 'Pro AI (own key)', item_variant: 'monthly', price: 5.99, quantity: 1 },
+    ])
+  })
+})
+
+describe('checkout_abandoned for Pro AI on your own key', () => {
+  it('uses the own-key price and item name from the session ai_mode', async () => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockReturnValue(
+      expiredEvent({ metadata: { user_id: USER_ID, tier: 'proAi', interval: 'yearly', ai_mode: 'byok' } })
+    )
+
+    await POST(makeRequest())
+    await flushAfter()
+
+    expect(gaBodies()[0].events[0].params).toMatchObject({
+      tier: 'pro_ai',
+      value: 64.49,
+      items: [{ item_id: 'pro_ai', item_name: 'Pro AI (own key)', item_variant: 'yearly', price: 64.49, quantity: 1 }],
+    })
+  })
+
+  it('treats a missing or unknown ai_mode as managed, and ignores it for Pro', async () => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockReturnValue(
+      expiredEvent({ metadata: { user_id: USER_ID, tier: 'proAi', interval: 'monthly', ai_mode: 'bogus' } })
+    )
+    await POST(makeRequest())
+    await flushAfter()
+    mockConstructEvent.mockReturnValue(
+      expiredEvent({ metadata: { user_id: USER_ID, tier: 'pro', interval: 'monthly', ai_mode: 'byok' } })
+    )
+    await POST(makeRequest())
+    await flushAfter()
+
+    const [managed, pro] = gaBodies().map((b) => b.events[0].params)
+    expect(managed).toMatchObject({ value: 7.99, items: [expect.objectContaining({ item_name: 'Pro AI' })] })
+    expect(pro).toMatchObject({ value: 3.99, items: [expect.objectContaining({ item_name: 'Pro' })] })
+  })
 })

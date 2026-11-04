@@ -27,7 +27,24 @@
   "sharingRequiresPro": "Berbagi memerlukan peningkatan ke Pro — hak akses tidak terpenuhi",
   "aiOncePerDay": "Sudah digunakan hari ini — tindakan AI ini dibatasi sekali sehari",
   "proAiRequired": "Paket Pro AI diperlukan",
-  "nameGroupOff": "Nama grup dimatikan di Pengaturan",
+  "nameGroupOff": "Pemberian nama grup dan jendela dimatikan di Pengaturan",
+  "describeGroupOff": "Deskripsi grup dan jendela dimatikan di Pengaturan",
   "suggestSessionsOff": "Saran sesi dimatikan di Pengaturan",
-  "organizeOff": "Pengaturan ulang dimatikan di Pengaturan"
+  "organizeOff": "Pengaturan ulang dimatikan di Pengaturan",
+  "ai": {
+    "disabled": "Fitur AI sedang tidak tersedia.",
+    "modelInvalid": "Model AI itu tidak tersedia. Pilih model lain di Pengaturan, tab AI.",
+    "overloaded": "Layanan AI sedang sibuk. Coba lagi sebentar lagi.",
+    "byokKeyMissing": "Tambahkan kunci API penyedia AI Anda di Pengaturan, tab AI, untuk memakai fitur AI.",
+    "byokKeyInvalid": "Penyedia AI Anda tidak menerima kunci API Anda. Periksa atau ganti di Pengaturan, tab AI.",
+    "byokRateLimited": "Kunci API Anda mencapai batas permintaan penyedianya. Tunggu sebentar lalu coba lagi.",
+    "byokBilling": "Saldo akun penyedia AI Anda habis atau ada masalah tagihan. Periksa tagihan di penyedia Anda.",
+    "creditsNotApplicable": "Paket kredit tidak tersedia saat Anda memakai kunci API sendiri.",
+    "unauthorized": "Sesi masuk Anda telah berakhir. Masuk lagi lalu coba sekali lagi.",
+    "invalidRequest": "TabMerger tidak dapat mengirim permintaan AI itu. Coba lagi, dan perbarui ekstensi jika terus terjadi.",
+    "refused": "AI menolak permintaan ini.",
+    "failed": "Permintaan AI gagal. Coba lagi.",
+    "rateLimited": "Terlalu banyak permintaan AI saat ini. Coba lagi dalam satu menit.",
+    "rateLimitedRetry": "Terlalu banyak permintaan AI saat ini. Coba lagi {{when}}."
+  }
 }

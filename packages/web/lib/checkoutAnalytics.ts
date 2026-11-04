@@ -1,4 +1,4 @@
-import { ANALYTICS_EVENTS, getPricingTier } from '@tabmerger/shared'
+import { ANALYTICS_EVENTS, getPricingTier, isAiMode, type AiMode } from '@tabmerger/shared'
 import { DEFAULT_LOCALE, localizedPath } from '@/i18n/locales'
 import { trackEvent } from './analytics'
 
@@ -22,6 +22,8 @@ export const CHECKOUT_RETURN_PARAMS = {
   status: 'checkout',
   tier: 'tier',
   interval: 'interval',
+  /** Pro AI's option; only `byok` is written (absent means TabMerger's key, `managed`). */
+  aiMode: 'aiMode',
 } as const
 
 /** The only value of `?checkout=` that means "came back from a canceled checkout". */
@@ -35,10 +37,50 @@ export function analyticsTier(tier: CheckoutTier): 'pro' | 'pro_ai' {
   return tier === 'proAi' ? 'pro_ai' : 'pro'
 }
 
-/** The list price in USD of one plan at one interval, from the shared PRICING_TIERS. */
-export function checkoutValue(tier: CheckoutTier, interval: CheckoutInterval): number {
+/**
+ * The list price in USD of one plan at one interval, from the shared PRICING_TIERS. `aiMode`
+ * picks Pro AI's option (`byok` is the cheaper own-key price); it's ignored for Pro.
+ */
+export function checkoutValue(
+  tier: CheckoutTier,
+  interval: CheckoutInterval,
+  aiMode: AiMode = 'managed'
+): number {
   const pricing = getPricingTier(analyticsTier(tier))
-  return interval === 'monthly' ? pricing.monthlyPrice : pricing.yearlyPrice
+  const prices = tier === 'proAi' && aiMode === 'byok' && pricing.byok ? pricing.byok : pricing
+  return interval === 'monthly' ? prices.monthlyPrice : prices.yearlyPrice
+}
+
+/** Suffix of the analytics item name for Pro AI with the customer's own key. */
+export const BYOK_ITEM_NAME_SUFFIX = ' (own key)'
+
+/**
+ * The GA4 `item_name` of a plan: the shared plan name ("Pro AI"), with " (own key)" for Pro AI's
+ * bring-your-own-key option so reports can tell the two Pro AI options apart. `item_id` stays the
+ * tier for both, so existing reports by tier keep working.
+ */
+export function analyticsItemName(tier: CheckoutTier, aiMode: AiMode = 'managed'): string {
+  const name = getPricingTier(analyticsTier(tier)).name
+  return tier === 'proAi' && aiMode === 'byok' ? `${name}${BYOK_ITEM_NAME_SUFFIX}` : name
+}
+
+/**
+ * The GA4 `items` entry for one plan. Shared by the client events and the webhook's
+ * `purchase` / `checkout_abandoned`, so every event names a plan the same way.
+ */
+export function analyticsItem(
+  tier: CheckoutTier,
+  interval: CheckoutInterval,
+  aiMode: AiMode = 'managed',
+  price: number = checkoutValue(tier, interval, aiMode)
+) {
+  return {
+    item_id: analyticsTier(tier),
+    item_name: analyticsItemName(tier, aiMode),
+    item_variant: interval,
+    price,
+    quantity: 1,
+  }
 }
 
 /**
@@ -49,13 +91,15 @@ export function checkoutValue(tier: CheckoutTier, interval: CheckoutInterval): n
 export function checkoutCancelPath(
   tier: CheckoutTier,
   interval: CheckoutInterval,
-  locale: string = DEFAULT_LOCALE
+  locale: string = DEFAULT_LOCALE,
+  aiMode: AiMode = 'managed'
 ): string {
   const query = new URLSearchParams({
     [CHECKOUT_RETURN_PARAMS.status]: CHECKOUT_CANCELED,
     [CHECKOUT_RETURN_PARAMS.tier]: tier,
     [CHECKOUT_RETURN_PARAMS.interval]: interval,
   })
+  if (tier === 'proAi' && aiMode === 'byok') query.set(CHECKOUT_RETURN_PARAMS.aiMode, aiMode)
   return `${localizedPath(locale, '/pricing')}?${query.toString()}`
 }
 
@@ -71,16 +115,21 @@ function isCheckoutInterval(value: string | null): value is CheckoutInterval {
  * Reads a canceled-checkout return from the URL's query. Returns null unless `checkout` is
  * exactly `canceled`. The tier and interval come from the address bar, so anyone can type
  * anything there: each is kept only when it is one of the known values, and is null otherwise.
+ * `aiMode` is present only when the query names a known option for Pro AI.
  */
-export function parseCanceledCheckout(
-  params: Pick<URLSearchParams, 'get'>
-): { tier: CheckoutTier | null; interval: CheckoutInterval | null } | null {
+export function parseCanceledCheckout(params: Pick<URLSearchParams, 'get'>): {
+  tier: CheckoutTier | null
+  interval: CheckoutInterval | null
+  aiMode?: AiMode
+} | null {
   if (params.get(CHECKOUT_RETURN_PARAMS.status) !== CHECKOUT_CANCELED) return null
   const tier = params.get(CHECKOUT_RETURN_PARAMS.tier)
   const interval = params.get(CHECKOUT_RETURN_PARAMS.interval)
+  const aiMode = params.get(CHECKOUT_RETURN_PARAMS.aiMode)
   return {
     tier: isCheckoutTier(tier) ? tier : null,
     interval: isCheckoutInterval(interval) ? interval : null,
+    ...(tier === 'proAi' && isAiMode(aiMode) ? { aiMode } : {}),
   }
 }
 
@@ -95,22 +144,18 @@ export function withoutCheckoutReturnParams(params: URLSearchParams): string {
 }
 
 /** GA4 e-commerce params for one plan: value, currency and the single-item `items` array. */
-function ecommerceParams(tier: CheckoutTier, interval: CheckoutInterval) {
-  const value = checkoutValue(tier, interval)
+function ecommerceParams(
+  tier: CheckoutTier,
+  interval: CheckoutInterval,
+  aiMode: AiMode = 'managed'
+) {
+  const value = checkoutValue(tier, interval, aiMode)
   return {
     tier: analyticsTier(tier),
     billing_interval: interval,
     value,
     currency: CHECKOUT_CURRENCY,
-    items: [
-      {
-        item_id: analyticsTier(tier),
-        item_name: getPricingTier(analyticsTier(tier)).name,
-        item_variant: interval,
-        price: value,
-        quantity: 1,
-      },
-    ],
+    items: [analyticsItem(tier, interval, aiMode, value)],
   }
 }
 
@@ -132,16 +177,19 @@ function sendClientEvent(name: string, params: Record<string, unknown>) {
 export function trackBeginCheckout({
   tier,
   interval,
+  aiMode = 'managed',
   source,
   component,
 }: {
   tier: CheckoutTier
   interval: CheckoutInterval
+  /** Pro AI's option; defaults to TabMerger's key. */
+  aiMode?: AiMode
   source: string
   component: string
 }) {
   sendClientEvent(ANALYTICS_EVENTS.beginCheckout, {
-    ...ecommerceParams(tier, interval),
+    ...ecommerceParams(tier, interval, aiMode),
     source,
     component,
   })
@@ -154,13 +202,15 @@ export function trackBeginCheckout({
 export function trackCheckoutCanceled({
   tier,
   interval,
+  aiMode = 'managed',
 }: {
   tier: CheckoutTier | null
   interval: CheckoutInterval | null
+  aiMode?: AiMode
 }) {
   const params: Record<string, unknown> =
     tier && interval
-      ? ecommerceParams(tier, interval)
+      ? ecommerceParams(tier, interval, aiMode)
       : {
           ...(tier ? { tier: analyticsTier(tier) } : {}),
           ...(interval ? { billing_interval: interval } : {}),

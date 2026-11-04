@@ -1,62 +1,37 @@
-import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase/server'
-import { aiDisabledResponse } from '@/lib/ai-guard'
-import { nameGroup } from '@/lib/ai'
-import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
-import { parseNameGroupBody, readJsonBody } from '@/lib/ai-validation'
+import { type NextRequest, type NextResponse } from 'next/server'
+import type { AINameGroupResponse } from '@tabmerger/shared'
+import { runAiTask, nameGroupTask } from '@/lib/ai'
+import { AI_MAX_BODY_BYTES_TAB_LIST, parseNameGroupBody } from '@/lib/ai-validation'
+import { aiJson, handleAiRoute } from '@/lib/ai-route'
 
 /**
- * Suggests a display name for a tab group based on its tab titles/URLs.
- * Called by the extension via Bearer-token auth. Requires Pro AI entitlement;
- * responds with 429 when the monthly request quota is exhausted, 403 if not subscribed.
+ * Seconds Vercel lets this function run (a literal: Next reads it statically). A short answer,
+ * even on the largest model with its thinking headroom, takes well under a minute; the model
+ * call's own deadline is 20 s earlier (`aiDeadline`), so a slow call times out in our code and
+ * releases its credit reservation and concurrency slot.
  */
-export async function POST(request: NextRequest) {
-  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
-  const aiDisabled = aiDisabledResponse()
-  if (aiDisabled) return aiDisabled
+export const maxDuration = 120
 
-  const authHeader = request.headers.get('authorization')
-  const token = authHeader?.replace('Bearer ', '')
-
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const supabase = await createServiceRoleClient()
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser(token)
-
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Validated before the usage check, so a rejected body never spends a credit.
-  const input = parseNameGroupBody(await readJsonBody(request))
-  if (!input.ok) {
-    return NextResponse.json({ error: input.error }, { status: 400 })
-  }
-
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.nameGroup)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required or monthly limit reached' },
-      { status: remaining === 0 ? 429 : 403 }
-    )
-  }
-
-  try {
-    const name = await nameGroup(input.data)
-    return NextResponse.json({ name }, {
-      headers: { 'X-AI-Requests-Remaining': String(remaining) },
-    })
-  } catch (err) {
-    console.error('AI name-group error:', err)
-    return NextResponse.json(
-      { error: 'Failed to name group' },
-      { status: 500 }
-    )
-  }
+/**
+ * Suggests up to 3 different 2-4 word display names for a tab group from its tab titles and URLs.
+ * Answers `{ names, name }`: `names` holds 1-3 distinct suggestions, best first, and `name` is
+ * `names[0]` for extension builds that read only `name`.
+ * Called by the extension with its Supabase JWT as a Bearer token. Requires an entitled Pro AI
+ * subscription; managed calls are metered in credits (the balance comes back in
+ * `X-AI-Credits-Remaining`); own-key calls send the key in `X-AI-Key` and go to that key's
+ * provider, unmetered. Optional body field `model`: `'auto'` or a model id of that provider. Request flow: see `lib/ai-route.ts`.
+ */
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  return handleAiRoute(request, {
+    action: 'nameGroup',
+    label: 'name-group',
+    maxDurationSeconds: maxDuration,
+    maxBodyBytes: AI_MAX_BODY_BYTES_TAB_LIST,
+    parse: parseNameGroupBody,
+    run: async (tabs, ctx) => {
+      const { result: names, remaining } = await runAiTask(nameGroupTask(tabs), ctx)
+      const answer: AINameGroupResponse = { names, name: names[0] }
+      return aiJson(answer, remaining)
+    },
+  })
 }

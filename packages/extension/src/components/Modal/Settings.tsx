@@ -7,9 +7,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { setDevAiUsage } from '@/mocks/devAiUsage';
-import { aiPost } from '@/hooks/useAI';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { applyTheme } from '@/lib/theme';
@@ -27,6 +24,7 @@ import { OtherDevices } from '@/components/Settings/OtherDevices';
 import { AutoBackups } from '@/components/Settings/AutoBackups';
 import { CheckForUpdates } from '@/components/Settings/CheckForUpdates';
 import { LanguageSetting } from '@/components/Settings/LanguageSetting';
+import { AiSettings } from '@/components/Settings/AiSettings';
 import { useLanguageSetting } from '@/hooks/useLocalePreference';
 import { autoBackupDownloadQueryKey } from '@/lib/autoBackupQueryKeys';
 import type { BackupDownloadResult } from '@/lib/autoBackupDownload';
@@ -35,11 +33,13 @@ import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 import { getEncryptionKeyState, resetEncryption } from '@/lib/encryptionKey';
-import { AI_ENABLED } from '@/lib/aiFlag';
+import { AI_ENABLED, AI_MANAGED_ENABLED } from '@/lib/aiFlag';
+import { DevAiCredits } from '@/components/Settings/DevAiCredits';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
 import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, SEARCH_NON_MATCHING, formatUsd, normalizeSearchNonMatching, toHttpUrl } from '@tabmerger/shared';
 import { formatDate } from '@/lib/i18n';
+import { SETTINGS_SELECT_WIDTH } from '@/components/Settings/settingsControls';
 
 /** The search setting's options, in the order the select lists them. */
 const SEARCH_NON_MATCHING_CHOICES = [
@@ -55,14 +55,26 @@ function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => (a[k] ?? DEFAULT_APP_SETTINGS[k]) === (b[k] ?? DEFAULT_APP_SETTINGS[k]));
 }
 
+/** The tabs a caller may open Settings on (`openModal('settings', { tab })`). */
+const SETTINGS_TABS = ['general', 'account', 'data', 'devices', 'ai', 'dev'] as const;
+
 interface SettingsModalProps {
   onClose: () => void;
+  /** The tab to open on, e.g. `ai` from an "Open Settings" action on an AI error. Unknown values open General. */
+  initialTab?: unknown;
 }
 
-export function SettingsModal({ onClose }: SettingsModalProps) {
+export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('general');
-  const [devUsageInput, setDevUsageInput] = useState('0');
+  const [activeTab, setActiveTab] = useState<string>(() =>
+    (SETTINGS_TABS as readonly unknown[]).includes(initialTab) ? (initialTab as string) : 'general'
+  );
+  // The requested tab until it has been shown. The AI and Devices tabs exist only once the
+  // account has loaded (useAuth reads the session after mount), and until then the dialog's
+  // open focus lands on the tab list, where Radix's focus activation selects General.
+  const requestedTab = useRef<string | null>(activeTab === 'general' ? null : activeTab);
+  const tabListRef = useRef<HTMLDivElement>(null);
+  const [focusActiveTab, setFocusActiveTab] = useState(false);
   const queryClient = useQueryClient();
   // `saved` is the query's current value (reactive — reflects saves made elsewhere,
   // e.g. another mount of this modal, and refetches after login via useSync's invalidate).
@@ -71,9 +83,26 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const [draft, setDraft] = useState<AppSettings>(saved);
   // Per-device, not an AppSetting: saved and applied with the rest by "Save changes"
   const language = useLanguageSetting();
-  const { tier, cloudSync, currentPeriodEnd, aiFeatures, maxGroups, maxTabs } = useEntitlements();
+  const { tier, cloudSync, currentPeriodEnd, aiFeatures, aiMode, maxGroups, maxTabs } = useEntitlements();
   const { remaining: aiUsageRemaining, cap: aiUsageCap, loading: aiUsageLoading } = useAiUsage();
   const { user, session, signOut } = useAuth();
+
+  // Shows the requested tab once it exists (see `requestedTab`), once: later picks are the user's
+  useEffect(() => {
+    const tab = requestedTab.current;
+    if (!tab) return;
+    if ((tab === 'ai' && !aiFeatures) || (tab === 'devices' && tier === 'free')) return;
+    requestedTab.current = null;
+    setActiveTab(tab);
+    // Focus follows only when it sits on the tab list (the dialog's open focus), never from elsewhere
+    if (tabListRef.current?.contains(document.activeElement)) setFocusActiveTab(true);
+  }, [aiFeatures, tier]);
+
+  useEffect(() => {
+    if (!focusActiveTab) return;
+    setFocusActiveTab(false);
+    tabListRef.current?.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.focus();
+  }, [focusActiveTab]);
   const [portalLoading, setPortalLoading] = useState(false);
   const { data: groupsState } = useGroups();
   const { mutate: importGroupsMutation } = useImportGroups();
@@ -107,25 +136,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           .catch((e) => toast.error(e instanceof Error ? e.message : t('settings.toast.encryptionResetFailed')));
       }
     });
-  };
-
-  // Sets the dev-only local mock counter (still read by useAiUsage in DEV — see its
-  // own comment) AND writes the same count to the real Supabase ai_usage table via
-  // /api/ai/dev-usage, so real server-side quota enforcement can be exercised
-  // end-to-end for the signed-in account, not just the local mock UI state.
-  const handleSyncDevUsage = async (count: number) => {
-    await setDevAiUsage(count);
-    queryClient.invalidateQueries({ queryKey: ['aiUsage', user?.id] });
-    if (!session?.access_token) {
-      toast.error(t('settings.toast.signInForAiUsage'));
-      return;
-    }
-    try {
-      await aiPost<{ count: number }>('/api/ai/dev-usage', { count }, session.access_token);
-      toast.success(t('settings.toast.aiUsageSet', { count }));
-    } catch {
-      toast.error(t('settings.toast.aiUsageFailed'));
-    }
   };
 
   // Re-seed the draft whenever the underlying query value changes (initial load
@@ -299,7 +309,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       </DialogHeader>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4 min-w-0">
-        <TabsList className="w-full">
+        <TabsList ref={tabListRef} className="w-full">
           <TabsTrigger value="general" className="flex-1 text-xs">
             {t('settings.tabs.general')}
           </TabsTrigger>
@@ -326,7 +336,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           )}
         </TabsList>
 
-        <div className="mt-4 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden pe-1">
+        {/* -ms-1 ps-1: the scroll clip sits 0.25rem outside the content on the start side too (pe-1
+            on the end side), so a field flush with the content's edge keeps its focus ring there */}
+        <div className="mt-4 -ms-1 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden ps-1 pe-1">
         <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
@@ -347,7 +359,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               value={draft.theme}
               onValueChange={(v) => patch('theme', v as AppSettings['theme'])}
             >
-              <SelectTrigger className="w-28 h-7 text-xs shrink-0" aria-label={t('settings.general.themeLabel')} data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
+              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('settings.general.themeLabel')} data-tour={TOUR_ANCHORS.settingsThemeTrigger}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -396,7 +408,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               value={normalizeSearchNonMatching(draft.searchNonMatching)}
               onValueChange={(v) => patch('searchNonMatching', normalizeSearchNonMatching(v))}
             >
-              <SelectTrigger className="w-24 h-7 text-xs shrink-0" aria-label={t('search.settingLabel')}>
+              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('search.settingLabel')}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -477,7 +489,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               value={String(draft.staleThresholdDays ?? 30)}
               onValueChange={(v) => patch('staleThresholdDays', Number(v) as AppSettings['staleThresholdDays'])}
             >
-              <SelectTrigger className="w-24 h-7 text-xs shrink-0">
+              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -506,6 +518,24 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           </div>
 
           <CheckForUpdates />
+
+          {/* For every plan (Settings → AI is Pro AI only): free and Pro see the button as a locked preview */}
+          {AI_ENABLED && (
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <Label className="text-sm">{t('settings.general.showAiButtonLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.general.showAiButtonDescription')}</p>
+              </div>
+              <Switch
+                className="shrink-0"
+                aria-label={t('settings.general.showAiButtonLabel')}
+                // Settings saved before this existed lack it: on
+                checked={draft.showAiButton !== false}
+                onCheckedChange={(v) => patch('showAiButton', v)}
+                data-testid="settings-show-ai-button"
+              />
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="account" className="space-y-4">
@@ -532,12 +562,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 <span className="text-xs">{user.email}</span>
               </div>
             )}
-            {aiFeatures && (
+            {aiFeatures && aiMode !== 'byok' && (
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{t('settings.account.aiCreditsLeft')}</span>
                 <span className="text-xs font-medium">
                   {aiUsageLoading ? '…' : t('settings.account.aiCreditsValue', { remaining: aiUsageRemaining, cap: aiUsageCap })}
                 </span>
+              </div>
+            )}
+            {aiFeatures && aiMode === 'byok' && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">{t('settings.account.aiKeyLabel')}</span>
+                <span className="text-xs font-medium">{t('settings.account.aiOwnKey')}</span>
               </div>
             )}
           </div>
@@ -672,9 +708,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
         {aiFeatures && (
           <TabsContent value="ai" className="space-y-4">
-            <p className="text-xs text-muted-foreground">
-              {t('settings.ai.intro')}
-            </p>
+            <AiSettings model={draft.aiModel} onModelChange={(v) => patch('aiModel', v)} />
+            {aiMode !== 'byok' && (
+              <p className="text-xs text-muted-foreground">
+                {t('settings.ai.intro')}
+              </p>
+            )}
 
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
@@ -699,6 +738,20 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 aria-label={t('settings.ai.nameGroupLabel')}
                 checked={draft.aiNameGroupEnabled}
                 onCheckedChange={(v) => patch('aiNameGroupEnabled', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <Label className="text-sm">{t('settings.ai.describeGroupLabel')}</Label>
+                <p className="text-xs text-muted-foreground">{t('settings.ai.describeGroupDescription')}</p>
+              </div>
+              <Switch
+                className="shrink-0"
+                aria-label={t('settings.ai.describeGroupLabel')}
+                // Settings saved before this toggle existed lack it: on
+                checked={draft.aiDescribeGroupEnabled !== false}
+                onCheckedChange={(v) => patch('aiDescribeGroupEnabled', v)}
               />
             </div>
 
@@ -779,42 +832,16 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </Button>
             </div>
 
-            {import.meta.env.DEV && AI_ENABLED && (
+            {/* Credits exist only on TabMerger's key, so only while that option is live */}
+            {import.meta.env.DEV && AI_MANAGED_ENABLED && (
               <>
                 <Separator />
-                <div className="flex items-center justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <Label className="text-sm">{t('settings.dev.usageLabel')}</Label>
-                    <p className="text-xs text-muted-foreground">
-                      {t('settings.dev.usageDescription', { cap: aiUsageCap })}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <Input
-                      type="number"
-                      min={0}
-                      value={devUsageInput}
-                      onChange={(e) => setDevUsageInput(e.target.value)}
-                      className="w-16 h-8 text-xs rounded-none"
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs rounded-none"
-                      onClick={() => void handleSyncDevUsage(Number(devUsageInput) || 0)}
-                    >
-                      {t('settings.dev.usageSet')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs rounded-none"
-                      onClick={() => void handleSyncDevUsage(0)}
-                    >
-                      {t('settings.dev.usageReset')}
-                    </Button>
-                  </div>
-                </div>
+                <DevAiCredits cap={aiUsageCap} />
+              </>
+            )}
+
+            {import.meta.env.DEV && AI_ENABLED && (
+              <>
                 <Separator />
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -839,8 +866,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         </div>
       </Tabs>
 
-      {/* Footer — only shown for the General tab, which now owns the cloud sync toggle too */}
-      {activeTab === 'general' && (
+      {/* Footer — shown for the tabs whose controls edit the draft: General (which owns the cloud
+          sync toggle too) and AI (feature toggles and the model) */}
+      {(activeTab === 'general' || activeTab === 'ai') && (
         <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-2 min-w-0">
           <Button
             variant="ghost"

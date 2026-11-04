@@ -7,6 +7,8 @@ import {
   DEFAULT_BACKUP_FILE_FOLDER,
   DEFAULT_BACKUP_FILE_PATTERN,
   DEFAULT_SEARCH_NON_MATCHING,
+  DEFAULT_AI_MODEL_CHOICE,
+  type AiModelChoice,
   type AutoBackupIntervalMinutes,
   type SearchNonMatching
 } from '@tabmerger/shared';
@@ -22,12 +24,18 @@ export interface AppSettings {
   showPreviewImages: boolean;
   /** Search: hide or dim what does not match. Objects saved before this existed lack it: read through `normalizeSearchNonMatching` (see `useSearchMode`). */
   searchNonMatching: SearchNonMatching;
+  /** The header's ✨ AI button, for every plan (free and Pro see a locked preview). Settings saved before it existed lack it: treat anything but `false` as on. */
+  showAiButton: boolean;
   aiDailyThrottle: boolean;
   aiAutoGroupEnabled: boolean;
   aiNameGroupEnabled: boolean;
+  /** "Describe group". Settings saved before it existed lack it: treat anything but `false` as on. */
+  aiDescribeGroupEnabled: boolean;
   aiSuggestSessionsEnabled: boolean;
   aiOrganizeEnabled: boolean;
   aiTabSummaryEnabled: boolean;
+  /** Pro AI model choice. Stored values are validated: read through `readAiModelChoice` (lib/aiModel.ts). */
+  aiModel: AiModelChoice;
   /** Automatic backups (Pro). Stored objects saved before these existed lack them, and stored values are validated: read through `readAutoBackupSettings`. */
   autoBackupEnabled: boolean;
   autoBackupIntervalMinutes: AutoBackupIntervalMinutes;
@@ -46,12 +54,15 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   staleThresholdDays: 30,
   showPreviewImages: false,
   searchNonMatching: DEFAULT_SEARCH_NON_MATCHING,
+  showAiButton: true,
   aiDailyThrottle: true,
   aiAutoGroupEnabled: true,
   aiNameGroupEnabled: true,
+  aiDescribeGroupEnabled: true,
   aiSuggestSessionsEnabled: true,
   aiOrganizeEnabled: true,
   aiTabSummaryEnabled: true,
+  aiModel: DEFAULT_AI_MODEL_CHOICE,
   autoBackupEnabled: DEFAULT_AUTO_BACKUP_ENABLED,
   autoBackupIntervalMinutes: DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES,
   autoBackupFileEnabled: DEFAULT_BACKUP_FILE_ENABLED,

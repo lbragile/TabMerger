@@ -27,6 +27,12 @@
   "sortByUrl": "Bu pencereyi URL'ye göre sırala",
   "notePlaceholder": "Not ekleyin…",
   "empty": "Boş pencere",
+  "toast": {
+    "noTabsToName": "Bu pencerede adlandırılacak sekme yok",
+    "nameAlreadyFits": "“{{name}}” bu pencereye zaten uyuyor",
+    "noTabsToDescribe": "Bu pencerede açıklanacak sekme yok",
+    "aiDescribeFailed": "Bu pencere açıklanamadı"
+  },
   "someOfTabs_one": "{{count}} sekmeden {{matched}}",
   "someOfTabs_other": "{{count}} sekmeden {{matched}}"
 }

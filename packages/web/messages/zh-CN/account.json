@@ -33,7 +33,9 @@
     "groups": "已同步的分组",
     "tabs": "已保存的标签页",
     "sessions": "会话与备份",
-    "aiCredits": "剩余 AI 额度"
+    "aiCredits": "剩余 AI 额度",
+    "aiOwnKey": "由谁负责 AI 设置",
+    "aiOwnKeyValue": "您自己"
   },
   "profile": {
     "title": "个人资料",
@@ -51,7 +53,56 @@
     "description": "管理您的套餐和账单。",
     "manageBilling": "管理账单",
     "upgrade": "升级",
-    "cancelNote": "您可以随时通过<strong>管理账单</strong>取消订阅。当前计费周期结束前，您仍可继续使用。"
+    "cancelNote": "您可以随时通过<strong>管理账单</strong>取消订阅。当前计费周期结束前，您仍可继续使用。",
+    "scheduledChange": "将于 {date} 更改为 {plan}。",
+    "scheduledChangeUnknownPlan": "你的套餐将于 {date} 更改。",
+    "scheduledCancelNote": "取消后，你的当前套餐会保留到本计费周期结束，已安排的更改将被取消。不予退款。之后续订时，仍保留你的当前套餐。",
+    "endsOn": "你的套餐将于 {date} 结束。",
+    "endsUnknownDate": "你的套餐已设置为结束。",
+    "endsNote": "套餐不会续订。保留套餐即可像以前一样续订并更改套餐；现在不会收费。"
+  },
+  "cancelSubscription": {
+    "button": "取消订阅",
+    "errors": {
+      "no_billing_account": "此套餐未关联账单账户。请发送邮件至 {email}，我们会为你取消。",
+      "no_subscription": "未找到可取消的订阅。请刷新页面，或发送邮件至 {email}。",
+      "not_entitled": "没有可取消的有效套餐。",
+      "already_canceling": "你的套餐已设置为在本计费周期结束时终止。",
+      "cancel_failed": "无法打开取消页面。请重试，或发送邮件至 {email}。",
+      "rate_limited": "短时间内的账单请求过多。请等待几分钟后再试。"
+    }
+  },
+  "keepCurrentPlan": {
+    "button": "保留当前套餐",
+    "success": "你的套餐保持为 {plan}。",
+    "successUnknownPlan": "你的当前套餐保持不变。",
+    "successRenews": "你的套餐保持为 {plan}。将于 {date} 续订，费用为 {amount}。",
+    "successRenewsOn": "你的套餐保持为 {plan}。将于 {date} 续订。",
+    "successUnknownPlanRenews": "你的当前套餐保持不变。将于 {date} 续订，费用为 {amount}。",
+    "successUnknownPlanRenewsOn": "你的当前套餐保持不变。将于 {date} 续订。",
+    "errors": {
+      "no_billing_account": "此套餐未关联账单账户。请发送邮件至 {email}，我们会为你处理。",
+      "no_subscription": "未找到你的订阅。请刷新页面，或发送邮件至 {email}。",
+      "no_scheduled_change": "已没有待生效的套餐变更。请刷新页面查看你的套餐。",
+      "keep_plan_failed": "无法保留你的当前套餐。请重试，或发送邮件至 {email}。",
+      "rate_limited": "短时间内的账单请求过多。请等待几分钟后再试。"
+    }
+  },
+  "resumeSubscription": {
+    "button": "保留我的套餐",
+    "success": "你的套餐将会续订。",
+    "successRenewsOn": "你的套餐将于 {date} 续订。",
+    "successRenews": "你的套餐将于 {date} 续订，费用为 {amount}。",
+    "errors": {
+      "no_billing_account": "此套餐未关联账单账户。请发送邮件至 {email}，我们会为你处理。",
+      "no_subscription": "未找到你的订阅。请刷新页面，或发送邮件至 {email}。",
+      "not_entitled": "此套餐已结束。请在价格页面选择套餐。",
+      "not_canceling": "你的套餐已不再设置为结束。请刷新页面查看你的套餐。",
+      "ends_early": "此套餐的结束日期由我们的支持团队设置。如需保留，请发送邮件至 {email}。",
+      "schedule_attached": "此套餐有我们的支持团队设置的更改。如需保留，请发送邮件至 {email}。",
+      "resume_failed": "无法保留你的套餐。请重试，或发送邮件至 {email}。",
+      "rate_limited": "短时间内的账单请求过多。请等待几分钟后再试。"
+    }
   },
   "devicesCard": {
     "title": "设备",
@@ -68,6 +119,15 @@
   },
   "credits": {
     "failed": "无法开始结账",
-    "getMore": "获取更多"
+    "getMore": "获取更多",
+    "notAvailable": "额度包仅适用于由 TabMerger 负责 AI 设置的有效 Pro AI 方案。",
+    "rateLimited": "短时间内的账单请求过多。请等待几分钟后再试。",
+    "resetsOn": "额度将于 {date} 重置",
+    "endsOn": "额度将于 {date} 到期"
+  },
+  "aiPlan": {
+    "title": "由谁负责 AI 设置",
+    "managed": "TabMerger：本月 {limit, number} AI 额度中还剩 {left, number}。",
+    "byok": "您自己：使用您自己的 API 密钥，由 AI 服务商直接计费，无额度上限。可在扩展程序的设置中添加或更改密钥。"
   }
 }

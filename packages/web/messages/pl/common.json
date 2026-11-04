@@ -6,5 +6,6 @@
   "opensInNewTab": " (otwiera się w nowej karcie)",
   "close": "Zamknij",
   "showPassphrase": "Pokaż frazę hasła",
-  "hidePassphrase": "Ukryj frazę hasła"
+  "hidePassphrase": "Ukryj frazę hasła",
+  "withYourOwnKey": "Z własnym kluczem API"
 }

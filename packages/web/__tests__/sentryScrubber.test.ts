@@ -15,6 +15,34 @@ describe('scrubEvent', () => {
     expect(result?.request?.headers).toEqual({})
   })
 
+  it('drops a BYOK Anthropic key sent in the X-AI-Key request header', () => {
+    const key = `sk-ant-api03-${'k'.repeat(40)}`
+    const event = {
+      request: { url: 'https://tabmerger.com/api/ai/name-group', headers: { 'X-AI-Key': key } },
+    } as unknown as ErrorEvent
+    const result = scrubEvent(event)
+    expect(JSON.stringify(result)).not.toContain(key)
+  })
+
+  it('drops the request body, query string and cookies: an AI route body is decrypted group content', () => {
+    const event = {
+      request: {
+        method: 'POST',
+        url: 'https://tabmerger.com/api/ai/describe-group?x=1',
+        headers: {},
+        data: { groupName: 'Medical records', tabs: [{ title: 'My diagnosis', url: 'https://clinic.example/me' }] },
+        query_string: 'x=1',
+        cookies: { sb: 'session' },
+      },
+    } as unknown as ErrorEvent
+    const result = scrubEvent(event)
+    expect(result?.request).toEqual({ method: 'POST', url: '[redacted]', headers: {} })
+    const sent = JSON.stringify(result)
+    for (const secret of ['Medical records', 'My diagnosis', 'clinic.example', 'x=1', 'session']) {
+      expect(sent).not.toContain(secret)
+    }
+  })
+
   it('redacts breadcrumb data urls when present', () => {
     const event = {
       breadcrumbs: [{ data: { url: 'https://example.com/a', from: '/a', to: '/b' } }],

@@ -27,5 +27,11 @@
   "sortByUrl": "このウィンドウをURL順に並べ替え",
   "notePlaceholder": "メモを追加…",
   "empty": "空のウィンドウ",
+  "toast": {
+    "noTabsToName": "名前を付けるタブがこのウィンドウにありません",
+    "nameAlreadyFits": "「{{name}}」はすでにこのウィンドウに合っています",
+    "noTabsToDescribe": "説明を書くタブがこのウィンドウにありません",
+    "aiDescribeFailed": "このウィンドウの説明を書けませんでした"
+  },
   "someOfTabs_other": "{{count}}個のタブ中{{matched}}個"
 }

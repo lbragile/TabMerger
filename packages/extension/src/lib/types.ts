@@ -1,4 +1,4 @@
-import { FREE_TIER_LIMITS, UNLIMITED_TIER_LIMITS } from '@tabmerger/shared';
+import { FREE_TIER_LIMITS, UNLIMITED_TIER_LIMITS, type AiMode } from '@tabmerger/shared';
 export interface Tab {
   id: number;
   title: string;
@@ -108,6 +108,8 @@ export interface Entitlements {
   cancelAtPeriodEnd: boolean;
   currentPeriodEnd: string | null;
   subscriptionStatus: string | null;
+  /** How a Pro AI subscription pays for AI (`subscriptions.ai_mode`); null on every other plan. */
+  aiMode: AiMode | null;
 }
 
 export const TIER_LIMITS: Record<Tier, Entitlements> = {
@@ -121,7 +123,8 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
     aiFeatures: false,
     cancelAtPeriodEnd: false,
     currentPeriodEnd: null,
-    subscriptionStatus: null
+    subscriptionStatus: null,
+    aiMode: null
   },
   pro: {
     tier: 'pro',
@@ -133,7 +136,8 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
     aiFeatures: false,
     cancelAtPeriodEnd: false,
     currentPeriodEnd: null,
-    subscriptionStatus: null
+    subscriptionStatus: null,
+    aiMode: null
   },
   pro_ai: {
     tier: 'pro_ai',
@@ -145,7 +149,8 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
     aiFeatures: true,
     cancelAtPeriodEnd: false,
     currentPeriodEnd: null,
-    subscriptionStatus: null
+    subscriptionStatus: null,
+    aiMode: null
   }
 };
 

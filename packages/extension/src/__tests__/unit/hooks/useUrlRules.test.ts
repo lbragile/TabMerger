@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { useUrlRules, useSaveUrlRules, matchUrlToRule, globMatch } from '@/hooks/useUrlRules'
+import { useUrlRules, useSaveUrlRules, matchUrlToRule, globMatch, retargetRulesToGroup } from '@/hooks/useUrlRules'
 import type { UrlRule } from '@/lib/types'
 
 const { mockGetSetting, mockSetSetting } = vi.hoisted(() => ({
@@ -198,5 +198,38 @@ describe('matchUrlToRule — stored rules of the wrong shape', () => {
   it('returns null for an address or a rule list of the wrong type', () => {
     expect(matchUrlToRule(undefined as unknown as string, [{ id: 'r', pattern: '*', groupId: 'g', createdAt: 1 }])).toBeNull()
     expect(matchUrlToRule('https://a.com', 'rules' as unknown as UrlRule[])).toBeNull()
+  })
+})
+
+describe('retargetRulesToGroup', () => {
+  const rules: UrlRule[] = [
+    { id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 },
+    { id: 'r2', pattern: 'b.com', groupId: 'g2', createdAt: 2 },
+    { id: 'r3', pattern: 'c.com', groupId: 'g3', createdAt: 3 },
+  ]
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetSetting.mockResolvedValue(rules)
+  })
+
+  it('points the rules of the merged groups at the target and leaves the others alone', async () => {
+    await retargetRulesToGroup(['g2', 'g3'], 'g1')
+    expect(mockSetSetting).toHaveBeenCalledTimes(1)
+    expect(mockSetSetting).toHaveBeenCalledWith('urlRules', [
+      { id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 },
+      { id: 'r2', pattern: 'b.com', groupId: 'g1', createdAt: 2 },
+      { id: 'r3', pattern: 'c.com', groupId: 'g1', createdAt: 3 },
+    ])
+  })
+
+  it('persists nothing when no rule points at a merged group', async () => {
+    await retargetRulesToGroup(['gX'], 'g1')
+    expect(mockSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('does nothing, not even a read, for an empty list', async () => {
+    await retargetRulesToGroup([], 'g1')
+    expect(mockGetSetting).not.toHaveBeenCalled()
+    expect(mockSetSetting).not.toHaveBeenCalled()
   })
 })

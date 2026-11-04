@@ -62,7 +62,7 @@
   },
   "proAi": {
     "title": "Organização com IA",
-    "description": "Deixe o Claude analisar suas abas e dar sugestões inteligentes para você se concentrar em pensar, não em arquivar.",
+    "description": "A IA lê os títulos e URLs das suas abas e sugere como agrupá-las, nomeá-las e organizá-las, para você se concentrar em pensar, não em arquivar.",
     "autoGrouping": {
       "title": "Agrupamento automático",
       "description": "Abra uma bagunça de abas e clique em um botão. A IA as agrupa de forma lógica por assunto, domínio e intenção."
@@ -71,13 +71,21 @@
       "title": "Nomes de grupos inteligentes",
       "description": "A IA sugere nomes concisos e descritivos para seus grupos. Um clique para aceitar, ou digite o seu."
     },
+    "describe": {
+      "title": "Descreva um grupo",
+      "description": "A IA escreve uma nota curta sobre o assunto das abas de um grupo ou janela, para você lembrar por que as salvou. Edite como qualquer outra nota."
+    },
     "summaries": {
       "title": "Resumos de abas",
       "description": "Passe o mouse sobre qualquer aba para ver um resumo de uma frase feito pela IA sobre o que a página trata — sem abri-la."
     },
     "sessionSuggestions": {
       "title": "Sugestões de sessões",
-      "description": "A IA analisa seus padrões de navegação e sugere como estruturar sessões para a máxima produtividade."
+      "description": "A IA analisa seus grupos salvos e sugere mesclar os que se sobrepõem ou arquivar os que você não usa há algum tempo. Mescle ou arquive com um clique."
+    },
+    "organize": {
+      "title": "Organize seu espaço de trabalho",
+      "description": "A IA revisa todos os seus grupos de uma vez e propõe mesclagens, novos nomes, arquivamentos e uma nova ordem. Desmarque as alterações que você não quiser e aplique o restante em uma única etapa que pode ser desfeita."
     }
   }
 }

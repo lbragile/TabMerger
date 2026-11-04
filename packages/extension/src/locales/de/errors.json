@@ -27,7 +27,24 @@
   "sharingRequiresPro": "Teilen erfordert ein Pro-Upgrade – Berechtigung fehlt",
   "aiOncePerDay": "Heute bereits genutzt – diese KI-Aktion ist auf einmal pro Tag begrenzt",
   "proAiRequired": "Pro-AI-Tarif erforderlich",
-  "nameGroupOff": "„Gruppe benennen“ ist in den Einstellungen deaktiviert",
+  "nameGroupOff": "„Gruppen und Fenster benennen“ ist in den Einstellungen deaktiviert",
+  "describeGroupOff": "„Gruppen und Fenster beschreiben“ ist in den Einstellungen deaktiviert",
   "suggestSessionsOff": "„Sitzungen vorschlagen“ ist in den Einstellungen deaktiviert",
-  "organizeOff": "„Organisieren“ ist in den Einstellungen deaktiviert"
+  "organizeOff": "„Organisieren“ ist in den Einstellungen deaktiviert",
+  "ai": {
+    "disabled": "KI-Funktionen sind gerade nicht verfügbar.",
+    "modelInvalid": "Dieses KI-Modell ist nicht verfügbar. Wähle in den Einstellungen im Tab „KI“ ein anderes.",
+    "overloaded": "Der KI-Dienst ist gerade ausgelastet. Versuche es in einer Minute erneut.",
+    "byokKeyMissing": "Füge in den Einstellungen im Tab „KI“ den API-Schlüssel deines KI-Anbieters hinzu, um KI-Funktionen zu nutzen.",
+    "byokKeyInvalid": "Dein KI-Anbieter hat deinen API-Schlüssel nicht akzeptiert. Prüfe oder ersetze ihn in den Einstellungen im Tab „KI“.",
+    "byokRateLimited": "Dein API-Schlüssel hat das Anfragelimit seines Anbieters erreicht. Warte einen Moment und versuche es erneut.",
+    "byokBilling": "Dein Konto beim KI-Anbieter hat kein Guthaben mehr oder ein Abrechnungsproblem. Prüfe die Abrechnung bei deinem Anbieter.",
+    "creditsNotApplicable": "Credit-Pakete gibt es nicht, wenn du deinen eigenen API-Schlüssel nutzt.",
+    "unauthorized": "Deine Anmeldung ist abgelaufen. Melde dich erneut an und versuche es noch einmal.",
+    "invalidRequest": "TabMerger konnte diese KI-Anfrage nicht senden. Versuche es erneut und aktualisiere die Erweiterung, falls es wieder passiert.",
+    "refused": "Die KI hat diese Anfrage abgelehnt.",
+    "failed": "Die KI-Anfrage ist fehlgeschlagen. Versuche es erneut.",
+    "rateLimited": "Gerade zu viele KI-Anfragen. Versuche es in einer Minute erneut.",
+    "rateLimitedRetry": "Gerade zu viele KI-Anfragen. Versuche es {{when}} erneut."
+  }
 }

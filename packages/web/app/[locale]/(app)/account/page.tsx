@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react'
 import type { Metadata } from 'next'
-import { getLocale, getTranslations } from 'next-intl/server'
+import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
-import { createBillingPortalSession } from '@/lib/stripe'
+import { createBillingPortalSession, getPendingPlanChange, type PendingPlanChange } from '@/lib/stripe'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -19,9 +19,16 @@ import { SetPasswordForm } from '@/components/account/SetPasswordForm'
 import { DevicesSection } from '@/components/account/DevicesSection'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { CreditsResetNote } from '@/components/account/CreditsResetNote'
+import { SwitchAiModeButton } from '@/components/account/SwitchAiModeButton'
+import { ScheduledChangeNotice } from '@/components/account/ScheduledChangeNotice'
+import { ResumeSubscriptionNotice } from '@/components/account/ResumeSubscriptionNotice'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
+import { scheduledChangeOf } from '@/lib/aiCreditsDate'
+import { ACCOUNT_AI_CREDITS_ANCHOR, aiAllowanceMonth, isAiMode, managedAiCreditsDate } from '@tabmerger/shared'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { getPlanForPriceId, getPriceInfo } from '@/lib/tiers'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('account')
@@ -30,7 +37,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AccountPage() {
   const supabase = await createClient()
-  const [t, locale] = await Promise.all([getTranslations('account'), getLocale()])
+  const [t, tPlan, locale, format] = await Promise.all([
+    getTranslations('account'),
+    getTranslations('pricing.planChange'),
+    getLocale(),
+    getFormatter(),
+  ])
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -58,6 +70,10 @@ export default async function AccountPage() {
   // accounts never sync, so there's nothing of theirs to show either way.
   const syncEnabled = hasCloudSync(subscription)
   const isPaid = syncEnabled
+  // Cancelled at the period end (`cancel_at_period_end`, which the webhook also sets for Stripe's
+  // `cancel_at` at the period end): the page says when it ends and offers "Keep my plan" instead of
+  // plan changes, which the server refuses until then (409 `cancel_scheduled`).
+  const setToEnd = isPaid && subscription?.cancel_at_period_end === true
 
   // Same row type the Devices list expects, so a mismatch fails here rather than at runtime.
   let deviceRows: ComponentProps<typeof DevicesSection>['initialDevices'] = []
@@ -107,30 +123,63 @@ export default async function AccountPage() {
     )
   }
 
+  // Pro AI's option: TabMerger's AI (monthly credits plus packs) or the subscriber's own key, which
+  // TabMerger doesn't meter (the server doesn't know the key's provider until a request either).
+  const isProAi = currentTier === 'pro_ai'
+  const aiMode = isAiMode(subscription?.ai_mode) ? subscription.ai_mode : 'managed'
+  const showAi = AI_AVAILABILITY.any
+  const isOwnKey = isProAi && aiMode === 'byok'
+  // Credit packs: managed Pro AI on an entitled plan, any time (not only once the month's credits
+  // run out), while TabMerger's AI is on sale. The own-key option spends no credits (the checkout
+  // answers 409 for it), and an ended plan has nothing to spend them against.
+  const canBuyCredits = isPaid && isProAi && aiMode === 'managed' && AI_AVAILABILITY.managed
   let aiCreditsLeft = 0
-  if (AI_ENABLED && currentTier === 'pro_ai') {
-    const month = new Date().toISOString().slice(0, 7)
+  let aiCreditsLimit = 0
+  if (showAi && isProAi && !isOwnKey) {
+    const month = aiAllowanceMonth(subscription?.ai_period_start, subscription?.ai_period_end)
     const { data: usage } = await supabase
       .from('ai_usage')
       .select('credits_used')
       .eq('user_id', user.id)
       .eq('month', month)
       .maybeSingle()
-    const cap = await getEffectiveCap(supabase, user.id, month)
-    aiCreditsLeft = cap - (usage?.credits_used ?? 0)
+    aiCreditsLimit = await getEffectiveCap(supabase, user.id, month)
+    aiCreditsLeft = Math.max(0, aiCreditsLimit - (usage?.credits_used ?? 0))
   }
 
   let billingPortalUrl: string | null = null
+  // A plan change waiting for the period end (a deferred downgrade). The page shows it with "Keep my
+  // current plan" (undoes it, /api/billing/keep-current-plan) and its own Cancel button (Stripe's
+  // cancel page for this subscription), because the portal's home page offers no cancellation
+  // while one is pending.
+  let pendingChange: PendingPlanChange | null = null
   if (isPaid && profile?.stripe_customer_id) {
-    try {
-      billingPortalUrl = await createBillingPortalSession({
-        customerId: profile.stripe_customer_id,
-        returnUrl: absoluteUrl('/account'),
-      })
-    } catch {
-      // non-fatal — portal link just won't show
-    }
+    const customerId = profile.stripe_customer_id
+    const [portal, pending] = await Promise.allSettled([
+      (async () => createBillingPortalSession({ customerId, returnUrl: absoluteUrl('/account') }))(),
+      (async () => (subscription?.id ? getPendingPlanChange({ customerId, subscriptionId: subscription.id }) : null))(),
+    ])
+    // Non-fatal: without them the portal link or the scheduled change just won't show.
+    if (portal.status === 'fulfilled') billingPortalUrl = portal.value
+    if (pending.status === 'fulfilled') pendingChange = pending.value
   }
+  // "Pro, billed monthly": the pricing page's plan-change wording; null for a price this deployment
+  // doesn't sell.
+  const planName = (plan: ReturnType<typeof getPlanForPriceId>): string | null => {
+    if (!plan) return null
+    const name =
+      plan.tierKey === 'pro'
+        ? tPlan('plans.pro')
+        : plan.aiMode === 'byok'
+          ? tPlan('plans.proAiByok')
+          : tPlan('plans.proAiManaged')
+    return plan.interval === 'yearly' ? tPlan('billedYearly', { plan: name }) : tPlan('billedMonthly', { plan: name })
+  }
+  const pendingPlanName = pendingChange ? planName(getPlanForPriceId(pendingChange.priceId)) : null
+  // Beside the credits: when they reset, or end (cancelling, or a scheduled change off managed Pro AI)
+  const creditsDate = AI_AVAILABILITY.managed
+    ? managedAiCreditsDate(subscription, { scheduledChange: scheduledChangeOf(pendingChange) })
+    : null
 
   return (
     <div className="max-w-2xl flex flex-col gap-6">
@@ -144,7 +193,7 @@ export default async function AccountPage() {
       {/* Usage summary — real Supabase counts, not placeholder numbers. Sync-derived cards
           (Groups synced / Tabs saved / Sessions) only render for accounts that actually sync;
           AI credits card is hidden entirely while AI features are coming soon. */}
-      {(syncEnabled || AI_ENABLED) && (
+      {(syncEnabled || showAi) && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-1">
           {[
             ...(syncEnabled
@@ -155,23 +204,28 @@ export default async function AccountPage() {
                   { id: 'sessions', label: t('stats.sessions'), value: String(sessionCount) },
                 ]
               : []),
-            ...(AI_ENABLED
-              ? [{ id: 'aiCredits', label: t('stats.aiCredits'), value: currentTier === 'pro_ai' ? String(aiCreditsLeft) : '0', accent: currentTier === 'pro_ai' }]
-              : []),
+            ...(!showAi
+              ? []
+              : isOwnKey
+                ? [{ id: 'aiOwnKey', label: t('stats.aiOwnKey'), value: t('stats.aiOwnKeyValue'), accent: true }]
+                : [{ id: 'aiCredits', label: t('stats.aiCredits'), value: isProAi ? format.number(aiCreditsLeft) : '0', accent: isProAi }]),
           ].map((stat, i) => (
             <div
               key={i}
-              className={`rounded-lg border p-4 ${stat.accent ? 'bg-accent border-primary/20' : 'bg-surface border-border'}`}
+              // The AI card is the extension's "Buy more credits" target (/account#ai-credits); the
+              // scroll margin keeps it clear of the sticky 4rem header.
+              id={stat.id === 'aiCredits' || stat.id === 'aiOwnKey' ? ACCOUNT_AI_CREDITS_ANCHOR : undefined}
+              className={`scroll-mt-20 rounded-lg border p-4 ${stat.accent ? 'bg-accent border-primary/20' : 'bg-surface border-border'}`}
             >
               <p className={`font-semibold tracking-tight ${stat.accent ? 'text-primary' : ''}`} style={{ fontSize: '26px' }}>
                 {stat.value}
               </p>
               <p className="text-[12px] text-text2 mt-0.5 flex items-center gap-1.5 flex-wrap">
                 {stat.label}
-                {stat.id === 'aiCredits' && currentTier === 'pro_ai' && aiCreditsLeft <= 0 && (
-                  <BuyCreditsButton />
-                )}
+                {/* Credit packs exist only for TabMerger's AI, and only once it's on sale. */}
+                {stat.id === 'aiCredits' && canBuyCredits && <BuyCreditsButton />}
               </p>
+              {stat.id === 'aiCredits' && <CreditsResetNote credits={creditsDate} className="text-xs text-text2" />}
             </div>
           ))}
         </div>
@@ -243,6 +297,7 @@ export default async function AccountPage() {
             status={subscription?.status}
             currentPeriodEnd={isPaid ? subscription?.current_period_end : undefined}
             priceId={subscription?.stripe_price_id}
+            setToEnd={setToEnd}
             action={
               isPaid && billingPortalUrl ? (
                 <Button variant="outline" size="sm" className="w-32" asChild>
@@ -256,7 +311,71 @@ export default async function AccountPage() {
             }
           />
 
-          {isPaid && billingPortalUrl && (
+          {/* Rendered for every paid account (notice null unless the plan is set to end) so it stays
+              mounted across the refresh after "Keep my plan" and can say when the plan renews. */}
+          {isPaid && (
+            <ResumeSubscriptionNotice
+              notice={
+                setToEnd
+                  ? {
+                      message: subscription?.current_period_end
+                        ? t('subscription.endsOn', { date: formatDate(subscription.current_period_end, locale) })
+                        : t('subscription.endsUnknownDate'),
+                      note: t('subscription.endsNote'),
+                    }
+                  : null
+              }
+            />
+          )}
+
+          {/* Pro AI: which option the subscription is on, and the switch to the other one (none while
+              the plan is set to end: keeping it comes first). */}
+          {showAi && isProAi && isPaid && (
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
+              <div className="min-w-0">
+                <p className="font-medium">{t('aiPlan.title')}</p>
+                <p className="text-muted-foreground">
+                  {isOwnKey
+                    ? t('aiPlan.byok')
+                    : t('aiPlan.managed', { left: aiCreditsLeft, limit: aiCreditsLimit })}
+                </p>
+              </div>
+              {!setToEnd && (
+                <SwitchAiModeButton
+                  current={aiMode}
+                  interval={getPriceInfo(subscription?.stripe_price_id)?.interval}
+                  periodEnd={subscription?.current_period_end}
+                  returnPath="/account"
+                  className="text-xs"
+                />
+              )}
+            </div>
+          )}
+
+          {/* Rendered for every paid account (notice null when nothing is scheduled) so it stays
+              mounted across the refresh after "Keep my current plan" and can say the plan stays. */}
+          {isPaid && (
+            <ScheduledChangeNotice
+              notice={
+                pendingChange
+                  ? {
+                      message: pendingPlanName
+                        ? t('subscription.scheduledChange', {
+                            plan: pendingPlanName,
+                            date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
+                          })
+                        : t('subscription.scheduledChangeUnknownPlan', {
+                            date: formatDate(new Date(pendingChange.effectiveAt * 1000), locale),
+                          }),
+                      note: t('subscription.scheduledCancelNote'),
+                    }
+                  : null
+              }
+              currentPlan={planName(getPlanForPriceId(subscription?.stripe_price_id))}
+            />
+          )}
+
+          {isPaid && billingPortalUrl && !pendingChange && !setToEnd && (
             <p className="text-xs text-muted-foreground">
               {t.rich('subscription.cancelNote', { strong: (chunks) => <strong>{chunks}</strong> })}
             </p>

@@ -66,6 +66,23 @@ describe('trackEvent — configured', () => {
     expect(set).toHaveBeenCalledWith(expect.objectContaining({ ga_client_id: expect.any(String) }))
   })
 
+  it('is a no-op in an automated-test build (VITE_E2E_TEST "true"), even with a web app URL', async () => {
+    vi.stubEnv('VITE_E2E_TEST', 'true')
+    vi.stubEnv('VITE_POSTHOG_API_KEY', 'phc_test')
+    const get = vi.fn().mockResolvedValue({ ga_client_id: 'x' })
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = { storage: { local: { get, set: vi.fn() } } }
+    try {
+      const mod = await import('@/lib/analytics')
+      mod.trackEvent('page_view')
+      mod.trackPostHogEvent('page_view')
+      await new Promise((r) => setTimeout(r, 0))
+      expect(fetch).not.toHaveBeenCalled()
+      expect(get).not.toHaveBeenCalled()
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
   it('swallows fetch errors silently', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')))
     ;(globalThis as { chrome: Record<string, unknown> }).chrome = {

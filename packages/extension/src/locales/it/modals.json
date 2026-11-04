@@ -61,5 +61,44 @@
   },
   "confirmDialog": {
     "cancel": "Annulla"
+  },
+  "organize": {
+    "title": "Organizza gruppi",
+    "description_one": "L'IA suggerisce {{count}} modifica. Togli la spunta a quelle che non vuoi.",
+    "description_many": "L'IA suggerisce {{count}} modifiche. Togli la spunta a quelle che non vuoi.",
+    "description_other": "L'IA suggerisce {{count}} modifiche. Togli la spunta a quelle che non vuoi.",
+    "merge": "Unisci «<from>{{from}}</from>» a «<to>{{to}}</to>»",
+    "rename": "Rinomina «<from>{{from}}</from>» in «<to>{{to}}</to>»",
+    "archive": "Archivia «<name>{{name}}</name>»",
+    "reorder": "Riordina i gruppi",
+    "archiveNote": "I gruppi archiviati vengono nascosti, non eliminati: ripristinali quando vuoi da Archiviati.",
+    "apply": "Applica selezionate",
+    "applied_one": "{{count}} modifica applicata",
+    "applied_many": "{{count}} modifiche applicate",
+    "applied_other": "{{count}} modifiche applicate",
+    "nothingApplied": "Niente da applicare: nel frattempo quei gruppi sono cambiati",
+    "applyFailed": "Impossibile applicare le modifiche"
+  },
+  "describeGroup": {
+    "title": "Usare la descrizione dell'AI?",
+    "description": "Questo gruppo ha già una nota. Sostituiscila o aggiungi il suggerimento sotto.",
+    "descriptionWindow": "Questa finestra ha già una nota. Sostituiscila o aggiungi il suggerimento sotto.",
+    "current": "Nota attuale",
+    "suggestion": "Suggerimento",
+    "replace": "Sostituisci nota",
+    "append": "Aggiungi sotto",
+    "tooLong": "Troppo lungo da aggiungere sotto la nota (massimo {{max}} caratteri). Sostituiscila invece.",
+    "saveFailed": "Impossibile salvare la nota"
+  },
+  "nameGroup": {
+    "title": "Dai un nome a questo gruppo",
+    "titleWindow": "Dai un nome a questa finestra",
+    "current": "Attuale: <name>{{name}}</name>",
+    "choices": "Nomi suggeriti",
+    "custom": "Oppure scrivine uno tuo:",
+    "customInput": "Il tuo nome",
+    "rename": "Rinomina",
+    "renameFailedWindow": "Impossibile rinominare la finestra",
+    "renameFailed": "Impossibile rinominare il gruppo"
   }
 }

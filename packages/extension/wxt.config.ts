@@ -4,7 +4,7 @@ import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolveManifestVersion } from "./scripts/manifestVersion";
-import { resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
+import { resolveE2eTestDefine, resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
 import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "./scripts/firefoxAddonIds";
 import { resolveFirefoxBetaUpdateUrl } from "./scripts/firefoxBetaUpdateUrl";
 import { resolveTrustedWebAppOrigins, toOriginMatchPatterns } from "./src/lib/webAppOrigins";
@@ -82,9 +82,8 @@ export default defineConfig({
             // the same precedent as `e2eGrantDownloads` above. `VITE_E2E_TEST=true` additionally
             // forces it on for any OTHER mode (e.g. a CI step that builds in production mode for
             // e2e and wants to export the var on that one step), without needing a `.env.e2e` file.
-            "import.meta.env.VITE_E2E_TEST": JSON.stringify(
-                cliWxtMode === "development" || process.env.VITE_E2E_TEST === "true",
-            ),
+            // The string "true" or absent, never a boolean (see resolveE2eTestDefine).
+            "import.meta.env.VITE_E2E_TEST": resolveE2eTestDefine(cliWxtMode, process.env.VITE_E2E_TEST),
         },
     }),
     manifestVersion: 3,

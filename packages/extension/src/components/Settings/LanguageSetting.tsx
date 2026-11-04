@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { LanguagePicker } from '@/components/LanguagePicker';
+import { SETTINGS_SELECT_WIDTH } from '@/components/Settings/settingsControls';
 import { LOCALE_PREFERENCE_AUTO, localePreferenceLabel, type LocalePreference } from '@/lib/localePreference';
 
 interface LanguageSettingProps {
@@ -29,13 +30,15 @@ export function LanguageSetting({ value, onChange }: LanguageSettingProps) {
         <Label id={labelId} className="text-sm">{t('settings.general.languageLabel')}</Label>
         <p className="text-xs text-muted-foreground">{t('settings.general.languageDescription')}</p>
       </div>
-      <Popover open={open} onOpenChange={setOpen}>
+      {/* modal: the list is portaled outside the Settings dialog, whose scroll lock otherwise
+          swallows mouse-wheel events there; a modal popover takes the lock and scrolls itself */}
+      <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>
           <button
             type="button"
             // "Language Deutsch": the row's label, then the value
             aria-labelledby={`${labelId} ${valueId}`}
-            className="flex h-7 w-40 shrink-0 items-center justify-between gap-2 border border-input bg-transparent px-3 text-xs shadow-xs focus:outline-none focus:ring-1 focus:ring-ring"
+            className={`flex h-7 ${SETTINGS_SELECT_WIDTH} shrink-0 items-center justify-between gap-2 border border-input bg-transparent px-3 text-xs shadow-xs focus:outline-none focus:ring-1 focus:ring-ring`}
             data-testid="settings-language"
           >
             <span id={valueId} className="truncate" lang={value === LOCALE_PREFERENCE_AUTO ? undefined : value}>

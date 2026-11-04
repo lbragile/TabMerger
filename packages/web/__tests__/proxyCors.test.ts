@@ -53,6 +53,22 @@ describe('proxy — extension CORS', () => {
     },
   )
 
+  it('lets the extension send a BYOK key to the AI routes and read the credit balance', async () => {
+    const { proxy } = await loadProxy()
+    const res = await proxy(req('/api/ai/name-group', { method: 'OPTIONS', origin: CHROME_DEV }))
+    expect(res.headers.get('Access-Control-Allow-Headers')).toMatch(/X-AI-Key/)
+    expect(res.headers.get('Access-Control-Expose-Headers')).toBe('X-AI-Credits-Remaining')
+    // The old Anthropic-only header name is gone.
+    expect(res.headers.get('Access-Control-Allow-Headers')).not.toMatch(/X-Anthropic-Key/)
+  })
+
+  it('does not accept the BYOK key header on non-AI routes', async () => {
+    const { proxy } = await loadProxy()
+    const res = await proxy(req('/api/track', { method: 'OPTIONS', origin: CHROME_DEV }))
+    expect(res.headers.get('Access-Control-Allow-Headers')).not.toMatch(/X-AI-Key/)
+    expect(res.headers.get('Access-Control-Expose-Headers')).toBeNull()
+  })
+
   it('adds CORS headers to the actual (post-preflight) request too', async () => {
     const { proxy } = await loadProxy()
     const res = await proxy(req('/api/track', { origin: CHROME_DEV }))

@@ -6,5 +6,6 @@
   "opensInNewTab": " (mở trong tab mới)",
   "close": "Đóng",
   "showPassphrase": "Hiện cụm mật khẩu",
-  "hidePassphrase": "Ẩn cụm mật khẩu"
+  "hidePassphrase": "Ẩn cụm mật khẩu",
+  "withYourOwnKey": "Bằng khóa API của bạn"
 }
