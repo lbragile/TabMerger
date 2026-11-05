@@ -10,6 +10,7 @@
  *
  * Server-only: never import this from a client component.
  */
+import { deployEnv } from '@/lib/deployment'
 
 export type Ga4Stream = 'web' | 'extension'
 
@@ -85,6 +86,5 @@ export function gaValue(value: string): string {
  * same `environment` field `lib/analytics.ts` adds to every browser-side event.
  */
 export function gaEnvironment(): string {
-  const env = process.env.VERCEL_ENV ?? process.env.NEXT_PUBLIC_VERCEL_ENV
-  return env === 'production' || env === 'preview' ? env : 'development'
+  return deployEnv()
 }

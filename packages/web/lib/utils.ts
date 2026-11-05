@@ -89,7 +89,7 @@ function validateBaseUrl(candidate: string | undefined): string | null {
 
 /**
  * Resolves the base URL for Stripe redirect targets (checkout success/cancel, billing portal
- * return): NEXT_PUBLIC_APP_URL, validated, set per Vercel environment — the real domain in
+ * return): NEXT_PUBLIC_APP_URL, validated, set per deployment environment — the real domain in
  * Production, the fixed alias https://preview.tabmerger.com in Preview (CI points it at
  * each new preview deploy, see .github/workflows/deploy-web.yml), localhost in local dev.
  *
@@ -120,18 +120,13 @@ export function absoluteUrl(path: string): string {
 }
 
 /**
- * Base URL for the root `metadata.metadataBase` (makes og:image / twitter:image absolute).
- * Unlike `absoluteUrl` this never throws: a missing or invalid NEXT_PUBLIC_APP_URL must not
- * break `next build` or page rendering. Falls back to the production alias, the preview
- * deployment host, then localhost.
+ * Base URL for the root `metadata.metadataBase` (makes og:image / twitter:image absolute):
+ * NEXT_PUBLIC_APP_URL, which every deployment sets (Stripe redirects already depend on it, see
+ * `absoluteUrl`). Unlike `absoluteUrl` this never throws: a missing or invalid value must not
+ * break `next build` or page rendering, so it falls back to localhost. No host-specific
+ * fallback (such as a platform's per-deployment hostname): those differ by host and would point
+ * social cards at a host without the site's cookies or canonical domain.
  */
 export function getMetadataBase(): URL {
-  const explicit = validateBaseUrl(process.env.NEXT_PUBLIC_APP_URL)
-  if (explicit) return new URL(explicit)
-  const vercelHost =
-    process.env.VERCEL_ENV === 'production'
-      ? process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
-      : process.env.VERCEL_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL
-  const fromVercel = vercelHost ? validateBaseUrl(`https://${vercelHost}`) : null
-  return new URL(fromVercel ?? 'http://localhost:3000')
+  return new URL(validateBaseUrl(process.env.NEXT_PUBLIC_APP_URL) ?? 'http://localhost:3000')
 }

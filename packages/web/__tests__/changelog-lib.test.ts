@@ -1,10 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const { readFileSync } = vi.hoisted(() => ({ readFileSync: vi.fn() }))
+// The build-time copy of CHANGELOG.md (scripts/generate-changelog.mjs). A getter, so each test
+// can choose the markdown and count how often lib/changelog.ts reads it.
+const generated = vi.hoisted(() => ({ markdown: '', reads: 0 }))
 
-vi.mock('node:fs', () => ({
-  default: { readFileSync },
-  readFileSync,
+vi.mock('@/generated/changelog', () => ({
+  get CHANGELOG_MARKDOWN() {
+    generated.reads += 1
+    return generated.markdown
+  },
 }))
 
 import { parseChangelog } from '@/lib/changelog'
@@ -242,68 +246,45 @@ ${STABLE_HEADER}
 })
 
 describe('getGeneratedChangelog', () => {
-  // getGeneratedChangelog() memoizes at module scope (see lib/changelog.ts) so a warm
-  // serverless instance only reads + parses CHANGELOG.md once. That means each test here
-  // needs a genuinely fresh module instance — vi.resetModules() + a fresh dynamic import —
-  // otherwise the first test's result would leak into every test after it via the cache.
+  // getGeneratedChangelog() memoizes at module scope (see lib/changelog.ts), so each test needs a
+  // genuinely fresh module instance (vi.resetModules() + a fresh dynamic import); otherwise the
+  // first test's result would leak into every test after it via the cache.
   beforeEach(() => {
-    readFileSync.mockReset()
+    generated.markdown = ''
+    generated.reads = 0
     vi.resetModules()
   })
 
-  it('returns an empty array, not an error, when CHANGELOG.md does not exist yet', async () => {
-    const err = Object.assign(new Error('ENOENT'), { code: 'ENOENT' })
-    readFileSync.mockImplementation(() => {
-      throw err
-    })
-    const fresh = await import('@/lib/changelog')
-    expect(fresh.getGeneratedChangelog()).toEqual([])
-  })
-
-  it('re-throws non-ENOENT read errors instead of silently swallowing them', async () => {
-    const err = Object.assign(new Error('EACCES'), { code: 'EACCES' })
-    readFileSync.mockImplementation(() => {
-      throw err
-    })
-    const fresh = await import('@/lib/changelog')
-    expect(() => fresh.getGeneratedChangelog()).toThrow('EACCES')
-  })
-
-  it('parses the file contents when CHANGELOG.md exists', async () => {
-    readFileSync.mockReturnValue(`${STABLE_HEADER}
+  it('parses the build-time copy of CHANGELOG.md, without reading any file at runtime', async () => {
+    generated.markdown = `${STABLE_HEADER}
 
 ### Features
 
 * a feature ([abc1234](https://github.com/o/r/commit/abc1234))
-`)
+`
     const fresh = await import('@/lib/changelog')
     const entries = fresh.getGeneratedChangelog()
     expect(entries).toHaveLength(1)
     expect(entries[0].version).toBe('v2.2.0')
   })
 
-  it('memoizes: only reads the file once across repeated calls within the same module instance', async () => {
-    readFileSync.mockReturnValue(`${STABLE_HEADER}
+  it('returns an empty array for a changelog with no stable releases', async () => {
+    generated.markdown = ''
+    const fresh = await import('@/lib/changelog')
+    expect(fresh.getGeneratedChangelog()).toEqual([])
+  })
+
+  it('memoizes: parses once across repeated calls within the same module instance', async () => {
+    generated.markdown = `${STABLE_HEADER}
 
 ### Features
 
 * a feature ([abc1234](https://github.com/o/r/commit/abc1234))
-`)
+`
     const fresh = await import('@/lib/changelog')
-    fresh.getGeneratedChangelog()
-    fresh.getGeneratedChangelog()
-    fresh.getGeneratedChangelog()
-    expect(readFileSync).toHaveBeenCalledTimes(1)
-  })
-
-  it('caches the empty (ENOENT) result too, rather than re-reading a missing file every call', async () => {
-    const err = Object.assign(new Error('ENOENT'), { code: 'ENOENT' })
-    readFileSync.mockImplementation(() => {
-      throw err
-    })
-    const fresh = await import('@/lib/changelog')
-    expect(fresh.getGeneratedChangelog()).toEqual([])
-    expect(fresh.getGeneratedChangelog()).toEqual([])
-    expect(readFileSync).toHaveBeenCalledTimes(1)
+    const first = fresh.getGeneratedChangelog()
+    expect(fresh.getGeneratedChangelog()).toBe(first)
+    expect(fresh.getGeneratedChangelog()).toBe(first)
+    expect(generated.reads).toBe(1)
   })
 })

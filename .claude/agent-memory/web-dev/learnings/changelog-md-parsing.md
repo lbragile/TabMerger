@@ -5,6 +5,12 @@ metadata:
   type: project
 ---
 
+> **Superseded in part (2026-11-04):** the runtime `fs.readFileSync`, the ENOENT fallback and
+> `outputFileTracingIncludes` are gone. The text is compiled in at build time; see
+> [[build-time-generated-module]]. The parsing notes below (heading format, `**scope:**` trap)
+> still apply; the path, tracing and fs-mocking notes are history.
+
+
 `packages/web/app/(marketing)/changelog/page.tsx` reads the repo-root `CHANGELOG.md`
 (owned by `@semantic-release/changelog`, which the release pipeline runs on every release) via `packages/web/lib/changelog.ts`'s `getGeneratedChangelog()`, instead of hand-maintaining
 a `ChangeEntry[]` literal. Pre-automation history stays in a frozen `LEGACY_CHANGELOG` constant

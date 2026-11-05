@@ -8,8 +8,6 @@ vi.mock('next/font/google', () => ({
   Noto_Sans_Arabic: () => ({ variable: 'z' }),
   Noto_Sans_Hebrew: () => ({ variable: 'z' }),
 }))
-vi.mock('@vercel/analytics/next', () => ({ Analytics: () => null }))
-vi.mock('@vercel/speed-insights/next', () => ({ SpeedInsights: () => null }))
 
 const appDir = join(__dirname, '..', 'app')
 

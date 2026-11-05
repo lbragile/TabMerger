@@ -60,7 +60,7 @@ async function currentLocale(): Promise<AppLocale> {
  *
  * The canonical is relative, so it resolves against `metadataBase` (`getMetadataBase()`), which is
  * the deployment's own origin. On the preview deployment that is the preview host, which is fine
- * because a Vercel preview deployment (`VERCEL_ENV === 'preview'`) answers `X-Robots-Tag: noindex`
+ * because the preview deployment (`isPreviewDeployment()`) answers `X-Robots-Tag: noindex`
  * (`previewNoindexHeaders()` in next.config.ts). Local development, CI and production send no such
  * header.
  *

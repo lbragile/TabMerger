@@ -57,8 +57,6 @@ describe.each(DEPLOYMENTS)('install links on $label', ({ vercelEnv, chrome, fire
 
   beforeEach(() => {
     vi.stubEnv('VERCEL_ENV', vercelEnv)
-    // Never set in the deployed bundles, so nothing may depend on it.
-    vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', '')
     localStorage.clear()
   })
 
@@ -162,7 +160,6 @@ describe('client components use the install link passed from the server', () => 
     'PricingCard "Install free" opens the given link whatever the environment says (%s)',
     async (vercelEnv) => {
       vi.stubEnv('VERCEL_ENV', vercelEnv)
-      vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', vercelEnv)
       const open = vi.spyOn(window, 'open').mockImplementation(() => null)
       render(
         <PricingCard

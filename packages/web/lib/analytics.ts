@@ -1,4 +1,5 @@
 import { deleteCookies, type ConsentChoice } from '@/lib/consent'
+import { clientDeployEnv } from '@/lib/deployment'
 
 declare global {
   interface Window {
@@ -76,7 +77,7 @@ export function trackEvent(name: string, params?: Record<string, unknown>) {
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
     window.gtag('event', name, {
       ...params,
-      environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? 'development',
+      environment: clientDeployEnv(),
     })
   }
 }

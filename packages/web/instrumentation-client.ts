@@ -1,6 +1,7 @@
 import { scrubBreadcrumb, scrubEvent, scrubPreparedEvent, scrubRecordingEvent } from '@/lib/sentry-scrubber'
 import { whenPageIdle } from '@/components/DeferredOnLoad'
 import { isAutomatedTestEnvironment } from '@/lib/isAutomatedTestEnvironment'
+import { clientDeployEnv } from '@/lib/deployment'
 
 type SentryModule = typeof import('@sentry/nextjs')
 
@@ -17,7 +18,7 @@ const sentry: Promise<SentryModule> | null =
           void import('@sentry/nextjs').then((Sentry) => {
             Sentry.init({
               dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-              environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? 'development',
+              environment: clientDeployEnv(),
               sendDefaultPii: false,
               beforeSend: scrubEvent,
               // Replay records breadcrumbs as they're added, so fragments (`#key=…`) go here too.

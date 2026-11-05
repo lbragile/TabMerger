@@ -1,4 +1,5 @@
 import { gaEnvironment } from '@/lib/ga4'
+import { deployCommitSha } from '@/lib/deployment'
 
 /**
  * Liveness facts for `GET /api/health` and the `web_heartbeat` cron: which commit is running,
@@ -12,7 +13,7 @@ export type SupabaseStatus = 'ok' | 'down' | 'unconfigured'
 
 export interface HealthReport {
   ok: boolean
-  /** Short git commit of the deployment, or `null` outside Vercel. */
+  /** Short git commit of the deployment, or `null` when the host doesn't provide one (local). */
   commit: string | null
   environment: string
   /** ISO time the report was made. */
@@ -56,9 +57,12 @@ export async function checkSupabase(now: number = Date.now()): Promise<SupabaseS
   return status
 }
 
-/** Short (7-character) commit SHA Vercel builds from, or `null` when it isn't set or isn't hex. */
+/**
+ * Short (7-character) commit SHA the deployment was built from ({@link deployCommitSha}), or
+ * `null` when it isn't set or isn't hex.
+ */
 export function deploymentCommit(): string | null {
-  const sha = process.env.VERCEL_GIT_COMMIT_SHA
+  const sha = deployCommitSha()
   return sha && /^[0-9a-f]{7,40}$/i.test(sha) ? sha.slice(0, 7).toLowerCase() : null
 }
 

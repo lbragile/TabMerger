@@ -85,10 +85,53 @@ describe('createRateLimiter', () => {
 })
 
 describe('getClientIp', () => {
-  it('takes the first x-forwarded-for address, or "unknown"', () => {
-    const withIp = new NextRequest('http://localhost/x', { headers: { 'x-forwarded-for': '1.2.3.4, 5.6.7.8' } })
-    expect(getClientIp(withIp)).toBe('1.2.3.4')
-    expect(getClientIp(new NextRequest('http://localhost/x'))).toBe('unknown')
+  const at = (headers: Record<string, string>) => new NextRequest('http://localhost/x', { headers })
+  const ALL = {
+    'cf-connecting-ip': '198.51.100.1',
+    'x-vercel-forwarded-for': '203.0.113.1',
+    'x-real-ip': '203.0.113.2',
+    'x-forwarded-for': '203.0.113.3, 5.6.7.8',
+  }
+
+  beforeEach(() => {
+    vi.stubEnv('VERCEL', '')
+    vi.stubEnv('DEPLOY_PLATFORM', '')
+  })
+
+  it('off a known platform, takes the first x-forwarded-for address, or "unknown"', () => {
+    expect(getClientIp(at({ 'x-forwarded-for': '1.2.3.4, 5.6.7.8' }))).toBe('4:1.2.3.4')
+    expect(getClientIp(at({}))).toBe('unknown')
+    expect(getClientIp(at({ 'x-forwarded-for': 'not-an-ip' }))).toBe('unknown')
+  })
+
+  it('on Vercel uses the same headers as the AI per-IP limit, in the same order', () => {
+    expect(getClientIp(at(ALL), 'vercel')).toBe('4:203.0.113.1')
+    expect(getClientIp(at({ 'x-real-ip': '203.0.113.2', 'x-forwarded-for': '203.0.113.3' }), 'vercel')).toBe('4:203.0.113.2')
+    vi.stubEnv('VERCEL', '1')
+    expect(getClientIp(at(ALL))).toBe('4:203.0.113.1')
+  })
+
+  it('on Cloudflare uses only cf-connecting-ip', () => {
+    expect(getClientIp(at(ALL), 'cloudflare')).toBe('4:198.51.100.1')
+    vi.stubEnv('DEPLOY_PLATFORM', 'cloudflare')
+    expect(getClientIp(at(ALL))).toBe('4:198.51.100.1')
+  })
+
+  it("can't be given a fresh key per request with the other platform's header", () => {
+    // Each request sends a different x-forwarded-for: on Cloudflare they all share one key.
+    const keys = ['192.0.2.1', '192.0.2.2', '192.0.2.3'].map((spoof) =>
+      getClientIp(at({ 'cf-connecting-ip': '198.51.100.1', 'x-forwarded-for': spoof, 'x-real-ip': spoof, 'x-vercel-forwarded-for': spoof }), 'cloudflare')
+    )
+    expect(new Set(keys)).toEqual(new Set(['4:198.51.100.1']))
+    // A client-sent cf-connecting-ip on Vercel is ignored.
+    expect(getClientIp(at({ 'cf-connecting-ip': '192.0.2.9', 'x-real-ip': '203.0.113.2' }), 'vercel')).toBe('4:203.0.113.2')
+    // Without the platform's own header there is no address, not a client-chosen one.
+    expect(getClientIp(at({ 'x-forwarded-for': '192.0.2.1' }), 'cloudflare')).toBe('unknown')
+  })
+
+  it('counts an IPv6 client once per /64', () => {
+    expect(getClientIp(at({ 'cf-connecting-ip': '2001:db8:aa:bb::1' }), 'cloudflare')).toBe('6:2001:db8:aa:bb::/64')
+    expect(getClientIp(at({ 'cf-connecting-ip': '2001:db8:aa:bb:1:2:3:4' }), 'cloudflare')).toBe('6:2001:db8:aa:bb::/64')
   })
 })
 
@@ -110,6 +153,21 @@ describe('buildDiagnostics', () => {
     expect(buildDiagnostics(req).envTag).toBe('[preview]')
     vi.stubEnv('VERCEL_ENV', 'production')
     expect(buildDiagnostics(req).envTag).toBe('')
+    // DEPLOY_ENV wins over VERCEL_ENV.
+    vi.stubEnv('DEPLOY_ENV', 'preview')
+    expect(buildDiagnostics(req).envTag).toBe('[preview]')
+  })
+
+  it('reads the commit from DEPLOY_COMMIT_SHA / DEPLOY_COMMIT_REF, falling back to Vercel', () => {
+    const req = new NextRequest('http://localhost/api/x')
+    vi.stubEnv('DEPLOY_COMMIT_SHA', '')
+    vi.stubEnv('DEPLOY_COMMIT_REF', '')
+    vi.stubEnv('VERCEL_GIT_COMMIT_SHA', 'abcdef1234')
+    vi.stubEnv('VERCEL_GIT_COMMIT_REF', 'main')
+    expect(buildDiagnostics(req).text).toContain('Commit: abcdef1 (main)')
+    vi.stubEnv('DEPLOY_COMMIT_SHA', '1234567fff')
+    vi.stubEnv('DEPLOY_COMMIT_REF', 'beta')
+    expect(buildDiagnostics(req).text).toContain('Commit: 1234567 (beta)')
   })
 
   it('reports an unknown page for a malformed Referer', () => {

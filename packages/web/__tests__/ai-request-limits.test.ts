@@ -140,6 +140,7 @@ beforeEach(() => {
   vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
   vi.stubEnv('ANTHROPIC_API_KEY', 'test-managed-key')
   vi.stubEnv('VERCEL', '')
+  vi.stubEnv('DEPLOY_PLATFORM', '')
   vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'test-service-role-secret')
   vi.spyOn(console, 'error').mockImplementation(() => {})
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
@@ -198,34 +199,66 @@ describe('ipRateLimitKey', () => {
 
 describe('clientIpKey', () => {
   const headers = (h: Record<string, string>) => new Headers(h)
+  const ALL = {
+    'cf-connecting-ip': '198.51.100.1',
+    'x-vercel-forwarded-for': '203.0.113.1',
+    'x-real-ip': '203.0.113.2',
+    'x-forwarded-for': '203.0.113.3',
+  }
 
-  it('trusts no header off Vercel, where a client could type any of them', () => {
-    expect(clientIpKey(headers({ 'x-forwarded-for': '203.0.113.7', 'x-real-ip': '203.0.113.7' }), false)).toBeNull()
+  it('trusts no header off a known platform, where a client could type any of them', () => {
+    expect(clientIpKey(headers(ALL), null)).toBeNull()
   })
 
   it('on Vercel prefers x-vercel-forwarded-for, then x-real-ip, then the first x-forwarded-for hop', () => {
-    expect(
-      clientIpKey(
-        headers({ 'x-vercel-forwarded-for': '203.0.113.1', 'x-real-ip': '203.0.113.2', 'x-forwarded-for': '203.0.113.3' }),
-        true
-      )
-    ).toBe(hashIpKey('4:203.0.113.1'))
-    expect(clientIpKey(headers({ 'x-real-ip': '203.0.113.2', 'x-forwarded-for': '203.0.113.3' }), true)).toBe(hashIpKey('4:203.0.113.2'))
-    expect(clientIpKey(headers({ 'x-forwarded-for': '203.0.113.3, 10.0.0.1' }), true)).toBe(hashIpKey('4:203.0.113.3'))
+    expect(clientIpKey(headers(ALL), 'vercel')).toBe(hashIpKey('4:203.0.113.1'))
+    expect(clientIpKey(headers({ 'x-real-ip': '203.0.113.2', 'x-forwarded-for': '203.0.113.3' }), 'vercel')).toBe(hashIpKey('4:203.0.113.2'))
+    expect(clientIpKey(headers({ 'x-forwarded-for': '203.0.113.3, 10.0.0.1' }), 'vercel')).toBe(hashIpKey('4:203.0.113.3'))
   })
 
-  it('returns null on Vercel without a readable address', () => {
-    expect(clientIpKey(headers({}), true)).toBeNull()
-    expect(clientIpKey(headers({ 'x-real-ip': 'garbage' }), true)).toBeNull()
+  it('on Cloudflare reads only cf-connecting-ip', () => {
+    expect(clientIpKey(headers(ALL), 'cloudflare')).toBe(hashIpKey('4:198.51.100.1'))
+    expect(clientIpKey(headers({ 'cf-connecting-ip': '2001:db8:aa:bb::1' }), 'cloudflare')).toBe(hashIpKey('6:2001:db8:aa:bb::/64'))
   })
 
-  it('reads VERCEL=1 from the environment by default', () => {
+  it("can't be steered with the other platform's header", () => {
+    // On Cloudflare a client can send Vercel's header names (nothing strips them): ignored.
+    const spoofOnCloudflare = { 'x-vercel-forwarded-for': '192.0.2.66', 'x-real-ip': '192.0.2.66', 'x-forwarded-for': '192.0.2.66' }
+    expect(clientIpKey(headers(spoofOnCloudflare), 'cloudflare')).toBeNull()
+    expect(clientIpKey(headers({ ...spoofOnCloudflare, 'cf-connecting-ip': '198.51.100.1' }), 'cloudflare')).toBe(hashIpKey('4:198.51.100.1'))
+    // On Vercel a client-sent cf-connecting-ip is ignored, with or without Vercel's own header.
+    expect(clientIpKey(headers({ 'cf-connecting-ip': '192.0.2.66' }), 'vercel')).toBeNull()
+    expect(clientIpKey(headers({ 'cf-connecting-ip': '192.0.2.66', 'x-real-ip': '203.0.113.2' }), 'vercel')).toBe(hashIpKey('4:203.0.113.2'))
+  })
+
+  it('returns null without a readable address', () => {
+    expect(clientIpKey(headers({}), 'vercel')).toBeNull()
+    expect(clientIpKey(headers({ 'x-real-ip': 'garbage' }), 'vercel')).toBeNull()
+    expect(clientIpKey(headers({}), 'cloudflare')).toBeNull()
+    expect(clientIpKey(headers({ 'cf-connecting-ip': 'garbage' }), 'cloudflare')).toBeNull()
+  })
+
+  it('reads the platform from the environment by default (VERCEL=1, or DEPLOY_PLATFORM)', () => {
     vi.stubEnv('VERCEL', '1')
-    expect(clientIpKey(headers({ 'x-real-ip': '203.0.113.2' }))).toBe(hashIpKey('4:203.0.113.2'))
+    expect(clientIpKey(headers(ALL))).toBe(hashIpKey('4:203.0.113.1'))
+    vi.stubEnv('VERCEL', '')
+    vi.stubEnv('DEPLOY_PLATFORM', 'cloudflare')
+    expect(clientIpKey(headers(ALL))).toBe(hashIpKey('4:198.51.100.1'))
+    // DEPLOY_PLATFORM wins over VERCEL=1.
+    vi.stubEnv('VERCEL', '1')
+    expect(clientIpKey(headers(ALL))).toBe(hashIpKey('4:198.51.100.1'))
+    vi.stubEnv('DEPLOY_PLATFORM', 'vercel')
+    vi.stubEnv('VERCEL', '')
+    expect(clientIpKey(headers(ALL))).toBe(hashIpKey('4:203.0.113.1'))
+  })
+
+  it('treats an unknown DEPLOY_PLATFORM as no platform (no header trusted)', () => {
+    vi.stubEnv('DEPLOY_PLATFORM', 'netlify')
+    expect(clientIpKey(headers(ALL))).toBeNull()
   })
 
   it('never returns the raw address: an HMAC of the normalised key, keyed by a server secret', () => {
-    const key = clientIpKey(headers({ 'x-real-ip': '203.0.113.2' }), true)
+    const key = clientIpKey(headers({ 'x-real-ip': '203.0.113.2' }), 'vercel')
     expect(key).toMatch(/^ip:[0-9a-f]{64}$/)
     expect(key).not.toContain('203.0.113.2')
     expect(hashIpKey('4:203.0.113.2', 'secret-a')).toBe(hashIpKey('4:203.0.113.2', 'secret-a'))
@@ -235,7 +268,7 @@ describe('clientIpKey', () => {
 
   it('skips the per-IP key when there is no secret to hash with', () => {
     vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', '')
-    expect(clientIpKey(headers({ 'x-real-ip': '203.0.113.2' }), true)).toBeNull()
+    expect(clientIpKey(headers({ 'x-real-ip': '203.0.113.2' }), 'vercel')).toBeNull()
   })
 })
 
@@ -273,7 +306,15 @@ describe('per-IP rate limit', () => {
     expect(mockGetUser).not.toHaveBeenCalled()
   })
 
-  it('is skipped where no trusted IP header exists (off Vercel); the user limit still applies', async () => {
+  it('keys on cf-connecting-ip on Cloudflare, not on a Vercel header the client sent', async () => {
+    vi.stubEnv('VERCEL', '')
+    vi.stubEnv('DEPLOY_PLATFORM', 'cloudflare')
+    await nameGroupPOST(nameReq({ 'cf-connecting-ip': '198.51.100.7', 'x-real-ip': '192.0.2.66', 'x-vercel-forwarded-for': '192.0.2.66' }))
+    const ipKeys = rpcCalls('rate_limit_take').filter((a) => a.p_bucket === 'ai-ip').map((a) => a.p_key)
+    expect(ipKeys).toEqual([hashIpKey('4:198.51.100.7')])
+  })
+
+  it('is skipped where no trusted IP header exists (off a known platform); the user limit still applies', async () => {
     vi.stubEnv('VERCEL', '')
     const res = await nameGroupPOST(nameReq({ 'x-real-ip': '203.0.113.7' }))
     expect(res.status).toBe(200)

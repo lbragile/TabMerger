@@ -5,6 +5,7 @@ import type { PostHog, PostHogConfig } from 'posthog-js'
 import { deleteCookies, getEffectiveConsent, subscribeConsent, type ConsentChoice } from '@/lib/consent'
 import { REPLAY_BLOCK_SELECTOR, scrubPostHogEvent } from '@/lib/analyticsPrivacy'
 import { isAutomatedTestEnvironment } from '@/lib/isAutomatedTestEnvironment'
+import { clientDeployEnv } from '@/lib/deployment'
 
 /** Where PostHog keeps its identifiers once the visitor accepts cookies (its default). */
 const CONSENTED_PERSISTENCE = 'localStorage+cookie' as const
@@ -79,7 +80,7 @@ export function applyPostHogConsent(posthog: PostHog, key: string, choice: Conse
       return
     }
     posthog.init(key, postHogConfig(choice))
-    posthog.register({ environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? 'development' })
+    posthog.register({ environment: clientDeployEnv() })
     // A Reject on an earlier visit left PostHog's own opt-out flag behind.
     if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing({ captureEventName: false })
     return

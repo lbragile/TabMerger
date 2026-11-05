@@ -24,7 +24,8 @@ describe('POST /api/track', () => {
     mockFetch.mockClear()
     process.env = { ...ORIGINAL_ENV }
     delete process.env.VERCEL_ENV
-    delete process.env.NEXT_PUBLIC_VERCEL_ENV
+    delete process.env.DEPLOY_ENV
+    delete process.env.NEXT_PUBLIC_DEPLOY_ENV
   })
 
   afterEach(() => {
@@ -96,6 +97,13 @@ describe('POST /api/track', () => {
       await POST(makeRequest({ event: 'extension_installed', client_id: 'abc-123' }))
 
       expect(sentBody().events[0].params).toEqual({ environment: env })
+    })
+
+    it('prefers DEPLOY_ENV over VERCEL_ENV when stamping environment', async () => {
+      process.env.DEPLOY_ENV = 'preview'
+      process.env.VERCEL_ENV = 'production'
+      await POST(makeRequest({ event: 'group_created', client_id: 'abc-123' }))
+      expect(sentBody().events[0].params).toEqual({ environment: 'preview' })
     })
 
     it('overrides a client-sent environment param with the server value', async () => {

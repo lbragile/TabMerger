@@ -31,7 +31,6 @@ describe('Footer', () => {
 
     function stubDeployment(vercelEnv: string) {
       vi.stubEnv('VERCEL_ENV', vercelEnv)
-      vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', vercelEnv)
     }
 
     it.each([
@@ -43,6 +42,18 @@ describe('Footer', () => {
       const publicColumn = screen.getByRole('heading', { name: 'Public' }).parentElement as HTMLElement
       const link = within(publicColumn).getByRole('link', { name: 'Beta' })
       expect(link).toHaveAttribute('href', '/beta')
+    })
+
+    it('follows DEPLOY_ENV over VERCEL_ENV for the beta link', () => {
+      vi.stubEnv('VERCEL_ENV', 'preview')
+      vi.stubEnv('DEPLOY_ENV', 'production')
+      const { unmount } = render(<Footer />)
+      expect(screen.queryByRole('link', { name: 'Beta' })).not.toBeInTheDocument()
+      unmount()
+      vi.stubEnv('VERCEL_ENV', 'production')
+      vi.stubEnv('DEPLOY_ENV', 'preview')
+      render(<Footer />)
+      expect(screen.getByRole('link', { name: 'Beta' })).toHaveAttribute('href', '/beta')
     })
 
     it('has no beta link on the production deployment, where the guide is not served', () => {

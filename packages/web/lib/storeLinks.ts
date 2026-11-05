@@ -50,8 +50,8 @@ export const BETA_STORE_LINKS: StoreLinks = {
  * production, the beta builds everywhere else.
  *
  * Server only. Call it from a server component (or a route) and pass the result down as props:
- * the deployment is known from `VERCEL_ENV`, which exists on the server but not in the browser,
- * so a client component calling this would always get the beta links, on production too.
+ * the server reads the deployment environment at runtime (`lib/deployment.ts`), while browser
+ * code only has whatever was written into the bundle at build time.
  */
 export function getStoreLinks(): StoreLinks {
   return isProductionDeployment() ? STABLE_STORE_LINKS : BETA_STORE_LINKS

@@ -43,6 +43,18 @@ describe('GET /api/health', () => {
     expect(init.headers).toEqual({ apikey: 'sb_publishable_test' })
   })
 
+  it('reports DEPLOY_COMMIT_SHA, which wins over the Vercel SHA, and the DEPLOY_ENV environment', async () => {
+    vi.stubEnv('DEPLOY_COMMIT_SHA', '1234567890abcdef1234567890abcdef12345678')
+    vi.stubEnv('DEPLOY_ENV', 'preview')
+    const body = await (await GET()).json()
+    expect(body).toMatchObject({ commit: '1234567', environment: 'preview' })
+  })
+
+  it('falls back to VERCEL_GIT_COMMIT_SHA when DEPLOY_COMMIT_SHA is empty', async () => {
+    vi.stubEnv('DEPLOY_COMMIT_SHA', '')
+    expect((await (await GET()).json()).commit).toBe('abcdef0')
+  })
+
   it('never contains a secret or the key', async () => {
     const text = await (await GET()).text()
     expect(text).not.toContain('should-never-appear')
@@ -80,6 +92,14 @@ describe('checkSupabase', () => {
 })
 
 describe('deploymentCommit', () => {
+  it('prefers DEPLOY_COMMIT_SHA, and a malformed one is not replaced by the Vercel value', () => {
+    vi.stubEnv('VERCEL_GIT_COMMIT_SHA', 'abc1234')
+    vi.stubEnv('DEPLOY_COMMIT_SHA', 'fedcba9')
+    expect(deploymentCommit()).toBe('fedcba9')
+    vi.stubEnv('DEPLOY_COMMIT_SHA', 'not-hex!')
+    expect(deploymentCommit()).toBeNull()
+  })
+
   it.each([
     ['', null],
     ['not-a-sha<script>', null],
