@@ -150,9 +150,13 @@ test.describe('sticky header survives Radix scroll lock', () => {
     await page.evaluate(() => window.scrollTo(0, 1500))
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(1000)
 
-    await page.locator('header button[aria-controls="mobile-nav-panel"]').click()
+    // The toggle names the panel in aria-controls only while it is open (the panel is not rendered
+    // when closed), so find it by its label and check the reference once the panel exists.
+    const toggle = page.locator('header button[aria-label="Open menu"]')
+    await toggle.click()
     const panel = page.locator('#mobile-nav-panel')
     await expect(panel).toBeVisible()
+    await expect(page.locator('header button[aria-controls="mobile-nav-panel"]')).toHaveAttribute('aria-expanded', 'true')
 
     const headerTop = await page.evaluate(() => document.querySelector('header')!.getBoundingClientRect().top)
     expect(Math.abs(headerTop), `header top was ${headerTop}`).toBeLessThanOrEqual(1)
