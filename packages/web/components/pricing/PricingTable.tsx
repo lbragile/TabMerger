@@ -27,7 +27,12 @@ interface PricingTableProps {
   scheduledChange?: ScheduledPlanChange | null
   /** A subscriber's plan set to end: the paid cards offer no change (see `PricingCard`). */
   planEnds?: PlanEnds | null
+  /** The plan is still being read in the browser: the paid cards' buttons are skeletons. */
+  planLoading?: boolean
 }
+
+/** Hides the plan-loading CTA skeletons when scripts don't run. */
+const PLAN_CTA_SKELETON_NOSCRIPT_CSS = '[data-plan-cta-skeleton]{display:none}'
 
 export function PricingTable({
   currentTier,
@@ -38,6 +43,7 @@ export function PricingTable({
   signedIn = false,
   scheduledChange = null,
   planEnds = null,
+  planLoading = false,
 }: PricingTableProps) {
   // Always opens on Monthly, whatever the current plan is billed at.
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
@@ -50,11 +56,20 @@ export function PricingTable({
 
   return (
     <div className="flex flex-col items-center gap-10">
-      {/* Segmented toggle */}
-      <div className="inline-flex rounded-md p-[3px] bg-surface3 border border-border text-sm">
+      {/* Without scripts the plan is never read: hide the paid cards' skeletons, whose
+          `<noscript>` guest buttons take their place (see PricingCard). */}
+      {planLoading && (
+        <noscript>
+          <style>{PLAN_CTA_SKELETON_NOSCRIPT_CSS}</style>
+        </noscript>
+      )}
+      {/* Segmented toggle: a labelled group of toggle buttons, the chosen one pressed. */}
+      <div role="group" aria-label={t('billingPeriod')} className="inline-flex rounded-md p-[3px] bg-surface3 border border-border text-sm">
         {(['monthly', 'yearly'] as const).map((opt) => (
           <button
             key={opt}
+            type="button"
+            aria-pressed={interval === opt}
             onClick={() => setInterval(opt)}
             className={cn(
               'h-[30px] px-4 rounded-lg font-medium transition-colors text-[13px] flex items-center gap-1.5 cursor-pointer',
@@ -90,6 +105,7 @@ export function PricingTable({
           currentPeriodEnd={currentPeriodEnd}
           installHref={installHref}
           signedIn={signedIn}
+          planLoading={planLoading}
           displayMonthly={zeroPrice}
           displayYearly={zeroPrice}
         />
@@ -109,6 +125,7 @@ export function PricingTable({
             currentPeriodEnd={currentPeriodEnd}
             installHref={installHref}
             signedIn={signedIn}
+            planLoading={planLoading}
             scheduledChange={scheduledChange}
             planEnds={planEnds}
             displayMonthly={listPrice(TIERS.pro.monthlyPrice)}
@@ -131,6 +148,7 @@ export function PricingTable({
           currentAiMode={currentAiMode}
           installHref={installHref}
           signedIn={signedIn}
+          planLoading={planLoading}
           scheduledChange={scheduledChange}
           planEnds={planEnds}
           aiOptions={{

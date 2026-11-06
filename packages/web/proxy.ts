@@ -218,6 +218,55 @@ export function stripLocalePrefix(pathname: string): string {
   return rest === '' ? '/' : rest
 }
 
+/**
+ * Signed-in pages: a visitor without a session is sent to sign-in. Matched with `startsWith` on
+ * the path without its locale prefix (`/es/dashboard` is `/dashboard`).
+ */
+export const PROTECTED_PAGE_PREFIXES: readonly string[] = ['/dashboard', '/account']
+
+/** Whether `appPath` (locale prefix already stripped) is a signed-in page. */
+export function isProtectedPath(appPath: string): boolean {
+  return PROTECTED_PAGE_PREFIXES.some((prefix) => appPath.startsWith(prefix))
+}
+
+/**
+ * Sections whose handlers read the cookie session on the server (`createClient()` from
+ * lib/supabase/server.ts), with everything under them:
+ * - `/auth`: sign-in, sign-up and password pages (a signed-in visitor is sent on to the dashboard).
+ * - `/api/auth`: the PKCE callback and sign-out.
+ * - `/api/billing`, `/api/billing-portal`, `/api/checkout`: billing actions taken from the site.
+ * - `/api/sessions`: deleting a saved session from the dashboard.
+ * - `/api/plan`: the visitor's plan for the pricing page and the home teaser, which read no
+ *   session themselves (the browser asks for it).
+ *
+ * Not listed, because they never read the cookie session: the AI routes and `/api/portal` (a
+ * Bearer token from the extension), the Stripe webhook (signature, service role), and the
+ * public routes (`/api/track`, `/api/contact`, `/api/og-preview`, `/api/health`, ...).
+ */
+export const SESSION_PATH_PREFIXES: readonly string[] = [
+  '/auth',
+  '/api/auth',
+  '/api/billing',
+  '/api/billing-portal',
+  '/api/checkout',
+  '/api/sessions',
+  '/api/plan',
+]
+
+/**
+ * Whether this request needs the Supabase session refreshed (and the protected-page check) before
+ * it is served. Only these paths create the Supabase client and call `auth.getUser()`, a network
+ * round trip to Supabase Auth; every other page and route is served without it. A route that
+ * starts reading the cookie session on the server (`createClient()` from lib/supabase/server.ts)
+ * must be added here, or its visitors' expired access tokens are never refreshed and it sees
+ * them as signed out.
+ */
+export function needsSession(pathname: string): boolean {
+  const appPath = stripLocalePrefix(pathname)
+  if (isProtectedPath(appPath)) return true
+  return SESSION_PATH_PREFIXES.some((prefix) => isUnderPath(appPath, prefix))
+}
+
 /** The header next-intl's handler uses to pass the locale to the render. */
 const LOCALE_HEADER = 'X-NEXT-INTL-LOCALE'
 
@@ -288,7 +337,8 @@ export function withConsentRegion<T extends NextResponse>(request: NextRequest, 
  * Runs on every matched request, in this order (each step may answer on its own):
  * 1. Legacy host redirect (old `*.vercel.app` hosts → custom domain).
  * 2. CORS preflight for the extension's `/api/*` calls.
- * 3. Supabase session refresh, then route protection for the signed-in pages.
+ * 3. Supabase session refresh, then route protection for the signed-in pages; only for the paths
+ *    that read the session ({@link needsSession}). Everything else skips straight to step 4.
  * 4. Locale routing (next-intl) for paths under `app/[locale]/`.
  * A new host-level redirect belongs beside step 1, before anything else runs.
  *
@@ -310,16 +360,21 @@ export async function proxy(request: NextRequest) {
     return new NextResponse(null, { status: 204, headers: cors })
   }
 
+  // Public pages and routes never read the session: no Supabase client, no Auth round trip.
+  if (!needsSession(request.nextUrl.pathname)) {
+    return withCors(withConsentRegion(request, passThrough(request)), cors)
+  }
+
   // ponytail: createServerClient(undefined!, ...) throws synchronously ("supabaseUrl is
   // required") — unlike lib/stripe.ts (module scope, evaluated once per build), this
-  // constructs on EVERY request, so a missing env var doesn't fail one build step, it 500s every
-  // request through this matcher, including the E2E gate's dev server when repo secrets aren't
-  // configured. There's also no safe-placeholder-host trick to reach for here (contrast
-  // lib/supabase/server.ts's createClient, still unguarded — see report): the client is used
-  // immediately below (auth.getUser()), not stashed for a caller to skip via a configured flag.
+  // constructs on every session request, so a missing env var doesn't fail one build step, it
+  // 500s every request that reaches here, including the E2E gate's dev server when repo secrets
+  // aren't configured. There's no safe-placeholder-host trick to reach for here (contrast
+  // lib/supabase/server.ts's createClient): the client is used immediately below
+  // (auth.getUser()), not stashed for a caller to skip via a configured flag.
   // Fails OPEN (passes the request through unauthenticated) rather than closed: with no working
   // auth backend there is no way to actually authenticate anyone, so blocking every route
-  // (including the public marketing pages this matcher also covers) would take the whole site
+  // (including the sign-in pages and billing routes that reach here) would take the site
   // down for a config gap that's already loud elsewhere (missing env vars show up in CI/logs),
   // not a silent security hole in a properly configured deployment.
   if (!supabaseUrl || !supabaseAnonKey) {
@@ -359,10 +414,7 @@ export async function proxy(request: NextRequest) {
   const appPath = stripLocalePrefix(pathname)
 
   // Protect app routes
-  if (
-    (appPath.startsWith('/dashboard') || appPath.startsWith('/account')) &&
-    !user
-  ) {
+  if (isProtectedPath(appPath) && !user) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/auth/sign-in'
     redirectUrl.searchParams.set('redirectTo', pathname)

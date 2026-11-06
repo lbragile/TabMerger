@@ -1,6 +1,7 @@
 {
   "monthly": "ماهانه",
   "yearly": "سالانه",
+  "billingPeriod": "دوره پرداخت",
   "discountBadge": "−{percent}٪",
   "recommended": "پیشنهادی",
   "forever": "برای همیشه",
@@ -42,6 +43,8 @@
     "chooseModel": "انتخاب مدل هوش مصنوعی"
   },
   "current": "طرح فعلی",
+  "loadingPlan": "در حال بارگذاری طرح شما",
+  "yourPlan": "طرح شما: {plan}",
   "installFree": "نصب رایگان",
   "switchToYearly": "تغییر به پرداخت سالانه",
   "switchToMonthly": "تغییر به پرداخت ماهانه",

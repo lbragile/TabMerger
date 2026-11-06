@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { readJsonBodyWithin } from '@/lib/ai-validation'
+import { limitOgPreviewByIp } from '@/lib/publicRateLimits'
 import { lookup } from 'node:dns/promises'
 import { isPrivateHost } from '@/lib/privateAddress'
 import { request as httpRequest } from 'node:http'
@@ -17,7 +19,7 @@ import {
 } from '@/lib/ogPreviewParse'
 
 /**
- * POST /api/og-preview  { "url": "<url>" }
+ * POST /api/og-preview  { "url": "<url>" }  (JSON text, sent as `text/plain` or `application/json`)
  *
  * The URL travels in the JSON body, never in a query string, so it never
  * lands in server access logs or proxy/browser history. There is no GET
@@ -237,10 +239,10 @@ async function fetchCapped(startUrl: string): Promise<{ body: string; finalUrl: 
 // fails silently client-side and Tab Preview just shows nothing.
 // `Cache-Control: no-store` on every response: nothing about this request
 // (including which URL was asked about) should be cached anywhere.
-function jsonResponse(body: unknown, init?: { status?: number }): NextResponse {
+function jsonResponse(body: unknown, init?: { status?: number; headers?: Record<string, string> }): NextResponse {
   return NextResponse.json(body, {
-    ...init,
-    headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' },
+    status: init?.status,
+    headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store', ...init?.headers },
   })
 }
 
@@ -311,14 +313,45 @@ async function fetchPreview(raw: string | null): Promise<
   return { ok: true, ogImage, description, imageKind }
 }
 
+/**
+ * Largest request body accepted, whatever its content type. The body only holds one URL; browsers
+ * cap URLs well below this.
+ */
+export const OG_PREVIEW_MAX_BODY_BYTES = 16 * 1024
+
+/**
+ * The `url` field of the request body, parsed as JSON whatever the `Content-Type`: the extension
+ * sends `text/plain` (a CORS "simple request", so no OPTIONS preflight before each hover), older
+ * builds and the share page send `application/json`. The body is read with the same cap
+ * ({@link OG_PREVIEW_MAX_BODY_BYTES}) either way. `url` is undefined for a body that is not JSON
+ * or has no `url`; the caller checks its type.
+ */
+export async function readPreviewRequestUrl(
+  req: Request
+): Promise<{ ok: true; url: unknown } | { ok: false; status: 408 | 413 }> {
+  const body = await readJsonBodyWithin(req, OG_PREVIEW_MAX_BODY_BYTES)
+  if (!body.ok) return { ok: false, status: body.reason === 'too_large' ? 413 : 408 }
+  const url = body.body !== null && typeof body.body === 'object' ? (body.body as { url?: unknown }).url : undefined
+  return { ok: true, url }
+}
+
+/**
+ * Before the body is read: an address over its per-IP limit (`limitOgPreviewByIp`) gets 429 with
+ * the usual empty preview and a `Retry-After`, and nothing is fetched. The extension and the share
+ * page both treat a non-ok answer as "no preview".
+ */
 export async function POST(req: NextRequest) {
-  let raw: unknown
-  try {
-    const body = await req.json()
-    raw = (body as { url?: unknown } | null)?.url
-  } catch {
-    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
+  const limit = await limitOgPreviewByIp(req.headers)
+  if (limit.limited) {
+    return jsonResponse(
+      { ogImage: null, description: null },
+      { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+    )
   }
+
+  const read = await readPreviewRequestUrl(req)
+  if (!read.ok) return jsonResponse({ ogImage: null, description: null }, { status: read.status })
+  const raw = read.url
   if (typeof raw !== 'string') {
     return jsonResponse({ ogImage: null, description: null }, { status: 400 })
   }

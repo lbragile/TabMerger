@@ -1,6 +1,7 @@
 {
   "monthly": "Miesięcznie",
   "yearly": "Rocznie",
+  "billingPeriod": "Okres rozliczeniowy",
   "discountBadge": "−{percent}%",
   "recommended": "Polecany",
   "forever": "na zawsze",
@@ -42,6 +43,8 @@
     "chooseModel": "Wybierz model AI"
   },
   "current": "Obecny",
+  "loadingPlan": "Wczytywanie planu",
+  "yourPlan": "Twój plan: {plan}",
   "installFree": "Zainstaluj za darmo",
   "switchToYearly": "Przejdź na płatność roczną",
   "switchToMonthly": "Przejdź na płatność miesięczną",

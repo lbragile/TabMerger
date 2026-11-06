@@ -10,11 +10,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type Stripe from 'stripe'
 import { flushPlanChangeAlarms, logPlanChangeAlarm, planChangeAlarms } from '@/lib/planChangeAlarm'
 
-const { mockCaptureMessage, mockFlush } = vi.hoisted(() => ({
+const { mockCaptureMessage, mockFlush, mockInit } = vi.hoisted(() => ({
   mockCaptureMessage: vi.fn(),
   mockFlush: vi.fn().mockResolvedValue(true),
+  mockInit: vi.fn(),
 }))
-vi.mock('@sentry/nextjs', () => ({ captureMessage: mockCaptureMessage, flush: mockFlush }))
+vi.mock('@sentry/nextjs', () => ({ captureMessage: mockCaptureMessage, flush: mockFlush, init: mockInit }))
+
+/** Server Sentry on (lib/sentryServer.ts): the Node.js runtime with a DSN set. */
+function enableServerSentry() {
+  vi.stubEnv('NEXT_RUNTIME', 'nodejs')
+  vi.stubEnv('NEXT_PUBLIC_SENTRY_DSN', 'https://sentry.invalid/1')
+  vi.stubEnv('NEXT_PUBLIC_E2E_TEST', '')
+}
 
 const PRICES = {
   STRIPE_PRO_MONTHLY_PRICE_ID: 'price_pro_m',
@@ -187,7 +195,8 @@ describe('logPlanChangeAlarm', () => {
     expect(second).toMatch(/^Stripe webhook: PLAN_CHANGE_ALARM credit on customer\.subscription\.updated \(subscription sub_1, invoice in_new total -3500, balance change unknown\)/)
   })
 
-  it('sends the same text to Sentry as an error, grouped by signal (stable fingerprint)', () => {
+  it('sends the same text to Sentry as an error, grouped by signal (stable fingerprint)', async () => {
+    enableServerSentry()
     const error = vi.spyOn(console, 'error').mockImplementation(() => {})
     mockCaptureMessage.mockClear()
     logPlanChangeAlarm('customer.subscription.updated', {
@@ -203,6 +212,8 @@ describe('logPlanChangeAlarm', () => {
       total: -100,
       balanceChange: -100,
     })
+    // The SDK loads on first use; flushing waits on the same load, after both captures.
+    await flushPlanChangeAlarms()
     expect(mockCaptureMessage).toHaveBeenCalledTimes(2)
     expect(mockCaptureMessage.mock.calls[0]).toEqual([
       error.mock.calls[0][0],
@@ -215,7 +226,26 @@ describe('logPlanChangeAlarm', () => {
   })
 
   it('flushPlanChangeAlarms waits at most 2 seconds for Sentry', async () => {
+    enableServerSentry()
     await flushPlanChangeAlarms()
     expect(mockFlush).toHaveBeenCalledWith(2000)
+  })
+
+  it('only logs, and never loads Sentry, when server Sentry is off (no DSN)', async () => {
+    vi.stubEnv('NEXT_RUNTIME', 'nodejs')
+    vi.stubEnv('NEXT_PUBLIC_SENTRY_DSN', '')
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockCaptureMessage.mockClear()
+    mockFlush.mockClear()
+    logPlanChangeAlarm('customer.subscription.updated', {
+      kind: 'lowered_at_once',
+      subscriptionId: 'sub_1',
+      from: 'pro/yearly',
+      to: 'pro/monthly',
+    })
+    await flushPlanChangeAlarms()
+    expect(error).toHaveBeenCalledTimes(1)
+    expect(mockCaptureMessage).not.toHaveBeenCalled()
+    expect(mockFlush).not.toHaveBeenCalled()
   })
 })

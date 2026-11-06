@@ -13,14 +13,14 @@ export const isSupabaseConfigured = Boolean(
 // ponytail: same bug class as lib/supabase/client.ts (commit de838ee) —
 // createServerClient(undefined!, ...) throws synchronously ("Your project's URL and Key are
 // required to create a Supabase client!"). Unlike the browser client, every caller here runs on
-// EVERY request, not just a prerendered one: Navbar (components/layout/Navbar.tsx) is a Server
-// Component in the shared marketing layout and calls createClient() unconditionally, so a missing
-// env var 500'd every single page, not just one build step. `.invalid` is an RFC 2606-reserved TLD
+// every request, not just a prerendered one (the (app) layout, the plan-aware home and pricing
+// pages, the cookie-session API routes), so a missing env var would 500 each of them, not just
+// one build step. `.invalid` is an RFC 2606-reserved TLD
 // that can never resolve — the client constructs, but any real request against it fails via a
 // normal network error. auth-js wraps every such call in try/catch (GoTrueClient._getUser /
 // lib/fetch.ts's _handleRequest), so `auth.getUser()` degrades to `{ data: { user: null }, error }`
 // instead of throwing — every caller in this codebase already treats `!user` as signed-out (see
-// Navbar, app/[locale]/(app)/layout.tsx's redirect, and the `if (!user) return ...`/401 checks in the API
+// app/[locale]/(app)/layout.tsx's redirect, and the `if (!user) return ...`/401 checks in the API
 // routes under app/api/), so this degrades to "signed out", not an auth bypass.
 const FALLBACK_URL = 'https://supabase-not-configured.invalid'
 const FALLBACK_KEY = 'not-configured'
@@ -55,8 +55,8 @@ export async function createClient() {
         // ponytail: no middleware.ts exists to persist a refreshed session, and setAll above
         // already discards every cookie write from a Server Component — so an auto-refresh
         // here can never succeed. Left enabled, GoTrue still attempts (and logs) a refresh
-        // against any stale/invalid refresh-token cookie on every request, e.g. the public
-        // /share/[slug] page via the Navbar server component. Disabling it is a no-op for
+        // against any stale/invalid refresh-token cookie on every request that reads the
+        // session. Disabling it is a no-op for
         // working sessions and removes the pointless failed-refresh noise for everyone else.
         autoRefreshToken: false,
       },

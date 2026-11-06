@@ -8,7 +8,7 @@
  * Anything missing, malformed or unknown is opt-in, the safe side (localhost has no geo headers).
  */
 
-import type { DeployPlatform } from '@/lib/deployment'
+import { EDGE_PROVIDERS, OFF_PLATFORM_GEO_ORDER, type DeployPlatform } from '@/lib/deployment'
 
 export const CONSENT_REGION_COOKIE = 'tm_consent_region'
 
@@ -84,21 +84,15 @@ export function parseRegionOverride(value: string | undefined): { country: strin
   return match ? { country: match[1], region: match[2] ?? null } : null
 }
 
-/** The geo-IP header pair (country, subdivision) each platform sets on incoming requests. */
-export const GEO_HEADERS: Readonly<Record<DeployPlatform, { country: string; region: string }>> = {
-  vercel: { country: 'x-vercel-ip-country', region: 'x-vercel-ip-country-region' },
-  // `cf-region-code` needs the zone's "Add visitor location headers" Managed Transform; without
-  // it the country alone decides, and Quebec falls back to Canada's opt-out.
-  cloudflare: { country: 'cf-ipcountry', region: 'cf-region-code' },
-}
-
 /**
  * The visitor's geo-IP country and subdivision from the request headers, for
  * {@link consentRegionFor}:
  *
- * - On a known platform, only that platform's headers ({@link GEO_HEADERS}).
- * - Off one (local development, CI), Vercel's pair, else Cloudflare's, taken as a pair (never a
- *   country from one and a subdivision from the other). The e2e tests send Vercel's names.
+ * - On a known platform, only that platform's `country` / `region` headers (`EDGE_PROVIDERS` in
+ *   lib/deployment.ts).
+ * - Off one (local development, CI), each platform's pair in `OFF_PLATFORM_GEO_ORDER` (Vercel's,
+ *   then Cloudflare's): the first pair with a country, else the last pair read. Always a pair,
+ *   never a country from one platform and a subdivision from another.
  *
  * Either way the values only choose a default for this visitor's own banner, which they can
  * change in "Cookie settings".
@@ -115,7 +109,11 @@ export function geoFromHeaders(
     const prefix = `${country}-`
     return { country, region: country && region?.startsWith(prefix) ? region.slice(prefix.length) : region }
   }
-  if (platform) return read(GEO_HEADERS[platform])
-  const vercel = read(GEO_HEADERS.vercel)
-  return vercel.country ? vercel : read(GEO_HEADERS.cloudflare)
+  if (platform) return read(EDGE_PROVIDERS[platform])
+  let geo: { country: string | null; region: string | null } = { country: null, region: null }
+  for (const candidate of OFF_PLATFORM_GEO_ORDER) {
+    geo = read(EDGE_PROVIDERS[candidate])
+    if (geo.country) break
+  }
+  return geo
 }

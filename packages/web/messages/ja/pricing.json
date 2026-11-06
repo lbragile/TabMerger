@@ -1,6 +1,7 @@
 {
   "monthly": "月払い",
   "yearly": "年払い",
+  "billingPeriod": "支払いサイクル",
   "discountBadge": "−{percent}%",
   "recommended": "おすすめ",
   "forever": "無期限",
@@ -42,6 +43,8 @@
     "chooseModel": "AIモデルを選択"
   },
   "current": "現在のプラン",
+  "loadingPlan": "プランを読み込み中",
+  "yourPlan": "ご利用中のプラン：{plan}",
   "installFree": "無料でインストール",
   "switchToYearly": "年払いに切り替え",
   "switchToMonthly": "月払いに切り替え",

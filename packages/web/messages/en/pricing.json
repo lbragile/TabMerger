@@ -1,6 +1,7 @@
 {
   "monthly": "Monthly",
   "yearly": "Yearly",
+  "billingPeriod": "Billing period",
   "discountBadge": "−{percent}%",
   "recommended": "Recommended",
   "forever": "forever",
@@ -42,6 +43,8 @@
     "chooseModel": "Choose your AI model"
   },
   "current": "Current",
+  "loadingPlan": "Loading your plan",
+  "yourPlan": "Your plan: {plan}",
   "installFree": "Install free",
   "switchToYearly": "Switch to yearly billing",
   "switchToMonthly": "Switch to monthly billing",

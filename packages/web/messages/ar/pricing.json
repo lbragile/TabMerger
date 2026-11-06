@@ -1,6 +1,7 @@
 {
   "monthly": "شهريًا",
   "yearly": "سنويًا",
+  "billingPeriod": "فترة الفوترة",
   "discountBadge": "−{percent}%",
   "recommended": "موصى به",
   "forever": "للأبد",
@@ -42,6 +43,8 @@
     "chooseModel": "اختر نموذج الذكاء الاصطناعي"
   },
   "current": "الحالية",
+  "loadingPlan": "جارٍ تحميل خطتك",
+  "yourPlan": "خطتك: {plan}",
   "installFree": "ثبّته مجانًا",
   "switchToYearly": "التبديل إلى الفوترة السنوية",
   "switchToMonthly": "التبديل إلى الفوترة الشهرية",

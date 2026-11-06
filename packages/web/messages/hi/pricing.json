@@ -1,6 +1,7 @@
 {
   "monthly": "मासिक",
   "yearly": "वार्षिक",
+  "billingPeriod": "बिलिंग अवधि",
   "discountBadge": "−{percent}%",
   "recommended": "अनुशंसित",
   "forever": "हमेशा के लिए",
@@ -42,6 +43,8 @@
     "chooseModel": "अपना AI मॉडल चुनें"
   },
   "current": "मौजूदा",
+  "loadingPlan": "आपका प्लान लोड हो रहा है",
+  "yourPlan": "आपका प्लान: {plan}",
   "installFree": "मुफ़्त इंस्टॉल करें",
   "switchToYearly": "वार्षिक बिलिंग पर जाएँ",
   "switchToMonthly": "मासिक बिलिंग पर जाएँ",

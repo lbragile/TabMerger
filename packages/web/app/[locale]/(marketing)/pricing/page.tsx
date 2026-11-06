@@ -1,11 +1,9 @@
 import { Suspense } from 'react'
 import { pageMetadata } from '@/lib/seo'
-import { getLocale, getTranslations } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { PricingTable } from '@/components/pricing/PricingTable'
+import { PricingTableForVisitor } from '@/components/pricing/PricingTableForVisitor'
 import { CheckoutCanceledTracker } from '@/components/pricing/CheckoutCanceledTracker'
-import { getCurrentPlan } from '@/lib/currentPlan'
-import { formatDate } from '@/lib/utils'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
 
@@ -16,15 +14,6 @@ export async function generateMetadata() {
 
 export default async function PricingPage() {
   const t = await getTranslations('pricing.page')
-  // Guests and free accounts both come back as 'free'; `signedIn` tells them apart. A plan change
-  // already scheduled is read too, so the cards show it instead of offering changes the server
-  // would refuse; its date is formatted here, as the account page does.
-  const [plan, locale] = await Promise.all([getCurrentPlan({ withPendingChange: true }), getLocale()])
-  const scheduledChange = plan.pendingChange
-    ? { plan: plan.pendingChange.plan, date: formatDate(plan.pendingChange.effectiveAt, locale) }
-    : null
-  // A plan set to end (cancelled at the period end) is offered no change until it is kept.
-  const planEnds = plan.setToEnd ? { date: plan.periodEnd ? formatDate(plan.periodEnd, locale) : null } : null
 
   return (
     <div className="py-16">
@@ -41,16 +30,8 @@ export default async function PricingPage() {
             {t('lead')}
           </p>
         </div>
-        <PricingTable
-          currentTier={plan.tier}
-          currentInterval={plan.interval}
-          currentAiMode={plan.aiMode}
-          currentPeriodEnd={plan.periodEnd}
-          installHref={getStoreLinks()[await getVisitorBrowser()]}
-          signedIn={plan.signedIn}
-          scheduledChange={scheduledChange}
-          planEnds={planEnds}
-        />
+        {/* The visitor's plan is read in the browser: this page reads no session on the server. */}
+        <PricingTableForVisitor installHref={getStoreLinks()[await getVisitorBrowser()]} />
       </div>
       <p className="text-center text-sm text-text2 mt-14">
         {t.rich('moreQuestions', {

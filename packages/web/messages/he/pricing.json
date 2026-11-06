@@ -1,6 +1,7 @@
 {
   "monthly": "חודשי",
   "yearly": "שנתי",
+  "billingPeriod": "תקופת החיוב",
   "discountBadge": "−{percent}%",
   "recommended": "מומלץ",
   "forever": "לתמיד",
@@ -42,6 +43,8 @@
     "chooseModel": "בחירת מודל ה-AI"
   },
   "current": "נוכחית",
+  "loadingPlan": "טוען את התוכנית שלך",
+  "yourPlan": "התוכנית שלך: {plan}",
   "installFree": "התקנה בחינם",
   "switchToYearly": "מעבר לחיוב שנתי",
   "switchToMonthly": "מעבר לחיוב חודשי",

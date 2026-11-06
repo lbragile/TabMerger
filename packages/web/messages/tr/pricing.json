@@ -1,6 +1,7 @@
 {
   "monthly": "Aylık",
   "yearly": "Yıllık",
+  "billingPeriod": "Faturalandırma dönemi",
   "discountBadge": "−%{percent}",
   "recommended": "Önerilen",
   "forever": "süresiz",
@@ -42,6 +43,8 @@
     "chooseModel": "Yapay zekâ modelinizi seçin"
   },
   "current": "Mevcut",
+  "loadingPlan": "Planınız yükleniyor",
+  "yourPlan": "Planınız: {plan}",
   "installFree": "Ücretsiz yükle",
   "switchToYearly": "Yıllık faturalandırmaya geç",
   "switchToMonthly": "Aylık faturalandırmaya geç",

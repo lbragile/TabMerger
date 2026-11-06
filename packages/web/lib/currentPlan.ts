@@ -3,6 +3,24 @@ import { createClient } from '@/lib/supabase/server'
 import { getPendingPlanChange } from '@/lib/stripe'
 import { getPlanForPriceId, getPriceInfo, type BillingInterval, type PaidTierKey } from '@/lib/tiers'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { takeRateLimit, type RateLimitBucket } from '@/lib/rateLimit'
+
+/**
+ * Per-user limit on reading a scheduled plan change from Stripe (`withPendingChange`, the pricing
+ * page's `GET /api/plan?pendingChange=1`). Each read is a Stripe `subscriptions.retrieve`, and
+ * Stripe's read limit is per account: one user looping the route could slow everyone's checkout
+ * and portal calls. Its own bucket, not the billing routes' (`BILLING_RATE_LIMIT`), so reloading
+ * the pricing page never uses up a visitor's checkout clicks. Fails open like billing: the
+ * limiter's table being unreachable must not hide the scheduled change from everyone.
+ */
+export const PENDING_CHANGE_RATE_LIMIT: RateLimitBucket = {
+  name: 'plan_pending_change',
+  limits: [
+    { windowSeconds: 60, max: 10 },
+    { windowSeconds: 60 * 60, max: 60 },
+  ],
+  onError: 'allow',
+}
 
 /**
  * A plan change waiting for the end of the paid period (Stripe's confirm page deferred it, or the
@@ -51,7 +69,10 @@ export const GUEST_PLAN: CurrentPlan = { signedIn: false, tier: 'free', periodEn
  * (`getPendingPlanChange()`, the account page's source), so the pricing page can show it instead
  * of offering changes the server would refuse (409 `already_scheduled`). Only the user's own
  * subscription on their own customer is read; a failed read leaves `pendingChange` null, as on the
- * account page. Off by default: the home page's teaser doesn't need a Stripe call.
+ * account page. Off by default: the home page's teaser doesn't need a Stripe call. Rate limited per
+ * user ({@link PENDING_CHANGE_RATE_LIMIT}); over the limit the plan comes back with
+ * `pendingChange: null` rather than an error, so the listing stays usable. Guests and accounts
+ * without an entitled subscription return before any of this.
  */
 export async function getCurrentPlan({ withPendingChange = false }: { withPendingChange?: boolean } = {}): Promise<CurrentPlan> {
   const supabase = await createClient()
@@ -96,6 +117,7 @@ async function readPendingChange(
   subscriptionId: string | null | undefined
 ): Promise<PendingPlanChangeInfo | null> {
   if (!subscriptionId) return null
+  if ((await takeRateLimit(PENDING_CHANGE_RATE_LIMIT, userId)).kind === 'limited') return null
   try {
     const { data: profile } = await supabase.from('profiles').select('stripe_customer_id').eq('id', userId).maybeSingle()
     const customerId = profile?.stripe_customer_id

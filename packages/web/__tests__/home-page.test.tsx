@@ -14,19 +14,19 @@ vi.mock('@/components/marketing/Hero', () => ({
 }))
 vi.mock('@/components/marketing/ReviewsStrip', () => ({ ReviewsStrip: () => <div>reviews</div> }))
 vi.mock('@/components/marketing/Features', () => ({ Features: () => <div>features</div> }))
-const teaser = vi.hoisted(() => ({ planPromise: null as Promise<unknown> | null }))
+const teaser = vi.hoisted(() => ({ props: null as Record<string, unknown> | null }))
 vi.mock('@/components/marketing/PricingTeaser', () => ({
-  PricingTeaserForVisitor: ({ planPromise }: { planPromise: Promise<unknown> }) => {
-    teaser.planPromise = planPromise
+  PricingTeaserForVisitor: (props: Record<string, unknown>) => {
+    teaser.props = props
     return <div>pricing-teaser</div>
   },
 }))
 vi.mock('@/components/marketing/FinalCta', () => ({ FinalCta: () => <div>final-cta</div> }))
-const currentPlan = vi.hoisted(() => ({ get: null as null | (() => Promise<unknown>) }))
-vi.mock('@/lib/currentPlan', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/lib/currentPlan')>()
-  return { ...actual, getCurrentPlan: () => currentPlan.get?.() ?? Promise.resolve(actual.GUEST_PLAN) }
-})
+const getCurrentPlan = vi.hoisted(() => vi.fn())
+vi.mock('@/lib/currentPlan', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/currentPlan')>()),
+  getCurrentPlan,
+}))
 
 describe('HomePage', () => {
   it('no longer renders the removed Testimonials section', async () => {
@@ -78,25 +78,13 @@ describe('HomePage', () => {
     })
   })
 
-  // The teaser stops recommending Pro to a subscriber: it gets the visitor's plan, streamed.
+  // The teaser stops recommending Pro to a subscriber: it reads the visitor's plan in the browser.
   describe('signed-in plan for the pricing teaser', () => {
-    it('hands the teaser the plan lookup unresolved, without holding the page for it', async () => {
-      let resolve!: (plan: unknown) => void
-      currentPlan.get = () => new Promise((r) => (resolve = r))
-      // The page renders while the lookup is still pending.
+    it('reads no session on the server: the teaser gets no plan from the page', async () => {
       render(await HomePage())
       expect(screen.getByText('pricing-teaser')).toBeInTheDocument()
-      const plan = { signedIn: true, tier: 'pro_ai', aiMode: 'managed', periodEnd: null }
-      resolve(plan)
-      await expect(teaser.planPromise).resolves.toEqual(plan)
-      currentPlan.get = null
-    })
-
-    it('shows the teaser as for a guest when the lookup fails', async () => {
-      currentPlan.get = () => Promise.reject(new Error('supabase down'))
-      render(await HomePage())
-      await expect(teaser.planPromise).resolves.toEqual({ signedIn: false, tier: 'free', periodEnd: null })
-      currentPlan.get = null
+      expect(teaser.props).toEqual({})
+      expect(getCurrentPlan).not.toHaveBeenCalled()
     })
   })
 

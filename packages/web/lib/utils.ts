@@ -5,12 +5,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/** "January 15, 2024" (in `locale`, default US English). */
-export function formatDate(date: string | Date, locale: string = 'en-US'): string {
+/**
+ * "January 15, 2024" (in `locale`, default US English), in `timeZone` when given, else the
+ * runtime's own (the server's on the server, the visitor's in the browser).
+ */
+export function formatDate(date: string | Date, locale: string = 'en-US', timeZone?: string): string {
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    ...(timeZone ? { timeZone } : {}),
   }).format(new Date(date))
 }
 

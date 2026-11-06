@@ -1,6 +1,7 @@
 {
   "monthly": "Ежемесячно",
   "yearly": "Ежегодно",
+  "billingPeriod": "Период оплаты",
   "discountBadge": "−{percent}%",
   "recommended": "Рекомендуем",
   "forever": "навсегда",
@@ -42,6 +43,8 @@
     "chooseModel": "Выбор модели ИИ"
   },
   "current": "Текущий",
+  "loadingPlan": "Загрузка вашего тарифа",
+  "yourPlan": "Ваш тариф: {plan}",
   "installFree": "Установить бесплатно",
   "switchToYearly": "Перейти на оплату за год",
   "switchToMonthly": "Перейти на помесячную оплату",

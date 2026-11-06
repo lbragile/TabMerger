@@ -1,5 +1,6 @@
 import { ANALYTICS_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
 import { hasDataConsent } from './dataConsent';
+import { SIMPLE_JSON_CONTENT_TYPE } from './simpleRequest';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string | undefined;
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_API_KEY as string | undefined;
@@ -39,6 +40,11 @@ export async function hashUserId(userId: string): Promise<string> {
  * the extension no longer holds the GA4 measurement ID or API secret (both are
  * server-only now), so nothing in the shipped bundle can be extracted to spoof events.
  * Fire-and-forget — errors are swallowed.
+ *
+ * The body is JSON but is sent as `text/plain;charset=UTF-8` on purpose: that makes the
+ * cross-origin POST a CORS "simple request", so the browser skips the OPTIONS preflight and each
+ * event costs one request to the web app instead of two. `/api/track` parses JSON from either
+ * content type (older installs still send `application/json`). See `simpleRequest.ts`.
  */
 export function trackEvent(name: string, params?: Record<string, string | number>): void {
   if (IS_AUTOMATED_TEST_BUILD) return; // never fire real analytics during an e2e run
@@ -52,7 +58,7 @@ export function trackEvent(name: string, params?: Record<string, string | number
     getClientId().then((clientId) => {
       fetch(`${WEB_APP_URL}/api/track`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': SIMPLE_JSON_CONTENT_TYPE },
         body: JSON.stringify({ event: name, params, client_id: clientId }),
       }).catch(() => {}); // fire-and-forget
     }).catch(() => {});

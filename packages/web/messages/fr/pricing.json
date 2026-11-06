@@ -1,6 +1,7 @@
 {
   "monthly": "Mensuel",
   "yearly": "Annuel",
+  "billingPeriod": "Période de facturation",
   "discountBadge": "−{percent} %",
   "recommended": "Recommandé",
   "forever": "pour toujours",
@@ -42,6 +43,8 @@
     "chooseModel": "Choisissez votre modèle d’IA"
   },
   "current": "Actuelle",
+  "loadingPlan": "Chargement de votre offre",
+  "yourPlan": "Votre offre : {plan}",
   "installFree": "Installer gratuitement",
   "switchToYearly": "Passer à la facturation annuelle",
   "switchToMonthly": "Passer à la facturation mensuelle",

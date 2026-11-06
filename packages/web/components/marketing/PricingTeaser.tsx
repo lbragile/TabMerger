@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, use, useState } from 'react'
+import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { TierBadge, TierFeatureIcon } from '@/components/pricing/TierBadge'
 import { Link } from '@/i18n/navigation'
@@ -14,9 +14,10 @@ import { useListPrice, useZeroPrice } from '@/components/pricing/priceFormat'
 import { cn } from '@/lib/utils'
 import { PRO_AI_MONTHLY_CREDITS, type AiMode } from '@tabmerger/shared'
 import { AiOptionSwitch } from '@/components/pricing/AiOptionSwitch'
-import { initialAiMode, isAiOptionAvailable } from '@/components/pricing/aiOptions'
+import { isAiOptionAvailable } from '@/components/pricing/aiOptions'
+import { useSeededAiMode } from '@/components/pricing/useSeededAiMode'
 import { planCardStatus } from '@/components/pricing/planStatus'
-import type { CurrentPlan } from '@/lib/currentPlan'
+import { useVisitorPlan } from '@/components/pricing/useVisitorPlan'
 
 const tiers = [
   { key: 'free', highlighted: false, blurb: 'blurbFree' },
@@ -39,33 +40,25 @@ interface PricingTeaserProps {
 }
 
 /**
- * The home page's teaser for the signed-in visitor's plan. The plan is read on the server and
- * handed down unresolved, so the page is sent at once; until it arrives (and for everyone it
- * resolves to free) the teaser shows the default listing. Only the badge and the card styling
- * change when it does: the badge sits on the card's edge, so nothing moves.
+ * The home page's teaser for the signed-in visitor's plan. The plan is read in the browser
+ * (`useVisitorPlan`: no request at all without a session), so the page reads no session on the
+ * server; until it is known (and for everyone it resolves to free) the teaser shows the default
+ * listing. Only the badge and the card styling change when it does: the badge sits on the card's
+ * edge, so nothing moves.
  */
-export function PricingTeaserForVisitor({ planPromise }: { planPromise: Promise<CurrentPlan> }) {
-  return (
-    <Suspense fallback={<PricingTeaser />}>
-      <ResolvedPricingTeaser planPromise={planPromise} />
-    </Suspense>
-  )
-}
-
-function ResolvedPricingTeaser({ planPromise }: { planPromise: Promise<CurrentPlan> }) {
-  const plan = use(planPromise)
-  return plan.tier === 'free' ? (
-    <PricingTeaser />
-  ) : (
-    <PricingTeaser currentTier={plan.tier} currentAiMode={plan.aiMode} />
-  )
+export function PricingTeaserForVisitor() {
+  const plan = useVisitorPlan()
+  const paid = plan && plan.tier !== 'free' ? plan : undefined
+  // One element whatever the plan: the Monthly/Yearly toggle and focus survive the plan arriving,
+  // and the Pro AI card follows the subscriber's option until the visitor uses its switch.
+  return <PricingTeaser currentTier={paid?.tier} currentAiMode={paid?.aiMode} />
 }
 
 export function PricingTeaser({ currentTier, currentAiMode }: PricingTeaserProps = {}) {
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
   // Pro AI's option on show: the subscriber's own, else TabMerger's AI or your own key (opens on
   // one that can be bought).
-  const [aiMode, setAiMode] = useState<AiMode>(() => initialAiMode(currentTier === 'pro_ai' ? currentAiMode : undefined))
+  const [aiMode, setAiMode] = useSeededAiMode(currentTier === 'pro_ai' ? currentAiMode : undefined)
   const t = useTranslations('home.pricing')
   const p = useTranslations('pricing')
   const common = useTranslations('common')
@@ -80,11 +73,14 @@ export function PricingTeaser({ currentTier, currentAiMode }: PricingTeaserProps
           {t('title')}
         </h2>
 
-        {/* Monthly/Yearly toggle — mirrors the full pricing page's pill toggle */}
-        <div className="inline-flex rounded-lg p-[0.1875rem] bg-surface3 border border-border text-sm mb-10">
+        {/* Monthly/Yearly toggle — mirrors the full pricing page's pill toggle (a labelled group of
+            toggle buttons, the chosen one pressed) */}
+        <div role="group" aria-label={p('billingPeriod')} className="inline-flex rounded-lg p-[0.1875rem] bg-surface3 border border-border text-sm mb-10">
           {(['monthly', 'yearly'] as const).map((opt) => (
             <button
               key={opt}
+              type="button"
+              aria-pressed={interval === opt}
               onClick={() => setInterval(opt)}
               className={cn(
                 'h-[1.875rem] px-4 rounded-lg font-medium transition-colors text-[0.8125rem] flex items-center gap-1.5',

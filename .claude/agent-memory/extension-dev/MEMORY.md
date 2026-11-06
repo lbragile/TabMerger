@@ -138,3 +138,4 @@
 - [Buy more credits in Settings → AI](learnings_buy_credits_entry.md) — lib/buyCredits.ts shared URL + 10% rule; e2e records tabs.create; Python write_text CRLF trap
 - [AI rate_limited, trimmed payloads, cap rule](learnings_ai_rate_limit_payload_cap.md) — two 429s, codeless 429 = platform → rate_limited; Intl wait copy; aiPayload + web-parser contract test (alias before `@`); allowance_spent cap
 - [E2E CI repro + vacuous hidden checks](learnings_e2e_ci_repro_and_vacuous_hidden_checks.md) — open dialog aria-hides header; wait for Save to disable; CI-identical build via defines
+- [/api/track + og-preview as CORS simple requests](learnings_track_cors_simple_request.md) — SIMPLE_JSON_CONTENT_TYPE (text/plain) skips the preflight; any extra header brings it back

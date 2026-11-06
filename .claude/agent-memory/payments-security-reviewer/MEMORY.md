@@ -17,4 +17,5 @@
 - [Payment reversal review](learnings_payment_reversal_review_method.md) — dispute/refund handlers: insert-on-missing races, unlocked read-then-write, event coverage, trigger-frozen allowance
 - [AI abuse limits](learnings_ai_abuse_limit_review_method.md) — rate limits/slots/deadlines: abort refund direction, sibling-route oracles, pre-slot work, IP keys, peek-then-count overshoot, SDK retries
 - [Cancel resume](learnings_cancel_resume_review_method.md) — clearing cancel_at: id provenance, flexible vs classic mode, independent natural period end, dispute/past_due, flag display-only
+- [Static page + plan API](learnings_static_page_plan_api_review_method.md) — plan moved to a client-fetched GET + proxy session allow-list: scoping, no-store, consumers, allow-list grep, path tricks
 - [Amount-driven portal deferral](learnings_amount_driven_portal_deferral_review_method.md) — schedule_at_period_end conditions: pair-by-pair per-month check, stale sessions, restricted coupons, schedule locks, alarm shape

@@ -1,6 +1,7 @@
 {
   "monthly": "Monatlich",
   "yearly": "Jährlich",
+  "billingPeriod": "Abrechnungszeitraum",
   "discountBadge": "−{percent}%",
   "recommended": "Empfohlen",
   "forever": "für immer",
@@ -42,6 +43,8 @@
     "chooseModel": "Wähle dein KI-Modell"
   },
   "current": "Aktuell",
+  "loadingPlan": "Dein Tarif wird geladen",
+  "yourPlan": "Dein Tarif: {plan}",
   "installFree": "Kostenlos installieren",
   "switchToYearly": "Zu jährlicher Abrechnung wechseln",
   "switchToMonthly": "Zu monatlicher Abrechnung wechseln",

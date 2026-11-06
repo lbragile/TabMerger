@@ -1,6 +1,7 @@
 {
   "monthly": "Bulanan",
   "yearly": "Tahunan",
+  "billingPeriod": "Periode tagihan",
   "discountBadge": "−{percent}%",
   "recommended": "Direkomendasikan",
   "forever": "selamanya",
@@ -42,6 +43,8 @@
     "chooseModel": "Pilih model AI Anda"
   },
   "current": "Saat ini",
+  "loadingPlan": "Memuat paket Anda",
+  "yourPlan": "Paket Anda: {plan}",
   "installFree": "Pasang gratis",
   "switchToYearly": "Beralih ke tagihan tahunan",
   "switchToMonthly": "Beralih ke tagihan bulanan",
