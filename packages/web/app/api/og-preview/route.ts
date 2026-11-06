@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { lookup } from 'node:dns/promises'
-import { isIP } from 'node:net'
+import { isPrivateHost } from '@/lib/privateAddress'
 import { request as httpRequest } from 'node:http'
 import { request as httpsRequest, type RequestOptions as HttpsRequestOptions } from 'node:https'
 import { gunzipSync, brotliDecompressSync, inflateSync } from 'node:zlib'
@@ -64,27 +64,6 @@ const MAX_REDIRECTS = 3
 // promises the requested address isn't stored, even transiently in memory.
 // If load ever becomes a concern, revisit with a short-TTL cache keyed by a
 // hash rather than the raw URL, not a plain re-add of this Map.
-
-function isPrivateHost(hostname: string): boolean {
-  const h = hostname.toLowerCase()
-  if (h === 'localhost' || h.endsWith('.local')) return true
-
-  const version = isIP(h)
-  if (version === 4) {
-    const [a, b] = h.split('.').map(Number)
-    if (a === 127) return true // loopback
-    if (a === 10) return true // 10.0.0.0/8
-    if (a === 172 && b >= 16 && b <= 31) return true // 172.16.0.0/12
-    if (a === 192 && b === 168) return true // 192.168.0.0/16
-    if (a === 169 && b === 254) return true // 169.254.0.0/16 (incl. cloud metadata)
-    if (a === 0) return true
-    return false
-  }
-  if (version === 6) {
-    return h === '::1' || h.startsWith('fe80:') || h.startsWith('fc') || h.startsWith('fd')
-  }
-  return false
-}
 
 /**
  * Resolves a hostname to every address it currently answers with and rejects
