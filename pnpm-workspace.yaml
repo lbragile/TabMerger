@@ -24,6 +24,11 @@ overrides:
   vite@6: '^6.4.4'
   zod@4: '^4.6.6'
   js-yaml@4: '^4.3.2'
+  # resend's optional peer. Nothing imports React Email (support mail is sent as
+  # plain text/HTML), so it only lands here to satisfy that peer; v1 drags in
+  # html-to-text@9 -> deepmerge@4 (advisory with no patched release). v2 uses
+  # html-to-text@10, which has no deepmerge.
+  '@react-email/render': '^2.2.0'
   # brace-expansion is pinned to the PATCHED release of each major line, NOT to a
   # single blanket floor. A blanket `brace-expansion: '>=2.1.3'` forces v5 onto
   # every edge — including minimatch@3.1.5, which declares `^1.1.7` and calls the
