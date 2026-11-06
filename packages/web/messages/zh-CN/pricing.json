@@ -42,6 +42,8 @@
     "chooseModel": "选择您的 AI 模型"
   },
   "current": "当前",
+  "loadingPlan": "正在加载您的套餐",
+  "yourPlan": "您的套餐：{plan}",
   "installFree": "免费安装",
   "switchToYearly": "切换为按年计费",
   "switchToMonthly": "切换为按月计费",

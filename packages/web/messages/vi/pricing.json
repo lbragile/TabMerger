@@ -42,6 +42,8 @@
     "chooseModel": "Chọn mô hình AI"
   },
   "current": "Hiện tại",
+  "loadingPlan": "Đang tải gói của bạn",
+  "yourPlan": "Gói của bạn: {plan}",
   "installFree": "Cài đặt miễn phí",
   "switchToYearly": "Chuyển sang thanh toán hàng năm",
   "switchToMonthly": "Chuyển sang thanh toán hàng tháng",

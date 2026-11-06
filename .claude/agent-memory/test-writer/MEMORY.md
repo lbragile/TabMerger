@@ -19,3 +19,4 @@
 - [Web RTL/catalog tests](learnings_web_rtl_catalog_tests.md) — ICU plural-category check, allowlisting known catalog gaps, timeouts under load
 - [Language picker + RTL tests](learnings_language_picker_rtl_tests.md) — option names are one joined aria-label, Settings 'cancel' = Escape, toaster x-position attr
 - [Deploy env hub tests](learnings_deploy_env_hub_tests.md) — both-source gate cases, client NEXT_PUBLIC_DEPLOY_ENV tests, Sentry client init test
+- [Vitest node-builtin mocks and heredoc gotchas](learnings_vitest_node_builtin_mocks.md) — dns/http mocks need default export, doMock for retries, use Write not heredocs for regex, separate coverage dirs

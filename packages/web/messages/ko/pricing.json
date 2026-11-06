@@ -42,6 +42,8 @@
     "chooseModel": "AI 모델 선택"
   },
   "current": "현재 요금제",
+  "loadingPlan": "요금제를 불러오는 중",
+  "yourPlan": "현재 요금제: {plan}",
   "installFree": "무료 설치",
   "switchToYearly": "연간 결제로 전환",
   "switchToMonthly": "월간 결제로 전환",

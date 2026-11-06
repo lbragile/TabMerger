@@ -13,6 +13,7 @@
   "openMenu": "Open menu",
   "closeMenu": "Close menu",
   "accountMenu": "Account menu",
+  "loadingAccount": "Loading account",
   "home": "TabMerger home",
   "github": "GitHub",
   "githubRepo": "TabMerger on GitHub",

@@ -5,10 +5,19 @@ metadata:
   type: reference
 ---
 
-`deployPlatform()` (`DEPLOY_PLATFORM` = `cloudflare | vercel`, else `vercel` when `VERCEL=1`,
+`deployPlatform()` (`DEPLOY_PLATFORM` = a key of `EDGE_PROVIDERS`, else `vercel` when `VERCEL=1`,
 else null) decides which request headers the server trusts.
 
-- **Client IP** (`trustedClientAddress` in `lib/clientIp.ts`): Cloudflare reads only
+- **One registry:** every header name lives in `EDGE_PROVIDERS` in `lib/deployment.ts`
+  (`{ clientIp: [ordered], country, region }` per platform; `DeployPlatform` is its key type,
+  `OFF_PLATFORM_GEO_ORDER` the off-platform geo order). A new host is one entry there.
+  `isDeployPlatform` uses `Object.hasOwn`, so `DEPLOY_PLATFORM=constructor` isn't a platform.
+  `__tests__/edgeProviders.test.ts` pins the names, the order and the never-mix rule.
+- **Empty header stops the chain:** `trustedClientAddress` takes the first header that is
+  *present* (`headers.get() !== null`), so an empty `x-vercel-forwarded-for` gives null rather
+  than falling through to `x-real-ip` (the old `??` chain's behaviour, kept on purpose).
+
+- **Client IP** (`trustedClientAddress` in `lib/clientIp.ts`, names from the registry): Cloudflare reads only
   `cf-connecting-ip`; Vercel reads `x-vercel-forwarded-for`, `x-real-ip`, `x-forwarded-for` in
   that order; null otherwise. Falling through to "whichever header exists" would let a client on
   one host send the other host's header name and choose its own rate-limit key. Tests send both

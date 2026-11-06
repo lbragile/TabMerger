@@ -10,6 +10,8 @@ import { GitHubMark } from '@/components/GitHubMark'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { useGithubRepoLabel, useStarCount } from '@/components/layout/githubLabels'
 import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useNavAccount, type NavAccountState } from '@/components/layout/NavAccount'
 
 const links = [
     { href: '/features', label: 'features' },
@@ -19,8 +21,11 @@ const links = [
 ] as const
 
 interface MobileNavToggleProps {
-    email?: string
-    initials?: string
+    /**
+     * Who is signed in. Defaults to the header's state (`NavAccountProvider`), resolved in the
+     * browser; `loading` until then.
+     */
+    account?: NavAccountState
     /**
      * The repository star count, fetched on the server and handed down unresolved: this
      * component never calls GitHub itself. Resolves to null when the count is unavailable.
@@ -64,9 +69,11 @@ function GithubRowWithCount({ starsPromise, onNavigate }: { starsPromise: Promis
 // ponytail: plain useState toggle instead of a headless-menu lib — four static
 // links plus a handful of auth links, no focus-trap/nested-menu needs that
 // would justify the dependency.
-export function MobileNavToggle({ email, initials, starsPromise }: MobileNavToggleProps) {
+export function MobileNavToggle({ account: accountProp, starsPromise }: MobileNavToggleProps) {
     const [open, setOpen] = useState(false)
     const t = useTranslations('nav')
+    const headerAccount = useNavAccount()
+    const account = accountProp ?? headerAccount
 
     return (
         <div className="md:hidden">
@@ -106,9 +113,15 @@ export function MobileNavToggle({ email, initials, starsPromise }: MobileNavTogg
                         <GithubRow onNavigate={() => setOpen(false)} />
                     )}
                     <div className="my-1 border-t border-border" />
-                    {initials ? (
+                    {account.status === 'loading' ? (
+                        // Opened before the session was read: one row holds the place of the account links.
+                        <div aria-busy="true" className="flex h-10 items-center px-3">
+                            <span className="sr-only">{t('loadingAccount')}</span>
+                            <Skeleton aria-hidden="true" className="h-4 w-32 motion-reduce:animate-none" />
+                        </div>
+                    ) : account.status === 'signedIn' ? (
                         <>
-                            <div className={`px-3 py-1.5 text-[13px] font-medium text-foreground ${NO_CAPTURE_CLASS}`}>{email}</div>
+                            <div className={`px-3 py-1.5 text-[13px] font-medium text-foreground ${NO_CAPTURE_CLASS}`}>{account.email}</div>
                             <Link
                                 href="/dashboard"
                                 onClick={() => setOpen(false)}

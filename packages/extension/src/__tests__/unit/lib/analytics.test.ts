@@ -55,6 +55,46 @@ describe('trackEvent — configured', () => {
     )
   })
 
+  it('sends /api/track as a CORS simple request: text/plain content type, unchanged JSON body', async () => {
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = {
+      storage: { local: { get: vi.fn().mockResolvedValue({ ga_client_id: 'existing-id' }), set: vi.fn() } },
+    }
+    const mod = await import('@/lib/analytics')
+    mod.trackEvent('group_created', { count: 3, source: 'popup' })
+    await new Promise((r) => setTimeout(r, 0))
+    const call = vi.mocked(fetch).mock.calls.find(([url]) => url === 'http://localhost:3000/api/track')
+    expect(call).toBeDefined()
+    const init = call![1] as RequestInit
+    // Exactly one header, and it is CORS-safelisted, so the browser sends no OPTIONS preflight.
+    expect(init.headers).toEqual({ 'Content-Type': 'text/plain;charset=UTF-8' })
+    expect(init.method).toBe('POST')
+    // The body is still a plain JSON string with the same shape the server has always parsed.
+    expect(typeof init.body).toBe('string')
+    expect(JSON.parse(init.body as string)).toEqual({
+      event: 'group_created',
+      params: { count: 3, source: 'popup' },
+      client_id: 'existing-id',
+    })
+  })
+
+  it('leaves the PostHog capture request as application/json', async () => {
+    vi.stubEnv('VITE_POSTHOG_API_KEY', 'phc_test')
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = {
+      storage: { local: { get: vi.fn().mockResolvedValue({ ga_client_id: 'existing-id' }), set: vi.fn() } },
+    }
+    try {
+      const mod = await import('@/lib/analytics')
+      mod.trackEvent('page_view')
+      await new Promise((r) => setTimeout(r, 0))
+      expect(fetch).toHaveBeenCalledWith(
+        'https://us.i.posthog.com/capture/',
+        expect.objectContaining({ headers: { 'Content-Type': 'application/json' } })
+      )
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
   it('generates and stores a new client id when none exists', async () => {
     const set = vi.fn().mockResolvedValue(undefined)
     ;(globalThis as { chrome: Record<string, unknown> }).chrome = {

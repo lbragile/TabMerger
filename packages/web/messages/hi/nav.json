@@ -13,6 +13,7 @@
   "openMenu": "मेनू खोलें",
   "closeMenu": "मेनू बंद करें",
   "accountMenu": "खाता मेनू",
+  "loadingAccount": "खाता लोड हो रहा है",
   "home": "TabMerger होम",
   "github": "GitHub",
   "githubRepo": "GitHub पर TabMerger",

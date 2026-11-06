@@ -146,10 +146,10 @@ describe('other scheduled changes', () => {
 })
 
 describe('the pricing page', () => {
-  it('reads the scheduled change with the plan and passes it down with its date formatted', async () => {
+  it('reads the scheduled change with the plan in the browser and passes it down with its date formatted', async () => {
     vi.resetModules()
     vi.doMock('next/headers', () => ({ headers: async () => new Headers() }))
-    const getCurrentPlan = vi.fn(async () => ({
+    const useVisitorPlan = vi.fn(() => ({
       signedIn: true,
       tier: 'pro_ai' as const,
       interval: 'monthly' as const,
@@ -157,15 +157,18 @@ describe('the pricing page', () => {
       periodEnd: '2026-11-26T12:00:00.000Z',
       pendingChange: { plan: PRO_MONTHLY.plan, effectiveAt: '2026-11-26T12:00:00.000Z' },
     }))
-    vi.doMock('@/lib/currentPlan', () => ({ getCurrentPlan }))
-    const { default: PricingPage } = await import('@/app/[locale]/(marketing)/pricing/page')
-    render(await PricingPage())
+    vi.doMock('@/components/pricing/useVisitorPlan', () => ({ useVisitorPlan }))
+    try {
+      const { default: PricingPage } = await import('@/app/[locale]/(marketing)/pricing/page')
+      render(await PricingPage())
 
-    expect(getCurrentPlan).toHaveBeenCalledWith({ withPendingChange: true })
-    expect(within(cards().pro).getByTestId('cta-scheduled')).toHaveTextContent(`Starts ${DATE}`)
-    expectNote(cards().proAi)
-    vi.doUnmock('@/lib/currentPlan')
-    vi.doUnmock('next/headers')
+      expect(useVisitorPlan).toHaveBeenCalledWith({ withPendingChange: true })
+      expect(within(cards().pro).getByTestId('cta-scheduled')).toHaveTextContent(`Starts ${DATE}`)
+      expectNote(cards().proAi)
+    } finally {
+      vi.doUnmock('@/components/pricing/useVisitorPlan')
+      vi.doUnmock('next/headers')
+    }
   })
 })
 

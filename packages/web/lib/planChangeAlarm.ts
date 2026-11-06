@@ -1,6 +1,6 @@
-import * as Sentry from '@sentry/nextjs'
 import type Stripe from 'stripe'
 import { classifyPlanChange, getPlanForPriceId, type PlanPrice } from './tiers'
+import { getServerSentry } from './sentryServer'
 
 /**
  * Something a plan change did that the refund policy (docs/PAYMENTS.md, "Refund policy") forbids,
@@ -116,8 +116,10 @@ export function planChangeAlarms(
  * holds the event type, the alarm, the subscription id, and the two plans (`pro/monthly`) or the
  * invoice id and amounts; never a customer, email, metadata or Stripe object. Sentry groups every
  * occurrence of one signal into one issue (`fingerprint: plan-change-alarm/<kind>`), whatever the
- * ids in the text. Reports only: nothing is changed at Stripe or in the database. Sentry sends in
- * the background; the webhook calls flushPlanChangeAlarms() after the response.
+ * ids in the text. Reports only: nothing is changed at Stripe or in the database. Sentry is loaded
+ * on first use (lib/sentryServer.ts) and sends in the background; the webhook calls
+ * flushPlanChangeAlarms() after the response. Without server Sentry (no DSN, tests) only the log
+ * line is written.
  */
 export function logPlanChangeAlarm(eventType: string, alarm: PlanChangeAlarm): void {
   const detail =
@@ -126,17 +128,22 @@ export function logPlanChangeAlarm(eventType: string, alarm: PlanChangeAlarm): v
       : `invoice ${alarm.invoiceId} total ${alarm.total}, balance change ${alarm.balanceChange ?? 'unknown'}`
   const line = `Stripe webhook: PLAN_CHANGE_ALARM ${alarm.kind} on ${eventType} (subscription ${alarm.subscriptionId}, ${detail}). The refund policy allows no credit and no immediate downgrade; check the portal's deferral (docs/PAYMENTS.md, "Plan-change alarm").`
   console.error(line)
-  Sentry.captureMessage(line, {
-    level: 'error',
-    fingerprint: ['plan-change-alarm', alarm.kind],
-    tags: { plan_change_alarm: alarm.kind },
-  })
+  void getServerSentry().then((Sentry) =>
+    Sentry?.captureMessage(line, {
+      level: 'error',
+      fingerprint: ['plan-change-alarm', alarm.kind],
+      tags: { plan_change_alarm: alarm.kind },
+    })
+  )
 }
 
 /**
  * Waits (at most 2 s) for Sentry to send queued alarms. A serverless function may be frozen once
- * it has answered, so the webhook runs this in `after()`. Without a DSN it resolves at once.
+ * it has answered, so the webhook runs this in `after()`. Without server Sentry it resolves at
+ * once. The alarms' captures were queued on the same loader promise first, so they are already in
+ * Sentry's queue when the flush starts.
  */
 export async function flushPlanChangeAlarms(): Promise<void> {
-  await Sentry.flush(2000)
+  const Sentry = await getServerSentry()
+  await Sentry?.flush(2000)
 }

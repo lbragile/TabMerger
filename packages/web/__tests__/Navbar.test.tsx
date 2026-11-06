@@ -2,12 +2,13 @@ import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-// Navbar is an async server component — mock its data dependency so we can
-// `await` and render the markup under test.
-vi.mock('@/lib/supabase/server', () => ({
-  createClient: async () => ({
+// Navbar is an async server component (translations) that reads no session itself: the account
+// controls read it in the browser (NavAccountProvider). Signed out here.
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: () => ({
     auth: {
-      getUser: async () => ({ data: { user: null } }),
+      getSession: async () => ({ data: { session: null } }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
     },
   }),
 }))
@@ -100,7 +101,7 @@ describe('Navbar', () => {
 
   it('shows sign-in controls when logged out', async () => {
     render(await Navbar())
-    expect(screen.getByRole('link', { name: 'Sign in' })).toBeInTheDocument()
+    expect(await screen.findByRole('link', { name: 'Sign in' })).toBeInTheDocument()
   })
 
   it('opens and closes the mobile nav panel via the hamburger toggle', async () => {
@@ -125,7 +126,7 @@ describe('Navbar: header controls', () => {
       render(await Navbar())
     })
     // Same 36px box and same border, so the browser snaps all four to the same device pixels.
-    expect(screen.getByRole('link', { name: 'Sign in' }).className).toContain('border-transparent')
+    expect((await screen.findByRole('link', { name: 'Sign in' })).className).toContain('border-transparent')
     expect(screen.getByRole('link', { name: 'Get started' }).className).toContain('border-primary')
   })
 })

@@ -1,27 +1,26 @@
 import { isIP } from 'node:net'
-import { deployPlatform, type DeployPlatform } from '@/lib/deployment'
+import { deployPlatform, EDGE_PROVIDERS, type DeployPlatform } from '@/lib/deployment'
 
 /**
- * The client's address for per-IP rate limits, read only from the header the hosting platform
- * itself sets ({@link deployPlatform}), never "whichever header exists":
+ * The client's address for per-IP rate limits, read only from the headers the hosting platform
+ * itself sets ({@link deployPlatform}; names in `EDGE_PROVIDERS`), never "whichever header
+ * exists":
  *
- * - `cloudflare`: `cf-connecting-ip` only. Cloudflare's edge sets it from the connection.
- *   `x-forwarded-for` / `x-real-ip` and Vercel's headers are ignored there, since nothing on the
- *   way strips a client-sent copy.
- * - `vercel`: `x-vercel-forwarded-for`, then `x-real-ip`, then `x-forwarded-for`. Vercel
- *   overwrites these with the client address and doesn't forward one a client sent;
- *   `x-vercel-forwarded-for` comes first because a proxy in front of Vercel could change
- *   `x-forwarded-for`. `cf-connecting-ip` is ignored there.
- * - no platform (local development, CI, tests): null. Every header is whatever the client typed.
+ * - On a platform: its `clientIp` headers in order, and the first one present wins (an empty one
+ *   still wins, giving null). Other platforms' headers are ignored, since nothing on the way
+ *   strips a client-sent copy (`cf-connecting-ip` on Vercel, `x-forwarded-for` on Cloudflare).
+ * - No platform (local development, CI, tests): null. Every header is whatever the client typed.
  *
  * The first address of a list, trimmed; null when the header is missing or empty. Not validated:
  * see {@link ipRateLimitKey}.
  */
 export function trustedClientAddress(headers: Headers, platform: DeployPlatform | null = deployPlatform()): string | null {
-  let raw: string | null
-  if (platform === 'cloudflare') raw = headers.get('cf-connecting-ip')
-  else if (platform === 'vercel') raw = headers.get('x-vercel-forwarded-for') ?? headers.get('x-real-ip') ?? headers.get('x-forwarded-for')
-  else return null
+  if (!platform) return null
+  let raw: string | null = null
+  for (const name of EDGE_PROVIDERS[platform].clientIp) {
+    raw = headers.get(name)
+    if (raw !== null) break
+  }
   // The platform sends one address; read a list defensively and keep the first hop.
   return raw?.split(',')[0]?.trim() || null
 }

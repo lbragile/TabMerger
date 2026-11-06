@@ -1,6 +1,6 @@
 ---
 name: plan-aware-listings
-description: How plan listings (pricing page, home teaser) learn the visitor's plan - getCurrentPlan + planCardStatus, streaming the plan into the teaser, and why switch-route check order decides which error copy users see
+description: How plan listings (pricing page, home teaser) learn the visitor's plan - getCurrentPlan + planCardStatus, read in the browser via GET /api/plan, and why switch-route check order decides which error copy users see
 metadata:
   type: reference
 ---
@@ -11,20 +11,18 @@ visitor's plan (paid tier only while `hasCloudSync` says the status is entitled,
 `planCardStatus()` is the Current / below-current / Recommended rule; PricingCard and
 PricingTeaser both call it. Don't re-derive tier ranks in a component.
 
-**Streaming the plan into a marketing section.** The home page is per-request anyway (`headers()`
-for the visitor browser, Navbar reads cookies), so no static rendering is lost. The page starts
-`getCurrentPlan().catch(() => GUEST_PLAN)` un-awaited and passes the promise to
-`PricingTeaserForVisitor`, which wraps `use(promise)` in its own `<Suspense fallback={<PricingTeaser />}>`.
-- The fallback is the guest view, so guests see no change and subscribers only see a badge swap
-  (the badge is absolutely positioned: no layout shift).
-- Keep the Suspense inside the component: `home-page.test.tsx` asserts the page has exactly one
-  top-level Suspense (the reviews strip).
-- The `.catch` matters in tests too: page tests mock `next/headers` without `cookies`, so the
-  Supabase server client throws; uncaught, that would reject inside `use()`.
+**The plan is read in the browser.** The pricing page and the home teaser read no session on the
+server (so the proxy skips the Supabase refresh for `/` and `/pricing`): `useVisitorPlan`
+(`components/pricing/useVisitorPlan.ts`) returns `undefined` while loading, the guest plan at once
+without a session cookie, else what `GET /api/plan[?pendingChange=1]` (`getCurrentPlan` on the
+server) answers. `PricingTableForVisitor` shows busy same-size CTA skeletons on the paid cards
+meanwhile (badges as for a guest); the teaser keeps its guest view until a paid plan arrives (the
+badge is absolutely positioned: no layout shift). See [[proxy-session-and-client-plan]].
 - Pass the teaser `currentTier` only for a paid plan: with `'free'` the Free card would gain a
   "Current" badge for guests and free accounts.
-- RTL: render inside `await act(async () => { render(...); await promise })` before asserting, or
-  you assert against the fallback (which looks like the guest view and passes wrongly).
+- RTL: mock `@/components/pricing/useVisitorPlan` with a hoisted value to test a listing; to test
+  the hook itself, mock `@/lib/supabase/client` (`auth.getSession`) and stub `fetch`. Assert after
+  the plan resolves, or you assert against the loading view (guest-looking, passes wrongly).
 
 **Plan-switch route check order decides the copy.** `startPlanSwitch` once answered a plain 400
 "interval is required" (no `code`) before checking `profiles.stripe_customer_id`. A plan granted by

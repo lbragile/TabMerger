@@ -4,7 +4,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { POST } from '@/app/api/track/route'
+import { POST, TRACK_MAX_BODY_BYTES } from '@/app/api/track/route'
 
 const mockFetch = vi.fn().mockResolvedValue({ ok: true })
 
@@ -207,6 +207,85 @@ describe('POST /api/track', () => {
 
       expect(res.status).toBe(400)
       expect(mockFetch).not.toHaveBeenCalled()
+    })
+    describe('content types and the size cap', () => {
+      const event = { event: 'group_created', client_id: 'abc-123', params: { count: 2 } }
+      const withType = (body: string, contentType: string | null, extra: Record<string, string> = {}) =>
+        new NextRequest('http://localhost/api/track', {
+          method: 'POST',
+          headers: { ...(contentType ? { 'content-type': contentType } : {}), ...extra },
+          body,
+        })
+      /** A body streamed in chunks with no content-length, so only the running count can refuse it. */
+      const streamed = (text: string, contentType: string) => {
+        const bytes = new TextEncoder().encode(text)
+        const stream = new ReadableStream<Uint8Array>({
+          start(controller) {
+            for (let i = 0; i < bytes.length; i += 4096) controller.enqueue(bytes.slice(i, i + 4096))
+            controller.close()
+          },
+        })
+        return new NextRequest('http://localhost/api/track', {
+          method: 'POST',
+          headers: { 'content-type': contentType },
+          body: stream,
+          duplex: 'half',
+        } as unknown as ConstructorParameters<typeof NextRequest>[1])
+      }
+
+      it.each(['text/plain', 'text/plain;charset=UTF-8', 'application/json', null])(
+        'parses a JSON body sent as %s',
+        async (contentType) => {
+          const res = await POST(withType(JSON.stringify(event), contentType))
+          expect(res.status).toBe(204)
+          expect(mockFetch).toHaveBeenCalledTimes(1)
+          expect(sentBody().events[0]).toEqual({ name: 'group_created', params: { count: 2, environment: 'development' } })
+        }
+      )
+
+      it.each(['text/plain', 'application/json'])('returns 400 for invalid JSON sent as %s', async (contentType) => {
+        const res = await POST(withType('{"event": "group_cre', contentType))
+        expect(res.status).toBe(400)
+        expect(mockFetch).not.toHaveBeenCalled()
+      })
+
+      it.each(['text/plain', 'application/json'])('applies the same validation to %s', async (contentType) => {
+        const res = await POST(withType(JSON.stringify({ event: 'group created', client_id: 'abc-123' }), contentType))
+        expect(res.status).toBe(400)
+        expect(mockFetch).not.toHaveBeenCalled()
+      })
+
+      it.each(['text/plain', 'application/json'])(
+        'returns 413 for a %s body declared over the cap, without calling GA',
+        async (contentType) => {
+          const res = await POST(
+            withType(JSON.stringify(event), contentType, { 'content-length': String(TRACK_MAX_BODY_BYTES + 1) })
+          )
+          expect(res.status).toBe(413)
+          expect(mockFetch).not.toHaveBeenCalled()
+        }
+      )
+
+      it.each(['text/plain', 'application/json'])(
+        'returns 413 for a %s body that streams past the cap without a content-length',
+        async (contentType) => {
+          const padded = JSON.stringify({ ...event, pad: 'x'.repeat(TRACK_MAX_BODY_BYTES) })
+          const res = await POST(streamed(padded, contentType))
+          expect(res.status).toBe(413)
+          expect(mockFetch).not.toHaveBeenCalled()
+        }
+      )
+
+      it('accepts the largest valid event (24 long params) well within the cap', async () => {
+        const params = Object.fromEntries(
+          Array.from({ length: 24 }, (_, i) => [`p${String(i).padStart(2, '0')}${'n'.repeat(36)}`, 'é'.repeat(100)])
+        )
+        const body = JSON.stringify({ event: 'e'.repeat(40), client_id: 'c'.repeat(100), params })
+        expect(new TextEncoder().encode(body).byteLength).toBeLessThan(TRACK_MAX_BODY_BYTES)
+        const res = await POST(withType(body, 'text/plain'))
+        expect(res.status).toBe(204)
+        expect(mockFetch).toHaveBeenCalledTimes(1)
+      })
     })
   })
 })

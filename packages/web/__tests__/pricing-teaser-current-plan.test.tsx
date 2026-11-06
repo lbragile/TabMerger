@@ -2,7 +2,8 @@
  * The home page's pricing teaser follows the signed-in visitor's plan with the pricing page's rule
  * (`planCardStatus`): Pro is Recommended unless the visitor already has it or a plan above it, and
  * the visitor's own paid plan shows "Current". The plan comes from the same server lookup the
- * pricing page uses (`getCurrentPlan`), so a paid tier counts only while its status is entitled.
+ * pricing page uses (`getCurrentPlan`, served to the browser by GET /api/plan and read there by
+ * `useVisitorPlan`), so a paid tier counts only while its status is entitled.
  */
 import { act, render, screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -33,6 +34,9 @@ vi.mock('@/lib/supabase/server', () => ({
   }),
 }))
 
+const visitor = vi.hoisted(() => ({ plan: undefined as unknown }))
+vi.mock('@/components/pricing/useVisitorPlan', () => ({ useVisitorPlan: () => visitor.plan }))
+
 import { PricingTeaserForVisitor } from '@/components/marketing/PricingTeaser'
 import { getCurrentPlan } from '@/lib/currentPlan'
 
@@ -44,10 +48,10 @@ function subscription(tier: string, status: string, aiMode: string | null = null
 async function renderFor(signedIn: boolean, row: Row | null = null) {
   db.user = signedIn ? { id: 'user-1' } : null
   db.subscription = row
-  const planPromise = getCurrentPlan()
+  // What GET /api/plan answers for this session, as the browser hook returns it.
+  visitor.plan = await getCurrentPlan()
   await act(async () => {
-    render(<PricingTeaserForVisitor planPromise={planPromise} />)
-    await planPromise
+    render(<PricingTeaserForVisitor />)
   })
 }
 

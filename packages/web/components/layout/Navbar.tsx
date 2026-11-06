@@ -1,31 +1,24 @@
 import { Suspense } from "react";
-import NextLink from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
-import { createClient } from "@/lib/supabase/server";
-import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { AccountMenuLoader } from "@/components/layout/AccountMenuLoader";
+import { NavAccountProvider, NavAccountSlot } from "@/components/layout/NavAccount";
 import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { GithubStars, GithubStarsFallback } from "@/components/layout/GithubStars";
 import { getGithubStarCount } from "@/lib/githubStats";
 
+/**
+ * The site header. Reads nothing per request, so the pages around it can be rendered at build
+ * time: the account controls are resolved in the browser (`NavAccountProvider`), the star count
+ * comes from a revalidated fetch.
+ */
 export async function Navbar() {
     // Started, not awaited: the header renders straight away and the star count streams in
     // behind a Suspense boundary. The one promise feeds both the badge and the mobile panel.
     const starsPromise = getGithubStarCount();
     const t = await getTranslations("nav");
-
-    const supabase = await createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    const initials = user?.email
-        ? user.email.slice(0, 2).toUpperCase()
-        : undefined;
 
     return (
         <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
@@ -80,36 +73,22 @@ export async function Navbar() {
                     </nav>
                 </div>
                 <div className="flex flex-1 items-center justify-end space-x-2">
-                    <div className="flex items-center gap-2.5">
-                        <Suspense fallback={<GithubStarsFallback />}>
-                            <GithubStars starsPromise={starsPromise} />
-                        </Suspense>
-                        {/* At every width, beside the theme toggle: below lg just the icon, the same
-                            2.25rem bordered square as the toggle. */}
-                        <LanguageSwitcher codeClassName="hidden lg:inline" />
-                        <ThemeToggle />
-                        {/* Sign-in/account controls move into the mobile hamburger panel below md */}
-                        <div className="hidden items-center gap-2.5 md:flex">
-                            {user ? (
-                                <AccountMenuLoader email={user.email ?? ""} initials={initials} />
-                            ) : (
-                                <>
-                                    {/* The theme toggle and the GitHub badge have a 1px border; these two get one too (transparent
-                                        or the fill colour), so all four are the same 36px box and the browser snaps
-                                        them to the same device pixels at any zoom. */}
-                                    <Button variant="ghost" size="sm" className="border border-transparent" asChild>
-                                        <NextLink href="/auth/sign-in">{t("signIn")}</NextLink>
-                                    </Button>
-                                    <Button size="sm" className="border border-primary" asChild>
-                                        <NextLink href="/auth/sign-up">
-                                            {t("getStarted")}
-                                        </NextLink>
-                                    </Button>
-                                </>
-                            )}
+                    <NavAccountProvider>
+                        <div className="flex items-center gap-2.5">
+                            <Suspense fallback={<GithubStarsFallback />}>
+                                <GithubStars starsPromise={starsPromise} />
+                            </Suspense>
+                            {/* At every width, beside the theme toggle: below lg just the icon, the same
+                                2.25rem bordered square as the toggle. */}
+                            <LanguageSwitcher codeClassName="hidden lg:inline" />
+                            <ThemeToggle />
+                            {/* Sign-in/account controls move into the mobile hamburger panel below md */}
+                            <div className="hidden items-center gap-2.5 md:flex">
+                                <NavAccountSlot />
+                            </div>
+                            <MobileNavToggle starsPromise={starsPromise} />
                         </div>
-                        <MobileNavToggle email={user?.email} initials={initials} starsPromise={starsPromise} />
-                    </div>
+                    </NavAccountProvider>
                 </div>
             </div>
         </header>

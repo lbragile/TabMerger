@@ -42,6 +42,8 @@
     "chooseModel": "בחירת מודל ה-AI"
   },
   "current": "נוכחית",
+  "loadingPlan": "טוען את התוכנית שלך",
+  "yourPlan": "התוכנית שלך: {plan}",
   "installFree": "התקנה בחינם",
   "switchToYearly": "מעבר לחיוב שנתי",
   "switchToMonthly": "מעבר לחיוב חודשי",

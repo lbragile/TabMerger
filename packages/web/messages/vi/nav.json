@@ -13,6 +13,7 @@
   "openMenu": "Mở menu",
   "closeMenu": "Đóng menu",
   "accountMenu": "Menu tài khoản",
+  "loadingAccount": "Đang tải tài khoản",
   "home": "Trang chủ TabMerger",
   "github": "GitHub",
   "githubRepo": "TabMerger trên GitHub",

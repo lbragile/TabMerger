@@ -13,6 +13,7 @@
   "openMenu": "Menüyü aç",
   "closeMenu": "Menüyü kapat",
   "accountMenu": "Hesap menüsü",
+  "loadingAccount": "Hesap yükleniyor",
   "home": "TabMerger ana sayfa",
   "github": "GitHub",
   "githubRepo": "GitHub'da TabMerger",

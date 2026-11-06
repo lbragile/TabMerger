@@ -7,6 +7,8 @@
  * Store's elevated review tier entirely. Title comes from chrome.tabs (tab.title),
  * already available without any extra permission.
  */
+import { SIMPLE_JSON_CONTENT_TYPE } from './simpleRequest';
+
 export interface PageMeta {
   description: string | null;
   ogImage: string | null;
@@ -19,7 +21,8 @@ export async function getPageMetaForTab(url: string): Promise<PageMeta | null> {
   try {
     const res = await fetch(`${webAppUrl}/api/og-preview`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      // JSON body as text/plain: a CORS simple request, so no OPTIONS preflight (see simpleRequest.ts)
+      headers: { 'Content-Type': SIMPLE_JSON_CONTENT_TYPE },
       body: JSON.stringify({ url })
     });
     if (!res.ok) return null;

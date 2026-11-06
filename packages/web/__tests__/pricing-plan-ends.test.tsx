@@ -132,27 +132,30 @@ describe('without a plan set to end, or without a paid plan', () => {
 })
 
 describe('the pricing page', () => {
-  it('passes a plan set to end down with its date formatted on the server', async () => {
+  it('passes a plan set to end, read in the browser, down with its date formatted (UTC)', async () => {
     vi.resetModules()
     vi.doMock('next/headers', () => ({ headers: async () => new Headers() }))
-    vi.doMock('@/lib/currentPlan', () => ({
-      getCurrentPlan: vi.fn(async () => ({
-        signedIn: true,
-        tier: 'pro_ai' as const,
-        interval: 'monthly' as const,
-        aiMode: 'managed' as const,
-        periodEnd: '2026-11-26T12:00:00.000Z',
-        setToEnd: true,
-        pendingChange: null,
-      })),
+    const useVisitorPlan = vi.fn(() => ({
+      signedIn: true,
+      tier: 'pro_ai' as const,
+      interval: 'monthly' as const,
+      aiMode: 'managed' as const,
+      periodEnd: '2026-11-26T12:00:00.000Z',
+      setToEnd: true,
+      pendingChange: null,
     }))
-    const { default: PricingPage } = await import('@/app/[locale]/(marketing)/pricing/page')
-    render(await PricingPage())
+    vi.doMock('@/components/pricing/useVisitorPlan', () => ({ useVisitorPlan }))
+    try {
+      const { default: PricingPage } = await import('@/app/[locale]/(marketing)/pricing/page')
+      render(await PricingPage())
 
-    expectNote(cards().pro)
-    expectNote(cards().proAi)
-    vi.doUnmock('@/lib/currentPlan')
-    vi.doUnmock('next/headers')
+      expect(useVisitorPlan).toHaveBeenCalledWith({ withPendingChange: true })
+      expectNote(cards().pro)
+      expectNote(cards().proAi)
+    } finally {
+      vi.doUnmock('@/components/pricing/useVisitorPlan')
+      vi.doUnmock('next/headers')
+    }
   })
 })
 

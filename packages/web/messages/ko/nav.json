@@ -13,6 +13,7 @@
   "openMenu": "메뉴 열기",
   "closeMenu": "메뉴 닫기",
   "accountMenu": "계정 메뉴",
+  "loadingAccount": "계정 불러오는 중",
   "home": "TabMerger 홈",
   "github": "GitHub",
   "githubRepo": "GitHub의 TabMerger",

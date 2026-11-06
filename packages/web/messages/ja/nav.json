@@ -13,6 +13,7 @@
   "openMenu": "メニューを開く",
   "closeMenu": "メニューを閉じる",
   "accountMenu": "アカウントメニュー",
+  "loadingAccount": "アカウントを読み込み中",
   "home": "TabMergerのホーム",
   "github": "GitHub",
   "githubRepo": "GitHubのTabMerger",

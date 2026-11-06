@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import type { AiMode } from '@tabmerger/shared'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TierBadge, TierFeatureIcon } from './TierBadge'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -16,12 +17,16 @@ import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 import { useListPrice, useZeroPrice } from './priceFormat'
 import type { TierFeature } from './tierFeatures'
 import { AiOptionSwitch } from './AiOptionSwitch'
-import { AI_OPTION_ORDER, initialAiMode, isAiOptionAvailable } from './aiOptions'
+import { AI_OPTION_ORDER, isAiOptionAvailable } from './aiOptions'
+import { useSeededAiMode } from './useSeededAiMode'
 import { usePlanChange } from './usePlanChange'
 import { normalizeTier, planCardStatus } from './planStatus'
 import type { PaidTierKey } from '@/lib/tiers'
 import type { PendingPlanChangeInfo } from '@/lib/currentPlan'
 import { PlanEndsNote, type PlanEnds } from './PlanEndsNote'
+
+/** Where a guest's checkout goes: sign in, then back to the pricing page. */
+const GUEST_CHECKOUT_SIGN_IN = '/auth/sign-in?redirectTo=/pricing'
 
 /** The card's full-width CTA: wraps instead of overflowing the card when a translated label is
  *  long, and keeps the usual 40px single-line height whenever it fits. */
@@ -95,6 +100,12 @@ interface PricingCardProps {
    * `cancel_scheduled`).
    */
   planEnds?: PlanEnds | null
+  /**
+   * The visitor's plan is still being read in the browser (the page is rendered ahead of time, the
+   * same for everyone). A paid card's button area is then a skeleton the size of a guest's button,
+   * marked busy; the badges show as for a guest until the plan is known.
+   */
+  planLoading?: boolean
 }
 
 export function PricingCard({
@@ -111,6 +122,7 @@ export function PricingCard({
   signedIn = false,
   scheduledChange,
   planEnds,
+  planLoading = false,
   ...singleOption
 }: PricingCardProps) {
   const router = useRouter()
@@ -124,7 +136,8 @@ export function PricingCard({
   const [loading, setLoading] = useState(false)
   const isProAi = tier === 'proAi'
   // Pro AI's option on show. Other plans have none; 'managed' keeps their checks simple.
-  const [aiMode, setAiMode] = useState<AiMode>(() => (isProAi ? initialAiMode(currentAiMode) : 'managed'))
+  const [seededAiMode, chooseAiMode] = useSeededAiMode(currentAiMode)
+  const aiMode: AiMode = isProAi ? seededAiMode : 'managed'
   const { monthlyPrice, yearlyPrice, displayMonthly, displayYearly, yearlySubtext, features } =
     aiOptions?.[aiMode] ?? singleOption
 
@@ -243,7 +256,7 @@ export function PricingCard({
       })
 
       if (res.status === 401) {
-        router.push('/auth/sign-in?redirectTo=/pricing')
+        router.push(GUEST_CHECKOUT_SIGN_IN)
         return
       }
 
@@ -373,8 +386,47 @@ export function PricingCard({
       <div className="mt-auto">
         {/* The Pro AI setup switch sits with the button, not near the price, so every card's
             title, price and feature list line up. */}
-        {aiOptions && <AiOptionSwitch value={aiMode} onChange={setAiMode} className="mb-4" />}
-        {isComingSoon ? (
+        {aiOptions && <AiOptionSwitch value={aiMode} onChange={chooseAiMode} className="mb-4" />}
+        {planLoading && !isFree ? (
+          <>
+            {/* Until the plan is known: the two buttons a visitor without a paid plan can get
+                ("Get …", "Upgrade to …"), hidden and stacked in one grid cell so the taller label
+                sets the box (either can wrap in a long translation), with the skeleton over them.
+                Subscriber-only states (a scheduled change or a plan set to end) are notes that
+                can be taller still; those subscribers see the card grow once, by design. */}
+            <div aria-busy="true" data-testid="cta-loading" data-plan-cta-skeleton="" className="relative grid">
+              <span className="sr-only">{t('loadingPlan')}</span>
+              <span aria-hidden="true" className={cn(buttonVariants(), CTA_CLASS, 'invisible [grid-area:1/1]')}>
+                {t('getPlan', { name })}
+              </span>
+              <span aria-hidden="true" className={cn(buttonVariants(), CTA_CLASS, 'invisible [grid-area:1/1]')}>
+                {t('upgradeTo', { name })}
+              </span>
+              <Skeleton aria-hidden="true" className="absolute inset-0 rounded-lg motion-reduce:animate-none" />
+            </div>
+            {/* Without scripts the plan is never read: the guest's way in, as the button would go
+                (checkout answers a guest with sign-in, back to this page). PricingTable hides the
+                skeleton then. */}
+            <noscript>
+              {isComingSoon ? (
+                <span className={cn(buttonVariants({ variant: 'outline' }), CTA_CLASS, 'cursor-not-allowed opacity-60')}>
+                  {common('comingSoon')}
+                </span>
+              ) : (
+                <a
+                  href={GUEST_CHECKOUT_SIGN_IN}
+                  className={cn(
+                    buttonVariants({ variant: highlighted ? 'default' : 'secondary' }),
+                    CTA_CLASS,
+                    highlighted && 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  )}
+                >
+                  {t('getPlan', { name })}
+                </a>
+              )}
+            </noscript>
+          </>
+        ) : isComingSoon ? (
           <Button
             variant="outline"
             className={cn(CTA_CLASS, 'cursor-not-allowed opacity-60')}

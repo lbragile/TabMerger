@@ -21,9 +21,54 @@
 export const DEPLOY_ENVS = ['production', 'preview', 'development'] as const
 export type DeployEnv = (typeof DEPLOY_ENVS)[number]
 
+/**
+ * The request headers one hosting platform's edge sets on every incoming request, overwriting any
+ * copy the client sent. Only the current platform's names are trusted ({@link deployPlatform}).
+ */
+export interface EdgeProvider {
+  /** Headers holding the client's address, in the order to try: the first one present wins. */
+  readonly clientIp: readonly string[]
+  /** Geo-IP country (ISO 3166-1 alpha-2). */
+  readonly country: string
+  /** Geo-IP subdivision (`QC`, or a full `CA-QC`). */
+  readonly region: string
+}
+
+/**
+ * Every hosting platform the server knows, keyed by its `DEPLOY_PLATFORM` name. Supporting a new
+ * host is one entry here (and its name in the deploy configuration): `lib/clientIp.ts` and
+ * `lib/consentRegions.ts` read their header names from this table.
+ *
+ * - `cloudflare`: `cf-connecting-ip` only. `cf-region-code` needs the zone's "Add visitor location
+ *   headers" Managed Transform; without it the country alone decides, and Quebec falls back to
+ *   Canada's opt-out.
+ * - `vercel`: `x-vercel-forwarded-for` first, because a proxy in front of Vercel could change
+ *   `x-forwarded-for`; then `x-real-ip`, then `x-forwarded-for`. Vercel overwrites all three and
+ *   doesn't forward a client-sent copy.
+ */
+export const EDGE_PROVIDERS = {
+  cloudflare: { clientIp: ['cf-connecting-ip'], country: 'cf-ipcountry', region: 'cf-region-code' },
+  vercel: {
+    clientIp: ['x-vercel-forwarded-for', 'x-real-ip', 'x-forwarded-for'],
+    country: 'x-vercel-ip-country',
+    region: 'x-vercel-ip-country-region',
+  },
+} as const satisfies Record<string, EdgeProvider>
+
 /** Hosting platforms whose request headers the server knows how to trust. */
-export const DEPLOY_PLATFORMS = ['cloudflare', 'vercel'] as const
-export type DeployPlatform = (typeof DEPLOY_PLATFORMS)[number]
+export type DeployPlatform = keyof typeof EDGE_PROVIDERS
+export const DEPLOY_PLATFORMS = Object.keys(EDGE_PROVIDERS) as readonly DeployPlatform[]
+
+/**
+ * Off any platform (local development, CI), the order in which each platform's geo headers are
+ * tried. The e2e tests send Vercel's names.
+ */
+export const OFF_PLATFORM_GEO_ORDER: readonly DeployPlatform[] = ['vercel', 'cloudflare']
+
+/** Whether `value` names a platform in {@link EDGE_PROVIDERS}. */
+export function isDeployPlatform(value: string | undefined): value is DeployPlatform {
+  return value !== undefined && Object.hasOwn(EDGE_PROVIDERS, value)
+}
 
 /** `value` when it names a known deployment, else `development` (local, CI, tests, typos). */
 export function normalizeDeployEnv(value: string | undefined): DeployEnv {
@@ -130,13 +175,13 @@ export function deploymentId(): string | undefined {
 
 /**
  * The hosting platform, which decides which request headers the server may trust (client IP,
- * geo). `DEPLOY_PLATFORM` when it is `cloudflare` or `vercel`; else `vercel` when Vercel's own
+ * geo). `DEPLOY_PLATFORM` when it names an {@link EDGE_PROVIDERS} entry; else `vercel` when Vercel's own
  * `VERCEL=1` is set; else null (local development, CI, tests), where every header is whatever
  * the client sent.
  */
 export function deployPlatform(): DeployPlatform | null {
   const configured = process.env.DEPLOY_PLATFORM
-  if (configured === 'cloudflare' || configured === 'vercel') return configured
+  if (isDeployPlatform(configured)) return configured
   if (process.env.VERCEL === '1') return 'vercel'
   return null
 }

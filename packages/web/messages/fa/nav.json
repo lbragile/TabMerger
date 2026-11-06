@@ -13,6 +13,7 @@
   "openMenu": "باز کردن منو",
   "closeMenu": "بستن منو",
   "accountMenu": "منوی حساب",
+  "loadingAccount": "در حال بارگذاری حساب",
   "home": "صفحهٔ اصلی TabMerger",
   "github": "GitHub",
   "githubRepo": "TabMerger در GitHub",

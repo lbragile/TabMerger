@@ -143,7 +143,7 @@ describe('TabPreview', () => {
     await waitFor(() => expect(document.querySelector('img[src="https://img.example.com/og.png"]')).not.toBeNull())
     expect(fetch).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       body: JSON.stringify({ url: 'https://example.com' }),
     })
   })

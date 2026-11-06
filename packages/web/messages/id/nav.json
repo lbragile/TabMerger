@@ -13,6 +13,7 @@
   "openMenu": "Buka menu",
   "closeMenu": "Tutup menu",
   "accountMenu": "Menu akun",
+  "loadingAccount": "Memuat akun",
   "home": "Beranda TabMerger",
   "github": "GitHub",
   "githubRepo": "TabMerger di GitHub",

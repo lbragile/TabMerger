@@ -88,7 +88,7 @@ describe('MobileNavToggle language', () => {
 describe('MobileNavToggle — analytics privacy', () => {
   it('keeps the signed-in email out of analytics', async () => {
     const user = userEvent.setup()
-    render(<MobileNavToggle email="someone@example.test" initials="SO" />)
+    render(<MobileNavToggle account={{ status: 'signedIn', email: 'someone@example.test', initials: 'SO' }} />)
     await act(async () => {
       await user.click(screen.getByRole('button', { name: 'Open menu' }))
     })

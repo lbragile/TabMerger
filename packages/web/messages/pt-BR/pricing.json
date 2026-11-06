@@ -42,6 +42,8 @@
     "chooseModel": "Escolha seu modelo de IA"
   },
   "current": "Atual",
+  "loadingPlan": "Carregando seu plano",
+  "yourPlan": "Seu plano: {plan}",
   "installFree": "Instalar grátis",
   "switchToYearly": "Mudar para cobrança anual",
   "switchToMonthly": "Mudar para cobrança mensal",
