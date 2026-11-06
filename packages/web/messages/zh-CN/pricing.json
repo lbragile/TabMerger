@@ -1,6 +1,7 @@
 {
   "monthly": "按月",
   "yearly": "按年",
+  "billingPeriod": "计费周期",
   "discountBadge": "−{percent}%",
   "recommended": "推荐",
   "forever": "永久",

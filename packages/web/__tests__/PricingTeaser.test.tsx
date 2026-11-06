@@ -210,4 +210,19 @@ describe('PricingTeaser', () => {
     const link = screen.getByRole('link', { name: /see full pricing/i })
     expect(link).toHaveAttribute('href', '/pricing')
   })
+
+  it('labels the Monthly/Yearly toggle as a group and marks the chosen option pressed', async () => {
+    const user = userEvent.setup()
+    render(<PricingTeaser />)
+    const group = screen.getByRole('group', { name: 'Billing period' })
+    const monthly = within(group).getByRole('button', { name: 'Monthly' })
+    const yearly = within(group).getByRole('button', { name: /Yearly/ })
+    expect(monthly).toHaveAttribute('aria-pressed', 'true')
+    expect(yearly).toHaveAttribute('aria-pressed', 'false')
+    expect(yearly).toHaveAttribute('type', 'button')
+
+    await user.click(yearly)
+    expect(monthly).toHaveAttribute('aria-pressed', 'false')
+    expect(yearly).toHaveAttribute('aria-pressed', 'true')
+  })
 })

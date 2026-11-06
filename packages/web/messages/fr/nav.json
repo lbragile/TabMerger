@@ -12,6 +12,7 @@
   "signOut": "Se déconnecter",
   "openMenu": "Ouvrir le menu",
   "closeMenu": "Fermer le menu",
+  "mobileMenu": "Menu",
   "accountMenu": "Menu du compte",
   "loadingAccount": "Chargement du compte",
   "home": "Accueil TabMerger",

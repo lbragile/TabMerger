@@ -1,6 +1,7 @@
 {
   "monthly": "मासिक",
   "yearly": "वार्षिक",
+  "billingPeriod": "बिलिंग अवधि",
   "discountBadge": "−{percent}%",
   "recommended": "अनुशंसित",
   "forever": "हमेशा के लिए",

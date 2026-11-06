@@ -1,6 +1,7 @@
 {
   "monthly": "Ежемесячно",
   "yearly": "Ежегодно",
+  "billingPeriod": "Период оплаты",
   "discountBadge": "−{percent}%",
   "recommended": "Рекомендуем",
   "forever": "навсегда",

@@ -63,11 +63,13 @@ export function PricingTable({
           <style>{PLAN_CTA_SKELETON_NOSCRIPT_CSS}</style>
         </noscript>
       )}
-      {/* Segmented toggle */}
-      <div className="inline-flex rounded-md p-[3px] bg-surface3 border border-border text-sm">
+      {/* Segmented toggle: a labelled group of toggle buttons, the chosen one pressed. */}
+      <div role="group" aria-label={t('billingPeriod')} className="inline-flex rounded-md p-[3px] bg-surface3 border border-border text-sm">
         {(['monthly', 'yearly'] as const).map((opt) => (
           <button
             key={opt}
+            type="button"
+            aria-pressed={interval === opt}
             onClick={() => setInterval(opt)}
             className={cn(
               'h-[30px] px-4 rounded-lg font-medium transition-colors text-[13px] flex items-center gap-1.5 cursor-pointer',

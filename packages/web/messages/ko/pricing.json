@@ -1,6 +1,7 @@
 {
   "monthly": "월간",
   "yearly": "연간",
+  "billingPeriod": "결제 주기",
   "discountBadge": "−{percent}%",
   "recommended": "추천",
   "forever": "평생",

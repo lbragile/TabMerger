@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto'
 import { isIP } from 'node:net'
 import { deployPlatform, EDGE_PROVIDERS, type DeployPlatform } from '@/lib/deployment'
 
@@ -69,3 +70,14 @@ export function ipRateLimitKey(raw: string): string | null {
   return `6:${groups.slice(0, 4).map((g) => g.toString(16)).join(':')}::/64`
 }
 
+
+/**
+ * The stored form of an IP key: `ip:` + HMAC-SHA256 of the normalised key ({@link ipRateLimitKey}),
+ * so `rate_limit_counters` never holds a client address. Keyed with the service-role key, a
+ * server-only secret already in every environment; rotating it only resets the counters. Null
+ * when that secret is missing.
+ */
+export function hashIpKey(normalized: string, secret: string | undefined = process.env.SUPABASE_SERVICE_ROLE_KEY): string | null {
+  if (!secret) return null
+  return `ip:${createHmac('sha256', secret).update(normalized).digest('hex')}`
+}

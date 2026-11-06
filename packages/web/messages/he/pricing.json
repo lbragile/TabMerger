@@ -1,6 +1,7 @@
 {
   "monthly": "חודשי",
   "yearly": "שנתי",
+  "billingPeriod": "תקופת החיוב",
   "discountBadge": "−{percent}%",
   "recommended": "מומלץ",
   "forever": "לתמיד",

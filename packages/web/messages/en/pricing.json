@@ -1,6 +1,7 @@
 {
   "monthly": "Monthly",
   "yearly": "Yearly",
+  "billingPeriod": "Billing period",
   "discountBadge": "−{percent}%",
   "recommended": "Recommended",
   "forever": "forever",

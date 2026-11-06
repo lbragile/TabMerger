@@ -1,6 +1,7 @@
 {
   "monthly": "Hàng tháng",
   "yearly": "Hàng năm",
+  "billingPeriod": "Kỳ thanh toán",
   "discountBadge": "−{percent}%",
   "recommended": "Đề xuất",
   "forever": "trọn đời",

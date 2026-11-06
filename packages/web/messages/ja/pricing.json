@@ -1,6 +1,7 @@
 {
   "monthly": "月払い",
   "yearly": "年払い",
+  "billingPeriod": "支払いサイクル",
   "discountBadge": "−{percent}%",
   "recommended": "おすすめ",
   "forever": "無期限",

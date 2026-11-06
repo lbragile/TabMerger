@@ -1,6 +1,7 @@
 {
   "monthly": "شهريًا",
   "yearly": "سنويًا",
+  "billingPeriod": "فترة الفوترة",
   "discountBadge": "−{percent}%",
   "recommended": "موصى به",
   "forever": "للأبد",

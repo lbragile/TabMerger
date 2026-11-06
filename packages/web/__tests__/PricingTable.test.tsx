@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import { PricingTable } from '@/components/pricing/PricingTable'
@@ -120,5 +120,20 @@ describe('PricingTable', () => {
     expect(gridEl).not.toBeNull()
     expect(gridEl.className).toMatch(/grid-cols-1/)
     expect(gridEl.className).toMatch(/md:\[grid-template-columns:1fr_1\.1fr_1fr\]/)
+  })
+
+  it('labels the Monthly/Yearly toggle as a group and marks the chosen option pressed', async () => {
+    const user = userEvent.setup()
+    render(<PricingTable installHref="https://store.example/tabmerger" />)
+    const group = screen.getByRole('group', { name: 'Billing period' })
+    const monthly = within(group).getByRole('button', { name: 'Monthly' })
+    const yearly = within(group).getByRole('button', { name: /Yearly/ })
+    expect(monthly).toHaveAttribute('aria-pressed', 'true')
+    expect(yearly).toHaveAttribute('aria-pressed', 'false')
+    expect(monthly).toHaveAttribute('type', 'button')
+
+    await user.click(yearly)
+    expect(monthly).toHaveAttribute('aria-pressed', 'false')
+    expect(yearly).toHaveAttribute('aria-pressed', 'true')
   })
 })

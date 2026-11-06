@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { GA_MAX_CLIENT_ID, GA_MAX_PARAMS, GA_MAX_STRING_VALUE, GA_NAME, gaEnvironment, isGa4Configured, sendGa4Event } from '@/lib/ga4'
 import { readJsonBodyWithin } from '@/lib/ai-validation'
+import { limitTrackByIp } from '@/lib/publicRateLimits'
 
 /**
  * Largest body accepted, whatever its content type. The biggest valid event (a 40-character name,
@@ -41,10 +42,17 @@ const bodySchema = z.object({
  * Response: 204 on success or when GA isn't configured (fire-and-forget, matches GA's own
  * response and the extension's no-op-when-unconfigured pattern); 400 for a body that is not
  * JSON or does not fit the rules, 413 for one over the cap and 408 for one that doesn't arrive in
- * time, all without calling GA.
+ * time, all without calling GA. 429 with no body (and a `Retry-After`) for an address over its
+ * per-IP limit (`limitTrackByIp`, in memory), answered before the body is read; the extension
+ * ignores the status, so a limited event is simply dropped.
  */
 export async function POST(req: NextRequest) {
   if (!isGa4Configured('extension')) return new NextResponse(null, { status: 204 })
+
+  const limit = limitTrackByIp(req.headers)
+  if (limit.limited) {
+    return new NextResponse(null, { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } })
+  }
 
   const body = await readJsonBodyWithin(req, TRACK_MAX_BODY_BYTES)
   if (!body.ok) return new NextResponse(null, { status: body.reason === 'too_large' ? 413 : 408 })

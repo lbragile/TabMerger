@@ -73,11 +73,14 @@ export function PricingTeaser({ currentTier, currentAiMode }: PricingTeaserProps
           {t('title')}
         </h2>
 
-        {/* Monthly/Yearly toggle — mirrors the full pricing page's pill toggle */}
-        <div className="inline-flex rounded-lg p-[0.1875rem] bg-surface3 border border-border text-sm mb-10">
+        {/* Monthly/Yearly toggle — mirrors the full pricing page's pill toggle (a labelled group of
+            toggle buttons, the chosen one pressed) */}
+        <div role="group" aria-label={p('billingPeriod')} className="inline-flex rounded-lg p-[0.1875rem] bg-surface3 border border-border text-sm mb-10">
           {(['monthly', 'yearly'] as const).map((opt) => (
             <button
               key={opt}
+              type="button"
+              aria-pressed={interval === opt}
               onClick={() => setInterval(opt)}
               className={cn(
                 'h-[1.875rem] px-4 rounded-lg font-medium transition-colors text-[0.8125rem] flex items-center gap-1.5',

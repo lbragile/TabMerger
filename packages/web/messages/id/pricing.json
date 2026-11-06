@@ -1,6 +1,7 @@
 {
   "monthly": "Bulanan",
   "yearly": "Tahunan",
+  "billingPeriod": "Periode tagihan",
   "discountBadge": "−{percent}%",
   "recommended": "Direkomendasikan",
   "forever": "selamanya",

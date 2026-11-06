@@ -12,6 +12,7 @@
   "signOut": "Keluar",
   "openMenu": "Buka menu",
   "closeMenu": "Tutup menu",
+  "mobileMenu": "Menu",
   "accountMenu": "Menu akun",
   "loadingAccount": "Memuat akun",
   "home": "Beranda TabMerger",

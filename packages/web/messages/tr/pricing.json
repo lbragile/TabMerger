@@ -1,6 +1,7 @@
 {
   "monthly": "Aylık",
   "yearly": "Yıllık",
+  "billingPeriod": "Faturalandırma dönemi",
   "discountBadge": "−%{percent}",
   "recommended": "Önerilen",
   "forever": "süresiz",

@@ -12,6 +12,7 @@
   "signOut": "Выйти",
   "openMenu": "Открыть меню",
   "closeMenu": "Закрыть меню",
+  "mobileMenu": "Меню",
   "accountMenu": "Меню аккаунта",
   "loadingAccount": "Загрузка аккаунта",
   "home": "Главная TabMerger",

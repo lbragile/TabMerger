@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readJsonBodyWithin } from '@/lib/ai-validation'
+import { limitOgPreviewByIp } from '@/lib/publicRateLimits'
 import { lookup } from 'node:dns/promises'
 import { isPrivateHost } from '@/lib/privateAddress'
 import { request as httpRequest } from 'node:http'
@@ -238,10 +239,10 @@ async function fetchCapped(startUrl: string): Promise<{ body: string; finalUrl: 
 // fails silently client-side and Tab Preview just shows nothing.
 // `Cache-Control: no-store` on every response: nothing about this request
 // (including which URL was asked about) should be cached anywhere.
-function jsonResponse(body: unknown, init?: { status?: number }): NextResponse {
+function jsonResponse(body: unknown, init?: { status?: number; headers?: Record<string, string> }): NextResponse {
   return NextResponse.json(body, {
-    ...init,
-    headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' },
+    status: init?.status,
+    headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store', ...init?.headers },
   })
 }
 
@@ -334,7 +335,20 @@ export async function readPreviewRequestUrl(
   return { ok: true, url }
 }
 
+/**
+ * Before the body is read: an address over its per-IP limit (`limitOgPreviewByIp`) gets 429 with
+ * the usual empty preview and a `Retry-After`, and nothing is fetched. The extension and the share
+ * page both treat a non-ok answer as "no preview".
+ */
 export async function POST(req: NextRequest) {
+  const limit = await limitOgPreviewByIp(req.headers)
+  if (limit.limited) {
+    return jsonResponse(
+      { ogImage: null, description: null },
+      { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+    )
+  }
+
   const read = await readPreviewRequestUrl(req)
   if (!read.ok) return jsonResponse({ ogImage: null, description: null }, { status: read.status })
   const raw = read.url

@@ -1,6 +1,7 @@
 {
   "monthly": "ماهانه",
   "yearly": "سالانه",
+  "billingPeriod": "دوره پرداخت",
   "discountBadge": "−{percent}٪",
   "recommended": "پیشنهادی",
   "forever": "برای همیشه",

@@ -1,9 +1,8 @@
-import { createHmac } from 'node:crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { AI_ERROR_CODES } from '@tabmerger/shared'
 import { createServiceRoleClient } from '@/lib/supabase/server'
-import { ipRateLimitKey, trustedClientAddress } from '@/lib/clientIp'
+import { hashIpKey, ipRateLimitKey, trustedClientAddress } from '@/lib/clientIp'
 import { deployPlatform, type DeployPlatform } from '@/lib/deployment'
 import {
   rateLimitedResponse,
@@ -125,20 +124,9 @@ export function limiterUnavailableResponse(): NextResponse {
 
 // --- Client IP ------------------------------------------------------------------------------
 
-// Address normalisation lives in lib/clientIp.ts (shared with the support forms); re-exported so
-// callers and tests can keep importing it from here.
-export { ipRateLimitKey }
-
-/**
- * The stored form of an IP key: `ip:` + HMAC-SHA256 of the normalised key ({@link ipRateLimitKey}),
- * so `rate_limit_counters` never holds a client address. Keyed with the service-role key, a
- * server-only secret already in every environment; rotating it only resets the counters. Null
- * when that secret is missing.
- */
-export function hashIpKey(normalized: string, secret: string | undefined = process.env.SUPABASE_SERVICE_ROLE_KEY): string | null {
-  if (!secret) return null
-  return `ip:${createHmac('sha256', secret).update(normalized).digest('hex')}`
-}
+// Address normalisation and hashing live in lib/clientIp.ts (shared with the support forms and
+// the og-preview limit); re-exported so callers and tests can keep importing them from here.
+export { hashIpKey, ipRateLimitKey }
 
 /**
  * The caller's rate-limit IP key (hashed, see {@link hashIpKey}), from the one header the hosting
