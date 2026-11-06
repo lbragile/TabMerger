@@ -57,6 +57,9 @@ supabase/.branches/
 .sentry/
 packages/web/.next/static/chunks/*.js.map
 
+# Build-time copies made by packages/web/scripts (e.g. CHANGELOG.md for /changelog)
+packages/web/generated/
+
 # Test outputs
 coverage/
 playwright-report/
@@ -86,6 +89,12 @@ packages/web/e2e/.auth/
 !packages/web/e2e/**/*-snapshots/**/*.png
 !packages/extension/e2e/**/*-snapshots/**/*.png
 .vercel
+# Cloudflare Workers (OpenNext): build output, Wrangler's local state, and local secrets
+# (.dev.vars is Wrangler's .env equivalent; only the committed example is allowed)
+.open-next
+.wrangler
+.dev.vars*
+!.dev.vars.example
 
 # Private local notes: kept on disk and backed up to the private repo, never committed here.
 # Agent-memory notes are private when named feedback_*, project_* or user_*; MEMORY.private.md

@@ -204,7 +204,7 @@ describe('PrivacyPage', () => {
 
   it('shows the date of the latest revision', () => {
     render(<PrivacyPage />)
-    expect(screen.getByText('Last updated: October 29, 2026')).toBeInTheDocument()
+    expect(screen.getByText('Last updated: November 4, 2026')).toBeInTheDocument()
   })
 
   it('discloses the AI abuse limits: per account and IP, IP never stored as is, deleted within days', () => {

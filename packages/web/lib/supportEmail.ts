@@ -1,5 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { Resend } from 'resend'
+import { ipRateLimitKey, trustedClientAddress } from '@/lib/clientIp'
+import { deployCommitRef, deployCommitSha, deploymentId, deployPlatform, rawDeployEnv, type DeployPlatform } from '@/lib/deployment'
 import { isEmailAddress } from '@/lib/emailAddress'
 import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 
@@ -29,7 +31,7 @@ export function isSenderAddress(value: string): boolean {
 /**
  * The first set and valid value among the named env vars, else `fallback`. A set
  * but invalid value is skipped with a warning that names the variable only (the
- * value may be a personal address), so a typo in Vercel can't put arbitrary text
+ * value may be a personal address), so a typo in the host settings can't put arbitrary text
  * into an email header and still delivers to the public support inbox.
  */
 function addressFromEnv(names: string[], isValid: (value: string) => boolean, fallback: string): string {
@@ -79,9 +81,18 @@ export function createRateLimiter(max: number, windowMs: number): (ip: string) =
   }
 }
 
-/** First address in `x-forwarded-for`, used only as a rate-limit key (never logged or emailed). */
-export function getClientIp(req: NextRequest): string {
-  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+/**
+ * The rate-limit key for a support-form request (never logged or emailed): the client address
+ * from the header the hosting platform sets ({@link trustedClientAddress}, the same source as the
+ * AI per-IP limit), normalised so an IPv6 client counts once per /64 ({@link ipRateLimitKey}).
+ * Off a known platform (local development, CI) it falls back to the first `x-forwarded-for`
+ * address so the limit can still be exercised there. `unknown` when there is no usable address.
+ */
+export function getClientIp(req: NextRequest, platform: DeployPlatform | null = deployPlatform()): string {
+  const raw = platform
+    ? trustedClientAddress(req.headers, platform)
+    : req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+  return (raw && ipRateLimitKey(raw)) || 'unknown'
 }
 
 /**
@@ -119,10 +130,10 @@ export function describeBrowser(userAgent: string | null): string {
  * production, `[preview]` etc. elsewhere.
  */
 export function buildDiagnostics(req: NextRequest): { env: string; envTag: string; text: string } {
-  const env = process.env.VERCEL_ENV || process.env.NODE_ENV || 'unknown'
-  const sha = process.env.VERCEL_GIT_COMMIT_SHA
-  const branch = process.env.VERCEL_GIT_COMMIT_REF
-  const deployment = process.env.VERCEL_DEPLOYMENT_ID
+  const env = rawDeployEnv() || process.env.NODE_ENV || 'unknown'
+  const sha = deployCommitSha()
+  const branch = deployCommitRef()
+  const deployment = deploymentId()
   const site = process.env.NEXT_PUBLIC_APP_URL || req.nextUrl.origin
   let page = 'unknown'
   let topic: string | null = null
@@ -156,7 +167,7 @@ export function buildDiagnostics(req: NextRequest): { env: string; envTag: strin
  * Logs only the error shape (name/statusCode) under `[<logTag>] send failed`,
  * never `error.message` (Resend messages can embed the recipient/sender
  * address) and never anything the submitter typed. This is the only signal
- * Vercel logs get for a Resend refusal, so without it a failure is silent.
+ * the host's logs get for a Resend refusal, so without it a failure is silent.
  * Callers answer the client with a generic failure; nothing from Resend is echoed.
  */
 export async function sendSupportEmail(

@@ -11,9 +11,9 @@ const { notFound } = vi.hoisted(() => ({
 vi.mock('next/navigation', () => ({ notFound }))
 
 /** Loads the page fresh so its module-scope metadata is evaluated under the stubbed env. */
-async function loadBetaPage(vercelEnv: string) {
+async function loadBetaPage(vercelEnv: string, deployEnv = '') {
   vi.stubEnv('VERCEL_ENV', vercelEnv)
-  vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', vercelEnv)
+  vi.stubEnv('DEPLOY_ENV', deployEnv)
   vi.resetModules()
   return import('@/app/[locale]/(marketing)/beta/page')
 }
@@ -32,6 +32,20 @@ describe('BetaPage production gate', () => {
     const { default: BetaPage } = await loadBetaPage('production')
     expect(() => BetaPage()).toThrow('NEXT_HTTP_ERROR_FALLBACK;404')
     expect(notFound).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([
+    ['DEPLOY_ENV=production alone', '', 'production'],
+    ['DEPLOY_ENV=production over VERCEL_ENV=preview', 'preview', 'production'],
+  ])('answers 404 for %s', async (_label, vercelEnv, deployEnv) => {
+    const { default: BetaPage } = await loadBetaPage(vercelEnv, deployEnv)
+    expect(() => BetaPage()).toThrow('NEXT_HTTP_ERROR_FALLBACK;404')
+  })
+
+  it('renders the guide when DEPLOY_ENV=preview overrides VERCEL_ENV=production', async () => {
+    const { default: BetaPage } = await loadBetaPage('production', 'preview')
+    render(<BetaPage />)
+    expect(notFound).not.toHaveBeenCalled()
   })
 
   it.each([

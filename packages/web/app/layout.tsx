@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { VercelInsights } from '@/components/VercelInsights'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -74,16 +73,6 @@ export default async function RootLayout({
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
             <ConsentedGoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
           )}
-        </DeferredOnLoad>
-        {/* Vercel Web Analytics + Speed Insights. The `/next` entry points hook
-            into the App Router, so client-side navigations are counted as page
-            views — the plain `/react` entry would only see the first load.
-            Both are cookieless and load same-origin scripts from /_vercel/*.
-            They only report once enabled in the Vercel dashboard (Analytics and
-            Speed Insights tabs); in local dev they run in debug mode and send
-            nothing. */}
-        <DeferredOnLoad>
-          <VercelInsights />
         </DeferredOnLoad>
       </body>
     </html>

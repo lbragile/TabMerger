@@ -8,3 +8,4 @@
 - [CI matrix gates](learnings_ci_matrix_gates.md) — aggregator jobs keep required check names stable, `strategy.job-total` shard count, fullyParallel sharding, artifact layout after per-package split, actionlint via docker
 - [History rewrite drops semantic-release notes](learnings_history_rewrite_semantic_release_notes.md) — recreate refs/notes/semantic-release-<tag> on rewritten tag commits, or the next beta recomputes an existing version and leaves a stray release commit
 - [Junk "closes" link in release notes](learnings_changelog_junk_closes_link.md) — PR-body anchors parsed as issue refs; issuePrefixes workaround, template URLs
+- [Cloudflare OpenNext spike](learnings_cloudflare_opennext_spike.md) — Windows build fails, Docker works, size ~5.2 MiB gz, changelog fs breaks

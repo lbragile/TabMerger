@@ -146,6 +146,9 @@ beforeEach(() => {
   vi.stubEnv('ANTHROPIC_API_KEY', '')
   vi.stubEnv('VERCEL_ENV', '')
   vi.stubEnv('VERCEL', '')
+  vi.stubEnv('DEPLOY_ENV', '')
+  vi.stubEnv('DEPLOY_PLATFORM', '')
+  vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', '')
   vi.stubEnv('AI_MOCK_SCENARIO', '')
   vi.spyOn(console, 'error').mockImplementation(() => {})
   consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -177,10 +180,26 @@ describe('gate', () => {
     ['Vercel production', { VERCEL_ENV: 'production' }],
     ['vercel dev', { VERCEL_ENV: 'development' }],
     ['Vercel build (VERCEL=1)', { VERCEL: '1' }],
+    // Any host, through the host-neutral variables (lib/deployment.ts), exactly like Vercel's.
+    ['DEPLOY_ENV=preview deployment', { DEPLOY_ENV: 'preview' }],
+    ['DEPLOY_ENV=production deployment', { DEPLOY_ENV: 'production' }],
+    ['DEPLOY_ENV=development deployment', { DEPLOY_ENV: 'development' }],
+    ['deployment with any DEPLOY_ENV value', { DEPLOY_ENV: 'staging' }],
+    ['Cloudflare deployment (DEPLOY_PLATFORM=cloudflare)', { DEPLOY_PLATFORM: 'cloudflare' }],
+    ['DEPLOY_PLATFORM=vercel deployment', { DEPLOY_PLATFORM: 'vercel' }],
+    ['deployment with an unknown DEPLOY_PLATFORM', { DEPLOY_PLATFORM: 'other' }],
+    ['build stamped for preview (NEXT_PUBLIC_DEPLOY_ENV)', { NEXT_PUBLIC_DEPLOY_ENV: 'preview' }],
+    ['build stamped for production (NEXT_PUBLIC_DEPLOY_ENV)', { NEXT_PUBLIC_DEPLOY_ENV: 'production' }],
   ])('is off on a %s even with AI_MOCK=true', (_label, env) => {
     mockOn()
     for (const [name, value] of Object.entries(env)) vi.stubEnv(name, value)
     expect(aiMockEnabled()).toBe(false)
+  })
+
+  it('stays on for a local build, whose NEXT_PUBLIC_DEPLOY_ENV defaults to development', () => {
+    mockOn()
+    vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', 'development')
+    expect(aiMockEnabled()).toBe(true)
   })
 
   it.each([undefined, '', 'false', 'TRUE', '1', ' true'])('is off when AI_MOCK is %j', (value) => {
@@ -733,6 +752,8 @@ describe('mock off', () => {
     ['AI_MOCK=true in a test build', { AI_MOCK: 'true' }],
     ['AI_MOCK=true in a production build', { AI_MOCK: 'true', NODE_ENV: 'production' }],
     ['AI_MOCK=true on Vercel', { AI_MOCK: 'true', NODE_ENV: 'development', VERCEL_ENV: 'preview' }],
+    ['AI_MOCK=true on Cloudflare', { AI_MOCK: 'true', NODE_ENV: 'development', DEPLOY_PLATFORM: 'cloudflare', DEPLOY_ENV: 'preview' }],
+    ['AI_MOCK=true with only DEPLOY_ENV set', { AI_MOCK: 'true', NODE_ENV: 'development', DEPLOY_ENV: 'production' }],
   ])('%s: the real model call runs and no mock header is set', async (_label, env) => {
     for (const [name, value] of Object.entries(env)) vi.stubEnv(name, value)
     sdk.countTokens.mockReset().mockResolvedValue({ input_tokens: 400 })

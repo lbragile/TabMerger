@@ -101,6 +101,20 @@ describe('applyPostHogConsent', () => {
     expect(fake.register).toHaveBeenCalledWith({ environment: expect.any(String) })
   })
 
+  it.each(['production', 'preview'])('registers environment=%s from NEXT_PUBLIC_DEPLOY_ENV', (env) => {
+    vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', env)
+    applyPostHogConsent(instance, KEY, 'granted')
+    expect(fake.register).toHaveBeenCalledWith({ environment: env })
+  })
+
+  it('registers development when NEXT_PUBLIC_DEPLOY_ENV is unset and ignores the server-side names', () => {
+    vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', '')
+    vi.stubEnv('VERCEL_ENV', 'production')
+    vi.stubEnv('DEPLOY_ENV', 'production')
+    applyPostHogConsent(instance, KEY, 'granted')
+    expect(fake.register).toHaveBeenCalledWith({ environment: 'development' })
+  })
+
   it('does not start PostHog at all after a stored Reject', () => {
     applyPostHogConsent(instance, KEY, 'denied')
     expect(fake.init).not.toHaveBeenCalled()

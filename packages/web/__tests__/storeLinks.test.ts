@@ -19,7 +19,6 @@ const EDGE_STABLE = 'https://microsoftedge.microsoft.com/addons/detail/tabmerger
 
 function stubDeployment(vercelEnv: string) {
   vi.stubEnv('VERCEL_ENV', vercelEnv)
-  vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', '')
 }
 
 describe('getStoreLinks', () => {
@@ -43,6 +42,16 @@ describe('getStoreLinks', () => {
       firefox: '/beta?download=firefox#firefox',
       edge: CHROME_BETA,
     })
+  })
+
+  it.each([
+    ['DEPLOY_ENV alone', { DEPLOY_ENV: 'production', VERCEL_ENV: '' }, STABLE_STORE_LINKS],
+    ['DEPLOY_ENV winning over a preview VERCEL_ENV', { DEPLOY_ENV: 'production', VERCEL_ENV: 'preview' }, STABLE_STORE_LINKS],
+    ['DEPLOY_ENV preview winning over a production VERCEL_ENV', { DEPLOY_ENV: 'preview', VERCEL_ENV: 'production' }, BETA_STORE_LINKS],
+    ['VERCEL_ENV as the fallback', { DEPLOY_ENV: '', VERCEL_ENV: 'production' }, STABLE_STORE_LINKS],
+  ])('picks the targets from %s', (_label, env, expected) => {
+    for (const [k, v] of Object.entries(env)) vi.stubEnv(k, v)
+    expect(getStoreLinks()).toEqual(expected)
   })
 
   it('does not treat a production build (NODE_ENV) as the production deployment', () => {

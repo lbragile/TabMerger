@@ -1,9 +1,15 @@
 import type { NextConfig } from 'next'
 import path from 'path'
-import { withSentryConfig } from '@sentry/nextjs'
+import { withSentryConfig } from '@sentry/nextjs/config'
 import createNextIntlPlugin from 'next-intl/plugin'
 import { FIREFOX_BETA } from '@tabmerger/shared'
-import { isPreviewDeployment } from './lib/deployment'
+import { deployEnv, isPreviewDeployment } from './lib/deployment'
+import { generateChangelogModule } from './scripts/generate-changelog.mjs'
+
+// /changelog's release notes are compiled in from the repo-root CHANGELOG.md (no runtime file
+// read). Done here so every `next dev` and `next build` refreshes them, whatever command runs
+// Next; throws, failing the build, when CHANGELOG.md is missing.
+generateChangelogModule()
 
 /**
  * Public base of the Vercel Blob store CI uploads the self-distributed Firefox beta build to
@@ -14,15 +20,33 @@ import { isPreviewDeployment } from './lib/deployment'
 const FIREFOX_BETA_BLOB_BASE_URL = process.env.FIREFOX_BETA_BLOB_BASE_URL
 
 /**
- * `X-Robots-Tag: noindex` on every response of a Vercel preview deployment (the beta testers'
- * site), so it never competes with production in search results. Vercel doesn't add one there:
- * the preview is served on a `*.vercel.app` alias, which is indexable by default.
+ * Values written into the bundles at build time (server and browser alike, wherever the exact
+ * `process.env.NAME` appears):
+ * - `NEXT_PUBLIC_DEPLOY_ENV`: the deployment environment for browser code (analytics, Sentry,
+ *   PostHog), derived here from `DEPLOY_ENV`, else Vercel's `VERCEL_ENV`, so a deploy sets one
+ *   variable for server and browser alike. Always defined: `development` locally.
+ * - `DEPLOY_COMMIT_SHA` / `DEPLOY_COMMIT_REF`: only when set for the build, so a host can stamp
+ *   the commit once at build time. Unset, server code keeps reading them (or Vercel's
+ *   `VERCEL_GIT_COMMIT_*`) at runtime.
+ */
+export function buildTimeEnv(): Record<string, string> {
+  const env: Record<string, string> = { NEXT_PUBLIC_DEPLOY_ENV: deployEnv() }
+  for (const name of ['DEPLOY_COMMIT_SHA', 'DEPLOY_COMMIT_REF'] as const) {
+    const value = process.env[name]
+    if (value) env[name] = value
+  }
+  return env
+}
+
+/**
+ * `X-Robots-Tag: noindex` on every response of the preview deployment (the beta testers' site),
+ * so it never competes with production in search results. Hosts don't add one there.
  *
- * Only `VERCEL_ENV === 'preview'` (`isPreviewDeployment()`), not "anything but production": local
+ * Only the preview environment (`isPreviewDeployment()`), not "anything but production": local
  * development and CI's `next start` (Lighthouse scores the SEO category, including is-crawlable)
- * have no `VERCEL_ENV` and must stay indexable. Evaluated when the site is built; the preview and
- * production sites are separate builds (`vercel build` vs `vercel build --prod`), each with its own
- * `VERCEL_ENV`. A header rather than a robots meta tag, so a 404 still carries exactly one meta.
+ * have no deployment environment and must stay indexable. Evaluated when the site is built; the
+ * preview and production sites are separate builds, each with its own `DEPLOY_ENV` (or
+ * `VERCEL_ENV`). A header rather than a robots meta tag, so a 404 still carries exactly one meta.
  */
 export function previewNoindexHeaders(): { source: string; headers: { key: string; value: string }[] }[] {
   if (!isPreviewDeployment()) return []
@@ -65,33 +89,9 @@ const nextConfig: NextConfig = {
     // so it finds node_modules/next that we've hoisted there.
     root: path.resolve(process.cwd(), '../..'),
   },
-  // The /changelog route (app/[locale]/(marketing)/changelog/page.tsx via lib/changelog.ts) reads
-  // the repo-root CHANGELOG.md with a *dynamically computed* fs path
-  // (path.resolve(process.cwd(), '../..', 'CHANGELOG.md')). Next's build-time file tracer
-  // (@vercel/nft) only bundles files it can find via static analysis of imports/requires,
-  // so a runtime-computed fs.readFileSync path is invisible to it — without this entry,
-  // the deployed Vercel function for this route would never actually have CHANGELOG.md in
-  // its bundle, and getGeneratedChangelog() would silently ENOENT-fallback to legacy-only
-  // forever, even after semantic-release starts generating the file. This route is also
-  // effectively dynamic (not statically generated) because the shared marketing layout's
-  // Navbar calls the async Supabase server client, so it re-reads this file per request —
-  // all the more reason it needs to be traced into the deployed bundle explicitly.
-  //
-  // outputFileTracingIncludes' `../../CHANGELOG.md` glob resolves relative to this project
-  // directory (packages/web) and points OUTSIDE it, into the monorepo root. Whether Next can
-  // honor an include that reaches outside the project directory depends on where it infers
-  // the file-tracing root to be. Without an explicit root, Next infers one (usually the pnpm
-  // workspace root, found via the lockfile) — confirmed this already resolves correctly with
-  // and without this setting (compared .next/server/app/(marketing)/changelog/page.js.nft.json
-  // before/after: both contain ../../../../../../../CHANGELOG.md). But relying on inference for
-  // a path that reaches outside the project directory is exactly the kind of thing that fails
-  // silently (ENOENT -> legacy-only fallback, no build error) if the heuristic ever picks a
-  // different root in some environment. Pin it explicitly, mirroring turbopack.root above.
+  // Pinned to the monorepo root, like turbopack.root, so file tracing never has to guess it.
   outputFileTracingRoot: path.resolve(process.cwd(), '../..'),
-  outputFileTracingIncludes: {
-    // The page lives under app/[locale]/ (the key is the route as Next names it).
-    '/[locale]/changelog': ['../../CHANGELOG.md'],
-  },
+  env: buildTimeEnv(),
   images: {
     remotePatterns: [
       {

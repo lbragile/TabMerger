@@ -18,3 +18,4 @@
 - [In-app confirm + backup file tests](learnings_in_app_confirm_and_backup_file_tests.md) — alertdialog/jsdom pointer-events, focusManager, downloads mock, file-copy e2e recorder
 - [Web RTL/catalog tests](learnings_web_rtl_catalog_tests.md) — ICU plural-category check, allowlisting known catalog gaps, timeouts under load
 - [Language picker + RTL tests](learnings_language_picker_rtl_tests.md) — option names are one joined aria-label, Settings 'cancel' = Escape, toaster x-position attr
+- [Deploy env hub tests](learnings_deploy_env_hub_tests.md) — both-source gate cases, client NEXT_PUBLIC_DEPLOY_ENV tests, Sentry client init test

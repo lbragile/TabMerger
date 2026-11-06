@@ -1,6 +1,6 @@
 /**
- * The consent-region cookie in proxy.ts: how a request's region is worked out (Vercel geo-IP
- * headers, or `CONSENT_REGION_OVERRIDE` off production), and that every response for a page gets
+ * The consent-region cookie in proxy.ts: how a request's region is worked out (the platform's
+ * geo-IP headers, Cloudflare's or Vercel's, or `CONSENT_REGION_OVERRIDE` off production), and that every response for a page gets
  * `tm_consent_region` (pass-throughs, next-intl rewrites and redirects, sign-in redirects) while
  * API routes and files never do. Pages are static, so this cookie is the only way the browser
  * learns its region; a response without it falls back to opt-in.
@@ -40,7 +40,10 @@ async function loadProxy(configured = true) {
 
 beforeEach(() => {
   vi.stubEnv('VERCEL_ENV', '')
-  vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', '')
+  vi.stubEnv('DEPLOY_ENV', '')
+  vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', '')
+  vi.stubEnv('DEPLOY_PLATFORM', '')
+  vi.stubEnv('VERCEL', '')
   vi.stubEnv('CONSENT_REGION_OVERRIDE', '')
   getUser.mockResolvedValue({ data: { user: null } })
 })
@@ -89,6 +92,45 @@ describe('consentRegionForRequest', () => {
     expect(consentRegionForRequest(req('/', { 'x-vercel-ip-country': 'CA', 'x-vercel-ip-country-region': 'ON' }))).toBe('optout')
   })
 
+  it("reads Cloudflare's cf-ipcountry and cf-region-code", async () => {
+    const { consentRegionForRequest } = await loadProxy(false)
+    vi.stubEnv('DEPLOY_PLATFORM', 'cloudflare')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'US' }))).toBe('optout')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'DE' }))).toBe('optin')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'CA', 'cf-region-code': 'QC' }))).toBe('optin')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'CA', 'cf-region-code': 'CA-QC' }))).toBe('optin')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'CA', 'cf-region-code': 'ON' }))).toBe('optout')
+    // Without the visitor-location transform there is no region: Canada's default decides.
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'CA' }))).toBe('optout')
+  })
+
+  it("treats Cloudflare's unknown (XX) and Tor (T1) countries as unknown: opt-in", async () => {
+    const { consentRegionForRequest } = await loadProxy(false)
+    vi.stubEnv('DEPLOY_PLATFORM', 'cloudflare')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'XX' }))).toBe('optin')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'T1' }))).toBe('optin')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'T1', 'cf-region-code': 'QC' }))).toBe('optin')
+  })
+
+  it("reads only the current platform's headers", async () => {
+    const { consentRegionForRequest } = await loadProxy(false)
+    vi.stubEnv('DEPLOY_PLATFORM', 'cloudflare')
+    expect(consentRegionForRequest(req('/', { 'x-vercel-ip-country': 'US' }))).toBe('optin')
+    expect(consentRegionForRequest(req('/', { 'x-vercel-ip-country': 'DE', 'cf-ipcountry': 'US' }))).toBe('optout')
+    vi.stubEnv('DEPLOY_PLATFORM', '')
+    vi.stubEnv('VERCEL', '1')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'US' }))).toBe('optin')
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'DE', 'x-vercel-ip-country': 'US' }))).toBe('optout')
+  })
+
+  it("off a known platform reads Vercel's pair, else Cloudflare's, never mixing the two", async () => {
+    const { consentRegionForRequest } = await loadProxy(false)
+    expect(consentRegionForRequest(req('/', { 'cf-ipcountry': 'US' }))).toBe('optout')
+    expect(consentRegionForRequest(req('/', { 'x-vercel-ip-country': 'DE', 'cf-ipcountry': 'US' }))).toBe('optin')
+    // Vercel's country with Cloudflare's region: the region is not borrowed.
+    expect(consentRegionForRequest(req('/', { 'x-vercel-ip-country': 'CA', 'cf-region-code': 'QC' }))).toBe('optout')
+  })
+
   it('is opt-in without geo headers (localhost) or with garbage in them', async () => {
     const { consentRegionForRequest } = await loadProxy(false)
     expect(consentRegionForRequest(req('/'))).toBe('optin')
@@ -115,7 +157,10 @@ describe('consentRegionForRequest', () => {
     expect(consentRegionForRequest(req('/'))).toBe('optin')
     expect(consentRegionForRequest(req('/', DE))).toBe('optin')
     vi.stubEnv('VERCEL_ENV', '')
-    vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', 'production')
+    vi.stubEnv('DEPLOY_ENV', 'production')
+    expect(consentRegionForRequest(req('/', DE))).toBe('optin')
+    vi.stubEnv('DEPLOY_ENV', '')
+    vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', 'production')
     expect(consentRegionForRequest(req('/', DE))).toBe('optin')
   })
 

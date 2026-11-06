@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createElement } from 'react'
 import { act, render } from '@testing-library/react'
 import { GTAG_SCRIPT_ID, loadGoogleAnalytics, trackEvent, updateGoogleAnalyticsConsent } from '@/lib/analytics'
@@ -27,6 +27,7 @@ beforeEach(() => {
 
 afterEach(() => {
   clearCookies()
+  vi.unstubAllEnvs()
 })
 
 describe('loadGoogleAnalytics', () => {
@@ -100,6 +101,24 @@ describe('trackEvent under Consent Mode', () => {
     loadGoogleAnalytics(GA_ID, choice)
     trackEvent('cta_click', { location: 'hero' })
     expect(commands().at(-1)).toEqual(['event', 'cta_click', expect.objectContaining({ location: 'hero' })])
+  })
+})
+
+describe('trackEvent environment tag', () => {
+  it.each(['production', 'preview'])('stamps environment=%s from NEXT_PUBLIC_DEPLOY_ENV', (env) => {
+    vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', env)
+    loadGoogleAnalytics(GA_ID, 'granted')
+    trackEvent('cta_click')
+    expect(commands().at(-1)).toEqual(['event', 'cta_click', { environment: env }])
+  })
+
+  it('stamps development when unset, ignoring the server-side names', () => {
+    vi.stubEnv('NEXT_PUBLIC_DEPLOY_ENV', '')
+    vi.stubEnv('VERCEL_ENV', 'production')
+    vi.stubEnv('DEPLOY_ENV', 'production')
+    loadGoogleAnalytics(GA_ID, 'granted')
+    trackEvent('cta_click')
+    expect(commands().at(-1)).toEqual(['event', 'cta_click', { environment: 'development' }])
   })
 })
 

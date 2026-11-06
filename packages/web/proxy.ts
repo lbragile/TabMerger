@@ -4,11 +4,12 @@ import createIntlMiddleware from 'next-intl/middleware'
 import { routing } from '@/i18n/routing'
 import { LOCALES } from '@/i18n/locales'
 import { AI_BYOK_KEY_HEADER, AI_CREDITS_REMAINING_HEADER } from '@tabmerger/shared'
-import { isProductionDeployment } from '@/lib/deployment'
+import { deployPlatform, isProductionDeployment } from '@/lib/deployment'
 import {
   CONSENT_REGION_COOKIE,
   CONSENT_REGION_MAX_AGE_SECONDS,
   consentRegionFor,
+  geoFromHeaders,
   parseRegionOverride,
   type ConsentRegion,
 } from '@/lib/consentRegions'
@@ -251,15 +252,17 @@ export function rendersPage(pathname: string): boolean {
 }
 
 /**
- * The visitor's consent region from Vercel's geo-IP headers (lib/consentRegions.ts). Off Vercel
- * there are none, so it is opt-in. `CONSENT_REGION_OVERRIDE` (a country such as `US`, or
- * `CA-QC`) stands in for the headers so the opt-out path can be tried locally; it is ignored on
- * the production deployment.
+ * The visitor's consent region from the hosting platform's geo-IP headers (`geoFromHeaders` in
+ * lib/consentRegions.ts: Cloudflare's `cf-ipcountry` / `cf-region-code` or Vercel's
+ * `x-vercel-ip-country` / `x-vercel-ip-country-region`). Locally there are none, so it is opt-in.
+ * `CONSENT_REGION_OVERRIDE` (a country such as `US`, or `CA-QC`) stands in for the headers so
+ * the opt-out path can be tried locally; it is ignored on the production deployment.
  */
 export function consentRegionForRequest(request: NextRequest): ConsentRegion {
   const override = isProductionDeployment() ? null : parseRegionOverride(process.env.CONSENT_REGION_OVERRIDE)
   if (override) return consentRegionFor(override.country, override.region)
-  return consentRegionFor(request.headers.get('x-vercel-ip-country'), request.headers.get('x-vercel-ip-country-region'))
+  const { country, region } = geoFromHeaders(request.headers, deployPlatform())
+  return consentRegionFor(country, region)
 }
 
 /**

@@ -153,12 +153,13 @@ describe('getMetadataBase', () => {
     expect(getMetadataBase().origin).toBe('https://tabmerger.app')
   })
 
-  it('falls back to the Vercel host, then localhost, without throwing', () => {
+  it('falls back to localhost without throwing, never to a host-specific deployment URL', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', '')
+    vi.stubEnv('VERCEL_ENV', 'preview')
     vi.stubEnv('VERCEL_URL', 'x-abc.vercel.app')
-    expect(getMetadataBase().origin).toBe('https://x-abc.vercel.app')
-    vi.stubEnv('VERCEL_URL', '')
-    vi.stubEnv('VERCEL_PROJECT_PRODUCTION_URL', '')
+    vi.stubEnv('VERCEL_PROJECT_PRODUCTION_URL', 'tabmerger.com')
+    expect(getMetadataBase().origin).toBe('http://localhost:3000')
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'not a url')
     expect(getMetadataBase().origin).toBe('http://localhost:3000')
   })
 })

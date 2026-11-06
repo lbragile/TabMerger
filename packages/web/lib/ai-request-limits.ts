@@ -1,9 +1,10 @@
 import { createHmac } from 'node:crypto'
-import { isIP } from 'node:net'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { AI_ERROR_CODES } from '@tabmerger/shared'
 import { createServiceRoleClient } from '@/lib/supabase/server'
+import { ipRateLimitKey, trustedClientAddress } from '@/lib/clientIp'
+import { deployPlatform, type DeployPlatform } from '@/lib/deployment'
 import {
   rateLimitedResponse,
   takeRateLimit,
@@ -124,49 +125,9 @@ export function limiterUnavailableResponse(): NextResponse {
 
 // --- Client IP ------------------------------------------------------------------------------
 
-/** The 8 groups of an IPv6 address (already validated by `isIP`), or null. */
-function ipv6Groups(address: string): number[] | null {
-  let text = address.toLowerCase()
-  // An embedded IPv4 tail (::ffff:192.0.2.1) becomes its two groups.
-  const lastColon = text.lastIndexOf(':')
-  const tail = text.slice(lastColon + 1)
-  if (tail.includes('.')) {
-    const o = tail.split('.').map(Number)
-    if (o.length !== 4 || o.some((n) => !Number.isInteger(n) || n < 0 || n > 255)) return null
-    text = `${text.slice(0, lastColon + 1)}${((o[0] << 8) | o[1]).toString(16)}:${((o[2] << 8) | o[3]).toString(16)}`
-  }
-  const halves = text.split('::')
-  if (halves.length > 2) return null
-  const head = halves[0] ? halves[0].split(':') : []
-  const rest = halves.length === 2 ? (halves[1] ? halves[1].split(':') : []) : null
-  const groups = rest === null ? head : [...head, ...Array<string>(8 - head.length - rest.length).fill('0'), ...rest]
-  if (groups.length !== 8) return null
-  const values = groups.map((g) => Number.parseInt(g, 16))
-  return values.every((v) => Number.isInteger(v) && v >= 0 && v <= 0xffff) ? values : null
-}
-
-/**
- * The rate-limit key for an address: `4:<address>` for IPv4 (and IPv4-mapped IPv6), `6:<first
- * four groups>::/64` for IPv6. One IPv6 host usually holds a whole /64, so a key per address
- * would let it rotate addresses past the limit (and add a counter row per address). Null for
- * anything that is not an IP address.
- */
-export function ipRateLimitKey(raw: string): string | null {
-  let address = raw.trim()
-  if (address.startsWith('[') && address.endsWith(']')) address = address.slice(1, -1)
-  const zone = address.indexOf('%')
-  if (zone !== -1) address = address.slice(0, zone)
-
-  const family = isIP(address)
-  if (family === 4) return `4:${address}`
-  if (family !== 6) return null
-
-  const groups = ipv6Groups(address)
-  if (!groups) return null
-  const mapped = groups.slice(0, 5).every((g) => g === 0) && groups[5] === 0xffff
-  if (mapped) return `4:${groups[6] >> 8}.${groups[6] & 0xff}.${groups[7] >> 8}.${groups[7] & 0xff}`
-  return `6:${groups.slice(0, 4).map((g) => g.toString(16)).join(':')}::/64`
-}
+// Address normalisation lives in lib/clientIp.ts (shared with the support forms); re-exported so
+// callers and tests can keep importing it from here.
+export { ipRateLimitKey }
 
 /**
  * The stored form of an IP key: `ip:` + HMAC-SHA256 of the normalised key ({@link ipRateLimitKey}),
@@ -180,19 +141,15 @@ export function hashIpKey(normalized: string, secret: string | undefined = proce
 }
 
 /**
- * The caller's rate-limit IP key (hashed, see {@link hashIpKey}), read only where the platform sets the header: on Vercel
- * (`VERCEL=1`), which overwrites `x-forwarded-for` / `x-real-ip` with the client address and
- * doesn't forward one a client sent. `x-vercel-forwarded-for` comes first because a proxy in
- * front of Vercel could change `x-forwarded-for`. Anywhere else these headers are whatever the
- * client typed, so there is no IP key (null) and the per-IP limit is skipped; the per-user
- * limits still apply.
+ * The caller's rate-limit IP key (hashed, see {@link hashIpKey}), from the one header the hosting
+ * platform sets ({@link trustedClientAddress}: `cf-connecting-ip` on Cloudflare, Vercel's own
+ * headers on Vercel). Off a known platform these headers are whatever the client typed, so there
+ * is no IP key (null) and the per-IP limit is skipped; the per-user limits still apply.
  */
-export function clientIpKey(headers: Headers, onVercel: boolean = process.env.VERCEL === '1'): string | null {
-  if (!onVercel) return null
-  const raw = headers.get('x-vercel-forwarded-for') ?? headers.get('x-real-ip') ?? headers.get('x-forwarded-for')
+export function clientIpKey(headers: Headers, platform: DeployPlatform | null = deployPlatform()): string | null {
+  const raw = trustedClientAddress(headers, platform)
   if (!raw) return null
-  // The first hop is the client; Vercel sends one address, but read a list defensively.
-  const normalized = ipRateLimitKey(raw.split(',')[0] ?? '')
+  const normalized = ipRateLimitKey(raw)
   if (!normalized) return null
   const hashed = hashIpKey(normalized)
   if (!hashed) console.error('AI per-IP limit skipped: no secret to hash the address with')

@@ -11,6 +11,7 @@ import {
   type AiSuggestionKind,
 } from '@tabmerger/shared'
 import { ProviderHttpError, type ProviderReply } from '@/lib/ai-providers'
+import { isHostedDeployment } from '@/lib/deployment'
 import type { AiTask } from '@/lib/ai'
 
 /**
@@ -24,8 +25,10 @@ import type { AiTask } from '@/lib/ai'
  * and sanitiser, which read the mock's raw JSON exactly as they would a model's.
  *
  * On only when `AI_MOCK=true` (server-only, never `NEXT_PUBLIC_*`) AND
- * `NODE_ENV === 'development'` AND not on Vercel (`VERCEL_ENV`/`VERCEL` unset). A production
- * build inlines `NODE_ENV` as `production`, so the mock is dead code there.
+ * `NODE_ENV === 'development'` AND not on a hosted deployment (`isHostedDeployment()`: none of
+ * `DEPLOY_ENV`, `DEPLOY_PLATFORM`, `VERCEL_ENV`, `VERCEL` set, and no build-time deployment
+ * environment). A production build inlines `NODE_ENV` as `production`, so the mock is dead code
+ * there.
  *
  * `AI_MOCK_SCENARIO` (optional): `ok` (default), `slow` (about 1.5 s per reply) or
  * `error:<kind>`, see {@link AiMockErrorKind}. The errors are shaped like the provider's own,
@@ -55,8 +58,8 @@ const CHARS_PER_TOKEN = 4
 export function aiMockEnabled(): boolean {
   if (process.env.AI_MOCK !== 'true') return false
   if (process.env.NODE_ENV !== 'development') return false
-  // Belt and braces: never on a Vercel deployment, whatever its NODE_ENV.
-  if (process.env.VERCEL_ENV || process.env.VERCEL) return false
+  // Belt and braces: never on a hosted deployment, on any platform, whatever its NODE_ENV.
+  if (isHostedDeployment()) return false
   return true
 }
 

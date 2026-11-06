@@ -1,5 +1,4 @@
-import fs from 'node:fs'
-import path from 'node:path'
+import { CHANGELOG_MARKDOWN } from '@/generated/changelog'
 import { githubPullRequestUrl, githubReleaseUrl } from '@/lib/github'
 
 export type ChangeType = 'New' | 'Improved' | 'Fixed'
@@ -48,18 +47,6 @@ const SECTION_TYPE: Record<string, ChangeType> = {
   'Performance Improvements': 'Improved',
   Reverts: 'Improved',
   'Code Refactoring': 'Improved',
-}
-
-/**
- * Resolves the path to the repo-root `CHANGELOG.md` that `@semantic-release/changelog`
- * owns. Next.js runs this package's build (and dev server) with `process.cwd()`
- * at `packages/web` in this pnpm monorepo — the same assumption `next.config.ts`
- * already makes for the Turbopack workspace root — so the repo root is two
- * directories up. Verified by inspecting `next.config.ts`'s
- * `path.resolve(process.cwd(), '../..')` comment, which documents this exact cwd.
- */
-function changelogPath(): string {
-  return path.resolve(process.cwd(), '../..', 'CHANGELOG.md')
 }
 
 function formatDate(iso: string): string {
@@ -186,40 +173,22 @@ export function parseChangelog(raw: string): ChangeEntry[] {
   return entries.filter((entry) => !PRERELEASE_RE.test(entry.version) && entry.changes.length > 0)
 }
 
-// Module-scope memo: the /changelog route is dynamic (server-rendered per request — the
-// shared marketing layout's Navbar calls the async Supabase server client), so without this,
-// getGeneratedChangelog() would do a synchronous fs.readFileSync + full parse on every single
-// request. A serverless instance loads this module once and reuses it across warm invocations,
-// and a redeploy always gets a fresh instance (and therefore a fresh cache) — so there is no
-// staleness risk from caching for the instance's lifetime. `undefined` means "not computed
-// yet"; the ENOENT/no-file case is cached as `[]`, not left to re-read the filesystem on every
-// request.
+// Module-scope memo: the /changelog route is dynamic (server-rendered per request: the shared
+// marketing layout's Navbar calls the async Supabase server client), so without this every
+// request would re-parse the whole changelog. The text is fixed for the life of a deployment, so
+// caching it for the instance's lifetime can't go stale.
 let cachedEntries: ChangeEntry[] | undefined
 
 /**
- * Reads and parses the repo-root `CHANGELOG.md` that semantic-release owns, memoizing the
- * result for the lifetime of this module instance (see cache comment above).
+ * The stable releases in the repo-root `CHANGELOG.md` that semantic-release owns, parsed once
+ * per server instance.
  *
- * `CHANGELOG.md` does not exist until semantic-release's first run, which has
- * not happened yet in this repo (see spec §1/§6) — that absence is the normal
- * pre-launch state, not an error, so it resolves to "no generated entries yet"
- * rather than throwing. Any other read error still propagates (and is NOT cached,
- * so a transient error doesn't wrongly pin the page to legacy-only for the rest of
- * the instance's lifetime) so a real build misconfiguration isn't silently swallowed.
+ * The markdown is copied into `generated/changelog.ts` at build time
+ * (`scripts/generate-changelog.mjs`, run from next.config.ts), so nothing here touches the
+ * filesystem: the page works on hosts that have none. A missing generated module fails the
+ * build at the import above rather than quietly showing only the older, hand-written entries.
  */
 export function getGeneratedChangelog(): ChangeEntry[] {
-  if (cachedEntries) return cachedEntries
-
-  let raw: string
-  try {
-    raw = fs.readFileSync(changelogPath(), 'utf8')
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-      cachedEntries = []
-      return cachedEntries
-    }
-    throw err
-  }
-  cachedEntries = parseChangelog(raw)
+  cachedEntries ??= parseChangelog(CHANGELOG_MARKDOWN)
   return cachedEntries
 }
