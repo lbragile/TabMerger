@@ -1,3 +1,15 @@
+## [3.11.2](https://github.com/lbragile/TabMerger/compare/v3.11.1...v3.11.2) (2026-11-06)
+
+
+### Bug Fixes
+
+* **web:** block ipv6 forms of private addresses in og-preview ([#108](https://github.com/lbragile/TabMerger/issues/108)) ([b83d0d6](https://github.com/lbragile/TabMerger/commit/b83d0d63b164156c3cb0261c11d2c9bca0f102b5))
+
+
+### Performance Improvements
+
+* cut server cpu per request and limit public routes ([#109](https://github.com/lbragile/TabMerger/issues/109)) ([bf5f43b](https://github.com/lbragile/TabMerger/commit/bf5f43ba9451ce68361cb69a0dff9045a6e6c064))
+
 ## [3.11.1](https://github.com/lbragile/TabMerger/compare/v3.11.0...v3.11.1) (2026-11-04)
 
 # [3.11.0](https://github.com/lbragile/TabMerger/compare/v3.10.0...v3.11.0) (2026-11-04)
