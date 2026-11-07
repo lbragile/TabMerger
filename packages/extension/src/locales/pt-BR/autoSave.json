@@ -1,0 +1,78 @@
+{
+  "groupName": "Salvo automaticamente {{when}}",
+  "notification": {
+    "title": "Salvamento automático do TabMerger"
+  },
+  "status": {
+    "saved_one": "{{count}} aba salva em {{name}}.",
+    "saved_many": "{{count}} abas salvas em {{name}}.",
+    "saved_other": "{{count}} abas salvas em {{name}}.",
+    "savedPartial": "{{saved}} de {{total}} abas salvas em {{name}} (limite do Free).",
+    "failed": "O salvamento automático não funcionou. Tente de novo.",
+    "lastRun": "Última execução {{when}}: {{result}}",
+    "never": "Nenhum salvamento automático ainda.",
+    "skip": {
+      "disabled": "O salvamento automático está desativado.",
+      "notDue": "O próximo salvamento programado ainda não chegou.",
+      "noTabs": "Nenhuma aba aberta para salvar.",
+      "nothingNew": "Nada novo para salvar: todas as abas abertas já estão salvas.",
+      "noGroupSlot": "Não salvo: o plano Free permite {{max}} grupos. Exclua ou mantenha menos grupos, ou faça upgrade.",
+      "noTabRoom": "Não salvo: o plano Free permite {{max}} abas salvas. Exclua algumas abas ou faça upgrade.",
+      "accountMismatch": "Este dispositivo ainda tem dados de outra conta. Abra o TabMerger de novo e tente outra vez.",
+      "busy": "Um salvamento automático já está em andamento."
+    }
+  },
+  "settings": {
+    "title": "Salvar abas abertas automaticamente",
+    "description": "Salva suas abas abertas como um novo grupo na seção Salvos automaticamente, em um horário ou quando você abre muitas abas. Abas já salvas são ignoradas e janelas privadas nunca são salvas. Todo salvamento automático é mantido.",
+    "descriptionFree": "Salva suas abas abertas como um novo grupo na seção Salvos automaticamente, em um horário ou quando você abre muitas abas. Abas já salvas são ignoradas e janelas privadas nunca são salvas. O plano Free mantém os {{keep}} salvamentos automáticos mais recentes, e eles contam para seus {{groups}} grupos e {{tabs}} abas.",
+    "upgrade": "Faça upgrade para manter todos",
+    "checkingPlan": "Verificando seu plano...",
+    "scheduleLabel": "Horário",
+    "scheduleAria": "Horário do salvamento automático",
+    "schedule": {
+      "0": "Desativado",
+      "15": "A cada 15 minutos",
+      "30": "A cada 30 minutos",
+      "60": "A cada hora",
+      "120": "A cada 2 horas",
+      "240": "A cada 4 horas",
+      "1440": "Diariamente"
+    },
+    "thresholdLabel": "Quando as abas abertas passarem de",
+    "thresholdAria": "Número de abas abertas que inicia um salvamento automático",
+    "thresholdOff": "Desativado",
+    "thresholdOption_one": "{{count}} aba aberta",
+    "thresholdOption_many": "{{count}} abas abertas",
+    "thresholdOption_other": "{{count}} abas abertas",
+    "notifyLabel": "Mostrar uma notificação",
+    "notifyDescription": "Uma notificação do navegador após cada salvamento automático.",
+    "noTrigger": "Escolha um horário ou um número de abas para salvar automaticamente.",
+    "runNow": "Salvar agora",
+    "running": "Salvando..."
+  },
+  "sidebar": {
+    "label": "SALVOS AUTOMATICAMENTE",
+    "countOfMax": "{{count}} de {{max}}",
+    "empty": "Nenhum salvamento automático ainda",
+    "replacedNext": "Substituído no próximo salvamento automático",
+    "open": "Abrir {{name}}",
+    "keep": "Manter como grupo",
+    "keepNamed": "Manter {{name}} como grupo",
+    "delete": "Excluir salvamento automático",
+    "deleteNamed": "Excluir {{name}}"
+  },
+  "banner": {
+    "kept": "Salvo automaticamente. Fica até você excluir.",
+    "rolling_one": "Salvo automaticamente. O plano Free mantém o {{count}} salvamento automático mais recente: o próximo substitui o mais antigo. Mantenha como grupo para não perder.",
+    "rolling_many": "Salvo automaticamente. O plano Free mantém os {{count}} salvamentos automáticos mais recentes: o próximo substitui o mais antigo. Mantenha como grupo para não perder.",
+    "rolling_other": "Salvo automaticamente. O plano Free mantém os {{count}} salvamentos automáticos mais recentes: o próximo substitui o mais antigo. Mantenha como grupo para não perder.",
+    "keep": "Manter como grupo"
+  },
+  "toast": {
+    "intro": "O salvamento automático está ativado. Altere em Configurações → Dados",
+    "kept": "Movido para seus grupos. Não será removido automaticamente.",
+    "keptFailed": "Não foi possível manter o grupo. Tente de novo.",
+    "settingFailed": "Não foi possível salvar a configuração de salvamento automático"
+  }
+}

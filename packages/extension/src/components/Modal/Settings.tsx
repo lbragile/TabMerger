@@ -22,6 +22,7 @@ import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
 import { AutoBackups } from '@/components/Settings/AutoBackups';
+import { AutoSaveTabs } from '@/components/Settings/AutoSaveTabs';
 import { CheckForUpdates } from '@/components/Settings/CheckForUpdates';
 import { LanguageSetting } from '@/components/Settings/LanguageSetting';
 import { AiSettings } from '@/components/Settings/AiSettings';
@@ -636,6 +637,11 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
           <p className="text-xs text-muted-foreground">
             {t('settings.data.intro')}
           </p>
+
+          <Separator />
+
+          {/* First on the tab. Saves immediately and mirrors into the draft, like AutoBackups below. */}
+          <AutoSaveTabs onSettingsSaved={(saved) => setDraft((prev) => ({ ...prev, ...saved }))} />
 
           <Separator />
 

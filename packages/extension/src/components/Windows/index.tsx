@@ -41,6 +41,8 @@ import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { findDuplicateTabs } from '@/lib/deduplication';
+import { isAutoSavedGroup } from '@/lib/autoSaveGroups';
+import { AutoSaveBanner } from './AutoSaveBanner';
 import { toast } from '@/lib/toast';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
@@ -357,6 +359,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex, allGroups }: WindowsP
 
   return (
     <div className="flex flex-col h-full min-w-0 overflow-hidden" data-tour={TOUR_ANCHORS.tabsPanel}>
+      {isAutoSavedGroup(groupProp) && <AutoSaveBanner group={groupProp} />}
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 py-2.5 border-b border-border shrink-0">
         <span className="text-xs text-muted-foreground flex items-center gap-1.5">

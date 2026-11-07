@@ -1,0 +1,72 @@
+{
+  "groupName": "自动保存 {{when}}",
+  "notification": {
+    "title": "TabMerger 自动保存"
+  },
+  "status": {
+    "saved_other": "已将 {{count}} 个标签页保存到 {{name}}。",
+    "savedPartial": "已将 {{total}} 个标签页中的 {{saved}} 个保存到 {{name}}（Free 上限）。",
+    "failed": "自动保存未成功。请重试。",
+    "lastRun": "上次运行 {{when}}：{{result}}",
+    "never": "还没有自动保存。",
+    "skip": {
+      "disabled": "自动保存已关闭。",
+      "notDue": "下一次定时自动保存还没到时间。",
+      "noTabs": "没有可保存的已打开标签页。",
+      "nothingNew": "没有新内容可保存：所有已打开的标签页都已保存。",
+      "noGroupSlot": "未保存：Free 方案最多 {{max}} 个分组。请删除或减少分组，或升级。",
+      "noTabRoom": "未保存：Free 方案最多保存 {{max}} 个标签页。请删除一些标签页，或升级。",
+      "accountMismatch": "此设备上仍有另一个账号的数据。请重新打开 TabMerger 后再试。",
+      "busy": "自动保存正在进行。"
+    }
+  },
+  "settings": {
+    "title": "自动保存已打开的标签页",
+    "description": "按计划或在你打开很多标签页时，将已打开的标签页保存为“自动保存”分区中的新分组。已保存的标签页会被跳过，无痕窗口从不保存。所有自动保存都会保留。",
+    "descriptionFree": "按计划或在你打开很多标签页时，将已打开的标签页保存为“自动保存”分区中的新分组。已保存的标签页会被跳过，无痕窗口从不保存。Free 方案保留最新的 {{keep}} 个自动保存，它们计入你的 {{groups}} 个分组和 {{tabs}} 个标签页上限。",
+    "upgrade": "升级以全部保留",
+    "checkingPlan": "正在检查你的方案...",
+    "scheduleLabel": "计划",
+    "scheduleAria": "自动保存计划",
+    "schedule": {
+      "0": "关闭",
+      "15": "每 15 分钟",
+      "30": "每 30 分钟",
+      "60": "每小时",
+      "120": "每 2 小时",
+      "240": "每 4 小时",
+      "1440": "每天"
+    },
+    "thresholdLabel": "当打开的标签页超过",
+    "thresholdAria": "触发自动保存的已打开标签页数量",
+    "thresholdOff": "关闭",
+    "thresholdOption_other": "{{count}} 个已打开标签页",
+    "notifyLabel": "显示通知",
+    "notifyDescription": "每次自动保存后显示浏览器通知。",
+    "noTrigger": "请选择计划或标签页数量来自动保存。",
+    "runNow": "立即自动保存",
+    "running": "正在保存..."
+  },
+  "sidebar": {
+    "label": "自动保存",
+    "countOfMax": "{{count}}/{{max}}",
+    "empty": "还没有自动保存",
+    "replacedNext": "将在下次自动保存时被替换",
+    "open": "打开 {{name}}",
+    "keep": "保留为分组",
+    "keepNamed": "将 {{name}} 保留为分组",
+    "delete": "删除自动保存",
+    "deleteNamed": "删除 {{name}}"
+  },
+  "banner": {
+    "kept": "已自动保存。在你删除前一直保留。",
+    "rolling_other": "已自动保存。Free 方案保留最新的 {{count}} 个自动保存：下一个会替换最早的那个。将其保留为分组即可留住。",
+    "keep": "保留为分组"
+  },
+  "toast": {
+    "intro": "自动保存已开启。可在 设置 → 数据 中更改",
+    "kept": "已移到你的分组。不会被自动删除。",
+    "keptFailed": "无法保留该分组。请重试。",
+    "settingFailed": "无法保存自动保存设置"
+  }
+}

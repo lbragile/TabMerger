@@ -3,12 +3,14 @@ import { Trans, useTranslation } from 'react-i18next';
 import { formatTimeAgo } from '@/lib/i18n';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
-import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2, BookmarkPlus } from 'lucide-react';
+import { Plus, RotateCcw, Trash2, BookmarkPlus } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GroupItem } from './GroupItem';
+import { SidebarSection } from './SidebarSection';
+import { AutoSavedSection } from './AutoSavedSection';
 import type { GroupsState } from '@/lib/types';
 import { useDndContext } from '@/components/dnd/DndProvider';
 import { dndListStyle, gapGrowthFor } from '@/lib/dndInsertion';
@@ -25,6 +27,7 @@ import { useConfirm } from '@/hooks/useConfirm';
 import { getGroupTabCount } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
+import { isAutoSavedGroup } from '@/lib/autoSaveGroups';
 import { FREE_TIER_LIMITS } from '@tabmerger/shared';
 import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
@@ -33,63 +36,6 @@ import { useSearchFilters, useSearchMode } from '@/hooks/useSearchView';
 import { useKeepFocusInList } from '@/hooks/useKeepFocusInList';
 import { useTourSearchShowsDemo } from '@/hooks/useTourSearchShowsDemo';
 import { isSearchActive, summarizeSearch } from '@/lib/searchMatch';
-
-/**
- * Shared shell for the Archived / Sessions sidebar sections: a disclosure header row
- * (chevron + label + count), an optional right-aligned action button as a SIBLING of the
- * toggle (never nested — nested interactive elements are invalid HTML and break both a11y
- * and click handling), and a collapsible body that shows `emptyLabel` when there is
- * nothing to list. Both sections always render — only the body is gated on `open`.
- */
-function SidebarSection({
-  label,
-  count,
-  open,
-  onToggle,
-  isEmpty,
-  emptyLabel,
-  action,
-  className,
-  tourAnchor,
-  children,
-}: {
-  label: string;
-  count: number;
-  open: boolean;
-  onToggle: () => void;
-  isEmpty: boolean;
-  emptyLabel: string;
-  action?: React.ReactNode;
-  className?: string;
-  /** Guided-tour anchor name (`data-tour`), see lib/tourSteps.ts. */
-  tourAnchor?: string;
-  children: React.ReactNode;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className={className} data-tour={tourAnchor}>
-      <div className="flex items-center gap-1 pe-1">
-        <button
-          type="button"
-          className="flex items-center gap-1 flex-1 min-w-0 px-2 py-0.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors select-none"
-          onClick={onToggle}
-        >
-          {open ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0 rtl:-scale-x-100" />}
-          <span className="truncate">{t('sidePanel.sectionLabel', { label, count })}</span>
-        </button>
-        {action}
-      </div>
-      {open && (
-        isEmpty ? (
-          <p className="mt-0.5 px-2 py-1.5 text-[11px] text-muted-foreground/60">{emptyLabel}</p>
-        ) : (
-          <div className="mt-0.5 max-h-28 overflow-y-auto">{children}</div>
-        )
-      )}
-    </div>
-  );
-}
-
 
 interface SidePanelProps {
   groupsState: GroupsState;
@@ -340,12 +286,14 @@ export function SidePanel({ groupsState }: SidePanelProps) {
         </div>
       </ScrollArea>
 
-      {/* Archived + Sessions — pinned above stats footer. Both sections always render
+      {/* Auto-saved + Archived + Sessions — pinned above stats footer. Every section always renders
           (header is always visible, even at 0 count); only the expanded body is gated. */}
       <div
         className="shrink-0"
         style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
       >
+        <AutoSavedSection groupsState={groupsState} />
+
         <SidebarSection
           label={t('sidePanel.archived')}
           count={archivedGroups.length}
@@ -510,8 +458,8 @@ export function SidePanel({ groupsState }: SidePanelProps) {
         style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
       >
         {(() => {
-          // ponytail: stats exclude archived groups
-          const saved = raw.filter((g) => !g.permanent && !g.archived);
+          // ponytail: stats exclude archived and auto-saved groups (both have their own section)
+          const saved = raw.filter((g) => !g.permanent && !g.archived && !isAutoSavedGroup(g));
           const groupCount = saved.length;
           const winCount = saved.reduce((acc, g) => acc + g.windows.length, 0);
           const tabCount = saved.reduce((acc, g) => acc + g.windows.reduce((a, w) => a + w.tabs.length, 0), 0);

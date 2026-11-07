@@ -1,5 +1,6 @@
 /** The fr catalog: same files and keys as en/, with fr's own plural forms (checked by the catalog test). */
 import auth from './auth.json' with { type: 'json' };
+import autoSave from './autoSave.json' with { type: 'json' };
 import background from './background.json' with { type: 'json' };
 import backups from './backups.json' with { type: 'json' };
 import banners from './banners.json' with { type: 'json' };
@@ -30,6 +31,7 @@ import windows from './windows.json' with { type: 'json' };
 
 export const fr = {
     auth,
+    autoSave,
     background,
     backups,
     banners,

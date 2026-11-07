@@ -5,6 +5,7 @@ import { createNowOpenGroup } from './utils';
 import { GROUPS_CHANGED_MESSAGE, type GroupsChangeCause, type GroupsChangedMessage } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
 import { savedDataChanged, savedDataFingerprint } from './savedData';
+import { emitAutoSavePromoted, promoteEditedAutoSave } from './autoSaveGroups';
 import { APP_SETTINGS_KEY, LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
 
 const DB_NAME = 'tabmerger';
@@ -560,7 +561,21 @@ async function writeGroupsState(
   const nextIndex = syncedOrder(state.available.map((g) => g.id));
   const rev = storedRev + 1;
 
-  const groups = state.available.map((g) => {
+  // An edit to an auto-saved group keeps it (see promoteEditedAutoSave): decided HERE, against the
+  // copy stored in this transaction, so every writer (mutations, drops, bulk actions, AI, the
+  // worker) is covered with no per-caller code. A write known to leave the saved data unchanged
+  // (the Now Open mirror) cannot have edited one and skips the comparison.
+  const promoted: Group[] = [];
+  const incoming = savedUnchanged
+    ? state.available
+    : state.available.map((g) => {
+        const kept = promoteEditedAutoSave(storedById.get(g.id), g);
+        if (!kept) return g;
+        promoted.push(kept);
+        return kept;
+      });
+
+  const groups = incoming.map((g) => {
     const { positionDirty: claimed, remoteUpdatedAt: incomingBase, ...rest0 } = g;
     // Practice data: stored without any sync mark, whatever the caller set (a drag marks the
     // groups it touched as changed)
@@ -602,6 +617,7 @@ async function writeGroupsState(
   await Promise.all([...requests, tx.done]);
   const stored = { ...state, available: groups, rev };
   notifyGroupsChanged(cause, stored, savedUnchanged);
+  emitAutoSavePromoted(promoted);
   return stored;
 }
 

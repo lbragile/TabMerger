@@ -20,7 +20,7 @@ function stableStringify(value: unknown): string {
  * remoteUpdatedAt) and position. Also what makes a conflict that is only a server-side `updated_at`
  * bump (a reorder elsewhere before migration 020) resolve silently instead of creating a copy.
  */
-export function groupContentEqual(a: Group, b: Group): boolean {
+export function groupContentEqual(a: Group, b: Group, { ignoreAutoSave = false }: { ignoreAutoSave?: boolean } = {}): boolean {
   const content = (g: Group) => ({
     name: g.name,
     color: g.color,
@@ -28,7 +28,9 @@ export function groupContentEqual(a: Group, b: Group): boolean {
     starred: g.starred ?? false,
     archived: g.archived ?? false,
     note: g.note ?? '',
-    info: g.info ?? ''
+    info: g.info ?? '',
+    // the auto-save marker counts (a Keep is a change to push) unless the caller says otherwise
+    autoSave: ignoreAutoSave ? null : (g.autoSave ?? null)
   });
   return stableStringify(content(a)) === stableStringify(content(b));
 }
@@ -43,6 +45,7 @@ export function conflictCopyName(name: string): string {
  * inserted (never a compare-and-swap) on the next push.
  */
 export function makeConflictCopy(local: Group): Group {
-  const { remoteUpdatedAt: _base, positionDirty: _dirty, ...rest } = local;
+  // (never an auto-save: the copy is this device's edit, kept as the user's own group)
+  const { remoteUpdatedAt: _base, positionDirty: _dirty, autoSave: _marker, ...rest } = local;
   return { ...rest, id: nanoid(10), name: conflictCopyName(local.name), updatedAt: Date.now(), pendingSync: true };
 }

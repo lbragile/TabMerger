@@ -15,6 +15,7 @@ import { type AiApplyResult, type AiGroupSuggestion, applyAiSuggestionsToState }
 /** What `useApplyAIGroups` reports back: `AiApplyResult` without the state. */
 export type AiApplyCounts = Omit<AiApplyResult, 'nextAvailable'>;
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
+import { isAutoSavedGroup, keepAutoSavedGroup } from '@/lib/autoSaveGroups';
 import { asNewGroup } from '@/lib/syncDirty';
 import { carryHistoryCursor, recordStep } from '@/lib/undoHistory';
 import { isTourDemoGroup } from '@tabmerger/shared';
@@ -1321,6 +1322,26 @@ export function useRestoreGroup() {
         available[groupIndex] = { ...group, archived: false, updatedAt: Date.now(), pendingSync: true };
         return { ...prev, available };
       })
+  });
+}
+
+/**
+ * "Keep as group": the auto-saved group with this id becomes a normal group that no later
+ * auto-save replaces (see `keepAutoSavedGroup`). Addressed by id: the Auto-saved section lists
+ * groups out of their stored order. One undo step; no write when it is gone or already kept.
+ */
+export function useKeepAutoSave() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (groupId: string) =>
+      mutate((prev) => {
+        const index = prev.available.findIndex((g) => g.id === groupId);
+        if (index < 0 || !isAutoSavedGroup(prev.available[index])) return null;
+        const available = [...prev.available];
+        available[index] = keepAutoSavedGroup(available[index]);
+        return { ...prev, available };
+      }, false, { align: false })
   });
 }
 

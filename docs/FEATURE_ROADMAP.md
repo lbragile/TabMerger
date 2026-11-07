@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-11-04. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-11-07. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.11.0` and the beta channel is at `v3.3.2-beta.1`
   (Chrome BETA listing, and the self-hosted Firefox beta), so beta testers have none of 3.4–3.11.
@@ -74,6 +74,7 @@ _Last updated 2026-11-04. Keep this current in the same change as the work (a CL
 - [x] Tab notes, and reminders with notifications
 - [x] Bulk tab actions (selection mode → move, star, share, delete)
 - [x] Automatic backups (Pro): an encrypted snapshot of the saved groups on a schedule (hourly to weekly, daily by default), newest 10 kept, restored from Settings → Data (add to the current groups, or replace them; both undoable). Backups stored in the account are brought back onto a device that lost its local data (reinstall, new browser profile) when that screen is opened. They also appear in a Backups section on the web dashboard, where they can be viewed, downloaded and deleted (restoring is done in the extension). Deleting one there removes the cloud copy only: a browser that already has that backup keeps its own copy, and a backup missing from the account is never deleted from a browser because of that. Optionally each backup is also saved as a JSON file inside the browser's Downloads folder (optional `downloads` permission, folder and file name chosen by the user); Settings shows the full path of the last file and a "Show in folder" button. Released in 3.2.0.
+- [ ] Auto-save open tabs (in progress, built in the extension, not released yet): the background worker saves the open tabs into a new group in an "Auto-saved" sidebar section, on a schedule (15 minutes to daily) and/or when the number of open tabs passes a threshold; tabs already saved anywhere are skipped (a URL open twice is saved once), private windows never. Free: off by default, newest 2 kept (the oldest is replaced in the same write), counted toward the 5-group / 50-tab limits. Pro / Pro AI: on by default, all kept; auto-saves made on Pro never roll after a downgrade. Editing an auto-save or "Keep as group" turns it into a normal group. Optional browser notification; Settings → Data card with "Auto-save now". No new permission, no schema change (the marker travels inside the encrypted group content).
 - [ ] Session scheduler ("restore this session every Monday at 9am")
 - [ ] Group templates (group structure without URLs)
 - [ ] Global quick-open hotkey outside the popup. Search inside the popup exists (Ctrl/Cmd+K).

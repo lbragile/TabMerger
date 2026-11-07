@@ -1,0 +1,72 @@
+{
+  "groupName": "자동 저장 {{when}}",
+  "notification": {
+    "title": "TabMerger 자동 저장"
+  },
+  "status": {
+    "saved_other": "{{count}}개 탭을 {{name}}에 저장했습니다.",
+    "savedPartial": "{{total}}개 중 {{saved}}개 탭을 {{name}}에 저장했습니다(Free 한도).",
+    "failed": "자동 저장에 실패했습니다. 다시 시도하세요.",
+    "lastRun": "마지막 실행 {{when}}: {{result}}",
+    "never": "아직 자동 저장이 없습니다.",
+    "skip": {
+      "disabled": "자동 저장이 꺼져 있습니다.",
+      "notDue": "다음 예약 자동 저장 시간이 아직 아닙니다.",
+      "noTabs": "저장할 열린 탭이 없습니다.",
+      "nothingNew": "새로 저장할 것이 없습니다. 열린 탭이 모두 이미 저장되어 있습니다.",
+      "noGroupSlot": "저장하지 않았습니다: Free 요금제는 그룹을 {{max}}개까지 허용합니다. 그룹을 삭제하거나 줄이거나 업그레이드하세요.",
+      "noTabRoom": "저장하지 않았습니다: Free 요금제는 저장된 탭을 {{max}}개까지 허용합니다. 일부 탭을 삭제하거나 업그레이드하세요.",
+      "accountMismatch": "이 기기에 다른 계정의 데이터가 아직 남아 있습니다. TabMerger를 다시 열고 다시 시도하세요.",
+      "busy": "자동 저장이 이미 실행 중입니다."
+    }
+  },
+  "settings": {
+    "title": "열린 탭 자동 저장",
+    "description": "일정에 따라 또는 탭을 많이 열면 열린 탭을 자동 저장 섹션에 새 그룹으로 저장합니다. 이미 저장된 탭은 건너뛰고 비공개 창은 저장하지 않습니다. 모든 자동 저장이 유지됩니다.",
+    "descriptionFree": "일정에 따라 또는 탭을 많이 열면 열린 탭을 자동 저장 섹션에 새 그룹으로 저장합니다. 이미 저장된 탭은 건너뛰고 비공개 창은 저장하지 않습니다. Free 요금제는 최신 자동 저장 {{keep}}개를 유지하며, 이는 그룹 {{groups}}개와 탭 {{tabs}}개 한도에 포함됩니다.",
+    "upgrade": "업그레이드하여 모두 유지",
+    "checkingPlan": "요금제를 확인하는 중...",
+    "scheduleLabel": "일정",
+    "scheduleAria": "자동 저장 일정",
+    "schedule": {
+      "0": "끄기",
+      "15": "15분마다",
+      "30": "30분마다",
+      "60": "1시간마다",
+      "120": "2시간마다",
+      "240": "4시간마다",
+      "1440": "매일"
+    },
+    "thresholdLabel": "열린 탭이 다음 수를 넘으면",
+    "thresholdAria": "자동 저장을 시작하는 열린 탭 수",
+    "thresholdOff": "끄기",
+    "thresholdOption_other": "열린 탭 {{count}}개",
+    "notifyLabel": "알림 표시",
+    "notifyDescription": "자동 저장할 때마다 브라우저 알림을 표시합니다.",
+    "noTrigger": "자동 저장하려면 일정이나 탭 수를 선택하세요.",
+    "runNow": "지금 자동 저장",
+    "running": "저장 중..."
+  },
+  "sidebar": {
+    "label": "자동 저장됨",
+    "countOfMax": "{{count}}/{{max}}",
+    "empty": "아직 자동 저장이 없습니다",
+    "replacedNext": "다음 자동 저장 때 교체됩니다",
+    "open": "{{name}} 열기",
+    "keep": "그룹으로 유지",
+    "keepNamed": "{{name}}을(를) 그룹으로 유지",
+    "delete": "자동 저장 삭제",
+    "deleteNamed": "{{name}} 삭제"
+  },
+  "banner": {
+    "kept": "자동으로 저장되었습니다. 삭제할 때까지 유지됩니다.",
+    "rolling_other": "자동으로 저장되었습니다. Free 요금제는 최신 자동 저장 {{count}}개를 유지하며, 다음 저장이 가장 오래된 것을 대체합니다. 계속 보관하려면 그룹으로 유지하세요.",
+    "keep": "그룹으로 유지"
+  },
+  "toast": {
+    "intro": "자동 저장이 켜져 있습니다. 설정 → 데이터에서 변경하세요",
+    "kept": "내 그룹으로 옮겼습니다. 자동으로 삭제되지 않습니다.",
+    "keptFailed": "그룹을 유지하지 못했습니다. 다시 시도하세요.",
+    "settingFailed": "자동 저장 설정을 저장하지 못했습니다"
+  }
+}

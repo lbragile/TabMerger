@@ -1,6 +1,7 @@
 import type { Tab } from '@tabmerger/shared'
 
-function normalizeUrl(url: string): string {
+/** The form two addresses are compared in when looking for duplicates (also auto-save's "already saved" check). */
+export function normalizeUrl(url: string): string {
   // a tab whose url is not a string (malformed stored data) compares as an empty address instead of throwing
   if (typeof url !== 'string') return ''
   try {

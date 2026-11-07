@@ -8,4 +8,5 @@
 - [Filtered index + set-aside history](learnings_filtered_index_and_set_aside_state.md) — local-only rows need one index space for every position check; stashed undo history must obey clearHistory
 - [Write path vs server base](learnings_write_path_server_base.md) — saveGroupsState keeps the stored remoteUpdatedAt, updateGroupsState trusts the incoming one
 - [Popup unmount + write scope](learnings_popup_unmount_and_write_scope.md) — popup close runs no effect cleanups; same-ref groups scope the sync stamp + undo check, not the IDB puts
+- [Local vs pulled group shape](learnings_local_vs_pulled_group_shape.md) — createGroup and rowToGroup store different shapes; raw content keys misread a re-push as an edit
 - [DnD rebase identity pitfalls](learnings_dnd_rebase_identity.md) — rank + duplicate-only context check; structurally blind to a pure transposition of identity-equal items

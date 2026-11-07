@@ -1,0 +1,81 @@
+{
+  "groupName": "Autozapis {{when}}",
+  "notification": {
+    "title": "Autozapis TabMerger"
+  },
+  "status": {
+    "saved_one": "Zapisano {{count}} kartę w {{name}}.",
+    "saved_few": "Zapisano {{count}} karty w {{name}}.",
+    "saved_many": "Zapisano {{count}} kart w {{name}}.",
+    "saved_other": "Zapisano {{count}} karty w {{name}}.",
+    "savedPartial": "Zapisano {{saved}} z {{total}} kart w {{name}} (limit Free).",
+    "failed": "Autozapis nie zadziałał. Spróbuj ponownie.",
+    "lastRun": "Ostatnie uruchomienie {{when}}: {{result}}",
+    "never": "Brak autozapisów.",
+    "skip": {
+      "disabled": "Autozapis jest wyłączony.",
+      "notDue": "Następny zaplanowany autozapis jeszcze nie nadszedł.",
+      "noTabs": "Brak otwartych kart do zapisania.",
+      "nothingNew": "Nic nowego do zapisania: wszystkie otwarte karty są już zapisane.",
+      "noGroupSlot": "Nie zapisano: plan Free pozwala na {{max}} grup. Usuń lub zachowaj mniej grup albo przejdź na wyższy plan.",
+      "noTabRoom": "Nie zapisano: plan Free pozwala na {{max}} zapisanych kart. Usuń część kart albo przejdź na wyższy plan.",
+      "accountMismatch": "To urządzenie wciąż przechowuje dane innego konta. Otwórz ponownie TabMerger i spróbuj jeszcze raz.",
+      "busy": "Autozapis już trwa."
+    }
+  },
+  "settings": {
+    "title": "Autozapis otwartych kart",
+    "description": "Zapisuje otwarte karty jako nową grupę w sekcji Autozapisy, według harmonogramu lub gdy otworzysz wiele kart. Karty już zapisane są pomijane, a okna prywatne nigdy nie są zapisywane. Każdy autozapis zostaje zachowany.",
+    "descriptionFree": "Zapisuje otwarte karty jako nową grupę w sekcji Autozapisy, według harmonogramu lub gdy otworzysz wiele kart. Karty już zapisane są pomijane, a okna prywatne nigdy nie są zapisywane. Plan Free zachowuje {{keep}} najnowsze autozapisy i wliczają się one do limitu {{groups}} grup i {{tabs}} kart.",
+    "upgrade": "Przejdź na wyższy plan, aby zachować wszystkie",
+    "checkingPlan": "Sprawdzanie planu...",
+    "scheduleLabel": "Harmonogram",
+    "scheduleAria": "Harmonogram autozapisu",
+    "schedule": {
+      "0": "Wył.",
+      "15": "Co 15 minut",
+      "30": "Co 30 minut",
+      "60": "Co godzinę",
+      "120": "Co 2 godziny",
+      "240": "Co 4 godziny",
+      "1440": "Codziennie"
+    },
+    "thresholdLabel": "Gdy otwartych kart jest więcej niż",
+    "thresholdAria": "Liczba otwartych kart, która uruchamia autozapis",
+    "thresholdOff": "Wył.",
+    "thresholdOption_one": "{{count}} otwarta karta",
+    "thresholdOption_few": "{{count}} otwarte karty",
+    "thresholdOption_many": "{{count}} otwartych kart",
+    "thresholdOption_other": "{{count}} otwartej karty",
+    "notifyLabel": "Pokaż powiadomienie",
+    "notifyDescription": "Powiadomienie przeglądarki po każdym autozapisie.",
+    "noTrigger": "Wybierz harmonogram lub liczbę kart, aby włączyć autozapis.",
+    "runNow": "Zapisz teraz",
+    "running": "Zapisywanie..."
+  },
+  "sidebar": {
+    "label": "AUTOZAPISY",
+    "countOfMax": "{{count}} z {{max}}",
+    "empty": "Brak autozapisów",
+    "replacedNext": "Zostanie zastąpiony przy następnym autozapisie",
+    "open": "Otwórz {{name}}",
+    "keep": "Zachowaj jako grupę",
+    "keepNamed": "Zachowaj {{name}} jako grupę",
+    "delete": "Usuń autozapis",
+    "deleteNamed": "Usuń {{name}}"
+  },
+  "banner": {
+    "kept": "Zapisano automatycznie. Zostaje, dopóki go nie usuniesz.",
+    "rolling_one": "Zapisano automatycznie. Plan Free zachowuje {{count}} najnowszy autozapis: następny zastępuje najstarszy. Zachowaj go jako grupę, aby go nie stracić.",
+    "rolling_few": "Zapisano automatycznie. Plan Free zachowuje {{count}} najnowsze autozapisy: następny zastępuje najstarszy. Zachowaj go jako grupę, aby go nie stracić.",
+    "rolling_many": "Zapisano automatycznie. Plan Free zachowuje {{count}} najnowszych autozapisów: następny zastępuje najstarszy. Zachowaj go jako grupę, aby go nie stracić.",
+    "rolling_other": "Zapisano automatycznie. Plan Free zachowuje {{count}} najnowszego autozapisu: następny zastępuje najstarszy. Zachowaj go jako grupę, aby go nie stracić.",
+    "keep": "Zachowaj jako grupę"
+  },
+  "toast": {
+    "intro": "Autozapis jest włączony. Zmień to w Ustawienia → Dane",
+    "kept": "Przeniesiono do Twoich grup. Nie zostanie usunięta automatycznie.",
+    "keptFailed": "Nie udało się zachować grupy. Spróbuj ponownie.",
+    "settingFailed": "Nie udało się zapisać ustawienia autozapisu"
+  }
+}
