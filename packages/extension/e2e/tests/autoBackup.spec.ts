@@ -65,7 +65,14 @@ async function openDataTab(page: Page): Promise<void> {
   await page.getByRole('tab', { name: /^data$/i }).click();
 }
 
-const section = (page: Page) => page.getByRole('region', { name: AUTO_BACKUP_COPY.title });
+const section = (page: Page) => page.getByRole('region', { name: 'Backups', exact: true });
+
+/** The saved backups are folded behind "N saved backups": unfold them (no-op when already open). */
+async function showBackups(page: Page): Promise<void> {
+  const toggle = section(page).getByTestId('backup-list-toggle');
+  await expect(toggle).toBeVisible();
+  if ((await toggle.getAttribute('aria-expanded')) !== 'true') await toggle.click();
+}
 
 test.describe('Automatic backups - free / signed-out', () => {
   test('a signed-out user sees the explanation and the upgrade button, with no working controls', async ({ context, extensionId }) => {
@@ -74,7 +81,7 @@ test.describe('Automatic backups - free / signed-out', () => {
     await openDataTab(page);
 
     const box = section(page);
-    await expect(box.getByText(AUTO_BACKUP_COPY.upgradeDescription)).toBeVisible();
+    await expect(box.getByText('Automatic backups are part of Pro.')).toBeVisible();
     await expect(box.getByRole('button', { name: 'Upgrade to Pro' })).toBeVisible();
     await expect(box.getByRole('switch')).toHaveCount(0);
     await expect(box.getByRole('combobox')).toHaveCount(0);
@@ -102,6 +109,7 @@ test.describe('Automatic backups - free / signed-out', () => {
     await openDataTab(page);
 
     const box = section(page);
+    await showBackups(page);
     await expect(box.getByText(/no longer includes automatic backups/i)).toBeVisible();
     await expect(box.getByRole('button', { name: /^Restore backup from/ })).toBeVisible();
     await expect(box.getByRole('button', { name: /back up now/i })).toHaveCount(0);
@@ -129,6 +137,9 @@ test.describe('Automatic backups - Pro', () => {
     await page.reload({ waitUntil: 'networkidle' });
     await openDataTab(page);
     await expect(section(page).getByRole('switch', { name: AUTO_BACKUP_COPY.title })).not.toBeChecked();
+    // the options are hidden while backups are off; turning them back on shows the stored interval
+    await expect(section(page).getByRole('combobox', { name: 'Backup interval' })).toHaveCount(0);
+    await section(page).getByRole('switch', { name: AUTO_BACKUP_COPY.title }).click();
     await expect(section(page).getByRole('combobox', { name: 'Backup interval' })).toContainText('Every 6 hours');
   });
 
@@ -156,6 +167,7 @@ test.describe('Automatic backups - Pro', () => {
     await page.reload({ waitUntil: 'networkidle' });
     await openDataTab(page);
 
+    await showBackups(page);
     const list = section(page).getByRole('list', { name: 'Automatic backups list' });
     const items = list.getByRole('listitem');
     await expect(items).toHaveCount(2);
@@ -183,6 +195,7 @@ test.describe('Automatic backups - Pro', () => {
   }
 
   async function openChoice(page: Page) {
+    await showBackups(page);
     await section(page).getByRole('button', { name: /^Restore backup from/ }).first().click();
   }
 
@@ -267,6 +280,7 @@ test.describe('Automatic backups - Pro', () => {
     expect((await readStoredGroups(page)).map((g) => g.name)).toEqual(['Now Open', 'Work']);
 
     // delete: the question says where the backup goes, Cancel keeps it, the action removes only it
+    await showBackups(page);
     const items = section(page).getByRole('list', { name: 'Automatic backups list' }).getByRole('listitem');
     await expect(items).toHaveCount(2);
     const del = items.first().getByRole('button', { name: /^Delete backup from/ });
@@ -300,6 +314,7 @@ test.describe('Automatic backups - Pro', () => {
     await openDataTab(page);
 
     const items = () => section(page).getByRole('list', { name: 'Automatic backups list' }).getByRole('listitem');
+    await showBackups(page);
     await expect(items()).toHaveCount(1);
     await page.waitForTimeout(800); // let the download finish
     await expect(page.getByText(/^Removed \d/)).toHaveCount(0);
@@ -308,12 +323,14 @@ test.describe('Automatic backups - Pro', () => {
     // after a popup reopen it is still there
     await page.reload({ waitUntil: 'networkidle' });
     await openDataTab(page);
+    await showBackups(page);
     await expect(items()).toHaveCount(1);
 
     // and an error from the account changes nothing either
     await page.route('**/rest/v1/sessions*', (route) => route.fulfill({ status: 500, json: { message: 'e2e: down' } }));
     await page.reload({ waitUntil: 'networkidle' });
     await openDataTab(page);
+    await showBackups(page);
     await expect(items()).toHaveCount(1);
     await expect(page.getByText(/^Removed \d/)).toHaveCount(0);
   });

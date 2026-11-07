@@ -162,7 +162,7 @@ test('a 700-character path wraps inside the popup, and markup and text-direction
   const shown = page.getByTestId('backup-file-path');
   await expect(shown).toContainText('<img src=x onerror=alert(1)>backupnosj.exe');
   expect(await shown.evaluate((el) => el.querySelector('img, a') === null && !el.textContent!.includes('‮'))).toBe(true);
-  const overflow = await page.getByRole('region', { name: 'Automatic backups' }).evaluate((el) => {
+  const overflow = await page.getByRole('region', { name: 'Backups', exact: true }).evaluate((el) => {
     const scroller = el.closest('.overflow-y-auto') as HTMLElement | null;
     return { section: el.scrollWidth - el.clientWidth, scroller: scroller ? scroller.scrollWidth - scroller.clientWidth : 0 };
   });

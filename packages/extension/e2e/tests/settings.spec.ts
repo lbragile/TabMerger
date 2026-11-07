@@ -18,7 +18,7 @@ test.describe('Import / Export', () => {
 
     const [download] = await Promise.all([
       page.waitForEvent('download', { timeout: 8_000 }),
-      page.getByRole('button', { name: 'Export' }).click(),
+      page.getByRole('button', { name: 'Export JSON' }).click(),
     ]);
 
     const path = await download.path();
@@ -182,7 +182,7 @@ test.describe('Import confirmation (in-app box)', () => {
     await page.keyboard.press('Escape');
     await expect(box).toHaveCount(0);
     await expect(page.getByRole('tab', { name: /data/i })).toBeVisible(); // Settings is still open
-    await expect(page.getByRole('button', { name: 'Import', exact: true })).toBeFocused();
+    await expect(page.getByRole('button', { name: 'Import file', exact: true })).toBeFocused();
     expect((await readStoredGroups(page)).map((g) => g.name)).toEqual(['Now Open', 'Work']);
     expect(native).toEqual([]);
   });

@@ -31,8 +31,11 @@ test.describe('Auto-save open tabs - Settings → Data', () => {
     await expect(box.getByRole('button', { name: 'Upgrade to keep them all' })).toBeVisible();
     // first on the tab: above the automatic backups section
     const autoSaveTop = (await box.boundingBox())!.y;
-    const backupsTop = (await page.getByRole('region', { name: 'Automatic backups' }).boundingBox())!.y;
+    const backupsTop = (await page.getByRole('region', { name: 'Backups', exact: true }).boundingBox())!.y;
     expect(autoSaveTop).toBeLessThan(backupsTop);
+
+    // the options are hidden (not just disabled) while it is off
+    await expect(box.getByRole('combobox', { name: 'Schedule' })).toHaveCount(0);
 
     // turning it on is remembered
     await box.getByRole('switch', { name: 'Auto-save open tabs' }).click();
@@ -51,7 +54,8 @@ test.describe('Auto-save open tabs - Settings → Data', () => {
 
     const box = card(page);
     await expect(box.getByRole('switch', { name: 'Auto-save open tabs' })).toBeChecked();
-    await expect(box.getByText(/Every auto-save is kept/)).toBeVisible();
+    await expect(box.getByRole('combobox', { name: 'Schedule' })).toBeVisible();
+    await expect(box.getByText(/keeps the newest 2 auto-saves/)).toHaveCount(0);
     await expect(box.getByRole('button', { name: 'Upgrade to keep them all' })).toHaveCount(0);
 
     await box.getByRole('combobox', { name: 'Schedule' }).click();
