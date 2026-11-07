@@ -33,9 +33,22 @@ test.describe('Subscription status banner', () => {
     const manage = page.getByRole('button', { name: 'Manage subscription' });
     await expect(manage).toBeVisible();
 
+    // Record what the popup asks the tabs API for (and still open it): the new tab's own URL is
+    // chrome-error:// when no web app is running (as in CI), so it can't be asserted on
+    await page.evaluate(() => {
+      const created: chrome.tabs.CreateProperties[] = [];
+      const original = chrome.tabs.create.bind(chrome.tabs);
+      (globalThis as unknown as { __tmCreated: typeof created }).__tmCreated = created;
+      chrome.tabs.create = ((props: chrome.tabs.CreateProperties) => {
+        created.push(props);
+        return original(props);
+      }) as typeof chrome.tabs.create;
+    });
     const [tab] = await Promise.all([context.waitForEvent('page'), manage.click()]);
-    // Not waiting for the load: the web app may not be running, the URL is set at creation
-    expect(tab.url().split(/[?#]/)[0]).toMatch(/\/account$/);
+    const created = await page.evaluate(() => (globalThis as unknown as { __tmCreated: chrome.tabs.CreateProperties[] }).__tmCreated);
+    expect(created).toHaveLength(1);
+    expect(created[0].url).toMatch(/^https?:\/\/[^/]+\/account$/);
+    await tab.close();
   });
 
   test('an active Pro plan that is not ending shows no banner or Manage subscription button', async ({ context, extensionId }) => {
