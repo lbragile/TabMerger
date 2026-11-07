@@ -419,20 +419,35 @@ async function wrappedKeyRow(): Promise<Record<string, unknown>> {
  * Fakes a signed-in Pro account: writes a session into chrome.storage.local (the Supabase
  * storage adapter, see lib/supabase.ts) and stubs EVERY Supabase REST call, so the outcome does
  * not depend on whether a Supabase is reachable from the machine running the test, or on how
- * fast it answers. Call it, then reload the popup.
+ * fast it answers. Call it, then reload the popup. `subscription` makes the stubbed plan a
+ * cancelling one (`cancelAtPeriodEnd` with a real `currentPeriodEnd`, which the status banner needs).
  *
  * Unstubbed, the `encryption_keys` check hit whatever VITE_SUPABASE_URL the build had: a local
  * stack answered 401 at once, an unreachable host only failed after PostgREST's retry backoff
  * (~7 s), and the test result followed that timing.
  */
-export async function signInAsPro(page: Page, encryption: E2eEncryption = 'unlocked'): Promise<void> {
+export async function signInAsPro(
+  page: Page,
+  encryption: E2eEncryption = 'unlocked',
+  subscription: { cancelAtPeriodEnd?: boolean; currentPeriodEnd?: string | null } = {}
+): Promise<void> {
   // Registered first = lowest priority: any table not stubbed below reads as empty / accepts writes.
   await page.route('**/rest/v1/**', (route) => route.fulfill({ json: [] }));
   await page.route('**/auth/v1/user*', (route) =>
     route.fulfill({ json: { id: E2E_USER_ID, email: E2E_USER_EMAIL, aud: 'authenticated' } })
   );
   await page.route('**/rest/v1/subscriptions*', (route) =>
-    route.fulfill({ json: [{ tier: 'pro', status: 'active', cancel_at_period_end: false, current_period_end: null, stripe_price_id: null }] })
+    route.fulfill({
+      json: [
+        {
+          tier: 'pro',
+          status: 'active',
+          cancel_at_period_end: subscription.cancelAtPeriodEnd ?? false,
+          current_period_end: subscription.currentPeriodEnd ?? null,
+          stripe_price_id: null
+        }
+      ]
+    })
   );
   const keyRow = encryption === 'locked' ? await wrappedKeyRow() : { user_id: E2E_USER_ID };
   await page.route('**/rest/v1/encryption_keys*', (route) => {
