@@ -54,6 +54,14 @@ export function Footer() {
                             </li>
                             <li>
                                 <Link
+                                    href="/compare"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    {nav("compare")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
                                     href="/changelog"
                                     className="hover:text-foreground transition-colors"
                                 >

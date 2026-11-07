@@ -1,0 +1,294 @@
+{
+  "metaTitle": "TabMerger vs OneTab, Session Buddy, Toby, Workona & lainnya",
+  "metaDescription": "Perbandingan yang adil antara TabMerger dan OneTab, Session Buddy, Toby, Workona, serta pengelola tab lainnya: paket gratis, harga, sinkronisasi, enkripsi, cadangan, dan AI, berdasarkan halaman masing-masing produk.",
+  "title": "Perbandingan TabMerger",
+  "lead": "Perbandingan yang adil dan berdampingan antara TabMerger dan {count, number} pengelola tab lainnya: apa yang bisa dilakukan masing-masing, dan berapa biayanya.",
+  "checkedOn": "Diperiksa pada <time>{date}</time>",
+  "differences": {
+    "label": "Yang membuat TabMerger berbeda",
+    "e2ee": {
+      "title": "Sinkronisasi yang tak bisa dibaca server",
+      "description": "Setiap grup yang disinkronkan selalu dienkripsi end-to-end. Tab Anda dikunci dengan kunci yang hanya dimiliki perangkat Anda."
+    },
+    "ai": {
+      "title": "AI yang merapikan untuk Anda",
+      "description": "Kelompokkan tab yang berantakan, beri nama grup, atau dapatkan ringkasan satu baris dari sebuah halaman. Dengan Pro AI atau kunci Anda sendiri.",
+      "descriptionOwnKey": "Kelompokkan tab yang berantakan, beri nama grup, atau dapatkan ringkasan satu baris dari sebuah halaman. Dengan Pro AI dan kunci API Anda sendiri.",
+      "descriptionComingSoon": "Kelompokkan tab yang berantakan, beri nama grup, atau dapatkan ringkasan satu baris dari sebuah halaman. Segera hadir di Pro AI."
+    },
+    "import": {
+      "title": "Pindah dalam semenit",
+      "description": "Salin daftar OneTab Anda ke file .txt lalu impor dari Pengaturan → Data: setiap daftar menjadi grup. HTML bookmark dan JSON juga bisa."
+    }
+  },
+  "table": {
+    "title": "Fitur demi fitur",
+    "lead": "Berdasarkan situs web dan halaman toko masing-masing produk. \"Tidak disebutkan\" berarti kami tidak bisa memastikannya, bukan berarti fiturnya tidak ada.",
+    "caption": "TabMerger dibandingkan dengan {products}",
+    "captionPair": "TabMerger dibandingkan dengan {product}",
+    "feature": "Fitur",
+    "pickerLegend": "Bandingkan TabMerger dengan",
+    "allTools": "Semua alat"
+  },
+  "groups": {
+    "plans": "Paket",
+    "organizing": "Penataan",
+    "finding": "Pencarian & pembersihan",
+    "saving": "Simpan & pulihkan",
+    "sync": "Sinkronisasi & keamanan",
+    "sharing": "Berbagi & pindah",
+    "ai": "AI (Pro AI)",
+    "other": "Lainnya"
+  },
+  "rows": {
+    "free": {
+      "label": "Paket gratis"
+    },
+    "paidFrom": {
+      "label": "Paket berbayar mulai"
+    },
+    "noAccount": {
+      "label": "Bisa tanpa akun"
+    },
+    "groups": {
+      "label": "Grup bernama"
+    },
+    "windows": {
+      "label": "Jendela di dalam grup"
+    },
+    "dnd": {
+      "label": "Seret dan lepas"
+    },
+    "shortcuts": {
+      "label": "Pintasan keyboard"
+    },
+    "contextMenu": {
+      "label": "Menu klik kanan"
+    },
+    "customTitles": {
+      "label": "Judul tab kustom"
+    },
+    "notes": {
+      "label": "Catatan"
+    },
+    "reminders": {
+      "label": "Pengingat dengan notifikasi"
+    },
+    "urlRules": {
+      "label": "Aturan penetapan URL otomatis"
+    },
+    "bulk": {
+      "label": "Tindakan massal"
+    },
+    "search": {
+      "label": "Pencarian"
+    },
+    "duplicates": {
+      "label": "Pembersihan duplikat"
+    },
+    "staleTabs": {
+      "label": "Saran membersihkan tab lama"
+    },
+    "memory": {
+      "label": "Membebaskan memori"
+    },
+    "sessions": {
+      "label": "Sesi & pemulihan setelah crash"
+    },
+    "continueOnDevice": {
+      "label": "Lanjutkan di perangkat lain"
+    },
+    "backups": {
+      "label": "Cadangan otomatis"
+    },
+    "sync": {
+      "label": "Sinkronisasi antarperangkat"
+    },
+    "e2ee": {
+      "label": "Sinkronisasi terenkripsi end-to-end"
+    },
+    "dashboard": {
+      "label": "Dasbor web"
+    },
+    "share": {
+      "label": "Tautan berbagi"
+    },
+    "import": {
+      "label": "Impor"
+    },
+    "export": {
+      "label": "Ekspor"
+    },
+    "aiAutoGroup": {
+      "label": "Pengelompokan otomatis"
+    },
+    "aiNames": {
+      "label": "Nama grup (tiga pilihan)"
+    },
+    "aiDescribe": {
+      "label": "Deskripsikan grup"
+    },
+    "aiSummaries": {
+      "label": "Ringkasan tab"
+    },
+    "aiSessions": {
+      "label": "Saran sesi"
+    },
+    "aiOrganize": {
+      "label": "Rapikan"
+    },
+    "aiOwnKey": {
+      "label": "Pakai kunci AI sendiri"
+    },
+    "languages": {
+      "label": "Bahasa"
+    },
+    "theme": {
+      "label": "Tema terang dan gelap"
+    },
+    "tour": {
+      "label": "Tur terpandu setelah instalasi"
+    },
+    "mobileApps": {
+      "label": "Aplikasi seluler"
+    },
+    "teams": {
+      "label": "Ruang kerja tim"
+    }
+  },
+  "states": {
+    "yes": "Ya",
+    "paid": "Ya",
+    "partial": "Ya",
+    "no": "Tidak",
+    "unknown": "Tidak disebutkan",
+    "paidPill": "Berbayar",
+    "paidSr": " (di paket berbayar)",
+    "partialSr": " (sebagian)"
+  },
+  "labels": {
+    "noPaidPlan": "Tidak ada paket berbayar yang tercantum",
+    "syncNeedsSignIn": "Sinkronisasi perlu masuk",
+    "folders": "Folder",
+    "collections": "Koleksi",
+    "collectionsAndSpaces": "Koleksi dan ruang",
+    "spaces": "Ruang",
+    "coreFeature": "Fitur utamanya",
+    "tabSuspension": "Penangguhan tab",
+    "listsSurviveRestarts": "Daftar bertahan setelah mulai ulang",
+    "saveWindows": "Simpan jendela sebagai sesi",
+    "autosave": "Simpan otomatis",
+    "pro": "Pro",
+    "alwaysOn": "Selalu aktif",
+    "noSync": "Tanpa sinkronisasi",
+    "proAi": "Pro AI",
+    "comingSoon": "Segera hadir",
+    "smartFeatures": "Fitur \"Smart\"",
+    "asWebPage": "Sebagai halaman web",
+    "shareCollections": "Bagikan koleksi",
+    "team": "Paket Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/bln · {yearly}/thn",
+    "priceMonthly": "{monthly}/bln",
+    "priceYearly": "{yearly}/thn",
+    "priceOnce": "{once} sekali bayar",
+    "noPaidPlanAtAll": "Tidak ada paket berbayar",
+    "namedColoredWindows": "Jendela bernama dan berwarna",
+    "namedTaggedSessions": "Sesi bernama dan bertag",
+    "windowTree": "Pohon jendela dan tab",
+    "saveRestoreWindows": "Simpan dan pulihkan jendela",
+    "cloudSync": "Sinkronisasi cloud",
+    "viaGoogleDrive": "Lewat cadangan Google Drive",
+    "closesIdleTabs": "Menutup tab yang menganggur",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Dengan Backup & Sync",
+    "detectsDuplicateBookmarks": "Mendeteksi bookmark duplikat",
+    "copyAsLinks": "Salin sebagai tautan, Markdown, CSV, atau JSON",
+    "crashRecovery": "Pemulihan setelah crash",
+    "searchesClosedTabs": "Mencari di tab yang ditutup",
+    "settingsOnly": "Hanya pengaturan"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, other {# grup}}, {tabs, plural, other {# tab}}",
+    "everyFeature": "Semua fitur",
+    "savedTabsLimit": "Hingga {count, plural, other {# tab tersimpan}}",
+    "proIncludes": "Pro: sinkronisasi dan cadangan",
+    "accountForSyncAi": "Diperlukan untuk sinkronisasi dan AI",
+    "namedColorCoded": "Bernama dan berkode warna",
+    "colorCoded": "Berkode warna",
+    "openSavedHistory": "Terbuka, tersimpan, dan riwayat",
+    "advancedSearchPaid": "Pencarian lanjutan berbayar",
+    "sessionsLimits": "{count, number} gratis di browser ini, tanpa batas dan tersinkron di Pro",
+    "historySnapshots": "Snapshot riwayat",
+    "dataStaysLocal": "Data tetap di perangkat",
+    "newestKept": "{count, number} terbaru disimpan, salinan file opsional",
+    "sessionBackups": "Cadangan sesi 90 hari",
+    "ownKeyOnly": "Dengan kunci API Anda sendiri",
+    "encrypted": "Terenkripsi",
+    "sharedSpaces": "Ruang bersama",
+    "mouseKeyboard": "Mouse dan keyboard",
+    "shortcutsTabMerger": "Simpan tab tanpa membuka popup; Ctrl/Cmd+K untuk mencari",
+    "customizable": "Bisa disesuaikan",
+    "urlRulesLimits": "{count, number} gratis, tanpa batas di Pro",
+    "bulkActions": "Pilih, pindahkan, beri bintang, bagikan, hapus",
+    "searchFilters": "Filter: group:, window:, tag:",
+    "dashboardView": "Lihat grup dan cadangan di browser",
+    "importFormats": "JSON, HTML bookmark, OneTab",
+    "importExportLists": "Impor dan ekspor daftar",
+    "manyFormats": "Lebih dari 15 format",
+    "aiProviders": "Anthropic, OpenAI, atau Gemini",
+    "optIn": "Opsional",
+    "rtlIncluded": "Termasuk kanan-ke-kiri",
+    "themesPalettes": "Tema, palet ramah buta warna",
+    "iosAndroid": "iOS dan Android",
+    "dashboardOnPhones": "Dasbor web bisa dipakai di ponsel",
+    "notOnSafari": "Tidak di Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, hanya tahunan",
+    "weeklyLocalBackup": "Cadangan lokal mingguan; cadangan cloud dengan Backup & Sync",
+    "plusManualBackups": "Plus cadangan manual sekali klik",
+    "donations": "Donasi",
+    "teamPricePerMember": "{monthly}/bln atau {yearly}/thn per anggota",
+    "upToSpaces": "Hingga {count, number} ruang",
+    "startingAtNoYearly": "\"Mulai dari\"; tidak ada harga tahunan",
+    "teamPricePerUser": "Mulai {monthly} per pengguna/bln, minimal {count, number} pengguna",
+    "noLimits": "Tanpa batas",
+    "proPlan": "Pro",
+    "searchOperators": "t:, u:, regex",
+    "offlineThisBrowser": "Bekerja offline, hanya di browser ini",
+    "savedWindowsFiles": "Jendela tersimpan sebagai file",
+    "autoSavesOnCloseTimer": "Menyimpan otomatis saat ditutup dan berkala",
+    "fromSessionBuddy": "Termasuk dari Session Buddy",
+    "backupsGoogleDrive": "Lokal tiap beberapa menit, harian ke Google Drive",
+    "groupsSavedLocally": "Grup disimpan secara lokal",
+    "toJsonFile": "Ke file JSON",
+    "reopenFromCorral": "Buka lagi dari Tab Corral",
+    "closeWindowsKeepTree": "Tutup jendela, tetap ada di pohon",
+    "textOutlineHtml": "Kerangka teks atau file HTML",
+    "stgImportSources": "Dari Tab Groups, Panorama View, Sync Tab Groups, JSON",
+    "closedTabsNotSynced": "Tab yang ditutup tidak disinkronkan"
+  },
+  "legend": {
+    "label": "Keterangan",
+    "yes": "Ya",
+    "paid": "Di paket berbayar",
+    "partial": "Sebagian",
+    "no": "Tidak",
+    "unknown": "Tidak disebutkan"
+  },
+  "switching": {
+    "title": "Pindah dari OneTab?",
+    "lead": "Daftar Anda masuk sebagai grup, lengkap dengan judulnya. Tidak ada yang keluar dari browser Anda.",
+    "steps": {
+      "export": "Di OneTab, buka <b>Export / Import URLs</b> lalu tekan <b>Copy to clipboard</b>.",
+      "save": "Tempel ke file teks biasa (Notepad, atau TextEdit dalam mode teks biasa) lalu simpan sebagai <b>.txt</b>.",
+      "open": "Di TabMerger, buka <b>Pengaturan → Data</b>, tekan <b>Impor</b>, lalu pilih file .txt.",
+      "import": "Konfirmasi. Setiap grup OneTab menjadi grup tersendiri, bernama \"Imported 1\", \"Imported 2\", dan seterusnya.",
+      "other": "Datang dari alat lain? Ekspor bookmark Anda sebagai HTML, atau file JSON, lalu impor dengan cara yang sama."
+    }
+  },
+  "fairUse": "Informasi berasal dari situs web dan halaman toko masing-masing produk, diperiksa pada <time>{date}</time>. Fitur dan harga bisa berubah; jika ada yang sudah usang, <link>beri tahu kami</link> dan kami akan memperbaikinya. Semua nama produk adalah merek dagang pemiliknya. TabMerger tidak berafiliasi dengan satu pun dari mereka.",
+  "sources": {
+    "label": "Sumber"
+  }
+}

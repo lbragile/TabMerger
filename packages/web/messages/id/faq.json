@@ -4,6 +4,7 @@
   "title": "Pertanyaan umum",
   "lead": "Masih ragu tentang sesuatu? Kami membalas email dalam waktu kurang dari sehari.",
   "contact": "Hubungi dukungan",
+  "compareLink": "Pindah dari pengelola tab lain? Lihat perbandingan TabMerger",
   "free": {
     "question": "Apakah TabMerger benar-benar gratis?",
     "answer": "Ya! Paket gratis mencakup semua fitur inti — hingga {groups} grup, {tabs} tab, {urlRules} aturan URL, seret dan lepas, serta impor/ekspor. Anda hanya membayar jika menginginkan sinkronisasi cloud, grup, tab, dan aturan URL tanpa batas, atau fitur AI."

@@ -1,0 +1,294 @@
+{
+  "metaTitle": "TabMerger बनाम OneTab, Session Buddy, Toby, Workona और अन्य",
+  "metaDescription": "TabMerger की OneTab, Session Buddy, Toby, Workona और दूसरे टैब मैनेजरों से निष्पक्ष तुलना: मुफ़्त प्लान, कीमतें, सिंक, एन्क्रिप्शन, बैकअप और AI, हर प्रोडक्ट के अपने पेजों के आधार पर।",
+  "title": "TabMerger की तुलना",
+  "lead": "TabMerger और {count, number} दूसरे टैब मैनेजरों की निष्पक्ष, साथ-साथ तुलना: हर एक क्या करता है और उसकी कीमत क्या है।",
+  "checkedOn": "<time>{date}</time> को जाँचा गया",
+  "differences": {
+    "label": "TabMerger को क्या अलग बनाता है",
+    "e2ee": {
+      "title": "ऐसा सिंक जिसे सर्वर नहीं पढ़ सकता",
+      "description": "हर सिंक होने वाला ग्रुप हमेशा एंड-टू-एंड एन्क्रिप्टेड रहता है। आपके टैब ऐसी कुंजी से सुरक्षित हैं जो सिर्फ़ आपके डिवाइसों के पास है।"
+    },
+    "ai": {
+      "title": "AI जो छँटाई कर दे",
+      "description": "बिखरे टैब को ग्रुप में बाँटें, किसी ग्रुप को नाम दें, या किसी पेज का एक लाइन का सारांश पाएँ। Pro AI या अपनी कुंजी के साथ।",
+      "descriptionOwnKey": "बिखरे टैब को ग्रुप में बाँटें, किसी ग्रुप को नाम दें, या किसी पेज का एक लाइन का सारांश पाएँ। Pro AI और अपनी API कुंजी के साथ।",
+      "descriptionComingSoon": "बिखरे टैब को ग्रुप में बाँटें, किसी ग्रुप को नाम दें, या किसी पेज का एक लाइन का सारांश पाएँ। Pro AI में जल्द आ रहा है।"
+    },
+    "import": {
+      "title": "एक मिनट में स्विच करें",
+      "description": "अपनी OneTab सूचियाँ एक .txt फ़ाइल में कॉपी करें और सेटिंग्स → डेटा से इंपोर्ट करें: हर सूची एक ग्रुप बन जाती है। बुकमार्क HTML और JSON भी चलते हैं।"
+    }
+  },
+  "table": {
+    "title": "हर फ़ीचर की तुलना",
+    "lead": "हर प्रोडक्ट की अपनी वेबसाइट और स्टोर लिस्टिंग के आधार पर। \"उल्लेख नहीं\" का मतलब है कि हम इसकी पुष्टि नहीं कर सके, यह नहीं कि फ़ीचर मौजूद नहीं है।",
+    "caption": "TabMerger की तुलना {products} से",
+    "captionPair": "TabMerger की तुलना {product} से",
+    "feature": "फ़ीचर",
+    "pickerLegend": "TabMerger की तुलना करें",
+    "allTools": "सभी टूल"
+  },
+  "groups": {
+    "plans": "प्लान",
+    "organizing": "व्यवस्थापन",
+    "finding": "खोज और सफ़ाई",
+    "saving": "सेव और रीस्टोर",
+    "sync": "सिंक और सुरक्षा",
+    "sharing": "शेयर और माइग्रेट",
+    "ai": "AI (Pro AI)",
+    "other": "बाकी सब"
+  },
+  "rows": {
+    "free": {
+      "label": "मुफ़्त प्लान"
+    },
+    "paidFrom": {
+      "label": "पेड प्लान की शुरुआती कीमत"
+    },
+    "noAccount": {
+      "label": "बिना अकाउंट के चलता है"
+    },
+    "groups": {
+      "label": "नाम वाले ग्रुप"
+    },
+    "windows": {
+      "label": "ग्रुप के अंदर विंडो"
+    },
+    "dnd": {
+      "label": "ड्रैग एंड ड्रॉप"
+    },
+    "shortcuts": {
+      "label": "कीबोर्ड शॉर्टकट"
+    },
+    "contextMenu": {
+      "label": "राइट-क्लिक मेन्यू"
+    },
+    "customTitles": {
+      "label": "टैब के अपने टाइटल"
+    },
+    "notes": {
+      "label": "नोट्स"
+    },
+    "reminders": {
+      "label": "नोटिफ़िकेशन वाले रिमाइंडर"
+    },
+    "urlRules": {
+      "label": "URL अपने-आप असाइन करने के नियम"
+    },
+    "bulk": {
+      "label": "बल्क एक्शन"
+    },
+    "search": {
+      "label": "खोज"
+    },
+    "duplicates": {
+      "label": "डुप्लिकेट हटाना"
+    },
+    "staleTabs": {
+      "label": "पुराने टैब हटाने के सुझाव"
+    },
+    "memory": {
+      "label": "मेमोरी खाली करना"
+    },
+    "sessions": {
+      "label": "सेशन और क्रैश के बाद रिकवरी"
+    },
+    "continueOnDevice": {
+      "label": "दूसरे डिवाइस पर जारी रखें"
+    },
+    "backups": {
+      "label": "अपने-आप बैकअप"
+    },
+    "sync": {
+      "label": "डिवाइसों के बीच सिंक"
+    },
+    "e2ee": {
+      "label": "एंड-टू-एंड एन्क्रिप्टेड सिंक"
+    },
+    "dashboard": {
+      "label": "वेब डैशबोर्ड"
+    },
+    "share": {
+      "label": "शेयर लिंक"
+    },
+    "import": {
+      "label": "इंपोर्ट"
+    },
+    "export": {
+      "label": "एक्सपोर्ट"
+    },
+    "aiAutoGroup": {
+      "label": "अपने-आप ग्रुप बनाना"
+    },
+    "aiNames": {
+      "label": "ग्रुप के नाम (चुनने के लिए तीन)"
+    },
+    "aiDescribe": {
+      "label": "ग्रुप का विवरण"
+    },
+    "aiSummaries": {
+      "label": "टैब सारांश"
+    },
+    "aiSessions": {
+      "label": "सेशन सुझाव"
+    },
+    "aiOrganize": {
+      "label": "व्यवस्थित करें"
+    },
+    "aiOwnKey": {
+      "label": "अपनी AI कुंजी इस्तेमाल करें"
+    },
+    "languages": {
+      "label": "भाषाएँ"
+    },
+    "theme": {
+      "label": "लाइट और डार्क थीम"
+    },
+    "tour": {
+      "label": "इंस्टॉल के बाद गाइडेड टूर"
+    },
+    "mobileApps": {
+      "label": "मोबाइल ऐप"
+    },
+    "teams": {
+      "label": "टीम वर्कस्पेस"
+    }
+  },
+  "states": {
+    "yes": "हाँ",
+    "paid": "हाँ",
+    "partial": "हाँ",
+    "no": "नहीं",
+    "unknown": "उल्लेख नहीं",
+    "paidPill": "पेड",
+    "paidSr": " (पेड प्लान में)",
+    "partialSr": " (आंशिक)"
+  },
+  "labels": {
+    "noPaidPlan": "कोई पेड प्लान नहीं बताया गया",
+    "syncNeedsSignIn": "सिंक के लिए साइन-इन ज़रूरी",
+    "folders": "फ़ोल्डर",
+    "collections": "कलेक्शन",
+    "collectionsAndSpaces": "कलेक्शन और स्पेस",
+    "spaces": "स्पेस",
+    "coreFeature": "इसका मुख्य फ़ीचर",
+    "tabSuspension": "टैब सस्पेंड करना",
+    "listsSurviveRestarts": "रीस्टार्ट के बाद भी सूचियाँ रहती हैं",
+    "saveWindows": "विंडो को सेशन के रूप में सेव करना",
+    "autosave": "ऑटो-सेव",
+    "pro": "Pro",
+    "alwaysOn": "हमेशा चालू",
+    "noSync": "कोई सिंक नहीं",
+    "proAi": "Pro AI",
+    "comingSoon": "जल्द आ रहा है",
+    "smartFeatures": "\"Smart\" फ़ीचर",
+    "asWebPage": "वेब पेज के रूप में",
+    "shareCollections": "कलेक्शन शेयर करना",
+    "team": "Team प्लान",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/माह · {yearly}/वर्ष",
+    "priceMonthly": "{monthly}/माह",
+    "priceYearly": "{yearly}/वर्ष",
+    "priceOnce": "{once} एक बार",
+    "noPaidPlanAtAll": "कोई पेड प्लान नहीं",
+    "namedColoredWindows": "नाम और रंग वाली विंडो",
+    "namedTaggedSessions": "नाम और टैग वाले सेशन",
+    "windowTree": "विंडो और टैब का ट्री",
+    "saveRestoreWindows": "विंडो सेव और रीस्टोर करना",
+    "cloudSync": "क्लाउड सिंक",
+    "viaGoogleDrive": "Google Drive बैकअप के ज़रिए",
+    "closesIdleTabs": "निष्क्रिय टैब बंद करता है",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Backup & Sync के साथ",
+    "detectsDuplicateBookmarks": "डुप्लिकेट बुकमार्क पहचानता है",
+    "copyAsLinks": "लिंक, Markdown, CSV या JSON के रूप में कॉपी",
+    "crashRecovery": "क्रैश के बाद रिकवरी",
+    "searchesClosedTabs": "बंद टैब में खोजता है",
+    "settingsOnly": "सिर्फ़ सेटिंग्स"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# ग्रुप} other {# ग्रुप}}, {tabs, plural, one {# टैब} other {# टैब}}",
+    "everyFeature": "हर फ़ीचर",
+    "savedTabsLimit": "{count, plural, one {# सेव किया टैब} other {# सेव किए टैब}} तक",
+    "proIncludes": "Pro: सिंक और बैकअप",
+    "accountForSyncAi": "सिंक और AI के लिए ज़रूरी",
+    "namedColorCoded": "नाम और रंग वाले",
+    "colorCoded": "रंग से पहचान",
+    "openSavedHistory": "खुले, सेव किए और हिस्ट्री",
+    "advancedSearchPaid": "एडवांस्ड खोज पेड है",
+    "sessionsLimits": "इस ब्राउज़र में {count, number} मुफ़्त, Pro में असीमित और सिंक",
+    "historySnapshots": "हिस्ट्री स्नैपशॉट",
+    "dataStaysLocal": "डेटा डिवाइस पर ही रहता है",
+    "newestKept": "नवीनतम {count, number} रखे जाते हैं, फ़ाइल कॉपी वैकल्पिक",
+    "sessionBackups": "90 दिन के सेशन बैकअप",
+    "ownKeyOnly": "अपनी API कुंजी के साथ",
+    "encrypted": "एन्क्रिप्टेड",
+    "sharedSpaces": "शेयर किए गए स्पेस",
+    "mouseKeyboard": "माउस और कीबोर्ड",
+    "shortcutsTabMerger": "पॉपअप खोले बिना टैब सेव करें; खोज के लिए Ctrl/Cmd+K",
+    "customizable": "कस्टमाइज़ किए जा सकते हैं",
+    "urlRulesLimits": "{count, number} मुफ़्त, Pro में असीमित",
+    "bulkActions": "चुनें, ले जाएँ, स्टार करें, शेयर करें, मिटाएँ",
+    "searchFilters": "फ़िल्टर: group:, window:, tag:",
+    "dashboardView": "ब्राउज़र में ग्रुप और बैकअप देखें",
+    "importFormats": "JSON, बुकमार्क HTML, OneTab",
+    "importExportLists": "सूचियाँ इंपोर्ट और एक्सपोर्ट करें",
+    "manyFormats": "15+ फ़ॉर्मेट",
+    "aiProviders": "Anthropic, OpenAI या Gemini",
+    "optIn": "वैकल्पिक",
+    "rtlIncluded": "दाएँ-से-बाएँ भाषाओं समेत",
+    "themesPalettes": "थीम, कलर-ब्लाइंड पैलेट",
+    "iosAndroid": "iOS और Android",
+    "dashboardOnPhones": "वेब डैशबोर्ड फ़ोन पर भी चलता है",
+    "notOnSafari": "Safari पर नहीं",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, सिर्फ़ वार्षिक",
+    "weeklyLocalBackup": "हर हफ़्ते लोकल बैकअप; Backup & Sync के साथ क्लाउड बैकअप",
+    "plusManualBackups": "साथ में एक-क्लिक मैन्युअल बैकअप",
+    "donations": "दान",
+    "teamPricePerMember": "प्रति सदस्य {monthly}/माह या {yearly}/वर्ष",
+    "upToSpaces": "{count, number} स्पेस तक",
+    "startingAtNoYearly": "\"शुरुआती\" कीमत; वार्षिक कीमत नहीं बताई गई",
+    "teamPricePerUser": "प्रति उपयोगकर्ता {monthly}/माह से, कम से कम {count, number} उपयोगकर्ता",
+    "noLimits": "कोई सीमा नहीं",
+    "proPlan": "Pro",
+    "searchOperators": "t:, u:, regex",
+    "offlineThisBrowser": "ऑफ़लाइन चलता है, सिर्फ़ इसी ब्राउज़र में",
+    "savedWindowsFiles": "सेव की गई विंडो फ़ाइलों के रूप में",
+    "autoSavesOnCloseTimer": "बंद करने पर और टाइमर से ऑटो-सेव",
+    "fromSessionBuddy": "Session Buddy से भी",
+    "backupsGoogleDrive": "हर कुछ मिनट में लोकल, रोज़ Google Drive पर",
+    "groupsSavedLocally": "ग्रुप लोकल रूप से सेव",
+    "toJsonFile": "JSON फ़ाइल में",
+    "reopenFromCorral": "Tab Corral से फिर खोलें",
+    "closeWindowsKeepTree": "विंडो बंद करें, ट्री में बनी रहती हैं",
+    "textOutlineHtml": "टेक्स्ट आउटलाइन या HTML फ़ाइल",
+    "stgImportSources": "Tab Groups, Panorama View, Sync Tab Groups, JSON से",
+    "closedTabsNotSynced": "बंद टैब सिंक नहीं होते"
+  },
+  "legend": {
+    "label": "संकेत",
+    "yes": "हाँ",
+    "paid": "पेड प्लान में",
+    "partial": "आंशिक",
+    "no": "नहीं",
+    "unknown": "उल्लेख नहीं"
+  },
+  "switching": {
+    "title": "OneTab से आ रहे हैं?",
+    "lead": "आपकी सूचियाँ टाइटल समेत ग्रुप के रूप में आ जाती हैं। कुछ भी आपके ब्राउज़र से बाहर नहीं जाता।",
+    "steps": {
+      "export": "OneTab में <b>Export / Import URLs</b> खोलें और <b>Copy to clipboard</b> दबाएँ।",
+      "save": "इसे एक सादी टेक्स्ट फ़ाइल (Notepad, या सादे टेक्स्ट पर सेट TextEdit) में पेस्ट करें और <b>.txt</b> के रूप में सेव करें।",
+      "open": "TabMerger में <b>सेटिंग्स → डेटा</b> खोलें, <b>आयात</b> दबाएँ और .txt फ़ाइल चुनें।",
+      "import": "पुष्टि करें। हर OneTab ग्रुप अपना अलग ग्रुप बन जाता है, जिनके नाम \"Imported 1\", \"Imported 2\" वगैरह होते हैं।",
+      "other": "किसी और टूल से आ रहे हैं? अपने बुकमार्क HTML या JSON फ़ाइल के रूप में एक्सपोर्ट करें और उसी तरह इंपोर्ट करें।"
+    }
+  },
+  "fairUse": "जानकारी हर प्रोडक्ट की अपनी वेबसाइट और स्टोर लिस्टिंग से ली गई है, जिसे <time>{date}</time> को जाँचा गया। फ़ीचर और कीमतें बदलती रहती हैं; अगर यहाँ कुछ पुराना है, तो <link>हमें बताएँ</link>, हम उसे ठीक कर देंगे। सभी प्रोडक्ट नाम अपने-अपने मालिकों के ट्रेडमार्क हैं। TabMerger इनमें से किसी से संबद्ध नहीं है।",
+  "sources": {
+    "label": "स्रोत"
+  }
+}

@@ -1,0 +1,294 @@
+{
+  "metaTitle": "TabMerger와 OneTab, Session Buddy, Toby, Workona 등 비교",
+  "metaDescription": "TabMerger를 OneTab, Session Buddy, Toby, Workona 등 다른 탭 관리자와 공정하게 비교합니다. 무료 플랜, 가격, 동기화, 암호화, 백업, AI를 각 제품의 공식 페이지 기준으로 정리했습니다.",
+  "title": "TabMerger 비교",
+  "lead": "TabMerger와 다른 탭 관리자 {count, number}개를 나란히 공정하게 비교합니다. 각각 무엇을 할 수 있고 얼마인지 확인하세요.",
+  "checkedOn": "<time>{date}</time> 확인",
+  "differences": {
+    "label": "TabMerger만의 차별점",
+    "e2ee": {
+      "title": "서버도 읽을 수 없는 동기화",
+      "description": "동기화되는 모든 그룹은 항상 종단 간 암호화됩니다. 탭은 내 기기만 가진 키로 잠겨 있습니다."
+    },
+    "ai": {
+      "title": "정리는 AI에게",
+      "description": "뒤죽박죽인 탭을 그룹으로 묶고, 그룹 이름을 짓고, 페이지를 한 줄로 요약하세요. Pro AI 또는 내 키로 사용할 수 있습니다.",
+      "descriptionOwnKey": "뒤죽박죽인 탭을 그룹으로 묶고, 그룹 이름을 짓고, 페이지를 한 줄로 요약하세요. Pro AI와 내 API 키로 사용할 수 있습니다.",
+      "descriptionComingSoon": "뒤죽박죽인 탭을 그룹으로 묶고, 그룹 이름을 짓고, 페이지를 한 줄로 요약하세요. Pro AI에서 곧 제공됩니다."
+    },
+    "import": {
+      "title": "1분 만에 이전",
+      "description": "OneTab 목록을 .txt 파일에 복사한 뒤 설정 → 데이터에서 가져오면 목록마다 그룹이 됩니다. 북마크 HTML과 JSON도 지원합니다."
+    }
+  },
+  "table": {
+    "title": "기능별 비교",
+    "lead": "각 제품의 공식 웹사이트와 스토어 등록 정보를 기준으로 했습니다. '명시 안 됨'은 확인하지 못했다는 뜻이며, 기능이 없다는 뜻이 아닙니다.",
+    "caption": "TabMerger와 {products} 비교",
+    "captionPair": "TabMerger와 {product} 비교",
+    "feature": "기능",
+    "pickerLegend": "TabMerger와 비교할 제품",
+    "allTools": "모든 도구"
+  },
+  "groups": {
+    "plans": "플랜",
+    "organizing": "정리",
+    "finding": "찾기와 정리",
+    "saving": "저장과 복원",
+    "sync": "동기화와 안전",
+    "sharing": "공유와 이전",
+    "ai": "AI (Pro AI)",
+    "other": "그 밖의 기능"
+  },
+  "rows": {
+    "free": {
+      "label": "무료 플랜"
+    },
+    "paidFrom": {
+      "label": "유료 플랜 시작 가격"
+    },
+    "noAccount": {
+      "label": "계정 없이 사용"
+    },
+    "groups": {
+      "label": "이름 있는 그룹"
+    },
+    "windows": {
+      "label": "그룹 안의 창"
+    },
+    "dnd": {
+      "label": "드래그 앤 드롭"
+    },
+    "shortcuts": {
+      "label": "키보드 단축키"
+    },
+    "contextMenu": {
+      "label": "오른쪽 클릭 메뉴"
+    },
+    "customTitles": {
+      "label": "탭 제목 직접 지정"
+    },
+    "notes": {
+      "label": "메모"
+    },
+    "reminders": {
+      "label": "알림이 있는 리마인더"
+    },
+    "urlRules": {
+      "label": "URL 자동 배정 규칙"
+    },
+    "bulk": {
+      "label": "일괄 작업"
+    },
+    "search": {
+      "label": "검색"
+    },
+    "duplicates": {
+      "label": "중복 정리"
+    },
+    "staleTabs": {
+      "label": "오래된 탭 정리 제안"
+    },
+    "memory": {
+      "label": "메모리 확보"
+    },
+    "sessions": {
+      "label": "세션 및 충돌 복구"
+    },
+    "continueOnDevice": {
+      "label": "다른 기기에서 이어 하기"
+    },
+    "backups": {
+      "label": "자동 백업"
+    },
+    "sync": {
+      "label": "기기 간 동기화"
+    },
+    "e2ee": {
+      "label": "종단 간 암호화 동기화"
+    },
+    "dashboard": {
+      "label": "웹 대시보드"
+    },
+    "share": {
+      "label": "공유 링크"
+    },
+    "import": {
+      "label": "가져오기"
+    },
+    "export": {
+      "label": "내보내기"
+    },
+    "aiAutoGroup": {
+      "label": "자동 그룹화"
+    },
+    "aiNames": {
+      "label": "그룹 이름(세 가지 중 선택)"
+    },
+    "aiDescribe": {
+      "label": "그룹 설명"
+    },
+    "aiSummaries": {
+      "label": "탭 요약"
+    },
+    "aiSessions": {
+      "label": "세션 제안"
+    },
+    "aiOrganize": {
+      "label": "정리하기"
+    },
+    "aiOwnKey": {
+      "label": "내 AI 키 사용"
+    },
+    "languages": {
+      "label": "언어"
+    },
+    "theme": {
+      "label": "라이트 및 다크 테마"
+    },
+    "tour": {
+      "label": "설치 후 가이드 투어"
+    },
+    "mobileApps": {
+      "label": "모바일 앱"
+    },
+    "teams": {
+      "label": "팀 작업 공간"
+    }
+  },
+  "states": {
+    "yes": "예",
+    "paid": "예",
+    "partial": "예",
+    "no": "아니요",
+    "unknown": "명시 안 됨",
+    "paidPill": "유료",
+    "paidSr": " (유료 플랜)",
+    "partialSr": " (일부)"
+  },
+  "labels": {
+    "noPaidPlan": "유료 플랜 안내 없음",
+    "syncNeedsSignIn": "동기화는 로그인 필요",
+    "folders": "폴더",
+    "collections": "컬렉션",
+    "collectionsAndSpaces": "컬렉션과 스페이스",
+    "spaces": "스페이스",
+    "coreFeature": "핵심 기능",
+    "tabSuspension": "탭 일시 중지",
+    "listsSurviveRestarts": "재시작 후에도 목록 유지",
+    "saveWindows": "창을 세션으로 저장",
+    "autosave": "자동 저장",
+    "pro": "Pro",
+    "alwaysOn": "항상 켜짐",
+    "noSync": "동기화 없음",
+    "proAi": "Pro AI",
+    "comingSoon": "출시 예정",
+    "smartFeatures": "'Smart' 기능",
+    "asWebPage": "웹 페이지로",
+    "shareCollections": "컬렉션 공유",
+    "team": "Team 플랜",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "월 {monthly} · 연 {yearly}",
+    "priceMonthly": "월 {monthly}",
+    "priceYearly": "연 {yearly}",
+    "priceOnce": "1회 {once}",
+    "noPaidPlanAtAll": "유료 플랜 없음",
+    "namedColoredWindows": "이름과 색상이 있는 창",
+    "namedTaggedSessions": "이름과 태그가 있는 세션",
+    "windowTree": "창과 탭의 트리",
+    "saveRestoreWindows": "창 저장 및 복원",
+    "cloudSync": "클라우드 동기화",
+    "viaGoogleDrive": "Google Drive 백업을 통해",
+    "closesIdleTabs": "사용하지 않는 탭 닫기",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Backup & Sync 사용 시",
+    "detectsDuplicateBookmarks": "중복 북마크 감지",
+    "copyAsLinks": "링크, Markdown, CSV, JSON으로 복사",
+    "crashRecovery": "충돌 복구",
+    "searchesClosedTabs": "닫은 탭 검색",
+    "settingsOnly": "설정만"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, other {그룹 #개}}, {tabs, plural, other {탭 #개}}",
+    "everyFeature": "모든 기능",
+    "savedTabsLimit": "저장 탭 최대 {count, plural, other {#개}}",
+    "proIncludes": "Pro: 동기화와 백업",
+    "accountForSyncAi": "동기화와 AI에는 필요",
+    "namedColorCoded": "이름과 색상 지정",
+    "colorCoded": "색상 구분",
+    "openSavedHistory": "열린 탭, 저장된 탭, 기록",
+    "advancedSearchPaid": "고급 검색은 유료",
+    "sessionsLimits": "이 브라우저에서 {count, number}개 무료, Pro는 무제한 동기화",
+    "historySnapshots": "기록 스냅샷",
+    "dataStaysLocal": "데이터는 기기에만 저장",
+    "newestKept": "최근 {count, number}개 보관, 파일 사본은 선택",
+    "sessionBackups": "90일 세션 백업",
+    "ownKeyOnly": "내 API 키로 사용",
+    "encrypted": "암호화됨",
+    "sharedSpaces": "공유 스페이스",
+    "mouseKeyboard": "마우스와 키보드",
+    "shortcutsTabMerger": "팝업을 열지 않고 탭 저장, Ctrl/Cmd+K로 검색",
+    "customizable": "사용자 지정 가능",
+    "urlRulesLimits": "{count, number}개 무료, Pro는 무제한",
+    "bulkActions": "선택, 이동, 별표, 공유, 삭제",
+    "searchFilters": "필터: group:, window:, tag:",
+    "dashboardView": "브라우저에서 그룹과 백업 보기",
+    "importFormats": "JSON, 북마크 HTML, OneTab",
+    "importExportLists": "목록 가져오기 및 내보내기",
+    "manyFormats": "15가지 이상 형식",
+    "aiProviders": "Anthropic, OpenAI 또는 Gemini",
+    "optIn": "선택 사항",
+    "rtlIncluded": "오른쪽에서 왼쪽으로 쓰는 언어 포함",
+    "themesPalettes": "테마, 색각 이상자용 팔레트",
+    "iosAndroid": "iOS 및 Android",
+    "dashboardOnPhones": "웹 대시보드는 휴대폰에서도 작동",
+    "notOnSafari": "Safari 제외",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, 연간 결제만",
+    "weeklyLocalBackup": "매주 로컬 백업, Backup & Sync로 클라우드 백업",
+    "plusManualBackups": "원클릭 수동 백업도 지원",
+    "donations": "기부",
+    "teamPricePerMember": "멤버당 월 {monthly} 또는 연 {yearly}",
+    "upToSpaces": "스페이스 최대 {count, number}개",
+    "startingAtNoYearly": "'부터' 가격, 연간 가격 표시 없음",
+    "teamPricePerUser": "사용자당 월 {monthly}부터, 최소 {count, number}명",
+    "noLimits": "제한 없음",
+    "proPlan": "Pro",
+    "searchOperators": "t:, u:, 정규식",
+    "offlineThisBrowser": "오프라인 작동, 이 브라우저에서만",
+    "savedWindowsFiles": "저장한 창을 파일로",
+    "autoSavesOnCloseTimer": "닫을 때와 타이머로 자동 저장",
+    "fromSessionBuddy": "Session Buddy에서도 가능",
+    "backupsGoogleDrive": "몇 분마다 로컬, 매일 Google Drive에",
+    "groupsSavedLocally": "그룹은 로컬에 저장",
+    "toJsonFile": "JSON 파일로",
+    "reopenFromCorral": "Tab Corral에서 다시 열기",
+    "closeWindowsKeepTree": "창을 닫아도 트리에 유지",
+    "textOutlineHtml": "텍스트 개요 또는 HTML 파일",
+    "stgImportSources": "Tab Groups, Panorama View, Sync Tab Groups, JSON에서",
+    "closedTabsNotSynced": "닫은 탭은 동기화되지 않음"
+  },
+  "legend": {
+    "label": "범례",
+    "yes": "예",
+    "paid": "유료 플랜에서",
+    "partial": "일부",
+    "no": "아니요",
+    "unknown": "명시 안 됨"
+  },
+  "switching": {
+    "title": "OneTab에서 옮겨 오시나요?",
+    "lead": "목록이 제목까지 그대로 그룹으로 옮겨집니다. 데이터는 브라우저 밖으로 나가지 않습니다.",
+    "steps": {
+      "export": "OneTab에서 <b>Export / Import URLs</b>를 열고 <b>Copy to clipboard</b>를 누르세요.",
+      "save": "일반 텍스트 파일(메모장, 또는 일반 텍스트로 설정한 TextEdit)에 붙여 넣고 <b>.txt</b>로 저장하세요.",
+      "open": "TabMerger에서 <b>설정 → 데이터</b>를 열고 <b>가져오기</b>를 누른 뒤 .txt 파일을 선택하세요.",
+      "import": "확인하세요. OneTab 그룹마다 별도 그룹이 생기며 이름은 'Imported 1', 'Imported 2' 순으로 붙습니다.",
+      "other": "다른 도구를 쓰셨나요? 북마크를 HTML이나 JSON 파일로 내보낸 뒤 같은 방법으로 가져오세요."
+    }
+  },
+  "fairUse": "정보는 각 제품의 공식 웹사이트와 스토어 등록 정보에서 가져왔으며 <time>{date}</time>에 확인했습니다. 기능과 가격은 바뀔 수 있습니다. 오래된 정보가 있다면 <link>알려 주세요</link>. 바로 고치겠습니다. 모든 제품명은 각 소유자의 상표입니다. TabMerger는 이들 중 어느 곳과도 제휴 관계가 없습니다.",
+  "sources": {
+    "label": "출처"
+  }
+}

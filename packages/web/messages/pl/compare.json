@@ -1,0 +1,294 @@
+{
+  "metaTitle": "TabMerger vs OneTab, Session Buddy, Toby, Workona i inne",
+  "metaDescription": "Uczciwe porównanie TabMergera z OneTab, Session Buddy, Toby, Workona i innymi menedżerami kart: darmowe plany, ceny, synchronizacja, szyfrowanie, kopie zapasowe i AI, według stron samych produktów.",
+  "title": "TabMerger na tle innych",
+  "lead": "Uczciwe porównanie TabMergera z innymi menedżerami kart (jest ich {count, number}): co potrafi każdy z nich i ile kosztuje.",
+  "checkedOn": "Sprawdzono <time>{date}</time>",
+  "differences": {
+    "label": "Co wyróżnia TabMerger",
+    "e2ee": {
+      "title": "Synchronizacja, której serwer nie odczyta",
+      "description": "Każda synchronizowana grupa jest zawsze szyfrowana end-to-end. Twoje karty chroni klucz, który mają tylko Twoje urządzenia."
+    },
+    "ai": {
+      "title": "AI, które porządkuje za Ciebie",
+      "description": "Pogrupuj bałagan kart, nazwij grupę albo streść stronę w jednym zdaniu. Z Pro AI lub własnym kluczem.",
+      "descriptionOwnKey": "Pogrupuj bałagan kart, nazwij grupę albo streść stronę w jednym zdaniu. Z Pro AI i własnym kluczem API.",
+      "descriptionComingSoon": "Pogrupuj bałagan kart, nazwij grupę albo streść stronę w jednym zdaniu. Wkrótce w Pro AI."
+    },
+    "import": {
+      "title": "Przeprowadzka w minutę",
+      "description": "Skopiuj listy z OneTab do pliku .txt i zaimportuj go w Ustawienia → Dane: każda lista stanie się grupą. Działa też HTML zakładek i JSON."
+    }
+  },
+  "table": {
+    "title": "Funkcja po funkcji",
+    "lead": "Według strony i karty w sklepie każdego produktu. „Brak informacji” oznacza, że nie udało nam się tego potwierdzić, a nie że funkcji brakuje.",
+    "caption": "TabMerger w porównaniu z {products}",
+    "captionPair": "TabMerger w porównaniu z {product}",
+    "feature": "Funkcja",
+    "pickerLegend": "Porównaj TabMerger z",
+    "allTools": "Wszystkie narzędzia"
+  },
+  "groups": {
+    "plans": "Plany",
+    "organizing": "Porządkowanie",
+    "finding": "Wyszukiwanie i porządki",
+    "saving": "Zapisywanie i przywracanie",
+    "sync": "Synchronizacja i bezpieczeństwo",
+    "sharing": "Udostępnianie i przenosiny",
+    "ai": "AI (Pro AI)",
+    "other": "Wszystko inne"
+  },
+  "rows": {
+    "free": {
+      "label": "Darmowy plan"
+    },
+    "paidFrom": {
+      "label": "Płatne plany od"
+    },
+    "noAccount": {
+      "label": "Działa bez konta"
+    },
+    "groups": {
+      "label": "Nazwane grupy"
+    },
+    "windows": {
+      "label": "Okna w grupach"
+    },
+    "dnd": {
+      "label": "Przeciąganie i upuszczanie"
+    },
+    "shortcuts": {
+      "label": "Skróty klawiszowe"
+    },
+    "contextMenu": {
+      "label": "Menu kontekstowe"
+    },
+    "customTitles": {
+      "label": "Własne tytuły kart"
+    },
+    "notes": {
+      "label": "Notatki"
+    },
+    "reminders": {
+      "label": "Przypomnienia z powiadomieniami"
+    },
+    "urlRules": {
+      "label": "Reguły automatycznego przypisywania URL"
+    },
+    "bulk": {
+      "label": "Działania zbiorcze"
+    },
+    "search": {
+      "label": "Wyszukiwanie"
+    },
+    "duplicates": {
+      "label": "Usuwanie duplikatów"
+    },
+    "staleTabs": {
+      "label": "Podpowiedzi porządkowania starych kart"
+    },
+    "memory": {
+      "label": "Zwalnianie pamięci"
+    },
+    "sessions": {
+      "label": "Sesje i odzyskiwanie po awarii"
+    },
+    "continueOnDevice": {
+      "label": "Kontynuuj na innym urządzeniu"
+    },
+    "backups": {
+      "label": "Automatyczne kopie zapasowe"
+    },
+    "sync": {
+      "label": "Synchronizacja między urządzeniami"
+    },
+    "e2ee": {
+      "label": "Synchronizacja szyfrowana end-to-end"
+    },
+    "dashboard": {
+      "label": "Panel w przeglądarce"
+    },
+    "share": {
+      "label": "Linki do udostępniania"
+    },
+    "import": {
+      "label": "Import"
+    },
+    "export": {
+      "label": "Eksport"
+    },
+    "aiAutoGroup": {
+      "label": "Automatyczne grupowanie"
+    },
+    "aiNames": {
+      "label": "Nazwy grup (trzy do wyboru)"
+    },
+    "aiDescribe": {
+      "label": "Opis grupy"
+    },
+    "aiSummaries": {
+      "label": "Podsumowania kart"
+    },
+    "aiSessions": {
+      "label": "Podpowiedzi sesji"
+    },
+    "aiOrganize": {
+      "label": "Porządkowanie"
+    },
+    "aiOwnKey": {
+      "label": "Własny klucz AI"
+    },
+    "languages": {
+      "label": "Języki"
+    },
+    "theme": {
+      "label": "Jasny i ciemny motyw"
+    },
+    "tour": {
+      "label": "Przewodnik po instalacji"
+    },
+    "mobileApps": {
+      "label": "Aplikacje mobilne"
+    },
+    "teams": {
+      "label": "Przestrzenie zespołowe"
+    }
+  },
+  "states": {
+    "yes": "Tak",
+    "paid": "Tak",
+    "partial": "Tak",
+    "no": "Nie",
+    "unknown": "Brak informacji",
+    "paidPill": "Płatne",
+    "paidSr": " (w płatnym planie)",
+    "partialSr": " (częściowo)"
+  },
+  "labels": {
+    "noPaidPlan": "Brak płatnego planu",
+    "syncNeedsSignIn": "Synchronizacja wymaga logowania",
+    "folders": "Foldery",
+    "collections": "Kolekcje",
+    "collectionsAndSpaces": "Kolekcje i przestrzenie",
+    "spaces": "Przestrzenie",
+    "coreFeature": "Jego główna funkcja",
+    "tabSuspension": "Usypianie kart",
+    "listsSurviveRestarts": "Listy przetrwają restart",
+    "saveWindows": "Zapis okien jako sesji",
+    "autosave": "Autozapis",
+    "pro": "Pro",
+    "alwaysOn": "Zawsze włączone",
+    "noSync": "Brak synchronizacji",
+    "proAi": "Pro AI",
+    "comingSoon": "Wkrótce",
+    "smartFeatures": "Funkcje „Smart”",
+    "asWebPage": "Jako strona WWW",
+    "shareCollections": "Udostępnianie kolekcji",
+    "team": "Plan Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/mies. · {yearly}/rok",
+    "priceMonthly": "{monthly}/mies.",
+    "priceYearly": "{yearly}/rok",
+    "priceOnce": "{once} jednorazowo",
+    "noPaidPlanAtAll": "Brak płatnego planu",
+    "namedColoredWindows": "Nazwane, kolorowe okna",
+    "namedTaggedSessions": "Nazwane sesje z tagami",
+    "windowTree": "Drzewo okien i kart",
+    "saveRestoreWindows": "Zapisywanie i przywracanie okien",
+    "cloudSync": "Synchronizacja w chmurze",
+    "viaGoogleDrive": "Przez kopie w Google Drive",
+    "closesIdleTabs": "Zamyka nieużywane karty",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Z Backup & Sync",
+    "detectsDuplicateBookmarks": "Wykrywa zduplikowane zakładki",
+    "copyAsLinks": "Kopiowanie jako linki, Markdown, CSV lub JSON",
+    "crashRecovery": "Odzyskiwanie po awarii",
+    "searchesClosedTabs": "Przeszukuje zamknięte karty",
+    "settingsOnly": "Tylko ustawienia"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# grupa} few {# grupy} many {# grup} other {# grupy}}, {tabs, plural, one {# karta} few {# karty} many {# kart} other {# karty}}",
+    "everyFeature": "Wszystkie funkcje",
+    "savedTabsLimit": "Do {count, plural, one {# zapisanej karty} few {# zapisanych kart} many {# zapisanych kart} other {# zapisanej karty}}",
+    "proIncludes": "Pro: synchronizacja i kopie zapasowe",
+    "accountForSyncAi": "Potrzebne do synchronizacji i AI",
+    "namedColorCoded": "Z nazwami i kolorami",
+    "colorCoded": "Z kolorami",
+    "openSavedHistory": "Otwarte, zapisane i historia",
+    "advancedSearchPaid": "Wyszukiwanie zaawansowane jest płatne",
+    "sessionsLimits": "{count, number} za darmo w tej przeglądarce, bez limitu i z synchronizacją w Pro",
+    "historySnapshots": "Migawki historii",
+    "dataStaysLocal": "Dane zostają na urządzeniu",
+    "newestKept": "Zachowywanych jest {count, number} najnowszych, opcjonalnie z kopią w pliku",
+    "sessionBackups": "Kopie sesji z 90 dni",
+    "ownKeyOnly": "Z własnym kluczem API",
+    "encrypted": "Szyfrowane",
+    "sharedSpaces": "Wspólne przestrzenie",
+    "mouseKeyboard": "Mysz i klawiatura",
+    "shortcutsTabMerger": "Zapis kart bez otwierania okienka; Ctrl/Cmd+K do wyszukiwania",
+    "customizable": "Konfigurowalne",
+    "urlRulesLimits": "{count, number} za darmo, bez limitu w Pro",
+    "bulkActions": "Zaznacz, przenieś, oznacz gwiazdką, udostępnij, usuń",
+    "searchFilters": "Filtry: group:, window:, tag:",
+    "dashboardView": "Podgląd grup i kopii w przeglądarce",
+    "importFormats": "JSON, HTML zakładek, OneTab",
+    "importExportLists": "Import i eksport list",
+    "manyFormats": "Ponad 15 formatów",
+    "aiProviders": "Anthropic, OpenAI lub Gemini",
+    "optIn": "Opcjonalne",
+    "rtlIncluded": "W tym pisane od prawej do lewej",
+    "themesPalettes": "Motywy, palety dla daltonistów",
+    "iosAndroid": "iOS i Android",
+    "dashboardOnPhones": "Panel w przeglądarce działa na telefonach",
+    "notOnSafari": "Nie w Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, tylko rocznie",
+    "weeklyLocalBackup": "Cotygodniowa kopia lokalna; kopia w chmurze z Backup & Sync",
+    "plusManualBackups": "Plus ręczne kopie jednym kliknięciem",
+    "donations": "Darowizny",
+    "teamPricePerMember": "{monthly}/mies. lub {yearly}/rok za członka",
+    "upToSpaces": "Do {count, number} przestrzeni",
+    "startingAtNoYearly": "„Od”; brak ceny rocznej",
+    "teamPricePerUser": "Od {monthly} za użytkownika/mies., co najmniej {count, number} użytkowników",
+    "noLimits": "Bez limitów",
+    "proPlan": "Pro",
+    "searchOperators": "t:, u:, regex",
+    "offlineThisBrowser": "Działa offline, tylko w tej przeglądarce",
+    "savedWindowsFiles": "Zapisane okna jako pliki",
+    "autoSavesOnCloseTimer": "Zapisuje przy zamykaniu i co jakiś czas",
+    "fromSessionBuddy": "Także z Session Buddy",
+    "backupsGoogleDrive": "Lokalnie co kilka minut, codziennie na Google Drive",
+    "groupsSavedLocally": "Grupy zapisane lokalnie",
+    "toJsonFile": "Do pliku JSON",
+    "reopenFromCorral": "Można je otworzyć ponownie z Tab Corral",
+    "closeWindowsKeepTree": "Zamknięte okna zostają w drzewie",
+    "textOutlineHtml": "Konspekt tekstowy lub plik HTML",
+    "stgImportSources": "Z Tab Groups, Panorama View, Sync Tab Groups, JSON",
+    "closedTabsNotSynced": "Zamknięte karty nie są synchronizowane"
+  },
+  "legend": {
+    "label": "Legenda",
+    "yes": "Tak",
+    "paid": "W płatnym planie",
+    "partial": "Częściowo",
+    "no": "Nie",
+    "unknown": "Brak informacji"
+  },
+  "switching": {
+    "title": "Przechodzisz z OneTab?",
+    "lead": "Twoje listy trafią do grup, razem z tytułami. Nic nie opuszcza Twojej przeglądarki.",
+    "steps": {
+      "export": "W OneTab otwórz <b>Export / Import URLs</b> i kliknij <b>Copy to clipboard</b>.",
+      "save": "Wklej tekst do zwykłego pliku tekstowego (Notatnik albo TextEdit w trybie zwykłego tekstu) i zapisz go jako <b>.txt</b>.",
+      "open": "W TabMergerze otwórz <b>Ustawienia → Dane</b>, kliknij <b>Import</b> i wybierz plik .txt.",
+      "import": "Potwierdź. Każda grupa z OneTab stanie się osobną grupą o nazwie „Imported 1”, „Imported 2” i tak dalej.",
+      "other": "Przechodzisz z innego narzędzia? Wyeksportuj zakładki jako HTML lub plik JSON i zaimportuj go tak samo."
+    }
+  },
+  "fairUse": "Informacje pochodzą ze strony i karty w sklepie każdego produktu i zostały sprawdzone <time>{date}</time>. Funkcje i ceny się zmieniają; jeśli coś jest nieaktualne, <link>daj nam znać</link>, a poprawimy. Wszystkie nazwy produktów są znakami towarowymi ich właścicieli. TabMerger nie jest powiązany z żadnym z nich.",
+  "sources": {
+    "label": "Źródła"
+  }
+}

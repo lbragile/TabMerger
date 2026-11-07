@@ -1,0 +1,294 @@
+{
+  "metaTitle": "TabMerger ile OneTab, Session Buddy, Toby, Workona ve diğerleri",
+  "metaDescription": "TabMerger'ın OneTab, Session Buddy, Toby, Workona ve diğer sekme yöneticileriyle adil bir karşılaştırması: ücretsiz planlar, fiyatlar, eşitleme, şifreleme, yedekler ve yapay zekâ, her ürünün kendi sayfalarına göre.",
+  "title": "TabMerger karşılaştırması",
+  "lead": "TabMerger ve {count, number} sekme yöneticisi için adil, yan yana bir karşılaştırma: her biri ne yapar ve ne kadar tutar.",
+  "checkedOn": "Kontrol tarihi: <time>{date}</time>",
+  "differences": {
+    "label": "TabMerger'ı farklı kılanlar",
+    "e2ee": {
+      "title": "Sunucunun okuyamadığı eşitleme",
+      "description": "Eşitlenen her grup her zaman uçtan uca şifrelenir. Sekmeleriniz yalnızca cihazlarınızda bulunan bir anahtarla korunur."
+    },
+    "ai": {
+      "title": "Düzenlemeyi yapay zekâ yapsın",
+      "description": "Dağınık sekmeleri gruplayın, bir gruba ad verin ya da bir sayfanın tek satırlık özetini alın. Pro AI veya kendi anahtarınızla.",
+      "descriptionOwnKey": "Dağınık sekmeleri gruplayın, bir gruba ad verin ya da bir sayfanın tek satırlık özetini alın. Pro AI ve kendi API anahtarınızla.",
+      "descriptionComingSoon": "Dağınık sekmeleri gruplayın, bir gruba ad verin ya da bir sayfanın tek satırlık özetini alın. Yakında Pro AI'da."
+    },
+    "import": {
+      "title": "Bir dakikada geçiş",
+      "description": "OneTab listelerinizi bir .txt dosyasına kopyalayın ve Ayarlar → Veri bölümünden içe aktarın: her liste bir grup olur. Yer imleri HTML'si ve JSON da çalışır."
+    }
+  },
+  "table": {
+    "title": "Özellik özellik",
+    "lead": "Her ürünün kendi web sitesine ve mağaza sayfasına göre. \"Belirtilmemiş\", bunu doğrulayamadığımız anlamına gelir; özelliğin olmadığı anlamına gelmez.",
+    "caption": "TabMerger ile {products} karşılaştırması",
+    "captionPair": "TabMerger ile {product} karşılaştırması",
+    "feature": "Özellik",
+    "pickerLegend": "TabMerger'ı şununla karşılaştır",
+    "allTools": "Tüm araçlar"
+  },
+  "groups": {
+    "plans": "Planlar",
+    "organizing": "Düzenleme",
+    "finding": "Bulma ve temizlik",
+    "saving": "Kaydetme ve geri yükleme",
+    "sync": "Eşitleme ve güvenlik",
+    "sharing": "Paylaşma ve taşıma",
+    "ai": "Yapay zekâ (Pro AI)",
+    "other": "Diğer her şey"
+  },
+  "rows": {
+    "free": {
+      "label": "Ücretsiz plan"
+    },
+    "paidFrom": {
+      "label": "Ücretli planlar (başlangıç)"
+    },
+    "noAccount": {
+      "label": "Hesap olmadan çalışır"
+    },
+    "groups": {
+      "label": "Adlandırılmış gruplar"
+    },
+    "windows": {
+      "label": "Grupların içinde pencereler"
+    },
+    "dnd": {
+      "label": "Sürükle ve bırak"
+    },
+    "shortcuts": {
+      "label": "Klavye kısayolları"
+    },
+    "contextMenu": {
+      "label": "Sağ tık menüsü"
+    },
+    "customTitles": {
+      "label": "Özel sekme başlıkları"
+    },
+    "notes": {
+      "label": "Notlar"
+    },
+    "reminders": {
+      "label": "Bildirimli hatırlatıcılar"
+    },
+    "urlRules": {
+      "label": "URL otomatik atama kuralları"
+    },
+    "bulk": {
+      "label": "Toplu işlemler"
+    },
+    "search": {
+      "label": "Arama"
+    },
+    "duplicates": {
+      "label": "Yinelenenleri temizleme"
+    },
+    "staleTabs": {
+      "label": "Eski sekmeleri temizleme önerileri"
+    },
+    "memory": {
+      "label": "Bellek boşaltma"
+    },
+    "sessions": {
+      "label": "Oturumlar ve çökme sonrası kurtarma"
+    },
+    "continueOnDevice": {
+      "label": "Başka bir cihazda devam etme"
+    },
+    "backups": {
+      "label": "Otomatik yedekler"
+    },
+    "sync": {
+      "label": "Cihazlar arası eşitleme"
+    },
+    "e2ee": {
+      "label": "Uçtan uca şifreli eşitleme"
+    },
+    "dashboard": {
+      "label": "Web paneli"
+    },
+    "share": {
+      "label": "Paylaşım bağlantıları"
+    },
+    "import": {
+      "label": "İçe aktarma"
+    },
+    "export": {
+      "label": "Dışa aktarma"
+    },
+    "aiAutoGroup": {
+      "label": "Otomatik gruplama"
+    },
+    "aiNames": {
+      "label": "Grup adları (üç seçenek)"
+    },
+    "aiDescribe": {
+      "label": "Grubu açıklama"
+    },
+    "aiSummaries": {
+      "label": "Sekme özetleri"
+    },
+    "aiSessions": {
+      "label": "Oturum önerileri"
+    },
+    "aiOrganize": {
+      "label": "Düzenle"
+    },
+    "aiOwnKey": {
+      "label": "Kendi yapay zekâ anahtarınızı kullanma"
+    },
+    "languages": {
+      "label": "Diller"
+    },
+    "theme": {
+      "label": "Açık ve koyu tema"
+    },
+    "tour": {
+      "label": "Kurulum sonrası rehberli tur"
+    },
+    "mobileApps": {
+      "label": "Mobil uygulamalar"
+    },
+    "teams": {
+      "label": "Ekip çalışma alanları"
+    }
+  },
+  "states": {
+    "yes": "Evet",
+    "paid": "Evet",
+    "partial": "Evet",
+    "no": "Hayır",
+    "unknown": "Belirtilmemiş",
+    "paidPill": "Ücretli",
+    "paidSr": " (ücretli planda)",
+    "partialSr": " (kısmen)"
+  },
+  "labels": {
+    "noPaidPlan": "Ücretli plan belirtilmemiş",
+    "syncNeedsSignIn": "Eşitleme için oturum açmak gerekir",
+    "folders": "Klasörler",
+    "collections": "Koleksiyonlar",
+    "collectionsAndSpaces": "Koleksiyonlar ve alanlar",
+    "spaces": "Alanlar",
+    "coreFeature": "Temel özelliği",
+    "tabSuspension": "Sekme askıya alma",
+    "listsSurviveRestarts": "Listeler yeniden başlatmada korunur",
+    "saveWindows": "Pencereleri oturum olarak kaydetme",
+    "autosave": "Otomatik kaydetme",
+    "pro": "Pro",
+    "alwaysOn": "Her zaman açık",
+    "noSync": "Eşitleme yok",
+    "proAi": "Pro AI",
+    "comingSoon": "Çok yakında",
+    "smartFeatures": "\"Smart\" özellikleri",
+    "asWebPage": "Web sayfası olarak",
+    "shareCollections": "Koleksiyon paylaşma",
+    "team": "Team planı",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/ay · {yearly}/yıl",
+    "priceMonthly": "{monthly}/ay",
+    "priceYearly": "{yearly}/yıl",
+    "priceOnce": "tek seferlik {once}",
+    "noPaidPlanAtAll": "Ücretli plan yok",
+    "namedColoredWindows": "Adlı, renkli pencereler",
+    "namedTaggedSessions": "Adlı, etiketli oturumlar",
+    "windowTree": "Pencere ve sekme ağacı",
+    "saveRestoreWindows": "Pencereleri kaydetme ve geri yükleme",
+    "cloudSync": "Bulut eşitleme",
+    "viaGoogleDrive": "Google Drive yedekleriyle",
+    "closesIdleTabs": "Boştaki sekmeleri kapatır",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Backup & Sync ile",
+    "detectsDuplicateBookmarks": "Yinelenen yer imlerini algılar",
+    "copyAsLinks": "Bağlantı, Markdown, CSV veya JSON olarak kopyalama",
+    "crashRecovery": "Çökme sonrası kurtarma",
+    "searchesClosedTabs": "Kapatılan sekmelerde arar",
+    "settingsOnly": "Yalnızca ayarlar"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# grup} other {# grup}}, {tabs, plural, one {# sekme} other {# sekme}}",
+    "everyFeature": "Tüm özellikler",
+    "savedTabsLimit": "En fazla {count, plural, one {# kayıtlı sekme} other {# kayıtlı sekme}}",
+    "proIncludes": "Pro: eşitleme ve yedekler",
+    "accountForSyncAi": "Eşitleme ve yapay zekâ için gerekir",
+    "namedColorCoded": "Adlı ve renk kodlu",
+    "colorCoded": "Renk kodlu",
+    "openSavedHistory": "Açık, kayıtlı ve geçmiş",
+    "advancedSearchPaid": "Gelişmiş arama ücretli",
+    "sessionsLimits": "Bu tarayıcıda {count, number} ücretsiz, Pro'da sınırsız ve eşitlenir",
+    "historySnapshots": "Geçmiş anlık görüntüleri",
+    "dataStaysLocal": "Veriler cihazda kalır",
+    "newestKept": "En yeni {count, number} tanesi saklanır, isteğe bağlı dosya kopyası",
+    "sessionBackups": "90 günlük oturum yedekleri",
+    "ownKeyOnly": "Kendi API anahtarınızla",
+    "encrypted": "Şifreli",
+    "sharedSpaces": "Paylaşılan alanlar",
+    "mouseKeyboard": "Fare ve klavye",
+    "shortcutsTabMerger": "Açılır pencereyi açmadan sekme kaydetme; arama için Ctrl/Cmd+K",
+    "customizable": "Özelleştirilebilir",
+    "urlRulesLimits": "{count, number} ücretsiz, Pro'da sınırsız",
+    "bulkActions": "Seçme, taşıma, yıldızlama, paylaşma, silme",
+    "searchFilters": "Filtreler: group:, window:, tag:",
+    "dashboardView": "Grupları ve yedekleri tarayıcıda görün",
+    "importFormats": "JSON, yer imleri HTML'si, OneTab",
+    "importExportLists": "Listeleri içe ve dışa aktarma",
+    "manyFormats": "15'ten fazla biçim",
+    "aiProviders": "Anthropic, OpenAI veya Gemini",
+    "optIn": "İsteğe bağlı",
+    "rtlIncluded": "Sağdan sola diller dahil",
+    "themesPalettes": "Temalar, renk körlüğüne uygun paletler",
+    "iosAndroid": "iOS ve Android",
+    "dashboardOnPhones": "Web paneli telefonlarda çalışır",
+    "notOnSafari": "Safari'de yok",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, yalnızca yıllık",
+    "weeklyLocalBackup": "Haftalık yerel yedek; Backup & Sync ile bulut yedeği",
+    "plusManualBackups": "Ayrıca tek tıkla elle yedekleme",
+    "donations": "Bağış",
+    "teamPricePerMember": "Üye başına {monthly}/ay veya {yearly}/yıl",
+    "upToSpaces": "En fazla {count, number} alan",
+    "startingAtNoYearly": "\"Başlayan\" fiyat; yıllık fiyat belirtilmemiş",
+    "teamPricePerUser": "Kullanıcı başına aylık {monthly} ve üzeri, en az {count, number} kullanıcı",
+    "noLimits": "Sınır yok",
+    "proPlan": "Pro",
+    "searchOperators": "t:, u:, regex",
+    "offlineThisBrowser": "Çevrimdışı çalışır, yalnızca bu tarayıcıda",
+    "savedWindowsFiles": "Kayıtlı pencereler dosya olarak",
+    "autoSavesOnCloseTimer": "Kapanışta ve zamanlayıcıyla kaydeder",
+    "fromSessionBuddy": "Session Buddy'den de",
+    "backupsGoogleDrive": "Birkaç dakikada bir yerel, her gün Google Drive'a",
+    "groupsSavedLocally": "Gruplar yerelde saklanır",
+    "toJsonFile": "Bir JSON dosyasına",
+    "reopenFromCorral": "Tab Corral'dan yeniden açılır",
+    "closeWindowsKeepTree": "Pencereleri kapatın, ağaçta kalsınlar",
+    "textOutlineHtml": "Metin taslağı veya HTML dosyası",
+    "stgImportSources": "Tab Groups, Panorama View, Sync Tab Groups, JSON'dan",
+    "closedTabsNotSynced": "Kapatılan sekmeler eşitlenmez"
+  },
+  "legend": {
+    "label": "Açıklama",
+    "yes": "Evet",
+    "paid": "Ücretli planda",
+    "partial": "Kısmen",
+    "no": "Hayır",
+    "unknown": "Belirtilmemiş"
+  },
+  "switching": {
+    "title": "OneTab'den mi geçiyorsunuz?",
+    "lead": "Listeleriniz başlıklarıyla birlikte grup olarak gelir. Hiçbir şey tarayıcınızdan çıkmaz.",
+    "steps": {
+      "export": "OneTab'de <b>Export / Import URLs</b> sayfasını açın ve <b>Copy to clipboard</b> düğmesine basın.",
+      "save": "Metni düz metin dosyasına yapıştırın (Not Defteri veya düz metne ayarlı TextEdit) ve <b>.txt</b> olarak kaydedin.",
+      "open": "TabMerger'da <b>Ayarlar → Veri</b> bölümünü açın, <b>İçe aktar</b> düğmesine basın ve .txt dosyasını seçin.",
+      "import": "Onaylayın. Her OneTab grubu \"Imported 1\", \"Imported 2\" gibi adlarla ayrı bir grup olur.",
+      "other": "Başka bir araçtan mı geliyorsunuz? Yer imlerinizi HTML ya da JSON dosyası olarak dışa aktarıp aynı şekilde içe aktarın."
+    }
+  },
+  "fairUse": "Bilgiler her ürünün kendi web sitesinden ve mağaza sayfasından alınmış, <time>{date}</time> tarihinde kontrol edilmiştir. Özellikler ve fiyatlar değişir; burada güncel olmayan bir şey varsa <link>bize bildirin</link>, düzeltelim. Tüm ürün adları sahiplerinin ticari markalarıdır. TabMerger'ın hiçbiriyle bağlantısı yoktur.",
+  "sources": {
+    "label": "Kaynaklar"
+  }
+}

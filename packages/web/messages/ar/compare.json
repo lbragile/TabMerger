@@ -1,0 +1,294 @@
+{
+  "metaTitle": "TabMerger مقابل ⁨OneTab⁩ و⁨Session Buddy⁩ و⁨Toby⁩ و⁨Workona⁩ وغيرها",
+  "metaDescription": "مقارنة منصفة بين TabMerger و⁨OneTab⁩ و⁨Session Buddy⁩ و⁨Toby⁩ و⁨Workona⁩ ومديري علامات تبويب آخرين: الخطط المجانية والأسعار والمزامنة والتشفير والنسخ الاحتياطية والذكاء الاصطناعي، وفق صفحات كل منتج.",
+  "title": "كيف يُقارَن TabMerger بغيره",
+  "lead": "مقارنة منصفة جنبًا إلى جنب بين TabMerger و{count, number} من مديري علامات التبويب الآخرين: ما يفعله كل منها وكم يكلّف.",
+  "checkedOn": "تم التحقق في <time>{date}</time>",
+  "differences": {
+    "label": "ما يميّز TabMerger",
+    "e2ee": {
+      "title": "مزامنة لا يستطيع الخادم قراءتها",
+      "description": "كل مجموعة تتم مزامنتها مشفّرة تشفيرًا تامًّا بين الطرفين، دائمًا. علامات التبويب لديك مقفلة بمفتاح لا تملكه إلا أجهزتك."
+    },
+    "ai": {
+      "title": "ذكاء اصطناعي يتولّى الترتيب",
+      "description": "اجمع فوضى علامات التبويب في مجموعات، أو سمِّ مجموعة، أو احصل على ملخّص لصفحة في سطر واحد. مع Pro AI أو مفتاحك الخاص.",
+      "descriptionOwnKey": "اجمع فوضى علامات التبويب في مجموعات، أو سمِّ مجموعة، أو احصل على ملخّص لصفحة في سطر واحد. مع Pro AI ومفتاح API الخاص بك.",
+      "descriptionComingSoon": "اجمع فوضى علامات التبويب في مجموعات، أو سمِّ مجموعة، أو احصل على ملخّص لصفحة في سطر واحد. قريبًا في Pro AI."
+    },
+    "import": {
+      "title": "انتقل في دقيقة",
+      "description": "انسخ قوائم OneTab إلى ملف .txt واستورده من الإعدادات ← البيانات: تصبح كل قائمة مجموعة. ويعمل أيضًا HTML للإشارات المرجعية وJSON."
+    }
+  },
+  "table": {
+    "title": "ميزة بميزة",
+    "lead": "وفق الموقع الرسمي وصفحة المتجر لكل منتج. \"غير مذكور\" يعني أننا لم نتمكن من التأكد، لا أن الميزة غير موجودة.",
+    "caption": "مقارنة TabMerger مع {products}",
+    "captionPair": "مقارنة TabMerger مع {product}",
+    "feature": "الميزة",
+    "pickerLegend": "قارن TabMerger مع",
+    "allTools": "كل الأدوات"
+  },
+  "groups": {
+    "plans": "الخطط",
+    "organizing": "التنظيم",
+    "finding": "البحث والتنظيف",
+    "saving": "الحفظ والاستعادة",
+    "sync": "المزامنة والأمان",
+    "sharing": "المشاركة والانتقال",
+    "ai": "الذكاء الاصطناعي (Pro AI)",
+    "other": "كل ما تبقى"
+  },
+  "rows": {
+    "free": {
+      "label": "خطة مجانية"
+    },
+    "paidFrom": {
+      "label": "الخطط المدفوعة تبدأ من"
+    },
+    "noAccount": {
+      "label": "يعمل بدون حساب"
+    },
+    "groups": {
+      "label": "مجموعات مسمّاة"
+    },
+    "windows": {
+      "label": "نوافذ داخل المجموعات"
+    },
+    "dnd": {
+      "label": "السحب والإفلات"
+    },
+    "shortcuts": {
+      "label": "اختصارات لوحة المفاتيح"
+    },
+    "contextMenu": {
+      "label": "قائمة النقر بزر الماوس الأيمن"
+    },
+    "customTitles": {
+      "label": "عناوين مخصّصة لعلامات التبويب"
+    },
+    "notes": {
+      "label": "ملاحظات"
+    },
+    "reminders": {
+      "label": "تذكيرات مع إشعارات"
+    },
+    "urlRules": {
+      "label": "قواعد التعيين التلقائي حسب URL"
+    },
+    "bulk": {
+      "label": "إجراءات جماعية"
+    },
+    "search": {
+      "label": "البحث"
+    },
+    "duplicates": {
+      "label": "تنظيف المكررات"
+    },
+    "staleTabs": {
+      "label": "اقتراحات لتنظيف علامات التبويب القديمة"
+    },
+    "memory": {
+      "label": "تحرير الذاكرة"
+    },
+    "sessions": {
+      "label": "الجلسات والاستعادة بعد الأعطال"
+    },
+    "continueOnDevice": {
+      "label": "المتابعة على جهاز آخر"
+    },
+    "backups": {
+      "label": "نسخ احتياطية تلقائية"
+    },
+    "sync": {
+      "label": "المزامنة بين الأجهزة"
+    },
+    "e2ee": {
+      "label": "مزامنة مشفّرة بين الطرفين"
+    },
+    "dashboard": {
+      "label": "لوحة تحكم على الويب"
+    },
+    "share": {
+      "label": "روابط المشاركة"
+    },
+    "import": {
+      "label": "الاستيراد"
+    },
+    "export": {
+      "label": "التصدير"
+    },
+    "aiAutoGroup": {
+      "label": "التجميع التلقائي"
+    },
+    "aiNames": {
+      "label": "أسماء المجموعات (ثلاثة للاختيار)"
+    },
+    "aiDescribe": {
+      "label": "وصف مجموعة"
+    },
+    "aiSummaries": {
+      "label": "ملخّصات علامات التبويب"
+    },
+    "aiSessions": {
+      "label": "اقتراحات الجلسات"
+    },
+    "aiOrganize": {
+      "label": "التنظيم الذكي"
+    },
+    "aiOwnKey": {
+      "label": "استخدام مفتاح ذكاء اصطناعي خاص بك"
+    },
+    "languages": {
+      "label": "اللغات"
+    },
+    "theme": {
+      "label": "سمة فاتحة وداكنة"
+    },
+    "tour": {
+      "label": "جولة إرشادية بعد التثبيت"
+    },
+    "mobileApps": {
+      "label": "تطبيقات الجوال"
+    },
+    "teams": {
+      "label": "مساحات عمل للفرق"
+    }
+  },
+  "states": {
+    "yes": "نعم",
+    "paid": "نعم",
+    "partial": "نعم",
+    "no": "لا",
+    "unknown": "غير مذكور",
+    "paidPill": "مدفوع",
+    "paidSr": " (في خطة مدفوعة)",
+    "partialSr": " (جزئيًا)"
+  },
+  "labels": {
+    "noPaidPlan": "لا توجد خطة مدفوعة مذكورة",
+    "syncNeedsSignIn": "المزامنة تتطلب تسجيل الدخول",
+    "folders": "مجلدات",
+    "collections": "تجميعات",
+    "collectionsAndSpaces": "تجميعات ومساحات",
+    "spaces": "مساحات",
+    "coreFeature": "ميزته الأساسية",
+    "tabSuspension": "تعليق علامات التبويب",
+    "listsSurviveRestarts": "تبقى القوائم بعد إعادة التشغيل",
+    "saveWindows": "حفظ النوافذ كجلسات",
+    "autosave": "حفظ تلقائي",
+    "pro": "Pro",
+    "alwaysOn": "مفعّل دائمًا",
+    "noSync": "لا مزامنة",
+    "proAi": "Pro AI",
+    "comingSoon": "قريبًا",
+    "smartFeatures": "ميزات \"Smart\"",
+    "asWebPage": "كصفحة ويب",
+    "shareCollections": "مشاركة التجميعات",
+    "team": "خطة Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/شهر · {yearly}/سنة",
+    "priceMonthly": "{monthly}/شهر",
+    "priceYearly": "{yearly}/سنة",
+    "priceOnce": "{once} مرة واحدة",
+    "noPaidPlanAtAll": "لا توجد خطة مدفوعة",
+    "namedColoredWindows": "نوافذ مسمّاة وملوّنة",
+    "namedTaggedSessions": "جلسات مسمّاة بوسوم",
+    "windowTree": "شجرة من النوافذ وعلامات التبويب",
+    "saveRestoreWindows": "حفظ النوافذ واستعادتها",
+    "cloudSync": "مزامنة سحابية",
+    "viaGoogleDrive": "عبر نسخ Google Drive الاحتياطية",
+    "closesIdleTabs": "يغلق علامات التبويب الخاملة",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "مع Backup & Sync",
+    "detectsDuplicateBookmarks": "يكتشف الإشارات المرجعية المكررة",
+    "copyAsLinks": "النسخ كروابط أو ⁨Markdown⁩ أو ⁨CSV⁩ أو ⁨JSON⁩",
+    "crashRecovery": "الاستعادة بعد الأعطال",
+    "searchesClosedTabs": "يبحث في علامات التبويب المغلقة",
+    "settingsOnly": "الإعدادات فقط"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, zero {لا مجموعات} one {مجموعة واحدة} two {مجموعتان} few {# مجموعات} many {# مجموعة} other {# مجموعة}}، {tabs, plural, zero {لا علامات تبويب} one {علامة تبويب واحدة} two {علامتا تبويب} few {# علامات تبويب} many {# علامة تبويب} other {# علامة تبويب}}",
+    "everyFeature": "كل الميزات",
+    "savedTabsLimit": "حتى {count, plural, zero {لا علامات تبويب محفوظة} one {علامة تبويب محفوظة واحدة} two {علامتي تبويب محفوظتين} few {# علامات تبويب محفوظة} many {# علامة تبويب محفوظة} other {# علامة تبويب محفوظة}}",
+    "proIncludes": "Pro: المزامنة والنسخ الاحتياطي",
+    "accountForSyncAi": "المزامنة والذكاء الاصطناعي يحتاجان إليه",
+    "namedColorCoded": "بأسماء وألوان",
+    "colorCoded": "بألوان مميزة",
+    "openSavedHistory": "المفتوحة والمحفوظة والسجل",
+    "advancedSearchPaid": "البحث المتقدم مدفوع",
+    "sessionsLimits": "{count, number} مجانًا في هذا المتصفح، وبلا حدود ومع المزامنة في Pro",
+    "historySnapshots": "لقطات من السجل",
+    "dataStaysLocal": "تبقى البيانات على الجهاز",
+    "newestKept": "يُحتفظ بأحدث {count, number}، مع نسخة اختيارية في ملف",
+    "sessionBackups": "نسخ احتياطية للجلسات لمدة 90 يومًا",
+    "ownKeyOnly": "بمفتاح API الخاص بك",
+    "encrypted": "مشفّرة",
+    "sharedSpaces": "مساحات مشتركة",
+    "mouseKeyboard": "بالماوس ولوحة المفاتيح",
+    "shortcutsTabMerger": "حفظ علامات التبويب دون فتح النافذة المنبثقة؛ ⁨Ctrl/Cmd+K⁩ للبحث",
+    "customizable": "قابلة للتخصيص",
+    "urlRulesLimits": "{count, number} مجانًا، وبلا حدود في Pro",
+    "bulkActions": "تحديد، نقل، تمييز بنجمة، مشاركة، حذف",
+    "searchFilters": "عوامل التصفية: ⁨group:⁩، ⁨window:⁩، ⁨tag:⁩",
+    "dashboardView": "عرض المجموعات والنسخ الاحتياطية في المتصفح",
+    "importFormats": "⁨JSON⁩، و⁨HTML⁩ للإشارات المرجعية، و⁨OneTab⁩",
+    "importExportLists": "استيراد القوائم وتصديرها",
+    "manyFormats": "أكثر من 15 تنسيقًا",
+    "aiProviders": "⁨Anthropic⁩ أو ⁨OpenAI⁩ أو ⁨Gemini⁩",
+    "optIn": "اختياري",
+    "rtlIncluded": "بما فيها اللغات من اليمين إلى اليسار",
+    "themesPalettes": "سمات ولوحات ألوان لمن لديهم عمى ألوان",
+    "iosAndroid": "iOS وAndroid",
+    "dashboardOnPhones": "لوحة التحكم على الويب تعمل على الهواتف",
+    "notOnSafari": "ليس على Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync، سنويًا فقط",
+    "weeklyLocalBackup": "نسخة محلية أسبوعية؛ ونسخة سحابية مع Backup & Sync",
+    "plusManualBackups": "ونسخ يدوية بنقرة واحدة",
+    "donations": "تبرعات",
+    "teamPricePerMember": "{monthly}/شهر أو {yearly}/سنة لكل عضو",
+    "upToSpaces": "حتى {count, number} مساحات",
+    "startingAtNoYearly": "\"يبدأ من\"؛ لا سعر سنويًا مذكورًا",
+    "teamPricePerUser": "من {monthly} لكل مستخدم شهريًا، {count, number} مستخدمين على الأقل",
+    "noLimits": "بلا حدود",
+    "proPlan": "Pro",
+    "searchOperators": "⁨t:⁩، ⁨u:⁩، ⁨regex⁩",
+    "offlineThisBrowser": "يعمل دون اتصال، في هذا المتصفح فقط",
+    "savedWindowsFiles": "النوافذ المحفوظة كملفات",
+    "autoSavesOnCloseTimer": "يحفظ عند الإغلاق وعلى فترات",
+    "fromSessionBuddy": "بما في ذلك من Session Buddy",
+    "backupsGoogleDrive": "محليًا كل بضع دقائق، ويوميًا إلى Google Drive",
+    "groupsSavedLocally": "المجموعات محفوظة محليًا",
+    "toJsonFile": "إلى ملف JSON",
+    "reopenFromCorral": "تُعاد فتحها من Tab Corral",
+    "closeWindowsKeepTree": "أغلق النوافذ واحتفظ بها في الشجرة",
+    "textOutlineHtml": "مخطط نصي أو ملف HTML",
+    "stgImportSources": "من ⁨Tab Groups⁩ و⁨Panorama View⁩ و⁨Sync Tab Groups⁩ و⁨JSON⁩",
+    "closedTabsNotSynced": "علامات التبويب المغلقة لا تُزامَن"
+  },
+  "legend": {
+    "label": "مفتاح الرموز",
+    "yes": "نعم",
+    "paid": "في خطة مدفوعة",
+    "partial": "جزئيًا",
+    "no": "لا",
+    "unknown": "غير مذكور"
+  },
+  "switching": {
+    "title": "قادم من OneTab؟",
+    "lead": "تصل قوائمك كمجموعات، مع عناوينها. لا شيء يغادر متصفحك.",
+    "steps": {
+      "export": "في OneTab، افتح <b>Export / Import URLs</b> واضغط <b>Copy to clipboard</b>.",
+      "save": "الصقه في ملف نصي عادي (Notepad، أو TextEdit في وضع النص العادي) واحفظه بامتداد <b>.txt</b>.",
+      "open": "في TabMerger، افتح <b>الإعدادات ← البيانات</b>، واضغط <b>استيراد</b> واختر ملف .txt.",
+      "import": "أكّد. تصبح كل مجموعة من OneTab مجموعة مستقلة باسم ⁨\"Imported 1\"⁩ و⁨\"Imported 2\"⁩ وهكذا.",
+      "other": "قادم من أداة أخرى؟ صدّر إشاراتك المرجعية بصيغة HTML أو كملف JSON، ثم استورده بالطريقة نفسها."
+    }
+  },
+  "fairUse": "المعلومات مأخوذة من الموقع الرسمي وصفحة المتجر لكل منتج، وتم التحقق منها في <time>{date}</time>. تتغير الميزات والأسعار؛ إذا كان هناك ما هو قديم، <link>أخبرنا</link> وسنصحّحه. جميع أسماء المنتجات علامات تجارية لمالكيها. لا يرتبط TabMerger بأيٍّ منها.",
+  "sources": {
+    "label": "المصادر"
+  }
+}

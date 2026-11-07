@@ -1,0 +1,294 @@
+{
+  "metaTitle": "So sánh TabMerger với OneTab, Session Buddy, Toby, Workona và hơn thế",
+  "metaDescription": "So sánh công bằng giữa TabMerger và OneTab, Session Buddy, Toby, Workona cùng các trình quản lý tab khác: gói miễn phí, giá, đồng bộ, mã hóa, sao lưu và AI, theo trang chính thức của từng sản phẩm.",
+  "title": "TabMerger so với các công cụ khác",
+  "lead": "So sánh công bằng, đặt cạnh nhau TabMerger và {count, number} trình quản lý tab khác: mỗi công cụ làm được gì và giá bao nhiêu.",
+  "checkedOn": "Kiểm tra ngày <time>{date}</time>",
+  "differences": {
+    "label": "Điểm khác biệt của TabMerger",
+    "e2ee": {
+      "title": "Đồng bộ mà máy chủ không đọc được",
+      "description": "Mọi nhóm được đồng bộ luôn được mã hóa đầu cuối. Tab của bạn được khóa bằng khóa chỉ thiết bị của bạn nắm giữ."
+    },
+    "ai": {
+      "title": "AI sắp xếp giúp bạn",
+      "description": "Gom đống tab lộn xộn thành nhóm, đặt tên nhóm hoặc tóm tắt một trang trong một dòng. Với Pro AI hoặc khóa của riêng bạn.",
+      "descriptionOwnKey": "Gom đống tab lộn xộn thành nhóm, đặt tên nhóm hoặc tóm tắt một trang trong một dòng. Với Pro AI và khóa API của riêng bạn.",
+      "descriptionComingSoon": "Gom đống tab lộn xộn thành nhóm, đặt tên nhóm hoặc tóm tắt một trang trong một dòng. Sắp có trong Pro AI."
+    },
+    "import": {
+      "title": "Chuyển sang trong một phút",
+      "description": "Sao chép danh sách OneTab vào tệp .txt rồi nhập từ Cài đặt → Dữ liệu: mỗi danh sách thành một nhóm. HTML dấu trang và JSON cũng dùng được."
+    }
+  },
+  "table": {
+    "title": "Từng tính năng",
+    "lead": "Theo trang web và trang cửa hàng của từng sản phẩm. \"Không nêu\" nghĩa là chúng tôi không xác nhận được, không phải là thiếu tính năng.",
+    "caption": "So sánh TabMerger với {products}",
+    "captionPair": "So sánh TabMerger với {product}",
+    "feature": "Tính năng",
+    "pickerLegend": "So sánh TabMerger với",
+    "allTools": "Tất cả công cụ"
+  },
+  "groups": {
+    "plans": "Gói",
+    "organizing": "Sắp xếp",
+    "finding": "Tìm kiếm & dọn dẹp",
+    "saving": "Lưu & khôi phục",
+    "sync": "Đồng bộ & an toàn",
+    "sharing": "Chia sẻ & chuyển đổi",
+    "ai": "AI (Pro AI)",
+    "other": "Mọi thứ khác"
+  },
+  "rows": {
+    "free": {
+      "label": "Gói miễn phí"
+    },
+    "paidFrom": {
+      "label": "Gói trả phí từ"
+    },
+    "noAccount": {
+      "label": "Dùng không cần tài khoản"
+    },
+    "groups": {
+      "label": "Nhóm có tên"
+    },
+    "windows": {
+      "label": "Cửa sổ bên trong nhóm"
+    },
+    "dnd": {
+      "label": "Kéo và thả"
+    },
+    "shortcuts": {
+      "label": "Phím tắt"
+    },
+    "contextMenu": {
+      "label": "Menu chuột phải"
+    },
+    "customTitles": {
+      "label": "Tiêu đề tab tùy chỉnh"
+    },
+    "notes": {
+      "label": "Ghi chú"
+    },
+    "reminders": {
+      "label": "Lời nhắc kèm thông báo"
+    },
+    "urlRules": {
+      "label": "Quy tắc tự gán URL"
+    },
+    "bulk": {
+      "label": "Thao tác hàng loạt"
+    },
+    "search": {
+      "label": "Tìm kiếm"
+    },
+    "duplicates": {
+      "label": "Dọn tab trùng lặp"
+    },
+    "staleTabs": {
+      "label": "Gợi ý dọn tab cũ"
+    },
+    "memory": {
+      "label": "Giải phóng bộ nhớ"
+    },
+    "sessions": {
+      "label": "Phiên & khôi phục sau sự cố"
+    },
+    "continueOnDevice": {
+      "label": "Tiếp tục trên thiết bị khác"
+    },
+    "backups": {
+      "label": "Sao lưu tự động"
+    },
+    "sync": {
+      "label": "Đồng bộ giữa các thiết bị"
+    },
+    "e2ee": {
+      "label": "Đồng bộ mã hóa đầu cuối"
+    },
+    "dashboard": {
+      "label": "Bảng điều khiển web"
+    },
+    "share": {
+      "label": "Liên kết chia sẻ"
+    },
+    "import": {
+      "label": "Nhập"
+    },
+    "export": {
+      "label": "Xuất"
+    },
+    "aiAutoGroup": {
+      "label": "Tự động nhóm"
+    },
+    "aiNames": {
+      "label": "Tên nhóm (ba gợi ý để chọn)"
+    },
+    "aiDescribe": {
+      "label": "Mô tả nhóm"
+    },
+    "aiSummaries": {
+      "label": "Tóm tắt tab"
+    },
+    "aiSessions": {
+      "label": "Gợi ý phiên"
+    },
+    "aiOrganize": {
+      "label": "Sắp xếp"
+    },
+    "aiOwnKey": {
+      "label": "Dùng khóa AI của riêng bạn"
+    },
+    "languages": {
+      "label": "Ngôn ngữ"
+    },
+    "theme": {
+      "label": "Giao diện sáng và tối"
+    },
+    "tour": {
+      "label": "Hướng dẫn sau khi cài đặt"
+    },
+    "mobileApps": {
+      "label": "Ứng dụng di động"
+    },
+    "teams": {
+      "label": "Không gian làm việc nhóm"
+    }
+  },
+  "states": {
+    "yes": "Có",
+    "paid": "Có",
+    "partial": "Có",
+    "no": "Không",
+    "unknown": "Không nêu",
+    "paidPill": "Trả phí",
+    "paidSr": " (ở gói trả phí)",
+    "partialSr": " (một phần)"
+  },
+  "labels": {
+    "noPaidPlan": "Không nêu gói trả phí",
+    "syncNeedsSignIn": "Đồng bộ cần đăng nhập",
+    "folders": "Thư mục",
+    "collections": "Bộ sưu tập",
+    "collectionsAndSpaces": "Bộ sưu tập và không gian",
+    "spaces": "Không gian",
+    "coreFeature": "Tính năng cốt lõi",
+    "tabSuspension": "Tạm ngưng tab",
+    "listsSurviveRestarts": "Danh sách còn sau khi khởi động lại",
+    "saveWindows": "Lưu cửa sổ thành phiên",
+    "autosave": "Tự động lưu",
+    "pro": "Pro",
+    "alwaysOn": "Luôn bật",
+    "noSync": "Không đồng bộ",
+    "proAi": "Pro AI",
+    "comingSoon": "Sắp ra mắt",
+    "smartFeatures": "Tính năng \"Smart\"",
+    "asWebPage": "Dưới dạng trang web",
+    "shareCollections": "Chia sẻ bộ sưu tập",
+    "team": "Gói Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/tháng · {yearly}/năm",
+    "priceMonthly": "{monthly}/tháng",
+    "priceYearly": "{yearly}/năm",
+    "priceOnce": "{once} một lần",
+    "noPaidPlanAtAll": "Không có gói trả phí",
+    "namedColoredWindows": "Cửa sổ có tên và màu",
+    "namedTaggedSessions": "Phiên có tên và thẻ",
+    "windowTree": "Cây cửa sổ và tab",
+    "saveRestoreWindows": "Lưu và khôi phục cửa sổ",
+    "cloudSync": "Đồng bộ đám mây",
+    "viaGoogleDrive": "Qua bản sao lưu Google Drive",
+    "closesIdleTabs": "Đóng tab không dùng",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Với Backup & Sync",
+    "detectsDuplicateBookmarks": "Phát hiện dấu trang trùng lặp",
+    "copyAsLinks": "Sao chép dạng liên kết, Markdown, CSV hoặc JSON",
+    "crashRecovery": "Khôi phục sau sự cố",
+    "searchesClosedTabs": "Tìm trong tab đã đóng",
+    "settingsOnly": "Chỉ phần cài đặt"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, other {# nhóm}}, {tabs, plural, other {# tab}}",
+    "everyFeature": "Mọi tính năng",
+    "savedTabsLimit": "Tối đa {count, plural, other {# tab đã lưu}}",
+    "proIncludes": "Pro: đồng bộ và sao lưu",
+    "accountForSyncAi": "Cần cho đồng bộ và AI",
+    "namedColorCoded": "Có tên và mã màu",
+    "colorCoded": "Mã màu",
+    "openSavedHistory": "Đang mở, đã lưu và lịch sử",
+    "advancedSearchPaid": "Tìm kiếm nâng cao phải trả phí",
+    "sessionsLimits": "{count, number} miễn phí trong trình duyệt này, không giới hạn và đồng bộ với Pro",
+    "historySnapshots": "Ảnh chụp lịch sử",
+    "dataStaysLocal": "Dữ liệu ở lại trên thiết bị",
+    "newestKept": "Giữ {count, number} bản mới nhất, tùy chọn sao chép ra tệp",
+    "sessionBackups": "Sao lưu phiên 90 ngày",
+    "ownKeyOnly": "Bằng khóa API của riêng bạn",
+    "encrypted": "Được mã hóa",
+    "sharedSpaces": "Không gian dùng chung",
+    "mouseKeyboard": "Chuột và bàn phím",
+    "shortcutsTabMerger": "Lưu tab mà không cần mở cửa sổ bật lên; Ctrl/Cmd+K để tìm",
+    "customizable": "Tùy chỉnh được",
+    "urlRulesLimits": "{count, number} miễn phí, không giới hạn với Pro",
+    "bulkActions": "Chọn, di chuyển, gắn sao, chia sẻ, xóa",
+    "searchFilters": "Bộ lọc: group:, window:, tag:",
+    "dashboardView": "Xem nhóm và bản sao lưu trong trình duyệt",
+    "importFormats": "JSON, HTML dấu trang, OneTab",
+    "importExportLists": "Nhập và xuất danh sách",
+    "manyFormats": "Hơn 15 định dạng",
+    "aiProviders": "Anthropic, OpenAI hoặc Gemini",
+    "optIn": "Tùy chọn",
+    "rtlIncluded": "Bao gồm ngôn ngữ viết từ phải sang trái",
+    "themesPalettes": "Giao diện, bảng màu cho người mù màu",
+    "iosAndroid": "iOS và Android",
+    "dashboardOnPhones": "Bảng điều khiển web dùng được trên điện thoại",
+    "notOnSafari": "Không có trên Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, chỉ theo năm",
+    "weeklyLocalBackup": "Sao lưu cục bộ hằng tuần; sao lưu đám mây với Backup & Sync",
+    "plusManualBackups": "Kèm sao lưu thủ công một chạm",
+    "donations": "Quyên góp",
+    "teamPricePerMember": "{monthly}/tháng hoặc {yearly}/năm mỗi thành viên",
+    "upToSpaces": "Tối đa {count, number} không gian",
+    "startingAtNoYearly": "\"Từ\"; không nêu giá theo năm",
+    "teamPricePerUser": "Từ {monthly} mỗi người dùng/tháng, tối thiểu {count, number} người dùng",
+    "noLimits": "Không giới hạn",
+    "proPlan": "Pro",
+    "searchOperators": "t:, u:, regex",
+    "offlineThisBrowser": "Chạy ngoại tuyến, chỉ trong trình duyệt này",
+    "savedWindowsFiles": "Cửa sổ đã lưu dưới dạng tệp",
+    "autoSavesOnCloseTimer": "Tự lưu khi đóng và theo hẹn giờ",
+    "fromSessionBuddy": "Kể cả từ Session Buddy",
+    "backupsGoogleDrive": "Cục bộ vài phút một lần, hằng ngày lên Google Drive",
+    "groupsSavedLocally": "Nhóm lưu cục bộ",
+    "toJsonFile": "Ra tệp JSON",
+    "reopenFromCorral": "Mở lại từ Tab Corral",
+    "closeWindowsKeepTree": "Đóng cửa sổ, vẫn giữ trong cây",
+    "textOutlineHtml": "Dàn ý văn bản hoặc tệp HTML",
+    "stgImportSources": "Từ Tab Groups, Panorama View, Sync Tab Groups, JSON",
+    "closedTabsNotSynced": "Tab đã đóng không được đồng bộ"
+  },
+  "legend": {
+    "label": "Chú giải",
+    "yes": "Có",
+    "paid": "Ở gói trả phí",
+    "partial": "Một phần",
+    "no": "Không",
+    "unknown": "Không nêu"
+  },
+  "switching": {
+    "title": "Chuyển từ OneTab?",
+    "lead": "Danh sách của bạn được chuyển thành nhóm, giữ nguyên tiêu đề. Không có gì rời khỏi trình duyệt của bạn.",
+    "steps": {
+      "export": "Trong OneTab, mở <b>Export / Import URLs</b> và nhấn <b>Copy to clipboard</b>.",
+      "save": "Dán vào một tệp văn bản thuần (Notepad, hoặc TextEdit ở chế độ văn bản thuần) và lưu thành <b>.txt</b>.",
+      "open": "Trong TabMerger, mở <b>Cài đặt → Dữ liệu</b>, nhấn <b>Nhập</b> và chọn tệp .txt.",
+      "import": "Xác nhận. Mỗi nhóm OneTab trở thành một nhóm riêng, tên là \"Imported 1\", \"Imported 2\", v.v.",
+      "other": "Dùng công cụ khác? Xuất dấu trang dưới dạng HTML, hoặc tệp JSON, rồi nhập theo cách tương tự."
+    }
+  },
+  "fairUse": "Thông tin lấy từ trang web và trang cửa hàng của từng sản phẩm, kiểm tra ngày <time>{date}</time>. Tính năng và giá có thể thay đổi; nếu có gì đã lỗi thời, <link>hãy cho chúng tôi biết</link> để chúng tôi sửa. Mọi tên sản phẩm là nhãn hiệu của chủ sở hữu tương ứng. TabMerger không liên kết với bất kỳ bên nào trong số đó.",
+  "sources": {
+    "label": "Nguồn"
+  }
+}

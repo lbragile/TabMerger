@@ -1,0 +1,294 @@
+{
+  "metaTitle": "Сравнение TabMerger с OneTab, Session Buddy, Toby, Workona и другими",
+  "metaDescription": "Честное сравнение TabMerger с OneTab, Session Buddy, Toby, Workona и другими менеджерами вкладок: бесплатные тарифы, цены, синхронизация, шифрование, резервные копии и ИИ — по страницам самих продуктов.",
+  "title": "TabMerger в сравнении",
+  "lead": "Честное сравнение TabMerger с другими менеджерами вкладок (их {count, number}): что умеет каждый и сколько стоит.",
+  "checkedOn": "Проверено <time>{date}</time>",
+  "differences": {
+    "label": "Чем выделяется TabMerger",
+    "e2ee": {
+      "title": "Синхронизация, которую сервер не может прочитать",
+      "description": "Каждая синхронизируемая группа всегда защищена сквозным шифрованием. Ваши вкладки заперты ключом, который есть только на ваших устройствах."
+    },
+    "ai": {
+      "title": "ИИ, который наводит порядок",
+      "description": "Сгруппируйте хаос из вкладок, дайте группе название или получите краткое содержание страницы в одну строку. С Pro AI или своим ключом.",
+      "descriptionOwnKey": "Сгруппируйте хаос из вкладок, дайте группе название или получите краткое содержание страницы в одну строку. С Pro AI и своим API-ключом.",
+      "descriptionComingSoon": "Сгруппируйте хаос из вкладок, дайте группе название или получите краткое содержание страницы в одну строку. Скоро в Pro AI."
+    },
+    "import": {
+      "title": "Переезд за минуту",
+      "description": "Скопируйте списки OneTab в файл .txt и импортируйте его в разделе «Настройки → Данные»: каждый список станет группой. HTML закладок и JSON тоже подходят."
+    }
+  },
+  "table": {
+    "title": "Функция за функцией",
+    "lead": "По данным сайта и страницы в магазине каждого продукта. «Не указано» значит, что мы не смогли это подтвердить, а не что функции нет.",
+    "caption": "Сравнение TabMerger с {products}",
+    "captionPair": "Сравнение TabMerger с {product}",
+    "feature": "Функция",
+    "pickerLegend": "Сравнить TabMerger с",
+    "allTools": "Все инструменты"
+  },
+  "groups": {
+    "plans": "Тарифы",
+    "organizing": "Организация",
+    "finding": "Поиск и уборка",
+    "saving": "Сохранение и восстановление",
+    "sync": "Синхронизация и безопасность",
+    "sharing": "Обмен и переезд",
+    "ai": "ИИ (Pro AI)",
+    "other": "Всё остальное"
+  },
+  "rows": {
+    "free": {
+      "label": "Бесплатный тариф"
+    },
+    "paidFrom": {
+      "label": "Платные тарифы от"
+    },
+    "noAccount": {
+      "label": "Работает без аккаунта"
+    },
+    "groups": {
+      "label": "Именованные группы"
+    },
+    "windows": {
+      "label": "Окна внутри групп"
+    },
+    "dnd": {
+      "label": "Перетаскивание"
+    },
+    "shortcuts": {
+      "label": "Сочетания клавиш"
+    },
+    "contextMenu": {
+      "label": "Контекстное меню"
+    },
+    "customTitles": {
+      "label": "Свои названия вкладок"
+    },
+    "notes": {
+      "label": "Заметки"
+    },
+    "reminders": {
+      "label": "Напоминания с уведомлениями"
+    },
+    "urlRules": {
+      "label": "Правила автоназначения URL"
+    },
+    "bulk": {
+      "label": "Массовые действия"
+    },
+    "search": {
+      "label": "Поиск"
+    },
+    "duplicates": {
+      "label": "Удаление дубликатов"
+    },
+    "staleTabs": {
+      "label": "Подсказки по уборке старых вкладок"
+    },
+    "memory": {
+      "label": "Освобождение памяти"
+    },
+    "sessions": {
+      "label": "Сессии и восстановление после сбоя"
+    },
+    "continueOnDevice": {
+      "label": "Продолжить на другом устройстве"
+    },
+    "backups": {
+      "label": "Автоматические резервные копии"
+    },
+    "sync": {
+      "label": "Синхронизация между устройствами"
+    },
+    "e2ee": {
+      "label": "Синхронизация со сквозным шифрованием"
+    },
+    "dashboard": {
+      "label": "Веб-панель"
+    },
+    "share": {
+      "label": "Ссылки для общего доступа"
+    },
+    "import": {
+      "label": "Импорт"
+    },
+    "export": {
+      "label": "Экспорт"
+    },
+    "aiAutoGroup": {
+      "label": "Автогруппировка"
+    },
+    "aiNames": {
+      "label": "Названия групп (три на выбор)"
+    },
+    "aiDescribe": {
+      "label": "Описание группы"
+    },
+    "aiSummaries": {
+      "label": "Сводки вкладок"
+    },
+    "aiSessions": {
+      "label": "Подсказки сессий"
+    },
+    "aiOrganize": {
+      "label": "Упорядочить"
+    },
+    "aiOwnKey": {
+      "label": "Свой ключ для ИИ"
+    },
+    "languages": {
+      "label": "Языки"
+    },
+    "theme": {
+      "label": "Светлая и тёмная тема"
+    },
+    "tour": {
+      "label": "Обзорный тур после установки"
+    },
+    "mobileApps": {
+      "label": "Мобильные приложения"
+    },
+    "teams": {
+      "label": "Командные пространства"
+    }
+  },
+  "states": {
+    "yes": "Да",
+    "paid": "Да",
+    "partial": "Да",
+    "no": "Нет",
+    "unknown": "Не указано",
+    "paidPill": "Платно",
+    "paidSr": " (на платном тарифе)",
+    "partialSr": " (частично)"
+  },
+  "labels": {
+    "noPaidPlan": "Платный тариф не указан",
+    "syncNeedsSignIn": "Для синхронизации нужен вход",
+    "folders": "Папки",
+    "collections": "Коллекции",
+    "collectionsAndSpaces": "Коллекции и пространства",
+    "spaces": "Пространства",
+    "coreFeature": "Его основная функция",
+    "tabSuspension": "Приостановка вкладок",
+    "listsSurviveRestarts": "Списки сохраняются после перезапуска",
+    "saveWindows": "Сохранение окон как сессий",
+    "autosave": "Автосохранение",
+    "pro": "Pro",
+    "alwaysOn": "Всегда включено",
+    "noSync": "Нет синхронизации",
+    "proAi": "Pro AI",
+    "comingSoon": "Скоро",
+    "smartFeatures": "Функции «Smart»",
+    "asWebPage": "В виде веб-страницы",
+    "shareCollections": "Общий доступ к коллекциям",
+    "team": "Тариф Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/мес. · {yearly}/год",
+    "priceMonthly": "{monthly}/мес.",
+    "priceYearly": "{yearly}/год",
+    "priceOnce": "{once} разово",
+    "noPaidPlanAtAll": "Платного тарифа нет",
+    "namedColoredWindows": "Именованные цветные окна",
+    "namedTaggedSessions": "Именованные сессии с тегами",
+    "windowTree": "Дерево окон и вкладок",
+    "saveRestoreWindows": "Сохранение и восстановление окон",
+    "cloudSync": "Облачная синхронизация",
+    "viaGoogleDrive": "Через резервные копии в Google Drive",
+    "closesIdleTabs": "Закрывает неактивные вкладки",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "С Backup & Sync",
+    "detectsDuplicateBookmarks": "Находит дубликаты закладок",
+    "copyAsLinks": "Копирование ссылками, в Markdown, CSV или JSON",
+    "crashRecovery": "Восстановление после сбоя",
+    "searchesClosedTabs": "Ищет по закрытым вкладкам",
+    "settingsOnly": "Только настройки"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# группа} few {# группы} many {# групп} other {# группы}}, {tabs, plural, one {# вкладка} few {# вкладки} many {# вкладок} other {# вкладки}}",
+    "everyFeature": "Все функции",
+    "savedTabsLimit": "До {count, plural, one {# сохранённой вкладки} few {# сохранённых вкладок} many {# сохранённых вкладок} other {# сохранённой вкладки}}",
+    "proIncludes": "Pro: синхронизация и резервные копии",
+    "accountForSyncAi": "Он нужен для синхронизации и ИИ",
+    "namedColorCoded": "С названиями и цветами",
+    "colorCoded": "С цветами",
+    "openSavedHistory": "Открытые, сохранённые и история",
+    "advancedSearchPaid": "Расширенный поиск платный",
+    "sessionsLimits": "{count, number} бесплатно в этом браузере, без ограничений и с синхронизацией в Pro",
+    "historySnapshots": "Снимки истории",
+    "dataStaysLocal": "Данные остаются на устройстве",
+    "newestKept": "Хранятся {count, number} последних, по желанию с копией в файл",
+    "sessionBackups": "Резервные копии сессий за 90 дней",
+    "ownKeyOnly": "Со своим API-ключом",
+    "encrypted": "Зашифрованы",
+    "sharedSpaces": "Общие пространства",
+    "mouseKeyboard": "Мышь и клавиатура",
+    "shortcutsTabMerger": "Сохранение вкладок без открытия окна расширения; Ctrl/Cmd+K для поиска",
+    "customizable": "Настраиваемые",
+    "urlRulesLimits": "{count, number} бесплатно, без ограничений в Pro",
+    "bulkActions": "Выбрать, переместить, отметить звездой, поделиться, удалить",
+    "searchFilters": "Фильтры: group:, window:, tag:",
+    "dashboardView": "Группы и резервные копии в браузере",
+    "importFormats": "JSON, HTML закладок, OneTab",
+    "importExportLists": "Импорт и экспорт списков",
+    "manyFormats": "Более 15 форматов",
+    "aiProviders": "Anthropic, OpenAI или Gemini",
+    "optIn": "По желанию",
+    "rtlIncluded": "Включая языки с письмом справа налево",
+    "themesPalettes": "Темы, палитры для дальтоников",
+    "iosAndroid": "iOS и Android",
+    "dashboardOnPhones": "Веб-панель работает на телефонах",
+    "notOnSafari": "Не в Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, только за год",
+    "weeklyLocalBackup": "Еженедельная локальная копия; облачная — с Backup & Sync",
+    "plusManualBackups": "Плюс ручные копии в один клик",
+    "donations": "Пожертвования",
+    "teamPricePerMember": "{monthly}/мес. или {yearly}/год за участника",
+    "upToSpaces": "До {count, number} пространств",
+    "startingAtNoYearly": "«От»; годовая цена не указана",
+    "teamPricePerUser": "От {monthly} за пользователя в месяц, минимум {count, number} пользователя",
+    "noLimits": "Без ограничений",
+    "proPlan": "Pro",
+    "searchOperators": "t:, u:, regex",
+    "offlineThisBrowser": "Работает офлайн, только в этом браузере",
+    "savedWindowsFiles": "Сохранённые окна в виде файлов",
+    "autoSavesOnCloseTimer": "Сохраняет при закрытии и по таймеру",
+    "fromSessionBuddy": "В том числе из Session Buddy",
+    "backupsGoogleDrive": "Локально каждые несколько минут, в Google Drive ежедневно",
+    "groupsSavedLocally": "Группы хранятся локально",
+    "toJsonFile": "В файл JSON",
+    "reopenFromCorral": "Их можно открыть снова из Tab Corral",
+    "closeWindowsKeepTree": "Закрытые окна остаются в дереве",
+    "textOutlineHtml": "Текстовая структура или файл HTML",
+    "stgImportSources": "Из Tab Groups, Panorama View, Sync Tab Groups, JSON",
+    "closedTabsNotSynced": "Закрытые вкладки не синхронизируются"
+  },
+  "legend": {
+    "label": "Обозначения",
+    "yes": "Да",
+    "paid": "На платном тарифе",
+    "partial": "Частично",
+    "no": "Нет",
+    "unknown": "Не указано"
+  },
+  "switching": {
+    "title": "Переходите с OneTab?",
+    "lead": "Ваши списки переносятся как группы, вместе с заголовками. Ничто не покидает ваш браузер.",
+    "steps": {
+      "export": "В OneTab откройте <b>Export / Import URLs</b> и нажмите <b>Copy to clipboard</b>.",
+      "save": "Вставьте текст в обычный текстовый файл (Блокнот или TextEdit в режиме простого текста) и сохраните его как <b>.txt</b>.",
+      "open": "В TabMerger откройте <b>Настройки → Данные</b>, нажмите <b>Импорт</b> и выберите файл .txt.",
+      "import": "Подтвердите. Каждая группа OneTab станет отдельной группой с названием «Imported 1», «Imported 2» и так далее.",
+      "other": "Переходите с другого инструмента? Экспортируйте закладки в HTML или файл JSON и импортируйте его так же."
+    }
+  },
+  "fairUse": "Сведения взяты с сайта и страницы в магазине каждого продукта и проверены <time>{date}</time>. Функции и цены меняются; если что-то устарело, <link>напишите нам</link>, и мы исправим. Все названия продуктов — товарные знаки их владельцев. TabMerger ни с кем из них не связан.",
+  "sources": {
+    "label": "Источники"
+  }
+}

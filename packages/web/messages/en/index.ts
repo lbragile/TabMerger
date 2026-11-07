@@ -15,6 +15,7 @@ import home from './home.json'
 import pricing from './pricing.json'
 import reviews from './reviews.json'
 import featuresPage from './featuresPage.json'
+import compare from './compare.json'
 import faq from './faq.json'
 import changelog from './changelog.json'
 import contact from './contact.json'
@@ -38,6 +39,7 @@ const messages = {
   pricing,
   reviews,
   featuresPage,
+  compare,
   faq,
   changelog,
   contact,

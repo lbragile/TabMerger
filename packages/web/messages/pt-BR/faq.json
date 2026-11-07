@@ -4,6 +4,7 @@
   "title": "Perguntas frequentes",
   "lead": "Ainda tem dúvida? Respondemos e-mails em menos de um dia.",
   "contact": "Falar com o suporte",
+  "compareLink": "Vindo de outro gerenciador de abas? Veja como o TabMerger se compara",
   "free": {
     "question": "O TabMerger é mesmo grátis?",
     "answer": "Sim! O plano gratuito inclui todos os recursos principais — até {groups} grupos, {tabs} abas, {urlRules} regras de URL, arrastar e soltar e importação/exportação. Você só paga se quiser sincronização na nuvem, grupos, abas e regras de URL ilimitados ou recursos de IA."
