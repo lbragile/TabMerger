@@ -28,7 +28,11 @@
     "captionPair": "TabMerger と {product} の比較",
     "feature": "機能",
     "pickerLegend": "TabMerger と比較する製品",
-    "allTools": "すべてのツール"
+    "allTools": "すべてのツール",
+    "previousTool": "前のツール",
+    "nextTool": "次のツール",
+    "previousSection": "前のセクション",
+    "nextSection": "次のセクション"
   },
   "groups": {
     "plans": "プラン",

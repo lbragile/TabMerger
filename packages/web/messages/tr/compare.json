@@ -28,7 +28,11 @@
     "captionPair": "TabMerger ile {product} karşılaştırması",
     "feature": "Özellik",
     "pickerLegend": "TabMerger'ı şununla karşılaştır",
-    "allTools": "Tüm araçlar"
+    "allTools": "Tüm araçlar",
+    "previousTool": "Önceki araç",
+    "nextTool": "Sonraki araç",
+    "previousSection": "Önceki bölüm",
+    "nextSection": "Sonraki bölüm"
   },
   "groups": {
     "plans": "Planlar",

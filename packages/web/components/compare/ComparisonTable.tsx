@@ -16,6 +16,7 @@ import {
   type Row,
 } from '@/lib/comparison'
 import { CompetitorPicker } from './CompetitorPicker'
+import { CompareScrollBox } from './CompareScrollBox'
 
 /** A translator that takes the data file's keys (checked against the catalog by a test). */
 type LooseTranslator = (key: string, values?: Record<string, string | number>) => string
@@ -88,14 +89,19 @@ function CellValue({ cell, t, values }: { cell: Cell; t: LooseTranslator; values
   )
 }
 
-/** The TabMerger column's tint (a primary wash), on its body cells. */
-const TABMERGER_TINT = 'bg-primary/5'
+/**
+ * The TabMerger column's tint (a primary wash) over an opaque background: its cells are pinned,
+ * so other columns scroll under them. An inset shadow paints above the background and below the
+ * text.
+ */
+const TABMERGER_TINT = 'bg-background shadow-[inset_0_0_0_100rem_hsl(var(--primary)/0.05)]'
+const TABMERGER_HEADER_TINT = 'bg-background shadow-[inset_0_0_0_100rem_hsl(var(--primary)/0.08)]'
 
 /**
- * The same tint over an opaque background, for the sticky header cell (rows scroll under it). An
- * inset shadow paints above the background and below the text.
+ * "All tools": the TabMerger column sticks right after the sticky feature column (`w-48`, 12rem),
+ * so it stays in view while the competitors scroll sideways. Stacked layouts don't pin it.
  */
-const TABMERGER_HEADER_TINT = 'bg-background shadow-[inset_0_0_0_100rem_hsl(var(--primary)/0.08)]'
+const TABMERGER_PINNED = 'sticky inset-s-48 compare-stacked:static'
 
 function ProductHeader({ product }: { product: Product }) {
   const isTabMerger = product.id === 'tabmerger'
@@ -103,12 +109,14 @@ function ProductHeader({ product }: { product: Product }) {
     <th
       scope="col"
       data-col={isTabMerger ? undefined : product.id}
+      data-product={isTabMerger ? 'tabmerger' : undefined}
       className={cn(
         // Table view: each header cell sticks to the top of the scroll box. Stacked: the whole
         // <thead> sticks instead (a cell can't stick outside its grid row).
         'sticky top-0 z-20 border-b border-border bg-background px-3.5 py-4 text-start align-top text-[0.9375rem] font-semibold',
         'compare-stacked:static compare-stacked:px-2 compare-stacked:py-3',
-        isTabMerger && cn('border-t-[0.1875rem] border-t-primary', TABMERGER_HEADER_TINT)
+        // TabMerger's header cell is a corner: sticky to the top and to the inline start.
+        isTabMerger && cn('z-30 border-t-[0.1875rem] border-t-primary', TABMERGER_PINNED, TABMERGER_HEADER_TINT)
       )}
     >
       {product.name}
@@ -164,14 +172,14 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
       label={t('table.pickerLegend')}
       allTools={t('table.allTools')}
     >
-      {/* Focusable so keyboard users can scroll it; named by the section heading. `relative`
-          makes it the containing block of the cells' sr-only (absolute) text, so that text is
-          clipped by the box instead of widening the page. */}
-      <div
-        role="region"
-        tabIndex={0}
-        aria-labelledby="compare-table"
-        className="relative mt-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring md:max-h-[calc(100svh-6rem)] md:overflow-auto md:compare-stacked:max-w-[48rem]"
+      <CompareScrollBox
+        labelledBy="compare-table"
+        labels={{
+          previousTool: t('table.previousTool'),
+          nextTool: t('table.nextTool'),
+          previousSection: t('table.previousSection'),
+          nextSection: t('table.nextSection'),
+        }}
       >
         <table className="w-full min-w-[112rem] table-fixed border-separate border-spacing-0 text-sm compare-stacked:flex compare-stacked:min-w-0 compare-stacked:flex-col">
           <caption className="sr-only">
@@ -225,7 +233,7 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
                             data-col={product.id === 'tabmerger' ? undefined : product.id}
                             className={cn(
                               'border-b border-line px-3.5 py-3 align-top compare-stacked:px-2 compare-stacked:pb-2.5 compare-stacked:pt-1.5',
-                              product.id === 'tabmerger' && TABMERGER_TINT
+                              product.id === 'tabmerger' && cn('z-10', TABMERGER_PINNED, TABMERGER_TINT)
                             )}
                           >
                             <CellValue cell={cell} t={t} values={cellValues(cell)} />
@@ -248,7 +256,7 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
             </tr>
           </tfoot>
         </table>
-      </div>
+      </CompareScrollBox>
     </CompetitorPicker>
   )
 }

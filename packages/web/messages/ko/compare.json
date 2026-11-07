@@ -28,7 +28,11 @@
     "captionPair": "TabMerger와 {product} 비교",
     "feature": "기능",
     "pickerLegend": "TabMerger와 비교할 제품",
-    "allTools": "모든 도구"
+    "allTools": "모든 도구",
+    "previousTool": "이전 도구",
+    "nextTool": "다음 도구",
+    "previousSection": "이전 섹션",
+    "nextSection": "다음 섹션"
   },
   "groups": {
     "plans": "플랜",

@@ -28,7 +28,11 @@
     "captionPair": "TabMerger की तुलना {product} से",
     "feature": "फ़ीचर",
     "pickerLegend": "TabMerger की तुलना करें",
-    "allTools": "सभी टूल"
+    "allTools": "सभी टूल",
+    "previousTool": "पिछला टूल",
+    "nextTool": "अगला टूल",
+    "previousSection": "पिछला सेक्शन",
+    "nextSection": "अगला सेक्शन"
   },
   "groups": {
     "plans": "प्लान",

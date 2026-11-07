@@ -28,7 +28,11 @@
     "captionPair": "TabMerger בהשוואה ל-{product}",
     "feature": "תכונה",
     "pickerLegend": "השוואת TabMerger עם",
-    "allTools": "כל הכלים"
+    "allTools": "כל הכלים",
+    "previousTool": "הכלי הקודם",
+    "nextTool": "הכלי הבא",
+    "previousSection": "הקטע הקודם",
+    "nextSection": "הקטע הבא"
   },
   "groups": {
     "plans": "תוכניות",

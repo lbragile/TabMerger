@@ -28,7 +28,11 @@
     "captionPair": "مقایسه TabMerger با {product}",
     "feature": "ویژگی",
     "pickerLegend": "مقایسه TabMerger با",
-    "allTools": "همه ابزارها"
+    "allTools": "همه ابزارها",
+    "previousTool": "ابزار قبلی",
+    "nextTool": "ابزار بعدی",
+    "previousSection": "بخش قبلی",
+    "nextSection": "بخش بعدی"
   },
   "groups": {
     "plans": "طرح‌ها",

@@ -28,7 +28,11 @@
     "captionPair": "Сравнение TabMerger с {product}",
     "feature": "Функция",
     "pickerLegend": "Сравнить TabMerger с",
-    "allTools": "Все инструменты"
+    "allTools": "Все инструменты",
+    "previousTool": "Предыдущий инструмент",
+    "nextTool": "Следующий инструмент",
+    "previousSection": "Предыдущий раздел",
+    "nextSection": "Следующий раздел"
   },
   "groups": {
     "plans": "Тарифы",

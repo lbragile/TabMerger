@@ -28,7 +28,11 @@
     "captionPair": "TabMerger 与 {product} 的对比",
     "feature": "功能",
     "pickerLegend": "将 TabMerger 与以下产品对比",
-    "allTools": "全部工具"
+    "allTools": "全部工具",
+    "previousTool": "上一个工具",
+    "nextTool": "下一个工具",
+    "previousSection": "上一部分",
+    "nextSection": "下一部分"
   },
   "groups": {
     "plans": "方案",

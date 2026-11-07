@@ -28,7 +28,11 @@
     "captionPair": "So sánh TabMerger với {product}",
     "feature": "Tính năng",
     "pickerLegend": "So sánh TabMerger với",
-    "allTools": "Tất cả công cụ"
+    "allTools": "Tất cả công cụ",
+    "previousTool": "Công cụ trước",
+    "nextTool": "Công cụ tiếp theo",
+    "previousSection": "Phần trước",
+    "nextSection": "Phần tiếp theo"
   },
   "groups": {
     "plans": "Gói",

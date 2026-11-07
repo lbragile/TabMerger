@@ -28,7 +28,11 @@
     "captionPair": "TabMerger dibandingkan dengan {product}",
     "feature": "Fitur",
     "pickerLegend": "Bandingkan TabMerger dengan",
-    "allTools": "Semua alat"
+    "allTools": "Semua alat",
+    "previousTool": "Alat sebelumnya",
+    "nextTool": "Alat berikutnya",
+    "previousSection": "Bagian sebelumnya",
+    "nextSection": "Bagian berikutnya"
   },
   "groups": {
     "plans": "Paket",

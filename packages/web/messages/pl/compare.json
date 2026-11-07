@@ -28,7 +28,11 @@
     "captionPair": "TabMerger w porównaniu z {product}",
     "feature": "Funkcja",
     "pickerLegend": "Porównaj TabMerger z",
-    "allTools": "Wszystkie narzędzia"
+    "allTools": "Wszystkie narzędzia",
+    "previousTool": "Poprzednie narzędzie",
+    "nextTool": "Następne narzędzie",
+    "previousSection": "Poprzednia sekcja",
+    "nextSection": "Następna sekcja"
   },
   "groups": {
     "plans": "Plany",

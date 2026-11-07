@@ -53,6 +53,18 @@ The cells' `sr-only` spans (absolute) escaped a non-positioned box and widened t
 428px (`window.scrollX` could move even with body `overflow-x: clip`). Add `relative` to the
 scroll box; check with `documentElement.scrollWidth` and by trying `scrollTo(500, y)`.
 
+**Scroll arrows over a sticky table** (`CompareScrollBox.tsx`). Measure everything from the DOM
+with `getBoundingClientRect` relative to the box's inline-start edge (`rtl ? box.right - el.right
+: el.left - box.left`). That one helper handles RTL, where Chrome's `scrollLeft` runs negative:
+scroll with `scrollBy({ left: rtl ? -delta : delta })`. "Next column" = the first column header
+whose start is past the pinned edge (the end of TabMerger's sticky header cell), delta = start minus
+pinned. "Next section" = the first `th[scope=colgroup]` below the sticky header's height. Put the
+overlays in a positioned wrapper outside the scroll box, with `z-40`. The box isn't a stacking
+context, so they must beat the sticky cells' z-30. Put the section control inside the legend bar
+height so it never covers a cell. Render controls only after hydration
+(`useSyncExternalStore(() => () => {}, () => true, () => false)`). jsdom has no
+`ResizeObserver`, so guard it.
+
 **Copy that describes the extension must match its UI.** The approved mockup said "pick OneTab,
 paste"; the extension imports OneTab from a `.txt` file via Settings → Data → Import (the
 separate Import/Export modal is not opened from anywhere). Grep `packages/extension/src` (the
