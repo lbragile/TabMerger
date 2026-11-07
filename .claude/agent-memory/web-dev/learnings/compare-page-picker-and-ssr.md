@@ -48,6 +48,10 @@ sticky cell needs an opaque background; keep the tint with
 `colSpan` row stays visible during sideways scroll as an `inline-block` with `sticky inset-s-*`.
 To move the legend above the rows on phones, make the stacked table `flex flex-col` and give
 `tfoot` `max-md:-order-1`. No inner scroll box below md: it traps touch scrolling.
+An `overflow: auto` box only clips absolute descendants whose containing block is inside it.
+The cells' `sr-only` spans (absolute) escaped a non-positioned box and widened the page by
+428px (`window.scrollX` could move even with body `overflow-x: clip`). Add `relative` to the
+scroll box; check with `documentElement.scrollWidth` and by trying `scrollTo(500, y)`.
 
 **Copy that describes the extension must match its UI.** The approved mockup said "pick OneTab,
 paste"; the extension imports OneTab from a `.txt` file via Settings → Data → Import (the

@@ -140,7 +140,7 @@ function Legend({ t }: { t: LooseTranslator }) {
  * rows under their group headings, and the legend in its `<tfoot>`.
  *
  * - "All tools" (md and up, nothing picked): a real table in its own scroll box. The product
- *   names stick to the top, the feature names to the inline start (columns are at least 10rem,
+ *   names stick to the top, the feature names to the inline start (columns are at least 10rem: 12rem + 10 × 10rem,
  *   so the box scrolls sideways), and the legend to the bottom.
  * - Two columns (phones, or one competitor picked): stacked rows, each feature's label on its
  *   own line above its two cells (the `compare-stacked:` variant). From md up the scroll box
@@ -164,14 +164,16 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
       label={t('table.pickerLegend')}
       allTools={t('table.allTools')}
     >
-      {/* Focusable so keyboard users can scroll it; named by the section heading. */}
+      {/* Focusable so keyboard users can scroll it; named by the section heading. `relative`
+          makes it the containing block of the cells' sr-only (absolute) text, so that text is
+          clipped by the box instead of widening the page. */}
       <div
         role="region"
         tabIndex={0}
         aria-labelledby="compare-table"
-        className="mt-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring md:max-h-[calc(100svh-6rem)] md:overflow-auto md:compare-stacked:max-w-[48rem]"
+        className="relative mt-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring md:max-h-[calc(100svh-6rem)] md:overflow-auto md:compare-stacked:max-w-[48rem]"
       >
-        <table className="w-full min-w-[102rem] table-fixed border-separate border-spacing-0 text-sm compare-stacked:flex compare-stacked:min-w-0 compare-stacked:flex-col">
+        <table className="w-full min-w-[112rem] table-fixed border-separate border-spacing-0 text-sm compare-stacked:flex compare-stacked:min-w-0 compare-stacked:flex-col">
           <caption className="sr-only">
             <span data-caption="all" className="max-md:hidden">
               {t('table.caption', { products: listNames(COMPETITORS.map((c) => c.name), common) })}
