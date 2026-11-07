@@ -11,6 +11,7 @@
   "upgrade": "Upgrade",
   "paymentIssue": "Zahlungsproblem – aktualisiere deine Karte",
   "planEnds": "Dein Pro-Abo endet am {{date}}",
+  "manageSubscription": "Abo verwalten",
   "approachingLimit": "Du näherst dich dem kostenlosen Limit – wechsle zu Pro für unbegrenzte Gruppen und Tabs",
   "update": {
     "label": "Update verfügbar",

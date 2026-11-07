@@ -11,6 +11,7 @@
   "upgrade": "Yükselt",
   "paymentIssue": "Ödeme sorunu — kartınızı güncelleyin",
   "planEnds": "Pro planınız {{date}} tarihinde sona eriyor",
+  "manageSubscription": "Aboneliği yönet",
   "approachingLimit": "Ücretsiz sınıra yaklaşıyorsunuz — sınırsız grup ve sekme için Pro'ya yükseltin",
   "update": {
     "label": "Güncelleme mevcut",

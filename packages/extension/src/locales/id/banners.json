@@ -10,6 +10,7 @@
   "upgrade": "Tingkatkan",
   "paymentIssue": "Masalah pembayaran — perbarui kartu Anda",
   "planEnds": "Paket Pro Anda berakhir pada {{date}}",
+  "manageSubscription": "Kelola langganan",
   "approachingLimit": "Anda mendekati batas gratis — tingkatkan ke Pro untuk grup dan tab tanpa batas",
   "update": {
     "label": "Pembaruan tersedia",

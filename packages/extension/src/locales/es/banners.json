@@ -12,6 +12,7 @@
   "upgrade": "Mejorar plan",
   "paymentIssue": "Problema de pago: actualiza tu tarjeta",
   "planEnds": "Tu plan Pro termina el {{date}}",
+  "manageSubscription": "Gestionar suscripción",
   "approachingLimit": "Te acercas al límite gratuito: mejora a Pro para tener grupos y pestañas ilimitados",
   "update": {
     "label": "Actualización disponible",

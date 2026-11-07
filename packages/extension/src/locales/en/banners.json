@@ -11,6 +11,7 @@
   "upgrade": "Upgrade",
   "paymentIssue": "Payment issue — update your card",
   "planEnds": "Your Pro plan ends on {{date}}",
+  "manageSubscription": "Manage subscription",
   "approachingLimit": "You're approaching the free limit — upgrade to Pro for unlimited groups and tabs",
   "update": {
     "label": "Update available",

@@ -99,6 +99,56 @@ describe('SubscriptionStatusBanner', () => {
     expect(screen.queryByText(/Pro plan ends on/)).toBeNull()
   })
 
+  it('renders a "Manage subscription" button in the plan-ends banner', async () => {
+    mockUseEntitlements.mockReturnValue(freeEntitlements({
+      tier: 'pro',
+      subscriptionStatus: 'active',
+      cancelAtPeriodEnd: true,
+      currentPeriodEnd: '2026-08-01T00:00:00Z',
+    }))
+    await renderBanner()
+    const cta = screen.getByRole('button', { name: 'Manage subscription' })
+    expect(cta).toHaveAttribute('type', 'button')
+    // The message stays a separate element, not part of the button's accessible name
+    expect(screen.getByText(/Pro plan ends on/)).not.toContainElement(cta)
+  })
+
+  it('clicking "Manage subscription" opens the web account page', async () => {
+    const user = userEvent.setup()
+    mockUseEntitlements.mockReturnValue(freeEntitlements({
+      tier: 'pro',
+      subscriptionStatus: 'active',
+      cancelAtPeriodEnd: true,
+      currentPeriodEnd: '2026-08-01T00:00:00Z',
+    }))
+    await renderBanner()
+    await user.click(screen.getByRole('button', { name: 'Manage subscription' }))
+    expect(mockTabsCreate).toHaveBeenCalledTimes(1)
+    expect(mockTabsCreate).toHaveBeenCalledWith({ url: `${import.meta.env.VITE_WEB_APP_URL}/account` })
+  })
+
+  it('has no "Manage subscription" button when the plan is not cancelling', async () => {
+    mockUseEntitlements.mockReturnValue(freeEntitlements({
+      tier: 'pro',
+      subscriptionStatus: 'active',
+      cancelAtPeriodEnd: false,
+      currentPeriodEnd: '2026-08-01T00:00:00Z',
+    }))
+    await renderBanner()
+    expect(screen.queryByRole('button', { name: 'Manage subscription' })).toBeNull()
+  })
+
+  it('has no "Manage subscription" button in the past_due banner', async () => {
+    mockUseEntitlements.mockReturnValue(freeEntitlements({
+      tier: 'pro',
+      subscriptionStatus: 'past_due',
+      cancelAtPeriodEnd: true,
+      currentPeriodEnd: '2026-08-01T00:00:00Z',
+    }))
+    await renderBanner()
+    expect(screen.queryByRole('button', { name: 'Manage subscription' })).toBeNull()
+  })
+
   it('clicking update-card link opens account page', async () => {
     const user = userEvent.setup()
     mockUseEntitlements.mockReturnValue(freeEntitlements({

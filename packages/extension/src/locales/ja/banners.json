@@ -10,6 +10,7 @@
   "upgrade": "アップグレード",
   "paymentIssue": "お支払いの問題: カードを更新してください",
   "planEnds": "Proプランは{{date}}に終了します",
+  "manageSubscription": "サブスクリプションを管理",
   "approachingLimit": "無料プランの上限に近づいています。Proにアップグレードすると、グループとタブが無制限になります",
   "update": {
     "label": "アップデートがあります",
