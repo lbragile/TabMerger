@@ -37,6 +37,18 @@ Every locale must keep the tag (the catalog test compares tags).
 **`inline-flex` on a sentence** turns its text runs into flex items and drops the space before an
 inline element ("Checked on" + `<time>`). Use `inline-block` for a bordered stamp.
 
+**Sticky header/column/footer in a table that can also "stack".** In table layout, put
+`sticky top-0` on the header `th` cells and `sticky bottom-0` on the `tfoot` `td`, not on
+`thead`/`tfoot` (cell sticky is the widely supported form). Use `border-separate border-spacing-0`:
+with `border-collapse` the borders stay behind while the sticky cells move. Once the table is
+re-laid out as blocks/grid rows (the stacked view), a sticky cell only sticks inside its own grid
+row, so there the `thead` (now a block/flex item of the table) gets the sticky instead. A tinted
+sticky cell needs an opaque background; keep the tint with
+`bg-background shadow-[inset_0_0_0_100rem_hsl(var(--primary)/0.08)]`. A label inside a
+`colSpan` row stays visible during sideways scroll as an `inline-block` with `sticky inset-s-*`.
+To move the legend above the rows on phones, make the stacked table `flex flex-col` and give
+`tfoot` `max-md:-order-1`. No inner scroll box below md: it traps touch scrolling.
+
 **Copy that describes the extension must match its UI.** The approved mockup said "pick OneTab,
 paste"; the extension imports OneTab from a `.txt` file via Settings → Data → Import (the
 separate Import/Export modal is not opened from anywhere). Grep `packages/extension/src` (the

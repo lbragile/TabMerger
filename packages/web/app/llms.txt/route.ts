@@ -13,7 +13,7 @@ const PAGES: ReadonlyArray<readonly [path: string, title: string, about: string]
   ['/', 'Home', 'What TabMerger is and how to install it'],
   ['/features', 'Features', 'Everything TabMerger can do'],
   ['/pricing', 'Pricing', 'The free plan and the paid plans'],
-  ['/compare', 'Compare', 'TabMerger next to OneTab, Session Buddy, Toby and Workona, from each product’s own pages'],
+  ['/compare', 'Compare', 'TabMerger next to OneTab, Session Buddy, Toby, Workona and five more tab managers, from each product’s own pages'],
   ['/faq', 'FAQ', 'Answers to common questions'],
   ['/changelog', 'Changelog', 'What changed in each release'],
   ['/privacy', 'Privacy', 'What data TabMerger handles and how'],
