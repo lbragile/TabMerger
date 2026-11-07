@@ -35,6 +35,8 @@ const {
   mockSetActiveGroupIndex: vi.fn(),
 }))
 
+// The Auto-saved section has its own tests (AutoSavedSection.test.tsx)
+vi.mock('@/components/SidePanel/AutoSavedSection', () => ({ AutoSavedSection: () => null }))
 vi.mock('@dnd-kit/core', () => ({
   DndContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   closestCenter: vi.fn(),
