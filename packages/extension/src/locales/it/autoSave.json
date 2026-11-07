@@ -29,7 +29,6 @@
     "upgrade": "Passa a un piano superiore per tenerli tutti",
     "checkingPlan": "Verifica del piano...",
     "scheduleLabel": "Pianificazione",
-    "scheduleAria": "Pianificazione del salvataggio automatico",
     "schedule": {
       "0": "Disattivato",
       "15": "Ogni 15 minuti",
@@ -40,7 +39,6 @@
       "1440": "Ogni giorno"
     },
     "thresholdLabel": "Quando le schede aperte superano",
-    "thresholdAria": "Numero di schede aperte che avvia un salvataggio automatico",
     "thresholdOff": "Disattivato",
     "thresholdOption_one": "{{count}} scheda aperta",
     "thresholdOption_many": "{{count}} schede aperte",
@@ -52,7 +50,7 @@
     "running": "Salvataggio..."
   },
   "sidebar": {
-    "label": "SALVATI IN AUTOMATICO",
+    "label": "Salvati in automatico",
     "countOfMax": "{{count}} di {{max}}",
     "empty": "Ancora nessun salvataggio automatico",
     "replacedNext": "Sostituito al prossimo salvataggio automatico",
@@ -60,7 +58,9 @@
     "keep": "Tieni come gruppo",
     "keepNamed": "Tieni {{name}} come gruppo",
     "delete": "Elimina salvataggio automatico",
-    "deleteNamed": "Elimina {{name}}"
+    "deleteNamed": "Elimina {{name}}",
+    "deleted": "{{name}} eliminato",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Salvato automaticamente. Resta finché non lo elimini.",

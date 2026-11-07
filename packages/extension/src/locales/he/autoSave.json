@@ -29,7 +29,6 @@
     "upgrade": "שדרגו כדי לשמור את כולן",
     "checkingPlan": "בודקים את התוכנית שלך...",
     "scheduleLabel": "לוח זמנים",
-    "scheduleAria": "לוח זמנים לשמירה אוטומטית",
     "schedule": {
       "0": "כבוי",
       "15": "כל 15 דקות",
@@ -40,7 +39,6 @@
       "1440": "מדי יום"
     },
     "thresholdLabel": "כשמספר הכרטיסיות הפתוחות עובר את",
-    "thresholdAria": "מספר הכרטיסיות הפתוחות שמפעיל שמירה אוטומטית",
     "thresholdOff": "כבוי",
     "thresholdOption_one": "כרטיסייה פתוחה {{count}}",
     "thresholdOption_two": "{{count}} כרטיסיות פתוחות",
@@ -60,7 +58,9 @@
     "keep": "שמירה כקבוצה",
     "keepNamed": "שמירת {{name}} כקבוצה",
     "delete": "מחיקת השמירה האוטומטית",
-    "deleteNamed": "מחיקת {{name}}"
+    "deleteNamed": "מחיקת {{name}}",
+    "deleted": "{{name}} נמחק",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "נשמר אוטומטית. יישמר עד שתמחקו אותו.",

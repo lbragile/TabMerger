@@ -54,12 +54,12 @@ test.describe('Auto-save open tabs - Settings → Data', () => {
     await expect(box.getByText(/Every auto-save is kept/)).toBeVisible();
     await expect(box.getByRole('button', { name: 'Upgrade to keep them all' })).toHaveCount(0);
 
-    await box.getByRole('combobox', { name: 'Auto-save schedule' }).click();
+    await box.getByRole('combobox', { name: 'Schedule' }).click();
     await page.getByRole('option', { name: 'Every 2 hours' }).click();
-    await expect(box.getByRole('combobox', { name: 'Auto-save schedule' })).toContainText('Every 2 hours');
+    await expect(box.getByRole('combobox', { name: 'Schedule' })).toContainText('Every 2 hours');
     await page.reload({ waitUntil: 'networkidle' });
     await openDataTab(page);
-    await expect(card(page).getByRole('combobox', { name: 'Auto-save schedule' })).toContainText('Every 2 hours');
+    await expect(card(page).getByRole('combobox', { name: 'Schedule' })).toContainText('Every 2 hours');
 
     const overflow = await card(page).evaluate((el) => {
       const scroller = el.closest('.overflow-y-auto') as HTMLElement | null;
@@ -80,12 +80,12 @@ test.describe('Auto-save open tabs - the Auto-saved section', () => {
       const page = await openPopup(context, extensionId);
       await seedAndReload(page, [NOW_OPEN]);
 
-      const header = page.getByRole('button', { name: /^AUTO-SAVED \(0\)$/ });
+      const header = page.getByRole('button', { name: /^Auto-saved \(0\)$/ });
       await expect(header).toBeVisible();
       await page.getByRole('button', { name: 'Auto-save now' }).first().click();
 
       // the worker wrote it; the popup refetches on the groups-changed broadcast
-      const freeHeader = page.getByRole('button', { name: /^AUTO-SAVED \(1 of 2\)$/ });
+      const freeHeader = page.getByRole('button', { name: /^Auto-saved \(1 of 2\)$/ });
       await expect(freeHeader).toBeVisible({ timeout: 15_000 });
       await expect(freeHeader).toHaveAttribute('aria-expanded', 'true');
       const open = page.getByRole('button', { name: /^Open Auto-saved / });
@@ -108,7 +108,7 @@ test.describe('Auto-save open tabs - the Auto-saved section', () => {
       // Keep: it leaves the section and joins the main group list
       await page.getByRole('button', { name: /^Keep Auto-saved .* as a group$/ }).click();
       await expect(page.getByText("Moved to your groups. It won't be removed automatically.")).toBeVisible();
-      await expect(page.getByRole('button', { name: /^AUTO-SAVED \(0\)$/ })).toBeVisible();
+      await expect(page.getByRole('button', { name: /^Auto-saved \(0\)$/ })).toBeVisible();
       await expect(page.getByTestId('auto-save-banner')).toHaveCount(0);
       await expect(page.locator('[data-sidebar-group-index]').filter({ hasText: auto.name })).toHaveCount(1);
     } finally {

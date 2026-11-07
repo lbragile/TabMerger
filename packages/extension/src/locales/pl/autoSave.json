@@ -30,7 +30,6 @@
     "upgrade": "Przejdź na wyższy plan, aby zachować wszystkie",
     "checkingPlan": "Sprawdzanie planu...",
     "scheduleLabel": "Harmonogram",
-    "scheduleAria": "Harmonogram autozapisu",
     "schedule": {
       "0": "Wył.",
       "15": "Co 15 minut",
@@ -41,7 +40,6 @@
       "1440": "Codziennie"
     },
     "thresholdLabel": "Gdy otwartych kart jest więcej niż",
-    "thresholdAria": "Liczba otwartych kart, która uruchamia autozapis",
     "thresholdOff": "Wył.",
     "thresholdOption_one": "{{count}} otwarta karta",
     "thresholdOption_few": "{{count}} otwarte karty",
@@ -54,7 +52,7 @@
     "running": "Zapisywanie..."
   },
   "sidebar": {
-    "label": "AUTOZAPISY",
+    "label": "Autozapisy",
     "countOfMax": "{{count}} z {{max}}",
     "empty": "Brak autozapisów",
     "replacedNext": "Zostanie zastąpiony przy następnym autozapisie",
@@ -62,7 +60,9 @@
     "keep": "Zachowaj jako grupę",
     "keepNamed": "Zachowaj {{name}} jako grupę",
     "delete": "Usuń autozapis",
-    "deleteNamed": "Usuń {{name}}"
+    "deleteNamed": "Usuń {{name}}",
+    "deleted": "Usunięto {{name}}",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Zapisano automatycznie. Zostaje, dopóki go nie usuniesz.",

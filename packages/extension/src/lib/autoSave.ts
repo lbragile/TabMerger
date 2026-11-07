@@ -270,7 +270,9 @@ export type AutoSavePlan =
  *     toward the group and tab limits. No free group slot (normal groups are never removed): skip.
  *     Near the tab limit: the tabs that fit, in window order ("Saved X of Y").
  *  5. The new group goes last, marked `pendingSync` (so a paid account uploads it, encrypted), never
- *     at index 0. `rolling` only when made on a confirmed Free plan.
+ *     at index 0. `rolling` unless the plan is paid (confirmed now, or remembered while the check
+ *     fails): a Free user whose check fails offline must still get auto-saves that roll later.
+ *     Only a confirmed-Free run REMOVES one.
  */
 export function planAutoSave(current: GroupsState, liveWindows: Window[], opts: AutoSavePlanOptions): AutoSavePlan {
   if (liveWindows.every((w) => w.tabs.length === 0)) return { kind: 'skip', reason: 'no-tabs' };
@@ -324,7 +326,7 @@ export function planAutoSave(current: GroupsState, liveWindows: Window[], opts: 
     windows,
     info: formatGroupCounts(windows.length, saved),
     pendingSync: true,
-    autoSave: { at: opts.now, rolling: confirmedFree }
+    autoSave: { at: opts.now, rolling: !treatAsPaid(opts.tier) }
   };
   const available = [...kept, group];
   // the active group keeps meaning the same group; one that was replaced hands over to "Now Open"

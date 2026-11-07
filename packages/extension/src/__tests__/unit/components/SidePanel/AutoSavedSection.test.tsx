@@ -74,15 +74,15 @@ beforeEach(() => {
 describe('AutoSavedSection', () => {
   it('empty: header with 0, collapsed, still offers "Auto-save now"', () => {
     renderSection(st(g('normal')))
-    expect(screen.getByRole('button', { name: 'AUTO-SAVED (0)' })).toHaveAttribute('aria-expanded', 'false')
-    fireEvent.click(screen.getByRole('button', { name: 'AUTO-SAVED (0)' }))
+    expect(screen.getByRole('button', { name: 'Auto-saved (0)' })).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(screen.getByRole('button', { name: 'Auto-saved (0)' }))
     expect(screen.getByText('No auto-saves yet')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Auto-save now' })).toBeInTheDocument()
   })
 
   it('Pro: lists auto-saves newest first, open by default, never the normal groups', () => {
     renderSection(st(g('normal'), g('old', { autoSave: { at: 1000, rolling: false } }), g('new', { autoSave: { at: 2000, rolling: false } })))
-    expect(screen.getByRole('button', { name: 'AUTO-SAVED (2)' })).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('button', { name: 'Auto-saved (2)' })).toHaveAttribute('aria-expanded', 'true')
     const opens = screen.getAllByRole('button', { name: /^Open Name/ }).map((b) => b.getAttribute('aria-label'))
     expect(opens).toEqual(['Open Name new', 'Open Name old'])
     expect(screen.queryByText('Name normal')).toBeNull()
@@ -92,14 +92,14 @@ describe('AutoSavedSection', () => {
   it('Free: "n of 2", and the oldest of two rolling ones says it goes next', () => {
     h.tier = 'free'
     renderSection(st(g('r1', { autoSave: { at: 1000, rolling: true } }), g('r2', { autoSave: { at: 2000, rolling: true } })))
-    expect(screen.getByRole('button', { name: 'AUTO-SAVED (2 of 2)' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Auto-saved (2 of 2)' })).toBeInTheDocument()
     expect(screen.getAllByText('Replaced at the next auto-save')).toHaveLength(1)
   })
 
   it('Free with a kept-on-Pro auto-save shows a plain count', () => {
     h.tier = 'free'
     renderSection(st(g('r1', { autoSave: { at: 1000, rolling: true } }), g('p', { autoSave: { at: 500, rolling: false } })))
-    expect(screen.getByRole('button', { name: 'AUTO-SAVED (2)' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Auto-saved (2)' })).toBeInTheDocument()
     expect(screen.queryByText('Replaced at the next auto-save')).toBeNull()
   })
 
@@ -112,7 +112,10 @@ describe('AutoSavedSection', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open Name a' }))
     expect(useUIStore.getState().activeGroupIndex).toBe(0)
     fireEvent.click(screen.getByRole('button', { name: 'Delete Name a' }))
-    expect(h.del).toHaveBeenCalledWith(2)
+    expect(h.del).toHaveBeenCalledWith(2, expect.objectContaining({ onSuccess: expect.any(Function) }))
+    // the row is gone and focus moved on, so the delete is announced
+    h.del.mock.calls[0][1].onSuccess()
+    expect(h.toast.success).toHaveBeenCalledWith('Deleted Name a', { id: 'auto-save-deleted' })
   })
 
   it('Keep keeps it by id and offers Undo for that step only', async () => {
@@ -169,6 +172,50 @@ describe('AutoSavedSection', () => {
     } finally {
       vi.useRealTimers()
     }
+  })
+})
+
+describe('AutoSavedSection — focus and announcements', () => {
+  const wrap = (state: GroupsState) => (
+    <QueryClientProvider client={new QueryClient()}>
+      <TooltipProvider>
+        <AutoSavedSection groupsState={state} />
+      </TooltipProvider>
+    </QueryClientProvider>
+  )
+
+  it('after Delete: announces it and focuses the next row; the toggle when none is left', async () => {
+    h.del.mockImplementation((_i: number, opts?: { onSuccess?: () => void }) => opts?.onSuccess?.())
+    const a = g('a', { autoSave: { at: 2, rolling: false } })
+    const b = g('b', { autoSave: { at: 1, rolling: false } })
+    const { rerender } = render(wrap(st(a, b)))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Name a' }))
+    expect(h.toast.success).toHaveBeenCalledWith('Deleted Name a', { id: 'auto-save-deleted' })
+    rerender(wrap(st(b)))
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Open Name b' })).toHaveFocus())
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Name b' }))
+    rerender(wrap(st()))
+    await waitFor(() => expect(screen.getByRole('button', { name: /^Auto-saved \(/ })).toHaveFocus())
+  })
+
+  it('after Keep: focus moves to the next row; the toast with Undo stays 10 s', async () => {
+    const entry = { active: { id: 'now', index: 0 }, available: [] }
+    h.keep.mockImplementation(async () => useUIStore.setState({ undoStack: [entry] }))
+    const a = g('a', { autoSave: { at: 2, rolling: false } })
+    const b = g('b', { autoSave: { at: 1, rolling: false } })
+    const { rerender } = render(wrap(st(a, b)))
+    fireEvent.click(screen.getByRole('button', { name: 'Keep Name a as a group' }))
+    await waitFor(() => expect(h.toast.success).toHaveBeenCalled())
+    expect(h.toast.success.mock.calls[0][1]).toMatchObject({ duration: 10_000 })
+    rerender(wrap(st({ ...a, autoSave: undefined }, b)))
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Open Name b' })).toHaveFocus())
+  })
+
+  it('a row describes its time and its counts; the badge is hidden from screen readers', () => {
+    render(wrap(st(g('a', { autoSave: { at: Date.now(), rolling: false } }))))
+    const open = screen.getByRole('button', { name: 'Open Name a' })
+    expect(open).toHaveAccessibleDescription(/1 window, 2 tabs/)
+    expect(screen.getByRole('button', { name: /^Auto-saved \(/ })).toHaveAttribute('aria-controls')
   })
 })
 

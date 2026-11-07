@@ -39,6 +39,13 @@ export const AUTO_SAVE_ALARM_NAME = 'tm-auto-save';
 /** Minimum time between two threshold-triggered runs, so a burst of new tabs saves once. */
 export const AUTO_SAVE_THRESHOLD_MIN_GAP_MS = 10 * 60 * 1000;
 
+/**
+ * How long a remembered "Free" answer lets a background run for a switch the user never touched
+ * stop without asking the server again (Free's default is off). Bounds how long someone who just
+ * upgraded waits for the Pro default; any settings change asks again at once.
+ */
+export const AUTO_SAVE_FREE_RECHECK_MS = 3 * 60 * 60 * 1000;
+
 /** Slack for the periodic alarm, which fires a few seconds short of one interval since the last run's stamp. */
 export const AUTO_SAVE_DUE_TOLERANCE_MS = 2 * 60 * 1000;
 

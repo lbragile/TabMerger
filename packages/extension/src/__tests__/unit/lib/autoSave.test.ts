@@ -224,13 +224,17 @@ describe('planAutoSave', () => {
     expect(plan.kind === 'write' && plan.replaced).toBe(0)
   })
 
-  it('unknown plan: saves but never removes, not rolling', () => {
+  it('unknown plan: saves but never removes; rolls unless a paid answer is remembered', () => {
     const r1 = group('r1', ['https://r1.test/'], { autoSave: { at: 1, rolling: true } })
     const r2 = group('r2', ['https://r2.test/'], { autoSave: { at: 2, rolling: true } })
     const plan = planAutoSave(state(r1, r2), [win('https://n.test/')], opts(UNKNOWN))
     if (plan.kind !== 'write') throw new Error('expected a write')
     expect(plan.state.available.map((g) => g.id)).toEqual(['now', 'r1', 'r2', 'new-id'])
-    expect(plan.group.autoSave?.rolling).toBe(false)
+    // a Free user offline still gets auto-saves that a later confirmed-Free run can replace
+    expect(plan.group.autoSave?.rolling).toBe(true)
+    const rememberedPro = planAutoSave(state(r1, r2), [win('https://n.test/')], opts({ kind: 'unknown', remembered: 'pro' }))
+    expect(rememberedPro.kind === 'write' && rememberedPro.group.autoSave?.rolling).toBe(false)
+    expect(rememberedPro.kind === 'write' && rememberedPro.replaced).toBe(0)
   })
 
   it('Free with no group slot and nothing to replace: skip, normal groups are never removed', () => {

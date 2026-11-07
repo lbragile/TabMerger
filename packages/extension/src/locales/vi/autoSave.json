@@ -27,7 +27,6 @@
     "upgrade": "Nâng cấp để giữ tất cả",
     "checkingPlan": "Đang kiểm tra gói của bạn...",
     "scheduleLabel": "Lịch",
-    "scheduleAria": "Lịch tự động lưu",
     "schedule": {
       "0": "Tắt",
       "15": "Mỗi 15 phút",
@@ -38,7 +37,6 @@
       "1440": "Hằng ngày"
     },
     "thresholdLabel": "Khi số thẻ đang mở vượt quá",
-    "thresholdAria": "Số thẻ đang mở sẽ kích hoạt tự động lưu",
     "thresholdOff": "Tắt",
     "thresholdOption_other": "{{count}} thẻ đang mở",
     "notifyLabel": "Hiện thông báo",
@@ -48,7 +46,7 @@
     "running": "Đang lưu..."
   },
   "sidebar": {
-    "label": "TỰ ĐỘNG LƯU",
+    "label": "Tự động lưu",
     "countOfMax": "{{count}}/{{max}}",
     "empty": "Chưa có bản tự động lưu nào",
     "replacedNext": "Sẽ được thay ở lần tự động lưu tiếp theo",
@@ -56,7 +54,9 @@
     "keep": "Giữ làm nhóm",
     "keepNamed": "Giữ {{name}} làm nhóm",
     "delete": "Xóa bản tự động lưu",
-    "deleteNamed": "Xóa {{name}}"
+    "deleteNamed": "Xóa {{name}}",
+    "deleted": "Đã xóa {{name}}",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Đã tự động lưu. Được giữ cho đến khi bạn xóa.",

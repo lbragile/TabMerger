@@ -28,7 +28,7 @@ vi.mock('@/lib/supabase', () => ({
 }))
 vi.mock('@/lib/entitlementTier', () => ({ fetchTier: vi.fn(async () => h.tier) }))
 
-import { armAutoSaveAlarm, checkTabThreshold, registerAutoSave, resolveRunTier, runAutoSave } from '@/lib/autoSaveRun'
+import { armAutoSaveAlarm, checkTabThreshold, recentlyFree, registerAutoSave, resolveRunTier, runAutoSave } from '@/lib/autoSaveRun'
 import { fetchTier } from '@/lib/entitlementTier'
 
 const NOW = Date.UTC(2030, 10, 5, 14, 30)
@@ -159,6 +159,28 @@ describe('runAutoSave', () => {
     h.settings.set(APP_SETTINGS_KEY, { autoSaveTabsEnabled: true, autoSaveIntervalMinutes: 0 })
     h.settings.delete(AUTO_SAVE_STATE_KEY)
     expect(await runAutoSave({ trigger: 'settings', now: NOW })).toMatchObject({ reason: 'not-due' })
+  })
+
+  it('never-toggled switch + a recent "Free" answer: scheduled runs stop before any request; a stale one asks again', async () => {
+    h.session = { user: { id: 'u1' } }
+    h.tier = 'free'
+    h.settings.set(AUTO_SAVE_TIER_SEEN_KEY, { tier: 'free', at: NOW - 60_000 })
+    expect(await runAutoSave({ trigger: 'startup', now: NOW })).toMatchObject({ reason: 'disabled' })
+    expect(fetchTier).not.toHaveBeenCalled()
+    h.settings.set(AUTO_SAVE_TIER_SEEN_KEY, { tier: 'free', at: NOW - 4 * 3_600_000 })
+    expect(await runAutoSave({ trigger: 'startup', now: NOW })).toMatchObject({ reason: 'disabled' })
+    expect(fetchTier).toHaveBeenCalledTimes(1)
+    // a manual run always asks
+    await runAutoSave({ trigger: 'manual', now: NOW })
+    expect(fetchTier).toHaveBeenCalledTimes(2)
+  })
+
+  it('recentlyFree only for a fresh, well-formed Free answer', () => {
+    expect(recentlyFree({ tier: 'free', at: NOW - 1000 }, NOW)).toBe(true)
+    expect(recentlyFree({ tier: 'pro', at: NOW - 1000 }, NOW)).toBe(false)
+    expect(recentlyFree({ tier: 'free', at: NOW + 1000 }, NOW)).toBe(false)
+    expect(recentlyFree({ tier: 'free' }, NOW)).toBe(false)
+    expect(recentlyFree(null, NOW)).toBe(false)
   })
 
   it('a threshold run without a threshold does nothing', async () => {

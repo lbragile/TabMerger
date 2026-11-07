@@ -28,7 +28,6 @@
     "upgrade": "Upgrade to keep them all",
     "checkingPlan": "Checking your plan...",
     "scheduleLabel": "Schedule",
-    "scheduleAria": "Auto-save schedule",
     "schedule": {
       "0": "Off",
       "15": "Every 15 minutes",
@@ -39,7 +38,6 @@
       "1440": "Daily"
     },
     "thresholdLabel": "When open tabs pass",
-    "thresholdAria": "Open-tab count that starts an auto-save",
     "thresholdOff": "Off",
     "thresholdOption_one": "{{count}} open tab",
     "thresholdOption_other": "{{count}} open tabs",
@@ -50,7 +48,7 @@
     "running": "Saving..."
   },
   "sidebar": {
-    "label": "AUTO-SAVED",
+    "label": "Auto-saved",
     "countOfMax": "{{count}} of {{max}}",
     "empty": "No auto-saves yet",
     "replacedNext": "Replaced at the next auto-save",
@@ -58,7 +56,9 @@
     "keep": "Keep as group",
     "keepNamed": "Keep {{name}} as a group",
     "delete": "Delete auto-save",
-    "deleteNamed": "Delete {{name}}"
+    "deleteNamed": "Delete {{name}}",
+    "deleted": "Deleted {{name}}",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Saved automatically. Kept until you delete it.",

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   AUTO_SAVE_FREE_KEEP_COUNT,
@@ -18,6 +19,7 @@ import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSetti
 import { useAutoSaveNow, useAutoSaveState } from '@/hooks/useAutoSave';
 import { describeAutoSaveOutcome, readAutoSaveSettings } from '@/lib/autoSave';
 import { formatTimeAgo } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { toast } from '@/lib/toast';
 import { SETTINGS_SELECT_WIDTH } from '@/components/Settings/settingsControls';
@@ -46,6 +48,8 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
   const settings = readAutoSaveSettings(saved, paid);
   const noTrigger = settings.intervalMinutes === 0 && settings.threshold === 0;
   const busy = settingsLoading || planLoading;
+  const id = useId();
+  const ids = { enabled: `${id}-enabled`, description: `${id}-desc`, schedule: `${id}-schedule`, threshold: `${id}-threshold`, hint: `${id}-hint`, notify: `${id}-notify`, notifyDescription: `${id}-notify-desc` };
 
   const save = async (patch: AutoSaveSettingsPatch) => {
     // never write defaults over settings that have not been read yet
@@ -67,8 +71,8 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
     <section aria-label={t('autoSave.settings.title')} className="min-w-0 space-y-3" data-testid="auto-save-settings">
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <Label className="text-sm">{t('autoSave.settings.title')}</Label>
-          <p className="text-xs text-muted-foreground">
+          <Label htmlFor={ids.enabled} className="text-sm">{t('autoSave.settings.title')}</Label>
+          <p id={ids.description} className="text-xs text-muted-foreground">
             {planLoading
               ? t('autoSave.settings.checkingPlan')
               : paid
@@ -90,8 +94,9 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
           )}
         </div>
         <Switch
+          id={ids.enabled}
           className="shrink-0"
-          aria-label={t('autoSave.settings.title')}
+          aria-describedby={ids.description}
           checked={!busy && settings.enabled}
           disabled={busy}
           onCheckedChange={(v) => void save({ autoSaveTabsEnabled: v === true })}
@@ -99,7 +104,7 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
       </div>
 
       <div className="flex items-center justify-between gap-4">
-        <Label className="text-sm min-w-0 flex-1">{t('autoSave.settings.scheduleLabel')}</Label>
+        <Label htmlFor={ids.schedule} className="text-sm min-w-0 flex-1">{t('autoSave.settings.scheduleLabel')}</Label>
         <Select
           value={String(settings.intervalMinutes)}
           disabled={!settings.enabled || busy}
@@ -108,7 +113,7 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
             if (isAutoSaveInterval(minutes)) void save({ autoSaveIntervalMinutes: minutes as AutoSaveIntervalMinutes });
           }}
         >
-          <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('autoSave.settings.scheduleAria')}>
+          <SelectTrigger id={ids.schedule} aria-describedby={ids.hint} className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -122,7 +127,7 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
       </div>
 
       <div className="flex items-center justify-between gap-4">
-        <Label className="text-sm min-w-0 flex-1">{t('autoSave.settings.thresholdLabel')}</Label>
+        <Label htmlFor={ids.threshold} className="text-sm min-w-0 flex-1">{t('autoSave.settings.thresholdLabel')}</Label>
         <Select
           value={String(settings.threshold)}
           disabled={!settings.enabled || busy}
@@ -131,7 +136,7 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
             if (isAutoSaveThreshold(count)) void save({ autoSaveTabThreshold: count as AutoSaveTabThreshold });
           }}
         >
-          <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('autoSave.settings.thresholdAria')}>
+          <SelectTrigger id={ids.threshold} aria-describedby={ids.hint} className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -144,20 +149,21 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
         </Select>
       </div>
 
-      {settings.enabled && noTrigger && (
-        <p className="min-w-0 text-xs text-muted-foreground" role="status">
-          {t('autoSave.settings.noTrigger')}
-        </p>
-      )}
+      {/* Always in the DOM, only its text changes (a status mounted with its text is often not
+          announced). Empty, it takes no room: -mt-3 cancels the gap, flow-root stops margin collapse. */}
+      <p id={ids.hint} className={cn('min-w-0 text-xs text-muted-foreground', !(settings.enabled && noTrigger) && '-mt-3 flow-root')} role="status">
+        {settings.enabled && noTrigger ? t('autoSave.settings.noTrigger') : ''}
+      </p>
 
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <Label className="text-sm">{t('autoSave.settings.notifyLabel')}</Label>
-          <p className="text-xs text-muted-foreground">{t('autoSave.settings.notifyDescription')}</p>
+          <Label htmlFor={ids.notify} className="text-sm">{t('autoSave.settings.notifyLabel')}</Label>
+          <p id={ids.notifyDescription} className="text-xs text-muted-foreground">{t('autoSave.settings.notifyDescription')}</p>
         </div>
         <Switch
+          id={ids.notify}
           className="shrink-0"
-          aria-label={t('autoSave.settings.notifyLabel')}
+          aria-describedby={ids.notifyDescription}
           checked={settings.notify}
           disabled={!settings.enabled || busy}
           onCheckedChange={(v) => void save({ autoSaveNotify: v === true })}
@@ -165,7 +171,8 @@ export function AutoSaveTabs({ onSettingsSaved }: AutoSaveTabsProps) {
       </div>
 
       <div className="flex items-center justify-between gap-4">
-        <p className="min-w-0 flex-1 text-xs text-muted-foreground" role="status" data-testid="auto-save-status">
+        {/* not a live region: "Auto-save now" already says how it ended in a toast */}
+        <p className="min-w-0 flex-1 text-xs text-muted-foreground" data-testid="auto-save-status">
           {statusLine}
         </p>
         <Button

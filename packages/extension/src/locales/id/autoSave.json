@@ -27,7 +27,6 @@
     "upgrade": "Upgrade untuk menyimpan semuanya",
     "checkingPlan": "Memeriksa paket Anda...",
     "scheduleLabel": "Jadwal",
-    "scheduleAria": "Jadwal simpan otomatis",
     "schedule": {
       "0": "Nonaktif",
       "15": "Setiap 15 menit",
@@ -38,7 +37,6 @@
       "1440": "Harian"
     },
     "thresholdLabel": "Saat tab terbuka melebihi",
-    "thresholdAria": "Jumlah tab terbuka yang memulai simpan otomatis",
     "thresholdOff": "Nonaktif",
     "thresholdOption_other": "{{count}} tab terbuka",
     "notifyLabel": "Tampilkan notifikasi",
@@ -48,7 +46,7 @@
     "running": "Menyimpan..."
   },
   "sidebar": {
-    "label": "DISIMPAN OTOMATIS",
+    "label": "Disimpan otomatis",
     "countOfMax": "{{count}} dari {{max}}",
     "empty": "Belum ada simpanan otomatis",
     "replacedNext": "Diganti pada simpan otomatis berikutnya",
@@ -56,7 +54,9 @@
     "keep": "Pertahankan sebagai grup",
     "keepNamed": "Pertahankan {{name}} sebagai grup",
     "delete": "Hapus simpanan otomatis",
-    "deleteNamed": "Hapus {{name}}"
+    "deleteNamed": "Hapus {{name}}",
+    "deleted": "{{name}} dihapus",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Disimpan otomatis. Tetap ada sampai Anda menghapusnya.",

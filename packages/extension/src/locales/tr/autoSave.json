@@ -28,7 +28,6 @@
     "upgrade": "Hepsini saklamak için yükseltin",
     "checkingPlan": "Planınız kontrol ediliyor...",
     "scheduleLabel": "Zamanlama",
-    "scheduleAria": "Otomatik kaydetme zamanlaması",
     "schedule": {
       "0": "Kapalı",
       "15": "15 dakikada bir",
@@ -39,7 +38,6 @@
       "1440": "Günlük"
     },
     "thresholdLabel": "Açık sekme sayısı şunu geçince",
-    "thresholdAria": "Otomatik kaydetmeyi başlatan açık sekme sayısı",
     "thresholdOff": "Kapalı",
     "thresholdOption_one": "{{count}} açık sekme",
     "thresholdOption_other": "{{count}} açık sekme",
@@ -50,7 +48,7 @@
     "running": "Kaydediliyor..."
   },
   "sidebar": {
-    "label": "OTOMATİK KAYITLAR",
+    "label": "Otomatik kayıtlar",
     "countOfMax": "{{count}} / {{max}}",
     "empty": "Henüz otomatik kayıt yok",
     "replacedNext": "Bir sonraki otomatik kayıtta değiştirilecek",
@@ -58,7 +56,9 @@
     "keep": "Grup olarak sakla",
     "keepNamed": "{{name}} grubunu sakla",
     "delete": "Otomatik kaydı sil",
-    "deleteNamed": "{{name}} grubunu sil"
+    "deleteNamed": "{{name}} grubunu sil",
+    "deleted": "{{name}} silindi",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Otomatik kaydedildi. Siz silene kadar saklanır.",

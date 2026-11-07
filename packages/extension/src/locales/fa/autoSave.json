@@ -28,7 +28,6 @@
     "upgrade": "برای نگه‌داشتن همه ارتقا دهید",
     "checkingPlan": "در حال بررسی طرح شما...",
     "scheduleLabel": "زمان‌بندی",
-    "scheduleAria": "زمان‌بندی ذخیرهٔ خودکار",
     "schedule": {
       "0": "خاموش",
       "15": "هر ۱۵ دقیقه",
@@ -39,7 +38,6 @@
       "1440": "روزانه"
     },
     "thresholdLabel": "وقتی زبانه‌های باز بیشتر شوند از",
-    "thresholdAria": "تعداد زبانه‌های بازی که ذخیرهٔ خودکار را شروع می‌کند",
     "thresholdOff": "خاموش",
     "thresholdOption_one": "{{count}} زبانهٔ باز",
     "thresholdOption_other": "{{count}} زبانهٔ باز",
@@ -58,7 +56,9 @@
     "keep": "نگه‌داشتن به‌عنوان گروه",
     "keepNamed": "نگه‌داشتن {{name}} به‌عنوان گروه",
     "delete": "حذف ذخیرهٔ خودکار",
-    "deleteNamed": "حذف {{name}}"
+    "deleteNamed": "حذف {{name}}",
+    "deleted": "{{name}} حذف شد",
+    "counts": "{{windows}}، {{tabs}}"
   },
   "banner": {
     "kept": "به‌طور خودکار ذخیره شد. تا وقتی حذفش نکنید می‌ماند.",

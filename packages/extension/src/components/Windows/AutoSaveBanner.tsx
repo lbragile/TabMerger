@@ -3,11 +3,25 @@ import { useQueryClient } from '@tanstack/react-query';
 import { History, Pin } from 'lucide-react';
 import { AUTO_SAVE_FREE_KEEP_COUNT } from '@tabmerger/shared';
 import { Button } from '@/components/ui/button';
-import type { Group } from '@/lib/types';
-import { useKeepAutoSave } from '@/hooks/useGroups';
+import type { Group, GroupsState } from '@/lib/types';
+import { GROUPS_QUERY_KEY, useKeepAutoSave } from '@/hooks/useGroups';
 import { showAutoSaveKeptToast } from '@/hooks/useAutoSaveToasts';
 import { useUIStore } from '@/stores/uiStore';
 import { toast } from '@/lib/toast';
+
+/**
+ * The banner (and the button that had focus) goes away with the marker: focus the group's row in
+ * the main group list instead, once it has rendered there (a few frames at most).
+ */
+function focusKeptGroup(index: number, framesLeft = 10): void {
+  if (index < 0 || framesLeft <= 0) return;
+  const row = document.querySelector<HTMLElement>(`[data-sidebar-group-index="${index}"]`);
+  if (row) {
+    row.focus();
+    return;
+  }
+  requestAnimationFrame(() => focusKeptGroup(index, framesLeft - 1));
+}
 
 /**
  * Shown above an auto-saved group in the main panel: what it is and how long it stays, with
@@ -25,6 +39,7 @@ export function AutoSaveBanner({ group }: { group: Group }) {
     try {
       await keep(group.id);
       showAutoSaveKeptToast(qc, before);
+      focusKeptGroup(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available.findIndex((g) => g.id === group.id) ?? -1);
     } catch {
       toast.error(t('autoSave.toast.keptFailed'));
     }

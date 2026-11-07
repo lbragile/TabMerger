@@ -8,6 +8,9 @@ import { useUIStore } from '@/stores/uiStore';
 import { undoHistoryEntry } from '@/hooks/useUndoRedo';
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups';
 
+/** How long the "Moved to your groups" toast stays when it offers Undo. */
+export const KEPT_TOAST_WITH_UNDO_MS = 10_000;
+
 /** `chrome.storage.local` flag: the one-time "Auto-save is on" toast was shown on this browser. */
 export const AUTO_SAVE_INTRO_SHOWN_KEY = 'tmAutoSaveIntroShown';
 
@@ -21,6 +24,8 @@ export function showAutoSaveKeptToast(qc: QueryClient, before?: GroupsState): vo
   const step = entry && entry !== before ? entry : undefined;
   toast.success(t('autoSave.toast.kept'), {
     id: 'auto-save-kept',
+    // an action needs time to be reached by keyboard or a screen reader
+    ...(step ? { duration: KEPT_TOAST_WITH_UNDO_MS } : {}),
     ...(step
       ? {
           action: {

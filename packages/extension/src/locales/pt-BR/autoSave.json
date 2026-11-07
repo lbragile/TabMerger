@@ -29,7 +29,6 @@
     "upgrade": "Faça upgrade para manter todos",
     "checkingPlan": "Verificando seu plano...",
     "scheduleLabel": "Horário",
-    "scheduleAria": "Horário do salvamento automático",
     "schedule": {
       "0": "Desativado",
       "15": "A cada 15 minutos",
@@ -40,7 +39,6 @@
       "1440": "Diariamente"
     },
     "thresholdLabel": "Quando as abas abertas passarem de",
-    "thresholdAria": "Número de abas abertas que inicia um salvamento automático",
     "thresholdOff": "Desativado",
     "thresholdOption_one": "{{count}} aba aberta",
     "thresholdOption_many": "{{count}} abas abertas",
@@ -52,7 +50,7 @@
     "running": "Salvando..."
   },
   "sidebar": {
-    "label": "SALVOS AUTOMATICAMENTE",
+    "label": "Salvos automaticamente",
     "countOfMax": "{{count}} de {{max}}",
     "empty": "Nenhum salvamento automático ainda",
     "replacedNext": "Substituído no próximo salvamento automático",
@@ -60,7 +58,9 @@
     "keep": "Manter como grupo",
     "keepNamed": "Manter {{name}} como grupo",
     "delete": "Excluir salvamento automático",
-    "deleteNamed": "Excluir {{name}}"
+    "deleteNamed": "Excluir {{name}}",
+    "deleted": "{{name}} excluído",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Salvo automaticamente. Fica até você excluir.",

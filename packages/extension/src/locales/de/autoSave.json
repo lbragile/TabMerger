@@ -28,7 +28,6 @@
     "upgrade": "Upgrade, um alle zu behalten",
     "checkingPlan": "Tarif wird geprüft...",
     "scheduleLabel": "Zeitplan",
-    "scheduleAria": "Zeitplan für Auto-Speichern",
     "schedule": {
       "0": "Aus",
       "15": "Alle 15 Minuten",
@@ -39,7 +38,6 @@
       "1440": "Täglich"
     },
     "thresholdLabel": "Wenn offene Tabs mehr sind als",
-    "thresholdAria": "Anzahl offener Tabs, ab der automatisch gespeichert wird",
     "thresholdOff": "Aus",
     "thresholdOption_one": "{{count}} offener Tab",
     "thresholdOption_other": "{{count}} offene Tabs",
@@ -50,7 +48,7 @@
     "running": "Wird gespeichert..."
   },
   "sidebar": {
-    "label": "AUTOMATISCH GESPEICHERT",
+    "label": "Automatisch gespeichert",
     "countOfMax": "{{count}} von {{max}}",
     "empty": "Noch keine automatischen Speicherungen",
     "replacedNext": "Wird beim nächsten Auto-Speichern ersetzt",
@@ -58,7 +56,9 @@
     "keep": "Als Gruppe behalten",
     "keepNamed": "{{name}} als Gruppe behalten",
     "delete": "Automatische Speicherung löschen",
-    "deleteNamed": "{{name}} löschen"
+    "deleteNamed": "{{name}} löschen",
+    "deleted": "{{name}} gelöscht",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Automatisch gespeichert. Bleibt, bis du sie löschst.",

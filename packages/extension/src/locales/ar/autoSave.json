@@ -32,7 +32,6 @@
     "upgrade": "قم بالترقية للاحتفاظ بها كلها",
     "checkingPlan": "جارٍ التحقق من خطتك...",
     "scheduleLabel": "الجدول",
-    "scheduleAria": "جدول الحفظ التلقائي",
     "schedule": {
       "0": "متوقف",
       "15": "كل 15 دقيقة",
@@ -43,7 +42,6 @@
       "1440": "يوميًا"
     },
     "thresholdLabel": "عندما تتجاوز علامات التبويب المفتوحة",
-    "thresholdAria": "عدد علامات التبويب المفتوحة الذي يبدأ الحفظ التلقائي",
     "thresholdOff": "متوقف",
     "thresholdOption_zero": "{{count}} علامة تبويب مفتوحة",
     "thresholdOption_one": "علامة تبويب مفتوحة ({{count}})",
@@ -66,7 +64,9 @@
     "keep": "الاحتفاظ كمجموعة",
     "keepNamed": "الاحتفاظ بـ {{name}} كمجموعة",
     "delete": "حذف الحفظ التلقائي",
-    "deleteNamed": "حذف {{name}}"
+    "deleteNamed": "حذف {{name}}",
+    "deleted": "تم حذف {{name}}",
+    "counts": "{{windows}}، {{tabs}}"
   },
   "banner": {
     "kept": "حُفظ تلقائيًا. يبقى حتى تحذفه.",

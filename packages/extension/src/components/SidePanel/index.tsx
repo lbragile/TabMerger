@@ -9,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GroupItem } from './GroupItem';
-import { SidebarSection } from './SidebarSection';
+import { SIDEBAR_ICON_BUTTON, SidebarSection } from './SidebarSection';
 import { AutoSavedSection } from './AutoSavedSection';
 import type { GroupsState } from '@/lib/types';
 import { useDndContext } from '@/components/dnd/DndProvider';
@@ -307,14 +307,14 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           {archivedGroups.map(({ group, realIndex }) => (
             <div
               key={group.id}
-              className="flex items-center gap-1.5 px-2 py-1.5 transition-colors"
+              className="flex items-center gap-1 px-2 py-1 transition-colors"
               style={{ borderInlineStart: `3px solid ${group.color}` }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--sidebar-hover-bg)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = ''; }}
             >
               <div className="flex-1 min-w-0">
                 <span dir="auto" className="block truncate text-[11px] text-muted-foreground text-ui-start">{group.name}</span>
-                <span className="block text-[9px] text-muted-foreground/50">{formatTimeAgo(group.updatedAt)}</span>
+                <span className="block text-[0.625rem] text-muted-foreground">{formatTimeAgo(group.updatedAt)}</span>
               </div>
               <span
                 className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
@@ -328,7 +328,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                    className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-foreground')}
                     onClick={() => restoreGroup(realIndex)}
                     aria-label={t('sidePanel.restoreNamed', { name: group.name })}
                   >
@@ -341,7 +341,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+                    className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-destructive')}
                     onClick={() => deleteGroup(realIndex)}
                     aria-label={t('sidePanel.deleteNamed', { name: group.name })}
                   >

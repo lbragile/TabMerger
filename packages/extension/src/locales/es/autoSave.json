@@ -29,7 +29,6 @@
     "upgrade": "Mejora para conservarlos todos",
     "checkingPlan": "Comprobando tu plan...",
     "scheduleLabel": "Horario",
-    "scheduleAria": "Horario del guardado automático",
     "schedule": {
       "0": "Desactivado",
       "15": "Cada 15 minutos",
@@ -40,7 +39,6 @@
       "1440": "Diario"
     },
     "thresholdLabel": "Cuando las pestañas abiertas superen",
-    "thresholdAria": "Cantidad de pestañas abiertas que inicia un guardado automático",
     "thresholdOff": "Desactivado",
     "thresholdOption_one": "{{count}} pestaña abierta",
     "thresholdOption_many": "{{count}} pestañas abiertas",
@@ -52,7 +50,7 @@
     "running": "Guardando..."
   },
   "sidebar": {
-    "label": "GUARDADO AUTOMÁTICO",
+    "label": "Guardado automático",
     "countOfMax": "{{count}} de {{max}}",
     "empty": "Aún no hay guardados automáticos",
     "replacedNext": "Se reemplaza en el próximo guardado automático",
@@ -60,7 +58,9 @@
     "keep": "Conservar como grupo",
     "keepNamed": "Conservar {{name}} como grupo",
     "delete": "Eliminar guardado automático",
-    "deleteNamed": "Eliminar {{name}}"
+    "deleteNamed": "Eliminar {{name}}",
+    "deleted": "Se eliminó {{name}}",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Guardado automáticamente. Se conserva hasta que lo elimines.",

@@ -27,7 +27,6 @@
     "upgrade": "アップグレードしてすべて残す",
     "checkingPlan": "プランを確認しています...",
     "scheduleLabel": "スケジュール",
-    "scheduleAria": "自動保存のスケジュール",
     "schedule": {
       "0": "オフ",
       "15": "15 分ごと",
@@ -38,7 +37,6 @@
       "1440": "毎日"
     },
     "thresholdLabel": "開いているタブがこの数を超えたとき",
-    "thresholdAria": "自動保存を始める開いているタブの数",
     "thresholdOff": "オフ",
     "thresholdOption_other": "開いているタブ {{count}} 個",
     "notifyLabel": "通知を表示",
@@ -56,7 +54,9 @@
     "keep": "グループとして残す",
     "keepNamed": "{{name}} をグループとして残す",
     "delete": "自動保存を削除",
-    "deleteNamed": "{{name}} を削除"
+    "deleteNamed": "{{name}} を削除",
+    "deleted": "{{name}} を削除しました",
+    "counts": "{{windows}}、{{tabs}}"
   },
   "banner": {
     "kept": "自動で保存されました。削除するまで残ります。",

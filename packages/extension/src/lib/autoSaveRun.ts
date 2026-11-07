@@ -1,4 +1,4 @@
-import { AUTO_SAVE_ALARM_NAME, AUTO_SAVE_MESSAGE } from '@tabmerger/shared';
+import { AUTO_SAVE_ALARM_NAME, AUTO_SAVE_FREE_RECHECK_MS, AUTO_SAVE_MESSAGE } from '@tabmerger/shared';
 import { getSetting, setSetting, updateGroupsState } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { fetchTier } from '@/lib/entitlementTier';
@@ -78,6 +78,13 @@ export async function resolveRunTier(now: number = Date.now()): Promise<RunTier 
   if (tier === null) return { kind: 'unknown', remembered: parseTierSeen(await getSetting<unknown>(AUTO_SAVE_TIER_SEEN_KEY, null)) };
   await setSetting(AUTO_SAVE_TIER_SEEN_KEY, { tier, at: now });
   return { kind: 'confirmed', tier };
+}
+
+/** Whether the remembered plan is a "Free" answer younger than `AUTO_SAVE_FREE_RECHECK_MS`. */
+export function recentlyFree(raw: unknown, now: number): boolean {
+  if (parseTierSeen(raw) !== 'free') return false;
+  const at = (raw as { at?: unknown }).at;
+  return typeof at === 'number' && Number.isFinite(at) && at <= now && now - at < AUTO_SAVE_FREE_RECHECK_MS;
 }
 
 /** The settings as the stored value and the remembered plan give them, with no network request (alarm arming). */
@@ -168,6 +175,10 @@ async function runLocked(trigger: AutoSaveTrigger, now: number): Promise<AutoSav
   const state = parseAutoSaveState(await getSetting<unknown>(AUTO_SAVE_STATE_KEY, null));
   if (scheduled && !scheduledRunDue(state, looseSettings.intervalMinutes, now)) return skip('not-due');
   if (trigger === 'threshold' && looseSettings.threshold <= 0) return skip('disabled');
+  // A switch never touched on a plan the server recently said is Free: off by default, so stop
+  // before any request (otherwise every worker start would ask). A settings change refreshes the
+  // answer first (see registerAutoSave), and it goes stale after AUTO_SAVE_FREE_RECHECK_MS.
+  if (!manual && !looseSettings.explicit && recentlyFree(await getSetting<unknown>(AUTO_SAVE_TIER_SEEN_KEY, null), now)) return skip('disabled');
 
   const tier = await resolveRunTier(now);
   if (tier === 'account-mismatch') return finish(skip('account-mismatch'), false, null);

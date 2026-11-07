@@ -72,7 +72,7 @@ describe('AutoSaveTabs', () => {
     renderIt()
     expect(toggle()).toHaveAttribute('aria-checked', 'false')
     expect(screen.getByText(new RegExp(`newest 2 auto-saves.*${FREE_TIER_LIMITS.groups} groups and ${FREE_TIER_LIMITS.tabs} tabs`))).toBeInTheDocument()
-    expect(screen.getByRole('combobox', { name: 'Auto-save schedule' })).toBeDisabled()
+    expect(screen.getByRole('combobox', { name: 'Schedule' })).toBeDisabled()
     fireEvent.click(screen.getByRole('button', { name: 'Upgrade to keep them all' }))
     expect(h.track).toHaveBeenCalledWith('upgrade_clicked', { source: 'settings_auto_save' })
     expect(tabsCreate).toHaveBeenCalledWith(expect.objectContaining({ url: expect.stringContaining('/pricing') }))
@@ -116,8 +116,8 @@ describe('AutoSaveTabs', () => {
   it('shows the selected options by their labels', () => {
     h.settings = { data: { autoSaveTabsEnabled: true, autoSaveIntervalMinutes: 1440, autoSaveTabThreshold: 50 }, isLoading: false }
     renderIt()
-    expect(screen.getByRole('combobox', { name: 'Auto-save schedule' })).toHaveTextContent('Daily')
-    expect(screen.getByRole('combobox', { name: 'Open-tab count that starts an auto-save' })).toHaveTextContent('50 open tabs')
+    expect(screen.getByRole('combobox', { name: 'Schedule' })).toHaveTextContent('Daily')
+    expect(screen.getByRole('combobox', { name: 'When open tabs pass' })).toHaveTextContent('50 open tabs')
   })
 
   it('status line from the last run, refreshed when the worker says so', async () => {

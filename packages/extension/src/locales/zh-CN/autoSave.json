@@ -27,7 +27,6 @@
     "upgrade": "升级以全部保留",
     "checkingPlan": "正在检查你的方案...",
     "scheduleLabel": "计划",
-    "scheduleAria": "自动保存计划",
     "schedule": {
       "0": "关闭",
       "15": "每 15 分钟",
@@ -38,7 +37,6 @@
       "1440": "每天"
     },
     "thresholdLabel": "当打开的标签页超过",
-    "thresholdAria": "触发自动保存的已打开标签页数量",
     "thresholdOff": "关闭",
     "thresholdOption_other": "{{count}} 个已打开标签页",
     "notifyLabel": "显示通知",
@@ -56,7 +54,9 @@
     "keep": "保留为分组",
     "keepNamed": "将 {{name}} 保留为分组",
     "delete": "删除自动保存",
-    "deleteNamed": "删除 {{name}}"
+    "deleteNamed": "删除 {{name}}",
+    "deleted": "已删除 {{name}}",
+    "counts": "{{windows}}，{{tabs}}"
   },
   "banner": {
     "kept": "已自动保存。在你删除前一直保留。",

@@ -28,7 +28,6 @@
     "upgrade": "सभी रखने के लिए अपग्रेड करें",
     "checkingPlan": "आपका प्लान जाँचा जा रहा है...",
     "scheduleLabel": "शेड्यूल",
-    "scheduleAria": "ऑटो-सेव शेड्यूल",
     "schedule": {
       "0": "बंद",
       "15": "हर 15 मिनट",
@@ -39,7 +38,6 @@
       "1440": "रोज़"
     },
     "thresholdLabel": "जब खुले टैब इससे ज़्यादा हों",
-    "thresholdAria": "ऑटो-सेव शुरू करने वाली खुले टैब की संख्या",
     "thresholdOff": "बंद",
     "thresholdOption_one": "{{count}} खुला टैब",
     "thresholdOption_other": "{{count}} खुले टैब",
@@ -58,7 +56,9 @@
     "keep": "ग्रुप के रूप में रखें",
     "keepNamed": "{{name}} को ग्रुप के रूप में रखें",
     "delete": "ऑटो-सेव हटाएँ",
-    "deleteNamed": "{{name}} हटाएँ"
+    "deleteNamed": "{{name}} हटाएँ",
+    "deleted": "{{name}} हटाया गया",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "अपने-आप सेव हुआ। आपके हटाने तक रखा जाएगा।",

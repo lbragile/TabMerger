@@ -29,7 +29,6 @@
     "upgrade": "Passez à l'offre supérieure pour tous les garder",
     "checkingPlan": "Vérification de votre offre...",
     "scheduleLabel": "Horaire",
-    "scheduleAria": "Horaire de l'enregistrement auto",
     "schedule": {
       "0": "Désactivé",
       "15": "Toutes les 15 minutes",
@@ -40,7 +39,6 @@
       "1440": "Tous les jours"
     },
     "thresholdLabel": "Quand les onglets ouverts dépassent",
-    "thresholdAria": "Nombre d'onglets ouverts qui déclenche un enregistrement auto",
     "thresholdOff": "Désactivé",
     "thresholdOption_one": "{{count}} onglet ouvert",
     "thresholdOption_many": "{{count}} onglets ouverts",
@@ -52,7 +50,7 @@
     "running": "Enregistrement..."
   },
   "sidebar": {
-    "label": "ENREGISTRÉS AUTO",
+    "label": "Enregistrés auto",
     "countOfMax": "{{count}} sur {{max}}",
     "empty": "Aucun enregistrement auto pour l'instant",
     "replacedNext": "Remplacé au prochain enregistrement auto",
@@ -60,7 +58,9 @@
     "keep": "Garder comme groupe",
     "keepNamed": "Garder {{name}} comme groupe",
     "delete": "Supprimer l'enregistrement auto",
-    "deleteNamed": "Supprimer {{name}}"
+    "deleteNamed": "Supprimer {{name}}",
+    "deleted": "{{name}} supprimé",
+    "counts": "{{windows}}, {{tabs}}"
   },
   "banner": {
     "kept": "Enregistré automatiquement. Conservé jusqu'à ce que vous le supprimiez.",
