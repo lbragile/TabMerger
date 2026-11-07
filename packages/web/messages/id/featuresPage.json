@@ -55,6 +55,10 @@
       "title": "Cadangan otomatis",
       "description": "TabMerger menyimpan snapshot terenkripsi dari grup Anda sesuai jadwal pilihan Anda, dari setiap jam hingga seminggu sekali. {count} cadangan terbaru disimpan, dan Anda dapat memulihkan salah satunya dari Pengaturan. Dasbor Anda juga menampilkannya, tempat Anda dapat melihat isinya atau mengunduhnya. Anda juga dapat menyimpan setiap cadangan sebagai file di komputer; salinan tersebut tidak dienkripsi."
     },
+    "autoSave": {
+      "title": "Simpan otomatis tab yang terbuka",
+      "description": "TabMerger menyimpan tab terbuka yang belum masuk grup mana pun ke grup simpan otomatis yang baru: sesuai jadwal, dari setiap 15 menit hingga sekali sehari, saat jumlah tab terbuka melewati angka yang Anda pilih, atau keduanya. Fitur ini berjalan tanpa membuka popup dan tidak pernah menutup tab. Tab yang sudah Anda simpan dilewati, dan jendela pribadi tidak pernah disimpan. Di paket gratis, aktifkan kapan pun Anda mau: {count} simpanan otomatis terbaru dipertahankan (tab yang masih terbuka dari simpanan yang diganti ikut dipindahkan) dan dihitung dalam batas paket gratis. Di Pro, fitur ini aktif sejak awal, setiap simpanan otomatis dipertahankan dan disinkronkan dengan enkripsi end-to-end seperti grup Anda yang lain."
+    },
     "support": {
       "title": "Dukungan prioritas",
       "description": "Pelanggan Pro mendapatkan dukungan jalur cepat dengan jaminan respons dalam 24 jam."

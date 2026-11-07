@@ -4,7 +4,7 @@ import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { AUTO_BACKUP_RETENTION_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { AUTO_BACKUP_RETENTION_COUNT, AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { STORE_ICON } from '@/components/marketing/BrowserIcons'
 import { StoreLink } from '@/components/StoreLink'
@@ -22,6 +22,7 @@ import {
   Shield,
   ArrowRight,
   History,
+  Save,
   NotebookPen,
   WandSparkles,
   type LucideIcon,
@@ -63,6 +64,7 @@ const featureSections: { key: SectionKey; features: { key: string; icon: LucideI
       { key: 'cloudSync', icon: Cloud },
       { key: 'sessions', icon: RefreshCw, count: FREE_TIER_LIMITS.sessions },
       { key: 'autoBackups', icon: History, count: AUTO_BACKUP_RETENTION_COUNT },
+      { key: 'autoSave', icon: Save, count: AUTO_SAVE_FREE_KEEP_COUNT },
       { key: 'support', icon: Shield },
     ],
   },

@@ -55,6 +55,10 @@
       "title": "Automatic backups",
       "description": "TabMerger saves an encrypted snapshot of your groups on a schedule you choose, from every hour to once a week. The newest {count} are kept, and you can bring any of them back from Settings. Your dashboard lists them too, where you can look inside one or download it. You can also have each one saved as a file on your computer; that copy is not encrypted."
     },
+    "autoSave": {
+      "title": "Auto-save open tabs",
+      "description": "TabMerger saves open tabs that aren't in a group yet into a new auto-saved group: on a schedule, from every 15 minutes to once a day, when your open tabs pass a number you choose, or both. It runs without opening the popup and never closes a tab. Tabs you've already saved are skipped, and private windows are never saved. On the free plan, turn it on when you want it: the newest {count} auto-saves are kept (tabs still open in a replaced one carry over), and they count toward the free plan's limits. On Pro it's on from the start, every auto-save is kept, and they sync end-to-end encrypted like your other groups."
+    },
     "support": {
       "title": "Priority support",
       "description": "Pro subscribers get fast-tracked support with a guaranteed response within 24 hours."

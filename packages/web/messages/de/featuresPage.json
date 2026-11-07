@@ -55,6 +55,10 @@
       "title": "Automatische Backups",
       "description": "TabMerger speichert in einem von dir gewählten Rhythmus, von stündlich bis wöchentlich, einen verschlüsselten Snapshot deiner Gruppen. Die neuesten {count} bleiben erhalten, und du kannst jedes davon in den Einstellungen zurückholen. Dein Dashboard listet sie ebenfalls auf, dort kannst du in eines hineinsehen oder es herunterladen. Du kannst jedes Backup außerdem als Datei auf deinem Computer speichern lassen; diese Kopie ist nicht verschlüsselt."
     },
+    "autoSave": {
+      "title": "Offene Tabs automatisch speichern",
+      "description": "TabMerger speichert offene Tabs, die noch in keiner Gruppe sind, in einer neuen Gruppe für automatisch gespeicherte Tabs: nach Zeitplan, von alle 15 Minuten bis einmal täglich, sobald mehr Tabs offen sind als eine von dir gewählte Zahl, oder beides. Das passiert, ohne dass du das Popup öffnest, und es wird nie ein Tab geschlossen. Bereits gespeicherte Tabs werden übersprungen, private Fenster werden nie gespeichert. Im kostenlosen Tarif schaltest du es ein, wenn du es brauchst: Die neuesten {count} automatischen Speicherungen bleiben erhalten (noch offene Tabs aus einer ersetzten wandern mit), und sie zählen zu den Limits des kostenlosen Tarifs. Mit Pro ist es von Anfang an aktiv, jede automatische Speicherung bleibt erhalten und wird wie deine anderen Gruppen Ende-zu-Ende-verschlüsselt synchronisiert."
+    },
     "support": {
       "title": "Priorisierter Support",
       "description": "Pro-Abonnenten erhalten beschleunigten Support mit garantierter Antwort innerhalb von 24 Stunden."

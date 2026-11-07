@@ -30,6 +30,8 @@
     "cloudSync": "Synchronisation cloud entre appareils",
     "sessionsSynced": "Sessions synchronisées entre appareils",
     "autoBackups": "Sauvegardes chiffrées automatiques",
+    "autoSaveFree": "Enregistrement automatique des onglets ouverts (les {count, number} plus récents conservés)",
+    "autoSavePro": "Enregistrement automatique des onglets ouverts, tous conservés",
     "prioritySupport": "Assistance prioritaire",
     "everythingInPro": "Tout ce qui est dans Pro",
     "aiGrouping": "Regroupement automatique des onglets par IA",

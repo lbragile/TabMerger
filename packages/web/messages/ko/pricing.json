@@ -30,6 +30,8 @@
     "cloudSync": "기기 간 클라우드 동기화",
     "sessionsSynced": "기기 간 세션 동기화",
     "autoBackups": "자동 암호화 백업",
+    "autoSaveFree": "열린 탭 자동 저장(최신 {count, number}개 보관)",
+    "autoSavePro": "열린 탭 자동 저장(모두 보관)",
     "prioritySupport": "우선 지원",
     "everythingInPro": "Pro의 모든 기능",
     "aiGrouping": "AI 탭 자동 그룹화",

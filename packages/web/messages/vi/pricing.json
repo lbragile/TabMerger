@@ -30,6 +30,8 @@
     "cloudSync": "Đồng bộ đám mây trên mọi thiết bị",
     "sessionsSynced": "Phiên được đồng bộ trên mọi thiết bị",
     "autoBackups": "Sao lưu mã hóa tự động",
+    "autoSaveFree": "Tự động lưu các tab đang mở (giữ {count, number} bản mới nhất)",
+    "autoSavePro": "Tự động lưu các tab đang mở, giữ tất cả",
     "prioritySupport": "Hỗ trợ ưu tiên",
     "everythingInPro": "Mọi tính năng của gói Pro",
     "aiGrouping": "Tự động nhóm tab bằng AI",

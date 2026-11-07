@@ -30,6 +30,8 @@
     "cloudSync": "Cihazlar arasında bulut eşitleme",
     "sessionsSynced": "Cihazlar arasında eşitlenen oturumlar",
     "autoBackups": "Otomatik şifreli yedekler",
+    "autoSaveFree": "Açık sekmeleri otomatik kaydetme (en yeni {count, number} kayıt saklanır)",
+    "autoSavePro": "Açık sekmeleri otomatik kaydetme, hepsi saklanır",
     "prioritySupport": "Öncelikli destek",
     "everythingInPro": "Pro'daki her şey",
     "aiGrouping": "Sekmelerin yapay zekâ ile otomatik gruplanması",

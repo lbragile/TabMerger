@@ -30,6 +30,8 @@
     "cloudSync": "सभी डिवाइस पर क्लाउड सिंक",
     "sessionsSynced": "सभी डिवाइस पर सिंक होने वाले सत्र",
     "autoBackups": "स्वचालित एन्क्रिप्टेड बैकअप",
+    "autoSaveFree": "खुले टैब अपने आप सहेजें (सबसे नए {count, number} रखे जाते हैं)",
+    "autoSavePro": "खुले टैब अपने आप सहेजें, सभी रखे जाते हैं",
     "prioritySupport": "प्राथमिकता सहायता",
     "everythingInPro": "Pro की सभी सुविधाएँ",
     "aiGrouping": "टैब की AI ऑटो-ग्रुपिंग",

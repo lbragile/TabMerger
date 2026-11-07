@@ -55,6 +55,10 @@
       "title": "Sauvegardes automatiques",
       "description": "TabMerger enregistre un instantané chiffré de vos groupes selon le rythme de votre choix, de toutes les heures à une fois par semaine. Les {count} plus récents sont conservés, et vous pouvez en restaurer un depuis les Paramètres. Votre tableau de bord les liste aussi : vous pouvez en consulter le contenu ou le télécharger. Chacun peut aussi être enregistré en fichier sur votre ordinateur ; cette copie n’est pas chiffrée."
     },
+    "autoSave": {
+      "title": "Enregistrement automatique des onglets ouverts",
+      "description": "TabMerger enregistre les onglets ouverts qui ne sont encore dans aucun groupe dans un nouveau groupe d’enregistrement automatique : selon un calendrier, de toutes les 15 minutes à une fois par jour, dès que vos onglets ouverts dépassent un nombre que vous choisissez, ou les deux. Tout se fait sans ouvrir la fenêtre contextuelle, et aucun onglet n’est jamais fermé. Les onglets déjà enregistrés sont ignorés, et les fenêtres de navigation privée ne sont jamais enregistrées. Avec l’offre gratuite, activez-le quand vous le souhaitez : les {count} enregistrements automatiques les plus récents sont conservés (les onglets encore ouverts d’un enregistrement remplacé sont repris) et ils comptent dans les limites de l’offre gratuite. Avec Pro, il est activé dès le départ, chaque enregistrement automatique est conservé et synchronisé avec un chiffrement de bout en bout, comme vos autres groupes."
+    },
     "support": {
       "title": "Assistance prioritaire",
       "description": "Les abonnés Pro bénéficient d’une assistance accélérée avec une réponse garantie sous 24 heures."

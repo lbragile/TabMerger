@@ -30,6 +30,8 @@
     "cloudSync": "跨设备云同步",
     "sessionsSynced": "跨设备同步会话",
     "autoBackups": "自动加密备份",
+    "autoSaveFree": "自动保存打开的标签页（保留最新 {count, number} 份）",
+    "autoSavePro": "自动保存打开的标签页（全部保留）",
     "prioritySupport": "优先支持",
     "everythingInPro": "包含 Pro 的全部功能",
     "aiGrouping": "AI 标签页自动分组",

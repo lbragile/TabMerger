@@ -30,6 +30,8 @@
     "cloudSync": "デバイス間のクラウド同期",
     "sessionsSynced": "デバイス間でセッションを同期",
     "autoBackups": "暗号化された自動バックアップ",
+    "autoSaveFree": "開いているタブを自動保存（最新の{count, number}件を保持）",
+    "autoSavePro": "開いているタブを自動保存（すべて保持）",
     "prioritySupport": "優先サポート",
     "everythingInPro": "Proのすべての機能",
     "aiGrouping": "AIによるタブの自動グループ化",
