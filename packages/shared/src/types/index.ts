@@ -47,6 +47,14 @@ export interface Group {
    * backed up, exported, shared or counted. Test it with `isTourDemoGroup`, never directly.
    */
   tourDemo?: boolean;
+  /**
+   * Set on a group the extension saved by itself (auto-save open tabs). `at`: when it was made;
+   * `rolling`: made on Free, so a later auto-save may replace it (only the newest
+   * AUTO_SAVE_FREE_KEEP_COUNT are kept). Made on Pro: `rolling: false`, never replaced. Editing the
+   * group (or "Keep as group") removes the marker and it becomes a normal group. Travels inside
+   * the encrypted blob only.
+   */
+  autoSave?: { at: number; rolling: boolean };
 }
 
 export interface UrlRule {
