@@ -1,5 +1,8 @@
 {
   "title": "Otomatik yedekler",
+  "sectionTitle": "Yedekler",
+  "purpose": "Geri yükleyebileceğiniz, gruplarınızın şifreli anlık görüntüleri.",
+  "proOnly": "Otomatik yedekler Pro'nun parçasıdır.",
   "description": "Tarayıcınız açıkken gruplarınızın şifreli bir anlık görüntüsünü aşağıdaki programa göre kaydeder. En yeni {{count}} yedek saklanır.",
   "upgradeDescription": "Otomatik yedekler Pro'nun parçasıdır: gruplarınızın şifreli bir anlık görüntüsü, programlı olarak kaydedilir ve en yeni {{count}} yedek saklanır.",
   "deleteScope": "Bu tarayıcıdan ve hesabınızdan kaldırılır. Bunu zaten almış başka bir tarayıcı kendi kopyasını tutar.",
@@ -21,6 +24,8 @@
   "upgradeToPro": "Pro'ya yükselt",
   "planEnded": "Planınız artık otomatik yedekleri içermiyor, bu yüzden yenileri oluşturulmuyor. Aşağıdakiler hâlâ sizin; geri yükleyebilir veya silebilirsiniz.",
   "listLabel": "Otomatik yedek listesi",
+  "savedCount_one": "{{count}} kayıtlı yedek",
+  "savedCount_other": "{{count}} kayıtlı yedek",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "{{when}} tarihli yedeği geri yükle",
   "restore": "Geri yükle",

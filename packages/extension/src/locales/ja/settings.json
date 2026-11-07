@@ -66,14 +66,16 @@
     "aiOwnKey": "自分の API キー"
   },
   "data": {
-    "intro": "TabMergerはすべてのデータをIndexedDBにローカル保存します。クラウド同期にはProアカウントが必要です。",
-    "exportLabel": "データをエクスポート",
-    "exportDescription": "すべてのグループをJSONファイルとしてダウンロードします",
-    "exportButton": "エクスポート",
-    "importLabel": "データをインポート",
-    "importDescription": "JSONのエクスポートからグループを復元します",
-    "importButton": "インポート",
+    "sections": {
+      "importExport": "インポートとエクスポート",
+      "danger": "危険な操作"
+    },
+    "importExportPurpose": "グループを TabMerger に取り込んだり、書き出したりします。",
+    "exportJson": "JSON をエクスポート",
+    "importFile": "ファイルをインポート",
+    "dangerPurpose": "このデバイス上のすべてのグループと設定を削除します。",
     "clearAll": "すべてのデータを消去",
+    "footer": "このデバイスに保存されます。クラウド同期には Pro が必要です。",
     "importTitle_other": "{{count}}個のグループをインポートしますか？",
     "importDescription_other": "「{{file}}」の{{count}}個のグループが、すでにあるグループの隣に追加されます。",
     "importConfirm_other": "{{count}}個のグループをインポート"

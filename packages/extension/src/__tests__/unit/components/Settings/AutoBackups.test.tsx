@@ -117,6 +117,12 @@ beforeEach(() => {
   Element.prototype.releasePointerCapture = vi.fn()
 })
 
+/** The saved backups are folded behind "N saved backups": unfold them (no-op when already open). */
+function showList() {
+  const toggle = screen.queryByTestId('backup-list-toggle')
+  if (toggle && toggle.getAttribute('aria-expanded') === 'false') fireEvent.click(toggle)
+}
+
 describe('describeBackupDownload', () => {
   it('loading wins', () => {
     expect(describeBackupDownload(undefined, true, true)).toMatch(/Checking/)
@@ -169,11 +175,21 @@ describe('AutoBackups — paid account', () => {
     await waitFor(() => expect(onSettingsSaved).toHaveBeenCalledWith({ autoBackupIntervalMinutes: 60 }))
   })
 
-  it('the interval control is unavailable while backups are off', () => {
+  it('the options box (interval, Back up now) is hidden while backups are off', () => {
     h.settings = { data: { autoBackupEnabled: false, autoBackupIntervalMinutes: 60 }, isLoading: false }
     renderIt()
-    expect(screen.getByRole('combobox', { name: 'Backup interval' })).toBeDisabled()
+    expect(screen.queryByRole('combobox', { name: 'Backup interval' })).toBeNull()
+    expect(screen.queryByRole('button', { name: /back up now/i })).toBeNull()
+    expect(screen.queryByTestId('backup-options')).toBeNull()
     expect(screen.getByRole('switch', { name: AUTO_BACKUP_COPY.title })).not.toBeChecked()
+  })
+
+  it('is a titled section: "Backups" heading, the purpose line, and the switch on the heading line', () => {
+    renderIt()
+    const section = screen.getByRole('region', { name: 'Backups' })
+    expect(within(section).getByRole('heading', { level: 3, name: 'Backups' })).toBeInTheDocument()
+    expect(within(section).getByText('Encrypted snapshots of your groups to restore from.')).toBeInTheDocument()
+    expect(screen.getByTestId('backup-options')).toBeInTheDocument()
   })
 
   it('does not save (and does not patch the draft) while settings are still loading', () => {
@@ -206,6 +222,9 @@ describe('AutoBackups — paid account', () => {
       backup('old', Date.now() - 5 * 86_400_000),
     ]
     renderIt()
+    expect(screen.queryByRole('list', { name: 'Automatic backups list' })).toBeNull() // folded by default
+    expect(screen.getByTestId('backup-list-toggle')).toHaveTextContent('2 saved backups')
+    showList()
     const list = screen.getByRole('list', { name: 'Automatic backups list' })
     const items = list.querySelectorAll('li')
     expect(items).toHaveLength(2)
@@ -289,8 +308,14 @@ describe('AutoBackups — restore and delete', () => {
     h.sessions = [backup('b1', Date.now() - 1000, [group('a', 2), group('b', 1)])]
     h.groups = { available: [group('cur')] }
   })
-  const restoreBtn = () => screen.getByRole('button', { name: /^Restore backup from/ })
-  const deleteBtn = () => screen.getByRole('button', { name: /^Delete backup from/ })
+  const restoreBtn = () => {
+    showList()
+    return screen.getByRole('button', { name: /^Restore backup from/ })
+  }
+  const deleteBtn = () => {
+    showList()
+    return screen.getByRole('button', { name: /^Delete backup from/ })
+  }
   const open = () => fireEvent.click(restoreBtn())
 
   it('Restore only opens the choice: nothing is imported or replaced yet', () => {
@@ -442,9 +467,9 @@ describe('AutoBackups — free or downgraded account', () => {
     h.entitlements = { cloudSync: false, maxGroups: 5, maxTabs: 50 }
   })
 
-  it('shows the explanation and an upgrade button, with no working controls', () => {
+  it('shows one line with an upgrade link, and no switch or other controls', () => {
     renderIt()
-    expect(screen.getByText(AUTO_BACKUP_COPY.upgradeDescription)).toBeInTheDocument()
+    expect(screen.getByText(/Automatic backups are part of Pro\./)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).toBeInTheDocument()
     expect(screen.queryByRole('switch')).toBeNull()
     expect(screen.queryByRole('combobox')).toBeNull()
@@ -467,6 +492,8 @@ describe('AutoBackups — free or downgraded account', () => {
     h.sessions = [backup('b1', Date.now() - 1000)]
     renderIt()
     expect(screen.getByText(/no longer includes automatic backups/)).toBeInTheDocument()
+    expect(screen.getByTestId('backup-list-toggle')).toHaveTextContent('1 saved backup')
+    showList()
     expect(screen.getByRole('button', { name: /^Restore backup from/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Delete backup from/ })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /back up now/i })).toBeNull()
@@ -479,6 +506,48 @@ describe('AutoBackups — free or downgraded account', () => {
 })
 
 
+describe('AutoBackups — the saved-backups disclosure', () => {
+  it('is absent when there are no backups', () => {
+    renderIt()
+    expect(screen.queryByTestId('backup-list-toggle')).toBeNull()
+    expect(screen.queryByRole('list', { name: 'Automatic backups list' })).toBeNull()
+  })
+
+  it('opens and closes the list, with aria-expanded and aria-controls pointing at it', () => {
+    h.sessions = [backup('b1', Date.now() - 1000), backup('b2', Date.now() - 2000)]
+    renderIt()
+    const toggle = screen.getByRole('button', { name: '2 saved backups' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    const controlled = document.getElementById(toggle.getAttribute('aria-controls')!)!
+    expect(controlled).not.toBeVisible()
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    expect(controlled).toBeVisible()
+    expect(within(controlled).getAllByRole('listitem')).toHaveLength(2)
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('list', { name: 'Automatic backups list' })).toBeNull()
+  })
+
+  it('stays open after a delete, so focus can move to the next row', async () => {
+    h.sessions = [backup('b1', Date.now() - 1000), backup('b2', Date.now() - 2000)]
+    h.deleteAutoBackup.mockImplementation(async (id: string) => {
+      h.sessions = (h.sessions as Session[]).filter((s) => s.id !== id)
+    })
+    const view = renderIt()
+    showList()
+    fireEvent.click(screen.getAllByRole('button', { name: /^Delete backup from/ })[0])
+    fireEvent.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Delete backup' }))
+    await waitFor(() => expect(h.deleteAutoBackup).toHaveBeenCalled())
+    view.rerender(
+      <QueryClientProvider client={qc}>
+        <AutoBackups onSettingsSaved={view.onSettingsSaved} onRestored={view.onRestored} />
+      </QueryClientProvider>
+    )
+    await waitFor(() => expect(screen.getByTestId('backup-list-toggle')).toHaveAttribute('aria-expanded', 'true'))
+  })
+})
+
 describe('AutoBackups — focus after deleting a backup', () => {
   const T = Date.now()
   beforeEach(() => {
@@ -489,6 +558,7 @@ describe('AutoBackups — focus after deleting a backup', () => {
   })
 
   async function deleteRow(view: ReturnType<typeof renderIt>, id: string) {
+    showList()
     const btn = document.querySelector<HTMLElement>(`[data-backup-delete="${id}"]`)!
     btn.focus()
     fireEvent.click(btn)
@@ -518,6 +588,6 @@ describe('AutoBackups — focus after deleting a backup', () => {
     h.sessions = [backup('only', T - 1000)]
     const view = renderIt()
     await deleteRow(view, 'only')
-    await waitFor(() => expect(screen.getByRole('region', { name: AUTO_BACKUP_COPY.title })).toHaveFocus())
+    await waitFor(() => expect(screen.getByRole('region', { name: 'Backups' })).toHaveFocus())
   })
 })

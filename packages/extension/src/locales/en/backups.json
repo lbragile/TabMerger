@@ -1,5 +1,8 @@
 {
   "title": "Automatic backups",
+  "sectionTitle": "Backups",
+  "purpose": "Encrypted snapshots of your groups to restore from.",
+  "proOnly": "Automatic backups are part of Pro.",
   "description": "Saves an encrypted snapshot of your groups on the schedule below while your browser is open. The newest {{count}} are kept.",
   "upgradeDescription": "Automatic backups are part of Pro: an encrypted snapshot of your groups, saved on a schedule, with the newest {{count}} kept.",
   "deleteScope": "It is removed from this browser and from your account. Another browser that already has it keeps its own copy.",
@@ -21,6 +24,8 @@
   "upgradeToPro": "Upgrade to Pro",
   "planEnded": "Your plan no longer includes automatic backups, so no new ones are made. The ones below are still yours to restore or delete.",
   "listLabel": "Automatic backups list",
+  "savedCount_one": "{{count}} saved backup",
+  "savedCount_other": "{{count}} saved backups",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Restore backup from {{when}}",
   "restore": "Restore",

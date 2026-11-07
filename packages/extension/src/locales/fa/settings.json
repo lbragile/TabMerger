@@ -67,14 +67,16 @@
     "aiOwnKey": "کلید API خودتان"
   },
   "data": {
-    "intro": "TabMerger همهٔ داده‌ها را به‌صورت محلی در IndexedDB ذخیره می‌کند. همگام‌سازی ابری به حساب Pro نیاز دارد.",
-    "exportLabel": "برون‌بری داده‌ها",
-    "exportDescription": "دانلود همهٔ گروه‌ها به‌صورت فایل JSON",
-    "exportButton": "برون‌بری",
-    "importLabel": "درون‌ریزی داده‌ها",
-    "importDescription": "بازیابی گروه‌ها از یک فایل JSON برون‌بری‌شده",
-    "importButton": "درون‌ریزی",
+    "sections": {
+      "importExport": "درون‌ریزی و برون‌بری",
+      "danger": "منطقهٔ خطر"
+    },
+    "importExportPurpose": "گروه‌هایتان را به TabMerger بیاورید یا از آن بیرون ببرید.",
+    "exportJson": "برون‌بری JSON",
+    "importFile": "درون‌ریزی فایل",
+    "dangerPurpose": "همهٔ گروه‌ها و تنظیمات روی این دستگاه را حذف می‌کند.",
     "clearAll": "پاک کردن همهٔ داده‌ها",
+    "footer": "روی این دستگاه ذخیره می‌شود. همگام‌سازی ابری به Pro نیاز دارد.",
     "importTitle_one": "{{count}} گروه درون‌ریزی شود؟",
     "importTitle_other": "{{count}} گروه درون‌ریزی شوند؟",
     "importDescription_one": "{{count}} گروهِ موجود در «{{file}}» در کنار گروه‌هایی که از قبل دارید اضافه می‌شود.",

@@ -67,14 +67,16 @@
     "aiOwnKey": "Kendi API anahtarınız"
   },
   "data": {
-    "intro": "TabMerger tüm verileri yerel olarak IndexedDB'de saklar. Bulut eşitleme bir Pro hesabı gerektirir.",
-    "exportLabel": "Verileri dışa aktar",
-    "exportDescription": "Tüm grupları JSON dosyası olarak indirin",
-    "exportButton": "Dışa aktar",
-    "importLabel": "Verileri içe aktar",
-    "importDescription": "Grupları bir JSON dışa aktarımından geri yükleyin",
-    "importButton": "İçe aktar",
+    "sections": {
+      "importExport": "İçe ve dışa aktarma",
+      "danger": "Tehlikeli bölge"
+    },
+    "importExportPurpose": "Gruplarınızı TabMerger'a aktarın veya dışarı taşıyın.",
+    "exportJson": "JSON olarak dışa aktar",
+    "importFile": "Dosya içe aktar",
+    "dangerPurpose": "Bu cihazdaki tüm grupları ve ayarları siler.",
     "clearAll": "Tüm verileri temizle",
+    "footer": "Bu cihazda saklanır. Bulut eşitleme için Pro gerekir.",
     "importTitle_one": "{{count}} grup içe aktarılsın mı?",
     "importTitle_other": "{{count}} grup içe aktarılsın mı?",
     "importDescription_one": "\"{{file}}\" içindeki {{count}} grup, mevcut gruplarınızın yanına eklenecek.",

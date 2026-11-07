@@ -22,8 +22,8 @@
   },
   "settings": {
     "title": "Tự động lưu các thẻ đang mở",
-    "description": "Lưu các thẻ đang mở thành một nhóm mới trong mục Tự động lưu, theo lịch hoặc khi bạn mở nhiều thẻ. Thẻ đã lưu sẽ được bỏ qua và cửa sổ riêng tư không bao giờ được lưu. Mọi bản tự động lưu đều được giữ lại.",
-    "descriptionFree": "Lưu các thẻ đang mở thành một nhóm mới trong mục Tự động lưu, theo lịch hoặc khi bạn mở nhiều thẻ. Thẻ đã lưu sẽ được bỏ qua và cửa sổ riêng tư không bao giờ được lưu. Gói Free giữ {{keep}} bản tự động lưu mới nhất và chúng được tính vào giới hạn {{groups}} nhóm và {{tabs}} thẻ của bạn.",
+    "purpose": "Tự động lưu các thẻ đang mở thành một nhóm mới.",
+    "freeLimits": "Gói Free giữ {{keep}} bản tự động lưu mới nhất và chúng được tính vào giới hạn {{groups}} nhóm và {{tabs}} thẻ của bạn.",
     "upgrade": "Nâng cấp để giữ tất cả",
     "checkingPlan": "Đang kiểm tra gói của bạn...",
     "scheduleLabel": "Lịch",
@@ -42,6 +42,7 @@
     "notifyLabel": "Hiện thông báo",
     "notifyDescription": "Một thông báo của trình duyệt sau mỗi lần tự động lưu.",
     "noTrigger": "Chọn lịch hoặc số thẻ để tự động lưu.",
+    "skipNote": "Thẻ đã lưu sẽ được bỏ qua và cửa sổ riêng tư không bao giờ được lưu.",
     "runNow": "Tự động lưu ngay",
     "running": "Đang lưu..."
   },

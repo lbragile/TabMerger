@@ -24,8 +24,8 @@
   },
   "settings": {
     "title": "Salva automaticamente le schede aperte",
-    "description": "Salva le schede aperte come nuovo gruppo nella sezione Salvati in automatico, secondo una pianificazione o quando apri molte schede. Le schede già salvate vengono saltate e le finestre private non vengono mai salvate. Ogni salvataggio automatico viene conservato.",
-    "descriptionFree": "Salva le schede aperte come nuovo gruppo nella sezione Salvati in automatico, secondo una pianificazione o quando apri molte schede. Le schede già salvate vengono saltate e le finestre private non vengono mai salvate. Il piano Free conserva i {{keep}} salvataggi automatici più recenti, che contano per i tuoi {{groups}} gruppi e {{tabs}} schede.",
+    "purpose": "Salva automaticamente le schede aperte in un nuovo gruppo.",
+    "freeLimits": "Il piano Free conserva i {{keep}} salvataggi automatici più recenti, che contano per i tuoi {{groups}} gruppi e {{tabs}} schede.",
     "upgrade": "Passa a un piano superiore per tenerli tutti",
     "checkingPlan": "Verifica del piano...",
     "scheduleLabel": "Pianificazione",
@@ -46,6 +46,7 @@
     "notifyLabel": "Mostra una notifica",
     "notifyDescription": "Una notifica del browser dopo ogni salvataggio automatico.",
     "noTrigger": "Scegli una pianificazione o un numero di schede per il salvataggio automatico.",
+    "skipNote": "Le schede già salvate vengono saltate e le finestre private non vengono mai salvate.",
     "runNow": "Salva ora",
     "running": "Salvataggio..."
   },

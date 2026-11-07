@@ -1,5 +1,8 @@
 {
   "title": "Automatische Backups",
+  "sectionTitle": "Backups",
+  "purpose": "Verschlüsselte Snapshots deiner Gruppen zum Wiederherstellen.",
+  "proOnly": "Automatische Backups gehören zu Pro.",
   "description": "Speichert in den unten gewählten Abständen einen verschlüsselten Snapshot deiner Gruppen, solange dein Browser geöffnet ist. Die neuesten {{count}} bleiben erhalten.",
   "upgradeDescription": "Automatische Backups gehören zu Pro: ein verschlüsselter Snapshot deiner Gruppen, regelmäßig gespeichert, wobei die neuesten {{count}} erhalten bleiben.",
   "deleteScope": "Es wird aus diesem Browser und aus deinem Konto entfernt. Ein anderer Browser, der es schon hat, behält seine eigene Kopie.",
@@ -21,6 +24,8 @@
   "upgradeToPro": "Auf Pro upgraden",
   "planEnded": "Dein Tarif enthält keine automatischen Backups mehr, daher werden keine neuen erstellt. Die unten aufgeführten gehören weiterhin dir: Du kannst sie wiederherstellen oder löschen.",
   "listLabel": "Liste der automatischen Backups",
+  "savedCount_one": "{{count}} gespeichertes Backup",
+  "savedCount_other": "{{count}} gespeicherte Backups",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Backup von {{when}} wiederherstellen",
   "restore": "Wiederherstellen",

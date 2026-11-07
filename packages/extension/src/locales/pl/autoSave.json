@@ -25,8 +25,8 @@
   },
   "settings": {
     "title": "Autozapis otwartych kart",
-    "description": "Zapisuje otwarte karty jako nową grupę w sekcji Autozapisy, według harmonogramu lub gdy otworzysz wiele kart. Karty już zapisane są pomijane, a okna prywatne nigdy nie są zapisywane. Każdy autozapis zostaje zachowany.",
-    "descriptionFree": "Zapisuje otwarte karty jako nową grupę w sekcji Autozapisy, według harmonogramu lub gdy otworzysz wiele kart. Karty już zapisane są pomijane, a okna prywatne nigdy nie są zapisywane. Plan Free zachowuje {{keep}} najnowsze autozapisy i wliczają się one do limitu {{groups}} grup i {{tabs}} kart.",
+    "purpose": "Automatycznie zapisuje otwarte karty jako nową grupę.",
+    "freeLimits": "Plan Free zachowuje {{keep}} najnowsze autozapisy i wliczają się one do limitu {{groups}} grup i {{tabs}} kart.",
     "upgrade": "Przejdź na wyższy plan, aby zachować wszystkie",
     "checkingPlan": "Sprawdzanie planu...",
     "scheduleLabel": "Harmonogram",
@@ -48,6 +48,7 @@
     "notifyLabel": "Pokaż powiadomienie",
     "notifyDescription": "Powiadomienie przeglądarki po każdym autozapisie.",
     "noTrigger": "Wybierz harmonogram lub liczbę kart, aby włączyć autozapis.",
+    "skipNote": "Karty już zapisane są pomijane, a okna prywatne nigdy nie są zapisywane.",
     "runNow": "Zapisz teraz",
     "running": "Zapisywanie..."
   },

@@ -1,5 +1,8 @@
 {
   "title": "Backup automatici",
+  "sectionTitle": "Backup",
+  "purpose": "Istantanee crittografate dei tuoi gruppi da cui ripristinare.",
+  "proOnly": "I backup automatici fanno parte di Pro.",
   "description": "Salva un'istantanea crittografata dei tuoi gruppi secondo la pianificazione qui sotto mentre il browser è aperto. Vengono conservati i {{count}} più recenti.",
   "upgradeDescription": "I backup automatici fanno parte di Pro: un'istantanea crittografata dei tuoi gruppi, salvata secondo una pianificazione, conservando i {{count}} più recenti.",
   "deleteScope": "Viene rimosso da questo browser e dal tuo account. Un altro browser che lo ha già ne conserva la propria copia.",
@@ -21,6 +24,9 @@
   "upgradeToPro": "Passa a Pro",
   "planEnded": "Il tuo piano non include più i backup automatici, quindi non ne vengono creati di nuovi. Quelli qui sotto restano tuoi da ripristinare o eliminare.",
   "listLabel": "Elenco dei backup automatici",
+  "savedCount_one": "{{count}} backup salvato",
+  "savedCount_many": "{{count}} backup salvati",
+  "savedCount_other": "{{count}} backup salvati",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Ripristina il backup di {{when}}",
   "restore": "Ripristina",

@@ -1,5 +1,8 @@
 {
   "title": "Sauvegardes automatiques",
+  "sectionTitle": "Sauvegardes",
+  "purpose": "Des instantanés chiffrés de vos groupes, à restaurer au besoin.",
+  "proOnly": "Les sauvegardes automatiques font partie de Pro.",
   "description": "Enregistre un instantané chiffré de vos groupes selon le calendrier ci-dessous tant que votre navigateur est ouvert. Les {{count}} plus récents sont conservés.",
   "upgradeDescription": "Les sauvegardes automatiques font partie de Pro : un instantané chiffré de vos groupes, enregistré selon un calendrier, avec les {{count}} plus récents conservés.",
   "deleteScope": "Elle est supprimée de ce navigateur et de votre compte. Un autre navigateur qui la possède déjà en garde sa propre copie.",
@@ -21,6 +24,9 @@
   "upgradeToPro": "Passer à Pro",
   "planEnded": "Votre offre n’inclut plus les sauvegardes automatiques : aucune nouvelle n’est créée. Celles ci-dessous restent à vous, pour les restaurer ou les supprimer.",
   "listLabel": "Liste des sauvegardes automatiques",
+  "savedCount_one": "{{count}} sauvegarde enregistrée",
+  "savedCount_many": "{{count}} de sauvegardes enregistrées",
+  "savedCount_other": "{{count}} sauvegardes enregistrées",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Restaurer la sauvegarde du {{when}}",
   "restore": "Restaurer",

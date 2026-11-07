@@ -66,14 +66,16 @@
     "aiOwnKey": "내 API 키"
   },
   "data": {
-    "intro": "TabMerger는 모든 데이터를 IndexedDB에 로컬로 저장합니다. 클라우드 동기화에는 Pro 계정이 필요합니다.",
-    "exportLabel": "데이터 내보내기",
-    "exportDescription": "모든 그룹을 JSON 파일로 다운로드",
-    "exportButton": "내보내기",
-    "importLabel": "데이터 가져오기",
-    "importDescription": "JSON 내보내기 파일에서 그룹 복원",
-    "importButton": "가져오기",
+    "sections": {
+      "importExport": "가져오기 및 내보내기",
+      "danger": "위험 구역"
+    },
+    "importExportPurpose": "그룹을 TabMerger로 가져오거나 밖으로 내보냅니다.",
+    "exportJson": "JSON 내보내기",
+    "importFile": "파일 가져오기",
+    "dangerPurpose": "이 기기의 모든 그룹과 설정을 삭제합니다.",
     "clearAll": "모든 데이터 지우기",
+    "footer": "이 기기에 저장됩니다. 클라우드 동기화에는 Pro가 필요합니다.",
     "importTitle_other": "그룹 {{count}}개를 가져오시겠습니까?",
     "importDescription_other": "\"{{file}}\"의 그룹 {{count}}개가 기존 그룹 옆에 추가됩니다.",
     "importConfirm_other": "그룹 {{count}}개 가져오기"

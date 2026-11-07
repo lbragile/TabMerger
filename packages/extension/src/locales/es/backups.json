@@ -1,5 +1,8 @@
 {
   "title": "Copias de seguridad automáticas",
+  "sectionTitle": "Copias de seguridad",
+  "purpose": "Instantáneas cifradas de tus grupos para restaurar.",
+  "proOnly": "Las copias automáticas forman parte de Pro.",
   "description": "Guarda una instantánea cifrada de tus grupos según el horario de abajo mientras tu navegador está abierto. Se conservan las {{count}} más recientes.",
   "upgradeDescription": "Las copias automáticas forman parte de Pro: una instantánea cifrada de tus grupos, guardada según un horario, conservando las {{count}} más recientes.",
   "deleteScope": "Se elimina de este navegador y de tu cuenta. Otro navegador que ya la tenga conserva su propia copia.",
@@ -21,6 +24,9 @@
   "upgradeToPro": "Mejorar a Pro",
   "planEnded": "Tu plan ya no incluye copias automáticas, así que no se harán nuevas. Las de abajo siguen siendo tuyas para restaurar o eliminar.",
   "listLabel": "Lista de copias automáticas",
+  "savedCount_one": "{{count}} copia guardada",
+  "savedCount_many": "{{count}} de copias guardadas",
+  "savedCount_other": "{{count}} copias guardadas",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Restaurar la copia del {{when}}",
   "restore": "Restaurar",

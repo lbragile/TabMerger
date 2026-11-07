@@ -59,20 +59,30 @@ beforeEach(() => {
 const toggle = () => screen.getByRole('switch', { name: 'Auto-save open tabs' })
 
 describe('AutoSaveTabs', () => {
-  it('Pro, never toggled: on by default with the Pro copy, no upgrade link', () => {
+  it('Pro, never toggled: on by default with the purpose line, the options box, and no Free line', () => {
     renderIt()
     expect(toggle()).toHaveAttribute('aria-checked', 'true')
-    expect(screen.getByText(/Every auto-save is kept/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 3, name: 'Auto-save open tabs' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Auto-save open tabs' })).toBeInTheDocument()
+    expect(screen.getByText('Saves your open tabs as a new group, automatically.')).toBeInTheDocument()
+    expect(screen.getByText('Tabs that are already saved are skipped, and private windows are never saved.')).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: 'Schedule' })).toBeInTheDocument()
+    expect(screen.queryByText(/The Free plan keeps/)).toBeNull()
     expect(screen.queryByRole('button', { name: /Upgrade to keep them all/ })).toBeNull()
     expect(screen.getByText('No auto-save yet.')).toBeInTheDocument()
   })
 
-  it('Free, never toggled: off by default, explains the newest-2 rule and the limits, with an upgrade link', () => {
+  it('Free, never toggled: off by default, options hidden, one line with the newest-2 rule, the limits and an upgrade link', () => {
     h.entitlements = { tier: 'free', loading: false }
     renderIt()
     expect(toggle()).toHaveAttribute('aria-checked', 'false')
     expect(screen.getByText(new RegExp(`newest 2 auto-saves.*${FREE_TIER_LIMITS.groups} groups and ${FREE_TIER_LIMITS.tabs} tabs`))).toBeInTheDocument()
-    expect(screen.getByRole('combobox', { name: 'Schedule' })).toBeDisabled()
+    // the options are hidden while auto-save is off, not shown disabled
+    expect(screen.queryByRole('combobox', { name: 'Schedule' })).toBeNull()
+    expect(screen.queryByRole('switch', { name: 'Show a notification' })).toBeNull()
+    // a manual run ignores the switch, so it stays available
+    expect(screen.getByRole('button', { name: 'Auto-save now' })).toBeInTheDocument()
+    expect(screen.getByTestId('auto-save-status')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Upgrade to keep them all' }))
     expect(h.track).toHaveBeenCalledWith('upgrade_clicked', { source: 'settings_auto_save' })
     expect(tabsCreate).toHaveBeenCalledWith(expect.objectContaining({ url: expect.stringContaining('/pricing') }))
@@ -100,11 +110,34 @@ describe('AutoSaveTabs', () => {
     expect(onSettingsSaved).not.toHaveBeenCalled()
   })
 
-  it('does not save while settings are still loading', () => {
+  it('does not save while settings are still loading: switch disabled, options hidden', () => {
     h.settings = { data: undefined, isLoading: true }
     renderIt()
-    fireEvent.click(screen.getByRole('switch', { name: 'Show a notification' }))
+    expect(toggle()).toBeDisabled()
+    expect(screen.queryByRole('switch', { name: 'Show a notification' })).toBeNull()
+    fireEvent.click(toggle())
     expect(h.saveSettings).not.toHaveBeenCalled()
+  })
+
+  it('turning auto-save on shows the options in the box; the last-run line stays the same element', () => {
+    h.settings = { data: { autoSaveTabsEnabled: false }, isLoading: false }
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    // a new element each time: re-rendering the identical element lets React skip the update
+    const ui = () => (
+      <QueryClientProvider client={qc}>
+        <AutoSaveTabs onSettingsSaved={vi.fn()} />
+      </QueryClientProvider>
+    )
+    const { rerender } = render(ui())
+    const status = screen.getByTestId('auto-save-status')
+    expect(screen.queryByRole('combobox', { name: 'Schedule' })).toBeNull()
+
+    h.settings = { data: { autoSaveTabsEnabled: true }, isLoading: false }
+    rerender(ui())
+    expect(screen.getByRole('combobox', { name: 'Schedule' })).toBeInTheDocument()
+    expect(screen.getByRole('switch', { name: 'Show a notification' })).toBeInTheDocument()
+    // the same element: the last-run line and "Auto-save now" keep their place when the switch flips
+    expect(screen.getByTestId('auto-save-status')).toBe(status)
   })
 
   it('both triggers off: the hint asks for a schedule or a tab count', () => {

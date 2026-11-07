@@ -1,5 +1,8 @@
 {
   "title": "Cadangan otomatis",
+  "sectionTitle": "Cadangan",
+  "purpose": "Tangkapan terenkripsi dari grup Anda untuk dipulihkan.",
+  "proOnly": "Cadangan otomatis adalah bagian dari Pro.",
   "description": "Menyimpan tangkapan terenkripsi dari grup Anda sesuai jadwal di bawah ini selama browser Anda terbuka. {{count}} cadangan terbaru disimpan.",
   "upgradeDescription": "Cadangan otomatis adalah bagian dari Pro: tangkapan terenkripsi dari grup Anda, disimpan sesuai jadwal, dengan {{count}} terbaru disimpan.",
   "deleteScope": "Ini dihapus dari browser ini dan dari akun Anda. Browser lain yang sudah memilikinya tetap menyimpan salinannya sendiri.",
@@ -21,6 +24,7 @@
   "upgradeToPro": "Tingkatkan ke Pro",
   "planEnded": "Paket Anda tidak lagi menyertakan cadangan otomatis, jadi tidak ada yang baru dibuat. Yang di bawah ini masih milik Anda untuk dipulihkan atau dihapus.",
   "listLabel": "Daftar cadangan otomatis",
+  "savedCount_other": "{{count}} cadangan tersimpan",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Pulihkan cadangan dari {{when}}",
   "restore": "Pulihkan",

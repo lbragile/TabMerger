@@ -23,8 +23,8 @@
   },
   "settings": {
     "title": "Offene Tabs automatisch speichern",
-    "description": "Speichert deine offenen Tabs als neue Gruppe im Bereich „Automatisch gespeichert“, nach Zeitplan oder wenn du viele Tabs öffnest. Bereits gespeicherte Tabs werden übersprungen, private Fenster nie gespeichert. Jede automatische Speicherung bleibt erhalten.",
-    "descriptionFree": "Speichert deine offenen Tabs als neue Gruppe im Bereich „Automatisch gespeichert“, nach Zeitplan oder wenn du viele Tabs öffnest. Bereits gespeicherte Tabs werden übersprungen, private Fenster nie gespeichert. Der Free-Tarif behält die neuesten {{keep}} automatischen Speicherungen, und sie zählen zu deinen {{groups}} Gruppen und {{tabs}} Tabs.",
+    "purpose": "Speichert deine offenen Tabs automatisch als neue Gruppe.",
+    "freeLimits": "Der Free-Tarif behält die neuesten {{keep}} automatischen Speicherungen, und sie zählen zu deinen {{groups}} Gruppen und {{tabs}} Tabs.",
     "upgrade": "Upgrade, um alle zu behalten",
     "checkingPlan": "Tarif wird geprüft...",
     "scheduleLabel": "Zeitplan",
@@ -44,6 +44,7 @@
     "notifyLabel": "Benachrichtigung anzeigen",
     "notifyDescription": "Eine Browser-Benachrichtigung nach jedem Auto-Speichern.",
     "noTrigger": "Wähle einen Zeitplan oder eine Tab-Anzahl, um automatisch zu speichern.",
+    "skipNote": "Bereits gespeicherte Tabs werden übersprungen, private Fenster nie gespeichert.",
     "runNow": "Jetzt automatisch speichern",
     "running": "Wird gespeichert..."
   },

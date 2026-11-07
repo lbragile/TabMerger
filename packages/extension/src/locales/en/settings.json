@@ -67,14 +67,16 @@
     "aiOwnKey": "Your own API key"
   },
   "data": {
-    "intro": "TabMerger stores all data locally in IndexedDB. Cloud sync requires a Pro account.",
-    "exportLabel": "Export data",
-    "exportDescription": "Download all groups as a JSON file",
-    "exportButton": "Export",
-    "importLabel": "Import data",
-    "importDescription": "Restore groups from a JSON export",
-    "importButton": "Import",
+    "sections": {
+      "importExport": "Import & export",
+      "danger": "Danger zone"
+    },
+    "importExportPurpose": "Move your groups in or out of TabMerger.",
+    "exportJson": "Export JSON",
+    "importFile": "Import file",
+    "dangerPurpose": "Delete every group and setting on this device.",
     "clearAll": "Clear all data",
+    "footer": "Stored on this device. Cloud sync needs Pro.",
     "importTitle_one": "Import {{count}} group?",
     "importTitle_other": "Import {{count}} groups?",
     "importDescription_one": "The {{count}} group in \"{{file}}\" will be added next to the groups you already have.",

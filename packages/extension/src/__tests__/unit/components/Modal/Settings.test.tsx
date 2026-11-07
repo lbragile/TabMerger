@@ -624,12 +624,40 @@ describe('SettingsModal — Account tab', () => {
 })
 
 describe('SettingsModal — Data tab', () => {
+  it('is four titled sections in order (auto-save, backups, import & export, danger zone), then the storage footer', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^data$/i)
+    // AutoBackups is a stub here (its own tests cover its section): check it sits between the two
+    const order = Array.from(document.querySelectorAll('[data-section]')).map((el) => el.getAttribute('data-section'))
+    expect(order).toEqual(['autosave', 'import-export', 'danger'])
+    const backups = screen.getByText('Automatic backups panel')
+    const follows = (a: Node, b: Node) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(follows(document.querySelector('[data-section="autosave"]')!, backups)).toBe(true)
+    expect(follows(backups, document.querySelector('[data-section="import-export"]')!)).toBe(true)
+    const headings = screen.getAllByRole('heading', { level: 3 }).map((el) => el.textContent)
+    expect(headings).toEqual(expect.arrayContaining(['Import & export', 'Danger zone']))
+    // export and import share one section, side by side
+    const io = screen.getByRole('region', { name: 'Import & export' })
+    expect(within(io).getByRole('button', { name: 'Export JSON' })).toBeInTheDocument()
+    expect(within(io).getByRole('button', { name: 'Import file' })).toBeInTheDocument()
+    expect(within(io).getByText('Move your groups in or out of TabMerger.')).toBeInTheDocument()
+    // clear all lives in the danger zone, explained, and is no longer full width
+    const danger = screen.getByRole('region', { name: 'Danger zone' })
+    expect(within(danger).getByText('Delete every group and setting on this device.')).toBeInTheDocument()
+    expect(within(danger).getByRole('button', { name: /clear all data/i })).not.toHaveClass('w-full')
+    // where the data lives is the last thing on the tab
+    const footer = screen.getByTestId('data-storage-footer')
+    expect(footer).toHaveTextContent('Stored on this device. Cloud sync needs Pro.')
+    expect(danger.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it('Export downloads groups as JSON via exportGroups', async () => {
     mockUseGroups.mockReturnValue({ data: { available: [{ name: 'g' }] } })
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^data$/i)
-    fireEvent.click(screen.getByRole('button', { name: /^export$/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Export JSON' }))
     expect(mockExportGroups).toHaveBeenCalledWith([{ name: 'g' }])
   })
 
@@ -710,7 +738,7 @@ describe('SettingsModal — Data tab', () => {
     expect(box).toHaveTextContent('<img src=x onerror=alert(1)>.json')
   })
 
-  it('Cancel imports nothing, keeps Settings open and returns focus to the Import button', async () => {
+  it('Cancel imports nothing, keeps Settings open and returns focus to the Import file button', async () => {
     const onClose = await openDataTab()
     chooseFile()
     const box = await screen.findByRole('alertdialog')
@@ -718,7 +746,7 @@ describe('SettingsModal — Data tab', () => {
     await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
     expect(mockImportGroupsMutate).not.toHaveBeenCalled()
     expect(onClose).not.toHaveBeenCalled()
-    expect(screen.getByRole('button', { name: 'Import' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'Import file' })).toHaveFocus()
   })
 
   it('Escape cancels the import question without closing Settings', async () => {
@@ -729,7 +757,7 @@ describe('SettingsModal — Data tab', () => {
     await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
     expect(mockImportGroupsMutate).not.toHaveBeenCalled()
     expect(onClose).not.toHaveBeenCalled()
-    expect(screen.getByRole('button', { name: 'Import' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Import file' })).toBeInTheDocument()
   })
 
   it('choosing the same file again after Cancel asks again (the input is cleared)', async () => {

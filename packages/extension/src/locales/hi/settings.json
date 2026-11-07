@@ -67,14 +67,16 @@
     "aiOwnKey": "आपकी अपनी API कुंजी"
   },
   "data": {
-    "intro": "TabMerger सभी डेटा स्थानीय रूप से IndexedDB में संग्रहीत करता है। क्लाउड सिंक के लिए Pro खाता आवश्यक है।",
-    "exportLabel": "डेटा निर्यात करें",
-    "exportDescription": "सभी समूहों को JSON फ़ाइल के रूप में डाउनलोड करें",
-    "exportButton": "निर्यात",
-    "importLabel": "डेटा आयात करें",
-    "importDescription": "JSON निर्यात से समूह पुनर्स्थापित करें",
-    "importButton": "आयात",
+    "sections": {
+      "importExport": "आयात और निर्यात",
+      "danger": "जोखिम क्षेत्र"
+    },
+    "importExportPurpose": "अपने समूहों को TabMerger में लाएँ या उससे बाहर ले जाएँ।",
+    "exportJson": "JSON निर्यात करें",
+    "importFile": "फ़ाइल आयात करें",
+    "dangerPurpose": "इस डिवाइस पर हर समूह और सेटिंग हटाता है।",
     "clearAll": "सभी डेटा साफ़ करें",
+    "footer": "इस डिवाइस पर संग्रहीत। क्लाउड सिंक के लिए Pro आवश्यक है।",
     "importTitle_one": "{{count}} समूह आयात करें?",
     "importTitle_other": "{{count}} समूह आयात करें?",
     "importDescription_one": "\"{{file}}\" में {{count}} समूह आपके पास पहले से मौजूद समूहों के साथ जोड़ा जाएगा।",

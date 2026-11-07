@@ -25,6 +25,7 @@ import { AutoBackups } from '@/components/Settings/AutoBackups';
 import { AutoSaveTabs } from '@/components/Settings/AutoSaveTabs';
 import { CheckForUpdates } from '@/components/Settings/CheckForUpdates';
 import { LanguageSetting } from '@/components/Settings/LanguageSetting';
+import { SettingsSection } from '@/components/Settings/SettingsSection';
 import { AiSettings } from '@/components/Settings/AiSettings';
 import { useLanguageSetting } from '@/hooks/useLocalePreference';
 import { autoBackupDownloadQueryKey } from '@/lib/autoBackupQueryKeys';
@@ -633,67 +634,16 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
           )}
         </TabsContent>
 
-        <TabsContent value="data" className="space-y-4">
-          <p className="text-xs text-muted-foreground">
-            {t('settings.data.intro')}
-          </p>
-
-          <Separator />
-
-          {/* First on the tab. Saves immediately and mirrors into the draft, like AutoBackups below. */}
+        {/* Four titled sections (auto-save, backups, import & export, danger zone), one Separator
+            between each, and where the data lives as a footer. */}
+        <TabsContent value="data" className="min-w-0 space-y-4">
+          {/* Saves immediately and mirrors into the draft, like AutoBackups below. */}
           <AutoSaveTabs onSettingsSaved={(saved) => setDraft((prev) => ({ ...prev, ...saved }))} />
 
           <Separator />
 
-          <div className="flex items-center justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <Label className="text-sm">{t('settings.data.exportLabel')}</Label>
-              <p className="text-xs text-muted-foreground">{t('settings.data.exportDescription')}</p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs gap-1.5 shrink-0 rounded-none"
-              onClick={handleExport}
-            >
-              <Download className="h-3.5 w-3.5" />
-              {t('settings.data.exportButton')}
-            </Button>
-          </div>
-
-          <div className="flex items-center justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <Label className="text-sm">{t('settings.data.importLabel')}</Label>
-              <p className="text-xs text-muted-foreground">{t('settings.data.importDescription')}</p>
-            </div>
-            <Button
-              ref={importButtonRef}
-              variant="outline"
-              size="sm"
-              className="text-xs gap-1.5 shrink-0 rounded-none"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Upload className="h-3.5 w-3.5" />
-              {t('settings.data.importButton')}
-            </Button>
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json,.html,.txt"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              // cleared so that choosing the same file again (after Cancel) asks again
-              e.target.value = '';
-              if (file) void handleImport(file);
-            }}
-          />
-
-          <Separator />
-
-          {/* Saves its two settings immediately (this tab has no Save footer) and mirrors them
-              into the draft, so a later "Save changes" on General cannot write old values back. */}
+          {/* Saves its settings immediately (this tab has no Save footer) and mirrors them into
+              the draft, so a later "Save changes" on General cannot write old values back. */}
           <AutoBackups
             onSettingsSaved={(saved) => setDraft((prev) => ({ ...prev, ...saved }))}
             onRestored={onClose}
@@ -701,9 +651,62 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
 
           <Separator />
 
-          <Button variant="destructive" size="sm" className="w-full text-xs rounded-none" onClick={handleClearAll}>
-            {t('settings.data.clearAll')}
-          </Button>
+          <SettingsSection
+            section="import-export"
+            testId="data-section-import-export"
+            title={t('settings.data.sections.importExport')}
+            purpose={t('settings.data.importExportPurpose')}
+          >
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <Button variant="outline" size="sm" className="text-xs gap-1.5 rounded-none" onClick={handleExport}>
+                <Download className="h-3.5 w-3.5" />
+                {t('settings.data.exportJson')}
+              </Button>
+              <Button
+                ref={importButtonRef}
+                variant="outline"
+                size="sm"
+                className="text-xs gap-1.5 rounded-none"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="h-3.5 w-3.5" />
+                {t('settings.data.importFile')}
+              </Button>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,.html,.txt"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                // cleared so that choosing the same file again (after Cancel) asks again
+                e.target.value = '';
+                if (file) void handleImport(file);
+              }}
+            />
+          </SettingsSection>
+
+          <Separator />
+
+          <SettingsSection
+            section="danger"
+            testId="data-section-danger"
+            title={t('settings.data.sections.danger')}
+            purpose={t('settings.data.dangerPurpose')}
+          >
+            <div className="min-w-0">
+              <Button variant="destructive" size="sm" className="text-xs rounded-none" onClick={handleClearAll}>
+                {t('settings.data.clearAll')}
+              </Button>
+            </div>
+          </SettingsSection>
+
+          <Separator />
+
+          <p className="min-w-0 text-xs text-muted-foreground" data-testid="data-storage-footer">
+            {t('settings.data.footer')}
+          </p>
         </TabsContent>
 
         {tier !== 'free' && (
