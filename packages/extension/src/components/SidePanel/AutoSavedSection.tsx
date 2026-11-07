@@ -34,14 +34,13 @@ export function AutoSavedSection({ groupsState }: { groupsState: GroupsState }) 
   const { mutate: deleteGroup } = useDeleteGroup();
   const { mutateAsync: keep } = useKeepAutoSave();
   const { run, running } = useAutoSaveNow();
-  // `null` until the user toggles it: open whenever there is something to show
-  const [openChoice, setOpenChoice] = useState<boolean | null>(null);
+  // closed until the user opens it, like Archived and Sessions
+  const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   /** After Keep / Delete: the row that leaves, and where focus goes once it is gone. */
   const [focusAfter, setFocusAfter] = useState<{ goneId: string; nextId: string | null } | null>(null);
 
   const list = listAutoSavedGroups(groupsState.available);
-  const open = openChoice ?? list.length > 0;
   useAutoSavePromotionToast();
   useAutoSaveIntroToast(list.length > 0);
 
@@ -90,7 +89,7 @@ export function AutoSavedSection({ groupsState }: { groupsState: GroupsState }) 
         label={t('autoSave.sidebar.label')}
         count={count}
         open={open}
-        onToggle={() => setOpenChoice(!open)}
+        onToggle={() => setOpen(!open)}
         isEmpty={list.length === 0}
         emptyLabel={t('autoSave.sidebar.empty')}
         className="mt-1.5"

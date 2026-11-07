@@ -40,7 +40,12 @@ const st = (...groups: Group[]): GroupsState => ({ active: { id: 'now', index: 0
 let sendMessage: ReturnType<typeof vi.fn>
 let localStore: Record<string, unknown>
 
-function renderSection(state: GroupsState) {
+/** The section starts closed; this opens it like the user would (click its header). */
+function expand() {
+  fireEvent.click(screen.getByRole('button', { name: /^Auto-saved \(/ }))
+}
+
+function renderSection(state: GroupsState, { open = true }: { open?: boolean } = {}) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   const utils = render(
     <QueryClientProvider client={qc}>
@@ -49,6 +54,7 @@ function renderSection(state: GroupsState) {
       </TooltipProvider>
     </QueryClientProvider>
   )
+  if (open) expand()
   return { ...utils, qc }
 }
 
@@ -73,15 +79,18 @@ beforeEach(() => {
 
 describe('AutoSavedSection', () => {
   it('empty: header with 0, collapsed, still offers "Auto-save now"', () => {
-    renderSection(st(g('normal')))
+    renderSection(st(g('normal')), { open: false })
     expect(screen.getByRole('button', { name: 'Auto-saved (0)' })).toHaveAttribute('aria-expanded', 'false')
     fireEvent.click(screen.getByRole('button', { name: 'Auto-saved (0)' }))
     expect(screen.getByText('No auto-saves yet')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Auto-save now' })).toBeInTheDocument()
   })
 
-  it('Pro: lists auto-saves newest first, open by default, never the normal groups', () => {
-    renderSection(st(g('normal'), g('old', { autoSave: { at: 1000, rolling: false } }), g('new', { autoSave: { at: 2000, rolling: false } })))
+  it('Pro: closed until opened, then lists auto-saves newest first, never the normal groups', () => {
+    renderSection(st(g('normal'), g('old', { autoSave: { at: 1000, rolling: false } }), g('new', { autoSave: { at: 2000, rolling: false } })), { open: false })
+    expect(screen.getByRole('button', { name: 'Auto-saved (2)' })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('button', { name: /^Open Name/ })).toBeNull()
+    expand()
     expect(screen.getByRole('button', { name: 'Auto-saved (2)' })).toHaveAttribute('aria-expanded', 'true')
     const opens = screen.getAllByRole('button', { name: /^Open Name/ }).map((b) => b.getAttribute('aria-label'))
     expect(opens).toEqual(['Open Name new', 'Open Name old'])
@@ -189,6 +198,7 @@ describe('AutoSavedSection — focus and announcements', () => {
     const a = g('a', { autoSave: { at: 2, rolling: false } })
     const b = g('b', { autoSave: { at: 1, rolling: false } })
     const { rerender } = render(wrap(st(a, b)))
+    expand()
     fireEvent.click(screen.getByRole('button', { name: 'Delete Name a' }))
     expect(h.toast.success).toHaveBeenCalledWith('Deleted Name a', { id: 'auto-save-deleted' })
     rerender(wrap(st(b)))
@@ -204,6 +214,7 @@ describe('AutoSavedSection — focus and announcements', () => {
     const a = g('a', { autoSave: { at: 2, rolling: false } })
     const b = g('b', { autoSave: { at: 1, rolling: false } })
     const { rerender } = render(wrap(st(a, b)))
+    expand()
     fireEvent.click(screen.getByRole('button', { name: 'Keep Name a as a group' }))
     await waitFor(() => expect(h.toast.success).toHaveBeenCalled())
     expect(h.toast.success.mock.calls[0][1]).toMatchObject({ duration: 10_000 })
@@ -213,6 +224,7 @@ describe('AutoSavedSection — focus and announcements', () => {
 
   it('a row describes its time and its counts; the badge is hidden from screen readers', () => {
     render(wrap(st(g('a', { autoSave: { at: Date.now(), rolling: false } }))))
+    expand()
     const open = screen.getByRole('button', { name: 'Open Name a' })
     expect(open).toHaveAccessibleDescription(/1 window, 2 tabs/)
     expect(screen.getByRole('button', { name: /^Auto-saved \(/ })).toHaveAttribute('aria-controls')

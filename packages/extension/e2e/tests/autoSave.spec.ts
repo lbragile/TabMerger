@@ -87,6 +87,9 @@ test.describe('Auto-save open tabs - the Auto-saved section', () => {
       // the worker wrote it; the popup refetches on the groups-changed broadcast
       const freeHeader = page.getByRole('button', { name: /^Auto-saved \(1 of 2\)$/ });
       await expect(freeHeader).toBeVisible({ timeout: 15_000 });
+      // closed until the user opens it
+      await expect(freeHeader).toHaveAttribute('aria-expanded', 'false');
+      await freeHeader.click();
       await expect(freeHeader).toHaveAttribute('aria-expanded', 'true');
       const open = page.getByRole('button', { name: /^Open Auto-saved / });
       await expect(open).toHaveCount(1);
