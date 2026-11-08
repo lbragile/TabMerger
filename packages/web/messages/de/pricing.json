@@ -30,6 +30,8 @@
     "cloudSync": "Cloud-Sync zwischen Geräten",
     "sessionsSynced": "Sitzungen zwischen Geräten synchronisiert",
     "autoBackups": "Automatische verschlüsselte Backups",
+    "autoSaveFree": "Offene Tabs automatisch speichern (die neuesten {count, number} bleiben erhalten)",
+    "autoSavePro": "Offene Tabs automatisch speichern, alle bleiben erhalten",
     "prioritySupport": "Priorisierter Support",
     "everythingInPro": "Alles aus Pro",
     "aiGrouping": "KI-Auto-Gruppierung von Tabs",

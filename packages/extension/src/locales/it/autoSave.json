@@ -1,0 +1,78 @@
+{
+  "groupName": "Salvato in automatico {{when}}",
+  "notification": {
+    "title": "Salvataggio automatico di TabMerger"
+  },
+  "status": {
+    "saved_one": "{{count}} scheda salvata in {{name}}.",
+    "saved_many": "{{count}} schede salvate in {{name}}.",
+    "saved_other": "{{count}} schede salvate in {{name}}.",
+    "savedPartial": "Salvate {{saved}} schede su {{total}} in {{name}} (limite Free).",
+    "failed": "Il salvataggio automatico non è riuscito. Riprova.",
+    "lastRun": "Ultima esecuzione {{when}}: {{result}}",
+    "never": "Ancora nessun salvataggio automatico.",
+    "skip": {
+      "disabled": "Il salvataggio automatico è disattivato.",
+      "notDue": "Il prossimo salvataggio pianificato non è ancora previsto.",
+      "noTabs": "Nessuna scheda aperta da salvare.",
+      "nothingNew": "Niente di nuovo da salvare: tutte le schede aperte sono già salvate.",
+      "noGroupSlot": "Non salvato: il piano Free consente {{max}} gruppi. Elimina o tieni meno gruppi, oppure passa a un piano superiore.",
+      "noTabRoom": "Non salvato: il piano Free consente {{max}} schede salvate. Elimina alcune schede oppure passa a un piano superiore.",
+      "accountMismatch": "Questo dispositivo contiene ancora i dati di un altro account. Riapri TabMerger e riprova.",
+      "busy": "Un salvataggio automatico è già in corso."
+    }
+  },
+  "settings": {
+    "title": "Salva automaticamente le schede aperte",
+    "description": "Salva le schede aperte come nuovo gruppo nella sezione Salvati in automatico, secondo una pianificazione o quando apri molte schede. Le schede già salvate vengono saltate e le finestre private non vengono mai salvate. Ogni salvataggio automatico viene conservato.",
+    "descriptionFree": "Salva le schede aperte come nuovo gruppo nella sezione Salvati in automatico, secondo una pianificazione o quando apri molte schede. Le schede già salvate vengono saltate e le finestre private non vengono mai salvate. Il piano Free conserva i {{keep}} salvataggi automatici più recenti, che contano per i tuoi {{groups}} gruppi e {{tabs}} schede.",
+    "upgrade": "Passa a un piano superiore per tenerli tutti",
+    "checkingPlan": "Verifica del piano...",
+    "scheduleLabel": "Pianificazione",
+    "schedule": {
+      "0": "Disattivato",
+      "15": "Ogni 15 minuti",
+      "30": "Ogni 30 minuti",
+      "60": "Ogni ora",
+      "120": "Ogni 2 ore",
+      "240": "Ogni 4 ore",
+      "1440": "Ogni giorno"
+    },
+    "thresholdLabel": "Quando le schede aperte superano",
+    "thresholdOff": "Disattivato",
+    "thresholdOption_one": "{{count}} scheda aperta",
+    "thresholdOption_many": "{{count}} schede aperte",
+    "thresholdOption_other": "{{count}} schede aperte",
+    "notifyLabel": "Mostra una notifica",
+    "notifyDescription": "Una notifica del browser dopo ogni salvataggio automatico.",
+    "noTrigger": "Scegli una pianificazione o un numero di schede per il salvataggio automatico.",
+    "runNow": "Salva ora",
+    "running": "Salvataggio..."
+  },
+  "sidebar": {
+    "label": "Salvati in automatico",
+    "countOfMax": "{{count}} di {{max}}",
+    "empty": "Ancora nessun salvataggio automatico",
+    "replacedNext": "Sostituito al prossimo salvataggio automatico",
+    "open": "Apri {{name}}",
+    "keep": "Tieni come gruppo",
+    "keepNamed": "Tieni {{name}} come gruppo",
+    "delete": "Elimina salvataggio automatico",
+    "deleteNamed": "Elimina {{name}}",
+    "deleted": "{{name}} eliminato",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Salvato automaticamente. Resta finché non lo elimini.",
+    "rolling_one": "Salvato automaticamente. Il piano Free conserva il {{count}} salvataggio automatico più recente: il prossimo sostituisce il più vecchio. Tienilo come gruppo per conservarlo.",
+    "rolling_many": "Salvato automaticamente. Il piano Free conserva i {{count}} salvataggi automatici più recenti: il prossimo sostituisce il più vecchio. Tienilo come gruppo per conservarlo.",
+    "rolling_other": "Salvato automaticamente. Il piano Free conserva i {{count}} salvataggi automatici più recenti: il prossimo sostituisce il più vecchio. Tienilo come gruppo per conservarlo.",
+    "keep": "Tieni come gruppo"
+  },
+  "toast": {
+    "intro": "Il salvataggio automatico è attivo. Modificalo in Impostazioni → Dati",
+    "kept": "Spostato nei tuoi gruppi. Non verrà rimosso automaticamente.",
+    "keptFailed": "Impossibile tenere il gruppo. Riprova.",
+    "settingFailed": "Impossibile salvare l'impostazione del salvataggio automatico"
+  }
+}

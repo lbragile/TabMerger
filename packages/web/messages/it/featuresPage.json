@@ -55,6 +55,10 @@
       "title": "Backup automatici",
       "description": "TabMerger salva un'istantanea crittografata dei tuoi gruppi con la frequenza che scegli, da ogni ora a una volta a settimana. Vengono conservate le {count} più recenti e puoi ripristinarne una qualsiasi dalle Impostazioni. Le trovi elencate anche nella dashboard, dove puoi vederne il contenuto o scaricarle. Puoi anche salvarle ciascuna come file sul tuo computer; quella copia non è crittografata."
     },
+    "autoSave": {
+      "title": "Salvataggio automatico delle schede aperte",
+      "description": "TabMerger salva le schede aperte che non sono ancora in un gruppo in un nuovo gruppo di salvataggio automatico: in base a una pianificazione, da ogni 15 minuti a una volta al giorno, quando le schede aperte superano un numero che scegli, o entrambe le cose. Funziona senza aprire il popup e non chiude mai una scheda. Le schede già salvate vengono saltate e le finestre private non vengono mai salvate. Con il piano gratuito lo attivi quando vuoi: vengono conservati i {count} salvataggi automatici più recenti (le schede ancora aperte di uno sostituito passano al nuovo) e contano per i limiti del piano gratuito. Con Pro è attivo fin dall'inizio, ogni salvataggio automatico viene conservato e sincronizzato con crittografia end-to-end come gli altri gruppi."
+    },
     "support": {
       "title": "Assistenza prioritaria",
       "description": "Gli abbonati Pro ricevono assistenza prioritaria con risposta garantita entro 24 ore."

@@ -1,0 +1,78 @@
+{
+  "groupName": "Guardado automático {{when}}",
+  "notification": {
+    "title": "Guardado automático de TabMerger"
+  },
+  "status": {
+    "saved_one": "Se guardó {{count}} pestaña en {{name}}.",
+    "saved_many": "Se guardaron {{count}} pestañas en {{name}}.",
+    "saved_other": "Se guardaron {{count}} pestañas en {{name}}.",
+    "savedPartial": "Se guardaron {{saved}} de {{total}} pestañas en {{name}} (límite de Free).",
+    "failed": "El guardado automático no funcionó. Inténtalo de nuevo.",
+    "lastRun": "Última ejecución {{when}}: {{result}}",
+    "never": "Aún no hay guardados automáticos.",
+    "skip": {
+      "disabled": "El guardado automático está desactivado.",
+      "notDue": "Todavía no toca el próximo guardado programado.",
+      "noTabs": "No hay pestañas abiertas para guardar.",
+      "nothingNew": "Nada nuevo que guardar: todas las pestañas abiertas ya están guardadas.",
+      "noGroupSlot": "No se guardó: el plan Free permite {{max}} grupos. Elimina o conserva menos grupos, o mejora tu plan.",
+      "noTabRoom": "No se guardó: el plan Free permite {{max}} pestañas guardadas. Elimina algunas pestañas o mejora tu plan.",
+      "accountMismatch": "Este dispositivo aún tiene datos de otra cuenta. Vuelve a abrir TabMerger e inténtalo de nuevo.",
+      "busy": "Ya hay un guardado automático en curso."
+    }
+  },
+  "settings": {
+    "title": "Guardar pestañas abiertas automáticamente",
+    "description": "Guarda tus pestañas abiertas como un grupo nuevo en la sección Guardado automático, según un horario o cuando abres muchas pestañas. Se omiten las pestañas ya guardadas y nunca se guardan las ventanas privadas. Se conservan todos los guardados automáticos.",
+    "descriptionFree": "Guarda tus pestañas abiertas como un grupo nuevo en la sección Guardado automático, según un horario o cuando abres muchas pestañas. Se omiten las pestañas ya guardadas y nunca se guardan las ventanas privadas. El plan Free conserva los {{keep}} guardados automáticos más recientes, y cuentan para tus {{groups}} grupos y {{tabs}} pestañas.",
+    "upgrade": "Mejora para conservarlos todos",
+    "checkingPlan": "Comprobando tu plan...",
+    "scheduleLabel": "Horario",
+    "schedule": {
+      "0": "Desactivado",
+      "15": "Cada 15 minutos",
+      "30": "Cada 30 minutos",
+      "60": "Cada hora",
+      "120": "Cada 2 horas",
+      "240": "Cada 4 horas",
+      "1440": "Diario"
+    },
+    "thresholdLabel": "Cuando las pestañas abiertas superen",
+    "thresholdOff": "Desactivado",
+    "thresholdOption_one": "{{count}} pestaña abierta",
+    "thresholdOption_many": "{{count}} pestañas abiertas",
+    "thresholdOption_other": "{{count}} pestañas abiertas",
+    "notifyLabel": "Mostrar una notificación",
+    "notifyDescription": "Una notificación del navegador después de cada guardado automático.",
+    "noTrigger": "Elige un horario o una cantidad de pestañas para guardar automáticamente.",
+    "runNow": "Guardar ahora",
+    "running": "Guardando..."
+  },
+  "sidebar": {
+    "label": "Guardado automático",
+    "countOfMax": "{{count}} de {{max}}",
+    "empty": "Aún no hay guardados automáticos",
+    "replacedNext": "Se reemplaza en el próximo guardado automático",
+    "open": "Abrir {{name}}",
+    "keep": "Conservar como grupo",
+    "keepNamed": "Conservar {{name}} como grupo",
+    "delete": "Eliminar guardado automático",
+    "deleteNamed": "Eliminar {{name}}",
+    "deleted": "Se eliminó {{name}}",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Guardado automáticamente. Se conserva hasta que lo elimines.",
+    "rolling_one": "Guardado automáticamente. El plan Free conserva el guardado automático más reciente ({{count}}): el siguiente reemplaza al más antiguo. Consérvalo como grupo para no perderlo.",
+    "rolling_many": "Guardado automáticamente. El plan Free conserva los {{count}} guardados automáticos más recientes: el siguiente reemplaza al más antiguo. Consérvalo como grupo para no perderlo.",
+    "rolling_other": "Guardado automáticamente. El plan Free conserva los {{count}} guardados automáticos más recientes: el siguiente reemplaza al más antiguo. Consérvalo como grupo para no perderlo.",
+    "keep": "Conservar como grupo"
+  },
+  "toast": {
+    "intro": "El guardado automático está activado. Cámbialo en Ajustes → Datos",
+    "kept": "Se movió a tus grupos. No se eliminará automáticamente.",
+    "keptFailed": "No se pudo conservar el grupo. Inténtalo de nuevo.",
+    "settingFailed": "No se pudo guardar el ajuste de guardado automático"
+  }
+}

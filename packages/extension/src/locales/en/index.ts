@@ -4,6 +4,7 @@
  * own top-level key, so `t('header.undo')` reads `header.json`'s `undo`.
  */
 import auth from './auth.json' with { type: 'json' };
+import autoSave from './autoSave.json' with { type: 'json' };
 import background from './background.json' with { type: 'json' };
 import backups from './backups.json' with { type: 'json' };
 import banners from './banners.json' with { type: 'json' };
@@ -34,6 +35,7 @@ import windows from './windows.json' with { type: 'json' };
 
 export const en = {
     auth,
+    autoSave,
     background,
     backups,
     banners,

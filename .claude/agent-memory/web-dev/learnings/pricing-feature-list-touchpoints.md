@@ -16,6 +16,12 @@ Adding or renaming a plan feature line touches more than `PRICING_TIERS`:
   is `AUTO_BACKUP_COPY.pricingFeature` in `constants/autoBackup.ts`, pinned by `autoBackup.test.ts`
   and `backup-file-copy.test.tsx`; the own-key note `aiOptions.byokHint` is pinned by
   `pricing-ai-options.test.tsx`.
+- Auto-save open tabs has a line on two plans: `pricing.features.autoSaveFree` (Free, after the
+  sessions line, `count` = `AUTO_SAVE_FREE_KEEP_COUNT`) and `autoSavePro` (Pro, after backups),
+  mirroring `AUTO_SAVE_COPY` in `constants/autoSave.ts`. Pro AI gets it through "Everything in
+  Pro", so neither Pro AI list repeats it. `__tests__/auto-save-copy.test.tsx` pins positions,
+  every locale's rendering and the `/features` card (Pro section row 04, copy covers Free too,
+  like the sessions card).
 - The extension upgrade prompt (`UpgradePrompt.tsx`, `upgrade.plans.<tier>.f1..f3`) shows only the
   **first three** lines of each plan; `sharedCopyParity.test.ts` checks those against
   `features.slice(0, 3)`. Inserting a line at position 4 or later leaves the 18 extension

@@ -1,0 +1,75 @@
+{
+  "groupName": "Automatisch gespeichert {{when}}",
+  "notification": {
+    "title": "TabMerger Auto-Speichern"
+  },
+  "status": {
+    "saved_one": "{{count}} Tab in {{name}} gespeichert.",
+    "saved_other": "{{count}} Tabs in {{name}} gespeichert.",
+    "savedPartial": "{{saved}} von {{total}} Tabs in {{name}} gespeichert (Free-Limit).",
+    "failed": "Auto-Speichern hat nicht funktioniert. Versuche es erneut.",
+    "lastRun": "Letzter Lauf {{when}}: {{result}}",
+    "never": "Noch nichts automatisch gespeichert.",
+    "skip": {
+      "disabled": "Auto-Speichern ist aus.",
+      "notDue": "Das nächste geplante Speichern ist noch nicht fällig.",
+      "noTabs": "Keine offenen Tabs zum Speichern.",
+      "nothingNew": "Nichts Neues zu speichern: Alle offenen Tabs sind schon gespeichert.",
+      "noGroupSlot": "Nicht gespeichert: Der Free-Tarif erlaubt {{max}} Gruppen. Lösche oder behalte weniger Gruppen oder führe ein Upgrade durch.",
+      "noTabRoom": "Nicht gespeichert: Der Free-Tarif erlaubt {{max}} gespeicherte Tabs. Lösche einige Tabs oder führe ein Upgrade durch.",
+      "accountMismatch": "Auf diesem Gerät liegen noch Daten eines anderen Kontos. Öffne TabMerger erneut und versuche es noch einmal.",
+      "busy": "Ein Auto-Speichern läuft bereits."
+    }
+  },
+  "settings": {
+    "title": "Offene Tabs automatisch speichern",
+    "description": "Speichert deine offenen Tabs als neue Gruppe im Bereich „Automatisch gespeichert“, nach Zeitplan oder wenn du viele Tabs öffnest. Bereits gespeicherte Tabs werden übersprungen, private Fenster nie gespeichert. Jede automatische Speicherung bleibt erhalten.",
+    "descriptionFree": "Speichert deine offenen Tabs als neue Gruppe im Bereich „Automatisch gespeichert“, nach Zeitplan oder wenn du viele Tabs öffnest. Bereits gespeicherte Tabs werden übersprungen, private Fenster nie gespeichert. Der Free-Tarif behält die neuesten {{keep}} automatischen Speicherungen, und sie zählen zu deinen {{groups}} Gruppen und {{tabs}} Tabs.",
+    "upgrade": "Upgrade, um alle zu behalten",
+    "checkingPlan": "Tarif wird geprüft...",
+    "scheduleLabel": "Zeitplan",
+    "schedule": {
+      "0": "Aus",
+      "15": "Alle 15 Minuten",
+      "30": "Alle 30 Minuten",
+      "60": "Stündlich",
+      "120": "Alle 2 Stunden",
+      "240": "Alle 4 Stunden",
+      "1440": "Täglich"
+    },
+    "thresholdLabel": "Wenn offene Tabs mehr sind als",
+    "thresholdOff": "Aus",
+    "thresholdOption_one": "{{count}} offener Tab",
+    "thresholdOption_other": "{{count}} offene Tabs",
+    "notifyLabel": "Benachrichtigung anzeigen",
+    "notifyDescription": "Eine Browser-Benachrichtigung nach jedem Auto-Speichern.",
+    "noTrigger": "Wähle einen Zeitplan oder eine Tab-Anzahl, um automatisch zu speichern.",
+    "runNow": "Jetzt automatisch speichern",
+    "running": "Wird gespeichert..."
+  },
+  "sidebar": {
+    "label": "Automatisch gespeichert",
+    "countOfMax": "{{count}} von {{max}}",
+    "empty": "Noch keine automatischen Speicherungen",
+    "replacedNext": "Wird beim nächsten Auto-Speichern ersetzt",
+    "open": "{{name}} öffnen",
+    "keep": "Als Gruppe behalten",
+    "keepNamed": "{{name}} als Gruppe behalten",
+    "delete": "Automatische Speicherung löschen",
+    "deleteNamed": "{{name}} löschen",
+    "deleted": "{{name}} gelöscht",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Automatisch gespeichert. Bleibt, bis du sie löschst.",
+    "rolling_one": "Automatisch gespeichert. Der Free-Tarif behält die neueste {{count}} automatische Speicherung: Die nächste ersetzt die älteste. Behalte sie als Gruppe, um sie zu sichern.",
+    "rolling_other": "Automatisch gespeichert. Der Free-Tarif behält die neuesten {{count}} automatischen Speicherungen: Die nächste ersetzt die älteste. Behalte sie als Gruppe, um sie zu sichern.",
+    "keep": "Als Gruppe behalten"
+  },
+  "toast": {
+    "intro": "Auto-Speichern ist an. Ändern unter Einstellungen → Daten",
+    "kept": "Zu deinen Gruppen verschoben. Sie wird nicht automatisch entfernt.",
+    "keptFailed": "Die Gruppe konnte nicht behalten werden. Versuche es erneut.",
+    "settingFailed": "Die Auto-Speichern-Einstellung konnte nicht gespeichert werden"
+  }
+}

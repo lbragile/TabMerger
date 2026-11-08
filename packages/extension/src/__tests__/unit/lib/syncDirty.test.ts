@@ -109,3 +109,12 @@ describe('restoreSnapshotAsLocalChange keeps the CURRENT sync identity of a grou
     expect('positionDirty' in out).toBe(false)
   })
 })
+
+describe('asNewGroup — auto-save marker', () => {
+  it('a copy (duplicate, restore from a session) is never an auto-save', () => {
+    const copy = asNewGroup(g('a', { autoSave: { at: 5, rolling: true }, remoteUpdatedAt: 'S' }), 'new')
+    expect(copy).toMatchObject({ id: 'new', pendingSync: true })
+    expect(copy).not.toHaveProperty('autoSave')
+    expect(copy).not.toHaveProperty('remoteUpdatedAt')
+  })
+})

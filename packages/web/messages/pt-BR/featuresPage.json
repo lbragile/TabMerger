@@ -55,6 +55,10 @@
       "title": "Backups automáticos",
       "description": "O TabMerger salva um instantâneo criptografado dos seus grupos no intervalo que você escolher, de toda hora a uma vez por semana. Os {count} mais recentes são mantidos, e você pode recuperar qualquer um nas Configurações. Seu painel também os lista, onde você pode ver dentro de um ou baixá-lo. Você também pode salvar cada um como arquivo no seu computador; essa cópia não é criptografada."
     },
+    "autoSave": {
+      "title": "Salvamento automático de abas abertas",
+      "description": "O TabMerger salva as abas abertas que ainda não estão em nenhum grupo em um novo grupo de salvamento automático: em um horário programado, de a cada 15 minutos a uma vez por dia, quando as abas abertas passam de um número que você escolhe, ou os dois. Funciona sem abrir o pop-up e nunca fecha uma aba. Abas que você já salvou são ignoradas, e janelas privadas nunca são salvas. No plano gratuito, ative quando quiser: os {count} salvamentos automáticos mais recentes são mantidos (abas ainda abertas de um substituído passam para o novo) e contam para os limites do plano gratuito. No Pro, ele já vem ativado, todos os salvamentos automáticos são mantidos e sincronizados com criptografia de ponta a ponta, como seus outros grupos."
+    },
     "support": {
       "title": "Suporte prioritário",
       "description": "Assinantes Pro têm suporte acelerado, com resposta garantida em até 24 horas."

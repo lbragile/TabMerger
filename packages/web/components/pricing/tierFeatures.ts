@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl'
-import { FREE_TIER_LIMITS, PRO_AI_MONTHLY_CREDITS, type AiMode } from '@tabmerger/shared'
+import { AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMITS, PRO_AI_MONTHLY_CREDITS, type AiMode } from '@tabmerger/shared'
 import type { TierKey } from '@/lib/tiers'
 
 /** A key under `pricing.features` and the values its message needs. */
@@ -18,6 +18,8 @@ interface FeatureLine {
     | 'cloudSync'
     | 'sessionsSynced'
     | 'autoBackups'
+    | 'autoSaveFree'
+    | 'autoSavePro'
     | 'prioritySupport'
     | 'everythingInPro'
     | 'aiGrouping'
@@ -45,6 +47,7 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'upToTabs', count: FREE_TIER_LIMITS.tabs },
     { key: 'upToUrlRules', count: FREE_TIER_LIMITS.urlRules },
     { key: 'saveSessions', count: FREE_TIER_LIMITS.sessions },
+    { key: 'autoSaveFree', count: AUTO_SAVE_FREE_KEEP_COUNT },
     { key: 'localOnly' },
     { key: 'importExport' },
     { key: 'dragDrop' },
@@ -56,6 +59,7 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'cloudSync' },
     { key: 'sessionsSynced' },
     { key: 'autoBackups' },
+    { key: 'autoSavePro' },
     { key: 'prioritySupport' },
   ],
   proAi: [

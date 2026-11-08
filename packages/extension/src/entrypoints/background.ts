@@ -24,6 +24,8 @@ import {
 import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 import { markTourPendingOnInstall } from '@/lib/tour';
 import { registerAutoBackup } from '@/lib/autoBackupAlarm';
+import { registerAutoSave } from '@/lib/autoSaveRun';
+import { isAutoSavedGroup } from '@/lib/autoSaveGroups';
 import { registerUninstallSurvey } from '@/lib/uninstallSurvey';
 import { registerUpdateAvailable } from '@/lib/extensionUpdate';
 import { recordInstallDate, registerHeartbeat } from '@/lib/heartbeat';
@@ -176,8 +178,9 @@ async function _buildMenus() {
   let groups: Awaited<ReturnType<typeof getGroupsState>>['available'] = [];
   try {
     const state = await getGroupsState();
-    // Never the guided tour's practice groups: the menu only offers the user's own groups
-    groups = state.available.filter((g) => !g.permanent && !g.archived && !isTourDemoGroup(g));
+    // Never the guided tour's practice groups: the menu only offers the user's own groups (and
+    // not auto-saves: they are not in the group list, and adding tabs would keep them anyway)
+    groups = state.available.filter((g) => !g.permanent && !g.archived && !isTourDemoGroup(g) && !isAutoSavedGroup(g));
   } catch {
     // IDB not ready — leave empty
   }
@@ -435,7 +438,7 @@ export default defineBackground(() => {
       const available = [...state.available];
       let targetIndex = groupId
         ? available.findIndex((g) => g.id === groupId && !g.permanent && !isTourDemoGroup(g))
-        : available.findIndex((g) => !g.permanent && !isTourDemoGroup(g));
+        : available.findIndex((g) => !g.permanent && !isTourDemoGroup(g) && !isAutoSavedGroup(g));
 
       if (targetIndex < 0 && !groupId) {
         available.push(createGroup(undefined, t('common.quickSaveGroup')));
@@ -608,4 +611,8 @@ export default defineBackground(() => {
 
   // Daily extension_heartbeat (own alarm, own onAlarm listener, see lib/heartbeat.ts)
   registerHeartbeat();
+
+  // Auto-save open tabs: own alarm, own tab and message listeners, registered LAST so the
+  // listener indexes the tests use for everything above stay the same (see lib/autoSaveRun.ts).
+  registerAutoSave();
 });

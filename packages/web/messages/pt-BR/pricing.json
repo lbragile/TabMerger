@@ -30,6 +30,8 @@
     "cloudSync": "Sincronização na nuvem entre dispositivos",
     "sessionsSynced": "Sessões sincronizadas entre dispositivos",
     "autoBackups": "Backups automáticos criptografados",
+    "autoSaveFree": "Salvamento automático de abas abertas (os {count, number} mais recentes ficam guardados)",
+    "autoSavePro": "Salvamento automático de abas abertas, todos guardados",
     "prioritySupport": "Suporte prioritário",
     "everythingInPro": "Tudo do Pro",
     "aiGrouping": "Agrupamento automático de abas por IA",

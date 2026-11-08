@@ -30,6 +30,8 @@
     "cloudSync": "Synchronizacja w chmurze między urządzeniami",
     "sessionsSynced": "Sesje synchronizowane między urządzeniami",
     "autoBackups": "Automatyczne szyfrowane kopie zapasowe",
+    "autoSaveFree": "Automatyczne zapisywanie otwartych kart (zachowywane są najnowsze: {count, number})",
+    "autoSavePro": "Automatyczne zapisywanie otwartych kart, wszystkie zachowane",
     "prioritySupport": "Priorytetowa pomoc",
     "everythingInPro": "Wszystko z planu Pro",
     "aiGrouping": "Automatyczne grupowanie kart przez AI",

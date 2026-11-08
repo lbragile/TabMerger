@@ -30,6 +30,8 @@
     "cloudSync": "Sincronizzazione cloud tra dispositivi",
     "sessionsSynced": "Sessioni sincronizzate tra dispositivi",
     "autoBackups": "Backup crittografati automatici",
+    "autoSaveFree": "Salvataggio automatico delle schede aperte (restano i {count, number} più recenti)",
+    "autoSavePro": "Salvataggio automatico delle schede aperte, tutti conservati",
     "prioritySupport": "Assistenza prioritaria",
     "everythingInPro": "Tutto ciò che è incluso in Pro",
     "aiGrouping": "Raggruppamento automatico delle schede con IA",

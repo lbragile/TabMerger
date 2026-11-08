@@ -1,0 +1,72 @@
+{
+  "groupName": "Disimpan otomatis {{when}}",
+  "notification": {
+    "title": "Simpan otomatis TabMerger"
+  },
+  "status": {
+    "saved_other": "{{count}} tab disimpan ke {{name}}.",
+    "savedPartial": "{{saved}} dari {{total}} tab disimpan ke {{name}} (batas Free).",
+    "failed": "Simpan otomatis tidak berhasil. Coba lagi.",
+    "lastRun": "Terakhir dijalankan {{when}}: {{result}}",
+    "never": "Belum ada simpanan otomatis.",
+    "skip": {
+      "disabled": "Simpan otomatis nonaktif.",
+      "notDue": "Simpan terjadwal berikutnya belum waktunya.",
+      "noTabs": "Tidak ada tab terbuka untuk disimpan.",
+      "nothingNew": "Tidak ada yang baru untuk disimpan: semua tab terbuka sudah tersimpan.",
+      "noGroupSlot": "Tidak disimpan: paket Free mengizinkan {{max}} grup. Hapus atau simpan lebih sedikit grup, atau upgrade.",
+      "noTabRoom": "Tidak disimpan: paket Free mengizinkan {{max}} tab tersimpan. Hapus beberapa tab, atau upgrade.",
+      "accountMismatch": "Perangkat ini masih menyimpan data akun lain. Buka lagi TabMerger lalu coba lagi.",
+      "busy": "Simpan otomatis sedang berjalan."
+    }
+  },
+  "settings": {
+    "title": "Simpan otomatis tab yang terbuka",
+    "description": "Menyimpan tab yang terbuka sebagai grup baru di bagian Disimpan otomatis, sesuai jadwal atau saat Anda membuka banyak tab. Tab yang sudah tersimpan dilewati, dan jendela pribadi tidak pernah disimpan. Setiap simpanan otomatis dipertahankan.",
+    "descriptionFree": "Menyimpan tab yang terbuka sebagai grup baru di bagian Disimpan otomatis, sesuai jadwal atau saat Anda membuka banyak tab. Tab yang sudah tersimpan dilewati, dan jendela pribadi tidak pernah disimpan. Paket Free menyimpan {{keep}} simpanan otomatis terbaru, dan semuanya dihitung dalam {{groups}} grup dan {{tabs}} tab Anda.",
+    "upgrade": "Upgrade untuk menyimpan semuanya",
+    "checkingPlan": "Memeriksa paket Anda...",
+    "scheduleLabel": "Jadwal",
+    "schedule": {
+      "0": "Nonaktif",
+      "15": "Setiap 15 menit",
+      "30": "Setiap 30 menit",
+      "60": "Setiap jam",
+      "120": "Setiap 2 jam",
+      "240": "Setiap 4 jam",
+      "1440": "Harian"
+    },
+    "thresholdLabel": "Saat tab terbuka melebihi",
+    "thresholdOff": "Nonaktif",
+    "thresholdOption_other": "{{count}} tab terbuka",
+    "notifyLabel": "Tampilkan notifikasi",
+    "notifyDescription": "Notifikasi browser setelah setiap simpan otomatis.",
+    "noTrigger": "Pilih jadwal atau jumlah tab untuk simpan otomatis.",
+    "runNow": "Simpan otomatis sekarang",
+    "running": "Menyimpan..."
+  },
+  "sidebar": {
+    "label": "Disimpan otomatis",
+    "countOfMax": "{{count}} dari {{max}}",
+    "empty": "Belum ada simpanan otomatis",
+    "replacedNext": "Diganti pada simpan otomatis berikutnya",
+    "open": "Buka {{name}}",
+    "keep": "Pertahankan sebagai grup",
+    "keepNamed": "Pertahankan {{name}} sebagai grup",
+    "delete": "Hapus simpanan otomatis",
+    "deleteNamed": "Hapus {{name}}",
+    "deleted": "{{name}} dihapus",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Disimpan otomatis. Tetap ada sampai Anda menghapusnya.",
+    "rolling_other": "Disimpan otomatis. Paket Free menyimpan {{count}} simpanan otomatis terbaru: yang berikutnya menggantikan yang terlama. Pertahankan sebagai grup agar tidak hilang.",
+    "keep": "Pertahankan sebagai grup"
+  },
+  "toast": {
+    "intro": "Simpan otomatis aktif. Ubah di Pengaturan → Data",
+    "kept": "Dipindahkan ke grup Anda. Tidak akan dihapus otomatis.",
+    "keptFailed": "Tidak dapat mempertahankan grup. Coba lagi.",
+    "settingFailed": "Tidak dapat menyimpan pengaturan simpan otomatis"
+  }
+}

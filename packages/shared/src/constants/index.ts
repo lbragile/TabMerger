@@ -1,5 +1,6 @@
 import type { PricingTier, SubscriptionStatus } from '../types/index.ts';
 import { AUTO_BACKUP_COPY } from './autoBackup';
+import { AUTO_SAVE_COPY } from './autoSave';
 import { PRO_AI_MONTHLY_CREDITS } from './ai';
 
 export const DEFAULT_GROUP_COLOR = 'rgba(128, 128, 128, 1)';
@@ -88,6 +89,7 @@ export const PRICING_TIERS: PricingTier[] = [
       `Up to ${FREE_TIER_LIMITS.tabs} tabs`,
       `Up to ${FREE_TIER_LIMITS.urlRules} URL rules`,
       `Save up to ${FREE_TIER_LIMITS.sessions} sessions in this browser`,
+      AUTO_SAVE_COPY.pricingFeatureFree,
       'Local storage only',
       'Import & export',
       'Drag & drop',
@@ -106,6 +108,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Cloud sync across devices',
       'Sessions synced across devices',
       AUTO_BACKUP_COPY.pricingFeature,
+      AUTO_SAVE_COPY.pricingFeaturePro,
       'Priority support',
     ],
     limits: UNLIMITED_TIER_LIMITS,
@@ -159,6 +162,7 @@ export * from './firefoxBeta';
 export * from './firefoxDataConsent';
 export * from './storeListings';
 export * from './autoBackup';
+export * from './autoSave';
 export * from './autoBackupFile';
 export * from './localOnlySyncKeys';
 export * from './uninstallSurvey';

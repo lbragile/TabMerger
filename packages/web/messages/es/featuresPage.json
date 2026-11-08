@@ -55,6 +55,10 @@
       "title": "Copias de seguridad automáticas",
       "description": "TabMerger guarda una instantánea cifrada de tus grupos según el horario que elijas, desde cada hora hasta una vez por semana. Se conservan las {count} más recientes y puedes recuperar cualquiera desde Ajustes. Tu panel también las lista, y ahí puedes ver el contenido de una o descargarla. También puedes guardar cada una como archivo en tu computadora; esa copia no está cifrada."
     },
+    "autoSave": {
+      "title": "Guardado automático de pestañas abiertas",
+      "description": "TabMerger guarda las pestañas abiertas que aún no están en ningún grupo en un nuevo grupo de guardado automático: según un horario, desde cada 15 minutos hasta una vez al día, cuando tus pestañas abiertas superan un número que eliges, o ambas cosas. Funciona sin abrir la ventana emergente y nunca cierra una pestaña. Las pestañas que ya guardaste se omiten y las ventanas privadas nunca se guardan. En el plan gratuito, actívalo cuando quieras: se conservan los {count} guardados automáticos más recientes (las pestañas aún abiertas de uno reemplazado pasan al nuevo) y cuentan para los límites del plan gratuito. En Pro está activado desde el principio, se conservan todos los guardados automáticos y se sincronizan con cifrado de extremo a extremo como tus demás grupos."
+    },
     "support": {
       "title": "Soporte prioritario",
       "description": "Los suscriptores Pro reciben soporte prioritario con respuesta garantizada en 24 horas."

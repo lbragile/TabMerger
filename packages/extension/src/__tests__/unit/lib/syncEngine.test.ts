@@ -747,3 +747,82 @@ describe('subscribeToRemoteChanges', () => {
     expect(mockRemoveChannel).toHaveBeenCalled()
   })
 })
+
+describe('auto-save marker travels inside the encrypted blob only', () => {
+  it('push: the marker is in the encrypted content, never in a plaintext column', async () => {
+    pending([makeGroup({ id: 'g1', autoSave: { at: 42, rolling: true } })])
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockGetDataKey.mockReturnValue({ fake: 'key' })
+    mockEncryptBlob.mockResolvedValue({ iv: 'iv1', ct: 'ct1' })
+    currentBuilder = makeBuilder([{ data: [{ updated_at: 'S1' }], error: null }])
+
+    await pushPendingChanges(makeSession('u1'))
+
+    expect(mockEncryptBlob).toHaveBeenCalledWith({ fake: 'key' }, expect.objectContaining({ autoSave: { at: 42, rolling: true } }))
+    const row = (currentBuilder.insert as unknown as { mock: { calls: unknown[][] } }).mock.calls[0][0] as Record<string, unknown>
+    expect(row).not.toHaveProperty('autoSave')
+    expect(JSON.stringify(row)).not.toContain('rolling')
+  })
+
+  it('push: a normal group carries no marker key', async () => {
+    pending([makeGroup({ id: 'g1' })])
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockGetDataKey.mockReturnValue({ fake: 'key' })
+    mockEncryptBlob.mockResolvedValue({ iv: 'iv1', ct: 'ct1' })
+    currentBuilder = makeBuilder([{ data: [{ updated_at: 'S1' }], error: null }])
+    await pushPendingChanges(makeSession('u1'))
+    expect(mockEncryptBlob.mock.calls[0][1]).not.toHaveProperty('autoSave')
+  })
+
+  it('pull: a well-formed decrypted marker is kept, a malformed one dropped', async () => {
+    mockGetDataKey.mockReturnValue({ fake: 'key' })
+    mockDecryptBlob
+      .mockResolvedValueOnce({ name: 'A', windows: [], info: '', autoSave: { at: 7, rolling: false } })
+      .mockResolvedValueOnce({ name: 'B', windows: [], info: '', autoSave: { at: 'x', rolling: 'no' } })
+    const row = (id: string) => ({ id, name: '', color: '#fff', updated_at: new Date(5000).toISOString(), windows: { v: 1, iv: 'iv', ct: id }, starred: false, archived: false, note: null, info: '' })
+    currentBuilder = makeBuilder([{ data: [row('a'), row('b')], error: null }])
+    const result = await pullRemoteChanges(makeSession(), [])
+    expect(result.find((g) => g.id === 'a')?.autoSave).toEqual({ at: 7, rolling: false })
+    expect(result.find((g) => g.id === 'b')).not.toHaveProperty('autoSave')
+  })
+})
+
+describe('auto-save marker in the merge', () => {
+  const OLD = new Date(1000).toISOString()
+  const NEW = new Date(9000).toISOString()
+  const encRow = (id: string) => ({ id, name: '', color: 'rgba(1,1,1,1)', updated_at: NEW, windows: { v: 1, iv: 'iv', ct: id }, starred: false, archived: false, note: null, info: '' })
+
+  it('an untouched auto-save that comes back as a newer server copy keeps its marker', async () => {
+    mockGetDataKey.mockReturnValue({ fake: 'key' })
+    mockDecryptBlob.mockResolvedValueOnce({ name: 'Work', windows: [], info: '', autoSave: { at: 5, rolling: true } })
+    currentBuilder = makeBuilder([{ data: [encRow('g1')], error: null }])
+    const local = makeGroup({ id: 'g1', remoteUpdatedAt: OLD, autoSave: { at: 5, rolling: true }, pendingSync: false })
+    const result = await pullRemoteChanges(makeSession(), [local])
+    expect(result.find((g) => g.id === 'g1')?.autoSave).toEqual({ at: 5, rolling: true })
+  })
+
+  it('a Keep here vs a marked server copy: no conflict copy, the kept version stays pending', async () => {
+    mockGetDataKey.mockReturnValue({ fake: 'key' })
+    mockDecryptBlob.mockResolvedValueOnce({ name: 'Work', windows: [], info: '', autoSave: { at: 5, rolling: true } })
+    currentBuilder = makeBuilder([{ data: [encRow('g1')], error: null }])
+    const local = makeGroup({ id: 'g1', remoteUpdatedAt: OLD, pendingSync: true, info: '' })
+    const result = await pullRemoteChanges(makeSession(), [local])
+    expect(result.filter((g) => g.name.includes('conflict copy'))).toHaveLength(0)
+    const merged = result.find((g) => g.id === 'g1')!
+    expect(merged.autoSave).toBeUndefined()
+    expect(merged.pendingSync).toBe(true)
+    expect(merged.remoteUpdatedAt).toBe(NEW)
+  })
+
+  it('kept elsewhere vs still marked here (pending): the kept server version wins, nothing left to push', async () => {
+    mockGetDataKey.mockReturnValue({ fake: 'key' })
+    mockDecryptBlob.mockResolvedValueOnce({ name: 'Work', windows: [], info: '' })
+    currentBuilder = makeBuilder([{ data: [encRow('g1')], error: null }])
+    const local = makeGroup({ id: 'g1', remoteUpdatedAt: OLD, pendingSync: true, info: '', autoSave: { at: 5, rolling: false } })
+    const result = await pullRemoteChanges(makeSession(), [local])
+    const merged = result.find((g) => g.id === 'g1')!
+    expect(result).toHaveLength(1)
+    expect(merged.autoSave).toBeUndefined()
+    expect(merged.pendingSync).toBe(false)
+  })
+})

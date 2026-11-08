@@ -86,6 +86,19 @@ export const AUTO_BACKUP_FILE_STATUS_KEY = 'autoBackupFileStatus';
 export const AUTO_BACKUP_FILE_LAST_KEY = 'autoBackupFileLast';
 
 /**
+ * Auto-save open tabs: when the last scheduled run happened and how the last run ended (the
+ * Settings status line). Shape checked by `parseAutoSaveState` (lib/autoSave.ts).
+ */
+export const AUTO_SAVE_STATE_KEY = 'autoSaveState';
+
+/**
+ * Auto-save open tabs: the plan last confirmed by the server for the signed-in account
+ * (`{ tier, at }`). Only picks the on/off default, the alarm and the Free limits while the server
+ * cannot be asked; a run never REMOVES anything on this remembered answer.
+ */
+export const AUTO_SAVE_TIER_SEEN_KEY = 'autoSaveTierSeen';
+
+/**
  * Settings that describe ONE account's sync progress. They live in the device-wide settings store,
  * so the account wipe removes them: the next account must not inherit "already migrated" /
  * "already seeded" from the previous one.
@@ -100,5 +113,7 @@ export const ACCOUNT_SCOPED_SETTING_KEYS = [
   AUTO_BACKUP_STORE_GUARD_KEY,
   AUTO_BACKUP_FREE_SEEN_KEY,
   AUTO_BACKUP_FILE_STATUS_KEY,
-  AUTO_BACKUP_FILE_LAST_KEY
+  AUTO_BACKUP_FILE_LAST_KEY,
+  AUTO_SAVE_STATE_KEY,
+  AUTO_SAVE_TIER_SEEN_KEY
 ] as const;

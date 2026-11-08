@@ -55,6 +55,10 @@
       "title": "Automatyczne kopie zapasowe",
       "description": "TabMerger zapisuje zaszyfrowaną migawkę Twoich grup według wybranego harmonogramu — od co godzinę po raz w tygodniu. Przechowywanych jest {count} najnowszych, a każdą z nich możesz przywrócić w Ustawieniach. Znajdziesz je też w panelu, gdzie możesz zajrzeć do środka lub je pobrać. Możesz również zapisywać każdą jako plik na komputerze; ta kopia nie jest zaszyfrowana."
     },
+    "autoSave": {
+      "title": "Automatyczne zapisywanie otwartych kart",
+      "description": "TabMerger zapisuje otwarte karty, których nie ma jeszcze w żadnej grupie, w nowej grupie automatycznego zapisu: według harmonogramu, od co 15 minut po raz dziennie, gdy liczba otwartych kart przekroczy wybraną wartość, albo w obu przypadkach. Działa bez otwierania wyskakującego okienka i nigdy nie zamyka kart. Karty już zapisane są pomijane, a okna prywatne nigdy nie są zapisywane. W planie darmowym włączasz je, kiedy chcesz: zachowywane są najnowsze automatyczne zapisy (maksymalnie {count}; wciąż otwarte karty z zastąpionego zapisu przechodzą do nowego) i liczą się do limitów planu darmowego. W Pro działa od początku, każdy automatyczny zapis jest zachowywany i synchronizowany z szyfrowaniem end-to-end, jak pozostałe grupy."
+    },
     "support": {
       "title": "Priorytetowa pomoc",
       "description": "Subskrybenci Pro otrzymują przyspieszoną pomoc z gwarantowaną odpowiedzią w ciągu 24 godzin."

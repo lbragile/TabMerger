@@ -3,6 +3,7 @@ import { encryptBlob, decryptBlob, isEncryptedBlob, isTourDemoGroup, SYNC_DATA_C
 import type { Group } from './types';
 import { emitForeignGroupsChange, emitSyncConflict } from './foreignChange';
 import { groupContentEqual, makeConflictCopy } from './syncConflict';
+import { parseAutoSaveMarker } from './autoSaveGroups';
 import { userDataChanged } from './savedData';
 import { compareStamps } from './stamp';
 import { withSyncLock } from './syncLock';
@@ -34,6 +35,8 @@ interface EncryptedContent {
   windows: Group['windows'];
   note: string | null | undefined;
   info: string | undefined;
+  /** auto-save marker (see `Group.autoSave`); absent on every other group */
+  autoSave?: Group['autoSave'];
 }
 
 const UNIQUE_VIOLATION = '23505';
@@ -104,7 +107,8 @@ async function pushGroup(session: Session, group: Group, position: number, legac
       name: group.name,
       windows: group.windows,
       note: group.note,
-      info: group.info
+      info: group.info,
+      ...(group.autoSave ? { autoSave: group.autoSave } : {})
     } satisfies EncryptedContent);
     const windowsField: EncryptedBlob = { v: 1, iv, ct };
     const name = '';
@@ -191,6 +195,7 @@ async function rowToGroup(row: Record<string, unknown>, onUndecryptable?: () => 
   let windows = row.windows as Group['windows'];
   let note = (row.note as string | null) ?? undefined;
   let info = row.info as string;
+  let autoSave: Group['autoSave'];
 
   if (encrypted) {
     const content = await decryptRow(row, onUndecryptable);
@@ -199,6 +204,8 @@ async function rowToGroup(row: Record<string, unknown>, onUndecryptable?: () => 
     windows = content.windows;
     note = content.note ?? undefined;
     info = content.info ?? '';
+    // decrypted content is still input: only a well-formed marker is kept
+    autoSave = parseAutoSaveMarker(content.autoSave);
   }
 
   return {
@@ -212,7 +219,8 @@ async function rowToGroup(row: Record<string, unknown>, onUndecryptable?: () => 
     note,
     info,
     pendingSync: false,
-    remoteUpdatedAt: row.updated_at as string
+    remoteUpdatedAt: row.updated_at as string,
+    ...(autoSave ? { autoSave } : {})
   };
 }
 
@@ -498,6 +506,12 @@ function mergeRemoteGroups(
         if (local.remoteUpdatedAt ? compareStamps(stamp!, local.remoteUpdatedAt) <= 0 : legacy) {
           // not newer than our base (or pre-upgrade: adopt the stamp now) -> the push wins
           merged.push(local.remoteUpdatedAt ? local : { ...local, remoteUpdatedAt: stamp });
+        } else if (groupContentEqual(local, remote, { ignoreAutoSave: true }) && !groupContentEqual(local, remote)) {
+          // Same content, only the auto-save marker differs: one side kept it ("Keep as group").
+          // Keeping wins, never a "(conflict copy)". When the server copy still has the marker this
+          // device stays pending, so the kept version goes up.
+          const { autoSave: _marker, ...kept } = local;
+          merged.push({ ...kept, pendingSync: !!remote.autoSave || plaintextIds.has(id), remoteUpdatedAt: stamp });
         } else if (groupContentEqual(local, remote)) {
           // Same content: adopt the stamp. The push is only cancelled when the server copy is already
           // ciphertext; a legacy PLAINTEXT row keeps the group pending so it is re-uploaded encrypted

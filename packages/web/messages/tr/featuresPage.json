@@ -55,6 +55,10 @@
       "title": "Otomatik yedekler",
       "description": "TabMerger, gruplarınızın şifreli bir anlık görüntüsünü saatte birden haftada bire kadar seçtiğiniz bir programla kaydeder. En yeni {count} tanesi saklanır ve herhangi birini Ayarlar'dan geri getirebilirsiniz. Kontrol panelinizde de listelenirler; orada birinin içine bakabilir veya indirebilirsiniz. Her birinin bilgisayarınıza dosya olarak kaydedilmesini de seçebilirsiniz; bu kopya şifreli değildir."
     },
+    "autoSave": {
+      "title": "Açık sekmeleri otomatik kaydetme",
+      "description": "TabMerger, henüz hiçbir grupta olmayan açık sekmeleri yeni bir otomatik kayıt grubuna kaydeder: bir programa göre, 15 dakikada birden günde bire kadar, açık sekme sayısı seçtiğiniz sayıyı geçtiğinde ya da her ikisinde. Bunun için açılır pencereyi açmanız gerekmez ve hiçbir sekme kapatılmaz. Zaten kaydettiğiniz sekmeler atlanır, gizli pencereler asla kaydedilmez. Ücretsiz planda istediğinizde açarsınız: en yeni {count} otomatik kayıt saklanır (yerine yenisi gelen kayıttaki hâlâ açık sekmeler yenisine aktarılır) ve bunlar ücretsiz planın sınırlarına dahil edilir. Pro'da baştan açıktır, her otomatik kayıt saklanır ve diğer gruplarınız gibi uçtan uca şifrelenerek eşitlenir."
+    },
     "support": {
       "title": "Öncelikli destek",
       "description": "Pro aboneleri, 24 saat içinde garantili yanıtla hızlandırılmış destek alır."

@@ -1,0 +1,75 @@
+{
+  "groupName": "Otomatik kaydedildi {{when}}",
+  "notification": {
+    "title": "TabMerger otomatik kaydetme"
+  },
+  "status": {
+    "saved_one": "{{count}} sekme {{name}} grubuna kaydedildi.",
+    "saved_other": "{{count}} sekme {{name}} grubuna kaydedildi.",
+    "savedPartial": "{{total}} sekmeden {{saved}} tanesi {{name}} grubuna kaydedildi (Free sınırı).",
+    "failed": "Otomatik kaydetme çalışmadı. Tekrar deneyin.",
+    "lastRun": "Son çalışma {{when}}: {{result}}",
+    "never": "Henüz otomatik kayıt yok.",
+    "skip": {
+      "disabled": "Otomatik kaydetme kapalı.",
+      "notDue": "Bir sonraki zamanlanmış kayıt henüz gelmedi.",
+      "noTabs": "Kaydedilecek açık sekme yok.",
+      "nothingNew": "Kaydedilecek yeni bir şey yok: açık sekmelerin hepsi zaten kayıtlı.",
+      "noGroupSlot": "Kaydedilmedi: Free plan {{max}} gruba izin verir. Daha az grup tutun ya da silin veya planınızı yükseltin.",
+      "noTabRoom": "Kaydedilmedi: Free plan {{max}} kayıtlı sekmeye izin verir. Bazı sekmeleri silin veya planınızı yükseltin.",
+      "accountMismatch": "Bu cihazda hâlâ başka bir hesabın verileri var. TabMerger'ı yeniden açıp tekrar deneyin.",
+      "busy": "Zaten bir otomatik kaydetme çalışıyor."
+    }
+  },
+  "settings": {
+    "title": "Açık sekmeleri otomatik kaydet",
+    "description": "Açık sekmelerinizi bir zamanlamaya göre ya da çok sekme açtığınızda Otomatik kaydedilenler bölümünde yeni bir grup olarak kaydeder. Zaten kayıtlı sekmeler atlanır, gizli pencereler asla kaydedilmez. Her otomatik kayıt saklanır.",
+    "descriptionFree": "Açık sekmelerinizi bir zamanlamaya göre ya da çok sekme açtığınızda Otomatik kaydedilenler bölümünde yeni bir grup olarak kaydeder. Zaten kayıtlı sekmeler atlanır, gizli pencereler asla kaydedilmez. Free plan en yeni {{keep}} otomatik kaydı saklar ve bunlar {{groups}} grup ve {{tabs}} sekme sınırınıza sayılır.",
+    "upgrade": "Hepsini saklamak için yükseltin",
+    "checkingPlan": "Planınız kontrol ediliyor...",
+    "scheduleLabel": "Zamanlama",
+    "schedule": {
+      "0": "Kapalı",
+      "15": "15 dakikada bir",
+      "30": "30 dakikada bir",
+      "60": "Saatte bir",
+      "120": "2 saatte bir",
+      "240": "4 saatte bir",
+      "1440": "Günlük"
+    },
+    "thresholdLabel": "Açık sekme sayısı şunu geçince",
+    "thresholdOff": "Kapalı",
+    "thresholdOption_one": "{{count}} açık sekme",
+    "thresholdOption_other": "{{count}} açık sekme",
+    "notifyLabel": "Bildirim göster",
+    "notifyDescription": "Her otomatik kayıttan sonra bir tarayıcı bildirimi.",
+    "noTrigger": "Otomatik kaydetmek için bir zamanlama veya sekme sayısı seçin.",
+    "runNow": "Şimdi otomatik kaydet",
+    "running": "Kaydediliyor..."
+  },
+  "sidebar": {
+    "label": "Otomatik kayıtlar",
+    "countOfMax": "{{count}} / {{max}}",
+    "empty": "Henüz otomatik kayıt yok",
+    "replacedNext": "Bir sonraki otomatik kayıtta değiştirilecek",
+    "open": "{{name}} grubunu aç",
+    "keep": "Grup olarak sakla",
+    "keepNamed": "{{name}} grubunu sakla",
+    "delete": "Otomatik kaydı sil",
+    "deleteNamed": "{{name}} grubunu sil",
+    "deleted": "{{name}} silindi",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Otomatik kaydedildi. Siz silene kadar saklanır.",
+    "rolling_one": "Otomatik kaydedildi. Free plan en yeni {{count}} otomatik kaydı saklar: bir sonraki en eskisinin yerini alır. Saklamak için grup olarak tutun.",
+    "rolling_other": "Otomatik kaydedildi. Free plan en yeni {{count}} otomatik kaydı saklar: bir sonraki en eskisinin yerini alır. Saklamak için grup olarak tutun.",
+    "keep": "Grup olarak sakla"
+  },
+  "toast": {
+    "intro": "Otomatik kaydetme açık. Ayarlar → Veri bölümünden değiştirin",
+    "kept": "Gruplarınıza taşındı. Otomatik olarak kaldırılmayacak.",
+    "keptFailed": "Grup saklanamadı. Tekrar deneyin.",
+    "settingFailed": "Otomatik kaydetme ayarı kaydedilemedi"
+  }
+}

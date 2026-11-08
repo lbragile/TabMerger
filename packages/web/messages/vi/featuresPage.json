@@ -55,6 +55,10 @@
       "title": "Sao lưu tự động",
       "description": "TabMerger lưu một bản chụp được mã hóa của các nhóm theo lịch bạn chọn, từ mỗi giờ đến mỗi tuần một lần. {count} bản mới nhất được giữ lại, và bạn có thể khôi phục bất kỳ bản nào từ Cài đặt. Bảng điều khiển cũng liệt kê chúng, nơi bạn có thể xem bên trong hoặc tải xuống. Bạn cũng có thể lưu mỗi bản thành một tệp trên máy tính; bản sao đó không được mã hóa."
     },
+    "autoSave": {
+      "title": "Tự động lưu tab đang mở",
+      "description": "TabMerger lưu các tab đang mở chưa thuộc nhóm nào vào một nhóm tự động lưu mới: theo lịch, từ mỗi 15 phút đến mỗi ngày một lần, khi số tab đang mở vượt quá con số bạn chọn, hoặc cả hai. Tính năng này chạy mà không cần mở cửa sổ bật lên và không bao giờ đóng tab nào. Các tab bạn đã lưu sẽ được bỏ qua, và cửa sổ riêng tư không bao giờ được lưu. Ở gói miễn phí, bạn bật khi cần: {count} lần tự động lưu mới nhất được giữ lại (các tab vẫn đang mở trong lần bị thay thế sẽ được chuyển sang lần mới) và được tính vào giới hạn của gói miễn phí. Ở gói Pro, tính năng này bật sẵn, mọi lần tự động lưu đều được giữ lại và đồng bộ với mã hóa đầu cuối như các nhóm khác."
+    },
     "support": {
       "title": "Hỗ trợ ưu tiên",
       "description": "Người đăng ký Pro được hỗ trợ ưu tiên với cam kết phản hồi trong vòng 24 giờ."

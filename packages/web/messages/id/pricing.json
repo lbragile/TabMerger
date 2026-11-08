@@ -30,6 +30,8 @@
     "cloudSync": "Sinkronisasi cloud antarperangkat",
     "sessionsSynced": "Sesi tersinkron antarperangkat",
     "autoBackups": "Cadangan terenkripsi otomatis",
+    "autoSaveFree": "Simpan otomatis tab yang terbuka ({count, number} terbaru dipertahankan)",
+    "autoSavePro": "Simpan otomatis tab yang terbuka, semuanya dipertahankan",
     "prioritySupport": "Dukungan prioritas",
     "everythingInPro": "Semua fitur Pro",
     "aiGrouping": "Pengelompokan tab otomatis dengan AI",

@@ -47,3 +47,15 @@ describe('conflict copies', () => {
     expect(copy.updatedAt).toBeGreaterThan(1)
   })
 })
+
+describe('auto-save marker', () => {
+  it('a conflict copy never keeps the marker', () => {
+    expect(makeConflictCopy(g({ autoSave: { at: 5, rolling: true } }))).not.toHaveProperty('autoSave')
+  })
+  it('the marker counts as content unless the caller ignores it', () => {
+    const marked = g({ autoSave: { at: 5, rolling: true } })
+    expect(groupContentEqual(marked, g())).toBe(false)
+    expect(groupContentEqual(marked, g(), { ignoreAutoSave: true })).toBe(true)
+    expect(groupContentEqual(marked, { ...marked })).toBe(true)
+  })
+})

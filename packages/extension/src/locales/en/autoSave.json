@@ -1,0 +1,75 @@
+{
+  "groupName": "Auto-saved {{when}}",
+  "notification": {
+    "title": "TabMerger auto-save"
+  },
+  "status": {
+    "saved_one": "Saved {{count}} tab to {{name}}.",
+    "saved_other": "Saved {{count}} tabs to {{name}}.",
+    "savedPartial": "Saved {{saved}} of {{total}} tabs to {{name}} (Free limit).",
+    "failed": "Auto-save did not work. Try again.",
+    "lastRun": "Last run {{when}}: {{result}}",
+    "never": "No auto-save yet.",
+    "skip": {
+      "disabled": "Auto-save is turned off.",
+      "notDue": "The next scheduled auto-save is not due yet.",
+      "noTabs": "No open tabs to save.",
+      "nothingNew": "Nothing new to save: every open tab is already saved.",
+      "noGroupSlot": "Not saved: the Free plan allows {{max}} groups. Delete or keep fewer groups, or upgrade.",
+      "noTabRoom": "Not saved: the Free plan allows {{max}} saved tabs. Delete some tabs, or upgrade.",
+      "accountMismatch": "This device still holds another account's data. Reopen TabMerger and try again.",
+      "busy": "An auto-save is already running."
+    }
+  },
+  "settings": {
+    "title": "Auto-save open tabs",
+    "description": "Saves your open tabs as a new group in the Auto-saved section, on a schedule or when you open many tabs. Tabs that are already saved are skipped, and private windows are never saved. Every auto-save is kept.",
+    "descriptionFree": "Saves your open tabs as a new group in the Auto-saved section, on a schedule or when you open many tabs. Tabs that are already saved are skipped, and private windows are never saved. The Free plan keeps the newest {{keep}} auto-saves, and they count toward your {{groups}} groups and {{tabs}} tabs.",
+    "upgrade": "Upgrade to keep them all",
+    "checkingPlan": "Checking your plan...",
+    "scheduleLabel": "Schedule",
+    "schedule": {
+      "0": "Off",
+      "15": "Every 15 minutes",
+      "30": "Every 30 minutes",
+      "60": "Every hour",
+      "120": "Every 2 hours",
+      "240": "Every 4 hours",
+      "1440": "Daily"
+    },
+    "thresholdLabel": "When open tabs pass",
+    "thresholdOff": "Off",
+    "thresholdOption_one": "{{count}} open tab",
+    "thresholdOption_other": "{{count}} open tabs",
+    "notifyLabel": "Show a notification",
+    "notifyDescription": "A browser notification after each auto-save.",
+    "noTrigger": "Pick a schedule or a tab count to auto-save.",
+    "runNow": "Auto-save now",
+    "running": "Saving..."
+  },
+  "sidebar": {
+    "label": "Auto-saved",
+    "countOfMax": "{{count}} of {{max}}",
+    "empty": "No auto-saves yet",
+    "replacedNext": "Replaced at the next auto-save",
+    "open": "Open {{name}}",
+    "keep": "Keep as group",
+    "keepNamed": "Keep {{name}} as a group",
+    "delete": "Delete auto-save",
+    "deleteNamed": "Delete {{name}}",
+    "deleted": "Deleted {{name}}",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Saved automatically. Kept until you delete it.",
+    "rolling_one": "Saved automatically. The Free plan keeps the newest {{count}} auto-save: the next one replaces the oldest. Keep it as a group to hold on to it.",
+    "rolling_other": "Saved automatically. The Free plan keeps the newest {{count}} auto-saves: the next one replaces the oldest. Keep it as a group to hold on to it.",
+    "keep": "Keep as group"
+  },
+  "toast": {
+    "intro": "Auto-save is on. Change it in Settings → Data",
+    "kept": "Moved to your groups. It won't be removed automatically.",
+    "keptFailed": "Could not keep the group. Try again.",
+    "settingFailed": "Could not save the auto-save setting"
+  }
+}

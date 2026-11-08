@@ -1,0 +1,78 @@
+{
+  "groupName": "Enregistré auto {{when}}",
+  "notification": {
+    "title": "Enregistrement auto TabMerger"
+  },
+  "status": {
+    "saved_one": "{{count}} onglet enregistré dans {{name}}.",
+    "saved_many": "{{count}} onglets enregistrés dans {{name}}.",
+    "saved_other": "{{count}} onglets enregistrés dans {{name}}.",
+    "savedPartial": "{{saved}} onglets sur {{total}} enregistrés dans {{name}} (limite Free).",
+    "failed": "L'enregistrement auto n'a pas fonctionné. Réessayez.",
+    "lastRun": "Dernière exécution {{when}} : {{result}}",
+    "never": "Aucun enregistrement auto pour l'instant.",
+    "skip": {
+      "disabled": "L'enregistrement auto est désactivé.",
+      "notDue": "Le prochain enregistrement programmé n'est pas encore prévu.",
+      "noTabs": "Aucun onglet ouvert à enregistrer.",
+      "nothingNew": "Rien de nouveau à enregistrer : tous les onglets ouverts sont déjà enregistrés.",
+      "noGroupSlot": "Non enregistré : l'offre Free permet {{max}} groupes. Supprimez ou gardez moins de groupes, ou passez à l'offre supérieure.",
+      "noTabRoom": "Non enregistré : l'offre Free permet {{max}} onglets enregistrés. Supprimez des onglets ou passez à l'offre supérieure.",
+      "accountMismatch": "Cet appareil contient encore les données d'un autre compte. Rouvrez TabMerger et réessayez.",
+      "busy": "Un enregistrement auto est déjà en cours."
+    }
+  },
+  "settings": {
+    "title": "Enregistrer automatiquement les onglets ouverts",
+    "description": "Enregistre vos onglets ouverts dans un nouveau groupe de la section Enregistrés auto, selon un horaire ou quand vous ouvrez beaucoup d'onglets. Les onglets déjà enregistrés sont ignorés et les fenêtres privées ne sont jamais enregistrées. Chaque enregistrement auto est conservé.",
+    "descriptionFree": "Enregistre vos onglets ouverts dans un nouveau groupe de la section Enregistrés auto, selon un horaire ou quand vous ouvrez beaucoup d'onglets. Les onglets déjà enregistrés sont ignorés et les fenêtres privées ne sont jamais enregistrées. L'offre Free conserve les {{keep}} enregistrements auto les plus récents, et ils comptent dans vos {{groups}} groupes et {{tabs}} onglets.",
+    "upgrade": "Passez à l'offre supérieure pour tous les garder",
+    "checkingPlan": "Vérification de votre offre...",
+    "scheduleLabel": "Horaire",
+    "schedule": {
+      "0": "Désactivé",
+      "15": "Toutes les 15 minutes",
+      "30": "Toutes les 30 minutes",
+      "60": "Toutes les heures",
+      "120": "Toutes les 2 heures",
+      "240": "Toutes les 4 heures",
+      "1440": "Tous les jours"
+    },
+    "thresholdLabel": "Quand les onglets ouverts dépassent",
+    "thresholdOff": "Désactivé",
+    "thresholdOption_one": "{{count}} onglet ouvert",
+    "thresholdOption_many": "{{count}} onglets ouverts",
+    "thresholdOption_other": "{{count}} onglets ouverts",
+    "notifyLabel": "Afficher une notification",
+    "notifyDescription": "Une notification du navigateur après chaque enregistrement auto.",
+    "noTrigger": "Choisissez un horaire ou un nombre d'onglets pour enregistrer automatiquement.",
+    "runNow": "Enregistrer maintenant",
+    "running": "Enregistrement..."
+  },
+  "sidebar": {
+    "label": "Enregistrés auto",
+    "countOfMax": "{{count}} sur {{max}}",
+    "empty": "Aucun enregistrement auto pour l'instant",
+    "replacedNext": "Remplacé au prochain enregistrement auto",
+    "open": "Ouvrir {{name}}",
+    "keep": "Garder comme groupe",
+    "keepNamed": "Garder {{name}} comme groupe",
+    "delete": "Supprimer l'enregistrement auto",
+    "deleteNamed": "Supprimer {{name}}",
+    "deleted": "{{name}} supprimé",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Enregistré automatiquement. Conservé jusqu'à ce que vous le supprimiez.",
+    "rolling_one": "Enregistré automatiquement. L'offre Free conserve le {{count}} enregistrement auto le plus récent : le suivant remplace le plus ancien. Gardez-le comme groupe pour le conserver.",
+    "rolling_many": "Enregistré automatiquement. L'offre Free conserve les {{count}} enregistrements auto les plus récents : le suivant remplace le plus ancien. Gardez-le comme groupe pour le conserver.",
+    "rolling_other": "Enregistré automatiquement. L'offre Free conserve les {{count}} enregistrements auto les plus récents : le suivant remplace le plus ancien. Gardez-le comme groupe pour le conserver.",
+    "keep": "Garder comme groupe"
+  },
+  "toast": {
+    "intro": "L'enregistrement auto est activé. Modifiez-le dans Paramètres → Données",
+    "kept": "Déplacé dans vos groupes. Il ne sera pas supprimé automatiquement.",
+    "keptFailed": "Impossible de garder le groupe. Réessayez.",
+    "settingFailed": "Impossible d'enregistrer le réglage d'enregistrement auto"
+  }
+}

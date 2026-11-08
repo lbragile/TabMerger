@@ -68,12 +68,15 @@ export function restoreSnapshotAsLocalChange(current: GroupsState, snapshot: Gro
 
 /**
  * A copy of `g` under a NEW identity (duplicate, import): new id, no server base, no position flag,
- * pending so it is inserted by the next push. Inheriting the source's `remoteUpdatedAt` would make
+ * pending so it is inserted by the next push, and never marked as an auto-save. Inheriting the source's `remoteUpdatedAt` would make
  * the push a compare-and-swap on a row that does not exist, which the merge reads as "deleted
  * elsewhere" and turns into a "(conflict copy)".
  */
 export function asNewGroup(g: Group, id: string = nanoid(10)): Group {
-  return { ...withoutSyncIdentity(g), id, pendingSync: true };
+  // A copy is the user's own group, never an auto-save: with the marker a Free user's duplicate
+  // or restored copy could be the oldest rolling auto-save and be removed by the next run.
+  const { autoSave: _marker, ...rest } = withoutSyncIdentity(g);
+  return { ...rest, id, pendingSync: true };
 }
 
 /**

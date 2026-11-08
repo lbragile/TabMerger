@@ -1,0 +1,72 @@
+{
+  "groupName": "Tự động lưu {{when}}",
+  "notification": {
+    "title": "Tự động lưu TabMerger"
+  },
+  "status": {
+    "saved_other": "Đã lưu {{count}} thẻ vào {{name}}.",
+    "savedPartial": "Đã lưu {{saved}}/{{total}} thẻ vào {{name}} (giới hạn Free).",
+    "failed": "Tự động lưu không thành công. Hãy thử lại.",
+    "lastRun": "Lần chạy gần nhất {{when}}: {{result}}",
+    "never": "Chưa có bản tự động lưu nào.",
+    "skip": {
+      "disabled": "Tự động lưu đang tắt.",
+      "notDue": "Chưa đến lần tự động lưu theo lịch tiếp theo.",
+      "noTabs": "Không có thẻ đang mở để lưu.",
+      "nothingNew": "Không có gì mới để lưu: mọi thẻ đang mở đều đã được lưu.",
+      "noGroupSlot": "Chưa lưu: gói Free cho phép {{max}} nhóm. Hãy xóa hoặc giữ ít nhóm hơn, hoặc nâng cấp.",
+      "noTabRoom": "Chưa lưu: gói Free cho phép {{max}} thẻ đã lưu. Hãy xóa bớt thẻ, hoặc nâng cấp.",
+      "accountMismatch": "Thiết bị này vẫn còn dữ liệu của tài khoản khác. Hãy mở lại TabMerger rồi thử lại.",
+      "busy": "Đang có một lần tự động lưu chạy."
+    }
+  },
+  "settings": {
+    "title": "Tự động lưu các thẻ đang mở",
+    "description": "Lưu các thẻ đang mở thành một nhóm mới trong mục Tự động lưu, theo lịch hoặc khi bạn mở nhiều thẻ. Thẻ đã lưu sẽ được bỏ qua và cửa sổ riêng tư không bao giờ được lưu. Mọi bản tự động lưu đều được giữ lại.",
+    "descriptionFree": "Lưu các thẻ đang mở thành một nhóm mới trong mục Tự động lưu, theo lịch hoặc khi bạn mở nhiều thẻ. Thẻ đã lưu sẽ được bỏ qua và cửa sổ riêng tư không bao giờ được lưu. Gói Free giữ {{keep}} bản tự động lưu mới nhất và chúng được tính vào giới hạn {{groups}} nhóm và {{tabs}} thẻ của bạn.",
+    "upgrade": "Nâng cấp để giữ tất cả",
+    "checkingPlan": "Đang kiểm tra gói của bạn...",
+    "scheduleLabel": "Lịch",
+    "schedule": {
+      "0": "Tắt",
+      "15": "Mỗi 15 phút",
+      "30": "Mỗi 30 phút",
+      "60": "Mỗi giờ",
+      "120": "Mỗi 2 giờ",
+      "240": "Mỗi 4 giờ",
+      "1440": "Hằng ngày"
+    },
+    "thresholdLabel": "Khi số thẻ đang mở vượt quá",
+    "thresholdOff": "Tắt",
+    "thresholdOption_other": "{{count}} thẻ đang mở",
+    "notifyLabel": "Hiện thông báo",
+    "notifyDescription": "Một thông báo của trình duyệt sau mỗi lần tự động lưu.",
+    "noTrigger": "Chọn lịch hoặc số thẻ để tự động lưu.",
+    "runNow": "Tự động lưu ngay",
+    "running": "Đang lưu..."
+  },
+  "sidebar": {
+    "label": "Tự động lưu",
+    "countOfMax": "{{count}}/{{max}}",
+    "empty": "Chưa có bản tự động lưu nào",
+    "replacedNext": "Sẽ được thay ở lần tự động lưu tiếp theo",
+    "open": "Mở {{name}}",
+    "keep": "Giữ làm nhóm",
+    "keepNamed": "Giữ {{name}} làm nhóm",
+    "delete": "Xóa bản tự động lưu",
+    "deleteNamed": "Xóa {{name}}",
+    "deleted": "Đã xóa {{name}}",
+    "counts": "{{windows}}, {{tabs}}"
+  },
+  "banner": {
+    "kept": "Đã tự động lưu. Được giữ cho đến khi bạn xóa.",
+    "rolling_other": "Đã tự động lưu. Gói Free giữ {{count}} bản tự động lưu mới nhất: bản tiếp theo sẽ thay bản cũ nhất. Hãy giữ làm nhóm để không bị mất.",
+    "keep": "Giữ làm nhóm"
+  },
+  "toast": {
+    "intro": "Tự động lưu đang bật. Thay đổi trong Cài đặt → Dữ liệu",
+    "kept": "Đã chuyển vào các nhóm của bạn. Nhóm sẽ không bị tự động xóa.",
+    "keptFailed": "Không thể giữ nhóm. Hãy thử lại.",
+    "settingFailed": "Không thể lưu cài đặt tự động lưu"
+  }
+}

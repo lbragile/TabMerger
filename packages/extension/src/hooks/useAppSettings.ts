@@ -1,6 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   AUTO_BACKUP_MESSAGE,
+  AUTO_SAVE_MESSAGE,
+  DEFAULT_AUTO_SAVE_INTERVAL_MINUTES,
+  DEFAULT_AUTO_SAVE_NOTIFY,
+  DEFAULT_AUTO_SAVE_TAB_THRESHOLD,
+  type AutoSaveIntervalMinutes,
+  type AutoSaveTabThreshold,
   DEFAULT_AUTO_BACKUP_ENABLED,
   DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES,
   DEFAULT_BACKUP_FILE_ENABLED,
@@ -43,6 +49,14 @@ export interface AppSettings {
   autoBackupFileEnabled: boolean;
   autoBackupFileFolder: string;
   autoBackupFilePattern: string;
+  /**
+   * Auto-save open tabs. Absent until the user toggles it: then the plan's default applies (Pro on,
+   * Free off). Stored values are validated: read through `readAutoSaveSettings` (lib/autoSave.ts).
+   */
+  autoSaveTabsEnabled?: boolean;
+  autoSaveIntervalMinutes: AutoSaveIntervalMinutes;
+  autoSaveTabThreshold: AutoSaveTabThreshold;
+  autoSaveNotify: boolean;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -67,18 +81,24 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   autoBackupIntervalMinutes: DEFAULT_AUTO_BACKUP_INTERVAL_MINUTES,
   autoBackupFileEnabled: DEFAULT_BACKUP_FILE_ENABLED,
   autoBackupFileFolder: DEFAULT_BACKUP_FILE_FOLDER,
-  autoBackupFilePattern: DEFAULT_BACKUP_FILE_PATTERN
+  autoBackupFilePattern: DEFAULT_BACKUP_FILE_PATTERN,
+  // no `autoSaveTabsEnabled`: absent = the plan's default
+  autoSaveIntervalMinutes: DEFAULT_AUTO_SAVE_INTERVAL_MINUTES,
+  autoSaveTabThreshold: DEFAULT_AUTO_SAVE_TAB_THRESHOLD,
+  autoSaveNotify: DEFAULT_AUTO_SAVE_NOTIFY
 };
 
 /**
- * Tells the background worker the settings were saved, so it re-arms the backup alarm with the
- * current on/off state and interval (alarms can only be managed there). Best effort: the worker
+ * Tells the background worker the settings were saved, so it re-arms the backup and auto-save
+ * alarms with the current on/off state and interval (alarms can only be managed there). Best effort: the worker
  * also re-arms itself every time it starts.
  */
 function notifyBackupSettingsChanged(): void {
   if (typeof chrome === 'undefined' || !chrome.runtime?.sendMessage) return;
   try {
     chrome.runtime.sendMessage({ type: AUTO_BACKUP_MESSAGE.SETTINGS_CHANGED }, () => void chrome.runtime.lastError);
+    // auto-save open tabs re-arms its own alarm the same way
+    chrome.runtime.sendMessage({ type: AUTO_SAVE_MESSAGE.SETTINGS_CHANGED }, () => void chrome.runtime.lastError);
   } catch {
     // extension context invalidated (reloading): nothing to do
   }

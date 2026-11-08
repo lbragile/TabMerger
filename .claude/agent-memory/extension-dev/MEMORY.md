@@ -140,3 +140,4 @@
 - [E2E CI repro + vacuous hidden checks](learnings_e2e_ci_repro_and_vacuous_hidden_checks.md) — open dialog aria-hides header; wait for Save to disable; CI-identical build via defines
 - [Subscription banner CTA](learnings_subscription_banner_cta.md) — shared ACCOUNT_URL; truncate + ms-auto; per-locale "subscription" term lives in web account.json
 - [/api/track + og-preview as CORS simple requests](learnings_track_cors_simple_request.md) — SIMPLE_JSON_CONTENT_TYPE (text/plain) skips the preflight; any extra header brings it back
+- [Auto-save open tabs](learnings_auto_save_open_tabs.md) — marker in the blob, promotion in writeGroupsState (pending + normalised), copies drop it, tier rules, e2e outDir build
