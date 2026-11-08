@@ -67,6 +67,8 @@ describe('needsSession', () => {
     '/de',
     '/fr/pricing',
     '/features',
+    '/compare',
+    '/he/compare',
     '/faq',
     '/privacy',
     '/terms',

@@ -97,6 +97,7 @@ export const LEGACY_REDIRECT_EXACT_PATHS: ReadonlySet<string> = new Set([
   '/',
   '/pricing',
   '/features',
+  '/compare',
   '/faq',
   '/beta',
   '/changelog',

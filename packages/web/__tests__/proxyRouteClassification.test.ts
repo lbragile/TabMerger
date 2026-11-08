@@ -58,6 +58,7 @@ const PUBLIC_ROUTES = new Set([
   '/',
   '/beta',
   '/changelog',
+  '/compare',
   '/contact',
   '/faq',
   '/features',
