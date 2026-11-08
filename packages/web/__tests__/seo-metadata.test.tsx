@@ -11,10 +11,10 @@ import type { Metadata } from 'next'
 import { createTranslator } from 'next-intl'
 import { FREE_TIER_LIMITS, PRICING_TIERS, STORE_LISTING_URL, SUPPORTED_LOCALES, getPricingTier } from '@tabmerger/shared'
 import { DEFAULT_LOCALE, PSEUDO_LOCALE, localizedPath } from '@/i18n/locales'
-import { NOINDEX, faqJsonLd, homeJsonLd, pageMetadata, serializeJsonLd } from '@/lib/seo'
+import { NOINDEX, PRO_AI_BYOK_OFFER_NAME, faqJsonLd, homeJsonLd, pageMetadata, serializeJsonLd } from '@/lib/seo'
 import { FAQ_KEYS, faqItems } from '@/lib/faq'
 import { GITHUB_REPO_URL } from '@/lib/github'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import en from '@/messages/en'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { isPreviewDeployment } from '@/lib/deployment'
@@ -174,11 +174,14 @@ describe('homepage JSON-LD', () => {
   })
 
   type Offer = { name: string; price: string; priceCurrency: string; priceSpecification?: Record<string, unknown>[] }
-  const offersOf = (aiEnabled: boolean) =>
-    (homeJsonLd(SITE_DESCRIPTION, base, aiEnabled)['@graph'].find((node) => node['@type'] === 'SoftwareApplication') as { offers: Offer[] }).offers
+  const AI_OFF = { managed: false, byok: false, any: false }
+  const BYOK_ONLY = { managed: false, byok: true, any: true }
+  const ALL_ON = { managed: true, byok: true, any: true }
+  const offersOf = (ai: typeof AI_OFF) =>
+    (homeJsonLd(SITE_DESCRIPTION, base, ai)['@graph'].find((node) => node['@type'] === 'SoftwareApplication') as { offers: Offer[] }).offers
 
-  it('offers Free and Pro at the PRICING_TIERS prices, and no Pro AI while managed AI is off', () => {
-    const offers = offersOf(false)
+  it('offers Free and Pro at the PRICING_TIERS prices, and no Pro AI while no AI option is on sale', () => {
+    const offers = offersOf(AI_OFF)
     expect(offers.map((o) => o.name)).toEqual(['Free', 'Pro'])
     const free = getPricingTier('free')
     const pro = getPricingTier('pro')
@@ -191,16 +194,22 @@ describe('homepage JSON-LD', () => {
     ])
   })
 
-  it('adds Pro AI at its PRICING_TIERS prices once managed AI is on sale', () => {
-    const offers = offersOf(true)
-    expect(offers.map((o) => o.name)).toEqual(PRICING_TIERS.map((t) => t.name))
+  it('adds both Pro AI options at their PRICING_TIERS prices when all AI is on sale', () => {
+    const offers = offersOf(ALL_ON)
+    expect(offers.map((o) => o.name)).toEqual([...PRICING_TIERS.map((t) => t.name), PRO_AI_BYOK_OFFER_NAME])
     const proAi = getPricingTier('pro_ai')
     expect(offers[2]).toMatchObject({ name: proAi.name, price: String(proAi.monthlyPrice) })
     expect(offers[2].priceSpecification?.map((spec) => spec.price)).toEqual([String(proAi.monthlyPrice), String(proAi.yearlyPrice)])
+    expect(offers[3]).toMatchObject({ name: PRO_AI_BYOK_OFFER_NAME, price: String(proAi.byok!.monthlyPrice) })
+    expect(offers[3].priceSpecification?.map((spec) => spec.price)).toEqual([String(proAi.byok!.monthlyPrice), String(proAi.byok!.yearlyPrice)])
   })
 
-  it('defaults to the build-time AI flag', () => {
-    expect((byType('SoftwareApplication') as { offers: Offer[] }).offers).toEqual(offersOf(AI_ENABLED))
+  it('offers only the own-provider Pro AI when only that option is on sale', () => {
+    expect(offersOf(BYOK_ONLY).map((o) => o.name)).toEqual(['Free', 'Pro', PRO_AI_BYOK_OFFER_NAME])
+  })
+
+  it('defaults to the build-time AI flags', () => {
+    expect((byType('SoftwareApplication') as { offers: Offer[] }).offers).toEqual(offersOf(AI_AVAILABILITY))
   })
 
   it('states no rating: the store ratings are streamed in after the page, not known up front', () => {

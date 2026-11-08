@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
-import { PRICING_TIERS, STORE_LISTING_URL, type PricingTier } from '@tabmerger/shared'
-import { AI_ENABLED } from '@/lib/aiFlag'
+import { PRICING_TIERS, STORE_LISTING_URL, type AiAvailability, type PricingTier } from '@tabmerger/shared'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import type { FaqItem } from '@/lib/faq'
 import { DEFAULT_LOCALE, OG_LOCALES, isAppLocale, languageAlternates, localizedPath, type AppLocale } from '@/i18n/locales'
 import { GITHUB_REPO_URL } from '@/lib/github'
@@ -149,22 +149,35 @@ function unitPrice(price: number, period: 'month' | 'year') {
   }
 }
 
-/**
- * One Offer per plan someone can get today. Free always; Pro, which is always on sale; Pro AI only
- * while managed AI is on sale (`NEXT_PUBLIC_AI_ENABLED`): with it off the site shows Pro AI as
- * "Coming soon". Every price comes from `PRICING_TIERS`.
- */
-function planOffers(aiEnabled: boolean) {
-  const onSale = (tier: PricingTier) => tier.id !== 'pro_ai' || aiEnabled
-  return PRICING_TIERS.filter(onSale).map((tier) => ({
+/** Name of the Pro AI option where the customer brings their own AI provider (`tier.byok`). */
+export const PRO_AI_BYOK_OFFER_NAME = 'Pro AI (your own AI provider)'
+
+/** One Offer at a plan's monthly price, with its monthly and yearly charges spelled out when paid. */
+function offer(name: string, monthlyPrice: number, yearlyPrice: number) {
+  return {
     '@type': 'Offer',
-    name: tier.name,
-    price: String(tier.monthlyPrice),
+    name,
+    price: String(monthlyPrice),
     priceCurrency: PRICE_CURRENCY,
-    ...(tier.monthlyPrice > 0
-      ? { priceSpecification: [unitPrice(tier.monthlyPrice, 'month'), unitPrice(tier.yearlyPrice, 'year')] }
-      : {}),
-  }))
+    ...(monthlyPrice > 0 ? { priceSpecification: [unitPrice(monthlyPrice, 'month'), unitPrice(yearlyPrice, 'year')] } : {}),
+  }
+}
+
+/**
+ * One Offer per plan someone can buy today, matching what the pricing page sells. Free and Pro
+ * always. Pro AI on TabMerger's AI while managed AI is on sale (`NEXT_PUBLIC_AI_ENABLED`), and Pro
+ * AI on the customer's own AI provider while that option is (`NEXT_PUBLIC_AI_BYOK_ENABLED`, also on
+ * with managed). With neither on, the site shows Pro AI as "Coming soon", so it is not offered.
+ * Every price comes from `PRICING_TIERS`.
+ */
+function planOffers(ai: AiAvailability) {
+  return PRICING_TIERS.flatMap((tier: PricingTier) => {
+    if (tier.id !== 'pro_ai') return [offer(tier.name, tier.monthlyPrice, tier.yearlyPrice)]
+    return [
+      ...(ai.managed ? [offer(tier.name, tier.monthlyPrice, tier.yearlyPrice)] : []),
+      ...(ai.byok && tier.byok ? [offer(PRO_AI_BYOK_OFFER_NAME, tier.byok.monthlyPrice, tier.byok.yearlyPrice)] : []),
+    ]
+  })
 }
 
 /**
@@ -181,7 +194,7 @@ function planOffers(aiEnabled: boolean) {
  * page wait on those requests, and a rating in structured data must match one visible on the
  * page, which a cached build-time figure would not reliably do.
  */
-export function homeJsonLd(description: string, base: URL = getMetadataBase(), aiEnabled: boolean = AI_ENABLED) {
+export function homeJsonLd(description: string, base: URL = getMetadataBase(), ai: AiAvailability = AI_AVAILABILITY) {
   const origin = base.origin
   const organizationId = `${origin}/#organization`
   const storeListings = [STORE_LISTING_URL.CHROME_STABLE, STORE_LISTING_URL.FIREFOX_STABLE, STORE_LISTING_URL.EDGE_STABLE]
@@ -216,7 +229,7 @@ export function homeJsonLd(description: string, base: URL = getMetadataBase(), a
         operatingSystem: 'Chrome, Brave, Edge, Firefox',
         installUrl: STORE_LISTING_URL.CHROME_STABLE,
         sameAs: [...storeListings, GITHUB_REPO_URL],
-        offers: planOffers(aiEnabled),
+        offers: planOffers(ai),
         publisher: { '@id': organizationId },
       },
     ],

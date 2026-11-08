@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { buildLlmsTxt, GET } from '@/app/llms.txt/route'
-import { FREE_TIER_LIMITS, STORE_LISTING_URL, SUPPORTED_LOCALES, formatUsd, getPricingTier } from '@tabmerger/shared'
+import {
+  FREE_TIER_LIMITS,
+  PRO_AI_MONTHLY_CREDITS,
+  STORE_LISTING_URL,
+  SUPPORTED_LOCALES,
+  formatUsd,
+  getPricingTier,
+} from '@tabmerger/shared'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import sitemap from '@/app/sitemap'
 
 describe('llms.txt', () => {
@@ -70,8 +78,37 @@ describe('llms.txt', () => {
     }
   })
 
-  it('says nothing about AI, which the site still gates', () => {
-    expect(buildLlmsTxt('https://example.test')).not.toMatch(/\bAI\b/)
+  describe('Pro AI follows the same flags as the pricing page', () => {
+    const OFF = { managed: false, byok: false, any: false }
+    const BYOK_ONLY = { managed: false, byok: true, any: true }
+    const ALL_ON = { managed: true, byok: true, any: true }
+    const proAi = getPricingTier('pro_ai')
+
+    it('says nothing about AI while no Pro AI option is on sale (the site shows "Coming soon")', () => {
+      expect(buildLlmsTxt('https://example.test', OFF)).not.toMatch(/\bAI\b/)
+    })
+
+    it('states both Pro AI options, their PRICING_TIERS prices and the monthly credits when all AI is on', () => {
+      const text = buildLlmsTxt('https://example.test', ALL_ON)
+      const facts = text.slice(text.indexOf('## Key facts'), text.indexOf('## Install'))
+      expect(facts).toContain('Pro AI includes everything in Pro')
+      expect(facts).toContain(`${formatUsd(proAi.monthlyPrice)} a month or ${formatUsd(proAi.yearlyPrice)} a year`)
+      expect(facts).toContain(`${PRO_AI_MONTHLY_CREDITS.toLocaleString('en-US')} AI credits a month`)
+      expect(facts).toContain(`${formatUsd(proAi.byok!.monthlyPrice)} a month or ${formatUsd(proAi.byok!.yearlyPrice)} a year`)
+      // The feature list keeps "AI" capitalised and has the model choice as its own clause.
+      expect(facts).toContain('tab preview with AI summary, and you choose the AI model.')
+    })
+
+    it('states only the own-provider option when only that one is on sale', () => {
+      const text = buildLlmsTxt('https://example.test', BYOK_ONLY)
+      expect(text).toContain('Pro AI with your own AI provider')
+      expect(text).not.toContain('Pro AI on TabMerger’s AI')
+      expect(text).not.toContain('AI credits')
+    })
+
+    it('defaults to the build-time flags', () => {
+      expect(buildLlmsTxt('https://example.test')).toBe(buildLlmsTxt('https://example.test', AI_AVAILABILITY))
+    })
   })
 
   it('is served as plain text', async () => {
