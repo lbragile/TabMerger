@@ -8,6 +8,7 @@ import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { STORE_LABEL } from '@/lib/stores'
 import type { InstallBrowser } from '@/lib/visitorBrowser'
+import { COMPARE_RICH_TAGS } from './richText'
 import { COMPARISON_CHECKED_DATE, COMPARISON_CHECKED_ON, COMPARISON_DATE_FORMAT, COMPETITORS, displayUrl, type Competitor } from '@/lib/comparison'
 
 /**
@@ -61,7 +62,7 @@ export function CompareDifferences() {
             <div className="font-mono text-[0.8125rem] font-medium text-primary">{String(i + 1).padStart(2, '0')}</div>
             <h3 className="mb-1.5 mt-2 text-[1.1875rem] font-semibold tracking-tight">{t(`${key}.title`)}</h3>
             <p className="text-[0.90625rem] leading-relaxed text-text2">
-              {key === 'ai' ? aiDescription : t(`${key}.description`)}
+              {key === 'ai' ? aiDescription : t.rich(`${key}.description`, COMPARE_RICH_TAGS)}
             </p>
           </div>
         ))}
@@ -109,7 +110,7 @@ export function SwitchingFromOneTab({ browser }: { browser: InstallBrowser }) {
             <span aria-hidden="true" className="pt-[0.15rem] font-mono text-[0.8125rem] text-primary">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <span>{t.rich(`steps.${step}`, { b: bold })}</span>
+            <span>{t.rich(`steps.${step}`, { b: bold, ...COMPARE_RICH_TAGS })}</span>
           </li>
         ))}
       </ol>

@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "עוברים בדקה",
-      "description": "מעתיקים את רשימות OneTab לקובץ .txt ומייבאים אותו בהגדרות ← נתונים: כל רשימה הופכת לקבוצה. גם HTML של סימניות ו-JSON עובדים."
+      "description": "מעתיקים את רשימות OneTab לקובץ <code>.txt</code> ומייבאים אותו בהגדרות ← נתונים: כל רשימה הופכת לקבוצה. גם HTML של סימניות ו-JSON עובדים."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "מוצפנים",
     "sharedSpaces": "מרחבים משותפים",
     "mouseKeyboard": "עכבר ומקלדת",
-    "shortcutsTabMerger": "שמירת כרטיסיות בלי לפתוח את החלון הקופץ; ⁨Ctrl/Cmd+K⁩ לחיפוש",
+    "shortcutsTabMerger": "שמירת כרטיסיות בלי לפתוח את החלון הקופץ; <code>Ctrl/Cmd+K</code> לחיפוש",
     "customizable": "ניתנים להתאמה",
     "urlRulesLimits": "{count, number} בחינם, ללא הגבלה ב-Pro",
     "bulkActions": "בחירה, העברה, סימון בכוכב, שיתוף, מחיקה",
-    "searchFilters": "מסננים: ⁨group:⁩, ⁨window:⁩, ⁨tag:⁩",
+    "searchFilters": "מסננים: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "צפייה בקבוצות ובגיבויים בדפדפן",
     "importFormats": "⁨JSON⁩, ⁨HTML⁩ של סימניות, ⁨OneTab⁩",
     "importExportLists": "ייבוא וייצוא של רשימות",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "החל מ-{monthly} למשתמש לחודש, לפחות {count, number} משתמשים",
     "noLimits": "בלי הגבלות",
     "proPlan": "Pro",
-    "searchOperators": "⁨t:⁩, ⁨u:⁩, ⁨regex⁩",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, ⁨regex⁩",
     "offlineThisBrowser": "עובד אופליין, רק בדפדפן הזה",
     "savedWindowsFiles": "חלונות שמורים כקבצים",
     "autoSavesOnCloseTimer": "שומר בסגירה ולפי טיימר",
@@ -285,8 +285,8 @@
     "lead": "הרשימות מגיעות כקבוצות, כולל הכותרות. שום דבר לא יוצא מהדפדפן שלכם.",
     "steps": {
       "export": "ב-OneTab, פותחים את <b>Export / Import URLs</b> ולוחצים על <b>Copy to clipboard</b>.",
-      "save": "מדביקים את הטקסט בקובץ טקסט רגיל (Notepad, או TextEdit במצב טקסט רגיל) ושומרים אותו כ-<b>.txt</b>.",
-      "open": "ב-TabMerger, פותחים את <b>הגדרות ← נתונים</b>, לוחצים על <b>ייבוא</b> ובוחרים את קובץ ה-.txt.",
+      "save": "מדביקים את הטקסט בקובץ טקסט רגיל (Notepad, או TextEdit במצב טקסט רגיל) ושומרים אותו כ-<b><code>.txt</code></b>.",
+      "open": "ב-TabMerger, פותחים את <b>הגדרות ← נתונים</b>, לוחצים על <b>ייבוא</b> ובוחרים את קובץ ה-<code>.txt</code>.",
       "import": "מאשרים. כל קבוצה של OneTab הופכת לקבוצה נפרדת, בשם ⁨\"Imported 1\"⁩, ⁨\"Imported 2\"⁩ וכן הלאה.",
       "other": "מגיעים מכלי אחר? מייצאים את הסימניות כ-HTML, או כקובץ JSON, ומייבאים אותו באותה דרך."
     }

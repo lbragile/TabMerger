@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Move over in a minute",
-      "description": "Copy your OneTab lists into a .txt file and import it from Settings → Data: each list becomes a group. Bookmarks HTML and JSON work too."
+      "description": "Copy your OneTab lists into a <code>.txt</code> file and import it from Settings → Data: each list becomes a group. Bookmarks HTML and JSON work too."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Encrypted",
     "sharedSpaces": "Shared spaces",
     "mouseKeyboard": "Mouse and keyboard",
-    "shortcutsTabMerger": "Save tabs without opening the popup; Ctrl/Cmd+K to search",
+    "shortcutsTabMerger": "Save tabs without opening the popup; <code>Ctrl/Cmd+K</code> to search",
     "customizable": "Customizable",
     "urlRulesLimits": "{count, number} free, unlimited on Pro",
     "bulkActions": "Select, move, star, share, delete",
-    "searchFilters": "Filters: group:, window:, tag:",
+    "searchFilters": "Filters: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "View groups and backups in the browser",
     "importFormats": "JSON, bookmarks HTML, OneTab",
     "importExportLists": "Import and export lists",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "From {monthly} per user/mo, at least {count, number} users",
     "noLimits": "No limits",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Works offline, in this browser only",
     "savedWindowsFiles": "Saved windows as files",
     "autoSavesOnCloseTimer": "Auto-saves on close and on a timer",
@@ -285,8 +285,8 @@
     "lead": "Your lists come across as groups, titles and all. Nothing leaves your browser.",
     "steps": {
       "export": "In OneTab, open <b>Export / Import URLs</b> and press <b>Copy to clipboard</b>.",
-      "save": "Paste it into a plain-text file (Notepad, or TextEdit set to plain text) and save it as <b>.txt</b>.",
-      "open": "In TabMerger, open <b>Settings → Data</b>, press <b>Import</b> and choose the .txt file.",
+      "save": "Paste it into a plain-text file (Notepad, or TextEdit set to plain text) and save it as <b><code>.txt</code></b>.",
+      "open": "In TabMerger, open <b>Settings → Data</b>, press <b>Import</b> and choose the <code>.txt</code> file.",
       "import": "Confirm. Each OneTab group becomes its own group, named “Imported 1”, “Imported 2” and so on.",
       "other": "Coming from another tool? Export your bookmarks as HTML, or a JSON file, and import that the same way."
     }

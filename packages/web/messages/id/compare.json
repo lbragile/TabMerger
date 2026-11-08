@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Pindah dalam semenit",
-      "description": "Salin daftar OneTab Anda ke file .txt lalu impor dari Pengaturan → Data: setiap daftar menjadi grup. HTML bookmark dan JSON juga bisa."
+      "description": "Salin daftar OneTab Anda ke file <code>.txt</code> lalu impor dari Pengaturan → Data: setiap daftar menjadi grup. HTML bookmark dan JSON juga bisa."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Terenkripsi",
     "sharedSpaces": "Ruang bersama",
     "mouseKeyboard": "Mouse dan keyboard",
-    "shortcutsTabMerger": "Simpan tab tanpa membuka popup; Ctrl/Cmd+K untuk mencari",
+    "shortcutsTabMerger": "Simpan tab tanpa membuka popup; <code>Ctrl/Cmd+K</code> untuk mencari",
     "customizable": "Bisa disesuaikan",
     "urlRulesLimits": "{count, number} gratis, tanpa batas di Pro",
     "bulkActions": "Pilih, pindahkan, beri bintang, bagikan, hapus",
-    "searchFilters": "Filter: group:, window:, tag:",
+    "searchFilters": "Filter: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Lihat grup dan cadangan di browser",
     "importFormats": "JSON, HTML bookmark, OneTab",
     "importExportLists": "Impor dan ekspor daftar",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "Mulai {monthly} per pengguna/bln, minimal {count, number} pengguna",
     "noLimits": "Tanpa batas",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Bekerja offline, hanya di browser ini",
     "savedWindowsFiles": "Jendela tersimpan sebagai file",
     "autoSavesOnCloseTimer": "Menyimpan otomatis saat ditutup dan berkala",
@@ -285,8 +285,8 @@
     "lead": "Daftar Anda masuk sebagai grup, lengkap dengan judulnya. Tidak ada yang keluar dari browser Anda.",
     "steps": {
       "export": "Di OneTab, buka <b>Export / Import URLs</b> lalu tekan <b>Copy to clipboard</b>.",
-      "save": "Tempel ke file teks biasa (Notepad, atau TextEdit dalam mode teks biasa) lalu simpan sebagai <b>.txt</b>.",
-      "open": "Di TabMerger, buka <b>Pengaturan → Data</b>, tekan <b>Impor</b>, lalu pilih file .txt.",
+      "save": "Tempel ke file teks biasa (Notepad, atau TextEdit dalam mode teks biasa) lalu simpan sebagai <b><code>.txt</code></b>.",
+      "open": "Di TabMerger, buka <b>Pengaturan → Data</b>, tekan <b>Impor</b>, lalu pilih file <code>.txt</code>.",
       "import": "Konfirmasi. Setiap grup OneTab menjadi grup tersendiri, bernama \"Imported 1\", \"Imported 2\", dan seterusnya.",
       "other": "Datang dari alat lain? Ekspor bookmark Anda sebagai HTML, atau file JSON, lalu impor dengan cara yang sama."
     }

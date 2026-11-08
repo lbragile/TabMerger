@@ -4,7 +4,7 @@
  * i18n-catalogs.test.ts (it walks every messages/<locale>/ folder); this file only checks that
  * every locale ships the `compare` namespace and that the data file's keys exist in English.
  */
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -387,5 +387,33 @@ describe('links to /compare', () => {
   it('the FAQ links to /compare', () => {
     render(<FAQ />)
     expect(screen.getByRole('link', { name: /how TabMerger compares/i })).toHaveAttribute('href', '/compare')
+  })
+})
+
+describe('code-like tokens stay left to right', () => {
+  // `group:`, `t:`, `Ctrl/Cmd+K`, `.txt` are wrapped in <code> in every catalog and rendered as
+  // <bdi dir="ltr">, so their punctuation can't flip in Arabic, Hebrew or Persian. The catalog
+  // test already requires every locale to keep every tag of the English message.
+  const catalog = (locale: string) =>
+    JSON.parse(readFileSync(join(__dirname, '..', 'messages', locale, 'compare.json'), 'utf8')) as {
+      notes: Record<string, string>
+    }
+  const withoutCode = (message: string) => message.replace(/<code>[^<]*<\/code>/g, '')
+
+  it.each(['ar', 'he', 'fa'])('%s keeps each search filter and operator inside <code>', (locale) => {
+    const { notes } = catalog(locale)
+    for (const token of ['group:', 'window:', 'tag:']) expect(notes.searchFilters).toContain(`<code>${token}</code>`)
+    for (const token of ['t:', 'u:']) expect(notes.searchOperators).toContain(`<code>${token}</code>`)
+    expect(withoutCode(notes.searchFilters)).not.toMatch(/group:|window:|tag:/)
+    expect(withoutCode(notes.searchOperators)).not.toMatch(/[tu]:/)
+    expect(withoutCode(notes.shortcutsTabMerger)).not.toMatch(/Cmd\+K/)
+  })
+
+  it('renders <code> tokens as left-to-right isolates in the table', () => {
+    render(<ComparisonTable />)
+    const [tabMerger] = cellsOf(COMPARISON_ROWS, 'search')
+    expect([...tabMerger.querySelectorAll('bdi[dir="ltr"]')].map((el) => el.textContent)).toEqual(['group:', 'window:', 'tag:'])
+    const tabManagerPlus = cellsOf(COMPARISON_ROWS, 'search')[COMPETITOR_IDS.indexOf('tabManagerPlus') + 1]
+    expect([...tabManagerPlus.querySelectorAll('bdi[dir="ltr"]')].map((el) => el.textContent)).toEqual(['t:', 'u:'])
   })
 })

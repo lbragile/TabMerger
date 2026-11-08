@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Changez en une minute",
-      "description": "Copiez vos listes OneTab dans un fichier .txt et importez-le depuis Paramètres → Données : chaque liste devient un groupe. Le HTML de favoris et le JSON fonctionnent aussi."
+      "description": "Copiez vos listes OneTab dans un fichier <code>.txt</code> et importez-le depuis Paramètres → Données : chaque liste devient un groupe. Le HTML de favoris et le JSON fonctionnent aussi."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Chiffrés",
     "sharedSpaces": "Espaces partagés",
     "mouseKeyboard": "Souris et clavier",
-    "shortcutsTabMerger": "Enregistrer des onglets sans ouvrir la fenêtre ; Ctrl/Cmd+K pour chercher",
+    "shortcutsTabMerger": "Enregistrer des onglets sans ouvrir la fenêtre ; <code>Ctrl/Cmd+K</code> pour chercher",
     "customizable": "Personnalisables",
     "urlRulesLimits": "{count, number} gratuites, illimitées avec Pro",
     "bulkActions": "Sélectionner, déplacer, mettre en favori, partager, supprimer",
-    "searchFilters": "Filtres : group:, window:, tag:",
+    "searchFilters": "Filtres : <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Voir ses groupes et sauvegardes dans le navigateur",
     "importFormats": "JSON, HTML de favoris, OneTab",
     "importExportLists": "Importer et exporter des listes",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "À partir de {monthly} par utilisateur/mois, {count, number} utilisateurs minimum",
     "noLimits": "Sans limites",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Fonctionne hors ligne, dans ce navigateur seulement",
     "savedWindowsFiles": "Fenêtres enregistrées en fichiers",
     "autoSavesOnCloseTimer": "Enregistre à la fermeture et à intervalles",
@@ -285,8 +285,8 @@
     "lead": "Vos listes arrivent sous forme de groupes, titres compris. Rien ne quitte votre navigateur.",
     "steps": {
       "export": "Dans OneTab, ouvrez <b>Export / Import URLs</b> et cliquez sur <b>Copy to clipboard</b>.",
-      "save": "Collez le texte dans un fichier texte brut (Bloc-notes, ou TextEdit en mode texte brut) et enregistrez-le en <b>.txt</b>.",
-      "open": "Dans TabMerger, ouvrez <b>Paramètres → Données</b>, cliquez sur <b>Importer</b> et choisissez le fichier .txt.",
+      "save": "Collez le texte dans un fichier texte brut (Bloc-notes, ou TextEdit en mode texte brut) et enregistrez-le en <b><code>.txt</code></b>.",
+      "open": "Dans TabMerger, ouvrez <b>Paramètres → Données</b>, cliquez sur <b>Importer</b> et choisissez le fichier <code>.txt</code>.",
       "import": "Confirmez. Chaque groupe OneTab devient un groupe à part, nommé « Imported 1 », « Imported 2 », etc.",
       "other": "Vous venez d’un autre outil ? Exportez vos favoris en HTML, ou un fichier JSON, et importez-le de la même façon."
     }

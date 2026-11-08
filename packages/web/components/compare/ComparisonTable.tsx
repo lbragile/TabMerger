@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, type ReactNode } from 'react'
 import { useFormatter, useTranslations } from 'next-intl'
 import { Check, Contrast, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -17,9 +17,12 @@ import {
 } from '@/lib/comparison'
 import { CompetitorPicker } from './CompetitorPicker'
 import { CompareScrollBox } from './CompareScrollBox'
+import { COMPARE_RICH_TAGS } from './richText'
 
 /** A translator that takes the data file's keys (checked against the catalog by a test). */
 type LooseTranslator = (key: string, values?: Record<string, string | number>) => string
+/** The same, for rich text (notes may wrap code-like tokens in `<code>`). */
+type LooseRichTranslator = (key: string, values?: Record<string, unknown>) => ReactNode
 
 /** Icon and colour of each state; `unknown` and `info` have no icon. */
 const STATE_ICON: Partial<Record<CellState, typeof Check>> = {
@@ -65,7 +68,17 @@ function useCellValues() {
   })
 }
 
-function CellValue({ cell, t, values }: { cell: Cell; t: LooseTranslator; values: Record<string, string | number> }) {
+function CellValue({
+  cell,
+  t,
+  rich,
+  values,
+}: {
+  cell: Cell
+  t: LooseTranslator
+  rich: LooseRichTranslator
+  values: Record<string, string | number>
+}) {
   const label = cell.labelKey ? t(`labels.${cell.labelKey}`, values) : t(`states.${cell.state === 'info' ? 'unknown' : cell.state}`)
   return (
     <div className={cn('flex items-start gap-1.5 font-medium', STATE_STYLE[cell.state])}>
@@ -81,7 +94,7 @@ function CellValue({ cell, t, values }: { cell: Cell; t: LooseTranslator; values
         {cell.state === 'partial' && <span className="sr-only">{t('states.partialSr')}</span>}
         {cell.noteKey && (
           <span className="mt-0.5 block text-[0.78125rem] font-normal not-italic leading-snug text-text3">
-            {t(`notes.${cell.noteKey}`, values)}
+            {rich(`notes.${cell.noteKey}`, { ...values, ...COMPARE_RICH_TAGS })}
           </span>
         )}
       </span>
@@ -160,7 +173,9 @@ function Legend({ t }: { t: LooseTranslator }) {
  * `overflow-x: clip` is fine).
  */
 export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Row[] }) {
-  const t = useTranslations('compare') as unknown as LooseTranslator
+  const compare = useTranslations('compare')
+  const t = compare as unknown as LooseTranslator
+  const rich = compare.rich as unknown as LooseRichTranslator
   const common = useTranslations('common')
   const cellValues = useCellValues()
   const colCount = PRODUCTS.length + 1
@@ -236,7 +251,7 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
                               product.id === 'tabmerger' && cn('z-10', TABMERGER_PINNED, TABMERGER_TINT)
                             )}
                           >
-                            <CellValue cell={cell} t={t} values={cellValues(cell)} />
+                            <CellValue cell={cell} t={t} rich={rich} values={cellValues(cell)} />
                           </td>
                         )
                       })}

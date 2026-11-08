@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "در یک دقیقه جابه‌جا شوید",
-      "description": "فهرست‌های OneTab را در یک فایل .txt کپی کنید و از تنظیمات ← داده‌ها درون‌ریزی کنید: هر فهرست یک گروه می‌شود. HTML نشانک‌ها و JSON هم کار می‌کنند."
+      "description": "فهرست‌های OneTab را در یک فایل <code>.txt</code> کپی کنید و از تنظیمات ← داده‌ها درون‌ریزی کنید: هر فهرست یک گروه می‌شود. HTML نشانک‌ها و JSON هم کار می‌کنند."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "رمزگذاری‌شده",
     "sharedSpaces": "فضاهای مشترک",
     "mouseKeyboard": "با موس و صفحه‌کلید",
-    "shortcutsTabMerger": "ذخیره زبانه‌ها بدون باز کردن پنجره بازشو؛ ⁨Ctrl/Cmd+K⁩ برای جست‌وجو",
+    "shortcutsTabMerger": "ذخیره زبانه‌ها بدون باز کردن پنجره بازشو؛ <code>Ctrl/Cmd+K</code> برای جست‌وجو",
     "customizable": "قابل تنظیم",
     "urlRulesLimits": "{count, number} رایگان، نامحدود در Pro",
     "bulkActions": "انتخاب، جابه‌جایی، ستاره‌دار کردن، هم‌رسانی، حذف",
-    "searchFilters": "فیلترها: ⁨group:⁩، ⁨window:⁩، ⁨tag:⁩",
+    "searchFilters": "فیلترها: <code>group:</code>، <code>window:</code>، <code>tag:</code>",
     "dashboardView": "دیدن گروه‌ها و پشتیبان‌ها در مرورگر",
     "importFormats": "⁨JSON⁩، ⁨HTML⁩ نشانک‌ها، ⁨OneTab⁩",
     "importExportLists": "درون‌ریزی و برون‌بری فهرست‌ها",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "از {monthly} برای هر کاربر در ماه، حداقل {count, number} کاربر",
     "noLimits": "بدون محدودیت",
     "proPlan": "Pro",
-    "searchOperators": "⁨t:⁩، ⁨u:⁩، ⁨regex⁩",
+    "searchOperators": "<code>t:</code>، <code>u:</code>، ⁨regex⁩",
     "offlineThisBrowser": "آفلاین کار می‌کند، فقط در همین مرورگر",
     "savedWindowsFiles": "پنجره‌های ذخیره‌شده به‌صورت فایل",
     "autoSavesOnCloseTimer": "هنگام بستن و با زمان‌سنج ذخیره می‌کند",
@@ -285,8 +285,8 @@
     "lead": "فهرست‌هایتان با عنوان‌ها به‌صورت گروه منتقل می‌شوند. چیزی از مرورگرتان بیرون نمی‌رود.",
     "steps": {
       "export": "در OneTab، <b>Export / Import URLs</b> را باز کنید و <b>Copy to clipboard</b> را بزنید.",
-      "save": "آن را در یک فایل متنی ساده (Notepad، یا TextEdit در حالت متن ساده) بچسبانید و با پسوند <b>.txt</b> ذخیره کنید.",
-      "open": "در TabMerger، <b>تنظیمات ← داده‌ها</b> را باز کنید، <b>درون‌ریزی</b> را بزنید و فایل .txt را انتخاب کنید.",
+      "save": "آن را در یک فایل متنی ساده (Notepad، یا TextEdit در حالت متن ساده) بچسبانید و با پسوند <b><code>.txt</code></b> ذخیره کنید.",
+      "open": "در TabMerger، <b>تنظیمات ← داده‌ها</b> را باز کنید، <b>درون‌ریزی</b> را بزنید و فایل <code>.txt</code> را انتخاب کنید.",
       "import": "تأیید کنید. هر گروه OneTab یک گروه جدا می‌شود با نام‌های ⁨\"Imported 1\"⁩، ⁨\"Imported 2\"⁩ و غیره.",
       "other": "از ابزار دیگری می‌آیید؟ نشانک‌هایتان را به‌صورت HTML یا فایل JSON برون‌بری کنید و به همین روش درون‌ریزی کنید."
     }

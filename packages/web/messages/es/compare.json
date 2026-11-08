@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Cámbiate en un minuto",
-      "description": "Copia tus listas de OneTab en un archivo .txt e impórtalo desde Ajustes → Datos: cada lista se convierte en un grupo. También funcionan el HTML de marcadores y JSON."
+      "description": "Copia tus listas de OneTab en un archivo <code>.txt</code> e impórtalo desde Ajustes → Datos: cada lista se convierte en un grupo. También funcionan el HTML de marcadores y JSON."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Cifrados",
     "sharedSpaces": "Espacios compartidos",
     "mouseKeyboard": "Ratón y teclado",
-    "shortcutsTabMerger": "Guarda pestañas sin abrir la ventana emergente; Ctrl/Cmd+K para buscar",
+    "shortcutsTabMerger": "Guarda pestañas sin abrir la ventana emergente; <code>Ctrl/Cmd+K</code> para buscar",
     "customizable": "Personalizables",
     "urlRulesLimits": "{count, number} gratis, ilimitadas con Pro",
     "bulkActions": "Seleccionar, mover, destacar, compartir, eliminar",
-    "searchFilters": "Filtros: group:, window:, tag:",
+    "searchFilters": "Filtros: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Consulta grupos y copias de seguridad en el navegador",
     "importFormats": "JSON, HTML de marcadores, OneTab",
     "importExportLists": "Importar y exportar listas",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "Desde {monthly} por usuario/mes, mínimo {count, number} usuarios",
     "noLimits": "Sin límites",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Funciona sin conexión, solo en este navegador",
     "savedWindowsFiles": "Ventanas guardadas como archivos",
     "autoSavesOnCloseTimer": "Guarda al cerrar y con un temporizador",
@@ -285,8 +285,8 @@
     "lead": "Tus listas llegan como grupos, con sus títulos. Nada sale de tu navegador.",
     "steps": {
       "export": "En OneTab, abre <b>Export / Import URLs</b> y pulsa <b>Copy to clipboard</b>.",
-      "save": "Pégalo en un archivo de texto sin formato (Bloc de notas, o TextEdit en modo texto sin formato) y guárdalo como <b>.txt</b>.",
-      "open": "En TabMerger, abre <b>Ajustes → Datos</b>, pulsa <b>Importar</b> y elige el archivo .txt.",
+      "save": "Pégalo en un archivo de texto sin formato (Bloc de notas, o TextEdit en modo texto sin formato) y guárdalo como <b><code>.txt</code></b>.",
+      "open": "En TabMerger, abre <b>Ajustes → Datos</b>, pulsa <b>Importar</b> y elige el archivo <code>.txt</code>.",
       "import": "Confirma. Cada grupo de OneTab se convierte en su propio grupo, llamado “Imported 1”, “Imported 2”, etc.",
       "other": "¿Vienes de otra herramienta? Exporta tus marcadores como HTML, o un archivo JSON, e impórtalo de la misma forma."
     }

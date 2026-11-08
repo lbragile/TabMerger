@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "एक मिनट में स्विच करें",
-      "description": "अपनी OneTab सूचियाँ एक .txt फ़ाइल में कॉपी करें और सेटिंग्स → डेटा से इंपोर्ट करें: हर सूची एक ग्रुप बन जाती है। बुकमार्क HTML और JSON भी चलते हैं।"
+      "description": "अपनी OneTab सूचियाँ एक <code>.txt</code> फ़ाइल में कॉपी करें और सेटिंग्स → डेटा से इंपोर्ट करें: हर सूची एक ग्रुप बन जाती है। बुकमार्क HTML और JSON भी चलते हैं।"
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "एन्क्रिप्टेड",
     "sharedSpaces": "शेयर किए गए स्पेस",
     "mouseKeyboard": "माउस और कीबोर्ड",
-    "shortcutsTabMerger": "पॉपअप खोले बिना टैब सेव करें; खोज के लिए Ctrl/Cmd+K",
+    "shortcutsTabMerger": "पॉपअप खोले बिना टैब सेव करें; खोज के लिए <code>Ctrl/Cmd+K</code>",
     "customizable": "कस्टमाइज़ किए जा सकते हैं",
     "urlRulesLimits": "{count, number} मुफ़्त, Pro में असीमित",
     "bulkActions": "चुनें, ले जाएँ, स्टार करें, शेयर करें, मिटाएँ",
-    "searchFilters": "फ़िल्टर: group:, window:, tag:",
+    "searchFilters": "फ़िल्टर: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "ब्राउज़र में ग्रुप और बैकअप देखें",
     "importFormats": "JSON, बुकमार्क HTML, OneTab",
     "importExportLists": "सूचियाँ इंपोर्ट और एक्सपोर्ट करें",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "प्रति उपयोगकर्ता {monthly}/माह से, कम से कम {count, number} उपयोगकर्ता",
     "noLimits": "कोई सीमा नहीं",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "ऑफ़लाइन चलता है, सिर्फ़ इसी ब्राउज़र में",
     "savedWindowsFiles": "सेव की गई विंडो फ़ाइलों के रूप में",
     "autoSavesOnCloseTimer": "बंद करने पर और टाइमर से ऑटो-सेव",
@@ -285,8 +285,8 @@
     "lead": "आपकी सूचियाँ टाइटल समेत ग्रुप के रूप में आ जाती हैं। कुछ भी आपके ब्राउज़र से बाहर नहीं जाता।",
     "steps": {
       "export": "OneTab में <b>Export / Import URLs</b> खोलें और <b>Copy to clipboard</b> दबाएँ।",
-      "save": "इसे एक सादी टेक्स्ट फ़ाइल (Notepad, या सादे टेक्स्ट पर सेट TextEdit) में पेस्ट करें और <b>.txt</b> के रूप में सेव करें।",
-      "open": "TabMerger में <b>सेटिंग्स → डेटा</b> खोलें, <b>आयात</b> दबाएँ और .txt फ़ाइल चुनें।",
+      "save": "इसे एक सादी टेक्स्ट फ़ाइल (Notepad, या सादे टेक्स्ट पर सेट TextEdit) में पेस्ट करें और <b><code>.txt</code></b> के रूप में सेव करें।",
+      "open": "TabMerger में <b>सेटिंग्स → डेटा</b> खोलें, <b>आयात</b> दबाएँ और <code>.txt</code> फ़ाइल चुनें।",
       "import": "पुष्टि करें। हर OneTab ग्रुप अपना अलग ग्रुप बन जाता है, जिनके नाम \"Imported 1\", \"Imported 2\" वगैरह होते हैं।",
       "other": "किसी और टूल से आ रहे हैं? अपने बुकमार्क HTML या JSON फ़ाइल के रूप में एक्सपोर्ट करें और उसी तरह इंपोर्ट करें।"
     }

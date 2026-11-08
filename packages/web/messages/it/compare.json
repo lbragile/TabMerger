@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Passa a TabMerger in un minuto",
-      "description": "Copia le tue liste di OneTab in un file .txt e importalo da Impostazioni → Dati: ogni lista diventa un gruppo. Funzionano anche l'HTML dei preferiti e il JSON."
+      "description": "Copia le tue liste di OneTab in un file <code>.txt</code> e importalo da Impostazioni → Dati: ogni lista diventa un gruppo. Funzionano anche l'HTML dei preferiti e il JSON."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Crittografati",
     "sharedSpaces": "Spazi condivisi",
     "mouseKeyboard": "Mouse e tastiera",
-    "shortcutsTabMerger": "Salva le schede senza aprire il popup; Ctrl/Cmd+K per cercare",
+    "shortcutsTabMerger": "Salva le schede senza aprire il popup; <code>Ctrl/Cmd+K</code> per cercare",
     "customizable": "Personalizzabili",
     "urlRulesLimits": "{count, number} gratuite, illimitate con Pro",
     "bulkActions": "Seleziona, sposta, aggiungi la stella, condividi, elimina",
-    "searchFilters": "Filtri: group:, window:, tag:",
+    "searchFilters": "Filtri: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Vedi gruppi e backup nel browser",
     "importFormats": "JSON, HTML dei preferiti, OneTab",
     "importExportLists": "Importa ed esporta liste",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "Da {monthly} per utente/mese, almeno {count, number} utenti",
     "noLimits": "Nessun limite",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Funziona offline, solo in questo browser",
     "savedWindowsFiles": "Finestre salvate come file",
     "autoSavesOnCloseTimer": "Salva alla chiusura e a intervalli",
@@ -285,8 +285,8 @@
     "lead": "Le tue liste arrivano come gruppi, titoli compresi. Niente lascia il tuo browser.",
     "steps": {
       "export": "In OneTab, apri <b>Export / Import URLs</b> e premi <b>Copy to clipboard</b>.",
-      "save": "Incollalo in un file di testo semplice (Blocco note, o TextEdit in modalità testo semplice) e salvalo come <b>.txt</b>.",
-      "open": "In TabMerger, apri <b>Impostazioni → Dati</b>, premi <b>Importa</b> e scegli il file .txt.",
+      "save": "Incollalo in un file di testo semplice (Blocco note, o TextEdit in modalità testo semplice) e salvalo come <b><code>.txt</code></b>.",
+      "open": "In TabMerger, apri <b>Impostazioni → Dati</b>, premi <b>Importa</b> e scegli il file <code>.txt</code>.",
       "import": "Conferma. Ogni gruppo di OneTab diventa un gruppo a sé, chiamato \"Imported 1\", \"Imported 2\" e così via.",
       "other": "Arrivi da un altro strumento? Esporta i preferiti in HTML, o un file JSON, e importalo allo stesso modo."
     }

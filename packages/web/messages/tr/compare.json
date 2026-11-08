@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Bir dakikada geçiş",
-      "description": "OneTab listelerinizi bir .txt dosyasına kopyalayın ve Ayarlar → Veri bölümünden içe aktarın: her liste bir grup olur. Yer imleri HTML'si ve JSON da çalışır."
+      "description": "OneTab listelerinizi bir <code>.txt</code> dosyasına kopyalayın ve Ayarlar → Veri bölümünden içe aktarın: her liste bir grup olur. Yer imleri HTML'si ve JSON da çalışır."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Şifreli",
     "sharedSpaces": "Paylaşılan alanlar",
     "mouseKeyboard": "Fare ve klavye",
-    "shortcutsTabMerger": "Açılır pencereyi açmadan sekme kaydetme; arama için Ctrl/Cmd+K",
+    "shortcutsTabMerger": "Açılır pencereyi açmadan sekme kaydetme; arama için <code>Ctrl/Cmd+K</code>",
     "customizable": "Özelleştirilebilir",
     "urlRulesLimits": "{count, number} ücretsiz, Pro'da sınırsız",
     "bulkActions": "Seçme, taşıma, yıldızlama, paylaşma, silme",
-    "searchFilters": "Filtreler: group:, window:, tag:",
+    "searchFilters": "Filtreler: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Grupları ve yedekleri tarayıcıda görün",
     "importFormats": "JSON, yer imleri HTML'si, OneTab",
     "importExportLists": "Listeleri içe ve dışa aktarma",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "Kullanıcı başına aylık {monthly} ve üzeri, en az {count, number} kullanıcı",
     "noLimits": "Sınır yok",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Çevrimdışı çalışır, yalnızca bu tarayıcıda",
     "savedWindowsFiles": "Kayıtlı pencereler dosya olarak",
     "autoSavesOnCloseTimer": "Kapanışta ve zamanlayıcıyla kaydeder",
@@ -285,8 +285,8 @@
     "lead": "Listeleriniz başlıklarıyla birlikte grup olarak gelir. Hiçbir şey tarayıcınızdan çıkmaz.",
     "steps": {
       "export": "OneTab'de <b>Export / Import URLs</b> sayfasını açın ve <b>Copy to clipboard</b> düğmesine basın.",
-      "save": "Metni düz metin dosyasına yapıştırın (Not Defteri veya düz metne ayarlı TextEdit) ve <b>.txt</b> olarak kaydedin.",
-      "open": "TabMerger'da <b>Ayarlar → Veri</b> bölümünü açın, <b>İçe aktar</b> düğmesine basın ve .txt dosyasını seçin.",
+      "save": "Metni düz metin dosyasına yapıştırın (Not Defteri veya düz metne ayarlı TextEdit) ve <b><code>.txt</code></b> olarak kaydedin.",
+      "open": "TabMerger'da <b>Ayarlar → Veri</b> bölümünü açın, <b>İçe aktar</b> düğmesine basın ve <code>.txt</code> dosyasını seçin.",
       "import": "Onaylayın. Her OneTab grubu \"Imported 1\", \"Imported 2\" gibi adlarla ayrı bir grup olur.",
       "other": "Başka bir araçtan mı geliyorsunuz? Yer imlerinizi HTML ya da JSON dosyası olarak dışa aktarıp aynı şekilde içe aktarın."
     }

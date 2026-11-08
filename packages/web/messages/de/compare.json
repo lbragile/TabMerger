@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "In einer Minute umgezogen",
-      "description": "Kopiere deine OneTab-Listen in eine .txt-Datei und importiere sie unter Einstellungen → Daten: Jede Liste wird zu einer Gruppe. Lesezeichen-HTML und JSON funktionieren auch."
+      "description": "Kopiere deine OneTab-Listen in eine <code>.txt</code>-Datei und importiere sie unter Einstellungen → Daten: Jede Liste wird zu einer Gruppe. Lesezeichen-HTML und JSON funktionieren auch."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Verschlüsselt",
     "sharedSpaces": "Geteilte Spaces",
     "mouseKeyboard": "Maus und Tastatur",
-    "shortcutsTabMerger": "Tabs speichern, ohne das Popup zu öffnen; Strg/Cmd+K zum Suchen",
+    "shortcutsTabMerger": "Tabs speichern, ohne das Popup zu öffnen; <code>Strg/Cmd+K</code> zum Suchen",
     "customizable": "Anpassbar",
     "urlRulesLimits": "{count, number} gratis, unbegrenzt mit Pro",
     "bulkActions": "Auswählen, verschieben, mit Stern markieren, teilen, löschen",
-    "searchFilters": "Filter: group:, window:, tag:",
+    "searchFilters": "Filter: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Gruppen und Backups im Browser ansehen",
     "importFormats": "JSON, Lesezeichen-HTML, OneTab",
     "importExportLists": "Listen importieren und exportieren",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "Ab {monthly} pro Nutzer/Monat, mindestens {count, number} Nutzer",
     "noLimits": "Ohne Limits",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, Regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, Regex",
     "offlineThisBrowser": "Funktioniert offline, nur in diesem Browser",
     "savedWindowsFiles": "Gespeicherte Fenster als Dateien",
     "autoSavesOnCloseTimer": "Speichert beim Schließen und per Timer",
@@ -285,8 +285,8 @@
     "lead": "Deine Listen kommen als Gruppen an, samt Titeln. Nichts verlässt deinen Browser.",
     "steps": {
       "export": "Öffne in OneTab <b>Export / Import URLs</b> und klicke auf <b>Copy to clipboard</b>.",
-      "save": "Füge den Text in eine reine Textdatei ein (Editor, oder TextEdit im Modus „Reiner Text“) und speichere sie als <b>.txt</b>.",
-      "open": "Öffne in TabMerger <b>Einstellungen → Daten</b>, klicke auf <b>Importieren</b> und wähle die .txt-Datei.",
+      "save": "Füge den Text in eine reine Textdatei ein (Editor, oder TextEdit im Modus „Reiner Text“) und speichere sie als <b><code>.txt</code></b>.",
+      "open": "Öffne in TabMerger <b>Einstellungen → Daten</b>, klicke auf <b>Importieren</b> und wähle die <code>.txt</code>-Datei.",
       "import": "Bestätige. Jede OneTab-Gruppe wird zu einer eigenen Gruppe, benannt „Imported 1“, „Imported 2“ und so weiter.",
       "other": "Du kommst von einem anderen Tool? Exportiere deine Lesezeichen als HTML oder eine JSON-Datei und importiere sie genauso."
     }

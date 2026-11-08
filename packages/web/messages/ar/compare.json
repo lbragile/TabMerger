@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "انتقل في دقيقة",
-      "description": "انسخ قوائم OneTab إلى ملف .txt واستورده من الإعدادات ← البيانات: تصبح كل قائمة مجموعة. ويعمل أيضًا HTML للإشارات المرجعية وJSON."
+      "description": "انسخ قوائم OneTab إلى ملف <code>.txt</code> واستورده من الإعدادات ← البيانات: تصبح كل قائمة مجموعة. ويعمل أيضًا HTML للإشارات المرجعية وJSON."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "مشفّرة",
     "sharedSpaces": "مساحات مشتركة",
     "mouseKeyboard": "بالماوس ولوحة المفاتيح",
-    "shortcutsTabMerger": "حفظ علامات التبويب دون فتح النافذة المنبثقة؛ ⁨Ctrl/Cmd+K⁩ للبحث",
+    "shortcutsTabMerger": "حفظ علامات التبويب دون فتح النافذة المنبثقة؛ <code>Ctrl/Cmd+K</code> للبحث",
     "customizable": "قابلة للتخصيص",
     "urlRulesLimits": "{count, number} مجانًا، وبلا حدود في Pro",
     "bulkActions": "تحديد، نقل، تمييز بنجمة، مشاركة، حذف",
-    "searchFilters": "عوامل التصفية: ⁨group:⁩، ⁨window:⁩، ⁨tag:⁩",
+    "searchFilters": "عوامل التصفية: <code>group:</code>، <code>window:</code>، <code>tag:</code>",
     "dashboardView": "عرض المجموعات والنسخ الاحتياطية في المتصفح",
     "importFormats": "⁨JSON⁩، و⁨HTML⁩ للإشارات المرجعية، و⁨OneTab⁩",
     "importExportLists": "استيراد القوائم وتصديرها",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "من {monthly} لكل مستخدم شهريًا، {count, number} مستخدمين على الأقل",
     "noLimits": "بلا حدود",
     "proPlan": "Pro",
-    "searchOperators": "⁨t:⁩، ⁨u:⁩، ⁨regex⁩",
+    "searchOperators": "<code>t:</code>، <code>u:</code>، ⁨regex⁩",
     "offlineThisBrowser": "يعمل دون اتصال، في هذا المتصفح فقط",
     "savedWindowsFiles": "النوافذ المحفوظة كملفات",
     "autoSavesOnCloseTimer": "يحفظ عند الإغلاق وعلى فترات",
@@ -285,8 +285,8 @@
     "lead": "تصل قوائمك كمجموعات، مع عناوينها. لا شيء يغادر متصفحك.",
     "steps": {
       "export": "في OneTab، افتح <b>Export / Import URLs</b> واضغط <b>Copy to clipboard</b>.",
-      "save": "الصقه في ملف نصي عادي (Notepad، أو TextEdit في وضع النص العادي) واحفظه بامتداد <b>.txt</b>.",
-      "open": "في TabMerger، افتح <b>الإعدادات ← البيانات</b>، واضغط <b>استيراد</b> واختر ملف .txt.",
+      "save": "الصقه في ملف نصي عادي (Notepad، أو TextEdit في وضع النص العادي) واحفظه بامتداد <b><code>.txt</code></b>.",
+      "open": "في TabMerger، افتح <b>الإعدادات ← البيانات</b>، واضغط <b>استيراد</b> واختر ملف <code>.txt</code>.",
       "import": "أكّد. تصبح كل مجموعة من OneTab مجموعة مستقلة باسم ⁨\"Imported 1\"⁩ و⁨\"Imported 2\"⁩ وهكذا.",
       "other": "قادم من أداة أخرى؟ صدّر إشاراتك المرجعية بصيغة HTML أو كملف JSON، ثم استورده بالطريقة نفسها."
     }

@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Chuyển sang trong một phút",
-      "description": "Sao chép danh sách OneTab vào tệp .txt rồi nhập từ Cài đặt → Dữ liệu: mỗi danh sách thành một nhóm. HTML dấu trang và JSON cũng dùng được."
+      "description": "Sao chép danh sách OneTab vào tệp <code>.txt</code> rồi nhập từ Cài đặt → Dữ liệu: mỗi danh sách thành một nhóm. HTML dấu trang và JSON cũng dùng được."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Được mã hóa",
     "sharedSpaces": "Không gian dùng chung",
     "mouseKeyboard": "Chuột và bàn phím",
-    "shortcutsTabMerger": "Lưu tab mà không cần mở cửa sổ bật lên; Ctrl/Cmd+K để tìm",
+    "shortcutsTabMerger": "Lưu tab mà không cần mở cửa sổ bật lên; <code>Ctrl/Cmd+K</code> để tìm",
     "customizable": "Tùy chỉnh được",
     "urlRulesLimits": "{count, number} miễn phí, không giới hạn với Pro",
     "bulkActions": "Chọn, di chuyển, gắn sao, chia sẻ, xóa",
-    "searchFilters": "Bộ lọc: group:, window:, tag:",
+    "searchFilters": "Bộ lọc: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Xem nhóm và bản sao lưu trong trình duyệt",
     "importFormats": "JSON, HTML dấu trang, OneTab",
     "importExportLists": "Nhập và xuất danh sách",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "Từ {monthly} mỗi người dùng/tháng, tối thiểu {count, number} người dùng",
     "noLimits": "Không giới hạn",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Chạy ngoại tuyến, chỉ trong trình duyệt này",
     "savedWindowsFiles": "Cửa sổ đã lưu dưới dạng tệp",
     "autoSavesOnCloseTimer": "Tự lưu khi đóng và theo hẹn giờ",
@@ -285,8 +285,8 @@
     "lead": "Danh sách của bạn được chuyển thành nhóm, giữ nguyên tiêu đề. Không có gì rời khỏi trình duyệt của bạn.",
     "steps": {
       "export": "Trong OneTab, mở <b>Export / Import URLs</b> và nhấn <b>Copy to clipboard</b>.",
-      "save": "Dán vào một tệp văn bản thuần (Notepad, hoặc TextEdit ở chế độ văn bản thuần) và lưu thành <b>.txt</b>.",
-      "open": "Trong TabMerger, mở <b>Cài đặt → Dữ liệu</b>, nhấn <b>Nhập</b> và chọn tệp .txt.",
+      "save": "Dán vào một tệp văn bản thuần (Notepad, hoặc TextEdit ở chế độ văn bản thuần) và lưu thành <b><code>.txt</code></b>.",
+      "open": "Trong TabMerger, mở <b>Cài đặt → Dữ liệu</b>, nhấn <b>Nhập</b> và chọn tệp <code>.txt</code>.",
       "import": "Xác nhận. Mỗi nhóm OneTab trở thành một nhóm riêng, tên là \"Imported 1\", \"Imported 2\", v.v.",
       "other": "Dùng công cụ khác? Xuất dấu trang dưới dạng HTML, hoặc tệp JSON, rồi nhập theo cách tương tự."
     }

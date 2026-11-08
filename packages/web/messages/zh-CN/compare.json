@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "一分钟完成迁移",
-      "description": "把 OneTab 列表复制到 .txt 文件中，然后在 设置 → 数据 中导入，每个列表都会变成一个分组。也支持书签 HTML 和 JSON。"
+      "description": "把 OneTab 列表复制到 <code>.txt</code> 文件中，然后在 设置 → 数据 中导入，每个列表都会变成一个分组。也支持书签 HTML 和 JSON。"
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "已加密",
     "sharedSpaces": "共享空间",
     "mouseKeyboard": "鼠标和键盘",
-    "shortcutsTabMerger": "无需打开弹窗即可保存标签页；Ctrl/Cmd+K 搜索",
+    "shortcutsTabMerger": "无需打开弹窗即可保存标签页；<code>Ctrl/Cmd+K</code> 搜索",
     "customizable": "可自定义",
     "urlRulesLimits": "免费 {count, number} 条，Pro 不限",
     "bulkActions": "选择、移动、加星标、分享、删除",
-    "searchFilters": "筛选：group:、window:、tag:",
+    "searchFilters": "筛选：<code>group:</code>、<code>window:</code>、<code>tag:</code>",
     "dashboardView": "在浏览器中查看分组和备份",
     "importFormats": "JSON、书签 HTML、OneTab",
     "importExportLists": "导入和导出列表",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "每用户每月 {monthly} 起，至少 {count, number} 名用户",
     "noLimits": "无限制",
     "proPlan": "Pro",
-    "searchOperators": "t:、u:、正则表达式",
+    "searchOperators": "<code>t:</code>、<code>u:</code>、正则表达式",
     "offlineThisBrowser": "离线可用，仅限此浏览器",
     "savedWindowsFiles": "将保存的窗口存为文件",
     "autoSavesOnCloseTimer": "关闭时和定时自动保存",
@@ -285,8 +285,8 @@
     "lead": "您的列表会连同标题一起变成分组。数据不会离开您的浏览器。",
     "steps": {
       "export": "在 OneTab 中打开 <b>Export / Import URLs</b>，然后点击 <b>Copy to clipboard</b>。",
-      "save": "将其粘贴到纯文本文件（记事本，或设为纯文本的“文本编辑”）中，并保存为 <b>.txt</b>。",
-      "open": "在 TabMerger 中打开 <b>设置 → 数据</b>，点击 <b>导入</b> 并选择该 .txt 文件。",
+      "save": "将其粘贴到纯文本文件（记事本，或设为纯文本的“文本编辑”）中，并保存为 <b><code>.txt</code></b>。",
+      "open": "在 TabMerger 中打开 <b>设置 → 数据</b>，点击 <b>导入</b> 并选择该 <code>.txt</code> 文件。",
       "import": "确认即可。每个 OneTab 分组都会成为独立的分组，名称依次为“Imported 1”“Imported 2”等。",
       "other": "来自其他工具？将书签导出为 HTML 或 JSON 文件，然后用同样的方法导入。"
     }

@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "1분 만에 이전",
-      "description": "OneTab 목록을 .txt 파일에 복사한 뒤 설정 → 데이터에서 가져오면 목록마다 그룹이 됩니다. 북마크 HTML과 JSON도 지원합니다."
+      "description": "OneTab 목록을 <code>.txt</code> 파일에 복사한 뒤 설정 → 데이터에서 가져오면 목록마다 그룹이 됩니다. 북마크 HTML과 JSON도 지원합니다."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "암호화됨",
     "sharedSpaces": "공유 스페이스",
     "mouseKeyboard": "마우스와 키보드",
-    "shortcutsTabMerger": "팝업을 열지 않고 탭 저장, Ctrl/Cmd+K로 검색",
+    "shortcutsTabMerger": "팝업을 열지 않고 탭 저장, <code>Ctrl/Cmd+K</code>로 검색",
     "customizable": "사용자 지정 가능",
     "urlRulesLimits": "{count, number}개 무료, Pro는 무제한",
     "bulkActions": "선택, 이동, 별표, 공유, 삭제",
-    "searchFilters": "필터: group:, window:, tag:",
+    "searchFilters": "필터: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "브라우저에서 그룹과 백업 보기",
     "importFormats": "JSON, 북마크 HTML, OneTab",
     "importExportLists": "목록 가져오기 및 내보내기",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "사용자당 월 {monthly}부터, 최소 {count, number}명",
     "noLimits": "제한 없음",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, 정규식",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, 정규식",
     "offlineThisBrowser": "오프라인 작동, 이 브라우저에서만",
     "savedWindowsFiles": "저장한 창을 파일로",
     "autoSavesOnCloseTimer": "닫을 때와 타이머로 자동 저장",
@@ -285,8 +285,8 @@
     "lead": "목록이 제목까지 그대로 그룹으로 옮겨집니다. 데이터는 브라우저 밖으로 나가지 않습니다.",
     "steps": {
       "export": "OneTab에서 <b>Export / Import URLs</b>를 열고 <b>Copy to clipboard</b>를 누르세요.",
-      "save": "일반 텍스트 파일(메모장, 또는 일반 텍스트로 설정한 TextEdit)에 붙여 넣고 <b>.txt</b>로 저장하세요.",
-      "open": "TabMerger에서 <b>설정 → 데이터</b>를 열고 <b>가져오기</b>를 누른 뒤 .txt 파일을 선택하세요.",
+      "save": "일반 텍스트 파일(메모장, 또는 일반 텍스트로 설정한 TextEdit)에 붙여 넣고 <b><code>.txt</code></b>로 저장하세요.",
+      "open": "TabMerger에서 <b>설정 → 데이터</b>를 열고 <b>가져오기</b>를 누른 뒤 <code>.txt</code> 파일을 선택하세요.",
       "import": "확인하세요. OneTab 그룹마다 별도 그룹이 생기며 이름은 'Imported 1', 'Imported 2' 순으로 붙습니다.",
       "other": "다른 도구를 쓰셨나요? 북마크를 HTML이나 JSON 파일로 내보낸 뒤 같은 방법으로 가져오세요."
     }

@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Переезд за минуту",
-      "description": "Скопируйте списки OneTab в файл .txt и импортируйте его в разделе «Настройки → Данные»: каждый список станет группой. HTML закладок и JSON тоже подходят."
+      "description": "Скопируйте списки OneTab в файл <code>.txt</code> и импортируйте его в разделе «Настройки → Данные»: каждый список станет группой. HTML закладок и JSON тоже подходят."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Зашифрованы",
     "sharedSpaces": "Общие пространства",
     "mouseKeyboard": "Мышь и клавиатура",
-    "shortcutsTabMerger": "Сохранение вкладок без открытия окна расширения; Ctrl/Cmd+K для поиска",
+    "shortcutsTabMerger": "Сохранение вкладок без открытия окна расширения; <code>Ctrl/Cmd+K</code> для поиска",
     "customizable": "Настраиваемые",
     "urlRulesLimits": "{count, number} бесплатно, без ограничений в Pro",
     "bulkActions": "Выбрать, переместить, отметить звездой, поделиться, удалить",
-    "searchFilters": "Фильтры: group:, window:, tag:",
+    "searchFilters": "Фильтры: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Группы и резервные копии в браузере",
     "importFormats": "JSON, HTML закладок, OneTab",
     "importExportLists": "Импорт и экспорт списков",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "От {monthly} за пользователя в месяц, минимум {count, number} пользователя",
     "noLimits": "Без ограничений",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Работает офлайн, только в этом браузере",
     "savedWindowsFiles": "Сохранённые окна в виде файлов",
     "autoSavesOnCloseTimer": "Сохраняет при закрытии и по таймеру",
@@ -285,8 +285,8 @@
     "lead": "Ваши списки переносятся как группы, вместе с заголовками. Ничто не покидает ваш браузер.",
     "steps": {
       "export": "В OneTab откройте <b>Export / Import URLs</b> и нажмите <b>Copy to clipboard</b>.",
-      "save": "Вставьте текст в обычный текстовый файл (Блокнот или TextEdit в режиме простого текста) и сохраните его как <b>.txt</b>.",
-      "open": "В TabMerger откройте <b>Настройки → Данные</b>, нажмите <b>Импорт</b> и выберите файл .txt.",
+      "save": "Вставьте текст в обычный текстовый файл (Блокнот или TextEdit в режиме простого текста) и сохраните его как <b><code>.txt</code></b>.",
+      "open": "В TabMerger откройте <b>Настройки → Данные</b>, нажмите <b>Импорт</b> и выберите файл <code>.txt</code>.",
       "import": "Подтвердите. Каждая группа OneTab станет отдельной группой с названием «Imported 1», «Imported 2» и так далее.",
       "other": "Переходите с другого инструмента? Экспортируйте закладки в HTML или файл JSON и импортируйте его так же."
     }

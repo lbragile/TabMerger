@@ -65,6 +65,16 @@ height so it never covers a cell. Render controls only after hydration
 (`useSyncExternalStore(() => () => {}, () => true, () => false)`). jsdom has no
 `ResizeObserver`, so guard it.
 
+**Code-like tokens in RTL copy.** Wrap them in a `<code>` tag in the catalog and render it as
+`<bdi dir="ltr">` (`components/compare/richText.tsx`, `COMPARE_RICH_TAGS`): search filters
+(`group:`), operators (`t:`), key combos (`Ctrl/Cmd+K`) and file extensions (`.txt`). A leading
+`.` is neutral, so a bare ".txt" in Hebrew shows its dot on the wrong side. A tag beats invisible
+FSI/PDI marks because the catalog test requires every locale to keep the English message's tags.
+Before calling a bidi bug, measure glyph order with a `Range` per character (`getBoundingClientRect().left`).
+In correct RTL, "מסננים: group:," puts the Hebrew label's colon right next to the token's
+colon. LTR readers see that as ": :group" in screenshots, and image-to-text readings of mixed
+RTL lines are unreliable.
+
 **Copy that describes the extension must match its UI.** The approved mockup said "pick OneTab,
 paste"; the extension imports OneTab from a `.txt` file via Settings → Data → Import (the
 separate Import/Export modal is not opened from anywhere). Grep `packages/extension/src` (the

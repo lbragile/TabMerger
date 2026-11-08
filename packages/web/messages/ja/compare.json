@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "1 分で乗り換え",
-      "description": "OneTab のリストを .txt ファイルにコピーし、設定 → データ からインポートすれば、各リストがグループになります。ブックマークの HTML や JSON にも対応しています。"
+      "description": "OneTab のリストを <code>.txt</code> ファイルにコピーし、設定 → データ からインポートすれば、各リストがグループになります。ブックマークの HTML や JSON にも対応しています。"
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "暗号化",
     "sharedSpaces": "共有スペース",
     "mouseKeyboard": "マウスとキーボード",
-    "shortcutsTabMerger": "ポップアップを開かずにタブを保存、Ctrl/Cmd+K で検索",
+    "shortcutsTabMerger": "ポップアップを開かずにタブを保存、<code>Ctrl/Cmd+K</code> で検索",
     "customizable": "カスタマイズ可能",
     "urlRulesLimits": "{count, number} 件まで無料、Pro なら無制限",
     "bulkActions": "選択、移動、スター、共有、削除",
-    "searchFilters": "フィルター: group:、window:、tag:",
+    "searchFilters": "フィルター: <code>group:</code>、<code>window:</code>、<code>tag:</code>",
     "dashboardView": "ブラウザでグループとバックアップを確認",
     "importFormats": "JSON、ブックマーク HTML、OneTab",
     "importExportLists": "リストのインポートとエクスポート",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "ユーザー 1 人あたり {monthly}/月から、最低 {count, number} ユーザー",
     "noLimits": "制限なし",
     "proPlan": "Pro",
-    "searchOperators": "t:、u:、正規表現",
+    "searchOperators": "<code>t:</code>、<code>u:</code>、正規表現",
     "offlineThisBrowser": "オフラインで動作、このブラウザのみ",
     "savedWindowsFiles": "保存したウィンドウをファイルで",
     "autoSavesOnCloseTimer": "閉じたときとタイマーで自動保存",
@@ -285,8 +285,8 @@
     "lead": "リストはタイトルも含めてグループとして取り込まれます。データがブラウザの外に出ることはありません。",
     "steps": {
       "export": "OneTab で <b>Export / Import URLs</b> を開き、<b>Copy to clipboard</b> を押します。",
-      "save": "プレーンテキストのファイル（メモ帳、またはプレーンテキストに設定したテキストエディット）に貼り付けて、<b>.txt</b> として保存します。",
-      "open": "TabMerger で <b>設定 → データ</b> を開き、<b>インポート</b> を押して .txt ファイルを選びます。",
+      "save": "プレーンテキストのファイル（メモ帳、またはプレーンテキストに設定したテキストエディット）に貼り付けて、<b><code>.txt</code></b> として保存します。",
+      "open": "TabMerger で <b>設定 → データ</b> を開き、<b>インポート</b> を押して <code>.txt</code> ファイルを選びます。",
       "import": "確定します。OneTab のグループはそれぞれ独立したグループになり、「Imported 1」「Imported 2」…と名前が付きます。",
       "other": "ほかのツールからの場合は、ブックマークを HTML または JSON ファイルとしてエクスポートし、同じ方法でインポートしてください。"
     }

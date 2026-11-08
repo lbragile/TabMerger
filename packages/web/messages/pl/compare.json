@@ -18,7 +18,7 @@
     },
     "import": {
       "title": "Przeprowadzka w minutę",
-      "description": "Skopiuj listy z OneTab do pliku .txt i zaimportuj go w Ustawienia → Dane: każda lista stanie się grupą. Działa też HTML zakładek i JSON."
+      "description": "Skopiuj listy z OneTab do pliku <code>.txt</code> i zaimportuj go w Ustawienia → Dane: każda lista stanie się grupą. Działa też HTML zakładek i JSON."
     }
   },
   "table": {
@@ -231,11 +231,11 @@
     "encrypted": "Szyfrowane",
     "sharedSpaces": "Wspólne przestrzenie",
     "mouseKeyboard": "Mysz i klawiatura",
-    "shortcutsTabMerger": "Zapis kart bez otwierania okienka; Ctrl/Cmd+K do wyszukiwania",
+    "shortcutsTabMerger": "Zapis kart bez otwierania okienka; <code>Ctrl/Cmd+K</code> do wyszukiwania",
     "customizable": "Konfigurowalne",
     "urlRulesLimits": "{count, number} za darmo, bez limitu w Pro",
     "bulkActions": "Zaznacz, przenieś, oznacz gwiazdką, udostępnij, usuń",
-    "searchFilters": "Filtry: group:, window:, tag:",
+    "searchFilters": "Filtry: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
     "dashboardView": "Podgląd grup i kopii w przeglądarce",
     "importFormats": "JSON, HTML zakładek, OneTab",
     "importExportLists": "Import i eksport list",
@@ -258,7 +258,7 @@
     "teamPricePerUser": "Od {monthly} za użytkownika/mies., co najmniej {count, number} użytkowników",
     "noLimits": "Bez limitów",
     "proPlan": "Pro",
-    "searchOperators": "t:, u:, regex",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
     "offlineThisBrowser": "Działa offline, tylko w tej przeglądarce",
     "savedWindowsFiles": "Zapisane okna jako pliki",
     "autoSavesOnCloseTimer": "Zapisuje przy zamykaniu i co jakiś czas",
@@ -285,8 +285,8 @@
     "lead": "Twoje listy trafią do grup, razem z tytułami. Nic nie opuszcza Twojej przeglądarki.",
     "steps": {
       "export": "W OneTab otwórz <b>Export / Import URLs</b> i kliknij <b>Copy to clipboard</b>.",
-      "save": "Wklej tekst do zwykłego pliku tekstowego (Notatnik albo TextEdit w trybie zwykłego tekstu) i zapisz go jako <b>.txt</b>.",
-      "open": "W TabMergerze otwórz <b>Ustawienia → Dane</b>, kliknij <b>Import</b> i wybierz plik .txt.",
+      "save": "Wklej tekst do zwykłego pliku tekstowego (Notatnik albo TextEdit w trybie zwykłego tekstu) i zapisz go jako <b><code>.txt</code></b>.",
+      "open": "W TabMergerze otwórz <b>Ustawienia → Dane</b>, kliknij <b>Import</b> i wybierz plik <code>.txt</code>.",
       "import": "Potwierdź. Każda grupa z OneTab stanie się osobną grupą o nazwie „Imported 1”, „Imported 2” i tak dalej.",
       "other": "Przechodzisz z innego narzędzia? Wyeksportuj zakładki jako HTML lub plik JSON i zaimportuj go tak samo."
     }
