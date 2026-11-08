@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Oturumlar ve çökme sonrası kurtarma"
     },
+    "autoSave": {
+      "label": "Açık sekmeleri otomatik kaydetme"
+    },
     "continueOnDevice": {
       "label": "Başka bir cihazda devam etme"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Pencereleri kapatın, ağaçta kalsınlar",
     "textOutlineHtml": "Metin taslağı veya HTML dosyası",
     "stgImportSources": "Tab Groups, Panorama View, Sync Tab Groups, JSON'dan",
-    "closedTabsNotSynced": "Kapatılan sekmeler eşitlenmez"
+    "closedTabsNotSynced": "Kapatılan sekmeler eşitlenmez",
+    "autoSaveTabMerger": "Ücretsiz: açtığınızda en yeni {count, number} kayıt saklanır. Pro: baştan açık, hepsi saklanır ve uçtan uca şifreli eşitlenir"
   },
   "legend": {
     "label": "Açıklama",

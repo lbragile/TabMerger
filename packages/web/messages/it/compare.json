@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sessioni e ripristino dopo un crash"
     },
+    "autoSave": {
+      "label": "Salvataggio automatico delle schede aperte"
+    },
     "continueOnDevice": {
       "label": "Continua su un altro dispositivo"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Chiudi le finestre, restano nell'albero",
     "textOutlineHtml": "Struttura di testo o file HTML",
     "stgImportSources": "Da Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Le schede chiuse non vengono sincronizzate"
+    "closedTabsNotSynced": "Le schede chiuse non vengono sincronizzate",
+    "autoSaveTabMerger": "Gratis: da attivare, restano i {count, number} più recenti. Pro: attivo da subito, restano tutti e si sincronizzano con crittografia end-to-end"
   },
   "legend": {
     "label": "Legenda",

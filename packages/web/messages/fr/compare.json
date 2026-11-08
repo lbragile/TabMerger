@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sessions et reprise après plantage"
     },
+    "autoSave": {
+      "label": "Enregistrement automatique des onglets ouverts"
+    },
     "continueOnDevice": {
       "label": "Reprendre sur un autre appareil"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Fermer des fenêtres en les gardant dans l’arbre",
     "textOutlineHtml": "Plan texte ou fichier HTML",
     "stgImportSources": "Depuis Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Les onglets fermés ne sont pas synchronisés"
+    "closedTabsNotSynced": "Les onglets fermés ne sont pas synchronisés",
+    "autoSaveTabMerger": "Gratuit : à activer, les {count, number} plus récents conservés. Pro : actif d’emblée, tous conservés et synchronisés, chiffrés de bout en bout"
   },
   "legend": {
     "label": "Légende",

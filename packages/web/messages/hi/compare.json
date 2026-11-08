@@ -102,6 +102,9 @@
     "sessions": {
       "label": "सेशन और क्रैश के बाद रिकवरी"
     },
+    "autoSave": {
+      "label": "खुले टैब अपने आप सहेजें"
+    },
     "continueOnDevice": {
       "label": "दूसरे डिवाइस पर जारी रखें"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "विंडो बंद करें, ट्री में बनी रहती हैं",
     "textOutlineHtml": "टेक्स्ट आउटलाइन या HTML फ़ाइल",
     "stgImportSources": "Tab Groups, Panorama View, Sync Tab Groups, JSON से",
-    "closedTabsNotSynced": "बंद टैब सिंक नहीं होते"
+    "closedTabsNotSynced": "बंद टैब सिंक नहीं होते",
+    "autoSaveTabMerger": "मुफ़्त: चालू करने पर सबसे नए {count, number} रखे जाते हैं। Pro: शुरू से चालू, सभी रखे जाते हैं और एंड-टू-एंड एन्क्रिप्टेड सिंक होते हैं"
   },
   "legend": {
     "label": "संकेत",

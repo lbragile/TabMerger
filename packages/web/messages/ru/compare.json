@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Сессии и восстановление после сбоя"
     },
+    "autoSave": {
+      "label": "Автосохранение открытых вкладок"
+    },
     "continueOnDevice": {
       "label": "Продолжить на другом устройстве"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Закрытые окна остаются в дереве",
     "textOutlineHtml": "Текстовая структура или файл HTML",
     "stgImportSources": "Из Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Закрытые вкладки не синхронизируются"
+    "closedTabsNotSynced": "Закрытые вкладки не синхронизируются",
+    "autoSaveTabMerger": "Бесплатно: включается вручную, хранятся последние {count, number}. Pro: включено сразу, хранятся все, синхронизация со сквозным шифрованием"
   },
   "legend": {
     "label": "Обозначения",

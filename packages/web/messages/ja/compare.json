@@ -102,6 +102,9 @@
     "sessions": {
       "label": "セッションとクラッシュからの復元"
     },
+    "autoSave": {
+      "label": "開いているタブの自動保存"
+    },
     "continueOnDevice": {
       "label": "別のデバイスで続ける"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "ウィンドウを閉じてもツリーに残る",
     "textOutlineHtml": "テキストのアウトラインまたは HTML ファイル",
     "stgImportSources": "Tab Groups、Panorama View、Sync Tab Groups、JSON から",
-    "closedTabsNotSynced": "閉じたタブは同期されない"
+    "closedTabsNotSynced": "閉じたタブは同期されない",
+    "autoSaveTabMerger": "無料: オンにすると最新 {count, number} 件を保持。Pro: 最初からオン、すべて保持し、エンドツーエンド暗号化で同期"
   },
   "legend": {
     "label": "凡例",

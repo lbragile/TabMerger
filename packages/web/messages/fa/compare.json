@@ -102,6 +102,9 @@
     "sessions": {
       "label": "نشست‌ها و بازیابی پس از خرابی"
     },
+    "autoSave": {
+      "label": "ذخیرهٔ خودکار زبانه‌های باز"
+    },
     "continueOnDevice": {
       "label": "ادامه در دستگاه دیگر"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "پنجره‌ها را ببندید، در درخت می‌مانند",
     "textOutlineHtml": "طرح متنی یا فایل HTML",
     "stgImportSources": "از ⁨Tab Groups⁩، ⁨Panorama View⁩، ⁨Sync Tab Groups⁩، ⁨JSON⁩",
-    "closedTabsNotSynced": "زبانه‌های بسته همگام نمی‌شوند"
+    "closedTabsNotSynced": "زبانه‌های بسته همگام نمی‌شوند",
+    "autoSaveTabMerger": "رایگان: روشنش کنید، {count, number} مورد جدیدتر نگه داشته می‌شوند. Pro: از ابتدا روشن، همه نگه داشته و با رمزگذاری سرتاسری همگام می‌شوند"
   },
   "legend": {
     "label": "راهنما",

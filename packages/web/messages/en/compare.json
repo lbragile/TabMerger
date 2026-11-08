@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sessions & crash recovery"
     },
+    "autoSave": {
+      "label": "Auto-save open tabs"
+    },
     "continueOnDevice": {
       "label": "Continue on another device"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Close windows, keep them in the tree",
     "textOutlineHtml": "Text outline or HTML file",
     "stgImportSources": "From Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Closed tabs aren't synced"
+    "closedTabsNotSynced": "Closed tabs aren't synced",
+    "autoSaveTabMerger": "Free: turn it on, newest {count, number} kept. Pro: on from the start, all kept and synced, end-to-end encrypted"
   },
   "legend": {
     "label": "Key",

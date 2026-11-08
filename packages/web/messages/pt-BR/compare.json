@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sessões e recuperação após falhas"
     },
+    "autoSave": {
+      "label": "Salvamento automático de abas abertas"
+    },
     "continueOnDevice": {
       "label": "Continuar em outro dispositivo"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Feche janelas e mantenha na árvore",
     "textOutlineHtml": "Estrutura em texto ou arquivo HTML",
     "stgImportSources": "De Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Abas fechadas não são sincronizadas"
+    "closedTabsNotSynced": "Abas fechadas não são sincronizadas",
+    "autoSaveTabMerger": "Grátis: ative e os {count, number} mais recentes ficam guardados. Pro: ativo desde o início, todos guardados e sincronizados com criptografia de ponta a ponta"
   },
   "legend": {
     "label": "Legenda",

@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sitzungen & Absturz-Wiederherstellung"
     },
+    "autoSave": {
+      "label": "Offene Tabs automatisch speichern"
+    },
     "continueOnDevice": {
       "label": "Auf einem anderen Gerät weitermachen"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Fenster schließen, im Baum behalten",
     "textOutlineHtml": "Text-Gliederung oder HTML-Datei",
     "stgImportSources": "Aus Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Geschlossene Tabs werden nicht synchronisiert"
+    "closedTabsNotSynced": "Geschlossene Tabs werden nicht synchronisiert",
+    "autoSaveTabMerger": "Gratis: einschaltbar, die neuesten {count, number} bleiben erhalten. Pro: von Anfang an aktiv, alle bleiben erhalten und werden Ende-zu-Ende-verschlüsselt synchronisiert"
   },
   "legend": {
     "label": "Legende",

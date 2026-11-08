@@ -102,6 +102,9 @@
     "sessions": {
       "label": "세션 및 충돌 복구"
     },
+    "autoSave": {
+      "label": "열린 탭 자동 저장"
+    },
     "continueOnDevice": {
       "label": "다른 기기에서 이어 하기"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "창을 닫아도 트리에 유지",
     "textOutlineHtml": "텍스트 개요 또는 HTML 파일",
     "stgImportSources": "Tab Groups, Panorama View, Sync Tab Groups, JSON에서",
-    "closedTabsNotSynced": "닫은 탭은 동기화되지 않음"
+    "closedTabsNotSynced": "닫은 탭은 동기화되지 않음",
+    "autoSaveTabMerger": "무료: 켜면 최신 {count, number}개 보관. Pro: 처음부터 켜짐, 모두 보관되고 종단 간 암호화로 동기화"
   },
   "legend": {
     "label": "범례",

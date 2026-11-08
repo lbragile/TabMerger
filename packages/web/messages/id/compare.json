@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sesi & pemulihan setelah crash"
     },
+    "autoSave": {
+      "label": "Simpan otomatis tab yang terbuka"
+    },
     "continueOnDevice": {
       "label": "Lanjutkan di perangkat lain"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Tutup jendela, tetap ada di pohon",
     "textOutlineHtml": "Kerangka teks atau file HTML",
     "stgImportSources": "Dari Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Tab yang ditutup tidak disinkronkan"
+    "closedTabsNotSynced": "Tab yang ditutup tidak disinkronkan",
+    "autoSaveTabMerger": "Gratis: aktifkan, {count, number} terbaru disimpan. Pro: aktif sejak awal, semua disimpan dan disinkronkan dengan enkripsi end-to-end"
   },
   "legend": {
     "label": "Keterangan",

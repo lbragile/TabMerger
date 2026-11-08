@@ -92,8 +92,8 @@ describe('comparison data', () => {
     }
   })
 
-  it('has 36 rows, every one in a known group, and the groups appear in page order', () => {
-    expect(COMPARISON_ROWS).toHaveLength(36)
+  it('has 37 rows, every one in a known group, and the groups appear in page order', () => {
+    expect(COMPARISON_ROWS).toHaveLength(37)
     const order = COMPARISON_ROWS.map((row) => ROW_GROUPS.indexOf(row.group))
     expect(order.every((i) => i >= 0)).toBe(true)
     expect(order).toEqual([...order].sort((a, b) => a - b))
@@ -177,7 +177,9 @@ describe('ComparisonTable', () => {
     // Ten product columns plus the visually hidden feature column.
     const heads = screen.getAllByRole('columnheader')
     for (const product of PRODUCTS) expect(heads.some((h) => h.textContent?.startsWith(product.name))).toBe(true)
-  })
+    // 37 role queries over a 370-cell table: passes alone, but ran past the default 5 s when
+    // the full suite saturates the machine.
+  }, 20_000)
 
   it('gives every cell accessible text for its state, with icons hidden from assistive technology', () => {
     const { container } = render(<ComparisonTable />)

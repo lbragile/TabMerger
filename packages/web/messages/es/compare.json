@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sesiones y recuperación tras fallos"
     },
+    "autoSave": {
+      "label": "Guardado automático de pestañas abiertas"
+    },
     "continueOnDevice": {
       "label": "Continuar en otro dispositivo"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Cierra ventanas y las conserva en el árbol",
     "textOutlineHtml": "Esquema de texto o archivo HTML",
     "stgImportSources": "Desde Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Las pestañas cerradas no se sincronizan"
+    "closedTabsNotSynced": "Las pestañas cerradas no se sincronizan",
+    "autoSaveTabMerger": "Gratis: actívalo y se conservan los {count, number} más recientes. Pro: activado desde el inicio, se conservan todos y se sincronizan con cifrado de extremo a extremo"
   },
   "legend": {
     "label": "Leyenda",

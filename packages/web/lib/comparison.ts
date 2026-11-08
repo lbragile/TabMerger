@@ -1,4 +1,4 @@
-import { AUTO_BACKUP_RETENTION_COUNT, FREE_TIER_LIMITS, PRICING_TIERS, SUPPORTED_LOCALES, type AiAvailability } from '@tabmerger/shared'
+import { AUTO_BACKUP_RETENTION_COUNT, AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMITS, PRICING_TIERS, SUPPORTED_LOCALES, type AiAvailability } from '@tabmerger/shared'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import { STORE_BROWSER, STORE_IDS, type StoreId } from '@/lib/stores'
 
@@ -328,6 +328,13 @@ export function comparisonRows(availability: AiAvailability = AI_AVAILABILITY): 
       tabManagerPlus: { state: 'yes', labelKey: 'saveRestoreWindows' },
       tabSessionManager: { state: 'yes', noteKey: 'autoSavesOnCloseTimer' },
       tabsOutliner: { state: 'yes', labelKey: 'crashRecovery' },
+    }),
+    // Free: opt-in, the newest few kept; Pro: on from the start, every auto-save kept and synced
+    // (end-to-end encrypted). Competitors only where the spec's facts say they save open tabs
+    // automatically.
+    row('autoSave', 'saving', { state: 'yes', noteKey: 'autoSaveTabMerger', values: { count: AUTO_SAVE_FREE_KEEP_COUNT } }, {
+      workona: { state: 'yes', labelKey: 'autosave' },
+      tabSessionManager: { state: 'yes', noteKey: 'autoSavesOnCloseTimer' },
     }),
     row('continueOnDevice', 'saving', { state: 'paid', labelKey: 'pro' }),
     row('backups', 'saving', { state: 'paid', labelKey: 'pro', noteKey: 'newestKept', values: { count: AUTO_BACKUP_RETENTION_COUNT } }, {

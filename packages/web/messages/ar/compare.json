@@ -102,6 +102,9 @@
     "sessions": {
       "label": "الجلسات والاستعادة بعد الأعطال"
     },
+    "autoSave": {
+      "label": "حفظ تلقائي لعلامات التبويب المفتوحة"
+    },
     "continueOnDevice": {
       "label": "المتابعة على جهاز آخر"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "أغلق النوافذ واحتفظ بها في الشجرة",
     "textOutlineHtml": "مخطط نصي أو ملف HTML",
     "stgImportSources": "من ⁨Tab Groups⁩ و⁨Panorama View⁩ و⁨Sync Tab Groups⁩ و⁨JSON⁩",
-    "closedTabsNotSynced": "علامات التبويب المغلقة لا تُزامَن"
+    "closedTabsNotSynced": "علامات التبويب المغلقة لا تُزامَن",
+    "autoSaveTabMerger": "مجاني: فعّله ويُحتفظ بأحدث {count, number}. Pro: مفعّل من البداية، ويُحتفظ بالكل مع مزامنة مشفّرة بين الطرفين"
   },
   "legend": {
     "label": "مفتاح الرموز",

@@ -102,6 +102,9 @@
     "sessions": {
       "label": "会话与崩溃恢复"
     },
+    "autoSave": {
+      "label": "自动保存打开的标签页"
+    },
     "continueOnDevice": {
       "label": "在其他设备上继续"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "关闭窗口后仍保留在树中",
     "textOutlineHtml": "文本大纲或 HTML 文件",
     "stgImportSources": "支持 Tab Groups、Panorama View、Sync Tab Groups、JSON",
-    "closedTabsNotSynced": "已关闭的标签页不同步"
+    "closedTabsNotSynced": "已关闭的标签页不同步",
+    "autoSaveTabMerger": "免费：手动开启，保留最新 {count, number} 份。Pro：默认开启，全部保留并以端到端加密同步"
   },
   "legend": {
     "label": "图例",

@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Sesje i odzyskiwanie po awarii"
     },
+    "autoSave": {
+      "label": "Automatyczne zapisywanie otwartych kart"
+    },
     "continueOnDevice": {
       "label": "Kontynuuj na innym urządzeniu"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Zamknięte okna zostają w drzewie",
     "textOutlineHtml": "Konspekt tekstowy lub plik HTML",
     "stgImportSources": "Z Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Zamknięte karty nie są synchronizowane"
+    "closedTabsNotSynced": "Zamknięte karty nie są synchronizowane",
+    "autoSaveTabMerger": "Za darmo: do włączenia, zachowywane są najnowsze ({count, number}). Pro: włączone od początku, wszystkie zachowane i synchronizowane z szyfrowaniem end-to-end"
   },
   "legend": {
     "label": "Legenda",

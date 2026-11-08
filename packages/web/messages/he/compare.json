@@ -102,6 +102,9 @@
     "sessions": {
       "label": "סשנים ושחזור אחרי קריסה"
     },
+    "autoSave": {
+      "label": "שמירה אוטומטית של כרטיסיות פתוחות"
+    },
     "continueOnDevice": {
       "label": "המשך במכשיר אחר"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "סוגרים חלונות, והם נשארים בעץ",
     "textOutlineHtml": "מתאר טקסט או קובץ HTML",
     "stgImportSources": "מ-⁨Tab Groups⁩, ⁨Panorama View⁩, ⁨Sync Tab Groups⁩, ⁨JSON⁩",
-    "closedTabsNotSynced": "כרטיסיות סגורות לא מסונכרנות"
+    "closedTabsNotSynced": "כרטיסיות סגורות לא מסונכרנות",
+    "autoSaveTabMerger": "חינם: מפעילים, {count, number} האחרונות נשמרות. Pro: פעיל מההתחלה, כולן נשמרות ומסונכרנות בהצפנה מקצה לקצה"
   },
   "legend": {
     "label": "מקרא",

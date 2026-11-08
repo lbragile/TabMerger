@@ -102,6 +102,9 @@
     "sessions": {
       "label": "Phiên & khôi phục sau sự cố"
     },
+    "autoSave": {
+      "label": "Tự động lưu tab đang mở"
+    },
     "continueOnDevice": {
       "label": "Tiếp tục trên thiết bị khác"
     },
@@ -263,7 +266,8 @@
     "closeWindowsKeepTree": "Đóng cửa sổ, vẫn giữ trong cây",
     "textOutlineHtml": "Dàn ý văn bản hoặc tệp HTML",
     "stgImportSources": "Từ Tab Groups, Panorama View, Sync Tab Groups, JSON",
-    "closedTabsNotSynced": "Tab đã đóng không được đồng bộ"
+    "closedTabsNotSynced": "Tab đã đóng không được đồng bộ",
+    "autoSaveTabMerger": "Miễn phí: bật lên, giữ {count, number} bản mới nhất. Pro: bật sẵn, giữ tất cả và đồng bộ được mã hóa đầu cuối"
   },
   "legend": {
     "label": "Chú giải",
