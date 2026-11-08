@@ -1,6 +1,6 @@
 {
   "name": "@tabmerger/extension",
-  "version": "3.12.0",
+  "version": "3.13.0",
   "license": "SEE LICENSE IN LICENSE.md",
   "private": true,
   "type": "module",
