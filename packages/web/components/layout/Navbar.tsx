@@ -25,15 +25,13 @@ export async function Navbar() {
     return (
         <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
             <div className="container relative flex items-center">
-                {/* Width budget from md to lg: the container is capped at 768px there and, logged out,
-                    holds the logo, four links, the GitHub mark, the language button, the theme toggle
-                    and two buttons. The tighter spacing below lg (me-4 here and on the logo, px-2 on
-                    the links), the logo without its wordmark and the icon-only language button are
-                    what make them fit: this block shrinks instead of overflowing, so when it is too wide
-                    the end cluster slides over the last link rather than causing a scrollbar.
-                    min-w-0 here and on the nav is what lets it shrink: with longer (translated) link
-                    labels the last links are cut off at the cluster instead of pushing the sign-in
-                    buttons off the screen. English fits without it. */}
+                {/* The link bar and the account controls show from lg up; below lg the menu button
+                    holds them. Width budget from lg to xl (1024-1279px), signed out: logo, four links
+                    (Changelog joins at xl), the GitHub mark alone, the icon-only language button, the
+                    theme toggle and two buttons, with at least 2rem to spare in every language
+                    (measured; translated labels and other platforms' fonts are wider than English on
+                    Windows). min-w-0 here and on the nav still lets this block shrink rather than push
+                    the controls off screen if a label ever grows. */}
                 <div className="me-4 flex min-w-0 items-center">
                     <Link href="/" className="me-4 flex shrink-0 items-center gap-[9px] lg:me-8">
                         <Image
@@ -43,19 +41,15 @@ export async function Navbar() {
                             height={26}
                             className="rounded-md"
                         />
-                        {/* Hidden from md to lg (the logo's alt text still names the link): the language
-                            button needs the room. */}
-                        <span className="hidden text-[15px] font-semibold tracking-tight sm:inline md:hidden lg:inline">TabMerger</span>
+                        <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">TabMerger</span>
                     </Link>
-                    {/* Tighter between md and lg (gap, padding, text a hair smaller): the 768-1023px
-                        header is the narrowest bar, and French "FAQ" was cut off there. */}
-                    <nav className="hidden min-w-0 items-center gap-0.5 overflow-hidden text-[13px] md:flex lg:gap-1 lg:text-[13.5px]">
+                    <nav className="hidden min-w-0 items-center gap-1 overflow-hidden text-[13.5px] lg:flex">
                         {NAV_LINKS.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    "h-8 items-center rounded-lg px-1.5 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3",
+                                    "h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground xl:px-3",
                                     link.barFromXl ? "hidden xl:flex" : "flex"
                                 )}
                             >
@@ -70,12 +64,13 @@ export async function Navbar() {
                             <Suspense fallback={<GithubStarsFallback />}>
                                 <GithubStars starsPromise={starsPromise} />
                             </Suspense>
-                            {/* At every width, beside the theme toggle: below lg just the icon, the same
-                                2.25rem bordered square as the toggle. */}
-                            <LanguageSwitcher codeClassName="hidden lg:inline" />
+                            {/* At every width, beside the theme toggle. The language code shows from sm,
+                                except from lg to xl, where the link bar needs the room: there it is
+                                just the icon, the same 2.25rem bordered square as the toggle. */}
+                            <LanguageSwitcher codeClassName="hidden sm:inline lg:hidden xl:inline" />
                             <ThemeToggle />
-                            {/* Sign-in/account controls move into the mobile hamburger panel below md */}
-                            <div className="hidden items-center gap-2.5 md:flex">
+                            {/* Sign-in/account controls move into the menu panel below lg */}
+                            <div className="hidden items-center gap-2.5 lg:flex">
                                 <NavAccountSlot />
                             </div>
                             <MobileNavToggle starsPromise={starsPromise} />

@@ -103,7 +103,7 @@ export function MobileNavToggle({ account: accountProp, starsPromise }: MobileNa
     }, [open, close])
 
     return (
-        <div ref={containerRef} className="md:hidden">
+        <div ref={containerRef} className="lg:hidden">
             <button
                 ref={toggleRef}
                 type="button"

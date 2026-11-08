@@ -236,18 +236,43 @@ test.describe('compare page', () => {
   })
 
   test.describe('header nav', () => {
+    // Below lg the header holds the menu button instead of the link bar, so no translated label
+    // can be cut off there, whatever the platform's fonts.
     for (const locale of ['de', 'fr']) {
-      for (const width of [768, 1024]) {
-        test(`${locale} at ${width}px: the nav is not clipped and Changelog is not in the bar`, async ({ page }) => {
-          await page.setViewportSize({ width, height: 800 })
-          await page.goto(`/${locale}/compare`)
-          const nav = page.locator('header nav').first()
-          await expect(nav).toBeVisible()
-          const clipped = await nav.evaluate((el) => el.scrollWidth - el.clientWidth)
-          expect(clipped).toBeLessThanOrEqual(0)
-          await expect(nav.locator('a[href$="/changelog"]')).toBeHidden()
+      test(`${locale} at 768px: the menu button replaces the link bar`, async ({ page }) => {
+        await page.setViewportSize({ width: 768, height: 800 })
+        await page.goto(`/${locale}/compare`)
+        await expect(page.locator('header button[aria-expanded]:not([aria-haspopup])')).toBeVisible()
+        await expect(page.locator('header nav').first()).toBeHidden()
+      })
+    }
+
+    // From lg the bar shows four links (Changelog joins at xl) and must leave real room before the
+    // controls: at least 2rem, so fonts that render wider (Linux CI) can't clip the last link.
+    for (const locale of ['de', 'fr', 'ru', 'vi', 'pt-BR']) {
+      test(`${locale} at 1024px: the bar leaves at least 2rem before the controls and Changelog waits for xl`, async ({ page }) => {
+        await page.setViewportSize({ width: 1024, height: 800 })
+        await page.goto(`/${locale}/compare`)
+        const nav = page.locator('header nav').first()
+        await expect(nav).toBeVisible()
+        await expect(nav.locator('a[href$="/changelog"]')).toBeHidden()
+        const slackRem = await page.evaluate(() => {
+          const header = document.querySelector('header')!
+          const bar = header.querySelector('nav')!
+          const rtl = getComputedStyle(header).direction === 'rtl'
+          const shown = (el: Element) => getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0
+          const last = [...bar.querySelectorAll('a')].filter(shown).at(-1)!.getBoundingClientRect()
+          const navRect = bar.getBoundingClientRect()
+          const controls = [...header.querySelectorAll('a, button')]
+            .filter((el) => !bar.contains(el) && shown(el))
+            .map((el) => el.getBoundingClientRect())
+            .filter((r) => (rtl ? r.right <= navRect.left + 1 : r.left >= navRect.right - 1))
+          const gap = rtl ? last.left - Math.max(...controls.map((r) => r.right)) : Math.min(...controls.map((r) => r.left)) - last.right
+          return gap / parseFloat(getComputedStyle(document.documentElement).fontSize)
         })
-      }
+        expect(slackRem).toBeGreaterThanOrEqual(2)
+        expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0)
+      })
     }
 
     test('1280: Changelog is in the bar, after Compare', async ({ page }) => {
