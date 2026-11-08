@@ -32,7 +32,10 @@
     "previousTool": "पिछला टूल",
     "nextTool": "अगला टूल",
     "previousSection": "पिछला सेक्शन",
-    "nextSection": "अगला सेक्शन"
+    "nextSection": "अगला सेक्शन",
+    "goToPreviousSection": "पिछला सेक्शन: {name}",
+    "goToNextSection": "अगला सेक्शन: {name}",
+    "sectionOf": "सेक्शन {current, number}/{total, number}"
   },
   "groups": {
     "plans": "प्लान",

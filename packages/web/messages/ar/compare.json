@@ -32,7 +32,10 @@
     "previousTool": "الأداة السابقة",
     "nextTool": "الأداة التالية",
     "previousSection": "القسم السابق",
-    "nextSection": "القسم التالي"
+    "nextSection": "القسم التالي",
+    "goToPreviousSection": "القسم السابق: {name}",
+    "goToNextSection": "القسم التالي: {name}",
+    "sectionOf": "القسم {current, number} من {total, number}"
   },
   "groups": {
     "plans": "الخطط",

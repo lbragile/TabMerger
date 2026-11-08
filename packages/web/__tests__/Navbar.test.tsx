@@ -60,10 +60,11 @@ describe('Navbar', () => {
     expect(getGithubStarCount).toHaveBeenCalledTimes(1)
   })
 
-  it('renders nav links including Changelog', async () => {
+  it('renders nav links including Compare and Changelog', async () => {
     render(await Navbar())
     expect(screen.getByRole('link', { name: 'Features' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Pricing' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Compare' })).toHaveAttribute('href', '/compare')
     expect(screen.getByRole('link', { name: 'Changelog' })).toBeInTheDocument()
   })
 

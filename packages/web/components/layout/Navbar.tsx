@@ -8,6 +8,8 @@ import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { GithubStars, GithubStarsFallback } from "@/components/layout/GithubStars";
 import { getGithubStarCount } from "@/lib/githubStats";
+import { NAV_LINKS } from "@/components/layout/navLinks";
+import { cn } from "@/lib/utils";
 
 /**
  * The site header. Reads nothing per request, so the pages around it can be rendered at build
@@ -45,31 +47,21 @@ export async function Navbar() {
                             button needs the room. */}
                         <span className="hidden text-[15px] font-semibold tracking-tight sm:inline md:hidden lg:inline">TabMerger</span>
                     </Link>
-                    <nav className="hidden min-w-0 items-center gap-1 overflow-hidden text-[13.5px] md:flex">
-                        <Link
-                            href="/features"
-                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
-                        >
-                            {t("features")}
-                        </Link>
-                        <Link
-                            href="/pricing"
-                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
-                        >
-                            {t("pricing")}
-                        </Link>
-                        <Link
-                            href="/changelog"
-                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
-                        >
-                            {t("changelog")}
-                        </Link>
-                        <Link
-                            href="/faq"
-                            className="flex h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3"
-                        >
-                            {t("faq")}
-                        </Link>
+                    {/* Tighter between md and lg (gap, padding, text a hair smaller): the 768-1023px
+                        header is the narrowest bar, and French "FAQ" was cut off there. */}
+                    <nav className="hidden min-w-0 items-center gap-0.5 overflow-hidden text-[13px] md:flex lg:gap-1 lg:text-[13.5px]">
+                        {NAV_LINKS.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={cn(
+                                    "h-8 items-center rounded-lg px-1.5 text-text2 transition-colors hover:bg-surface2 hover:text-foreground lg:px-3",
+                                    link.barFromXl ? "hidden xl:flex" : "flex"
+                                )}
+                            >
+                                {t(link.label)}
+                            </Link>
+                        ))}
                     </nav>
                 </div>
                 <div className="flex flex-1 items-center justify-end space-x-2">

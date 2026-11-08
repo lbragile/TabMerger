@@ -32,7 +32,10 @@
     "previousTool": "이전 도구",
     "nextTool": "다음 도구",
     "previousSection": "이전 섹션",
-    "nextSection": "다음 섹션"
+    "nextSection": "다음 섹션",
+    "goToPreviousSection": "이전 섹션: {name}",
+    "goToNextSection": "다음 섹션: {name}",
+    "sectionOf": "섹션 {current, number}/{total, number}"
   },
   "groups": {
     "plans": "플랜",

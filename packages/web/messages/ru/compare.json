@@ -32,7 +32,10 @@
     "previousTool": "Предыдущий инструмент",
     "nextTool": "Следующий инструмент",
     "previousSection": "Предыдущий раздел",
-    "nextSection": "Следующий раздел"
+    "nextSection": "Следующий раздел",
+    "goToPreviousSection": "Предыдущий раздел: {name}",
+    "goToNextSection": "Следующий раздел: {name}",
+    "sectionOf": "Раздел {current, number} из {total, number}"
   },
   "groups": {
     "plans": "Тарифы",

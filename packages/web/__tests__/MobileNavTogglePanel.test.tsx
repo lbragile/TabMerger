@@ -20,7 +20,7 @@ async function open(account: NavAccountState) {
 const panelOpen = () => document.getElementById('mobile-nav-panel') !== null
 
 describe('MobileNavToggle panel links close the panel', () => {
-  it.each(['Features', 'Pricing', 'Changelog', 'FAQ'])('closes after the %s link', async (name) => {
+  it.each(['Features', 'Pricing', 'Compare', 'Changelog', 'FAQ'])('closes after the %s link', async (name) => {
     const user = await open({ status: 'signedOut' })
     expect(panelOpen()).toBe(true)
     const link = screen.getByRole('link', { name })

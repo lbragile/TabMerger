@@ -32,7 +32,10 @@
     "previousTool": "上一个工具",
     "nextTool": "下一个工具",
     "previousSection": "上一部分",
-    "nextSection": "下一部分"
+    "nextSection": "下一部分",
+    "goToPreviousSection": "上一部分：{name}",
+    "goToNextSection": "下一部分：{name}",
+    "sectionOf": "第 {current, number} 部分，共 {total, number} 部分"
   },
   "groups": {
     "plans": "方案",

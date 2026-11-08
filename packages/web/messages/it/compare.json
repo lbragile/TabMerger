@@ -32,7 +32,10 @@
     "previousTool": "Strumento precedente",
     "nextTool": "Strumento successivo",
     "previousSection": "Sezione precedente",
-    "nextSection": "Sezione successiva"
+    "nextSection": "Sezione successiva",
+    "goToPreviousSection": "Sezione precedente: {name}",
+    "goToNextSection": "Sezione successiva: {name}",
+    "sectionOf": "Sezione {current, number} di {total, number}"
   },
   "groups": {
     "plans": "Piani",

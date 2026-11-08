@@ -32,7 +32,10 @@
     "previousTool": "Alat sebelumnya",
     "nextTool": "Alat berikutnya",
     "previousSection": "Bagian sebelumnya",
-    "nextSection": "Bagian berikutnya"
+    "nextSection": "Bagian berikutnya",
+    "goToPreviousSection": "Bagian sebelumnya: {name}",
+    "goToNextSection": "Bagian berikutnya: {name}",
+    "sectionOf": "Bagian {current, number} dari {total, number}"
   },
   "groups": {
     "plans": "Paket",

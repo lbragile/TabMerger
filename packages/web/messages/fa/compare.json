@@ -32,7 +32,10 @@
     "previousTool": "ابزار قبلی",
     "nextTool": "ابزار بعدی",
     "previousSection": "بخش قبلی",
-    "nextSection": "بخش بعدی"
+    "nextSection": "بخش بعدی",
+    "goToPreviousSection": "بخش قبلی: {name}",
+    "goToNextSection": "بخش بعدی: {name}",
+    "sectionOf": "بخش {current, number} از {total, number}"
   },
   "groups": {
     "plans": "طرح‌ها",

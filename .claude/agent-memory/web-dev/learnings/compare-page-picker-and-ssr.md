@@ -65,6 +65,21 @@ height so it never covers a cell. Render controls only after hydration
 (`useSyncExternalStore(() => () => {}, () => true, () => false)`). jsdom has no
 `ResizeObserver`, so guard it.
 
+**Controls tied to a layout switch.** Don't trust `scrollWidth` alone when a picker changes
+the layout: the arrows stayed in the single-competitor view. Derive "can scroll sideways" from
+the layout attribute plus real overflow, and re-measure from a `MutationObserver` on that
+attribute (a ResizeObserver on the table misses it when sizes don't change). Put a bar that must
+stay above the legend into the sticky `<tfoot>` cell itself: then the last rows scroll clear
+of it with no spacer. Give it the box's `clientWidth` and `sticky inset-s-0` so it doesn't
+scroll sideways. Outside "gutter" buttons need the measured page margin (`min(rect.left,
+clientWidth - rect.right)`) to hold button plus gap, or they widen the page.
+
+**Header nav width budget, 5 links.** Measure every locale at 768/900/1024/1279/1280 with the
+last link's rect against the nav's (the nav is `overflow-hidden`, so clipping shows up as
+`scrollWidth > clientWidth`, not page overflow). Fixes that worked: a `barFromXl` link
+(`hidden xl:flex`) in the shared `NAV_LINKS`, and md-only tightening (`gap-0.5`, `px-1.5`, 13px
+text).
+
 **Code-like tokens in RTL copy.** Wrap them in a `<code>` tag in the catalog and render it as
 `<bdi dir="ltr">` (`components/compare/richText.tsx`, `COMPARE_RICH_TAGS`): search filters
 (`group:`), operators (`t:`), key combos (`Ctrl/Cmd+K`) and file extensions (`.txt`). A leading

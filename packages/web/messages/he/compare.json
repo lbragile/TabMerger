@@ -32,7 +32,10 @@
     "previousTool": "הכלי הקודם",
     "nextTool": "הכלי הבא",
     "previousSection": "הקטע הקודם",
-    "nextSection": "הקטע הבא"
+    "nextSection": "הקטע הבא",
+    "goToPreviousSection": "הקטע הקודם: {name}",
+    "goToNextSection": "הקטע הבא: {name}",
+    "sectionOf": "קטע {current, number} מתוך {total, number}"
   },
   "groups": {
     "plans": "תוכניות",

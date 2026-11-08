@@ -17,6 +17,7 @@ import {
 } from '@/lib/comparison'
 import { CompetitorPicker } from './CompetitorPicker'
 import { CompareScrollBox } from './CompareScrollBox'
+import { CompareSectionBar } from './CompareSectionBar'
 import { COMPARE_RICH_TAGS } from './richText'
 
 /** A translator that takes the data file's keys (checked against the catalog by a test). */
@@ -179,6 +180,8 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
   const common = useTranslations('common')
   const cellValues = useCellValues()
   const colCount = PRODUCTS.length + 1
+  // The section names, in page order: the group headings' words, for the section bar.
+  const sections = ROW_GROUPS.map((group) => t(`groups.${group}`))
   const rowClass = 'compare-stacked:grid compare-stacked:grid-cols-2'
 
   return (
@@ -194,6 +197,10 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
           nextTool: t('table.nextTool'),
           previousSection: t('table.previousSection'),
           nextSection: t('table.nextSection'),
+          sections,
+          goToPreviousSection: sections.map((name) => t('table.goToPreviousSection', { name })),
+          goToNextSection: sections.map((name) => t('table.goToNextSection', { name })),
+          sectionOf: sections.map((_, i) => t('table.sectionOf', { current: i + 1, total: sections.length })),
         }}
       >
         <table className="w-full min-w-[112rem] table-fixed border-separate border-spacing-0 text-sm compare-stacked:flex compare-stacked:min-w-0 compare-stacked:flex-col">
@@ -264,9 +271,13 @@ export function ComparisonTable({ rows = COMPARISON_ROWS }: { rows?: readonly Ro
             <tr className="compare-stacked:block">
               <td
                 colSpan={colCount}
-                className="sticky bottom-0 z-20 border-t border-border bg-background px-3.5 py-3 compare-stacked:static compare-stacked:block compare-stacked:px-2 max-md:border-b max-md:border-t-0"
+                className="sticky bottom-0 z-20 border-t border-border bg-background p-0 compare-stacked:static compare-stacked:block max-md:border-b max-md:border-t-0"
               >
-                <Legend t={t} />
+                {/* The section bar (client, md and up, JavaScript only) sits right above the legend. */}
+                <CompareSectionBar />
+                <div className="px-3.5 py-3 compare-stacked:px-2">
+                  <Legend t={t} />
+                </div>
               </td>
             </tr>
           </tfoot>

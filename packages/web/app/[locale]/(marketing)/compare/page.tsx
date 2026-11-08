@@ -26,8 +26,9 @@ export default async function ComparePage() {
         <div className="mx-auto max-w-[67.5rem]">
           <CompareHero />
           <CompareDifferences />
+          {/* `#compare-table` lands 1rem under the 4rem navbar, with the whole table box in view. */}
           <section aria-labelledby="compare-table">
-            <h2 id="compare-table" className="text-3xl font-bold tracking-tight">
+            <h2 id="compare-table" className="scroll-mt-20 text-3xl font-bold tracking-tight">
               {t('title')}
             </h2>
             <p className="mt-2 text-[1.0625rem] text-text2">{t('lead')}</p>

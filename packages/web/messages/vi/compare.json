@@ -32,7 +32,10 @@
     "previousTool": "Công cụ trước",
     "nextTool": "Công cụ tiếp theo",
     "previousSection": "Phần trước",
-    "nextSection": "Phần tiếp theo"
+    "nextSection": "Phần tiếp theo",
+    "goToPreviousSection": "Phần trước: {name}",
+    "goToNextSection": "Phần tiếp theo: {name}",
+    "sectionOf": "Phần {current, number}/{total, number}"
   },
   "groups": {
     "plans": "Gói",

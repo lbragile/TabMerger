@@ -32,7 +32,10 @@
     "previousTool": "Önceki araç",
     "nextTool": "Sonraki araç",
     "previousSection": "Önceki bölüm",
-    "nextSection": "Sonraki bölüm"
+    "nextSection": "Sonraki bölüm",
+    "goToPreviousSection": "Önceki bölüm: {name}",
+    "goToNextSection": "Sonraki bölüm: {name}",
+    "sectionOf": "Bölüm {current, number}/{total, number}"
   },
   "groups": {
     "plans": "Planlar",

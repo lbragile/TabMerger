@@ -32,7 +32,10 @@
     "previousTool": "前のツール",
     "nextTool": "次のツール",
     "previousSection": "前のセクション",
-    "nextSection": "次のセクション"
+    "nextSection": "次のセクション",
+    "goToPreviousSection": "前のセクション: {name}",
+    "goToNextSection": "次のセクション: {name}",
+    "sectionOf": "セクション {current, number}/{total, number}"
   },
   "groups": {
     "plans": "プラン",
