@@ -52,6 +52,17 @@ export function isValidKey(key) {
   return /^[a-zA-Z0-9-]{8,128}$/.test(key)
 }
 
+/** The five predefined XML entities. */
+const XML_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }
+
+/**
+ * Decodes XML entities in one pass. Chained replaces would decode twice: replacing `&amp;`
+ * first turns `&amp;lt;` (a literal "&lt;") into `&lt;`, which a later replace turns into `<`.
+ */
+export function unescapeXml(text) {
+  return text.replace(/&(amp|lt|gt|quot|apos);/g, (_, name) => XML_ENTITIES[name])
+}
+
 /**
  * The page URLs in a sitemap: every `<loc>`, unescaped, deduplicated, and only https URLs on
  * `host` (IndexNow rejects a request whose URLs are on another host).
@@ -59,7 +70,7 @@ export function isValidKey(key) {
 export function extractSitemapUrls(xml, host) {
   const urls = new Set()
   for (const [, raw] of xml.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)) {
-    const text = raw.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+    const text = unescapeXml(raw)
     let url
     try {
       url = new URL(text)

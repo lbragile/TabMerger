@@ -14,6 +14,7 @@ import {
   parseArgs,
   parseOrigin,
   run,
+  unescapeXml,
 } from './indexnow-submit.mjs'
 
 const KEY = '8d52356bc0e253ad07ef1a2b738f0662'
@@ -65,6 +66,15 @@ test('isValidKey follows the IndexNow key format', () => {
   assert.equal(isValidKey('has space in it'), false)
   assert.equal(isValidKey('<html>not a key</html>'), false)
   assert.equal(isValidKey('a'.repeat(129)), false)
+})
+
+test('unescapeXml decodes each entity exactly once', () => {
+  assert.equal(unescapeXml('a=1&amp;b=2'), 'a=1&b=2')
+  assert.equal(unescapeXml('&lt;&gt;&quot;&apos;'), `<>"'`)
+  // A literal "&lt;" is escaped as "&amp;lt;" and must come back as "&lt;", never "<".
+  assert.equal(unescapeXml('&amp;lt;'), '&lt;')
+  assert.equal(unescapeXml('&amp;amp;'), '&amp;')
+  assert.equal(unescapeXml('&unknown; stays'), '&unknown; stays')
 })
 
 test('extractSitemapUrls dedupes, trims, unescapes, and keeps only https URLs on the host', () => {
