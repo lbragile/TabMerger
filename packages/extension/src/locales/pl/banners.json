@@ -13,6 +13,7 @@
   "upgrade": "Przejdź na wyższy plan",
   "paymentIssue": "Problem z płatnością — zaktualizuj kartę",
   "planEnds": "Twój plan Pro kończy się {{date}}",
+  "manageSubscription": "Zarządzaj subskrypcją",
   "approachingLimit": "Zbliżasz się do limitu darmowego planu — przejdź na Pro dla nieograniczonej liczby grup i kart",
   "update": {
     "label": "Dostępna aktualizacja",

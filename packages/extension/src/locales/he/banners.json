@@ -12,6 +12,7 @@
   "upgrade": "שדרוג",
   "paymentIssue": "בעיה בתשלום — עדכנו את הכרטיס",
   "planEnds": "תוכנית ה-Pro שלך מסתיימת ב-{{date}}",
+  "manageSubscription": "ניהול המינוי",
   "approachingLimit": "מתקרבים למגבלה החינמית — שדרגו ל-Pro לקבוצות ולכרטיסיות ללא הגבלה",
   "update": {
     "label": "יש עדכון זמין",

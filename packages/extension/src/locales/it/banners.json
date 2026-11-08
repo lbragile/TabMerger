@@ -12,6 +12,7 @@
   "upgrade": "Passa a Pro",
   "paymentIssue": "Problema di pagamento: aggiorna la tua carta",
   "planEnds": "Il tuo piano Pro termina il {{date}}",
+  "manageSubscription": "Gestisci abbonamento",
   "approachingLimit": "Ti stai avvicinando al limite gratuito: passa a Pro per gruppi e schede illimitati",
   "update": {
     "label": "Aggiornamento disponibile",
