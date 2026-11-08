@@ -11,7 +11,6 @@ vi.mock('@/stores/uiStore', () => ({
 // Stub all child modals so this only tests the switch/routing logic.
 vi.mock('@/components/Modal/AddGroup', () => ({ AddGroupModal: () => <div data-testid="addGroup" /> }))
 vi.mock('@/components/Modal/DeleteConfirm', () => ({ DeleteConfirmModal: ({ type }: { type: string }) => <div data-testid="deleteConfirm">{type}</div> }))
-vi.mock('@/components/Modal/ImportExport', () => ({ ImportExportModal: ({ mode }: { mode: string }) => <div data-testid="importExport">{mode}</div> }))
 vi.mock('@/components/Modal/Settings', () => ({ SettingsModal: () => <div data-testid="settings" /> }))
 vi.mock('@/components/Modal/Auth', () => ({ AuthModal: () => <div data-testid="auth" /> }))
 vi.mock('@/components/Modal/UpgradePrompt', () => ({ UpgradePromptModal: ({ reason }: { reason: string }) => <div data-testid="upgrade">{reason}</div> }))
@@ -90,18 +89,6 @@ describe('ModalRoot — routing', () => {
       expect(screen.getByTestId('deleteConfirm')).toHaveTextContent(type)
     }
   )
-
-  it('passes data.mode to ImportExportModal, defaulting to "export"', () => {
-    mockState({ type: 'importExport', data: {} })
-    render(<ModalRoot />)
-    expect(screen.getByTestId('importExport')).toHaveTextContent('export')
-  })
-
-  it('passes data.mode="import" through', () => {
-    mockState({ type: 'importExport', data: { mode: 'import' } })
-    render(<ModalRoot />)
-    expect(screen.getByTestId('importExport')).toHaveTextContent('import')
-  })
 
   it('passes data.reason to UpgradePromptModal', () => {
     mockState({ type: 'upgrade', data: { reason: 'maxTabs' } })

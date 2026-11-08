@@ -14,7 +14,7 @@ export interface ImportResult {
   skipped: number
 }
 
-/** A full-state import (the Import / Export dialog's JSON file): the validated state and the left-out count. */
+/** A full-state import (`{ active, available }` JSON): the validated state and the left-out count. */
 export interface ImportStateResult {
   state: GroupsState
   skipped: number
@@ -165,11 +165,6 @@ export function exportGroups(groups: Group[]): string {
   return JSON.stringify(withoutTourDemoGroups(groups))
 }
 
-/** The full-state export (`{ active, available }`) of the Import / Export dialog, same rule. */
-export function exportGroupsState(state: GroupsState): string {
-  return JSON.stringify({ ...state, available: withoutTourDemoGroups(state.available) }, null, 2)
-}
-
 /**
  * Reads a JSON array of groups (the Settings backup format) for an APPENDING import. Every entry
  * is validated and rebuilt; entries that are not groups, windows or tabs are left out and counted.
@@ -184,9 +179,9 @@ export function importGroups(json: string): ImportResult {
 }
 
 /**
- * Reads a full exported state (`{ active, available }`, the Import / Export dialog's format) for a
- * REPLACING import. Only `active` and `available` are taken; `available` goes through the same
- * validation as {@link importGroups}, with the file's "Now Open" group (if any) kept first.
+ * Reads a full exported state (`{ active, available }`) for a REPLACING import. Only `active`
+ * and `available` are taken; `available` goes through the same validation as
+ * {@link importGroups}, with the file's "Now Open" group (if any) kept first.
  * Throws on invalid JSON, when `available` is not an array, and when the file had entries but
  * none of them is a usable group.
  */
