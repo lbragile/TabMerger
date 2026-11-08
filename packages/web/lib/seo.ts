@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
-import { PRICING_TIERS, STORE_LISTING_URL } from '@tabmerger/shared'
+import { PRICING_TIERS, STORE_LISTING_URL, type AiAvailability, type PricingTier } from '@tabmerger/shared'
+import { AI_AVAILABILITY } from '@/lib/aiFlag'
+import type { FaqItem } from '@/lib/faq'
 import { DEFAULT_LOCALE, OG_LOCALES, isAppLocale, languageAlternates, localizedPath, type AppLocale } from '@/i18n/locales'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { getMetadataBase } from '@/lib/utils'
@@ -133,18 +135,70 @@ export async function siteMetadata(locale: AppLocale): Promise<Metadata> {
   }
 }
 
+/** Every price is US dollars (the Stripe Prices are USD-only). */
+const PRICE_CURRENCY = 'USD'
+
+/** A plan's price for one billing period, as schema.org states a recurring charge. */
+function unitPrice(price: number, period: 'month' | 'year') {
+  return {
+    '@type': 'UnitPriceSpecification',
+    price: String(price),
+    priceCurrency: PRICE_CURRENCY,
+    billingDuration: period === 'month' ? 'P1M' : 'P1Y',
+    referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: period === 'month' ? 'MON' : 'ANN' },
+  }
+}
+
+/** Name of the Pro AI option where the customer brings their own AI provider (`tier.byok`). */
+export const PRO_AI_BYOK_OFFER_NAME = 'Pro AI (your own AI provider)'
+
+/** One Offer at a plan's monthly price, with its monthly and yearly charges spelled out when paid. */
+function offer(name: string, monthlyPrice: number, yearlyPrice: number) {
+  return {
+    '@type': 'Offer',
+    name,
+    price: String(monthlyPrice),
+    priceCurrency: PRICE_CURRENCY,
+    ...(monthlyPrice > 0 ? { priceSpecification: [unitPrice(monthlyPrice, 'month'), unitPrice(yearlyPrice, 'year')] } : {}),
+  }
+}
+
+/**
+ * One Offer per plan someone can buy today, matching what the pricing page sells. Free and Pro
+ * always. Pro AI on TabMerger's AI while managed AI is on sale (`NEXT_PUBLIC_AI_ENABLED`), and Pro
+ * AI on the customer's own AI provider while that option is (`NEXT_PUBLIC_AI_BYOK_ENABLED`, also on
+ * with managed). With neither on, the site shows Pro AI as "Coming soon", so it is not offered.
+ * Every price comes from `PRICING_TIERS`.
+ */
+function planOffers(ai: AiAvailability) {
+  return PRICING_TIERS.flatMap((tier: PricingTier) => {
+    if (tier.id !== 'pro_ai') return [offer(tier.name, tier.monthlyPrice, tier.yearlyPrice)]
+    return [
+      ...(ai.managed ? [offer(tier.name, tier.monthlyPrice, tier.yearlyPrice)] : []),
+      ...(ai.byok && tier.byok ? [offer(PRO_AI_BYOK_OFFER_NAME, tier.byok.monthlyPrice, tier.byok.yearlyPrice)] : []),
+    ]
+  })
+}
+
 /**
  * The homepage's structured data: the website, its publisher, and the extension itself.
+ *
+ * The extension node names its current picture twice: `image` and `screenshot` are the Open Graph
+ * image (the popup as it looks now), so a product card has no reason to reach for an older one.
+ * `installUrl` and `sameAs` point at the stable store listings (plus the source), which identify
+ * the extension unambiguously. `operatingSystem` matches the browsers the Open Graph image lists:
+ * the Chrome Web Store build also installs on Brave.
  *
  * No `aggregateRating`: the store ratings the landing page shows are fetched from three stores
  * and streamed in after the page (a Suspense boundary). Putting them here would make the whole
  * page wait on those requests, and a rating in structured data must match one visible on the
  * page, which a cached build-time figure would not reliably do.
  */
-export function homeJsonLd(description: string, base: URL = getMetadataBase()) {
+export function homeJsonLd(description: string, base: URL = getMetadataBase(), ai: AiAvailability = AI_AVAILABILITY) {
   const origin = base.origin
-  const free = PRICING_TIERS.find((tier) => tier.id === 'free')
   const organizationId = `${origin}/#organization`
+  const storeListings = [STORE_LISTING_URL.CHROME_STABLE, STORE_LISTING_URL.FIREFOX_STABLE, STORE_LISTING_URL.EDGE_STABLE]
+  const currentImage = `${origin}/opengraph-image.png`
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -154,12 +208,7 @@ export function homeJsonLd(description: string, base: URL = getMetadataBase()) {
         name: SITE_NAME,
         url: `${origin}/`,
         logo: `${origin}/icon.png`,
-        sameAs: [
-          GITHUB_REPO_URL,
-          STORE_LISTING_URL.CHROME_STABLE,
-          STORE_LISTING_URL.FIREFOX_STABLE,
-          STORE_LISTING_URL.EDGE_STABLE,
-        ],
+        sameAs: [GITHUB_REPO_URL, ...storeListings],
       },
       {
         '@type': 'WebSite',
@@ -174,17 +223,33 @@ export function homeJsonLd(description: string, base: URL = getMetadataBase()) {
         name: SITE_NAME,
         description,
         url: `${origin}/`,
-        image: `${origin}/opengraph-image.png`,
+        image: currentImage,
+        screenshot: currentImage,
         applicationCategory: 'BrowserApplication',
-        operatingSystem: 'Chrome, Firefox, Edge',
-        offers: {
-          '@type': 'Offer',
-          price: String(free?.monthlyPrice ?? 0),
-          priceCurrency: 'USD',
-        },
+        operatingSystem: 'Chrome, Brave, Edge, Firefox',
+        installUrl: STORE_LISTING_URL.CHROME_STABLE,
+        sameAs: [...storeListings, GITHUB_REPO_URL],
+        offers: planOffers(ai),
         publisher: { '@id': organizationId },
       },
     ],
+  }
+}
+
+/**
+ * The /faq page's FAQPage structured data. Built from the same items the page renders
+ * (`faqItems()` in `lib/faq.ts`), so every question and answer here is word for word the visible
+ * text, which structured data must be.
+ */
+export function faqJsonLd(items: ReadonlyArray<Pick<FaqItem, 'question' | 'answer'>>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map(({ question, answer }) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
   }
 }
 

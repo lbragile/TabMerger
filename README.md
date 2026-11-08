@@ -20,7 +20,19 @@ members of the tester group, Edge installs that same Chrome beta, and the Firefo
 installed from the beta guide.
 
 A cross-browser tab manager for Chrome, Firefox, and Edge. Save, organize, and restore your tab
-sessions, with optional cloud sync (end-to-end encrypted) and AI-powered grouping (coming soon).
+sessions, with optional cloud sync (end-to-end encrypted) and AI-powered organizing (Pro AI).
+
+[![TabMerger: saved tabs in named, color-coded groups, with search, windows and sessions](packages/web/app/opengraph-image.png)](https://tabmerger.com)
+
+**What it does** ([full feature list](https://tabmerger.com/features)):
+
+- Save open tabs into named, color-coded groups, with each browser window kept as its own section
+- Search every saved tab's title and URL, and reorder tabs, windows and groups with drag and drop
+- Save and restore whole sessions, add notes to windows, and export or import everything as JSON
+- Works offline with no account: your data stays in your browser by default
+- Optional Pro cloud sync across browsers, end-to-end encrypted so the server never sees your tabs
+- Pro AI: auto-group your tabs, get group names and descriptions, hover a tab for a summary, and
+  have AI suggest merges, renames and archives across your workspace (on TabMerger's AI or your own provider)
 
 **Install:** [Chrome Web Store](https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc)
 (Edge, Brave, Vivaldi and Arc install it from there too), [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/tabmerger/),
