@@ -71,14 +71,16 @@
     "aiOwnKey": "مفتاح API الخاص بك"
   },
   "data": {
-    "intro": "يخزّن TabMerger كل البيانات محليًا في IndexedDB. تتطلب المزامنة السحابية حساب Pro.",
-    "exportLabel": "تصدير البيانات",
-    "exportDescription": "تنزيل كل المجموعات كملف JSON",
-    "exportButton": "تصدير",
-    "importLabel": "استيراد البيانات",
-    "importDescription": "استعادة المجموعات من ملف JSON مُصدَّر",
-    "importButton": "استيراد",
+    "sections": {
+      "importExport": "الاستيراد والتصدير",
+      "danger": "منطقة الخطر"
+    },
+    "importExportPurpose": "انقل مجموعاتك إلى TabMerger أو منه.",
+    "exportJson": "تصدير JSON",
+    "importFile": "استيراد ملف",
+    "dangerPurpose": "احذف كل المجموعات والإعدادات على هذا الجهاز.",
     "clearAll": "مسح كل البيانات",
+    "footer": "تُخزَّن البيانات على هذا الجهاز. تتطلب المزامنة السحابية خطة Pro.",
     "importTitle_zero": "استيراد {{count}} مجموعة؟",
     "importTitle_one": "استيراد مجموعة واحدة؟",
     "importTitle_two": "استيراد مجموعتين؟",

@@ -1,5 +1,8 @@
 {
   "title": "Backups automáticos",
+  "sectionTitle": "Backups",
+  "purpose": "Instantâneos criptografados dos seus grupos para restaurar.",
+  "proOnly": "Os backups automáticos fazem parte do Pro.",
   "description": "Salva um instantâneo criptografado dos seus grupos no intervalo abaixo enquanto o navegador estiver aberto. Os {{count}} mais recentes são mantidos.",
   "upgradeDescription": "Os backups automáticos fazem parte do Pro: um instantâneo criptografado dos seus grupos, salvo periodicamente, mantendo os {{count}} mais recentes.",
   "deleteScope": "Ele é removido deste navegador e da sua conta. Outro navegador que já o tenha mantém a própria cópia.",
@@ -21,6 +24,9 @@
   "upgradeToPro": "Fazer upgrade para o Pro",
   "planEnded": "Seu plano não inclui mais backups automáticos, então nenhum novo é criado. Os abaixo continuam seus para restaurar ou excluir.",
   "listLabel": "Lista de backups automáticos",
+  "savedCount_one": "{{count}} backup salvo",
+  "savedCount_many": "{{count}} de backups salvos",
+  "savedCount_other": "{{count}} backups salvos",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Restaurar backup de {{when}}",
   "restore": "Restaurar",

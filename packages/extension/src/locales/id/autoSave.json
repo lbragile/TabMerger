@@ -22,8 +22,8 @@
   },
   "settings": {
     "title": "Simpan otomatis tab yang terbuka",
-    "description": "Menyimpan tab yang terbuka sebagai grup baru di bagian Disimpan otomatis, sesuai jadwal atau saat Anda membuka banyak tab. Tab yang sudah tersimpan dilewati, dan jendela pribadi tidak pernah disimpan. Setiap simpanan otomatis dipertahankan.",
-    "descriptionFree": "Menyimpan tab yang terbuka sebagai grup baru di bagian Disimpan otomatis, sesuai jadwal atau saat Anda membuka banyak tab. Tab yang sudah tersimpan dilewati, dan jendela pribadi tidak pernah disimpan. Paket Free menyimpan {{keep}} simpanan otomatis terbaru, dan semuanya dihitung dalam {{groups}} grup dan {{tabs}} tab Anda.",
+    "purpose": "Menyimpan tab yang terbuka sebagai grup baru secara otomatis.",
+    "freeLimits": "Paket Free menyimpan {{keep}} simpanan otomatis terbaru, dan semuanya dihitung dalam {{groups}} grup dan {{tabs}} tab Anda.",
     "upgrade": "Upgrade untuk menyimpan semuanya",
     "checkingPlan": "Memeriksa paket Anda...",
     "scheduleLabel": "Jadwal",
@@ -42,6 +42,7 @@
     "notifyLabel": "Tampilkan notifikasi",
     "notifyDescription": "Notifikasi browser setelah setiap simpan otomatis.",
     "noTrigger": "Pilih jadwal atau jumlah tab untuk simpan otomatis.",
+    "skipNote": "Tab yang sudah tersimpan dilewati, dan jendela pribadi tidak pernah disimpan.",
     "runNow": "Simpan otomatis sekarang",
     "running": "Menyimpan..."
   },

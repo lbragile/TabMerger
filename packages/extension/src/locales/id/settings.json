@@ -66,14 +66,16 @@
     "aiOwnKey": "Kunci API milik Anda"
   },
   "data": {
-    "intro": "TabMerger menyimpan semua data secara lokal di IndexedDB. Sinkronisasi cloud memerlukan akun Pro.",
-    "exportLabel": "Ekspor data",
-    "exportDescription": "Unduh semua grup sebagai file JSON",
-    "exportButton": "Ekspor",
-    "importLabel": "Impor data",
-    "importDescription": "Pulihkan grup dari ekspor JSON",
-    "importButton": "Impor",
+    "sections": {
+      "importExport": "Impor & ekspor",
+      "danger": "Zona berbahaya"
+    },
+    "importExportPurpose": "Pindahkan grup Anda ke dalam atau keluar dari TabMerger.",
+    "exportJson": "Ekspor JSON",
+    "importFile": "Impor file",
+    "dangerPurpose": "Menghapus semua grup dan pengaturan di perangkat ini.",
     "clearAll": "Hapus semua data",
+    "footer": "Disimpan di perangkat ini. Sinkronisasi cloud memerlukan Pro.",
     "importTitle_other": "Impor {{count}} grup?",
     "importDescription_other": "{{count}} grup di \"{{file}}\" akan ditambahkan di samping grup yang sudah Anda miliki.",
     "importConfirm_other": "Impor {{count}} grup"

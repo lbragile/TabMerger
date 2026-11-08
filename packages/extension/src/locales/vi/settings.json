@@ -66,14 +66,16 @@
     "aiOwnKey": "Khóa API của riêng bạn"
   },
   "data": {
-    "intro": "TabMerger lưu trữ tất cả dữ liệu cục bộ trong IndexedDB. Đồng bộ đám mây yêu cầu tài khoản Pro.",
-    "exportLabel": "Xuất dữ liệu",
-    "exportDescription": "Tải xuống tất cả nhóm dưới dạng tệp JSON",
-    "exportButton": "Xuất",
-    "importLabel": "Nhập dữ liệu",
-    "importDescription": "Khôi phục nhóm từ bản xuất JSON",
-    "importButton": "Nhập",
+    "sections": {
+      "importExport": "Nhập và xuất",
+      "danger": "Vùng nguy hiểm"
+    },
+    "importExportPurpose": "Chuyển các nhóm của bạn vào hoặc ra khỏi TabMerger.",
+    "exportJson": "Xuất JSON",
+    "importFile": "Nhập tệp",
+    "dangerPurpose": "Xóa mọi nhóm và cài đặt trên thiết bị này.",
     "clearAll": "Xóa tất cả dữ liệu",
+    "footer": "Được lưu trên thiết bị này. Đồng bộ đám mây yêu cầu Pro.",
     "importTitle_other": "Nhập {{count}} nhóm?",
     "importDescription_other": "{{count}} nhóm trong \"{{file}}\" sẽ được thêm bên cạnh các nhóm bạn đã có.",
     "importConfirm_other": "Nhập {{count}} nhóm"

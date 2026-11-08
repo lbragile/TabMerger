@@ -66,14 +66,16 @@
     "aiOwnKey": "您自己的 API 密钥"
   },
   "data": {
-    "intro": "TabMerger 将所有数据本地存储在 IndexedDB 中。云同步需要 Pro 账户。",
-    "exportLabel": "导出数据",
-    "exportDescription": "将所有分组下载为 JSON 文件",
-    "exportButton": "导出",
-    "importLabel": "导入数据",
-    "importDescription": "从 JSON 导出文件恢复分组",
-    "importButton": "导入",
+    "sections": {
+      "importExport": "导入与导出",
+      "danger": "危险操作"
+    },
+    "importExportPurpose": "将分组导入 TabMerger 或从中导出。",
+    "exportJson": "导出 JSON",
+    "importFile": "导入文件",
+    "dangerPurpose": "删除此设备上的所有分组和设置。",
     "clearAll": "清除所有数据",
+    "footer": "存储在此设备上。云同步需要 Pro。",
     "importTitle_other": "导入 {{count}} 个分组？",
     "importDescription_other": "“{{file}}”中的 {{count}} 个分组将添加到您现有的分组旁边。",
     "importConfirm_other": "导入 {{count}} 个分组"

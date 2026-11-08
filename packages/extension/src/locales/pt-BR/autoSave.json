@@ -24,8 +24,8 @@
   },
   "settings": {
     "title": "Salvar abas abertas automaticamente",
-    "description": "Salva suas abas abertas como um novo grupo na seção Salvos automaticamente, em um horário ou quando você abre muitas abas. Abas já salvas são ignoradas e janelas privadas nunca são salvas. Todo salvamento automático é mantido.",
-    "descriptionFree": "Salva suas abas abertas como um novo grupo na seção Salvos automaticamente, em um horário ou quando você abre muitas abas. Abas já salvas são ignoradas e janelas privadas nunca são salvas. O plano Free mantém os {{keep}} salvamentos automáticos mais recentes, e eles contam para seus {{groups}} grupos e {{tabs}} abas.",
+    "purpose": "Salva suas abas abertas como um novo grupo, automaticamente.",
+    "freeLimits": "O plano Free mantém os {{keep}} salvamentos automáticos mais recentes, e eles contam para seus {{groups}} grupos e {{tabs}} abas.",
     "upgrade": "Faça upgrade para manter todos",
     "checkingPlan": "Verificando seu plano...",
     "scheduleLabel": "Horário",
@@ -46,6 +46,7 @@
     "notifyLabel": "Mostrar uma notificação",
     "notifyDescription": "Uma notificação do navegador após cada salvamento automático.",
     "noTrigger": "Escolha um horário ou um número de abas para salvar automaticamente.",
+    "skipNote": "Abas já salvas são ignoradas e janelas privadas nunca são salvas.",
     "runNow": "Salvar agora",
     "running": "Salvando..."
   },

@@ -265,6 +265,13 @@ wrong because of it. A new screenshot of a search (matched text highlighted, the
 by search" line, per-group counts in the sidebar) is optional and not made yet. The visual
 regression baseline `search` (extension e2e) does change and needs regenerating.
 
+**Settings → Data layout (next release):** the Data tab is now four titled sections (Auto-save
+open tabs, Backups, Import & export, Danger zone) with each feature's options shown only while it
+is on and the saved backups folded behind "N saved backups". No current store screenshot shows
+Settings, so none is out of date. A new Settings → Data screenshot (Pro account, auto-save and
+backups on) is optional and not made yet. Extension visual-regression baselines that capture the
+Data tab change and need regenerating.
+
 **Needs refreshing (guided tour, next release):** the popup header gained a "?" (Take the tour)
 button between the selection toggle and the account icon, so every store screenshot that shows
 the popup header is one icon out of date: `open-popup-light/dark.jpg`,

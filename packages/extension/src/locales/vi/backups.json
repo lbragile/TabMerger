@@ -1,5 +1,8 @@
 {
   "title": "Sao lưu tự động",
+  "sectionTitle": "Sao lưu",
+  "purpose": "Các bản chụp đã mã hóa của nhóm để khôi phục.",
+  "proOnly": "Sao lưu tự động là một phần của Pro.",
   "description": "Lưu một bản chụp đã mã hóa của các nhóm của bạn theo lịch bên dưới trong khi trình duyệt đang mở. {{count}} bản mới nhất được giữ lại.",
   "upgradeDescription": "Sao lưu tự động là một phần của Pro: bản chụp đã mã hóa của các nhóm của bạn, được lưu theo lịch, với {{count}} bản mới nhất được giữ lại.",
   "deleteScope": "Nó bị xóa khỏi trình duyệt này và khỏi tài khoản của bạn. Một trình duyệt khác đã có bản sao vẫn giữ nguyên bản sao của nó.",
@@ -21,6 +24,7 @@
   "upgradeToPro": "Nâng cấp lên Pro",
   "planEnded": "Gói của bạn không còn bao gồm sao lưu tự động, vì vậy không có bản mới nào được tạo. Các bản dưới đây vẫn thuộc về bạn để khôi phục hoặc xóa.",
   "listLabel": "Danh sách sao lưu tự động",
+  "savedCount_other": "{{count}} bản sao lưu đã lưu",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "Khôi phục bản sao lưu từ {{when}}",
   "restore": "Khôi phục",

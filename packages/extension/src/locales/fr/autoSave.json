@@ -24,8 +24,8 @@
   },
   "settings": {
     "title": "Enregistrer automatiquement les onglets ouverts",
-    "description": "Enregistre vos onglets ouverts dans un nouveau groupe de la section Enregistrés auto, selon un horaire ou quand vous ouvrez beaucoup d'onglets. Les onglets déjà enregistrés sont ignorés et les fenêtres privées ne sont jamais enregistrées. Chaque enregistrement auto est conservé.",
-    "descriptionFree": "Enregistre vos onglets ouverts dans un nouveau groupe de la section Enregistrés auto, selon un horaire ou quand vous ouvrez beaucoup d'onglets. Les onglets déjà enregistrés sont ignorés et les fenêtres privées ne sont jamais enregistrées. L'offre Free conserve les {{keep}} enregistrements auto les plus récents, et ils comptent dans vos {{groups}} groupes et {{tabs}} onglets.",
+    "purpose": "Enregistre automatiquement vos onglets ouverts dans un nouveau groupe.",
+    "freeLimits": "L'offre Free conserve les {{keep}} enregistrements auto les plus récents, et ils comptent dans vos {{groups}} groupes et {{tabs}} onglets.",
     "upgrade": "Passez à l'offre supérieure pour tous les garder",
     "checkingPlan": "Vérification de votre offre...",
     "scheduleLabel": "Horaire",
@@ -46,6 +46,7 @@
     "notifyLabel": "Afficher une notification",
     "notifyDescription": "Une notification du navigateur après chaque enregistrement auto.",
     "noTrigger": "Choisissez un horaire ou un nombre d'onglets pour enregistrer automatiquement.",
+    "skipNote": "Les onglets déjà enregistrés sont ignorés et les fenêtres privées ne sont jamais enregistrées.",
     "runNow": "Enregistrer maintenant",
     "running": "Enregistrement..."
   },

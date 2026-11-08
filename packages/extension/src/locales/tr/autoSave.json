@@ -23,8 +23,8 @@
   },
   "settings": {
     "title": "Açık sekmeleri otomatik kaydet",
-    "description": "Açık sekmelerinizi bir zamanlamaya göre ya da çok sekme açtığınızda Otomatik kaydedilenler bölümünde yeni bir grup olarak kaydeder. Zaten kayıtlı sekmeler atlanır, gizli pencereler asla kaydedilmez. Her otomatik kayıt saklanır.",
-    "descriptionFree": "Açık sekmelerinizi bir zamanlamaya göre ya da çok sekme açtığınızda Otomatik kaydedilenler bölümünde yeni bir grup olarak kaydeder. Zaten kayıtlı sekmeler atlanır, gizli pencereler asla kaydedilmez. Free plan en yeni {{keep}} otomatik kaydı saklar ve bunlar {{groups}} grup ve {{tabs}} sekme sınırınıza sayılır.",
+    "purpose": "Açık sekmelerinizi otomatik olarak yeni bir grup olarak kaydeder.",
+    "freeLimits": "Free plan en yeni {{keep}} otomatik kaydı saklar ve bunlar {{groups}} grup ve {{tabs}} sekme sınırınıza sayılır.",
     "upgrade": "Hepsini saklamak için yükseltin",
     "checkingPlan": "Planınız kontrol ediliyor...",
     "scheduleLabel": "Zamanlama",
@@ -44,6 +44,7 @@
     "notifyLabel": "Bildirim göster",
     "notifyDescription": "Her otomatik kayıttan sonra bir tarayıcı bildirimi.",
     "noTrigger": "Otomatik kaydetmek için bir zamanlama veya sekme sayısı seçin.",
+    "skipNote": "Zaten kayıtlı sekmeler atlanır, gizli pencereler asla kaydedilmez.",
     "runNow": "Şimdi otomatik kaydet",
     "running": "Kaydediliyor..."
   },

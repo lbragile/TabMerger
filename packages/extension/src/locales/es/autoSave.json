@@ -24,8 +24,8 @@
   },
   "settings": {
     "title": "Guardar pestañas abiertas automáticamente",
-    "description": "Guarda tus pestañas abiertas como un grupo nuevo en la sección Guardado automático, según un horario o cuando abres muchas pestañas. Se omiten las pestañas ya guardadas y nunca se guardan las ventanas privadas. Se conservan todos los guardados automáticos.",
-    "descriptionFree": "Guarda tus pestañas abiertas como un grupo nuevo en la sección Guardado automático, según un horario o cuando abres muchas pestañas. Se omiten las pestañas ya guardadas y nunca se guardan las ventanas privadas. El plan Free conserva los {{keep}} guardados automáticos más recientes, y cuentan para tus {{groups}} grupos y {{tabs}} pestañas.",
+    "purpose": "Guarda tus pestañas abiertas como un grupo nuevo, automáticamente.",
+    "freeLimits": "El plan Free conserva los {{keep}} guardados automáticos más recientes, y cuentan para tus {{groups}} grupos y {{tabs}} pestañas.",
     "upgrade": "Mejora para conservarlos todos",
     "checkingPlan": "Comprobando tu plan...",
     "scheduleLabel": "Horario",
@@ -46,6 +46,7 @@
     "notifyLabel": "Mostrar una notificación",
     "notifyDescription": "Una notificación del navegador después de cada guardado automático.",
     "noTrigger": "Elige un horario o una cantidad de pestañas para guardar automáticamente.",
+    "skipNote": "Se omiten las pestañas ya guardadas y nunca se guardan las ventanas privadas.",
     "runNow": "Guardar ahora",
     "running": "Guardando..."
   },

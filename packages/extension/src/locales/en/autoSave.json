@@ -23,8 +23,8 @@
   },
   "settings": {
     "title": "Auto-save open tabs",
-    "description": "Saves your open tabs as a new group in the Auto-saved section, on a schedule or when you open many tabs. Tabs that are already saved are skipped, and private windows are never saved. Every auto-save is kept.",
-    "descriptionFree": "Saves your open tabs as a new group in the Auto-saved section, on a schedule or when you open many tabs. Tabs that are already saved are skipped, and private windows are never saved. The Free plan keeps the newest {{keep}} auto-saves, and they count toward your {{groups}} groups and {{tabs}} tabs.",
+    "purpose": "Saves your open tabs as a new group, automatically.",
+    "freeLimits": "The Free plan keeps the newest {{keep}} auto-saves, and they count toward your {{groups}} groups and {{tabs}} tabs.",
     "upgrade": "Upgrade to keep them all",
     "checkingPlan": "Checking your plan...",
     "scheduleLabel": "Schedule",
@@ -44,6 +44,7 @@
     "notifyLabel": "Show a notification",
     "notifyDescription": "A browser notification after each auto-save.",
     "noTrigger": "Pick a schedule or a tab count to auto-save.",
+    "skipNote": "Tabs that are already saved are skipped, and private windows are never saved.",
     "runNow": "Auto-save now",
     "running": "Saving..."
   },

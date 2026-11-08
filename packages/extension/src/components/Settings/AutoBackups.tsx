@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDateTime, t as translate } from '@/lib/i18n';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { RotateCcw, Trash2 } from 'lucide-react';
 import { AUTO_BACKUP_INTERVALS, AUTO_BACKUP_MESSAGE, AUTO_BACKUP_RETENTION_COUNT, normalizeAutoBackupInterval } from '@tabmerger/shared';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -22,11 +21,13 @@ import { countSavedGroupsAndTabs } from '@/lib/tierLimits';
 import { useUIStore } from '@/stores/uiStore';
 import { importGroups, skippedContext } from '@/lib/importExport';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
-import { cn, getGroupTabCount, relativeTimeStr } from '@/lib/utils';
+import { cn, relativeTimeStr } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { toast } from '@/lib/toast';
 import type { Session } from '@/lib/types';
 import { SETTINGS_SELECT_WIDTH } from '@/components/Settings/settingsControls';
+import { SETTINGS_SUB_BOX, SettingsSection } from '@/components/Settings/SettingsSection';
+import { BackupList } from '@/components/Settings/BackupList';
 
 type BackupSettingsPatch = Partial<Pick<AppSettings, 'autoBackupEnabled' | 'autoBackupIntervalMinutes'>> & BackupFilePatch;
 
@@ -65,9 +66,10 @@ const formatBackupDate = (ms: number) =>
   formatDateTime(ms, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 /**
- * Settings → Data → "Automatic backups". Paid accounts get the switch, the interval, "Back up
- * now" and the list; everyone else gets a short explanation and an upgrade button. Backups that
- * already exist stay listed (restore / delete) after a downgrade.
+ * Settings → Data → "Backups". Paid accounts get the switch on the heading line and, while it is
+ * on, a box with the interval, "Back up now" and the backup-file settings; everyone else gets one
+ * line and an upgrade link. Saved backups are folded behind "N saved backups" and stay listed
+ * (restore / delete) after a downgrade.
  *
  * This is only the UI of the rule: the worker checks the plan with the server before every
  * backup, and the server rejects the cloud copy for an account that is not paid.
@@ -252,97 +254,103 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
     deleteBackup(backup.id);
   };
 
+  const upgrade = () => {
+    trackEvent('upgrade_clicked', { source: 'settings_auto_backup' });
+    chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`, active: true });
+  };
+
   return (
-    <section ref={sectionRef} tabIndex={-1} aria-label={t('backups.title')} className="min-w-0 space-y-3 focus:outline-none">
+    <SettingsSection
+      ref={sectionRef}
+      tabIndex={-1}
+      section="backups"
+      testId="data-section-backups"
+      title={t('backups.sectionTitle')}
+      purpose={t('backups.purpose')}
+      headerAction={
+        // Only a paid plan gets the switch; while the plan loads there is none (a paid user must
+        // not see it flip, a free one must not see a switch it cannot use).
+        !planLoading && cloudSync ? (
+          <Switch
+            className="shrink-0"
+            aria-label={t('backups.title')}
+            checked={enabled}
+            disabled={settingsLoading}
+            onCheckedChange={(v) => void save({ autoBackupEnabled: v === true })}
+          />
+        ) : undefined
+      }
+    >
       {planLoading ? (
         // The plan is not known yet: neither the controls nor the upgrade offer (a paid user must
         // not see "Upgrade to Pro" flash by while their subscription loads).
-        <div className="min-w-0">
-          <Label className="text-sm">{t('backups.title')}</Label>
-          <p className="text-xs text-muted-foreground">{t('backups.checkingPlan')}</p>
-        </div>
+        <p className="min-w-0 text-xs text-muted-foreground">{t('backups.checkingPlan')}</p>
       ) : cloudSync ? (
-        <>
-          <div className="flex items-center justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <Label className="text-sm">{t('backups.title')}</Label>
-              <p className="text-xs text-muted-foreground">{t('backups.description', { count: AUTO_BACKUP_RETENTION_COUNT })}</p>
+        enabled && (
+          <div className={cn('min-w-0 space-y-3', SETTINGS_SUB_BOX)} data-testid="backup-options">
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <Label className="text-sm">{t('backups.intervalLabel')}</Label>
+                <p className="text-xs text-muted-foreground">
+                  {t('backups.intervalDescription', { count: AUTO_BACKUP_RETENTION_COUNT })}
+                </p>
+              </div>
+              <Select
+                value={String(intervalMinutes)}
+                disabled={settingsLoading}
+                onValueChange={(v) => void save({ autoBackupIntervalMinutes: normalizeAutoBackupInterval(Number(v)) })}
+              >
+                <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('backups.intervalAria')}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {AUTO_BACKUP_INTERVALS.map((option) => (
+                    <SelectItem key={option.minutes} value={String(option.minutes)}>
+                      {t(`backups.interval.${option.minutes}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Switch
-              className="shrink-0"
-              aria-label={t('backups.title')}
-              checked={enabled}
-              disabled={settingsLoading}
-              onCheckedChange={(v) => void save({ autoBackupEnabled: v === true })}
-            />
-          </div>
 
-          <div className="flex items-center justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <Label className="text-sm">{t('backups.intervalLabel')}</Label>
-              <p className="text-xs text-muted-foreground">
-                {t('backups.intervalDescription', { count: AUTO_BACKUP_RETENTION_COUNT })}
+            <div className="flex items-center justify-between gap-4">
+              <p className="min-w-0 flex-1 text-xs text-muted-foreground">
+                {latest ? t('backups.lastBackup', { when: relativeTimeStr(latest.createdAt) }) : t('backups.noBackupYet')}
               </p>
+              <Button
+                variant="outline"
+                size="sm"
+                // `aria-disabled`, not `disabled`: a disabled button drops keyboard focus to the
+                // page while the backup runs. The handler is guarded instead.
+                className="text-xs shrink-0 rounded-none aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+                aria-disabled={running || downloading}
+                aria-busy={running}
+                onClick={() => {
+                  if (running || downloading) return;
+                  void handleBackupNow();
+                }}
+              >
+                {running ? t('backups.backingUp') : t('backups.backUpNow')}
+              </Button>
             </div>
-            <Select
-              value={String(intervalMinutes)}
-              disabled={!enabled || settingsLoading}
-              onValueChange={(v) => void save({ autoBackupIntervalMinutes: normalizeAutoBackupInterval(Number(v)) })}
-            >
-              <SelectTrigger className={`${SETTINGS_SELECT_WIDTH} h-7 text-xs shrink-0`} aria-label={t('backups.intervalAria')}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {AUTO_BACKUP_INTERVALS.map((option) => (
-                  <SelectItem key={option.minutes} value={String(option.minutes)}>
-                    {t(`backups.interval.${option.minutes}`)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
-          <div className="flex items-center justify-between gap-4">
-            <p className="min-w-0 flex-1 text-xs text-muted-foreground">
-              {latest ? t('backups.lastBackup', { when: relativeTimeStr(latest.createdAt) }) : t('backups.noBackupYet')}
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              // `aria-disabled`, not `disabled`: a disabled button drops keyboard focus to the
-              // page while the backup runs. The handler is guarded instead.
-              className="text-xs shrink-0 rounded-none aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
-              aria-disabled={running || downloading}
-              aria-busy={running}
-              onClick={() => {
-                if (running || downloading) return;
-                void handleBackupNow();
-              }}
-            >
-              {running ? t('backups.backingUp') : t('backups.backUpNow')}
-            </Button>
+            <div className="min-w-0 border-t border-border pt-3">
+              <AutoBackupFileSettings file={file} disabled={settingsLoading} onSave={save} />
+            </div>
           </div>
-
-          <AutoBackupFileSettings file={file} disabled={settingsLoading} onSave={save} />
-        </>
+        )
       ) : (
-        <div className="flex items-center justify-between gap-4">
-          <div className="min-w-0 flex-1">
-            <Label className="text-sm">{t('backups.title')}</Label>
-            <p className="text-xs text-muted-foreground">{t('backups.upgradeDescription', { count: AUTO_BACKUP_RETENTION_COUNT })}</p>
-          </div>
+        <p className="min-w-0 text-xs text-muted-foreground">
+          {t('backups.proOnly')}{' '}
           <Button
-            variant="outline"
+            variant="link"
             size="sm"
-            className="text-xs shrink-0 rounded-none"
-            onClick={() => {
-              trackEvent('upgrade_clicked', { source: 'settings_auto_backup' });
-              chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`, active: true });
-            }}
+            className="inline h-auto whitespace-normal p-0 text-start align-baseline text-xs"
+            onClick={upgrade}
           >
             {t('backups.upgradeToPro')}
           </Button>
-        </div>
+        </p>
       )}
 
       {/* Always in the DOM, only its text changes: a status element that is mounted together
@@ -359,66 +367,15 @@ export function AutoBackups({ onSettingsSaved, onRestored }: AutoBackupsProps) {
         </p>
       )}
 
-      {backups.length > 0 && (
-        <ul className="min-w-0 border border-border divide-y divide-border" aria-label={t('backups.listLabel')}>
-          {backups.map((backup) => {
-            const tabCount = backup.groups.reduce((sum, g) => sum + getGroupTabCount(g), 0);
-            const when = formatBackupDate(backup.createdAt);
-            return (
-              <li key={backup.id} className="min-w-0 px-2 py-1.5">
-                <div className="flex items-center gap-2 min-w-0">
-                <div className="min-w-0 flex-1">
-                  <span className="block truncate text-xs">{when}</span>
-                  <span className="block truncate text-[11px] text-muted-foreground">
-                    {t('backups.counts', { groups: t('common.groupCount', { count: backup.groups.length }), tabs: t('common.tabCount', { count: tabCount }) })}
-                  </span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 gap-1 text-xs shrink-0 rounded-none"
-                  aria-label={t('backups.restoreFrom', { when })}
-                  aria-expanded={restoreId === backup.id}
-                  onClick={() => setRestoreId(restoreId === backup.id ? null : backup.id)}
-                >
-                  <RotateCcw className="h-3 w-3" />
-                  {t('backups.restore')}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 px-2 shrink-0 rounded-none text-muted-foreground hover:text-destructive"
-                  aria-label={t('backups.deleteFrom', { when })}
-                  data-backup-delete={backup.id}
-                  onClick={() => void handleDelete(backup)}
-                >
-                  <Trash2 className="h-3 w-3" />
-                </Button>
-                </div>
-                {restoreId === backup.id && (
-                  <div className="mt-1.5 min-w-0 space-y-1.5" role="group" aria-label={t('backups.howToRestore', { when })}>
-                    <p className="text-[11px] text-muted-foreground">
-                      {t('backups.restoreExplainer')}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                      <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => void handleRestore(backup, 'add')}>
-                        {t('backups.addToMine')}
-                      </Button>
-                      <Button variant="outline" size="sm" className="h-7 text-xs rounded-none" onClick={() => void handleRestore(backup, 'replace')}>
-                        {t('backups.replaceMine')}
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-7 text-xs rounded-none" onClick={() => setRestoreId(null)}>
-                        {t('backups.cancel')}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <BackupList
+        backups={backups}
+        formatDate={formatBackupDate}
+        restoreId={restoreId}
+        onRestoreIdChange={setRestoreId}
+        onRestore={(backup, mode) => void handleRestore(backup, mode)}
+        onDelete={(backup) => void handleDelete(backup)}
+      />
       {confirmDialog}
-    </section>
+    </SettingsSection>
   );
 }

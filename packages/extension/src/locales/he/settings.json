@@ -68,14 +68,16 @@
     "aiOwnKey": "מפתח API משלכם"
   },
   "data": {
-    "intro": "TabMerger שומר את כל הנתונים באופן מקומי ב-IndexedDB. סנכרון בענן דורש חשבון Pro.",
-    "exportLabel": "ייצוא נתונים",
-    "exportDescription": "הורדת כל הקבוצות כקובץ JSON",
-    "exportButton": "ייצוא",
-    "importLabel": "ייבוא נתונים",
-    "importDescription": "שחזור קבוצות מקובץ JSON שיוצא",
-    "importButton": "ייבוא",
+    "sections": {
+      "importExport": "ייבוא וייצוא",
+      "danger": "אזור מסוכן"
+    },
+    "importExportPurpose": "העברת הקבוצות שלך אל TabMerger או ממנו.",
+    "exportJson": "ייצוא JSON",
+    "importFile": "ייבוא קובץ",
+    "dangerPurpose": "מחיקת כל הקבוצות וההגדרות במכשיר הזה.",
     "clearAll": "מחיקת כל הנתונים",
+    "footer": "נשמר במכשיר הזה. סנכרון בענן דורש Pro.",
     "importTitle_one": "לייבא קבוצה אחת?",
     "importTitle_two": "לייבא שתי קבוצות?",
     "importTitle_other": "לייבא {{count}} קבוצות?",

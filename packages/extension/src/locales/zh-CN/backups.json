@@ -1,5 +1,8 @@
 {
   "title": "自动备份",
+  "sectionTitle": "备份",
+  "purpose": "分组的加密快照，可用于恢复。",
+  "proOnly": "自动备份是 Pro 的一部分。",
   "description": "浏览器打开期间，按以下计划保存分组的加密快照，并保留最新的 {{count}} 份。",
   "upgradeDescription": "自动备份是 Pro 的一部分：按计划保存分组的加密快照，并保留最新的 {{count}} 份。",
   "deleteScope": "它将从此浏览器和您的账户中移除。已拥有该备份的其他浏览器会保留自己的副本。",
@@ -21,6 +24,7 @@
   "upgradeToPro": "升级到 Pro",
   "planEnded": "您的套餐不再包含自动备份，因此不会再创建新备份。下方已有的备份仍可恢复或删除。",
   "listLabel": "自动备份列表",
+  "savedCount_other": "{{count}} 个已保存的备份",
   "counts": "{{groups}} · {{tabs}}",
   "restoreFrom": "恢复{{when}}的备份",
   "restore": "恢复",
