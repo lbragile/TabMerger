@@ -247,6 +247,10 @@ export function CompareScrollBox({ labelledBy, labels, children }: CompareScroll
   }, [])
 
   const between = { top: m.header, bottom: m.footer }
+  // Rails run from the very top (through the sticky product row, so no scrolled header cell shows
+  // between the pinned columns and a rail) down to the section bar. They sit above the scrolled
+  // cells and never overlap the pinned corner/TabMerger cells.
+  const railSpan = { top: 0, bottom: m.footer }
   const railWidth = `${ARROW_REM}rem`
 
   return (
@@ -297,13 +301,13 @@ export function CompareScrollBox({ labelledBy, labels, children }: CompareScroll
                 <>
                   <div
                     className={cn(RAIL, 'border-e shadow-[0.25rem_0_0.5rem_-0.25rem_hsl(var(--foreground)/0.12)] rtl:shadow-[-0.25rem_0_0.5rem_-0.25rem_hsl(var(--foreground)/0.12)]')}
-                    style={{ ...between, insetInlineStart: `calc(${m.pinned}px - ${railWidth})` }}
+                    style={{ ...railSpan, insetInlineStart: `calc(${m.pinned}px - ${railWidth})` }}
                   >
                     <ToolArrow direction={-1} disabled={!m.start} label={labels.previousTool} onClick={scrollColumn} />
                   </div>
                   <div
                     className={cn(RAIL, 'inset-e-0 border-s shadow-[-0.25rem_0_0.5rem_-0.25rem_hsl(var(--foreground)/0.12)] rtl:shadow-[0.25rem_0_0.5rem_-0.25rem_hsl(var(--foreground)/0.12)]')}
-                    style={between}
+                    style={railSpan}
                   >
                     <ToolArrow direction={1} disabled={!m.end} label={labels.nextTool} onClick={scrollColumn} />
                   </div>
