@@ -2,7 +2,6 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useUIStore } from '@/stores/uiStore';
 import { AddGroupModal } from './AddGroup';
 import { DeleteConfirmModal } from './DeleteConfirm';
-import { ImportExportModal } from './ImportExport';
 import { SettingsModal } from './Settings';
 import { AuthModal } from './Auth';
 import { UpgradePromptModal } from './UpgradePrompt';
@@ -45,8 +44,6 @@ export function ModalRoot() {
         );
       case 'saveSession':
         return <SaveSessionModal data={modal.data ?? {}} onClose={closeModal} />;
-      case 'importExport':
-        return <ImportExportModal mode={(modal.data?.mode as string) ?? 'export'} data={modal.data ?? {}} onClose={closeModal} />;
       case 'settings':
         return <SettingsModal onClose={closeModal} initialTab={modal.data?.tab} />;
       case 'auth':

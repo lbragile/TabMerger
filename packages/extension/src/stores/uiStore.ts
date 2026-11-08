@@ -8,7 +8,6 @@ export type ModalType =
   | 'deleteGroup'
   | 'deleteWindow'
   | 'deleteTab'
-  | 'importExport'
   | 'settings'
   | 'auth'
   | 'upgrade'

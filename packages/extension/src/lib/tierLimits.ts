@@ -91,18 +91,19 @@ export function showFreeLimitToast(limit: LimitName, maxAllowed: number, detail?
 }
 
 /**
- * One shared gate for every group-import path (`ImportExportModal`'s JSON/Bookmarks/OneTab
- * imports, `SettingsModal`'s Data-tab import). Computes the resulting group/tab counts,
+ * One shared gate for every group-import path (`SettingsModal`'s Data-tab import of a JSON
+ * backup, bookmarks HTML or OneTab text file, and `AutoBackups`' restore). Computes the resulting group/tab counts,
  * checks them against `caps`, and — if blocked — fires the same upgrade toast every other
  * limit gate uses (with a "this file contains N groups, M tabs" detail line) before
  * returning `true` so the caller can bail without writing anything.
  *
  * `mode` controls how "resulting" is computed:
  * - `'append'` — the import is additive (goes through `useImportGroups`, which appends to
- *   the existing `available`): resulting = current + imported.
- * - `'replace'` — the import REPLACES the entire `available` array (`ImportExportModal`'s
- *   own JSON round-trip, via `setGroupsState`): resulting = the imported file's own counts;
- *   there's no surviving "current" to add.
+ *   the existing `available`): the Data-tab import and an auto-backup "add" restore.
+ *   resulting = current + imported.
+ * - `'replace'` — the import REPLACES the saved groups (an auto-backup "replace" restore, via
+ *   `useReplaceSavedGroups`): resulting = the imported groups' own counts; there's no surviving
+ *   "current" to add.
  *
  * Paid tiers (caps at `Infinity`) always pass — `exceedsFreeLimits` handles that, no
  * `tier === 'free'` pre-check needed here.

@@ -234,7 +234,7 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
       if (groups.length === 0) throw new Error(t('settings.toast.noGroupsFound'));
 
       // Free-tier backstop: this import path is additive (appends to existing groups),
-      // so gate on current + imported, same as ImportExport.tsx's Bookmarks/OneTab paths.
+      // so gate on current + imported.
       if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
 
       // The file name is the user's own, shown as text and cut short so it cannot fill the dialog.
