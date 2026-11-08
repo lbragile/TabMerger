@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "インストール後のガイドツアー"
-    },
-    "mobileApps": {
-      "label": "モバイルアプリ"
-    },
-    "teams": {
-      "label": "チーム用ワークスペース"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "任意",
     "rtlIncluded": "右から左に書く言語にも対応",
     "themesPalettes": "テーマ、色覚に配慮したパレット",
-    "iosAndroid": "iOS と Android",
-    "dashboardOnPhones": "Web ダッシュボードはスマートフォンでも使える",
     "notOnSafari": "Safari 版は非対応",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync（年払いのみ）",
     "weeklyLocalBackup": "毎週ローカルにバックアップ、Backup & Sync でクラウドにも",
     "plusManualBackups": "ワンクリックの手動バックアップも",
     "donations": "寄付",
-    "teamPricePerMember": "メンバー 1 人あたり {monthly}/月 または {yearly}/年",
     "upToSpaces": "最大 {count, number} スペース",
     "startingAtNoYearly": "「〜から」の表示、年額の記載なし",
-    "teamPricePerUser": "ユーザー 1 人あたり {monthly}/月から、最低 {count, number} ユーザー",
     "noLimits": "制限なし",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>、<code>u:</code>、正規表現",

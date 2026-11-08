@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "تور راهنما پس از نصب"
-    },
-    "mobileApps": {
-      "label": "اپ‌های موبایل"
-    },
-    "teams": {
-      "label": "فضاهای کاری تیمی"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "اختیاری",
     "rtlIncluded": "از جمله راست‌به‌چپ",
     "themesPalettes": "پوسته‌ها، رنگ‌بندی برای کوررنگ‌ها",
-    "iosAndroid": "iOS و Android",
-    "dashboardOnPhones": "داشبورد وب روی گوشی کار می‌کند",
     "notOnSafari": "نه در Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync، فقط سالانه",
     "weeklyLocalBackup": "پشتیبان محلی هفتگی؛ پشتیبان ابری با Backup & Sync",
     "plusManualBackups": "به‌علاوه پشتیبان‌گیری دستی با یک کلیک",
     "donations": "کمک مالی",
-    "teamPricePerMember": "{monthly}/ماه یا {yearly}/سال برای هر عضو",
     "upToSpaces": "تا {count, number} فضا",
     "startingAtNoYearly": "«از»؛ قیمت سالانه ذکر نشده",
-    "teamPricePerUser": "از {monthly} برای هر کاربر در ماه، حداقل {count, number} کاربر",
     "noLimits": "بدون محدودیت",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>، <code>u:</code>، ⁨regex⁩",

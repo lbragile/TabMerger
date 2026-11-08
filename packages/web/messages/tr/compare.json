@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "Kurulum sonrası rehberli tur"
-    },
-    "mobileApps": {
-      "label": "Mobil uygulamalar"
-    },
-    "teams": {
-      "label": "Ekip çalışma alanları"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "İsteğe bağlı",
     "rtlIncluded": "Sağdan sola diller dahil",
     "themesPalettes": "Temalar, renk körlüğüne uygun paletler",
-    "iosAndroid": "iOS ve Android",
-    "dashboardOnPhones": "Web paneli telefonlarda çalışır",
     "notOnSafari": "Safari'de yok",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, yalnızca yıllık",
     "weeklyLocalBackup": "Haftalık yerel yedek; Backup & Sync ile bulut yedeği",
     "plusManualBackups": "Ayrıca tek tıkla elle yedekleme",
     "donations": "Bağış",
-    "teamPricePerMember": "Üye başına {monthly}/ay veya {yearly}/yıl",
     "upToSpaces": "En fazla {count, number} alan",
     "startingAtNoYearly": "\"Başlayan\" fiyat; yıllık fiyat belirtilmemiş",
-    "teamPricePerUser": "Kullanıcı başına aylık {monthly} ve üzeri, en az {count, number} kullanıcı",
     "noLimits": "Sınır yok",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, regex",

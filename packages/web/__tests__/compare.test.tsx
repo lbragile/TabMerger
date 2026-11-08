@@ -92,8 +92,8 @@ describe('comparison data', () => {
     }
   })
 
-  it('has 38 rows, every one in a known group, and the groups appear in page order', () => {
-    expect(COMPARISON_ROWS).toHaveLength(38)
+  it('has 36 rows, every one in a known group, and the groups appear in page order', () => {
+    expect(COMPARISON_ROWS).toHaveLength(36)
     const order = COMPARISON_ROWS.map((row) => ROW_GROUPS.indexOf(row.group))
     expect(order.every((i) => i >= 0)).toBe(true)
     expect(order).toEqual([...order].sort((a, b) => a - b))
@@ -103,11 +103,21 @@ describe('comparison data', () => {
     expect([...LEGEND_STATES]).toEqual(['yes', 'paid', 'partial', 'no', 'unknown'])
   })
 
-  it('uses "Not stated" for anything not listed, and "No" for AI everywhere but Toby', () => {
+  it('uses "Not stated" for anything not listed, AI rows included (silence is never "No")', () => {
     const noAccount = COMPARISON_ROWS.find((r) => r.key === 'noAccount')!
     expect(noAccount.cells.tabSessionManager.state).toBe('unknown')
     const aiDescribe = COMPARISON_ROWS.find((r) => r.key === 'aiDescribe')!
-    for (const id of COMPETITOR_IDS) expect(aiDescribe.cells[id].state).toBe(id === 'toby' ? 'unknown' : 'no')
+    for (const id of COMPETITOR_IDS) expect(aiDescribe.cells[id].state).toBe('unknown')
+    // No competitor has a "No" on any AI row; Toby keeps its verified paid "Smart" cells.
+    for (const row of COMPARISON_ROWS.filter((r) => r.group === 'ai')) {
+      for (const id of COMPETITOR_IDS) expect(row.cells[id].state, `${row.key} ${id}`).not.toBe('no')
+    }
+    expect(COMPARISON_ROWS.find((r) => r.key === 'aiAutoGroup')!.cells.toby).toMatchObject({ state: 'paid', labelKey: 'smartFeatures' })
+  })
+
+  it('has no "Mobile apps" or "Team workspaces" row', () => {
+    expect(COMPARISON_ROWS.map((r) => r.key)).not.toEqual(expect.arrayContaining(['mobileApps']))
+    expect(COMPARISON_ROWS.map((r) => r.key)).not.toEqual(expect.arrayContaining(['teams']))
   })
 
   it('has every labelKey and noteKey, row label, group and state word in the English catalog', () => {

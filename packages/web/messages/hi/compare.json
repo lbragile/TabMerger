@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "इंस्टॉल के बाद गाइडेड टूर"
-    },
-    "mobileApps": {
-      "label": "मोबाइल ऐप"
-    },
-    "teams": {
-      "label": "टीम वर्कस्पेस"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "वैकल्पिक",
     "rtlIncluded": "दाएँ-से-बाएँ भाषाओं समेत",
     "themesPalettes": "थीम, कलर-ब्लाइंड पैलेट",
-    "iosAndroid": "iOS और Android",
-    "dashboardOnPhones": "वेब डैशबोर्ड फ़ोन पर भी चलता है",
     "notOnSafari": "Safari पर नहीं",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, सिर्फ़ वार्षिक",
     "weeklyLocalBackup": "हर हफ़्ते लोकल बैकअप; Backup & Sync के साथ क्लाउड बैकअप",
     "plusManualBackups": "साथ में एक-क्लिक मैन्युअल बैकअप",
     "donations": "दान",
-    "teamPricePerMember": "प्रति सदस्य {monthly}/माह या {yearly}/वर्ष",
     "upToSpaces": "{count, number} स्पेस तक",
     "startingAtNoYearly": "\"शुरुआती\" कीमत; वार्षिक कीमत नहीं बताई गई",
-    "teamPricePerUser": "प्रति उपयोगकर्ता {monthly}/माह से, कम से कम {count, number} उपयोगकर्ता",
     "noLimits": "कोई सीमा नहीं",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, regex",

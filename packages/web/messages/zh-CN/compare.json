@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "安装后的引导教程"
-    },
-    "mobileApps": {
-      "label": "移动应用"
-    },
-    "teams": {
-      "label": "团队工作区"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "可选",
     "rtlIncluded": "包括从右到左书写的语言",
     "themesPalettes": "主题、色盲友好配色",
-    "iosAndroid": "iOS 和 Android",
-    "dashboardOnPhones": "网页控制台可在手机上使用",
     "notOnSafari": "不含 Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync，仅按年",
     "weeklyLocalBackup": "每周本地备份；Backup & Sync 提供云备份",
     "plusManualBackups": "另有一键手动备份",
     "donations": "捐赠",
-    "teamPricePerMember": "每位成员 {monthly}/月或 {yearly}/年",
     "upToSpaces": "最多 {count, number} 个空间",
     "startingAtNoYearly": "“起价”；未列出年价",
-    "teamPricePerUser": "每用户每月 {monthly} 起，至少 {count, number} 名用户",
     "noLimits": "无限制",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>、<code>u:</code>、正则表达式",

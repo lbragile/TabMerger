@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "Recorrido guiado al instalar"
-    },
-    "mobileApps": {
-      "label": "Apps móviles"
-    },
-    "teams": {
-      "label": "Espacios de trabajo en equipo"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "Opcional",
     "rtlIncluded": "Incluye idiomas de derecha a izquierda",
     "themesPalettes": "Temas, paletas para daltónicos",
-    "iosAndroid": "iOS y Android",
-    "dashboardOnPhones": "El panel web funciona en el móvil",
     "notOnSafari": "No en Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, solo anual",
     "weeklyLocalBackup": "Copia local semanal; copia en la nube con Backup & Sync",
     "plusManualBackups": "Además, copias manuales con un clic",
     "donations": "Donaciones",
-    "teamPricePerMember": "{monthly}/mes o {yearly}/año por miembro",
     "upToSpaces": "Hasta {count, number} espacios",
     "startingAtNoYearly": "“Desde”; sin precio anual indicado",
-    "teamPricePerUser": "Desde {monthly} por usuario/mes, mínimo {count, number} usuarios",
     "noLimits": "Sin límites",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, regex",

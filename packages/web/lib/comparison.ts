@@ -8,8 +8,8 @@ import { STORE_BROWSER, STORE_IDS, type StoreId } from '@/lib/stores'
  * Every competitor cell comes from that product's own website or store listing (Chrome Web Store,
  * or Firefox Add-ons for a Firefox-only add-on), checked on {@link COMPARISON_CHECKED_ON}.
  * `unknown` ("Not stated") means those pages don't say, never that the feature is missing; `no`
- * is used only where the product's own pages say so, or where its own feature list has nothing
- * of the kind (AI). Anything a row doesn't list for a competitor is "Not stated" (`row()`).
+ * is used only where the product's own pages say so. Anything a row doesn't list for a
+ * competitor is "Not stated" (`row()`), AI rows included.
  * Re-check every competitor and update the date in the same change as any edit here.
  * TabMerger's own numbers come from `@tabmerger/shared` so they can't drift from what is sold.
  *
@@ -222,13 +222,12 @@ const NO_PAID_PLAN_LISTED: Cell = { state: 'info', labelKey: 'noPaidPlan' }
 const NO_PAID_PLAN_DONATIONS: Cell = { state: 'info', labelKey: 'noPaidPlanAtAll', noteKey: 'donations' }
 
 /**
- * A row: TabMerger's cell and the competitors' cells. A competitor left out is "Not stated", or
- * "No" on an AI row except Toby (its own pages describe paid "Smart" features).
+ * A row: TabMerger's cell and the competitors' cells. A competitor left out is "Not stated", on
+ * every row, AI included: silence on a product's own pages never becomes "No".
  */
 function row(key: string, group: RowGroup, tabmerger: Cell, competitors: Partial<Record<CompetitorId, Cell>> = {}): Row {
-  const fallback = (id: CompetitorId) => (group === 'ai' && id !== 'toby' ? NO : NOT_STATED)
   const cells = { tabmerger } as Record<ProductId, Cell>
-  for (const id of COMPETITOR_IDS) cells[id] = competitors[id] ?? fallback(id)
+  for (const id of COMPETITOR_IDS) cells[id] = competitors[id] ?? NOT_STATED
   return { key, group, cells }
 }
 
@@ -395,11 +394,6 @@ export function comparisonRows(availability: AiAvailability = AI_AVAILABILITY): 
     }),
     row('theme', 'other', YES, { onetab: YES, sessionBuddy: YES, toby: { state: 'yes', noteKey: 'themesPalettes' } }),
     row('tour', 'other', YES),
-    row('mobileApps', 'other', { state: 'no', noteKey: 'dashboardOnPhones' }, { toby: { state: 'yes', noteKey: 'iosAndroid' } }),
-    row('teams', 'other', NO, {
-      toby: { state: 'paid', labelKey: 'team', noteKey: 'teamPricePerMember', prices: { monthly: 10, yearly: 96 } },
-      workona: { state: 'paid', labelKey: 'team', noteKey: 'teamPricePerUser', prices: { monthly: 8 }, values: { count: 3 } },
-    }),
   ]
 }
 

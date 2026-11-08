@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "Обзорный тур после установки"
-    },
-    "mobileApps": {
-      "label": "Мобильные приложения"
-    },
-    "teams": {
-      "label": "Командные пространства"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "По желанию",
     "rtlIncluded": "Включая языки с письмом справа налево",
     "themesPalettes": "Темы, палитры для дальтоников",
-    "iosAndroid": "iOS и Android",
-    "dashboardOnPhones": "Веб-панель работает на телефонах",
     "notOnSafari": "Не в Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, только за год",
     "weeklyLocalBackup": "Еженедельная локальная копия; облачная — с Backup & Sync",
     "plusManualBackups": "Плюс ручные копии в один клик",
     "donations": "Пожертвования",
-    "teamPricePerMember": "{monthly}/мес. или {yearly}/год за участника",
     "upToSpaces": "До {count, number} пространств",
     "startingAtNoYearly": "«От»; годовая цена не указана",
-    "teamPricePerUser": "От {monthly} за пользователя в месяц, минимум {count, number} пользователя",
     "noLimits": "Без ограничений",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, regex",

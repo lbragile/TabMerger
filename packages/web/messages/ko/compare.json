@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "설치 후 가이드 투어"
-    },
-    "mobileApps": {
-      "label": "모바일 앱"
-    },
-    "teams": {
-      "label": "팀 작업 공간"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "선택 사항",
     "rtlIncluded": "오른쪽에서 왼쪽으로 쓰는 언어 포함",
     "themesPalettes": "테마, 색각 이상자용 팔레트",
-    "iosAndroid": "iOS 및 Android",
-    "dashboardOnPhones": "웹 대시보드는 휴대폰에서도 작동",
     "notOnSafari": "Safari 제외",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, 연간 결제만",
     "weeklyLocalBackup": "매주 로컬 백업, Backup & Sync로 클라우드 백업",
     "plusManualBackups": "원클릭 수동 백업도 지원",
     "donations": "기부",
-    "teamPricePerMember": "멤버당 월 {monthly} 또는 연 {yearly}",
     "upToSpaces": "스페이스 최대 {count, number}개",
     "startingAtNoYearly": "'부터' 가격, 연간 가격 표시 없음",
-    "teamPricePerUser": "사용자당 월 {monthly}부터, 최소 {count, number}명",
     "noLimits": "제한 없음",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, 정규식",

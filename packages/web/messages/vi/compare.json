@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "Hướng dẫn sau khi cài đặt"
-    },
-    "mobileApps": {
-      "label": "Ứng dụng di động"
-    },
-    "teams": {
-      "label": "Không gian làm việc nhóm"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "Tùy chọn",
     "rtlIncluded": "Bao gồm ngôn ngữ viết từ phải sang trái",
     "themesPalettes": "Giao diện, bảng màu cho người mù màu",
-    "iosAndroid": "iOS và Android",
-    "dashboardOnPhones": "Bảng điều khiển web dùng được trên điện thoại",
     "notOnSafari": "Không có trên Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, chỉ theo năm",
     "weeklyLocalBackup": "Sao lưu cục bộ hằng tuần; sao lưu đám mây với Backup & Sync",
     "plusManualBackups": "Kèm sao lưu thủ công một chạm",
     "donations": "Quyên góp",
-    "teamPricePerMember": "{monthly}/tháng hoặc {yearly}/năm mỗi thành viên",
     "upToSpaces": "Tối đa {count, number} không gian",
     "startingAtNoYearly": "\"Từ\"; không nêu giá theo năm",
-    "teamPricePerUser": "Từ {monthly} mỗi người dùng/tháng, tối thiểu {count, number} người dùng",
     "noLimits": "Không giới hạn",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, regex",

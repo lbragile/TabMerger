@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "סיור מודרך אחרי ההתקנה"
-    },
-    "mobileApps": {
-      "label": "אפליקציות לנייד"
-    },
-    "teams": {
-      "label": "סביבות עבודה לצוותים"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "לפי בחירה",
     "rtlIncluded": "כולל מימין לשמאל",
     "themesPalettes": "ערכות נושא, פלטות לעיוורי צבעים",
-    "iosAndroid": "iOS ו-Android",
-    "dashboardOnPhones": "לוח הבקרה באתר עובד בטלפונים",
     "notOnSafari": "לא ב-Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, רק שנתי",
     "weeklyLocalBackup": "גיבוי מקומי שבועי; גיבוי בענן עם Backup & Sync",
     "plusManualBackups": "ועוד גיבויים ידניים בלחיצה",
     "donations": "תרומות",
-    "teamPricePerMember": "{monthly}/חודש או {yearly}/שנה לחבר צוות",
     "upToSpaces": "עד {count, number} מרחבים",
     "startingAtNoYearly": "\"החל מ\"; לא צוין מחיר שנתי",
-    "teamPricePerUser": "החל מ-{monthly} למשתמש לחודש, לפחות {count, number} משתמשים",
     "noLimits": "בלי הגבלות",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, ⁨regex⁩",

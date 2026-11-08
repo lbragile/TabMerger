@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "Guided tour for new installs"
-    },
-    "mobileApps": {
-      "label": "Mobile apps"
-    },
-    "teams": {
-      "label": "Team workspaces"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "Opt-in",
     "rtlIncluded": "Including right-to-left",
     "themesPalettes": "Themes, color-blind palettes",
-    "iosAndroid": "iOS and Android",
-    "dashboardOnPhones": "Web dashboard works on phones",
     "notOnSafari": "Not on Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, yearly only",
     "weeklyLocalBackup": "Weekly local backup; cloud backup with Backup & Sync",
     "plusManualBackups": "Plus one-click manual backups",
     "donations": "Donations",
-    "teamPricePerMember": "{monthly}/mo or {yearly}/yr per member",
     "upToSpaces": "Up to {count, number} spaces",
     "startingAtNoYearly": "“Starting at”; no yearly price listed",
-    "teamPricePerUser": "From {monthly} per user/mo, at least {count, number} users",
     "noLimits": "No limits",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, regex",

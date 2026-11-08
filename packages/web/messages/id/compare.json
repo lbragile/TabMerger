@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "Tur terpandu setelah instalasi"
-    },
-    "mobileApps": {
-      "label": "Aplikasi seluler"
-    },
-    "teams": {
-      "label": "Ruang kerja tim"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "Opsional",
     "rtlIncluded": "Termasuk kanan-ke-kiri",
     "themesPalettes": "Tema, palet ramah buta warna",
-    "iosAndroid": "iOS dan Android",
-    "dashboardOnPhones": "Dasbor web bisa dipakai di ponsel",
     "notOnSafari": "Tidak di Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync, hanya tahunan",
     "weeklyLocalBackup": "Cadangan lokal mingguan; cadangan cloud dengan Backup & Sync",
     "plusManualBackups": "Plus cadangan manual sekali klik",
     "donations": "Donasi",
-    "teamPricePerMember": "{monthly}/bln atau {yearly}/thn per anggota",
     "upToSpaces": "Hingga {count, number} ruang",
     "startingAtNoYearly": "\"Mulai dari\"; tidak ada harga tahunan",
-    "teamPricePerUser": "Mulai {monthly} per pengguna/bln, minimal {count, number} pengguna",
     "noLimits": "Tanpa batas",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>, <code>u:</code>, regex",

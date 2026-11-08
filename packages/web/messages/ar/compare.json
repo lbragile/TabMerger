@@ -155,12 +155,6 @@
     },
     "tour": {
       "label": "جولة إرشادية بعد التثبيت"
-    },
-    "mobileApps": {
-      "label": "تطبيقات الجوال"
-    },
-    "teams": {
-      "label": "مساحات عمل للفرق"
     }
   },
   "states": {
@@ -247,18 +241,14 @@
     "optIn": "اختياري",
     "rtlIncluded": "بما فيها اللغات من اليمين إلى اليسار",
     "themesPalettes": "سمات ولوحات ألوان لمن لديهم عمى ألوان",
-    "iosAndroid": "iOS وAndroid",
-    "dashboardOnPhones": "لوحة التحكم على الويب تعمل على الهواتف",
     "notOnSafari": "ليس على Safari",
     "json": "JSON",
     "backupSyncYearly": "Backup & Sync، سنويًا فقط",
     "weeklyLocalBackup": "نسخة محلية أسبوعية؛ ونسخة سحابية مع Backup & Sync",
     "plusManualBackups": "ونسخ يدوية بنقرة واحدة",
     "donations": "تبرعات",
-    "teamPricePerMember": "{monthly}/شهر أو {yearly}/سنة لكل عضو",
     "upToSpaces": "حتى {count, number} مساحات",
     "startingAtNoYearly": "\"يبدأ من\"؛ لا سعر سنويًا مذكورًا",
-    "teamPricePerUser": "من {monthly} لكل مستخدم شهريًا، {count, number} مستخدمين على الأقل",
     "noLimits": "بلا حدود",
     "proPlan": "Pro",
     "searchOperators": "<code>t:</code>، <code>u:</code>، ⁨regex⁩",
