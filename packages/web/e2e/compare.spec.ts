@@ -94,4 +94,176 @@ test.describe('compare page', () => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     expect(await pageOverflow(page)).toBeLessThanOrEqual(0)
   })
+
+  const box = (page: Page) => page.locator('[role="region"][tabindex="0"]')
+  const toolArrows = (page: Page) => page.getByRole('button', { name: /^(Previous|Next) tool$/ })
+  const sectionButtons = (page: Page) => page.getByRole('button', { name: /^(Previous|Next) section/ })
+
+  async function ready(page: Page, width: number, height = 900, path = '/compare') {
+    await page.setViewportSize({ width, height })
+    await page.goto(path)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    // The controls render after hydration; wait for the picker to be interactive.
+    await page.waitForLoadState('networkidle').catch(() => {})
+  }
+
+  test.describe('section bar', () => {
+    test('next lands the section header right under the product row (1280)', async ({ page }) => {
+      await ready(page, 1280)
+      await box(page).scrollIntoViewIfNeeded()
+      const next = page.getByRole('button', { name: /^Next section: / })
+      await expect(next).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Previous section' })).toBeDisabled()
+      await next.click()
+      const header = page.locator('tbody th[scope="colgroup"]').nth(1)
+      await expect
+        .poll(
+          async () => {
+            const [h, row] = await Promise.all([header.boundingBox(), page.locator('thead th').filter({ hasText: /^TabMerger/ }).boundingBox()])
+            return Math.abs(h!.y - (row!.y + row!.height))
+          },
+          { timeout: 5000 }
+        )
+        .toBeLessThanOrEqual(3)
+      await expect(page.getByRole('button', { name: /^Previous section: / })).toBeEnabled()
+    })
+
+    for (const [w, h] of [
+      [1280, 900],
+      [1366, 768],
+    ]) {
+      test(`the legend bottom is inside the viewport after scrolling to the table (${w}x${h})`, async ({ page }) => {
+        await ready(page, w, h)
+        await page.evaluate(() => document.getElementById('compare-table')!.scrollIntoView())
+        await page.waitForTimeout(400)
+        const legend = await page.getByRole('list', { name: 'Key' }).boundingBox()
+        expect(legend!.y + legend!.height).toBeLessThanOrEqual(h)
+      })
+    }
+  })
+
+  test.describe('tool arrows', () => {
+    test('1280: both arrows sit outside the box and there are no rails', async ({ page }) => {
+      await ready(page, 1280)
+      await expect(toolArrows(page)).toHaveCount(2)
+      const b = (await box(page).boundingBox())!
+      const prev = (await page.getByRole('button', { name: 'Previous tool' }).boundingBox())!
+      const next = (await page.getByRole('button', { name: 'Next tool' }).boundingBox())!
+      expect(prev.x + prev.width).toBeLessThanOrEqual(b.x + 0.5)
+      expect(next.x).toBeGreaterThanOrEqual(b.x + b.width - 0.5)
+      // A rail is a bordered opaque strip inside the box; outside arrows are in a plain wrapper.
+      for (const name of ['Previous tool', 'Next tool']) {
+        const cls = await page.getByRole('button', { name }).locator('xpath=..').getAttribute('class')
+        expect(cls).not.toMatch(/border-(e|s)/)
+      }
+    })
+
+    test('1024: rails render, next moves exactly one column and disables at the far end', async ({ page }) => {
+      await ready(page, 1024)
+      await expect(toolArrows(page)).toHaveCount(2)
+      const b = (await box(page).boundingBox())!
+      const rail = (await page.getByRole('button', { name: 'Previous tool' }).locator('xpath=..').boundingBox())!
+      const nextSection = (await page.getByRole('button', { name: /^Next section/ }).boundingBox())!
+      expect(rail.y).toBeLessThanOrEqual(b.y + 1)
+      expect(rail.y + rail.height).toBeLessThanOrEqual(nextSection.y + 2)
+      // Nothing scrolled shows between TabMerger's header cell and the start rail.
+      const tm = (await page.locator('thead th').filter({ hasText: /^TabMerger/ }).boundingBox())!
+      expect(Math.abs(rail.x - (tm.x + tm.width))).toBeLessThanOrEqual(1.5)
+
+      const next = page.getByRole('button', { name: 'Next tool' })
+      const prev = page.getByRole('button', { name: 'Previous tool' })
+      await expect(prev).toBeDisabled()
+      const colX = async (id: string) => (await page.locator(`thead th[data-col="${id}"]`).boundingBox())!.x
+      const onetabBefore = await colX('onetab')
+      const sessionBefore = await colX('sessionBuddy')
+      await next.click()
+      // One column: Session Buddy lands at the pinned edge, just after the rail.
+      // The pinned edge includes the 2.5rem (40px) start rail.
+      await expect.poll(async () => Math.abs((await colX('sessionBuddy')) - (onetabBefore + 40))).toBeLessThanOrEqual(2)
+      expect(sessionBefore).toBeGreaterThan(onetabBefore)
+      for (let i = 0; i < 12 && (await next.isEnabled()); i++) {
+        await next.click()
+        await page.waitForTimeout(500)
+      }
+      await expect(next).toBeDisabled()
+      await expect(prev).toBeEnabled()
+    })
+
+    test('picking one competitor removes arrows and rails; "All tools" brings them back', async ({ page }) => {
+      await ready(page, 1024)
+      await expect(toolArrows(page)).toHaveCount(2)
+      await openPicker(page)
+      await page.getByRole('option', { name: 'Toby' }).click()
+      await expect(toolArrows(page)).toHaveCount(0)
+      await openPicker(page)
+      await page.getByRole('option', { name: 'All tools' }).click()
+      await expect(toolArrows(page)).toHaveCount(2)
+    })
+
+    test('below 768 there are no tool arrows and no section bar', async ({ page }) => {
+      await ready(page, 390, 844)
+      await expect(toolArrows(page)).toHaveCount(0)
+      await expect(sectionButtons(page)).toHaveCount(0)
+    })
+
+    test('without JavaScript there are no arrows and no section bar, and the table is complete', async ({ browser }) => {
+      const ctx = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1280, height: 900 } })
+      const page = await ctx.newPage()
+      await page.goto('/compare')
+      await expect(page.getByRole('table')).toBeAttached()
+      await expect(page.locator('thead th')).toHaveCount(11)
+      await expect(toolArrows(page)).toHaveCount(0)
+      await expect(sectionButtons(page)).toHaveCount(0)
+      await ctx.close()
+    })
+
+    test('he at 1024: rails mirror and next still advances', async ({ page }) => {
+      await ready(page, 1024, 900, '/he/compare')
+      await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
+      // Hebrew labels.
+      const arrows = page.getByRole('button', { name: /^(הכלי הקודם|הכלי הבא)$/ })
+      await expect(arrows).toHaveCount(2)
+      const b = (await box(page).boundingBox())!
+      // The pinned columns are on the right in RTL: the start rail is right of the box centre.
+      const startRail = (await arrows.first().locator('xpath=..').boundingBox())!
+      expect(startRail.x + startRail.width / 2).toBeGreaterThan(b.x + b.width / 2)
+      const colX = async (id: string) => (await page.locator(`thead th[data-col="${id}"]`).boundingBox())!.x
+      const onetabBefore = await colX('onetab')
+      await page.getByRole('button', { name: 'הכלי הבא' }).click()
+      // Next moves toward later columns, which is leftward in RTL: the content slides toward the start (right) edge, one column.
+      await expect.poll(async () => (await colX('onetab')) - onetabBefore).toBeGreaterThan(100)
+    })
+  })
+
+  test.describe('header nav', () => {
+    for (const locale of ['de', 'fr']) {
+      for (const width of [768, 1024]) {
+        test(`${locale} at ${width}px: the nav is not clipped and Changelog is not in the bar`, async ({ page }) => {
+          await page.setViewportSize({ width, height: 800 })
+          await page.goto(`/${locale}/compare`)
+          const nav = page.locator('header nav').first()
+          await expect(nav).toBeVisible()
+          const clipped = await nav.evaluate((el) => el.scrollWidth - el.clientWidth)
+          expect(clipped).toBeLessThanOrEqual(0)
+          await expect(nav.locator('a[href$="/changelog"]')).toBeHidden()
+        })
+      }
+    }
+
+    test('1280: Changelog is in the bar, after Compare', async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 })
+      await page.goto('/compare')
+      const hrefs = await page.locator('header nav').first().locator('a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
+      expect(hrefs).toEqual(['/features', '/pricing', '/compare', '/changelog', '/faq'])
+    })
+
+    test('the mobile menu lists Changelog', async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 })
+      await page.goto('/compare')
+      await expect(async () => {
+        await page.getByRole('button', { name: 'Open menu' }).click()
+        await expect(page.getByRole('navigation', { name: 'Menu', exact: true }).getByRole('link', { name: 'Changelog' })).toBeVisible({ timeout: 1000 })
+      }).toPass({ timeout: 15_000 })
+    })
+  })
 })
