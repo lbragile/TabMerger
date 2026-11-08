@@ -8,7 +8,8 @@ import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { GithubStars, GithubStarsFallback } from "@/components/layout/GithubStars";
 import { getGithubStarCount } from "@/lib/githubStats";
-import { NAV_LINKS } from "@/components/layout/navLinks";
+import { NAV_LINK_ACTIVE_CLASS, NAV_LINKS } from "@/components/layout/navLinks";
+import { NavLink } from "@/components/layout/NavLink";
 import { cn } from "@/lib/utils";
 
 /**
@@ -45,16 +46,17 @@ export async function Navbar() {
                     </Link>
                     <nav className="hidden min-w-0 items-center gap-1 overflow-hidden text-[13.5px] lg:flex">
                         {NAV_LINKS.map((link) => (
-                            <Link
+                            <NavLink
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
                                     "h-8 items-center rounded-lg px-2 text-text2 transition-colors hover:bg-surface2 hover:text-foreground xl:px-3",
                                     link.barFromXl ? "hidden xl:flex" : "flex"
                                 )}
+                                activeClassName={NAV_LINK_ACTIVE_CLASS}
                             >
                                 {t(link.label)}
-                            </Link>
+                            </NavLink>
                         ))}
                     </nav>
                 </div>
