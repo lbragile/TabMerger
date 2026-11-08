@@ -1,3 +1,10 @@
+## [3.13.1](https://github.com/lbragile/TabMerger/compare/v3.13.0...v3.13.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* **extension:** declutter the settings data tab into titled sections ([#113](https://github.com/lbragile/TabMerger/issues/113)) ([28f9a67](https://github.com/lbragile/TabMerger/commit/28f9a675392974ad750946fed1c279138c954a50))
+
 # [3.13.0](https://github.com/lbragile/TabMerger/compare/v3.12.0...v3.13.0) (2026-11-08)
 
 
