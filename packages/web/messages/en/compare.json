@@ -1,0 +1,295 @@
+{
+  "metaTitle": "TabMerger vs OneTab, Session Buddy, Toby, Workona & more",
+  "metaDescription": "A fair comparison of TabMerger with OneTab, Session Buddy, Toby, Workona and other tab managers: free plans, prices, sync, encryption, backups and AI, from each product's own pages.",
+  "title": "How TabMerger compares",
+  "lead": "A fair, side-by-side look at TabMerger and {count, number} other tab managers: what each one does, and what it costs.",
+  "checkedOn": "Checked on <time>{date}</time>",
+  "differences": {
+    "label": "What sets TabMerger apart",
+    "e2ee": {
+      "title": "Sync the server can't read",
+      "description": "Every synced group is end-to-end encrypted, always. Your tabs are locked with a key only your devices hold."
+    },
+    "ai": {
+      "title": "AI that does the filing",
+      "description": "Group a mess of tabs, name a group, or get a one-line summary of a page. With Pro AI or your own key.",
+      "descriptionOwnKey": "Group a mess of tabs, name a group, or get a one-line summary of a page. With Pro AI and your own API key.",
+      "descriptionComingSoon": "Group a mess of tabs, name a group, or get a one-line summary of a page. Coming soon to Pro AI."
+    },
+    "import": {
+      "title": "Move over in a minute",
+      "description": "Copy your OneTab lists into a <code>.txt</code> file and import it from Settings → Data: each list becomes a group. Bookmarks HTML and JSON work too."
+    }
+  },
+  "table": {
+    "title": "Feature by feature",
+    "lead": "From each product's own website and store listing. \"Not stated\" means we couldn't confirm it, not that it's missing.",
+    "caption": "TabMerger compared with {products}",
+    "captionPair": "TabMerger compared with {product}",
+    "feature": "Feature",
+    "pickerLegend": "Compare TabMerger with",
+    "allTools": "All tools",
+    "previousTool": "Previous tool",
+    "nextTool": "Next tool",
+    "previousSection": "Previous section",
+    "nextSection": "Next section",
+    "goToPreviousSection": "Previous section: {name}",
+    "goToNextSection": "Next section: {name}",
+    "sectionOf": "Section {current, number} of {total, number}"
+  },
+  "groups": {
+    "plans": "Plans",
+    "organizing": "Organizing",
+    "finding": "Finding & cleanup",
+    "saving": "Saving & restoring",
+    "sync": "Sync & safety",
+    "sharing": "Sharing & moving",
+    "ai": "AI (Pro AI)",
+    "other": "Everything else"
+  },
+  "rows": {
+    "free": {
+      "label": "Free plan"
+    },
+    "paidFrom": {
+      "label": "Paid plans from"
+    },
+    "noAccount": {
+      "label": "Works without an account"
+    },
+    "groups": {
+      "label": "Named groups"
+    },
+    "windows": {
+      "label": "Windows inside groups"
+    },
+    "dnd": {
+      "label": "Drag and drop"
+    },
+    "shortcuts": {
+      "label": "Keyboard shortcuts"
+    },
+    "contextMenu": {
+      "label": "Right-click menu"
+    },
+    "customTitles": {
+      "label": "Custom tab titles"
+    },
+    "notes": {
+      "label": "Notes"
+    },
+    "reminders": {
+      "label": "Reminders with notifications"
+    },
+    "urlRules": {
+      "label": "URL auto-assignment rules"
+    },
+    "bulk": {
+      "label": "Bulk actions"
+    },
+    "search": {
+      "label": "Search"
+    },
+    "duplicates": {
+      "label": "Duplicate cleanup"
+    },
+    "staleTabs": {
+      "label": "Stale-tab cleanup suggestions"
+    },
+    "memory": {
+      "label": "Free up memory"
+    },
+    "sessions": {
+      "label": "Sessions & crash recovery"
+    },
+    "autoSave": {
+      "label": "Auto-save open tabs"
+    },
+    "continueOnDevice": {
+      "label": "Continue on another device"
+    },
+    "backups": {
+      "label": "Automatic backups"
+    },
+    "sync": {
+      "label": "Cross-device sync"
+    },
+    "e2ee": {
+      "label": "End-to-end encrypted sync"
+    },
+    "dashboard": {
+      "label": "Web dashboard"
+    },
+    "share": {
+      "label": "Share links"
+    },
+    "import": {
+      "label": "Import"
+    },
+    "export": {
+      "label": "Export"
+    },
+    "aiAutoGroup": {
+      "label": "Auto-grouping"
+    },
+    "aiNames": {
+      "label": "Group names (three to pick from)"
+    },
+    "aiDescribe": {
+      "label": "Describe a group"
+    },
+    "aiSummaries": {
+      "label": "Tab summaries"
+    },
+    "aiSessions": {
+      "label": "Session suggestions"
+    },
+    "aiOrganize": {
+      "label": "Organize"
+    },
+    "aiOwnKey": {
+      "label": "Use your own AI key"
+    },
+    "languages": {
+      "label": "Languages"
+    },
+    "theme": {
+      "label": "Light and dark theme"
+    },
+    "tour": {
+      "label": "Guided tour for new installs"
+    }
+  },
+  "states": {
+    "yes": "Yes",
+    "paid": "Yes",
+    "partial": "Yes",
+    "no": "No",
+    "unknown": "Not stated",
+    "paidPill": "Paid",
+    "paidSr": " (on a paid plan)",
+    "partialSr": " (partly)"
+  },
+  "labels": {
+    "noPaidPlan": "No paid plan listed",
+    "syncNeedsSignIn": "Sync needs sign-in",
+    "folders": "Folders",
+    "collections": "Collections",
+    "collectionsAndSpaces": "Collections and spaces",
+    "spaces": "Spaces",
+    "coreFeature": "Its core feature",
+    "tabSuspension": "Tab suspension",
+    "listsSurviveRestarts": "Lists survive restarts",
+    "saveWindows": "Save windows as sessions",
+    "autosave": "Autosave",
+    "pro": "Pro",
+    "alwaysOn": "Always on",
+    "noSync": "No sync",
+    "proAi": "Pro AI",
+    "comingSoon": "Coming soon",
+    "smartFeatures": "Smart features",
+    "asWebPage": "As a web page",
+    "shareCollections": "Share collections",
+    "team": "Team plan",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/mo · {yearly}/yr",
+    "priceMonthly": "{monthly}/mo",
+    "priceYearly": "{yearly}/yr",
+    "priceOnce": "{once} once",
+    "noPaidPlanAtAll": "No paid plan",
+    "namedColoredWindows": "Named, colored windows",
+    "namedTaggedSessions": "Named, tagged sessions",
+    "windowTree": "Tree of windows and tabs",
+    "saveRestoreWindows": "Save and restore windows",
+    "cloudSync": "Cloud sync",
+    "viaGoogleDrive": "Through Google Drive backups",
+    "closesIdleTabs": "Closes idle tabs",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "With Backup & Sync",
+    "detectsDuplicateBookmarks": "Detects duplicate bookmarks",
+    "copyAsLinks": "Copy as links, Markdown, CSV or JSON",
+    "crashRecovery": "Crash recovery",
+    "searchesClosedTabs": "Searches closed tabs",
+    "settingsOnly": "Settings only"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# group} other {# groups}}, {tabs, plural, one {# tab} other {# tabs}}",
+    "everyFeature": "Every feature",
+    "savedTabsLimit": "Up to {count, plural, one {# saved tab} other {# saved tabs}}",
+    "proIncludes": "Pro: sync and backups",
+    "accountForSyncAi": "Sync and AI need one",
+    "namedColorCoded": "Named and color-coded",
+    "colorCoded": "Color-coded",
+    "openSavedHistory": "Open, saved and history",
+    "advancedSearchPaid": "Advanced search is paid",
+    "sessionsLimits": "{count, number} free in this browser, unlimited and synced on Pro",
+    "historySnapshots": "History snapshots",
+    "dataStaysLocal": "Data stays on the device",
+    "newestKept": "Newest {count, number} kept, optional file copy",
+    "sessionBackups": "90-day session backups",
+    "ownKeyOnly": "With your own API key",
+    "encrypted": "Encrypted",
+    "sharedSpaces": "Shared spaces",
+    "mouseKeyboard": "Mouse and keyboard",
+    "shortcutsTabMerger": "Save tabs without opening the popup; <code>Ctrl/Cmd+K</code> to search",
+    "customizable": "Customizable",
+    "urlRulesLimits": "{count, number} free, unlimited on Pro",
+    "bulkActions": "Select, move, star, share, delete",
+    "searchFilters": "Filters: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
+    "dashboardView": "View groups and backups in the browser",
+    "importFormats": "JSON, bookmarks HTML, OneTab",
+    "importExportLists": "Import and export lists",
+    "manyFormats": "15+ formats",
+    "aiProviders": "Anthropic, OpenAI or Gemini",
+    "optIn": "Opt-in",
+    "rtlIncluded": "Including right-to-left",
+    "themesPalettes": "Themes, color-blind palettes",
+    "notOnSafari": "Not on Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, yearly only",
+    "weeklyLocalBackup": "Weekly local backup; cloud backup with Backup & Sync",
+    "plusManualBackups": "Plus one-click manual backups",
+    "donations": "Donations",
+    "upToSpaces": "Up to {count, number} spaces",
+    "startingAtNoYearly": "“Starting at”; no yearly price listed",
+    "noLimits": "No limits",
+    "proPlan": "Pro",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
+    "offlineThisBrowser": "Works offline, in this browser only",
+    "savedWindowsFiles": "Saved windows as files",
+    "autoSavesOnCloseTimer": "Auto-saves on close and on a timer",
+    "fromSessionBuddy": "Including from Session Buddy",
+    "backupsGoogleDrive": "Every few minutes locally, daily to Google Drive",
+    "groupsSavedLocally": "Groups saved locally",
+    "toJsonFile": "To a JSON file",
+    "reopenFromCorral": "Reopen them from the Tab Corral",
+    "closeWindowsKeepTree": "Close windows, keep them in the tree",
+    "textOutlineHtml": "Text outline or HTML file",
+    "stgImportSources": "From Tab Groups, Panorama View, Sync Tab Groups, JSON",
+    "closedTabsNotSynced": "Closed tabs aren't synced",
+    "autoSaveTabMerger": "Free: turn it on, newest {count, number} kept. Pro: on from the start, all kept and synced, end-to-end encrypted"
+  },
+  "legend": {
+    "label": "Key",
+    "yes": "Yes",
+    "paid": "On a paid plan",
+    "partial": "Partly",
+    "no": "No",
+    "unknown": "Not stated"
+  },
+  "switching": {
+    "title": "Switching from OneTab?",
+    "lead": "Your lists come across as groups, titles and all. Nothing leaves your browser.",
+    "steps": {
+      "export": "In OneTab, open <b>Export / Import URLs</b> and press <b>Copy to clipboard</b>.",
+      "save": "Paste it into a plain-text file (Notepad, or TextEdit set to plain text) and save it as <b><code>.txt</code></b>.",
+      "open": "In TabMerger, open <b>Settings → Data</b>, press <b>Import</b> and choose the <code>.txt</code> file.",
+      "import": "Confirm. Each OneTab group becomes its own group, named “Imported 1”, “Imported 2” and so on.",
+      "other": "Coming from another tool? Export your bookmarks as HTML, or a JSON file, and import that the same way."
+    }
+  },
+  "fairUse": "Information comes from each product's own website and store listing, checked on <time>{date}</time>. Features and prices change; if something here is out of date, <link>tell us</link> and we'll fix it. All product names are trademarks of their owners. TabMerger is not affiliated with any of them.",
+  "sources": {
+    "label": "Sources"
+  }
+}

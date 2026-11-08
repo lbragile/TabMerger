@@ -1,0 +1,295 @@
+{
+  "metaTitle": "TabMerger x OneTab, Session Buddy, Toby, Workona e mais",
+  "metaDescription": "Uma comparação justa do TabMerger com OneTab, Session Buddy, Toby, Workona e outros gerenciadores de abas: planos gratuitos, preços, sincronização, criptografia, backups e IA, segundo as páginas de cada produto.",
+  "title": "Como o TabMerger se compara",
+  "lead": "Uma comparação justa, lado a lado, do TabMerger com outros {count, number} gerenciadores de abas: o que cada um faz e quanto custa.",
+  "checkedOn": "Verificado em <time>{date}</time>",
+  "differences": {
+    "label": "O que diferencia o TabMerger",
+    "e2ee": {
+      "title": "Sincronização que o servidor não consegue ler",
+      "description": "Todo grupo sincronizado tem criptografia de ponta a ponta, sempre. Suas abas ficam protegidas por uma chave que só os seus dispositivos têm."
+    },
+    "ai": {
+      "title": "IA que organiza por você",
+      "description": "Agrupe uma bagunça de abas, dê nome a um grupo ou resuma uma página em uma linha. Com o Pro AI ou a sua própria chave.",
+      "descriptionOwnKey": "Agrupe uma bagunça de abas, dê nome a um grupo ou resuma uma página em uma linha. Com o Pro AI e a sua própria chave de API.",
+      "descriptionComingSoon": "Agrupe uma bagunça de abas, dê nome a um grupo ou resuma uma página em uma linha. Em breve no Pro AI."
+    },
+    "import": {
+      "title": "Mude em um minuto",
+      "description": "Copie suas listas do OneTab para um arquivo <code>.txt</code> e importe em Configurações → Dados: cada lista vira um grupo. HTML de favoritos e JSON também funcionam."
+    }
+  },
+  "table": {
+    "title": "Recurso por recurso",
+    "lead": "Segundo o site e a página na loja de cada produto. “Não informado” significa que não conseguimos confirmar, não que o recurso falte.",
+    "caption": "TabMerger comparado com {products}",
+    "captionPair": "TabMerger comparado com {product}",
+    "feature": "Recurso",
+    "pickerLegend": "Comparar o TabMerger com",
+    "allTools": "Todas as ferramentas",
+    "previousTool": "Ferramenta anterior",
+    "nextTool": "Próxima ferramenta",
+    "previousSection": "Seção anterior",
+    "nextSection": "Próxima seção",
+    "goToPreviousSection": "Seção anterior: {name}",
+    "goToNextSection": "Próxima seção: {name}",
+    "sectionOf": "Seção {current, number} de {total, number}"
+  },
+  "groups": {
+    "plans": "Planos",
+    "organizing": "Organização",
+    "finding": "Busca e limpeza",
+    "saving": "Salvar e restaurar",
+    "sync": "Sincronização e segurança",
+    "sharing": "Compartilhar e migrar",
+    "ai": "IA (Pro AI)",
+    "other": "Todo o resto"
+  },
+  "rows": {
+    "free": {
+      "label": "Plano gratuito"
+    },
+    "paidFrom": {
+      "label": "Planos pagos a partir de"
+    },
+    "noAccount": {
+      "label": "Funciona sem conta"
+    },
+    "groups": {
+      "label": "Grupos com nome"
+    },
+    "windows": {
+      "label": "Janelas dentro dos grupos"
+    },
+    "dnd": {
+      "label": "Arrastar e soltar"
+    },
+    "shortcuts": {
+      "label": "Atalhos de teclado"
+    },
+    "contextMenu": {
+      "label": "Menu do botão direito"
+    },
+    "customTitles": {
+      "label": "Títulos de aba personalizados"
+    },
+    "notes": {
+      "label": "Notas"
+    },
+    "reminders": {
+      "label": "Lembretes com notificações"
+    },
+    "urlRules": {
+      "label": "Regras de atribuição automática de URL"
+    },
+    "bulk": {
+      "label": "Ações em massa"
+    },
+    "search": {
+      "label": "Busca"
+    },
+    "duplicates": {
+      "label": "Limpeza de duplicadas"
+    },
+    "staleTabs": {
+      "label": "Sugestões para limpar abas antigas"
+    },
+    "memory": {
+      "label": "Liberar memória"
+    },
+    "sessions": {
+      "label": "Sessões e recuperação após falhas"
+    },
+    "autoSave": {
+      "label": "Salvamento automático de abas abertas"
+    },
+    "continueOnDevice": {
+      "label": "Continuar em outro dispositivo"
+    },
+    "backups": {
+      "label": "Backups automáticos"
+    },
+    "sync": {
+      "label": "Sincronização entre dispositivos"
+    },
+    "e2ee": {
+      "label": "Sincronização com criptografia de ponta a ponta"
+    },
+    "dashboard": {
+      "label": "Painel web"
+    },
+    "share": {
+      "label": "Links de compartilhamento"
+    },
+    "import": {
+      "label": "Importação"
+    },
+    "export": {
+      "label": "Exportação"
+    },
+    "aiAutoGroup": {
+      "label": "Agrupamento automático"
+    },
+    "aiNames": {
+      "label": "Nomes de grupo (três para escolher)"
+    },
+    "aiDescribe": {
+      "label": "Descrever um grupo"
+    },
+    "aiSummaries": {
+      "label": "Resumos de abas"
+    },
+    "aiSessions": {
+      "label": "Sugestões de sessão"
+    },
+    "aiOrganize": {
+      "label": "Organizar"
+    },
+    "aiOwnKey": {
+      "label": "Usar sua própria chave de IA"
+    },
+    "languages": {
+      "label": "Idiomas"
+    },
+    "theme": {
+      "label": "Tema claro e escuro"
+    },
+    "tour": {
+      "label": "Tour guiado ao instalar"
+    }
+  },
+  "states": {
+    "yes": "Sim",
+    "paid": "Sim",
+    "partial": "Sim",
+    "no": "Não",
+    "unknown": "Não informado",
+    "paidPill": "Pago",
+    "paidSr": " (em um plano pago)",
+    "partialSr": " (em parte)"
+  },
+  "labels": {
+    "noPaidPlan": "Nenhum plano pago informado",
+    "syncNeedsSignIn": "Sincronização exige login",
+    "folders": "Pastas",
+    "collections": "Coleções",
+    "collectionsAndSpaces": "Coleções e espaços",
+    "spaces": "Espaços",
+    "coreFeature": "Seu recurso principal",
+    "tabSuspension": "Suspensão de abas",
+    "listsSurviveRestarts": "Listas sobrevivem a reinícios",
+    "saveWindows": "Salvar janelas como sessões",
+    "autosave": "Salvamento automático",
+    "pro": "Pro",
+    "alwaysOn": "Sempre ativa",
+    "noSync": "Sem sincronização",
+    "proAi": "Pro AI",
+    "comingSoon": "Em breve",
+    "smartFeatures": "Recursos “Smart”",
+    "asWebPage": "Como página web",
+    "shareCollections": "Compartilhar coleções",
+    "team": "Plano Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/mês · {yearly}/ano",
+    "priceMonthly": "{monthly}/mês",
+    "priceYearly": "{yearly}/ano",
+    "priceOnce": "{once} pagamento único",
+    "noPaidPlanAtAll": "Sem plano pago",
+    "namedColoredWindows": "Janelas com nome e cor",
+    "namedTaggedSessions": "Sessões com nome e tags",
+    "windowTree": "Árvore de janelas e abas",
+    "saveRestoreWindows": "Salvar e restaurar janelas",
+    "cloudSync": "Sincronização na nuvem",
+    "viaGoogleDrive": "Por backups no Google Drive",
+    "closesIdleTabs": "Fecha abas ociosas",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Com Backup & Sync",
+    "detectsDuplicateBookmarks": "Detecta favoritos duplicados",
+    "copyAsLinks": "Copiar como links, Markdown, CSV ou JSON",
+    "crashRecovery": "Recuperação após falhas",
+    "searchesClosedTabs": "Busca em abas fechadas",
+    "settingsOnly": "Só as configurações"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# grupo} other {# grupos}}, {tabs, plural, one {# aba} other {# abas}}",
+    "everyFeature": "Todos os recursos",
+    "savedTabsLimit": "Até {count, plural, one {# aba salva} other {# abas salvas}}",
+    "proIncludes": "Pro: sincronização e backups",
+    "accountForSyncAi": "Sincronização e IA exigem uma",
+    "namedColorCoded": "Com nome e cor",
+    "colorCoded": "Com cores",
+    "openSavedHistory": "Abertas, salvas e histórico",
+    "advancedSearchPaid": "A busca avançada é paga",
+    "sessionsLimits": "{count, number} grátis neste navegador, ilimitadas e sincronizadas no Pro",
+    "historySnapshots": "Snapshots do histórico",
+    "dataStaysLocal": "Os dados ficam no dispositivo",
+    "newestKept": "As {count, number} mais recentes são mantidas, com cópia opcional em arquivo",
+    "sessionBackups": "Backups de sessões por 90 dias",
+    "ownKeyOnly": "Com a sua própria chave de API",
+    "encrypted": "Criptografados",
+    "sharedSpaces": "Espaços compartilhados",
+    "mouseKeyboard": "Mouse e teclado",
+    "shortcutsTabMerger": "Salve abas sem abrir o pop-up; <code>Ctrl/Cmd+K</code> para buscar",
+    "customizable": "Personalizáveis",
+    "urlRulesLimits": "{count, number} grátis, ilimitadas no Pro",
+    "bulkActions": "Selecionar, mover, favoritar, compartilhar, excluir",
+    "searchFilters": "Filtros: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
+    "dashboardView": "Veja grupos e backups no navegador",
+    "importFormats": "JSON, HTML de favoritos, OneTab",
+    "importExportLists": "Importar e exportar listas",
+    "manyFormats": "Mais de 15 formatos",
+    "aiProviders": "Anthropic, OpenAI ou Gemini",
+    "optIn": "Opcional",
+    "rtlIncluded": "Inclusive da direita para a esquerda",
+    "themesPalettes": "Temas, paletas para daltônicos",
+    "notOnSafari": "Não no Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, só anual",
+    "weeklyLocalBackup": "Backup local semanal; backup na nuvem com Backup & Sync",
+    "plusManualBackups": "Mais backups manuais com um clique",
+    "donations": "Doações",
+    "upToSpaces": "Até {count, number} espaços",
+    "startingAtNoYearly": "“A partir de”; sem preço anual informado",
+    "noLimits": "Sem limites",
+    "proPlan": "Pro",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, regex",
+    "offlineThisBrowser": "Funciona off-line, só neste navegador",
+    "savedWindowsFiles": "Janelas salvas como arquivos",
+    "autoSavesOnCloseTimer": "Salva ao fechar e por temporizador",
+    "fromSessionBuddy": "Inclusive do Session Buddy",
+    "backupsGoogleDrive": "A cada poucos minutos no local, diariamente no Google Drive",
+    "groupsSavedLocally": "Grupos salvos localmente",
+    "toJsonFile": "Em um arquivo JSON",
+    "reopenFromCorral": "Reabra pelo Tab Corral",
+    "closeWindowsKeepTree": "Feche janelas e mantenha na árvore",
+    "textOutlineHtml": "Estrutura em texto ou arquivo HTML",
+    "stgImportSources": "De Tab Groups, Panorama View, Sync Tab Groups, JSON",
+    "closedTabsNotSynced": "Abas fechadas não são sincronizadas",
+    "autoSaveTabMerger": "Grátis: ative e os {count, number} mais recentes ficam guardados. Pro: ativo desde o início, todos guardados e sincronizados com criptografia de ponta a ponta"
+  },
+  "legend": {
+    "label": "Legenda",
+    "yes": "Sim",
+    "paid": "Em um plano pago",
+    "partial": "Em parte",
+    "no": "Não",
+    "unknown": "Não informado"
+  },
+  "switching": {
+    "title": "Vindo do OneTab?",
+    "lead": "Suas listas chegam como grupos, com títulos e tudo. Nada sai do seu navegador.",
+    "steps": {
+      "export": "No OneTab, abra <b>Export / Import URLs</b> e clique em <b>Copy to clipboard</b>.",
+      "save": "Cole em um arquivo de texto simples (Bloco de Notas, ou TextEdit em modo texto simples) e salve como <b><code>.txt</code></b>.",
+      "open": "No TabMerger, abra <b>Configurações → Dados</b>, clique em <b>Importar</b> e escolha o arquivo <code>.txt</code>.",
+      "import": "Confirme. Cada grupo do OneTab vira um grupo próprio, chamado “Imported 1”, “Imported 2” e assim por diante.",
+      "other": "Vindo de outra ferramenta? Exporte seus favoritos como HTML, ou um arquivo JSON, e importe do mesmo jeito."
+    }
+  },
+  "fairUse": "As informações vêm do site e da página na loja de cada produto, verificadas em <time>{date}</time>. Recursos e preços mudam; se algo estiver desatualizado, <link>avise a gente</link> e corrigimos. Todos os nomes de produtos são marcas de seus donos. O TabMerger não tem vínculo com nenhum deles.",
+  "sources": {
+    "label": "Fontes"
+  }
+}

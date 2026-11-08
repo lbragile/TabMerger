@@ -1,0 +1,295 @@
+{
+  "metaTitle": "TabMerger vs. OneTab, Session Buddy, Toby, Workona & mehr",
+  "metaDescription": "Ein fairer Vergleich von TabMerger mit OneTab, Session Buddy, Toby, Workona und weiteren Tab-Managern: Gratis-Pläne, Preise, Sync, Verschlüsselung, Backups und KI, laut den eigenen Seiten jedes Produkts.",
+  "title": "TabMerger im Vergleich",
+  "lead": "Ein fairer Vergleich von TabMerger mit {count, number} anderen Tab-Managern: was jedes Tool kann und was es kostet.",
+  "checkedOn": "Geprüft am <time>{date}</time>",
+  "differences": {
+    "label": "Was TabMerger auszeichnet",
+    "e2ee": {
+      "title": "Sync, den der Server nicht lesen kann",
+      "description": "Jede synchronisierte Gruppe ist immer Ende-zu-Ende-verschlüsselt. Deine Tabs sind mit einem Schlüssel gesichert, den nur deine Geräte haben."
+    },
+    "ai": {
+      "title": "KI, die für dich sortiert",
+      "description": "Bring Ordnung in ein Tab-Chaos, benenne eine Gruppe oder lass dir eine Seite in einem Satz zusammenfassen. Mit Pro AI oder deinem eigenen Schlüssel.",
+      "descriptionOwnKey": "Bring Ordnung in ein Tab-Chaos, benenne eine Gruppe oder lass dir eine Seite in einem Satz zusammenfassen. Mit Pro AI und deinem eigenen API-Schlüssel.",
+      "descriptionComingSoon": "Bring Ordnung in ein Tab-Chaos, benenne eine Gruppe oder lass dir eine Seite in einem Satz zusammenfassen. Demnächst in Pro AI."
+    },
+    "import": {
+      "title": "In einer Minute umgezogen",
+      "description": "Kopiere deine OneTab-Listen in eine <code>.txt</code>-Datei und importiere sie unter Einstellungen → Daten: Jede Liste wird zu einer Gruppe. Lesezeichen-HTML und JSON funktionieren auch."
+    }
+  },
+  "table": {
+    "title": "Funktion für Funktion",
+    "lead": "Laut der eigenen Website und dem Store-Eintrag jedes Produkts. „Keine Angabe“ heißt, dass wir es nicht bestätigen konnten, nicht, dass es fehlt.",
+    "caption": "TabMerger im Vergleich mit {products}",
+    "captionPair": "TabMerger im Vergleich mit {product}",
+    "feature": "Funktion",
+    "pickerLegend": "TabMerger vergleichen mit",
+    "allTools": "Alle Tools",
+    "previousTool": "Vorheriges Tool",
+    "nextTool": "Nächstes Tool",
+    "previousSection": "Vorheriger Abschnitt",
+    "nextSection": "Nächster Abschnitt",
+    "goToPreviousSection": "Vorheriger Abschnitt: {name}",
+    "goToNextSection": "Nächster Abschnitt: {name}",
+    "sectionOf": "Abschnitt {current, number} von {total, number}"
+  },
+  "groups": {
+    "plans": "Pläne",
+    "organizing": "Organisieren",
+    "finding": "Finden & aufräumen",
+    "saving": "Speichern & wiederherstellen",
+    "sync": "Sync & Sicherheit",
+    "sharing": "Teilen & umziehen",
+    "ai": "KI (Pro AI)",
+    "other": "Alles Weitere"
+  },
+  "rows": {
+    "free": {
+      "label": "Gratis-Plan"
+    },
+    "paidFrom": {
+      "label": "Bezahlpläne ab"
+    },
+    "noAccount": {
+      "label": "Ohne Konto nutzbar"
+    },
+    "groups": {
+      "label": "Benannte Gruppen"
+    },
+    "windows": {
+      "label": "Fenster in Gruppen"
+    },
+    "dnd": {
+      "label": "Drag-and-drop"
+    },
+    "shortcuts": {
+      "label": "Tastenkürzel"
+    },
+    "contextMenu": {
+      "label": "Rechtsklickmenü"
+    },
+    "customTitles": {
+      "label": "Eigene Tab-Titel"
+    },
+    "notes": {
+      "label": "Notizen"
+    },
+    "reminders": {
+      "label": "Erinnerungen mit Benachrichtigung"
+    },
+    "urlRules": {
+      "label": "Regeln zur automatischen URL-Zuordnung"
+    },
+    "bulk": {
+      "label": "Massenaktionen"
+    },
+    "search": {
+      "label": "Suche"
+    },
+    "duplicates": {
+      "label": "Duplikate entfernen"
+    },
+    "staleTabs": {
+      "label": "Vorschläge zum Aufräumen alter Tabs"
+    },
+    "memory": {
+      "label": "Speicher freigeben"
+    },
+    "sessions": {
+      "label": "Sitzungen & Absturz-Wiederherstellung"
+    },
+    "autoSave": {
+      "label": "Offene Tabs automatisch speichern"
+    },
+    "continueOnDevice": {
+      "label": "Auf einem anderen Gerät weitermachen"
+    },
+    "backups": {
+      "label": "Automatische Backups"
+    },
+    "sync": {
+      "label": "Geräteübergreifender Sync"
+    },
+    "e2ee": {
+      "label": "Ende-zu-Ende-verschlüsselter Sync"
+    },
+    "dashboard": {
+      "label": "Web-Dashboard"
+    },
+    "share": {
+      "label": "Freigabelinks"
+    },
+    "import": {
+      "label": "Import"
+    },
+    "export": {
+      "label": "Export"
+    },
+    "aiAutoGroup": {
+      "label": "Automatisches Gruppieren"
+    },
+    "aiNames": {
+      "label": "Gruppennamen (drei zur Auswahl)"
+    },
+    "aiDescribe": {
+      "label": "Gruppe beschreiben"
+    },
+    "aiSummaries": {
+      "label": "Tab-Zusammenfassungen"
+    },
+    "aiSessions": {
+      "label": "Sitzungsvorschläge"
+    },
+    "aiOrganize": {
+      "label": "Organisieren"
+    },
+    "aiOwnKey": {
+      "label": "Eigener KI-Schlüssel"
+    },
+    "languages": {
+      "label": "Sprachen"
+    },
+    "theme": {
+      "label": "Helles und dunkles Design"
+    },
+    "tour": {
+      "label": "Geführte Tour nach der Installation"
+    }
+  },
+  "states": {
+    "yes": "Ja",
+    "paid": "Ja",
+    "partial": "Ja",
+    "no": "Nein",
+    "unknown": "Keine Angabe",
+    "paidPill": "Bezahlt",
+    "paidSr": " (in einem Bezahlplan)",
+    "partialSr": " (teilweise)"
+  },
+  "labels": {
+    "noPaidPlan": "Kein Bezahlplan angegeben",
+    "syncNeedsSignIn": "Sync erfordert Anmeldung",
+    "folders": "Ordner",
+    "collections": "Sammlungen",
+    "collectionsAndSpaces": "Sammlungen und Spaces",
+    "spaces": "Spaces",
+    "coreFeature": "Seine Kernfunktion",
+    "tabSuspension": "Tabs pausieren",
+    "listsSurviveRestarts": "Listen überstehen Neustarts",
+    "saveWindows": "Fenster als Sitzungen speichern",
+    "autosave": "Automatisches Speichern",
+    "pro": "Pro",
+    "alwaysOn": "Immer aktiv",
+    "noSync": "Kein Sync",
+    "proAi": "Pro AI",
+    "comingSoon": "Demnächst",
+    "smartFeatures": "Smart-Funktionen",
+    "asWebPage": "Als Webseite",
+    "shareCollections": "Sammlungen teilen",
+    "team": "Team-Plan",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/Monat · {yearly}/Jahr",
+    "priceMonthly": "{monthly}/Monat",
+    "priceYearly": "{yearly}/Jahr",
+    "priceOnce": "{once} einmalig",
+    "noPaidPlanAtAll": "Kein Bezahlplan",
+    "namedColoredWindows": "Benannte, farbige Fenster",
+    "namedTaggedSessions": "Benannte Sitzungen mit Tags",
+    "windowTree": "Baum aus Fenstern und Tabs",
+    "saveRestoreWindows": "Fenster speichern und wiederherstellen",
+    "cloudSync": "Cloud-Sync",
+    "viaGoogleDrive": "Über Google-Drive-Backups",
+    "closesIdleTabs": "Schließt inaktive Tabs",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Mit Backup & Sync",
+    "detectsDuplicateBookmarks": "Erkennt doppelte Lesezeichen",
+    "copyAsLinks": "Als Links, Markdown, CSV oder JSON kopieren",
+    "crashRecovery": "Absturz-Wiederherstellung",
+    "searchesClosedTabs": "Durchsucht geschlossene Tabs",
+    "settingsOnly": "Nur Einstellungen"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# Gruppe} other {# Gruppen}}, {tabs, plural, one {# Tab} other {# Tabs}}",
+    "everyFeature": "Alle Funktionen",
+    "savedTabsLimit": "Bis zu {count, plural, one {# gespeicherter Tab} other {# gespeicherte Tabs}}",
+    "proIncludes": "Pro: Sync und Backups",
+    "accountForSyncAi": "Sync und KI brauchen eins",
+    "namedColorCoded": "Mit Namen und Farben",
+    "colorCoded": "Farbcodiert",
+    "openSavedHistory": "Offene, gespeicherte und Verlauf",
+    "advancedSearchPaid": "Erweiterte Suche kostenpflichtig",
+    "sessionsLimits": "{count, number} gratis in diesem Browser, unbegrenzt und synchronisiert mit Pro",
+    "historySnapshots": "Verlaufs-Snapshots",
+    "dataStaysLocal": "Daten bleiben auf dem Gerät",
+    "newestKept": "Die neuesten {count, number} bleiben erhalten, optional als Dateikopie",
+    "sessionBackups": "Sitzungs-Backups für 90 Tage",
+    "ownKeyOnly": "Mit deinem eigenen API-Schlüssel",
+    "encrypted": "Verschlüsselt",
+    "sharedSpaces": "Geteilte Spaces",
+    "mouseKeyboard": "Maus und Tastatur",
+    "shortcutsTabMerger": "Tabs speichern, ohne das Popup zu öffnen; <code>Strg/Cmd+K</code> zum Suchen",
+    "customizable": "Anpassbar",
+    "urlRulesLimits": "{count, number} gratis, unbegrenzt mit Pro",
+    "bulkActions": "Auswählen, verschieben, mit Stern markieren, teilen, löschen",
+    "searchFilters": "Filter: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
+    "dashboardView": "Gruppen und Backups im Browser ansehen",
+    "importFormats": "JSON, Lesezeichen-HTML, OneTab",
+    "importExportLists": "Listen importieren und exportieren",
+    "manyFormats": "Über 15 Formate",
+    "aiProviders": "Anthropic, OpenAI oder Gemini",
+    "optIn": "Optional",
+    "rtlIncluded": "Auch von rechts nach links",
+    "themesPalettes": "Designs, Farbpaletten für Farbenblinde",
+    "notOnSafari": "Nicht in Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, nur jährlich",
+    "weeklyLocalBackup": "Wöchentliches lokales Backup; Cloud-Backup mit Backup & Sync",
+    "plusManualBackups": "Plus manuelle Backups per Klick",
+    "donations": "Spenden",
+    "upToSpaces": "Bis zu {count, number} Spaces",
+    "startingAtNoYearly": "„Ab“-Preis; kein Jahrespreis angegeben",
+    "noLimits": "Ohne Limits",
+    "proPlan": "Pro",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, Regex",
+    "offlineThisBrowser": "Funktioniert offline, nur in diesem Browser",
+    "savedWindowsFiles": "Gespeicherte Fenster als Dateien",
+    "autoSavesOnCloseTimer": "Speichert beim Schließen und per Timer",
+    "fromSessionBuddy": "Auch aus Session Buddy",
+    "backupsGoogleDrive": "Alle paar Minuten lokal, täglich in Google Drive",
+    "groupsSavedLocally": "Gruppen lokal gespeichert",
+    "toJsonFile": "In eine JSON-Datei",
+    "reopenFromCorral": "Wieder öffnen aus dem Tab Corral",
+    "closeWindowsKeepTree": "Fenster schließen, im Baum behalten",
+    "textOutlineHtml": "Text-Gliederung oder HTML-Datei",
+    "stgImportSources": "Aus Tab Groups, Panorama View, Sync Tab Groups, JSON",
+    "closedTabsNotSynced": "Geschlossene Tabs werden nicht synchronisiert",
+    "autoSaveTabMerger": "Gratis: einschaltbar, die neuesten {count, number} bleiben erhalten. Pro: von Anfang an aktiv, alle bleiben erhalten und werden Ende-zu-Ende-verschlüsselt synchronisiert"
+  },
+  "legend": {
+    "label": "Legende",
+    "yes": "Ja",
+    "paid": "In einem Bezahlplan",
+    "partial": "Teilweise",
+    "no": "Nein",
+    "unknown": "Keine Angabe"
+  },
+  "switching": {
+    "title": "Du kommst von OneTab?",
+    "lead": "Deine Listen kommen als Gruppen an, samt Titeln. Nichts verlässt deinen Browser.",
+    "steps": {
+      "export": "Öffne in OneTab <b>Export / Import URLs</b> und klicke auf <b>Copy to clipboard</b>.",
+      "save": "Füge den Text in eine reine Textdatei ein (Editor, oder TextEdit im Modus „Reiner Text“) und speichere sie als <b><code>.txt</code></b>.",
+      "open": "Öffne in TabMerger <b>Einstellungen → Daten</b>, klicke auf <b>Importieren</b> und wähle die <code>.txt</code>-Datei.",
+      "import": "Bestätige. Jede OneTab-Gruppe wird zu einer eigenen Gruppe, benannt „Imported 1“, „Imported 2“ und so weiter.",
+      "other": "Du kommst von einem anderen Tool? Exportiere deine Lesezeichen als HTML oder eine JSON-Datei und importiere sie genauso."
+    }
+  },
+  "fairUse": "Die Angaben stammen von der eigenen Website und dem Store-Eintrag jedes Produkts, geprüft am <time>{date}</time>. Funktionen und Preise ändern sich; wenn hier etwas veraltet ist, <link>sag uns Bescheid</link>, und wir korrigieren es. Alle Produktnamen sind Marken ihrer jeweiligen Inhaber. TabMerger ist mit keinem von ihnen verbunden.",
+  "sources": {
+    "label": "Quellen"
+  }
+}

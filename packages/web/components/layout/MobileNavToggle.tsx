@@ -12,13 +12,8 @@ import { useGithubRepoLabel, useStarCount } from '@/components/layout/githubLabe
 import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useNavAccount, type NavAccountState } from '@/components/layout/NavAccount'
+import { NAV_LINKS } from '@/components/layout/navLinks'
 
-const links = [
-    { href: '/features', label: 'features' },
-    { href: '/pricing', label: 'pricing' },
-    { href: '/changelog', label: 'changelog' },
-    { href: '/faq', label: 'faq' },
-] as const
 
 interface MobileNavToggleProps {
     /**
@@ -108,7 +103,7 @@ export function MobileNavToggle({ account: accountProp, starsPromise }: MobileNa
     }, [open, close])
 
     return (
-        <div ref={containerRef} className="md:hidden">
+        <div ref={containerRef} className="lg:hidden">
             <button
                 ref={toggleRef}
                 type="button"
@@ -128,7 +123,7 @@ export function MobileNavToggle({ account: accountProp, starsPromise }: MobileNa
                     aria-label={t('mobileMenu')}
                     className="absolute inset-x-0 top-16 z-40 flex flex-col gap-1 border-b border-border bg-background p-4"
                 >
-                    {links.map((link) => (
+                    {NAV_LINKS.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}

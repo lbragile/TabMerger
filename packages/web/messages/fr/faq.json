@@ -4,6 +4,7 @@
   "title": "Questions fréquentes",
   "lead": "Un doute ? Nous répondons aux e-mails en moins d’un jour.",
   "contact": "Contacter l’assistance",
+  "compareLink": "Vous venez d’un autre gestionnaire d’onglets ? Voyez comment TabMerger se compare",
   "free": {
     "question": "TabMerger est-il vraiment gratuit ?",
     "answer": "Oui ! L’offre gratuite inclut toutes les fonctionnalités de base : jusqu’à {groups} groupes, {tabs} onglets, {urlRules} règles d’URL, le glisser-déposer et l’import/export. Vous ne payez que pour la synchronisation cloud, les groupes, onglets et règles d’URL illimités, ou les fonctionnalités IA."

@@ -4,6 +4,7 @@
   "title": "Frequently asked",
   "lead": "Still unsure about something? We answer email in under a day.",
   "contact": "Contact support",
+  "compareLink": "Coming from another tab manager? See how TabMerger compares",
   "free": {
     "question": "Is TabMerger really free?",
     "answer": "Yes! The free tier includes all the core features — up to {groups} groups, {tabs} tabs, {urlRules} URL rules, drag-and-drop, and import/export. You only pay if you want cloud sync, unlimited groups, tabs and URL rules, or AI features."

@@ -4,6 +4,7 @@
   "title": "Domande frequenti",
   "lead": "Hai ancora qualche dubbio? Rispondiamo alle email in meno di un giorno.",
   "contact": "Contatta l'assistenza",
+  "compareLink": "Arrivi da un altro gestore di schede? Guarda come si confronta TabMerger",
   "free": {
     "question": "TabMerger è davvero gratuito?",
     "answer": "Sì! Il piano gratuito include tutte le funzionalità principali: fino a {groups} gruppi, {tabs} schede, {urlRules} regole URL, trascinamento e importazione/esportazione. Paghi solo se vuoi la sincronizzazione cloud, gruppi, schede e regole URL illimitati o le funzionalità IA."

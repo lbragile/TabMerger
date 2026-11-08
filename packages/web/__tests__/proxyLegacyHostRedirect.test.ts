@@ -23,6 +23,7 @@ const ALLOWED_PATHS = [
   '/',
   '/pricing',
   '/features',
+  '/compare',
   '/faq',
   '/beta',
   '/changelog',

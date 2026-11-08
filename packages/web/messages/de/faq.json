@@ -4,6 +4,7 @@
   "title": "Häufig gefragt",
   "lead": "Noch unsicher bei etwas? Wir beantworten E-Mails innerhalb eines Tages.",
   "contact": "Support kontaktieren",
+  "compareLink": "Du kommst von einem anderen Tab-Manager? So schneidet TabMerger im Vergleich ab",
   "free": {
     "question": "Ist TabMerger wirklich kostenlos?",
     "answer": "Ja! Der kostenlose Tarif enthält alle Kernfunktionen – bis zu {groups} Gruppen, {tabs} Tabs, {urlRules} URL-Regeln, Drag-and-drop sowie Import/Export. Du zahlst nur, wenn du Cloud-Sync, unbegrenzte Gruppen, Tabs und URL-Regeln oder KI-Funktionen willst."

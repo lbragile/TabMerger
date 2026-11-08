@@ -24,7 +24,7 @@ describe('sitemap', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://example.test')
     const entries = sitemap()
     // One entry per page and shipped locale; the English-only legal pages once, in English.
-    const expected = ['/', '/features', '/pricing', '/faq', '/changelog', '/privacy', '/terms', '/contact'].flatMap((path) =>
+    const expected = ['/', '/features', '/pricing', '/compare', '/faq', '/changelog', '/privacy', '/terms', '/contact'].flatMap((path) =>
       (ENGLISH_ONLY_PATHS.has(path) ? [DEFAULT_LOCALE] : SUPPORTED_LOCALES).map(
         (locale) => new URL(localizedPath(locale, path), getMetadataBase()).href
       )

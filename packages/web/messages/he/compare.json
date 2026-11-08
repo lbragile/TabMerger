@@ -1,0 +1,295 @@
+{
+  "metaTitle": "TabMerger מול ⁨OneTab⁩, ⁨Session Buddy⁩, ⁨Toby⁩, ⁨Workona⁩ ועוד",
+  "metaDescription": "השוואה הוגנת של TabMerger מול ⁨OneTab⁩, ⁨Session Buddy⁩, ⁨Toby⁩, ⁨Workona⁩ ומנהלי כרטיסיות נוספים: תוכניות חינמיות, מחירים, סנכרון, הצפנה, גיבויים ו-AI, לפי הדפים של כל מוצר.",
+  "title": "איך TabMerger משתווה",
+  "lead": "השוואה הוגנת, זה לצד זה, של TabMerger ועוד {count, number} מנהלי כרטיסיות: מה כל אחד עושה וכמה הוא עולה.",
+  "checkedOn": "נבדק ב-<time>{date}</time>",
+  "differences": {
+    "label": "מה מייחד את TabMerger",
+    "e2ee": {
+      "title": "סנכרון שהשרת לא יכול לקרוא",
+      "description": "כל קבוצה מסונכרנת מוצפנת מקצה לקצה, תמיד. הכרטיסיות שלכם נעולות במפתח שרק למכשירים שלכם יש."
+    },
+    "ai": {
+      "title": "AI שעושה את הסידור",
+      "description": "מקבצים בלגן של כרטיסיות לקבוצות, נותנים שם לקבוצה או מקבלים סיכום של עמוד בשורה אחת. עם Pro AI או עם מפתח משלכם.",
+      "descriptionOwnKey": "מקבצים בלגן של כרטיסיות לקבוצות, נותנים שם לקבוצה או מקבלים סיכום של עמוד בשורה אחת. עם Pro AI ועם מפתח API משלכם.",
+      "descriptionComingSoon": "מקבצים בלגן של כרטיסיות לקבוצות, נותנים שם לקבוצה או מקבלים סיכום של עמוד בשורה אחת. בקרוב ב-Pro AI."
+    },
+    "import": {
+      "title": "עוברים בדקה",
+      "description": "מעתיקים את רשימות OneTab לקובץ <code>.txt</code> ומייבאים אותו בהגדרות ← נתונים: כל רשימה הופכת לקבוצה. גם HTML של סימניות ו-JSON עובדים."
+    }
+  },
+  "table": {
+    "title": "תכונה מול תכונה",
+    "lead": "לפי האתר ודף החנות של כל מוצר. \"לא צוין\" פירושו שלא הצלחנו לאשר, לא שהתכונה חסרה.",
+    "caption": "TabMerger בהשוואה ל-{products}",
+    "captionPair": "TabMerger בהשוואה ל-{product}",
+    "feature": "תכונה",
+    "pickerLegend": "השוואת TabMerger עם",
+    "allTools": "כל הכלים",
+    "previousTool": "הכלי הקודם",
+    "nextTool": "הכלי הבא",
+    "previousSection": "הקטע הקודם",
+    "nextSection": "הקטע הבא",
+    "goToPreviousSection": "הקטע הקודם: {name}",
+    "goToNextSection": "הקטע הבא: {name}",
+    "sectionOf": "קטע {current, number} מתוך {total, number}"
+  },
+  "groups": {
+    "plans": "תוכניות",
+    "organizing": "ארגון",
+    "finding": "חיפוש וניקוי",
+    "saving": "שמירה ושחזור",
+    "sync": "סנכרון ובטיחות",
+    "sharing": "שיתוף ומעבר",
+    "ai": "AI (Pro AI)",
+    "other": "כל השאר"
+  },
+  "rows": {
+    "free": {
+      "label": "תוכנית חינמית"
+    },
+    "paidFrom": {
+      "label": "התוכנית בתשלום הזולה ביותר"
+    },
+    "noAccount": {
+      "label": "עובד בלי חשבון"
+    },
+    "groups": {
+      "label": "קבוצות עם שמות"
+    },
+    "windows": {
+      "label": "חלונות בתוך קבוצות"
+    },
+    "dnd": {
+      "label": "גרירה ושחרור"
+    },
+    "shortcuts": {
+      "label": "קיצורי מקלדת"
+    },
+    "contextMenu": {
+      "label": "תפריט לחיצה ימנית"
+    },
+    "customTitles": {
+      "label": "כותרות כרטיסיות מותאמות"
+    },
+    "notes": {
+      "label": "הערות"
+    },
+    "reminders": {
+      "label": "תזכורות עם התראות"
+    },
+    "urlRules": {
+      "label": "כללי שיוך אוטומטי לפי URL"
+    },
+    "bulk": {
+      "label": "פעולות מרובות"
+    },
+    "search": {
+      "label": "חיפוש"
+    },
+    "duplicates": {
+      "label": "ניקוי כפילויות"
+    },
+    "staleTabs": {
+      "label": "הצעות לניקוי כרטיסיות ישנות"
+    },
+    "memory": {
+      "label": "פינוי זיכרון"
+    },
+    "sessions": {
+      "label": "סשנים ושחזור אחרי קריסה"
+    },
+    "autoSave": {
+      "label": "שמירה אוטומטית של כרטיסיות פתוחות"
+    },
+    "continueOnDevice": {
+      "label": "המשך במכשיר אחר"
+    },
+    "backups": {
+      "label": "גיבויים אוטומטיים"
+    },
+    "sync": {
+      "label": "סנכרון בין מכשירים"
+    },
+    "e2ee": {
+      "label": "סנכרון מוצפן מקצה לקצה"
+    },
+    "dashboard": {
+      "label": "לוח בקרה באתר"
+    },
+    "share": {
+      "label": "קישורי שיתוף"
+    },
+    "import": {
+      "label": "ייבוא"
+    },
+    "export": {
+      "label": "ייצוא"
+    },
+    "aiAutoGroup": {
+      "label": "קיבוץ אוטומטי"
+    },
+    "aiNames": {
+      "label": "שמות לקבוצות (שלוש הצעות לבחירה)"
+    },
+    "aiDescribe": {
+      "label": "תיאור קבוצה"
+    },
+    "aiSummaries": {
+      "label": "סיכומי כרטיסיות"
+    },
+    "aiSessions": {
+      "label": "הצעות לסשנים"
+    },
+    "aiOrganize": {
+      "label": "סידור"
+    },
+    "aiOwnKey": {
+      "label": "שימוש במפתח AI משלכם"
+    },
+    "languages": {
+      "label": "שפות"
+    },
+    "theme": {
+      "label": "ערכת נושא בהירה וכהה"
+    },
+    "tour": {
+      "label": "סיור מודרך אחרי ההתקנה"
+    }
+  },
+  "states": {
+    "yes": "כן",
+    "paid": "כן",
+    "partial": "כן",
+    "no": "לא",
+    "unknown": "לא צוין",
+    "paidPill": "בתשלום",
+    "paidSr": " (בתוכנית בתשלום)",
+    "partialSr": " (חלקית)"
+  },
+  "labels": {
+    "noPaidPlan": "לא צוינה תוכנית בתשלום",
+    "syncNeedsSignIn": "סנכרון דורש התחברות",
+    "folders": "תיקיות",
+    "collections": "אוספים",
+    "collectionsAndSpaces": "אוספים ומרחבים",
+    "spaces": "מרחבים",
+    "coreFeature": "התכונה המרכזית שלו",
+    "tabSuspension": "השהיית כרטיסיות",
+    "listsSurviveRestarts": "הרשימות נשמרות אחרי הפעלה מחדש",
+    "saveWindows": "שמירת חלונות כסשנים",
+    "autosave": "שמירה אוטומטית",
+    "pro": "Pro",
+    "alwaysOn": "תמיד פעיל",
+    "noSync": "אין סנכרון",
+    "proAi": "Pro AI",
+    "comingSoon": "בקרוב",
+    "smartFeatures": "תכונות \"Smart\"",
+    "asWebPage": "כדף אינטרנט",
+    "shareCollections": "שיתוף אוספים",
+    "team": "תוכנית Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/חודש · {yearly}/שנה",
+    "priceMonthly": "{monthly}/חודש",
+    "priceYearly": "{yearly}/שנה",
+    "priceOnce": "{once} חד-פעמי",
+    "noPaidPlanAtAll": "אין תוכנית בתשלום",
+    "namedColoredWindows": "חלונות עם שמות וצבעים",
+    "namedTaggedSessions": "סשנים עם שמות ותגיות",
+    "windowTree": "עץ של חלונות וכרטיסיות",
+    "saveRestoreWindows": "שמירה ושחזור של חלונות",
+    "cloudSync": "סנכרון בענן",
+    "viaGoogleDrive": "דרך גיבויים ב-Google Drive",
+    "closesIdleTabs": "סוגר כרטיסיות לא פעילות",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "עם Backup & Sync",
+    "detectsDuplicateBookmarks": "מזהה סימניות כפולות",
+    "copyAsLinks": "העתקה כקישורים, ⁨Markdown⁩, ⁨CSV⁩ או ⁨JSON⁩",
+    "crashRecovery": "שחזור אחרי קריסה",
+    "searchesClosedTabs": "מחפש בכרטיסיות סגורות",
+    "settingsOnly": "רק הגדרות"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {קבוצה אחת} two {שתי קבוצות} other {# קבוצות}}, {tabs, plural, one {כרטיסייה אחת} two {שתי כרטיסיות} other {# כרטיסיות}}",
+    "everyFeature": "כל התכונות",
+    "savedTabsLimit": "עד {count, plural, one {כרטיסייה שמורה אחת} two {שתי כרטיסיות שמורות} other {# כרטיסיות שמורות}}",
+    "proIncludes": "Pro: סנכרון וגיבויים",
+    "accountForSyncAi": "סנכרון ו-AI דורשים חשבון",
+    "namedColorCoded": "עם שמות וצבעים",
+    "colorCoded": "בצבעים",
+    "openSavedHistory": "פתוחות, שמורות והיסטוריה",
+    "advancedSearchPaid": "חיפוש מתקדם בתשלום",
+    "sessionsLimits": "{count, number} בחינם בדפדפן הזה, ללא הגבלה ומסונכרנים ב-Pro",
+    "historySnapshots": "תמונות מצב של ההיסטוריה",
+    "dataStaysLocal": "הנתונים נשארים במכשיר",
+    "newestKept": "{count, number} האחרונים נשמרים, עותק בקובץ אופציונלי",
+    "sessionBackups": "גיבויי סשנים ל-90 יום",
+    "ownKeyOnly": "עם מפתח API משלכם",
+    "encrypted": "מוצפנים",
+    "sharedSpaces": "מרחבים משותפים",
+    "mouseKeyboard": "עכבר ומקלדת",
+    "shortcutsTabMerger": "שמירת כרטיסיות בלי לפתוח את החלון הקופץ; <code>Ctrl/Cmd+K</code> לחיפוש",
+    "customizable": "ניתנים להתאמה",
+    "urlRulesLimits": "{count, number} בחינם, ללא הגבלה ב-Pro",
+    "bulkActions": "בחירה, העברה, סימון בכוכב, שיתוף, מחיקה",
+    "searchFilters": "מסננים: <code>group:</code>, <code>window:</code>, <code>tag:</code>",
+    "dashboardView": "צפייה בקבוצות ובגיבויים בדפדפן",
+    "importFormats": "⁨JSON⁩, ⁨HTML⁩ של סימניות, ⁨OneTab⁩",
+    "importExportLists": "ייבוא וייצוא של רשימות",
+    "manyFormats": "יותר מ-15 פורמטים",
+    "aiProviders": "⁨Anthropic⁩, ⁨OpenAI⁩ או ⁨Gemini⁩",
+    "optIn": "לפי בחירה",
+    "rtlIncluded": "כולל מימין לשמאל",
+    "themesPalettes": "ערכות נושא, פלטות לעיוורי צבעים",
+    "notOnSafari": "לא ב-Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync, רק שנתי",
+    "weeklyLocalBackup": "גיבוי מקומי שבועי; גיבוי בענן עם Backup & Sync",
+    "plusManualBackups": "ועוד גיבויים ידניים בלחיצה",
+    "donations": "תרומות",
+    "upToSpaces": "עד {count, number} מרחבים",
+    "startingAtNoYearly": "\"החל מ\"; לא צוין מחיר שנתי",
+    "noLimits": "בלי הגבלות",
+    "proPlan": "Pro",
+    "searchOperators": "<code>t:</code>, <code>u:</code>, ⁨regex⁩",
+    "offlineThisBrowser": "עובד אופליין, רק בדפדפן הזה",
+    "savedWindowsFiles": "חלונות שמורים כקבצים",
+    "autoSavesOnCloseTimer": "שומר בסגירה ולפי טיימר",
+    "fromSessionBuddy": "כולל מ-Session Buddy",
+    "backupsGoogleDrive": "מקומית כל כמה דקות, מדי יום ל-Google Drive",
+    "groupsSavedLocally": "הקבוצות נשמרות מקומית",
+    "toJsonFile": "לקובץ JSON",
+    "reopenFromCorral": "פותחים אותן מחדש מ-Tab Corral",
+    "closeWindowsKeepTree": "סוגרים חלונות, והם נשארים בעץ",
+    "textOutlineHtml": "מתאר טקסט או קובץ HTML",
+    "stgImportSources": "מ-⁨Tab Groups⁩, ⁨Panorama View⁩, ⁨Sync Tab Groups⁩, ⁨JSON⁩",
+    "closedTabsNotSynced": "כרטיסיות סגורות לא מסונכרנות",
+    "autoSaveTabMerger": "חינם: מפעילים, {count, number} האחרונות נשמרות. Pro: פעיל מההתחלה, כולן נשמרות ומסונכרנות בהצפנה מקצה לקצה"
+  },
+  "legend": {
+    "label": "מקרא",
+    "yes": "כן",
+    "paid": "בתוכנית בתשלום",
+    "partial": "חלקית",
+    "no": "לא",
+    "unknown": "לא צוין"
+  },
+  "switching": {
+    "title": "עוברים מ-OneTab?",
+    "lead": "הרשימות מגיעות כקבוצות, כולל הכותרות. שום דבר לא יוצא מהדפדפן שלכם.",
+    "steps": {
+      "export": "ב-OneTab, פותחים את <b>Export / Import URLs</b> ולוחצים על <b>Copy to clipboard</b>.",
+      "save": "מדביקים את הטקסט בקובץ טקסט רגיל (Notepad, או TextEdit במצב טקסט רגיל) ושומרים אותו כ-<b><code>.txt</code></b>.",
+      "open": "ב-TabMerger, פותחים את <b>הגדרות ← נתונים</b>, לוחצים על <b>ייבוא</b> ובוחרים את קובץ ה-<code>.txt</code>.",
+      "import": "מאשרים. כל קבוצה של OneTab הופכת לקבוצה נפרדת, בשם ⁨\"Imported 1\"⁩, ⁨\"Imported 2\"⁩ וכן הלאה.",
+      "other": "מגיעים מכלי אחר? מייצאים את הסימניות כ-HTML, או כקובץ JSON, ומייבאים אותו באותה דרך."
+    }
+  },
+  "fairUse": "המידע לקוח מהאתר ומדף החנות של כל מוצר, ונבדק ב-<time>{date}</time>. תכונות ומחירים משתנים; אם משהו כאן לא מעודכן, <link>ספרו לנו</link> ונתקן. כל שמות המוצרים הם סימנים מסחריים של בעליהם. ל-TabMerger אין קשר לאף אחד מהם.",
+  "sources": {
+    "label": "מקורות"
+  }
+}

@@ -9,7 +9,7 @@ import { DEFAULT_LOCALE, PUBLIC_LOCALES, localizedPath } from '@/i18n/locales'
 //
 // No `lastModified`: there is no reliable per-page date, and stamping every URL with the build
 // time teaches search engines to ignore the field. Leaving it out is better than a wrong date.
-export const SITEMAP_PATHS = ['/', '/features', '/pricing', '/faq', '/changelog', '/privacy', '/terms', '/contact']
+export const SITEMAP_PATHS = ['/', '/features', '/pricing', '/compare', '/faq', '/changelog', '/privacy', '/terms', '/contact']
 
 /** Pages that exist in English only, under every locale (the binding legal text). */
 export const ENGLISH_ONLY_PATHS: ReadonlySet<string> = new Set(['/privacy', '/terms'])

@@ -7,9 +7,16 @@ import { useFormatter } from 'next-intl'
  */
 export function useListPrice(): (amount: number) => string {
   const format = useFormatter()
-  return (amount) =>
-    format.number(amount, { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  return (amount) => format.number(amount, LIST_PRICE_FORMAT)
 }
+
+/** The number format of a list price (USD, always with cents), for a formatter outside the hook. */
+export const LIST_PRICE_FORMAT = {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+} as const satisfies Intl.NumberFormatOptions
 
 /** The free plan's "$0": the same symbol, no cents. */
 export function useZeroPrice(): string {

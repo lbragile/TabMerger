@@ -4,6 +4,7 @@
   "title": "常见问题",
   "lead": "还有疑问？我们会在一天内回复邮件。",
   "contact": "联系支持",
+  "compareLink": "正在使用其他标签页管理器？看看 TabMerger 的对比",
   "free": {
     "question": "TabMerger 真的免费吗？",
     "answer": "是的！免费版包含全部核心功能：最多 {groups} 个分组、{tabs} 个标签页、{urlRules} 条网址规则、拖放以及导入/导出。只有在需要云同步、不限数量的分组、标签页和网址规则，或 AI 功能时才需付费。"

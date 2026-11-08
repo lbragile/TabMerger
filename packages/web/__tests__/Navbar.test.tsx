@@ -60,10 +60,11 @@ describe('Navbar', () => {
     expect(getGithubStarCount).toHaveBeenCalledTimes(1)
   })
 
-  it('renders nav links including Changelog', async () => {
+  it('renders nav links including Compare and Changelog', async () => {
     render(await Navbar())
     expect(screen.getByRole('link', { name: 'Features' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Pricing' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Compare' })).toHaveAttribute('href', '/compare')
     expect(screen.getByRole('link', { name: 'Changelog' })).toBeInTheDocument()
   })
 
@@ -72,7 +73,7 @@ describe('Navbar', () => {
     expect(screen.getByRole('button', { name: 'Toggle theme' })).toBeInTheDocument()
   })
 
-  it('puts the language button just before the theme toggle at every width, icon-only below lg', async () => {
+  it('puts the language button just before the theme toggle at every width, icon-only below sm and from lg to xl', async () => {
     await act(async () => {
       render(await Navbar())
     })
@@ -84,7 +85,17 @@ describe('Navbar', () => {
     // The same 2.25rem bordered box as the theme toggle once the code is hidden.
     expect(language).toHaveClass('h-9', 'border-border2', 'px-[0.5625rem]')
     expect(language).toHaveTextContent('EN')
-    expect(language.querySelector('span')).toHaveClass('hidden', 'lg:inline')
+    expect(language.querySelector('span')).toHaveClass('hidden', 'sm:inline', 'lg:hidden', 'xl:inline')
+  })
+
+  it('shows the link bar and the account controls from lg up, and the menu button below lg', async () => {
+    const { container } = render(await Navbar())
+    const bar = container.querySelector('header nav')!
+    expect(bar).toHaveClass('hidden', 'lg:flex')
+    expect(bar.className).not.toMatch(/md:flex/)
+    expect(screen.getByRole('button', { name: 'Open menu' }).parentElement).toHaveClass('lg:hidden')
+    // Changelog joins the bar at xl.
+    expect(screen.getByRole('link', { name: 'Changelog' })).toHaveClass('hidden', 'xl:flex')
   })
 
   it('opens the 18-language menu from the header button (the phone picker too)', async () => {

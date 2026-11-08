@@ -1,0 +1,295 @@
+{
+  "metaTitle": "TabMerger と OneTab・Session Buddy・Toby・Workona などの比較",
+  "metaDescription": "TabMerger を OneTab、Session Buddy、Toby、Workona などのタブ管理ツールと公平に比較。無料プラン、価格、同期、暗号化、バックアップ、AI を各製品の公式ページの情報で並べました。",
+  "title": "TabMerger と他のツールの比較",
+  "lead": "TabMerger とほかの {count, number} 個のタブ管理ツールを公平に並べて比較。それぞれにできることと料金をまとめました。",
+  "checkedOn": "<time>{date}</time> 時点の情報",
+  "differences": {
+    "label": "TabMerger ならではの点",
+    "e2ee": {
+      "title": "サーバーにも読めない同期",
+      "description": "同期するグループはすべて、常にエンドツーエンドで暗号化されます。タブを守る鍵は、あなたのデバイスだけが持っています。"
+    },
+    "ai": {
+      "title": "整理は AI におまかせ",
+      "description": "散らかったタブをグループにまとめたり、グループに名前を付けたり、ページを一行で要約したりできます。Pro AI か自分のキーで利用できます。",
+      "descriptionOwnKey": "散らかったタブをグループにまとめたり、グループに名前を付けたり、ページを一行で要約したりできます。Pro AI と自分の API キーで利用できます。",
+      "descriptionComingSoon": "散らかったタブをグループにまとめたり、グループに名前を付けたり、ページを一行で要約したりできます。Pro AI で近日公開予定です。"
+    },
+    "import": {
+      "title": "1 分で乗り換え",
+      "description": "OneTab のリストを <code>.txt</code> ファイルにコピーし、設定 → データ からインポートすれば、各リストがグループになります。ブックマークの HTML や JSON にも対応しています。"
+    }
+  },
+  "table": {
+    "title": "機能ごとの比較",
+    "lead": "各製品の公式サイトとストアの掲載情報によるものです。「記載なし」は確認できなかったという意味で、機能がないという意味ではありません。",
+    "caption": "TabMerger と {products}の比較",
+    "captionPair": "TabMerger と {product} の比較",
+    "feature": "機能",
+    "pickerLegend": "TabMerger と比較する製品",
+    "allTools": "すべてのツール",
+    "previousTool": "前のツール",
+    "nextTool": "次のツール",
+    "previousSection": "前のセクション",
+    "nextSection": "次のセクション",
+    "goToPreviousSection": "前のセクション: {name}",
+    "goToNextSection": "次のセクション: {name}",
+    "sectionOf": "セクション {current, number}/{total, number}"
+  },
+  "groups": {
+    "plans": "プラン",
+    "organizing": "整理",
+    "finding": "検索と整理",
+    "saving": "保存と復元",
+    "sync": "同期と安全",
+    "sharing": "共有と移行",
+    "ai": "AI（Pro AI）",
+    "other": "その他"
+  },
+  "rows": {
+    "free": {
+      "label": "無料プラン"
+    },
+    "paidFrom": {
+      "label": "有料プランの料金"
+    },
+    "noAccount": {
+      "label": "アカウントなしで使える"
+    },
+    "groups": {
+      "label": "名前付きグループ"
+    },
+    "windows": {
+      "label": "グループ内のウィンドウ"
+    },
+    "dnd": {
+      "label": "ドラッグ＆ドロップ"
+    },
+    "shortcuts": {
+      "label": "キーボードショートカット"
+    },
+    "contextMenu": {
+      "label": "右クリックメニュー"
+    },
+    "customTitles": {
+      "label": "タブのタイトル変更"
+    },
+    "notes": {
+      "label": "メモ"
+    },
+    "reminders": {
+      "label": "通知付きリマインダー"
+    },
+    "urlRules": {
+      "label": "URL の自動振り分けルール"
+    },
+    "bulk": {
+      "label": "一括操作"
+    },
+    "search": {
+      "label": "検索"
+    },
+    "duplicates": {
+      "label": "重複の整理"
+    },
+    "staleTabs": {
+      "label": "古いタブの整理の提案"
+    },
+    "memory": {
+      "label": "メモリの解放"
+    },
+    "sessions": {
+      "label": "セッションとクラッシュからの復元"
+    },
+    "autoSave": {
+      "label": "開いているタブの自動保存"
+    },
+    "continueOnDevice": {
+      "label": "別のデバイスで続ける"
+    },
+    "backups": {
+      "label": "自動バックアップ"
+    },
+    "sync": {
+      "label": "デバイス間の同期"
+    },
+    "e2ee": {
+      "label": "エンドツーエンド暗号化された同期"
+    },
+    "dashboard": {
+      "label": "Web ダッシュボード"
+    },
+    "share": {
+      "label": "共有リンク"
+    },
+    "import": {
+      "label": "インポート"
+    },
+    "export": {
+      "label": "エクスポート"
+    },
+    "aiAutoGroup": {
+      "label": "自動グループ化"
+    },
+    "aiNames": {
+      "label": "グループ名（3 案から選択）"
+    },
+    "aiDescribe": {
+      "label": "グループの説明"
+    },
+    "aiSummaries": {
+      "label": "タブの要約"
+    },
+    "aiSessions": {
+      "label": "セッションの提案"
+    },
+    "aiOrganize": {
+      "label": "整理"
+    },
+    "aiOwnKey": {
+      "label": "自分の AI キーを使う"
+    },
+    "languages": {
+      "label": "言語"
+    },
+    "theme": {
+      "label": "ライト／ダークテーマ"
+    },
+    "tour": {
+      "label": "インストール後のガイドツアー"
+    }
+  },
+  "states": {
+    "yes": "はい",
+    "paid": "はい",
+    "partial": "はい",
+    "no": "いいえ",
+    "unknown": "記載なし",
+    "paidPill": "有料",
+    "paidSr": "（有料プラン）",
+    "partialSr": "（一部）"
+  },
+  "labels": {
+    "noPaidPlan": "有料プランの記載なし",
+    "syncNeedsSignIn": "同期にはサインインが必要",
+    "folders": "フォルダ",
+    "collections": "コレクション",
+    "collectionsAndSpaces": "コレクションとスペース",
+    "spaces": "スペース",
+    "coreFeature": "主要機能",
+    "tabSuspension": "タブの休止",
+    "listsSurviveRestarts": "再起動後もリストが残る",
+    "saveWindows": "ウィンドウをセッションとして保存",
+    "autosave": "自動保存",
+    "pro": "Pro",
+    "alwaysOn": "常にオン",
+    "noSync": "同期なし",
+    "proAi": "Pro AI",
+    "comingSoon": "近日公開",
+    "smartFeatures": "「Smart」機能",
+    "asWebPage": "Web ページとして",
+    "shareCollections": "コレクションを共有",
+    "team": "Team プラン",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/月 · {yearly}/年",
+    "priceMonthly": "{monthly}/月",
+    "priceYearly": "{yearly}/年",
+    "priceOnce": "{once}（買い切り）",
+    "noPaidPlanAtAll": "有料プランなし",
+    "namedColoredWindows": "名前と色を付けたウィンドウ",
+    "namedTaggedSessions": "名前とタグを付けたセッション",
+    "windowTree": "ウィンドウとタブのツリー",
+    "saveRestoreWindows": "ウィンドウの保存と復元",
+    "cloudSync": "クラウド同期",
+    "viaGoogleDrive": "Google ドライブのバックアップ経由",
+    "closesIdleTabs": "使っていないタブを閉じる",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "Backup & Sync を利用",
+    "detectsDuplicateBookmarks": "重複したブックマークを検出",
+    "copyAsLinks": "リンク、Markdown、CSV、JSON でコピー",
+    "crashRecovery": "クラッシュからの復元",
+    "searchesClosedTabs": "閉じたタブを検索",
+    "settingsOnly": "設定のみ"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, other {# グループ}}、{tabs, plural, other {# タブ}}",
+    "everyFeature": "すべての機能",
+    "savedTabsLimit": "保存できるタブは最大 {count, plural, other {# 個}}",
+    "proIncludes": "Pro: 同期とバックアップ",
+    "accountForSyncAi": "同期と AI には必要",
+    "namedColorCoded": "名前と色を付けられる",
+    "colorCoded": "色分け",
+    "openSavedHistory": "開いているタブ、保存済み、履歴",
+    "advancedSearchPaid": "高度な検索は有料",
+    "sessionsLimits": "このブラウザで {count, number} 件まで無料、Pro なら無制限で同期",
+    "historySnapshots": "履歴のスナップショット",
+    "dataStaysLocal": "データは端末内に保存",
+    "newestKept": "最新 {count, number} 件を保持、ファイルへのコピーも可",
+    "sessionBackups": "90 日分のセッションバックアップ",
+    "ownKeyOnly": "自分の API キーで利用",
+    "encrypted": "暗号化",
+    "sharedSpaces": "共有スペース",
+    "mouseKeyboard": "マウスとキーボード",
+    "shortcutsTabMerger": "ポップアップを開かずにタブを保存、<code>Ctrl/Cmd+K</code> で検索",
+    "customizable": "カスタマイズ可能",
+    "urlRulesLimits": "{count, number} 件まで無料、Pro なら無制限",
+    "bulkActions": "選択、移動、スター、共有、削除",
+    "searchFilters": "フィルター: <code>group:</code>、<code>window:</code>、<code>tag:</code>",
+    "dashboardView": "ブラウザでグループとバックアップを確認",
+    "importFormats": "JSON、ブックマーク HTML、OneTab",
+    "importExportLists": "リストのインポートとエクスポート",
+    "manyFormats": "15 以上の形式",
+    "aiProviders": "Anthropic、OpenAI、Gemini",
+    "optIn": "任意",
+    "rtlIncluded": "右から左に書く言語にも対応",
+    "themesPalettes": "テーマ、色覚に配慮したパレット",
+    "notOnSafari": "Safari 版は非対応",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync（年払いのみ）",
+    "weeklyLocalBackup": "毎週ローカルにバックアップ、Backup & Sync でクラウドにも",
+    "plusManualBackups": "ワンクリックの手動バックアップも",
+    "donations": "寄付",
+    "upToSpaces": "最大 {count, number} スペース",
+    "startingAtNoYearly": "「〜から」の表示、年額の記載なし",
+    "noLimits": "制限なし",
+    "proPlan": "Pro",
+    "searchOperators": "<code>t:</code>、<code>u:</code>、正規表現",
+    "offlineThisBrowser": "オフラインで動作、このブラウザのみ",
+    "savedWindowsFiles": "保存したウィンドウをファイルで",
+    "autoSavesOnCloseTimer": "閉じたときとタイマーで自動保存",
+    "fromSessionBuddy": "Session Buddy からも",
+    "backupsGoogleDrive": "数分ごとにローカル、毎日 Google ドライブへ",
+    "groupsSavedLocally": "グループはローカルに保存",
+    "toJsonFile": "JSON ファイルへ",
+    "reopenFromCorral": "Tab Corral から開き直せる",
+    "closeWindowsKeepTree": "ウィンドウを閉じてもツリーに残る",
+    "textOutlineHtml": "テキストのアウトラインまたは HTML ファイル",
+    "stgImportSources": "Tab Groups、Panorama View、Sync Tab Groups、JSON から",
+    "closedTabsNotSynced": "閉じたタブは同期されない",
+    "autoSaveTabMerger": "無料: オンにすると最新 {count, number} 件を保持。Pro: 最初からオン、すべて保持し、エンドツーエンド暗号化で同期"
+  },
+  "legend": {
+    "label": "凡例",
+    "yes": "はい",
+    "paid": "有料プランで利用可",
+    "partial": "一部",
+    "no": "いいえ",
+    "unknown": "記載なし"
+  },
+  "switching": {
+    "title": "OneTab から乗り換えますか？",
+    "lead": "リストはタイトルも含めてグループとして取り込まれます。データがブラウザの外に出ることはありません。",
+    "steps": {
+      "export": "OneTab で <b>Export / Import URLs</b> を開き、<b>Copy to clipboard</b> を押します。",
+      "save": "プレーンテキストのファイル（メモ帳、またはプレーンテキストに設定したテキストエディット）に貼り付けて、<b><code>.txt</code></b> として保存します。",
+      "open": "TabMerger で <b>設定 → データ</b> を開き、<b>インポート</b> を押して <code>.txt</code> ファイルを選びます。",
+      "import": "確定します。OneTab のグループはそれぞれ独立したグループになり、「Imported 1」「Imported 2」…と名前が付きます。",
+      "other": "ほかのツールからの場合は、ブックマークを HTML または JSON ファイルとしてエクスポートし、同じ方法でインポートしてください。"
+    }
+  },
+  "fairUse": "情報は各製品の公式サイトとストアの掲載ページによるもので、<time>{date}</time> に確認しました。機能や価格は変わることがあります。古くなっている点があれば<link>お知らせください</link>。修正します。すべての製品名は各所有者の商標です。TabMerger はいずれとも提携していません。",
+  "sources": {
+    "label": "出典"
+  }
+}

@@ -4,6 +4,7 @@
   "title": "Sıkça sorulanlar",
   "lead": "Hâlâ emin olmadığınız bir şey mi var? E-postalara bir günden kısa sürede yanıt veriyoruz.",
   "contact": "Destekle iletişime geçin",
+  "compareLink": "Başka bir sekme yöneticisinden mi geliyorsunuz? TabMerger'ın karşılaştırmasına bakın",
   "free": {
     "question": "TabMerger gerçekten ücretsiz mi?",
     "answer": "Evet! Ücretsiz plan tüm temel özellikleri içerir: {groups} gruba, {tabs} sekmeye ve {urlRules} URL kuralına kadar, sürükle-bırak ve içe/dışa aktarma. Yalnızca bulut eşitleme, sınırsız grup, sekme ve URL kuralı ya da yapay zekâ özellikleri istiyorsanız ödeme yaparsınız."

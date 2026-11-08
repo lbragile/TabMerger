@@ -4,6 +4,7 @@
   "title": "Câu hỏi thường gặp",
   "lead": "Vẫn còn thắc mắc? Chúng tôi trả lời email trong vòng chưa đầy một ngày.",
   "contact": "Liên hệ hỗ trợ",
+  "compareLink": "Bạn đang dùng trình quản lý tab khác? Xem TabMerger so sánh thế nào",
   "free": {
     "question": "TabMerger có thực sự miễn phí không?",
     "answer": "Có! Gói miễn phí bao gồm tất cả tính năng cốt lõi — tối đa {groups} nhóm, {tabs} tab, {urlRules} quy tắc URL, kéo và thả, cùng nhập/xuất. Bạn chỉ trả phí nếu muốn đồng bộ đám mây, không giới hạn nhóm, tab và quy tắc URL, hoặc các tính năng AI."

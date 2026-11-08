@@ -4,6 +4,7 @@
   "title": "Preguntas frecuentes",
   "lead": "¿Aún tienes dudas? Respondemos el correo en menos de un día.",
   "contact": "Contactar con soporte",
+  "compareLink": "¿Vienes de otro gestor de pestañas? Mira cómo se compara TabMerger",
   "free": {
     "question": "¿TabMerger es realmente gratis?",
     "answer": "¡Sí! El plan gratuito incluye todas las funciones básicas: hasta {groups} grupos, {tabs} pestañas, {urlRules} reglas de URL, arrastrar y soltar, e importar/exportar. Solo pagas si quieres sincronización en la nube, grupos, pestañas y reglas de URL ilimitados, o funciones de IA."

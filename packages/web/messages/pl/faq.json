@@ -4,6 +4,7 @@
   "title": "Częste pytania",
   "lead": "Nadal masz wątpliwości? Na e-maile odpowiadamy w mniej niż dobę.",
   "contact": "Skontaktuj się z pomocą",
+  "compareLink": "Przechodzisz z innego menedżera kart? Zobacz, jak wypada TabMerger",
   "free": {
     "question": "Czy TabMerger jest naprawdę darmowy?",
     "answer": "Tak! Plan darmowy obejmuje wszystkie podstawowe funkcje — do {groups} grup, {tabs} kart, {urlRules} reguł URL, przeciąganie i upuszczanie oraz import/eksport. Płacisz tylko wtedy, gdy chcesz synchronizacji w chmurze, nielimitowanych grup, kart i reguł URL lub funkcji AI."

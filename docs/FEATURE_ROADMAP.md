@@ -39,6 +39,7 @@ _Last updated 2026-11-07. Keep this current in the same change as the work (a CL
 - [x] `/changelog` page (reads the semantic-release `CHANGELOG.md`; prereleases filtered out)
 - [x] Invented testimonials replaced by live store ratings and reviews from all three listings (Chrome Web Store, Firefox Add-ons, Edge Add-ons): one combined rating, each store's own figures, and a carousel mixing their reviews
 - [x] SEO basics: metadata, `sitemap.ts`, `robots.ts`
+- [x] Comparison page `/compare`: TabMerger next to nine other tab managers (OneTab, Session Buddy, Toby, Workona, Tab Manager Plus, Tab Session Manager, Tabs Outliner, Simple Tab Groups, Tab Wrangler), every TabMerger feature as a row, every competitor fact taken from that product's own site or store listing and dated. A "Compare TabMerger with" dropdown at every width (all tools from tablet width up, one competitor at a time on phones), a scroll box with a sticky header row and legend, and a "Switching from OneTab?" guide. Linked from the footer, `/features` and `/faq`. Not yet released.
 - [ ] OpenGraph/Twitter share image. `metadata.openGraph` has no image today.
 - [ ] Email capture on the landing page (newsletter/waitlist). Resend is used only for the contact form so far.
 - [ ] Chrome Web Store screenshot refresh. The pipeline exists in `packages/demo` (`screenshots`, `store-assets`).

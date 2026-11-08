@@ -130,6 +130,11 @@ export default async function FeaturesPage() {
               </Link>
             </Button>
           </div>
+          <p className="mt-6 text-sm text-text2">
+            <Link href="/compare" className="underline underline-offset-2 hover:text-primary transition-colors">
+              {t('compareLink')}
+            </Link>
+          </p>
         </div>
 
         {/* Feature sections — numbered rows, same format as the homepage teaser */}

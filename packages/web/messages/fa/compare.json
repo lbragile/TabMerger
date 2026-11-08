@@ -1,0 +1,295 @@
+{
+  "metaTitle": "TabMerger در برابر ⁨OneTab⁩، ⁨Session Buddy⁩، ⁨Toby⁩، ⁨Workona⁩ و دیگران",
+  "metaDescription": "مقایسه‌ای منصفانه میان TabMerger و ⁨OneTab⁩، ⁨Session Buddy⁩، ⁨Toby⁩، ⁨Workona⁩ و دیگر مدیرهای زبانه: طرح‌های رایگان، قیمت‌ها، همگام‌سازی، رمزگذاری، پشتیبان‌گیری و هوش مصنوعی، بر اساس صفحه‌های خود هر محصول.",
+  "title": "مقایسه TabMerger با دیگران",
+  "lead": "مقایسه‌ای منصفانه و کنار هم از TabMerger و {count, number} مدیر زبانه دیگر: هر کدام چه می‌کند و چقدر هزینه دارد.",
+  "checkedOn": "بررسی‌شده در <time>{date}</time>",
+  "differences": {
+    "label": "آنچه TabMerger را متمایز می‌کند",
+    "e2ee": {
+      "title": "همگام‌سازی‌ای که سرور نمی‌تواند بخواند",
+      "description": "هر گروه همگام‌شده همیشه رمزگذاری سرتاسری دارد. زبانه‌های شما با کلیدی قفل شده‌اند که فقط دستگاه‌های خودتان دارند."
+    },
+    "ai": {
+      "title": "هوش مصنوعی‌ای که مرتب می‌کند",
+      "description": "زبانه‌های درهم را گروه‌بندی کنید، برای گروهی نام بگذارید یا خلاصه یک‌خطی یک صفحه را بگیرید. با Pro AI یا کلید خودتان.",
+      "descriptionOwnKey": "زبانه‌های درهم را گروه‌بندی کنید، برای گروهی نام بگذارید یا خلاصه یک‌خطی یک صفحه را بگیرید. با Pro AI و کلید API خودتان.",
+      "descriptionComingSoon": "زبانه‌های درهم را گروه‌بندی کنید، برای گروهی نام بگذارید یا خلاصه یک‌خطی یک صفحه را بگیرید. به‌زودی در Pro AI."
+    },
+    "import": {
+      "title": "در یک دقیقه جابه‌جا شوید",
+      "description": "فهرست‌های OneTab را در یک فایل <code>.txt</code> کپی کنید و از تنظیمات ← داده‌ها درون‌ریزی کنید: هر فهرست یک گروه می‌شود. HTML نشانک‌ها و JSON هم کار می‌کنند."
+    }
+  },
+  "table": {
+    "title": "ویژگی به ویژگی",
+    "lead": "بر اساس وب‌سایت و صفحه فروشگاه هر محصول. «ذکر نشده» یعنی نتوانستیم آن را تأیید کنیم، نه اینکه آن ویژگی وجود ندارد.",
+    "caption": "مقایسه TabMerger با {products}",
+    "captionPair": "مقایسه TabMerger با {product}",
+    "feature": "ویژگی",
+    "pickerLegend": "مقایسه TabMerger با",
+    "allTools": "همه ابزارها",
+    "previousTool": "ابزار قبلی",
+    "nextTool": "ابزار بعدی",
+    "previousSection": "بخش قبلی",
+    "nextSection": "بخش بعدی",
+    "goToPreviousSection": "بخش قبلی: {name}",
+    "goToNextSection": "بخش بعدی: {name}",
+    "sectionOf": "بخش {current, number} از {total, number}"
+  },
+  "groups": {
+    "plans": "طرح‌ها",
+    "organizing": "سازمان‌دهی",
+    "finding": "یافتن و پاک‌سازی",
+    "saving": "ذخیره و بازیابی",
+    "sync": "همگام‌سازی و ایمنی",
+    "sharing": "هم‌رسانی و جابه‌جایی",
+    "ai": "هوش مصنوعی (Pro AI)",
+    "other": "سایر موارد"
+  },
+  "rows": {
+    "free": {
+      "label": "طرح رایگان"
+    },
+    "paidFrom": {
+      "label": "طرح‌های پولی از"
+    },
+    "noAccount": {
+      "label": "بدون حساب کار می‌کند"
+    },
+    "groups": {
+      "label": "گروه‌های نام‌دار"
+    },
+    "windows": {
+      "label": "پنجره‌ها درون گروه‌ها"
+    },
+    "dnd": {
+      "label": "کشیدن و رها کردن"
+    },
+    "shortcuts": {
+      "label": "میان‌برهای صفحه‌کلید"
+    },
+    "contextMenu": {
+      "label": "منوی کلیک راست"
+    },
+    "customTitles": {
+      "label": "عنوان دلخواه برای زبانه‌ها"
+    },
+    "notes": {
+      "label": "یادداشت‌ها"
+    },
+    "reminders": {
+      "label": "یادآورها با اعلان"
+    },
+    "urlRules": {
+      "label": "قوانین تخصیص خودکار بر اساس URL"
+    },
+    "bulk": {
+      "label": "کارهای گروهی"
+    },
+    "search": {
+      "label": "جست‌وجو"
+    },
+    "duplicates": {
+      "label": "پاک‌سازی موارد تکراری"
+    },
+    "staleTabs": {
+      "label": "پیشنهاد پاک‌سازی زبانه‌های کهنه"
+    },
+    "memory": {
+      "label": "آزادسازی حافظه"
+    },
+    "sessions": {
+      "label": "نشست‌ها و بازیابی پس از خرابی"
+    },
+    "autoSave": {
+      "label": "ذخیرهٔ خودکار زبانه‌های باز"
+    },
+    "continueOnDevice": {
+      "label": "ادامه در دستگاه دیگر"
+    },
+    "backups": {
+      "label": "پشتیبان‌گیری خودکار"
+    },
+    "sync": {
+      "label": "همگام‌سازی میان دستگاه‌ها"
+    },
+    "e2ee": {
+      "label": "همگام‌سازی با رمزگذاری سرتاسری"
+    },
+    "dashboard": {
+      "label": "داشبورد وب"
+    },
+    "share": {
+      "label": "پیوندهای هم‌رسانی"
+    },
+    "import": {
+      "label": "درون‌ریزی"
+    },
+    "export": {
+      "label": "برون‌بری"
+    },
+    "aiAutoGroup": {
+      "label": "گروه‌بندی خودکار"
+    },
+    "aiNames": {
+      "label": "نام گروه‌ها (سه پیشنهاد برای انتخاب)"
+    },
+    "aiDescribe": {
+      "label": "توصیف گروه"
+    },
+    "aiSummaries": {
+      "label": "خلاصه زبانه‌ها"
+    },
+    "aiSessions": {
+      "label": "پیشنهاد نشست"
+    },
+    "aiOrganize": {
+      "label": "سازمان‌دهی هوشمند"
+    },
+    "aiOwnKey": {
+      "label": "استفاده از کلید هوش مصنوعی خودتان"
+    },
+    "languages": {
+      "label": "زبان‌ها"
+    },
+    "theme": {
+      "label": "پوسته روشن و تیره"
+    },
+    "tour": {
+      "label": "تور راهنما پس از نصب"
+    }
+  },
+  "states": {
+    "yes": "بله",
+    "paid": "بله",
+    "partial": "بله",
+    "no": "خیر",
+    "unknown": "ذکر نشده",
+    "paidPill": "پولی",
+    "paidSr": " (در طرح پولی)",
+    "partialSr": " (تا حدی)"
+  },
+  "labels": {
+    "noPaidPlan": "طرح پولی‌ای ذکر نشده",
+    "syncNeedsSignIn": "همگام‌سازی نیاز به ورود دارد",
+    "folders": "پوشه‌ها",
+    "collections": "مجموعه‌ها",
+    "collectionsAndSpaces": "مجموعه‌ها و فضاها",
+    "spaces": "فضاها",
+    "coreFeature": "ویژگی اصلی آن",
+    "tabSuspension": "تعلیق زبانه‌ها",
+    "listsSurviveRestarts": "فهرست‌ها پس از راه‌اندازی دوباره می‌مانند",
+    "saveWindows": "ذخیره پنجره‌ها به‌صورت نشست",
+    "autosave": "ذخیره خودکار",
+    "pro": "Pro",
+    "alwaysOn": "همیشه روشن",
+    "noSync": "بدون همگام‌سازی",
+    "proAi": "Pro AI",
+    "comingSoon": "به‌زودی",
+    "smartFeatures": "ویژگی‌های «Smart»",
+    "asWebPage": "به‌صورت صفحه وب",
+    "shareCollections": "هم‌رسانی مجموعه‌ها",
+    "team": "طرح Team",
+    "languageCount": "{count, number}",
+    "priceMonthlyYearly": "{monthly}/ماه · {yearly}/سال",
+    "priceMonthly": "{monthly}/ماه",
+    "priceYearly": "{yearly}/سال",
+    "priceOnce": "{once} یک‌باره",
+    "noPaidPlanAtAll": "طرح پولی ندارد",
+    "namedColoredWindows": "پنجره‌های نام‌دار و رنگی",
+    "namedTaggedSessions": "نشست‌های نام‌دار و برچسب‌دار",
+    "windowTree": "درختی از پنجره‌ها و زبانه‌ها",
+    "saveRestoreWindows": "ذخیره و بازیابی پنجره‌ها",
+    "cloudSync": "همگام‌سازی ابری",
+    "viaGoogleDrive": "از طریق پشتیبان‌های Google Drive",
+    "closesIdleTabs": "زبانه‌های بیکار را می‌بندد",
+    "backupSync": "Backup & Sync",
+    "withBackupSync": "با Backup & Sync",
+    "detectsDuplicateBookmarks": "نشانک‌های تکراری را تشخیص می‌دهد",
+    "copyAsLinks": "کپی به‌صورت پیوند، ⁨Markdown⁩، ⁨CSV⁩ یا ⁨JSON⁩",
+    "crashRecovery": "بازیابی پس از خرابی",
+    "searchesClosedTabs": "در زبانه‌های بسته جست‌وجو می‌کند",
+    "settingsOnly": "فقط تنظیمات"
+  },
+  "notes": {
+    "freeLimits": "{groups, plural, one {# گروه} other {# گروه}}، {tabs, plural, one {# زبانه} other {# زبانه}}",
+    "everyFeature": "همه ویژگی‌ها",
+    "savedTabsLimit": "تا {count, plural, one {# زبانه ذخیره‌شده} other {# زبانه ذخیره‌شده}}",
+    "proIncludes": "Pro: همگام‌سازی و پشتیبان‌گیری",
+    "accountForSyncAi": "همگام‌سازی و هوش مصنوعی به آن نیاز دارند",
+    "namedColorCoded": "با نام و رنگ",
+    "colorCoded": "رنگی",
+    "openSavedHistory": "باز، ذخیره‌شده و تاریخچه",
+    "advancedSearchPaid": "جست‌وجوی پیشرفته پولی است",
+    "sessionsLimits": "{count, number} رایگان در این مرورگر، نامحدود و همگام در Pro",
+    "historySnapshots": "عکس‌های لحظه‌ای تاریخچه",
+    "dataStaysLocal": "داده‌ها روی دستگاه می‌مانند",
+    "newestKept": "{count, number} مورد آخر نگه داشته می‌شود، با رونوشت اختیاری در فایل",
+    "sessionBackups": "پشتیبان نشست‌ها تا 90 روز",
+    "ownKeyOnly": "با کلید API خودتان",
+    "encrypted": "رمزگذاری‌شده",
+    "sharedSpaces": "فضاهای مشترک",
+    "mouseKeyboard": "با موس و صفحه‌کلید",
+    "shortcutsTabMerger": "ذخیره زبانه‌ها بدون باز کردن پنجره بازشو؛ <code>Ctrl/Cmd+K</code> برای جست‌وجو",
+    "customizable": "قابل تنظیم",
+    "urlRulesLimits": "{count, number} رایگان، نامحدود در Pro",
+    "bulkActions": "انتخاب، جابه‌جایی، ستاره‌دار کردن، هم‌رسانی، حذف",
+    "searchFilters": "فیلترها: <code>group:</code>، <code>window:</code>، <code>tag:</code>",
+    "dashboardView": "دیدن گروه‌ها و پشتیبان‌ها در مرورگر",
+    "importFormats": "⁨JSON⁩، ⁨HTML⁩ نشانک‌ها، ⁨OneTab⁩",
+    "importExportLists": "درون‌ریزی و برون‌بری فهرست‌ها",
+    "manyFormats": "بیش از 15 قالب",
+    "aiProviders": "⁨Anthropic⁩، ⁨OpenAI⁩ یا ⁨Gemini⁩",
+    "optIn": "اختیاری",
+    "rtlIncluded": "از جمله راست‌به‌چپ",
+    "themesPalettes": "پوسته‌ها، رنگ‌بندی برای کوررنگ‌ها",
+    "notOnSafari": "نه در Safari",
+    "json": "JSON",
+    "backupSyncYearly": "Backup & Sync، فقط سالانه",
+    "weeklyLocalBackup": "پشتیبان محلی هفتگی؛ پشتیبان ابری با Backup & Sync",
+    "plusManualBackups": "به‌علاوه پشتیبان‌گیری دستی با یک کلیک",
+    "donations": "کمک مالی",
+    "upToSpaces": "تا {count, number} فضا",
+    "startingAtNoYearly": "«از»؛ قیمت سالانه ذکر نشده",
+    "noLimits": "بدون محدودیت",
+    "proPlan": "Pro",
+    "searchOperators": "<code>t:</code>، <code>u:</code>، ⁨regex⁩",
+    "offlineThisBrowser": "آفلاین کار می‌کند، فقط در همین مرورگر",
+    "savedWindowsFiles": "پنجره‌های ذخیره‌شده به‌صورت فایل",
+    "autoSavesOnCloseTimer": "هنگام بستن و با زمان‌سنج ذخیره می‌کند",
+    "fromSessionBuddy": "از جمله از Session Buddy",
+    "backupsGoogleDrive": "هر چند دقیقه محلی، روزانه در Google Drive",
+    "groupsSavedLocally": "گروه‌ها به‌صورت محلی ذخیره می‌شوند",
+    "toJsonFile": "در یک فایل JSON",
+    "reopenFromCorral": "از Tab Corral دوباره باز می‌شوند",
+    "closeWindowsKeepTree": "پنجره‌ها را ببندید، در درخت می‌مانند",
+    "textOutlineHtml": "طرح متنی یا فایل HTML",
+    "stgImportSources": "از ⁨Tab Groups⁩، ⁨Panorama View⁩، ⁨Sync Tab Groups⁩، ⁨JSON⁩",
+    "closedTabsNotSynced": "زبانه‌های بسته همگام نمی‌شوند",
+    "autoSaveTabMerger": "رایگان: روشنش کنید، {count, number} مورد جدیدتر نگه داشته می‌شوند. Pro: از ابتدا روشن، همه نگه داشته و با رمزگذاری سرتاسری همگام می‌شوند"
+  },
+  "legend": {
+    "label": "راهنما",
+    "yes": "بله",
+    "paid": "در طرح پولی",
+    "partial": "تا حدی",
+    "no": "خیر",
+    "unknown": "ذکر نشده"
+  },
+  "switching": {
+    "title": "از OneTab می‌آیید؟",
+    "lead": "فهرست‌هایتان با عنوان‌ها به‌صورت گروه منتقل می‌شوند. چیزی از مرورگرتان بیرون نمی‌رود.",
+    "steps": {
+      "export": "در OneTab، <b>Export / Import URLs</b> را باز کنید و <b>Copy to clipboard</b> را بزنید.",
+      "save": "آن را در یک فایل متنی ساده (Notepad، یا TextEdit در حالت متن ساده) بچسبانید و با پسوند <b><code>.txt</code></b> ذخیره کنید.",
+      "open": "در TabMerger، <b>تنظیمات ← داده‌ها</b> را باز کنید، <b>درون‌ریزی</b> را بزنید و فایل <code>.txt</code> را انتخاب کنید.",
+      "import": "تأیید کنید. هر گروه OneTab یک گروه جدا می‌شود با نام‌های ⁨\"Imported 1\"⁩، ⁨\"Imported 2\"⁩ و غیره.",
+      "other": "از ابزار دیگری می‌آیید؟ نشانک‌هایتان را به‌صورت HTML یا فایل JSON برون‌بری کنید و به همین روش درون‌ریزی کنید."
+    }
+  },
+  "fairUse": "اطلاعات از وب‌سایت و صفحه فروشگاه هر محصول گرفته شده و در <time>{date}</time> بررسی شده است. ویژگی‌ها و قیمت‌ها تغییر می‌کنند؛ اگر چیزی قدیمی است، <link>به ما بگویید</link> تا اصلاحش کنیم. همه نام‌های محصولات نشان‌های تجاری صاحبانشان هستند. TabMerger به هیچ‌کدام از آن‌ها وابسته نیست.",
+  "sources": {
+    "label": "منابع"
+  }
+}

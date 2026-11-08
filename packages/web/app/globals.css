@@ -4,6 +4,18 @@
 /* ponytail: class-based dark mode — replaces darkMode: ['class'] in old tailwind.config */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* The /compare table's two-column "stacked" layout (each feature's label above its two cells):
+   always below md, and at any width once one competitor is picked (the picker sets
+   data-compare-layout="stacked" on the wrapper). See components/compare/CompetitorPicker.tsx. */
+@custom-variant compare-stacked {
+  @media (width < 48rem) {
+    @slot;
+  }
+  &:where([data-compare-layout="stacked"] *) {
+    @slot;
+  }
+}
+
 @theme inline {
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));

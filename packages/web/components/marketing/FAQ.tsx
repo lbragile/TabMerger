@@ -88,6 +88,11 @@ export function FAQ() {
           >
             {t('contact')}
           </Link>
+          <p className="mt-4 text-[0.8125rem] text-text2">
+            <Link href="/compare" className="underline underline-offset-2 hover:text-primary transition-colors">
+              {t('compareLink')}
+            </Link>
+          </p>
         </div>
 
         <div className="sm:col-span-2 flex flex-col">
