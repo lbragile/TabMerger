@@ -1,3 +1,10 @@
+# [3.12.0](https://github.com/lbragile/TabMerger/compare/v3.11.2...v3.12.0) (2026-11-08)
+
+
+### Features
+
+* **extension:** add manage subscription CTA to the plan-ends banner ([#111](https://github.com/lbragile/TabMerger/issues/111)) ([1ccdffa](https://github.com/lbragile/TabMerger/commit/1ccdffa3b708099333ff85abb129d96783d1ed9d))
+
 ## [3.11.2](https://github.com/lbragile/TabMerger/compare/v3.11.1...v3.11.2) (2026-11-06)
 
 
