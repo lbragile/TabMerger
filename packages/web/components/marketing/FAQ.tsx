@@ -4,11 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
-import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { FREE_TIER_LIMITS } from '@tabmerger/shared'
-
-/** Each question is a key under `faq` (its `question` and `answer`), in display order. */
-const FAQ_KEYS = ['free', 'sync', 'ai', 'cancel', 'browsers', 'privacy', 'downgrade'] as const
+import { faqItems } from '@/lib/faq'
 
 function FAQItem({
   question,
@@ -57,21 +53,8 @@ function FAQItem({
 // top border, so a second line above it left two lines with an empty band between them.
 export function FAQ() {
   const t = useTranslations('faq')
-  const answer = (key: (typeof FAQ_KEYS)[number]) => {
-    if (key === 'free') {
-      return t('free.answer', {
-        groups: FREE_TIER_LIMITS.groups,
-        tabs: FREE_TIER_LIMITS.tabs,
-        urlRules: FREE_TIER_LIMITS.urlRules,
-      })
-    }
-    if (key === 'ai') {
-      if (AI_AVAILABILITY.managed) return t('ai.answer')
-      // Only the own-key option is live yet.
-      return AI_AVAILABILITY.byok ? t('ai.answerOwnKey') : t('ai.answerComingSoon')
-    }
-    return t(`${key}.answer`)
-  }
+  // The same items the page's FAQPage structured data is built from (lib/faq.ts).
+  const items = faqItems(t)
   return (
     <section className="py-16 sm:py-[72px] px-6 sm:px-11">
       <div className="container max-w-[960px] grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
@@ -96,8 +79,8 @@ export function FAQ() {
         </div>
 
         <div className="sm:col-span-2 flex flex-col">
-          {FAQ_KEYS.map((key, i) => (
-            <FAQItem key={key} question={t(`${key}.question`)} answer={answer(key)} defaultOpen={i === 0} />
+          {items.map(({ key, question, answer }, i) => (
+            <FAQItem key={key} question={question} answer={answer} defaultOpen={i === 0} />
           ))}
           <div className="border-t border-line" />
         </div>

@@ -8,9 +8,13 @@ import { join } from 'node:path'
 import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Metadata } from 'next'
-import { PRICING_TIERS, SUPPORTED_LOCALES } from '@tabmerger/shared'
+import { createTranslator } from 'next-intl'
+import { FREE_TIER_LIMITS, PRICING_TIERS, STORE_LISTING_URL, SUPPORTED_LOCALES, getPricingTier } from '@tabmerger/shared'
 import { DEFAULT_LOCALE, PSEUDO_LOCALE, localizedPath } from '@/i18n/locales'
-import { NOINDEX, homeJsonLd, pageMetadata, serializeJsonLd } from '@/lib/seo'
+import { NOINDEX, faqJsonLd, homeJsonLd, pageMetadata, serializeJsonLd } from '@/lib/seo'
+import { FAQ_KEYS, faqItems } from '@/lib/faq'
+import { GITHUB_REPO_URL } from '@/lib/github'
+import { AI_ENABLED } from '@/lib/aiFlag'
 import en from '@/messages/en'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { isPreviewDeployment } from '@/lib/deployment'
@@ -150,16 +154,53 @@ describe('homepage JSON-LD', () => {
   const data = homeJsonLd(SITE_DESCRIPTION, base)
   const byType = (type: string) => data['@graph'].find((node) => node['@type'] === type) as Record<string, unknown>
 
-  it('describes the extension as a free browser application', () => {
+  it('describes the extension as a browser application with its current image and store listings', () => {
     const app = byType('SoftwareApplication')
     expect(app).toMatchObject({
       name: 'TabMerger',
       applicationCategory: 'BrowserApplication',
-      operatingSystem: 'Chrome, Firefox, Edge',
+      operatingSystem: 'Chrome, Brave, Edge, Firefox',
       url: 'https://example.test/',
-      offers: { '@type': 'Offer', price: String(PRICING_TIERS.find((t) => t.id === 'free')!.monthlyPrice), priceCurrency: 'USD' },
+      image: 'https://example.test/opengraph-image.png',
+      screenshot: 'https://example.test/opengraph-image.png',
+      installUrl: STORE_LISTING_URL.CHROME_STABLE,
     })
-    expect(app.offers).toMatchObject({ price: '0' })
+    expect(app.sameAs).toEqual([
+      STORE_LISTING_URL.CHROME_STABLE,
+      STORE_LISTING_URL.FIREFOX_STABLE,
+      STORE_LISTING_URL.EDGE_STABLE,
+      GITHUB_REPO_URL,
+    ])
+  })
+
+  type Offer = { name: string; price: string; priceCurrency: string; priceSpecification?: Record<string, unknown>[] }
+  const offersOf = (aiEnabled: boolean) =>
+    (homeJsonLd(SITE_DESCRIPTION, base, aiEnabled)['@graph'].find((node) => node['@type'] === 'SoftwareApplication') as { offers: Offer[] }).offers
+
+  it('offers Free and Pro at the PRICING_TIERS prices, and no Pro AI while managed AI is off', () => {
+    const offers = offersOf(false)
+    expect(offers.map((o) => o.name)).toEqual(['Free', 'Pro'])
+    const free = getPricingTier('free')
+    const pro = getPricingTier('pro')
+    expect(offers[0]).toEqual({ '@type': 'Offer', name: free.name, price: String(free.monthlyPrice), priceCurrency: 'USD' })
+    expect(offers[0].price).toBe('0')
+    expect(offers[1]).toMatchObject({ name: pro.name, price: String(pro.monthlyPrice), priceCurrency: 'USD' })
+    expect(offers[1].priceSpecification).toEqual([
+      expect.objectContaining({ price: String(pro.monthlyPrice), priceCurrency: 'USD', billingDuration: 'P1M' }),
+      expect.objectContaining({ price: String(pro.yearlyPrice), priceCurrency: 'USD', billingDuration: 'P1Y' }),
+    ])
+  })
+
+  it('adds Pro AI at its PRICING_TIERS prices once managed AI is on sale', () => {
+    const offers = offersOf(true)
+    expect(offers.map((o) => o.name)).toEqual(PRICING_TIERS.map((t) => t.name))
+    const proAi = getPricingTier('pro_ai')
+    expect(offers[2]).toMatchObject({ name: proAi.name, price: String(proAi.monthlyPrice) })
+    expect(offers[2].priceSpecification?.map((spec) => spec.price)).toEqual([String(proAi.monthlyPrice), String(proAi.yearlyPrice)])
+  })
+
+  it('defaults to the build-time AI flag', () => {
+    expect((byType('SoftwareApplication') as { offers: Offer[] }).offers).toEqual(offersOf(AI_ENABLED))
   })
 
   it('states no rating: the store ratings are streamed in after the page, not known up front', () => {
@@ -183,6 +224,36 @@ describe('homepage JSON-LD', () => {
     const scripts = container.querySelectorAll('script[type="application/ld+json"]')
     expect(scripts).toHaveLength(1)
     expect(scripts[0].innerHTML).toBe('{"a":"\\u003cb>"}')
+  })
+})
+
+describe('FAQ JSON-LD', () => {
+  const t = createTranslator({ locale: 'en', messages: en, namespace: 'faq' })
+  const AI_OFF = { managed: false, byok: false, any: false }
+
+  it('lists every FAQ question in display order, word for word from the en catalog', () => {
+    const data = faqJsonLd(faqItems(t, AI_OFF))
+    expect(data['@type']).toBe('FAQPage')
+    expect(data.mainEntity.map((q) => q.name)).toEqual(FAQ_KEYS.map((key) => en.faq[key].question))
+    for (const q of data.mainEntity) {
+      expect(q['@type']).toBe('Question')
+      expect(q.acceptedAnswer['@type']).toBe('Answer')
+      expect(q.acceptedAnswer.text.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('fills the free-plan answer from FREE_TIER_LIMITS, with no ICU placeholder left', () => {
+    const free = faqItems(t, AI_OFF).find((item) => item.key === 'free')!
+    expect(free.answer).toContain(String(FREE_TIER_LIMITS.groups))
+    expect(free.answer).toContain(String(FREE_TIER_LIMITS.tabs))
+    expect(free.answer).not.toMatch(/[{}]/)
+  })
+
+  it('gives the AI answer for what is actually on sale', () => {
+    const aiAnswer = (ai: typeof AI_OFF) => faqItems(t, ai).find((item) => item.key === 'ai')!.answer
+    expect(aiAnswer(AI_OFF)).toBe(en.faq.ai.answerComingSoon)
+    expect(aiAnswer({ managed: false, byok: true, any: true })).toBe(en.faq.ai.answerOwnKey)
+    expect(aiAnswer({ managed: true, byok: true, any: true })).toBe(en.faq.ai.answer)
   })
 })
 

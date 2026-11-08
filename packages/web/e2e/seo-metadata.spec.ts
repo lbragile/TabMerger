@@ -66,10 +66,22 @@ test.describe('SEO metadata', () => {
     await expect(scripts).toHaveCount(1)
     const data = JSON.parse((await scripts.textContent())!)
     const app = data['@graph'].find((node: { '@type': string }) => node['@type'] === 'SoftwareApplication')
-    expect(app).toMatchObject({
-      applicationCategory: 'BrowserApplication',
-      offers: { price: '0', priceCurrency: 'USD' },
-    })
+    expect(app).toMatchObject({ applicationCategory: 'BrowserApplication' })
+    // One Offer per plan on sale; the free one first, at no cost.
+    expect(app.offers[0]).toMatchObject({ name: 'Free', price: '0', priceCurrency: 'USD' })
+    expect(app.screenshot).toMatch(/\/opengraph-image\.png$/)
+  })
+
+  test('the FAQ page has FAQPage JSON-LD matching its visible questions', async ({ page }) => {
+    await page.goto('/faq')
+    const scripts = page.locator('script[type="application/ld+json"]')
+    await expect(scripts).toHaveCount(1)
+    const data = JSON.parse((await scripts.textContent())!)
+    expect(data['@type']).toBe('FAQPage')
+    expect(data.mainEntity.length).toBeGreaterThan(0)
+    for (const { name } of data.mainEntity as { name: string }[]) {
+      await expect(page.getByText(name, { exact: true }).first()).toBeVisible()
+    }
   })
 
   test('the 404 carries exactly one robots noindex', async ({ page }) => {
