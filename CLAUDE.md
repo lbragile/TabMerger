@@ -28,6 +28,7 @@ pnpm --filter @tabmerger/extension test:e2e:ui      # Extension E2E — interact
 pnpm --filter @tabmerger/extension test:integration # Extension integration tests (real IndexedDB round trips)
 pnpm --filter @tabmerger/extension exec vitest run --coverage # Extension coverage (the ≥80% gate)
 pnpm scan-secrets       # Check staged files for API keys / PII
+pnpm indexnow           # Ask Bing & co. (via IndexNow) to recrawl the live sitemap; runs automatically after each production web deploy; --dry-run to preview
 bash scripts/vercel-env-push.sh packages/web/.env.preview preview [--apply]  # Push a local env file to Vercel (dry run without --apply)
 ```
 

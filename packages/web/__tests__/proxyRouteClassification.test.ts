@@ -70,6 +70,7 @@ const PUBLIC_ROUTES = new Set([
   '/share/demo',
   '/share/1',
   '/llms.txt',
+  '/indexnow.txt',
   '/api/ai/byok/verify',
   '/api/ai/describe-group',
   '/api/ai/dev-usage',

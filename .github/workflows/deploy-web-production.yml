@@ -262,3 +262,13 @@ jobs:
             [ "$ok" = 1 ] && echo "Live checks: passed (/, /privacy, extension CORS preflight)." || echo "Live checks: FAILED, see the job log."
           } >> "$GITHUB_STEP_SUMMARY"
           [ "$ok" = 1 ]
+
+      # Ask IndexNow search engines (Bing feeds ChatGPT search) to recrawl the live sitemap now
+      # that the new build is serving. After the live check, so they fetch the new pages, not the
+      # old ones. The script reads the key from the live site (/indexnow.txt) and sends only
+      # public page URLs. A search-engine ping must never fail a deploy, hence continue-on-error;
+      # its result is in this step's log.
+      - name: Ping IndexNow
+        if: success()
+        continue-on-error: true
+        run: node scripts/indexnow-submit.mjs --origin https://tabmerger.com

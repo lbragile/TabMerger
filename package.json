@@ -25,7 +25,8 @@
     "demo:render": "pnpm --filter @tabmerger/demo render:dark && pnpm --filter @tabmerger/demo render:light",
     "demo:screenshots": "pnpm --filter @tabmerger/demo screenshots",
     "demo:store-assets": "pnpm --filter @tabmerger/demo store-assets",
-    "scan-secrets": "bash scripts/scan-secrets.sh"
+    "scan-secrets": "bash scripts/scan-secrets.sh",
+    "indexnow": "node scripts/indexnow-submit.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
