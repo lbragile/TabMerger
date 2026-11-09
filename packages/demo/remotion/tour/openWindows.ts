@@ -19,6 +19,7 @@ export const TOUR_OPEN_WINDOWS_AFTER: readonly { scene: string; open: OpenWindow
     { scene: "restore-group", open: [false, true, true] },
     { scene: "share-group", open: [false, true, true] },
     { scene: "sync-devices", open: [false, true, true] },
+    { scene: "ai-sort", open: [false, true, true] }, // only the popup is drawn
     { scene: "closing-card", open: [false, true, true] }, // nothing is drawn
 ];
 
@@ -54,6 +55,7 @@ export const TOUR_RESTORED_WINDOWS_AFTER: readonly { scene: string; restored: Re
     { scene: "share-group", restored: [true, true] },
     // Still open in the story (real windows of this computer), not drawn.
     { scene: "sync-devices", restored: [true, true] },
+    { scene: "ai-sort", restored: [true, true] }, // still open, not drawn
     { scene: "closing-card", restored: [true, true] }, // nothing is drawn
 ];
 

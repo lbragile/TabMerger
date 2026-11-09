@@ -1,11 +1,11 @@
 {
     "frames": {
-        "dark": 44,
-        "light": 43
+        "dark": 43,
+        "light": 44
     },
     "framesB": {
         "dark": 43,
-        "light": 43
+        "light": 44
     },
     "bOffset": {
         "dark": 0,
@@ -13,10 +13,10 @@
     },
     "events": {
         "dark": {
-            "end": 44
+            "end": 43
         },
         "light": {
-            "end": 43
+            "end": 44
         }
     }
 }

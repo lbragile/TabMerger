@@ -1,40 +1,40 @@
 {
     "frames": {
-        "dark": 376,
-        "light": 380
+        "dark": 378,
+        "light": 376
     },
     "events": {
         "dark": {
             "aGrip": 28,
-            "aPickup": 32,
-            "aOver": 72,
-            "aDrop": 86,
-            "aTwoWindows": 87,
-            "selectCalendar": 137,
-            "selectSlack": 161,
-            "bGrip": 227,
-            "bPickup": 231,
-            "bOver": 267,
-            "bDrop": 271,
-            "bWorkCounts": 272,
-            "cancelSelection": 335,
-            "selectionCleared": 341
+            "aPickup": 31,
+            "aOver": 68,
+            "aDrop": 82,
+            "aTwoWindows": 83,
+            "selectCalendar": 133,
+            "selectSlack": 157,
+            "bGrip": 228,
+            "bPickup": 232,
+            "bOver": 270,
+            "bDrop": 274,
+            "bWorkCounts": 275,
+            "cancelSelection": 337,
+            "selectionCleared": 343
         },
         "light": {
             "aGrip": 29,
-            "aPickup": 33,
-            "aOver": 70,
-            "aDrop": 84,
-            "aTwoWindows": 85,
-            "selectCalendar": 135,
-            "selectSlack": 158,
-            "bGrip": 228,
-            "bPickup": 231,
-            "bOver": 269,
-            "bDrop": 273,
-            "bWorkCounts": 274,
-            "cancelSelection": 338,
-            "selectionCleared": 344
+            "aPickup": 32,
+            "aOver": 69,
+            "aDrop": 83,
+            "aTwoWindows": 84,
+            "selectCalendar": 133,
+            "selectSlack": 156,
+            "bGrip": 223,
+            "bPickup": 227,
+            "bOver": 264,
+            "bDrop": 268,
+            "bWorkCounts": 270,
+            "cancelSelection": 333,
+            "selectionCleared": 339
         }
     }
 }

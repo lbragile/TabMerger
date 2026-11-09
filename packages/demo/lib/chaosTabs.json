@@ -18,7 +18,7 @@
     "https://app.slack.com/client": {
         "fromPopup": true,
         "title": "Find your workspace | Slack",
-        "host": "app.slack.com/client",
+        "host": "app.slack.com/workspace-signin",
         "favicon": "tour/favicons/app-slack-com.ico",
         "screenshot": "tour/pages/app-slack-com.jpg",
         "accent": "#6b7280"

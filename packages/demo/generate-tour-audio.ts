@@ -1,8 +1,18 @@
-// Procedurally synthesises the feature tour's sound design (no samples, no music, no third-party audio, so
-// there is nothing to license or credit and the result is deterministic): `public/tour/audio/tour-<theme>.wav`,
-// plus `out/tour/audio/tour-audio-<theme>.json` (events, cuts, loudness) for the sync chart.
+// Procedurally synthesises the feature tour's sound design (no samples, no third-party audio, so the sound effects
+// are deterministic and need no credit): `public/tour/audio/tour-<theme>.wav` (effects only), and
+// `public/tour/audio/tour-<theme>-mix.wav` (the same effects over the music bed), plus
+// `out/tour/audio/tour-audio-<theme>.json` (events, cuts, loudness) for the sync chart.
 //
-// There is no music bed: the tour is silent between sounds. The sounds, all in D major, are
+// Music bed: "Day Dreamin' with U" by Michael Ramir C. (Mixkit Stock Music Free License: free for commercial use, YouTube
+// and online ads included, no attribution required; not allowed: redistributing the track, remixing it into a music-only
+// track, registering it with Content ID). It is downloaded on demand into the gitignored public/tour/audio/music/ by
+// fetch-tour-music.ts and never committed. It runs at exactly 120 BPM in F major; the track is started at an offset
+// so one of its beats lands exactly on the first scene cut (beat = 15 frames, see remotion/tour/beatGrid.ts), fades in
+// over 0.3 s from frame 0 and fades out over the closing card to exact silence at the last frame. Its level is ONE
+// constant, MUSIC_RMS_DB (RMS of the used part of the track in dBFS), well under the effects. If the track is missing and
+// cannot be downloaded, only the effects-only WAV is written.
+//
+// The sound effects, all in F major (the track's key), are
 //   - a rising stack of pentatonic notes under the poster intro,
 //   - short sounds on the real events of each scene (tick, pluck, thump, chime; one soft tonal swell when the
 //     second device arrives in the sync scene). Nothing is tied to a scene cut: no whoosh, no swell, no
@@ -16,7 +26,7 @@
 // scene durations in both themes but footage events differ by a few frames, so each theme gets its
 // own track.
 //
-// Loudness: the mix gets a fixed gain (SFX_GAIN_DB) and ffmpeg's alimiter keeps the peaks under a ceiling of
+// Loudness: the effects get a fixed gain (SFX_GAIN_DB) and ffmpeg's alimiter keeps the peaks under a ceiling of
 // about -1.9 dBTP. The gain is a constant rather than a normalisation to a target LUFS on purpose: with long
 // silences the integrated loudness depends on how many sounds there are, so normalising would change the
 // level of every individual sound whenever one was added or removed. Integrated loudness, true peak and
@@ -27,6 +37,9 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { TOUR_SCENES, getTourCutFrames, getTourDurationInFrames } from "./remotion/tour/registry";
+import { TOUR_FIRST_CUT_FRAME } from "./remotion/tour/registry";
+import { MUSIC_BPM, musicStartOffsetSec } from "./remotion/tour/beatGrid";
+import { ensureTourMusic } from "./fetch-tour-music";
 
 const FPS = 30;
 const SR = 44100;
@@ -34,8 +47,18 @@ const SR = 44100;
 const SFX_GAIN_DB = 7.5;
 /** alimiter settings (limit 0.8 = -1.94 dBFS); a ceiling for the strummed closing chord, the loudest sound. */
 const LIMITER = "alimiter=limit=0.8:attack=3:release=60:level=disabled";
-/** The key every sound is built from: D major (tonic as a pitch class, C = 0). */
-const TONIC = 2;
+/** The key every sound is built from: F major, the music's key (tonic as a pitch class, C = 0). */
+const TONIC = 5;
+/** THE music level: RMS of the used part of the track, in dBFS (the effects sit well above it). Change this one number. */
+const MUSIC_RMS_DB = -30;
+/** Seconds the music takes to fade in from frame 0. */
+const MUSIC_FADE_IN = 0.3;
+/**
+ * Gain on the whole effects+music mix before its limiter, to bring the mix toward YouTube's usual level. It keeps the
+ * effects-to-music balance; +4 dB measures about -18.7 LUFS (0 dB: -22.5; +7 dB: -16.2 but the limiter then works on
+ * the intro stack and every chord).
+ */
+const MIX_MASTER_DB = 4;
 /** Seconds of the final fade to silence (the last 60 ms stay silent). */
 const FADE_OUT = 3.4;
 
@@ -47,16 +70,19 @@ const MAPPING: Record<string, { footage: string; start: number; speed: number }>
     "find-a-tab": { footage: "tourFindATabFootage", start: 0, speed: 1 },
     "restore-group": { footage: "tourRestoreGroupFootage", start: 0, speed: 1.4 },
     "share-group": { footage: "tourShareGroupFootage", start: 0, speed: 1.5 },
+    "ai-sort": { footage: "tourAiSortFootage", start: 26, speed: 1.15 }, // HEAD_FRAMES (the move) and FOOTAGE_SPEED in Scene10AiSort.tsx
 };
 type Kind = "tick" | "pluck" | "thump" | "chime" | "swell";
-/** Which footage events get which sound. */
-const ACCENTS: Record<string, [event: string, kind: Kind][]> = {
+/** Which footage events get which sound; the optional third value delays the sound by that many scene frames (a short stack). */
+const ACCENTS: Record<string, [event: string, kind: Kind, delayFrames?: number][]> = {
     "drag-to-new-group": [["pickup", "tick"], ["drop", "thump"], ["windowClosed", "pluck"], ["renameText", "tick"], ["renameInput", "tick"], ["colorDot", "tick"], ["apply", "chime"]],
     "organise-tabs": [["aPickup", "tick"], ["aDrop", "thump"], ["selectCalendar", "tick"], ["selectSlack", "tick"], ["bPickup", "tick"], ["bDrop", "thump"], ["selectionCleared", "pluck"]],
     "name-and-note": [["renameDblclick", "tick"], ["renameCommit", "pluck"], ["noteMenuOpen", "tick"], ["noteItemClick", "tick"], ["noteSave", "pluck"], ["noteSaved", "chime"]],
-    "find-a-tab": [["searchClick", "tick"], ["resultsShown", "pluck"], ["resultClick", "tick"], ["overlayClosed", "chime"]],
+    "find-a-tab": [["searchClick", "tick"], ["resultsShown", "pluck"], ["resultClick", "tick"], ["clearClick", "tick"], ["searchCleared", "chime"]],
     "restore-group": [["groupClick", "tick"], ["open0", "tick"], ["windowCreated0", "chime"], ["open1", "tick"], ["windowCreated1", "chime"]],
     "share-group": [["selectClick", "tick"], ["groupTick", "tick"], ["shareClick", "pluck"], ["toastShown", "chime"]],
+    // Auto-group: menu tick, a pluck on the click, the new groups arrive with a chime under a short rising pluck stack, then a tick
+    "ai-sort": [["menuClick", "tick"], ["autoGroupClick", "pluck"], ["groupsShown", "chime"], ["groupsShown", "pluck", 6], ["groupsShown", "pluck", 12], ["openGroupClick", "tick"]],
 };
 /** Sounds with fixed scene-local frames (scenes without footage events), from the scene constants. */
 const FIXED: Record<string, [local: number, kind: Kind][]> = {
@@ -66,8 +92,16 @@ const FIXED: Record<string, [local: number, kind: Kind][]> = {
     "closing-card": [[8, "pluck"], [18, "pluck"], [28, "pluck"], [38, "chime"]], // logo, name, tagline, call to action
 };
 const midi = (n: number) => 440 * Math.pow(2, (n - 69) / 12);
-/** D major pentatonic, as semitone offsets from the tonic. */
+/** Major pentatonic, as semitone offsets from the tonic. */
 const PENT = [0, 2, 4, 7, 9];
+/** Major scale offsets: chimes are diatonic triads (stacked scale thirds) so they never leave the key. */
+const SCALE = [0, 2, 4, 5, 7, 9, 11];
+/** The pitch `steps` scale degrees above MIDI note `m` (m must be in the key). */
+function scaleUp(m: number, steps: number) {
+    const rel = (m - TONIC + 120) % 12, oct = Math.floor((m - TONIC) / 12);
+    const i = SCALE.indexOf(rel) + steps;
+    return TONIC + (oct + Math.floor(i / 7)) * 12 + SCALE[((i % 7) + 7) % 7];
+}
 
 const argv = process.argv.slice(2);
 const theme = (argv.find((a) => !a.startsWith("--")) ?? "both") as "dark" | "light" | "both";
@@ -124,7 +158,7 @@ function synth(t: "dark" | "light") {
         const s0 = frameToSample(frame);
         const pan = 0.5 + 0.18 * Math.sin(counter * 1.7);
         const gL = Math.cos(pan * Math.PI * 0.5), gR = Math.sin(pan * Math.PI * 0.5);
-        // C5..B5 base, an octave down if it would pass G6: cannot clash
+        // the tonic's octave 5 upward, an octave down if it would pass G6: cannot clash
         let note = 72 + TONIC + PENT[(counter * 2) % PENT.length];
         if (note > 91) note -= 12;
         counter++;
@@ -145,7 +179,7 @@ function synth(t: "dark" | "light") {
             add(s0, o, 0.16, 0.16);
             add(s0, tone(midi(note), 1.0, 0.008, 0.14, [1, 0.25]), 0.07 * gL, 0.07 * gR);
         } else if (kind === "chime") {
-            const ns = [note, note + 4, note + 7];
+            const ns = [note, scaleUp(note, 2), scaleUp(note, 4)]; // diatonic triad: major or minor as the key dictates
             ns.forEach((m, i) => add(s0 + Math.round(i * 0.085 * SR), tone(midi(m), 2.6, 0.01, 0.42, [1, 0.2]), 0.065 * gL, 0.065 * gR));
         } else if (kind === "swell") {
             // a soft tonal swell (no noise): the key's root and fifth an octave up, peaking at the event frame
@@ -168,10 +202,10 @@ function synth(t: "dark" | "light") {
         const map = MAPPING[id];
         if (map && ACCENTS[id]) {
             const ev = loadEvents(map.footage, t);
-            for (const [name, kind] of ACCENTS[id]) {
+            for (const [name, kind, delay = 0] of ACCENTS[id]) {
                 if (ev[name] === undefined) continue;
                 const local = map.start + (ev[name] - 1) / map.speed;
-                accent(Math.round(cut + local), kind, `${id}:${name}`);
+                accent(Math.round(cut + local) + delay, kind, `${id}:${name}${delay ? `+${delay}` : ""}`);
             }
         }
         // the swells that used to peak at every cut after the first are gone, but each one advanced `counter`
@@ -235,6 +269,43 @@ function ffRun(args: string[], input?: Buffer) {
     return { out: (r.stderr ?? "") + (r.stdout ?? ""), status: r.status };
 }
 
+/** Decodes any audio file to interleaved stereo float32 at SR via ffmpeg. */
+function decodeStereo(file: string): Float32Array {
+    const r = spawnSync(FFMPEG, ["-v", "error", "-i", file, "-f", "f32le", "-ar", String(SR), "-ac", "2", "-"], { maxBuffer: 1 << 30 });
+    if (r.error || r.status !== 0) throw new Error(`decoding ${file} failed: ${r.error?.message ?? String(r.stderr)}`);
+    const b = r.stdout;
+    return new Float32Array(b.buffer.slice(b.byteOffset, b.byteOffset + b.length - (b.length % 8)));
+}
+
+/**
+ * The music bed for a tour of `N` samples: the track started at the offset that puts a beat on the first cut, scaled to
+ * MUSIC_RMS_DB (measured over the part used, before the fades), with the fade in and the fade out over the closing card.
+ * Returns interleaved stereo plus the figures for the report, or null when the track is not available.
+ */
+function musicBed(N: number, musicFile: string | null, lastCut: number) {
+    if (!musicFile) return null;
+    const track = decodeStereo(musicFile);
+    const offset = musicStartOffsetSec(TOUR_FIRST_CUT_FRAME);
+    const from = Math.round(offset * SR);
+    const usable = Math.floor(track.length / 2) - from;
+    if (usable < N) console.warn(`[audio] the music is ${(usable / SR).toFixed(1)} s from the offset but the tour needs ${(N / SR).toFixed(1)} s: it ends early`);
+    let ss = 0, cnt = 0;
+    for (let i = 0; i < Math.min(N, usable); i++) { const l = track[2 * (from + i)], r = track[2 * (from + i) + 1]; ss += l * l + r * r; cnt += 2; }
+    const rmsDb = 10 * Math.log10(ss / cnt);
+    const gain = Math.pow(10, (MUSIC_RMS_DB - rmsDb) / 20);
+    const endSec = N / SR, fadeStart = (lastCut / FPS), fadeLen = endSec - 0.06 - fadeStart;
+    const out = new Float32Array(N * 2);
+    for (let i = 0; i < Math.min(N, usable); i++) {
+        const t = i / SR;
+        const fi = Math.min(1, t / MUSIC_FADE_IN);
+        const b = Math.min(1, Math.max(0, (endSec - 0.06 - t) / fadeLen));
+        const g = gain * fi * b * b * (3 - 2 * b);
+        out[2 * i] = track[2 * (from + i)] * g;
+        out[2 * i + 1] = track[2 * (from + i) + 1] * g;
+    }
+    return { out, offset, rmsDb, gainDb: 20 * Math.log10(gain), bpm: MUSIC_BPM };
+}
+
 /** Integrated loudness (LUFS), true peak (dBTP) and loudness range (LU) of an audio file. */
 function measure(file: string) {
     const { out } = ffRun(["-hide_banner", "-nostats", "-i", file, "-af", "ebur128=peak=true", "-f", "null", "-"]);
@@ -246,7 +317,7 @@ function measure(file: string) {
     };
 }
 
-function build(t: "dark" | "light") {
+function build(t: "dark" | "light", musicFile: string | null) {
     const { L: sL, R: sR, N, events, cuts, total } = synth(t);
     addIntroAndClosing(sL, sR, cuts);
     // master: every sound ends with the final fade to exact silence at the last frame
@@ -262,15 +333,34 @@ function build(t: "dark" | "light") {
     const chartDir = path.resolve(__dirname, "out/tour/audio");
     fs.mkdirSync(dir, { recursive: true });
     fs.mkdirSync(chartDir, { recursive: true });
+    const write = (wav: string, data: Float32Array, af: string) => {
+        const r = ffRun(["-v", "error", "-y", "-f", "f32le", "-ar", String(SR), "-ac", "2", "-i", "-", "-af", af, "-c:a", "pcm_s16le", wav], Buffer.from(data.buffer));
+        if (r.status !== 0) throw new Error(`writing ${wav} failed: ${r.out}`);
+        return measure(wav);
+    };
+    // effects only (the file the effects-only render and the silent-music fallback use)
     const wav = path.join(dir, `tour-${t}.wav`);
-    const r = ffRun(["-v", "error", "-y", "-f", "f32le", "-ar", String(SR), "-ac", "2", "-i", "-", "-af", `volume=${SFX_GAIN_DB.toFixed(3)}dB,${LIMITER}`, "-c:a", "pcm_s16le", wav], Buffer.from(inter.buffer));
-    if (r.status !== 0) throw new Error(`writing ${wav} failed: ${r.out}`);
-    const loudness = measure(wav);
+    const loudness = write(wav, inter, `volume=${SFX_GAIN_DB.toFixed(3)}dB,${LIMITER}`);
+    // effects over the music bed: the same effects gain, the music at MUSIC_RMS_DB, one master gain and the limiter
+    const bed = musicBed(N, musicFile, cuts[cuts.length - 1]);
+    let mix: ReturnType<typeof measure> | null = null;
+    if (bed) {
+        const k = Math.pow(10, SFX_GAIN_DB / 20);
+        const summed = new Float32Array(N * 2);
+        for (let i = 0; i < summed.length; i++) summed[i] = inter[i] * k + bed.out[i];
+        mix = write(path.join(dir, `tour-${t}-mix.wav`), summed, `volume=${MIX_MASTER_DB.toFixed(3)}dB,${LIMITER}`);
+    }
     fs.writeFileSync(
         path.join(chartDir, `tour-audio-${t}.json`),
-        JSON.stringify({ theme: t, fps: FPS, total, gainDb: SFX_GAIN_DB, events, cuts, loudness, sceneIds: TOUR_SCENES.map((s) => s.id) }, null, 2),
+        JSON.stringify({ theme: t, fps: FPS, total, gainDb: SFX_GAIN_DB, events, cuts, loudness, music: bed ? { rmsDb: MUSIC_RMS_DB, startOffsetSec: bed.offset, appliedGainDb: bed.gainDb, bpm: bed.bpm, mixLoudness: mix } : null, sceneIds: TOUR_SCENES.map((s) => s.id) }, null, 2),
     );
-    console.log(`[audio:${t}] ${(N / SR).toFixed(2)}s, ${total} frames, ${events.length} event sounds, integrated ${loudness.I} LUFS, true peak ${loudness.TP} dBTP, LRA ${loudness.LRA} LU`);
+    console.log(`[audio:${t}] ${(N / SR).toFixed(2)}s, ${total} frames, ${events.length} event sounds, effects only: integrated ${loudness.I} LUFS, true peak ${loudness.TP} dBTP, LRA ${loudness.LRA} LU`);
+    if (bed && mix) console.log(`[audio:${t}] with music (${bed.rmsDb.toFixed(1)} dB track scaled to ${MUSIC_RMS_DB} dB RMS, start offset ${bed.offset.toFixed(3)} s): integrated ${mix.I} LUFS, true peak ${mix.TP} dBTP, LRA ${mix.LRA} LU`);
 }
 
-for (const t of themes) build(t);
+async function main() {
+    let musicFile: string | null = null;
+    try { musicFile = await ensureTourMusic(); } catch (e) { console.warn(`[audio] no music bed (${(e as Error).message}); writing the effects-only WAV`); }
+    for (const t of themes) build(t, musicFile);
+}
+main();

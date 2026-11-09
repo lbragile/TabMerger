@@ -1,22 +1,26 @@
 {
     "frames": {
-        "dark": 167,
-        "light": 161
+        "dark": 237,
+        "light": 233
     },
     "events": {
         "dark": {
             "searchClick": 39,
-            "typeStart": 50,
-            "resultsShown": 67,
-            "resultClick": 127,
-            "overlayClosed": 132
+            "typeStart": 51,
+            "resultsShown": 69,
+            "resultClick": 125,
+            "overlayClosed": 129,
+            "clearClick": 198,
+            "searchCleared": 203
         },
         "light": {
-            "searchClick": 34,
-            "typeStart": 45,
-            "resultsShown": 63,
-            "resultClick": 125,
-            "overlayClosed": 127
+            "searchClick": 38,
+            "typeStart": 50,
+            "resultsShown": 67,
+            "resultClick": 126,
+            "overlayClosed": 129,
+            "clearClick": 196,
+            "searchCleared": 199
         }
     }
 }

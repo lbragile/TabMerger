@@ -1,0 +1,94 @@
+{
+    "frames": {
+        "dark": 196,
+        "light": 192
+    },
+    "events": {
+        "dark": {
+            "menuClick": 36,
+            "menuOpen": 38,
+            "autoGroupClick": 82,
+            "groupsShown": 96,
+            "openGroupClick": 170,
+            "end": 197
+        },
+        "light": {
+            "menuClick": 35,
+            "menuOpen": 37,
+            "autoGroupClick": 80,
+            "groupsShown": 92,
+            "openGroupClick": 167,
+            "end": 191
+        }
+    },
+    "groups": {
+        "dark": [
+            {
+                "name": "Arxiv",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "React",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "MDN",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "Wxt",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "Hacker News",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "Other",
+                "windows": 1,
+                "tabs": 8
+            }
+        ],
+        "light": [
+            {
+                "name": "Arxiv",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "React",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "MDN",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "Wxt",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "Hacker News",
+                "windows": 1,
+                "tabs": 1
+            },
+            {
+                "name": "Other",
+                "windows": 1,
+                "tabs": 8
+            }
+        ]
+    },
+    "toast": {
+        "dark": "AI created 6 groups",
+        "light": "AI created 6 groups"
+    }
+}
