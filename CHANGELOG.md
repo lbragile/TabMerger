@@ -1,3 +1,20 @@
+# [3.14.0](https://github.com/lbragile/TabMerger/compare/v3.13.1...v3.14.0) (2026-11-09)
+
+
+### Features
+
+* **extension:** list every supported language in the browser stores ([#122](https://github.com/lbragile/TabMerger/issues/122)) ([9ee464d](https://github.com/lbragile/TabMerger/commit/9ee464de205dbb5cfed6ef15955233696a2a6d0a))
+* **web:** add a /compare page next to other tab managers ([#114](https://github.com/lbragile/TabMerger/issues/114)) ([8baf5d0](https://github.com/lbragile/TabMerger/commit/8baf5d03ba18a7da7e4f8f66933b65c2e4600699))
+* **web:** highlight the current page in the header and menu ([#119](https://github.com/lbragile/TabMerger/issues/119)) ([380aa91](https://github.com/lbragile/TabMerger/commit/380aa9125db4517ce1addacfe4dddd4b4648d2d2))
+* **web:** make the current page's nav link stand out in brand teal ([#121](https://github.com/lbragile/TabMerger/issues/121)) ([a955f71](https://github.com/lbragile/TabMerger/commit/a955f71b74a4de42c3800ffe2943291d6f35c16a))
+* **web:** ping IndexNow after production web deploys ([#116](https://github.com/lbragile/TabMerger/issues/116)) ([d17580a](https://github.com/lbragile/TabMerger/commit/d17580a8a4652ce4001569f4efbd44189461dae9))
+* **web:** richer structured data and llms.txt facts for answer engines ([#117](https://github.com/lbragile/TabMerger/issues/117)) ([471ec57](https://github.com/lbragile/TabMerger/commit/471ec574b2713b0e49ecfa645ba7042317fb190e))
+
+
+### Reverts
+
+* **web:** drop the duplicate IndexNow key file ([#120](https://github.com/lbragile/TabMerger/issues/120)) ([9709f6f](https://github.com/lbragile/TabMerger/commit/9709f6f7715eecd0979121f3c2fb1986589167c0))
+
 ## [3.13.1](https://github.com/lbragile/TabMerger/compare/v3.13.0...v3.13.1) (2026-11-08)
 
 
