@@ -30,6 +30,14 @@ import { MobileNavToggle } from '@/components/layout/MobileNavToggle'
 
 const MAIN_LINKS = ['Features', 'Pricing', 'Compare', 'Changelog', 'FAQ']
 
+/**
+ * Asserts `el` has none of `classes`. `.not.toHaveClass(a, b)` only fails when every one is
+ * present, so each class is checked on its own.
+ */
+function expectNoClass(el: HTMLElement, ...classes: string[]) {
+  for (const c of classes) expect(el, c).not.toHaveClass(c)
+}
+
 describe('isNavLinkActive', () => {
   it('matches the page itself', () => {
     expect(isNavLinkActive('/pricing', '/pricing')).toBe(true)
@@ -60,7 +68,7 @@ describe('NavLink', () => {
   it('marks its page as current and adds the active classes', () => {
     nav.pathname = '/pricing'
     render(
-      <NavLink href="/pricing" className="px-2 text-text2" activeClassName="bg-surface2 text-foreground">
+      <NavLink href="/pricing" className="px-2 text-text2" activeClassName="bg-primary/10 text-primary">
         x
       </NavLink>
     )
@@ -68,21 +76,21 @@ describe('NavLink', () => {
     expect(link).toHaveAttribute('aria-current', 'page')
     expect(link).toHaveAttribute('href', '/pricing')
     // The active text colour replaces the resting one rather than both being set.
-    expect(link).toHaveClass('px-2', 'bg-surface2', 'text-foreground')
+    expect(link).toHaveClass('px-2', 'bg-primary/10', 'text-primary')
     expect(link).not.toHaveClass('text-text2')
   })
 
   it('leaves other pages unmarked, with only their own classes', () => {
     nav.pathname = '/features'
     render(
-      <NavLink href="/pricing" className="px-2 text-text2" activeClassName="bg-surface2 text-foreground">
+      <NavLink href="/pricing" className="px-2 text-text2" activeClassName="bg-primary/10 text-primary">
         x
       </NavLink>
     )
     const link = screen.getByRole('link', { name: 'x' })
     expect(link).not.toHaveAttribute('aria-current')
     expect(link).toHaveClass('px-2', 'text-text2')
-    expect(link).not.toHaveClass('bg-surface2')
+    expectNoClass(link, 'bg-primary/10', 'text-primary')
   })
 
   it('passes other Link props through (onClick)', async () => {
@@ -111,12 +119,19 @@ describe('Navbar link bar: active page', () => {
     const bar = await renderBar()
     const pricing = within(bar).getByRole('link', { name: 'Pricing' })
     expect(pricing).toHaveAttribute('aria-current', 'page')
-    expect(pricing).toHaveClass('bg-surface2', 'text-foreground')
-    // Same box as the others: no padding, height or weight change while active.
+    // A square teal tint that stays teal while hovered: the base rounding, resting grey text and
+    // grey hover are replaced, not left alongside.
+    expect(pricing).toHaveClass('bg-primary/10', 'text-primary', 'rounded-none', 'hover:bg-primary/12', 'hover:text-primary')
+    expectNoClass(pricing, 'rounded-lg', 'text-text2', 'hover:bg-surface2', 'hover:text-foreground')
+    // Same box as the others: no padding, height, border or weight change while active.
     expect(pricing).toHaveClass('h-8', 'px-2', 'xl:px-3')
-    expect(pricing).not.toHaveClass('font-medium')
+    expectNoClass(pricing, 'font-medium', 'border')
     for (const name of MAIN_LINKS.filter((n) => n !== 'Pricing')) {
-      expect(within(bar).getByRole('link', { name })).not.toHaveAttribute('aria-current')
+      const other = within(bar).getByRole('link', { name })
+      expect(other).not.toHaveAttribute('aria-current')
+      // Inactive links keep their rounded grey look and hover.
+      expect(other).toHaveClass('rounded-lg', 'text-text2', 'hover:bg-surface2', 'hover:text-foreground')
+      expectNoClass(other, 'rounded-none', 'text-primary', 'bg-primary/10')
     }
   })
 
@@ -155,9 +170,13 @@ describe('MobileNavToggle panel: active page', () => {
     const panel = await openPanel({ status: 'signedOut' })
     const faq = within(panel).getByRole('link', { name: 'FAQ' })
     expect(faq).toHaveAttribute('aria-current', 'page')
-    expect(faq).toHaveClass('bg-surface2', 'text-foreground', 'h-10', 'px-3')
+    expect(faq).toHaveClass('bg-primary/10', 'text-primary', 'rounded-none', 'hover:bg-primary/12', 'h-10', 'px-3')
+    expectNoClass(faq, 'rounded-lg', 'text-text2', 'hover:bg-surface2', 'hover:text-foreground')
     for (const name of MAIN_LINKS.filter((n) => n !== 'FAQ')) {
-      expect(within(panel).getByRole('link', { name })).not.toHaveAttribute('aria-current')
+      const other = within(panel).getByRole('link', { name })
+      expect(other).not.toHaveAttribute('aria-current')
+      expect(other).toHaveClass('rounded-lg', 'text-text2')
+      expect(other).not.toHaveClass('text-primary')
     }
   })
 
@@ -167,7 +186,10 @@ describe('MobileNavToggle panel: active page', () => {
   ])('marks the signed-in %s row', async (pathname, name) => {
     nav.pathname = pathname
     const panel = await openPanel({ status: 'signedIn', email: ['user', 'example.test'].join('@') })
-    expect(within(panel).getByRole('link', { name })).toHaveAttribute('aria-current', 'page')
+    const row = within(panel).getByRole('link', { name })
+    expect(row).toHaveAttribute('aria-current', 'page')
+    expect(row).toHaveClass('bg-primary/10', 'text-primary', 'rounded-none')
+    expectNoClass(row, 'rounded-lg', 'text-text2')
     const current = within(panel).getAllByRole('link').filter((l) => l.hasAttribute('aria-current'))
     expect(current).toHaveLength(1)
   })

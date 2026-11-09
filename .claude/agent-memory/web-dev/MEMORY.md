@@ -63,5 +63,5 @@
 - [Proxy session + client plan](learnings/proxy-session-and-client-plan.md) — needsSession allow-list (add new cookie-session routes!), browser account slot/plan fetch, skeleton lifecycle (loading/preload/noscript/timeout/status/no remount), text/plain bodies
 - [Public-route IP limits](learnings/public-route-ip-limits.md) — track/og-preview: in-memory first (~1.4 us) vs DB (~0.2 ms CPU + round trip); og-preview escalates to Postgres from 10/min; fresh-IP test isolation
 - [Disclosure menu Escape/focus](learnings/disclosure-menu-escape-focus.md) — aria-controls only while open, Escape scoped to focus in the menu, close() refocuses toggle, Enter-presses-toggle test trap
-- [Active nav link](learnings/active-nav-link.md) — NavLink + isNavLinkActive, locale-free usePathname, active class in a plain module, no font-medium (measured), headless font widths
+- [Active nav link](learnings/active-nav-link.md) — NavLink + isNavLinkActive, teal active class + AA tint table, --radius 0, multi-class not.toHaveClass trap, no font-medium
 - [Compare page picker + SSR](learnings/compare-page-picker-and-ssr.md) — breakpoint default without JS (data-chosen auto + useSyncExternalStore), Radix Select placeholder-not-children trap, two-branch custom variant, t.rich tag for <time>
