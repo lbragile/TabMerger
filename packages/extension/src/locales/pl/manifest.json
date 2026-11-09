@@ -1,0 +1,8 @@
+{
+  "extDescription": "Zapisuj karty w nazwanych grupach z kolorami i przywracaj, gdy chcesz. Działa offline, opcjonalna szyfrowana synchronizacja (Pro).",
+  "commandActivate": "Aktywuj rozszerzenie",
+  "commandSaveCurrentTab": "Zapisz bieżącą kartę w TabMerger",
+  "commandSaveTabsLeft": "Zapisz karty po lewej w TabMerger",
+  "commandSaveTabsRight": "Zapisz karty po prawej w TabMerger",
+  "commandSaveOtherTabs": "Zapisz wszystkie inne karty w TabMerger"
+}

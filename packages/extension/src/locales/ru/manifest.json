@@ -1,0 +1,8 @@
+{
+  "extDescription": "Храните вкладки в именованных цветных группах и восстанавливайте когда угодно. Офлайн; шифрованная синхронизация по желанию (Pro).",
+  "commandActivate": "Активировать расширение",
+  "commandSaveCurrentTab": "Сохранить текущую вкладку в TabMerger",
+  "commandSaveTabsLeft": "Сохранить вкладки слева в TabMerger",
+  "commandSaveTabsRight": "Сохранить вкладки справа в TabMerger",
+  "commandSaveOtherTabs": "Сохранить все остальные вкладки в TabMerger"
+}

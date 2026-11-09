@@ -1,0 +1,8 @@
+{
+  "extDescription": "Salva le schede in gruppi con nome e colore e ripristinale quando vuoi. Funziona offline, sincronizzazione cifrata opzionale (Pro).",
+  "commandActivate": "Attiva l'estensione",
+  "commandSaveCurrentTab": "Salva la scheda corrente in TabMerger",
+  "commandSaveTabsLeft": "Salva le schede a sinistra in TabMerger",
+  "commandSaveTabsRight": "Salva le schede a destra in TabMerger",
+  "commandSaveOtherTabs": "Salva tutte le altre schede in TabMerger"
+}

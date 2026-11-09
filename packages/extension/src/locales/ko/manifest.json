@@ -1,0 +1,8 @@
+{
+  "extDescription": "열린 탭을 이름과 색상을 지정한 그룹에 저장하고 언제든 복원하세요. 오프라인에서도 작동하며, 암호화 동기화(Pro)도 선택할 수 있습니다.",
+  "commandActivate": "확장 프로그램 활성화",
+  "commandSaveCurrentTab": "현재 탭을 TabMerger에 저장",
+  "commandSaveTabsLeft": "왼쪽 탭을 TabMerger에 저장",
+  "commandSaveTabsRight": "오른쪽 탭을 TabMerger에 저장",
+  "commandSaveOtherTabs": "다른 탭 모두 TabMerger에 저장"
+}

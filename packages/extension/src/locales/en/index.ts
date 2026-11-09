@@ -2,6 +2,10 @@
  * The English catalog, the default locale and the source of the key types (src/i18next.d.ts):
  * a key used in code but missing here fails `tsc`. One JSON file per feature area, each under its
  * own top-level key, so `t('header.undo')` reads `header.json`'s `undo`.
+ *
+ * `manifest.json` (in every language) is the store listing's text: the build turns it into the
+ * browser's `_locales/<code>/messages.json` (scripts/manifestLocales.ts), which the manifest's
+ * description and keyboard-shortcut names read through `__MSG_<key>__`. Flat keys, no placeholders.
  */
 import auth from './auth.json' with { type: 'json' };
 import autoSave from './autoSave.json' with { type: 'json' };
@@ -19,6 +23,7 @@ import groupMenu from './groupMenu.json' with { type: 'json' };
 import header from './header.json' with { type: 'json' };
 import importExport from './importExport.json' with { type: 'json' };
 import keyboardMove from './keyboardMove.json' with { type: 'json' };
+import manifest from './manifest.json' with { type: 'json' };
 import modals from './modals.json' with { type: 'json' };
 import preview from './preview.json' with { type: 'json' };
 import search from './search.json' with { type: 'json' };
@@ -50,6 +55,7 @@ export const en = {
     header,
     importExport,
     keyboardMove,
+    manifest,
     modals,
     preview,
     search,

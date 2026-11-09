@@ -1,0 +1,8 @@
+{
+  "extDescription": "Enregistrez vos onglets en groupes nommés et colorés, restaurez-les à tout moment. Hors ligne, synchro chiffrée en option (Pro).",
+  "commandActivate": "Activer l’extension",
+  "commandSaveCurrentTab": "Enregistrer l’onglet actuel dans TabMerger",
+  "commandSaveTabsLeft": "Enregistrer les onglets à gauche dans TabMerger",
+  "commandSaveTabsRight": "Enregistrer les onglets à droite dans TabMerger",
+  "commandSaveOtherTabs": "Enregistrer tous les autres onglets dans TabMerger"
+}

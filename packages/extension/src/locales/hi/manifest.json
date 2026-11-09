@@ -1,0 +1,8 @@
+{
+  "extDescription": "खुले टैब को नाम और रंग वाले ग्रुप में सहेजें और कभी भी वापस लाएँ। ऑफ़लाइन काम करता है, वैकल्पिक एन्क्रिप्टेड सिंक (Pro) के साथ।",
+  "commandActivate": "एक्सटेंशन सक्रिय करें",
+  "commandSaveCurrentTab": "मौजूदा टैब TabMerger में सहेजें",
+  "commandSaveTabsLeft": "बाईं ओर के टैब TabMerger में सहेजें",
+  "commandSaveTabsRight": "दाईं ओर के टैब TabMerger में सहेजें",
+  "commandSaveOtherTabs": "सभी अन्य टैब TabMerger में सहेजें"
+}

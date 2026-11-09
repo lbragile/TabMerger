@@ -1,0 +1,8 @@
+{
+  "extDescription": "Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).",
+  "commandActivate": "Activate the extension",
+  "commandSaveCurrentTab": "Save the current tab to TabMerger",
+  "commandSaveTabsLeft": "Save tabs to the left of TabMerger",
+  "commandSaveTabsRight": "Save tabs to the right to TabMerger",
+  "commandSaveOtherTabs": "Save all other tabs to TabMerger"
+}

@@ -1,0 +1,8 @@
+{
+  "extDescription": "Simpan tab ke grup bernama berkode warna, lalu pulihkan kapan saja. Bisa offline, dengan sinkronisasi terenkripsi opsional (Pro).",
+  "commandActivate": "Aktifkan ekstensi",
+  "commandSaveCurrentTab": "Simpan tab saat ini ke TabMerger",
+  "commandSaveTabsLeft": "Simpan tab di sebelah kiri ke TabMerger",
+  "commandSaveTabsRight": "Simpan tab di sebelah kanan ke TabMerger",
+  "commandSaveOtherTabs": "Simpan semua tab lainnya ke TabMerger"
+}

@@ -7,8 +7,9 @@ import { resolveManifestVersion } from "./scripts/manifestVersion";
 import { resolveE2eTestDefine, resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
 import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "./scripts/firefoxAddonIds";
 import { resolveFirefoxBetaUpdateUrl } from "./scripts/firefoxBetaUpdateUrl";
+import { DEFAULT_MANIFEST_LOCALE, localeFilesFor, manifestMessage, readManifestCatalogs } from "./scripts/manifestLocales";
 import { resolveTrustedWebAppOrigins, toOriginMatchPatterns } from "./src/lib/webAppOrigins";
-import { DEV_EXTENSION_ID } from "@tabmerger/shared";
+import { DEV_EXTENSION_ID, SUPPORTED_LOCALES } from "@tabmerger/shared";
 import { FIREFOX_DATA_CONSENT_CATEGORIES } from "@tabmerger/shared";
 import pkg from "./package.json";
 
@@ -122,10 +123,14 @@ export default defineConfig({
             { allowLocalhostHttp: mode === "development" },
         );
         return {
+            // Literal, not __MSG_: it differs per mode and the store listing name must match the
+            // production value exactly.
             name: getExtensionName(mode),
-            description: isBeta
-                ? "THIS EXTENSION IS FOR BETA TESTING"
-                : "Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).",
+            // The description and command names come from _locales/<code>/messages.json, written by
+            // the build:publicAssets hook below from src/locales/<lng>/manifest.json, so every store
+            // lists each shipped language. Beta keeps its literal warning.
+            default_locale: DEFAULT_MANIFEST_LOCALE,
+            description: isBeta ? "THIS EXTENSION IS FOR BETA TESTING" : manifestMessage("extDescription"),
             incognito: "spanning",
             permissions: [
                 "tabs",
@@ -174,35 +179,35 @@ export default defineConfig({
             // extension could still grab one — rebind manually at chrome://extensions/shortcuts if so).
             commands: {
                 _execute_action: {
-                    description: "Activate the extension",
+                    description: manifestMessage("commandActivate"),
                 },
                 "save-current-tab": {
                     suggested_key: {
                         default: "Ctrl+Shift+S",
                         mac: "Command+Shift+S",
                     },
-                    description: "Save the current tab to TabMerger",
+                    description: manifestMessage("commandSaveCurrentTab"),
                 },
                 "save-tabs-left": {
                     suggested_key: {
                         default: "Ctrl+Shift+K",
                         mac: "Command+Shift+K",
                     },
-                    description: "Save tabs to the left of TabMerger",
+                    description: manifestMessage("commandSaveTabsLeft"),
                 },
                 "save-tabs-right": {
                     suggested_key: {
                         default: "Ctrl+Shift+U",
                         mac: "Command+Shift+U",
                     },
-                    description: "Save tabs to the right to TabMerger",
+                    description: manifestMessage("commandSaveTabsRight"),
                 },
                 "save-other-tabs": {
                     suggested_key: {
                         default: "Ctrl+Shift+P",
                         mac: "Command+Shift+P",
                     },
-                    description: "Save all other tabs to TabMerger",
+                    description: manifestMessage("commandSaveOtherTabs"),
                 },
             },
             // Lets the web app probe install status on demand via chrome.runtime.sendMessage
@@ -295,6 +300,14 @@ export default defineConfig({
         startUrls: ["about:blank"],
     },
     hooks: {
+        // Writes _locales/<code>/messages.json (one per shipped language) into the output folder.
+        // build:publicAssets runs inside every entrypoint build: `wxt build`, `wxt zip` and the
+        // `wxt` dev server's first build. Generated only, never committed: the source of truth is
+        // the `manifest` i18next namespace, so the store text gets the catalogs' parity checks.
+        "build:publicAssets": (_wxt, files) => {
+            const catalogs = readManifestCatalogs(path.resolve(__dirname, "src/locales"), SUPPORTED_LOCALES);
+            files.push(...localeFilesFor(catalogs));
+        },
         // ponytail: background/content scripts build in Vite "lib mode"
         // (wxt's getLibModeConfig), which sets its own
         // `define: { "process.env.NODE_ENV": JSON.stringify(wxtConfig.mode) }`
