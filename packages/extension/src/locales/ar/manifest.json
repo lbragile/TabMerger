@@ -1,0 +1,8 @@
+{
+  "extDescription": "احفظ علامات التبويب المفتوحة في مجموعات مسمّاة وملوّنة واستعدها في أي وقت. يعمل دون اتصال، مع مزامنة مشفّرة اختيارية (Pro).",
+  "commandActivate": "تفعيل الإضافة",
+  "commandSaveCurrentTab": "حفظ علامة التبويب الحالية في TabMerger",
+  "commandSaveTabsLeft": "حفظ علامات التبويب على اليمين في TabMerger",
+  "commandSaveTabsRight": "حفظ علامات التبويب على اليسار في TabMerger",
+  "commandSaveOtherTabs": "حفظ كل علامات التبويب الأخرى في TabMerger"
+}

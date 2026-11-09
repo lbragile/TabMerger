@@ -1,0 +1,8 @@
+{
+  "extDescription": "Guarda pestañas en grupos con nombre y color y restáuralas cuando quieras. Sin conexión, con sincronización cifrada opcional (Pro).",
+  "commandActivate": "Activar la extensión",
+  "commandSaveCurrentTab": "Guardar la pestaña actual en TabMerger",
+  "commandSaveTabsLeft": "Guardar pestañas a la izquierda en TabMerger",
+  "commandSaveTabsRight": "Guardar pestañas a la derecha en TabMerger",
+  "commandSaveOtherTabs": "Guardar todas las demás pestañas en TabMerger"
+}

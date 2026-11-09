@@ -1,0 +1,8 @@
+{
+  "extDescription": "שמירת כרטיסיות פתוחות בקבוצות עם שמות וצבעים ושחזור שלהן בכל עת. עובד גם במצב לא מקוון, עם סנכרון מוצפן אופציונלי (Pro).",
+  "commandActivate": "הפעלת התוסף",
+  "commandSaveCurrentTab": "שמירת הכרטיסייה הנוכחית ב-TabMerger",
+  "commandSaveTabsLeft": "שמירת הכרטיסיות מימין ב-TabMerger",
+  "commandSaveTabsRight": "שמירת הכרטיסיות משמאל ב-TabMerger",
+  "commandSaveOtherTabs": "שמירת כל שאר הכרטיסיות ב-TabMerger"
+}

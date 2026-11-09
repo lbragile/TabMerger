@@ -5,7 +5,7 @@ metadata:
   type: reference
 ---
 
-Extension i18n (packages/extension) uses i18next + react-i18next, not chrome.i18n / `_locales`.
+Extension i18n (packages/extension) uses i18next + react-i18next, not chrome.i18n. The only `_locales` are the build-generated store-listing messages (see [[learnings-store-locales-build-hook]]).
 
 - Catalogs: `src/locales/en/<area>.json`, merged under one `translation` namespace in
   `src/locales/en/index.ts` (key `header.undo` = `header.json` → `undo`). Typed through

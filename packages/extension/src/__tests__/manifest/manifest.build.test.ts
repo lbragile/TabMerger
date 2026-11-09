@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
@@ -16,6 +16,8 @@ import { FIREFOX_BETA, FIREFOX_DATA_CONSENT_CATEGORIES } from "@tabmerger/shared
  *   (VITE_WEB_APP_URL plus any VITE_EXTRA_WEB_APP_URLS, the same list as externally_connectable).
  * - The Firefox add-on ID must be the live AMO listing's GUID for stable, and the separate beta
  *   ID for beta: any other stable ID is a different add-on, so existing users would stop updating.
+ * - The store text is localized: `default_locale` is set and the `_locales/<code>/messages.json`
+ *   folders exist (generated from src/locales/<lng>/manifest.json, scripts/manifestLocales.ts).
  */
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
@@ -23,6 +25,8 @@ const testDir = path.dirname(fileURLToPath(import.meta.url));
 const extensionRoot = path.resolve(testDir, "../../../");
 
 type Manifest = {
+  default_locale?: string;
+  description?: string;
   content_scripts?: { matches: string[]; js: string[] }[];
   externally_connectable?: { matches?: string[]; ids?: string[] };
   host_permissions?: string[];
@@ -54,10 +58,16 @@ function build(args: string[], outDirName: string, env: Record<string, string> =
 }
 
 describe("manifest build output", () => {
-  it("Chrome manifest has no content_scripts and no new host permission", () => {
+  it("Chrome manifest has no content_scripts, no new host permission, and is localized", () => {
     const manifest = build([], "chrome-mv3");
     expect(manifest.content_scripts).toBeUndefined();
     expect(manifest.host_permissions).toBeUndefined();
+    // Localized store text: default_locale plus the _locales folders the build:publicAssets hook writes
+    expect(manifest.default_locale).toBe("en");
+    expect(manifest.description).toBe("__MSG_extDescription__");
+    for (const code of ["en", "pt_BR", "zh_CN"]) {
+      expect(existsSync(path.join(extensionRoot, ".output", "chrome-mv3", "_locales", code, "messages.json")), code).toBe(true);
+    }
   });
 
   it("Edge manifest has no content_scripts either", () => {

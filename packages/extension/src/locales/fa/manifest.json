@@ -1,0 +1,8 @@
+{
+  "extDescription": "زبانه‌ها را در گروه‌هایی با نام و رنگ ذخیره و هر زمان بازیابی کنید. آفلاین کار می‌کند؛ همگام‌سازی رمزگذاری‌شدهٔ اختیاری (Pro).",
+  "commandActivate": "فعال‌سازی افزونه",
+  "commandSaveCurrentTab": "ذخیرهٔ زبانهٔ فعلی در TabMerger",
+  "commandSaveTabsLeft": "ذخیرهٔ زبانه‌های سمت راست در TabMerger",
+  "commandSaveTabsRight": "ذخیرهٔ زبانه‌های سمت چپ در TabMerger",
+  "commandSaveOtherTabs": "ذخیرهٔ همهٔ زبانه‌های دیگر در TabMerger"
+}

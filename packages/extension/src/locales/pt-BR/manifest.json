@@ -1,0 +1,8 @@
+{
+  "extDescription": "Salve abas em grupos nomeados e coloridos e restaure quando quiser. Funciona offline; sincronização criptografada opcional (Pro).",
+  "commandActivate": "Ativar a extensão",
+  "commandSaveCurrentTab": "Salvar a aba atual no TabMerger",
+  "commandSaveTabsLeft": "Salvar abas à esquerda no TabMerger",
+  "commandSaveTabsRight": "Salvar abas à direita no TabMerger",
+  "commandSaveOtherTabs": "Salvar todas as outras abas no TabMerger"
+}

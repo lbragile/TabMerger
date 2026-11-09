@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-11-07. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-11-08. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.11.0` and the beta channel is at `v3.3.2-beta.1`
   (Chrome BETA listing, and the self-hosted Firefox beta), so beta testers have none of 3.4–3.11.
@@ -49,6 +49,7 @@ _Last updated 2026-11-07. Keep this current in the same change as the work (a CL
 - [x] The website and the extension in German, Spanish, French, Japanese, Brazilian Portuguese and Simplified Chinese. The site picks the visitor's language from the browser and the switcher; the extension follows the browser's language. Since 3.4.0 (stable extension 3.7.0).
 - [x] Eight more languages on the website and in the extension: Italian, Russian, Korean, Turkish, Indonesian, Polish, Vietnamese and Hindi (fifteen in all). The plan names "Pro" and "Pro AI" stay as brand names in every language. Released in 3.9.0, in the stores since 3.10.0.
 - [x] Arabic, Hebrew and Persian on the website and in the extension (eighteen languages in all), with right-to-left layouts: the page and the popup mirror (sidebar, menus, tour card, drag ghost, toasts, left/right arrow keys), user content such as tab titles and group names keeps its own direction, and URLs stay left-to-right. Text that names a side ("the list on the left") names the mirrored side in these languages. The old Hebrew code `iw` is read as `he`. Not yet released.
+- [x] Localized store listings: the extension package declares all eighteen languages (`_locales`, generated at build time from each catalog's `manifest` namespace), so the Chrome Web Store, Firefox Add-ons and Edge Add-ons list them, with a translated summary and keyboard-shortcut names. Each language's detailed store description is entered in the store dashboards after the upload. Not yet released.
 - [x] A language picker in the extension: Settings → General → Language (applied with "Save changes") and a language menu in the popup header (applied at once). "Browser default" follows the browser's language; the choice is per device and never synced. Since 3.4.0 (stable extension 3.7.0).
 - [x] Searchable language pickers on the website and in the extension: a search field that matches a language's own name, its name in the current language, or its code ("de", "he"); a scrolling list that opens at the current language; each language's own name with its name in the current language beside it; and a ¶← mark on right-to-left languages. On the website the picker sits in the top bar at every width, phones included. Not yet released.
 

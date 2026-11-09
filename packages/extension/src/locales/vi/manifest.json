@@ -1,0 +1,8 @@
+{
+  "extDescription": "Lưu thẻ đang mở vào nhóm có tên và mã màu, khôi phục bất cứ lúc nào. Hoạt động ngoại tuyến, có đồng bộ mã hóa tùy chọn (Pro).",
+  "commandActivate": "Kích hoạt tiện ích",
+  "commandSaveCurrentTab": "Lưu thẻ hiện tại vào TabMerger",
+  "commandSaveTabsLeft": "Lưu các thẻ bên trái vào TabMerger",
+  "commandSaveTabsRight": "Lưu các thẻ bên phải vào TabMerger",
+  "commandSaveOtherTabs": "Lưu tất cả các thẻ khác vào TabMerger"
+}

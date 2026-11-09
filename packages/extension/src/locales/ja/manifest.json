@@ -1,0 +1,8 @@
+{
+  "extDescription": "開いているタブを名前と色で分けたグループに保存し、いつでも復元できます。オフラインで動作し、暗号化同期 (Pro) も利用できます。",
+  "commandActivate": "拡張機能を有効にする",
+  "commandSaveCurrentTab": "現在のタブをTabMergerに保存",
+  "commandSaveTabsLeft": "左側のタブをTabMergerに保存",
+  "commandSaveTabsRight": "右側のタブをTabMergerに保存",
+  "commandSaveOtherTabs": "他のすべてのタブをTabMergerに保存"
+}

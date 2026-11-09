@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-11-07
+> Last Updated: 2026-11-08
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -30,6 +30,11 @@ Everything else in this file was derived from the repository. These items cannot
 - [ ] **Test instructions field:** paste the "Notes for the review team" paragraph from
       [Review Notes](#review-notes). No test account is needed.
 - [ ] **BETA item:** confirm `3.3.2-beta.1` is the live BETA build.
+- [ ] **Localized store listings (after the first upload with `_locales`):** in the stable item's
+      Store listing tab, pick each language and paste its detailed description (screenshots are
+      optional): Arabic, German, Spanish, Persian, French, Hebrew, Hindi, Indonesian, Italian,
+      Japanese, Korean, Polish, Portuguese (Brazil), Russian, Turkish, Vietnamese and Chinese
+      (Simplified). Summaries come from the package (see [Localized listings](#localized-listings)).
 - [ ] **Existing-user note:** the description tells v2 users that v3 does not import their v2
       data. Delete that paragraph if you would rather not say so.
 
@@ -62,12 +67,15 @@ TabMerger
 
 **Short Description** [REQUIRED] (max 132 characters)
 
-122 characters, the stable manifest `description` in `wxt.config.ts`:
+122 characters, the stable manifest `description` (`__MSG_extDescription__`, English text in
+`src/locales/en/manifest.json`; the other languages are listed under
+[Localized listings](#localized-listings)):
 
 > Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).
 
-<!-- The dashboard summary is read from the manifest `description`, so change it there, not only
-     here. BETA builds use their own description string and are unaffected. -->
+<!-- The dashboard summary is read from the manifest `description`, so change it in
+     src/locales/<lng>/manifest.json (every language), not only here. BETA builds use their own
+     literal description string and are unaffected. -->
 
 **Detailed Description** [REQUIRED] (about 4,300 characters, limit 16,000)
 
@@ -179,6 +187,44 @@ Saves, organizes, and restores browser tabs into named groups.
 
 **Primary Language** [REQUIRED]
 English
+
+### Localized listings
+
+From the next release on, the package declares `default_locale: "en"` and ships
+`_locales/<code>/messages.json` for all 18 UI languages, so the dashboard's Store listing tab
+offers each of them in its language picker. The build writes those files from the `manifest`
+namespace of the extension catalogs (`src/locales/<lng>/manifest.json`, converted by
+`scripts/manifestLocales.ts` in WXT's `build:publicAssets` hook); they are never committed. The
+manifest's `description` is `__MSG_extDescription__` and the five keyboard-shortcut names are
+`__MSG_command…__`, so each language's **summary** and shortcut names come from the package.
+The **detailed description** (and optionally screenshots) of each language is entered in the
+dashboard after the upload; until then a language shows the English detailed description.
+
+| Language | `_locales` code | Summary (characters, max 132) |
+|---|---|---|
+| English (default) | `en` | 122 |
+| Arabic | `ar` | 123 |
+| German | `de` | 131 |
+| Spanish | `es` | 131 |
+| Persian | `fa` | 126 |
+| French | `fr` | 128 |
+| Hebrew | `he` | 120 |
+| Hindi | `hi` | 127 |
+| Indonesian | `id` | 129 |
+| Italian | `it` | 131 |
+| Japanese | `ja` | 66 |
+| Korean | `ko` | 77 |
+| Polish | `pl` | 130 |
+| Portuguese (Brazil) | `pt_BR` | 129 |
+| Russian | `ru` | 130 |
+| Turkish | `tr` | 131 |
+| Vietnamese | `vi` | 125 |
+| Chinese (Simplified) | `zh_CN` | 46 |
+
+Every code is on Chrome's supported locale list; only `pt-BR` and `zh-CN` change (hyphen to
+underscore). The unit test `src/__tests__/unit/scripts/manifestLocales.test.ts` fails on a summary
+over 132 characters, a missing or extra key, or an empty message. Firefox (AMO) and Edge Add-ons
+read the same `_locales` folders.
 
 ---
 
@@ -709,6 +755,7 @@ with the real semver string carried in `version_name`.
 | Stable | `3.10.0` | — | `v3.9.0` | 2026-10-21 | Published in stable `3.10.0` (Chrome and Firefox also received `3.9.0`): eight more languages in the popup, the extension pages, the right-click menu and notifications (Italian, Russian, Korean, Turkish, Indonesian, Polish, Vietnamese, Hindi; fifteen in all), the same language rules as above. The package stays under its size budget because the background worker now bundles only the strings it uses. Same release: the anonymous install and update events also carry the extension version, the release channel and the browser name (already covered by "User activity"; no new tick), and test builds no longer send analytics or error reports. No manifest change, no new permission. The manifest name and description and this listing stay English. Screenshots: none affected |
 | Stable | `3.10.0` | — | `v3.10.0` | 2026-10-22 | Published in stable `3.10.0`: three more languages, Arabic, Hebrew and Persian (eighteen in all), with right-to-left layouts: in those languages the popup and the extension pages mirror (sidebar on the right, menus, tour card, toasts, Left/Right arrow keys), while tab titles, group names and URLs keep their own direction. The language menu in the header and Settings, General → Language now have a search field (by name or code such as "de"), a scrolling list, each language's name in the current language, and a ¶← mark on right-to-left languages. The old Hebrew code `iw` stored by an earlier choice is read as `he`. No manifest change, no new permission, no new data leaves the device. The manifest name and description and this listing stay English; the long description's language bullet is updated. Screenshots: the English popup is pixel-identical, so none need refreshing; a right-to-left screenshot is optional |
 | Both | next release | — | not tagged yet | 2026-11-07 | Draft (in code, not released): "Auto-save open tabs". The background worker saves the open tabs into a new group, shown in a new "Auto-saved" sidebar section, on a schedule (`chrome.alarms`, every 15 minutes to daily) and/or when the number of open tabs passes a threshold (`tabs.onCreated` / `tabs.onRemoved`); tabs already saved are skipped, private windows never saved, an optional notification (`notifications`). Settings → Data gets an "Auto-save open tabs" card. Free: off by default, newest 2 auto-saves kept, counted toward the free limits. Pro / Pro AI: on by default, all kept. **No manifest change and no new permission**: `tabs`, `alarms` and `notifications` are already granted (checked against `wxt.config.ts`), so no re-approval prompt. Privacy tab: no new tick; auto-saved groups are ordinary saved groups (stored locally, uploaded end-to-end encrypted only for Pro sync, already covered by "Web history"). Description: new bullet under "What you can do". Screenshots: the sidebar gains an "Auto-saved" section header above "Archived", so screenshots showing the sidebar footer area need refreshing |
+| Both | next release | — | not tagged yet | 2026-11-08 | Draft (in code, not released): localized store text. The manifest gains `default_locale: "en"`, its `description` becomes `__MSG_extDescription__` and the five command descriptions `__MSG_command…__`, resolved from `_locales/<code>/messages.json` for all 18 UI languages (`ar`, `de`, `en`, `es`, `fa`, `fr`, `he`, `hi`, `id`, `it`, `ja`, `ko`, `pl`, `pt_BR`, `ru`, `tr`, `vi`, `zh_CN`), generated at build time from `src/locales/<lng>/manifest.json`. The `name` stays a literal and BETA keeps its literal description. No new permission and no new data. The English summary is unchanged; after the upload, enter each language's detailed description in the dashboard (see [Localized listings](#localized-listings)). Screenshots: none affected; per-language screenshots optional |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
 Betas 1–3 predate the store-version offset, so their manifest version is the plain
@@ -740,6 +787,8 @@ Paste into the dashboard's test-instructions field for the v2 to v3 update:
 > menu, the badge, shortcuts and the user's URL rules. AI is off. Version 2 data is not imported.
 > Uninstalling opens an optional survey on the TabMerger website (runtime.setUninstallURL, no
 > permission); its URL holds only version, browser, channel and an analytics on/off flag.
+
+For the first release with localized store text, add: "The package now includes `_locales` for 18 languages (`default_locale` en); only the description and keyboard-shortcut names are localized, and no functionality changed."
 
 (That text records the v2 to v3 update, which shipped with AI off. For the first release with AI
 on, replace "AI is off" with: AI actions are optional and user-started; they send open-tab titles
