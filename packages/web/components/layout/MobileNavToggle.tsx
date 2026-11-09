@@ -3,7 +3,6 @@
 import { Suspense, use, useCallback, useEffect, useRef, useState } from 'react'
 import NextLink from 'next/link'
 import { useTranslations } from 'next-intl'
-import { Link } from '@/i18n/navigation'
 import { Star } from 'lucide-react'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 import { GitHubMark } from '@/components/GitHubMark'
@@ -12,7 +11,8 @@ import { useGithubRepoLabel, useStarCount } from '@/components/layout/githubLabe
 import { NO_CAPTURE_CLASS } from '@/lib/analyticsPrivacy'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useNavAccount, type NavAccountState } from '@/components/layout/NavAccount'
-import { NAV_LINKS } from '@/components/layout/navLinks'
+import { NAV_LINK_ACTIVE_CLASS, NAV_LINKS } from '@/components/layout/navLinks'
+import { NavLink } from '@/components/layout/NavLink'
 
 
 interface MobileNavToggleProps {
@@ -27,6 +27,10 @@ interface MobileNavToggleProps {
      */
     starsPromise?: Promise<number | null>
 }
+
+/** A page link row in the panel: the main links, then Dashboard and Account when signed in. */
+const PANEL_LINK_CLASS =
+    'flex h-10 items-center rounded-lg px-3 text-[14px] text-text2 transition-colors hover:bg-surface2 hover:text-foreground'
 
 const GITHUB_ROW_CLASS =
     'flex h-10 items-center gap-2 rounded-lg px-3 text-[14px] text-text2 transition-colors hover:bg-surface2 hover:text-foreground sm:hidden'
@@ -124,14 +128,15 @@ export function MobileNavToggle({ account: accountProp, starsPromise }: MobileNa
                     className="absolute inset-x-0 top-16 z-40 flex flex-col gap-1 border-b border-border bg-background p-4"
                 >
                     {NAV_LINKS.map((link) => (
-                        <Link
+                        <NavLink
                             key={link.href}
                             href={link.href}
                             onClick={close}
-                            className="flex h-10 items-center rounded-lg px-3 text-[14px] text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                            className={PANEL_LINK_CLASS}
+                            activeClassName={NAV_LINK_ACTIVE_CLASS}
                         >
                             {t(link.label)}
-                        </Link>
+                        </NavLink>
                     ))}
                     {/* The bar itself shows the badge from sm up, so this row is for narrower screens. */}
                     {starsPromise ? (
@@ -151,20 +156,22 @@ export function MobileNavToggle({ account: accountProp, starsPromise }: MobileNa
                     ) : account.status === 'signedIn' ? (
                         <>
                             <div className={`px-3 py-1.5 text-[13px] font-medium text-foreground ${NO_CAPTURE_CLASS}`}>{account.email}</div>
-                            <Link
+                            <NavLink
                                 href="/dashboard"
                                 onClick={close}
-                                className="flex h-10 items-center rounded-lg px-3 text-[14px] text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                                className={PANEL_LINK_CLASS}
+                                activeClassName={NAV_LINK_ACTIVE_CLASS}
                             >
                                 {t('dashboard')}
-                            </Link>
-                            <Link
+                            </NavLink>
+                            <NavLink
                                 href="/account"
                                 onClick={close}
-                                className="flex h-10 items-center rounded-lg px-3 text-[14px] text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                                className={PANEL_LINK_CLASS}
+                                activeClassName={NAV_LINK_ACTIVE_CLASS}
                             >
                                 {t('account')}
-                            </Link>
+                            </NavLink>
                             <SignOutForm>
                                 <button
                                     type="submit"
