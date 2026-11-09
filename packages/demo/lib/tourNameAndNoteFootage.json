@@ -1,32 +1,32 @@
 {
     "frames": {
-        "dark": 272,
-        "light": 271
+        "dark": 279,
+        "light": 275
     },
     "events": {
         "dark": {
-            "renameDblclick": 24,
-            "renameTypeStart": 37,
-            "renameCommit": 62,
-            "renamed": 64,
-            "noteMenuOpen": 99,
-            "noteItemClick": 128,
-            "noteTypeStart": 142,
-            "noteTyped": 205,
-            "noteSave": 227,
-            "noteSaved": 233
+            "renameDblclick": 26,
+            "renameTypeStart": 39,
+            "renameCommit": 64,
+            "renamed": 65,
+            "noteMenuOpen": 102,
+            "noteItemClick": 132,
+            "noteTypeStart": 146,
+            "noteTyped": 209,
+            "noteSave": 233,
+            "noteSaved": 239
         },
         "light": {
-            "renameDblclick": 24,
-            "renameTypeStart": 38,
+            "renameDblclick": 26,
+            "renameTypeStart": 40,
             "renameCommit": 63,
             "renamed": 65,
             "noteMenuOpen": 99,
-            "noteItemClick": 129,
-            "noteTypeStart": 143,
-            "noteTyped": 205,
-            "noteSave": 227,
-            "noteSaved": 231
+            "noteItemClick": 130,
+            "noteTypeStart": 144,
+            "noteTyped": 207,
+            "noteSave": 230,
+            "noteSaved": 236
         }
     }
 }

@@ -179,13 +179,17 @@ async function main() {
             await page.getByRole("button", { name: "Save", exact: true }).click();
             await page.waitForSelector('[aria-label="Edit tab note"]', { timeout: 5000 });
 
-            // --- scene 6 actions (unrecorded): search "slack", pick the Work result ---------------
+            // --- scene 6 actions (unrecorded): search "slack", pick the Work result, Clear search --
             await page.getByLabel("Open search").click();
             const sField = page.getByPlaceholder("Search tabs, groups…");
             await sField.waitFor({ state: "visible", timeout: 5000 });
             await sField.pressSequentially("slack", { delay: 20 });
             await page.locator(".fixed.z-50").getByText("Find your workspace", { exact: false }).first().click();
             await page.waitForFunction(() => document.querySelectorAll(".fixed.z-50").length === 0, undefined, { timeout: 5000, polling: 20 });
+            await page.waitForTimeout(400);
+            // the product keeps the query after a pick; scene 6 ends by clicking "Clear search"
+            await page.getByTestId("header-clear-search").click();
+            await page.waitForFunction(() => document.querySelector('[data-testid="header-clear-search"]') === null, undefined, { timeout: 5000, polling: 20 });
             await page.waitForTimeout(400);
         } finally {
             setPace(null);
@@ -202,6 +206,7 @@ async function main() {
         if (!/^2 Windows .* 7 Tabs$/.test(start.header ?? "") || !/Work2◆7/.test(rows) || !/Q4 Launch2◆3/.test(rows) || !/Now Open2◆10/.test(rows))
             throw new Error("[tour] the pre-roll did not reproduce scene 6 end state (Work open)");
         if ((await page.getByLabel("Cancel selection").count()) > 0) throw new Error("[tour] selection mode is still on");
+        if ((await page.getByTestId("header-clear-search").count()) > 0 || rows.split("|").length < 6) throw new Error("[tour] the search is not cleared (scene 6 end state)");
         if ((await page.getByPlaceholder("Add a note…").count()) > 0 || (await page.locator(".fixed.z-50").count()) > 0) throw new Error("[tour] an editor or overlay is open");
         
         const realWindows = () =>

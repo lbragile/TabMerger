@@ -226,6 +226,10 @@ async function main() {
             setPace(null);
         }
         await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+        // Scene 5 starts on Q4 Launch. If the drop's hover sprang Work open (it depends on how slowly the capture runs), go back to Q4 Launch.
+        if ((await page.getByText("Sprint Notes").count()) > 0) {
+            await click("backToQ4", page.locator("[data-sidebar-group-index]").filter({ has: page.getByText("Q4 Launch", { exact: true }) }).first());
+        }
         await glide(page, NEUTRAL.x, NEUTRAL.y);
         await page.waitForTimeout(HOLD_AT_END_MS);
 

@@ -35,3 +35,11 @@
 - [Feature tour organise scene (2026-10-09)](learnings_feature_tour_organise_tabs_2026_10_09.md) — replay prior scene unrecorded for a seamless cut, Ctrl-click = selection mode, 600ms spring-open limit, clip-path windows fade
 - [Tour final composition and audio](learnings_tour_final_composition_and_audio.md) — frozen-first-frame dissolves, poster intro, synthesised bed pipeline, ffmpeg/loudness and synthesis pitfalls
 - [Tour sound design only (2026-10-10)](learnings_tour_sound_design_only_2026_10_10.md) — SFX only, fixed gain not LUFS normalisation, md5 refactor proof, limiter finding, WAV/ffmpeg gotchas
+- [Tour scene 5 re-record (2026-11-08)](learnings_tour_scene5_rerecord_2026_11_08.md) — no fixes needed, duplicate frames under parallel load, md5 seam check between scenes
+- [Tour music bed + beat grid (2026-11-08)](learnings_tour_music_bed_and_beat_grid.md) — licensed track fetched not committed, start-offset beat alignment, F-major retune (diatonic chimes), gated-LUFS/limiter trade-off, pure beat-snap helper
+- [Tour scene 10: Pro AI auto-group (2026-11-08)](learnings_tour_ai_sort_scene_2026_11_08.md) — AI_MOCK recipe, throwaway pro_ai user, Auto-group applies instantly, shared-profile EPERM, closing-card backdrop
+- [Tour rebuild (2026-11-08)](learnings_tour_rebuild_2026_11_08.md) — demo build rejects http localhost env, shared .pw-user-data collisions, search pick leaves query set
+- [Tour scene 4 re-record under load (2026-11-08)](learnings_tour_organise_rerecord_2026_11_08.md) — slow capture springs Work open on the drop; recorder forces Q4 Launch view; frame-count variance
+- [Tour scenes 6/7: search kept after pick (2026-11-08)](learnings_tour_scene6_7_search_kept_2026_11_08.md) — recorders must click Clear search after the pick; ring overlay dropped; capture-rate md5 check under load
+- [Tour beat-snap wiring (2026-11-08)](learnings_tour_beat_snap_wiring_2026_11_08.md) — registry extras/maxShorten, ffmpeg frame extraction quirks, full ffmpeg needed for audio
+- [Tour scenes 8/9 re-record (2026-11-08)](learnings_tour_share_sync_rerecord_2026_11_08.md) — inline scene-6 replay needs Clear search, flaky Assets-rename check, sed pitfalls, still frame range

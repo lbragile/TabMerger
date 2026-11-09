@@ -249,6 +249,14 @@ async function main() {
             await page.locator(".fixed.z-50").getByText("Find your workspace", { exact: false }).first().click();
             await page.waitForFunction(() => document.querySelectorAll(".fixed.z-50").length === 0, undefined, { timeout: 5000, polling: 20 });
             await page.waitForTimeout(400);
+            // The product keeps the query after a pick: clear it with the header's "Clear search" button.
+            await page.getByTestId("header-clear-search").click();
+            await page.waitForFunction(
+                () => document.querySelector('[data-testid="header-clear-search"]') === null && document.querySelectorAll("[data-sidebar-group-index]").length === 6,
+                undefined,
+                { timeout: 5000, polling: 20 },
+            );
+            await page.waitForTimeout(400);
 
             // --- scene 7 actions (unrecorded): open Q4 Launch two saved windows in the browser ---
             await page.locator("[data-sidebar-group-index]").filter({ has: page.getByText("Q4 Launch", { exact: true }) }).first().click();

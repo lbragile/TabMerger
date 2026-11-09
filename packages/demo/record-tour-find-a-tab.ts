@@ -8,7 +8,8 @@
 // the GitHub tab. Only then does the frame grabber start and only scene 6 is recorded:
 // click the search field, type "slack", the results (across all groups) show with their group
 // names, and the result for the Slack tab that lives in Work is clicked, which switches the
-// popup to that group and clears the query. Event times are logged on the grabber clock.
+// popup to Work and reveals that tab (the query stays, the sidebar stays filtered); then the
+// header's "Clear search" button is clicked and the full sidebar is back. Event times are logged on the grabber clock.
 //
 // Output (gitignored with the rest of public/tour/):
 //   public/tour/frames/<theme>/find-a-tab/f-0001.jpg ...
@@ -40,7 +41,8 @@ const NEUTRAL = { x: 600, y: 500 };
 const QUERY = "slack";
 const TYPE_DELAY_MS = 85; // scene 3 typing pace for names
 const LEAD_IN_MS = 250;
-const HOLD_RESULTS_MS = 1500;
+const HOLD_RESULTS_MS = 1300;
+const HOLD_REVEAL_MS = 1300; // the filtered Work view with the revealed tab, before "Clear search"
 const HOLD_AT_END_MS = 1000;
 
 async function main() {
@@ -93,6 +95,16 @@ async function main() {
             const b = await l.boundingBox();
             if (!b) throw new Error("[tour] could not resolve an element box");
             return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+        };
+        /** Leave with a quick flick (a glide would sweep the pointer across rows). */
+        const flickTo = async (to: { x: number; y: number }) => {
+            const from = await page.evaluate(() => (window as unknown as { __tmLast?: { x: number; y: number } }).__tmLast);
+            const a = from ?? NEUTRAL;
+            for (let i = 1; i <= 3; i++) {
+                await page.mouse.move(a.x + ((to.x - a.x) * i) / 3, a.y + ((to.y - a.y) * i) / 3);
+                await page.waitForTimeout(16);
+            }
+            glide.setPos(to.x, to.y);
         };
         const afterDrag = async () => {
             const last = await page.evaluate(() => (window as unknown as { __tmLast?: { x: number; y: number } }).__tmLast);
@@ -233,15 +245,16 @@ async function main() {
         await click("resultClick", row);
         await page.waitForFunction(() => document.querySelectorAll(".fixed.z-50").length === 0, undefined, { timeout: 5000, polling: 20 });
         mark("overlayClosed");
-        // Leave with a quick flick to blank space (a glide would sweep the pointer across rows).
-        {
-            const from = await page.evaluate(() => (window as unknown as { __tmLast?: { x: number; y: number } }).__tmLast);
-            const a = from ?? NEUTRAL;
-            for (let i = 1; i <= 3; i++) {
-                await page.mouse.move(a.x + ((NEUTRAL.x - a.x) * i) / 3, a.y + ((NEUTRAL.y - a.y) * i) / 3);
-                await page.waitForTimeout(16);
-            }
-        }
+        // The product now keeps the query after a pick (sidebar stays filtered) and reveals the tab.
+        await flickTo(NEUTRAL);
+        await page.waitForTimeout(HOLD_REVEAL_MS);
+        // Clear the search with the header's own "Clear search" (x) button.
+        const clear = page.getByTestId("header-clear-search");
+        await clear.waitFor({ state: "visible", timeout: 5000 });
+        await click("clearClick", clear);
+        await page.waitForFunction(() => document.querySelector('[data-testid="header-clear-search"]') === null, undefined, { timeout: 5000, polling: 20 });
+        mark("searchCleared");
+        await flickTo(NEUTRAL);
         await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
         await page.waitForTimeout(HOLD_AT_END_MS);
 
@@ -249,6 +262,9 @@ async function main() {
         const caps = await grabber.stop();
         const end = await readPopup(page);
         console.log("[tour] popup at the end", JSON.stringify(end));
+        if (!/^2 Windows .* 7 Tabs$/.test(end.header ?? "") || !/Work2◆7/.test(end.rows.join("|")) || !/Q4 Launch2◆3/.test(end.rows.join("|")) || end.rows.length < 3)
+            throw new Error("[tour] scene 6 end state is wrong (expected Work 2/7, Q4 Launch 2/3, all groups visible)");
+        if ((await page.getByTestId("header-clear-search").count()) > 0 || (await page.getByLabel("Open search").innerText()).includes("slack")) throw new Error("[tour] the search is not cleared");
         console.log("[tour] search field text at the end:", JSON.stringify(await page.getByLabel("Open search").innerText()));
         console.log("[tour] windows at the end:", JSON.stringify(await windowTitles(page)));
         console.log("[tour] tabs shown at the end:", JSON.stringify(await page.evaluate(() => Array.from(document.querySelectorAll<HTMLElement>('[aria-label^="Drag to reorder tab"]')).map((n) => (n.getAttribute("aria-label") ?? "").replace("Drag to reorder tab: ", "").slice(0, 30)))));

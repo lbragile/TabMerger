@@ -120,7 +120,7 @@ export function RemotionRoot() {
                         key={`${scene.id}-${theme}`}
                         id={tourSceneCompositionId(scene.id, theme)}
                         component={TourSceneView}
-                        durationInFrames={scene.durationInFrames}
+                        durationInFrames={scene.baseDurationInFrames}
                         fps={TOUR_FPS}
                         width={TOUR_WIDTH}
                         height={TOUR_HEIGHT}

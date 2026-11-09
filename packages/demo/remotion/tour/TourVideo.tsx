@@ -17,12 +17,13 @@ import { TourThumbnail } from "./TourThumbnail";
 // TRANSITION_FRAMES (the fade-in) and its content starts at the cut; the next scene's fade-in begins
 // right after this scene's content ends. Total length: see getTourDurationInFrames in registry.ts.
 //
-// Audio: an optional synthesised background bed (public/tour/audio/tour-<theme>.wav, written by
-// generate-tour-audio.ts). The video is complete without it: pass the prop `audio: false` (see the
-// render:tour-*-silent scripts) or leave the file out and no <Audio> is rendered.
-const audioFile = (theme: string) => `tour/audio/tour-${theme}.wav`;
+// Audio: optional, written by generate-tour-audio.ts. `tour-<theme>-mix.wav` is the sound effects over the music bed;
+// `tour-<theme>.wav` is the effects only (used when the mix is missing or the prop `music: false` is passed). The video
+// is complete without any of it: pass `audio: false` (see the render:tour-*-silent scripts: no audio track at all) or
+// leave the files out and no <Audio> is rendered.
+const audioFile = (theme: string, music: boolean) => `tour/audio/tour-${theme}${music ? "-mix" : ""}.wav`;
 
-export function TourVideo({ theme = "dark", audio = true }: TourSceneProps & { audio?: boolean }) {
+export function TourVideo({ theme = "dark", audio = true, music = true }: TourSceneProps & { audio?: boolean; music?: boolean }) {
     const frame = useCurrentFrame();
     let cutFrame = TOUR_FIRST_CUT_FRAME; // where this scene's content starts
     let caption = "";
@@ -47,9 +48,17 @@ export function TourVideo({ theme = "dark", audio = true }: TourSceneProps & { a
                             <scene.Component theme={theme} />
                         </Freeze>
                     </Sequence>
-                    <Sequence from={TRANSITION_FRAMES}>
+                    <Sequence from={TRANSITION_FRAMES} durationInFrames={Math.min(scene.baseDurationInFrames, scene.durationInFrames)}>
                         <scene.Component theme={theme} />
                     </Sequence>
+                    {/* Beat snapping: a longer scene holds its last frame (a shorter one is simply cut at the end). */}
+                    {scene.extraFrames > 0 && (
+                        <Sequence from={TRANSITION_FRAMES + scene.baseDurationInFrames}>
+                            <Freeze frame={scene.baseDurationInFrames - 1}>
+                                <scene.Component theme={theme} />
+                            </Freeze>
+                        </Sequence>
+                    )}
                 </Fade>
             </Sequence>
         );
@@ -58,7 +67,8 @@ export function TourVideo({ theme = "dark", audio = true }: TourSceneProps & { a
     const barIn = Math.min(1, Math.max(0, (frame - TOUR_INTRO_HOLD_FRAMES) / TRANSITION_FRAMES));
     const barOut = noBarFrom === null || frame < noBarFrom ? 1 : 1 - Math.min(1, (frame - noBarFrom) / CAPTION_BAR_FADE_FRAMES);
     const barOpacity = barIn * barOut;
-    const hasAudio = audio && getStaticFiles().some((f) => f.name === audioFile(theme));
+    const files = getStaticFiles().map((f) => f.name);
+    const audioSrc = !audio ? null : music && files.includes(audioFile(theme, true)) ? audioFile(theme, true) : files.includes(audioFile(theme, false)) ? audioFile(theme, false) : null;
     return (
         <AbsoluteFill style={{ backgroundColor: THEME_COLORS[theme].bg }}>
             {/* The poster image, fully opaque from frame 0; scene 1 dissolves in over it. */}
@@ -67,7 +77,7 @@ export function TourVideo({ theme = "dark", audio = true }: TourSceneProps & { a
             </Sequence>
             {scenes}
             {barOpacity > 0 && <CaptionBar text={caption} {...(barOpacity < 1 ? { opacity: barOpacity } : {})} />}
-            {hasAudio && <Audio src={staticFile(audioFile(theme))} />}
+            {audioSrc && <Audio src={staticFile(audioSrc)} />}
         </AbsoluteFill>
     );
 }
