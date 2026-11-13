@@ -5,7 +5,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // GitHub's runners have 4 cores. One worker made this the slowest CI job (222 tests in 7.5 min).
+  // The specs only read pages and share one throwaway account that none of them change, so they
+  // can run side by side. Three workers leave a core for the dev server they all load pages from.
+  workers: process.env.CI ? 3 : undefined,
   // CI also sets PLAYWRIGHT_JUNIT_OUTPUT_NAME to write test results for Codecov's Tests tab.
   reporter: process.env.CI
     ? [['github'], ...(process.env.PLAYWRIGHT_JUNIT_OUTPUT_NAME ? [['junit'] as ['junit']] : [])]

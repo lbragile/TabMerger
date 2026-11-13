@@ -1,5 +1,17 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Locator, type Page } from '@playwright/test'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@tabmerger/shared'
+
+/**
+ * Opens the language menu; retries because a click before hydration does nothing. With several
+ * workers sharing one dev server, hydration can land after the first click.
+ */
+async function openLanguageMenu(page: Page, button: Locator) {
+  const menu = page.getByRole('menu')
+  await expect(async () => {
+    if (!(await menu.isVisible())) await button.click()
+    await expect(menu).toBeVisible({ timeout: 1000 })
+  }).toPass({ timeout: 15_000 })
+}
 
 /**
  * The header language picker: searching it and switching to a right-to-left language. The
@@ -12,7 +24,7 @@ test.describe('language switcher', () => {
 
   test('finds Hebrew by typing "heb", picks it with Enter, and lands on /he right to left', async ({ page }) => {
     await page.goto('/pricing')
-    await page.getByRole('button', { name: 'Language: English (EN)' }).click()
+    await openLanguageMenu(page, page.getByRole('button', { name: 'Language: English (EN)' }))
 
     const search = page.getByRole('searchbox', { name: 'Search languages by name or code' })
     await expect(search).toBeFocused()
@@ -29,7 +41,7 @@ test.describe('language switcher', () => {
 
   test('opens on /he with Hebrew, the checked language near the end of the list, in view', async ({ page }) => {
     await page.goto('/he/pricing')
-    await page.getByRole('button', { name: 'שפה: עברית (HE)' }).click()
+    await openLanguageMenu(page, page.getByRole('button', { name: 'שפה: עברית (HE)' }))
     await expect(page.getByRole('searchbox')).toBeFocused()
     const hebrew = page.getByRole('menuitemradio', { name: /^עברית/ })
     await expect(hebrew).toHaveAttribute('aria-checked', 'true')
@@ -47,7 +59,7 @@ test.describe('language switcher', () => {
     await page.setViewportSize({ width: 320, height: 700 })
     for (const locale of SUPPORTED_LOCALES) {
       await page.goto(locale === DEFAULT_LOCALE ? '/pricing' : `/${locale}/pricing`)
-      await page.locator('header button[aria-haspopup="menu"]').first().click()
+      await openLanguageMenu(page, page.locator('header button[aria-haspopup="menu"]').first())
       const search = page.getByRole('searchbox')
       await expect(search).toBeFocused()
       await expect(search).toHaveValue('')
@@ -73,7 +85,7 @@ test.describe('language switcher', () => {
   test('says when nothing matches, and the list scrolls within the screen', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 500 })
     await page.goto('/pricing')
-    await page.getByRole('button', { name: 'Language: English (EN)' }).click()
+    await openLanguageMenu(page, page.getByRole('button', { name: 'Language: English (EN)' }))
 
     // A short window: the menu stays on screen and its list scrolls.
     const menu = page.getByRole('menu')
@@ -91,9 +103,8 @@ test.describe('language switcher', () => {
     await page.goto('/pricing')
     const button = page.getByRole('button', { name: 'Language: English (EN)' })
     await expect(button).toBeVisible()
-    await button.click()
+    await openLanguageMenu(page, button)
     const menu = page.getByRole('menu')
-    await expect(menu).toBeVisible()
     const box = await menu.boundingBox()
     expect(box && box.x).toBeGreaterThanOrEqual(0)
     expect(box && box.x + box.width).toBeLessThanOrEqual(375)
