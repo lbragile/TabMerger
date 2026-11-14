@@ -1,0 +1,28 @@
+{
+  "day": {
+    "today": "Heute",
+    "yesterday": "Gestern"
+  },
+  "errors": {
+    "openFailed": "Diese Seite ließ sich nicht öffnen. Sie bleibt in der Liste.",
+    "changeFailed": "Die Liste geschlossener Tabs ließ sich nicht ändern. Versuche es erneut."
+  },
+  "settings": {
+    "title": "Geschlossene Tabs merken",
+    "purpose": "Tabs und Fenster, die du schließt, bleiben unter „Kürzlich geschlossen“, damit du sie wieder öffnen kannst. Nur auf diesem Gerät gespeichert. Private Fenster werden nie erfasst.",
+    "keptFor_one": "Dein Tarif behält sie {{count}} Tag",
+    "keptFor_other": "Dein Tarif behält sie {{count}} Tage",
+    "inList_one": "{{count}} in der Liste",
+    "inList_other": "{{count}} in der Liste",
+    "off": "Geschlossene Tabs merken ist aus.",
+    "clear": "Liste leeren",
+    "checkingPlan": "Tarif wird geprüft..."
+  },
+  "toast": {
+    "cleared_one": "{{count}} geschlossener Tab oder geschlossenes Fenster entfernt",
+    "cleared_other": "{{count}} geschlossene Tabs und Fenster entfernt",
+    "turnedOffCleared_one": "Ausgeschaltet · {{count}} geschlossener Tab oder geschlossenes Fenster entfernt",
+    "turnedOffCleared_other": "Ausgeschaltet · {{count}} geschlossene Tabs und Fenster entfernt",
+    "turnedOff": "Geschlossene Tabs werden nicht mehr gemerkt"
+  }
+}

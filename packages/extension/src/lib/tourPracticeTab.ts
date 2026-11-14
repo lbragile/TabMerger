@@ -1,3 +1,5 @@
+import { closeTabs } from '@/lib/closeLiveTabs';
+
 /**
  * The spare browser tab of the guided tour's "save a tab" step.
  *
@@ -77,7 +79,8 @@ export async function closeTourPracticeTab(tabId: number | null | undefined): Pr
   if (typeof tabId !== 'number') return;
   if (!(await isTourPracticeTabOpen(tabId))) return;
   try {
-    await chrome.tabs.remove(tabId);
+    // the tour's own page, never the user's: not a close to remember
+    await closeTabs(tabId, { record: false });
   } catch {
     // Already gone
   }

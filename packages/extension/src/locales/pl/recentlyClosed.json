@@ -1,0 +1,36 @@
+{
+  "day": {
+    "today": "Dzisiaj",
+    "yesterday": "Wczoraj"
+  },
+  "errors": {
+    "openFailed": "Nie udało się otworzyć tej strony. Zostaje na liście.",
+    "changeFailed": "Nie udało się zmienić listy zamkniętych kart. Spróbuj ponownie."
+  },
+  "settings": {
+    "title": "Zapamiętuj zamknięte karty",
+    "purpose": "Karty i okna, które zamykasz, zostają w sekcji Ostatnio zamknięte, żeby można je było otworzyć ponownie. Zapisywane tylko na tym urządzeniu. Okna prywatne nigdy nie są zapisywane.",
+    "keptFor_one": "Twój plan przechowuje je przez {{count}} dzień",
+    "keptFor_few": "Twój plan przechowuje je przez {{count}} dni",
+    "keptFor_many": "Twój plan przechowuje je przez {{count}} dni",
+    "keptFor_other": "Twój plan przechowuje je przez {{count}} dnia",
+    "inList_one": "{{count}} na liście",
+    "inList_few": "{{count}} na liście",
+    "inList_many": "{{count}} na liście",
+    "inList_other": "{{count}} na liście",
+    "off": "Zapamiętywanie zamkniętych kart jest wyłączone.",
+    "clear": "Wyczyść listę",
+    "checkingPlan": "Sprawdzanie planu..."
+  },
+  "toast": {
+    "cleared_one": "Usunięto {{count}} zamkniętą kartę lub okno",
+    "cleared_few": "Usunięto {{count}} zamknięte karty i okna",
+    "cleared_many": "Usunięto {{count}} zamkniętych kart i okien",
+    "cleared_other": "Usunięto {{count}} zamkniętych kart i okien",
+    "turnedOffCleared_one": "Wyłączono · usunięto {{count}} zamkniętą kartę lub okno",
+    "turnedOffCleared_few": "Wyłączono · usunięto {{count}} zamknięte karty i okna",
+    "turnedOffCleared_many": "Wyłączono · usunięto {{count}} zamkniętych kart i okien",
+    "turnedOffCleared_other": "Wyłączono · usunięto {{count}} zamkniętych kart i okien",
+    "turnedOff": "Zamknięte karty nie są już zapamiętywane"
+  }
+}

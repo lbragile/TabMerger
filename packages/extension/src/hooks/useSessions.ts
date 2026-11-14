@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isOpenableUrl } from '@/lib/safeOpen';
+import { closeWindows } from '@/lib/closeLiveTabs';
 import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
 import { FREE_TIER_LIMITS, isTourDemoGroup } from '@tabmerger/shared';
@@ -126,7 +127,8 @@ export function useRestoreSession() {
     onSuccess: () => { trackEvent('session_restored'); },
     mutationFn: async (session: Session) => {
       const windows = await chrome.windows.getAll();
-      await Promise.all(windows.map((w) => chrome.windows.remove(w.id!)));
+      // Restoring replaces the open windows WITHOUT saving them: "Recently closed" remembers them
+      await closeWindows(windows.map((w) => w.id!), { record: true });
       for (const group of session.groups) {
         for (const win of group.windows) {
           const tabs = win.tabs.filter((t) => isOpenableUrl(t.url));

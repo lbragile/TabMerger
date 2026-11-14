@@ -1,0 +1,24 @@
+{
+  "day": {
+    "today": "Hari ini",
+    "yesterday": "Kemarin"
+  },
+  "errors": {
+    "openFailed": "Halaman ini tidak bisa dibuka. Halaman tetap ada di daftar.",
+    "changeFailed": "Daftar tab yang ditutup tidak bisa diubah. Coba lagi."
+  },
+  "settings": {
+    "title": "Ingat tab yang ditutup",
+    "purpose": "Tab dan jendela yang Anda tutup tetap ada di Baru ditutup, jadi Anda bisa membukanya lagi. Hanya disimpan di perangkat ini. Jendela pribadi tidak pernah dicatat.",
+    "keptFor_other": "Paket Anda menyimpannya selama {{count}} hari",
+    "inList_other": "{{count}} di daftar",
+    "off": "Mengingat tab yang ditutup nonaktif.",
+    "clear": "Kosongkan daftar",
+    "checkingPlan": "Memeriksa paket Anda..."
+  },
+  "toast": {
+    "cleared_other": "{{count}} tab dan jendela yang ditutup dihapus",
+    "turnedOffCleared_other": "Dinonaktifkan · {{count}} tab dan jendela yang ditutup dihapus",
+    "turnedOff": "Tab yang ditutup tidak lagi diingat"
+  }
+}

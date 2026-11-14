@@ -14,6 +14,7 @@ import {
   DEFAULT_BACKUP_FILE_PATTERN,
   DEFAULT_SEARCH_NON_MATCHING,
   DEFAULT_AI_MODEL_CHOICE,
+  DEFAULT_REMEMBER_CLOSED_TABS,
   type AiModelChoice,
   type AutoBackupIntervalMinutes,
   type SearchNonMatching
@@ -57,6 +58,12 @@ export interface AppSettings {
   autoSaveIntervalMinutes: AutoSaveIntervalMinutes;
   autoSaveTabThreshold: AutoSaveTabThreshold;
   autoSaveNotify: boolean;
+  /**
+   * "Remember closed tabs" (Settings → Data). Device-local like every setting here (settings are
+   * never synced). Settings saved before it existed lack it: read through `readRememberClosedTabs`
+   * (lib/recentlyClosed.ts), where only an explicit `false` is off.
+   */
+  rememberClosedTabs: boolean;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -85,7 +92,8 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   // no `autoSaveTabsEnabled`: absent = the plan's default
   autoSaveIntervalMinutes: DEFAULT_AUTO_SAVE_INTERVAL_MINUTES,
   autoSaveTabThreshold: DEFAULT_AUTO_SAVE_TAB_THRESHOLD,
-  autoSaveNotify: DEFAULT_AUTO_SAVE_NOTIFY
+  autoSaveNotify: DEFAULT_AUTO_SAVE_NOTIFY,
+  rememberClosedTabs: DEFAULT_REMEMBER_CLOSED_TABS
 };
 
 /**

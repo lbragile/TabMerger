@@ -5,6 +5,6 @@ import { getDb } from '@/lib/localDb'
 export async function clearDb(): Promise<void> {
   const db = await getDb()
   await Promise.all(
-    (['groups', 'groupsState', 'sessions', 'settings'] as const).map((store) => db.clear(store))
+    (['groups', 'groupsState', 'sessions', 'settings', 'recentlyClosed'] as const).map((store) => db.clear(store))
   )
 }

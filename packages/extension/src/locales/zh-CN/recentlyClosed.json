@@ -1,0 +1,24 @@
+{
+  "day": {
+    "today": "今天",
+    "yesterday": "昨天"
+  },
+  "errors": {
+    "openFailed": "无法打开此页面。它会保留在列表中。",
+    "changeFailed": "无法更改已关闭标签页列表。请重试。"
+  },
+  "settings": {
+    "title": "记住关闭的标签页",
+    "purpose": "你关闭的标签页和窗口会保留在“最近关闭”中，方便你重新打开。仅保存在此设备上。隐私窗口永远不会被记录。",
+    "keptFor_other": "你的套餐会保留 {{count}} 天",
+    "inList_other": "列表中有 {{count}} 项",
+    "off": "记住关闭的标签页已关闭。",
+    "clear": "清空列表",
+    "checkingPlan": "正在检查你的套餐..."
+  },
+  "toast": {
+    "cleared_other": "已清除 {{count}} 个关闭的标签页和窗口",
+    "turnedOffCleared_other": "已关闭 · 已清除 {{count}} 个关闭的标签页和窗口",
+    "turnedOff": "不再记住关闭的标签页"
+  }
+}

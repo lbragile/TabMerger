@@ -1,0 +1,32 @@
+{
+  "day": {
+    "today": "Oggi",
+    "yesterday": "Ieri"
+  },
+  "errors": {
+    "openFailed": "Impossibile aprire questa pagina. Resta nell'elenco.",
+    "changeFailed": "Impossibile modificare l'elenco delle schede chiuse. Riprova."
+  },
+  "settings": {
+    "title": "Ricorda le schede chiuse",
+    "purpose": "Le schede e le finestre che chiudi restano in Chiuse di recente, così puoi riaprirle. Salvate solo su questo dispositivo. Le finestre private non vengono mai registrate.",
+    "keptFor_one": "Il tuo piano le conserva per {{count}} giorno",
+    "keptFor_many": "Il tuo piano le conserva per {{count}} giorni",
+    "keptFor_other": "Il tuo piano le conserva per {{count}} giorni",
+    "inList_one": "{{count}} nell'elenco",
+    "inList_many": "{{count}} nell'elenco",
+    "inList_other": "{{count}} nell'elenco",
+    "off": "Ricorda le schede chiuse è disattivato.",
+    "clear": "Svuota elenco",
+    "checkingPlan": "Verifica del piano..."
+  },
+  "toast": {
+    "cleared_one": "Cancellata {{count}} scheda o finestra chiusa",
+    "cleared_many": "Cancellate {{count}} schede e finestre chiuse",
+    "cleared_other": "Cancellate {{count}} schede e finestre chiuse",
+    "turnedOffCleared_one": "Disattivato · cancellata {{count}} scheda o finestra chiusa",
+    "turnedOffCleared_many": "Disattivato · cancellate {{count}} schede e finestre chiuse",
+    "turnedOffCleared_other": "Disattivato · cancellate {{count}} schede e finestre chiuse",
+    "turnedOff": "Le schede chiuse non vengono più ricordate"
+  }
+}

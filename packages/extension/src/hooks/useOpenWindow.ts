@@ -1,5 +1,6 @@
 import type { Window as ExtWindow } from '@/lib/types';
 import { isOpenableUrl } from '@/lib/safeOpen';
+import { closeTabs } from '@/lib/closeLiveTabs';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { resolveIncognito } from '@/lib/incognito';
 import { TOUR_SIGNALS, isTourOpenBlocked } from '@/lib/tourSandbox';
@@ -52,7 +53,8 @@ export function useOpenWindow() {
 
       // Remove the blank tab Chrome creates automatically with a new window
       if (blankTabId !== undefined) {
-        await chrome.tabs.remove(blankTabId);
+        // the browser's own blank tab, never the user's: not a close to remember
+        await closeTabs(blankTabId, { record: false });
       }
     }
   };

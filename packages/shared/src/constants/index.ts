@@ -11,6 +11,16 @@ export const DEFAULT_WINDOW_TITLE = 'Window';
 /** What the Free plan allows. The single source for enforcement, pricing copy and upgrade prompts. */
 export const FREE_TIER_LIMITS = { groups: 5, tabs: 50, urlRules: 3, sessions: 3 } as const;
 
+/**
+ * How long "Recently closed tabs" keeps entries, per plan (local-only data: the client limits are
+ * all the enforcement it needs). An entry is one closed tab or one closed window. Free limits apply
+ * only when the plan is KNOWN to be Free; an unknown plan (offline, failed check) keeps the Pro ones.
+ */
+export const RECENTLY_CLOSED_LIMITS = {
+  free: { entries: 50, days: 7 },
+  pro: { entries: 1000, days: 30 },
+} as const;
+
 /** Paid plans have no caps. */
 export const UNLIMITED_TIER_LIMITS = { groups: Infinity, tabs: Infinity, urlRules: Infinity, sessions: Infinity } as const;
 
@@ -70,6 +80,15 @@ export const PRESET_COLORS = [
   'rgba(107, 114, 128, 1)', // gray
   'rgba(15, 23, 42, 1)',    // slate dark
 ] as const;
+
+/** The two neutral presets: too alike to tell auto-generated items apart, so never picked for one. */
+const NEUTRAL_PRESET_COLORS: readonly string[] = ['rgba(107, 114, 128, 1)', 'rgba(15, 23, 42, 1)'];
+
+/**
+ * The colours auto-generated items get (auto-saved groups, recently-closed days), so several of
+ * them are easy to tell apart: {@link PRESET_COLORS} without gray and slate dark (10 colours).
+ */
+export const AUTO_ITEM_COLORS: readonly string[] = PRESET_COLORS.filter((c) => !NEUTRAL_PRESET_COLORS.includes(c));
 
 /**
  * The yearly discount every paid option advertises. Each yearly price is set so its real saving
@@ -172,6 +191,7 @@ export * from './localeSearch';
 export * from './analyticsEvents';
 export * from './extensionLifecycle';
 export * from './ai';
+export * from './recentlyClosed';
 
 /** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
 export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

@@ -1,0 +1,28 @@
+{
+  "day": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  },
+  "errors": {
+    "openFailed": "Couldn't open this page. It stays in the list.",
+    "changeFailed": "Couldn't change the list of closed tabs. Try again."
+  },
+  "settings": {
+    "title": "Remember closed tabs",
+    "purpose": "Tabs and windows you close stay in Recently closed, so you can reopen them. Stored only on this device. Private windows are never recorded.",
+    "keptFor_one": "Your plan keeps them for {{count}} day",
+    "keptFor_other": "Your plan keeps them for {{count}} days",
+    "inList_one": "{{count}} in the list",
+    "inList_other": "{{count}} in the list",
+    "off": "Remembering closed tabs is off.",
+    "clear": "Clear list",
+    "checkingPlan": "Checking your plan..."
+  },
+  "toast": {
+    "cleared_one": "Cleared {{count}} closed tab or window",
+    "cleared_other": "Cleared {{count}} closed tabs and windows",
+    "turnedOffCleared_one": "Turned off · cleared {{count}} closed tab or window",
+    "turnedOffCleared_other": "Turned off · cleared {{count}} closed tabs and windows",
+    "turnedOff": "Stopped remembering closed tabs"
+  }
+}
