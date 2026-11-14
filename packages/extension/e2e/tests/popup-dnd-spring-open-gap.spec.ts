@@ -118,7 +118,7 @@ const gapProbe = (cdp: RawCdp) =>
 const tabsOf = (cdp: RawCdp, id: string) =>
   cdp.evaluate<string[][]>(
     `new Promise(resolve => {
-       const req = indexedDB.open('tabmerger', 1);
+       const req = indexedDB.open('tabmerger');
        req.onsuccess = () => {
          const tx = req.result.transaction('groups', 'readonly');
          tx.objectStore('groups').get('${id}').onsuccess = (e) => {

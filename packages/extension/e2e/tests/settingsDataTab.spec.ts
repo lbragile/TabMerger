@@ -4,7 +4,7 @@ import { openPopup, seedAndReload, signInAsPro } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
 
 /**
- * Settings → Data layout: four titled sections in a fixed order (auto-save, backups, import &
+ * Settings → Data layout: five titled sections in a fixed order (auto-save, backups, remember closed tabs, import &
  * export, danger zone), nothing wider than the 800x600 popup, and a feature's options box that
  * is only on screen while its switch is on.
  */
@@ -15,7 +15,7 @@ async function openDataTab(page: Page): Promise<void> {
   await page.getByRole('tab', { name: /^data$/i }).click();
 }
 
-const HEADINGS = ['Auto-save open tabs', 'Backups', 'Import & export', 'Danger zone'];
+const HEADINGS = ['Auto-save open tabs', 'Backups', 'Remember closed tabs', 'Import & export', 'Danger zone'];
 
 async function expectLayout(page: Page): Promise<void> {
   const panel = page.getByRole('tabpanel');
@@ -33,7 +33,7 @@ async function expectLayout(page: Page): Promise<void> {
 }
 
 test.describe('Settings → Data tab layout', () => {
-  test('Free: four sections in order, no horizontal overflow, auto-save options only while on', async ({ context, extensionId }) => {
+  test('Free: five sections in order, no horizontal overflow, auto-save options only while on', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
     await openDataTab(page);

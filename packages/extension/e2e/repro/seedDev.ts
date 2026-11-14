@@ -183,7 +183,7 @@ async function writeSeed(
   return page.evaluate(
     async ({ saved, wipe }) => {
       const DB_NAME = 'tabmerger';
-      const DB_VERSION = 1;
+      const DB_VERSION = 2;
 
       const db: IDBDatabase = await new Promise((resolve, reject) => {
         const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -204,6 +204,8 @@ async function writeSeed(
           }
           if (!d.objectStoreNames.contains('settings'))
             d.createObjectStore('settings', { keyPath: 'id' });
+          if (!d.objectStoreNames.contains('recentlyClosed'))
+            d.createObjectStore('recentlyClosed', { keyPath: 'id' }).createIndex('closedAt', 'closedAt');
         };
       });
 
@@ -375,7 +377,7 @@ test('seed dev extension for manual DnD click-around', async () => {
   const names = await popupPage!.evaluate(
     () =>
       new Promise<string[]>((resolve) => {
-        const req = indexedDB.open('tabmerger', 1);
+        const req = indexedDB.open('tabmerger');
         req.onsuccess = () => {
           const tx = req.result.transaction('groups', 'readonly');
           tx.objectStore('groups').getAll().onsuccess = (e) => {

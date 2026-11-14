@@ -146,7 +146,7 @@ test.describe('DnD inside the real MV3 action popup', () => {
           () =>
             cdp.evaluate<string[]>(
               `new Promise(resolve => {
-                 const req = indexedDB.open('tabmerger', 1);
+                 const req = indexedDB.open('tabmerger');
                  req.onsuccess = () => {
                    const tx = req.result.transaction('groups', 'readonly');
                    tx.objectStore('groups').get('work').onsuccess = (e) => {
@@ -329,7 +329,7 @@ test('spring-open: a WINDOW dropped onto another group\'s window row (after dwel
           () =>
             cdp.evaluate<string[][]>(
               `new Promise(resolve => {
-                 const req = indexedDB.open('tabmerger', 1);
+                 const req = indexedDB.open('tabmerger');
                  req.onsuccess = () => {
                    const tx = req.result.transaction('groups', 'readonly');
                    tx.objectStore('groups').get('play').onsuccess = (e) => {
@@ -345,7 +345,7 @@ test('spring-open: a WINDOW dropped onto another group\'s window row (after dwel
 
       const workAfter = await cdp.evaluate<string[][]>(
         `new Promise(resolve => {
-           const req = indexedDB.open('tabmerger', 1);
+           const req = indexedDB.open('tabmerger');
            req.onsuccess = () => {
              const tx = req.result.transaction('groups', 'readonly');
              tx.objectStore('groups').get('work').onsuccess = (e) => {
