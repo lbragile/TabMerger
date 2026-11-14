@@ -192,7 +192,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
 
   return (
     <div
-      className="flex flex-col h-full shrink-0 bg-zone-sidebar"
+      className="tm-sidebar flex flex-col h-full shrink-0 bg-zone-sidebar"
       style={{ width: 240, minWidth: 240, borderInlineEnd: '1px solid var(--zone-sidebar-border)' }}
     >
       {/* Groups list */}

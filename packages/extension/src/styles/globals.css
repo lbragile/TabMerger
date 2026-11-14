@@ -66,7 +66,7 @@
        Dark-mode values are overridden in .dark below. */
     --sidebar-text-active: #111827;      /* ~18:1 contrast on light sidebar — active group name */
     --sidebar-text-inactive: #374151;    /* ~11:1 contrast — inactive group name */
-    --sidebar-text-muted: #6B7280;       /* ~5.5:1 contrast — badge counts, footer */
+    --sidebar-text-muted: #4B5563;       /* badge counts, footer: 7.1:1 plain, 4.6:1 on a badge on the current row */
     --sidebar-text-subtle: #767C88;      /* ~3.6:1 contrast — drag handle / unstarred star (WCAG AA 3:1 for UI components) */
     --star-active: #B45309;              /* amber-700 — starred icon on light sidebar (~4.5:1, WCAG AA) */
 
@@ -87,12 +87,12 @@
     /* Sidebar text — WCAG AA compliant on the #16181D sidebar background */
     --sidebar-text-active: #FFFFFF;      /* 21:1 contrast — active group name */
     --sidebar-text-inactive: #C4C7CC;    /* ~10:1 contrast — inactive group name */
-    --sidebar-text-muted: #9CA3AF;       /* ~7:1  contrast — badge counts, footer */
+    --sidebar-text-muted: #B8BEC8;       /* badge counts, footer: 9.5:1 plain, 4.6:1 on a badge on the current row */
     --sidebar-text-subtle: #8B919A;      /* ~5.5:1 contrast — drag handle / unstarred star */
     --star-active: #FBBF24;             /* yellow-400 — starred icon on dark sidebar (~11:1, WCAG AA) */
     --zone-sidebar-border: rgba(255,255,255,0.08);
     --sidebar-hover-bg: rgba(255,255,255,0.07);
-    --sidebar-current-bg: rgba(255,255,255,0.16);
+    --sidebar-current-bg: rgba(255,255,255,0.14); /* twice hover; 0.16 left muted text under 4.5:1 */
     --sidebar-badge-bg: rgba(255,255,255,0.1);
     --sidebar-accent-filter: brightness(1.5);
     --foreground: 0 0% 98%;
@@ -120,6 +120,15 @@
 }
 
 @layer base {
+  /* The sidebar (SidePanel root): its rows add hover, current and badge tints on top of the zone
+     colour, so its muted text is darker (light) / lighter (dark) than elsewhere, keeping 10px detail
+     lines at 4.5:1 or more on plain, hover and current rows (light 7.1 / 6.3 / 5.4; dark 8.6 / 7.1 / 5.7). */
+  .tm-sidebar {
+    --muted-foreground: 240 3.8% 34%;
+  }
+  .dark .tm-sidebar {
+    --muted-foreground: 240 5% 72%;
+  }
   * {
     @apply border-border;
   }

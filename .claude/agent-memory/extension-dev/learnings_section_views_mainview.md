@@ -48,6 +48,11 @@ Accessibility pass (after an accessibility-auditor review):
   (`sidebarRowDetailClass` -> `--sidebar-text-inactive`). `--sidebar-current-bg` (0.12 black light,
   0.16 white dark) is shared by group rows and section rows; on section rows it also needs a
   `hover:` copy or the hover class wins.
+- Sidebar muted text is scoped: `.tm-sidebar` (SidePanel root) overrides `--muted-foreground`
+  (light 34%, dark 72%) and `--sidebar-text-muted` is darker/lighter, so 10px lines and badge counts
+  stay >= 4.5:1 on plain, hover, current and badge-on-current backgrounds. Dark `--sidebar-current-bg`
+  is 0.14 (0.16 dropped muted text under 4.5). `__tests__/unit/styles/sidebarContrast.test.ts` reads
+  the tokens from globals.css and computes the ratios, so a token change that breaks it fails a test.
 - "◆" in translated meta strings: `SeparatedText` splits on it into aria-hidden spans; tests then
   need a matcher on the whole `<p>`'s textContent (getByText only reads an element's own text nodes).
 
