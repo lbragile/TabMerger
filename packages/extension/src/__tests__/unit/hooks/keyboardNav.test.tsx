@@ -210,3 +210,38 @@ describe('focus ring', () => {
     expect(result.current.focusedGroupIndex).toBe(1)
   })
 })
+
+describe('useKeyboardNav — while a read-only view (archived group, session) is open', () => {
+  const arrow = (key: 'ArrowDown' | 'ArrowUp') =>
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key, code: key, bubbles: true, cancelable: true }))
+    })
+  afterEach(() => {
+    useUIStore.setState({ mainView: { kind: 'group' }, mainViewReturnGroupId: null })
+    document.body.innerHTML = ''
+  })
+
+  it('Up/Down from anything but a group row neither switch groups nor close the view', () => {
+    useUIStore.setState({ activeGroupIndex: 1, mainView: { kind: 'archived', groupId: 'x' } })
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    const opener = document.createElement('button')
+    opener.setAttribute('data-archived-open', 'x')
+    document.body.appendChild(opener)
+    opener.focus()
+    arrow('ArrowDown')
+    arrow('ArrowUp')
+    expect(useUIStore.getState()).toMatchObject({ activeGroupIndex: 1, mainView: { kind: 'archived', groupId: 'x' } })
+  })
+
+  it('from a group row they still switch groups (and so close the view)', () => {
+    useUIStore.setState({ activeGroupIndex: 1, mainView: { kind: 'session', sessionId: 's' } })
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    const row = document.createElement('div')
+    row.tabIndex = 0
+    row.setAttribute('data-sidebar-group-index', '1')
+    document.body.appendChild(row)
+    row.focus()
+    arrow('ArrowDown')
+    expect(useUIStore.getState()).toMatchObject({ activeGroupIndex: 2, mainView: { kind: 'group' } })
+  })
+})

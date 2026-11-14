@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Group, Session } from '@/lib/types';
 import { formatDateTime } from '@/lib/i18n';
@@ -5,7 +6,10 @@ import { formatGroupCounts, getGroupTabCount, getSessionCounts } from '@/lib/uti
 import { useUIStore } from '@/stores/uiStore';
 import { useDeleteSession } from '@/hooks/useSessions';
 import { useConfirmedRestoreSession } from '@/hooks/useConfirmedRestoreSession';
+import { announceSectionView } from '@/lib/sectionViewStatus';
+import { handleReadOnlyListKeyDown } from '@/lib/readOnlyListKeys';
 import { SectionViewHeader } from './SectionViewHeader';
+import { SeparatedText } from './SeparatedText';
 import { ReadOnlyWindows } from './ReadOnlyWindows';
 
 /** When a session was saved: "Nov 10, 6:22 PM", with the year when it isn't this year. */
@@ -25,6 +29,7 @@ export function SessionView({ session, groups }: { session: Session; groups: rea
   const { mutate: deleteSession } = useDeleteSession();
   const { restore, restoring, confirmDialog } = useConfirmedRestoreSession();
   const { tabs } = getSessionCounts(session);
+  const baseId = useId();
 
   return (
     <div className="flex h-full min-w-0 flex-col overflow-hidden" data-testid="session-view">
@@ -37,26 +42,33 @@ export function SessionView({ session, groups }: { session: Session; groups: rea
         })}
         description={session.description}
         primaryLabel={t('sidePanel.restoreSession')}
-        onPrimary={() => restore(session, () => closeMainView(groups))}
+        onPrimary={() =>
+          restore(session, () => {
+            closeMainView(groups);
+            announceSectionView(t('sidePanel.view.restored', { name: session.name }));
+          })
+        }
         primaryDisabled={restoring}
         deleteLabel={t('sidePanel.deleteSession')}
-        onDelete={() => deleteSession(session.id)}
+        onDelete={() => deleteSession(session.id, { onSuccess: () => announceSectionView(t('sidePanel.view.deleted', { name: session.name })) })}
         onClose={() => closeMainView(groups)}
         banner={t('sidePanel.view.sessionBanner')}
       />
-      <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-2">
+      {/* One arrow-key list across every group's tabs */}
+      <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-2" onKeyDown={handleReadOnlyListKeyDown}>
         {session.groups.length === 0 && <p className="py-4 text-center text-xs text-muted-foreground">{t('sidePanel.view.sessionEmpty')}</p>}
-        {session.groups.map((group) => (
-          <section
+        {session.groups.map((group, groupIndex) => (
+          <div
             key={group.id}
-            aria-label={group.name}
+            role="group"
+            aria-labelledby={`${baseId}-g${groupIndex}`}
             className="mb-3 min-w-0 ps-2"
             style={{ borderInlineStart: `3px solid ${group.color}` }}
           >
-            <h3 dir="auto" className="truncate text-xs font-semibold text-ui-start" title={group.name}>{group.name}</h3>
-            <p className="mb-1 text-[10px] text-muted-foreground">{formatGroupCounts(group.windows.length, getGroupTabCount(group))}</p>
-            <ReadOnlyWindows windows={group.windows} />
-          </section>
+            <h3 id={`${baseId}-g${groupIndex}`} dir="auto" className="truncate text-xs font-semibold text-ui-start" title={group.name}>{group.name}</h3>
+            <p className="mb-1 text-[10px] text-muted-foreground"><SeparatedText text={formatGroupCounts(group.windows.length, getGroupTabCount(group))} /></p>
+            <ReadOnlyWindows windows={group.windows} headingLevel={4} ownArrowKeys={false} />
+          </div>
         ))}
       </div>
       {confirmDialog}

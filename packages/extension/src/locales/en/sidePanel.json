@@ -49,6 +49,10 @@
     "restore": "Restore",
     "sessionMeta": "Session ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "A snapshot of your groups. Looking doesn't change anything; Restore session brings these groups back.",
-    "sessionEmpty": "This session has no groups."
+    "sessionEmpty": "This session has no groups.",
+    "showingArchived": "Showing archived group {{name}}, read-only",
+    "showingSession": "Showing session {{name}}, read-only",
+    "restored": "Restored {{name}}",
+    "deleted": "Deleted {{name}}"
   }
 }

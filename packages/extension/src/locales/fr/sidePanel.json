@@ -49,6 +49,10 @@
     "restore": "Restaurer",
     "sessionMeta": "Session ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "Un instantané de vos groupes. Le consulter ne change rien ; « Restaurer la session » ramène ces groupes.",
-    "sessionEmpty": "Cette session ne contient aucun groupe."
+    "sessionEmpty": "Cette session ne contient aucun groupe.",
+    "showingArchived": "Affichage du groupe archivé {{name}}, lecture seule",
+    "showingSession": "Affichage de la session {{name}}, lecture seule",
+    "restored": "{{name}} restauré",
+    "deleted": "{{name}} supprimé"
   }
 }

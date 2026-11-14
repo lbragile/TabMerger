@@ -49,6 +49,10 @@
     "restore": "復元",
     "sessionMeta": "セッション ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "グループのスナップショットです。表示しても何も変わりません。「セッションを復元」でこれらのグループを元に戻せます。",
-    "sessionEmpty": "このセッションにはグループがありません。"
+    "sessionEmpty": "このセッションにはグループがありません。",
+    "showingArchived": "アーカイブ済みグループ「{{name}}」を表示中（読み取り専用）",
+    "showingSession": "セッション「{{name}}」を表示中（読み取り専用）",
+    "restored": "「{{name}}」を復元しました",
+    "deleted": "「{{name}}」を削除しました"
   }
 }

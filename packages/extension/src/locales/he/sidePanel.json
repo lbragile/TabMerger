@@ -49,6 +49,10 @@
     "restore": "שחזור",
     "sessionMeta": "סשן ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "תמונת מצב של הקבוצות שלך. הצפייה לא משנה דבר; \"שחזור הסשן\" מחזיר את הקבוצות האלה.",
-    "sessionEmpty": "אין קבוצות בסשן הזה."
+    "sessionEmpty": "אין קבוצות בסשן הזה.",
+    "showingArchived": "מוצגת הקבוצה בארכיון {{name}}, קריאה בלבד",
+    "showingSession": "מוצג הסשן {{name}}, קריאה בלבד",
+    "restored": "{{name}} שוחזר",
+    "deleted": "{{name}} נמחק"
   }
 }

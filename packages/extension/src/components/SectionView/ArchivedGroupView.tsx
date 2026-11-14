@@ -4,6 +4,7 @@ import { formatTimeAgo } from '@/lib/i18n';
 import { formatGroupCounts, getGroupTabCount } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useDeleteGroup, useRestoreGroup } from '@/hooks/useGroups';
+import { announceSectionView } from '@/lib/sectionViewStatus';
 import { SectionViewHeader } from './SectionViewHeader';
 import { ReadOnlyWindows } from './ReadOnlyWindows';
 
@@ -25,6 +26,7 @@ export function ArchivedGroupView({ group, groupIndex, groups }: { group: Group;
         // Show the restored group (found by id: positions can move while the write runs)
         const at = next?.available.findIndex((g) => g.id === group.id) ?? -1;
         if (at >= 0) setActiveGroupIndex(at);
+        announceSectionView(t('sidePanel.view.restored', { name: group.name }));
       }
     });
 
@@ -38,12 +40,12 @@ export function ArchivedGroupView({ group, groupIndex, groups }: { group: Group;
         onPrimary={restore}
         primaryDisabled={restoring}
         deleteLabel={t('sidePanel.deleteGroup')}
-        onDelete={() => deleteGroup(groupIndex)}
+        onDelete={() => deleteGroup(groupIndex, { onSuccess: () => announceSectionView(t('sidePanel.view.deleted', { name: group.name })) })}
         onClose={() => closeMainView(groups)}
         banner={t('sidePanel.view.archivedBanner', { time: formatTimeAgo(group.updatedAt) })}
       />
       <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-2">
-        <ReadOnlyWindows windows={group.windows} />
+        <ReadOnlyWindows windows={group.windows} headingLevel={3} />
       </div>
     </div>
   );

@@ -265,8 +265,11 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         background:
           isSelected
             ? 'rgba(0, 180, 204, 0.15)'
-            : isActive || contextMenuOpen
-            ? 'rgba(255,255,255,0.12)'
+            : isActive
+            // the row the main panel shows: the same current background as the section rows
+            ? 'var(--sidebar-current-bg)'
+            : contextMenuOpen
+            ? 'var(--sidebar-hover-bg)'
             : undefined,
         borderInlineStart: isActive ? `3px solid ${displayColor}` : '3px solid transparent',
         // --sidebar-text-active: ≈14.5:1 (light) / 14:1 (dark) against the selected tint.

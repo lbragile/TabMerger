@@ -15,7 +15,7 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAutoSaveNow } from '@/hooks/useAutoSave';
 import { showAutoSaveKeptToast, useAutoSaveIntroToast, useAutoSavePromotionToast } from '@/hooks/useAutoSaveToasts';
 import { toast } from '@/lib/toast';
-import { SIDEBAR_FOCUS_RING, SIDEBAR_ICON_BUTTON, SIDEBAR_ROW, SIDEBAR_ROW_ACTIVE, SidebarSection, sidebarRowNameClass } from './SidebarSection';
+import { SIDEBAR_FOCUS_RING, SIDEBAR_ICON_BUTTON, SIDEBAR_ROW, SIDEBAR_ROW_ACTIVE, SidebarSection, sidebarRowDetailClass, sidebarRowNameClass } from './SidebarSection';
 
 /**
  * The "Auto-saved" sidebar section (above Archived and Sessions): groups "Auto-save open tabs"
@@ -135,11 +135,12 @@ export function AutoSavedSection({ groupsState }: { groupsState: GroupsState }) 
                   aria-label={t('autoSave.sidebar.open', { name: group.name })}
                   aria-describedby={`${detailId} ${detailId}-counts`}
                   aria-current={isActive ? 'page' : undefined}
+                  aria-disabled={selectionMode || undefined}
                   data-auto-save-open={group.id}
                   onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
                 >
                   <span dir="auto" className={cn('block truncate text-[11px] text-ui-start', sidebarRowNameClass(isActive))}>{group.name}</span>
-                  <span id={detailId} className={cn('block truncate text-[0.625rem]', replacedNext ? 'font-medium text-foreground' : 'text-muted-foreground')}>
+                  <span id={detailId} className={cn('block truncate', replacedNext ? 'text-[0.625rem] font-medium text-foreground' : sidebarRowDetailClass(isActive))}>
                     {replacedNext ? t('autoSave.sidebar.replacedNext') : formatTimeAgo(group.autoSave!.at)}
                   </span>
                   <span id={`${detailId}-counts`} className="sr-only">

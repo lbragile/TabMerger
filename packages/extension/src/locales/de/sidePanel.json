@@ -49,6 +49,10 @@
     "restore": "Wiederherstellen",
     "sessionMeta": "Sitzung ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "Ein Schnappschuss deiner Gruppen. Ansehen ändert nichts; „Sitzung wiederherstellen“ holt diese Gruppen zurück.",
-    "sessionEmpty": "Diese Sitzung enthält keine Gruppen."
+    "sessionEmpty": "Diese Sitzung enthält keine Gruppen.",
+    "showingArchived": "Archivierte Gruppe {{name}} wird angezeigt, nur lesen",
+    "showingSession": "Sitzung {{name}} wird angezeigt, nur lesen",
+    "restored": "{{name}} wiederhergestellt",
+    "deleted": "{{name}} gelöscht"
   }
 }

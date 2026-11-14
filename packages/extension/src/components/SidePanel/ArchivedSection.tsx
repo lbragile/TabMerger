@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RotateCcw, Trash2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -8,19 +9,23 @@ import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { useUIStore } from '@/stores/uiStore';
 import { SIDEBAR_SECTION } from '@/lib/sidebarSections';
 import { useDeleteGroup, useRestoreGroup } from '@/hooks/useGroups';
+import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
+import { announceSectionView } from '@/lib/sectionViewStatus';
 import {
   SIDEBAR_FOCUS_RING,
   SIDEBAR_ICON_BUTTON,
   SIDEBAR_ROW,
   SIDEBAR_ROW_ACTIVE,
   SidebarSection,
+  sidebarRowDetailClass,
   sidebarRowNameClass
 } from './SidebarSection';
 
 /**
  * The "Archived" sidebar section. A row's name opens the group read-only in the main panel
  * (`mainView` `archived`), the row the panel shows is marked current; Restore and Delete are
- * sibling buttons, never inside the open button. Rows don't open while selecting.
+ * sibling buttons, never inside the open button. Rows don't open while selecting (`aria-disabled`).
+ * Restore and Delete are announced in the status line, and focus moves to the next row.
  */
 export function ArchivedSection({ groups }: { groups: readonly Group[] }) {
   const { t } = useTranslation();
@@ -34,6 +39,23 @@ export function ArchivedSection({ groups }: { groups: readonly Group[] }) {
   const { mutate: deleteGroup } = useDeleteGroup();
 
   const archived = groups.map((group, realIndex) => ({ group, realIndex })).filter(({ group }) => !group.permanent && group.archived);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const focus = useFocusAfterRowRemoval(rootRef, archived.map(({ group }) => group.id), 'data-archived-open');
+
+  const restore = (group: Group, realIndex: number) => {
+    focus.prepare(group.id);
+    restoreGroup(realIndex, {
+      onSuccess: () => announceSectionView(t('sidePanel.view.restored', { name: group.name })),
+      onError: focus.cancel
+    });
+  };
+  const remove = (group: Group, realIndex: number) => {
+    focus.prepare(group.id);
+    deleteGroup(realIndex, {
+      onSuccess: () => announceSectionView(t('sidePanel.view.deleted', { name: group.name })),
+      onError: focus.cancel
+    });
+  };
 
   const show = (groupId: string) => {
     if (selectionMode) return;
@@ -41,6 +63,7 @@ export function ArchivedSection({ groups }: { groups: readonly Group[] }) {
   };
 
   return (
+    <div ref={rootRef}>
     <SidebarSection
       label={t('sidePanel.archived')}
       count={archived.length}
@@ -64,11 +87,12 @@ export function ArchivedSection({ groups }: { groups: readonly Group[] }) {
                 aria-label={t('sidePanel.view.showArchived', { name: group.name })}
                 aria-describedby={`${detailId} ${detailId}-counts`}
                 aria-current={active ? 'page' : undefined}
+                aria-disabled={selectionMode || undefined}
                 data-archived-open={group.id}
                 onClick={() => show(group.id)}
               >
                 <span dir="auto" className={cn('block truncate text-[11px] text-ui-start', sidebarRowNameClass(active))}>{group.name}</span>
-                <span id={detailId} className="block truncate text-[0.625rem] text-muted-foreground">{formatTimeAgo(group.updatedAt)}</span>
+                <span id={detailId} className={cn('block truncate', sidebarRowDetailClass(active))}>{formatTimeAgo(group.updatedAt)}</span>
                 <span id={`${detailId}-counts`} className="sr-only">
                   {t('autoSave.sidebar.counts', { windows: t('common.windowCount', { count: group.windows.length }), tabs: t('common.tabCount', { count: tabs }) })}
                 </span>
@@ -87,10 +111,10 @@ export function ArchivedSection({ groups }: { groups: readonly Group[] }) {
                   <button
                     type="button"
                     className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-foreground')}
-                    onClick={() => restoreGroup(realIndex)}
+                    onClick={() => restore(group, realIndex)}
                     aria-label={t('sidePanel.restoreNamed', { name: group.name })}
                   >
-                    <RotateCcw className="h-3 w-3" />
+                    <RotateCcw className="h-3 w-3 rtl:-scale-x-100" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top">{t('sidePanel.restoreGroup')}</TooltipContent>
@@ -100,7 +124,7 @@ export function ArchivedSection({ groups }: { groups: readonly Group[] }) {
                   <button
                     type="button"
                     className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-destructive')}
-                    onClick={() => deleteGroup(realIndex)}
+                    onClick={() => remove(group, realIndex)}
                     aria-label={t('sidePanel.deleteNamed', { name: group.name })}
                   >
                     <Trash2 className="h-3 w-3" />
@@ -113,5 +137,6 @@ export function ArchivedSection({ groups }: { groups: readonly Group[] }) {
         })}
       </ul>
     </SidebarSection>
+    </div>
   );
 }

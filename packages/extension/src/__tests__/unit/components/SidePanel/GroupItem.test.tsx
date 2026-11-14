@@ -171,6 +171,8 @@ describe('GroupItem', () => {
     const { unmount } = wrap(React.createElement(GroupItem, { group: makeGroup({ name: 'Shown' }), groupIndex: 0, isActive: true, onClick: vi.fn() }))
     expect(screen.getByTestId('group-wrapper')).toHaveAttribute('data-current', 'true')
     expect(screen.getByText('Shown')).toHaveClass('font-semibold')
+    // the current background, stronger than hover (the same token as the current section rows)
+    expect(screen.getByTestId('group-wrapper').style.background).toBe('var(--sidebar-current-bg)')
     unmount()
     wrap(React.createElement(GroupItem, { group: makeGroup({ name: 'Other' }), groupIndex: 1, isActive: false, onClick: vi.fn() }))
     expect(screen.getByTestId('group-wrapper')).toHaveAttribute('data-current', 'false')

@@ -49,6 +49,10 @@
     "restore": "Pulihkan",
     "sessionMeta": "Sesi ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "Cuplikan grup Anda. Melihat tidak mengubah apa pun; \"Pulihkan sesi\" mengembalikan grup-grup ini.",
-    "sessionEmpty": "Sesi ini tidak memiliki grup."
+    "sessionEmpty": "Sesi ini tidak memiliki grup.",
+    "showingArchived": "Menampilkan grup diarsipkan {{name}}, hanya baca",
+    "showingSession": "Menampilkan sesi {{name}}, hanya baca",
+    "restored": "{{name}} dipulihkan",
+    "deleted": "{{name}} dihapus"
   }
 }

@@ -49,6 +49,10 @@
     "restore": "Geri yükle",
     "sessionMeta": "Oturum ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "Gruplarınızın anlık görüntüsü. Bakmak hiçbir şeyi değiştirmez; \"Oturumu geri yükle\" bu grupları geri getirir.",
-    "sessionEmpty": "Bu oturumda grup yok."
+    "sessionEmpty": "Bu oturumda grup yok.",
+    "showingArchived": "Arşivlenmiş {{name}} grubu gösteriliyor, salt okunur",
+    "showingSession": "{{name}} oturumu gösteriliyor, salt okunur",
+    "restored": "{{name}} geri yüklendi",
+    "deleted": "{{name}} silindi"
   }
 }

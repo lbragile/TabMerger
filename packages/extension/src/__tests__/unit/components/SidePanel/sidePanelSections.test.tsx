@@ -13,6 +13,8 @@ import { SidePanel } from '@/components/SidePanel'
 import type { Group, GroupsState } from '@/lib/types'
 import type { Session } from '@tabmerger/shared'
 import { GROUP_VIEW, useUIStore } from '@/stores/uiStore'
+import { act } from '@testing-library/react'
+import { clearSectionViewStatus, getSectionViewStatus } from '@/lib/sectionViewStatus'
 
 const {
   mockUseEntitlements,
@@ -159,10 +161,10 @@ describe('SidePanel — archived groups section', () => {
     expect(screen.getByText('Old Project')).toBeTruthy()
 
     await user.click(screen.getByRole('button', { name: /restore old project/i }))
-    expect(mockRestoreGroup).toHaveBeenCalledWith(1)
+    expect(mockRestoreGroup).toHaveBeenCalledWith(1, expect.objectContaining({ onSuccess: expect.any(Function) }))
 
     await user.click(screen.getByRole('button', { name: /delete old project/i }))
-    expect(mockDeleteGroup).toHaveBeenCalledWith(1)
+    expect(mockDeleteGroup).toHaveBeenCalledWith(1, expect.objectContaining({ onSuccess: expect.any(Function) }))
 
     await user.click(screen.getByText(/ARCHIVED \(1\)/))
     expect(screen.queryByText('Old Project')).toBeNull()
@@ -204,12 +206,12 @@ describe('SidePanel — sessions section', () => {
     // Confirm: only the action button restores
     await user.click(screen.getByRole('button', { name: /restore session: morning setup/i }))
     await user.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Close all windows' }))
-    expect(mockRestoreSession).toHaveBeenCalledWith(session)
+    expect(mockRestoreSession).toHaveBeenCalledWith(session, expect.objectContaining({ onSuccess: expect.any(Function) }))
     expect(mockRestoreSession).toHaveBeenCalledTimes(1)
     expect(nativeConfirm).not.toHaveBeenCalled()
 
     await user.click(screen.getByRole('button', { name: /delete session morning setup/i }))
-    expect(mockDeleteSession).toHaveBeenCalledWith(session.id)
+    expect(mockDeleteSession).toHaveBeenCalledWith(session.id, expect.objectContaining({ onSuccess: expect.any(Function) }))
   })
 
   it('cuts a long session name at 60 characters in the restore question and Escape cancels it', async () => {
@@ -341,5 +343,100 @@ describe('SidePanel — section rows open read-only views; the sections are an a
     await user.click(screen.getByRole('button', { name: 'Show session Morning setup' }))
     expect(useUIStore.getState().mainView).toEqual({ kind: 'session', sessionId: 's1' })
     expect(screen.getByRole('button', { name: 'Show session Morning setup' })).toHaveAttribute('aria-current', 'page')
+  })
+})
+
+describe('SidePanel — section rows: feedback, focus, selection mode, contrast', () => {
+  /** Renders the panel and returns a rerender with new groups (same wrappers). */
+  function renderPanel(groupsState: GroupsState) {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
+    const ui = (gs: GroupsState) =>
+      React.createElement(QueryClientProvider, { client: qc }, React.createElement(TooltipProvider, null, React.createElement(SidePanel, { groupsState: gs })))
+    const utils = render(ui(groupsState))
+    return { ...utils, rerenderWith: (gs: GroupsState) => utils.rerender(ui(gs)) }
+  }
+  const nowOpen = () => makeGroup({ id: 'now', permanent: true, name: 'Now Open' })
+
+  it('Restore on an archived row says "Restored" and moves focus to the next row, then the toggle', async () => {
+    const a = makeGroup({ id: 'a', name: 'Alpha', archived: true })
+    const b = makeGroup({ id: 'b', name: 'Beta', archived: true })
+    const now = nowOpen()
+    const user = userEvent.setup()
+    const { rerenderWith } = renderPanel(makeGroupsState([now, a, b]))
+    await user.click(screen.getByText(/ARCHIVED \(2\)/))
+    await user.click(screen.getByRole('button', { name: 'Restore Alpha' }))
+    act(() => mockRestoreGroup.mock.calls[0][1].onSuccess())
+    expect(getSectionViewStatus()).toBe('Restored Alpha')
+    rerenderWith(makeGroupsState([now, { ...a, archived: false }, b]))
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Show archived group Beta' })).toHaveFocus())
+
+    await user.click(screen.getByRole('button', { name: 'Delete Beta' }))
+    act(() => mockDeleteGroup.mock.calls[0][1].onSuccess())
+    expect(getSectionViewStatus()).toBe('Deleted Beta')
+    rerenderWith(makeGroupsState([now, { ...a, archived: false }]))
+    await waitFor(() => expect(screen.getByRole('button', { name: /^ARCHIVED \(0\)/ })).toHaveFocus())
+    act(() => clearSectionViewStatus())
+  })
+
+  it('a failed Restore leaves focus alone', async () => {
+    const a = makeGroup({ id: 'a', name: 'Alpha', archived: true })
+    const user = userEvent.setup()
+    const { rerenderWith } = renderPanel(makeGroupsState([nowOpen(), a]))
+    await user.click(screen.getByText(/ARCHIVED \(1\)/))
+    const restore = screen.getByRole('button', { name: 'Restore Alpha' })
+    await user.click(restore)
+    act(() => mockRestoreGroup.mock.calls[0][1].onError())
+    rerenderWith(makeGroupsState([nowOpen(), a]))
+    expect(restore).toHaveFocus()
+  })
+
+  it('Delete on a session row says "Deleted" and moves focus to the previous row when it was the last', async () => {
+    const s1 = makeSession({ id: 's1', name: 'First' })
+    const s2 = makeSession({ id: 's2', name: 'Second' })
+    mockUseSessionsData.mockReturnValue({ data: [s1, s2] })
+    const user = userEvent.setup()
+    const { rerenderWith } = renderPanel(makeGroupsState([nowOpen()]))
+    await user.click(screen.getByText(/SESSIONS \(2\)/))
+    await user.click(screen.getByRole('button', { name: 'Delete session Second' }))
+    act(() => mockDeleteSession.mock.calls[0][1].onSuccess())
+    expect(getSectionViewStatus()).toBe('Deleted Second')
+    mockUseSessionsData.mockReturnValue({ data: [s1] })
+    rerenderWith(makeGroupsState([nowOpen()]))
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Show session First' })).toHaveFocus())
+    act(() => clearSectionViewStatus())
+  })
+
+  it('in selection mode the rows say they are unavailable (aria-disabled)', async () => {
+    mockUseSessionsData.mockReturnValue({ data: [makeSession({ id: 's1', name: 'First' })] })
+    const user = userEvent.setup()
+    renderPanel(makeGroupsState([nowOpen(), makeGroup({ id: 'a', name: 'Alpha', archived: true })]))
+    await user.click(screen.getByText(/ARCHIVED \(1\)/))
+    expect(screen.getByRole('button', { name: 'Show archived group Alpha' })).not.toHaveAttribute('aria-disabled')
+    act(() => useUIStore.setState({ selectionMode: true }))
+    expect(screen.getByRole('button', { name: 'Show archived group Alpha' })).toHaveAttribute('aria-disabled', 'true')
+    await user.click(screen.getByText(/SESSIONS \(1\)/))
+    expect(screen.getByRole('button', { name: 'Show session First' })).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('session rows use the readable 10px muted detail text; Restore icons mirror right-to-left', async () => {
+    mockUseSessionsData.mockReturnValue({ data: [makeSession({ id: 's1', name: 'First', description: 'Notes' })] })
+    const user = userEvent.setup()
+    renderPanel(makeGroupsState([nowOpen()]))
+    await user.click(screen.getByText(/SESSIONS \(1\)/))
+    const row = screen.getByRole('button', { name: 'Show session First' })
+    expect(within(row).getByText('Notes')).toHaveClass('text-[0.625rem]', 'text-muted-foreground')
+    expect(row.querySelector('[class*="text-[9px]"], [class*="text-muted-foreground/"]')).toBeNull()
+    expect(screen.getByRole('button', { name: 'Restore session: First' }).querySelector('svg')).toHaveClass('rtl:-scale-x-100')
+  })
+
+  it('the current section row has the current background (not the hover one) and darker detail text', async () => {
+    const user = userEvent.setup()
+    renderPanel(makeGroupsState([nowOpen(), makeGroup({ id: 'a', name: 'Alpha', archived: true })]))
+    await user.click(screen.getByText(/ARCHIVED \(1\)/))
+    const open = screen.getByRole('button', { name: 'Show archived group Alpha' })
+    await user.click(open)
+    expect(open.closest('li')).toHaveClass('bg-[var(--sidebar-current-bg)]')
+    expect(open.closest('li')).not.toHaveClass('hover:bg-[var(--sidebar-hover-bg)]')
+    expect(open.querySelector('[id^="archived-detail-"]')).toHaveClass('text-[var(--sidebar-text-inactive)]')
   })
 })

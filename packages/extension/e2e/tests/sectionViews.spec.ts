@@ -83,7 +83,9 @@ test.describe('Sidebar section views', () => {
     const view = page.getByTestId('session-view');
     await expect(view).toBeVisible();
     await expect(view.getByRole('heading', { level: 2, name: 'Morning setup' })).toBeVisible();
-    await expect(view.getByRole('region', { name: 'Session group' })).toBeVisible();
+    // each group is a named group with a heading, not a landmark
+    await expect(view.getByRole('group', { name: 'Session group' })).toBeVisible();
+    await expect(view.getByRole('region')).toHaveCount(0);
 
     await view.getByRole('button', { name: 'Restore session', exact: true }).click();
     const box = page.getByRole('alertdialog', { name: 'Restore this session?' });
@@ -103,6 +105,36 @@ test.describe('Sidebar section views', () => {
     await page.getByRole('button', { name: 'Close this view' }).click();
     await expect(page.getByTestId('archived-view')).toHaveCount(0);
     await expect(page.locator('[data-sidebar-group-index]').filter({ hasText: 'Work' })).toHaveAttribute('aria-current', 'page');
+  });
+
+  test('opening a view is announced; arrows on the opener keep the view; ✕ hands focus back to the opener', async ({ context, extensionId }) => {
+    const page = await openWithViews(context, extensionId);
+    await archivedHeader(page).click();
+    const opener = page.getByRole('button', { name: 'Show archived group Old Project' });
+    await opener.click();
+    const status = page.getByTestId('section-view-status');
+    await expect(status).toHaveAttribute('role', 'status');
+    await expect(status).toHaveText('Showing archived group Old Project, read-only');
+
+    // Up/Down from the row that opened the view do not switch groups (which would close it)
+    await opener.focus();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowUp');
+    await expect(page.getByTestId('archived-view')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Close this view' }).click();
+    await expect(page.getByTestId('archived-view')).toHaveCount(0);
+    await expect(opener).toBeFocused();
+    await expect(status).toHaveText('');
+  });
+
+  test('Restore from a sidebar row is announced and focus moves on, never to the page', async ({ context, extensionId }) => {
+    const page = await openWithViews(context, extensionId);
+    await archivedHeader(page).click();
+    await page.getByRole('button', { name: 'Restore Old Project' }).click();
+    await expect(page.getByTestId('section-view-status')).toHaveText('Restored Old Project');
+    // the only archived row left: focus goes to the section toggle
+    await expect(archivedHeader(page)).toBeFocused();
   });
 
   test('the bottom sections are an accordion: opening one closes the other', async ({ context, extensionId }) => {

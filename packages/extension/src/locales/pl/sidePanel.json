@@ -49,6 +49,10 @@
     "restore": "Przywróć",
     "sessionMeta": "Sesja ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "Migawka Twoich grup. Przeglądanie niczego nie zmienia; „Przywróć sesję” przywraca te grupy.",
-    "sessionEmpty": "Ta sesja nie ma grup."
+    "sessionEmpty": "Ta sesja nie ma grup.",
+    "showingArchived": "Wyświetlanie zarchiwizowanej grupy {{name}}, tylko do odczytu",
+    "showingSession": "Wyświetlanie sesji {{name}}, tylko do odczytu",
+    "restored": "Przywrócono: {{name}}",
+    "deleted": "Usunięto: {{name}}"
   }
 }

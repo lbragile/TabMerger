@@ -6,15 +6,37 @@ import { useUIStore, type MainView } from '@/stores/uiStore';
 import { useSessions } from '@/hooks/useSessions';
 import { ArchivedGroupView } from './ArchivedGroupView';
 import { SessionView } from './SessionView';
+import { TOUR_ANCHORS } from '@/lib/tourSteps';
+import { announceSectionView, clearSectionViewStatus } from '@/lib/sectionViewStatus';
 
 const GROUP_VIEW_FALLBACK: MainView = { kind: 'group' };
+
+/**
+ * Where focus goes when a view closed and took the focused control with it: the sidebar row that
+ * opened the view, else the group row now shown, else the view's section toggle.
+ */
+function focusAfterViewClosed(view: MainView, activeGroupIndex: number): void {
+  const opener =
+    view.kind === 'archived'
+      ? `[data-archived-open="${CSS.escape(view.groupId)}"]`
+      : view.kind === 'session'
+        ? `[data-session-open="${CSS.escape(view.sessionId)}"]`
+        : null;
+  const anchor = view.kind === 'archived' ? TOUR_ANCHORS.archived : TOUR_ANCHORS.sessions;
+  const target =
+    (opener ? document.querySelector<HTMLElement>(opener) : null) ??
+    document.querySelector<HTMLElement>(`[data-sidebar-group-index="${activeGroupIndex}"]`) ??
+    document.querySelector<HTMLElement>(`[data-tour="${anchor}"] [data-sidebar-section-toggle]`);
+  target?.focus();
+}
 
 /**
  * The main panel: the active group's windows (`WindowsPanel`), or the read-only view a sidebar
  * section row opened (`uiStore.mainView`). A view whose archived group or session is gone (deleted
  * or restored here, from the sidebar, or by sync from another device; undone) falls back to the
  * group shown before it opened. Coming back to the group view with focus lost (its ✕ or the view
- * itself unmounted) puts focus on that group's sidebar row.
+ * itself unmounted) puts focus back on the row that opened the view, else that group's sidebar row
+ * (`focusAfterViewClosed`). While a view is open the polite status line says so.
  */
 export function MainPanel({ groupsState }: { groupsState: GroupsState }) {
   const { t } = useTranslation();
@@ -35,16 +57,29 @@ export function MainPanel({ groupsState }: { groupsState: GroupsState }) {
     if (gone) closeMainView(groups);
   }, [gone, groups, closeMainView]);
 
-  const wasGroupView = useRef(true);
+  const lastView = useRef<MainView>(GROUP_VIEW_FALLBACK);
   const groupView = mainView.kind === 'group';
   useEffect(() => {
-    const returned = groupView && !wasGroupView.current;
-    wasGroupView.current = groupView;
-    if (!returned) return;
+    const closed = lastView.current;
+    lastView.current = mainView;
+    if (!groupView || closed.kind === 'group') return;
     const focused = document.activeElement;
     if (focused && focused !== document.body) return;
-    document.querySelector<HTMLElement>(`[data-sidebar-group-index="${activeGroupIndex}"]`)?.focus();
-  }, [groupView, activeGroupIndex]);
+    focusAfterViewClosed(closed, activeGroupIndex);
+  }, [groupView, mainView, activeGroupIndex]);
+
+  // "Showing … read-only" while a view is open; cleared when it closes (unless replaced meanwhile)
+  const showing =
+    archivedIndex >= 0
+      ? t('sidePanel.view.showingArchived', { name: groups[archivedIndex].name })
+      : session
+        ? t('sidePanel.view.showingSession', { name: session.name })
+        : '';
+  useEffect(() => {
+    if (!showing) return;
+    announceSectionView(showing);
+    return () => clearSectionViewStatus(showing);
+  }, [showing]);
 
   if (archivedIndex >= 0) {
     return <ArchivedGroupView group={groups[archivedIndex]} groupIndex={archivedIndex} groups={groups} />;

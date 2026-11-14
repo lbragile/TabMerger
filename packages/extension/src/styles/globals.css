@@ -75,6 +75,7 @@
     --zone-sidebar: 240 5% 97%;          /* light: same as header */
     --zone-sidebar-border: rgba(0,0,0,0.08);
     --sidebar-hover-bg: rgba(0,0,0,0.05);
+    --sidebar-current-bg: rgba(0,0,0,0.12);  /* the row the main panel shows: clearly stronger than hover */
     --sidebar-badge-bg: rgba(0,0,0,0.07);
     --sidebar-accent-filter: brightness(0.7);
   }
@@ -91,6 +92,7 @@
     --star-active: #FBBF24;             /* yellow-400 — starred icon on dark sidebar (~11:1, WCAG AA) */
     --zone-sidebar-border: rgba(255,255,255,0.08);
     --sidebar-hover-bg: rgba(255,255,255,0.07);
+    --sidebar-current-bg: rgba(255,255,255,0.16);
     --sidebar-badge-bg: rgba(255,255,255,0.1);
     --sidebar-accent-filter: brightness(1.5);
     --foreground: 0 0% 98%;

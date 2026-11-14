@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BookmarkPlus, RotateCcw, Trash2 } from 'lucide-react';
 import { FREE_TIER_LIMITS } from '@tabmerger/shared';
@@ -12,12 +13,15 @@ import { SIDEBAR_SECTION } from '@/lib/sidebarSections';
 import { useDeleteSession, useSaveSession } from '@/hooks/useSessions';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useConfirmedRestoreSession } from '@/hooks/useConfirmedRestoreSession';
+import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
+import { announceSectionView } from '@/lib/sectionViewStatus';
 import {
   SIDEBAR_FOCUS_RING,
   SIDEBAR_ICON_BUTTON,
   SIDEBAR_ROW,
   SIDEBAR_ROW_ACTIVE,
   SidebarSection,
+  sidebarRowDetailClass,
   sidebarRowNameClass
 } from './SidebarSection';
 
@@ -40,6 +44,16 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
   const { mutate: deleteSession } = useDeleteSession();
   const { mutateAsync: saveSession } = useSaveSession();
   const { restore, restoring, confirmDialog } = useConfirmedRestoreSession();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const focus = useFocusAfterRowRemoval(rootRef, sessions.map((s) => s.id), 'data-session-open');
+
+  const remove = (session: Session) => {
+    focus.prepare(session.id);
+    deleteSession(session.id, {
+      onSuccess: () => announceSectionView(t('sidePanel.view.deleted', { name: session.name })),
+      onError: focus.cancel
+    });
+  };
 
   // Moved from Header (P4, popup-ui-consolidation-spec.md): "Save session" lives in the section header
   const handleSaveSession = () => {
@@ -67,7 +81,7 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
   };
 
   return (
-    <>
+    <div ref={rootRef}>
     <SidebarSection
       label={t('sidePanel.sessions')}
       count={sessions.length}
@@ -105,16 +119,17 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
                 aria-label={t('sidePanel.view.showSession', { name: session.name })}
                 aria-describedby={`${detailId} ${detailId}-counts`}
                 aria-current={active ? 'page' : undefined}
+                aria-disabled={selectionMode || undefined}
                 data-session-open={session.id}
                 onClick={() => show(session.id)}
               >
                 <span dir="auto" className={cn('block truncate text-[11px] text-ui-start', sidebarRowNameClass(active))}>{session.name}</span>
                 {session.description && (
-                  <span dir="auto" className="block truncate text-[9px] text-muted-foreground/70 italic text-ui-start" title={session.description}>
+                  <span dir="auto" className={cn('block truncate italic text-ui-start', sidebarRowDetailClass(active))} title={session.description}>
                     {session.description}
                   </span>
                 )}
-                <span id={detailId} className="block text-[9px] text-muted-foreground/50">{formatTimeAgo(session.createdAt)}</span>
+                <span id={detailId} className={cn('block', sidebarRowDetailClass(active))}>{formatTimeAgo(session.createdAt)}</span>
                 <span id={`${detailId}-counts`} className="sr-only">
                   {t('sidePanel.view.sessionCounts', {
                     groups: t('common.groupCountTitle', { count: session.groups.length }),
@@ -141,9 +156,9 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
                     className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-foreground disabled:opacity-50')}
                     disabled={restoring}
                     aria-label={t('sidePanel.restoreSessionNamed', { name: session.name })}
-                    onClick={() => restore(session)}
+                    onClick={() => restore(session, () => announceSectionView(t('sidePanel.view.restored', { name: session.name })))}
                   >
-                    <RotateCcw className="h-3 w-3" />
+                    <RotateCcw className="h-3 w-3 rtl:-scale-x-100" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top">{t('sidePanel.restoreSession')}</TooltipContent>
@@ -153,7 +168,7 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
                   <button
                     type="button"
                     className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-destructive')}
-                    onClick={() => deleteSession(session.id)}
+                    onClick={() => remove(session)}
                     aria-label={t('sidePanel.deleteSessionNamed', { name: session.name })}
                   >
                     <Trash2 className="h-3 w-3" />
@@ -167,6 +182,6 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
       </ul>
     </SidebarSection>
     {confirmDialog}
-    </>
+    </div>
   );
 }

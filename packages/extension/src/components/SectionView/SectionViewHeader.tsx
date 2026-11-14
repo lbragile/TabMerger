@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
+import { SeparatedText } from './SeparatedText';
 
 interface SectionViewHeaderProps {
   /** The group colour dot before the title; none when omitted. */
   color?: string;
   title: string;
-  /** One line under the title, e.g. "Archived ◆ 1 Window ◆ 6 Tabs". */
+  /** One line under the title, e.g. "Archived ◆ 1 Window ◆ 6 Tabs" (the ◆ are hidden from screen readers). */
   meta: string;
   /** An optional second line (a session's description). */
   description?: string;
@@ -42,7 +43,7 @@ export function SectionViewHeader({ color, title, meta, description, primaryLabe
         {color && <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />}
         <div className="min-w-0 flex-1">
           <h2 dir="auto" className="truncate text-sm font-semibold text-ui-start" title={title}>{title}</h2>
-          <p className="truncate text-[11px] text-muted-foreground">{meta}</p>
+          <p className="truncate text-[11px] text-muted-foreground"><SeparatedText text={meta} /></p>
           {description && (
             <p dir="auto" className="truncate text-[11px] italic text-muted-foreground text-ui-start" title={description}>{description}</p>
           )}

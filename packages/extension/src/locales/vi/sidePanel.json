@@ -49,6 +49,10 @@
     "restore": "Khôi phục",
     "sessionMeta": "Phiên ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "Ảnh chụp các nhóm của bạn. Xem không thay đổi gì; \"Khôi phục phiên\" sẽ đưa các nhóm này trở lại.",
-    "sessionEmpty": "Phiên này không có nhóm nào."
+    "sessionEmpty": "Phiên này không có nhóm nào.",
+    "showingArchived": "Đang hiện nhóm đã lưu trữ {{name}}, chỉ đọc",
+    "showingSession": "Đang hiện phiên {{name}}, chỉ đọc",
+    "restored": "Đã khôi phục {{name}}",
+    "deleted": "Đã xóa {{name}}"
   }
 }

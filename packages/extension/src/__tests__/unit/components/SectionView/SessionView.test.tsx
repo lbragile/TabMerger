@@ -22,6 +22,9 @@ const g = (id: string): Group => ({
   windows: [{ id: 1, tabs: [{ id: 0, title: 'T', url: 'https://t.test/' }], incognito: false, focused: false }],
 })
 const session = (createdAt: number, groups: Group[]): Session => ({ id: 's', name: 'Snap', createdAt, groups })
+/** A meta line ("Session ◆ …"): its ◆ separators are aria-hidden spans, so match the whole paragraph's text */
+const metaLine = (m: string | RegExp, scope: Pick<typeof screen, 'getByText'> = screen) =>
+  scope.getByText((_, el) => el?.tagName === 'P' && (typeof m === 'string' ? el.textContent === m : m.test(el.textContent ?? '')))
 const renderView = (s: Session) => render(<TooltipProvider><SessionView session={s} groups={[]} /></TooltipProvider>)
 
 beforeEach(() => useUIStore.setState({ mainView: GROUP_VIEW, mainViewReturnGroupId: null }))
@@ -35,18 +38,18 @@ describe('SessionView', () => {
     const now = new Date()
     const thisYear = new Date(now.getFullYear(), 0, 2, 9, 5).getTime()
     renderView(session(thisYear, [g('a')]))
-    expect(screen.getByText(/^Session ◆ /).textContent).not.toContain(String(now.getFullYear()))
+    expect(metaLine(/^Session ◆ /).textContent).not.toContain(String(now.getFullYear()))
   })
 
   it('includes the year when the session is not from this year', () => {
     renderView(session(new Date(2020, 5, 10, 18, 22).getTime(), [g('a')]))
-    expect(screen.getByText(/^Session ◆ /).textContent).toContain('2020')
+    expect(metaLine(/^Session ◆ /).textContent).toContain('2020')
   })
 
   it('says so when the session holds no groups', () => {
     renderView(session(Date.now(), []))
     expect(screen.getByText('This session has no groups.')).toBeInTheDocument()
-    expect(screen.getByText(/0 Groups ◆ 0 Tabs/)).toBeInTheDocument()
+    expect(metaLine(/0 Groups ◆ 0 Tabs/)).toBeInTheDocument()
   })
 })
 

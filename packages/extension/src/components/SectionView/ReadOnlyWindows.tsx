@@ -1,48 +1,48 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Window as SavedWindow } from '@/lib/types';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { getDisplayTitle } from '@/lib/tabTitle';
 import { FALLBACK_FAVICON, getUrlDisplay, openSavedTab } from '@/lib/savedTab';
+import { READ_ONLY_TAB_ATTR, READ_ONLY_TAB_KEYS, handleReadOnlyListKeyDown } from '@/lib/readOnlyListKeys';
 
-/** Marks the tab buttons of a read-only list, for the Up/Down arrow keys. */
-const READ_ONLY_TAB_ATTR = 'data-read-only-tab';
-
-/**
- * Up/Down move between the list's tab buttons (Home/End to the first and last). The key is
- * consumed, so the popup-wide arrow-key group switching (`useKeyboardNav`) leaves it alone.
- */
-function handleListKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-  if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key) || e.altKey || e.ctrlKey || e.metaKey) return;
-  const buttons = [...e.currentTarget.querySelectorAll<HTMLButtonElement>(`button[${READ_ONLY_TAB_ATTR}]`)];
-  const at = buttons.indexOf(e.target as HTMLButtonElement);
-  if (at < 0) return;
-  e.preventDefault();
-  const next = e.key === 'Home' ? 0 : e.key === 'End' ? buttons.length - 1 : Math.min(Math.max(at + (e.key === 'ArrowDown' ? 1 : -1), 0), buttons.length - 1);
-  buttons[next]?.focus();
+interface ReadOnlyWindowsProps {
+  windows: readonly SavedWindow[];
+  /** Heading level of each window's title: 3 under a view's h2, 4 under a session group's h3. */
+  headingLevel?: 3 | 4;
+  /**
+   * Whether this list handles the arrow keys itself. Off when an ancestor does it for several
+   * lists at once (the session view: one list across all its groups).
+   */
+  ownArrowKeys?: boolean;
 }
 
 /**
  * Windows and their tabs, read-only: the look of the windows panel's cards without any of its
  * editing (no drag and drop, keyboard move, selection, rename, notes or menus, and no drop
- * targets). A tab is a button that opens it the way a saved tab opens (`openSavedTab`). Used by
- * the archived-group and session views. Rows carry none of the `data-group-index` /
- * `data-window-index` / `data-tab-index` attributes the popup's keyboard shortcuts act on, so
- * Delete, F2 and N do nothing here.
+ * targets). Each window is a `role="group"` named by its heading (not a landmark). A tab is a
+ * button that opens it the way a saved tab opens (`openSavedTab`); Up/Down/Home/End move between
+ * them (`handleReadOnlyListKeyDown`). Used by the archived-group and session views. Rows carry
+ * none of the `data-group-index` / `data-window-index` / `data-tab-index` attributes the popup's
+ * keyboard shortcuts act on, so Delete, F2 and N do nothing here.
  */
-export function ReadOnlyWindows({ windows }: { windows: readonly SavedWindow[] }) {
+export function ReadOnlyWindows({ windows, headingLevel = 3, ownArrowKeys = true }: ReadOnlyWindowsProps) {
   const { t } = useTranslation();
+  const baseId = useId();
   if (windows.length === 0) {
     return <p className="py-4 text-center text-xs text-muted-foreground">{t('windows.noWindows')}</p>;
   }
+  const Heading = headingLevel === 4 ? 'h4' : 'h3';
   return (
-    <div className="min-w-0" onKeyDown={handleListKeyDown}>
+    <div className="min-w-0" onKeyDown={ownArrowKeys ? handleReadOnlyListKeyDown : undefined}>
       {windows.map((win, windowIndex) => {
         const title = win.name ?? t('window.numbered', { number: windowIndex + 1 });
         const tabs = win.tabs.filter(Boolean);
+        const headingId = `${baseId}-w${windowIndex}`;
         return (
-          <section key={windowIndex} aria-label={title} className="mb-2 min-w-0 overflow-hidden border border-border bg-card p-1">
+          <div key={windowIndex} role="group" aria-labelledby={headingId} className="mb-2 min-w-0 overflow-hidden border border-border bg-card p-1">
             <div className="flex min-w-0 items-center gap-1.5 border-b border-border/50 px-1.5 py-1">
-              <span dir="auto" className="min-w-0 truncate text-xs font-medium text-ui-start">{title}</span>
+              <Heading id={headingId} dir="auto" className="min-w-0 truncate text-xs font-medium text-ui-start">{title}</Heading>
               <span className="shrink-0 text-[10px] text-muted-foreground">{t('common.tabCountTitle', { count: tabs.length })}</span>
             </div>
             <ul className="min-w-0">
@@ -54,6 +54,7 @@ export function ReadOnlyWindows({ windows }: { windows: readonly SavedWindow[] }
                     <button
                       type="button"
                       {...{ [READ_ONLY_TAB_ATTR]: '' }}
+                      aria-keyshortcuts={READ_ONLY_TAB_KEYS}
                       className="flex w-full min-w-0 items-center gap-1 px-1.5 py-0.5 text-start hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
                       disabled={!isOpenableUrl(tab.url)}
                       title={tab.url}
@@ -72,7 +73,7 @@ export function ReadOnlyWindows({ windows }: { windows: readonly SavedWindow[] }
                 );
               })}
             </ul>
-          </section>
+          </div>
         );
       })}
     </div>

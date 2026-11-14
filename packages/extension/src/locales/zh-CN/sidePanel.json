@@ -49,6 +49,10 @@
     "restore": "恢复",
     "sessionMeta": "会话 ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "这是你的分组快照。查看不会改变任何内容；“恢复会话”会把这些分组找回来。",
-    "sessionEmpty": "此会话没有分组。"
+    "sessionEmpty": "此会话没有分组。",
+    "showingArchived": "正在显示已归档分组 {{name}}（只读）",
+    "showingSession": "正在显示会话 {{name}}（只读）",
+    "restored": "已恢复 {{name}}",
+    "deleted": "已删除 {{name}}"
   }
 }

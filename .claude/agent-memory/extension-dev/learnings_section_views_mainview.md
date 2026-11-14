@@ -30,6 +30,27 @@ recently closed tabs feature). Shape:
 - Accordion: `uiStore.openSidebarSection` + `toggleSidebarSection`; section ids in
   `lib/sidebarSections.ts` (NOT the store module).
 
+Accessibility pass (after an accessibility-auditor review):
+- Status line: `lib/sectionViewStatus.ts` (module store) + `SectionViewAnnouncer` (polite, mounted in
+  App outside the DnD tree). MainPanel announces "Showing … read-only" in an effect whose cleanup
+  calls `clearSectionViewStatus(sameText)`, so a "Restored X" written meanwhile survives the close
+  whatever the order of the store update and the effect.
+- Focus on close: MainPanel remembers the last non-group view and, only when focus fell to
+  `<body>`, focuses the opener (`[data-archived-open|data-session-open]`), else the group row, else
+  the section toggle. Row Restore/Delete use `useFocusAfterRowRemoval` (next, previous, toggle).
+  Sidebar effects run before MainPanel's (earlier in the tree), so the row hook wins and MainPanel
+  sees focus is no longer on body.
+- `useKeyboardNav` handles Up/Down on `document` for ANY focused element: while a view is open it
+  now only acts from a `[data-sidebar-group-index]` row. The session view puts one
+  `handleReadOnlyListKeyDown` on the container of all groups (`ownArrowKeys={false}` on each list).
+- Light-theme muted text (#71717a-ish) on the sidebar is ~4.4:1 plain and ~4.0:1 on the 5% hover
+  overlay, so any stronger "current" background needs darker detail text
+  (`sidebarRowDetailClass` -> `--sidebar-text-inactive`). `--sidebar-current-bg` (0.12 black light,
+  0.16 white dark) is shared by group rows and section rows; on section rows it also needs a
+  `hover:` copy or the hover class wins.
+- "◆" in translated meta strings: `SeparatedText` splits on it into aria-hidden spans; tests then
+  need a matcher on the whole `<p>`'s textContent (getByText only reads an element's own text nodes).
+
 Gotchas:
 - Many tests `vi.mock('@/stores/uiStore', () => ({ useUIStore: sel => mock(sel) }))`: a new named
   export imported from the store (a constant) throws there, `useUIStore.getState()` is undefined,

@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 /**
  * The look of a sidebar section's small icon buttons (Keep, Restore, Delete, the header action):
@@ -18,7 +19,8 @@ export const SIDEBAR_FOCUS_RING = 'focus-visible:outline-none focus-visible:ring
  * (its 3px start bar is the item's colour, set inline by each section).
  */
 export const SIDEBAR_ROW = 'flex items-center gap-1 px-2 py-1 transition-colors min-w-0 hover:bg-[var(--sidebar-hover-bg)]';
-export const SIDEBAR_ROW_ACTIVE = 'bg-[var(--sidebar-hover-bg)]';
+/** The current row: a background clearly stronger than hover (and kept on hover), as the current group row. */
+export const SIDEBAR_ROW_ACTIVE = 'bg-[var(--sidebar-current-bg)] hover:bg-[var(--sidebar-current-bg)]';
 
 /**
  * A section row's name: semibold and in the full text colour on the one row the main panel shows
@@ -26,6 +28,14 @@ export const SIDEBAR_ROW_ACTIVE = 'bg-[var(--sidebar-hover-bg)]';
  */
 export function sidebarRowNameClass(active: boolean): string {
   return active ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground';
+}
+
+/**
+ * A section row's detail line (time, description): 10px, muted; on the current row a darker grey,
+ * since muted text on the stronger current background drops under 4.5:1.
+ */
+export function sidebarRowDetailClass(active: boolean): string {
+  return cn('text-[0.625rem]', active ? 'text-[var(--sidebar-text-inactive)]' : 'text-muted-foreground');
 }
 
 /**

@@ -34,6 +34,7 @@ import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
 import { Tour } from '@/components/Tour/Tour';
 import { SearchAnnouncer } from '@/components/SearchAnnouncer';
+import { SectionViewAnnouncer } from '@/components/SectionView/SectionViewAnnouncer';
 
 function AppContent() {
   const { data: groupsState, isLoading } = useGroups();
@@ -164,6 +165,8 @@ function AppContent() {
       {selectedItems.length > 0 && <SelectionActionBar />}
       {/* Polite live region: how many tabs a search found, and in how many groups */}
       <SearchAnnouncer groups={groupsState.available} />
+      {/* Polite live region: an archived group / session view opened, restored or deleted */}
+      <SectionViewAnnouncer />
       {/* Guided tour: mounted after the app because its steps point at the controls above */}
       <Tour />
     </div>

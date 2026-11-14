@@ -49,6 +49,10 @@
     "restore": "Ripristina",
     "sessionMeta": "Sessione ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
     "sessionBanner": "Un’istantanea dei tuoi gruppi. Guardarla non cambia nulla; «Ripristina sessione» riporta questi gruppi.",
-    "sessionEmpty": "Questa sessione non contiene gruppi."
+    "sessionEmpty": "Questa sessione non contiene gruppi.",
+    "showingArchived": "Gruppo archiviato {{name}} in visualizzazione, sola lettura",
+    "showingSession": "Sessione {{name}} in visualizzazione, sola lettura",
+    "restored": "{{name}} ripristinato",
+    "deleted": "{{name}} eliminato"
   }
 }

@@ -34,6 +34,9 @@ const group = (id: string, extra: Partial<Group> = {}): Group => ({ id, name: `N
 const nowOpen = group('now', { permanent: true })
 const state = (...groups: Group[]): GroupsState => ({ active: { id: 'now', index: 0 }, available: [nowOpen, ...groups] })
 
+/** A meta line ("Session ◆ …"): its ◆ separators are aria-hidden spans, so match the whole paragraph's text */
+const metaLine = (m: string | RegExp, scope: Pick<typeof screen, 'getByText'> = screen) =>
+  scope.getByText((_, el) => el?.tagName === 'P' && (typeof m === 'string' ? el.textContent === m : m.test(el.textContent ?? '')))
 const renderPanel = (s: GroupsState) => {
   const utils = render(<TooltipProvider><MainPanel groupsState={s} /></TooltipProvider>)
   return { ...utils, rerenderWith: (next: GroupsState) => utils.rerender(<TooltipProvider><MainPanel groupsState={next} /></TooltipProvider>) }
@@ -63,7 +66,9 @@ describe('MainPanel — archived group view', () => {
     renderPanel(state(group('a'), archived))
     openArchived()
     expect(screen.getByRole('heading', { level: 2, name: 'Name arch' })).toBeInTheDocument()
-    expect(screen.getByText('Archived ◆ 1 Window ◆ 2 Tabs')).toBeInTheDocument()
+    const meta = metaLine('Archived ◆ 1 Window ◆ 2 Tabs')
+    // the separators are not read out ("black diamond")
+    expect(meta.querySelectorAll('span[aria-hidden="true"]')).toHaveLength(2)
     expect(screen.getByRole('note')).toHaveTextContent(/^Archived just now\. Read-only: restore it to move, edit or add tabs\. Clicking a tab still opens it\.$/)
     expect(screen.queryByTestId('windows-panel')).toBeNull()
     // no attributes the popup's keyboard shortcuts (Delete, F2, N) act on
@@ -95,7 +100,7 @@ describe('MainPanel — archived group view', () => {
     openArchived()
     await user.click(screen.getByRole('button', { name: 'More options for Name arch' }))
     await user.click(await screen.findByRole('menuitem', { name: 'Delete group' }))
-    expect(h.deleteGroup).toHaveBeenCalledWith(2)
+    expect(h.deleteGroup).toHaveBeenCalledWith(2, expect.objectContaining({ onSuccess: expect.any(Function) }))
   })
 
   it('falls back to the group view when the group is no longer archived or is gone', () => {
@@ -144,12 +149,14 @@ describe('MainPanel — session view', () => {
     renderPanel(state())
     openSession()
     expect(screen.getByRole('heading', { level: 2, name: 'Morning' })).toBeInTheDocument()
-    expect(screen.getByText(/^Session ◆ .+ ◆ 2 Groups ◆ 3 Tabs$/)).toBeInTheDocument()
+    expect(metaLine(/^Session ◆ .+ ◆ 2 Groups ◆ 3 Tabs$/)).toBeInTheDocument()
     expect(screen.getByText('Before standup')).toBeInTheDocument()
     expect(screen.getByRole('note')).toHaveTextContent("A snapshot of your groups. Looking doesn't change anything; Restore session brings these groups back.")
-    const read = screen.getByRole('region', { name: 'Read' })
+    // a named group (not a landmark) with a real heading
+    expect(screen.queryAllByRole('region')).toHaveLength(0)
+    const read = screen.getByRole('group', { name: 'Read' })
     expect(within(read).getByRole('heading', { level: 3, name: 'Read' })).toBeInTheDocument()
-    expect(within(read).getByText('1 Window ◆ 2 Tabs')).toBeInTheDocument()
+    expect(metaLine('1 Window ◆ 2 Tabs', within(read))).toBeInTheDocument()
   })
 
   it('Restore session asks first, restores, then goes back to the group view', async () => {
