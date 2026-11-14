@@ -25,6 +25,8 @@
   --color-card-foreground: hsl(var(--card-foreground));
   --color-zone-header: hsl(var(--zone-header));
   --color-zone-sidebar: hsl(var(--zone-sidebar));
+  --color-tooltip: hsl(var(--tooltip));
+  --color-tooltip-foreground: hsl(var(--tooltip-foreground));
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -41,6 +43,10 @@
     --popover-foreground: 240 10% 3.9%;
     --primary: 193 100% 40%;
     --primary-foreground: 0 0% 100%;
+    /* Tooltips: the primary hue, darker in the light theme so white 12px text reaches 5.7:1
+       (white on --primary is only 3.05:1) */
+    --tooltip: 193 100% 28%;
+    --tooltip-foreground: 0 0% 100%;
     --secondary: 33 91% 54%;
     --secondary-foreground: 0 0% 100%;
     --muted: 240 4.8% 95.9%;
@@ -94,6 +100,9 @@
     --popover-foreground: 0 0% 98%;
     --primary: 193 80% 55%;
     --primary-foreground: 193 100% 10%;
+    /* Tooltips keep the primary look in the dark theme (7.3:1) */
+    --tooltip: 193 80% 55%;
+    --tooltip-foreground: 193 100% 10%;
     --secondary: 33 85% 60%;
     --secondary-foreground: 33 91% 10%;
     --muted: 240 3.7% 15.9%;
