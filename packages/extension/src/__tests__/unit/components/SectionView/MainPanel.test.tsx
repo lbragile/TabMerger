@@ -178,3 +178,41 @@ describe('MainPanel — session view', () => {
     expect(useUIStore.getState().mainView).toEqual({ kind: 'session', sessionId: 's1' })
   })
 })
+
+describe('MainPanel — focus return', () => {
+  const archived = group('arch', { archived: true, windows: [win('https://a.test/')] })
+
+  function renderWithSidebarRow() {
+    const row = document.createElement('div')
+    row.tabIndex = 0
+    row.setAttribute('data-sidebar-group-index', '1')
+    document.body.appendChild(row)
+    return row
+  }
+
+  it('returning to the group view with focus lost puts focus on the active group\'s sidebar row', () => {
+    const row = renderWithSidebarRow()
+    useUIStore.setState({ activeGroupIndex: 1 })
+    renderPanel(state(group('a'), archived))
+    act(() => useUIStore.getState().openMainView({ kind: 'archived', groupId: 'arch' }, 'a'))
+    // the view's ✕ unmounts with focus on it: focus falls back to <body>
+    ;(document.activeElement as HTMLElement | null)?.blur()
+    act(() => useUIStore.getState().closeMainView(state(group('a'), archived).available))
+    expect(row).toHaveFocus()
+    row.remove()
+  })
+
+  it('leaves focus alone when it is already somewhere else', () => {
+    const row = renderWithSidebarRow()
+    const other = document.createElement('button')
+    document.body.appendChild(other)
+    useUIStore.setState({ activeGroupIndex: 1 })
+    renderPanel(state(group('a'), archived))
+    act(() => useUIStore.getState().openMainView({ kind: 'archived', groupId: 'arch' }, 'a'))
+    other.focus()
+    act(() => useUIStore.getState().closeMainView(state(group('a'), archived).available))
+    expect(other).toHaveFocus()
+    row.remove()
+    other.remove()
+  })
+})

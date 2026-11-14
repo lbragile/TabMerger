@@ -9,6 +9,7 @@ import {
   getFaviconUrl,
   getGroupInfo,
   getGroupTabCount,
+  getSessionCounts,
   parseSearchQuery,
   relativeTimeStr,
   sortWindowsByStarred,
@@ -226,5 +227,20 @@ describe('sortWindowsByStarred', () => {
     const sorted = sortWindowsByStarred([unstarred, starred1, starred2])
     expect(sorted[0]).toBe(starred1)
     expect(sorted[1]).toBe(starred2)
+  })
+})
+
+describe('getSessionCounts', () => {
+  const g = (windowTabCounts: number[]) => ({
+    ...createGroup('g'),
+    windows: windowTabCounts.map((n) => createWindow(Array.from({ length: n }, (_, i) => createTab(`T${i}`, `https://t${i}.test/`)))),
+  })
+
+  it('is zero for a session with no groups', () => {
+    expect(getSessionCounts({ id: 's', name: 'S', createdAt: 1, groups: [] })).toEqual({ windows: 0, tabs: 0 })
+  })
+
+  it('sums windows and tabs over all its groups', () => {
+    expect(getSessionCounts({ id: 's', name: 'S', createdAt: 1, groups: [g([2, 3]), g([1]), g([])] })).toEqual({ windows: 3, tabs: 6 })
   })
 })

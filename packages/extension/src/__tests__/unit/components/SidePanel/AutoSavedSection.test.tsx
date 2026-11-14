@@ -112,6 +112,22 @@ describe('AutoSavedSection', () => {
     expect(screen.queryByText('Replaced at the next auto-save')).toBeNull()
   })
 
+  it('only the group view makes a row current: an archived group or a session being shown clears it and its weight', () => {
+    renderSection(st(g('normal'), g('a', { autoSave: { at: 1, rolling: false } })))
+    act(() => useUIStore.setState({ activeGroupIndex: 2 }))
+    const row = () => screen.getByRole('button', { name: 'Open Name a' })
+    expect(row()).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByText('Name a')).toHaveClass('font-semibold')
+    for (const view of [{ kind: 'archived', groupId: 'x' } as const, { kind: 'session', sessionId: 's' } as const]) {
+      act(() => useUIStore.setState({ mainView: view }))
+      expect(row()).not.toHaveAttribute('aria-current')
+      expect(screen.getByText('Name a')).toHaveClass('font-normal')
+      expect(screen.getByText('Name a')).not.toHaveClass('font-semibold')
+    }
+    act(() => useUIStore.setState({ mainView: GROUP_VIEW }))
+    expect(row()).toHaveAttribute('aria-current', 'page')
+  })
+
   it('a row opens the group in the main panel (not in selection mode); Delete deletes by its real index', () => {
     renderSection(st(g('normal'), g('a', { autoSave: { at: 1, rolling: false } })))
     fireEvent.click(screen.getByRole('button', { name: 'Open Name a' }))
