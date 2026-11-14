@@ -9,6 +9,7 @@ import { getSetting, setSetting } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { fetchTier } from '@/lib/entitlementTier';
 import { parseTierSeen } from '@/lib/autoSave';
+import { recentlyFree } from '@/lib/autoSaveRun';
 import { isOwnExtensionPage } from '@/lib/messageSender';
 import { APP_SETTINGS_KEY, AUTO_SAVE_TIER_SEEN_KEY, LAST_USER_ID_KEY } from '@/lib/syncSettingKeys';
 import {
@@ -53,8 +54,10 @@ const INDEX_REFRESH_MS = 300;
 /**
  * The plan to prune for, without a network request when one was remembered: nobody signed in on a
  * store no account owns is Free; otherwise the server's last answer (`AUTO_SAVE_TIER_SEEN_KEY`,
- * which auto-save keeps current), asking the server only when there is none. A failed check, an
- * account mismatch or a signed-out store that still holds an account's data is `unknown` (Pro limits).
+ * which auto-save keeps current), asking the server only when there is none or when it is a "free"
+ * older than `AUTO_SAVE_FREE_RECHECK_MS` (the fresh answer is remembered). A failed check, an account
+ * mismatch, or a signed-out store that still holds an account's data with no usable remembered
+ * answer is `unknown` (Pro limits).
  */
 export async function resolveRecentlyClosedPlan(now: number = Date.now()): Promise<RecentlyClosedPlan> {
   let userId: string | null = null;
@@ -65,7 +68,12 @@ export async function resolveRecentlyClosedPlan(now: number = Date.now()): Promi
     userId = null;
   }
   const owner = await getSetting<string | null>(LAST_USER_ID_KEY, null);
-  const remembered = parseTierSeen(await getSetting<unknown>(AUTO_SAVE_TIER_SEEN_KEY, null));
+  const rawSeen = await getSetting<unknown>(AUTO_SAVE_TIER_SEEN_KEY, null);
+  // A remembered "free" is trusted only while it is recent (`AUTO_SAVE_FREE_RECHECK_MS`): pruning
+  // DELETES entries, so a user who upgraded since must not keep being trimmed to the Free limits.
+  // A remembered paid answer is always trusted (keeping too much is the safe side).
+  const seen = parseTierSeen(rawSeen);
+  const remembered = seen === 'free' && !recentlyFree(rawSeen, now) ? null : seen;
   const asPlan = (tier: string | null): RecentlyClosedPlan => (tier === 'free' ? 'free' : tier ? 'pro' : 'unknown');
   if (!userId) return owner ? asPlan(remembered) : 'free';
   if (owner && owner !== userId) return 'unknown';
