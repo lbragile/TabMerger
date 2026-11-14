@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Não foi possível abrir esta página. Ela continua na lista.",
-    "changeFailed": "Não foi possível alterar a lista de abas fechadas. Tente de novo."
+    "changeFailed": "Não foi possível alterar a lista de abas fechadas. Tente de novo.",
+    "undoIncomplete": "Não foi possível recuperá-las: já tinham sido apagadas.",
+    "undoTurnedOnListGone": "Lembrar abas fechadas foi reativado, mas a lista limpa já tinha sido apagada."
   },
   "settings": {
     "title": "Lembrar abas fechadas",

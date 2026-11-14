@@ -9,6 +9,7 @@ const mockPurge = vi.hoisted(() => vi.fn())
 const mockNotify = vi.hoisted(() => vi.fn())
 const mockGetSession = vi.hoisted(() => vi.fn())
 const mockFetchTier = vi.hoisted(() => vi.fn())
+const mockRemember = vi.hoisted(() => vi.fn())
 
 vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting, setSetting: mockSetSetting }))
 vi.mock('@/lib/recentlyClosedDb', () => ({
@@ -16,13 +17,15 @@ vi.mock('@/lib/recentlyClosedDb', () => ({
   pruneRecentlyClosed: mockPrune,
   purgeClearedRecentlyClosed: mockPurge,
   notifyRecentlyClosedChanged: mockNotify,
+  getRememberClosedTabs: mockRemember,
+  migrateRememberClosedTabs: vi.fn().mockResolvedValue(true),
 }))
 vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: mockGetSession } } }))
 vi.mock('@/lib/entitlementTier', () => ({ fetchTier: mockFetchTier }))
 
 import { createRecentlyClosedRecorder, resolveRecentlyClosedPlan } from '@/lib/recentlyClosedRecorder'
 import { quietCloseTabKey, quietCloseWindowKey } from '@/lib/recentlyClosed'
-import { APP_SETTINGS_KEY, AUTO_SAVE_TIER_SEEN_KEY, LAST_USER_ID_KEY } from '@/lib/syncSettingKeys'
+import { AUTO_SAVE_TIER_SEEN_KEY, LAST_USER_ID_KEY } from '@/lib/syncSettingKeys'
 
 const NOW = 1_800_000_000_000
 let session: Map<string, unknown>
@@ -75,6 +78,7 @@ beforeEach(() => {
   mockNotify.mockReset()
   mockGetSession.mockReset().mockResolvedValue({ data: { session: null } })
   mockFetchTier.mockReset()
+  mockRemember.mockReset().mockResolvedValue(true)
 })
 
 afterEach(() => {
@@ -139,13 +143,16 @@ describe('snapshot cache', () => {
 })
 
 describe('recording', () => {
-  it('records a single closed tab as a tab entry with the plan limits', async () => {
+  it('records a single closed tab at once with the Pro limits, then trims a Free plan in its own step', async () => {
     const r = makeRecorder('free')
     await r.ready
     await r.onRemoved(1, { windowId: 1, isWindowClosing: false })
     await r.idle()
     expect(written()).toEqual([{ id: 'id1', closedAt: NOW, kind: 'tab', tabs: [{ url: 'https://t1.test/', title: 'T1' }] }])
-    expect(mockAdd.mock.calls[0][1]).toEqual(RECENTLY_CLOSED_LIMITS.free)
+    // recording never waits on the plan lookup: it writes with the Pro limits...
+    expect(mockAdd.mock.calls[0][1]).toEqual(RECENTLY_CLOSED_LIMITS.pro)
+    // ...and the known Free plan trims afterwards
+    expect(mockPrune).toHaveBeenCalledWith(RECENTLY_CLOSED_LIMITS.free, NOW)
     expect(mockNotify).toHaveBeenCalled()
     expect(r.snapshots.has(1)).toBe(false)
     r.dispose()
@@ -157,12 +164,14 @@ describe('recording', () => {
     await r.onRemoved(1, { windowId: 1, isWindowClosing: false })
     await r.idle()
     expect(mockAdd.mock.calls[0][1]).toEqual(RECENTLY_CLOSED_LIMITS.pro)
+    expect(mockPrune).not.toHaveBeenCalled()
     r.dispose()
   })
 
   it.each([
-    ['the setting is off', () => (settings[APP_SETTINGS_KEY] = { rememberClosedTabs: false }), 1, 'off'],
-    ['the tab is private', () => (openTabs[0] = liveTab(1, { incognito: true })), 1, 'incognito'],
+    ['the setting is off', () => mockRemember.mockResolvedValue(false), 1, 'off'],
+    // private tabs are never snapshotted at all, so their close is an unknown tab
+    ['the tab is private', () => (openTabs[0] = liveTab(1, { incognito: true })), 1, 'unknown-tab'],
     ['the page is a browser page', () => (openTabs[0] = liveTab(1, { url: 'chrome://newtab/' })), 1, 'not-recordable'],
     ['TabMerger closed it quietly', () => session.set(quietCloseTabKey(1), NOW - 1000), 1, 'quiet'],
     ['TabMerger closed its window quietly', () => session.set(quietCloseWindowKey(1), NOW - 1000), 1, 'quiet'],

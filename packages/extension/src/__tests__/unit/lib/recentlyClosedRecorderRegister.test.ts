@@ -16,6 +16,8 @@ vi.mock('@/lib/recentlyClosedDb', () => ({
   pruneRecentlyClosed: h.prune,
   purgeClearedRecentlyClosed: h.purge,
   notifyRecentlyClosedChanged: h.notify,
+  getRememberClosedTabs: vi.fn().mockResolvedValue(true),
+  migrateRememberClosedTabs: vi.fn().mockResolvedValue(true),
 }))
 vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: vi.fn().mockResolvedValue({ data: { session: null } }) } } }))
 vi.mock('@/lib/entitlementTier', () => ({ fetchTier: vi.fn() }))

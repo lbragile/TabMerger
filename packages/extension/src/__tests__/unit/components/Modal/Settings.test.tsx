@@ -77,6 +77,8 @@ vi.mock('@/lib/aiFlag', () => ({
 
 vi.mock('@/lib/demo', () => ({ enterDemoMode: mockEnterDemoMode }))
 
+// "Remember closed tabs" is read from its own store by useAppSettings: kept off the getDb mock
+vi.mock('@/lib/recentlyClosedDb', () => ({ getRememberClosedTabs: vi.fn().mockResolvedValue(true) }))
 vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
   setSetting: mockSetSetting,

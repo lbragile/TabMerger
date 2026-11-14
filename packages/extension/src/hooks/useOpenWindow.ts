@@ -38,7 +38,9 @@ export function useOpenWindow() {
     } else {
       // Nothing open yet — create a new window, populate it, then remove the initial blank tab
       const incognito = await resolveIncognito(window.incognito);
-      const newWin = await chrome.windows.create(incognito ? { focused: true, incognito: true } : { focused: true });
+      // Created UNFOCUSED and focused at the end: focusing it first dismisses this popup, and the
+      // rest of the work (its tabs, closing the blank tab after a storage write) would be lost.
+      const newWin = await chrome.windows.create(incognito ? { focused: false, incognito: true } : { focused: false });
       if (!newWin) return;
       const targetWindowId = newWin.id!;
       const blankTabId = newWin.tabs?.[0]?.id;
@@ -55,6 +57,11 @@ export function useOpenWindow() {
       if (blankTabId !== undefined) {
         // the browser's own blank tab, never the user's: not a close to remember
         await closeTabs(blankTabId, { record: false });
+      }
+      try {
+        await chrome.windows.update(targetWindowId, { focused: true });
+      } catch {
+        // focusing is cosmetic: the window and its tabs are open
       }
     }
   };

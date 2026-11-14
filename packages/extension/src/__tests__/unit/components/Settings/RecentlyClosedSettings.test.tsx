@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { RECENTLY_CLOSED_CLEAR_DELAY_MS, RECENTLY_CLOSED_LIMITS } from '@tabmerger/shared'
+import { RECENTLY_CLOSED_LIMITS, RECENTLY_CLOSED_UNDO_TOAST_MS } from '@tabmerger/shared'
 
 const h = vi.hoisted(() => ({
   entitlements: { tier: 'pro', loading: false } as Record<string, unknown>,
@@ -12,6 +12,8 @@ const h = vi.hoisted(() => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
   track: vi.fn(),
   failSet: { on: false },
+  // the switch lives in the recently-closed store's meta row
+  remember: { on: true },
 }))
 
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => h.entitlements }))
@@ -24,7 +26,17 @@ vi.mock('@/lib/localDb', () => ({
 }))
 vi.mock('@/lib/recentlyClosedDb', () => ({
   getRecentlyClosedEntries: async () => h.entries,
-  markRecentlyClosedCleared: h.mark,
+  getRememberClosedTabs: async () => h.remember.on,
+  setRememberClosedTabs: async (on: boolean) => {
+    if (h.failSet.on) throw new Error('disk full')
+    h.remember.on = on
+  },
+  markRecentlyClosedCleared: async (ids: unknown, now: number, opts: { turnOff?: boolean } = {}) => {
+    if (h.failSet.on) throw new Error('disk full')
+    const marked = await h.mark(ids, now, opts)
+    if (opts.turnOff) h.remember.on = false
+    return marked
+  },
   unmarkRecentlyClosedCleared: h.unmark,
   deleteRecentlyClosedEntries: vi.fn(),
   putRecentlyClosedEntries: vi.fn(),
@@ -34,7 +46,6 @@ vi.mock('@/lib/toast', () => ({ toast: h.toast }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: (...a: unknown[]) => h.track(...a) }))
 
 import { RecentlyClosedSettings } from '@/components/Settings/RecentlyClosedSettings'
-import { APP_SETTINGS_KEY } from '@/lib/syncSettingKeys'
 
 const entry = (id: string) => ({ id, closedAt: Date.now() - 1000, kind: 'tab', tabs: [{ url: `https://${id}.test/`, title: id }] })
 
@@ -57,6 +68,7 @@ beforeEach(() => {
   h.entries = []
   h.stored.clear()
   h.failSet.on = false
+  h.remember.on = true
   h.mark.mockReset().mockResolvedValue([])
   h.unmark.mockReset().mockResolvedValue(0)
   ;(globalThis as { chrome?: unknown }).chrome = {
@@ -109,14 +121,28 @@ describe('RecentlyClosedSettings', () => {
     await waitFor(() => expect(clearBtn()).toBeEnabled())
     fireEvent.click(clearBtn())
     await waitFor(() => expect(h.toast.success).toHaveBeenCalled())
-    expect(h.mark).toHaveBeenCalledWith('all')
+    expect(h.mark).toHaveBeenCalledWith('all', expect.any(Number), {})
     expect(h.track).toHaveBeenCalledWith('recently_closed_cleared')
     const [message, opts] = h.toast.success.mock.calls[0]
     expect(message).toBe('Cleared 2 closed tabs and windows')
-    expect(opts.duration).toBe(RECENTLY_CLOSED_CLEAR_DELAY_MS - 1000)
+    expect(opts.duration).toBe(RECENTLY_CLOSED_UNDO_TOAST_MS)
     // the toast's Undo takes the mark off
+    h.unmark.mockResolvedValue(2)
     opts.action.onClick()
     await waitFor(() => expect(h.unmark).toHaveBeenCalledWith(['a', 'b']))
+    expect(h.toast.error).not.toHaveBeenCalled()
+  })
+
+  it('an Undo that comes after the delete says the entries could not be brought back', async () => {
+    h.entries = [entry('a'), entry('b')]
+    h.mark.mockResolvedValue(['a', 'b'])
+    h.unmark.mockResolvedValue(1)
+    renderIt()
+    await waitFor(() => expect(clearBtn()).toBeEnabled())
+    fireEvent.click(clearBtn())
+    await waitFor(() => expect(h.toast.success).toHaveBeenCalled())
+    h.toast.success.mock.calls[0][1].action.onClick()
+    await waitFor(() => expect(h.toast.error).toHaveBeenCalledWith("Couldn't bring them back: they were already deleted."))
   })
 
   it('clearing a list that turns out empty shows no toast; a failure shows the error toast', async () => {
@@ -151,20 +177,38 @@ describe('RecentlyClosedSettings', () => {
     await waitFor(() => expect(toggle()).toBeEnabled())
     fireEvent.click(toggle())
     await waitFor(() => expect(onSettingsSaved).toHaveBeenCalledWith({ rememberClosedTabs: false }))
-    expect((h.stored.get(APP_SETTINGS_KEY) as { rememberClosedTabs: boolean }).rememberClosedTabs).toBe(false)
-    expect(h.mark).toHaveBeenCalledWith('all')
+    expect(h.remember.on).toBe(false)
+    expect(h.mark).toHaveBeenCalledWith('all', expect.any(Number), { turnOff: true })
     expect(h.track).toHaveBeenCalledWith('recently_closed_toggled', { on: 0 })
     const [message, opts] = h.toast.success.mock.calls[0]
     expect(message).toBe('Turned off · cleared 2 closed tabs and windows')
-    expect(opts.duration).toBe(RECENTLY_CLOSED_CLEAR_DELAY_MS - 1000)
+    expect(opts.duration).toBe(RECENTLY_CLOSED_UNDO_TOAST_MS)
     // off: the summary becomes the off line and Clear list goes away
     await waitFor(() => expect(screen.getByTestId('recently-closed-summary')).toHaveTextContent('Remembering closed tabs is off.'))
     expect(screen.queryByRole('button', { name: 'Clear list' })).toBeNull()
 
+    h.unmark.mockResolvedValue(2)
     opts.action.onClick()
     await waitFor(() => expect(onSettingsSaved).toHaveBeenLastCalledWith({ rememberClosedTabs: true }))
     expect(h.unmark).toHaveBeenCalledWith(['a', 'b'])
-    expect((h.stored.get(APP_SETTINGS_KEY) as { rememberClosedTabs: boolean }).rememberClosedTabs).toBe(true)
+    expect(h.remember.on).toBe(true)
+    expect(h.toast.error).not.toHaveBeenCalled()
+  })
+
+  it('a late Undo of turning it off still turns it back on, and says the list is gone', async () => {
+    h.entries = [entry('a')]
+    h.mark.mockResolvedValue(['a'])
+    h.unmark.mockResolvedValue(0)
+    const { onSettingsSaved } = renderIt()
+    await waitFor(() => expect(toggle()).toBeEnabled())
+    fireEvent.click(toggle())
+    await waitFor(() => expect(h.toast.success).toHaveBeenCalled())
+    h.toast.success.mock.calls[0][1].action.onClick()
+    await waitFor(() =>
+      expect(h.toast.error).toHaveBeenCalledWith('Remembering closed tabs is back on, but the cleared list was already deleted.')
+    )
+    expect(h.remember.on).toBe(true)
+    expect(onSettingsSaved).toHaveBeenLastCalledWith({ rememberClosedTabs: true })
   })
 
   it('turning it off with an empty list uses the plain message', async () => {
@@ -176,7 +220,7 @@ describe('RecentlyClosedSettings', () => {
   })
 
   it('turning it on again saves it, tracks it and shows no toast', async () => {
-    h.stored.set(APP_SETTINGS_KEY, { rememberClosedTabs: false })
+    h.remember.on = false
     const { onSettingsSaved } = renderIt()
     await waitFor(() => expect(toggle()).toBeEnabled())
     expect(toggle()).toHaveAttribute('aria-checked', 'false')

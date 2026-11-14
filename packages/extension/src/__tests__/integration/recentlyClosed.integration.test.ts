@@ -5,6 +5,7 @@ import {
   addRecentlyClosedEntry,
   deleteRecentlyClosedEntries,
   getRecentlyClosedEntries,
+  migrateRememberClosedTabs,
   markRecentlyClosedCleared,
   pruneRecentlyClosed,
   purgeClearedRecentlyClosed,
@@ -43,7 +44,9 @@ describe('recording (add + dedupe + prune in one transaction)', () => {
   })
 
   it('writes nothing while the setting is off (checked inside the write)', async () => {
+    // the switch lives in the store's meta row (the old appSettings value is migrated at worker start)
     await setSetting(APP_SETTINGS_KEY, { rememberClosedTabs: false })
+    await migrateRememberClosedTabs()
     expect(await addRecentlyClosedEntry(tab('x', 'https://x.test', NOW), pro, NOW)).toBe(false)
     expect(await ids(true)).toEqual([])
   })

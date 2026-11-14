@@ -136,11 +136,12 @@ describe('useOpenWindow', () => {
       await result.current(window)
     })
 
-    // Hook now creates a focused window first, then adds tabs individually
-    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: true })
+    // The window is created UNFOCUSED (focusing would dismiss the popup mid-way), filled, then focused
+    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: false })
     expect(chromeMock.tabs.create).toHaveBeenCalledWith({ windowId: 99, url: 'https://a.com' })
     expect(chromeMock.tabs.create).toHaveBeenCalledWith({ windowId: 99, url: 'https://b.com' })
-    expect(chromeMock.windows.update).not.toHaveBeenCalled()
+    expect(chromeMock.windows.update).toHaveBeenCalledTimes(1)
+    expect(chromeMock.windows.update).toHaveBeenCalledWith(99, { focused: true })
   })
 
   it('creates only missing tabs in the matched window and focuses it when some URLs are already open', async () => {
@@ -210,7 +211,7 @@ describe('useOpenWindow', () => {
     })
 
     // Only the tab with a URL should be created
-    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: true })
+    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: false })
     expect(chromeMock.tabs.create).toHaveBeenCalledTimes(1)
     expect(chromeMock.tabs.create).toHaveBeenCalledWith({ windowId: 99, url: 'https://a.com' })
   })
@@ -1449,7 +1450,8 @@ describe('useToggleWindowIncognito', () => {
     expect(chromeMock.windows.create).toHaveBeenCalledWith({
       incognito: true,
       url: ['https://a.com', 'https://b.com'],
-      focused: true,
+      // unfocused until the old window is closed, then focused (see useToggleWindowIncognito)
+      focused: false,
     })
   })
 
@@ -1467,6 +1469,20 @@ describe('useToggleWindowIncognito', () => {
     })
 
     expect(chromeMock.windows.remove).toHaveBeenCalledWith(42)
+  })
+
+  it('focuses the new window only AFTER the old one is closed (focusing first dismissed the popup mid-way)', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [nowOpenWindow(42, [tab(1, 'https://a.com')])]
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, makeState([nowOpen]))
+    chromeMock.windows.create.mockResolvedValueOnce({ id: 77 })
+    const { result } = renderHook(() => useToggleWindowIncognito(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0 })
+    })
+    expect(chromeMock.windows.update).toHaveBeenCalledWith(77, { focused: true })
+    expect(chromeMock.windows.remove.mock.invocationCallOrder[0]).toBeLessThan(chromeMock.windows.update.mock.invocationCallOrder[0])
   })
 
   it('filters out restricted URLs (chrome://, about:) from the chrome.windows.create call', async () => {

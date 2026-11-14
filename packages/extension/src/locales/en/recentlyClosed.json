@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Couldn't open this page. It stays in the list.",
-    "changeFailed": "Couldn't change the list of closed tabs. Try again."
+    "changeFailed": "Couldn't change the list of closed tabs. Try again.",
+    "undoIncomplete": "Couldn't bring them back: they were already deleted.",
+    "undoTurnedOnListGone": "Remembering closed tabs is back on, but the cleared list was already deleted."
   },
   "settings": {
     "title": "Remember closed tabs",

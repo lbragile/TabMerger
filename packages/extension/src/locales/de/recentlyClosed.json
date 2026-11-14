@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Diese Seite ließ sich nicht öffnen. Sie bleibt in der Liste.",
-    "changeFailed": "Die Liste geschlossener Tabs ließ sich nicht ändern. Versuche es erneut."
+    "changeFailed": "Die Liste geschlossener Tabs ließ sich nicht ändern. Versuche es erneut.",
+    "undoIncomplete": "Konnte sie nicht zurückholen: Sie waren schon gelöscht.",
+    "undoTurnedOnListGone": "Geschlossene Tabs merken ist wieder an, aber die geleerte Liste war schon gelöscht."
   },
   "settings": {
     "title": "Geschlossene Tabs merken",

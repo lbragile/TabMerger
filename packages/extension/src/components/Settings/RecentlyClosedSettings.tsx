@@ -44,7 +44,13 @@ export function RecentlyClosedSettings({ onSettingsSaved }: RecentlyClosedSettin
     label: t('header.undo'),
     onClick: () =>
       undo(token, {
-        onSuccess: afterUndo,
+        onSuccess: ({ complete }) => {
+          afterUndo?.();
+          // the Undo came after the worker deleted (some of) the cleared entries
+          if (complete) return;
+          const turnedOn = token.kind === 'unmark' && token.turnBackOn === true;
+          toast.error(t(turnedOn ? 'recentlyClosed.errors.undoTurnedOnListGone' : 'recentlyClosed.errors.undoIncomplete'));
+        },
         onError: () => toast.error(t('recentlyClosed.errors.changeFailed'))
       })
   });

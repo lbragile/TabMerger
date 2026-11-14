@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Impossible d'ouvrir cette page. Elle reste dans la liste.",
-    "changeFailed": "Impossible de modifier la liste des onglets fermés. Réessayez."
+    "changeFailed": "Impossible de modifier la liste des onglets fermés. Réessayez.",
+    "undoIncomplete": "Impossible de les récupérer : ils étaient déjà supprimés.",
+    "undoTurnedOnListGone": "La mémorisation des onglets fermés est réactivée, mais la liste vidée était déjà supprimée."
   },
   "settings": {
     "title": "Mémoriser les onglets fermés",

@@ -582,14 +582,22 @@ export function useToggleWindowIncognito() {
         const win = group.windows[windowIndex];
         const tabUrls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
         const oldWindowId = win.id;
-        // no `url: []`: with nothing to reopen the window is created without a url list
-        await chrome.windows.create(
+        // no `url: []`: with nothing to reopen the window is created without a url list.
+        // Created UNFOCUSED: focusing it would dismiss this popup before the old window is closed
+        // (the quiet close awaits a storage write first), leaving both copies open. The old window
+        // is closed first, then the new one is focused.
+        const created = await chrome.windows.create(
           tabUrls.length > 0
-            ? { incognito: !win.incognito, url: tabUrls, focused: true }
-            : { incognito: !win.incognito, focused: true }
+            ? { incognito: !win.incognito, url: tabUrls, focused: false }
+            : { incognito: !win.incognito, focused: false }
         );
         // its tabs were just reopened in the new window: not a close to remember
         await closeWindows(oldWindowId, { record: false });
+        try {
+          if (typeof created?.id === 'number') await chrome.windows.update(created.id, { focused: true });
+        } catch {
+          // focusing is cosmetic: the window is open
+        }
         return;
       }
 

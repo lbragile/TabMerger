@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "无法打开此页面。它会保留在列表中。",
-    "changeFailed": "无法更改已关闭标签页列表。请重试。"
+    "changeFailed": "无法更改已关闭标签页列表。请重试。",
+    "undoIncomplete": "无法恢复：它们已被删除。",
+    "undoTurnedOnListGone": "已重新开启记住关闭的标签页，但清空的列表已被删除。"
   },
   "settings": {
     "title": "记住关闭的标签页",

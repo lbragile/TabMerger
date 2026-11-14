@@ -18,6 +18,8 @@ vi.mock('@/lib/recentlyClosedDb', () => ({
   pruneRecentlyClosed: mockPrune,
   purgeClearedRecentlyClosed: vi.fn().mockResolvedValue({ deleted: 0, nextPurgeAt: null }),
   notifyRecentlyClosedChanged: vi.fn(),
+  getRememberClosedTabs: vi.fn().mockResolvedValue(true),
+  migrateRememberClosedTabs: vi.fn().mockResolvedValue(true),
 }))
 
 import { createRecentlyClosedRecorder, resolveRecentlyClosedPlan } from '@/lib/recentlyClosedRecorder'

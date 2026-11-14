@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "No se pudo abrir esta página. Sigue en la lista.",
-    "changeFailed": "No se pudo cambiar la lista de pestañas cerradas. Inténtalo de nuevo."
+    "changeFailed": "No se pudo cambiar la lista de pestañas cerradas. Inténtalo de nuevo.",
+    "undoIncomplete": "No se pudieron recuperar: ya se habían borrado.",
+    "undoTurnedOnListGone": "Recordar pestañas cerradas vuelve a estar activado, pero la lista vaciada ya se había borrado."
   },
   "settings": {
     "title": "Recordar pestañas cerradas",

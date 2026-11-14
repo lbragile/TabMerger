@@ -20,6 +20,7 @@ import {
   type SearchNonMatching
 } from '@tabmerger/shared';
 import { getSetting, setSetting } from '@/lib/localDb';
+import { getRememberClosedTabs } from '@/lib/recentlyClosedDb';
 
 export interface AppSettings {
   theme: 'light' | 'dark' | 'system';
@@ -59,9 +60,10 @@ export interface AppSettings {
   autoSaveTabThreshold: AutoSaveTabThreshold;
   autoSaveNotify: boolean;
   /**
-   * "Remember closed tabs" (Settings → Data). Device-local like every setting here (settings are
-   * never synced). Settings saved before it existed lack it: read through `readRememberClosedTabs`
-   * (lib/recentlyClosed.ts), where only an explicit `false` is off.
+   * "Remember closed tabs" (Settings → Data). Device-local. Its real home is the recently-closed
+   * store's meta row (lib/recentlyClosedDb.ts, so a recording touches one store): `useAppSettings`
+   * reads it from there, and only `useSetRememberClosedTabs` changes it (a value written here by a
+   * settings save is ignored). Read through `readRememberClosedTabs`: only an explicit `false` is off.
    */
   rememberClosedTabs: boolean;
 }
@@ -114,6 +116,16 @@ function notifyBackupSettingsChanged(): void {
 
 export const APP_SETTINGS_QUERY_KEY = ['appSettings'] as const;
 
+/** The stored settings, with "Remember closed tabs" from its own store (the stored value if that can't be read). */
+async function readAppSettings(): Promise<AppSettings> {
+  const settings = await getSetting<AppSettings>('appSettings', DEFAULT_APP_SETTINGS);
+  try {
+    return { ...settings, rememberClosedTabs: await getRememberClosedTabs() };
+  } catch {
+    return settings;
+  }
+}
+
 /**
  * Reads the single 'appSettings' record from IndexedDB via TanStack Query.
  * staleTime:0 (like useGroups) so every subscriber always reflects the latest
@@ -124,7 +136,7 @@ export const APP_SETTINGS_QUERY_KEY = ['appSettings'] as const;
 export function useAppSettings() {
   return useQuery({
     queryKey: APP_SETTINGS_QUERY_KEY,
-    queryFn: () => getSetting<AppSettings>('appSettings', DEFAULT_APP_SETTINGS),
+    queryFn: readAppSettings,
     staleTime: 0,
     refetchOnWindowFocus: false
   });

@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Halaman ini tidak bisa dibuka. Halaman tetap ada di daftar.",
-    "changeFailed": "Daftar tab yang ditutup tidak bisa diubah. Coba lagi."
+    "changeFailed": "Daftar tab yang ditutup tidak bisa diubah. Coba lagi.",
+    "undoIncomplete": "Tidak bisa dikembalikan: sudah dihapus.",
+    "undoTurnedOnListGone": "Mengingat tab yang ditutup aktif lagi, tetapi daftar yang dikosongkan sudah dihapus."
   },
   "settings": {
     "title": "Ingat tab yang ditutup",

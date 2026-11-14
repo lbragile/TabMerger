@@ -6,7 +6,9 @@ import {
   RECENTLY_CLOSED_MAX_TITLE_LENGTH,
   RECENTLY_CLOSED_MAX_URL_LENGTH,
   RECENTLY_CLOSED_MAX_WINDOW_TABS,
+  RECENTLY_CLOSED_META_ID,
   RECENTLY_CLOSED_QUIET_CLOSE_TTL_MS,
+  RECENTLY_CLOSED_UNPIN_GRACE_MS,
   RECENTLY_CLOSED_STORAGE_KEYS,
   isScriptUrl
 } from '@tabmerger/shared';
@@ -43,6 +45,18 @@ export interface TabSnapshot {
   /** Browser tab group id (`-1`/absent = none), kept so `tabGroups.onUpdated` can find its tabs. */
   groupId?: number;
   tabGroup?: ClosedTabGroup;
+  /** When the tab last went from pinned to unpinned (see {@link pinnedAtClose}). */
+  unpinnedAt?: number;
+}
+
+/**
+ * Whether the tab counts as pinned when it closed at `closedAt`. Chrome un-pins a window's pinned
+ * tabs (`onUpdated { pinned: false }`) just before closing the window, so a tab un-pinned within
+ * `RECENTLY_CLOSED_UNPIN_GRACE_MS` before its close was pinned as far as the user is concerned.
+ */
+export function pinnedAtClose(snap: TabSnapshot, closedAt: number): boolean {
+  if (snap.pinned) return true;
+  return typeof snap.unpinnedAt === 'number' && closedAt >= snap.unpinnedAt && closedAt - snap.unpinnedAt <= RECENTLY_CLOSED_UNPIN_GRACE_MS;
 }
 
 /** One tab as stored in the list. */
@@ -145,16 +159,20 @@ export function tabGroupOf(group: { title?: string; color?: string } | null | un
  */
 export function snapshotFromTab(tab: chrome.tabs.Tab, tabGroup?: ClosedTabGroup): TabSnapshot | null {
   if (typeof tab.id !== 'number' || tab.id < 0 || typeof tab.windowId !== 'number') return null;
+  // private tabs are never recorded, so nothing about them is kept (not even in session storage)
+  if (tab.incognito === true) return null;
   const url = tab.url || tab.pendingUrl || '';
   const snap: TabSnapshot = {
     url,
     title: typeof tab.title === 'string' ? tab.title : '',
     pinned: tab.pinned === true,
     windowId: tab.windowId,
-    incognito: tab.incognito === true,
+    incognito: false,
     index: typeof tab.index === 'number' ? tab.index : 0
   };
-  if (tab.favIconUrl) snap.favIconUrl = tab.favIconUrl;
+  // capped like stored entries: a huge inline icon must not fill session storage (10 MB)
+  const favIconUrl = cleanFavIconUrl(tab.favIconUrl);
+  if (favIconUrl) snap.favIconUrl = favIconUrl;
   if (typeof tab.groupId === 'number' && tab.groupId >= 0) {
     snap.groupId = tab.groupId;
     if (tabGroup) snap.tabGroup = tabGroup;
@@ -312,3 +330,32 @@ export function isQuietMarkFresh(at: unknown, now: number): boolean {
 export function isQuietCloseKey(key: string): boolean {
   return key.startsWith(`${RECENTLY_CLOSED_STORAGE_KEYS.quietCloseIds}:`);
 }
+
+/**
+ * The store's bookkeeping row (id `RECENTLY_CLOSED_META_ID`), never an entry:
+ *  - `remember`: the "Remember closed tabs" switch (absent until set or migrated from the old
+ *    `appSettings.rememberClosedTabs`; absent reads as on);
+ *  - `clearedBefore`: when the whole list was last cleared (Clear list, turning it off, "Clear all
+ *    data"). A close that happened before it but was still queued (a window buffer, the write
+ *    queue) is dropped instead of bringing a cleared list back.
+ */
+export interface RecentlyClosedMeta {
+  id: typeof RECENTLY_CLOSED_META_ID;
+  remember?: boolean;
+  clearedBefore?: number;
+}
+
+export function isMetaRow(raw: unknown): boolean {
+  return typeof raw === 'object' && raw !== null && (raw as { id?: unknown }).id === RECENTLY_CLOSED_META_ID;
+}
+
+/** The stored meta row read back, validated (anything malformed is left out). */
+export function parseRecentlyClosedMeta(raw: unknown): RecentlyClosedMeta {
+  const meta: RecentlyClosedMeta = { id: RECENTLY_CLOSED_META_ID };
+  if (!isMetaRow(raw)) return meta;
+  const r = raw as Record<string, unknown>;
+  if (typeof r.remember === 'boolean') meta.remember = r.remember;
+  if (typeof r.clearedBefore === 'number' && Number.isFinite(r.clearedBefore)) meta.clearedBefore = r.clearedBefore;
+  return meta;
+}
+

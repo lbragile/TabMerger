@@ -205,7 +205,7 @@ describe('record: false (its content is safe elsewhere)', () => {
     ;(chrome.windows.getAll as ReturnType<typeof vi.fn>).mockResolvedValue([])
     const { wrapper } = setup({ active: { id: group.id, index: 0 }, available: [group] })
     const { result } = renderHook(() => useOpenWindow(), { wrapper })
-    await act(async () => { await result.current(w as ExtWindow, group.id) })
+    await act(async () => { await result.current(w as ExtWindow) })
     expect(tabsRemove).toHaveBeenCalledWith(900)
     expect(marks()).toEqual([quietCloseTabKey(900)])
   })

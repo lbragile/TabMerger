@@ -1,12 +1,10 @@
 import { useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { RECENTLY_CLOSED_CLEAR_DELAY_MS, RECENTLY_CLOSED_MESSAGE } from '@tabmerger/shared';
-import { getSetting, setSetting } from '@/lib/localDb';
-import { APP_SETTINGS_KEY } from '@/lib/syncSettingKeys';
+import { RECENTLY_CLOSED_MESSAGE, RECENTLY_CLOSED_UNDO_TOAST_MS as UNDO_TOAST_MS } from '@tabmerger/shared';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { closeTabs, closeWindows } from '@/lib/closeLiveTabs';
-import { APP_SETTINGS_QUERY_KEY, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
+import { APP_SETTINGS_QUERY_KEY, type AppSettings } from '@/hooks/useAppSettings';
 import type { ClosedTab, RecentlyClosedEntry } from '@/lib/recentlyClosed';
 import { groupEntriesByDay, localDayKey, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
 import {
@@ -15,6 +13,7 @@ import {
   markRecentlyClosedCleared,
   notifyRecentlyClosedChanged,
   putRecentlyClosedEntries,
+  setRememberClosedTabs,
   unmarkRecentlyClosedCleared
 } from '@/lib/recentlyClosedDb';
 
@@ -38,17 +37,16 @@ import {
  *   useUndoRecentlyClosed()          undo any of the above
  *
  * Removing and clearing only MARK entries (`clearedAt`): they disappear at once and the worker
- * deletes them about 10 s later, so Undo works for that long (show the toast for ~10 s). Nothing
- * here touches the groups, the undo stack or sync.
+ * deletes them about 60 s later. Show the Undo toast for RECENTLY_CLOSED_UNDO_TOAST_MS (9 s): the
+ * long delete delay covers a toast Sonner paused (hovered, or the page hidden). If Undo still comes
+ * too late, useUndoRecentlyClosed resolves `{ complete: false }`: tell the user the entries could not
+ * be brought back. Nothing here touches the groups, the undo stack or sync.
  */
 
 export const RECENTLY_CLOSED_QUERY_KEY = ['recentlyClosed'] as const;
 
-/**
- * How long an Undo toast for a removal or clear stays up: a second short of the worker's delete
- * delay, so Undo is never offered for entries that are already gone.
- */
-export const RECENTLY_CLOSED_UNDO_TOAST_MS = RECENTLY_CLOSED_CLEAR_DELAY_MS - 1000;
+/** How long an Undo toast for a reopen, removal or clear stays up (well inside the 60 s delete delay). */
+export const RECENTLY_CLOSED_UNDO_TOAST_MS = UNDO_TOAST_MS;
 
 /** What a reopen or a removal did, so it can be undone. Opaque to the UI: pass it to {@link useUndoRecentlyClosed}. */
 export type RecentlyClosedUndo =
@@ -214,12 +212,16 @@ export function useReopenRecentlyClosed() {
 }
 
 /** Marks entries cleared and resolves the undo. */
-async function clearEntries(qc: QueryClient, target: { ids: readonly string[] } | { day: string } | 'all'): Promise<RecentlyClosedUndo & { kind: 'unmark' }> {
+async function clearEntries(
+  qc: QueryClient,
+  target: { ids: readonly string[] } | { day: string } | 'all',
+  opts: { turnOff?: boolean } = {}
+): Promise<RecentlyClosedUndo & { kind: 'unmark' }> {
   let ids: readonly string[] | 'all';
   if (target === 'all') ids = 'all';
   else if ('day' in target) ids = (await getRecentlyClosedEntries()).filter((e) => localDayKey(e.closedAt) === target.day).map((e) => e.id);
   else ids = target.ids;
-  const marked = ids === 'all' || ids.length > 0 ? await markRecentlyClosedCleared(ids) : [];
+  const marked = ids === 'all' || ids.length > 0 ? await markRecentlyClosedCleared(ids, Date.now(), opts) : [];
   if (marked.length > 0) changed(qc, true);
   return { kind: 'unmark', ids: marked };
 }
@@ -242,39 +244,51 @@ export function useClearRecentlyClosed() {
   return useMutation({ mutationFn: () => clearEntries(qc, 'all') });
 }
 
-async function writeRememberSetting(qc: QueryClient, on: boolean): Promise<void> {
-  const current = await getSetting<AppSettings>(APP_SETTINGS_KEY, DEFAULT_APP_SETTINGS);
-  const next = { ...current, rememberClosedTabs: on };
-  await setSetting(APP_SETTINGS_KEY, next);
-  qc.setQueryData(APP_SETTINGS_QUERY_KEY, next);
+/** Mirrors the switch into the Settings cache (`useAppSettings` exposes it as `rememberClosedTabs`). */
+function cacheRememberSetting(qc: QueryClient, on: boolean): void {
+  qc.setQueryData<AppSettings>(APP_SETTINGS_QUERY_KEY, (prev) => (prev ? { ...prev, rememberClosedTabs: on } : prev));
 }
 
 /**
- * The "Remember closed tabs" switch. Saved at once (a read-modify-write of the stored settings, so
- * nothing else in them is overwritten). Turning it OFF stops recording at once (the worker re-reads
- * it inside every write) and clears the list: the resolved undo turns it back on and brings the
- * entries back. Turning it on resolves `null` (nothing to undo).
+ * The "Remember closed tabs" switch. Saved at once in the recently-closed store's own meta row
+ * (one transaction; the worker re-reads it inside every recording). Turning it OFF stops recording
+ * and clears the list in ONE transaction: the resolved undo turns it back on and brings the entries
+ * back. Turning it on resolves `null` (nothing to undo).
  */
 export function useSetRememberClosedTabs() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (on: boolean): Promise<(RecentlyClosedUndo & { kind: 'unmark' }) | null> => {
-      await writeRememberSetting(qc, on);
-      if (on) return null;
-      const undo = await clearEntries(qc, 'all');
+      if (on) {
+        await setRememberClosedTabs(true);
+        cacheRememberSetting(qc, true);
+        return null;
+      }
+      const undo = await clearEntries(qc, 'all', { turnOff: true });
+      cacheRememberSetting(qc, false);
       return { ...undo, turnBackOn: true };
     }
   });
 }
 
-/** Undoes a reopen, a removal, a clear or turning the setting off. */
+/**
+ * Undoes a reopen, a removal, a clear or turning the setting off. Resolves `{ complete }`: `false`
+ * when some cleared entries were already deleted (the Undo came after the worker's delete delay), so
+ * the UI can say the list could not be fully brought back. Turning the setting back on happens
+ * either way.
+ */
 export function useUndoRecentlyClosed() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (undo: RecentlyClosedUndo): Promise<void> => {
+    mutationFn: async (undo: RecentlyClosedUndo): Promise<{ complete: boolean }> => {
+      let complete = true;
       if (undo.kind === 'unmark') {
-        if (undo.turnBackOn) await writeRememberSetting(qc, true);
-        await unmarkRecentlyClosedCleared(undo.ids);
+        if (undo.turnBackOn) {
+          await setRememberClosedTabs(true);
+          cacheRememberSetting(qc, true);
+        }
+        const restored = await unmarkRecentlyClosedCleared(undo.ids);
+        complete = restored >= undo.ids.length;
       } else {
         await putRecentlyClosedEntries(undo.entries);
         // what the reopen opened goes away again, without being recorded as a new close
@@ -282,6 +296,7 @@ export function useUndoRecentlyClosed() {
         if (undo.openedTabIds.length > 0) await closeTabs(undo.openedTabIds, { record: false }).catch(() => {});
       }
       changed(qc);
+      return { complete };
     }
   });
 }

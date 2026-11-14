@@ -1,4 +1,5 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
+import { RECENTLY_CLOSED_META_ID } from '@tabmerger/shared';
 import { test, expect } from '../fixtures';
 import { openPopup, seedAndReload, startTitleServer, waitForStoredGroups, readStoredGroups } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
@@ -47,7 +48,8 @@ async function readClosed(reader: Page | Worker, includeCleared = false): Promis
         };
       })
   );
-  return all.filter((e) => includeCleared || e.clearedAt === undefined);
+  // the store also holds ONE meta row (the switch and the last full clear): never an entry
+  return all.filter((e) => e.id !== RECENTLY_CLOSED_META_ID && (includeCleared || e.clearedAt === undefined));
 }
 
 const lastSegment = (url: string) => decodeURIComponent(url.split('/').pop() ?? '');
@@ -153,11 +155,9 @@ test.describe('Recently closed: recording', () => {
     }
   });
 
-  // Known product gap: the pinned flag of a closed window's tab is lost, because Chrome un-pins the
-  // tab (tabs.onUpdated { pinned: false }) right before closing the window. Marked as an expected
-  // failure so this goes red (and the marker comes off) the day the recorder keeps the pin.
+  // Chrome un-pins a window's pinned tabs (tabs.onUpdated { pinned: false }) right before closing
+  // the window: the recorder counts a tab un-pinned that shortly before its close as pinned.
   test('closing a window keeps the pinned flag of its pinned tab', async ({ context, extensionId }) => {
-    test.fail();
     const server = await startTitleServer();
     try {
       const { sw } = await setup(context, extensionId);
@@ -308,17 +308,19 @@ test.describe('Recently closed: Settings > Data', () => {
     await expect
       .poll(async () =>
         page.evaluate(
-          () =>
+          (metaId: string) =>
             new Promise<boolean | null>((resolve) => {
               const req = indexedDB.open('tabmerger');
               req.onsuccess = () => {
-                const get = req.result.transaction('settings', 'readonly').objectStore('settings').get('appSettings');
+                // the switch lives in the recently-closed store's meta row
+                const get = req.result.transaction('recentlyClosed', 'readonly').objectStore('recentlyClosed').get(metaId);
                 get.onsuccess = () => {
                   req.result.close();
-                  resolve((get.result?.value?.rememberClosedTabs as boolean | undefined) ?? null);
+                  resolve((get.result?.remember as boolean | undefined) ?? null);
                 };
               };
-            })
+            }),
+          RECENTLY_CLOSED_META_ID
         )
       )
       .toBe(false);

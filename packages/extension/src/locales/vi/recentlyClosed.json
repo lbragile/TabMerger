@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Không mở được trang này. Trang vẫn còn trong danh sách.",
-    "changeFailed": "Không thay đổi được danh sách thẻ đã đóng. Hãy thử lại."
+    "changeFailed": "Không thay đổi được danh sách thẻ đã đóng. Hãy thử lại.",
+    "undoIncomplete": "Không khôi phục được: chúng đã bị xóa.",
+    "undoTurnedOnListGone": "Ghi nhớ thẻ đã đóng đã bật lại, nhưng danh sách đã xóa không còn nữa."
   },
   "settings": {
     "title": "Ghi nhớ thẻ đã đóng",

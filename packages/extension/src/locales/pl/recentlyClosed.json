@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Nie udało się otworzyć tej strony. Zostaje na liście.",
-    "changeFailed": "Nie udało się zmienić listy zamkniętych kart. Spróbuj ponownie."
+    "changeFailed": "Nie udało się zmienić listy zamkniętych kart. Spróbuj ponownie.",
+    "undoIncomplete": "Nie udało się ich przywrócić: zostały już usunięte.",
+    "undoTurnedOnListGone": "Zapamiętywanie zamkniętych kart jest znów włączone, ale wyczyszczona lista została już usunięta."
   },
   "settings": {
     "title": "Zapamiętuj zamknięte karty",

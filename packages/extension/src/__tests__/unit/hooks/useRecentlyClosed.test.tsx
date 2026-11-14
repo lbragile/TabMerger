@@ -15,6 +15,7 @@ const h = vi.hoisted(() => ({
   setSetting: vi.fn(),
   closeTabs: vi.fn(),
   closeWindows: vi.fn(),
+  setRemember: vi.fn(),
 }))
 
 vi.mock('@/lib/recentlyClosedDb', () => ({
@@ -24,6 +25,7 @@ vi.mock('@/lib/recentlyClosedDb', () => ({
   markRecentlyClosedCleared: h.mark,
   unmarkRecentlyClosedCleared: h.unmark,
   notifyRecentlyClosedChanged: h.notify,
+  setRememberClosedTabs: h.setRemember,
 }))
 vi.mock('@/lib/localDb', () => ({ getSetting: h.getSetting, setSetting: h.setSetting }))
 vi.mock('@/lib/closeLiveTabs', () => ({ closeTabs: h.closeTabs, closeWindows: h.closeWindows }))
@@ -292,7 +294,7 @@ describe('removing and clearing', () => {
     h.mark.mockResolvedValue(['a', 'b'])
     const { result } = renderHook(() => useRemoveRecentlyClosedEntry(), { wrapper })
     const undo = await result.current.mutateAsync({ ids: ['a', 'b'] })
-    expect(h.mark).toHaveBeenCalledWith(['a', 'b'])
+    expect(h.mark).toHaveBeenCalledWith(['a', 'b'], expect.any(Number), {})
     expect(undo).toEqual({ kind: 'unmark', ids: ['a', 'b'] })
     expect(h.notify).toHaveBeenCalled()
     expect(sendMessage).toHaveBeenCalledWith({ type: RECENTLY_CLOSED_MESSAGE.CLEARED }, expect.any(Function))
@@ -321,7 +323,7 @@ describe('removing and clearing', () => {
     h.mark.mockResolvedValue(['old'])
     const { result } = renderHook(() => useRemoveRecentlyClosedDay(), { wrapper })
     const undo = await result.current.mutateAsync({ day: localDayKey(old.closedAt) })
-    expect(h.mark).toHaveBeenCalledWith(['old'])
+    expect(h.mark).toHaveBeenCalledWith(['old'], expect.any(Number), {})
     expect(undo).toEqual({ kind: 'unmark', ids: ['old'] })
   })
 
@@ -337,7 +339,7 @@ describe('removing and clearing', () => {
     h.mark.mockResolvedValue(['a', 'b', 'c'])
     const { result } = renderHook(() => useClearRecentlyClosed(), { wrapper })
     const undo = await result.current.mutateAsync()
-    expect(h.mark).toHaveBeenCalledWith('all')
+    expect(h.mark).toHaveBeenCalledWith('all', expect.any(Number), {})
     expect(undo.ids).toHaveLength(3)
   })
 
@@ -352,28 +354,32 @@ describe('removing and clearing', () => {
     await expect(result.current.mutateAsync()).resolves.toMatchObject({ ids: ['a'] })
   })
 
-  it('the undo toast lasts a second less than the worker delete delay', () => {
-    expect(RECENTLY_CLOSED_UNDO_TOAST_MS).toBe(RECENTLY_CLOSED_CLEAR_DELAY_MS - 1000)
+  it('the undo toast is short (9 s) and the worker delete delay is far longer (a paused toast)', () => {
+    expect(RECENTLY_CLOSED_UNDO_TOAST_MS).toBe(9000)
+    expect(RECENTLY_CLOSED_CLEAR_DELAY_MS).toBeGreaterThanOrEqual(6 * RECENTLY_CLOSED_UNDO_TOAST_MS)
   })
 })
 
 describe('useSetRememberClosedTabs', () => {
-  it('turning it on writes the setting (keeping the others) and resolves null', async () => {
-    h.getSetting.mockResolvedValue({ theme: 'dark', rememberClosedTabs: false })
+  it('turning it on writes the switch in its own store, mirrors it into the settings cache and resolves null', async () => {
+    qc.setQueryData(APP_SETTINGS_QUERY_KEY, { theme: 'dark', rememberClosedTabs: false })
     const { result } = renderHook(() => useSetRememberClosedTabs(), { wrapper })
     await expect(result.current.mutateAsync(true)).resolves.toBeNull()
-    expect(h.setSetting).toHaveBeenCalledWith(APP_SETTINGS_KEY, { theme: 'dark', rememberClosedTabs: true })
+    expect(h.setRemember).toHaveBeenCalledWith(true)
+    expect(h.setSetting).not.toHaveBeenCalled()
     expect(qc.getQueryData(APP_SETTINGS_QUERY_KEY)).toEqual({ theme: 'dark', rememberClosedTabs: true })
     expect(h.mark).not.toHaveBeenCalled()
   })
 
-  it('turning it off writes the setting AND clears the list, resolving an undo that turns it back on', async () => {
-    h.getSetting.mockResolvedValue({ theme: 'dark', rememberClosedTabs: true })
+  it('turning it off switches it off AND clears the list in ONE write, resolving an undo that turns it back on', async () => {
+    qc.setQueryData(APP_SETTINGS_QUERY_KEY, { theme: 'dark', rememberClosedTabs: true })
     h.mark.mockResolvedValue(['a', 'b'])
     const { result } = renderHook(() => useSetRememberClosedTabs(), { wrapper })
     const undo = await result.current.mutateAsync(false)
-    expect(h.setSetting).toHaveBeenCalledWith(APP_SETTINGS_KEY, { theme: 'dark', rememberClosedTabs: false })
-    expect(h.mark).toHaveBeenCalledWith('all')
+    expect(h.mark).toHaveBeenCalledWith('all', expect.any(Number), { turnOff: true })
+    expect(h.setRemember).not.toHaveBeenCalled()
+    expect(h.setSetting).not.toHaveBeenCalled()
+    expect(qc.getQueryData(APP_SETTINGS_QUERY_KEY)).toEqual({ theme: 'dark', rememberClosedTabs: false })
     expect(undo).toEqual({ kind: 'unmark', ids: ['a', 'b'], turnBackOn: true })
   })
 })
@@ -381,20 +387,28 @@ describe('useSetRememberClosedTabs', () => {
 describe('useUndoRecentlyClosed', () => {
   const undoWith = async (token: Parameters<ReturnType<typeof useUndoRecentlyClosed>['mutateAsync']>[0]) => {
     const { result } = renderHook(() => useUndoRecentlyClosed(), { wrapper })
-    await result.current.mutateAsync(token)
+    return result.current.mutateAsync(token)
   }
 
-  it('unmark: takes the cleared mark off and refreshes', async () => {
-    await undoWith({ kind: 'unmark', ids: ['a'] })
+  it('unmark: takes the cleared mark off, refreshes and reports a complete undo', async () => {
+    h.unmark.mockResolvedValue(1)
+    await expect(undoWith({ kind: 'unmark', ids: ['a'] })).resolves.toEqual({ complete: true })
     expect(h.unmark).toHaveBeenCalledWith(['a'])
-    expect(h.setSetting).not.toHaveBeenCalled()
+    expect(h.setRemember).not.toHaveBeenCalled()
     expect(h.notify).toHaveBeenCalled()
   })
 
-  it('unmark with turnBackOn: switches Remember closed tabs back on first', async () => {
-    h.getSetting.mockResolvedValue({ rememberClosedTabs: false })
-    await undoWith({ kind: 'unmark', ids: ['a'], turnBackOn: true })
-    expect(h.setSetting).toHaveBeenCalledWith(APP_SETTINGS_KEY, { rememberClosedTabs: true })
+  it('an undo that comes after the delete reports it is incomplete', async () => {
+    h.unmark.mockResolvedValue(1)
+    await expect(undoWith({ kind: 'unmark', ids: ['a', 'b'] })).resolves.toEqual({ complete: false })
+  })
+
+  it('unmark with turnBackOn: switches Remember closed tabs back on first, even when the list is gone', async () => {
+    qc.setQueryData(APP_SETTINGS_QUERY_KEY, { rememberClosedTabs: false })
+    h.unmark.mockResolvedValue(0)
+    await expect(undoWith({ kind: 'unmark', ids: ['a'], turnBackOn: true })).resolves.toEqual({ complete: false })
+    expect(h.setRemember).toHaveBeenCalledWith(true)
+    expect(qc.getQueryData(APP_SETTINGS_QUERY_KEY)).toEqual({ rememberClosedTabs: true })
     expect(h.unmark).toHaveBeenCalledWith(['a'])
   })
 
@@ -420,7 +434,7 @@ describe('useUndoRecentlyClosed', () => {
   it('a tab or window that is already gone does not fail the undo', async () => {
     h.closeTabs.mockRejectedValue(new Error('No tab'))
     h.closeWindows.mockRejectedValue(new Error('No window'))
-    await expect(undoWith({ kind: 'restore', entries: [tabEntry('t')], openedTabIds: [1], openedWindowId: 2 })).resolves.toBeUndefined()
+    await expect(undoWith({ kind: 'restore', entries: [tabEntry('t')], openedTabIds: [1], openedWindowId: 2 })).resolves.toEqual({ complete: true })
     expect(h.notify).toHaveBeenCalled()
   })
 

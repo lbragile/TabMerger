@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "이 페이지를 열 수 없습니다. 목록에 그대로 남습니다.",
-    "changeFailed": "닫은 탭 목록을 변경할 수 없습니다. 다시 시도하세요."
+    "changeFailed": "닫은 탭 목록을 변경할 수 없습니다. 다시 시도하세요.",
+    "undoIncomplete": "되돌릴 수 없습니다: 이미 삭제되었습니다.",
+    "undoTurnedOnListGone": "닫은 탭 기억하기가 다시 켜졌지만, 지운 목록은 이미 삭제되었습니다."
   },
   "settings": {
     "title": "닫은 탭 기억하기",

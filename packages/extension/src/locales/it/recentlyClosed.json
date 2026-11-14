@@ -5,7 +5,9 @@
   },
   "errors": {
     "openFailed": "Impossibile aprire questa pagina. Resta nell'elenco.",
-    "changeFailed": "Impossibile modificare l'elenco delle schede chiuse. Riprova."
+    "changeFailed": "Impossibile modificare l'elenco delle schede chiuse. Riprova.",
+    "undoIncomplete": "Impossibile recuperarle: erano già state eliminate.",
+    "undoTurnedOnListGone": "Ricorda le schede chiuse è di nuovo attivo, ma l'elenco svuotato era già stato eliminato."
   },
   "settings": {
     "title": "Ricorda le schede chiuse",

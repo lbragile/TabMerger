@@ -31,18 +31,42 @@ Non-obvious points:
   buffered, giving two entries. Writes have a second chain so a slow plan lookup doesn't block events.
 - **Window-entry tab order** needs the snapshot's `index` kept fresh: `tabs.onMoved`/`onCreated`/
   `onAttached` trigger a debounced per-window `tabs.query({ windowId })` re-index.
-- **"Remember closed tabs" is re-read INSIDE the add transaction** (`['recentlyClosed','settings']`),
-  so turning it off stops an in-flight recording too.
-- **IDB v1 -> v2**: new store only in `oldVersion < 2`; a `blocking()` handler closes a stale
-  connection (a popup left open across an update would otherwise block the upgrade forever). The
-  integration test builds a real v1 DB with `idb.openDB` BEFORE dynamically importing `localDb`.
-  `dbTestUtils.clearDb` lists stores explicitly: add new stores there.
-- **Clears are marks** (`clearedAt`), deleted by the worker after `RECENTLY_CLOSED_CLEAR_DELAY_MS`
-  (timer after the popup's `CLEARED` message, and a sweep at worker start). Undo = unmark. The UI
-  toast is a second shorter than the delay (`RECENTLY_CLOSED_UNDO_TOAST_MS`).
-- **Plan for pruning** reuses auto-save's remembered server answer (`AUTO_SAVE_TIER_SEEN_KEY`) and
-  only calls `fetchTier` when there is none; unknown -> Pro limits. The popup's `useEntitlements`
-  reports `free` when offline, so it is not a safe pruning signal.
+- **The switch and the last full clear live in the store's own meta row** (`RECENTLY_CLOSED_META_ID`,
+  `{ remember?, clearedBefore? }`), so a recording is ONE transaction on ONE store (a
+  `['recentlyClosed','settings']` readwrite tx serialised recordings behind every settings/groups
+  write). The old `appSettings.rememberClosedTabs` is copied once (`migrateRememberClosedTabs`, run
+  at worker start); `useAppSettings` overlays the meta value (try/catch: many unit tests mock
+  `localDb` without `getDb`). Every `getAll` consumer must skip the meta row: prune's "corrupt row"
+  cleanup would otherwise delete it, and e2e helpers that read the store raw must filter it.
+- **`clearedBefore` drops closes still queued from before a full clear** (window buffer, write
+  queue) inside the add transaction. "Clear all data" clears the store and puts the meta row back
+  with `clearedBefore`.
+- **IDB versions**: new store only in `oldVersion < N`. `getDb` memoises the OPEN PROMISE (concurrent
+  first calls used to open several connections), closes exactly the connection that got
+  `versionchange` (`event.target` vs `unwrap(db)`), logs `blocked`, resets on `terminated`, and on
+  `VersionError` (database newer than the build) reopens with no version. `DB_VERSION` must never go
+  down: `localDbVersion.test.ts` holds a shipped floor. fake-indexeddb runs the whole
+  blocking/versionchange dance (see `localDbConnection.integration.test.ts`, which uses
+  `vi.resetModules()` + `deleteDB` per test for a fresh module and database).
+- **Clears are marks** (`clearedAt`), deleted by the worker 60 s later (`RECENTLY_CLOSED_CLEAR_DELAY_MS`;
+  timer after the popup's `CLEARED` message, and a sweep at worker start). The toast is 9 s:
+  Sonner PAUSES a toast while hovered or the page is hidden, so the delete delay must be far longer
+  than the toast. Undo compares what came back with the ids and reports `{ complete }`.
+- **Recording never waits on the network**: entries are written with the Pro limits; a KNOWN Free
+  plan trims in a separate queued step afterwards; the plan lookup has a 3 s timeout (a timed-out
+  answer is not memoised). Plan source: auto-save's remembered server answer
+  (`AUTO_SAVE_TIER_SEEN_KEY`, a "free" only while `recentlyFree`), else `fetchTier`; unknown -> Pro
+  limits. The popup's `useEntitlements` reports `free` when offline, so it is not a pruning signal.
+- **Chrome un-pins a window's pinned tabs (`onUpdated { pinned: false }`) just before closing the
+  window** (seen in the worker's event log): the snapshot keeps `unpinnedAt`, and a close within
+  `RECENTLY_CLOSED_UNPIN_GRACE_MS` (1.5 s) counts the tab as pinned.
+- **`tabs.onRemoved` can arrive after `windows.onRemoved`**: a window's quiet mark is left to expire
+  (30 s), never removed at `windows.onRemoved`.
+- **A quiet close awaits a storage write, so anything that focuses a new window first loses the
+  popup before the close**: create the window `focused: false`, close the old one, then
+  `windows.update(id, { focused: true })` (incognito toggle, `useOpenWindow`).
+- Private tabs are never snapshotted (nothing about them reaches `storage.session`), and snapshot
+  favicons are capped like stored ones.
 - `RESTRICTED_URL_RE` moved to `lib/safeOpen.ts` (re-exported from `hooks/useGroups.ts`) so the worker
   can use it without importing a React hook module.
 - `background.test.ts` mocks `@/lib/recentlyClosedRecorder`: the recorder's seed `tabs.query({})`

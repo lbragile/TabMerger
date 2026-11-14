@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import {
   RECENTLY_CLOSED_MESSAGE,
+  RECENTLY_CLOSED_PLAN_TIMEOUT_MS,
   RECENTLY_CLOSED_SNAPSHOT_DEBOUNCE_MS,
   RECENTLY_CLOSED_STORAGE_KEYS,
   RECENTLY_CLOSED_WINDOW_FLUSH_MS
@@ -11,16 +12,16 @@ import { fetchTier } from '@/lib/entitlementTier';
 import { parseTierSeen } from '@/lib/autoSave';
 import { recentlyFree } from '@/lib/autoSaveRun';
 import { isOwnExtensionPage } from '@/lib/messageSender';
-import { APP_SETTINGS_KEY, AUTO_SAVE_TIER_SEEN_KEY, LAST_USER_ID_KEY } from '@/lib/syncSettingKeys';
+import { AUTO_SAVE_TIER_SEEN_KEY, LAST_USER_ID_KEY } from '@/lib/syncSettingKeys';
 import {
   buildEntry,
   isQuietCloseKey,
   isQuietMarkFresh,
   isSnapshotChange,
   limitsForPlan,
+  pinnedAtClose,
   quietCloseTabKey,
   quietCloseWindowKey,
-  readRememberClosedTabs,
   skipReason,
   snapshotFromTab,
   tabGroupOf,
@@ -29,7 +30,14 @@ import {
   type SkipReason,
   type TabSnapshot
 } from '@/lib/recentlyClosed';
-import { addRecentlyClosedEntry, notifyRecentlyClosedChanged, pruneRecentlyClosed, purgeClearedRecentlyClosed } from '@/lib/recentlyClosedDb';
+import {
+  addRecentlyClosedEntry,
+  getRememberClosedTabs,
+  migrateRememberClosedTabs,
+  notifyRecentlyClosedChanged,
+  pruneRecentlyClosed,
+  purgeClearedRecentlyClosed
+} from '@/lib/recentlyClosedDb';
 
 /**
  * The background worker's side of "Recently closed tabs" (spec: "Behaviour (background worker)").
@@ -222,19 +230,51 @@ export function createRecentlyClosedRecorder(options: RecorderOptions = {}) {
     persist();
   };
 
-  const ready = onQueue(load);
+  const ready = onQueue(async () => {
+    // the switch moved from appSettings into the store's meta row: copied once, before any recording
+    await migrateRememberClosedTabs().catch(() => undefined);
+    await load();
+  });
 
+  /**
+   * The plan, memoised for a while. The lookup (session + subscription request) gives up after
+   * RECENTLY_CLOSED_PLAN_TIMEOUT_MS as `unknown` (Pro limits), and a timed-out answer is not
+   * memoised, so the next call asks again. Nothing that records a close ever waits on this.
+   */
   const currentPlan = async (): Promise<RecentlyClosedPlan> => {
     const t = now();
     if (plan && t - plan.at < PLAN_MEMO_MS) return plan.value;
-    let value: RecentlyClosedPlan = 'unknown';
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timedOut = Symbol('timeout');
+    let value: RecentlyClosedPlan | typeof timedOut;
     try {
-      value = await resolvePlanFn();
+      value = await Promise.race([
+        resolvePlanFn(),
+        new Promise<typeof timedOut>((resolve) => {
+          timer = setTimeout(() => resolve(timedOut), RECENTLY_CLOSED_PLAN_TIMEOUT_MS);
+        })
+      ]);
     } catch {
       value = 'unknown';
+    } finally {
+      if (timer) clearTimeout(timer);
     }
+    if (value === timedOut) return 'unknown';
     plan = { value, at: t };
     return value;
+  };
+
+  /**
+   * Trims the list to the plan's limits once the plan is known, as its own queued write. Only a
+   * plan KNOWN to be Free trims anything beyond what every write already prunes (the Pro limits).
+   */
+  const trimForPlan = async (): Promise<void> => {
+    const known = await currentPlan();
+    if (known !== 'free') return;
+    await writeQueue(async () => {
+      const { deleted } = await pruneRecentlyClosed(limitsForPlan('free'), now());
+      if (deleted > 0) notifyRecentlyClosedChanged();
+    });
   };
 
   const schedulePurge = (at: number | null) => {
@@ -250,12 +290,17 @@ export function createRecentlyClosedRecorder(options: RecorderOptions = {}) {
     }, Math.max(0, at - now()) + 50);
   };
 
+  /**
+   * Records at once with the Pro limits (never waiting on the network for the plan), then trims to
+   * the Free limits in a separate step when the plan turns out to be Free.
+   */
   const write = (snaps: TabSnapshot[], closedAt: number) =>
     writeQueue(async () => {
       const entry = buildEntry(snaps, closedAt, newId());
       if (!entry) return;
-      const limits = limitsForPlan(await currentPlan());
-      if (await addRecentlyClosedEntry(entry, limits, now())) notifyRecentlyClosedChanged();
+      if (!(await addRecentlyClosedEntry(entry, limitsForPlan('pro'), now()))) return;
+      notifyRecentlyClosedChanged();
+      void track(trimForPlan().catch((err: unknown) => console.warn('[TabMerger] recently closed trim failed:', err)));
     });
 
   const flushWindow = (windowId: number) => {
@@ -301,11 +346,19 @@ export function createRecentlyClosedRecorder(options: RecorderOptions = {}) {
     onUpdated: (tabId: number, changeInfo: chrome.tabs.OnUpdatedInfo, tab: chrome.tabs.Tab) => {
       // `status` and the like fire all the time: only a real change to what is remembered counts
       if (!isSnapshotChange(changeInfo)) return Promise.resolve();
+      const at = now();
       return onQueue(async () => {
         const known = snapshots.get(tabId);
         // the group is looked up again only when the tab changed group
         const keepGroup = !('groupId' in changeInfo) && known?.groupId === tab.groupId ? known?.tabGroup : undefined;
         await put({ ...tab, id: tabId }, keepGroup);
+        // Chrome un-pins a window's pinned tabs right before closing the window: remember when a
+        // pinned tab was un-pinned, so a close right after still counts it as pinned (pinnedAtClose)
+        const next = snapshots.get(tabId);
+        if (next && !next.pinned && known) {
+          const unpinnedAt = known.pinned && changeInfo.pinned === false ? at : known.unpinnedAt;
+          if (unpinnedAt !== undefined) snapshots.set(tabId, { ...next, unpinnedAt });
+        }
         persist();
       });
     },
@@ -346,13 +399,19 @@ export function createRecentlyClosedRecorder(options: RecorderOptions = {}) {
     onRemoved: (tabId: number, info: { windowId: number; isWindowClosing: boolean }) => {
       const closedAt = now();
       return onQueue(async () => {
-        const snapshot = snapshots.get(tabId);
+        let snapshot = snapshots.get(tabId);
         snapshots.delete(tabId);
         persist();
         const quiet = await isQuiet(tabId, info.windowId);
-        const enabled = readRememberClosedTabs(await getSetting<unknown>(APP_SETTINGS_KEY, null));
+        let enabled = true;
+        try {
+          enabled = await getRememberClosedTabs();
+        } catch {
+          // unreadable switch: the write re-checks it inside its own transaction
+        }
         lastSkip = skipReason({ enabled, snapshot, quiet });
         if (lastSkip || !snapshot) return;
+        if (pinnedAtClose(snapshot, closedAt) && !snapshot.pinned) snapshot = { ...snapshot, pinned: true };
         if (!info.isWindowClosing) {
           void write([snapshot], closedAt);
           return;
@@ -367,11 +426,11 @@ export function createRecentlyClosedRecorder(options: RecorderOptions = {}) {
         buffers.set(info.windowId, next);
       });
     },
+    // The window's quiet-close mark is NOT removed here: `tabs.onRemoved` can still arrive after
+    // `windows.onRemoved`, and those tabs must stay quiet. The mark expires on its own (30 s).
     onWindowRemoved: (windowId: number) =>
-      onQueue(async () => {
+      onQueue(() => {
         flushWindow(windowId);
-        const area = sessionArea();
-        await Promise.resolve(area?.remove(quietCloseWindowKey(windowId))).catch(() => {});
       }),
     /** Popup marked entries cleared: delete them once the undo window has passed. */
     onCleared: () =>
@@ -380,13 +439,15 @@ export function createRecentlyClosedRecorder(options: RecorderOptions = {}) {
         schedulePurge(nextPurgeAt);
       }),
     /** Worker start: prune for the plan and delete cleared entries whose undo window passed while it slept. */
-    sweep: () =>
-      writeQueue(async () => {
-        const limits = limitsForPlan(await currentPlan());
+    // the plan is looked up OUTSIDE the write queue: recordings never wait on it
+    sweep: async () => {
+      const limits = limitsForPlan(await currentPlan());
+      await writeQueue(async () => {
         const { deleted, nextPurgeAt } = await pruneRecentlyClosed(limits, now());
         if (deleted > 0) notifyRecentlyClosedChanged();
         schedulePurge(nextPurgeAt);
-      }),
+      });
+    },
     /** Resolves when every queued event and write has finished (tests). */
     idle: async () => {
       while (pending.size > 0) await Promise.allSettled([...pending]);

@@ -34,8 +34,31 @@ export const RECENTLY_CLOSED_QUIET_CLOSE_TTL_MS = 30 * 1000;
 /** A window's buffered closes are written this long after the last one if `windows.onRemoved` never fires. */
 export const RECENTLY_CLOSED_WINDOW_FLUSH_MS = 1000;
 
-/** Entries marked cleared (Clear list, remove a day, turning it off) are deleted this long after the mark: the Undo window. */
-export const RECENTLY_CLOSED_CLEAR_DELAY_MS = 10 * 1000;
+/**
+ * Entries marked cleared (Clear list, remove a day, turning it off) are deleted this long after the
+ * mark. Much longer than the Undo toast ({@link RECENTLY_CLOSED_UNDO_TOAST_MS}): Sonner pauses a
+ * toast while it is hovered or the page is hidden, so its Undo can be clicked well after it was shown.
+ */
+export const RECENTLY_CLOSED_CLEAR_DELAY_MS = 60 * 1000;
+
+/** How long an Undo toast for a reopen, removal or clear is shown (while not paused). */
+export const RECENTLY_CLOSED_UNDO_TOAST_MS = 9 * 1000;
+
+/** The worker's plan lookup gives up after this long (then: unknown, Pro limits); recording never waits on it. */
+export const RECENTLY_CLOSED_PLAN_TIMEOUT_MS = 3 * 1000;
+
+/**
+ * Chrome un-pins a window's pinned tabs (`tabs.onUpdated { pinned: false }`) just before it closes
+ * the window. A tab un-pinned this shortly before it closed is remembered as pinned.
+ */
+export const RECENTLY_CLOSED_UNPIN_GRACE_MS = 1500;
+
+/**
+ * Id of the one bookkeeping row in the `recentlyClosed` store (not an entry): the "Remember closed
+ * tabs" switch and the time of the last full clear. Kept in the store itself so a recording touches
+ * one object store only.
+ */
+export const RECENTLY_CLOSED_META_ID = '__meta__';
 
 /** On by default, also for existing users at the update. */
 export const DEFAULT_REMEMBER_CLOSED_TABS = true;
