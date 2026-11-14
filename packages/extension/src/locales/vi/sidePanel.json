@@ -37,5 +37,18 @@
   "proRequired": "Yêu cầu Pro",
   "locked": "Nâng cấp lên Pro để truy cập nhóm này",
   "pin": "Ghim nhóm",
-  "unpin": "Bỏ ghim nhóm"
+  "unpin": "Bỏ ghim nhóm",
+  "view": {
+    "showArchived": "Hiện nhóm đã lưu trữ {{name}}",
+    "showSession": "Hiện phiên {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Đóng chế độ xem này",
+    "moreOptions": "Tùy chọn khác cho {{name}}",
+    "archivedMeta": "Đã lưu trữ ◆ {{counts}}",
+    "archivedBanner": "Đã lưu trữ {{time}}. Chỉ đọc: khôi phục nhóm để di chuyển, chỉnh sửa hoặc thêm thẻ. Nhấp vào thẻ vẫn mở thẻ đó.",
+    "restore": "Khôi phục",
+    "sessionMeta": "Phiên ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "Ảnh chụp các nhóm của bạn. Xem không thay đổi gì; \"Khôi phục phiên\" sẽ đưa các nhóm này trở lại.",
+    "sessionEmpty": "Phiên này không có nhóm nào."
+  }
 }

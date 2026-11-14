@@ -13,7 +13,24 @@ export const SIDEBAR_ICON_BUTTON =
 export const SIDEBAR_FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset';
 
 /**
- * Shared shell for the Auto-saved / Archived / Sessions sidebar sections: a disclosure header row
+ * A section row (Auto-saved, Archived, Sessions): the open button, the counts badge and the icon
+ * buttons side by side. The row whose contents the main panel shows adds {@link SIDEBAR_ROW_ACTIVE}
+ * (its 3px start bar is the item's colour, set inline by each section).
+ */
+export const SIDEBAR_ROW = 'flex items-center gap-1 px-2 py-1 transition-colors min-w-0 hover:bg-[var(--sidebar-hover-bg)]';
+export const SIDEBAR_ROW_ACTIVE = 'bg-[var(--sidebar-hover-bg)]';
+
+/**
+ * A section row's name: semibold and in the full text colour on the one row the main panel shows
+ * (the same weight as the active group row), regular and muted everywhere else.
+ */
+export function sidebarRowNameClass(active: boolean): string {
+  return active ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground';
+}
+
+/**
+ * Shared shell for the Auto-saved / Archived / Sessions sidebar sections (an accordion: the parent
+ * passes `open` from `uiStore.openSidebarSection`, so expanding one collapses the others): a disclosure header row
  * (chevron + label + count), an optional right-aligned action button as a SIBLING of the
  * toggle (never nested — nested interactive elements are invalid HTML and break both a11y
  * and click handling), and a collapsible body that shows `emptyLabel` when there is

@@ -64,6 +64,8 @@ interface GroupContextMenuProps {
   wrapperClassName?: string;
   /** Accessible name of the row; the group's name when omitted. */
   wrapperLabel?: string;
+  /** The row whose group the main panel shows: `aria-current="page"`. */
+  wrapperCurrent?: boolean;
   /**
    * The row's positional DnD model id, rendered as `data-tm-dnd-id`. `dndMultiDrag` /
    * `dndDragVisuals` / `dndFocus` find rows through this STATIC attribute — without it a
@@ -93,6 +95,7 @@ export function GroupContextMenu({
   wrapperStyle,
   wrapperClassName,
   wrapperLabel,
+  wrapperCurrent = false,
   wrapperDndId,
   moveGroupId,
   selectGroupItem,
@@ -152,6 +155,7 @@ export function GroupContextMenu({
       tabIndex={0}
       role="button"
       aria-label={wrapperLabel ?? group.name}
+      aria-current={wrapperCurrent ? 'page' : undefined}
       data-sidebar-group-index={groupIndex}
       data-tour={group.permanent ? TOUR_ANCHORS.nowOpen : undefined}
       data-tm-dnd-id={wrapperDndId}

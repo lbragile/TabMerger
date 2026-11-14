@@ -251,6 +251,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       wrapperRef={setNodeRef}
       // Static row id for the multi-drag registry (collapse + `+N`) and focus-by-identity.
       wrapperDndId={group.id}
+      wrapperCurrent={isActive}
       wrapperLabel={searchDimmed ? t('sidePanel.groupNoMatch', { name: displayName, suffix: t('search.noMatchSuffix') }) : group.permanent ? displayName : undefined}
       // Space on the focused row starts keyboard move mode — only for a row that has a grip.
       moveGroupId={group.permanent || savedGroupCount <= 1 || reorderLocked ? undefined : group.id}
@@ -416,7 +417,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 <span
                   ref={nameRef}
                   dir="auto"
-                  className="block truncate text-xs font-medium text-ui-start"
+                  // Semibold on the one current row (as the current section rows), regular on the rest
+                  className={cn('block truncate text-xs text-ui-start', isActive ? 'font-semibold' : 'font-normal')}
                   style={{ color: isActive ? 'var(--sidebar-text-active)' : 'var(--sidebar-text-inactive)' }}
                   onDoubleClick={(e) => {
                     e.stopPropagation();

@@ -51,6 +51,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
     wrapperStyle,
     wrapperDndId,
     wrapperLabel,
+    wrapperCurrent,
     onWrapperClick,
     onWrapperContextMenu,
     onWrapperMouseEnter,
@@ -64,6 +65,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
     wrapperStyle?: React.CSSProperties
     wrapperDndId?: string
     wrapperLabel?: string
+    wrapperCurrent?: boolean
     moveGroupId?: string
     selectGroupItem?: unknown
     onWrapperClick?: React.MouseEventHandler<HTMLDivElement>
@@ -77,6 +79,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
         'data-testid': 'group-wrapper',
         'data-tm-dnd-id': wrapperDndId,
         'aria-label': wrapperLabel,
+        'data-current': String(!!wrapperCurrent),
         'data-move-group-id': moveGroupId,
         'data-select-item': selectGroupItem ? JSON.stringify(selectGroupItem) : undefined,
         ref: wrapperRef,
@@ -161,6 +164,17 @@ describe('GroupItem', () => {
     vi.clearAllMocks()
     mockUseGroups.mockReturnValue({ data: { available: [makeGroup(), makeGroup()], active: { id: '', index: 0 } } })
     mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+  })
+
+  it('only the current row is marked current and semibold; others are regular weight', () => {
+    // (GroupContextMenu, mocked here, turns `wrapperCurrent` into aria-current="page")
+    const { unmount } = wrap(React.createElement(GroupItem, { group: makeGroup({ name: 'Shown' }), groupIndex: 0, isActive: true, onClick: vi.fn() }))
+    expect(screen.getByTestId('group-wrapper')).toHaveAttribute('data-current', 'true')
+    expect(screen.getByText('Shown')).toHaveClass('font-semibold')
+    unmount()
+    wrap(React.createElement(GroupItem, { group: makeGroup({ name: 'Other' }), groupIndex: 1, isActive: false, onClick: vi.fn() }))
+    expect(screen.getByTestId('group-wrapper')).toHaveAttribute('data-current', 'false')
+    expect(screen.getByText('Other')).toHaveClass('font-normal')
   })
 
   it('renders group name and window/tab count badge', () => {

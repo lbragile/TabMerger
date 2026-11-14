@@ -37,5 +37,18 @@
   "proRequired": "Pro erforderlich",
   "locked": "Upgrade auf Pro, um auf diese Gruppe zuzugreifen",
   "pin": "Gruppe anheften",
-  "unpin": "Gruppe lösen"
+  "unpin": "Gruppe lösen",
+  "view": {
+    "showArchived": "Archivierte Gruppe {{name}} anzeigen",
+    "showSession": "Sitzung {{name}} anzeigen",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Diese Ansicht schließen",
+    "moreOptions": "Weitere Optionen für {{name}}",
+    "archivedMeta": "Archiviert ◆ {{counts}}",
+    "archivedBanner": "Archiviert {{time}}. Nur lesen: Stelle die Gruppe wieder her, um Tabs zu verschieben, zu bearbeiten oder hinzuzufügen. Ein Klick auf einen Tab öffnet ihn trotzdem.",
+    "restore": "Wiederherstellen",
+    "sessionMeta": "Sitzung ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "Ein Schnappschuss deiner Gruppen. Ansehen ändert nichts; „Sitzung wiederherstellen“ holt diese Gruppen zurück.",
+    "sessionEmpty": "Diese Sitzung enthält keine Gruppen."
+  }
 }

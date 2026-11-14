@@ -12,11 +12,10 @@ import { useAppSettings, DEFAULT_APP_SETTINGS } from '@/hooks/useAppSettings';
 import { hasDataConsent } from '@/lib/dataConsent';
 import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
 import type { Tab } from '@/lib/types';
+import { FALLBACK_FAVICON } from '@/lib/savedTab';
 
 // ponytail: module-level cache — lives for the popup session, cleared on close
 const summaryCache = new Map<string, string>();
-
-const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
 interface TabPreviewProps {
   tab: Tab;

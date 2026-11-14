@@ -47,7 +47,8 @@ vi.mock('@/hooks/useEntitlements', () => ({
 }))
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: (sel: (s: object) => unknown) =>
-    sel({ selectionMode: false, activeGroupIndex: 0, setActiveGroupIndex: vi.fn(), setRenameTarget: vi.fn(), openModal: h.openModal }),
+    // The Sessions section is the open one (clicking its header keeps it open: the toggle is a stub)
+    sel({ selectionMode: false, activeGroupIndex: 0, setActiveGroupIndex: vi.fn(), setRenameTarget: vi.fn(), openModal: h.openModal, openSidebarSection: 'sessions', toggleSidebarSection: vi.fn(), openMainView: vi.fn() }),
 }))
 vi.mock('@/hooks/useSessions', () => ({
   useSessions: () => ({ data: h.sessions }),

@@ -87,6 +87,8 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
     const { t } = useTranslation();
     const openModal = useUIStore((s) => s.openModal);
     const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
+    // A read-only view (an archived group, a session) fills the main panel: no group is selected for AI
+    const groupViewShown = useUIStore((s) => (s.mainView?.kind ?? "group") === "group");
     const { aiFeatures, tier, maxGroups, maxTabs, aiMode } = useEntitlements();
     const { data: groupsState } = useGroups();
     const { data: appSettings } = useAppSettings();
@@ -96,7 +98,7 @@ export function AiMenu({ onQuotaExceeded }: AiMenuProps) {
     const { mutateAsync: organizeTabs, isPending: organizeLoading } = useOrganizeTabs();
     // The selected-group actions work on the group shown in the main panel; the same actions as
     // the sidebar group menu's (shared hooks: same toasts, undo step and note review)
-    const activeGroup = groupsState?.available[activeGroupIndex];
+    const activeGroup = groupViewShown ? groupsState?.available[activeGroupIndex] : undefined;
     const { run: nameActiveGroup, isPending: nameLoading, block } = useNameGroupAction(activeGroup);
     const { run: describeActiveGroup, isPending: describeLoading } = useDescribeGroupAction(activeGroup);
     const aiPending = aiLoading || organizeLoading || nameLoading || describeLoading;

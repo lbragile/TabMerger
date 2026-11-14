@@ -4,7 +4,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from 'sonner';
 import { Header } from '@/components/Header';
 import { SidePanel } from '@/components/SidePanel';
-import { WindowsPanel } from '@/components/Windows';
+import { MainPanel } from '@/components/SectionView/MainPanel';
 import { DndProvider } from '@/components/dnd/DndProvider';
 import { KeyboardMoveHost } from '@/components/KeyboardMove/KeyboardMoveHost';
 import { ModalRoot } from '@/components/Modal';
@@ -36,9 +36,7 @@ import { Tour } from '@/components/Tour/Tour';
 import { SearchAnnouncer } from '@/components/SearchAnnouncer';
 
 function AppContent() {
-  const { t } = useTranslation();
   const { data: groupsState, isLoading } = useGroups();
-  const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
   const searchFilter = useUIStore((s) => s.searchFilter);
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
   const selectionMode = useUIStore((s) => s.selectionMode);
@@ -139,9 +137,6 @@ function AppContent() {
     );
   }
 
-  const activeGroup = groupsState.available[activeGroupIndex] ?? groupsState.available[0];
-  const safeActiveIndex = groupsState.available.indexOf(activeGroup);
-
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <Header />
@@ -160,13 +155,8 @@ function AppContent() {
         <div className="flex flex-1 min-h-0">
           <SidePanel groupsState={groupsState} />
           <main className="flex-1 min-w-0 overflow-hidden">
-            {activeGroup ? (
-              <WindowsPanel group={activeGroup} groupIndex={safeActiveIndex} allGroups={groupsState.available} />
-            ) : (
-              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                {t('common.noGroupSelected')}
-              </div>
-            )}
+            {/* The active group, or a read-only view an Archived / Sessions row opened */}
+            <MainPanel groupsState={groupsState} />
           </main>
         </div>
       </DndProvider>

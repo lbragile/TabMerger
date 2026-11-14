@@ -142,3 +142,5 @@
 - [/api/track + og-preview as CORS simple requests](learnings_track_cors_simple_request.md) — SIMPLE_JSON_CONTENT_TYPE (text/plain) skips the preflight; any extra header brings it back
 - [Auto-save open tabs](learnings_auto_save_open_tabs.md) — marker in the blob, promotion in writeGroupsState (pending + normalised), copies drop it, tier rules, e2e outDir build
 - [Store-listing _locales build hook](learnings_store_locales_build_hook.md) — `manifest` namespace -> build:publicAssets; vi.mock("vite") + computed import for wxt.config tests
+- [Section views (mainView) + accordion](learnings_section_views_mainview.md) — read-only archived/session views; separate list (no data-* indexes); store-mock + CRLF gotchas
+- [Tooltip portal + contrast](learnings_tooltip_portal_contrast.md) — no portal = inherited row opacity + ScrollArea scrollbar on top; --tooltip tokens 5.67:1 light

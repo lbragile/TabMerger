@@ -12,10 +12,10 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { SidePanel } from '@/components/SidePanel'
 import type { Group, GroupsState } from '@/lib/types'
 import type { Session } from '@tabmerger/shared'
+import { GROUP_VIEW, useUIStore } from '@/stores/uiStore'
 
 const {
   mockUseEntitlements,
-  mockUseUIStore,
   mockRestoreGroup,
   mockDeleteGroup,
   mockRestoreSession,
@@ -25,7 +25,6 @@ const {
   mockSetActiveGroupIndex,
 } = vi.hoisted(() => ({
   mockUseEntitlements: vi.fn(),
-  mockUseUIStore: vi.fn(),
   mockRestoreGroup: vi.fn(),
   mockDeleteGroup: vi.fn(),
   mockRestoreSession: vi.fn(),
@@ -56,10 +55,10 @@ vi.mock('@/hooks/useDnd', () => ({
 }))
 
 vi.mock('@/components/SidePanel/GroupItem', () => ({
-  GroupItem: ({ group, onClick, isLocked }: { group: { name: string }; onClick: () => void; isLocked: boolean }) =>
+  GroupItem: ({ group, onClick, isLocked, isActive }: { group: { name: string }; onClick: () => void; isLocked: boolean; isActive: boolean }) =>
     React.createElement(
       'div',
-      { 'data-testid': 'group-item', 'data-locked': String(isLocked), onClick },
+      { 'data-testid': 'group-item', 'data-locked': String(isLocked), 'data-active': String(isActive), onClick },
       group.name
     ),
 }))
@@ -73,10 +72,6 @@ vi.mock('@/hooks/useGroups', () => ({
 vi.mock('@/hooks/useEntitlements', () => ({
   useEntitlements: () => mockUseEntitlements(),
   isOverFreeLimit: (itemIndex: number, freeLimit: number) => itemIndex >= freeLimit,
-}))
-
-vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector),
 }))
 
 vi.mock('@/hooks/useSessions', () => ({
@@ -137,7 +132,8 @@ beforeEach(() => {
   mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free', aiFeatures: false })
   mockUseSessionsData.mockReturnValue({ data: [] })
   mockUseRestoreSessionState.mockReturnValue({ isPending: false })
-  mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+  // The real store (the sections are an accordion kept there), with the actions the tests watch replaced
+  useUIStore.setState({ ...baseUIState, openSidebarSection: null, mainView: GROUP_VIEW, mainViewReturnGroupId: null })
 })
 
 describe('SidePanel — archived groups section', () => {
@@ -281,9 +277,7 @@ describe('SidePanel — starred-first ordering and isLocked gating', () => {
 
 describe('SidePanel — selectionMode guards', () => {
   it('disables the Add Group button and ignores group-item clicks while in selection mode', async () => {
-    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
-      selector({ ...baseUIState, selectionMode: true })
-    )
+    useUIStore.setState({ selectionMode: true })
     const groupsState = makeGroupsState([makeGroup({ permanent: true, name: 'Now Open' })])
     wrap(React.createElement(SidePanel, { groupsState }))
 
@@ -298,5 +292,54 @@ describe('SidePanel — selectionMode guards', () => {
     wrap(React.createElement(SidePanel, { groupsState }))
     fireEvent.click(screen.getByTestId('group-item'))
     expect(mockSetActiveGroupIndex).toHaveBeenCalledWith(0)
+  })
+})
+
+describe('SidePanel — section rows open read-only views; the sections are an accordion', () => {
+  it('expanding one section collapses the other; the open one collapses on a second click', async () => {
+    const user = userEvent.setup()
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ permanent: true })]) }))
+    const archived = screen.getByRole('button', { name: /ARCHIVED \(0\)/ })
+    const sessions = screen.getByRole('button', { name: /SESSIONS \(0\)/ })
+    await user.click(archived)
+    expect(archived).toHaveAttribute('aria-expanded', 'true')
+    await user.click(sessions)
+    expect(sessions).toHaveAttribute('aria-expanded', 'true')
+    expect(archived).toHaveAttribute('aria-expanded', 'false')
+    await user.click(sessions)
+    expect(sessions).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('an archived row opens its view and is the current row (semibold); Restore and Delete stay siblings', async () => {
+    const archivedGroup = makeGroup({ id: 'arch', name: 'Old Project', archived: true })
+    const user = userEvent.setup()
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ id: 'now', permanent: true }), archivedGroup]) }))
+    await user.click(screen.getByText(/ARCHIVED \(1\)/))
+    const open = screen.getByRole('button', { name: 'Show archived group Old Project' })
+    expect(open).not.toHaveAttribute('aria-current')
+    expect(screen.getByTestId('group-item')).toHaveAttribute('data-active', 'true')
+    await user.click(open)
+    // one current row: the group behind the view is not marked while the view shows
+    expect(screen.getByTestId('group-item')).toHaveAttribute('data-active', 'false')
+    expect(useUIStore.getState()).toMatchObject({ mainView: { kind: 'archived', groupId: 'arch' }, mainViewReturnGroupId: 'now' })
+    expect(open).toHaveAttribute('aria-current', 'page')
+    expect(within(open).getByText('Old Project')).toHaveClass('font-semibold')
+    expect(open.querySelector('button')).toBeNull()
+    expect(open.parentElement).toContainElement(screen.getByRole('button', { name: /restore old project/i }))
+  })
+
+  it('a session row opens its view; nothing opens while selecting', async () => {
+    const session = makeSession({ id: 's1', name: 'Morning setup' })
+    mockUseSessionsData.mockReturnValue({ data: [session] })
+    const user = userEvent.setup()
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ permanent: true })]) }))
+    await user.click(screen.getByText(/SESSIONS \(1\)/))
+    useUIStore.setState({ selectionMode: true })
+    await user.click(screen.getByRole('button', { name: 'Show session Morning setup' }))
+    expect(useUIStore.getState().mainView).toEqual({ kind: 'group' })
+    useUIStore.setState({ selectionMode: false })
+    await user.click(screen.getByRole('button', { name: 'Show session Morning setup' }))
+    expect(useUIStore.getState().mainView).toEqual({ kind: 'session', sessionId: 's1' })
+    expect(screen.getByRole('button', { name: 'Show session Morning setup' })).toHaveAttribute('aria-current', 'page')
   })
 })

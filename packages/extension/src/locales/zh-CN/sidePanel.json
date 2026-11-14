@@ -37,5 +37,18 @@
   "proRequired": "需要 Pro",
   "locked": "升级到 Pro 以访问此分组",
   "pin": "固定分组",
-  "unpin": "取消固定分组"
+  "unpin": "取消固定分组",
+  "view": {
+    "showArchived": "显示已归档分组 {{name}}",
+    "showSession": "显示会话 {{name}}",
+    "sessionCounts": "{{groups}}，{{windows}}，{{tabs}}",
+    "close": "关闭此视图",
+    "moreOptions": "{{name}} 的更多选项",
+    "archivedMeta": "已归档 ◆ {{counts}}",
+    "archivedBanner": "{{time}}归档。只读：恢复分组后才能移动、编辑或添加标签页。点击标签页仍会打开它。",
+    "restore": "恢复",
+    "sessionMeta": "会话 ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "这是你的分组快照。查看不会改变任何内容；“恢复会话”会把这些分组找回来。",
+    "sessionEmpty": "此会话没有分组。"
+  }
 }

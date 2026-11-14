@@ -9,12 +9,13 @@ import { formatTimeAgo } from '@/lib/i18n';
 import { cn, getGroupTabCount } from '@/lib/utils';
 import { isRollingAutoSave, listAutoSavedGroups, rollingToReplace } from '@/lib/autoSaveGroups';
 import { useUIStore } from '@/stores/uiStore';
+import { SIDEBAR_SECTION } from '@/lib/sidebarSections';
 import { useDeleteGroup, useKeepAutoSave } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAutoSaveNow } from '@/hooks/useAutoSave';
 import { showAutoSaveKeptToast, useAutoSaveIntroToast, useAutoSavePromotionToast } from '@/hooks/useAutoSaveToasts';
 import { toast } from '@/lib/toast';
-import { SIDEBAR_FOCUS_RING, SIDEBAR_ICON_BUTTON, SidebarSection } from './SidebarSection';
+import { SIDEBAR_FOCUS_RING, SIDEBAR_ICON_BUTTON, SIDEBAR_ROW, SIDEBAR_ROW_ACTIVE, SidebarSection, sidebarRowNameClass } from './SidebarSection';
 
 /**
  * The "Auto-saved" sidebar section (above Archived and Sessions): groups "Auto-save open tabs"
@@ -30,12 +31,15 @@ export function AutoSavedSection({ groupsState }: { groupsState: GroupsState }) 
   const free = tier === 'free';
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
+  // A row is current only while the main panel shows the group view (not an archived group or a session)
+  const groupViewShown = useUIStore((s) => (s.mainView?.kind ?? 'group') === 'group');
   const selectionMode = useUIStore((s) => s.selectionMode);
   const { mutate: deleteGroup } = useDeleteGroup();
   const { mutateAsync: keep } = useKeepAutoSave();
   const { run, running } = useAutoSaveNow();
-  // closed until the user opens it, like Archived and Sessions
-  const [open, setOpen] = useState(false);
+  // One open section at a time (an accordion with Archived and Sessions); all start closed
+  const open = useUIStore((s) => s.openSidebarSection === SIDEBAR_SECTION.autoSaved);
+  const toggle = useUIStore((s) => s.toggleSidebarSection);
   const rootRef = useRef<HTMLDivElement>(null);
   /** After Keep / Delete: the row that leaves, and where focus goes once it is gone. */
   const [focusAfter, setFocusAfter] = useState<{ goneId: string; nextId: string | null } | null>(null);
@@ -89,7 +93,7 @@ export function AutoSavedSection({ groupsState }: { groupsState: GroupsState }) 
         label={t('autoSave.sidebar.label')}
         count={count}
         open={open}
-        onToggle={() => setOpen(!open)}
+        onToggle={() => toggle(SIDEBAR_SECTION.autoSaved)}
         isEmpty={list.length === 0}
         emptyLabel={t('autoSave.sidebar.empty')}
         className="mt-1.5"
@@ -116,13 +120,13 @@ export function AutoSavedSection({ groupsState }: { groupsState: GroupsState }) 
         <ul data-testid="auto-saved-list">
           {list.map(({ group, realIndex }) => {
             const replacedNext = nextReplaced.has(group.id) && rollingCount >= AUTO_SAVE_FREE_KEEP_COUNT;
-            const isActive = realIndex === activeGroupIndex;
+            const isActive = groupViewShown && realIndex === activeGroupIndex;
             const tabs = getGroupTabCount(group);
             const detailId = `auto-save-detail-${group.id}`;
             return (
               <li
                 key={group.id}
-                className={cn('flex items-center gap-1 px-2 py-1 transition-colors min-w-0 hover:bg-[var(--sidebar-hover-bg)]', isActive && 'bg-[var(--sidebar-hover-bg)]')}
+                className={cn(SIDEBAR_ROW, isActive && SIDEBAR_ROW_ACTIVE)}
                 style={{ borderInlineStart: `3px solid ${group.color}` }}
               >
                 <button
@@ -130,11 +134,11 @@ export function AutoSavedSection({ groupsState }: { groupsState: GroupsState }) 
                   className={cn('flex-1 min-w-0 text-start', SIDEBAR_FOCUS_RING)}
                   aria-label={t('autoSave.sidebar.open', { name: group.name })}
                   aria-describedby={`${detailId} ${detailId}-counts`}
-                  aria-current={isActive ? 'true' : undefined}
+                  aria-current={isActive ? 'page' : undefined}
                   data-auto-save-open={group.id}
                   onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
                 >
-                  <span dir="auto" className="block truncate text-[11px] text-muted-foreground text-ui-start">{group.name}</span>
+                  <span dir="auto" className={cn('block truncate text-[11px] text-ui-start', sidebarRowNameClass(isActive))}>{group.name}</span>
                   <span id={detailId} className={cn('block truncate text-[0.625rem]', replacedNext ? 'font-medium text-foreground' : 'text-muted-foreground')}>
                     {replacedNext ? t('autoSave.sidebar.replacedNext') : formatTimeAgo(group.autoSave!.at)}
                   </span>

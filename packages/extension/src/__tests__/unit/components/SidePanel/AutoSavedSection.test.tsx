@@ -8,7 +8,7 @@ import { AutoSavedSection } from '@/components/SidePanel/AutoSavedSection'
 import { AutoSaveBanner } from '@/components/Windows/AutoSaveBanner'
 import { emitAutoSavePromoted } from '@/lib/autoSaveGroups'
 import { AUTO_SAVE_INTRO_SHOWN_KEY } from '@/hooks/useAutoSaveToasts'
-import { useUIStore } from '@/stores/uiStore'
+import { GROUP_VIEW, useUIStore } from '@/stores/uiStore'
 
 const h = vi.hoisted(() => ({
   tier: 'pro',
@@ -65,7 +65,7 @@ beforeEach(() => {
   h.keepPending = false
   localStore = {}
   sendMessage = vi.fn()
-  useUIStore.setState({ activeGroupIndex: 0, selectionMode: false, undoStack: [] })
+  useUIStore.setState({ activeGroupIndex: 0, selectionMode: false, undoStack: [], openSidebarSection: null, mainView: GROUP_VIEW, mainViewReturnGroupId: null })
   ;(globalThis as { chrome?: unknown }).chrome = {
     runtime: { sendMessage, onMessage: { addListener: vi.fn(), removeListener: vi.fn() } },
     storage: {
@@ -116,7 +116,7 @@ describe('AutoSavedSection', () => {
     renderSection(st(g('normal'), g('a', { autoSave: { at: 1, rolling: false } })))
     fireEvent.click(screen.getByRole('button', { name: 'Open Name a' }))
     expect(useUIStore.getState().activeGroupIndex).toBe(2)
-    expect(screen.getByRole('button', { name: 'Open Name a' })).toHaveAttribute('aria-current', 'true')
+    expect(screen.getByRole('button', { name: 'Open Name a' })).toHaveAttribute('aria-current', 'page')
     act(() => useUIStore.setState({ activeGroupIndex: 0, selectionMode: true }))
     fireEvent.click(screen.getByRole('button', { name: 'Open Name a' }))
     expect(useUIStore.getState().activeGroupIndex).toBe(0)

@@ -37,5 +37,18 @@
   "proRequired": "Pro gerekli",
   "locked": "Bu gruba erişmek için Pro'ya yükseltin",
   "pin": "Grubu sabitle",
-  "unpin": "Grubun sabitlemesini kaldır"
+  "unpin": "Grubun sabitlemesini kaldır",
+  "view": {
+    "showArchived": "Arşivlenmiş {{name}} grubunu göster",
+    "showSession": "{{name}} oturumunu göster",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Bu görünümü kapat",
+    "moreOptions": "{{name}} için diğer seçenekler",
+    "archivedMeta": "Arşivlendi ◆ {{counts}}",
+    "archivedBanner": "{{time}} arşivlendi. Salt okunur: sekmeleri taşımak, düzenlemek veya eklemek için grubu geri yükleyin. Bir sekmeye tıklamak onu yine de açar.",
+    "restore": "Geri yükle",
+    "sessionMeta": "Oturum ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "Gruplarınızın anlık görüntüsü. Bakmak hiçbir şeyi değiştirmez; \"Oturumu geri yükle\" bu grupları geri getirir.",
+    "sessionEmpty": "Bu oturumda grup yok."
+  }
 }

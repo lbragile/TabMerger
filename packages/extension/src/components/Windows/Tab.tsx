@@ -18,7 +18,6 @@ import { cn } from '@/lib/utils';
 import { withAlpha } from '@/lib/color';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
-import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { getDisplayTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
@@ -33,22 +32,7 @@ import { usePanelSearch, withoutFilteredOut } from '@/hooks/useSearchView';
 import { Highlighted } from '@/components/Highlighted';
 import { matchRanges, snippetAroundMatch, tabMatchesFilters, urlPrefixLength } from '@/lib/searchMatch';
 import { announceDnd } from '@/lib/dndLiveRegion';
-
-const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
-
-// ponytail: hostname + path (no query/hash) display; column already truncates via CSS
-function getUrlDisplay(url?: string): string {
-  if (!url) return '';
-  try {
-    const u = new URL(url);
-    const hostname = u.hostname.replace(/^www\./, '');
-    let path = u.pathname.replace(/\/$/, '');
-    if (path.length > 15) path = `${path.slice(0, 15)}...`;
-    return path ? `${hostname}${path}` : hostname;
-  } catch {
-    return '';
-  }
-}
+import { FALLBACK_FAVICON, getUrlDisplay, openSavedTab } from '@/lib/savedTab';
 
 const CHROME_GROUP_COLOR_MAP: Record<string, string> = {
   blue: '#1a73e8',
@@ -271,12 +255,7 @@ export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, sibli
     if (isLocked) return;
     // Skip opening the tab when Ctrl/Cmd/Shift is held — those gestures are for selection
     if (e && (e.ctrlKey || e.metaKey || e.shiftKey)) return;
-    if (!isOpenableUrl(tab.url)) return;
-    if (tab.chromeGroup && chrome.tabGroups) {
-      await openTabInChromeGroup(tab, undefined, true);
-      return;
-    }
-    chrome.tabs.create({ url: tab.url, active: true });
+    await openSavedTab(tab);
   };
 
   // 6b: reopen all tabs in this Chrome group as a new Chrome tab group

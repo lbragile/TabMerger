@@ -37,5 +37,18 @@
   "proRequired": "Pro required",
   "locked": "Upgrade to Pro to access this group",
   "pin": "Pin group",
-  "unpin": "Unpin group"
+  "unpin": "Unpin group",
+  "view": {
+    "showArchived": "Show archived group {{name}}",
+    "showSession": "Show session {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Close this view",
+    "moreOptions": "More options for {{name}}",
+    "archivedMeta": "Archived ◆ {{counts}}",
+    "archivedBanner": "Archived {{time}}. Read-only: restore it to move, edit or add tabs. Clicking a tab still opens it.",
+    "restore": "Restore",
+    "sessionMeta": "Session ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "A snapshot of your groups. Looking doesn't change anything; Restore session brings these groups back.",
+    "sessionEmpty": "This session has no groups."
+  }
 }

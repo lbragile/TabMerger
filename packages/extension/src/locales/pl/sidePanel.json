@@ -37,5 +37,18 @@
   "proRequired": "Wymagany Pro",
   "locked": "Przejdź na Pro, aby uzyskać dostęp do tej grupy",
   "pin": "Przypnij grupę",
-  "unpin": "Odepnij grupę"
+  "unpin": "Odepnij grupę",
+  "view": {
+    "showArchived": "Pokaż zarchiwizowaną grupę {{name}}",
+    "showSession": "Pokaż sesję {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Zamknij ten widok",
+    "moreOptions": "Więcej opcji dla {{name}}",
+    "archivedMeta": "Zarchiwizowano ◆ {{counts}}",
+    "archivedBanner": "Zarchiwizowano {{time}}. Tylko do odczytu: przywróć grupę, aby przenosić, edytować lub dodawać karty. Kliknięcie karty nadal ją otwiera.",
+    "restore": "Przywróć",
+    "sessionMeta": "Sesja ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "Migawka Twoich grup. Przeglądanie niczego nie zmienia; „Przywróć sesję” przywraca te grupy.",
+    "sessionEmpty": "Ta sesja nie ma grup."
+  }
 }

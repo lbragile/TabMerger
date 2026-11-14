@@ -37,5 +37,18 @@
   "proRequired": "Requiere Pro",
   "locked": "Mejora a Pro para acceder a este grupo",
   "pin": "Fijar grupo",
-  "unpin": "Desfijar grupo"
+  "unpin": "Desfijar grupo",
+  "view": {
+    "showArchived": "Mostrar el grupo archivado {{name}}",
+    "showSession": "Mostrar la sesión {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Cerrar esta vista",
+    "moreOptions": "Más opciones para {{name}}",
+    "archivedMeta": "Archivado ◆ {{counts}}",
+    "archivedBanner": "Archivado {{time}}. Solo lectura: restáuralo para mover, editar o añadir pestañas. Al hacer clic en una pestaña, se abre igualmente.",
+    "restore": "Restaurar",
+    "sessionMeta": "Sesión ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "Una instantánea de tus grupos. Mirarla no cambia nada; «Restaurar sesión» recupera estos grupos.",
+    "sessionEmpty": "Esta sesión no tiene grupos."
+  }
 }

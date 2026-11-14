@@ -37,5 +37,18 @@
   "proRequired": "Proが必要です",
   "locked": "このグループを使うにはProにアップグレードしてください",
   "pin": "グループをピン留め",
-  "unpin": "グループのピン留めを解除"
+  "unpin": "グループのピン留めを解除",
+  "view": {
+    "showArchived": "アーカイブ済みグループ「{{name}}」を表示",
+    "showSession": "セッション「{{name}}」を表示",
+    "sessionCounts": "{{groups}}、{{windows}}、{{tabs}}",
+    "close": "この表示を閉じる",
+    "moreOptions": "「{{name}}」のその他のオプション",
+    "archivedMeta": "アーカイブ済み ◆ {{counts}}",
+    "archivedBanner": "アーカイブ日時: {{time}}。読み取り専用です。タブの移動・編集・追加はグループを復元してから行ってください。タブをクリックすると開きます。",
+    "restore": "復元",
+    "sessionMeta": "セッション ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "グループのスナップショットです。表示しても何も変わりません。「セッションを復元」でこれらのグループを元に戻せます。",
+    "sessionEmpty": "このセッションにはグループがありません。"
+  }
 }

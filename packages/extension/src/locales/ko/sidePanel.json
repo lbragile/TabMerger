@@ -37,5 +37,18 @@
   "proRequired": "Pro 필요",
   "locked": "이 그룹을 사용하려면 Pro로 업그레이드하세요",
   "pin": "그룹 고정",
-  "unpin": "그룹 고정 해제"
+  "unpin": "그룹 고정 해제",
+  "view": {
+    "showArchived": "보관된 그룹 {{name}} 보기",
+    "showSession": "세션 {{name}} 보기",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "이 보기 닫기",
+    "moreOptions": "{{name}} 추가 옵션",
+    "archivedMeta": "보관됨 ◆ {{counts}}",
+    "archivedBanner": "{{time}} 보관됨. 읽기 전용: 탭을 이동, 편집 또는 추가하려면 그룹을 복원하세요. 탭을 클릭하면 열립니다.",
+    "restore": "복원",
+    "sessionMeta": "세션 ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "그룹의 스냅샷입니다. 보기만 해서는 아무것도 바뀌지 않으며, \"세션 복원\"을 누르면 이 그룹들이 돌아옵니다.",
+    "sessionEmpty": "이 세션에는 그룹이 없습니다."
+  }
 }

@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { nanoid } from 'nanoid';
-import type { Group, Window, Tab } from './types';
+import type { Group, Window, Tab, Session } from './types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE, FIRST_GROUP_TITLE } from './types';
 import { t } from './i18n';
 
@@ -87,6 +87,14 @@ export function getFaviconUrl(url: string): string {
 
 export function getGroupTabCount(group: Group): number {
   return group.windows.reduce((acc, w) => acc + w.tabs.length, 0);
+}
+
+/** A saved session's window and tab totals, over all its groups. */
+export function getSessionCounts(session: Session): { windows: number; tabs: number } {
+  return {
+    windows: session.groups.reduce((a, g) => a + g.windows.length, 0),
+    tabs: session.groups.reduce((a, g) => a + getGroupTabCount(g), 0)
+  };
 }
 
 /**

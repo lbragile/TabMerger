@@ -37,5 +37,18 @@
   "proRequired": "Pro requis",
   "locked": "Passez à Pro pour accéder à ce groupe",
   "pin": "Épingler le groupe",
-  "unpin": "Détacher le groupe"
+  "unpin": "Détacher le groupe",
+  "view": {
+    "showArchived": "Afficher le groupe archivé {{name}}",
+    "showSession": "Afficher la session {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Fermer cette vue",
+    "moreOptions": "Plus d’options pour {{name}}",
+    "archivedMeta": "Archivé ◆ {{counts}}",
+    "archivedBanner": "Archivé {{time}}. Lecture seule : restaurez-le pour déplacer, modifier ou ajouter des onglets. Cliquer sur un onglet l’ouvre quand même.",
+    "restore": "Restaurer",
+    "sessionMeta": "Session ◆ {{date}} ◆ {{groups}} ◆ {{tabs}}",
+    "sessionBanner": "Un instantané de vos groupes. Le consulter ne change rien ; « Restaurer la session » ramène ces groupes.",
+    "sessionEmpty": "Cette session ne contient aucun groupe."
+  }
 }
