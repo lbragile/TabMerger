@@ -1,0 +1,26 @@
+{
+  "day": {
+    "today": "오늘",
+    "yesterday": "어제"
+  },
+  "errors": {
+    "openFailed": "이 페이지를 열 수 없습니다. 목록에 그대로 남습니다.",
+    "changeFailed": "닫은 탭 목록을 변경할 수 없습니다. 다시 시도하세요.",
+    "undoIncomplete": "되돌릴 수 없습니다: 이미 삭제되었습니다.",
+    "undoTurnedOnListGone": "닫은 탭 기억하기가 다시 켜졌지만, 지운 목록은 이미 삭제되었습니다."
+  },
+  "settings": {
+    "title": "닫은 탭 기억하기",
+    "purpose": "닫은 탭과 창은 최근에 닫은 항목에 남아 다시 열 수 있습니다. 이 기기에만 저장됩니다. 비공개 창은 기록되지 않습니다.",
+    "keptFor_other": "현재 요금제에서 {{count}}일 동안 보관합니다",
+    "inList_other": "목록에 {{count}}개",
+    "off": "닫은 탭 기억하기가 꺼져 있습니다.",
+    "clear": "목록 지우기",
+    "checkingPlan": "요금제 확인 중..."
+  },
+  "toast": {
+    "cleared_other": "닫은 탭과 창 {{count}}개를 지웠습니다",
+    "turnedOffCleared_other": "끔 · 닫은 탭과 창 {{count}}개를 지웠습니다",
+    "turnedOff": "더 이상 닫은 탭을 기억하지 않습니다"
+  }
+}

@@ -19,3 +19,10 @@ export function isOpenableUrl(url: unknown): url is string {
 export function openableUrls(urls: readonly unknown[]): string[] {
   return urls.filter(isOpenableUrl);
 }
+
+/**
+ * Addresses that cannot be opened programmatically, and that saving open tabs leaves out: browser
+ * pages (`chrome://`, which includes the new-tab page), `about:` and extension pages. Matches the
+ * scheme prefix, so it covers both `about:blank` and `chrome://newtab`.
+ */
+export const RESTRICTED_URL_RE = /^(chrome|about|chrome-extension|moz-extension):/i;

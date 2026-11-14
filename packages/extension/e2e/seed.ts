@@ -97,7 +97,7 @@ export const WORK_GROUP = {
 export async function seedConfirmOnDelete(page: Page, value: boolean) {
   await page.evaluate(async (val) => {
     await new Promise<void>((resolve, reject) => {
-      const req = indexedDB.open('tabmerger', 1);
+      const req = indexedDB.open('tabmerger');
       req.onsuccess = () => {
         const db = req.result;
         const tx = db.transaction('settings', 'readwrite');

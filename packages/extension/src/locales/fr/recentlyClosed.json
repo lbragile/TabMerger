@@ -1,0 +1,34 @@
+{
+  "day": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier"
+  },
+  "errors": {
+    "openFailed": "Impossible d'ouvrir cette page. Elle reste dans la liste.",
+    "changeFailed": "Impossible de modifier la liste des onglets fermés. Réessayez.",
+    "undoIncomplete": "Impossible de les récupérer : ils étaient déjà supprimés.",
+    "undoTurnedOnListGone": "La mémorisation des onglets fermés est réactivée, mais la liste vidée était déjà supprimée."
+  },
+  "settings": {
+    "title": "Mémoriser les onglets fermés",
+    "purpose": "Les onglets et fenêtres que vous fermez restent dans Fermés récemment, pour les rouvrir. Enregistrés uniquement sur cet appareil. Les fenêtres privées ne sont jamais enregistrées.",
+    "keptFor_one": "Votre offre les garde {{count}} jour",
+    "keptFor_many": "Votre offre les garde {{count}} jours",
+    "keptFor_other": "Votre offre les garde {{count}} jours",
+    "inList_one": "{{count}} dans la liste",
+    "inList_many": "{{count}} dans la liste",
+    "inList_other": "{{count}} dans la liste",
+    "off": "La mémorisation des onglets fermés est désactivée.",
+    "clear": "Vider la liste",
+    "checkingPlan": "Vérification de votre offre..."
+  },
+  "toast": {
+    "cleared_one": "{{count}} onglet ou fenêtre fermé effacé",
+    "cleared_many": "{{count}} onglets et fenêtres fermés effacés",
+    "cleared_other": "{{count}} onglets et fenêtres fermés effacés",
+    "turnedOffCleared_one": "Désactivé · {{count}} onglet ou fenêtre fermé effacé",
+    "turnedOffCleared_many": "Désactivé · {{count}} onglets et fenêtres fermés effacés",
+    "turnedOffCleared_other": "Désactivé · {{count}} onglets et fenêtres fermés effacés",
+    "turnedOff": "Les onglets fermés ne sont plus mémorisés"
+  }
+}

@@ -77,6 +77,8 @@ vi.mock('@/lib/aiFlag', () => ({
 
 vi.mock('@/lib/demo', () => ({ enterDemoMode: mockEnterDemoMode }))
 
+// "Remember closed tabs" is read from its own store by useAppSettings: kept off the getDb mock
+vi.mock('@/lib/recentlyClosedDb', () => ({ getRememberClosedTabs: vi.fn().mockResolvedValue(true) }))
 vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
   setSetting: mockSetSetting,
@@ -106,6 +108,8 @@ vi.mock('@/lib/dataConsent', () => ({ requestDataConsent: mockRequestDataConsent
 vi.mock('@/components/Settings/OtherDevices', () => ({ OtherDevices: () => <div>Other devices panel</div> }))
 // The Data tab's backups section has its own data hooks (sessions, entitlements), so it is stubbed here like OtherDevices.
 vi.mock('@/components/Settings/AutoBackups', () => ({ AutoBackups: () => <div>Automatic backups panel</div> }))
+// covered by RecentlyClosedSettings.test.tsx; a stub section here keeps the Data tab's order checkable
+vi.mock('@/components/Settings/RecentlyClosedSettings', () => ({ RecentlyClosedSettings: () => <section data-section="recently-closed">Recently closed panel</section> }))
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: Object.assign((sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }), {
     getState: () => ({ clearHistory: mockClearHistory })
@@ -624,16 +628,17 @@ describe('SettingsModal — Account tab', () => {
 })
 
 describe('SettingsModal — Data tab', () => {
-  it('is four titled sections in order (auto-save, backups, import & export, danger zone), then the storage footer', async () => {
+  it('is five titled sections in order (auto-save, backups, recently closed, import & export, danger zone), then the storage footer', async () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^data$/i)
     // AutoBackups is a stub here (its own tests cover its section): check it sits between the two
     const order = Array.from(document.querySelectorAll('[data-section]')).map((el) => el.getAttribute('data-section'))
-    expect(order).toEqual(['autosave', 'import-export', 'danger'])
+    expect(order).toEqual(['autosave', 'recently-closed', 'import-export', 'danger'])
     const backups = screen.getByText('Automatic backups panel')
     const follows = (a: Node, b: Node) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING)
     expect(follows(document.querySelector('[data-section="autosave"]')!, backups)).toBe(true)
+    expect(follows(backups, document.querySelector('[data-section="recently-closed"]')!)).toBe(true)
     expect(follows(backups, document.querySelector('[data-section="import-export"]')!)).toBe(true)
     const headings = screen.getAllByRole('heading', { level: 3 }).map((el) => el.textContent)
     expect(headings).toEqual(expect.arrayContaining(['Import & export', 'Danger zone']))

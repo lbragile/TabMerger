@@ -144,7 +144,7 @@ test.describe('DnD zone behavior (drag no longer auto-stars)', () => {
 
     const plainStarred = await page.evaluate(async () => {
       return new Promise<boolean>((resolve) => {
-        const req = indexedDB.open('tabmerger', 1);
+        const req = indexedDB.open('tabmerger');
         req.onsuccess = () => {
           const db = req.result;
           const tx = db.transaction('groups', 'readonly');
@@ -193,7 +193,7 @@ test.describe('DnD zone behavior (drag no longer auto-stars)', () => {
 
     const stillStarred = await page.evaluate(async () => {
       return new Promise<boolean>((resolve) => {
-        const req = indexedDB.open('tabmerger', 1);
+        const req = indexedDB.open('tabmerger');
         req.onsuccess = () => {
           const db = req.result;
           const tx = db.transaction('groups', 'readonly');

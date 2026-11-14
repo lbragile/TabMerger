@@ -1,0 +1,30 @@
+{
+  "day": {
+    "today": "Bugün",
+    "yesterday": "Dün"
+  },
+  "errors": {
+    "openFailed": "Bu sayfa açılamadı. Listede kalıyor.",
+    "changeFailed": "Kapatılan sekmeler listesi değiştirilemedi. Tekrar deneyin.",
+    "undoIncomplete": "Geri getirilemedi: zaten silinmişlerdi.",
+    "undoTurnedOnListGone": "Kapatılan sekmeleri hatırlama yeniden açık, ancak temizlenen liste zaten silinmişti."
+  },
+  "settings": {
+    "title": "Kapatılan sekmeleri hatırla",
+    "purpose": "Kapattığınız sekmeler ve pencereler Son kapatılanlar'da kalır, böylece onları yeniden açabilirsiniz. Yalnızca bu cihazda saklanır. Gizli pencereler hiçbir zaman kaydedilmez.",
+    "keptFor_one": "Planınız onları {{count}} gün saklar",
+    "keptFor_other": "Planınız onları {{count}} gün saklar",
+    "inList_one": "Listede {{count}}",
+    "inList_other": "Listede {{count}}",
+    "off": "Kapatılan sekmeleri hatırlama kapalı.",
+    "clear": "Listeyi temizle",
+    "checkingPlan": "Planınız kontrol ediliyor..."
+  },
+  "toast": {
+    "cleared_one": "{{count}} kapatılan sekme veya pencere temizlendi",
+    "cleared_other": "{{count}} kapatılan sekme ve pencere temizlendi",
+    "turnedOffCleared_one": "Kapatıldı · {{count}} kapatılan sekme veya pencere temizlendi",
+    "turnedOffCleared_other": "Kapatıldı · {{count}} kapatılan sekme ve pencere temizlendi",
+    "turnedOff": "Kapatılan sekmeler artık hatırlanmıyor"
+  }
+}

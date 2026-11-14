@@ -18,6 +18,7 @@ import keyboardMove from './keyboardMove.json' with { type: 'json' };
 import manifest from './manifest.json' with { type: 'json' };
 import modals from './modals.json' with { type: 'json' };
 import preview from './preview.json' with { type: 'json' };
+import recentlyClosed from './recentlyClosed.json' with { type: 'json' };
 import search from './search.json' with { type: 'json' };
 import selection from './selection.json' with { type: 'json' };
 import settings from './settings.json' with { type: 'json' };
@@ -50,6 +51,7 @@ export const vi = {
     manifest,
     modals,
     preview,
+    recentlyClosed,
     search,
     selection,
     settings,

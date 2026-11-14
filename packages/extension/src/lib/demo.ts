@@ -1,5 +1,6 @@
 import { saveGroupsState } from './localDb';
 import { demoData } from './demoData';
+import { closeWindows } from './closeLiveTabs';
 
 // ponytail: dev-only helper for the Playwright/Remotion marketing walkthrough — never called in prod builds
 
@@ -16,9 +17,9 @@ export async function enterDemoMode(): Promise<void> {
   const freshWindow = await chrome.windows.create({ url: 'chrome://newtab' });
 
   const allWindows = await chrome.windows.getAll();
-  await Promise.all(
-    allWindows
-      .filter((w) => w.id !== undefined && w.id !== freshWindow?.id)
-      .map((w) => chrome.windows.remove(w.id as number))
+  // dev-only window reset for a recording: not a close to remember
+  await closeWindows(
+    allWindows.filter((w) => w.id !== undefined && w.id !== freshWindow?.id).map((w) => w.id as number),
+    { record: false }
   );
 }

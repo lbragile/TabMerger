@@ -43,7 +43,7 @@ const backupGroup = (id: string, name: string, tabs: number) => ({
 async function seedSessions(page: Page, sessions: SeedSession[]): Promise<void> {
   await page.evaluate(async (sessions) => {
     await new Promise<void>((resolve, reject) => {
-      const req = indexedDB.open('tabmerger', 1);
+      const req = indexedDB.open('tabmerger');
       req.onerror = () => reject(req.error);
       req.onsuccess = () => {
         const db = req.result;

@@ -15,7 +15,7 @@ import { NOW_OPEN, WORK_GROUP } from '../seed';
 async function seedSession(page: Page, name: string): Promise<void> {
   await page.evaluate(async (name) => {
     await new Promise<void>((resolve, reject) => {
-      const req = indexedDB.open('tabmerger', 1);
+      const req = indexedDB.open('tabmerger');
       req.onerror = () => reject(req.error);
       req.onsuccess = () => {
         const db = req.result;

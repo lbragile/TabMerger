@@ -1,6 +1,7 @@
-import { openDB, type IDBPDatabase, type IDBPTransaction } from 'idb';
-import { isTourDemoGroup } from '@tabmerger/shared';
+import { openDB, unwrap, type IDBPDatabase, type IDBPTransaction } from 'idb';
+import { RECENTLY_CLOSED_META_ID, isTourDemoGroup } from '@tabmerger/shared';
 import type { Group, GroupsState, Session } from './types';
+import type { RecentlyClosedEntry, RecentlyClosedMeta } from './recentlyClosed';
 import { createNowOpenGroup } from './utils';
 import { GROUPS_CHANGED_MESSAGE, type GroupsChangeCause, type GroupsChangedMessage } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
@@ -9,7 +10,17 @@ import { emitAutoSavePromoted, promoteEditedAutoSave } from './autoSaveGroups';
 import { APP_SETTINGS_KEY, LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
 
 const DB_NAME = 'tabmerger';
-const DB_VERSION = 1;
+/**
+ * 2 = the `recentlyClosed` store ("Recently closed tabs", lib/recentlyClosedDb.ts). Every version
+ * bump creates its new stores in its own `oldVersion < N` branch only: stores of earlier versions
+ * are never touched by a later upgrade.
+ *
+ * NEVER LOWER THIS. Once a build with version N has run on a device, the database there IS version
+ * N, and opening it with a lower number fails (VersionError). A reverted bump therefore has to
+ * keep the number (and may leave the new store unused). `getDb` survives a lower number by opening
+ * the current version as is, but a unit test (localDbVersion.test.ts) fails if it ever drops.
+ */
+export const DB_VERSION = 2;
 
 export interface TabMergerDB {
   groups: {
@@ -30,9 +41,23 @@ export interface TabMergerDB {
     key: string;
     value: unknown;
   };
+  /** Device-local list of closed tabs and windows (never synced, exported or backed up). */
+  recentlyClosed: {
+    key: string;
+    /** entries, plus the one meta row (RECENTLY_CLOSED_META_ID) */
+    value: RecentlyClosedEntry | RecentlyClosedMeta;
+    indexes: { closedAt: number };
+  };
 }
 
-let dbInstance: IDBPDatabase<TabMergerDB> | null = null;
+/**
+ * The ONE open (or opening) connection of this context, memoised as a promise so concurrent first
+ * callers share it instead of opening several. Reset when the connection is closed for a newer
+ * version (`versionchange`) or by the browser (`terminated`); the next `getDb()` reopens.
+ */
+let dbPromise: Promise<IDBPDatabase<TabMergerDB>> | null = null;
+/** The resolved connection behind {@link dbPromise}, to tell whether an event is about it. */
+let dbConnection: IDBPDatabase<TabMergerDB> | null = null;
 
 /**
  * Notifies the background entrypoint that a group-changing write committed, so it can
@@ -96,29 +121,79 @@ function notifyGroupsChanged(cause?: GroupsChangeCause, stored?: GroupsState, sa
   }
 }
 
-export async function getDb(): Promise<IDBPDatabase<TabMergerDB>> {
-  if (dbInstance) return dbInstance;
+function upgradeDb(db: IDBPDatabase<TabMergerDB>, oldVersion: number): void {
+  if (!db.objectStoreNames.contains('groups')) {
+    const groupsStore = db.createObjectStore('groups', { keyPath: 'id' });
+    groupsStore.createIndex('by-updatedAt', 'updatedAt');
+  }
+  if (!db.objectStoreNames.contains('groupsState')) {
+    db.createObjectStore('groupsState', { keyPath: 'id' });
+  }
+  if (!db.objectStoreNames.contains('sessions')) {
+    const sessionsStore = db.createObjectStore('sessions', { keyPath: 'id' });
+    sessionsStore.createIndex('by-createdAt', 'createdAt');
+  }
+  if (!db.objectStoreNames.contains('settings')) {
+    db.createObjectStore('settings', { keyPath: 'id' });
+  }
+  // v2: "Recently closed tabs". Only in this branch, so the v1 stores above are left as they are.
+  if (oldVersion < 2 && !db.objectStoreNames.contains('recentlyClosed')) {
+    const recentlyClosed = db.createObjectStore('recentlyClosed', { keyPath: 'id' });
+    recentlyClosed.createIndex('closedAt', 'closedAt');
+  }
+}
 
-  dbInstance = await openDB<TabMergerDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      if (!db.objectStoreNames.contains('groups')) {
-        const groupsStore = db.createObjectStore('groups', { keyPath: 'id' });
-        groupsStore.createIndex('by-updatedAt', 'updatedAt');
-      }
-      if (!db.objectStoreNames.contains('groupsState')) {
-        db.createObjectStore('groupsState', { keyPath: 'id' });
-      }
-      if (!db.objectStoreNames.contains('sessions')) {
-        const sessionsStore = db.createObjectStore('sessions', { keyPath: 'id' });
-        sessionsStore.createIndex('by-createdAt', 'createdAt');
-      }
-      if (!db.objectStoreNames.contains('settings')) {
-        db.createObjectStore('settings', { keyPath: 'id' });
-      }
+/** Forgets the memoised connection if it is `raw` (closed for a newer version, or by the browser). */
+function forgetConnection(raw: IDBDatabase | null): void {
+  if (!dbConnection || (raw && unwrap(dbConnection) !== raw)) return;
+  dbConnection = null;
+  dbPromise = null;
+}
+
+async function openDb(): Promise<IDBPDatabase<TabMergerDB>> {
+  const handlers = {
+    // A context running OLDER code (a popup left open across an extension update) holds the old
+    // version open and would block this upgrade forever: the connection that got the
+    // `versionchange` closes itself, and its next `getDb()` reopens at the new version.
+    blocking(_current: number, _blocked: number | null, event: IDBVersionChangeEvent) {
+      const raw = event.target as IDBDatabase | null;
+      raw?.close();
+      forgetConnection(raw);
+    },
+    blocked() {
+      console.warn('[localDb] waiting for an older connection to close before upgrading the database');
+    },
+    terminated() {
+      // the browser closed it (storage cleared, crash): the next call reopens
+      forgetConnection(null);
     }
-  });
+  };
+  try {
+    return await openDB<TabMergerDB>(DB_NAME, DB_VERSION, { upgrade: (db, oldVersion) => upgradeDb(db, oldVersion), ...handlers });
+  } catch (err) {
+    // The database on this device is NEWER than this build (a build with a lower DB_VERSION ran
+    // after a higher one): open it as it is, without upgrading, so the data stays readable.
+    if ((err as { name?: string } | null)?.name !== 'VersionError') throw err;
+    console.error('[localDb] the database is newer than this build expects; opening it without an upgrade', err);
+    return openDB<TabMergerDB>(DB_NAME, undefined, handlers);
+  }
+}
 
-  return dbInstance;
+export function getDb(): Promise<IDBPDatabase<TabMergerDB>> {
+  if (!dbPromise) {
+    const opening = openDb().then(
+      (db) => {
+        if (dbPromise === opening) dbConnection = db;
+        return db;
+      },
+      (err: unknown) => {
+        if (dbPromise === opening) dbPromise = null; // the next call retries
+        throw err;
+      }
+    );
+    dbPromise = opening;
+  }
+  return dbPromise;
 }
 
 /**
@@ -874,7 +949,7 @@ export function clearAllLocalData(): Promise<void> {
   return enqueueGroupsWrite(async () => {
     const db = await getDb();
     const keep = new Set<string>([CLOUD_SYNC_ACTIVE_KEY, LAST_USER_ID_KEY]);
-    const tx = db.transaction(['groups', 'groupsState', 'sessions', 'settings'], 'readwrite');
+    const tx = db.transaction(['groups', 'groupsState', 'sessions', 'settings', 'recentlyClosed'], 'readwrite');
     // Listed INSIDE the transaction: a setting written between a separate listing and the wipe
     // (the backup store guard, a pending delete) would survive "Clear all data".
     const settingKeys = ((await tx.objectStore('settings').getAllKeys()) as string[]).filter((k) => !keep.has(k));
@@ -882,6 +957,12 @@ export function clearAllLocalData(): Promise<void> {
       tx.objectStore('groups').clear(),
       tx.objectStore('groupsState').clear(),
       tx.objectStore('sessions').clear(),
+      // "Clear all data" means everything on this device, the recently-closed list included; the
+      // meta row put back records the clear, so a close still queued in the worker from before it
+      // is dropped instead of starting the list again (the switch goes back to its default, on,
+      // like every other setting)
+      tx.objectStore('recentlyClosed').clear(),
+      tx.objectStore('recentlyClosed').put({ id: RECENTLY_CLOSED_META_ID, clearedBefore: Date.now() }),
       ...settingKeys.map((k) => tx.objectStore('settings').delete(k)),
       tx.done
     ]);

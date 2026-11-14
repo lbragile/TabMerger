@@ -238,7 +238,7 @@ async function rowBoxByText(cdp: RawCdp, text: string) {
 async function idbGroup(cdp: RawCdp, id: string) {
   return cdp.evaluate<{ windows: { tabs: string[] }[] }>(
     `new Promise(resolve => {
-       const req = indexedDB.open('tabmerger', 1);
+       const req = indexedDB.open('tabmerger');
        req.onsuccess = () => {
          const tx = req.result.transaction('groups', 'readonly');
          tx.objectStore('groups').get(${JSON.stringify(id)}).onsuccess = (e) => {
@@ -253,7 +253,7 @@ async function groupOrder(cdp: RawCdp) {
   // The authoritative sidebar order lives in groupsState.state.order (see localDb).
   return cdp.evaluate<string[]>(
     `new Promise(resolve => {
-       const req = indexedDB.open('tabmerger', 1);
+       const req = indexedDB.open('tabmerger');
        req.onsuccess = () => {
          const tx = req.result.transaction('groupsState', 'readonly');
          tx.objectStore('groupsState').get('state').onsuccess = (e) =>
@@ -539,7 +539,7 @@ test('real popup — SCREENSHOT the ghost card: first frame, mid-drag, a second 
     await cdp.evaluate(`
       localStorage.setItem('tabmerger-theme', 'light');
       new Promise((resolve) => {
-        const req = indexedDB.open('tabmerger', 1);
+        const req = indexedDB.open('tabmerger');
         req.onsuccess = () => {
           const tx = req.result.transaction('settings', 'readwrite');
           const store = tx.objectStore('settings');
@@ -2221,7 +2221,7 @@ async function normalWindows(context: BrowserContext): Promise<{ id: number; foc
 async function idbSetting(cdp: RawCdp, key: string): Promise<unknown> {
   return cdp.evaluate<unknown>(
     `new Promise(resolve => {
-       const req = indexedDB.open('tabmerger', 1);
+       const req = indexedDB.open('tabmerger');
        req.onsuccess = () => {
          req.result.transaction('settings', 'readonly').objectStore('settings').get(${JSON.stringify(key)}).onsuccess =
            (e) => resolve(e.target.result ? e.target.result.value : null);
@@ -2233,7 +2233,7 @@ async function idbSetting(cdp: RawCdp, key: string): Promise<unknown> {
 async function idbStateActive(cdp: RawCdp): Promise<unknown> {
   return cdp.evaluate<unknown>(
     `new Promise(resolve => {
-       const req = indexedDB.open('tabmerger', 1);
+       const req = indexedDB.open('tabmerger');
        req.onsuccess = () => {
          req.result.transaction('groupsState', 'readonly').objectStore('groupsState').get('state').onsuccess =
            (e) => resolve(e.target.result ? e.target.result.active : null);
@@ -2729,7 +2729,7 @@ const selectedTabLabels = (cdp: RawCdp) =>
 async function idbTabs(cdp: RawCdp, id: string) {
   return cdp.evaluate<{ title: string; id: number; savedAt: number | null }[][]>(
     `new Promise(resolve => {
-       const req = indexedDB.open('tabmerger', 1);
+       const req = indexedDB.open('tabmerger');
        req.onsuccess = () => {
          req.result.transaction('groups', 'readonly').objectStore('groups').get(${JSON.stringify(id)}).onsuccess = (e) => {
            const g = e.target.result;

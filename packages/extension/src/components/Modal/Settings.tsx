@@ -23,6 +23,7 @@ import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
 import { AutoBackups } from '@/components/Settings/AutoBackups';
 import { AutoSaveTabs } from '@/components/Settings/AutoSaveTabs';
+import { RecentlyClosedSettings } from '@/components/Settings/RecentlyClosedSettings';
 import { CheckForUpdates } from '@/components/Settings/CheckForUpdates';
 import { LanguageSetting } from '@/components/Settings/LanguageSetting';
 import { SettingsSection } from '@/components/Settings/SettingsSection';
@@ -634,7 +635,7 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
           )}
         </TabsContent>
 
-        {/* Four titled sections (auto-save, backups, import & export, danger zone), one Separator
+        {/* Five titled sections (auto-save, backups, recently closed, import & export, danger zone), one Separator
             between each, and where the data lives as a footer. */}
         <TabsContent value="data" className="min-w-0 space-y-4">
           {/* Saves immediately and mirrors into the draft, like AutoBackups below. */}
@@ -648,6 +649,11 @@ export function SettingsModal({ onClose, initialTab }: SettingsModalProps) {
             onSettingsSaved={(saved) => setDraft((prev) => ({ ...prev, ...saved }))}
             onRestored={onClose}
           />
+
+          <Separator />
+
+          {/* Device-local list of closed tabs: saves immediately and mirrors into the draft too. */}
+          <RecentlyClosedSettings onSettingsSaved={(saved) => setDraft((prev) => ({ ...prev, ...saved }))} />
 
           <Separator />
 

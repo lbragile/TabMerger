@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { AUTO_SAVE_THRESHOLD_MIN_GAP_MS, FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { AUTO_ITEM_COLORS, AUTO_SAVE_THRESHOLD_MIN_GAP_MS, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import type { Group, GroupsState, Window } from '@/lib/types'
 import {
   INITIAL_THRESHOLD_STATE,
@@ -11,6 +11,7 @@ import {
   parseAutoSaveState,
   parseThresholdState,
   parseTierSeen,
+  newestAutoSaveColor,
   planAutoSave,
   readAutoSaveSettings,
   scheduledRunDue,
@@ -306,3 +307,29 @@ describe('copy', () => {
     }
   })
 })
+
+describe('auto-saved group colour', () => {
+  const gray = 'rgba(107, 114, 128, 1)'
+  const slate = 'rgba(15, 23, 42, 1)'
+
+  it('gives a new auto-save a non-neutral colour different from the newest previous auto-save', () => {
+    const older = group('older', ['https://o.test/'], { color: AUTO_ITEM_COLORS[1], autoSave: { at: NOW - 2000, rolling: false } })
+    const newest = group('newest', ['https://n.test/'], { color: AUTO_ITEM_COLORS[0], autoSave: { at: NOW - 1000, rolling: false } })
+    for (const r of [0, 0.3, 0.6, 0.99]) {
+      const plan = planAutoSave(state(older, newest), [win('https://fresh.test/')], { ...opts(PRO), random: () => r })
+      if (plan.kind !== 'write') throw new Error('expected a write')
+      expect(AUTO_ITEM_COLORS).toContain(plan.group.color)
+      expect([gray, slate]).not.toContain(plan.group.color)
+      expect(plan.group.color).not.toBe(AUTO_ITEM_COLORS[0])
+    }
+  })
+
+  it('ignores kept groups (no marker) when looking for the previous colour', () => {
+    const kept = group('kept', ['https://k.test/'], { color: AUTO_ITEM_COLORS[0] })
+    expect(newestAutoSaveColor([kept])).toBeUndefined()
+    const plan = planAutoSave(state(kept), [win('https://fresh.test/')], { ...opts(PRO), random: () => 0 })
+    if (plan.kind !== 'write') throw new Error('expected a write')
+    expect(plan.group.color).toBe(AUTO_ITEM_COLORS[0])
+  })
+})
+

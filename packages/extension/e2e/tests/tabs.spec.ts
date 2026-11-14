@@ -145,7 +145,7 @@ test.describe('Tab drag — across windows within a group (unified DnD)', () => 
     // Assert against persisted IndexedDB — resilient to render timing in the panel.
     const window0Urls = await page.evaluate(async () => {
       return new Promise<string[]>((resolve) => {
-        const req = indexedDB.open('tabmerger', 1);
+        const req = indexedDB.open('tabmerger');
         req.onsuccess = () => {
           const db = req.result;
           const tx = db.transaction('groups', 'readonly');

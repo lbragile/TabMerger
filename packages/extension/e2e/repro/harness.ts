@@ -127,7 +127,7 @@ export async function readAllGroups(page: Page): Promise<
   return page.evaluate(
     () =>
       new Promise((resolve) => {
-        const req = indexedDB.open('tabmerger', 1);
+        const req = indexedDB.open('tabmerger');
         req.onsuccess = () => {
           const tx = req.result.transaction('groups', 'readonly');
           tx.objectStore('groups').getAll().onsuccess = (e) => {

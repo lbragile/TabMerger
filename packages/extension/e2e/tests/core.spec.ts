@@ -140,7 +140,7 @@ test.describe('Core — sidebar and basic invariants', () => {
       const host = new URL(fixture.url).host;
       await seedPage.evaluate((h) => {
         return new Promise<void>((resolve, reject) => {
-          const open = indexedDB.open('tabmerger', 1);
+          const open = indexedDB.open('tabmerger');
           open.onsuccess = () => {
             const db = open.result;
             const tx = db.transaction('settings', 'readwrite');
@@ -184,7 +184,7 @@ test.describe('Core — sidebar and basic invariants', () => {
         // handle instead of retrying with a freshly-fetched worker next tick.
         return Promise.race([
           sw.evaluate((groupId) => new Promise<number>((resolve) => {
-            const open = indexedDB.open('tabmerger', 1);
+            const open = indexedDB.open('tabmerger');
             open.onsuccess = () => {
               const db = open.result;
               const tx = db.transaction('groups', 'readonly');

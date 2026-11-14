@@ -1,0 +1,26 @@
+{
+  "day": {
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua"
+  },
+  "errors": {
+    "openFailed": "Không mở được trang này. Trang vẫn còn trong danh sách.",
+    "changeFailed": "Không thay đổi được danh sách thẻ đã đóng. Hãy thử lại.",
+    "undoIncomplete": "Không khôi phục được: chúng đã bị xóa.",
+    "undoTurnedOnListGone": "Ghi nhớ thẻ đã đóng đã bật lại, nhưng danh sách đã xóa không còn nữa."
+  },
+  "settings": {
+    "title": "Ghi nhớ thẻ đã đóng",
+    "purpose": "Các thẻ và cửa sổ bạn đóng sẽ ở lại trong Đã đóng gần đây để bạn mở lại. Chỉ lưu trên thiết bị này. Cửa sổ riêng tư không bao giờ được ghi lại.",
+    "keptFor_other": "Gói của bạn giữ chúng trong {{count}} ngày",
+    "inList_other": "{{count}} trong danh sách",
+    "off": "Ghi nhớ thẻ đã đóng đang tắt.",
+    "clear": "Xóa danh sách",
+    "checkingPlan": "Đang kiểm tra gói của bạn..."
+  },
+  "toast": {
+    "cleared_other": "Đã xóa {{count}} thẻ và cửa sổ đã đóng",
+    "turnedOffCleared_other": "Đã tắt · đã xóa {{count}} thẻ và cửa sổ đã đóng",
+    "turnedOff": "Không còn ghi nhớ thẻ đã đóng"
+  }
+}

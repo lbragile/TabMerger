@@ -1,0 +1,34 @@
+{
+  "day": {
+    "today": "Hoy",
+    "yesterday": "Ayer"
+  },
+  "errors": {
+    "openFailed": "No se pudo abrir esta página. Sigue en la lista.",
+    "changeFailed": "No se pudo cambiar la lista de pestañas cerradas. Inténtalo de nuevo.",
+    "undoIncomplete": "No se pudieron recuperar: ya se habían borrado.",
+    "undoTurnedOnListGone": "Recordar pestañas cerradas vuelve a estar activado, pero la lista vaciada ya se había borrado."
+  },
+  "settings": {
+    "title": "Recordar pestañas cerradas",
+    "purpose": "Las pestañas y ventanas que cierras quedan en Cerradas recientemente para que puedas volver a abrirlas. Solo se guardan en este dispositivo. Las ventanas privadas nunca se registran.",
+    "keptFor_one": "Tu plan las guarda {{count}} día",
+    "keptFor_many": "Tu plan las guarda {{count}} días",
+    "keptFor_other": "Tu plan las guarda {{count}} días",
+    "inList_one": "{{count}} en la lista",
+    "inList_many": "{{count}} en la lista",
+    "inList_other": "{{count}} en la lista",
+    "off": "Recordar pestañas cerradas está desactivado.",
+    "clear": "Vaciar lista",
+    "checkingPlan": "Comprobando tu plan..."
+  },
+  "toast": {
+    "cleared_one": "Se borró {{count}} pestaña o ventana cerrada",
+    "cleared_many": "Se borraron {{count}} pestañas y ventanas cerradas",
+    "cleared_other": "Se borraron {{count}} pestañas y ventanas cerradas",
+    "turnedOffCleared_one": "Desactivado · se borró {{count}} pestaña o ventana cerrada",
+    "turnedOffCleared_many": "Desactivado · se borraron {{count}} pestañas y ventanas cerradas",
+    "turnedOffCleared_other": "Desactivado · se borraron {{count}} pestañas y ventanas cerradas",
+    "turnedOff": "Ya no se recuerdan las pestañas cerradas"
+  }
+}

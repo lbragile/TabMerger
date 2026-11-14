@@ -12,6 +12,19 @@ const COPY_SYMBOLS = ['·', '—', '–', '×', '/', '…', '•', '(', ')', ':'
 const COPY_ATTRIBUTES = '^(aria-label|aria-description|aria-roledescription|aria-valuetext|title|placeholder|alt|label|description|tooltip)$'
 const LETTERS = '/[A-Za-z]/'
 
+// Every browser-tab close states whether "Recently closed tabs" remembers it: closeTabs /
+// closeWindows in src/lib/closeLiveTabs.ts, never chrome.tabs.remove / chrome.windows.remove
+// directly. `no-restricted-properties` can't see `chrome.tabs.remove` (its `object` option only
+// matches a bare identifier, not `chrome.tabs`), so these are syntax selectors; the destructured
+// `tabs.remove(...)` form is covered by the properties rule below.
+const CLOSE_TABS_MESSAGE = 'Close browser tabs with closeTabs(ids, { record }) / closeWindows(ids, { record }) from @/lib/closeLiveTabs, so every close decides whether "Recently closed" remembers it.'
+const CLOSE_TABS_SYNTAX = ['chrome', 'browser'].flatMap((ns) =>
+  ['tabs', 'windows'].map((api) => ({
+    selector: `MemberExpression[object.object.name='${ns}'][object.property.name='${api}'][property.name='remove']`,
+    message: CLOSE_TABS_MESSAGE,
+  }))
+)
+
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {
@@ -41,6 +54,12 @@ export default [
       // React hooks — only the rules that were in v4
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      'no-restricted-syntax': ['error', ...CLOSE_TABS_SYNTAX],
+      'no-restricted-properties': [
+        'error',
+        { object: 'tabs', property: 'remove', message: CLOSE_TABS_MESSAGE },
+        { object: 'windows', property: 'remove', message: CLOSE_TABS_MESSAGE },
+      ],
     },
     settings: { react: { version: 'detect' } },
   },
@@ -52,6 +71,8 @@ export default [
       'react/jsx-no-literals': ['error', { noStrings: false, allowedStrings: COPY_SYMBOLS, ignoreProps: true }],
       'no-restricted-syntax': [
         'error',
+        // (this block's own list replaces the one above for these files, so it repeats it)
+        ...CLOSE_TABS_SYNTAX,
         {
           selector: `JSXAttribute[name.name=/${COPY_ATTRIBUTES}/] > Literal[value=${LETTERS}]`,
           message: 'User-facing attribute text must come from the catalog: t("area.key") from @/lib/i18n.',

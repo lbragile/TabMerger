@@ -1,0 +1,34 @@
+{
+  "day": {
+    "today": "Hoje",
+    "yesterday": "Ontem"
+  },
+  "errors": {
+    "openFailed": "Não foi possível abrir esta página. Ela continua na lista.",
+    "changeFailed": "Não foi possível alterar a lista de abas fechadas. Tente de novo.",
+    "undoIncomplete": "Não foi possível recuperá-las: já tinham sido apagadas.",
+    "undoTurnedOnListGone": "Lembrar abas fechadas foi reativado, mas a lista limpa já tinha sido apagada."
+  },
+  "settings": {
+    "title": "Lembrar abas fechadas",
+    "purpose": "As abas e janelas que você fecha ficam em Fechadas recentemente, para você reabrir. Salvas só neste dispositivo. Janelas privadas nunca são registradas.",
+    "keptFor_one": "Seu plano as mantém por {{count}} dia",
+    "keptFor_many": "Seu plano as mantém por {{count}} dias",
+    "keptFor_other": "Seu plano as mantém por {{count}} dias",
+    "inList_one": "{{count}} na lista",
+    "inList_many": "{{count}} na lista",
+    "inList_other": "{{count}} na lista",
+    "off": "Lembrar abas fechadas está desativado.",
+    "clear": "Limpar lista",
+    "checkingPlan": "Verificando seu plano..."
+  },
+  "toast": {
+    "cleared_one": "{{count}} aba ou janela fechada apagada",
+    "cleared_many": "{{count}} abas e janelas fechadas apagadas",
+    "cleared_other": "{{count}} abas e janelas fechadas apagadas",
+    "turnedOffCleared_one": "Desativado · {{count}} aba ou janela fechada apagada",
+    "turnedOffCleared_many": "Desativado · {{count}} abas e janelas fechadas apagadas",
+    "turnedOffCleared_other": "Desativado · {{count}} abas e janelas fechadas apagadas",
+    "turnedOff": "As abas fechadas não são mais lembradas"
+  }
+}

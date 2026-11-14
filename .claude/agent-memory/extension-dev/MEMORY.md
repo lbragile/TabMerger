@@ -144,3 +144,4 @@
 - [Store-listing _locales build hook](learnings_store_locales_build_hook.md) — `manifest` namespace -> build:publicAssets; vi.mock("vite") + computed import for wxt.config tests
 - [Section views (mainView) + accordion](learnings_section_views_mainview.md) — read-only views, status line, focus on close, arrow guard, current-bg contrast, mock gotchas
 - [Tooltip portal + contrast](learnings_tooltip_portal_contrast.md) — no portal = inherited row opacity + ScrollArea scrollbar on top; --tooltip tokens 5.67:1 light
+- [Recently closed engine](learnings_recently_closed_engine.md) — closeTabs({record}) + lint ban, quiet marks, meta row, getDb promise/VersionError, 60 s delete, un-pin grace
