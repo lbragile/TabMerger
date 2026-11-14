@@ -10,3 +10,4 @@
 - [Popup unmount + write scope](learnings_popup_unmount_and_write_scope.md) — popup close runs no effect cleanups; same-ref groups scope the sync stamp + undo check, not the IDB puts
 - [Local vs pulled group shape](learnings_local_vs_pulled_group_shape.md) — createGroup and rowToGroup store different shapes; raw content keys misread a re-push as an edit
 - [DnD rebase identity pitfalls](learnings_dnd_rebase_identity.md) — rank + duplicate-only context check; structurally blind to a pure transposition of identity-equal items
+- [IDB version bumps + undo windows](learnings_idb_version_bump_and_undo_windows.md) — blocking must close its own connection, memoize the open promise, no downgrades, settings-scope overlap, Sonner pauses toasts
