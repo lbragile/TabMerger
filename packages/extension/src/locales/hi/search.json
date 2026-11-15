@@ -36,5 +36,15 @@
   "close": "बंद करें",
   "summaryNone": "कोई टैब मेल नहीं खाता",
   "summary_one": "{{groups}} में {{count}} टैब मेल खाता है",
-  "summary_other": "{{groups}} में {{count}} टैब मेल खाते हैं"
+  "summary_other": "{{groups}} में {{count}} टैब मेल खाते हैं",
+  "recentlyClosed": "हाल ही में बंद किए गए",
+  "exampleClosed": "सिर्फ़ हाल ही में बंद किए गए टैब में खोजें",
+  "closedToday": "आज {{time}} बजे बंद किया",
+  "closedYesterday": "कल {{time}} बजे बंद किया",
+  "closedOn": "{{day}} को बंद किया",
+  "closedFromWindow": "बंद की गई विंडो से",
+  "closedWindowLabel": "विंडो · {{tabs}}",
+  "closedOff": "बंद किए गए टैब याद रखना बंद है",
+  "closedReopened": "{{title}} फिर से खोला गया",
+  "closedRestoredWindow": "{{tabs}} वाली विंडो फिर से खोली गई"
 }

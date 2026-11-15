@@ -27,7 +27,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUIStore } from "@/stores/uiStore";
-import { SearchOverlay } from './SearchOverlay';
+import { SearchOverlayWithClosed } from './SearchOverlayWithClosed';
 import { LanguageMenu } from './LanguageMenu';
 import { AiMenu } from './AiMenu';
 import { useShallow } from "zustand/react/shallow";
@@ -250,7 +250,7 @@ export function Header() {
             </div>
 
             {/* Search overlay */}
-            {searchOpen && <SearchOverlay
+            {searchOpen && <SearchOverlayWithClosed
                 query={searchFilter}
                 onQueryChange={handleSearchQueryChange}
                 groupsState={groupsState}

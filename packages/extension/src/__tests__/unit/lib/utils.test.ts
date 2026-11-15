@@ -155,45 +155,70 @@ describe('getGroupInfo', () => {
 
 describe('parseSearchQuery', () => {
   it('returns empty strings for an empty query', () => {
-    expect(parseSearchQuery('')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: '', closedOnly: false })
   })
 
   it('returns tabQuery only when no prefix token is present', () => {
-    expect(parseSearchQuery('github')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'github' })
+    expect(parseSearchQuery('github')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'github', closedOnly: false })
   })
 
   it('returns groupFilter only when query is just a group: token', () => {
-    expect(parseSearchQuery('group:work')).toEqual({ groupFilter: 'work', windowFilter: '', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('group:work')).toEqual({ groupFilter: 'work', windowFilter: '', tagFilter: '', tabQuery: '', closedOnly: false })
   })
 
   // unquoted value is greedy — consumes to next prefix or end
   it('unquoted group: consumes all remaining words as groupFilter', () => {
-    expect(parseSearchQuery('group:work github')).toEqual({ groupFilter: 'work github', windowFilter: '', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('group:work github')).toEqual({ groupFilter: 'work github', windowFilter: '', tagFilter: '', tabQuery: '', closedOnly: false })
   })
 
   it('multi-word unquoted group: value', () => {
-    expect(parseSearchQuery('group:My Saved Group')).toEqual({ groupFilter: 'My Saved Group', windowFilter: '', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('group:My Saved Group')).toEqual({ groupFilter: 'My Saved Group', windowFilter: '', tagFilter: '', tabQuery: '', closedOnly: false })
   })
 
   it('returns windowFilter when query uses window: prefix', () => {
-    expect(parseSearchQuery('window:Morning')).toEqual({ groupFilter: '', windowFilter: 'Morning', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('window:Morning')).toEqual({ groupFilter: '', windowFilter: 'Morning', tagFilter: '', tabQuery: '', closedOnly: false })
   })
 
   it('multi-word unquoted tag: value', () => {
     // ponytail: tag: greedy too — "work research" is the tagFilter, tabQuery empty
-    expect(parseSearchQuery('tag:work research')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: 'work research', tabQuery: '' })
+    expect(parseSearchQuery('tag:work research')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: 'work research', tabQuery: '', closedOnly: false })
   })
 
   it('quoted group: value with plain text after', () => {
-    expect(parseSearchQuery('group:"My Group" open tabs')).toEqual({ groupFilter: 'My Group', windowFilter: '', tagFilter: '', tabQuery: 'open tabs' })
+    expect(parseSearchQuery('group:"My Group" open tabs')).toEqual({ groupFilter: 'My Group', windowFilter: '', tagFilter: '', tabQuery: 'open tabs', closedOnly: false })
   })
 
   it('case-insensitive prefix matching', () => {
-    expect(parseSearchQuery('GROUP:Work')).toEqual({ groupFilter: 'Work', windowFilter: '', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('GROUP:Work')).toEqual({ groupFilter: 'Work', windowFilter: '', tagFilter: '', tabQuery: '', closedOnly: false })
   })
 
   it('does not treat embedded group: as a prefix', () => {
-    expect(parseSearchQuery('xyzgroup:work')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'xyzgroup:work' })
+    expect(parseSearchQuery('xyzgroup:work')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'xyzgroup:work', closedOnly: false })
+  })
+
+  describe('closed: scope', () => {
+    it('alone sets closedOnly with no words', () => {
+      expect(parseSearchQuery('closed:')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: '', closedOnly: true })
+    })
+
+    it('puts its text (with or without a space after the colon) into the plain words', () => {
+      expect(parseSearchQuery('closed: stripe')).toMatchObject({ tabQuery: 'stripe', closedOnly: true })
+      expect(parseSearchQuery('closed:stripe docs')).toMatchObject({ tabQuery: 'stripe docs', closedOnly: true })
+      expect(parseSearchQuery('CLOSED:"Pull request"')).toMatchObject({ tabQuery: 'Pull request', closedOnly: true })
+    })
+
+    it('joins plain words typed before it', () => {
+      expect(parseSearchQuery('react closed:')).toMatchObject({ tabQuery: 'react', closedOnly: true })
+    })
+
+    it('combines with the other filters', () => {
+      expect(parseSearchQuery('closed: stripe tag:Work')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: 'Work', tabQuery: 'stripe', closedOnly: true })
+      expect(parseSearchQuery('group:"Home" closed: bank')).toEqual({ groupFilter: 'Home', windowFilter: '', tagFilter: '', tabQuery: 'bank', closedOnly: true })
+    })
+
+    it('is not a prefix inside a word', () => {
+      expect(parseSearchQuery('enclosed:yes')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'enclosed:yes', closedOnly: false })
+    })
   })
 })
 

@@ -852,7 +852,7 @@ describe('TabItem — stale badge', () => {
 
 describe('TabItem — search hides rows (reorder locked)', () => {
   const lockedView = buildPanelSearchView(
-    { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'my' },
+    { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'my', closedOnly: false },
     'hide',
     { windows: [{ tabMatches: [true], matchCount: 1, selfMatch: false, visible: true }], matchCount: 1, tabCount: 1, nameMatch: false, visible: true }
   )

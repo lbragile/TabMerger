@@ -9,7 +9,7 @@ export type MatchRange = [start: number, end: number];
 
 export type SearchFilters = ReturnType<typeof parseSearchQuery>;
 
-export const NO_FILTERS: SearchFilters = { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: '' };
+export const NO_FILTERS: SearchFilters = { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: '', closedOnly: false };
 
 const DEFAULT_WINDOW_NAME = 'Window';
 

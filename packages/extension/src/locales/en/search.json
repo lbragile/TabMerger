@@ -36,5 +36,15 @@
   "close": "close",
   "summaryNone": "No tabs match",
   "summary_one": "{{count}} tab matches in {{groups}}",
-  "summary_other": "{{count}} tabs match in {{groups}}"
+  "summary_other": "{{count}} tabs match in {{groups}}",
+  "recentlyClosed": "Recently closed",
+  "exampleClosed": "Search only tabs you closed recently",
+  "closedToday": "closed today {{time}}",
+  "closedYesterday": "closed yesterday {{time}}",
+  "closedOn": "closed {{day}}",
+  "closedFromWindow": "from a closed window",
+  "closedWindowLabel": "Window · {{tabs}}",
+  "closedOff": "Remembering closed tabs is off",
+  "closedReopened": "Reopened {{title}}",
+  "closedRestoredWindow": "Restored a window with {{tabs}}"
 }

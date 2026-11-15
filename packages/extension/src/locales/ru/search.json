@@ -40,5 +40,15 @@
   "summary_one": "{{count}} вкладка совпадает в {{groups}}",
   "summary_few": "{{count}} вкладки совпадают в {{groups}}",
   "summary_many": "{{count}} вкладок совпадают в {{groups}}",
-  "summary_other": "{{count}} вкладки совпадают в {{groups}}"
+  "summary_other": "{{count}} вкладки совпадают в {{groups}}",
+  "recentlyClosed": "Недавно закрытые",
+  "exampleClosed": "Искать только среди недавно закрытых вкладок",
+  "closedToday": "закрыта сегодня в {{time}}",
+  "closedYesterday": "закрыта вчера в {{time}}",
+  "closedOn": "закрыта: {{day}}",
+  "closedFromWindow": "из закрытого окна",
+  "closedWindowLabel": "Окно · {{tabs}}",
+  "closedOff": "Запоминание закрытых вкладок выключено",
+  "closedReopened": "Снова открыта: {{title}}",
+  "closedRestoredWindow": "Восстановлено окно: {{tabs}}"
 }
