@@ -54,5 +54,24 @@
     "showingSession": "セッション「{{name}}」を表示中（読み取り専用）",
     "restored": "「{{name}}」を復元しました",
     "deleted": "「{{name}}」を削除しました"
+  },
+  "sessionColor": {
+    "label": "色",
+    "random": "ランダム",
+    "change": "色を変更…",
+    "changed": "{{name}} の色を変更しました",
+    "failed": "色を変更できませんでした。もう一度お試しください。",
+    "names": {
+      "red": "赤",
+      "orange": "オレンジ",
+      "yellow": "黄",
+      "green": "緑",
+      "cyan": "シアン",
+      "blue": "青",
+      "indigo": "インディゴ",
+      "purple": "紫",
+      "pink": "ピンク",
+      "teal": "ティール"
+    }
   }
 }

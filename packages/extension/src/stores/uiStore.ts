@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { GroupsState } from '@/lib/types';
 import { withoutTourDemoGroups } from '@tabmerger/shared';
 import { setSetting } from '@/lib/localDb';
-import type { SidebarSectionId } from '@/lib/sidebarSections';
+import { SIDEBAR_SECTION, type SidebarSectionId } from '@/lib/sidebarSections';
 
 export type ModalType =
   | 'addGroup'
@@ -54,13 +54,14 @@ export interface TabPositionTarget {
 /**
  * What the main panel shows. `group` is the group at `activeGroupIndex` (the editable windows
  * panel); every other kind is a read-only view opened from a sidebar section row, addressed by a
- * stable id (positions shift as groups come and go). New kinds are added as more members of this
- * union (e.g. a recently-closed day).
+ * stable id (positions shift as groups come and go).
  */
 export type MainView =
   | { kind: 'group' }
   | { kind: 'archived'; groupId: string }
-  | { kind: 'session'; sessionId: string };
+  | { kind: 'session'; sessionId: string }
+  /** One local day of the recently-closed list (`RecentlyClosedDay.key`, `YYYY-MM-DD`). */
+  | { kind: 'closedDay'; day: string };
 
 /** The main panel showing the active group: the default view, and where every other view returns to. */
 export const GROUP_VIEW: MainView = Object.freeze({ kind: 'group' }) as MainView;
@@ -88,7 +89,10 @@ interface UIState {
    * the group view is showing.
    */
   mainViewReturnGroupId: string | null;
-  /** The one expanded sidebar section (an accordion), or null when all are collapsed. Not persisted. */
+  /**
+   * The one expanded sidebar section (an accordion), or null when all are collapsed. Not persisted:
+   * every popup opens with Recently closed expanded (the most used section).
+   */
   openSidebarSection: SidebarSectionId | null;
   searchFilter: string;
   renameTarget: RenameTarget | null;
@@ -287,7 +291,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   activeGroupIndex: 0,
   mainView: GROUP_VIEW,
   mainViewReturnGroupId: null,
-  openSidebarSection: null,
+  openSidebarSection: SIDEBAR_SECTION.recentlyClosed,
   scrollToWindowIndex: null,
   searchFilter: '',
   renameTarget: null,

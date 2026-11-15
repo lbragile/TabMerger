@@ -54,5 +54,24 @@
     "showingSession": "نمایش نشست {{name}}، فقط‌خواندنی",
     "restored": "{{name}} بازگردانده شد",
     "deleted": "{{name}} حذف شد"
+  },
+  "sessionColor": {
+    "label": "رنگ",
+    "random": "تصادفی",
+    "change": "تغییر رنگ…",
+    "changed": "رنگ {{name}} تغییر کرد",
+    "failed": "رنگ تغییر نکرد. دوباره امتحان کنید.",
+    "names": {
+      "red": "قرمز",
+      "orange": "نارنجی",
+      "yellow": "زرد",
+      "green": "سبز",
+      "cyan": "فیروزه‌ای",
+      "blue": "آبی",
+      "indigo": "نیلی",
+      "purple": "بنفش",
+      "pink": "صورتی",
+      "teal": "سبزآبی"
+    }
   }
 }

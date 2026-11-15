@@ -54,5 +54,24 @@
     "showingSession": "عرض الجلسة {{name}}، للقراءة فقط",
     "restored": "تمت استعادة {{name}}",
     "deleted": "تم حذف {{name}}"
+  },
+  "sessionColor": {
+    "label": "اللون",
+    "random": "عشوائي",
+    "change": "تغيير اللون…",
+    "changed": "تغيّر لون {{name}}",
+    "failed": "تعذّر تغيير اللون. حاول مرة أخرى.",
+    "names": {
+      "red": "أحمر",
+      "orange": "برتقالي",
+      "yellow": "أصفر",
+      "green": "أخضر",
+      "cyan": "سماوي",
+      "blue": "أزرق",
+      "indigo": "نيلي",
+      "purple": "بنفسجي",
+      "pink": "وردي",
+      "teal": "أزرق مخضر"
+    }
   }
 }

@@ -54,5 +54,24 @@
     "showingSession": "Showing session {{name}}, read-only",
     "restored": "Restored {{name}}",
     "deleted": "Deleted {{name}}"
+  },
+  "sessionColor": {
+    "label": "Color",
+    "random": "Random",
+    "change": "Change color…",
+    "changed": "Changed the color of {{name}}",
+    "failed": "Couldn't change the color. Try again.",
+    "names": {
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "cyan": "Cyan",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "purple": "Purple",
+      "pink": "Pink",
+      "teal": "Teal"
+    }
   }
 }

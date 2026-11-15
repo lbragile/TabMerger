@@ -54,5 +54,24 @@
     "showingSession": "Wyświetlanie sesji {{name}}, tylko do odczytu",
     "restored": "Przywrócono: {{name}}",
     "deleted": "Usunięto: {{name}}"
+  },
+  "sessionColor": {
+    "label": "Kolor",
+    "random": "Losowy",
+    "change": "Zmień kolor…",
+    "changed": "Zmieniono kolor: {{name}}",
+    "failed": "Nie udało się zmienić koloru. Spróbuj ponownie.",
+    "names": {
+      "red": "Czerwony",
+      "orange": "Pomarańczowy",
+      "yellow": "Żółty",
+      "green": "Zielony",
+      "cyan": "Cyjan",
+      "blue": "Niebieski",
+      "indigo": "Indygo",
+      "purple": "Fioletowy",
+      "pink": "Różowy",
+      "teal": "Morski"
+    }
   }
 }

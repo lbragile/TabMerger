@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { decryptBlob, generateDataKey, isEncryptedBlob } from '@tabmerger/shared'
+import { AUTO_ITEM_COLORS, decryptBlob, generateDataKey, isEncryptedBlob } from '@tabmerger/shared'
 import type { Session } from '@/lib/types'
-import { deleteRemoteSessions, pushSessionToSupabase, refreshUploadedSession } from '@/lib/sessionUpload'
+import { deleteRemoteSessions, pushSessionToSupabase, refreshUploadedSession, sessionContent } from '@/lib/sessionUpload'
 
 const h = vi.hoisted(() => ({
   auth: { user: { id: 'user-1' } } as unknown,
@@ -249,5 +249,38 @@ describe('refreshUploadedSession', () => {
     h.gate = { key }
     h.firefoxOk = false
     expect(await refreshUploadedSession(base, 'user-1')).toBe('failed')
+  })
+})
+
+describe('session colour (inside the ciphertext only)', () => {
+  it('a palette colour travels inside the encrypted blob, never in a plaintext column', async () => {
+    const color = AUTO_ITEM_COLORS[3]
+    await pushSessionToSupabase({ ...base, color }, 'user-1')
+    const row = h.upserts[0]
+    expect(Object.keys(row).sort()).toEqual(['created_at', 'description', 'groups', 'id', 'name', 'user_id'])
+    expect(JSON.stringify(row)).not.toContain('rgba')
+    const content = await decryptBlob<Record<string, unknown>>(key, row.groups as never)
+    expect(content.color).toBe(color)
+  })
+
+  it.each([['rgba(1, 2, 3, 1)'], ['red'], [''], [42]])('a colour outside the palette (%s) is not uploaded', async (color) => {
+    await pushSessionToSupabase({ ...base, color: color as unknown as string }, 'user-1')
+    const content = await decryptBlob<Record<string, unknown>>(key, h.upserts[0].groups as never)
+    expect('color' in content).toBe(false)
+  })
+
+  it('a refresh re-encrypts the colour too', async () => {
+    expect(await refreshUploadedSession({ ...base, color: AUTO_ITEM_COLORS[0] }, 'user-1')).toBe('updated')
+    const content = await decryptBlob<Record<string, unknown>>(key, h.updates[0].groups as never)
+    expect(content.color).toBe(AUTO_ITEM_COLORS[0])
+  })
+
+  it('sessionContent keeps name, groups and description as before', () => {
+    expect(sessionContent({ ...base, color: AUTO_ITEM_COLORS[1] })).toEqual({
+      name: base.name,
+      groups: base.groups,
+      description: base.description,
+      color: AUTO_ITEM_COLORS[1],
+    })
   })
 })

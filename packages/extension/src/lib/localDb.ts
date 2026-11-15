@@ -3,6 +3,7 @@ import { RECENTLY_CLOSED_META_ID, isTourDemoGroup } from '@tabmerger/shared';
 import type { Group, GroupsState, Session } from './types';
 import type { RecentlyClosedEntry, RecentlyClosedMeta } from './recentlyClosed';
 import { createNowOpenGroup } from './utils';
+import { withValidSessionColor } from './sessionColor';
 import { GROUPS_CHANGED_MESSAGE, type GroupsChangeCause, type GroupsChangedMessage } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
 import { savedDataChanged, savedDataFingerprint } from './savedData';
@@ -714,10 +715,11 @@ export async function deleteGroup(id: string): Promise<void> {
   notifyGroupsChanged();
 }
 
+/** Every stored session, newest first. A colour outside the palette is dropped on the way out (see lib/sessionColor.ts). */
 export async function getSessions(): Promise<Session[]> {
   const db = await getDb();
   const sessions = await db.getAll('sessions');
-  return sessions.sort((a, b) => b.createdAt - a.createdAt);
+  return sessions.map(withValidSessionColor).sort((a, b) => b.createdAt - a.createdAt);
 }
 
 export async function saveSession(session: Session): Promise<void> {
@@ -728,6 +730,19 @@ export async function saveSession(session: Session): Promise<void> {
 export async function deleteSession(id: string): Promise<void> {
   const db = await getDb();
   await db.delete('sessions', id);
+}
+
+/**
+ * Sets a session's colour IF it is still stored, in ONE transaction (a session deleted meanwhile is
+ * never re-created). Resolves the updated session, or `null` when it is gone.
+ */
+export async function updateSessionColor(id: string, color: string): Promise<Session | null> {
+  const db = await getDb();
+  const tx = db.transaction('sessions', 'readwrite');
+  const stored = await tx.store.get(id);
+  const next = stored ? { ...stored, color } : null;
+  await Promise.all([next ? tx.store.put(next) : undefined, tx.done]);
+  return next;
 }
 
 /**

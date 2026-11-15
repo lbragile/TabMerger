@@ -23,6 +23,7 @@ const h = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/localDb', () => ({ setSetting: vi.fn().mockResolvedValue(undefined), getSetting: vi.fn() }))
+vi.mock('@/hooks/useRecentlyClosed', () => ({ useRecentlyClosed: () => ({ days: [], entries: [], isLoading: false }) }))
 vi.mock('@/components/Windows', () => ({ WindowsPanel: () => <div data-testid="windows-panel" /> }))
 vi.mock('@/hooks/useGroups', () => ({
   useRestoreGroup: () => ({ mutate: h.restoreGroup, isPending: false }),

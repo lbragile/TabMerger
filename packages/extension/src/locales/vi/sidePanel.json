@@ -54,5 +54,24 @@
     "showingSession": "Đang hiện phiên {{name}}, chỉ đọc",
     "restored": "Đã khôi phục {{name}}",
     "deleted": "Đã xóa {{name}}"
+  },
+  "sessionColor": {
+    "label": "Màu",
+    "random": "Ngẫu nhiên",
+    "change": "Đổi màu…",
+    "changed": "Đã đổi màu của {{name}}",
+    "failed": "Không đổi được màu. Hãy thử lại.",
+    "names": {
+      "red": "Đỏ",
+      "orange": "Cam",
+      "yellow": "Vàng",
+      "green": "Xanh lá",
+      "cyan": "Xanh lơ",
+      "blue": "Xanh dương",
+      "indigo": "Chàm",
+      "purple": "Tím",
+      "pink": "Hồng",
+      "teal": "Xanh mòng két"
+    }
   }
 }

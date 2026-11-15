@@ -101,6 +101,13 @@ export interface Session {
    * never uploaded) still uploads once.
    */
   uploadedAt?: number;
+  /**
+   * The session's colour (row bar, view dot), one of `AUTO_ITEM_COLORS`: checked whenever a
+   * session is read (`lib/sessionColor.ts`), anything else is dropped. Stored locally and inside
+   * the encrypted blob on the server; never as a plaintext column. Sessions without one show the
+   * stable colour of their id (`sessionDisplayColor`).
+   */
+  color?: string;
 }
 
 export type Tier = 'free' | 'pro' | 'pro_ai';

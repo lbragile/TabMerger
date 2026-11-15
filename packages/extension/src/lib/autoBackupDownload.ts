@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { validSessionColor } from '@/lib/sessionColor';
 import { lazyMessages } from '@/lib/i18n';
 import { AUTO_BACKUP_DOWNLOAD_LIMITS, AUTO_BACKUP_RETENTION_COUNT, autoBackupName, decryptBlob, isEncryptedBlob } from '@tabmerger/shared';
 import type { Group, Session } from '@/lib/types';
@@ -126,7 +127,9 @@ export function buildDownloadedBackup(id: unknown, createdAtRaw: unknown, conten
   const { groups, dropped } = capDownloadedGroups(sanitised);
 
   const name = typeof c.name === 'string' && c.name.trim() !== '' ? c.name.slice(0, MAX_BACKUP_NAME_LENGTH) : autoBackupName(createdAt);
-  return { backup: { id, name, groups, createdAt, auto: true }, dropped };
+  // a colour from the blob only when it is one of the palette's (lib/sessionColor.ts)
+  const color = validSessionColor(c.color);
+  return { backup: { id, name, groups, createdAt, auto: true, ...(color ? { color } : {}) }, dropped };
 }
 
 /** {@link buildDownloadedBackup} without the count. */

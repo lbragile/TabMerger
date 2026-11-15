@@ -5,7 +5,8 @@ import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
 import { FREE_TIER_LIMITS, isTourDemoGroup } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
-import { getSessions, saveSession, deleteSession, getSetting, setSetting } from '@/lib/localDb';
+import { getSessions, saveSession, deleteSession, getSetting, setSetting, updateSessionColor } from '@/lib/localDb';
+import { validSessionColor } from '@/lib/sessionColor';
 import { supabase } from '@/lib/supabase';
 import { resolveIncognito } from '@/lib/incognito';
 import { LAST_USER_ID_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
@@ -28,6 +29,37 @@ export function useSessions() {
 export { pushSessionToSupabase };
 
 /**
+ * Who a session upload is for: the signed-in account, but only while the store's recorded owner is
+ * that account (or nobody yet). Read BEFORE anything is written: if the store still holds another
+ * account's data (the account wipe has not run yet), nothing is uploaded under the signed-in one.
+ */
+async function sessionUploadOwner(): Promise<string | undefined> {
+  try {
+    const signedInId = (await supabase.auth.getSession()).data.session?.user.id;
+    const storeOwner = await getSetting<string | null>(LAST_USER_ID_KEY, null);
+    if (signedInId && (!storeOwner || storeOwner === signedInId)) return signedInId;
+  } catch (e) {
+    console.warn('[TabMerger] Session sync to Supabase failed', e);
+  }
+  return undefined;
+}
+
+/**
+ * Best-effort upload of a session just written locally. Not on the server (no key yet / locked /
+ * offline / rejected / no owner): sessions have no per-row pending flag, so the self-heal is
+ * re-armed and the next sync uploads every local session (see useSync).
+ */
+async function uploadSessionOrRearm(session: Session, ownerId: string | undefined): Promise<void> {
+  let uploaded = false;
+  try {
+    if (ownerId) uploaded = await pushSessionToSupabase(session, ownerId);
+  } catch (e) {
+    console.warn('[TabMerger] Session sync to Supabase failed', e);
+  }
+  if (!uploaded) await setSetting(SESSIONS_MIGRATION_DONE_KEY, false);
+}
+
+/**
  * Saves the current non-permanent groups as a named session snapshot.
  * Local-first: writes to IndexedDB first, then best-effort syncs to Supabase.
  * Enforces `FREE_SESSION_LIMIT` for users without the `hasSessions` entitlement.
@@ -41,7 +73,7 @@ export function useSaveSession() {
   const { data: groupsState } = useGroups();
 
   return useMutation({
-    mutationFn: async ({ name, description, sessionCount, hasSessions, cloudSync }: { name: string; description?: string; sessionCount: number; hasSessions: boolean; cloudSync: boolean }) => {
+    mutationFn: async ({ name, description, color, sessionCount, hasSessions, cloudSync }: { name: string; description?: string; color?: string; sessionCount: number; hasSessions: boolean; cloudSync: boolean }) => {
       // ponytail: free tier gets 3 sessions; pro+ unlimited (hasSessions = entitlement)
       if (!hasSessions && sessionCount >= FREE_SESSION_LIMIT) {
         throw new Error('SESSION_LIMIT');
@@ -55,6 +87,8 @@ export function useSaveSession() {
         description,
         groups,
         createdAt: Date.now(),
+        // only a palette colour is ever stored (see lib/sessionColor.ts)
+        ...(validSessionColor(color) ? { color } : {}),
       };
       // Whose session this is, captured BEFORE anything is written: the upload below is refused
       // if the signed-in account is no longer this one (see pushSessionToSupabase). Free users
@@ -62,31 +96,32 @@ export function useSaveSession() {
       // The groups being saved are the STORE's, so its recorded owner decides, not only who is
       // signed in right now: if the store still holds another account's data (the account wipe
       // has not run yet), nothing is uploaded under the signed-in account.
-      let ownerId: string | undefined;
-      if (cloudSync) {
-        try {
-          const signedInId = (await supabase.auth.getSession()).data.session?.user.id;
-          const storeOwner = await getSetting<string | null>(LAST_USER_ID_KEY, null);
-          if (signedInId && (!storeOwner || storeOwner === signedInId)) ownerId = signedInId;
-        } catch (e) {
-          console.warn('[TabMerger] Session sync to Supabase failed', e);
-        }
-      }
+      const ownerId = cloudSync ? await sessionUploadOwner() : undefined;
       await saveSession(session);
       // ponytail: best-effort Supabase sync — local save already succeeded. Only for
       // users with the cloud-sync entitlement; free users stay local-only.
-      if (cloudSync) {
-        let uploaded = false;
-        try {
-          if (ownerId) uploaded = await pushSessionToSupabase(session, ownerId);
-        } catch (e) {
-          console.warn('[TabMerger] Session sync to Supabase failed', e);
-        }
-        // Not on the server (no key yet / locked / offline / rejected): sessions have no per-row
-        // pending flag, so re-arm the self-heal and the next sync uploads it (see useSync).
-        if (!uploaded) await setSetting(SESSIONS_MIGRATION_DONE_KEY, false);
-      }
+      if (cloudSync) await uploadSessionOrRearm(session, ownerId);
       return session;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
+  });
+}
+
+/**
+ * "Change colour…" on a saved session: stores the new colour (only a palette colour, and only if
+ * the session still exists: one IndexedDB transaction) and uploads the session again like any
+ * session edit, encrypted, for accounts with cloud sync. Resolves the updated session, or `null`
+ * when it was deleted meanwhile.
+ */
+export function useUpdateSessionColor() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, color, cloudSync }: { id: string; color: string; cloudSync: boolean }) => {
+      if (!validSessionColor(color)) throw new Error('INVALID_SESSION_COLOR');
+      const ownerId = cloudSync ? await sessionUploadOwner() : undefined;
+      const updated = await updateSessionColor(id, color);
+      if (updated && cloudSync) await uploadSessionOrRearm(updated, ownerId);
+      return updated;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
   });

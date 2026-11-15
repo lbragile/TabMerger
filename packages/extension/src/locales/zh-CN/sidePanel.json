@@ -54,5 +54,24 @@
     "showingSession": "正在显示会话 {{name}}（只读）",
     "restored": "已恢复 {{name}}",
     "deleted": "已删除 {{name}}"
+  },
+  "sessionColor": {
+    "label": "颜色",
+    "random": "随机",
+    "change": "更改颜色…",
+    "changed": "已更改 {{name}} 的颜色",
+    "failed": "无法更改颜色，请重试。",
+    "names": {
+      "red": "红色",
+      "orange": "橙色",
+      "yellow": "黄色",
+      "green": "绿色",
+      "cyan": "青色",
+      "blue": "蓝色",
+      "indigo": "靛蓝",
+      "purple": "紫色",
+      "pink": "粉色",
+      "teal": "蓝绿色"
+    }
   }
 }

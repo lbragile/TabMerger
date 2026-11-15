@@ -11,6 +11,8 @@ import { handleReadOnlyListKeyDown } from '@/lib/readOnlyListKeys';
 import { SectionViewHeader } from './SectionViewHeader';
 import { SeparatedText } from './SeparatedText';
 import { ReadOnlyWindows } from './ReadOnlyWindows';
+import { SessionColorMenu } from './SessionColorMenu';
+import { sessionDisplayColor } from '@/lib/sessionColor';
 
 /** When a session was saved: "Nov 10, 6:22 PM", with the year when it isn't this year. */
 function sessionDate(createdAt: number): string {
@@ -34,6 +36,7 @@ export function SessionView({ session, groups }: { session: Session; groups: rea
   return (
     <div className="flex h-full min-w-0 flex-col overflow-hidden" data-testid="session-view">
       <SectionViewHeader
+        color={sessionDisplayColor(session)}
         title={session.name}
         meta={t('sidePanel.view.sessionMeta', {
           date: sessionDate(session.createdAt),
@@ -49,6 +52,7 @@ export function SessionView({ session, groups }: { session: Session; groups: rea
           })
         }
         primaryDisabled={restoring}
+        menuItems={<SessionColorMenu session={session} />}
         deleteLabel={t('sidePanel.deleteSession')}
         onDelete={() => deleteSession(session.id, { onSuccess: () => announceSectionView(t('sidePanel.view.deleted', { name: session.name })) })}
         onClose={() => closeMainView(groups)}

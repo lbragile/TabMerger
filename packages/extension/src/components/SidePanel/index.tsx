@@ -7,6 +7,7 @@ import { toast } from '@/lib/toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { GroupItem } from './GroupItem';
+import { RecentlyClosedSection } from './RecentlyClosedSection';
 import { AutoSavedSection } from './AutoSavedSection';
 import { ArchivedSection } from './ArchivedSection';
 import { SessionsSection } from './SessionsSection';
@@ -250,12 +251,15 @@ export function SidePanel({ groupsState }: SidePanelProps) {
         </div>
       </ScrollArea>
 
-      {/* Auto-saved + Archived + Sessions — pinned above stats footer. Every section always renders
-          (header is always visible, even at 0 count); only the expanded body is gated. */}
+      {/* Recently closed + Auto-saved + Archived + Sessions — pinned above stats footer. Every
+          section always renders (header is always visible, even at 0 count); only the expanded
+          body is gated (an accordion: at most one body is open). */}
       <div
         className="shrink-0"
         style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
       >
+        <RecentlyClosedSection groups={raw} />
+
         <AutoSavedSection groupsState={groupsState} />
 
         <ArchivedSection groups={raw} />

@@ -21,6 +21,59 @@
   "toast": {
     "cleared_other": "Đã xóa {{count}} thẻ và cửa sổ đã đóng",
     "turnedOffCleared_other": "Đã tắt · đã xóa {{count}} thẻ và cửa sổ đã đóng",
-    "turnedOff": "Không còn ghi nhớ thẻ đã đóng"
+    "turnedOff": "Không còn ghi nhớ thẻ đã đóng",
+    "reopened": "Đã mở lại {{title}}",
+    "restoredWindow": "Đã khôi phục cửa sổ có {{tabs}}",
+    "reopenedAll": "Đã mở lại {{tabs}} trong cửa sổ mới",
+    "removed": "Đã xóa {{name}} khỏi danh sách",
+    "saved": "Đã lưu vào {{group}}",
+    "linkCopied": "Đã sao chép liên kết",
+    "copyFailed": "Không sao chép được liên kết."
+  },
+  "section": {
+    "title": "Đã đóng gần đây",
+    "offCount": "tắt",
+    "empty_other": "Chưa đóng thẻ nào. Các thẻ bạn đóng sẽ hiện ở đây theo ngày, trong {{count}} ngày.",
+    "offBody": "Ghi nhớ thẻ đã đóng đang tắt.",
+    "turnOn": "Bật trong Cài đặt",
+    "freeNote": "Free giữ {{free}} ngày gần nhất. Pro giữ {{pro}} ngày.",
+    "seePro": "Xem Pro",
+    "dayDetail": "{{tabs}} · {{windows}}",
+    "showDay_today": "Hiện các thẻ đã đóng hôm nay",
+    "showDay_yesterday": "Hiện các thẻ đã đóng hôm qua",
+    "showDay_date": "Hiện các thẻ đã đóng vào {{day}}",
+    "removeDay_today": "Xóa các thẻ đã đóng hôm nay khỏi danh sách",
+    "removeDay_yesterday": "Xóa các thẻ đã đóng hôm qua khỏi danh sách",
+    "removeDay_date": "Xóa các thẻ đã đóng vào {{day}} khỏi danh sách",
+    "removeDayTooltip": "Xóa ngày"
+  },
+  "view": {
+    "meta_other": "Đã đóng gần đây ◆ đã đóng {{count}}",
+    "reopenAll": "Mở lại tất cả trong cửa sổ mới",
+    "saveAll": "Lưu tất cả vào nhóm…",
+    "removeDay": "Xóa ngày này",
+    "clearAll": "Xóa tất cả mục đã đóng gần đây ({{n}})",
+    "noMatches": "Không có thẻ nào đã đóng trong ngày này khớp với tìm kiếm.",
+    "showMore": "Hiện thêm",
+    "showing_today": "Đang hiện các thẻ đã đóng hôm nay",
+    "showing_yesterday": "Đang hiện các thẻ đã đóng hôm qua",
+    "showing_date": "Đang hiện các thẻ đã đóng vào {{day}}",
+    "listLabel": "Thẻ và cửa sổ đã đóng"
+  },
+  "entry": {
+    "window": "Cửa sổ · {{tabs}}",
+    "reopenTab": "Mở lại {{title}}, đã đóng {{time}}",
+    "restoreWindow": "Khôi phục cửa sổ có {{tabs}}, đã đóng {{time}}",
+    "reopenTabInWindow": "Mở lại {{title}}",
+    "windowTabs": "Các thẻ trong cửa sổ này",
+    "reopen": "Mở lại",
+    "restore": "Khôi phục cửa sổ",
+    "saveToGroup": "Lưu vào nhóm…",
+    "copyLink": "Sao chép liên kết",
+    "remove": "Xóa khỏi danh sách",
+    "newGroup": "Nhóm mới: {{name}}",
+    "newGroupPlain": "Nhóm mới",
+    "noGroups": "Chưa có nhóm nào được lưu",
+    "moreOptions": "Tùy chọn khác cho {{name}}"
   }
 }

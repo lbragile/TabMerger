@@ -24,6 +24,8 @@ import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
 import { withTabCustomTitle } from '@/lib/tabTitle';
 import type { LiveTabsEffect } from '@/lib/undoLiveTabs';
 import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
+import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
+import { addClosedEntriesToState, closedTabCount, type ClosedSaveTarget } from '@/lib/recentlyClosedSave';
 import { toast } from '@/lib/toast';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
@@ -1521,6 +1523,28 @@ export function useSaveShortcutTabs() {
         return { ...prev, available };
       }, false, { align: false }),
     onSuccess: () => { trackEvent('tabs_saved', { count: 1 }); }
+  });
+}
+
+/**
+ * "Save to group…" from Recently closed: adds closed tabs and windows to a saved group, or to a new
+ * group named after the site (`lib/recentlyClosedSave.ts` builds the result). One write, so it is
+ * one undo step, marked `pendingSync` and synced/encrypted like every other change; the Free
+ * group/tab limits are checked first (`caps`, as `useAddGroup`). The recently-closed entries stay
+ * in their list: the tabs are still closed.
+ */
+export function useSaveClosedToGroup(caps: TierCaps = {}) {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({ entries, target }: { entries: readonly Pick<RecentlyClosedEntry, 'kind' | 'tabs'>[]; target: ClosedSaveTarget }) => {
+      assertWithinFreeLimits(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY), caps, 'newGroupName' in target ? 1 : 0, closedTabCount(entries));
+      return mutate((prev) => addClosedEntriesToState(prev, entries, target, Date.now())?.state ?? null, false, { align: false });
+    },
+    onSuccess: (next) => {
+      if (!wasAborted(next)) trackEvent('tabs_saved', { count: 1 });
+    }
   });
 }
 

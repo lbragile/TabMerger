@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from '@/lib/contentUploadKey';
 import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { syncRequestSignal } from '@/lib/syncRequest';
+import { validSessionColor } from '@/lib/sessionColor';
 
 /** Whether the client's CURRENT session belongs to `userId`. A failed read counts as "no". */
 export async function isSignedInAs(userId: string): Promise<boolean> {
@@ -16,16 +17,24 @@ export async function isSignedInAs(userId: string): Promise<boolean> {
   }
 }
 
-/** What goes inside a session's ciphertext. Only the literal `true` is ever written for `auto`; a manual session's blob has no `auto` key at all. */
-const sessionContent = (session: Session) => ({
-  name: session.name,
-  groups: session.groups,
-  description: session.description,
-  ...(session.auto === true ? { auto: true } : {})
-});
+/**
+ * What goes inside a session's ciphertext. Only the literal `true` is ever written for `auto`; a
+ * manual session's blob has no `auto` key at all. `color` goes in only when it is one of the
+ * palette's (never a plaintext column: the server cannot see a session's colour either).
+ */
+export const sessionContent = (session: Session) => {
+  const color = validSessionColor(session.color);
+  return {
+    name: session.name,
+    groups: session.groups,
+    description: session.description,
+    ...(session.auto === true ? { auto: true } : {}),
+    ...(color ? { color } : {})
+  };
+};
 
 /**
- * Upserts a single local session to Supabase with `{name, groups, description, auto}` ENCRYPTED
+ * Upserts a single local session to Supabase with `{name, groups, description, auto, color}` ENCRYPTED
  * into the `groups` column (the plaintext `name`/`description` columns are sent blank, and the
  * automatic-backup marker exists only inside the ciphertext: the server cannot tell a backup from
  * a session the user saved). There is no plaintext branch: without an unlocked key (setup not

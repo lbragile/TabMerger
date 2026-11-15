@@ -54,5 +54,24 @@
     "showingSession": "{{name}} oturumu gösteriliyor, salt okunur",
     "restored": "{{name}} geri yüklendi",
     "deleted": "{{name}} silindi"
+  },
+  "sessionColor": {
+    "label": "Renk",
+    "random": "Rastgele",
+    "change": "Rengi değiştir…",
+    "changed": "{{name}} rengi değiştirildi",
+    "failed": "Renk değiştirilemedi. Tekrar deneyin.",
+    "names": {
+      "red": "Kırmızı",
+      "orange": "Turuncu",
+      "yellow": "Sarı",
+      "green": "Yeşil",
+      "cyan": "Camgöbeği",
+      "blue": "Mavi",
+      "indigo": "Çivit",
+      "purple": "Mor",
+      "pink": "Pembe",
+      "teal": "Deniz mavisi"
+    }
   }
 }

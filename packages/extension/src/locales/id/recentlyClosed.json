@@ -21,6 +21,59 @@
   "toast": {
     "cleared_other": "{{count}} tab dan jendela yang ditutup dihapus",
     "turnedOffCleared_other": "Dinonaktifkan · {{count}} tab dan jendela yang ditutup dihapus",
-    "turnedOff": "Tab yang ditutup tidak lagi diingat"
+    "turnedOff": "Tab yang ditutup tidak lagi diingat",
+    "reopened": "{{title}} dibuka lagi",
+    "restoredWindow": "Jendela berisi {{tabs}} dipulihkan",
+    "reopenedAll": "{{tabs}} dibuka lagi di jendela baru",
+    "removed": "{{name}} dihapus dari daftar",
+    "saved": "Disimpan ke {{group}}",
+    "linkCopied": "Tautan disalin",
+    "copyFailed": "Tautan tidak dapat disalin."
+  },
+  "section": {
+    "title": "Baru ditutup",
+    "offCount": "nonaktif",
+    "empty_other": "Belum ada yang ditutup. Tab yang Anda tutup muncul di sini per hari, selama {{count}} hari.",
+    "offBody": "Mengingat tab yang ditutup nonaktif.",
+    "turnOn": "Aktifkan di Setelan",
+    "freeNote": "Free menyimpan {{free}} hari terakhir. Pro menyimpan {{pro}} hari.",
+    "seePro": "Lihat Pro",
+    "dayDetail": "{{tabs}} · {{windows}}",
+    "showDay_today": "Tampilkan tab yang ditutup hari ini",
+    "showDay_yesterday": "Tampilkan tab yang ditutup kemarin",
+    "showDay_date": "Tampilkan tab yang ditutup pada {{day}}",
+    "removeDay_today": "Hapus tab yang ditutup hari ini dari daftar",
+    "removeDay_yesterday": "Hapus tab yang ditutup kemarin dari daftar",
+    "removeDay_date": "Hapus tab yang ditutup pada {{day}} dari daftar",
+    "removeDayTooltip": "Hapus hari"
+  },
+  "view": {
+    "meta_other": "Baru ditutup ◆ {{count}} ditutup",
+    "reopenAll": "Buka lagi semua di jendela baru",
+    "saveAll": "Simpan semua ke grup…",
+    "removeDay": "Hapus hari ini",
+    "clearAll": "Hapus semua yang baru ditutup ({{n}})",
+    "noMatches": "Tidak ada tab yang ditutup pada hari ini yang cocok dengan pencarian.",
+    "showMore": "Tampilkan lebih banyak",
+    "showing_today": "Menampilkan tab yang ditutup hari ini",
+    "showing_yesterday": "Menampilkan tab yang ditutup kemarin",
+    "showing_date": "Menampilkan tab yang ditutup pada {{day}}",
+    "listLabel": "Tab dan jendela yang ditutup"
+  },
+  "entry": {
+    "window": "Jendela · {{tabs}}",
+    "reopenTab": "Buka lagi {{title}}, ditutup {{time}}",
+    "restoreWindow": "Pulihkan jendela berisi {{tabs}}, ditutup {{time}}",
+    "reopenTabInWindow": "Buka lagi {{title}}",
+    "windowTabs": "Tab di jendela ini",
+    "reopen": "Buka lagi",
+    "restore": "Pulihkan jendela",
+    "saveToGroup": "Simpan ke grup…",
+    "copyLink": "Salin tautan",
+    "remove": "Hapus dari daftar",
+    "newGroup": "Grup baru: {{name}}",
+    "newGroupPlain": "Grup baru",
+    "noGroups": "Belum ada grup tersimpan",
+    "moreOptions": "Opsi lain untuk {{name}}"
   }
 }

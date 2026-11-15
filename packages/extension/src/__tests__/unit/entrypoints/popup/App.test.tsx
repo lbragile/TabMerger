@@ -18,6 +18,7 @@ vi.mock('@/hooks/useKeyboardNav', () => ({ useKeyboardNav: vi.fn() }))
 vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))
 // The main panel reads saved sessions (a session view); none here
 vi.mock('@/hooks/useSessions', () => ({ useSessions: () => ({ data: [] }) }))
+vi.mock('@/hooks/useRecentlyClosed', () => ({ useRecentlyClosed: () => ({ days: [], entries: [], isLoading: false }) }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 vi.mock('@/stores/uiStore', () => ({ useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector) }))
 

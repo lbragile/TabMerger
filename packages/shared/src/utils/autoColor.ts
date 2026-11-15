@@ -26,3 +26,22 @@ export function colorForDay(localDayKey: string): string {
   const n = AUTO_ITEM_COLORS.length;
   return AUTO_ITEM_COLORS[((days % n) + n) % n];
 }
+
+/** Whether `value` is exactly one of the {@link AUTO_ITEM_COLORS} (stored colours are checked against the palette when read). */
+export function isAutoItemColor(value: unknown): value is string {
+  return typeof value === 'string' && AUTO_ITEM_COLORS.includes(value);
+}
+
+/**
+ * A stable colour for an item that has none stored (a session saved before sessions had colours):
+ * a string hash (FNV-1a) of its id, modulo the palette. The same id always gets the same colour,
+ * so nothing has to be written back.
+ */
+export function colorForId(id: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < id.length; i++) {
+    hash ^= id.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return AUTO_ITEM_COLORS[hash % AUTO_ITEM_COLORS.length];
+}

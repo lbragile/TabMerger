@@ -54,5 +54,24 @@
     "showingSession": "Sitzung {{name}} wird angezeigt, nur lesen",
     "restored": "{{name}} wiederhergestellt",
     "deleted": "{{name}} gelöscht"
+  },
+  "sessionColor": {
+    "label": "Farbe",
+    "random": "Zufällig",
+    "change": "Farbe ändern…",
+    "changed": "Farbe von {{name}} geändert",
+    "failed": "Die Farbe konnte nicht geändert werden. Versuche es erneut.",
+    "names": {
+      "red": "Rot",
+      "orange": "Orange",
+      "yellow": "Gelb",
+      "green": "Grün",
+      "cyan": "Cyan",
+      "blue": "Blau",
+      "indigo": "Indigo",
+      "purple": "Lila",
+      "pink": "Pink",
+      "teal": "Türkis"
+    }
   }
 }

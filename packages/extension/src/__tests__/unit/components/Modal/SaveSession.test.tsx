@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
+import { AUTO_ITEM_COLORS } from '@tabmerger/shared'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { SaveSessionModal } from '@/components/Modal/SaveSession'
 
@@ -34,7 +35,7 @@ describe('SaveSessionModal', () => {
     const { onSave, onClose } = renderModal()
     fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: '  My Session  ' } })
     fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
-    expect(onSave).toHaveBeenCalledWith('My Session', undefined)
+    expect(onSave).toHaveBeenCalledWith('My Session', undefined, undefined)
     expect(onClose).toHaveBeenCalled()
   })
 
@@ -43,14 +44,14 @@ describe('SaveSessionModal', () => {
     fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: 'My Session' } })
     fireEvent.change(screen.getByLabelText(/description/i), { target: { value: '  Weekend reading  ' } })
     fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
-    expect(onSave).toHaveBeenCalledWith('My Session', 'Weekend reading')
+    expect(onSave).toHaveBeenCalledWith('My Session', 'Weekend reading', undefined)
   })
 
   it('does not require a description to save', () => {
     const { onSave, onClose } = renderModal()
     fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: 'My Session' } })
     fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
-    expect(onSave).toHaveBeenCalledWith('My Session', undefined)
+    expect(onSave).toHaveBeenCalledWith('My Session', undefined, undefined)
     expect(onClose).toHaveBeenCalled()
   })
 
@@ -59,5 +60,29 @@ describe('SaveSessionModal', () => {
     fireEvent.click(screen.getByRole('button', { name: /cancel/i }))
     expect(onSave).not.toHaveBeenCalled()
     expect(onClose).toHaveBeenCalled()
+  })
+
+  it('offers a Color radio group: Random is checked by default and saves no colour (the caller picks one)', () => {
+    const { onSave } = renderModal()
+    const group = screen.getByRole('radiogroup', { name: 'Color' })
+    const radios = within(group).getAllByRole('radio')
+    // Random + the ten palette colours, each named
+    expect(radios).toHaveLength(1 + AUTO_ITEM_COLORS.length)
+    expect(within(group).getByRole('radio', { name: 'Random' })).toBeChecked()
+    expect(within(group).getByRole('radio', { name: 'Teal' })).not.toBeChecked()
+    fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: 'Work' } })
+    fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
+    expect(onSave).toHaveBeenCalledWith('Work', undefined, undefined)
+  })
+
+  it('saves the picked palette colour', () => {
+    const { onSave } = renderModal()
+    const blue = screen.getByRole('radio', { name: 'Blue' })
+    fireEvent.click(blue)
+    expect(blue).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Random' })).not.toBeChecked()
+    fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: 'Work' } })
+    fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
+    expect(onSave).toHaveBeenCalledWith('Work', undefined, AUTO_ITEM_COLORS[5])
   })
 })

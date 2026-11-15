@@ -54,5 +54,24 @@
     "showingSession": "세션 {{name}} 표시 중, 읽기 전용",
     "restored": "{{name}} 복원됨",
     "deleted": "{{name}} 삭제됨"
+  },
+  "sessionColor": {
+    "label": "색상",
+    "random": "무작위",
+    "change": "색상 변경…",
+    "changed": "{{name}}의 색상을 변경했습니다",
+    "failed": "색상을 변경하지 못했습니다. 다시 시도하세요.",
+    "names": {
+      "red": "빨강",
+      "orange": "주황",
+      "yellow": "노랑",
+      "green": "초록",
+      "cyan": "청록",
+      "blue": "파랑",
+      "indigo": "남색",
+      "purple": "보라",
+      "pink": "분홍",
+      "teal": "틸"
+    }
   }
 }

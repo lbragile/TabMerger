@@ -2,11 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { useSessions, useSaveSession, useDeleteSession, useRestoreSession } from '@/hooks/useSessions'
+import { useSessions, useSaveSession, useDeleteSession, useRestoreSession, useUpdateSessionColor } from '@/hooks/useSessions'
+import { AUTO_ITEM_COLORS } from '@tabmerger/shared'
 import { createGroup, createWindow, createTab } from '@/lib/utils'
 import type { GroupsState, Session } from '@/lib/types'
 
-const { mockStoreOwner, mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting, mockSetSetting, mockCanUploadOnFirefox } = vi.hoisted(() => ({
+const { mockStoreOwner, mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting, mockSetSetting, mockCanUploadOnFirefox, mockUpdateSessionColor } = vi.hoisted(() => ({
+  mockUpdateSessionColor: vi.fn(),
   mockStoreOwner: vi.fn().mockResolvedValue(null),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
   mockGetSessions: vi.fn().mockResolvedValue([]),
@@ -23,6 +25,7 @@ vi.mock('@/lib/localDb', () => ({
   getSessions: mockGetSessions,
   saveSession: mockSaveSession,
   deleteSession: mockDeleteSession,
+  updateSessionColor: mockUpdateSessionColor,
   // the store's recorded owner is its own setting; everything else is the encryption stand-in below
   getSetting: (key: string, d: unknown) => (key === 'lastSignedInUserId' ? mockStoreOwner() : mockGetSetting(key, d)),
   setSetting: mockSetSetting,
@@ -475,5 +478,94 @@ describe('useRestoreSession — stored URLs', () => {
     expect(chrome.windows.create).toHaveBeenCalledTimes(1)
     expect(chrome.windows.create).toHaveBeenCalledWith({ url: 'https://b.com' })
     expect(mockTrackEvent).toHaveBeenCalledWith('session_restored')
+  })
+})
+
+describe('session colours', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    idx = 0
+    responses = []
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+    mockGetSetting.mockResolvedValue(false)
+    mockGetDataKey.mockReturnValue(null)
+    mockCanUploadOnFirefox.mockResolvedValue(true)
+    mockStoreOwner.mockResolvedValue(null)
+    groupsStateForUseGroups = { available: [createGroup(undefined, 'Saved')], active: { id: 'x', index: 0 } }
+  })
+
+  it('useSaveSession stores a palette colour', async () => {
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'S', color: AUTO_ITEM_COLORS[4], sessionCount: 0, hasSessions: true, cloudSync: false })
+    })
+    expect((mockSaveSession.mock.calls[0][0] as Session).color).toBe(AUTO_ITEM_COLORS[4])
+  })
+
+  it.each([[undefined], ['rgba(1, 2, 3, 1)'], ['javascript:alert(1)']])('useSaveSession stores no colour for %s', async (color) => {
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'S', color, sessionCount: 0, hasSessions: true, cloudSync: false })
+    })
+    expect('color' in (mockSaveSession.mock.calls[0][0] as Session)).toBe(false)
+  })
+
+  it('useUpdateSessionColor writes locally only for a Free account (no upload, no self-heal flag)', async () => {
+    mockUpdateSessionColor.mockResolvedValue({ id: 's1', name: 'S', groups: [], createdAt: 1, color: AUTO_ITEM_COLORS[2] })
+    const { result } = renderHook(() => useUpdateSessionColor(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ id: 's1', color: AUTO_ITEM_COLORS[2], cloudSync: false })
+    })
+    expect(mockUpdateSessionColor).toHaveBeenCalledWith('s1', AUTO_ITEM_COLORS[2])
+    expect(builder.upsert).not.toHaveBeenCalled()
+    expect(mockSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('useUpdateSessionColor uploads the session again, encrypted, with its new colour', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
+    responses = [{ data: null, error: null }]
+    mockUpdateSessionColor.mockResolvedValue({ id: 's1', name: 'S', groups: [], createdAt: 1, color: AUTO_ITEM_COLORS[2] })
+    const { result } = renderHook(() => useUpdateSessionColor(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ id: 's1', color: AUTO_ITEM_COLORS[2], cloudSync: true })
+    })
+    const upserted = (builder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    expect(upserted.groups).toEqual({ v: 1, iv: 'iv-stub', ct: 'ct-stub' })
+    expect(mockEncryptBlob).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ color: AUTO_ITEM_COLORS[2] }))
+    expect(mockSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('useUpdateSessionColor re-arms the self-heal when the upload could not happen', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockUpdateSessionColor.mockResolvedValue({ id: 's1', name: 'S', groups: [], createdAt: 1, color: AUTO_ITEM_COLORS[2] })
+    const { result } = renderHook(() => useUpdateSessionColor(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ id: 's1', color: AUTO_ITEM_COLORS[2], cloudSync: true })
+    })
+    expect(builder.upsert).not.toHaveBeenCalled()
+    expect(mockSetSetting).toHaveBeenCalledWith(expect.any(String), false)
+  })
+
+  it('useUpdateSessionColor does nothing remote for a session deleted meanwhile', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockUpdateSessionColor.mockResolvedValue(null)
+    const { result } = renderHook(() => useUpdateSessionColor(), { wrapper })
+    let out: unknown
+    await act(async () => {
+      out = await result.current.mutateAsync({ id: 'gone', color: AUTO_ITEM_COLORS[2], cloudSync: true })
+    })
+    expect(out).toBeNull()
+    expect(builder.upsert).not.toHaveBeenCalled()
+    expect(mockSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('useUpdateSessionColor refuses a colour outside the palette and writes nothing', async () => {
+    const { result } = renderHook(() => useUpdateSessionColor(), { wrapper })
+    await act(async () => {
+      await expect(result.current.mutateAsync({ id: 's1', color: 'rgba(0, 0, 0, 1)', cloudSync: true })).rejects.toThrow('INVALID_SESSION_COLOR')
+    })
+    expect(mockUpdateSessionColor).not.toHaveBeenCalled()
   })
 })

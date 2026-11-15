@@ -21,6 +21,59 @@
   "toast": {
     "cleared_other": "닫은 탭과 창 {{count}}개를 지웠습니다",
     "turnedOffCleared_other": "끔 · 닫은 탭과 창 {{count}}개를 지웠습니다",
-    "turnedOff": "더 이상 닫은 탭을 기억하지 않습니다"
+    "turnedOff": "더 이상 닫은 탭을 기억하지 않습니다",
+    "reopened": "{{title}}을(를) 다시 열었습니다",
+    "restoredWindow": "{{tabs}}가 있는 창을 복원했습니다",
+    "reopenedAll": "{{tabs}}를 새 창에서 다시 열었습니다",
+    "removed": "{{name}}을(를) 목록에서 제거했습니다",
+    "saved": "{{group}}에 저장했습니다",
+    "linkCopied": "링크를 복사했습니다",
+    "copyFailed": "링크를 복사하지 못했습니다."
+  },
+  "section": {
+    "title": "최근에 닫은 탭",
+    "offCount": "꺼짐",
+    "empty_other": "아직 닫은 탭이 없습니다. 닫은 탭은 날짜별로 여기에 {{count}}일 동안 표시됩니다.",
+    "offBody": "닫은 탭 기억하기가 꺼져 있습니다.",
+    "turnOn": "설정에서 켜기",
+    "freeNote": "Free는 최근 {{free}}일, Pro는 {{pro}}일 동안 보관합니다.",
+    "seePro": "Pro 보기",
+    "dayDetail": "{{tabs}} · {{windows}}",
+    "showDay_today": "오늘 닫은 탭 보기",
+    "showDay_yesterday": "어제 닫은 탭 보기",
+    "showDay_date": "{{day}}에 닫은 탭 보기",
+    "removeDay_today": "오늘 닫은 탭을 목록에서 제거",
+    "removeDay_yesterday": "어제 닫은 탭을 목록에서 제거",
+    "removeDay_date": "{{day}}에 닫은 탭을 목록에서 제거",
+    "removeDayTooltip": "날짜 제거"
+  },
+  "view": {
+    "meta_other": "최근에 닫은 탭 ◆ {{count}}개 닫음",
+    "reopenAll": "새 창에서 모두 다시 열기",
+    "saveAll": "모두 그룹에 저장…",
+    "removeDay": "이 날짜 제거",
+    "clearAll": "최근에 닫은 탭 모두 지우기 ({{n}})",
+    "noMatches": "이 날 닫은 탭 중 검색과 일치하는 탭이 없습니다.",
+    "showMore": "더 보기",
+    "showing_today": "오늘 닫은 탭을 표시하는 중",
+    "showing_yesterday": "어제 닫은 탭을 표시하는 중",
+    "showing_date": "{{day}}에 닫은 탭을 표시하는 중",
+    "listLabel": "닫은 탭과 창"
+  },
+  "entry": {
+    "window": "창 · {{tabs}}",
+    "reopenTab": "{{title}} 다시 열기, {{time}} 닫음",
+    "restoreWindow": "{{tabs}}가 있는 창 복원, {{time}} 닫음",
+    "reopenTabInWindow": "{{title}} 다시 열기",
+    "windowTabs": "이 창의 탭",
+    "reopen": "다시 열기",
+    "restore": "창 복원",
+    "saveToGroup": "그룹에 저장…",
+    "copyLink": "링크 복사",
+    "remove": "목록에서 제거",
+    "newGroup": "새 그룹: {{name}}",
+    "newGroupPlain": "새 그룹",
+    "noGroups": "아직 저장된 그룹이 없습니다",
+    "moreOptions": "{{name}} 추가 옵션"
   }
 }

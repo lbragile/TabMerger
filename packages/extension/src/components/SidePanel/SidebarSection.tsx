@@ -66,7 +66,8 @@ export function SidebarSection({
   open: boolean;
   onToggle: () => void;
   isEmpty: boolean;
-  emptyLabel: string;
+  /** Shown in the body when there is nothing to list (text, or text with a link button). */
+  emptyLabel: React.ReactNode;
   action?: React.ReactNode;
   className?: string;
   /** Guided-tour anchor name (`data-tour`), see lib/tourSteps.ts. */

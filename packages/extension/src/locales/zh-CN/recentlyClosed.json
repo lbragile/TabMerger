@@ -21,6 +21,59 @@
   "toast": {
     "cleared_other": "已清除 {{count}} 个关闭的标签页和窗口",
     "turnedOffCleared_other": "已关闭 · 已清除 {{count}} 个关闭的标签页和窗口",
-    "turnedOff": "不再记住关闭的标签页"
+    "turnedOff": "不再记住关闭的标签页",
+    "reopened": "已重新打开 {{title}}",
+    "restoredWindow": "已恢复包含 {{tabs}} 的窗口",
+    "reopenedAll": "已在新窗口中重新打开 {{tabs}}",
+    "removed": "已从列表中移除 {{name}}",
+    "saved": "已保存到 {{group}}",
+    "linkCopied": "链接已复制",
+    "copyFailed": "无法复制链接。"
+  },
+  "section": {
+    "title": "最近关闭",
+    "offCount": "已关闭",
+    "empty_other": "还没有关闭任何标签页。你关闭的标签页会按天显示在这里，保留 {{count}} 天。",
+    "offBody": "记住关闭的标签页已关闭。",
+    "turnOn": "在设置中开启",
+    "freeNote": "Free 保留最近 {{free}} 天，Pro 保留 {{pro}} 天。",
+    "seePro": "了解 Pro",
+    "dayDetail": "{{tabs}} · {{windows}}",
+    "showDay_today": "显示今天关闭的标签页",
+    "showDay_yesterday": "显示昨天关闭的标签页",
+    "showDay_date": "显示 {{day}} 关闭的标签页",
+    "removeDay_today": "从列表中移除今天关闭的标签页",
+    "removeDay_yesterday": "从列表中移除昨天关闭的标签页",
+    "removeDay_date": "从列表中移除 {{day}} 关闭的标签页",
+    "removeDayTooltip": "移除这一天"
+  },
+  "view": {
+    "meta_other": "最近关闭 ◆ 已关闭 {{count}} 个",
+    "reopenAll": "在新窗口中全部重新打开",
+    "saveAll": "全部保存到分组…",
+    "removeDay": "移除这一天",
+    "clearAll": "清除所有最近关闭的内容（{{n}}）",
+    "noMatches": "这一天关闭的标签页中没有与搜索匹配的。",
+    "showMore": "显示更多",
+    "showing_today": "正在显示今天关闭的标签页",
+    "showing_yesterday": "正在显示昨天关闭的标签页",
+    "showing_date": "正在显示 {{day}} 关闭的标签页",
+    "listLabel": "关闭的标签页和窗口"
+  },
+  "entry": {
+    "window": "窗口 · {{tabs}}",
+    "reopenTab": "重新打开 {{title}}，关闭于 {{time}}",
+    "restoreWindow": "恢复包含 {{tabs}} 的窗口，关闭于 {{time}}",
+    "reopenTabInWindow": "重新打开 {{title}}",
+    "windowTabs": "此窗口中的标签页",
+    "reopen": "重新打开",
+    "restore": "恢复窗口",
+    "saveToGroup": "保存到分组…",
+    "copyLink": "复制链接",
+    "remove": "从列表中移除",
+    "newGroup": "新分组：{{name}}",
+    "newGroupPlain": "新分组",
+    "noGroups": "还没有保存的分组",
+    "moreOptions": "{{name}} 的更多选项"
   }
 }

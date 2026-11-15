@@ -54,5 +54,24 @@
     "showingSession": "Menampilkan sesi {{name}}, hanya baca",
     "restored": "{{name}} dipulihkan",
     "deleted": "{{name}} dihapus"
+  },
+  "sessionColor": {
+    "label": "Warna",
+    "random": "Acak",
+    "change": "Ubah warna…",
+    "changed": "Warna {{name}} diubah",
+    "failed": "Warna tidak dapat diubah. Coba lagi.",
+    "names": {
+      "red": "Merah",
+      "orange": "Oranye",
+      "yellow": "Kuning",
+      "green": "Hijau",
+      "cyan": "Sian",
+      "blue": "Biru",
+      "indigo": "Nila",
+      "purple": "Ungu",
+      "pink": "Merah muda",
+      "teal": "Hijau toska"
+    }
   }
 }

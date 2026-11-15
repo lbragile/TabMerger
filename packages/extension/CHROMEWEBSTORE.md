@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-11-13
+> Last Updated: 2026-11-15
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -102,7 +102,12 @@ WHAT YOU CAN DO
 - Take saved sessions (snapshots of your groups) and restore them later.
 - Look inside an archived group or a saved session before you bring it back: click it in the
   sidebar to see its windows and tabs, read-only, open any tab from there, then restore it with
-  one click. The Auto-saved, Archived and Sessions sections open one at a time.
+  one click. The Recently closed, Auto-saved, Archived and Sessions sections open one at a time.
+- Recently closed: the tabs and windows you close stay in the sidebar's "Recently closed"
+  section, one row per day (Free keeps 7 days, Pro 30). Open a day to reopen a tab, restore a
+  whole window, save it into a group, or remove it, each with Undo. Stored only on this device;
+  private windows are never recorded, and you can turn it off or clear it in Settings.
+- Give each saved session a colour (or let TabMerger pick one) so sessions are easy to tell apart.
 - Auto-save open tabs: TabMerger saves the tabs you have open into a new group in the
   "Auto-saved" section, on a schedule (every 15 minutes up to daily) or when you open more tabs
   than a number you pick. Tabs you already saved are skipped and private windows are never
@@ -309,6 +314,13 @@ The description must be between 250 and 10,000 characters (the stable descriptio
 
 ### Screenshot Notes
 
+**Recently closed (next release):** the sidebar has a new "Recently closed" section, first in the
+bottom stack and open when the popup opens, so every store screenshot that shows the sidebar's
+bottom sections is out of date. Regenerate them with the demo pipeline; a screenshot of a day
+opened in the main panel is optional and not made yet. Session rows now show each session's
+colour as their start bar. Extension visual-regression baselines that show the sidebar change
+and need regenerating.
+
 **Search highlighting (next release):** no current store screenshot shows a search, so none is
 wrong because of it. A new screenshot of a search (matched text highlighted, the "N tabs hidden
 by search" line, per-group counts in the sidebar) is optional and not made yet. The visual
@@ -493,6 +505,15 @@ All three certifications can be ticked, because they are true as built:
 
 ### Technical privacy notes
 
+- Recently closed (on by default, Settings → Data → "Remember closed tabs"): the background
+  worker keeps the address, title and icon of tabs the user closes, using the `tabs` permission it
+  already has (no `sessions` permission). The list lives only in the extension's own database on
+  the device: never synced, never uploaded, not in exports or backups, and private windows are
+  never recorded. Nothing new leaves the device, so the "Web history" disclosure (which covers
+  data that is collected) is unchanged. Saving an entry into a group makes it a normal saved tab,
+  synced and encrypted like any other.
+- Session colours: a session's colour is stored inside the session's encrypted content, never as
+  a plaintext column.
 - Free-tier users: all tab/group data stays in local IndexedDB and never leaves the device
   (except the favicon and analytics requests in the table above, and the opt-in preview).
 - What the server can see when a Pro user syncs: row ids, timestamps, group colour, starred and

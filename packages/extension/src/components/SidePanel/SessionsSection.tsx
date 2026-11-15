@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BookmarkPlus, RotateCcw, Trash2 } from 'lucide-react';
-import { FREE_TIER_LIMITS } from '@tabmerger/shared';
+import { FREE_TIER_LIMITS, pickAutoColor } from '@tabmerger/shared';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Group, Session } from '@/lib/types';
 import { formatTimeAgo } from '@/lib/i18n';
@@ -15,6 +15,7 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useConfirmedRestoreSession } from '@/hooks/useConfirmedRestoreSession';
 import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
 import { announceSectionView } from '@/lib/sectionViewStatus';
+import { sessionDisplayColor } from '@/lib/sessionColor';
 import {
   SIDEBAR_FOCUS_RING,
   SIDEBAR_ICON_BUTTON,
@@ -58,9 +59,11 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
   // Moved from Header (P4, popup-ui-consolidation-spec.md): "Save session" lives in the section header
   const handleSaveSession = () => {
     openModal('saveSession', {
-      onSave: async (name: string, description?: string) => {
+      onSave: async (name: string, description?: string, picked?: string) => {
+        // Random: never the colour of the most recent session, so two in a row differ
+        const color = picked ?? pickAutoColor(sessions[0] ? sessionDisplayColor(sessions[0]) : undefined);
         try {
-          await saveSession({ name, description, sessionCount: sessions.length, hasSessions, cloudSync });
+          await saveSession({ name, description, color, sessionCount: sessions.length, hasSessions, cloudSync });
           toast.success(t('sidePanel.toast.sessionSaved'));
         } catch (err) {
           if (err instanceof Error && err.message === 'SESSION_LIMIT') {
@@ -111,7 +114,7 @@ export function SessionsSection({ groups, sessions }: { groups: readonly Group[]
             <li
               key={session.id}
               className={cn(SIDEBAR_ROW, 'gap-1.5 py-1.5', active && SIDEBAR_ROW_ACTIVE)}
-              style={{ borderInlineStart: `3px solid ${session.groups[0]?.color ?? 'var(--sidebar-text-muted)'}` }}
+              style={{ borderInlineStart: `3px solid ${sessionDisplayColor(session)}` }}
             >
               <button
                 type="button"

@@ -54,5 +54,24 @@
     "showingSession": "מוצג הסשן {{name}}, קריאה בלבד",
     "restored": "{{name}} שוחזר",
     "deleted": "{{name}} נמחק"
+  },
+  "sessionColor": {
+    "label": "צבע",
+    "random": "אקראי",
+    "change": "שינוי צבע…",
+    "changed": "הצבע של {{name}} שונה",
+    "failed": "לא ניתן היה לשנות את הצבע. כדאי לנסות שוב.",
+    "names": {
+      "red": "אדום",
+      "orange": "כתום",
+      "yellow": "צהוב",
+      "green": "ירוק",
+      "cyan": "טורקיז",
+      "blue": "כחול",
+      "indigo": "אינדיגו",
+      "purple": "סגול",
+      "pink": "ורוד",
+      "teal": "ירוק כחלחל"
+    }
   }
 }

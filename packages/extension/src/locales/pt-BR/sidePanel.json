@@ -54,5 +54,24 @@
     "showingSession": "Mostrando a sessão {{name}}, somente leitura",
     "restored": "{{name}} restaurado",
     "deleted": "{{name}} excluído"
+  },
+  "sessionColor": {
+    "label": "Cor",
+    "random": "Aleatória",
+    "change": "Mudar cor…",
+    "changed": "Cor de {{name}} alterada",
+    "failed": "Não foi possível mudar a cor. Tente de novo.",
+    "names": {
+      "red": "Vermelho",
+      "orange": "Laranja",
+      "yellow": "Amarelo",
+      "green": "Verde",
+      "cyan": "Ciano",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "purple": "Roxo",
+      "pink": "Rosa",
+      "teal": "Verde-azulado"
+    }
   }
 }
