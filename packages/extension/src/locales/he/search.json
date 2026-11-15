@@ -38,5 +38,15 @@
   "summaryNone": "אין כרטיסיות תואמות",
   "summary_one": "כרטיסייה אחת תואמת ב{{groups}}",
   "summary_two": "שתי כרטיסיות תואמות ב{{groups}}",
-  "summary_other": "{{count}} כרטיסיות תואמות ב{{groups}}"
+  "summary_other": "{{count}} כרטיסיות תואמות ב{{groups}}",
+  "recentlyClosed": "נסגרו לאחרונה",
+  "exampleClosed": "חיפוש רק בכרטיסיות שנסגרו לאחרונה",
+  "closedToday": "נסגרה היום ב-{{time}}",
+  "closedYesterday": "נסגרה אתמול ב-{{time}}",
+  "closedOn": "נסגרה: {{day}}",
+  "closedFromWindow": "מחלון שנסגר",
+  "closedWindowLabel": "חלון · {{tabs}}",
+  "closedOff": "זכירת כרטיסיות סגורות כבויה",
+  "closedReopened": "{{title}} נפתחה מחדש",
+  "closedRestoredWindow": "שוחזר חלון עם {{tabs}}"
 }

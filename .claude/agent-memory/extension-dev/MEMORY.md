@@ -146,3 +146,4 @@
 - [Tooltip portal + contrast](learnings_tooltip_portal_contrast.md) — no portal = inherited row opacity + ScrollArea scrollbar on top; --tooltip tokens 5.67:1 light
 - [Recently closed engine](learnings_recently_closed_engine.md) — closeTabs({record}) + lint ban, quiet marks, meta row, getDb promise/VersionError, 60 s delete, un-pin grace
 - [Recently closed UI + session colours](learnings_recently_closed_ui.md) — closedDay view, one actions hook, Save to group via useGroups, submenu clicks in jsdom
+- [Search: recently closed + closed: scope](learnings_search_recently_closed.md) — closedOnly joins tabQuery; pure lib + connected wrapper; mutateAsync after unmount; CRLF needles

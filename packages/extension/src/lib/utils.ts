@@ -125,9 +125,15 @@ export function sortWindowsByStarred(windows: Window[]): Window[] {
  * e.g. 'group:"My Group" open tabs' → { groupFilter: "My Group", windowFilter: "", tagFilter: "", tabQuery: "open tabs" }
  * e.g. 'window:Morning'             → { groupFilter: "", windowFilter: "Morning", tagFilter: "", tabQuery: "" }
  * e.g. 'xyz_group:work'             → { groupFilter: "", windowFilter: "", tagFilter: "", tabQuery: "xyz_group:work" }
+ *
+ * `closed:` is a scope, not a filter of its own: it sets `closedOnly` (the search overlay then lists
+ * only recently closed tabs) and its text joins the plain words, so `closed: stripe` gives
+ * `{ closedOnly: true, tabQuery: "stripe" }`. The windows panel ignores the scope, so it still
+ * marks "stripe" in the saved tabs.
  */
-export function parseSearchQuery(query: string): { groupFilter: string; windowFilter: string; tagFilter: string; tabQuery: string } {
-  const PREFIX_RE = /group:|window:|tag:/i;
+export function parseSearchQuery(query: string): { groupFilter: string; windowFilter: string; tagFilter: string; tabQuery: string; closedOnly: boolean } {
+  const PREFIX_RE = /group:|window:|tag:|closed:/i;
+  let closedOnly = false;
   let groupFilter = '';
   let windowFilter = '';
   let tagFilter = '';
@@ -175,11 +181,12 @@ export function parseSearchQuery(query: string): { groupFilter: string; windowFi
 
     if (prefix === 'group:') groupFilter = value;
     else if (prefix === 'window:') windowFilter = value;
+    else if (prefix === 'closed:') { closedOnly = true; if (value.trim()) plainParts.push(value.trim()); }
     else tagFilter = value;
     plainStart = pos; // resume plain-text accumulation after the consumed value
   }
 
-  return { groupFilter, windowFilter, tagFilter, tabQuery: plainParts.filter(Boolean).join(' ') };
+  return { groupFilter, windowFilter, tagFilter, tabQuery: plainParts.filter(Boolean).join(' '), closedOnly };
 }
 
 

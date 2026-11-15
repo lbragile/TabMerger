@@ -34,5 +34,15 @@
   "select": "pilih",
   "close": "tutup",
   "summaryNone": "Tidak ada tab yang cocok",
-  "summary_other": "{{count}} tab cocok di {{groups}}"
+  "summary_other": "{{count}} tab cocok di {{groups}}",
+  "recentlyClosed": "Baru ditutup",
+  "exampleClosed": "Cari hanya di tab yang baru ditutup",
+  "closedToday": "ditutup hari ini {{time}}",
+  "closedYesterday": "ditutup kemarin {{time}}",
+  "closedOn": "ditutup {{day}}",
+  "closedFromWindow": "dari jendela yang ditutup",
+  "closedWindowLabel": "Jendela · {{tabs}}",
+  "closedOff": "Mengingat tab yang ditutup nonaktif",
+  "closedReopened": "{{title}} dibuka lagi",
+  "closedRestoredWindow": "Jendela dengan {{tabs}} dipulihkan"
 }

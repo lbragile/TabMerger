@@ -541,7 +541,7 @@ describe('WindowItem', () => {
 
 describe('WindowItem — search hides rows (reorder locked)', () => {
   const hideView = buildPanelSearchView(
-    { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'tab' },
+    { groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'tab', closedOnly: false },
     'hide',
     { windows: [{ tabMatches: [true], matchCount: 1, selfMatch: false, visible: true }], matchCount: 1, tabCount: 1, nameMatch: false, visible: true }
   )
