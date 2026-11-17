@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-11-09. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-11-16. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.14.0` and the beta channel is at `v3.3.2-beta.1`
   (Chrome BETA listing, and the self-hosted Firefox beta), so beta testers have none of 3.4–3.14.
@@ -82,7 +82,7 @@ _Last updated 2026-11-09. Keep this current in the same change as the work (a CL
 - [ ] Group templates (group structure without URLs)
 - [ ] Global quick-open hotkey outside the popup. Search inside the popup exists (Ctrl/Cmd+K).
 - [ ] Export to Notion or Obsidian (markdown links). Export is JSON only today.
-- [ ] Recently closed tabs list
+- [ ] Recently closed tabs list (in progress, not released): every closed tab and window is kept on the device and listed by day in a sidebar section; reopen, restore a window, save to a group, and search them with Ctrl/Cmd+K (`closed:`). Free keeps up to 50 from the last 7 days, Pro up to 1,000 for 30 days. No new browser permission; never synced. Ships with: archived groups and sessions opening read-only on the right, session colours, and colours for auto-saved groups.
 
 ## Growth
 
