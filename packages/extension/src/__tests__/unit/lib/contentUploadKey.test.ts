@@ -1,14 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getContentUploadKey } from '@/lib/contentUploadKey'
 
-const { mockGetEncryptionKeyState, mockGetDataKey } = vi.hoisted(() => ({
+const { mockGetEncryptionKeyState, mockGetDataKey, mockGetDataKeyFingerprint } = vi.hoisted(() => ({
   mockGetEncryptionKeyState: vi.fn(),
   mockGetDataKey: vi.fn(),
+  mockGetDataKeyFingerprint: vi.fn(),
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
   getEncryptionKeyState: mockGetEncryptionKeyState,
   getDataKey: mockGetDataKey,
+  getDataKeyFingerprint: mockGetDataKeyFingerprint,
 }))
 
 const key = { type: 'data-key' } as unknown as CryptoKey
@@ -16,6 +18,7 @@ const key = { type: 'data-key' } as unknown as CryptoKey
 beforeEach(() => {
   vi.clearAllMocks()
   mockGetDataKey.mockResolvedValue(key)
+  mockGetDataKeyFingerprint.mockResolvedValue(undefined)
 })
 
 // The single gate every content upload goes through: a key to encrypt with, or no upload at all.
@@ -53,6 +56,17 @@ describe('getContentUploadKey with an expected user', () => {
     expect(await getContentUploadKey('u1')).toEqual({ key })
     expect(mockGetEncryptionKeyState).toHaveBeenCalledWith('u1')
     expect(mockGetDataKey).toHaveBeenCalledWith('u1')
+  })
+
+  it('with an expected user, also says which key row the key belongs to (when known)', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockGetDataKeyFingerprint.mockResolvedValue('salt.iv')
+    expect(await getContentUploadKey('u1')).toEqual({ key, keyFingerprint: 'salt.iv' })
+    expect(mockGetDataKeyFingerprint).toHaveBeenCalledWith('u1')
+    // without an expected user it is not looked up
+    mockGetDataKeyFingerprint.mockClear()
+    expect(await getContentUploadKey()).toEqual({ key })
+    expect(mockGetDataKeyFingerprint).not.toHaveBeenCalled()
   })
 
   it('a mismatch (state "unknown") makes no key lookup and returns no key', async () => {

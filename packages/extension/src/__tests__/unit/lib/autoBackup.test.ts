@@ -27,7 +27,7 @@ import {
 } from '@/lib/autoBackup'
 import {
   REARMED_BY_BACKUP,
-  SESSIONS_HEAL_IN_PROGRESS,
+  SESSIONS_HEAL_PASS_PREFIX,
   AUTO_BACKUP_FILE_LAST_KEY,
   AUTO_BACKUP_FILE_STATUS_KEY,
   AUTO_BACKUP_FREE_SEEN_KEY,
@@ -72,7 +72,7 @@ interface Changes {
   deleteSessionIds?: string[]
   settings?: Record<string, unknown>
   updateSettings?: Record<string, (stored: unknown) => unknown>
-  markUploaded?: { ids: string[]; at: number }
+  markUploaded?: { ids: string[]; at: number; pending?: number; keyFingerprint?: string }
 }
 /** One transaction's worth of changes; `updateSettings` functions see the value stored right now. */
 function applyChanges(changes: Changes) {
@@ -96,7 +96,14 @@ function applyChanges(changes: Changes) {
   }
   if (changes.markUploaded) {
     h.log.push(`markUploaded:${changes.markUploaded.ids.join(',')}`)
-    h.sessions = h.sessions.map((x) => (changes.markUploaded!.ids.includes((x as { id: string }).id) ? { ...(x as object), uploadedAt: changes.markUploaded!.at } : x))
+    const mark = changes.markUploaded
+    h.sessions = h.sessions.map((x) => {
+      const row = x as { id: string; uploadPending?: number }
+      if (!mark.ids.includes(row.id)) return x
+      const next: Record<string, unknown> = { ...row, uploadedAt: mark.at, ...(mark.keyFingerprint ? { uploadedKey: mark.keyFingerprint } : {}) }
+      if (mark.pending !== undefined && row.uploadPending === mark.pending) delete next.uploadPending
+      return next
+    })
   }
 }
 
@@ -154,11 +161,11 @@ vi.mock('@/lib/sessionUpload', () => ({
     h.beforeSignedIn?.(++h.signedInCalls)
     return (h.authSession as { user: { id: string } } | null)?.user.id === id
   }),
-  pushSessionToSupabase: vi.fn(async (_s: unknown, uid: string) => {
+  uploadSessionRow: vi.fn(async (_s: unknown, uid: string) => {
     h.log.push(`upload:${uid}`)
     h.duringUpload?.()
     if (h.uploadResult instanceof Error) throw h.uploadResult
-    return h.uploadResult
+    return h.uploadResult ? { ok: true, keyFingerprint: 'key-1' } : { ok: false }
   }),
   deleteRemoteSessions: vi.fn(async (ids: string[], uid: string) => {
     h.log.push(`remoteDelete:${ids.join(',')}:${uid}`)
@@ -1203,7 +1210,8 @@ describe('the sessions self-heal flag: a healthy backup causes no sessions pass'
     expect(REARMED_BY_BACKUP).toBe('')
     expect(rearmSessionsFlagForBackup(true)).toBe(REARMED_BY_BACKUP)
     for (const v of [false, 0, '', undefined, null, 'x', 1]) expect(rearmSessionsFlagForBackup(v)).toBe(false)
-    expect(SESSIONS_HEAL_IN_PROGRESS).not.toBe(REARMED_BY_BACKUP)
+    // a pass token can never be mistaken for the backup's marker
+    expect(`${SESSIONS_HEAL_PASS_PREFIX}abc`).not.toBe(REARMED_BY_BACKUP)
   })
 
   it('the flag is written through updateSettings (applied to the stored value), not through settings', async () => {
@@ -1231,28 +1239,50 @@ describe('the sessions self-heal flag: a healthy backup causes no sessions pass'
     expect(h.settings.get(FLAG)).toBe(false)
   })
 
-  it('flag true + the upload did not happen: false', async () => {
+  // A backup whose upload did not happen keeps its OWN pending mark (the sync's changed-sessions pass
+  // uploads it alone): the run takes its marker back to `true`, never arming a full re-upload pass.
+  const backupPending = () => (h.sessions[0] as { auto?: boolean; uploadPending?: number; uploadedAt?: number })
+
+  it('flag true + the upload did not happen: the flag goes back to true, the backup stays pending', async () => {
     h.settings.set(FLAG, true)
     h.uploadResult = false
     await runAutoBackup({ now: NOW })
-    expect(h.settings.get(FLAG)).toBe(false)
-    expect(h.casCalls).toEqual([])
+    expect(h.settings.get(FLAG)).toBe(true)
+    expect(h.casCalls).toEqual([[FLAG, REARMED_BY_BACKUP, true]])
+    expect(backupPending()).toMatchObject({ auto: true, uploadPending: NOW })
+    expect(backupPending().uploadedAt).toBeUndefined()
   })
 
-  it('flag true + the upload threw: false', async () => {
+  it('flag true + the upload threw: the flag goes back to true, the backup stays pending', async () => {
     h.settings.set(FLAG, true)
     h.uploadResult = new Error('network')
     await runAutoBackup({ now: NOW })
-    expect(h.settings.get(FLAG)).toBe(false)
+    expect(h.settings.get(FLAG)).toBe(true)
+    expect(backupPending().uploadPending).toBe(NOW)
   })
 
-  it('flag true + identity lost after the local write: false', async () => {
+  it('flag true + identity lost after the local write: the flag goes back to true, the backup stays pending', async () => {
     h.settings.set(FLAG, true)
     h.beforeSignedIn = (n) => {
       if (n === 2) h.authSession = { user: { id: 'user-2' } }
     }
     expect(await runAutoBackup({ now: NOW })).toEqual({ status: 'skipped', reason: 'identity-changed' })
+    expect(h.settings.get(FLAG)).toBe(true)
+    expect(backupPending().uploadPending).toBe(NOW)
+  })
+
+  it('a failed upload never touches a flag that held something else (a key change re-armed it): it stays', async () => {
+    h.settings.set(FLAG, false)
+    h.uploadResult = false
+    await runAutoBackup({ now: NOW })
     expect(h.settings.get(FLAG)).toBe(false)
+  })
+
+  it('a successful upload clears the backup\'s pending mark and records the key it is under', async () => {
+    h.settings.set(FLAG, true)
+    await runAutoBackup({ now: NOW })
+    expect(backupPending().uploadPending).toBeUndefined()
+    expect(backupPending()).toMatchObject({ uploadedAt: NOW, uploadedKey: 'key-1' })
   })
 
   it('flag true + a wipe removes the guard before the commit: nothing is written, the flag stays true', async () => {
@@ -1264,7 +1294,7 @@ describe('the sessions self-heal flag: a healthy backup causes no sessions pass'
 
   it.each([
     ['false', false],
-    ['0', 0],
+    ['a pass token', 'pass:abc'],
   ])('a %s written between the commit and the upload confirmation survives', async (_n, rewritten) => {
     h.settings.set(FLAG, true)
     h.duringUpload = () => void h.settings.set(FLAG, rewritten) // a failed save / a pass that started

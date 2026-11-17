@@ -8,7 +8,15 @@ import { GROUPS_CHANGED_MESSAGE, type GroupsChangeCause, type GroupsChangedMessa
 import { groupContentEqual } from './syncConflict';
 import { savedDataChanged, savedDataFingerprint } from './savedData';
 import { emitAutoSavePromoted, promoteEditedAutoSave } from './autoSaveGroups';
-import { APP_SETTINGS_KEY, LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
+import {
+  APP_SETTINGS_KEY,
+  LAST_USER_ID_KEY,
+  CLOUD_SYNC_ACTIVE_KEY,
+  ACCOUNT_SCOPED_SETTING_KEYS,
+  SESSIONS_DELETED_HERE_KEY,
+  SESSION_DELETED_HERE_MAX,
+  SESSION_DELETED_HERE_TTL_MS
+} from './syncSettingKeys';
 
 const DB_NAME = 'tabmerger';
 /**
@@ -734,9 +742,38 @@ export async function saveSession(session: Session): Promise<void> {
   await db.put('sessions', session);
 }
 
-export async function deleteSession(id: string): Promise<void> {
+/** The remembered user-deleted session ids still within their lifetime (see `SESSIONS_DELETED_HERE_KEY`). */
+export function liveDeletedSessionIds(raw: unknown, now: number): Record<string, number> {
+  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return {};
+  const live = Object.entries(raw as Record<string, unknown>)
+    .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && Number.isFinite(entry[1]) && entry[1] <= now + 60_000 && now - entry[1] < SESSION_DELETED_HERE_TTL_MS)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, SESSION_DELETED_HERE_MAX);
+  return Object.fromEntries(live);
+}
+
+/**
+ * Whether the USER deleted session `id` on this device recently (any popup or the worker): a row an
+ * upload re-created after that must be deleted again. A wipe ("Clear all data", an account switch)
+ * is not a user delete and records nothing.
+ */
+export async function wasSessionDeletedHere(id: string, now: number = Date.now()): Promise<boolean> {
+  const raw = await getSetting<unknown>(SESSIONS_DELETED_HERE_KEY, null);
+  return id in liveDeletedSessionIds(raw, now);
+}
+
+/**
+ * The user deleted session `id` here: the local delete AND the remembered "deleted here" id (read by
+ * every context, see {@link wasSessionDeletedHere}) in ONE transaction, so no upload can see the
+ * session gone without also seeing why.
+ */
+export async function deleteSession(id: string, now: number = Date.now()): Promise<void> {
   const db = await getDb();
-  await db.delete('sessions', id);
+  const tx = db.transaction(['sessions', 'settings'], 'readwrite');
+  const settings = tx.objectStore('settings');
+  const record = (await settings.get(SESSIONS_DELETED_HERE_KEY)) as { id: string; value: unknown } | undefined;
+  const deleted = { ...liveDeletedSessionIds(record?.value, now), [id]: now };
+  await Promise.all([tx.objectStore('sessions').delete(id), settings.put({ id: SESSIONS_DELETED_HERE_KEY, value: deleted }), tx.done]);
 }
 
 /**
@@ -767,9 +804,10 @@ export async function updateSessionColor(id: string, color: string, uploadPendin
  * back: a session deleted while the upload ran would be re-created, and one changed meanwhile
  * would be overwritten with the old content. With `uploadedPending`, the session's
  * `uploadPending` mark is cleared only if it is still that token: a change made while the upload
- * ran set a new token and still needs its own upload.
+ * ran set a new token and still needs its own upload. With `keyFingerprint`, the key the server's
+ * copy is now under is recorded (`uploadedKey`).
  */
-export async function markSessionUploaded(id: string, at: number, uploadedPending?: number): Promise<void> {
+export async function markSessionUploaded(id: string, at: number, uploadedPending?: number, keyFingerprint?: string): Promise<void> {
   const db = await getDb();
   const tx = db.transaction('sessions', 'readwrite');
   const stored = await tx.store.get(id);
@@ -777,7 +815,7 @@ export async function markSessionUploaded(id: string, at: number, uploadedPendin
     await tx.done;
     return;
   }
-  const next: Session = { ...stored, uploadedAt: at };
+  const next: Session = { ...stored, uploadedAt: at, ...(keyFingerprint ? { uploadedKey: keyFingerprint } : {}) };
   if (uploadedPending !== undefined && stored.uploadPending === uploadedPending) delete next.uploadPending;
   const put = tx.store.put(next);
   tx.commit();
@@ -827,8 +865,18 @@ export interface SessionChanges {
    * followed by a `settings` entry can. Each function must be synchronous.
    */
   updateSettings?: Record<string, (stored: unknown) => unknown>;
-  /** Stamps `uploadedAt` on these sessions IF they are still stored (a session deleted meanwhile is not re-created). */
-  markUploaded?: { ids: string[]; at: number };
+  /**
+   * Stamps `uploadedAt` on these sessions IF they are still stored (a session deleted meanwhile is
+   * not re-created). `pending`: clears an `uploadPending` mark that is still this token.
+   * `keyFingerprint`: records the key the upload was made under (`uploadedKey`).
+   */
+  markUploaded?: { ids: string[]; at: number; pending?: number; keyFingerprint?: string };
+}
+
+function stampUploaded(s: Session, mark: NonNullable<SessionChanges['markUploaded']>): Session {
+  const next: Session = { ...s, uploadedAt: mark.at, ...(mark.keyFingerprint ? { uploadedKey: mark.keyFingerprint } : {}) };
+  if (mark.pending !== undefined && s.uploadPending === mark.pending) delete next.uploadPending;
+  return next;
 }
 
 /** A readwrite transaction over the `sessions` and `settings` stores. */
@@ -845,7 +893,7 @@ async function applySessionChanges(tx: SessionsSettingsTx, changes: SessionChang
     Promise.all(updates.map(([id]) => settings.get(id) as Promise<{ id: string; value: unknown } | undefined>))
   ]);
   await Promise.all([
-    ...stillStored.filter((s): s is Session => s !== undefined).map((s) => sessions.put({ ...s, uploadedAt: changes.markUploaded!.at })),
+    ...stillStored.filter((s): s is Session => s !== undefined).map((s) => sessions.put(stampUploaded(s, changes.markUploaded!))),
     ...(changes.putSessions ?? []).map((s) => sessions.put(s)),
     ...(changes.deleteSessionIds ?? []).map((id) => sessions.delete(id)),
     ...Object.entries(changes.settings ?? {}).map(([id, value]) => settings.put({ id, value })),

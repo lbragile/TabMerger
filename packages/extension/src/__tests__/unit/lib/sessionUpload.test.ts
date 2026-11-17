@@ -14,7 +14,7 @@ import {
 
 const h = vi.hoisted(() => ({
   auth: { user: { id: 'user-1' } } as unknown,
-  gate: { key: null } as { key: CryptoKey | null; reason?: string },
+  gate: { key: null } as { key: CryptoKey | null; reason?: string; keyFingerprint?: string },
   firefoxOk: true,
   upsertError: null as unknown,
   deleteError: null as unknown,
@@ -35,6 +35,8 @@ const h = vi.hoisted(() => ({
   /** the local sessions store (getSession / markSessionUploaded) */
   local: new Map<string, Record<string, unknown>>(),
   marks: [] as unknown[][],
+  /** ids the user deleted in ANY context (IndexedDB, see wasSessionDeletedHere) */
+  deletedElsewhere: new Set<string>(),
 }))
 
 vi.mock('@/lib/supabase', () => ({
@@ -90,11 +92,12 @@ vi.mock('@/lib/contentUploadKey', () => ({
 vi.mock('@/lib/syncEngine', () => ({ canUploadOnFirefox: vi.fn(async () => h.firefoxOk) }))
 vi.mock('@/lib/localDb', () => ({
   getSession: vi.fn(async (id: string) => h.local.get(id)),
-  markSessionUploaded: vi.fn(async (id: string, at: number, token?: number) => {
+  wasSessionDeletedHere: vi.fn(async (id: string) => h.deletedElsewhere.has(id)),
+  markSessionUploaded: vi.fn(async (id: string, at: number, token?: number, keyFingerprint?: string) => {
     h.marks.push([id, at, token])
     const row = h.local.get(id)
     if (!row) return
-    const next: Record<string, unknown> = { ...row, uploadedAt: at }
+    const next: Record<string, unknown> = { ...row, uploadedAt: at, ...(keyFingerprint ? { uploadedKey: keyFingerprint } : {}) }
     if (token !== undefined && row.uploadPending === token) delete next.uploadPending
     h.local.set(id, next)
   }),
@@ -130,6 +133,7 @@ beforeEach(async () => {
   h.done.length = 0
   h.local.clear()
   h.marks.length = 0
+  h.deletedElsewhere.clear()
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
@@ -445,3 +449,115 @@ describe('uploadStoredSession: one upload per session, the stored copy, update-o
     expect(order).toEqual(['other', 'a', 'b', 'c'])
   })
 })
+
+describe('S1: a copy written under an older key is uploaded again when its row is gone', () => {
+  const stamped = (extra: Record<string, unknown> = {}) => ({ ...base, uploadedAt: 1, ...extra }) as unknown as Record<string, unknown>
+
+  it('a saved session whose server copy was under an older key, row gone: re-inserted and stamped with the new key', async () => {
+    h.gate = { key, keyFingerprint: 'new-key' }
+    h.readRow = null
+    h.local.set('s1', stamped({ uploadedKey: 'old-key' }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('reinserted')
+    expect(h.upserts).toHaveLength(1)
+    expect(isEncryptedBlob(h.upserts[0].groups)).toBe(true)
+    expect(h.local.get('s1')!.uploadedKey).toBe('new-key')
+  })
+
+  it('the same key, row gone: a dashboard delete, nothing re-created', async () => {
+    h.gate = { key, keyFingerprint: 'k' }
+    h.readRow = null
+    h.local.set('s1', stamped({ uploadedKey: 'k' }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.upserts).toHaveLength(0)
+  })
+
+  it('an unknown upload key (uploaded before it was recorded) or an unknown current key: gone, nothing re-created', async () => {
+    h.readRow = null
+    h.gate = { key, keyFingerprint: 'k' }
+    h.local.set('s1', stamped())
+    expect(await refreshUploadedSession(h.local.get('s1') as unknown as Session, 'user-1')).toBe('gone')
+    h.gate = { key }
+    expect(await refreshUploadedSession({ ...base, uploadedAt: 1, uploadedKey: 'old' }, 'user-1')).toBe('gone')
+    expect(h.upserts).toHaveLength(0)
+  })
+
+  it('automatic backups keep the update-only rule even after a key change', async () => {
+    h.gate = { key, keyFingerprint: 'new' }
+    h.readRow = null
+    expect(await refreshUploadedSession({ ...base, auto: true, uploadedAt: 1, uploadedKey: 'old' }, 'user-1')).toBe('gone')
+    expect(h.upserts).toHaveLength(0)
+  })
+
+  it('an update records the key the row is under now; a first upload too', async () => {
+    h.gate = { key, keyFingerprint: 'k2' }
+    h.local.set('s1', stamped({ uploadedKey: 'k1' }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('refreshed')
+    expect(h.local.get('s1')!.uploadedKey).toBe('k2')
+    h.local.set('s2', { ...base, id: 's2' } as unknown as Record<string, unknown>)
+    expect(await uploadStoredSession('s2', 'user-1')).toBe('uploaded')
+    expect(h.local.get('s2')!.uploadedKey).toBe('k2')
+  })
+
+  it('a failed re-insert is failed (retried later), and the stamp is not changed', async () => {
+    h.gate = { key, keyFingerprint: 'new-key' }
+    h.readRow = null
+    h.upsertError = { message: 'rls' }
+    h.local.set('s1', stamped({ uploadedKey: 'old-key', uploadPending: 3 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('failed')
+    expect(h.local.get('s1')!.uploadedKey).toBe('old-key')
+    expect(h.local.get('s1')!.uploadPending).toBe(3)
+  })
+})
+
+describe('S7: one sign-in for the whole refresh read', () => {
+  it('a sign-out and sign-in as the SAME user during the read (new token) is failed, never gone', async () => {
+    h.auth = { user: { id: 'user-1' }, access_token: 'token-a' }
+    h.readRow = null
+    h.onRead = () => {
+      h.auth = { user: { id: 'user-1' }, access_token: 'token-b' }
+    }
+    expect(await refreshUploadedSession({ ...base, uploadedAt: 1 }, 'user-1')).toBe('failed')
+    expect(h.updates).toHaveLength(0)
+  })
+
+  it('the same token before and after: gone is trusted', async () => {
+    h.auth = { user: { id: 'user-1' }, access_token: 'token-a' }
+    h.readRow = null
+    expect(await refreshUploadedSession({ ...base, uploadedAt: 1 }, 'user-1')).toBe('gone')
+  })
+})
+
+describe('S3: a delete made in ANOTHER popup is honoured after a first upload', () => {
+  const manual = (extra: Record<string, unknown> = {}) => ({ ...base, ...extra }) as unknown as Record<string, unknown>
+
+  it('deleted in another context while this upload ran: the re-created row is deleted again', async () => {
+    h.local.set('s1', manual({ uploadPending: 1 }))
+    h.beforeUpsert = async () => {
+      // popup B: the local delete and its remembered id land in one transaction
+      h.local.delete('s1')
+      h.deletedElsewhere.add('s1')
+    }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('uploaded')
+    expect(h.done).toEqual(['upsert:s1', 'delete:s1'])
+  })
+
+  it('remembered as deleted but stored again (restored): nothing deleted', async () => {
+    h.deletedElsewhere.add('s1')
+    h.local.set('s1', manual({ uploadPending: 1 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('uploaded')
+    expect(h.deletes).toHaveLength(0)
+  })
+
+  it('a re-insert after a key change honours the remembered delete too', async () => {
+    h.gate = { key, keyFingerprint: 'new' }
+    h.readRow = null
+    h.local.set('s1', manual({ uploadedAt: 1, uploadedKey: 'old' }))
+    h.beforeUpsert = async () => {
+      h.local.delete('s1')
+      h.deletedElsewhere.add('s1')
+    }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('reinserted')
+    expect(h.deletes).toEqual([{ ids: ['s1'], userId: 'user-1' }])
+  })
+})
+

@@ -102,6 +102,25 @@ describe('setupEncryption', () => {
     expect(await getDataKey()).toBe(fakeDataKey)
   })
 
+  it('getDataKeyFingerprint: the key row the persisted key belongs to; nothing without a key', async () => {
+    const builder = { insert: vi.fn().mockResolvedValue({ error: null }), upsert: vi.fn() }
+    mockFrom.mockReturnValue(builder)
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'fp-user' } } } })
+    mockExportKeyToBase64.mockResolvedValue('b64-fp')
+    mockGenerateDataKey.mockResolvedValue({ type: 'k' })
+    mockDeriveWrappingKey.mockResolvedValue({ type: 'w' })
+    mockWrapDataKey.mockResolvedValue({ wrappedKey: 'wrapped', iv: 'iv9' })
+    const { setupEncryption, getDataKeyFingerprint, clearCachedDataKey } = await import('@/lib/encryptionKey')
+    expect(await getDataKeyFingerprint('fp-user')).toBeUndefined()
+    await setupEncryption('a passphrase')
+    const fingerprint = await getDataKeyFingerprint('fp-user')
+    expect(fingerprint).toMatch(/\.iv9$/)
+    // another account's key row is not this one's
+    expect(await getDataKeyFingerprint('someone-else')).toBeUndefined()
+    await clearCachedDataKey('fp-user')
+    expect(await getDataKeyFingerprint('fp-user')).toBeUndefined()
+  })
+
   it('throws when there is no active session', async () => {
     mockGetSession.mockResolvedValue({ data: { session: null } })
     const { setupEncryption } = await import('@/lib/encryptionKey')

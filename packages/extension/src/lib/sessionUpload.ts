@@ -5,16 +5,28 @@ import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from '@/lib/contentUpload
 import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { syncRequestSignal } from '@/lib/syncRequest';
 import { validSessionColor } from '@/lib/sessionColor';
-import { getSession, markSessionUploaded } from '@/lib/localDb';
+import { getSession, markSessionUploaded, wasSessionDeletedHere } from '@/lib/localDb';
 
 /** Whether the client's CURRENT session belongs to `userId`. A failed read counts as "no". */
 export async function isSignedInAs(userId: string): Promise<boolean> {
-  if (!userId) return false;
+  return (await signedInToken(userId)) !== null;
+}
+
+/**
+ * The access token of the client's CURRENT session if it belongs to `userId`, else `null` (signed
+ * out, someone else, or the read failed). Comparing it before and after a request tells whether the
+ * request ran under ONE sign-in: a sign-out and sign-in as the same user in between swaps the token,
+ * and a read made while signed out sees no row at all (RLS).
+ */
+async function signedInToken(userId: string): Promise<string | null> {
+  if (!userId) return null;
   try {
     const { data } = await supabase.auth.getSession();
-    return data.session?.user.id === userId;
+    const current = data.session;
+    if (current?.user.id !== userId) return null;
+    return typeof current.access_token === 'string' ? current.access_token : '';
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -60,18 +72,31 @@ export const sessionContent = (session: Session) => {
  * No React here: the background worker imports this module.
  */
 export async function pushSessionToSupabase(session: Session, expectedUserId: string): Promise<boolean> {
-  if (!(await isSignedInAs(expectedUserId))) return false;
-  if (!(await canUploadOnFirefox())) return false; // see syncEngine.ts's canUploadOnFirefox doc comment
+  return (await uploadSessionRow(session, expectedUserId)).ok;
+}
+
+/** What an upload wrote: on success, which key row it encrypted with (`Session.uploadedKey`), when known. */
+export type SessionRowWrite = { ok: true; keyFingerprint?: string } | { ok: false };
+
+/** {@link pushSessionToSupabase}, also telling which key the row was encrypted with. */
+export async function uploadSessionRow(session: Session, expectedUserId: string): Promise<SessionRowWrite> {
+  if (!(await isSignedInAs(expectedUserId))) return { ok: false };
+  if (!(await canUploadOnFirefox())) return { ok: false }; // see syncEngine.ts's canUploadOnFirefox doc comment
 
   const gate = await getContentUploadKey(expectedUserId);
   if (!gate.key) {
     console.warn(`[TabMerger] Session ${session.id} not uploaded: ${UPLOAD_BLOCKED_MESSAGE[gate.reason]}`);
-    return false;
+    return { ok: false };
   }
   // Checked again after the lookup: everything from here to the request is for the expected account.
-  if (!(await isSignedInAs(expectedUserId))) return false;
-  const { iv, ct } = await encryptBlob(gate.key, sessionContent(session));
+  if (!(await isSignedInAs(expectedUserId))) return { ok: false };
+  if (!(await upsertSessionRow(session, expectedUserId, gate.key))) return { ok: false };
+  return gate.keyFingerprint ? { ok: true, keyFingerprint: gate.keyFingerprint } : { ok: true };
+}
 
+/** The upsert itself (callers checked the account and the key). Resolves whether the server accepted it. */
+async function upsertSessionRow(session: Session, expectedUserId: string, key: CryptoKey): Promise<boolean> {
+  const { iv, ct } = await encryptBlob(key, sessionContent(session));
   const { error } = await supabase
     .from('sessions')
     .upsert({
@@ -90,25 +115,47 @@ export async function pushSessionToSupabase(session: Session, expectedUserId: st
   return true;
 }
 
+/** What {@link refreshSessionRow} did. */
+export type SessionRefreshOutcome =
+  /** the server's row was updated */
+  | 'updated'
+  /** the row was gone, but the server's copy had been written under an older key: uploaded again */
+  | 'reinserted'
+  /** the row was deleted elsewhere (the dashboard, another device): nothing re-created */
+  | 'gone'
+  /** not sent or not confirmed: try later */
+  | 'failed';
+
 /**
- * For a session this device already confirmed on the server (an automatic backup with
- * `uploadedAt`): writes its content again, but NEVER creates the row. If the server no longer
- * has it, it was deleted somewhere else (the web dashboard), which removes the CLOUD copy only:
- * this resolves `gone`, nothing is uploaded, and the caller keeps the local backup. Used by the
- * sessions self-heal, which otherwise re-uploads everything after an encryption reset.
+ * For a session this device already confirmed on the server (`uploadedAt`): writes its content
+ * again, but NEVER creates the row, with one exception below. If the server no longer has it, it was
+ * deleted somewhere else (the web dashboard), which removes the CLOUD copy only: this answers `gone`,
+ * nothing is uploaded, and the caller keeps the local session.
+ *
+ * The exception (a saved session, never an automatic backup): the server's copy was written under
+ * an OLDER key than this device's (`uploadedKey` differs from the current key's fingerprint). After
+ * an encryption reset, the user sees those old-key rows as unreadable in the dashboard and may delete
+ * them; that deleted the unreadable copy, not this readable one, so the session is uploaded again
+ * (`reinserted`). An unknown upload key (sessions uploaded before it was recorded) is not a
+ * difference: `gone`.
  *
  * `gone` is only answered when a read of the row succeeded, returned nothing, AND the client was
- * still signed in as `expectedUserId` afterwards: a signed-out or swapped client also sees "no
- * row" (RLS). `updated` is only answered when the server reports exactly ONE row written: an
- * UPDATE that matched nothing (the row was deleted after the read, or the server refused the
- * write without an error) is not a success. Everything else is `failed` (try later).
+ * signed in as `expectedUserId` with the SAME access token before and after the read: a signed-out
+ * client sees "no row" too (RLS), and so does a sign-out and sign-in as the same user that straddles
+ * the read. `updated` is only answered when the server reports exactly ONE row written: an UPDATE
+ * that matched nothing (the row was deleted after the read, or the server refused the write without
+ * an error) is not a success. Everything else is `failed` (try later). On success, `keyFingerprint`
+ * is the key the row is now under.
  */
-export async function refreshUploadedSession(session: Session, expectedUserId: string): Promise<'updated' | 'gone' | 'failed'> {
+export async function refreshSessionRow(session: Session, expectedUserId: string): Promise<{ outcome: SessionRefreshOutcome; keyFingerprint?: string }> {
+  const failed = { outcome: 'failed' as const };
   try {
-    if (!(await isSignedInAs(expectedUserId))) return 'failed';
-    if (!(await canUploadOnFirefox())) return 'failed';
+    if (!(await isSignedInAs(expectedUserId))) return failed;
+    if (!(await canUploadOnFirefox())) return failed;
     const gate = await getContentUploadKey(expectedUserId);
-    if (!gate.key) return 'failed';
+    if (!gate.key) return failed;
+    const tokenBefore = await signedInToken(expectedUserId);
+    if (tokenBefore === null) return failed;
     const { data: row, error: readError } = await supabase
       .from('sessions')
       .select('id')
@@ -116,9 +163,16 @@ export async function refreshUploadedSession(session: Session, expectedUserId: s
       .eq('user_id', expectedUserId)
       .abortSignal(syncRequestSignal())
       .maybeSingle();
-    if (readError) return 'failed';
-    if (!(await isSignedInAs(expectedUserId))) return 'failed';
-    if (!row) return 'gone';
+    if (readError) return failed;
+    // one sign-in for the whole read: a swapped token may have read nothing because of RLS
+    if ((await signedInToken(expectedUserId)) !== tokenBefore) return failed;
+    const keyFingerprint = gate.keyFingerprint;
+    const withKey = <T extends SessionRefreshOutcome>(outcome: T) => (keyFingerprint ? { outcome, keyFingerprint } : { outcome });
+    if (!row) {
+      const olderKey = session.auto !== true && !!session.uploadedKey && !!keyFingerprint && session.uploadedKey !== keyFingerprint;
+      if (!olderKey) return { outcome: 'gone' };
+      return (await upsertSessionRow(session, expectedUserId, gate.key)) ? withKey('reinserted') : failed;
+    }
     const { iv, ct } = await encryptBlob(gate.key, sessionContent(session));
     // UPDATE, not upsert: a row deleted between the read above and here stays deleted.
     const { data: written, error } = await supabase
@@ -128,12 +182,17 @@ export async function refreshUploadedSession(session: Session, expectedUserId: s
       .eq('user_id', expectedUserId)
       .select('id')
       .abortSignal(syncRequestSignal());
-    if (error || !Array.isArray(written) || written.length !== 1) return 'failed';
-    return 'updated';
+    if (error || !Array.isArray(written) || written.length !== 1) return failed;
+    return withKey('updated');
   } catch (e) {
     console.warn('[TabMerger] Session refresh failed', session.id, e);
-    return 'failed';
+    return failed;
   }
+}
+
+/** {@link refreshSessionRow}'s outcome alone. */
+export async function refreshUploadedSession(session: Session, expectedUserId: string): Promise<SessionRefreshOutcome> {
+  return (await refreshSessionRow(session, expectedUserId)).outcome;
 }
 
 /**
@@ -181,7 +240,11 @@ export function queueSessionUpload<T>(id: string, task: () => Promise<T>): Promi
   return run;
 }
 
-/** Sessions the user deleted on this device while this context ran (not a wipe: see uploadStoredSession). */
+/**
+ * Sessions the user deleted while this context ran (not a wipe: see uploadStoredSession). The
+ * delete itself also records the id in IndexedDB for every OTHER context (`wasSessionDeletedHere`);
+ * this set only covers the moment before that transaction commits.
+ */
 const deletedHere = new Set<string>();
 
 /**
@@ -190,6 +253,22 @@ const deletedHere = new Set<string>();
  */
 export function noteSessionDeletedHere(id: string): void {
   deletedHere.add(id);
+}
+
+/**
+ * After an upload that may have CREATED session `id`'s row (a first upload, a re-insert): if the
+ * user deleted it meanwhile, here or in another popup (the id is remembered in IndexedDB in the
+ * delete's own transaction), and it is not stored any more, its row is deleted again. A wipe
+ * records no ids, so it never deletes anything in the account.
+ */
+export async function deleteRowIfDeletedHere(id: string, expectedUserId: string): Promise<void> {
+  try {
+    if (!deletedHere.has(id) && !(await wasSessionDeletedHere(id))) return;
+    if (await getSession(id)) return;
+    await deleteRemoteSessions([id], expectedUserId);
+  } catch (e) {
+    console.warn('[TabMerger] Session delete after upload failed', id, e);
+  }
 }
 
 /**
@@ -207,6 +286,8 @@ export type StoredSessionUploadResult =
   | 'uploaded'
   /** an update of the row the server already had */
   | 'refreshed'
+  /** the row was gone but held an older key's copy: uploaded again (see refreshSessionRow) */
+  | 'reinserted'
   /** the server no longer has it (deleted in the dashboard or elsewhere): nothing re-inserted, the local copy stays */
   | 'gone-remote'
   /** no longer stored here: nothing sent */
@@ -229,23 +310,33 @@ export function uploadStoredSession(id: string, expectedUserId: string): Promise
     const stored = await getSession(id);
     if (!stored) return 'gone-local';
     let result: StoredSessionUploadResult;
+    let keyFingerprint: string | undefined;
     try {
       if (typeof stored.uploadedAt === 'number') {
-        const outcome = await refreshUploadedSession(stored, expectedUserId);
-        result = outcome === 'updated' ? 'refreshed' : outcome === 'gone' ? 'gone-remote' : 'failed';
+        const refreshed = await refreshSessionRow(stored, expectedUserId);
+        keyFingerprint = refreshed.keyFingerprint;
+        result =
+          refreshed.outcome === 'updated' ? 'refreshed' : refreshed.outcome === 'reinserted' ? 'reinserted' : refreshed.outcome === 'gone' ? 'gone-remote' : 'failed';
       } else {
-        result = (await pushSessionToSupabase(stored, expectedUserId)) ? 'uploaded' : 'failed';
+        const written = await uploadSessionRow(stored, expectedUserId);
+        if (written.ok) keyFingerprint = written.keyFingerprint;
+        result = written.ok ? 'uploaded' : 'failed';
       }
     } catch (e) {
       console.warn('[TabMerger] Session upload failed', id, e);
       result = 'failed';
     }
     if (result === 'failed') return result;
-    // on the row as stored NOW (if it still is): stamps a first upload, clears this upload's mark
-    await markSessionUploaded(id, typeof stored.uploadedAt === 'number' ? stored.uploadedAt : Date.now(), stored.uploadPending);
-    if (result !== 'gone-remote' && deletedHere.has(id) && !(await getSession(id))) {
-      await deleteRemoteSessions([id], expectedUserId);
-    }
+    // on the row as stored NOW (if it still is): stamps a first upload, clears this upload's mark,
+    // records the key the server's copy is under now (not after `gone`: nothing was written)
+    await markSessionUploaded(
+      id,
+      typeof stored.uploadedAt === 'number' ? stored.uploadedAt : Date.now(),
+      stored.uploadPending,
+      result === 'gone-remote' ? undefined : keyFingerprint
+    );
+    // a write that could have created the row: deleted again if the user deleted the session meanwhile
+    if (result !== 'gone-remote') await deleteRowIfDeletedHere(id, expectedUserId);
     return result;
   });
 }

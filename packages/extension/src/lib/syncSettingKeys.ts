@@ -8,29 +8,31 @@ export const LAST_USER_ID_KEY = 'lastSignedInUserId';
 export const CLOUD_SYNC_ACTIVE_KEY = 'cloudSyncActive';
 
 /**
- * Setting: true once EVERY locally saved session is on the server, encrypted. Sessions have no
- * per-row pending flag, so this one flag is their "nothing left to upload" marker: it is re-armed
- * (false) whenever a session upload was skipped or failed, and by encryption setup / reset, and
- * `useSync` re-uploads all sessions until every push succeeded.
+ * Setting: `true` once every local session is on the server, encrypted under the CURRENT key.
+ * Anything else means a full re-upload pass is due (`useSync`): `false` (written by a key change:
+ * encryption setup, a reset, an unlock after the key was replaced elsewhere), a pass's own token
+ * (a pass is running, or stopped before finishing), {@link REARMED_BY_BACKUP}. A single session's
+ * change does not re-arm it: it carries its own `uploadPending` mark. Readers test `=== true`.
  */
 export const SESSIONS_MIGRATION_DONE_KEY = 'sessionsEncryptionMigrationDone';
 
 /**
- * The value of {@link SESSIONS_MIGRATION_DONE_KEY} while a re-upload pass is running. It reads as
- * "not done" (falsy) to everyone, like `false`, but is a different value: when the pass ends it
- * only writes `true` if this marker is still stored. A `false` written meanwhile (a session
- * saved, a backup taken, encryption reset) is for a session the pass did not see, and stays.
+ * Prefix of the token a running re-upload pass stores in {@link SESSIONS_MIGRATION_DONE_KEY}: a
+ * fresh random value per pass (`pass:<random>`), so a pass only ever recognises ITS OWN marker.
+ * When the pass ends it writes `true` only if its token is still stored, and its orphan cleanup
+ * (remote deletes) runs only then too: another popup's pass, a key change, a backup run or a wipe
+ * ("Clear all data", which removes the flag) in between all make it step back.
  */
-export const SESSIONS_HEAL_IN_PROGRESS = 0;
+export const SESSIONS_HEAL_PASS_PREFIX = 'pass:';
 
 /**
  * The value of {@link SESSIONS_MIGRATION_DONE_KEY} between an automatic backup being written and
- * its upload being confirmed, when the flag was `true` before. Falsy like `false` (a worker
- * stopped mid-run leaves a backup the next sync uploads), but a different value from `false` and
- * from {@link SESSIONS_HEAL_IN_PROGRESS}: once the backup is on the server the run puts `true`
- * back only if this exact value is still stored. So a backup that uploaded does not cost a full
- * re-upload pass, and a `false` (a failed save, an encryption reset) or a pass marker written in
- * between is never undone. Every reader must test the flag for truthiness, never `=== false`.
+ * its upload ending, when the flag was `true` before. Not `true`, so a worker stopped mid-run leaves
+ * a pass due; but a different value from `false` and from any pass token: when the run ends (the
+ * backup uploaded, or its upload failed and the backup carries its own `uploadPending` mark for the
+ * changed-sessions pass) it puts `true` back only if this exact value is still stored. So a backup
+ * never costs a full re-upload pass by itself, and a `false` (a key change) or a pass token written
+ * in between is never undone.
  */
 export const REARMED_BY_BACKUP = '';
 
@@ -44,6 +46,21 @@ export const ENCRYPTION_MIGRATION_DONE_KEY = 'encryptionMigrationDone';
  * no base + a row that exists remotely is a genuine id collision.
  */
 export const REMOTE_BASE_SEEDED_KEY = 'remoteBaseSeeded';
+
+/**
+ * Setting: `{ [sessionId]: deletedAtMs }`, sessions the user deleted on this device (written in the
+ * same transaction as the local delete, see `deleteSession`). Shared by every popup and the worker:
+ * an upload that started before the delete (in this context or another one) and re-created the row
+ * deletes it again. Entries expire after {@link SESSION_DELETED_HERE_TTL_MS}; at most
+ * {@link SESSION_DELETED_HERE_MAX} are kept. Account-scoped.
+ */
+export const SESSIONS_DELETED_HERE_KEY = 'sessionsDeletedHere';
+
+/** How long a user-deleted session id is remembered: far longer than any upload request can take. */
+export const SESSION_DELETED_HERE_TTL_MS = 60 * 60 * 1000;
+
+/** At most this many remembered deleted session ids (the newest are kept). */
+export const SESSION_DELETED_HERE_MAX = 500;
 
 /** Setting: retry backoff of the pending remote deletes (see syncEngine's flushPendingDeletes). */
 export const DELETE_BACKOFF_KEY = 'pendingDeleteBackoff';
@@ -115,5 +132,6 @@ export const ACCOUNT_SCOPED_SETTING_KEYS = [
   AUTO_BACKUP_FILE_STATUS_KEY,
   AUTO_BACKUP_FILE_LAST_KEY,
   AUTO_SAVE_STATE_KEY,
-  AUTO_SAVE_TIER_SEEN_KEY
+  AUTO_SAVE_TIER_SEEN_KEY,
+  SESSIONS_DELETED_HERE_KEY
 ] as const;

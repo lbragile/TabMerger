@@ -18,7 +18,7 @@ import { TIER_LIMITS } from '@/lib/types';
 import { getGroupsState, getSessions, deleteSession, getSetting, setSetting, commitSessions, commitSessionsIfGuardHolds, compareAndSetSetting } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { fetchTier } from '@/lib/entitlementTier';
-import { pushSessionToSupabase, deleteRemoteSessions, isSignedInAs } from '@/lib/sessionUpload';
+import { uploadSessionRow, deleteRemoteSessions, isSignedInAs } from '@/lib/sessionUpload';
 import { saveBackupFile, isBackupFileResult, type BackupFileLast, type BackupFileResult, type BackupFileStatus } from '@/lib/autoBackupFile';
 import {
   APP_SETTINGS_KEY,
@@ -342,11 +342,12 @@ export interface RunAutoBackupOptions {
  *
  * Then: write the session locally, remember time + fingerprint, delete automatic backups beyond
  * the retention count (locally and on the server; the backup just made is always kept), and
- * upload the new one encrypted. The sessions self-heal is re-armed in the same transaction that
- * writes the backup, so when the upload does not happen (offline, key locked or not set up,
- * Firefox consent missing, the worker stopped) the backup stays local and the next sync in the
- * popup uploads it. When the upload is confirmed the run takes its own re-arm back (see
- * `REARMED_BY_BACKUP`), so a backup that uploaded does not cause a sessions re-upload pass.
+ * upload the new one encrypted. The backup is written with its own `uploadPending` mark, so when
+ * the upload does not happen (offline, key locked or not set up, Firefox consent missing, the
+ * worker stopped) it stays local and the next sync in the popup uploads it alone (the
+ * changed-sessions pass). The sessions flag holds the run's marker while it runs and gets it back
+ * to `true` when the upload ends either way (see `REARMED_BY_BACKUP`): a backup never causes a
+ * full re-upload pass of every session, except after a worker stopped mid-run.
  *
  * Deletes this device still owes the server (see `flushPendingRemoteDeletes`) are sent right
  * after step 2, whether or not a backup follows.
@@ -411,7 +412,9 @@ async function runLocked({ manual = false, recheckTier = false, now = Date.now()
   // Everything above took time (IndexedDB, a request): is this still the account the run started for?
   if (!(await backupIdentityHolds(userId))) return skip('identity-changed');
 
-  const session: Session = { id: nanoid(10), name: autoBackupName(now), groups, createdAt: now, auto: true };
+  // `uploadPending`: not on the server yet. If the upload below fails, or the worker stops before
+  // it, the sync's changed-sessions pass uploads this backup alone (see useSync), never a full pass.
+  const session: Session = { id: nanoid(10), name: autoBackupName(now), groups, createdAt: now, auto: true, uploadPending: now };
   // Rotation only ever follows a backup that was just written, so it can never empty the list.
   // The new backup is NOT part of the selection: it takes one of the kept places whatever its
   // date. Sorted in with the others, a clock that was moved back would make it the "oldest" and
@@ -434,12 +437,11 @@ async function runLocked({ manual = false, recheckTier = false, now = Date.now()
     updateSettings: {
       // added to the list as stored when this transaction runs, never to an earlier read of it
       [AUTO_BACKUP_PENDING_DELETES_KEY]: addPendingRemoteDeletes(staleIds),
-      // The new backup is not on the server yet. Sessions have no per-row pending flag, so the
-      // sessions self-heal is re-armed HERE, with the backup: a worker stopped anywhere after
-      // this line leaves a backup the next sync still uploads (see useSync). A flag that was
-      // `true` gets the backup's own marker, which the run turns back into `true` once the upload
-      // is confirmed (below); anything else was already "work left" for another reason and
-      // becomes a plain `false`, which this run never clears.
+      // The new backup carries its own `uploadPending` mark (see above). The sessions flag also
+      // gets the run's marker while the run is going: a flag that was `true` becomes
+      // REARMED_BY_BACKUP, which the run turns back into `true` when its upload ends (below);
+      // anything else was already "work left" for another reason and becomes a plain `false`,
+      // which this run never clears.
       [SESSIONS_MIGRATION_DONE_KEY]: rearmSessionsFlagForBackup
     }
   });
@@ -464,9 +466,10 @@ async function runLocked({ manual = false, recheckTier = false, now = Date.now()
   // The backup is on this device, in its owner's store. From here on only requests remain, and
   // each one is refused (client check, then RLS on `user_id`) unless the session is still theirs.
   if (!(await backupIdentityHolds(userId))) {
-    // Not uploaded: if the store is STILL this user's (they may sign back in), let the next sync
-    // upload it. Conditional like every other write, so it cannot land in a wiped store.
-    await commitSessionsIfGuardHolds(guard, { settings: { [SESSIONS_MIGRATION_DONE_KEY]: false } });
+    // Not uploaded: the backup's own `uploadPending` mark makes the next sync upload it (if the
+    // store is still this user's), so the run's marker goes back to `true` instead of arming a full
+    // re-upload pass. A wipe removed the flag: then nothing matches and nothing is written.
+    await compareAndSetSetting(SESSIONS_MIGRATION_DONE_KEY, REARMED_BY_BACKUP, true);
     return skip('identity-changed');
   }
   // The server rows of rotated-out backups go too. A delete that could not be confirmed (offline)
@@ -474,22 +477,29 @@ async function runLocked({ manual = false, recheckTier = false, now = Date.now()
   await flushPendingRemoteDeletes(userId);
 
   let uploaded = false;
+  let keyFingerprint: string | undefined;
   try {
-    uploaded = await pushSessionToSupabase(session, userId);
+    const written = await uploadSessionRow(session, userId);
+    uploaded = written.ok;
+    if (written.ok) keyFingerprint = written.keyFingerprint;
   } catch (e) {
     console.warn('[TabMerger] Automatic backup upload failed', e);
   }
   if (uploaded) {
-    // Remember that the server has it: from now on it is never INSERTED again (see `uploadedAt`).
-    const stamped = await commitSessionsIfGuardHolds(guard, { markUploaded: { ids: [session.id], at: now } });
+    // Remember that the server has it: from now on it is never INSERTED again (see `uploadedAt`),
+    // its pending mark is done, and the key it is under is recorded.
+    const stamped = await commitSessionsIfGuardHolds(guard, {
+      markUploaded: { ids: [session.id], at: now, pending: session.uploadPending, ...(keyFingerprint ? { keyFingerprint } : {}) }
+    });
     // The one thing this run left to upload is on the server: if the flag still holds this run's
-    // marker, every session is uploaded again and no sync pass is needed. A `false` or a pass
-    // marker written since (a failed save, an encryption reset, a pass that started) is not
+    // marker, it goes back to `true`. A `false` (a key change) or a pass token written since is not
     // this value, so it stays, and that pass finishes the job. Not after a wipe (guard gone).
     if (stamped) await compareAndSetSetting(SESSIONS_MIGRATION_DONE_KEY, REARMED_BY_BACKUP, true);
   } else {
-    // Sessions have no per-row pending flag: re-arm the self-heal and the next sync uploads it (see useSync).
-    await commitSessionsIfGuardHolds(guard, { settings: { [SESSIONS_MIGRATION_DONE_KEY]: false } });
+    // Not uploaded: the backup keeps its `uploadPending` mark, and the sync's changed-sessions pass
+    // uploads it alone. A failed upload never arms a full re-upload pass of every session: the
+    // run's marker goes back to `true` (only if it is still stored: not after a wipe or a key change).
+    await compareAndSetSetting(SESSIONS_MIGRATION_DONE_KEY, REARMED_BY_BACKUP, true);
   }
 
   return { status: 'created', sessionId: session.id, createdAt: now, uploaded, pruned: stale.length, ...(file ? { file: file.result, filePath: file.path } : {}) };

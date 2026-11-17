@@ -114,6 +114,7 @@ vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ cloudSync:
 vi.mock('@/lib/encryptionKey', () => ({
   getEncryptionKeyState: async () => 'present',
   getDataKey: async () => net.key,
+  getDataKeyFingerprint: async () => undefined,
   ENCRYPTION_MIGRATION_DONE_KEY: 'encryptionMigrationDone',
 }))
 
@@ -434,13 +435,16 @@ describe('the sessions flag around a healthy backup — real IndexedDB', () => {
     expect(saved.uploadedAt).toBe(BASE)
   })
 
-  it('flag true + the upload fails: the flag ends false and no uploadedAt is stamped', async () => {
+  it('flag true + the upload fails: the backup keeps its own pending mark, no full pass is armed, no uploadedAt', async () => {
     await seedGroups('a')
     await setSetting(SESSIONS_MIGRATION_DONE_KEY, true)
     net.failUpsert = true
     expect(await runAutoBackup({ now: BASE })).toMatchObject({ status: 'created', uploaded: false })
-    expect(await getSetting(SESSIONS_MIGRATION_DONE_KEY, null)).toBe(false)
-    expect((await getSessions())[0].uploadedAt).toBeUndefined()
+    // the changed-sessions pass uploads this backup alone; a full re-upload of every session is not owed
+    expect(await getSetting(SESSIONS_MIGRATION_DONE_KEY, null)).toBe(true)
+    const [backup] = await getSessions()
+    expect(backup.uploadedAt).toBeUndefined()
+    expect(backup.uploadPending).toBe(BASE)
   })
 
   it('flag false before + upload ok: stays false (a pass is still owed for another reason)', async () => {
