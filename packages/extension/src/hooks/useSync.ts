@@ -8,10 +8,11 @@ import {
   setSetting,
   markAllGroupsPendingSync,
   getSessions,
+  getSession,
   markSessionUploaded,
   compareAndSetSetting
 } from '@/lib/localDb';
-import { refreshUploadedSession, deleteRemoteSessions } from '@/lib/sessionUpload';
+import { refreshUploadedSession, deleteRemoteSessions, queueSessionUpload, uploadStoredSession } from '@/lib/sessionUpload';
 import { cycleDeadline } from '@/lib/syncRequest';
 import { getEncryptionKeyState, getDataKey, ENCRYPTION_MIGRATION_DONE_KEY } from '@/lib/encryptionKey';
 import { useUIStore } from '@/stores/uiStore';
@@ -122,9 +123,10 @@ export function useSync() {
         // flag itself, and must not have that undone when the pass finishes.
         await setSetting(SESSIONS_MIGRATION_DONE_KEY, SESSIONS_HEAL_IN_PROGRESS);
         // Never-uploaded sessions FIRST: a pass that runs out of time must have spent it on what
-        // the server does not have yet, not on refreshing backups it already holds (stable sort).
-        const isUploadedBackup = (s: { auto?: boolean; uploadedAt?: number }) => s.auto === true && typeof s.uploadedAt === 'number';
-        const sessions = [...(await getSessions())].sort((a, b) => Number(isUploadedBackup(a)) - Number(isUploadedBackup(b)));
+        // the server does not have yet, not on refreshing rows it already holds (stable sort).
+        // `uploadedAt`: the server confirmed it once (a backup, or a saved session since colours).
+        const isUploaded = (s: { uploadedAt?: number }) => typeof s.uploadedAt === 'number';
+        const sessions = [...(await getSessions())].sort((a, b) => Number(isUploaded(a)) - Number(isUploaded(b)));
         let allUploaded = true;
         /** ids this pass upserted: each was a copy read above, see the check after the loop */
         const pushedIds: string[] = [];
@@ -134,23 +136,31 @@ export function useSync() {
             break;
           }
           try {
-            // An automatic backup the server already confirmed is never INSERTED again. If the
-            // server no longer has it (`gone`), it was deleted in the web dashboard: that removes
-            // the cloud copy only, so there is nothing to do and the local backup STAYS. One never
-            // uploaded (taken offline) uploads below.
-            if (isUploadedBackup(s)) {
-              if ((await refreshUploadedSession(s, session.user.id)) === 'failed') allUploaded = false;
-              continue;
-            }
-            // for THIS cycle's account only: refused if the client's session changed meanwhile
-            if (!(await pushSessionToSupabase(s, session.user.id))) {
-              allUploaded = false;
-              continue;
-            }
-            pushedIds.push(s.id);
-            // stamped on the session as stored NOW (if it still is), never by saving back the
-            // copy read above: that would re-create a backup deleted while the upload ran
-            if (s.auto === true) await markSessionUploaded(s.id, Date.now());
+            // One upload per session at a time (a colour change may be uploading it right now),
+            // and of the copy stored when its turn comes, not the one listed above.
+            const outcome = await queueSessionUpload(s.id, async (): Promise<'ok' | 'failed' | 'pushed'> => {
+              const current = await getSession(s.id);
+              if (!current) return 'ok';
+              // A session the server already confirmed is never INSERTED again. If the server no
+              // longer has it (`gone`), it was deleted in the web dashboard or on another device:
+              // that removes the cloud copy only, so there is nothing to do and the local copy
+              // STAYS. One never uploaded (saved or backed up offline) uploads below.
+              if (isUploaded(current)) {
+                const refreshed = await refreshUploadedSession(current, session.user.id);
+                if (refreshed === 'failed') return 'failed';
+                // the server has (or deliberately lost) this content: its pending mark is done
+                if (current.uploadPending !== undefined) await markSessionUploaded(current.id, current.uploadedAt!, current.uploadPending);
+                return 'ok';
+              }
+              // for THIS cycle's account only: refused if the client's session changed meanwhile
+              if (!(await pushSessionToSupabase(current, session.user.id))) return 'failed';
+              // stamped on the session as stored NOW (if it still is), never by saving back the
+              // copy read above: that would re-create a session deleted while the upload ran
+              await markSessionUploaded(current.id, Date.now(), current.uploadPending);
+              return 'pushed';
+            });
+            if (outcome === 'failed') allUploaded = false;
+            else if (outcome === 'pushed') pushedIds.push(s.id);
           } catch (e) {
             allUploaded = false;
             console.warn('[useSync] session self-heal push failed', s.id, e);
@@ -181,6 +191,21 @@ export function useSync() {
         // save, a backup run, an encryption reset): those sessions were not in the list above.
         // (A backup run's own marker, REARMED_BY_BACKUP, is falsy too: it starts a pass like `false`.)
         else await compareAndSetSetting(SESSIONS_MIGRATION_DONE_KEY, SESSIONS_HEAL_IN_PROGRESS, true);
+      } finally {
+        sessionsHealRunning.current = false;
+      }
+    } else if (canUpload && !sessionsHealRunning.current && Date.now() >= sessionsRetryAt.current) {
+      // No full pass due: upload only the sessions changed here and not confirmed yet
+      // (`uploadPending`: a save or a colour change whose upload the popup did not see finish),
+      // each as stored now. A failure waits for the retry delay like a full pass.
+      sessionsHealRunning.current = true;
+      try {
+        const pending = (await getSessions()).filter((s) => typeof s.uploadPending === 'number');
+        for (const s of pending) {
+          if ((await uploadStoredSession(s.id, session.user.id)) === 'failed') sessionsRetryAt.current = Date.now() + SESSIONS_RETRY_MS;
+        }
+      } catch (e) {
+        console.warn('[useSync] pending session upload failed', e);
       } finally {
         sessionsHealRunning.current = false;
       }

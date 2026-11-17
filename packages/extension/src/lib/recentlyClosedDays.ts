@@ -1,5 +1,5 @@
-import { colorForDay } from '@tabmerger/shared';
-import { activeLocale, t } from '@/lib/i18n';
+import { RECENTLY_CLOSED_LIMITS, colorForDay } from '@tabmerger/shared';
+import { activeLocale, formatNumber, t } from '@/lib/i18n';
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
 
 /**
@@ -103,4 +103,22 @@ export function formatClosedTime(closedAt: number, locale: string = activeLocale
   } catch {
     return new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' }).format(closedAt);
   }
+}
+
+/**
+ * How long each plan keeps the list, with BOTH limits (entries and days, from
+ * `RECENTLY_CLOSED_LIMITS`, never literal numbers): "Free keeps up to 50 from the last 7 days. Pro
+ * keeps up to 1,000 for 30 days." The quiet line on Free under the sidebar section and the oldest day.
+ */
+export function recentlyClosedPlanNote(): string {
+  const { free, pro } = RECENTLY_CLOSED_LIMITS;
+  const freeLine = t('recentlyClosed.section.freeKeeps', { count: free.days, entries: formatNumber(free.entries) });
+  const proLine = t('recentlyClosed.section.proKeeps', { count: pro.days, entries: formatNumber(pro.entries) });
+  return `${freeLine} ${proLine}`;
+}
+
+/** Settings → Data's line for the plan's own limits: "Your plan keeps up to 50 for 7 days". */
+export function recentlyClosedKeepsLine(plan: 'free' | 'pro'): string {
+  const limits = RECENTLY_CLOSED_LIMITS[plan];
+  return t('recentlyClosed.settings.keeps', { count: limits.days, entries: formatNumber(limits.entries) });
 }

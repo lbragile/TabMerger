@@ -46,7 +46,5 @@
   "closedOn": "fechada em {{day}}",
   "closedFromWindow": "de uma janela fechada",
   "closedWindowLabel": "Janela · {{tabs}}",
-  "closedOff": "Lembrar abas fechadas está desativado",
-  "closedReopened": "{{title}} reaberta",
-  "closedRestoredWindow": "Janela restaurada com {{tabs}}"
+  "closedOff": "Lembrar abas fechadas está desativado"
 }

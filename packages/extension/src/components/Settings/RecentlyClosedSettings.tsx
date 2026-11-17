@@ -12,7 +12,8 @@ import {
   useUndoRecentlyClosed,
   type RecentlyClosedUndo
 } from '@/hooks/useRecentlyClosed';
-import { limitsForPlan, readRememberClosedTabs } from '@/lib/recentlyClosed';
+import { readRememberClosedTabs } from '@/lib/recentlyClosed';
+import { recentlyClosedKeepsLine } from '@/lib/recentlyClosedDays';
 import { trackEvent } from '@/lib/analytics';
 import { toast } from '@/lib/toast';
 import { SettingsSection } from '@/components/Settings/SettingsSection';
@@ -38,7 +39,6 @@ export function RecentlyClosedSettings({ onSettingsSaved }: RecentlyClosedSettin
   const { mutateAsync: clearAll, isPending: clearing } = useClearRecentlyClosed();
   const { mutate: undo } = useUndoRecentlyClosed();
   const on = readRememberClosedTabs(saved);
-  const days = limitsForPlan(tier === 'free' ? 'free' : 'pro').days;
 
   const undoAction = (token: RecentlyClosedUndo, afterUndo?: () => void) => ({
     label: t('header.undo'),
@@ -91,7 +91,7 @@ export function RecentlyClosedSettings({ onSettingsSaved }: RecentlyClosedSettin
 
   const summary = planLoading
     ? t('recentlyClosed.settings.checkingPlan')
-    : `${t('recentlyClosed.settings.keptFor', { count: days })} · ${t('recentlyClosed.settings.inList', { count: entries.length })}`;
+    : `${recentlyClosedKeepsLine(tier === 'free' ? 'free' : 'pro')} · ${t('recentlyClosed.settings.inList', { count: entries.length })}`;
 
   return (
     <SettingsSection

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed'
 import type { GroupsState } from '@/lib/types'
 import { createGroup, createTab, createWindow } from '@/lib/utils'
-import { addClosedEntriesToState, closedTabCount, savedTabFromClosed, siteGroupName } from '@/lib/recentlyClosedSave'
+import { addClosedEntriesToState, closedTabCount, isClosedSaveTarget, savedTabFromClosed, siteGroupName } from '@/lib/recentlyClosedSave'
 
 const NOW = 1_800_000_000_000
 
@@ -107,9 +107,20 @@ describe('addClosedEntriesToState', () => {
   it.each([
     ['Now Open', 'now'],
     ['an archived group', 'arch'],
+    ['a tour practice group', 'tour'],
     ['a group that is gone', 'missing'],
   ])('does nothing for %s', (_label, groupId) => {
-    expect(addClosedEntriesToState(state(), [tabEntry('https://a.example')], { groupId }, NOW)).toBeNull()
+    const s = state()
+    s.available.push({ ...createGroup('tour', 'Tour demo'), tourDemo: true } as GroupsState['available'][number])
+    expect(addClosedEntriesToState(s, [tabEntry('https://a.example')], { groupId }, NOW)).toBeNull()
+  })
+
+  it('isClosedSaveTarget: saved groups only', () => {
+    const [nowOpen, work, , archived] = state().available
+    expect(isClosedSaveTarget(work)).toBe(true)
+    expect(isClosedSaveTarget(nowOpen)).toBe(false)
+    expect(isClosedSaveTarget(archived)).toBe(false)
+    expect(isClosedSaveTarget({ ...work, tourDemo: true } as typeof work)).toBe(false)
   })
 
   it('does nothing without tabs', () => {

@@ -32,6 +32,7 @@ const {
   mockRefreshUploadedSession,
   mockCycleDeadline,
   mockDeleteRemoteSessions,
+  mockUploadStoredSession,
 } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
@@ -59,6 +60,7 @@ const {
   mockRefreshUploadedSession: vi.fn().mockResolvedValue('updated'),
   mockCycleDeadline: vi.fn(() => Date.now() + 60_000),
   mockDeleteRemoteSessions: vi.fn().mockResolvedValue(true),
+  mockUploadStoredSession: vi.fn().mockResolvedValue('uploaded'),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
@@ -98,8 +100,17 @@ vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/up
   clearLocalAccountData: mockClearLocalAccountData,
   markSessionUploaded: mockMarkSessionUploaded,
   compareAndSetSetting: mockCompareAndSetSetting,
+  // the pass uploads each session as stored when its turn comes
+  // the session as the pass listed it (getSessions' latest answer), without another getSessions call
+  getSession: async (id: string) => (((await mockGetSessions.mock.results.at(-1)?.value) ?? []) as { id: string }[]).find((x) => x.id === id),
 }))
-vi.mock('@/lib/sessionUpload', () => ({ refreshUploadedSession: mockRefreshUploadedSession, deleteRemoteSessions: mockDeleteRemoteSessions }))
+vi.mock('@/lib/sessionUpload', () => ({
+  refreshUploadedSession: mockRefreshUploadedSession,
+  deleteRemoteSessions: mockDeleteRemoteSessions,
+  // one at a time per id: the tests run them in order anyway
+  queueSessionUpload: (_id: string, task: () => Promise<unknown>) => task(),
+  uploadStoredSession: mockUploadStoredSession,
+}))
 vi.mock('@/lib/syncRequest', async (orig) => ({ ...(await orig<typeof import('@/lib/syncRequest')>()), cycleDeadline: mockCycleDeadline }))
 vi.mock('@/lib/encryptionKey', () => ({
   getEncryptionKeyState: mockGetEncryptionKeyState,
@@ -384,8 +395,28 @@ describe('useSync — sessions encryption migration self-heal', () => {
     renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
 
     await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    await waitFor(() => expect(mockGetSessions).toHaveBeenCalled())
+    // only the pending-only check runs: nothing is marked, so nothing is uploaded
     expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
-    expect(mockGetSessions).not.toHaveBeenCalled()
+    expect(mockUploadStoredSession).not.toHaveBeenCalled()
+    expect(mockSetSetting).not.toHaveBeenCalledWith('sessionsEncryptionMigrationDone', expect.anything())
+  })
+
+  it('with the flag set, uploads only the sessions marked uploadPending, one by one, as stored', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockGetSetting.mockResolvedValue(true)
+    mockGetSessions.mockResolvedValue([
+      { id: 'p1', name: 'P', groups: [], createdAt: 1, uploadPending: 5 },
+      { id: 'done', name: 'D', groups: [], createdAt: 2 },
+    ])
+
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+    await waitFor(() => expect(mockUploadStoredSession).toHaveBeenCalledWith('p1', 'u1'))
+    expect(mockUploadStoredSession).toHaveBeenCalledTimes(1)
+    expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
   })
 })
 
@@ -431,17 +462,18 @@ describe('useSync — sessions pass: automatic backups, ordering, deadline, one 
   it('a backup never uploaded is pushed, then stamped through markSessionUploaded (not by saving a copy back)', async () => {
     mockGetSessions.mockResolvedValue([backup('b1')])
     run()
-    await waitFor(() => expect(mockMarkSessionUploaded).toHaveBeenCalledWith('b1', expect.any(Number)))
+    await waitFor(() => expect(mockMarkSessionUploaded).toHaveBeenCalledWith('b1', expect.any(Number), undefined))
     expect(mockPushSessionToSupabase).toHaveBeenCalledWith(expect.objectContaining({ id: 'b1' }), 'u1')
   })
 
-  it('a manual session is never stamped; a push that did not happen is not stamped', async () => {
-    mockGetSessions.mockResolvedValue([{ id: 'm1', name: 'M', groups: [], createdAt: 1 }, backup('b2')])
+  it('a pushed saved session is stamped too (and its pending mark cleared); a push that did not happen is not stamped', async () => {
+    mockGetSessions.mockResolvedValue([{ id: 'm1', name: 'M', groups: [], createdAt: 1, uploadPending: 9 }, backup('b2')])
     mockPushSessionToSupabase.mockResolvedValueOnce(true).mockResolvedValueOnce(false)
     run()
     await waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(2))
     await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
-    expect(mockMarkSessionUploaded).not.toHaveBeenCalled()
+    expect(mockMarkSessionUploaded).toHaveBeenCalledTimes(1)
+    expect(mockMarkSessionUploaded).toHaveBeenCalledWith('m1', expect.any(Number), 9)
     expect(mockCompareAndSetSetting).not.toHaveBeenCalled()
   })
 

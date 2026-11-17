@@ -52,7 +52,5 @@
   "closedOn": "أُغلقت {{day}}",
   "closedFromWindow": "من نافذة مغلقة",
   "closedWindowLabel": "نافذة · {{tabs}}",
-  "closedOff": "تذكّر علامات التبويب المغلقة متوقف",
-  "closedReopened": "أُعيد فتح {{title}}",
-  "closedRestoredWindow": "استُعيدت نافذة فيها {{tabs}}"
+  "closedOff": "تذكّر علامات التبويب المغلقة متوقف"
 }

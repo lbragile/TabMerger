@@ -42,7 +42,5 @@
   "closedOn": "ditutup {{day}}",
   "closedFromWindow": "dari jendela yang ditutup",
   "closedWindowLabel": "Jendela · {{tabs}}",
-  "closedOff": "Mengingat tab yang ditutup nonaktif",
-  "closedReopened": "{{title}} dibuka lagi",
-  "closedRestoredWindow": "Jendela dengan {{tabs}} dipulihkan"
+  "closedOff": "Mengingat tab yang ditutup nonaktif"
 }

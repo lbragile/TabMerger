@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { BookmarkPlus, Plus } from 'lucide-react';
-import { isTourDemoGroup } from '@tabmerger/shared';
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
@@ -10,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { Group } from '@/lib/types';
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
-import { siteGroupName, type ClosedSaveTarget } from '@/lib/recentlyClosedSave';
+import { isClosedSaveTarget, siteGroupName, type ClosedSaveTarget } from '@/lib/recentlyClosedSave';
 
 interface SaveToGroupMenuProps {
   /** Every group (the saved data); Now Open, archived groups and the tour's practice groups are left out. */
@@ -28,7 +27,7 @@ interface SaveToGroupMenuProps {
  */
 export function SaveToGroupMenu({ groups, entries, label, onSave }: SaveToGroupMenuProps) {
   const { t } = useTranslation();
-  const targets = groups.filter((g) => !g.permanent && !g.archived && !isTourDemoGroup(g));
+  const targets = groups.filter(isClosedSaveTarget);
   const site = siteGroupName(entries);
   const newName = site || t('recentlyClosed.entry.newGroupPlain');
   return (

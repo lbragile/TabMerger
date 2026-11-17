@@ -5,6 +5,7 @@ import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from '@/lib/contentUpload
 import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { syncRequestSignal } from '@/lib/syncRequest';
 import { validSessionColor } from '@/lib/sessionColor';
+import { getSession, markSessionUploaded } from '@/lib/localDb';
 
 /** Whether the client's CURRENT session belongs to `userId`. A failed read counts as "no". */
 export async function isSignedInAs(userId: string): Promise<boolean> {
@@ -156,4 +157,95 @@ export async function deleteRemoteSessions(ids: string[], expectedUserId: string
     console.warn('[TabMerger] Session delete sync to Supabase failed', e);
     return false;
   }
+}
+
+/**
+ * One upload at a time per session id, in the order asked (this context only). Two quick colour
+ * picks, or a pick and the sync's sessions pass, can otherwise land on the server in the wrong
+ * order, and an upload still in flight can land after a delete of the same row.
+ */
+const uploadQueues = new Map<string, Promise<unknown>>();
+
+/** Runs `task` after every earlier queued task for session `id` (whether it failed or not). */
+export function queueSessionUpload<T>(id: string, task: () => Promise<T>): Promise<T> {
+  const previous = uploadQueues.get(id) ?? Promise.resolve();
+  const run = previous.then(task, task);
+  const tail = run.then(
+    () => undefined,
+    () => undefined
+  );
+  uploadQueues.set(id, tail);
+  void tail.then(() => {
+    if (uploadQueues.get(id) === tail) uploadQueues.delete(id);
+  });
+  return run;
+}
+
+/** Sessions the user deleted on this device while this context ran (not a wipe: see uploadStoredSession). */
+const deletedHere = new Set<string>();
+
+/**
+ * Records that the user deleted session `id` here, BEFORE the local delete. An upload of it that
+ * was already in flight then deletes the row it re-created (see {@link uploadStoredSession}).
+ */
+export function noteSessionDeletedHere(id: string): void {
+  deletedHere.add(id);
+}
+
+/**
+ * {@link deleteRemoteSessions} for sessions the user deleted here, queued behind any upload of
+ * the same ids, so the delete always reaches the server after them.
+ */
+export async function deleteRemoteSessionsQueued(ids: string[], expectedUserId: string): Promise<boolean> {
+  const results = await Promise.all(ids.map((id) => queueSessionUpload(id, () => deleteRemoteSessions([id], expectedUserId))));
+  return results.every(Boolean);
+}
+
+/** What {@link uploadStoredSession} did. */
+export type StoredSessionUploadResult =
+  /** first upload (the row was inserted); the session is now stamped `uploadedAt` */
+  | 'uploaded'
+  /** an update of the row the server already had */
+  | 'refreshed'
+  /** the server no longer has it (deleted in the dashboard or elsewhere): nothing re-inserted, the local copy stays */
+  | 'gone-remote'
+  /** no longer stored here: nothing sent */
+  | 'gone-local'
+  /** not sent or not accepted: the `uploadPending` mark stays for a retry */
+  | 'failed';
+
+/**
+ * Uploads session `id` AS STORED NOW (never a copy read earlier), queued per id
+ * ({@link queueSessionUpload}). A session the server already has (`uploadedAt`) is only UPDATED
+ * (`refreshUploadedSession`): one deleted in the dashboard or on another device is never
+ * re-created by an edit here. A first upload stamps `uploadedAt`. Success clears the
+ * `uploadPending` token the upload read (a later change keeps its own). If the user deleted the
+ * session here while the request ran, the row it may have re-created is deleted again; a wipe
+ * ("Clear all data", an account switch) also empties the store but must never delete anything in
+ * the account, so only deletes recorded by {@link noteSessionDeletedHere} count.
+ */
+export function uploadStoredSession(id: string, expectedUserId: string): Promise<StoredSessionUploadResult> {
+  return queueSessionUpload(id, async (): Promise<StoredSessionUploadResult> => {
+    const stored = await getSession(id);
+    if (!stored) return 'gone-local';
+    let result: StoredSessionUploadResult;
+    try {
+      if (typeof stored.uploadedAt === 'number') {
+        const outcome = await refreshUploadedSession(stored, expectedUserId);
+        result = outcome === 'updated' ? 'refreshed' : outcome === 'gone' ? 'gone-remote' : 'failed';
+      } else {
+        result = (await pushSessionToSupabase(stored, expectedUserId)) ? 'uploaded' : 'failed';
+      }
+    } catch (e) {
+      console.warn('[TabMerger] Session upload failed', id, e);
+      result = 'failed';
+    }
+    if (result === 'failed') return result;
+    // on the row as stored NOW (if it still is): stamps a first upload, clears this upload's mark
+    await markSessionUploaded(id, typeof stored.uploadedAt === 'number' ? stored.uploadedAt : Date.now(), stored.uploadPending);
+    if (result !== 'gone-remote' && deletedHere.has(id) && !(await getSession(id))) {
+      await deleteRemoteSessions([id], expectedUserId);
+    }
+    return result;
+  });
 }

@@ -42,7 +42,5 @@
   "closedOn": "đóng {{day}}",
   "closedFromWindow": "từ một cửa sổ đã đóng",
   "closedWindowLabel": "Cửa sổ · {{tabs}}",
-  "closedOff": "Ghi nhớ thẻ đã đóng đang tắt",
-  "closedReopened": "Đã mở lại {{title}}",
-  "closedRestoredWindow": "Đã khôi phục cửa sổ có {{tabs}}"
+  "closedOff": "Ghi nhớ thẻ đã đóng đang tắt"
 }

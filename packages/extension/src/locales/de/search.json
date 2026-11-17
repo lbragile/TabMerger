@@ -44,7 +44,5 @@
   "closedOn": "geschlossen am {{day}}",
   "closedFromWindow": "aus einem geschlossenen Fenster",
   "closedWindowLabel": "Fenster · {{tabs}}",
-  "closedOff": "Geschlossene Tabs merken ist aus",
-  "closedReopened": "{{title}} wieder geöffnet",
-  "closedRestoredWindow": "Fenster mit {{tabs}} wiederhergestellt"
+  "closedOff": "Geschlossene Tabs merken ist aus"
 }

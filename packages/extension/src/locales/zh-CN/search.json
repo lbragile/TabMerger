@@ -42,7 +42,5 @@
   "closedOn": "{{day}} 关闭",
   "closedFromWindow": "来自已关闭的窗口",
   "closedWindowLabel": "窗口 · {{tabs}}",
-  "closedOff": "记住关闭的标签页已关闭",
-  "closedReopened": "已重新打开 {{title}}",
-  "closedRestoredWindow": "已恢复包含 {{tabs}} 的窗口"
+  "closedOff": "记住关闭的标签页已关闭"
 }

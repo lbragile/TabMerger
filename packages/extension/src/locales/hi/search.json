@@ -44,7 +44,5 @@
   "closedOn": "{{day}} को बंद किया",
   "closedFromWindow": "बंद की गई विंडो से",
   "closedWindowLabel": "विंडो · {{tabs}}",
-  "closedOff": "बंद किए गए टैब याद रखना बंद है",
-  "closedReopened": "{{title}} फिर से खोला गया",
-  "closedRestoredWindow": "{{tabs}} वाली विंडो फिर से खोली गई"
+  "closedOff": "बंद किए गए टैब याद रखना बंद है"
 }

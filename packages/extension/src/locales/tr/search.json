@@ -44,7 +44,5 @@
   "closedOn": "{{day}} kapatıldı",
   "closedFromWindow": "kapatılan bir pencereden",
   "closedWindowLabel": "Pencere · {{tabs}}",
-  "closedOff": "Kapatılan sekmeleri hatırlama kapalı",
-  "closedReopened": "Yeniden açıldı: {{title}}",
-  "closedRestoredWindow": "Pencere geri yüklendi: {{tabs}}"
+  "closedOff": "Kapatılan sekmeleri hatırlama kapalı"
 }

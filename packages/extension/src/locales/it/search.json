@@ -46,7 +46,5 @@
   "closedOn": "chiusa {{day}}",
   "closedFromWindow": "da una finestra chiusa",
   "closedWindowLabel": "Finestra · {{tabs}}",
-  "closedOff": "Ricorda le schede chiuse è disattivato",
-  "closedReopened": "Riaperta: {{title}}",
-  "closedRestoredWindow": "Finestra ripristinata con {{tabs}}"
+  "closedOff": "Ricorda le schede chiuse è disattivato"
 }

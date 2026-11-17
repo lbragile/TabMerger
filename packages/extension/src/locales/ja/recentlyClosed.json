@@ -7,12 +7,13 @@
     "openFailed": "このページを開けませんでした。リストには残ります。",
     "changeFailed": "閉じたタブのリストを変更できませんでした。もう一度お試しください。",
     "undoIncomplete": "元に戻せませんでした: すでに削除されています。",
-    "undoTurnedOnListGone": "閉じたタブの記憶を再びオンにしましたが、消去したリストはすでに削除されています。"
+    "undoTurnedOnListGone": "閉じたタブの記憶を再びオンにしましたが、消去したリストはすでに削除されています。",
+    "groupGone": "そのグループはもう存在しません。何も保存されませんでした。"
   },
   "settings": {
     "title": "閉じたタブを記憶する",
     "purpose": "閉じたタブやウィンドウは「最近閉じたタブ」に残り、もう一度開けます。このデバイスにのみ保存されます。プライベートウィンドウは記録されません。",
-    "keptFor_other": "ご利用のプランでは {{count}} 日間保存されます",
+    "keeps_other": "ご利用のプランでは最大 {{entries}} 件を {{count}} 日間保存します",
     "inList_other": "リストに {{count}} 件",
     "off": "閉じたタブの記憶はオフです。",
     "clear": "リストを消去",
@@ -36,7 +37,8 @@
     "empty_other": "まだ閉じたタブはありません。閉じたタブは日ごとにここに表示され、{{count}}日間保存されます。",
     "offBody": "閉じたタブの記憶はオフです。",
     "turnOn": "設定でオンにする",
-    "freeNote": "Free は直近 {{free}} 日分、Pro は {{pro}} 日分を保存します。",
+    "freeKeeps_other": "Free は直近 {{count}} 日分から最大 {{entries}} 件を保存します。",
+    "proKeeps_other": "Pro は最大 {{entries}} 件を {{count}} 日間保存します。",
     "seePro": "Pro を見る",
     "dayDetail": "{{tabs}}・{{windows}}",
     "showDay_today": "今日閉じたタブを表示",

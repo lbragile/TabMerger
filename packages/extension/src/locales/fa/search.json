@@ -44,7 +44,5 @@
   "closedOn": "{{day}} بسته شد",
   "closedFromWindow": "از یک پنجرهٔ بسته‌شده",
   "closedWindowLabel": "پنجره · {{tabs}}",
-  "closedOff": "به خاطر سپردن زبانه‌های بسته‌شده خاموش است",
-  "closedReopened": "{{title}} دوباره باز شد",
-  "closedRestoredWindow": "پنجره‌ای با {{tabs}} بازیابی شد"
+  "closedOff": "به خاطر سپردن زبانه‌های بسته‌شده خاموش است"
 }

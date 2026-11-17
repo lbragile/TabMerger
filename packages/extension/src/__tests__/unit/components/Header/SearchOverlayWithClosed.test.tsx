@@ -6,7 +6,7 @@ import type { GroupsState } from '@/lib/types'
 
 /**
  * SearchOverlayWithClosed: the overlay's "Recently closed" source. Picking a closed result reopens
- * it through useReopenRecentlyClosed, tracks `recently_closed_reopened { kind, from: 'search' }`,
+ * it through the list's useReopenClosedEntry('search') (useReopenRecentlyClosed underneath), tracks `recently_closed_reopened { kind, from: 'search' }`,
  * and shows a toast whose Undo goes to useUndoRecentlyClosed; a refused address is an error toast.
  */
 

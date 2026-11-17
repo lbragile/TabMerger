@@ -46,7 +46,5 @@
   "closedOn": "fermé le {{day}}",
   "closedFromWindow": "d’une fenêtre fermée",
   "closedWindowLabel": "Fenêtre · {{tabs}}",
-  "closedOff": "La mémorisation des onglets fermés est désactivée",
-  "closedReopened": "{{title}} rouvert",
-  "closedRestoredWindow": "Fenêtre restaurée avec {{tabs}}"
+  "closedOff": "La mémorisation des onglets fermés est désactivée"
 }

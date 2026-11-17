@@ -44,6 +44,29 @@ fields explicitly, so the extra blob key is ignored there.
   new toast under the id of a toast Sonner is still dismissing never appears. Only plain
   confirmations (saved, link copied) share an id.
 
+Session uploads after a sync-conflict audit (all in `lib/sessionUpload.ts`):
+- `queueSessionUpload(id, task)`: one upload per session id at a time in this context; the sync's
+  sessions pass, colour changes and the remote delete (`deleteRemoteSessionsQueued`) all go
+  through it, so a delete always lands after an in-flight upsert and picks land in order.
+- `uploadStoredSession(id, owner)` uploads the copy stored WHEN ITS TURN COMES. Stamped sessions
+  (`uploadedAt`, now set on saved sessions too, not only backups) are update-only
+  (`refreshUploadedSession`); `gone` = deleted on the dashboard: local stays, nothing re-inserted.
+- After an upload, a session gone locally is deleted remotely ONLY if `noteSessionDeletedHere`
+  recorded a user delete: "Clear all data" / account switch also empty the store and must never
+  delete account data (same reason the sync pass checks its own in-progress marker).
+- `Session.uploadPending` is a token (epoch ms), set in the same IDB write as the change;
+  `markSessionUploaded(id, at, token)` clears it only if unchanged. `useSync` uploads marked
+  sessions one by one when no full pass is due, so a popup closing mid-upload loses nothing
+  without re-arming a full pass. idb writes that must survive a closing popup: `tx.commit()` in
+  the same tick as the `put`.
+- Save to group: the mutator decides "target gone" on the FRESH state and the mutation throws
+  `ClosedSaveTargetGoneError` (in `lib/`, never re-exported from `hooks/`: WXT auto-import trap),
+  so no success toast, analytics or `tabs_saved` fire for a write that did nothing.
+- Two-number copy with proper plurals ("up to 50 from the last 7 days"): pluralise on the days
+  (`count`), pass the other number pre-formatted (`formatNumber`) as a plain placeholder; split
+  the Free and Pro halves into two keys so each day count gets its own plural form. Pick a
+  sentence shape per language whose day phrase has one grammatical case (German "7 Tage lang").
+
 Test gotchas:
 - E2E submenus (real Chrome): moving the pointer from a SubTrigger to its items crosses the other
   menu items and closes the submenu ("html intercepts pointer events", item detached). Use

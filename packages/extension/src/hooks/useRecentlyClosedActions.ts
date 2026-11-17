@@ -13,7 +13,7 @@ import { useSaveClosedToGroup } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
 import type { RecentlyClosedDay } from '@/lib/recentlyClosedDays';
-import type { ClosedSaveTarget } from '@/lib/recentlyClosedSave';
+import { ClosedSaveTargetGoneError, type ClosedSaveTarget } from '@/lib/recentlyClosedSave';
 import { FreeLimitExceededError } from '@/lib/tierLimits';
 import { announceSectionView } from '@/lib/sectionViewStatus';
 import { trackEvent } from '@/lib/analytics';
@@ -38,23 +38,16 @@ export function useEntryName(): (entry: RecentlyClosedEntry, tabIndex?: number) 
 const ACTION_TOAST_ID = 'recently-closed-action';
 
 /**
- * Everything the Recently closed section and day view do to the list, with the feedback the spec
- * asks for: a toast with Undo (9 s) after a reopen, removal or clear, the same text in the status
- * line, an error toast that keeps the entry when the browser refuses a URL, and analytics events
- * that never carry a URL, title or site. "Save to group…" goes through `useGroups`, so Free
- * limits, `pendingSync`, sync and undo work as for any save; the entry stays in the list.
- * Each action resolves `true` when it did what was asked (the caller moves focus then).
+ * The feedback every change to the list gives: `done(message, ...undoTokens)` shows a toast with
+ * Undo (9 s; Undo takes back every token in order and says when the entries were already deleted)
+ * and puts the same text in the status line; `failed(err)` shows the error toast (the entry stays
+ * when the browser refused the address) and resolves `false`. Everything runs through
+ * `mutateAsync`, so an Undo still works after the component that showed the toast unmounted (the
+ * search overlay closes as soon as a result is picked).
  */
-export function useRecentlyClosedActions() {
+function useRecentlyClosedFeedback() {
   const { t } = useTranslation();
-  const nameOf = useEntryName();
-  const { maxGroups, maxTabs } = useEntitlements();
-  const { mutateAsync: reopenEntry } = useReopenRecentlyClosed();
-  const { mutateAsync: removeEntries } = useRemoveRecentlyClosedEntry();
-  const { mutateAsync: removeDayEntries } = useRemoveRecentlyClosedDay();
-  const { mutateAsync: clearAllEntries } = useClearRecentlyClosed();
   const { mutateAsync: undo } = useUndoRecentlyClosed();
-  const { mutateAsync: saveClosed } = useSaveClosedToGroup({ maxGroups, maxTabs });
 
   /** The toast's Undo: takes back every step in order (a "Reopen all" is a reopen plus a removal). */
   const undoAction = (tokens: RecentlyClosedUndo[]) => ({
@@ -72,30 +65,44 @@ export function useRecentlyClosedActions() {
     }
   });
 
-  /** Toast (with Undo) + status line. */
   const done = (message: string, ...tokens: RecentlyClosedUndo[]) => {
     announceSectionView(message);
     toast.success(message, { duration: RECENTLY_CLOSED_UNDO_TOAST_MS, action: undoAction(tokens) });
   };
 
-  const failed = (err: unknown) => {
+  const failed = (err: unknown): false => {
     toast.error(t(err instanceof RecentlyClosedOpenError ? 'recentlyClosed.errors.openFailed' : 'recentlyClosed.errors.changeFailed'));
     return false;
   };
 
-  /**
-   * Reopens a tab entry, restores a window entry, or (with `tabIndex`) reopens one tab of a window.
-   * `background`: Ctrl/Cmd or middle click, the popup stays and the tab opens without focus.
-   */
-  const reopen = async (entry: RecentlyClosedEntry, { tabIndex, background = false }: { tabIndex?: number; background?: boolean } = {}) => {
+  return { done, failed };
+}
+
+/**
+ * Reopens a closed entry with the list's feedback: a tab entry, a whole window entry, or (with
+ * `tabIndex`) one tab of a window entry; `background` (Ctrl/Cmd or middle click) opens it without
+ * focus. Toast "Reopened <title>" / "Restored a window with N tabs" with Undo, the error toast when
+ * the browser refuses the address, and `recently_closed_reopened { kind, from }` where `kind` is
+ * what actually opened (`tab` for one tab of a window). Used by the day view (`from: 'list'`) and
+ * the Ctrl+K overlay (`from: 'search'`). Resolves `true` when it opened.
+ */
+export function useReopenClosedEntry(from: 'list' | 'search') {
+  const { t } = useTranslation();
+  const nameOf = useEntryName();
+  const { mutateAsync: reopenEntry } = useReopenRecentlyClosed();
+  const { done, failed } = useRecentlyClosedFeedback();
+
+  return async (entry: RecentlyClosedEntry, { tabIndex, background = false }: { tabIndex?: number; background?: boolean } = {}) => {
+    // a tab entry has one tab: an index there means nothing
+    const index = entry.kind === 'window' ? tabIndex : undefined;
     try {
-      const token = await reopenEntry({ entry, tabIndex, active: !background });
-      const wholeWindow = entry.kind === 'window' && tabIndex === undefined;
-      trackEvent('recently_closed_reopened', { kind: wholeWindow ? 'window' : 'tab', from: 'list' });
+      const token = await reopenEntry({ entry, tabIndex: index, active: !background });
+      const wholeWindow = entry.kind === 'window' && index === undefined;
+      trackEvent('recently_closed_reopened', { kind: wholeWindow ? 'window' : 'tab', from });
       done(
         wholeWindow
           ? t('recentlyClosed.toast.restoredWindow', { tabs: t('common.tabCount', { count: entry.tabs.length }) })
-          : t('recentlyClosed.toast.reopened', { title: nameOf(entry, tabIndex) }),
+          : t('recentlyClosed.toast.reopened', { title: nameOf(entry, index) }),
         token
       );
       return true;
@@ -103,6 +110,28 @@ export function useRecentlyClosedActions() {
       return failed(err);
     }
   };
+}
+
+/**
+ * Everything the Recently closed section and day view do to the list, with the feedback the spec
+ * asks for: a toast with Undo (9 s) after a reopen, removal or clear, the same text in the status
+ * line, an error toast that keeps the entry when the browser refuses a URL, and analytics events
+ * that never carry a URL, title or site. "Save to group…" goes through `useGroups`, so Free
+ * limits, `pendingSync`, sync and undo work as for any save; the entry stays in the list.
+ * Each action resolves `true` when it did what was asked (the caller moves focus then).
+ */
+export function useRecentlyClosedActions() {
+  const { t } = useTranslation();
+  const nameOf = useEntryName();
+  const { maxGroups, maxTabs } = useEntitlements();
+  const { mutateAsync: reopenEntry } = useReopenRecentlyClosed();
+  const { mutateAsync: removeEntries } = useRemoveRecentlyClosedEntry();
+  const { mutateAsync: removeDayEntries } = useRemoveRecentlyClosedDay();
+  const { mutateAsync: clearAllEntries } = useClearRecentlyClosed();
+  const { mutateAsync: saveClosed } = useSaveClosedToGroup({ maxGroups, maxTabs });
+  const { done, failed } = useRecentlyClosedFeedback();
+  /** Reopens a tab entry, restores a window entry, or (with `tabIndex`) reopens one tab of a window. */
+  const reopen = useReopenClosedEntry('list');
 
   /**
    * "Reopen all in a new window": every tab of the day in one new window (pinned tabs and tab
@@ -180,7 +209,7 @@ export function useRecentlyClosedActions() {
     } catch (err) {
       // the Free-limit backstop already showed the upgrade toast
       if (err instanceof FreeLimitExceededError) return false;
-      toast.error(t('recentlyClosed.errors.changeFailed'));
+      toast.error(t(err instanceof ClosedSaveTargetGoneError ? 'recentlyClosed.errors.groupGone' : 'recentlyClosed.errors.changeFailed'));
       return false;
     }
   };

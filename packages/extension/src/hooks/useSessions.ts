@@ -5,12 +5,12 @@ import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
 import { FREE_TIER_LIMITS, isTourDemoGroup } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
-import { getSessions, saveSession, deleteSession, getSetting, setSetting, updateSessionColor } from '@/lib/localDb';
+import { getSessions, saveSession, deleteSession, getSetting, updateSessionColor } from '@/lib/localDb';
 import { validSessionColor } from '@/lib/sessionColor';
 import { supabase } from '@/lib/supabase';
 import { resolveIncognito } from '@/lib/incognito';
-import { LAST_USER_ID_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
-import { pushSessionToSupabase, deleteRemoteSessions } from '@/lib/sessionUpload';
+import { LAST_USER_ID_KEY } from '@/lib/syncSettingKeys';
+import { pushSessionToSupabase, deleteRemoteSessionsQueued, noteSessionDeletedHere, uploadStoredSession } from '@/lib/sessionUpload';
 import { useGroups } from './useGroups';
 
 export const SESSIONS_QUERY_KEY = ['sessions'] as const;
@@ -45,18 +45,15 @@ async function sessionUploadOwner(): Promise<string | undefined> {
 }
 
 /**
- * Best-effort upload of a session just written locally. Not on the server (no key yet / locked /
- * offline / rejected / no owner): sessions have no per-row pending flag, so the self-heal is
- * re-armed and the next sync uploads every local session (see useSync).
+ * Best-effort upload of a session just written locally (marked `uploadPending` in that same
+ * write): the STORED copy, one upload per session at a time (`uploadStoredSession`). Not on the
+ * server (no key yet / locked / offline / rejected / no owner / the popup closed meanwhile): the
+ * mark stays and the sync's sessions pass retries this session alone (see useSync), without a
+ * full pass of every session.
  */
-async function uploadSessionOrRearm(session: Session, ownerId: string | undefined): Promise<void> {
-  let uploaded = false;
-  try {
-    if (ownerId) uploaded = await pushSessionToSupabase(session, ownerId);
-  } catch (e) {
-    console.warn('[TabMerger] Session sync to Supabase failed', e);
-  }
-  if (!uploaded) await setSetting(SESSIONS_MIGRATION_DONE_KEY, false);
+async function uploadMarkedSession(id: string, ownerId: string | undefined): Promise<void> {
+  if (!ownerId) return;
+  await uploadStoredSession(id, ownerId);
 }
 
 /**
@@ -81,14 +78,17 @@ export function useSaveSession() {
       if (!groupsState) throw new Error('No groups state');
       // Saved groups only: never "Now Open", never the guided tour's practice groups
       const groups = groupsState.available.filter((g) => !g.permanent && !isTourDemoGroup(g));
+      const createdAt = Date.now();
       const session: Session = {
         id: nanoid(10),
         name,
         description,
         groups,
-        createdAt: Date.now(),
+        createdAt,
         // only a palette colour is ever stored (see lib/sessionColor.ts)
         ...(validSessionColor(color) ? { color } : {}),
+        // not on the server yet: retried by the sync if this popup closes before the upload ends
+        ...(cloudSync ? { uploadPending: createdAt } : {}),
       };
       // Whose session this is, captured BEFORE anything is written: the upload below is refused
       // if the signed-in account is no longer this one (see pushSessionToSupabase). Free users
@@ -100,7 +100,7 @@ export function useSaveSession() {
       await saveSession(session);
       // ponytail: best-effort Supabase sync — local save already succeeded. Only for
       // users with the cloud-sync entitlement; free users stay local-only.
-      if (cloudSync) await uploadSessionOrRearm(session, ownerId);
+      if (cloudSync) await uploadMarkedSession(session.id, ownerId);
       return session;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
@@ -108,10 +108,11 @@ export function useSaveSession() {
 }
 
 /**
- * "Change colour…" on a saved session: stores the new colour (only a palette colour, and only if
- * the session still exists: one IndexedDB transaction) and uploads the session again like any
- * session edit, encrypted, for accounts with cloud sync. Resolves the updated session, or `null`
- * when it was deleted meanwhile.
+ * "Change colour…" on a saved session: stores the new colour (only a palette colour, only if the
+ * session still exists and is not an automatic backup: one IndexedDB transaction, which also marks
+ * it `uploadPending` for accounts with cloud sync) and uploads the stored session again, encrypted,
+ * update-only once the server has it: a session deleted in the dashboard is never re-created.
+ * Resolves the updated session, or `null` when it was deleted meanwhile (or is a backup).
  */
 export function useUpdateSessionColor() {
   const qc = useQueryClient();
@@ -119,8 +120,8 @@ export function useUpdateSessionColor() {
     mutationFn: async ({ id, color, cloudSync }: { id: string; color: string; cloudSync: boolean }) => {
       if (!validSessionColor(color)) throw new Error('INVALID_SESSION_COLOR');
       const ownerId = cloudSync ? await sessionUploadOwner() : undefined;
-      const updated = await updateSessionColor(id, color);
-      if (updated && cloudSync) await uploadSessionOrRearm(updated, ownerId);
+      const updated = await updateSessionColor(id, color, cloudSync ? Date.now() : undefined);
+      if (updated && cloudSync) await uploadMarkedSession(id, ownerId);
       return updated;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
@@ -144,9 +145,11 @@ export function useDeleteSession() {
       } catch (e) {
         console.warn('[TabMerger] Session delete sync to Supabase failed', e);
       }
+      // an upload of it still in flight deletes the row it re-creates (see uploadStoredSession)
+      noteSessionDeletedHere(id);
       await deleteSession(id);
-      // ponytail: best-effort Supabase sync (never throws)
-      if (ownerId) await deleteRemoteSessions([id], ownerId);
+      // ponytail: best-effort Supabase sync (never throws), sent after any upload of this session
+      if (ownerId) await deleteRemoteSessionsQueued([id], ownerId);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
   });

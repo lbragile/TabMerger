@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { colorForDay } from '@tabmerger/shared'
-import { dayLabel, formatClosedTime, groupEntriesByDay, localDayBounds, localDayKey } from '@/lib/recentlyClosedDays'
+import { dayLabel, formatClosedTime, groupEntriesByDay, localDayBounds, localDayKey, recentlyClosedKeepsLine, recentlyClosedPlanNote } from '@/lib/recentlyClosedDays'
+import { i18n } from '@/lib/i18n'
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed'
 
 const at = (y: number, m: number, d: number, h = 12, min = 0, s = 0) => new Date(y, m - 1, d, h, min, s).getTime()
@@ -98,5 +99,33 @@ describe('formatClosedTime', () => {
     const t = at(2026, 11, 13, 14, 58)
     expect(formatClosedTime(t, 'en-GB')).toBe('14:58')
     expect(formatClosedTime(t, 'en-US')).toMatch(/2:58\sPM/)
+  })
+})
+
+describe('plan limits copy (both limits, from RECENTLY_CLOSED_LIMITS)', () => {
+  afterEach(async () => {
+    await i18n.changeLanguage('en')
+  })
+
+  it('English: entries and days of both plans, the big number formatted', () => {
+    expect(recentlyClosedPlanNote()).toBe('Free keeps up to 50 from the last 7 days. Pro keeps up to 1,000 for 30 days.')
+    expect(recentlyClosedKeepsLine('free')).toBe('Your plan keeps up to 50 for 7 days')
+    expect(recentlyClosedKeepsLine('pro')).toBe('Your plan keeps up to 1,000 for 30 days')
+  })
+
+  it('Russian picks the plural form of each day count (7 and 30 are both "many")', async () => {
+    await i18n.changeLanguage('ru')
+    const note = recentlyClosedPlanNote()
+    expect(note).toContain('7 дней')
+    expect(note).toContain('30 дней')
+    expect(note).not.toContain('{{')
+  })
+
+  it('Arabic picks the few form for 7 and the many form for 30', async () => {
+    await i18n.changeLanguage('ar')
+    const note = recentlyClosedPlanNote()
+    expect(note).toContain('أيام')
+    expect(note).toContain('يومًا')
+    expect(note).not.toContain('{{')
   })
 })

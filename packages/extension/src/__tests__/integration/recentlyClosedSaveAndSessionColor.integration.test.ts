@@ -4,7 +4,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 import { AUTO_ITEM_COLORS } from '@tabmerger/shared'
 import { useSaveClosedToGroup, GROUPS_QUERY_KEY } from '@/hooks/useGroups'
-import { getGroupsState, getSessions, saveGroupsState, saveSession, updateSessionColor } from '@/lib/localDb'
+import { getGroupsState, getSessions, markSessionUploaded, saveGroupsState, saveSession, updateGroupsState, updateSessionColor } from '@/lib/localDb'
+import { addRecentlyClosedEntry, getRecentlyClosedEntries } from '@/lib/recentlyClosedDb'
+import { ClosedSaveTargetGoneError } from '@/lib/recentlyClosedSave'
+import { RECENTLY_CLOSED_LIMITS } from '@tabmerger/shared'
 import { createGroup, createNowOpenGroup, createTab, createWindow } from '@/lib/utils'
 import type { GroupsState, Session } from '@/lib/types'
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed'
@@ -102,6 +105,57 @@ describe('useSaveClosedToGroup — real IndexedDB', () => {
   })
 })
 
+describe('useSaveClosedToGroup — the menu was opened on an older state', () => {
+  beforeEach(async () => {
+    await clearDb()
+    useUIStore.setState({ undoStack: [], redoStack: [] })
+  })
+
+  it.each([
+    ['deleted', (g: GroupsState) => ({ ...g, available: g.available.filter((x) => x.id !== 'g0') })],
+    ['archived', (g: GroupsState) => ({ ...g, available: g.available.map((x) => (x.id === 'g0' ? { ...x, archived: true } : x)) })],
+  ])('the picked group was %s after the menu opened: rejects ClosedSaveTargetGoneError, writes nothing, no undo step', async (_how, change) => {
+    const menuState = await seed()
+    await updateGroupsState((fresh) => change(fresh))
+    const before = await getGroupsState()
+    const { wrapper } = client(menuState)
+    const { result } = renderHook(() => useSaveClosedToGroup(), { wrapper })
+    const undoBefore = useUIStore.getState().undoStack.length
+    await expect(
+      result.current.mutateAsync({ entries: [entry('t', 'tab', ['https://a.example'])], target: { groupId: 'g0' } })
+    ).rejects.toBeInstanceOf(ClosedSaveTargetGoneError)
+    expect(await getGroupsState()).toEqual(before)
+    expect(useUIStore.getState().undoStack.length).toBe(undoBefore)
+  })
+
+  it('a group write that landed between menu open and save is kept, and the tab goes to the picked group by id', async () => {
+    const menuState = await seed(2)
+    // another context adds a tab to the target AND moves it to the end, after the menu opened
+    await updateGroupsState((fresh) => {
+      const g0 = fresh.available.find((x) => x.id === 'g0')!
+      const edited = { ...g0, windows: [{ ...g0.windows[0], tabs: [...g0.windows[0].tabs, createTab('Concurrent', 'https://concurrent.example')] }] }
+      return { ...fresh, available: [fresh.available[0], fresh.available.find((x) => x.id === 'g1')!, edited] }
+    })
+    const { wrapper } = client(menuState)
+    const { result } = renderHook(() => useSaveClosedToGroup(), { wrapper })
+    await result.current.mutateAsync({ entries: [entry('t', 'tab', ['https://saved.example'])], target: { groupId: 'g0' } })
+    const stored = await getGroupsState()
+    const g0 = stored.available.find((x) => x.id === 'g0')!
+    expect(g0.windows.flatMap((w) => w.tabs.map((t) => t.url))).toEqual(['https://existing0.example', 'https://concurrent.example', 'https://saved.example'])
+    expect(stored.available.find((x) => x.id === 'g1')!.windows.flatMap((w) => w.tabs).map((t) => t.url)).toEqual(['https://existing1.example'])
+  })
+
+  it('the recently closed entry is still in the list after it was saved into a group', async () => {
+    const state = await seed()
+    const closed = entry('rc1', 'tab', ['https://keep-me.example'])
+    await addRecentlyClosedEntry({ ...closed, tabs: closed.tabs.map(({ url, title }) => ({ url, title })) }, RECENTLY_CLOSED_LIMITS.pro)
+    const { wrapper } = client(state)
+    const { result } = renderHook(() => useSaveClosedToGroup(), { wrapper })
+    await result.current.mutateAsync({ entries: [closed], target: { groupId: 'g0' } })
+    expect((await getRecentlyClosedEntries()).map((e) => e.id)).toEqual(['rc1'])
+  })
+})
+
 describe('session colours — real IndexedDB', () => {
   beforeEach(async () => {
     await clearDb()
@@ -122,6 +176,28 @@ describe('session colours — real IndexedDB', () => {
     const updated = await updateSessionColor('s', AUTO_ITEM_COLORS[9])
     expect(updated).toMatchObject({ id: 's', description: 'd', color: AUTO_ITEM_COLORS[9] })
     expect((await getSessions())[0]).toMatchObject({ id: 's', description: 'd', color: AUTO_ITEM_COLORS[9] })
+  })
+
+  it('updateSessionColor refuses an automatic backup and marks the upload token in the same write', async () => {
+    await saveSession(session('auto', { auto: true }))
+    expect(await updateSessionColor('auto', AUTO_ITEM_COLORS[1], 5)).toBeNull()
+    expect((await getSessions())[0].color).toBeUndefined()
+    await saveSession(session('m'))
+    expect(await updateSessionColor('m', AUTO_ITEM_COLORS[1], 5)).toMatchObject({ color: AUTO_ITEM_COLORS[1], uploadPending: 5 })
+    expect((await getSessions()).find((x) => x.id === 'm')).toMatchObject({ uploadPending: 5 })
+  })
+
+  it('markSessionUploaded clears only the token it uploaded; a newer change keeps its mark', async () => {
+    await saveSession(session('m', { uploadPending: 2 }))
+    await markSessionUploaded('m', 100, 1)
+    expect((await getSessions())[0]).toMatchObject({ uploadedAt: 100, uploadPending: 2 })
+    await markSessionUploaded('m', 200, 2)
+    const [after] = await getSessions()
+    expect(after.uploadedAt).toBe(200)
+    expect(after.uploadPending).toBeUndefined()
+    // never re-creates a session that is gone
+    await markSessionUploaded('gone', 300, 1)
+    expect((await getSessions()).map((x) => x.id)).toEqual(['m'])
   })
 
   it('updateSessionColor never re-creates a session deleted meanwhile', async () => {

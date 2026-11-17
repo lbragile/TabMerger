@@ -94,13 +94,22 @@ export interface Session {
   auto?: boolean;
   /**
    * Local-only (never uploaded, never in a file): epoch ms this session was confirmed stored on
-   * the server. Set for automatic backups only, and it means ONE thing: never INSERT this row
-   * again. A backup carrying it that the server no longer has was deleted in the web dashboard,
-   * which removes the cloud copy only: it is not uploaded again, and it STAYS on this device
-   * (absence on the server never deletes a local backup). A backup without it (taken offline,
-   * never uploaded) still uploads once.
+   * the server, for automatic backups and saved sessions alike. It means ONE thing: never INSERT
+   * this row again (later uploads are update-only, `refreshUploadedSession`). A session carrying it
+   * that the server no longer has was deleted in the web dashboard or on another device, which
+   * removes the cloud copy only: it is not uploaded again, and it STAYS on this device (absence on
+   * the server never deletes a local session). One without it (saved offline, never uploaded)
+   * still uploads once.
    */
   uploadedAt?: number;
+  /**
+   * Local-only: this session changed (saved, colour changed) and that change is not confirmed on
+   * the server yet. A token (epoch ms of the change): an upload clears it only if it is still the
+   * token it uploaded (`markSessionUploaded`), so a later change keeps its own mark. The sync's
+   * sessions pass retries marked sessions one by one (useSync), so a popup that closed during the
+   * upload loses nothing, without re-arming a full pass of every session.
+   */
+  uploadPending?: number;
   /**
    * The session's colour (row bar, view dot), one of `AUTO_ITEM_COLORS`: checked whenever a
    * session is read (`lib/sessionColor.ts`), anything else is dropped. Stored locally and inside

@@ -46,7 +46,5 @@
   "closedOn": "cerrada el {{day}}",
   "closedFromWindow": "de una ventana cerrada",
   "closedWindowLabel": "Ventana · {{tabs}}",
-  "closedOff": "Recordar pestañas cerradas está desactivado",
-  "closedReopened": "Se volvió a abrir {{title}}",
-  "closedRestoredWindow": "Se restauró una ventana con {{tabs}}"
+  "closedOff": "Recordar pestañas cerradas está desactivado"
 }

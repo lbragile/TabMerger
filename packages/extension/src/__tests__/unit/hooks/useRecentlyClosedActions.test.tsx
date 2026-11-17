@@ -42,6 +42,7 @@ vi.mock('@/lib/toast', () => ({ toast: { success: h.toastSuccess, error: h.toast
 import { RecentlyClosedOpenError, RECENTLY_CLOSED_UNDO_TOAST_MS } from '@/hooks/useRecentlyClosed'
 import { useRecentlyClosedActions, useEntryName } from '@/hooks/useRecentlyClosedActions'
 import { FreeLimitExceededError } from '@/lib/tierLimits'
+import { ClosedSaveTargetGoneError } from '@/lib/recentlyClosedSave'
 
 const tabEntry: RecentlyClosedEntry = { id: 't1', closedAt: 1, kind: 'tab', tabs: [{ url: 'https://github.com/pr/1', title: 'Pull request #1' }] }
 const windowEntry: RecentlyClosedEntry = {
@@ -268,6 +269,18 @@ describe('useRecentlyClosedActions', () => {
     })
     expect(h.toastError).not.toHaveBeenCalled()
     expect(h.track).not.toHaveBeenCalled()
+  })
+
+  it('saveToGroup into a group that is gone by the time it writes: "That group no longer exists", no success, no analytics', async () => {
+    h.save.mockRejectedValue(new ClosedSaveTargetGoneError())
+    const { result } = renderHook(() => useRecentlyClosedActions())
+    await act(async () => {
+      expect(await result.current.saveToGroup([tabEntry], { groupId: 'g1' }, 'tab', 'Work')).toBe(false)
+    })
+    expect(h.toastError).toHaveBeenCalledWith('That group no longer exists. Nothing was saved.')
+    expect(h.toastSuccess).not.toHaveBeenCalled()
+    expect(h.track).not.toHaveBeenCalled()
+    expect(getSectionViewStatus()).toBe('')
   })
 
   it('saveToGroup failing otherwise shows an error', async () => {

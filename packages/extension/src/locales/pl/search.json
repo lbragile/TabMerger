@@ -48,7 +48,5 @@
   "closedOn": "zamknięta: {{day}}",
   "closedFromWindow": "z zamkniętego okna",
   "closedWindowLabel": "Okno · {{tabs}}",
-  "closedOff": "Zapamiętywanie zamkniętych kart jest wyłączone",
-  "closedReopened": "Ponownie otwarto: {{title}}",
-  "closedRestoredWindow": "Przywrócono okno: {{tabs}}"
+  "closedOff": "Zapamiętywanie zamkniętych kart jest wyłączone"
 }

@@ -7,12 +7,13 @@
     "openFailed": "Không mở được trang này. Trang vẫn còn trong danh sách.",
     "changeFailed": "Không thay đổi được danh sách thẻ đã đóng. Hãy thử lại.",
     "undoIncomplete": "Không khôi phục được: chúng đã bị xóa.",
-    "undoTurnedOnListGone": "Ghi nhớ thẻ đã đóng đã bật lại, nhưng danh sách đã xóa không còn nữa."
+    "undoTurnedOnListGone": "Ghi nhớ thẻ đã đóng đã bật lại, nhưng danh sách đã xóa không còn nữa.",
+    "groupGone": "Nhóm đó không còn nữa. Chưa lưu gì cả."
   },
   "settings": {
     "title": "Ghi nhớ thẻ đã đóng",
     "purpose": "Các thẻ và cửa sổ bạn đóng sẽ ở lại trong Đã đóng gần đây để bạn mở lại. Chỉ lưu trên thiết bị này. Cửa sổ riêng tư không bao giờ được ghi lại.",
-    "keptFor_other": "Gói của bạn giữ chúng trong {{count}} ngày",
+    "keeps_other": "Gói của bạn giữ tối đa {{entries}} mục trong {{count}} ngày",
     "inList_other": "{{count}} trong danh sách",
     "off": "Ghi nhớ thẻ đã đóng đang tắt.",
     "clear": "Xóa danh sách",
@@ -36,7 +37,8 @@
     "empty_other": "Chưa đóng thẻ nào. Các thẻ bạn đóng sẽ hiện ở đây theo ngày, trong {{count}} ngày.",
     "offBody": "Ghi nhớ thẻ đã đóng đang tắt.",
     "turnOn": "Bật trong Cài đặt",
-    "freeNote": "Free giữ {{free}} ngày gần nhất. Pro giữ {{pro}} ngày.",
+    "freeKeeps_other": "Free giữ tối đa {{entries}} mục trong {{count}} ngày gần nhất.",
+    "proKeeps_other": "Pro giữ tối đa {{entries}} mục trong {{count}} ngày.",
     "seePro": "Xem Pro",
     "dayDetail": "{{tabs}} · {{windows}}",
     "showDay_today": "Hiện các thẻ đã đóng hôm nay",

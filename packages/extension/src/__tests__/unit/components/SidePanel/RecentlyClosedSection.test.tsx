@@ -86,7 +86,8 @@ describe('RecentlyClosedSection', () => {
 
   it('header counts the day rows; each row has its label, tabs and windows, entry count and colour bar', () => {
     renderSection()
-    expect(screen.getByRole('button', { name: /recently closed \(3\)/i })).toHaveAttribute('aria-expanded', 'true')
+    // a plain row count, like the other sections ("Recently closed (3)", not "(3 days)")
+    expect(screen.getByRole('button', { name: 'Recently closed (3)' })).toHaveAttribute('aria-expanded', 'true')
     const rows = within(screen.getByTestId('recently-closed-days')).getAllByRole('listitem')
     expect(rows).toHaveLength(3)
     const today = screen.getByRole('button', { name: 'Show tabs closed today' })
@@ -169,7 +170,7 @@ describe('RecentlyClosedSection', () => {
     h.settings = { rememberClosedTabs: false }
     const user = userEvent.setup()
     renderSection()
-    expect(screen.getByRole('button', { name: /recently closed \(off\)/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Recently closed (off)' })).toBeInTheDocument()
     expect(screen.queryByTestId('recently-closed-days')).toBeNull()
     expect(screen.getByText(/Remembering closed tabs is off\./)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Turn on in Settings' }))
@@ -181,7 +182,8 @@ describe('RecentlyClosedSection', () => {
     const user = userEvent.setup()
     const { unmount } = renderSection()
     const note = screen.getByTestId('recently-closed-free-note')
-    expect(note).toHaveTextContent('Free keeps the last 7 days. Pro keeps 30.')
+    // both limits of both plans (RECENTLY_CLOSED_LIMITS), numbers formatted for the locale
+    expect(note).toHaveTextContent('Free keeps up to 50 from the last 7 days. Pro keeps up to 1,000 for 30 days.')
     await user.click(within(note).getByRole('button', { name: 'See Pro' }))
     expect(h.create).toHaveBeenCalledWith({ url: expect.stringMatching(/\/pricing$/), active: true })
     expect(h.track).toHaveBeenCalledWith('upgrade_clicked', { source: 'recently_closed_sidebar' })

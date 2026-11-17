@@ -42,7 +42,5 @@
   "closedOn": "{{day}}에 닫음",
   "closedFromWindow": "닫은 창에서",
   "closedWindowLabel": "창 · {{tabs}}",
-  "closedOff": "닫은 탭 기억하기가 꺼져 있습니다",
-  "closedReopened": "{{title}} 다시 열림",
-  "closedRestoredWindow": "{{tabs}} 창을 복원함"
+  "closedOff": "닫은 탭 기억하기가 꺼져 있습니다"
 }

@@ -14,8 +14,7 @@ import { useAppSettings } from '@/hooks/useAppSettings';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
 import { limitsForPlan, readRememberClosedTabs } from '@/lib/recentlyClosed';
-import type { RecentlyClosedDay } from '@/lib/recentlyClosedDays';
-import { RECENTLY_CLOSED_LIMITS } from '@tabmerger/shared';
+import { recentlyClosedPlanNote, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
 import { trackEvent } from '@/lib/analytics';
 import {
   SIDEBAR_FOCUS_RING,
@@ -143,7 +142,7 @@ export function RecentlyClosedSection({ groups }: { groups: readonly Group[] }) 
         </ul>
         {free && (
           <p className="px-2 py-1 text-[10px] text-muted-foreground" data-testid="recently-closed-free-note">
-            {t('recentlyClosed.section.freeNote', { free: RECENTLY_CLOSED_LIMITS.free.days, pro: RECENTLY_CLOSED_LIMITS.pro.days })}{' '}
+            {recentlyClosedPlanNote()}{' '}
             <Button variant="link" size="sm" className="inline h-auto whitespace-normal p-0 text-start align-baseline text-[10px]" onClick={() => openPricingPage('recently_closed_sidebar')}>
               {t('recentlyClosed.section.seePro')}
             </Button>

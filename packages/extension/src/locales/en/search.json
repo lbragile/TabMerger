@@ -44,7 +44,5 @@
   "closedOn": "closed {{day}}",
   "closedFromWindow": "from a closed window",
   "closedWindowLabel": "Window · {{tabs}}",
-  "closedOff": "Remembering closed tabs is off",
-  "closedReopened": "Reopened {{title}}",
-  "closedRestoredWindow": "Restored a window with {{tabs}}"
+  "closedOff": "Remembering closed tabs is off"
 }

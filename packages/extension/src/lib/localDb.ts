@@ -722,6 +722,13 @@ export async function getSessions(): Promise<Session[]> {
   return sessions.map(withValidSessionColor).sort((a, b) => b.createdAt - a.createdAt);
 }
 
+/** One stored session (its colour checked like {@link getSessions}), or `undefined`. */
+export async function getSession(id: string): Promise<Session | undefined> {
+  const db = await getDb();
+  const stored = await db.get('sessions', id);
+  return stored ? withValidSessionColor(stored) : undefined;
+}
+
 export async function saveSession(session: Session): Promise<void> {
   const db = await getDb();
   await db.put('sessions', session);
@@ -733,15 +740,24 @@ export async function deleteSession(id: string): Promise<void> {
 }
 
 /**
- * Sets a session's colour IF it is still stored, in ONE transaction (a session deleted meanwhile is
- * never re-created). Resolves the updated session, or `null` when it is gone.
+ * Sets a session's colour IF it is still stored and is not an automatic backup, in ONE transaction
+ * committed in the same tick as the write (a session deleted meanwhile is never re-created, and a
+ * popup closing right after cannot lose it). `uploadPending` (a token, see `Session.uploadPending`)
+ * marks it for upload in that same write. Resolves the updated session, or `null` when it is gone
+ * or is a backup.
  */
-export async function updateSessionColor(id: string, color: string): Promise<Session | null> {
+export async function updateSessionColor(id: string, color: string, uploadPending?: number): Promise<Session | null> {
   const db = await getDb();
   const tx = db.transaction('sessions', 'readwrite');
   const stored = await tx.store.get(id);
-  const next = stored ? { ...stored, color } : null;
-  await Promise.all([next ? tx.store.put(next) : undefined, tx.done]);
+  if (!stored || stored.auto === true) {
+    await tx.done;
+    return null;
+  }
+  const next: Session = { ...stored, color, ...(uploadPending !== undefined ? { uploadPending } : {}) };
+  const put = tx.store.put(next);
+  tx.commit();
+  await Promise.all([put, tx.done]);
   return next;
 }
 
@@ -749,13 +765,23 @@ export async function updateSessionColor(id: string, color: string): Promise<Ses
  * Stamps `uploadedAt` on a session IF it is still stored, reading and writing it in ONE
  * transaction. A caller that uploaded a copy it read earlier must not `saveSession` that copy
  * back: a session deleted while the upload ran would be re-created, and one changed meanwhile
- * would be overwritten with the old content.
+ * would be overwritten with the old content. With `uploadedPending`, the session's
+ * `uploadPending` mark is cleared only if it is still that token: a change made while the upload
+ * ran set a new token and still needs its own upload.
  */
-export async function markSessionUploaded(id: string, at: number): Promise<void> {
+export async function markSessionUploaded(id: string, at: number, uploadedPending?: number): Promise<void> {
   const db = await getDb();
   const tx = db.transaction('sessions', 'readwrite');
   const stored = await tx.store.get(id);
-  await Promise.all([stored ? tx.store.put({ ...stored, uploadedAt: at }) : undefined, tx.done]);
+  if (!stored) {
+    await tx.done;
+    return;
+  }
+  const next: Session = { ...stored, uploadedAt: at };
+  if (uploadedPending !== undefined && stored.uploadPending === uploadedPending) delete next.uploadPending;
+  const put = tx.store.put(next);
+  tx.commit();
+  await Promise.all([put, tx.done]);
 }
 
 /**

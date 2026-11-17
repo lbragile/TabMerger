@@ -48,7 +48,5 @@
   "closedOn": "закрыта: {{day}}",
   "closedFromWindow": "из закрытого окна",
   "closedWindowLabel": "Окно · {{tabs}}",
-  "closedOff": "Запоминание закрытых вкладок выключено",
-  "closedReopened": "Снова открыта: {{title}}",
-  "closedRestoredWindow": "Восстановлено окно: {{tabs}}"
+  "closedOff": "Запоминание закрытых вкладок выключено"
 }

@@ -46,7 +46,5 @@
   "closedOn": "נסגרה: {{day}}",
   "closedFromWindow": "מחלון שנסגר",
   "closedWindowLabel": "חלון · {{tabs}}",
-  "closedOff": "זכירת כרטיסיות סגורות כבויה",
-  "closedReopened": "{{title}} נפתחה מחדש",
-  "closedRestoredWindow": "שוחזר חלון עם {{tabs}}"
+  "closedOff": "זכירת כרטיסיות סגורות כבויה"
 }

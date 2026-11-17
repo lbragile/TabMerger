@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { isTourDemoGroup } from '@tabmerger/shared';
 import type { ClosedTab, RecentlyClosedEntry } from '@/lib/recentlyClosed';
 import type { Group, GroupsState, Tab } from '@/lib/types';
 import { createGroup, createWindow, getGroupInfo } from '@/lib/utils';
@@ -11,6 +12,22 @@ import { createGroup, createWindow, getGroupInfo } from '@/lib/utils';
 
 /** Where the entries go: an existing saved group (by id), or a new group with this name. */
 export type ClosedSaveTarget = { groupId: string } | { newGroupName: string };
+
+/**
+ * The group picked in "Save to group…" can no longer take them (deleted, archived, or not a saved
+ * group) by the time the write ran: nothing was saved. Thrown by `useSaveClosedToGroup`.
+ */
+export class ClosedSaveTargetGoneError extends Error {
+  constructor() {
+    super('closed-save-target-gone');
+    this.name = 'ClosedSaveTargetGoneError';
+  }
+}
+
+/** Whether a group can take saved closed tabs: a saved group, not Now Open, not archived, not the tour's practice data. */
+export function isClosedSaveTarget(group: Group): boolean {
+  return !group.permanent && !group.archived && !isTourDemoGroup(group);
+}
 
 /** A closed tab as a saved tab: `id: 0` (saved tabs have no browser id), no pin, stamped `savedAt`. */
 export function savedTabFromClosed(tab: ClosedTab, now: number): Tab {
@@ -38,7 +55,7 @@ export function siteGroupName(entries: readonly Pick<RecentlyClosedEntry, 'tabs'
 
 /**
  * The saved data with `entries` added to `target`, or `null` when there is nothing to do (no tabs,
- * or the group is gone, archived or Now Open). Window entries become one window each; tab entries
+ * or the group is gone, archived, Now Open or a tour practice group: {@link isClosedSaveTarget}). Window entries become one window each; tab entries
  * go together into the group's last window (a new window when the group has none, or when window
  * entries are saved with them, so the tabs closed one by one stay together).
  */
@@ -52,7 +69,7 @@ export function addClosedEntriesToState(
   const available = [...state.available];
   let index: number;
   if ('groupId' in target) {
-    index = available.findIndex((g) => g.id === target.groupId && !g.permanent && !g.archived);
+    index = available.findIndex((g) => g.id === target.groupId && isClosedSaveTarget(g));
     if (index < 0) return null;
   } else {
     available.push(createGroup(nanoid(10), target.newGroupName || undefined));

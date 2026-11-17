@@ -25,7 +25,7 @@ import { withTabCustomTitle } from '@/lib/tabTitle';
 import type { LiveTabsEffect } from '@/lib/undoLiveTabs';
 import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
-import { addClosedEntriesToState, closedTabCount, type ClosedSaveTarget } from '@/lib/recentlyClosedSave';
+import { ClosedSaveTargetGoneError, addClosedEntriesToState, closedTabCount, type ClosedSaveTarget } from '@/lib/recentlyClosedSave';
 import { toast } from '@/lib/toast';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
@@ -1531,7 +1531,9 @@ export function useSaveShortcutTabs() {
  * group named after the site (`lib/recentlyClosedSave.ts` builds the result). One write, so it is
  * one undo step, marked `pendingSync` and synced/encrypted like every other change; the Free
  * group/tab limits are checked first (`caps`, as `useAddGroup`). The recently-closed entries stay
- * in their list: the tabs are still closed.
+ * in their list: the tabs are still closed. A picked group that is gone, archived or no longer a
+ * saved group when the write runs (the menu was opened before) writes nothing and rejects with
+ * `ClosedSaveTargetGoneError`, so the UI never reports a save that did not happen.
  */
 export function useSaveClosedToGroup(caps: TierCaps = {}) {
   const qc = useQueryClient();
@@ -1540,7 +1542,20 @@ export function useSaveClosedToGroup(caps: TierCaps = {}) {
   return useMutation({
     mutationFn: ({ entries, target }: { entries: readonly Pick<RecentlyClosedEntry, 'kind' | 'tabs'>[]; target: ClosedSaveTarget }) => {
       assertWithinFreeLimits(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY), caps, 'newGroupName' in target ? 1 : 0, closedTabCount(entries));
-      return mutate((prev) => addClosedEntriesToState(prev, entries, target, Date.now())?.state ?? null, false, { align: false });
+      let targetGone = false;
+      return mutate(
+        (prev) => {
+          const result = addClosedEntriesToState(prev, entries, target, Date.now());
+          // decided on the FRESH state inside the write, not on the menu's copy
+          if (!result && 'groupId' in target && closedTabCount(entries) > 0) targetGone = true;
+          return result?.state ?? null;
+        },
+        false,
+        { align: false }
+      ).then((next) => {
+        if (targetGone) throw new ClosedSaveTargetGoneError();
+        return next;
+      });
     },
     onSuccess: (next) => {
       if (!wasAborted(next)) trackEvent('tabs_saved', { count: 1 });

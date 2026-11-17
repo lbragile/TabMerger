@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { Group } from '@/lib/types';
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
-import type { RecentlyClosedDay } from '@/lib/recentlyClosedDays';
-import { RECENTLY_CLOSED_LIMITS } from '@tabmerger/shared';
+import { recentlyClosedPlanNote, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
 import { textMatches } from '@/lib/searchMatch';
 import { handleReadOnlyListKeyDown } from '@/lib/readOnlyListKeys';
 import { useUIStore } from '@/stores/uiStore';
@@ -129,7 +128,7 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
         )}
         {oldestFree && (
           <p className="px-1.5 py-2 text-[11px] text-muted-foreground" data-testid="closed-day-free-note">
-            {t('recentlyClosed.section.freeNote', { free: RECENTLY_CLOSED_LIMITS.free.days, pro: RECENTLY_CLOSED_LIMITS.pro.days })}{' '}
+            {recentlyClosedPlanNote()}{' '}
             <Button variant="link" size="sm" className="inline h-auto whitespace-normal p-0 text-start align-baseline text-[11px]" onClick={() => openPricingPage('recently_closed_day')}>
               {t('recentlyClosed.section.seePro')}
             </Button>

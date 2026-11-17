@@ -42,7 +42,5 @@
   "closedOn": "{{day}} に閉じた",
   "closedFromWindow": "閉じたウィンドウから",
   "closedWindowLabel": "ウィンドウ · {{tabs}}",
-  "closedOff": "閉じたタブの記憶はオフです",
-  "closedReopened": "{{title}} を開き直しました",
-  "closedRestoredWindow": "{{tabs}} のウィンドウを復元しました"
+  "closedOff": "閉じたタブの記憶はオフです"
 }
