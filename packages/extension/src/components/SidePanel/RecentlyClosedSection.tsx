@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -16,6 +15,7 @@ import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
 import { limitsForPlan, readRememberClosedTabs } from '@/lib/recentlyClosed';
 import { recentlyClosedPlanNote, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
 import { trackEvent } from '@/lib/analytics';
+import { INLINE_LINK } from '@/lib/inlineLink';
 import {
   SIDEBAR_FOCUS_RING,
   SIDEBAR_ICON_BUTTON,
@@ -80,9 +80,9 @@ export function RecentlyClosedSection({ groups }: { groups: readonly Group[] }) 
   ) : (
     <>
       {t('recentlyClosed.section.offBody')}{' '}
-      <Button variant="link" size="sm" className="inline h-auto whitespace-normal p-0 text-start align-baseline text-[11px]" onClick={() => openModal('settings', { tab: 'data' })}>
+      <button type="button" className={INLINE_LINK} onClick={() => openModal('settings', { tab: 'data' })}>
         {t('recentlyClosed.section.turnOn')}
-      </Button>
+      </button>
     </>
   );
 
@@ -143,9 +143,9 @@ export function RecentlyClosedSection({ groups }: { groups: readonly Group[] }) 
         {free && (
           <p className="px-2 py-1 text-[10px] text-muted-foreground" data-testid="recently-closed-free-note">
             {recentlyClosedPlanNote()}{' '}
-            <Button variant="link" size="sm" className="inline h-auto whitespace-normal p-0 text-start align-baseline text-[10px]" onClick={() => openPricingPage('recently_closed_sidebar')}>
+            <button type="button" className={INLINE_LINK} onClick={() => openPricingPage('recently_closed_sidebar')}>
               {t('recentlyClosed.section.seePro')}
-            </Button>
+            </button>
           </p>
         )}
       </SidebarSection>

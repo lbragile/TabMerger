@@ -84,14 +84,19 @@
     "showing_today": "Показаны вкладки, закрытые сегодня",
     "showing_yesterday": "Показаны вкладки, закрытые вчера",
     "showing_date": "Показаны вкладки, закрытые {{day}}",
-    "listLabel": "Закрытые вкладки и окна"
+    "listLabel": "Закрытые вкладки и окна",
+    "matches_one": "{{count}} совпадение",
+    "matches_few": "{{count}} совпадения",
+    "matches_many": "{{count}} совпадений",
+    "matches_other": "{{count}} совпадения",
+    "notMatching": "Не подходит под поиск"
   },
   "entry": {
     "window": "Окно · {{tabs}}",
     "reopenTab": "Снова открыть {{title}}, закрыта {{time}}",
     "restoreWindow": "Восстановить окно ({{tabs}}), закрыто {{time}}",
     "reopenTabInWindow": "Снова открыть {{title}}",
-    "windowTabs": "Вкладки этого окна",
+    "windowTabs": "Вкладки окна, закрытого в {{time}}, {{tabs}}",
     "reopen": "Открыть снова",
     "restore": "Восстановить окно",
     "saveToGroup": "Сохранить в группу…",

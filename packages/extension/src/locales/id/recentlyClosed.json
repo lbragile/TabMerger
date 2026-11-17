@@ -60,14 +60,16 @@
     "showing_today": "Menampilkan tab yang ditutup hari ini",
     "showing_yesterday": "Menampilkan tab yang ditutup kemarin",
     "showing_date": "Menampilkan tab yang ditutup pada {{day}}",
-    "listLabel": "Tab dan jendela yang ditutup"
+    "listLabel": "Tab dan jendela yang ditutup",
+    "matches_other": "{{count}} hasil",
+    "notMatching": "Tidak cocok dengan pencarian"
   },
   "entry": {
     "window": "Jendela · {{tabs}}",
     "reopenTab": "Buka lagi {{title}}, ditutup {{time}}",
     "restoreWindow": "Pulihkan jendela berisi {{tabs}}, ditutup {{time}}",
     "reopenTabInWindow": "Buka lagi {{title}}",
-    "windowTabs": "Tab di jendela ini",
+    "windowTabs": "Tab dari jendela yang ditutup pukul {{time}}, {{tabs}}",
     "reopen": "Buka lagi",
     "restore": "Pulihkan jendela",
     "saveToGroup": "Simpan ke grup…",

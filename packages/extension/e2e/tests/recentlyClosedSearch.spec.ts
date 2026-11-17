@@ -105,9 +105,8 @@ test.describe('Search: recently closed tabs', () => {
         })
         .toBe(1);
       await expect.poll(async () => closedTitles(sw), { timeout: 10_000 }).toEqual([]);
-      // the toast (with Undo), and the same words in the polite status line (the list's own reopen)
+      // the toast (with Undo) is the one announcement
       await expect(page.locator('[data-sonner-toast]').getByText('Reopened Quarterly Invoices')).toBeVisible();
-      await expect(page.getByTestId('section-view-status')).toHaveText('Reopened Quarterly Invoices');
     } finally {
       await server.close();
     }

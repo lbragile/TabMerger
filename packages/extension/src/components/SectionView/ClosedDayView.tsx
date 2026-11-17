@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppWindow, Eraser, Trash2 } from 'lucide-react';
 import { SEARCH_NON_MATCHING } from '@tabmerger/shared';
@@ -9,18 +9,23 @@ import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
 import { recentlyClosedPlanNote, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
 import { textMatches } from '@/lib/searchMatch';
 import { handleReadOnlyListKeyDown } from '@/lib/readOnlyListKeys';
+import { announceSectionView, clearSectionViewStatus } from '@/lib/sectionViewStatus';
 import { useUIStore } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useSearchFilters, useSearchMode } from '@/hooks/useSearchView';
 import { useRecentlyClosedActions } from '@/hooks/useRecentlyClosedActions';
 import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
 import { openPricingPage } from '@/lib/pricingLink';
+import { INLINE_LINK } from '@/lib/inlineLink';
 import { SECTION_VIEW_TITLE_ATTR, SectionViewHeader } from './SectionViewHeader';
 import { SaveToGroupMenu } from './SaveToGroupMenu';
 import { CLOSED_ENTRY_ATTR, ClosedEntryRow, type ClosedEntryActions } from './ClosedEntryRow';
 
 /** How many entries of a day show at first, and how many more each "Show more" adds. */
 export const CLOSED_DAY_PAGE_SIZE = 100;
+
+/** How long the search must stay unchanged before "N matches" is announced (no chatter while typing). */
+export const MATCHES_ANNOUNCE_DELAY_MS = 500;
 
 /** Whether a closed entry matches the search box's plain words (title or URL of any of its tabs). */
 export function closedEntryMatches(entry: RecentlyClosedEntry, query: string): boolean {
@@ -38,7 +43,8 @@ interface ClosedDayViewProps {
  * One local day of the recently-closed list in the main panel (`mainView` `closedDay`): header
  * with the day's colour dot, its label, "Recently closed ◆ 8 closed", the day's ⋯ menu and ✕; then
  * the day's entries, newest first, as one arrow-key list (`ClosedEntryRow`). The header search
- * box filters the entries by title and URL while the day shows. Reopening or removing an entry
+ * box filters the entries by title and URL while the day shows (hidden or muted, as Settings says,
+ * with the number of matches announced). Reopening or removing an entry
  * moves focus to the next row (else the previous, else the title). The first 100 entries show,
  * then "Show more". On Free, the oldest day ends with a note on how long each plan keeps them.
  */
@@ -61,6 +67,19 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
   const matchingIds = new Set(matching.map((e) => e.id));
   const totalEntries = days.reduce((n, d) => n + d.entries.length, 0);
   const oldestFree = !planLoading && tier === 'free' && days[days.length - 1]?.key === day.key;
+
+  // Filtering is not silent: "N matches" in the status line once the search settles (none: the
+  // "no closed tabs match" line below is a status of its own). Cleared when it changes or closes.
+  const matchCount = matching.length;
+  useEffect(() => {
+    if (!query || matchCount === 0) return;
+    const text = t('recentlyClosed.view.matches', { count: matchCount });
+    const timer = setTimeout(() => announceSectionView(text), MATCHES_ANNOUNCE_DELAY_MS);
+    return () => {
+      clearTimeout(timer);
+      clearSectionViewStatus(text);
+    };
+  }, [query, matchCount, t]);
 
   /** Runs an action that takes `entry` off the list, moving focus once it has gone. */
   const leaving = async (entry: RecentlyClosedEntry, run: () => Promise<boolean>) => {
@@ -111,9 +130,12 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
         onClose={() => closeMainView(groups)}
       />
       <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-2">
-        {query && matching.length === 0 && (
-          <p className="py-4 text-center text-xs text-muted-foreground">{t('recentlyClosed.view.noMatches')}</p>
-        )}
+        {/* always mounted, so the "no match" line is announced when it appears */}
+        <div role="status">
+          {query && matching.length === 0 && (
+            <p className="py-4 text-center text-xs text-muted-foreground">{t('recentlyClosed.view.noMatches')}</p>
+          )}
+        </div>
         <ul aria-label={t('recentlyClosed.view.listLabel')} className="min-w-0" onKeyDown={handleReadOnlyListKeyDown}>
           {listed.map((entry) => (
             <ClosedEntryRow key={entry.id} entry={entry} groups={groups} actions={rowActions} dimmed={!!query && !hide && !matchingIds.has(entry.id)} />
@@ -129,9 +151,9 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
         {oldestFree && (
           <p className="px-1.5 py-2 text-[11px] text-muted-foreground" data-testid="closed-day-free-note">
             {recentlyClosedPlanNote()}{' '}
-            <Button variant="link" size="sm" className="inline h-auto whitespace-normal p-0 text-start align-baseline text-[11px]" onClick={() => openPricingPage('recently_closed_day')}>
+            <button type="button" className={INLINE_LINK} onClick={() => openPricingPage('recently_closed_day')}>
               {t('recentlyClosed.section.seePro')}
-            </Button>
+            </button>
           </p>
         )}
       </div>

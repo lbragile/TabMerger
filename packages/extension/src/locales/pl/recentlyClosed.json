@@ -84,14 +84,19 @@
     "showing_today": "Wyświetlane są karty zamknięte dzisiaj",
     "showing_yesterday": "Wyświetlane są karty zamknięte wczoraj",
     "showing_date": "Wyświetlane są karty zamknięte {{day}}",
-    "listLabel": "Zamknięte karty i okna"
+    "listLabel": "Zamknięte karty i okna",
+    "matches_one": "{{count}} wynik",
+    "matches_few": "{{count}} wyniki",
+    "matches_many": "{{count}} wyników",
+    "matches_other": "{{count}} wyniku",
+    "notMatching": "Nie pasuje do wyszukiwania"
   },
   "entry": {
     "window": "Okno · {{tabs}}",
     "reopenTab": "Otwórz ponownie {{title}}, zamknięta {{time}}",
     "restoreWindow": "Przywróć okno ({{tabs}}), zamknięte {{time}}",
     "reopenTabInWindow": "Otwórz ponownie {{title}}",
-    "windowTabs": "Karty w tym oknie",
+    "windowTabs": "Karty okna zamkniętego o {{time}}, {{tabs}}",
     "reopen": "Otwórz ponownie",
     "restore": "Przywróć okno",
     "saveToGroup": "Zapisz w grupie…",

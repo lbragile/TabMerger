@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { Input } from '@/components/ui/input';
 import { parseSearchQuery } from '@/lib/utils';
+import { chromeGroupColor, readableTextColor } from '@/lib/color';
 import type { GroupsState } from '@/lib/types';
 import { isHiddenFromSearch } from '@/lib/tourSandbox';
 import { useTourSearchShowsDemo } from '@/hooks/useTourSearchShowsDemo';
@@ -519,7 +520,7 @@ function shiftRanges(ranges: MatchRange[], by: number): MatchRange[] {
     return ranges.map(([from, to]) => [from + by, to + by]);
 }
 
-function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges, groupQuery = '', tagQuery = '', folderColor, windowColor, groupName, chromeGroupName, chromeGroupColor, active, onMouseEnter, onClick }: {
+function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges, groupQuery = '', tagQuery = '', folderColor, windowColor, groupName, chromeGroupName, chromeGroupColor: chromeGroupColorName, active, onMouseEnter, onClick }: {
     /** Option id: the search box points at the active row with `aria-activedescendant`. */
     id: string;
     label: string; meta: string; folderColor?: string; windowColor?: string;
@@ -540,7 +541,7 @@ function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges
             {!groupName && windowColor && <AppWindow className="h-3.5 w-3.5 shrink-0" style={{ color: windowColor }} />}
             {!groupName && !windowColor && <Folder className="h-3.5 w-3.5 shrink-0" style={{ color: folderColor ?? 'currentColor', fill: folderColor ?? 'currentColor' }} />}
             {groupName && (
-                <span dir="auto" className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: folderColor }}>
+                <span dir="auto" className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 leading-none" style={{ backgroundColor: folderColor, color: folderColor ? readableTextColor(folderColor) : undefined }}>
                     <Highlighted text={groupName} ranges={matchRanges(groupName, groupQuery)} />
                 </span>
             )}
@@ -549,7 +550,7 @@ function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges
                 {meta && <span dir={metaIsUrl ? 'ltr' : 'auto'} className="block text-[10px] text-muted-foreground truncate text-ui-start"><Highlighted text={meta} ranges={metaRanges ?? []} /></span>}
             </span>
             {chromeGroupName && (
-                <span dir="auto" className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: chromeGroupColor ?? '#888' }}>
+                <span dir="auto" className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 leading-none" style={{ backgroundColor: chromeGroupColor(chromeGroupColorName), color: readableTextColor(chromeGroupColor(chromeGroupColorName)) }}>
                     <Highlighted text={chromeGroupName} ranges={matchRanges(chromeGroupName, tagQuery)} />
                 </span>
             )}

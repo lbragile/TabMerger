@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Info, MoreHorizontal, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -42,6 +42,7 @@ export const SECTION_VIEW_TITLE_ATTR = 'data-section-view-title';
 export function SectionViewHeader({ color, title, meta, description, primaryLabel, onPrimary, primaryDisabled, menuItems, deleteLabel, onDelete, onClose, banner }: SectionViewHeaderProps) {
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
   // A multi-select starting in the sidebar closes the menu, like every other overlay
   useCloseOnOverlayDismiss(() => setMenuOpen(false));
   return (
@@ -63,11 +64,19 @@ export function SectionViewHeader({ color, title, meta, description, primaryLabe
         {(menuItems || onDelete) && (
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0 rounded-none" aria-label={t('sidePanel.view.moreOptions', { name: title })}>
+            <Button ref={menuButton} variant="ghost" size="icon" className="h-6 w-6 shrink-0 rounded-none" aria-label={t('sidePanel.view.moreOptions', { name: title })}>
               <MoreHorizontal className="h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="text-xs">
+          <DropdownMenuContent
+            align="end"
+            className="text-xs"
+            // the shared menu never moves focus on close: back to ⋯ while the view is there (a
+            // Delete that closes the view leaves focus to MainPanel, which returns it to the opener)
+            onCloseAutoFocus={() => {
+              if (menuButton.current?.isConnected) menuButton.current.focus();
+            }}
+          >
             {menuItems}
             {onDelete && (
               <DropdownMenuItem className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive" onClick={onDelete}>

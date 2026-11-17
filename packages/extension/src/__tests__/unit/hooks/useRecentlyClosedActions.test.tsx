@@ -111,7 +111,8 @@ describe('useRecentlyClosedActions', () => {
     expect(h.reopen).toHaveBeenCalledWith({ entry: tabEntry, tabIndex: undefined, active: true })
     expect(h.track).toHaveBeenCalledWith('recently_closed_reopened', { kind: 'tab', from: 'list' })
     expect(h.toastSuccess).toHaveBeenCalledWith('Reopened Pull request #1', expect.objectContaining({ duration: RECENTLY_CLOSED_UNDO_TOAST_MS }))
-    expect(getSectionViewStatus()).toBe('Reopened Pull request #1')
+    // the toast is the announcement: the status line is not written as well (no double reading)
+    expect(getSectionViewStatus()).toBe('')
     // analytics never carry a URL, a title or a site
     expect(JSON.stringify(h.track.mock.calls)).not.toMatch(/github|Pull request/)
     await act(async () => lastUndo()())
@@ -256,8 +257,10 @@ describe('useRecentlyClosedActions', () => {
     })
     expect(h.save).toHaveBeenCalledWith({ entries: [tabEntry], target: { groupId: 'g1' } })
     expect(h.track).toHaveBeenCalledWith('recently_closed_saved', { kind: 'tab' })
-    expect(h.toastSuccess).toHaveBeenCalledWith('Saved to Work', expect.anything())
-    expect(getSectionViewStatus()).toBe('Saved to Work')
+    expect(h.toastSuccess).toHaveBeenCalledWith('Saved to Work')
+    expect(getSectionViewStatus()).toBe('')
+    // a new toast each time (no fixed id), so the same words twice are announced twice
+    expect(h.toastSuccess.mock.calls.at(-1)).toEqual(['Saved to Work'])
     expect(h.removeEntries).not.toHaveBeenCalled()
   })
 
@@ -300,7 +303,7 @@ describe('useRecentlyClosedActions', () => {
       await result.current.copyLink('https://github.com/pr/1')
     })
     expect(writeText).toHaveBeenCalledWith('https://github.com/pr/1')
-    expect(h.toastSuccess).toHaveBeenCalledWith('Link copied', expect.anything())
+    expect(h.toastSuccess).toHaveBeenCalledWith('Link copied')
     writeText.mockRejectedValue(new Error('denied'))
     await act(async () => {
       await result.current.copyLink('https://github.com/pr/1')

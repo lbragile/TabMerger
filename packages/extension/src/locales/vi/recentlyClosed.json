@@ -60,14 +60,16 @@
     "showing_today": "Đang hiện các thẻ đã đóng hôm nay",
     "showing_yesterday": "Đang hiện các thẻ đã đóng hôm qua",
     "showing_date": "Đang hiện các thẻ đã đóng vào {{day}}",
-    "listLabel": "Thẻ và cửa sổ đã đóng"
+    "listLabel": "Thẻ và cửa sổ đã đóng",
+    "matches_other": "{{count}} kết quả",
+    "notMatching": "Không khớp với tìm kiếm"
   },
   "entry": {
     "window": "Cửa sổ · {{tabs}}",
     "reopenTab": "Mở lại {{title}}, đã đóng {{time}}",
     "restoreWindow": "Khôi phục cửa sổ có {{tabs}}, đã đóng {{time}}",
     "reopenTabInWindow": "Mở lại {{title}}",
-    "windowTabs": "Các thẻ trong cửa sổ này",
+    "windowTabs": "Các thẻ của cửa sổ đã đóng lúc {{time}}, {{tabs}}",
     "reopen": "Mở lại",
     "restore": "Khôi phục cửa sổ",
     "saveToGroup": "Lưu vào nhóm…",

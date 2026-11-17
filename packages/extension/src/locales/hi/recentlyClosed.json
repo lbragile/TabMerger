@@ -68,14 +68,17 @@
     "showing_today": "आज बंद किए गए टैब दिखाए जा रहे हैं",
     "showing_yesterday": "कल बंद किए गए टैब दिखाए जा रहे हैं",
     "showing_date": "{{day}} को बंद किए गए टैब दिखाए जा रहे हैं",
-    "listLabel": "बंद किए गए टैब और विंडो"
+    "listLabel": "बंद किए गए टैब और विंडो",
+    "matches_one": "{{count}} मिलान",
+    "matches_other": "{{count}} मिलान",
+    "notMatching": "खोज से मेल नहीं खाता"
   },
   "entry": {
     "window": "विंडो · {{tabs}}",
     "reopenTab": "{{title}} फिर से खोलें, {{time}} बंद किया गया",
     "restoreWindow": "{{tabs}} वाली विंडो पुनर्स्थापित करें, {{time}} बंद की गई",
     "reopenTabInWindow": "{{title}} फिर से खोलें",
-    "windowTabs": "इस विंडो के टैब",
+    "windowTabs": "{{time}} पर बंद की गई विंडो के टैब, {{tabs}}",
     "reopen": "फिर से खोलें",
     "restore": "विंडो पुनर्स्थापित करें",
     "saveToGroup": "समूह में सहेजें…",

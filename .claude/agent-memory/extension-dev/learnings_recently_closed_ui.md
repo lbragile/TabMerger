@@ -67,6 +67,25 @@ Session uploads after a sync-conflict audit (all in `lib/sessionUpload.ts`):
   the Free and Pro halves into two keys so each day count gets its own plural form. Pick a
   sentence shape per language whose day phrase has one grammatical case (German "7 Tage lang").
 
+Accessibility pass (after an accessibility-auditor review):
+- In-sentence links use `INLINE_LINK` (lib/inlineLink.ts): underlined, `--inline-link` token (light
+  193 100% 25%: 6.7:1 white, 6.3 sidebar, 5.6 hover; dark = primary). The shared Button `link`
+  variant (`--primary`) is ~3:1 in light; `styles/inlineLinkContrast.test.ts` computes the ratios.
+- `components/ui/dropdown-menu.tsx` ALWAYS `preventDefault`s `onCloseAutoFocus` (focus would leave
+  the popup otherwise). Per menu, pass `onCloseAutoFocus` that focuses a ref'd trigger if
+  `isConnected`; row-removing items still get `useFocusAfterRowRemoval` afterwards.
+- Radix's menu trigger consumes ArrowDown (opens the menu, `preventDefault`), so the list's arrow
+  handler checks `e.defaultPrevented`; `READ_ONLY_ROW_ATTR` lets a chevron/⋯ act from its row.
+- The Sonner toaster is itself a polite live region: a toast IS the announcement. Writing the same
+  text to the section status line read it twice. Same words twice only re-announce if the toast is
+  NEW (no fixed `id`) and, for the status line, if the text changes (`announceSectionView` appends a
+  no-break space on every other repeat; `clearSectionViewStatus(onlyIf)` ignores it).
+- Badge text on a colour: `readableTextColor` (lib/color.ts) picks PURE black or white; with
+  #18181b indigo/purple stay under 4.5:1. Chrome tab-group colours are names: map them with
+  `chromeGroupColor` (CSS `yellow` is #ffff00).
+- jest-dom: `.not.toHaveAccessibleDescription()` with no argument failed on an element with no
+  description; assert `aria-describedby` is null instead.
+
 Test gotchas:
 - E2E submenus (real Chrome): moving the pointer from a SubTrigger to its items crosses the other
   menu items and closes the submenu ("html intercepts pointer events", item detached). Use

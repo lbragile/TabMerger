@@ -85,4 +85,24 @@ describe('SaveSessionModal', () => {
     fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
     expect(onSave).toHaveBeenCalledWith('Work', undefined, AUTO_ITEM_COLORS[5])
   })
+
+  it('writes the chosen (or focused) colour by name, and marks the chosen swatch with a check and a 2px ring', () => {
+    renderModal()
+    const name = screen.getByTestId('session-color-name')
+    expect(name).toHaveTextContent('Random')
+    const yellow = screen.getByRole('radio', { name: 'Yellow' })
+    fireEvent.focus(yellow)
+    expect(name).toHaveTextContent('Yellow')
+    fireEvent.blur(yellow)
+    fireEvent.click(screen.getByRole('radio', { name: 'Teal' }))
+    expect(name).toHaveTextContent('Teal')
+    const swatch = screen.getByRole('radio', { name: 'Teal' }).nextElementSibling as HTMLElement
+    expect(swatch.className).toContain('ring-2')
+    // a border that reaches 3:1 on the dialog, on every swatch
+    expect(swatch.className).toContain('border-foreground/50')
+    // the check is drawn black on a light colour like teal
+    expect(swatch.querySelector('svg')?.getAttribute('style')).toContain('rgb(0, 0, 0)')
+    const other = screen.getByRole('radio', { name: 'Blue' }).nextElementSibling as HTMLElement
+    expect(other.querySelector('svg')).toBeNull()
+  })
 })

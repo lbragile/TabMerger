@@ -68,14 +68,17 @@
     "showing_today": "در حال نمایش زبانه‌های بسته‌شدهٔ امروز",
     "showing_yesterday": "در حال نمایش زبانه‌های بسته‌شدهٔ دیروز",
     "showing_date": "در حال نمایش زبانه‌های بسته‌شده در {{day}}",
-    "listLabel": "زبانه‌ها و پنجره‌های بسته‌شده"
+    "listLabel": "زبانه‌ها و پنجره‌های بسته‌شده",
+    "matches_one": "{{count}} مورد پیدا شد",
+    "matches_other": "{{count}} مورد پیدا شد",
+    "notMatching": "با جست‌وجو جور نیست"
   },
   "entry": {
     "window": "پنجره · {{tabs}}",
     "reopenTab": "بازکردن دوبارهٔ {{title}}، بسته‌شده {{time}}",
     "restoreWindow": "بازیابی پنجره با {{tabs}}، بسته‌شده {{time}}",
     "reopenTabInWindow": "بازکردن دوبارهٔ {{title}}",
-    "windowTabs": "زبانه‌های این پنجره",
+    "windowTabs": "زبانه‌های پنجره‌ای که ساعت {{time}} بسته شد، {{tabs}}",
     "reopen": "بازکردن دوباره",
     "restore": "بازیابی پنجره",
     "saveToGroup": "ذخیره در گروه…",

@@ -100,14 +100,21 @@
     "showing_today": "يتم عرض علامات التبويب المغلقة اليوم",
     "showing_yesterday": "يتم عرض علامات التبويب المغلقة أمس",
     "showing_date": "يتم عرض علامات التبويب المغلقة يوم {{day}}",
-    "listLabel": "علامات التبويب والنوافذ المغلقة"
+    "listLabel": "علامات التبويب والنوافذ المغلقة",
+    "matches_zero": "لا نتائج ({{count}})",
+    "matches_one": "نتيجة واحدة",
+    "matches_two": "نتيجتان",
+    "matches_few": "{{count}} نتائج",
+    "matches_many": "{{count}} نتيجة",
+    "matches_other": "{{count}} نتيجة",
+    "notMatching": "لا يطابق البحث"
   },
   "entry": {
     "window": "نافذة · {{tabs}}",
     "reopenTab": "إعادة فتح {{title}}، أُغلقت {{time}}",
     "restoreWindow": "استعادة نافذة فيها {{tabs}}، أُغلقت {{time}}",
     "reopenTabInWindow": "إعادة فتح {{title}}",
-    "windowTabs": "علامات التبويب في هذه النافذة",
+    "windowTabs": "علامات تبويب النافذة المغلقة الساعة {{time}}، {{tabs}}",
     "reopen": "إعادة فتح",
     "restore": "استعادة النافذة",
     "saveToGroup": "حفظ في مجموعة…",

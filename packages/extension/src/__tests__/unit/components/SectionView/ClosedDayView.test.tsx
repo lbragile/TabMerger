@@ -7,7 +7,7 @@ import type { Group, GroupsState } from '@/lib/types'
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed'
 import type { RecentlyClosedDay } from '@/lib/recentlyClosedDays'
 import { clearSectionViewStatus, getSectionViewStatus } from '@/lib/sectionViewStatus'
-import { CLOSED_DAY_PAGE_SIZE, closedEntryMatches } from '@/components/SectionView/ClosedDayView'
+import { CLOSED_DAY_PAGE_SIZE, MATCHES_ANNOUNCE_DELAY_MS, closedEntryMatches } from '@/components/SectionView/ClosedDayView'
 import { closedHost, isBackgroundClick } from '@/components/SectionView/ClosedEntryRow'
 
 const h = vi.hoisted(() => ({
@@ -108,9 +108,10 @@ describe('ClosedDayView — header and list', () => {
     const list = screen.getByRole('list', { name: 'Closed tabs and windows' })
     const buttons = within(list).getAllByRole('button', { name: /^(Reopen|Restore window)/ })
     expect(buttons.map((b) => b.getAttribute('aria-label'))).toEqual([
-      expect.stringMatching(/^Reopen Pull request #126, closed /),
-      expect.stringMatching(/^Restore window with 3 tabs, closed /),
-      expect.stringMatching(/^Reopen Hacker News, closed /),
+      // the visible clock time, not a relative one (the name contains what the row shows)
+      expect.stringMatching(/^Reopen Pull request #126, closed (2:58|14:58)/),
+      expect.stringMatching(/^Restore window with 3 tabs, closed (2:57|14:57)/),
+      expect.stringMatching(/^Reopen Hacker News, closed (2:58|14:58)/),
     ])
     expect(within(buttons[0]).getByText('github.com')).toBeInTheDocument()
     expect(within(buttons[1]).getByText('Window · 3 tabs')).toBeInTheDocument()
@@ -205,11 +206,11 @@ describe('ClosedDayView — rows', () => {
     openDay()
     fireEvent.click(screen.getByRole('button', { name: /^Restore window with 3 tabs/ }))
     expect(h.actions.reopen).toHaveBeenLastCalledWith(windowEntry, { background: false })
-    const chevron = screen.getByRole('button', { name: 'Tabs in this window' })
+    const chevron = screen.getByRole('button', { name: /^Tabs of the window closed at (2:57|14:57).*, 3 tabs$/ })
     expect(chevron).toHaveAttribute('aria-expanded', 'false')
     await user.click(chevron)
     expect(chevron).toHaveAttribute('aria-expanded', 'true')
-    const inner = screen.getByRole('list', { name: 'Tabs in this window' })
+    const inner = screen.getByRole('list', { name: /^Tabs of the window closed at .*, 3 tabs$/ })
     expect(chevron).toHaveAttribute('aria-controls', inner.id)
     await user.click(within(inner).getByRole('button', { name: 'Reopen Figma B' }))
     expect(h.actions.reopen).toHaveBeenLastCalledWith(windowEntry, { tabIndex: 1, background: false })
@@ -289,7 +290,7 @@ describe('ClosedDayView — rows', () => {
     const user = userEvent.setup()
     renderPanel()
     openDay()
-    await user.click(screen.getByRole('button', { name: 'Tabs in this window' }))
+    await user.click(screen.getByRole('button', { name: /^Tabs of the window closed at/ }))
     await user.click(screen.getByRole('button', { name: 'Reopen Figma A' }))
     expect(h.actions.reopen).toHaveBeenCalledWith(windowEntry, { tabIndex: 0, background: false })
   })
@@ -354,8 +355,12 @@ describe('ClosedDayView — search, long days, Free note', () => {
     openDay()
     const rows = within(screen.getByRole('list', { name: 'Closed tabs and windows' })).getAllByRole('button', { name: /^(Reopen|Restore window)/ })
     expect(rows).toHaveLength(3)
-    expect(rows[0].closest('li')?.className).not.toContain('opacity-40')
-    expect(rows[2].closest('li')?.className).toContain('opacity-40')
+    // readable muted text, never a whole-row opacity; marked for assistive tech
+    for (const row of rows) expect(row.closest('li')?.className ?? '').not.toContain('opacity')
+    expect(rows[0].getAttribute('aria-describedby')).toBeNull()
+    expect(rows[2]).toHaveAccessibleDescription("Doesn't match the search")
+    expect(rows[2].querySelector('[dir="auto"]')?.className).toContain('text-muted-foreground')
+    expect(rows[0].querySelector('[dir="auto"]')?.className).not.toContain('text-muted-foreground')
   })
 
   it('no match says so', () => {
@@ -408,5 +413,81 @@ describe('helpers', () => {
     expect(isBackgroundClick({ button: 1, ctrlKey: false, metaKey: false } as never)).toBe(true)
     expect(isBackgroundClick({ button: 0, ctrlKey: true, metaKey: false } as never)).toBe(true)
     expect(isBackgroundClick({ button: 0, ctrlKey: false, metaKey: false } as never)).toBe(false)
+  })
+})
+
+describe('ClosedDayView — accessibility', () => {
+  it('closing a row menu (Esc) puts focus back on its ⋯ button', async () => {
+    const user = userEvent.setup()
+    renderPanel()
+    openDay()
+    const more = screen.getByRole('button', { name: 'More options for Pull request #126' })
+    await user.click(more)
+    await screen.findByRole('menuitem', { name: 'Reopen' })
+    await user.keyboard('{Escape}')
+    await vi.waitFor(() => expect(more).toHaveFocus())
+  })
+
+  it('an item that keeps the row (Copy link) also returns focus to ⋯', async () => {
+    const user = userEvent.setup()
+    renderPanel()
+    openDay()
+    const more = screen.getByRole('button', { name: 'More options for Pull request #126' })
+    await user.click(more)
+    await user.click(await screen.findByRole('menuitem', { name: 'Copy link' }))
+    await vi.waitFor(() => expect(more).toHaveFocus())
+  })
+
+  it('closing the day ⋯ menu puts focus back on it', async () => {
+    const user = userEvent.setup()
+    renderPanel()
+    openDay()
+    const more = screen.getByRole('button', { name: 'More options for Today' })
+    await user.click(more)
+    await screen.findByRole('menuitem', { name: 'Remove this day' })
+    await user.keyboard('{Escape}')
+    await vi.waitFor(() => expect(more).toHaveFocus())
+  })
+
+  it('arrow keys from a chevron or ⋯ move between rows, and they say so', () => {
+    renderPanel()
+    openDay()
+    const chevron = screen.getByRole('button', { name: /^Tabs of the window closed at/ })
+    expect(chevron).toHaveAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown Home End')
+    chevron.focus()
+    fireEvent.keyDown(chevron, { key: 'ArrowDown' })
+    expect(screen.getByRole('button', { name: /^Reopen Hacker News/ })).toHaveFocus()
+    const more = screen.getByRole('button', { name: 'More options for Hacker News' })
+    expect(more).toHaveAttribute('aria-keyshortcuts', 'ArrowUp Home End')
+    more.focus()
+    fireEvent.keyDown(more, { key: 'ArrowUp' })
+    expect(screen.getByRole('button', { name: /^Restore window with 3 tabs/ })).toHaveFocus()
+  })
+
+  it('a search announces the number of matches once it settles, and clears it after', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    try {
+      useUIStore.setState({ searchFilter: 'figma' })
+      const { unmount } = renderPanel()
+      openDay()
+      act(() => void vi.advanceTimersByTime(MATCHES_ANNOUNCE_DELAY_MS + 10))
+      expect(getSectionViewStatus()).toBe('1 match')
+      act(() => useUIStore.setState({ searchFilter: 'e' }))
+      act(() => void vi.advanceTimersByTime(MATCHES_ANNOUNCE_DELAY_MS + 10))
+      expect(getSectionViewStatus()).toBe('3 matches')
+      unmount()
+      expect(getSectionViewStatus()).toBe('')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('no match is said by a status line that was there before it appeared', () => {
+    renderPanel()
+    openDay()
+    const status = screen.getAllByRole('status').find((el) => el.closest('[data-testid="closed-day-view"]'))!
+    expect(status).toBeEmptyDOMElement()
+    act(() => useUIStore.setState({ searchFilter: 'zzzz' }))
+    expect(status).toHaveTextContent('No closed tabs on this day match your search.')
   })
 })

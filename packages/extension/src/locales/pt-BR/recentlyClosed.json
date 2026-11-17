@@ -76,14 +76,18 @@
     "showing_today": "Mostrando as abas fechadas hoje",
     "showing_yesterday": "Mostrando as abas fechadas ontem",
     "showing_date": "Mostrando as abas fechadas em {{day}}",
-    "listLabel": "Abas e janelas fechadas"
+    "listLabel": "Abas e janelas fechadas",
+    "matches_one": "{{count}} resultado",
+    "matches_many": "{{count}} resultados",
+    "matches_other": "{{count}} resultados",
+    "notMatching": "Não corresponde à pesquisa"
   },
   "entry": {
     "window": "Janela · {{tabs}}",
     "reopenTab": "Reabrir {{title}}, fechada {{time}}",
     "restoreWindow": "Restaurar janela com {{tabs}}, fechada {{time}}",
     "reopenTabInWindow": "Reabrir {{title}}",
-    "windowTabs": "Abas desta janela",
+    "windowTabs": "Abas da janela fechada às {{time}}, {{tabs}}",
     "reopen": "Reabrir",
     "restore": "Restaurar janela",
     "saveToGroup": "Salvar em um grupo…",

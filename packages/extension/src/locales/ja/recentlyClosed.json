@@ -60,14 +60,16 @@
     "showing_today": "今日閉じたタブを表示中",
     "showing_yesterday": "昨日閉じたタブを表示中",
     "showing_date": "{{day}}に閉じたタブを表示中",
-    "listLabel": "閉じたタブとウィンドウ"
+    "listLabel": "閉じたタブとウィンドウ",
+    "matches_other": "{{count}} 件一致",
+    "notMatching": "検索に一致しません"
   },
   "entry": {
     "window": "ウィンドウ・{{tabs}}",
     "reopenTab": "{{title}} を開き直す（{{time}}に閉じた）",
     "restoreWindow": "{{tabs}}のウィンドウを復元（{{time}}に閉じた）",
     "reopenTabInWindow": "{{title}} を開き直す",
-    "windowTabs": "このウィンドウのタブ",
+    "windowTabs": "{{time}} に閉じたウィンドウのタブ、{{tabs}}",
     "reopen": "開き直す",
     "restore": "ウィンドウを復元",
     "saveToGroup": "グループに保存…",

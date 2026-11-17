@@ -60,14 +60,16 @@
     "showing_today": "正在显示今天关闭的标签页",
     "showing_yesterday": "正在显示昨天关闭的标签页",
     "showing_date": "正在显示 {{day}} 关闭的标签页",
-    "listLabel": "关闭的标签页和窗口"
+    "listLabel": "关闭的标签页和窗口",
+    "matches_other": "{{count}} 个匹配",
+    "notMatching": "与搜索不匹配"
   },
   "entry": {
     "window": "窗口 · {{tabs}}",
     "reopenTab": "重新打开 {{title}}，关闭于 {{time}}",
     "restoreWindow": "恢复包含 {{tabs}} 的窗口，关闭于 {{time}}",
     "reopenTabInWindow": "重新打开 {{title}}",
-    "windowTabs": "此窗口中的标签页",
+    "windowTabs": "{{time}} 关闭的窗口中的标签页，{{tabs}}",
     "reopen": "重新打开",
     "restore": "恢复窗口",
     "saveToGroup": "保存到分组…",

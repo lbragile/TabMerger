@@ -142,8 +142,8 @@ test.describe('Recently closed: sidebar section and day view', () => {
       await todayRow(page).click();
       const restore = dayView(page).getByRole('button', { name: /^Restore window with 3 tabs, closed / });
       await expect(restore).toBeVisible();
-      await dayView(page).getByRole('button', { name: 'Tabs in this window' }).click();
-      await expect(dayView(page).getByRole('list', { name: 'Tabs in this window' }).getByRole('button')).toHaveCount(3);
+      await dayView(page).getByRole('button', { name: /^Tabs of the window closed at .*, 3 tabs$/ }).click();
+      await expect(dayView(page).getByRole('list', { name: /^Tabs of the window closed at .*, 3 tabs$/ }).getByRole('button')).toHaveCount(3);
 
       await restore.click({ modifiers: ['Control'] });
       await expect.poll(() => openTitles(sw)).toEqual(expect.arrayContaining(['Win One', 'Win Two', 'Win Three']));

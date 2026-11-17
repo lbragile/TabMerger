@@ -76,14 +76,18 @@
     "showing_today": "Schede chiuse oggi",
     "showing_yesterday": "Schede chiuse ieri",
     "showing_date": "Schede chiuse il {{day}}",
-    "listLabel": "Schede e finestre chiuse"
+    "listLabel": "Schede e finestre chiuse",
+    "matches_one": "{{count}} risultato",
+    "matches_many": "{{count}} risultati",
+    "matches_other": "{{count}} risultati",
+    "notMatching": "Non corrisponde alla ricerca"
   },
   "entry": {
     "window": "Finestra · {{tabs}}",
     "reopenTab": "Riapri {{title}}, chiusa {{time}}",
     "restoreWindow": "Ripristina finestra con {{tabs}}, chiusa {{time}}",
     "reopenTabInWindow": "Riapri {{title}}",
-    "windowTabs": "Schede di questa finestra",
+    "windowTabs": "Schede della finestra chiusa alle {{time}}, {{tabs}}",
     "reopen": "Riapri",
     "restore": "Ripristina finestra",
     "saveToGroup": "Salva in un gruppo…",

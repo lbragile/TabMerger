@@ -76,14 +76,18 @@
     "showing_today": "Mostrando las pestañas cerradas hoy",
     "showing_yesterday": "Mostrando las pestañas cerradas ayer",
     "showing_date": "Mostrando las pestañas cerradas el {{day}}",
-    "listLabel": "Pestañas y ventanas cerradas"
+    "listLabel": "Pestañas y ventanas cerradas",
+    "matches_one": "{{count}} coincidencia",
+    "matches_many": "{{count}} coincidencias",
+    "matches_other": "{{count}} coincidencias",
+    "notMatching": "No coincide con la búsqueda"
   },
   "entry": {
     "window": "Ventana · {{tabs}}",
     "reopenTab": "Reabrir {{title}}, cerrada {{time}}",
     "restoreWindow": "Restaurar ventana con {{tabs}}, cerrada {{time}}",
     "reopenTabInWindow": "Reabrir {{title}}",
-    "windowTabs": "Pestañas de esta ventana",
+    "windowTabs": "Pestañas de la ventana cerrada a las {{time}}, {{tabs}}",
     "reopen": "Reabrir",
     "restore": "Restaurar ventana",
     "saveToGroup": "Guardar en un grupo…",

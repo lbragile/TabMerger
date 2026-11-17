@@ -49,7 +49,7 @@ export function SessionColorMenu({ session }: { session: Session }) {
             const key = autoColorName(color);
             return (
               <DropdownMenuRadioItem key={color} value={color} className="text-xs">
-                <span aria-hidden className="me-2 h-3 w-3 shrink-0 rounded-full border border-foreground/15" style={{ backgroundColor: color }} />
+                <span aria-hidden className="me-2 h-3 w-3 shrink-0 rounded-full border border-foreground/50" style={{ backgroundColor: color }} />
                 {key ? t(`sidePanel.sessionColor.names.${key}`) : color}
               </DropdownMenuRadioItem>
             );

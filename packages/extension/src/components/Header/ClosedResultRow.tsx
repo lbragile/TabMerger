@@ -1,4 +1,5 @@
 import type { MouseEvent } from 'react';
+import { chromeGroupColor, readableTextColor } from '@/lib/color';
 import { AppWindow, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Highlighted } from '@/components/Highlighted';
@@ -56,7 +57,7 @@ export function ClosedResultRow({ id, result, tabQuery, tagQuery, active, onMous
         {url.text && <span dir="ltr" className="block text-[10px] text-muted-foreground truncate text-ui-start"><Highlighted text={url.text} ranges={url.ranges} /></span>}
       </span>
       {chromeGroup && (
-        <span dir="auto" className="shrink-0 max-w-[6rem] truncate text-[10px] font-medium px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: chromeGroup.color }}>
+        <span dir="auto" className="shrink-0 max-w-[6rem] truncate text-[10px] font-medium px-1.5 py-0.5 leading-none" style={{ backgroundColor: chromeGroupColor(chromeGroup.color), color: readableTextColor(chromeGroup.color) }}>
           <Highlighted text={chromeGroup.title} ranges={matchRanges(chromeGroup.title, tagQuery)} />
         </span>
       )}

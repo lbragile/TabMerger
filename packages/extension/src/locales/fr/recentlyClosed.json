@@ -76,14 +76,18 @@
     "showing_today": "Affichage des onglets fermés aujourd’hui",
     "showing_yesterday": "Affichage des onglets fermés hier",
     "showing_date": "Affichage des onglets fermés le {{day}}",
-    "listLabel": "Onglets et fenêtres fermés"
+    "listLabel": "Onglets et fenêtres fermés",
+    "matches_one": "{{count}} résultat",
+    "matches_many": "{{count}} résultats",
+    "matches_other": "{{count}} résultats",
+    "notMatching": "Ne correspond pas à la recherche"
   },
   "entry": {
     "window": "Fenêtre · {{tabs}}",
     "reopenTab": "Rouvrir {{title}}, fermé {{time}}",
     "restoreWindow": "Restaurer la fenêtre avec {{tabs}}, fermée {{time}}",
     "reopenTabInWindow": "Rouvrir {{title}}",
-    "windowTabs": "Onglets de cette fenêtre",
+    "windowTabs": "Onglets de la fenêtre fermée à {{time}}, {{tabs}}",
     "reopen": "Rouvrir",
     "restore": "Restaurer la fenêtre",
     "saveToGroup": "Enregistrer dans un groupe…",

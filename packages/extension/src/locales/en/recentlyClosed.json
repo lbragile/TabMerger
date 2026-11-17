@@ -68,14 +68,17 @@
     "showing_today": "Showing tabs closed today",
     "showing_yesterday": "Showing tabs closed yesterday",
     "showing_date": "Showing tabs closed on {{day}}",
-    "listLabel": "Closed tabs and windows"
+    "listLabel": "Closed tabs and windows",
+    "matches_one": "{{count}} match",
+    "matches_other": "{{count}} matches",
+    "notMatching": "Doesn't match the search"
   },
   "entry": {
     "window": "Window · {{tabs}}",
     "reopenTab": "Reopen {{title}}, closed {{time}}",
     "restoreWindow": "Restore window with {{tabs}}, closed {{time}}",
     "reopenTabInWindow": "Reopen {{title}}",
-    "windowTabs": "Tabs in this window",
+    "windowTabs": "Tabs of the window closed at {{time}}, {{tabs}}",
     "reopen": "Reopen",
     "restore": "Restore window",
     "saveToGroup": "Save to group…",

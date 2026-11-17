@@ -76,14 +76,18 @@
     "showing_today": "מוצגות הכרטיסיות שנסגרו היום",
     "showing_yesterday": "מוצגות הכרטיסיות שנסגרו אתמול",
     "showing_date": "מוצגות הכרטיסיות שנסגרו ב-{{day}}",
-    "listLabel": "כרטיסיות וחלונות שנסגרו"
+    "listLabel": "כרטיסיות וחלונות שנסגרו",
+    "matches_one": "תוצאה אחת",
+    "matches_two": "{{count}} תוצאות",
+    "matches_other": "{{count}} תוצאות",
+    "notMatching": "לא תואם לחיפוש"
   },
   "entry": {
     "window": "חלון · {{tabs}}",
     "reopenTab": "פתיחה מחדש של {{title}}, נסגרה {{time}}",
     "restoreWindow": "שחזור חלון עם {{tabs}}, נסגר {{time}}",
     "reopenTabInWindow": "פתיחה מחדש של {{title}}",
-    "windowTabs": "הכרטיסיות בחלון הזה",
+    "windowTabs": "הכרטיסיות של החלון שנסגר ב-{{time}}, {{tabs}}",
     "reopen": "פתיחה מחדש",
     "restore": "שחזור החלון",
     "saveToGroup": "שמירה בקבוצה…",

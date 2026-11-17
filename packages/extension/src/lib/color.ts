@@ -61,3 +61,51 @@ export function rgbaToHex(rgba: string): string {
   const toHex = (n: number) => Math.round(n).toString(16).padStart(2, '0');
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
+
+/**
+ * The colours Chrome draws its tab groups in (`chrome.tabGroups.Color` names), for badges that show
+ * a tab's browser group. CSS's own colour of the same name (`yellow` = #ffff00) is far off.
+ */
+export const CHROME_GROUP_COLORS: Readonly<Record<string, string>> = Object.freeze({
+  grey: '#5f6368',
+  blue: '#1a73e8',
+  red: '#d93025',
+  yellow: '#f9ab00',
+  green: '#188038',
+  pink: '#d01884',
+  purple: '#a142f4',
+  cyan: '#007b83',
+  orange: '#fa903e',
+});
+
+/** A browser tab group's colour as CSS: Chrome's own for its colour names, else the value as given. */
+export function chromeGroupColor(color: string | undefined): string {
+  if (!color) return CHROME_GROUP_COLORS.grey;
+  return CHROME_GROUP_COLORS[color.toLowerCase()] ?? color;
+}
+
+/** WCAG relative luminance of an `rgb(a)` or hex colour (0 black .. 1 white); grey for anything else. */
+export function relativeLuminance(color: string): number {
+  const { r, g, b } = isValidHexColor(color) ? parseRgba(hexToRgba(color)) : parseRgba(color);
+  const channel = (v: number) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+}
+
+/** The contrast ratio of two colours (1..21). */
+export function contrastRatio(a: string, b: string): number {
+  const [x, y] = [relativeLuminance(a), relativeLuminance(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+}
+
+/**
+ * Text drawn on a coloured background (a group or tab-group badge, a check on a swatch): black
+ * or white, whichever contrasts more with `background`. Every preset and Chrome group colour then
+ * reaches 4.5:1 (white text on yellow, cyan or green does not).
+ */
+export function readableTextColor(background: string): '#000000' | '#ffffff' {
+  const css = chromeGroupColor(background);
+  return contrastRatio(css, '#000000') >= contrastRatio(css, '#ffffff') ? '#000000' : '#ffffff';
+}

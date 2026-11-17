@@ -5,4 +5,5 @@
 - [Tour inert hides live regions](learnings_tour_inert_hides_live_regions.md) — lockTourApp inerts the app root, silencing in-root live regions; tour forces dim mode; roving tabindex reach
 - [Sidebar sections / auto-save a11y](learnings_sidebar_sections_autosave.md) — SidebarSection aria-controls, raw-button focus ring, tiny targets, 9px/50% text, double announce
 - [Read-only section views a11y](learnings_read_only_section_views.md) — master-detail focus/announce, document-level arrows closing views, current cue, diamond meta
+- [Recently closed UI a11y](learnings_recently_closed_ui.md) — toast+status double announce, menu focus not restored, link contrast, swatch contrast, window-row names
 - [Browser-resolved skeletons checklist](learnings_browser_resolved_skeletons.md) — noscript, aria-busy, dynamic() collapse, stale-cookie shift, key remounts, label-length sizing

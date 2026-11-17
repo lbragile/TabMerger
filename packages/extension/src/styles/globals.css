@@ -47,6 +47,9 @@
        (white on --primary is only 3.05:1) */
     --tooltip: 193 100% 28%;
     --tooltip-foreground: 0 0% 100%;
+    /* Links inside a sentence ("See Pro", "Turn on in Settings"): the primary hue, dark enough
+       for 4.5:1 on white, the sidebar and its hover (--primary itself is ~3:1 there) */
+    --inline-link: 193 100% 25%;
     --secondary: 33 91% 54%;
     --secondary-foreground: 0 0% 100%;
     --muted: 240 4.8% 95.9%;
@@ -105,6 +108,7 @@
     /* Tooltips keep the primary look in the dark theme (7.3:1) */
     --tooltip: 193 80% 55%;
     --tooltip-foreground: 193 100% 10%;
+    --inline-link: 193 80% 55%;
     --secondary: 33 85% 60%;
     --secondary-foreground: 33 91% 10%;
     --muted: 240 3.7% 15.9%;

@@ -60,14 +60,16 @@
     "showing_today": "오늘 닫은 탭을 표시하는 중",
     "showing_yesterday": "어제 닫은 탭을 표시하는 중",
     "showing_date": "{{day}}에 닫은 탭을 표시하는 중",
-    "listLabel": "닫은 탭과 창"
+    "listLabel": "닫은 탭과 창",
+    "matches_other": "{{count}}개 일치",
+    "notMatching": "검색과 일치하지 않음"
   },
   "entry": {
     "window": "창 · {{tabs}}",
     "reopenTab": "{{title}} 다시 열기, {{time}} 닫음",
     "restoreWindow": "{{tabs}}가 있는 창 복원, {{time}} 닫음",
     "reopenTabInWindow": "{{title}} 다시 열기",
-    "windowTabs": "이 창의 탭",
+    "windowTabs": "{{time}}에 닫은 창의 탭, {{tabs}}",
     "reopen": "다시 열기",
     "restore": "창 복원",
     "saveToGroup": "그룹에 저장…",
