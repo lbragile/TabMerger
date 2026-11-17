@@ -32,6 +32,8 @@
     "autoBackups": "Automatische verschlüsselte Backups",
     "autoSaveFree": "Offene Tabs automatisch speichern (die neuesten {count, number} bleiben erhalten)",
     "autoSavePro": "Offene Tabs automatisch speichern, alle bleiben erhalten",
+    "recentlyClosedFree": "Zuletzt geschlossene Tabs: die letzten {count, number} oder {days, plural, one {# Tag} other {# Tage}}",
+    "recentlyClosedPro": "Zuletzt geschlossene Tabs: bis zu {count, number}, {days, plural, one {# Tag} other {# Tage}} lang gespeichert",
     "prioritySupport": "Priorisierter Support",
     "everythingInPro": "Alles aus Pro",
     "aiGrouping": "KI-Auto-Gruppierung von Tabs",

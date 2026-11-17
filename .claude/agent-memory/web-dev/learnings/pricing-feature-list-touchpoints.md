@@ -22,6 +22,18 @@ Adding or renaming a plan feature line touches more than `PRICING_TIERS`:
   Pro", so neither Pro AI list repeats it. `__tests__/auto-save-copy.test.tsx` pins positions,
   every locale's rendering and the `/features` card (Pro section row 04, copy covers Free too,
   like the sessions card).
+- Recently closed tabs has a line on Free and Pro (`recentlyClosedFree` / `recentlyClosedPro`,
+  after each auto-save line), from `RECENTLY_CLOSED_COPY`. That object sits in
+  `constants/index.ts` beside `RECENTLY_CLOSED_LIMITS`, not in `recentlyClosed.ts`: index.ts
+  re-exports that file, so importing the limits there would be a cycle. These lines carry two
+  numbers, so `FeatureLine` has a `days` field and `useTierFeatures` passes `{ count, days }`
+  (cast the key to a two-placeholder key so the extra value type-checks). On `/features`, a
+  description with several numbers takes a `values` record on its `featureSections` entry.
+  Pinned by `recently-closed-copy.test.tsx` (web) and `recentlyClosedCopy.test.ts` (shared).
+- The privacy page is English-only binding text (JSX literals, lint-exempt, no catalog), so a
+  privacy disclosure is never an 18-locale change; bump its "Last updated" date with
+  `privacy-page.test.tsx`. `backup-file-copy.test.tsx` pins the order of the "How data is stored"
+  row labels, so a new row there must update that list too.
 - The extension upgrade prompt (`UpgradePrompt.tsx`, `upgrade.plans.<tier>.f1..f3`) shows only the
   **first three** lines of each plan; `sharedCopyParity.test.ts` checks those against
   `features.slice(0, 3)`. Inserting a line at position 4 or later leaves the 18 extension

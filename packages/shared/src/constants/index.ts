@@ -21,6 +21,18 @@ export const RECENTLY_CLOSED_LIMITS = {
   pro: { entries: 1000, days: 30 },
 } as const;
 
+/**
+ * "Recently closed tabs" lines in the plan feature lists, built from {@link RECENTLY_CLOSED_LIMITS}
+ * so the copy can't drift from what the extension keeps. Pro AI gets the Pro line through
+ * "Everything in Pro". (Here, not in `./recentlyClosed.ts`, which this file re-exports.)
+ */
+export const RECENTLY_CLOSED_COPY = {
+  /** Line in the Free plan's feature list. */
+  pricingFeatureFree: `Recently closed tabs: last ${RECENTLY_CLOSED_LIMITS.free.entries.toLocaleString('en-US')} or ${RECENTLY_CLOSED_LIMITS.free.days.toLocaleString('en-US')} days`,
+  /** Line in the Pro plan's feature list. */
+  pricingFeaturePro: `Recently closed tabs: up to ${RECENTLY_CLOSED_LIMITS.pro.entries.toLocaleString('en-US')}, kept ${RECENTLY_CLOSED_LIMITS.pro.days.toLocaleString('en-US')} days`,
+} as const;
+
 /** Paid plans have no caps. */
 export const UNLIMITED_TIER_LIMITS = { groups: Infinity, tabs: Infinity, urlRules: Infinity, sessions: Infinity } as const;
 
@@ -109,6 +121,7 @@ export const PRICING_TIERS: PricingTier[] = [
       `Up to ${FREE_TIER_LIMITS.urlRules} URL rules`,
       `Save up to ${FREE_TIER_LIMITS.sessions} sessions in this browser`,
       AUTO_SAVE_COPY.pricingFeatureFree,
+      RECENTLY_CLOSED_COPY.pricingFeatureFree,
       'Local storage only',
       'Import & export',
       'Drag & drop',
@@ -128,6 +141,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Sessions synced across devices',
       AUTO_BACKUP_COPY.pricingFeature,
       AUTO_SAVE_COPY.pricingFeaturePro,
+      RECENTLY_CLOSED_COPY.pricingFeaturePro,
       'Priority support',
     ],
     limits: UNLIMITED_TIER_LIMITS,

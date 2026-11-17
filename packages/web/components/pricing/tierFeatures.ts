@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl'
-import { AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMITS, PRO_AI_MONTHLY_CREDITS, type AiMode } from '@tabmerger/shared'
+import { AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMITS, PRO_AI_MONTHLY_CREDITS, RECENTLY_CLOSED_LIMITS, type AiMode } from '@tabmerger/shared'
 import type { TierKey } from '@/lib/tiers'
 
 /** A key under `pricing.features` and the values its message needs. */
@@ -20,6 +20,8 @@ interface FeatureLine {
     | 'autoBackups'
     | 'autoSaveFree'
     | 'autoSavePro'
+    | 'recentlyClosedFree'
+    | 'recentlyClosedPro'
     | 'prioritySupport'
     | 'everythingInPro'
     | 'aiGrouping'
@@ -32,6 +34,8 @@ interface FeatureLine {
     | 'ownApiKey'
     | 'chooseModel'
   count?: number
+  /** A second number (the recently-closed lines: how many days entries are kept). */
+  days?: number
   /** "Everything in X": a capability the plan below already has (a check mark, not a +). */
   inherited?: boolean
 }
@@ -48,6 +52,7 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'upToUrlRules', count: FREE_TIER_LIMITS.urlRules },
     { key: 'saveSessions', count: FREE_TIER_LIMITS.sessions },
     { key: 'autoSaveFree', count: AUTO_SAVE_FREE_KEEP_COUNT },
+    { key: 'recentlyClosedFree', count: RECENTLY_CLOSED_LIMITS.free.entries, days: RECENTLY_CLOSED_LIMITS.free.days },
     { key: 'localOnly' },
     { key: 'importExport' },
     { key: 'dragDrop' },
@@ -60,6 +65,7 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'sessionsSynced' },
     { key: 'autoBackups' },
     { key: 'autoSavePro' },
+    { key: 'recentlyClosedPro', count: RECENTLY_CLOSED_LIMITS.pro.entries, days: RECENTLY_CLOSED_LIMITS.pro.days },
     { key: 'prioritySupport' },
   ],
   proAi: [
@@ -103,9 +109,9 @@ export interface TierFeature {
 export function useTierFeatures(): (tier: TierKey, aiMode?: AiMode) => TierFeature[] {
   const t = useTranslations('pricing.features')
   return (tier, aiMode = 'managed') =>
-    (tier === 'proAi' && aiMode === 'byok' ? PRO_AI_BYOK_FEATURE_LINES : TIER_FEATURE_LINES[tier]).map(({ key, count, inherited = false }) => ({
-      // Lines without a number have no placeholder; passing `count` to them is harmless.
-      text: t(key as 'upToGroups', { count: count ?? 0 }),
+    (tier === 'proAi' && aiMode === 'byok' ? PRO_AI_BYOK_FEATURE_LINES : TIER_FEATURE_LINES[tier]).map(({ key, count, days, inherited = false }) => ({
+      // Lines without a number have no placeholder; passing `count` and `days` to them is harmless.
+      text: t(key as 'recentlyClosedPro', { count: count ?? 0, days: days ?? 0 }),
       inherited,
     }))
 }

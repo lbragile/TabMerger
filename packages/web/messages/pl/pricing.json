@@ -32,6 +32,8 @@
     "autoBackups": "Automatyczne szyfrowane kopie zapasowe",
     "autoSaveFree": "Automatyczne zapisywanie otwartych kart (zachowywane są najnowsze: {count, number})",
     "autoSavePro": "Automatyczne zapisywanie otwartych kart, wszystkie zachowane",
+    "recentlyClosedFree": "Ostatnio zamknięte karty: ostatnie {count, number} lub {days, plural, one {# dzień} few {# dni} many {# dni} other {# dnia}}",
+    "recentlyClosedPro": "Ostatnio zamknięte karty: do {count, number}, przechowywane przez {days, plural, one {# dzień} few {# dni} many {# dni} other {# dnia}}",
     "prioritySupport": "Priorytetowa pomoc",
     "everythingInPro": "Wszystko z planu Pro",
     "aiGrouping": "Automatyczne grupowanie kart przez AI",

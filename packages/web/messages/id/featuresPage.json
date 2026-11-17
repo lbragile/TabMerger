@@ -24,6 +24,10 @@
       "title": "Pencarian teks lengkap",
       "description": "Cari di semua judul dan URL tab secara instan. Hasil cocok dengan teks persis seperti yang Anda ketik (huruf besar atau kecil), dengan kecocokan terbaik di urutan teratas."
     },
+    "recentlyClosed": {
+      "title": "Tab yang baru ditutup",
+      "description": "Setiap tab dan jendela yang Anda tutup masuk ke daftar Baru ditutup di bilah samping, dikelompokkan per hari. Buka kembali tab, pulihkan seluruh jendela atau simpan ke grup, atau temukan dengan Ctrl/Cmd+K: awali pencarian dengan closed: untuk mencari di sana saja. Paket gratis menyimpan hingga {freeEntries, number} dari {freeDays, plural, other {# hari}} terakhir; Pro menyimpan hingga {proEntries, number} selama {proDays, plural, other {# hari}}. Daftar ini tetap di perangkat Anda: tidak pernah disinkronkan, diunggah, atau diekspor, jendela pribadi tidak pernah dicatat, dan Anda dapat menonaktifkan atau mengosongkannya di Pengaturan → Data."
+    },
     "dnd": {
       "title": "Penataan ulang dengan seret dan lepas",
       "description": "Atur ulang tab di dalam grup dan ubah urutan grup itu sendiri dengan interaksi seret dan lepas yang mulus."

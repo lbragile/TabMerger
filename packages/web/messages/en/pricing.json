@@ -32,6 +32,8 @@
     "autoBackups": "Automatic encrypted backups",
     "autoSaveFree": "Auto-save open tabs (newest {count, number} kept)",
     "autoSavePro": "Auto-save open tabs, all kept",
+    "recentlyClosedFree": "Recently closed tabs: last {count, number} or {days, plural, one {# day} other {# days}}",
+    "recentlyClosedPro": "Recently closed tabs: up to {count, number}, kept {days, plural, one {# day} other {# days}}",
     "prioritySupport": "Priority support",
     "everythingInPro": "Everything in Pro",
     "aiGrouping": "AI auto-grouping of tabs",

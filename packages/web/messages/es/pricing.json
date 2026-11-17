@@ -32,6 +32,8 @@
     "autoBackups": "Copias de seguridad cifradas automáticas",
     "autoSaveFree": "Guardado automático de pestañas abiertas (se conservan los {count, number} más recientes)",
     "autoSavePro": "Guardado automático de pestañas abiertas, se conservan todos",
+    "recentlyClosedFree": "Pestañas cerradas recientemente: las últimas {count, number} o las de {days, plural, one {el último día} other {los últimos # días}}",
+    "recentlyClosedPro": "Pestañas cerradas recientemente: hasta {count, number}, guardadas {days, plural, one {# día} other {# días}}",
     "prioritySupport": "Soporte prioritario",
     "everythingInPro": "Todo lo de Pro",
     "aiGrouping": "Agrupación automática de pestañas con IA",

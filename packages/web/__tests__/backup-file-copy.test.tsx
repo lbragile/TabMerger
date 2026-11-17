@@ -24,7 +24,8 @@ describe('privacy page: backup files', () => {
   it('keeps the row between the local and the account storage rows', () => {
     render(<PrivacyPage />)
     const labels = Array.from(document.getElementById('how-stored')!.querySelectorAll('span.font-medium')).map((el) => el.textContent)
-    expect(labels.slice(0, 3)).toEqual(['Local (all tiers)', 'Backup files (optional)', 'Supabase (Pro)'])
+    // The other on-device rows (local data, the recently closed list) come first.
+    expect(labels.slice(0, 4)).toEqual(['Local (all tiers)', 'Recently closed tabs (all tiers)', 'Backup files (optional)', 'Supabase (Pro)'])
   })
 })
 

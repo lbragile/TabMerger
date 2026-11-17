@@ -24,6 +24,10 @@
       "title": "Busca em texto completo",
       "description": "Pesquise na hora por todos os títulos e URLs das suas abas. Os resultados correspondem ao texto exatamente como você digita (qualquer caixa), com as melhores correspondências primeiro."
     },
+    "recentlyClosed": {
+      "title": "Abas fechadas recentemente",
+      "description": "Cada aba e janela que você fecha vai para a lista Fechadas recentemente na barra lateral, agrupada por dia. Reabra uma aba, restaure uma janela inteira ou salve-a em um grupo, ou encontre-a com Ctrl/Cmd+K: comece sua busca com closed: para procurar só ali. O plano gratuito guarda até {freeEntries, number} dos últimos {freeDays, plural, one {# dia} other {# dias}}; o Pro guarda até {proEntries, number} por {proDays, plural, one {# dia} other {# dias}}. A lista fica no seu dispositivo: nunca é sincronizada, enviada nem exportada, janelas privadas nunca são registradas e você pode desativá-la ou limpá-la em Configurações → Dados."
+    },
     "dnd": {
       "title": "Reordenação por arrastar e soltar",
       "description": "Reorganize abas dentro dos grupos e reordene os próprios grupos com interações suaves de arrastar e soltar."

@@ -3,7 +3,7 @@ import { pageMetadata } from '@/lib/seo'
 import { DEFAULT_LOCALE, localeDirection } from '@/i18n/locales'
 import { Link } from '@/i18n/navigation'
 import { LegalToc } from '@/components/legal-toc'
-import { BACKUP_FILE_COPY } from '@tabmerger/shared'
+import { BACKUP_FILE_COPY, RECENTLY_CLOSED_LIMITS } from '@tabmerger/shared'
 import { SUPPORT_EMAIL } from '@/lib/supportInbox'
 import { CookieSettingsButton } from '@/components/consent/CookieSettingsButton'
 
@@ -48,7 +48,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: November 4, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: November 16, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -118,6 +118,10 @@ export default function PrivacyPage() {
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Local (all tiers)</span>
               <span className="text-muted-foreground">Tab and group data in browser IndexedDB, under your control. Not transmitted anywhere unless you enable sync, or send a specific tab's address to the preview service by turning on page previews (see "Page previews" above). One exception: showing a tab's icon can send that site's domain to Google's favicon service (see "Site icons" above).</span>
+            </div>
+            <div id="recently-closed" className="flex gap-4 px-4 py-3 scroll-mt-24">
+              <span className="font-medium w-40 shrink-0">Recently closed tabs (all tiers)</span>
+              <span className="text-muted-foreground">The extension keeps a list of the tabs and windows you close (their addresses, titles and icons) so you can reopen them, in IndexedDB on that device only, for up to {RECENTLY_CLOSED_LIMITS.free.days} days on Free and {RECENTLY_CLOSED_LIMITS.pro.days} days on Pro and Pro AI. The list is never synced, uploaded to our servers or included in exports, tabs in private windows are never recorded, and you can turn it off and clear it in the extension&apos;s Settings → Data.</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Backup files (optional)</span>

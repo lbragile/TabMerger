@@ -24,6 +24,10 @@
       "title": "Ricerca full-text",
       "description": "Cerca all'istante tra tutti i titoli e gli URL delle tue schede. I risultati corrispondono al testo esattamente come lo digiti (senza distinzione tra maiuscole e minuscole), con le corrispondenze migliori in cima."
     },
+    "recentlyClosed": {
+      "title": "Schede chiuse di recente",
+      "description": "Ogni scheda e finestra che chiudi finisce nell'elenco Chiusi di recente nella barra laterale, raggruppato per giorno. Riapri una scheda, ripristina un'intera finestra o salvala in un gruppo, oppure trovala con Ctrl/Cmd+K: inizia la ricerca con closed: per cercare solo lì. Il piano gratuito ne conserva fino a {freeEntries, number} degli ultimi {freeDays, plural, one {# giorno} other {# giorni}}; Pro ne conserva fino a {proEntries, number} per {proDays, plural, one {# giorno} other {# giorni}}. L'elenco resta sul tuo dispositivo: non viene mai sincronizzato, caricato o esportato, le finestre private non vengono mai registrate e puoi disattivarlo o svuotarlo in Impostazioni → Dati."
+    },
     "dnd": {
       "title": "Riordino con trascinamento",
       "description": "Sposta le schede all'interno dei gruppi e riordina i gruppi stessi con un trascinamento fluido."
