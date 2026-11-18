@@ -98,10 +98,31 @@ export interface Session {
    * this row again (later uploads are update-only, `refreshUploadedSession`). A session carrying it
    * that the server no longer has was deleted in the web dashboard or on another device, which
    * removes the cloud copy only: it is not uploaded again, and it STAYS on this device (absence on
-   * the server never deletes a local session). One without it (saved offline, never uploaded)
-   * still uploads once.
+   * the server never deletes a local session). The one exception: a saved session whose copy was
+   * written under an older encryption key (`uploadedKey`) is uploaded again, see there. One without
+   * it (saved offline, saved while the plan was not known yet, never uploaded) still uploads once:
+   * the sync's changed-sessions pass takes every manual session without it.
    */
   uploadedAt?: number;
+  /**
+   * Local-only: which encryption key row the server's copy was last written under (the key's
+   * fingerprint, `getDataKeyFingerprint`), stamped with `uploadedAt` and on every refresh. Two uses:
+   *  - a copy written under an OLDER key is not this account's readable copy: if its row is gone
+   *    (unreadable old-key rows deleted in the dashboard after an encryption reset), a manual
+   *    session is uploaded again instead of being treated as deleted (`refreshSessionRow`);
+   *  - the full re-upload pass after a key change skips sessions already under the current key,
+   *    so a pass that ran out of time resumes where it stopped.
+   * Absent on sessions uploaded before it existed (treated as "key unknown").
+   */
+  uploadedKey?: string;
+  /**
+   * Local-only: the server answered that this session's row is gone (deleted in the dashboard or on
+   * another device) while this device held the copy. Remembered so that a LATER key change does not
+   * take the old `uploadedKey` as "the copy there was an unreadable old-key row" and re-insert it
+   * (see `refreshSessionRow`), and so the full pass after a key change does not ask again. Cleared
+   * by a later write that finds the row there again.
+   */
+  remoteGone?: true;
   /**
    * Local-only: this session changed (saved, colour changed) and that change is not confirmed on
    * the server yet. A token (epoch ms of the change): an upload clears it only if it is still the

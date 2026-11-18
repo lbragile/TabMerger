@@ -147,3 +147,4 @@
 - [Recently closed engine](learnings_recently_closed_engine.md) — closeTabs({record}) + lint ban, quiet marks, meta row, getDb promise/VersionError, 60 s delete, un-pin grace
 - [Recently closed UI + session colours](learnings_recently_closed_ui.md) — closedDay view, one actions hook, Save to group via useGroups, submenu clicks in jsdom
 - [Search: recently closed + closed: scope](learnings_search_recently_closed.md) — closedOnly joins tabQuery; pure lib + connected wrapper; mutateAsync after unmount; CRLF needles
+- [Session upload keys + passes](learnings_session_upload_keys_and_passes.md) — uploadedKey re-insert/resume, per-pass token, deleted ids in the delete tx, token check

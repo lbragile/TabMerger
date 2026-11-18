@@ -84,6 +84,27 @@ async function cacheDataKey(dataKey: CryptoKey, userId: string, fingerprint: str
   cachedDataKey = { userId, key: dataKey, stored: b64 };
 }
 
+/**
+ * Which key row this device's persisted data key for `userId` belongs to (the binding's
+ * fingerprint, see {@link KeyBinding}), or `undefined` when there is no key or no binding yet.
+ * Stored next to a session's `uploadedAt` (`Session.uploadedKey`): an upload made under another key
+ * than today's is not the server's current copy (see `refreshSessionRow` in lib/sessionUpload.ts).
+ * Not a secret: the salt and wrap IV are public parts of the key row.
+ */
+export async function getDataKeyFingerprint(userId: string): Promise<string | undefined> {
+  try {
+    if (!(await readStored<string>(localKeyFor(userId)))) return undefined;
+    const binding = await readStored<KeyBinding>(bindingKeyFor(userId));
+    // only a key VERIFIED against that row on this device: a legacy key that merely adopted the
+    // current row may itself be stale, and copies written with it must not count as "current key"
+    if (binding?.verified !== true) return undefined;
+    const fingerprint = binding.fingerprint;
+    return typeof fingerprint === 'string' && fingerprint !== '' ? fingerprint : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /** Clears the cached data key (module + persisted local storage) for a specific user — call on sign-out. */
 export async function clearCachedDataKey(userId: string): Promise<void> {
   cachedDataKey = null;

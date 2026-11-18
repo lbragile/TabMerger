@@ -17,7 +17,14 @@ import {
   saveSession,
   setSetting,
 } from '@/lib/localDb'
-import { AUTO_BACKUP_PENDING_DELETES_KEY, AUTO_BACKUP_STATE_KEY, LAST_USER_ID_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys'
+import {
+  AUTO_BACKUP_PENDING_DELETES_KEY,
+  AUTO_BACKUP_STATE_KEY,
+  LAST_USER_ID_KEY,
+  SESSIONS_DELETED_HERE_KEY,
+  SESSIONS_MIGRATION_DONE_KEY,
+} from '@/lib/syncSettingKeys'
+import { wasSessionDeletedHere } from '@/lib/localDb'
 import { createGroup, createNowOpenGroup } from '@/lib/utils'
 import type { Group, Session } from '@/lib/types'
 import { clearDb } from './dbTestUtils'
@@ -40,6 +47,8 @@ const net = vi.hoisted(() => ({
   onSelect: null as null | (() => Promise<void>),
   onUpsert: null as null | ((id: string) => Promise<void>),
   authSession: { user: { id: 'user-1' } },
+  /** the key row the gate's key belongs to (Session.uploadedKey), when a test sets one */
+  keyFingerprint: undefined as string | undefined,
 }))
 
 vi.mock('@/lib/supabase', () => ({
@@ -100,7 +109,7 @@ vi.mock('@/lib/supabase', () => ({
   isSupabaseConfigured: true,
 }))
 vi.mock('@/lib/contentUploadKey', () => ({
-  getContentUploadKey: async () => (net.key ? { key: net.key } : { key: null, reason: 'locked' }),
+  getContentUploadKey: async () => (net.key ? { key: net.key, ...(net.keyFingerprint ? { keyFingerprint: net.keyFingerprint } : {}) } : { key: null, reason: 'locked' }),
   UPLOAD_BLOCKED_MESSAGE: { 'no-key': 'a', unknown: 'b', locked: 'c' },
 }))
 vi.mock('@/lib/syncEngine', () => ({
@@ -114,6 +123,7 @@ vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ cloudSync:
 vi.mock('@/lib/encryptionKey', () => ({
   getEncryptionKeyState: async () => 'present',
   getDataKey: async () => net.key,
+  getDataKeyFingerprint: async () => undefined,
   ENCRYPTION_MIGRATION_DONE_KEY: 'encryptionMigrationDone',
 }))
 
@@ -146,6 +156,7 @@ beforeEach(async () => {
   net.signals.length = 0
   net.onSelect = null
   net.onUpsert = null
+  net.keyFingerprint = undefined
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
@@ -305,6 +316,24 @@ describe('automatic backup download — real IndexedDB', () => {
     expect(await getSetting(AUTO_BACKUP_STATE_KEY, null)).toMatchObject({ lastBackupId: 'r2', fingerprint: '' })
   })
 
+  it('G3: a backup the user deleted here recently is never brought back by a download', async () => {
+    // deleted here (remembered in the delete transaction), but its row survived on the server
+    await saveSession({ id: 'r1', name: 'x', groups: [savedGroup('z')], createdAt: Date.now() - DAY, auto: true, uploadedAt: 1 })
+    await deleteSession('r1')
+    await remoteBackup('r1', Date.now() - DAY)
+    await remoteBackup('r2', Date.now() - 2 * DAY)
+    const out = await downloadAutoBackups()
+    expect(out).toMatchObject({ status: 'done', added: 1 })
+    expect((await getSessions()).map((s) => s.id)).toEqual(['r2'])
+  })
+
+  it('F6: downloaded backups are stamped with the key they were just decrypted with', async () => {
+    net.keyFingerprint = 'key-now'
+    await remoteBackup('r1', Date.now() - DAY)
+    await downloadAutoBackups()
+    expect((await getSessions()).find((s) => s.id === 'r1')).toMatchObject({ uploadedKey: 'key-now', uploadedAt: expect.any(Number) })
+  })
+
   it('after seeding, the first local backup is not skipped as unchanged', async () => {
     await remoteBackup('r1', Date.now() - 2 * 60 * 60 * 1000)
     await downloadAutoBackups()
@@ -434,13 +463,16 @@ describe('the sessions flag around a healthy backup — real IndexedDB', () => {
     expect(saved.uploadedAt).toBe(BASE)
   })
 
-  it('flag true + the upload fails: the flag ends false and no uploadedAt is stamped', async () => {
+  it('flag true + the upload fails: the backup keeps its own pending mark, no full pass is armed, no uploadedAt', async () => {
     await seedGroups('a')
     await setSetting(SESSIONS_MIGRATION_DONE_KEY, true)
     net.failUpsert = true
     expect(await runAutoBackup({ now: BASE })).toMatchObject({ status: 'created', uploaded: false })
-    expect(await getSetting(SESSIONS_MIGRATION_DONE_KEY, null)).toBe(false)
-    expect((await getSessions())[0].uploadedAt).toBeUndefined()
+    // the changed-sessions pass uploads this backup alone; a full re-upload of every session is not owed
+    expect(await getSetting(SESSIONS_MIGRATION_DONE_KEY, null)).toBe(true)
+    const [backup] = await getSessions()
+    expect(backup.uploadedAt).toBeUndefined()
+    expect(backup.uploadPending).toBe(BASE)
   })
 
   it('flag false before + upload ok: stays false (a pass is still owed for another reason)', async () => {
@@ -530,5 +562,26 @@ describe('useSync sessions pass with a session deleted mid-pass — real Indexed
     await waitFor(async () => expect(await getSetting(SESSIONS_MIGRATION_DONE_KEY, null)).toBe(true), { timeout: 5000 })
     expect(net.deleted).toEqual([])
     expect(net.rows.has('s1')).toBe(true)
+  })
+})
+
+describe('F2: deleted and rotated-out backups are remembered as deleted here — real IndexedDB', () => {
+  it('deleteAutoBackup remembers the id in the delete transaction', async () => {
+    await saveSession({ id: 'bk1', name: 'b', groups: [savedGroup('z')], createdAt: Date.now() - DAY, auto: true, uploadedAt: 1 })
+    await deleteAutoBackup('bk1')
+    expect(await wasSessionDeletedHere('bk1')).toBe(true)
+    expect(await getSessions()).toEqual([])
+  })
+
+  it('a rotation remembers the rotated-out ids with the new backup', async () => {
+    for (let i = 0; i < 10; i++) {
+      await saveSession({ id: `old${i}`, name: 'b', groups: [savedGroup('z')], createdAt: BASE - (i + 1) * DAY, auto: true, uploadedAt: 1 })
+    }
+    await seedGroups('a')
+    expect(await runAutoBackup({ now: BASE })).toMatchObject({ status: 'created' })
+    const remembered = Object.keys(((await getSetting(SESSIONS_DELETED_HERE_KEY, {})) as Record<string, number>) ?? {})
+    expect(remembered.length).toBeGreaterThan(0)
+    const stored = new Set((await getSessions()).map((s) => s.id))
+    for (const id of remembered) expect(stored.has(id)).toBe(false)
   })
 })
