@@ -18,6 +18,11 @@ const h = vi.hoisted(() => ({
   setRemember: vi.fn(),
 }))
 
+// the plan the popup shows (useEntitlements) and the confirmed-Free prune, separate from `h` (all mocks)
+const plan = vi.hoisted(() => ({ tier: 'pro' as string, loading: false, trim: vi.fn() }))
+vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ tier: plan.tier, loading: plan.loading }) }))
+vi.mock('@/lib/recentlyClosedPlan', () => ({ trimRecentlyClosedIfFree: plan.trim }))
+
 vi.mock('@/lib/recentlyClosedDb', () => ({
   getRecentlyClosedEntries: h.getEntries,
   deleteRecentlyClosedEntries: h.deleteEntries,
@@ -39,7 +44,9 @@ import {
   useReopenRecentlyClosed,
   useRemoveRecentlyClosedDay,
   useRemoveRecentlyClosedEntry,
+  useRecentlyClosedPlan,
   useSetRememberClosedTabs,
+  useTrimRecentlyClosedForPlan,
   useUndoRecentlyClosed,
 } from '@/hooks/useRecentlyClosed'
 import { APP_SETTINGS_QUERY_KEY } from '@/hooks/useAppSettings'
@@ -86,6 +93,9 @@ beforeEach(() => {
   tabGroupsUpdate = vi.fn(async () => ({}))
   sendMessage = vi.fn()
   for (const m of Object.values(h)) m.mockReset()
+  plan.tier = 'pro'
+  plan.loading = false
+  plan.trim.mockReset().mockResolvedValue(0)
   h.getEntries.mockResolvedValue([])
   h.deleteEntries.mockResolvedValue(undefined)
   h.putEntries.mockResolvedValue(undefined)
@@ -136,6 +146,96 @@ describe('useRecentlyClosed', () => {
     const { result } = renderHook(() => useRecentlyClosed(), { wrapper })
     await waitFor(() => expect(result.current.isLoading).toBe(false))
     expect(listeners).toHaveLength(0)
+  })
+})
+
+/** Local noon `back` days before today (a day boundary never splits the fixtures). */
+const daysAgo = (back: number, hour = 12) => {
+  const d = new Date(NOW)
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() - back, hour).getTime()
+}
+
+describe('useRecentlyClosed: what the plan lists', () => {
+  const threeDays = () => [tabEntry('today', 'https://t.test/', daysAgo(0, 1)), tabEntry('yest', 'https://y.test/', daysAgo(1)), tabEntry('old', 'https://o.test/', daysAgo(4))]
+
+  it('Free lists only its newest 2 days that have closes: entries, days and their count agree', async () => {
+    plan.tier = 'free'
+    h.getEntries.mockResolvedValue(threeDays())
+    const { result } = renderHook(() => useRecentlyClosed(), { wrapper })
+    await waitFor(() => expect(result.current.entries).toHaveLength(2))
+    expect(result.current.plan).toBe('free')
+    expect(result.current.entries.map((e) => e.id)).toEqual(['today', 'yest'])
+    expect(result.current.days.map((d) => d.key)).toEqual([localDayKey(daysAgo(0)), localDayKey(daysAgo(1))])
+  })
+
+  it('Free with no close today: the 2 newest days with closes, not the last 2 calendar days', async () => {
+    plan.tier = 'free'
+    h.getEntries.mockResolvedValue([tabEntry('a', 'https://a.test/', daysAgo(3)), tabEntry('b', 'https://b.test/', daysAgo(6)), tabEntry('c', 'https://c.test/', daysAgo(9))])
+    const { result } = renderHook(() => useRecentlyClosed(), { wrapper })
+    await waitFor(() => expect(result.current.days).toHaveLength(2))
+    expect(result.current.entries.map((e) => e.id)).toEqual(['a', 'b'])
+  })
+
+  it('Pro, and Free while the plan is still loading, list every stored day', async () => {
+    h.getEntries.mockResolvedValue(threeDays())
+    const { result, rerender } = renderHook(() => useRecentlyClosed(), { wrapper })
+    await waitFor(() => expect(result.current.days).toHaveLength(3))
+    expect(result.current.plan).toBe('pro')
+    plan.tier = 'free'
+    plan.loading = true
+    rerender()
+    expect(result.current.plan).toBe('unknown')
+    expect(result.current.days).toHaveLength(3)
+    plan.loading = false
+    rerender()
+    expect(result.current.plan).toBe('free')
+    expect(result.current.days).toHaveLength(2)
+  })
+
+  it('useRecentlyClosedPlan: Pro AI is pro', () => {
+    plan.tier = 'pro_ai'
+    expect(renderHook(() => useRecentlyClosedPlan()).result.current).toBe('pro')
+  })
+})
+
+describe('useTrimRecentlyClosedForPlan', () => {
+  it('prunes once when the popup shows Free, refreshing the list when something went', async () => {
+    plan.tier = 'free'
+    plan.trim.mockResolvedValue(2)
+    const spy = vi.spyOn(qc, 'invalidateQueries')
+    const { rerender } = renderHook(() => useTrimRecentlyClosedForPlan(), { wrapper })
+    await waitFor(() => expect(spy).toHaveBeenCalledWith({ queryKey: RECENTLY_CLOSED_QUERY_KEY }))
+    rerender()
+    rerender()
+    expect(plan.trim).toHaveBeenCalledTimes(1)
+  })
+
+  it('never while the plan loads or on Pro; runs once the plan turns out Free', async () => {
+    plan.tier = 'free'
+    plan.loading = true
+    const { rerender } = renderHook(() => useTrimRecentlyClosedForPlan(), { wrapper })
+    plan.tier = 'pro'
+    plan.loading = false
+    rerender()
+    expect(plan.trim).not.toHaveBeenCalled()
+    plan.tier = 'free'
+    rerender()
+    await waitFor(() => expect(plan.trim).toHaveBeenCalledTimes(1))
+  })
+
+  it('nothing deleted: no refresh; a failed prune only warns', async () => {
+    plan.tier = 'free'
+    const spy = vi.spyOn(qc, 'invalidateQueries')
+    renderHook(() => useTrimRecentlyClosedForPlan(), { wrapper })
+    await waitFor(() => expect(plan.trim).toHaveBeenCalledTimes(1))
+    await act(async () => {})
+    expect(spy).not.toHaveBeenCalled()
+
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    plan.trim.mockRejectedValueOnce(new Error('idb'))
+    renderHook(() => useTrimRecentlyClosedForPlan(), { wrapper })
+    await waitFor(() => expect(warn).toHaveBeenCalledWith('[TabMerger] recently closed trim failed:', expect.any(Error)))
+    warn.mockRestore()
   })
 })
 

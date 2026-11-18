@@ -7,10 +7,9 @@ import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { RECENTLY_CLOSED_SECTION_ATTR, SIDEBAR_SECTION } from '@/lib/sidebarSections';
 import { openPricingPage } from '@/lib/pricingLink';
-import { useRecentlyClosed } from '@/hooks/useRecentlyClosed';
+import { useRecentlyClosed, useTrimRecentlyClosedForPlan } from '@/hooks/useRecentlyClosed';
 import { useRecentlyClosedActions } from '@/hooks/useRecentlyClosedActions';
 import { useAppSettings } from '@/hooks/useAppSettings';
-import { useEntitlements } from '@/hooks/useEntitlements';
 import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
 import { readRememberClosedTabs } from '@/lib/recentlyClosed';
 import { recentlyClosedEmptyText, recentlyClosedPlanNote, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
@@ -40,8 +39,9 @@ export function useDayDetail(): (day: RecentlyClosedDay) => string {
  * one row per local day, newest first (Today, Yesterday, "Wed, Nov 11"). A row's name opens the
  * day in the main panel (`mainView` `closedDay`) and is the current row while it shows; its Remove
  * button (a sibling, never nested) removes the whole day with an Undo toast. The header counts the
- * day rows and reads "(off)" while remembering is off; the body then links to Settings → Data.
- * On Free a quiet line after the last day says how long each plan keeps them.
+ * day rows shown and reads "(off)" while remembering is off; the body then links to Settings → Data.
+ * On Free only the days Free keeps are listed, and a quiet line after the last day says how long
+ * each plan keeps them.
  */
 export function RecentlyClosedSection({ groups }: { groups: readonly Group[] }) {
   const { t } = useTranslation();
@@ -53,15 +53,17 @@ export function RecentlyClosedSection({ groups }: { groups: readonly Group[] }) 
   const openModal = useUIStore((s) => s.openModal);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
   const { data: settings } = useAppSettings();
-  const { tier, loading: planLoading } = useEntitlements();
-  const { days } = useRecentlyClosed();
+  // `days` is already limited to what the plan keeps (Free: its newest days), so the header count,
+  // the rows and the Free note always agree; storage is trimmed to match once Free is confirmed
+  const { days, plan } = useRecentlyClosed();
+  useTrimRecentlyClosedForPlan();
   const { removeDay } = useRecentlyClosedActions();
   const dayDetail = useDayDetail();
   const rootRef = useRef<HTMLDivElement>(null);
   const focus = useFocusAfterRowRemoval(rootRef, days.map((d) => d.key), 'data-closed-day-open');
 
   const on = readRememberClosedTabs(settings);
-  const free = !planLoading && tier === 'free';
+  const free = plan === 'free';
 
   const show = (day: RecentlyClosedDay) => {
     if (selectionMode) return;

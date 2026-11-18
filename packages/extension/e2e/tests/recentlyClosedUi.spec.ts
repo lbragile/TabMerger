@@ -93,7 +93,8 @@ test.describe('Recently closed: sidebar section and day view', () => {
       await expect(sectionToggle(page).locator('span.uppercase')).toHaveCSS('font-weight', '400');
       await sectionToggle(page).click();
       await expect(sectionToggle(page)).toHaveAttribute('aria-expanded', 'true');
-      await expect(sectionToggle(page).locator('span.uppercase')).toHaveCSS('font-weight', '600');
+      // bold (700), not semibold: 600 in the platform UI font at 11px barely differed from 400
+      await expect(sectionToggle(page).locator('span.uppercase')).toHaveCSS('font-weight', '700');
       await expect(sectionToggle(page)).toHaveAccessibleName(/recently closed \(0\)/i);
       // signed out = Free: its rolling window
       await expect(page.getByText('Nothing closed yet. Tabs you close show up here by day, for your last 2 days.')).toBeVisible();
@@ -108,6 +109,7 @@ test.describe('Recently closed: sidebar section and day view', () => {
       await expect(dayView(page)).toBeVisible();
       await expect(dayView(page).getByRole('heading', { level: 2, name: 'Today' })).toBeVisible();
       await expect(todayRow(page)).toHaveAttribute('aria-current', 'page');
+      await expect(todayRow(page).locator('span').first()).toHaveCSS('font-weight', '700');
       await expect(dayView(page).getByRole('button', { name: /^Reopen Closed B, closed / })).toBeVisible();
 
       // ✕ goes back and returns focus to the day row
@@ -117,6 +119,55 @@ test.describe('Recently closed: sidebar section and day view', () => {
     } finally {
       await server.close();
     }
+  });
+
+  test('Free with 3 stored days lists its 2 newest, "(2)" in the header, and storage is trimmed to match; the open day is bold', async ({ context, extensionId }) => {
+    const { page, sw } = await setup(context, extensionId, { expand: false });
+    // kept under the Pro limits (or an older rule): no close today, then yesterday, 2 and 5 days ago
+    await page.evaluate(async () => {
+      const at = (back: number) => {
+        const d = new Date();
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate() - back, 12).getTime();
+      };
+      const rows = [1, 1, 2, 5].map((back, i) => ({ id: `seeded-${i}`, closedAt: at(back) - i * 60_000, kind: 'tab', tabs: [{ url: `https://seeded${i}.example/`, title: `Seeded ${i}` }] }));
+      await new Promise<void>((resolve, reject) => {
+        const req = indexedDB.open('tabmerger');
+        req.onerror = () => reject(req.error);
+        req.onsuccess = () => {
+          const db = req.result;
+          const tx = db.transaction('recentlyClosed', 'readwrite');
+          for (const row of rows) tx.objectStore('recentlyClosed').put(row);
+          tx.oncomplete = () => {
+            db.close();
+            resolve();
+          };
+          tx.onerror = () => reject(tx.error);
+        };
+      });
+    });
+    await page.reload({ waitUntil: 'networkidle' });
+    // signed out on a fresh profile = Free, confirmed: the header counts only the rows shown
+    await expect(sectionToggle(page)).toHaveAccessibleName(/recently closed \(2\)/i);
+    await sectionToggle(page).click();
+    const dayRows = page.locator('[data-closed-day-open]');
+    await expect(dayRows).toHaveCount(2);
+    const yesterday = page.getByRole('button', { name: 'Show tabs closed yesterday' });
+    await expect(yesterday).toHaveAccessibleDescription('2 tabs');
+    await expect(page.getByTestId('recently-closed-free-note')).toContainText('Free keeps your last 2 days.');
+    // the popup's catch-up prune: storage holds exactly the 2 days shown
+    await expect.poll(async () => (await storedTitles(sw)).length, { timeout: 10_000 }).toBe(3);
+
+    await yesterday.click();
+    await expect(yesterday).toHaveAttribute('aria-current', 'page');
+    await expect(yesterday.locator('span').first()).toHaveCSS('font-weight', '700');
+    await expect(sectionToggle(page).locator('span.uppercase')).toHaveCSS('font-weight', '700');
+    const other = page.locator('[data-closed-day-open]:not([aria-current])');
+    await expect(other.locator('span').first()).toHaveCSS('font-weight', '400');
+    // the other day is current once opened
+    await other.click();
+    await expect(yesterday).not.toHaveAttribute('aria-current');
+    await expect(yesterday.locator('span').first()).toHaveCSS('font-weight', '400');
+    await expect(page.locator('[data-closed-day-open][aria-current="page"] span').first()).toHaveCSS('font-weight', '700');
   });
 
   test('reopening a tab takes it off the list and opens it; Undo closes it and brings it back', async ({ context, extensionId }) => {

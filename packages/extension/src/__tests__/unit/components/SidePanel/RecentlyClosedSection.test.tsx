@@ -17,9 +17,14 @@ const h = vi.hoisted(() => ({
   track: vi.fn(),
   openModal: vi.fn(),
   create: vi.fn(),
+  trim: vi.fn(),
 }))
 
-vi.mock('@/hooks/useRecentlyClosed', () => ({ useRecentlyClosed: () => ({ days: h.days, entries: h.days.flatMap((d) => d.entries), isLoading: false }) }))
+vi.mock('@/hooks/useRecentlyClosed', () => ({
+  // the real hook limits `days` to the plan (see RecentlyClosedSectionPlan.test.tsx); here they are given as is
+  useRecentlyClosed: () => ({ days: h.days, entries: h.days.flatMap((d) => d.entries), isLoading: false, plan: h.planLoading ? 'unknown' : h.tier === 'free' ? 'free' : 'pro' }),
+  useTrimRecentlyClosedForPlan: h.trim,
+}))
 vi.mock('@/hooks/useRecentlyClosedActions', () => ({ useRecentlyClosedActions: () => ({ removeDay: h.removeDay }) }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => ({ data: h.settings }) }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ tier: h.tier, loading: h.planLoading }) }))
@@ -84,14 +89,14 @@ describe('RecentlyClosedSection', () => {
     expect(useUIStore.getState().openSidebarSection).toBeNull()
   })
 
-  it('the expanded header is semibold, a collapsed one regular', async () => {
+  it('the expanded header is bold, a collapsed one regular', async () => {
     const user = userEvent.setup()
     renderSection()
     const label = () => screen.getByRole('button', { name: /^recently closed \(/i }).querySelector('span.uppercase')!
-    expect(label().className).toContain('font-semibold')
+    expect(label().className).toContain('font-bold')
     await user.click(screen.getByRole('button', { name: /^recently closed \(/i }))
     expect(label().className).toContain('font-normal')
-    expect(label().className).not.toContain('font-semibold')
+    expect(label().className).not.toContain('font-bold')
   })
 
   it('header counts the day rows; each row has its label, tabs and windows, entry count and colour bar', () => {
@@ -108,7 +113,7 @@ describe('RecentlyClosedSection', () => {
     expect(screen.getByRole('button', { name: 'Show tabs closed on Mon, Dec 30' })).toBeInTheDocument()
   })
 
-  it('clicking a day opens it on the right; that row is the only current one (semibold, aria-current)', async () => {
+  it('clicking a day opens it on the right; that row is the only current one (bold, aria-current)', async () => {
     const user = userEvent.setup()
     renderSection()
     await user.click(screen.getByRole('button', { name: 'Show tabs closed yesterday' }))
@@ -117,7 +122,7 @@ describe('RecentlyClosedSection', () => {
     expect(h.track).toHaveBeenCalledWith('recently_closed_opened')
     const current = screen.getByRole('button', { name: 'Show tabs closed yesterday' })
     expect(current).toHaveAttribute('aria-current', 'page')
-    expect(current.querySelector('span')?.className).toContain('font-semibold')
+    expect(current.querySelector('span')?.className).toContain('font-bold')
     expect(screen.getByRole('button', { name: 'Show tabs closed today' })).not.toHaveAttribute('aria-current')
     expect(current.closest('li')?.className).toContain('bg-[var(--sidebar-current-bg)]')
   })

@@ -1,11 +1,13 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { RECENTLY_CLOSED_MESSAGE, RECENTLY_CLOSED_UNDO_TOAST_MS as UNDO_TOAST_MS } from '@tabmerger/shared';
 import { isOpenableUrl } from '@/lib/safeOpen';
 import { closeTabs, closeWindows } from '@/lib/closeLiveTabs';
 import { APP_SETTINGS_QUERY_KEY, type AppSettings } from '@/hooks/useAppSettings';
-import type { ClosedTab, RecentlyClosedEntry } from '@/lib/recentlyClosed';
+import { useEntitlements } from '@/hooks/useEntitlements';
+import { entriesShownForPlan, type ClosedTab, type RecentlyClosedEntry, type RecentlyClosedPlan } from '@/lib/recentlyClosed';
+import { trimRecentlyClosedIfFree } from '@/lib/recentlyClosedPlan';
 import { groupEntriesByDay, localDayKey, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
 import {
   deleteRecentlyClosedEntries,
@@ -22,7 +24,9 @@ import {
  * (lib/recentlyClosedRecorder.ts); this reads the list and changes it. No UI here.
  *
  * Reading:
- *   const { entries, days, isLoading } = useRecentlyClosed();
+ *   const { entries, days, plan, isLoading } = useRecentlyClosed();
+ *   // what the plan lists (entriesShownForPlan): on Free only the newest 2 days that have closes,
+ *   // so every consumer (day rows and their count, day view, Ctrl+K, Settings) shows the same list.
  *   // days: newest first, each { key: 'YYYY-MM-DD', kind, label, color, start, end, entries,
  *   // tabCount, windowCount, allTabCount } (see RecentlyClosedDay in lib/recentlyClosedDays.ts).
  *   // `color` is the day's fixed colour (colorForDay): same every time, different from the next day.
@@ -75,13 +79,27 @@ function changed(qc: QueryClient, cleared = false): void {
 }
 
 /**
- * The recently-closed list: `entries` (newest first, cleared ones left out) and `days` (grouped by
- * local day, labelled in the UI language). `staleTime: Infinity` (local data); refetched when the
- * worker records a close (`RECENTLY_CLOSED_CHANGED`) and after every change made here.
+ * The plan the popup lists recently closed tabs for: `free` once `useEntitlements` says Free (not
+ * while it loads), else `pro`/`unknown` (everything stored). Display only: pruning storage needs a
+ * confirmed answer (see {@link useTrimRecentlyClosedForPlan}).
+ */
+export function useRecentlyClosedPlan(): RecentlyClosedPlan {
+  const { tier, loading } = useEntitlements();
+  if (loading) return 'unknown';
+  return tier === 'free' ? 'free' : 'pro';
+}
+
+/**
+ * The recently-closed list as the plan shows it: `entries` (newest first, cleared ones left out)
+ * and `days` (grouped by local day, labelled in the UI language), both limited by
+ * `entriesShownForPlan` (Free: the newest `recentDays` days that have closes, the days its prune
+ * keeps), and the `plan` they were limited for. `staleTime: Infinity` (local data); refetched when
+ * the worker records a close (`RECENTLY_CLOSED_CHANGED`) and after every change made here.
  */
 export function useRecentlyClosed() {
   const qc = useQueryClient();
   const { i18n } = useTranslation();
+  const plan = useRecentlyClosedPlan();
   const query = useQuery({
     queryKey: RECENTLY_CLOSED_QUERY_KEY,
     queryFn: () => getRecentlyClosedEntries(),
@@ -99,13 +117,34 @@ export function useRecentlyClosed() {
     return () => chrome.runtime.onMessage.removeListener(onMessage);
   }, [qc]);
 
-  const entries = query.data;
+  const stored = query.data;
   const language = i18n.language;
-  const days: RecentlyClosedDay[] = useMemo(
-    () => (entries ? groupEntriesByDay(entries, Date.now(), language) : []),
-    [entries, language]
-  );
-  return { ...query, entries: entries ?? [], days };
+  const entries = useMemo(() => (stored ? entriesShownForPlan(stored, plan) : []), [stored, plan]);
+  const days: RecentlyClosedDay[] = useMemo(() => groupEntriesByDay(entries, Date.now(), language), [entries, language]);
+  return { ...query, entries, days, plan };
+}
+
+/**
+ * Catches storage up with the Free list: once the popup shows Free (`useRecentlyClosedPlan`), the
+ * stored list is pruned to the Free limits ONCE per mount, through `trimRecentlyClosedIfFree`,
+ * which prunes only when the server confirms Free (never while the plan loads, never on `unknown`,
+ * never on the Free `useEntitlements` reports when its read failed). Without it, entries kept under
+ * the Pro limits (recorded while the plan was unknown, or under an older rule) stayed stored until
+ * the worker's next start or recorded close. Mounted once, by the sidebar section.
+ */
+export function useTrimRecentlyClosedForPlan(): void {
+  const qc = useQueryClient();
+  const plan = useRecentlyClosedPlan();
+  const done = useRef(false);
+  useEffect(() => {
+    if (plan !== 'free' || done.current) return;
+    done.current = true;
+    trimRecentlyClosedIfFree()
+      .then((deleted) => {
+        if (deleted > 0) void qc.invalidateQueries({ queryKey: RECENTLY_CLOSED_QUERY_KEY });
+      })
+      .catch((err: unknown) => console.warn('[TabMerger] recently closed trim failed:', err));
+  }, [plan, qc]);
 }
 
 async function popupWindowId(): Promise<number | undefined> {

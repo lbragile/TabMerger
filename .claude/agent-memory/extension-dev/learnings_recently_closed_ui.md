@@ -16,7 +16,8 @@ Shape:
   (`RECENTLY_CLOSED_SECTION_ATTR` lives in `lib/sidebarSections.ts`, NOT the component module:
   MainPanel importing the section component dragged its hooks into every MainPanel test).
 - `uiStore.openSidebarSection` defaults to null (every section collapsed when the popup opens);
-  `SidebarSection` makes the expanded section's label semibold.
+  `SidebarSection` makes the expanded section's label bold (see
+  [[learnings-recently-closed-plan-display]] for why not semibold).
 - All list actions + toasts + status line + analytics live in ONE hook,
   `hooks/useRecentlyClosedActions.ts`; components get `true` back when the entry really left, and
   only then move focus (`useFocusAfterRowRemoval` gained a `fallbackSelector`, the day view uses

@@ -23,11 +23,13 @@ export const SIDEBAR_ROW = 'flex items-center gap-1 px-2 py-1 transition-colors 
 export const SIDEBAR_ROW_ACTIVE = 'bg-[var(--sidebar-current-bg)] hover:bg-[var(--sidebar-current-bg)]';
 
 /**
- * A section row's name: semibold and in the full text colour on the one row the main panel shows
- * (the same weight as the active group row), regular and muted everywhere else.
+ * A section row's name: bold (700) and in the full text colour on the one row the main panel shows,
+ * regular and muted everywhere else. Bold, not semibold: the popup renders in the platform UI font
+ * (Segoe UI on Windows), where 600 at 11px barely differs from 400; every platform UI font ships
+ * a real bold, so it is never synthesized.
  */
 export function sidebarRowNameClass(active: boolean): string {
-  return active ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground';
+  return active ? 'font-bold text-foreground' : 'font-normal text-muted-foreground';
 }
 
 /**
@@ -45,7 +47,7 @@ export function sidebarRowDetailClass(active: boolean): string {
  * toggle (never nested — nested interactive elements are invalid HTML and break both a11y
  * and click handling), and a collapsible body that shows `emptyLabel` when there is
  * nothing to list. Every section always renders — only the body is gated on `open`. The open
- * section's label is semibold (collapsed ones regular), so the expanded one stands out. The toggle
+ * section's label is bold (collapsed ones regular), so the expanded one stands out. The toggle
  * says what it controls (`aria-controls`, while the body exists). The label is shown in capitals by
  * CSS, so screen readers read the words, not letters.
  */
@@ -89,8 +91,8 @@ export function SidebarSection({
           data-sidebar-section-toggle=""
         >
           {open ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0 rtl:-scale-x-100" />}
-          {/* the expanded section's label is semibold, the collapsed ones regular (same colour tokens) */}
-          <span className={cn('truncate uppercase', open ? 'font-semibold' : 'font-normal')}>{t('sidePanel.sectionLabel', { label, count })}</span>
+          {/* the expanded section's label is bold, the collapsed ones regular (same colour tokens) */}
+          <span className={cn('truncate uppercase', open ? 'font-bold' : 'font-normal')}>{t('sidePanel.sectionLabel', { label, count })}</span>
         </button>
         {action}
       </div>

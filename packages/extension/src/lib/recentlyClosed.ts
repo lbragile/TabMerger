@@ -114,6 +114,31 @@ export function limitsForPlan(plan: RecentlyClosedPlan): RecentlyClosedLimits {
   return plan === 'free' ? RECENTLY_CLOSED_LIMITS.free : RECENTLY_CLOSED_LIMITS.pro;
 }
 
+/**
+ * The newest `count` local days (`localDayKey`) that have an entry not marked cleared: Free's
+ * rolling window. At least one day. Shared by pruning ({@link planPrune}) and what the popup shows
+ * ({@link entriesShownForPlan}), so the list never shows a day the next prune would delete.
+ */
+export function newestDayKeys(entries: readonly Pick<RecentlyClosedEntry, 'closedAt' | 'clearedAt'>[], count: number): Set<string> {
+  const days = [...new Set(entries.filter((e) => e.clearedAt === undefined).map((e) => localDayKey(e.closedAt)))].sort().reverse();
+  return new Set(days.slice(0, Math.max(1, count)));
+}
+
+/**
+ * The entries the popup lists for `plan` (the sidebar day rows and their count, the day view,
+ * Ctrl+K's closed results, the Settings count): on a plan KNOWN to be Free only the newest
+ * `recentDays` local days that have entries, the same days the Free prune keeps, so the list
+ * matches "Free keeps your last 2 days" even before storage was pruned. Any other plan (`pro`, or
+ * `unknown` while it is loading) lists everything. Cleared entries are never listed.
+ */
+export function entriesShownForPlan<T extends Pick<RecentlyClosedEntry, 'closedAt' | 'clearedAt'>>(entries: readonly T[], plan: RecentlyClosedPlan): T[] {
+  const live = entries.filter((e) => e.clearedAt === undefined);
+  const { recentDays } = limitsForPlan(plan);
+  if (recentDays === undefined) return live;
+  const keep = newestDayKeys(live, recentDays);
+  return live.filter((e) => keep.has(localDayKey(e.closedAt)));
+}
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
@@ -278,8 +303,7 @@ export function planPrune(existing: RecentlyClosedEntry[], entry: RecentlyClosed
   if (entry) kept.push(entry);
   if (limits.recentDays !== undefined) {
     // the newest N local days that have entries; the entry being added is always among them
-    const days = [...new Set(kept.map((e) => localDayKey(e.closedAt)))].sort().reverse();
-    const keepDays = new Set(days.slice(0, Math.max(1, limits.recentDays)));
+    const keepDays = newestDayKeys(kept, limits.recentDays);
     if (entry) keepDays.add(localDayKey(entry.closedAt));
     for (const e of kept) if (!keepDays.has(localDayKey(e.closedAt)) && e.id !== entry?.id) drop.add(e.id);
     kept = kept.filter((e) => !drop.has(e.id));

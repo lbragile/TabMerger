@@ -117,12 +117,12 @@ describe('AutoSavedSection', () => {
     act(() => useUIStore.setState({ activeGroupIndex: 2 }))
     const row = () => screen.getByRole('button', { name: 'Open Name a' })
     expect(row()).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByText('Name a')).toHaveClass('font-semibold')
+    expect(screen.getByText('Name a')).toHaveClass('font-bold')
     for (const view of [{ kind: 'archived', groupId: 'x' } as const, { kind: 'session', sessionId: 's' } as const]) {
       act(() => useUIStore.setState({ mainView: view }))
       expect(row()).not.toHaveAttribute('aria-current')
       expect(screen.getByText('Name a')).toHaveClass('font-normal')
-      expect(screen.getByText('Name a')).not.toHaveClass('font-semibold')
+      expect(screen.getByText('Name a')).not.toHaveClass('font-bold')
     }
     act(() => useUIStore.setState({ mainView: GROUP_VIEW }))
     expect(row()).toHaveAttribute('aria-current', 'page')

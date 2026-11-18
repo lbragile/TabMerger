@@ -326,7 +326,7 @@ describe('SidePanel — section rows open read-only views; the sections are an a
     expect(screen.getByTestId('group-item')).toHaveAttribute('data-active', 'false')
     expect(useUIStore.getState()).toMatchObject({ mainView: { kind: 'archived', groupId: 'arch' }, mainViewReturnGroupId: 'now' })
     expect(open).toHaveAttribute('aria-current', 'page')
-    expect(within(open).getByText('Old Project')).toHaveClass('font-semibold')
+    expect(within(open).getByText('Old Project')).toHaveClass('font-bold')
     expect(open.querySelector('button')).toBeNull()
     expect(open.parentElement).toContainElement(screen.getByRole('button', { name: /restore old project/i }))
   })

@@ -160,7 +160,9 @@ test.describe('Sidebar section views', () => {
     await expect(nowOpen).not.toHaveAttribute('aria-current', /.*/);
     await expect(nowOpen.locator('.font-semibold')).toHaveCount(0);
     await expect(archivedRow).toHaveAttribute('aria-current', 'page');
-    await expect(archivedRow.locator('.font-semibold')).toHaveCount(1);
+    // a section row's current state is bold (700), a step above the group row's semibold
+    await expect(archivedRow.locator('.font-bold')).toHaveCount(1);
+    await expect(archivedRow.locator('.font-bold')).toHaveCSS('font-weight', '700');
 
     // picking a group row makes it current again and clears the view's row
     await nowOpen.click();
