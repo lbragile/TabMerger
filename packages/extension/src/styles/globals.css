@@ -27,6 +27,8 @@
   --color-zone-sidebar: hsl(var(--zone-sidebar));
   --color-tooltip: hsl(var(--tooltip));
   --color-tooltip-foreground: hsl(var(--tooltip-foreground));
+  --color-view-primary: hsl(var(--view-primary));
+  --color-view-primary-foreground: hsl(var(--view-primary-foreground));
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -47,6 +49,11 @@
        (white on --primary is only 3.05:1) */
     --tooltip: 193 100% 28%;
     --tooltip-foreground: 0 0% 100%;
+    /* The primary action of a read-only view's header (Restore, Restore session): the primary hue,
+       darker in the light theme so its white 12px label reaches 5.7:1 (white on --primary: 3.04:1).
+       Own tokens, so a restyle of tooltips or of --primary never recolours it by accident. */
+    --view-primary: 193 100% 28%;
+    --view-primary-foreground: 0 0% 100%;
     /* Links inside a sentence ("See Pro", "Turn on in Settings"): the primary hue, dark enough
        for 4.5:1 on white, the sidebar and its hover (--primary itself is ~3:1 there) */
     --inline-link: 193 100% 25%;
@@ -81,6 +88,18 @@
     --sidebar-current-bg: rgba(0,0,0,0.12);  /* the row the main panel shows: clearly stronger than hover */
     --sidebar-badge-bg: rgba(0,0,0,0.07);
     --sidebar-accent-filter: brightness(0.7);
+
+    /* Read-only session/archived views (`.tm-session-tile`, `.tm-bracket-*` below). Percentages
+       of the item's colour mixed into the background (fill, border, rail) or into black (icon):
+       on white the colour alone is too faint for the icon (yellow ~2:1), so it is darkened to
+       stay >= 3:1 on its tile; the rail is stronger than in the dark theme for the same reason.
+       `__tests__/unit/styles/sessionViewContrast.test.ts` checks every palette colour. */
+    --session-tile-fill: 10%;
+    --session-tile-border: 45%;
+    --session-tile-icon: 60%;
+    --bracket-rail: 65%;
+    /* The height of a session group's sticky header; window tiles stick just below it */
+    --section-group-header: 2.375rem;
   }
 
   .dark {
@@ -108,6 +127,9 @@
     /* Tooltips keep the primary look in the dark theme (7.3:1) */
     --tooltip: 193 80% 55%;
     --tooltip-foreground: 193 100% 10%;
+    /* Unchanged from --primary in the dark theme (dark text on it: 7.3:1) */
+    --view-primary: 193 80% 55%;
+    --view-primary-foreground: 193 100% 10%;
     --inline-link: 193 80% 55%;
     --secondary: 33 85% 60%;
     --secondary-foreground: 33 91% 10%;
@@ -120,6 +142,11 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+    /* The icon keeps the full colour: every palette colour is >= 3:1 on its dark tile */
+    --session-tile-fill: 14%;
+    --session-tile-border: 45%;
+    --session-tile-icon: 100%;
+    --bracket-rail: 50%;
   }
 }
 
@@ -331,6 +358,18 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Read-only views. The item's colour comes in as `--item-color` (an inline style, as group
+   colours always are); the theme decides how strong each part is (tokens in :root / .dark). */
+.tm-session-tile {
+  background-color: color-mix(in srgb, var(--item-color) var(--session-tile-fill), hsl(var(--background)));
+  border: 1px solid color-mix(in srgb, var(--item-color) var(--session-tile-border), hsl(var(--background)));
+  color: color-mix(in srgb, var(--item-color) var(--session-tile-icon), #000);
+}
+/* A window's bracket: the rail beside its tabs and the foot at its end */
+.tm-bracket-rail {
+  background-color: color-mix(in srgb, var(--item-color) var(--bracket-rail), hsl(var(--background)));
 }
 
 /* DnD: no row transform transitions during the frames where the native-drag source

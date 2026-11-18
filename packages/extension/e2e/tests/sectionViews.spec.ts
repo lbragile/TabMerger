@@ -1,6 +1,7 @@
+import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload } from '../helpers';
+import { openPopup, seedAndReload, seedSettings } from '../helpers';
 import { NOW_OPEN, WORK_GROUP, ANOTHER_GROUP, tab } from '../seed';
 
 /**
@@ -84,7 +85,7 @@ test.describe('Sidebar section views', () => {
     await expect(view).toBeVisible();
     await expect(view.getByRole('heading', { level: 2, name: 'Morning setup' })).toBeVisible();
     // each group is a named group with a heading, not a landmark
-    await expect(view.getByRole('group', { name: 'Session group' })).toBeVisible();
+    await expect(view.getByRole('group', { name: 'Session group', exact: true })).toBeVisible();
     await expect(view.getByRole('region')).toHaveCount(0);
 
     await view.getByRole('button', { name: 'Restore session', exact: true }).click();
@@ -188,5 +189,115 @@ test.describe('Sidebar section views', () => {
     });
     expect(attachedToBody).toBe(true);
     expect(await tooltip.evaluate((el) => !!el.closest('[data-sidebar-group-index]'))).toBe(false);
+  });
+});
+
+/** A session of 10 groups x 5 windows x 10 tabs (500 tabs); group 1's second window is named "Press". */
+async function seedLargeSession(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const colors = ['rgba(236, 72, 153, 1)', 'rgba(59, 130, 246, 1)', 'rgba(234, 179, 8, 1)', 'rgba(34, 197, 94, 1)', 'rgba(249, 115, 22, 1)'];
+    const groups = Array.from({ length: 10 }, (_, g) => ({
+      id: `big${g}`,
+      name: `Group ${g + 1}`,
+      color: colors[g % colors.length],
+      updatedAt: 1,
+      windows: Array.from({ length: 5 }, (_, w) => ({
+        id: 0,
+        incognito: false,
+        focused: false,
+        ...(g === 0 && w === 1 ? { name: 'Press' } : {}),
+        tabs: Array.from({ length: 10 }, (_, t) => ({ id: 0, title: `Tab ${g + 1}.${w + 1}.${t + 1}`, url: `https://site${t}.example.com/${g}/${w}` })),
+      })),
+    }));
+    await new Promise<void>((resolve, reject) => {
+      const req = indexedDB.open('tabmerger');
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => {
+        const tx = req.result.transaction('sessions', 'readwrite');
+        tx.objectStore('sessions').put({ id: 'sessbig001', name: 'Big session', color: 'rgba(234, 179, 8, 1)', createdAt: Date.now() - 60_000, groups });
+        tx.oncomplete = () => {
+          req.result.close();
+          resolve();
+        };
+        tx.onerror = () => reject(tx.error);
+      };
+    });
+  });
+}
+
+async function openLargeSession(context: Parameters<typeof openPopup>[0], extensionId: string, theme: 'dark' | 'light'): Promise<Page> {
+  const page = await openPopup(context, extensionId);
+  await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+  await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
+  await seedLargeSession(page);
+  await seedSettings(page, { appSettings: { theme } });
+  await page.evaluate((t) => localStorage.setItem('tabmerger-theme', t), theme);
+  await page.reload({ waitUntil: 'networkidle' });
+  await sessionsHeader(page).click();
+  await page.getByRole('button', { name: 'Show session Big session' }).click();
+  await expect(page.getByTestId('session-view')).toBeVisible();
+  return page;
+}
+
+test.describe('Session view layout (sticky group headers, window brackets, fades)', () => {
+  test('500 tabs: the group header and window tile stay at the top while scrolling; the bottom fade goes at the end', async ({ context, extensionId }) => {
+    const page = await openLargeSession(context, extensionId, 'dark');
+    const view = page.getByTestId('session-view');
+    const scroller = view.locator('[data-faded-scroll]');
+    const topFade = view.locator('[data-fade="top"]');
+    const bottomFade = view.locator('[data-fade="bottom"]');
+
+    await expect(view.getByRole('button', { name: /^Tab / })).toHaveCount(500);
+    await expect(view.getByRole('group', { name: 'Group 1, Press, window 2, 10 tabs' })).toBeVisible();
+    await expect(topFade).toHaveCSS('opacity', '0');
+    await expect(bottomFade).toHaveCSS('opacity', '1');
+
+    // into group 3's second window, past its first tabs
+    const target = view.getByRole('group', { name: 'Group 3, window 2, 10 tabs' });
+    await scroller.evaluate((el) => {
+      const win = el.querySelector<HTMLElement>('[aria-label="Group 3, window 2, 10 tabs"]')!;
+      el.scrollTop += win.getBoundingClientRect().top - el.getBoundingClientRect().top + 120;
+    });
+    const scrollTop = (await scroller.boundingBox())!.y;
+    const header = view.getByRole('group', { name: 'Group 3' }).locator('[data-session-group-header]');
+    await expect.poll(async () => Math.round((await header.boundingBox())!.y - scrollTop)).toBe(0);
+    await expect(header.getByRole('heading', { level: 3, name: 'Group 3' })).toBeInViewport();
+    // the tile sits just under the header (its height + 0.5rem), not scrolled away with the window's top
+    const tile = target.locator('[data-window-tile]');
+    const headerHeight = (await header.boundingBox())!.height;
+    await expect.poll(async () => Math.round((await tile.boundingBox())!.y - scrollTop)).toBe(Math.round(headerHeight + 8));
+    await expect(tile).toBeInViewport();
+    await expect(tile).toContainText('2');
+    await expect(topFade).toHaveCSS('opacity', '1');
+    await expect(bottomFade).toHaveCSS('opacity', '1');
+
+    // the end: no bottom fade, the "End of session" line
+    await scroller.evaluate((el) => {
+      el.scrollTop = el.scrollHeight;
+    });
+    await expect(bottomFade).toHaveCSS('opacity', '0');
+    await expect(topFade).toHaveCSS('opacity', '1');
+    await expect(view.getByText('End of session · 500 tabs')).toBeInViewport();
+    // no read-only banner: Restore session asks first
+    await expect(view.getByRole('note')).toHaveCount(0);
+  });
+
+  for (const theme of ['dark', 'light'] as const) {
+    test(`axe finds nothing in the session view (${theme} theme)`, async ({ context, extensionId }) => {
+      const page = await openLargeSession(context, extensionId, theme);
+      await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /dark/ : /^(?!.*dark)/);
+      const results = await new AxeBuilder({ page }).include('[data-testid="session-view"]').analyze();
+      expect(results.violations).toEqual([]);
+    });
+  }
+
+  test('axe finds nothing in the archived view with brackets', async ({ context, extensionId }) => {
+    const page = await openWithViews(context, extensionId);
+    await archivedHeader(page).click();
+    await page.getByRole('button', { name: 'Show archived group Old Project' }).click();
+    const view = page.getByTestId('archived-view');
+    await expect(view.getByRole('group', { name: 'Old Project, window 1, 2 tabs' })).toBeVisible();
+    const results = await new AxeBuilder({ page }).include('[data-testid="archived-view"]').analyze();
+    expect(results.violations).toEqual([]);
   });
 });

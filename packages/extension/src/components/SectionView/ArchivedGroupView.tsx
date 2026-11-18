@@ -11,7 +11,8 @@ import { ReadOnlyWindows } from './ReadOnlyWindows';
 /**
  * An archived group, read-only, in the main panel (`mainView` `archived`). Restore brings it back
  * and shows it as a normal group; Delete (⋯) removes it, and the panel falls back to the group
- * shown before (`MainPanel`). Tabs open on click; nothing else is editable here.
+ * shown before (`MainPanel`). Its windows are brackets in the group's colour (no group header:
+ * the view is one group). Tabs open on click; nothing else is editable here.
  */
 export function ArchivedGroupView({ group, groupIndex, groups }: { group: Group; groupIndex: number; groups: readonly Group[] }) {
   const { t } = useTranslation();
@@ -45,7 +46,7 @@ export function ArchivedGroupView({ group, groupIndex, groups }: { group: Group;
         banner={t('sidePanel.view.archivedBanner', { time: formatTimeAgo(group.updatedAt) })}
       />
       <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-2">
-        <ReadOnlyWindows windows={group.windows} headingLevel={3} />
+        <ReadOnlyWindows windows={group.windows} groupName={group.name} color={group.color} />
       </div>
     </div>
   );

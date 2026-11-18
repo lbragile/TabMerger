@@ -145,19 +145,21 @@ describe('MainPanel — session view', () => {
 
   const openSession = () => act(() => useUIStore.getState().openMainView({ kind: 'session', sessionId: 's1' }, 'now'))
 
-  it('previews each group with its colour bar, counts and tabs', () => {
+  it('previews each group with its sticky header, counts and tabs', () => {
     h.sessions = [session]
     renderPanel(state())
     openSession()
     expect(screen.getByRole('heading', { level: 2, name: 'Morning' })).toBeInTheDocument()
-    expect(metaLine(/^Session ◆ .+ ◆ 2 Groups ◆ 3 Tabs$/)).toBeInTheDocument()
+    expect(metaLine(/^Saved .+ · 2 groups · 2 windows · 3 tabs$/)).toBeInTheDocument()
     expect(screen.getByText('Before standup')).toBeInTheDocument()
-    expect(screen.getByRole('note')).toHaveTextContent("A snapshot of your groups. Looking doesn't change anything; Restore session brings these groups back.")
+    // no read-only banner: Restore session asks before it changes anything
+    expect(screen.queryByRole('note')).toBeNull()
     // a named group (not a landmark) with a real heading
     expect(screen.queryAllByRole('region')).toHaveLength(0)
     const read = screen.getByRole('group', { name: 'Read' })
     expect(within(read).getByRole('heading', { level: 3, name: 'Read' })).toBeInTheDocument()
-    expect(metaLine('1 Window ◆ 2 Tabs', within(read))).toBeInTheDocument()
+    expect(metaLine('1 window · 2 tabs', within(read))).toBeInTheDocument()
+    expect(within(read).getByRole('group', { name: 'Read, window 1, 2 tabs' })).toBeInTheDocument()
   })
 
   it('Restore session asks first, restores, then goes back to the group view', async () => {

@@ -1,18 +1,20 @@
-import { useId } from 'react';
+import { useId, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Bookmark, RotateCcw } from 'lucide-react';
 import type { Group, Session } from '@/lib/types';
 import { formatDateTime } from '@/lib/i18n';
-import { formatGroupCounts, getGroupTabCount, getSessionCounts } from '@/lib/utils';
+import { getGroupTabCount, getSessionCounts } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useDeleteSession } from '@/hooks/useSessions';
 import { useConfirmedRestoreSession } from '@/hooks/useConfirmedRestoreSession';
 import { announceSectionView } from '@/lib/sectionViewStatus';
 import { handleReadOnlyListKeyDown } from '@/lib/readOnlyListKeys';
+import { sessionDisplayColor } from '@/lib/sessionColor';
 import { SectionViewHeader } from './SectionViewHeader';
-import { SeparatedText } from './SeparatedText';
+import { DOT_SEPARATOR, SeparatedText } from './SeparatedText';
 import { ReadOnlyWindows } from './ReadOnlyWindows';
 import { SessionColorMenu } from './SessionColorMenu';
-import { sessionDisplayColor } from '@/lib/sessionColor';
+import { FadedScrollArea } from './FadedScrollArea';
 
 /** When a session was saved: "Nov 10, 6:22 PM", with the year when it isn't this year. */
 function sessionDate(createdAt: number): string {
@@ -20,31 +22,70 @@ function sessionDate(createdAt: number): string {
   return formatDateTime(createdAt, { month: 'short', day: 'numeric', year: sameYear ? undefined : 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
+/** The header's tile: a bookmark in the session's colour on a tint of it (theme values in globals.css). */
+function SessionTile({ color }: { color: string }) {
+  return (
+    <span aria-hidden="true" data-session-tile="" className="tm-session-tile flex h-7 w-7 shrink-0 items-center justify-center" style={{ '--item-color': color } as CSSProperties}>
+      <Bookmark className="h-3.5 w-3.5" strokeWidth={1.8} />
+    </span>
+  );
+}
+
 /**
- * A saved session, read-only, in the main panel (`mainView` `session`): each of its groups with a
- * bar in the group's colour, its counts and its windows' tabs. Looking changes nothing; "Restore
- * session" asks first (it closes every browser window), as the sidebar row does. Tabs open on click.
+ * One group of a session: a header that sticks to the top of the scroll area while its windows
+ * pass under it (colour square, name as the h3 that names the group, its counts), then its
+ * windows as brackets whose tiles stick just below that header.
+ */
+function SessionGroup({ group, headingId }: { group: Group; headingId: string }) {
+  const { t } = useTranslation();
+  const counts = t('sidePanel.view.groupCounts', {
+    windows: t('common.windowCount', { count: group.windows.length }),
+    tabs: t('common.tabCount', { count: getGroupTabCount(group) })
+  });
+  return (
+    <div role="group" aria-labelledby={headingId} className="min-w-0 pb-1.5" data-session-group="">
+      <div className="sticky top-0 z-[3] flex h-[var(--section-group-header)] min-w-0 items-center gap-2.5 border-b border-border/60 bg-background" data-session-group-header="">
+        <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0" style={{ backgroundColor: group.color }} />
+        <h3 id={headingId} dir="auto" className="min-w-0 truncate text-[0.8125rem] font-bold text-ui-start" title={group.name}>{group.name}</h3>
+        <p className="shrink-0 whitespace-nowrap text-[11px] text-muted-foreground"><SeparatedText text={counts} separator={DOT_SEPARATOR} /></p>
+      </div>
+      <ReadOnlyWindows windows={group.windows} groupName={group.name} color={group.color} underGroupHeader ownArrowKeys={false} />
+    </div>
+  );
+}
+
+/**
+ * A saved session, read-only, in the main panel (`mainView` `session`): a header (colour tile,
+ * name, "Saved … · 5 groups · 7 windows · 20 tabs", the description), then each of its groups
+ * with a sticky header and its windows as brackets, and an "End of session" line. Looking
+ * changes nothing; "Restore session" asks first (it closes every browser window), as the sidebar
+ * row does. Tabs open on click; Up/Down move across every group's tabs as one list.
  */
 export function SessionView({ session, groups }: { session: Session; groups: readonly Group[] }) {
   const { t } = useTranslation();
   const closeMainView = useUIStore((s) => s.closeMainView);
   const { mutate: deleteSession } = useDeleteSession();
   const { restore, restoring, confirmDialog } = useConfirmedRestoreSession();
-  const { tabs } = getSessionCounts(session);
+  const { windows, tabs } = getSessionCounts(session);
+  const tabCount = t('common.tabCount', { count: tabs });
+  const color = sessionDisplayColor(session);
   const baseId = useId();
 
   return (
     <div className="flex h-full min-w-0 flex-col overflow-hidden" data-testid="session-view">
       <SectionViewHeader
-        color={sessionDisplayColor(session)}
+        prominent
+        icon={<SessionTile color={color} />}
         title={session.name}
-        meta={t('sidePanel.view.sessionMeta', {
+        meta={t('sidePanel.view.sessionSavedMeta', {
           date: sessionDate(session.createdAt),
-          groups: t('common.groupCountTitle', { count: session.groups.length }),
-          tabs: t('common.tabCountTitle', { count: tabs })
+          groups: t('common.groupCount', { count: session.groups.length }),
+          windows: t('common.windowCount', { count: windows }),
+          tabs: tabCount
         })}
         description={session.description}
         primaryLabel={t('sidePanel.restoreSession')}
+        primaryIcon={<RotateCcw aria-hidden="true" />}
         onPrimary={() =>
           restore(session, () => {
             closeMainView(groups);
@@ -56,25 +97,19 @@ export function SessionView({ session, groups }: { session: Session; groups: rea
         deleteLabel={t('sidePanel.deleteSession')}
         onDelete={() => deleteSession(session.id, { onSuccess: () => announceSectionView(t('sidePanel.view.deleted', { name: session.name })) })}
         onClose={() => closeMainView(groups)}
-        banner={t('sidePanel.view.sessionBanner')}
       />
       {/* One arrow-key list across every group's tabs */}
-      <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-2" onKeyDown={handleReadOnlyListKeyDown}>
+      <FadedScrollArea className="pb-4 pe-3 ps-5" onKeyDown={handleReadOnlyListKeyDown} topFadeClassName="top-[var(--section-group-header)]">
         {session.groups.length === 0 && <p className="py-4 text-center text-xs text-muted-foreground">{t('sidePanel.view.sessionEmpty')}</p>}
         {session.groups.map((group, groupIndex) => (
-          <div
-            key={group.id}
-            role="group"
-            aria-labelledby={`${baseId}-g${groupIndex}`}
-            className="mb-3 min-w-0 ps-2"
-            style={{ borderInlineStart: `3px solid ${group.color}` }}
-          >
-            <h3 id={`${baseId}-g${groupIndex}`} dir="auto" className="truncate text-xs font-semibold text-ui-start" title={group.name}>{group.name}</h3>
-            <p className="mb-1 text-[10px] text-muted-foreground"><SeparatedText text={formatGroupCounts(group.windows.length, getGroupTabCount(group))} /></p>
-            <ReadOnlyWindows windows={group.windows} headingLevel={4} ownArrowKeys={false} />
-          </div>
+          <SessionGroup key={group.id} group={group} headingId={`${baseId}-g${groupIndex}`} />
         ))}
-      </div>
+        {session.groups.length > 0 && (
+          <p className="ms-[3.375rem] mt-2.5 text-[11px] text-muted-foreground" data-session-end="">
+            <SeparatedText text={t('sidePanel.view.sessionEnd', { tabs: tabCount })} separator={DOT_SEPARATOR} />
+          </p>
+        )}
+      </FadedScrollArea>
       {confirmDialog}
     </div>
   );

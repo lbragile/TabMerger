@@ -5,18 +5,28 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
-import { SeparatedText } from './SeparatedText';
+import { cn } from '@/lib/utils';
+import { DOT_SEPARATOR, SeparatedText } from './SeparatedText';
 
 interface SectionViewHeaderProps {
-  /** The group colour dot before the title; none when omitted. */
+  /** The group colour dot before the title; none when omitted (or when `icon` is given). */
   color?: string;
+  /** A tile before the title instead of the dot (a session's bookmark tile); decorative. */
+  icon?: ReactNode;
+  /** The larger header: a bold, bigger title and roomier buttons (the session view). */
+  prominent?: boolean;
   title: string;
-  /** One line under the title, e.g. "Archived ◆ 1 Window ◆ 6 Tabs" (the ◆ are hidden from screen readers). */
+  /**
+   * One line under the title, e.g. "Archived ◆ 1 Window ◆ 6 Tabs"; in a `prominent` header the
+   * separator is "·" ("Saved Nov 10 · 5 groups"). Either is hidden from screen readers.
+   */
   meta: string;
   /** An optional second line (a session's description). */
   description?: string;
   /** The primary action button; none when omitted (a recently-closed day). */
   primaryLabel?: string;
+  /** An icon before the primary label (decorative). */
+  primaryIcon?: ReactNode;
   onPrimary?: () => void;
   primaryDisabled?: boolean;
   /** Items of the ⋯ menu before Delete (`DropdownMenuItem`s, submenus). */
@@ -39,32 +49,37 @@ export const SECTION_VIEW_TITLE_ATTR = 'data-section-view-title';
  * ✕ to go back to the group shown before, and a banner saying what the view is and that it is
  * read-only. Each part but the title, meta line and ✕ is optional.
  */
-export function SectionViewHeader({ color, title, meta, description, primaryLabel, onPrimary, primaryDisabled, menuItems, deleteLabel, onDelete, onClose, banner }: SectionViewHeaderProps) {
+export function SectionViewHeader({ color, icon, prominent = false, title, meta, description, primaryLabel, primaryIcon, onPrimary, primaryDisabled, menuItems, deleteLabel, onDelete, onClose, banner }: SectionViewHeaderProps) {
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   // A multi-select starting in the sidebar closes the menu, like every other overlay
   useCloseOnOverlayDismiss(() => setMenuOpen(false));
+  const iconButton = cn('shrink-0 rounded-none', prominent ? 'h-8 w-8' : 'h-6 w-6');
   return (
     <div className="shrink-0 border-b border-border">
-      <div className="flex min-w-0 items-center gap-2 px-3 py-2">
-        {color && <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />}
+      <div className={cn('flex min-w-0 items-center', prominent ? 'gap-3 py-3 pe-2 ps-5' : 'gap-2 px-3 py-2')}>
+        {icon ?? (color && <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />)}
         <div className="min-w-0 flex-1">
-          <h2 dir="auto" tabIndex={-1} {...{ [SECTION_VIEW_TITLE_ATTR]: '' }} className="truncate text-sm font-semibold text-ui-start focus-visible:outline-none" title={title}>{title}</h2>
-          <p className="truncate text-[11px] text-muted-foreground"><SeparatedText text={meta} /></p>
+          <h2 dir="auto" tabIndex={-1} {...{ [SECTION_VIEW_TITLE_ATTR]: '' }} className={cn('truncate text-ui-start focus-visible:outline-none', prominent ? 'text-[0.9375rem] font-bold leading-5 tracking-[-0.01em]' : 'text-sm font-semibold')} title={title}>{title}</h2>
+          {/* a prominent header has less room beside its buttons: the line wraps once rather than cut the counts */}
+          <p className={cn('text-[11px] text-muted-foreground', prominent ? 'mt-0.5 line-clamp-2' : 'truncate')}><SeparatedText text={meta} separator={prominent ? DOT_SEPARATOR : undefined} /></p>
           {description && (
             <p dir="auto" className="truncate text-[11px] italic text-muted-foreground text-ui-start" title={description}>{description}</p>
           )}
         </div>
         {primaryLabel && (
-          <Button size="sm" className="h-7 shrink-0 rounded-none px-3 text-xs" onClick={onPrimary} disabled={primaryDisabled}>
+          // Its own tokens (--view-primary): white on the light theme's --primary is 3.04:1, under
+          // the 4.5:1 its 12px label needs
+          <Button size="sm" className={cn('shrink-0 rounded-none bg-view-primary text-xs text-view-primary-foreground hover:bg-view-primary/90', prominent ? 'h-8 gap-1.5 px-3.5 font-semibold [&_svg]:size-3.5' : 'h-7 px-3')} onClick={onPrimary} disabled={primaryDisabled}>
+            {primaryIcon}
             {primaryLabel}
           </Button>
         )}
         {(menuItems || onDelete) && (
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
           <DropdownMenuTrigger asChild>
-            <Button ref={menuButton} variant="ghost" size="icon" className="h-6 w-6 shrink-0 rounded-none" aria-label={t('sidePanel.view.moreOptions', { name: title })}>
+            <Button ref={menuButton} variant="ghost" size="icon" className={iconButton} aria-label={t('sidePanel.view.moreOptions', { name: title })}>
               <MoreHorizontal className="h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
@@ -89,7 +104,7 @@ export function SectionViewHeader({ color, title, meta, description, primaryLabe
         )}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0 rounded-none" onClick={onClose} aria-label={t('sidePanel.view.close')}>
+            <Button variant="ghost" size="icon" className={iconButton} onClick={onClose} aria-label={t('sidePanel.view.close')}>
               <X className="h-3.5 w-3.5" />
             </Button>
           </TooltipTrigger>

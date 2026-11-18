@@ -322,6 +322,16 @@ the demo pipeline; a screenshot of a day opened in the main panel (now with its 
 colour as their start bar. Extension visual-regression baselines that show the sidebar change
 and need regenerating.
 
+**Session and archived views (next release):** a saved session opened in the main panel has a new
+layout: a header with a bookmark tile in the session's colour, the name in bold and one line
+"Saved … · N groups · N windows · N tabs", and the "Restore session" button with an icon (the
+read-only note under the header is gone; Restore still asks first). Each group has a header that
+stays at the top while scrolling, and each window is a numbered bracket in the group's colour with
+its tab count. An archived group opened in the main panel shows its windows the same way. The
+Restore button of both views is a darker cyan in the light theme. No current store screenshot
+shows either view, so none is out of date; a screenshot of a session view is optional and not
+made yet.
+
 **Search highlighting (next release):** no current store screenshot shows a search, so none is
 wrong because of it. A new screenshot of a search (matched text highlighted, the "N tabs hidden
 by search" line, per-group counts in the sidebar) is optional and not made yet. The visual

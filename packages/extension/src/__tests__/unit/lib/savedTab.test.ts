@@ -3,13 +3,26 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 const h = vi.hoisted(() => ({ openInGroup: vi.fn() }))
 vi.mock('@/lib/chromeGroups', () => ({ openTabInChromeGroup: h.openInGroup }))
 
-import { FALLBACK_FAVICON, getUrlDisplay, openSavedTab } from '@/lib/savedTab'
+import { FALLBACK_FAVICON, getSiteDisplay, getUrlDisplay, openSavedTab } from '@/lib/savedTab'
 
 const create = vi.fn()
 
 beforeEach(() => {
   vi.clearAllMocks()
   ;(globalThis as { chrome?: unknown }).chrome = { tabs: { create }, tabGroups: {} }
+})
+
+describe('getSiteDisplay', () => {
+  it('is the hostname without www., never the path or query', () => {
+    expect(getSiteDisplay('https://www.example.com/docs/a?x=1#top')).toBe('example.com')
+    expect(getSiteDisplay('https://news.ycombinator.com/')).toBe('news.ycombinator.com')
+  })
+
+  it('falls back to the address for a URL without a host, and is empty for nothing or junk', () => {
+    expect(getSiteDisplay('file:///C:/notes/today.txt')).toBe(getUrlDisplay('file:///C:/notes/today.txt'))
+    expect(getSiteDisplay(undefined)).toBe('')
+    expect(getSiteDisplay('not a url')).toBe('')
+  })
 })
 
 describe('getUrlDisplay', () => {

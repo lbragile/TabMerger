@@ -35,8 +35,9 @@ const session = (extra: Partial<Session> = {}): Session => ({ id: 's1', name: 'W
 
 const renderView = () => render(<TooltipProvider><MainPanel groupsState={groupsState} /></TooltipProvider>)
 const open = () => act(() => useUIStore.getState().openMainView({ kind: 'session', sessionId: 's1' }, 'now'))
-/** The header's colour dot (the only aria-hidden round span before the title). */
+/** The header's colour tile (the aria-hidden bookmark tile before the title), and the colour it is drawn in. */
 const dot = () => screen.getByRole('heading', { level: 2 }).parentElement!.previousElementSibling as HTMLElement
+const tileColor = () => dot().style.getPropertyValue('--item-color')
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -46,19 +47,19 @@ beforeEach(() => {
 })
 
 describe('session view colour', () => {
-  it('shows the stored colour as the header dot', () => {
+  it('shows the stored colour as the header tile', () => {
     h.sessions = [session({ color: AUTO_ITEM_COLORS[5] })]
     renderView()
     open()
-    expect(dot().style.backgroundColor).toBe('rgb(59, 130, 246)')
+    expect(dot()).toHaveAttribute('data-session-tile')
+    expect(tileColor()).toBe(AUTO_ITEM_COLORS[5])
   })
 
   it('a session saved before colours shows the stable colour of its id', () => {
     h.sessions = [session()]
     renderView()
     open()
-    const expected = colorForId('s1').replace('rgba(', 'rgb(').replace(/, 1\)$/, ')')
-    expect(dot().style.backgroundColor).toBe(expected)
+    expect(tileColor()).toBe(colorForId('s1'))
   })
 
   it('⋯ → Change color… lists the ten colours with the current one checked, and picking one saves it', async () => {

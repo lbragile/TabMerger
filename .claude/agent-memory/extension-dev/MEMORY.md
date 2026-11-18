@@ -150,3 +150,4 @@
 - [Recently closed: hours strip + markers](learnings_recently_closed_hours.md) — per-hour bars (roving, aria-pressed), markers in the one list, pick reset in render, scratch screenshot spec
 - [Search: recently closed + closed: scope](learnings_search_recently_closed.md) — closedOnly joins tabQuery; pure lib + connected wrapper; mutateAsync after unmount; CRLF needles
 - [Session upload keys + passes](learnings_session_upload_keys_and_passes.md) — uploadedKey re-insert/resume, per-pass token, deleted ids in the delete tx, token check
+- [Session view window brackets](learnings_session_view_brackets.md) — sticky header/tile/fade z-layers, one offset token, color-mix theme tokens, --view-primary (3.04:1 primary), flex accname spaces

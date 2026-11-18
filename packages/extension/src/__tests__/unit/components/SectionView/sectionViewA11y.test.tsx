@@ -171,11 +171,12 @@ describe('section views — arrow keys', () => {
     expect(tabs[1]).toHaveFocus()
   })
 
-  it('each window is a named group with a heading, never a landmark', () => {
+  it('each window is a group named by its group, number and tab count, never a landmark; its gutter is hidden', () => {
     renderWithSidebar(state(archived))
     openArchived()
     expect(screen.queryAllByRole('region')).toHaveLength(0)
-    const windowGroup = screen.getByRole('group', { name: 'Window 1' })
-    expect(within(windowGroup).getByRole('heading', { level: 3, name: 'Window 1' })).toBeInTheDocument()
+    const windowGroup = screen.getByRole('group', { name: 'Name arch, window 1, 1 tab' })
+    expect(windowGroup.querySelector('[data-window-gutter]')).toHaveAttribute('aria-hidden', 'true')
+    expect(within(windowGroup).getByRole('button', { name: /a\.test/ })).toBeInTheDocument()
   })
 })

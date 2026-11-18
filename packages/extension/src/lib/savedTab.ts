@@ -24,6 +24,20 @@ export function getUrlDisplay(url?: string): string {
 }
 
 /**
+ * The site a tab is on, for a compact row (the read-only views): the hostname without `www.`.
+ * A URL without a host (`file:`, `about:`) falls back to {@link getUrlDisplay}; empty when unparsable.
+ */
+export function getSiteDisplay(url?: string): string {
+  if (!url) return '';
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, '');
+    return host || getUrlDisplay(url);
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Opens a saved (stored) tab in a new, focused browser tab: inside its browser tab group when it
  * was saved in one (and the browser has tab groups), else as a plain tab. A URL that may not be
  * opened from stored data (`isOpenableUrl`) does nothing.
