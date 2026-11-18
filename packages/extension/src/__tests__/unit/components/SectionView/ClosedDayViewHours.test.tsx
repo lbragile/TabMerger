@@ -88,7 +88,9 @@ const renderPanel = () => {
 }
 const openDay = (day = '2030-01-03') => act(() => useUIStore.getState().openMainView({ kind: 'closedDay', day }, 'work'))
 
-const strip = () => screen.getByRole('group', { name: 'Tabs closed per hour' })
+const strip = () => screen.getByRole('toolbar', { name: 'Tabs closed per hour' })
+const outline = (hour: number) => bar(hour).querySelector<HTMLElement>('[data-closed-hour-outline]')!
+const fillOf = (hour: number) => bar(hour).querySelector<HTMLElement>('[data-closed-hour-fill]')!
 const bars = () => within(strip()).getAllByRole('button')
 const bar = (hour: number) => strip().querySelector<HTMLButtonElement>(`[${CLOSED_HOUR_BAR_ATTR}="${hour}"]`)!
 const list = () => screen.getByRole('list', { name: 'Closed tabs and windows' })
@@ -123,15 +125,21 @@ describe('ClosedDayView — activity strip', () => {
     expect(strip().querySelectorAll(':scope > span[aria-hidden="true"]')).toHaveLength(20)
   })
 
-  it('bar heights scale with the busiest hour, in the day colour', () => {
+  it('bar heights scale with the busiest hour, in the day colour, inside a 3:1 outline that survives forced colours', () => {
     renderPanel()
     openDay()
-    const fill = (hour: number) => bar(hour).firstElementChild as HTMLElement
-    expect(fill(16).style.height).toBe('2.625rem')
-    expect(fill(11).style.height).toBe('2.625rem')
-    expect(fill(14).style.height).toBe('1.75rem')
-    expect(fill(9).style.height).toBe('0.875rem')
-    expect(fill(16).style.backgroundColor).toBe('rgb(6, 182, 212)')
+    expect(outline(16).style.height).toBe('2.625rem')
+    expect(outline(11).style.height).toBe('2.625rem')
+    expect(outline(14).style.height).toBe('1.75rem')
+    expect(outline(9).style.height).toBe('0.875rem')
+    expect(fillOf(16).style.backgroundColor).toBe('rgb(6, 182, 212)')
+    // the outline is a 1px border in the muted text colour (styles/hourStripContrast.test.ts), never the day colour
+    expect(outline(16).className).toMatch(/(^|\s)border(\s|$)/)
+    expect(outline(16).className).toContain('border-muted-foreground')
+    expect(outline(16).style.backgroundColor).toBe('')
+    // forced colours: the outline turns CanvasText and the fill keeps a system colour
+    expect(outline(16).className).toContain('forced-colors:border-[CanvasText]')
+    expect(fillOf(16).className).toContain('forced-color-adjust-none')
   })
 
   it('the axis names 00, 06, 12, 18 and 23 in the locale hour format, hidden from assistive tech', () => {
@@ -164,8 +172,14 @@ describe('ClosedDayView — activity strip', () => {
     await user.click(bar(16))
     expect(bar(16)).toHaveAttribute('aria-pressed', 'true')
     expect(bar(14)).toHaveAttribute('aria-pressed', 'false')
-    expect((bar(14).firstElementChild as HTMLElement).className).toContain('opacity-40')
-    expect((bar(16).firstElementChild as HTMLElement).className).not.toContain('opacity-40')
+    // only the other bars' fill dims: their outline and the button stay at full opacity
+    expect(fillOf(14).className).toContain('opacity-40')
+    expect(outline(14).className).not.toContain('opacity')
+    expect(bar(14).className).not.toContain('opacity')
+    expect(fillOf(16).className).not.toContain('opacity-40')
+    // the picked bar is underlined (its state is not shown by dimming alone)
+    expect(bar(16).lastElementChild?.className).toContain('bg-foreground')
+    expect(bar(14).lastElementChild?.className).not.toContain('bg-foreground')
     expect(rowIds()).toEqual(['figma', 'win', 'pr'])
     expect(status()).toHaveTextContent(new RegExp(`^Showing (${H(16)}) · 3 closed`))
     expect(getSectionViewStatus()).toMatch(new RegExp(`^Showing (${H(16)}) · 3 closed$`))
@@ -267,7 +281,9 @@ describe('ClosedDayView — strip keyboard', () => {
     expect(bar(14)).toHaveFocus()
     fireEvent.keyDown(bar(14), { key: 'Home' })
     expect(bar(9)).toHaveFocus()
-    expect(bar(9)).toHaveAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight Home End')
+    // a horizontal toolbar says how its arrow keys work; no per-bar shortcut list
+    expect(strip()).toHaveAttribute('aria-orientation', 'horizontal')
+    expect(bar(9)).not.toHaveAttribute('aria-keyshortcuts')
   })
 
   it('right to left: ArrowLeft moves to the next (later) hour', () => {
@@ -296,6 +312,43 @@ describe('ClosedDayView — strip keyboard', () => {
     await user.click(bar(14))
     act(() => bar(14).blur())
     expect(bar(14).tabIndex).toBe(0)
+  })
+})
+
+describe('ClosedDayView — focus when the picked hour empties', () => {
+  it('focus on the picked bar: it goes to the toolbar stop bar, not the page', async () => {
+    const user = userEvent.setup()
+    const { rerenderPanel } = renderPanel()
+    openDay()
+    await user.click(bar(9))
+    expect(bar(9)).toHaveFocus()
+    h.days = [makeDay('2030-01-03', DAY_ENTRIES.filter((e) => e.id !== 'hn')), h.days[1]]
+    rerenderPanel()
+    expect(bar(11)).toHaveFocus()
+    expect(bar(11).tabIndex).toBe(0)
+  })
+
+  it('focus on "Show all hours": the same', async () => {
+    const user = userEvent.setup()
+    const { rerenderPanel } = renderPanel()
+    openDay()
+    await user.click(bar(14))
+    act(() => within(status()).getByRole('button', { name: 'Show all hours' }).focus())
+    h.days = [makeDay('2030-01-03', DAY_ENTRIES.filter((e) => e.id !== 'stripe' && e.id !== 'next')), h.days[1]]
+    rerenderPanel()
+    expect(bar(9)).toHaveFocus()
+  })
+
+  it('focus elsewhere in the view stays where it is', async () => {
+    const user = userEvent.setup()
+    const { rerenderPanel } = renderPanel()
+    openDay()
+    await user.click(bar(9))
+    const close = screen.getByRole('button', { name: 'Close this view' })
+    act(() => close.focus())
+    h.days = [makeDay('2030-01-03', DAY_ENTRIES.filter((e) => e.id !== 'hn')), h.days[1]]
+    rerenderPanel()
+    expect(close).toHaveFocus()
   })
 })
 

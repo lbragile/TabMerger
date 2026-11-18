@@ -18,8 +18,21 @@ Shape (all popup-only):
   hour back does not revive the old pick. Day change resets for free: MainPanel keys the view by day.
   Picks are announced via `announceSectionView` from the click (never from an effect, never for
   the automatic reset); unmount clears the last announced text.
-- `ClosedHourStrip`: `role="group"` of bar buttons with roving tabindex (Left/Right via
-  `inlineArrow`, Home/End; the stop = last focused, else picked, else earliest bar). The visible
+- `ClosedHourStrip`: `role="toolbar"` + `aria-orientation="horizontal"` of bar buttons with
+  roving tabindex (Left/Right via `inlineArrow`, Home/End; the stop = last focused, else picked,
+  else earliest bar). No per-bar `aria-keyshortcuts` (the toolbar role implies the arrows).
+- Non-text contrast (1.4.11): day colours (orange, yellow, green, cyan, teal) are under 3:1 on
+  white and a dimmed bar is ~1.5-2.5:1, so each bar is an outline span (`border
+  border-muted-foreground`, >= 3:1 in both themes, pinned by `styles/hourStripContrast.test.ts`)
+  holding a fill span; ONLY the fill dims. Forced colours: Tailwind v4 `forced-colors:` variant
+  plus `forced-color-adjust-none`; an inline `backgroundColor` beats a class, so the fill's
+  override needs the `!` suffix (`forced-colors:bg-[CanvasText]!`). Playwright's
+  `emulateMedia({ forcedColors: 'active' })` only flips the media query (no real palette), so a
+  screenshot under it shows the rules applied, not real Windows high-contrast colours.
+- Focus when the pick empties on its own: the picked bar / "Show all hours" unmount with focus on
+  them. A strip effect on picked going non-null -> null moves focus to the stop bar (else the
+  view title) when focus is on body or inside the strip. Child effects run before the parent's
+  `useFocusAfterRowRemoval`, so a row removal's own focus move still wins. The visible
   status `<p>` is NOT a live region (the section announcer is), or picks would be read twice.
   "Show all hours" unmounts itself on click, so it focuses the previously picked bar.
   The picked bar gets an underline too (state not by opacity alone). 24-column grid: Tailwind v4

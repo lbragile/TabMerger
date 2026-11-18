@@ -340,7 +340,8 @@ test.describe('Recently closed: day at a glance (hours)', () => {
     await sectionToggle(page).click();
     await todayRow(page).click();
     const view = dayView(page);
-    const strip = view.getByRole('group', { name: 'Tabs closed per hour' });
+    const strip = view.getByRole('toolbar', { name: 'Tabs closed per hour' });
+    await expect(strip).toHaveAttribute('aria-orientation', 'horizontal');
     await expect(strip.getByRole('button')).toHaveCount(3);
     const bar = (hour: number) => strip.locator(`[data-closed-hour-bar="${hour}"]`);
     await expect(bar(16)).toHaveAccessibleName(/, 2 closed$/);
@@ -372,6 +373,15 @@ test.describe('Recently closed: day at a glance (hours)', () => {
     await expect(page.getByTestId('section-view-status')).toHaveText(/^Showing .+ · 2 closed$/);
     const pickedAxe = await new AxeBuilder({ page }).include('[data-testid="closed-hour-strip"]').analyze();
     expect(pickedAxe.violations).toEqual([]);
+    // every bar keeps a full-opacity 1px outline in the muted text colour; only the other bars' fill dims
+    // off the bars: a hovered fill is lighter too
+    await page.mouse.move(790, 590);
+    const outline16 = bar(16).locator('[data-closed-hour-outline]');
+    await expect(outline16).toHaveCSS('border-top-width', '1px');
+    await expect(outline16).toHaveCSS('opacity', '1');
+    await expect(bar(16)).toHaveCSS('opacity', '1');
+    await expect(bar(16).locator('[data-closed-hour-fill]')).toHaveCSS('opacity', '0.4');
+    await expect(bar(11).locator('[data-closed-hour-fill]')).toHaveCSS('opacity', '1');
 
     await view.getByRole('button', { name: 'Show all hours' }).click();
     await expect(list.locator('[data-closed-entry]')).toHaveCount(5);
