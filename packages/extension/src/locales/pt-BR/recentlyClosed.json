@@ -82,6 +82,23 @@
     "matches_other": "{{count}} resultados",
     "notMatching": "Não corresponde à pesquisa"
   },
+  "hours": {
+    "stripLabel": "Abas fechadas por hora",
+    "bar_one": "{{hour}}, {{count}} fechada",
+    "bar_many": "{{hour}}, {{count}} fechadas",
+    "bar_other": "{{hour}}, {{count}} fechadas",
+    "busiest": "Hora com mais fechamentos: {{hour}}",
+    "busiestTwo": "Horas com mais fechamentos: {{first}} e {{second}}",
+    "spread_one": "Fechadas em {{count}} hora",
+    "spread_many": "Fechadas em {{count}} horas",
+    "spread_other": "Fechadas em {{count}} horas",
+    "showing_one": "Mostrando {{hour}} · {{count}} fechada",
+    "showing_many": "Mostrando {{hour}} · {{count}} fechadas",
+    "showing_other": "Mostrando {{hour}} · {{count}} fechadas",
+    "showingAll": "Mostrando todas as horas",
+    "showAll": "Mostrar todas as horas",
+    "noMatches": "Nenhuma aba fechada nesta hora corresponde à pesquisa."
+  },
   "entry": {
     "window": "Janela · {{tabs}}",
     "reopenTab": "Reabrir {{title}}, fechada {{time}}",

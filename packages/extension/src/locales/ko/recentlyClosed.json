@@ -64,6 +64,17 @@
     "matches_other": "{{count}}개 일치",
     "notMatching": "검색과 일치하지 않음"
   },
+  "hours": {
+    "stripLabel": "시간별 닫은 탭",
+    "bar_other": "{{hour}}, {{count}}개 닫음",
+    "busiest": "가장 많음: {{hour}}",
+    "busiestTwo": "가장 많음: {{first}}, {{second}}",
+    "spread_other": "{{count}}개 시간대에 닫음",
+    "showing_other": "{{hour}} 표시 중 · {{count}}개 닫음",
+    "showingAll": "모든 시간 표시 중",
+    "showAll": "모든 시간 보기",
+    "noMatches": "이 시간에 닫은 탭 중 검색과 일치하는 탭이 없습니다."
+  },
   "entry": {
     "window": "창 · {{tabs}}",
     "reopenTab": "{{title}} 다시 열기, {{time}} 닫음",

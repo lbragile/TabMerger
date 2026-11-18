@@ -64,6 +64,17 @@
     "matches_other": "{{count}} hasil",
     "notMatching": "Tidak cocok dengan pencarian"
   },
+  "hours": {
+    "stripLabel": "Tab yang ditutup per jam",
+    "bar_other": "{{hour}}, {{count}} ditutup",
+    "busiest": "Tersibuk: {{hour}}",
+    "busiestTwo": "Tersibuk: {{first}} dan {{second}}",
+    "spread_other": "Ditutup dalam {{count}} jam",
+    "showing_other": "Menampilkan {{hour}} · {{count}} ditutup",
+    "showingAll": "Menampilkan semua jam",
+    "showAll": "Tampilkan semua jam",
+    "noMatches": "Tidak ada tab yang ditutup pada jam ini yang cocok dengan pencarian."
+  },
   "entry": {
     "window": "Jendela · {{tabs}}",
     "reopenTab": "Buka lagi {{title}}, ditutup {{time}}",

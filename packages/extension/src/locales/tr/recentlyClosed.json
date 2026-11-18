@@ -73,6 +73,20 @@
     "matches_other": "{{count}} eşleşme",
     "notMatching": "Aramayla eşleşmiyor"
   },
+  "hours": {
+    "stripLabel": "Saat başına kapatılan sekmeler",
+    "bar_one": "{{hour}}, {{count}} kapatıldı",
+    "bar_other": "{{hour}}, {{count}} kapatıldı",
+    "busiest": "En yoğun: {{hour}}",
+    "busiestTwo": "En yoğun: {{first}} ve {{second}}",
+    "spread_one": "{{count}} saate yayıldı",
+    "spread_other": "{{count}} saate yayıldı",
+    "showing_one": "{{hour}} gösteriliyor · {{count}} kapatıldı",
+    "showing_other": "{{hour}} gösteriliyor · {{count}} kapatıldı",
+    "showingAll": "Tüm saatler gösteriliyor",
+    "showAll": "Tüm saatleri göster",
+    "noMatches": "Bu saatte kapatılan sekmelerden hiçbiri aramanızla eşleşmiyor."
+  },
   "entry": {
     "window": "Pencere · {{tabs}}",
     "reopenTab": "{{title}} sekmesini yeniden aç, kapatılma: {{time}}",

@@ -376,9 +376,9 @@ describe('ClosedDayView — search, long days, Free note', () => {
     renderPanel()
     openDay()
     const list = screen.getByRole('list', { name: 'Closed tabs and windows' })
-    expect(list.querySelectorAll(':scope > li')).toHaveLength(CLOSED_DAY_PAGE_SIZE)
+    expect(list.querySelectorAll(':scope > li[data-read-only-row]')).toHaveLength(CLOSED_DAY_PAGE_SIZE)
     fireEvent.click(screen.getByRole('button', { name: 'Show more' }))
-    expect(list.querySelectorAll(':scope > li')).toHaveLength(CLOSED_DAY_PAGE_SIZE + 30)
+    expect(list.querySelectorAll(':scope > li[data-read-only-row]')).toHaveLength(CLOSED_DAY_PAGE_SIZE + 30)
     expect(screen.queryByRole('button', { name: 'Show more' })).toBeNull()
   }, 30_000)
 

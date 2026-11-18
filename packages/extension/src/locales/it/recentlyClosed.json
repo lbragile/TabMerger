@@ -82,6 +82,23 @@
     "matches_other": "{{count}} risultati",
     "notMatching": "Non corrisponde alla ricerca"
   },
+  "hours": {
+    "stripLabel": "Schede chiuse per ora",
+    "bar_one": "{{hour}}, {{count}} chiusa",
+    "bar_many": "{{hour}}, {{count}} chiuse",
+    "bar_other": "{{hour}}, {{count}} chiuse",
+    "busiest": "Ora più attiva: {{hour}}",
+    "busiestTwo": "Ore più attive: {{first}} e {{second}}",
+    "spread_one": "Chiuse in {{count}} ora",
+    "spread_many": "Chiuse in {{count}} ore",
+    "spread_other": "Chiuse in {{count}} ore",
+    "showing_one": "Ore {{hour}} · {{count}} chiusa",
+    "showing_many": "Ore {{hour}} · {{count}} chiuse",
+    "showing_other": "Ore {{hour}} · {{count}} chiuse",
+    "showingAll": "Mostrate tutte le ore",
+    "showAll": "Mostra tutte le ore",
+    "noMatches": "Nessuna scheda chiusa in quest'ora corrisponde alla ricerca."
+  },
   "entry": {
     "window": "Finestra · {{tabs}}",
     "reopenTab": "Riapri {{title}}, chiusa {{time}}",

@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-11-16
+> Last Updated: 2026-11-17
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -104,7 +104,8 @@ WHAT YOU CAN DO
   sidebar to see its windows and tabs, read-only, open any tab from there, then restore it with
   one click. The Recently closed, Auto-saved, Archived and Sessions sections open one at a time.
 - Recently closed: the tabs and windows you close stay in the sidebar's "Recently closed"
-  section, one row per day (Free keeps your last 2 days with closed tabs, Pro your last 30 days). Open a day to reopen a tab, restore a
+  section, one row per day (Free keeps your last 2 days with closed tabs, Pro your last 30 days). Open a day to see when you closed
+  things (a bar per hour; click one to list only that hour) and to reopen a tab, restore a
   whole window, save it into a group, or remove it, each with Undo. Stored only on this device;
   private windows are never recorded, and you can turn it off or clear it in Settings.
 - Give each saved session a colour (or let TabMerger pick one) so sessions are easy to tell apart.
@@ -317,7 +318,7 @@ The description must be between 250 and 10,000 characters (the stable descriptio
 **Recently closed (next release):** the sidebar has a new "Recently closed" section, first in the
 bottom stack (collapsed when the popup opens; the expanded section's header is bold), so every
 store screenshot that shows the sidebar's bottom sections is out of date. Regenerate them with
-the demo pipeline; a screenshot of a day opened in the main panel is optional and not made yet. Session rows now show each session's
+the demo pipeline; a screenshot of a day opened in the main panel (now with its per-hour activity strip and hour markers) is optional and not made yet. Session rows now show each session's
 colour as their start bar. Extension visual-regression baselines that show the sidebar change
 and need regenerating.
 

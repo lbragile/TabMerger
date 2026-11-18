@@ -73,6 +73,20 @@
     "matches_other": "{{count}} matches",
     "notMatching": "Doesn't match the search"
   },
+  "hours": {
+    "stripLabel": "Tabs closed per hour",
+    "bar_one": "{{hour}}, {{count}} closed",
+    "bar_other": "{{hour}}, {{count}} closed",
+    "busiest": "Busiest: {{hour}}",
+    "busiestTwo": "Busiest: {{first}} and {{second}}",
+    "spread_one": "Closed across {{count}} hour",
+    "spread_other": "Closed across {{count}} hours",
+    "showing_one": "Showing {{hour}} · {{count}} closed",
+    "showing_other": "Showing {{hour}} · {{count}} closed",
+    "showingAll": "Showing all hours",
+    "showAll": "Show all hours",
+    "noMatches": "No closed tabs in this hour match your search."
+  },
   "entry": {
     "window": "Window · {{tabs}}",
     "reopenTab": "Reopen {{title}}, closed {{time}}",

@@ -82,6 +82,23 @@
     "matches_other": "{{count}} résultats",
     "notMatching": "Ne correspond pas à la recherche"
   },
+  "hours": {
+    "stripLabel": "Onglets fermés par heure",
+    "bar_one": "{{hour}}, {{count}} fermé",
+    "bar_many": "{{hour}}, {{count}} fermés",
+    "bar_other": "{{hour}}, {{count}} fermés",
+    "busiest": "Heure la plus chargée : {{hour}}",
+    "busiestTwo": "Heures les plus chargées : {{first}} et {{second}}",
+    "spread_one": "Fermés sur {{count}} heure",
+    "spread_many": "Fermés sur {{count}} heures",
+    "spread_other": "Fermés sur {{count}} heures",
+    "showing_one": "Affichage de {{hour}} · {{count}} fermé",
+    "showing_many": "Affichage de {{hour}} · {{count}} fermés",
+    "showing_other": "Affichage de {{hour}} · {{count}} fermés",
+    "showingAll": "Toutes les heures sont affichées",
+    "showAll": "Afficher toutes les heures",
+    "noMatches": "Aucun onglet fermé à cette heure ne correspond à la recherche."
+  },
   "entry": {
     "window": "Fenêtre · {{tabs}}",
     "reopenTab": "Rouvrir {{title}}, fermé {{time}}",

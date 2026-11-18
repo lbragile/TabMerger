@@ -147,5 +147,6 @@
 - [Recently closed engine](learnings_recently_closed_engine.md) — closeTabs({record}) + lint ban, quiet marks, meta row, getDb promise/VersionError, 60 s delete, un-pin grace
 - [Recently closed UI + session colours](learnings_recently_closed_ui.md) — closedDay view, one actions hook, Save to group via useGroups, submenu clicks in jsdom
 - [Recently closed: plan-limited list + bold rows](learnings_recently_closed_plan_display.md) — entriesShownForPlan in the hook, confirmed-Free popup prune, Segoe UI 600 vs 700
+- [Recently closed: hours strip + markers](learnings_recently_closed_hours.md) — per-hour bars (roving, aria-pressed), markers in the one list, pick reset in render, scratch screenshot spec
 - [Search: recently closed + closed: scope](learnings_search_recently_closed.md) — closedOnly joins tabQuery; pure lib + connected wrapper; mutateAsync after unmount; CRLF needles
 - [Session upload keys + passes](learnings_session_upload_keys_and_passes.md) — uploadedKey re-insert/resume, per-pass token, deleted ids in the delete tx, token check

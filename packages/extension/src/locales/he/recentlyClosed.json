@@ -82,6 +82,23 @@
     "matches_other": "{{count}} תוצאות",
     "notMatching": "לא תואם לחיפוש"
   },
+  "hours": {
+    "stripLabel": "כרטיסיות שנסגרו לפי שעה",
+    "bar_one": "{{hour}}, נסגרה {{count}}",
+    "bar_two": "{{hour}}, נסגרו {{count}}",
+    "bar_other": "{{hour}}, נסגרו {{count}}",
+    "busiest": "השעה העמוסה ביותר: {{hour}}",
+    "busiestTwo": "השעות העמוסות ביותר: {{first}} ו-{{second}}",
+    "spread_one": "שעות עם סגירות: {{count}}",
+    "spread_two": "שעות עם סגירות: {{count}}",
+    "spread_other": "שעות עם סגירות: {{count}}",
+    "showing_one": "מוצגת {{hour}} · נסגרה {{count}}",
+    "showing_two": "מוצגת {{hour}} · נסגרו {{count}}",
+    "showing_other": "מוצגת {{hour}} · נסגרו {{count}}",
+    "showingAll": "מוצגות כל השעות",
+    "showAll": "להציג את כל השעות",
+    "noMatches": "אף כרטיסייה שנסגרה בשעה הזאת לא תואמת לחיפוש."
+  },
   "entry": {
     "window": "חלון · {{tabs}}",
     "reopenTab": "פתיחה מחדש של {{title}}, נסגרה {{time}}",

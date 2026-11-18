@@ -82,6 +82,23 @@
     "matches_other": "{{count}} coincidencias",
     "notMatching": "No coincide con la búsqueda"
   },
+  "hours": {
+    "stripLabel": "Pestañas cerradas por hora",
+    "bar_one": "{{hour}}, {{count}} cerrada",
+    "bar_many": "{{hour}}, {{count}} cerradas",
+    "bar_other": "{{hour}}, {{count}} cerradas",
+    "busiest": "Hora con más cierres: {{hour}}",
+    "busiestTwo": "Horas con más cierres: {{first}} y {{second}}",
+    "spread_one": "Cerradas en {{count}} hora",
+    "spread_many": "Cerradas en {{count}} horas",
+    "spread_other": "Cerradas en {{count}} horas",
+    "showing_one": "Mostrando {{hour}} · {{count}} cerrada",
+    "showing_many": "Mostrando {{hour}} · {{count}} cerradas",
+    "showing_other": "Mostrando {{hour}} · {{count}} cerradas",
+    "showingAll": "Mostrando todas las horas",
+    "showAll": "Mostrar todas las horas",
+    "noMatches": "Ninguna pestaña cerrada en esta hora coincide con la búsqueda."
+  },
   "entry": {
     "window": "Ventana · {{tabs}}",
     "reopenTab": "Reabrir {{title}}, cerrada {{time}}",

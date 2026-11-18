@@ -64,6 +64,17 @@
     "matches_other": "{{count}} 件一致",
     "notMatching": "検索に一致しません"
   },
+  "hours": {
+    "stripLabel": "1時間ごとの閉じたタブ",
+    "bar_other": "{{hour}}、{{count}}件",
+    "busiest": "最多: {{hour}}",
+    "busiestTwo": "最多: {{first}}と{{second}}",
+    "spread_other": "{{count}}時間にわたって閉じた",
+    "showing_other": "{{hour}}を表示中 · {{count}}件",
+    "showingAll": "すべての時間を表示中",
+    "showAll": "すべての時間を表示",
+    "noMatches": "この時間に閉じたタブに、検索に一致するものはありません。"
+  },
   "entry": {
     "window": "ウィンドウ・{{tabs}}",
     "reopenTab": "{{title}} を開き直す（{{time}}に閉じた）",

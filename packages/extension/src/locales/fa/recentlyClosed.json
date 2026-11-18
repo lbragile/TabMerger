@@ -73,6 +73,20 @@
     "matches_other": "{{count}} مورد پیدا شد",
     "notMatching": "با جست‌وجو جور نیست"
   },
+  "hours": {
+    "stripLabel": "زبانه‌های بسته‌شده در هر ساعت",
+    "bar_one": "{{hour}}، {{count}} بسته‌شده",
+    "bar_other": "{{hour}}، {{count}} بسته‌شده",
+    "busiest": "شلوغ‌ترین ساعت: {{hour}}",
+    "busiestTwo": "شلوغ‌ترین ساعت‌ها: {{first}} و {{second}}",
+    "spread_one": "بسته‌شده در {{count}} ساعت",
+    "spread_other": "بسته‌شده در {{count}} ساعت",
+    "showing_one": "نمایش {{hour}} · {{count}} بسته‌شده",
+    "showing_other": "نمایش {{hour}} · {{count}} بسته‌شده",
+    "showingAll": "همهٔ ساعت‌ها نمایش داده می‌شوند",
+    "showAll": "نمایش همهٔ ساعت‌ها",
+    "noMatches": "هیچ زبانهٔ بسته‌شده‌ای در این ساعت با جست‌وجوی شما جور نیست."
+  },
   "entry": {
     "window": "پنجره · {{tabs}}",
     "reopenTab": "بازکردن دوبارهٔ {{title}}، بسته‌شده {{time}}",

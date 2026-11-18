@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { AUTO_ITEM_COLORS, RECENTLY_CLOSED_META_ID } from '@tabmerger/shared';
 import { test, expect } from '../fixtures';
@@ -297,6 +298,96 @@ async function saveSession(page: Page, name: string, color?: string): Promise<vo
   await dialog.getByRole('button', { name: /^save$/i }).click();
   await expect(dialog).toHaveCount(0);
 }
+
+/**
+ * Stores today's entries closed in three local hours (newest first: 16:42, 16:05 window, 11:30,
+ * 11:02, 09:15) and reloads. Today's date whatever the clock says: a time later today is still today.
+ */
+async function seedTodayAcrossHours(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const d = new Date();
+    const at = (h: number, m: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, m).getTime();
+    const tab = (id: string, closedAt: number) => ({ id, closedAt, kind: 'tab', tabs: [{ url: `https://${id}.example/`, title: `Hour ${id}` }] });
+    const rows = [
+      tab('h16a', at(16, 42)),
+      { id: 'h16w', closedAt: at(16, 5), kind: 'window', tabs: [{ url: 'https://w1.example/', title: 'W1' }, { url: 'https://w2.example/', title: 'W2' }] },
+      tab('h11a', at(11, 30)),
+      tab('h11b', at(11, 2)),
+      tab('h09a', at(9, 15))
+    ];
+    await new Promise<void>((resolve, reject) => {
+      const req = indexedDB.open('tabmerger');
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => {
+        const db = req.result;
+        const tx = db.transaction('recentlyClosed', 'readwrite');
+        for (const row of rows) tx.objectStore('recentlyClosed').put(row);
+        tx.oncomplete = () => {
+          db.close();
+          resolve();
+        };
+        tx.onerror = () => reject(tx.error);
+      };
+    });
+  });
+  await page.reload({ waitUntil: 'networkidle' });
+}
+
+test.describe('Recently closed: day at a glance (hours)', () => {
+  test('hour markers sit below their entries; a bar shows only its hour; Show all hours; the strip passes axe', async ({ context, extensionId }) => {
+    const { page } = await setup(context, extensionId, { expand: false });
+    await seedTodayAcrossHours(page);
+    await sectionToggle(page).click();
+    await todayRow(page).click();
+    const view = dayView(page);
+    const strip = view.getByRole('group', { name: 'Tabs closed per hour' });
+    await expect(strip.getByRole('button')).toHaveCount(3);
+    const bar = (hour: number) => strip.locator(`[data-closed-hour-bar="${hour}"]`);
+    await expect(bar(16)).toHaveAccessibleName(/, 2 closed$/);
+    await expect(bar(9)).toHaveAccessibleName(/, 1 closed$/);
+    await expect(view.getByTestId('closed-hour-status')).toHaveText(/^Busiest: .+ and .+$/);
+
+    // DOM order: each hour's entries, then its marker
+    const list = view.getByRole('list', { name: 'Closed tabs and windows' });
+    const order = await list.evaluate((ul) =>
+      [...ul.children].map((li) => li.getAttribute('data-closed-hour-marker') ?? li.querySelector('[data-closed-entry]')?.getAttribute('data-closed-entry'))
+    );
+    expect(order).toEqual(['h16a', 'h16w', '16', 'h11a', 'h11b', '11', 'h09a', '9']);
+    await expect(list.locator('[data-closed-hour-marker]').first()).toHaveAttribute('aria-hidden', 'true');
+
+    // arrow keys cross from 16:00 into 11:00
+    await list.getByRole('button', { name: /^Restore window with 2 tabs/ }).focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(list.getByRole('button', { name: /^Reopen Hour h11a/ })).toBeFocused();
+
+    const axe = await new AxeBuilder({ page }).include('[data-testid="closed-hour-strip"]').analyze();
+    expect(axe.violations).toEqual([]);
+
+    await bar(11).click();
+    await expect(bar(11)).toHaveAttribute('aria-pressed', 'true');
+    await expect(bar(16)).toHaveAttribute('aria-pressed', 'false');
+    await expect(list.locator('[data-closed-entry]')).toHaveCount(2);
+    await expect(list.getByRole('button', { name: /^Reopen Hour h11a/ })).toBeVisible();
+    await expect(view.getByTestId('closed-hour-status')).toContainText(/^Showing .+ · 2 closed/);
+    await expect(page.getByTestId('section-view-status')).toHaveText(/^Showing .+ · 2 closed$/);
+    const pickedAxe = await new AxeBuilder({ page }).include('[data-testid="closed-hour-strip"]').analyze();
+    expect(pickedAxe.violations).toEqual([]);
+
+    await view.getByRole('button', { name: 'Show all hours' }).click();
+    await expect(list.locator('[data-closed-entry]')).toHaveCount(5);
+    await expect(bar(11)).toHaveAttribute('aria-pressed', 'false');
+    await expect(bar(11)).toBeFocused();
+    await expect(view.getByRole('button', { name: 'Show all hours' })).toHaveCount(0);
+
+    // the bars are one tab stop, arrows move along them
+    await page.keyboard.press('ArrowRight');
+    await expect(bar(16)).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(list.locator('[data-closed-entry]')).toHaveCount(2);
+    await page.keyboard.press('Enter');
+    await expect(list.locator('[data-closed-entry]')).toHaveCount(5);
+  });
+});
 
 test.describe('Session colours', () => {
   test('Random gives a palette colour that differs from the last session; a picked colour is saved and shown', async ({ context, extensionId }) => {

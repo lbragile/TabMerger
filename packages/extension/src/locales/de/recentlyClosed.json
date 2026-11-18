@@ -73,6 +73,20 @@
     "matches_other": "{{count}} Treffer",
     "notMatching": "Passt nicht zur Suche"
   },
+  "hours": {
+    "stripLabel": "Geschlossene Tabs pro Stunde",
+    "bar_one": "{{hour}}, {{count}} geschlossen",
+    "bar_other": "{{hour}}, {{count}} geschlossen",
+    "busiest": "Am meisten um {{hour}}",
+    "busiestTwo": "Am meisten um {{first}} und {{second}}",
+    "spread_one": "Verteilt auf {{count}} Stunde",
+    "spread_other": "Verteilt auf {{count}} Stunden",
+    "showing_one": "Nur {{hour}} · {{count}} geschlossen",
+    "showing_other": "Nur {{hour}} · {{count}} geschlossen",
+    "showingAll": "Alle Stunden werden angezeigt",
+    "showAll": "Alle Stunden anzeigen",
+    "noMatches": "Keine geschlossenen Tabs dieser Stunde passen zur Suche."
+  },
   "entry": {
     "window": "Fenster · {{tabs}}",
     "reopenTab": "{{title}} wieder öffnen, geschlossen {{time}}",

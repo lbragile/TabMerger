@@ -91,6 +91,26 @@
     "matches_other": "{{count}} совпадения",
     "notMatching": "Не подходит под поиск"
   },
+  "hours": {
+    "stripLabel": "Закрытые вкладки по часам",
+    "bar_one": "{{hour}}, закрыто: {{count}}",
+    "bar_few": "{{hour}}, закрыто: {{count}}",
+    "bar_many": "{{hour}}, закрыто: {{count}}",
+    "bar_other": "{{hour}}, закрыто: {{count}}",
+    "busiest": "Больше всего: {{hour}}",
+    "busiestTwo": "Больше всего: {{first}} и {{second}}",
+    "spread_one": "Часов с закрытиями: {{count}}",
+    "spread_few": "Часов с закрытиями: {{count}}",
+    "spread_many": "Часов с закрытиями: {{count}}",
+    "spread_other": "Часов с закрытиями: {{count}}",
+    "showing_one": "Показано {{hour}} · закрыто: {{count}}",
+    "showing_few": "Показано {{hour}} · закрыто: {{count}}",
+    "showing_many": "Показано {{hour}} · закрыто: {{count}}",
+    "showing_other": "Показано {{hour}} · закрыто: {{count}}",
+    "showingAll": "Показаны все часы",
+    "showAll": "Показать все часы",
+    "noMatches": "Ни одна вкладка, закрытая в этот час, не подходит под поиск."
+  },
   "entry": {
     "window": "Окно · {{tabs}}",
     "reopenTab": "Снова открыть {{title}}, закрыта {{time}}",

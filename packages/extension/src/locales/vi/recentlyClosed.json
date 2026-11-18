@@ -64,6 +64,17 @@
     "matches_other": "{{count}} kết quả",
     "notMatching": "Không khớp với tìm kiếm"
   },
+  "hours": {
+    "stripLabel": "Thẻ đã đóng theo giờ",
+    "bar_other": "{{hour}}, đã đóng {{count}}",
+    "busiest": "Nhiều nhất: {{hour}}",
+    "busiestTwo": "Nhiều nhất: {{first}} và {{second}}",
+    "spread_other": "Đóng trong {{count}} giờ",
+    "showing_other": "Đang hiện {{hour}} · đã đóng {{count}}",
+    "showingAll": "Đang hiện tất cả các giờ",
+    "showAll": "Hiện tất cả các giờ",
+    "noMatches": "Không có thẻ nào đã đóng trong giờ này khớp với tìm kiếm."
+  },
   "entry": {
     "window": "Cửa sổ · {{tabs}}",
     "reopenTab": "Mở lại {{title}}, đã đóng {{time}}",

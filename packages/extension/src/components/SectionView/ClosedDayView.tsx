@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppWindow, Eraser, Trash2 } from 'lucide-react';
 import { SEARCH_NON_MATCHING } from '@tabmerger/shared';
@@ -15,11 +15,14 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useSearchFilters, useSearchMode } from '@/hooks/useSearchView';
 import { useRecentlyClosedActions } from '@/hooks/useRecentlyClosedActions';
 import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
+import { useClosedHourFilter } from '@/hooks/useClosedHourFilter';
+import { runsByHour } from '@/lib/recentlyClosedHours';
 import { openPricingPage } from '@/lib/pricingLink';
 import { INLINE_LINK } from '@/lib/inlineLink';
 import { SECTION_VIEW_TITLE_ATTR, SectionViewHeader } from './SectionViewHeader';
 import { SaveToGroupMenu } from './SaveToGroupMenu';
 import { CLOSED_ENTRY_ATTR, ClosedEntryRow, type ClosedEntryActions } from './ClosedEntryRow';
+import { ClosedHourMarker, ClosedHourStrip } from './ClosedHourStrip';
 
 /** How many entries of a day show at first, and how many more each "Show more" adds. */
 export const CLOSED_DAY_PAGE_SIZE = 100;
@@ -41,12 +44,14 @@ interface ClosedDayViewProps {
 
 /**
  * One local day of the recently-closed list in the main panel (`mainView` `closedDay`): header
- * with the day's colour dot, its label, "Recently closed ◆ 8 closed", the day's ⋯ menu and ✕; then
- * the day's entries, newest first, as one arrow-key list (`ClosedEntryRow`). The header search
- * box filters the entries by title and URL while the day shows (hidden or muted, as Settings says,
- * with the number of matches announced). Reopening or removing an entry
- * moves focus to the next row (else the previous, else the title). The first 100 entries show,
- * then "Show more". On Free, the oldest day ends with a note on how long each plan keeps them.
+ * with the day's colour dot, its label, "Recently closed ◆ 8 closed", the day's ⋯ menu and ✕; the
+ * day's activity strip (`ClosedHourStrip`: closes per hour, a bar shows only that hour); then the
+ * day's entries, newest first, as one arrow-key list (`ClosedEntryRow`), each hour's entries
+ * followed by a decorative "11:00 ───" marker so the list reads back in time. The header search
+ * box filters the entries (of the picked hour) by title and URL (hidden or muted, as Settings says,
+ * with the number of matches announced). Reopening or removing an entry moves focus to the next row
+ * (else the previous, else the title). The first 100 entries show, then "Show more". On Free, the
+ * oldest day ends with a note on how long each plan keeps them.
  */
 export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
   const { t } = useTranslation();
@@ -58,13 +63,18 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
   const [limit, setLimit] = useState(CLOSED_DAY_PAGE_SIZE);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const hours = useClosedHourFilter(day.entries);
+  const { inHour, picked } = hours;
+
   const query = filters.tabQuery;
-  const matching = query ? day.entries.filter((e) => closedEntryMatches(e, query)) : day.entries;
+  const matching = useMemo(() => (query ? inHour.filter((e) => closedEntryMatches(e, query)) : inHour), [inHour, query]);
   const hide = !!query && searchMode === SEARCH_NON_MATCHING.HIDE;
-  const listed = (hide ? matching : day.entries).slice(0, limit);
-  const more = (hide ? matching : day.entries).length - listed.length;
+  const shown = hide ? matching : inHour;
+  const listed = useMemo(() => shown.slice(0, limit), [shown, limit]);
+  const runs = useMemo(() => runsByHour(listed), [listed]);
+  const more = shown.length - listed.length;
   const focus = useFocusAfterRowRemoval(rootRef, listed.map((e) => e.id), CLOSED_ENTRY_ATTR, `[${SECTION_VIEW_TITLE_ATTR}]`);
-  const matchingIds = new Set(matching.map((e) => e.id));
+  const matchingIds = useMemo(() => new Set(matching.map((e) => e.id)), [matching]);
   const totalEntries = days.reduce((n, d) => n + d.entries.length, 0);
   const oldestFree = !planLoading && tier === 'free' && days[days.length - 1]?.key === day.key;
 
@@ -85,6 +95,11 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
   const leaving = async (entry: RecentlyClosedEntry, run: () => Promise<boolean>) => {
     focus.prepare(entry.id);
     if (!(await run())) focus.cancel();
+  };
+
+  const pickHour = (hour: number | null) => {
+    setLimit(CLOSED_DAY_PAGE_SIZE);
+    hours.pick(hour);
   };
 
   const rowActions: ClosedEntryActions = {
@@ -129,17 +144,22 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
         }
         onClose={() => closeMainView(groups)}
       />
+      <ClosedHourStrip counts={hours.counts} color={day.color} picked={picked} onPick={pickHour} />
       <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-2">
         {/* always mounted, so the "no match" line is announced when it appears */}
         <div role="status">
           {query && matching.length === 0 && (
-            <p className="py-4 text-center text-xs text-muted-foreground">{t('recentlyClosed.view.noMatches')}</p>
+            <p className="py-4 text-center text-xs text-muted-foreground">{t(picked === null ? 'recentlyClosed.view.noMatches' : 'recentlyClosed.hours.noMatches')}</p>
           )}
         </div>
         <ul aria-label={t('recentlyClosed.view.listLabel')} className="min-w-0" onKeyDown={handleReadOnlyListKeyDown}>
-          {listed.map((entry) => (
-            <ClosedEntryRow key={entry.id} entry={entry} groups={groups} actions={rowActions} dimmed={!!query && !hide && !matchingIds.has(entry.id)} />
-          ))}
+          {/* one flat array: a row keeps its key (and an open chevron) when its hour's first row leaves */}
+          {runs.flatMap((run, i) => [
+            ...run.entries.map((entry) => (
+              <ClosedEntryRow key={entry.id} entry={entry} groups={groups} actions={rowActions} dimmed={!!query && !hide && !matchingIds.has(entry.id)} />
+            )),
+            <ClosedHourMarker key={`hour-${run.hour}-${i}`} hour={run.hour} />
+          ])}
         </ul>
         {more > 0 && (
           <div className="flex justify-center py-2">
@@ -160,3 +180,4 @@ export function ClosedDayView({ day, days, groups }: ClosedDayViewProps) {
     </div>
   );
 }
+

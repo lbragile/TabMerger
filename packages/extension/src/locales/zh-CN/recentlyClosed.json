@@ -64,6 +64,17 @@
     "matches_other": "{{count}} 个匹配",
     "notMatching": "与搜索不匹配"
   },
+  "hours": {
+    "stripLabel": "每小时关闭的标签页",
+    "bar_other": "{{hour}}，已关闭 {{count}} 个",
+    "busiest": "最多：{{hour}}",
+    "busiestTwo": "最多：{{first}} 和 {{second}}",
+    "spread_other": "分布在 {{count}} 个小时",
+    "showing_other": "正在显示 {{hour}} · 已关闭 {{count}} 个",
+    "showingAll": "正在显示所有小时",
+    "showAll": "显示所有小时",
+    "noMatches": "这个小时关闭的标签页中没有与搜索匹配的。"
+  },
   "entry": {
     "window": "窗口 · {{tabs}}",
     "reopenTab": "重新打开 {{title}}，关闭于 {{time}}",
