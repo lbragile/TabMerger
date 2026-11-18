@@ -37,5 +37,44 @@
   "proRequired": "Wymagany Pro",
   "locked": "Przejdź na Pro, aby uzyskać dostęp do tej grupy",
   "pin": "Przypnij grupę",
-  "unpin": "Odepnij grupę"
+  "unpin": "Odepnij grupę",
+  "view": {
+    "showArchived": "Pokaż zarchiwizowaną grupę {{name}}",
+    "showSession": "Pokaż sesję {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Zamknij ten widok",
+    "moreOptions": "Więcej opcji dla {{name}}",
+    "archivedMeta": "Zarchiwizowano ◆ {{counts}}",
+    "archivedBanner": "Zarchiwizowano {{time}}. Tylko do odczytu: przywróć grupę, aby przenosić, edytować lub dodawać karty. Kliknięcie karty nadal ją otwiera.",
+    "restore": "Przywróć",
+    "sessionEmpty": "Ta sesja nie ma grup.",
+    "sessionSavedMeta": "Zapisano {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, okno {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, okno {{number}}, {{tabs}}",
+    "sessionEnd": "Koniec sesji · {{tabs}}",
+    "showingArchived": "Wyświetlanie zarchiwizowanej grupy {{name}}, tylko do odczytu",
+    "showingSession": "Wyświetlanie sesji {{name}}, tylko do odczytu",
+    "restored": "Przywrócono: {{name}}",
+    "deleted": "Usunięto: {{name}}"
+  },
+  "sessionColor": {
+    "label": "Kolor",
+    "random": "Losowy",
+    "change": "Zmień kolor…",
+    "changed": "Zmieniono kolor: {{name}}",
+    "failed": "Nie udało się zmienić koloru. Spróbuj ponownie.",
+    "names": {
+      "red": "Czerwony",
+      "orange": "Pomarańczowy",
+      "yellow": "Żółty",
+      "green": "Zielony",
+      "cyan": "Cyjan",
+      "blue": "Niebieski",
+      "indigo": "Indygo",
+      "purple": "Fioletowy",
+      "pink": "Różowy",
+      "teal": "Morski"
+    }
+  }
 }

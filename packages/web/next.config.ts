@@ -92,6 +92,14 @@ const nextConfig: NextConfig = {
   // Pinned to the monorepo root, like turbopack.root, so file tracing never has to guess it.
   outputFileTracingRoot: path.resolve(process.cwd(), '../..'),
   env: buildTimeEnv(),
+  experimental: {
+    // Next's built-in MCP server (on by default in dev) appends every log line to
+    // `.next/dev/logs/next-development.log`. That file sits inside Turbopack's watched root (the
+    // monorepo root, above), so each write counts as a change: Turbopack recompiles, logs
+    // "Compiled", writes the file again, and the page reloads every ~2s forever. Nothing in this
+    // repo uses Next's MCP endpoint.
+    mcpServer: false,
+  },
   images: {
     remotePatterns: [
       {

@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-11-08
+> Last Updated: 2026-11-17
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -100,6 +100,15 @@ WHAT YOU CAN DO
   notification at the time you choose.
 - Set URL rules that send matching tabs to a group automatically, and clean up duplicate tabs.
 - Take saved sessions (snapshots of your groups) and restore them later.
+- Look inside an archived group or a saved session before you bring it back: click it in the
+  sidebar to see its windows and tabs, read-only, open any tab from there, then restore it with
+  one click. The Recently closed, Auto-saved, Archived and Sessions sections open one at a time.
+- Recently closed: the tabs and windows you close stay in the sidebar's "Recently closed"
+  section, one row per day (Free keeps your last 2 days with closed tabs, Pro your last 30 days). Open a day to see when you closed
+  things (a bar per hour; click one to list only that hour) and to reopen a tab, restore a
+  whole window, save it into a group, or remove it, each with Undo. Stored only on this device;
+  private windows are never recorded, and you can turn it off or clear it in Settings.
+- Give each saved session a colour (or let TabMerger pick one) so sessions are easy to tell apart.
 - Auto-save open tabs: TabMerger saves the tabs you have open into a new group in the
   "Auto-saved" section, on a schedule (every 15 minutes up to daily) or when you open more tabs
   than a number you pick. Tabs you already saved are skipped and private windows are never
@@ -306,6 +315,23 @@ The description must be between 250 and 10,000 characters (the stable descriptio
 
 ### Screenshot Notes
 
+**Recently closed (next release):** the sidebar has a new "Recently closed" section, first in the
+bottom stack (collapsed when the popup opens; the expanded section's header is bold), so every
+store screenshot that shows the sidebar's bottom sections is out of date. Regenerate them with
+the demo pipeline; a screenshot of a day opened in the main panel (now with its per-hour activity strip and hour markers) is optional and not made yet. Session rows now show each session's
+colour as their start bar. Extension visual-regression baselines that show the sidebar change
+and need regenerating.
+
+**Session and archived views (next release):** a saved session opened in the main panel has a new
+layout: a header with a bookmark tile in the session's colour, the name in bold and one line
+"Saved … · N groups · N windows · N tabs", and the "Restore session" button with an icon (the
+read-only note under the header is gone; Restore still asks first). Each group has a header that
+stays at the top while scrolling, and each window is a numbered bracket in the group's colour with
+its tab count. An archived group opened in the main panel shows its windows the same way. The
+Restore button of both views is a darker cyan in the light theme. No current store screenshot
+shows either view, so none is out of date; a screenshot of a session view is optional and not
+made yet.
+
 **Search highlighting (next release):** no current store screenshot shows a search, so none is
 wrong because of it. A new screenshot of a search (matched text highlighted, the "N tabs hidden
 by search" line, per-group counts in the sidebar) is optional and not made yet. The visual
@@ -490,6 +516,15 @@ All three certifications can be ticked, because they are true as built:
 
 ### Technical privacy notes
 
+- Recently closed (on by default, Settings → Data → "Remember closed tabs"): the background
+  worker keeps the address, title and icon of tabs the user closes, using the `tabs` permission it
+  already has (no `sessions` permission). The list lives only in the extension's own database on
+  the device: never synced, never uploaded, not in exports or backups, and private windows are
+  never recorded. Nothing new leaves the device, so the "Web history" disclosure (which covers
+  data that is collected) is unchanged. Saving an entry into a group makes it a normal saved tab,
+  synced and encrypted like any other.
+- Session colours: a session's colour is stored inside the session's encrypted content, never as
+  a plaintext column.
 - Free-tier users: all tab/group data stays in local IndexedDB and never leaves the device
   (except the favicon and analytics requests in the table above, and the opt-in preview).
 - What the server can see when a Pro user syncs: row ids, timestamps, group colour, starred and
@@ -756,6 +791,7 @@ with the real semver string carried in `version_name`.
 | Stable | `3.10.0` | — | `v3.10.0` | 2026-10-22 | Published in stable `3.10.0`: three more languages, Arabic, Hebrew and Persian (eighteen in all), with right-to-left layouts: in those languages the popup and the extension pages mirror (sidebar on the right, menus, tour card, toasts, Left/Right arrow keys), while tab titles, group names and URLs keep their own direction. The language menu in the header and Settings, General → Language now have a search field (by name or code such as "de"), a scrolling list, each language's name in the current language, and a ¶← mark on right-to-left languages. The old Hebrew code `iw` stored by an earlier choice is read as `he`. No manifest change, no new permission, no new data leaves the device. The manifest name and description and this listing stay English; the long description's language bullet is updated. Screenshots: the English popup is pixel-identical, so none need refreshing; a right-to-left screenshot is optional |
 | Both | next release | — | not tagged yet | 2026-11-07 | Draft (in code, not released): "Auto-save open tabs". The background worker saves the open tabs into a new group, shown in a new "Auto-saved" sidebar section, on a schedule (`chrome.alarms`, every 15 minutes to daily) and/or when the number of open tabs passes a threshold (`tabs.onCreated` / `tabs.onRemoved`); tabs already saved are skipped, private windows never saved, an optional notification (`notifications`). Settings → Data gets an "Auto-save open tabs" card. Free: off by default, newest 2 auto-saves kept, counted toward the free limits. Pro / Pro AI: on by default, all kept. **No manifest change and no new permission**: `tabs`, `alarms` and `notifications` are already granted (checked against `wxt.config.ts`), so no re-approval prompt. Privacy tab: no new tick; auto-saved groups are ordinary saved groups (stored locally, uploaded end-to-end encrypted only for Pro sync, already covered by "Web history"). Description: new bullet under "What you can do". Screenshots: the sidebar gains an "Auto-saved" section header above "Archived", so screenshots showing the sidebar footer area need refreshing |
 | Both | next release | — | not tagged yet | 2026-11-08 | Draft (in code, not released): localized store text. The manifest gains `default_locale: "en"`, its `description` becomes `__MSG_extDescription__` and the five command descriptions `__MSG_command…__`, resolved from `_locales/<code>/messages.json` for all 18 UI languages (`ar`, `de`, `en`, `es`, `fa`, `fr`, `he`, `hi`, `id`, `it`, `ja`, `ko`, `pl`, `pt_BR`, `ru`, `tr`, `vi`, `zh_CN`), generated at build time from `src/locales/<lng>/manifest.json`. The `name` stays a literal and BETA keeps its literal description. No new permission and no new data. The English summary is unchanged; after the upload, enter each language's detailed description in the dashboard (see [Localized listings](#localized-listings)). Screenshots: none affected; per-language screenshots optional |
+| Both | next release | — | not tagged yet | 2026-11-13 | Draft (in code, not released): clicking an archived group or a saved session in the sidebar shows it read-only in the main panel (header with Restore, a ⋯ menu with Delete and ✕ to go back; tabs open on click; no editing, drag and drop or AI actions there). The bottom sidebar sections (Auto-saved, Archived, Sessions) become an accordion: opening one closes the others. The current sidebar row is now the only one in bold. **No manifest change and no new permission**; no new data is stored or sent, so the privacy tab is unchanged. Description: new bullet under "What you can do". Screenshots: `open-popup-light/dark.jpg` shows the Archived and Sessions sections and the group names in the sidebar (now regular weight except the current one), so refresh it at the next upload; a screenshot of an archived group or session view would be worth adding |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
 Betas 1–3 predate the store-version offset, so their manifest version is the plain

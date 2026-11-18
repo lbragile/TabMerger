@@ -78,6 +78,12 @@ export interface Session {
   createdAt: number;
   /** True for a snapshot the extension took by itself (automatic backup). Travels inside the encrypted blob only. */
   auto?: boolean;
+  /**
+   * The session's colour, one of `AUTO_ITEM_COLORS` (checked when read; anything else is ignored).
+   * Travels inside the encrypted blob only. Missing on sessions saved before colours existed: they
+   * show `colorForId(id)`.
+   */
+  color?: string;
 }
 
 // Subscription tiers

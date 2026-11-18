@@ -38,5 +38,13 @@
   "summaryNone": "Ninguna pestaña coincide",
   "summary_one": "{{count}} pestaña coincide en {{groups}}",
   "summary_many": "{{count}} de pestañas coinciden en {{groups}}",
-  "summary_other": "{{count}} pestañas coinciden en {{groups}}"
+  "summary_other": "{{count}} pestañas coinciden en {{groups}}",
+  "recentlyClosed": "Cerradas recientemente",
+  "exampleClosed": "Busca solo en las pestañas que cerraste hace poco",
+  "closedToday": "cerrada hoy a las {{time}}",
+  "closedYesterday": "cerrada ayer a las {{time}}",
+  "closedOn": "cerrada el {{day}}",
+  "closedFromWindow": "de una ventana cerrada",
+  "closedWindowLabel": "Ventana · {{tabs}}",
+  "closedOff": "Recordar pestañas cerradas está desactivado"
 }

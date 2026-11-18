@@ -15,6 +15,8 @@ import { copyLiveTab } from '@/lib/dndMove';
 import { isTourPracticeUrl } from '@/lib/tourPracticeTab';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
+import { closeTabs } from '@/lib/closeLiveTabs';
+import { registerRecentlyClosed } from '@/lib/recentlyClosedRecorder';
 import {
   ANALYTICS_EVENTS,
   EXTENSION_MESSAGE,
@@ -293,9 +295,10 @@ export default defineBackground(() => {
     port.onDisconnect.addListener(() => {
       if (pending.size === 0) return;
       // Best effort: a tab the user already closed makes `remove` reject, which must not
-      // take the rest of the batch down.
-      void chrome.tabs.remove([...pending]).catch(() => {
-        pending.forEach((id) => void chrome.tabs.remove(id).catch(() => {}));
+      // take the rest of the batch down. Not recorded in "Recently closed": the drag moved
+      // these tabs into a group.
+      void closeTabs([...pending], { record: false }).catch(() => {
+        pending.forEach((id) => void closeTabs(id, { record: false }).catch(() => {}));
       });
     });
   });
@@ -615,4 +618,8 @@ export default defineBackground(() => {
   // Auto-save open tabs: own alarm, own tab and message listeners, registered LAST so the
   // listener indexes the tests use for everything above stay the same (see lib/autoSaveRun.ts).
   registerAutoSave();
+
+  // "Recently closed tabs": its own tab/window listeners (snapshot cache + recording), registered
+  // after everything above so their listener indexes stay the same (see lib/recentlyClosedRecorder.ts).
+  registerRecentlyClosed();
 });

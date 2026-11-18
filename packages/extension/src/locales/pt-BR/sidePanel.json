@@ -37,5 +37,44 @@
   "proRequired": "Requer Pro",
   "locked": "Faça upgrade para o Pro para acessar este grupo",
   "pin": "Fixar grupo",
-  "unpin": "Desafixar grupo"
+  "unpin": "Desafixar grupo",
+  "view": {
+    "showArchived": "Mostrar o grupo arquivado {{name}}",
+    "showSession": "Mostrar a sessão {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Fechar esta visualização",
+    "moreOptions": "Mais opções para {{name}}",
+    "archivedMeta": "Arquivado ◆ {{counts}}",
+    "archivedBanner": "Arquivado {{time}}. Somente leitura: restaure-o para mover, editar ou adicionar guias. Clicar em uma guia ainda a abre.",
+    "restore": "Restaurar",
+    "sessionEmpty": "Esta sessão não tem grupos.",
+    "sessionSavedMeta": "Salva em {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, janela {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, janela {{number}}, {{tabs}}",
+    "sessionEnd": "Fim da sessão · {{tabs}}",
+    "showingArchived": "Mostrando o grupo arquivado {{name}}, somente leitura",
+    "showingSession": "Mostrando a sessão {{name}}, somente leitura",
+    "restored": "{{name}} restaurado",
+    "deleted": "{{name}} excluído"
+  },
+  "sessionColor": {
+    "label": "Cor",
+    "random": "Aleatória",
+    "change": "Mudar cor…",
+    "changed": "Cor de {{name}} alterada",
+    "failed": "Não foi possível mudar a cor. Tente de novo.",
+    "names": {
+      "red": "Vermelho",
+      "orange": "Laranja",
+      "yellow": "Amarelo",
+      "green": "Verde",
+      "cyan": "Ciano",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "purple": "Roxo",
+      "pink": "Rosa",
+      "teal": "Verde-azulado"
+    }
+  }
 }

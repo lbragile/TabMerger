@@ -38,5 +38,13 @@
   "summaryNone": "Nenhuma aba corresponde",
   "summary_one": "{{count}} aba corresponde em {{groups}}",
   "summary_other": "{{count}} abas correspondem em {{groups}}",
-  "summary_many": "{{count}} abas correspondem em {{groups}}"
+  "summary_many": "{{count}} abas correspondem em {{groups}}",
+  "recentlyClosed": "Fechadas recentemente",
+  "exampleClosed": "Pesquise só nas abas que você fechou recentemente",
+  "closedToday": "fechada hoje às {{time}}",
+  "closedYesterday": "fechada ontem às {{time}}",
+  "closedOn": "fechada em {{day}}",
+  "closedFromWindow": "de uma janela fechada",
+  "closedWindowLabel": "Janela · {{tabs}}",
+  "closedOff": "Lembrar abas fechadas está desativado"
 }

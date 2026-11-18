@@ -37,5 +37,44 @@
   "proRequired": "Pro 필요",
   "locked": "이 그룹을 사용하려면 Pro로 업그레이드하세요",
   "pin": "그룹 고정",
-  "unpin": "그룹 고정 해제"
+  "unpin": "그룹 고정 해제",
+  "view": {
+    "showArchived": "보관된 그룹 {{name}} 보기",
+    "showSession": "세션 {{name}} 보기",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "이 보기 닫기",
+    "moreOptions": "{{name}} 추가 옵션",
+    "archivedMeta": "보관됨 ◆ {{counts}}",
+    "archivedBanner": "{{time}} 보관됨. 읽기 전용: 탭을 이동, 편집 또는 추가하려면 그룹을 복원하세요. 탭을 클릭하면 열립니다.",
+    "restore": "복원",
+    "sessionEmpty": "이 세션에는 그룹이 없습니다.",
+    "sessionSavedMeta": "{{date}}에 저장됨 · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, 창 {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, 창 {{number}}, {{tabs}}",
+    "sessionEnd": "세션 끝 · {{tabs}}",
+    "showingArchived": "보관된 그룹 {{name}} 표시 중, 읽기 전용",
+    "showingSession": "세션 {{name}} 표시 중, 읽기 전용",
+    "restored": "{{name}} 복원됨",
+    "deleted": "{{name}} 삭제됨"
+  },
+  "sessionColor": {
+    "label": "색상",
+    "random": "무작위",
+    "change": "색상 변경…",
+    "changed": "{{name}}의 색상을 변경했습니다",
+    "failed": "색상을 변경하지 못했습니다. 다시 시도하세요.",
+    "names": {
+      "red": "빨강",
+      "orange": "주황",
+      "yellow": "노랑",
+      "green": "초록",
+      "cyan": "청록",
+      "blue": "파랑",
+      "indigo": "남색",
+      "purple": "보라",
+      "pink": "분홍",
+      "teal": "틸"
+    }
+  }
 }

@@ -37,5 +37,44 @@
   "proRequired": "يتطلب Pro",
   "locked": "رقِّ خطتك إلى Pro للوصول إلى هذه المجموعة",
   "pin": "تثبيت المجموعة",
-  "unpin": "إلغاء تثبيت المجموعة"
+  "unpin": "إلغاء تثبيت المجموعة",
+  "view": {
+    "showArchived": "عرض المجموعة المؤرشفة {{name}}",
+    "showSession": "عرض الجلسة {{name}}",
+    "sessionCounts": "{{groups}}، {{windows}}، {{tabs}}",
+    "close": "إغلاق هذا العرض",
+    "moreOptions": "خيارات أخرى لـ {{name}}",
+    "archivedMeta": "مؤرشفة ◆ {{counts}}",
+    "archivedBanner": "أُرشفت {{time}}. للقراءة فقط: استعدها لنقل علامات التبويب أو تعديلها أو إضافتها. النقر على علامة تبويب يفتحها مع ذلك.",
+    "restore": "استعادة",
+    "sessionEmpty": "لا تحتوي هذه الجلسة على مجموعات.",
+    "sessionSavedMeta": "تم الحفظ {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}، النافذة {{number}}، {{tabs}}",
+    "windowLabelNamed": "{{group}}، {{name}}، النافذة {{number}}، {{tabs}}",
+    "sessionEnd": "نهاية الجلسة · {{tabs}}",
+    "showingArchived": "عرض المجموعة المؤرشفة {{name}}، للقراءة فقط",
+    "showingSession": "عرض الجلسة {{name}}، للقراءة فقط",
+    "restored": "تمت استعادة {{name}}",
+    "deleted": "تم حذف {{name}}"
+  },
+  "sessionColor": {
+    "label": "اللون",
+    "random": "عشوائي",
+    "change": "تغيير اللون…",
+    "changed": "تغيّر لون {{name}}",
+    "failed": "تعذّر تغيير اللون. حاول مرة أخرى.",
+    "names": {
+      "red": "أحمر",
+      "orange": "برتقالي",
+      "yellow": "أصفر",
+      "green": "أخضر",
+      "cyan": "سماوي",
+      "blue": "أزرق",
+      "indigo": "نيلي",
+      "purple": "بنفسجي",
+      "pink": "وردي",
+      "teal": "أزرق مخضر"
+    }
+  }
 }

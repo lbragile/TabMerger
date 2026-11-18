@@ -24,6 +24,10 @@
       "title": "Wyszukiwanie pełnotekstowe",
       "description": "Błyskawicznie przeszukuj tytuły i adresy URL wszystkich kart. Wyniki pasują do wpisanego tekstu dokładnie (bez względu na wielkość liter), najlepsze dopasowania na górze."
     },
+    "recentlyClosed": {
+      "title": "Ostatnio zamknięte karty",
+      "description": "Każda zamknięta karta i każde zamknięte okno trafia na listę Ostatnio zamknięte na pasku bocznym, pogrupowaną według dni. Otwórz kartę ponownie, przywróć całe okno lub zapisz je w grupie albo znajdź je skrótem Ctrl/Cmd+K: zacznij wyszukiwanie od closed:, aby szukać tylko tam. Plan darmowy przechowuje {freeDays, plural, one {ostatni dzień} few {ostatnie # dni} many {ostatnie # dni} other {ostatnie # dnia}} z zamkniętymi kartami, a Pro {proDays, plural, one {ostatni dzień} few {ostatnie # dni} many {ostatnie # dni} other {ostatnie # dnia}}. Lista zostaje na Twoim urządzeniu: nigdy nie jest synchronizowana, przesyłana ani eksportowana, okna prywatne nigdy nie są zapisywane, a w sekcji Ustawienia → Dane możesz ją wyłączyć lub wyczyścić."
+    },
     "dnd": {
       "title": "Zmiana kolejności przeciąganiem",
       "description": "Przestawiaj karty w grupach i zmieniaj kolejność samych grup płynnym przeciąganiem i upuszczaniem."

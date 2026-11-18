@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { GroupsState } from '@/lib/types';
 import { withoutTourDemoGroups } from '@tabmerger/shared';
 import { setSetting } from '@/lib/localDb';
+import type { SidebarSectionId } from '@/lib/sidebarSections';
 
 export type ModalType =
   | 'addGroup'
@@ -50,6 +51,21 @@ export interface TabPositionTarget {
   tabIndex: number;
 }
 
+/**
+ * What the main panel shows. `group` is the group at `activeGroupIndex` (the editable windows
+ * panel); every other kind is a read-only view opened from a sidebar section row, addressed by a
+ * stable id (positions shift as groups come and go).
+ */
+export type MainView =
+  | { kind: 'group' }
+  | { kind: 'archived'; groupId: string }
+  | { kind: 'session'; sessionId: string }
+  /** One local day of the recently-closed list (`RecentlyClosedDay.key`, `YYYY-MM-DD`). */
+  | { kind: 'closedDay'; day: string };
+
+/** The main panel showing the active group: the default view, and where every other view returns to. */
+export const GROUP_VIEW: MainView = Object.freeze({ kind: 'group' }) as MainView;
+
 export type SelectionItemType = 'tab' | 'window' | 'group';
 
 export interface SelectedItem {
@@ -61,6 +77,20 @@ export interface SelectedItem {
 interface UIState {
   modal: ModalState;
   activeGroupIndex: number;
+  /**
+   * What the main panel shows (see {@link MainView}). Not persisted, never in the undo history.
+   * `activeGroupIndex` keeps its meaning while another view is open: it is the group view to
+   * return to, and selecting any group (`setActiveGroupIndex`) goes back to `{ kind: 'group' }`.
+   */
+  mainView: MainView;
+  /**
+   * Id of the group that was showing when a non-group view opened, so closing that view returns
+   * to the same group even if positions shifted meanwhile (a group deleted above it). Null while
+   * the group view is showing.
+   */
+  mainViewReturnGroupId: string | null;
+  /** The one expanded sidebar section (an accordion), or null when all are collapsed (as every popup opens). Not persisted. */
+  openSidebarSection: SidebarSectionId | null;
   searchFilter: string;
   renameTarget: RenameTarget | null;
   /** Set by a global keyboard shortcut to open the note editor for a specific tab row (consumed + cleared by TabItem). */
@@ -166,6 +196,20 @@ interface UIState {
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
   closeModal: () => void;
   setActiveGroupIndex: (index: number) => void;
+  /**
+   * Opens a read-only view in the main panel. `returnGroupId` is the id of the group showing now
+   * (kept from the first open when one read-only view replaces another). Opening `{ kind: 'group' }`
+   * is the same as {@link UIState.closeMainView} without groups.
+   */
+  openMainView: (view: MainView, returnGroupId?: string | null) => void;
+  /**
+   * Back to the group view. With `groups` (the current list), the group that was showing when the
+   * view opened is found by id and selected again, wherever it sits now; without it (or when that
+   * group is gone) `activeGroupIndex` is left as it is.
+   */
+  closeMainView: (groups?: readonly { id: string }[]) => void;
+  /** Expands `section` and collapses the others; collapses it when it is the open one. */
+  toggleSidebarSection: (section: SidebarSectionId) => void;
   setScrollToWindowIndex: (index: number | null) => void;
   setSearchFilter: (filter: string) => void;
   setRenameTarget: (target: RenameTarget | null) => void;
@@ -242,6 +286,9 @@ function historySnapshot(state: GroupsState, keepTourDemo = false): GroupsState 
 export const useUIStore = create<UIState>((set, get) => ({
   modal: { type: null },
   activeGroupIndex: 0,
+  mainView: GROUP_VIEW,
+  mainViewReturnGroupId: null,
+  openSidebarSection: null,
   scrollToWindowIndex: null,
   searchFilter: '',
   renameTarget: null,
@@ -281,10 +328,34 @@ export const useUIStore = create<UIState>((set, get) => ({
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),
   setActiveGroupIndex: (index) => {
-    set({ activeGroupIndex: index });
+    // Selecting a group always shows it: any read-only view closes
+    set({ activeGroupIndex: index, mainView: GROUP_VIEW, mainViewReturnGroupId: null });
     // ponytail: fire-and-forget; .catch silences IndexedDB-unavailable errors in test env
     void setSetting('activeGroupIndex', index).catch(() => {});
   },
+  openMainView: (view, returnGroupId = null) => {
+    if (view.kind === 'group') {
+      get().closeMainView();
+      return;
+    }
+    set((prev) => ({
+      mainView: view,
+      // One read-only view replacing another still returns to the group shown before the first
+      mainViewReturnGroupId: prev.mainView.kind === 'group' ? returnGroupId : prev.mainViewReturnGroupId
+    }));
+  },
+  closeMainView: (groups) => {
+    const { mainView, mainViewReturnGroupId, activeGroupIndex } = get();
+    if (mainView.kind === 'group') return;
+    const at = groups && mainViewReturnGroupId ? groups.findIndex((g) => g.id === mainViewReturnGroupId) : -1;
+    if (at >= 0 && at !== activeGroupIndex) {
+      get().setActiveGroupIndex(at);
+      return;
+    }
+    set({ mainView: GROUP_VIEW, mainViewReturnGroupId: null });
+  },
+  toggleSidebarSection: (section) =>
+    set((prev) => ({ openSidebarSection: prev.openSidebarSection === section ? null : section })),
   setScrollToWindowIndex: (index) => set({ scrollToWindowIndex: index }),
   setSearchFilter: (filter) => set({ searchFilter: filter }),
   setRenameTarget: (target) => set({ renameTarget: target }),

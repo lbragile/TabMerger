@@ -34,5 +34,13 @@
   "select": "選択",
   "close": "閉じる",
   "summaryNone": "一致するタブはありません",
-  "summary_other": "{{groups}}で{{count}}個のタブが一致"
+  "summary_other": "{{groups}}で{{count}}個のタブが一致",
+  "recentlyClosed": "最近閉じたタブ",
+  "exampleClosed": "最近閉じたタブだけを検索",
+  "closedToday": "今日 {{time}} に閉じた",
+  "closedYesterday": "昨日 {{time}} に閉じた",
+  "closedOn": "{{day}} に閉じた",
+  "closedFromWindow": "閉じたウィンドウから",
+  "closedWindowLabel": "ウィンドウ · {{tabs}}",
+  "closedOff": "閉じたタブの記憶はオフです"
 }

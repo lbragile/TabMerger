@@ -37,5 +37,44 @@
   "proRequired": "Нужен Pro",
   "locked": "Перейдите на Pro, чтобы открыть эту группу",
   "pin": "Закрепить группу",
-  "unpin": "Открепить группу"
+  "unpin": "Открепить группу",
+  "view": {
+    "showArchived": "Показать архивную группу {{name}}",
+    "showSession": "Показать сеанс {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Закрыть этот вид",
+    "moreOptions": "Другие действия для {{name}}",
+    "archivedMeta": "В архиве ◆ {{counts}}",
+    "archivedBanner": "Перемещено в архив {{time}}. Только для чтения: восстановите группу, чтобы перемещать, изменять или добавлять вкладки. Вкладку по-прежнему можно открыть щелчком.",
+    "restore": "Восстановить",
+    "sessionEmpty": "В этом сеансе нет групп.",
+    "sessionSavedMeta": "Сохранён {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, окно {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, окно {{number}}, {{tabs}}",
+    "sessionEnd": "Конец сеанса · {{tabs}}",
+    "showingArchived": "Показана архивная группа {{name}}, только для чтения",
+    "showingSession": "Показан сеанс {{name}}, только для чтения",
+    "restored": "Восстановлено: {{name}}",
+    "deleted": "Удалено: {{name}}"
+  },
+  "sessionColor": {
+    "label": "Цвет",
+    "random": "Случайный",
+    "change": "Изменить цвет…",
+    "changed": "Цвет «{{name}}» изменён",
+    "failed": "Не удалось изменить цвет. Попробуйте ещё раз.",
+    "names": {
+      "red": "Красный",
+      "orange": "Оранжевый",
+      "yellow": "Жёлтый",
+      "green": "Зелёный",
+      "cyan": "Голубой",
+      "blue": "Синий",
+      "indigo": "Индиго",
+      "purple": "Фиолетовый",
+      "pink": "Розовый",
+      "teal": "Бирюзовый"
+    }
+  }
 }

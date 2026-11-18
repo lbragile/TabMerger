@@ -21,6 +21,7 @@ const h = vi.hoisted(() => ({
 
 // The Auto-saved section has its own tests (AutoSavedSection.test.tsx)
 vi.mock('@/components/SidePanel/AutoSavedSection', () => ({ AutoSavedSection: () => null }))
+vi.mock('@/components/SidePanel/RecentlyClosedSection', () => ({ RecentlyClosedSection: () => null }))
 vi.mock('@dnd-kit/core', () => ({
   DndContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   closestCenter: vi.fn(),
@@ -47,7 +48,8 @@ vi.mock('@/hooks/useEntitlements', () => ({
 }))
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: (sel: (s: object) => unknown) =>
-    sel({ selectionMode: false, activeGroupIndex: 0, setActiveGroupIndex: vi.fn(), setRenameTarget: vi.fn(), openModal: h.openModal }),
+    // The Sessions section is the open one (clicking its header keeps it open: the toggle is a stub)
+    sel({ selectionMode: false, activeGroupIndex: 0, setActiveGroupIndex: vi.fn(), setRenameTarget: vi.fn(), openModal: h.openModal, openSidebarSection: 'sessions', toggleSidebarSection: vi.fn(), openMainView: vi.fn() }),
 }))
 vi.mock('@/hooks/useSessions', () => ({
   useSessions: () => ({ data: h.sessions }),

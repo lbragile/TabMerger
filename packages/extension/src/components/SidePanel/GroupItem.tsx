@@ -251,6 +251,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       wrapperRef={setNodeRef}
       // Static row id for the multi-drag registry (collapse + `+N`) and focus-by-identity.
       wrapperDndId={group.id}
+      wrapperCurrent={isActive}
       wrapperLabel={searchDimmed ? t('sidePanel.groupNoMatch', { name: displayName, suffix: t('search.noMatchSuffix') }) : group.permanent ? displayName : undefined}
       // Space on the focused row starts keyboard move mode — only for a row that has a grip.
       moveGroupId={group.permanent || savedGroupCount <= 1 || reorderLocked ? undefined : group.id}
@@ -264,8 +265,11 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         background:
           isSelected
             ? 'rgba(0, 180, 204, 0.15)'
-            : isActive || contextMenuOpen
-            ? 'rgba(255,255,255,0.12)'
+            : isActive
+            // the row the main panel shows: the same current background as the section rows
+            ? 'var(--sidebar-current-bg)'
+            : contextMenuOpen
+            ? 'var(--sidebar-hover-bg)'
             : undefined,
         borderInlineStart: isActive ? `3px solid ${displayColor}` : '3px solid transparent',
         // --sidebar-text-active: ≈14.5:1 (light) / 14:1 (dark) against the selected tint.
@@ -416,7 +420,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 <span
                   ref={nameRef}
                   dir="auto"
-                  className="block truncate text-xs font-medium text-ui-start"
+                  // Semibold on the one current row (as the current section rows), regular on the rest
+                  className={cn('block truncate text-xs text-ui-start', isActive ? 'font-semibold' : 'font-normal')}
                   style={{ color: isActive ? 'var(--sidebar-text-active)' : 'var(--sidebar-text-inactive)' }}
                   onDoubleClick={(e) => {
                     e.stopPropagation();

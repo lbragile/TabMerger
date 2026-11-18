@@ -25,6 +25,11 @@
   --color-card-foreground: hsl(var(--card-foreground));
   --color-zone-header: hsl(var(--zone-header));
   --color-zone-sidebar: hsl(var(--zone-sidebar));
+  --color-tooltip: hsl(var(--tooltip));
+  --color-tooltip-foreground: hsl(var(--tooltip-foreground));
+  --color-primary-solid: hsl(var(--primary-solid));
+  --color-primary-solid-foreground: hsl(var(--primary-solid-foreground));
+  --color-primary-solid-hover: hsl(var(--primary-solid-hover));
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -41,6 +46,20 @@
     --popover-foreground: 240 10% 3.9%;
     --primary: 193 100% 40%;
     --primary-foreground: 0 0% 100%;
+    /* Tooltips: the primary hue, darker in the light theme so white 12px text reaches 5.7:1
+       (white on --primary is only 3.05:1) */
+    --tooltip: 193 100% 28%;
+    --tooltip-foreground: 0 0% 100%;
+    /* Solid primary fills with a text label (Button default variant, Restore): the primary hue,
+       darker in the light theme so a white label reaches 5.7:1 (white on --primary: 3.04:1).
+       --primary itself stays the brand accent for tints, links, rings and the switch. Hover is
+       a darker solid, so it never gets lighter than rest (a see-through --primary/90 would, toward white). */
+    --primary-solid: 193 100% 28%;
+    --primary-solid-foreground: 0 0% 100%;
+    --primary-solid-hover: 193 100% 24%;
+    /* Links inside a sentence ("See Pro", "Turn on in Settings"): the primary hue, dark enough
+       for 4.5:1 on white, the sidebar and its hover (--primary itself is ~3:1 there) */
+    --inline-link: 193 100% 25%;
     --secondary: 33 91% 54%;
     --secondary-foreground: 0 0% 100%;
     --muted: 240 4.8% 95.9%;
@@ -60,7 +79,7 @@
        Dark-mode values are overridden in .dark below. */
     --sidebar-text-active: #111827;      /* ~18:1 contrast on light sidebar — active group name */
     --sidebar-text-inactive: #374151;    /* ~11:1 contrast — inactive group name */
-    --sidebar-text-muted: #6B7280;       /* ~5.5:1 contrast — badge counts, footer */
+    --sidebar-text-muted: #4B5563;       /* badge counts, footer: 7.1:1 plain, 4.6:1 on a badge on the current row */
     --sidebar-text-subtle: #767C88;      /* ~3.6:1 contrast — drag handle / unstarred star (WCAG AA 3:1 for UI components) */
     --star-active: #B45309;              /* amber-700 — starred icon on light sidebar (~4.5:1, WCAG AA) */
 
@@ -69,8 +88,21 @@
     --zone-sidebar: 240 5% 97%;          /* light: same as header */
     --zone-sidebar-border: rgba(0,0,0,0.08);
     --sidebar-hover-bg: rgba(0,0,0,0.05);
+    --sidebar-current-bg: rgba(0,0,0,0.12);  /* the row the main panel shows: clearly stronger than hover */
     --sidebar-badge-bg: rgba(0,0,0,0.07);
     --sidebar-accent-filter: brightness(0.7);
+
+    /* Read-only session/archived views (`.tm-session-tile`, `.tm-bracket-*` below). Percentages
+       of the item's colour mixed into the background (fill, border, rail) or into black (icon):
+       on white the colour alone is too faint for the icon (yellow ~2:1), so it is darkened to
+       stay >= 3:1 on its tile; the rail is stronger than in the dark theme for the same reason.
+       `__tests__/unit/styles/sessionViewContrast.test.ts` checks every palette colour. */
+    --session-tile-fill: 10%;
+    --session-tile-border: 45%;
+    --session-tile-icon: 60%;
+    --bracket-rail: 65%;
+    /* The height of a session group's sticky header; window tiles stick just below it */
+    --section-group-header: 2.375rem;
   }
 
   .dark {
@@ -80,11 +112,12 @@
     /* Sidebar text — WCAG AA compliant on the #16181D sidebar background */
     --sidebar-text-active: #FFFFFF;      /* 21:1 contrast — active group name */
     --sidebar-text-inactive: #C4C7CC;    /* ~10:1 contrast — inactive group name */
-    --sidebar-text-muted: #9CA3AF;       /* ~7:1  contrast — badge counts, footer */
+    --sidebar-text-muted: #B8BEC8;       /* badge counts, footer: 9.5:1 plain, 4.6:1 on a badge on the current row */
     --sidebar-text-subtle: #8B919A;      /* ~5.5:1 contrast — drag handle / unstarred star */
     --star-active: #FBBF24;             /* yellow-400 — starred icon on dark sidebar (~11:1, WCAG AA) */
     --zone-sidebar-border: rgba(255,255,255,0.08);
     --sidebar-hover-bg: rgba(255,255,255,0.07);
+    --sidebar-current-bg: rgba(255,255,255,0.14); /* twice hover; 0.16 left muted text under 4.5:1 */
     --sidebar-badge-bg: rgba(255,255,255,0.1);
     --sidebar-accent-filter: brightness(1.5);
     --foreground: 0 0% 98%;
@@ -94,6 +127,15 @@
     --popover-foreground: 0 0% 98%;
     --primary: 193 80% 55%;
     --primary-foreground: 193 100% 10%;
+    /* Tooltips keep the primary look in the dark theme (7.3:1) */
+    --tooltip: 193 80% 55%;
+    --tooltip-foreground: 193 100% 10%;
+    /* Unchanged from --primary in the dark theme (dark text on it: 7.3:1); hover is the old
+       primary at 90% opacity */
+    --primary-solid: 193 80% 55%;
+    --primary-solid-foreground: 193 100% 10%;
+    --primary-solid-hover: 193 80% 55% / 0.9;
+    --inline-link: 193 80% 55%;
     --secondary: 33 85% 60%;
     --secondary-foreground: 33 91% 10%;
     --muted: 240 3.7% 15.9%;
@@ -105,10 +147,24 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+    /* The icon keeps the full colour: every palette colour is >= 3:1 on its dark tile */
+    --session-tile-fill: 14%;
+    --session-tile-border: 45%;
+    --session-tile-icon: 100%;
+    --bracket-rail: 50%;
   }
 }
 
 @layer base {
+  /* The sidebar (SidePanel root): its rows add hover, current and badge tints on top of the zone
+     colour, so its muted text is darker (light) / lighter (dark) than elsewhere, keeping 10px detail
+     lines at 4.5:1 or more on plain, hover and current rows (light 7.1 / 6.3 / 5.4; dark 8.6 / 7.1 / 5.7). */
+  .tm-sidebar {
+    --muted-foreground: 240 3.8% 34%;
+  }
+  .dark .tm-sidebar {
+    --muted-foreground: 240 5% 72%;
+  }
   * {
     @apply border-border;
   }
@@ -307,6 +363,18 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Read-only views. The item's colour comes in as `--item-color` (an inline style, as group
+   colours always are); the theme decides how strong each part is (tokens in :root / .dark). */
+.tm-session-tile {
+  background-color: color-mix(in srgb, var(--item-color) var(--session-tile-fill), hsl(var(--background)));
+  border: 1px solid color-mix(in srgb, var(--item-color) var(--session-tile-border), hsl(var(--background)));
+  color: color-mix(in srgb, var(--item-color) var(--session-tile-icon), #000);
+}
+/* A window's bracket: the rail beside its tabs and the foot at its end */
+.tm-bracket-rail {
+  background-color: color-mix(in srgb, var(--item-color) var(--bracket-rail), hsl(var(--background)));
 }
 
 /* DnD: no row transform transitions during the frames where the native-drag source

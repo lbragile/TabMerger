@@ -67,6 +67,7 @@ const {
 
 // The Auto-saved section has its own tests (AutoSavedSection.test.tsx)
 vi.mock('@/components/SidePanel/AutoSavedSection', () => ({ AutoSavedSection: () => null }))
+vi.mock('@/components/SidePanel/RecentlyClosedSection', () => ({ RecentlyClosedSection: () => null }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 // This suite exercises Header's AI dropdown behavior directly, not the coming-soon
 // flag, so force it on regardless of the real VITE_AI_ENABLED default.

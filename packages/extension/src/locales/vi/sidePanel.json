@@ -37,5 +37,44 @@
   "proRequired": "Yêu cầu Pro",
   "locked": "Nâng cấp lên Pro để truy cập nhóm này",
   "pin": "Ghim nhóm",
-  "unpin": "Bỏ ghim nhóm"
+  "unpin": "Bỏ ghim nhóm",
+  "view": {
+    "showArchived": "Hiện nhóm đã lưu trữ {{name}}",
+    "showSession": "Hiện phiên {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Đóng chế độ xem này",
+    "moreOptions": "Tùy chọn khác cho {{name}}",
+    "archivedMeta": "Đã lưu trữ ◆ {{counts}}",
+    "archivedBanner": "Đã lưu trữ {{time}}. Chỉ đọc: khôi phục nhóm để di chuyển, chỉnh sửa hoặc thêm thẻ. Nhấp vào thẻ vẫn mở thẻ đó.",
+    "restore": "Khôi phục",
+    "sessionEmpty": "Phiên này không có nhóm nào.",
+    "sessionSavedMeta": "Đã lưu {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, cửa sổ {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, cửa sổ {{number}}, {{tabs}}",
+    "sessionEnd": "Hết phiên · {{tabs}}",
+    "showingArchived": "Đang hiện nhóm đã lưu trữ {{name}}, chỉ đọc",
+    "showingSession": "Đang hiện phiên {{name}}, chỉ đọc",
+    "restored": "Đã khôi phục {{name}}",
+    "deleted": "Đã xóa {{name}}"
+  },
+  "sessionColor": {
+    "label": "Màu",
+    "random": "Ngẫu nhiên",
+    "change": "Đổi màu…",
+    "changed": "Đã đổi màu của {{name}}",
+    "failed": "Không đổi được màu. Hãy thử lại.",
+    "names": {
+      "red": "Đỏ",
+      "orange": "Cam",
+      "yellow": "Vàng",
+      "green": "Xanh lá",
+      "cyan": "Xanh lơ",
+      "blue": "Xanh dương",
+      "indigo": "Chàm",
+      "purple": "Tím",
+      "pink": "Hồng",
+      "teal": "Xanh mòng két"
+    }
+  }
 }

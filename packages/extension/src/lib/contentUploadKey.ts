@@ -1,4 +1,4 @@
-import { getEncryptionKeyState, getDataKey } from './encryptionKey';
+import { getEncryptionKeyState, getDataKey, getDataKeyFingerprint } from './encryptionKey';
 
 /**
  * Why content may not be uploaded right now:
@@ -14,7 +14,11 @@ export const UPLOAD_BLOCKED_MESSAGE: Record<UploadBlockedReason, string> = {
   locked: 'the encryption key is locked on this device'
 };
 
-export type ContentUploadGate = { key: CryptoKey } | { key: null; reason: UploadBlockedReason };
+/**
+ * `keyFingerprint`: which key row the key belongs to (see `getDataKeyFingerprint`), when known and
+ * an `expectedUserId` was given. Sessions store it with `uploadedAt` (`Session.uploadedKey`).
+ */
+export type ContentUploadGate = { key: CryptoKey; keyFingerprint?: string } | { key: null; reason: UploadBlockedReason };
 
 /**
  * THE gate for every upload of user content (group `windows/name/note/info`, session
@@ -38,9 +42,21 @@ export async function getContentUploadKey(expectedUserId?: string): Promise<Cont
   if (state !== 'present') return { key: null, reason: state === 'absent' ? 'no-key' : 'unknown' };
   try {
     const key = await getDataKey(expectedUserId);
-    return key ? { key } : { key: null, reason: 'locked' };
+    if (!key) return { key: null, reason: 'locked' };
+    return { key, ...(await keyFingerprintFor(expectedUserId)) };
   } catch {
     // unreadable / corrupt stored key: same as never unlocked
     return { key: null, reason: 'locked' };
+  }
+}
+
+/** `{ keyFingerprint }` when known; never fails the gate (an unknown fingerprint only means "key unknown"). */
+async function keyFingerprintFor(expectedUserId: string | undefined): Promise<{ keyFingerprint?: string }> {
+  if (!expectedUserId) return {};
+  try {
+    const keyFingerprint = await getDataKeyFingerprint(expectedUserId);
+    return keyFingerprint ? { keyFingerprint } : {};
+  } catch {
+    return {};
   }
 }

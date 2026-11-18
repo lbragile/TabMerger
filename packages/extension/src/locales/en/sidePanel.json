@@ -37,5 +37,44 @@
   "proRequired": "Pro required",
   "locked": "Upgrade to Pro to access this group",
   "pin": "Pin group",
-  "unpin": "Unpin group"
+  "unpin": "Unpin group",
+  "view": {
+    "showArchived": "Show archived group {{name}}",
+    "showSession": "Show session {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Close this view",
+    "moreOptions": "More options for {{name}}",
+    "archivedMeta": "Archived ◆ {{counts}}",
+    "archivedBanner": "Archived {{time}}. Read-only: restore it to move, edit or add tabs. Clicking a tab still opens it.",
+    "restore": "Restore",
+    "sessionEmpty": "This session has no groups.",
+    "sessionSavedMeta": "Saved {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, window {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, window {{number}}, {{tabs}}",
+    "sessionEnd": "End of session · {{tabs}}",
+    "showingArchived": "Showing archived group {{name}}, read-only",
+    "showingSession": "Showing session {{name}}, read-only",
+    "restored": "Restored {{name}}",
+    "deleted": "Deleted {{name}}"
+  },
+  "sessionColor": {
+    "label": "Color",
+    "random": "Random",
+    "change": "Change color…",
+    "changed": "Changed the color of {{name}}",
+    "failed": "Couldn't change the color. Try again.",
+    "names": {
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "cyan": "Cyan",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "purple": "Purple",
+      "pink": "Pink",
+      "teal": "Teal"
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import { t } from '@/lib/i18n';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { isOpenableUrl, openableUrls } from '@/lib/safeOpen';
+import { isOpenableUrl, openableUrls, RESTRICTED_URL_RE } from '@/lib/safeOpen';
+import { closeTabs, closeWindows } from '@/lib/closeLiveTabs';
 import { nanoid } from 'nanoid';
 import type { Group, GroupsState, Tab } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
@@ -23,6 +24,8 @@ import { noteTabsOpenedByPopup } from '@/lib/ownOpenedTabs';
 import { withTabCustomTitle } from '@/lib/tabTitle';
 import type { LiveTabsEffect } from '@/lib/undoLiveTabs';
 import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
+import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
+import { ClosedSaveTargetGoneError, addClosedEntriesToState, closedTabCount, type ClosedSaveTarget } from '@/lib/recentlyClosedSave';
 import { toast } from '@/lib/toast';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
@@ -394,8 +397,9 @@ export function useDeleteWindow() {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const group = state?.available[groupIndex];
       const tabIds = closableTabIds(group, group?.windows[windowIndex]?.tabs ?? []);
+      // closing a Now Open window saves nothing: "Recently closed" remembers it
       if (tabIds.length > 0) {
-        chrome.tabs.remove(tabIds).catch(() => {});
+        closeTabs(tabIds, { record: true }).catch(() => {});
       }
 
       return mutate((prev) => {
@@ -424,7 +428,8 @@ export function useDeleteAllWindows() {
       const group = state?.available[groupIndex];
       // Only Now Open's tabs are closed in the browser (see closableTabIds)
       const tabIds = closableTabIds(group, group?.windows.flatMap((w) => w.tabs) ?? []);
-      if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
+      // nothing is saved: "Recently closed" remembers them
+      if (tabIds.length > 0) closeTabs(tabIds, { record: true }).catch(() => {});
 
       return mutate((prev) => {
         const available = [...prev.available];
@@ -556,9 +561,9 @@ export function useToggleGroupStar() {
   });
 }
 
-// URLs that cannot be programmatically opened (chrome://, about:, extension pages, etc.)
-// ponytail: matches scheme: prefix — covers both about:blank and chrome://newtab
-export const RESTRICTED_URL_RE = /^(chrome|about|chrome-extension|moz-extension):/i;
+// URLs that cannot be programmatically opened: lives in lib/safeOpen.ts (the background worker's
+// recently-closed recorder uses the same rule), re-exported here for existing importers.
+export { RESTRICTED_URL_RE };
 
 /**
  * Toggles incognito mode for a window.
@@ -579,13 +584,22 @@ export function useToggleWindowIncognito() {
         const win = group.windows[windowIndex];
         const tabUrls = openableUrls(win.tabs.map((t) => t.url)).filter((u) => !RESTRICTED_URL_RE.test(u));
         const oldWindowId = win.id;
-        // no `url: []`: with nothing to reopen the window is created without a url list
-        await chrome.windows.create(
+        // no `url: []`: with nothing to reopen the window is created without a url list.
+        // Created UNFOCUSED: focusing it would dismiss this popup before the old window is closed
+        // (the quiet close awaits a storage write first), leaving both copies open. The old window
+        // is closed first, then the new one is focused.
+        const created = await chrome.windows.create(
           tabUrls.length > 0
-            ? { incognito: !win.incognito, url: tabUrls, focused: true }
-            : { incognito: !win.incognito, focused: true }
+            ? { incognito: !win.incognito, url: tabUrls, focused: false }
+            : { incognito: !win.incognito, focused: false }
         );
-        await chrome.windows.remove(oldWindowId);
+        // its tabs were just reopened in the new window: not a close to remember
+        await closeWindows(oldWindowId, { record: false });
+        try {
+          if (typeof created?.id === 'number') await chrome.windows.update(created.id, { focused: true });
+        } catch {
+          // focusing is cosmetic: the window is open
+        }
         return;
       }
 
@@ -633,8 +647,9 @@ export function useDeleteTab() {
       const group = state?.available[groupIndex];
       const tab = group?.windows[windowIndex]?.tabs[tabIndex];
       const [tabId] = closableTabIds(group, tab ? [tab] : []);
+      // nothing is saved: "Recently closed" remembers it
       if (tabId !== undefined) {
-        chrome.tabs.remove(tabId).catch(() => {});
+        closeTabs(tabId, { record: true }).catch(() => {});
       }
 
       return mutate((prev) => {
@@ -1120,8 +1135,9 @@ export function useDeduplicateGroup() {
         group,
         duplicatesStillInPlace(group, duplicates).map((d) => group.windows[d.windowIndex].tabs[d.tabIndex])
       );
+      // a duplicate's URL stays open in the kept tab: not a close to remember
       if (tabIds.length > 0) {
-        chrome.tabs.remove(tabIds).catch(() => {});
+        closeTabs(tabIds, { record: false }).catch(() => {});
       }
       return mutate(
         (prev) => {
@@ -1507,6 +1523,43 @@ export function useSaveShortcutTabs() {
         return { ...prev, available };
       }, false, { align: false }),
     onSuccess: () => { trackEvent('tabs_saved', { count: 1 }); }
+  });
+}
+
+/**
+ * "Save to group…" from Recently closed: adds closed tabs and windows to a saved group, or to a new
+ * group named after the site (`lib/recentlyClosedSave.ts` builds the result). One write, so it is
+ * one undo step, marked `pendingSync` and synced/encrypted like every other change; the Free
+ * group/tab limits are checked first (`caps`, as `useAddGroup`). The recently-closed entries stay
+ * in their list: the tabs are still closed. A picked group that is gone, archived or no longer a
+ * saved group when the write runs (the menu was opened before) writes nothing and rejects with
+ * `ClosedSaveTargetGoneError`, so the UI never reports a save that did not happen.
+ */
+export function useSaveClosedToGroup(caps: TierCaps = {}) {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({ entries, target }: { entries: readonly Pick<RecentlyClosedEntry, 'kind' | 'tabs'>[]; target: ClosedSaveTarget }) => {
+      assertWithinFreeLimits(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY), caps, 'newGroupName' in target ? 1 : 0, closedTabCount(entries));
+      let targetGone = false;
+      return mutate(
+        (prev) => {
+          const result = addClosedEntriesToState(prev, entries, target, Date.now());
+          // decided on the FRESH state inside the write, not on the menu's copy
+          if (!result && 'groupId' in target && closedTabCount(entries) > 0) targetGone = true;
+          return result?.state ?? null;
+        },
+        false,
+        { align: false }
+      ).then((next) => {
+        if (targetGone) throw new ClosedSaveTargetGoneError();
+        return next;
+      });
+    },
+    onSuccess: (next) => {
+      if (!wasAborted(next)) trackEvent('tabs_saved', { count: 1 });
+    }
   });
 }
 

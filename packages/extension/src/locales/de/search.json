@@ -36,5 +36,13 @@
   "close": "schließen",
   "summaryNone": "Keine Tabs passen",
   "summary_one": "{{count}} Tab passt in {{groups}}",
-  "summary_other": "{{count}} Tabs passen in {{groups}}"
+  "summary_other": "{{count}} Tabs passen in {{groups}}",
+  "recentlyClosed": "Kürzlich geschlossen",
+  "exampleClosed": "Nur kürzlich geschlossene Tabs durchsuchen",
+  "closedToday": "heute {{time}} geschlossen",
+  "closedYesterday": "gestern {{time}} geschlossen",
+  "closedOn": "geschlossen am {{day}}",
+  "closedFromWindow": "aus einem geschlossenen Fenster",
+  "closedWindowLabel": "Fenster · {{tabs}}",
+  "closedOff": "Geschlossene Tabs merken ist aus"
 }

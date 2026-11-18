@@ -1,0 +1,94 @@
+{
+  "day": {
+    "today": "今日",
+    "yesterday": "昨日"
+  },
+  "errors": {
+    "openFailed": "このページを開けませんでした。リストには残ります。",
+    "changeFailed": "閉じたタブのリストを変更できませんでした。もう一度お試しください。",
+    "undoIncomplete": "元に戻せませんでした: すでに削除されています。",
+    "undoTurnedOnListGone": "閉じたタブの記憶を再びオンにしましたが、消去したリストはすでに削除されています。",
+    "groupGone": "そのグループはもう存在しません。何も保存されませんでした。"
+  },
+  "settings": {
+    "title": "閉じたタブを記憶する",
+    "purpose": "閉じたタブやウィンドウは「最近閉じたタブ」に残り、もう一度開けます。このデバイスにのみ保存されます。プライベートウィンドウは記録されません。",
+    "keeps_other": "ご利用のプランでは直近 {{count}} 日分を保存します",
+    "inList_other": "リストに {{count}} 件",
+    "off": "閉じたタブの記憶はオフです。",
+    "clear": "リストを消去",
+    "checkingPlan": "プランを確認しています..."
+  },
+  "toast": {
+    "cleared_other": "閉じたタブとウィンドウを {{count}} 件消去しました",
+    "turnedOffCleared_other": "オフにしました · 閉じたタブとウィンドウを {{count}} 件消去しました",
+    "turnedOff": "閉じたタブを記憶しなくなりました",
+    "reopened": "{{title}} を開き直しました",
+    "restoredWindow": "{{tabs}}のウィンドウを復元しました",
+    "reopenedAll": "{{tabs}}を新しいウィンドウで開き直しました",
+    "removed": "{{name}} を一覧から削除しました",
+    "saved": "{{group}} に保存しました",
+    "linkCopied": "リンクをコピーしました",
+    "copyFailed": "リンクをコピーできませんでした。"
+  },
+  "section": {
+    "title": "最近閉じたタブ",
+    "offCount": "オフ",
+    "empty_other": "まだ閉じたタブはありません。閉じたタブは日ごとにここに表示され、直近 {{count}} 日分が保存されます。",
+    "offBody": "閉じたタブの記憶はオフです。",
+    "turnOn": "設定でオンにする",
+    "freeKeeps_other": "Free は直近 {{count}} 日分を保存します。",
+    "proKeeps_other": "Pro は直近 {{count}} 日分を保存します。",
+    "seePro": "Pro を見る",
+    "dayDetail": "{{tabs}}・{{windows}}",
+    "showDay_today": "今日閉じたタブを表示",
+    "showDay_yesterday": "昨日閉じたタブを表示",
+    "showDay_date": "{{day}}に閉じたタブを表示",
+    "removeDay_today": "今日閉じたタブを一覧から削除",
+    "removeDay_yesterday": "昨日閉じたタブを一覧から削除",
+    "removeDay_date": "{{day}}に閉じたタブを一覧から削除",
+    "removeDayTooltip": "この日を削除"
+  },
+  "view": {
+    "meta_other": "最近閉じたタブ ◆ {{count}}件",
+    "reopenAll": "すべて新しいウィンドウで開き直す",
+    "saveAll": "すべてをグループに保存…",
+    "removeDay": "この日を削除",
+    "clearAll": "最近閉じたタブをすべて消去 ({{n}})",
+    "noMatches": "この日に閉じたタブに、検索に一致するものはありません。",
+    "showMore": "さらに表示",
+    "showing_today": "今日閉じたタブを表示中",
+    "showing_yesterday": "昨日閉じたタブを表示中",
+    "showing_date": "{{day}}に閉じたタブを表示中",
+    "listLabel": "閉じたタブとウィンドウ",
+    "matches_other": "{{count}} 件一致",
+    "notMatching": "検索に一致しません"
+  },
+  "hours": {
+    "stripLabel": "1時間ごとの閉じたタブ",
+    "bar_other": "{{hour}}、{{count}}件",
+    "busiest": "最多: {{hour}}",
+    "busiestTwo": "最多: {{first}}と{{second}}",
+    "spread_other": "{{count}}時間にわたって閉じた",
+    "showing_other": "{{hour}}を表示中 · {{count}}件",
+    "showingAll": "すべての時間を表示中",
+    "showAll": "すべての時間を表示",
+    "noMatches": "この時間に閉じたタブに、検索に一致するものはありません。"
+  },
+  "entry": {
+    "window": "ウィンドウ・{{tabs}}",
+    "reopenTab": "{{title}} を開き直す（{{time}}に閉じた）",
+    "restoreWindow": "{{tabs}}のウィンドウを復元（{{time}}に閉じた）",
+    "reopenTabInWindow": "{{title}} を開き直す",
+    "windowTabs": "{{time}} に閉じたウィンドウのタブ、{{tabs}}",
+    "reopen": "開き直す",
+    "restore": "ウィンドウを復元",
+    "saveToGroup": "グループに保存…",
+    "copyLink": "リンクをコピー",
+    "remove": "一覧から削除",
+    "newGroup": "新しいグループ: {{name}}",
+    "newGroupPlain": "新しいグループ",
+    "noGroups": "保存済みのグループはまだありません",
+    "moreOptions": "{{name}} のその他のオプション"
+  }
+}

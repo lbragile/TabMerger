@@ -11,6 +11,39 @@ export const DEFAULT_WINDOW_TITLE = 'Window';
 /** What the Free plan allows. The single source for enforcement, pricing copy and upgrade prompts. */
 export const FREE_TIER_LIMITS = { groups: 5, tabs: 50, urlRules: 3, sessions: 3 } as const;
 
+/**
+ * How long "Recently closed tabs" keeps entries, per plan (local-only data: the client limits are
+ * all the enforcement it needs). An entry is one closed tab or one closed window. The two plans use
+ * different fields because they mean different things: Free keeps the newest `recentDays` days that
+ * have closes, Pro a number of calendar `days`. Free limits apply only when the plan is KNOWN to be
+ * Free; an unknown plan (offline, failed check) keeps the Pro ones.
+ */
+export const RECENTLY_CLOSED_LIMITS = {
+  /**
+   * The newest `recentDays` local days that have closed tabs, rolling (not necessarily
+   * consecutive calendar days): when a newer day appears, the oldest one's entries go. `entries`
+   * is only a storage cap (one heavy day must not fill the device), the same as Pro's.
+   */
+  free: { recentDays: 2, entries: 1000 },
+  /** Closes of the last `days` calendar days; `entries` is only a storage cap, never advertised. */
+  pro: { days: 30, entries: 1000 },
+} as const;
+
+/** "your last day" / "your last 2 days": a plan's window in words (the entry caps are never advertised). */
+const lastDays = (n: number) => (n === 1 ? 'your last day' : `your last ${n.toLocaleString('en-US')} days`);
+
+/**
+ * "Recently closed tabs" lines in the plan feature lists, built from {@link RECENTLY_CLOSED_LIMITS}
+ * so the copy can't drift from what the extension keeps. Pro AI gets the Pro line through
+ * "Everything in Pro". (Here, not in `./recentlyClosed.ts`, which this file re-exports.)
+ */
+export const RECENTLY_CLOSED_COPY = {
+  /** Line in the Free plan's feature list. */
+  pricingFeatureFree: `Recently closed tabs: ${lastDays(RECENTLY_CLOSED_LIMITS.free.recentDays)}`,
+  /** Line in the Pro plan's feature list. */
+  pricingFeaturePro: `Recently closed tabs: ${lastDays(RECENTLY_CLOSED_LIMITS.pro.days)}`,
+} as const;
+
 /** Paid plans have no caps. */
 export const UNLIMITED_TIER_LIMITS = { groups: Infinity, tabs: Infinity, urlRules: Infinity, sessions: Infinity } as const;
 
@@ -71,6 +104,15 @@ export const PRESET_COLORS = [
   'rgba(15, 23, 42, 1)',    // slate dark
 ] as const;
 
+/** The two neutral presets: too alike to tell auto-generated items apart, so never picked for one. */
+const NEUTRAL_PRESET_COLORS: readonly string[] = ['rgba(107, 114, 128, 1)', 'rgba(15, 23, 42, 1)'];
+
+/**
+ * The colours auto-generated items get (auto-saved groups, recently-closed days), so several of
+ * them are easy to tell apart: {@link PRESET_COLORS} without gray and slate dark (10 colours).
+ */
+export const AUTO_ITEM_COLORS: readonly string[] = PRESET_COLORS.filter((c) => !NEUTRAL_PRESET_COLORS.includes(c));
+
 /**
  * The yearly discount every paid option advertises. Each yearly price is set so its real saving
  * over twelve monthly payments is at least this and under one point more, so the badge (rounded
@@ -90,6 +132,7 @@ export const PRICING_TIERS: PricingTier[] = [
       `Up to ${FREE_TIER_LIMITS.urlRules} URL rules`,
       `Save up to ${FREE_TIER_LIMITS.sessions} sessions in this browser`,
       AUTO_SAVE_COPY.pricingFeatureFree,
+      RECENTLY_CLOSED_COPY.pricingFeatureFree,
       'Local storage only',
       'Import & export',
       'Drag & drop',
@@ -109,6 +152,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Sessions synced across devices',
       AUTO_BACKUP_COPY.pricingFeature,
       AUTO_SAVE_COPY.pricingFeaturePro,
+      RECENTLY_CLOSED_COPY.pricingFeaturePro,
       'Priority support',
     ],
     limits: UNLIMITED_TIER_LIMITS,
@@ -172,6 +216,7 @@ export * from './localeSearch';
 export * from './analyticsEvents';
 export * from './extensionLifecycle';
 export * from './ai';
+export * from './recentlyClosed';
 
 /** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
 export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

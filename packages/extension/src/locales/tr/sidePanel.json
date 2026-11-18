@@ -37,5 +37,44 @@
   "proRequired": "Pro gerekli",
   "locked": "Bu gruba erişmek için Pro'ya yükseltin",
   "pin": "Grubu sabitle",
-  "unpin": "Grubun sabitlemesini kaldır"
+  "unpin": "Grubun sabitlemesini kaldır",
+  "view": {
+    "showArchived": "Arşivlenmiş {{name}} grubunu göster",
+    "showSession": "{{name}} oturumunu göster",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Bu görünümü kapat",
+    "moreOptions": "{{name}} için diğer seçenekler",
+    "archivedMeta": "Arşivlendi ◆ {{counts}}",
+    "archivedBanner": "{{time}} arşivlendi. Salt okunur: sekmeleri taşımak, düzenlemek veya eklemek için grubu geri yükleyin. Bir sekmeye tıklamak onu yine de açar.",
+    "restore": "Geri yükle",
+    "sessionEmpty": "Bu oturumda grup yok.",
+    "sessionSavedMeta": "Kaydedildi: {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, pencere {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, pencere {{number}}, {{tabs}}",
+    "sessionEnd": "Oturumun sonu · {{tabs}}",
+    "showingArchived": "Arşivlenmiş {{name}} grubu gösteriliyor, salt okunur",
+    "showingSession": "{{name}} oturumu gösteriliyor, salt okunur",
+    "restored": "{{name}} geri yüklendi",
+    "deleted": "{{name}} silindi"
+  },
+  "sessionColor": {
+    "label": "Renk",
+    "random": "Rastgele",
+    "change": "Rengi değiştir…",
+    "changed": "{{name}} rengi değiştirildi",
+    "failed": "Renk değiştirilemedi. Tekrar deneyin.",
+    "names": {
+      "red": "Kırmızı",
+      "orange": "Turuncu",
+      "yellow": "Sarı",
+      "green": "Yeşil",
+      "cyan": "Camgöbeği",
+      "blue": "Mavi",
+      "indigo": "Çivit",
+      "purple": "Mor",
+      "pink": "Pembe",
+      "teal": "Deniz mavisi"
+    }
+  }
 }

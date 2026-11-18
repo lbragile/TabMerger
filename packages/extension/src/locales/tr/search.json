@@ -36,5 +36,13 @@
   "close": "kapat",
   "summaryNone": "Eşleşen sekme yok",
   "summary_one": "{{groups}} içinde {{count}} sekme eşleşiyor",
-  "summary_other": "{{groups}} içinde {{count}} sekme eşleşiyor"
+  "summary_other": "{{groups}} içinde {{count}} sekme eşleşiyor",
+  "recentlyClosed": "Son kapatılanlar",
+  "exampleClosed": "Yalnızca son kapatılan sekmelerde ara",
+  "closedToday": "bugün {{time}} kapatıldı",
+  "closedYesterday": "dün {{time}} kapatıldı",
+  "closedOn": "{{day}} kapatıldı",
+  "closedFromWindow": "kapatılan bir pencereden",
+  "closedWindowLabel": "Pencere · {{tabs}}",
+  "closedOff": "Kapatılan sekmeleri hatırlama kapalı"
 }

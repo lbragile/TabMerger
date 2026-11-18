@@ -37,5 +37,44 @@
   "proRequired": "需要 Pro",
   "locked": "升级到 Pro 以访问此分组",
   "pin": "固定分组",
-  "unpin": "取消固定分组"
+  "unpin": "取消固定分组",
+  "view": {
+    "showArchived": "显示已归档分组 {{name}}",
+    "showSession": "显示会话 {{name}}",
+    "sessionCounts": "{{groups}}，{{windows}}，{{tabs}}",
+    "close": "关闭此视图",
+    "moreOptions": "{{name}} 的更多选项",
+    "archivedMeta": "已归档 ◆ {{counts}}",
+    "archivedBanner": "{{time}}归档。只读：恢复分组后才能移动、编辑或添加标签页。点击标签页仍会打开它。",
+    "restore": "恢复",
+    "sessionEmpty": "此会话没有分组。",
+    "sessionSavedMeta": "保存于 {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}，窗口 {{number}}，{{tabs}}",
+    "windowLabelNamed": "{{group}}，{{name}}，窗口 {{number}}，{{tabs}}",
+    "sessionEnd": "会话结束 · {{tabs}}",
+    "showingArchived": "正在显示已归档分组 {{name}}（只读）",
+    "showingSession": "正在显示会话 {{name}}（只读）",
+    "restored": "已恢复 {{name}}",
+    "deleted": "已删除 {{name}}"
+  },
+  "sessionColor": {
+    "label": "颜色",
+    "random": "随机",
+    "change": "更改颜色…",
+    "changed": "已更改 {{name}} 的颜色",
+    "failed": "无法更改颜色，请重试。",
+    "names": {
+      "red": "红色",
+      "orange": "橙色",
+      "yellow": "黄色",
+      "green": "绿色",
+      "cyan": "青色",
+      "blue": "蓝色",
+      "indigo": "靛蓝",
+      "purple": "紫色",
+      "pink": "粉色",
+      "teal": "蓝绿色"
+    }
+  }
 }

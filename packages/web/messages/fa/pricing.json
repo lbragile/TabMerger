@@ -32,6 +32,8 @@
     "autoBackups": "پشتیبان‌گیری خودکار رمزگذاری‌شده",
     "autoSaveFree": "ذخیرهٔ خودکار زبانه‌های باز ({count, number} مورد جدیدتر نگه داشته می‌شوند)",
     "autoSavePro": "ذخیرهٔ خودکار زبانه‌های باز، همه نگه داشته می‌شوند",
+    "recentlyClosedFree": "زبانه‌های اخیراً بسته‌شده: {days, plural, one {# روز} other {# روز}} اخیر شما",
+    "recentlyClosedPro": "زبانه‌های اخیراً بسته‌شده: {days, plural, one {# روز} other {# روز}} اخیر شما",
     "prioritySupport": "پشتیبانی با اولویت",
     "everythingInPro": "همهٔ امکانات Pro",
     "aiGrouping": "گروه‌بندی خودکار زبانه‌ها با هوش مصنوعی",

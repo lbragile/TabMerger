@@ -32,6 +32,8 @@
     "autoBackups": "نسخ احتياطية مشفّرة تلقائية",
     "autoSaveFree": "حفظ تلقائي لعلامات التبويب المفتوحة (يُحتفظ بأحدث {count, number})",
     "autoSavePro": "حفظ تلقائي لعلامات التبويب المفتوحة، مع الاحتفاظ بها كلها",
+    "recentlyClosedFree": "علامات التبويب المغلقة مؤخرًا: آخر {days, plural, zero {# يوم} one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}",
+    "recentlyClosedPro": "علامات التبويب المغلقة مؤخرًا: آخر {days, plural, zero {# يوم} one {يوم واحد} two {يومين} few {# أيام} many {# يومًا} other {# يوم}}",
     "prioritySupport": "دعم ذو أولوية",
     "everythingInPro": "كل ما في Pro",
     "aiGrouping": "تجميع تلقائي لعلامات التبويب بالذكاء الاصطناعي",

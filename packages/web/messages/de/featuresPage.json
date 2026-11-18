@@ -24,6 +24,10 @@
       "title": "Volltextsuche",
       "description": "Durchsuche alle Tab-Titel und URLs sofort. Treffer entsprechen dem Text genau so, wie du ihn tippst (egal ob Groß- oder Kleinschreibung), die besten zuerst."
     },
+    "recentlyClosed": {
+      "title": "Zuletzt geschlossene Tabs",
+      "description": "Jeder Tab und jedes Fenster, das du schließt, landet nach Tagen sortiert in der Liste „Zuletzt geschlossen“ in der Seitenleiste. Öffne einen Tab wieder, stelle ein ganzes Fenster wieder her oder speichere es in einer Gruppe, oder finde es mit Strg/Cmd+K: Beginne deine Suche mit closed:, um nur dort zu suchen. Im kostenlosen Tarif {freeDays, plural, one {bleibt dein letzter Tag} other {bleiben deine letzten # Tage}} mit geschlossenen Tabs erhalten, mit Pro {proDays, plural, one {dein letzter Tag} other {deine letzten # Tage}}. Die Liste bleibt auf deinem Gerät: Sie wird nie synchronisiert, hochgeladen oder exportiert, private Fenster werden nie erfasst, und du kannst sie unter Einstellungen → Daten ausschalten oder leeren."
+    },
     "dnd": {
       "title": "Neu anordnen per Drag-and-drop",
       "description": "Ordne Tabs innerhalb von Gruppen und die Gruppen selbst per flüssigem Drag-and-drop neu an."

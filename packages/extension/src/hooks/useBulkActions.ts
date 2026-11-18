@@ -10,6 +10,7 @@ import { updateGroupsState } from '@/lib/localDb';
 import { useUIStore } from '@/stores/uiStore';
 import type { SelectedItem } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY, RESTRICTED_URL_RE, closableTabIds } from '@/hooks/useGroups';
+import { closeTabs } from '@/lib/closeLiveTabs';
 import { createWindow, getGroupInfo, sortWindowsByStarred } from '@/lib/utils';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { resolveIncognito } from '@/lib/incognito';
@@ -114,13 +115,14 @@ export function useBulkDelete() {
                 : b.tabIndex - a.tabIndex
             );
 
-          // Fire-and-forget close of the selected Now Open tabs (saved tabs close nothing)
+          // Fire-and-forget close of the selected Now Open tabs (saved tabs close nothing).
+          // Nothing is saved: "Recently closed" remembers them.
           const tabIds = parsed.flatMap((p) => {
             const grp = state.available[p.groupIndex];
             const t = grp?.windows[p.windowIndex]?.tabs[p.tabIndex];
             return closableTabIds(grp, t ? [t] : []);
           });
-          if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
+          if (tabIds.length > 0) closeTabs(tabIds, { record: true }).catch(() => {});
 
           // Deep-clone the mutable part (windows + tabs arrays) of the affected groups only.
           // Untouched groups keep their objects, which keeps them out of the sync stamp and lets
@@ -170,7 +172,8 @@ export function useBulkDelete() {
             const grp = state.available[p.groupIndex];
             return closableTabIds(grp, grp?.windows[p.windowIndex]?.tabs ?? []);
           });
-          if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
+          // nothing is saved: "Recently closed" remembers them
+          if (tabIds.length > 0) closeTabs(tabIds, { record: true }).catch(() => {});
 
           const available = state.available.map((g) => ({ ...g, windows: [...g.windows] }));
 

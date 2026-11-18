@@ -40,5 +40,13 @@
   "summary_one": "{{count}} karta pasuje w {{groups}}",
   "summary_few": "{{count}} karty pasują w {{groups}}",
   "summary_many": "{{count}} kart pasuje w {{groups}}",
-  "summary_other": "{{count}} karty pasuje w {{groups}}"
+  "summary_other": "{{count}} karty pasuje w {{groups}}",
+  "recentlyClosed": "Ostatnio zamknięte",
+  "exampleClosed": "Szukaj tylko w ostatnio zamkniętych kartach",
+  "closedToday": "zamknięta dziś o {{time}}",
+  "closedYesterday": "zamknięta wczoraj o {{time}}",
+  "closedOn": "zamknięta: {{day}}",
+  "closedFromWindow": "z zamkniętego okna",
+  "closedWindowLabel": "Okno · {{tabs}}",
+  "closedOff": "Zapamiętywanie zamkniętych kart jest wyłączone"
 }

@@ -4,7 +4,7 @@ import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { AUTO_BACKUP_RETENTION_COUNT, AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { AUTO_BACKUP_RETENTION_COUNT, AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMITS, RECENTLY_CLOSED_LIMITS } from '@tabmerger/shared'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { STORE_ICON } from '@/components/marketing/BrowserIcons'
 import { StoreLink } from '@/components/StoreLink'
@@ -25,6 +25,7 @@ import {
   Save,
   NotebookPen,
   WandSparkles,
+  RotateCcw,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -44,14 +45,26 @@ const badgeStyle: Record<SectionKey, string> = {
 
 /**
  * Each feature is a key under its section (`featuresPage.<section>.<key>.title|description`).
- * `count` fills the description's `{count}` (a limit from `@tabmerger/shared`).
+ * `count` fills the description's `{count}` (a limit from `@tabmerger/shared`); `values` fills a
+ * description with several named numbers.
  */
-const featureSections: { key: SectionKey; features: { key: string; icon: LucideIcon; count?: number }[] }[] = [
+const featureSections: {
+  key: SectionKey
+  features: { key: string; icon: LucideIcon; count?: number; values?: Record<string, number> }[]
+}[] = [
   {
     key: 'core',
     features: [
       { key: 'groups', icon: Layers },
       { key: 'search', icon: Search },
+      {
+        key: 'recentlyClosed',
+        icon: RotateCcw,
+        values: {
+          freeDays: RECENTLY_CLOSED_LIMITS.free.recentDays,
+          proDays: RECENTLY_CLOSED_LIMITS.pro.days,
+        },
+      },
       { key: 'dnd', icon: GripVertical },
       { key: 'shortcuts', icon: Keyboard },
       { key: 'importExport', icon: Download },
@@ -100,8 +113,9 @@ export default async function FeaturesPage() {
   ])
   const BrowserIcon = STORE_ICON[browser]
   // Feature keys come from the list above (a test renders every one). Messages without a
-  // `{count}` ignore the value.
-  const featureText = (path: string, count = 0) => t(path as 'pro.sessions.description', { count })
+  // `{count}` (or without the named `values`) ignore them.
+  const featureText = (path: string, count = 0, values: Record<string, number> = {}) =>
+    t(path as 'pro.sessions.description', { ...values, count })
 
   return (
     <div className="py-16">
@@ -155,7 +169,7 @@ export default async function FeaturesPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-[19px] tracking-tight mb-1.5">{featureText(`${section.key}.${feature.key}.title`)}</h3>
-                        <p className="text-[14.5px] leading-relaxed text-text2">{featureText(`${section.key}.${feature.key}.description`, feature.count)}</p>
+                        <p className="text-[14.5px] leading-relaxed text-text2">{featureText(`${section.key}.${feature.key}.description`, feature.count, feature.values)}</p>
                       </div>
                       <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 shrink-0">
                         <Icon className="h-5 w-5 text-primary" />

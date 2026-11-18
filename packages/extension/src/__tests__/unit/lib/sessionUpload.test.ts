@@ -1,13 +1,28 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { decryptBlob, generateDataKey, isEncryptedBlob } from '@tabmerger/shared'
+import { AUTO_ITEM_COLORS, decryptBlob, generateDataKey, isEncryptedBlob } from '@tabmerger/shared'
 import type { Session } from '@/lib/types'
-import { deleteRemoteSessions, pushSessionToSupabase, refreshUploadedSession } from '@/lib/sessionUpload'
+import {
+  isRowRejection,
+  deleteRemoteSessions,
+  deleteRemoteSessionsQueued,
+  noteSessionDeletedHere,
+  pushSessionToSupabase,
+  queueSessionUpload,
+  refreshUploadedSession,
+  sessionContent,
+  uploadStoredSession,
+} from '@/lib/sessionUpload'
 
 const h = vi.hoisted(() => ({
   auth: { user: { id: 'user-1' } } as unknown,
-  gate: { key: null } as { key: CryptoKey | null; reason?: string },
+  gate: { key: null } as { key: CryptoKey | null; reason?: string; keyFingerprint?: string },
   firefoxOk: true,
   upsertError: null as unknown,
+  /** HTTP status of the upsert / update answer */
+  upsertStatus: 201 as number,
+  updateStatus: 200 as number,
+  /** updateSettings entries written through commitSessions */
+  committed: [] as Record<string, unknown>[],
   deleteError: null as unknown,
   deleteThrows: false,
   upserts: [] as Record<string, unknown>[],
@@ -19,6 +34,15 @@ const h = vi.hoisted(() => ({
   readError: null as unknown,
   updateRows: [{ id: 's1' }] as unknown,
   updateError: null as unknown,
+  /** awaited before an upsert is recorded (to hold an upload in flight) */
+  beforeUpsert: null as null | (() => Promise<void>),
+  /** every request in the order it COMPLETED */
+  done: [] as string[],
+  /** the local sessions store (getSession / markSessionUploaded) */
+  local: new Map<string, Record<string, unknown>>(),
+  marks: [] as unknown[][],
+  /** ids the user deleted in ANY context (IndexedDB, see wasSessionDeletedHere) */
+  deletedElsewhere: new Set<string>(),
 }))
 
 vi.mock('@/lib/supabase', () => ({
@@ -31,19 +55,22 @@ vi.mock('@/lib/supabase', () => ({
       const finish = async () => {
         h.requests.push({ ...q })
         if (q.op === 'upsert') {
+          await h.beforeUpsert?.()
           h.upserts.push(q.payload as Record<string, unknown>)
-          return { error: h.upsertError }
+          h.done.push(`upsert:${(q.payload as { id: string }).id}`)
+          return { error: h.upsertError, status: h.upsertStatus }
         }
         if (q.op === 'delete') {
           if (h.deleteThrows) throw new Error('offline')
           const ids = (q.filters.find((f) => f[0] === 'in') as unknown[])[2] as string[]
           const userId = (q.filters.find((f) => f[0] === 'eq' && f[1] === 'user_id') as unknown[])[2]
           h.deletes.push({ ids, userId })
+          h.done.push(`delete:${ids.join()}`)
           return { error: h.deleteError }
         }
         if (q.op === 'update') {
           h.updates.push(q.payload as Record<string, unknown>)
-          return { data: h.updateRows, error: h.updateError }
+          return { data: h.updateRows, error: h.updateError, status: h.updateStatus }
         }
         h.onRead?.()
         return { data: h.readRow, error: h.readError }
@@ -69,6 +96,23 @@ vi.mock('@/lib/contentUploadKey', () => ({
   UPLOAD_BLOCKED_MESSAGE: { 'no-key': 'no key', unknown: 'unknown', locked: 'locked' },
 }))
 vi.mock('@/lib/syncEngine', () => ({ canUploadOnFirefox: vi.fn(async () => h.firefoxOk) }))
+vi.mock('@/lib/localDb', () => ({
+  getSession: vi.fn(async (id: string) => h.local.get(id)),
+  wasSessionDeletedHere: vi.fn(async (id: string) => h.deletedElsewhere.has(id)),
+  commitSessions: vi.fn(async (changes: { updateSettings?: Record<string, (s: unknown) => unknown> }) => {
+    for (const [k, fn] of Object.entries(changes.updateSettings ?? {})) h.committed.push({ [k]: fn(undefined) })
+  }),
+  markSessionUploaded: vi.fn(async (id: string, at: number, token?: number, keyFingerprint?: string, outcome = 'written') => {
+    h.marks.push([id, at, token])
+    const row = h.local.get(id)
+    if (!row) return
+    const next: Record<string, unknown> = { ...row, uploadedAt: at, ...(keyFingerprint ? { uploadedKey: keyFingerprint } : {}) }
+    if (outcome === 'remote-gone') next.remoteGone = true
+    else if (outcome === 'written') delete next.remoteGone
+    if (token !== undefined && row.uploadPending === token) delete next.uploadPending
+    h.local.set(id, next)
+  }),
+}))
 
 const base: Session = {
   id: 's1',
@@ -96,6 +140,14 @@ beforeEach(async () => {
   h.readError = null
   h.updateRows = [{ id: 's1' }]
   h.updateError = null
+  h.beforeUpsert = null
+  h.done.length = 0
+  h.local.clear()
+  h.marks.length = 0
+  h.deletedElsewhere.clear()
+  h.upsertStatus = 201
+  h.updateStatus = 200
+  h.committed.length = 0
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
@@ -249,5 +301,371 @@ describe('refreshUploadedSession', () => {
     h.gate = { key }
     h.firefoxOk = false
     expect(await refreshUploadedSession(base, 'user-1')).toBe('failed')
+  })
+})
+
+describe('session colour (inside the ciphertext only)', () => {
+  it('a palette colour travels inside the encrypted blob, never in a plaintext column', async () => {
+    const color = AUTO_ITEM_COLORS[3]
+    await pushSessionToSupabase({ ...base, color }, 'user-1')
+    const row = h.upserts[0]
+    expect(Object.keys(row).sort()).toEqual(['created_at', 'description', 'groups', 'id', 'name', 'user_id'])
+    expect(JSON.stringify(row)).not.toContain('rgba')
+    const content = await decryptBlob<Record<string, unknown>>(key, row.groups as never)
+    expect(content.color).toBe(color)
+  })
+
+  it.each([['rgba(1, 2, 3, 1)'], ['red'], [''], [42]])('a colour outside the palette (%s) is not uploaded', async (color) => {
+    await pushSessionToSupabase({ ...base, color: color as unknown as string }, 'user-1')
+    const content = await decryptBlob<Record<string, unknown>>(key, h.upserts[0].groups as never)
+    expect('color' in content).toBe(false)
+  })
+
+  it('a refresh re-encrypts the colour too', async () => {
+    expect(await refreshUploadedSession({ ...base, color: AUTO_ITEM_COLORS[0] }, 'user-1')).toBe('updated')
+    const content = await decryptBlob<Record<string, unknown>>(key, h.updates[0].groups as never)
+    expect(content.color).toBe(AUTO_ITEM_COLORS[0])
+  })
+
+  it('sessionContent keeps name, groups and description as before', () => {
+    expect(sessionContent({ ...base, color: AUTO_ITEM_COLORS[1] })).toEqual({
+      name: base.name,
+      groups: base.groups,
+      description: base.description,
+      color: AUTO_ITEM_COLORS[1],
+    })
+  })
+})
+
+describe('uploadStoredSession: one upload per session, the stored copy, update-only once on the server', () => {
+  const manual = (extra: Record<string, unknown> = {}) => ({ ...base, ...extra }) as unknown as Record<string, unknown>
+
+  it('uploads the copy stored when its turn comes, stamps uploadedAt and clears that upload\'s pending token', async () => {
+    h.local.set('s1', manual({ color: AUTO_ITEM_COLORS[1], uploadPending: 7 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('uploaded')
+    expect(h.upserts).toHaveLength(1)
+    const content = await decryptBlob<Record<string, unknown>>(key, h.upserts[0].groups as never)
+    expect(content.color).toBe(AUTO_ITEM_COLORS[1])
+    expect(h.local.get('s1')!.uploadedAt).toEqual(expect.any(Number))
+    expect('uploadPending' in h.local.get('s1')!).toBe(false)
+  })
+
+  it('a session the server already has is UPDATED only, never inserted', async () => {
+    h.local.set('s1', manual({ uploadedAt: 3, uploadPending: 8 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('refreshed')
+    expect(h.upserts).toHaveLength(0)
+    expect(h.updates).toHaveLength(1)
+    expect('uploadPending' in h.local.get('s1')!).toBe(false)
+  })
+
+  it('one deleted in the dashboard (gone on the server) is not re-created and stays here', async () => {
+    h.local.set('s1', manual({ uploadedAt: 3, uploadPending: 8 }))
+    h.readRow = null
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.upserts).toHaveLength(0)
+    expect(h.updates).toHaveLength(0)
+    expect(h.local.has('s1')).toBe(true)
+    expect(h.deletes).toHaveLength(0)
+  })
+
+  it('a session no longer stored sends nothing', async () => {
+    expect(await uploadStoredSession('nope', 'user-1')).toBe('gone-local')
+    expect(h.requests).toEqual([])
+  })
+
+  it('a failed upload keeps the pending token for the retry and stamps nothing', async () => {
+    h.local.set('s1', manual({ uploadPending: 7 }))
+    h.upsertError = { message: 'rejected' }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('failed')
+    expect(h.local.get('s1')!.uploadPending).toBe(7)
+    expect(h.marks).toEqual([])
+  })
+
+  it('a change made while the upload ran keeps its own pending token', async () => {
+    h.local.set('s1', manual({ uploadPending: 7 }))
+    h.beforeUpsert = async () => {
+      h.local.set('s1', { ...h.local.get('s1')!, color: AUTO_ITEM_COLORS[4], uploadPending: 9 })
+    }
+    await uploadStoredSession('s1', 'user-1')
+    expect(h.local.get('s1')!.uploadPending).toBe(9)
+  })
+
+  it('two quick colour picks upload in order: the later colour lands last', async () => {
+    h.local.set('s1', manual({ color: AUTO_ITEM_COLORS[0], uploadPending: 1 }))
+    let release!: () => void
+    h.beforeUpsert = () => new Promise<void>((r) => (release = r))
+    const first = uploadStoredSession('s1', 'user-1')
+    await vi.waitFor(() => expect(release).toBeTypeOf('function'))
+    // the second pick is stored while the first upload is in flight
+    h.local.set('s1', { ...h.local.get('s1')!, color: AUTO_ITEM_COLORS[5], uploadPending: 2 })
+    const second = uploadStoredSession('s1', 'user-1')
+    h.beforeUpsert = null
+    release()
+    await Promise.all([first, second])
+    const last = await decryptBlob<Record<string, unknown>>(key, (h.updates.at(-1) ?? h.upserts.at(-1))!.groups as never)
+    expect(last.color).toBe(AUTO_ITEM_COLORS[5])
+    // the first insert stamped it, so the second one is an update
+    expect(h.upserts).toHaveLength(1)
+    expect(h.updates).toHaveLength(1)
+  })
+
+  it('a delete during the upload: the queued remote delete lands AFTER the upsert, so no row is resurrected', async () => {
+    h.local.set('s1', manual({ uploadPending: 1 }))
+    let release!: () => void
+    h.beforeUpsert = () => new Promise<void>((r) => (release = r))
+    const upload = uploadStoredSession('s1', 'user-1')
+    await vi.waitFor(() => expect(release).toBeTypeOf('function'))
+    // what useDeleteSession does
+    noteSessionDeletedHere('s1')
+    h.local.delete('s1')
+    const del = deleteRemoteSessionsQueued(['s1'], 'user-1')
+    release()
+    await Promise.all([upload, del])
+    // the upsert first; then the delete (the upload's own re-check may send a second one: harmless)
+    expect(h.done[0]).toBe('upsert:s1')
+    expect(h.done.slice(1).length).toBeGreaterThan(0)
+    expect(h.done.slice(1).every((op) => op === 'delete:s1')).toBe(true)
+  })
+
+  it('deleted here while the upload ran (its remote delete sent earlier): the upload deletes the row it re-created', async () => {
+    h.local.set('s1', manual({ uploadPending: 1 }))
+    h.beforeUpsert = async () => {
+      noteSessionDeletedHere('s1')
+      h.local.delete('s1')
+    }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('uploaded')
+    expect(h.done).toEqual(['upsert:s1', 'delete:s1'])
+    expect(h.deletes).toEqual([{ ids: ['s1'], userId: 'user-1' }])
+  })
+
+  it('a session gone after its upload without a delete here (a wipe) is never deleted on the server', async () => {
+    h.local.set('wiped', manual({ id: 'wiped', uploadPending: 1 }))
+    h.beforeUpsert = async () => void h.local.delete('wiped')
+    await uploadStoredSession('wiped', 'user-1')
+    expect(h.deletes).toHaveLength(0)
+  })
+
+  it('queueSessionUpload runs tasks of one id in order even when one fails; other ids do not wait', async () => {
+    const order: string[] = []
+    let releaseA!: () => void
+    const a = queueSessionUpload('x', () => new Promise<void>((r) => (releaseA = r)).then(() => void order.push('a')))
+    const b = queueSessionUpload('x', async () => {
+      order.push('b')
+      throw new Error('boom')
+    })
+    const c = queueSessionUpload('x', async () => void order.push('c'))
+    await queueSessionUpload('y', async () => void order.push('other'))
+    expect(order).toEqual(['other'])
+    releaseA()
+    await a
+    await expect(b).rejects.toThrow('boom')
+    await c
+    expect(order).toEqual(['other', 'a', 'b', 'c'])
+  })
+})
+
+describe('S1: a copy written under an older key is uploaded again when its row is gone', () => {
+  const stamped = (extra: Record<string, unknown> = {}) => ({ ...base, uploadedAt: 1, ...extra }) as unknown as Record<string, unknown>
+
+  it('a saved session whose server copy was under an older key, row gone: re-inserted and stamped with the new key', async () => {
+    h.gate = { key, keyFingerprint: 'new-key' }
+    h.readRow = null
+    h.local.set('s1', stamped({ uploadedKey: 'old-key' }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('reinserted')
+    expect(h.upserts).toHaveLength(1)
+    expect(isEncryptedBlob(h.upserts[0].groups)).toBe(true)
+    expect(h.local.get('s1')!.uploadedKey).toBe('new-key')
+  })
+
+  it('the same key, row gone: a dashboard delete, nothing re-created', async () => {
+    h.gate = { key, keyFingerprint: 'k' }
+    h.readRow = null
+    h.local.set('s1', stamped({ uploadedKey: 'k' }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.upserts).toHaveLength(0)
+  })
+
+  it('an unknown upload key (uploaded before it was recorded) or an unknown current key: gone, nothing re-created', async () => {
+    h.readRow = null
+    h.gate = { key, keyFingerprint: 'k' }
+    h.local.set('s1', stamped())
+    expect(await refreshUploadedSession(h.local.get('s1') as unknown as Session, 'user-1')).toBe('gone')
+    h.gate = { key }
+    expect(await refreshUploadedSession({ ...base, uploadedAt: 1, uploadedKey: 'old' }, 'user-1')).toBe('gone')
+    expect(h.upserts).toHaveLength(0)
+  })
+
+  it('automatic backups keep the update-only rule even after a key change', async () => {
+    h.gate = { key, keyFingerprint: 'new' }
+    h.readRow = null
+    expect(await refreshUploadedSession({ ...base, auto: true, uploadedAt: 1, uploadedKey: 'old' }, 'user-1')).toBe('gone')
+    expect(h.upserts).toHaveLength(0)
+  })
+
+  it('an update records the key the row is under now; a first upload too', async () => {
+    h.gate = { key, keyFingerprint: 'k2' }
+    h.local.set('s1', stamped({ uploadedKey: 'k1' }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('refreshed')
+    expect(h.local.get('s1')!.uploadedKey).toBe('k2')
+    h.local.set('s2', { ...base, id: 's2' } as unknown as Record<string, unknown>)
+    expect(await uploadStoredSession('s2', 'user-1')).toBe('uploaded')
+    expect(h.local.get('s2')!.uploadedKey).toBe('k2')
+  })
+
+  it('a failed re-insert is failed (retried later), and the stamp is not changed', async () => {
+    h.gate = { key, keyFingerprint: 'new-key' }
+    h.readRow = null
+    h.upsertError = { message: 'rls' }
+    h.local.set('s1', stamped({ uploadedKey: 'old-key', uploadPending: 3 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('failed')
+    expect(h.local.get('s1')!.uploadedKey).toBe('old-key')
+    expect(h.local.get('s1')!.uploadPending).toBe(3)
+  })
+})
+
+describe('S7: one sign-in for the whole refresh read', () => {
+  it('a sign-out and sign-in as the SAME user during the read (new token) is failed, never gone', async () => {
+    h.auth = { user: { id: 'user-1' }, access_token: 'token-a' }
+    h.readRow = null
+    h.onRead = () => {
+      h.auth = { user: { id: 'user-1' }, access_token: 'token-b' }
+    }
+    expect(await refreshUploadedSession({ ...base, uploadedAt: 1 }, 'user-1')).toBe('failed')
+    expect(h.updates).toHaveLength(0)
+  })
+
+  it('the same token before and after: gone is trusted', async () => {
+    h.auth = { user: { id: 'user-1' }, access_token: 'token-a' }
+    h.readRow = null
+    expect(await refreshUploadedSession({ ...base, uploadedAt: 1 }, 'user-1')).toBe('gone')
+  })
+})
+
+describe('S3: a delete made in ANOTHER popup is honoured after a first upload', () => {
+  const manual = (extra: Record<string, unknown> = {}) => ({ ...base, ...extra }) as unknown as Record<string, unknown>
+
+  it('deleted in another context while this upload ran: the re-created row is deleted again', async () => {
+    h.local.set('s1', manual({ uploadPending: 1 }))
+    h.beforeUpsert = async () => {
+      // popup B: the local delete and its remembered id land in one transaction
+      h.local.delete('s1')
+      h.deletedElsewhere.add('s1')
+    }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('uploaded')
+    expect(h.done).toEqual(['upsert:s1', 'delete:s1'])
+  })
+
+  it('remembered as deleted but stored again (restored): nothing deleted', async () => {
+    h.deletedElsewhere.add('s1')
+    h.local.set('s1', manual({ uploadPending: 1 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('uploaded')
+    expect(h.deletes).toHaveLength(0)
+  })
+
+  it('a re-insert after a key change honours the remembered delete too', async () => {
+    h.gate = { key, keyFingerprint: 'new' }
+    h.readRow = null
+    h.local.set('s1', manual({ uploadedAt: 1, uploadedKey: 'old' }))
+    h.beforeUpsert = async () => {
+      h.local.delete('s1')
+      h.deletedElsewhere.add('s1')
+    }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('reinserted')
+    expect(h.deletes).toEqual([{ ids: ['s1'], userId: 'user-1' }])
+  })
+})
+
+describe('F1: a delete this device saw is not undone by a later key change', () => {
+  const stamped = (extra: Record<string, unknown> = {}) => ({ ...base, uploadedAt: 1, ...extra }) as unknown as Record<string, unknown>
+
+  it('gone under k1 is remembered; after a reset to k2 the missing row is still a delete: nothing upserted', async () => {
+    h.readRow = null
+    h.gate = { key, keyFingerprint: 'k1' }
+    h.local.set('s1', stamped({ uploadedKey: 'k1', uploadPending: 2 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.local.get('s1')!.remoteGone).toBe(true)
+    // encryption reset elsewhere: the gate now has k2; a colour change marks it pending again
+    h.gate = { key, keyFingerprint: 'k2' }
+    h.local.set('s1', { ...h.local.get('s1')!, uploadPending: 3 })
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.upserts).toHaveLength(0)
+    expect(h.local.get('s1')!.uploadedKey).toBe('k1')
+  })
+
+  it('a later write that finds the row there again (re-created elsewhere) clears the marker', async () => {
+    h.gate = { key, keyFingerprint: 'k2' }
+    h.local.set('s1', stamped({ uploadedKey: 'k1', remoteGone: true, uploadPending: 1 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('refreshed')
+    expect('remoteGone' in h.local.get('s1')!).toBe(false)
+    expect(h.local.get('s1')!.uploadedKey).toBe('k2')
+  })
+})
+
+describe('G1: a delete is remembered for good only when the current key was known', () => {
+  it('gone while the key is unknown: no marker (a later key change may still re-upload it)', async () => {
+    h.readRow = null
+    h.gate = { key } // no fingerprint: unverified binding, or the lookup failed
+    h.local.set('s1', { ...base, uploadedAt: 1, uploadedKey: 'k1', uploadPending: 2 } as unknown as Record<string, unknown>)
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect('remoteGone' in h.local.get('s1')!).toBe(false)
+    expect('uploadPending' in h.local.get('s1')!).toBe(false)
+  })
+
+  it('gone with the key unknown keeps a marker set earlier', async () => {
+    h.readRow = null
+    h.gate = { key }
+    h.local.set('s1', { ...base, uploadedAt: 1, remoteGone: true, uploadPending: 2 } as unknown as Record<string, unknown>)
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.local.get('s1')!.remoteGone).toBe(true)
+  })
+})
+
+describe('G2: a row the server refuses for its own content is rejected, not failed', () => {
+  it('isRowRejection: 413 and data / integrity / size classes only', () => {
+    expect(isRowRejection({ code: '22001' })).toBe(true)
+    expect(isRowRejection({ code: '23514' })).toBe(true)
+    expect(isRowRejection({ code: '54000' })).toBe(true)
+    expect(isRowRejection({ code: '' }, 413)).toBe(true)
+    for (const code of ['42501', 'PGRST301', '', '08006', undefined]) expect(isRowRejection({ code })).toBe(false)
+    expect(isRowRejection(null, 413)).toBe(false)
+  })
+
+  it('a first upload refused for its content: rejected, the pending mark stays', async () => {
+    h.local.set('s1', { ...base, uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.upsertError = { code: '', message: 'Payload Too Large' }
+    h.upsertStatus = 413
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('rejected')
+    expect(h.local.get('s1')!.uploadPending).toBe(1)
+  })
+
+  it('an update refused for its content: rejected; an RLS refusal (every row): failed', async () => {
+    h.local.set('s1', { ...base, uploadedAt: 1, uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.updateError = { code: '22001', message: 'value too long' }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('rejected')
+    h.updateError = { code: '42501', message: 'rls' }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('failed')
+  })
+})
+
+describe('G3: a re-delete that did not reach the server is remembered for the backup flush', () => {
+  it('deleted in another context, the re-delete fails: the id joins the pending remote deletes', async () => {
+    h.local.set('b1', { ...base, id: 'b1', auto: true, uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.beforeUpsert = async () => {
+      h.local.delete('b1')
+      h.deletedElsewhere.add('b1')
+    }
+    h.deleteError = { message: 'offline' }
+    expect(await uploadStoredSession('b1', 'user-1')).toBe('uploaded')
+    expect(h.committed).toEqual([{ autoBackupPendingRemoteDeletes: ['b1'] }])
+  })
+
+  it('a re-delete that worked writes nothing more', async () => {
+    h.local.set('b1', { ...base, id: 'b1', uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.beforeUpsert = async () => {
+      h.local.delete('b1')
+      h.deletedElsewhere.add('b1')
+    }
+    await uploadStoredSession('b1', 'user-1')
+    expect(h.committed).toEqual([])
   })
 })

@@ -44,5 +44,13 @@
   "summary_two": "علامتا تبويب مطابقتان في {{groups}}",
   "summary_few": "{{count}} علامات تبويب مطابقة في {{groups}}",
   "summary_many": "{{count}} علامة تبويب مطابقة في {{groups}}",
-  "summary_other": "{{count}} علامة تبويب مطابقة في {{groups}}"
+  "summary_other": "{{count}} علامة تبويب مطابقة في {{groups}}",
+  "recentlyClosed": "المغلقة مؤخرًا",
+  "exampleClosed": "ابحث في علامات التبويب المغلقة مؤخرًا فقط",
+  "closedToday": "أُغلقت اليوم {{time}}",
+  "closedYesterday": "أُغلقت أمس {{time}}",
+  "closedOn": "أُغلقت {{day}}",
+  "closedFromWindow": "من نافذة مغلقة",
+  "closedWindowLabel": "نافذة · {{tabs}}",
+  "closedOff": "تذكّر علامات التبويب المغلقة متوقف"
 }

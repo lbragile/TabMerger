@@ -24,6 +24,10 @@
       "title": "Recherche plein texte",
       "description": "Recherchez instantanément dans les titres et URL de tous vos onglets. Les résultats correspondent exactement à votre saisie (majuscules ou minuscules), les meilleurs en premier."
     },
+    "recentlyClosed": {
+      "title": "Onglets fermés récemment",
+      "description": "Chaque onglet et chaque fenêtre que vous fermez rejoint la liste Fermés récemment dans la barre latérale, classée par jour. Rouvrez un onglet, restaurez une fenêtre entière ou enregistrez-la dans un groupe, ou retrouvez-la avec Ctrl/Cmd+K : commencez votre recherche par closed: pour ne chercher que là. L’offre gratuite conserve {freeDays, plural, one {votre dernier jour} other {vos # derniers jours}} avec des onglets fermés ; Pro conserve {proDays, plural, one {votre dernier jour} other {vos # derniers jours}}. La liste reste sur votre appareil : elle n’est jamais synchronisée, envoyée ni exportée, les fenêtres de navigation privée ne sont jamais enregistrées, et vous pouvez la désactiver ou la vider dans Paramètres → Données."
+    },
     "dnd": {
       "title": "Réorganisation par glisser-déposer",
       "description": "Déplacez les onglets dans les groupes et réordonnez les groupes eux-mêmes par de fluides glisser-déposer."

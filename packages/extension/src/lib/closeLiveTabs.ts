@@ -1,4 +1,70 @@
 import { closeTabsWhenPopupCloses } from '@/lib/deferredTabClose';
+import { quietCloseTabKey, quietCloseWindowKey } from '@/lib/recentlyClosed';
+
+/**
+ * Whether the browser should remember a close in "Recently closed tabs":
+ *  - `record: false` when the tab's content is safe elsewhere: it was just saved (moved) into a
+ *    group, it is a duplicate whose URL stays open, or it is reopened somewhere else;
+ *  - `record: true` when the user only closed it (nothing saved).
+ */
+export interface CloseOptions {
+  record: boolean;
+}
+
+/**
+ * Marks ids as "closed by TabMerger, don't record" in `chrome.storage.session` (one key per id, so
+ * the popup adding marks and the worker consuming them never overwrite each other). Awaited BEFORE
+ * the close, so the worker's `onRemoved` always sees the mark. Best effort: without session storage
+ * (an old browser) the close is recorded, which only means one extra list entry.
+ */
+async function markQuiet(keys: string[]): Promise<void> {
+  if (keys.length === 0) return;
+  try {
+    const session = typeof chrome === 'undefined' ? undefined : chrome.storage?.session;
+    if (!session?.set) return;
+    const at = Date.now();
+    await session.set(Object.fromEntries(keys.map((key) => [key, at])));
+  } catch {
+    // storage unavailable: the close is still made (and recorded)
+  }
+}
+
+function validIds(ids: number | readonly number[]): number[] {
+  const list = typeof ids === 'number' ? [ids] : [...ids];
+  return [...new Set(list)].filter((id) => typeof id === 'number' && Number.isInteger(id) && id >= 0);
+}
+
+/**
+ * THE way TabMerger closes browser tabs (an ESLint rule bans `chrome.tabs.remove` everywhere
+ * else): every close states whether "Recently closed tabs" should remember it (see
+ * {@link CloseOptions}). Rejects like `chrome.tabs.remove` does (a tab already gone), so callers
+ * keep their own `.catch`.
+ */
+export async function closeTabs(ids: number | readonly number[], { record }: CloseOptions): Promise<void> {
+  const list = validIds(ids);
+  if (list.length === 0) return;
+  if (!record) await markQuiet(list.map(quietCloseTabKey));
+  // the call keeps the caller's shape (one id, or a list)
+  if (typeof ids === 'number') {
+    // eslint-disable-next-line no-restricted-syntax -- the one sanctioned close path (see closeTabs)
+    await chrome.tabs.remove(list[0]);
+  } else {
+    // eslint-disable-next-line no-restricted-syntax -- the one sanctioned close path (see closeTabs)
+    await chrome.tabs.remove(list);
+  }
+}
+
+/**
+ * {@link closeTabs} for whole browser windows (`chrome.windows.remove`), with the same rule: a
+ * window whose tabs are reopened elsewhere is closed quietly.
+ */
+export async function closeWindows(ids: number | readonly number[], { record }: CloseOptions): Promise<void> {
+  const list = validIds(ids);
+  if (list.length === 0) return;
+  if (!record) await markQuiet(list.map(quietCloseWindowKey));
+  // eslint-disable-next-line no-restricted-syntax -- the one sanctioned close path (see closeTabs)
+  await Promise.all(list.map((id) => chrome.windows.remove(id)));
+}
 
 /**
  * Id of the browser window this TabMerger page lives in, or `null` when it can't be told.
@@ -67,5 +133,6 @@ export async function closeLiveTabsSafely(tabIds: number[]): Promise<void> {
   // The deferred ids go first: if removing the others somehow dismisses the popup,
   // the background worker already holds the rest.
   if (deferred.length > 0) closeTabsWhenPopupCloses(deferred);
-  if (now.length > 0) await chrome.tabs.remove(now);
+  // a drag OUT of Now Open moves the tabs into a group (and Redo of one does it again): not recorded
+  if (now.length > 0) await closeTabs(now, { record: false });
 }

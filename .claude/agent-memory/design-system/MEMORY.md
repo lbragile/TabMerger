@@ -6,3 +6,4 @@
 - [Signed-in header on phones](learnings_app_header_mobile.md) — app/(app)/layout.tsx header overflowed 390px phones (442px); icons-only below `sm` with aria-labels, 16px gutter, shrink rules; verify by measuring scrollWidth at 360/390/1280 with a throwaway LOCAL user
 - [SessionCard 3-column overflow](learnings_session_card_overflow.md) — side-by-side flex-row panel overflowed lg:grid-cols-3; collapsible section below + `min-w-0` on the grid item and every truncating flex child
 - [Tooltip focus restore](learnings_tooltip_focus_restore.md) — Radix tooltip reopens on overlay focus restore; trigger wrapper ignores non-focus-visible focus
+- [Solid primary tokens](learnings_solid_primary_tokens.md) — --primary-solid* pair for 4.5:1 button labels in light; own hover token; test + screenshot recipe

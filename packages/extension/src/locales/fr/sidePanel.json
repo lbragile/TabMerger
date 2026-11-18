@@ -37,5 +37,44 @@
   "proRequired": "Pro requis",
   "locked": "Passez à Pro pour accéder à ce groupe",
   "pin": "Épingler le groupe",
-  "unpin": "Détacher le groupe"
+  "unpin": "Détacher le groupe",
+  "view": {
+    "showArchived": "Afficher le groupe archivé {{name}}",
+    "showSession": "Afficher la session {{name}}",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Fermer cette vue",
+    "moreOptions": "Plus d’options pour {{name}}",
+    "archivedMeta": "Archivé ◆ {{counts}}",
+    "archivedBanner": "Archivé {{time}}. Lecture seule : restaurez-le pour déplacer, modifier ou ajouter des onglets. Cliquer sur un onglet l’ouvre quand même.",
+    "restore": "Restaurer",
+    "sessionEmpty": "Cette session ne contient aucun groupe.",
+    "sessionSavedMeta": "Enregistrée le {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, fenêtre {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, fenêtre {{number}}, {{tabs}}",
+    "sessionEnd": "Fin de la session · {{tabs}}",
+    "showingArchived": "Affichage du groupe archivé {{name}}, lecture seule",
+    "showingSession": "Affichage de la session {{name}}, lecture seule",
+    "restored": "{{name}} restauré",
+    "deleted": "{{name}} supprimé"
+  },
+  "sessionColor": {
+    "label": "Couleur",
+    "random": "Aléatoire",
+    "change": "Changer la couleur…",
+    "changed": "Couleur de {{name}} modifiée",
+    "failed": "Impossible de changer la couleur. Réessayez.",
+    "names": {
+      "red": "Rouge",
+      "orange": "Orange",
+      "yellow": "Jaune",
+      "green": "Vert",
+      "cyan": "Cyan",
+      "blue": "Bleu",
+      "indigo": "Indigo",
+      "purple": "Violet",
+      "pink": "Rose",
+      "teal": "Bleu canard"
+    }
+  }
 }

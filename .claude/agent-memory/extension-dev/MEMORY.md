@@ -142,3 +142,12 @@
 - [/api/track + og-preview as CORS simple requests](learnings_track_cors_simple_request.md) — SIMPLE_JSON_CONTENT_TYPE (text/plain) skips the preflight; any extra header brings it back
 - [Auto-save open tabs](learnings_auto_save_open_tabs.md) — marker in the blob, promotion in writeGroupsState (pending + normalised), copies drop it, tier rules, e2e outDir build
 - [Store-listing _locales build hook](learnings_store_locales_build_hook.md) — `manifest` namespace -> build:publicAssets; vi.mock("vite") + computed import for wxt.config tests
+- [Section views (mainView) + accordion](learnings_section_views_mainview.md) — read-only views, status line, focus on close, arrow guard, current-bg contrast, mock gotchas
+- [Tooltip portal + contrast](learnings_tooltip_portal_contrast.md) — no portal = inherited row opacity + ScrollArea scrollbar on top; --tooltip tokens 5.67:1 light
+- [Recently closed engine](learnings_recently_closed_engine.md) — closeTabs({record}) + lint ban, quiet marks, meta row, getDb promise/VersionError, 60 s delete, un-pin grace
+- [Recently closed UI + session colours](learnings_recently_closed_ui.md) — closedDay view, one actions hook, Save to group via useGroups, submenu clicks in jsdom
+- [Recently closed: plan-limited list + bold rows](learnings_recently_closed_plan_display.md) — entriesShownForPlan in the hook, confirmed-Free popup prune, Segoe UI 600 vs 700
+- [Recently closed: hours strip + markers](learnings_recently_closed_hours.md) — per-hour bars (roving, aria-pressed), markers in the one list, pick reset in render, scratch screenshot spec
+- [Search: recently closed + closed: scope](learnings_search_recently_closed.md) — closedOnly joins tabQuery; pure lib + connected wrapper; mutateAsync after unmount; CRLF needles
+- [Session upload keys + passes](learnings_session_upload_keys_and_passes.md) — uploadedKey re-insert/resume, per-pass token, deleted ids in the delete tx, token check
+- [Session view window brackets](learnings_session_view_brackets.md) — sticky header/tile/fade z-layers, one offset token, color-mix theme tokens, --view-primary (3.04:1 primary), flex accname spaces

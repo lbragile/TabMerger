@@ -1,5 +1,7 @@
 # web-dev Memory Index
 
+- [Next MCP log reload loop](learnings/next-mcp-log-reload-loop.md) — `experimental.mcpServer` writes `.next/dev/logs/next-development.log` inside Turbopack's monorepo-root watch, so dev recompiles and reloads every ~2s; kept off in next.config.ts
+
 - [Flex img collapse on mobile](learnings/navbar-flex-collapse.md) — next/image in nested flex rows can collapse to 0x0 at narrow viewports without shrink-0; verify logo/icons at 375px with actual boundingBox checks, not just screenshots.
 - [SEO metadata](learnings/seo-metadata.md) — `pageMetadata()` per page (openGraph replace drops the file image), relative canonical + preview-only X-Robots-Tag, noindex vs Disallow, 404 duplicate noindex, JSON-LD `<` escaping
 - [CHANGELOG.md parsing](learnings/changelog-md-parsing.md) — angular-preset heading/section format and the `**scope:**` double-colon trap (file access notes superseded by build-time-generated-module)
@@ -52,7 +54,7 @@
 - [Per-test hoisted mock state](learnings/vitest-hoisted-mock-state.md) — vary a hoisted vi.mock via a `vi.hoisted` object; `vi.doUnmock` drops the hoisted mock too
 - [Pro AI option switch + plan-change confirm](learnings/pro-ai-option-switch-and-plan-change-confirm.md) — fieldset/radio segmented control, stacked option panels, radius tokens (--radius 0), confirm-before-POST on shared planChangeTiming(), RTL ignore trap
 - [Mobile horizontal overflow](learnings/mobile-horizontal-overflow.md) — overflow-x clip (not hidden) keeps sticky navbar; fixed left+right banner stretches as a symptom; grid-cols-N is minmax(0,1fr); probe past the clip
-- [Pricing feature-list touchpoints](learnings/pricing-feature-list-touchpoints.md) — every copy of a plan feature line (shared, tierFeatures, pricing/featuresPage/faq JSON, extension f1..f3, store listing), own-key provider names (Gemini), and the tests pinning them
+- [Pricing feature-list touchpoints](learnings/pricing-feature-list-touchpoints.md) — every copy of a plan feature line, two-number lines (`days`), English-only privacy page, own-key provider names, and the tests pinning them
 - [Orphan words: pretty vs balance](learnings/orphan-words-pretty-vs-balance.md) — Chromium pretty keeps a lone long last word; balance on list lines; headless last-line measuring; repairing a race-corrupted dev manifest
 - [Shared date format, scratch extension build, doMock order](learnings/shared-date-format-and-scratch-extension-build.md) — `as const satisfies` Intl options for next-intl; wxt `-c` wrapper to build e2e outside .output/; doMock outlives resetModules; timed optional Stripe reads
 - [Deployment env hub](learnings/deployment-env-hub.md) — lib/deployment.ts only reader of host vars; NEXT_PUBLIC_DEPLOY_ENV derived in next.config env; `''` = unset; isHostedDeployment

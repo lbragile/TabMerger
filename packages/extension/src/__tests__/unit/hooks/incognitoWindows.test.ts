@@ -70,7 +70,7 @@ describe('useOpenWindow — incognito', () => {
   it('creates an incognito window when the saved window was incognito and access is allowed', async () => {
     const { result } = renderHook(() => useOpenWindow())
     await act(async () => { await result.current(win(true)) })
-    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: true, incognito: true })
+    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: false, incognito: true })
     expect(mockToastInfo).not.toHaveBeenCalled()
   })
 
@@ -78,14 +78,14 @@ describe('useOpenWindow — incognito', () => {
     chromeMock.extension.isAllowedIncognitoAccess.mockResolvedValue(false)
     const { result } = renderHook(() => useOpenWindow())
     await act(async () => { await result.current(win(true)) })
-    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: true })
+    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: false })
     expect(mockToastInfo).toHaveBeenCalledTimes(1)
   })
 
   it('never passes incognito for a non-incognito saved window', async () => {
     const { result } = renderHook(() => useOpenWindow())
     await act(async () => { await result.current(win(false)) })
-    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: true })
+    expect(chromeMock.windows.create).toHaveBeenCalledWith({ focused: false })
     expect(chromeMock.extension.isAllowedIncognitoAccess).not.toHaveBeenCalled()
   })
 

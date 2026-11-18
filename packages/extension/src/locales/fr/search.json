@@ -38,5 +38,13 @@
   "summaryNone": "Aucun onglet ne correspond",
   "summary_one": "{{count}} onglet correspond dans {{groups}}",
   "summary_many": "{{count}} d’onglets correspondent dans {{groups}}",
-  "summary_other": "{{count}} onglets correspondent dans {{groups}}"
+  "summary_other": "{{count}} onglets correspondent dans {{groups}}",
+  "recentlyClosed": "Fermés récemment",
+  "exampleClosed": "Chercher uniquement dans les onglets fermés récemment",
+  "closedToday": "fermé aujourd’hui à {{time}}",
+  "closedYesterday": "fermé hier à {{time}}",
+  "closedOn": "fermé le {{day}}",
+  "closedFromWindow": "d’une fenêtre fermée",
+  "closedWindowLabel": "Fenêtre · {{tabs}}",
+  "closedOff": "La mémorisation des onglets fermés est désactivée"
 }

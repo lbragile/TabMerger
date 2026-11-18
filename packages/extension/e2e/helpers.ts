@@ -99,7 +99,7 @@ export async function seedIdb(
 ) {
   await page.evaluate(async (groups) => {
     const DB_NAME = 'tabmerger';
-    const DB_VERSION = 1;
+    const DB_VERSION = 2;
 
     const write = () => new Promise<void>((resolve, reject) => {
       const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -147,6 +147,9 @@ export async function seedIdb(
         }
         if (!db.objectStoreNames.contains('settings'))
           db.createObjectStore('settings', { keyPath: 'id' });
+        // v2 store (mirrors localDb.ts), so a database created here is complete at version 2
+        if (!db.objectStoreNames.contains('recentlyClosed'))
+          db.createObjectStore('recentlyClosed', { keyPath: 'id' }).createIndex('closedAt', 'closedAt');
       };
     });
 
@@ -167,7 +170,7 @@ export async function seedIdb(
 export async function seedSettings(page: Page, records: Record<string, unknown>): Promise<void> {
   await page.evaluate(async (records) => {
     await new Promise<void>((resolve, reject) => {
-      const req = indexedDB.open('tabmerger', 1);
+      const req = indexedDB.open('tabmerger');
       req.onerror = () => reject(req.error);
       req.onsuccess = () => {
         const db = req.result;

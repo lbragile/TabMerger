@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { nanoid } from 'nanoid';
-import type { Group, Window, Tab } from './types';
+import type { Group, Window, Tab, Session } from './types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE, FIRST_GROUP_TITLE } from './types';
 import { t } from './i18n';
 
@@ -89,6 +89,14 @@ export function getGroupTabCount(group: Group): number {
   return group.windows.reduce((acc, w) => acc + w.tabs.length, 0);
 }
 
+/** A saved session's window and tab totals, over all its groups. */
+export function getSessionCounts(session: Session): { windows: number; tabs: number } {
+  return {
+    windows: session.groups.reduce((a, g) => a + g.windows.length, 0),
+    tabs: session.groups.reduce((a, g) => a + getGroupTabCount(g), 0)
+  };
+}
+
 /**
  * Format window and tab counts as full singular/plural words.
  * e.g. formatGroupCounts(1, 3) → "1 Window ◆ 3 Tabs"
@@ -117,9 +125,15 @@ export function sortWindowsByStarred(windows: Window[]): Window[] {
  * e.g. 'group:"My Group" open tabs' → { groupFilter: "My Group", windowFilter: "", tagFilter: "", tabQuery: "open tabs" }
  * e.g. 'window:Morning'             → { groupFilter: "", windowFilter: "Morning", tagFilter: "", tabQuery: "" }
  * e.g. 'xyz_group:work'             → { groupFilter: "", windowFilter: "", tagFilter: "", tabQuery: "xyz_group:work" }
+ *
+ * `closed:` is a scope, not a filter of its own: it sets `closedOnly` (the search overlay then lists
+ * only recently closed tabs) and its text joins the plain words, so `closed: stripe` gives
+ * `{ closedOnly: true, tabQuery: "stripe" }`. The windows panel ignores the scope, so it still
+ * marks "stripe" in the saved tabs.
  */
-export function parseSearchQuery(query: string): { groupFilter: string; windowFilter: string; tagFilter: string; tabQuery: string } {
-  const PREFIX_RE = /group:|window:|tag:/i;
+export function parseSearchQuery(query: string): { groupFilter: string; windowFilter: string; tagFilter: string; tabQuery: string; closedOnly: boolean } {
+  const PREFIX_RE = /group:|window:|tag:|closed:/i;
+  let closedOnly = false;
   let groupFilter = '';
   let windowFilter = '';
   let tagFilter = '';
@@ -167,11 +181,12 @@ export function parseSearchQuery(query: string): { groupFilter: string; windowFi
 
     if (prefix === 'group:') groupFilter = value;
     else if (prefix === 'window:') windowFilter = value;
+    else if (prefix === 'closed:') { closedOnly = true; if (value.trim()) plainParts.push(value.trim()); }
     else tagFilter = value;
     plainStart = pos; // resume plain-text accumulation after the consumed value
   }
 
-  return { groupFilter, windowFilter, tagFilter, tabQuery: plainParts.filter(Boolean).join(' ') };
+  return { groupFilter, windowFilter, tagFilter, tabQuery: plainParts.filter(Boolean).join(' '), closedOnly };
 }
 
 

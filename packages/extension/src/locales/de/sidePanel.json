@@ -37,5 +37,44 @@
   "proRequired": "Pro erforderlich",
   "locked": "Upgrade auf Pro, um auf diese Gruppe zuzugreifen",
   "pin": "Gruppe anheften",
-  "unpin": "Gruppe lösen"
+  "unpin": "Gruppe lösen",
+  "view": {
+    "showArchived": "Archivierte Gruppe {{name}} anzeigen",
+    "showSession": "Sitzung {{name}} anzeigen",
+    "sessionCounts": "{{groups}}, {{windows}}, {{tabs}}",
+    "close": "Diese Ansicht schließen",
+    "moreOptions": "Weitere Optionen für {{name}}",
+    "archivedMeta": "Archiviert ◆ {{counts}}",
+    "archivedBanner": "Archiviert {{time}}. Nur lesen: Stelle die Gruppe wieder her, um Tabs zu verschieben, zu bearbeiten oder hinzuzufügen. Ein Klick auf einen Tab öffnet ihn trotzdem.",
+    "restore": "Wiederherstellen",
+    "sessionEmpty": "Diese Sitzung enthält keine Gruppen.",
+    "sessionSavedMeta": "Gespeichert {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}, Fenster {{number}}, {{tabs}}",
+    "windowLabelNamed": "{{group}}, {{name}}, Fenster {{number}}, {{tabs}}",
+    "sessionEnd": "Ende der Sitzung · {{tabs}}",
+    "showingArchived": "Archivierte Gruppe {{name}} wird angezeigt, nur lesen",
+    "showingSession": "Sitzung {{name}} wird angezeigt, nur lesen",
+    "restored": "{{name}} wiederhergestellt",
+    "deleted": "{{name}} gelöscht"
+  },
+  "sessionColor": {
+    "label": "Farbe",
+    "random": "Zufällig",
+    "change": "Farbe ändern…",
+    "changed": "Farbe von {{name}} geändert",
+    "failed": "Die Farbe konnte nicht geändert werden. Versuche es erneut.",
+    "names": {
+      "red": "Rot",
+      "orange": "Orange",
+      "yellow": "Gelb",
+      "green": "Grün",
+      "cyan": "Cyan",
+      "blue": "Blau",
+      "indigo": "Indigo",
+      "purple": "Lila",
+      "pink": "Pink",
+      "teal": "Türkis"
+    }
+  }
 }

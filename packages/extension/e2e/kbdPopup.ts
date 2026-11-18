@@ -192,7 +192,7 @@ export async function openRealPopup(
       ),
     snapshot: () =>
       evalX(
-        `new Promise(resolve => { const req = indexedDB.open('tabmerger', 1); req.onsuccess = () => { const db = req.result; const tx = db.transaction(['groups','groupsState'], 'readonly'); const out = { order: [], groups: {} }; tx.objectStore('groups').getAll().onsuccess = (e) => { for (const g of e.target.result) out.groups[g.id] = (g.windows || []).map(w => (w.tabs || []).map(t => t.title)); }; tx.objectStore('groupsState').get('state').onsuccess = (e) => { out.order = (e.target.result && e.target.result.order) || []; }; tx.oncomplete = () => resolve(out); }; })`
+        `new Promise(resolve => { const req = indexedDB.open('tabmerger'); req.onsuccess = () => { const db = req.result; const tx = db.transaction(['groups','groupsState'], 'readonly'); const out = { order: [], groups: {} }; tx.objectStore('groups').getAll().onsuccess = (e) => { for (const g of e.target.result) out.groups[g.id] = (g.windows || []).map(w => (w.tabs || []).map(t => t.title)); }; tx.objectStore('groupsState').get('state').onsuccess = (e) => { out.order = (e.target.result && e.target.result.order) || []; }; tx.oncomplete = () => resolve(out); }; })`
       ),
     tabUrls: () =>
       sw.evaluate(async () => (await chrome.tabs.query({})).map((t) => t.url || t.pendingUrl || '')),

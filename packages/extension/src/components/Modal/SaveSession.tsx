@@ -5,19 +5,25 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { RANDOM_SESSION_COLOR, SessionColorPicker } from './SessionColorPicker';
 
 interface SaveSessionModalProps {
   data: Record<string, unknown>;
   onClose: () => void;
 }
 
-/** Data-tab equivalent of Header's "Save session" action — replaces window.prompt(). */
+/**
+ * The Save session dialog: name (required), description and an optional colour ("Random" by
+ * default). `data.onSave(name, description, color)` gets `color` undefined for Random: the caller
+ * picks one that differs from the last session's.
+ */
 export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState(false);
-  const onSave = data.onSave as (name: string, description?: string) => void | Promise<void>;
+  const [color, setColor] = useState(RANDOM_SESSION_COLOR);
+  const onSave = data.onSave as (name: string, description?: string, color?: string) => void | Promise<void>;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +32,7 @@ export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
       setError(true);
       return;
     }
-    void onSave(trimmed, description.trim() || undefined);
+    void onSave(trimmed, description.trim() || undefined, color === RANDOM_SESSION_COLOR ? undefined : color);
     onClose();
   };
 
@@ -63,6 +69,8 @@ export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
           rows={3}
         />
       </div>
+
+      <SessionColorPicker value={color} onChange={setColor} />
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onClose}>

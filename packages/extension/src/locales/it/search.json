@@ -38,5 +38,13 @@
   "summaryNone": "Nessuna scheda corrisponde",
   "summary_one": "{{count}} scheda corrisponde in {{groups}}",
   "summary_other": "{{count}} schede corrispondono in {{groups}}",
-  "summary_many": "{{count}} schede corrispondono in {{groups}}"
+  "summary_many": "{{count}} schede corrispondono in {{groups}}",
+  "recentlyClosed": "Chiuse di recente",
+  "exampleClosed": "Cerca solo tra le schede chiuse di recente",
+  "closedToday": "chiusa oggi alle {{time}}",
+  "closedYesterday": "chiusa ieri alle {{time}}",
+  "closedOn": "chiusa {{day}}",
+  "closedFromWindow": "da una finestra chiusa",
+  "closedWindowLabel": "Finestra · {{tabs}}",
+  "closedOff": "Ricorda le schede chiuse è disattivato"
 }

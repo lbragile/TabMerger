@@ -1,14 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isOpenableUrl } from '@/lib/safeOpen';
+import { closeWindows } from '@/lib/closeLiveTabs';
 import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
 import { FREE_TIER_LIMITS, isTourDemoGroup } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
-import { getSessions, saveSession, deleteSession, getSetting, setSetting } from '@/lib/localDb';
+import { getSessions, saveSession, deleteSession, getSetting, updateSessionColor } from '@/lib/localDb';
+import { validSessionColor } from '@/lib/sessionColor';
 import { supabase } from '@/lib/supabase';
 import { resolveIncognito } from '@/lib/incognito';
-import { LAST_USER_ID_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
-import { pushSessionToSupabase, deleteRemoteSessions } from '@/lib/sessionUpload';
+import { LAST_USER_ID_KEY } from '@/lib/syncSettingKeys';
+import { pushSessionToSupabase, deleteRemoteSessionsQueued, noteSessionDeletedHere, uploadStoredSession } from '@/lib/sessionUpload';
 import { useGroups } from './useGroups';
 
 export const SESSIONS_QUERY_KEY = ['sessions'] as const;
@@ -27,6 +29,34 @@ export function useSessions() {
 export { pushSessionToSupabase };
 
 /**
+ * Who a session upload is for: the signed-in account, but only while the store's recorded owner is
+ * that account (or nobody yet). Read BEFORE anything is written: if the store still holds another
+ * account's data (the account wipe has not run yet), nothing is uploaded under the signed-in one.
+ */
+async function sessionUploadOwner(): Promise<string | undefined> {
+  try {
+    const signedInId = (await supabase.auth.getSession()).data.session?.user.id;
+    const storeOwner = await getSetting<string | null>(LAST_USER_ID_KEY, null);
+    if (signedInId && (!storeOwner || storeOwner === signedInId)) return signedInId;
+  } catch (e) {
+    console.warn('[TabMerger] Session sync to Supabase failed', e);
+  }
+  return undefined;
+}
+
+/**
+ * Best-effort upload of a session just written locally (marked `uploadPending` in that same
+ * write): the STORED copy, one upload per session at a time (`uploadStoredSession`). Not on the
+ * server (no key yet / locked / offline / rejected / no owner / the popup closed meanwhile): the
+ * mark stays and the sync's sessions pass retries this session alone (see useSync), without a
+ * full pass of every session.
+ */
+async function uploadMarkedSession(id: string, ownerId: string | undefined): Promise<void> {
+  if (!ownerId) return;
+  await uploadStoredSession(id, ownerId);
+}
+
+/**
  * Saves the current non-permanent groups as a named session snapshot.
  * Local-first: writes to IndexedDB first, then best-effort syncs to Supabase.
  * Enforces `FREE_SESSION_LIMIT` for users without the `hasSessions` entitlement.
@@ -40,7 +70,7 @@ export function useSaveSession() {
   const { data: groupsState } = useGroups();
 
   return useMutation({
-    mutationFn: async ({ name, description, sessionCount, hasSessions, cloudSync }: { name: string; description?: string; sessionCount: number; hasSessions: boolean; cloudSync: boolean }) => {
+    mutationFn: async ({ name, description, color, sessionCount, hasSessions, cloudSync }: { name: string; description?: string; color?: string; sessionCount: number; hasSessions: boolean; cloudSync: boolean }) => {
       // ponytail: free tier gets 3 sessions; pro+ unlimited (hasSessions = entitlement)
       if (!hasSessions && sessionCount >= FREE_SESSION_LIMIT) {
         throw new Error('SESSION_LIMIT');
@@ -48,12 +78,17 @@ export function useSaveSession() {
       if (!groupsState) throw new Error('No groups state');
       // Saved groups only: never "Now Open", never the guided tour's practice groups
       const groups = groupsState.available.filter((g) => !g.permanent && !isTourDemoGroup(g));
+      const createdAt = Date.now();
       const session: Session = {
         id: nanoid(10),
         name,
         description,
         groups,
-        createdAt: Date.now(),
+        createdAt,
+        // only a palette colour is ever stored (see lib/sessionColor.ts)
+        ...(validSessionColor(color) ? { color } : {}),
+        // not on the server yet: retried by the sync if this popup closes before the upload ends
+        ...(cloudSync ? { uploadPending: createdAt } : {}),
       };
       // Whose session this is, captured BEFORE anything is written: the upload below is refused
       // if the signed-in account is no longer this one (see pushSessionToSupabase). Free users
@@ -61,31 +96,33 @@ export function useSaveSession() {
       // The groups being saved are the STORE's, so its recorded owner decides, not only who is
       // signed in right now: if the store still holds another account's data (the account wipe
       // has not run yet), nothing is uploaded under the signed-in account.
-      let ownerId: string | undefined;
-      if (cloudSync) {
-        try {
-          const signedInId = (await supabase.auth.getSession()).data.session?.user.id;
-          const storeOwner = await getSetting<string | null>(LAST_USER_ID_KEY, null);
-          if (signedInId && (!storeOwner || storeOwner === signedInId)) ownerId = signedInId;
-        } catch (e) {
-          console.warn('[TabMerger] Session sync to Supabase failed', e);
-        }
-      }
+      const ownerId = cloudSync ? await sessionUploadOwner() : undefined;
       await saveSession(session);
       // ponytail: best-effort Supabase sync — local save already succeeded. Only for
       // users with the cloud-sync entitlement; free users stay local-only.
-      if (cloudSync) {
-        let uploaded = false;
-        try {
-          if (ownerId) uploaded = await pushSessionToSupabase(session, ownerId);
-        } catch (e) {
-          console.warn('[TabMerger] Session sync to Supabase failed', e);
-        }
-        // Not on the server (no key yet / locked / offline / rejected): sessions have no per-row
-        // pending flag, so re-arm the self-heal and the next sync uploads it (see useSync).
-        if (!uploaded) await setSetting(SESSIONS_MIGRATION_DONE_KEY, false);
-      }
+      if (cloudSync) await uploadMarkedSession(session.id, ownerId);
       return session;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
+  });
+}
+
+/**
+ * "Change colour…" on a saved session: stores the new colour (only a palette colour, only if the
+ * session still exists and is not an automatic backup: one IndexedDB transaction, which also marks
+ * it `uploadPending` for accounts with cloud sync) and uploads the stored session again, encrypted,
+ * update-only once the server has it: a session deleted in the dashboard is never re-created.
+ * Resolves the updated session, or `null` when it was deleted meanwhile (or is a backup).
+ */
+export function useUpdateSessionColor() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, color, cloudSync }: { id: string; color: string; cloudSync: boolean }) => {
+      if (!validSessionColor(color)) throw new Error('INVALID_SESSION_COLOR');
+      const ownerId = cloudSync ? await sessionUploadOwner() : undefined;
+      const updated = await updateSessionColor(id, color, cloudSync ? Date.now() : undefined);
+      if (updated && cloudSync) await uploadMarkedSession(id, ownerId);
+      return updated;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
   });
@@ -108,9 +145,11 @@ export function useDeleteSession() {
       } catch (e) {
         console.warn('[TabMerger] Session delete sync to Supabase failed', e);
       }
+      // an upload of it still in flight deletes the row it re-creates (see uploadStoredSession)
+      noteSessionDeletedHere(id);
       await deleteSession(id);
-      // ponytail: best-effort Supabase sync (never throws)
-      if (ownerId) await deleteRemoteSessions([id], ownerId);
+      // ponytail: best-effort Supabase sync (never throws), sent after any upload of this session
+      if (ownerId) await deleteRemoteSessionsQueued([id], ownerId);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: SESSIONS_QUERY_KEY }),
   });
@@ -126,7 +165,8 @@ export function useRestoreSession() {
     onSuccess: () => { trackEvent('session_restored'); },
     mutationFn: async (session: Session) => {
       const windows = await chrome.windows.getAll();
-      await Promise.all(windows.map((w) => chrome.windows.remove(w.id!)));
+      // Restoring replaces the open windows WITHOUT saving them: "Recently closed" remembers them
+      await closeWindows(windows.map((w) => w.id!), { record: true });
       for (const group of session.groups) {
         for (const win of group.windows) {
           const tabs = win.tabs.filter((t) => isOpenableUrl(t.url));

@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { formatTimeAgo } from '@/lib/i18n';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
-import { Plus, RotateCcw, Trash2, BookmarkPlus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { toast } from '@/lib/toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GroupItem } from './GroupItem';
-import { SIDEBAR_ICON_BUTTON, SidebarSection } from './SidebarSection';
+import { RecentlyClosedSection } from './RecentlyClosedSection';
 import { AutoSavedSection } from './AutoSavedSection';
+import { ArchivedSection } from './ArchivedSection';
+import { SessionsSection } from './SessionsSection';
 import type { GroupsState } from '@/lib/types';
 import { useDndContext } from '@/components/dnd/DndProvider';
 import { dndListStyle, gapGrowthFor } from '@/lib/dndInsertion';
@@ -18,17 +18,14 @@ import { NEW_GROUP_ID, setNewGroupZoneGate } from '@/hooks/useDndHandlers';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
-import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
+import { useAddGroup } from '@/hooks/useGroups';
 import { FreeLimitExceededError, countedGroups } from '@/lib/tierLimits';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
-import { useSessions, useDeleteSession, useRestoreSession, useSaveSession } from '@/hooks/useSessions';
-import { useConfirm } from '@/hooks/useConfirm';
-import { getGroupTabCount } from '@/lib/utils';
+import { useSessions } from '@/hooks/useSessions';
 import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { isAutoSavedGroup } from '@/lib/autoSaveGroups';
-import { FREE_TIER_LIMITS } from '@tabmerger/shared';
 import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { SEARCH_NON_MATCHING } from '@tabmerger/shared';
@@ -97,45 +94,18 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const atNewGroupStop = useKeyboardMoveStore((s) => s.marker?.type === 'zone' && s.marker.zone === 'new-group');
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
+  // Only one sidebar row is current: while a read-only view (an archived group, a session) fills
+  // the main panel, no group row is, though `activeGroupIndex` still names the group to return to.
+  const groupViewShown = useUIStore((s) => (s.mainView?.kind ?? 'group') === 'group');
   const selectionMode = useUIStore((s) => s.selectionMode);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
-  const openModal = useUIStore((s) => s.openModal);
-  const { maxGroups, maxTabs, sessions: hasSessions, cloudSync } = useEntitlements();
+  const { maxGroups, maxTabs } = useEntitlements();
   const { mutateAsync: addGroup } = useAddGroup({ maxGroups, maxTabs });
-  const { mutate: restoreGroup } = useRestoreGroup();
-  const { mutate: deleteGroup } = useDeleteGroup();
-  const [archivedOpen, setArchivedOpen] = useState(false);
-  const [sessionsOpen, setSessionsOpen] = useState(false);
   const { data: storedSessions = [] } = useSessions();
   // Automatic backups share the sessions store but are NOT listed here: this list's Restore closes
   // every browser window and reopens the tabs, which is not what restoring a backup means. They
   // are managed in Settings → Data only, and never count toward the Free session limit.
   const sessions = storedSessions.filter((s) => s.auto !== true);
-  const { mutate: deleteSession } = useDeleteSession();
-  const { mutate: restoreSession, isPending: restoring } = useRestoreSession();
-  const { confirm, confirmDialog } = useConfirm();
-  const { mutateAsync: saveSession } = useSaveSession();
-
-  // Moved from Header (P4, popup-ui-consolidation-spec.md): "Save session" now lives in
-  // the Sessions section header instead of the always-visible header icon bar.
-  const handleSaveSession = () => {
-    openModal('saveSession', {
-      onSave: async (name: string, description?: string) => {
-        try {
-          await saveSession({ name, description, sessionCount: sessions.length, hasSessions, cloudSync });
-          toast.success(t('sidePanel.toast.sessionSaved'));
-        } catch (err) {
-          if (err instanceof Error && err.message === 'SESSION_LIMIT') {
-            toast.error(t('sidePanel.toast.sessionLimit', { max: FREE_TIER_LIMITS.sessions }), {
-              action: { label: t('common.upgrade'), onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
-            });
-          } else {
-            toast.error(t('sidePanel.toast.sessionFailed'));
-          }
-        }
-      }
-    });
-  };
 
   // Sync DOM focus to sidebar group when navigating with arrow keys.
   // ponytail: only steal focus if the user is already keyboard-navigating the sidebar
@@ -165,11 +135,6 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const groupListRef = useRef<HTMLDivElement>(null);
   const keepFocus = useKeepFocusInList(groupListRef, hideNonMatching);
   const plainOnly = !!filters.tabQuery && !filters.groupFilter && !filters.windowFilter && !filters.tagFilter;
-
-  // Split archived vs active (permanent is always active)
-  const archivedGroups = raw
-    .map((g, i) => ({ group: g, realIndex: i }))
-    .filter(({ group }) => !group.permanent && group.archived);
 
   // Active display list: Now Open + non-archived saved groups, sorted starred first
   // (shared with `useArchiveGroup`'s "activate the group above" rule — see sidebarOrder.ts)
@@ -228,7 +193,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
 
   return (
     <div
-      className="flex flex-col h-full shrink-0 bg-zone-sidebar"
+      className="tm-sidebar flex flex-col h-full shrink-0 bg-zone-sidebar"
       style={{ width: 240, minWidth: 240, borderInlineEnd: '1px solid var(--zone-sidebar-border)' }}
     >
       {/* Groups list */}
@@ -239,7 +204,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>
             {available.map(({ group, realIndex, isLocked }) => {
               const found = searchSummary?.perGroup[realIndex];
-              const isActive = realIndex === activeGroupIndex;
+              const isActive = groupViewShown && realIndex === activeGroupIndex;
               const noMatch = !!found && !found.visible;
               // The group on screen stays listed even with no match: it is what the panel shows.
               // So does "Now Open" (with a "0 found" badge): it is the way back to the live tabs.
@@ -286,170 +251,20 @@ export function SidePanel({ groupsState }: SidePanelProps) {
         </div>
       </ScrollArea>
 
-      {/* Auto-saved + Archived + Sessions — pinned above stats footer. Every section always renders
-          (header is always visible, even at 0 count); only the expanded body is gated. */}
+      {/* Recently closed + Auto-saved + Archived + Sessions — pinned above stats footer. Every
+          section always renders (header is always visible, even at 0 count); only the expanded
+          body is gated (an accordion: at most one body is open). */}
       <div
         className="shrink-0"
         style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
       >
+        <RecentlyClosedSection groups={raw} />
+
         <AutoSavedSection groupsState={groupsState} />
 
-        <SidebarSection
-          label={t('sidePanel.archived')}
-          count={archivedGroups.length}
-          open={archivedOpen}
-          onToggle={() => setArchivedOpen((o) => !o)}
-          isEmpty={archivedGroups.length === 0}
-          emptyLabel={t('sidePanel.noArchived')}
-          className="mt-1.5"
-          tourAnchor={TOUR_ANCHORS.archived}
-        >
-          {archivedGroups.map(({ group, realIndex }) => (
-            <div
-              key={group.id}
-              className="flex items-center gap-1 px-2 py-1 transition-colors"
-              style={{ borderInlineStart: `3px solid ${group.color}` }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--sidebar-hover-bg)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = ''; }}
-            >
-              <div className="flex-1 min-w-0">
-                <span dir="auto" className="block truncate text-[11px] text-muted-foreground text-ui-start">{group.name}</span>
-                <span className="block text-[0.625rem] text-muted-foreground">{formatTimeAgo(group.updatedAt)}</span>
-              </div>
-              <span
-                className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
-                style={{ background: 'var(--sidebar-badge-bg)', color: 'var(--sidebar-text-muted)' }}
-              >
-                <span>{group.windows.length}</span>
-                <span className="opacity-40">◆</span>
-                <span>{getGroupTabCount(group)}</span>
-              </span>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-foreground')}
-                    onClick={() => restoreGroup(realIndex)}
-                    aria-label={t('sidePanel.restoreNamed', { name: group.name })}
-                  >
-                    <RotateCcw className="h-3 w-3" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="top">{t('sidePanel.restoreGroup')}</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    className={cn(SIDEBAR_ICON_BUTTON, 'hover:text-destructive')}
-                    onClick={() => deleteGroup(realIndex)}
-                    aria-label={t('sidePanel.deleteNamed', { name: group.name })}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="top">{t('sidePanel.deleteGroup')}</TooltipContent>
-              </Tooltip>
-            </div>
-          ))}
-        </SidebarSection>
+        <ArchivedSection groups={raw} />
 
-        <SidebarSection
-          label={t('sidePanel.sessions')}
-          count={sessions.length}
-          open={sessionsOpen}
-          onToggle={() => setSessionsOpen((o) => !o)}
-          isEmpty={sessions.length === 0}
-          emptyLabel={t('sidePanel.noSessions')}
-          className="mt-1.5 mb-1.5"
-          tourAnchor={TOUR_ANCHORS.sessions}
-          action={
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  className="shrink-0 text-muted-foreground hover:text-foreground transition-colors p-0.5"
-                  onClick={handleSaveSession}
-                  aria-label={t('sidePanel.saveSession')}
-                >
-                  <BookmarkPlus className="h-3.5 w-3.5" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="top">{t('sidePanel.saveSession')}</TooltipContent>
-            </Tooltip>
-          }
-        >
-          {sessions.map((session) => {
-            const winCount = session.groups.reduce((a, g) => a + g.windows.length, 0);
-            const tabCount = session.groups.reduce((a, g) => a + getGroupTabCount(g), 0);
-            return (
-              <div
-                key={session.id}
-                className="flex items-center gap-1.5 px-2 py-1.5 transition-colors"
-                style={{ borderInlineStart: `3px solid ${session.groups[0]?.color ?? 'var(--sidebar-text-muted)'}` }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--sidebar-hover-bg)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = ''; }}
-              >
-                <div className="flex-1 min-w-0">
-                  <span dir="auto" className="block truncate text-[11px] text-muted-foreground text-ui-start">{session.name}</span>
-                  {session.description && (
-                    <span dir="auto" className="block truncate text-[9px] text-muted-foreground/70 italic text-ui-start" title={session.description}>
-                      {session.description}
-                    </span>
-                  )}
-                  <span className="block text-[9px] text-muted-foreground/50">{formatTimeAgo(session.createdAt)}</span>
-                </div>
-                <span
-                  className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
-                  style={{ background: 'var(--sidebar-badge-bg)', color: 'var(--sidebar-text-muted)' }}
-                >
-                  <span>{session.groups.length}</span>
-                  <span className="opacity-40">◆</span>
-                  <span>{winCount}</span>
-                  <span className="opacity-40">◆</span>
-                  <span>{tabCount}</span>
-                </span>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
-                      disabled={restoring}
-                      aria-label={t('sidePanel.restoreSessionNamed', { name: session.name })}
-                      onClick={() => {
-                        const name = session.name.length > 60 ? `${session.name.slice(0, 60)}…` : session.name;
-                        void confirm({
-                          title: t('sidePanel.restoreConfirmTitle'),
-                          description: t('sidePanel.restoreConfirmDescription', { name }),
-                          confirmLabel: t('sidePanel.restoreConfirmLabel'),
-                          destructive: true
-                        }).then((confirmed) => {
-                          if (confirmed) restoreSession(session);
-                        });
-                      }}
-                    >
-                      <RotateCcw className="h-3 w-3" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">{t('sidePanel.restoreSession')}</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
-                      onClick={() => deleteSession(session.id)}
-                      aria-label={t('sidePanel.deleteSessionNamed', { name: session.name })}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">{t('sidePanel.deleteSession')}</TooltipContent>
-                </Tooltip>
-              </div>
-            );
-          })}
-        </SidebarSection>
+        <SessionsSection groups={raw} sessions={sessions} />
       </div>
 
       {/* Footer — stats */}
@@ -478,7 +293,6 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           );
         })()}
         </div>
-      {confirmDialog}
     </div>
   );
 }

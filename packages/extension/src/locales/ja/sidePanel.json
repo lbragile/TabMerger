@@ -37,5 +37,44 @@
   "proRequired": "Proが必要です",
   "locked": "このグループを使うにはProにアップグレードしてください",
   "pin": "グループをピン留め",
-  "unpin": "グループのピン留めを解除"
+  "unpin": "グループのピン留めを解除",
+  "view": {
+    "showArchived": "アーカイブ済みグループ「{{name}}」を表示",
+    "showSession": "セッション「{{name}}」を表示",
+    "sessionCounts": "{{groups}}、{{windows}}、{{tabs}}",
+    "close": "この表示を閉じる",
+    "moreOptions": "「{{name}}」のその他のオプション",
+    "archivedMeta": "アーカイブ済み ◆ {{counts}}",
+    "archivedBanner": "アーカイブ日時: {{time}}。読み取り専用です。タブの移動・編集・追加はグループを復元してから行ってください。タブをクリックすると開きます。",
+    "restore": "復元",
+    "sessionEmpty": "このセッションにはグループがありません。",
+    "sessionSavedMeta": "{{date}}に保存 · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}、ウィンドウ {{number}}、{{tabs}}",
+    "windowLabelNamed": "{{group}}、{{name}}、ウィンドウ {{number}}、{{tabs}}",
+    "sessionEnd": "セッションの終わり · {{tabs}}",
+    "showingArchived": "アーカイブ済みグループ「{{name}}」を表示中（読み取り専用）",
+    "showingSession": "セッション「{{name}}」を表示中（読み取り専用）",
+    "restored": "「{{name}}」を復元しました",
+    "deleted": "「{{name}}」を削除しました"
+  },
+  "sessionColor": {
+    "label": "色",
+    "random": "ランダム",
+    "change": "色を変更…",
+    "changed": "{{name}} の色を変更しました",
+    "failed": "色を変更できませんでした。もう一度お試しください。",
+    "names": {
+      "red": "赤",
+      "orange": "オレンジ",
+      "yellow": "黄",
+      "green": "緑",
+      "cyan": "シアン",
+      "blue": "青",
+      "indigo": "インディゴ",
+      "purple": "紫",
+      "pink": "ピンク",
+      "teal": "ティール"
+    }
+  }
 }

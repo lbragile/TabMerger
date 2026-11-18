@@ -34,5 +34,13 @@
   "select": "chọn",
   "close": "đóng",
   "summaryNone": "Không có thẻ nào khớp",
-  "summary_other": "{{count}} thẻ khớp trong {{groups}}"
+  "summary_other": "{{count}} thẻ khớp trong {{groups}}",
+  "recentlyClosed": "Đã đóng gần đây",
+  "exampleClosed": "Chỉ tìm trong các thẻ đã đóng gần đây",
+  "closedToday": "đóng hôm nay lúc {{time}}",
+  "closedYesterday": "đóng hôm qua lúc {{time}}",
+  "closedOn": "đóng {{day}}",
+  "closedFromWindow": "từ một cửa sổ đã đóng",
+  "closedWindowLabel": "Cửa sổ · {{tabs}}",
+  "closedOff": "Ghi nhớ thẻ đã đóng đang tắt"
 }

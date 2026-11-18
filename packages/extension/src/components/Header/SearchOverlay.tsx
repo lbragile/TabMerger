@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { Input } from '@/components/ui/input';
 import { parseSearchQuery } from '@/lib/utils';
+import { chromeGroupColor, readableTextColor } from '@/lib/color';
 import type { GroupsState } from '@/lib/types';
 import { isHiddenFromSearch } from '@/lib/tourSandbox';
 import { useTourSearchShowsDemo } from '@/hooks/useTourSearchShowsDemo';
@@ -12,6 +13,9 @@ import { bestRank, matchRanges, matchRank, normalizeQuery, snippetAroundMatch, s
 import { TOUR_ANCHORS } from '@/lib/tourSteps';
 import { motionScrollBehavior } from '@/lib/reducedMotion';
 import { SEARCH_ANNOUNCE_DELAY_MS } from '@/components/SearchAnnouncer';
+import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
+import { CLOSED_RESULTS_UNDER_SAVED, searchRecentlyClosed, type ClosedSearchResult } from '@/lib/recentlyClosedSearch';
+import { ClosedResultRow } from './ClosedResultRow';
 
 // The queries are search syntax (and an example word), not translated; the descriptions are.
 const EXAMPLES = [
@@ -19,6 +23,7 @@ const EXAMPLES = [
     { query: 'group:',    desc: 'search.exampleGroup' },
     { query: 'window:',   desc: 'search.exampleWindow' },
     { query: 'tag:',      desc: 'search.exampleTag' },
+    { query: 'closed:',   desc: 'search.exampleClosed' },
 ] as const;
 
 /**
@@ -35,6 +40,9 @@ function getPickerContext(query: string): { prefix: 'group:' | 'window:' | 'tag:
     const matchStart = query.lastIndexOf(m[2]);
     return { prefix: m[2].toLowerCase() as 'group:' | 'window:' | 'tag:', typed: m[3], before: query.slice(0, matchStart) };
 }
+
+/** The most saved results listed, and the most closed ones with `closed:`. */
+const RESULT_CAP = 12;
 
 type Result =
     | { kind: 'group'; label: string; meta: string; groupIndex: number; color: string }
@@ -53,7 +61,9 @@ type Result =
  */
 function getResults(query: string, groupsState: GroupsState | undefined, t: TFunction): Result[] {
     if (!groupsState || !query.trim()) return [];
-    const { groupFilter, windowFilter, tagFilter, tabQuery } = parseSearchQuery(query);
+    const { groupFilter, windowFilter, tagFilter, tabQuery, closedOnly } = parseSearchQuery(query);
+    // `closed:` lists recently closed tabs only (see `searchRecentlyClosed`)
+    if (closedOnly) return [];
     const ranked: Array<{ result: Result; rank: MatchRank }> = [];
     const push = (result: Result, rank: MatchRank) => ranked.push({ result, rank });
 
@@ -97,7 +107,7 @@ function getResults(query: string, groupsState: GroupsState | undefined, t: TFun
         }
     });
 
-    return sortByRank(ranked, (r) => r.rank).slice(0, 12).map((r) => r.result);
+    return sortByRank(ranked, (r) => r.rank).slice(0, RESULT_CAP).map((r) => r.result);
 }
 
 /** A picker's first 8 entries, best match first (with nothing typed yet, in list order). */
@@ -168,6 +178,13 @@ interface Props {
     onSelectTab?: (groupIndex: number, windowIndex: number, tabIndex: number) => void;
     onClose: () => void;
     inputRef: React.RefObject<HTMLInputElement | null>;
+    /**
+     * The recently-closed list, for the "Recently closed" section under the saved results and the
+     * `closed:` scope. `remember` is the "Remember closed tabs" setting. Omitted: neither exists.
+     */
+    closed?: { entries: readonly RecentlyClosedEntry[]; remember: boolean };
+    /** A "Recently closed" result was picked (the overlay closes itself afterwards). */
+    onReopenClosed?: (result: ClosedSearchResult, opts: { background: boolean }) => void;
 }
 
 /**
@@ -178,7 +195,7 @@ interface Props {
  *
  * Selecting any result navigates to that group via `onSelectGroup`.
  */
-export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup, onSelectWindow, onSelectTab, onClose, inputRef }: Props) {
+export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup, onSelectWindow, onSelectTab, onClose, inputRef, closed, onReopenClosed }: Props) {
     const { t } = useTranslation();
     const [cursor, setCursor] = useState(-1);
     // Suppresses results for one render cycle after a picker selection completes.
@@ -212,7 +229,16 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [inPicker, isPicking, query, groupsState, searchShowsDemo, t]
     );
-    const listLength = inPicker ? pickerItems.length : (query.trim() ? results.length : EXAMPLES.length);
+    // After the saved results, never changing them: up to 3 under them, the full cap with `closed:`.
+    // Remembering off: nothing is listed (the list was cleared when it was turned off anyway).
+    const closedEntries = closed?.remember ? closed.entries : undefined;
+    const closedResults = useMemo(
+        () => (inPicker || isPicking || !query.trim() || !closedEntries || !onReopenClosed)
+            ? []
+            : searchRecentlyClosed(closedEntries, parsed, parsed.closedOnly ? RESULT_CAP : CLOSED_RESULTS_UNDER_SAVED),
+        [inPicker, isPicking, query, closedEntries, onReopenClosed, parsed]
+    );
+    const listLength = inPicker ? pickerItems.length : (query.trim() ? results.length + closedResults.length : EXAMPLES.length);
 
     useEffect(() => { setCursor(-1); setIsPicking(false); }, [query]);
 
@@ -263,6 +289,11 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
         }, 0);
     }, [pickerCtx, onQueryChange, inputRef]);
 
+    const pickClosed = useCallback((r: ClosedSearchResult, background: boolean) => {
+        onReopenClosed?.(r, { background });
+        onClose();
+    }, [onReopenClosed, onClose]);
+
     const pickTab = useCallback((r: Result) => {
         if (r.kind === 'tab' && onSelectTab) onSelectTab(r.groupIndex, r.windowIndex, r.tabIndex);
         else onSelectGroup(r.groupIndex);
@@ -290,6 +321,8 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                 if (inPicker) {
                     const item = pickerItems[cursor];
                     if (item) completePick(item.name, item.index);
+                } else if (query.trim() && cursor >= results.length && closedResults[cursor - results.length]) {
+                    pickClosed(closedResults[cursor - results.length], e.ctrlKey || e.metaKey);
                 } else if (query.trim() && results[cursor]) {
                     const r = results[cursor];
                     if (r.kind === 'window') { onQueryChange(`${query.trimEnd()} window:"${r.label}" `); inputRef.current?.focus(); setCursor(-1); }
@@ -303,7 +336,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
         };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
-    }, [cursor, listLength, inPicker, pickerItems, pickerCtx, results, query, onSelectGroup, onSelectWindow, onQueryChange, inputRef, completePick, pickTab]);
+    }, [cursor, listLength, inPicker, pickerItems, pickerCtx, results, closedResults, query, onSelectGroup, onSelectWindow, onQueryChange, inputRef, completePick, pickTab, pickClosed]);
 
     return (
         <>
@@ -377,8 +410,10 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                         </div>
                     ) : query.trim() ? (
                         /* Search results */
-                        results.length === 0 ? (
-                            <p className="px-4 py-6 text-center text-[12px] text-muted-foreground">{t('search.noMatchesFor', { query })}</p>
+                        results.length + closedResults.length === 0 ? (
+                            <p className="px-4 py-6 text-center text-[12px] text-muted-foreground" data-testid="search-no-matches">
+                                {parsed.closedOnly && closed && !closed.remember ? t('search.closedOff') : t('search.noMatchesFor', { query })}
+                            </p>
                         ) : (
                             <div role="listbox" id={listId} aria-label={t('search.results')}>
                                 {results.filter((r) => r.kind === 'group').length > 0 && (
@@ -433,6 +468,18 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
                                         })}
                                     </div>
                                 )}
+                                {closedResults.length > 0 && (
+                                    <div role="group" aria-labelledby={`${listId}-closed`} data-testid="search-closed-section">
+                                        <p id={`${listId}-closed`} className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{t('search.recentlyClosed')}</p>
+                                        {closedResults.map((r, i) => {
+                                            const ri = results.length + i;
+                                            return <ClosedResultRow key={`c${r.entry.id}`} result={r}
+                                                tabQuery={parsed.tabQuery} tagQuery={parsed.tagFilter}
+                                                id={optionId(ri)} active={cursor === ri} onMouseEnter={() => setCursor(ri)}
+                                                onPick={(background) => pickClosed(r, background)} />;
+                                        })}
+                                    </div>
+                                )}
                             </div>
                         )
                     ) : (
@@ -473,7 +520,7 @@ function shiftRanges(ranges: MatchRange[], by: number): MatchRange[] {
     return ranges.map(([from, to]) => [from + by, to + by]);
 }
 
-function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges, groupQuery = '', tagQuery = '', folderColor, windowColor, groupName, chromeGroupName, chromeGroupColor, active, onMouseEnter, onClick }: {
+function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges, groupQuery = '', tagQuery = '', folderColor, windowColor, groupName, chromeGroupName, chromeGroupColor: chromeGroupColorName, active, onMouseEnter, onClick }: {
     /** Option id: the search box points at the active row with `aria-activedescendant`. */
     id: string;
     label: string; meta: string; folderColor?: string; windowColor?: string;
@@ -494,7 +541,7 @@ function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges
             {!groupName && windowColor && <AppWindow className="h-3.5 w-3.5 shrink-0" style={{ color: windowColor }} />}
             {!groupName && !windowColor && <Folder className="h-3.5 w-3.5 shrink-0" style={{ color: folderColor ?? 'currentColor', fill: folderColor ?? 'currentColor' }} />}
             {groupName && (
-                <span dir="auto" className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: folderColor }}>
+                <span dir="auto" className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 leading-none" style={{ backgroundColor: folderColor, color: folderColor ? readableTextColor(folderColor) : undefined }}>
                     <Highlighted text={groupName} ranges={matchRanges(groupName, groupQuery)} />
                 </span>
             )}
@@ -503,7 +550,7 @@ function ResultRow({ id, label, meta, metaIsUrl = false, labelRanges, metaRanges
                 {meta && <span dir={metaIsUrl ? 'ltr' : 'auto'} className="block text-[10px] text-muted-foreground truncate text-ui-start"><Highlighted text={meta} ranges={metaRanges ?? []} /></span>}
             </span>
             {chromeGroupName && (
-                <span dir="auto" className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 text-white leading-none" style={{ backgroundColor: chromeGroupColor ?? '#888' }}>
+                <span dir="auto" className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 leading-none" style={{ backgroundColor: chromeGroupColor(chromeGroupColorName), color: readableTextColor(chromeGroupColor(chromeGroupColorName)) }}>
                     <Highlighted text={chromeGroupName} ranges={matchRanges(chromeGroupName, tagQuery)} />
                 </span>
             )}

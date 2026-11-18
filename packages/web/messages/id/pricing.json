@@ -32,6 +32,8 @@
     "autoBackups": "Cadangan terenkripsi otomatis",
     "autoSaveFree": "Simpan otomatis tab yang terbuka ({count, number} terbaru dipertahankan)",
     "autoSavePro": "Simpan otomatis tab yang terbuka, semuanya dipertahankan",
+    "recentlyClosedFree": "Tab yang baru ditutup: {days, plural, other {# hari}} terakhir Anda",
+    "recentlyClosedPro": "Tab yang baru ditutup: {days, plural, other {# hari}} terakhir Anda",
     "prioritySupport": "Dukungan prioritas",
     "everythingInPro": "Semua fitur Pro",
     "aiGrouping": "Pengelompokan tab otomatis dengan AI",

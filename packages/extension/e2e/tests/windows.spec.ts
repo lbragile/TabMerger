@@ -145,7 +145,7 @@ test.describe('Window drag — onto a different group (unified DnD)', () => {
   async function readGroupWindowCount(page: import('@playwright/test').Page, id: string) {
     return page.evaluate(async (gid) => {
       return new Promise<{ count: number; urls: string[] }>((resolve) => {
-        const req = indexedDB.open('tabmerger', 1);
+        const req = indexedDB.open('tabmerger');
         req.onsuccess = () => {
           const db = req.result;
           const tx = db.transaction('groups', 'readonly');

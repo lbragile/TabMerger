@@ -1,14 +1,15 @@
 import { nanoid } from 'nanoid';
+import { validSessionColor } from '@/lib/sessionColor';
 import { lazyMessages } from '@/lib/i18n';
 import { AUTO_BACKUP_DOWNLOAD_LIMITS, AUTO_BACKUP_RETENTION_COUNT, autoBackupName, decryptBlob, isEncryptedBlob } from '@tabmerger/shared';
 import type { Group, Session } from '@/lib/types';
-import { getSessions, getSetting, commitSessionsIfGuardHolds } from '@/lib/localDb';
+import { getSessions, getSetting, commitSessionsIfGuardHolds, liveDeletedSessionIds } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { getContentUploadKey } from '@/lib/contentUploadKey';
 import { importGroups } from '@/lib/importExport';
 import { isSignedInAs } from '@/lib/sessionUpload';
 import { syncRequestSignal } from '@/lib/syncRequest';
-import { AUTO_BACKUP_STATE_KEY, AUTO_BACKUP_STORE_GUARD_KEY } from '@/lib/syncSettingKeys';
+import { AUTO_BACKUP_STATE_KEY, AUTO_BACKUP_STORE_GUARD_KEY, SESSIONS_DELETED_HERE_KEY } from '@/lib/syncSettingKeys';
 import {
   backupIdentityHolds,
   claimBackupStore,
@@ -126,7 +127,9 @@ export function buildDownloadedBackup(id: unknown, createdAtRaw: unknown, conten
   const { groups, dropped } = capDownloadedGroups(sanitised);
 
   const name = typeof c.name === 'string' && c.name.trim() !== '' ? c.name.slice(0, MAX_BACKUP_NAME_LENGTH) : autoBackupName(createdAt);
-  return { backup: { id, name, groups, createdAt, auto: true }, dropped };
+  // a colour from the blob only when it is one of the palette's (lib/sessionColor.ts)
+  const color = validSessionColor(c.color);
+  return { backup: { id, name, groups, createdAt, auto: true, ...(color ? { color } : {}) }, dropped };
 }
 
 /** {@link buildDownloadedBackup} without the count. */
@@ -299,7 +302,10 @@ async function downloadLocked(now: number): Promise<BackupDownloadResult> {
   // (session removed + id noted), so whichever side of the sessions read it lands on, one of the
   // two reads shows it: before, the id is in this list; after, the session is still in `local`.
   // Nothing takes an id off the list meanwhile: that only happens under the lock this holds.
-  const blockedIds = new Set([...pendingDeletes, ...(await getPendingRemoteDeletes())]);
+  // ...and the sessions the user deleted here recently (a re-delete after an upload that re-created
+  // the row may not have reached the server: its row must not come back through the download)
+  const deletedHere = Object.keys(liveDeletedSessionIds(await getSetting<unknown>(SESSIONS_DELETED_HERE_KEY, null), now));
+  const blockedIds = new Set([...pendingDeletes, ...(await getPendingRemoteDeletes()), ...deletedHere]);
   const localIds = new Set(local.map((s) => s.id));
   // Rows already on this device (or deleted here) are counted without being decrypted again.
   const known = data.filter((r) => isBackupId((r as RemoteSessionRow)?.id) && localIds.has((r as RemoteSessionRow).id as string));
@@ -307,7 +313,13 @@ async function downloadLocked(now: number): Promise<BackupDownloadResult> {
   const { backups, unreadable, dropped } = await decryptAutoBackupRows(data, gate.key, new Set([...localIds, ...blockedIds]), now);
 
   // what is added is on the server by definition: marked so, like a backup this device uploaded
-  const toAdd = selectBackupsToAdd(local, backups, blockedIds).map((s) => ({ ...s, uploadedAt: now }));
+  // ...and under the key it was just decrypted with (when known), so the full pass after a key
+  // change does not ask the server about it again unless the key really changed
+  const toAdd = selectBackupsToAdd(local, backups, blockedIds).map((s) => ({
+    ...s,
+    uploadedAt: now,
+    ...(gate.keyFingerprint ? { uploadedKey: gate.keyFingerprint } : {})
+  }));
   const seeded = seedStateAfterDownload(parseAutoBackupState(await getSetting<unknown>(AUTO_BACKUP_STATE_KEY, null)), toAdd);
 
   // The rows were requested, and decrypted, for `userId`. They are stored only if that is still

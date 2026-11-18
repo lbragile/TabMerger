@@ -24,6 +24,10 @@
       "title": "Tam metin arama",
       "description": "Tüm sekme başlıklarınızda ve URL'lerinizde anında arama yapın. Sonuçlar metni tam yazdığınız gibi (büyük/küçük harf fark etmeksizin) eşleştirir, en iyi eşleşmeler önce gelir."
     },
+    "recentlyClosed": {
+      "title": "Son kapatılan sekmeler",
+      "description": "Kapattığınız her sekme ve pencere, kenar çubuğundaki Son kapatılanlar listesine güne göre gruplanarak eklenir. Bir sekmeyi yeniden açın, bütün bir pencereyi geri yükleyin ya da bir gruba kaydedin veya Ctrl/Cmd+K ile bulun: yalnızca orada aramak için aramanıza closed: ile başlayın. Ücretsiz plan sekme kapattığınız son {freeDays, plural, one {# günü} other {# günü}} saklar; Pro ise son {proDays, plural, one {# gününüzü} other {# gününüzü}} saklar. Liste cihazınızda kalır: asla eşitlenmez, yüklenmez veya dışa aktarılmaz, gizli pencereler asla kaydedilmez ve listeyi Ayarlar → Veri bölümünden kapatabilir ya da temizleyebilirsiniz."
+    },
     "dnd": {
       "title": "Sürükle-bırak ile yeniden sıralama",
       "description": "Akıcı sürükle-bırak etkileşimleriyle gruplardaki sekmeleri ve grupların kendisini yeniden düzenleyin."

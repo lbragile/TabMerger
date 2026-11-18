@@ -32,6 +32,8 @@
     "autoBackups": "Backups automáticos criptografados",
     "autoSaveFree": "Salvamento automático de abas abertas (os {count, number} mais recentes ficam guardados)",
     "autoSavePro": "Salvamento automático de abas abertas, todos guardados",
+    "recentlyClosedFree": "Abas fechadas recentemente: {days, plural, one {seu último dia} other {seus últimos # dias}}",
+    "recentlyClosedPro": "Abas fechadas recentemente: {days, plural, one {seu último dia} other {seus últimos # dias}}",
     "prioritySupport": "Suporte prioritário",
     "everythingInPro": "Tudo do Pro",
     "aiGrouping": "Agrupamento automático de abas por IA",

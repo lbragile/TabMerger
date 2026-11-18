@@ -11,6 +11,7 @@ import {
   isAutoSaveInterval,
   isAutoSaveThreshold,
   isTourDemoGroup,
+  pickAutoColor,
   type AutoSaveIntervalMinutes,
   type AutoSaveTabThreshold
 } from '@tabmerger/shared';
@@ -19,7 +20,7 @@ import type { Group, GroupsState, Tab, Tier, Window } from '@/lib/types';
 import { createGroup, formatGroupCounts, getFaviconUrl } from '@/lib/utils';
 import { normalizeUrl } from '@/lib/deduplication';
 import { countSavedGroupsAndTabs } from '@/lib/groupCounts';
-import { rollingToReplace } from '@/lib/autoSaveGroups';
+import { isAutoSavedGroup, rollingToReplace } from '@/lib/autoSaveGroups';
 import { isTourPracticeUrl } from '@/lib/tourPracticeTab';
 
 /**
@@ -248,6 +249,21 @@ export interface AutoSavePlanOptions {
   /** test seam */
   id?: string;
   name: string;
+  /** test seam for the colour pick ([0, 1), like `Math.random`) */
+  random?: () => number;
+}
+
+/**
+ * The colour of the newest auto-saved group still marked as one (kept groups no longer are), so the
+ * next auto-save never gets the same colour. `undefined` when there is none.
+ */
+export function newestAutoSaveColor(groups: readonly Group[]): string | undefined {
+  let newest: Group | undefined;
+  for (const g of groups) {
+    if (!isAutoSavedGroup(g)) continue;
+    if (!newest || (g.autoSave?.at ?? 0) > (newest.autoSave?.at ?? 0)) newest = g;
+  }
+  return newest?.color;
 }
 
 export type AutoSavePlan =
@@ -269,7 +285,9 @@ export type AutoSavePlan =
  *  4. Free limits (Free, or an unknown plan without a remembered paid answer): auto-saves count
  *     toward the group and tab limits. No free group slot (normal groups are never removed): skip.
  *     Near the tab limit: the tabs that fit, in window order ("Saved X of Y").
- *  5. The new group goes last, marked `pendingSync` (so a paid account uploads it, encrypted), never
+ *  5. The new group gets a colour from `AUTO_ITEM_COLORS`, never the newest existing auto-save's,
+ *     so several auto-saves are easy to tell apart (a kept group keeps its colour).
+ *  6. The new group goes last, marked `pendingSync` (so a paid account uploads it, encrypted), never
  *     at index 0. `rolling` unless the plan is paid (confirmed now, or remembered while the check
  *     fails): a Free user whose check fails offline must still get auto-saves that roll later.
  *     Only a confirmed-Free run REMOVES one.
@@ -322,6 +340,7 @@ export function planAutoSave(current: GroupsState, liveWindows: Window[], opts: 
 
   const group: Group = {
     ...createGroup(opts.id ?? nanoid(10), opts.name),
+    color: pickAutoColor(newestAutoSaveColor(current.available), opts.random),
     updatedAt: opts.now,
     windows,
     info: formatGroupCounts(windows.length, saved),

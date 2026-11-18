@@ -46,6 +46,8 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
   const deleteTab = deleteTabMutate as unknown as (arg: unknown) => void
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex)
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex)
+  // A read-only view (archived group, session) fills the main panel: see the Up/Down rule below
+  const viewOpen = useUIStore((s) => (s.mainView?.kind ?? 'group') !== 'group')
   const openModal = useUIStore((s) => s.openModal)
   const setRenameTarget = useUIStore((s) => s.setRenameTarget)
   const setNoteTarget = useUIStore((s) => s.setNoteTarget)
@@ -75,6 +77,10 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
         }
         return
       }
+
+      // While a read-only view is open, Up/Down switch groups (and so close the view) only from a
+      // group row: from the row that opened the view or the view's buttons they did it silently
+      if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && viewOpen && getFocusedSidebarGroupIndex() == null) return
 
       if (e.key === 'ArrowDown') {
         e.preventDefault()
@@ -142,7 +148,7 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
 
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
-  }, [addGroup, deleteTab, deleteTabMutate, activeGroupIndex, setActiveGroupIndex, groupCount, focusedTabId, searchInputRef, openModal, setRenameTarget, setNoteTarget])
+  }, [addGroup, deleteTab, deleteTabMutate, activeGroupIndex, setActiveGroupIndex, viewOpen, groupCount, focusedTabId, searchInputRef, openModal, setRenameTarget, setNoteTarget])
 
   return { focusedGroupIndex: activeGroupIndex }
 }

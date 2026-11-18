@@ -1,0 +1,94 @@
+{
+  "day": {
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua"
+  },
+  "errors": {
+    "openFailed": "Không mở được trang này. Trang vẫn còn trong danh sách.",
+    "changeFailed": "Không thay đổi được danh sách thẻ đã đóng. Hãy thử lại.",
+    "undoIncomplete": "Không khôi phục được: chúng đã bị xóa.",
+    "undoTurnedOnListGone": "Ghi nhớ thẻ đã đóng đã bật lại, nhưng danh sách đã xóa không còn nữa.",
+    "groupGone": "Nhóm đó không còn nữa. Chưa lưu gì cả."
+  },
+  "settings": {
+    "title": "Ghi nhớ thẻ đã đóng",
+    "purpose": "Các thẻ và cửa sổ bạn đóng sẽ ở lại trong Đã đóng gần đây để bạn mở lại. Chỉ lưu trên thiết bị này. Cửa sổ riêng tư không bao giờ được ghi lại.",
+    "keeps_other": "Gói của bạn giữ {{count}} ngày gần nhất",
+    "inList_other": "{{count}} trong danh sách",
+    "off": "Ghi nhớ thẻ đã đóng đang tắt.",
+    "clear": "Xóa danh sách",
+    "checkingPlan": "Đang kiểm tra gói của bạn..."
+  },
+  "toast": {
+    "cleared_other": "Đã xóa {{count}} thẻ và cửa sổ đã đóng",
+    "turnedOffCleared_other": "Đã tắt · đã xóa {{count}} thẻ và cửa sổ đã đóng",
+    "turnedOff": "Không còn ghi nhớ thẻ đã đóng",
+    "reopened": "Đã mở lại {{title}}",
+    "restoredWindow": "Đã khôi phục cửa sổ có {{tabs}}",
+    "reopenedAll": "Đã mở lại {{tabs}} trong cửa sổ mới",
+    "removed": "Đã xóa {{name}} khỏi danh sách",
+    "saved": "Đã lưu vào {{group}}",
+    "linkCopied": "Đã sao chép liên kết",
+    "copyFailed": "Không sao chép được liên kết."
+  },
+  "section": {
+    "title": "Đã đóng gần đây",
+    "offCount": "tắt",
+    "empty_other": "Chưa đóng thẻ nào. Các thẻ bạn đóng sẽ hiện ở đây theo ngày, cho {{count}} ngày gần nhất của bạn.",
+    "offBody": "Ghi nhớ thẻ đã đóng đang tắt.",
+    "turnOn": "Bật trong Cài đặt",
+    "freeKeeps_other": "Free giữ {{count}} ngày gần nhất của bạn.",
+    "proKeeps_other": "Pro giữ {{count}} ngày gần nhất của bạn.",
+    "seePro": "Xem Pro",
+    "dayDetail": "{{tabs}} · {{windows}}",
+    "showDay_today": "Hiện các thẻ đã đóng hôm nay",
+    "showDay_yesterday": "Hiện các thẻ đã đóng hôm qua",
+    "showDay_date": "Hiện các thẻ đã đóng vào {{day}}",
+    "removeDay_today": "Xóa các thẻ đã đóng hôm nay khỏi danh sách",
+    "removeDay_yesterday": "Xóa các thẻ đã đóng hôm qua khỏi danh sách",
+    "removeDay_date": "Xóa các thẻ đã đóng vào {{day}} khỏi danh sách",
+    "removeDayTooltip": "Xóa ngày"
+  },
+  "view": {
+    "meta_other": "Đã đóng gần đây ◆ đã đóng {{count}}",
+    "reopenAll": "Mở lại tất cả trong cửa sổ mới",
+    "saveAll": "Lưu tất cả vào nhóm…",
+    "removeDay": "Xóa ngày này",
+    "clearAll": "Xóa tất cả mục đã đóng gần đây ({{n}})",
+    "noMatches": "Không có thẻ nào đã đóng trong ngày này khớp với tìm kiếm.",
+    "showMore": "Hiện thêm",
+    "showing_today": "Đang hiện các thẻ đã đóng hôm nay",
+    "showing_yesterday": "Đang hiện các thẻ đã đóng hôm qua",
+    "showing_date": "Đang hiện các thẻ đã đóng vào {{day}}",
+    "listLabel": "Thẻ và cửa sổ đã đóng",
+    "matches_other": "{{count}} kết quả",
+    "notMatching": "Không khớp với tìm kiếm"
+  },
+  "hours": {
+    "stripLabel": "Thẻ đã đóng theo giờ",
+    "bar_other": "{{hour}}, đã đóng {{count}}",
+    "busiest": "Nhiều nhất: {{hour}}",
+    "busiestTwo": "Nhiều nhất: {{first}} và {{second}}",
+    "spread_other": "Đóng trong {{count}} giờ",
+    "showing_other": "Đang hiện {{hour}} · đã đóng {{count}}",
+    "showingAll": "Đang hiện tất cả các giờ",
+    "showAll": "Hiện tất cả các giờ",
+    "noMatches": "Không có thẻ nào đã đóng trong giờ này khớp với tìm kiếm."
+  },
+  "entry": {
+    "window": "Cửa sổ · {{tabs}}",
+    "reopenTab": "Mở lại {{title}}, đã đóng {{time}}",
+    "restoreWindow": "Khôi phục cửa sổ có {{tabs}}, đã đóng {{time}}",
+    "reopenTabInWindow": "Mở lại {{title}}",
+    "windowTabs": "Các thẻ của cửa sổ đã đóng lúc {{time}}, {{tabs}}",
+    "reopen": "Mở lại",
+    "restore": "Khôi phục cửa sổ",
+    "saveToGroup": "Lưu vào nhóm…",
+    "copyLink": "Sao chép liên kết",
+    "remove": "Xóa khỏi danh sách",
+    "newGroup": "Nhóm mới: {{name}}",
+    "newGroupPlain": "Nhóm mới",
+    "noGroups": "Chưa có nhóm nào được lưu",
+    "moreOptions": "Tùy chọn khác cho {{name}}"
+  }
+}

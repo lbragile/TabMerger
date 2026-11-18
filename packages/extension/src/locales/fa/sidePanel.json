@@ -37,5 +37,44 @@
   "proRequired": "به Pro نیاز است",
   "locked": "برای دسترسی به این گروه به Pro ارتقا دهید",
   "pin": "سنجاق کردن گروه",
-  "unpin": "برداشتن سنجاق گروه"
+  "unpin": "برداشتن سنجاق گروه",
+  "view": {
+    "showArchived": "نمایش گروه بایگانی‌شدهٔ {{name}}",
+    "showSession": "نمایش نشست {{name}}",
+    "sessionCounts": "{{groups}}، {{windows}}، {{tabs}}",
+    "close": "بستن این نما",
+    "moreOptions": "گزینه‌های بیشتر برای {{name}}",
+    "archivedMeta": "بایگانی‌شده ◆ {{counts}}",
+    "archivedBanner": "{{time}} بایگانی شد. فقط‌خواندنی: برای جابه‌جا کردن، ویرایش یا افزودن زبانه‌ها آن را بازگردانید. کلیک روی زبانه همچنان آن را باز می‌کند.",
+    "restore": "بازگرداندن",
+    "sessionEmpty": "این نشست هیچ گروهی ندارد.",
+    "sessionSavedMeta": "ذخیره‌شده {{date}} · {{groups}} · {{windows}} · {{tabs}}",
+    "groupCounts": "{{windows}} · {{tabs}}",
+    "windowLabel": "{{group}}، پنجرهٔ {{number}}، {{tabs}}",
+    "windowLabelNamed": "{{group}}، {{name}}، پنجرهٔ {{number}}، {{tabs}}",
+    "sessionEnd": "پایان نشست · {{tabs}}",
+    "showingArchived": "نمایش گروه بایگانی‌شدهٔ {{name}}، فقط‌خواندنی",
+    "showingSession": "نمایش نشست {{name}}، فقط‌خواندنی",
+    "restored": "{{name}} بازگردانده شد",
+    "deleted": "{{name}} حذف شد"
+  },
+  "sessionColor": {
+    "label": "رنگ",
+    "random": "تصادفی",
+    "change": "تغییر رنگ…",
+    "changed": "رنگ {{name}} تغییر کرد",
+    "failed": "رنگ تغییر نکرد. دوباره امتحان کنید.",
+    "names": {
+      "red": "قرمز",
+      "orange": "نارنجی",
+      "yellow": "زرد",
+      "green": "سبز",
+      "cyan": "فیروزه‌ای",
+      "blue": "آبی",
+      "indigo": "نیلی",
+      "purple": "بنفش",
+      "pink": "صورتی",
+      "teal": "سبزآبی"
+    }
+  }
 }
